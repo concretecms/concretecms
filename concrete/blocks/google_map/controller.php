@@ -10,6 +10,51 @@ use Config;
 
 class Controller extends BlockController implements UsesFeatureInterface
 {
+    /**
+     * @var string|null
+     */
+    public $title;
+
+    /**
+     * @var string|null
+     */
+    public $location;
+
+    /**
+     * @var float|string|null
+     */
+    public $latitude;
+
+    /**
+     * @var float|string|null
+     */
+    public $longitude;
+
+    /**
+     * @var int|string|null
+     */
+    public $zoom;
+
+    /**
+     * @var string|null
+     */
+    public $width;
+
+    /**
+     * @var string|null
+     */
+    public $height;
+
+    /**
+     * @var bool|int|string|null
+     */
+    public $scrollwheel;
+
+    /**
+     * @var string|null
+     */
+    public $titleFormat;
+
     protected $btTable = 'btGoogleMap';
 
     protected $btInterfaceWidth = 525;

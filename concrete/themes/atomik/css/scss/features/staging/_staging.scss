@@ -1,0 +1,13 @@
+
+div.ccm-production-notice-staging {
+  background-color: $accent;
+  bottom: 0;
+  color: $light;
+  font-weight: bold;
+  left: 0;
+  padding: 10px;
+  position: fixed;
+  text-align: center;
+  width: 100%;
+  z-index: $index-level-stage-notice;
+}

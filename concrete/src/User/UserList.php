@@ -60,6 +60,21 @@ class UserList extends DatabaseItemList implements PagerProviderInterface, Pagin
     protected $includeUnvalidatedUsers = false;
 
     /**
+     * @var bool
+     */
+    protected $includeEmailInKeywordSearch = true;
+
+    /**
+     * @var bool
+     */
+    protected $includeAttributesInKeywordSearch = true;
+
+    /**
+     * @var bool
+     */
+    protected $includeUsernameInKeywordSearch = true;
+
+    /**
      * @var UserInfoRepository|null
      */
     private $userInfoRepository;
@@ -104,6 +119,30 @@ class UserList extends DatabaseItemList implements PagerProviderInterface, Pagin
     public function enablePermissions()
     {
         unset($this->permissionsChecker);
+    }
+
+    /**
+     * @param bool $includeEmailInKeywordSearch
+     */
+    public function setIncludeEmailInKeywordSearch(bool $includeEmailInKeywordSearch): void
+    {
+        $this->includeEmailInKeywordSearch = $includeEmailInKeywordSearch;
+    }
+
+    /**
+     * @param bool $includeAttributesInKeywordSearch
+     */
+    public function setIncludeAttributesInKeywordSearch(bool $includeAttributesInKeywordSearch): void
+    {
+        $this->includeAttributesInKeywordSearch = $includeAttributesInKeywordSearch;
+    }
+
+    /**
+     * @param bool $includeUsernameInKeywordSearch
+     */
+    public function setIncludeUsernameInKeywordSearch(bool $includeUsernameInKeywordSearch): void
+    {
+        $this->includeUsernameInKeywordSearch = $includeUsernameInKeywordSearch;
     }
 
     public function getTotalResults()
@@ -304,19 +343,27 @@ class UserList extends DatabaseItemList implements PagerProviderInterface, Pagin
      */
     public function filterByKeywords($keywords)
     {
-        $expressions = [
-            $this->query->expr()->like('u.uName', ':keywords'),
-            $this->query->expr()->like('u.uEmail', ':keywords'),
-        ];
-
-        $keys = \Concrete\Core\Attribute\Key\UserKey::getSearchableIndexedList();
-        foreach ($keys as $ak) {
-            $cnt = $ak->getController();
-            $expressions[] = $cnt->searchKeywords($keywords, $this->query);
+        $expressions = [];
+        if ($this->includeUsernameInKeywordSearch) {
+            $expressions[] = $this->query->expr()->like('u.uName', ':keywords');
         }
-        $expr = $this->query->expr();
-        $this->query->andWhere(call_user_func_array([$expr, 'orX'], $expressions));
-        $this->query->setParameter('keywords', '%' . $keywords . '%');
+        if ($this->includeEmailInKeywordSearch) {
+            $expressions[] = $this->query->expr()->like('u.uEmail', ':keywords');
+        }
+        if ($this->includeAttributesInKeywordSearch) {
+            $keys = \Concrete\Core\Attribute\Key\UserKey::getSearchableIndexedList();
+            foreach ($keys as $ak) {
+                $cnt = $ak->getController();
+                $expressions[] = $cnt->searchKeywords($keywords, $this->query);
+            }
+        }
+        if (count($expressions)) {
+            $expr = $this->query->expr();
+            $this->query->andWhere(call_user_func_array([$expr, 'orX'], $expressions));
+            $this->query->setParameter('keywords', '%' . $keywords . '%');
+        } else {
+            throw new \RuntimeException(t('Called filterByKeywords but did not provide any valid criteria to search.'));
+        }
     }
 
     /**

@@ -13,7 +13,9 @@ final class Version20210813173441 extends AbstractMigration implements Repeatabl
 
     public function upgradeDatabase()
     {
-        // Nothing here. Had to move this back to Version20210216184000
+        \Concrete\Core\Database\Schema\Schema::refreshCoreXMLSchema([
+            'PageTypes',
+        ]);
     }
 
 }

@@ -37,6 +37,7 @@ use Concrete\Core\Permission\Access\Entity\UserEntity as UserPermissionAccessEnt
 use Concrete\Core\Permission\AssignableObjectInterface;
 use Concrete\Core\Permission\AssignableObjectTrait;
 use Concrete\Core\Permission\Key\PageKey as PagePermissionKey;
+use Concrete\Core\Production\Modes;
 use Concrete\Core\Site\SiteAggregateInterface;
 use Concrete\Core\Site\Tree\TreeInterface;
 use Concrete\Core\StyleCustomizer\Skin\SkinInterface;
@@ -156,6 +157,118 @@ class Page extends Collection implements CategoryMemberInterface,
      * @var int|null
      */
     protected $siteTreeID;
+
+    /**
+     * @deprecated What's deprecated is the "public" part.
+     *
+     * @var int|null
+     */
+    public $pkgID;
+
+    /**
+     * @deprecated What's deprecated is the "public" part.
+     *
+     * @var string|false|null
+     */
+    public $pkgHandle;
+
+    /**
+     * @deprecated What's deprecated is the "public" part.
+     *
+     * @var int|null
+     */
+    public $cPointerID;
+
+    /**
+     * @deprecated What's deprecated is the "public" part.
+     *
+     * @var int|bool|null
+     */
+    public $cIsDraft;
+
+    /**
+     * @deprecated What's deprecated is the "public" part.
+     *
+     * @var int|bool|null
+     */
+    public $cIsActive;
+
+    /**
+     * @deprecated What's deprecated is the "public" part.
+     *
+     * @var string|null
+     */
+    public $cFilename;
+
+    /**
+     * @deprecated What's deprecated is the "public" part.
+     *
+     * @var int|null
+     */
+    public $ptID;
+
+    /**
+     * @deprecated What's deprecated is the "public" part.
+     *
+     * @var int|null
+     */
+    public $cDisplayOrder;
+
+    /**
+     * @deprecated What's deprecated is the "public" part.
+     *
+     * @var string|null
+     */
+    public $cInheritPermissionsFrom;
+
+    /**
+     * @deprecated What's deprecated is the "public" part.
+     *
+     * @var bool|int|null
+     */
+    public $cOverrideTemplatePermissions;
+
+    /**
+     * @deprecated What's deprecated is the "public" part.
+     *
+     * @var int|bool|null
+     */
+    public $cIsTemplate;
+
+    /**
+     * @deprecated What's deprecated is the "public" part.
+     *
+     * @var int|null
+     */
+    public $uID;
+
+    /**
+     * @deprecated What's deprecated is the "public" part.
+     *
+     * @var string|null
+     */
+    public $cPath;
+
+    /**
+     * @deprecated What's deprecated is the "public" part.
+     *
+     * @var int|null
+     */
+    public $cParentID;
+
+    /**
+     * @deprecated What's deprecated is the "public" part.
+     *
+     * @var int|null
+     */
+    public $cChildren;
+
+    /**
+     * @deprecated What's deprecated is the "public" part.
+     *
+     * @var int|null
+     */
+    public $cCacheFullPageContent;
 
     /**
      * The custom name of the alias page.
@@ -1309,7 +1422,7 @@ class Page extends Collection implements CategoryMemberInterface,
      */
     public function getCollectionPath()
     {
-        return isset($this->cPath) ? $this->cPath : null;
+        return $this->cPath;
     }
 
     /**
@@ -1417,13 +1530,11 @@ class Page extends Collection implements CategoryMemberInterface,
     /**
      * Returns full url for the current page.
      *
-     * @param bool $appendBaseURL UNUSED
-     *
      * @return string
      */
-    public function getCollectionLink($appendBaseURL = false)
+    public function getCollectionLink()
     {
-        return Core::make('helper/navigation')->getLinkToCollection($this, $appendBaseURL);
+        return Core::make('helper/navigation')->getLinkToCollection($this);
     }
 
     /**
@@ -1946,7 +2057,7 @@ class Page extends Collection implements CategoryMemberInterface,
     public function setTheme($pl)
     {
         $db = Database::connection();
-        $db->executeQuery('update CollectionVersions set pThemeID = ? where cID = ? and cvID = ?', [$pl->getThemeID(), $this->cID, $this->vObj->getVersionID()]);
+        $db->executeQuery('update CollectionVersions set pThemeID = ? where cID = ? and cvID = ?', [$pl ? $pl->getThemeID() : 0, $this->cID, $this->vObj->getVersionID()]);
         $this->themeObject = $pl;
     }
 
@@ -2262,6 +2373,11 @@ EOT
         }
         if (is_object($ptm)) {
             $classes[] = 'page-template-' . str_replace('_', '-', $ptm->getPageTemplateHandle());
+        }
+
+        $config = app('config');
+        if (in_array($config->get('concrete.security.production.mode'), [Modes::MODE_STAGING, Modes::MODE_DEVELOPMENT])) {
+            $classes[] = 'ccm-production-mode-' . $config->get('concrete.security.production.mode');
         }
 
         /*
@@ -3491,6 +3607,8 @@ EOT
         $db = Database::connection();
         $txt = Core::make('helper/text');
 
+        $theme = false;
+
         // the passed collection is the parent collection
         $cParentID = $this->getCollectionID();
 
@@ -3553,6 +3671,10 @@ EOT
             // then we use the page type's default template
             if ($pt->getPageTypeDefaultPageTemplateID() > 0 && !$template) {
                 $template = $pt->getPageTypeDefaultPageTemplateObject();
+            }
+
+            if ($pt->getPageTypeDefaultThemeID()) {
+                $theme = $pt->getPageTypeDefaultThemeObject();
             }
 
             $ptID = $pt->getPageTypeID();
@@ -3632,6 +3754,10 @@ EOT
         }
         if (!$hasAuthor) {
             $u->refreshUserGroups();
+        }
+
+        if ($theme) {
+            $pc->setTheme($theme);
         }
 
         return $pc;
@@ -3770,6 +3896,21 @@ EOT
             $upcomingScheduledDateInSeconds = $upcomingScheduledDateObject->getTimestamp() - $date->getOverridableNow(true);
             if ($lifetime > $upcomingScheduledDateInSeconds) {
                 $lifetime = $upcomingScheduledDateInSeconds;
+            }
+        }
+
+        // Let's check block output lifetime
+        if ($app['config']->get('concrete.cache.full_page_lifetime_block')) {
+            $blocks = $this->getBlocks();
+            $blocks = array_merge($this->getGlobalBlocks(), $blocks);
+            foreach ($blocks as $b) {
+                if ($b->cacheBlockOutput()) {
+                    $blockLifetime = $b->getBlockOutputCacheLifetime();
+                    // We should ignore 0 because it means forever
+                    if ($blockLifetime > 0 && $lifetime > $blockLifetime) {
+                        $lifetime = $blockLifetime;
+                    }
+                }
             }
         }
 

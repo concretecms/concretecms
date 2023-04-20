@@ -21,6 +21,9 @@
     <field name="ptDefaultPageTemplateID" type="integer" size="10">
       <unsigned/>
     </field>
+    <field name="ptDefaultThemeID" type="integer" size="10">
+      <unsigned/>
+    </field>
     <field name="ptAllowedPageTemplates" type="string" size="1">
       <default value="A"/>
     </field>
@@ -174,6 +177,7 @@
     </field>
     <field name="ptComposerFormLayoutSetName" type="string" size="255"/>
     <field name="ptComposerFormLayoutSetDescription" type="text" size="65535"/>
+    <field name="ptComposerFormLayoutSetCollapseType" type="string" size="12"/>
     <field name="ptComposerFormLayoutSetDisplayOrder" type="integer" size="10">
       <unsigned/>
       <default value="0"/>

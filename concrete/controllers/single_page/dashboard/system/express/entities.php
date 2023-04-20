@@ -2,6 +2,7 @@
 
 namespace Concrete\Controller\SinglePage\Dashboard\System\Express;
 
+use Concrete\Core\Api\Command\SynchronizeScopesCommand;
 use Concrete\Core\Attribute\Category\SearchIndexer\ExpressSearchIndexer;
 use Concrete\Core\Entity\Express\Entity;
 use Concrete\Core\Entity\Express\Form;
@@ -60,6 +61,12 @@ class Entities extends DashboardPageController
                     $entity->setSupportsCustomDisplayOrder(true);
                 }
 
+                if ($this->app->make('config')->get('concrete.api.enabled')) {
+                    $entity->setIncludeInRestApi(
+                        $this->request->request->getBoolean('include_in_rest_api', false)
+                    );
+                }
+
                 $form = new Form();
                 $form->setEntity($entity);
                 $form->setName('Form');
@@ -88,6 +95,10 @@ class Entities extends DashboardPageController
                     }
                 }
 
+                if ($this->app->make('config')->get('concrete.api.enabled')) {
+                    $command = new SynchronizeScopesCommand();
+                    $this->app->executeCommand($command);
+                }
                 $this->flash('success', t('Object added successfully.'));
                 return Redirect::to('/dashboard/system/express/entities', 'view_entity', $entity->getId());
             }
@@ -381,6 +392,12 @@ class Entities extends DashboardPageController
                 $entity->setSupportsCustomDisplayOrder(true);
             }
 
+            if ($this->app->make('config')->get('concrete.api.enabled')) {
+                $entity->setIncludeInRestApi(
+                    $this->request->request->getBoolean('include_in_rest_api', false)
+                );
+            }
+
             $this->entityManager->persist($entity);
             $this->entityManager->flush();
 
@@ -394,6 +411,11 @@ class Entities extends DashboardPageController
             $folder = Node::getByID($this->request->request('entity_results_parent_node_id'));
             if (is_object($folder)) {
                 $resultsNode->move($folder);
+            }
+
+            if ($this->app->make('config')->get('concrete.api.enabled')) {
+                $command = new SynchronizeScopesCommand();
+                $this->app->executeCommand($command);
             }
 
             $this->flash('success', t('Object updated successfully.'));

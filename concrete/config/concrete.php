@@ -6,9 +6,9 @@ return [
      *
      * @var string
      */
-    'version' => '9.1.3',
-    'version_installed' => '9.1.3',
-    'version_db' => '20220908074900', // the key of the latest database migration
+    'version' => '9.2.0',
+    'version_installed' => '9.2.0',
+    'version_db' => '20230308163514', // the key of the latest database migration
 
     /*
      * Installation status
@@ -139,7 +139,7 @@ return [
         'extensions_denylist' => '*.php;*.php2;*.php3;*.php4;*.php5;*.php7;*.php8;*.phtml;*.phar;*.htaccess;*.pl;*.phpsh;*.pht;*.shtml;*.cgi',
 
         /*
-         * Numoer of maximum parallel uploads 
+         * Numoer of maximum parallel uploads
          */
         'parallel' => 4,
 
@@ -225,14 +225,14 @@ return [
          *
          * @var bool
          */
-        'overrides' => true,
+        'overrides' => false,
 
         /*
          * Cache Blocks
          *
          * @var bool
          */
-        'blocks' => true,
+        'blocks' => false,
 
         /*
          * Cache Assets
@@ -268,6 +268,13 @@ return [
          * @var string
          */
         'full_page_lifetime' => 'default',
+
+        /**
+         * Respect lifetime of each block on the page
+         *
+         * @var bool
+         */
+        'full_page_lifetime_block' => false,
 
         /*
          * Custom lifetime value, only used if concrete.cache.full_page_lifetime is 'custom'
@@ -457,6 +464,13 @@ return [
             'Concrete\Core\Messenger\Transport\DefaultAsync\DefaultSyncTransport', // used for tests and advanced configuration
         ],
 
+        'failure' => [
+            'default_receiver' => 'failed',
+            'transports' => [
+                'Concrete\Core\Messenger\Transport\DefaultFailed\DefaultFailedTransport',
+            ],
+        ],
+
         'consume' => [
 
             /**
@@ -609,7 +623,7 @@ return [
          */
         'enabled' => true,
         'default' => [
-            'address' => 'concrete-cms-noreply@concretecms',
+            'address' => '',
             'name' => '',
         ],
         'form_block' => [
@@ -756,6 +770,7 @@ return [
          * @var string (now|async)
          */
         'basic_thumbnailer_generation_strategy' => 'now',
+        'help_overlay' => true,
         'require_version_comments' => false,
         /*
          * Control whether a block type can me moved to different block type sets
@@ -814,9 +829,10 @@ return [
             'height' => 500,
         ],
         'user_avatar' => [
-            'width' => 80,
-            'height' => 80,
+            'width' => 120,
+            'height' => 120,
             'default' => ASSETS_URL_IMAGES . '/avatar_none.png',
+            'resolution' => '2', // Set this to 1 if you want width and height to match in the cropper exactly.
         ],
     ],
 
@@ -872,6 +888,10 @@ return [
          * Don't resize the files with these mime types (space-separated list)
          */
         'dont_resize_mimetypes' => 'image/gif',
+        /**
+         * Enable asciify to sanitize name of uploaded files
+         */
+        'enable_filename_asciify' => true,
     ],
 
     'search_users' => [
@@ -944,7 +964,7 @@ return [
         'concrete' => 'http://marketplace.concretecms.com',
         'concrete_secure' => 'https://marketplace.concretecms.com',
         'concrete_community' => 'https://community.concretecms.com',
-        'background_feed' => '//backgroundimages.concretecms.com/wallpaper',
+        'background_feed' => 'https://backgroundimages.concretecms.com/wallpaper',
         'privacy_policy' => '//www.concretecms.com/about/legal/privacy-policy',
         'background_feed_secure' => 'https://backgroundimages.concrete5.org/wallpaper',
         'background_info' => 'http://backgroundimages.concretecms.com/get_image_data.php',
@@ -1159,6 +1179,7 @@ return [
             'required_lower_case' => 0,
             'required_upper_case' => 0,
             'reuse' => 0,
+            'max_age' => null, // Max age (in days) before users have to change their password
             'custom_regex' => [],
 
             /**
@@ -1184,6 +1205,10 @@ return [
             'hash_cost_log2' => 12,
 
             'legacy_salt' => '',
+            'reset_message' => [
+                'password_reset' => '',
+                'password_expired' => '',
+            ]
         ],
         'email' => [
             'test_mx_record' => false,
@@ -1252,11 +1277,22 @@ return [
 
             'invalidate_on_ip_mismatch' => true,
 
+            'ignored_ip_mismatches' => [],
+
+            'enable_user_specific_ignored_ip_mismatches' => false,
+
             'invalidate_inactive_users' => [
                 // Is the automatically logout inactive users setting enabled?
                 'enabled' => false,
                 // Time window (in seconds) for inactive users to be automatically logout
                 'time' => 300,
+            ],
+        ],
+        'production' => [
+            'mode' => 'production',
+            'staging' => [
+                // Whether to always show the staging notification bar, even for logged-out users.
+                'show_notification_to_unregistered_users' => false,
             ],
         ],
         'misc' => [
@@ -1323,6 +1359,7 @@ return [
     'seo' => [
         'exclude_words' => 'a, an, as, at, before, but, by, for, from, is, in, into, like, of, off, on, onto, per, ' .
             'since, than, the, this, that, to, up, via, with',
+        'enable_slug_asciify' => true,
 
         /*
          * URL rewriting

@@ -1,5 +1,8 @@
 <?php defined('C5_EXECUTE') or die('Access Denied.'); ?>
 <?php
+
+use Concrete\Core\Express\Component\ExpressEntrySelectInstanceFactory;
+
 $options = [];
 $selectedIDs = [];
 if (isset($selectedEntities)) {
@@ -11,6 +14,11 @@ if (isset($selectedEntities)) {
         $selectedIDs[] = $selectedEntity->getID();
     }
 }
+
+$targetEntityHandle = $control->getAssociation()->getTargetEntity()->getHandle();
+$factory = app(ExpressEntrySelectInstanceFactory::class);
+$instance = $factory->createInstance($targetEntityHandle);
+
 ?>
 <div class="mb-3">
     <?php if ($view->supportsLabel()) {
@@ -22,57 +30,12 @@ if (isset($selectedEntities)) {
         <span class="text-muted small"><?=t('Required')?></span>
     <?php } ?>
 
-    <select multiple data-select-and-add="<?= $control->getId(); ?>" class="form-control form-select" name="express_association_<?= $control->getId(); ?>[]">
-        <?php foreach ($options as $option) { ?>
-            <option selected value="<?=$option['exEntryID']?>"><?=$option['label']?></option>
-        <?php } ?>
-    </select>
+    <div data-vue="cms">
+        <concrete-express-entry-select
+                :entry-id='<?=json_encode($selectedIDs)?>'
+                input-name="express_association_<?= $control->getId(); ?>[]"
+                access-token="<?=$instance->getAccessToken()?>"
+                entity="<?=$targetEntityHandle?>">
+        </concrete-express-entry-select>
+    </div>
 </div>
-
-<script type="text/javascript">
-    $(function() {
-        $('select[data-select-and-add="<?= $control->getId(); ?>"]').selectpicker(
-            {
-                liveSearch: true
-            }
-        ).ajaxSelectPicker(
-            {
-                ajax: {
-                    url: "<?= \URL::to('/ccm/system/express/entry/get_json'); ?>",
-                    data: {
-                        'exEntityID': '<?= $control->getAssociation()->getTargetEntity()->getID(); ?>',
-                        'keyword': "{{{q}}}"
-                    },
-                    method: 'get'
-                },
-                preprocessData: function(data) {
-                    var entries = []
-                    if (data.hasOwnProperty('data')) {
-                        data.data.forEach(function(entry) {
-                            entries.push({
-                                'value': entry.exEntryID,
-                                'text': entry.label
-                            })
-                        })
-                    }
-                    return entries
-                },
-                locale: {
-                    currentlySelected: "<?=t('Currently Selected'); ?>",
-                    emptyTitle: "<?=t('Select and begin typing'); ?>",
-                    errorText: "<?=t('Unable to retrieve results'); ?>",
-                    searchPlaceholder: "<?=t('Search...'); ?>",
-                    statusInitialized: "<?=t('Start typing a search query'); ?>",
-                    statusNoResults: "<?=t('No Results'); ?>",
-                    statusSearching: "<?=t('Searching...'); ?>",
-                    statusTooShort: "<?=t('Please enter more characters'); ?>",
-                },
-                preserveSelected: false,
-                clearOnEmpty: false,
-                minLength: 2,
-            },
-        );
-    });
-
-
-</script>

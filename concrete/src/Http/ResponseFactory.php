@@ -7,7 +7,6 @@ use Concrete\Core\Application\ApplicationAwareTrait;
 use Concrete\Core\Command\Process\Menu\Item\RunningProcessesItem;
 use Concrete\Core\Config\Repository\Repository;
 use Concrete\Core\Controller\Controller;
-use Concrete\Core\Http\Service\Ajax;
 use Concrete\Core\Localization\Localization;
 use Concrete\Core\Page\Collection\Collection;
 use Concrete\Core\Page\Controller\PageController;
@@ -56,7 +55,7 @@ class ResponseFactory implements ResponseFactoryInterface, ApplicationAwareInter
      */
     public function create($content, $code = Response::HTTP_OK, array $headers = [])
     {
-        return Response::create($content, $code, $headers);
+        return new Response($content, $code, $headers);
     }
 
     /**
@@ -64,7 +63,7 @@ class ResponseFactory implements ResponseFactoryInterface, ApplicationAwareInter
      */
     public function json($data, $code = Response::HTTP_OK, array $headers = [])
     {
-        return JsonResponse::create($data, $code, $headers);
+        return new JsonResponse($data, $code, $headers);
     }
 
     /**
@@ -72,7 +71,7 @@ class ResponseFactory implements ResponseFactoryInterface, ApplicationAwareInter
      */
     public function notFound($content, $code = Response::HTTP_NOT_FOUND, $headers = [])
     {
-        if ($this->app->make(Ajax::class)->isAjaxRequest($this->request)) {
+        if ($this->request->isXmlHttpRequest()) {
             $this->localization->pushActiveContext(Localization::CONTEXT_SITE);
             $responseData = [
                 'error' => t('Page not found'),
@@ -135,7 +134,7 @@ class ResponseFactory implements ResponseFactoryInterface, ApplicationAwareInter
      */
     public function redirect($to, $code = Response::HTTP_MOVED_PERMANENTLY, $headers = [])
     {
-        return RedirectResponse::create($to, $code, $headers);
+        return new RedirectResponse($to, $code, $headers);
     }
 
     /**
@@ -158,6 +157,12 @@ class ResponseFactory implements ResponseFactoryInterface, ApplicationAwareInter
      */
     public function controller(Controller $controller, $code = Response::HTTP_OK, $headers = [])
     {
+        $dl = $this->app->make('multilingual/detector');
+        $c = Page::getCurrentPage();
+        // if the page exists and is not in error
+        if ($c && !$c->isError()) {
+            $dl->setupSiteInterfaceLocalization($c);
+        }
         $this->localization->pushActiveContext(Localization::CONTEXT_SITE);
         try {
             $request = $this->request;

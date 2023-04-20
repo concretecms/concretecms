@@ -2,6 +2,7 @@
 
 use Concrete\Core\Support\Facade\Url;
 use Concrete\Core\Url\Resolver\Manager\ResolverManagerInterface;
+use Concrete\Core\Announcement\AnnouncementService;
 
 defined('C5_EXECUTE') or die('Access Denied.');
 
@@ -10,7 +11,7 @@ $app = Concrete\Core\Support\Facade\Facade::getFacadeApplication();
 $dh = $app->make('helper/concrete/dashboard');
 $sh = $app->make('helper/concrete/dashboard/sitemap');
 
-if (isset($cp) && $cp->canViewToolbar() && (!$dh->inDashboard())) {
+if (isset($cp) && $cp->canViewToolbar() && (!$dh->inDashboard()) && !$view->isEditingDisabled()) {
     $cih = $app->make('helper/concrete/ui');
     $ihm = $app->make('helper/concrete/ui/menu');
     $valt = $app->make('helper/validation/token');
@@ -37,7 +38,18 @@ if (isset($cp) && $cp->canViewToolbar() && (!$dh->inDashboard())) {
         }
     }
 
-    ?>
+    $announcementService = $app->make(AnnouncementService::class);
+    /**
+     * @var $announcementService AnnouncementService
+     */
+    if ($broadcast = $announcementService->getBroadcast()) {
+        ?>
+        <div data-wrapper="concrete-announcement-broadcast">
+            <concrete-announcement-broadcast :broadcast='<?=json_encode($broadcast, JSON_HEX_APOS)?>'>
+            </concrete-announcement-broadcast>
+        </div>
+    <?php } ?>
+
     <?=View::element('icons')?>
     <div id="ccm-page-controls-wrapper" class="ccm-ui">
         <div id="ccm-toolbar" class="<?= $show_titles ? 'titles' : '' ?> <?= $large_font ? 'large-font' : '' ?>">
@@ -203,9 +215,10 @@ if (isset($cp) && $cp->canViewToolbar() && (!$dh->inDashboard())) {
                 ?>
                 <li data-guide-toolbar-action="help" class="float-end d-none d-md-block">
                     <a <?php if ($show_tooltips) { ?>class="launch-tooltip"<?php } ?> data-bs-toggle="tooltip"
-                       data-bs-placement="bottom" href="#"
-                       data-panel-url="<?= URL::to('/ccm/system/panels/help') ?>"
-                       title="<?= t('View help about the CMS.') ?>" data-launch-panel="help">
+                       data-launch="help-modal"
+                       data-bs-placement="bottom"
+                       href="<?= URL::to('/ccm/system/dialogs/help/help') ?>?ccm_token=<?=$valt->generate('view_help')?>"
+                       title="<?= t('View help about the CMS.') ?>">
                         <svg><use xlink:href="#icon-help" /></svg><span
                                 class="ccm-toolbar-accessibility-title ccm-toolbar-accessibility-title-add-page"><?= tc('toolbar', 'Help') ?></span>
                     </a>
@@ -329,6 +342,18 @@ if (isset($cp) && $cp->canViewToolbar() && (!$dh->inDashboard())) {
                                 'type' => 'info',
                                 'icon' => 'fas fa-cog',
                                 'buttons' => $buttons,
+                            ]);
+                        }
+                        $publishEndDate = $vo->getPublishEndDate();
+                        if ($publishEndDate && $dateHelper->toDateTime() > $dateHelper->toDateTime($publishEndDate)) {
+                            $date = $dateHelper->formatDate($publishEndDate);
+                            $time = $dateHelper->formatTime($publishEndDate);
+                            $message = t(/*i18n: %1$s is a date, %2$s is a time */'This version of the page was closed on %1$s at %2$s', $date, $time);
+                            echo $cih->notify([
+                                'title' => t('Closed Page.'),
+                                'text' => $message,
+                                'type' => 'info',
+                                'icon' => 'fas fa-cog',
                             ]);
                         }
                     }

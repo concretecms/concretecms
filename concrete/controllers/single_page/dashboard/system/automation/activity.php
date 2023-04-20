@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Controller\SinglePage\Dashboard\System\Automation;
 
+use Concrete\Core\Command\Process\Command\ClearProcessDataCommand;
 use Concrete\Core\Command\Process\Command\DeleteProcessCommand;
 use Concrete\Core\Command\Process\Logger\LoggerFactoryInterface;
 use Concrete\Core\Entity\Command\Process;
@@ -21,6 +22,18 @@ class Activity extends DashboardPageController
         $this->subscribeToProcessTopicsIfNotificationEnabled();
     }
 
+    public function clear_processes()
+    {
+        if (!$this->token->validate('clear_processes')) {
+            $this->error->add($this->token->getErrorMessage());
+        }
+        if (!$this->error->has()) {
+            $this->app->executeCommand(new ClearProcessDataCommand());
+            $this->flash('success', t('Process data cleared successfully.'));
+            return $this->buildRedirect($this->action('view'));
+        }
+        $this->view();
+    }
 
     public function delete($token = null)
     {

@@ -59,6 +59,13 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
     /** @var null|string  */
     protected $btTable = null;
     protected $btID;
+    /** @var array */
+    protected $requestArray;
+    /**
+     * @deprecated What's deprecated is the "public" part.
+     * @var string|null
+     */
+    public $btCachedBlockRecord;
 
     /**
      * @internal
@@ -72,6 +79,13 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
      * @var bool
      */
     protected $supportSavingNullValues = false;
+
+    /**
+     * @deprecated What's deprecated is the "public" part.
+     *
+     * @var \Concrete\Core\Area\Area|null
+     */
+    public $area;
 
     public function getBlockTypeInSetName()
     {
@@ -247,8 +261,7 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
      */
     public function getPermissionObject()
     {
-        $bp = new Permissions(Block::getByID($this->bID));
-
+        $bp = new Checker($this->block);
         return $bp;
     }
 
@@ -696,7 +709,7 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
     {
         // the only post that matters is the one for this attribute's name space
         $req = ($this->requestArray == false) ? $_POST : $this->requestArray;
-        if (is_array($req['_bf'])) {
+        if (isset($req['_bf']) && is_array($req['_bf'])) {
             $identifier = $this->identifier;
             $b = $this->getBlockObject();
             if (is_object($b)) {

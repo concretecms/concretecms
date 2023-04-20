@@ -190,7 +190,7 @@ class Range extends Denylist
         $config = $this->app->make('config');
         $bom = $config->get('concrete.export.csv.include_bom') ? $config->get('concrete.charset_bom') : '';
 
-        return StreamedResponse::create(
+        return new StreamedResponse(
             function () use ($app, $type, $ranges, $bom) {
                 $writer = $app->make(IPRangesCsvWriter::class, [
                     'writer' => $app->make(WriterFactory::class)->createFromPath('php://output', 'w'),

@@ -1,9 +1,13 @@
 <?php
+
 namespace Concrete\Core\Entity\User;
 
 use Concrete\Core\Notification\Subject\SubjectInterface;
 use Concrete\Core\User\Group\Group;
 use Concrete\Core\User\UserInfo;
+use DateTime;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -15,90 +19,94 @@ use Doctrine\ORM\Mapping as ORM;
 class GroupSignupRequestAccept implements SubjectInterface
 {
     /**
-     * @var int
      * @ORM\Id
      * @ORM\Column(type="integer", options={"unsigned":true})
      * @ORM\GeneratedValue(strategy="AUTO")
+     *
+     * @var int|null NULL if not yet flushed to the database
      */
     protected $id;
 
     /**
      * @ORM\OneToMany(targetEntity="\Concrete\Core\Entity\Notification\GroupSignupRequestAcceptNotification", mappedBy="signup", cascade={"remove"}),
+     *
+     * @var \Doctrine\Common\Collections\Collection
      */
     protected $notifications;
 
     /**
-     * @var int
      * @ORM\Column(type="integer", options={"unsigned":true})
+     *
+     * @var int
      */
     protected $gID;
 
     /**
-     * @var User
      * @ORM\ManyToOne(targetEntity="\Concrete\Core\Entity\User\User")
      * @ORM\JoinColumn(name="uID", referencedColumnName="uID", onDelete="SET NULL")
+     *
+     * @var \Concrete\Core\Entity\User\User|null
      */
     protected $user;
 
     /**
-     * @var User
      * @ORM\ManyToOne(targetEntity="\Concrete\Core\Entity\User\User")
      * @ORM\JoinColumn(name="managerUID", referencedColumnName="uID", onDelete="SET NULL")
+     *
+     * @var \Concrete\Core\Entity\User\User|null
      */
     protected $manager;
 
     /**
-     * @var \DateTime
      * @ORM\Column(type="datetime")
+     *
+     * @var \DateTime
      */
-    protected $RequestAccepted = null;
+    protected $RequestAccepted;
 
     /**
-     * GroupSignupRequestAccept constructor.
-     * @param Group $group
-     * @param \Concrete\Core\User\User $user
-     * @param \Concrete\Core\User\User $manager
-     * @throws \Exception
+     * @param \Concrete\Core\User\Group\Group|null $group
+     * @param \Concrete\Core\User\User|null $user
+     * @param \Concrete\Core\User\User|null $manager
      */
     public function __construct($group = null, $user = null, $manager = null)
     {
+        $this->notifications = new ArrayCollection();
         if ($group instanceof Group) {
             $this->gID = $group->getGroupID();
         }
-
         if ($user instanceof \Concrete\Core\User\User) {
-            if ($user->getUserInfoObject() instanceof UserInfo) {
-                $this->user = $user->getUserInfoObject()->getEntityObject();
+            $userInfo = $user->getUserInfoObject();
+            if ($userInfo instanceof UserInfo) {
+                $this->user = $userInfo->getEntityObject();
             }
         }
-
         if ($manager instanceof \Concrete\Core\User\User) {
-            $this->manager = $user->getUserInfoObject()->getEntityObject();
+            $userInfo = $manager->getUserInfoObject();
+            if ($userInfo instanceof UserInfo) {
+                $this->manager = $userInfo->getEntityObject();
+            }
         }
-
-        $this->RequestAccepted = new \DateTime();
+        $this->RequestAccepted = new DateTime();
     }
 
-    /**
-     * @return User
-     */
-    public function getManager(): User
+    public function getManager(): ?User
     {
         return $this->manager;
     }
 
     /**
-     * @param User $manager
-     * @return GroupSignupRequestAccept
+     * @return $this
      */
-    public function setManager(User $manager): GroupSignupRequestAccept
+    public function setManager(User $manager): self
     {
         $this->manager = $manager;
+
         return $this;
     }
 
     /**
-     * @return Group
+     * @return \Concrete\Core\User\Group\Group|null
      */
     public function getGroup()
     {
@@ -106,79 +114,70 @@ class GroupSignupRequestAccept implements SubjectInterface
     }
 
     /**
-     * @return int
+     * @return int|null return NULL if not yet flushed to the database
      */
-    public function getId(): int
+    public function getId(): ?int
     {
         return $this->id;
     }
 
     /**
-     * @param int $id
-     * @return GroupSignupRequestAccept
+     * @return $this
      */
-    public function setId(int $id): GroupSignupRequestAccept
+    public function setId(?int $id): self
     {
         $this->id = $id;
+
         return $this;
     }
 
-    /**
-     * @return int
-     */
     public function getGID(): int
     {
         return $this->gID;
     }
 
     /**
-     * @param int $gID
-     * @return GroupSignupRequestAccept
+     * @return $this
      */
-    public function setGID(int $gID): GroupSignupRequestAccept
+    public function setGID(int $gID): self
     {
         $this->gID = $gID;
+
         return $this;
     }
 
-    /**
-     * @return User
-     */
-    public function getUser(): User
+    public function getUser(): ?User
     {
         return $this->user;
     }
 
     /**
-     * @param User $user
-     * @return GroupSignupRequestAccept
+     * @return $this
      */
-    public function setUser(User $user): GroupSignupRequestAccept
+    public function setUser(User $user): self
     {
         $this->user = $user;
+
         return $this;
     }
 
-    /**
-     * @return \DateTime
-     */
-    public function getRequestAccepted(): \DateTime
+    public function getRequestAccepted(): DateTime
     {
         return $this->RequestAccepted;
     }
 
     /**
-     * @param \DateTime $RequestAccepted
-     * @return GroupSignupRequestAccept
+     * @return $this
      */
-    public function setRequestAccepted(\DateTime $RequestAccepted): GroupSignupRequestAccept
+    public function setRequestAccepted(DateTime $RequestAccepted): self
     {
         $this->RequestAccepted = $RequestAccepted;
+
         return $this;
     }
 
     /**
-     * Get the date of this notification
+     * Get the date of this notification.
      *
      * @return \DateTime
      */
@@ -190,5 +189,13 @@ class GroupSignupRequestAccept implements SubjectInterface
     public function getUsersToExcludeFromNotification()
     {
         return [];
+    }
+
+    /**
+     * @return \Concrete\Core\Entity\Notification\GroupSignupRequestAcceptNotification[]
+     */
+    public function getNotifications(): Collection
+    {
+        return $this->notifications;
     }
 }

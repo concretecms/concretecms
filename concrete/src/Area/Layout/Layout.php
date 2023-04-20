@@ -177,6 +177,8 @@ abstract class Layout extends ConcreteObject
 
     abstract public function exportDetails($node);
 
+    abstract public function getDisplayName();
+
     /**
      * @param \SimpleXMLElement $node
      */

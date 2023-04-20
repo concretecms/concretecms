@@ -11,37 +11,57 @@ use Concrete\Core\Tree\Node\Type\Topic;
 class Controller extends BlockController implements UsesFeatureInterface
 {
     /**
-     * @var string
-     */
-    public $titleText = '';
-
-    /**
-     * @var bool
+     * @var int|string|null
      */
     public $useCustomTitle = false;
 
     /**
-     * @var bool
+     * @var int|string|null
      */
     public $useFilterTitle = false;
 
     /**
-     * @var bool
+     * @var int|string|null
      */
     public $useFilterTopic = false;
 
     /**
-     * @var bool
+     * @var int|string|null
      */
     public $useFilterTag = false;
 
     /**
-     * @var bool
+     * @var int|string|null
      */
     public $useFilterDate = false;
 
     /**
-     * @var string
+     * @var string|null
+     */
+    public $topicTextFormat;
+
+    /**
+     * @var string|null
+     */
+    public $tagTextFormat;
+
+    /**
+     * @var string|null
+     */
+    public $dateTextFormat;
+
+    /**
+     * @var string|null
+     */
+    public $filterDateFormat;
+
+    /**
+     * @var string|null
+     */
+    public $titleText = '';
+
+    /**
+     * @var string|null
      */
     public $formatting = 'h1';
 

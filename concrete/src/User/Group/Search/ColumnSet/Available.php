@@ -4,9 +4,16 @@ namespace Concrete\Core\User\Group\Search\ColumnSet;
 
 use Concrete\Core\Tree\Node\Node;
 use Concrete\Core\User\Group\Group;
+use Concrete\Core\User\Group\Search\ColumnSet\Column\GroupIdColumn;
 
 class Available extends DefaultSet
 {
+
+    public function __construct()
+    {
+        parent::__construct();
+        $this->addColumn(new GroupIdColumn());
+    }
 
     /**
      * @param Node $node

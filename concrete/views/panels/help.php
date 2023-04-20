@@ -20,13 +20,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
 <?php } ?>
 
 <?php
-if ($message === null) {
-    if ($page === null || !$page->isSystemPage()) {
-        echo '<div class="mb-5">';
-        View::element('help/introduction');
-        echo '</div>';
-    }
-} else {
+if ($message !== null) {
     echo '<div class="mb-5">';
     View::element('help/message', compact('message', 'messageFormatter'));
     echo '</div>';

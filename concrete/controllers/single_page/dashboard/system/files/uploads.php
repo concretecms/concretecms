@@ -29,6 +29,7 @@ class Uploads extends DashboardPageController
             }
         }
         $this->set('maxImageSizePage', $maxImageSizePage);
+        $this->set('enableFilenameAsciify', $this->app['config']->get('concrete.file_manager.enable_filename_asciify', true));
         return null;
     }
 
@@ -79,6 +80,9 @@ class Uploads extends DashboardPageController
         } else {
             $service->setChunkingEnabled(false);
         }
+
+        $this->app['config']->save('concrete.file_manager.enable_filename_asciify', (bool) $this->post('enableFilenameAsciify'));
+
         $this->flash('success', t('Options saved successfully.'));
 
         return $this->app->make(ResponseFactoryInterface::class)->redirect($this->action(''), 302);

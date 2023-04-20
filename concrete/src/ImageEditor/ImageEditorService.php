@@ -8,13 +8,17 @@ use Concrete\Core\Entity\File\Image\Editor;
 use Concrete\Core\Entity\File\Version;
 use Concrete\Core\Entity\Package;
 use Concrete\Core\Error\ErrorList\ErrorList;
+use Concrete\Core\File\Image\Thumbnail\Type\Type;
 use Concrete\Core\Filesystem\Element;
 use Concrete\Core\Filesystem\ElementManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
-
+use Concrete\Core\File\Image\Thumbnail\Type\Version as ThumbnailTypeVersion;
 class ImageEditorService
 {
+
+    const DEFAULT_EDITOR = 'default';
+
     /** @var EntityManagerInterface */
     protected $entityManager;
     protected $imageEditorRepository;
@@ -46,7 +50,7 @@ class ImageEditorService
 
     private function setupDefaultEditor()
     {
-        $this->addEditor("toast", t("Toast Image Editor"));
+        $this->addEditor(self::DEFAULT_EDITOR, t("Image Editor"));
     }
 
     public function removeEditor(
@@ -55,7 +59,7 @@ class ImageEditorService
     {
         $errorList = new ErrorList();
 
-        if ($editor->getHandle() === "toast") {
+        if ($editor->getHandle() === self::DEFAULT_EDITOR) {
             $errorList->add(t("You can not remove the default editor."));
         }
 
@@ -196,7 +200,7 @@ class ImageEditorService
     {
         try {
             /** @noinspection PhpIncompatibleReturnTypeInspection */
-            return $this->imageEditorRepository->findOneBy(["handle" => "toast"]);
+            return $this->imageEditorRepository->findOneBy(["handle" => self::DEFAULT_EDITOR]);
         } catch (Exception $e) {
         }
     }
@@ -204,23 +208,33 @@ class ImageEditorService
     /**
      * @param Version $fileVersion
      */
-    public function renderActiveEditor(
+    public function renderActiveImageEditor(
         $fileVersion
     )
     {
         if ($fileVersion instanceof Version) {
             $activeEditor = $this->getActiveEditor();
-            /** @var ElementManager $elementManager */
-            $elementManager = $this->app->make(ElementManager::class);
-
-            $element = $elementManager->get(
-                'files/edit/image_editor/' . $activeEditor->getHandle(),
-                null,
-                null,
-                $activeEditor->getPackageHandle()
-            );
-
+            $element = $activeEditor->getImageEditorElement();
             if ($element instanceof Element) {
+                $element->getElementController()->set("fileVersion", $fileVersion);
+                $element->render();
+            }
+        }
+    }
+
+    /**
+     * @param Version $fileVersion
+     */
+    public function renderActiveThumbnailEditor(
+        $fileVersion,
+        ThumbnailTypeVersion $thumbnail
+    )
+    {
+        if ($fileVersion instanceof Version) {
+            $activeEditor = $this->getActiveEditor();
+            $element = $activeEditor->getThumbnailEditorHandle();
+            if ($element instanceof Element) {
+                $element->getElementController()->setThumbnail($thumbnail);
                 $element->getElementController()->set("fileVersion", $fileVersion);
                 $element->render();
             }

@@ -30,6 +30,146 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class Controller extends BlockController implements UsesFeatureInterface
 {
+    /**
+     * @var string|null
+     */
+    public $setIds;
+
+    /**
+     * @var int|string|null
+     */
+    protected $folderID = 0;
+
+    /**
+     * @var string|null
+     */
+    public $setMode;
+
+    /**
+     * @var int|string|null
+     */
+    public $onlyCurrentUser;
+
+    /**
+     * @var string|null
+     */
+    public $tags;
+
+    /**
+     * @var string|null
+     */
+    public $viewProperties;
+
+    /**
+     * @var string|null
+     */
+    public $expandableProperties;
+
+    /**
+     * @var string|null
+     */
+    public $searchProperties;
+
+    /**
+     * @var string|null
+     */
+    public $orderBy;
+
+    /**
+     * @var int|string|null
+     */
+    public $displayLimit;
+
+    /**
+     * @var bool|int|string|null
+     */
+    public $displayOrderDesc;
+
+    /**
+     * @var int|string|null
+     */
+    public $addFilesToSetID;
+
+    /**
+     * @var int|string|null
+     */
+    public $maxThumbWidth;
+
+    /**
+     * @var int|string|null
+     */
+    public $maxThumbHeight;
+
+    /**
+     * @var int|string|null
+     */
+    public $enableSearch;
+
+    /**
+     * @var string|null
+     */
+    public $heightMode;
+
+    /**
+     * @var string|null
+     */
+    public $downloadFileMethod;
+
+    /**
+     * @var int|string|null
+     */
+    public $fixedHeightSize;
+
+    /**
+     * @var string|null
+     */
+    public $headerBackgroundColor;
+
+    /**
+     * @var string|null
+     */
+    public $headerBackgroundColorActiveSort;
+
+    /**
+     * @var string|null
+     */
+    public $headerTextColor;
+
+    /**
+     * @var int|string|null
+     */
+    public $allowFileUploading;
+
+    /**
+     * @var int|string|null
+     */
+    public $allowInPageFileManagement;
+
+    /**
+     * @var string|null
+     */
+    public $tableName;
+
+    /**
+     * @var string|null
+     */
+    public $tableDescription;
+
+    /**
+     * @var bool|int|string|null
+     */
+    public $tableStriped;
+
+    /**
+     * @var string|null
+     */
+    public $rowBackgroundColorAlternate;
+
+    /**
+     * @var int|string|null
+     */
+    public $hideFolders;
+
     protected $btInterfaceWidth = '640';
     protected $btInterfaceHeight = '400';
     protected $btTable = 'btDocumentLibrary';
@@ -38,9 +178,6 @@ class Controller extends BlockController implements UsesFeatureInterface
 
     /** @var FileFolder|null */
     protected $rootNode = null;
-
-    /** @var int */
-    protected $folderID = 0;
 
     public function getBlockTypeDescription()
     {
@@ -286,6 +423,11 @@ class Controller extends BlockController implements UsesFeatureInterface
                     $subselect
                         ->select('count(distinct fsf.fsID) as sets')
                         ->addSelect('fsf.fID')
+                        // fsID and fsDisplayOrder are only needed if ordering by fileset.
+                        // Although when including files that are in all filesets
+                        // ordering by fileset doesn't always make sense let's do it anyway!
+                        ->addSelect('fsf.fsID')
+                        ->addSelect('fsf.fsDisplayOrder')
                         ->from('FileSetFiles', 'fsf')
                         ->where('fsf.fsID in (:sets)')
                         ->groupBy('fsf.fID');
@@ -309,6 +451,11 @@ class Controller extends BlockController implements UsesFeatureInterface
 
                     $query->andWhere($expr);
                     break;
+            }
+
+            if ($this->orderBy == 'set') {
+                $order = $this->displayOrderDesc ? 'desc' : 'asc';
+                $query->orderBy('fsf.fsID', 'asc')->addOrderBy('fsf.fsDisplayOrder', $order);
             }
         }
 
@@ -635,7 +782,7 @@ class Controller extends BlockController implements UsesFeatureInterface
 
     /**
      * @param int |false $bID BlockID
-     * @return Symfony\Component\HttpFoundation\Response | void
+     * @return \Symfony\Component\HttpFoundation\Response | void
      * @throws UserMessageException
      * @throws \Illuminate\Contracts\Container\BindingResolutionException
      */
@@ -734,11 +881,15 @@ class Controller extends BlockController implements UsesFeatureInterface
         $list = $this->setupFolderFileFolderFilter($list);
         $list->ignorePermissions();
 
-        $order = $this->displayOrderDesc ? 'desc' : 'asc';
-        $orderBy = $this->getSortColumnKey($this->orderBy, 'filelist');
-        if ($orderBy) {
-            $list->getQueryObject()->addSelect($orderBy);
-            $list->sortBy($orderBy, $order);
+        // Ordering by FileSet Order is dealt with in setupFolderFileSetFilter()
+        // No need to run this code here then
+        if ($this->orderBy != 'set') {
+            $order = $this->displayOrderDesc ? 'desc' : 'asc';
+            $orderBy = $this->getSortColumnKey($this->orderBy, 'filelist');
+            if ($orderBy) {
+                $list->getQueryObject()->addSelect($orderBy);
+                $list->sortBy($orderBy, $order);
+            }
         }
 
         if ($keywords = $this->request('keywords')) {

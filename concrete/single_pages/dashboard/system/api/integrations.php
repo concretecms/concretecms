@@ -16,7 +16,7 @@ if ($pagination->getTotalResults() > 0) { ?>
         <?php foreach ($pagination->getCurrentPageResults() as $client) { ?>
         <tr data-details-url="<?=$view->action('view_client', $client->getIdentifier())?>">
             <td class="text-nowrap"><?=$client->getIdentifier()?></td>
-            <td class="ccm-search-results-name w-100"><?=$client->getName()?></td>
+            <td class="ccm-search-results-name w-100"><?=h($client->getName())?></td>
         </tr>
         <?php } ?>
         </tbody>

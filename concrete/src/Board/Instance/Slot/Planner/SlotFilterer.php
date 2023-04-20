@@ -87,8 +87,9 @@ class SlotFilterer
         // for this template.
 
         $collection = new PossibleContentObjectCollection();
+        $objectGroupsCount = count($objectGroups);
         for ($i = 0; $i < $contentSlots; $i++) {
-            $availableContentObjectsForSlot = $objectGroups[$i];
+            $availableContentObjectsForSlot = $i < $objectGroupsCount ? $objectGroups[$i] : null;
             if ($availableContentObjectsForSlot) {
                 $contentObjects = $availableContentObjectsForSlot->getContentObjects();
                 $filterer = $potentialTemplate->getDriver()->getSlotFilterer();
@@ -111,7 +112,6 @@ class SlotFilterer
         PossibleContentObjectCollection $possibleContentObjectCollection,
         int $slot
     ) {
-        $planner = $plannedInstance->getInstance()->getBoard()->getTemplate()->getDriver()->getLayoutPlanner();
         $objectCollection = new ObjectCollection();
         foreach($possibleContentObjectCollection->getArray() as $slot => $contentObjects) {
             if (!empty($contentObjects[0])) {

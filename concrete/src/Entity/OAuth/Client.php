@@ -2,10 +2,11 @@
 
 namespace Concrete\Core\Entity\OAuth;
 
-use Doctrine\ORM\Mapping as ORM;
+use Concrete\Core\Api\Documentation\RedirectUriFactory;
+use Doctrine\Common\Collections\ArrayCollection;
 use InvalidArgumentException;
 use League\OAuth2\Server\Entities\ClientEntityInterface;
-
+use Doctrine\ORM\Mapping as ORM;
 /**
  * @ORM\Entity(repositoryClass="ClientRepository")
  * @ORM\Table(
@@ -13,7 +14,7 @@ use League\OAuth2\Server\Entities\ClientEntityInterface;
  *     uniqueConstraints={@ORM\UniqueConstraint(name="client_idx", columns={"clientKey", "clientSecret"})}
  * )
  */
-class Client implements ClientEntityInterface
+class Client implements ClientEntityInterface, \JsonSerializable
 {
 
     /**
@@ -58,12 +59,41 @@ class Client implements ClientEntityInterface
     protected $clientSecret;
 
     /**
+     * @var bool
+     * @ORM\Column(type="boolean")
+     */
+    protected $documentationEnabled = false;
+
+    /**
+     * @var bool
+     * @ORM\Column(type="boolean")
+     */
+    protected $hasCustomScopes = false;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="Scope", inversedBy="clients")
+     * @ORM\JoinTable(name="OAuth2ClientScopes",
+     *      joinColumns={@ORM\JoinColumn(name="clientIdentifier", referencedColumnName="identifier", onDelete="CASCADE")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="scopeIdentifier", referencedColumnName="identifier")}
+     *      )
+     */
+    protected $scopes;
+
+    /**
      * The type of consent this client must get from the user
      *
      * @var int
      * @ORM\Column(type="integer", options={"unsigned": true})
      */
     protected $consentType = self::CONSENT_SIMPLE;
+
+    /**
+     * Client constructor.
+     */
+    public function __construct()
+    {
+        $this->scopes = new ArrayCollection();
+    }
 
     /**
      * {@inheritdoc}
@@ -144,6 +174,18 @@ class Client implements ClientEntityInterface
     }
 
     /**
+     * Returns the actual redirect URI bound to the entity. This is a string (sometimes containing a | to explode
+     * into multiple.) We have a separate method because the getRedirectUri method below actually splits piped
+     * strings into arrays, and it also appends the Swagger UI doc redirectUri if docs are enabled on the client.
+     *
+     * @return string|null
+     */
+    public function getSpecifiedRedirectUri(): ?string
+    {
+        return $this->redirectUri;
+    }
+
+    /**
      * {@inheritdoc}
      *
      * @see \League\OAuth2\Server\Entities\ClientEntityInterface::getRedirectUri()
@@ -154,14 +196,37 @@ class Client implements ClientEntityInterface
          * Note – An empty redirect URL will still trigger League's redirect URI check, because it's looking for
          * is_string() and this returns an empty string. So let's use the falsy check to turn even empty strings
          * into nulls.
+         *
+         * Additional note - I'm keeping the original comment above but this is NO LONGER THE CASE. League OAuth2
+         * 8.2+ requires a redirectUri on auth code flows. So the change to null isn't necessary but I'm going to
+         * keep it (AE)
          */
         $url = $this->redirectUri ? $this->redirectUri : null;
 
-        if (is_string($url) && strpos($url, '|') !== false) {
-            return explode('|', $url);
+        $urls = [];
+
+        if (is_string($url)) {
+            if (strpos($url, '|') !== false) {
+                $urls[] = explode('|', $url);
+            } else {
+                $urls[] = $url;
+            }
+        } else {
+            $urls[] = '';
         }
 
-        return $url;
+        if ($this->isDocumentationEnabled()) {
+            $urls[] = app(RedirectUriFactory::class)->createDocumentationRedirectUri($this);
+        }
+
+        if (count($urls) > 1) {
+            return $urls;
+        } else if (isset($urls[0])) {
+            // we could technically return just the array every time but this will keep tests working just as before
+            return $urls[0];
+        } else {
+            return '';
+        }
     }
 
     /**
@@ -198,4 +263,59 @@ class Client implements ClientEntityInterface
 
         $this->consentType = $consentType;
     }
+
+    /**
+     * @return bool
+     */
+    public function isDocumentationEnabled(): bool
+    {
+        return $this->documentationEnabled;
+    }
+
+    /**
+     * @param bool $documentationEnabled
+     */
+    public function setDocumentationEnabled(bool $documentationEnabled): void
+    {
+        $this->documentationEnabled = $documentationEnabled;
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasCustomScopes(): bool
+    {
+        return $this->hasCustomScopes;
+    }
+
+    /**
+     * @param bool $hasCustomScopes
+     */
+    public function setHasCustomScopes(bool $hasCustomScopes): void
+    {
+        $this->hasCustomScopes = $hasCustomScopes;
+    }
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getScopes()
+    {
+        return $this->scopes;
+    }
+
+    public function setScopes($scopes): void
+    {
+        $this->scopes = $scopes;
+    }
+
+
+    #[\ReturnTypeWillChange]
+    public function jsonSerialize()
+    {
+        return [
+            'identifier' => $this->getIdentifier(),
+        ];
+    }
+
 }

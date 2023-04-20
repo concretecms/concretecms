@@ -47,19 +47,67 @@ use Concrete\Core\Permission\Checker;
 
 class Controller extends BlockController implements NotificationProviderInterface, UsesFeatureInterface
 {
+    /**
+     * @var string|null
+     */
+    public $exFormID;
+
+    /**
+     * @var string|null
+     */
+    public $submitLabel;
+
+    /**
+     * @var string|null
+     */
+    public $thankyouMsg;
+
+    /**
+     * @var bool|int|string|null
+     */
+    public $notifyMeOnSubmission;
+
+    /**
+     * @var string|null
+     */
+    public $recipientEmail;
+
+    /**
+     * @var int|string|null
+     */
+    public $displayCaptcha;
+
+    /**
+     * @var bool|int|string|null
+     */
+    public $storeFormSubmission = 1;
+
+    /**
+     * @var int|string|null
+     */
+    public $redirectCID;
+
+    /**
+     * @var string|null
+     */
+    public $replyToEmailControlID;
+
+    /**
+     * @var int|string|null
+     */
+    public $addFilesToSet;
+
+    /**
+     * @var int|string|null
+     */
+    public $addFilesToFolder;
+
     protected $btInterfaceWidth = 640;
     protected $btInterfaceHeight = 700;
     protected $btCacheBlockOutput = false;
     protected $btTable = 'btExpressForm';
     protected $btExportPageColumns = ['redirectCID'];
     protected $btCopyWhenPropagate = true;
-
-    public $notifyMeOnSubmission;
-    public $recipientEmail;
-    public $replyToEmailControlID;
-    public $storeFormSubmission = 1;
-    public $exFormID;
-    public $addFilesToFolder;
 
     const FORM_RESULTS_CATEGORY_NAME = 'Forms';
 
@@ -251,6 +299,9 @@ class Controller extends BlockController implements NotificationProviderInterfac
                         $key = $this->saveAttributeKeySettings($controller, $key, $post);
                         $entityManager->persist($key);
                         $entityManager->flush();
+
+                        $this->runAttributeIndexer($entity, $key);
+
                         $control->setAttributeKey($key);
                     }
                     break;
@@ -311,6 +362,7 @@ class Controller extends BlockController implements NotificationProviderInterfac
         if ($token->validate('update_control')) {
             $fieldSet = $this->getFormFieldSet();
             $post = $this->request->request->all();
+            $entity = $fieldSet->getForm()->getEntity();
             $controlId = $post['id'] ?? null;
             $entityManager = $this->app->make(EntityManagerInterface::class);
 
@@ -337,7 +389,7 @@ class Controller extends BlockController implements NotificationProviderInterfac
                         $key = $this->saveAttributeKeySettings($controller, $key, $post);
                         $entityManager->persist($key);
                         $entityManager->flush();
-                        $control->setAttributeKey($key);
+                        $this->runAttributeIndexer($entity, $key, true);
                         $control->setAttributeKey($key);
                     } else {
                         if ($control instanceof TextControl) {
@@ -591,7 +643,7 @@ class Controller extends BlockController implements NotificationProviderInterfac
                         $submittedData .= $value->getPlainTextValue() . "\r\n\r\n";
                     }
 
-                    if (!$antispam->check($submittedData, 'form_block')) {
+                    if (!$antispam->check($submittedData, 'express_form_block')) {
                         // Remove the entry and silently fail.
                         $entityManager->refresh($entry);
                         $entityManager->remove($entry);
@@ -650,7 +702,7 @@ class Controller extends BlockController implements NotificationProviderInterfac
                     if (is_object($c) && !$c->isError()) {
                         $r = Redirect::page($c);
                         $target = strpos($r->getTargetUrl(),"?") === false ? $r->getTargetUrl()."?" : $r->getTargetUrl()."&";
-                        $r->setTargetUrl($target . 'form_success=1&entry=' . $entry->getID());
+                        $r->setTargetUrl($target . 'form_success=1&entry=' . $entry->getPublicIdentifier());
                     }
                 }
 
@@ -691,6 +743,31 @@ class Controller extends BlockController implements NotificationProviderInterfac
         $key->setAttributeKeySettings($settings);
         $entityManager->persist($settings);
         return $key;
+    }
+
+    /**
+     * @param \Concrete\Core\Entity\Express\Entity $entity
+     * @param ExpressKey $key
+     * @param bool update
+     *
+     * This method should always preserve the attribute's handle when updating
+     */
+    protected function runAttributeIndexer(Entity $entity, ExpressKey $key, $update = false)
+    {
+        $category = $entity->getAttributeKeyCategory();
+
+        if (is_object($category)) {
+            $indexer = $category->getSearchIndexer();
+
+            if (is_object($indexer)) {
+                if ($update) {
+                    // when updating we do not change the attribute Handle even if we change the Name
+                    $indexer->updateRepositoryColumns($category, $key, $key->getAttributeKeyHandle());
+                } else {
+                    $indexer->updateRepositoryColumns($category, $key);
+                }
+            }
+        }
     }
 
     public function edit()

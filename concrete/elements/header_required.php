@@ -193,7 +193,9 @@ if (!empty($alternateHreflangTags)) {
 <?php
 $v = View::getRequestInstance();
 if ($cp) {
-    View::element('page_controls_header', ['cp' => $cp, 'c' => $c]);
+    if (!$v->isEditingDisabled()) {
+        View::element('page_controls_header', ['cp' => $cp, 'c' => $c]);
+    }
     if ($isEditMode) {
         $cookie = $app->make('cookie');
         if ($cookie->get('ccmLoadAddBlockWindow')) {

@@ -23,7 +23,6 @@ class ExecutableFilesTest extends TestCase
                 && strpos($file, 'concrete/vendor/') !== 0
                 && strpos($file, 'packages/') !== 0
                 && strpos($file, 'updates/') !== 0
-                && strpos($file, '.travis/') !== 0
             ;
         });
         sort($actual);

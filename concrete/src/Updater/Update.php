@@ -7,6 +7,7 @@ use Concrete\Core\Cache\Command\ClearCacheCommand;
 use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Database\DatabaseStructureManager;
 use Concrete\Core\Foundation\Environment\FunctionInspector;
+use Concrete\Core\SiteInformation\SiteInformationSurvey;
 use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\Updater\Migrations\Configuration;
 use Concrete\Core\Utility\Service\Validation\Numbers;
@@ -255,12 +256,20 @@ class Update
         $app = Application::getFacadeApplication();
         $config = $app->make('config');
         try {
+            $formParams = [
+                'LOCALE' =>  Localization::activeLocale(),
+                'BASE_URL_FULL' => (string) Application::getApplicationURL(),
+                'APP_VERSION' => APP_VERSION
+            ];
+            $survey = $app->make(SiteInformationSurvey::class);
+            $results = $survey->getSaver()->getResults();
+            if ($results && is_array($results)) {
+                foreach ($results as $key => $value) {
+                    $formParams['INFO'][$key] = $value;
+                }
+            }
             $response = $app->make('http/client')->post($config->get('concrete.updates.services.get_available_updates'),
-                ['form_params' => [
-                    'LOCALE' =>  Localization::activeLocale(),
-                    'BASE_URL_FULL' => (string) Application::getApplicationURL(),
-                    'APP_VERSION' => APP_VERSION
-                ]]
+                ['form_params' => $formParams]
             );
             $update = RemoteApplicationUpdateFactory::getFromJSON($response->getBody()->getContents());
         } catch (Exception $x) {

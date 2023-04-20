@@ -67,7 +67,7 @@ class Messenger extends AbstractController
             $this->eventDispatcher->addSubscriber(new StopWorkerOnMessageLimitListener(5, $logger));
             $this->eventDispatcher->addSubscriber(new StopWorkerOnTimeLimitListener(5, $logger));
             $worker = new Worker(
-                [$this->transportManager->getReceivers()->get(TransportInterface::DEFAULT_ASYNC)],
+                [TransportInterface::DEFAULT_ASYNC => $this->transportManager->getReceivers()->get(TransportInterface::DEFAULT_ASYNC)],
                 $this->bus,
                 $this->eventDispatcher,
                 $logger

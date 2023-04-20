@@ -30,7 +30,8 @@ $router->all('/approve_recent/{cID}/{token}', 'Page::approveRecent');
 $router->all('/publish_now/{cID}/{token}', 'Page::publishNow');
 $router->all('/cancel_schedule/{cID}/{token}', 'Page::cancelSchedule');
 $router->all('/chooser/search/{keywords}', 'Page\Chooser::searchPages');
-$router->all('/autocomplete', 'Page\Autocomplete::view');
+$router->post('/autocomplete', 'Page\Autocomplete::view');
+$router->post('/autocomplete/get_selected', 'Page\Autocomplete::getSelectedPages');
 $router->all('/preview_version', 'Page\PreviewVersion::view');
 $router->all('/url_slug', 'Page\UrlSlug::view');
 

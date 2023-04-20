@@ -19,15 +19,63 @@ defined('C5_EXECUTE') or die('Access Denied.');
 
 class Controller extends BlockController implements UsesFeatureInterface
 {
+    /**
+     * @var string|null
+     */
+    public $title;
+
+    /**
+     * @var string|null
+     */
+    public $body;
+
+    /**
+     * @var string|null
+     */
+    public $buttonText;
+
+    /**
+     * @var string|null
+     */
+    public $buttonExternalLink;
+
+    /**
+     * @var int|string|null
+     */
+    public $buttonInternalLinkCID;
+
+    /**
+     * @var int|string|null
+     */
+    public $buttonFileLinkID;
+
+    /**
+     * @var string|null
+     */
+    public $buttonColor;
+
+    /**
+     * @var string|null
+     */
+    public $buttonStyle;
+
+    /**
+     * @var string|null
+     */
+    public $buttonSize;
+
+    /**
+     * @var string|null
+     */
+    public $titleFormat;
+
+    /**
+     * @var string|null
+     */
+    protected $icon;
+
     public $helpers = ['form'];
 
-    public $buttonInternalLinkCID;
-    public $buttonExternalLink;
-    public $buttonFileLinkID;
-    public $buttonText;
-    public $buttonSize;
-    public $buttonStyle;
-    public $buttonColor;
     public $buttonIcon;
 
     protected $btDefaultSet = 'basic';
@@ -39,8 +87,6 @@ class Controller extends BlockController implements UsesFeatureInterface
     protected $btCacheBlockOutputOnPost = true;
     protected $btCacheBlockOutputForRegisteredUsers = true;
     protected $btCacheBlockOutputLifetime = 300;
-
-    protected $icon;
 
     /**
      * {@inheritdoc}
@@ -156,9 +202,6 @@ class Controller extends BlockController implements UsesFeatureInterface
       }
     }
 
-
-
-
     public function save($args)
     {
         list($imageLinkType, $imageLinkValue) = $this->app->make(DestinationPicker::class)->decode('imageLink', $this->getImageLinkPickers(), null, null, $args);
@@ -166,12 +209,9 @@ class Controller extends BlockController implements UsesFeatureInterface
         $args['buttonInternalLinkCID'] = $imageLinkType === 'page' ? $imageLinkValue : 0;
         $args['buttonFileLinkID'] = $imageLinkType === 'file' ? $imageLinkValue : 0;
         $args['buttonExternalLink'] = $imageLinkType === 'external_url' ? $imageLinkValue : '';
-        /** @var SanitizeService $security */
         $security = $this->app->make('helper/security');
         $args['icon'] = $security->sanitizeString($args['icon'] ?? '');
 
         parent::save($args);
     }
-    
-
 }

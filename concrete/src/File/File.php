@@ -12,6 +12,7 @@ use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\Tree\Node\Type\File as FileNode;
 use Concrete\Core\Tree\Node\Type\FileFolder;
 use Concrete\Core\User\UserInfoRepository;
+use Concrete\Core\Utility\Service\Validation\Numbers;
 use Doctrine\ORM\EntityManagerInterface;
 use Concrete\Core\User\User;
 
@@ -45,6 +46,32 @@ class File
         $entityManager = $app->make(EntityManagerInterface::class);
 
         return $fUUID ? $entityManager->getRepository(FileEntity::class)->findOneBy(["fUUID" => $fUUID]) : null;
+    }
+
+    /**
+     * Returns a file object in several conditions. If a UUID is given, we only check using that method.
+     * Otherwise, if an integer is given, we retrieve the object first. Then, we check to see if a UUID is
+     * present on the file. If a UUID is not present, we return the object. If it is present, we
+     * do not, because this file is no longer accessible via the numerical ID when using this method.
+     *
+     * @param $id
+     */
+    public static function getByUUIDOrID($id): ?FileEntity
+    {
+        if (is_string($id) && uuid_is_valid($id)) {
+            return static::getByUUID($id);
+        } else {
+            $numbers = new Numbers();
+            if ($numbers->integer($id)) {
+                $file = static::getByID($id);
+                if ($file) {
+                    if (!$file->hasFileUUID()) {
+                        return $file;
+                    }
+                }
+            }
+        }
+        return null;
     }
 
     /**

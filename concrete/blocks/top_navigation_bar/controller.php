@@ -23,15 +23,62 @@ defined('C5_EXECUTE') or die('Access Denied.');
 
 class Controller extends BlockController implements UsesFeatureInterface, FileTrackableInterface
 {
-    public $helpers = ['form'];
+    /**
+     * @var string|null
+     */
+    public $brandingText;
 
+    /**
+     * @var int|string|null
+     */
     public $brandingLogo = 0;
+
+    /**
+     * @var int|string|null
+     */
     public $brandingTransparentLogo = 0;
-    public $includeBrandLogo = false;
+
+    /**
+     * @var bool|int|string|null
+     */
     public $includeBrandText = false;
+
+    /**
+     * @var bool|int|string|null
+     */
+    public $includeBrandLogo = false;
+
+    /**
+     * @var bool|int|string|null
+     */
+    public $includeTransparency;
+
+    /**
+     * @var bool|int|string|null
+     */
     public $includeStickyNav = false;
+
+    /**
+     * @var bool|int|string|null
+     */
+    public $includeNavigation;
+
+    /**
+     * @var bool|int|string|null
+     */
     public $includeNavigationDropdowns = false;
+
+    /**
+     * @var bool|int|string|null
+     */
     public $includeSearchInput;
+
+    /**
+     * @var int|string|null
+     */
+    public $searchInputFormActionPageID;
+
+    public $helpers = ['form'];
 
     protected $btInterfaceWidth = 640;
     protected $btInterfaceHeight = 500;
@@ -129,7 +176,7 @@ class Controller extends BlockController implements UsesFeatureInterface, FileTr
         return $ids;
     }
 
-    protected function getNavigation(): Navigation
+    protected function getHomePage(): Page
     {
         $section = Section::getByLocale(\Localization::getInstance()->getLocale());
         if ($section instanceof Section) {
@@ -138,6 +185,12 @@ class Controller extends BlockController implements UsesFeatureInterface, FileTr
             $site = $this->app->make('site')->getSite();
             $home = $site->getSiteHomePageObject();
         }
+        return $home;
+    }
+
+    protected function getNavigation(): Navigation
+    {
+        $home = $this->getHomePage();
         $children = $home->getCollectionChildren();
         $navigation = new Navigation();
 
@@ -172,9 +225,7 @@ class Controller extends BlockController implements UsesFeatureInterface, FileTr
 
     public function view()
     {
-        $site = $this->app->make('site')->getSite();
-        $home = $site->getSiteHomePageObject();
-
+        $home = $this->getHomePage();
         if ($this->brandingLogo) {
             $logo = File::getByID($this->brandingLogo);
             if ($logo) {
@@ -289,7 +340,7 @@ class Controller extends BlockController implements UsesFeatureInterface, FileTr
         }
         return $files;
     }
-    
+
     public function getPageItemNavTarget($pageItem) // Respect nav_target Page Attribute & External Link targets
     {
 	if (!is_object($pageItem) || !$pageItem instanceof \Concrete\Core\Navigation\Item\PageItem) {

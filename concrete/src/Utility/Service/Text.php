@@ -12,8 +12,10 @@
  */
 namespace Concrete\Core\Utility\Service;
 
+use Concrete\Core\Config\Repository\Repository;
 use Concrete\Core\Foundation\ConcreteObject;
 use Config;
+use Concrete\Core\Support\Facade\Application;
 use DOMDocument;
 use Patchwork\Utf8;
 
@@ -392,12 +394,19 @@ class Text
      */
     public function urlify($handle, $max_length = null, $locale = '', $removeExcludedWords = true)
     {
+        $app = Application::getFacadeApplication();
+        $config = $app->make(Repository::class);
         if ($max_length === null) {
-            $max_length = Config::get('concrete.seo.segment_max_length');
+            $max_length = $config->get('concrete.seo.segment_max_length');
         }
-        $text = strtolower(str_replace(array("\r", "\n", "\t"), ' ', $this->asciify($handle, $locale)));
+        if ($config->get('concrete.seo.enable_slug_asciify')) {
+            $text = $this->asciify($handle, $locale);
+        } else {
+            $text = $handle;
+        }
+        $text = strtolower(str_replace(array("\r", "\n", "\t"), ' ', $text));
         if ($removeExcludedWords) {
-            $excludeSeoWords = Config::get('concrete.seo.exclude_words');
+            $excludeSeoWords = $config->get('concrete.seo.exclude_words');
             if (is_string($excludeSeoWords)) {
                 if (strlen($excludeSeoWords)) {
                     $remove_list = explode(',', $excludeSeoWords);
@@ -407,7 +416,7 @@ class Text
                     $remove_list = array();
                 }
             } else {
-                $remove_list = URLify::$remove_list;
+                $remove_list = \URLify::$remove_list;
             }
             if (count($remove_list)) {
                 $text = preg_replace('/\b(' . implode('|', $remove_list) . ')\b/i', '', $text);

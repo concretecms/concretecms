@@ -2,15 +2,15 @@
   margin: 0 auto 0 auto;
 }
 
-img.u-avatar {
-  max-width: 80px;
-  max-height: 80px;
-  border: 1px solid $gray-500;
-  border-radius: $border-radius;
-}
-
 div.ccm-user-detail-basics {
   display: flex;
+
+  img.u-avatar {
+    max-width: 80px;
+    max-height: 80px;
+    border: 1px solid $gray-500;
+    border-radius: $border-radius;
+  }
 
   .ccm-user-detail-basics-avatar {
     align-self: center;
@@ -18,8 +18,24 @@ div.ccm-user-detail-basics {
     padding-right: 1.5em;
   }
 
+  .ccm-user-detail-basics-avatar-edit {
+    &:hover {
+      img {
+        border: 1px solid $primary;
+      }
+    }
+  }
+
   .ccm-user-detail-basics-name {
     align-self: center;
+  }
+}
+
+#edit-avatar-modal {
+  img.u-avatar {
+    border: 1px solid $gray-500;
+    border-radius: $border-radius;
+    max-width: 100%;
   }
 }
 

@@ -15,13 +15,14 @@ if ($enable_server_sent_events) {
 
                 <div class="form-group">
                     <?= $form->label('address', t('Hub Publish URL')) ?>
-                    <?= $form->text(
+                    <div class="float-end label badge bg-primary">Required</div>
+                    <?= $form->url(
                         'publishUrl',
                         $publishUrl,
                         ['placeholder' => 'https://mercure.my.server.io/.well-known/mercure']
                     ) ?>
                     <div class="help-block"><?= t(
-                            'A server that handles subscription requests and distributes the content to subscribers when the corresponding topics have been updated.'
+                            'A server that handles subscription requests and distributes the content to subscribers when the corresponding topics have been updated. <b>Make sure you fill out this URL!</b>'
                         ) ?></div>
                 </div>
 
@@ -137,8 +138,8 @@ if ($enable_server_sent_events) {
                             jwtKey: '<?=$jwtKey?>',
                             publisherPrivateKey: '<?=$publisherPrivateKey?>',
                             subscriberPrivateKey: '<?=$subscriberPrivateKey?>',
-                            eventSourceUrl: '<?=$eventSourceUrl?>',
-                            testConnectionTopicUrl: '<?=$testConnectionTopicUrl?>',
+                            eventSourceUrl: '<?=$eventSourceUrl ?? ''?>',
+                            testConnectionTopicUrl: '<?=$testConnectionTopicUrl ?? null?>',
                             eventSource: null,
                         },
                         mounted() {

@@ -41,6 +41,7 @@ foreach ($output as $position => $assets) {
 <script>
 $(document).ready(function() {
     var imageEditor = new window.tuiImageEditor('#tui-image-editor-container', {
+        usageStatistics: false,
         includeUI: {
             loadImage: {
                 path: '<?php echo h($fileVersion->getURL()); ?>',
@@ -56,12 +57,17 @@ $(document).ready(function() {
 
     $('.tui-image-editor-save-btn').on('click', function () {
         var url = CCM_DISPATCHER_FILENAME + '/ccm/system/file/edit/save/<?php echo h($fileVersion->getFileID()); ?>';
+        <?php if ($fileVersion->getType() == 'JPEG') { ?>
+            var format = 'jpeg'
+        <?php } else { ?>
+            var format = 'png'
+        <?php } ?>
 
         $.concreteAjax({
             dataType: 'json',
             data: {
                 token: CCM_SECURITY_TOKEN,
-                imageData: imageEditor.toDataURL()
+                imageData: imageEditor.toDataURL({format: format})
             },
             type: 'POST',
             url: url,

@@ -229,6 +229,7 @@ const FILENAME_CONVERSATION_EDITOR_OPTIONS = 'options.php';
 const FILENAME_STYLE_CUSTOMIZER_STYLES = 'styles.xml';
 const FILENAME_STYLE_CUSTOMIZER_DEFAULT_PRESET_NAME = 'defaults.less';
 const FILENAME_THEMES_SKIN_STYLESHEET_ENTRYPOINT = 'main.css';
+const FILENAME_CONTENT_XML = 'content.xml';
 
 /*
  * ----------------------------------------------------------------------------
@@ -314,9 +315,9 @@ const VIEW_CORE_THEME = 'concrete';
 /* -- Users -- */
 const USER_SUPER = 'admin';
 const USER_SUPER_ID = 1;
-const GUEST_GROUP_ID = '1';
-const REGISTERED_GROUP_ID = '2';
-const ADMIN_GROUP_ID = '3';
+const GUEST_GROUP_ID = 1;
+const REGISTERED_GROUP_ID = 2;
+const ADMIN_GROUP_ID = 3;
 const DEFAULT_GROUP_TYPE_ID = '1';
 const DEFAULT_GROUP_ROLE_ID = '1';
 
@@ -325,6 +326,9 @@ const DEFAULT_GROUP_ROLE_ID = '1';
  */
 const USER_FOREVER_COOKIE_LIFETIME = 1209600; // 14 days
 const USER_CHANGE_PASSWORD_URL_LIFETIME = 7200;
+/**
+ * @deprecated use app(\Concrete\Core\Session\SessionValidator::class)->getUserActivityThreshold()
+ */
 const ONLINE_NOW_TIMEOUT = 300;
 const UVTYPE_REGISTER = 0;
 const UVTYPE_CHANGE_PASSWORD = 1;
@@ -352,6 +356,7 @@ const USER_INACTIVE = 21;
 const USER_NON_VALIDATED = 22;
 const USER_SESSION_EXPIRED = 23;
 const USER_PASSWORD_RESET = 24;
+const USER_PASSWORD_EXPIRED = 25;
 const COLLECTION_MASTER_UNAUTH = 30;
 const COLLECTION_PRIVATE = 40;
 const BLOCK_NOT_AVAILABLE = 50;

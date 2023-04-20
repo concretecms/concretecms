@@ -1,5 +1,8 @@
 <?xml version="1.0"?>
 <concrete5-cif version="1.0">
+    <themes>
+        <theme handle="elemental" package="" activated="1"/>
+    </themes>
     <attributekeys>
         <attributekey handle="job_posting_department" name="Department" package="" searchable="1" indexed="1"
                       type="select" category="collection">

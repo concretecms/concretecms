@@ -1,6 +1,8 @@
 <?php
 defined('C5_EXECUTE') or die("Access Denied.");
 
+use Concrete\Block\CoreContainer\Controller as ContainerBlockController;
+
 /* @var Area $a */
 
 $btl = new BlockTypeList();
@@ -10,6 +12,13 @@ $ap = new Permissions($a);
 $class = 'ccm-area';
 if ($a->isGlobalArea()) {
     $class .= ' ccm-global-area';
+} else if ($a instanceof \Concrete\Core\Area\SubArea) {
+    $block = $a->getSubAreaBlockObject();
+    if ($block->getController() instanceof ContainerBlockController) {
+        $class .= ' ccm-container-area';
+    } else {
+        $class .= ' ccm-layout-area';
+    }
 }
 
 $c = Page::getCurrentPage();

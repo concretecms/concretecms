@@ -1,6 +1,11 @@
 #ccm-popover-menu-container {
   .popover {
+    position: absolute;
     z-index: 2001;
+
+    .popover-arrow {
+      display: none;
+    }
 
     &.bs-popover-top,
     &.bs-popover-bottom {

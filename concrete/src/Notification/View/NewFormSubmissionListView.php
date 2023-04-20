@@ -30,7 +30,7 @@ class NewFormSubmissionListView extends StandardListView
         if ($entry) {
             $entity = $entry->getEntity();
             if ($entity) {
-                return t('New form submission: <a href="%s"><strong>%s</strong></a>.',
+                return t('New entry submitted to form: <a href="%s"><strong>%s</strong></a>.',
                     \URL::to('/dashboard/reports/forms', 'view_entry', $entry->getID()), $entity->getEntityDisplayName());
             }
         }

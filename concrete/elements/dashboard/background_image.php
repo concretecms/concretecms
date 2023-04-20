@@ -42,14 +42,14 @@ if (Config::get('concrete.white_label.background_image') !== 'none' && !Config::
                 if (window.innerHeight > document.body.offsetHeight) {
                     $('.ccm-page-background-credit').css('position', 'fixed')
                 }
-                $('.ccm-page-background-credit').addClass('animated fadeIn').removeClass('d-none')
+                $('.ccm-page-background-credit').removeClass('d-none')
             });
-            $.backstretch("<?= Config::get('concrete.urls.background_feed') . '/' . $image ?>", {
-                fade: 500
-            });
+
         <?php } ?>
         
     });
+
+    $('body').css('background-image', 'url(<?= Config::get('concrete.urls.background_feed') . '/' . $image ?>)')
 </script>
 
 

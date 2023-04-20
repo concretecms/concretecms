@@ -18,7 +18,7 @@ jobs:
         env:
           MYSQL_ALLOW_EMPTY_PASSWORD: true
           MYSQL_ROOT_PASSWORD: root
-          MYSQL_DATABASE: concrete5_tests
+          MYSQL_DATABASE: ccm_tests
         ports:
           - 3306:3306/tcp
         options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
@@ -39,12 +39,13 @@ jobs:
           - php-version: 8.0
             operating-system: "ubuntu-latest"
             dependencies: "highest"
-          # Lowest doesn't work at the moment. Test with composer version 1 on 7.3 only.
           - php-version: 7.3
             operating-system: "ubuntu-latest"
             dependencies: "locked"
-            composer: "composer:v1, prestissimo"
           - php-version: 8.1
+            operating-system: "ubuntu-latest"
+            dependencies: "locked"
+          - php-version: 8.2
             operating-system: "ubuntu-latest"
             dependencies: "locked"
 
@@ -69,8 +70,8 @@ jobs:
 
       - name: "Prepare mysql user"
         run: |
-          mysql -h127.0.0.1 -uroot -proot -e "CREATE USER 'travis'@'%' IDENTIFIED BY '';"
-          mysql -h127.0.0.1 -uroot -proot -e "GRANT ALL PRIVILEGES ON *.* TO 'travis'@'%' WITH GRANT OPTION; FLUSH PRIVILEGES;"
+          mysql -h127.0.0.1 -uroot -proot -e "CREATE USER 'ccm_test'@'%' IDENTIFIED BY '';"
+          mysql -h127.0.0.1 -uroot -proot -e "GRANT ALL PRIVILEGES ON *.* TO 'ccm_test'@'%' WITH GRANT OPTION; FLUSH PRIVILEGES;"
 
       - name: "Install lowest dependencies"
         if: ${{ matrix.dependencies == 'lowest' }}

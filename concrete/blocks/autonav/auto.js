@@ -97,9 +97,13 @@ Concrete.event.bind('autonav.edit.open', function() {
         });
     }, 500));
 
-    _.defer(function() {
+    setTimeout(function() {
+        // Super not ideal: but unfortunately the way the concrete page input works
+        // we don't have the selected page ID immediately available to the DOM. So let's
+        // wait a second. Otherwise preview won't work.
+        // @TODO refactor this and the input.
         reloadPreview();
-    });
+    }, 1000);
 });
 
 ConcreteEvent.subscribe('SitemapSelectPage', function(){

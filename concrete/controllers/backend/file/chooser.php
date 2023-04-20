@@ -167,7 +167,7 @@ class Chooser extends Controller
             $list = new FolderItemList();
             $list->filterByParentFolder($folder);
             $list->getQueryObject()->addOrderBy('fv.fvType');
-            $list->sortBy('dateModified', 'desc');
+            $list->sortBy('name', 'asc');
             $list->setItemsPerPage(20);
             $list->enableAutomaticSorting();
 

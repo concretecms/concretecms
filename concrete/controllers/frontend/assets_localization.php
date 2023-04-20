@@ -43,6 +43,7 @@ var ccmi18n = ' . json_encode([
     'changeBlockCSS' => t('Design'),
     'changeBlockTemplate' => t('Block Template'),
     'chooseFont' => t('Choose Font'),
+    'chooseGroup' => t('Choose a Group'),
     'chooseUser' => t('Choose a User'),
     'clear' => t('Clear'),
     'closeWindow' => t('Close'),
@@ -72,7 +73,7 @@ var ccmi18n = ' . json_encode([
     'editMode' => t('Edit Mode'),
     'editModeMsg' => t('Let\'s start editing a page.'),
     'editStackContents' => t('Manage Stack Contents'),
-    'emptyArea' => t('Empty %s Area', '<%- area_handle %>'),
+    'emptyArea' => t('Empty Area'),
     'error' => t('Error'),
     'errorCustomStylePresetNoName' => t('You must give your custom style preset a name.'),
     'errorDetails' => t('Details'),
@@ -308,6 +309,7 @@ var ccmi18n_filemanager = ' . json_encode([
     'sets' => t('Sets'),
     'specifyName' => t('Please enter a name...'),
     'thumbnailImages' => t('Thumbnail Images'),
+    'thumbnailImageSaved' => t('Thumbnail image saved successfully.'),
     'title' => t('File Manager'),
     'upload' => t('Upload'),
     'uploadComplete' => t('Upload Complete'),
@@ -507,6 +509,15 @@ var ccmi18n_processes = ' . json_encode([
     'confirmDeletion' => t('Delete this process log entry? The record of the process along with any logs will be removed.'),
     'close' => t('Close'),
     'delete' => t('Delete'),
+]) . ';
+
+var ccmi18n_passwordInput = ' . json_encode([
+    'invalid' => tc('Password', 'Invalid'),
+    'tooWeak' => tc('Password', 'Too Weak'),
+    'weak' => tc('Password', 'Weak'),
+    'medium' => tc('Password', 'Medium'),
+    'strong' => tc('Password', 'Strong'),
+    'veryStrong' => tc('Password', 'Very Strong'),
 ]) . ';
         ';
 

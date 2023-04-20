@@ -20,6 +20,51 @@ use FileImporter;
 
 class Controller extends BlockController
 {
+    /**
+     * @var int|string|null
+     */
+    public $questionSetId;
+    
+    /**
+     * @var string|null
+     */
+    public $surveyName;
+    
+    /**
+     * @var string|null
+     */
+    public $submitText = '';
+    
+    /**
+     * @var string|null
+     */
+    public $thankyouMsg = '';
+    
+    /**
+     * @var bool|int|string|null
+     */
+    public $notifyMeOnSubmission;
+    
+    /**
+     * @var string|null
+     */
+    public $recipientEmail;
+    
+    /**
+     * @var int|string|null
+     */
+    public $displayCaptcha;
+    
+    /**
+     * @var int|string|null
+     */
+    public $redirectCID;
+    
+    /**
+     * @var int|string|null
+     */
+    public $addFilesToSet;
+
     public $btTable = 'btForm';
 
     public $btQuestionsTablename = 'btFormQuestions';
@@ -31,10 +76,6 @@ class Controller extends BlockController
     public $btInterfaceWidth = '525';
 
     public $btInterfaceHeight = '550';
-
-    public $thankyouMsg = '';
-
-    public $submitText = '';
 
     public $noSubmitFormRedirect = 0;
 
@@ -317,7 +358,7 @@ class Controller extends BlockController
         $db = $this->app->make('database/connection');
 
         //question set id
-        $qsID = (int) ($_POST['qsID']);
+        $qsID = (int) ($_POST['qsID'] ?? 0);
         if ($qsID == 0) {
             throw new Exception(t("Oops, something is wrong with the form you posted (it doesn't have a question set id)."));
         }
@@ -363,7 +404,7 @@ class Controller extends BlockController
                         $emailValidator = $this->app->make(EmailValidator::class);
                     }
                     $e = $this->app->make('error');
-                    if (!$emailValidator->isValid($_POST['Question' . $row['msqID']], $e)) {
+                    if (!$emailValidator->isValid($_POST['Question' . $row['msqID']] ?? '', $e)) {
                         $errors['emails'] = $e->toText();
                         $errorDetails[$row['msqID']]['emails'] = $errors['emails'];
                     }
@@ -382,7 +423,7 @@ class Controller extends BlockController
                     if (!isset($_FILES['Question' . $row['msqID']]) || !is_uploaded_file($_FILES['Question' . $row['msqID']]['tmp_name'])) {
                         $notCompleted = 1;
                     }
-                } elseif (!strlen(trim($_POST['Question' . $row['msqID']]))) {
+                } elseif (!strlen(trim($_POST['Question' . $row['msqID']] ?? ''))) {
                     $notCompleted = 1;
                 }
                 if ($notCompleted) {
@@ -451,11 +492,9 @@ class Controller extends BlockController
 
             $questionAnswerPairs = [];
 
-            if (Config::get('concrete.email.form_block.address') && strstr(Config::get('concrete.email.form_block.address'), '@')) {
-                $formFormEmailAddress = Config::get('concrete.email.form_block.address');
-            } else {
-                $adminUserInfo = UserInfo::getByID(USER_SUPER_ID);
-                $formFormEmailAddress = $adminUserInfo->getUserEmail();
+            $formFormEmailAddress = (string) Config::get('concrete.email.form_block.address');
+            if (strpos($formFormEmailAddress, '@') === false) {
+                $formFormEmailAddress = (string) Config::get('concrete.email.default.address');
             }
             $replyToEmailAddress = $formFormEmailAddress;
             //loop through each question and get the answers
@@ -472,11 +511,11 @@ class Controller extends BlockController
                         }
                     }
                 } elseif ($row['inputType'] == 'text') {
-                    $answerLong = $txt->sanitize($_POST['Question' . $row['msqID']]);
+                    $answerLong = $txt->sanitize($_POST['Question' . $row['msqID']] ?? '');
                     $answer = '';
                 } elseif ($row['inputType'] == 'fileupload') {
                     $answerLong = '';
-                    $answer = (int) ($tmpFileIds[(int) ($row['msqID'])]);
+                    $answer = (int) ($tmpFileIds[(int) ($row['msqID'])] ?? 0);
                     if ($answer > 0) {
                         $answerDisplay = File::getByID($answer)->getVersion()->getDownloadURL();
                     } else {
@@ -484,21 +523,21 @@ class Controller extends BlockController
                     }
                 } elseif ($row['inputType'] == 'datetime') {
                     $formPage = $this->getCollectionObject();
-                    $answer = $txt->sanitize($_POST['Question' . $row['msqID']]);
+                    $answer = $txt->sanitize($_POST['Question' . $row['msqID']] ?? '');
                     if ($formPage) {
                         $site = $formPage->getSite();
                         $timezone = $site->getTimezone();
                         $date = $this->app->make('date');
-                        $answerDisplay = $date->formatDateTime($txt->sanitize($_POST['Question' . $row['msqID']]), false, false, $timezone);
+                        $answerDisplay = $date->formatDateTime($txt->sanitize($_POST['Question' . $row['msqID']] ?? ''), false, false, $timezone);
                     } else {
-                        $answerDisplay = $txt->sanitize($_POST['Question' . $row['msqID']]);
+                        $answerDisplay = $txt->sanitize($_POST['Question' . $row['msqID']] ?? '');
                     }
                 } elseif ($row['inputType'] == 'url') {
                     $answerLong = '';
-                    $answer = $txt->sanitize($_POST['Question' . $row['msqID']]);
+                    $answer = $txt->sanitize($_POST['Question' . $row['msqID']] ?? '');
                 } elseif ($row['inputType'] == 'email') {
                     $answerLong = '';
-                    $answer = $txt->sanitize($_POST['Question' . $row['msqID']]);
+                    $answer = $txt->sanitize($_POST['Question' . $row['msqID']] ?? '');
                     if (!empty($row['options'])) {
                         $settings = unserialize($row['options']);
                         if (is_array($settings) && array_key_exists('send_notification_from', $settings) && $settings['send_notification_from'] == 1) {
@@ -510,10 +549,10 @@ class Controller extends BlockController
                     }
                 } elseif ($row['inputType'] == 'telephone') {
                     $answerLong = '';
-                    $answer = $txt->sanitize($_POST['Question' . $row['msqID']]);
+                    $answer = $txt->sanitize($_POST['Question' . $row['msqID']] ?? '');
                 } else {
                     $answerLong = '';
-                    $answer = $txt->sanitize($_POST['Question' . $row['msqID']]);
+                    $answer = $txt->sanitize($_POST['Question' . $row['msqID']] ?? '');
                 }
 
                 if (is_array($answer)) {
@@ -545,11 +584,9 @@ class Controller extends BlockController
             }
 
             if ((int) ($this->notifyMeOnSubmission) > 0 && !$foundSpam) {
-                if (Config::get('concrete.email.form_block.address') && strstr(Config::get('concrete.email.form_block.address'), '@')) {
-                    $formFormEmailAddress = Config::get('concrete.email.form_block.address');
-                } else {
-                    $adminUserInfo = UserInfo::getByID(USER_SUPER_ID);
-                    $formFormEmailAddress = $adminUserInfo->getUserEmail();
+                $formFormEmailAddress = (string) Config::get('concrete.email.form_block.address');
+                if (strpos($formFormEmailAddress, '@') === false) {
+                    $formFormEmailAddress = (string) Config::get('concrete.email.default.address');
                 }
 
                 $mh = $this->app->make('helper/mail');

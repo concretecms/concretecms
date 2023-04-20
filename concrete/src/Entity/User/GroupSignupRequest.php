@@ -1,74 +1,81 @@
 <?php
+
 namespace Concrete\Core\Entity\User;
 
 use Concrete\Core\Notification\Subject\SubjectInterface;
 use Concrete\Core\User\Group\Group;
 use Concrete\Core\User\UserInfo;
+use DateTime;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
-* @ORM\Entity
-* @ORM\Table(
-*     name="GroupSignupRequests"
-* )
-*/
+ * @ORM\Entity
+ * @ORM\Table(
+ *     name="GroupSignupRequests"
+ * )
+ */
 class GroupSignupRequest implements SubjectInterface
 {
     /**
-     * @var int
      * @ORM\Id
      * @ORM\Column(type="integer", options={"unsigned":true})
      * @ORM\GeneratedValue(strategy="AUTO")
+     *
+     * @var int|null NULL if not yet flushed to the database
      */
     protected $id;
 
     /**
-     * @ORM\OneToMany(targetEntity="\Concrete\Core\Entity\Notification\GroupSignupRequestNotification", mappedBy="signup", cascade={"remove"}),
+     * @ORM\OneToMany(targetEntity="\Concrete\Core\Entity\Notification\GroupSignupRequestNotification", mappedBy="signupRequest", cascade={"remove"}),
+     *
+     * @var \Doctrine\Common\Collections\Collection
      */
     protected $notifications;
 
     /**
-     * @var int
      * @ORM\Column(type="integer", options={"unsigned":true})
+     *
+     * @var int
      */
     protected $gID;
 
     /**
-     * @var User
      * @ORM\ManyToOne(targetEntity="\Concrete\Core\Entity\User\User")
      * @ORM\JoinColumn(name="uID", referencedColumnName="uID", onDelete="SET NULL")
+     *
+     * @var \Concrete\Core\Entity\User\User|null
      */
     protected $user;
 
     /**
-     * @var \DateTime
      * @ORM\Column(type="datetime")
+     *
+     * @var \DateTime
      */
-    protected $requested = null;
+    protected $requested;
 
     /**
-     * GroupSignupRequest constructor.
-     * @param Group $group
+     * @param \Concrete\Core\User\Group\Group|null $group
      * @param \Concrete\Core\User\User $user
-     * @throws \Exception
      */
     public function __construct($group = null, $user = null)
     {
+        $this->notifications = new ArrayCollection();
         if ($group instanceof Group) {
             $this->gID = $group->getGroupID();
         }
-
         if ($user instanceof \Concrete\Core\User\User) {
             if ($user->getUserInfoObject() instanceof UserInfo) {
                 $this->user = $user->getUserInfoObject()->getEntityObject();
             }
         }
-
-        $this->requested = new \DateTime();
+        $this->requested = new DateTime();
     }
 
     /**
-     * @return Group
+     * @return \Concrete\Core\User\Group\Group|null
      */
     public function getGroup()
     {
@@ -76,20 +83,20 @@ class GroupSignupRequest implements SubjectInterface
     }
 
     /**
-     * @return int
+     * @return int|null return NULL if not yet flushed to the database
      */
-    public function getId(): int
+    public function getId(): ?int
     {
         return $this->id;
     }
 
     /**
-     * @param int $id
-     * @return GroupSignupRequest
+     * @return $this
      */
-    public function setId(int $id): GroupSignupRequest
+    public function setId(?int $id): self
     {
         $this->id = $id;
+
         return $this;
     }
 
@@ -102,53 +109,47 @@ class GroupSignupRequest implements SubjectInterface
     }
 
     /**
-     * @param int $gID
-     * @return GroupSignupRequest
+     * @return $this
      */
-    public function setGID(int $gID): GroupSignupRequest
+    public function setGID(int $gID): self
     {
         $this->gID = $gID;
+
         return $this;
     }
 
-    /**
-     * @return User
-     */
-    public function getUser(): User
+    public function getUser(): ?User
     {
         return $this->user;
     }
 
     /**
-     * @param User $user
-     * @return GroupSignupRequest
+     * @return $this
      */
-    public function setUser(User $user): GroupSignupRequest
+    public function setUser(User $user): self
     {
         $this->user = $user;
+
         return $this;
     }
 
-    /**
-     * @return \DateTime
-     */
-    public function getRequested(): \DateTime
+    public function getRequested(): DateTime
     {
         return $this->requested;
     }
 
     /**
-     * @param \DateTime $requested
-     * @return GroupSignupRequest
+     * @return $this
      */
-    public function setRequested(\DateTime $requested): GroupSignupRequest
+    public function setRequested(DateTime $requested): self
     {
         $this->requested = $requested;
+
         return $this;
     }
 
     /**
-     * Get the date of this notification
+     * Get the date of this notification.
      *
      * @return \DateTime
      */
@@ -160,5 +161,13 @@ class GroupSignupRequest implements SubjectInterface
     public function getUsersToExcludeFromNotification()
     {
         return [];
+    }
+
+    /**
+     * @return \Concrete\Core\Entity\Notification\GroupSignupRequestNotification[]
+     */
+    public function getNotifications(): Collection
+    {
+        return $this->notifications;
     }
 }

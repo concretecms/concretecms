@@ -32,15 +32,14 @@ $fileFolderSelector = $app->make(FileFolderSelector::class);
             <?= $form->text('uName', ['autofocus' => 'autofocus', 'autocomplete' => 'off']); ?>
 		</div>
 
-        <div class="form-group" data-vue="password">
+        <div class="form-group" data-vue-app="password">
             <?= $form->label('uPassword', t('Password')) ?>
             <div class="float-end">
             <span class="text-muted small">
                 <?php echo t('Required') ?>
             </span>
             </div>
-            <?= ''//$form->password('uPassword', ['autocomplete' => 'off']); ?>
-            <password-input name="uPassword"/>
+            <password-input name="uPassword" :strength-meter="true"/>
 		</div>
 
 		<div class="form-group">
@@ -123,7 +122,7 @@ $fileFolderSelector = $app->make(FileFolderSelector::class);
     $(function() {
         Concrete.Vue.activateContext('cms', function(Vue, config) {
             new Vue({
-                el: 'div[data-vue]',
+                el: 'div[data-vue-app]',
                 components: config.components
             })
         })

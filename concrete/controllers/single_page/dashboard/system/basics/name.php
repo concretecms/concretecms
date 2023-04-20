@@ -44,6 +44,7 @@ class Name extends DashboardSitePageController
                 $attributes = SiteKey::getList();
                 foreach ($attributes as $ak) {
                     $controller = $ak->getController();
+                    $controller->setAttributeObject($this->site);
                     $value = $controller->createAttributeValueFromRequest();
                     $this->site->setAttribute($ak, $value);
                 }

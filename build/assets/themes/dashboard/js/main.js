@@ -7,14 +7,19 @@ import '@concretecms/bedrock/assets/bedrock/js/frontend';
 
 // Import the CMS components and the backend components.
 // We need the avatar component because we use it in the Dashboard user view.
-import AvatarCropper from '@concretecms/bedrock/assets/account/js/frontend/components/Avatar/Cropper.vue'
-
-Concrete.Vue.createContext('backend', {
-    AvatarCropper
-}, 'cms')
+import AvatarCropper from '@concretecms/bedrock/assets/account/js/frontend/components/AvatarCropper.vue'
+import FileManagerFavoriteFolderSelector from './file-manager/FileManagerFavoriteFolderSelector.vue'
+const backendComponents = {
+    AvatarCropper,
+    FileManagerFavoriteFolderSelector
+}
+Concrete.Vue.createContext('backend', backendComponents, 'cms')
 
 // Desktops and waiting for me
 import '@concretecms/bedrock/assets/desktop/js/frontend';
+
+// My Account as rendered by Dashboard theme
+import './account';
 
 // Calendar
 import '@concretecms/bedrock/assets/calendar/js/backend';
@@ -37,7 +42,6 @@ import './translator';
 import './remote-marketplace';
 import 'magnific-popup'
 import '@concretecms/bedrock/assets/imagery/js/frontend/responsive-slides';
-import components from "@concretecms/bedrock/assets/cms/components/index";
 
 var setupResultMessages = function() {
     if ($('#ccm-dashboard-result-message').length > 0) {
@@ -128,12 +132,13 @@ var setupTooltips = function() {
     }
     const tooltipTriggerList = [].slice.call(document.querySelectorAll('.launch-tooltip'))
     const tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
-        return new bootstrap.Tooltip(tooltipTriggerEl, {
+        return bootstrap.Tooltip.getInstance(tooltipTriggerEl) || new bootstrap.Tooltip(tooltipTriggerEl, {
             container: '#ccm-tooltip-holder'
         })
     })
 };
 
+// Legacy - use BS modals instead (but really try not using modals at all.)
 var setupDialogs = function() {
     $('.dialog-launch').dialog();
 
@@ -168,6 +173,38 @@ var setupDialogs = function() {
 
 };
 
+var setupModals = function() {
+
+    // sets up launchable modals (e.g. modals that open an external URL with options
+    $('div#ccm-dashboard-page').on('click', '[data-launch-modal]', function() {
+        if ($(this).attr('disabled')) {
+            return false;
+        }
+
+        const optionsString = $(this).attr('data-modal-options') ?? false
+        const options = optionsString ? JSON.parse(optionsString) : {}
+        const modal = new ConcreteModal()
+
+        try {
+            const url = new URL($(this).attr('data-launch-modal'))
+            modal.openExternal(url, options.title ?? null)
+        } catch (e) {
+            const element = $('div[data-modal-content=' + $(this).attr('data-launch-modal') + ']')
+            if (element.length) {
+                options.message = element.html()
+                modal.show(options)
+            }
+        }
+    });
+
+}
+
+var setupVueAutomounters = function() {
+    $(function() {
+        $('[data-vue]').concreteVue({'context': 'backend'})
+    })
+}
+
 var setupPrivacyPolicy = function() {
 
     $('div#ccm-dashboard-page').on('click', 'button[data-action=agree-privacy-policy]', function() {
@@ -195,12 +232,6 @@ var setupHeaderMenu = function() {
             $menu.append($buttons);
         }
     }
-};
-
-var setupSiteListMenuItem = function() {
-    $('select[data-select=ccm-header-site-list]').on('changed.bs.select', function() {
-        window.location.href = $(this).val()
-    })
 };
 
 var setupAsynchronousThumbnails = function() {
@@ -236,11 +267,12 @@ var setupAsynchronousThumbnails = function() {
 
 setupTooltips();
 setupResultMessages();
-setupSiteListMenuItem();
 setupDialogs();
+setupModals();
 setupDetailsURLs();
 setupFavorites();
 setupAdvancedSearchLinks();
 setupHeaderMenu();
 setupPrivacyPolicy();
 setupAsynchronousThumbnails();
+setupVueAutomounters()

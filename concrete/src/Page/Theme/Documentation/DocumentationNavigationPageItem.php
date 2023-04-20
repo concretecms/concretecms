@@ -9,6 +9,11 @@ class DocumentationNavigationPageItem extends PageItem
 {
 
     /**
+     * @var Theme
+     */
+    protected $theme;
+
+    /**
      * Item constructor.
      * @param string $url
      * @param string $name
@@ -16,9 +21,15 @@ class DocumentationNavigationPageItem extends PageItem
      */
     public function __construct(Theme $theme, Page $page, bool $isActive = false)
     {
-        $this->url = \URL::to('/dashboard/pages/themes/preview', $theme->getThemeID(), $page->getCollectionID());
+        $this->theme = $theme;
+        $this->pageID = $page->getCollectionID();
         $this->name = $page->getCollectionName();
         $this->isActive = $isActive;
+    }
+
+    public function getURL(): string
+    {
+        return \URL::to('/dashboard/pages/themes/preview', $this->theme->getThemeID(), $this->getPageID());
     }
 
 }

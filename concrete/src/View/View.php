@@ -143,6 +143,16 @@ class View extends AbstractView
         return $ret;
     }
 
+    /**
+     * Fix https://github.com/concretecms/concretecms/issues/11283
+     *
+     * @return bool
+     */
+    public function isEditingDisabled(): bool
+    {
+        return false;
+    }
+
     public function setViewTheme($theme)
     {
         if (is_object($theme)) {

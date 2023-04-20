@@ -156,7 +156,7 @@ class MiniSurvey
         $this->db->executeQuery($sql);
     }
 
-    public function loadQuestions($qsID, $bID = 0, $showPending = 0)
+    public static function loadQuestions($qsID, $bID = 0, $showPending = 0)
     {
         $db = Database::connection();
         if ((int) $bID) {

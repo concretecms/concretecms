@@ -277,6 +277,7 @@ class FolderItemList extends AttributedItemList implements PagerProviderInterfac
     {
         $expressions = [
             $this->query->expr()->like('fv.fvFilename', ':keywords'),
+            $this->query->expr()->like('fv.fvTitle', ':keywords'),
             $this->query->expr()->like('fv.fvDescription', ':keywords'),
             $this->query->expr()->like('treeNodeName', ':keywords'),
             $this->query->expr()->like('fv.fvTags', ':keywords'),
@@ -390,5 +391,21 @@ class FolderItemList extends AttributedItemList implements PagerProviderInterfac
     protected function getAttributeKeyClassName()
     {
         return '\\Concrete\\Core\\Attribute\\Key\\FileKey';
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Search\ItemList\Database\ItemList::executeSanitizedSortBy()
+     */
+    protected function executeSanitizedSortBy($column, $direction = 'asc')
+    {
+        switch ($column) {
+            case 'fv.fvTitle':
+                $column = 'if(nt.treeNodeTypeHandle=\'file\', fv.fvTitle, n.treeNodeName)';
+                break;
+        }
+
+        return parent::executeSanitizedSortBy($column, $direction);
     }
 }

@@ -6,6 +6,7 @@ use Concrete\Core\Attribute\Category\CategoryInterface;
 use Concrete\Core\Attribute\Command\ClearAttributesCommand;
 use Concrete\Core\Attribute\Command\SaveAttributesCommand;
 use Concrete\Core\Attribute\ObjectInterface;
+use Concrete\Core\Error\ErrorList\ErrorList;
 use Concrete\Core\Validation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
@@ -26,13 +27,13 @@ trait ControllerTrait
 
     abstract public function canEditAttributeKey(int $akID): bool;
 
-    public function saveAttributes()
+    public function saveAttributes(): ?ErrorList
     {
         // Let's retrieve a list of attribute keys that we're trying to set.
-        $selectedAttributes = (array) $this->request->request->get('selectedKeys', []);
+        $selectedAttributes = (array)$this->request->request->get('selectedKeys', []);
 
         // In case of non modified Multiple Valued attribute in bulk edit
-        $ignoredAttributes = (array) $this->request->request->get('ignoredKeys', []);
+        $ignoredAttributes = (array)$this->request->request->get('ignoredKeys', []);
 
         foreach ($this->getObjects() as $object) {
             // Now, let's divide attributes into piles of those we need to save, and those we need to clear
@@ -65,7 +66,8 @@ trait ControllerTrait
                          */
                         $response = $validator->validateSaveValueRequest(
                             $controller,
-                            $this->request
+                            $this->request,
+                            false // In this case we should allow field not present errors because we're not on registration or in user profile
                         );
                         if ($response->isValid()) {
                             $attributesToSave[] = $ak;
@@ -78,8 +80,9 @@ trait ControllerTrait
 
             $this->app->executeCommand(new ClearAttributesCommand($attributesToClear, $object));
             $this->app->executeCommand(new SaveAttributesCommand($attributesToSave, $object));
-            return null;
         }
+
+        return null;
     }
 
     public function getAttribute()

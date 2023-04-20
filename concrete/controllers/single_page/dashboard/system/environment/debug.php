@@ -45,7 +45,7 @@ class Debug extends DashboardPageController
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'debug_example';
 
         error_reporting($this->request->query->get('warnings_as_errors') ? -1 : DEFAULT_ERROR_REPORTING);
-        $this->will_throw_a_warning_because = $this->is_not_a_defined_property;
+        $this->produceNotice();
 
         throw new ExampleException('Sample Debug Output!');
     }
@@ -60,7 +60,7 @@ class Debug extends DashboardPageController
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'debug_example';
 
         error_reporting($this->request->query->get('warnings_as_errors') ? -1 : DEFAULT_ERROR_REPORTING);
-        $this->will_throw_a_warning_because = $this->is_not_a_defined_property;
+        $this->produceNotice();
 
         throw new ExampleException('Sample Message Output!');
     }
@@ -74,9 +74,18 @@ class Debug extends DashboardPageController
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'debug_example';
 
         error_reporting($this->request->query->get('warnings_as_errors') ? -1 : DEFAULT_ERROR_REPORTING);
-        $this->will_throw_a_warning_because = $this->is_not_a_defined_property;
+        $this->produceNotice();
 
         throw new ExampleException('Sample Disabled Output!');
+    }
+
+    protected function produceNotice(): void
+    {
+        if (PHP_VERSION_ID < 80000) {
+            $this->will_throw_a_notice_because = $this->is_not_a_defined_property;
+        } else {
+            unserialize('this will throw an E_NOTICE');
+        }
     }
 }
 

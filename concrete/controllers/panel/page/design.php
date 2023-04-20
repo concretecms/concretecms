@@ -35,6 +35,7 @@ class Design extends BackendUIPageController
 
         $pTemplateID = $c->getPageTemplateID();
         $templates = array();
+        $selectedTemplate = null;
         if ($pTemplateID) {
             $selectedTemplate = Template::getByID($pTemplateID);
             $templates[] = $selectedTemplate;
@@ -108,6 +109,7 @@ class Design extends BackendUIPageController
         $req = Request::getInstance();
         $req->setCurrentPage($this->page);
         $controller = $this->page->getPageController();
+        $controller->disableEditing();
         $view = $controller->getViewObject();
 
         $previewRequest = new PageDesignPreviewRequest();
@@ -135,7 +137,6 @@ class Design extends BackendUIPageController
         }
 
         $view->setCustomPreviewRequest($previewRequest);
-        $req->setCustomRequestUser(-1);
         $response = new \Symfony\Component\HttpFoundation\Response();
         $content = $view->render();
         $response->setContent($content);

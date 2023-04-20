@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\Page\Type;
 
+use Concrete\Core\Page\Theme\Theme;
 use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\Attribute\Key\CollectionKey;
 use Concrete\Core\Multilingual\Page\Section\Section;
@@ -38,6 +39,7 @@ use Concrete\Core\Page\Type\Composer\Control\CorePageProperty\CorePageProperty a
 class Type extends ConcreteObject implements \Concrete\Core\Permission\ObjectInterface, AssignableObjectInterface
 {
     protected $ptDefaultPageTemplateID = 0;
+    protected $ptDefaultThemeID = 0;
 
     use AssignableObjectTrait;
 
@@ -102,9 +104,19 @@ class Type extends ConcreteObject implements \Concrete\Core\Permission\ObjectInt
         return $this->ptDefaultPageTemplateID;
     }
 
+    public function getPageTypeDefaultThemeID()
+    {
+        return $this->ptDefaultThemeID;
+    }
+
     public function getPageTypeDefaultPageTemplateObject()
     {
         return PageTemplate::getByID($this->ptDefaultPageTemplateID);
+    }
+
+    public function getPageTypeDefaultThemeObject()
+    {
+        return Theme::getByID($this->ptDefaultThemeID);
     }
 
     public function getPermissionObjectIdentifier()
@@ -318,6 +330,15 @@ class Type extends ConcreteObject implements \Concrete\Core\Permission\ObjectInt
             $template->setPermissionsToManualOverride();
         }
 
+        // either set the default page object to have the default theme of the page type, or, set the theme id to 0 to be based on active them
+        if ($this->getPageTypeDefaultThemeID() != $template->getCollectionThemeID()) {
+            if ($this->getPageTypeDefaultThemeID() > 0 && $theme = $this->getPageTypeDefaultThemeObject()) {
+                $template->setTheme($theme);
+            } else {
+                $template->setTheme(false);
+            }
+        }
+
         return $template;
     }
 
@@ -387,6 +408,7 @@ class Type extends ConcreteObject implements \Concrete\Core\Permission\ObjectInt
         $ptHandle = (string) $node['handle'];
         $db = Loader::db();
         $defaultPageTemplate = PageTemplate::getByHandle((string) $node->pagetemplates['default']);
+        $defaultTheme = Theme::getByHandle((string) $node->pagetemplates['theme']);
 
         $ptID = $db->GetOne('select ptID from PageTypes where ptHandle = ?', array($ptHandle));
         $data = array(
@@ -402,6 +424,11 @@ class Type extends ConcreteObject implements \Concrete\Core\Permission\ObjectInt
         if ($defaultPageTemplate) {
             $data['defaultTemplate'] = $defaultPageTemplate;
         }
+
+        if ($defaultTheme) {
+            $data['defaultTheme'] = $defaultTheme;
+        }
+
         if ($ptAllowedPageTemplates) {
             $data['allowedTemplates'] = $ptAllowedPageTemplates;
         }
@@ -551,6 +578,12 @@ class Type extends ConcreteObject implements \Concrete\Core\Permission\ObjectInt
         if (is_object($defaultPageTemplate)) {
             $pagetemplates->addAttribute('default', $defaultPageTemplate->getPageTemplateHandle());
         }
+
+        $defaultPageTheme = Theme::getByID($this->getPageTypeDefaultThemeID());
+        if (is_object($defaultPageTheme)) {
+            $pagetemplates->addAttribute('theme', $defaultPageTheme->getThemeHandle());
+        }
+
         $target = $this->getPageTypePublishTargetObject();
         $target->export($pagetype);
 
@@ -611,6 +644,7 @@ class Type extends ConcreteObject implements \Concrete\Core\Permission\ObjectInt
             'handle' => $ptHandle,
             'name' => $ptName,
             'defaultTemplate' => $this->getPageTypeDefaultPageTemplateObject(),
+            'defaultTheme' => $this->getPageTypeDefaultThemeObject(),
             'allowedTemplates' => $this->getPageTypeAllowedPageTemplates(),
             'templates' => $this->getPageTypeSelectedPageTemplateObjects(),
             'ptLaunchInComposer' => $this->doesPageTypeLaunchInComposer(),
@@ -713,6 +747,7 @@ class Type extends ConcreteObject implements \Concrete\Core\Permission\ObjectInt
     {
         $data = $data + array(
             'defaultTemplate' => null,
+            'defaultTheme' => null,
             'allowedTemplates' => null,
             'templates' => null,
             'internal' => null,
@@ -729,6 +764,7 @@ class Type extends ConcreteObject implements \Concrete\Core\Permission\ObjectInt
         $siteTypeID = $data['siteType']->getSiteTypeID();
 
         $ptDefaultPageTemplateID = 0;
+        $ptDefaultThemeID = null;
         $ptIsFrequentlyAdded = 0;
         $ptLaunchInComposer = 0;
         $pkgID = 0;
@@ -741,6 +777,11 @@ class Type extends ConcreteObject implements \Concrete\Core\Permission\ObjectInt
         } elseif (!empty($data['defaultTemplate'])) {
             $ptDefaultPageTemplateID = PageTemplate::getByHandle($data['defaultTemplate'])->getPageTemplateID();
         }
+
+        if (is_object($data['defaultTheme'])) {
+            $ptDefaultThemeID = $data['defaultTheme']->getThemeID();
+        }
+
         $ptAllowedPageTemplates = 'A';
         if ($data['allowedTemplates']) {
             $ptAllowedPageTemplates = $data['allowedTemplates'];
@@ -770,11 +811,12 @@ class Type extends ConcreteObject implements \Concrete\Core\Permission\ObjectInt
         }
 
         $db->Execute(
-            'insert into PageTypes (ptName, ptHandle, ptDefaultPageTemplateID, ptAllowedPageTemplates, ptIsInternal, ptLaunchInComposer, ptDisplayOrder, ptIsFrequentlyAdded, siteTypeID, pkgID) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+            'insert into PageTypes (ptName, ptHandle, ptDefaultPageTemplateID, ptDefaultThemeID, ptAllowedPageTemplates, ptIsInternal, ptLaunchInComposer, ptDisplayOrder, ptIsFrequentlyAdded, siteTypeID, pkgID) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
             array(
                 $ptName,
                 $ptHandle,
                 $ptDefaultPageTemplateID,
+                $ptDefaultThemeID,
                 $ptAllowedPageTemplates,
                 $ptIsInternal,
                 $ptLaunchInComposer,
@@ -845,18 +887,23 @@ class Type extends ConcreteObject implements \Concrete\Core\Permission\ObjectInt
         $ptLaunchInComposer = $this->doesPageTypeLaunchInComposer();
         $ptDisplayOrder = $this->getPageTypeDisplayOrder();
 
-        if ($data['name']) {
+        if (isset($data['name']) && $data['name']) {
             $ptName = $data['name'];
         }
-        if ($data['handle']) {
+        if (isset($data['handle']) && $data['handle']) {
             $ptHandle = $data['handle'];
         }
-        if (is_object($data['defaultTemplate'])) {
+        if (isset($data['defaultTemplate']) && is_object($data['defaultTemplate'])) {
             $ptDefaultPageTemplateID = $data['defaultTemplate']->getPageTemplateID();
         } elseif (!empty($data['defaultTemplate'])) {
             $ptDefaultPageTemplateID = PageTemplate::getByHandle($data['defaultTemplate'])->getPageTemplateID();
         }
-        if ($data['allowedTemplates']) {
+        if (isset($data['defaultTheme']) && is_object($data['defaultTheme'])) {
+            $ptDefaultThemeID = $data['defaultTheme']->getThemeID();
+        } else {
+            $ptDefaultThemeID = null;
+        }
+        if (isset($data['allowedTemplates'])) {
             $ptAllowedPageTemplates = $data['allowedTemplates'];
         }
         if (isset($data['ptLaunchInComposer'])) {
@@ -870,7 +917,7 @@ class Type extends ConcreteObject implements \Concrete\Core\Permission\ObjectInt
         }
 
         $templates = $this->getPageTypePageTemplateObjects();
-        if (is_array($data['templates'])) {
+        if (isset($data['templates']) && is_array($data['templates'])) {
             $templates = $data['templates'];
         }
         $ptIsInternal = $this->isPageTypeInternal();
@@ -879,11 +926,12 @@ class Type extends ConcreteObject implements \Concrete\Core\Permission\ObjectInt
         }
         $db = Loader::db();
         $db->Execute(
-            'update PageTypes set ptName = ?, ptHandle = ?, ptDefaultPageTemplateID = ?, ptAllowedPageTemplates = ?, ptIsInternal = ?, ptLaunchInComposer = ?, ptIsFrequentlyAdded = ?, ptDisplayOrder = ? where ptID = ?',
+            'update PageTypes set ptName = ?, ptHandle = ?, ptDefaultPageTemplateID = ?, ptDefaultThemeID = ?, ptAllowedPageTemplates = ?, ptIsInternal = ?, ptLaunchInComposer = ?, ptIsFrequentlyAdded = ?, ptDisplayOrder = ? where ptID = ?',
             array(
                 $ptName,
                 $ptHandle,
                 $ptDefaultPageTemplateID,
+                $ptDefaultThemeID,
                 $ptAllowedPageTemplates,
                 $ptIsInternal,
                 $ptLaunchInComposer,
@@ -945,7 +993,7 @@ class Type extends ConcreteObject implements \Concrete\Core\Permission\ObjectInt
         if (!$includeInternal) {
             $ptIDs = $db->GetCol('select ptID from PageTypes where siteTypeID = ? and ptIsInternal = 0 order by ptDisplayOrder asc', $v);
         } else {
-            $ptIDs = $db->GetCol('select ptID from PageTypes order by ptDisplayOrder asc', $v);
+            $ptIDs = $db->GetCol('select ptID from PageTypes order by ptDisplayOrder asc');
         }
 
         return static::returnList($ptIDs);
@@ -1104,7 +1152,7 @@ class Type extends ConcreteObject implements \Concrete\Core\Permission\ObjectInt
         }
     }
 
-    public function addPageTypeComposerFormLayoutSet($ptComposerFormLayoutSetName, $ptComposerFormLayoutSetDescription)
+    public function addPageTypeComposerFormLayoutSet($ptComposerFormLayoutSetName, $ptComposerFormLayoutSetDescription, $collapseType = '')
     {
         $db = Loader::db();
         $displayOrder = $db->GetOne(
@@ -1115,10 +1163,11 @@ class Type extends ConcreteObject implements \Concrete\Core\Permission\ObjectInt
             $displayOrder = 0;
         }
         $db->Execute(
-            'insert into PageTypeComposerFormLayoutSets (ptComposerFormLayoutSetName, ptComposerFormLayoutSetDescription, ptID, ptComposerFormLayoutSetDisplayOrder) values (?, ?, ?, ?)',
+            'insert into PageTypeComposerFormLayoutSets (ptComposerFormLayoutSetName, ptComposerFormLayoutSetDescription, ptComposerFormLayoutSetCollapseType, ptID, ptComposerFormLayoutSetDisplayOrder) values (?, ?, ?, ?, ?)',
             array(
                 $ptComposerFormLayoutSetName,
                 $ptComposerFormLayoutSetDescription,
+                $collapseType,
                 $this->ptID,
                 $displayOrder,
             )

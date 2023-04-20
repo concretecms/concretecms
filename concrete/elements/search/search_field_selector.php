@@ -26,8 +26,8 @@ defined('C5_EXECUTE') or die("Access Denied.");
     <script type="text/template" data-template="search-field-row">
         <div class="ccm-search-field-selector-row">
             <input type="hidden" name="field[]" value="<%=field.key%>">
-            <div class="form-group">
-                <label><strong><%=field.label%></strong></label>
+            <div class="mb-3">
+                <label class="form-label"><%=field.label%></label>
                 <a data-search-remove="search-field" class="ccm-hover-icon float-end" href="#">
                     <svg width="20" height="20"><use xlink:href="#icon-minus-circle" /></svg>
                     </i></a>

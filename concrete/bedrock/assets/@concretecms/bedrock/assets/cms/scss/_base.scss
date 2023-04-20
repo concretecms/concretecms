@@ -4,6 +4,7 @@
 @import 'buttons';
 @import 'tables';
 @import 'breadcrumb';
+@import 'cards';
 @import 'list-group';
 
 // Support classes
@@ -65,10 +66,6 @@
 // File Uploader
 @import './file-uploader';
 
-// Bootstrap Select
-@import 'bootstrap-select/sass/bootstrap-select';
-@import 'ajax-bootstrap-select/dist/css/ajax-bootstrap-select';
-
 // Forms
 @import './forms';
 
@@ -76,10 +73,6 @@
 // Otherwise we will get a SassError due a mixin names conflict
 // Previously wasn't throwing the error because Selectize includes the BS mixins
 @import '~bootstrap/scss/mixins';
-
-//TODO: Check Selectize replacement
-//@import '~selectize-bootstrap4-theme/scss/selectize.bootstrap4';
-//@import './selectize';
 
 // Miscellaneous components
 @import './vue';
@@ -90,6 +83,7 @@
 @import './tabs';
 @import './item-selector';
 @import './item-select-list';
+@import './select-combo-box';
 @import './permission-grid';
 @import './tooltips';
 @import 'spectrum-colorpicker2/dist/spectrum';

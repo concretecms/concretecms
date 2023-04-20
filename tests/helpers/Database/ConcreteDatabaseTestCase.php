@@ -115,7 +115,7 @@ abstract class ConcreteDatabaseTestCase extends TestCase
     protected function connection()
     {
         if (!static::$connection) {
-            static::$connection = Core::make('database')->connection('travis');
+            static::$connection = Core::make('database')->connection('ccm_test');
         }
         return static::$connection;
     }

@@ -4,6 +4,7 @@ namespace Concrete\Core\Legacy;
 /**
  * @deprecated
  */
+#[\AllowDynamicProperties]
 class Model
 {
     protected $_table;

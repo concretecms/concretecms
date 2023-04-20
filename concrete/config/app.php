@@ -95,14 +95,15 @@ return [
         'core_messenger' => '\Concrete\Core\Messenger\MessengerServiceProvider',
         'core_cache' => '\Concrete\Core\Cache\CacheServiceProvider', // needs to come before api
         'core_file' => '\Concrete\Core\File\FileServiceProvider',
-        'core_encryption' => '\Concrete\Core\Encryption\EncryptionServiceProvider',
         'core_validation' => '\Concrete\Core\Validation\ValidationServiceProvider',
         'core_localization' => '\Concrete\Core\Localization\LocalizationServiceProvider',
         'core_exporter' => '\Concrete\Core\Export\ExportServiceProvider',
         'core_multilingual' => '\Concrete\Core\Multilingual\MultilingualServiceProvider',
         'core_feed' => '\Concrete\Core\Feed\FeedServiceProvider',
+        'core_health' => '\Concrete\Core\Health\HealthServiceProvider',
         'core_html' => '\Concrete\Core\Html\HtmlServiceProvider',
         'core_editor' => '\Concrete\Core\Editor\EditorServiceProvider',
+        'core_image_editor' => '\Concrete\Core\ImageEditor\ImageEditorServiceProvider',
         'core_mail' => '\Concrete\Core\Mail\MailServiceProvider',
         'core_application' => '\Concrete\Core\Application\ApplicationServiceProvider',
         'core_utility' => '\Concrete\Core\Utility\UtilityServiceProvider',
@@ -114,7 +115,7 @@ return [
         'core_manager_search_fields' => '\Concrete\Core\Search\Field\ManagerServiceProvider',
         'core_permissions' => '\Concrete\Core\Permission\PermissionServiceProvider',
         'core_automation' => '\Concrete\Core\Command\Task\ServiceProvider',
-        'core_api' => 'Concrete\Core\Api\ApiServiceProvider',
+        'core_announcement' => '\Concrete\Core\Announcement\AnnouncementServiceProvider',
         'core_form' => '\Concrete\Core\Form\FormServiceProvider',
         'core_session' => '\Concrete\Core\Session\SessionServiceProvider',
         'core_cookie' => '\Concrete\Core\Cookie\CookieServiceProvider',
@@ -126,7 +127,6 @@ return [
         'core_package' => '\Concrete\Core\Package\PackageServiceProvider',
         'core_url' => '\Concrete\Core\Url\UrlServiceProvider',
         'core_devices' => '\Concrete\Core\Device\DeviceServiceProvider',
-
         'core_user' => '\Concrete\Core\User\UserServiceProvider',
         'core_service_manager' => '\Concrete\Core\Service\Manager\ServiceManagerServiceProvider',
         'core_site' => '\Concrete\Core\Site\ServiceProvider',
@@ -156,6 +156,10 @@ return [
         //
         // Tracker
         'core_usagetracker' => '\Concrete\Core\Statistics\UsageTracker\ServiceProvider',
+
+        // Api - has to come after Express (and possibly other items)
+        'core_api' => 'Concrete\Core\Api\ApiServiceProvider',
+
     ],
 
     /*
@@ -192,6 +196,8 @@ return [
         'authentication_type',
         'block_type',
         'block_type_set',
+        'tree_type',
+        'tree_node_type',
         'express_entity',
         'captcha_library',
         'container',
@@ -226,6 +232,8 @@ return [
     'importer_routines' => [
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportSiteTypesRoutine',
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportGroupsRoutine',
+        'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportTreeTypesRoutine',
+        'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportTreeNodeTypesRoutine',
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportSinglePageStructureRoutine',
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportStacksStructureRoutine',
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportBlockTypesRoutine',
@@ -419,7 +427,7 @@ return [
         ],
 
         'moment' => [
-            ['javascript', 'js/moment.js', ['minify' => false, 'combine' => false, 'version' => '2.24.0']],
+            ['javascript', 'js/moment.js', ['minify' => false, 'combine' => false]],
             ['javascript-localized', '/ccm/assets/localization/moment/js'],
         ],
 
@@ -516,6 +524,10 @@ return [
             ['css', 'css/features/faq/frontend.css', ['minify' => false]],
         ],
 
+        'feature/forms/frontend' => [
+            ['javascript', 'js/features/forms/frontend.js', ['minify' => false]],
+        ],
+
         'feature/basics/frontend' => [
             ['css', 'css/features/basics/frontend.css', ['minify' => false]],
         ],
@@ -559,6 +571,10 @@ return [
         'feature/multilingual/frontend' => [
             ['javascript', 'js/features/multilingual/frontend.js', ['minify' => false]],
             ['css', 'css/features/multilingual/frontend.css', ['minify' => false]],
+        ],
+
+        'feature/staging/frontend' => [
+            ['css', 'css/features/staging/frontend.css', ['minify' => false]],
         ],
 
         'tui-image-editor' => [
@@ -717,6 +733,12 @@ return [
             ],
         ],
 
+        'feature/forms/frontend' => [
+            [
+                ['javascript', 'feature/forms/frontend'],
+            ],
+        ],
+
         'feature/imagery/frontend' => [
             [
                 ['javascript', 'feature/imagery/frontend'],
@@ -767,6 +789,12 @@ return [
         'feature/search/frontend' => [
             [
                 ['css', 'feature/search/frontend'],
+            ],
+        ],
+
+        'feature/staging/frontend' => [
+            [
+                ['css', 'feature/staging/frontend'],
             ],
         ],
 

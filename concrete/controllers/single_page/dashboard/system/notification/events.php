@@ -128,12 +128,12 @@ class Events extends DashboardPageController
     public function test_connection()
     {
         $ping = $this->request->request->get('ping');
-        $hub = $this->app->make(Hub::class);
+        $service = $this->app->make(MercureService::class);
         /**
          * @var $subscriber Subscriber
          */
         $event = new TestConnectionEvent($ping);
-        $hub->publish($event->getUpdate());
+        $service->publish($event);
 
         return new JsonResponse([]); // This is just here for our ajax requests, it has nothing to do with mercure
     }
@@ -142,6 +142,10 @@ class Events extends DashboardPageController
     {
         if (!$this->token->validate('submit')) {
             $this->error->add($this->token->getErrorMessage());
+        }
+
+        if (!$this->request->request->get('publishUrl')) {
+            $this->error->add(t('You must specify a publish URL.'));
         }
 
         $config = $this->app->make('config');

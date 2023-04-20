@@ -31,7 +31,7 @@ class Service
      */
     public function getAllowlistGroup()
     {
-        return Group::getByID(Config::get('concrete.spam.allowist_group', Config::get('concrete.spam.whitelist_group')));
+        return Group::getByID(Config::get('concrete.spam.allowlist_group', Config::get('concrete.spam.whitelist_group')));
     }
 
     /**
@@ -97,6 +97,9 @@ class Service
             $args['content'] = $content;
             foreach ($additionalArgs as $key => $value) {
                 $args[$key] = $value;
+            }
+            if (!isset($args['type'])) {
+                $args['type'] = $type;
             }
             if (isset($args['user']) && is_object($args['user'])) {
                 $u = $args['user'];

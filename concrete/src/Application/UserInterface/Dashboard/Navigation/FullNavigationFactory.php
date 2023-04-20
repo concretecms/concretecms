@@ -20,10 +20,15 @@ class FullNavigationFactory
 
     protected function getPageChildren(Page $page)
     {
+        $accountChildren = null;
         if ($page->getCollectionPath() == '/dashboard/welcome') {
-            $page = Page::getByPath('/account');
+            $accountPage = Page::getByPath('/account');
+            $accountChildren = $accountPage->getCollectionChildren();
         }
         $children = $page->getCollectionChildren();
+        if (isset($accountChildren)) {
+            return array_merge($children, $accountChildren);
+        }
         return $children;
     }
 

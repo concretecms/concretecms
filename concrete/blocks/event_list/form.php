@@ -146,7 +146,7 @@ if (count($pageAttributeKeys)) {
         <?php echo $form->label('eventListTitle', t('Title')); ?>
 	    <div class="input-group">
         	<?php echo $form->text('eventListTitle', $eventListTitle) ?>
-			<?php echo $form->select('titleFormat', \Concrete\Core\Block\BlockController::$btTitleFormats, $titleFormat, array('style' => 'width:105px;flex-grow:0;', 'class' => 'form-select')); ?>
+			<?php echo $form->select('titleFormat', \Concrete\Core\Block\BlockController::$btTitleFormats, $titleFormat ?? null, array('style' => 'width:105px;flex-grow:0;', 'class' => 'form-select')); ?>
 		</div>
 	</div>
 
@@ -158,6 +158,27 @@ if (count($pageAttributeKeys)) {
     <div class="mb-3">
         <?php echo $form->label('totalPerPage', t('Events to Display Per Page')); ?>
         <?php echo $form->text('totalPerPage', $totalPerPage); ?>
+    </div>
+
+    <div class="mb-3">
+        <?php echo $form->label('eventPeriod', t('Event Period')); ?>
+        <?php
+        echo $form->select('eventPeriod', [
+            "future_events" => t("Future Events"),
+            "past_events" => t("Past Events"),
+            "all_events" => t("All Events")
+        ], $eventPeriod);
+        ?>
+    </div>
+
+    <div class="mb-3">
+        <?php echo $form->label('eventOrder', t('Event Order')); ?>
+        <?php
+        echo $form->select('eventOrder', [
+            "most_recent_first" => t("Most Recent First"),
+            "oldest_first" => t("Oldest First"),
+        ], $eventOrder);
+        ?>
     </div>
 
     <div class="mb-3">

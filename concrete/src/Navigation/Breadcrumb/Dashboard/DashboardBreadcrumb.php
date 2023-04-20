@@ -14,6 +14,27 @@ class DashboardBreadcrumb implements BreadcrumbInterface, \Iterator
     protected $items = [];
 
     /**
+     * @var bool
+     */
+    protected $sanitizeName = true;
+
+    /**
+     * @return bool
+     */
+    public function sanitizeName(): bool
+    {
+        return $this->sanitizeName;
+    }
+
+    /**
+     * @param bool $sanitizeName
+     */
+    public function setSanitizeName(bool $sanitizeName): void
+    {
+        $this->sanitizeName = $sanitizeName;
+    }
+
+    /**
      * {@inheritdoc}
      *
      * @see \Concrete\Core\Navigation\NavigationInterface::add()

@@ -32,7 +32,7 @@ use Loader;
 use Page;
 use PageCache;
 use Permissions;
-use Stack;
+use Concrete\Core\Page\Stack\Stack;
 
 class Collection extends ConcreteObject implements TrackableInterface
 {
@@ -138,7 +138,7 @@ class Collection extends ConcreteObject implements TrackableInterface
         /** @var Connection $db */
         $db = $app->make(Connection::class);
         $qb = $db->createQueryBuilder();
-        $qb->select('c.cID', 'p.cID')
+        $qb->select('c.cID', 'p.cID AS pcID')
             ->from('Collections', 'c')
             ->leftJoin('c', 'Pages', 'p', 'c.cID = p.cID')
             ->where('c.cHandle = :cHandle')
@@ -896,22 +896,64 @@ class Collection extends ConcreteObject implements TrackableInterface
     }
 
     /**
-     * Get the blocks contained in the all the global areas.
+     * Get the blocks contained in all the global areas in this collection.
      *
      * @return \Concrete\Core\Block\Block[]
      */
     public function getGlobalBlocks()
+    {
+        $stacks = $this->getGlobalStacksForCollection();
+        $blocks = [];
+
+        foreach($stacks as $s) {
+            $blocksTmp = $s->getBlocks(STACKS_AREA_NAME);
+            $blocks = array_merge($blocks, $blocksTmp);
+        }
+
+        return $blocks;
+    }
+
+    /**
+     * Get the IDs for blocks contained in all the global areas in this collection.
+     *
+     * @return array Return a list of arrays, each one is a dictionary like ['bID' => <block ID>, 'arHandle' => <area handle>]
+     */
+    public function getGlobalBlockIDs()
+    {
+        $stacks = $this->getGlobalStacksForCollection();
+        $blockIDs = [];
+
+        foreach ($stacks as $s) {
+            $blockIDsTmp = $s->getBlockIDs(STACKS_AREA_NAME);
+            $blockIDs = array_merge($blockIDs, $blockIDsTmp);
+        }
+
+        return $blockIDs;
+    }
+
+    /**
+     * Get all the global stacks loaded in this collection.
+     *
+     * @return \Concrete\Core\Page\Stack\Stack[]
+     */
+    protected function getGlobalStacksForCollection()
     {
         $app = Application::getFacadeApplication();
         /** @var Connection $db */
         $db = $app->make(Connection::class);
         $qb = $db->createQueryBuilder();
         $rs = $qb->select('stName')
-            ->from('Stacks')
-            ->where('stType = :stType')
+            ->from('Stacks', 's')
+            ->innerJoin('s', 'Areas', 'a', 'a.arHandle = s.stName')
+            ->andWhere('a.arIsGlobal = 1')
+            ->andWhere('a.cID = :cID')
+            ->andWhere('s.stType = :stType')
+            ->setParameter('cID', $this->getCollectionID())
             ->setParameter('stType', Stack::ST_TYPE_GLOBAL_AREA)
             ->execute()->fetchAll(FetchMode::COLUMN);
-        $blocks = [];
+
+        $stacks = [];
+
         if (count($rs) > 0) {
             $pcp = new Permissions($this);
             foreach ($rs as $garHandle) {
@@ -921,13 +963,12 @@ class Collection extends ConcreteObject implements TrackableInterface
                     $s = Stack::getByName($garHandle, 'ACTIVE');
                 }
                 if (is_object($s)) {
-                    $blocksTmp = $s->getBlocks(STACKS_AREA_NAME);
-                    $blocks = array_merge($blocks, $blocksTmp);
+                    $stacks[] = $s;
                 }
             }
         }
 
-        return $blocks;
+        return $stacks;
     }
 
     /**

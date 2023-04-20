@@ -8,7 +8,7 @@
   "prefer-stable": true,
   "archive": {
     "exclude": [
-      "/tests", "/build", "/.github", "/.gitattributes", "/.travis.yml", "/CONTRIBUTING.md", "/phpunit.xml"
+      "/tests", "/build", "/.github", "/.gitattributes", "/CONTRIBUTING.md", "/phpunit.xml"
     ]
   },
   "require": {
@@ -61,7 +61,7 @@
       "merge-extra": false
     },
     "allow-subpatches": [
-      "concrete5/dependency-patches"
+      "concretecms/dependency-patches"
     ]
   },
   "autoload-dev": {

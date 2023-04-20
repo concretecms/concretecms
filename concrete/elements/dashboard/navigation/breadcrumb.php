@@ -19,14 +19,15 @@ if ($total > 1) {
                     ?>
                     <span class="dropdown">
                     <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
-                        <?= h($item->getName()) ?>
+                        <?= $breadcrumb->sanitizeName() ? h($item->getName()) : $item->getName(); ?>
                         <span class="caret"></span>
                     </a>
                         <ul class="dropdown-menu" role="menu">
                             <?php
-                            foreach ($item->getChildren() as $child) {
-                                ?>
-                                <li><a class="dropdown-item" href="<?= h($child->getUrl()); ?>"><?= h($child->getName()); ?></a></li>
+                            foreach ($item->getChildren() as $child) { ?>
+                                <li><a class="dropdown-item" href="<?= h($child->getUrl()); ?>">
+                                   <?= $breadcrumb->sanitizeName() ? h($child->getName()) : $child->getName(); ?>
+                                </a></li>
                                 <?php
                             }
                             ?>
@@ -37,7 +38,9 @@ if ($total > 1) {
                     echo h($item->getName());
                 } else {
                     ?>
-                    <a href="<?= h($item->getURL()) ?>"><?= h($item->getName()) ?></a>
+                    <a href="<?= h($item->getURL()) ?>">
+                        <?= $breadcrumb->sanitizeName() ? h($item->getName()) : $item->getName(); ?>
+                    </a>
                     <?php
                 }
                 ?>

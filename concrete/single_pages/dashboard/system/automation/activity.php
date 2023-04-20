@@ -4,8 +4,13 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
 ?>
 
-<div v-cloak id="process-list">
+<div class="ccm-dashboard-header-buttons">
+    <button data-dialog="clear-processes" class="btn btn-secondary">
+        <?=t('Clear Processes')?>
+    </button>
+</div>
 
+<div v-cloak id="process-list">
     <div v-if="runningProcesses.length">
         <h3><?=t('Currently Running')?></h3>
         <div v-if="runningProcesses.length">
@@ -28,7 +33,18 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
 </div>
 
-
+<div class="ccm-dashboard-dialog-wrapper">
+    <div data-dialog-wrapper="clear-processes">
+        <form method="post" action="<?= $controller->action('clear_processes') ?>">
+            <?php $token->output('clear_processes') ?>
+            <p><?=t('Are you sure you want to clear all processes? This will clear out all queued messages, batches, processes and process histories. This cannot be undone.') ?></p>
+            <div class="dialog-buttons">
+                <button class="btn btn-secondary" onclick="jQuery.fn.dialog.closeTop()"><?= t('Cancel') ?></button>
+                <button class="btn btn-danger" onclick="$('div[data-dialog-wrapper=clear-processes] form').submit()"><?= t('Clear') ?></button>
+            </div>
+        </form>
+    </div>
+</div>
 <script type="text/javascript">
     $(function() {
         Concrete.Vue.activateContext('backend', function (Vue, config) {

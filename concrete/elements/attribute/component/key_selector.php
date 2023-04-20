@@ -102,7 +102,12 @@ defined('C5_EXECUTE') or die('Access Denied.');
                     }
                 },
                 loadContent(attribute) {
-                    $(this.$el).find("#ccm-attribute-key-" + attribute.akID).html(attribute.content)
+                    var $content = $(this.$el).find("#ccm-attribute-key-" + attribute.akID)
+                    $content.html(attribute.content)
+                    $content.find('[data-vue]').each(function() {
+                        console.log($(this))
+                        $(this).concreteVue({'context': $(this).attr('data-vue')})
+                    })
                 },
                 isSelected(akID) {
                     return this.selectedAttributes.findIndex(attribute => attribute.akID == akID) > -1

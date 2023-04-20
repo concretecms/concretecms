@@ -1,13 +1,16 @@
 <?php
 namespace Concrete\Attribute\Calendar;
 
+use Concrete\Core\Api\ApiResourceValueInterface;
+use Concrete\Core\Api\Fractal\Transformer\CalendarTransformer;
+use Concrete\Core\Api\Resources;
 use Concrete\Core\Attribute\FontAwesomeIconFormatter;
-use Concrete\Core\Entity\Attribute\Value\Value\NumberValue;
 use Concrete\Core\Calendar\Calendar;
-use Concrete\Core\Entity\Calendar\CalendarEvent;
-use Concrete\Core\Page\Page;
+use Concrete\Core\Entity\Attribute\Value\Value\NumberValue;
+use League\Fractal\Resource\Item;
+use League\Fractal\Resource\ResourceInterface;
 
-class Controller extends \Concrete\Attribute\Number\Controller
+class Controller extends \Concrete\Attribute\Number\Controller implements ApiResourceValueInterface
 {
     protected $helpers = ['form'];
     protected $calendar;
@@ -18,7 +21,7 @@ class Controller extends \Concrete\Attribute\Number\Controller
     }
 
     /**
-     * @param $value CalendarEvent
+     * @param $value Calendar
      */
     public function createAttributeValue($value)
     {
@@ -52,7 +55,6 @@ class Controller extends \Concrete\Attribute\Number\Controller
         } else {
             $av = new NumberValue();
             $av->setValue(0);
-
             return $av;
         }
     }
@@ -92,4 +94,24 @@ class Controller extends \Concrete\Attribute\Number\Controller
         }
         $this->set('calendars', $calendars);
     }
+
+    public function createAttributeValueFromNormalizedJson($json)
+    {
+        $av = new NumberValue();
+        if ($json) {
+            $av->setValue($json);
+        } else {
+            $av->setValue(0);
+        }
+        return $av;
+    }
+
+    public function getApiValueResource(): ?ResourceInterface
+    {
+        if ($calendar = $this->getValue()) {
+            return new Item($calendar, new CalendarTransformer(), Resources::RESOURCE_CALENDARS);
+        }
+        return null;
+    }
+
 }

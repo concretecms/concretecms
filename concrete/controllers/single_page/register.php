@@ -78,9 +78,9 @@ class Register extends PageController
         $token = $this->app->make('token');
 
         if ($token->validate('register.do_register')) {
-            $username = $_POST['uName'];
-            $password = $_POST['uPassword'];
-            $passwordConfirm = $_POST['uPasswordConfirm'];
+            $username = $_POST['uName'] ?? '';
+            $password = $_POST['uPassword'] ?? '';
+            $passwordConfirm = $_POST['uPasswordConfirm'] ?? '';
 
             // clean the username
             $username = trim($username);
@@ -172,16 +172,16 @@ class Register extends PageController
                     $mh->addParameter('siteName', tc('SiteName', \Core::make('site')->getSite()->getSiteName()));
 
                     if ($config->get('concrete.email.register_notification.address')) {
-                        if (Config::get('concrete.email.register_notification.name')) {
-                            $fromName = Config::get('concrete.email.register_notification.name');
+                        if ($config->get('concrete.email.register_notification.name')) {
+                            $fromName = $config->get('concrete.email.register_notification.name');
                         } else {
                             $fromName = t('Website Registration Notification');
                         }
-                        $mh->from(Config::get('concrete.email.register_notification.address'), $fromName);
+                        $mh->from($config->get('concrete.email.register_notification.address'), $fromName);
                     } else {
-                        $adminUser = UserInfo::getByID(USER_SUPER_ID);
-                        if (is_object($adminUser)) {
-                            $mh->from($adminUser->getUserEmail(), t('Website Registration Notification'));
+                        $fromEmail = (string) $config->get('concrete.email.default.address');
+                        if ($fromEmail !== '') {
+                            $mh->from($fromEmail, t('Website Registration Notification'));
                         }
                     }
 

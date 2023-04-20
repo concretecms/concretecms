@@ -36,7 +36,16 @@ if ($view->controller->getAction() == 'preview_version') { ?>
     <div class="row gx-5">
         <div class="col-lg-6">
             <div class="ccm-file-manager-details-preview-thumbnail">
-                <?= $thumbnail ?>
+                <?php if ($fileVersion->canView()) { ?>
+                    <a
+                        href="<?=URL::to('/ccm/system/file/view')?>?fID=<?=$file->getFileID()?>"
+                        class="dialog-launch"
+                        dialog-width="90%"
+                        dialog-height="75%"
+                    ><?= $thumbnail ?></a>
+                <?php } else { ?>
+                    <?= $thumbnail ?>
+                <?php } ?>
             </div>
         </div>
         <div class="col-lg-6">
@@ -141,7 +150,7 @@ if ($view->controller->getAction() == 'preview_version') { ?>
                         <?php
                     } else {
                         ?>
-                        <span><?= implode(', ', $tags) ?></span>
+                        <span><?= h(implode(', ', $tags)) ?></span>
                         <?php
                     }
                     ?>

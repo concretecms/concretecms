@@ -2,13 +2,18 @@
 
 namespace Concrete\Attribute\Rating;
 
+use Concrete\Core\Api\Attribute\OpenApiSpecifiableInterface;
+use Concrete\Core\Api\OpenApi\SpecProperty;
 use Concrete\Core\Attribute\Controller as AttributeTypeController;
 use Concrete\Core\Attribute\FontAwesomeIconFormatter;
 use Concrete\Core\Attribute\SimpleTextExportableAttributeInterface;
+use Concrete\Core\Entity\Attribute\Key\Key;
 use Concrete\Core\Entity\Attribute\Value\Value\NumberValue;
 use Concrete\Core\Error\ErrorList\ErrorList;
 
-class Controller extends AttributeTypeController implements SimpleTextExportableAttributeInterface
+class Controller extends AttributeTypeController implements
+    SimpleTextExportableAttributeInterface,
+    OpenApiSpecifiableInterface
 {
     public $helpers = ['rating'];
 
@@ -126,4 +131,14 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
 
         return $value;
     }
+
+    public function getOpenApiSpecProperty(Key $key): SpecProperty
+    {
+        return new SpecProperty(
+            $key->getAttributeKeyHandle(),
+            $key->getAttributeKeyDisplayName(),
+            'number'
+        );
+    }
+
 }

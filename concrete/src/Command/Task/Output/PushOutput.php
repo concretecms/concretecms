@@ -32,7 +32,7 @@ class PushOutput implements OutputInterface, NormalizableInterface, Denormalizab
 
     public function write($message)
     {
-        $this->service->getHub()->publish((new ProcessOutputEvent($this->processId, $message))->getUpdate());
+        $this->service->publish(new ProcessOutputEvent($this->processId, $message));
     }
 
     public function normalize(NormalizerInterface $normalizer, string $format = null, array $context = [])

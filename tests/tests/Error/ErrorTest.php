@@ -43,7 +43,7 @@ class ErrorTest extends TestCase
         $html = ob_get_contents();
         ob_end_clean();
         $json = json_encode($e);
-        $this->assertEquals('{"error":true,"errors":["This is a test."]}', $json);
+        $this->assertEquals('{"error":true,"errors":["This is a test."],"list":[{"message":"This is a test.","messageContainsHtml":false}]}', $json);
         $this->assertEquals($json, $output);
         $output = json_decode($output);
         $this->assertEquals(true, $output->error);

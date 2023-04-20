@@ -10,6 +10,7 @@ class SaveAttributesCommandHandler
         $keys = $command->getAttributeKeys();
         foreach($keys as $key) {
             $controller = $key->getController();
+            $controller->setAttributeObject($command->getObject());
             $value = $controller->createAttributeValueFromRequest();
             $command->getObject()->setAttribute($key, $value);
         }

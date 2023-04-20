@@ -17,8 +17,6 @@
 
             <div class="tab-pane active" id="tab-content-fields">
 
-                <p class="mb-0"><small class="text-muted"><?=t('Add custom search fields based on your needs.')?></small></p>
-
                 <?php
                     print $searchFieldSelectorElement->render();
                 ?>
@@ -26,8 +24,6 @@
             </div>
 
             <div class="tab-pane" id="tab-content-columns">
-
-                <p><small class="text-muted"><?=t('Customize the columns, column order, sort and number of results for your search.')?></small></p>
 
                 <?php
                     print $customizeElement->render();
@@ -41,8 +37,8 @@
                         <table class="ccm-search-results-table ccm-search-presets-table">
                             <tbody>
                                 <?php foreach ($searchPresets as $searchPreset) { ?>
-                                    <tr data-search-preset-id="<?= $searchPreset->getId(); ?>" data-search-preset-name="<?= $searchPreset->getPresetName(); ?>" data-action="<?= $controller->getSavedSearchBaseURL($searchPreset); ?>">
-                                        <td style="padding-left: 15px;"><?= $searchPreset->getPresetName(); ?></td>
+                                    <tr data-search-preset-id="<?= $searchPreset->getId(); ?>" data-search-preset-name="<?= h($searchPreset->getPresetName()); ?>" data-action="<?= $controller->getSavedSearchBaseURL($searchPreset); ?>">
+                                        <td style="padding-left: 15px;"><?= h($searchPreset->getPresetName()); ?></td>
                                         <td valign="top" style="text-align: right; padding-right: 15px;">
                                             <div class="btn-group">
                                                 <button type="button" data-button-action="edit-search-preset" dialog-title="<?= t('Edit Search Preset'); ?>" data-tree-action-url="<?= $controller->getSavedSearchEditURL($searchPreset); ?>" class="btn btn-info btn-sm"><?= t('Edit'); ?></button>

@@ -42,6 +42,7 @@ $router->all('/search', 'Search::view');
 $router->all('/jump_to_folder', 'JumpToFolder::view');
 $router->all('/thumbnails', 'Thumbnails::view');
 $router->all('/thumbnails/edit', 'Thumbnails\Edit::view');
+$router->all('/thumbnails/edit/submit', 'Thumbnails\Edit::submit');
 $router->all('/usage/{fID}', 'Usage::view');
 $router->all('/statistics/{fID}', 'Statistics::view');
 $router->all('/statistics/load_more/{fID}', 'Statistics::load_more');

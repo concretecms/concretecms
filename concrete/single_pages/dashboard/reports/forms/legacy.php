@@ -187,7 +187,7 @@ EOT
             <table class="table table-striped">
                 <thead>
                 <tr>
-                    <?php if ($_REQUEST['sortBy'] == 'chrono') { ?>
+                    <?php if (($_REQUEST['sortBy'] ?? '') === 'chrono') { ?>
                     <th class="header headerSortDown">
                         <a href="<?php echo $text->entities($urlhelper->unsetVariable('sortBy')) ?>">
                             <?php } else { ?>
@@ -243,10 +243,10 @@ EOT
                             } else {
                                 if ($question['inputType'] == 'text') {
                                     echo '<td>' . $text->entities(
-                                            $answerSet['answers'][$questionId]['answerLong']) . '</td>';
+                                            $answerSet['answers'][$questionId]['answerLong'] ?? '') . '</td>';
                                 } else {
                                     echo '<td>' . $text->entities(
-                                            $answerSet['answers'][$questionId]['answer']) . '</td>';
+                                            $answerSet['answers'][$questionId]['answer'] ?? '') . '</td>';
                                 }
                             }
                         }

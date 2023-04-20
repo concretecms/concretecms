@@ -3,10 +3,10 @@
 namespace Concrete\Tests\Session;
 
 use Concrete\Core\Http\Request;
-use Concrete\Core\Permission\IPService;
 use Concrete\Core\Session\SessionValidator;
 use Concrete\Core\Support\Facade\Application;
 use Concrete\Tests\TestCase;
+use Doctrine\ORM\EntityManagerInterface;
 use IPLib\Address\AddressInterface;
 use IPLib\Factory;
 use IPLib\ParseStringFlag;
@@ -40,8 +40,11 @@ class SessionValidatorTest extends TestCase
         $this->app['config'] = clone $this->app['config'];
 
         $this->request = Request::create('http://url.com/');
-        $config = $this->app->make('config');
-        $this->validator = new SessionValidator($this->app, $this->app['config'], $this->request, $this->app->make(IPService::class, ['config' => $config, 'request' => $this->request]));
+        $this->validator = new SessionValidator(
+            $this->app,
+            $this->app['config'],
+            $this->request
+        );
 
         $store = [];
         $mock = $this->getMockBuilder('Symfony\Component\HttpFoundation\Session\Session')

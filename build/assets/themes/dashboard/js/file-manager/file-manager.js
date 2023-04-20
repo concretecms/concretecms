@@ -26,26 +26,18 @@
         my.setupBulkActions()
         my.setupFolderActions()
         my.setupFavoriteFolderActions()
+
     }
 
     ConcreteFileManagerTable.prototype = Object.create(ConcreteSearchResultsTable.prototype)
 
     ConcreteFileManagerTable.prototype.setupFavoriteFolderActions = function () {
-        var $favoriteFolderSelector = $("#favoriteFolderSelector")
-
-        // bind the change handler for the favorite folder selector
-        $favoriteFolderSelector.change(function(e) {
-            e.preventDefault()
-            var favoriteFolderId = $(this).val()
-            window.location.href = CCM_DISPATCHER_FILENAME + "/dashboard/files/search/folder/" + favoriteFolderId
-        })
-
         $(".ccm-favorite-folder-switch").change(function() {
             var favoriteFolderId = $(this).val()
-
             if ($(this).is(":checked")) {
                 // add folder to users favorite list
                 new ConcreteAjaxRequest({
+                    loader: false,
                     url: CCM_DISPATCHER_FILENAME + "/ccm/system/file/add_favorite_folder/" + favoriteFolderId,
                     success: function() {
                         ConcreteEvent.publish('FileManagerRefreshFavoriteFolderList')
@@ -54,6 +46,7 @@
             } else {
                 // add folder to users favorite list
                 new ConcreteAjaxRequest({
+                    loader: false,
                     url: CCM_DISPATCHER_FILENAME + "/ccm/system/file/remove_favorite_folder/" + favoriteFolderId,
                     success: function() {
                         ConcreteEvent.publish('FileManagerRefreshFavoriteFolderList')
@@ -61,38 +54,6 @@
                 })
             }
         })
-
-        ConcreteEvent.subscribe('FileManagerRefreshFavoriteFolderList', function() {
-            // fetch user favorite folders and render list
-            new ConcreteAjaxRequest({
-                url: CCM_DISPATCHER_FILENAME + "/ccm/system/file/get_favorite_folders",
-                success: function(response) {
-                    if (Object.keys(response.favoriteFolders).length) {
-                        $favoriteFolderSelector.selectpicker('show')
-                        $favoriteFolderSelector.html("")
-
-                        for(var favoriteFolderId in response.favoriteFolders) {
-                            var favoriteFolderName = response.favoriteFolders[favoriteFolderId]
-
-                            var $favoriteFolderOptionItem = $("<option></option>")
-                                .attr("value", favoriteFolderId)
-                                .attr("data-icon", "fa fa-folder")
-                                .text(favoriteFolderName)
-
-                            $favoriteFolderSelector.append($favoriteFolderOptionItem)
-                        }
-
-                        $favoriteFolderSelector.selectpicker('refresh')
-                    } else {
-                        $favoriteFolderSelector.selectpicker('hide')
-                    }
-                }
-            })
-        })
-
-        // load list on page start up
-        $favoriteFolderSelector.selectpicker('refresh')
-        ConcreteEvent.publish('FileManagerRefreshFavoriteFolderList')
     }
 
     ConcreteFileManagerTable.prototype.setupFileEvents = function () {

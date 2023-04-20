@@ -46,6 +46,7 @@ use Concrete\Core\Utility\Service\Identifier;
 use Concrete\Core\Workflow\Request\ActivateUserRequest as ActivateUserWorkflowRequest;
 use Concrete\Core\Workflow\Request\DeleteUserRequest as DeleteUserWorkflowRequest;
 use Core;
+use Doctrine\DBAL\Types\SimpleArrayType;
 use Doctrine\ORM\EntityManagerInterface;
 use Group;
 use Imagine\Image\ImageInterface;
@@ -439,9 +440,9 @@ class UserInfo extends ConcreteObject implements AttributeObjectInterface, Permi
             $mh->addParameter('myPrivateMessagesURL', $urlManager->resolve(['/account/messages']));
             if ($siteConfig->get('user.profiles_enabled')) {
                 $mh->addParameter('profileURL', $this->getUserPublicProfileUrl());
-                if ($this->getAttribute('profile_private_messages_enabled')) {
-                    $mh->addParameter('replyToMessageURL', $urlManager->resolve(['/account/messages', 'reply', 'inbox', $msgID]));
-                }
+            }
+            if ($this->getAttribute('profile_private_messages_enabled')) {
+                $mh->addParameter('replyToMessageURL', $urlManager->resolve(['/account/messages', 'reply', 'inbox', $msgID]));
             }
             $mh->to($recipient->getUserEmail());
 
@@ -543,9 +544,13 @@ class UserInfo extends ConcreteObject implements AttributeObjectInterface, Permi
                     $result = null;
                 }
             }
+            if (is_array($data['ignoredIPMismatches'] ?? null)) {
+                $fields[] = 'ignoredIPMismatches = ?';
+                $values[] = (new SimpleArrayType())->convertToDatabaseValue($data['ignoredIPMismatches'], $this->connection->getDatabasePlatform());
+            }
             if ($result === true && !empty($fields)) {
                 $this->connection->executeQuery(
-                    'update Users set  ' . implode(', ', $fields) . 'where uID = ? limit 1',
+                    'update Users set  ' . implode(', ', $fields) . ' where uID = ? limit 1',
                     array_merge($values, [$uID])
                 );
                 if (!empty($nullFields)) {
@@ -875,6 +880,14 @@ class UserInfo extends ConcreteObject implements AttributeObjectInterface, Permi
     }
 
     /**
+     * @see \Concrete\Core\Entity\User\User::getUserLastPasswordChange()
+     */
+    public function getUserLastPasswordChange(): ?\DateTimeInterface
+    {
+        return $this->entity->getUserLastPasswordChange();
+    }
+
+    /**
      * @see \Concrete\Core\Entity\User\User::isUserActive()
      */
     public function isActive()
@@ -1001,6 +1014,7 @@ class UserInfo extends ConcreteObject implements AttributeObjectInterface, Permi
     {
         foreach ($attributes as $uak) {
             $controller = $uak->getController();
+            $controller->setAttributeObject($this);
             $value = $controller->createAttributeValueFromRequest();
             $this->setAttribute($uak, $value);
         }

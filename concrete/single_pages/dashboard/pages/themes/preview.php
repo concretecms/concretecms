@@ -65,7 +65,7 @@ $previewContentsURL = URL::to('/ccm/system/panels/page/design/preview_contents')
     </div>
 </div>
 
-<div data-vue="theme-customizer" class="h-100">
+<div data-vue-app="theme-customizer" class="h-100">
 
     <div class="ccm-page h-100">
     <iframe name="ccm-page-preview-frame" class="ccm-page-preview-frame" style="margin-top: 48px" class="w-100 h-100" style="border: 0"

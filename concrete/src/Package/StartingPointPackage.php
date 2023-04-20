@@ -3,13 +3,17 @@ namespace Concrete\Core\Package;
 
 use AuthenticationType;
 use Concrete\Block\ExpressForm\Controller as ExpressFormBlockController;
-use Concrete\Core\Api\OAuth\Scope\ScopeRegistryInterface;
+use Concrete\Core\Announcement\AnnouncementService;
+use Concrete\Core\Api\Command\SynchronizeScopesCommand;
 use Concrete\Core\Backup\ContentImporter;
 use Concrete\Core\Config\Renderer;
+use Concrete\Core\Config\Repository\Repository;
 use Concrete\Core\Database\DatabaseStructureManager;
 use Concrete\Core\Entity\OAuth\Scope;
 use Concrete\Core\File\Filesystem;
 use Concrete\Core\File\Service\File;
+use Concrete\Core\Messenger\Transport\DefaultAsync\DefaultAsyncConnection;
+use Concrete\Core\User\Group\Command\AddGroupCommand;
 use Concrete\Core\Localization\Localization;
 use Concrete\Core\Mail\Importer\MailImporter;
 use Concrete\Core\Package\Routine\AttachModeInstallRoutine;
@@ -17,6 +21,7 @@ use Concrete\Core\Permission\Access\Access as PermissionAccess;
 use Concrete\Core\Permission\Access\Entity\ConversationMessageAuthorEntity;
 use Concrete\Core\Permission\Access\Entity\GroupEntity as GroupPermissionAccessEntity;
 use Concrete\Core\Permission\Access\Entity\UserEntity;
+use Concrete\Core\Production\Modes;
 use Concrete\Core\Tree\Node\Type\ExpressEntryCategory;
 use Concrete\Core\Tree\Type\ExpressEntryResults;
 use Concrete\Core\Updater\Migrations\Configuration;
@@ -336,6 +341,7 @@ class StartingPointPackage extends Package
         $ci = new ContentImporter();
         $ci->importContentFile(DIR_BASE_CORE . '/config/install/base/summary.xml');
         $ci->importContentFile(DIR_BASE_CORE . '/config/install/base/themes.xml');
+        // this remains for backward compatibility but no core themes use it.
         if (file_exists($this->getPackagePath() . '/themes.xml')) {
             $ci->importContentFile($this->getPackagePath() . '/themes.xml');
         }
@@ -411,12 +417,8 @@ class StartingPointPackage extends Package
 
     protected function install_api()
     {
-        $scopes = $this->app->make(ScopeRegistryInterface::class)->getScopes();
-        $em = $this->app->make(EntityManager::class);
-        foreach ($scopes as $scope) {
-            $em->persist($scope);
-            $em->flush();
-        }
+        $command = new SynchronizeScopesCommand();
+        $this->app->executeCommand($command);
     }
 
     protected function install_database()
@@ -460,6 +462,8 @@ class StartingPointPackage extends Package
         } catch (\Exception $e) {
             throw new \Exception(t('Unable to install database: %s', $e->getMessage()));
         }
+        $connection = $this->app->make(DefaultAsyncConnection::class)->getWrappedConnection();
+        $connection->setup();
     }
 
     protected function indexAdditionalDatabaseFields()
@@ -494,19 +498,22 @@ class StartingPointPackage extends Package
         // insert the default groups
         // create the groups our site users
         // specify the ID's since auto increment may not always be +1
-        $g1 = Group::add(
-            tc('GroupName', 'Guest'),
-            tc('GroupDescription', 'The guest group represents unregistered visitors to your site.'),
-            false,
-            false,
-            GUEST_GROUP_ID);
-        $g2 = Group::add(
-            tc('GroupName', 'Registered Users'),
-            tc('GroupDescription', 'The registered users group represents all user accounts.'),
-            false,
-            false,
-            REGISTERED_GROUP_ID);
-        $g3 = Group::add(tc('GroupName', 'Administrators'), '', false, false, ADMIN_GROUP_ID);
+        $command = new AddGroupCommand();
+        $this->app->executeCommand($command
+            ->setName(tc('GroupName', 'Guest'))
+            ->setDescription(tc('GroupDescription', 'The guest group represents unregistered visitors to your site.'))
+            ->setForcedNewGroupID(GUEST_GROUP_ID)
+        );
+        $this->app->executeCommand($command
+            ->setName(tc('GroupName', 'Registered Users'))
+            ->setDescription(tc('GroupDescription', 'The registered users group represents all user accounts.'))
+            ->setForcedNewGroupID(REGISTERED_GROUP_ID)
+        );
+        $this->app->executeCommand($command
+            ->setName(tc('GroupName', 'Administrators'))
+            ->setDescription('')
+            ->setForcedNewGroupID(ADMIN_GROUP_ID)
+        );
 
         $superuser = UserInfo::addSuperUser($this->installerOptions->getUserPasswordHash(), $this->installerOptions->getUserEmail());
         $u = User::getByUserID(USER_SUPER_ID, true, false);
@@ -528,6 +535,12 @@ class StartingPointPackage extends Package
         $db->executeQuery('insert into GroupTypeSelectedRoles (gtID, grID) values (?,?)', [DEFAULT_GROUP_TYPE_ID, DEFAULT_GROUP_ROLE_ID]);
         $db->executeQuery('update `Groups` set gtID = ?, gDefaultRoleID = ?', [DEFAULT_GROUP_TYPE_ID, DEFAULT_GROUP_ROLE_ID]);
         $db->executeQuery('update UserGroups set grID = ?', [DEFAULT_GROUP_ROLE_ID]);
+
+        $config = $this->app->make(Repository::class);
+        if (!$config->get('concrete.email.default.address')) {
+            $config->set('concrete.email.default.address', $this->installerOptions->getUserEmail());
+            $config->save('concrete.email.default.address', $this->installerOptions->getUserEmail());
+        }
     }
 
     protected function make_directories()
@@ -592,10 +605,17 @@ class StartingPointPackage extends Package
         }
         $config->save('app.server_timezone', $this->installerOptions->getServerTimeZone(true)->getName());
 
+        $config->save('concrete.security.production.mode', Modes::MODE_DEVELOPMENT);
+
         $this->installerOptions->deleteFiles();
 
         // Set the version_db as the version_db_installed
         $config->save('concrete.version_db_installed', $config->get('concrete.version_db'));
+
+        // Initiate announcements
+        $announcementService = $this->app->make(AnnouncementService::class);
+        $announcementService->createAnnouncementIfNotExists('collect_site_information');
+        $announcementService->createAnnouncementIfNotExists('welcome');
 
         // Clear cache
         $config->clearCache();

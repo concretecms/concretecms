@@ -483,9 +483,9 @@ class Version extends ConcreteObject implements PermissionObjectInterface, Attri
      *
      * @return string|null
      */
-    public function getVersionComments()
+    public function getVersionComments($sanitize = true)
     {
-        return $this->cvComments;
+        return $sanitize ? h($this->cvComments) : $this->cvComments;
     }
 
     /**
@@ -710,7 +710,7 @@ class Version extends ConcreteObject implements PermissionObjectInterface, Attri
         $db = $app->make(Connection::class);
         /** @var Date $dh */
         $dh = $app->make('helper/date');
-        $u = $app->make(\Concrete\Core\User\User::class);
+        $u = $app->make(User::class);
         $uID = $u->getUserID();
         $cvID = $this->getVersionID();
         $cID = $this->getCollectionID();
@@ -810,6 +810,7 @@ class Version extends ConcreteObject implements PermissionObjectInterface, Attri
             );
         }
         $ev = new Event($c);
+        $ev->setUser($u);
         $ev->setCollectionVersionObject($this);
         $app->make('director')->dispatch('on_page_version_approve', $ev);
 
@@ -942,6 +943,7 @@ class Version extends ConcreteObject implements PermissionObjectInterface, Attri
         $cvID = $this->cvID;
         $c = Page::getByID($this->cID, $cvID);
         $cID = $c->getCollectionID();
+        $u = $app->make(User::class);
 
         $q = "select bID, arHandle from CollectionVersionBlocks where cID = ? and cvID = ?";
         $r = $db->executeQuery($q, array(
@@ -991,6 +993,7 @@ class Version extends ConcreteObject implements PermissionObjectInterface, Attri
         $this->refreshCache();
 
         $ev = new Event($c);
+        $ev->setUser($u);
         $ev->setCollectionVersionObject($this);
         $app->make('director')->dispatch('on_page_version_delete', $ev);
     }

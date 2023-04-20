@@ -34,18 +34,110 @@ use Symfony\Component\HttpFoundation\Request;
 
 class Controller extends BlockController implements UsesFeatureInterface
 {
+    /**
+     * @var string|null
+     */
+    public $exEntityID;
+
+    /**
+     * @var int|string|null
+     */
+    public $detailPage;
+
+    /**
+     * @var string|null
+     */
+    public $linkedProperties;
+
+    /**
+     * @var string|null
+     */
+    public $searchProperties = false;
+
+    /**
+     * @var string|null
+     */
+    public $searchAssociations;
+
+    /**
+     * @var string|null
+     */
+    public $columns;
+
+    /**
+     * @var string|null
+     */
+    public $filterFields;
+
+    /**
+     * @var int|string|null
+     */
+    public $displayLimit;
+
+    /**
+     * @var int|string|null
+     */
+    public $enableItemsPerPageSelection = false;
+
+    /**
+     * @var int|string|null
+     */
+    public $enablePagination;
+
+    /**
+     * @var int|string|null
+     */
+    public $enableSearch;
+
+    /**
+     * @var int|string|null
+     */
+    public $enableKeywordSearch;
+
+    /**
+     * @var string|null
+     */
+    public $headerBackgroundColor;
+
+    /**
+     * @var string|null
+     */
+    public $headerBackgroundColorActiveSort;
+
+    /**
+     * @var string|null
+     */
+    public $headerTextColor;
+
+    /**
+     * @var string|null
+     */
+    public $tableName;
+
+    /**
+     * @var string|null
+     */
+    public $tableDescription;
+
+    /**
+     * @var bool|int|string|null
+     */
+    public $tableStriped;
+
+    /**
+     * @var string|null
+     */
+    public $rowBackgroundColorAlternate;
+
+    /**
+     * @var string|null
+     */
+    public $titleFormat;
+
     protected $btInterfaceWidth = "640";
     protected $btInterfaceHeight = "400";
     protected $btTable = 'btExpressEntryList';
     protected $entityAttributes = [];
-
-    public $enableItemsPerPageSelection = false;
-
-    public $searchProperties = false;
-
-    public $searchAssociations;
-
-    public $columns;
 
     public function on_start()
     {
@@ -75,7 +167,7 @@ class Controller extends BlockController implements UsesFeatureInterface
             Features::EXPRESS
         ];
     }
-    
+
     public function add()
     {
         $this->loadData();
@@ -168,8 +260,7 @@ class Controller extends BlockController implements UsesFeatureInterface
 
                 $fieldManager = $this->getSearchFieldManager($entity);
                 $fieldSelectorElement = new SearchFieldSelector($fieldManager, $this->getActionURL('add_search_field'));
-                $fieldSelectorElement->setIncludeJavaScript(true);
-                
+
                 $query = new Query();
                 if ($this->filterFields) {
                     $filterFields = unserialize($this->filterFields);
@@ -306,8 +397,8 @@ class Controller extends BlockController implements UsesFeatureInterface
                 $columnSet = new DefaultSet($category);
             }
 
-            $query = $queryModifier->process($query);
             $query->setColumns($columnSet);
+            $query = $queryModifier->process($query);
 
             $result = $resultFactory->createFromQuery($searchProvider, $query);
             $list = $result->getItemListObject();
