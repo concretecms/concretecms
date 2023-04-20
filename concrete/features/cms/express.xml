@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<concrete5-cif version="1.0">
+
+    <blocktypes>
+        <blocktype handle="express_entry_list" package=""/>
+        <blocktype handle="express_entry_detail" package=""/>
+    </blocktypes>
+
+    <blocktypesets>
+        <blocktypeset handle="express" name="Express" package="">
+            <blocktype handle="express_entry_list"/>
+            <blocktype handle="express_entry_detail"/>
+        </blocktypeset>
+    </blocktypesets>
+
+</concrete5-cif>

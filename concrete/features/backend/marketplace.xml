@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<concrete5-cif version="1.0">
+
+    <singlepages>
+        <page name="Connect to the Community" path="/dashboard/extend/connect" filename="/dashboard/extend/connect.php"
+              pagetype="" description="Connect to the Concrete community." package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>concretecms.com, my account, marketplace</value>
+                </attributekey>
+            </attributes>
+        </page>
+        <page name="Get More Themes" path="/dashboard/extend/themes" filename="/dashboard/extend/themes.php" pagetype=""
+              description="Download themes from the marketplace." package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>buy theme, new theme, marketplace, template</value>
+                </attributekey>
+            </attributes>
+        </page>
+        <page name="Get More Add-Ons" path="/dashboard/extend/addons" filename="/dashboard/extend/addons.php"
+              pagetype="" description="Download add-ons from the marketplace." package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>buy addon, buy add on, buy add-on, purchase addon, purchase add on, purchase add-on, find addon, new addon, marketplace</value>
+                </attributekey>
+            </attributes>
+        </page>
+
+    </singlepages>
+
+
+</concrete5-cif>

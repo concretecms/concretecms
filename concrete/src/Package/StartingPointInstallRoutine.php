@@ -1,6 +1,9 @@
 <?php
 namespace Concrete\Core\Package;
 
+/**
+ * @deprecated
+ */
 class StartingPointInstallRoutine implements \JsonSerializable
 {
     /**

@@ -11,9 +11,13 @@ return [
         '/install/web_precondition/{handle}' => ['\Concrete\Controller\Install::web_precondition'],
         '/install/web_precondition/{handle}/{argument}' => ['\Concrete\Controller\Install::web_precondition'],
         '/install/configure' => ['\Concrete\Controller\Install::configure'],
-        '/install/run_routine/{pkgHandle}/{routine}' => ['\Concrete\Controller\Install::run_routine'],
+        '/install/run_routine/{pkgHandle}' => ['\Concrete\Controller\Install::run_routine'],
         '/install/i18n/{locale}' => ['\Concrete\Controller\Install::getInstallerStrings'],
         '/install/{locale}' => ['\Concrete\Controller\Install::view'],
+    ],
+
+    'providers' => [
+        'core_install' => '\Concrete\Core\Install\InstallServiceProvider',
     ],
 
     'assets' => [

@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<concrete5-cif version="1.0">
+
+    <singlepages>
+        <page name="Theme Documentation" path="/!themes" filename="/!themes/view.php" pagetype="" description="" package="" global="true">
+        <attributes>
+            <attributekey handle="icon_dashboard">
+                <value>fas fa-palette</value>
+            </attributekey>
+        </attributes>
+    </page>
+    </singlepages>
+
+    <pagetypes>
+        <pagetype handle="core_theme_documentation_category" name="Theme Documentation Category" internal="1"
+                  package=""/>
+        <pagetype handle="core_theme_documentation" name="Theme Documentation" internal="1" package=""/>
+    </pagetypes>
+
+    <pagetemplates>
+        <pagetemplate handle="core_theme_documentation" name="Theme Documentation" internal="1" package=""/>
+    </pagetemplates>
+
+
+</concrete5-cif>

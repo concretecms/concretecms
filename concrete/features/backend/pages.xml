@@ -1,0 +1,170 @@
+<?xml version="1.0"?>
+<concrete5-cif version="1.0">
+
+    <singlepages>
+        <page name="Sitemap" path="/dashboard/sitemap" filename="/dashboard/sitemap/view.php" pagetype=""
+              description="Whole world at a glance." package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>pages, add page, delete page, copy, move, alias</value>
+                </attributekey>
+            </attributes>
+        </page>
+        <page name="Full Sitemap" path="/dashboard/sitemap/full" filename="/dashboard/sitemap/full.php" pagetype=""
+              description="" package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>pages, add page, delete page, copy, move, alias</value>
+                </attributekey>
+            </attributes>
+        </page>
+        <page name="Flat View" path="/dashboard/sitemap/explore" filename="/dashboard/sitemap/explore.php" pagetype=""
+              description="" package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>pages, add page, delete page, copy, move, alias, bulk</value>
+                </attributekey>
+            </attributes>
+        </page>
+        <page name="Page Search" path="/dashboard/sitemap/search" filename="/dashboard/sitemap/search.php" pagetype=""
+              description="" package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>find page, search page, search, find, pages, sitemap</value>
+                </attributekey>
+            </attributes>
+        </page>
+
+        <page name="Pages &amp; Themes" path="/dashboard/pages" filename="/dashboard/pages/view.php" pagetype=""
+              description="Reskin your site." package=""/>
+        <page name="Themes" path="/dashboard/pages/themes" filename="/dashboard/pages/themes/view.php" pagetype=""
+              description="Reskin your site." package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>new theme, theme, active theme, change theme, template, css</value>
+                </attributekey>
+            </attributes>
+        </page>
+        <page name="Inspect" path="/dashboard/pages/themes/inspect" filename="/dashboard/pages/themes/inspect.php"
+              pagetype="" description="" package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>page types</value>
+                </attributekey>
+                <attributekey handle="exclude_nav">
+                    <value><![CDATA[1]]></value>
+                </attributekey>
+            </attributes>
+        </page>
+        <page name="Page Types" path="/dashboard/pages/types" filename="/dashboard/pages/types/view.php" pagetype=""
+              description="" package="">
+        </page>
+
+        <page name="Organize Page Type Order" path="/dashboard/pages/types/organize"
+              filename="/dashboard/pages/types/organize.php" pagetype=""
+              description="" package="">
+            <attributes>
+                <attributekey handle="exclude_nav">
+                    <value><![CDATA[1]]></value>
+                </attributekey>
+            </attributes>
+        </page>
+
+        <page name="Add Page Type" path="/dashboard/pages/types/add" filename="/dashboard/pages/types/add.php"
+              pagetype="" description="" package="">
+            <attributes>
+                <attributekey handle="exclude_nav">
+                    <value><![CDATA[1]]></value>
+                </attributekey>
+            </attributes>
+
+        </page>
+
+        <page name="Compose Form" path="/dashboard/pages/types/form" filename="/dashboard/pages/types/form.php"
+              pagetype="" description="" package="">
+            <attributes>
+                <attributekey handle="exclude_nav">
+                    <value><![CDATA[1]]></value>
+                </attributekey>
+            </attributes>
+        </page>
+
+        <page name="Defaults and Output" path="/dashboard/pages/types/output"
+              filename="/dashboard/pages/types/output.php" pagetype="" description="" package="">
+            <attributes>
+                <attributekey handle="exclude_nav">
+                    <value><![CDATA[1]]></value>
+                </attributekey>
+            </attributes>
+        </page>
+
+        <page name="Page Type Attributes" path="/dashboard/pages/types/attributes"
+              filename="/dashboard/pages/types/attributes.php" pagetype="" description="" package="">
+            <attributes>
+                <attributekey handle="exclude_nav">
+                    <value><![CDATA[1]]></value>
+                </attributekey>
+            </attributes>
+        </page>
+
+        <page name="Page Type Permissions" path="/dashboard/pages/types/permissions"
+              filename="/dashboard/pages/types/permissions.php" pagetype="" description="" package="">
+            <attributes>
+                <attributekey handle="exclude_nav">
+                    <value><![CDATA[1]]></value>
+                </attributekey>
+            </attributes>
+        </page>
+
+        <page name="Page Templates" path="/dashboard/pages/templates" filename="/dashboard/pages/templates/view.php"
+              pagetype="" description="Form factors for pages in your site." package=""/>
+        <page name="Add Page Template" path="/dashboard/pages/templates/add"
+              filename="/dashboard/pages/templates/add.php" pagetype="" description="Add page templates to your site."
+              package="">
+            <attributes>
+                <attributekey handle="exclude_nav">
+                    <value><![CDATA[1]]></value>
+                </attributekey>
+            </attributes>
+        </page>
+        <page name="Containers" path="/dashboard/pages/containers" filename="/dashboard/pages/containers/view.php"
+              pagetype="" description="Container Templates for Areas." package=""/>
+        <page name="Add Container" path="/dashboard/pages/containers/add"
+              filename="/dashboard/pages/containers/add.php" pagetype="" description="Add page containers."
+              package="">
+            <attributes>
+                <attributekey handle="exclude_nav">
+                    <value><![CDATA[1]]></value>
+                </attributekey>
+            </attributes>
+        </page>
+        <page name="Attributes" path="/dashboard/pages/attributes" filename="/dashboard/pages/attributes.php"
+              pagetype="" description="" package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>page attributes, custom</value>
+                </attributekey>
+            </attributes>
+        </page>
+        <page name="Single Pages" path="/dashboard/pages/single" filename="/dashboard/pages/single.php" pagetype=""
+              description="" package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>single, page, custom, application</value>
+                </attributekey>
+            </attributes>
+        </page>
+
+        <page name="RSS Feeds" path="/dashboard/pages/feeds" filename="/dashboard/pages/feeds.php" pagetype=""
+              description="" package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>atom, rss, feed, syndication</value>
+                </attributekey>
+            </attributes>
+        </page>
+
+    </singlepages>
+
+
+</concrete5-cif>

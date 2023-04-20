@@ -395,7 +395,8 @@ export default {
             localization: {
                 siteLocaleLanguage: this.siteLocaleLanguage,
                 siteLocaleCountry: this.siteLocaleCountry,
-                timezone: this.timezone
+//                timezone: this.timezone
+                timezone: 'America/Los_Angeles'
             }
         }
     }

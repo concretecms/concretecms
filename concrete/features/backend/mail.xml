@@ -1,0 +1,59 @@
+<?xml version="1.0"?>
+<concrete5-cif version="1.0">
+
+    <singlepages>
+
+        <page name="Email" path="/dashboard/system/mail" filename="/dashboard/system/mail/view.php" pagetype=""
+              description="Control how your site send and processes mail." package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>smtp, mail settings</value>
+                </attributekey>
+            </attributes>
+        </page>
+        <page name="SMTP Method" path="/dashboard/system/mail/method" filename="/dashboard/system/mail/method.php"
+              pagetype="" description="" package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>email server, mail settings, mail configuration, external, internal</value>
+                </attributekey>
+            </attributes>
+        </page>
+        <page name="Test Mail Settings" path="/dashboard/system/mail/method/test"
+              filename="/dashboard/system/mail/method/test.php" pagetype="" description="" package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>test smtp, test mail</value>
+                </attributekey>
+            </attributes>
+        </page>
+        <page name="Email Importers" path="/dashboard/system/mail/importers"
+              filename="/dashboard/system/mail/importers.php" pagetype="" description="" package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>email server, mail settings, mail configuration, private message, message system, import, email, message</value>
+                </attributekey>
+            </attributes>
+        </page>
+        <page name="System Email Addresses" path="/dashboard/system/mail/addresses"
+              filename="/dashboard/system/mail/addresses.php" pagetype="" description="" package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>mail settings, mail configuration, email, sender</value>
+                </attributekey>
+            </attributes>
+        </page>
+        <page name="Email Logging" path="/dashboard/system/mail/logging" filename="/dashboard/system/mail/logging.php"
+              pagetype=""
+              description="Control how emails get logged." package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>email logging, mail logging, log mails, log emails</value>
+                </attributekey>
+            </attributes>
+        </page>
+
+    </singlepages>
+
+
+</concrete5-cif>

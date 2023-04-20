@@ -1,0 +1,94 @@
+<?xml version="1.0"?>
+<concrete5-cif version="1.0">
+
+    <singlepages>
+
+        <page name="Permissions &amp; Access" path="/dashboard/system/permissions"
+              filename="/dashboard/system/permissions/view.php" pagetype=""
+              description="Control who sees and edits your site." package=""/>
+        <page name="Site Access" path="/dashboard/system/permissions/site"
+              filename="/dashboard/system/permissions/site.php" pagetype="" description="" package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>editors, hide site, offline, private, public, access</value>
+                </attributekey>
+            </attributes>
+        </page>
+        <page name="Task Permissions" path="/dashboard/system/permissions/tasks"
+              filename="/dashboard/system/permissions/tasks.php" pagetype="" description="" package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>security, actions, administrator, admin, package, marketplace, search</value>
+                </attributekey>
+            </attributes>
+        </page>
+        <page name="User Permissions" path="/dashboard/system/permissions/users"
+              filename="/dashboard/system/permissions/users.php" pagetype="" description="" package="">
+        </page>
+        <page name="Advanced Permissions" path="/dashboard/system/permissions/advanced"
+              filename="/dashboard/system/permissions/advanced.php" pagetype="" description="" package="">
+        </page>
+        <page name="Workflows" path="/dashboard/system/permissions/workflows"
+              filename="/dashboard/system/permissions/workflows.php"
+              pagetype="" description="" package=""/>
+        <page name="IP Deny List" path="/dashboard/system/permissions/denylist"
+              filename="/dashboard/system/permissions/denylist.php" pagetype="" description="" package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>security, lock ip, lock out, block ip, address, restrict, access</value>
+                </attributekey>
+            </attributes>
+        </page>
+        <page name="Configure IP Blocking" path="/dashboard/system/permissions/denylist/configure"
+              filename="/dashboard/system/permissions/denylist/configure.php" pagetype="" description="" package="">
+            <attributes>
+                <attributekey handle="exclude_nav">
+                    <value>1</value>
+                </attributekey>
+            </attributes>
+        </page>
+        <page name="IP Range" path="/dashboard/system/permissions/denylist/range"
+              filename="/dashboard/system/permissions/denylist/range.php" pagetype="" description="" package="">
+            <attributes>
+                <attributekey handle="exclude_nav">
+                    <value>1</value>
+                </attributekey>
+            </attributes>
+        </page>
+        <page name="Captcha Setup" path="/dashboard/system/permissions/captcha"
+              filename="/dashboard/system/permissions/captcha.php" pagetype="" description="" package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>security, registration</value>
+                </attributekey>
+            </attributes>
+        </page>
+        <page name="Spam Control" path="/dashboard/system/permissions/antispam"
+              filename="/dashboard/system/permissions/antispam.php" pagetype="" description="" package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>antispam, block spam, security</value>
+                </attributekey>
+            </attributes>
+        </page>
+        <page name="Maintenance Mode" path="/dashboard/system/permissions/maintenance"
+              filename="/dashboard/system/permissions/maintenance.php" pagetype="" description="" package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>lock site, under construction, hide, hidden</value>
+                </attributekey>
+            </attributes>
+        </page>
+        <page name="Trusted Proxies" path="/dashboard/system/permissions/trusted_proxies"
+              filename="/dashboard/system/permissions/trusted_proxies.php" pagetype="" description="" package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>trusted, proxy, proxies, ip, header, cloudflare</value>
+                </attributekey>
+            </attributes>
+        </page>
+
+    </singlepages>
+
+
+</concrete5-cif>

@@ -3,12 +3,9 @@
 namespace Concrete\Core\Install;
 
 use Concrete\Core\Application\Application;
-use Concrete\Core\Application\ApplicationAwareInterface;
-use Concrete\Core\Application\ApplicationAwareTrait;
 use Concrete\Core\File\Service\File;
-use Concrete\Core\Install\StartingPoint\FeaturedStartingPoint;
+use Concrete\Core\Install\StartingPoint\Controller\ControllerInterface;
 use Concrete\Core\Install\StartingPoint\StartingPoint;
-use Concrete\Core\Package\FeaturedStartingPointPackageInterface;
 use Concrete\Core\Package\StartingPointPackage;
 
 class StartingPointService
@@ -45,14 +42,23 @@ class StartingPointService
         return $this->otherStartingPoints;
     }
 
-    protected function createFeaturedStartingPoint(string $thumbnail, string $identifier, string $name, array $descriptionLines)
+    protected function createStartingPoint(string $directory, string $handle, string $name, $description, $thumbnail = null)
     {
-        return new FeaturedStartingPoint($thumbnail, $identifier, $name, $descriptionLines);
+        return new StartingPoint($directory, $handle, $name, $description, $thumbnail);
     }
 
-    public function createStartingPoint(string $identifier, string $name, string $description)
+    public function getStartingPointFromHandle(string $handle)
     {
-        return new StartingPoint($identifier, $name, $description);
+        foreach ($this->featuredStartingPoints as $startingPoint) {
+            if ($startingPoint->getHandle() == $handle) {
+                return $startingPoint;
+            }
+        }
+        foreach ($this->otherStartingPoints as $startingPoint) {
+            if ($startingPoint->getHandle() == $handle) {
+                return $startingPoint;
+            }
+        }
     }
 
     protected function loadStartingPoints()
@@ -63,10 +69,14 @@ class StartingPointService
             foreach ($this->fileService->getDirectoryContents(DIR_STARTING_POINT_PACKAGES) as $pkgHandle) {
                 $class = '\\Application\\StartingPointPackage\\' . camelcase($pkgHandle) . '\\Controller';
                 $pkg = $this->app->make($class);
-                if ($pkg instanceof FeaturedStartingPointPackageInterface) {
-                    $startingPoints[] = $this->createFeaturedStartingPoint($pkg->getStartingPointThumbnail(), $pkg->getPackageHandle(), $pkg->getPackageName(), $pkg->getStartingPointDescriptionLines());
+                $directory = DIR_STARTING_POINT_PACKAGES . DIRECTORY_SEPARATOR . $pkgHandle;
+                if ($pkg instanceof ControllerInterface) {
+                    $startingPoints[] = $this->createStartingPoint($directory, $pkg->getStartingPointHandle(), $pkg->getStartingPointName(), $pkg->getStartingPointDescription(), $pkg->getStartingPointThumbnail());
                 } else {
-                    $startingPoints[] = $this->createStartingPoint($pkg->getPackageHandle(), $pkg->getPackageName(), $pkg->getPackageDescription());
+                    /**
+                     * @var $pkg StartingPointPackage
+                     */
+                    $startingPoints[] = $this->createStartingPoint($directory, $pkg->getPackageHandle(), $pkg->getPackageName(), $pkg->getPackageDescription());
                 }
             }
         }
@@ -87,10 +97,11 @@ class StartingPointService
                         $pkg = $this->app->make($pkgClass);
                         $theme = $this->app->make($themeClass);
                         if ($pkg->allowsFullContentSwap()) {
-                            if ($pkg instanceof FeaturedStartingPointPackageInterface) {
-                                $startingPoints[] = $this->createFeaturedStartingPoint($pkg->getStartingPointThumbnail(), $themeHandle, $theme->getThemeName(), $pkg->getStartingPointDescriptionLines());
+                            $directory = DIR_PACKAGES . DIRECTORY_SEPARATOR . $pkgHandle;
+                            if ($pkg instanceof ControllerInterface) {
+                                $startingPoints[] = $this->createStartingPoint($directory, $pkg->getStartingPointThumbnail(), $pkg->getStartingPointName(), $pkg->getStartingPointDescription(), $pkg->getStartingPointThumbnail());
                             } else {
-                                $startingPoints[] = $this->createStartingPoint($themeHandle, $theme->getThemeName(), $theme->getThemeDescription());
+                                $startingPoints[] = $this->createStartingPoint($directory, $themeHandle, $theme->getThemeName(), $theme->getThemeDescription());
                             }
                         }
                     }
@@ -102,15 +113,16 @@ class StartingPointService
         foreach ($this->fileService->getDirectoryContents(DIR_STARTING_POINT_PACKAGES_CORE) as $pkgHandle) {
             $class = '\\Concrete\\StartingPointPackage\\' . camelcase($pkgHandle) . '\\Controller';
             $pkg = $this->app->make($class);
-            if ($pkg instanceof FeaturedStartingPointPackageInterface) {
-                $startingPoints[] = $this->createFeaturedStartingPoint($pkg->getStartingPointThumbnail(), $pkg->getPackageHandle(), $pkg->getPackageName(), $pkg->getStartingPointDescriptionLines());
+            $directory = DIR_STARTING_POINT_PACKAGES_CORE . DIRECTORY_SEPARATOR . $pkgHandle;
+            if ($pkg instanceof ControllerInterface) {
+                $startingPoints[] = $this->createStartingPoint($directory, $pkg->getStartingPointHandle(), $pkg->getStartingPointName(), $pkg->getStartingPointDescription(), $pkg->getStartingPointThumbnail());
             } else {
-                $startingPoints[] = $this->createStartingPoint($pkg->getPackageHandle(), $pkg->getPackageName(), $pkg->getPackageDescription());
+                $startingPoints[] = $this->createStartingPoint($directory, $pkg->getPackageHandle(), $pkg->getPackageName(), $pkg->getPackageDescription());
             }
         }
 
         foreach ($startingPoints as $startingPoint) {
-            if ($startingPoint instanceof FeaturedStartingPoint) {
+            if ($startingPoint->getThumbnail()) {
                 $this->featuredStartingPoints[] = $startingPoint;
             } else {
                 $this->otherStartingPoints[] = $startingPoint;
@@ -121,7 +133,7 @@ class StartingPointService
     /*
      * @TODO - replace this with a better method that can work in all the contexts.
      */
-    public function getController(string $identifier): StartingPointPackage
+    public function getController(string $identifier)
     {
         if (is_dir(DIR_STARTING_POINT_PACKAGES . '/' . $identifier)) {
             $class = '\\Application\\StartingPointPackage\\' . camelcase($identifier) . '\\Controller';

@@ -1,0 +1,63 @@
+<?xml version="1.0"?>
+<concrete5-cif version="1.0">
+
+    <singlepages>
+
+        <page name="SEO &amp; Statistics" path="/dashboard/system/seo" filename="/dashboard/system/seo/view.php"
+              pagetype="" description="Enable pretty URLs and tracking codes." package=""/>
+        <page name="URLs and Redirection" path="/dashboard/system/seo/urls" filename="/dashboard/system/seo/urls.php"
+              pagetype=""
+              description="" package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>vanity, pretty url, redirection, hostname, canonical, seo, pageview, view</value>
+                </attributekey>
+            </attributes>
+        </page>
+        <page name="Bulk SEO Updater" path="/dashboard/system/seo/bulk" filename="/dashboard/system/seo/bulk.php"
+              pagetype="" description="" package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>bulk, seo, change keywords, engine, optimization, search</value>
+                </attributekey>
+            </attributes>
+        </page>
+        <page name="Tracking Codes" path="/dashboard/system/seo/codes" filename="/dashboard/system/seo/codes.php"
+              pagetype="" description="" package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>traffic, statistics, google analytics, quant, pageviews, hits</value>
+                </attributekey>
+            </attributes>
+        </page>
+        <page name="Excluded URL Word List" path="/dashboard/system/seo/excluded"
+              filename="/dashboard/system/seo/excluded.php" pagetype="" description="" package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>pretty, slug</value>
+                </attributekey>
+            </attributes>
+        </page>
+        <page name="Search Index" path="/dashboard/system/seo/searchindex"
+              filename="/dashboard/system/seo/searchindex.php" pagetype="" description="" package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>configure search, site search, search option</value>
+                </attributekey>
+            </attributes>
+        </page>
+        <page name="URL Slug" path="/dashboard/system/seo/url_slug"
+              filename="/dashboard/system/seo/url_slug.php" pagetype="" description="" package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>url, slug</value>
+                </attributekey>
+            </attributes>
+        </page>
+
+
+
+    </singlepages>
+
+
+</concrete5-cif>

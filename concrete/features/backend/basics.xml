@@ -1,0 +1,358 @@
+<?xml version="1.0"?>
+<concrete5-cif version="1.0">
+
+    <singlepages>
+        <page name="Dashboard" path="/dashboard" filename="/dashboard/view.php" pagetype="" description="" package=""
+              global="true">
+            <attributes>
+                <attributekey handle="icon_dashboard">
+                    <value>fas fa-th-large</value>
+                </attributekey>
+            </attributes>
+        </page>
+        <page name="Welcome" path="/dashboard/welcome" filename="/dashboard/welcome.php" description="" package="">
+            <attributes>
+                <attributekey handle="desktop_priority">
+                    <value>2</value>
+                </attributekey>
+                <attributekey handle="is_desktop">
+                    <value>1</value>
+                </attributekey>
+                <attributekey handle="exclude_nav">
+                    <value>0</value>
+                </attributekey>
+            </attributes>
+            <area name="Main">
+                <blocks>
+                    <block type="desktop_app_status" name=""/>
+                    <block type="core_area_layout" name="">
+                        <arealayout type="theme-grid" columns="12">
+                            <columns>
+                                <column span="4" offset="0">
+                                    <block type="desktop_latest_form" name=""/>
+                                </column>
+                                <column span="4" offset="0">
+                                    <block type="desktop_site_activity" name="">
+                                        <data>
+                                            <type>form_submissions</type>
+                                            <type>survey_results</type>
+                                            <type>signups</type>
+                                            <type>conversation_messages</type>
+                                            <type>workflow</type>
+                                        </data>
+                                    </block>
+                                </column>
+                                <column span="4" offset="0">
+                                    <block type="desktop_latest_health_result" name=""/>
+                                </column>
+                            </columns>
+                        </arealayout>
+                    </block>
+                    <block type="core_area_layout" name="">
+                        <arealayout type="theme-grid" columns="12">
+                            <columns>
+
+                                <column span="4" offset="0">
+                                    <block type="rss_displayer" name="" cache-output="1" cache-output-on-post="1" cache-output-for-registered-users="1" cache-output-lifetime="7200">
+                                        <data table="btRssDisplay">
+                                            <record>
+                                                <title>Tutorials</title>
+                                                <url>https://documentation.concretecms.org/rss/tutorials</url>
+                                                <dateFormat>longDate</dateFormat>
+                                                <itemsToDisplay>1</itemsToDisplay>
+                                                <showSummary>1</showSummary>
+                                                <launchInNewWindow>1</launchInNewWindow>
+                                            </record>
+                                        </data>
+                                    </block>
+                                </column>
+                                <column span="8" offset="0">
+                                    <block type="rss_displayer" name="" cache-output="1" cache-output-on-post="1" cache-output-for-registered-users="1" cache-output-lifetime="7200">
+                                        <style>
+                                            <customClass>concrete-blog-stories</customClass>
+                                        </style>
+                                        <data table="btRssDisplay">
+                                            <record>
+                                                <title>News from concretecms.com</title>
+                                                <url>https://www.concretecms.com/rss/blog</url>
+                                                <dateFormat>longDate</dateFormat>
+                                                <itemsToDisplay>3</itemsToDisplay>
+                                                <showSummary>1</showSummary>
+                                                <launchInNewWindow>1</launchInNewWindow>
+                                            </record>
+                                        </data>
+                                    </block>
+                                </column>
+                            </columns>
+                        </arealayout>
+                    </block>
+                    <block type="core_area_layout" name="">
+                        <arealayout type="theme-grid" columns="12">
+                            <columns>
+                                <column span="4" offset="0">
+                                    <block type="desktop_concrete_latest" name="" cache-output="1" cache-output-on-post="1" cache-output-for-registered-users="1" cache-output-lifetime="7200">
+                                        <data table="btDesktopConcreteLatest">
+                                            <record>
+                                                <slot>A</slot>
+                                            </record>
+                                        </data>
+                                    </block>
+                                </column>
+                                <column span="4" offset="0">
+                                    <block type="desktop_concrete_latest" name="" cache-output="1" cache-output-on-post="1" cache-output-for-registered-users="1" cache-output-lifetime="7200">
+                                        <data table="btDesktopConcreteLatest">
+                                            <record>
+                                                <slot>B</slot>
+                                            </record>
+                                        </data>
+                                    </block>
+                                </column>
+                                <column span="4" offset="0">
+                                    <block type="desktop_concrete_latest" name="" cache-output="1" cache-output-on-post="1" cache-output-for-registered-users="1" cache-output-lifetime="7200">
+                                        <data table="btDesktopConcreteLatest">
+                                            <record>
+                                                <slot>C</slot>
+                                            </record>
+                                        </data>
+                                    </block>
+                                </column>
+                            </columns>
+                        </arealayout>
+                    </block>
+                </blocks>
+            </area>
+
+        </page>
+        <page name="System &amp; Settings" path="/dashboard/system" filename="/dashboard/system/view.php" pagetype=""
+              description="Secure and setup your site." package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>dashboard, configuration</value>
+                </attributekey>
+            </attributes>
+        </page>
+        <page name="Basics" path="/dashboard/system/basics" filename="/dashboard/system/basics/view.php" pagetype=""
+              description="Basic information about your website." package=""/>
+        <page name="Name &amp; Attributes" path="/dashboard/system/basics/name"
+              filename="/dashboard/system/basics/name.php"
+              pagetype="" description="" package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>website name, title</value>
+                </attributekey>
+            </attributes>
+        </page>
+        <page name="Production Mode" path="/dashboard/system/basics/production_mode"
+              filename="/dashboard/system/basics/production_mode.php"
+              pagetype="" description="" package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>production, staging, site copy, development copy, local</value>
+                </attributekey>
+            </attributes>
+        </page>
+        <page name="Accessibility" path="/dashboard/system/basics/accessibility"
+              filename="/dashboard/system/basics/accessibility.php" pagetype="" description="" package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>accessibility, easy mode</value>
+                </attributekey>
+            </attributes>
+        </page>
+        <page name="Site Information" path="/dashboard/system/basics/site_information"
+              filename="/dashboard/system/basics/site_information.php"
+              pagetype="" description="" package="">
+            <attributes>
+                <attributekey handle="exclude_search_index">
+                    <value>1</value>
+                </attributekey>
+            </attributes>
+        </page>
+        <page name="Social Links" path="/dashboard/system/basics/social" filename="/dashboard/system/basics/social.php"
+              pagetype="" description="" package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>sharing, facebook, twitter</value>
+                </attributekey>
+            </attributes>
+        </page>
+        <page name="Bookmark Icons" path="/dashboard/system/basics/icons" filename="/dashboard/system/basics/icons.php"
+              pagetype="" description="Bookmark icon and mobile home screen icon setup." package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>logo, favicon, iphone, icon, bookmark</value>
+                </attributekey>
+            </attributes>
+        </page>
+        <page name="Rich Text Editor" path="/dashboard/system/basics/editor"
+              filename="/dashboard/system/basics/editor.php" pagetype="" description="" package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>tinymce, content block, fonts, editor, content, overlay</value>
+                </attributekey>
+            </attributes>
+        </page>
+        <page name="Languages" path="/dashboard/system/basics/multilingual"
+              filename="/dashboard/system/basics/multilingual/view.php" pagetype="" description="" package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>translate, translation, internationalization, multilingual</value>
+                </attributekey>
+            </attributes>
+        </page>
+        <page name="Update Languages" path="/dashboard/system/basics/multilingual/update"
+              filename="/dashboard/system/basics/multilingual/update/multilingual/update.php" pagetype="" description=""
+              package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>languages, update, gettext, translation, translate</value>
+                </attributekey>
+                <attributekey handle="exclude_nav">
+                    <value>1</value>
+                </attributekey>
+            </attributes>
+        </page>
+        <page name="Time Zone" path="/dashboard/system/basics/timezone" filename="/dashboard/system/basics/timezone.php"
+              pagetype="" description="" package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>timezone, profile, locale</value>
+                </attributekey>
+            </attributes>
+        </page>
+        <page name="Custom Attributes" path="/dashboard/system/basics/attributes"
+              filename="/dashboard/system/basics/attributes.php"
+              pagetype="" description="" package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>site attributes</value>
+                </attributekey>
+                <attributekey handle="exclude_nav">
+                    <value>1</value>
+                </attributekey>
+                <attributekey handle="exclude_search_index">
+                    <value>1</value>
+                </attributekey>
+            </attributes>
+        </page>
+        <page name="Reset Clipboard and Edit Mode" path="/dashboard/system/basics/reset_edit_mode"
+              filename="/dashboard/system/basics/reset_edit_mode.php"
+              pagetype="" description="" package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>checkin, check-in, check, force</value>
+                </attributekey>
+            </attributes>
+        </page>
+
+        <page name="Optimization" path="/dashboard/system/optimization"
+              filename="/dashboard/system/optimization/view.php" pagetype="" description="Keep your site running well."
+              package=""/>
+        <page name="Cache &amp; Speed Settings" path="/dashboard/system/optimization/cache"
+              filename="/dashboard/system/optimization/cache.php" pagetype="" description="" package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>cache option, change cache, override, turn on cache, turn off cache, no cache, page cache, caching</value>
+                </attributekey>
+            </attributes>
+        </page>
+        <page name="Clear Cache" path="/dashboard/system/optimization/clearcache"
+              filename="/dashboard/system/optimization/clearcache.php" pagetype="" description="" package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>cache option, turn off cache, no cache, page cache, caching</value>
+                </attributekey>
+            </attributes>
+        </page>
+
+        <page name="Environment" path="/dashboard/system/environment" filename="/dashboard/system/environment/view.php"
+              pagetype="" description="Advanced settings for web developers." package="">
+            <attributes>
+                <attributekey handle="exclude_search_index">
+                    <value><![CDATA[1]]></value>
+                </attributekey>
+            </attributes>
+        </page>
+        <page name="Environment Information" path="/dashboard/system/environment/info"
+              filename="/dashboard/system/environment/info.php" pagetype="" description="" package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>overrides, system info, debug, support, help</value>
+                </attributekey>
+            </attributes>
+        </page>
+        <page name="Debug Settings" path="/dashboard/system/environment/debug"
+              filename="/dashboard/system/environment/debug.php" pagetype="" description="" package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>errors, exceptions, develop, support, help</value>
+                </attributekey>
+            </attributes>
+        </page>
+        <page name="Logging Settings" path="/dashboard/system/environment/logging"
+              filename="/dashboard/system/environment/logging.php" pagetype="" description="" package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>email, logging, logs, smtp, pop, errors, mysql, log</value>
+                </attributekey>
+            </attributes>
+        </page>
+        <page name="Proxy Server" path="/dashboard/system/environment/proxy"
+              filename="/dashboard/system/environment/proxy.php" pagetype=""
+              description="" package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>network, proxy server</value>
+                </attributekey>
+            </attributes>
+        </page>
+        <page name="Database Entities" path="/dashboard/system/environment/entities"
+              filename="/dashboard/system/environment/entities.php" pagetype=""
+              description="" package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>database, entities, doctrine, orm</value>
+                </attributekey>
+            </attributes>
+        </page>
+        <page name="Database Character Set" path="/dashboard/system/environment/database_charset"
+              filename="/dashboard/system/environment/database_charset.php" pagetype="" description="" package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>database, character set, charset, collation, utf8</value>
+                </attributekey>
+            </attributes>
+        </page>
+        <page name="Geolocation" path="/dashboard/system/environment/geolocation"
+              filename="/dashboard/system/environment/geolocation.php" pagetype="" description="" package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>geolocation, ip, address, country, nation, place, locate</value>
+                </attributekey>
+            </attributes>
+        </page>
+        <page name="Security Policy" path="/dashboard/system/environment/security"
+              filename="/dashboard/system/environment/security.php" pagetype="" description="" package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>security, content security policy, csp, strict transport security, hsts, x-frame-options</value>
+                </attributekey>
+            </attributes>
+        </page>
+        <page name="Update Concrete" path="/dashboard/system/update" filename="/dashboard/system/update/view.php"
+              pagetype="" description="" package="">
+        </page>
+        <page name="Apply Update" path="/dashboard/system/update/update"
+              filename="/dashboard/system/update/update.php" pagetype="" description="" package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>upgrade, new version, update</value>
+                </attributekey>
+            </attributes>
+        </page>
+
+
+    </singlepages>
+
+
+</concrete5-cif>

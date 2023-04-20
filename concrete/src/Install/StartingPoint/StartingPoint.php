@@ -2,8 +2,13 @@
 
 namespace Concrete\Core\Install\StartingPoint;
 
-class StartingPoint implements StartingPointInterface
+class StartingPoint implements \JsonSerializable
 {
+
+    /**
+     * @var string
+     */
+    protected $thumbnail;
 
     /**
      * @var string
@@ -13,23 +18,41 @@ class StartingPoint implements StartingPointInterface
     /**
      * @var string
      */
-    protected $identifier;
+    protected $handle;
 
     /**
-     * @var string
+     * @var string[]|string
      */
     protected $description;
 
     /**
      * @var string
      */
-    protected $type;
+    protected $directory;
 
-    public function __construct(string $identifier, string $name, string $description = '')
+    public function __construct(string $directory, string $handle, string $name, $description, string $thumbnail = null)
     {
+        $this->directory = $directory;
         $this->name = $name;
-        $this->identifier = $identifier;
+        $this->handle = $handle;
+        $this->thumbnail = $thumbnail;
         $this->description = $description;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDirectory(): string
+    {
+        return $this->directory;
+    }
+
+    /**
+     * @return string
+     */
+    public function getThumbnail(): ?string
+    {
+        return $this->thumbnail;
     }
 
     /**
@@ -43,26 +66,27 @@ class StartingPoint implements StartingPointInterface
     /**
      * @return string
      */
-    public function getIdentifier(): string
+    public function getHandle(): string
     {
-        return $this->identifier;
+        return $this->handle;
     }
 
     /**
-     * @return string
+     * @return string|string[]
      */
-    public function getDescription(): string
+    public function getDescription()
     {
         return $this->description;
     }
 
-    #[\ReturnTypeWillChange]
+
     public function jsonSerialize()
     {
         return [
-            'name' => t($this->getName()),
-            'identifier' => $this->getIdentifier(),
+            'handle' => $this->getHandle(),
+            'name' => $this->getName(),
             'description' => $this->getDescription(),
+            'thumbnail' => $this->getThumbnail(),
         ];
     }
 

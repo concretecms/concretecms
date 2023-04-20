@@ -35,6 +35,7 @@ use Psr\Log\LoggerAwareInterface as PsrLoggerAwareInterface;
 use Redirect;
 use Symfony\Component\HttpFoundation\Request as SymfonyRequest;
 use Symfony\Component\Messenger\Stamp\HandledStamp;
+use Symfony\Component\Messenger\Stamp\StampInterface;
 use View;
 
 class Application extends Container
@@ -49,12 +50,13 @@ class Application extends Container
      *
      * @param object $command
      * @param string $onBus
+     * @param StampInterface[] $stamps
      * @return mixed
      */
-    public function executeCommand($command, $onBus = 'default')
+    public function executeCommand($command, $onBus = 'default', $stamps = [])
     {
         $messageBus = $this->make(MessageBusManager::class)->getBus($onBus);
-        $envelope = $messageBus->dispatch($command);
+        $envelope = $messageBus->dispatch($command, $stamps);
         $handled = $envelope->last(HandledStamp::class);
         if ($handled instanceof HandledStamp) {
             return $handled->getResult();

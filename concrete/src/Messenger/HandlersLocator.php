@@ -10,6 +10,8 @@ use Concrete\Core\Command\Task\Stamp\OutputStamp;
 use Concrete\Core\Config\Repository\Repository;
 use Concrete\Core\Entity\Command\Batch;
 use Concrete\Core\Foundation\Command\HandlerAwareCommandInterface;
+use Concrete\Core\Install\StartingPoint\Installer\Routine\InstallOptionsAwareInterface;
+use Concrete\Core\Install\StartingPoint\Installer\Routine\Stamp\InstallOptionsStamp;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\Exception\NoHandlerForMessageException;
@@ -75,6 +77,12 @@ class HandlersLocator implements HandlersLocatorInterface
                     if ($batch) {
                         $builtClass->setBatch($batch);
                     }
+                }
+            }
+            if ($builtClass instanceof InstallOptionsAwareInterface) {
+                $installOptionsStamp = $envelope->last(InstallOptionsStamp::class);
+                if ($installOptionsStamp) {
+                    $builtClass->setInstallOptions($installOptionsStamp->getInstallOptions());
                 }
             }
             $callable = [$builtClass, '__invoke'];
