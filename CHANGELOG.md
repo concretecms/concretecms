@@ -1,3 +1,174 @@
+# 9.2.0
+
+## Major New Features
+
+* Refinements to the in-page editing experience: better highlight of editable blocks and areas, better delineation of containers, layouts and in-page areas, better hit areas for draggable blocks and much more.
+* New “Site Health” Hub: run reports against your site to ensure that its optimally configured. Extensible reports engine ships with the ability to check site for production status settings, cache settings, unauthorized JavaScript and more. Learn more at https://www.youtube.com/watch?v=K76xk1E6hPE
+* Complete 1.0 REST API with coverage of major Concrete CMS features, including pages, users, files, Express objects and more. 
+
+## New Features
+
+* Added production modes to the Dashboard - tell Concrete whether this copy is in development, staging or production mode. Useful when running security health checks, or automatically displaying a staging notice to admins or visitors on a staging copy of a site.
+* Added the ability to view and retry failed queue messages within the Dashboard and through the use of a command line tool. (https://www.loom.com/share/83530934986940b98f74ebe108e49c6e)
+* Added a button to clear all running processes in case any get stuck.
+* Adds ability to configure Composer form sets to be collapsable (thanks Mesuva)
+* Adds option to filter events in Event List by Past, Future or All Events (thanks katalysis)
+* Adds option to change sort order by Most Recent First or Oldest First (thanks katalysis)
+* Added new password strength meter to user creation and password changing Dashboard pages (thanks shahroq)
+* Added new URL Slug Dashboard page to the SEO section, where you can change settings related to URL slugs (thanks hissy)
+* We no longer fall back to using the super admin’s email address as the default address if certain specific addresses aren’t set; instead we use a new config value “default email address”, settable in config code and from the Dashboard email options page (Thanks mlocati)
+* Added the ability to specify several allowed IP addresses to avoid triggering logout on IP address change. Added user-specific IP address overrides as well (thanks mlocati)
+* Improvements to user experience when passwords are reset for users by administrators, either for a single user, or for all users in the site (mlocati). Users will no longer have to enter their email addresses twice, and will no longer be told that they’re in the “forgot password” user flow, when they’re actually in the manual reset user flow.
+* Added the ability to force user passwords changes every X days (thanks mlocati)
+* Added the ability to mark a password as reset from a Dashboard user detail page (thanks mlocati)
+* Add more info in user details dashboard page (thanks mlocati)
+* Added a new full page caching setting that determines the lifetime of the page based on the blocks on the page (thanks hissy)
+* Defaulted file manager and file manager component in chooser to sorting by name ascending for more consistent behavior.
+* New user avatar editor component in My Account and Dashboard.
+* Added a config option to disable asciify for uploaded files (thanks hissy)
+
+
+## Behavioral Improvements
+
+* Improved display of View Page as User panel.
+* Using group paths when group operations are logged instead of group names (thanks mlocati)
+* Activating the Elemental or Atomik themes after installation will install required supported templates. 
+* Added min fields to page list block number fields (thanks ccmEnlil)
+* Core guest, registered and admin groups once again forced to be created with the proper initial IDs (thanks mlocati)
+* New conversations message notifications now appear in Waiting for Me.
+* Top Navigation Bar block now correctly links to the multilingual home pages, and includes nav-path-selected CSS classes on parent pages of active pages.
+* Top Navigation Bar now honors nav target custom attribute (thanks ccmEnlil)
+* API Integrations can limit which Concrete CMS product areas they cover via custom scopes. 
+* Add missing for attribute to checkbox label of option list attribute (thanks Mesuva)
+* SMTP config page: don't send the SMTP password to the clients (thanks mlocati)
+* Fix UI of "Update Languages" dashboard page (thanks mlocati)
+* Heartbeat backend call updates “Online Now” user property (thanks mlocati)
+* Add option to disable asciify on generate url slug (thanks hissy)
+* Performance improvement: All global areas’' blocks no longer loaded on every page load (thanks mnakalay)
+* Fixed: Breadcrumb block doesn't respect replace_link_with_first_in_nav attribute (thanks hissy)
+* Fixed error where Express Entry List criteria in the block were being shown twice.
+* Changed image slider URL field from textarea to text input for better display and less ability to mess up input by putting in newlines (thanks nikolai-nikolajevic)
+* Dashboard Environment Information page now wraps its content properly (thanks JohnTheFish)
+* Fixed error where containers when used on page would block that page from engaging in automated full-page caching (thanks hissy)
+* Added date/time of previous login to Welcome back dashboard and account screens.
+* File title is now included when searching via the file manager file/folder interface.
+* Much improved, more uniform appearance to select pickers and combo boxes when using autocomplete functionality.
+* Better block caching settings for certain core block types (thanks 
+* Added additionally indexes throughout (thanks jlucki)
+* Performance Improvement: Avoid getting same attribute values multiple times (thanks hissy)
+* Added a new publish notification if a page has a publish end date that is earlier than the current date (and is therefore closed) (thanks hissy)
+* Alias pages are no longer included in sitemap.xml.
+
+## Bug Fixes
+
+* Fixed: Express Form Block submission cannot be edited (thanks mnakalay)
+* Fixed bug: Viewing versions of a page with permissions does not work
+* Fixed bug: Page preview fails if page is protected
+* Fixed bug: Unable to view mobile preview, page versions panel detail, custom design before publish the page
+* Fixed bug where unapproved conversation messages were being sent to subscribers.
+* Fixed bug where advanced search dialogs in the Dashboard weren’t accurately showing default search and sort order selections.
+* Add the missing user param on page_version_approve event (thanks chauve-dev)
+* Fix sorting results of FolderItemList by file title when only full group by SQL mode is enabled (thanks mlocati)
+* Many bug fixes to searchable lists.
+* Bug fixes to Tags attribute that fixes inability to remove tags, other problems.
+* Fixed: For draft pages, the destination is the Drafts directory if you create the page in another language.
+* Fixed inability to use query parameter ccm_order_by broken with block express_entry_list (thanks mnakalay)
+* Fixed issue where editing a JPEG using the image editor would save that file with the JPEG extension but the file behind the scenes was actually a PNG.
+* Fixed Calendar block not being properly localized.
+* Fix issue under PHP8 when saving select/option attributes with no selected values (thanks Mesuva)
+* Fixed bug where tag block showing tags on a specific page did not limit properly.
+* Fixed /concrete/single_pages/download_file.php:23 Undefined variable $fID under PHP 8.
+* Fixed inability to set home folder when editing a user in the Dashboard.
+* Fixed: [V9][Bug] Order by FileSet not working in Document Library Block (thanks mnakalay)
+* Fixed: "select fileset" dialog in file manager doesn't retain file set values (thanks mnakalay)
+* Fixed error registering users with email validation under PHP 8.
+* Exporting users now checks the permission of the access user export permission.
+* When running validate-schema via the console no more errors are reported (thanks biplobice)
+* Fixed errors regarding `titleFormat` in multiple blocks under PHP8
+* Fixed error when placing site into maintenance mode.
+* Fixed: Dashboard user attributes always required when present and empty even if not required when editing attributes 
+* Fixed: If ID of the Home page isn't 1, we can't manage access rights to site
+* Image attribute causing js error in composer and attribute panel (thanks mlocati)
+* Fixed bug where marking a page description as required in composer made it impossible to approve the page version even when description was specified. 
+* Fixed error when hiding username on new registration form under PHP 8.
+* Fixed error using layout sliders on non-Bedrock themes.
+* Many small errors and code incompatibilities fixed in group notifications (thanks mlocati)
+* Fix handling of page removal when deleting a calendar event (thanks mlocati)
+* Fixed PHP errors when using Legacy Form block with PHP 8 (thanks mlocati)
+* Fixed some exceptions in BlockController when using PHP8 (thanks biplobice)
+* Fixed Wrong params order in the call of View::element(), under elements\workflow\edit_type_form_required.php (thanks BSalaeddin)
+* Fixed bug where removing orphaned blocks that are part of page defaults for a page template deletes them from all pages of that type (thanks hissy)
+* Fixed error when using Check Automated Groups task.
+* Fixed error when saving page type order in the Page Type Order and Group Dashboard page under PHP 8 (thanks hissy)
+* Fixed error when visiting URL of deleted private message: Undefined property: Concrete\Core\User\PrivateMessage\PrivateMessage::$uID
+* Fixed: Tags Block Ignores Display Limit
+* Fixed JavaScript error in version 9 themes when using address attributes.
+* Fixed: Presets transparent less variable are replaced by colors when upgrading to concrete version 9 (thanks apaccou)
+* Fixes in browsers where certain asynchronous operations could result in a popup saying “undefined” when navigating away from a page
+* Fixed: Attempting to delete the "social block" gave displayOrder error under PHP 8.1.
+* Fixed: Bugfix: Bulk update for page attributes only saves first selected page (thanks lvanstrijland)
+* Fixed misnamed spam allowlist parameter that could result in spam allowlist functionality not working for all configurations (thanks gantanikhiliraj)
+* Fixed some bugs in conversations under PHP 8.
+* Fixed error displaying languages in Dashboard Breadcrumb dropdown on Global Areas Dashboard page when multilingual is enabled.
+* Fix undefined array key when exporting Express entries on PHP 8 (thanks JeffPaetkau)
+* Fixed: Get an antispam library by handle breaks under PHP 8 (thanks mnakalay)
+* Fixed: Undefined variable $selectedTemplate" error on design panel when editing single pages in PHP 8 (thanks hissy)
+* Fixed error when a user has no rights to do settings on express, but can edit the entities (under PHP 8) (thanks Lemonbrain)
+* Fixed: HTML block breaks composer interface on PHP 8.1 (thanks hissy)
+* Fixed Unable to install with MariaDB 10.10+ (thanks mlocati)
+* Fixed: Adding Core Property 'Text' to Express Form Causes Error under PHP 8.
+* Fixed occasional errors that could occur if a config file is written twice in rapid succession (thanks JohnTheFish)
+* Fixes to the user registration email template (thanks jlucki)
+* Add cache lock to fix potential race condition with attribute keys (thanks jlucki)
+* Fixed: Legacy form dashboard view "Undefined array key ..." under PHP8
+* Fixed: Undefined array key "ptComposerOutputControlID" error on page type default page after removing a composer control under PHP 8
+* Fixed behavior where if a custom file storage was set as default it was not selected when adding new folders (thanks hissy)
+* Document library block forcing download of files outside default storage location (as attachment)
+
+
+## Backward Compatibility Notes
+
+* The user autocomplete quickSelect method now defaults to showing user avatars and including usernames and email addresses (if the site is configured to use usernames). This is likely desired for an administrative component but if you’re using quickSelect on the frontend you may wish to restrict this behavior. Consider modifying your usage of quickSelect to use the AUTO_MINIMUM constant and enable/disable user avatars as you like.
+* Bootstrap Select has been deprecated. It is still shipping with Bedrock but will be removed in a subsequent version update. Update your code to use new Concrete select components instead.
+* The encryption service (unused by the core) has been removed; there is no replacement built into the core but many third party libraries are available in packagist.
+* The v-date-picker and v-calendar Vue components have been removed. They are attractive but they are simply too large to include in the JavaScript that powers Concrete. They have been replaced with native solutions. It is unlikely that you’ve included these components in custom code, but if you have you’ll need to import them into your JavaScript bundles yourself.
+* The vue toggle Vue component has been removed. It was too large to include in the Concrete CMS JavaScript bundle. If you need this functionality use Bootstrap Switches, which are now included and available.
+
+## Developer Updates
+
+* Bedrock updated to 1.4, which includes support for Bootstrap 5.2 and many other updates.
+* Numerous minor PHP dependency updates
+* New Group selector Vue component (Thanks mlocati)
+* New ConcreteSelect, ConcreteUserSelect, ConcretePageSelect and other components.
+* Developers can now add to the list of email addresses displayed on the System Email Addresses Dashboard page for their custom add-ons (thanks mlocati)
+* Display the php-cs-fixers applied when the phpcs CLI command applies fixes (thanks mlocati)
+* FancyTree deprecated errors no longer displayed in Sitemap (thanks mlocati)
+* Theme developers may add required additional content XML for their theme in content.xml in the theme root - it will be installed if (and only if) the theme is activated.
+* Added an option to hide usernames from the user picker component (thanks mlocati)
+* Add the setupSiteInterfaceLocalization in the controller method in ResponseFactory.php (thanks chauve-dev)
+* Deprecate Ajax::isAjaxRequest (thanks mlocati)
+* Removed more instances of “concrete5” in favor of “Concrete CMS”
+*  Guzzle PHP Library updated to 7.5.
+* Concrete now supports Doctrine ORM 2.14.x+
+* Fixed error when running method `getPermissionObject` from the `BlockController` class.
+* Many minor PHP dependency version updates.
+* Minor improvements to antispam service (thanks mnakalay)
+* Updates to block controller code to future-proof for PHP 9 (thanks mlocati)
+
+
+* moment.js has been updated to the latest stable version. This file could sometimes trigger insecurity warnings.
+
+## Security Fixes
+
+* Fixed CVE-2023-28477 Stored XSS on API Integrations via name parameter. Prior to fix While adding API Integrations on concrete cms, the parameter name accepted special characters enabling malicious JavaScript payloads impacting /dashboard/system/api/integrations and /dashboard/system/api/integrations/view_client/unique-id. Concrete CMS Security team CVSS scored this 5.5 AV:N/AC:L/PR:H/UI:N/S:U/C:H/I:L/A:N. Thanks Veshraj Ghimire for reporting H1 1753684 and providing the fix.  Fixed in commit 
+* Fixed CVE-2023-28476 Stored XSS on Tags. Prior to fix there was no sanitation when adding tags on uploaded files. Concrete CMS Security team scored this 4.5 with CVSS v3.1 AV:N/AC:L/PR:H/UI:R/S:U/C:H/I:N/A:N. Thanks Veshraj Ghimire and Ashim Chapagain for reporting H1#1767949 and providing the fix. Fixed in commit
+* Fixed: CVE-2023-28475 Reflected XSS on the Reply form by ensuring msgID is sanitized. Concrete CMS Security team scored this 4.2 with CVSS v3.1 vector AV:N/AC:H/PR:N/UI:R/S:U/C:L/I:L/A:N.   Thanks Bogdan Tiron from Fortbridge for reporting H1 1772092. Fixed in commit #11279
+* Fixed CVE-2023-28474 Stored XSS on Saved Preset. Prior to fix, there was no sanitation when saving presets on search. Concrete CMS Security team scored this 3.5 with CVSS v3.1 vector AV:N/AC:L/PR:H/UI:R/S:U/C:L/I:L/A:N Thanks Veshraj Ghimire for reporting H1 1768494 Fixed in commit
+* Fixed CVE-2023-28472 Secure and Http only attributes are now set for ccmPoll cookies. Concrete CMS Security team scored this 3.4 with CVSS v3.1 vectorAV:N/AC:H/PR:N/UI:R/S:C/C:L/I:N/A:N Fixed in commit #11000 
+* Fixed CVE-2023-28473 possible Auth bypass in the jobs section. Concrete CMS Security team scored this 2.2 with CVSS v3.1 vector AV:N/AC:H/PR:H/UI:N/S:U/C:N/I:L/A:N Thanks Adrian Tiron from Fortbridge for Reporting H1 1772230. Fixed in commit #11118
+* Fixed moment.js CVE-2022-24785. Concrete now pulls in updated versions of moment.js  Concrete CMS Security team scored this 2.2 with CVSS v3.1 vector AV:N/AC:H/PR:H/UI:N/S:U/C:N/I:N/A:L Thanks Fortbridge for reporting. Fixed in commit 11085
+* Fixed: CVE-2023-28471 XSS on container name. Prior to fix, there was no sanitization on the container name resulting in stored XSS. Concrete CMS Security team scored this 2.0 with CVSS v3.1 vectorAV:N/AC:H/PR:H/UI:R/S:U/C:L/I:N/A:N Thanks Ashim Chapagain for reporting H1: 1866111] and providing Concrete CMS Pull request #11209
+
 # 9.1.3
 
 ## Behavioral Improvements
