@@ -92,23 +92,24 @@ export default {
             if (this.routines.length > routineIndex) {
                 var startingPoint = this.installOptions.startingPoint
                 var routine = this.routines[routineIndex]
-                var method = routine.method
-                var url = this.startingPointRoutineUrl + '/' + startingPoint + '/' + method
+                var url = this.startingPointRoutineUrl + '/' + startingPoint
                 my.currentProgress = routine.text
 
                 $.ajax({
                     cache: false,
                     dataType: 'json',
                     method: 'post',
-                    data: this.installOptions,
+                    data: {
+                        routine: routine,
+                        options: this.installOptions,
+                    },
                     url: url,
                     success(r) {
                         if (r.error) {
                             my.installError = r.message
                         } else {
-                            NProgress.set(routine.progress / 100)
                             my.currentRoutine++
-
+                            NProgress.set(my.currentRoutine / my.routines.length)
                         }
                     }
                 })

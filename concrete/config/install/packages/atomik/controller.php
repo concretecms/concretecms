@@ -2,19 +2,27 @@
 
 namespace Concrete\StartingPointPackage\Atomik;
 
-use Concrete\Core\Package\FeaturedStartingPointPackageInterface;
-use Concrete\Core\Package\StartingPointPackage;
+use Concrete\Core\Install\StartingPoint\Controller\AbstractController;
 
-class Controller extends StartingPointPackage implements FeaturedStartingPointPackageInterface
+class Controller extends AbstractController
 {
-    protected $pkgHandle = 'atomik';
 
-    public function getStartingPointThumbnail(): string
+    public function getStartingPointHandle(): string
+    {
+        return 'atomik';
+    }
+
+    public function getStartingPointName(): string
+    {
+        return t('Atomik');
+    }
+
+    public function getStartingPointThumbnail(): ?string
     {
         return ASSETS_URL . '/' . DIRNAME_THEMES . '/atomik/thumbnail.png';
     }
 
-    public function getStartingPointDescriptionLines(): array
+    public function getStartingPointDescription()
     {
         return [
             t('Creative Services'),
@@ -23,11 +31,6 @@ class Controller extends StartingPointPackage implements FeaturedStartingPointPa
             t('Corporate Blogs'),
             t('General purpose websites'),
         ];
-    }
-
-    public function getPackageName()
-    {
-        return t('Atomik');
     }
 
 }

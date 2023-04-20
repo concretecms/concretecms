@@ -5,18 +5,17 @@ namespace Concrete\Controller;
 use Concrete\Core\Cache\Cache;
 use Concrete\Core\Controller\Controller;
 use Concrete\Core\Http\ResponseFactoryInterface;
+use Concrete\Core\Install\Command\ValidateEnvironmentCommand;
 use Concrete\Core\Install\ExecutedPreconditionList;
 use Concrete\Core\Install\InstallEnvironment;
 use Concrete\Core\Install\Installer;
 use Concrete\Core\Install\InstallerOptions;
 use Concrete\Core\Install\InstallerOptionsFactory;
 use Concrete\Core\Install\PreconditionService;
-use Concrete\Core\Install\Command\ValidateEnvironmentCommand;
 use Concrete\Core\Install\StartingPointService;
 use Concrete\Core\Install\WebPreconditionInterface;
 use Concrete\Core\Localization\Localization;
 use Concrete\Core\Localization\Translation\Remote\ProviderInterface as RemoteTranslationsProvider;
-use Concrete\Core\Package\StartingPointPackage;
 use Concrete\Core\View\View;
 use Punic\Comparer as PunicComparer;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -106,7 +105,7 @@ class Install extends Controller
         Cache::disableAll();
     }
 
-    public function run_routine($pkgHandle, $routine)
+    public function run_routine($pkgHandle)
     {
         $options = $this->app->make(InstallerOptions::class);
         $options->load();
@@ -115,8 +114,8 @@ class Install extends Controller
         try {
             $installer = $this->app->make(Installer::class);
             $installer->setOptions($options);
-            $spl = $installer->getStartingPoint(false);
-            $spl->executeInstallRoutine($routine);
+            $routine = $installer->getRoutineFromRequest();
+            $installer->executeRoutine($routine);
             $r['error'] = false;
         } catch (\Exception $e) {
             $r['error'] = true;
@@ -137,7 +136,8 @@ class Install extends Controller
         $installer->setOptions($options);
         $startingPoint = $installer->getStartingPoint(true);
 
-        return new JsonResponse($startingPoint->getInstallRoutines());
+        $commands = $startingPoint->getStartingPointInstaller()->getInstallCommands($options);
+        return $installer->sendCommandsToClient($commands);
     }
 
     protected function getPreconditions(): ExecutedPreconditionList

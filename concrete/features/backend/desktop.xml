@@ -1,16 +1,15 @@
 <?xml version="1.0"?>
 <concrete5-cif version="1.0">
 
+    <pagetypes>
+        <pagetype handle="core_desktop" name="Desktop" internal="1" package=""/>
+    </pagetypes>
+
+    <pagetemplates>
+        <pagetemplate handle="desktop" name="Desktop" internal="1" package=""/>
+    </pagetemplates>
+
     <singlepages>
-
-        <page name="Drafts" path="/!drafts" filename="/!drafts/view.php" pagetype="" description="" package="" root="true">
-            <attributes>
-                <attributekey handle="icon_dashboard">
-                    <value>fas fa-edit</value>
-                </attributekey>
-            </attributes>
-        </page>
-
         <page name="Welcome Back" path="/desktop" custom-path="/account/welcome" filename="/desktop.php" pagetype="" description="" package="" root="true">
             <attributes>
                 <attributekey handle="desktop_priority">
@@ -46,8 +45,32 @@
                 </blocks>
             </area>
         </page>
-
-
+        <page name="Waiting for Me" path="/dashboard/welcome/me" filename="" pagetype="" template="desktop"
+          description="" package="">
+        <area name="Main">
+            <blocks>
+                <block type="core_area_layout" name="">
+                    <arealayout type="theme-grid" columns="12">
+                        <columns>
+                            <column span="12" offset="0">
+                                <block type="desktop_waiting_for_me"/>
+                            </column>
+                        </columns>
+                    </arealayout>
+                </block>
+                <block type="core_area_layout" name="">
+                    <arealayout type="theme-grid" columns="12">
+                        <columns>
+                            <column span="12" offset="0">
+                                <block type="desktop_draft_list"/>
+                            </column>
+                        </columns>
+                    </arealayout>
+                </block>
+            </blocks>
+        </area>
+    </page>
     </singlepages>
+
 
 </concrete5-cif>

@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<concrete5-cif version="1.0">
+
+    <blocktypes>
+        <blocktype handle="video" package=""/>
+        <blocktype handle="youtube" package=""/>
+    </blocktypes>
+
+    <blocktypesets>
+        <blocktypeset handle="multimedia" name="Multimedia" package="">
+            <blocktype handle="video"/>
+            <blocktype handle="youtube"/>
+        </blocktypeset>
+    </blocktypesets>
+
+</concrete5-cif>

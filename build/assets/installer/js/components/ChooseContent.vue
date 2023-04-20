@@ -18,10 +18,10 @@
                     <div class="card-body">
                         <h1 class="card-title">{{startingPoint.name}}</h1>
                         <ul class="list-unstyled mt-3 mb-4">
-                            <li v-for="descriptionLine in startingPoint.descriptionLines">{{ descriptionLine}}</li>
+                            <li v-for="descriptionLine in startingPoint.description">{{ descriptionLine}}</li>
                         </ul>
-                        <button type="button" @click="selectedStartingPoint = startingPoint.identifier" :class="{'active': selectedStartingPoint === startingPoint.identifier, 'w-100': true, 'btn': true, 'btn-lg btn-outline-primary': true}">
-                            <span v-if="selectedStartingPoint === startingPoint.identifier">
+                        <button type="button" @click="selectedStartingPoint = startingPoint.handle" :class="{'active': selectedStartingPoint === startingPoint.handle, 'w-100': true, 'btn': true, 'btn-lg btn-outline-primary': true}">
+                            <span v-if="selectedStartingPoint === startingPoint.handle">
                                 {{lang.selected}} <i class="fa fa-check-circle"></i>
                             </span>
                             <span v-else>
@@ -42,8 +42,8 @@
                             <div><b>{{ startingPoint.name }}</b></div>
                             <div class="text-muted">{{ startingPoint.description }}</div>
                         </div>
-                        <button type="button" @click="selectedStartingPoint = startingPoint.identifier" :class="{'col-3': true, 'active': selectedStartingPoint === startingPoint.identifier, 'ms-auto': true, 'btn': true, 'btn-outline-primary': true}">
-                            <span v-if="selectedStartingPoint === startingPoint.identifier">
+                        <button type="button" @click="selectedStartingPoint = startingPoint.handle" :class="{'col-3': true, 'active': selectedStartingPoint === startingPoint.handle, 'ms-auto': true, 'btn': true, 'btn-outline-primary': true}">
+                            <span v-if="selectedStartingPoint === startingPoint.handle">
                                 {{lang.selected}}
                             </span>
                             <span v-else>

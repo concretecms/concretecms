@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<concrete5-cif version="1.0">
+
+    <singlepages>
+
+        <page name="My Account" path="/account" filename="/account/view.php" pagetype="" description="" package="" global="true">
+            <attributes>
+                <attributekey handle="icon_dashboard">
+                    <value>fas fa-briefcase</value>
+                </attributekey>
+            </attributes>
+        </page>
+        <page name="Edit Profile" path="/account/edit_profile" filename="/account/edit_profile.php" pagetype="" description="Edit your user profile and change password." package="" />
+        <page name="Profile Picture" path="/account/avatar" filename="/account/avatar.php" pagetype="" description="Specify a new image attached to posts or edits." package="" />
+        <page name="Private Messages" path="/account/messages" filename="/account/messages.php" pagetype="" description="Inbox for site-specific messages." package="" />
+
+
+    </singlepages>
+
+</concrete5-cif>
