@@ -118,9 +118,7 @@ class Controller extends BlockController implements UsesFeatureInterface
             $av = $c->getAttributeValueObject($ak);
             $controller = $ak->getController();
             $attributeValue = $c->getAttribute($ak->getAttributeKeyHandle());
-            if (is_object($attributeValue)) {
-                $items = $attributeValue->getSelectedOptions();
-            }
+            $items = is_object($attributeValue) ? $attributeValue->getSelectedOptions() : [];
         }
 
         if ($this->targetCID > 0) {
