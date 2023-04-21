@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+<concrete5-cif version="1.0">
+
+    <permissioncategories>
+        <category handle="conversation" package=""/>
+        <category handle="conversation_message" package=""/>
+    </permissioncategories>
+
+    <permissionaccessentitytypes>
+        <permissionaccessentitytype handle="group">
+            <category handle="conversation" package=""/>
+            <category handle="conversation_message" package=""/>
+        </permissionaccessentitytype>
+        <permissionaccessentitytype handle="user">
+            <category handle="conversation" package=""/>
+            <category handle="conversation_message" package=""/>
+        </permissionaccessentitytype>
+        <permissionaccessentitytype handle="group_set">
+            <category handle="conversation" package=""/>
+            <category handle="conversation_message" package=""/>
+        </permissionaccessentitytype>
+        <permissionaccessentitytype handle="group_combination">
+            <category handle="conversation" package=""/>
+            <category handle="conversation_message" package=""/>
+        </permissionaccessentitytype>
+        <permissionaccessentitytype handle="conversation_message_author" name="Message Author" package="">
+            <categories>
+                <category handle="conversation" />
+                <category handle="conversation_message" />
+            </categories>
+        </permissionaccessentitytype>
+    </permissionaccessentitytypes>
+
+    <permissionkeys>
+        <permissionkey handle="add_conversation_message" name="Add Message to Conversation" has-custom-class="true" description="" package="" category="conversation" />
+        <permissionkey handle="add_conversation_message_attachments" name="Add Message Attachments" description="" package="" category="conversation" />
+        <permissionkey handle="edit_conversation_permissions" name="Edit Conversation Permissions" description="" package="" category="conversation" />
+        <permissionkey handle="delete_conversation_message" name="Delete Message" description="" package="" category="conversation" />
+        <permissionkey handle="edit_conversation_message" name="Edit Message" description="" package="" category="conversation" />
+        <permissionkey handle="rate_conversation_message" name="Rate Message" description="" package="" category="conversation" />
+        <permissionkey handle="flag_conversation_message" name="Flag Message" description="" package="" category="conversation" />
+        <permissionkey handle="approve_conversation_message" name="Approve Message" description="" package="" category="conversation" />
+    </permissionkeys>
+
+</concrete5-cif>

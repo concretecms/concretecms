@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+<concrete5-cif version="1.0">
+
+    <permissioncategories>
+        <category handle="express_tree_node" package=""/>
+        <category handle="express_entry" package=""/>
+    </permissioncategories>
+
+    <permissionaccessentitytypes>
+        <permissionaccessentitytype handle="group">
+            <category handle="express_tree_node" />
+            <category handle="express_entry" />
+        </permissionaccessentitytype>
+        <permissionaccessentitytype handle="user">
+            <category handle="express_tree_node" />
+            <category handle="express_entry" />
+        </permissionaccessentitytype>
+        <permissionaccessentitytype handle="group_set">
+            <category handle="express_tree_node" />
+            <category handle="express_entry" />
+        </permissionaccessentitytype>
+        <permissionaccessentitytype handle="group_combination">
+            <category handle="express_tree_node" />
+            <category handle="express_entry" />
+        </permissionaccessentitytype>
+    </permissionaccessentitytypes>
+
+    <permissionkeys>
+        <permissionkey handle="view_express_entries" name="View Entries" package="" category="express_tree_node">
+        </permissionkey>
+        <permissionkey handle="add_express_entries" name="Add Entry" package="" category="express_tree_node">
+        </permissionkey>
+        <permissionkey handle="edit_express_entries" name="Edit Entry" package="" category="express_tree_node">
+        </permissionkey>
+        <permissionkey handle="delete_express_entries" name="Delete Entry" package="" category="express_tree_node">
+        </permissionkey>
+
+        <permissionkey handle="view_express_entry" name="View Entries" package="" category="express_entry">
+        </permissionkey>
+        <permissionkey handle="edit_express_entry" name="Edit Entry" package="" category="express_entry">
+        </permissionkey>
+        <permissionkey handle="delete_express_entry" name="Delete Entry" package="" category="express_entry">
+        </permissionkey>
+    </permissionkeys>
+</concrete5-cif>

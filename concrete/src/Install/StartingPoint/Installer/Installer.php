@@ -3,6 +3,8 @@ namespace Concrete\Core\Install\StartingPoint\Installer;
 
 use Concrete\Core\Feature\Features;
 use Concrete\Core\Install\InstallerOptions;
+use Concrete\Core\Install\StartingPoint\Installer\Routine\Base\AddExpressObjectsSupportRoutine;
+use Concrete\Core\Install\StartingPoint\Installer\Routine\Frontend\ImportStartingPointContentRoutine;
 use Concrete\Core\Install\StartingPoint\Installer\Routine\Frontend\ImportStartingPointFilesRoutine;
 use Concrete\Core\Install\StartingPoint\Installer\Routine\Backend\ReorderBackendRoutine;
 use Concrete\Core\Install\StartingPoint\Installer\Routine\Backend\SetupBackendPermissionsRoutine;
@@ -28,12 +30,21 @@ class Installer implements InstallerInterface
             new InstallDatabaseRoutine(),
             new InstallSiteRoutine(),
             new AddUsersRoutine(),
-            new InstallFeatureContentRoutine(Features::PERMISSIONS, 'base', t('Adding core permission support.')),
+            new InstallFeatureContentRoutine(Features::PERMISSIONS, 'base', t('Adding core permissions support.')),
+            new InstallFeatureContentRoutine('permissions/boards', 'base', t('Adding Boards permission support.')),
+            new InstallFeatureContentRoutine('permissions/calendar', 'base', t('Adding Calendar permissions support.')),
+            new InstallFeatureContentRoutine('permissions/conversations', 'base', t('Adding Conversations permissions support.')),
+            new InstallFeatureContentRoutine('permissions/express', 'base', t('Adding Express permissions support.')),
+            new InstallFeatureContentRoutine('permissions/multilingual', 'base', t('Adding multilingual permission support.')),
             new AddTreeNodesRoutine(),
             new InstallFeatureContentRoutine(Features::ATTRIBUTES, 'base', t('Adding core attribute types and categories.')),
+            new InstallFeatureContentRoutine('attributes/calendar', 'base', t('Adding calendar attributes.')),
+            new InstallFeatureContentRoutine('attributes/express', 'base', t('Adding Express attributes.')),
             new AddHomePageRoutine(),
+            new AddExpressObjectsSupportRoutine(),
             new InstallFeatureContentRoutine(Features::PAGES, 'base', t('Adding base required single pages.')),
             new InstallFeatureContentRoutine(Features::BOARDS, 'base', t('Adding board data sources.')),
+            new InstallFeatureContentRoutine(Features::CONVERSATIONS, 'base', t('Adding conversation components.')),
             new InstallFeatureContentRoutine(Features::AUTOMATION, 'base', t('Adding tasks.')),
             new InstallApiRoutine(),
             new InstallFileManagerSupportRoutine(),
@@ -77,7 +88,6 @@ class Installer implements InstallerInterface
         return $routines;
     }
 
-
     protected function getFinishRoutines(): array
     {
         return [
@@ -89,8 +99,15 @@ class Installer implements InstallerInterface
     public function getFrontendRoutines(): array
     {
         $routines = [];
+        $routines = [];
+        foreach ($this->getContentRoutines('frontend', function($identifier) {
+            return t('Installing Frontend Content: %s', Features::getDisplayName($identifier));
+        }) as $routine) {
+            $routines[] = $routine;
+        }
         $routines[] = new InstallFeatureContentRoutine(Features::THEMES, 'base', t('Adding themes.'));
         $routines[] = new ImportStartingPointFilesRoutine();
+        $routines[] = new ImportStartingPointContentRoutine();
         return $routines;
     }
 

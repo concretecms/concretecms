@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<concrete5-cif version="1.0">
+
+    <permissioncategories>
+        <category handle="multilingual_section" package=""/>
+    </permissioncategories>
+
+
+</concrete5-cif>

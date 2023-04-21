@@ -2,21 +2,19 @@
 
 namespace Concrete\Core\Install\StartingPoint;
 
-use Concrete\Core\Install\StartingPoint\Controller\ControllerInterface;
+use Concrete\Core\Install\StartingPoint\Installer\Installer;
 use Concrete\Core\Install\StartingPoint\Installer\InstallerInterface;
+use Concrete\Core\Package\StartingPointPackage;
 
-class StartingPoint extends AbstractStartingPoint
+class LegacyStartingPoint extends AbstractStartingPoint
 {
 
     /**
-     * @var ControllerInterface
+     * @var StartingPointPackage
      */
     protected $controller;
 
-    /**
-     * StartingPoint constructor.
-     */
-    public function __construct(string $directory, ControllerInterface $controller)
+    public function __construct(string $directory, StartingPointPackage $controller)
     {
         $this->directory = $directory;
         $this->controller = $controller;
@@ -24,32 +22,32 @@ class StartingPoint extends AbstractStartingPoint
 
     public function getHandle(): string
     {
-        return $this->controller->getHandle();
+        return $this->controller->getPackageHandle();
     }
 
     public function getName(): string
     {
-        return $this->controller->getName();
+        return $this->controller->getPackageName();
     }
 
     public function getThumbnail(): ?string
     {
-        return $this->controller->getThumbnail();
+        return null;
     }
 
     public function providesThumbnails(): bool
     {
-        return $this->controller->providesThumbnails();
+        return $this->controller->contentProvidesFileThumbnails();
     }
 
     public function getDescription()
     {
-        return $this->controller->getDescription();
+        return $this->controller->getPackageDescription();
     }
 
     public function getInstaller(): InstallerInterface
     {
-        return $this->controller->getInstaller();
+        return new Installer();
     }
 
 }

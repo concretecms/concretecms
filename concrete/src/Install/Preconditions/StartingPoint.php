@@ -72,7 +72,7 @@ class StartingPoint extends AbstractPrecondition implements OptionsPreconditionI
         if ($handle === '') {
             $result = new PreconditionResult(PreconditionResult::STATE_WARNING, t('The starting point has not been defined: if you proceed the default one will be used.'));
         } else {
-            $sp = app(StartingPointService::class)->getController($handle);
+            $sp = app(StartingPointService::class)->getByHandle($handle);
             if ($sp === null) {
                 $result = new PreconditionResult(PreconditionResult::STATE_FAILED, t('Invalid starting point: %s', $handle));
             } else {

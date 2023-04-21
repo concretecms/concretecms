@@ -4,6 +4,7 @@
     <permissioncategories>
         <category handle="page" package=""/>
         <category handle="single_page" package=""/>
+        <category handle="stack" package=""/>
         <category handle="user" package=""/>
         <category handle="file_folder" package=""/>
         <!-- TODO: Kill file and replace with file tree node //-->
@@ -333,6 +334,7 @@
                 <category handle="group_tree_node" />
                 <category handle="group_folder" />
                 <category handle="category_tree_node" />
+                <category handle="topic_tree_node" />
 			</categories>
         </permissionaccessentitytype>
         <permissionaccessentitytype handle="user" name="User" package="">
@@ -353,6 +355,7 @@
                 <category handle="group_tree_node" />
                 <category handle="group_folder" />
                 <category handle="category_tree_node" />
+                <category handle="topic_tree_node" />
             </categories>
 
         </permissionaccessentitytype>
@@ -374,6 +377,7 @@
                 <category handle="group_tree_node" />
                 <category handle="group_folder" />
                 <category handle="category_tree_node" />
+                <category handle="topic_tree_node" />
             </categories>
 
         </permissionaccessentitytype>
@@ -395,6 +399,7 @@
                 <category handle="group_tree_node" />
                 <category handle="group_folder" />
                 <category handle="category_tree_node" />
+                <category handle="topic_tree_node" />
             </categories>
 
         </permissionaccessentitytype>

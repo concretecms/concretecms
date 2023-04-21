@@ -1,6 +1,13 @@
 <?xml version="1.0"?>
 <concrete5-cif version="1.0">
 
+    <attributekeys>
+        <attributekey handle="icon_dashboard" name="Dashboard Icon" package="" searchable="0" indexed="0"
+                      type="textarea" internal="1" category="collection">
+            <type mode=""/>
+        </attributekey>
+    </attributekeys>
+
     <singlepages>
         <page name="Attributes" path="/dashboard/system/attributes" filename="/dashboard/system/attributes/view.php"
               pagetype="" description="Setup attributes for pages, users, files and more." package="">
