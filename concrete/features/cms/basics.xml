@@ -2,11 +2,6 @@
 <concrete5-cif version="1.0">
 
     <blocktypes>
-        <blocktype handle="core_area_layout" package=""/>
-        <blocktype handle="core_container" package=""/>
-        <blocktype handle="core_page_type_composer_control_output" package=""/>
-        <blocktype handle="core_scrapbook_display" package=""/>
-
         <blocktype handle="content" package=""/>
         <blocktype handle="html" package=""/>
         <blocktype handle="horizontal_rule" package=""/>
@@ -31,16 +26,5 @@
             <blocktype handle="page_attribute_display"/>
         </blocktypeset>
     </blocktypesets>
-
-    <pagetypepublishtargettypes>
-        <type handle="parent_page" name="Always publish below a certain page" package="" />
-        <type handle="page_type" name="Choose from pages of a certain type" package="" />
-        <type handle="all" name="Choose from all pages when publishing" package="" />
-    </pagetypepublishtargettypes>
-    <pagetypecomposercontroltypes>
-        <type handle="core_page_property" name="Built-In Property" package="" />
-        <type handle="collection_attribute" name="Custom Attribute" package="" />
-        <type handle="block" name="Block" package="" />
-    </pagetypecomposercontroltypes>
 
 </concrete5-cif>

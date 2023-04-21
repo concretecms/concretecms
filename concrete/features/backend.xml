@@ -1,0 +1,136 @@
+<?xml version="1.0"?>
+<concrete5-cif version="1.0">
+
+    <singlepages>
+        <page name="Dashboard" path="/dashboard" filename="/dashboard/view.php" pagetype="" description="" package=""
+              global="true">
+            <attributes>
+                <attributekey handle="icon_dashboard">
+                    <value>fas fa-th-large</value>
+                </attributekey>
+            </attributes>
+        </page>
+        <page name="Welcome" path="/dashboard/welcome" filename="/dashboard/welcome.php" description="" package="">
+            <attributes>
+                <attributekey handle="desktop_priority">
+                    <value>2</value>
+                </attributekey>
+                <attributekey handle="is_desktop">
+                    <value>1</value>
+                </attributekey>
+                <attributekey handle="exclude_nav">
+                    <value>0</value>
+                </attributekey>
+            </attributes>
+            <area name="Main">
+                <blocks>
+                    <block type="desktop_app_status" name=""/>
+                    <block type="core_area_layout" name="">
+                        <arealayout type="theme-grid" columns="12">
+                            <columns>
+                                <column span="4" offset="0">
+                                    <block type="desktop_latest_form" name=""/>
+                                </column>
+                                <column span="4" offset="0">
+                                    <block type="desktop_site_activity" name="">
+                                        <data>
+                                            <type>form_submissions</type>
+                                            <type>survey_results</type>
+                                            <type>signups</type>
+                                            <type>conversation_messages</type>
+                                            <type>workflow</type>
+                                        </data>
+                                    </block>
+                                </column>
+                                <column span="4" offset="0">
+                                    <block type="desktop_latest_health_result" name=""/>
+                                </column>
+                            </columns>
+                        </arealayout>
+                    </block>
+                    <block type="core_area_layout" name="">
+                        <arealayout type="theme-grid" columns="12">
+                            <columns>
+
+                                <column span="4" offset="0">
+                                    <block type="rss_displayer" name="" cache-output="1" cache-output-on-post="1" cache-output-for-registered-users="1" cache-output-lifetime="7200">
+                                        <data table="btRssDisplay">
+                                            <record>
+                                                <title>Tutorials</title>
+                                                <url>https://documentation.concretecms.org/rss/tutorials</url>
+                                                <dateFormat>longDate</dateFormat>
+                                                <itemsToDisplay>1</itemsToDisplay>
+                                                <showSummary>1</showSummary>
+                                                <launchInNewWindow>1</launchInNewWindow>
+                                            </record>
+                                        </data>
+                                    </block>
+                                </column>
+                                <column span="8" offset="0">
+                                    <block type="rss_displayer" name="" cache-output="1" cache-output-on-post="1" cache-output-for-registered-users="1" cache-output-lifetime="7200">
+                                        <style>
+                                            <customClass>concrete-blog-stories</customClass>
+                                        </style>
+                                        <data table="btRssDisplay">
+                                            <record>
+                                                <title>News from concretecms.com</title>
+                                                <url>https://www.concretecms.com/rss/blog</url>
+                                                <dateFormat>longDate</dateFormat>
+                                                <itemsToDisplay>3</itemsToDisplay>
+                                                <showSummary>1</showSummary>
+                                                <launchInNewWindow>1</launchInNewWindow>
+                                            </record>
+                                        </data>
+                                    </block>
+                                </column>
+                            </columns>
+                        </arealayout>
+                    </block>
+                    <block type="core_area_layout" name="">
+                        <arealayout type="theme-grid" columns="12">
+                            <columns>
+                                <column span="4" offset="0">
+                                    <block type="desktop_concrete_latest" name="" cache-output="1" cache-output-on-post="1" cache-output-for-registered-users="1" cache-output-lifetime="7200">
+                                        <data table="btDesktopConcreteLatest">
+                                            <record>
+                                                <slot>A</slot>
+                                            </record>
+                                        </data>
+                                    </block>
+                                </column>
+                                <column span="4" offset="0">
+                                    <block type="desktop_concrete_latest" name="" cache-output="1" cache-output-on-post="1" cache-output-for-registered-users="1" cache-output-lifetime="7200">
+                                        <data table="btDesktopConcreteLatest">
+                                            <record>
+                                                <slot>B</slot>
+                                            </record>
+                                        </data>
+                                    </block>
+                                </column>
+                                <column span="4" offset="0">
+                                    <block type="desktop_concrete_latest" name="" cache-output="1" cache-output-on-post="1" cache-output-for-registered-users="1" cache-output-lifetime="7200">
+                                        <data table="btDesktopConcreteLatest">
+                                            <record>
+                                                <slot>C</slot>
+                                            </record>
+                                        </data>
+                                    </block>
+                                </column>
+                            </columns>
+                        </arealayout>
+                    </block>
+                </blocks>
+            </area>
+
+        </page>
+        <page name="System &amp; Settings" path="/dashboard/system" filename="/dashboard/system/view.php" pagetype=""
+              description="Secure and setup your site." package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>dashboard, configuration</value>
+                </attributekey>
+            </attributes>
+        </page>
+    </singlepages>
+
+</concrete5-cif>

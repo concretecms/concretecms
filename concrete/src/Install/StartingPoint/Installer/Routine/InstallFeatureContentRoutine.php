@@ -1,7 +1,6 @@
 <?php
 namespace Concrete\Core\Install\StartingPoint\Installer\Routine;
 
-use Concrete\Core\Backup\ContentImporter;
 use Illuminate\Filesystem\Filesystem;
 
 class InstallFeatureContentRoutine extends AbstractRoutine
@@ -22,7 +21,7 @@ class InstallFeatureContentRoutine extends AbstractRoutine
      */
     protected $feature;
 
-    public function __construct(string $feature, string $domain, string $text = null)
+    public function __construct(string $domain, string $feature = null, string $text = null)
     {
         $this->text = $text;
         $this->domain = $domain;
@@ -48,14 +47,18 @@ class InstallFeatureContentRoutine extends AbstractRoutine
     /**
      * @return string
      */
-    public function getFeature(): string
+    public function getFeature(): ?string
     {
         return $this->feature;
     }
 
     public function getContentFile(): string
     {
-        return sprintf(DIR_BASE_CORE . '/features/%s/%s.xml', $this->getDomain(), $this->getFeature());
+        if ($this->getFeature() && $this->getDomain()) {
+            return sprintf(DIR_BASE_CORE . '/features/%s/%s.xml', $this->getDomain(), $this->getFeature());
+        } else {
+            return sprintf(DIR_BASE_CORE . '/features/%s.xml', $this->getDomain());
+        }
     }
 
     public function hasContentFile(): bool

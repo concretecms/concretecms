@@ -30,22 +30,22 @@ class Installer implements InstallerInterface
             new InstallDatabaseRoutine(),
             new InstallSiteRoutine(),
             new AddUsersRoutine(),
-            new InstallFeatureContentRoutine(Features::PERMISSIONS, 'base', t('Adding core permissions support.')),
-            new InstallFeatureContentRoutine('permissions/boards', 'base', t('Adding Boards permission support.')),
-            new InstallFeatureContentRoutine('permissions/calendar', 'base', t('Adding Calendar permissions support.')),
-            new InstallFeatureContentRoutine('permissions/conversations', 'base', t('Adding Conversations permissions support.')),
-            new InstallFeatureContentRoutine('permissions/express', 'base', t('Adding Express permissions support.')),
-            new InstallFeatureContentRoutine('permissions/multilingual', 'base', t('Adding multilingual permission support.')),
+            new InstallFeatureContentRoutine('base', Features::PERMISSIONS, t('Adding core permissions support.')),
+            new InstallFeatureContentRoutine('base', 'permissions/boards', t('Adding Boards permission support.')),
+            new InstallFeatureContentRoutine('base', 'permissions/calendar', t('Adding Calendar permissions support.')),
+            new InstallFeatureContentRoutine('base', 'permissions/conversations', t('Adding Conversations permissions support.')),
+            new InstallFeatureContentRoutine('base', 'permissions/express', t('Adding Express permissions support.')),
+            new InstallFeatureContentRoutine('base', 'permissions/multilingual', t('Adding multilingual permission support.')),
             new AddTreeNodesRoutine(),
-            new InstallFeatureContentRoutine(Features::ATTRIBUTES, 'base', t('Adding core attribute types and categories.')),
-            new InstallFeatureContentRoutine('attributes/calendar', 'base', t('Adding calendar attributes.')),
-            new InstallFeatureContentRoutine('attributes/express', 'base', t('Adding Express attributes.')),
+            new InstallFeatureContentRoutine('base', Features::ATTRIBUTES, t('Adding core attribute types and categories.')),
+            new InstallFeatureContentRoutine('base', 'attributes/calendar', t('Adding calendar attributes.')),
+            new InstallFeatureContentRoutine('base', 'attributes/express', t('Adding Express attributes.')),
             new AddHomePageRoutine(),
             new AddExpressObjectsSupportRoutine(),
-            new InstallFeatureContentRoutine(Features::PAGES, 'base', t('Adding base required single pages.')),
-            new InstallFeatureContentRoutine(Features::BOARDS, 'base', t('Adding board data sources.')),
-            new InstallFeatureContentRoutine(Features::CONVERSATIONS, 'base', t('Adding conversation components.')),
-            new InstallFeatureContentRoutine(Features::AUTOMATION, 'base', t('Adding tasks.')),
+            new InstallFeatureContentRoutine( 'base', Features::PAGES, t('Adding base required single pages.')),
+            new InstallFeatureContentRoutine('base', Features::BOARDS, t('Adding board data sources.')),
+            new InstallFeatureContentRoutine( 'base', Features::CONVERSATIONS, t('Adding conversation components.')),
+            new InstallFeatureContentRoutine('base', Features::AUTOMATION, t('Adding tasks.')),
             new InstallApiRoutine(),
             new InstallFileManagerSupportRoutine(),
         ];
@@ -57,8 +57,8 @@ class Installer implements InstallerInterface
         $routines = [];
         foreach ($features as $identifier) {
             $routine = new InstallFeatureContentRoutine(
-                $identifier,
                 $domain,
+                $identifier,
                 $displayMethod($identifier)
             );
             if ($routine->hasContentFile()) {
@@ -70,14 +70,31 @@ class Installer implements InstallerInterface
 
     protected function getCmsRoutines(): array
     {
-        return $this->getContentRoutines('cms', function($identifier) {
+
+        $routines = [];
+        $routines[] = new InstallFeatureContentRoutine(
+            'cms',
+            null,
+            t('Installing CMS.')
+        );
+        foreach ($this->getContentRoutines('cms', function($identifier) {
             return t('Installing CMS: %s', Features::getDisplayName($identifier));
-        });
+        }) as $routine) {
+            $routines[] = $routine;
+        }
+
+        return $routines;
     }
 
     protected function getBackendRoutines(): array
     {
         $routines = [];
+        $routines[] = new InstallFeatureContentRoutine(
+            'backend',
+            null,
+            t('Installing backend.')
+        );
+
         foreach ($this->getContentRoutines('backend', function($identifier) {
             return t('Installing Admin Backend: %s', Features::getDisplayName($identifier));
         }) as $routine) {
@@ -99,13 +116,17 @@ class Installer implements InstallerInterface
     public function getFrontendRoutines(): array
     {
         $routines = [];
-        $routines = [];
+        $routines[] = new InstallFeatureContentRoutine(
+            'frontend',
+            null,
+            t('Installing Frontend.')
+        );
         foreach ($this->getContentRoutines('frontend', function($identifier) {
             return t('Installing Frontend Content: %s', Features::getDisplayName($identifier));
         }) as $routine) {
             $routines[] = $routine;
         }
-        $routines[] = new InstallFeatureContentRoutine(Features::THEMES, 'base', t('Adding themes.'));
+        $routines[] = new InstallFeatureContentRoutine('base', Features::THEMES, t('Adding themes.'));
         $routines[] = new ImportStartingPointFilesRoutine();
         $routines[] = new ImportStartingPointContentRoutine();
         return $routines;
