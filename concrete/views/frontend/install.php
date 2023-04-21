@@ -20,8 +20,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
                     :lang='<?= h(json_encode($lang))?>'
                     <?php if (isset($locale)) { ?>locale="<?=$locale?>"<?php } ?>
                     <?php if (isset($preconditions)) { ?>:preconditions='<?=h(json_encode($preconditions))?>'<?php } ?>
-                    <?php if (isset($featuredStartingPoints)) { ?>:starting-points='<?=h(json_encode($featuredStartingPoints))?>'<?php } ?>
-                    <?php if (isset($otherStartingPoints)) { ?>:starting-points='<?=h(json_encode($otherStartingPoints))?>'<?php } ?>
+                    <?php if (isset($startingPoints)) { ?>:starting-points='<?=h(json_encode($startingPoints))?>'<?php } ?>
                     :locales='<?= h(json_encode($locales))?>'
                     :languages='<?= h(json_encode($languages))?>'
                     :online-locales='<?= h(json_encode($onlineLocales))?>'

@@ -77,7 +77,24 @@ export default {
         }
     },
     computed: {
-
+        featuredStartingPoints: function() {
+            let featuredStartingPoints = []
+            this.startingPoints.forEach((startingPoint) => {
+                if (startingPoint.thumbnail) {
+                    featuredStartingPoints.push(startingPoint)
+                }
+            })
+            return featuredStartingPoints
+        },
+        otherStartingPoints: function() {
+            let otherStartingPoints = []
+            this.startingPoints.forEach((startingPoint) => {
+                if (!startingPoint.thumbnail) {
+                    otherStartingPoints.push(startingPoint)
+                }
+            })
+            return otherStartingPoints
+        }
     },
     props: {
         logo: {
@@ -88,11 +105,7 @@ export default {
             type: String,
             required: false
         },
-        featuredStartingPoints: {
-            type: Array,
-            required: true
-        },
-        otherStartingPoints: {
+        startingPoints: {
             type: Array,
             required: true
         },

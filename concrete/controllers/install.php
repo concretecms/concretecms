@@ -74,11 +74,7 @@ class Install extends Controller
         if ($locale) {
             Localization::changeLocale($locale);
             $this->set('preconditions', $this->getPreconditions());
-            $this->set(
-                'featuredStartingPoints',
-                $this->app->make(StartingPointService::class)->getFeaturedStartingPoints()
-            );
-            $this->set('otherStartingPoints', $this->app->make(StartingPointService::class)->getOtherStartingPoints());
+            $this->set('startingPoints', $this->app->make(StartingPointService::class)->getStartingPoints());
             $this->set('locale', $locale);
         }
         $config = $this->app->make('config');
@@ -136,7 +132,7 @@ class Install extends Controller
         $installer->setOptions($options);
         $startingPoint = $installer->getStartingPoint(true);
 
-        $commands = $startingPoint->getStartingPointInstaller()->getInstallCommands($options);
+        $commands = $startingPoint->getInstaller()->getInstallCommands($options);
         return $installer->sendCommandsToClient($commands);
     }
 
@@ -158,8 +154,7 @@ class Install extends Controller
         $data = [];
         $data['i18n'] = $this->getStrings();
         $data['preconditions'] = $this->getPreconditions();
-        $data['featured_starting_points'] = $this->app->make(StartingPointService::class)->getFeaturedStartingPoints();
-        $data['other_starting_points'] = $this->app->make(StartingPointService::class)->getOtherStartingPoints();
+        $data['starting_points'] = $this->app->make(StartingPointService::class)->getStartingPoints();
         return new JsonResponse($data);
     }
 

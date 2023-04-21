@@ -7,7 +7,12 @@ use Concrete\Core\Install\StartingPoint\Installer\InstallerInterface;
 abstract class AbstractController implements ControllerInterface
 {
 
-    public function getStartingPointInstaller(): InstallerInterface
+    public function providesThumbnails(): bool
+    {
+        return false;
+    }
+
+    public function getInstaller(): InstallerInterface
     {
         return new Installer();
     }

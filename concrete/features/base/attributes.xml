@@ -173,4 +173,18 @@
             </categories>
         </attributetype>
     </attributetypes>
+
+    <attributekeys>
+        <attributekey handle="exclude_nav" name="Exclude From Nav" package="" searchable="1" indexed="0" type="boolean" category="collection">
+            <type checked="" checkbox-label="Exclude Page from Navigation"/>
+        </attributekey>
+        <attributekey handle="exclude_page_list" name="Exclude From Page List" package="" searchable="1" indexed="0" type="boolean" category="collection">
+            <type checked="" checkbox-label="Exclude Page from Page List Blocks" />
+        </attributekey>
+        <attributekey handle="exclude_search_index" name="Exclude From Search Index" package="" searchable="1" indexed="0" type="boolean" category="collection">
+            <type checked=""/>
+        </attributekey>
+    </attributekeys>
+
+
 </concrete5-cif>

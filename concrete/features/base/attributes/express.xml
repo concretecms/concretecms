@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+<concrete5-cif version="1.0">
+
+    <attributecategories>
+        <category handle="express" allow-sets="1" package="">
+            <attributetypes>
+                <attributetype handle="text" />
+                <attributetype handle="duration" />
+                <attributetype handle="textarea" />
+                <attributetype handle="boolean" />
+                <attributetype handle="date_time" />
+                <attributetype handle="image_file" />
+                <attributetype handle="number" />
+                <attributetype handle="select" />
+                <attributetype handle="address" />
+                <attributetype handle="telephone" />
+                <attributetype handle="url" />
+                <attributetype handle="email" />
+                <attributetype handle="topics" />
+                <attributetype handle="page_selector" />
+                <attributetype handle="user_selector" />
+                <attributetype handle="site" />
+                <attributetype handle="calendar" />
+                <attributetype handle="calendar_event" />
+                <attributetype handle="user_group" />
+            </attributetypes>
+        </category>
+    </attributecategories>
+
+    <attributetypes>
+        <attributetype handle="express" name="Express Entity" package="">
+            <categories>
+                <category handle="collection"/>
+                <category handle="user"/>
+                <category handle="file"/>
+                <category handle="site"/>
+                <category handle="site_type"/>
+            </categories>
+        </attributetype>
+    </attributetypes>
+
+
+</concrete5-cif>

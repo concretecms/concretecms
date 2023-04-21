@@ -1,25 +1,21 @@
 <?php
 namespace Concrete\Core\Install\StartingPoint\Controller;
 
-use Concrete\Core\Install\StartingPoint\Installer\InstallerInterface;
-
 interface ControllerInterface
 {
 
-    public function getStartingPointName(): string;
+    public function getHandle(): string;
 
-    public function getStartingPointHandle(): string;
+    public function getName(): string;
 
-    /**
-     * @return string
-     */
-    public function getStartingPointThumbnail(): ?string;
+    public function getThumbnail(): ?string;
+
+    public function providesThumbnails(): bool;
 
     /**
      * @return string[]|string
      */
-    public function getStartingPointDescription();
+    public function getDescription();
 
-    public function getStartingPointInstaller(): InstallerInterface;
 
 }

@@ -1,0 +1,79 @@
+<?xml version="1.0"?>
+<concrete5-cif version="1.0">
+
+    <permissioncategories>
+        <category handle="board_admin" package=""/>
+        <category handle="board" package=""/>
+    </permissioncategories>
+
+    <permissionaccessentitytypes>
+        <permissionaccessentitytype handle="group">
+            <category handle="board_admin" package=""/>
+            <category handle="board" package=""/>
+        </permissionaccessentitytype>
+        <permissionaccessentitytype handle="user">
+            <category handle="board_admin" package=""/>
+            <category handle="board" package=""/>
+        </permissionaccessentitytype>
+        <permissionaccessentitytype handle="group_set">
+            <category handle="board_admin" package=""/>
+            <category handle="board" package=""/>
+        </permissionaccessentitytype>
+        <permissionaccessentitytype handle="group_combination">
+            <category handle="board_admin" package=""/>
+            <category handle="board" package=""/>
+        </permissionaccessentitytype>
+    </permissionaccessentitytypes>
+
+    <permissionkeys>
+        <permissionkey handle="add_board" name="Add Board" description="" package="" category="board_admin">
+            <access>
+                <entity type="group" name="Administrators"/>
+            </access>
+        </permissionkey>
+        <permissionkey handle="view_boards" name="View Boards" description="" package="" category="board_admin">
+            <access>
+                <entity type="group" name="Guest"/>
+            </access>
+        </permissionkey>
+        <permissionkey handle="edit_boards_settings" name="Edit Board Settings" description="" package=""
+                       category="board_admin">
+            <access>
+                <entity type="group" name="Administrators"/>
+            </access>
+        </permissionkey>
+        <permissionkey handle="edit_boards_contents" name="Edit Board Content" description="" package=""
+                       category="board_admin">
+            <access>
+                <entity type="group" name="Administrators"/>
+            </access>
+        </permissionkey>
+        <permissionkey handle="edit_boards_permissions" name="Edit Permissions" description="" package=""
+                       category="board_admin">
+            <access>
+                <entity type="group" name="Administrators"/>
+            </access>
+        </permissionkey>
+        <permissionkey handle="edit_boards_locked_rules" name="Edit Locked Rules" description="" package=""
+                       category="board_admin">
+            <access>
+                <entity type="group" name="Administrators"/>
+            </access>
+        </permissionkey>
+        <permissionkey handle="delete_boards" name="Delete Boards" description="" package="" category="board_admin">
+            <access>
+                <entity type="group" name="Administrators"/>
+            </access>
+        </permissionkey>
+
+        <permissionkey handle="view_board" name="View Board" description="" package="" category="board"/>
+        <permissionkey handle="edit_board_settings" name="Edit Settings" description="" package="" category="board"/>
+        <permissionkey handle="edit_board_permissions" name="Edit Permissions" description="" package=""
+                       category="board"/>
+        <permissionkey handle="edit_board_contents" name="Edit Contents" description="" package="" category="board"/>
+        <permissionkey handle="edit_board_locked_rules" name="Edit Locked Rules" description="" package=""
+                       category="board"/>
+        <permissionkey handle="delete_board" name="Delete Board" description="" package="" category="board"/>
+    </permissionkeys>
+
+</concrete5-cif>

@@ -7,22 +7,22 @@ use Concrete\Core\Install\StartingPoint\Controller\AbstractController;
 class Controller extends AbstractController
 {
 
-    public function getStartingPointHandle(): string
+    public function getHandle(): string
     {
         return 'atomik';
     }
 
-    public function getStartingPointName(): string
+    public function getName(): string
     {
         return t('Atomik');
     }
 
-    public function getStartingPointThumbnail(): ?string
+    public function getThumbnail(): ?string
     {
         return ASSETS_URL . '/' . DIRNAME_THEMES . '/atomik/thumbnail.png';
     }
 
-    public function getStartingPointDescription()
+    public function getDescription()
     {
         return [
             t('Creative Services'),

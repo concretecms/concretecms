@@ -195,7 +195,7 @@ class Installer
             }
             $handle = static::DEFAULT_STARTING_POINT;
         }
-        $result = $this->application->make(StartingPointService::class)->getController($handle);
+        $result = $this->application->make(StartingPointService::class)->getByHandle($handle);
         if ($result === null) {
             throw new UserMessageException(t('Invalid starting point: %s', $handle));
         }

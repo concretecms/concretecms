@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<concrete5-cif version="1.0">
+
+    <conversationeditors>
+        <editor handle="plain_text" name="Plain Text" package="" activated="1"/>
+        <editor handle="markdown" name="Markdown" package="" activated="0"/>
+        <editor handle="rich_text" name="Rich Text" package="" activated="0"/>
+    </conversationeditors>
+
+    <conversationratingtypes>
+        <conversationratingtype handle="up_vote" name="Up Vote" points="1" package="" />
+        <conversationratingtype handle="down_vote" name="Down Vote" points="0" package="" />
+    </conversationratingtypes>
+
+</concrete5-cif>

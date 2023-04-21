@@ -46,8 +46,7 @@
                 :locale="selectedLocale"
                 :lang="lang"
                 :logo="logo"
-                :featured-starting-points="loadedFeaturedStartingPoints"
-                :other-starting-points="loadedOtherStartingPoints"
+                :starting-points="loadedStartingPoints"
                 :starting-point="startingPoint"
                 @select-starting-point="selectStartingPoint"
                 @previous="previous"
@@ -191,8 +190,7 @@ export default {
             this.loadedPreconditions = preconditions
         },
         setStartingPoints(startingPoints) {
-            this.loadedFeaturedStartingPoints = startingPoints.featured_starting_points
-            this.loadedOtherStartingPoints = startingPoints.other_starting_points
+            this.loadedStartingPoints = startingPoints
         },
         previous() {
             if (this.step === 'confirm') {
@@ -315,11 +313,7 @@ export default {
             type: String,
             required: true
         },
-        featuredStartingPoints: {
-            type: Array,
-            required: false
-        },
-        otherStartingPoints: {
+        startingPoints: {
             type: Array,
             required: false
         },
@@ -362,8 +356,7 @@ export default {
         selectedLocale: null,
         i18n: {},
         loadedPreconditions: [],
-        loadedFeaturedStartingPoints: [],
-        loadedOtherStartingPoints: [],
+        loadedStartingPoints: [],
         environmentWarnings: [],
         environmentErrors: [],
         optionsPreconditions: [],
@@ -377,8 +370,8 @@ export default {
         if (this.preconditions) {
             this.loadedPreconditions = this.preconditions
         }
-        if (this.featuredStartingPoints) {
-            this.loadedFeaturedStartingPoints = this.featuredStartingPoints
+        if (this.startingPoints) {
+            this.loadedStartingPoints = this.startingPoints
         }
         if (this.otherStartingPoints) {
             this.loadedOtherStartingPoints = this.otherStartingPoints

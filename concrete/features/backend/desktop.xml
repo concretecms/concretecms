@@ -1,6 +1,17 @@
 <?xml version="1.0"?>
 <concrete5-cif version="1.0">
 
+    <attributekeys>
+        <attributekey handle="desktop_priority" name="Desktop Priority" package="" searchable="0" indexed="0"
+                      type="number" internal="1" category="collection">
+            <type mode=""/>
+        </attributekey>
+        <attributekey handle="is_desktop" name="Is Desktop" package="" searchable="0" indexed="0" type="boolean"
+                      internal="1" category="collection">
+            <type mode=""/>
+        </attributekey>
+    </attributekeys>
+
     <pagetypes>
         <pagetype handle="core_desktop" name="Desktop" internal="1" package=""/>
     </pagetypes>
@@ -10,7 +21,8 @@
     </pagetemplates>
 
     <singlepages>
-        <page name="Welcome Back" path="/desktop" custom-path="/account/welcome" filename="/desktop.php" pagetype="" description="" package="" root="true">
+        <page name="Welcome Back" path="/desktop" custom-path="/account/welcome" filename="/desktop.php" pagetype=""
+              description="" package="" root="true">
             <attributes>
                 <attributekey handle="desktop_priority">
                     <value>1</value>
@@ -28,7 +40,7 @@
                         <arealayout type="theme-grid" columns="12">
                             <columns>
                                 <column span="12" offset="0">
-                                    <block type="desktop_waiting_for_me" />
+                                    <block type="desktop_waiting_for_me"/>
                                 </column>
                             </columns>
                         </arealayout>
@@ -37,7 +49,7 @@
                         <arealayout type="theme-grid" columns="12">
                             <columns>
                                 <column span="12" offset="0">
-                                    <block type="desktop_draft_list" />
+                                    <block type="desktop_draft_list"/>
                                 </column>
                             </columns>
                         </arealayout>
@@ -46,30 +58,30 @@
             </area>
         </page>
         <page name="Waiting for Me" path="/dashboard/welcome/me" filename="" pagetype="" template="desktop"
-          description="" package="">
-        <area name="Main">
-            <blocks>
-                <block type="core_area_layout" name="">
-                    <arealayout type="theme-grid" columns="12">
-                        <columns>
-                            <column span="12" offset="0">
-                                <block type="desktop_waiting_for_me"/>
-                            </column>
-                        </columns>
-                    </arealayout>
-                </block>
-                <block type="core_area_layout" name="">
-                    <arealayout type="theme-grid" columns="12">
-                        <columns>
-                            <column span="12" offset="0">
-                                <block type="desktop_draft_list"/>
-                            </column>
-                        </columns>
-                    </arealayout>
-                </block>
-            </blocks>
-        </area>
-    </page>
+              description="" package="">
+            <area name="Main">
+                <blocks>
+                    <block type="core_area_layout" name="">
+                        <arealayout type="theme-grid" columns="12">
+                            <columns>
+                                <column span="12" offset="0">
+                                    <block type="desktop_waiting_for_me"/>
+                                </column>
+                            </columns>
+                        </arealayout>
+                    </block>
+                    <block type="core_area_layout" name="">
+                        <arealayout type="theme-grid" columns="12">
+                            <columns>
+                                <column span="12" offset="0">
+                                    <block type="desktop_draft_list"/>
+                                </column>
+                            </columns>
+                        </arealayout>
+                    </block>
+                </blocks>
+            </area>
+        </page>
     </singlepages>
 
 
