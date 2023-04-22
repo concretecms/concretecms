@@ -10,7 +10,10 @@ class AddTreeNodesRoutineHandler
 
     public function __invoke()
     {
+        NodeType::add('dashboard_page');
+        NodeType::add('menu_category');
         NodeType::add('category');
+        TreeType::add('dashboard_menu');
         TreeType::add('topic');
         NodeType::add('topic');
     }

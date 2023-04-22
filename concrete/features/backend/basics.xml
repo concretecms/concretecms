@@ -22,6 +22,25 @@
                 </attributekey>
             </attributes>
         </page>
+        <page name="Navigation &amp; Menus" path="/dashboard/system/basics/menus"
+              filename="/dashboard/system/basics/navigation.php" pagetype="" description="" package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>menus, navigation, dropdown</value>
+                </attributekey>
+            </attributes>
+        </page>
+        <page name="Menu Details" path="/dashboard/system/basics/menus/details"
+              filename="/dashboard/system/basics/navigation/details.php" pagetype="" description="" package="">
+            <attributes>
+                <attributekey handle="exclude_nav">
+                    <value>1</value>
+                </attributekey>
+                <attributekey handle="exclude_search_index">
+                    <value>1</value>
+                </attributekey>
+            </attributes>
+        </page>
         <page name="Accessibility" path="/dashboard/system/basics/accessibility"
               filename="/dashboard/system/basics/accessibility.php" pagetype="" description="" package="">
             <attributes>
@@ -123,7 +142,9 @@
               filename="/dashboard/system/optimization/cache.php" pagetype="" description="" package="">
             <attributes>
                 <attributekey handle="meta_keywords">
-                    <value>cache option, change cache, override, turn on cache, turn off cache, no cache, page cache, caching</value>
+                    <value>cache option, change cache, override, turn on cache, turn off cache, no cache, page cache,
+                        caching
+                    </value>
                 </attributekey>
             </attributes>
         </page>
@@ -206,7 +227,8 @@
               filename="/dashboard/system/environment/security.php" pagetype="" description="" package="">
             <attributes>
                 <attributekey handle="meta_keywords">
-                    <value>security, content security policy, csp, strict transport security, hsts, x-frame-options</value>
+                    <value>security, content security policy, csp, strict transport security, hsts, x-frame-options
+                    </value>
                 </attributekey>
             </attributes>
         </page>
