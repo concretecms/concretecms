@@ -9,7 +9,10 @@ class TwigCache implements CacheInterface
 {
     public const CACHE_TTL = 86400;
 
-    private ExpensiveCache $cache;
+    /**
+     * @var ExpensiveCache
+     */
+    private $cache;
 
     public function __construct(ExpensiveCache $cache)
     {
