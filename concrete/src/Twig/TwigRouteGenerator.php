@@ -8,7 +8,10 @@ use Pagerfanta\RouteGenerator\RouteGeneratorInterface;
 
 class TwigRouteGenerator implements RouteGeneratorInterface
 {
-    private array $options;
+    /**
+     * @var array $options
+     */
+    private $options;
 
     public function __construct(array $options = [])
     {
