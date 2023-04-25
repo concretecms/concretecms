@@ -31,7 +31,9 @@ class TwigRouteGenerator implements RouteGeneratorInterface
         $query = array_merge($query, array_key_exists('query', $this->options) ? $this->options['query'] : []);
 
         // Remove any query parameters with a null value.
-        $query = array_filter($query, fn ($value) => $value !== null);
+        $query = array_filter($query, function ($value) {
+            return $value !== null;
+        });
 
         return (string) $url->setQuery(http_build_query($query));
     }
