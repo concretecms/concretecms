@@ -117,7 +117,18 @@
     "tubalmartin/cssmin": "^4.1",
     "ssddanbrown/htmldiff": "^1.0",
     "zircote/swagger-php": "^4.4",
-    "concretecms/dependency-patches": "^1.7.2"
+    "concretecms/dependency-patches": "^1.7.2",
+    "symfony/validator": "^5.2",
+    "symfony/expression-language": "^5.2",
+    "symfony/form": "^5.2",
+    "symfony/twig-bridge": "^5.2",
+    "symfony/security-csrf": "^5.2",
+    "twig/twig": "^2.4",
+    "twig/extra-bundle": "3.3.1",
+    "symfony/translation": "^5.2",
+    "pagerfanta/doctrine-orm-adapter": "v2.7.3",
+    "pagerfanta/twig": "v2.7.3",
+    "symfony/mime": "^5.2"
   },
   "replace": {
     "laminas/laminas-cache-storage-adapter-apc": "*",

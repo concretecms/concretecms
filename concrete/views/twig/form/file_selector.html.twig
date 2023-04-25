@@ -1,0 +1,27 @@
+{% block file_selector_row %}
+    <div class="mb-3 {{ form.vars.class }}" id="{{ form.vars.id }}">
+        {{ form_label(form) }}
+        {{ form_errors(form) }}
+        <concrete-file-input
+                :filters='{{ filters|raw }}'
+                :file-id="{{ file_id }}"
+                choose-text="{{ form.vars.choose_file }}"
+                input-name="{{ input_name }}"
+        ></concrete-file-input>
+    </div>
+    <script>
+        $(document).ready(function () {
+            var selector = $('#{{ form.vars.id }}');
+            if (selector) {
+                selector.each(function (i, item) {
+                    Concrete.Vue.activateContext('cms', function (Vue, config) {
+                        new Vue({
+                            el: item,
+                            components: config.components
+                        })
+                    })
+                })
+            }
+        });
+    </script>
+{% endblock %}
