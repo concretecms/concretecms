@@ -33,18 +33,19 @@ class AppendHTMLModifier implements ModifierInterface
     protected function removeUnrelatedSectionsFromNavigation(array $items, array $sectionIDs)
     {
         foreach($items as $item) {
-            /**
-             * @var $item PageItem
-             */
-            if ($item->getPageID() == $this->currentPage->getCollectionID()) {
-                $item->setIsActive(true);
-            } else if (in_array($item->getPageID(), $sectionIDs)) {
-                $item->setIsActiveParent(true);
-            } else {
-                //$item->setChildren([]);
-            }
+            if ($item instanceof PageItem) {
+                if ($item->getPageID() == $this->currentPage->getCollectionID()) {
+                    $item->setIsActive(true);
+                } else {
+                    if (in_array($item->getPageID(), $sectionIDs)) {
+                        $item->setIsActiveParent(true);
+                    } else {
+                        //$item->setChildren([]);
+                    }
+                }
 
-            $this->removeUnrelatedSectionsFromNavigation($item->getChildren(), $sectionIDs);
+                $this->removeUnrelatedSectionsFromNavigation($item->getChildren(), $sectionIDs);
+            }
         }
     }
 

@@ -2,6 +2,8 @@
 
 namespace Concrete\Core\Navigation\Modifier;
 
+use ClassesWithParents\E;
+use Concrete\Core\Navigation\Item\SupportsChildrenItemInterface;
 use Concrete\Core\Navigation\NavigationInterface;
 
 class FlatChildrenModifier implements ModifierInterface
@@ -13,9 +15,13 @@ class FlatChildrenModifier implements ModifierInterface
 
         foreach ($childPages as $childPage) {
             $flattedChildPages[] = $childPage;
-
-            if (count($childPage->getChildren()) > 0) {
-                $flattedChildPages = array_merge($flattedChildPages, $this->flatChildren($childPage->getChildren()));
+            if ($childPage instanceof SupportsChildrenItemInterface) {
+                if (count($childPage->getChildren()) > 0) {
+                    $flattedChildPages = array_merge(
+                        $flattedChildPages,
+                        $this->flatChildren($childPage->getChildren())
+                    );
+                }
             }
         }
 
@@ -25,7 +31,9 @@ class FlatChildrenModifier implements ModifierInterface
     public function modify(NavigationInterface $navigation)
     {
         foreach ($navigation->getItems() as $item) {
-            $item->setChildren($this->flatChildren($item->getChildren()));
+            if ($item instanceof SupportsChildrenItemInterface) {
+                $item->setChildren($this->flatChildren($item->getChildren()));
+            }
         }
     }
 

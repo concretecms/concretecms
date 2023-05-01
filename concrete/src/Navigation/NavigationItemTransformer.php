@@ -2,7 +2,7 @@
 
 namespace Concrete\Core\Navigation;
 
-use Concrete\Core\Navigation\Item\Item;
+use Concrete\Core\Navigation\Item\SerializableItemInterface;
 use League\Fractal\TransformerAbstract;
 
 class NavigationItemTransformer extends TransformerAbstract
@@ -10,11 +10,11 @@ class NavigationItemTransformer extends TransformerAbstract
     /**
      * Basic transforming of a Navigation item into an array.
      *
-     * @param Item $item
+     * @param SerializableItemInterface $item
      *
      * @return array
      */
-    public function transform(Item $item)
+    public function transform(SerializableItemInterface $item)
     {
         return $item->jsonSerialize();
     }

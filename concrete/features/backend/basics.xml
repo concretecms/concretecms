@@ -41,6 +41,8 @@
                 </attributekey>
             </attributes>
         </page>
+        <page name="Dashboard Options" path="/dashboard/system/basics/dashboard" filename="/dashboard/system/basics/dashboard.php" pagetype=""
+              description="Configure how your admin backend works." package=""/>
         <page name="Accessibility" path="/dashboard/system/basics/accessibility"
               filename="/dashboard/system/basics/accessibility.php" pagetype="" description="" package="">
             <attributes>

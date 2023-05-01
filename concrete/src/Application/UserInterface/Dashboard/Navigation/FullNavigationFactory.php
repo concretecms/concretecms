@@ -1,9 +1,11 @@
 <?php
+
 namespace Concrete\Core\Application\UserInterface\Dashboard\Navigation;
 
-use Concrete\Core\Navigation\Item\PageItem;
+use Concrete\Core\Application\Application;
+use Concrete\Core\Entity\Navigation\Menu;
 use Concrete\Core\Page\Page;
-use Concrete\Core\Permission\Checker;
+use Doctrine\ORM\EntityManager;
 
 class FullNavigationFactory
 {
@@ -13,47 +15,47 @@ class FullNavigationFactory
      */
     protected $cache;
 
-    public function __construct(NavigationCache $cache)
-    {
+    /**
+     * @var Application
+     */
+    protected $app;
+
+    /**
+     * @var EntityManager
+     */
+    protected $entityManager;
+
+    /**
+     * @var TreeMenuNavigationFactory
+     */
+    protected $treeMenuNavigationFactory;
+
+    /**
+     * @var DashboardSitemapNavigationFactory
+     */
+    protected $dashboardSitemapNavigationFactory;
+
+    public function __construct(
+        TreeMenuNavigationFactory $treeMenuNavigationFactory,
+        DashboardSitemapNavigationFactory $dashboardSitemapNavigationFactory,
+        Application $app,
+        EntityManager $entityManager,
+        NavigationCache $cache
+    ) {
+        $this->treeMenuNavigationFactory = $treeMenuNavigationFactory;
+        $this->dashboardSitemapNavigationFactory = $dashboardSitemapNavigationFactory;
+        $this->app = $app;
+        $this->entityManager = $entityManager;
         $this->cache = $cache;
     }
 
-    protected function getPageChildren(Page $page)
+    public function getMenu(): ?Menu
     {
-        $accountChildren = null;
-        if ($page->getCollectionPath() == '/dashboard/welcome') {
-            $accountPage = Page::getByPath('/account');
-            $accountChildren = $accountPage->getCollectionChildren();
+        $dashboardMenuID = $this->app->make('config/database')->get('app.dashboard_menu');
+        if ($dashboardMenuID) {
+            return $this->entityManager->getRepository(Menu::class)->find($dashboardMenuID);
         }
-        $children = $page->getCollectionChildren();
-        if (isset($accountChildren)) {
-            return array_merge($children, $accountChildren);
-        }
-        return $children;
-    }
-
-    /**
-     * @param Page $currentPage
-     * @param Navigation $navigation
-     * @param PageItem|null $currentItem
-     * @return Navigation
-     */
-    protected function populateNavigation(Page $currentPage, Navigation $navigation, PageItem $currentItem = null)
-    {
-        $permissions = new Checker($currentPage);
-        if ($permissions->canViewPage() && !$currentPage->getAttribute('exclude_nav')) {
-            $item = new PageItem($currentPage);
-            $children = $this->getPageChildren($currentPage);
-            foreach($children as $child) {
-                $this->populateNavigation($child, $navigation, $item);
-            }
-            if ($currentItem) {
-                $currentItem->addChild($item);
-            } else {
-                $navigation->add($item);
-            }
-        }
-        return $navigation;
+        return null;
     }
 
     /**
@@ -65,11 +67,12 @@ class FullNavigationFactory
     public function createNavigation(): Navigation
     {
         if (!$this->cache->has()) {
-            $navigation = new Navigation();
-            $home = Page::getByPath('/dashboard');
-            $children = $home->getCollectionChildren();
-            foreach($children as $child) {
-                $navigation = $this->populateNavigation($child, $navigation);
+            $menu = $this->getMenu();
+            if ($menu) {
+                $navigation = $this->treeMenuNavigationFactory->createNavigation($menu->getTree());
+            } else {
+                $home = Page::getByPath('/dashboard');
+                $navigation = $this->dashboardSitemapNavigationFactory->createNavigation($home);
             }
             $this->cache->set($navigation);
         } else {

@@ -4,6 +4,7 @@ namespace Concrete\Core\Entity\Navigation;
 
 use Concrete\Core\Menu\Type\Manager;
 use Concrete\Core\Menu\Type\TypeInterface;
+use Concrete\Core\Tree\Tree;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -95,9 +96,12 @@ class Menu
 
     public function getTypeDriver(): TypeInterface
     {
-        return $this->app->make(Manager::class)->driver($this->getType());
+        return app(Manager::class)->driver($this->getType());
     }
 
-
+    public function getTree(): Tree
+    {
+        return Tree::getByID($this->getTreeID());
+    }
 
 }

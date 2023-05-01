@@ -6,6 +6,7 @@ use Concrete\Core\Entity\Navigation\Menu;
 use Concrete\Core\Menu\Command\DeleteMenuCommand;
 use Concrete\Core\Menu\Command\UpdateMenuCommand;
 use Concrete\Core\Page\Controller\DashboardPageController;
+use Concrete\Core\Tree\Tree;
 
 class Details extends DashboardPageController
 {
@@ -14,6 +15,9 @@ class Details extends DashboardPageController
     {
         $menu = $this->entityManager->find(Menu::class, $menuId);
         $this->set('menu', $menu);
+        if ($menu->getTreeID()) {
+            $this->set("tree", Tree::getByID($menu->getTreeID()));
+        }
     }
 
     public function edit($menuId = null)

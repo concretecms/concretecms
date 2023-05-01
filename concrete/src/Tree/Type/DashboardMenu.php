@@ -2,7 +2,8 @@
 
 namespace Concrete\Core\Tree\Type;
 
-use Concrete\Core\Tree\Node\Type\MenuCategory;
+
+use Concrete\Core\Tree\Node\Type\NavigationMenu;
 
 class DashboardMenu extends Menu
 {
@@ -14,7 +15,7 @@ class DashboardMenu extends Menu
 
     public static function add()
     {
-        $rootNode = MenuCategory::add();
+        $rootNode = NavigationMenu::add();
         $treeID = parent::create($rootNode);
         $tree = self::getByID($treeID);
         return $tree;

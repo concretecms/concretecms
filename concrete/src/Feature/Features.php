@@ -74,6 +74,7 @@ class Features
     const NOTIFICATION = 'notification';
     const THEME_DOCUMENTATION = 'theme_documentation';
     const MAIL = 'mail';
+    const API = 'api';
 
     public static function getFeatures(): array
     {
@@ -162,6 +163,8 @@ class Features
                 return t('Theme Documentation');
             case self::SUMMARY:
                 return t('Summary Templates');
+            case self::API:
+                return t('API');
         }
     }
 }
