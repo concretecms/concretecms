@@ -175,6 +175,13 @@
     </attributetypes>
 
     <attributekeys>
+        <attributekey handle="meta_title" name="Meta Title" package="" searchable="1" indexed="0" type="text" category="collection"/>
+        <attributekey handle="meta_description" name="Meta Description" package="" searchable="1" indexed="0" type="textarea" category="collection">
+            <type mode=""/>
+        </attributekey>
+        <attributekey handle="meta_keywords" name="Meta Keywords" package="" searchable="1" indexed="0" type="textarea" category="collection">
+            <type mode=""/>
+        </attributekey>
         <attributekey handle="exclude_nav" name="Exclude From Nav" package="" searchable="1" indexed="0" type="boolean" category="collection">
             <type checked="" checkbox-label="Exclude Page from Navigation"/>
         </attributekey>
