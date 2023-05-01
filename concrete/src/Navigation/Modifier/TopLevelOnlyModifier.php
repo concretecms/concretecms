@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\Navigation\Modifier;
 
+use Concrete\Core\Navigation\Item\SupportsChildrenItemInterface;
 use Concrete\Core\Navigation\NavigationInterface;
 
 class TopLevelOnlyModifier implements ModifierInterface
@@ -12,7 +13,9 @@ class TopLevelOnlyModifier implements ModifierInterface
     public function modify(NavigationInterface $navigation)
     {
         foreach($navigation->getItems() as $topLevelItem) {
-            $topLevelItem->setChildren([]);
+            if ($topLevelItem instanceof SupportsChildrenItemInterface) {
+                $topLevelItem->setChildren([]);
+            }
         }
     }
 

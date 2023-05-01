@@ -4,16 +4,21 @@
  */
 
 $walkNavigation = function(array $items) use (&$walkNavigation) {
-    if (count($items)) { ?>
+    if (count($items)) {
+        ?>
         <ul class="nav flex-column">
             <?php foreach($items as $item) { ?>
                 <li>
-                    <a href="<?=$item->getURL()?>"
-                    <?php if ($item->isActive()) { ?>class="ccm-panel-menu-item-active"<?php } ?>
-                    <?php if ($item->isActiveParent()) { ?>class="ccm-panel-menu-parent-item-active"<?php } ?>>
-                        <?=h($item->getName())?>
-                    </a>
-                    <?php $walkNavigation($item->getChildren());?>
+                    <?php if ($item instanceof \Concrete\Core\Navigation\Item\RenderableItemInterface) { ?>
+                        <?=$item->render()?>
+                    <?php } else { ?>
+                        <a href="<?=$item->getURL()?>"
+                           <?php if ($item->isActive()) { ?>class="ccm-panel-menu-item-active"<?php } ?>
+                           <?php if ($item->isActiveParent()) { ?>class="ccm-panel-menu-parent-item-active"<?php } ?>>
+                            <?=h($item->getName())?>
+                        </a>
+                        <?php $walkNavigation($item->getChildren());?>
+                    <?php } ?>
                 </li>
             <?php } ?>
         </ul>

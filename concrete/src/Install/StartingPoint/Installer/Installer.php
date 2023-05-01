@@ -3,11 +3,10 @@ namespace Concrete\Core\Install\StartingPoint\Installer;
 
 use Concrete\Core\Feature\Features;
 use Concrete\Core\Install\InstallerOptions;
-use Concrete\Core\Install\StartingPoint\Installer\Routine\Base\AddExpressObjectsSupportRoutine;
-use Concrete\Core\Install\StartingPoint\Installer\Routine\Frontend\ImportStartingPointContentRoutine;
-use Concrete\Core\Install\StartingPoint\Installer\Routine\Frontend\ImportStartingPointFilesRoutine;
+use Concrete\Core\Install\StartingPoint\Installer\Routine\Backend\CreateBackendNavigationRoutine;
 use Concrete\Core\Install\StartingPoint\Installer\Routine\Backend\ReorderBackendRoutine;
 use Concrete\Core\Install\StartingPoint\Installer\Routine\Backend\SetupBackendPermissionsRoutine;
+use Concrete\Core\Install\StartingPoint\Installer\Routine\Base\AddExpressObjectsSupportRoutine;
 use Concrete\Core\Install\StartingPoint\Installer\Routine\Base\AddHomePageRoutine;
 use Concrete\Core\Install\StartingPoint\Installer\Routine\Base\AddTreeNodesRoutine;
 use Concrete\Core\Install\StartingPoint\Installer\Routine\Base\AddUsersRoutine;
@@ -18,6 +17,8 @@ use Concrete\Core\Install\StartingPoint\Installer\Routine\Base\InstallDatabaseRo
 use Concrete\Core\Install\StartingPoint\Installer\Routine\Base\InstallFileManagerSupportRoutine;
 use Concrete\Core\Install\StartingPoint\Installer\Routine\Base\InstallSiteRoutine;
 use Concrete\Core\Install\StartingPoint\Installer\Routine\Base\SetupSitePermissionsRoutine;
+use Concrete\Core\Install\StartingPoint\Installer\Routine\Frontend\ImportStartingPointContentRoutine;
+use Concrete\Core\Install\StartingPoint\Installer\Routine\Frontend\ImportStartingPointFilesRoutine;
 use Concrete\Core\Install\StartingPoint\Installer\Routine\InstallFeatureContentRoutine;
 
 class Installer implements InstallerInterface
@@ -101,7 +102,7 @@ class Installer implements InstallerInterface
             $routines[] = $routine;
         }
         $routines[] = new SetupBackendPermissionsRoutine();
-        $routines[] = new ReorderBackendRoutine();
+        $routines[] = new CreateBackendNavigationRoutine();
         return $routines;
     }
 

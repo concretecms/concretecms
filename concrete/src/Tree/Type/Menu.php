@@ -5,7 +5,7 @@ namespace Concrete\Core\Tree\Type;
 use Concrete\Core\Tree\Tree;
 use SimpleXMLElement;
 
-class Menu extends Tree
+class Menu extends Tree implements MenuInterface
 {
 
     /**

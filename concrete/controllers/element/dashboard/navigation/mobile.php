@@ -1,13 +1,9 @@
 <?php
 namespace Concrete\Controller\Element\Dashboard\Navigation;
 
-use Concrete\Core\Application\UserInterface\Dashboard\Navigation\FavoritesNavigationFactory;
 use Concrete\Core\Application\UserInterface\Dashboard\Navigation\FullNavigationFactory;
-use Concrete\Core\Application\UserInterface\Dashboard\Navigation\Modifier\OpenToCurrentPageModifier;
 use Concrete\Core\Controller\ElementController;
-use Concrete\Core\Navigation\Modifier\NavigationStartingPointModifier;
 use Concrete\Core\Navigation\Modifier\AppendHTMLModifier;
-use Concrete\Core\Navigation\Modifier\TopLevelOnlyModifier;
 use Concrete\Core\Navigation\NavigationModifier;
 use Concrete\Core\Page\Page;
 

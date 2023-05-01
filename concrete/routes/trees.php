@@ -51,3 +51,8 @@ $router->all('/ccm/system/dialogs/tree/node/delete/remove_tree_node', '\Concrete
 $router->all('/ccm/system/dialogs/tree/node/permissions', '\Concrete\Controller\Dialog\Tree\Node\Permissions::view');
 $router->all('/ccm/system/dialogs/tree/node/category/delete_express', '\Concrete\Controller\Dialog\Tree\Node\Category\DeleteExpress::view');
 $router->all('/ccm/system/dialogs/tree/node/category/delete_express/remove_tree_node', '\Concrete\Controller\Dialog\Tree\Node\Category\DeleteExpress::remove_tree_node');
+
+$router->all('/ccm/system/dialogs/tree/node/add/dashboard_page', '\Concrete\Controller\Dialog\Tree\Node\DashboardPage\Add::view');
+$router->all('/ccm/system/dialogs/tree/node/add/dashboard_page/add_dashboard_page_node', '\Concrete\Controller\Dialog\Tree\Node\DashboardPage\Add::add_dashboard_page_node');
+$router->all('/ccm/system/dialogs/tree/node/edit/dashboard_page', '\Concrete\Controller\Dialog\Tree\Node\DashboardPage\Edit::view');
+$router->all('/ccm/system/dialogs/tree/node/edit/dashboard_page/update_dashboard_page_node', '\Concrete\Controller\Dialog\Tree\Node\DashboardPage\Edit::update_dashboard_page_node');

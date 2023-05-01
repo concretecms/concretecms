@@ -12,6 +12,23 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
 <h4><?=$menu->getName()?></h4>
 
+<?php if (is_object($tree)) {
+?>
+<div data-tree="<?=$tree->getTreeID(); ?>">
+</div>
+
+<script type="text/javascript">
+    $(function() {
+
+        $('[data-tree]').concreteTree({
+            'treeID': '<?=$tree->getTreeID(); ?>'
+        });
+
+    });
+</script>
+
+<?php } ?>
+
 
 <div class="modal fade" tabindex="-1" role="dialog" id="delete-menu-modal">
     <div class="modal-dialog modal-dialog-centered">
