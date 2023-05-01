@@ -2,6 +2,7 @@
 namespace Concrete\Core\Health\Report\Test\Test;
 
 use Concrete\Core\Config\Repository\Repository;
+use Concrete\Core\Health\Report\Finding\Control\Location\AutomationSettingsLocation;
 use Concrete\Core\Health\Report\Finding\Control\Location\LoggingSettingsLocation;
 use Concrete\Core\Health\Report\Runner;
 use Concrete\Core\Health\Report\Test\TestInterface;
@@ -27,7 +28,7 @@ class CheckConfigLoggingSettingsForProductionTest implements TestInterface
         if ($this->config->get('concrete.processes.logging.method') === 'none') {
             $report->info(
                 t('Task process output is not being logged. Consider enabling logging on tasks.'),
-                $report->button(new LoggingSettingsLocation())
+                $report->button(new AutomationSettingsLocation())
             );
         }
 
