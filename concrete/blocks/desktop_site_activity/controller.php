@@ -234,12 +234,7 @@ class Controller extends BlockController implements UsesFeatureInterface
     protected function getLatestFormSubmissions($since)
     {
         $since = date('Y-m-d H:i:s', $since);
-
-        // legacy
-        /** @var Connection $db */
         $db = $this->app->make(Connection::class);
-        $r = $db->executeQuery('select count(uID) from btFormAnswerSet where created >= ?', [$since]);
-        $legacy = $r->fetchOne();
 
         // new
         $entityManager = $db->getEntityManager();
@@ -248,7 +243,7 @@ class Controller extends BlockController implements UsesFeatureInterface
         ;
 
         $ids = [];
-        $new = 0;
+        $count = 0;
         foreach ($forms as $form) {
             $ids[] = $form->getID();
         }
@@ -259,10 +254,10 @@ class Controller extends BlockController implements UsesFeatureInterface
             );
             $q->setParameter('entities', $forms);
             $q->setParameter('date', $since);
-            $new = $q->getSingleScalarResult();
+            $count = $q->getSingleScalarResult();
         }
 
-        return $legacy + $new;
+        return $count;
     }
 
     /**

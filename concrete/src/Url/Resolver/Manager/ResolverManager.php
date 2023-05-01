@@ -3,6 +3,7 @@
 namespace Concrete\Core\Url\Resolver\Manager;
 
 use Concrete\Core\Url\Resolver\UrlResolverInterface;
+use League\Url\UrlInterface;
 
 class ResolverManager implements ResolverManagerInterface
 {
@@ -77,6 +78,11 @@ class ResolverManager implements ResolverManagerInterface
     public function getResolvers()
     {
         return $this->resolvers;
+    }
+
+    public function to(/* ... */): UrlInterface
+    {
+        return $this->resolve(func_get_args());
     }
 
     /**
