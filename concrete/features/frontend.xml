@@ -3,13 +3,6 @@
 
 
     <attributekeys>
-        <attributekey handle="meta_title" name="Meta Title" package="" searchable="1" indexed="0" type="text" category="collection"/>
-        <attributekey handle="meta_description" name="Meta Description" package="" searchable="1" indexed="0" type="textarea" category="collection">
-            <type mode=""/>
-        </attributekey>
-        <attributekey handle="meta_keywords" name="Meta Keywords" package="" searchable="1" indexed="0" type="textarea" category="collection">
-            <type mode=""/>
-        </attributekey>
         <attributekey handle="tags" name="Tags" package="" searchable="1" indexed="1" type="select" category="collection">
             <type allow-multiple-values="1" display-order="display_asc" allow-other-values="1">
             </type>
