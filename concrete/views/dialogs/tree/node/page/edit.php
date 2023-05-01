@@ -5,7 +5,7 @@ $form = Loader::helper('form');
     ?>
 
 <div class="ccm-ui">
-	<form method="post" data-dialog-form="edit-topic-node" class="form-horizontal" action="<?=$controller->action('update_dashboard_page_node')?>">
+	<form method="post" data-dialog-form="edit-topic-node" class="form-horizontal" action="<?=$controller->action('update_page_node')?>">
 		<input type="hidden" name="treeNodeID" value="<?=$node->getTreeNodeID()?>" />
         <div class="mb-3">
             <label class="form-label"><?=t('Page')?></label>

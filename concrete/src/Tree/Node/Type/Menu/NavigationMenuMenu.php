@@ -1,7 +1,7 @@
 <?php
 namespace Concrete\Core\Tree\Node\Type\Menu;
 
-use Concrete\Core\Tree\Menu\Item\NavigationMenu\AddDashboardPageItem;
+use Concrete\Core\Tree\Menu\Item\NavigationMenu\AddPageItem;
 use Concrete\Core\Tree\Menu\Menu;
 use Concrete\Core\Tree\Node\Type\Category;
 
@@ -13,7 +13,7 @@ class NavigationMenuMenu extends Menu
         parent::__construct($category);
         $p = new \Permissions($category);
         if ($p->canAddTopicTreeNode()) {
-            $this->addItem(new AddDashboardPageItem($category));
+            $this->addItem(new AddPageItem($category));
         }
     }
 

@@ -1,7 +1,7 @@
 <?php defined('C5_EXECUTE') or die('Access Denied.'); ?>
 
 <div class="ccm-ui">
-    <form method="post" data-dialog-form="add-dashboard-page-node" class="form-horizontal" action="<?= $controller->action('add_dashboard_page_node'); ?>">
+    <form method="post" data-dialog-form="add-page-node" class="form-horizontal" action="<?= $controller->action('add_page_node'); ?>">
         <input type="hidden" name="treeNodeID" value="<?= $node->getTreeNodeID(); ?>">
         <div class="mb-3">
             <label class="form-label"><?=t('Page')?></label>
@@ -27,7 +27,7 @@
     $(function() {
         ConcreteEvent.unsubscribe('AjaxFormSubmitSuccess.addTreeNode');
         ConcreteEvent.subscribe('AjaxFormSubmitSuccess.addTreeNode', function(e, data) {
-            if (data.form == 'add-dashboard-page-node') {
+            if (data.form == 'add-page-node') {
                 ConcreteEvent.publish('ConcreteTreeAddTreeNode', {'node': data.response});
             }
         });

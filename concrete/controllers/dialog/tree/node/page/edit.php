@@ -1,21 +1,21 @@
 <?php
-namespace Concrete\Controller\Dialog\Tree\Node\DashboardPage;
+namespace Concrete\Controller\Dialog\Tree\Node\Page;
 
 use Concrete\Controller\Dialog\Tree\Node;
+use Concrete\Core\Error\UserMessageException;
 use Concrete\Core\Page\Page as CorePage;
 use Concrete\Core\Permission\Checker;
-use Concrete\Core\Tree\Node\Type\DashboardPage;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
-class Add extends Node
+class Edit extends Node
 {
-    protected $viewPath = '/dialogs/tree/node/dashboard_page/add';
+    protected $viewPath = '/dialogs/tree/node/page/edit';
 
     protected function canAccess()
     {
         $node = $this->getNode();
         $np = new \Permissions($node);
-        return $np->canAddTopicTreeNode();
+        return $np->canEditTreeNode();
     }
 
     public function view()
@@ -24,29 +24,27 @@ class Add extends Node
         $this->set('node', $node);
     }
 
-    public function add_dashboard_page_node()
+    public function update_page_node()
     {
         if ($this->validateAction()) {
-
             $error = \Core::make('error');
-            $parent = $this->getNode();
-
-            if (!is_object($parent)) {
-                $error->add(t('Invalid parent category'));
-            }
-
+            $node = $this->getNode();
             $page = CorePage::getByID($this->request->request->get('pageID'));
             $checker = new Checker($page);
             if (!$checker->canViewPage()) {
                 $error->add(t('Invalid page object.'));
             }
+
+
             if (!$error->has()) {
-                $pageNode = DashboardPage::add($page, $this->request->request->getBoolean('includeSubpagesInMenu'), $parent);
-                $r = $pageNode->getTreeNodeJSON();
+                $node->setDetails($page, $this->request->request->getBoolean('includeSubpagesInMenu'));
+                $r = $node->getTreeNodeJSON();
                 return new JsonResponse($r);
             } else {
                 return new JsonResponse($error);
             }
+        } else {
+            throw new UserMessageException(t('Access Denied'));
         }
     }
 }
