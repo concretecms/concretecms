@@ -44,12 +44,6 @@ class Controller extends BlockController implements UsesFeatureInterface
      */
     public function view()
     {
-        /** @var Connection $db */
-        $db = app(Connection::class);
-        $r = $db->executeQuery('select * from btFormAnswerSet order by created desc limit 1');
-        $row = $r->fetchAssociative();
-
-        $legacyDateCreated = $row === false ? null : strtotime($row['created']);
         /** @var \Doctrine\ORM\EntityManager $entityManager */
         $entityManager = app(EntityManagerInterface::class);
         $forms = $entityManager->getRepository('Concrete\Core\Entity\Express\Entity')
@@ -72,22 +66,7 @@ class Controller extends BlockController implements UsesFeatureInterface
             $result = null;
         }
 
-        $formDateCreated = 0;
         if (is_object($result)) {
-            $formDateCreated = app('date')->toDateTime($result->getDateCreated())->getTimestamp();
-        }
-
-        if ($legacyDateCreated !== null && $legacyDateCreated > $formDateCreated) {
-            if (is_array($row) && isset($row['questionSetId'])) {
-                $r = $db->executeQuery('select * from btForm where questionSetId = ?', [$row['questionSetId']]);
-                $row2 = $r->fetchAssociative();
-                if (is_array($row2) && isset($row2['bID'])) {
-                    $this->set('formName', $row2['surveyName']);
-                    $this->set('date', app('date')->formatDateTime(strtotime($row['created'])));
-                    $this->set('link', app(ResolverManagerInterface::class)->resolve(['/dashboard/reports/forms/legacy']) . '?qsid=' . $row['questionSetId']);
-                }
-            }
-        } elseif (is_object($result)) {
             $entity = $result->getEntity();
             $this->set('formName', $entity->getEntityDisplayName());
             $this->set('date', app('date')->formatDateTime($result->getDateCreated()));

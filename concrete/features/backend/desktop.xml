@@ -57,6 +57,8 @@
                 </blocks>
             </area>
         </page>
+    </singlepages>
+    <pages>
         <page name="Waiting for Me" path="/dashboard/welcome/me" filename="" pagetype="" template="desktop"
               description="" package="">
             <area name="Main">
@@ -82,7 +84,7 @@
                 </blocks>
             </area>
         </page>
-    </singlepages>
+    </pages>
 
 
 </concrete5-cif>

@@ -16,6 +16,8 @@ use Concrete\Core\Install\StartingPoint\Installer\Routine\Base\InstallApiRoutine
 use Concrete\Core\Install\StartingPoint\Installer\Routine\Base\InstallDatabaseRoutine;
 use Concrete\Core\Install\StartingPoint\Installer\Routine\Base\InstallFileManagerSupportRoutine;
 use Concrete\Core\Install\StartingPoint\Installer\Routine\Base\InstallSiteRoutine;
+use Concrete\Core\Install\StartingPoint\Installer\Routine\Base\SetDefaultConversationPermissionsRoutine;
+use Concrete\Core\Install\StartingPoint\Installer\Routine\Base\SetDefaultConversationSubscribersRoutine;
 use Concrete\Core\Install\StartingPoint\Installer\Routine\Base\SetupSitePermissionsRoutine;
 use Concrete\Core\Install\StartingPoint\Installer\Routine\Frontend\ImportStartingPointContentRoutine;
 use Concrete\Core\Install\StartingPoint\Installer\Routine\Frontend\ImportStartingPointFilesRoutine;
@@ -35,6 +37,8 @@ class Installer implements InstallerInterface
             new InstallFeatureContentRoutine('base', 'permissions/boards', t('Adding Boards permission support.')),
             new InstallFeatureContentRoutine('base', 'permissions/calendar', t('Adding Calendar permissions support.')),
             new InstallFeatureContentRoutine('base', 'permissions/conversations', t('Adding Conversations permissions support.')),
+            new SetDefaultConversationSubscribersRoutine(),
+            new SetDefaultConversationPermissionsRoutine(),
             new InstallFeatureContentRoutine('base', 'permissions/express', t('Adding Express permissions support.')),
             new InstallFeatureContentRoutine('base', 'permissions/multilingual', t('Adding multilingual permission support.')),
             new AddTreeNodesRoutine(),
