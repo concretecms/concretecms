@@ -10,7 +10,7 @@ use Concrete\Core\Menu\Type\Manager;
 use Concrete\Core\Page\Page;
 use Concrete\Core\Tree\Node\Node;
 use Concrete\Core\Tree\Node\Type\DashboardPackagePages;
-use Concrete\Core\Tree\Node\Type\DashboardPage;
+use Concrete\Core\Tree\Node\Type\Page as PageNode;
 
 class CreateBackendNavigationRoutineHandler
 {
@@ -34,10 +34,10 @@ class CreateBackendNavigationRoutineHandler
         return $this->app->executeCommand($command);
     }
 
-    protected function addItem(Node $node, string $path, $includeSubpagesInMenu = true): DashboardPage
+    protected function addItem(Node $node, string $path, $includeSubpagesInMenu = true): PageNode
     {
         $page = Page::getByPath($path, 'RECENT');
-        return DashboardPage::add($page, $includeSubpagesInMenu, $node);
+        return PageNode::add($page, $includeSubpagesInMenu, $node);
     }
 
     protected function addDashboardPackagePagesNode(Node $node)

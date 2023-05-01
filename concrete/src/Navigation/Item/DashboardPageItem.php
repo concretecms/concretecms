@@ -2,10 +2,6 @@
 
 namespace Concrete\Core\Navigation\Item;
 
-use HtmlObject\Element;
-use HtmlObject\Link;
-use HtmlObject\Traits\Tag;
-
 class DashboardPageItem extends PageItem
 {
 

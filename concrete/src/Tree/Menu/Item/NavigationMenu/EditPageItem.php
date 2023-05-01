@@ -4,7 +4,7 @@ namespace Concrete\Core\Tree\Menu\Item\NavigationMenu;
 
 use Concrete\Core\Tree\Menu\Item\AbstractNodeItem;
 
-class EditDashboardPageItem extends AbstractNodeItem
+class EditPageItem extends AbstractNodeItem
 {
 
     public function getDialogTitle()
@@ -19,7 +19,7 @@ class EditDashboardPageItem extends AbstractNodeItem
 
     public function getActionURL()
     {
-        return \URL::to('/ccm/system/dialogs/tree/node/edit/dashboard_page?treeNodeID=' . $this->node->getTreeNodeID());
+        return \URL::to('/ccm/system/dialogs/tree/node/edit/page?treeNodeID=' . $this->node->getTreeNodeID());
     }
 
     public function getItemName()

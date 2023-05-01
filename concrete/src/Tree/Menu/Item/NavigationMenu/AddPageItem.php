@@ -4,7 +4,7 @@ namespace Concrete\Core\Tree\Menu\Item\NavigationMenu;
 
 use Concrete\Core\Tree\Menu\Item\Category\CategoryItem;
 
-class AddDashboardPageItem extends CategoryItem
+class AddPageItem extends CategoryItem
 {
 
     public function getDialogTitle()
@@ -19,7 +19,7 @@ class AddDashboardPageItem extends CategoryItem
 
     public function getActionURL()
     {
-        return \URL::to('/ccm/system/dialogs/tree/node/add/dashboard_page?treeNodeID=' . $this->category->getTreeNodeID());
+        return \URL::to('/ccm/system/dialogs/tree/node/add/page?treeNodeID=' . $this->category->getTreeNodeID());
     }
 
     public function getItemName()

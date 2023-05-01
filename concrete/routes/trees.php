@@ -52,7 +52,7 @@ $router->all('/ccm/system/dialogs/tree/node/permissions', '\Concrete\Controller\
 $router->all('/ccm/system/dialogs/tree/node/category/delete_express', '\Concrete\Controller\Dialog\Tree\Node\Category\DeleteExpress::view');
 $router->all('/ccm/system/dialogs/tree/node/category/delete_express/remove_tree_node', '\Concrete\Controller\Dialog\Tree\Node\Category\DeleteExpress::remove_tree_node');
 
-$router->all('/ccm/system/dialogs/tree/node/add/dashboard_page', '\Concrete\Controller\Dialog\Tree\Node\DashboardPage\Add::view');
-$router->all('/ccm/system/dialogs/tree/node/add/dashboard_page/add_dashboard_page_node', '\Concrete\Controller\Dialog\Tree\Node\DashboardPage\Add::add_dashboard_page_node');
-$router->all('/ccm/system/dialogs/tree/node/edit/dashboard_page', '\Concrete\Controller\Dialog\Tree\Node\DashboardPage\Edit::view');
-$router->all('/ccm/system/dialogs/tree/node/edit/dashboard_page/update_dashboard_page_node', '\Concrete\Controller\Dialog\Tree\Node\DashboardPage\Edit::update_dashboard_page_node');
+$router->all('/ccm/system/dialogs/tree/node/add/page', '\Concrete\Controller\Dialog\Tree\Node\Page\Add::view');
+$router->all('/ccm/system/dialogs/tree/node/add/page/add_page_node', '\Concrete\Controller\Dialog\Tree\Node\Page\Add::add_page_node');
+$router->all('/ccm/system/dialogs/tree/node/edit/page', '\Concrete\Controller\Dialog\Tree\Node\Page\Edit::view');
+$router->all('/ccm/system/dialogs/tree/node/edit/page/update_page_node', '\Concrete\Controller\Dialog\Tree\Node\Page\Edit::update_page_node');
