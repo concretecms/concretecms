@@ -8,7 +8,7 @@ use Concrete\Core\Application\UserInterface\Dashboard\Navigation\NavigationCache
 use Concrete\Core\Updater\Migrations\AbstractMigration;
 use Concrete\Core\Updater\Migrations\RepeatableMigrationInterface;
 
-final class Version20220809215454 extends AbstractMigration implements RepeatableMigrationInterface
+final class Version20220909100000 extends AbstractMigration implements RepeatableMigrationInterface
 {
 
     public function upgradeDatabase()
