@@ -48,7 +48,7 @@ class Available extends DefaultSet
      * @param Node $node
      * @return mixed
      */
-    public function getMemberCount($node)
+    public static function getMemberCount($node)
     {
         if ($node->getTreeNodeTypeHandle() == 'group_folder') {
             return '';
@@ -79,7 +79,7 @@ class Available extends DefaultSet
      * @param Node $node
      * @return mixed
      */
-    public function getGroupName($node)
+    public static function getGroupName($node)
     {
         if ($node->getTreeNodeTypeHandle() == 'group_folder') {
             return $node->getTreeNodeName();
