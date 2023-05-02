@@ -65,6 +65,7 @@ class QueryFactory
      */
     public function createFromAdvancedSearchRequest(ProviderInterface $searchProvider, Request $request, $method = Request::METHOD_POST)
     {
+        $defaultColumnSet = $searchProvider->getDefaultColumnSet();
         $query = new Query();
         $vars = $this->getRequestData($request, $method);
         $fields = $searchProvider->getFieldManager()->getFieldsFromRequest($vars);
@@ -72,20 +73,31 @@ class QueryFactory
         $set = $searchProvider->getBaseColumnSet();
         $available = $searchProvider->getAvailableColumnSet();
 
-        if (isset($vars['column']) && is_array($vars['column'])) {
+        if (is_array($vars['column'] ?? null)) {
             foreach ($vars['column'] as $key) {
-                $set->addColumn($available->getColumnByKey($key));
+                $column = $available->getColumnByKey($key);
+                if ($column) {
+                    $set->addColumn($column);
+                }
             }
         }
-
-        $sort = $available->getColumnByKey($vars['fSearchDefaultSort']);
-        $set->setDefaultSortColumn($sort, $vars['fSearchDefaultSortDirection']);
-
+        if ($set->getColumns() === []) {
+            foreach ($defaultColumnSet->getColumns() as $column) {
+                $set->addColumn($column);
+            }
+        }
+        $sort = empty($vars['fSearchDefaultSort']) ? null : $available->getColumnByKey($vars['fSearchDefaultSort']);
+        if ($sort === null) {
+            $set->setDefaultSortColumn($defaultColumnSet->getDefaultSortColumn(), $defaultColumnSet->getDefaultSortColumn()->getColumnSortDirection());
+        } else {
+            $set->setDefaultSortColumn($sort, $vars['fSearchDefaultSortDirection'] ?? 'asc');
+        }
         $query->setFields($fields);
         $query->setColumns($set);
-
-        $itemsPerPage = $vars['fSearchItemsPerPage'];
-        $query->setItemsPerPage($itemsPerPage);
+        $itemsPerPage = is_numeric($vars['fSearchItemsPerPage'] ?? null) ? (int) $vars['fSearchItemsPerPage'] : 0;
+        if ($itemsPerPage > 0) {
+            $query->setItemsPerPage($itemsPerPage);
+        }
 
         return $query;
     }
