@@ -6,12 +6,13 @@ use Concrete\Core\Authentication\AuthenticationTypeController;
 use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Routing\RedirectResponse;
 use Concrete\Core\User\User;
+use Concrete\Core\Validation\CSRF\Token;
 use OAuth\Common\Exception\Exception;
 use OAuth\Common\Service\AbstractService;
+use OAuth\Common\Token\Exception\ExpiredTokenException;
 use OAuth\Common\Token\TokenInterface;
 use OAuth\UserData\Extractor\Extractor;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
-use Concrete\Core\Validation\CSRF\Token;
 
 abstract class GenericOauthTypeController extends AuthenticationTypeController
 {
@@ -557,10 +558,12 @@ abstract class GenericOauthTypeController extends AuthenticationTypeController
         $uID = $user->getUserID();
         $namespace = $this->getHandle();
         $binding = $this->getBindingForUser($user);
-
-        $this->getService()->request('/' . $binding . '/permissions', 'DELETE');
         try {
-            $this->getBindingService()->clearBinding($uID, $namespace, $binding);
+            $this->getService()->request('/' . $binding . '/permissions', 'DELETE');
+        } catch (ExpiredTokenException $_) {
+        }
+        try {
+            $this->getBindingService()->clearBinding($uID, $binding, $namespace);
             $this->showSuccess(t('Successfully detached.'));
             exit;
         } catch (\Exception $e) {

@@ -20,9 +20,8 @@ class PermissionablePagination extends Pagination
         $itemList->getQueryObject()->setMaxResults($this->maxResultsToProcessAtOnce);
         $results = $itemList->getResults();
         $adapter = new ArrayAdapter($results);
-        $this->list = $itemList;
 
-        Pagerfanta::__construct($adapter);
+        parent::__construct($itemList, $adapter);
     }
 
     public function getCurrentPageResults()
