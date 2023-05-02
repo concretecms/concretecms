@@ -1,0 +1,43 @@
+div.theme-oxford-shirt {
+    .ccm-search-block-form {
+        .form-control {
+            background-color: $search-collapse-bg;
+        }
+        .btn-secondary {
+            color: #fff;
+        }
+    }
+    #searchResults {
+        .searchResult {
+            border-bottom: 1px solid $light-accent;
+            margin-bottom: 1rem;
+            .searchResult-thumbnail {
+                max-height: 80px;
+                max-width: 80px;
+                border-radius: 8px;
+                overflow: hidden;
+                margin-right: 1rem;
+                img {
+                    height: 100%;
+                    width: 100%;
+                    object-fit: cover;
+                }
+            }
+            h3 {
+                a {
+                    color: $default-fc;
+                    transition: 0.3s;
+                }
+                &:hover {
+                    a {
+                        color: $secondary;
+                        transition: 0.3s;
+                    }
+                }
+            }
+            p {
+                color: $dim;
+            }
+        }
+    }
+}

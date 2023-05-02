@@ -1,0 +1,64 @@
+div.theme-oxford-shirt {
+  div.ccm-block-feature-link {
+    background-color: $feature-bg;
+    padding: 2rem 1rem;
+    @include media-breakpoint-up(md) {
+      padding:3rem 2rem;
+    }
+    @include media-breakpoint-up(lg) {
+      padding: 3rem 4rem;
+    }
+    div.ccm-block-feature-link-text {
+      @include media-breakpoint-up(sm) {
+        padding-left: 1rem;
+        border-left: 4px solid $link-color;
+      }
+      @include media-breakpoint-up(sm) {
+        padding-left: 1.5rem;
+      }
+      > h1, h2, h3, h4, h5, h6 {
+        color: $link-color;
+        position: relative;
+        @include rfs(2rem);
+        @include media-breakpoint-down(xs) {
+          @include rfs(1.25rem);
+        }
+        @include media-breakpoint-up(sm) {
+          @include rfs(2rem);
+        }
+        &:after {
+          content: '';
+          height: 4px;
+          width: 40px;
+          background-color: $secondary;
+          position: absolute;
+          bottom: 0;
+          left: 0;
+        }
+        padding-bottom: 1rem;
+        @include media-breakpoint-up(sm) {
+          border-bottom: none;
+          padding-bottom: 0;
+          &:after {
+            display: none;
+          }
+        }
+      }
+      .btn-link {
+        padding: 0;
+      }
+      @include media-breakpoint-up(md) {
+        border-left: 4px solid $link-color;
+      }
+    }
+    @include make-display-headings();
+  }
+  .row {
+    > div:last-child {
+      > div.ccm-block-feature-link {
+        margin-bottom: 0; // If the feature link comes at the of a container we don't want to add extra margin
+      }
+    }
+  }
+}
+

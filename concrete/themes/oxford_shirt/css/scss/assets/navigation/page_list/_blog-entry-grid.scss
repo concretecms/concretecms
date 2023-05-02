@@ -1,0 +1,48 @@
+div.theme-oxford-shirt {
+  div.ccm-summary-template-blog-entry-thumbnail {
+    height: 100%;
+    .card {
+      height: 100%;
+      box-shadow: none;
+      transition: 0.3s;
+      .card-img-top {
+        max-height: 340px;
+        object-fit: cover;
+        border-bottom-left-radius: var(--bs-card-inner-border-radius);
+        border-bottom-right-radius: var(--bs-card-inner-border-radius);
+        transition: 0.3s;
+      }
+      .card-body {
+        padding-left: 0;
+        padding-right: 0;
+        display: flex;
+        flex-direction: column;
+        transition: 0.3s;
+      }
+      .card-title {
+        color: $default-fc;
+        order: 2;
+        margin-bottom: 0;
+      }
+      .card-text {
+        text-align: start!important;
+        order: 1;
+        margin-bottom: var(--bs-card-title-spacer-y);
+      }
+
+      &:hover {
+        box-shadow: var(--bs-card-box-shadow);
+        transition: 0.3s;
+        max-height: 430px;
+        img.card-img-top {
+          transform: scale(0.9);
+          transition: 0.3s;
+        }
+        .card-body {
+          padding: 1rem;
+          transition: 0.3s;
+        }
+      }
+    }
+  }
+}

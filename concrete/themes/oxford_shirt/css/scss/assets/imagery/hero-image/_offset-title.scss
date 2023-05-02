@@ -1,0 +1,68 @@
+div.theme-oxford-shirt {
+  div.ccm-block-hero-image.offset-title {
+    div.ccm-block-hero-image-cover {
+      background-color: transparent;
+    }
+    div.ccm-block-hero-image-offset-text {
+      @include media-breakpoint-up(md) {
+        padding: 0 1rem;
+      }
+      @include media-breakpoint-up(lg) {
+        padding: 0 2rem;
+      }
+      @include media-breakpoint-up(xl) {
+        padding: 0 6rem;
+      }
+      div.ccm-block-hero-image-text {
+        height: 100%;
+        text-align: start;
+        color: #fff;
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 2;
+        background-color: $hero-image-cover-bg;
+        h1 {
+          font-family: $display-font-family;
+          @include rfs($hero-image-title-font-size);
+          font-weight: 700;
+          margin-bottom: 0.25rem;
+        }
+        @include media-breakpoint-up(md) {
+          text-align: center;
+          margin-top: -9rem; // put the h1 on top of the image.
+          background-color: $body-bg;
+          color: $dark;
+          z-index: 2;
+          position: relative;
+          padding: 2rem;
+          width: 100%;
+          h1 {
+            font-family: $display-font-family;
+            @include font-size($hero-image-title-font-size);
+            font-weight: 700;
+            margin-bottom: 1rem;
+          }
+          p {
+            text-align: center;
+            font-size: 1rem;
+          }
+        }
+        @include media-breakpoint-up(xl) {
+          padding: 3rem;
+        }
+      }
+    }
+  }
+  @include media-breakpoint-up(lg) {
+    // If a container is around, let's add some extra padding
+    div.container {
+      div.ccm-block-hero-image-offset-title {
+        margin-top: 2rem;
+        margin-bottom: 2rem;
+      }
+    }
+  }
+}

@@ -1,0 +1,167 @@
+<concrete5-cif version="1.0">
+    <area name="Main">
+        <blocks>
+            <block type="core_theme_documentation_breadcrumb" name="">
+                <style>
+                    <backgroundColor/>
+                    <backgroundRepeat/>
+                    <backgroundSize/>
+                    <backgroundPosition/>
+                    <borderWidth/>
+                    <borderColor/>
+                    <borderStyle/>
+                    <borderRadius/>
+                    <baseFontSize/>
+                    <alignment/>
+                    <textColor/>
+                    <linkColor/>
+                    <paddingTop/>
+                    <paddingBottom/>
+                    <paddingLeft/>
+                    <paddingRight/>
+                    <marginTop/>
+                    <marginBottom/>
+                    <marginLeft/>
+                    <marginRight/>
+                    <rotate/>
+                    <boxShadowHorizontal/>
+                    <boxShadowVertical/>
+                    <boxShadowBlur/>
+                    <boxShadowSpread/>
+                    <boxShadowColor/>
+                    <customClass>mt-5</customClass>
+                    <customID/>
+                    <customElementAttribute/>
+                    <hideOnExtraSmallDevice/>
+                    <hideOnSmallDevice/>
+                    <hideOnMediumDevice/>
+                    <hideOnLargeDevice/>
+                </style>
+            </block>
+            <block type="content" name="">
+                <data table="btContentLocal">
+                    <record>
+                        <content><![CDATA[<h1>Forms &amp; Express</h1>
+
+<p class="lead">Collect data from visitors, search your site and create custom data objects.</p>
+]]></content>
+                    </record>
+                </data>
+            </block>
+            <block type="content" name="">
+                <data table="btContentLocal">
+                    <record>
+                        <content><![CDATA[<h2 class="text-primary">Form</h2>
+]]></content>
+                    </record>
+                </data>
+            </block>
+            <block type="express_form" name="">
+                <data table="btExpressForm">
+                    <record>
+                        <exFormID><![CDATA[77c4ef3e-136c-11ec-9fc5-8aa7a7509c1c]]></exFormID>
+                        <submitLabel><![CDATA[Submit]]></submitLabel>
+                        <thankyouMsg><![CDATA[Thanks!]]></thankyouMsg>
+                        <notifyMeOnSubmission><![CDATA[0]]></notifyMeOnSubmission>
+                        <recipientEmail><![CDATA[]]></recipientEmail>
+                        <displayCaptcha><![CDATA[1]]></displayCaptcha>
+                        <storeFormSubmission><![CDATA[1]]></storeFormSubmission>
+                        <redirectCID>0</redirectCID>
+                        <replyToEmailControlID><![CDATA[]]></replyToEmailControlID>
+                        <addFilesToSet><![CDATA[0]]></addFilesToSet>
+                        <addFilesToFolder><![CDATA[7]]></addFilesToFolder>
+                    </record>
+                </data>
+            </block>
+            <block type="content" name="">
+                <data table="btContentLocal">
+                    <record>
+                        <content><![CDATA[<h2 class="text-primary">Search</h2>
+]]></content>
+                    </record>
+                </data>
+            </block>
+            <block type="search" name="">
+                <data table="btSearch">
+                    <record>
+                        <title><![CDATA[Search]]></title>
+                        <buttonText><![CDATA[Search]]></buttonText>
+                        <baseSearchPath><![CDATA[]]></baseSearchPath>
+                        <search_all><![CDATA[0]]></search_all>
+                        <allow_user_options><![CDATA[0]]></allow_user_options>
+                        <postTo_cID/>
+                        <resultsURL><![CDATA[]]></resultsURL>
+                    </record>
+                </data>
+            </block>
+            <block type="content" name="">
+                <data table="btContentLocal">
+                    <record>
+                        <content><![CDATA[<h2 class="text-primary">External Form</h2>
+]]></content>
+                    </record>
+                </data>
+            </block>
+            <block type="external_form" name="">
+                <data table="btExternalForm">
+                    <record>
+                        <filename><![CDATA[test_form.php]]></filename>
+                    </record>
+                </data>
+            </block>
+            <block type="content" name="">
+                <data table="btContentLocal">
+                    <record>
+                        <content><![CDATA[<h2 class="text-primary">Express Entry List</h2>
+]]></content>
+                    </record>
+                </data>
+            </block>
+            <block type="express_entry_list" name="">
+                <data table="btExpressEntryList">
+                    <record>
+                        <exEntityID><![CDATA[77c4eb1a-136c-11ec-9fc5-8aa7a7509c1c]]></exEntityID>
+                        <detailPage><![CDATA[0]]></detailPage>
+                        <linkedProperties><![CDATA[[]]]></linkedProperties>
+                        <searchProperties><![CDATA[[]]]></searchProperties>
+                        <searchAssociations><![CDATA[[]]]></searchAssociations>
+                        <columns>
+                            <![CDATA[O:48:"Concrete\Core\Express\Search\ColumnSet\ColumnSet":2:{s:10:"]]></columns>
+                        <filterFields><![CDATA[a:0:{}]]></filterFields>
+                        <displayLimit><![CDATA[20]]></displayLimit>
+                        <enableItemsPerPageSelection><![CDATA[0]]></enableItemsPerPageSelection>
+                        <enablePagination><![CDATA[1]]></enablePagination>
+                        <enableSearch><![CDATA[1]]></enableSearch>
+                        <enableKeywordSearch><![CDATA[1]]></enableKeywordSearch>
+                        <headerBackgroundColor><![CDATA[]]></headerBackgroundColor>
+                        <headerBackgroundColorActiveSort><![CDATA[]]></headerBackgroundColorActiveSort>
+                        <headerTextColor><![CDATA[]]></headerTextColor>
+                        <tableName><![CDATA[]]></tableName>
+                        <tableDescription><![CDATA[]]></tableDescription>
+                        <tableStriped><![CDATA[0]]></tableStriped>
+                        <rowBackgroundColorAlternate><![CDATA[]]></rowBackgroundColorAlternate>
+                        <titleFormat><![CDATA[h2]]></titleFormat>
+                    </record>
+                </data>
+            </block>
+            <block type="content" name="">
+                <data table="btContentLocal">
+                    <record>
+                        <content><![CDATA[<h2 class="text-primary">Express Entry Detail</h2>]]></content>
+                    </record>
+                </data>
+            </block>
+            <block type="express_entry_detail" name="">
+                <data table="btExpressEntryDetail">
+                    <record>
+                        <exEntityID><![CDATA[77c4eb1a-136c-11ec-9fc5-8aa7a7509c1c]]></exEntityID>
+                        <exSpecificEntryID><![CDATA[0]]></exSpecificEntryID>
+                        <exEntryAttributeKeyHandle><![CDATA[]]></exEntryAttributeKeyHandle>
+                        <exFormID><![CDATA[77c4ef3e-136c-11ec-9fc5-8aa7a7509c1c]]></exFormID>
+                        <entryMode><![CDATA[S]]></entryMode>
+                    </record>
+                </data>
+            </block>
+        </blocks>
+    </area>
+</concrete5-cif>

@@ -1,0 +1,440 @@
+div.theme-oxford-shirt {
+    //Small Screen Toggle
+    .ccm-conversation-block-dropdown {
+        max-width: 320px;
+        margin-left: auto;
+        .ccm-conversation-block-toggle {
+            transform: translate3d(0px, 0px, 0px);
+            box-shadow: none;  
+            @include rfs(1.2rem);
+            padding: 0;
+            height: 35px;
+            width: 35px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            span.dropdown-dot {
+                display: block;
+                height: 5px;
+                width: 5px;
+                border-radius: 5px;
+                background-color: $conversation-toggle-icon-bg;
+                margin: 0.15rem;
+                transition: 0.3s;
+                &:nth-of-type(1) {
+                    transform: rotate(0deg);
+                    transition: 0.3s;
+                }
+                &:nth-of-type(2) {
+                    opacity: 1;
+                    transition: 0.3s;
+                }
+                &:nth-of-type(3) {
+                    transform: rotate(0deg);
+                    transition: 0.3s;
+                }
+            }
+        }
+        .ccm-conversation-block-toggle.show {
+            span.dropdown-dot {
+                transition: 0.3s;
+                &:nth-of-type(1) {
+                    transform: rotate(45deg);
+                    transform-origin: 10% 10%;
+                    width: 28px;
+                    height: 3px;
+                    position: absolute;
+                    left: 0.3rem;
+                    top: 0.3rem;
+                    transition: 0.3s;
+                }
+                &:nth-of-type(2) {
+                    opacity: 0;
+                    transition: 0.3s;
+                }
+                &:nth-of-type(3) {
+                    transform: rotate(-45deg);
+                    transform-origin: 10% 90%;
+                    width: 28px;
+                    height: 3px;
+                    position: absolute;
+                    left: 0.3rem;
+                    bottom: 0.3rem;
+                    transition: 0.3s;
+                }
+            }
+        }
+        .ccm-conversation-block-dropdown-menu {
+            position: relative;
+            background-color: $conversation-dropdown-menu-bg;
+            button.btn.btn-outline-dim {
+                position: relative;
+                right: 0;
+                bottom: 0;
+                height: 40px;
+                width: 40px;
+                color: $default-fc;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+
+            }
+            button.btn.btn-outline-dim.offcanvas-toggle {
+                bottom: 0;
+            }
+            button.btn.btn-outline-dim.like-page {
+                bottom: 0;
+            }
+            button.btn.btn-outline-dim.add-page {
+                bottom: 0;
+            }
+        }
+        .ccm-conversation-block-dropdown-menu.show {
+            display: flex;
+            justify-content: space-between;
+            padding: 1rem;
+            border-radius: 8px;
+            width: 100%;
+            max-width: 296px;
+            box-shadow: 0 5px 8px 5px rgba($secondary, .15);
+        }
+    }
+    .ccm-conversation-block {
+        @include media-breakpoint-down(md) {
+            
+        }
+        
+        button.btn.btn-outline-dim {
+            position: fixed;
+            right: 1rem;
+            bottom: 300px;
+            height: 40px;
+            width: 40px;
+            color: $default-fc;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            @include media-breakpoint-up(md) {
+                right: 3rem;
+            }
+            @include media-breakpoint-up(lg) {
+                right: 4rem;
+            }
+            @include media-breakpoint-up(xl) {
+                right: 5rem;
+            }
+        }
+        button.btn.btn-outline-dim.offcanvas-toggle {
+            bottom: 340px;
+        }
+        button.btn.btn-outline-dim.like-page {
+            bottom: 400px;
+        }
+        button.btn.btn-outline-dim.add-page {
+            bottom: 280px;
+        }
+    }
+    .ccm-conversation-wrapper {
+        overflow: scroll;
+        h4 {
+            @extend h2;
+            @include rfs(2rem);
+            font-weight: 700;
+            padding: 1rem 1rem 0 1rem;
+        }
+        p {
+            padding: 0 1rem;
+        }
+        div.ccm-conversation-avatar {
+            left: 1rem;
+        }
+        form.aux-reply-form {
+            div.ccm-conversation-avatar {
+                left: 0;
+            }
+        }
+        .ccm-conversation-add-new-message {
+            padding: 0 1rem;
+        }
+        div.ccm-conversation-no-messages {
+            padding: 0 1rem;
+        }
+        div.ccm-conversation-messages-header {
+            padding: 0 1rem;
+            .form-select {
+                border: none;
+                color: $conversation-select-color;
+                background-color: $conversation-select-bg;
+                box-shadow: none;
+                font-family: $headings-font-family;
+                font-style: normal;
+                font-weight: 500;
+                font-size: 14px;
+                background-image: $conversation-select-bg-image;
+                border: 1px solid #ced4da;
+            }
+        }
+        div.ccm-conversation-avatar {
+            img {
+                border-radius: 40px;
+            }
+        }
+        #cnvMessageBody {
+            background-color:$conversation-textarea-bg;
+        }
+        div.ccm-conversation-message-level1,
+        div.ccm-conversation-message-level2,
+        div.ccm-conversation-message-level3,
+        div.ccm-conversation-message-level4 {
+            background-color: $light;
+        }
+        div.ccm-conversation-message-level0 {
+            padding-right: 1rem;
+            padding-left: 65px;
+        }
+        div.ccm-conversation-message-level1 {
+            margin-left: 0;
+            padding-left: 100px;
+            padding-right: 1rem;
+            .ccm-conversation-avatar {
+                left: 50px;
+            }
+        }
+        div.ccm-conversation-message-level2 {
+            margin-left: 0;
+            padding-left: 150px;
+            padding-right: 1rem;
+            .ccm-conversation-avatar {
+                left: 100px;
+            }
+        }
+        div.ccm-conversation-message-level3 {
+            margin-left: 0;
+            padding-left: 200px;
+            padding-right: 1rem;
+            .ccm-conversation-avatar {
+                left: 150px;
+            }
+        }
+        div.ccm-conversation-message-level4 {
+            margin-left: 0;
+            padding-left: 250px;
+            padding-right: 1rem;
+            .ccm-conversation-avatar {
+                left: 200px;
+            }
+        }
+        div.ccm-conversation-message {
+            padding-top: 1.25rem;
+            div.ccm-conversation-avatar {
+                top: 1.25rem;
+            }
+            .ccm-conversation-message-body {
+                line-height: 1.4;
+            }
+            div.ccm-conversation-message-byline {
+                display: flex;
+                flex-direction: column;
+                position: relative;
+                span.ccm-conversation-message-username {
+                    color: $default-fc;
+                    font-family: $display-font-family;
+                    font-weight: 500;
+                    text-transform: capitalize;
+                }
+                span.ccm-conversation-message-date {
+                    font-family: $display-font-family;
+                    font-weight: 500;
+                    text-transform: capitalize;
+                    font-size: 12px;
+                    color: $dim;
+                }
+                span.ccm-conversation-message-admin-control {
+                    .admin-flag {
+                        display: none;
+                    }
+                }
+                span.ccm-conversation-message-divider {
+                    display: none;
+                    padding: 0;
+                }
+            }
+            div.ccm-conversation-message-controls {
+                position: relative;
+                padding-top: 0.5rem;
+                ul {
+                    float: none;
+                    display: flex;
+                    align-items: center;
+                    a {
+                        padding: 0;
+                    }
+                    li {
+                        &:first-child {
+                            display: flex;
+                            justify-content: center;
+                            align-items: center;
+                            order: 3;
+                            margin-left: auto;
+                        }
+                        &:nth-child(2), &:nth-child(3) {
+                            display: none;
+                        }
+                        &:nth-child(4) {
+                            display: flex;
+                            order:1;
+                            margin-left: 0;
+                        }
+                        &:nth-child(5) {
+                            display: flex;
+                            order:2;
+                        }
+                        a[data-toggle^=conversation-reply] {
+                            border: 1px solid $dim;
+                            height: 24px;
+                            width: 24px;
+                            border-radius: 4px;
+                            color: $default-fc;
+                            font-size: 0;
+                            display: flex;
+                            justify-content: center;
+                            align-items: center;
+                            &:after {
+                                content: "\f3e5";
+                                font-family: "Font Awesome 5 Free";
+                                font-weight: 600;
+                                color: $default-fc;
+                                transition: 0.2s;
+                                font-size: 14px;
+                            }
+                            &:hover {
+                                &:after {
+                                    color: $secondary;
+                                    transition: 0.2s;
+                                }
+                            }
+                        }
+                        .conversation-rate-message {
+                            border: 1px solid $dim;
+                            height: 24px;
+                            width: 24px;
+                            border-radius: 4px;
+                            display: flex;
+                            justify-content: center;
+                            align-items: center;
+                            order: 1;
+                            i.fa-thumbs-up {
+                                &:before {
+                                    content: '\f004';
+                                    color: $default-fc;
+                                    transition: 0.2s;
+                                }
+                            }
+                            &:hover {
+                                i.fa-thumbs-up {
+                                    &:before {
+                                        color: $primary;
+                                        transition: 0.2s;
+                                    }
+                                }
+                            }
+                        }
+                        .conversation-rate-message[data-conversation-rating-type^=down_vote] {
+                            display: none;
+                        }
+                        .ccm-conversation-message-rating-score {
+                            background-color: $primary;
+                            color: #fff;
+                            height: 14px;
+                            width: 14px;
+                            border-radius: 14px;
+                            font-family: $headings-font-family;
+                            font-style: normal;
+                            font-weight: 500;
+                            font-size: 8px;
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            position: absolute;
+                            top: 0;
+                            left: 26px;
+                        }
+                    }
+                }
+                .ccm-conversation-social-share {
+                    display: none;
+                }
+            } 
+            &:hover {
+                div.ccm-conversation-message-byline {
+                    span.ccm-conversation-message-admin-control.ccm-conversation-message-divider {
+                        display: inline-block;
+                        .admin-edit {
+                            position: absolute;
+                            border: 1px solid $dim;
+                            height: 24px;
+                            width: 24px;
+                            border-radius: 4px;
+                            color: $default-fc;
+                            font-size: 0;
+                            display: flex;
+                            justify-content: center;
+                            align-items: center;
+                            right: 30px;
+                            top: 0;
+                            &:after {
+                                content: "\f044";
+                                font-family: "Font Awesome 5 Free";
+                                font-weight: 600;
+                                color: $default-fc;
+                                transition: 0.2s;
+                                font-size: 14px;
+                            }
+                            &:hover {
+                                &:after {
+                                    color: $primary;
+                                    transition: 0.3s;
+                                }
+                            }
+                        }
+                        .admin-delete {
+                            position: absolute;
+                            border: 1px solid $dim;
+                            height: 24px;
+                            width: 24px;
+                            border-radius: 4px;
+                            color: $default-fc;
+                            font-size: 0;
+                            display: flex;
+                            justify-content: center;
+                            align-items: center;
+                            right: 0;
+                            top: 0;
+                            &:after {
+                                content: "\f1f8";
+                                font-family: "Font Awesome 5 Free";
+                                font-weight: 600;
+                                color: $default-fc;
+                                transition: 0.2s;
+                                font-size: 14px;
+                            }
+                            &:hover {
+                                &:after {
+                                    color: $primary;
+                                    transition: 0.3s;
+                                }
+                            }
+                        }
+                    }
+                    span {
+                        &:nth-child(4) {
+                            display: none!important;
+                        }
+                    }
+                }
+            }
+        } 
+    }
+
+}
+

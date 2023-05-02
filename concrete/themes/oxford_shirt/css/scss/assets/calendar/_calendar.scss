@@ -1,0 +1,274 @@
+div.theme-oxford-shirt {
+    .ccm-block-calendar-wrapper {
+        .fc-header-toolbar {
+            margin-bottom: 0;
+            padding: 1rem;
+            border: 1px solid $grey-accent;
+            border-bottom: none;
+            border-top-left-radius: 4px;
+            border-top-right-radius: 4px;
+            //Buttons - Remove if manage to get external header to work
+            .fc-prev-button, .fc-next-button {
+                background-color: transparent;
+                box-shadow: none;
+                border: none;
+                background: transparent;
+            }
+            .fc-icon {
+                color: $calendar-icon-color;
+            }
+            .fc-today-button {
+                color: $secondary;
+                border: 1px solid $secondary;
+                background-color:$calendar-button-bg;
+                opacity: 1;
+                font-weight: 500;
+                font-family: $display-font-family;
+                text-transform: capitalize;
+                transition: 0.3s;
+                background-image: none;
+                text-shadow: none;
+                &:hover {
+                    background-color: $secondary;
+                    color: #fff;
+                    transition: 0.3s;
+                }
+            }
+            // End of buttons
+
+            // Dropdown
+            .select-view {
+                border: 1px solid $secondary;
+                font-family: $display-font-family;
+                color: $secondary;
+                background-color: $calendar-view-select-bg;
+                background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%2342AAB8' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/%3e%3c/svg%3e");
+                &:focus {
+                    box-shadow:inset 0 1px 2px rgba($light , 0.08), 0 0 0 0.25rem rgba($secondary, 0.25);
+                }
+                option {
+                    &:hover {
+                        color: $secondary;
+                        background-color:#fff;
+                    }
+                }
+            }
+        }
+        //Table
+        .fc-view-container {
+            .fc-head-container {
+                table {
+                    thead {
+                        th {
+                            background-color: $calendar-weekend-bg;
+                        }
+                    }
+                    
+                }
+            }
+            table {
+                thead {
+                    border-bottom: none;
+                }
+            }
+            tr {
+                td {
+                    span.fc-day-number {
+                        font-weight: 500;
+                        font-family: $display-font-family;
+                        color: $dim;
+                        height: 24px;
+                        width: 24px;
+                        border-radius: 24px;
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        margin-top: 0.15rem;
+                        margin-left: 0.15rem;
+                        float: left;
+                    }
+                }
+                td.fc-sat, td.fc-sun {
+                    background-color: $calendar-weekend-bg;
+                }
+                td.fc-today {
+                    background: transparent;
+                    span.fc-day-number {
+                        background: $secondary;
+                        color: #fff;
+                    }
+                }
+            }
+            .fc-popover {
+                .fc-header {
+                    background-color: $secondary;
+                    color: #fff;
+                    .fc-close {
+                        color: #fff;
+                    }
+                }
+            }
+            .fc-content-skeleton, .fc-popover {
+                .fc-day-top {
+                    border-color: #ddd;
+                }
+                .fc-event-container {
+                    .fc-day-grid-event {
+                        background-color: transparent!important;
+                        border-color: transparent!important;
+                        color: $calendar-font-color!important;
+                        .fc-content {
+                            display: flex;
+                            flex-direction: row-reverse;
+                            justify-content: space-between;
+                            font-size: 10px;
+                            .fc-time {
+                                font-weight: 400;
+                                text-transform: uppercase;
+                            }
+                            .fc-title {
+                                font-weight: 700;
+                                margin-right: auto;
+                                position: relative;
+                                padding-left: 0.6rem;
+                                &:before {
+                                    content:'';
+                                    position: absolute;
+                                    left: 0;
+                                    top: 0;
+                                    bottom: 0;
+                                    margin-top: auto;
+                                    margin-bottom: auto;
+                                    height: 5px;
+                                    width: 5px;
+                                    border-radius: 5px;
+                                    background-color: $primary;
+                                    display: inline-block;
+                                }
+                            }
+                        }
+                    }
+                }
+                .fc-event-container[colspan] {
+                    .fc-day-grid-event {
+                        background-color: rgba($primary, 0.25)!important;
+                        .fc-content {
+                            .fc-title {
+                                padding-left: 0;
+                                &:before {
+                                    display: none;
+                                }
+                            }
+                        }
+                    }
+                }
+                .fc-event-container.fc-limited {
+                    display: none;
+                }
+                .fc-more-cell {
+                    text-align: center;
+                    .fc-more {
+                        color: $link-color;
+                        font-family: $display-font-family;
+                        font-weight: 500;
+                        
+                    }
+                }
+            }
+            // List Month View
+            .fc-listMonth-view {
+                table.fc-list-table {
+                    tr.fc-list-heading {
+                        .fc-widget-header {
+                            background-color: $secondary;
+                            color: #fff;
+                            text-align: center;
+                            font-family: $display-font-family;
+                            font-weight: 500;
+                            @include rfs(14px);
+                            display: table-cell;
+                            .fc-list-heading-main {
+                                float: none;
+                                
+                            }
+                            .fc-list-heading-alt {
+                                float: none;
+
+                            }
+                        }
+                        
+                    }
+                    tr.fc-list-item {
+                        display: flex;
+                        flex-direction: row-reverse;
+                        justify-content: space-between;
+                        align-items: center;
+                        border-bottom: 1px solid $grey-accent;
+                        padding: 0 0.25rem;
+                        
+                        @include media-breakpoint-up(sm) {
+                            padding: 0 1rem;
+                        }
+                        
+                        &:hover {
+                            background-color: $calendar-list-item-hover;
+                            .fc-list-item-title, .fc-list-item-marker, .fc-list-item-time {
+                                background: transparent;
+                            }
+                        }
+                        .fc-list-item-time {
+                            border: none;
+                            width: 10%;
+                            font-size: 10px;
+                            text-transform: uppercase;
+                            display: flex;
+                            justify-content: flex-end;
+                            padding: 0;
+                        }
+                        .fc-list-item-marker {
+                            display: none;
+                            .fc-event-dot {
+                                background-color: $primary!important;
+                            }
+                        }
+                        .fc-list-item-title {
+                            position: relative;
+                            padding-left: 0.6rem;
+                            font-size: 10px;
+                            font-weight: 700;
+                            border: none;
+                            width: 90%;
+                            &:before {
+                                content:'';
+                                position: absolute;
+                                left: 0;
+                                top: 0;
+                                bottom: 0;
+                                margin-top: auto;
+                                margin-bottom: auto;
+                                height: 5px;
+                                width: 5px;
+                                border-radius: 5px;
+                                background-color: $primary;
+                                display: inline-block;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+// Lightbox Close Button
+.mfp-container {
+    .mfp-content {
+        .ccm-block-calendar-event-dialog-details {
+            background: $calendar-popup-background;
+            border: 1px solid $calendar-popup-border-color;
+        }
+    }
+    .mfp-close {
+        color: $calendar-popup-close-color!important;
+        display: block!important;
+    }
+}
