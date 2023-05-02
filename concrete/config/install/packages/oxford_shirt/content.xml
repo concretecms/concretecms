@@ -2718,36 +2718,11 @@
                          </pagetemplate>
                          <pagetemplate handle="full">
                               <page name="" path="" public-date="2023-02-14 12:44:09" filename="" pagetype="page" template="full" user="katalysis" description="" package="" root="true">
-                                   <area name="Main">
-                                        <blocks>
-                                             <block type="core_page_type_composer_control_output" name="" mc-block-id="6610ed54">
-                                                  <control output-control-id="9d407f13"/>
-                                             </block>
-                                        </blocks>
-                                   </area>
                                    <area name="Page Header">
-                                        <blocks>
-                                             <block type="core_container" name="" mc-block-id="dfceed8e">
-                                                  <container handle="single_column">
-                                                       <containerarea name="Body">
-                                                            <block type="autonav" name="" custom-template="breadcrumb.php" mc-block-id="e04fd043">
-                                                                 <data table="btNavigation">
-                                                                      <record>
-                                                                           <orderBy><![CDATA[display_asc]]></orderBy>
-                                                                           <displayPages><![CDATA[top]]></displayPages>
-                                                                           <displayPagesCID/>
-                                                                           <displayPagesIncludeSelf><![CDATA[0]]></displayPagesIncludeSelf>
-                                                                           <displaySubPages><![CDATA[relevant_breadcrumb]]></displaySubPages>
-                                                                           <displaySubPageLevels><![CDATA[all]]></displaySubPageLevels>
-                                                                           <displaySubPageLevelsNum><![CDATA[0]]></displaySubPageLevelsNum>
-                                                                           <displayUnavailablePages><![CDATA[0]]></displayUnavailablePages>
-                                                                      </record>
-                                                                 </data>
-                                                            </block>
-                                                       </containerarea>
-                                                  </container>
-                                             </block>
-                                        </blocks>
+                                        <blocks/>
+                                   </area>
+                                   <area name="Main">
+                                        <blocks/>
                                    </area>
                                    <area name="Page Footer">
                                         <blocks/>
