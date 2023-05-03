@@ -27,5 +27,9 @@
             <notnull/>
         </field>
         <field name="icon" type="string" />
+        <field name="fID" type="integer">
+            <unsigned/>
+            <default value="0" />
+    </field>
     </table>
 </schema>
