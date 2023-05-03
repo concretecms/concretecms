@@ -73,5 +73,5 @@ if (is_object($f) && $f->getFileID()) {
         <?php if ($paragraph) {
             echo $paragraph;
         } ?>
-        <? } ?>
+        <?php } ?>
 </div>
