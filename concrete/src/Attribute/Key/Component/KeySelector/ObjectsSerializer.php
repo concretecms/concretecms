@@ -56,7 +56,7 @@ class ObjectsSerializer implements \JsonSerializable
             $filteredValues = array_filter($values);
 
             // Check if all values are equals. if not, then we have multiple values for this attribute.
-            if (count(array_unique($filteredValues)) === 1 && count($filteredValues) === count($values)) {
+            if (count(array_unique($filteredValues, SORT_REGULAR)) === 1 && count($filteredValues) === count($values)) {
                 $value = head($values);
                 $data[] = new KeySerializer($value->getAttributeKey(), $value);
             } else {
