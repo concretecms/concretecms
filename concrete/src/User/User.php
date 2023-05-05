@@ -482,12 +482,17 @@ class User extends ConcreteObject
 
     /**
      * @param bool $hard
+     *
+     * @return \Symfony\Component\HttpFoundation\Response|null
      */
     public function logout($hard = true)
     {
         $app = Application::getFacadeApplication();
         $events = $app->make('director');
         $logger = $app->make(LoggerFactory::class)->createLogger(Channels::CHANNEL_AUTHENTICATION);
+        $currentUser = $app->make(User::class);
+        $event = new Event\Logout((int) $currentUser->getUserID());
+        $events->dispatch('on_before_user_logout', $event);
         $logger->info(t('Logout from user {user} (ID {id}) requested'), [
             'user' => $this->getUserName(),
             'id' => $this->getUserID(),
@@ -503,7 +508,9 @@ class User extends ConcreteObject
         });
         $navigationCache = $app->make(NavigationCache::class);
         $navigationCache->clear();
-        $events->dispatch('on_user_logout');
+        $events->dispatch('on_user_logout', $event);
+
+        return $event->getResponse();
     }
 
     /**
