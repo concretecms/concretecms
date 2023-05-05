@@ -486,7 +486,7 @@ class User extends ConcreteObject
     public function logout($hard = true)
     {
         $app = Application::getFacadeApplication();
-        $events = $app['director'];
+        $events = $app->make('director');
         $logger = $app->make(LoggerFactory::class)->createLogger(Channels::CHANNEL_AUTHENTICATION);
         $logger->info(t('Logout from user {user} (ID {id}) requested'), [
             'user' => $this->getUserName(),
@@ -498,15 +498,12 @@ class User extends ConcreteObject
         $this->unloadAuthenticationTypes();
 
         $this->invalidateSession($hard);
-        $app->singleton(User::class, function () {
+        $app->singleton(User::class, static function () {
             return new User();
         });
-        $events->dispatch('on_user_logout');
-
-        $app = Application::getFacadeApplication();
-        /** @var NavigationCache $navigationCache */
         $navigationCache = $app->make(NavigationCache::class);
         $navigationCache->clear();
+        $events->dispatch('on_user_logout');
     }
 
     /**
