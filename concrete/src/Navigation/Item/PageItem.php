@@ -59,6 +59,9 @@ class PageItem extends Item
         $p = Page::getByID($this->pageID);
         if ($p->isExternalLink()) {
             $url = $p->getCollectionPointerExternalLink();
+        } else if ($p->getAttribute('replace_link_with_first_in_nav')) {
+            $child = $p->getFirstChild();
+            $url = $child instanceof Page ? $child->getCollectionLink() : $p->getCollectionLink();
         } else {
             $url = $p->getCollectionLink();
         }
