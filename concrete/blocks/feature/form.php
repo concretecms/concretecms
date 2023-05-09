@@ -8,6 +8,34 @@ $title = $title ?? '';
 $titleFormat = $titleFormat ?? '';
 $internalLinkCID = $internalLinkCID ?? 0;
 $externalLink = $externalLink ?? '';
+
+use Concrete\Core\Application\Service\FileManager;
+use Concrete\Core\Entity\File\File;
+use Concrete\Core\Form\Service\DestinationPicker\DestinationPicker;
+use Concrete\Core\Form\Service\Widget\PageSelector;
+use Concrete\Core\Support\Facade\Application;
+
+/**
+ * @var DestinationPicker $destinationPicker
+ * @var string $sizingOption
+ * @var array $themeResponsiveImageMap
+ * @var array $thumbnailTypes
+ * @var array $selectedThumbnailTypes
+ * @var array $imageLinkPickers
+ * @var string $imageLinkHandle
+ * @var mixed $imageLinkValue
+ * @var int $constrainImage
+ * @var File|null $bfo
+ */
+
+$app = Application::getFacadeApplication();
+/** @var PageSelector $pageSelector */
+$pageSelector = $app->make(PageSelector::class);
+/** @var FileManager $fileManager */
+$fileManager = $app->make(FileManager::class);
+
+$thumbnailTypes['0'] = t('Full Size');
+
 ?>
 
 <fieldset>
@@ -17,6 +45,14 @@ $externalLink = $externalLink ?? '';
         <div id="ccm-icon-selector-<?= h($bID) ?>">
             <icon-selector name="icon" selected="<?= h($icon) ?>" title="<?= t('Choose Icon') ?>" empty-option-label="<?= h(tc('Icon', '** None Selected')) ?>" />
         </div>
+    </div>
+
+    <div class="form-group">
+        <?php
+        echo $form->label('ccm-b-image', t('Image'));
+        echo $fileManager->image('ccm-b-image', 'fID', t('Choose Image'), $bf);
+        ?>
+        <p class="text-muted small">If Image is set, no icon will appear</p>
     </div>
 
     <div class="form-group">

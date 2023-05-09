@@ -20,6 +20,10 @@
       <default value="h4" />
 	  <notnull/>
     </field>
+    <field name="fID" type="integer">
+            <unsigned/>
+            <default value="0" />
+    </field>
   </table>
 
 </schema>

@@ -11,6 +11,33 @@ use Concrete\Core\Form\Service\DestinationPicker\DestinationPicker;
 $bID = $bID ?? 0;
 $icon = $icon ?? '';
 
+use Concrete\Core\Application\Service\FileManager;
+use Concrete\Core\Entity\File\File;
+use Concrete\Core\Form\Service\Widget\PageSelector;
+use Concrete\Core\Support\Facade\Application;
+
+/**
+ * @var DestinationPicker $destinationPicker
+ * @var string $sizingOption
+ * @var array $themeResponsiveImageMap
+ * @var array $thumbnailTypes
+ * @var array $selectedThumbnailTypes
+ * @var array $imageLinkPickers
+ * @var string $imageLinkHandle
+ * @var mixed $imageLinkValue
+ * @var int $constrainImage
+ * @var File|null $bfo
+ */
+
+ $app = Application::getFacadeApplication();
+/** @var PageSelector $pageSelector */
+$pageSelector = $app->make(PageSelector::class);
+/** @var FileManager $fileManager */
+$fileManager = $app->make(FileManager::class);
+
+$thumbnailTypes['0'] = t('Full Size');
+
+
 ?>
 
 <fieldset class="mb-3">
@@ -26,6 +53,15 @@ $icon = $icon ?? '';
         <label class="form-label" for="body"><?=t('Body')?></label>
         <?php
         echo $editor->outputBlockEditModeEditor('body', isset($body) ? LinkAbstractor::translateFromEditMode($body) : null);
+        ?>
+    </div>
+</fieldset>
+
+<fieldset class="mb-3">
+<legend><?=t('Image')?></legend>
+    <div class="form-group">
+        <?php
+        echo $fileManager->image('ccm-b-image', 'fID', t('Choose Image'), $bf);
         ?>
     </div>
 </fieldset>
