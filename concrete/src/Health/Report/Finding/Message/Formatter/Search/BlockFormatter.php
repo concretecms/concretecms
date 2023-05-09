@@ -19,9 +19,9 @@ class BlockFormatter implements FormatterInterface, MessageHasDetailsInterface, 
      * @param BlockMessage $message
      * @return string
      */
-    public function getFindingsListMessage(MessageInterface $message, Finding $finding): string
+    public function getFindingsListMessage(MessageInterface $findingMessage, Finding $finding): string
     {
-        $block = Block::getByID($message->getBlockID());
+        $block = Block::getByID($findingMessage->getBlockID());
         if ($block) {
             $page = $block->getBlockCollectionObject();
             if ($page) {
@@ -35,6 +35,8 @@ class BlockFormatter implements FormatterInterface, MessageHasDetailsInterface, 
             } else {
                 $message = t('%s block type (ID %s)', $block->getBlockTypeHandle(), $block->getBlockID());
             }
+        } else {
+            $message = t('Unknown block type. Perhaps this has already been deleted.');
         }
         return $message;
     }
