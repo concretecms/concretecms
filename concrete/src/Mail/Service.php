@@ -64,7 +64,7 @@ class Service
     protected $cc;
 
     /**
-     * List of "CC" recipients (every item is an array with at key 0 the email address and at key 1 an optional name).
+     * List of "BCC" recipients (every item is an array with at key 0 the email address and at key 1 an optional name).
      *
      * @var array[array]
      */
