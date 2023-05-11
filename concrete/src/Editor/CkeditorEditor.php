@@ -259,7 +259,7 @@ EOL;
      */
     public function outputSimpleEditor($key, $content = null)
     {
-        $simplePlugins = ['basicstyles','dialogadvtab','divarea','image','tab','toolbar','undo','wysiwygarea','normalizeonchange'];
+        $simplePlugins = ['basicstyles','dialogadvtab','divarea','image','tab','toolbar','undo','wysiwygarea','normalizeonchange','concretelink'];
         if ($this->allowFileManager()) {
             $simplePlugins += ['concrete5filemanager', 'concrete5uploadimage'];
         }
