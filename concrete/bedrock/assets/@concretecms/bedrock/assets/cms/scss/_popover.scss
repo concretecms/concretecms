@@ -1,26 +1,25 @@
-#ccm-popover-menu-container {
-  .popover {
-    position: absolute;
-    z-index: 2001;
+#ccm-popover-menu-container .popover,
+.ccm-edit-mode-block-menu.popover {
+  position: absolute;
+  z-index: 2001;
 
+  .popover-arrow {
+    display: none;
+  }
+
+  &.bs-popover-top,
+  &.bs-popover-bottom {
     .popover-arrow {
-      display: none;
+      left: 50%;
+      margin-left: -0.5rem;
     }
+  }
 
-    &.bs-popover-top,
-    &.bs-popover-bottom {
-      .popover-arrow {
-        left: 50%;
-        margin-left: -0.5rem;
-      }
-    }
-
-    &.bs-popover-left,
-    &.bs-popover-right {
-      .popover-arrow {
-        margin-top: -0.5rem;
-        top: 50%;
-      }
+  &.bs-popover-left,
+  &.bs-popover-right {
+    .popover-arrow {
+      margin-top: -0.5rem;
+      top: 50%;
     }
   }
 
