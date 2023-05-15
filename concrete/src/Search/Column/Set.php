@@ -11,6 +11,42 @@ class Set implements \JsonSerializable
         $this->columns[] = $col;
     }
 
+    /**
+     * Add a column after a specific key.
+     * @param \Concrete\Core\Search\Column\ColumnInterface $col
+     * @param string $key
+     * @return void
+     */
+    public function addColumnAfterKey($col, $key)
+    {
+        $columns = [];
+        foreach($this->columns as $column) {
+            $columns[] = $column;
+            if ($column->getColumnKey() == $key) {
+                $columns[] = $col;
+            }
+        }
+        $this->columns = $columns;
+    }
+
+    /**
+     * Add a column before a specific key.
+     * @param \Concrete\Core\Search\Column\ColumnInterface $col
+     * @param string $key
+     * @return void
+     */
+    public function addColumnBeforeKey($col, $key)
+    {
+        $columns = [];
+        foreach($this->columns as $column) {
+            if ($column->getColumnKey() == $key) {
+                $columns[] = $col;
+            }
+            $columns[] = $column;
+        }
+        $this->columns = $columns;
+    }
+
     public function removeColumnByKey($key)
     {
         foreach($this->columns as $i => $column) {
