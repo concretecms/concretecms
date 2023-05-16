@@ -8,7 +8,8 @@ defined('C5_EXECUTE') or die('Access Denied.');
  */
 
 try {
-    $objects = Express::getEntities();
+    $list = Express::getEntities(true);
+    $objects = $list->findBy(['include_in_rest_api' => true, 'is_published' => true]);
 } catch (\Exception $e) {
     // Note - this might happen if proxies need to be rebuilt and this is the cleanest way to do it, although
     // not ideal.
