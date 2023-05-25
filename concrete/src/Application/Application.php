@@ -302,7 +302,7 @@ class Application extends Container
      */
     public static function isRunThroughCommandLineInterface()
     {
-        return defined('C5_ENVIRONMENT_ONLY') && C5_ENVIRONMENT_ONLY || PHP_SAPI == 'cli' || PHP_SAPI === 'phpdbg';
+        return PHP_SAPI == 'cli' || PHP_SAPI === 'phpdbg';
     }
 
     /**
