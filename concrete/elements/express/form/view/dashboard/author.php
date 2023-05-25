@@ -1,7 +1,7 @@
 <?php defined('C5_EXECUTE') or die("Access Denied."); ?>
 
-<div class="list-group-item">
-    <h6><?=$label?></h6>
+<div class="mb-3">
+    <label class="form-label"><?=$label?></label>
     <div>
         <?php
         $author = $entry->getAuthor();
