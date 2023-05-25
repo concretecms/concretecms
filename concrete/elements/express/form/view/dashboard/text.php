@@ -1,9 +1,9 @@
 <?php defined('C5_EXECUTE') or die("Access Denied."); ?>
 
-<div class="list-group-item">
+<div class="mb-3">
 
 <?php if ($control->getHeadline()) { ?>
-    <h6><?=$control->getHeadline()?></h6>
+    <div class="form-label"><?=$control->getHeadline()?></div>
 <?php } ?>
 <?php if ($control->getBody()) { ?>
     <div>
