@@ -7,7 +7,7 @@ use Concrete\Core\Application\ApplicationAwareInterface;
 use Concrete\Core\Application\ApplicationAwareTrait;
 use Concrete\Core\Asset\AssetList;
 use Concrete\Core\File\Type\TypeList;
-use Concrete\Core\Foundation\ClassAliasList;
+use Concrete\Core\Foundation\ClassAutoloader;
 use Concrete\Core\Http\Request;
 use Concrete\Core\Routing\RedirectResponse;
 use Concrete\Core\Routing\SystemRouteList;
@@ -306,24 +306,15 @@ class DefaultBooter implements BootInterface, ApplicationAwareInterface
             array_get($connection, 'server');
     }
 
-    /**
-     * @param Repository $config
-     *
-     * @return ClassAliasList
-     */
-    private function initializeClassAliases(Repository $config)
+    private function initializeClassAliases(Repository $config): void
     {
-        $list = ClassAliasList::getInstance();
-        $list->registerMultipleRequired($config->get('app.aliases'));
-        $list->registerMultiple($config->get('app.facades'));
-
+        $autoloader = ClassAutoloader::getInstance();
+        $autoloader
+            ->addClassAliases($config->get('app.aliases', []), true)
+            ->addClassAliases($config->get('app.facades', []), false)
+        ;        
         // Autoload aliases to prevent typehinting errors
-        class_exists('\Request');
-        if (version_compare(PHP_VERSION, '7.2.0alpha1') < 0) {
-            $list->register('Concrete\Core\Foundation\Object', 'Concrete\Core\Foundation\ConcreteObject');
-        }
-
-        return $list;
+        class_exists('Request');
     }
 
     /**

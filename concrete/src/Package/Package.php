@@ -14,10 +14,8 @@ use Concrete\Core\Entity\Package as PackageEntity;
 use Concrete\Core\Package\Dependency\DependencyChecker;
 use Concrete\Core\Package\ItemCategory\Manager;
 use Concrete\Core\Page\Theme\Theme;
-use Concrete\Core\Support\Facade\Application as ApplicationFacade;
 use Doctrine\Persistence\Mapping\Driver\MappingDriverChain;
 use Doctrine\Common\Proxy\ProxyGenerator;
-use Doctrine\DBAL\Driver\PDOConnection;
 use Doctrine\DBAL\Schema\Comparator as SchemaComparator;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
@@ -129,7 +127,7 @@ abstract class Package implements LocalizablePackageInterface
     /**
      * Associated package entity.
      *
-     * @var PackageEntity|null
+     * @var \Concrete\Core\Entity\Package|null
      */
     protected $entity;
 
@@ -252,7 +250,7 @@ abstract class Package implements LocalizablePackageInterface
     /**
      * Get the associated package entity (if available).
      *
-     * @return PackageEntity|null May return NULL if the package is invalid and/or if it's not installed
+     * @return \Concrete\Core\Entity\Package|null May return NULL if the package is invalid and/or if it's not installed
      */
     public function getPackageEntity()
     {
@@ -265,8 +263,6 @@ abstract class Package implements LocalizablePackageInterface
 
     /**
      * Set the associated package entity.
-     *
-     * @param PackageEntity $entity
      */
     public function setPackageEntity(PackageEntity $entity)
     {
@@ -282,8 +278,7 @@ abstract class Package implements LocalizablePackageInterface
     }
 
     /**
-     * @param array $pkgContentSwapFiles
-     * @return Package
+     * @return $this
      */
     public function setContentSwapFiles(array $pkgContentSwapFiles): Package
     {
@@ -581,7 +576,7 @@ abstract class Package implements LocalizablePackageInterface
      * Install the package info row and the database (doctrine entities and db.xml).
      * Packages installing additional content should override this method, call the parent method (`parent::install()`).
      *
-     * @return PackageEntity
+     * @return \Concrete\Core\Entity\Package
      */
     public function install()
     {
@@ -673,13 +668,11 @@ abstract class Package implements LocalizablePackageInterface
      * @deprecated
      * Use $app->make('Concrete\Core\Package\PackageService')->getInstalledList()
      *
-     * @return PackageEntity[]
+     * @return \Concrete\Core\Entity\Package[]
      */
     public static function getInstalledList()
     {
-        $app = ApplicationFacade::getFacadeApplication();
-
-        return $app->make(PackageService::class)->getInstalledList();
+        return app(PackageService::class)->getInstalledList();
     }
 
     /**
@@ -690,9 +683,7 @@ abstract class Package implements LocalizablePackageInterface
      */
     public static function getInstalledHandles()
     {
-        $app = ApplicationFacade::getFacadeApplication();
-
-        return $app->make(PackageService::class)->getInstalledHandles();
+        return app(PackageService::class)->getInstalledHandles();
     }
 
     /**
@@ -701,39 +692,33 @@ abstract class Package implements LocalizablePackageInterface
      *
      * @param string $pkgHandle
      *
-     * @return PackageEntity|null
+     * @return \Concrete\Core\Entity\Package|null
      */
     public static function getByHandle($pkgHandle)
     {
-        $app = ApplicationFacade::getFacadeApplication();
-
-        return $app->make(PackageService::class)->getByHandle($pkgHandle);
+        return app(PackageService::class)->getByHandle($pkgHandle);
     }
 
     /**
      * @deprecated
      * Use $app->make('Concrete\Core\Package\PackageService')->getLocalUpgradeablePackages()
      *
-     * @return PackageEntity[]
+     * @return \Concrete\Core\Entity\Package[]
      */
     public static function getLocalUpgradeablePackages()
     {
-        $app = ApplicationFacade::getFacadeApplication();
-
-        return $app->make(PackageService::class)->getLocalUpgradeablePackages();
+        return app(PackageService::class)->getLocalUpgradeablePackages();
     }
 
     /**
      * @deprecated
      * Use $app->make('Concrete\Core\Package\PackageService')->getRemotelyUpgradeablePackages()
      *
-     * @return PackageEntity[]
+     * @return \Concrete\Core\Entity\Package[]
      */
     public static function getRemotelyUpgradeablePackages()
     {
-        $app = ApplicationFacade::getFacadeApplication();
-
-        return $app->make(PackageService::class)->getRemotelyUpgradeablePackages();
+        return app(PackageService::class)->getRemotelyUpgradeablePackages();
     }
 
     /**
@@ -742,13 +727,11 @@ abstract class Package implements LocalizablePackageInterface
      *
      * @param bool $filterInstalled
      *
-     * @return Package[]
+     * @return \Concrete\Core\Package\Package[]
      */
     public static function getAvailablePackages($filterInstalled = true)
     {
-        $app = ApplicationFacade::getFacadeApplication();
-
-        return $app->make(PackageService::class)->getAvailablePackages($filterInstalled);
+        return app(PackageService::class)->getAvailablePackages($filterInstalled);
     }
 
     /**
@@ -757,13 +740,11 @@ abstract class Package implements LocalizablePackageInterface
      *
      * @param int $pkgID
      *
-     * @return PackageEntity|null
+     * @return \Concrete\Core\Entity\Package|null
      */
     public static function getByID($pkgID)
     {
-        $app = ApplicationFacade::getFacadeApplication();
-
-        return $app->make(PackageService::class)->getByID($pkgID);
+        return app(PackageService::class)->getByID($pkgID);
     }
 
     /**
@@ -772,13 +753,11 @@ abstract class Package implements LocalizablePackageInterface
      *
      * @param string $pkgHandle
      *
-     * @return Package
+     * @return \Concrete\Core\Package\Package
      */
     public static function getClass($pkgHandle)
     {
-        $app = ApplicationFacade::getFacadeApplication();
-
-        return $app->make(PackageService::class)->getClass($pkgHandle);
+        return app(PackageService::class)->getClass($pkgHandle);
     }
 
     /**
@@ -971,39 +950,35 @@ abstract class Package implements LocalizablePackageInterface
      *
      * @throws \Doctrine\DBAL\ConnectionException
      *
-     * @return bool|stdClass Returns false if the XML file could not be found
+     * @return bool|\stdClass Returns false if the XML file could not be found
      */
     public static function installDB($xmlFile)
     {
-        if (file_exists($xmlFile)) {
-            $app = ApplicationFacade::getFacadeApplication();
-            $db = $app->make(Connection::class);
-            /* @var Connection $db */
-
-            $parser = Schema::getSchemaParser(simplexml_load_file($xmlFile));
-            $parser->setIgnoreExistingTables(false);
-            $toSchema = $parser->parse($db);
-
-            $fromSchema = $db->getSchemaManager()->createSchema();
-            $comparator = new SchemaComparator();
-            $schemaDiff = $comparator->compare($fromSchema, $toSchema);
-            $saveQueries = $schemaDiff->toSaveSql($db->getDatabasePlatform());
-
-            if (count($saveQueries)) {
-                $db->beginTransaction();
-                foreach ($saveQueries as $query) {
-                    $db->query($query);
-                }
-                if ($db->isTransactionActive() && !$db->isAutoCommit()) {
-                    $db->commit();
-                }
-            }
-
-            $result = new stdClass();
-            $result->result = false;
-        } else {
-            $result = false;
+        if (!file_exists($xmlFile)) {
+            return false;
         }
+        $db = app(Connection::class);
+        $parser = Schema::getSchemaParser(simplexml_load_file($xmlFile));
+        $parser->setIgnoreExistingTables(false);
+        $toSchema = $parser->parse($db);
+
+        $fromSchema = $db->getSchemaManager()->createSchema();
+        $comparator = new SchemaComparator();
+        $schemaDiff = $comparator->compare($fromSchema, $toSchema);
+        $saveQueries = $schemaDiff->toSaveSql($db->getDatabasePlatform());
+
+        if ($saveQueries !== []) {
+            $db->beginTransaction();
+            foreach ($saveQueries as $query) {
+                $db->query($query);
+            }
+            if ($db->isTransactionActive() && !$db->isAutoCommit()) {
+                $db->commit();
+            }
+        }
+
+        $result = new stdClass();
+        $result->result = false;
 
         return $result;
     }
@@ -1080,7 +1055,7 @@ abstract class Package implements LocalizablePackageInterface
     /**
      * Create an entity manager used for the package install, upgrade and unistall process.
      *
-     * @return EntityManager|null
+     * @return \Doctrine\ORM\EntityManager|null
      */
     public function getPackageEntityManager()
     {
@@ -1088,44 +1063,42 @@ abstract class Package implements LocalizablePackageInterface
         $provider = $providerFactory->getEntityManagerProvider();
         $drivers = $provider->getDrivers();
         if (empty($drivers)) {
-            $result = null;
-        } else {
-            $config = Setup::createConfiguration(true, $this->app->make('config')->get('database.proxy_classes'));
-            $driverImpl = new MappingDriverChain();
-            $coreDriver = new CoreDriver($this->app);
+            return null;
+        }
+        $config = Setup::createConfiguration(true, $this->app->make('config')->get('database.proxy_classes'));
+        $driverImpl = new MappingDriverChain();
+        $coreDriver = new CoreDriver($this->app);
 
-            // Add all the installed packages so that the new package could potentially extend packages that are already / installed
-            $packages = $this->app->make(PackageService::class)->getInstalledList();
-            foreach($packages as $package) {
-                $existingProviderFactory = new PackageProviderFactory($this->app, $package->getController());
-                $existingProvider = $existingProviderFactory->getEntityManagerProvider();
-                $existingDrivers = $existingProvider->getDrivers();
-                if (!empty($existingDrivers)) {
-                    foreach($existingDrivers as $existingDriver) {
-                        $driverImpl->addDriver($existingDriver->getDriver(), $existingDriver->getNamespace());
-                    }
+        // Add all the installed packages so that the new package could potentially extend packages that are already / installed
+        $packages = $this->app->make(PackageService::class)->getInstalledList();
+        foreach($packages as $package) {
+            $existingProviderFactory = new PackageProviderFactory($this->app, $package->getController());
+            $existingProvider = $existingProviderFactory->getEntityManagerProvider();
+            $existingDrivers = $existingProvider->getDrivers();
+            if (!empty($existingDrivers)) {
+                foreach($existingDrivers as $existingDriver) {
+                    $driverImpl->addDriver($existingDriver->getDriver(), $existingDriver->getNamespace());
                 }
             }
-
-            // Add the core driver to it so packages can extend the core and not break.
-            $driverImpl->addDriver($coreDriver->getDriver(), $coreDriver->getNamespace());
-
-            foreach ($drivers as $driver) {
-                $driverImpl->addDriver($driver->getDriver(), $driver->getNamespace());
-            }
-            $config->setMetadataDriverImpl($driverImpl);
-            $db = $this->app->make(Connection::class);
-            $result = EntityManager::create($db, $config);
         }
 
-        return $result;
+        // Add the core driver to it so packages can extend the core and not break.
+        $driverImpl->addDriver($coreDriver->getDriver(), $coreDriver->getNamespace());
+
+        foreach ($drivers as $driver) {
+            $driverImpl->addDriver($driver->getDriver(), $driver->getNamespace());
+        }
+        $config->setMetadataDriverImpl($driverImpl);
+        $db = $this->app->make(Connection::class);
+
+        return EntityManager::create($db, $config);
     }
 
     /**
      * @deprecated
      * Use $app->make('Doctrine\ORM\EntityManagerInterface')
      *
-     * @return EntityManagerInterface
+     * @return \Doctrine\ORM\EntityManagerInterface
      */
     public function getEntityManager()
     {
@@ -1174,7 +1147,7 @@ abstract class Package implements LocalizablePackageInterface
      *
      * @return array
      *
-     * @see Package::$packageDependencies
+     * @see \Concrete\Core\Package\Package::$packageDependencies
      */
     public function getPackageDependencies()
     {
@@ -1219,8 +1192,6 @@ abstract class Package implements LocalizablePackageInterface
 
     /**
      * Destroys all proxies related to a package.
-     *
-     * @param EntityManagerInterface $em
      */
     protected function destroyProxyClasses(EntityManagerInterface $em)
     {
