@@ -687,7 +687,11 @@ class Controller extends BlockController implements NotificationProviderInterfac
                 } else {
                     $entry = $manager->createEntry($entity);
                 }
-                $submittedAttributeValues = $manager->getEntryAttributeValuesForm($form, $entry);
+                if ($this->areFormSubmissionsStored()) {
+                    $submittedAttributeValues = $entry->getEntryAttributeValues();
+                } else {
+                    $submittedAttributeValues = $manager->getEntryAttributeValuesForm($form, $entry);
+                }
                 $notifier = $controller->getNotifier($this);
                 $notifications = $notifier->getNotificationList();
                 array_walk($notifications->getNotifications(), function ($notification) use ($submittedAttributeValues) {
