@@ -142,7 +142,7 @@ $publishDate = $v->getPublishDate();
                 title: '<?=t('Revert Page to Draft')?>',
                 height: 'auto',
                 onOpen: function() {
-                    $('[data-dialog-revert-page=submit').on('click', function () {
+                    $('[data-dialog-revert-page=submit]').on('click', function () {
                         ConcreteRevertPageToDraft.sendRequest();
                     });
                 }
