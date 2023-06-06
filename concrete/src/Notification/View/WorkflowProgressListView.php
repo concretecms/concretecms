@@ -4,7 +4,6 @@ namespace Concrete\Core\Notification\View;
 
 use Concrete\Core\Application\UserInterface\ContextMenu\Item\LinkItem;
 use Concrete\Core\Entity\Notification\Notification;
-use Concrete\Core\Entity\Notification\UserSignupNotification;
 use Concrete\Core\Notification\View\Menu\WorkflowProgressListViewMenu;
 use Concrete\Core\Workflow\Progress\SiteProgressInterface;
 use HtmlObject\Element;
@@ -20,14 +19,14 @@ class WorkflowProgressListView extends StandardListView
     protected $actions = [];
 
     /**
-     * @var UserSignupNotification
+     * @var \Concrete\Core\Entity\Notification\WorkflowProgressNotification
      */
     protected $notification;
 
     /**
      * WorkflowProgressListView constructor.
      *
-     * @param Notification WorkflowProgressNotification
+     * @param \Concrete\Core\Entity\Notification\WorkflowProgressNotification $notification
      */
     public function __construct(Notification $notification)
     {
