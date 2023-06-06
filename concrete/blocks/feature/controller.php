@@ -147,7 +147,7 @@ class Controller extends BlockController implements UsesFeatureInterface
         $args['paragraph'] = LinkAbstractor::translateTo($args['paragraph']);
         /** @var SanitizeService $security */
         $security = $this->app->make('helper/security');
-        $args['icon'] = $security->sanitizeString($args['icon']);
+        $args['icon'] = isset($args['icon']) ? $security->sanitizeString($args['icon']) : '';
         $args['title'] = $security->sanitizeString($args['title']);
         $args['titleFormat'] = $security->sanitizeString($args['titleFormat']);
         $args['internalLinkCID'] = $security->sanitizeInt($args['internalLinkCID']);
