@@ -27,7 +27,12 @@ class BlockMessage implements MessageInterface
         $this->content = $content;
     }
 
-
+    /**
+     * {@inheritdoc}
+     *
+     * @see \JsonSerializable::jsonSerialize()
+     */
+    #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
         $data = [

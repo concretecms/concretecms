@@ -37,6 +37,12 @@ class Broadcast implements BroadcastInterface
         return $this->announcements;
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \JsonSerializable::jsonSerialize()
+     */
+    #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
         return [

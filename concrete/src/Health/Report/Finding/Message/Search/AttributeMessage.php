@@ -23,6 +23,12 @@ class AttributeMessage implements MessageInterface
         $this->value = $value;
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \JsonSerializable::jsonSerialize()
+     */
+    #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
         $data = [
