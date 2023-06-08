@@ -51,26 +51,56 @@ class Collection implements \ArrayAccess, \Iterator
         unset($this->elements[$offset]);
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Iterator::rewind()
+     */
+    #[\ReturnTypeWillChange]
     public function rewind()
     {
         reset($this->elements);
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Iterator::current()
+     */
+    #[\ReturnTypeWillChange]
     public function current()
     {
         return current($this->elements);
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Iterator::key()
+     */
+    #[\ReturnTypeWillChange]
     public function key()
     {
         return key($this->elements);
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Iterator::next()
+     */
+    #[\ReturnTypeWillChange]
     public function next()
     {
         next($this->elements);
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Iterator::valid()
+     */
+    #[\ReturnTypeWillChange]
     public function valid()
     {
         return $this->current() !== false;
