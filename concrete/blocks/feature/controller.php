@@ -55,6 +55,7 @@ class Controller extends BlockController implements UsesFeatureInterface
     protected $btCacheBlockOutputOnPost = true;
     protected $btCacheBlockOutputForRegisteredUsers = true;
     protected $btExportPageColumns = array('internalLinkCID');
+    protected $btExportFileColumns = array('fID');
     protected $btInterfaceHeight = 520;
     protected $btTable = 'btFeature';
 

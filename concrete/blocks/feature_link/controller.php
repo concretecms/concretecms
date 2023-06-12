@@ -90,6 +90,7 @@ class Controller extends BlockController implements UsesFeatureInterface
     protected $btCacheBlockRecord = true;
     protected $btCacheBlockOutput = true;
     protected $btCacheBlockOutputOnPost = true;
+    protected $btExportFileColumns = array('fID');
     protected $btCacheBlockOutputForRegisteredUsers = true;
     protected $btCacheBlockOutputLifetime = 300;
 
