@@ -40,9 +40,7 @@ class VariableFactory
 
     public function getCursorValue()
     {
-        if (isset($this->requestData[$this->getCursorVariableName()])) {
-            return $this->requestData[$this->getCursorVariableName()];
-        }
+        return $this->requestData[$this->getCursorVariableName()] ?? '';
     }
 
     public function getCurrentCursor()
