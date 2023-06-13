@@ -2,38 +2,33 @@
 
 namespace Concrete\Tests\Logging;
 
-use Cascade\Cascade;
 use Concrete\Core\Application\Application;
-use Concrete\Core\Config\Repository\Repository;
 use Concrete\Core\Database\Connection\Connection;
-use Concrete\Core\Entity\Site\Site;
 use Concrete\Core\Logging\Channels;
 use Concrete\Core\Logging\Configuration\AdvancedConfiguration;
 use Concrete\Core\Logging\Configuration\ConfigurationFactory;
-use Concrete\Core\Logging\Configuration\SimpleConfiguration;
 use Concrete\Core\Logging\Configuration\SimpleDatabaseConfiguration;
 use Concrete\Core\Logging\Configuration\SimpleFileConfiguration;
 use Concrete\Core\Logging\GroupLogger;
 use Concrete\Core\Logging\Handler\DatabaseHandler;
 use Concrete\Core\Logging\LoggerFactory;
 use Concrete\Core\Logging\Processor\ConcreteUserProcessor;
-use Concrete\Core\Site\Service;
 use Concrete\Core\Support\Facade\Facade;
 use Concrete\Core\Support\Facade\Log;
 use Concrete\TestHelpers\Database\ConcreteDatabaseTestCase;
 use Illuminate\Filesystem\Filesystem;
 use Mockery as M;
 use Monolog\Formatter\LineFormatter;
-use Monolog\Handler\NullHandler;
-use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
 use Concrete\Core\Logging\LogEntry;
 use Monolog\Processor\PsrLogMessageProcessor;
+use Concrete\Core\Entity\User;
 
 class LogTest extends ConcreteDatabaseTestCase
 {
     protected $fixtures = [];
     protected $tables = ['Logs'];
+    protected $metadatas = [User\User::class, User\UserSignup::class];
     protected $app;
 
     /**
