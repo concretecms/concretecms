@@ -1,13 +1,14 @@
 <?php
 namespace Concrete\Core\Notification\Subscription;
 
-use Concrete\Core\Application\Application;
-use Concrete\Core\Support\Manager as CoreManager;
-
-defined('C5_EXECUTE') or die("Access Denied.");
+defined('C5_EXECUTE') or die('Access Denied.');
 
 class Manager
 {
+    /**
+     * @var \Concrete\Core\Notification\Type\Manager
+     */
+    protected $typeManager;
 
     public function __construct(\Concrete\Core\Notification\Type\Manager $manager)
     {
