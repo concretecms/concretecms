@@ -36,6 +36,11 @@ class LogTest extends ConcreteDatabaseTestCase
     protected $tables = ['Logs'];
     protected $app;
 
+    /**
+     * @var \Concrete\Core\Database\Connection\Connection
+     */
+    protected $db;
+
     public function setUp(): void
     {
         parent::setUp();
