@@ -218,7 +218,7 @@ class Set
     public static function __callStatic($name, $arguments)
     {
         if (strcasecmp($name, 'add') === 0) {
-            return call_user_func_array('static::create', $arguments);
+            return static::create(... $arguments);
         }
         trigger_error("Call to undefined method ".__CLASS__."::$name()", E_USER_ERROR);
     }
