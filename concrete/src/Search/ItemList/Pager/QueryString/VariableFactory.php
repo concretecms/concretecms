@@ -11,6 +11,13 @@ class VariableFactory
 
     protected $itemList;
 
+    /**
+     * @deprecated What's deprecated is the "public" part
+     *
+     * @var array
+     */
+    public $requestData;
+
     public function getCursorVariableName()
     {
         return 'ccm_cursor';
