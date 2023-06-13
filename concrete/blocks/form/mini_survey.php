@@ -368,7 +368,7 @@ class MiniSurvey
         return $rs->fetch();
     }
 
-    public function reorderQuestions($qsID = 0, $qIDs)
+    public function reorderQuestions($qsID, $qIDs)
     {
         $qIDs = explode(',', $qIDs);
         if (!is_array($qIDs)) {
