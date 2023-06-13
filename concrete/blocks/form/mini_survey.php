@@ -25,6 +25,11 @@ class MiniSurvey
      */
     public $db;
 
+    /**
+     * @var bool|null
+     */
+    public $frontEndMode;
+
     public function __construct()
     {
         $this->db = Database::connection();
