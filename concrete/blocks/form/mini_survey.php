@@ -20,6 +20,11 @@ class MiniSurvey
 
     public $lastSavedqID = 0;
 
+    /**
+     * @var \Concrete\Core\Database\Connection\Connection
+     */
+    public $db;
+
     public function __construct()
     {
         $this->db = Database::connection();
