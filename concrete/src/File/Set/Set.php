@@ -52,9 +52,11 @@ class Set
     public $fsName;
 
     /**
+     * @deprecated this field is not used anymore since ConcreteCMS 8
+     *
      * @var int
      */
-    //public $fsOverrideGlobalPermissions;
+    public $fsOverrideGlobalPermissions;
 
     /**
      * @var int
