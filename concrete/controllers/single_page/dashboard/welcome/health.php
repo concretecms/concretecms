@@ -1,18 +1,15 @@
 <?php
 namespace Concrete\Controller\SinglePage\Dashboard\Welcome;
 
-use Concrete\Core\Command\Task\Input\Input;
-use Concrete\Core\Command\Task\Runner\Context\ContextFactory;
 use Concrete\Core\Command\Task\TaskService;
 use Concrete\Core\Command\Task\Traits\DashboardTaskRunnerTrait;
 use Concrete\Core\Entity\Command\TaskProcess;
-use Concrete\Core\Entity\Health\Report\Result;
 use Concrete\Core\Health\Grade\PassFailGrade;
 use Concrete\Core\Health\Report\ReportControllerInterface;
 use Concrete\Core\Health\Report\Result\ResultList;
+use Concrete\Core\Localization\Service\Date;
 use Concrete\Core\Page\Controller\DashboardPageController;
 use Concrete\Core\Production\Modes;
-use Concrete\Core\Search\Pagination\Pagination;
 use Concrete\Core\Search\Pagination\PaginationFactory;
 
 class Health extends DashboardPageController
@@ -28,6 +25,7 @@ class Health extends DashboardPageController
 
     public function view()
     {
+        $this->set('dateService', $this->app->make(Date::class));
         $this->setThemeViewTemplate('desktop/empty.php');
         $this->loadlatestResults();
         $this->loadReports();
@@ -75,6 +73,7 @@ class Health extends DashboardPageController
         $this->set('productionStatus', $productionStatus);
         $this->set('productionStatusClass', $productionStatusClass);
     }
+
     protected function loadReports()
     {
         $reports = [];
