@@ -321,6 +321,7 @@ var ccmi18n_filemanager = ' . json_encode([
     'uploadFiles' => t('Upload Files'),
     'width' => t('Width'),
     'height' => t('Height'),
+    'size' => t('Size'),
 ]) . ';
 
 var ccmi18n_chosen = ' . json_encode([
