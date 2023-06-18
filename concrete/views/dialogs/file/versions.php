@@ -1,10 +1,14 @@
 <?php
 
-use Concrete\Core\Entity\Statistics\UsageTracker\FileUsageRecord;
-use Concrete\Core\Page\Page;
 use Concrete\Core\Support\Facade\Url;
 
-/** @var FileUsageRecord[] $records */
+/**
+ * @var Concrete\Core\Permission\Checker $fp
+ * @var Concrete\Core\Entity\File\File $f
+ * @var Concrete\Core\Localization\Service\Date $dh
+ * @var Concrete\Core\Validation\CSRF\Token $token
+ * @var Concrete\Core\Entity\File\Version|null $fv
+ */
 
 ?>
 <div class="ccm-ui">
@@ -24,7 +28,7 @@ use Concrete\Core\Support\Facade\Url;
             ?>
         </tr>
         <?php
-        $versions = $f->getVersionList();
+        $versions = $f->getFileVersions();
         foreach ($versions as $fvv) {
             ?>
             <tr <?php if ($fvv->getFileVersionID() == $fv->getFileVersionID()) {
@@ -124,7 +128,7 @@ use Concrete\Core\Support\Facade\Url;
 
         setupFileVersionsTable: function () {
             var my = this;
-            $versions = $('#ccm-file-versions');
+            var $versions = $('#ccm-file-versions');
             $versions.on('click', 'input[name=fvID]', function () {
                 var fvID = $(this).val();
                 $.concreteAjax({
@@ -152,6 +156,12 @@ use Concrete\Core\Support\Facade\Url;
                         });
                     }
                 });
+            });
+            var initiallyActiveVersion = <?= $fv ? (int) $fv->getFileVersionID() : 0 ?>;
+        	$versions.closest('.ui-dialog').on('dialogclose', function() {
+                if (!$versions.find('tr[data-file-version-id=' + initiallyActiveVersion + ']').hasClass('table-success')) {
+                    window.location.reload();
+                }
             });
 
         }
