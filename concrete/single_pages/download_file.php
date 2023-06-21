@@ -20,7 +20,13 @@ $app = Application::getFacadeApplication();
 /** @var Form $form */
 $form = $app->make(Form::class);
 
-$file = File::getByID($fID);
+$validFile = true;
+
+if (!isset($filename) || !isset($fID)) {
+    $validFile = false;
+}
+
+$file = File::getByID($fID ?? null);
 
 if ($file instanceof FileEntity && $file->hasFileUUID()) {
     $submitPasswordUrl = (string)Url::to('/download_file', 'submit_password', $file->getFileUUID());
@@ -34,7 +40,7 @@ if ($file instanceof FileEntity && $file->hasFileUUID()) {
         <?php echo t('Download File') ?>
     </h1>
 
-<?php if (!isset($filename)) { ?>
+<?php if (!$validFile) { ?>
     <p>
         <?php echo t('Invalid File.'); ?>
     </p>
