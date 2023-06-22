@@ -81,6 +81,7 @@ $(document).ready(function() {
             url: url,
             success: function (r) {
                 $.fn.dialog.closeTop();
+                window.location.reload();
             }
         });
     });
