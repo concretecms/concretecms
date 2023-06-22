@@ -60,9 +60,6 @@ class RedisSessionHandler extends SessionHandler
         $this->prefix = $options['prefix'] ? $options['prefix'] : 'sf_s';
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function doRead($sessionId)
     {
         return $this->redis->get($this->prefix.$sessionId) ?: '';
@@ -70,15 +67,15 @@ class RedisSessionHandler extends SessionHandler
 
     /**
      * {@inheritdoc}
+     *
+     * @see \SessionHandler::read()
      */
+    #[\ReturnTypeWillChange]
     public function read($session_id)
     {
         return $this->doRead($session_id);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function doWrite($sessionId, $data)
     {
         $result = $this->redis->setex($this->prefix.$sessionId, (int) ini_get('session.gc_maxlifetime'), $data);
@@ -88,7 +85,10 @@ class RedisSessionHandler extends SessionHandler
 
     /**
      * {@inheritdoc}
+     *
+     * @see \SessionHandler::write()
      */
+    #[\ReturnTypeWillChange]
     public function write($session_id, $session_data)
     {
         return $this->doWrite($session_id, $session_data);
@@ -96,15 +96,15 @@ class RedisSessionHandler extends SessionHandler
 
     /**
      * {@inheritdoc}
+     *
+     * @see \SessionHandler::destroy()
      */
+    #[\ReturnTypeWillChange]
     public function destroy($session_id)
     {
         return $this->doDestroy($session_id);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function doDestroy($sessionId)
     {
         $this->redis->del($this->prefix.$sessionId);
@@ -114,7 +114,10 @@ class RedisSessionHandler extends SessionHandler
 
     /**
      * {@inheritdoc}
+     *
+     * @see \SessionHandler::close()
      */
+    #[\ReturnTypeWillChange]
     public function close()
     {
         return true;
@@ -122,15 +125,15 @@ class RedisSessionHandler extends SessionHandler
 
     /**
      * {@inheritdoc}
+     *
+     * @see \SessionHandler::gc()
      */
+    #[\ReturnTypeWillChange]
     public function gc($maxlifetime)
     {
         return true;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function updateTimestamp($sessionId, $data)
     {
         return (bool) $this->redis->expire($this->prefix.$sessionId, (int) ini_get('session.gc_maxlifetime'));

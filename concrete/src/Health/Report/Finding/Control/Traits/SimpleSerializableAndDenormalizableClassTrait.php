@@ -10,7 +10,12 @@ use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
  */
 trait SimpleSerializableAndDenormalizableClassTrait
 {
-
+    /**
+     * {@inheritdoc}
+     *
+     * @see \JsonSerializable::jsonSerialize()
+     */
+    #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
         $data = [

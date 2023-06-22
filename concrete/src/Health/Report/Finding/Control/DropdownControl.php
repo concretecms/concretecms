@@ -24,6 +24,12 @@ class DropdownControl implements ControlInterface
         return new DropdownFormatter();
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \JsonSerializable::jsonSerialize()
+     */
+    #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
         $data = [

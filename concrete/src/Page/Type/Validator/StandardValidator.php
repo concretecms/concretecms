@@ -12,6 +12,13 @@ use Core;
 
 class StandardValidator implements ValidatorInterface
 {
+    /**
+     * @deprecated What's deprecated is the "public" part: use the setPageTypeObject()/getPageTypeObject() methods instead
+     *
+     * @var \Concrete\Core\Page\Type\Type|null
+     */
+    public $type;
+
     public function setPageTypeObject(Type $type)
     {
         $this->type = $type;

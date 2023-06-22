@@ -33,26 +33,56 @@ class ValueList extends ConcreteObject implements \Iterator
         return $this->attributes[$akHandle];
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Iterator::rewind()
+     */
+    #[\ReturnTypeWillChange]
     public function rewind()
     {
         reset($this->attributes);
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Iterator::current()
+     */
+    #[\ReturnTypeWillChange]
     public function current()
     {
         return current($this->attributes);
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Iterator::key()
+     */
+    #[\ReturnTypeWillChange]
     public function key()
     {
         return key($this->attributes);
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Iterator::next()
+     */
+    #[\ReturnTypeWillChange]
     public function next()
     {
         next($this->attributes);
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Iterator::valid()
+     */
+    #[\ReturnTypeWillChange]
     public function valid()
     {
         return $this->current() !== false;
