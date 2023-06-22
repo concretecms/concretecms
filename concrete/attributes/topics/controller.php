@@ -452,7 +452,7 @@ class Controller extends AttributeTypeController implements
                 $this->load();
             }
             $initialized = false;
-            preg_match_all('/tid:(\d+)$/', $textRepresentation, $matches);
+            preg_match_all('/tid:(\d+)\b/', $textRepresentation, $matches);
             $nodeIDs = array_unique(array_map('intval', $matches[1]));
             foreach ($nodeIDs as $nodeID) {
                 $node = TreeNode::getByID($nodeID);
