@@ -9,6 +9,7 @@ use Concrete\Core\Block\Block;
 use Concrete\Core\Block\BlockType\BlockType;
 use Concrete\Core\Block\BlockType\BlockTypeList;
 use Concrete\Core\Block\BlockType\Set as BlockTypeSet;
+use Concrete\Core\Entity\Block\BlockType\BlockType as BlockTypeEntity;
 use Concrete\Core\Block\View\BlockView;
 use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Entity\Page\Container;
@@ -24,6 +25,7 @@ use Concrete\Core\Support\Facade\StackFolder;
 use Concrete\Core\Validation\CSRF\Token;
 use Concrete\Core\View\View;
 use Doctrine\ORM\EntityManager;
+use Illuminate\Support\Arr;
 
 class Add extends BackendInterfacePageController
 {
@@ -433,6 +435,12 @@ class Add extends BackendInterfacePageController
      */
     protected function buildSetsAndBlockTypes()
     {
+        // Grabbing the concrete config key block_add_panel_order.alpha
+        $appConfig = $this->app->make('config');
+        $blockOrder = $appConfig->get('concrete.block_add_panel_order.alpha', false);
+
+        // $blockSetHandles will list the sets' handles that require alphabetical ordering
+        $blockSetHandles = [];
         $allowedBlockTypes = [];
         $btl = new BlockTypeList();
         foreach ($btl->get() as $blockType) {
@@ -464,6 +472,12 @@ class Add extends BackendInterfacePageController
             }
             if (!empty($blockTypesForSet)) {
                 $key = $set->getBlockTypeSetDisplayName();
+                
+                // let's only add sets that actually require ordering
+                if (is_array($blockOrder) && in_array($set->getBlockTypeSetHandle(), $blockOrder)) {
+                    $blockSetHandles[$key] = $set->getBlockTypeSetHandle();
+                }
+                
                 if (isset($blockTypesForSets[$key])) {
                     $blockTypesForSets[$key] = array_merge($blockTypesForSets[$key], $blockTypesForSet);
                 } else {
@@ -480,6 +494,13 @@ class Add extends BackendInterfacePageController
             }
             if (!empty($blockTypesForSet)) {
                 $key = t('Other');
+                
+                // The 'Other' block type set doesn't have a handle
+                // So let's accept 'other' as a handle for ordering
+                if (is_array($blockOrder) && in_array('other', $blockOrder)) {
+                    $blockSetHandles[$key] = 'other';
+                }
+                
                 if (isset($blockTypesForSets[$key])) {
                     $blockTypesForSets[$key] = array_merge($blockTypesForSets[$key], $blockTypesForSet);
                 } else {
@@ -487,7 +508,29 @@ class Add extends BackendInterfacePageController
                 }
             }
         }
+        
+        // We should now order the sets if any
+        if ($blockOrder) {
+            foreach ($blockTypesForSets as $key => $blockList) {
+                // at this point $blockOrder is either boolean True (or equivalent) or an array
+                // so it's either an array or not
+                $shouldOrder = !is_array($blockOrder) || isset($blockSetHandles[$key]);
 
+                // whether all sets should be ordered or this one specifically, we process it
+                if ($shouldOrder) {
+                    $blockTypesForSets[$key] = array_values(
+                        Arr::sort(
+                            $blockTypesForSets[$key], 
+                            function (BlockTypeEntity $bte) {
+                                return $bte->getBlockTypeInSetName();
+                            }
+                        )
+                    );
+                }
+            }
+
+        }
+        
         return $blockTypesForSets;
     }
 }
