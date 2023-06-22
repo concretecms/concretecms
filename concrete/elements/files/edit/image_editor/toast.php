@@ -11,10 +11,10 @@ use Concrete\Core\Http\ResponseAssetGroup;
 $group = ResponseAssetGroup::get();
 $formatter = new JavascriptFormatter();
 $output = $group->getAssetsToOutput();
-foreach ($output as $position => $assets) {
+foreach ($output as $assets) {
     foreach ($assets as $asset) {
         if ($asset instanceof Concrete\Core\Asset\Asset) {
-            print $formatter->output($asset);
+            echo $formatter->output($asset);
         }
     }
 }
@@ -29,12 +29,16 @@ foreach ($output as $position => $assets) {
 </style>
 
 <div class="dialog-buttons">
-    <button class="tui-image-editor-close-btn btn btn-secondary float-start">
-        <?php echo t('Cancel') ?>
-    </button>
-
+    <div class="float-start">
+        <button class="tui-image-editor-fullscreen-btn btn btn-secondary">
+            <?= t('Full screen') ?>
+        </button>
+        <button class="tui-image-editor-close-btn btn btn-secondary">
+            <?= t('Cancel') ?>
+        </button>
+    </div>
     <button class="tui-image-editor-save-btn btn btn-primary">
-        <?php echo t("Save"); ?>
+        <?= t('Save'); ?>
     </button>
 </div>
 
@@ -44,19 +48,23 @@ $(document).ready(function() {
         usageStatistics: false,
         includeUI: {
             loadImage: {
-                path: '<?php echo h($fileVersion->getURL()); ?>',
-                name: '<?php echo h($fileVersion->getFileName()); ?>'
+                path: <?= json_encode((string) $fileVersion->getURL()) ?>,
+                name: <?= json_encode((string) $fileVersion->getFileName()) ?>
             },
             menuBarPosition: 'bottom'
         }
     });
 
-    $(".tui-image-editor-close-btn").on('click', function () {
+    $('.tui-image-editor-fullscreen-btn').on('click', function () {
+        document.getElementById('tui-image-editor-container').requestFullscreen();
+    });
+
+    $('.tui-image-editor-close-btn').on('click', function () {
         $.fn.dialog.closeTop();
     });
 
     $('.tui-image-editor-save-btn').on('click', function () {
-        var url = CCM_DISPATCHER_FILENAME + '/ccm/system/file/edit/save/<?php echo h($fileVersion->getFileID()); ?>';
+        var url = CCM_DISPATCHER_FILENAME + '/ccm/system/file/edit/save/<?= $fileVersion->getFileID() ?>';
         <?php if ($fileVersion->getType() == 'JPEG') { ?>
             var format = 'jpeg'
         <?php } else { ?>
