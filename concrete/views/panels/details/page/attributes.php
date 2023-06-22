@@ -132,10 +132,9 @@ defined('C5_EXECUTE') or die('Access Denied.');
                     });
 
                     var $form = $('form[data-panel-detail-form=attributes]');
-                    $form.append(
-                        renderAttribute(r)
-                    );
-                    $form.find('[data-vue]').each(function() {
+                    var $attribute = $(renderAttribute(r))
+                    $attribute.appendTo($form)
+                    $attribute.find('[data-vue]').each(function() {
                         $(this).concreteVue({ context: $(this).attr('data-vue') })
                     })
                     $form.delay(1).queue(function () {
