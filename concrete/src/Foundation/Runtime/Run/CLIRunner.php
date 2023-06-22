@@ -65,6 +65,10 @@ class CLIRunner implements RunInterface, ApplicationAwareInterface
         $registry->setApplication($this->app);
         $registry->registerCommands();
 
+        if ($this->shouldRunCommands() === false) {
+            return;
+        }
+
         // Load the console commands
 
         \Events::dispatch('on_before_console_run');
@@ -72,5 +76,10 @@ class CLIRunner implements RunInterface, ApplicationAwareInterface
         $console->run($input);
 
         \Events::dispatch('on_after_console_run');
+    }
+
+    protected function shouldRunCommands(): bool
+    {
+        return defined('C5_ENVIRONMENT_ONLY') && C5_ENVIRONMENT_ONLY ? false : true;
     }
 }

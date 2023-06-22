@@ -122,6 +122,9 @@ class DefaultRunner implements RunInterface, ApplicationAwareInterface
         $request = $this->createRequest();
 
         if (!$response) {
+            if ($this->shouldProcessRequest($request) === false) {
+                return null;
+            }
             $response = $this->server->handleRequest($request);
         }
 
@@ -543,5 +546,10 @@ class DefaultRunner implements RunInterface, ApplicationAwareInterface
         $this->eventDispatcher = $urlResolver;
 
         return $this;
+    }
+
+    protected function shouldProcessRequest(Request $request): bool
+    {
+        return defined('C5_ENVIRONMENT_ONLY') && C5_ENVIRONMENT_ONLY ? false : true;
     }
 }
