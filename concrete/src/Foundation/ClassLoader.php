@@ -34,6 +34,7 @@ class ClassLoader
 
     public function reset()
     {
+        ClassAutoloader::getInstance()->reset();
     }
 
 

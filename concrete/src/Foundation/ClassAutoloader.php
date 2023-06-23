@@ -66,7 +66,7 @@ final class ClassAutoloader
      *
      * @var string
      */
-    private $applicationNamespace = 'Application\\';
+    private $applicationNamespace;
 
     /**
      * The absolute path to the application directory, always using '/' as directory separator and ending with '/'.
@@ -93,7 +93,7 @@ final class ClassAutoloader
      *
      * @var bool
      */
-    private $applicationLegacyNamespaceEnabled = false;
+    private $applicationLegacyNamespaceEnabled;
 
     /**
      * The absolute path to the packages directory, always using '/' as directory separator and ending with '/'.
@@ -110,14 +110,14 @@ final class ClassAutoloader
      *
      * @var array
      */
-    private $aliases = [];
+    private $aliases;
 
     /**
      * List of class aliases that must be autoloaded at boot time (without leading '\').
      *
      * @var string[]
      */
-    private $requiredAliases = [];
+    private $requiredAliases;
 
     /**
      * List of registered packages.
@@ -125,7 +125,7 @@ final class ClassAutoloader
      *
      * @var \Concrete\Core\Package\Package[]|null[]
      */
-    private $registeredPackages = [];
+    private $registeredPackages;
 
     /**
      * Details about the computed autoloading stuff for every package.
@@ -133,15 +133,37 @@ final class ClassAutoloader
      *
      * @var array[]
      */
-    private $packageInfo = [];
+    private $packageInfo;
 
     public function __construct()
     {
-        $this
+        $this->reset(true, true);
+    }
+
+    /**
+     * Reset this instance values to the default ones.
+     *
+     * @param bool $aliasesToo should we reset the aliases too?
+     * @param bool $packagesToo should we reset the registered packages too?
+     *
+     * @return $this
+     */
+    public function reset(bool $aliasesToo = false, $packagesToo = false): self
+    {
+        if ($aliasesToo) {
+            $this->requiredAliases = $this->aliases = [];
+        }
+        if ($packagesToo) {
+            $this->packageInfo = $this->registeredPackages = [];
+        }
+
+        return $this
             ->setCoreDir(DIR_BASE_CORE)
             ->setCoreStartingPointDir(DIR_STARTING_POINT_PACKAGES_CORE)
+            ->setApplicationNamespace('Application')
             ->setApplicationDir(DIR_APPLICATION)
             ->setApplicationStartingPointDir(DIR_STARTING_POINT_PACKAGES)
+            ->setApplicationLegacyNamespaceEnabled(false)
             ->setPackagesDir(DIR_PACKAGES)
         ;
     }
