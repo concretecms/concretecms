@@ -540,9 +540,8 @@ final class ClassAutoloader
             return false;
         }
         foreach ([
-            'Concrete' => $this->applicationDir . DIRNAME_CLASSES . '/Concrete/',
-            'Entity' => $this->applicationDir . DIRNAME_CLASSES . '/Entity/',
-            'Src' => $this->applicationDir . DIRNAME_CLASSES . '/',
+            'Concrete\\' => $this->applicationDir . DIRNAME_CLASSES . '/Concrete/',
+            'Entity\\' => $this->applicationDir . DIRNAME_CLASSES . '/Entity/',
         ] as $namespaceSuffix => $directoryPrefix) {
             if ($this->loadPSR4Class($class, $this->applicationNamespace . $namespaceSuffix, $directoryPrefix, self::FLAG_NONE)) {
                 return true;
