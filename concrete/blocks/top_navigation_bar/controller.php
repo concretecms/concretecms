@@ -235,6 +235,11 @@ class Controller extends BlockController implements UsesFeatureInterface, FileTr
         if (!isset($logo)) {
             $this->set('logo', null);
         }
+        if ($this->includeBrandText && !$this->brandingText) {
+            $site = $this->app->make('site')->getSite();
+            $brandingText = $site->getSiteName();
+            $this->set('brandingText', $brandingText);
+        }
         if ($this->brandingTransparentLogo) {
             $transparentLogo = File::getByID($this->brandingTransparentLogo);
             if ($transparentLogo) {
