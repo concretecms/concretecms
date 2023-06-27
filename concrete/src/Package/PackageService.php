@@ -278,7 +278,7 @@ class PackageService
             $class = '\\Concrete\\Package\\' . camelcase($pkgHandle) . '\\Controller';
             try {
                 $cl = $this->application->make($class);
-            } catch (\Exception $ex) {
+            } catch (\Throwable $ex) {
                 $cl = $this->application->make('Concrete\Core\Package\BrokenPackage', ['pkgHandle' => $pkgHandle]);
             }
             $cache->save($item->set($cl));
