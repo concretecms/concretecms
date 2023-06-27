@@ -50,6 +50,6 @@ class Legacy extends Parser
      */
     protected function getDefaultPackageMinimumCodeVersion()
     {
-        return '5.0.0'; // https://github.com/concrete5/concrete5-legacy/blob/5.6.4.0/web/concrete/core/models/package.php#L144
+        return '5.0.0'; // https://github.com/concretecms/concrete5-legacy/blob/5.6.4.0/web/concrete/core/models/package.php#L144
     }
 }
