@@ -6,13 +6,8 @@ use Concrete\Controller\Backend\UserInterface as BackendInterfaceController;
 use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Http\ResponseFactory;
 use Concrete\Core\Page\EditResponse;
-use Concrete\Core\Page\Page;
-use Concrete\Core\Permission\Checker as Permissions;
 use Concrete\Core\Permission\Key\Key;
-use Concrete\Core\Support\Facade\Application;
-use Concrete\Core\User\User;
 use Concrete\Core\Url\Resolver\Manager\ResolverManagerInterface;
-
 
 class DeleteAll extends BackendInterfaceController
 {
