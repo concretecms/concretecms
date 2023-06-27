@@ -99,6 +99,7 @@ class Controller extends BlockController implements FileTrackableInterface, Uses
     protected $btCacheBlockOutputLifetime = 300;
     protected $btIgnorePageThemeGridFrameworkContainer = true;
     protected $btExportFileColumns = ['image'];
+    protected $btExportPageColumns = ['imageLink_page'];
 
     /**
      * {@inheritdoc}
