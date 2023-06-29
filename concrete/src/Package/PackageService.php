@@ -6,6 +6,7 @@ use Concrete\Core\Application\Application;
 use Concrete\Core\Database\EntityManager\Provider\PackageProviderFactory;
 use Concrete\Core\Database\EntityManagerConfigUpdater;
 use Concrete\Core\Error\ErrorList\ErrorList;
+use Concrete\Core\Error\UserMessageException;
 use Concrete\Core\Foundation\ClassLoader;
 use Concrete\Core\Localization\Localization;
 use Concrete\Core\User\User;
@@ -278,6 +279,9 @@ class PackageService
             $class = '\\Concrete\\Package\\' . camelcase($pkgHandle) . '\\Controller';
             try {
                 $cl = $this->application->make($class);
+                if (!$cl instanceof Package) {
+                    throw new UserMessageException(t('The package controller does not extend the PHP class %s', Package::class));
+                }
             } catch (\Throwable $ex) {
                 $cl = $this->application->make('Concrete\Core\Package\BrokenPackage', ['pkgHandle' => $pkgHandle]);
             }
