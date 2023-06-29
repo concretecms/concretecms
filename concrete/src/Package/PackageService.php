@@ -283,7 +283,7 @@ class PackageService
                     throw new UserMessageException(t('The package controller does not extend the PHP class %s', Package::class));
                 }
             } catch (\Throwable $ex) {
-                $cl = $this->application->make('Concrete\Core\Package\BrokenPackage', ['pkgHandle' => $pkgHandle]);
+                $cl = $this->application->make('Concrete\Core\Package\BrokenPackage', ['pkgHandle' => $pkgHandle, 'errorDetails' => $ex->getMessage()]);
             }
             $cache->save($item->set($cl));
         }
