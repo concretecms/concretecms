@@ -52,6 +52,7 @@ class Controller extends BlockController implements FileTrackableInterface, Uses
     protected $btWrapperClass = 'ccm-ui';
     protected $btCacheBlockRecord = true;
     protected $btExportFileColumns = ['fID'];
+    protected $btExportContentColumns = ['title', 'description'];
     protected $btCacheBlockOutput = true;
     protected $btCacheBlockOutputOnPost = true;
     protected $btCacheBlockOutputForRegisteredUsers = false;
