@@ -42,4 +42,14 @@ class MemoryOutput implements OutputInterface
     {
         return $this->messages;
     }
+
+    /**
+     * @return $this
+     */
+    public function reset(): self
+    {
+        $this->messages = [];
+
+        return $this;
+    }
 }
