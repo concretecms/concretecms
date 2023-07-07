@@ -34,7 +34,7 @@ class Pagination extends Pagerfanta
     {
         $this->list = $itemList;
 
-        return parent::__construct($adapter);
+        parent::__construct($adapter);
     }
 
     public function getTotal()
