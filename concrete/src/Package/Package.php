@@ -824,7 +824,7 @@ abstract class Package implements LocalizablePackageInterface
 
         // Step 1 does that package exist ?
         if ($this instanceof BrokenPackage) {
-            $errors->add($this->getErrorText(self::E_PACKAGE_NOT_FOUND));
+            $errors->add($this->getInstallErrorMessage());
         } elseif ($this->getPackageHandle() === '' || !is_dir($this->getPackagePath())) {
             $errors->add($this->getErrorText(self::E_PACKAGE_NOT_FOUND));
         }
