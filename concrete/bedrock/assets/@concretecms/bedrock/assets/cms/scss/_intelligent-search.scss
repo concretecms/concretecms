@@ -11,7 +11,7 @@ div#ccm-intelligent-search-results {
   position: fixed;
   right: 120px;
   text-align: left;
-  top: 48px;
+  top: $ccm-toolbar-height;
   width: 251px;
   z-index: $index-level-intelligent-search;
 
