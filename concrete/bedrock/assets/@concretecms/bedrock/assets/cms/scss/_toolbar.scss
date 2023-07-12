@@ -2,7 +2,7 @@
 div#ccm-toolbar {
   background-color: $gray-100;
   border-bottom: 1px solid $gray-200;
-  height: 48px;
+  height: $ccm-toolbar-height;
   left: 0;
   position: fixed;
   top: 0;
@@ -386,7 +386,7 @@ ul.ccm-mobile-menu {
   overflow-y: scroll;
   padding: 15px 0;
   position: fixed;
-  top: 48px;
+  top: $ccm-toolbar-height;
   width: 100%;
   z-index: $index-level-main-bar;
 
@@ -514,6 +514,6 @@ html.ccm-toolbar-visible {
   .ccm-page {
     // This used to be dynamically included in the theme. Now we're moving it here.
     // The purpose of this code is to push the content of the page down if the toolbar appears at the top.
-    margin-top: 48px;
+    margin-top: $ccm-toolbar-height;
   }
 }
