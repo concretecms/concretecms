@@ -36,6 +36,7 @@ class DashboardCalendarPageController extends DashboardSitePageController
 
         $filterTopics = array();
 
+        $this->set('topics', null);
         $ak = $calendar->getCalendarTopicsAttributeKey();
         if (is_object($ak)) {
             $node = Node::getByID($ak->getController()->getTopicParentNode());
