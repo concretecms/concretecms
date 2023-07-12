@@ -26,7 +26,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
  * @var int|null $initialEdit
  */
 
-Loader::element('calendar/header', array(
+View::element('calendar/header', array(
     'calendar' => $calendar,
     'calendars' => $calendars,
 ));
@@ -136,7 +136,6 @@ Loader::element('calendar/header', array(
         $cols = 0;
         $cellCounter = 0;
         $isToday = false;
-        Loader::helper('text');
         for ($i = 1 - $firstDayInMonthNum; $i <= $daysInMonth; ++$i) {
             ++$cellCounter;
             if ($cols >= 7) {
