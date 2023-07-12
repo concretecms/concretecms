@@ -134,10 +134,8 @@ View::element('calendar/header', array(
     <tr>
         <?php
         $cols = 0;
-        $cellCounter = 0;
         $isToday = false;
         for ($i = 1 - $firstDayInMonthNum; $i <= $daysInMonth; ++$i) {
-            ++$cellCounter;
             if ($cols >= 7) {
                 echo '</tr><tr>';
                 $cols = 0;
@@ -170,9 +168,6 @@ View::element('calendar/header', array(
                         /** @var EventOccurrence $occurrence */
                         foreach ($results as $occurrence) {
                             $menu = new \Concrete\Core\Calendar\Event\Menu\EventOccurrenceMenu($occurrence);
-                            $event = $occurrence->getEvent();
-                            $color = $linkFormatter->getEventOccurrenceBackgroundColor($occurrence);
-                            $date = $dateFormatter->getOccurrenceDateString($occurrence);
                             ?>
                             <div class="ccm-dashboard-calendar-date-event">
                                 <?php print $menu->getMenuElement();?>
