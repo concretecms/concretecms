@@ -11,6 +11,13 @@ class VariableFactory
 
     protected $itemList;
 
+    /**
+     * @deprecated What's deprecated is the "public" part
+     *
+     * @var array
+     */
+    public $requestData;
+
     public function getCursorVariableName()
     {
         return 'ccm_cursor';
@@ -33,9 +40,7 @@ class VariableFactory
 
     public function getCursorValue()
     {
-        if (isset($this->requestData[$this->getCursorVariableName()])) {
-            return $this->requestData[$this->getCursorVariableName()];
-        }
+        return $this->requestData[$this->getCursorVariableName()] ?? '';
     }
 
     public function getCurrentCursor()

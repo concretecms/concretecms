@@ -125,7 +125,7 @@ class EmailValidator extends AbstractTranslatableValidator
         if ($mixed !== null && !is_string($mixed)) {
             throw new InvalidArgumentException(t('Invalid type supplied to validator.'));
         }
-        if ($this->checkEmail($mixed) === false) {
+        if (!filter_var($mixed, FILTER_VALIDATE_EMAIL) || $this->checkEmail($mixed) === false) {
             if ($error && $message = $this->getErrorString(self::E_INVALID_ADDRESS, $mixed)) {
                 $error[] = $message;
             }

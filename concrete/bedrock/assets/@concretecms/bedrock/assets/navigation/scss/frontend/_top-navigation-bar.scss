@@ -14,6 +14,55 @@ div.ccm-block-top-navigation-bar {
     }
   }
 
+  .navbar-toggler {
+    .icon-bar {
+      background-color: $black;
+      display: block;
+      height: 2px;
+      width: 25px;
+
+      &:nth-of-type(1) {
+        transform: rotate(45deg);
+        transform-origin: 10% 10%;
+      }
+
+      &:nth-of-type(2) {
+        opacity: 0;
+      }
+
+      &:nth-of-type(3) {
+        transform: rotate(-45deg);
+        transform-origin: 10% 90%;
+      }
+
+      + .icon-bar {
+        margin-top: 5px;
+      }
+    }
+
+    &.collapsed {
+      .icon-bar {
+        &:nth-of-type(1) {
+          transform: rotate(0);
+        }
+
+        &:nth-of-type(2) {
+          opacity: 1;
+        }
+
+        &:nth-of-type(3) {
+          transform: rotate(0);
+        }
+      }
+    }
+
+    &:hover {
+      .icon-bar {
+        background-color: $primary;
+      }
+    }
+  }
+
   // Logo/brand
   .navbar-brand {
     // If this is being included in a BS4 theme we need to reset some parameters

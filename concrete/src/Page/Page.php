@@ -1608,7 +1608,10 @@ class Page extends Collection implements CategoryMemberInterface,
      */
     public function getCollectionHandle()
     {
-        return $this->vObj->cvHandle;
+        if (isset($this->vObj)) {
+            return $this->vObj->cvHandle;
+        }
+        return null;
     }
 
     /**
@@ -1671,7 +1674,10 @@ class Page extends Collection implements CategoryMemberInterface,
      */
     public function getPageTemplateID()
     {
-        return $this->vObj->pTemplateID;
+        if (isset($this->vObj)) {
+            return $this->vObj->pTemplateID;
+        }
+        return null;
     }
 
     /**
@@ -1953,7 +1959,10 @@ class Page extends Collection implements CategoryMemberInterface,
      */
     public function getCollectionDatePublic()
     {
-        return $this->vObj->cvDatePublic;
+        if (isset($this->vObj)) {
+            return $this->vObj->cvDatePublic;
+        }
+        return null;
     }
 
     /**
@@ -1973,7 +1982,10 @@ class Page extends Collection implements CategoryMemberInterface,
      */
     public function getCollectionDescription()
     {
-        return $this->vObj->cvDescription;
+        if (isset($this->vObj)) {
+            return $this->vObj->cvDescription;
+        }
+        return null;
     }
 
     /**
@@ -4218,7 +4230,7 @@ EOT
                 $b = Block::getByID($row['bID'], $mc, $row['arHandle']);
                 if ($cAcquireComposerOutputControls || !in_array($b->getBlockTypeHandle(), ['core_page_type_composer_control_output'])) {
                     if ($row['btCopyWhenPropagate']) {
-                        $b->duplicate($nc, true);
+                        $b->duplicate($nc, 'duplicate_master');
                     } else {
                         $b->alias($nc);
                     }

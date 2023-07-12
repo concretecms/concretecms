@@ -39,6 +39,16 @@ abstract class AttributeValueTestCase extends ConcreteDatabaseTestCase
         'Groups',
     ];
 
+    /**
+     * @var \Concrete\Core\Attribute\Category\CategoryInterface
+     */
+    protected $category;
+
+    /**
+     * @var \Concrete\Core\Page\Page|\Concrete\Core\Attribute\ObjectInterface
+     */
+    protected $object;
+
     public function setUp(): void
     {
         $service = Core::make('site/type');

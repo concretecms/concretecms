@@ -55,6 +55,12 @@ class Location implements LocationInterface
         $this->url = $url;
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \JsonSerializable::jsonSerialize()
+     */
+    #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
         return [

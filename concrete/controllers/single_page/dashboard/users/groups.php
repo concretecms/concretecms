@@ -128,8 +128,9 @@ class Groups extends DashboardPageController
         );
 
         $result = $this->createSearchResult($query);
-
         $this->renderSearchResult($result);
+        $rootFolder = $this->getRootFolder();
+        $this->setCurrentFolder($rootFolder);
     }
 
     public function preset($presetID = null)

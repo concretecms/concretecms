@@ -382,7 +382,6 @@ class Entry implements \JsonSerializable, PermissionObjectInterface, AttributeOb
     {
         $this->attributes = new ArrayCollection();
         $this->associations = new ArrayCollection();
-        $this->containing_associations = new ArrayCollection();
         $this->exEntryDateCreated = new \DateTime();
         $this->exEntryDateModified = new \DateTime();
     }

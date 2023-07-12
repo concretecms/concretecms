@@ -17,6 +17,7 @@ class EmailValidatorTest extends TestCase
         $this->assertFalse($validator->isValid('x'));
         $this->assertFalse($validator->isValid('example@'));
         $this->assertFalse($validator->isValid('@example.com'));
+        $this->assertFalse($validator->isValid('someone@example.com🍛'));
         $this->assertTrue($validator->isValid('someone@example.com'));
     }
 

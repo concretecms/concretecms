@@ -80,6 +80,6 @@ class FiveSeven extends Parser
      */
     protected function getDefaultPackageMinimumCodeVersion()
     {
-        return '5.7.0'; // https://github.com/concrete5/concrete5/blob/8.5.1/concrete/src/Package/Package.php#L183
+        return '5.7.0'; // https://github.com/concretecms/concretecms/blob/8.5.1/concrete/src/Package/Package.php#L183
     }
 }

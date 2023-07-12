@@ -56,7 +56,7 @@ class DefaultSet extends ColumnSet
      * @return string
      * @noinspection PhpUnused
      */
-    public function getCollectionLevel($logEntry)
+    public static function getCollectionLevel($logEntry)
     {
         return Levels::getLevelDisplayName($logEntry->getLevel());
     }
@@ -66,7 +66,7 @@ class DefaultSet extends ColumnSet
      * @return string
      * @throws \Illuminate\Contracts\Container\BindingResolutionException
      */
-    public function getFormattedMessage($logEntry)
+    public static function getFormattedMessage($logEntry)
     {
         $app = Application::getFacadeApplication();
         /** @var TextService $textHelper */

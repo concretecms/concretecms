@@ -209,24 +209,27 @@ class PasswordValidatorServiceProvider extends Provider
     protected function wrappedRegexValidator($regex, $requirementString)
     {
         $regexValidator = $this->regexValidator($regex, $requirementString);
-        $validator = $this->app->make(ClosureValidator::class, ['validator_closure' =>
-            function (ClosureValidator $validator, $string, ArrayAccess $error = null) use ($regexValidator) {
-                try {
-                    $regexValidator->isValid($string, $error);
-                } catch (\RuntimeException $e) {
-                    if ($error) {
-                        $error[] = $regexValidator::E_DOES_NOT_MATCH;
-                    }
+        $validator = $this->app->make(ClosureValidator::class, [
+            'validator_closure' =>
+                function (ClosureValidator $validator, $string, ArrayAccess $error = null) use ($regexValidator) {
+                    try {
+                        $regexValidator->isValid($string, $error);
+                    } catch (\RuntimeException $e) {
+                        if ($error) {
+                            $error[] = $regexValidator::E_DOES_NOT_MATCH;
+                        }
 
-                    return false;
+                        return false;
+                    }
+                },
+            'requirements_closure' =>
+                function () use ($regexValidator, $requirementString) {
+                    return [
+                        $regexValidator::E_DOES_NOT_MATCH => $requirementString
+                    ];
                 }
-            },
-            function () use ($regexValidator, $requirementString) {
-                return [
-                    $regexValidator::E_DOES_NOT_MATCH => $requirementString
-                ];
-            }
-        ]);
+            ]
+        );
 
         return $validator;
 

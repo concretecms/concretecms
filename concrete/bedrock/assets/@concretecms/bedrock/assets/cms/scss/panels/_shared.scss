@@ -138,7 +138,7 @@ div.ccm-panel-left {
 div.ccm-panel-content {
   bottom: 0;
   left: 0;
-  margin-top: 48px;
+  margin-top: $ccm-toolbar-height;
   overflow: auto;
   padding: 0;
   position: absolute;

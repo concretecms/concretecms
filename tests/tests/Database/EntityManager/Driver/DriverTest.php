@@ -14,6 +14,11 @@ use Concrete\Tests\TestCase;
  */
 class DriverTest extends TestCase
 {
+    /**
+     * @var \Concrete\Core\Database\EntityManager\Driver\Driver
+     */
+    protected $driver;
+
     public function setUp():void
     {
         parent::setUp();

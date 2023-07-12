@@ -77,7 +77,7 @@ class ContextFactory
         if ($pushOutput) {
             $outputs[] = $pushOutput;
         }
-        if ($outputs > 0) {
+        if ($outputs !== []) {
             return new AggregateOutput($outputs);
         } else {
             return new NullOutput();

@@ -83,7 +83,7 @@ class Controller extends GenericOauth2TypeController
             $userID = $data['user_id'];
             if ($userID !== null && $userID !== '') {
                 try {
-                    $this->getBindingService()->clearBinding(null, $userID, 'facebook');
+                    $this->getBindingService()->clearBinding($userID, null, 'facebook');
                 } catch (\Exception $e) {
                     \Log::Error(t('Error detaching account : %s', $e->getMessage()));
                     $this->showError(t('Error detaching account'));

@@ -56,6 +56,12 @@ class Announcement implements AnnouncementInterface
         return 'concrete-announcement-modal';
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \JsonSerializable::jsonSerialize()
+     */
+    #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
         return [

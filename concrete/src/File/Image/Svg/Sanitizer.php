@@ -259,7 +259,9 @@ class Sanitizer
             throw SanitizerException::create(SanitizerException::ERROR_FAILED_TO_PARSE_XML);
         }
 
-        $disabled = libxml_disable_entity_loader(true);
+        // In PHP 8.0 and later, PHP uses libxml versions from 2.9.0, libxml_disable_entity_loader is deprecated.
+        // (it's safe to not call it because we don't set LIBXML_NOENT)
+        $disabled = PHP_VERSION_ID >= 80000 ? null : libxml_disable_entity_loader(true);
         $xml = new DOMDocument();
 
         $error = null;
@@ -270,7 +272,9 @@ class Sanitizer
         } catch (Throwable $x) {
             $error = $x;
         } finally {
-            libxml_disable_entity_loader($disabled);
+            if ($disabled !== null) {
+                libxml_disable_entity_loader($disabled);
+            }
         }
 
         if ($error !== null || $loaded === false) {

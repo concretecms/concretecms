@@ -39,6 +39,12 @@ class ButtonControl implements ControlInterface
         return new ButtonFormatter();
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \JsonSerializable::jsonSerialize()
+     */
+    #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
         $data = [
