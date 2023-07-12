@@ -1,3 +1,82 @@
+# 9.2.1
+
+## New Features
+
+* Added a thumbnail property to the Feature and Feature Link block types (thanks katalysis)
+* File manager image editor now supports full screen mode (thanks mlocati)
+
+## Behavioral Improvements
+
+* Reinstated the ability to attach accounts to external authentication providers on the My Account page.
+* Use User->isRegistered() instead of User->isLoggedIn() throughout Concrete (Thanks mlocati)
+* Top Navigation Bar now honors `replace_link_with_first_in_nav` custom attribute (thanks danklassen)
+* Top Navigation Bar block can now use the site name for branding text if no custom branding text is defined in the block.
+* Dashboard image editor is now larger (thanks mlocati)
+* Minor display improvements
+* First weekday in calendar is now defined by the locale instead of being hard-coded to Sunday (thanks mlocati)
+* Page Selector and User Selector attributes now work better when used with Express label entry display masks/labels.
+* Image editor in Dashboard now reloads an image detail page when an asset is edited (thanks mlocati)
+* Display more details when explaining why a package cannot be installed due to problems in the package controller (thanks mlocati)
+* Dashboard File Details page now reloads when versions are changed (thanks mlocati)
+* Improved appearance of Express Entry Details block.
+* Added optional alphabetical sort to to block type sets using a configuration option (see here: https://github.com/concretecms/concretecms/pull/11292) (thanks mnakalay)
+* Dates displayed in Site Health reports are now properly localized (thanks mlocati)
+* Logs Dashboard page now reloads when logs are cleared (thanks mlocati)
+* Content replacement should be slightly faster when dealing with large amounts of block records.
+
+## Bug Fixes
+
+* Many additional stricter code fixes under PHP 8.2 (thanks mlocati)
+* Fixed: Express form with file upload attributes results in multiple copies of a file in the file manager.
+* Fixed inability to do Board instance editing of individual slots.
+* Fixed inability to view site health reports under certain conditions.
+* Fixed bug where selecting “Force file to download” in a block would result in being unable to un-check and save the setting at a later point (thanks mlocati)
+* Fixed bug where conversations were not getting a unique ID when being created, leading duplicate conversations when being added.
+* Fixed some misnamed migrations (thanks mlocati)
+* Bug fixes to redirect response in GenericOauthTypeController (thanks mlocati)
+* We now properly pass the type object to the authentication type controllers upon instantiation (thanks mlocati)
+* Fixed errors importing files in the incoming directory (thanks JeRoNZ)
+* OAuth service provider: avoid deprecated methods, display errors properly (thanks mlocati)
+* Fixed bug where adding an attribute to a page via the attributes panel would clear out select attribute options set against that page if they existed.
+* Fixed: Using the feature block, if the icon is not selected, an exception occurs with PHP 8.x due to an undefined array index (thanks JeRoNZ)
+* Fixed: Can't bulk edit attributes on page search v9.2 (thanks mlocati)
+* Fix View pages using a specific block type (thanks mlocati)
+* Fixed Social links stacking instead of displaying inline (thanks nikkiklassen)
+* Fixed: Health Check - "Consider enabling logging on tasks." incorrect link
+* Fixed: If a page doesn't have the tags attribute attached to it but has a Tags Block you will get this error when accessing that page (thanks mlocati)
+* Fixed some errors when detaching OAuth2 accounts (thanks mlocati)
+* We now properly pass the item object to user interface menu controllers (thanks mlocati)
+* Multilingual - Exception when try to reload strings (thanks mlocati)
+* Fixed: Fixed attempt to read property "pTemplateID" results in null under some very rare circumstances.
+* PHP 8 Fix: Fix warnings when viewing /dashboard/reports/logs (thanks mlocati)
+* Fixed error when searching Logs by their severity level in the Dashboard (thanks lemonbrain-mk)
+* Fixed bug where Express object added to the API was unavailable in the API if it had been added via the in-page form builder.
+* Fix Undefined property error on PHP 8 in WorkflowAccess class (thanks hissy)
+* Fixed error when attempting to use the Closure password validator (thanks gregheafield)
+* Fix Undefined array key "scheme" in redis drivers (thanks mlocati)
+* Fixed inability to revert page to draft (thanks JeRonZ).
+* Fixed Feature and Feature Link block types not exporting their files or importing them properly when used with the Migration Tool.
+* Fixed: Pages with theme defined preset layouts crash when editing if the theme is changed (thanks JeRoNZ)
+* Fix accessing undefined array index in dialog/block/design.php under certain conditions (thanks mlocati)
+* Fix ckeditor language path & remove declaration variable $useLanguage (thanks hamzaouibacha)
+* Fixed error when using sitemap selector that nodes in the unexpanded areas would not be selected when those areas were expanded (thanks deanL-zuiderlicht)
+* Declare width, height and size in ccmi18n_filemanager object is used in ConcreteFileChooser component so it’s properly localized (thanks hamzaouibacha)
+* Currently active geolocation library is now properly highlighted. (thanks mlocati)
+* When given a list of topic node ID's such as tid:54,tid:56, the method updateAttributeValueFromTextRepresentation() only imports the last ID in the list when importing content (thanks JohnTheFish)
+
+## Developer Improvements
+
+* Fixed: The email validation with the EmailValidator class gets passed even if it contains emojis (thanks biplobice)
+* Developers can now define the minimum PHP version required for a Concrete package with the `getPhpVersionRequired` in their package controllers (thanks mlocati)
+* Developers can now specify if certain block content fields ought to be run through the content importer replaceContent method, by including them in the `$btExportContentColumns` protected array in their block controller.
+* Fix support for `C5_ENVIRONMENT_ONLY` env variable (thanks mlocati)
+* Move the `on_user_logout` event at the end of the logout (thanks mlocati)
+* Upgrade `primal/color` third party color parsing library for better PHP 8 compatibility (thanks mlocati)
+* Add `on_before_user_logout`, enable customization of post-logout URL (thanks mlocati)
+* icon-bar class now included in the Navigation fallback asset so themes that the Top Navigatiaon Bar block will support it when using fallback assets.
+* Add ability to column at a specific position (thanks biplobice)
+* Added new MemoryOutput class for tasks for diagnostic purposes (thanks mlocati)
+
 # 9.2.0
 
 ## Major New Features
