@@ -23,6 +23,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
  * @var int $todayDateTimestamp
  * @var Concrete\Core\Calendar\Event\Formatter\DateFormatter $dateFormatter
  * @var Concrete\Core\Calendar\Event\Formatter\LinkFormatter $linkFormatter
+ * @var int[] $weekdays
  * @var int|null $initialEdit
  */
 
@@ -124,8 +125,8 @@ View::element('calendar/header', array(
     <thead>
     <tr>
         <?php
-        for($weekday = 0; $weekday < 7; $weekday++) {
-            ?><td width="<?= 100 / 7?>%"><h4><?= PunicCalendar::getWeekdayName($weekday, 'abbreviated', '', true) ?></h4></td><?php
+        foreach ($weekdays as $weekday) {
+            ?><td width="<?= 100 / 7 ?>%"><h4><?= PunicCalendar::getWeekdayName($weekday, 'abbreviated', '', true) ?></h4></td><?php
         }
         ?>
     </tr>
@@ -135,10 +136,16 @@ View::element('calendar/header', array(
         <?php
         $cols = 0;
         $isToday = false;
-        for ($i = 1 - $firstDayInMonthNum; $i <= $daysInMonth; ++$i) {
+        $i = 0;
+        while ($i < $daysInMonth) {
             if ($cols >= 7) {
                 echo '</tr><tr>';
                 $cols = 0;
+            }
+            if ($i === 0 && $weekdays[$cols] === $firstDayInMonthNum) {
+                $i = 1;
+            } elseif ($i > 0) {
+                $i++;
             }
             ++$cols;
             $isToday = (date('Y') == $year && $month == date('m') && $i == date('j'));

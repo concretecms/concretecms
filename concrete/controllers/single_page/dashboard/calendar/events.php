@@ -8,6 +8,7 @@ use Concrete\Core\Calendar\Calendar;
 use Concrete\Core\Calendar\CalendarServiceProvider;
 use URL;
 use Concrete\Core\Calendar\Utility\Preferences;
+use Punic\Calendar as PunicCalendar;
 
 class Events extends DashboardCalendarPageController
 {
@@ -82,7 +83,11 @@ class Events extends DashboardCalendarPageController
         $serviceProvider = $this->app->make(CalendarServiceProvider::class);
         $this->set('dateFormatter', $serviceProvider->getDateFormatter());
         $this->set('linkFormatter', $serviceProvider->getLinkFormatter());
-
+        $weekdays = [PunicCalendar::getFirstWeekday()];
+        for ($index = 1; $index <= 6; $index++) {
+            $weekdays[$index] = ($weekdays[$index - 1] + 1) % 7;
+        }
+        $this->set('weekdays', $weekdays);
         // Process the given edit ID if there is one
         $initialEdit = (int) $this->request->get('edit');
         $this->set('initialEdit', $initialEdit > 0 ? $initialEdit : null);
