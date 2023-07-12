@@ -1,13 +1,30 @@
 <?php
 
-defined('C5_EXECUTE') or die("Access Denied.");
-
 use Concrete\Core\Calendar\Event\EventOccurrence;
+use Concrete\Core\View\View;
 use Punic\Calendar as PunicCalendar;
 
-if (!isset($topic)) {
-    $topic = null;
-}
+defined('C5_EXECUTE') or die('Access Denied.');
+
+/**
+ * @var Concrete\Core\Tree\Node\Type\Topic[]|null $topics
+ * @var Concrete\Core\Entity\Calendar\Calendar[] $calendars
+ * @var Concrete\Core\Permission\Checker $calendarPermissions
+ * @var Concrete\Core\Entity\Calendar\Calendar $calendar
+ * @var Concrete\Core\Tree\Node\Type\Topic|null $topic
+ * @var string $monthText 'January', ...
+ * @var int|string $month 1 to 12
+ * @var int|string $year
+ * @var int $daysInMonth
+ * @var int $firstDayInMonthNum
+ * @var League\Url\UrlInterface|string $nextLink
+ * @var League\Url\UrlInterface|string $previousLink
+ * @var League\Url\UrlInterface|string $todayLink
+ * @var int $todayDateTimestamp
+ * @var Concrete\Core\Calendar\Event\Formatter\DateFormatter $dateFormatter
+ * @var Concrete\Core\Calendar\Event\Formatter\LinkFormatter $linkFormatter
+ * @var int|null $initialEdit
+ */
 
 Loader::element('calendar/header', array(
     'calendar' => $calendar,

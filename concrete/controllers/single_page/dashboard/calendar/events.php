@@ -73,7 +73,7 @@ class Events extends DashboardCalendarPageController
         $this->set('monthText', $dh->date('F', $monthYearTimestamp, $todayDate->getTimezone()));
         $this->set('month', $month);
         $this->set('year', $year);
-        $this->set('daysInMonth', date('t', $monthYearTimestamp));
+        $this->set('daysInMonth', (int) date('t', $monthYearTimestamp));
         $this->set('firstDayInMonthNum', $firstDayInMonthNum);
         $this->set('nextLink', $nextLink);
         $this->set('previousLink', $previousLink);
