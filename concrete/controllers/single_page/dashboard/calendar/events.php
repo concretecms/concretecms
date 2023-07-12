@@ -47,6 +47,7 @@ class Events extends DashboardCalendarPageController
         $previousLink = URL::to('/dashboard/calendar/events/view', $calendar->getID(), $previousLinkYear, $previousLinkMonth);
         $todayLink = URL::to('/dashboard/calendar/events/view', $calendar->getID());
 
+        $this->set('topic', null);
         if ($topic_id) {
             $topic_id = intval($topic_id, 10);
             $topic = Node::getByID($topic_id);
@@ -84,9 +85,7 @@ class Events extends DashboardCalendarPageController
 
         // Process the given edit ID if there is one
         $initialEdit = (int) $this->request->get('edit');
-        if ($initialEdit > 0) {
-            $this->set('initialEdit', $initialEdit);
-        }
+        $this->set('initialEdit', $initialEdit > 0 ? $initialEdit : null);
 
         $editor = $this->app->make('editor');
         $editor->requireEditorAssets();
