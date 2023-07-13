@@ -301,7 +301,7 @@ class PageList extends DatabaseItemList implements PagerProviderInterface, Pagin
 
     public function getTotalResults()
     {
-        if ($this->permissionsChecker === -1) {
+        if (isset($this->permissionsChecker) && $this->permissionsChecker === -1) {
             $query = $this->deliverQueryObject();
             // We need to reset the potential custom order by here because otherwise, if we've added
             // items to the select parts, and we're ordering by them, we get a SQL error
@@ -331,21 +331,22 @@ class PageList extends DatabaseItemList implements PagerProviderInterface, Pagin
      */
     public function getResult($queryRow)
     {
+        $permissionsDisabled = isset($this->permissionsChecker) && $this->permissionsChecker === -1;
         $c = Page::getByID($queryRow['cID']);
         if (is_object($c) && $this->checkPermissions($c)) {
             if ($this->pageVersionToRetrieve == self::PAGE_VERSION_RECENT) {
                 $cp = new \Permissions($c);
-                if ($cp->canViewPageVersions() || $this->permissionsChecker === -1) {
+                if ($cp->canViewPageVersions() || $permissionsDisabled) {
                     $c->loadVersionObject('RECENT');
                 }
             } elseif ($this->pageVersionToRetrieve == self::PAGE_VERSION_SCHEDULED) {
                 $cp = new \Permissions($c);
-                if ($cp->canViewPageVersions() || $this->permissionsChecker === -1) {
+                if ($cp->canViewPageVersions() || $permissionsDisabled) {
                     $c->loadVersionObject('SCHEDULED');
                 }
             } elseif ($this->pageVersionToRetrieve == self::PAGE_VERSION_RECENT_UNAPPROVED) {
                 $cp = new \Permissions($c);
-                if ($cp->canViewPageVersions() || $this->permissionsChecker === -1) {
+                if ($cp->canViewPageVersions() || $permissionsDisabled) {
                     $c->loadVersionObject('RECENT_UNAPPROVED');
                 }
             } else {
