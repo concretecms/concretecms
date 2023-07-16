@@ -18,5 +18,6 @@
         <field name="includeNavigationDropdowns" type="boolean" />
         <field name="includeSearchInput" type="boolean" />
         <field name="searchInputFormActionPageID" type="integer" />
+        <field name="toggleVerticalHorizontal" type="boolean" />
     </table>
 </schema>

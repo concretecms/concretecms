@@ -19,6 +19,10 @@ if ($includeBrandText && $includeBrandLogo) {
         <div class="mb-3">
             <legend><?=t('Options')?></legend>
             <div class="form-check form-switch">
+                <input type="checkbox" class="form-check-input" id="toggleVerticalHorizontal" name="toggleVerticalHorizontal" value="1" v-model="toggleVerticalHorizontal">
+                <label class="form-check-label" for="toggleVerticalHorizontal"><?=t('Vertical [off] or horizontal [on] menu.')?></label>
+            </div>
+            <div class="form-check form-switch">
                 <input type="checkbox" class="form-check-input" id="includeNavigation" name="includeNavigation" value="1" v-model="includeNavigation">
                 <label class="form-check-label" for="includeNavigation"><?=t('Show pages in the navigation bar.')?></label>
             </div>
@@ -87,6 +91,7 @@ if ($includeBrandText && $includeBrandLogo) {
             el: 'div[data-view=edit-top-navigation-bar-block]',
             components: config.components,
             data: {
+                toggleVerticalHorizontal: <?=$toggleVerticalHorizontal ? 'true' : 'false'?>,
                 includeTransparency: <?=$includeTransparency ? 'true' : 'false'?>,
                 includeNavigation: <?=$includeNavigation ? 'true' : 'false'?>,
                 includeNavigationDropdowns: <?=$includeNavigationDropdowns ? 'true' : 'false'?>,

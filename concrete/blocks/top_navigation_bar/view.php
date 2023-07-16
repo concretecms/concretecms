@@ -3,7 +3,7 @@ $c = Page::getCurrentPage();
 ?>
 
 <div class="ccm-block-top-navigation-bar" <?php if ($includeTransparency) { ?>style="display: none" data-transparency="navbar"<?php } ?>>
-    <nav class="navbar navbar-expand-lg navbar-light <?php if ($includeStickyNav && !$c->isEditMode()) { ?>fixed-top<?php } ?>">
+    <nav class="navbar <?php if ($toggleVerticalHorizontal) { ?>navbar-expand-lg<?php } ?> navbar-light <?php if ($includeStickyNav && !$c->isEditMode()) { ?>fixed-top<?php } ?>">
         <div class="container-fluid">
             <a class="navbar-brand" href="<?=$home->getCollectionLink()?>">
                 <?php if ($logo && ($includeBrandLogo && $includeBrandText)) { ?>

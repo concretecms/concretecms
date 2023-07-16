@@ -74,6 +74,15 @@ class Controller extends BlockController implements UsesFeatureInterface, FileTr
     public $includeSearchInput;
 
     /**
+     * @var bool|int|string|null
+     *
+     * True => Horizontal menu
+     * False => Vertical menu
+     * Default: True
+     */
+    public $toggleVerticalHorizontal;
+
+    /**
      * @var int|string|null
      */
     public $searchInputFormActionPageID;
@@ -121,6 +130,7 @@ class Controller extends BlockController implements UsesFeatureInterface, FileTr
         $site = $this->app->make('site')->getSite();
         $brandingText = $site->getSiteName();
 
+        $this->set('toggleVerticalHorizontal', true); // Horizontal by default
         $this->set('includeTransparency', false);
         $this->set('includeStickyNav', false);
         $this->set('includeNavigation', true);
@@ -262,6 +272,7 @@ class Controller extends BlockController implements UsesFeatureInterface, FileTr
     public function save($args)
     {
         $data = [];
+        $data['toggleVerticalHorizontal'] = !empty($args['toggleVerticalHorizontal']) ? 1 : 0;
         $data['includeNavigation'] = !empty($args['includeNavigation']) ? 1 : 0;
         $data['includeNavigationDropdowns'] = !empty($args['includeNavigationDropdowns']) ? 1 : 0;
         $data['includeTransparency'] = !empty($args['includeTransparency']) ? 1 : 0;
