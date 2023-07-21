@@ -60,10 +60,21 @@ class AnnouncementService implements ApplicationAwareInterface
     {
         $db = $this->entityManager->getConnection();
         // Return announcements that this user has NOT seen.
-        $r = $db->executeQuery('select id from Announcements a left join AnnouncementUserViews v on (a.id = v.announcement_id and v.uID = 1) where v.uID is null');
+        $r = $db->executeQuery(
+            'select id from Announcements a left join AnnouncementUserViews v 
+    on (a.id = v.announcement_id and v.uID = ?) where v.uID is null',
+            [
+                $user->getUserID()
+            ]
+        );
         $announcements = [];
         while ($row = $r->fetchAssociative()) {
-            $announcements[] = $this->entityManager->find(Announcement::class, $row['id']);
+            $announcement = $this->entityManager->find(Announcement::class, $row['id']);
+            if ($announcement
+                && ($announcementController = $announcement->getController())
+                && $announcementController->shouldDisplayAnnouncementToUser($user)) {
+                $announcements[] = $announcement;
+            }
         }
         return $announcements;
     }
@@ -86,7 +97,6 @@ class AnnouncementService implements ApplicationAwareInterface
             }
         }
         return null;
-
     }
 
     public function markAnnouncementAsViewed(string $announcementHandle, User $user)
@@ -112,9 +122,10 @@ class AnnouncementService implements ApplicationAwareInterface
 
             $announcementController = $announcement->getController();
             $announcementController->onViewAnnouncement($user);
-
         } else {
-            throw new \Exception(t('Unable to mark announcement as viewed - %s - no announcement found.', $announcementHandle));
+            throw new \Exception(
+                t('Unable to mark announcement as viewed - %s - no announcement found.', $announcementHandle)
+            );
         }
     }
 }

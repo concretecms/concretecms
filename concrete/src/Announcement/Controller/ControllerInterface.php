@@ -16,7 +16,7 @@ interface ControllerInterface
      * @param array $announcements
      * @return bool
      */
-    public function shouldDisplayAnnouncementToUser(User $user, array $announcements): bool;
+    public function shouldDisplayAnnouncementToUser(User $user): bool;
 
     public function onViewAnnouncement(User $user);
 

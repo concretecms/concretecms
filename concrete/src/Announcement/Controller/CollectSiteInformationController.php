@@ -14,7 +14,7 @@ class CollectSiteInformationController extends AbstractController
 
     use SingleSlideTrait;
 
-    public function shouldDisplayAnnouncementToUser(User $user, array $announcements): bool
+    public function shouldDisplayAnnouncementToUser(User $user): bool
     {
         return $user->isSuperUser();
     }
