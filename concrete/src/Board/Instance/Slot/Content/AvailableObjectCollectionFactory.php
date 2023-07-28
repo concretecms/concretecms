@@ -86,6 +86,7 @@ class AvailableObjectCollectionFactory
             $slots[$i] = $availableObjects;
         }
 
+        $collections = [];
         if ($contentSlots > 1) {
             $combinations = $this->generateCombinations($slots);
             foreach($combinations as $combination) {
