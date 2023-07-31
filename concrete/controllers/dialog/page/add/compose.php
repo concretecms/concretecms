@@ -7,6 +7,8 @@ use Concrete\Core\Page\EditResponse;
 use Concrete\Core\Page\Template;
 use Concrete\Core\Page\Type\Type;
 use Concrete\Core\View\DialogView;
+use Concrete\Core\Support\Facade\Application;
+use Concrete\Core\Config\Repository\Repository;
 use Page;
 use Permissions;
 
@@ -93,7 +95,10 @@ class Compose extends Controller
                     $dateTime = new DateTime();
                     $publishDateTime = $dateTime->translate('cvPublishDate');
                     $publishEndDateTime = $dateTime->translate('cvPublishEndDate');
-                    if ($this->request->request->get('keepOtherScheduling')) {
+                    $app = Application::getFacadeApplication();
+                    $appConfig = $app->make(Repository::class);
+                    $defaultKeepLiveVersionApproved = (bool)$appConfig->get('concrete.misc.change_default_behaviour_to_keep_live_version_approved');
+                    if ($defaultKeepLiveVersionApproved xor (bool)$this->request->request->get('keepOtherScheduling')) {
                         $keepOtherScheduling = true;
                     }
                 }

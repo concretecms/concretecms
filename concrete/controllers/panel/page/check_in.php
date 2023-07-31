@@ -12,6 +12,8 @@ use Page;
 use Concrete\Core\Workflow\Request\ApprovePageRequest as ApprovePagePageWorkflowRequest;
 use PageEditResponse;
 use Concrete\Core\Http\ResponseFactoryInterface;
+use Concrete\Core\Support\Facade\Application;
+use Concrete\Core\Config\Repository\Repository;
 
 class CheckIn extends BackendInterfacePageController
 {
@@ -105,7 +107,10 @@ class CheckIn extends BackendInterfacePageController
                         $dateTime = new DateTime();
                         $publishDateTime = $dateTime->translate('cvPublishDate');
                         $publishEndDateTime = $dateTime->translate('cvPublishEndDate');
-                        if ($this->request->request->get('keepOtherScheduling')) {
+                        $app = Application::getFacadeApplication();
+                        $appConfig = $app->make(Repository::class);
+                        $defaultKeepLiveVersionApproved = (bool)$appConfig->get('concrete.misc.change_default_behaviour_to_keep_live_version_approved');
+                        if ($defaultKeepLiveVersionApproved xor (bool)$this->request->request->get('keepOtherScheduling')) {
                             $pkr->setKeepOtherScheduling(true);
                         }
                         $pkr->scheduleVersion($publishDateTime, $publishEndDateTime);

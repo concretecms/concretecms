@@ -10,6 +10,8 @@ use Concrete\Core\Page\Type\Type as PageType;
 use Concrete\Core\Page\Page;
 use Concrete\Core\User\User;
 use Concrete\Core\View\View;
+use Concrete\Core\Support\Facade\Application;
+use Concrete\Core\Config\Repository\Repository;
 use Exception;
 
 class Composer extends BackendInterfacePageController
@@ -92,7 +94,10 @@ class Composer extends BackendInterfacePageController
                     $dateTime = new DateTime();
                     $publishDateTime = $dateTime->translate('cvPublishDate');
                     $publishEndDateTime = $dateTime->translate('cvPublishEndDate');
-                    if ($this->request->request->get('keepOtherScheduling')) {
+                    $app = Application::getFacadeApplication();
+                    $appConfig = $app->make(Repository::class);
+                    $defaultKeepLiveVersionApproved = (bool)$appConfig->get('concrete.misc.change_default_behaviour_to_keep_live_version_approved');
+                    if ($defaultKeepLiveVersionApproved xor (bool)$this->request->request->get('keepOtherScheduling')) {
                         $keepOtherScheduling = true;
                     }
                 }
