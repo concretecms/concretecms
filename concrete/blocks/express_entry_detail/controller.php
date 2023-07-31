@@ -13,6 +13,7 @@ use Concrete\Core\Html\Service\Seo;
 use Concrete\Core\Support\Facade\Express;
 use Concrete\Core\Support\Facade\Facade;
 use Concrete\Core\Url\SeoCanonical;
+use Doctrine\ORM\EntityManager;
 use Exception;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
@@ -161,6 +162,36 @@ class Controller extends BlockController implements UsesFeatureInterface
                 $this->view();
             }
         }
+    }
+
+    public function getSearchableContent()
+    {
+        // The entity manager doesn't appear to be available in the CLI version of task running? At least not
+        // at the block level when retrieving searchable content? So let's manually create it.
+        if (!isset($this->entityManager)) {
+            $this->entityManager = $this->app->make(EntityManager::class);
+        }
+        // Let's run the view() method so we can populate the renderer object and the entry that we're supposed
+        // to render.
+        $this->view();
+
+        // Now, if we do indeed have the renderer and entry defined within the block controller, let's retrieve them.
+        if (($renderer = $this->get('renderer')) && ($entry = $this->get('entry'))) {
+
+            // Since we have the entry and renderer, let's actually render the thing. This will result in printing
+            // out actual HTML, so let's output-buffer it.
+            ob_start();
+            $renderer->render($entry);
+            $content = ob_get_contents();
+            ob_end_clean();
+
+            // Finally, let's do some quirk and dirty removal of HTML and the massive newlines that
+            // such an operation will create. NOTE: This is not meant to be perfect or meant to look
+            // particularly beautiful if rendered - it is meant to populate the search index.
+            $content = str_replace(["\r", "\n"], " ", strip_tags($content));
+            return $content;
+        }
+        return '';
     }
 
     public function action_load_entity_data()
