@@ -164,7 +164,7 @@ class CollectionAttributeControl extends Control
             $controller = $ak->getController();
             $controller->setAttributeObject($c->getVersionObject());
             $value = $controller->createAttributeValueFromRequest();
-            $c->setAttribute($ak, $value);
+            $c->setAttribute($ak, $value, false);
         }
     }
 
