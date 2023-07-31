@@ -773,6 +773,12 @@ return [
         'help_overlay' => true,
         'require_version_comments' => false,
         /*
+        * Inverts the "Keep Live Version Approved"-Toggle-Button behaviour on the site page version scheduling element
+        *
+        * @var bool
+        */
+        'change_default_behaviour_to_keep_live_version_approved' => false,
+        /*
          * Control whether a block type can me moved to different block type sets
          *
          * @var bool
