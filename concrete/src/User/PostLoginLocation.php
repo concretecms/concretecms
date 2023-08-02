@@ -91,7 +91,7 @@ class PostLoginLocation
     /**
      * Store in the session the post-login URL or page.
      *
-     * @param string|\League\URL\URLInterface|\Concrete\Core\Page\Page|int $url the URL to redirect users to after login
+     * @param string|\League\Url\UrlInterface|\Concrete\Core\Page\Page|int $url the URL to redirect users to after login
      */
     public function setSessionPostLoginUrl($url)
     {
