@@ -7,8 +7,6 @@ use Concrete\Core\Http\ResponseFactoryInterface;
 use Concrete\Core\Page\Desktop\DesktopList;
 use Concrete\Core\Page\Page;
 use Concrete\Core\Site\Service;
-use Concrete\Core\Support\Facade\Application;
-use Concrete\Core\Support\Facade\Site;
 use Concrete\Core\Url\Resolver\Manager\ResolverManagerInterface;
 use Concrete\Core\Utility\Service\Validation\Numbers;
 use Symfony\Component\HttpFoundation\Response;
