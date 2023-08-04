@@ -23,14 +23,12 @@ if (!isset($authTypeParams)) {
 /* @var Key[] $required_attributes */
 
 $attribute_mode = (isset($required_attributes) && count($required_attributes));
-
-// Determine login header title
-$title = t('Please sign in here.');
-if ($attribute_mode) {
-    $title = t('Required Attributes');
-} elseif (isset($user) && $user->isRegistered()) {
-    $title = t('You are already logged in.');
+$site = app('site')->getSite() ?? null;
+$siteName = '';
+if ($site) {
+    $siteName = $site->getSiteName();
 }
+
 ?>
 
 <div class="login-page">
@@ -52,10 +50,9 @@ if ($attribute_mode) {
                     <h2 class="login-page-title">
                         <?php
                         if (!$attribute_mode) {
-                            echo t('Welcome back!');
+                            echo t('Sign in to <b>%s</b>', $siteName);
                         }
                         ?>
-                        <?= $title; ?>
                     </h2>
                 </div>
             </div>
@@ -90,20 +87,29 @@ if ($attribute_mode) {
                 <div class="col-12">
                     <?php
                     $i = 0;
-                    foreach ($activeAuths as $auth) {
-                        ?>
-                        <div data-handle="<?= $auth->getAuthenticationTypeHandle(); ?>" class="authentication-type authentication-type-<?= $auth->getAuthenticationTypeHandle(); ?>">
-                            <?php $auth->renderForm($authTypeElement ?: 'form', $authTypeParams ?: []); ?>
-                        </div>
-                        <?php
-                        if ($i == 0 && count($activeAuths) > 1 && Config::get('concrete.user.registration.enabled')) {
-                            echo '<div class="text-center" style="margin-bottom: 5px;">';
-                            echo t('or');
-                            echo '</div>';
-                        } elseif ($i == 0 && count($activeAuths) > 1) {
-                            echo '<hr>';
+                    if ($user->isRegistered()) { ?>
+
+                        <div class="lead text-center mb-5"><?=t('You are already logged in.')?></div>
+
+                        <div class="d-grid ms-5 me-5"><a href="<?=URL::to('/')?>" class="btn btn-outline-secondary"><?=t('Return to Home')?></a></div>
+
+                    <?php
+                    } else {
+                        foreach ($activeAuths as $auth) {
+                            ?>
+                            <div data-handle="<?= $auth->getAuthenticationTypeHandle(); ?>" class="authentication-type authentication-type-<?= $auth->getAuthenticationTypeHandle(); ?>">
+                                <?php $auth->renderForm($authTypeElement ?: 'form', $authTypeParams ?: []); ?>
+                            </div>
+                            <?php
+                            if ($i == 0 && count($activeAuths) > 1 && Config::get('concrete.user.registration.enabled')) {
+                                echo '<div class="text-center" style="margin-bottom: 5px;">';
+                                echo t('or');
+                                echo '</div>';
+                            } elseif ($i == 0 && count($activeAuths) > 1) {
+                                echo '<hr>';
+                            }
+                            ++$i;
                         }
-                        ++$i;
                     }
                     ?>
                 </div>
