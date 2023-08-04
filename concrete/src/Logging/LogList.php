@@ -125,7 +125,7 @@ class LogList extends ItemList implements PagerProviderInterface, PaginationProv
 
     public function getTotalResults()
     {
-        if ($this->permissionsChecker === -1) {
+        if (isset($this->permissionsChecker) && $this->permissionsChecker === -1) {
             return $this->deliverQueryObject()
                 ->resetQueryParts(['groupBy', 'orderBy'])
                 ->select('count(distinct l.logID)')

@@ -5,6 +5,30 @@ use Concrete\Core\Foundation\ConcreteObject;
 
 class Description extends ConcreteObject
 {
+    /**
+     * @var ?string
+     * @deprecated Will become protected
+     */
+    public $text = null;
+
+    /**
+     * @var ?string
+     * @deprecated Will become protected
+     */
+    public $emailtext = null;
+
+    /**
+     * @var ?string
+     * @deprecated Will become protected
+     */
+    public $status = null;
+
+    /**
+     * @var ?string
+     * @deprecated Will become protected
+     */
+    public $incontext = null;
+
     public function getDescription()
     {
         return $this->text;

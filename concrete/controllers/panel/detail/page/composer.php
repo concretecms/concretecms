@@ -98,7 +98,8 @@ class Composer extends BackendInterfacePageController
                 }
 
                 $pagetype->publish($c, $publishDateTime, $publishEndDateTime, $keepOtherScheduling);
-                $ptr->setRedirectURL($this->app->make('helper/navigation')->getLinkToCollection($c));
+                $nc = Page::getByID($c->getCollectionID(), 'ACTIVE');
+                $ptr->setRedirectURL($this->app->make('helper/navigation')->getLinkToCollection($nc));
             }
             $ptr->outputJSON();
         } else {

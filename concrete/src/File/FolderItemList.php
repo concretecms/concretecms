@@ -366,7 +366,6 @@ class FolderItemList extends AttributedItemList implements PagerProviderInterfac
                      */
                     if (!$pa->validateAccessEntities($accessEntitiesWithoutFileUploader)) {
                         $query
-                            ->leftJoin('tf', 'Files', 'f', 'tf.fID = f.fID')
                             ->andWhere('(f.uID = :fileUploaderID OR f.fOverrideSetPermissions = 1) OR nt.treeNodeTypeHandle != \'file\'')
                             ->setParameter('fileUploaderID', $u->getUserID())
                         ;

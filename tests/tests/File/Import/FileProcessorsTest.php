@@ -10,6 +10,7 @@ use Concrete\Core\File\Import\Processor\SvgProcessor;
 use Concrete\Core\Support\Facade\Application;
 use Concrete\TestHelpers\File\FileStorageTestCase;
 use Exception;
+use Imagine\Image\Metadata\ExifMetadataReader;
 
 class FileProcessorsTest extends FileStorageTestCase
 {
@@ -87,6 +88,9 @@ class FileProcessorsTest extends FileStorageTestCase
 
     public function testImageAutorotator()
     {
+        if (!ExifMetadataReader::isSupported()) {
+            $this->markTestSkipped(ExifMetadataReader::getUnsupportedReason());
+        }
         $file = DIR_TESTS . '/assets/File/Import/19x100-exif-rotated-6.jpg';
         $unrotatedWidth = 19;
         $unrotatedHeight = 100;

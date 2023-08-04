@@ -48,7 +48,13 @@ class PresetLayout extends Layout
 
     public function getDisplayName()
     {
-        return t('%s Layout Preset', $this->getPresetObject()->getName());
+        $presetObject = $this->getPresetObject();
+        if ($presetObject === null) {
+            $name = t('Unknown');
+        } else {
+           $name = $presetObject->getName();
+        }
+        return t('%s Layout Preset', $name);
     }
 
     protected function loadColumnNumber()

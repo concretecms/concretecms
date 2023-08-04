@@ -97,6 +97,13 @@ abstract class Package implements LocalizablePackageInterface
     const E_PACKAGE_THEME_ACTIVE = 21;
 
     /**
+     * Error code: This package requires PHP version %1$s or greater (the current PHP version is %2$s).
+     *
+     * @var int
+     */
+    const E_PACKAGE_PHP_VERSION = 22;
+
+    /**
      * Absolute path to the /concrete/packages directory.
      *
      * @var string
@@ -181,6 +188,15 @@ abstract class Package implements LocalizablePackageInterface
      * @var string
      */
     protected $appVersionRequired = '5.7.0';
+
+    /**
+     * The minimum PHP version compatible with the package.
+     * Override this value according to the minimum required version for your package.
+     *
+     * @var string
+     * @var string
+     */
+    protected $phpVersionRequired = '';
 
     /**
      * Override this value and set it to true if your package clears all existing website content when it's being installed.
@@ -455,6 +471,21 @@ abstract class Package implements LocalizablePackageInterface
     public function getApplicationVersionRequired()
     {
         return $this->appVersionRequired;
+    }
+
+    /**
+     * Get the minimum PHP version compatible with the package.
+     *
+     * @return string
+     *
+     * @example '' if the package is compatible with any PHP version that's already compatible with the core
+     * @example '8' if the package requires PHP 8.0.0 and later
+     * @example '8.1' if the package requires PHP 8.1.0 and later
+     * @example '8.1.20' if the package requires PHP 8.1.20 and later
+     */
+    public function getPHPVersionRequired(): string
+    {
+        return $this->phpVersionRequired;
     }
 
     /**
@@ -773,7 +804,7 @@ abstract class Package implements LocalizablePackageInterface
 
         // Step 1 does that package exist ?
         if ($this instanceof BrokenPackage) {
-            $errors->add($this->getErrorText(self::E_PACKAGE_NOT_FOUND));
+            $errors->add($this->getInstallErrorMessage());
         } elseif ($this->getPackageHandle() === '' || !is_dir($this->getPackagePath())) {
             $errors->add($this->getErrorText(self::E_PACKAGE_NOT_FOUND));
         }
@@ -791,6 +822,10 @@ abstract class Package implements LocalizablePackageInterface
             $applicationVersionRequired = $this->getApplicationVersionRequired();
             if (version_compare(APP_VERSION, $applicationVersionRequired, '<')) {
                 $errors->add($this->getErrorText([self::E_PACKAGE_VERSION, $applicationVersionRequired]));
+            }
+            $phpVersionRequired = $this->getPHPVersionIDRequired();
+            if ($phpVersionRequired !== null && $phpVersionRequired > PHP_VERSION_ID) {
+                $errors->add($this->getErrorText([self::E_PACKAGE_PHP_VERSION, $this->getPHPVersionRequired(), PHP_VERSION]));
             }
 
             // Step 4 - Check for package dependencies
@@ -1179,6 +1214,7 @@ abstract class Package implements LocalizablePackageInterface
                 self::E_PACKAGE_MIGRATE_BACKUP => t('Unable to backup old package directory to %s', $config->get('concrete.misc.package_backup_directory')),
                 self::E_PACKAGE_INVALID_APP_VERSION => t('This package isn\'t currently available for this version of Concrete. Please contact the maintainer of this package for assistance.'),
                 self::E_PACKAGE_THEME_ACTIVE => t('This package contains the active site theme, please change the theme before uninstalling.'),
+                self::E_PACKAGE_PHP_VERSION => t('This package requires PHP version %1$s or greater (the current PHP version is %2$s).'),
             ];
             if (isset($dictionary[$errorCode])) {
                 $result = $dictionary[$errorCode];
@@ -1210,5 +1246,28 @@ abstract class Package implements LocalizablePackageInterface
                 @unlink($proxyFileName);
             }
         }
+    }
+
+    /**
+     * Get the minimum PHP version compatible with the package.
+     *
+     * @return int|null
+     *
+     * @example null if the package is compatible with any PHP version that's already compatible with the core
+     * @example 80000 if the package requires PHP 8.0.0 and later
+     * @example 80100 if the package requires PHP 8.1.0 and later
+     * @example 80120 if the package requires PHP 8.1.20 and later
+     */
+    protected function getPHPVersionIDRequired(): ?int
+    {
+        $matches = null;
+        if (!preg_match('/^(?<major>\d+)(\.(?<minor>\d+)(\.(?<patch>\d+))?)?$/', $this->getPHPVersionRequired(), $matches)) {
+            return null;
+        }
+        $major = (int) $matches['major'];
+        $minor = empty($matches['minor']) ? 0 : (int) $matches['minor'];
+        $patch = empty($matches['patch']) ? 0 : (int) $matches['patch'];
+
+        return $major * 10000 + $minor * 100 + $patch;
     }
 }

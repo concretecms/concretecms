@@ -3,13 +3,13 @@
 namespace Concrete\Core\Package;
 
 use Concrete\Core\Application\Application;
-use Concrete\Core\Database\EntityManager\Provider\PackageProviderFactory;
 use Concrete\Core\Database\EntityManagerConfigUpdater;
+use Concrete\Core\Database\EntityManager\Provider\PackageProviderFactory;
 use Concrete\Core\Error\ErrorList\ErrorList;
+use Concrete\Core\Foundation\ClassAutoloader;
 use Concrete\Core\Localization\Localization;
 use Concrete\Core\User\User;
 use Doctrine\ORM\EntityManagerInterface;
-use Concrete\Core\Foundation\ClassAutoloader;
 use Throwable;
 
 /**
@@ -275,15 +275,17 @@ class PackageService
             $class = '\\Concrete\\Package\\' . camelcase($pkgHandle) . '\\Controller';
             $packageController = null;
             try {
-                $cl = $this->application->make($class);
-                if ($cl instanceof Package) {
-                    $packageController = $cl;
+                $packageController = $this->application->make($class);
+                if (!$packageController instanceof Package) {
+                    $packageController = null;
+                    $errorDetails = t('The package controller does not extend the PHP class %s', Package::class);
                 }
-            } catch (Throwable $_) {
+            } catch (Throwable $x) {
+                $errorDetails = $x->getMessage();
             }
             if ($packageController === null) {
                 $classAutoloader->unregisterPackage($pkgHandle);
-                $packageController = $this->application->make(BrokenPackage::class, ['pkgHandle' => $pkgHandle]);
+                $packageController = $this->application->make(BrokenPackage::class, ['pkgHandle' => $pkgHandle, 'errorDetails' => $errorDetails]);
             } else {
                 $classAutoloader->registerPackageController($packageController);
             }

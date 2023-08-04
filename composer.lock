@@ -6201,16 +6201,16 @@
         },
         {
             "name": "primal/color",
-            "version": "1.0.1",
+            "version": "1.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrimalPHP/Color.git",
-                "reference": "dca054972fd09cba33f51675878030305b85030a"
+                "reference": "f1b30498cc6c9fdeb63aefe01ea3b92e7a0a4661"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrimalPHP/Color/zipball/dca054972fd09cba33f51675878030305b85030a",
-                "reference": "dca054972fd09cba33f51675878030305b85030a",
+                "url": "https://api.github.com/repos/PrimalPHP/Color/zipball/f1b30498cc6c9fdeb63aefe01ea3b92e7a0a4661",
+                "reference": "f1b30498cc6c9fdeb63aefe01ea3b92e7a0a4661",
                 "shasum": ""
             },
             "require": {
@@ -6236,9 +6236,9 @@
             ],
             "authors": [
                 {
-                    "name": "Jarvis Badgley",
-                    "email": "primal@chipersoft.com",
-                    "homepage": "http://chipersoft.com"
+                    "name": "Jocelyn Badgley",
+                    "email": "primal@twipped.com",
+                    "homepage": "http://twipped.com"
                 }
             ],
             "description": "Collection of classes for converting and manipulating colors",
@@ -6248,9 +6248,9 @@
             ],
             "support": {
                 "issues": "https://github.com/PrimalPHP/Color/issues",
-                "source": "https://github.com/PrimalPHP/Color/tree/master"
+                "source": "https://github.com/PrimalPHP/Color/tree/1.0.2"
             },
-            "time": "2017-07-10T16:28:36+00:00"
+            "time": "2023-06-18T03:26:38+00:00"
         },
         {
             "name": "psr/cache",
