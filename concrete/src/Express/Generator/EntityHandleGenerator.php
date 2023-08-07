@@ -32,6 +32,9 @@ class EntityHandleGenerator
     {
         $text = \Core::make('helper/text');
         $baseHandle = trim(substr($text->handle($entity->getName()), 0, 32), '_');
+        if (!$baseHandle) {
+            $baseHandle = 'express_entity';
+        }
 
         if ($this->handleIsAvailable($baseHandle, $entity)) {
             return $baseHandle;
