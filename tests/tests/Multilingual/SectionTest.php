@@ -20,7 +20,7 @@ class SectionTest extends PageTestCase
         $em = $this->app->make(EntityManagerInterface::class);
         // gotta do this for php8
         $this->app->bind('multilingual/detector', function () {
-            $detector = new Detector();
+            $detector = new Detector($this->app->make('cache/request'));
             $detector->setApplication($this->app);
             return $detector;
         });
