@@ -53,6 +53,22 @@ $c = Page::getCurrentPage();
                             </div>
                         </form>
                     <?php } ?>
+                    <?php if (isset($languages) && $languages) { ?>
+                        <div class="dropdown-center ms-3 order-2">
+                            <button class="btn btn-link dropdown-toggle d-block mx-auto" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fas fa-globe"></i>
+                                <span class="d-lg-none ms-2"><?= t('Switch Language') ?></span>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-lg-end w-100">
+                                <?php foreach ($languages as $language) { ?>
+                                    <li>
+                                        <a class="dropdown-item<?php if ($language->isActive()) { echo ' active'; } ?>"
+                                           href="<?= h($language->getUrl()) ?>"><?= h($language->getName()) ?></a>
+                                    </li>
+                                <?php } ?>
+                            </ul>
+                        </div>
+                    <?php } ?>
                     <ul class="navbar-nav">
                         <?php foreach ($navigation->getItems() as $item) {
                             /**
@@ -74,7 +90,6 @@ $c = Page::getCurrentPage();
                             <?php } ?>
                         <?php } ?>
                     </ul>
-
                 </div>
             <?php } ?>
         </div>
