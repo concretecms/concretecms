@@ -28,7 +28,7 @@ class SwitchLanguage extends AbstractController
         $targetSection = Section::getByID($targetSectionID);
         if ($currentPage && $targetSection) {
             if ($currentPage->isGeneratedCollection()) {
-                // If the current page is a single page, set the section language,
+                // If the current page is a single page, set the session language,
                 // then redirect back to the original page.
                 /** @var Session $session */
                 $session = $this->app->make('session');
