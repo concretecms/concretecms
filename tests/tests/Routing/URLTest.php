@@ -12,6 +12,26 @@ use URL;
 class URLTest extends TestCase
 {
     /**
+     * @var \Concrete\Core\Page\Page
+     */
+    protected $page;
+
+    /**
+     * @var \Concrete\Core\Page\Page
+     */
+    protected $dashboard;
+
+    /**
+     * @var \Concrete\Core\Html\Service\Navigation
+     */
+    protected $service;
+
+    /**
+     * @var string|null
+     */
+    protected $oldUrl;
+
+    /**
      * Here's the expected behavior.
      * All URLs generated should have index.php in front of them if
      * concrete.seo.url_rewriting is false.

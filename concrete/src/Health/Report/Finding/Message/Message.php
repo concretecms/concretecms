@@ -18,6 +18,12 @@ class Message implements MessageInterface
         $this->message = $message;
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \JsonSerializable::jsonSerialize()
+     */
+    #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
         $data = [

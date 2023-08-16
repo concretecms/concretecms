@@ -418,7 +418,7 @@ class SessionFactory implements SessionFactoryInterface
                 yield $server;
             }
         } else {
-            yield ['host' => '127.0.0.1', 'port' => '6379', 'timeout' => 5, 'database'=>$database];
+            yield ['scheme' => 'tcp', 'host' => '127.0.0.1', 'port' => 6379, 'timeout' => 5, 'database' => $database];
         }
     }
 }

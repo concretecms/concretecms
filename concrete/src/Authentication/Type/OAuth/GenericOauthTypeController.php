@@ -334,7 +334,7 @@ abstract class GenericOauthTypeController extends AuthenticationTypeController
     protected function createUser()
     {
         // Make sure that this extractor supports everything we need.
-        if (!$this->supportsEmail() && $this->supportsUniqueId()) {
+        if (!($this->supportsEmail() && $this->supportsUniqueId())) {
             throw new Exception('Email and unique ID support are required for user creation.');
         }
 

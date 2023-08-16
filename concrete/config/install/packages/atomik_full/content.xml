@@ -3016,7 +3016,7 @@ Nam massa mauris, euismod vel tortor vel, finibus accumsan sem. Sed varius vulpu
                     <block type="top_navigation_bar" name="">
                         <data table="btTopNavigationBar">
                             <record>
-                                <brandingText><![CDATA[Concrete Site]]></brandingText>
+                                <brandingText></brandingText>
                                 <brandingLogo>{ccm:export:file:atomik-logo.png}</brandingLogo>
                                 <brandingTransparentLogo>{ccm:export:file:atomik-logo-transparent.png}
                                 </brandingTransparentLogo>

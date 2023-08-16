@@ -1,6 +1,6 @@
 <?php defined('C5_EXECUTE') or die("Access Denied."); ?>
 
-<div class="form-group">
+<div class="mb-3">
     <?php if ($entry) { ?>
         <div>
             <?php

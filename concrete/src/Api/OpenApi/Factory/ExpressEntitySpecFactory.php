@@ -64,7 +64,7 @@ class ExpressEntitySpecFactory
                         $association->getTargetEntity()->getHandle(),
                         $association->getTargetEntity()->getName(),
                         new SpecPropertyRef(
-                            '/components/schemas/' . camelcase($association->getTargetEntity()->getName())
+                            '/components/schemas/' . camelcase($association->getTargetEntity()->getHandle())
                         )
                     )
                 );
@@ -77,7 +77,7 @@ class ExpressEntitySpecFactory
                             'array',
                             null,
                             new SpecPropertyRefItems(
-                                '/components/schemas/' . camelcase($association->getTargetEntity()->getName())
+                                '/components/schemas/' . camelcase($association->getTargetEntity()->getHandle())
                             )
                         )
                     );

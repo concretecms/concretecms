@@ -63,6 +63,7 @@ class SiteGroupEntity extends Entity
 
     public function validate(PermissionAccess $pae)
     {
+        $site = null;
         if ($pae instanceof SiteAccessInterface) {
             $site = $pae->getSite();
         }

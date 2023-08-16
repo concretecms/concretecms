@@ -1,15 +1,33 @@
 <?php
 
-defined('C5_EXECUTE') or die("Access Denied.");
-
 use Concrete\Core\Calendar\Event\EventOccurrence;
+use Concrete\Core\View\View;
 use Punic\Calendar as PunicCalendar;
 
-if (!isset($topic)) {
-    $topic = null;
-}
+defined('C5_EXECUTE') or die('Access Denied.');
 
-Loader::element('calendar/header', array(
+/**
+ * @var Concrete\Core\Tree\Node\Type\Topic[]|null $topics
+ * @var Concrete\Core\Entity\Calendar\Calendar[] $calendars
+ * @var Concrete\Core\Permission\Checker $calendarPermissions
+ * @var Concrete\Core\Entity\Calendar\Calendar $calendar
+ * @var Concrete\Core\Tree\Node\Type\Topic|null $topic
+ * @var string $monthText 'January', ...
+ * @var int|string $month 1 to 12
+ * @var int|string $year
+ * @var int $daysInMonth
+ * @var int $firstDayInMonthNum
+ * @var League\Url\UrlInterface|string $nextLink
+ * @var League\Url\UrlInterface|string $previousLink
+ * @var League\Url\UrlInterface|string $todayLink
+ * @var int $todayDateTimestamp
+ * @var Concrete\Core\Calendar\Event\Formatter\DateFormatter $dateFormatter
+ * @var Concrete\Core\Calendar\Event\Formatter\LinkFormatter $linkFormatter
+ * @var int[] $weekdays
+ * @var int|null $initialEdit
+ */
+
+View::element('calendar/header', array(
     'calendar' => $calendar,
     'calendars' => $calendars,
 ));
@@ -107,8 +125,8 @@ Loader::element('calendar/header', array(
     <thead>
     <tr>
         <?php
-        for($weekday = 0; $weekday < 7; $weekday++) {
-            ?><td width="<?= 100 / 7?>%"><h4><?= PunicCalendar::getWeekdayName($weekday, 'abbreviated', '', true) ?></h4></td><?php
+        foreach ($weekdays as $weekday) {
+            ?><td width="<?= 100 / 7 ?>%"><h4><?= PunicCalendar::getWeekdayName($weekday, 'abbreviated', '', true) ?></h4></td><?php
         }
         ?>
     </tr>
@@ -117,14 +135,17 @@ Loader::element('calendar/header', array(
     <tr>
         <?php
         $cols = 0;
-        $cellCounter = 0;
         $isToday = false;
-        Loader::helper('text');
-        for ($i = 1 - $firstDayInMonthNum; $i <= $daysInMonth; ++$i) {
-            ++$cellCounter;
+        $i = 0;
+        while ($i < $daysInMonth) {
             if ($cols >= 7) {
                 echo '</tr><tr>';
                 $cols = 0;
+            }
+            if ($i === 0 && $weekdays[$cols] === $firstDayInMonthNum) {
+                $i = 1;
+            } elseif ($i > 0) {
+                $i++;
             }
             ++$cols;
             $isToday = (date('Y') == $year && $month == date('m') && $i == date('j'));
@@ -154,9 +175,6 @@ Loader::element('calendar/header', array(
                         /** @var EventOccurrence $occurrence */
                         foreach ($results as $occurrence) {
                             $menu = new \Concrete\Core\Calendar\Event\Menu\EventOccurrenceMenu($occurrence);
-                            $event = $occurrence->getEvent();
-                            $color = $linkFormatter->getEventOccurrenceBackgroundColor($occurrence);
-                            $date = $dateFormatter->getOccurrenceDateString($occurrence);
                             ?>
                             <div class="ccm-dashboard-calendar-date-event">
                                 <?php print $menu->getMenuElement();?>

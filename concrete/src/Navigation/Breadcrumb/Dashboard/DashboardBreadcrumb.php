@@ -71,26 +71,56 @@ class DashboardBreadcrumb implements BreadcrumbInterface, \Iterator
         return $this;
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Iterator::rewind()
+     */
+    #[\ReturnTypeWillChange]
     public function rewind()
     {
         reset($this->items);
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Iterator::current()
+     */
+    #[\ReturnTypeWillChange]
     public function current()
     {
         return current($this->items);
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Iterator::key()
+     */
+    #[\ReturnTypeWillChange]
     public function key()
     {
         return key($this->items);
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Iterator::next()
+     */
+    #[\ReturnTypeWillChange]
     public function next()
     {
         next($this->items);
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Iterator::valid()
+     */
+    #[\ReturnTypeWillChange]
     public function valid()
     {
         return $this->current() !== false;

@@ -545,10 +545,13 @@ class Controller extends AttributeTypeController implements
         return $str;
     }
 
+    /**
+     * @return \Doctrine\Common\Collections\Collection|\Concrete\Core\Entity\Attribute\Value\Value\SelectValueOption[]
+     */
     public function getSelectedOptions()
     {
-        if ($this->attributeValue && $this->attributeValue->getValue()) {
-            return $this->attributeValue->getValue()->getSelectedOptions();
+        if ($this->attributeValue && ($value = $this->attributeValue->getValue())) {
+            return $value->getSelectedOptions();
         }
 
         return [];

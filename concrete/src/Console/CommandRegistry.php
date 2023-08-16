@@ -64,6 +64,8 @@ class CommandRegistry implements ApplicationAwareInterface
         Command\UninstallPackageCommand::class,
         Command\UpdatePackageCommand::class,
         Command\InstallThemeCommand::class,
+        Command\ActivateThemeCommand::class,
+        Command\ActivateThemeSkinCommand::class,
         Command\DenylistClear::class,
         Command\JobCommand::class,
         Command\RefreshEntitiesCommand::class,

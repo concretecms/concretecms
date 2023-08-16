@@ -206,11 +206,11 @@ class View extends AbstractView
             switch ($this->themeHandle) {
                 case VIEW_CORE_THEME:
                     $this->themeObject = new \Concrete\Theme\Concrete\PageTheme();
-                    $this->pkgHandle = false;
+                    $this->themePkgHandle = false;
                     break;
                 case 'dashboard':
                     $this->themeObject = new \Concrete\Theme\Dashboard\PageTheme();
-                    $this->pkgHandle = false;
+                    $this->themePkgHandle = false;
                     break;
                 default:
                     if (!isset($this->themeObject)) {

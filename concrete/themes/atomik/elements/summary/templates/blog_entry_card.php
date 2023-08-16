@@ -8,7 +8,7 @@
         </div>
         <div class="card-body">
             <h5 class="card-title"><?=$title?></h5>
-            <?php if ($date) { ?>
+            <?php if (isset($date)) { ?>
                 <p class="card-text text-center"><small class="text-muted"><?=date('F d, Y', (string) $date)?></small></p>
             <?php } ?>
         </div>

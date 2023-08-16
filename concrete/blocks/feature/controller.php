@@ -55,6 +55,7 @@ class Controller extends BlockController implements UsesFeatureInterface
     protected $btCacheBlockOutputOnPost = true;
     protected $btCacheBlockOutputForRegisteredUsers = true;
     protected $btExportPageColumns = array('internalLinkCID');
+    protected $btExportFileColumns = array('fID');
     protected $btInterfaceHeight = 520;
     protected $btTable = 'btFeature';
 
@@ -216,7 +217,7 @@ class Controller extends BlockController implements UsesFeatureInterface
         $args['paragraph'] = LinkAbstractor::translateTo($args['paragraph']);
         /** @var SanitizeService $security */
         $security = $this->app->make('helper/security');
-        $args['icon'] = $security->sanitizeString($args['icon']);
+        $args['icon'] = isset($args['icon']) ? $security->sanitizeString($args['icon']) : '';
         $args['title'] = $security->sanitizeString($args['title']);
         $args['titleFormat'] = $security->sanitizeString($args['titleFormat']);
         $args['internalLinkCID'] = $security->sanitizeInt($args['internalLinkCID']);

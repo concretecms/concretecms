@@ -32,6 +32,11 @@ class Controller extends AttributeTypeController implements
 {
     public $helpers = ['form', 'lists/countries'];
 
+    public $akHasCustomCountries;
+    public $akDefaultCountry;
+    public $akCustomCountries;
+    public $akGeolocateCountry;
+    
     protected $searchIndexFieldDefinition = [
         'address1' => [
             'type' => 'string',

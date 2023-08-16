@@ -6,12 +6,8 @@ use Concrete\Controller\Backend\UserInterface as BackendInterfaceController;
 use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Http\ResponseFactory;
 use Concrete\Core\Page\EditResponse;
-use Concrete\Core\Page\Page;
-use Concrete\Core\Permission\Checker as Permissions;
 use Concrete\Core\Permission\Key\Key;
-use Concrete\Core\Support\Facade\Application;
-use Concrete\Core\User\User;
-
+use Concrete\Core\Url\Resolver\Manager\ResolverManagerInterface;
 
 class DeleteAll extends BackendInterfaceController
 {
@@ -44,7 +40,8 @@ class DeleteAll extends BackendInterfaceController
             /** @noinspection SqlNoDataSourceInspection */
             $db->executeQuery("TRUNCATE TABLE Logs");
 
-            $editResponse->setMessage(t('Log cleared successfully.'));
+            $this->flash('success', t('Log cleared successfully.'));
+            $editResponse->setRedirectURL((string) $this->app->make(ResolverManagerInterface::class)->resolve(['/dashboard/reports/logs']));
         } else {
             $editResponse->setMessage(t('Access denied'));
         }

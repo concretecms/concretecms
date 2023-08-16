@@ -315,7 +315,7 @@ class BasicWorkflow extends \Concrete\Core\Workflow\Workflow implements Assignab
         return $buttons;
     }
 
-    private function getTranslatedMessage($message = null, $date)
+    private function getTranslatedMessage($message, $date)
     {
 
         if (is_array($message)) {

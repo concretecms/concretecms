@@ -13,7 +13,7 @@ abstract class AbstractController implements ControllerInterface, ApplicationAwa
 
     use ApplicationAwareTrait;
 
-    public function shouldDisplayAnnouncementToUser(User $user, array $announcements): bool
+    public function shouldDisplayAnnouncementToUser(User $user): bool
     {
         return true;
     }

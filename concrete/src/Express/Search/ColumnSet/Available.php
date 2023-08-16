@@ -9,7 +9,7 @@ use Concrete\Core\Search\Column\Column;
 class Available extends DefaultSet
 {
 
-    public function getAuthor(Entry $entry)
+    public static function getAuthor(Entry $entry)
     {
         $author = $entry->getAuthor();
         if ($author) {
