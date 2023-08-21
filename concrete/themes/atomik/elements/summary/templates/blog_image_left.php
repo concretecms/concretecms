@@ -11,9 +11,11 @@ $view->setViewTheme('atomik');
         <div class="col-md-6">
             <h5 class=""><a href="<?=$link?>"><?=$title?></a></h5>
             <?php
-            $view->inc('elements/byline.php', ['author' => $author, 'date' => $date]);
+            if (isset($author) || isset($date)) {
+                $view->inc('elements/byline.php', ['author' => $author ?? '', 'date' => $date ?? '']);
+            }
             ?>
-            <?php if ($description) { ?>
+            <?php if (isset($description)) { ?>
                 <p><?=$description?></p>
             <?php } ?>
         </div>
