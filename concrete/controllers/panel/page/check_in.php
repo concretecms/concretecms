@@ -109,8 +109,8 @@ class CheckIn extends BackendInterfacePageController
                         $publishEndDateTime = $dateTime->translate('cvPublishEndDate');
                         $app = Application::getFacadeApplication();
                         $appConfig = $app->make(Repository::class);
-                        $defaultKeepLiveVersionApproved = (bool)$appConfig->get('concrete.misc.change_default_behaviour_to_keep_live_version_approved');
-                        if ($defaultKeepLiveVersionApproved xor (bool)$this->request->request->get('keepOtherScheduling')) {
+                        $liveVersionStatusOnScheduledVersionApproval = (string)$appConfig->get('concrete.misc.live_version_status_on_scheduled_version_approval');
+                        if (($liveVersionStatusOnScheduledVersionApproval === 'unapproved') xor (bool)$this->request->request->get('keepOtherScheduling')) {
                             $pkr->setKeepOtherScheduling(true);
                         }
                         $pkr->scheduleVersion($publishDateTime, $publishEndDateTime);

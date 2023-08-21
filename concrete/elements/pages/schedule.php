@@ -10,7 +10,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
 $app = Application::getFacadeApplication();
 $appConfig = $app->make(Repository::class);
-$defaultKeepLiveVersionApproved = (bool)$appConfig->get('concrete.misc.change_default_behaviour_to_keep_live_version_approved');
+$liveVersionStatusOnScheduledVersionApproval = (string)$appConfig->get('concrete.misc.live_version_status_on_scheduled_version_approval');
 
 /** @var Form $form */
 $form = $app->make('helper/form');
@@ -56,7 +56,7 @@ $timezone = $dateService->getTimezoneDisplayName($timezone);
 </div>
 
 <?php if ($activeVersionExists || $scheduledVersionExists) {
-    if($defaultKeepLiveVersionApproved) {
+    if($liveVersionStatusOnScheduledVersionApproval === 'unapproved') {
         if ($scheduledVersionExists) {
             $keepOtherScheduling = t('Remove current scheduled. This version will go live by itself.');
         } else {
