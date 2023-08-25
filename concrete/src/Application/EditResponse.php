@@ -60,6 +60,13 @@ class EditResponse implements JsonSerializable
     public $redirectURL;
 
     /**
+     * The current page should be reloaded.
+     *
+     * @var bool
+     */
+    private $reloadCurrentPage = false;
+
+    /**
      * Additional response data.
      *
      * @var array
@@ -217,6 +224,26 @@ class EditResponse implements JsonSerializable
     }
 
     /**
+     * The current page should be reloaded?
+     *
+     * @return $this
+     */
+    public function setReloadCurrentPage(bool $value): object
+    {
+        $this->reloadCurrentPage = $value;
+
+        return $this;
+    }
+
+    /**
+     * The current page should be reloaded?
+     */
+    public function isReloadCurrentPage(): bool
+    {
+        return $this->reloadCurrentPage;
+    }
+
+    /**
      * Set additional response data.
      *
      * @param string $key
@@ -276,6 +303,7 @@ class EditResponse implements JsonSerializable
         $o->message = $this->getMessage();
         $o->title = $this->getTitle();
         $o->redirectURL = (string) $this->getRedirectURL();
+        $o->reloadCurrentPage = $this->isReloadCurrentPage();
         foreach ($this->additionalData as $key => $value) {
             $o->{$key} = $value;
         }
