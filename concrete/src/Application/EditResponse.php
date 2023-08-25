@@ -53,7 +53,7 @@ class EditResponse implements JsonSerializable
     /**
      * The redirect URL of the response.
      *
-     * @var string|\League\URL\URLInterface|null
+     * @var string|\League\Url\UrlInterface|null
      *
      * @deprecated since concrete5 8.5.0a3 (what's deprecated is the "public part") - use setMessage/getMessage
      */
@@ -202,7 +202,7 @@ class EditResponse implements JsonSerializable
     /**
      * Set the redirect URL of the response.
      *
-     * @param string|\League\URL\URLInterface|null $url
+     * @param string|\League\Url\UrlInterface|null $url
      *
      * @return $this
      */
@@ -216,7 +216,7 @@ class EditResponse implements JsonSerializable
     /**
      * Get the redirect URL of the response.
      *
-     * @return string|\League\URL\URLInterface|null
+     * @return string|\League\Url\UrlInterface|null
      */
     public function getRedirectURL()
     {
