@@ -306,21 +306,34 @@ class GroupTest extends UserTestCase
          *
          * root
          *  ├── a     (without users)
+         *  │
          *  ├── b     (without users)
+         *  │
          *  ├─┬ c     (without users)
          *  │ ├── c1  (without users)
          *  │ └── c2  (without users)
+         *  │
          *  ├─┬ d     (without users)
          *  │ ├── d1  (without users)
          *  │ └── d2  (without users)
+         *  │
          *  ├─┬ e     (with users)
          *  │ └── e1  (without users)
+         *  │
          *  ├─┬ f     (without users)
          *  │ ├── f1  (without users)
          *  │ ├─┬ f2  (with users)
          *  │ │ └ f21 (without users)
-         *  │ └─┬ f3 (without users)
+         *  │ └─┬ f3  (without users)
          *  │   └ f31 (without users)
+         *  │
+         *  ├─┬ g     (without users)
+         *  │ └─┬ g1  (without users)
+         *  │   └ g11 (without users)
+         *  │
+         *  └─┬ h     (without users)
+         *    └─┬ h1  (without users)
+         *      └ h11 (without users)
          */
         $app = app();
         $a = Group::add('a', '', null);
@@ -339,6 +352,12 @@ class GroupTest extends UserTestCase
         $f21 = Group::add('f21', '', $f2);
         $f3 = Group::add('f3', '', $f);
         $f31 = Group::add('f31', '', $f3);
+        $g = Group::add('g', '', null);
+        $g1 = Group::add('g1', '', $g);
+        $g11 = Group::add('g11', '', $g1);
+        $h = Group::add('h', '', null);
+        $h1 = Group::add('h1', '', $h);
+        $h11 = Group::add('h11', '', $h1);
 
         $userInfo = $this->createUser('username', 'user@email.org');
         $user = $userInfo->getUserObject();
@@ -491,6 +510,43 @@ class GroupTest extends UserTestCase
         $this->assertEqualsCanonicalizing([$f->getGroupID(), $f2->getGroupID()], array_keys($result->getUndeletableGroups()));
         $this->assertSame($f->getGroupID(), Group::getByPath('/f')->getGroupID());
         $this->assertSame($f2->getGroupID(), Group::getByPath('/f/f2')->getGroupID());
+        $this->assertSame($f21->getGroupID(), Group::getByPath('/f/f2/f21')->getGroupID());
+
+        // Test moving to parent group (when there group being deleted is a sub-group)
+        $command = (new Command\DeleteGroupCommand($g1->getGroupID()))
+            ->setExtendedResults(true)
+            ->setOnChildGroups(Command\DeleteGroupCommand::ONCHILDGROUPS_MOVETOPARENT)
+        ;
+        $result = $app->executeCommand($command);
+        $this->assertInstanceOf(Command\DeleteGroupCommand\Result::class, $result);
+        /** @var \Concrete\Core\User\Group\Command\DeleteGroupCommand\Result $result */
+        $this->assertSame(false, $result->isGroupDeleted($g->getGroupID()));
+        $this->assertSame(true, $result->isGroupDeleted($g1->getGroupID()));
+        $this->assertSame(false, $result->isGroupDeleted($g11->getGroupID()));
+        $this->assertSame([$g1->getGroupID()], $result->getDeletedGroupIDs());
+        $this->assertSame(1, $result->getNumberOfDeletedGroups());
+        $this->assertSame(0, $result->getNumberOfUndeletableGroups());
+        $this->assertSame([], array_keys($result->getUndeletableGroups()));
+        $this->assertSame($g->getGroupID(), Group::getByPath('/g')->getGroupID());
+        $this->assertSame($g11->getGroupID(), Group::getByPath('/g/g11')->getGroupID());
+
+        // Test moving to parent group (when there group being deleted is not a sub-group)
+        $command = (new Command\DeleteGroupCommand($h->getGroupID()))
+            ->setExtendedResults(true)
+            ->setOnChildGroups(Command\DeleteGroupCommand::ONCHILDGROUPS_MOVETOPARENT)
+        ;
+        $result = $app->executeCommand($command);
+        $this->assertInstanceOf(Command\DeleteGroupCommand\Result::class, $result);
+        /** @var \Concrete\Core\User\Group\Command\DeleteGroupCommand\Result $result */
+        $this->assertSame(true, $result->isGroupDeleted($h->getGroupID()));
+        $this->assertSame(false, $result->isGroupDeleted($h1->getGroupID()));
+        $this->assertSame(false, $result->isGroupDeleted($h11->getGroupID()));
+        $this->assertSame([$h->getGroupID()], $result->getDeletedGroupIDs());
+        $this->assertSame(1, $result->getNumberOfDeletedGroups());
+        $this->assertSame(0, $result->getNumberOfUndeletableGroups());
+        $this->assertSame([], array_keys($result->getUndeletableGroups()));
+        $this->assertSame($h1->getGroupID(), Group::getByPath('/h1')->getGroupID());
+        $this->assertSame($h11->getGroupID(), Group::getByPath('/h1/h11')->getGroupID());
     }
 
     /**

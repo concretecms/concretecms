@@ -11,9 +11,11 @@ class DeleteGroupCommand extends Command
 
     public const ONCHILDGROUPS_MOVETOROOT = 1;
 
-    public const ONCHILDGROUPS_ABORT = 2;
+    public const ONCHILDGROUPS_MOVETOPARENT = 2;
 
-    public const ONCHILDGROUPS_DELETE = 3;
+    public const ONCHILDGROUPS_ABORT = 3;
+
+    public const ONCHILDGROUPS_DELETE = 4;
 
     /**
      * @var bool
@@ -69,6 +71,7 @@ class DeleteGroupCommand extends Command
      * @return $this
      *
      * @see \Concrete\Core\User\Group\Command\DeleteGroupCommand::ONCHILDGROUPS_MOVETOROOT
+     * @see \Concrete\Core\User\Group\Command\DeleteGroupCommand::ONCHILDGROUPS_MOVETOPARENT
      * @see \Concrete\Core\User\Group\Command\DeleteGroupCommand::ONCHILDGROUPS_ABORT
      * @see \Concrete\Core\User\Group\Command\DeleteGroupCommand::ONCHILDGROUPS_DELETE
      */
@@ -81,6 +84,7 @@ class DeleteGroupCommand extends Command
 
     /**
      * @see \Concrete\Core\User\Group\Command\DeleteGroupCommand::ONCHILDGROUPS_MOVETOROOT
+     * @see \Concrete\Core\User\Group\Command\DeleteGroupCommand::ONCHILDGROUPS_MOVETOPARENT
      * @see \Concrete\Core\User\Group\Command\DeleteGroupCommand::ONCHILDGROUPS_ABORT
      * @see \Concrete\Core\User\Group\Command\DeleteGroupCommand::ONCHILDGROUPS_DELETE
      */

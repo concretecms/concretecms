@@ -143,6 +143,39 @@ class DeleteGroupCommandHandler
     {
         $groupNode->populateDirectChildrenOnly();
         switch ($command->getOnChildGroups()) {
+            case DeleteGroupCommand::ONCHILDGROUPS_MOVETOROOT:
+                $groupTree = GroupTree::get();
+                $rootNode = $groupTree->getRootTreeNodeObject();
+                if ($rootNode === null) {
+                    $result->addUndeletableGrup(
+                        $group->getGroupID(),
+                        t("The group \"%s\" can't be deleted because we coulnd't find the root tree node", $group->getGroupDisplayName(false))
+                    );
+
+                    return false;
+                }
+                foreach ($groupNode->getChildNodes() as $childnode) {
+                    $childnode->move($rootNode);
+                }
+                break;
+            case DeleteGroupCommand::ONCHILDGROUPS_MOVETOPARENT:
+                $parentNode = $groupNode->getTreeNodeParentObject();
+                if ($parentNode === null) {
+                    $groupTree = GroupTree::get();
+                    $parentNode = $groupTree->getRootTreeNodeObject();
+                    if ($parentNode === null) {
+                        $result->addUndeletableGrup(
+                            $group->getGroupID(),
+                            t("The group \"%s\" can't be deleted because we coulnd't find the root tree node", $group->getGroupDisplayName(false))
+                        );
+
+                        return false;
+                    }
+                }
+                foreach ($groupNode->getChildNodes() as $childnode) {
+                    $childnode->move($parentNode);
+                }
+                break;
             case DeleteGroupCommand::ONCHILDGROUPS_ABORT:
                 $numChildGroups = count($groupNode->getChildNodes());
                 if ($numChildGroups !== 0) {
@@ -157,21 +190,6 @@ class DeleteGroupCommandHandler
                     );
 
                     return false;
-                }
-                break;
-            case DeleteGroupCommand::ONCHILDGROUPS_MOVETOROOT:
-                $groupTree = GroupTree::get();
-                $rootNode = $groupTree->getRootTreeNodeObject();
-                if ($rootNode === null) {
-                    $result->addUndeletableGrup(
-                        $group->getGroupID(),
-                        t("The group \"%s\" can't be deleted because we coulnd't find the root tree node", $group->getGroupDisplayName(false))
-                    );
-
-                    return false;
-                }
-                foreach ($groupNode->getChildNodes() as $childnode) {
-                    $childnode->move($rootNode);
                 }
                 break;
             case DeleteGroupCommand::ONCHILDGROUPS_DELETE:
