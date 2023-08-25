@@ -194,7 +194,7 @@ class GroupTest extends UserTestCase
             } else {
                 $user->enterGroup($groupB);
             }
-            ++$i;
+            $i++;
         }
 
         $user = \UserInfo::getByName('zxsdfer');
@@ -229,7 +229,6 @@ class GroupTest extends UserTestCase
         $user = $user->getUserObject();
         $user->enterGroup($groupD);
 
-
         $user = \UserInfo::getByName('zxcvz1231');
         $user = $user->getUserObject();
         $user->enterGroup($groupC);
@@ -240,12 +239,10 @@ class GroupTest extends UserTestCase
         $results = $list4->getResults();
         $this->assertEquals(7, count($results));
 
-
         $list5 = new UserList();
         $list5->filterByInAnyGroup([$groupC, $groupA], false);
         $results = $list5->getResults();
         $this->assertEquals(5, count($results));
-
 
         $list6 = new UserList();
         $list6->filterByInAnyGroup([$groupB, $groupA], true);
