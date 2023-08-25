@@ -696,28 +696,40 @@ where treeNodeDisplayOrder > ? and treeNodeParentID = ?',
         $db->executeQuery('delete from TreeNodePermissionAssignments where treeNodeID = ?', [$this->treeNodeID]);
     }
 
+    /**
+     * @param int|mixed $treeNodeID
+     *
+     * @return \Concrete\Core\Tree\Node\Node|null
+     */
     public static function getByID($treeNodeID)
     {
-        $app = Facade::getFacadeApplication();
-        $db = app(Connection::class);
-        $cache = $app->make('cache/request');
-        $item = $cache->getItem(sprintf('tree/node/%s', $treeNodeID));
-        if (!$item->isMiss()) {
-            return $item->get();
-        } else {
-            $node = null;
-            $row = $db->fetchAssoc('select * from TreeNodes where treeNodeID = ?', [$treeNodeID]);
-            if ($row && $row['treeNodeID']) {
-                $tt = TreeNodeType::getByID($row['treeNodeTypeID']);
-                $node = app($tt->getTreeNodeTypeClass());
-                $row['treeNodeTypeHandle'] = $tt->getTreeNodeTypeHandle();
-                $node->setPropertiesFromArray($row);
-                $node->loadDetails();
-            }
-            $cache->save($item->set($node));
-
-            return $node;
+        $treeNodeID = (int) $treeNodeID;
+        if ($treeNodeID === 0) {
+            return null;
         }
+        $app = app();
+        $cache = $app->make('cache/request');
+        if ($cache->isEnabled()) {
+            $item = $cache->getItem(sprintf('tree/node/%s', $treeNodeID));
+            if ($item->isHit()) {
+                return $item->get();
+            }
+        }
+        $db = $app->make(Connection::class);
+        $row = $db->fetchAssociative('select * from TreeNodes where treeNodeID = ?', [$treeNodeID]);
+        if ($row === false) {
+            return null;
+        }
+        $tt = TreeNodeType::getByID($row['treeNodeTypeID']);
+        $node = $app->make($tt->getTreeNodeTypeClass());
+        $row['treeNodeTypeHandle'] = $tt->getTreeNodeTypeHandle();
+        $node->setPropertiesFromArray($row);
+        $node->loadDetails();
+        if (isset($item)) {
+            $cache->save($item->set($node));
+        }
+        
+        return $node;
     }
 
     /**
