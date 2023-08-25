@@ -346,7 +346,7 @@ $userEntity = $user->getEntityObject();
                                     </legend>
 
                                     <div class="form-group">
-                                        <?php echo $form->label('uPasswordMine', t('Your Current Password')); ?>
+                                        <?php echo $form->label('uPasswordMine', t('Password for the currently logged in user')); ?>
                                         <password-input name="uPasswordMine"/>
                                     </div>
 
