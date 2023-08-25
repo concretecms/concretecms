@@ -1153,13 +1153,14 @@ return [
 
         /*
          * --------------------------------------------------------------------
-         * Gravatar Settings
+         * Group Settings
          * --------------------------------------------------------------------
          */
         'group' => [
             'badge' => [
                 'default_point_value' => 50,
             ],
+            'delete_requires_superuser' => true,
         ],
 
         'username' => [

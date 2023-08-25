@@ -14,6 +14,9 @@ defined('C5_EXECUTE') or die('Access Denied.');
 
 $router->all('/jump_to_folder', 'JumpToFolder::view');
 
+$router->all('/delete', 'Delete::view');
+$router->all('/delete/submit', 'Delete::submit');
+
 $router->all('/bulk/delete', 'Bulk\Delete::view');
 $router->all('/bulk/delete/submit', 'Bulk\Delete::submit');
 

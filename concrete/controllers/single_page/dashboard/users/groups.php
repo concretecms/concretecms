@@ -1,5 +1,7 @@
 <?php
+
 namespace Concrete\Controller\SinglePage\Dashboard\Users;
+
 
 use Concrete\Core\Entity\Search\Query;
 use Concrete\Core\Entity\Search\SavedGroupSearch;
@@ -17,19 +19,23 @@ use Concrete\Core\Search\Query\QueryModifier;
 use Concrete\Core\Search\Result\Result;
 use Concrete\Core\Search\Result\ResultFactory;
 use Concrete\Core\Tree\Node\Node;
-use Concrete\Core\Tree\Node\NodeType;
 use Concrete\Core\Tree\Node\Type\GroupFolder;
+use Concrete\Core\User\Group\CanDeleteGroupsTrait;
 use Concrete\Core\User\Group\FolderManager;
 use Concrete\Core\User\Group\Group;
+use Concrete\Core\User\Group\GroupRepository;
 use Concrete\Core\User\Group\Search\Field\Field\FolderField;
 use Concrete\Core\User\Group\Search\Menu\MenuFactory;
 use Concrete\Core\User\Group\Search\SearchProvider;
-use Exception;
 use Concrete\Core\User\User;
+use Exception;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 class Groups extends DashboardPageController
 {
+    use CanDeleteGroupsTrait;
+
     /**
      * @var Element
      */
@@ -271,20 +277,28 @@ class Groups extends DashboardPageController
         $this->view();
     }
 
-    public function edit($gID = false)
+    public function edit($gID = false): ?Response
     {
-        $g = Group::getByID(intval($gID));
-        $gp = new Checker($g);
-        if (!is_object($g)) {
-            throw new \Exception(t('Invalid group.'));
+        $gID = $gID ? (int) $gID : 0;
+        $group = $gID === 0 ? null : $this->app->make(GroupRepository::class)->getGroupById($gID);
+        if ($group === null) {
+            $this->flash('error', t('Invalid group.'));
+        } else {
+            $gp = new Checker($group);
+            if (!$gp->canEditGroup()) {
+                $this->flash('error', t('You do not have access to edit this group.'));
+                $group = null;
+            }
         }
-        if (!$gp->canEditGroup()) {
-            throw new \Exception(t('You do not have access to edit this group.'));
+        if ($group === null) {
+            return $this->buildRedirect('/dashboard/users/groups');
         }
-        if (is_object($g)) {
-            $this->set('group', $g);
-        }
-        $this->render("/dashboard/users/groups/edit");
+
+        $this->set('group', $group);
+        $this->set('whyUserCantDeleteGroup', $this->getWhyUserCantDeleteGroups());
+        $this->render('/dashboard/users/groups/edit');
+
+        return null;
     }
 
     public function bulk_update_complete()

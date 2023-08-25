@@ -13,8 +13,6 @@ use Concrete\Core\User\Group\Search\Result\Column;
 use Concrete\Core\User\Group\Search\Result\Result;
 use Concrete\Core\User\Group\Search\Result\Item;
 use Concrete\Core\User\Group\Search\Result\ItemColumn;
-use Concrete\Core\Support\Facade\Url;
-use Concrete\Core\User\Group\Menu;
 
 /** @var MenuInterface $menu */
 /** @var Result $result */
@@ -26,27 +24,33 @@ use Concrete\Core\User\Group\Menu;
         <thead>
         <tr>
             <th colspan="2" class="ccm-search-results-bulk-selector">
-                <div class="btn-group dropdown">
-                    <span class="btn btn-secondary" data-search-checkbox-button="select-all">
-                        <!--suppress HtmlFormInputWithoutLabel -->
-                        <input type="checkbox" data-search-checkbox="select-all"/>
-                    </span>
+                <?php
+                if ($resultsBulkMenu->hasItems()) {
+                    ?>
+                    <div class="btn-group dropdown">
+                        <span class="btn btn-secondary" data-search-checkbox-button="select-all">
+                            <!--suppress HtmlFormInputWithoutLabel -->
+                            <input type="checkbox" data-search-checkbox="select-all"/>
+                        </span>
+    
+                        <button
+                                type="button"
+                                disabled="disabled"
+                                data-search-checkbox-button="dropdown"
+                                class="btn btn-secondary dropdown-toggle dropdown-toggle-split"
+                                data-bs-toggle="dropdown"
+                                data-reference="parent">
+    
+                                <span class="sr-only">
+                                    <?php echo t("Toggle Dropdown"); ?>
+                                </span>
+                        </button>
 
-                    <button
-                            type="button"
-                            disabled="disabled"
-                            data-search-checkbox-button="dropdown"
-                            class="btn btn-secondary dropdown-toggle dropdown-toggle-split"
-                            data-bs-toggle="dropdown"
-                            data-reference="parent">
-
-                            <span class="sr-only">
-                                <?php echo t("Toggle Dropdown"); ?>
-                            </span>
-                    </button>
-
-                    <?php echo $resultsBulkMenu->getMenuElement(); ?>
-                </div>
+                        <?= $resultsBulkMenu->getMenuElement() ?>
+                    </div>
+                    <?php
+                }
+                ?>
             </th>
 
             <?php foreach ($result->getColumns() as $column): ?>
