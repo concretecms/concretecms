@@ -14,6 +14,17 @@ final class Result
      */
     private $undeletableGroups = [];
 
+    public function __toString(): string
+    {
+        $lines = [];
+        $lines[] = t2(/*i18n: %s is a number*/ '%s group has been deleted', '%s groups have been deleted', $this->getNumberOfDeletedGroups());
+        foreach ($this->getUndeletableGroups() as $reason) {
+            $lines[] = $reason;
+        }
+
+        return implode("\n", $lines);
+    }
+
     public function isGroupDeleted(int $groupID): bool
     {
         return in_array($groupID, $this->deletedGroupIDs, true);
