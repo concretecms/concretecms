@@ -346,11 +346,6 @@ $userEntity = $user->getEntityObject();
                                     </legend>
 
                                     <div class="form-group">
-                                        <?php echo $form->label('uPasswordMine', t('Password for the currently logged in user')); ?>
-                                        <password-input name="uPasswordMine"/>
-                                    </div>
-
-                                    <div class="form-group">
                                         <?php echo $form->label('uPasswordNew', t('New Password')); ?>
                                         <password-input name="uPasswordNew" :strength-meter="true"/>
                                     </div>
@@ -359,6 +354,12 @@ $userEntity = $user->getEntityObject();
                                         <?php echo $form->label('uPasswordNewConfirm', t('Confirm New Password')); ?>
                                         <password-input name="uPasswordNewConfirm"/>
                                     </div>
+
+                                    <div class="form-group">
+                                        <?php echo $form->label('uPasswordMine', t('Your Password (for additional security)')); ?>
+                                        <password-input name="uPasswordMine"/>
+                                    </div>
+
                                     <div class="help-block"><?php echo h(t('Leave blank to leave the password unchanged.')); ?></div>
                                 </fieldset>
                             <?php } ?>
