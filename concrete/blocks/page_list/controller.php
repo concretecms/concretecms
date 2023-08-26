@@ -455,9 +455,12 @@ class Controller extends BlockController implements UsesFeatureInterface
         }
 
         if ($this->paginate) {
-            /** @var SeoCanonical $seoCanonical */
-            $seoCanonical = $this->app->make(SeoCanonical::class);
-            $seoCanonical->addIncludedQuerystringParameter($this->list->getQueryPaginationPageParameter());
+            $paging = $this->request->request($this->list->getQueryPaginationPageParameter());
+            if ($paging && $paging >= 2) { // Canonicalize page 2 and greater only
+                /** @var SeoCanonical $seoCanonical */
+                $seoCanonical = $this->app->make(SeoCanonical::class);
+                $seoCanonical->addIncludedQuerystringParameter($this->list->getQueryPaginationPageParameter());
+            }
         }
 
         return $this->list;
