@@ -169,6 +169,23 @@ class Controller extends BlockController implements FileTrackableInterface, Uses
     {
         parent::export($blockNode);
 
+        if ($this->getInternalLinkCID()) {
+            $imageLinkHandle = 'page';
+            $imageLinkValue = $this->getInternalLinkCID();
+        } elseif ($this->getFileLinkID()) {
+            $imageLinkHandle = 'file';
+            $imageLinkValue = $this->getFileLinkID();
+        } elseif ((string) $this->getExternalLink() !== '') {
+            $imageLinkHandle = 'external_url';
+            $imageLinkValue = (string) $this->getExternalLink();
+        } else {
+            $imageLinkHandle = 'none';
+            $imageLinkValue = null;
+        }
+        /** @var DestinationPicker $destinationPicker */
+        $destinationPicker = $this->app->make(DestinationPicker::class);
+        $destinationPicker->export('imageLink', $imageLinkHandle, $imageLinkValue, $this, $blockNode);
+
         $thumbnailTypes = $this->getSelectedThumbnailTypes();
         if (count($thumbnailTypes)) {
             $thumbnails = $blockNode->addChild('thumbnails');

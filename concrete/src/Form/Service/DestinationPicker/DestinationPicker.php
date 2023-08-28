@@ -4,6 +4,7 @@ namespace Concrete\Core\Form\Service\DestinationPicker;
 
 use ArrayAccess;
 use Concrete\Core\Application\Application;
+use Concrete\Core\Block\BlockController;
 use Concrete\Core\Form\Service\Form;
 use Concrete\Core\Http\Request;
 use RuntimeException;
@@ -237,6 +238,38 @@ EOT
         }
 
         return [$handle, $value];
+    }
+
+    /**
+     * Add child nodes that compatible with importing via the destination picker to exporting blocks in CIF format xml
+     *
+     * @param string $key The field name
+     * @param string $selectedPickerHandle The handle of selected picker
+     * @param string|int $value The value to export
+     * @param BlockController $blockController The controller of the block you export
+     * @param \SimpleXMLElement $blockNode The xml element that passed to export function
+     * @return void
+     */
+    public function export(string $key, string $selectedPickerHandle, $value, BlockController $blockController, \SimpleXMLElement $blockNode): void
+    {
+        if (isset($blockNode->data)) {
+            foreach ($blockNode->data as $data) {
+                if (isset($data->record) && ((string)$data['table'] === $blockController->getBlockTypeDatabaseTable())) {
+                    $which = $data->record->addChild($key . '__which');
+                    $node = dom_import_simplexml($which);
+                    if ($node) {
+                        $no = $node->ownerDocument;
+                        $node->appendChild($no->createCDataSection($selectedPickerHandle));
+                    }
+                    $valueNode = $data->record->addChild($key . '_' . $selectedPickerHandle);
+                    $node = dom_import_simplexml($valueNode);
+                    if ($node) {
+                        $no = $node->ownerDocument;
+                        $node->appendChild($no->createCDataSection($value));
+                    }
+                }
+            }
+        }
     }
 
     /**
