@@ -205,14 +205,14 @@ class Controller extends BlockController implements UsesFeatureInterface, FileTr
     {
         $home = $this->getHomePage();
         $children = $home->getCollectionChildren();
-        $navigation = new Navigation();
+        $navigation = $this->app->make(Navigation::class);
 
         $current = Page::getCurrentPage();
         $parentIDs = $this->getParentIDsToCurrent();
 
         foreach ($children as $child) {
             if ($this->includePageInNavigation($child)) {
-                $item = new PageItem($child);
+                $item = $this->app->make(PageItem::class, ['page' => $child]);
                 if ($home->getCollectionID() !== $current->getCollectionID() && in_array($child->getCollectionID(), $parentIDs)) {
                     $item->setIsActiveParent(true);
                 }
@@ -221,7 +221,7 @@ class Controller extends BlockController implements UsesFeatureInterface, FileTr
                     $dropdownChildren = $child->getCollectionChildren();
                     foreach ($dropdownChildren as $dropdownChild) {
                         if ($this->includePageInNavigation($dropdownChild)) {
-                            $dropdownChildItem = new PageItem($dropdownChild);
+                            $dropdownChildItem = $this->app->make(PageItem::class, ['page' => $dropdownChild]);
                             if (in_array($dropdownChild->getCollectionID(), $parentIDs)) {
                                 $dropdownChildItem->setIsActiveParent(true);
                             }
