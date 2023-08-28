@@ -1075,7 +1075,7 @@ class Group extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
 
     /**
      * @param string $gPath The group path
-     * @return Group
+     * @return Group|null
      * @deprecated
      * This is deprecated, user the grouprepository instead.
      */
