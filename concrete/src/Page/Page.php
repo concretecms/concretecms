@@ -2555,15 +2555,15 @@ EOT
             $r->execute($v);
         }
 
-        // load new version object
-        $this->loadVersionObject($cvID);
-
         $db->executeQuery('update Pages set ptID = ?, uID = ?, pkgID = ?, cFilename = ?, cCacheFullPageContent = ?, cCacheFullPageContentLifetimeCustom = ?, cCacheFullPageContentOverrideLifetime = ? where cID = ?', [$ptID, $uID, $pkgID, $cFilename, $cCacheFullPageContent, $cCacheFullPageContentLifetimeCustom, $cCacheFullPageContentOverrideLifetime, $this->cID]);
 
         $cache = PageCache::getLibrary();
         $cache->purge($this);
 
         $this->refreshCache();
+
+        // load new version object
+        $this->loadVersionObject($cvID);
 
         $pe = new Event($this);
         Events::dispatch('on_page_update', $pe);
