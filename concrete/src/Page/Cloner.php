@@ -178,12 +178,12 @@ class Cloner
 
             Section::registerDuplicate($newPage, $page);
 
+            $newPage->rescanCollectionPath();
+            $newPage->movePageDisplayOrderToBottom();
+
             $pe = new DuplicatePageEvent($page);
             $pe->setNewPageObject($newPage);
             $this->eventDispatcher->dispatch('on_page_duplicate', $pe);
-
-            $newPage->rescanCollectionPath();
-            $newPage->movePageDisplayOrderToBottom();
 
             if ($page instanceof Stack) {
                 Area::getOrCreate($newPage, STACKS_AREA_NAME);
