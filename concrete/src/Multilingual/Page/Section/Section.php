@@ -85,9 +85,8 @@ class Section extends Page
      *
      * @param int $cID
      * @param int|string $cvID
-     * @param string $class
      *
-     * @return MultilingualSection|false
+     * @return self|false
      */
     public static function getByID($cID, $cvID = 'RECENT')
     {
