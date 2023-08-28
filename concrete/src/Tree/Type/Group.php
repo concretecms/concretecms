@@ -40,8 +40,7 @@ class Group extends Tree
     public static function get()
     {
         $db = Database::connection();
-        $treeTypeID = $db->GetOne('select treeTypeID from TreeTypes where treeTypeHandle = ?', array('group'));
-        $treeID = $db->GetOne('select treeID from Trees where treeTypeID = ?', array($treeTypeID));
+        $treeID = $db->fetchOne('SELECT Trees.treeID FROM TreeTypes INNER JOIN Trees ON TreeTypes.treeTypeID = Trees.treeTypeID WHERE TreeTypes.treeTypeHandle = ?', ['group']);
 
         return Tree::getByID($treeID);
     }
