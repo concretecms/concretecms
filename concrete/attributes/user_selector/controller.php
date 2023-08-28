@@ -90,6 +90,18 @@ class Controller extends AttributeTypeController implements
         return $av;
     }
 
+    public function searchForm($list)
+    {
+        $list->filterByAttribute($this->attributeKey->getAttributeKeyHandle(), (int)$this->request('value'));
+        return $list;
+    }
+
+    public function search()
+    {
+        $user_selector = $this->app->make('helper/form/user_selector');
+        echo $user_selector->selectUser($this->field('value'), $this->request('value'));
+    }
+
     public function getSearchIndexValue()
     {
         return $this->attributeValue->getValue();
