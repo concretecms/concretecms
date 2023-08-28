@@ -29,7 +29,7 @@ class Update extends DashboardPageController
                         $p->upgradeCoreData();
                         $p->upgrade();
                         $loc->popActiveContext();
-                        $this->set('message', t('The package has been updated successfully.'));
+                        $this->set('message', t('Package "%s" has been updated successfully to version %s.', $pkg->getPackageName(), $pkg->getPackageVersion()));
                     } catch (Exception $e) {
                         $loc->popActiveContext();
                         $this->error->add($e);
