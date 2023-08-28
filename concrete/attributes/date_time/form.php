@@ -34,10 +34,12 @@ switch ($displayMode) {
         echo $form->text($view->field('value'), $value, ['placeholder' => $placeholder]);
         break;
     case 'date':
-        echo $form_date_time->date($view->field('value'), $value);
+        $value = $date->formatCustom('Y-m-d', $value);
+        echo '<input type="date" class="ccm-input-text form-control" id="' . $view->field('value') . '" name="'. $view->field('value') .'" value="' . $value . '">';
         break;
     default:
-        echo $form_date_time->datetime($view->field('value'), $value, false, true, null, $timeResolution);
+        $value = $date->formatCustom('Y-m-d H:i', $value);
+        echo '<input type="datetime-local" class="ccm-input-text form-control" id="' . $view->field('value') . '" name="'. $view->field('value') .'" value="' . $value . '">';
         break;
 }
 
