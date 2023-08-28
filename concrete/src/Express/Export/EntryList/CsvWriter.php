@@ -156,7 +156,7 @@ class CsvWriter
             $output = [];
             if ($collection = $association->getSelectedEntries()) {
                 foreach($collection as $entry) {
-                    $output[] = $entry->getPublicIdentifier();
+                    $output[] = $entry->getLabel();
                 }
             }
             yield $association->getAssociation()->getId() => implode('|', $output);

@@ -53,7 +53,9 @@ class Entry implements \JsonSerializable, PermissionObjectInterface, AttributeOb
         if (substr($nm, 0, 3) == 'get') {
             $nm = preg_replace('/(?!^)[[:upper:]]/', '_\0', $nm);
             $nm = strtolower($nm);
-            $identifier = str_replace('get_', '', $nm);
+            // Strip off the first four characters ("get_") in order to get the handle identifier of either the
+            // association or the attribute key.
+            $identifier = substr($nm, 4);
 
             // check for association
             $association = $this->getAssociation($identifier);
