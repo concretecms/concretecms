@@ -327,11 +327,6 @@ const DEFAULT_GROUP_ROLE_ID = '1';
 const USER_FOREVER_COOKIE_LIFETIME = 1209600; // 14 days
 const USER_CHANGE_PASSWORD_URL_LIFETIME = 7200;
 /**
- * Use Config::get('concrete.misc.live_version_status_on_scheduled_version_approval')
- */
-const APPROVED = 'approved';
-const UNAPPROVED = 'unapproved';
-/**
  * @deprecated use app(\Concrete\Core\Session\SessionValidator::class)->getUserActivityThreshold()
  */
 const ONLINE_NOW_TIMEOUT = 300;

@@ -56,7 +56,7 @@ $timezone = $dateService->getTimezoneDisplayName($timezone);
 </div>
 
 <?php if ($activeVersionExists || $scheduledVersionExists) {
-    if($liveVersionStatusOnScheduledVersionApproval === UNAPPROVED) {
+    if($liveVersionStatusOnScheduledVersionApproval === 'unapproved') {
         if ($scheduledVersionExists) {
             $keepOtherScheduling = t('Remove current scheduled. This version will go live by itself.');
         } else {

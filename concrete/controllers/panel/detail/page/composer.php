@@ -97,7 +97,9 @@ class Composer extends BackendInterfacePageController
                     $app = Application::getFacadeApplication();
                     $appConfig = $app->make(Repository::class);
                     $liveVersionStatusOnScheduledVersionApproval = (string)$appConfig->get('concrete.misc.live_version_status_on_scheduled_version_approval');
-                    if (($liveVersionStatusOnScheduledVersionApproval === UNAPPROVED) xor (bool)$this->request->request->get('keepOtherScheduling')) {
+                    $isUnapproved = $liveVersionStatusOnScheduledVersionApproval === 'unapproved';
+                    $isKeepOtherScheduling = (bool)$this->request->request->get('keepOtherScheduling');
+                    if (($isUnapproved && !$isKeepOtherScheduling) || (!$isUnapproved && $isKeepOtherScheduling)) {
                         $keepOtherScheduling = true;
                     }
                 }
