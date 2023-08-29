@@ -331,7 +331,7 @@ class Login extends PageController implements LoggerAwareInterface
         $user = $this->app->make(User::class);
         $this->set('user', $user);
 
-        if (strlen($type)) {
+        if (is_string($type) && $type !== '') {
             try {
                 $at = AuthenticationType::getByHandle($type);
                 if ($at->isEnabled()) {
