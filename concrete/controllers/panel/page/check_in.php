@@ -112,7 +112,7 @@ class CheckIn extends BackendInterfacePageController
                         $liveVersionStatusOnScheduledVersionApproval = (string)$appConfig->get('concrete.misc.live_version_status_on_scheduled_version_approval');
                         $isUnapproved = $liveVersionStatusOnScheduledVersionApproval === 'unapproved';
                         $isKeepOtherScheduling = (bool)$this->request->request->get('keepOtherScheduling');
-                        if (($isUnapproved && !$isKeepOtherScheduling) || (!$isUnapproved && $isKeepOtherScheduling)) {
+                        if ($isUnapproved === !$isKeepOtherScheduling) {
                             $pkr->setKeepOtherScheduling(true);
                         }
                         $pkr->scheduleVersion($publishDateTime, $publishEndDateTime);

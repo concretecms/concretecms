@@ -100,7 +100,7 @@ class Compose extends Controller
                     $liveVersionStatusOnScheduledVersionApproval = (string)$appConfig->get('concrete.misc.live_version_status_on_scheduled_version_approval');
                     $isUnapproved = $liveVersionStatusOnScheduledVersionApproval === 'unapproved';
                     $isKeepOtherScheduling = (bool)$this->request->request->get('keepOtherScheduling');
-                    if (($isUnapproved && !$isKeepOtherScheduling) || (!$isUnapproved && $isKeepOtherScheduling)) {
+                    if ($isUnapproved === !$isKeepOtherScheduling) {
                         $keepOtherScheduling = true;
                     }
                 }
