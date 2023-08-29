@@ -29,6 +29,11 @@ class Login extends PageController implements LoggerAwareInterface
     public $helpers = ['form'];
     protected $locales = [];
 
+    /**
+     * @var \Concrete\Core\Error\ErrorList\ErrorList|null
+     */    
+    protected $error;
+
     public function on_before_render()
     {
         if ($this->error->has()) {
