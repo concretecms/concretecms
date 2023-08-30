@@ -67,7 +67,7 @@ class PageIndexer implements IndexingDriverInterface, ApplicationAwareInterface
     /**
      * Get a page based on criteria
      * @param string|int|Page|Collection $page
-     * @return \Concrete\Core\Page\Page
+     * @return \Concrete\Core\Page\Page|null
      */
     protected function getPage($page)
     {
@@ -90,6 +90,7 @@ class PageIndexer implements IndexingDriverInterface, ApplicationAwareInterface
         if ($page instanceof Collection) {
             return $this->getPage($page->getCollectionID());
         }
-    }
 
+        return null;
+    }
 }
