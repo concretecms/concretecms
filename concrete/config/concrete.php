@@ -753,11 +753,16 @@ return [
          */
         'default_jpeg_image_compression' => 80,
         /*
+         * The WEBP compression level (in range 0... 100)
+         */
+        'default_webp_image_compression' => 80,
+        /*
          * The PNG compression level (in range 0... 9)
          */
         'default_png_image_compression' => 9,
         /*
-         * The default thumbnail format: jpeg, png, auto (if auto: we'll create a jpeg if the source image is jpeg, we'll create a png otherwise).
+         * The default thumbnail format: jpeg, png, webp, auto
+         * (if auto: we'll keep original format if it is supported, we'll create a webp otherwise).
          */
         'default_thumbnail_format' => 'auto',
         /*
