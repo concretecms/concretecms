@@ -34,27 +34,36 @@
 
     <fieldset>
         <legend><?= t('Custom Attributes') ?></legend>
-        <?php if ($totalAttributes > 0) { ?>
-            <?php foreach ($sets as $set) { ?>
-                <h4><?= $set->getAttributeSetDisplayName() ?></h4>
-                <?php
+        <?php
+        if ($totalAttributes > 0) {
+            foreach ($sets as $set) {
                 $attributes = $set->getAttributeKeys();
-                foreach ($attributes as $ak) {
+                if (count($attributes)) {
+                    ?>
+                    <h4><?= $set->getAttributeSetDisplayName() ?></h4>
+                    <?php
+                    foreach ($attributes as $ak) {
+                        $renderer->render($ak);
+                    }
+                }
+            }
+
+            if (count($unassignedAttributes)) {
+                ?>
+                <h4><?= t('Other') ?></h4>
+                <?php
+                foreach ($unassignedAttributes as $ak) {
                     $renderer->render($ak);
                 }
-                ?>
-            <?php } ?>
-            <h4><?= t('Other') ?></h4>
-            <?php
-            foreach ($unassignedAttributes as $ak) {
-                $renderer->render($ak);
             }
+        } else {
             ?>
-        <?php } else { ?>
             <div class="mt-3">
                 <p><?= t('You have not defined any <a href="%s">custom attributes</a> for this site.', URL::to('/dashboard/system/basics/attributes')) ?></p>
             </div>
-        <?php } ?>
+            <?php
+        }
+        ?>
     </fieldset>
 
     <div class="ccm-dashboard-form-actions-wrapper">
