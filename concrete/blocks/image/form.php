@@ -100,6 +100,21 @@ $thumbnailTypes['0'] = t('Full Size');
 
 <fieldset>
     <legend>
+        <?= t('Lazy load'); ?>
+    </legend>
+
+    <div class="form-group">
+        <div class="form-check">
+            <?php
+            echo $form->checkbox('lazyLoad', 1, !empty($lazyLoad));
+            echo $form->label('lazyLoad', t('Lazy load image'), ['class' => 'form-check-label']);
+            ?>
+        </div>
+    </div>
+</fieldset>
+
+<fieldset>
+    <legend>
         <?php echo t('Sizing'); ?>
     </legend>
 
