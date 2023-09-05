@@ -119,6 +119,12 @@ if (is_object($f) && $f->getFileID()) {
 
                 break;
         }
+
+        // Add image dimensions
+        if (empty($imageTag->getAttribute('width')) || empty($imageTag->getAttribute('height'))) {
+            $imageTag->setAttribute('width', $f->getAttribute('width'));
+            $imageTag->setAttribute('height', $f->getAttribute('height'));
+        }
     }
 
     $imageTag->addClass('ccm-image-block img-fluid bID-' . $bID);
