@@ -18,6 +18,7 @@ use Concrete\Core\Foundation\ConcreteObject;
 use Concrete\Core\Page\Cloner;
 use Concrete\Core\Page\ClonerOptions;
 use Concrete\Core\Page\Collection\Version\VersionList;
+use Concrete\Core\Page\Command\QueuedReindexPageCommand;
 use Concrete\Core\Page\Command\ReindexPageCommand;
 use Concrete\Core\Page\Search\IndexedSearch;
 use Concrete\Core\Page\Summary\Template\Populator;
@@ -424,13 +425,17 @@ class Collection extends ConcreteObject implements TrackableInterface
         return t('Version %d', $cvID + 1);
     }
 
-    public function reindex()
+    public function reindex($doReindexImmediately = true)
     {
         if ($this->isAlias() && !$this->isExternalLink()) {
             return false;
         }
 
-        $command = new ReindexPageCommand($this->getCollectionID());
+        if ($doReindexImmediately) {
+            $command = new ReindexPageCommand($this->getCollectionID());
+        } else {
+            $command = new QueuedReindexPageCommand($this->getCollectionID());
+        }
         $app = Facade::getFacadeApplication();
         $app->executeCommand($command);
     }

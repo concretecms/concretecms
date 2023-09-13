@@ -942,10 +942,6 @@ class Theme extends ConcreteObject implements \JsonSerializable
             $documentationList->setSiteTreeToAll();
             $documentationList->includeSystemPages();
             $documentationList->filterByPath($parentPage->getCollectionPath());
-            $documentationList->filterByPageTypeHandle([
-                THEME_DOCUMENTATION_PAGE_TYPE,
-                THEME_DOCUMENTATION_CATEGORY_PAGE_TYPE]
-            );
             $documentationList->sortByDisplayOrder();
             $themeDocumentationPages = $documentationList->getResults();
             return $themeDocumentationPages;

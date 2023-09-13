@@ -10,7 +10,7 @@ $walkNavigation = static function (array $items, int $level) use (&$walkNavigati
         <ul class="<?php if ($level > 1) { ?>ps-4<?php } ?> nav flex-column">
             <?php foreach($items as $item) { ?>
                 <li class="nav-item">
-                    <a target="_top" class="nav-link <?php if (count($item->getChildren())) { ?>disabled fw-bold<?php } ?>" href="<?=$item->getURL()?>">
+                    <a target="<?=$item->getTarget()?>" class="nav-link <?php if (count($item->getChildren())) { ?>disabled fw-bold<?php } ?>" href="<?=$item->getURL()?>">
                         <?=h($item->getName())?>
                     </a>
                     <?php $walkNavigation($item->getChildren(), $level + 1); ?>
