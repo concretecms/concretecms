@@ -32,6 +32,11 @@ class DocumentationNavigationPageItem extends PageItem
         $this->isActive = $isActive;
     }
 
+    public function isDocumentationCategory(): bool
+    {
+        return in_array($this->page->getPageTypeHandle(), [THEME_DOCUMENTATION_CATEGORY_PAGE_TYPE]);
+    }
+
     public function getPageID(): int
     {
         return $this->page->getCollectionID();
