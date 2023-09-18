@@ -140,11 +140,7 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
 
                 return true;
             default:
-                if (array_key_exists('value', $data) && $data['value'] !== '') {
-                    return $data['value'];
-                } else {
-                    return null;
-                }
+                return !empty($data['value']);
         }
     }
 
