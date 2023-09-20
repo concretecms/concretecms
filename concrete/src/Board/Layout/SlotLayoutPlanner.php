@@ -2,8 +2,8 @@
 
 namespace Concrete\Core\Board\Layout;
 
-use Concrete\Core\Board\Instance\Slot\Content\ObjectInterface;
 use Concrete\Core\Board\Instance\Slot\Planner\PlannedInstance;
+use Concrete\Core\Board\Instance\Slot\Planner\PlannedSlot;
 use Concrete\Core\Entity\Board\SlotTemplate;
 
 defined('C5_EXECUTE') or die("Access Denied.");
@@ -22,9 +22,16 @@ class SlotLayoutPlanner implements PlannerInterface
         $this->registry = $registry;
     }
 
-
     public function isValidInstance(PlannedInstance $plannedInstance): bool
     {
+        return true;
+    }
+
+    public function isValidPlannedSlot(
+        PlannedSlot $plannedSlot,
+        PlannedInstance $plannedInstance,
+        int $slot
+    ): bool {
         return true;
     }
 

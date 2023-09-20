@@ -42,7 +42,9 @@ class SummaryTemplates extends BackendInterfaceController
     public function action()
     {
         $url = call_user_func_array('parent::action', func_get_args());
-        $url .= '&eventID=' . $_REQUEST['eventID'];
+        if (!empty($_REQUEST['eventID'])) {
+            $url .= '&eventID=' . $_REQUEST['eventID'];
+        }
 
         return $url;
     }

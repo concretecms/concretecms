@@ -2,10 +2,7 @@
 
 namespace Concrete\Core\Board\Instance\Slot\Planner;
 
-use Concrete\Core\Board\Instance\Slot\Content\ObjectCollection;
-use Concrete\Core\Board\Instance\Slot\Template\AvailableTemplateCollectionFactory;
 use Concrete\Core\Entity\Board\Instance;
-use Concrete\Core\Entity\Board\SlotTemplate;
 use Concrete\Core\Logging\Channels;
 use Concrete\Core\Logging\LoggerAwareInterface;
 use Concrete\Core\Logging\LoggerAwareTrait;
@@ -17,6 +14,8 @@ class Planner implements LoggerAwareInterface
     const VERIFICATION_FAILURE_LOGGING_THRESHOLD = 5; // At what point do we start logging high numbers of failures.
 
     use LoggerAwareTrait;
+
+    protected $verificationChecksRun = 0;
 
     public function getLoggerChannel()
     {
@@ -31,6 +30,14 @@ class Planner implements LoggerAwareInterface
     public function __construct(SlotFilterer $slotFilterer)
     {
         $this->slotFilterer = $slotFilterer;
+    }
+
+    /**
+     * @return int
+     */
+    public function getVerificationChecksRun(): int
+    {
+        return $this->verificationChecksRun;
     }
 
     protected function planSlot(
@@ -110,18 +117,18 @@ class Planner implements LoggerAwareInterface
         int $totalSlots
     ): PlannedInstance {
         $isValidInstance = null;
-        $verificationChecks = 0;
-        while ($isValidInstance !== true && $verificationChecks <= self::MAX_VERIFICATION_CHECKS) {
-            if ($verificationChecks > self::VERIFICATION_FAILURE_LOGGING_THRESHOLD) {
+        $this->verificationChecksRun = 0;
+        while ($isValidInstance !== true && $this->verificationChecksRun <= self::MAX_VERIFICATION_CHECKS) {
+            if ($this->verificationChecksRun > self::VERIFICATION_FAILURE_LOGGING_THRESHOLD) {
                 $this->logger->notice(
                     t(
                         'High number of board planner verification checks on board instance generation for instance {instance}. Current check: {checkNumber}'
                     ),
-                    ['instance' => $instance->getBoardInstanceID(), 'checkNumber' => $verificationChecks]
+                    ['instance' => $instance->getBoardInstanceID(), 'checkNumber' => $this->verificationChecksRun]
                 );
             }
 
-            $verificationChecks++;
+            $this->verificationChecksRun++;
             $plannedInstance = $this->createPlannedInstance(
                 $instance,
                 $contentObjectGroups,
@@ -131,7 +138,7 @@ class Planner implements LoggerAwareInterface
             $isValidInstance = $this->isValidInstance($plannedInstance);
         }
 
-        if ($verificationChecks >= self::MAX_VERIFICATION_CHECKS) {
+        if ($this->verificationChecksRun >= self::MAX_VERIFICATION_CHECKS) {
             throw new \Exception(
                 t(
                     'Max verification checks limit of %s reached while generating board instance %s',
