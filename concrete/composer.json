@@ -97,7 +97,7 @@
     "indigophp/hash-compat": "^1.1",
     "phpseclib/phpseclib": "^3.0",
     "symfony/psr-http-message-bridge": "^2.0",
-    "guzzlehttp/guzzle": "7.5.3.",
+    "guzzlehttp/guzzle": "^7.4",
     "league/fractal": "^0.19.2",
     "league/pipeline": "^1.0",
     "symfony/property-access": "^5.2",
