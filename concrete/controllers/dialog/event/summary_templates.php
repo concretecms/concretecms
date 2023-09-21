@@ -7,6 +7,7 @@ use Concrete\Core\Calendar\Event\EventService;
 use Concrete\Core\Calendar\Event\Summary\Template\Command\DisableCustomCalendarEventSummaryTemplatesCommand;
 use Concrete\Core\Calendar\Event\Summary\Template\Command\EnableCustomCalendarEventSummaryTemplatesCommand;
 use Concrete\Core\Calendar\Event\EditResponse;
+use Concrete\Core\Entity\Calendar\CalendarEventVersionOccurrence;
 use Concrete\Core\Support\Facade\Facade;
 
 class SummaryTemplates extends BackendInterfaceController
@@ -39,23 +40,27 @@ class SummaryTemplates extends BackendInterfaceController
         return false;
     }
 
+    protected function getOccurrenceFromRequest(): CalendarEventVersionOccurrence
+    {
+        $occurrence = $this->eventOccurrenceService->getByID((int) $this->request->query->get('versionOccurrenceID'));
+        if (!$occurrence) {
+            throw new \Exception(t('Invalid occurrence.'));
+        }
+        return $occurrence;
+    }
+
     public function action()
     {
+        $occurrence = $this->getOccurrenceFromRequest();
         $url = call_user_func_array('parent::action', func_get_args());
-        if (!empty($_REQUEST['eventID'])) {
-            $url .= '&eventID=' . $_REQUEST['eventID'];
-        }
-
+        $url .= '&versionOccurrenceID=' . $occurrence->getID();
         return $url;
     }
 
 
     public function view()
     {
-        $occurrence = $this->eventOccurrenceService->getByID($this->request->query->get('versionOccurrenceID'));
-        if (!$occurrence) {
-            throw new \Exception(t('Invalid occurrence.'));
-        }
+        $occurrence = $this->getOccurrenceFromRequest();
         $pageTemplates = $occurrence->getSummaryTemplates();
         $selectedTemplateIDs = [];
         $templates = [];
@@ -80,7 +85,8 @@ class SummaryTemplates extends BackendInterfaceController
     public function submit()
     {
         if ($this->validateAction()) {
-            $event = $this->eventService->getByID($_REQUEST['eventID'], EventService::EVENT_VERSION_RECENT);
+            $occurrence = $this->getOccurrenceFromRequest();
+            $event = $occurrence->getEvent();
             if (!$event) {
                 throw new \Exception(t('Invalid event.'));
             }
