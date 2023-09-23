@@ -528,6 +528,7 @@ where treeNodeDisplayOrder > ? and treeNodeParentID = ?',
             $newParent->updateDateModified();
             $this->treeNodeParentID = $newParent->getTreeNodeID();
             $this->treeNodeDisplayOrder = $treeNodeDisplayOrder;
+            $newParent->clearLoadedChildren();
         }
     }
 
@@ -656,6 +657,19 @@ where treeNodeDisplayOrder > ? and treeNodeParentID = ?',
             }
             $this->childNodesLoaded = true;
         }
+    }
+
+    /**
+     * Clear the child nodes loaded by populateChildren() / populateDirectChildrenOnly().
+     *
+     * @return $this
+     */
+    public function clearLoadedChildren(): self
+    {
+        $this->childNodesLoaded = false;
+        $this->childNodes = [];
+
+        return $this;
     }
 
     public function delete()
