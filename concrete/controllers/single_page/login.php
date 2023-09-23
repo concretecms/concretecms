@@ -29,6 +29,11 @@ class Login extends PageController implements LoggerAwareInterface
     public $helpers = ['form'];
     protected $locales = [];
 
+    /**
+     * @var \Concrete\Core\Error\ErrorList\ErrorList|null
+     */    
+    protected $error;
+
     public function on_before_render()
     {
         if ($this->error->has()) {
@@ -326,7 +331,7 @@ class Login extends PageController implements LoggerAwareInterface
         $user = $this->app->make(User::class);
         $this->set('user', $user);
 
-        if (strlen($type)) {
+        if (is_string($type) && $type !== '') {
             try {
                 $at = AuthenticationType::getByHandle($type);
                 if ($at->isEnabled()) {
