@@ -597,13 +597,15 @@ class Group extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
         return $children;
     }
 
+    /**
+     * @return \Concrete\Core\User\Group\Group|null
+     */
     public function getParentGroup()
     {
         $node = GroupTreeNode::getTreeNodeByGroupID($this->getGroupID());
         $parent = $node->getTreeNodeParentObject();
-        if ($parent) {
-            return $parent->getTreeNodeGroupObject();
-        }
+
+        return $parent instanceof \Concrete\Core\Tree\Node\Type\Group ? $parent->getTreeNodeGroupObject() : null;
     }
 
     public function getGroupDisplayName($includeHTML = true, $includePath = true)
