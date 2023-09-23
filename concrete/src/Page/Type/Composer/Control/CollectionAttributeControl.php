@@ -163,7 +163,7 @@ class CollectionAttributeControl extends Control
         if (is_object($ak)) {
             $controller = $ak->getController();
             $value = $controller->createAttributeValueFromRequest();
-            $c->setAttribute($ak, $value);
+            $c->setAttribute($ak, $value, false);
         }
     }
 
