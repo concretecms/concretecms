@@ -8,7 +8,7 @@ return [
      */
     'version' => '9.2.2a1',
     'version_installed' => '9.2.2a1',
-    'version_db' => '20230812015937', // the key of the latest database migration
+    'version_db' => '20230924000000', // the key of the latest database migration
 
     /*
      * Installation status
@@ -892,6 +892,10 @@ return [
          * Enable asciify to sanitize name of uploaded files
          */
         'enable_filename_asciify' => true,
+        /**
+         * Determines whether the list should keep folders on top when sorting by name.
+         */
+        'keep_folders_on_top' => false,
     ],
 
     'search_users' => [
