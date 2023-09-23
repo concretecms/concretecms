@@ -10,9 +10,9 @@ use Concrete\Core\Application\UserInterface\ContextMenu\DropdownMenu;
 use Concrete\Core\Application\UserInterface\ContextMenu\MenuInterface;
 use Concrete\Core\User\Group\Group;
 use Concrete\Core\User\Group\Search\Result\Column;
-use Concrete\Core\User\Group\Search\Result\Result;
 use Concrete\Core\User\Group\Search\Result\Item;
 use Concrete\Core\User\Group\Search\Result\ItemColumn;
+use Concrete\Core\User\Group\Search\Result\Result;
 
 /** @var MenuInterface $menu */
 /** @var Result $result */
@@ -42,7 +42,7 @@ use Concrete\Core\User\Group\Search\Result\ItemColumn;
                                 data-reference="parent">
     
                                 <span class="sr-only">
-                                    <?php echo t("Toggle Dropdown"); ?>
+                                    <?= t('Toggle Dropdown') ?>
                                 </span>
                         </button>
 
@@ -53,20 +53,20 @@ use Concrete\Core\User\Group\Search\Result\ItemColumn;
                 ?>
             </th>
 
-            <?php foreach ($result->getColumns() as $column): ?>
+            <?php foreach ($result->getColumns() as $column) { ?>
                 <?php /** @var Column $column */ ?>
-                <th class="<?php echo $column->getColumnStyleClass() ?>">
-                    <?php if ($column->isColumnSortable()): ?>
-                        <a href="<?php echo h($column->getColumnSortURL()) ?>">
-                            <?php echo $column->getColumnTitle() ?>
+                <th class="<?= $column->getColumnStyleClass() ?>">
+                    <?php if ($column->isColumnSortable()) { ?>
+                        <a href="<?= h($column->getColumnSortURL()) ?>">
+                            <?= $column->getColumnTitle() ?>
                         </a>
-                    <?php else: ?>
+                    <?php } else { ?>
                         <span>
-                            <?php echo $column->getColumnTitle() ?>
+                            <?= $column->getColumnTitle() ?>
                         </span>
-                    <?php endif; ?>
+                    <?php } ?>
                 </th>
-            <?php endforeach; ?>
+            <?php } ?>
         </tr>
         </thead>
 
@@ -77,7 +77,7 @@ use Concrete\Core\User\Group\Search\Result\ItemColumn;
             /** @var Group $group */
             $group = $item->getItem();
             ?>
-            <tr data-details-url="<?=$item->getDetailsURL()?>"
+            <tr data-details-url="<?= $item->getDetailsURL() ?>"
                 <?php if (isset($highlightResults)
                     && in_array($item->getItem()->getTreeNodeID(), $highlightResults)) { ?>
                     class="table-row-highlight"<?php } ?>
@@ -88,34 +88,32 @@ use Concrete\Core\User\Group\Search\Result\ItemColumn;
                         <!--suppress HtmlFormInputWithoutLabel -->
                         <input data-search-checkbox="individual"
                                type="checkbox"
-                               data-node-type="<?php
-                               echo $item->getItem()->getTreeNodeTypeHandle() ?>"
-                               data-item-id="<?php echo $item->getResultGroupId() ?>"/>
+                               data-node-type="<?= $item->getItem()->getTreeNodeTypeHandle() ?>"
+                               data-item-id="<?= $item->getResultGroupId() ?>"/>
                         <?php
                     } ?>
                 </td>
 
                 <td class="ccm-search-results-icon">
-                    <?php
-                    echo $item->getItem()->getListFormatter()->getIconElement() ?>
+                    <?= $item->getItem()->getListFormatter()->getIconElement() ?>
                 </td>
 
                 <?php foreach ($item->getColumns() as $column) { ?>
                     <?php /** @var ItemColumn $column */ ?>
                     <?php /** @noinspection PhpUndefinedMethodInspection */
 
-                    if ($column->getColumnKey() ==  'name') { ?>
+                    if ($column->getColumnKey() == 'name') { ?>
                         <td class="ccm-search-results-name">
-                            <?php echo $column->getColumnValue(); ?>
+                            <?= $column->getColumnValue() ?>
                         </td>
                     <?php } else { ?>
-                        <td class="<?=$class?? '' ?>">
-                            <?php echo $column->getColumnValue(); ?>
+                        <td class="<?= $class ?? '' ?>">
+                            <?= $column->getColumnValue() ?>
                         </td>
                     <?php } ?>
                 <?php } ?>
 
-                <?php $menu = $item->getItem()->getTreeNodeMenu(); ?>
+                <?php $menu = $item->getItem()->getTreeNodeMenu() ?>
 
                 <?php if ($menu) { ?>
                     <td class="ccm-search-results-menu-launcher">
@@ -133,7 +131,7 @@ use Concrete\Core\User\Group\Search\Result\ItemColumn;
                                 </svg>
                             </button>
 
-                            <?php echo $menu->getMenuElement(); ?>
+                            <?= $menu->getMenuElement() ?>
                         </div>
                     </td>
                 <?php } ?>
@@ -143,13 +141,13 @@ use Concrete\Core\User\Group\Search\Result\ItemColumn;
     </table>
 </div>
 
-<?php echo $result->getPagination()->renderView('dashboard'); ?>
+<?= $result->getPagination()->renderView('dashboard') ?>
 
 <script type="text/javascript">
     (function ($) {
         $(function () {
             $('table[data-search-results=groups]').concreteGroupManagerTable({
-                'folderID': '<?php echo $folderID; ?>'
+                'folderID': '<?= $folderID ?>'
             });
         });
     })(jQuery);

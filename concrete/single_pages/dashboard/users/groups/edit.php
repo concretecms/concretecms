@@ -59,7 +59,7 @@ $urlResolver = $app->make(ResolverManagerInterface::class);
             <div class="help-block">
                 <?= t(
                     'Click %shere%s to manage the group types.',
-                    '<a href="' . h((string)$urlResolver->resolve(['/dashboard/users/group_types'])) . '">',
+                    '<a href="' . h((string) $urlResolver->resolve(['/dashboard/users/group_types'])) . '">',
                     '</a>'
                 ) ?>
             </div>
