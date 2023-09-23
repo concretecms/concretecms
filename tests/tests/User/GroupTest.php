@@ -106,6 +106,11 @@ class GroupTest extends UserTestCase
         $group3 = Group::add('Approvers', 'This is a test group 1', $group2);
         $group4 = Group::add('Group 10', 'This is a test group 10', $group1);
 
+        $parentOfGroup2 = $group2->getParentGroup();
+        $this->assertNotNull($parentOfGroup2);
+        $this->assertSame($group1->getGroupID(), $parentOfGroup2->getGroupID());
+        $this->assertNull($group1->getParentGroup());
+
         $newPath = $group3->getGroupPath();
         $this->assertEquals('/HGroup/Group 1/Approvers', $newPath);
 
