@@ -7,6 +7,7 @@ use Concrete\Core\Tree\Node\NodeType as TreeNodeType;
 use Concrete\Core\Tree\TreeType;
 use Concrete\Core\Tree\Type\Group as GroupTreeType;
 use Concrete\Core\User\Group\Command;
+use Concrete\Core\User\Group\FolderManager;
 use Concrete\Core\User\Group\Group;
 use Concrete\Core\User\UserList;
 use Concrete\TestHelpers\User\UserTestCase;
@@ -21,6 +22,7 @@ class GroupTest extends UserTestCase
         TreeNodeType::add('group');
         TreeType::add('group');
         GroupTreeType::add();
+        (new FolderManager())->create();
         Group::add(
             tc('GroupName', 'Guest'),
             tc('GroupDescription', 'The guest group represents unregistered visitors to your site.'),
@@ -574,6 +576,8 @@ class GroupTest extends UserTestCase
     {
         $this->tables = array_values(array_unique(array_merge($this->tables, [
             'GroupSelectedRoles',
+            'TreeGroupFolderNodes',
+            'TreeGroupFolderNodeSelectedGroupTypes',
         ])));
 
         return parent::getTables();
