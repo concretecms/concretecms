@@ -1,18 +1,18 @@
 <?php
+
 namespace Concrete\Core\Command\Task\Input\Definition;
 
-use Concrete\Core\Command\Task\Input\FieldInterface as LoadedFieldInterface;
 use Concrete\Core\Command\Task\Input\Field as LoadedField;
+use Concrete\Core\Command\Task\Input\FieldInterface as LoadedFieldInterface;
 use Concrete\Core\Console\Command\TaskCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 
-defined('C5_EXECUTE') or die("Access Denied.");
+defined('C5_EXECUTE') or die('Access Denied.');
 
 class Field implements FieldInterface
 {
-
     /**
      * @var string
      */
@@ -33,12 +33,18 @@ class Field implements FieldInterface
      */
     protected $isRequired = false;
 
-    public function __construct(string $key, string $label, string $description, bool $isRequired = false)
+    /**
+     * @var string
+     */
+    protected $shortcut;
+
+    public function __construct(string $key, string $label, string $description, bool $isRequired = false, ?string $shortcut = null)
     {
         $this->key = $key;
         $this->label = $label;
         $this->description = $description;
         $this->isRequired = $isRequired;
+        $this->shortcut = $shortcut;
     }
 
     /**
@@ -65,11 +71,20 @@ class Field implements FieldInterface
         return $this->description;
     }
 
+    /**
+     * @return string|null
+     */
+    public function getShortcut(): ?string
+    {
+        return $this->shortcut;
+    }
+
     public function isValid(LoadedFieldInterface $loadedField): bool
     {
         if ($this->isRequired() && !$loadedField->getValue()) {
             throw new \Exception(t('Field "%s" is required.', $loadedField->getKey()));
         }
+
         return true;
     }
 
@@ -90,6 +105,7 @@ class Field implements FieldInterface
                 return new LoadedField($this->getKey(), $consoleInput->getOption($this->getKey()));
             }
         }
+
         return null;
     }
 
@@ -120,6 +136,9 @@ class Field implements FieldInterface
         } else {
             $command->addOption($this->getKey(), null, InputOption::VALUE_REQUIRED, $this->getDescription());
         }
-    }
 
+        if ($this->getShortcut()) {
+            $command->addOption($this->getShortcut(), null, InputOption::VALUE_REQUIRED, $this->getDescription());
+        }
+    }
 }
