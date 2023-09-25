@@ -17,7 +17,7 @@ $view->setViewTheme('atomik');
             <?php } ?>
         </div>
         <div class="col-md-6 order-1 order-md-2">
-            <img class="img-fluid mb-md-0 mb-3" src="<?=$thumbnail->getThumbnailURL('blog_entry_thumbnail')?>">
+            <a href="<?=$link?>"><img class="img-fluid mb-md-0 mb-3" src="<?=$thumbnail->getThumbnailURL('blog_entry_thumbnail')?>"></a>
         </div>
     </div>
 </div>
