@@ -34,7 +34,7 @@ class Field implements FieldInterface
     protected $isRequired = false;
 
     /**
-     * @var string
+     * @var string|null
      */
     protected $shortcut;
 
@@ -71,9 +71,6 @@ class Field implements FieldInterface
         return $this->description;
     }
 
-    /**
-     * @return string|null
-     */
     public function getShortcut(): ?string
     {
         return $this->shortcut;
@@ -134,11 +131,7 @@ class Field implements FieldInterface
         if ($this->isRequired()) {
             $command->addArgument($this->getKey(), InputArgument::REQUIRED, $this->getDescription());
         } else {
-            $command->addOption($this->getKey(), null, InputOption::VALUE_REQUIRED, $this->getDescription());
-        }
-
-        if ($this->getShortcut()) {
-            $command->addOption($this->getShortcut(), null, InputOption::VALUE_REQUIRED, $this->getDescription());
+            $command->addOption($this->getKey(), $this->getShortcut(), InputOption::VALUE_REQUIRED, $this->getDescription());
         }
     }
 }
