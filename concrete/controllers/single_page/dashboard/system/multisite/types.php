@@ -155,7 +155,7 @@ class Types extends DashboardPageController
             return $this->buildRedirect($this->action());
         }
         $this->setCurrentSiteType($type);
-        $this->prepareSkelpeton($type, true);
+        $this->prepareSkeleton($type, true);
         $this->render('/dashboard/system/multisite/types/view_skeleton');
     }
 
@@ -306,7 +306,7 @@ class Types extends DashboardPageController
         }
 
         $this->setCurrentSiteType($type);
-        $this->prepareSkelpeton($type, false);
+        $this->prepareSkeleton($type, false);
 
         $category = $this->getCategoryObject();
         $skeleton = $this->get('skeleton');
@@ -404,7 +404,7 @@ class Types extends DashboardPageController
         return $skeletonService->createSkeleton($type, $locale);
     }
 
-    protected function prepareSkelpeton(?Type $type, bool $createIfNotFound): void
+    protected function prepareSkeleton(?Type $type, bool $createIfNotFound): void
     {
         $this->set('skeleton', $this->getTypeSkeleton($type, $createIfNotFound));
     }

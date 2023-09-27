@@ -47,7 +47,7 @@ class SiteTypeCategory extends AbstractStandardCategory
 
     public function getAttributeValueRepository()
     {
-        return $this->entityManager->getRepository(SiteValue::class);
+        return $this->entityManager->getRepository(SiteTypeValue::class);
     }
 
     public function getAttributeValues($skeleton)
