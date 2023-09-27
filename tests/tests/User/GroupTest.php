@@ -7,6 +7,7 @@ use Concrete\Core\Tree\Node\NodeType as TreeNodeType;
 use Concrete\Core\Tree\TreeType;
 use Concrete\Core\Tree\Type\Group as GroupTreeType;
 use Concrete\Core\User\Group\Command;
+use Concrete\Core\User\Group\FolderManager;
 use Concrete\Core\User\Group\Group;
 use Concrete\Core\User\UserList;
 use Concrete\TestHelpers\User\UserTestCase;
@@ -21,6 +22,7 @@ class GroupTest extends UserTestCase
         TreeNodeType::add('group');
         TreeType::add('group');
         GroupTreeType::add();
+        (new FolderManager())->create();
         Group::add(
             tc('GroupName', 'Guest'),
             tc('GroupDescription', 'The guest group represents unregistered visitors to your site.'),
@@ -103,6 +105,11 @@ class GroupTest extends UserTestCase
         $group2 = Group::add('Group 1', 'This is a test group 2', $group1);
         $group3 = Group::add('Approvers', 'This is a test group 1', $group2);
         $group4 = Group::add('Group 10', 'This is a test group 10', $group1);
+
+        $parentOfGroup2 = $group2->getParentGroup();
+        $this->assertNotNull($parentOfGroup2);
+        $this->assertSame($group1->getGroupID(), $parentOfGroup2->getGroupID());
+        $this->assertNull($group1->getParentGroup());
 
         $newPath = $group3->getGroupPath();
         $this->assertEquals('/HGroup/Group 1/Approvers', $newPath);
@@ -574,6 +581,8 @@ class GroupTest extends UserTestCase
     {
         $this->tables = array_values(array_unique(array_merge($this->tables, [
             'GroupSelectedRoles',
+            'TreeGroupFolderNodes',
+            'TreeGroupFolderNodeSelectedGroupTypes',
         ])));
 
         return parent::getTables();
