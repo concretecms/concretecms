@@ -110,6 +110,7 @@ class Design extends BackendUIPageController
         $req->setCurrentPage($this->page);
         $controller = $this->page->getPageController();
         $controller->disableEditing();
+        $controller->runAction('view');
         $view = $controller->getViewObject();
 
         $previewRequest = new PageDesignPreviewRequest();
