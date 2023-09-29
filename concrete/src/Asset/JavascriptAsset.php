@@ -1,8 +1,9 @@
 <?php
 namespace Concrete\Core\Asset;
 
+use Concrete\Core\Config\Repository\Repository;
 use HtmlObject\Element;
-use Config;
+
 
 class JavascriptAsset extends Asset
 {
@@ -37,16 +38,15 @@ class JavascriptAsset extends Asset
      */
     protected static function getOutputDirectory()
     {
-        if (!file_exists(Config::get('concrete.cache.directory').'/'.DIRNAME_JAVASCRIPT)) {
-            $proceed = @mkdir(Config::get('concrete.cache.directory').'/'.DIRNAME_JAVASCRIPT);
+        $config = app(Repository::class);
+        $path = $config->get('concrete.cache.directory') . '/' . DIRNAME_JAVASCRIPT;
+        if (!file_exists($path)) {
+            $proceed = @mkdir($path, $config->get('concrete.filesystem.permissions.directory'));
         } else {
             $proceed = true;
         }
-        if ($proceed) {
-            return Config::get('concrete.cache.directory').'/'.DIRNAME_JAVASCRIPT;
-        } else {
-            return false;
-        }
+
+        return $proceed ? $path : false;
     }
 
     /**

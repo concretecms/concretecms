@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\Console\Command;
 
+use Concrete\Core\Config\Repository\Repository;
 use Concrete\Core\Console\Command;
 use Concrete\Core\Localization\Localization;
 use Concrete\Core\Localization\Translation\Remote\ProviderInterface as RemoteTranslationProvider;
@@ -64,6 +65,7 @@ EOT
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $this->app = Application::getFacadeApplication();
+        $config = $this->app->make(Repository::class);
         
         $vsh = $this->app->make('helper/validation/strings');
         /* @var \Concrete\Core\Utility\Service\Validation\Strings $vsh */
@@ -162,7 +164,7 @@ EOT
         // Save the pot file
         $output->write('Saving .pot file... ');
         if (!is_dir($packageLanguagesDirectory)) {
-            @mkdir($packageLanguagesDirectory, 0775, true);
+            @mkdir($packageLanguagesDirectory, $config->get('concrete.filesystem.permissions.directory'), true);
             if (!is_dir($packageLanguagesDirectory)) {
                 throw new Exception("Unable to create the directory $packageLanguagesDirectory");
             }
@@ -206,7 +208,7 @@ EOT
             }
             $output->write('- saving .po file... ');
             if (!is_dir($poDirectory)) {
-                @mkdir($poDirectory, 0775, true);
+                @mkdir($poDirectory, $config->get('concrete.filesystem.permissions.directory'), true);
                 if (!is_dir($poDirectory)) {
                     throw new Exception("Unable to create the directory $poDirectory");
                 }
