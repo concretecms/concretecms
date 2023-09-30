@@ -51,7 +51,7 @@
                                 <?php
                                 echo $form->checkbox('plugin[]', $key, $manager->isSelected($key), ['class' => 'form-check-input']);
                                 ?>
-                                <label class="form-check-label" for="plugin[]">
+                                <label class="form-check-label" for="plugin_<?= $key ?>">
                                 <?php
                                     if ($description !== '') {
                                         echo '<span class="launch-tooltip" title="', h($description), '">';
