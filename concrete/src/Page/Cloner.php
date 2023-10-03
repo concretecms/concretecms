@@ -16,6 +16,7 @@ use Concrete\Core\Page\Statistics as PageStatistics;
 use Concrete\Core\Site\Service as SiteService;
 use Concrete\Core\Site\Tree\TreeInterface;
 use Doctrine\ORM\EntityManagerInterface;
+use Concrete\Core\Support\Facade\Application;
 use PDO;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
