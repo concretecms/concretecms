@@ -7,8 +7,6 @@ use Concrete\Core\Http\ResponseFactoryInterface;
 use Concrete\Core\Page\Desktop\DesktopList;
 use Concrete\Core\Page\Page;
 use Concrete\Core\Site\Service;
-use Concrete\Core\Support\Facade\Application;
-use Concrete\Core\Support\Facade\Site;
 use Concrete\Core\Url\Resolver\Manager\ResolverManagerInterface;
 use Concrete\Core\Utility\Service\Validation\Numbers;
 use Symfony\Component\HttpFoundation\Response;
@@ -93,7 +91,7 @@ class PostLoginLocation
     /**
      * Store in the session the post-login URL or page.
      *
-     * @param string|\League\URL\URLInterface|\Concrete\Core\Page\Page|int $url the URL to redirect users to after login
+     * @param string|\League\Url\UrlInterface|\Concrete\Core\Page\Page|int $url the URL to redirect users to after login
      */
     public function setSessionPostLoginUrl($url)
     {

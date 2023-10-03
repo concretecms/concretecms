@@ -144,8 +144,6 @@ class Themes extends DashboardSitePageController
         return $this->buildRedirect($this->action());
     }
 
-
-
     public function preview($pThemeID = null, $previewPageID = null)
     {
         $theme = Theme::getByID($pThemeID);

@@ -203,11 +203,15 @@ class Type extends ConcreteObject implements \Concrete\Core\Permission\ObjectInt
             $c->move($parent);
             $db = \Database::connection();
             $db->executeQuery('update Pages set cIsDraft = 0 where cID = ?', [$c->getCollectionID()]);
-            if (!$parent->overrideTemplatePermissions()) {
-                // that means the permissions of pages added beneath here inherit from page type permissions
-                // this is a very poorly named method. Template actually used to mean Type.
-                // so this means we need to set the permissions of this current page to inherit from page types.
+            if (!$parent->overrideTemplatePermissions() && $c->getCollectionInheritance() === 'PARENT') {
+                // When the parent page's subpage permissions setting is "inherit page type default permissions",
+                // the permissions of this page should inherit from the default.
+                // overrideTemplatePermissions() is a very poorly named method. Template actually used to mean Type.
                 $c->inheritPermissionsFromDefaults();
+            } elseif ($parent->overrideTemplatePermissions() && $c->getCollectionInheritance() === 'TEMPLATE') {
+                // When the parent page's subpage permissions setting is "inherit from parent",
+                // off course the permissions of this page should inherit from the parent.
+                $c->inheritPermissionsFromParent();
             }
             $c->activate();
         } else {

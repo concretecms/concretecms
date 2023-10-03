@@ -65,18 +65,18 @@ class PageIndexer implements IndexingDriverInterface, ApplicationAwareInterface
     /**
      * Get a page based on criteria
      * @param string|int|Page|Collection $page
-     * @return \Concrete\Core\Page\Page
+     * @return \Concrete\Core\Page\Page|null
      */
     protected function getPage($page)
     {
         // Handle passed cID
         if (is_numeric($page)) {
-            return Page::getByID($page);
+            return Page::getByID($page, 'ACTIVE');
         }
 
         // Handle passed /path/to/collection
         if (is_string($page)) {
-            return Page::getByPath($page);
+            return Page::getByPath($page, 'ACTIVE');
         }
 
         // If it's a page, just return the page
@@ -84,10 +84,11 @@ class PageIndexer implements IndexingDriverInterface, ApplicationAwareInterface
             return $page;
         }
 
-        // If it's not a page but it's a collection, lets try getting a page by id
+        // If it's not a page, but it's a collection, lets try getting a page by id
         if ($page instanceof Collection) {
             return $this->getPage($page->getCollectionID());
         }
-    }
 
+        return null;
+    }
 }

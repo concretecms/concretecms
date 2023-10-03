@@ -26,6 +26,10 @@ defined('C5_EXECUTE') or die('Access Denied.');
 
 $addressId = uniqid('ccm_attribute_address_', true);
 
+$country = $country ?? null;
+$search = $search ?? false;
+$akDefaultCountry = $akDefaultCountry ?? null;
+$akHasCustomCountries = $akHasCustomCountries ?? false;
 ?>
 
 <div id="<?= $addressId; ?>" class="ccm-attribute-address-composer-wrapper ccm-attribute-address-<?= $key->getAttributeKeyID(); ?>">

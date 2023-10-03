@@ -12,6 +12,7 @@ if ($includeBrandText && $includeBrandLogo) {
 } else {
     $brandingMode = 'text';
 }
+$multilingualEnabled = $multilingualEnabled ?? false;
 ?>
 
 <div data-view="edit-top-navigation-bar-block">
@@ -38,6 +39,12 @@ if ($includeBrandText && $includeBrandLogo) {
                 <input type="checkbox" class="form-check-input" id="includeSearchInput" name="includeSearchInput" value="1" v-model="includeSearchInput">
                 <label class="form-check-label" for="includeSearchInput"><?=t('Display search input within navigation bar.')?></label>
             </div>
+            <?php if ($multilingualEnabled) { ?>
+            <div class="form-check form-switch">
+                <input type="checkbox" class="form-check-input" id="includeSwitchLanguage" name="includeSwitchLanguage" value="1" v-model="includeSwitchLanguage">
+                <label class="form-check-label" for="includeSwitchLanguage"><?=t('Display switch language within navigation bar')?></label>
+            </div>
+            <?php } ?>
         </div>
     </fieldset>
     <fieldset class="mb-3 border-top pt-3">
@@ -82,7 +89,6 @@ if ($includeBrandText && $includeBrandLogo) {
 <script type="text/javascript">
 
     Concrete.Vue.activateContext('cms', function (Vue, config) {
-        Vue.config.devtools = true;
         new Vue({
             el: 'div[data-view=edit-top-navigation-bar-block]',
             components: config.components,
@@ -92,6 +98,7 @@ if ($includeBrandText && $includeBrandLogo) {
                 includeNavigationDropdowns: <?=$includeNavigationDropdowns ? 'true' : 'false'?>,
                 includeStickyNav: <?=$includeStickyNav ? 'true' : 'false'?>,
                 includeSearchInput: <?=$includeSearchInput ? 'true' : 'false'?>,
+                includeSwitchLanguage: <?=$includeSwitchLanguage ? 'true' : 'false'?>,
                 brandingLogo: <?=(int) ($brandingLogo ?? null)?>,
                 brandingTransparentLogo: <?=(int) ($brandingTransparentLogo ?? null)?>,
                 searchInputFormActionPageID: <?=(int) ($searchInputFormActionPageID ?? null)?>,

@@ -50,7 +50,7 @@ abstract class Snippet extends ConcreteObject
     {
         $db = Loader::db();
         $r = $db->GetRow('select scsHandle, scsIsActive, pkgID, scsName from SystemContentEditorSnippets where scsHandle = ?', array($scsHandle));
-        if (is_array($r) && $r['scsHandle']) {
+        if (array_key_exists('scsHandle', $r)) {
             $pkgHandle = false;
             if ($r['pkgID']) {
                 $pkgHandle = PackageList::getHandle($r['pkgID']);

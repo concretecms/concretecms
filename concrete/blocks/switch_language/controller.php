@@ -8,8 +8,9 @@ use Concrete\Core\Feature\UsesFeatureInterface;
 use Concrete\Core\Http\Response;
 use Concrete\Core\Http\ResponseFactoryInterface;
 use Concrete\Core\Multilingual\Page\Section\Section;
+use Concrete\Core\Multilingual\Service\Detector;
+use Concrete\Core\Page\Page;
 use Concrete\Core\Permission\Checker;
-use Concrete\Core\Url\Resolver\Manager\ResolverManagerInterface;
 use Cookie;
 use Session;
 
@@ -22,7 +23,7 @@ class Controller extends BlockController implements UsesFeatureInterface
     protected $btTable = 'btSwitchLanguage';
     protected $btCacheBlockOutput = true;
     protected $btCacheBlockOutputForRegisteredUsers = true;
-    protected $btCacheBlockOutputLifetime = 300;
+    protected $btCacheBlockOutputLifetime = 3600;
 
     public $helpers = ['form'];
 
@@ -49,33 +50,16 @@ class Controller extends BlockController implements UsesFeatureInterface
     }
 
     /**
-     * @param int $currentPageID
-     * @param int $sectionID
-     *
-     * @return \League\URL\URLInterface
+     * @deprecated Use Detector::getSwitchLink instead
      */
     public function resolve_language_url($currentPageID, $sectionID)
     {
-        $resolve = ['/'];
-        $lang = Section::getByID((int) $sectionID);
-        if (is_object($lang)) {
-            $resolve = [$lang];
-            $page = \Page::getByID((int) $currentPageID);
-            if (!$page->isError()) {
-                $relatedID = $lang->getTranslatedPageID($page);
-                if ($relatedID) {
-                    $pc = \Page::getByID($relatedID);
-                    $resolve = [$pc];
-                } elseif ($page->isGeneratedCollection()) {
-                    $this->app->make('session')->set('multilingual_default_locale', $lang->getLocale());
-                    $resolve = [$page];
-                }
-            }
-        }
-
-        return $this->app->make(ResolverManagerInterface::class)->resolve($resolve);
+        return $this->app->make('multilingual/detector')->getSwitchLink($currentPageID, $sectionID);
     }
 
+    /**
+     * @deprecated Use /ccm/frontend/multilingual/switch_language instead
+     */
     public function action_switch_language($currentPageID, $sectionID, $bID = false)
     {
         $to = $this->resolve_language_url($currentPageID, $sectionID);
@@ -108,21 +92,14 @@ class Controller extends BlockController implements UsesFeatureInterface
 
     public function view()
     {
-        $ml = Section::getList();
-        $c = \Page::getCurrentPage();
-        $al = Section::getBySectionOfSite($c);
+        /** @var Detector $dl */
+        $dl = $this->app->make('multilingual/detector');
+        $ml = $dl->getAvailableSections();
+        $c = Page::getCurrentPage();
         $languages = [];
-        $locale = null;
-        if ($al !== null) {
-            $locale = $al->getLanguage();
-        }
-        if (!$locale) {
-            $locale = \Localization::activeLocale();
-            $al = Section::getByLocale($locale);
-        }
         $mlAccessible = [];
         foreach ($ml as $m) {
-            $pc = new Checker(\Page::getByID($m->getCollectionID()));
+            $pc = new Checker(Page::getByID($m->getCollectionID()));
             if ($pc->canRead()) {
                 $mlAccessible[] = $m;
                 $languages[$m->getCollectionID()] = $m->getLanguageText($m->getLocale());
@@ -130,10 +107,11 @@ class Controller extends BlockController implements UsesFeatureInterface
         }
         $this->set('languages', $languages);
         $this->set('languageSections', $mlAccessible);
+        $al = $dl->getActiveSection($c);
         $this->set('activeLanguage', $al ? $al->getCollectionID() : null);
-        $dl = $this->app->make('multilingual/detector');
         $this->set('defaultLocale', $dl->getPreferredSection());
-        $this->set('locale', $locale);
+        $this->set('locale', $dl->getActiveLocale($c));
         $this->set('cID', $c->getCollectionID());
+        $this->set('detector', $dl);
     }
 }

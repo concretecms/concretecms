@@ -87,9 +87,8 @@ class SlotFilterer
         // for this template.
 
         $collection = new PossibleContentObjectCollection();
-        $objectGroupsCount = count($objectGroups);
         for ($i = 0; $i < $contentSlots; $i++) {
-            $availableContentObjectsForSlot = $i < $objectGroupsCount ? $objectGroups[$i] : null;
+            $availableContentObjectsForSlot = $objectGroups[$i] ?? null;
             if ($availableContentObjectsForSlot) {
                 $contentObjects = $availableContentObjectsForSlot->getContentObjects();
                 $filterer = $potentialTemplate->getDriver()->getSlotFilterer();
@@ -138,14 +137,24 @@ class SlotFilterer
                 $slot
             );
 
+            $planner = $plannedInstance->getInstance()->getBoard()->getTemplate()->getDriver()->getLayoutPlanner();
             if (count($contentObjectCollection->getContentObjects()) == $contentSlots) {
-                // We found a valid template. So let's remove the total number of content slots from our
-                // $contentObjectGroups array so we don't just keep placing the same item over and over
-                $plannedInstance->removeObjectGroups($contentSlots);
                 $plannedSlotTemplate = new PlannedSlotTemplate();
                 $plannedSlotTemplate->setSlotTemplate($potentialTemplate);
                 $plannedSlotTemplate->setObjectCollection($contentObjectCollection);
-                return $plannedSlotTemplate;
+                $isValid = true;
+                if ($planner) {
+                    $plannedSlotToValidate = new PlannedSlot();
+                    $plannedSlotToValidate->setSlot($slot);
+                    $plannedSlotToValidate->setTemplate($plannedSlotTemplate);
+                    $isValid = $planner->isValidPlannedSlot($plannedSlotToValidate, $plannedInstance, $slot);
+                }
+                if ($isValid) {
+                    // We found a valid template. So let's remove the total number of content slots from our
+                    // $contentObjectGroups array so we don't just keep placing the same item over and over
+                    $plannedInstance->removeObjectGroups($contentSlots);
+                    return $plannedSlotTemplate;
+                }
             }
         }
         // If we made it all the way down here, we must not be able to place any valid templates for the current

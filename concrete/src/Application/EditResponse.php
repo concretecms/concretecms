@@ -53,11 +53,18 @@ class EditResponse implements JsonSerializable
     /**
      * The redirect URL of the response.
      *
-     * @var string|\League\URL\URLInterface|null
+     * @var string|\League\Url\UrlInterface|null
      *
      * @deprecated since concrete5 8.5.0a3 (what's deprecated is the "public part") - use setMessage/getMessage
      */
     public $redirectURL;
+
+    /**
+     * The current page should be reloaded.
+     *
+     * @var bool
+     */
+    private $reloadCurrentPage = false;
 
     /**
      * Additional response data.
@@ -195,7 +202,7 @@ class EditResponse implements JsonSerializable
     /**
      * Set the redirect URL of the response.
      *
-     * @param string|\League\URL\URLInterface|null $url
+     * @param string|\League\Url\UrlInterface|null $url
      *
      * @return $this
      */
@@ -209,11 +216,31 @@ class EditResponse implements JsonSerializable
     /**
      * Get the redirect URL of the response.
      *
-     * @return string|\League\URL\URLInterface|null
+     * @return string|\League\Url\UrlInterface|null
      */
     public function getRedirectURL()
     {
         return $this->redirectURL;
+    }
+
+    /**
+     * The current page should be reloaded?
+     *
+     * @return $this
+     */
+    public function setReloadCurrentPage(bool $value): object
+    {
+        $this->reloadCurrentPage = $value;
+
+        return $this;
+    }
+
+    /**
+     * The current page should be reloaded?
+     */
+    public function isReloadCurrentPage(): bool
+    {
+        return $this->reloadCurrentPage;
     }
 
     /**
@@ -276,6 +303,7 @@ class EditResponse implements JsonSerializable
         $o->message = $this->getMessage();
         $o->title = $this->getTitle();
         $o->redirectURL = (string) $this->getRedirectURL();
+        $o->reloadCurrentPage = $this->isReloadCurrentPage();
         foreach ($this->additionalData as $key => $value) {
             $o->{$key} = $value;
         }

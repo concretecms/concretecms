@@ -47,7 +47,6 @@ $boardInstanceID = $boardInstanceID ?? 0;
 <script type="text/javascript">
 
     Concrete.Vue.activateContext('cms', function (Vue, config) {
-        Vue.config.devtools = true;
         new Vue({
             el: 'div[data-view=edit-board-block]',
             components: config.components,

@@ -1,9 +1,9 @@
 <?php
 namespace Concrete\Core\Tree\Type;
 
+use Concrete\Core\Tree\Node\Type\Group as GroupTreeNode;
 use Concrete\Core\Tree\Tree;
 use Database;
-use GroupTreeNode;
 
 class Group extends Tree
 {
@@ -40,8 +40,7 @@ class Group extends Tree
     public static function get()
     {
         $db = Database::connection();
-        $treeTypeID = $db->GetOne('select treeTypeID from TreeTypes where treeTypeHandle = ?', array('group'));
-        $treeID = $db->GetOne('select treeID from Trees where treeTypeID = ?', array($treeTypeID));
+        $treeID = $db->fetchOne('SELECT Trees.treeID FROM TreeTypes INNER JOIN Trees ON TreeTypes.treeTypeID = Trees.treeTypeID WHERE TreeTypes.treeTypeHandle = ?', ['group']);
 
         return Tree::getByID($treeID);
     }
@@ -71,9 +70,9 @@ class Group extends Tree
     public static function ensureGroupNodes()
     {
         $db = Database::connection();
-        $tree = GroupTree::get();
+        $tree = static::get();
         $rootNode = $tree->getRootTreeNodeObject();
-        $rows = $db->GetCol('select Groups.gID from ' . $db->getDatabasePlatform()->quoteSingleIdentifier('Groups') . ' left join TreeGroupNodes on Groups.gID = TreeGroupNodes.gID where TreeGroupNodes.gID is null');
+        $rows = $db->fetchFirstColumn('select Groups.gID from ' . $db->getDatabasePlatform()->quoteSingleIdentifier('Groups') . ' left join TreeGroupNodes on Groups.gID = TreeGroupNodes.gID where TreeGroupNodes.gID is null');
         foreach ($rows as $gID) {
             $g = static::getByID($gID);
             GroupTreeNode::add($g, $rootNode);

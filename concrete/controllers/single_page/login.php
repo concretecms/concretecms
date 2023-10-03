@@ -29,6 +29,11 @@ class Login extends PageController implements LoggerAwareInterface
     public $helpers = ['form'];
     protected $locales = [];
 
+    /**
+     * @var \Concrete\Core\Error\ErrorList\ErrorList|null
+     */    
+    protected $error;
+
     public function on_before_render()
     {
         if ($this->error->has()) {
@@ -43,11 +48,13 @@ class Login extends PageController implements LoggerAwareInterface
     {
         $config = $this->app->make('config');
         $this->error->add(t($config->get('concrete.user.deactivation.message')));
+        $this->view();
     }
 
     public function session_invalidated()
     {
         $this->error->add(t('Your session has expired. Please sign in again.'));
+        $this->view();
     }
 
     /**
@@ -246,6 +253,7 @@ class Login extends PageController implements LoggerAwareInterface
             );
             $this->error->add(t('User is not registered. Check your authentication controller.'));
             $u->logout();
+            $this->view();
         }
     }
 
@@ -323,7 +331,7 @@ class Login extends PageController implements LoggerAwareInterface
         $user = $this->app->make(User::class);
         $this->set('user', $user);
 
-        if (strlen($type)) {
+        if (is_string($type) && $type !== '') {
             try {
                 $at = AuthenticationType::getByHandle($type);
                 if ($at->isEnabled()) {
@@ -433,5 +441,6 @@ class Login extends PageController implements LoggerAwareInterface
             $pll = $this->app->make(PostLoginLocation::class);
             $pll->setSessionPostLoginUrl($rcID);
         }
+        $this->view();
     }
 }
