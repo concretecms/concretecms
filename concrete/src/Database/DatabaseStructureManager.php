@@ -2,9 +2,10 @@
 namespace Concrete\Core\Database;
 
 use Closure;
+use Concrete\Core\Config\Repository\Repository;
+use Core;
 use Doctrine\DBAL\Schema\SchemaDiff;
 use Doctrine\ORM\EntityManagerInterface;
-use Core;
 use Doctrine\ORM\Tools\SchemaTool;
 use Doctrine\Persistence\Mapping\MappingException;
 
@@ -20,14 +21,12 @@ class DatabaseStructureManager
     /**
      * The entity classes and their metadata.
      * 
-     * @var \Doctrine\Common\Persistence\Mapping\ClassMetadata[]
+     * @var \Doctrine\ORM\Mapping\ClassMetadata[]|null
      */
     protected $metadatas;
 
     /**
      * Create a new structure manager.
-     * 
-     * @param \Doctrine\ORM\EntityManagerInterface $em
      */
     public function __construct(EntityManagerInterface $em)
     {
@@ -93,9 +92,10 @@ class DatabaseStructureManager
                         $proxyDir
                     ));
                 }
-                @mkdir($proxyDir, DIRECTORY_PERMISSIONS_MODE_COMPUTED, true);
+                $permissions = app(Repository::class)->get('concrete.filesystem.permissions.directory');
+                @mkdir($proxyDir, $permissions, true);
                 if (is_dir($proxyDir)) {
-                    @chmod($proxyDir, DIRECTORY_PERMISSIONS_MODE_COMPUTED);
+                    @chmod($proxyDir, $permissions);
                 } else {
                     throw new \Exception(t(
                         "Could not create the proxies directory. " .
@@ -354,7 +354,7 @@ class DatabaseStructureManager
      * Returns the entity classes and their metadata. Loads this data if it has
      * not been already loaded by this instancfe.
      * 
-     * @return \Doctrine\Common\Persistence\Mapping\ClassMetadata[]
+     * @return \Doctrine\ORM\Mapping\ClassMetadata[]
      */
     public function getMetadatas()
     {
