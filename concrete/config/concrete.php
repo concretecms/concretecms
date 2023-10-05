@@ -8,7 +8,7 @@ return [
      */
     'version' => '9.2.2a1',
     'version_installed' => '9.2.2a1',
-    'version_db' => '20230812015937', // the key of the latest database migration
+    'version_db' => '20231002142400', // the key of the latest database migration
 
     /*
      * Installation status
