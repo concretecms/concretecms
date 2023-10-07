@@ -16,4 +16,4 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: release-version
-          path: build/${{ env.ARCHIVE_NAME }}
+          path: build/${{ env.ARCHIVE_ZIP }}
