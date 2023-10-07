@@ -17,9 +17,9 @@ jobs:
         run: gh release upload ${{ github.event.release.tag_name }} build/${{ env.ARCHIVE_BASENAME }}.zip#archive
       - name: Upload Remote Update Archive
         run: |
-            cd build \
-            unzip ${{ env.ARCHIVE_BASENAME }}.zip \
-            mkdir ${{ env.ARCHIVE_BASENAME }}-remote-updater \
+            cd build
+            unzip ${{ env.ARCHIVE_BASENAME }}.zip
+            mkdir ${{ env.ARCHIVE_BASENAME }}-remote-updater
             mv ${{ env.ARCHIVE_BASENAME }}/concrete ${{ env.ARCHIVE_BASENAME }}-remote-updater/
             zip -r ${{ env.ARCHIVE_BASENAME }}-remote-updater/ ${{ env.ARCHIVE_BASENAME }}-remote-updater.zip
             gh release upload  ${{ github.event.release.tag_name }} build/${{ env.ARCHIVE_BASENAME }}.zip#remote-updater
