@@ -6,11 +6,14 @@ jobs:
   build:
     runs-on: ubuntu-latest
     env:
-      ARCHIVE_NAME: ${{ github.event.repository.name }}-${{ github.event.release.tag_name }}
+      ARCHIVE_ZIP: concrete-cms-${{ github.event.release.tag_name }}.zip
     steps:
       - name: Checkout
         uses: actions/checkout@v4
       - name: Build
         run: cd build/ && npm i && grunt build-release
-      - name: list-stuff
-        run: ls -la
+      - name: Upload Archive
+        uses: actions/upload-artifact@v3
+        with:
+          name: release-version
+          path: build/"$ARCHIVE_ZIP" 
