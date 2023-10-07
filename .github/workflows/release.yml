@@ -8,11 +8,7 @@ jobs:
     env:
       ARCHIVE_NAME: ${{ github.event.repository.name }}-${{ github.event.release.tag_name }}
     steps:
-      - name: download-source
-        run: curl -sL "${{ github.event.release.tarball_url }}" >"$ARCHIVE_NAME".tar.gz
-      - name: unzip-source
-        run: mkdir "$ARCHIVE_NAME" && tar -xzf "$ARCHIVE_NAME".tar.gz -C "$ARCHIVE_NAME" --strip-components 1
-      - name: install-npm-dependencies
-        run: cd "$ARCHIVE_NAME"/ && ls -la && npm i && grunt build-Release
+      - name: Checkout
+        uses: actions/checkout@v4
       - name: list-stuff
         run: ls -la
