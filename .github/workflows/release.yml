@@ -13,7 +13,4 @@ jobs:
       - name: Build
         run: cd build/ && npm i && grunt build-release
       - name: Upload Archive
-        uses: actions/upload-artifact@v3
-        with:
-          name: release-version
-          path: build/${{ env.ARCHIVE_ZIP }}
+        run: gh release upload ${{ github.event.release.tag_name }} build/${{ env.ARCHIVE_ZIP }}
