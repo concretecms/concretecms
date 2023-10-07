@@ -14,6 +14,6 @@ jobs:
       - name: unzip-source
         run: mkdir "$ARCHIVE_NAME" && tar -xzf "$ARCHIVE_NAME".tar.gz -C "$ARCHIVE_NAME" --strip-components 1
       - name: install-npm-dependencies
-        run: cd "$ARCHIVE_NAME"/build && ls -la && npm i && grunt build-Release
+        run: cd "$ARCHIVE_NAME"/ && ls -la && npm i && grunt build-Release
       - name: list-stuff
         run: ls -la
