@@ -22,4 +22,4 @@ jobs:
             mkdir ${{ env.ARCHIVE_BASENAME }}-remote-updater
             mv ${{ env.ARCHIVE_BASENAME }}/concrete ${{ env.ARCHIVE_BASENAME }}-remote-updater/
             zip -r ${{ env.ARCHIVE_BASENAME }}-remote-updater.zip ${{ env.ARCHIVE_BASENAME }}-remote-updater/
-            gh release upload  ${{ github.event.release.tag_name }} build/${{ env.ARCHIVE_BASENAME }}-remote-updater.zip#remote-updater
+            gh release upload ${{ github.event.release.tag_name }} ${{ env.ARCHIVE_BASENAME }}-remote-updater.zip#remote-updater
