@@ -1,5 +1,4 @@
-name: release-concrete-cms-version
-run-name: Build and Publish new Concrete CMS Release
+name: "Publish New Version"
 on:
   release:
     types: [published]
