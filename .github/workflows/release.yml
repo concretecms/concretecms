@@ -6,7 +6,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     env:
-      ARCHIVE_ZIP: concrete-cms-${{ github.event.release.tag_name }}.zip
+      ARCHIVE_BASENAME: concrete-cms-${{ github.event.release.tag_name }}
       GH_TOKEN: ${{ github.token }}
     steps:
       - name: Checkout
@@ -14,4 +14,12 @@ jobs:
       - name: Build
         run: cd build/ && npm i && grunt build-release
       - name: Upload Archive
-        run: gh release upload ${{ github.event.release.tag_name }} build/${{ env.ARCHIVE_ZIP }}
+        run: gh release upload ${{ github.event.release.tag_name }} build/${{ env.ARCHIVE_BASENAME }}.zip#archive
+      - name: Upload Remote Update Archive
+        run: |
+            cd build \
+            unzip ${{ env.ARCHIVE_BASENAME }}.zip \
+            mkdir ${{ env.ARCHIVE_BASENAME }}-remote-updater \
+            mv ${{ env.ARCHIVE_BASENAME }}/concrete ${{ env.ARCHIVE_BASENAME }}-remote-updater/
+            zip -r ${{ env.ARCHIVE_BASENAME }}-remote-updater/ ${{ env.ARCHIVE_BASENAME }}-remote-updater.zip
+            gh release upload  ${{ github.event.release.tag_name }} build/${{ env.ARCHIVE_BASENAME }}.zip#remote-updater
