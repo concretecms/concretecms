@@ -10,5 +10,7 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+      - name: Build
+        run: cd build/ && npm i && grunt build-release
       - name: list-stuff
         run: ls -la
