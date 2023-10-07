@@ -7,6 +7,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       ARCHIVE_ZIP: concrete-cms-${{ github.event.release.tag_name }}.zip
+      GH_TOKEN: ${{ github.token }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
