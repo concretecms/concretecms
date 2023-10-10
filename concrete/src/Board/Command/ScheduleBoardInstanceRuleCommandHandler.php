@@ -2,14 +2,10 @@
 
 namespace Concrete\Core\Board\Command;
 
-use Concrete\Core\Entity\Board\Instance;
 use Concrete\Core\Entity\Board\InstanceSlotRule;
-use Concrete\Core\Localization\Service\Date;
 use Concrete\Core\Logging\Channels;
 use Concrete\Core\Logging\LoggerFactory;
-use Concrete\Core\User\User;
 use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\Id\UuidGenerator;
 
 class ScheduleBoardInstanceRuleCommandHandler
 {

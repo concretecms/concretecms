@@ -2,7 +2,6 @@
 
 namespace Concrete\Core\Board\Designer\Command;
 
-use Concrete\Core\Entity\Board\Designer\CustomElementItem;
 use Concrete\Core\Entity\Board\Designer\ItemSelectorCustomElementItem;
 use Doctrine\ORM\EntityManager;
 

@@ -3,7 +3,6 @@
 namespace Concrete\Core\Board\Command;
 
 use Concrete\Core\Entity\Board\Board;
-use Concrete\Core\Entity\Board\SlotTemplate;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManager;
 

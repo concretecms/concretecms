@@ -1,8 +1,6 @@
 <?php
 namespace Concrete\Core\Board\Instance\Slot\Menu;
 
-use Concrete\Core\Application\UserInterface\ContextMenu\Item\DialogLinkItem;
-use Concrete\Core\Application\UserInterface\ContextMenu\Item\DividerItem;
 use Concrete\Core\Application\UserInterface\ContextMenu\Item\LinkItem;
 use Concrete\Core\Application\UserInterface\ContextMenu\PopoverMenu;
 use Concrete\Core\Board\Instance\Slot\RenderedSlot;
