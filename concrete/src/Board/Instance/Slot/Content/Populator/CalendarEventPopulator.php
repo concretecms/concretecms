@@ -39,6 +39,7 @@ class CalendarEventPopulator extends AbstractPopulator
         if ($occurrence) {
             return $this->createSummaryContentObjects($occurrence);
         }
+        return [];
     }
 
 }
