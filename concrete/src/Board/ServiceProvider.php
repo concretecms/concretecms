@@ -17,6 +17,7 @@ class ServiceProvider extends Provider
         $this->app->singleton(BoardSlotTempateManager::class);
         $this->app->singleton(Manager::class);
         $this->app->singleton(CollectionFactory::class);
+        $this->app->singleton(SummaryCategoryManager::class);
 
         $this->app
             ->when(ContentRenderer::class)
