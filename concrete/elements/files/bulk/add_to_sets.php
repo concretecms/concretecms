@@ -50,7 +50,7 @@ View::element(
             $checkbox->addClass("form-check-input");
             $checkbox->setAttribute("id", $id);
 
-            $input = new Input('hidden', 'fsID:' . $fileset->getFileSetID(), $fileset->getFileSetID());
+            $input = new Input('hidden', 'fsID:' . $fileset->getFileSetID());
             $input->setAttribute('data-set-input', $fileset->getFileSetID());
 
             $found = 0;
