@@ -8,6 +8,7 @@ use Concrete\Core\Foundation\Service\Provider;
 use Concrete\Core\Page\Page;
 use Concrete\Core\Board\Template\Driver\Manager as BoardTemplateManager;
 use Concrete\Core\Board\Template\Slot\Driver\Manager as BoardSlotTempateManager;
+use Concrete\Core\Summary\Category\Driver\Manager as SummaryCategoryManager;
 
 class ServiceProvider extends Provider
 {
