@@ -72,7 +72,7 @@ class Areas extends ApiController implements ApplicationAwareInterface
         if ($page && $page->isError() && $page->getError() == COLLECTION_NOT_FOUND) {
             return $this->error(t('Page not found.', 404));
         }
-        $area = Area::get($page, $areaHandle);
+        $area = Area::getOrCreate($page, $areaHandle);
         $blockType = BlockType::getByHandle($content['type']);
         if (!$blockType) {
             return $this->error(t('Invalid block type handle.', 401));
@@ -90,13 +90,6 @@ class Areas extends ApiController implements ApplicationAwareInterface
 
         $block = $this->app->executeCommand($command);
 
-        /**
-         * @var Block $block
-         *
-         * Ensure we're passing back the proper new collection so API consumers can look at its version, work with it
-         * etc...
-         */
-        $block->setBlockCollectionObject($page);
         $transformer = new BaseBlockTransformer();
         $transformer->setDefaultIncludes(['page']);
         return $this->transform($block, $transformer, Resources::RESOURCE_BLOCKS);
