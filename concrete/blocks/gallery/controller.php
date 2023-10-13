@@ -350,6 +350,9 @@ class Controller extends BlockController implements FileTrackableInterface, Uses
                 }
 
                 $current = $this->formatEntry($entry);
+                if (!$current) {
+                    continue;
+                }
                 $current['displayChoices'] = $this->getDisplayChoices();
             }
 

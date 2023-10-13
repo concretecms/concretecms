@@ -559,23 +559,32 @@ class Group extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
 
     public function getParentGroups()
     {
-        $node = GroupTreeNode::getTreeNodeByGroupID($this->getGroupID());
+        $parents = $this->getParentNodes();
         $parentGroups = [];
-        if (is_object($node)) {
-            $parents = $node->getTreeNodeParentArray();
-            $parents = array_reverse($parents);
-            foreach ($parents as $node) {
-                if ($node instanceof \Concrete\Core\Tree\Node\Type\Group) {
-                    $g = $node->getTreeNodeGroupObject();
-                    if (is_object($g)) {
-                        $parentGroups[] = $g;
-                    }
+        foreach ($parents as $node) {
+            if ($node instanceof \Concrete\Core\Tree\Node\Type\Group) {
+                $g = $node->getTreeNodeGroupObject();
+                if (is_object($g)) {
+                    $parentGroups[] = $g;
                 }
             }
         }
 
         return $parentGroups;
     }
+
+    public function getParentNodes(): array
+    {
+        $node = GroupTreeNode::getTreeNodeByGroupID($this->getGroupID());
+        if (is_object($node)) {
+            $parents = $node->getTreeNodeParentArray();
+            $parents = array_reverse($parents);
+            array_shift($parents); // Remove the top level node because it's always "All Groups"
+            return $parents;
+        }
+        return [];
+    }
+
 
     public function getChildGroups()
     {
@@ -597,27 +606,29 @@ class Group extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
         return $children;
     }
 
+    /**
+     * @return \Concrete\Core\User\Group\Group|null
+     */
     public function getParentGroup()
     {
         $node = GroupTreeNode::getTreeNodeByGroupID($this->getGroupID());
         $parent = $node->getTreeNodeParentObject();
-        if ($parent) {
-            return $parent->getTreeNodeGroupObject();
-        }
+
+        return $parent instanceof \Concrete\Core\Tree\Node\Type\Group ? $parent->getTreeNodeGroupObject() : null;
     }
 
     public function getGroupDisplayName($includeHTML = true, $includePath = true)
     {
         $return = '';
         if ($includePath) {
-            $parentGroups = $this->getParentGroups();
-            if ($parentGroups !== []) {
+            $parentNodes = $this->getParentNodes();
+            if ($parentNodes !== []) {
                 $separator = app(Repository::class)->get('concrete.seo.group_name_separator');
                 if ($includeHTML) {
                     $return .= '<span class="ccm-group-breadcrumb">';
                 }
-                foreach ($parentGroups as $pg) {
-                    $return .= h(tc('GroupName', $pg->getGroupName())) . " {$separator} ";
+                foreach ($parentNodes as $pg) {
+                    $return .= h(tc('GroupName', $pg->getTreeNodeName())) . " {$separator} ";
                 }
                 if ($includeHTML) {
                     $return = rtrim($return) . '</span> ';

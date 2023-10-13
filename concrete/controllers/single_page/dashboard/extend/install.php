@@ -4,7 +4,7 @@ namespace Concrete\Controller\SinglePage\Dashboard\Extend;
 
 use Concrete\Core\Entity\Package as PackageEntity;
 use Concrete\Core\Error\ErrorList\ErrorList;
-use Concrete\Core\Foundation\ClassLoader;
+use Concrete\Core\Foundation\ClassAutoloader;
 use Concrete\Core\Localization\Service\TranslationsInstaller;
 use Concrete\Core\Logging\Channels;
 use Concrete\Core\Logging\LoggerFactory;
@@ -133,8 +133,6 @@ class Install extends DashboardPageController
                         }
                     }
                 }
-                $loader = new ClassLoader();
-                $loader->registerPackageCustomAutoloaders($p);
                 if (
                     (!$p->showInstallOptionsScreen()) ||
                     $this->token->validate('install_options_selected')

@@ -379,6 +379,9 @@ if ($install_config) {
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
+                                    <div class="d-none">
+                                        <input type="text" name="username" value="<?= h(USER_SUPER) ?>" autocomplete="username" readonly="readonly" />
+                                    </div>
                                     <label for="uPassword"
                                            class="control-label form-label"><?= t('Administrator Password') ?></label>
                                     <?= $form->password('uPassword', $passwordAttributes) ?>

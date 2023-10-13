@@ -4,7 +4,7 @@ namespace Concrete\Core\Foundation\Runtime\Run;
 use Concrete\Core\Application\ApplicationAwareInterface;
 use Concrete\Core\Application\ApplicationAwareTrait;
 use Concrete\Core\Config\Repository\Repository;
-use Concrete\Core\Foundation\ClassAliasList;
+use Concrete\Core\Foundation\ClassAutoloader;
 use Concrete\Core\Http\Request;
 use Concrete\Core\Http\Response;
 use Concrete\Core\Http\ResponseFactoryInterface;
@@ -245,7 +245,7 @@ class DefaultRunner implements RunInterface, ApplicationAwareInterface
      */
     protected function preloadClassAliases()
     {
-        ClassAliasList::getInstance()->resolveRequired();
+        ClassAutoloader::getInstance()->autoloadAliasesAtBoot();
     }
 
     /**

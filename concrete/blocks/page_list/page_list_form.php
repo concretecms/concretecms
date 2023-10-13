@@ -583,7 +583,7 @@ echo $userInterface->tabs([
 			</div>
 
             <div class="form-group">
-                <?php echo $form->label("noResultsMessage", ('Message to Display When No Pages Listed.')); ?>
+                <?php echo $form->label("noResultsMessage", t('Message to Display When No Pages Listed')); ?>
                 <?php echo $form->textarea("noResultsMessage", $noResultsMessage); ?>
             </div>
 

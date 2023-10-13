@@ -25,6 +25,13 @@ class BitmapFormat
     const FORMAT_JPEG = 'jpeg';
 
     /**
+     * Bitmap image format: WEBP.
+     *
+     * @var string
+     */
+    const FORMAT_WEBP = 'webp';
+
+    /**
      * Bitmap image format: GIF.
      *
      * @var string
@@ -51,6 +58,13 @@ class BitmapFormat
      * @var int
      */
     const DEFAULT_JPEG_QUALITY = 80;
+
+    /**
+     * Default WEBP quality (from 0 to 100) - to be used when there's no (valid) configured value.
+     *
+     * @var int
+     */
+    const DEFAULT_WEBP_QUALITY = 80;
 
     /**
      * Default PNG compression level (from 0 to 9) - to be used when there's no (valid) configured value.
@@ -99,6 +113,7 @@ class BitmapFormat
             $this->allImageFormats = [
                 static::FORMAT_PNG,
                 static::FORMAT_JPEG,
+                static::FORMAT_WEBP,
                 static::FORMAT_GIF,
                 static::FORMAT_WBMP,
                 static::FORMAT_XBM,
@@ -134,6 +149,7 @@ class BitmapFormat
         switch ($format) {
             case static::FORMAT_PNG:
             case static::FORMAT_JPEG:
+            case static::FORMAT_WEBP:
             case static::FORMAT_GIF:
             case static::FORMAT_XBM:
                 $result = 'image/' . $format;
@@ -163,6 +179,9 @@ class BitmapFormat
                 break;
             case 'image/jpeg':
                 $result = static::FORMAT_JPEG;
+                break;
+            case 'image/webp':
+                $result = static::FORMAT_WEBP;
                 break;
             case 'image/gif':
                 $result = static::FORMAT_GIF;
@@ -203,6 +222,9 @@ class BitmapFormat
             case static::FORMAT_JPEG:
                 $result['jpeg_quality'] = $this->getDefaultJpegQuality();
                 break;
+            case static::FORMAT_WEBP:
+                $result['webp_quality'] = $this->getDefaultWebpQuality();
+                break;
         }
 
         return $result;
@@ -226,6 +248,9 @@ class BitmapFormat
                 break;
             case static::FORMAT_JPEG:
                 $result = 'jpg';
+                break;
+            case static::FORMAT_WEBP:
+                $result = 'webp';
                 break;
             case static::FORMAT_GIF:
                 $result = 'gif';
@@ -273,6 +298,41 @@ class BitmapFormat
             $result = (int) $result;
         } else {
             $result = static::DEFAULT_JPEG_QUALITY;
+        }
+
+        return $result;
+    }
+
+    /**
+     * Set the default WEBP quality.
+     *
+     * @param int $value an integer from 0 to 100
+     *
+     * @return $this
+     */
+    public function setDefaultWebpQuality($value)
+    {
+        if ($this->valn->integer($value, 0, 100)) {
+            $value = (int) $value;
+            $this->config->set('concrete.misc.default_webp_image_compression', $value);
+            $this->config->save('concrete.misc.default_webp_image_compression', $value);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Get the default WEBP quality.
+     *
+     * @return int an integer from 0 to 100
+     */
+    public function getDefaultWebpQuality()
+    {
+        $result = $this->config->get('concrete.misc.default_webp_image_compression');
+        if ($this->valn->integer($result, 0, 100)) {
+            $result = (int) $result;
+        } else {
+            $result = static::DEFAULT_WEBP_QUALITY;
         }
 
         return $result;

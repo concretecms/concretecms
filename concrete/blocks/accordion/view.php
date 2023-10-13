@@ -26,7 +26,7 @@ $alwaysOpen = $alwaysOpen ?? false;
 
             <<?php echo $itemHeadingFormat; ?> class="accordion-header">
                 <button class="accordion-button <?php if($entryClass !== ' show'){echo 'collapsed'; }?>" type="button" data-bs-toggle="collapse" data-bs-target="#collapse<?=$entry->getId()?>">
-                    <?=$entry->getTitle()?>
+                    <?=h($entry->getTitle())?>
                 </button>
             </<?php echo $itemHeadingFormat; ?>>
 
