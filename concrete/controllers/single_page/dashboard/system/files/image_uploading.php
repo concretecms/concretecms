@@ -26,6 +26,7 @@ class ImageUploading extends DashboardPageController
         $this->set('manipulation_library', $config->get('concrete.file_manager.images.manipulation_library'));
 
         $this->set('jpeg_quality', $bitmapFormat->getDefaultJpegQuality());
+        $this->set('webp_quality', $bitmapFormat->getDefaultWebpQuality());
         $this->set('png_compression', $bitmapFormat->getDefaultPngCompressionLevel());
 
         $this->set('restrict_max_width', (int) $config->get('concrete.file_manager.restrict_max_width'));
@@ -102,6 +103,12 @@ class ImageUploading extends DashboardPageController
             } else {
                 $this->error->add(t('Invalid JPEG quality level'));
             }
+            $webp_quality = (int) $post->get('webp_quality');
+            if ($valn->integer($webp_quality, 0, 100)) {
+                $webp_quality = (int) $webp_quality;
+            } else {
+                $this->error->add(t('Invalid WEBP quality level'));
+            }
             $png_compression = $post->get('png_compression');
             if ($valn->integer($png_compression, 0, 9)) {
                 $png_compression = (int) $png_compression;
@@ -134,6 +141,7 @@ class ImageUploading extends DashboardPageController
                 $bitmapFormat = $this->app->make(BitmapFormat::class);
                 $config->save('concrete.file_manager.images.manipulation_library', $manipulation_library);
                 $bitmapFormat->setDefaultJpegQuality($jpeg_quality);
+                $bitmapFormat->setDefaultWebpQuality($webp_quality);
                 $bitmapFormat->setDefaultPngCompressionLevel($png_compression);
                 $config->save('concrete.file_manager.images.use_exif_data_to_rotate_images', $use_exif_data_to_rotate_images);
                 $config->save('concrete.file_manager.images.use_exif_data_for_file_name_attribute', $use_exif_data_for_file_name_attribute);
