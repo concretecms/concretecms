@@ -73,6 +73,11 @@ class Controller extends BlockController implements FileTrackableInterface, Uses
     public $title;
 
     /**
+     * @var int
+     */
+    public $lazyLoad;
+
+    /**
      * @var string|null
      */
     public $sizingOption;
@@ -140,6 +145,7 @@ class Controller extends BlockController implements FileTrackableInterface, Uses
         $this->set('imgPaths', $imgPaths);
         $this->set('altText', $this->getAltText());
         $this->set('title', $this->getTitle());
+        $this->set('lazyLoad', $this->getLazyLoad());
         $this->set('linkURL', $this->getLinkURL());
         $this->set('openLinkInNewWindow', $this->shouldLinkOpenInNewWindow());
         $this->set('selectedThumbnailTypes', $this->getSelectedThumbnailTypes());
@@ -435,6 +441,14 @@ class Controller extends BlockController implements FileTrackableInterface, Uses
     }
 
     /**
+     * @return int|null
+     */
+    public function getLazyLoad()
+    {
+        return !empty($this->lazyLoad) ? 1 : 0;
+    }
+
+    /**
      * @return string
      */
     public function getExternalLink()
@@ -554,6 +568,7 @@ class Controller extends BlockController implements FileTrackableInterface, Uses
             'fOnstateID' => 0,
             'maxWidth' => 0,
             'maxHeight' => 0,
+            'lazyLoad' => !empty($args['lazyLoad']) ? 1 : 0,
             'sizingOption' => 'thumbnails_default',
             'openLinkInNewWindow' => 0,
         ];

@@ -31,6 +31,7 @@ $app = Application::getFacadeApplication();
  * @var array $imgPaths May be empty, or may contain two strings (with keys 'default' and 'hover')
  * @var string $altText
  * @var string|null $title
+ * @var int|null $lazyLoad
  * @var string $linkURL
  * @var bool $openLinkInNewWindow
  * @var array $selectedThumbnailTypes Array keys are the breakpoint handles, array values are the breakpoint IDs
@@ -119,6 +120,12 @@ if (is_object($f) && $f->getFileID()) {
 
                 break;
         }
+
+        // Add image dimensions
+        if (empty($imageTag->getAttribute('width')) || empty($imageTag->getAttribute('height'))) {
+            $imageTag->setAttribute('width', $f->getAttribute('width'));
+            $imageTag->setAttribute('height', $f->getAttribute('height'));
+        }
     }
 
     $imageTag->addClass('ccm-image-block img-fluid bID-' . $bID);
@@ -138,6 +145,10 @@ if (is_object($f) && $f->getFileID()) {
         $imageTag->addClass('ccm-image-block-hover');
         $imageTag->setAttribute('data-default-src', $imgPaths['default']);
         $imageTag->setAttribute('data-hover-src', $imgPaths['hover']);
+    }
+
+    if (!empty($lazyLoad)) {
+        $imageTag->setAttribute('loading', 'lazy');
     }
 
     if ($linkURL) {
