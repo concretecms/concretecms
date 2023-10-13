@@ -3,32 +3,31 @@
 defined('C5_EXECUTE') or die('Access Denied.');
 
 /**
- * @var Concrete\Controller\Dialog\Groups\Bulk\Delete $controller
+ * @var Concrete\Controller\Dialog\Groups\Delete $controller
  * @var Concrete\Core\View\DialogView $view
  * @var Concrete\Core\Form\Service\Form $form
- * @var Concrete\Core\User\Group\Group[] $groups
+ * @var Concrete\Core\User\Group\Group|null $group
  */
 
-if ($groups === []) {
+if ($group === null) {
     ?>
     <div class="alert-message info">
-        <?= t('No groups are eligible for this operation') ?>
+        <?= t('Unable to find the requested group') ?>
     </div>
     <?php
     return;
 }
 ?>
-<p><?= t('Are you sure you would like to delete the following groups?') ?></p>
+
+<?= t('Are you sure you would like to delete the following group?') ?><br />
+<div class="alert alert-info">
+    <?= $group->getGroupDisplayName() ?>
+</div>
 <form method="POST" data-dialog-form="delete-groups" action="<?= h($controller->action('submit')) ?>" data-dialog-form>
-    <?php
-    foreach ($groups as $group) {
-        echo $form->hidden('item[]', $group->getGroupID());
-    }
-    ?>
+    <?= $form->hidden('groupID', $group->getGroupID()) ?>
     <div class="ccm-ui">
         <?php
-        $view->element('groups/confirm_list', ['groups' => $groups]);
-        $view->element('groups/delete_options', ['numGroups' => count($groups)]);
+        $view->element('groups/delete_options', ['numGroups' => 1]);
         ?>
     </div>
     <div class="dialog-buttons">
