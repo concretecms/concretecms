@@ -78,6 +78,7 @@ function getBuiltFiles()
         'css/features/profile/frontend.css',
         'css/features/search/frontend.css',
         'css/features/social/frontend.css',
+        'css/features/staging/frontend.css',
         'css/features/taxonomy/frontend.css',
         'css/features/testimonials/frontend.css',
         'css/features/video/frontend.css',
