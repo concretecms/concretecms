@@ -1,1 +1,1 @@
-﻿CKEDITOR.plugins.setLang("print","ro",{toolbar:"Printează"});
+CKEDITOR.plugins.setLang("print","ro",{toolbar:"Printează"});

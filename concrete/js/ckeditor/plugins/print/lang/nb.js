@@ -1,1 +1,1 @@
-﻿CKEDITOR.plugins.setLang("print","nb",{toolbar:"Skriv ut"});
+CKEDITOR.plugins.setLang("print","nb",{toolbar:"Skriv ut"});

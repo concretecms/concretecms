@@ -1,1 +1,1 @@
-﻿CKEDITOR.plugins.setLang("preview","sr-latn",{preview:"Izgled stranice"});
+CKEDITOR.plugins.setLang("preview","sr-latn",{preview:"Izgled stranice"});

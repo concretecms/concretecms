@@ -1,1 +1,1 @@
-﻿CKEDITOR.plugins.setLang("pagebreak","vi",{alt:"Ngắt trang",toolbar:"Chèn ngắt trang"});
+CKEDITOR.plugins.setLang("pagebreak","vi",{alt:"Ngắt trang",toolbar:"Chèn ngắt trang"});
