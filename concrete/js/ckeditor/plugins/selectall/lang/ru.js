@@ -1,1 +1,1 @@
-﻿CKEDITOR.plugins.setLang("selectall","ru",{toolbar:"Выделить все"});
+CKEDITOR.plugins.setLang("selectall","ru",{toolbar:"Выделить все"});

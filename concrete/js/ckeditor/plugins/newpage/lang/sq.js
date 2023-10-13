@@ -1,1 +1,1 @@
-﻿CKEDITOR.plugins.setLang("newpage","sq",{toolbar:"Faqe e Re"});
+CKEDITOR.plugins.setLang("newpage","sq",{toolbar:"Faqe e Re"});
