@@ -50,68 +50,31 @@ defined('C5_EXECUTE') or die('Access Denied.');
     </fieldset>
     <fieldset>
         <legend><?=t('Settings'); ?></legend>
-        <div class="form-group">
+        <div class="mb-3" data-vue="cms">
             <label class="control-label launch-tooltip form-label" for="timezone" data-bs-placement="right" title="<?= t(
                     'This will control the default timezone that will be used to display date/times.'
                 ); ?>">
                 <?php echo t('Default Timezone'); ?>
             </label>
-            <div class="row ps-3">
-                <?php
-                /* Currently Bootstrap Select is broken with optgroup
-                 * https://github.com/snapappointments/bootstrap-select/issues/2607
-                 * So I'm going to remove optgroups here for the time being. It's either that or remove
-                 * BS Select from this list. Either way, when this is fixed, pull in an updated version of the library
-                 * and up revert this
-                 */
-                /*
-                ?>
-                <select class="selectpicker" name="timezone" data-live-search="true" data-width="auto">
-                    <?php
-                    foreach ($timezones as $areaName => $namedTimezones) {
-                        ?>
-                        <optgroup label="<?= h($areaName); ?>">
-                            <?php
-                            foreach ($namedTimezones as $tzID => $tzName) {
-                                $zone = new DateTimeZone($tzID);
-                                $zoneName = Punic\Calendar::getTimezoneNameNoLocationSpecific($zone);
-                                if ($zoneName) {
-                                    $zoneName = '(' . $zoneName . ')';
-                                } ?>
-                                <option value="<?= h($tzID); ?>"<?= strcasecmp($tzID, $timezone) === 0 ? ' selected="selected"' : ''; ?>>
-                                    <?= h($tzName); ?> <?=$zoneName; ?>
-                                </option>
-                                <?php
-                            } ?>
-                        </optgroup>
-                        <?php
+            <?php
+            $timezoneOptions = [];
+            foreach ($timezones as $areaName => $namedTimezones) {
+                if (!isset($timezoneOptions[$areaName])) {
+                    $timezoneOptions[$areaName] = [];
+                }
+                foreach ($namedTimezones as $tzID => $tzName) {
+                    $zone = new DateTimeZone($tzID);
+                    $zoneName = Punic\Calendar::getTimezoneNameNoLocationSpecific($zone);
+                    if ($zoneName) {
+                        $zoneName = '(' . $zoneName . ')';
                     }
-                    ?>
-                </select>
-                */ ?>
-
-
-                <select class="selectpicker" name="timezone" data-live-search="true" data-width="auto">
-                    <?php
-                    foreach ($timezones as $areaName => $namedTimezones) {
-                        ?>
-                            <?php
-                            foreach ($namedTimezones as $tzID => $tzName) {
-                                $zone = new DateTimeZone($tzID);
-                                $zoneName = Punic\Calendar::getTimezoneNameNoLocationSpecific($zone);
-                                if ($zoneName) {
-                                    $zoneName = '(' . $zoneName . ')';
-                                } ?>
-                                <option value="<?= h($tzID); ?>"<?= strcasecmp($tzID, $timezone) === 0 ? ' selected="selected"' : ''; ?>>
-                                    <?= h($tzName); ?> <?=$zoneName; ?>
-                                </option>
-                                <?php
-                            } ?>
-                        <?php
-                    }
-                    ?>
-                </select>
-            </div>
+                    $label = h($tzName) . ' ' . $zoneName;
+                    $timezoneOptions[$areaName][$tzID] = $label;
+                }
+            }
+            ?>
+            <concrete-select value="<?=$timezone ?? null?>" name="timezone" :options='<?=json_encode($timezoneOptions)?>'>
+            </concrete-select>
         </div>
         <div class="form-group">
             <label class="control-label form-label">
@@ -137,13 +100,14 @@ defined('C5_EXECUTE') or die('Access Denied.');
     </div>
 
 </form>
+
 <?php
 if (isset($compatibleTimezones) && !empty($compatibleTimezones)) {
                         ?>
     <div id="user-timezone-autofix-dialog" style="display: none" class="ccm-ui" title="<?=t('Select time zone'); ?>">
         <form method="POST" action="<?= $view->action('setSystemTimezone'); ?>" class="ccm-ui" id="user-timezone-autofix-form">
             <?php $token->output('set_system_timezone'); ?>
-            <div class="form-group">
+            <div>
                 <select class="form-select" size="15" name="new-timezone">
                     <?php
                     foreach ($compatibleTimezones as $timezoneID => $timezoneName) {

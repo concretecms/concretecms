@@ -14,13 +14,6 @@ defined('C5_EXECUTE') or die('Access Denied.');
 
 class Controller extends BlockController implements UsesFeatureInterface
 {
-    public $helpers = ['form', 'form/page_selector'];
-
-    /**
-     * @var int|null
-     */
-    public $topicTreeID;
-
     /**
      * @var string|null
      */
@@ -32,7 +25,12 @@ class Controller extends BlockController implements UsesFeatureInterface
     public $topicAttributeKeyHandle;
 
     /**
-     * @var int|null
+     * @var int|string|null
+     */
+    public $topicTreeID;
+
+    /**
+     * @var int|string|null
      */
     public $cParentID;
 
@@ -40,6 +38,13 @@ class Controller extends BlockController implements UsesFeatureInterface
      * @var string|null
      */
     public $title;
+
+    /**
+     * @var string|null
+     */
+    public $titleFormat;
+
+    public $helpers = ['form', 'form/page_selector'];
 
     protected $btInterfaceWidth = 400;
 
@@ -51,6 +56,11 @@ class Controller extends BlockController implements UsesFeatureInterface
      * @var string[]
      */
     protected $btExportPageColumns = ['cParentID'];
+
+    /**
+     * @var bool
+     */
+    protected $btCacheSettingsInitialized = false;
 
     /**
      * {@inheritdoc}
@@ -276,5 +286,63 @@ class Controller extends BlockController implements UsesFeatureInterface
         }
 
         parent::save($data);
+    }
+
+    /**
+     * @return bool
+     */
+    public function cacheBlockOutput()
+    {
+        $this->setupCacheSettings();
+
+        return $this->btCacheBlockOutput;
+    }
+
+    /**
+     * @return bool
+     */
+    public function cacheBlockOutputOnPost()
+    {
+        $this->setupCacheSettings();
+
+        return $this->btCacheBlockOutputOnPost;
+    }
+
+    /**
+     * @return bool
+     */
+    public function cacheBlockOutputForRegisteredUsers()
+    {
+        $this->setupCacheSettings();
+
+        return $this->btCacheBlockOutputForRegisteredUsers;
+    }
+
+    /**
+     * @return void
+     */
+    protected function setupCacheSettings(): void
+    {
+        $page = $this->getCollectionObject();
+        if ($this->btCacheSettingsInitialized || !is_object($page) || $page->isEditMode()) {
+            return;
+        }
+
+        $this->btCacheSettingsInitialized = true;
+
+        $btCacheBlockOutput = false;
+        $btCacheBlockOutputOnPost = false;
+        $btCacheBlockOutputForRegisteredUsers = false;
+
+        // If post result page is another page, we don't need to care about "active" topic
+        if ($this->cParentID && $this->cParentID !== $page->getCollectionID()) {
+            $btCacheBlockOutput = true;
+            $btCacheBlockOutputOnPost = true;
+            $btCacheBlockOutputForRegisteredUsers = true;
+        }
+
+        $this->btCacheBlockOutput = $btCacheBlockOutput;
+        $this->btCacheBlockOutputOnPost = $btCacheBlockOutputOnPost;
+        $this->btCacheBlockOutputForRegisteredUsers = $btCacheBlockOutputForRegisteredUsers;
     }
 }

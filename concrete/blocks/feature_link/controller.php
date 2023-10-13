@@ -19,15 +19,68 @@ defined('C5_EXECUTE') or die('Access Denied.');
 
 class Controller extends BlockController implements UsesFeatureInterface
 {
+    /**
+     * @var string|null
+     */
+    public $title;
+
+    /**
+     * @var string|null
+     */
+    public $body;
+
+    /**
+     * @var string|null
+     */
+    public $buttonText;
+
+    /**
+     * @var string|null
+     */
+    public $buttonExternalLink;
+
+    /**
+     * @var int|string|null
+     */
+    public $buttonInternalLinkCID;
+
+    /**
+     * @var int|string|null
+     */
+    public $buttonFileLinkID;
+
+    /**
+     * @var string|null
+     */
+    public $buttonColor;
+
+    /**
+     * @var string|null
+     */
+    public $buttonStyle;
+
+    /**
+     * @var string|null
+     */
+    public $buttonSize;
+
+    /**
+     * @var string|null
+     */
+    public $titleFormat;
+
+    /**
+     * @var string|null
+     */
+    protected $icon;
+
+    /**
+     * @var int|string|null
+     */
+    public $fID;
+
     public $helpers = ['form'];
 
-    public $buttonInternalLinkCID;
-    public $buttonExternalLink;
-    public $buttonFileLinkID;
-    public $buttonText;
-    public $buttonSize;
-    public $buttonStyle;
-    public $buttonColor;
     public $buttonIcon;
 
     protected $btDefaultSet = 'basic';
@@ -37,10 +90,10 @@ class Controller extends BlockController implements UsesFeatureInterface
     protected $btCacheBlockRecord = true;
     protected $btCacheBlockOutput = true;
     protected $btCacheBlockOutputOnPost = true;
+    protected $btExportFileColumns = array('fID');
+    protected $btExportPageColumns = ['imageLink_page'];
     protected $btCacheBlockOutputForRegisteredUsers = true;
     protected $btCacheBlockOutputLifetime = 300;
-
-    protected $icon;
 
     /**
      * {@inheritdoc}
@@ -85,6 +138,7 @@ class Controller extends BlockController implements UsesFeatureInterface
     {
         $this->set('titleFormat', 'h2');
         $this->edit();
+        $this->set('bf', null);
     }
 
     public function edit()
@@ -107,6 +161,62 @@ class Controller extends BlockController implements UsesFeatureInterface
             $this->set('imageLinkHandle', 'none');
             $this->set('imageLinkValue', null);
         }
+         // Image file object
+         $bf = null;
+         if ($this->getFileID() > 0) {
+             $bf = $this->getFileObject();
+         }
+         $this->set('bf', $bf);
+    }
+
+    /**
+     * @return bool
+     */
+    public function isComposerControlDraftValueEmpty()
+    {
+        $f = $this->getFileObject();
+        if (is_object($f) && $f->getFileID()) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * @return int
+     */
+    public function getFileID()
+    {
+        return isset($this->record->fID) ? $this->record->fID : (isset($this->fID) ? $this->fID : null);
+    }
+
+    /**
+     * @return \Concrete\Core\Entity\File\File|null
+     */
+    public function getFileObject()
+    {
+        return File::getByID($this->getFileID());
+    }
+
+    /**
+     * @return \Concrete\Core\Entity\File\File|null
+     */
+    public function getImageFeatureDetailFileObject()
+    {
+        // i don't know why this->fID isn't sticky in some cases, leading us to query
+        // every damn time
+        $db = $this->app->make('database')->connection();
+
+        $file = null;
+        $fID = $db->fetchColumn('SELECT fID FROM btContentImage WHERE bID = ?', [$this->bID], 0);
+        if ($fID) {
+            $f = File::getByID($fID);
+            if (is_object($f) && $f->getFileID()) {
+                $file = $f;
+            }
+        }
+
+        return $file;
     }
 
     /**
@@ -154,10 +264,10 @@ class Controller extends BlockController implements UsesFeatureInterface
         $this->set('buttonIcon', $this->icon);
         $this->set('iconTag', FontAwesomeIcon::getFromClassNames(h($this->icon)));
       }
+      // Check for a valid File in the view
+      $f = $this->getFileObject();
+      $this->set('f', $f);
     }
-
-
-
 
     public function save($args)
     {
@@ -166,12 +276,18 @@ class Controller extends BlockController implements UsesFeatureInterface
         $args['buttonInternalLinkCID'] = $imageLinkType === 'page' ? $imageLinkValue : 0;
         $args['buttonFileLinkID'] = $imageLinkType === 'file' ? $imageLinkValue : 0;
         $args['buttonExternalLink'] = $imageLinkType === 'external_url' ? $imageLinkValue : '';
-        /** @var SanitizeService $security */
         $security = $this->app->make('helper/security');
         $args['icon'] = $security->sanitizeString($args['icon'] ?? '');
+        $args = $args + [
+            'fID' => 0,
+        ];
+        $args['fID'] = $args['fID'] != '' ? $args['fID'] : 0;
 
         parent::save($args);
     }
-    
 
+    public function getUsedFiles()
+    {
+        return [$this->getFileID()];
+    }
 }

@@ -17,6 +17,66 @@ use Concrete\Core\View\View;
 
 class Controller extends BlockController implements FileTrackableInterface, UsesFeatureInterface
 {
+    /**
+     * @var int|string|null
+     */
+    public $fID;
+
+    /**
+     * @var int|string|null
+     */
+    public $fOnstateID;
+
+    /**
+     * @var int|string|null
+     */
+    public $cropImage;
+
+    /**
+     * @var int|string|null
+     */
+    public $maxWidth;
+
+    /**
+     * @var int|string|null
+     */
+    public $maxHeight;
+
+    /**
+     * @var string|null
+     */
+    public $externalLink;
+
+    /**
+     * @var int|string|null
+     */
+    public $internalLinkCID;
+
+    /**
+     * @var int|string|null
+     */
+    public $fileLinkID;
+
+    /**
+     * @var bool|int|string|null
+     */
+    public $openLinkInNewWindow;
+
+    /**
+     * @var string|null
+     */
+    public $altText;
+
+    /**
+     * @var string|null
+     */
+    public $title;
+
+    /**
+     * @var string|null
+     */
+    public $sizingOption;
+
     protected $btInterfaceWidth = 400;
     protected $btInterfaceHeight = 550;
     protected $btTable = 'btContentImage';
@@ -108,6 +168,23 @@ class Controller extends BlockController implements FileTrackableInterface, Uses
     public function export(\SimpleXMLElement $blockNode)
     {
         parent::export($blockNode);
+
+        if ($this->getInternalLinkCID()) {
+            $imageLinkHandle = 'page';
+            $imageLinkValue = $this->getInternalLinkCID();
+        } elseif ($this->getFileLinkID()) {
+            $imageLinkHandle = 'file';
+            $imageLinkValue = $this->getFileLinkID();
+        } elseif ((string) $this->getExternalLink() !== '') {
+            $imageLinkHandle = 'external_url';
+            $imageLinkValue = (string) $this->getExternalLink();
+        } else {
+            $imageLinkHandle = 'none';
+            $imageLinkValue = null;
+        }
+        /** @var DestinationPicker $destinationPicker */
+        $destinationPicker = $this->app->make(DestinationPicker::class);
+        $destinationPicker->export('imageLink', $imageLinkHandle, $imageLinkValue, $this, $blockNode);
 
         $thumbnailTypes = $this->getSelectedThumbnailTypes();
         if (count($thumbnailTypes)) {
@@ -445,7 +522,7 @@ class Controller extends BlockController implements FileTrackableInterface, Uses
         if ($svg && isset($args['cropImage'])) {
             $e->add(t('SVG images cannot be cropped.'));
         }
-        
+
         $this->app->make(DestinationPicker::class)->decode('imageLink', $this->getImageLinkPickers(), $e, t('Image Link'), $args);
 
         return $e;

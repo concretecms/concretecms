@@ -27,12 +27,24 @@ $fileFolderSelector = $app->make(FileFolderSelector::class);
             <div class="float-end">
             <span class="text-muted small">
                 <?php echo t('Required') ?>
+                <?php 
+                    $config  = $app->make( 'config' );
+                    $minimumLength = $config->get( 'concrete.user.username.minimum' );
+                    $maximumLength = $config->get( 'concrete.user.username.maximum' );
+                    if ( $minimumLength && $maximumLength ) {
+                        echo t( 'Between %s and %s characters long.', $minimumLength, $maximumLength );
+                    } elseif ( $minimumLength ) {
+                        echo t( 'At least %s characters long.', $minimumLength );
+                    } elseif ( $maximumLength ) {
+                        echo t( 'At most %s characters long.', $maximumLength );
+                    }
+                ?>
             </span>
             </div>
             <?= $form->text('uName', ['autofocus' => 'autofocus', 'autocomplete' => 'off']); ?>
 		</div>
 
-        <div class="form-group" data-vue="password">
+        <div class="form-group" data-vue-app="password">
             <?= $form->label('uPassword', t('Password')) ?>
             <div class="float-end">
             <span class="text-muted small">
@@ -122,7 +134,7 @@ $fileFolderSelector = $app->make(FileFolderSelector::class);
     $(function() {
         Concrete.Vue.activateContext('cms', function(Vue, config) {
             new Vue({
-                el: 'div[data-vue]',
+                el: 'div[data-vue-app]',
                 components: config.components
             })
         })

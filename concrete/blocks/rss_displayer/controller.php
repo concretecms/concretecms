@@ -9,10 +9,41 @@ use Core;
 
 class Controller extends BlockController implements UsesFeatureInterface
 {
-    public $itemsToDisplay = "5";
-    public $showSummary = "1";
-    public $launchInNewWindow = "1";
-    public $title = "";
+    /**
+     * @var string|null
+     */
+    public $title = '';
+
+    /**
+     * @var string|null
+     */
+    public $url;
+
+    /**
+     * @var string|null
+     */
+    public $dateFormat;
+
+    /**
+     * @var int|string|null
+     */
+    public $itemsToDisplay = 5;
+
+    /**
+     * @var bool|int|string|null
+     */
+    public $showSummary = 1;
+
+    /**
+     * @var bool|int|string|null
+     */
+    public $launchInNewWindow = 1;
+
+    /**
+     * @var string|null
+     */
+    public $titleFormat;
+
     protected $btTable = 'btRssDisplay';
     protected $btInterfaceWidth = 400;
     protected $btInterfaceHeight = 550;
@@ -25,7 +56,7 @@ class Controller extends BlockController implements UsesFeatureInterface
     /**
      * Default number of seconds that the output of this block should be cached
      * (Can be overridden by the user within C5 UI).
-     * 
+     *
      * @var int
      */
     protected $btCacheBlockOutputLifetime = 3600;
@@ -33,17 +64,17 @@ class Controller extends BlockController implements UsesFeatureInterface
     /**
      * Number of seconds that the RSS feed itself should be cached before fetching
      * a fresh copy.
-     * 
+     *
      * (Perhaps this could eventually become a user-setting?)
-     * 
+     *
      * Caching is important as fetching a remote URL can significantly delay
      * the rendering of a PHP page.
-     * 
+     *
      * Setting to "null" should cache it indefinitely until cache is manually cleared.
-     * 
+     *
      * Should probably be less than $btCacheBlockOutputLifetime above, otherwise the
      * block will be re-rendered using the same stale RSS data.
-     * 
+     *
      * @var int
      */
     protected $rssFeedCacheLifetime = 1800;

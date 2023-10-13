@@ -33,7 +33,7 @@ class SelectValue extends AbstractValue implements \IteratorAggregate
     }
 
     /**
-     * @return mixed
+     * @return \Doctrine\Common\Collections\Collection|\Concrete\Core\Entity\Attribute\Value\Value\SelectValueOption[]
      */
     public function getSelectedOptions()
     {

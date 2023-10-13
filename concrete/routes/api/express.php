@@ -7,7 +7,14 @@ defined('C5_EXECUTE') or die('Access Denied.');
  * @var Concrete\Core\Routing\Router $router
  */
 
-$objects = Express::getEntities();
+try {
+    $list = Express::getEntities(true);
+    $objects = $list->findBy(['include_in_rest_api' => true, 'is_published' => true]);
+} catch (\Exception $e) {
+    // Note - this might happen if proxies need to be rebuilt and this is the cleanest way to do it, although
+    // not ideal.
+    $objects = [];
+}
 
 foreach ($objects as $object) {
 
@@ -22,18 +29,18 @@ foreach ($objects as $object) {
     ;
 
 
-    $router->get('/' . $object->getPluralHandle() . '/{entryID}', '\Concrete\Core\Api\Controller\Express::read')
+    $router->get('/' . $object->getPluralHandle() . '/{entryIdentifier}', '\Concrete\Core\Api\Controller\Express::read')
         ->setScopes($object->getPluralHandle() . ':read')
         ->setDefaults(['objectHandle' => $object->getHandle()])
     ;
 
-    $router->put('/' . $object->getPluralHandle() . '/{entryID}', '\Concrete\Core\Api\Controller\Express::update')
+    $router->put('/' . $object->getPluralHandle() . '/{entryIdentifier}', '\Concrete\Core\Api\Controller\Express::update')
         ->setScopes($object->getPluralHandle() . ':update')
         ->setDefaults(['objectHandle' => $object->getHandle()])
     ;
 
 
-    $router->delete('/' . $object->getPluralHandle() . '/{entryID}', '\Concrete\Core\Api\Controller\Express::delete')
+    $router->delete('/' . $object->getPluralHandle() . '/{entryIdentifier}', '\Concrete\Core\Api\Controller\Express::delete')
         ->setScopes($object->getPluralHandle() . ':delete')
         ->setDefaults(['objectHandle' => $object->getHandle()])
     ;

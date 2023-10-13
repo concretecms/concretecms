@@ -12,6 +12,21 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
 class Controller extends BlockController implements UsesFeatureInterface
 {
+    /**
+     * @var int|string|null
+     */
+    public $btSocialLinkID;
+
+    /**
+     * @var int|string|null
+     */
+    public $slID;
+
+    /**
+     * @var int|string|null
+     */
+    public $displayOrder;
+
     public $helpers = ['form'];
 
     protected $btInterfaceWidth = 400;

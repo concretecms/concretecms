@@ -10,6 +10,31 @@ use Page;
 
 class Controller extends BlockController implements UsesFeatureInterface
 {
+    /**
+     * @var string|null
+     */
+    public $title;
+
+    /**
+     * @var int|string|null
+     */
+    public $targetCID;
+
+    /**
+     * @var string|null
+     */
+    public $displayMode = 'page';
+
+    /**
+     * @var int|string|null
+     */
+    public $cloudCount = 10;
+
+    /**
+     * @var string|null
+     */
+    public $titleFormat;
+
     protected $btTable = 'btTags';
     protected $btInterfaceWidth = "450";
     protected $btInterfaceHeight = "439";
@@ -23,8 +48,6 @@ class Controller extends BlockController implements UsesFeatureInterface
     protected $btWrapperClass = 'ccm-ui';
 
     public $attributeHandle = 'tags';
-    public $displayMode = 'page';
-    public $cloudCount = 10;
     public $helpers = array('navigation');
 
     /**
@@ -90,31 +113,31 @@ class Controller extends BlockController implements UsesFeatureInterface
             $controller = $type->getController();
             $controller->setAttributeKey($ak);
             $items = $controller->getOptions();
-            if ($this->cloudCount > 0 && count($items) > 0) {
-                $i = 1;
-                foreach ($items as $item) {
-                    $options[] = $item;
-                    if ($i >= $this->cloudCount) {
-                        break;
-                    }
-                    ++$i;
-                }
-            } else {
-                $options = $items;
-            }
         } else {
             $c = Page::getCurrentPage();
             $av = $c->getAttributeValueObject($ak);
             $controller = $ak->getController();
             $attributeValue = $c->getAttribute($ak->getAttributeKeyHandle());
-            if (is_object($attributeValue)) {
-                $options = $attributeValue->getSelectedOptions();
-            }
+            $items = is_object($attributeValue) ? $attributeValue->getSelectedOptions() : [];
         }
 
         if ($this->targetCID > 0) {
             $target = Page::getByID($this->targetCID);
             $this->set('target', $target);
+        }
+
+        $options = [];
+        if ($this->cloudCount > 0 && count($items) > 0) {
+            $i = 1;
+            foreach ($items as $item) {
+                $options[] = $item;
+                if ($i >= $this->cloudCount) {
+                    break;
+                }
+                ++$i;
+            }
+        } else {
+            $options = $items;
         }
 
         // grab selected tag, if we're linking to a page with a tag block on it.
@@ -144,6 +167,7 @@ class Controller extends BlockController implements UsesFeatureInterface
             if (!$this->isValidStack($c)) {
                 $nvc = $c->getVersionToModify();
                 $controller = $ak->getController();
+                $controller->setAttributeObject($nvc);
                 $value = $controller->createAttributeValueFromRequest();
                 $nvc->setAttribute($ak, $value);
                 $nvc->refreshCache();

@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\Page\Theme;
 
+use Concrete\Core\Backup\ContentImporter;
 use Concrete\Core\Cache\Level\RequestCache;
 use Concrete\Core\Entity\Page\Theme\CustomSkin;
 use Concrete\Core\Entity\Permission\IpAccessControlCategory;
@@ -941,10 +942,6 @@ class Theme extends ConcreteObject implements \JsonSerializable
             $documentationList->setSiteTreeToAll();
             $documentationList->includeSystemPages();
             $documentationList->filterByPath($parentPage->getCollectionPath());
-            $documentationList->filterByPageTypeHandle([
-                THEME_DOCUMENTATION_PAGE_TYPE,
-                THEME_DOCUMENTATION_CATEGORY_PAGE_TYPE]
-            );
             $documentationList->sortByDisplayOrder();
             $themeDocumentationPages = $documentationList->getResults();
             return $themeDocumentationPages;
@@ -1234,6 +1231,15 @@ class Theme extends ConcreteObject implements \JsonSerializable
         $entityManager->persist($site);
         $entityManager->flush();
 
+        $env = Environment::get();
+        $record = $env->getRecord(
+            DIRNAME_THEMES . DIRECTORY_SEPARATOR . $this->getThemeHandle() . DIRECTORY_SEPARATOR . FILENAME_CONTENT_XML,
+            $this->getPackageHandle()
+        );
+        if ($record->exists()) {
+            $importer = app(ContentImporter::class);
+            $importer->importContentFile($record->file);
+        }
 
         $treeIDs = [0];
         foreach($site->getLocales() as $locale) {

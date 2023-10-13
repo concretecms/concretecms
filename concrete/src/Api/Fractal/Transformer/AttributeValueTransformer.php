@@ -1,8 +1,10 @@
 <?php
 namespace Concrete\Core\Api\Fractal\Transformer;
 
+use Concrete\Core\Api\ApiResourceValueInterface;
+use Concrete\Core\Api\Attribute\SimpleApiAttributeValueInterface;
 use Concrete\Core\Entity\Attribute\Value\AbstractValue;
-use Concrete\Core\Api\Attribute\FractalTransformableInterface;
+use League\Fractal\Manager;
 use League\Fractal\TransformerAbstract;
 
 class AttributeValueTransformer extends TransformerAbstract
@@ -13,10 +15,16 @@ class AttributeValueTransformer extends TransformerAbstract
         $key = $value->getAttributeKey();
         $type = $value->getAttributeTypeObject();
         if ($key && $type) {
+            $attributeValue = null;
             $controller = $value->getController();
-            if ($controller instanceof FractalTransformableInterface) {
-                $transformer = $controller->getApiDataTransformer();
-                $attributeValue = $transformer->transform($value);
+            if ($controller instanceof ApiResourceValueInterface) {
+                $attributeValueResource = $controller->getApiValueResource();
+                if ($attributeValueResource) {
+                    $fractal = app(Manager::class);
+                    $attributeValue = $fractal->createData($attributeValueResource)->toArray();
+                }
+            } else if ($controller instanceof SimpleApiAttributeValueInterface) {
+                $attributeValue = $controller->getApiAttributeValue();
             } else {
                 $attributeValue = $controller->getSearchIndexValue();
             }

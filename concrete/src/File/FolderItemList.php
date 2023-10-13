@@ -277,6 +277,7 @@ class FolderItemList extends AttributedItemList implements PagerProviderInterfac
     {
         $expressions = [
             $this->query->expr()->like('fv.fvFilename', ':keywords'),
+            $this->query->expr()->like('fv.fvTitle', ':keywords'),
             $this->query->expr()->like('fv.fvDescription', ':keywords'),
             $this->query->expr()->like('treeNodeName', ':keywords'),
             $this->query->expr()->like('fv.fvTags', ':keywords'),
@@ -365,7 +366,6 @@ class FolderItemList extends AttributedItemList implements PagerProviderInterfac
                      */
                     if (!$pa->validateAccessEntities($accessEntitiesWithoutFileUploader)) {
                         $query
-                            ->leftJoin('tf', 'Files', 'f', 'tf.fID = f.fID')
                             ->andWhere('(f.uID = :fileUploaderID OR f.fOverrideSetPermissions = 1) OR nt.treeNodeTypeHandle != \'file\'')
                             ->setParameter('fileUploaderID', $u->getUserID())
                         ;

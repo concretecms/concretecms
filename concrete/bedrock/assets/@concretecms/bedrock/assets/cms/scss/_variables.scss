@@ -45,6 +45,7 @@ $hr-opacity: 1;
 /* borders */
 $border-radius: 3px;
 $border-radius-sm: 2px;
+$border-color-translucent: rgba(#000, 0.075);
 
 /* buttons */
 $btn-font-weight: 600;
@@ -55,6 +56,7 @@ $btn-box-shadow: inset 0 0;
 
 /* forms */
 $input-focus-box-shadow: 0 0;
+$input-btn-focus-box-shadow: 0 0; // button as well as dialog close
 $input-placeholder-color: #b2b3b4;
 $input-border-color: rgb(235, 235, 235);
 $form-select-border-color: rgb(235, 235, 235);
@@ -136,10 +138,18 @@ $dropdown-box-shadow: 0 1px 1px 0 rgba(65, 69, 73, 0.3), 0 1px 3px 1px rgba(65, 
 $popover-border-color: transparent;
 $popover-border-radius: 5px;
 $popover-inner-border-radius: 5px;
-$popover-border-width: 0;
 $popover-box-shadow: 0 1px 1px 0 rgba(65, 69, 73, 0.3), 0 1px 3px 1px rgba(65, 69, 73, 0.15);
-$popover-arrow-width: 0;
-$popover-arrow-height: 0;
+// Originally I had set the following three items as well, but I can't do that. Why?
+// Setting these unintentionally removes the arrow from guide popovers (the walk throughs we launch
+// from the help dialog. The arrows are very important in that context so let's not globally disable them.
+// (Why does border width set those to zero? No idea. But I had to disable my setting of border width to
+// get this to work as well.)
+// So instead, in order to remove the arrow from the in-page popovers (which I think looks gauche) let's
+// Use separate CSS within the _popover.scss file, rather than globally removing them. Finally, let's
+// Get rid of the outer border around popovers by setting a transparent color rather than border width of 0.
+// $popover-border-width: 0;
+// $popover-arrow-width: 0;
+// $popover-arrow-height: 0;
 
 /* Links */
 $link-decoration: none;
@@ -172,7 +182,7 @@ $h6-font-size: 1rem * 0.8;
 $modal-header-bg: $blue;
 $modal-title-font-size: 1.5rem;
 $modal-title-font-weight: 400;
-$modal-title-letter-spacing: auto;
+$modal-title-letter-spacing: inherit;
 $modal-title-color: white;
 
 /* additional tab colors */
@@ -350,3 +360,5 @@ $help-tour-position-color: #fff;
 
 /* Form Group */
 $form-group-margin-bottom: 1.5rem;
+
+$ccm-toolbar-height: 48px;

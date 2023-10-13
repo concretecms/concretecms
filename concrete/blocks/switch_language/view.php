@@ -24,6 +24,8 @@ defined('C5_EXECUTE') or die('Access Denied.');
 
 // The ID of the current page
 /* @var int $cID */
+
+/** @var \Concrete\Core\Multilingual\Service\Detector $detector */
 ?>
 
 <div class="ccm-block-switch-language">
@@ -39,7 +41,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
                 $activeLanguage,
                 [
                     'data-select' => 'multilingual-switch-language',
-                    'data-action' => $view->action('switch_language', $cID, '--language--'),
+                    'data-action' => $detector->getSwitchLink($cID, '--language--'),
                 ]
             ) ?>
         </div>

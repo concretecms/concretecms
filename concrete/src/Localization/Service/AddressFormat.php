@@ -116,7 +116,7 @@ class AddressFormat
 
         // Addressing does not currently support a third address line.
         // See: https://github.com/commerceguys/addressing/pull/121
-        $line2 = trim($addressData['address2']);
+        $line2 = trim($addressData['address2'] ?? '');
         if (!empty($addressData['address3'])) {
             if (!empty($line2)) {
                 $line2 .= ', ';
@@ -303,7 +303,7 @@ class AddressFormat
         $postalAreaLine = '';
         if (isset($addressData['city'])) {
             $postalAreaLine = $addressData['city'];
-            if ($addressData['state_province']) {
+            if ($addressData['state_province'] ?? '') {
                 // The country is unknown, so the text representation of the
                 // state or the provice cannot be determined. Fall back to the
                 // code.

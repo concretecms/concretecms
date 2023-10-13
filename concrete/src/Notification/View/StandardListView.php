@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Core\Notification\View;
 
 use Concrete\Controller\Element\Notification\ListDetails;
@@ -81,7 +82,11 @@ abstract class StandardListView implements StandardListViewInterface
     {
         $comment = $this->getInitiatorComment();
         if ($comment) {
-            $commentElement = new Element('div', $comment, array('class' => 'ccm-block-desktop-waiting-for-me-author-comment'));
+            $commentElement = new Element(
+                'div',
+                $comment,
+                array('class' => 'ccm-block-desktop-waiting-for-me-author-comment')
+            );
             return $commentElement;
         }
     }
@@ -110,6 +115,12 @@ abstract class StandardListView implements StandardListViewInterface
 
     public function renderInitiatorActionDescription()
     {
+        $wrapper = new Element('div');
+
+        $title = new Element(
+            'span', tc('notificationTitle', '%s. ', $this->getTitle()),
+            array('class' => 'ccm-block-desktop-waiting-for-me-title')
+        );
 
         $user = $this->getInitiatorUserObject();
         $element = $this->getRequestedByElement();
@@ -121,17 +132,24 @@ abstract class StandardListView implements StandardListViewInterface
             $element->appendChild($inner);
             $inner->appendChild($link);
 
-            $dateElement = new Element('span', tc('date', ' on %s', $this->getDateString()), array('class' => 'ccm-block-desktop-waiting-for-me-date'));
+            $dateElement = new Element(
+                'span',
+                tc('date', ' on %s', $this->getDateString()),
+                array('class' => 'ccm-block-desktop-waiting-for-me-date')
+            );
             $element->appendChild($dateElement);
-
-            return $element;
         } else {
             // No requested by element
-            $element = new Element('span', $this->getDateString(), array('class' => 'ccm-block-desktop-waiting-for-me-date'));
-            return $element;
+            $element = new Element(
+                'span',
+                $this->getDateString(),
+                array('class' => 'ccm-block-desktop-waiting-for-me-date')
+            );
         }
 
-
+        $wrapper->appendChild($title);
+        $wrapper->appendChild($element);
+        return $wrapper;
     }
 
 }

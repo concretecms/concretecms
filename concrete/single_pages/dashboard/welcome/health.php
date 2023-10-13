@@ -5,10 +5,11 @@ defined('C5_EXECUTE') or die("Access Denied.");
 use Concrete\Controller\SinglePage\Dashboard\Welcome\Health;
 
 /**
- * @var $results \Concrete\Core\Search\Pagination\Pagination|null
- * @var $reports \Concrete\Core\Entity\Automation\Task[]
- * @var $productionStatus string
- * @var $productionStatusClass string
+ * @var Concrete\Core\Localization\Service\Date $dateService
+ * @var Concrete\Core\Search\Pagination\Pagination|null $results
+ * @var Concrete\Core\Entity\Automation\Task[] $reports
+ * @var string $productionStatus
+ * @var string $productionStatusClass
  */
 
 ?>
@@ -50,7 +51,7 @@ use Concrete\Controller\SinglePage\Dashboard\Welcome\Health;
         <div class="row">
             <?php $view->inc('elements/result_messages.php'); ?>
         </div>
-        <div data-vue="health">
+        <div data-vue-app="health">
             <div v-if="runningProcesses.length" class="row mb-3">
                 <div class="col-12">
                     <div class="card">
@@ -144,7 +145,7 @@ use Concrete\Controller\SinglePage\Dashboard\Welcome\Health;
                                 <?php foreach ($results->getCurrentPageResults() as $result) { ?>
                                     <tr data-details-url="<?=URL::to('/dashboard/reports/health/details', $result->getID())?>">
                                         <td class="ccm-search-results-name w-50"><?=$result->getName()?></td>
-                                        <td class="text-nowrap"><?=$result->getDateCompleted('F d, Y g:i a')?></td>
+                                        <td class="text-nowrap"><?= h($dateService->formatDateTime($result->getDateCompleted())) ?></td>
                                         <td class="text-nowrap text-center">
                                             <?php
                                             $grade = $result->getGrade();
@@ -191,7 +192,7 @@ use Concrete\Controller\SinglePage\Dashboard\Welcome\Health;
     $(function() {
         Concrete.Vue.activateContext('backend', function (Vue, config) {
             new Vue({
-                el: 'div[data-vue=health]',
+                el: 'div[data-vue-app=health]',
                 components: config.components,
                 data: {
                     'runningProcesses': <?=json_encode($runningReportProcesses)?>,

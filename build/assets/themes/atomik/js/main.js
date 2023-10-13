@@ -4,6 +4,7 @@ import '@concretecms/bedrock/assets/bedrock/js/frontend';
 // Feature support
 import '@concretecms/bedrock/assets/account/js/frontend';
 import '@concretecms/bedrock/assets/desktop/js/frontend';
+import '@concretecms/bedrock/assets/forms/js/frontend';
 // I wish we could include this in Atomik but if we do it collides with the use of it in the core components.
 //import '@concretecms/bedrock/assets/calendar/js/frontend';
 import '@concretecms/bedrock/assets/navigation/js/frontend';

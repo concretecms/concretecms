@@ -120,7 +120,7 @@ abstract class AbstractField implements FieldInterface
     public function loadDataFromImport(\SimpleXMLElement $element)
     {
         if (!$this->isLoaded) {
-            $this->data = json_decode($element->data);
+            $this->data = json_decode($element->data, true);
         }
     }
 }

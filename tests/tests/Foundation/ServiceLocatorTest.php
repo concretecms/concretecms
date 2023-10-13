@@ -19,7 +19,6 @@ class ServiceLocatorTest extends TestCase
     {
         $groups = [
             '\Concrete\Core\File\FileServiceProvider',
-            '\Concrete\Core\Encryption\EncryptionServiceProvider',
             '\Concrete\Core\Validation\ValidationServiceProvider',
             '\Concrete\Core\Localization\LocalizationServiceProvider',
             '\Concrete\Core\Feed\FeedServiceProvider',

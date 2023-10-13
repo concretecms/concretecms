@@ -23,6 +23,12 @@ class AttributeMessage implements MessageInterface
         $this->value = $value;
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \JsonSerializable::jsonSerialize()
+     */
+    #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
         $data = [
@@ -34,13 +40,15 @@ class AttributeMessage implements MessageInterface
 
     public function getCategoryValue(): ?AbstractValue
     {
-        $key = $this->value->getAttributeKey();
-        if ($key) {
-            $value = $key->getAttributeCategory()->getAttributeValueRepository()->findOneBy(
-                ['generic_value' => $this->value]
-            );
-            if ($value instanceof AbstractValue) {
-                return $value;
+        if ($this->value) {
+            $key = $this->value->getAttributeKey();
+            if ($key) {
+                $value = $key->getAttributeCategory()->getAttributeValueRepository()->findOneBy(
+                    ['generic_value' => $this->value]
+                );
+                if ($value instanceof AbstractValue) {
+                    return $value;
+                }
             }
         }
         return null;

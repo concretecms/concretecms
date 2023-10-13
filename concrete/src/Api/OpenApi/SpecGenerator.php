@@ -87,7 +87,7 @@ class SpecGenerator implements ApplicationAwareInterface
                 foreach ($attributesToAdd as $attribute) {
                     $controller = $attribute->getController();
                     if ($controller instanceof OpenApiSpecifiableInterface) {
-                        $attributeProperty = $controller->getOpenApiSpecProperty();
+                        $attributeProperty = $controller->getOpenApiSpecProperty($attribute);
                     } else {
                         $attributeProperty = new SpecProperty(
                             $attribute->getAttributeKeyHandle(),

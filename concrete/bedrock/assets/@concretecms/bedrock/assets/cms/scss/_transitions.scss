@@ -24,4 +24,26 @@
   opacity: 0;
 }
 
+/**
+ * General fade
+ */
+.concrete-fade-enter-active,
+.concrete-fade-leave-active {
+  transition: opacity 0.15s ease-out;
+}
 
+.concrete-fade-enter,
+.concrete-fade-leave-to {
+  opacity: 0;
+}
+
+/**
+ * Fix for https://github.com/concretecms/concretecms/issues/11306
+ * Old Bootstrap 3 themes will cause this. BS3 used to set .fade {opacity: 0} right within
+ * the global namespace. Bootstrap 4/5 fix this by setting that to .fade(not(.show)), but unless
+ * the BS3 root fade is reverted then it will override our updates and bootstrap modals will not work
+ * on the frontend. This should fix that.
+ */
+.fade {
+  opacity: revert;
+}

@@ -3,11 +3,22 @@
 namespace Concrete\Core\Notification\Events;
 
 use Concrete\Core\Config\Repository\Repository;
+use Concrete\Core\Logging\Channels;
+use Concrete\Core\Logging\LoggerAwareInterface;
+use Concrete\Core\Logging\LoggerAwareTrait;
+use Concrete\Core\Notification\Events\ServerEvent\ServerEventInterface;
 use Symfony\Component\Mercure\Hub;
 use Concrete\Core\Application\Application;
 
-class MercureService
+class MercureService implements LoggerAwareInterface
 {
+
+    use LoggerAwareTrait;
+
+    public function getLoggerChannel()
+    {
+        return Channels::CHANNEL_MESSENGER;
+    }
 
     /**
      * @var Repository
@@ -54,6 +65,23 @@ class MercureService
             $this->hub = $this->app->make(Hub::class);
         }
         return $this->hub;
+    }
+
+    /**
+     * Wrapper for getting the hub directly and publishing an update. Useful for ensuring Mercure doesn't
+     * raise undue errors.
+     *
+     * @param ServerEventInterface $event
+     */
+    public function publish(ServerEventInterface $event)
+    {
+        $hub = $this->getHub();
+        $update = $event->getUpdate();
+        try {
+            $hub->publish($update);
+        } catch (\Exception $e) {
+            $this->logger->notice(t('Attempted to send update to Mercure service and failed: %s', $e->getMessage()));
+        }
     }
 
     public function getSubscriber(): Subscriber

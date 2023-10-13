@@ -1,7 +1,8 @@
 <?php defined('C5_EXECUTE') or die("Access Denied.");
 
 /**
- * @var \Concrete\Core\Search\Pagination\Pagination $pagination
+ * @var Concrete\Core\Localization\Service\Date $dateService
+ * @var Concrete\Core\Search\Pagination\Pagination $pagination
  */
 if ($pagination->getTotalResults() > 0) { ?>
 
@@ -19,8 +20,8 @@ if ($pagination->getTotalResults() > 0) { ?>
         <?php foreach ($pagination->getCurrentPageResults() as $result) { ?>
             <tr data-details-url="<?=URL::to('/dashboard/reports/health/details', $result->getID())?>">
                 <td class="ccm-search-results-name w-50"><?=$result->getName()?></td>
-                <td class="text-nowrap"><?=$result->getDateStarted('F d, Y g:i a')?></td>
-                <td class="text-nowrap"><?=$result->getDateCompleted('F d, Y g:i a') ?? '<span class="text-muted">' . t('Running...') . '</span>'?></td>
+                <td class="text-nowrap"><?= h($dateService->formatDateTime($result->getDateStarted())) ?></td>
+                <td class="text-nowrap"><?= h($dateService->formatDateTime($result->getDateCompleted())) ?: '<span class="text-muted">' . t('Running...') . '</span>'?></td>
                 <td class="text-nowrap text-center"><?=$result->getTotalFindings()?></td>
                 <td class="text-nowrap text-center">
                     <?php

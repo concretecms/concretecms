@@ -12,8 +12,10 @@ use Concrete\Core\File\File;
 use Concrete\Core\File\Tracker\FileTrackableInterface;
 use Concrete\Core\Html\Service\Navigation as NavigationService;
 use Concrete\Core\Multilingual\Page\Section\Section;
+use Concrete\Core\Multilingual\Service\Detector;
 use Concrete\Core\Navigation\Breadcrumb\PageBreadcrumbFactory;
 use Concrete\Core\Navigation\Item\PageItem;
+use Concrete\Core\Navigation\Item\SwitchLanguageItem;
 use Concrete\Core\Navigation\Navigation;
 use Concrete\Core\Page\Page;
 use Concrete\Core\Permission\Checker;
@@ -23,15 +25,67 @@ defined('C5_EXECUTE') or die('Access Denied.');
 
 class Controller extends BlockController implements UsesFeatureInterface, FileTrackableInterface
 {
-    public $helpers = ['form'];
+    /**
+     * @var string|null
+     */
+    public $brandingText;
 
+    /**
+     * @var int|string|null
+     */
     public $brandingLogo = 0;
+
+    /**
+     * @var int|string|null
+     */
     public $brandingTransparentLogo = 0;
-    public $includeBrandLogo = false;
+
+    /**
+     * @var bool|int|string|null
+     */
     public $includeBrandText = false;
+
+    /**
+     * @var bool|int|string|null
+     */
+    public $includeBrandLogo = false;
+
+    /**
+     * @var bool|int|string|null
+     */
+    public $includeTransparency;
+
+    /**
+     * @var bool|int|string|null
+     */
     public $includeStickyNav = false;
+
+    /**
+     * @var bool|int|string|null
+     */
+    public $includeNavigation;
+
+    /**
+     * @var bool|int|string|null
+     */
     public $includeNavigationDropdowns = false;
+
+    /**
+     * @var bool|int|string|null
+     */
     public $includeSearchInput;
+
+    /**
+     * @var int|string|null
+     */
+    public $searchInputFormActionPageID;
+
+    /**
+     * @var bool|int|string|null
+     */
+    public $includeSwitchLanguage;
+
+    public $helpers = ['form'];
 
     protected $btInterfaceWidth = 640;
     protected $btInterfaceHeight = 500;
@@ -73,6 +127,8 @@ class Controller extends BlockController implements UsesFeatureInterface, FileTr
     {
         $site = $this->app->make('site')->getSite();
         $brandingText = $site->getSiteName();
+        /** @var Detector $detector */
+        $detector = $this->app->make('multilingual/detector');
 
         $this->set('includeTransparency', false);
         $this->set('includeStickyNav', false);
@@ -85,6 +141,7 @@ class Controller extends BlockController implements UsesFeatureInterface, FileTr
         $this->set('brandingTransparentLogo', null);
         $this->set('searchInputFormActionPageID', null);
         $this->set('brandingText', $brandingText);
+        $this->set('includeSwitchLanguage', $detector->isEnabled());
         $this->edit();
     }
 
@@ -92,6 +149,9 @@ class Controller extends BlockController implements UsesFeatureInterface, FileTr
     {
         $this->set('fileManager', new FileManager());
         $this->set('editor', $this->app->make('editor'));
+        /** @var Detector $detector */
+        $detector = $this->app->make('multilingual/detector');
+        $this->set('multilingualEnabled', $detector->isEnabled());
     }
 
     protected function includePageInNavigation(Page $page)
@@ -129,7 +189,7 @@ class Controller extends BlockController implements UsesFeatureInterface, FileTr
         return $ids;
     }
 
-    protected function getNavigation(): Navigation
+    protected function getHomePage(): Page
     {
         $section = Section::getByLocale(\Localization::getInstance()->getLocale());
         if ($section instanceof Section) {
@@ -138,15 +198,21 @@ class Controller extends BlockController implements UsesFeatureInterface, FileTr
             $site = $this->app->make('site')->getSite();
             $home = $site->getSiteHomePageObject();
         }
+        return $home;
+    }
+
+    protected function getNavigation(): Navigation
+    {
+        $home = $this->getHomePage();
         $children = $home->getCollectionChildren();
-        $navigation = new Navigation();
+        $navigation = $this->app->make(Navigation::class);
 
         $current = Page::getCurrentPage();
         $parentIDs = $this->getParentIDsToCurrent();
 
         foreach ($children as $child) {
             if ($this->includePageInNavigation($child)) {
-                $item = new PageItem($child);
+                $item = $this->app->make(PageItem::class, ['page' => $child]);
                 if ($home->getCollectionID() !== $current->getCollectionID() && in_array($child->getCollectionID(), $parentIDs)) {
                     $item->setIsActiveParent(true);
                 }
@@ -155,7 +221,7 @@ class Controller extends BlockController implements UsesFeatureInterface, FileTr
                     $dropdownChildren = $child->getCollectionChildren();
                     foreach ($dropdownChildren as $dropdownChild) {
                         if ($this->includePageInNavigation($dropdownChild)) {
-                            $dropdownChildItem = new PageItem($dropdownChild);
+                            $dropdownChildItem = $this->app->make(PageItem::class, ['page' => $dropdownChild]);
                             if (in_array($dropdownChild->getCollectionID(), $parentIDs)) {
                                 $dropdownChildItem->setIsActiveParent(true);
                             }
@@ -172,9 +238,7 @@ class Controller extends BlockController implements UsesFeatureInterface, FileTr
 
     public function view()
     {
-        $site = $this->app->make('site')->getSite();
-        $home = $site->getSiteHomePageObject();
-
+        $home = $this->getHomePage();
         if ($this->brandingLogo) {
             $logo = File::getByID($this->brandingLogo);
             if ($logo) {
@@ -183,6 +247,11 @@ class Controller extends BlockController implements UsesFeatureInterface, FileTr
         }
         if (!isset($logo)) {
             $this->set('logo', null);
+        }
+        if ($this->includeBrandText && !$this->brandingText) {
+            $site = $this->app->make('site')->getSite();
+            $brandingText = $site->getSiteName();
+            $this->set('brandingText', $brandingText);
         }
         if ($this->brandingTransparentLogo) {
             $transparentLogo = File::getByID($this->brandingTransparentLogo);
@@ -201,6 +270,22 @@ class Controller extends BlockController implements UsesFeatureInterface, FileTr
             }
             $this->set('searchAction', $searchAction);
         }
+        if ($this->includeSwitchLanguage) {
+            $c = Page::getCurrentPage();
+            /** @var Detector $detector */
+            $detector = $this->app->make('multilingual/detector');
+            $activeSection = $detector->getActiveSection($c);
+            $sections = $detector->getAvailableSections();
+            $languages = [];
+            foreach ($sections as $section) {
+                $pc = new Checker($section);
+                if ($pc->canRead()) {
+                    $isActive = $activeSection && $activeSection->getCollectionID() === $section->getCollectionID();
+                    $languages[] = new SwitchLanguageItem($section, $detector->getSwitchLink($c->getCollectionID(), $section->getCollectionID()), $isActive);
+                }
+            }
+            $this->set('languages', $languages);
+        }
     }
 
     public function save($args)
@@ -211,6 +296,7 @@ class Controller extends BlockController implements UsesFeatureInterface, FileTr
         $data['includeTransparency'] = !empty($args['includeTransparency']) ? 1 : 0;
         $data['includeSearchInput'] = !empty($args['includeSearchInput']) ? 1 : 0;
         $data['includeStickyNav'] = !empty($args['includeStickyNav']) ? 1 : 0;
+        $data['includeSwitchLanguage'] = !empty($args['includeSwitchLanguage']) ? 1 : 0;
 
         $data['includeBrandLogo'] = 0;
         $data['includeBrandText'] = 0;
@@ -289,7 +375,7 @@ class Controller extends BlockController implements UsesFeatureInterface, FileTr
         }
         return $files;
     }
-    
+
     public function getPageItemNavTarget($pageItem) // Respect nav_target Page Attribute & External Link targets
     {
 	if (!is_object($pageItem) || !$pageItem instanceof \Concrete\Core\Navigation\Item\PageItem) {

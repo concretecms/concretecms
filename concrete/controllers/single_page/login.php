@@ -29,6 +29,11 @@ class Login extends PageController implements LoggerAwareInterface
     public $helpers = ['form'];
     protected $locales = [];
 
+    /**
+     * @var \Concrete\Core\Error\ErrorList\ErrorList|null
+     */    
+    protected $error;
+
     public function on_before_render()
     {
         if ($this->error->has()) {
@@ -43,11 +48,13 @@ class Login extends PageController implements LoggerAwareInterface
     {
         $config = $this->app->make('config');
         $this->error->add(t($config->get('concrete.user.deactivation.message')));
+        $this->view();
     }
 
     public function session_invalidated()
     {
         $this->error->add(t('Your session has expired. Please sign in again.'));
+        $this->view();
     }
 
     /**
@@ -246,6 +253,7 @@ class Login extends PageController implements LoggerAwareInterface
             );
             $this->error->add(t('User is not registered. Check your authentication controller.'));
             $u->logout();
+            $this->view();
         }
     }
 
@@ -323,7 +331,7 @@ class Login extends PageController implements LoggerAwareInterface
         $user = $this->app->make(User::class);
         $this->set('user', $user);
 
-        if (strlen($type)) {
+        if (is_string($type) && $type !== '') {
             try {
                 $at = AuthenticationType::getByHandle($type);
                 if ($at->isEnabled()) {
@@ -393,41 +401,35 @@ class Login extends PageController implements LoggerAwareInterface
     }
 
     /**
-     * @deprecated
+     * @deprecated Use do_logout instead
+     *
+     * @param string|false|null $token
+     *
+     * @see \Concrete\Controller\SinglePage\Login::do_logout()
      */
     public function logout($token = false)
     {
-        if ($this->app->make('token')->validate('logout', $token)) {
-            $u = $this->app->make(User::class);
-            $u->logout();
-            $this->redirect('/');
+        $valt = $this->app->make('token');
+        if ($valt->validate('logout', $token)) {
+            $response = $this->app->make(User::class)->logout() ?? $this->buildRedirect('/');
+            $response->send();
+            exit();
         }
     }
 
     /**
-     * @param $token
+     * @param string|false|null $token
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function do_logout($token = false)
     {
-        $factory = $this->app->make(ResponseFactoryInterface::class);
-        /* @var ResponseFactoryInterface $factory */
         $valt = $this->app->make('token');
-        /* @var \Concrete\Core\Validation\CSRF\Token $valt */
-
-        if ($valt->validate('do_logout', $token)) {
-            // Resolve the current logged in user and log them out
-            $this->app->make(User::class)->logout();
-
-            // Determine the destination URL
-            $url = $this->app->make('url/manager')->resolve(['/']);
-
-            // Return a new redirect to the homepage.
-            return $factory->redirect((string) $url, 302);
+        if (!$valt->validate('do_logout', $token)) {
+            return $this->app->make(ResponseFactoryInterface::class)->error($valt->getErrorMessage());
         }
 
-        return $factory->error($valt->getErrorMessage());
+        return $this->app->make(User::class)->logout() ?? $this->buildRedirect('/');
     }
 
     public function forward($cID = 0)
@@ -439,5 +441,6 @@ class Login extends PageController implements LoggerAwareInterface
             $pll = $this->app->make(PostLoginLocation::class);
             $pll->setSessionPostLoginUrl($rcID);
         }
+        $this->view();
     }
 }

@@ -3,17 +3,20 @@
 namespace Concrete\Block\CoreContainer;
 
 use Concrete\Core\Area\ContainerArea;
+use Concrete\Core\Block\Block;
 use Concrete\Core\Block\BlockController;
 use Concrete\Core\Block\BlockType\BlockType;
 use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Entity\Page\Container;
+use Concrete\Core\Feature\UsesFeatureInterface;
 use Concrete\Core\Page\Container\ContainerBlockInstance;
 use Concrete\Core\Page\Container\ContainerExporter;
 use Concrete\Core\Page\Container\TemplateLocator;
 use Concrete\Core\StyleCustomizer\Inline\StyleSet;
 use Doctrine\ORM\EntityManager;
+use Illuminate\Contracts\Container\BindingResolutionException;
 
-class Controller extends BlockController
+class Controller extends BlockController implements UsesFeatureInterface
 {
     /**
      * @var int|null
@@ -34,6 +37,16 @@ class Controller extends BlockController
      * @var bool
      */
     protected $btIgnorePageThemeGridFrameworkContainer = true;
+
+    /**
+     * @var bool
+     */
+    protected $btCacheSettingsInitialized = false;
+
+    /**
+     * @var string[]
+     */
+    protected $requiredFeatures = [];
 
     /**
      * {@inheritdoc}
@@ -204,6 +217,56 @@ class Controller extends BlockController
     }
 
     /**
+     * @throws BindingResolutionException
+     *
+     * @return bool
+     */
+    public function cacheBlockOutput()
+    {
+        $this->setupCacheSettings();
+
+        return $this->btCacheBlockOutput;
+    }
+
+    /**
+     * @throws BindingResolutionException
+     *
+     * @return bool
+     */
+    public function cacheBlockOutputOnPost()
+    {
+        $this->setupCacheSettings();
+
+        return $this->btCacheBlockOutputOnPost;
+    }
+
+    /**
+     * @throws BindingResolutionException
+     *
+     * @return int
+     */
+    public function getBlockTypeCacheOutputLifetime()
+    {
+        $this->setupCacheSettings();
+
+        return $this->btCacheBlockOutputLifetime;
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @throws BindingResolutionException
+     *
+     * @return string[]
+     */
+    public function getRequiredFeatures(): array
+    {
+        $this->setupCacheSettings();
+
+        return $this->requiredFeatures;
+    }
+
+    /**
      * Import additional data about this block.
      *
      * @param \Concrete\Core\Block\Block $b
@@ -246,6 +309,95 @@ class Controller extends BlockController
                 }
                 $btc = $bt->getController();
                 $btc->import($page, $subArea->getAreaHandle(), $bx);
+            }
+        }
+    }
+
+    /**
+     * @throws BindingResolutionException
+     *
+     * @return void
+     */
+    protected function setupCacheSettings(): void
+    {
+        $page = $this->getCollectionObject();
+        if ($this->btCacheSettingsInitialized || $page->isEditMode()) {
+            return;
+        }
+
+        $this->btCacheSettingsInitialized = true;
+
+        $btCacheBlockOutput = true;
+        $btCacheBlockOutputOnPost = true;
+        $btCacheBlockOutputLifetime = 0;
+
+        $blocks = [];
+
+        $instance = $this->getContainerInstanceObject();
+        if ($instance) {
+            $block = $this->getBlockObject();
+            $entityManager = $this->app->make(EntityManager::class);
+            foreach ($instance->getInstanceAreas() as $instanceArea) {
+                $containerBlockInstance = new ContainerBlockInstance(
+                    $block,
+                    $instance,
+                    $entityManager
+                );
+                $containerArea = new ContainerArea($containerBlockInstance, $instanceArea->getContainerAreaName());
+                foreach ($containerArea->getAreaBlocksArray($page) as $subBlock) {
+                    $blocks[] = $subBlock;
+                }
+            }
+        }
+
+        $arrAssetBlocks = [];
+
+        /** @var Block $b */
+        foreach ($blocks as $b) {
+            if ($b->overrideAreaPermissions()) {
+                $btCacheBlockOutput = false;
+                $btCacheBlockOutputOnPost = false;
+                $btCacheBlockOutputLifetime = 0;
+                break;
+            }
+
+            $btCacheBlockOutputOnPost = $btCacheBlockOutputOnPost && $b->cacheBlockOutputOnPost();
+
+            //As soon as we find something which cannot be cached, entire block cannot be cached, so stop checking.
+            if (!$b->cacheBlockOutput()) {
+                $this->btCacheBlockOutput = false;
+                $this->btCacheBlockOutputOnPost = false;
+                $this->btCacheBlockOutputLifetime = 0;
+
+                return;
+            }
+            $expires = $b->getBlockOutputCacheLifetime();
+            if ($expires && $btCacheBlockOutputLifetime < $expires) {
+                $btCacheBlockOutputLifetime = $expires;
+            }
+
+            $objController = $b->getController();
+            if (is_callable([$objController, 'registerViewAssets'])) {
+                $arrAssetBlocks[] = $objController;
+            }
+        }
+
+        $this->btCacheBlockOutput = $btCacheBlockOutput;
+        $this->btCacheBlockOutputOnPost = $btCacheBlockOutputOnPost;
+        $this->btCacheBlockOutputLifetime = $btCacheBlockOutputLifetime;
+
+        foreach ($arrAssetBlocks as $objController) {
+            if ($objController instanceof BlockController) {
+                $objController->on_start();
+                $objController->outputAutoHeaderItems();
+                $objController->registerViewAssets();
+                if ($objController instanceof UsesFeatureInterface) {
+                    foreach ($objController->getRequiredFeatures() as $feature) {
+                        if (!in_array($feature, $this->requiredFeatures, true)) {
+                            $this->requiredFeatures[] = $feature;
+                        }
+                    }
+                }
             }
         }
     }

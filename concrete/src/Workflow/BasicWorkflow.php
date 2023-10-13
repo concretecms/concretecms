@@ -178,15 +178,12 @@ class BasicWorkflow extends \Concrete\Core\Workflow\Workflow implements Assignab
         }
         $dh = Core::make('helper/date');
 
-        if (Config::get('concrete.email.workflow_notification.address')){
-            $fromAddress = Config::get('concrete.email.workflow_notification.address');
-        } else {
-            $adminUser = UserInfo::getByID(USER_SUPER_ID);
-            $fromAddress = $adminUser->getUserEmail();
+        $fromAddress = (string) Config::get('concrete.email.workflow_notification.address');
+        if ($fromAddress === '') {
+            $fromAddress = (string) Config::get('concrete.email.default.address');
         }
-        if (Config::get('concrete.email.workflow_notification.name')) {
-            $fromName = Config::get('concrete.email.workflow_notification.name');
-        } else {
+        $fromName = (string) Config::get('concrete.email.workflow_notification.name');
+        if ($fromName === '') {
             $fromName = t('Basic Workflow');
         }
 
@@ -318,7 +315,7 @@ class BasicWorkflow extends \Concrete\Core\Workflow\Workflow implements Assignab
         return $buttons;
     }
 
-    private function getTranslatedMessage($message = null, $date)
+    private function getTranslatedMessage($message, $date)
     {
 
         if (is_array($message)) {

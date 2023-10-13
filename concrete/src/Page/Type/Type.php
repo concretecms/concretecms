@@ -203,11 +203,15 @@ class Type extends ConcreteObject implements \Concrete\Core\Permission\ObjectInt
             $c->move($parent);
             $db = \Database::connection();
             $db->executeQuery('update Pages set cIsDraft = 0 where cID = ?', [$c->getCollectionID()]);
-            if (!$parent->overrideTemplatePermissions()) {
-                // that means the permissions of pages added beneath here inherit from page type permissions
-                // this is a very poorly named method. Template actually used to mean Type.
-                // so this means we need to set the permissions of this current page to inherit from page types.
+            if (!$parent->overrideTemplatePermissions() && $c->getCollectionInheritance() === 'PARENT') {
+                // When the parent page's subpage permissions setting is "inherit page type default permissions",
+                // the permissions of this page should inherit from the default.
+                // overrideTemplatePermissions() is a very poorly named method. Template actually used to mean Type.
                 $c->inheritPermissionsFromDefaults();
+            } elseif ($parent->overrideTemplatePermissions() && $c->getCollectionInheritance() === 'TEMPLATE') {
+                // When the parent page's subpage permissions setting is "inherit from parent",
+                // off course the permissions of this page should inherit from the parent.
+                $c->inheritPermissionsFromParent();
             }
             $c->activate();
         } else {
@@ -887,23 +891,23 @@ class Type extends ConcreteObject implements \Concrete\Core\Permission\ObjectInt
         $ptLaunchInComposer = $this->doesPageTypeLaunchInComposer();
         $ptDisplayOrder = $this->getPageTypeDisplayOrder();
 
-        if ($data['name']) {
+        if (isset($data['name']) && $data['name']) {
             $ptName = $data['name'];
         }
-        if ($data['handle']) {
+        if (isset($data['handle']) && $data['handle']) {
             $ptHandle = $data['handle'];
         }
-        if (is_object($data['defaultTemplate'])) {
+        if (isset($data['defaultTemplate']) && is_object($data['defaultTemplate'])) {
             $ptDefaultPageTemplateID = $data['defaultTemplate']->getPageTemplateID();
         } elseif (!empty($data['defaultTemplate'])) {
             $ptDefaultPageTemplateID = PageTemplate::getByHandle($data['defaultTemplate'])->getPageTemplateID();
         }
-        if (is_object($data['defaultTheme'])) {
+        if (isset($data['defaultTheme']) && is_object($data['defaultTheme'])) {
             $ptDefaultThemeID = $data['defaultTheme']->getThemeID();
         } else {
             $ptDefaultThemeID = null;
         }
-        if ($data['allowedTemplates']) {
+        if (isset($data['allowedTemplates'])) {
             $ptAllowedPageTemplates = $data['allowedTemplates'];
         }
         if (isset($data['ptLaunchInComposer'])) {
@@ -917,7 +921,7 @@ class Type extends ConcreteObject implements \Concrete\Core\Permission\ObjectInt
         }
 
         $templates = $this->getPageTypePageTemplateObjects();
-        if (is_array($data['templates'])) {
+        if (isset($data['templates']) && is_array($data['templates'])) {
             $templates = $data['templates'];
         }
         $ptIsInternal = $this->isPageTypeInternal();
@@ -993,7 +997,7 @@ class Type extends ConcreteObject implements \Concrete\Core\Permission\ObjectInt
         if (!$includeInternal) {
             $ptIDs = $db->GetCol('select ptID from PageTypes where siteTypeID = ? and ptIsInternal = 0 order by ptDisplayOrder asc', $v);
         } else {
-            $ptIDs = $db->GetCol('select ptID from PageTypes order by ptDisplayOrder asc', $v);
+            $ptIDs = $db->GetCol('select ptID from PageTypes order by ptDisplayOrder asc');
         }
 
         return static::returnList($ptIDs);

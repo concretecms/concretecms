@@ -125,7 +125,7 @@ if (is_object($renderer)) {
 
         Concrete.Vue.activateContext('cms', function (Vue, config) {
             new Vue({
-                el: 'div[data-vue=board]',
+                el: 'div[data-vue-app=board]',
                 components: config.components
             })
         })

@@ -1,0 +1,18 @@
+/**
+ * Handles fancy selects (currently TomSelect, formerly a million different things like Bootstrap Select,
+ * Selectize, select2, etc... Most of the styles for these components are contained in their own
+ * library styles included in _base.scss, but this includes extensions to those component styles
+ */
+@import '~tom-select/src/scss/tom-select.bootstrap5';
+
+/**
+ * Customize TomSelect drop shadow. Wish we could do this with some variables but the box shadow is not
+ * exposed as a variable
+ */
+.ccm-ui {
+  .ts-dropdown,
+  .ts-dropdown.form-select,
+  .ts-dropdown.form-control {
+    box-shadow: $dropdown-box-shadow;
+  }
+}

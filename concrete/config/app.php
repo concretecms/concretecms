@@ -95,7 +95,6 @@ return [
         'core_messenger' => '\Concrete\Core\Messenger\MessengerServiceProvider',
         'core_cache' => '\Concrete\Core\Cache\CacheServiceProvider', // needs to come before api
         'core_file' => '\Concrete\Core\File\FileServiceProvider',
-        'core_encryption' => '\Concrete\Core\Encryption\EncryptionServiceProvider',
         'core_validation' => '\Concrete\Core\Validation\ValidationServiceProvider',
         'core_localization' => '\Concrete\Core\Localization\LocalizationServiceProvider',
         'core_exporter' => '\Concrete\Core\Export\ExportServiceProvider',
@@ -104,6 +103,7 @@ return [
         'core_health' => '\Concrete\Core\Health\HealthServiceProvider',
         'core_html' => '\Concrete\Core\Html\HtmlServiceProvider',
         'core_editor' => '\Concrete\Core\Editor\EditorServiceProvider',
+        'core_image_editor' => '\Concrete\Core\ImageEditor\ImageEditorServiceProvider',
         'core_mail' => '\Concrete\Core\Mail\MailServiceProvider',
         'core_application' => '\Concrete\Core\Application\ApplicationServiceProvider',
         'core_utility' => '\Concrete\Core\Utility\UtilityServiceProvider',
@@ -115,7 +115,7 @@ return [
         'core_manager_search_fields' => '\Concrete\Core\Search\Field\ManagerServiceProvider',
         'core_permissions' => '\Concrete\Core\Permission\PermissionServiceProvider',
         'core_automation' => '\Concrete\Core\Command\Task\ServiceProvider',
-        'core_api' => 'Concrete\Core\Api\ApiServiceProvider',
+        'core_announcement' => '\Concrete\Core\Announcement\AnnouncementServiceProvider',
         'core_form' => '\Concrete\Core\Form\FormServiceProvider',
         'core_session' => '\Concrete\Core\Session\SessionServiceProvider',
         'core_cookie' => '\Concrete\Core\Cookie\CookieServiceProvider',
@@ -156,6 +156,10 @@ return [
         //
         // Tracker
         'core_usagetracker' => '\Concrete\Core\Statistics\UsageTracker\ServiceProvider',
+
+        // Api - has to come after Express (and possibly other items)
+        'core_api' => 'Concrete\Core\Api\ApiServiceProvider',
+
     ],
 
     /*
@@ -520,6 +524,10 @@ return [
             ['css', 'css/features/faq/frontend.css', ['minify' => false]],
         ],
 
+        'feature/forms/frontend' => [
+            ['javascript', 'js/features/forms/frontend.js', ['minify' => false]],
+        ],
+
         'feature/basics/frontend' => [
             ['css', 'css/features/basics/frontend.css', ['minify' => false]],
         ],
@@ -722,6 +730,12 @@ return [
         'feature/faq/frontend' => [
             [
                 ['css', 'feature/faq/frontend'],
+            ],
+        ],
+
+        'feature/forms/frontend' => [
+            [
+                ['javascript', 'feature/forms/frontend'],
             ],
         ],
 

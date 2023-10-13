@@ -1,8 +1,15 @@
 <?php
 namespace Concrete\Attribute\UserSelector;
 
+use Concrete\Core\Api\ApiResourceValueInterface;
+use Concrete\Core\Api\Attribute\OpenApiSpecifiableInterface;
+use Concrete\Core\Api\Attribute\SupportsAttributeValueFromJsonInterface;
+use Concrete\Core\Api\Fractal\Transformer\UserTransformer;
+use Concrete\Core\Api\OpenApi\SpecProperty;
+use Concrete\Core\Api\Resources;
 use Concrete\Core\Attribute\Controller as AttributeTypeController;
 use Concrete\Core\Attribute\FontAwesomeIconFormatter;
+use Concrete\Core\Entity\Attribute\Key\Key;
 use Concrete\Core\Entity\Attribute\Value\Value\NumberValue;
 use Concrete\Core\Error\ErrorList\Error\FieldNotPresentError;
 use Concrete\Core\Error\ErrorList\ErrorList;
@@ -10,8 +17,13 @@ use Concrete\Core\Error\ErrorList\Field\AttributeField;
 use Concrete\Core\User\User;
 use Concrete\Core\User\UserInfo;
 use Concrete\Core\User\UserInfoRepository;
+use League\Fractal\Resource\Item;
+use League\Fractal\Resource\ResourceInterface;
 
-class Controller extends AttributeTypeController
+class Controller extends AttributeTypeController implements
+    OpenApiSpecifiableInterface,
+    SupportsAttributeValueFromJsonInterface,
+    ApiResourceValueInterface
 {
     protected $searchIndexFieldDefinition = [
         'type' => 'integer',
@@ -78,6 +90,18 @@ class Controller extends AttributeTypeController
         return $av;
     }
 
+    public function searchForm($list)
+    {
+        $list->filterByAttribute($this->attributeKey->getAttributeKeyHandle(), (int)$this->request('value'));
+        return $list;
+    }
+
+    public function search()
+    {
+        $user_selector = $this->app->make('helper/form/user_selector');
+        echo $user_selector->selectUser($this->field('value'), $this->request('value'));
+    }
+
     public function getSearchIndexValue()
     {
         return $this->attributeValue->getValue();
@@ -130,4 +154,33 @@ class Controller extends AttributeTypeController
 
         return $error;
     }
+
+    public function getOpenApiSpecProperty(Key $key): SpecProperty
+    {
+        return new SpecProperty(
+            $key->getAttributeKeyHandle(),
+            $key->getAttributeKeyDisplayName(),
+            'integer'
+        );
+    }
+
+    public function createAttributeValueFromNormalizedJson($json)
+    {
+        return $this->createAttributeValue($json);
+    }
+
+    public function getApiValueResource(): ?ResourceInterface
+    {
+        if ($this->getAttributeValue()) {
+            $uID = $this->getAttributeValue()->getValue();
+            if ($uID) {
+                $user = $this->app->make(UserInfoRepository::class)->getByID($uID);
+                return new Item($user, new UserTransformer(), Resources::RESOURCE_USERS);
+            }
+        }
+        return null;
+    }
+
+
+
 }

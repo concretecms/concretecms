@@ -58,25 +58,27 @@ class Express extends ApiController implements ApplicationAwareInterface
         return $resource;
     }
 
-    protected function getEntry(string $objectHandle, $entryID)
+    protected function getEntry(string $objectHandle, $entryIdentifier)
     {
-        $entryID = (int) $entryID;
+        /**
+         * @var $express ObjectManager
+         */
         $express = $this->app->make('express');
         $object = $express->getObjectByHandle($objectHandle);
         if (!$object) {
             return $this->error(t('Object not found.', 404));
         }
-        $entry = $express->getEntry($entryID);
+        $entry = $express->getEntryByPublicIdentifier($entryIdentifier);
         if (!$entry || !$entry->is($objectHandle)) {
-            return $this->error(t('Invalid entry ID.', 404));
+            return $this->error(t('Invalid entry public identifier.', 404));
         }
 
         return [$object, $entry];
     }
 
-    public function read(string $objectHandle, $entryID)
+    public function read(string $objectHandle, $entryIdentifier)
     {
-        $response = $this->getEntry($objectHandle, $entryID);
+        $response = $this->getEntry($objectHandle, $entryIdentifier);
         if ($response instanceof JsonResponse) {
             return $response;
         } else {
@@ -90,9 +92,9 @@ class Express extends ApiController implements ApplicationAwareInterface
         return $this->transform($entry, new ExpressEntryTransformer($object), $object->getPluralHandle());
     }
 
-    public function update(string $objectHandle, $entryID)
+    public function update(string $objectHandle, $entryIdentifier)
     {
-        $response = $this->getEntry($objectHandle, $entryID);
+        $response = $this->getEntry($objectHandle, $entryIdentifier);
         if ($response instanceof JsonResponse) {
             return $response;
         } else {
@@ -130,9 +132,9 @@ class Express extends ApiController implements ApplicationAwareInterface
         return new Item($entry, new ExpressEntryTransformer($object), $object->getPluralHandle());
     }
 
-    public function delete(string $objectHandle, $entryID)
+    public function delete(string $objectHandle, $entryIdentifier)
     {
-        $response = $this->getEntry($objectHandle, $entryID);
+        $response = $this->getEntry($objectHandle, $entryIdentifier);
         if ($response instanceof JsonResponse) {
             return $response;
         } else {
@@ -146,7 +148,7 @@ class Express extends ApiController implements ApplicationAwareInterface
         $express = $this->app->make('express');
         $express->deleteEntry($entry);
 
-        return $this->deleted($object->getPluralHandle(), $entryID);
+        return $this->deleted($object->getPluralHandle(), $entryIdentifier);
     }
 
 

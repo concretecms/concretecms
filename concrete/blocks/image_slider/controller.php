@@ -15,6 +15,36 @@ use Page;
 
 class Controller extends BlockController implements FileTrackableInterface, UsesFeatureInterface
 {
+    /**
+     * @var int|string|null
+     */
+    public $navigationType;
+
+    /**
+     * @var int|string|null
+     */
+    public $timeout;
+
+    /**
+     * @var int|string|null
+     */
+    public $speed;
+
+    /**
+     * @var int|string|null
+     */
+    public $noAnimate;
+
+    /**
+     * @var int|string|null
+     */
+    public $pause;
+
+    /**
+     * @var int|string|null
+     */
+    public $maxWidth;
+
     protected $btTable = 'btImageSlider';
     protected $btExportTables = ['btImageSlider', 'btImageSliderEntries'];
     protected $btInterfaceWidth = 600;
@@ -22,6 +52,7 @@ class Controller extends BlockController implements FileTrackableInterface, Uses
     protected $btWrapperClass = 'ccm-ui';
     protected $btCacheBlockRecord = true;
     protected $btExportFileColumns = ['fID'];
+    protected $btExportContentColumns = ['title', 'description'];
     protected $btCacheBlockOutput = true;
     protected $btCacheBlockOutputOnPost = true;
     protected $btCacheBlockOutputForRegisteredUsers = false;
@@ -43,7 +74,7 @@ class Controller extends BlockController implements FileTrackableInterface, Uses
         parent::__construct($obj);
         $this->tracker = $tracker;
     }
-    
+
     public function getRequiredFeatures(): array
     {
         return [
@@ -99,7 +130,7 @@ class Controller extends BlockController implements FileTrackableInterface, Uses
     {
         $this->edit();
     }
-    
+
     public function getEntries()
     {
         $db = Database::get();

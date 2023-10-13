@@ -6,9 +6,9 @@ return [
      *
      * @var string
      */
-    'version' => '9.2.0a3',
-    'version_installed' => '9.2.0a3',
-    'version_db' => '20221122000000', // the key of the latest database migration
+    'version' => '9.2.2a1',
+    'version_installed' => '9.2.2a1',
+    'version_db' => '20231002142400', // the key of the latest database migration
 
     /*
      * Installation status
@@ -268,6 +268,13 @@ return [
          * @var string
          */
         'full_page_lifetime' => 'default',
+
+        /**
+         * Respect lifetime of each block on the page
+         *
+         * @var bool
+         */
+        'full_page_lifetime_block' => false,
 
         /*
          * Custom lifetime value, only used if concrete.cache.full_page_lifetime is 'custom'
@@ -616,7 +623,7 @@ return [
          */
         'enabled' => true,
         'default' => [
-            'address' => 'concrete-cms-noreply@concretecms',
+            'address' => '',
             'name' => '',
         ],
         'form_block' => [
@@ -763,6 +770,7 @@ return [
          * @var string (now|async)
          */
         'basic_thumbnailer_generation_strategy' => 'now',
+        'help_overlay' => true,
         'require_version_comments' => false,
         /*
          * Control whether a block type can me moved to different block type sets
@@ -821,9 +829,10 @@ return [
             'height' => 500,
         ],
         'user_avatar' => [
-            'width' => 80,
-            'height' => 80,
+            'width' => 120,
+            'height' => 120,
             'default' => ASSETS_URL_IMAGES . '/avatar_none.png',
+            'resolution' => '2', // Set this to 1 if you want width and height to match in the cropper exactly.
         ],
     ],
 
@@ -879,6 +888,10 @@ return [
          * Don't resize the files with these mime types (space-separated list)
          */
         'dont_resize_mimetypes' => 'image/gif',
+        /**
+         * Enable asciify to sanitize name of uploaded files
+         */
+        'enable_filename_asciify' => true,
     ],
 
     'search_users' => [
@@ -1263,6 +1276,10 @@ return [
             'invalidate_on_user_agent_mismatch' => true,
 
             'invalidate_on_ip_mismatch' => true,
+
+            'ignored_ip_mismatches' => [],
+
+            'enable_user_specific_ignored_ip_mismatches' => false,
 
             'invalidate_inactive_users' => [
                 // Is the automatically logout inactive users setting enabled?

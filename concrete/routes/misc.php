@@ -15,6 +15,10 @@ defined('C5_EXECUTE') or die('Access Denied.');
 $router->all('/ccm/system/captcha/picture', '\Concrete\Core\Captcha\CaptchaWithPictureInterface::displayCaptchaPicture');
 $router->all('/ccm/system/dialogs/language/update/details', '\Concrete\Controller\Dialog\Language\Update\Details::view');
 $router->all('/dashboard/blocks/stacks/list', '\Concrete\Controller\SinglePage\Dashboard\Blocks\Stacks::list_page');
+$router->all('/ccm/system/dialogs/help/help/', '\Concrete\Controller\Dialog\Help\Help::view');
+$router->all('/ccm/system/dialogs/help/get_items', '\Concrete\Controller\Dialog\Help\Help::getItems');
+$router->post('/ccm/system/announcement/mark_as_viewed/{handle}', '\Concrete\Controller\Backend\Announcement::markAsViewed');
+$router->post('/ccm/system/announcement/site_information/submit', '\Concrete\Controller\Backend\Announcement\SiteInformation::submit');
 $router->all('/ccm/system/notification/alert/archive/', '\Concrete\Controller\Backend\Notification\Alert::archive');
 $router->all('/ccm/system/accept_privacy_policy/', '\Concrete\Controller\Backend\PrivacyPolicy::acceptPrivacyPolicy');
 $router->all('/ccm/system/account/remove_inbox_new_message_status', '\Concrete\Controller\Backend\Account::removeInboxNewMessageStatus');
@@ -52,4 +56,5 @@ $router->all('/ccm/system/dialogs/editor/settings/preview', 'Concrete\Controller
 $router->all('/ccm/system/dashboard/attribute/set/update_order', 'Concrete\Controller\Backend\Attribute\Set\UpdateOrder::view');
 $router->all('/ccm/system/heartbeat', '\Concrete\Controller\Frontend\Heartbeat::view');
 
-$router->all('/ccm/system/user/autocomplete', 'Concrete\Controller\Backend\User\Autocomplete::view');
+$router->post('/ccm/system/user/autocomplete', 'Concrete\Controller\Backend\User\Autocomplete::view');
+$router->post('/ccm/system/user/autocomplete/get_selected', 'Concrete\Controller\Backend\User\Autocomplete::getSelectedUsers');

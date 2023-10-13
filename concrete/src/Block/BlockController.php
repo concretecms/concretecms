@@ -50,6 +50,7 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
     protected $bActionCID;
     protected $btExportPageColumns = [];
     protected $btExportFileColumns = [];
+    protected $btExportContentColumns = [];
     protected $btExportPageTypeColumns = [];
     protected $btExportPageFeedColumns = [];
     protected $btExportFileFolderColumns = [];
@@ -61,6 +62,11 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
     protected $btID;
     /** @var array */
     protected $requestArray;
+    /**
+     * @deprecated What's deprecated is the "public" part.
+     * @var string|null
+     */
+    public $btCachedBlockRecord;
 
     /**
      * @internal
@@ -74,6 +80,13 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
      * @var bool
      */
     protected $supportSavingNullValues = false;
+
+    /**
+     * @deprecated What's deprecated is the "public" part.
+     *
+     * @var \Concrete\Core\Area\Area|null
+     */
+    public $area;
 
     public function getBlockTypeInSetName()
     {
@@ -249,8 +262,7 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
      */
     public function getPermissionObject()
     {
-        $bp = new Permissions(Block::getByID($this->bID));
-
+        $bp = new Checker($this->block);
         return $bp;
     }
 
@@ -466,9 +478,20 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
             foreach ($blockNode->data as $data) {
                 if ($data['table'] == $this->getBlockTypeDatabaseTable()) {
                     if (isset($data->record)) {
-                        foreach ($data->record->children() as $node) {
-                            $result = $inspector->inspect((string) $node);
-                            $args[$node->getName()] = $result->getReplacedValue();
+                        foreach ($data->record->children() as $key => $node) {
+                            if (in_array($key, $this->btExportPageColumns)
+                                || in_array($key, $this->btExportFileColumns)
+                                || in_array($key, $this->btExportPageTypeColumns)
+                                || in_array($key, $this->btExportPageFeedColumns)
+                                || in_array($key, $this->btExportFileFolderColumns)) {
+                                    $result = $inspector->inspect((string) $node);
+                                    $args[$node->getName()] = $result->getReplacedValue();
+                            } else if (in_array($key, $this->btExportContentColumns)) {
+                                $result = $inspector->inspect((string) $node);
+                                $args[$node->getName()] = $result->getReplacedContent();
+                            } else {
+                                $args[$node->getName()] = (string) $node;
+                            }
                         }
                     }
                 }
@@ -489,10 +512,21 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
                         foreach ($data->record as $record) {
                             $aar = new \Concrete\Core\Legacy\BlockRecord($table);
                             $aar->bID = $b->getBlockID();
-                            foreach ($record->children() as $node) {
+                            foreach ($record->children() as $key => $node) {
                                 $nodeName = $node->getName();
-                                $result = $inspector->inspect((string) $node);
-                                $aar->{$nodeName} = $result->getReplacedValue();
+                                if (in_array($key, $this->btExportPageColumns)
+                                    || in_array($key, $this->btExportFileColumns)
+                                    || in_array($key, $this->btExportPageTypeColumns)
+                                    || in_array($key, $this->btExportPageFeedColumns)
+                                    || in_array($key, $this->btExportFileFolderColumns)) {
+                                        $result = $inspector->inspect((string) $node);
+                                        $aar->{$nodeName} = $result->getReplacedValue();
+                                } else if (in_array($key, $this->btExportContentColumns)) {
+                                    $result = $inspector->inspect((string) $node);
+                                    $aar->{$nodeName} = $result->getReplacedContent();
+                                } else {
+                                    $aar->{$nodeName} = (string) $node;
+                                }
                             }
                             $aar->Save();
                         }

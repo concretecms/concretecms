@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\Foundation;
 
+#[\AllowDynamicProperties]
 class ConcreteObject
 {
     public $error = '';

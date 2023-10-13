@@ -108,4 +108,14 @@ class Factory
 
         return $client;
     }
+
+    /**
+     * Get the default options for the HTTP client.
+     *
+     * @return array
+     */
+    public function getDefaultOptions(Repository $config)
+    {
+        return $this->getOptions($config);
+    }
 }

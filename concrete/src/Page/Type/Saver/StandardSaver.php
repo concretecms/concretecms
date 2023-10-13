@@ -15,6 +15,11 @@ class StandardSaver implements SaverInterface
 
     protected $ptDraftVersionsToSave = 10;
 
+    /**
+     * @var \Concrete\Core\Page\Type\Type|null
+     */
+    protected $type;
+
     public function setPageTypeObject(Type $type)
     {
         $this->type = $type;

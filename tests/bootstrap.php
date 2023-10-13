@@ -50,9 +50,6 @@ Request::setInstance(new Request(
 $app = require DIR_BASE_CORE . '/bootstrap/start.php';
 /* @var Concrete\Core\Application\Application $app */
 
-// Configure error reporting (test more strictly than core settings)
-error_reporting(E_ALL & ~E_STRICT & ~E_DEPRECATED);
-
 // Initialize the database
 $cn = $app->make('database')->connection('ccm_testWithoutDB');
 $cn->connect();

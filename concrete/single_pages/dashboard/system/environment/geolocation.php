@@ -87,7 +87,7 @@ if (isset($geolocator)) {
                         data-editurl="<?= $this->action('details', $geolocator->getGeolocatorID()); ?>"
                         data-geolocator-id="<?= $geolocator->getGeolocatorID(); ?>"
                         data-geolocator-name="<?= $geolocator->getGeolocatorDisplayName(); ?>"
-                        class="geolocator <?= $geolocator->isActive() ? 'success' : ''; ?>"
+                        class="geolocator <?= $geolocator->isActive() ? 'table-success' : ''; ?>"
                     >
                         <td><?= $geolocator->getGeolocatorHandle(); ?></td>
                         <td><?= $geolocator->getGeolocatorDisplayName(); ?></td>

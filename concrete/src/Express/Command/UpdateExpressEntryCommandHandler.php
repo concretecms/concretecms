@@ -3,6 +3,7 @@
 namespace Concrete\Core\Express\Command;
 
 use Concrete\Core\Express\Association\Applier;
+use Concrete\Core\Express\ObjectManager;
 
 class UpdateExpressEntryCommandHandler
 {
@@ -14,9 +15,15 @@ class UpdateExpressEntryCommandHandler
      */
     protected $applier;
 
-    public function __construct(Applier $applier)
+    /**
+     * @var ObjectManager
+     */
+    protected $objectManager;
+
+    public function __construct(Applier $applier, ObjectManager $objectManager)
     {
         $this->applier = $applier;
+        $this->objectManager = $objectManager;
     }
 
     public function __invoke(UpdateExpressEntryCommand $command)
@@ -32,6 +39,7 @@ class UpdateExpressEntryCommandHandler
             $this->handleAssociationMap($map, $entry);
         }
 
+        $this->objectManager->refresh($entry);
         return $entry;
     }
 

@@ -2,19 +2,36 @@
 
 namespace Concrete\Attribute\SocialLinks;
 
+use Concrete\Core\Api\ApiResourceValueInterface;
+use Concrete\Core\Api\Attribute\OpenApiSpecifiableInterface;
+use Concrete\Core\Api\Attribute\SupportsAttributeValueFromJsonInterface;
+use Concrete\Core\Api\Fractal\Transformer\SocialLinkTransformer;
+use Concrete\Core\Api\OpenApi\SpecProperty;
+use Concrete\Core\Api\OpenApi\SpecPropertyRef;
+use Concrete\Core\Api\OpenApi\SpecPropertyRefItems;
+use Concrete\Core\Api\Resources;
 use Concrete\Core\Attribute\Controller as AttributeTypeController;
 use Concrete\Core\Attribute\FontAwesomeIconFormatter;
 use Concrete\Core\Attribute\Form\Control\View\GroupedView;
 use Concrete\Core\Attribute\SimpleTextExportableAttributeInterface;
+use Concrete\Core\Entity\Attribute\Key\Key;
 use Concrete\Core\Entity\Attribute\Value\Value\SelectedSocialLink;
+use Concrete\Core\Entity\Attribute\Value\Value\SelectValue;
+use Concrete\Core\Entity\Attribute\Value\Value\SelectValueOption;
 use Concrete\Core\Entity\Attribute\Value\Value\SocialLinksValue;
 use Concrete\Core\Error\ErrorList\ErrorList;
 use Concrete\Core\Sharing\SocialNetwork\Service as Service;
 use Concrete\Core\Sharing\SocialNetwork\ServiceList as ServiceList;
 use Environment;
+use League\Fractal\Resource\Collection;
+use League\Fractal\Resource\ResourceInterface;
 use Loader;
 
-class Controller extends AttributeTypeController implements SimpleTextExportableAttributeInterface
+class Controller extends AttributeTypeController implements
+    SimpleTextExportableAttributeInterface,
+    OpenApiSpecifiableInterface,
+    SupportsAttributeValueFromJsonInterface,
+    ApiResourceValueInterface
 {
     public function getIconFormatter()
     {
@@ -202,4 +219,45 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
 
         return $value;
     }
+
+    public function getOpenApiSpecProperty(Key $key): SpecProperty
+    {
+        return new SpecProperty(
+            $key->getAttributeKeyHandle(),
+            $key->getAttributeKeyDisplayName(),
+            'array',
+            null,
+            new SpecPropertyRef(
+                '/components/schemas/UserSocialLink'
+            )
+        );
+    }
+
+    public function createAttributeValueFromNormalizedJson($json)
+    {
+        $data = [];
+        foreach ((array) $json as $record) {
+            $service = $record['service'] ?? null;
+            $serviceInfo = $record['service_info'] ?? null;
+            if ($service && $serviceInfo) {
+                $data[$service] = $serviceInfo;
+            }
+        }
+        return $this->createAttributeValue($data);
+    }
+
+    public function getApiValueResource(): ?ResourceInterface
+    {
+        $value = $this->getAttributeValueObject();
+        if ($value) {
+            /**
+             * @var $value SocialLinksValue
+             */
+            $links = $value->getSelectedLinks()->toArray();
+            return new Collection($links, new SocialLinkTransformer(), Resources::RESOURCE_SOCIAL_LINKS);
+        }
+        return null;
+    }
+
+
 }

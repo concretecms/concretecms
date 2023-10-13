@@ -3,6 +3,7 @@
 namespace Concrete\Core\Api\OpenApi\Factory;
 
 use Concrete\Core\Api\OpenApi\Parameter\Parameter;
+use Concrete\Core\Api\OpenApi\SpecSchema;
 use Concrete\Core\Entity\Express\Entity;
 use Concrete\Core\Api\Attribute\OpenApiSpecifiableInterface;
 use Concrete\Core\Api\OpenApi\JsonSchemaRefArrayContent;
@@ -35,11 +36,11 @@ class ExpressEntitySpecFactory
     {
         $model = new SpecModel(camelcase($object->getHandle()), t('%s model', $object->getName()));
         $model
-            ->addProperty(new SpecProperty('id', t('Entry ID'), 'integer'))
-            ->addProperty(new SpecProperty('date_added', t('Date Added'), 'date'))
-            ->addProperty(new SpecProperty('date_last_updated', t('Date Last Updated'), 'date'))
-            ->addProperty(new SpecProperty('label', t('Label'), 'text'))
-            ->addProperty(new SpecProperty('url', t('URL'), 'text'))
+            ->addProperty(new SpecProperty('id', t('Entry public identifier'), 'string'))
+            ->addProperty(new SpecProperty('date_added', t('Date Added'), 'string', 'date'))
+            ->addProperty(new SpecProperty('date_last_updated', t('Date Last Updated'), 'string', 'date'))
+            ->addProperty(new SpecProperty('label', t('Label'), 'string'))
+            ->addProperty(new SpecProperty('url', t('URL'), 'string'))
             ->addProperty(
                 new SpecProperty(
                     'author', t('Author'),
@@ -49,7 +50,10 @@ class ExpressEntitySpecFactory
 
         foreach ($object->getAttributes() as $attribute) {
             $model->addProperty(
-                new SpecProperty($attribute->getAttributeKeyHandle(), $attribute->getAttributeKeyDisplayName(), 'string')
+                new SpecProperty(
+                    $attribute->getAttributeKeyHandle(), $attribute->getAttributeKeyDisplayName(),
+                    new SpecPropertyRef('/components/schemas/CustomAttribute')
+                )
             );
         }
 
@@ -59,18 +63,25 @@ class ExpressEntitySpecFactory
                     new SpecProperty(
                         $association->getTargetEntity()->getHandle(),
                         $association->getTargetEntity()->getName(),
-                        new SpecPropertyRef('/components/schemas/' . camelcase($association->getTargetEntity()->getName()))
+                        new SpecPropertyRef(
+                            '/components/schemas/' . camelcase($association->getTargetEntity()->getHandle())
+                        )
                     )
                 );
-            } else if ($association instanceof OneToManyAssociation || $association instanceof ManyToManyAssociation) {
-                $model->addProperty(
-                    new SpecProperty(
-                        $association->getTargetEntity()->getHandle(),
-                        $association->getTargetEntity()->getName(),
-                        'array',
-                        new SpecPropertyRefItems('/components/schemas/' . camelcase($association->getTargetEntity()->getName()))
-                    )
-                );
+            } else {
+                if ($association instanceof OneToManyAssociation || $association instanceof ManyToManyAssociation) {
+                    $model->addProperty(
+                        new SpecProperty(
+                            $association->getTargetEntity()->getHandle(),
+                            $association->getTargetEntity()->getName(),
+                            'array',
+                            null,
+                            new SpecPropertyRefItems(
+                                '/components/schemas/' . camelcase($association->getTargetEntity()->getHandle())
+                            )
+                        )
+                    );
+                }
             }
         }
         $components = new SpecComponents();
@@ -91,17 +102,7 @@ class ExpressEntitySpecFactory
         foreach ($object->getAttributes() as $attribute) {
             $controller = $attribute->getController();
             if ($controller instanceof OpenApiSpecifiableInterface) {
-                $attributeProperty = $controller->getOpenApiSpecProperty();
-                /* example:
-                $attributeProperty = new SpecProperty(
-                    $attribute->getAttributeKeyHandle(),
-                    $attribute->getAttributeKeyDisplayName(),
-                    'object'
-                );
-                $attributeProperty->addObjectProperty(
-                    new SpecProperty('id', t('Entry ID'), 'integer')
-                );
-                */
+                $attributeProperty = $controller->getOpenApiSpecProperty($attribute);
             } else {
                 $attributeProperty = new SpecProperty(
                     $attribute->getAttributeKeyHandle(),
@@ -122,15 +123,18 @@ class ExpressEntitySpecFactory
                         'integer',
                     )
                 );
-            } else if ($association instanceof OneToManyAssociation || $association instanceof ManyToManyAssociation) {
-                $model->addProperty(
-                    new SpecProperty(
-                        $association->getTargetEntity()->getPluralHandle(),
-                        $association->getTargetEntity()->getName(),
-                        'array',
-                        ['type' => 'integer'],
-                    )
-                );
+            } else {
+                if ($association instanceof OneToManyAssociation || $association instanceof ManyToManyAssociation) {
+                    $model->addProperty(
+                        new SpecProperty(
+                            $association->getTargetEntity()->getPluralHandle(),
+                            $association->getTargetEntity()->getName(),
+                            'array',
+                            null,
+                            ['type' => 'integer'],
+                        )
+                    );
+                }
             }
         }
 
@@ -183,16 +187,18 @@ class ExpressEntitySpecFactory
     protected function addRead(SpecFragment $spec, Entity $object)
     {
         $handle = $object->getPluralHandle();
-        $path = self::API_PREFIX . '/' . $handle . '/{id}';
+        $path = self::API_PREFIX . '/' . $handle . '/{uuid}';
         $includes = $this->getIncludesForObject($object);
         $spec->addPath(
             (new SpecPath(
                 $path,
                 'GET',
                 $handle,
-                t('Find a %s by its ID.', $object->getName())
+                t('Find a %s by its public identifier.', $object->getName())
             ))
-                ->addParameter(new Parameter('id', 'path', t('The ID of the object.')))
+                ->addParameter(
+                    new Parameter('uuid', 'path', t('The public identifier/uuid of the entry.'), new SpecSchema('string', 'string'))
+                )
                 ->addParameter(new IncludesParameter($includes))
                 ->setSecurity(new SpecSecurity('authorization', [$handle . ':read']))
                 ->addResponse(
@@ -239,7 +245,7 @@ class ExpressEntitySpecFactory
     protected function addUpdate(SpecFragment $spec, Entity $object)
     {
         $handle = $object->getPluralHandle();
-        $path = self::API_PREFIX . '/' . $handle . '/{id}';
+        $path = self::API_PREFIX . '/' . $handle . '/{uuid}';
 
         $specPath = (new SpecPath(
             $path,
@@ -250,7 +256,7 @@ class ExpressEntitySpecFactory
 
         $specPath
             ->setSecurity(new SpecSecurity('authorization', [$handle . ':update']))
-            ->addParameter(new Parameter('id', 'path', t('The ID of the object.')))
+            ->addParameter(new Parameter('id', 'path', t('The ID of the object.'), new SpecSchema('string', 'string')))
             ->addResponse(
                 new SpecResponse(
                     200,
@@ -270,7 +276,7 @@ class ExpressEntitySpecFactory
     protected function addDelete(SpecFragment $spec, Entity $object)
     {
         $handle = $object->getPluralHandle();
-        $path = self::API_PREFIX . '/' . $handle . '/{id}';
+        $path = self::API_PREFIX . '/' . $handle . '/{uuid}';
         $spec->addPath(
             (new SpecPath(
                 $path,
@@ -278,7 +284,9 @@ class ExpressEntitySpecFactory
                 $handle,
                 t('Delete a %s.', $object->getName())
             ))
-                ->addParameter(new Parameter('id', 'path', t('The ID of the object.')))
+                ->addParameter(
+                    new Parameter('id', 'path', t('The ID of the object.'), new SpecSchema('string', 'string'))
+                )
                 ->setSecurity(new SpecSecurity('authorization', [$handle . ':delete']))
                 ->addResponse(
                     new SpecResponse(
@@ -294,28 +302,36 @@ class ExpressEntitySpecFactory
     protected function addScopes(SpecFragment $spec, Entity $object)
     {
         $spec->addSecurityScheme(
-            new SpecSecurityScheme('authorization', [
+            new SpecSecurityScheme(
+                'authorization', [
                 sprintf('%s:read', $object->getPluralHandle()) =>
                     t('Read %s information', $object->getName())
-            ]),
+            ]
+            ),
         );
         $spec->addSecurityScheme(
-            new SpecSecurityScheme('authorization', [
+            new SpecSecurityScheme(
+                'authorization', [
                 sprintf('%s:add', $object->getPluralHandle()) =>
                     t('Add %s information', $object->getName())
-            ]),
+            ]
+            ),
         );
         $spec->addSecurityScheme(
-            new SpecSecurityScheme('authorization', [
+            new SpecSecurityScheme(
+                'authorization', [
                 sprintf('%s:update', $object->getPluralHandle()) =>
                     t('Update %s information', $object->getName())
-            ]),
+            ]
+            ),
         );
         $spec->addSecurityScheme(
-            new SpecSecurityScheme('authorization', [
+            new SpecSecurityScheme(
+                'authorization', [
                 sprintf('%s:delete', $object->getPluralHandle()) =>
                     t('Delete %s', $object->getName())
-            ]),
+            ]
+            ),
         );
         return $spec;
     }

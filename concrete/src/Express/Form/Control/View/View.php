@@ -7,6 +7,10 @@ use Concrete\Core\Form\Control\FormView as BaseFormView;
 
 abstract class View extends BaseFormView
 {
+    /**
+     * @var \Concrete\Core\Entity\Express\Control\Control
+     */
+    protected $control;
 
     public function __construct(ContextInterface $context, Control $control)
     {

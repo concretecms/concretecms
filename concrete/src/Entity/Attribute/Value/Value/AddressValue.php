@@ -7,7 +7,9 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="atAddress")
+ * @ORM\Table(name="atAddress", indexes={
+ *     @ORM\Index(name="postal_code", columns={"postal_code"}),
+ * })
  */
 class AddressValue extends AbstractValue
 {

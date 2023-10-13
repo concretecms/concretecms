@@ -52,10 +52,10 @@ $previewContentsURL = URL::to('/ccm/system/panels/page/design/preview_contents')
                             <?php if (count($item->getChildren())) { ?>
                                 <li><h6 class="dropdown-header"><?=$item->getName()?></h6></li>
                                 <?php foreach($item->getChildren() as $child) { ?>
-                                    <li><a class="dropdown-item" href="<?=$child->getURL()?>"><?=t($child->getName())?></a></li>
+                                    <li><a class="dropdown-item" target="<?=$child->getTarget()?>" href="<?=$child->getURL()?>"><?=t($child->getName())?></a></li>
                                 <?php } ?>
                             <?php } else { ?>
-                                <li><a class="dropdown-item" href="<?=$item->getURL()?>"><?=t($item->getName())?></a></li>
+                                <li><a class="dropdown-item" target="<?=$item->getTarget()?>"  href="<?=$item->getURL()?>"><?=t($item->getName())?></a></li>
                             <?php } ?>
                         <?php } ?>
                     </ul>
@@ -65,7 +65,7 @@ $previewContentsURL = URL::to('/ccm/system/panels/page/design/preview_contents')
     </div>
 </div>
 
-<div data-vue="theme-customizer" class="h-100">
+<div data-vue-app="theme-customizer" class="h-100">
 
     <div class="ccm-page h-100">
     <iframe name="ccm-page-preview-frame" class="ccm-page-preview-frame" style="margin-top: 48px" class="w-100 h-100" style="border: 0"

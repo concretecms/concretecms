@@ -286,10 +286,7 @@ class LogEntry
         $db = $app->make('database')->connection();
         $row = $db->fetchAssoc('select * from Logs where logID = ?', [$logID]);
         if ($row) {
-            $obj = new static();
-            $obj = array_to_object($obj, $row);
-
-            return $obj;
+            return new static($row);
         }
     }
 

@@ -3,9 +3,11 @@ namespace Concrete\Core\Package;
 
 use AuthenticationType;
 use Concrete\Block\ExpressForm\Controller as ExpressFormBlockController;
+use Concrete\Core\Announcement\AnnouncementService;
 use Concrete\Core\Api\Command\SynchronizeScopesCommand;
 use Concrete\Core\Backup\ContentImporter;
 use Concrete\Core\Config\Renderer;
+use Concrete\Core\Config\Repository\Repository;
 use Concrete\Core\Database\DatabaseStructureManager;
 use Concrete\Core\Entity\OAuth\Scope;
 use Concrete\Core\File\Filesystem;
@@ -339,6 +341,7 @@ class StartingPointPackage extends Package
         $ci = new ContentImporter();
         $ci->importContentFile(DIR_BASE_CORE . '/config/install/base/summary.xml');
         $ci->importContentFile(DIR_BASE_CORE . '/config/install/base/themes.xml');
+        // this remains for backward compatibility but no core themes use it.
         if (file_exists($this->getPackagePath() . '/themes.xml')) {
             $ci->importContentFile($this->getPackagePath() . '/themes.xml');
         }
@@ -477,12 +480,10 @@ class StartingPointPackage extends Package
         $cba = AuthenticationType::add('concrete', 'Standard');
         $coa = AuthenticationType::add('community', 'community.concretecms.com');
         $fba = AuthenticationType::add('facebook', 'Facebook');
-        $twa = AuthenticationType::add('twitter', 'Twitter');
         $gat = AuthenticationType::add('google', 'Google');
         $ext = AuthenticationType::add('external_concrete', 'External Concrete Site');
 
         $fba->disable();
-        $twa->disable();
         $coa->disable();
         $gat->disable();
         $ext->disable();
@@ -532,6 +533,12 @@ class StartingPointPackage extends Package
         $db->executeQuery('insert into GroupTypeSelectedRoles (gtID, grID) values (?,?)', [DEFAULT_GROUP_TYPE_ID, DEFAULT_GROUP_ROLE_ID]);
         $db->executeQuery('update `Groups` set gtID = ?, gDefaultRoleID = ?', [DEFAULT_GROUP_TYPE_ID, DEFAULT_GROUP_ROLE_ID]);
         $db->executeQuery('update UserGroups set grID = ?', [DEFAULT_GROUP_ROLE_ID]);
+
+        $config = $this->app->make(Repository::class);
+        if (!$config->get('concrete.email.default.address')) {
+            $config->set('concrete.email.default.address', $this->installerOptions->getUserEmail());
+            $config->save('concrete.email.default.address', $this->installerOptions->getUserEmail());
+        }
     }
 
     protected function make_directories()
@@ -602,6 +609,11 @@ class StartingPointPackage extends Package
 
         // Set the version_db as the version_db_installed
         $config->save('concrete.version_db_installed', $config->get('concrete.version_db'));
+
+        // Initiate announcements
+        $announcementService = $this->app->make(AnnouncementService::class);
+        $announcementService->createAnnouncementIfNotExists('collect_site_information');
+        $announcementService->createAnnouncementIfNotExists('welcome');
 
         // Clear cache
         $config->clearCache();

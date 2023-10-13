@@ -5,9 +5,54 @@ use Concrete\Core\Package\Package;
 
 class Item implements ItemInterface
 {
+    /**
+     * @deprecated What's deprecated is the "public" part.
+     *
+     * @var string|null
+     */
+    public $handle;
+
+    /**
+     * @deprecated What's deprecated is the "public" part.
+     *
+     * @var string|false|null
+     */
+    public $pkgHandle;
+
+    /**
+     * @var \Concrete\Core\Application\UserInterface\Menu\Item\ControllerInterface|null
+     */
     protected $controller;
 
     protected $linkAttributes = [];
+
+    /**
+     * @deprecated What's deprecated is the "public" part.
+     *
+     * @var string|null
+     */
+    public $position;
+
+    /**
+     * @deprecated What's deprecated is the "public" part.
+     *
+     * @var string|null
+     */
+    public $href;
+
+    /**
+     * @deprecated What's deprecated is the "public" part.
+     *
+     * @var string|null
+     */
+    public $label;
+
+    /**
+     * @deprecated What's deprecated is the "public" part.
+     *
+     * @var string|null
+     */
+    public $icon;
 
     public function __construct($handle, $pkgHandle = false)
     {
@@ -17,12 +62,12 @@ class Item implements ItemInterface
 
     public function getHandle()
     {
-        return isset($this->handle) ? $this->handle : null;
+        return $this->handle;
     }
 
     public function getLabel()
     {
-        return isset($this->label) ? $this->label : null;
+        return $this->label;
     }
 
     public function setLabel($label)
@@ -32,12 +77,12 @@ class Item implements ItemInterface
 
     public function getPosition()
     {
-        return isset($this->position) ? $this->position : null;
+        return $this->position;
     }
 
     public function getLinkAttributes()
     {
-        return isset($this->linkAttributes) ? $this->linkAttributes : null;
+        return $this->linkAttributes;
     }
 
     public function setLinkAttributes($linkAttributes)
@@ -52,7 +97,7 @@ class Item implements ItemInterface
 
     public function getLink()
     {
-        return isset($this->href) ? $this->href : null;
+        return $this->href;
     }
 
     public function setIcon($icon)
@@ -62,7 +107,7 @@ class Item implements ItemInterface
 
     public function getIcon()
     {
-        return isset($this->icon) ? $this->icon : null;
+        return $this->icon;
     }
 
     public function setPosition($position)
@@ -72,7 +117,7 @@ class Item implements ItemInterface
 
     public function getPackageHandle()
     {
-        return isset($this->pkgHandle) ? $this->pkgHandle : null;
+        return $this->pkgHandle;
     }
 
     public function getPackageObject()
@@ -82,14 +127,14 @@ class Item implements ItemInterface
 
     public function getController()
     {
-        if (!isset($this->controller)) {
+        if ($this->controller === null) {
             $handle = $this->getHandle();
             $class = overrideable_core_class(
                 'MenuItem\\' . camelcase($handle) . '\\Controller',
                 DIRNAME_MENU_ITEMS . '/' . $handle . '/' . FILENAME_CONTROLLER,
                 $this->pkgHandle
             );
-            $this->setController(\Core::make($class, [$this]));
+            $this->setController(\Core::make($class, ['item' => $this]));
         }
 
         return $this->controller;

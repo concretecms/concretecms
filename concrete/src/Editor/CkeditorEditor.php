@@ -526,8 +526,7 @@ EOL;
      */
     protected function getLanguageOption()
     {
-        $langPath = DIR_BASE_CORE . '/js/ckeditor4/vendor/lang/';
-        $useLanguage = 'en';
+        $langPath = DIR_BASE_CORE . '/js/ckeditor/lang/';
 
         $language = strtolower(str_replace('_', '-', Localization::activeLocale()));
         if (file_exists($langPath . $language . '.js')) {

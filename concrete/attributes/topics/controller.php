@@ -2,9 +2,16 @@
 
 namespace Concrete\Attribute\Topics;
 
+use Concrete\Core\Api\ApiResourceValueInterface;
+use Concrete\Core\Api\Attribute\OpenApiSpecifiableInterface;
+use Concrete\Core\Api\Attribute\SupportsAttributeValueFromJsonInterface;
+use Concrete\Core\Api\Fractal\Transformer\TopicTreeNodeTransformer;
+use Concrete\Core\Api\OpenApi\SpecProperty;
+use Concrete\Core\Api\Resources;
 use Concrete\Core\Attribute\Controller as AttributeTypeController;
 use Concrete\Core\Attribute\FontAwesomeIconFormatter;
 use Concrete\Core\Attribute\SimpleTextExportableAttributeInterface;
+use Concrete\Core\Entity\Attribute\Key\Key;
 use Concrete\Core\Entity\Attribute\Key\Settings\TopicsSettings;
 use Concrete\Core\Entity\Attribute\Value\Value\SelectedTopic;
 use Concrete\Core\Entity\Attribute\Value\Value\TopicsValue;
@@ -19,8 +26,14 @@ use Concrete\Core\Tree\Type\Topic as TopicTree;
 use Concrete\Core\Utility\Service\Xml;
 use Core;
 use Database;
+use League\Fractal\Resource\Collection;
+use League\Fractal\Resource\ResourceInterface;
 
-class Controller extends AttributeTypeController implements SimpleTextExportableAttributeInterface
+class Controller extends AttributeTypeController implements
+    SimpleTextExportableAttributeInterface,
+    OpenApiSpecifiableInterface,
+    SupportsAttributeValueFromJsonInterface,
+    ApiResourceValueInterface
 {
     public $akTopicParentNodeID;
     public $akTopicTreeID;
@@ -439,7 +452,7 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
                 $this->load();
             }
             $initialized = false;
-            preg_match_all('/tid:(\d+)$/', $textRepresentation, $matches);
+            preg_match_all('/tid:(\d+)\b/', $textRepresentation, $matches);
             $nodeIDs = array_unique(array_map('intval', $matches[1]));
             foreach ($nodeIDs as $nodeID) {
                 $node = TreeNode::getByID($nodeID);
@@ -492,4 +505,54 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
             $this->akTopicAllowMultipleValues = $type->allowMultipleValues();
         }
     }
+
+    public function getOpenApiSpecProperty(Key $key): SpecProperty
+    {
+        return new SpecProperty(
+            $key->getAttributeKeyHandle(),
+            $key->getAttributeKeyDisplayName(),
+            'array',
+            null,
+            ['type' => 'integer'],
+        );
+    }
+
+    public function createAttributeValueFromNormalizedJson($json)
+    {
+        $av = new TopicsValue();
+        foreach ((array) $json as $topicId) {
+            $topicId = (int) $topicId;
+            if ($topicId) {
+                $topic = new SelectedTopic();
+                $topic->setAttributeValue($av);
+                $topic->setTreeNodeID($topicId);
+                $av->getSelectedTopics()->add($topic);
+            }
+        }
+        return $av;
+    }
+
+    public function getApiValueResource(): ?ResourceInterface
+    {
+        $value = $this->getAttributeValueObject();
+        if ($value) {
+            /**
+             * @var $value TopicsValue
+             */
+            $topics = [];
+            $selectedTopics = $value->getSelectedTopics();
+            foreach ($selectedTopics as $selectedTopic) {
+                /**
+                 * @var $selectedTopic SelectedTopic
+                 */
+                $node = Node::getByID($selectedTopic->getTreeNodeID());
+                if ($node instanceof Topic) {
+                    $topics[] = $node;
+                }
+            }
+            return new Collection($topics, new TopicTreeNodeTransformer(), Resources::RESOURCE_TOPICS);
+        }
+        return null;
+    }
+
 }

@@ -388,6 +388,12 @@ class PageListGenerator
             $result = (bool) $page->getAttribute($ak);
         }
 
+        if (!$result) {
+            if ($page->isAliasPage()) {
+                $result = true;
+            }
+        }
+
         return $result;
     }
 

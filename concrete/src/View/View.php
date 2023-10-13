@@ -143,6 +143,16 @@ class View extends AbstractView
         return $ret;
     }
 
+    /**
+     * Fix https://github.com/concretecms/concretecms/issues/11283
+     *
+     * @return bool
+     */
+    public function isEditingDisabled(): bool
+    {
+        return false;
+    }
+
     public function setViewTheme($theme)
     {
         if (is_object($theme)) {
@@ -196,11 +206,11 @@ class View extends AbstractView
             switch ($this->themeHandle) {
                 case VIEW_CORE_THEME:
                     $this->themeObject = new \Concrete\Theme\Concrete\PageTheme();
-                    $this->pkgHandle = false;
+                    $this->themePkgHandle = false;
                     break;
                 case 'dashboard':
                     $this->themeObject = new \Concrete\Theme\Dashboard\PageTheme();
-                    $this->pkgHandle = false;
+                    $this->themePkgHandle = false;
                     break;
                 default:
                     if (!isset($this->themeObject)) {

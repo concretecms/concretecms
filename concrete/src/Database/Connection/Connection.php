@@ -103,9 +103,9 @@ class Connection extends \Doctrine\DBAL\Connection
         $args = func_get_args();
         if (isset($args) && isset($args[1]) && (is_string($args[1]) || is_array($args[1]))) {
             return $this->executeQuery($args[0], $args[1]);
-        } else {
-            return call_user_func_array('parent::query', $args);
         }
+
+        return parent::query(... $args);
     }
 
     /**
@@ -462,7 +462,7 @@ class Connection extends \Doctrine\DBAL\Connection
      *
      * @throws \Exception throws an exception in case of errors
      *
-     * @return array keys: collation (always lower case); array values: associated character set (always lower case)
+     * @return array keys: collation (always lower case); array values: associated character set (always lower case, empty string if not applicable)
      */
     public function getSupportedCollations()
     {
@@ -470,10 +470,10 @@ class Connection extends \Doctrine\DBAL\Connection
             $supportedCollations = [];
             $rs = $this->executeQuery('SHOW COLLATION');
             while (($row = $rs->fetch(PDO::FETCH_ASSOC)) !== false) {
-                if (!isset($row['Collation']) || !isset($row['Charset'])) {
+                if (!isset($row['Collation']) || !array_key_exists('Charset', $row)) {
                     throw new Exception(t('Unrecognized result of the "%s" database query.', 'SHOW COLLATION'));
                 }
-                $supportedCollations[strtolower($row['Collation'])] = strtolower($row['Charset']);
+                $supportedCollations[strtolower($row['Collation'])] = strtolower($row['Charset'] ?? '');
             }
             $this->supportedCollations = $supportedCollations;
         }

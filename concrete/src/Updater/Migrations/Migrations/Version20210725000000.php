@@ -71,8 +71,15 @@ final class Version20210725000000 extends AbstractMigration implements Repeatabl
         $this->output(t('Installing automated tasks upgrade XML...'));
         $importer = new ContentImporter();
         $importer->importContentFile(DIR_BASE_CORE . '/config/install/base/tasks.xml');
-
         $jobsToUninstall = [
+            'index_search',
+            'index_search_all',
+            'check_automated_groups',
+            'generate_sitemap',
+            'process_email',
+            'remove_old_page_versions',
+            'update_statistics',
+            'deactivate_users',
             'fill_thumbnails_table',
             'update_gatherings',
         ];

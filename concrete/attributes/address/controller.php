@@ -1,11 +1,17 @@
 <?php
 namespace Concrete\Attribute\Address;
 
+use Concrete\Core\Api\Attribute\OpenApiSpecifiableInterface;
+use Concrete\Core\Api\Attribute\SimpleApiAttributeValueInterface;
+use Concrete\Core\Api\Attribute\SupportsAttributeValueFromJsonInterface;
+use Concrete\Core\Api\OpenApi\SpecProperty;
+use Concrete\Core\Api\OpenApi\SpecPropertyRef;
 use Concrete\Core\Attribute\Context\BasicFormContext;
 use Concrete\Core\Attribute\Controller as AttributeTypeController;
 use Concrete\Core\Attribute\FontAwesomeIconFormatter;
 use Concrete\Core\Attribute\Form\Control\View\GroupedView;
 use Concrete\Core\Attribute\MulticolumnTextExportableAttributeInterface;
+use Concrete\Core\Entity\Attribute\Key\Key;
 use Concrete\Core\Entity\Attribute\Key\Settings\AddressSettings;
 use Concrete\Core\Entity\Attribute\Value\Value\AddressValue;
 use Concrete\Core\Error\ErrorList\ErrorList;
@@ -18,10 +24,19 @@ use Concrete\Core\Localization\Service\CountryList;
 use Concrete\Core\Localization\Service\StatesProvincesList;
 use Concrete\Core\Support\Facade\Application;
 
-class Controller extends AttributeTypeController implements MulticolumnTextExportableAttributeInterface
+class Controller extends AttributeTypeController implements
+    MulticolumnTextExportableAttributeInterface,
+    OpenApiSpecifiableInterface,
+    SupportsAttributeValueFromJsonInterface,
+    SimpleApiAttributeValueInterface
 {
     public $helpers = ['form', 'lists/countries'];
 
+    public $akHasCustomCountries;
+    public $akDefaultCountry;
+    public $akCustomCountries;
+    public $akGeolocateCountry;
+    
     protected $searchIndexFieldDefinition = [
         'address1' => [
             'type' => 'string',
@@ -280,13 +295,27 @@ class Controller extends AttributeTypeController implements MulticolumnTextExpor
         }
         extract($data);
         $av = new AddressValue();
-        $av->setAddress1($address1);
-        $av->setAddress2($address2);
-        $av->setCity($city);
-        $av->setStateProvince($state_province);
-        $av->setCountry($country);
-        $av->setPostalCode($postal_code);
-
+        if (isset($address1)) {
+            $av->setAddress1($address1);
+        }
+        if (isset($address2)) {
+            $av->setAddress2($address2);
+        }
+        if (isset($address3)) {
+            $av->setAddress3($address3);
+        }
+        if (isset($city)) {
+            $av->setCity($city);
+        }
+        if (isset($state_province)) {
+            $av->setStateProvince($state_province);
+        }
+        if (isset($country)) {
+            $av->setCountry($country);
+        }
+        if (isset($postal_code)) {
+            $av->setPostalCode($postal_code);
+        }
         return $av;
     }
 
@@ -496,5 +525,26 @@ class Controller extends AttributeTypeController implements MulticolumnTextExpor
         $this->set('akHasCustomCountries', $this->akHasCustomCountries);
         $this->set('akCustomCountries', $this->akCustomCountries);
         $this->set('akGeolocateCountry', $this->akGeolocateCountry);
+    }
+
+    public function getOpenApiSpecProperty(Key $key): SpecProperty
+    {
+        return new SpecProperty(
+            $key->getAttributeKeyHandle(),
+            $key->getAttributeKeyDisplayName(),
+            new SpecPropertyRef(
+                '/components/schemas/AddressAttributeValue'
+            )
+        );
+    }
+
+    public function createAttributeValueFromNormalizedJson($json)
+    {
+        return $this->createAttributeValue($json);
+    }
+
+    public function getApiAttributeValue()
+    {
+        return $this->getSearchIndexValue();
     }
 }

@@ -229,6 +229,7 @@ const FILENAME_CONVERSATION_EDITOR_OPTIONS = 'options.php';
 const FILENAME_STYLE_CUSTOMIZER_STYLES = 'styles.xml';
 const FILENAME_STYLE_CUSTOMIZER_DEFAULT_PRESET_NAME = 'defaults.less';
 const FILENAME_THEMES_SKIN_STYLESHEET_ENTRYPOINT = 'main.css';
+const FILENAME_CONTENT_XML = 'content.xml';
 
 /*
  * ----------------------------------------------------------------------------

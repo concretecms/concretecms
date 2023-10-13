@@ -12,6 +12,7 @@ if ($includeBrandText && $includeBrandLogo) {
 } else {
     $brandingMode = 'text';
 }
+$multilingualEnabled = $multilingualEnabled ?? false;
 ?>
 
 <div data-view="edit-top-navigation-bar-block">
@@ -38,6 +39,12 @@ if ($includeBrandText && $includeBrandLogo) {
                 <input type="checkbox" class="form-check-input" id="includeSearchInput" name="includeSearchInput" value="1" v-model="includeSearchInput">
                 <label class="form-check-label" for="includeSearchInput"><?=t('Display search input within navigation bar.')?></label>
             </div>
+            <?php if ($multilingualEnabled) { ?>
+            <div class="form-check form-switch">
+                <input type="checkbox" class="form-check-input" id="includeSwitchLanguage" name="includeSwitchLanguage" value="1" v-model="includeSwitchLanguage">
+                <label class="form-check-label" for="includeSwitchLanguage"><?=t('Display switch language within navigation bar')?></label>
+            </div>
+            <?php } ?>
         </div>
     </fieldset>
     <fieldset class="mb-3 border-top pt-3">
@@ -58,22 +65,23 @@ if ($includeBrandText && $includeBrandLogo) {
         </div>
         <div class="mb-3" v-if="brandingMode == 'logoText' || brandingMode == 'text'">
             <label class="form-label" for="logo"><?=t('Text Branding')?></label>
-            <input type="text" name="brandingText" class="form-control" value="<?=$brandingText?>">
+            <input type="text" name="brandingText" class="form-control" value="<?=$brandingText ?? null ?>">
+            <div class="help-block"><?=t('Leave blank to inherit this text from the global site name.')?></div>
         </div>
         <div class="mb-3" v-if="brandingMode == 'logoText' || brandingMode == 'logo'">
             <label class="form-label" for="brandingLogo"><?=t('Logo')?></label>
-            <concrete-file-input choose-text="<?=t('Choose Logo')?>" input-name="brandingLogo" file-id="<?=$brandingLogo??null?>"></concrete-file-input>
+            <concrete-file-input choose-text="<?=t('Choose Logo')?>" input-name="brandingLogo" file-id="<?=$brandingLogo ?? null ?>"></concrete-file-input>
         </div>
         <div class="mb-3" v-if="includeTransparency && (brandingMode == 'logoText' || brandingMode == 'logo')">
             <label class="form-label" for="brandingTransparentLogo"><?=t('Transparent Logo')?></label>
-            <concrete-file-input choose-text="<?=t('Choose Logo')?>" input-name="brandingTransparentLogo" file-id="<?=$brandingTransparentLogo??null?>"></concrete-file-input>
+            <concrete-file-input choose-text="<?=t('Choose Logo')?>" input-name="brandingTransparentLogo" file-id="<?=$brandingTransparentLogo ?? null ?>"></concrete-file-input>
         </div>
     </fieldset>
     <fieldset v-if="includeSearchInput" class="border-top pt-3">
         <legend><?=t('Search')?></legend>
         <div class="mb-3">
             <label class="form-label" for="searchInputFormActionPageID"><?=t('Search Results Page')?></label>
-            <concrete-page-input choose-text="<?=t('Choose Page')?>" page-id="<?=$searchInputFormActionPageID??null?>" input-name="searchInputFormActionPageID"></concrete-page-input>
+            <concrete-page-input choose-text="<?=t('Choose Page')?>" page-id="<?=$searchInputFormActionPageID ?? null ?>" input-name="searchInputFormActionPageID"></concrete-page-input>
         </div>
     </fieldset>
 </div>
@@ -81,7 +89,6 @@ if ($includeBrandText && $includeBrandLogo) {
 <script type="text/javascript">
 
     Concrete.Vue.activateContext('cms', function (Vue, config) {
-        Vue.config.devtools = true;
         new Vue({
             el: 'div[data-view=edit-top-navigation-bar-block]',
             components: config.components,
@@ -91,9 +98,10 @@ if ($includeBrandText && $includeBrandLogo) {
                 includeNavigationDropdowns: <?=$includeNavigationDropdowns ? 'true' : 'false'?>,
                 includeStickyNav: <?=$includeStickyNav ? 'true' : 'false'?>,
                 includeSearchInput: <?=$includeSearchInput ? 'true' : 'false'?>,
-                brandingLogo: <?=(int) ($brandingLogo??null)?>,
-                brandingTransparentLogo: <?=(int) ($brandingTransparentLogo??null)?>,
-                searchInputFormActionPageID: <?=(int) ($searchInputFormActionPageID??null)?>,
+                includeSwitchLanguage: <?=$includeSwitchLanguage ? 'true' : 'false'?>,
+                brandingLogo: <?=(int) ($brandingLogo ?? null)?>,
+                brandingTransparentLogo: <?=(int) ($brandingTransparentLogo ?? null)?>,
+                searchInputFormActionPageID: <?=(int) ($searchInputFormActionPageID ?? null)?>,
                 brandingMode: '<?=$brandingMode?>',
             }
         })

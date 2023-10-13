@@ -83,11 +83,11 @@ $weekDays = \Punic\Calendar::getSortedWeekdays('wide');
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-sm-6" data-column="date">
+                        <div class="col-sm-5" data-column="date">
                             <input type="text" class="form-control" name="<%=options.namespace%>_pdStartDate_pub_<%=repetition.setID%>" value="<%=repetition.pdStartDate%>">
                             <input type="hidden" name="<%=options.namespace%>_pdStartDate_<%=repetition.setID%>" value="<%=repetition.pdStartDate%>">
                         </div>
-                        <div class="col-sm-6">
+                        <div class="col-sm-7">
                             <?php /*
                                 Note: the form-control on here is NOT ideal, that's bootstrap 4 markup,
                                 but bootstrap select doesn't understand form-select so if you don't give it form-control you won't get full width form controls here */
@@ -108,11 +108,11 @@ $weekDays = \Punic\Calendar::getSortedWeekdays('wide');
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-sm-6" data-column="date">
+                        <div class="col-sm-5" data-column="date">
                             <input type="text" class="form-control" name="<%=options.namespace%>_pdEndDate_pub_<%=repetition.setID%>" value="<%=repetition.pdEndDate%>">
                             <input type="hidden" class="form-control" name="<%=options.namespace%>_pdEndDate_<%=repetition.setID%>" value="<%=repetition.pdEndDate%>">
                         </div>
-                        <div class="col-sm-6">
+                        <div class="col-sm-7">
                             <?php /*
                                 Note: the form-control on here is NOT ideal, that's bootstrap 4 markup,
                                 but bootstrap select doesn't understand form-select so if you don't give it form-control you won't get full width form controls here */

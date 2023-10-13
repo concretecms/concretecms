@@ -24,6 +24,7 @@ $form = $app->make(Form::class);
 $c = Page::getCurrentPage();
 /** @var PageSelector $pageSelector */
 $pageSelector = $app->make(PageSelector::class);
+
 ?>
 
 <?php if (!$ak instanceof Key) { ?>
@@ -37,7 +38,7 @@ $pageSelector = $app->make(PageSelector::class);
         <?php echo $form->label("title", t('Title')); ?>
 	    <div class="input-group">
 		    <?php echo $form->text('title', $title); ?>
-			<?php echo $form->select('titleFormat', \Concrete\Core\Block\BlockController::$btTitleFormats, $titleFormat, array('style' => 'width:105px;flex-grow:0;', 'class' => 'form-select')); ?>
+			<?php echo $form->select('titleFormat', \Concrete\Core\Block\BlockController::$btTitleFormats, $titleFormat ?? 'h5' ?? null, array('style' => 'width:105px;flex-grow:0;', 'class' => 'form-select')); ?>
 		</div>
 	</div>
 
@@ -78,8 +79,12 @@ $pageSelector = $app->make(PageSelector::class);
     <?php } ?>
 
     <div id="ccm-tags-display-cloud" class="form-group">
-        <?php echo $form->label('cloudCount', t('Number to Display')) ?>
+        <?php echo $form->label('cloudCount', t('Tag Limit')) ?>
         <?php echo $form->text('cloudCount', $cloudCount, ['size' => 4]) ?>
+    </div>
+
+    <div class="help-block">
+        <?=t('Set to 0 to display all tags.')?>
     </div>
 
     <div class="form-group">

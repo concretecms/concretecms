@@ -5,8 +5,6 @@ namespace Concrete\Core\Health\Report\Finding\Message\Search;
 use Concrete\Core\Entity\Attribute\Value\Value\Value;
 use Concrete\Core\Health\Report\Finding\Message\Formatter\FormatterInterface;
 use Concrete\Core\Health\Report\Finding\Message\Formatter\Search\BlockFormatter;
-use Concrete\Core\Health\Report\Finding\Message\Formatter\Search\SimpleAttributeFormatter;
-use Concrete\Core\Health\Report\Finding\Message\Formatter\Search\SimpleBlockFormatter;
 use Concrete\Core\Health\Report\Finding\Message\MessageInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 
@@ -29,7 +27,12 @@ class BlockMessage implements MessageInterface
         $this->content = $content;
     }
 
-
+    /**
+     * {@inheritdoc}
+     *
+     * @see \JsonSerializable::jsonSerialize()
+     */
+    #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
         $data = [
@@ -57,9 +60,6 @@ class BlockMessage implements MessageInterface
     }
 
 
-    /**
-     * @return SimpleAttributeFormatter
-     */
     public function getFormatter(): FormatterInterface
     {
         return new BlockFormatter();

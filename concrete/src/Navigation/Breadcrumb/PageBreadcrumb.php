@@ -52,41 +52,59 @@ class PageBreadcrumb implements BreadcrumbInterface, \Iterator
     }
 
     /**
-     * @return void
+     * {@inheritdoc}
+     *
+     * @see \Iterator::rewind()
      */
+    #[\ReturnTypeWillChange]
     public function rewind()
     {
         reset($this->items);
     }
 
     /**
+     * {@inheritdoc}
+     *
+     * @see \Iterator::current()
+     *
      * @return \Concrete\Core\Navigation\Item\ItemInterface|false
      */
+    #[\ReturnTypeWillChange]
     public function current()
     {
         return current($this->items);
     }
 
     /**
+     * {@inheritdoc}
+     *
+     * @see \Iterator::key()
+     *
      * @return int|string
      */
+    #[\ReturnTypeWillChange]
     public function key()
     {
         return key($this->items);
     }
 
     /**
-     * @return void
+     * {@inheritdoc}
+     *
+     * @see \Iterator::next()
      */
+    #[\ReturnTypeWillChange]
     public function next()
     {
         next($this->items);
     }
 
     /**
-     * @return bool
+     * {@inheritdoc}
+     *
+     * @see \Iterator::valid()
      */
-    public function valid():bool
+    public function valid(): bool
     {
         return $this->current() !== false;
     }

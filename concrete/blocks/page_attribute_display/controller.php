@@ -17,33 +17,54 @@ defined('C5_EXECUTE') or die('Access Denied.');
  */
 class Controller extends BlockController implements UsesFeatureInterface
 {
+    /**
+     * @var string|null
+     */
+    public $attributeHandle;
+
+    /**
+     * @var string|null
+     */
+    public $attributeTitleText;
+
+    /**
+     * @var string|null
+     */
+    public $displayTag;
+
+    /**
+     * @var string|null
+     */
+    public $dateFormat;
+
+    /**
+     * Thumbnail height.
+     *
+     * @var int|string|null
+     */
+    public $thumbnailHeight = 250;
+
+    /**
+     * Thumbnail width.
+     *
+     * @var int|string|null
+     */
+    public $thumbnailWidth = 250;
+
+    /**
+     * @var string|null
+     */
+    public $delimiter;
+
     protected $btTable = 'btPageAttributeDisplay';
     protected $btInterfaceWidth = "500";
     protected $btInterfaceHeight = "365";
-    /** @var string|null */
-    public $dateFormat;
     /** @var bool */
     protected $btCacheBlockOutput = true;
     /** @var bool */
     protected $btCacheBlockOutputOnPost = true;
     /** @var bool */
     protected $btCacheBlockOutputForRegisteredUsers = false;
-
-    /**
-     * @var int thumbnail height
-     */
-    public $thumbnailHeight = 250;
-
-    /**
-     * @var int thumbnail width
-     */
-    public $thumbnailWidth = 250;
-    /** @var string|null */
-    public $attributeHandle;
-    /** @var string|null */
-    public $attributeTitleText;
-    /** @var string|null */
-    public $displayTag;
 
     public function getBlockTypeDescription()
     {
@@ -85,7 +106,7 @@ class Controller extends BlockController implements UsesFeatureInterface
         if (!is_numeric($args['thumbnailHeight'])) {
             $error->add(t('Thumbnail Height must be a number.'));
         }
-        
+
         if (!is_numeric($args['thumbnailWidth'])) {
             $error->add(t('Thumbnail Width must be a number.'));
         }
@@ -320,8 +341,8 @@ class Controller extends BlockController implements UsesFeatureInterface
     {
       // only use the type specific template if there is NOT a custom template defined
       $b = $this->getBlockObject();
-      if ($b->getBlockFilename()) {      
-        // custom template  
+      if ($b->getBlockFilename()) {
+        // custom template
       } else {
         $templateHandle = $this->getTemplateHandle();
         if (in_array($templateHandle, ['date_time', 'boolean'])) {

@@ -27,6 +27,9 @@ class Controller extends BlockController implements FileTrackableInterface, Uses
     protected $btExportTables = ['btGallery', 'btGalleryEntries', 'btGalleryEntryDisplayChoices'];
     protected $btExportFileColumns = ['fID'];
     protected $btCacheBlockRecord = false;
+    protected $btCacheBlockOutput = true;
+    protected $btCacheBlockOutputForRegisteredUsers = false;
+    protected $btCacheBlockOutputOnPost = true;
     /** @var int */
     protected $includeDownloadLink;
     /** @var Connection|null */
@@ -347,6 +350,9 @@ class Controller extends BlockController implements FileTrackableInterface, Uses
                 }
 
                 $current = $this->formatEntry($entry);
+                if (!$current) {
+                    continue;
+                }
                 $current['displayChoices'] = $this->getDisplayChoices();
             }
 
@@ -375,7 +381,6 @@ class Controller extends BlockController implements FileTrackableInterface, Uses
         if ($file) {
             $version = $file->getVersion();
             if ($version) {
-                $resource = $version->getFileResource();
 
                 $attributes = [];
                 foreach ($version->getAttributes() as $value) {
@@ -390,7 +395,7 @@ class Controller extends BlockController implements FileTrackableInterface, Uses
                     'id' => $entry['fID'],
                     'title' => $version->getTitle(),
                     'description' => $version->getDescription(),
-                    'extension' => $resource->getMimetype(),
+                    'extension' => $version->getExtension(),
                     'attributes' => $attributes,
                     'fileSize' => $this->numbersHelper()->formatSize($version->getFullSize()),
                     'imageUrl' => $version->getThumbnailURL('file_manager_detail'),

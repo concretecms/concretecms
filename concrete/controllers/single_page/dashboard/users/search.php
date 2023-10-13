@@ -6,6 +6,7 @@ use Concrete\Controller\Element\Search\Users\Header;
 use Concrete\Core\Attribute\Category\CategoryService;
 use Concrete\Core\Csv\Export\UserExporter;
 use Concrete\Core\Csv\WriterFactory;
+use Concrete\Core\Config\Repository\Repository;
 use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Entity\Search\SavedUserSearch;
 use Concrete\Core\Error\ErrorList\ErrorList;
@@ -15,9 +16,11 @@ use Concrete\Core\Logging\Channels;
 use Concrete\Core\Logging\LoggerFactory;
 use Concrete\Core\Navigation\Breadcrumb\Dashboard\DashboardUserBreadcrumbFactory;
 use Concrete\Core\Page\Controller\DashboardPageController;
+use Concrete\Core\Page\Page;
 use Concrete\Core\Permission\Checker;
 use Concrete\Core\Url\Url;
 use Concrete\Core\User\Command\UpdateUserAvatarCommand;
+use Concrete\Core\User\Component\AvatarCropperInstanceFactory;
 use Concrete\Core\User\EditResponse as UserEditResponse;
 use Concrete\Core\User\User;
 use Concrete\Core\Workflow\Progress\UserProgress as UserWorkflowProgress;
@@ -42,6 +45,8 @@ use Concrete\Core\Search\Query\QueryFactory;
 use Concrete\Core\Search\Query\QueryModifier;
 use Concrete\Core\Search\Result\Result;
 use Concrete\Core\Search\Result\ResultFactory;
+use Concrete\Core\Session\SessionValidator;
+use IPLib\Factory;
 use Symfony\Component\HttpFoundation\Request;
 
 class Search extends DashboardPageController
@@ -191,13 +196,30 @@ class Search extends DashboardPageController
         return $this->app->make(DashboardUserBreadcrumbFactory::class);
     }
 
-    public function update_avatar($uID = false)
+    public function delete_avatar($uID = false)
     {
         $this->setupUser($uID);
         $token = $this->token;
-        if (!$token->validate('avatar/save_avatar', $this->request->query->get('ccm_token'))) {
+        if (!$token->validate('delete_avatar', $this->request->query->get('ccm_token'))) {
+            $this->error->add($token->getErrorMessage());
+        }
+        if ($this->error->has()) {
+            return new JsonResponse($this->error);
+        } else {
+            $service = $this->app->make('user/avatar');
+            $service->removeAvatar($this->user);
+            return new JsonResponse($this->user);
+        }
+    }
+
+    public function update_avatar($uID = false)
+    {
+        $this->setupUser($uID);
+        $instanceFactory = $this->app->make(AvatarCropperInstanceFactory::class);
+        $instance = $instanceFactory->createInstanceFromRequest($this->request);
+        if (!$instanceFactory->instanceMatchesAccessToken($instance, $this->request->get('accessToken') ?? '')) {
             $result['error'] = true;
-            $result['message'] = $token->getErrorMessage();
+            $result['message'] = $this->token->getErrorMessage();
             return new JsonResponse($result, 400);
         }
 
@@ -213,10 +235,9 @@ class Search extends DashboardPageController
                 $result['success'] = true;
                 $result['avatar'] = $this->user->getUserAvatar()->getPath() . '?' . time();
 
-            } elseif ($this->request->post('task') == 'clear') {
-                $this->user->update(['uHasAvatar' => 0]);
             }
 
+            $this->flash('success', t('Profile picture saved.'));
             return new JsonResponse($result, $result['success'] ? 200 : 400);
 
         } else {
@@ -235,15 +256,14 @@ class Search extends DashboardPageController
                         $mh->to($this->user->getUserEmail());
                         $config = $this->app->make('config');
                         if ($config->get('concrete.email.register_notification.address')) {
-                            if (Config::get('concrete.email.register_notification.name')) {
-                                $fromName = Config::get('concrete.email.register_notification.name');
+                            if ($config->get('concrete.email.register_notification.name')) {
+                                $fromName = $config->get('concrete.email.register_notification.name');
                             } else {
                                 $fromName = t('Website Registration Notification');
                             }
-                            $mh->from(Config::get('concrete.email.register_notification.address'), $fromName);
+                            $mh->from($config->get('concrete.email.register_notification.address'), $fromName);
                         } else {
-                            $adminUser = UserInfo::getByID(USER_SUPER_ID);
-                            $mh->from($adminUser->getUserEmail(), t('Website Registration Notification'));
+                            $mh->from($config->get('concrete.email.default.address'), t('Website Registration Notification'));
                         }
                         $mh->addParameter('uID', $this->user->getUserID());
                         $mh->addParameter('user', $this->user);
@@ -296,7 +316,7 @@ class Search extends DashboardPageController
                 $this->setupUser($uID);
                 if ($this->canResetPassword && $this->app->make('helper/validation/token')->validate()) {
                     $this->user->markAsPasswordReset();
-                    $this->flash('success', t('The user will have to change his password at next login.'));
+                    $this->flash('success', t('The user will have to change their password at next login.'));
                     return $this->buildRedirect(['/dashboard/users/search', 'edit', $this->user->getUserID()]);
                 }
             case 'delete':
@@ -377,6 +397,21 @@ class Search extends DashboardPageController
                 }
                 $data['uPasswordConfirm'] = $passwordNew;
                 $data['uPassword'] = $passwordNew;
+            }
+            if ($this->shouldViewIgnoredIPMismatches() && $this->canEditIgnoredIPMismatches()) {
+                $ignoredIPMismatches = [];
+                foreach (preg_split('/\s+/', (string) $this->request->request->get('ignoredIPMismatches'), -1, PREG_SPLIT_NO_EMPTY) as $ignoredIPMismatch) {
+                    $range = Factory::parseRangeString($ignoredIPMismatch);
+                    if ($range === null) {
+                        $error->add(t('The IP address range %s is not valid.', $ignoredIPMismatch));
+                    } else {
+                        $range = (string) $range;
+                        if (!in_array($range, $ignoredIPMismatches, true)) {
+                            $ignoredIPMismatches[] = $range;
+                        }
+                    }
+                }
+                $data['ignoredIPMismatches'] = $ignoredIPMismatches;
             }
 
             $userMessage->setError($error);
@@ -541,13 +576,6 @@ class Search extends DashboardPageController
 
             $factory = $this->createBreadcrumbFactory();
             $this->setBreadcrumb($factory->getBreadcrumb($this->getPageObject(), $ui));
-
-            $saveAvatarUrl = $this->app->make('url')->to($this->getPageObject(), 'update_avatar', $ui->getUserID());
-            $saveAvatarUrl = $saveAvatarUrl->setQuery(array(
-                'ccm_token' => $this->token->generate('avatar/save_avatar'),
-            ));
-
-            $this->set('saveAvatarUrl', $saveAvatarUrl);
             $this->render("/dashboard/users/search/edit");
         } else {
             return $this->buildRedirect('/dashboard/users/search');
@@ -559,8 +587,7 @@ class Search extends DashboardPageController
     public function view($uID = null, $status = false)
     {
         if (isset($uID)) {
-            $this->edit($uID, $status);
-            return;
+            return $this->edit($uID, $status);
         }
 
         $query = $this->getQueryFactory()->createQuery($this->getSearchProvider(), [
@@ -691,6 +718,26 @@ class Search extends DashboardPageController
                 || $this->canEditLanguage || $this->canEditTimezone);
             $this->set('allowedEditAttributes', $this->allowedEditAttributes);
             $this->set('canAddGroup', $this->canAddGroup);
+            $this->set('shouldViewIgnoredIPMismatches', $this->shouldViewIgnoredIPMismatches());
+            $this->set('canEditIgnoredIPMismatches', $this->canEditIgnoredIPMismatches());
         }
+    }
+
+    protected function shouldViewIgnoredIPMismatches(): bool
+    {
+        $config = $this->app->make(Repository::class);
+
+        return (bool) $config->get(SessionValidator::CONFIGKEY_IP_MISMATCH) && (bool) $config->get(SessionValidator::CONFIGKEY_ENABLE_USERSPECIFIC_IP_MISMATCH_ALLOWLIST);
+    }
+
+    protected function canEditIgnoredIPMismatches(): bool
+    {
+        $page = Page::getByPath('/dashboard/system/registration/automated_logout');
+        if (!$page || $page->isError()) {
+            return false;
+        }
+        $permissions = new Checker($page);
+
+        return $permissions->canViewPage() ? true : false;
     }
 }

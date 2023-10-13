@@ -482,12 +482,17 @@ class User extends ConcreteObject
 
     /**
      * @param bool $hard
+     *
+     * @return \Symfony\Component\HttpFoundation\Response|null
      */
     public function logout($hard = true)
     {
         $app = Application::getFacadeApplication();
-        $events = $app['director'];
+        $events = $app->make('director');
         $logger = $app->make(LoggerFactory::class)->createLogger(Channels::CHANNEL_AUTHENTICATION);
+        $currentUser = $app->make(User::class);
+        $event = new Event\Logout((int) $currentUser->getUserID());
+        $events->dispatch('on_before_user_logout', $event);
         $logger->info(t('Logout from user {user} (ID {id}) requested'), [
             'user' => $this->getUserName(),
             'id' => $this->getUserID(),
@@ -498,15 +503,14 @@ class User extends ConcreteObject
         $this->unloadAuthenticationTypes();
 
         $this->invalidateSession($hard);
-        $app->singleton(User::class, function () {
+        $app->singleton(User::class, static function () {
             return new User();
         });
-        $events->dispatch('on_user_logout');
-
-        $app = Application::getFacadeApplication();
-        /** @var NavigationCache $navigationCache */
         $navigationCache = $app->make(NavigationCache::class);
         $navigationCache->clear();
+        $events->dispatch('on_user_logout', $event);
+
+        return $event->getResponse();
     }
 
     /**
@@ -1031,7 +1035,7 @@ class User extends ConcreteObject
      */
     public function refreshCollectionEdit(&$c)
     {
-        if ($this->isLoggedIn() && $c->getCollectionCheckedOutUserID() == $this->getUserID()) {
+        if ($this->isRegistered() && $c->getCollectionCheckedOutUserID() == $this->getUserID()) {
             $app = Application::getFacadeApplication();
             $db = $app['database']->connection();
             $cID = $c->getCollectionID();

@@ -21,6 +21,56 @@ defined('C5_EXECUTE') or die('Access Denied.');
 class Controller extends BlockController implements UsesFeatureInterface
 {
     /**
+     * @var string|null
+     */
+    protected $mode = 'S';
+
+    /**
+     * @var string|null
+     */
+    protected $calendarEventAttributeKeyHandle;
+
+    /**
+     * @var int|string|null
+     */
+    public $calendarID;
+
+    /**
+     * @var int|string|null
+     */
+    protected $eventID;
+
+    /**
+     * @var string|null
+     */
+    public $displayEventAttributes;
+
+    /**
+     * @var bool|int|string|null
+     */
+    public $allowExport;
+
+    /**
+     * @var bool|int|string|null
+     */
+    public $enableLinkToPage;
+
+    /**
+     * @var bool|int|string|null
+     */
+    public $displayEventName;
+
+    /**
+     * @var bool|int|string|null
+     */
+    public $displayEventDate;
+
+    /**
+     * @var bool|int|string|null
+     */
+    public $displayEventDescription;
+
+    /**
      * @var int
      */
     protected $btInterfaceWidth = 550;
@@ -34,21 +84,6 @@ class Controller extends BlockController implements UsesFeatureInterface
      * @var string
      */
     protected $btTable = 'btCalendarEvent';
-
-    /**
-     * @var string
-     */
-    protected $mode = 'S';
-
-    /**
-     * @var string
-     */
-    protected $calendarEventAttributeKeyHandle;
-
-    /**
-     * @var int|null
-     */
-    protected $eventID;
 
     /**
      * {@inheritdoc}

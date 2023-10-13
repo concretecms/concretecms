@@ -26,7 +26,7 @@ $config = $editor->getOptions();
 
   <div class="tab-pane active" id="accordion-content" role="tabpanel">
 
-    <div data-vue="accordion-block">
+    <div data-vue-app="accordion-block">
 
       <input type="hidden" name="accordionBlockData" :value="JSON.stringify(entries)" />
 
@@ -101,7 +101,7 @@ $config = $editor->getOptions();
     $(function() {
         Concrete.Vue.activateContext('accordion', function (Vue, config) {
             new Vue({
-                el: 'div[data-vue=accordion-block]',
+                el: 'div[data-vue-app=accordion-block]',
                 components: config.components,
                 data: {
                     entries: <?=json_encode($entries ?? [])?>

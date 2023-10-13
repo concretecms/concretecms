@@ -12,7 +12,7 @@
 $(document).ready(function() {
     $.get('<?= $view->action('get_environment_info'); ?>').then(function(data) {
         $('#ccm-dashboard-environment-info-copy').show()
-        $('#ccm-dashboard-environment-info').html('<pre><code>' + data + '</code></pre>');
+        $('#ccm-dashboard-environment-info').html('<pre><code style="white-space: pre-wrap">' + data + '</code></pre>');
         $('#ccm-dashboard-environment-info-copy').click(function() {
             var textArea = document.createElement('textarea')
             textArea.value = data

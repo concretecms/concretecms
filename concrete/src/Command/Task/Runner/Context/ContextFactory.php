@@ -43,7 +43,7 @@ class ContextFactory
     protected function getPushOutput(TaskRunnerInterface $runner): ?PushOutput
     {
         if ($runner instanceof ProcessTaskRunnerInterface && $this->mercureService->isEnabled()) {
-            return new PushOutput($this->mercureService, $runner->getProcess()->getID());
+            $this->app->make(PushOutput::class, ['processId' => $runner->getProcess()->getID()]);
         }
         return null;
     }
@@ -77,7 +77,7 @@ class ContextFactory
         if ($pushOutput) {
             $outputs[] = $pushOutput;
         }
-        if ($outputs > 0) {
+        if ($outputs !== []) {
             return new AggregateOutput($outputs);
         } else {
             return new NullOutput();

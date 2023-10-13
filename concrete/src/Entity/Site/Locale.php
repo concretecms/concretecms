@@ -4,6 +4,7 @@ namespace Concrete\Core\Entity\Site;
 
 use Concrete\Core\Entity\LocaleTrait;
 use Concrete\Core\Localization\Locale\LocaleInterface;
+use Concrete\Core\Multilingual\Service\UserInterface\Flag;
 use Concrete\Core\Site\Tree\TreeInterface;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -14,7 +15,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(name="SiteLocales")
  * @ORM\EntityListeners({"\Concrete\Core\Site\Locale\Listener"})
  */
-class Locale implements LocaleInterface, LocaleEntityInterface, TreeInterface
+class Locale implements LocaleInterface, LocaleEntityInterface, TreeInterface, \JsonSerializable
 {
     use LocaleTrait;
 
@@ -129,5 +130,19 @@ class Locale implements LocaleInterface, LocaleEntityInterface, TreeInterface
     public function getSiteTreeObject()
     {
         return $this->getSiteTree();
+    }
+
+    #[\ReturnTypeWillChange]
+    public function jsonSerialize()
+    {
+        return [
+            'id' => $this->getLocaleID(),
+            'language' => [
+                'lang' => $this->getLanguage(),
+                'text' => $this->getLanguageText(),
+            ],
+            'locale' => $this->getLocale(),
+            'flag' => Flag::getLocaleFlagIcon($this, true),
+        ];
     }
 }

@@ -36,7 +36,7 @@ class PackageList extends ConcreteObject
         }
         $packageList = CacheLocal::getEntry('packageHandleList', false);
         if (is_array($packageList)) {
-            return $packageList[$pkgID];
+            return $packageList[$pkgID] ?? null;
         }
 
         $packageList = array();
@@ -48,7 +48,7 @@ class PackageList extends ConcreteObject
 
         CacheLocal::set('packageHandleList', false, $packageList);
 
-        return $packageList[$pkgID];
+        return $packageList[$pkgID] ?? null;
     }
 
     public static function refreshCache()

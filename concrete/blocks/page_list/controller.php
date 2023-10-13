@@ -24,6 +24,181 @@ use PageList;
 
 class Controller extends BlockController implements UsesFeatureInterface
 {
+    /**
+     * @var int|string|null
+     */
+    public $num;
+
+    /**
+     * @var string|null
+     */
+    public $orderBy;
+
+    /**
+     * @var int|string|null
+     */
+    public $cParentID;
+
+    /**
+     * @var bool|int|string|null
+     */
+    public $cThis;
+
+    /**
+     * @var bool|int|string|null
+     */
+    public $cThisParent;
+
+    /**
+     * @var bool|int|string|null
+     */
+    public $useButtonForLink;
+
+    /**
+     * @var string|null
+     */
+    public $buttonLinkText;
+
+    /**
+     * @var string|null
+     */
+    public $pageListTitle;
+
+    /**
+     * @var bool|int|string|null
+     */
+    public $filterByRelated;
+
+    /**
+     * @var bool|int|string|null
+     */
+    public $filterByCustomTopic;
+
+    /**
+     * @var string|null
+     */
+    public $filterDateOption;
+
+    /**
+     * @var int|string|null
+     */
+    public $filterDateDays;
+
+    /**
+     * @var string|null
+     */
+    public $filterDateStart;
+
+    /**
+     * @var string|null
+     */
+    public $filterDateEnd;
+
+    /**
+     * @var string|null
+     */
+    public $relatedTopicAttributeKeyHandle;
+
+    /**
+     * @var string|null
+     */
+    public $customTopicAttributeKeyHandle;
+
+    /**
+     * @var int|string|null
+     */
+    public $customTopicTreeNodeID;
+
+    /**
+     * @var bool|int|string|null
+     */
+    public $includeName;
+
+    /**
+     * @var bool|int|string|null
+     */
+    public $includeDescription;
+
+    /**
+     * @var bool|int|string|null
+     */
+    public $includeDate;
+
+    /**
+     * @var bool|int|string|null
+     */
+    public $includeAllDescendents;
+
+    /**
+     * @var bool|int|string|null
+     */
+    public $paginate;
+
+    /**
+     * @var bool|int|string|null
+     */
+    public $displayAliases;
+
+    /**
+     * @var bool|int|string|null
+     */
+    public $displaySystemPages;
+
+    /**
+     * @var bool|int|string|null
+     */
+    public $ignorePermissions;
+
+    /**
+     * @var bool|int|string|null
+     */
+    public $enableExternalFiltering;
+
+    /**
+     * @var bool|int|string|null
+     */
+    public $excludeCurrentPage;
+
+    /**
+     * @var int|string|null
+     */
+    public $ptID;
+
+    /**
+     * @var int|string|null
+     */
+    public $pfID;
+
+    /**
+     * @var int|string|null
+     */
+    public $truncateSummaries;
+
+    /**
+     * @var bool|int|string|null
+     */
+    public $displayFeaturedOnly;
+
+    /**
+     * @var string|null
+     */
+    public $noResultsMessage;
+
+    /**
+     * @var bool|int|string|null
+     */
+    public $displayThumbnail;
+
+    /**
+     * @var int|string|null
+     */
+    public $truncateChars;
+
+    /**
+     * @var string|null
+     */
+    public $titleFormat;
+
     protected $btTable = 'btPageList';
     protected $btInterfaceWidth = 700;
     protected $btInterfaceHeight = 525;
@@ -36,22 +211,19 @@ class Controller extends BlockController implements UsesFeatureInterface
     protected $btCacheBlockOutputLifetime = 300;
     protected $list;
 
-    public $orderBy;
-    public $filterDateOption;
-    public $displayFeaturedOnly;
-    public $displayAliases;
-    public $displaySystemPages;
-    public $excludeCurrentPage;
-    public $ptID;
-    public $filterByRelated;
-    public $filterByCustomTopic;
-    public $cParentID;
-    public $num;
-    public $pfID;
-    public $truncateSummaries;
-    public $displayThumbnail;
-    public $includeName;
-    public $paginate;
+    /**
+     * @deprecated What's deprecated is the "public" part.
+     *
+     * @var int|null
+     */
+    public $cID;
+
+    /**
+     * @deprecated What's deprecated is the "public" part.
+     *
+     * @var int|null
+     */
+    public $cPID;
 
     public function getRequiredFeatures(): array
     {
@@ -143,7 +315,7 @@ class Controller extends BlockController implements UsesFeatureInterface
         $this->list->disableAutomaticSorting();
         $this->list->setNameSpace('b' . $this->bID);
         $expr = $this->list->getQueryObject()->expr(); // Get Query Expression Object
-        
+
         $cArray = [];
 
         switch ($this->orderBy) {
@@ -283,9 +455,12 @@ class Controller extends BlockController implements UsesFeatureInterface
         }
 
         if ($this->paginate) {
-            /** @var SeoCanonical $seoCanonical */
-            $seoCanonical = $this->app->make(SeoCanonical::class);
-            $seoCanonical->addIncludedQuerystringParameter($this->list->getQueryPaginationPageParameter());
+            $paging = $this->request->request($this->list->getQueryPaginationPageParameter());
+            if ($paging && $paging >= 2) { // Canonicalize page 2 and greater only
+                /** @var SeoCanonical $seoCanonical */
+                $seoCanonical = $this->app->make(SeoCanonical::class);
+                $seoCanonical->addIncludedQuerystringParameter($this->list->getQueryPaginationPageParameter());
+            }
         }
 
         return $this->list;
@@ -588,6 +763,7 @@ class Controller extends BlockController implements UsesFeatureInterface
             'paginate' => 0,
             'rss' => 0,
             'pfID' => 0,
+            'ptID' => 0,
             'filterDateOption' => 'all',
             'cParentID' => null,
         ];

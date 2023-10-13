@@ -25,65 +25,69 @@ class AttributeFormatter implements FormatterInterface, MessageHasDetailsInterfa
      * @param AttributeMessage $message
      * @return string
      */
-    public function getFindingsListMessage(MessageInterface $message, Finding $finding): string
+    public function getFindingsListMessage(MessageInterface $findingMessage, Finding $finding): string
     {
-        $value = $message->getCategoryValue();
-        $key = $value->getAttributeKey();
-        $keyName = $key->getAttributeKeyDisplayName('text');
+        $value = $findingMessage->getCategoryValue();
+        if ($value) {
+            $key = $value->getAttributeKey();
+            $keyName = $key->getAttributeKeyDisplayName('text');
 
-        if ($value instanceof ExpressValue) {
-            $entry = $value->getEntry();
-            $entity = $entry->getEntity();
-            $message = t(
-                /* i18n: %1$s is the name of an attribute key, %2$s is the name of an entity, %3$s is the label of an entity entry, %4$s is the ID of the entry */
-                '"%1$s" attribute in %2$s object "%3$s" (ID %4$s)',
-                $keyName,
-                $entity->getEntityDisplayName('text'),
-                $entry->getLabel(),
-                $entry->getPublicIdentifier(),
-            );
-        } else {
-            $message = t('Unknown object');
-            if ($value instanceof PageValue) {
-                $page = Page::getByID($value->getPageID());
+            if ($value instanceof ExpressValue) {
+                $entry = $value->getEntry();
+                $entity = $entry->getEntity();
                 $message = t(
+                    /* i18n: %1$s is the name of an attribute key, %2$s is the name of an entity, %3$s is the label of an entity entry, %4$s is the ID of the entry */
+                    '"%1$s" attribute in %2$s object "%3$s" (ID %4$s)',
+                    $keyName,
+                    $entity->getEntityDisplayName('text'),
+                    $entry->getLabel(),
+                    $entry->getPublicIdentifier(),
+                );
+            } else {
+                $message = t('Unknown object');
+                if ($value instanceof PageValue) {
+                    $page = Page::getByID($value->getPageID());
+                    $message = t(
                     /* i18n: %1$s is the name of an attribute key, %2$s is the name of a page, %3$s is the ID of the page */
-                    'Page attribute "%1$s" on page %2$s (ID %3$s)',
-                    $keyName,
-                    $page->getCollectionName(),
-                    $value->getPageID()
-                );
-            }
-            if ($value instanceof EventValue) {
-                $event = $value->getVersion()->getEvent();
-                $message = t(
+                        'Page attribute "%1$s" on page %2$s (ID %3$s)',
+                        $keyName,
+                        $page->getCollectionName(),
+                        $value->getPageID()
+                    );
+                }
+                if ($value instanceof EventValue) {
+                    $event = $value->getVersion()->getEvent();
+                    $message = t(
                     /* i18n: %1$s is the name of an attribute key, %2$s is the name of an event, %3$s is the ID of the event */
-                    'Calendar event attribute "%1$s" on event %2$s (ID %3$s)',
-                    $keyName,
-                    $event->getName(),
-                    $event->getID()
-                );
-            }
-            if ($value instanceof FileValue) {
-                $version = $value->getVersion();
-                $message = t(
+                        'Calendar event attribute "%1$s" on event %2$s (ID %3$s)',
+                        $keyName,
+                        $event->getName(),
+                        $event->getID()
+                    );
+                }
+                if ($value instanceof FileValue) {
+                    $version = $value->getVersion();
+                    $message = t(
                     /* i18n: %1$s is the name of an attribute key, %2$s is the name of a file, %3$s is the ID of the file */
-                    'File attribute "%1$s" on file %2$s (ID %3$s)',
-                    $keyName,
-                    $version->getFilename(),
-                    $version->getFileID()
-                );
-            }
-            if ($value instanceof UserValue) {
-                $user = $value->getUser();
-                $message = t(
+                        'File attribute "%1$s" on file %2$s (ID %3$s)',
+                        $keyName,
+                        $version->getFilename(),
+                        $version->getFileID()
+                    );
+                }
+                if ($value instanceof UserValue) {
+                    $user = $value->getUser();
+                    $message = t(
                     /* i18n: %1$s is the name of an attribute key, %2$s is a username, %3$s is the ID of the user */
-                    'User attribute "%1$s" on user %2$s (ID %3$s)',
-                    $keyName,
-                    $user->getUserInfoObject()->getUserDisplayName(),
-                    $user->getUserID()
-                );
+                        'User attribute "%1$s" on user %2$s (ID %3$s)',
+                        $keyName,
+                        $user->getUserInfoObject()->getUserDisplayName(),
+                        $user->getUserID()
+                    );
+                }
             }
+        } else {
+            $message = t('Unknown attribute. Perhaps this has already been deleted.');
         }
 
         return $message;

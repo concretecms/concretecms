@@ -18,14 +18,79 @@ use Concrete\Core\User\UserInfo;
 class Controller extends BlockController implements UsesFeatureInterface
 {
     /**
-     * @var int|null
+     * @var int|string|null
      */
-    public $enableTopCommentReviews;
-
+    public $cnvID;
+    
+    /**
+     * @var int|string|null
+     */
+    public $enablePosting;
+    
+    /**
+     * @var bool|int|string|null
+     */
+    public $paginate;
+    
+    /**
+     * @var int|string|null
+     */
+    public $itemsPerPage;
+    
     /**
      * @var string|null
      */
+    public $displayMode;
+    
+    /**
+     * @var string|null
+     */
+    public $orderBy;
+    
+    /**
+     * @var bool|int|string|null
+     */
+    public $enableOrdering;
+    
+    /**
+     * @var bool|int|string|null
+     */
+    public $enableCommentRating;
+    
+    /**
+     * @var bool|int|string|null
+     */
+    public $enableTopCommentReviews;
+    
+    /**
+     * @var bool|int|string|null
+     */
+    public $displaySocialLinks;
+    
+    /**
+     * @var int|string|null
+     */
     public $reviewAggregateAttributeKey;
+    
+    /**
+     * @var string|null
+     */
+    public $displayPostingForm;
+    
+    /**
+     * @var string|null
+     */
+    public $addMessageLabel;
+    
+    /**
+     * @var string|null
+     */
+    public $dateFormat;
+    
+    /**
+     * @var string|null
+     */
+    public $customDateFormat;
 
     /**
      * @var int|null
@@ -36,11 +101,6 @@ class Controller extends BlockController implements UsesFeatureInterface
      * @var int|null
      */
     public $maxFilesGuest;
-
-    /**
-     * @var bool|int
-     */
-    public $enablePosting;
 
     /**
      * @var int

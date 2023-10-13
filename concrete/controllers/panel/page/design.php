@@ -35,6 +35,7 @@ class Design extends BackendUIPageController
 
         $pTemplateID = $c->getPageTemplateID();
         $templates = array();
+        $selectedTemplate = null;
         if ($pTemplateID) {
             $selectedTemplate = Template::getByID($pTemplateID);
             $templates[] = $selectedTemplate;
@@ -109,6 +110,7 @@ class Design extends BackendUIPageController
         $req->setCurrentPage($this->page);
         $controller = $this->page->getPageController();
         $controller->disableEditing();
+        $controller->runAction('view');
         $view = $controller->getViewObject();
 
         $previewRequest = new PageDesignPreviewRequest();

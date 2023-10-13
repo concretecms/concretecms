@@ -50,7 +50,7 @@ class PasswordHasher
      */
     public function hashPassword($password)
     {
-        return password_hash($password, $this->algorithm, $this->hashOptions);
+        return password_hash($password ?? '', $this->algorithm, $this->hashOptions);
     }
 
     /**

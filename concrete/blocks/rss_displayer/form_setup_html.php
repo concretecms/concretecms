@@ -11,7 +11,7 @@
     <?php echo $form->label("title", t('Feed Title')); ?>
     <div class="input-group">
     	<input name="title" class="form-control" placeholder="<?= h(t('Feed Title')) ?>" value="<?= h($title) ?>"/>
-		<?php echo $form->select('titleFormat', \Concrete\Core\Block\BlockController::$btTitleFormats, $titleFormat, array('style' => 'width:105px;flex-grow:0;', 'class' => 'form-select')); ?>
+		<?php echo $form->select('titleFormat', \Concrete\Core\Block\BlockController::$btTitleFormats, $titleFormat ?? null, array('style' => 'width:105px;flex-grow:0;', 'class' => 'form-select')); ?>
 	</div>
 </div>
 <div class="form-group">

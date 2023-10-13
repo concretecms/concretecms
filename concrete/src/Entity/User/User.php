@@ -144,12 +144,19 @@ class User implements UserEntityInterface, \JsonSerializable
      */
     protected $uHomeFileManagerFolderID = null;
 
+    /**
+     * @var string[]|null
+     * @ORM\Column(type="simple_array", nullable=true)
+     */
+    protected $ignoredIPMismatches;
+
     public function __construct()
     {
         $this->alerts = new ArrayCollection();
         $this->uLastPasswordChange = new \DateTime();
         $this->uDateLastUpdated = new \DateTime();
         $this->uDateAdded = new \DateTime();
+        $this->ignoredIPMismatches = [];
     }
 
     /**
@@ -490,6 +497,26 @@ class User implements UserEntityInterface, \JsonSerializable
     public function setHomeFileManagerFolderID($uHomeFileManagerFolderID)
     {
         $this->uHomeFileManagerFolderID = $uHomeFileManagerFolderID;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getIgnoredIPMismatches(): array
+    {
+        return $this->ignoredIPMismatches;
+    }
+
+    /**
+     * @param string[] $value
+     *
+     * @return $this
+     */
+    public function setIgnoredIPMismatches(array $value): self
+    {
+        $this->ignoredIPMismatches = $value;
+
+        return $this;
     }
 
     /**

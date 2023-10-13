@@ -29,6 +29,6 @@ return [
         0 => '%d X %s',
         1 => '%d X %s',
     ],
-    "context${cs}Welcome!" => 'E!',
-    "context${cs}Welcome %s!" => 'E %s!',
+    "context{$cs}Welcome!" => 'E!',
+    "context{$cs}Welcome %s!" => 'E %s!',
 ];

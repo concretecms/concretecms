@@ -1,8 +1,8 @@
 <?php
 namespace Concrete\Core\Api\Fractal\Transformer;
 
+use Concrete\Core\Api\ApiResourceValueInterface;
 use Concrete\Core\Block\Block;
-use Concrete\Core\Api\Attribute\FractalTransformableInterface;
 use Concrete\Core\Api\Resources;
 use League\Fractal\Resource\Item;
 use League\Fractal\TransformerAbstract;
@@ -17,9 +17,13 @@ class BaseBlockTransformer extends TransformerAbstract
     public function transform(Block $block)
     {
         $controller = $block->getController();
-        if ($controller instanceof FractalTransformableInterface) {
-            $transformer = $controller->getApiDataTransformer();
-            $blockValue = $transformer->transform($block);
+        if ($controller instanceof ApiResourceValueInterface) {
+            $blockValueResource = $controller->getApiValueResource();
+            if ($blockValueResource) {
+                $blockValue = $blockValueResource->getTransformer()->transform(
+                    $blockValueResource->getData()
+                );
+            }
         } else {
             // Hacky but a reasonable way to get a default API export
             $exportNode = new \SimpleXMLElement('<temporary-element></temporary-element>');

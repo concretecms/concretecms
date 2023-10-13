@@ -73,7 +73,7 @@ var ccmi18n = ' . json_encode([
     'editMode' => t('Edit Mode'),
     'editModeMsg' => t('Let\'s start editing a page.'),
     'editStackContents' => t('Manage Stack Contents'),
-    'emptyArea' => t('Empty %s Area', '<%- area_handle %>'),
+    'emptyArea' => t('Empty Area'),
     'error' => t('Error'),
     'errorCustomStylePresetNoName' => t('You must give your custom style preset a name.'),
     'errorDetails' => t('Details'),
@@ -309,6 +309,7 @@ var ccmi18n_filemanager = ' . json_encode([
     'sets' => t('Sets'),
     'specifyName' => t('Please enter a name...'),
     'thumbnailImages' => t('Thumbnail Images'),
+    'thumbnailImageSaved' => t('Thumbnail image saved successfully.'),
     'title' => t('File Manager'),
     'upload' => t('Upload'),
     'uploadComplete' => t('Upload Complete'),
@@ -318,6 +319,9 @@ var ccmi18n_filemanager = ' . json_encode([
     'uploadProgress' => t('Upload Progress'),
     'view' => t('View'),
     'uploadFiles' => t('Upload Files'),
+    'width' => t('Width'),
+    'height' => t('Height'),
+    'size' => t('Size'),
 ]) . ';
 
 var ccmi18n_chosen = ' . json_encode([
