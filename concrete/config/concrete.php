@@ -773,6 +773,14 @@ return [
         'help_overlay' => true,
         'require_version_comments' => false,
         /*
+        * Changes the "Keep Live Version Approved"-Toggle-Button behaviour on the site page version scheduling element
+        * unapproved: removes live or scheduled version of the site page, if the changed site page gets scheduled
+        * approved: keeps live or scheduled version of the site page approved, if the changed site page gets scheduled
+        *
+        * @var string (approved | unapproved)
+        */
+        'live_version_status_on_scheduled_version_approval' => 'unapproved',
+        /*
          * Control whether a block type can me moved to different block type sets
          *
          * @var bool
