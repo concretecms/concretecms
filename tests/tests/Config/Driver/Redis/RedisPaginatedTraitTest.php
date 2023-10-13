@@ -19,8 +19,6 @@ class RedisPaginatedTraitTest extends TestCase
 
     public function testPaginatedScan()
     {
-        $this->markTestSkipped('Something about these tests is broken. Not sure if it is latest PHP or the redis extension but these tests are way too precarious.');
-
         if (\PHP_MAJOR_VERSION < 8) {
             M::getConfiguration()->setInternalClassMethodParamMap('Redis', 'scan', [
                 '&$iterator',
