@@ -143,7 +143,8 @@ class TranslationsInstaller
         }
         $directory = dirname($localStats->getFilename());
         if (!$this->fs->isDirectory($directory)) {
-            if ($this->fs->makeDirectory($directory, DIRECTORY_PERMISSIONS_MODE_COMPUTED, true, true) !== true) {
+            $permissions = $this->config->get('concrete.filesystem.permissions.directory');
+            if ($this->fs->makeDirectory($directory, $permissions, true, true) !== true) {
                 throw new Exception(t('Failed to create the directory for the language file. Please be sure that the %s directory is writable', $shownDirectoryName));
             }
         }
