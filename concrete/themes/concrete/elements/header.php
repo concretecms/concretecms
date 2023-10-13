@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html lang="<?php echo Localization::activeLanguage() ?>">
 <head>
-    <link rel="stylesheet" type="text/css" href="<?=$view->getThemePath()?>/main.css" />
+    <link rel="stylesheet" type="text/css" href="<?=$view->getThemePath()?>/main.css">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
 <?php

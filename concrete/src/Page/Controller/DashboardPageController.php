@@ -71,7 +71,7 @@ class DashboardPageController extends PageController
     {
         $md = new Mobile_Detect();
         if ($md->isMobile()) {
-            $this->addHeaderItem('<meta name="viewport" content="width=device-width,initial-scale=1"/>');
+            $this->addHeaderItem('<meta name="viewport" content="width=device-width,initial-scale=1">');
         }
     }
 
