@@ -5,10 +5,8 @@ namespace Concrete\Core\Application;
 use Concrete\Core\Cache\Command\ClearCacheCommand;
 use Concrete\Core\Cache\Page\PageCache;
 use Concrete\Core\Cache\Page\PageCacheRecord;
-use Concrete\Core\Database\EntityManagerConfigUpdater;
 use Concrete\Core\Entity\Site\Site;
-use Concrete\Core\Foundation\ClassLoader;
-use Concrete\Core\Messenger\MessageBusManager;
+use Concrete\Core\Foundation\ClassAutoloader;
 use Concrete\Core\Foundation\EnvironmentDetector;
 use Concrete\Core\Foundation\Runtime\DefaultRuntime;
 use Concrete\Core\Foundation\Runtime\RuntimeInterface;
@@ -17,6 +15,9 @@ use Concrete\Core\Http\Request;
 use Concrete\Core\Localization\Localization;
 use Concrete\Core\Logging\Channels;
 use Concrete\Core\Logging\LoggerAwareInterface;
+use Concrete\Core\Messenger\MessageBusManager;
+use Concrete\Core\Package\BrokenPackage;
+use Concrete\Core\Package\PackageList;
 use Concrete\Core\Package\PackageService;
 use Concrete\Core\Routing\RedirectResponse;
 use Concrete\Core\System\Mutex\MutexInterface;
@@ -24,15 +25,12 @@ use Concrete\Core\Updater\Update;
 use Concrete\Core\Url\Url;
 use Concrete\Core\Url\UrlImmutable;
 use Config;
-use Environment;
 use Exception;
 use Illuminate\Container\Container;
 use Job;
 use JobSet;
-use Log;
 use Page;
 use Psr\Log\LoggerAwareInterface as PsrLoggerAwareInterface;
-use Redirect;
 use Symfony\Component\HttpFoundation\Request as SymfonyRequest;
 use Symfony\Component\Messenger\Stamp\HandledStamp;
 use View;
@@ -41,6 +39,10 @@ class Application extends Container
 {
     protected $installed = null;
     protected $environment = null;
+  
+    /**
+     * @var \Concrete\Core\Package\Package[]
+     */
     protected $packages = [];
 
     /**
@@ -228,18 +230,17 @@ class Application extends Container
      */
     public function setupPackageAutoloaders()
     {
-        $pla = \Concrete\Core\Package\PackageList::get();
-        $pl = $pla->getPackages();
-        $cl = ClassLoader::getInstance();
-        /** @var \Package[] $pl */
-        foreach ($pl as $p) {
-            \Config::package($p);
-            if ($p->isPackageInstalled()) {
-                $pkg = $this->make('Concrete\Core\Package\PackageService')->getClass($p->getPackageHandle());
-                if (is_object($pkg) && (!$pkg instanceof \Concrete\Core\Package\BrokenPackage)) {
-                    $cl->registerPackage($pkg);
-                    $this->packages[] = $pkg;
-                }
+        $packageEntities = PackageList::get()->getPackages();
+        if ($packageEntities === []) {
+            return;
+        }
+        $packageService = $this->make(PackageService::class);
+        $config = $this->make('config');
+        foreach ($packageEntities as $packageEntity) {
+            $packageController = $packageService->getClass($packageEntity->getPackageHandle());
+            if (!$packageController instanceof BrokenPackage) {
+                $config->package($packageController);
+                $this->packages[] = $packageController;
             }
         }
     }
@@ -249,15 +250,12 @@ class Application extends Container
      */
     public function setupPackages()
     {
-        $config = $this['config'];
-
+        $config = $this->make('config');
         $loc = Localization::getInstance();
-        $entityManager = $this['Doctrine\ORM\EntityManager'];
-        $configUpdater = new EntityManagerConfigUpdater($entityManager);
-
         if ($config->get('concrete.updates.enable_auto_update_packages')) {
             foreach ($this->packages as $pkg) {
                 $dbPkg = \Package::getByHandle($pkg->getPackageHandle());
+                /** @var \Concrete\Core\Entity\Package $dbPkg */
                 $pkgInstalledVersion = $dbPkg->getPackageVersion();
                 $pkgFileVersion = $pkg->getPackageVersion();
                 if (version_compare($pkgFileVersion, $pkgInstalledVersion, '>')) {

@@ -17,7 +17,7 @@ class RedisSaverTest extends TestCase
      */
     public function testSave($namespace)
     {
-        $this->markTestSkipped('These tests have begun to fail in PHP 8.2.11. Fix them and reimplement.');
+        $this->markTestSkipped('Something about these tests is broken. Not sure if it is latest PHP or the redis extension but these tests are way too precarious.');
 
         $expectedIterator = null;
         $expectedSearch = 'cfg=' . $namespace . '::test.foo.*';

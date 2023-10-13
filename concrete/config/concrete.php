@@ -102,7 +102,7 @@ return [
                 'concrete.debug.hide_keys',
                 'app.api_keys',
             ],
-        ]
+        ],
     ],
 
     /*
@@ -139,7 +139,7 @@ return [
         'extensions_denylist' => '*.php;*.php2;*.php3;*.php4;*.php5;*.php7;*.php8;*.phtml;*.phar;*.htaccess;*.pl;*.phpsh;*.pht;*.shtml;*.cgi',
 
         /*
-         * Numoer of maximum parallel uploads
+         * Number of maximum parallel uploads
          */
         'parallel' => 4,
 
@@ -388,7 +388,7 @@ return [
         /**
          * Timestamp of the last time that the cache was cleared, this is used when generating assets.
          */
-        'last_cleared'=> 1648642409
+        'last_cleared' => 1648642409,
     ],
 
     'design' => [
@@ -402,9 +402,7 @@ return [
      * ------------------------------------------------------------------------
      */
     'processes' => [
-
         'logging' => [
-
             /*
              * Do we log task process output (triggered in the dashboard or in the CLI) to a file somewhere?
              *
@@ -413,46 +411,38 @@ return [
             'method' => 'none',
 
             'file' => [
-
                 /*
                  * The directory that holds process logs
                  *
                  * @var string
                  */
                 'directory' => '',
-
             ],
-
         ],
 
         'scheduler' => [
-
             /*
              * Are scheduled tasks available? Scheduled tasks require running a console command every minute.
              *
              * @var bool
              */
             'enable' => false,
-
         ],
-
 
         /**
          * The point after which old completed are automatically removed from the system.
          */
-        'delete_threshold' => 7 // days
-
+        'delete_threshold' => 7, // days
     ],
 
     'messenger' => [
-
         'default_bus' => 'default',
 
         'buses' => [
             'default' => [
                 'default_middleware' => true,
                 'middleware' => [],
-            ]
+            ],
         ],
 
         'routing' => [
@@ -472,7 +462,6 @@ return [
         ],
 
         'consume' => [
-
             /**
              * Listener. If set to app, then queueable operations like rescanning files and deleting bulk pages
              * will be polled and executed through browser XHR processes. If set to worker you must run
@@ -482,7 +471,6 @@ return [
              * @var string (app|worker)
              */
             'method' => 'app',
-
         ],
 
         /*
@@ -497,31 +485,23 @@ return [
             'delete_page_forever' => 100,
             'copy_page' => 10,
         ],
-
-
     ],
 
     /*
- * ------------------------------------------------------------------------
- * Events settings
- * ------------------------------------------------------------------------
- */
+     * ------------------------------------------------------------------------
+     * Events settings
+     * ------------------------------------------------------------------------
+     */
     'events' => [
-
         'broadcast' => [
-
             /*
              * Driver
              *
              * @var string (redis|none)
              */
-            'driver' => ''
-
+            'driver' => '',
         ],
-
-
     ],
-
 
     /*
      * ------------------------------------------------------------------------
@@ -753,11 +733,16 @@ return [
          */
         'default_jpeg_image_compression' => 80,
         /*
+         * The WEBP compression level (in range 0... 100)
+         */
+        'default_webp_image_compression' => 80,
+        /*
          * The PNG compression level (in range 0... 9)
          */
         'default_png_image_compression' => 9,
         /*
-         * The default thumbnail format: jpeg, png, auto (if auto: we'll create a jpeg if the source image is jpeg, we'll create a png otherwise).
+         * The default thumbnail format: jpeg, png, webp, auto
+         * (if auto: we'll keep original format if it is supported, we'll create a webp otherwise).
          */
         'default_thumbnail_format' => 'auto',
         /*
@@ -772,6 +757,14 @@ return [
         'basic_thumbnailer_generation_strategy' => 'now',
         'help_overlay' => true,
         'require_version_comments' => false,
+        /*
+        * Changes the "Keep Live Version Approved"-Toggle-Button behaviour on the site page version scheduling element
+        * unapproved: removes live or scheduled version of the site page, if the changed site page gets scheduled
+        * approved: keeps live or scheduled version of the site page approved, if the changed site page gets scheduled
+        *
+        * @var string (approved | unapproved)
+        */
+        'live_version_status_on_scheduled_version_approval' => 'unapproved',
         /*
          * Control whether a block type can me moved to different block type sets
          *
@@ -892,6 +885,10 @@ return [
          * Enable asciify to sanitize name of uploaded files
          */
         'enable_filename_asciify' => true,
+        /**
+         * Determines whether the list should keep folders on top when sorting by name.
+         */
+        'keep_folders_on_top' => false,
     ],
 
     'search_users' => [
@@ -1028,7 +1025,6 @@ return [
          * @var null|string Custom URL for background image.
          */
         'background_url' => null,
-
     ],
     'session' => [
         'name' => 'CONCRETE',
@@ -1153,13 +1149,14 @@ return [
 
         /*
          * --------------------------------------------------------------------
-         * Gravatar Settings
+         * Group Settings
          * --------------------------------------------------------------------
          */
         'group' => [
             'badge' => [
                 'default_point_value' => 50,
             ],
+            'delete_requires_superuser' => true,
         ],
 
         'username' => [
@@ -1208,7 +1205,7 @@ return [
             'reset_message' => [
                 'password_reset' => '',
                 'password_expired' => '',
-            ]
+            ],
         ],
         'email' => [
             'test_mx_record' => false,
@@ -1468,7 +1465,6 @@ return [
                 ],
             ],
         ],
-
     ],
 
     'mutex' => [
