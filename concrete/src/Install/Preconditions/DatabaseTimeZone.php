@@ -5,13 +5,14 @@ namespace Concrete\Core\Install\Preconditions;
 use Concrete\Core\Application\Application;
 use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Database\Connection\Timezone;
+use Concrete\Core\Install\AbstractPrecondition;
 use Concrete\Core\Install\ConnectionOptionsPreconditionInterface;
 use Concrete\Core\Install\InstallerOptions;
 use Concrete\Core\Install\PreconditionResult;
 use Exception;
 use Punic\Misc as PunicMisc;
 
-class DatabaseTimeZone implements ConnectionOptionsPreconditionInterface
+class DatabaseTimeZone extends AbstractPrecondition implements ConnectionOptionsPreconditionInterface
 {
     /**
      * @var \Concrete\Core\Application\Application

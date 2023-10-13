@@ -1,0 +1,75 @@
+<?xml version="1.0"?>
+<concrete5-cif version="1.0">
+
+    <singlepages>
+
+        <page name="Reports" path="/dashboard/reports" filename="/dashboard/reports.php" pagetype=""
+              description="Get data from forms and logs." package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>forms, log, error, email, mysql, exception, survey</value>
+                </attributekey>
+            </attributes>
+        </page>
+        <page name="Form Results" path="/dashboard/reports/forms" filename="/dashboard/reports/forms.php" pagetype=""
+              description="Get submission data." package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>forms, questions, response, data</value>
+                </attributekey>
+            </attributes>
+        </page>
+        <page name="Form Results" path="/dashboard/reports/forms/legacy" filename="/dashboard/reports/legacy.php"
+              pagetype=""
+              description="Get submission data." package="">
+            <attributes>
+                <attributekey handle="exclude_nav">
+                    <value><![CDATA[1]]></value>
+                </attributekey>
+                <attributekey handle="exclude_search_index">
+                    <value><![CDATA[1]]></value>
+                </attributekey>
+            </attributes>
+        </page>
+        <page name="Report Details" path="/dashboard/reports/health/details" filename="/dashboard/reports/health/details.php" pagetype=""
+              description="" package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>page types</value>
+                </attributekey>
+                <attributekey handle="exclude_nav">
+                    <value><![CDATA[1]]></value>
+                </attributekey>
+            </attributes>
+        </page>
+        <page name="Surveys" path="/dashboard/reports/surveys" filename="/dashboard/reports/surveys.php" pagetype=""
+              description="" package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>questions, quiz, response</value>
+                </attributekey>
+            </attributes>
+        </page>
+        <page name="Logs" path="/dashboard/reports/logs" filename="/dashboard/reports/logs.php" pagetype=""
+              description="" package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>forms, log, error, email, mysql, exception, survey, history</value>
+                </attributekey>
+            </attributes>
+        </page>
+        <page name="Page Changes" path="/dashboard/reports/page_changes" filename="/dashboard/reports/page_changes.php"
+              pagetype=""
+              description="" package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>changes, csv, report</value>
+                </attributekey>
+            </attributes>
+        </page>
+
+
+    </singlepages>
+
+
+</concrete5-cif>

@@ -1,0 +1,50 @@
+<?xml version="1.0"?>
+<concrete5-cif version="1.0">
+
+    <attributekeys>
+        <attributekey handle="icon_dashboard" name="Dashboard Icon" package="" searchable="0" indexed="0"
+                      type="textarea" internal="1" category="collection">
+            <type mode=""/>
+        </attributekey>
+    </attributekeys>
+
+    <singlepages>
+        <page name="Attributes" path="/dashboard/system/attributes" filename="/dashboard/system/attributes/view.php"
+              pagetype="" description="Setup attributes for pages, users, files and more." package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>attribute configuration</value>
+                </attributekey>
+            </attributes>
+        </page>
+        <page name="Types" path="/dashboard/system/attributes/types" filename="/dashboard/system/attributes/types.php"
+              pagetype="" description="Choose which attribute types are available for different items." package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>attributes, types</value>
+                </attributekey>
+            </attributes>
+        </page>
+        <page name="Sets" path="/dashboard/system/attributes/sets" filename="/dashboard/system/attributes/sets.php"
+              pagetype="" description="Group attributes into sets for easier organization" package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>attributes, sets</value>
+                </attributekey>
+            </attributes>
+        </page>
+        <page name="Topics" path="/dashboard/system/attributes/topics"
+              filename="/dashboard/system/attributes/topics.php" pagetype="" description="" package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>topics, tags, taxonomy</value>
+                </attributekey>
+            </attributes>
+        </page>
+        <page name="Add Topic Tree" path="/dashboard/system/attributes/topics/add"
+              filename="/dashboard/system/attributes/topics/add.php" pagetype="" description="" package="">
+        </page>
+    </singlepages>
+
+
+</concrete5-cif>

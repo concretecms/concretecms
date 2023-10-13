@@ -3,18 +3,90 @@
 namespace Concrete\Core\Install;
 
 use Concrete\Core\Application\Application;
+use Concrete\Core\Install\StartingPoint\Installer\Routine\Stamp\InstallOptionsStamp;
 use Concrete\Core\Database\CharacterSetCollation\Exception as CharacterSetCollationException;
 use Concrete\Core\Database\CharacterSetCollation\Resolver;
 use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Database\DatabaseManager;
 use Concrete\Core\Error\UserMessageException;
+use Concrete\Core\Foundation\Environment\FunctionInspector;
 use Concrete\Core\Install\Preconditions\PdoMysqlExtension;
+use Concrete\Core\Install\StartingPoint\Installer\Routine\RoutineInterface;
+use Concrete\Core\Localization\Localization;
 use Concrete\Core\Package\StartingPointPackage;
 use Exception;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Serializer\SerializerInterface;
 use Throwable;
 
 class Installer
 {
+
+    /**
+     * @var SerializerInterface
+     */
+    protected $serializer;
+
+    /**
+     * @var Request
+     */
+    protected $request;
+
+    public function sendCommandsToClient(array $commands): JsonResponse
+    {
+        return JsonResponse::fromJsonString($this->serializer->serialize($commands, 'json'));
+    }
+
+    public function getRoutineFromRequest(): RoutineInterface
+    {
+        $routineData = $this->request->request->get('routine') ?? [];
+        $routine = $this->serializer->denormalize($routineData, $routineData['class']);
+        return $routine;
+    }
+
+    public function executeRoutine(RoutineInterface $routine)
+    {
+        if (!@ini_get('safe_mode') && $this->application->make(FunctionInspector::class)->functionAvailable('set_time_limit')) {
+            @set_time_limit(1000);
+        }
+        $timezone = $this->options->getServerTimeZone(true);
+        date_default_timezone_set($timezone->getName());
+        $this->application->make('config')->set('app.server_timezone', $timezone->getName());
+        $localization = Localization::getInstance();
+        $localization->pushActiveContext(Localization::CONTEXT_SYSTEM);
+        $error = null;
+        try {
+            $this->application->executeCommand(
+                $routine,
+                $this->application->make('config')->get('concrete.messenger.default_bus'),
+                [new InstallOptionsStamp($this->getOptions())]
+            );
+        } catch (Exception $x) {
+            $error = $x;
+        } catch (Throwable $x) {
+            $error = $x;
+        }
+        $localization->popActiveContext();
+        if ($error !== null) {
+            throw $error;
+        }
+
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     /**
      * The default starting point handle.
      *
@@ -29,6 +101,7 @@ class Installer
      */
     protected $application;
 
+
     /**
      * The options to be used by the installer.
      *
@@ -41,17 +114,11 @@ class Installer
      */
     protected $characterSetCollationResolver;
 
-    /**
-     * Initialize the instance.
-     *
-     * @param Application $application the application instance
-     * @param InstallerOptions $options the options to be used by the installer
-     * @param \Concrete\Core\Database\CharacterSetCollation\Resolver $characterSetCollationResolver
-     */
-    public function __construct(Application $application, InstallerOptions $options, Resolver $characterSetCollationResolver)
+    public function __construct(Application $application, SerializerInterface $serializer, Resolver $characterSetCollationResolver, Request $request)
     {
         $this->application = $application;
-        $this->options = $options;
+        $this->serializer = $serializer;
+        $this->request = $request;
         $this->characterSetCollationResolver = $characterSetCollationResolver;
     }
 
@@ -128,12 +195,10 @@ class Installer
             }
             $handle = static::DEFAULT_STARTING_POINT;
         }
-        $result = StartingPointPackage::getClass($handle);
+        $result = $this->application->make(StartingPointService::class)->getByHandle($handle);
         if ($result === null) {
             throw new UserMessageException(t('Invalid starting point: %s', $handle));
         }
-        $result->setInstallerOptions($this->getOptions());
-
         return $result;
     }
 

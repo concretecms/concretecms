@@ -1,0 +1,49 @@
+<?xml version="1.0"?>
+<concrete5-cif version="1.0">
+
+    <singlepages>
+
+        <page name="Automation" path="/dashboard/system/automation"
+              filename="/dashboard/system/automation/view.php" pagetype="" description="Run and automate commands."
+              package=""/>
+        <page name="Tasks" path="/dashboard/system/automation/tasks"
+              filename="/dashboard/system/automation/tasks.php" pagetype="" description="" package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>automated jobs, commands, tasks, console, cli</value>
+                </attributekey>
+            </attributes>
+        </page>
+        <page name="Activity" path="/dashboard/system/automation/activity"
+              filename="/dashboard/system/automation/activity.php" pagetype="" description="" package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>processes, queues, jobs, running</value>
+                </attributekey>
+            </attributes>
+        </page>
+        <page name="Failed Messages" path="/dashboard/system/automation/failed"
+              filename="/dashboard/system/automation/failed.php" pagetype="" description="" package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>failed messages, retry</value>
+                </attributekey>
+            </attributes>
+        </page>
+        <page name="Schedule" path="/dashboard/system/automation/schedule"
+              filename="/dashboard/system/automation/schedule.php" pagetype="" description="" package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>cron, scheduling, jobs</value>
+                </attributekey>
+            </attributes>
+        </page>
+        <page name="Automation Settings" path="/dashboard/system/automation/settings"
+              filename="/dashboard/system/automation/settings.php" pagetype="" description="" package="">
+        </page>
+
+
+    </singlepages>
+
+
+</concrete5-cif>

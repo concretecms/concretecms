@@ -22,7 +22,7 @@ class Add extends Node
         $this->set('node', $node);
     }
 
-    public function add_topic_node()
+    public function add_dashboard_page()
     {
         $token = \Core::make('token');
         $error = \Core::make('error');

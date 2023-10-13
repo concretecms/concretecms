@@ -18,155 +18,153 @@ class Features
 {
 
     /**
-     * Fundamental feature: Pages
+     * Base, Frontend, backend and CMS features. Essentially mandatory
      */
+
     const PAGES = 'pages';
-
-    /**
-     * Fundamental feature: support for uploaded files and the file manager.
-     */
+    const THEMES = 'themes';
     const FILES = 'files';
-
-    /**
-     * Fundamental feature: support for users, authentication.
-     */
     const USERS = 'users';
-
-    /**
-     * Fundamental feature: support for stacks
-     */    
-    const STACKS = 'stacks';
-
-    /**
-     * Fundamental feature: support for Express
-     */
-    const EXPRESS = 'express';
-
-    /**
-     * Fundamental feature: support for package installation.
-     */
-    const PACKAGES = 'packages';
-
-    /**
-     * Fundamental feature: support for basics on the front-end: file block, feature block, content, etc...
-     */
     const BASICS = 'basics';
+    const PERMISSIONS = 'permissions';
+    const ATTRIBUTES = 'attributes';
 
     /**
-     * Bedrock typography support: titles, display titles, buttons, colors, etc...
+     * Base, frontend, backend and CMS features that are not mandatory.
+     */
+
+    const STACKS = 'stacks';
+    const EXPRESS = 'express';
+    const CALENDAR = 'calendar';
+    const BOARDS = 'boards';
+    const NAVIGATION = 'navigation';
+    const DOCUMENTS = 'documents';
+    const SOCIAL = 'social';
+    const FORMS = 'forms';
+    const MULTILINGUAL = 'multilingual';
+    const VIDEO = 'video';
+    const IMAGERY = 'imagery';
+    const TAXONOMY = 'taxonomy';
+    const TESTIMONIALS = 'testimonials';
+    const CONVERSATIONS = 'conversations';
+    const FAQ = 'faq';
+    const SEARCH = 'search';
+    const STAGING = 'staging';
+    const MAPS = 'maps';
+    const POLLS = 'polls';
+    const ACCORDIONS = 'accordions';
+    const ACCOUNT = 'account';
+    const DESKTOP = 'desktop';
+    const PROFILE = 'profile';
+    const SUMMARY = 'summary';
+
+    /**
+     * Frontend features
      */
     const TYPOGRAPHY = 'typography';
 
     /**
-     * Accessory feature: support for calendars
+     * Backend features
      */
-    const CALENDAR = 'calendar';
-    
-    /**
-     * Fundamental feature: support for Boards
-     */
-    const BOARDS = 'boards';
-
-    /**
-     * Accessory feature: support for autonav, page list, etc...
-     */
-    const NAVIGATION = 'navigation';
-
-    /**
-     * Accessory feature: support for documents (public file manager)
-     */
-    const DOCUMENTS = 'documents';
-
-    /**
-     * Accessory feature: support for social networking
-     */
-    const SOCIAL = 'social';
-
-    /**
-     * Accessory UI feature: form/data entry interfaces
-     */
-    const FORMS = 'forms';
-
-    /**
-     * Accessory feature: support for multilingual. Note, this does not mean the ability to run concrete5 in a language
-     * other than English. This is more about running a site with multiple language trees.
-     */
-    const MULTILINGUAL = 'multilingual';
-    
-    /**
-     * Accessory feature: support for video
-     */
-    const VIDEO = 'video';
-
-    /**
-     * Accessory feature: support for rich imagery (lightbox, galleries, sliders)
-     */
-    const IMAGERY = 'imagery';
-
-    /**
-     * Accessory feature: support for the concrete5 marketplace.
-     */
+    const PACKAGES = 'packages';
+    const MULTISITE = 'multisite';
     const MARKETPLACE = 'marketplace';
+    const HEALTH = 'health';
+    const AUTOMATION = 'automation';
+    const NOTIFICATION = 'notification';
+    const THEME_DOCUMENTATION = 'theme_documentation';
+    const MAIL = 'mail';
+    const API = 'api';
 
-    /**
-     * Accessory feature: support for tags, topics.
-     */
-    const TAXONOMY = 'taxonomy';
+    public static function getFeatures(): array
+    {
+        $reflectionClass = new \ReflectionClass(self::class);
+        return $reflectionClass->getConstants();
+    }
 
-    /**
-     * Accessory feature: support for testimonials
-     */
-    const TESTIMONIALS = 'testimonials';
-
-    /**
-     * Accessory feature: support for conversations
-     */
-    const CONVERSATIONS = 'conversations';
-
-    /**
-     * Accessory feature: support for FAQs
-     */
-    const FAQ = 'faq';
-
-    /**
-     * Accessory feature: support for search
-     */
-    const SEARCH = 'search';
-
-    /**
-     * Accessory feature: support for the staging bar when a site is in staging mode
-     */
-    const STAGING = 'staging';
-
-    /**
-     * Accessory feature: support for maps
-     */
-    const MAPS = 'maps';
-
-    /**
-     * Accessory feature: support for surveys
-     */
-    const POLLS = 'polls';
-
-    /**
-     * Accessory feature: support for accordions
-     */
-    const ACCORDIONS = 'accordions';
-
-    /**
-     * Accessory feature: support for My Account/Edit Profile
-     */
-    const ACCOUNT = 'account';
-
-    /**
-     * Accessory feature: support for desktop functionality, like "Waiting for Me", "Draft List", etc...
-     */
-    const DESKTOP = 'desktop';
-
-    /**
-     * Accessory feature: support for frontend user profiles
-     */
-    const PROFILE = 'profile';
-
-
+    public static function getDisplayName(string $feature)
+    {
+        switch ($feature) {
+            case self::PAGES:
+                return t('Pages');
+            case self::FILES:
+                return t('Files');
+            case self::USERS:
+                return t('Users and Groups');
+            case self::STACKS:
+                return t('Stacks and Content Library');
+            case self::EXPRESS:
+                return t('Express Data Objects');
+            case self::PACKAGES:
+                return t('Packages and Extensions');
+            case self::BASICS:
+                return t('Basics');
+            case self::TYPOGRAPHY:
+                return t('Typography');
+            case self::CALENDAR:
+                return t('Calendars and Events');
+            case self::BOARDS:
+                return t('Boards');
+            case self::NAVIGATION:
+                return t('Navigation');
+            case self::DOCUMENTS:
+                return t('Document Management');
+            case self::SOCIAL:
+                return t('Social Networking and Sharing');
+            case self::FORMS:
+                return t('Forms');
+            case self::MULTILINGUAL:
+                return t('Multilingual Support');
+            case self::MULTISITE:
+                return t('Multiple Site Hosting');
+            case self::VIDEO:
+                return t('Video');
+            case self::IMAGERY:
+                return t('Galleries, Image Sliders and Lightboxes');
+            case self::MARKETPLACE:
+                return t('Marketplace Connectivity');
+            case self::TAXONOMY:
+                return t('Tags and Taxonomy');
+            case self::TESTIMONIALS:
+                return t('Testimonials');
+            case self::CONVERSATIONS:
+                return t('Conversations');
+            case self::FAQ:
+                return t('Frequently Asked Questions');
+            case self::SEARCH:
+                return t('Search and SEO');
+            case self::STAGING:
+                return t('Development, Staging and Production');
+            case self::MAPS:
+                return t('Maps');
+            case self::AUTOMATION:
+                return t('Tasks and Automation');
+            case self::POLLS:
+                return t('Polls and Surveys');
+            case self::ACCORDIONS:
+                return t('Accordions');
+            case self::ACCOUNT:
+                return t('Personal My Account');
+            case self::DESKTOP:
+                return t('Welcome Desktops');
+            case self::PROFILE:
+                return t('Public User Profile');
+            case self::HEALTH:
+                return t('Site Health Reports');
+            case self::NOTIFICATION:
+                return t('Notification');
+            case self::ATTRIBUTES:
+                return t('Attribute keys, entities and categories');
+            case self::PERMISSIONS:
+                return t('Permission keys, entities and categories');
+            case self::MAIL:
+                return t('Mail');
+            case self::THEME_DOCUMENTATION:
+                return t('Theme Documentation');
+            case self::SUMMARY:
+                return t('Summary Templates');
+            case self::API:
+                return t('API');
+        }
+    }
 }

@@ -1,1 +1,1 @@
-﻿CKEDITOR.plugins.setLang("preview","zh-cn",{preview:"预览"});
+CKEDITOR.plugins.setLang("preview","zh-cn",{preview:"预览"});

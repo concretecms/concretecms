@@ -1,19 +1,23 @@
+@import url(//fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700);
+@import url('https://fonts.cdnfonts.com/css/basier');
+
+@import "variables";
+
 @import "@concretecms/bedrock/assets/bedrock/scss/frontend";
 
+
 // Import the basics from the CMS foundation because the toolbar sits atop our theme.
-@import "@concretecms/bedrock/assets/cms/scss/bootstrap/reboot";
 @import "@concretecms/bedrock/assets/cms/scss/variables";
-@import "@concretecms/bedrock/assets/cms/scss/toolbar";
 @import "@concretecms/bedrock/assets/cms/scss/nprogress";
-@import "@concretecms/bedrock/assets/cms/scss/buttons";
-@import "@concretecms/bedrock/assets/cms/scss/forms";
 @import "@concretecms/bedrock/assets/cms/scss/login-page";
+@import "@concretecms/bedrock/assets/cms/scss/vue";
 
 @import "./features/account/account";
 @import "./features/desktop/desktop";
 
+@import "font-smoothing";
 @import "container";
-@import "install";
 @import "background-image";
 @import "account";
+@import "cards";
 

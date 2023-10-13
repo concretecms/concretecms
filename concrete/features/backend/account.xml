@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<concrete5-cif version="1.0">
+
+    <attributekeys>
+        <attributekey handle="profile_private_messages_enabled" name="I would like to receive private messages."
+                      package="" searchable="1" indexed="0" type="boolean" category="user" profile-displayed="0"
+                      profile-editable="1" profile-required="0" register-editable="1" register-required="0"
+                      member-list-displayed="0">
+            <type checked="1"/>
+        </attributekey>
+        <attributekey handle="profile_private_messages_notification_enabled"
+                      name="Send me email notifications when I receive a private message." package="" searchable="1"
+                      indexed="0" type="boolean" category="user" profile-displayed="0" profile-editable="1"
+                      profile-required="0" register-editable="1" register-required="0" member-list-displayed="0">
+            <type checked="1"/>
+        </attributekey>
+    </attributekeys>
+
+</concrete5-cif>

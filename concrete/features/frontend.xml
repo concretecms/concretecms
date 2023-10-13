@@ -1,0 +1,72 @@
+<?xml version="1.0"?>
+<concrete5-cif version="1.0">
+
+
+    <attributekeys>
+        <attributekey handle="tags" name="Tags" package="" searchable="1" indexed="1" type="select" category="collection">
+            <type allow-multiple-values="1" display-order="display_asc" allow-other-values="1">
+            </type>
+        </attributekey>
+        <attributekey handle="is_featured" name="Is Featured" package="" searchable="1" indexed="0" type="boolean" category="collection">
+            <type checked="" checkbox-label="Feature this Page"/>
+        </attributekey>
+        <attributekey handle="header_extra_content" name="Header Extra Content" package="" searchable="1" indexed="0" type="textarea" category="collection">
+            <type mode=""/>
+        </attributekey>
+        <attributekey handle="exclude_sitemapxml" name="Exclude From sitemap.xml" package="" searchable="1" indexed="0" type="boolean" category="collection">
+            <type checked=""/>
+        </attributekey>
+        <attributekey handle="exclude_subpages_from_nav" name="Exclude Sub-Pages From Nav" package="" searchable="1" indexed="1" type="boolean" category="collection">
+            <type checked="0"/>
+        </attributekey>
+        <attributekey handle="thumbnail" name="Thumbnail" package="" searchable="1" indexed="1" type="image_file" category="collection"/>
+
+    </attributekeys>
+
+    <attributesets>
+        <attributeset handle="seo" name="SEO" package="" locked="0" category="collection">
+            <attributekey handle="meta_title"/>
+            <attributekey handle="meta_description"/>
+            <attributekey handle="header_extra_content"/>
+            <attributekey handle="exclude_sitemapxml"/>
+        </attributeset>
+        <attributeset handle="navigation" name="Navigation and Indexing" package="" locked="0" category="collection">
+            <attributekey handle="is_featured"/>
+            <attributekey handle="exclude_nav"/>
+            <attributekey handle="exclude_page_list"/>
+            <attributekey handle="exclude_search_index"/>
+        </attributeset>
+    </attributesets>
+
+    <summarycategories>
+        <category handle="page" name="Page" package=""/>
+        <category handle="calendar_event" name="Calendar Event" package=""/>
+    </summarycategories>
+    <summaryfields>
+        <field handle="title" name="Title" package=""/>
+        <field handle="date" name="Date" package=""/>
+        <field handle="date_start" name="Start Date" package=""/>
+        <field handle="date_end" name="End Date" package=""/>
+        <field handle="link" name="Link" package=""/>
+        <field handle="description" name="Description" package=""/>
+        <field handle="thumbnail" name="Thumbnail" package=""/>
+        <field handle="categories" name="Categories" package=""/>
+        <field handle="author" name="Author" package=""/>
+    </summaryfields>
+    <summarytemplates>
+        <template handle="default" name="Default Summary Template"
+                  icon="blank.png" package="">
+            <categories>
+                <category handle="page"/>
+                <category handle="calendar_event"/>
+            </categories>
+            <fields>
+                <field required="1">title</field>
+                <field required="1">link</field>
+                <field>description</field>
+                <field>date</field>
+            </fields>
+        </template>
+    </summarytemplates>
+
+</concrete5-cif>

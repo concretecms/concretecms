@@ -1,0 +1,45 @@
+div.theme-oxford-shirt {
+  .ccm-block-testimonial-large-avatar{
+    margin-bottom: 3rem;
+    padding-left: 1rem;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+    border-left: solid 4px $primary!important;
+    @include media-breakpoint-up(md) {
+      display: flex;
+      align-items: center;
+      border-left: none!important;
+      padding-left: 0;
+    }
+    .ccm-block-testimonial-large-image {
+      img {
+        max-width: 152px;
+        max-height: 152px;
+      }
+      margin-right: 1rem;
+    }
+    .ccm-block-testimonial-large-avatar-text {
+      padding: 1rem 1rem 1rem 0;
+      @include media-breakpoint-up(md) {
+        border-left: solid 4px $primary!important;
+        padding: 1rem;
+      }
+      .ccm-block-testimonial-name {
+        font-weight: 400;
+        color: $primary;
+        @include rfs(1rem);
+        letter-spacing: -0.3px;
+      }
+      .ccm-block-testimonial-paragraph {
+        @include rfs(1.25rem);
+        font-style: italic;
+        margin-bottom: 1.5rem;
+      }
+      .ccm-block-testimonial-position {
+        font-style: normal;
+        font-size: $font-size-sm;
+        color: $dim;
+      }
+    }
+  }
+}

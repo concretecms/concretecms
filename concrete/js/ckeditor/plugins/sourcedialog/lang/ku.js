@@ -1,1 +1,1 @@
-﻿CKEDITOR.plugins.setLang("sourcedialog","ku",{toolbar:"سەرچاوە",title:"سەرچاوە"});
+CKEDITOR.plugins.setLang("sourcedialog","ku",{toolbar:"سەرچاوە",title:"سەرچاوە"});

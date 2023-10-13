@@ -4,15 +4,17 @@ namespace Concrete\Core\Navigation\Item;
 
 use Concrete\Core\Tree\Node\Type\FileFolder;
 
-/**
- * @method FileFolderItem[] getChildren()
- */
-class FileFolderItem extends Item
+class FileFolderItem implements ItemInterface, SerializableItemInterface
 {
     /**
      * @var int
      */
     protected $folderId;
+
+    /**
+     * string
+     */
+    protected $name;
 
     /**
      * Item constructor.
@@ -21,8 +23,7 @@ class FileFolderItem extends Item
      */
     public function __construct(FileFolder $folder)
     {
-        parent::__construct('', $folder->getTreeNodeDisplayName());
-
+        $this->name = $folder->getTreeNodeDisplayName();
         $this->folderId = $folder->getTreeNodeID();
     }
 
@@ -32,6 +33,14 @@ class FileFolderItem extends Item
     public function getFolderId(): int
     {
         return $this->folderId;
+    }
+
+    /**
+     * @return string
+     */
+    public function getName(): string
+    {
+        return $this->name;
     }
 
     /**
@@ -45,10 +54,10 @@ class FileFolderItem extends Item
     #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
-        $data = parent::jsonSerialize();
         $data['folderId'] = $this->getFolderId();
         $data['type'] = 'file_folder';
-
+        $data['name'] = $this->getName();
+        $data['children'] = [];
         return $data;
     }
 }

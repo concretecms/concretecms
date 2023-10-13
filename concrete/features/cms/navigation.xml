@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+<concrete5-cif version="1.0">
+
+    <blocktypes>
+        <blocktype handle="autonav" package=""/>
+        <blocktype handle="page_title" package=""/>
+        <blocktype handle="top_navigation_bar" package=""/>
+        <blocktype handle="faq" package=""/>
+        <blocktype handle="accordion" package=""/>
+        <blocktype handle="page_list" package=""/>
+        <blocktype handle="next_previous" package=""/>
+        <blocktype handle="date_navigation" package=""/>
+        <blocktype handle="tags" package=""/>
+        <blocktype handle="topic_list" package=""/>
+        <blocktype handle="rss_displayer" package=""/>
+        <blocktype handle="switch_language" package=""/>
+        <blocktype handle="breadcrumbs" package=""/>
+    </blocktypes>
+
+    <blocktypesets>
+        <blocktypeset handle="navigation" name="Navigation" package="">
+            <blocktype handle="autonav"/>
+            <blocktype handle="page_title"/>
+            <blocktype handle="top_navigation_bar"/>
+            <blocktype handle="accordion"/>
+            <blocktype handle="faq"/>
+            <blocktype handle="page_list"/>
+            <blocktype handle="next_previous"/>
+            <blocktype handle="date_navigation"/>
+            <blocktype handle="tags"/>
+            <blocktype handle="topic_list"/>
+            <blocktype handle="rss_displayer"/>
+            <blocktype handle="switch_language"/>
+            <blocktype handle="breadcrumbs"/>
+        </blocktypeset>
+    </blocktypesets>
+
+</concrete5-cif>

@@ -43,6 +43,7 @@ class UrlServiceProvider extends Provider
             });
         $this->app->bind('Concrete\Core\Url\Resolver\Manager\ResolverManagerInterface', 'Concrete\Core\Url\Resolver\Manager\ResolverManager');
         $this->app->bind('url/manager', 'Concrete\Core\Url\Resolver\Manager\ResolverManager');
+        $this->app->alias('url/manager', 'url');
 
         $this->app
             ->when(SeoCanonical::class)

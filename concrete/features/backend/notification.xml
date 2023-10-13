@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<concrete5-cif version="1.0">
+
+    <singlepages>
+        <page name="Notification" path="/dashboard/system/notification"
+              filename="/dashboard/system/notification/view.php" pagetype="" description="Notification settings."
+              package=""/>
+        <page name="Server-Sent Events" path="/dashboard/system/notification/events"
+              filename="/dashboard/system/notification/events.php" pagetype="" description="" package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>websocket, socket, socket.io, push, push notifications, mercure</value>
+                </attributekey>
+            </attributes>
+        </page>
+        <page name="Waiting for Me" path="/dashboard/system/notification/alerts"
+              filename="/dashboard/system/notification/alerts.php" pagetype="" description="" package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>waiting for me, inbox, notifications</value>
+                </attributekey>
+            </attributes>
+        </page>
+
+
+    </singlepages>
+
+
+</concrete5-cif>

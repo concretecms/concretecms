@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<concrete5-cif version="1.0">
+
+    <blocktypes>
+        <blocktype handle="survey" package=""/>
+=        <blocktype handle="social_links" package=""/>
+        <blocktype handle="testimonial" package=""/>
+        <blocktype handle="share_this_page" package=""/>
+    </blocktypes>
+
+    <blocktypesets>
+        <blocktypeset handle="social" name="Social Networking" package="">
+            <blocktype handle="survey"/>
+            <blocktype handle="social_links"/>
+            <blocktype handle="testimonial"/>
+            <blocktype handle="share_this_page"/>
+        </blocktypeset>
+    </blocktypesets>
+
+
+</concrete5-cif>

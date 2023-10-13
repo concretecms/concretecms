@@ -3,5 +3,6 @@
     <themes>
         <theme handle="atomik" package="" />
         <theme handle="elemental" package="" />
+        <theme handle="oxford_shirt" package="" />
     </themes>
 </concrete5-cif>

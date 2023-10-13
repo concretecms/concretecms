@@ -4,109 +4,78 @@ namespace Concrete\Core\Navigation\Item;
 
 use Concrete\Core\Page\Page;
 
-class PageItem extends Item
+use Concrete\Core\Navigation\Item\Traits\SupportsChildrenItemTrait;
+
+class PageItem implements SerializableItemInterface, SupportsChildrenItemInterface, LinkItemInterface
 {
 
-    /**
-     * @var int
-     */
-    protected $pageID;
+    use SupportsChildrenItemTrait;
 
-    /**
-     * @var string
-     */
-    protected $keywords = '';
-
-    /**
-     * Item constructor.
-     * @param string $url
-     * @param string $name
-     * @param bool $isActive
-     */
-    public function __construct(Page $page = null, bool $isActive = false)
-    {
-        if ($page) {
-            $this->pageID = $page->getCollectionID();
-            $this->keywords = (string)$page->getAttribute("meta_keywords");
-            parent::__construct($this->getURL(), $page->getCollectionName(), $isActive);
-        }
-        if ($this->keywords === null) {
-            $this->keywords = '';
-        }
-    }
-
-    /**
-     * @return int
-     */
-    public function getPageID(): int
-    {
-        return $this->pageID;
-    }
-
-    /**
-     * @param int $pageID
-     */
-    public function setPageID(int $pageID): void
-    {
-        $this->pageID = $pageID;
-    }
-
+    /**(
+     * @var Page
     /**
      * @return string
      */
     public function getURL(): string
     {
-        $p = Page::getByID($this->pageID);
-        if ($p->isExternalLink()) {
-            $url = $p->getCollectionPointerExternalLink();
-        } else if ($p->getAttribute('replace_link_with_first_in_nav')) {
-            $child = $p->getFirstChild();
-            $url = $child instanceof Page ? $child->getCollectionLink() : $p->getCollectionLink();
+        if ($this->page->isExternalLink()) {
+            $url = $this->page->getCollectionPointerExternalLink();
+        } else if ($this->page->getAttribute('replace_link_with_first_in_nav')) {
+            $child = $this->page->getFirstChild();
+            $url = $child instanceof Page ? $child->getCollectionLink() : $this->page->getCollectionLink();
         } else {
-            $url = $p->getCollectionLink();
+            $url = $this->page->getCollectionLink();
         }
         return $url;
     }
-    
+
     /**
      * @return string
      */
-    public function getKeywords(): string
-    {
-        return $this->keywords;
-    }
+    protected $page;
 
     /**
-     * @param string $keywords
-     * @return PageItem
+     * DashboardPageItem constructor.
+     * @param Page $page
      */
-    public function setKeywords(string $keywords): PageItem
+    public function __construct(Page $page)
     {
-        $this->keywords = $keywords;
-        return $this;
+        $this->page = $page;
     }
 
-    /**
-     * {@inheritdoc}
-     *
-     * @see \Concrete\Core\Navigation\Item\Item::getName()
-     */
     public function getName(): string
     {
-        return t(parent::getName());
+        return $this->page->getCollectionName();
+    }
+
+    public function getUrl(): string
+    {
+        return (string) $this->page->getCollectionLink();
+    }
+
+    public function getPageID(): int
+    {
+        return $this->page->getCollectionID();
+    }
+
+    public function getKeywords(): ?string
+    {
+        return $this->page->getAttribute('meta_keywords');
     }
 
     #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
         return [
-            // We need to use the parent's getName method (it's in English)
-            'name' => parent::getName(),
+            'name' => $this->getName(),
             'pageID' => $this->getPageID(),
-            'url' => $this->getURL(),
+            'url' => $this->getUrl(),
             'keywords' => $this->getKeywords(),
-        ] + parent::jsonSerialize();
+            'isActive' => $this->isActive(),
+            'isActiveParent' => $this->isActiveParent(),
+        ];
     }
 
 
 }
+

@@ -1,7 +1,14 @@
 <?php
 namespace Concrete\Core\Navigation\Item;
 
-class Item implements ItemInterface, \JsonSerializable
+use HtmlObject\Element;
+use HtmlObject\Link;
+use HtmlObject\Traits\Tag;
+
+/**
+ * @deprecated
+ */
+class Item implements LinkItemInterface, \JsonSerializable, SupportsChildrenItemInterface
 {
 
     /**
@@ -84,7 +91,7 @@ class Item implements ItemInterface, \JsonSerializable
         $this->children = $children;
     }
 
-    public function addChild(Item $item)
+    public function addChild(ItemInterface $item)
     {
         $this->children[] = $item;
     }
@@ -150,6 +157,5 @@ class Item implements ItemInterface, \JsonSerializable
         }
         $this->setChildren($newChildren);
     }
-
 
 }

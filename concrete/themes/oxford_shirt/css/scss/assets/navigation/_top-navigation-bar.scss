@@ -1,0 +1,452 @@
+div.ccm-page {
+  div.ccm-block-top-navigation-bar {
+    border-bottom: 1px solid $grey-accent;
+    z-index: 1000!important;
+    // Navigation bar styling
+    .navbar {
+      background-color: $top-navbar-bg;
+      position: relative;
+      height: 100px;
+      // Toggle buttons
+      .search-toggler,
+      .navbar-toggler {
+        padding: $btn-padding-y $btn-padding-x; // Reset default nav-bar toggler padding
+        width: 70px;
+        display: flex;
+        justify-content: center;
+        @include media-breakpoint-up(lg) {
+          padding: $btn-padding-y $btn-padding-x; // Reset default nav-bar toggler padding
+          width: 190px;
+          justify-content: flex-start;
+        }
+        .icon-text {
+          display: none;
+          @include media-breakpoint-up(lg) {
+            display: block;
+            font-family: $headings-font-family;
+            font-style: normal;
+            font-weight: 500;
+            font-size: 16px;
+            margin-left: 1rem;
+            color: $default-fc;
+          }
+        }
+      }
+      .search-toggler {
+        i {
+          font-size: 16px;
+          color: $default-fc;
+        }
+      }
+      .navbar-toggler {
+        border-right: 1px solid $grey-accent;
+        border-radius: 0;
+        // Animated open/close icon
+        .icon-bar {
+          display: block;
+          width: 25px;
+          height: 2px;
+          transition: all 0.2s;
+          background-color: $icon-bar-bg;
+          &:nth-of-type(1) {
+            transform: rotate(45deg);
+            transform-origin: 10% 10%;
+          }
+          &:nth-of-type(2) {
+            opacity: 0;
+          }
+          &:nth-of-type(3) {
+            transform: rotate(-45deg);
+            transform-origin: 10% 90%;
+          }
+          + .icon-bar {
+            margin-top: 5px;
+          }
+        }
+        &.collapsed {
+          .icon-bar {
+            &:nth-of-type(1) {
+              transform: rotate(0);
+              width: 20px;
+            }
+            &:nth-of-type(2) {
+              opacity: 1;
+            }
+            &:nth-of-type(3) {
+              transform: rotate(0);
+              width: 15px;
+            }
+          }
+        }
+        &:hover {
+          .icon-bar {
+            background-color: $primary;
+          }
+        }
+      }
+      .transparency-enabled:not(.transparency-temporarily-disabled) {
+        .navbar-toggler {
+          .icon-bar {
+            background-color: $white;
+          }
+        }
+      }
+      // Logo/brand
+      .navbar-brand {
+        width: calc(100% - 140px);
+        padding: $btn-padding-y $btn-padding-x;
+        text-align: right;
+        img {
+          max-height: 38px;
+        }
+        font-family: $display-font-family;
+        font-weight: $display-font-weight;
+        font-size: 32px;
+        text-transform: uppercase;
+        margin-right: auto;
+        &:hover {
+          color: $primary;
+        }
+        .logo {
+          display: inline-block;
+        }
+        .logo-transparent {
+          display: none;
+        }
+        @include media-breakpoint-up(lg) {
+          width: calc(100% - 760px);
+          text-align: center;
+        }
+      }
+      // Search
+      .search-collapse {
+        position: absolute;
+        width: 100%;
+        left: 0;
+        top: 0;
+        background: $search-collapse-bg;
+        align-items: center;
+        padding: 1rem 0;
+        .form-control {
+          background: $search-collapse-bg;
+        }
+        @include media-breakpoint-up(lg) {
+          width: calc(100% - 380px);
+          left: 190px;
+          border-right: solid 1px $grey-accent;
+          border-left: solid 1px $grey-accent;
+        }
+        form {
+          margin-right: auto;
+          display: flex;
+          width: 100%;
+          height: 68px;
+          button {
+            border: none;
+            box-shadow: none;
+            padding-left: 18px;
+            padding-right: 0.5rem;
+            display: flex;
+            margin: auto 0;
+            height: 68px;
+            align-items: center;
+            i {
+              font-size: 16px;
+              color: $grey-accent;
+            }
+          }
+          .form-control {
+            border: none;
+            box-shadow: none;
+            &::placeholder {
+              font-size: 16px;
+            }
+          }
+        }
+        .search-toggler {
+          // Toggle button inside collapse panel
+          width: auto;
+          height: 68px;
+          .icon-text {
+            font-weight: $font-weight-light;
+          }
+        }
+      }
+      .search-collapse.show {
+        //display: flex;
+      }
+    }
+
+    .navbar-collapse {
+      background-color: $navbar-collapse-bg;
+      margin-top: calc(1rem + 3px);
+      z-index:1;
+      @include media-breakpoint-down(lg) {
+      max-height: calc(100vh - 100px);
+      overflow-y: scroll;
+      }
+      .nav-item {
+        &.active {
+          color: $secondary;
+        }
+        .nav-link {
+          padding: $navbar-nav-link-padding-y $navbar-nav-link-padding-x;
+          transition: all 0.2s;
+          text-align: left;
+          position: relative;
+          font-family: $display-font-family;
+          color: $nav-link-color;
+          &.active {
+            color: $secondary;
+          }
+          &:hover {
+            color: $secondary;
+          }
+          &.dropdown-toggle:after {
+            border: solid $grey-accent;
+            border-width: 0 1px 1px 0;
+            display: inline-block!important;
+            padding: 4px;
+            transform: rotate(-45deg);
+            -webkit-transform: rotate(-45deg);
+            position: absolute;
+            right: 1.25rem;
+            top: 50%;
+            margin-top: -4px;
+            display: block;
+          }
+          @include media-breakpoint-down(lg) {
+            &.show.dropdown-toggle:after {
+              transform: rotate(45deg);
+              -webkit-transform: rotate(45deg);
+            }
+          }
+          i {
+            margin-right: 10px;
+            color: $grey-accent;
+          }
+        }
+        &:hover {
+          .nav-link {
+            &.dropdown-toggle:after {
+              border: solid $secondary;
+              border-width: 0 1px 1px 0;
+            }
+          }
+        }
+        &.dropdown {
+          position: unset; // Allows dropdown to move to top of navigation
+          .dropdown-menu.level-1 {
+            padding: $dropdown-padding-y $dropdown-padding-x;
+            border: 0;
+            box-shadow: none;
+            background-color: $dropdown-menu-bg;
+            .nav-link {
+              // padding: $dropdown-item-padding-y $dropdown-item-padding-x;
+              padding: 0.75rem 1.25rem; // variables are not coming through properly
+              font-family: $display-font-family;
+              &:after {
+                margin-left: 0.255em;
+                vertical-align: 0.255em;
+                content: '';
+                border: solid $grey-accent;
+                border-width: 0 1px 1px 0;
+                display: inline-block!important;
+                padding: 4px;
+                transform: rotate(-45deg);
+                -webkit-transform: rotate(-45deg);
+                position: absolute;
+                right: 1.25rem;
+                top: 50%;
+                margin-top: -4px;
+                display: block;
+              }
+              @include media-breakpoint-down(lg) {
+                &:after {
+                  transform: rotate(45deg);
+                  -webkit-transform: rotate(45deg);
+                }
+              }
+            }
+            li {
+              &:hover {
+                .nav-link {
+                  &:after {
+                    border: solid $secondary;
+                    border-width: 0 1px 1px 0;
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+
+      hr.dropdown-divider {
+        // between usual nav and topics etc.
+        height: 30px;
+      }
+
+      @include media-breakpoint-up(lg) {
+        margin-top: 0;
+        position: fixed;
+        z-index: 10;
+        top: 101px;
+        width: 190px;
+        height: calc(100vh - 101px);
+        border-right: solid 1px $grey-accent;
+        // Navigation dropdown styling
+        .dropdown-menu {
+          position: absolute;
+          left: 190px;
+          top: 0;
+          padding: 40px 80px;
+          width: calc(100vw - 190px);
+          min-height: 50vh;
+          //display:block; // temporary
+          .nav-item {
+            width: 100%;
+            max-width: 300px;
+            &:hover {
+              background-color: transparent;
+            }
+          }
+          .dropdown-menu {
+            // Subsequent levels
+            width: 100%;
+            max-width: 300px;
+            left: 300px;
+            padding: 0.6rem 0 0 1rem;
+            .nav-link {
+              // padding: $dropdown-item-padding-y $dropdown-item-padding-x;
+              padding: 0.75rem 1.25rem; // variables are not coming through properly
+              font-family: $display-font-family;
+              &:after {
+                margin-left: 0.255em;
+                vertical-align: 0.255em;
+                content: '';
+                border: solid $grey-accent;
+                border-width: 0 1px 1px 0;
+                display: inline-block!important;
+                padding: 4px;
+                transform: rotate(-45deg);
+                -webkit-transform: rotate(-45deg);
+                position: absolute;
+                right: 1.25rem;
+                top: 50%;
+                margin-top: -4px;
+                display: block;
+              }
+            }
+            li {
+              &:hover {
+                .nav-link {
+                  &:after {
+                    border: solid $secondary;
+                    border-width: 0 1px 1px 0;
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+
+    &.transparency-enabled:not(.transparency-temporarily-disabled) {
+      .navbar {
+        background-color: transparent;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        z-index: 5; // to put it over any other elements
+        transition: all 0.2s;
+        &.sticky-top {
+          position: sticky; // need to declare this because otherwise our customizations override this
+        }
+        .navbar-brand {
+          color: $white;
+          transition: all 0.2s;
+          &:hover {
+            color: $gray-500;
+          }
+          .logo {
+            display: none;
+          }
+          .logo-transparent {
+            display: inline-block;
+          }
+        }
+        .nav-item {
+          a.nav-link {
+            color: $white;
+            &:hover {
+              color: $gray-500;
+            }
+          }
+        }
+      }
+    }
+  }
+
+/* ============ desktop view ============ */
+@media all and (min-width: 992px) {
+
+	.sidebar li{ position: unset; }
+
+	.sidebar li .submenu{ 
+		display: none;
+    background-color: $dropdown-menu-bg;
+    box-shadow: none;
+    top: 0;
+	}
+
+	[dir=rtl] .sidebar li .submenu{ 
+		right:100%; left:auto;
+	}
+
+	.sidebar li:hover{ background: var(--bs-light); }
+	.sidebar li:hover > .submenu{ display: block; }
+
+}	
+/* ============ desktop view .end// ============ */
+
+
+/* ============ small devices ============ */
+@media (max-width: 991px) {
+
+	.sidebar .submenu, .sidebar .dropdown-menu{
+		position: static!important;
+		margin-left:0.7rem; margin-right:0.7rem; margin-bottom: .5rem;
+    background-color: $dropdown-menu-bg;
+    box-shadow: none;
+    border-left: 1px solid $grey-accent;
+	}
+
+}	
+/* ============ small devices .end// ============ */
+
+
+.sidebar .nav-link {
+    //font-weight: 500;
+    color: var(--bs-dark);
+}
+.sidebar .nav-link:hover {
+    background: var(--bs-light);
+    color: var(--bs-primary);
+}
+}
+
+html.ccm-toolbar-visible:not(.ccm-edit-mode) {
+  div.ccm-page {
+    div.ccm-block-top-navigation-bar.fixed-top {
+      top: 48px; 
+      .navbar-collapse {
+        @include media-breakpoint-up(lg) {
+          top: 149px;
+        }
+      }
+    }
+  }
+}

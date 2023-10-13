@@ -25,12 +25,6 @@ class DefaultAsyncConnection
     public function __construct(Application $app)
     {
         $this->app = $app;
-        $this->wrappedConnection = new DoctrineTransportConnection([
-           'table_name' => 'MessengerMessages',
-           'queue_name' => 'default',
-           'redeliver_timeout' => 3600,
-           'auto_setup' => true,
-       ], $app->make(DoctrineConnection::class));
     }
 
     /**
@@ -38,6 +32,16 @@ class DefaultAsyncConnection
      */
     public function getWrappedConnection(): DoctrineTransportConnection
     {
+        if (!$this->wrappedConnection) {
+            $this->wrappedConnection = new DoctrineTransportConnection(
+                [
+                    'table_name' => 'MessengerMessages',
+                    'queue_name' => 'default',
+                    'redeliver_timeout' => 3600,
+                    'auto_setup' => true,
+                ], $this->app->make(DoctrineConnection::class)
+            );
+        }
         return $this->wrappedConnection;
     }
 

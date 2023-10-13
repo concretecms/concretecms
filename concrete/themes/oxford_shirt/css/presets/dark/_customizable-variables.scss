@@ -1,0 +1,111 @@
+// Colors - custom for theme
+$primary: #C82D35 !default;
+$secondary: #42AAB8 !default;
+$light: #F9FBFC !default;
+$light-accent: #F6F6F6 !default;
+$grey-accent: #E0E0E0 !default;
+$dark: #131214 !default;
+$dim: #828282!default;
+$dark-bg: #1A191B;
+$dark-bg-lighter: #252526;
+
+// Top Navigation Bar
+$top-navbar-bg: $dark-bg !default;
+
+// Body Font
+$font-family-base: "Basier Circle" !default;
+$font-size-base: 1rem;
+$body-color: #fff!default;
+
+// Skin Font Colours
+$default-fc: #fff;
+
+// Wrapper Colour
+$wrapper-background: $dark-bg !default;
+
+// Feature & Feature Link
+$feature-bg: $dark-bg-lighter!important;
+
+// Hero Image
+$hero-image-title-color: #fff !default;
+$hero-image-title-font-size: 3rem !default;
+$hero-image-cover-bg: rgba(0, 0, 0, 0.4) !default;
+
+// Image Slider
+$image-slider-cover-bg: rgba(58, 58, 58, .86) !default;
+$image-slider-arrow-bg: rgb(255, 255, 255) !default;
+$image-slider-cover-color: rgb(255, 255, 255) !default;
+
+// Stripes/Containers
+$stripe-padding-y: 1rem;
+$stripe-highlight-bg: $dark-bg-lighter!important;
+
+// Footer
+$theme-footer-bg: $dark !default;
+$theme-footer-color: #FFFFFF !default;
+$theme-footer-link-color: #FFFFFF !default;
+
+//Accordion
+$accordion-bg:                            transparent;
+$accordion-button-bg:                     transparent;
+$accordion-button-active-bg:              transparent;
+$accordion-button-active-color:           $body-color;
+$accordion-icon-color:                    $grey-accent;
+$accordion-icon-active-color:             $secondary;
+$accordion-border-color:                  $grey-accent;
+$accordion-button-focus-box-shadow:       none;
+$accordion-padding-x:                     1rem;
+$accordion-button-icon:         url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='#{$accordion-icon-color}'><path fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/></svg>");
+
+// Pagination
+$pagination-color:                  #fff;
+$pagination-border-width:           0;
+$pagination-active-color:           $primary;
+$pagination-active-bg:              transparent;
+$pagination-active-border-color:    $primary;
+$pagination-bg:                   $dark-bg;
+$pagination-disabled-bg:          $dark-bg;
+$pagination-disabled-color:       #fff;
+$pagination-hover-bg:               $dark-bg-lighter;
+
+// Offcanvas
+$modal-content-bg:          $dark;
+
+// Share This Page
+$share-link-bg: $dark-bg-lighter;
+
+// Top Navigation Bar
+$icon-bar-bg: #fff;
+$navbar-collapse-bg: $dark-bg;
+$navbar-collapse-font-color: #fff;
+$nav-link-color: #fff;
+$dropdown-menu-bg: $dark-bg-lighter;
+$dropdown-link-color: #fff;
+$dropdown-link-hover-color:  $dim;
+$search-collapse-bg: $dark-bg-lighter;
+
+// Calendar 
+$calendar-weekend-bg: $dark-bg-lighter;
+$calendar-font-color: #fff;
+$calendar-button-bg: $dark-bg-lighter;
+$calendar-view-select-bg: $dark-bg-lighter;
+$calendar-icon-color: #fff;
+$calendar-list-item-hover: $dark-bg-lighter;
+$calendar-popup-background: $dark-bg;
+$calendar-popup-border-color: #fff;
+$calendar-popup-close-color: #fff;
+
+// Conversation
+$conversation-dropdown-menu-bg: $dark-bg-lighter;
+$conversation-toggle-icon-bg: #fff;
+$conversation-textarea-bg: $dark-bg-lighter;
+$conversation-select-color: #fff;
+$conversation-select-bg: $dark-bg-lighter;
+$conversation-select-bg-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23ffffff' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/%3e%3c/svg%3e");
+
+// Form Elements
+$form-control-bg: $dark-bg-lighter;
+$form-check-input-bg: $dark-bg-lighter;
+
+// Tables
+$table-striped-bg: $dark-bg-lighter;

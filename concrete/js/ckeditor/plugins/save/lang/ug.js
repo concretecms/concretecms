@@ -1,1 +1,1 @@
-﻿CKEDITOR.plugins.setLang("save","ug",{toolbar:"ساقلا"});
+CKEDITOR.plugins.setLang("save","ug",{toolbar:"ساقلا"});

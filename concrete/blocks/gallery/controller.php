@@ -444,6 +444,7 @@ class Controller extends BlockController implements FileTrackableInterface, Uses
                 "options" => [
                     "wide" => t('Wide'),
                     "standard" => t('Standard'),
+                    "narrow" => t('Narrow'),
                 ]
             ]
         ];

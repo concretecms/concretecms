@@ -23,7 +23,11 @@ $config = $app->make(Repository::class);
     <input type="search" autocomplete="off" id="ccm-nav-intelligent-search" tabindex="1"/>
 
     <div id="ccm-intelligent-search-results">
-        <?php foreach ($navigation->getItems() as $searchResult) { ?>
+        <?php foreach ($navigation->getItems() as $searchResult) {
+            if (!($searchResult instanceof \Concrete\Core\Navigation\Item\LinkItemInterface)) {
+                continue;
+            }
+            ?>
             <?php /** @var PageItem $searchResult */ ?>
 
             <div class="ccm-intelligent-search-results-module ccm-intelligent-search-results-module-onsite">

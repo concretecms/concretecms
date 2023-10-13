@@ -1,1 +1,1 @@
-﻿CKEDITOR.plugins.setLang("save","fa",{toolbar:"ذخیره"});
+CKEDITOR.plugins.setLang("save","fa",{toolbar:"ذخیره"});

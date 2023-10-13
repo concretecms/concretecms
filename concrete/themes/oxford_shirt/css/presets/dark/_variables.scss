@@ -1,0 +1,30 @@
+@import url(//fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900);
+@import url('https://fonts.cdnfonts.com/css/basier');
+
+// Colors - Base Bootstrap
+$success: #04AF7A;
+$danger: #A32C0D;
+$warning: #F0B720;
+$info: #20BFF0;
+$dark: #131214;
+$gray-500: #979797;
+
+// Display Headings
+$display-font-family: "Roboto" !default;
+$display-font-weight: 400 !default;
+$display-font-style: normal;
+$display-line-height: 1em;
+$display-font-sizes: (
+        1: 3rem,
+        2: 2rem,
+        3: 1.25rem,
+        4: 1.5rem
+);
+
+// Regular Headings
+$headings-font-family: "Roboto" !default;
+$headings-font-weight: 700 !default;
+
+// Links
+$link-color: $secondary;
+$link-decoration: none;

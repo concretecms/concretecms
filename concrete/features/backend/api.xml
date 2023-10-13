@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<concrete5-cif version="1.0">
+
+    <singlepages>
+        <page name="API" path="/dashboard/system/api" filename="/dashboard/system/api/view.php"
+              pagetype="" description="" package="">
+        </page>
+        <page name="API Integrations" path="/dashboard/system/api/integrations"
+              filename="/dashboard/system/api/integrations.php" pagetype=""
+              description="" package="">
+        </page>
+        <page name="Scopes" path="/dashboard/system/api/scopes"
+              filename="/dashboard/system/api/scopes.php" pagetype=""
+              description="" package="">
+        </page>
+        <page name="API Settings" path="/dashboard/system/api/settings"
+              filename="/dashboard/system/api/settings.php" pagetype="" description="" package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>API, programming, public, app</value>
+                </attributekey>
+            </attributes>
+        </page>
+    </singlepages>
+
+
+</concrete5-cif>

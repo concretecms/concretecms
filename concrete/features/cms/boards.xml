@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<concrete5-cif version="1.0">
+
+    <blocktypes>
+        <blocktype handle="board" package=""/>
+    </blocktypes>
+
+    <blocktypesets>
+        <blocktypeset handle="multimedia" name="Multimedia" package="">
+            <blocktype handle="board"/>
+        </blocktypeset>
+    </blocktypesets>
+
+</concrete5-cif>
