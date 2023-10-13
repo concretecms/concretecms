@@ -168,8 +168,9 @@ class Marketplace implements ApplicationAwareInterface
         } else {
             while (!feof($handle)) {
                 $data = fread($handle, $chunksize);
+                $data = is_numeric($data) ? (int) $data : $data;
 
-                if ($data == Package::E_PACKAGE_INVALID_APP_VERSION) {
+                if ($data === Package::E_PACKAGE_INVALID_APP_VERSION) {
                     $error->add(t('This package isn\'t currently available for this version of Concrete . Please contact the maintainer of this package for assistance.'));
                 } else {
                     fwrite($fp, $data, strlen($data));

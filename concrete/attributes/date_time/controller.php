@@ -13,7 +13,7 @@ use Exception;
 
 class Controller extends AttributeTypeController implements SimpleTextExportableAttributeInterface
 {
-    public $helpers = ['form', 'date', 'form/date_time'];
+    public $helpers = ['form', 'date'];
 
     protected $searchIndexFieldDefinition = ['type' => 'datetime', 'options' => ['notnull' => false]];
 
@@ -124,24 +124,7 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
         if ($this->akDateDisplayMode === null) {
             $this->load();
         }
-        switch ($this->akDateDisplayMode) {
-            case 'date_time':
-                if (empty($data['value_dt']) || (!is_numeric($data['value_h'])) || (!is_numeric($data['value_m']))) {
-                    return false;
-                }
-                $dh = $this->app->make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service\Date */
-                switch ($dh->getTimeFormat()) {
-                    case 12:
-                        if (empty($data['value_a'])) {
-                            return false;
-                        }
-                        break;
-                }
-
-                return true;
-            default:
-                return $data['value'] != '';
-        }
+        return $data['value'] != '';
     }
 
     public function search()

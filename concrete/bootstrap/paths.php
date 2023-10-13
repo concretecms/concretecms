@@ -2,6 +2,10 @@
 
 defined('C5_EXECUTE') or define('C5_EXECUTE', md5(uniqid()));
 
+/**
+ * @var Concrete\Core\Application\Application $app
+ */
+
 /*
  * ----------------------------------------------------------------------------
  * Assets (Images, JS, etc....) URLs

@@ -3,6 +3,7 @@ namespace Concrete\Core\Calendar\Event;
 
 use Concrete\Core\Foundation\Repetition\AbstractRepetition;
 
+#[\AllowDynamicProperties]
 class EventRepetition extends AbstractRepetition
 {
 

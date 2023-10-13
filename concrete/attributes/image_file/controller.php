@@ -92,7 +92,7 @@ class Controller extends AttributeTypeController implements
         if (is_object($f)) {
             $type = strtolower($f->getTypeObject()->getGenericDisplayType());
 
-            return '<a target="_blank" href="' . $f->getDownloadURL() . '" class="ccm-attribute-image-file ccm-attribute-image-file-' . $type . '">' . $f->getTitle() . '</a>';
+            return '<a target="_blank" href="' . $f->getDownloadURL() . '" class="ccm-attribute-image-file ccm-attribute-image-file-' . $type . '">' . h($f->getTitle()) . '</a>';
         }
     }
 

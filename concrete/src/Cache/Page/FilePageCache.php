@@ -2,6 +2,7 @@
 namespace Concrete\Core\Cache\Page;
 
 use Config;
+use Concrete\Core\Config\Repository\Repository;
 use Concrete\Core\Page\Page as ConcretePage;
 use Loader;
 
@@ -59,9 +60,11 @@ class FilePageCache extends PageCache
 
     public function set(ConcretePage $c, $content)
     {
-        if (!is_dir(Config::get('concrete.cache.page.directory'))) {
-            @mkdir(Config::get('concrete.cache.page.directory'));
-            @touch(Config::get('concrete.cache.page.directory') . '/index.html');
+        $config = app(Repository::class);
+        $dir = $config->get('concrete.cache.page.directory');
+        if (!is_dir($dir)) {
+            @mkdir($dir, $config->get('concrete.filesystem.permissions.directory'));
+            @touch($dir . '/index.html');
         }
         $url = $c->getSite()->getSiteCanonicalURL();
         $lifetime = $c->getCollectionFullPageCachingLifetimeValue();

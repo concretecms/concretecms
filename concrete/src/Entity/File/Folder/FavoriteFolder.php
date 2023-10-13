@@ -19,7 +19,7 @@ class FavoriteFolder
      * @var User
      * @ORM\Id
      * @ORM\ManyToOne(targetEntity="\Concrete\Core\Entity\User\User")
-     * @ORM\JoinColumn(name="uID", referencedColumnName="uID")
+     * @ORM\JoinColumn(name="uID", referencedColumnName="uID", onDelete="CASCADE")
      */
     protected $owner = null;
 

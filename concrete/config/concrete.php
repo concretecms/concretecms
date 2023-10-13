@@ -8,7 +8,7 @@ return [
      */
     'version' => '9.2.2a1',
     'version_installed' => '9.2.2a1',
-    'version_db' => '20230905000000', // the key of the latest database migration
+    'version_db' => '20231002142400', // the key of the latest database migration
 
     /*
      * Installation status
@@ -753,11 +753,16 @@ return [
          */
         'default_jpeg_image_compression' => 80,
         /*
+         * The WEBP compression level (in range 0... 100)
+         */
+        'default_webp_image_compression' => 80,
+        /*
          * The PNG compression level (in range 0... 9)
          */
         'default_png_image_compression' => 9,
         /*
-         * The default thumbnail format: jpeg, png, auto (if auto: we'll create a jpeg if the source image is jpeg, we'll create a png otherwise).
+         * The default thumbnail format: jpeg, png, webp, auto
+         * (if auto: we'll keep original format if it is supported, we'll create a webp otherwise).
          */
         'default_thumbnail_format' => 'auto',
         /*
@@ -772,6 +777,14 @@ return [
         'basic_thumbnailer_generation_strategy' => 'now',
         'help_overlay' => true,
         'require_version_comments' => false,
+        /*
+        * Changes the "Keep Live Version Approved"-Toggle-Button behaviour on the site page version scheduling element
+        * unapproved: removes live or scheduled version of the site page, if the changed site page gets scheduled
+        * approved: keeps live or scheduled version of the site page approved, if the changed site page gets scheduled
+        *
+        * @var string (approved | unapproved)
+        */
+        'live_version_status_on_scheduled_version_approval' => 'unapproved',
         /*
          * Control whether a block type can me moved to different block type sets
          *

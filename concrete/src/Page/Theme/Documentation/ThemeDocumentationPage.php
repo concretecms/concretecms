@@ -1,10 +1,12 @@
 <?php
 namespace Concrete\Core\Page\Theme\Documentation;
 
+use Concrete\Core\Page\Theme\Documentation\Traits\GetThemeContentXmlElementTrait;
 use Concrete\Core\Page\Theme\Theme;
 
 class ThemeDocumentationPage extends AbstractDocumentationContentPage
 {
+    use GetThemeContentXmlElementTrait;
 
     /**
      * @var string
@@ -54,15 +56,8 @@ class ThemeDocumentationPage extends AbstractDocumentationContentPage
      */
     public function getContentXmlElement(): ?\SimpleXMLElement
     {
-        $file = $this->contentFile;
-        if ($file) {
-            return simplexml_load_file(
-                $this->theme->getThemeDirectory() .
-                DIRECTORY_SEPARATOR .
-                DIRNAME_THEME_DOCUMENTATION .
-                DIRECTORY_SEPARATOR .
-                $file
-            );
+        if ($this->contentFile) {
+            return self::getThemeContentXmlElement($this->theme, $this->contentFile);
         }
         return null;
     }
