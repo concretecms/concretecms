@@ -29,6 +29,7 @@ class PagePopulator extends AbstractPopulator
         if ($page && !$page->isError()) {
             return $this->createSummaryContentObjects($page);
         }
+        return [];
     }
 
 }

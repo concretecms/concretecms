@@ -3,9 +3,7 @@
 namespace Concrete\Core\Board\Instance\Slot\Planner;
 
 use Concrete\Core\Board\Instance\Slot\Content\ItemObjectGroup;
-use Concrete\Core\Board\Instance\Slot\Content\ObjectCollection;
 use Concrete\Core\Entity\Board\Instance;
-use Concrete\Core\Entity\Board\SlotTemplate;
 
 /**
  * Simple object to tie a board instance to a set of a InstanceItem objects. These get decreased over time

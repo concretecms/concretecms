@@ -1,7 +1,6 @@
 <?php
 namespace Concrete\Core\Board\Instance\Item\Data;
 
-use Concrete\Core\Entity\Calendar\CalendarEvent;
 use Concrete\Core\Entity\Calendar\CalendarEventVersionOccurrence;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 

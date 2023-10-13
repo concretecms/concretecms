@@ -5,7 +5,6 @@ use Concrete\Core\Board\Instance\Slot\Content\AvailableObjectCollectionFactory;
 use Concrete\Core\Board\Instance\Slot\Content\ContentRenderer;
 use Concrete\Core\Board\Instance\Slot\Content\ItemObjectGroup;
 use Concrete\Core\Entity\Board\SlotTemplate;
-use Symfony\Component\HttpFoundation\JsonResponse;
 
 trait SlotTemplateJsonHelperTrait
 {

@@ -3,7 +3,6 @@
 namespace Concrete\Core\Board\Command;
 
 use Concrete\Core\Application\Application;
-use Concrete\Core\Entity\Board\InstanceItemBatch;
 use Doctrine\ORM\EntityManager;
 
 class AddContentToBoardInstanceCommandHandler

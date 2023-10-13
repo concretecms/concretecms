@@ -3,13 +3,11 @@ namespace Concrete\Core\Board\Instance;
 
 use Concrete\Core\Application\ApplicationAwareInterface;
 use Concrete\Core\Application\ApplicationAwareTrait;
-use Concrete\Core\Board\Instance\Slot\RenderedSlotCollection;
 use Concrete\Core\Board\Instance\Slot\RenderedSlotCollectionFactory;
 use Concrete\Core\Board\Instance\Slot\SlotRenderer;
 use Concrete\Core\Board\Template\TemplateLocator;
 use Concrete\Core\Entity\Board\Instance;
 use Concrete\Core\Filesystem\FileLocator;
-use Concrete\Core\Page\Theme\Theme;
 
 class Renderer implements ApplicationAwareInterface
 {
