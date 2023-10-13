@@ -168,7 +168,7 @@ class Install extends Controller
         $passwordMinLength = (int) $config->get('concrete.user.password.minimum', 5);
         $passwordMaxLength = (int) $config->get('concrete.user.password.maximum');
         $passwordAttributes = [
-            'autocomplete' => 'off',
+            'autocomplete' => 'new-password',
         ];
         if ($passwordMinLength > 0) {
             $passwordAttributes['required'] = 'required';
