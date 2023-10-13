@@ -1,0 +1,28 @@
+{% block page_selector_row %}
+    <div class="mb-3 {{ form.vars.class }}"  id="{{ form.vars.id }}">
+        {{ form_label(form) }}
+        {{ form_errors(form) }}
+            <concrete-page-input
+                    :page-id="{{ page_id }}"
+                    input-name="{{ input_name }}"
+                    choose-text="{{ form.vars.choose_file }}"
+                    :include-system-pages="false"
+                    :ask-include-system-pages="false"
+            ></concrete-page-input>
+    </div>
+    <script>
+        $(document).ready(function () {
+            var selector = $('#{{ form.vars.id }}');
+            if (selector) {
+                selector.each(function (i, item) {
+                    Concrete.Vue.activateContext('cms', function (Vue, config) {
+                        new Vue({
+                            el: item,
+                            components: config.components
+                        })
+                    })
+                })
+            }
+        });
+    </script>
+{% endblock %}

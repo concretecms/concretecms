@@ -1,0 +1,14 @@
+{% block wysiwyg_row %}
+    <div class="mb-3">
+        {{ form_label(form) }}
+        {{ form_errors(form) }}
+        {{ form_widget(form) }}
+    </div>
+    <script>
+        $(document).ready(function () {
+            var wysiwygSelectorInit =  {{ outputInlineEditorInitJSFunction()|raw }};
+            var wysiwygSelector = $('#{{ form.vars.id }}');
+            wysiwygSelectorInit(wysiwygSelector);
+        });
+    </script>
+{% endblock %}

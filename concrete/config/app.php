@@ -161,6 +161,11 @@ return [
         // Api - has to come after Express (and possibly other items)
         'core_api' => 'Concrete\Core\Api\ApiServiceProvider',
 
+        // Symfony Components
+        'core_twig' => 'Concrete\Core\Twig\TwigServiceProvider',
+        'core_symfony_form' => 'Concrete\Core\Providers\SymfonyFormServiceProvider',
+        'core_serializer' => 'Concrete\Core\Providers\SerializerServiceProvider'
+
     ],
 
     /*
@@ -889,4 +894,7 @@ return [
 
     ],
 
+    'twig_additional_theme_paths' => [
+
+    ],
 ];
