@@ -1,1 +1,1 @@
-﻿CKEDITOR.plugins.setLang("newpage","ku",{toolbar:"پەڕەیەکی نوێ"});
+CKEDITOR.plugins.setLang("newpage","ku",{toolbar:"پەڕەیەکی نوێ"});

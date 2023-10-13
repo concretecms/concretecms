@@ -1,1 +1,1 @@
-﻿CKEDITOR.plugins.setLang("save","tt",{toolbar:"Саклау"});
+CKEDITOR.plugins.setLang("save","tt",{toolbar:"Саклау"});

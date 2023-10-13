@@ -1,0 +1,170 @@
+<?xml version="1.0"?>
+<concrete5-cif version="1.0">
+
+    <singlepages>
+
+        <page name="Members" path="/dashboard/users" filename="/dashboard/users/view.php" pagetype=""
+              description="Add and manage the user accounts and groups on your website." package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>users, groups, people, find, delete user, remove user, change password, password</value>
+                </attributekey>
+            </attributes>
+        </page>
+        <page name="Search Users" path="/dashboard/users/search" filename="/dashboard/users/search.php" pagetype=""
+              description="" package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>find, search, people, delete user, remove user, change password, password</value>
+                </attributekey>
+            </attributes>
+        </page>
+        <page name="User Groups" path="/dashboard/users/groups" filename="/dashboard/users/groups.php" pagetype=""
+              description="" package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>user, group, people, permissions, expire</value>
+                </attributekey>
+            </attributes>
+        </page>
+        <page name="Group Types" path="/dashboard/users/group_types" filename="/dashboard/users/group_types.php"
+              pagetype=""
+              description="" package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>group types, group type</value>
+                </attributekey>
+            </attributes>
+        </page>
+        <page name="Send Message to Group" path="/dashboard/users/groups/message"
+              filename="/dashboard/users/groups/message.php" pagetype=""
+              description="" package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>user, group, people, messages</value>
+                </attributekey>
+            </attributes>
+        </page>
+        <page name="Attributes" path="/dashboard/users/attributes" filename="/dashboard/users/attributes.php"
+              pagetype="" description="" package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>user attributes, user data, gather data, registration data</value>
+                </attributekey>
+            </attributes>
+        </page>
+        <page name="Add User" path="/dashboard/users/add" filename="/dashboard/users/add.php" pagetype="" description=""
+              package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>new user, create</value>
+                </attributekey>
+                <attributekey handle="exclude_nav">
+                    <value><![CDATA[1]]></value>
+                </attributekey>
+            </attributes>
+        </page>
+        <page name="Add Group" path="/dashboard/users/add_group" filename="/dashboard/users/add_group.php" pagetype=""
+              description="" package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>new user group, new group, group, create</value>
+                </attributekey>
+                <attributekey handle="exclude_nav">
+                    <value><![CDATA[1]]></value>
+                </attributekey>
+            </attributes>
+        </page>
+        <page name="Move Multiple Groups" path="/dashboard/users/groups/bulkupdate"
+              filename="/dashboard/users/groups/bulkupdate.php" pagetype="" description="" package="">
+        </page>
+        <page name="Bulk User Assignment" path="/dashboard/users/groups/bulk_user_assignment"
+              filename="/dashboard/users/groups/bulk_user_assignment.php" pagetype="" description="" package="">
+        </page>
+        <page name="Group Sets" path="/dashboard/users/group_sets" filename="/dashboard/users/group_sets.php"
+              pagetype="" description="" package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>group set</value>
+                </attributekey>
+            </attributes>
+        </page>
+
+        <page name="Login &amp; Registration" path="/dashboard/system/registration"
+              filename="/dashboard/system/registration/view.php" pagetype=""
+              description="Change login behaviors and setup public profiles." package=""/>
+        <page name="Account Options" path="/dashboard/system/registration/open"
+              filename="/dashboard/system/registration/open.php" pagetype="" description="" package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>signup, new user, community, public registration, public, registration</value>
+                </attributekey>
+            </attributes>
+        </page>
+        <page name="Login Destination" path="/dashboard/system/registration/postlogin"
+              filename="/dashboard/system/registration/postlogin.php" pagetype="" description="" package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>profile, login, redirect, specific, dashboard, administrators</value>
+                </attributekey>
+            </attributes>
+        </page>
+        <page name="Public Profiles" path="/dashboard/system/registration/profiles"
+              filename="/dashboard/system/registration/profiles.php" pagetype="" description="" package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>member profile, member page, community, forums, social, avatar</value>
+                </attributekey>
+            </attributes>
+        </page>
+        <page name="Authentication Types" path="/dashboard/system/registration/authentication"
+              filename="/dashboard/system/registration/authentication.php" pagetype="" description="" package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>auth, authentication, types, oauth, facebook, login, registration</value>
+                </attributekey>
+            </attributes>
+        </page>
+        <page name="Global Password Reset" path="/dashboard/system/registration/global_password_reset"
+              filename="/dashboard/system/registration/global_password_reset.php" pagetype=""
+              description="Signs out all users, resets all passwords and forces users to choose a new one" package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>global, password, reset, change password, force, sign out</value>
+                </attributekey>
+            </attributes>
+        </page>
+        <page name="User Deactivation Settings" path="/dashboard/system/registration/deactivation"
+              filename="/dashboard/system/registration/deactivation.php" pagetype="" description="" package="">
+        </page>
+        <page name="Automated Logout" path="/dashboard/system/registration/automated_logout"
+              filename="/dashboard/system/registration/automated_logout.php" pagetype=""
+              description="Automate when users are logged out, or do it manually" package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>login, logout, user, agent, ip, change, security, session, invalidation, invalid</value>
+                </attributekey>
+            </attributes>
+        </page>
+        <page name="Password Requirements" path="/dashboard/system/registration/password_requirements"
+              filename="/dashboard/system/registration/password_requirements.php" pagetype=""
+              description="Set password rule and regulations." package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>password, requirements, code, key, login, registration, security, nist</value>
+                </attributekey>
+            </attributes>
+        </page>
+        <page name="Session Options" path="/dashboard/system/registration/session_options"
+              filename="/dashboard/system/registration/session_options.php" pagetype="" description="" package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>session, options</value>
+                </attributekey>
+            </attributes>
+        </page>
+
+    </singlepages>
+
+
+</concrete5-cif>

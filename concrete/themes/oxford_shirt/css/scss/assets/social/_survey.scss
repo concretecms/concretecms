@@ -1,0 +1,51 @@
+div.theme-oxford-shirt {
+    .poll {
+        div#surveyQuestion {
+            @extend h3;
+            @include rfs(1.25rem);
+            padding-left:1.5rem;
+            border-left: 4px solid $link-color;
+            margin-bottom: 1rem;
+        }
+        form {
+            .form-check {
+                margin-bottom: 1rem;
+                display: flex;
+                align-items: center;
+                .form-check-input {
+                    width: 1.5rem;
+                    height: 1.5rem;
+                    border: 1px solid $grey-accent;
+                    background-color: $form-check-input-bg;
+                    &:checked {
+                        background-color: $link-color;
+                        border-color: $link-color;
+                    }
+                    &:checked[type=radio] {
+                        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 10'%3e%3cpath d='M12.0007 1.66668L4.00065 9.66668L0.333984 6.00002L1.27398 5.06002L4.00065 7.78002L11.0607 0.726685L12.0007 1.66668Z' fill='%23FFF'/%3e%3c/svg%3e");
+                        background-size: 12px 12px;
+                    }
+                    &:focus {
+                        box-shadow: 0 0 0 0.25rem rgba($link-color, 0.25);
+                    }
+                }
+                .form-check-label {
+                    margin-left: 1rem;
+                }
+            }
+            .form-group {
+                display: flex;
+                justify-content: flex-end;
+                .btn-primary {
+                    padding-left: 3rem;
+                    padding-right: 3rem;
+                }
+            }
+        }
+    }
+    div#surveyResults {
+        .help-block.subtitle-big {
+            letter-spacing: -0.2px;
+        }
+    }
+}

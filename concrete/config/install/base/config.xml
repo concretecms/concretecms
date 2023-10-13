@@ -1,50 +1,17 @@
 <?xml version="1.0"?>
 <concrete5-cif version="1.0">
 
-	<!-- Default Banned Words, these are run through Rot13 -->
-	<banned_words>
-		<banned_word>shpx</banned_word><!-- Fu** -->
-		<banned_word>fuvg</banned_word><!-- Sh** -->
-		<banned_word>ovgpu</banned_word> <!-- Bi*** -->
-		<banned_word>nff</banned_word> <!-- A** -->
-	</banned_words>
 
 	<!-- Conversation Flag Types -->
 	<flag_types>
 		<flag_type>spam</flag_type>
 	</flag_types>
 
-	<!-- Geolocators -->
+	<!-- Geolocators: personalization -->
 	<geolocators>
 		<geolocator handle="geoplugin" name="geoPlugin" description="" package="" active="1">
 			<option name="url">http://www.geoplugin.net/json.gp?ip=[[IP]]</option>
 		</geolocator>
 	</geolocators>
-
-    <!-- IP Access Control Categories -->
-    <ipaccesscontrolcategories>
-        <ipaccesscontrolcategory
-            handle="failed_login"
-            enabled="1"
-            name="Failed Login Attempts"
-            max-events="5"
-            time-window="300"
-            ban-duration="600"
-            site-specific="0"
-            log-channel-handle=""
-            package=""
-        />
-		<ipaccesscontrolcategory
-				handle="forgot_password"
-				enabled="1"
-				name="Forgot Password Attempts"
-				max-events="2"
-				time-window="30"
-				ban-duration="600"
-				site-specific="0"
-				log-channel-handle=""
-				package=""
-		/>
-    </ipaccesscontrolcategories>
 
 </concrete5-cif>

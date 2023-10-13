@@ -10,6 +10,8 @@ use Concrete\Core\Command\Task\Stamp\OutputStamp;
 use Concrete\Core\Config\Repository\Repository;
 use Concrete\Core\Entity\Command\Batch;
 use Concrete\Core\Foundation\Command\HandlerAwareCommandInterface;
+use Concrete\Core\Install\StartingPoint\Installer\Routine\InstallOptionsAwareInterface;
+use Concrete\Core\Install\StartingPoint\Installer\Routine\Stamp\InstallOptionsStamp;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\Exception\NoHandlerForMessageException;
@@ -34,11 +36,10 @@ class HandlersLocator implements HandlersLocatorInterface
      */
     protected $entityManager;
 
-    public function __construct(Application $app, Repository $config, EntityManager $entityManager)
+    public function __construct(Application $app, Repository $config)
     {
         $this->app = $app;
         $this->config = $config;
-        $this->entityManager = $entityManager;
     }
 
     public function getHandlers(Envelope $envelope): iterable
@@ -67,12 +68,21 @@ class HandlersLocator implements HandlersLocatorInterface
                 $batchStamp = $envelope->last(BatchStamp::class);
                 if ($batchStamp) {
                     /**
+                     * We can't pass this in because it breaks install before the DB connection is ready.
+                     *
                      * @var $batchStamp BatchStamp
                      */
-                    $batch = $this->entityManager->find(Batch::class, $batchStamp->getBatchId());
+                    $batch = $this->app->make(EntityManager::class)
+                        ->find(Batch::class, $batchStamp->getBatchId());
                     if ($batch) {
                         $builtClass->setBatch($batch);
                     }
+                }
+            }
+            if ($builtClass instanceof InstallOptionsAwareInterface) {
+                $installOptionsStamp = $envelope->last(InstallOptionsStamp::class);
+                if ($installOptionsStamp) {
+                    $builtClass->setInstallOptions($installOptionsStamp->getInstallOptions());
                 }
             }
             $callable = [$builtClass, '__invoke'];

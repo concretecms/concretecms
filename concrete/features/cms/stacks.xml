@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<concrete5-cif version="1.0">
+
+    <blocktypes>
+        <blocktype handle="core_stack_display" package=""/>
+    </blocktypes>
+
+</concrete5-cif>

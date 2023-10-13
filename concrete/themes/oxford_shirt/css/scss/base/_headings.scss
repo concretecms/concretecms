@@ -1,0 +1,30 @@
+.ccm-page {
+  .display-1,
+  .display-2,
+  .display-3,
+  .display-4,
+  .display-5,
+  .display-6 {
+    font-family: $display-font-family;
+    text-transform: uppercase;
+  }
+  h1 {
+    @include rfs(3rem);
+  }
+  .subtitle-big {
+    font-family: $display-font-family;
+    @include font-size($font-size-base);
+    color: $dim;
+    font-weight: 500;
+  }
+  .subtitle-small {
+    font-family: $display-font-family;
+    @include font-size(12px);
+    color: $dim;
+    font-weight: 500;
+  }
+  .muted {
+    color: $dim;
+  }
+}
+

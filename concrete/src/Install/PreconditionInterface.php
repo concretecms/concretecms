@@ -5,7 +5,7 @@ namespace Concrete\Core\Install;
 /**
  * Interface for the checks to be performed before installing concrete5.
  */
-interface PreconditionInterface
+interface PreconditionInterface extends \JsonSerializable
 {
     /**
      * Get the precondition name.

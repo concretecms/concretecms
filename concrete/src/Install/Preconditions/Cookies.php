@@ -2,10 +2,9 @@
 
 namespace Concrete\Core\Install\Preconditions;
 
-use Concrete\Core\Error\UserMessageException;
-use Concrete\Core\Install\WebPreconditionInterface;
+use Concrete\Core\Install\AbstractListablePrecondition;
 
-class Cookies implements WebPreconditionInterface
+class Cookies extends AbstractListablePrecondition
 {
     /**
      * {@inheritdoc}
@@ -47,51 +46,6 @@ class Cookies implements WebPreconditionInterface
         return null;
     }
 
-    /**
-     * {@inheritdoc}
-     *
-     * @see WebPreconditionInterface::getInitialMessage()
-     */
-    public function getInitialMessage()
-    {
-        return '';
-    }
-
-    /**
-     * {@inheritdoc}
-     *
-     * @see WebPreconditionInterface::getHtml()
-     */
-    public function getHtml()
-    {
-        $errorMessage = json_encode(t('Cookies must be enabled in your browser to install Concrete CMS.'));
-        $myIdentifier = json_encode($this->getUniqueIdentifier());
-
-        return <<<EOT
-<script>
-$(document).ready(function() {
-    function check() {
-        if (typeof navigator.cookieEnabled === 'boolean') {
-            return navigator.cookieEnabled;
-        }
-        var COOKIE_NAME = 'CONCRETE5_INSTALL_TEST', COOKIE_VALUE = 'ok_' + Math.random();
-        document.cookie = COOKIE_NAME + '=' + COOKIE_VALUE;
-        if (document.cookie.indexOf(COOKIE_NAME + '=' + COOKIE_VALUE) < 0) {
-            return false;
-        }
-        document.cookie = COOKIE_NAME + '=;expires=Thu, 01 Jan 1970 00:00:01 GMT';
-        return true;
-    }
-    if (check()) {
-        setWebPreconditionResult({$myIdentifier}, true);
-    } else {
-        setWebPreconditionResult({$myIdentifier}, false, {$errorMessage});
-    }
-});
-</script>
-EOT
-        ;
-    }
 
     /**
      * {@inheritdoc}
@@ -100,16 +54,19 @@ EOT
      */
     public function performCheck()
     {
-        throw new UserMessageException('This precondition does not have PHP checks');
+        return null;
     }
 
-    /**
-     * {@inheritdoc}
-     *
-     * @see WebPreconditionInterface::getAjaxAnswer()
-     */
-    public function getAjaxAnswer($argument)
+    public function getComponent(): string
     {
-        throw new UserMessageException('This precondition does not have PHP checks');
+        return 'cookies-precondition';
+    }
+
+    #[\ReturnTypeWillChange]
+    public function jsonSerialize()
+    {
+        $data = parent::jsonSerialize();
+        $data['message_failed'] = t('Cookies must be enabled in your browser to install Concrete CMS.');
+        return $data;
     }
 }

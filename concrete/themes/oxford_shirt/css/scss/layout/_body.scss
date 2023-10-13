@@ -1,0 +1,9 @@
+// Page styles to create responsive sticky footer always at the bottom of the screen height
+html, body {min-height:100vh;}
+
+div.ccm-page {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background-color: $wrapper-background;
+}

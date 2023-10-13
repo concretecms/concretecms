@@ -2,7 +2,7 @@
 namespace Concrete\Core\Application\UserInterface\Dashboard\Navigation;
 
 use Concrete\Core\Foundation\Serializer\JsonSerializer;
-use Concrete\Core\Navigation\Item\PageItem;
+use Concrete\Core\Navigation\Item\DashboardPageItem;
 use Concrete\Core\Page\Page;
 use Concrete\Core\Permission\Checker;
 use Concrete\Core\User\User;
@@ -59,7 +59,7 @@ class FavoritesNavigationFactory
                     if ($page && !$page->isError()) {
                         $checker = new Checker($page);
                         if ($checker->canViewPage()) {
-                            $navigation->add(new PageItem($page));
+                            $navigation->add(new DashboardPageItem($page));
                         }
                     }
                 }

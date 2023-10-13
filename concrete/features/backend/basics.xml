@@ -1,0 +1,253 @@
+<?xml version="1.0"?>
+<concrete5-cif version="1.0">
+
+    <singlepages>
+        <page name="Basics" path="/dashboard/system/basics" filename="/dashboard/system/basics/view.php" pagetype=""
+              description="Basic information about your website." package=""/>
+        <page name="Name &amp; Attributes" path="/dashboard/system/basics/name"
+              filename="/dashboard/system/basics/name.php"
+              pagetype="" description="" package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>website name, title</value>
+                </attributekey>
+            </attributes>
+        </page>
+        <page name="Production Mode" path="/dashboard/system/basics/production_mode"
+              filename="/dashboard/system/basics/production_mode.php"
+              pagetype="" description="" package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>production, staging, site copy, development copy, local</value>
+                </attributekey>
+            </attributes>
+        </page>
+        <page name="Navigation &amp; Menus" path="/dashboard/system/basics/menus"
+              filename="/dashboard/system/basics/navigation.php" pagetype="" description="" package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>menus, navigation, dropdown</value>
+                </attributekey>
+            </attributes>
+        </page>
+        <page name="Menu Details" path="/dashboard/system/basics/menus/details"
+              filename="/dashboard/system/basics/navigation/details.php" pagetype="" description="" package="">
+            <attributes>
+                <attributekey handle="exclude_nav">
+                    <value>1</value>
+                </attributekey>
+                <attributekey handle="exclude_search_index">
+                    <value>1</value>
+                </attributekey>
+            </attributes>
+        </page>
+        <page name="Dashboard Options" path="/dashboard/system/basics/dashboard" filename="/dashboard/system/basics/dashboard.php" pagetype=""
+              description="Configure how your admin backend works." package=""/>
+        <page name="Accessibility" path="/dashboard/system/basics/accessibility"
+              filename="/dashboard/system/basics/accessibility.php" pagetype="" description="" package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>accessibility, easy mode</value>
+                </attributekey>
+            </attributes>
+        </page>
+        <page name="Site Information" path="/dashboard/system/basics/site_information"
+              filename="/dashboard/system/basics/site_information.php"
+              pagetype="" description="" package="">
+            <attributes>
+                <attributekey handle="exclude_search_index">
+                    <value>1</value>
+                </attributekey>
+            </attributes>
+        </page>
+        <page name="Social Links" path="/dashboard/system/basics/social" filename="/dashboard/system/basics/social.php"
+              pagetype="" description="" package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>sharing, facebook, twitter</value>
+                </attributekey>
+            </attributes>
+        </page>
+        <page name="Bookmark Icons" path="/dashboard/system/basics/icons" filename="/dashboard/system/basics/icons.php"
+              pagetype="" description="Bookmark icon and mobile home screen icon setup." package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>logo, favicon, iphone, icon, bookmark</value>
+                </attributekey>
+            </attributes>
+        </page>
+        <page name="Rich Text Editor" path="/dashboard/system/basics/editor"
+              filename="/dashboard/system/basics/editor.php" pagetype="" description="" package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>tinymce, content block, fonts, editor, content, overlay</value>
+                </attributekey>
+            </attributes>
+        </page>
+        <page name="Languages" path="/dashboard/system/basics/multilingual"
+              filename="/dashboard/system/basics/multilingual/view.php" pagetype="" description="" package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>translate, translation, internationalization, multilingual</value>
+                </attributekey>
+            </attributes>
+        </page>
+        <page name="Update Languages" path="/dashboard/system/basics/multilingual/update"
+              filename="/dashboard/system/basics/multilingual/update/multilingual/update.php" pagetype="" description=""
+              package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>languages, update, gettext, translation, translate</value>
+                </attributekey>
+                <attributekey handle="exclude_nav">
+                    <value>1</value>
+                </attributekey>
+            </attributes>
+        </page>
+        <page name="Time Zone" path="/dashboard/system/basics/timezone" filename="/dashboard/system/basics/timezone.php"
+              pagetype="" description="" package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>timezone, profile, locale</value>
+                </attributekey>
+            </attributes>
+        </page>
+        <page name="Custom Attributes" path="/dashboard/system/basics/attributes"
+              filename="/dashboard/system/basics/attributes.php"
+              pagetype="" description="" package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>site attributes</value>
+                </attributekey>
+                <attributekey handle="exclude_nav">
+                    <value>1</value>
+                </attributekey>
+                <attributekey handle="exclude_search_index">
+                    <value>1</value>
+                </attributekey>
+            </attributes>
+        </page>
+        <page name="Reset Clipboard and Edit Mode" path="/dashboard/system/basics/reset_edit_mode"
+              filename="/dashboard/system/basics/reset_edit_mode.php"
+              pagetype="" description="" package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>checkin, check-in, check, force</value>
+                </attributekey>
+            </attributes>
+        </page>
+
+        <page name="Optimization" path="/dashboard/system/optimization"
+              filename="/dashboard/system/optimization/view.php" pagetype="" description="Keep your site running well."
+              package=""/>
+        <page name="Cache &amp; Speed Settings" path="/dashboard/system/optimization/cache"
+              filename="/dashboard/system/optimization/cache.php" pagetype="" description="" package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>cache option, change cache, override, turn on cache, turn off cache, no cache, page cache,
+                        caching
+                    </value>
+                </attributekey>
+            </attributes>
+        </page>
+        <page name="Clear Cache" path="/dashboard/system/optimization/clearcache"
+              filename="/dashboard/system/optimization/clearcache.php" pagetype="" description="" package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>cache option, turn off cache, no cache, page cache, caching</value>
+                </attributekey>
+            </attributes>
+        </page>
+
+        <page name="Environment" path="/dashboard/system/environment" filename="/dashboard/system/environment/view.php"
+              pagetype="" description="Advanced settings for web developers." package="">
+            <attributes>
+                <attributekey handle="exclude_search_index">
+                    <value><![CDATA[1]]></value>
+                </attributekey>
+            </attributes>
+        </page>
+        <page name="Environment Information" path="/dashboard/system/environment/info"
+              filename="/dashboard/system/environment/info.php" pagetype="" description="" package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>overrides, system info, debug, support, help</value>
+                </attributekey>
+            </attributes>
+        </page>
+        <page name="Debug Settings" path="/dashboard/system/environment/debug"
+              filename="/dashboard/system/environment/debug.php" pagetype="" description="" package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>errors, exceptions, develop, support, help</value>
+                </attributekey>
+            </attributes>
+        </page>
+        <page name="Logging Settings" path="/dashboard/system/environment/logging"
+              filename="/dashboard/system/environment/logging.php" pagetype="" description="" package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>email, logging, logs, smtp, pop, errors, mysql, log</value>
+                </attributekey>
+            </attributes>
+        </page>
+        <page name="Proxy Server" path="/dashboard/system/environment/proxy"
+              filename="/dashboard/system/environment/proxy.php" pagetype=""
+              description="" package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>network, proxy server</value>
+                </attributekey>
+            </attributes>
+        </page>
+        <page name="Database Entities" path="/dashboard/system/environment/entities"
+              filename="/dashboard/system/environment/entities.php" pagetype=""
+              description="" package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>database, entities, doctrine, orm</value>
+                </attributekey>
+            </attributes>
+        </page>
+        <page name="Database Character Set" path="/dashboard/system/environment/database_charset"
+              filename="/dashboard/system/environment/database_charset.php" pagetype="" description="" package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>database, character set, charset, collation, utf8</value>
+                </attributekey>
+            </attributes>
+        </page>
+        <page name="Geolocation" path="/dashboard/system/environment/geolocation"
+              filename="/dashboard/system/environment/geolocation.php" pagetype="" description="" package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>geolocation, ip, address, country, nation, place, locate</value>
+                </attributekey>
+            </attributes>
+        </page>
+        <page name="Security Policy" path="/dashboard/system/environment/security"
+              filename="/dashboard/system/environment/security.php" pagetype="" description="" package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>security, content security policy, csp, strict transport security, hsts, x-frame-options
+                    </value>
+                </attributekey>
+            </attributes>
+        </page>
+        <page name="Update Concrete" path="/dashboard/system/update" filename="/dashboard/system/update/view.php"
+              pagetype="" description="" package="">
+        </page>
+        <page name="Apply Update" path="/dashboard/system/update/update"
+              filename="/dashboard/system/update/update.php" pagetype="" description="" package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>upgrade, new version, update</value>
+                </attributekey>
+            </attributes>
+        </page>
+
+
+    </singlepages>
+
+
+</concrete5-cif>

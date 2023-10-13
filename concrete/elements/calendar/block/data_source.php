@@ -88,7 +88,7 @@ if ($calendarAttributeKeyHandle) {
     <?php } ?>
 
     <div data-row="specific-calendar">
-        <div class="form-group" data-vue="cms">
+        <div class="form-group">
             <?php
             echo $form->label('calendarSelect', t('Calendar'));
             ?>
@@ -107,6 +107,13 @@ if ($calendarAttributeKeyHandle) {
 <!--suppress EqualityComparisonWithCoercionJS -->
 <script>
     $(function () {
+
+        Concrete.Vue.activateContext('cms', function (Vue, config) {
+            new Vue({
+                el: 'div[data-row=specific-calendar]',
+                components: config.components
+            })
+        })
 
         $('input[name=chooseCalendar]').on('change', function () {
             let selected = $('input[name=chooseCalendar]:checked').val();

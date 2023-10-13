@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<concrete5-cif version="1.0">
+
+    <singlepages>
+
+        <page name="Multilingual" path="/dashboard/system/multilingual"
+              filename="/dashboard/system/multilingual/view.php" pagetype=""
+              description="Run your site in multiple languages." package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>multilingual, localization, internationalization, i18n</value>
+                </attributekey>
+            </attributes>
+        </page>
+        <page name="Multilingual Setup" path="/dashboard/system/multilingual/setup"
+              filename="/dashboard/system/multilingual/setup.php" pagetype=""
+              description="" package=""/>
+        <page name="Copy Languages" path="/dashboard/system/multilingual/copy"
+              filename="/dashboard/system/multilingual/copy.php" pagetype=""
+              description="" package=""/>
+        <page name="Page Report" path="/dashboard/system/multilingual/page_report"
+              filename="/dashboard/system/multilingual/page_report.php" pagetype=""
+              description="" package=""/>
+        <page name="Translate Site Interface" path="/dashboard/system/multilingual/translate_interface"
+              filename="/dashboard/system/multilingual/translate_interface.php" pagetype=""
+              description="" package=""/>
+
+    </singlepages>
+
+
+</concrete5-cif>

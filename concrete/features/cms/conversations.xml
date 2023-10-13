@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<concrete5-cif version="1.0">
+
+    <blocktypes>
+        <blocktype handle="core_conversation" package=""/>
+    </blocktypes>
+
+    <blocktypesets>
+        <blocktypeset handle="social" name="Social Networking" package="">
+            <blocktype handle="core_conversation"/>
+        </blocktypeset>
+    </blocktypesets>
+
+
+</concrete5-cif>

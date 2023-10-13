@@ -2,11 +2,12 @@
 
 namespace Concrete\Core\Install\Preconditions;
 
+use Concrete\Core\Install\AbstractListablePrecondition;
 use Concrete\Core\Install\PreconditionInterface;
 use Concrete\Core\Install\PreconditionResult;
 use ReflectionObject;
 
-class PhpCommentsPreserved implements PreconditionInterface
+class PhpCommentsPreserved extends AbstractListablePrecondition
 {
     /**
      * This is to check if comments are being stripped (Doctrine ORM depends on comments not being stripped).

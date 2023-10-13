@@ -1,0 +1,58 @@
+<?xml version="1.0"?>
+<concrete5-cif version="1.0">
+
+    <singlepages>
+
+        <page name="Conversations" path="/dashboard/conversations" filename="/dashboard/conversations/view.php"
+              pagetype="" description="" package=""/>
+        <page name="Messages" path="/dashboard/conversations/messages" filename="/dashboard/conversations/messages.php"
+              pagetype="" description="" package="">
+            <attributes>
+                <attributekey handle="icon_dashboard">
+                    <value>icon-bullhorn</value>
+                </attributekey>
+            </attributes>
+        </page>
+
+        <page name="Conversations" path="/dashboard/system/conversations"
+              filename="/dashboard/system/conversations/view.php" pagetype=""
+              description="Manage your conversations settings" package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>conversations</value>
+                </attributekey>
+            </attributes>
+        </page>
+        <page name="Settings" path="/dashboard/system/conversations/settings"
+              filename="/dashboard/system/conversations/settings/view.php" pagetype=""
+              description="" package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>conversations</value>
+                </attributekey>
+            </attributes>
+        </page>
+        <page name="Community Points" path="/dashboard/system/conversations/points"
+              filename="/dashboard/system/conversations/points.php" pagetype="" description="" package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>conversations ratings, ratings, community, community points</value>
+                </attributekey>
+            </attributes>
+        </page>
+        <page name="Banned Words" path="/dashboard/system/conversations/bannedwords"
+              filename="/dashboard/system/conversations/bannedwords.php" pagetype="" description="" package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>conversations bad words, banned words, banned, bad words, bad, words, list</value>
+                </attributekey>
+            </attributes>
+        </page>
+        <page name="Conversation Permissions" path="/dashboard/system/conversations/permissions"
+              filename="/dashboard/system/conversations/permissions.php" pagetype="" description="" package="">
+        </page>
+
+    </singlepages>
+
+
+</concrete5-cif>

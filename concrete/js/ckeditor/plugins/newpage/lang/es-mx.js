@@ -1,1 +1,1 @@
-﻿CKEDITOR.plugins.setLang("newpage","es-mx",{toolbar:"Página nueva"});
+CKEDITOR.plugins.setLang("newpage","es-mx",{toolbar:"Página nueva"});

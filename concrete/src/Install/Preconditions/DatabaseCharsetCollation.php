@@ -7,12 +7,13 @@ use Concrete\Core\Database\CharacterSetCollation\Exception\LongKeysUnsupportedBy
 use Concrete\Core\Database\CharacterSetCollation\Exception\NoCharacterSetCollationDefinedException;
 use Concrete\Core\Database\CharacterSetCollation\Resolver;
 use Concrete\Core\Database\Connection\Connection;
+use Concrete\Core\Install\AbstractPrecondition;
 use Concrete\Core\Install\ConnectionOptionsPreconditionInterface;
 use Concrete\Core\Install\InstallerOptions;
 use Concrete\Core\Install\PreconditionResult;
 use Exception;
 
-class DatabaseCharsetCollation implements ConnectionOptionsPreconditionInterface
+class DatabaseCharsetCollation extends AbstractPrecondition implements ConnectionOptionsPreconditionInterface
 {
     /**
      * @var \Concrete\Core\Database\CharacterSetCollation\Resolver

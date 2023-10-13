@@ -1,1 +1,1 @@
-﻿CKEDITOR.plugins.setLang("showblocks","sr",{toolbar:"Прикажи блокове"});
+CKEDITOR.plugins.setLang("showblocks","sr",{toolbar:"Прикажи блокове"});

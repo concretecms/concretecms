@@ -1,0 +1,14 @@
+<concrete5-cif version="1.0">
+    <containers>
+        <container handle="light_stripe" name="Highlight Stripe"
+                   icon="full.png" package=""/>
+        <container handle="two_column_light" name="Two Column Highlight"
+                   icon="two_column.png" package=""/>
+        <container handle="two_column_condensed" name="Two Column Condensed"
+                   icon="two_column.png" package=""/>
+        <container handle="grid_four" name="Responsive Grid of Four"
+                   icon="blank.png" package=""/>
+        <container handle="grid_six" name="Responsive Grid of Six"
+                   icon="blank.png" package=""/>
+    </containers>
+</concrete5-cif>

@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<concrete5-cif version="1.0">
+    <attributekeys>
+        <attributekey handle="width" name="Width" package="" searchable="1" indexed="0" type="number" category="file"/>
+        <attributekey handle="height" name="Height" package="" searchable="1" indexed="0" type="number"
+                      category="file"/>
+    </attributekeys>
+</concrete5-cif>

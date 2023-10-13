@@ -105,6 +105,7 @@ class MessageBusManager implements ContainerInterface
 
                 $middleware[] = new SendMessageMiddleware($this->app->make(SendersLocator::class));
                 $middleware[] = new HandleMessageMiddleware($this->app->make(HandlersLocator::class));
+
             } else {
                 $middleware = $customConfigMiddleware; // I'm not really sure how you could _really_ use this through config but let's provide the option
             }

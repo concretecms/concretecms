@@ -1,0 +1,31 @@
+@import url(//fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700);
+@import url('https://fonts.cdnfonts.com/css/basier');
+
+// Colors - Base Bootstrap
+$success: #04AF7A;
+$danger: #A32C0D;
+$warning: #F0B720;
+$info: #20BFF0;
+$dark: #131214;
+$gray-500: #979797;
+
+// Display Headings
+$display-font-family: "Space Grotesk" !default;
+$display-font-weight: 700 !default;
+$display-font-style: normal;
+$display-line-height: 1em;
+$display-font-sizes: (
+        1: 3rem,
+        2: 2rem,
+        3: 1.25rem,
+        4: 1rem
+);
+
+// Regular Headings
+$headings-font-family: "Space Grotesk" !default;
+$headings-font-weight: 700 !default;
+
+// Links
+$link-color: $secondary;
+$link-decoration: none;
+

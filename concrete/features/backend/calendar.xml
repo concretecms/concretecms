@@ -1,0 +1,57 @@
+<?xml version="1.0"?>
+<concrete5-cif version="1.0">
+
+    <singlepages>
+
+        <page name="Calendar &amp; Events" path="/dashboard/calendar" filename="/dashboard/calendar/view.php"
+              pagetype="" description="" package=""/>
+        <page name="View Calendar" path="/dashboard/calendar/events" filename="/dashboard/calendar/events.php"
+              pagetype="" description="" package=""/>
+        <page name="Event List" path="/dashboard/calendar/event_list" filename="/dashboard/calendar/event_list.php"
+              pagetype="" description="" package="">
+            <attributes>
+                <attributekey handle="exclude_nav">
+                    <value><![CDATA[1]]></value>
+                </attributekey>
+                <attributekey handle="exclude_search_index">
+                    <value><![CDATA[1]]></value>
+                </attributekey>
+            </attributes>
+        </page>
+        <page name="Add Calendar" path="/dashboard/calendar/add" filename="/dashboard/calendar/add.php" pagetype=""
+              description="" package=""/>
+        <page name="Calendar Permissions" path="/dashboard/calendar/permissions"
+              filename="/dashboard/calendar/permissions.php" pagetype="" description="" package="">
+            <attributes>
+                <attributekey handle="exclude_nav">
+                    <value><![CDATA[1]]></value>
+                </attributekey>
+                <attributekey handle="exclude_search_index">
+                    <value><![CDATA[1]]></value>
+                </attributekey>
+            </attributes>
+        </page>
+        <page name="Attributes" path="/dashboard/calendar/attributes" filename="/dashboard/calendar/attributes.php"
+              pagetype="" description="" package="">
+        </page>
+
+        <page name="Calendar" path="/dashboard/system/calendar"
+              filename="/dashboard/system/calendar/view.php" pagetype=""
+              description="Manage your calendar settings" package=""/>
+        <page name="General Settings" path="/dashboard/system/calendar/settings"
+              filename="/dashboard/system/calendar/settings.php" pagetype=""
+              description="" package=""/>
+        <page name="Color Settings" path="/dashboard/system/calendar/colors"
+              filename="/dashboard/system/calendar/colors.php" pagetype=""
+              description="" package=""/>
+        <page name="Calendar Permissions" path="/dashboard/system/calendar/permissions"
+              filename="/dashboard/system/calendar/permissions.php" pagetype=""
+              description="" package=""/>
+        <page name="Import Calendar Data" path="/dashboard/system/calendar/import"
+              filename="/dashboard/system/calendar/import.php" pagetype=""
+              description="" package=""/>
+
+    </singlepages>
+
+
+</concrete5-cif>

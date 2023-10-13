@@ -1,0 +1,135 @@
+div.theme-oxford-shirt {
+  .ccm-image-slider {
+    .ccm-image-slider-inner {
+      position: relative;
+    }
+    .rslides {
+      max-width: 850px;
+    }
+    .rslides-slide {
+      img {
+        min-height: 346px;
+        border-radius: 8px;
+        object-fit: cover;
+      }
+    }
+    .rslides_nav {
+      background: none;
+      opacity: 1;
+      margin: auto;
+      margin-bottom: 12.15rem;
+      top: 0;
+      bottom: 0;
+      z-index: 3;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: auto;
+      @include media-breakpoint-down(xl) {
+        margin-bottom: 11rem;
+      }
+      @include media-breakpoint-down(lg) {
+        margin-bottom: 9rem;
+      }
+      &:after {
+          display: inline-block;
+          font-family: 'Font Awesome 5 Free';
+          font-size: 24px;
+          font-weight: 600;
+          text-decoration: inherit;
+          vertical-align: middle;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          color: $link-color;
+          transition: all 0.4s ease-in-out;
+          background-color: $light;
+          height: 48px;
+          width: 48px;
+          border-radius: 48px;
+          margin-top: auto;
+          margin-bottom: auto;
+          @include media-breakpoint-down(xl) {
+            background-color: rgba($dark, 0.15);
+            color: #fff;
+          }
+          @include media-breakpoint-down(lg) {
+            height: 32px;
+            width: 32px;
+            border-radius: 32px;
+            font-size: 0.8rem;
+          }
+          @include media-breakpoint-down(md) {
+            height: 24px;
+            width: 24px;
+            border-radius: 24px;
+            font-size: 0.8rem;
+          }
+      }
+      &:hover {
+        &::after {
+          color: $primary;
+        }
+      }
+      &.prev {
+        &::after {
+          content: '\f060';
+        }
+        @include media-breakpoint-down(xxl) {
+          left: -1rem;
+        }
+        @include media-breakpoint-down(xl) {
+          left: 0.25rem;
+        }
+      }
+      &.next {
+        &::after {
+          content: '\f061';
+        }
+        @include media-breakpoint-down(xxl) {
+          right: -1rem;
+        }
+        @include media-breakpoint-down(xl) {
+          right: 0.25rem;
+        }
+      }
+    }
+    .rslides_tabs {
+      position: absolute;
+      bottom: 0.5rem;
+      left: 0;
+      z-index: 2;
+      width: 100%;
+      margin-bottom: 0;
+      padding-bottom: 0;
+      li {
+        a {
+          margin: 0;
+          width: 30px;
+          background: transparent;
+          border-radius: 0;
+          border-bottom: 3px solid rgba($image-slider-cover-color, 0.5);
+          transition: all 0.4s ease-in-out;
+        }
+        &.rslides_here {
+          a {
+            border-bottom-color: $image-slider-cover-color;
+          }
+        }
+      }
+    }
+    .ccm-image-slider-text {
+      width: 100%;
+      padding-top: 0;
+      padding-left: 1rem;
+      border-left: solid 4px $primary;
+      margin-bottom: 1rem;
+      p {
+        color: $dim;
+      }
+      .ccm-image-slider-title {
+        @extend h4;
+      }
+    }
+  }
+}

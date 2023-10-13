@@ -1,0 +1,64 @@
+<?xml version="1.0"?>
+<concrete5-cif version="1.0">
+
+    <pagetypes>
+        <pagetype handle="core_stack" name="Stack" internal="1" package=""/>
+        <pagetype handle="core_stack_category" name="Stack Category" internal="1" package=""/>
+    </pagetypes>
+
+    <pagetemplates>
+        <pagetemplate handle="core_stack" name="Stack" internal="1" package=""/>
+    </pagetemplates>
+
+
+    <singlepages>
+        <page name="Stacks" path="/!stacks" filename="/!stacks/view.php" pagetype="" description="" package="" global="true">
+            <attributes>
+                <attributekey handle="icon_dashboard">
+                    <value>fas fa-th</value>
+                </attributekey>
+            </attributes>
+        </page>
+
+        <page name="Stacks &amp; Blocks" path="/dashboard/blocks" filename="/dashboard/blocks/view.php" pagetype=""
+              description="Manage sitewide content and administer block types." package=""/>
+        <page name="Stacks &amp; Global Areas" path="/dashboard/blocks/stacks"
+              filename="/dashboard/blocks/stacks/view.php" pagetype=""
+              description="Share content across your site." package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>stacks, global areas, reusable content, scrapbook, copy, paste, paste block, copy block, site name, logo</value>
+                </attributekey>
+            </attributes>
+
+        </page>
+        <page name="Block &amp; Stack Permissions" path="/dashboard/blocks/permissions"
+              filename="/dashboard/blocks/permissions.php" pagetype=""
+              description="Control who can add blocks and stacks on your site." package=""/>
+        <page name="Stack List" path="/dashboard/blocks/stacks/list" filename="/dashboard/blocks/stacks/list/view.php"
+              pagetype="" description="" package="">
+            <attributes>
+                <attributekey handle="exclude_nav">
+                    <value><![CDATA[1]]></value>
+                </attributekey>
+                <attributekey handle="exclude_search_index">
+                    <value><![CDATA[1]]></value>
+                </attributekey>
+                <attributekey handle="meta_keywords">
+                    <value>edit stacks, view stacks, all stacks</value>
+                </attributekey>
+            </attributes>
+        </page>
+        <page name="Block Types" path="/dashboard/blocks/types" filename="/dashboard/blocks/types/view.php" pagetype=""
+              description="Manage the installed block types in your site." package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>block, refresh, custom</value>
+                </attributekey>
+            </attributes>
+        </page>
+
+    </singlepages>
+
+
+</concrete5-cif>

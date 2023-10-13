@@ -1,0 +1,28 @@
+@import "bootstrap/scss/functions";
+
+$enable-shadows: true;
+$enable-smooth-scroll: false;
+
+$min-contrast-ratio: 4.0; // Had to set this in order to get the blue button to use white ?!?
+
+
+$primary: #017ddd;
+$secondary: #ddd;
+$light: #F9FBFC;
+$dark: #131214;
+
+
+$btn-padding-x: 3rem;
+$btn-padding-x-lg: 3.5rem;
+$border-radius-lg: 3px;
+$border-radius: 3px;
+
+$card-box-shadow: 0 2px 4px 1px rgba(0, 0, 0, 0.15);
+$card-border-width: 0;
+$card-bg: transparent;
+
+
+$form-label-font-weight: 700;
+
+$font-family-base: "Basier Circle";
+$headings-font-family: "Space Grotesk";

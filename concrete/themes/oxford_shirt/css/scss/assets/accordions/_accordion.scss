@@ -1,0 +1,67 @@
+div.ccm-page.theme-oxford-shirt {
+    .ccm-block-accordion {
+        margin-bottom: 1rem;
+        @include media-breakpoint-up(md) {
+            padding: 0;
+            margin-left: -1rem;
+            margin-right: -1rem;
+        }
+        .accordion-item {
+            border-bottom: none;
+            @include media-breakpoint-up(sm) {
+                border-bottom: 1px solid $grey-accent;
+            }
+        }
+        .accordion-header {
+            margin-bottom: 0!important;
+            .accordion-button {
+                font-weight: 600!important;
+                @include rfs(1rem);
+                box-shadow: none;
+                padding: var(--bs-accordion-body-padding-y) 0;
+                &:after {
+                    display: none;
+                }
+                @include media-breakpoint-up(sm) {
+                    &:after {
+                        display: block;
+                    }
+                }
+                @include media-breakpoint-up(md) {
+                    padding: var(--bs-accordion-body-padding-y) var(--bs-accordion-body-padding-x);
+                }
+            }
+        }
+        .accordion-body {
+            padding: 0;
+            @include media-breakpoint-up(md) {
+                padding-top: 0;
+                padding: var(--bs-accordion-body-padding-y) var(--bs-accordion-body-padding-x);
+            }
+        }
+        .accordion-button.btn-outline-secondary {
+            border: 1px solid $secondary;
+            border-radius: 4px;
+            &:after {
+                margin-right: auto;
+                color: $secondary;
+                background-image: var(--bs-accordion-btn-active-icon);
+                transition: 0.2s;
+            }
+            &:hover {
+                &:after {
+                    background-image: var(--bs-accordion-btn-icon);
+                    transition: 0.2s;
+                }
+            }
+        }
+        .btn-outline-secondary:not(.collapsed){
+            background-color: $secondary;
+            box-shadow: none;
+            &:after {
+                background-image: var(--bs-accordion-btn-icon);
+
+            }
+        }
+    }
+}

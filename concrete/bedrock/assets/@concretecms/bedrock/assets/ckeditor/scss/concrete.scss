@@ -9,3 +9,9 @@
 .cke_panel {
   z-index: $index-level-editor-toolbar-dropdown !important;
 }
+
+// Fix z-index issue with Maximize plugin
+// See https://github.com/concretecms/concretecms/issues/11679
+div[role=dialog] .cke_maximized {
+  z-index: 2000 !important;
+}

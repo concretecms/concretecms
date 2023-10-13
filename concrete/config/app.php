@@ -97,6 +97,7 @@ return [
         'core_file' => '\Concrete\Core\File\FileServiceProvider',
         'core_validation' => '\Concrete\Core\Validation\ValidationServiceProvider',
         'core_localization' => '\Concrete\Core\Localization\LocalizationServiceProvider',
+        'core_menus' => '\Concrete\Core\Menu\MenuServiceProvider',
         'core_exporter' => '\Concrete\Core\Export\ExportServiceProvider',
         'core_multilingual' => '\Concrete\Core\Multilingual\MultilingualServiceProvider',
         'core_feed' => '\Concrete\Core\Feed\FeedServiceProvider',

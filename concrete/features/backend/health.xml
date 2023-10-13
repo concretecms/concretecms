@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<concrete5-cif version="1.0">
+
+    <singlepages>
+
+
+        <page name="Site Health" path="/dashboard/reports/health" filename="/dashboard/reports/health.php" pagetype=""
+              description="" package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>health, check, site check, optimization</value>
+                </attributekey>
+            </attributes>
+        </page>
+        <page name="Site Health" path="/dashboard/welcome/health" filename="/dashboard/welcome/health.php" pagetype="" template=""
+              description="" package="">
+        </page>
+
+
+
+    </singlepages>
+
+
+</concrete5-cif>

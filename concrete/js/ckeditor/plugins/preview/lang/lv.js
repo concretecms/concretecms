@@ -1,1 +1,1 @@
-﻿CKEDITOR.plugins.setLang("preview","lv",{preview:"Priekšskatīt"});
+CKEDITOR.plugins.setLang("preview","lv",{preview:"Priekšskatīt"});

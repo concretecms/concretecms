@@ -1,0 +1,36 @@
+div.theme-oxford-shirt {
+  div.ccm-block-feature-link.top-link {
+    background-color: transparent!important;
+    margin-bottom: 2rem;
+    padding: 0;
+    div.ccm-block-feature-link-text {
+      margin-bottom: 2rem;
+      border-left: none;
+      padding-left: 0;
+      > h1, h2, h3, h4, h5, h6 {
+        @extend h3;
+        color: $default-fc;
+      }
+      p {
+        color: $dim;
+      }
+      .btn-link {
+        font-family: $headings-font-family;
+        padding: 0;
+        line-height: 1;
+      }
+    }
+    &:last-of-type {
+      div.ccm-block-feature-link-text {
+        margin-bottom: 0;
+      }
+    }
+    
+    @include make-display-headings();
+    @include media-breakpoint-up(md) {
+      margin-bottom: 0;
+    }
+  }
+}
+  
+  

@@ -1,0 +1,197 @@
+<?xml version="1.0"?>
+<concrete5-cif version="1.0">
+    <attributecategories>
+        <category handle="collection" allow-sets="1" package=""/>
+        <category handle="user" allow-sets="1" package=""/>
+        <category handle="file" allow-sets="1" package=""/>
+        <category handle="site" allow-sets="1" package=""/>
+        <category handle="site_type" allow-sets="1" package=""/>
+    </attributecategories>
+    <attributetypes>
+        <attributetype handle="text" name="Text" package="">
+            <categories>
+                <category handle="collection"/>
+                <category handle="user"/>
+                <category handle="file"/>
+                <category handle="site"/>
+                <category handle="site_type"/>
+            </categories>
+        </attributetype>
+        <attributetype handle="duration" name="Duration" package="">
+            <categories>
+                <category handle="collection"/>
+                <category handle="user"/>
+                <category handle="file"/>
+                <category handle="site"/>
+                <category handle="site_type"/>
+            </categories>
+        </attributetype>
+        <attributetype handle="textarea" name="Text Area" package="">
+            <categories>
+                <category handle="collection"/>
+                <category handle="user"/>
+                <category handle="file"/>
+                <category handle="site"/>
+                <category handle="site_type"/>
+            </categories>
+        </attributetype>
+        <attributetype handle="boolean" name="Checkbox" package="">
+            <categories>
+                <category handle="collection"/>
+                <category handle="user"/>
+                <category handle="file"/>
+                <category handle="site"/>
+                <category handle="site_type"/>
+            </categories>
+        </attributetype>
+        <attributetype handle="date_time" name="Date/Time" package="">
+            <categories>
+                <category handle="collection"/>
+                <category handle="user"/>
+                <category handle="file"/>
+                <category handle="site"/>
+                <category handle="site_type"/>
+            </categories>
+        </attributetype>
+        <attributetype handle="image_file" name="Image/File" package="">
+            <categories>
+                <category handle="collection"/>
+                <category handle="site"/>
+                <category handle="site_type"/>
+            </categories>
+        </attributetype>
+        <attributetype handle="number" name="Number" package="">
+            <categories>
+                <category handle="collection"/>
+                <category handle="user"/>
+                <category handle="file"/>
+                <category handle="site"/>
+                <category handle="site_type"/>
+            </categories>
+        </attributetype>
+
+        <attributetype handle="select" name="Option List" package="">
+            <categories>
+                <category handle="collection"/>
+                <category handle="user"/>
+                <category handle="file"/>
+                <category handle="site"/>
+                <category handle="site_type"/>
+            </categories>
+        </attributetype>
+        <attributetype handle="address" name="Address" package="">
+            <categories>
+                <category handle="user"/>
+                <category handle="site"/>
+                <category handle="site_type"/>
+            </categories>
+        </attributetype>
+
+        <attributetype handle="telephone" name="Phone Number" package="">
+            <categories>
+                <category handle="collection"/>
+                <category handle="user"/>
+                <category handle="file"/>
+                <category handle="site"/>
+                <category handle="site_type"/>
+            </categories>
+        </attributetype>
+        <attributetype handle="url" name="URL" package="">
+            <categories>
+                <category handle="collection"/>
+                <category handle="user"/>
+                <category handle="file"/>
+                <category handle="site"/>
+                <category handle="site_type"/>
+            </categories>
+        </attributetype>
+        <attributetype handle="email" name="Email" package="">
+            <categories>
+                <category handle="collection"/>
+                <category handle="user"/>
+                <category handle="file"/>
+                <category handle="site"/>
+                <category handle="site_type"/>
+            </categories>
+        </attributetype>
+        <attributetype handle="rating" name="Rating" package="">
+            <categories>
+                <category handle="collection"/>
+                <category handle="file"/>
+            </categories>
+        </attributetype>
+        <attributetype handle="topics" name="Topics" package="">
+            <categories>
+                <category handle="collection"/>
+                <category handle="user"/>
+                <category handle="file"/>
+                <category handle="site"/>
+                <category handle="site_type"/>
+            </categories>
+        </attributetype>
+        <attributetype handle="social_links" name="Social Links" package="">
+            <categories>
+                <category handle="user"/>
+            </categories>
+        </attributetype>
+        <attributetype handle="express" name="Express Entity" package="">
+            <categories>
+                <category handle="collection"/>
+                <category handle="user"/>
+                <category handle="file"/>
+                <category handle="site"/>
+                <category handle="site_type"/>
+            </categories>
+        </attributetype>
+        <attributetype handle="page_selector" name="Page Selector" package="">
+            <categories>
+                <category handle="collection"/>
+                <category handle="site"/>
+                <category handle="site_type"/>
+            </categories>
+        </attributetype>
+        <attributetype handle="user_selector" name="User Selector" package="">
+            <categories>
+                <category handle="collection"/>
+                <category handle="user"/>
+                <category handle="file"/>
+                <category handle="site"/>
+                <category handle="site_type"/>
+            </categories>
+        </attributetype>
+        <attributetype handle="site" name="Site" package="">
+            <categories>
+                <category handle="collection"/>
+                <category handle="user"/>
+                <category handle="file"/>
+            </categories>
+        </attributetype>
+        <attributetype handle="user_group" name="User Group" package="">
+            <categories>
+                <category handle="site"/>
+                <category handle="site_type"/>
+            </categories>
+        </attributetype>
+    </attributetypes>
+
+    <attributekeys>
+        <attributekey handle="meta_title" name="Meta Title" package="" searchable="1" indexed="0" type="text" category="collection"/>
+        <attributekey handle="meta_description" name="Meta Description" package="" searchable="1" indexed="0" type="textarea" category="collection">
+            <type mode=""/>
+        </attributekey>
+        <attributekey handle="meta_keywords" name="Meta Keywords" package="" searchable="1" indexed="0" type="textarea" category="collection">
+            <type mode=""/>
+        </attributekey>
+        <attributekey handle="exclude_nav" name="Exclude From Nav" package="" searchable="1" indexed="0" type="boolean" category="collection">
+            <type checked="" checkbox-label="Exclude Page from Navigation"/>
+        </attributekey>
+        <attributekey handle="exclude_page_list" name="Exclude From Page List" package="" searchable="1" indexed="0" type="boolean" category="collection">
+            <type checked="" checkbox-label="Exclude Page from Page List Blocks" />
+        </attributekey>
+        <attributekey handle="exclude_search_index" name="Exclude From Search Index" package="" searchable="1" indexed="0" type="boolean" category="collection">
+            <type checked=""/>
+        </attributekey>
+    </attributekeys>
+
+
+</concrete5-cif>

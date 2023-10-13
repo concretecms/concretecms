@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<concrete5-cif version="1.0">
+
+    <blocktypes>
+        <blocktype handle="hero_image" package=""/>
+        <blocktype handle="image_slider" package=""/>
+        <blocktype handle="gallery" package=""/>
+    </blocktypes>
+
+    <blocktypesets>
+        <blocktypeset handle="multimedia" name="Multimedia" package="">
+            <blocktype handle="hero_image"/>
+            <blocktype handle="image_slider"/>
+            <blocktype handle="gallery"/>
+        </blocktypeset>
+    </blocktypesets>
+
+</concrete5-cif>

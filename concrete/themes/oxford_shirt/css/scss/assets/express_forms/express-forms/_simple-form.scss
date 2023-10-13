@@ -1,0 +1,61 @@
+div.ccm-page.theme-oxford-shirt {
+    .ccm-block-express-form.simple-form {
+        max-width: 100%;
+        margin-left: auto;
+        margin-right: auto;
+        @include media-breakpoint-up(md) {
+            max-width: 100%;
+        }
+        .form-stacked {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            @include make-col(12);
+            @include media-breakpoint-up(sm) {
+                flex-direction: row;
+            }
+            @include media-breakpoint-up(md) {
+                @include make-col(10);
+                margin: 0 auto;
+            }
+            @include media-breakpoint-up(xl) {
+                @include make-col(8);
+                margin: 0 auto;
+            }
+        }
+        .ccm-dashboard-express-form {
+            @include make-col(12);
+            margin-right: 0.25rem;
+            @include media-breakpoint-up(sm) {
+                @include make-col(9);
+            }
+            @include media-breakpoint-up(xl) {
+                @include make-col(9);
+            }
+            .form-control {
+                display: flex;
+                width: 100%;
+            }
+            .form-label {
+                display: none;
+            }
+        }
+        .form-actions {
+            display: flex;
+            margin-left: 0.25rem;
+            button {
+                width: 100%;
+                padding-left: 2rem;
+                padding-right: 2rem;
+                @include media-breakpoint-up(sm) {
+                    width: auto;
+                }
+            }
+            @include media-breakpoint-up(sm) {
+                justify-content: flex-end;
+                align-items: flex-start;
+                margin-left: 0.25rem;
+            }
+        }
+    }
+}

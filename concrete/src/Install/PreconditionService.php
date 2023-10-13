@@ -37,6 +37,19 @@ class PreconditionService
         $this->config = $config;
     }
 
+    public function getPreconditionList(): ExecutedPreconditionList
+    {
+        $list = new ExecutedPreconditionList();
+        foreach ($this->getAllPreconditions() as $precondition) {
+            if ($precondition instanceof ListablePreconditionInterface) {
+                $result = $precondition->performCheck();
+                $executedPrecondition = new ExecutedPrecondition($result, $precondition);
+                $list->addPrecondition($executedPrecondition);
+            }
+        }
+        return $list;
+    }
+
     /**
      * Get the pre-configuration preconditions.
      *

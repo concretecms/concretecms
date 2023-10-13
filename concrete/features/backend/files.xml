@@ -1,0 +1,141 @@
+<?xml version="1.0"?>
+<concrete5-cif version="1.0">
+
+    <singlepages>
+
+        <page name="Files" path="/dashboard/files" filename="/dashboard/files/view.php" pagetype=""
+              description="All documents and images." package=""/>
+        <page name="File Manager" path="/dashboard/files/search" filename="/dashboard/files/search.php" pagetype=""
+              description="" package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>add file, delete file, copy, move, alias, resize, crop, rename, images, title, attribute</value>
+                </attributekey>
+            </attributes>
+        </page>
+        <page name="File Details" path="/dashboard/files/details" filename="/dashboard/files/details.php" pagetype=""
+              description="" package="">
+            <attributes>
+                <attributekey handle="exclude_nav">
+                    <value><![CDATA[1]]></value>
+                </attributekey>
+            </attributes>
+        </page>
+        <page name="Attributes" path="/dashboard/files/attributes" filename="/dashboard/files/attributes.php"
+              pagetype="" description="" package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>file, file attributes, title, attribute, description, rename</value>
+                </attributekey>
+            </attributes>
+        </page>
+        <page name="File Sets" path="/dashboard/files/sets" filename="/dashboard/files/sets.php" pagetype=""
+              description="" package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>files, category, categories</value>
+                </attributekey>
+            </attributes>
+        </page>
+        <page name="Add File Set" path="/dashboard/files/add_set" filename="/dashboard/files/add_set.php" pagetype=""
+              description="" package="">
+            <attributes>
+                <attributekey handle="exclude_nav">
+                    <value><![CDATA[1]]></value>
+                </attributekey>
+                <attributekey handle="meta_keywords">
+                    <value>new file set</value>
+                </attributekey>
+            </attributes>
+        </page>
+
+        <page name="Files" path="/dashboard/system/files" filename="/dashboard/system/files/view.php" pagetype=""
+              description="" package=""/>
+        <page name="Allowed File Types" path="/dashboard/system/files/filetypes"
+              filename="/dashboard/system/files/filetypes.php" pagetype="" description="" package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>security, files, media, extension, manager, upload</value>
+                </attributekey>
+            </attributes>
+        </page>
+        <page name="File Manager Permissions" path="/dashboard/system/files/permissions"
+              filename="/dashboard/system/files/permissions.php" pagetype="" description="" package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>file options, file manager, upload, modify</value>
+                </attributekey>
+            </attributes>
+        </page>
+        <page name="Thumbnails" path="/dashboard/system/files/thumbnails"
+              filename="/dashboard/system/files/thumbnails.php" pagetype="" description="" package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>images, picture, responsive, retina</value>
+                </attributekey>
+            </attributes>
+        </page>
+        <page name="Thumbnail Options" path="/dashboard/system/files/thumbnails/options"
+              filename="/dashboard/system/files/thumbnails/options.php" pagetype="" description="" package="">
+            <attributes>
+                <attributekey handle="exclude_nav">
+                    <value>1</value>
+                </attributekey>
+                <attributekey handle="meta_keywords">
+                    <value>thumbnail, format, png, jpg, jpeg, quality, compression, gd, imagick, imagemagick, transparency</value>
+                </attributekey>
+            </attributes>
+        </page>
+        <page name="Image Options" path="/dashboard/system/files/image_uploading"
+              filename="/dashboard/system/files/image_uploading.php" pagetype="" description="" package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>uploading, upload, images, image, resizing, manager, exif, rotation, rotate, quality, compression, png, jpg, jpeg</value>
+                </attributekey>
+            </attributes>
+        </page>
+        <page name="Image Editor" path="/dashboard/system/files/image_editor"
+              filename="/dashboard/system/files/image_editor.php" pagetype="" description="" package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>image, editor, active, default, edit, png, jpg, jpeg</value>
+                </attributekey>
+            </attributes>
+        </page>
+        <page name="File Storage Locations" path="/dashboard/system/files/storage"
+              filename="/dashboard/system/files/storage.php" pagetype="" description="" package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>security, alternate storage, hide files</value>
+                </attributekey>
+            </attributes>
+        </page>
+        <page name="External File Providers" path="/dashboard/system/files/external_file_provider"
+              filename="/dashboard/system/files/external_file_provider.php" pagetype="" description="" package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>external, file, providers</value>
+                </attributekey>
+            </attributes>
+        </page>
+        <page name="Export Options" path="/dashboard/system/files/export_options"
+              filename="/dashboard/system/files/export_options.php" pagetype="" description="" package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>files, export, csv, bom, encoding</value>
+                </attributekey>
+            </attributes>
+        </page>
+        <page name="Upload Settings" path="/dashboard/system/files/uploads"
+              filename="/dashboard/system/files/uploads.php" pagetype="" description="" package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>files, upload, parallel, upload_max_filesize, post_max_size, limit, resize, chunk</value>
+                </attributekey>
+            </attributes>
+        </page>
+
+    </singlepages>
+
+
+</concrete5-cif>

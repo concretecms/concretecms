@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<concrete5-cif version="1.0">
+
+    <singlepages>
+        <page name="Extend Concrete" path="/dashboard/extend" filename="/dashboard/extend/view.php" pagetype=""
+              description=""
+              package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>add-on, addon, add on, package, app, ecommerce, discussions, forums, themes, templates, blocks</value>
+                </attributekey>
+            </attributes>
+        </page>
+        <page name="Add Functionality" path="/dashboard/extend/install" filename="/dashboard/extend/install.php"
+              pagetype="" description="Install add-ons &amp; themes." package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>add-on, addon, ecommerce, install, discussions, forums, themes, templates, blocks</value>
+                </attributekey>
+            </attributes>
+        </page>
+        <page name="Update Add-Ons" path="/dashboard/extend/update" filename="/dashboard/extend/update.php" pagetype=""
+              description="Update your installed packages." package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>update, upgrade</value>
+                </attributekey>
+            </attributes>
+        </page>
+
+
+    </singlepages>
+
+
+</concrete5-cif>
