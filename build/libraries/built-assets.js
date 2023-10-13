@@ -101,6 +101,7 @@ function getBuiltFiles()
         'js/features/maps/frontend.js',
         'js/features/multilingual/frontend.js',
         'js/features/navigation/frontend.js',
+        'js/features/forms/frontend.js',
         'js/fullcalendar.js',
         'js/jquery.js',
         'js/tui-image-editor.js',
