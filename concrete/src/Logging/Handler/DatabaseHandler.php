@@ -17,7 +17,7 @@ class DatabaseHandler extends AbstractProcessingHandler
             $this->initialize();
         }
 
-        $uID = ($record['extra'] && $record['extra']['user'])?$record['extra']['user'][0]:0;
+        $uID = $record['extra']['user'][0] ?? 0;
 
         $this->statement->execute(
             array(
