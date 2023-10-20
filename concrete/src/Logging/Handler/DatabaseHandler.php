@@ -17,9 +17,7 @@ class DatabaseHandler extends AbstractProcessingHandler
             $this->initialize();
         }
 
-        $app = Application::getFacadeApplication();
-        $u = $app->make(User::class);
-        $uID = $u->isRegistered() ? $u->getUserID() : 0;
+        $uID = $record['extra']['user'][0] ?? 0;
 
         $this->statement->execute(
             array(
