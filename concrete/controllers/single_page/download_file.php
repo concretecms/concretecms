@@ -154,7 +154,7 @@ class DownloadFile extends PageController
             $responseObject = $permissionChecker->getResponseObject();
 
             try {
-                if (!$responseObject->validate("view_file")) {
+                if (!is_object($responseObject) || !$responseObject->validate("view_file")) {
                     return false;
                 }
             } catch (Exception $err) {
