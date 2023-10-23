@@ -65,7 +65,7 @@
     "zendframework/zend-cache": "2.7.*",
     "zendframework/zend-http": "2.6.*",
     "zendframework/zend-feed": "2.7.*",
-    "zendframework/zend-i18n": "2.7.*",
+    "zendframework/zend-i18n": "2.10.*",
     "nesbot/carbon": "~1.15",
     "egulias/email-validator": "1.*",
     "punic/punic": "^3.0.1",
