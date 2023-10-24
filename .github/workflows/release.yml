@@ -12,7 +12,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
       - name: Build
-        run: cd build/ && npm i && grunt build-release
+        run: cd build/ && npm ci && grunt build-release
       - name: Upload Archive
         run: gh release upload ${{ github.event.release.tag_name }} build/${{ env.ARCHIVE_BASENAME }}.zip#archive
       - name: Upload Remote Update Archive
