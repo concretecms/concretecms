@@ -24,7 +24,7 @@ $file = File::getByID($fID);
 
 if ($file instanceof FileEntity && $file->hasFileUUID()) {
     $submitPasswordUrl = (string)Url::to('/download_file', 'submit_password', $file->getFileUUID());
-} else {
+} else if(!empty($fID)){
     $submitPasswordUrl = (string)Url::to('/download_file', 'submit_password', $fID);
 }
 
@@ -38,7 +38,7 @@ if ($file instanceof FileEntity && $file->hasFileUUID()) {
     <p>
         <?php echo t('Invalid File.'); ?>
     </p>
-<?php } else { ?>
+<?php } else if(!empty($submitPasswordUrl)){ ?>
     <p>
         <?php echo t('This file requires a password to download.') ?>
     </p>

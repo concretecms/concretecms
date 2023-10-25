@@ -3,6 +3,10 @@ name: Build assets
 on:
   pull_request:
   push:
+    branches:
+      - "**"      
+    tags-ignore:
+      - "**"
 
 jobs:
   build-assets:
@@ -20,7 +24,6 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.nodejs-version }}
-
       - name: Checkout
         uses: actions/checkout@v3
       - name: Install NodeJS dependencies
@@ -51,21 +54,33 @@ jobs:
         run: |
           cd "${{ github.workspace }}/build"
           npm run-script prod
-      - name: Update repository
+      - name: Check if we need to create a pull request
         if: matrix.update-repo == 'yes'
+        id: pr-test
         run: |
           cd '${{ github.workspace }}'
           if git diff --exit-code --name-status; then
-              echo "Repository not updated because no change has been detected"
+            echo "We won't create a pull request because no change has been detected"
           elif [ '${{ github.event_name }}' != 'push' ]; then
-            echo "Repository not updated because it's a '${{ github.event_name }}' operation and not a 'push' one"
+            echo "We won't create a pull request because it's a '${{ github.event_name }}' operation and not a 'push' one"
           elif [ '${{ github.repository }}' != 'concretecms/concretecms' ]; then
-            echo "Repository not updated because it's '${{ github.repository }}' and not 'concretecms/concretecms'"
+            echo "We won't create a pull request because the current repository is '${{ github.repository }}' and not 'concretecms/concretecms'"
           else
-            echo 'Changes detected!'
-            git config --local user.name 'GitHub Action'
-            git config --local user.email 'noreply@concretecms.org'
-            git add -A
-            git commit -m 'Update built assets'
-            git push
+            echo 'Changes detected and pull request needed!'
+            echo "result=yes" >>"$GITHUB_OUTPUT"
+            echo "branch-name=auto-assets/$(date --utc +%Y%m%d-%H%M%S)" >>"$GITHUB_OUTPUT"
           fi
+      - name: Create pull request
+        id: pr-create
+        if: steps.pr-test.outputs.result == 'yes'
+        uses: peter-evans/create-pull-request@v5
+        with:
+          commit-message: Automatic assets rebuilding
+          committer: GitHub Action <noreply@concretecms.org>
+          author: GitHub Action <noreply@concretecms.org>
+          branch: '${{ steps.pr-test.outputs.branch-name }}'
+          title: "Automatic assets rebuilding for ${{ github.ref_name }}"
+          body: "Created by ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+      - name: Pull request info
+        if: steps.pr-test.outputs.result == 'yes'
+        run: printf 'Pull request created:\n%s' "${{ steps.pr-create.outputs.pull-request-url }}"
