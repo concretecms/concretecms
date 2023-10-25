@@ -68,7 +68,7 @@ class SiteGroupEntity extends Entity
             $site = $pae->getSite();
         }
 
-        if (!$site) {
+        if (empty($site)) {
             $site = \Core::make('site')->getActiveSiteForEditing();
         }
 
