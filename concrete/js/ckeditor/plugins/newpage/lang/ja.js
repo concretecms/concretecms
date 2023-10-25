@@ -1,1 +1,1 @@
-﻿CKEDITOR.plugins.setLang("newpage","ja",{toolbar:"新しいページ"});
+CKEDITOR.plugins.setLang("newpage","ja",{toolbar:"新しいページ"});

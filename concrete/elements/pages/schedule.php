@@ -4,10 +4,14 @@ use Concrete\Core\Form\Service\Form;
 use Concrete\Core\Form\Service\Widget\DateTime as DateTimeWidget;
 use Concrete\Core\Page\Collection\Version\Version;
 use Concrete\Core\Support\Facade\Application;
+use Concrete\Core\Config\Repository\Repository;
 
 defined('C5_EXECUTE') or die("Access Denied.");
 
 $app = Application::getFacadeApplication();
+$appConfig = $app->make(Repository::class);
+$liveVersionStatusOnScheduledVersionApproval = (string)$appConfig->get('concrete.misc.live_version_status_on_scheduled_version_approval');
+
 /** @var Form $form */
 $form = $app->make('helper/form');
 /** @var DateTimeWidget $datetime */
@@ -52,10 +56,18 @@ $timezone = $dateService->getTimezoneDisplayName($timezone);
 </div>
 
 <?php if ($activeVersionExists || $scheduledVersionExists) {
-    if ($scheduledVersionExists) {
-        $keepOtherScheduling = t('Keep existing scheduling. This version will go live separately.');
+    if($liveVersionStatusOnScheduledVersionApproval === 'unapproved') {
+        if ($scheduledVersionExists) {
+            $keepOtherScheduling = t('Remove current scheduled. This version will go live by itself.');
+        } else {
+            $keepOtherScheduling = t('Remove live version in meantime.');
+        }
     } else {
-        $keepOtherScheduling = t('Keep live version approved.');
+        if ($scheduledVersionExists) {
+            $keepOtherScheduling = t('Keep existing scheduling. This version will go live separately.');
+        } else {
+            $keepOtherScheduling = t('Keep live version approved.');
+        }
     }
     ?>
 <div class="form-group">

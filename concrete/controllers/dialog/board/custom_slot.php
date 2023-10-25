@@ -6,11 +6,7 @@ use Concrete\Core\Block\BlockType\BlockType;
 use Concrete\Core\Block\View\BlockView;
 use Concrete\Core\Board\Command\AddCustomSlotToBoardCommand;
 use Concrete\Core\Board\Helper\Traits\SlotTemplateJsonHelperTrait;
-use Concrete\Core\Board\Instance\Slot\Content\AvailableObjectCollectionFactory;
 use Concrete\Core\Board\Instance\Slot\Content\ContentPopulator;
-use Concrete\Core\Board\Instance\Slot\Content\ContentRenderer;
-use Concrete\Core\Board\Instance\Slot\Content\ObjectCollection;
-use Concrete\Core\Board\Instance\Slot\Template\AvailableTemplateCollectionFactory;
 use Concrete\Core\Entity\Board\Instance;
 use Concrete\Core\Entity\Board\InstanceItem;
 use Concrete\Core\Entity\Board\SlotTemplate;
@@ -20,6 +16,8 @@ use Concrete\Core\Permission\Checker;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
+use \Concrete\Core\Board\Instance\Slot\Planner\SlotFilterer;
+use \Concrete\Core\Board\Instance\Slot\Planner\PlannedInstance;
 
 class CustomSlot extends \Concrete\Core\Controller\Controller
 {
@@ -56,7 +54,6 @@ class CustomSlot extends \Concrete\Core\Controller\Controller
     {
         $entityManager = $this->app->make(EntityManager::class);
         $contentPopulator = $this->app->make(ContentPopulator::class);
-        $availableTemplateCollectionFactory = $this->app->make(AvailableTemplateCollectionFactory::class);
 
         $instance = $this->getInstanceFromRequest();
         $items = [];
@@ -65,9 +62,9 @@ class CustomSlot extends \Concrete\Core\Controller\Controller
                 $items[] = $entityManager->find(InstanceItem::class, $itemId);
             }
         }
-        $templates = $availableTemplateCollectionFactory->getAvailableTemplates(
-            $instance, $this->request->request->get('slot')
-        );
+        
+        $plannedInstance = new PlannedInstance($instance, $items);
+        $templates = $this->app->make(SlotFilterer::class)->getPotentialSlotTemplates($plannedInstance, $this->request->request->get('slot'));
 
         $itemObjectGroups = $contentPopulator->createContentObjects($items);
         return new JsonResponse($this->createSlotTemplateJsonArray($templates, $itemObjectGroups));

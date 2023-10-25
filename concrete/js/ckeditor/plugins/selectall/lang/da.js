@@ -1,1 +1,1 @@
-﻿CKEDITOR.plugins.setLang("selectall","da",{toolbar:"Vælg alt"});
+CKEDITOR.plugins.setLang("selectall","da",{toolbar:"Vælg alt"});

@@ -4,7 +4,6 @@ namespace Concrete\Core\Board\Instance\Slot;
 
 use Concrete\Core\Entity\Board\Instance;
 use Concrete\Core\Entity\Board\InstanceSlotRule;
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManager;
 
 /**

@@ -1,1 +1,1 @@
-﻿CKEDITOR.plugins.setLang("sourcedialog","tr",{toolbar:"Kaynak",title:"Kaynak"});
+CKEDITOR.plugins.setLang("sourcedialog","tr",{toolbar:"Kaynak",title:"Kaynak"});

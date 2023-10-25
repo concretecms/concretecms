@@ -100,9 +100,14 @@ class FolderItemList extends AttributedItemList implements PagerProviderInterfac
 
     public function createQuery()
     {
-        $this->query->select('distinct n.treeNodeID')
-            ->addSelect('if(nt.treeNodeTypeHandle=\'file\', fv.fvTitle, n.treeNodeName) as name')
-            ->addSelect('if(nt.treeNodeTypeHandle=\'file\', fv.fvDateAdded, n.dateModified) as dateModified')
+        $this->query->select('distinct n.treeNodeID');
+        $config = Application::getFacadeApplication()->make('config');
+        if ($config->get('concrete.file_manager.keep_folders_on_top')) {
+            $this->query->addSelect('if(nt.treeNodeTypeHandle=\'file\', concat("1", fv.fvTitle), concat("0", n.treeNodeName)) as name');
+        } else {
+            $this->query->addSelect('if(nt.treeNodeTypeHandle=\'file\', fv.fvTitle, n.treeNodeName) as name');
+        }
+        $this->query->addSelect('if(nt.treeNodeTypeHandle=\'file\', fv.fvDateAdded, n.dateModified) as dateModified')
             ->addSelect('case when nt.treeNodeTypeHandle=\'file_folder\' then 1 else (10 + fvType) end as type')
             ->addSelect('fv.fvSize as size')
             ->from('TreeNodes', 'n')
@@ -128,11 +133,9 @@ class FolderItemList extends AttributedItemList implements PagerProviderInterfac
 
     public function getPaginationAdapter()
     {
-        $adapter = new DoctrineDbalAdapter($this->deliverQueryObject(), function ($query) {
+        return new DoctrineDbalAdapter($this->deliverQueryObject(), function ($query) {
             $query->resetQueryParts(['groupBy', 'orderBy'])->select('count(distinct n.treeNodeID)')->setMaxResults(1);
         });
-
-        return $adapter;
     }
 
     public function getResult($queryRow)

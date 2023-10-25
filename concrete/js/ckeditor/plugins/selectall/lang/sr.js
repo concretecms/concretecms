@@ -1,1 +1,1 @@
-﻿CKEDITOR.plugins.setLang("selectall","sr",{toolbar:"Означи све"});
+CKEDITOR.plugins.setLang("selectall","sr",{toolbar:"Означи све"});

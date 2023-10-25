@@ -2,7 +2,6 @@
 
 namespace Concrete\Core\Board\Command;
 
-use Concrete\Core\Board\Instance\Item\Populator\PopulatorInterface;
 use Concrete\Core\Entity\Board\InstanceItem;
 use Concrete\Core\Entity\Board\InstanceItemBatch;
 use Concrete\Core\Logging\Channels;

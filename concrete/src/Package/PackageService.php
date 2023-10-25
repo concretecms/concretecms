@@ -3,14 +3,14 @@
 namespace Concrete\Core\Package;
 
 use Concrete\Core\Application\Application;
-use Concrete\Core\Database\EntityManager\Provider\PackageProviderFactory;
 use Concrete\Core\Database\EntityManagerConfigUpdater;
+use Concrete\Core\Database\EntityManager\Provider\PackageProviderFactory;
 use Concrete\Core\Error\ErrorList\ErrorList;
-use Concrete\Core\Error\UserMessageException;
-use Concrete\Core\Foundation\ClassLoader;
+use Concrete\Core\Foundation\ClassAutoloader;
 use Concrete\Core\Localization\Localization;
 use Concrete\Core\User\User;
 use Doctrine\ORM\EntityManagerInterface;
+use Throwable;
 
 /**
  * Service class for the package entities and controllers.
@@ -230,7 +230,6 @@ class PackageService
     public function install(Package $p, $data)
     {
         $this->localization->pushActiveContext(Localization::CONTEXT_SYSTEM);
-        ClassLoader::getInstance()->registerPackage($p);
 
         if (method_exists($p, 'validate_install')) {
             $response = $p->validate_install($data);
@@ -252,7 +251,7 @@ class PackageService
             }
         }
         $this->localization->popActiveContext();
-        $pkg = $this->getByHandle($p->getPackageHandle());
+        $this->getByHandle($p->getPackageHandle());
 
         return $p;
     }
@@ -262,33 +261,40 @@ class PackageService
      *
      * @param string $pkgHandle Handle of package
      *
-     * @return Package
+     * @return \Concrete\Core\Package\Package
      */
     public function getClass($pkgHandle)
     {
         $cache = $this->application->make('cache/request');
         $item = $cache->getItem('package/class/' . $pkgHandle);
-        $cl = $item->get();
         if ($item->isMiss()) {
             $item->lock();
+            $classAutoloader = ClassAutoloader::getInstance();
+            $classAutoloader->registerPackageHandle($pkgHandle);
             // loads and instantiates the object
-
-            $cl = \Concrete\Core\Foundation\ClassLoader::getInstance();
-            $cl->registerPackageController($pkgHandle);
-
             $class = '\\Concrete\\Package\\' . camelcase($pkgHandle) . '\\Controller';
+            $packageController = null;
             try {
-                $cl = $this->application->make($class);
-                if (!$cl instanceof Package) {
-                    throw new UserMessageException(t('The package controller does not extend the PHP class %s', Package::class));
+                $packageController = $this->application->make($class);
+                if (!$packageController instanceof Package) {
+                    $packageController = null;
+                    $errorDetails = t('The package controller does not extend the PHP class %s', Package::class);
                 }
-            } catch (\Throwable $ex) {
-                $cl = $this->application->make('Concrete\Core\Package\BrokenPackage', ['pkgHandle' => $pkgHandle, 'errorDetails' => $ex->getMessage()]);
+            } catch (Throwable $x) {
+                $errorDetails = $x->getMessage();
             }
-            $cache->save($item->set($cl));
+            if ($packageController === null) {
+                $classAutoloader->unregisterPackage($pkgHandle);
+                $packageController = $this->application->make(BrokenPackage::class, ['pkgHandle' => $pkgHandle, 'errorDetails' => $errorDetails]);
+            } else {
+                $classAutoloader->registerPackageController($packageController);
+            }
+            $cache->save($item->set($packageController));
+        } else {
+            $packageController = $item->get();
         }
 
-        return clone $cl;
+        return clone $packageController;
     }
 
     /**

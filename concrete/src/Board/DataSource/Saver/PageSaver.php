@@ -3,7 +3,6 @@ namespace Concrete\Core\Board\DataSource\Saver;
 
 use Concrete\Core\Entity\Board\DataSource\Configuration\Configuration;
 use Concrete\Core\Entity\Board\DataSource\Configuration\PageConfiguration;
-use Concrete\Core\Entity\Board\DataSource\ConfiguredDataSource;
 use Concrete\Core\Entity\Search\Query;
 use Concrete\Core\Page\Search\Field\Manager;
 use Doctrine\ORM\EntityManager;

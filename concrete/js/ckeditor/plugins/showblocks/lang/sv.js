@@ -1,1 +1,1 @@
-﻿CKEDITOR.plugins.setLang("showblocks","sv",{toolbar:"Visa block"});
+CKEDITOR.plugins.setLang("showblocks","sv",{toolbar:"Visa block"});

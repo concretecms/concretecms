@@ -157,6 +157,7 @@ class DeleteGroupCommandHandler
                 foreach ($groupNode->getChildNodes() as $childnode) {
                     $childnode->move($rootNode);
                 }
+                $groupNode->clearLoadedChildren();
                 break;
             case DeleteGroupCommand::ONCHILDGROUPS_MOVETOPARENT:
                 $parentNode = $groupNode->getTreeNodeParentObject();
@@ -175,6 +176,7 @@ class DeleteGroupCommandHandler
                 foreach ($groupNode->getChildNodes() as $childnode) {
                     $childnode->move($parentNode);
                 }
+                $groupNode->clearLoadedChildren();
                 break;
             case DeleteGroupCommand::ONCHILDGROUPS_ABORT:
                 $numChildGroups = count($groupNode->getChildNodes());

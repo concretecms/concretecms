@@ -1,1 +1,1 @@
-﻿CKEDITOR.plugins.setLang("newpage","zh",{toolbar:"新增網頁"});
+CKEDITOR.plugins.setLang("newpage","zh",{toolbar:"新增網頁"});

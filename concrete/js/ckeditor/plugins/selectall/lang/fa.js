@@ -1,1 +1,1 @@
-﻿CKEDITOR.plugins.setLang("selectall","fa",{toolbar:"گزینش همه"});
+CKEDITOR.plugins.setLang("selectall","fa",{toolbar:"گزینش همه"});

@@ -89,7 +89,6 @@ $multilingualEnabled = $multilingualEnabled ?? false;
 <script type="text/javascript">
 
     Concrete.Vue.activateContext('cms', function (Vue, config) {
-        Vue.config.devtools = true;
         new Vue({
             el: 'div[data-view=edit-top-navigation-bar-block]',
             components: config.components,

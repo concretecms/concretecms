@@ -23,7 +23,8 @@ class RedisPaginatedTraitTest extends TestCase
             M::getConfiguration()->setInternalClassMethodParamMap('Redis', 'scan', [
                 '&$iterator',
                 '$pattern = null',
-                '$count = 0'
+                '$count = null',
+                '$type = null',
             ]);
         }
 

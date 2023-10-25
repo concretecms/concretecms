@@ -188,11 +188,12 @@ class Package implements LocalizablePackageInterface
         $this->pkgDateInstalled = new DateTime();
     }
 
+    /**
+     * @return \Concrete\Core\Package\Package
+     */
     public function getController()
     {
-        $app = Application::getFacadeApplication();
-
-        return $app->make(PackageService::class)->getClass($this->getPackageHandle());
+        return app(PackageService::class)->getClass($this->getPackageHandle());
     }
 
     public function __call($method, $arguments)

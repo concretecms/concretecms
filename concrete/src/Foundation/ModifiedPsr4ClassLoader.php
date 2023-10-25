@@ -16,6 +16,10 @@ namespace Concrete\Core\Foundation;
  * See http://www.php-fig.org/psr/psr-4/
  *
  * @author Alexander M. Turek <me@derrabus.de>
+*
+ * @deprecated
+ *
+ * @see \Concrete\Core\Foundation\ClassAutoloader
  */
 class ModifiedPsr4ClassLoader implements ClassLoaderInterface
 {
