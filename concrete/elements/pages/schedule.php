@@ -1,16 +1,16 @@
 <?php
 
+use Concrete\Core\Config\Repository\Repository;
 use Concrete\Core\Form\Service\Form;
 use Concrete\Core\Form\Service\Widget\DateTime as DateTimeWidget;
 use Concrete\Core\Page\Collection\Version\Version;
 use Concrete\Core\Support\Facade\Application;
-use Concrete\Core\Config\Repository\Repository;
 
-defined('C5_EXECUTE') or die("Access Denied.");
+defined('C5_EXECUTE') or die('Access Denied.');
 
 $app = Application::getFacadeApplication();
 $appConfig = $app->make(Repository::class);
-$liveVersionStatusOnScheduledVersionApproval = (string)$appConfig->get('concrete.misc.live_version_status_on_scheduled_version_approval');
+$liveVersionStatusOnScheduledVersionApproval = (string) $appConfig->get('concrete.misc.live_version_status_on_scheduled_version_approval');
 
 /** @var Form $form */
 $form = $app->make('helper/form');
@@ -22,7 +22,7 @@ $publishEndDate = '';
 $activeVersionExists = false;
 $scheduledVersionExists = false;
 if (isset($page) && is_object($page)) {
-    $v = Version::get($page, "RECENT");
+    $v = Version::get($page, 'RECENT');
     $publishDate = $v->getPublishDate();
     $publishEndDate = $v->getPublishEndDate();
     $activeVersion = Version::get($page, 'ACTIVE');
@@ -52,18 +52,28 @@ $alternativeScheduledVersionExistsIfo = 'At the moment, current scheduled versio
 ?>
 
 <div class="form-group form-group-last">
-    <label class="control-label form-label"><?=t('From')?></label>
-    <?= $datetime->datetime('cvPublishDate', $publishDate, true, true,
-        'light-panel-calendar'); ?>
+    <label class="control-label form-label"><?= t('From') ?></label>
+    <?= $datetime->datetime(
+    'cvPublishDate',
+    $publishDate,
+    true,
+    true,
+    'light-panel-calendar'
+); ?>
 </div>
 <div class="form-group form-group-last">
-    <label class="control-label form-label"><?=t('To')?></label>
-    <?= $datetime->datetime('cvPublishEndDate', $publishEndDate, true, true,
-        'light-panel-calendar'); ?>
+    <label class="control-label form-label"><?= t('To') ?></label>
+    <?= $datetime->datetime(
+            'cvPublishEndDate',
+            $publishEndDate,
+            true,
+            true,
+            'light-panel-calendar'
+        ); ?>
 </div>
 
 <div style="text-align: right">
-    <span class="form-text help-block"><?=t('Time Zone: %s', $timezone)?></span>
+    <span class="form-text help-block"><?= t('Time Zone: %s', $timezone) ?></span>
 </div>
 
 <?php if ($activeVersionExists || $scheduledVersionExists) {
@@ -114,7 +124,7 @@ $alternativeScheduledVersionExistsIfo = 'At the moment, current scheduled versio
 <div class="dialog-buttons">
     <button type="submit" name="action" value="schedule"
             class="btn btn-primary ccm-check-in-schedule">
-        <?=t('Schedule')?>
+        <?= t('Schedule') ?>
     </button>
 </div>
 
