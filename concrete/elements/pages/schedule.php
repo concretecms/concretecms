@@ -38,17 +38,6 @@ if (isset($page) && is_object($page)) {
 $dateService = $app->make('date');
 $timezone = $dateService->getUserTimeZoneID();
 $timezone = $dateService->getTimezoneDisplayName($timezone);
-
-// activeVersionExists
-$activeVersionExistsText = t('At the moment, the existing live version will remain.');
-$activeVersionExistsInfo = 'Activate to remove the current live version.';
-$alternativeActiveVersionExistsText = t('Deactivate to leave current live version online.');
-$alternativeActiveVersionExistsInfo = 'At the moment, the current live version gets removed.';
-// scheduledVersionExists
-$scheduledVersionExistsText = t('Activate to remove the current scheduled version.');
-$scheduledVersionExistsIfo = 'At the moment, the existing scheduled version will remain.';
-$alternativeScheduledVersionExistsText = t('Deactivate to leave current scheduled version.');
-$alternativeScheduledVersionExistsIfo = 'At the moment, current scheduled version gets removed.';
 ?>
 
 <div class="form-group form-group-last">
@@ -78,15 +67,15 @@ $alternativeScheduledVersionExistsIfo = 'At the moment, current scheduled versio
 
 <?php if ($activeVersionExists || $scheduledVersionExists) {
     if($scheduledVersionExists == false) {
-        $primaryText = $activeVersionExistsText;
-        $primaryInfo = $activeVersionExistsInfo;
-        $alternativeText = $alternativeActiveVersionExistsText;
-        $alternativeInfo = $alternativeActiveVersionExistsInfo;
+        $primaryText = t('At the moment, the existing live version will remain.');
+        $primaryInfo = t('Activate to remove the current live version.');
+        $alternativeText = t('Deactivate to leave current live version online.');
+        $alternativeInfo = t('At the moment, the current live version gets removed.');
     } else {
-        $primaryText = $scheduledVersionExistsText;
-        $primaryInfo = $scheduledVersionExistsIfo;
-        $alternativeText = $alternativeScheduledVersionExistsText;
-        $alternativeInfo = $alternativeScheduledVersionExistsIfo;
+        $primaryText = t('Activate to remove the current scheduled version.');
+        $primaryInfo = t('At the moment, the existing scheduled version will remain.');
+        $alternativeText = t('Deactivate to leave current scheduled version.');
+        $alternativeInfo = t('At the moment, current scheduled version gets removed.');
     }
     ?>
     <div class="form-group">
