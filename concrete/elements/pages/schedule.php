@@ -79,37 +79,37 @@ $alternativeScheduledVersionExistsIfo = 'At the moment, current scheduled versio
         $alternativeInfo = $alternativeScheduledVersionExistsIfo;
     }
     ?>
-<div class="form-group">
-    <div class="form-check form-switch">
-        <?= $form->checkbox('keepOtherScheduling', 1, false) ?>
-        <?= $form->label('keepOtherScheduling', $primaryText) ?>
-        <?= $form->label('keepOtherScheduling', $alternativeText, ['class' => 'active']) ?>
-            <!-- <?= $icon = '<svg class="svg-icon"><use xlink:href="#icon-info" /></svg>' ?> -->
-            <span class="form-text help-block"><?= $icon . $primaryInfo ?></span>
-            <span class="form-text help-block active"><?= $icon . $alternativeInfo ?></span>
-        <style>
-            .svg-icon {
-                width: 22.1px;
-                height: 18.1px;
-                vertical-align: -0.15em;
-                fill: #0099ff;
-                overflow: hidden;
-            }
-            .form-switch label.active,
-            .form-switch span.active {
-                display: none;
-            }
-            .form-switch input[type="checkbox"]:checked ~ label,
-            .form-switch input[type="checkbox"]:checked ~ span {
-                display: none;
-            }
-            .form-switch input[type="checkbox"]:checked ~ label.active,
-            .form-switch input[type="checkbox"]:checked ~ span.active {
-                display: inline-block;
-            }
-        </style>
-    </div>
-<?php } ?>
+    <div class="form-group">
+        <div class="form-check form-switch">
+            <?= $form->checkbox('keepOtherScheduling', 1, false) ?>
+            <?= $form->label('keepOtherScheduling', $primaryText) ?>
+            <?= $form->label('keepOtherScheduling', $alternativeText, ['class' => 'active']) ?>
+                <!-- <?= $icon = '<svg class="svg-icon"><use xlink:href="#icon-info" /></svg>' ?> -->
+                <span class="form-text help-block"><?= $icon . $primaryInfo ?></span>
+                <span class="form-text help-block active"><?= $icon . $alternativeInfo ?></span>
+            <style>
+                .svg-icon {
+                    width: 22.1px;
+                    height: 18.1px;
+                    vertical-align: -0.15em;
+                    fill: #0099ff;
+                    overflow: hidden;
+                }
+                .form-switch label.active,
+                .form-switch span.active {
+                    display: none;
+                }
+                .form-switch input[type="checkbox"]:checked ~ label,
+                .form-switch input[type="checkbox"]:checked ~ span {
+                    display: none;
+                }
+                .form-switch input[type="checkbox"]:checked ~ label.active,
+                .form-switch input[type="checkbox"]:checked ~ span.active {
+                    display: inline-block;
+                }
+            </style>
+        </div>
+    <?php } ?>
 
 <div class="dialog-buttons">
     <button type="submit" name="action" value="schedule"
