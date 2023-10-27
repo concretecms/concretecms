@@ -38,6 +38,17 @@ if (isset($page) && is_object($page)) {
 $dateService = $app->make('date');
 $timezone = $dateService->getUserTimeZoneID();
 $timezone = $dateService->getTimezoneDisplayName($timezone);
+
+// activeVersionExists
+$activeVersionExistsText = t('At the moment, the existing live version will remain.');
+$activeVersionExistsInfo = 'Activate to remove the current live version.';
+$alternativeActiveVersionExistsText = t('Deactivate to leave current live version online.');
+$alternativeActiveVersionExistsInfo = 'At the moment, the current live version gets removed.';
+// scheduledVersionExists
+$scheduledVersionExistsText = t('Activate to remove the current scheduled version.');
+$scheduledVersionExistsIfo = 'At the moment, the existing scheduled version will remain.';
+$alternativeScheduledVersionExistsText = t('Deactivate to leave current scheduled version.');
+$alternativeScheduledVersionExistsIfo = 'At the moment, current scheduled version gets removed.';
 ?>
 
 <div class="form-group form-group-last">
@@ -56,26 +67,48 @@ $timezone = $dateService->getTimezoneDisplayName($timezone);
 </div>
 
 <?php if ($activeVersionExists || $scheduledVersionExists) {
-    if($liveVersionStatusOnScheduledVersionApproval === 'unapproved') {
-        if ($scheduledVersionExists) {
-            $keepOtherScheduling = t('Remove current scheduled. This version will go live by itself.');
-        } else {
-            $keepOtherScheduling = t('Remove live version in meantime.');
-        }
+    if($scheduledVersionExists == false) {
+        $primaryText = $activeVersionExistsText;
+        $primaryInfo = $activeVersionExistsInfo;
+        $alternativeText = $alternativeActiveVersionExistsText;
+        $alternativeInfo = $alternativeActiveVersionExistsInfo;
     } else {
-        if ($scheduledVersionExists) {
-            $keepOtherScheduling = t('Keep existing scheduling. This version will go live separately.');
-        } else {
-            $keepOtherScheduling = t('Keep live version approved.');
-        }
+        $primaryText = $scheduledVersionExistsText;
+        $primaryInfo = $scheduledVersionExistsIfo;
+        $alternativeText = $alternativeScheduledVersionExistsText;
+        $alternativeInfo = $alternativeScheduledVersionExistsIfo;
     }
     ?>
 <div class="form-group">
     <div class="form-check form-switch">
         <?= $form->checkbox('keepOtherScheduling', 1, false) ?>
-        <?= $form->label('keepOtherScheduling', $keepOtherScheduling) ?>
+        <?= $form->label('keepOtherScheduling', $primaryText) ?>
+        <?= $form->label('keepOtherScheduling', $alternativeText, ['class' => 'active']) ?>
+            <!-- <?= $icon = '<svg class="svg-icon"><use xlink:href="#icon-info" /></svg>' ?> -->
+            <span class="form-text help-block"><?= $icon . $primaryInfo ?></span>
+            <span class="form-text help-block active"><?= $icon . $alternativeInfo ?></span>
+        <style>
+            .svg-icon {
+                width: 22.1px;
+                height: 18.1px;
+                vertical-align: -0.15em;
+                fill: #0099ff;
+                overflow: hidden;
+            }
+            .form-switch label.active,
+            .form-switch span.active {
+                display: none;
+            }
+            .form-switch input[type="checkbox"]:checked ~ label,
+            .form-switch input[type="checkbox"]:checked ~ span {
+                display: none;
+            }
+            .form-switch input[type="checkbox"]:checked ~ label.active,
+            .form-switch input[type="checkbox"]:checked ~ span.active {
+                display: inline-block;
+            }
+        </style>
     </div>
-</div>
 <?php } ?>
 
 <div class="dialog-buttons">
