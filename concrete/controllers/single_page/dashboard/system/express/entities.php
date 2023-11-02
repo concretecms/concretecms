@@ -25,15 +25,20 @@ class Entities extends DashboardPageController
             $vs = \Core::make('helper/validation/strings');
 
             $name = $sec->sanitizeString($this->request->request->get('name'));
-            $handle = $sec->sanitizeString($this->request->request->get('handle'));
+            $handle = $this->request->request->get('handle');
+            $plural_handle = $this->request->request->get('plural_handle');
 
             if (!$vs->handle($handle)) {
-                $this->error->add(t('You must create a handle for your data object. It may contain only lowercase letters and underscores.'), 'handle');
+                $this->error->add(t('You must create a valid handle for your data object. It may contain only lowercase letters and underscores.'), 'handle');
             } else {
                 $entity = Express::getObjectByHandle($handle);
                 if (is_object($entity)) {
                     $this->error->add(t('An express object with this handle already exists.'));
                 }
+            }
+
+            if (!$vs->handle($plural_handle)) {
+                $this->error->add(t('You must create a valid plural handle for your data object. It may contain only lowercase letters and underscores.'), 'plural_handle');
             }
 
             if (!$name) {
@@ -43,8 +48,8 @@ class Entities extends DashboardPageController
             if (!$this->error->has()) {
                 $entity = new Entity();
                 $entity->setName($this->request->request->get('name'));
-                $entity->setHandle($this->request->request->get('handle'));
-                $entity->setPluralHandle($this->request->request->get('plural_handle'));
+                $entity->setHandle($handle);
+                $entity->setPluralHandle($plural_handle);
                 $entity->setLabelMask($this->request->request->get('label_mask'));
                 $entity->setDescription($this->request->request->get('description'));
 
@@ -233,15 +238,25 @@ class Entities extends DashboardPageController
         $vs = \Core::make('helper/validation/strings');
 
         $name = $sec->sanitizeString($this->request->request->get('name'));
-        $handle = $sec->sanitizeString($this->request->request->get('handle'));
+        $handle = $this->request->request->get('handle');
+        $plural_handle = $this->request->request->get('plural_handle');
 
         if (!$vs->handle($handle)) {
-            $this->error->add(t('You must create a handle for your data object. It may contain only lowercase letters and underscores.'), 'handle');
+            $this->error->add(t('You must create a valid handle for your data object. It may contain only lowercase letters and underscores.'), 'handle');
         } else {
             $exist = Express::getObjectByHandle($handle);
             if (is_object($exist) && $exist->getID() != $id) {
                 $this->error->add(t('An express object with this handle already exists.'));
             }
+        }
+
+        if (!$vs->handle($plural_handle)) {
+            $this->error->add(
+                t(
+                    'You must create a valid plural handle for your data object. It may contain only lowercase letters and underscores.'
+                ),
+                'plural_handle'
+            );
         }
 
         if (!$name) {
@@ -277,7 +292,7 @@ class Entities extends DashboardPageController
 
             $entity->setName($name);
             $entity->setHandle($handle);
-            $entity->setPluralHandle($this->request->request->get('plural_handle'));
+            $entity->setPluralHandle($plural_handle);
             $entity->setLabelMask($this->request->request->get('label_mask'));
             $entity->setDescription($this->request->request->get('description'));
             $entity->setDefaultViewForm($viewForm);
