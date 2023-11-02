@@ -170,7 +170,7 @@ class CommandRegistry implements ApplicationAwareInterface
                 foreach($tasks as $task) {
                     $this->console->add(new TaskCommand($task));
                 }
-            } catch (\Exception $e) {
+            } catch (\Throwable $e) {
                 // Something isn't right. Probably the proxies aren't built yet or are in the process of being rebuilt?
                 // Don't let us use task commands unless the proxies are present.
             }
