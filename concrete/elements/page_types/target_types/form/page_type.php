@@ -45,7 +45,7 @@ if (is_object($pagetype) && $pagetype->getPageTypePublishTargetTypeID() == $conf
         $pl->filterByPageTypeID($configuredTarget->getPageTypeID());
         $pl->sortByName();
 	    
-        if (isset($site) && is_object($site)) {
+        if (is_object($site ?? null)) {
             $pl->filterBySite($site);
         }
 	    
