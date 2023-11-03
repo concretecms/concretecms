@@ -30,6 +30,18 @@
                 "symfony/css-selector": "^2.6"
             },
             "type": "library",
+            "extra": {
+                "patches_applied": {
+                    "hash": "e2a5dd43ca137fd4803f9f35257a7ada4d1e1cdd",
+                    "list": [
+                        {
+                            "from-package": "concretecms/dependency-patches 1.7.6",
+                            "path": "anahkiasen/html-object/php8.1-compatibility.patch",
+                            "description": "Add PHP 8.1 compatibility"
+                        }
+                    ]
+                }
+            },
             "autoload": {
                 "psr-4": {
                     "HtmlObject\\": "src"
@@ -211,16 +223,16 @@
         },
         {
             "name": "concretecms/dependency-patches",
-            "version": "1.7.2",
+            "version": "1.7.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/concretecms/dependency-patches.git",
-                "reference": "ec219a55e89c2552efb7368175c65e68cd2a3de0"
+                "reference": "4a564d5e4e8338ffe398ea85b904941db52d9b99"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/concretecms/dependency-patches/zipball/ec219a55e89c2552efb7368175c65e68cd2a3de0",
-                "reference": "ec219a55e89c2552efb7368175c65e68cd2a3de0",
+                "url": "https://api.github.com/repos/concretecms/dependency-patches/zipball/4a564d5e4e8338ffe398ea85b904941db52d9b99",
+                "reference": "4a564d5e4e8338ffe398ea85b904941db52d9b99",
                 "shasum": ""
             },
             "require": {
@@ -229,6 +241,9 @@
             "type": "library",
             "extra": {
                 "patches": {
+                    "anahkiasen/html-object:1.4.4": {
+                        "Add PHP 8.1 compatibility": "anahkiasen/html-object/php8.1-compatibility.patch"
+                    },
                     "doctrine/annotations:1.2.7": {
                         "Fix access array offset on value of type null": "doctrine/annotations/access-array-offset-on-null.patch"
                     },
@@ -239,31 +254,11 @@
                     "egulias/email-validator:1.2.15": {
                         "Fix access array offset on value of type null": "egulias/email-validator/access-array-offset-on-null.patch"
                     },
-                    "zendframework/zend-stdlib:2.7.7": {
-                        "Fix ArrayObject::unserialize()": "zendframework/zend-stdlib/ArrayObject-unserialize-continue.patch"
+                    "gettext/gettext:3.5.9": {
+                        "Fix PHP 8 compatibility": "gettext/gettext/php8-compatibility.patch"
                     },
-                    "sunra/php-simple-html-dom-parser:1.5.2": {
-                        "Fix minus in regular expressions": "sunra/php-simple-html-dom-parser/minus-in-regular-expressions.patch",
-                        "Add PHP 8.1 compatibility": "sunra/php-simple-html-dom-parser/php8.1-compatibility.patch"
-                    },
-                    "phpunit/phpunit:4.8.36": {
-                        "Avoid each() in Getopt": "phpunit/phpunit/Getopt-each.patch"
-                    },
-                    "tedivm/jshrink:1.1.0": {
-                        "Fix continue switch in Minifier": "tedivm/jshrink/fix-minifier-loop.patch",
-                        "Update to upstream version 1.3.2": "tedivm/jshrink/update-upstream-1.3.2.patch"
-                    },
-                    "zendframework/zend-code:2.6.3": {
-                        "Fix continue switch in FileGenerator and MethodReflection": "zendframework/zend-code/switch-continue.patch"
-                    },
-                    "zendframework/zend-http:2.6.0": {
-                        "Remove support for the X-Original-Url and X-Rewrite-Url headers": "zendframework/zend-http/no-x-original-url-x-rewrite.patch"
-                    },
-                    "zendframework/zend-mail:2.7.3": {
-                        "Fix idn_to_ascii deprecation warning": "zendframework/zend-mail/fix-idn_to_ascii-deprecation-warning.patch"
-                    },
-                    "zendframework/zend-validator:2.8.2": {
-                        "Fix idn_to_ascii/idn_to_utf8 deprecation warning": "zendframework/zend-validator/fix-idn_to_-deprecation-warning.patch"
+                    "laminas/laminas-code:3.4.1": {
+                        "Add PHP 8.1 compatibility": "laminas/laminas-code/php8.1-compatibility.patch"
                     },
                     "lcobucci/jwt:3.4.5": {
                         "Add PHP 8 compatibility": "lcobucci/jwt/php8-compatibility.patch"
@@ -274,11 +269,40 @@
                     "league/url:3.3.5": {
                         "Add PHP 8.1 compatibility": "league/url/php8.1-compatibility.patch"
                     },
-                    "laminas/laminas-code:3.4.1": {
-                        "Add PHP 8.1 compatibility": "laminas/laminas-code/php8.1-compatibility.patch"
+                    "phpunit/phpunit:4.8.36": {
+                        "Avoid each() in Getopt": "phpunit/phpunit/Getopt-each.patch"
                     },
-                    "anahkiasen/html-object:1.4.4": {
-                        "Add PHP 8.1 compatibility": "anahkiasen/html-object/php8.1-compatibility.patch"
+                    "primal/color:1.0.1": {
+                        "Fix PHP 8 compatibility": "primal/color/php8-compatibility.patch"
+                    },
+                    "sunra/php-simple-html-dom-parser:1.5.2": {
+                        "Fix minus in regular expressions": "sunra/php-simple-html-dom-parser/minus-in-regular-expressions.patch",
+                        "Add PHP 8.1 compatibility": "sunra/php-simple-html-dom-parser/php8.1-compatibility.patch"
+                    },
+                    "tedivm/jshrink:1.1.0": {
+                        "Fix continue switch in Minifier": "tedivm/jshrink/fix-minifier-loop.patch",
+                        "Update to upstream version 1.3.2": "tedivm/jshrink/update-upstream-1.3.2.patch"
+                    },
+                    "wikimedia/less.php:1.8.2": {
+                        "Add PHP 8.2 compatibility": "wikimedia/less.php/fix-php-8.2-compatibility.patch"
+                    },
+                    "zendframework/zend-code:2.6.3": {
+                        "Fix continue switch in FileGenerator and MethodReflection": "zendframework/zend-code/switch-continue.patch"
+                    },
+                    "zendframework/zend-http:2.6.0": {
+                        "Remove support for the X-Original-Url and X-Rewrite-Url headers": "zendframework/zend-http/no-x-original-url-x-rewrite.patch"
+                    },
+                    "zendframework/zend-i18n:2.7.3": {
+                        "Add support for PHP 7.4 to Gettext Loader": "zendframework/zend-i18n/gettext-loader-php7.4.patch"
+                    },
+                    "zendframework/zend-mail:2.7.3": {
+                        "Fix idn_to_ascii deprecation warning": "zendframework/zend-mail/fix-idn_to_ascii-deprecation-warning.patch"
+                    },
+                    "zendframework/zend-stdlib:2.7.7": {
+                        "Fix ArrayObject::unserialize()": "zendframework/zend-stdlib/ArrayObject-unserialize-continue.patch"
+                    },
+                    "zendframework/zend-validator:2.8.2": {
+                        "Fix idn_to_ascii/idn_to_utf8 deprecation warning": "zendframework/zend-validator/fix-idn_to_-deprecation-warning.patch"
                     }
                 }
             },
@@ -294,9 +318,9 @@
                     "role": "author"
                 }
             ],
-            "description": "Patches required for concrete5 dependencies",
-            "homepage": "https://github.com/concrete5/dependency-patches",
-            "time": "2022-03-31T17:52:31+00:00"
+            "description": "Patches required for concrete5 and Concrete CMS dependencies",
+            "homepage": "https://github.com/concretecms/dependency-patches",
+            "time": "2023-11-02T15:31:00+00:00"
         },
         {
             "name": "concretecms/doctrine-xml",
@@ -515,7 +539,7 @@
                     "hash": "82e8d7bd5d0530366e7da28f81a2cef0f28bab55",
                     "list": [
                         {
-                            "from-package": "concrete5/dependency-patches 1.5.0",
+                            "from-package": "concretecms/dependency-patches 1.7.6",
                             "path": "doctrine/annotations/access-array-offset-on-null.patch",
                             "description": "Fix access array offset on value of type null"
                         }
@@ -1138,12 +1162,17 @@
                     "dev-master": "2.6.x-dev"
                 },
                 "patches_applied": {
-                    "hash": "f03553f596500df8083abdd1cd87cd1916d1a3f4",
+                    "hash": "cc001a5b63de854ea8b786e0c6cb3d79460c36d2",
                     "list": [
                         {
-                            "from-package": "concrete5/dependency-patches 1.5.0",
+                            "from-package": "concretecms/dependency-patches 1.7.6",
                             "path": "doctrine/orm/UnitOfWork-createEntity-continue.patch",
                             "description": "Fix UnitOfWork::createEntity()"
+                        },
+                        {
+                            "from-package": "concretecms/dependency-patches 1.7.6",
+                            "path": "doctrine/orm/access-array-offset-on-null.patch",
+                            "description": "Fix access array offset on value of type null"
                         }
                     ]
                 }
@@ -1368,6 +1397,18 @@
                 "twig/twig": "Is necessary if you want to use the Twig extractor"
             },
             "type": "library",
+            "extra": {
+                "patches_applied": {
+                    "hash": "fc20e1dcce554bb50ef5a2583fae08dd3a7b8e93",
+                    "list": [
+                        {
+                            "from-package": "concretecms/dependency-patches 1.7.6",
+                            "path": "gettext/gettext/php8-compatibility.patch",
+                            "description": "Fix PHP 8 compatibility"
+                        }
+                    ]
+                }
+            },
             "autoload": {
                 "psr-4": {
                     "Gettext\\": "src"
@@ -2695,6 +2736,16 @@
             "extra": {
                 "branch-alias": {
                     "dev-master": "3.3-dev"
+                },
+                "patches_applied": {
+                    "hash": "cf09d5571fb17829c242450582ed83792df24c88",
+                    "list": [
+                        {
+                            "from-package": "concretecms/dependency-patches 1.7.6",
+                            "path": "league/url/php8.1-compatibility.patch",
+                            "description": "Add PHP 8.1 compatibility"
+                        }
+                    ]
                 }
             },
             "autoload": {
@@ -3655,6 +3706,16 @@
             "extra": {
                 "branch-alias": {
                     "dev-master": "1.0.x-dev"
+                },
+                "patches_applied": {
+                    "hash": "d22f2364a834b1917b3b4fa5d3e7227b29575733",
+                    "list": [
+                        {
+                            "from-package": "concretecms/dependency-patches 1.7.6",
+                            "path": "primal/color/php8-compatibility.patch",
+                            "description": "Fix PHP 8 compatibility"
+                        }
+                    ]
                 }
             },
             "autoload": {
@@ -4016,12 +4077,17 @@
             "type": "library",
             "extra": {
                 "patches_applied": {
-                    "hash": "43699395013691839330f8406ee49fa752c163fb",
+                    "hash": "3285e37f0b32ba746ab47014a697ea90a981abfb",
                     "list": [
                         {
-                            "from-package": "concrete5/dependency-patches 1.5.0",
+                            "from-package": "concretecms/dependency-patches 1.7.6",
                             "path": "sunra/php-simple-html-dom-parser/minus-in-regular-expressions.patch",
                             "description": "Fix minus in regular expressions"
+                        },
+                        {
+                            "from-package": "concretecms/dependency-patches 1.7.6",
+                            "path": "sunra/php-simple-html-dom-parser/php8.1-compatibility.patch",
+                            "description": "Add PHP 8.1 compatibility"
                         }
                     ]
                 }
@@ -5758,12 +5824,12 @@
                     "hash": "c8ec7f9d85bbbe7d89dd1fe73ea17f64a508e3f9",
                     "list": [
                         {
-                            "from-package": "concrete5/dependency-patches 1.5.0",
+                            "from-package": "concretecms/dependency-patches 1.7.6",
                             "path": "tedivm/jshrink/fix-minifier-loop.patch",
                             "description": "Fix continue switch in Minifier"
                         },
                         {
-                            "from-package": "concrete5/dependency-patches 1.5.0",
+                            "from-package": "concretecms/dependency-patches 1.7.6",
                             "path": "tedivm/jshrink/update-upstream-1.3.2.patch",
                             "description": "Update to upstream version 1.3.2"
                         }
@@ -6310,7 +6376,7 @@
                     "hash": "43aec57a6422c48c002031806c8a8ca01b6208cf",
                     "list": [
                         {
-                            "from-package": "concrete5/dependency-patches 1.5.0",
+                            "from-package": "concretecms/dependency-patches 1.7.6",
                             "path": "zendframework/zend-code/switch-continue.patch",
                             "description": "Fix continue switch in FileGenerator and MethodReflection"
                         }
@@ -6533,7 +6599,7 @@
                     "hash": "b1172d4359d8b116dcf51b148427b53e41d1ae2a",
                     "list": [
                         {
-                            "from-package": "concrete5/dependency-patches 1.5.0",
+                            "from-package": "concretecms/dependency-patches 1.7.6",
                             "path": "zendframework/zend-http/no-x-original-url-x-rewrite.patch",
                             "description": "Remove support for the X-Original-Url and X-Rewrite-Url headers"
                         }
@@ -6666,6 +6732,16 @@
                 "zf": {
                     "component": "Zend\\I18n",
                     "config-provider": "Zend\\I18n\\ConfigProvider"
+                },
+                "patches_applied": {
+                    "hash": "0dd457fc56b70541be390d5087fe4a4757e62d84",
+                    "list": [
+                        {
+                            "from-package": "concretecms/dependency-patches 1.7.6",
+                            "path": "zendframework/zend-i18n/gettext-loader-php7.4.patch",
+                            "description": "Add support for PHP 7.4 to Gettext Loader"
+                        }
+                    ]
                 }
             },
             "autoload": {
@@ -6776,7 +6852,7 @@
                     "hash": "2eef0fc6a76db7a14e55b9d0717ffd9092bce7ce",
                     "list": [
                         {
-                            "from-package": "concrete5/dependency-patches 1.5.0",
+                            "from-package": "concretecms/dependency-patches 1.7.6",
                             "path": "zendframework/zend-mail/fix-idn_to_ascii-deprecation-warning.patch",
                             "description": "Fix idn_to_ascii deprecation warning"
                         }
@@ -6950,10 +7026,10 @@
                     "dev-develop": "3.1-dev"
                 },
                 "patches_applied": {
-                    "hash": "f247c9d47f2ba4ae8d9dfe6d1a25c8627e377753",
+                    "hash": "8d3d823a714a3a76d8a616d01922aa7491e13302",
                     "list": [
                         {
-                            "from-package": "concrete5/dependency-patches 1.5.0",
+                            "from-package": "concretecms/dependency-patches 1.7.6",
                             "path": "zendframework/zend-stdlib/ArrayObject-unserialize-continue.patch",
                             "description": "Fix ArrayObject::unserialize()"
                         }
@@ -7082,7 +7158,7 @@
                     "hash": "37d53a3bf7979793505330148334c2e97b2f7a0a",
                     "list": [
                         {
-                            "from-package": "concrete5/dependency-patches 1.5.0",
+                            "from-package": "concretecms/dependency-patches 1.7.6",
                             "path": "zendframework/zend-validator/fix-idn_to_-deprecation-warning.patch",
                             "description": "Fix idn_to_ascii/idn_to_utf8 deprecation warning"
                         }
@@ -8098,7 +8174,7 @@
                     "hash": "b230cedd50b7175de81a87b2ec86ad380ee748f9",
                     "list": [
                         {
-                            "from-package": "concrete5/dependency-patches 1.5.0",
+                            "from-package": "concretecms/dependency-patches 1.7.6",
                             "path": "phpunit/phpunit/Getopt-each.patch",
                             "description": "Avoid each() in Getopt"
                         }
