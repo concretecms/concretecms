@@ -3,9 +3,10 @@ namespace Concrete\Core\Database;
 
 use Closure;
 use Doctrine\Common\Persistence\Mapping\MappingException;
+use Concrete\Core\Config\Repository\Repository;
+use Core;
 use Doctrine\DBAL\Schema\SchemaDiff;
 use Doctrine\ORM\EntityManagerInterface;
-use Core;
 use Doctrine\ORM\Tools\SchemaTool;
 
 class DatabaseStructureManager
@@ -93,9 +94,10 @@ class DatabaseStructureManager
                         $proxyDir
                     ));
                 }
-                @mkdir($proxyDir, DIRECTORY_PERMISSIONS_MODE_COMPUTED, true);
+                $permissions = app(Repository::class)->get('concrete.filesystem.permissions.directory');
+                @mkdir($proxyDir, $permissions, true);
                 if (is_dir($proxyDir)) {
-                    @chmod($proxyDir, DIRECTORY_PERMISSIONS_MODE_COMPUTED);
+                    @chmod($proxyDir, $permissions);
                 } else {
                     throw new \Exception(t(
                         "Could not create the proxies directory. " .
@@ -394,7 +396,7 @@ class DatabaseStructureManager
             $cache->flushAll();
         }
 
-        // Next, we regnerate proxies
+        // Next, we regenerate proxies
         $metadatas = $this->entityManager->getMetadataFactory()->getAllMetadata();
         $this->entityManager->getProxyFactory()->generateProxyClasses($metadatas, \Config::get('database.proxy_classes'));
         return $metadatas;

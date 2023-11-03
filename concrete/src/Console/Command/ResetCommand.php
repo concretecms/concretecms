@@ -112,7 +112,7 @@ EOT
         foreach ($createEmptyDirs as $shownName => $fullpath) {
             if (!file_exists($fullpath)) {
                 $output->write("Creating directory $shownName... ");
-                if (@mkdir($fullpath) === false) {
+                if (@mkdir($fullpath, DIRECTORY_PERMISSIONS_MODE_COMPUTED) === false) {
                     throw new Exception("Failed to create directory $fullpath");
                 }
                 $output->writeln('<info>done.</info>');
