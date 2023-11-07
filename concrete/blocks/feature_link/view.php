@@ -3,6 +3,8 @@
  * Building the button
  */
 
+$buttonColor = $buttonColor ?? null;
+
 if (isset($button)) {
 
     if ($buttonStyle == 'outline') {
