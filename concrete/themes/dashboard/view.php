@@ -13,7 +13,7 @@ $view->inc('elements/header.php');
             <?php } ?>
         </a>
     <?php } ?>
-    <h1><?=(isset($pageTitle) && $pageTitle) ? t($pageTitle) : '&nbsp;' ?></h1>
+    <h1><?=(isset($pageTitle) && $pageTitle) ? h(t($pageTitle)) : '&nbsp;' ?></h1>
     <?php echo Core::make('helper/concrete/ui/help')->display('dashboard', $c->getCollectionPath()); ?>
 
     <div class="ccm-dashboard-header-menu">
