@@ -3,8 +3,11 @@
 namespace Concrete\Block\Survey;
 
 use Concrete\Core\Block\BlockController;
+use Concrete\Core\Cookie\CookieJar;
+use Concrete\Core\Cookie\ResponseCookieJar;
 use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Error\ErrorList\ErrorList;
+use Concrete\Core\Routing\RedirectResponse;
 use Concrete\Core\User\User;
 use Core;
 use Database;
@@ -151,8 +154,22 @@ class Controller extends BlockController
                 ];
                 $q = 'INSERT INTO btSurveyResults (optionID, bID, uID, ipAddress, cID) VALUES (?, ?, ?, ?, ?)';
                 $db->query($q, $v);
-                setcookie('ccmPoll' . $this->bID . '-' . $this->cID, 'voted', time() + 1296000, DIR_REL . '/');
-                $this->redirect($c->getCollectionPath() . '?survey_voted=1');
+                $cookieJar = $this->app->make(ResponseCookieJar::class);
+                $cookieKey = 'ccmPoll' . $this->bID . '-' . $this->cID;
+                $config = $this->app->make('config');
+                $cookieJar->addCookie(
+                    $cookieKey,
+                    'voted',
+                    time() + 1296000,
+                    DIR_REL . '/',
+                    // $domain
+                    $config->get('concrete.session.cookie.cookie_domain'),
+                    // $secure
+                    $config->get('concrete.session.cookie.cookie_secure'),
+                    // $httpOnly
+                    $config->get('concrete.session.cookie.cookie_httponly')
+                );
+                return new RedirectResponse($c->getCollectionPath() . '?survey_voted=1');
             }
         }
     }
@@ -165,6 +182,12 @@ class Controller extends BlockController
     public function hasVoted()
     {
         $u = $this->app->make(User::class);
+        $cookieJar = $this->app->make(CookieJar::class);
+        $cookieKey = 'ccmPoll' . $this->bID . '-' . $this->cID;
+        $cookieHasVoted = false;
+        if ($cookieJar->has($cookieKey) && $cookieJar->get($cookieKey) == 'voted') {
+            $cookieHasVoted = true;
+        }
         if ($u->isRegistered()) {
             $db = Database::connection();
             $v = [$u->getUserID(), $this->bID, $this->cID];
@@ -173,7 +196,7 @@ class Controller extends BlockController
             if ($result > 0) {
                 return true;
             }
-        } elseif ($_COOKIE['ccmPoll' . $this->bID . '-' . $this->cID] == 'voted') {
+        } else if ($cookieHasVoted) {
             return true;
         }
 
