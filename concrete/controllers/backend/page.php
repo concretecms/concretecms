@@ -82,6 +82,9 @@ class Page extends Controller
                 break;
         }
 
+        if ($this->request->query->has('redirect')) {
+            $redirectUrl = $this->app->make(ResolverManagerInterface::class)->resolve([$this->request->query->get('redirect')]);
+        }
         return $this->buildRedirect($redirectUrl);
     }
 

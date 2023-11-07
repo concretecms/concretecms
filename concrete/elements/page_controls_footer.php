@@ -94,12 +94,13 @@ if (isset($cp) && $cp->canViewToolbar() && (!$dh->inDashboard()) && !$view->isEd
                         </li>
                         <?php
                     } elseif ($permissions->canEditPageContents()) {
+                        $request = Request::createFromGlobals();
                         ?>
                         <li data-guide-toolbar-action="edit-page" class="ccm-toolbar-page-edit float-start d-none d-md-block">
                             <a <?php if ($show_tooltips) { ?>class="launch-tooltip"<?php } ?> data-bs-toggle="tooltip" data-bs-placement="bottom"
                                 <?php if ($c->isMasterCollection()) { ?>data-disable-panel="check-in"<?php } ?>
                                 data-toolbar-action="check-out"
-                                href="<?= h($resolver->resolve(["/ccm/system/page/checkout/{$cID}/-/" . $valt->generate()])) ?>"
+                                href="<?= h($resolver->resolve(["/ccm/system/page/checkout/{$cID}/-/" . $valt->generate()])) ?>?redirect=<?=h($request->getPath())?>"
                                 title="<?= t('Edit This Page') ?>"
                             >
                                 <svg><use xlink:href="#icon-pencil" /></svg><span class="ccm-toolbar-accessibility-title ccm-toolbar-accessibility-title-edit-mode"><?= tc('toolbar', 'Edit Mode') ?></span>
