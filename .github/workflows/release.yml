@@ -1,0 +1,25 @@
+name: "Publish New Version"
+on:
+  release:
+    types: [published]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      ARCHIVE_BASENAME: concrete-cms-${{ github.event.release.tag_name }}
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Build
+        run: cd build/ && npm ci && grunt build-release
+      - name: Upload Archive
+        run: gh release upload ${{ github.event.release.tag_name }} build/${{ env.ARCHIVE_BASENAME }}.zip#archive
+      - name: Upload Remote Update Archive
+        run: |
+            cd build
+            unzip ${{ env.ARCHIVE_BASENAME }}.zip
+            mkdir ${{ env.ARCHIVE_BASENAME }}-remote-updater
+            mv ${{ env.ARCHIVE_BASENAME }}/concrete ${{ env.ARCHIVE_BASENAME }}-remote-updater/
+            zip -r ${{ env.ARCHIVE_BASENAME }}-remote-updater.zip ${{ env.ARCHIVE_BASENAME }}-remote-updater/
+            gh release upload ${{ github.event.release.tag_name }} ${{ env.ARCHIVE_BASENAME }}-remote-updater.zip#remote-updater
