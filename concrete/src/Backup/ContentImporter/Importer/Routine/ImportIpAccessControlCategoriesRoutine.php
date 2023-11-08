@@ -46,7 +46,7 @@ class ImportIpAccessControlCategoriesRoutine extends AbstractRoutine
                         ->setSiteSpecific($xIpAccessControlCategory['site-specific'])
                         ->setPackage(static::getPackageObject($xIpAccessControlCategory['package']))
                     ;
-                    $logChannelHandle = (string) $xIpAccessControlCategory['logChannelHandle'];
+                    $logChannelHandle = (string) $xIpAccessControlCategory['log-channel-handle'];
                     if ($logChannelHandle !== '') {
                         $category->setLogChannelHandle($logChannelHandle);
                     }
