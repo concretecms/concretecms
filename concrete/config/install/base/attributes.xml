@@ -284,8 +284,7 @@
             <attributekey handle="exclude_sitemapxml"/>
         </attributeset>
         <attributeset handle="navigation" name="Navigation and Indexing" package="" locked="0" category="collection">
-            <attributekey handle="is_featured
-            "/>
+            <attributekey handle="is_featured"/>
             <attributekey handle="exclude_nav"/>
             <attributekey handle="exclude_page_list"/>
             <attributekey handle="exclude_search_index"/>
