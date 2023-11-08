@@ -466,7 +466,7 @@
             </access>
         </permissionkey>
 
-        <permissionkey handle="view_announcement_content" name="View Announcement Content" package="Controls whether a user sees the Announcement modal interstitial, including upgrades and help, upon login." category="admin">
+        <permissionkey handle="view_announcement_content" name="View Announcement Content" package="" description="Controls whether a user sees the Announcement modal interstitial, including upgrades and help, upon login." category="admin">
             <access>
                 <group name="Administrators" description=""/>
             </access>
