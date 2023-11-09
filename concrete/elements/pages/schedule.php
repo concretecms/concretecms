@@ -53,62 +53,34 @@ $timezone = $dateService->getTimezoneDisplayName($timezone);
 <div class="form-group form-group-last">
     <label class="control-label form-label"><?= t('To') ?></label>
     <?= $datetime->datetime(
-            'cvPublishEndDate',
-            $publishEndDate,
-            true,
-            true,
-            'light-panel-calendar'
-        ); ?>
+    'cvPublishEndDate',
+    $publishEndDate,
+    true,
+    true,
+    'light-panel-calendar'
+); ?>
 </div>
 
 <div style="text-align: right">
     <span class="form-text help-block"><?= t('Time Zone: %s', $timezone) ?></span>
 </div>
 
-<?php if ($activeVersionExists || $scheduledVersionExists) {
-    if($scheduledVersionExists == false) {
-        $primaryText = t('At the moment, the existing live version will remain.');
-        $primaryInfo = t('Activate to remove the current live version.');
-        $alternativeText = t('Deactivate to leave current live version online.');
-        $alternativeInfo = t('At the moment, the current live version gets removed.');
-    } else {
-        $primaryText = t('Activate to remove the current scheduled version.');
-        $primaryInfo = t('At the moment, the existing scheduled version will remain.');
-        $alternativeText = t('Deactivate to leave current scheduled version.');
-        $alternativeInfo = t('At the moment, current scheduled version gets removed.');
-    }
-    ?>
+<?php if ($activeVersionExists || $scheduledVersionExists) { ?>
     <div class="form-group">
         <div class="form-check form-switch">
-            <?= $form->checkbox('keepOtherScheduling', 1, false) ?>
-            <?= $form->label('keepOtherScheduling', $primaryText) ?>
-            <?= $form->label('keepOtherScheduling', $alternativeText, ['class' => 'active']) ?>
-                <!-- <?= $icon = '<svg class="svg-icon"><use xlink:href="#icon-info" /></svg>' ?> -->
-                <span class="form-text help-block"><?= $icon . $primaryInfo ?></span>
-                <span class="form-text help-block active"><?= $icon . $alternativeInfo ?></span>
-            <style>
-                .svg-icon {
-                    width: 22.1px;
-                    height: 18.1px;
-                    vertical-align: -0.15em;
-                    fill: #0099ff;
-                    overflow: hidden;
-                }
-                .form-switch label.active,
-                .form-switch span.active {
-                    display: none;
-                }
-                .form-switch input[type="checkbox"]:checked ~ label,
-                .form-switch input[type="checkbox"]:checked ~ span {
-                    display: none;
-                }
-                .form-switch input[type="checkbox"]:checked ~ label.active,
-                .form-switch input[type="checkbox"]:checked ~ span.active {
-                    display: inline-block;
-                }
-            </style>
+        <?= $form->checkbox('keepOtherScheduling', 1, false) ?>
+            <label for="keepOtherScheduling" class="form-check-label">
+                <span class="text-standard"><?= $scheduledVersionExists ? t('Activate to remove the current scheduled version.') : t('At the moment, the existing live version will remain.') ?></span>
+                <span class="text-active"><?= $scheduledVersionExists ? t('Deactivate to leave current scheduled version.') : t('Deactivate to leave current live version online.') ?></span>
+            </label>
+            <span class="form-text help-block">
+                <i class="fa fa-info-circle" aria-hidden="true"></i>
+                <span class="info-standard"><?= $scheduledVersionExists ? t('At the moment, the existing scheduled version will remain.') : t('Activate to remove the current live version.') ?></span>
+                <span class="info-active"><?= $scheduledVersionExists ? t('At the moment, current scheduled version gets removed.') : t('At the moment, the current live version gets removed.') ?></span>
+            </span>
         </div>
-    <?php } ?>
+    </div>
+<?php } ?>
 
 <div class="dialog-buttons">
     <button type="submit" name="action" value="schedule"
@@ -118,6 +90,19 @@ $timezone = $dateService->getTimezoneDisplayName($timezone);
 </div>
 
 <style type="text/css">
+    .text-active, .info-active {
+        display: none;
+    }
+
+    #keepOtherScheduling:checked ~ .form-check-label .text-standard,
+    #keepOtherScheduling:checked ~ .help-block .info-standard {
+        display: none;
+    }
+
+    #keepOtherScheduling:checked ~ .form-check-label .text-active,
+    #keepOtherScheduling:checked ~ .help-block .info-active {
+        display: inline;
+    }
     div.ui-dialog button.ccm-check-in-schedule {
         float: right;
     }
