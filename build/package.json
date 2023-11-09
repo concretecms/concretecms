@@ -13,7 +13,7 @@
     "production": "mix --production"
   },
   "devDependencies": {
-    "@concretecms/bedrock": "^1.4.9",
+    "@concretecms/bedrock": "^1.4.10",
     "cross-env": "^5.1.1",
     "download": "~8.0.0",
     "grunt": "^1.5.3",
@@ -22,7 +22,7 @@
     "resolve-url-loader": "^5.0.0",
     "sass": "^1.49.7",
     "sass-loader": "^12.4.0",
-    "vue-loader": "^17.3.0",
+    "vue-loader": "^15.10.1",
     "vue-template-compiler": "^2.7.14"
   },
   "dependencies": {
