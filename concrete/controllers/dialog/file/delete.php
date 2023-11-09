@@ -31,7 +31,7 @@ class Delete extends UserInterface
 
     public function submit($fID)
     {
-        if ($this->canAccess()) {
+        if ($this->validateAction()) {
             $file = File::getByID($this->request->attributes->get('fID'));
             $file->delete();
 

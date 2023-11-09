@@ -172,7 +172,7 @@ class Controller extends BlockController implements UsesFeatureInterface
                         if (is_array($content) && $content[0] instanceof \Concrete\Core\Tree\Node\Type\Topic) {
                             $content = str_replace(', ', "\n", $content_alt->getDisplayValue());
                         } elseif ($content instanceof SelectValue) {
-                            $content = (string) $content;
+                            $content = h((string) $content);
                         } else {
                             $content = $content_alt->getDisplayValue();
                         }
