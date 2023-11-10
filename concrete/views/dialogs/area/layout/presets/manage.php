@@ -3,7 +3,6 @@
 <div class="ccm-ui">
 
 
-<<<<<<< HEAD
 <?php if (count($presets) > 0) {
     ?>
     <div class="alert alert-info"><?=t("Deleting a preset will not affect any layouts that have used that preset in the past.")?></div>
@@ -11,28 +10,21 @@
     <ul class="item-select-list">
     <?php foreach ($presets as $preset) {
     ?>
-        <li data-preset-row="<?=$preset->getAreaLayoutPresetID()?>"><span><?=$preset->getAreaLayoutPresetName()?>
+        <li data-preset-row="<?=$preset->getAreaLayoutPresetID()?>"><span><?=h($preset->getAreaLayoutPresetName())?>
         <a href="javascript:void(0)" class="pull-right icon-link delete-area-layout-preset" data-action="delete-area-layout-preset"><i class="fa fa-trash-o"></i></a>
         </span></li>
-    <?php 
+    <?php
 }
     ?>
     </ul>
 
-<?php 
+<?php
 } else {
     ?>
     <p><?=t('You have no presets.')?></p>
-<?php 
+<?php
 } ?>
 
-=======
-        <ul class="item-select-list">
-            <?php foreach ($presets as $preset) { ?>
-                <li data-preset-row="<?php echo $preset->getAreaLayoutPresetID() ?>">
-                    <span>
-                        <?php echo h($preset->getAreaLayoutPresetName()) ?>
->>>>>>> c88ddd1f8f (Sanitize layout preset name on output)
 
 </div>
 
