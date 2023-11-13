@@ -24,9 +24,16 @@ div.theme-atomik {
 
     // Social Links
     .ccm-block-social-links {
+      ul {
+        display: flex;
+      }
       margin-bottom: 2rem;
       a {
         color: $dark;
+      }
+      svg {
+        max-height: 20px;
+        fill: $dark;
       }
       i {
         font-size: 27px;
@@ -43,6 +50,9 @@ div.theme-atomik {
 
       &:hover {
         color: $primary;
+        svg {
+          fill: $primary;
+        }
       }
     }
 
