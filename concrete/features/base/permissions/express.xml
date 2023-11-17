@@ -8,20 +8,28 @@
 
     <permissionaccessentitytypes>
         <permissionaccessentitytype handle="group">
-            <category handle="express_tree_node" />
-            <category handle="express_entry" />
+            <categories>
+                <category handle="express_tree_node" />
+                <category handle="express_entry" />
+            </categories>
         </permissionaccessentitytype>
         <permissionaccessentitytype handle="user">
-            <category handle="express_tree_node" />
-            <category handle="express_entry" />
+            <categories>
+                <category handle="express_tree_node" />
+                <category handle="express_entry" />
+            </categories>
         </permissionaccessentitytype>
         <permissionaccessentitytype handle="group_set">
-            <category handle="express_tree_node" />
-            <category handle="express_entry" />
+            <categories>
+                <category handle="express_tree_node" />
+                <category handle="express_entry" />
+            </categories>
         </permissionaccessentitytype>
         <permissionaccessentitytype handle="group_combination">
-            <category handle="express_tree_node" />
-            <category handle="express_entry" />
+            <categories>
+                <category handle="express_tree_node" />
+                <category handle="express_entry" />
+            </categories>
         </permissionaccessentitytype>
     </permissionaccessentitytypes>
 
