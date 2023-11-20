@@ -74,13 +74,17 @@ class StyleSet
         $o->setRotate((string) $node->rotate);
         $o->setBoxShadowHorizontal((string) $node->boxShadowHorizontal);
         $o->setBoxShadowVertical((string) $node->boxShadowVertical);
-        $o->setBoxShadowSpread((string) $node->boxShadowSpread);
         $o->setBoxShadowBlur((string) $node->boxShadowBlur);
+        $o->setBoxShadowSpread((string) $node->boxShadowSpread);
         $o->setBoxShadowColor((string) $node->boxShadowColor);
-        $o->setBoxShadowInset((bool) $node->boxShadowInset);
+        $o->setBoxShadowInset(filter_var((string) $node->boxShadowInset, FILTER_VALIDATE_BOOLEAN));
         $o->setCustomClass((string) $node->customClass);
         $o->setCustomID((string) $node->customID);
         $o->setCustomElementAttribute((string) $node->customElementAttribute);
+        $o->setHideOnExtraSmallDevice(filter_var((string) $node->hideOnExtraSmallDevice, FILTER_VALIDATE_BOOLEAN));
+        $o->setHideOnSmallDevice(filter_var((string) $node->hideOnSmallDevice, FILTER_VALIDATE_BOOLEAN));
+        $o->setHideOnMediumDevice(filter_var((string) $node->hideOnMediumDevice, FILTER_VALIDATE_BOOLEAN));
+        $o->setHideOnLargeDevice(filter_var((string) $node->hideOnLargeDevice, FILTER_VALIDATE_BOOLEAN));
 
         $o->save();
 
