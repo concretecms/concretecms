@@ -2172,7 +2172,6 @@
                                                 <maxHeight><![CDATA[0]]></maxHeight>
                                                 <externalLink><![CDATA[]]></externalLink>
                                                 <internalLinkCID><![CDATA[0]]></internalLinkCID>
-                                                <forceImageToMatchDimensions><![CDATA[0]]></forceImageToMatchDimensions>
                                                 <altText><![CDATA[Blank Image]]></altText>
                                                 <title><![CDATA[Blank Image]]></title>
                                             </record>
@@ -2542,7 +2541,6 @@
                                                 <maxHeight><![CDATA[0]]></maxHeight>
                                                 <externalLink><![CDATA[]]></externalLink>
                                                 <internalLinkCID><![CDATA[0]]></internalLinkCID>
-                                                <forceImageToMatchDimensions><![CDATA[0]]></forceImageToMatchDimensions>
                                                 <altText><![CDATA[]]></altText>
                                             </record>
                                         </data>
@@ -2635,7 +2633,6 @@
                                                 <maxHeight><![CDATA[0]]></maxHeight>
                                                 <externalLink><![CDATA[]]></externalLink>
                                                 <internalLinkCID><![CDATA[0]]></internalLinkCID>
-                                                <forceImageToMatchDimensions><![CDATA[0]]></forceImageToMatchDimensions>
                                                 <altText><![CDATA[]]></altText>
                                             </record>
                                         </data>
@@ -2694,7 +2691,6 @@
                                                 <maxHeight><![CDATA[0]]></maxHeight>
                                                 <externalLink><![CDATA[]]></externalLink>
                                                 <internalLinkCID><![CDATA[0]]></internalLinkCID>
-                                                <forceImageToMatchDimensions><![CDATA[0]]></forceImageToMatchDimensions>
                                                 <altText><![CDATA[]]></altText>
                                             </record>
                                         </data>
@@ -2728,7 +2724,6 @@
                                                 <maxHeight><![CDATA[0]]></maxHeight>
                                                 <externalLink><![CDATA[]]></externalLink>
                                                 <internalLinkCID><![CDATA[0]]></internalLinkCID>
-                                                <forceImageToMatchDimensions><![CDATA[0]]></forceImageToMatchDimensions>
                                                 <altText><![CDATA[]]></altText>
                                             </record>
                                         </data>
@@ -2771,7 +2766,6 @@
                                 <maxHeight><![CDATA[0]]></maxHeight>
                                 <externalLink><![CDATA[]]></externalLink>
                                 <internalLinkCID><![CDATA[0]]></internalLinkCID>
-                                <forceImageToMatchDimensions><![CDATA[0]]></forceImageToMatchDimensions>
                                 <altText><![CDATA[]]></altText>
                             </record>
                         </data>
