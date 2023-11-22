@@ -287,11 +287,6 @@
                                                 <addMessageLabel><![CDATA[Add Message]]></addMessageLabel>
                                                 <dateFormat><![CDATA[default]]></dateFormat>
                                                 <customDateFormat><![CDATA[]]></customDateFormat>
-                                                <maxFilesGuest><![CDATA[0]]></maxFilesGuest>
-                                                <maxFilesRegistered><![CDATA[0]]></maxFilesRegistered>
-                                                <maxFileSizeGuest><![CDATA[0]]></maxFileSizeGuest>
-                                                <maxFileSizeRegistered><![CDATA[0]]></maxFileSizeRegistered>
-                                                <fileExtensions><![CDATA[]]></fileExtensions>
                                             </record>
                                         </data>
                                     </block>
@@ -2263,11 +2258,6 @@
                                 <addMessageLabel><![CDATA[Add Message]]></addMessageLabel>
                                 <dateFormat><![CDATA[default]]></dateFormat>
                                 <customDateFormat><![CDATA[]]></customDateFormat>
-                                <maxFilesGuest><![CDATA[0]]></maxFilesGuest>
-                                <maxFilesRegistered><![CDATA[0]]></maxFilesRegistered>
-                                <maxFileSizeGuest><![CDATA[0]]></maxFileSizeGuest>
-                                <maxFileSizeRegistered><![CDATA[0]]></maxFileSizeRegistered>
-                                <fileExtensions><![CDATA[]]></fileExtensions>
                             </record>
                         </data>
                     </block>
@@ -2334,11 +2324,6 @@
                                 <addMessageLabel><![CDATA[Add Message]]></addMessageLabel>
                                 <dateFormat><![CDATA[default]]></dateFormat>
                                 <customDateFormat><![CDATA[]]></customDateFormat>
-                                <maxFilesGuest><![CDATA[0]]></maxFilesGuest>
-                                <maxFilesRegistered><![CDATA[0]]></maxFilesRegistered>
-                                <maxFileSizeGuest><![CDATA[0]]></maxFileSizeGuest>
-                                <maxFileSizeRegistered><![CDATA[0]]></maxFileSizeRegistered>
-                                <fileExtensions><![CDATA[]]></fileExtensions>
                             </record>
                         </data>
                     </block>
@@ -2405,11 +2390,6 @@
                                 <addMessageLabel><![CDATA[Add Message]]></addMessageLabel>
                                 <dateFormat><![CDATA[default]]></dateFormat>
                                 <customDateFormat><![CDATA[]]></customDateFormat>
-                                <maxFilesGuest><![CDATA[0]]></maxFilesGuest>
-                                <maxFilesRegistered><![CDATA[0]]></maxFilesRegistered>
-                                <maxFileSizeGuest><![CDATA[0]]></maxFileSizeGuest>
-                                <maxFileSizeRegistered><![CDATA[0]]></maxFileSizeRegistered>
-                                <fileExtensions><![CDATA[]]></fileExtensions>
                             </record>
                         </data>
                     </block>
