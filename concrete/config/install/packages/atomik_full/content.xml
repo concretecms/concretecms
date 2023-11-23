@@ -187,10 +187,8 @@
                                                             <filterDateDays><![CDATA[0]]></filterDateDays>
                                                             <filterDateStart><![CDATA[]]></filterDateStart>
                                                             <filterDateEnd><![CDATA[]]></filterDateEnd>
-                                                            <relatedTopicAttributeKeyHandle>
-                                                                <![CDATA[]]></relatedTopicAttributeKeyHandle>
-                                                            <customTopicAttributeKeyHandle>
-                                                                <![CDATA[]]></customTopicAttributeKeyHandle>
+                                                            <relatedTopicAttributeKeyHandle><![CDATA[]]></relatedTopicAttributeKeyHandle>
+                                                            <customTopicAttributeKeyHandle><![CDATA[]]></customTopicAttributeKeyHandle>
                                                             <customTopicTreeNodeID><![CDATA[0]]></customTopicTreeNodeID>
                                                             <includeName><![CDATA[1]]></includeName>
                                                             <includeDescription><![CDATA[1]]></includeDescription>
@@ -200,8 +198,7 @@
                                                             <displayAliases><![CDATA[0]]></displayAliases>
                                                             <displaySystemPages><![CDATA[0]]></displaySystemPages>
                                                             <ignorePermissions><![CDATA[0]]></ignorePermissions>
-                                                            <enableExternalFiltering>
-                                                                <![CDATA[0]]></enableExternalFiltering>
+                                                            <enableExternalFiltering><![CDATA[0]]></enableExternalFiltering>
                                                             <ptID>{ccm:export:pagetype:blog_entry}</ptID>
                                                             <pfID/>
                                                             <truncateSummaries><![CDATA[0]]></truncateSummaries>
@@ -844,8 +841,7 @@ Aenean eu enim justo. Vestibulum aliquam hendrerit molestie.</p>
                                             <filterDateDays><![CDATA[0]]></filterDateDays>
                                             <filterDateStart><![CDATA[]]></filterDateStart>
                                             <filterDateEnd><![CDATA[]]></filterDateEnd>
-                                            <relatedTopicAttributeKeyHandle>
-                                                <![CDATA[]]></relatedTopicAttributeKeyHandle>
+                                            <relatedTopicAttributeKeyHandle><![CDATA[]]></relatedTopicAttributeKeyHandle>
                                             <customTopicAttributeKeyHandle><![CDATA[]]></customTopicAttributeKeyHandle>
                                             <customTopicTreeNodeID><![CDATA[0]]></customTopicTreeNodeID>
                                             <includeName><![CDATA[0]]></includeName>
@@ -1755,8 +1751,7 @@ Maecenas consequat lectus a euismod pellentesque. Pellentesque commodo quam nec 
                                             <filterDateDays><![CDATA[0]]></filterDateDays>
                                             <filterDateStart><![CDATA[]]></filterDateStart>
                                             <filterDateEnd><![CDATA[]]></filterDateEnd>
-                                            <relatedTopicAttributeKeyHandle>
-                                                <![CDATA[]]></relatedTopicAttributeKeyHandle>
+                                            <relatedTopicAttributeKeyHandle><![CDATA[]]></relatedTopicAttributeKeyHandle>
                                             <customTopicAttributeKeyHandle><![CDATA[]]></customTopicAttributeKeyHandle>
                                             <customTopicTreeNodeID><![CDATA[0]]></customTopicTreeNodeID>
                                             <includeName><![CDATA[1]]></includeName>
@@ -2423,8 +2418,7 @@ Nam massa mauris, euismod vel tortor vel, finibus accumsan sem. Sed varius vulpu
                                 <setMode><![CDATA[any]]></setMode>
                                 <onlyCurrentUser><![CDATA[0]]></onlyCurrentUser>
                                 <tags><![CDATA[]]></tags>
-                                <viewProperties>
-                                    <![CDATA[{"thumbnail":"1","filename":"5","tags":"-1","date":"5","extension":"-1","size":"5","description":"-1","ak_16":"-1","ak_17":"-1","ak_19":"-1"}]]></viewProperties>
+                                <viewProperties><![CDATA[{"thumbnail":"1","filename":"5","tags":"-1","date":"5","extension":"-1","size":"5","description":"-1","ak_16":"-1","ak_17":"-1","ak_19":"-1"}]]></viewProperties>
                                 <expandableProperties><![CDATA[[]]]></expandableProperties>
                                 <searchProperties></searchProperties>
                                 <orderBy><![CDATA[title]]></orderBy>
@@ -3018,8 +3012,7 @@ Nam massa mauris, euismod vel tortor vel, finibus accumsan sem. Sed varius vulpu
                             <record>
                                 <brandingText></brandingText>
                                 <brandingLogo>{ccm:export:file:atomik-logo.png}</brandingLogo>
-                                <brandingTransparentLogo>{ccm:export:file:atomik-logo-transparent.png}
-                                </brandingTransparentLogo>
+                                <brandingTransparentLogo>{ccm:export:file:atomik-logo-transparent.png}</brandingTransparentLogo>
                                 <includeBrandText><![CDATA[1]]></includeBrandText>
                                 <includeBrandLogo><![CDATA[1]]></includeBrandLogo>
                                 <includeTransparency>1</includeTransparency>
