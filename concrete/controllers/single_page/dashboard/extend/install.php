@@ -169,7 +169,7 @@ class Install extends DashboardPageController
     public function package_installed($pkgID = 0)
     {
         $pkg = Package::getByID($pkgID);
-        $this->set('message', t('Package "%s" version %s has been installed.', $pkg->getPackageName(), $pkg->getPackageVersion()));
+        $this->set('message', t('Package "%s" version %s has been installed.', t($pkg->getPackageName()), $pkg->getPackageVersion()));
         $this->set('installedPKG', $pkg);
     }
 
