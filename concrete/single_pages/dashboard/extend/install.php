@@ -262,6 +262,9 @@ if ($this->controller->getTask() == 'install_package' && isset($showInstallOptio
         <h3><?= t('Currently Installed'); ?></h3>
         <?php
         if (count($pkgArray) > 0) {
+            usort($pkgArray, function($a,$b){
+                return $a->getPackageName() <=> $b->getPackageName();
+            });
             foreach ($pkgArray as $pkg) {
                 ?>
                 <div class="d-flex border p-3">
