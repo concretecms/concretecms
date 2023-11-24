@@ -91,6 +91,7 @@ class SiteType implements ItemInterface
 
         if (is_object($skeleton)) {
             $skeletonNode = $sitetype->addChild('skeleton');
+            $skeletonStacksNode = null;
             foreach($skeleton->getLocales() as $locale) {
                 /**
                  * @var $locale SkeletonLocale
@@ -116,7 +117,9 @@ class SiteType implements ItemInterface
                 $stacks = $stackList->getResults();
 
                 if (count($stacks)) {
-                    $skeletonStacksNode = $skeletonNode->addChild('stacks');
+                    if ($skeletonStacksNode === null) {
+                        $skeletonStacksNode = $skeletonNode->addChild('stacks');
+                    }
                     foreach($stacks as $stack) {
                         $exporter->export($stack, $skeletonStacksNode);
                     }
