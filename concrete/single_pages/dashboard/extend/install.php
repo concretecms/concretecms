@@ -263,7 +263,7 @@ if ($this->controller->getTask() == 'install_package' && isset($showInstallOptio
         <?php
         if (count($pkgArray) > 0) {
             usort($pkgArray, function($a,$b){
-                return $a->getPackageName() <=> $b->getPackageName();
+                return t($a->getPackageName()) <=> t($b->getPackageName());
             });
             foreach ($pkgArray as $pkg) {
                 ?>
