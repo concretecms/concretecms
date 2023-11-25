@@ -2,10 +2,13 @@
 
 namespace Concrete\Core\Backup\ContentImporter\Importer\Routine;
 
+use Concrete\Core\Backup\ContentImporter\ImportFromCifTrait;
 use Concrete\Core\Package\PackageService;
 
 abstract class AbstractRoutine implements RoutineInterface
 {
+    use ImportFromCifTrait;
+
     /**
      * Get a package entity given its handle.
      *
