@@ -25,13 +25,10 @@ class ImportSinglePageStructureRoutine extends AbstractRoutine implements Specif
             foreach ($sx->singlepages->page as $p) {
                 $pkg = static::getPackageObject($p['package']);
 
-                if (isset($p['global']) && (string) $p['global'] === 'true') {
+                if (self::getBoolFromCif($p['global'])) {
                     $spl = Single::addGlobal($p['path'], $pkg);
                 } else {
-                    $root = false;
-                    if (isset($p['root']) && (string) $p['root'] === 'true') {
-                        $root = true;
-                    }
+                    $root = self::getBoolFromCif($p['root']);
 
                     $siteTree = null;
                     if (isset($this->home)) {
