@@ -32,18 +32,18 @@ class ImportFromCifTraitTest extends TestCase
             ['<foo> yes </foo>', true],
             ['<foo> on </foo>', true],
             ['<foo> 1 </foo>', true],
-            ['<foo>unrecognized</foo>', false],
+            ['<foo>unrecognized</foo>', false, '', true],
             ['<foo><bar>false</bar><baz>true</baz></foo>', false],
             ['<foo><bar>false</bar><baz>true</baz></foo>', false, 'bar'],
             ['<foo><bar>false</bar><baz>true</baz></foo>', true, 'baz'],
-            ['<foo><bar>false</bar><baz>true</baz></foo>', false, 'qux'],
+            ['<foo><bar>false</bar><baz>true</baz></foo>', false, 'qux', true],
         ];
     }
 
     /**
      * @dataProvider provideBooleanValuesCases
      */
-    public function testBooleanValues(string $xml, bool $expected, string $childName = ''): void
+    public function testBooleanValues(string $xml, bool $expected, string $childName = '', bool $isDefaultFallback = false): void
     {
         $element = $this->parseXml($xml);
         if ($childName !== '') {
@@ -51,12 +51,16 @@ class ImportFromCifTraitTest extends TestCase
         }
         $actual = self::getBoolFromCif($element);
         $this->assertSame($expected, $actual);
+        if ($isDefaultFallback) {
+            $actual = self::getBoolFromCif($element, true);
+            $this->assertSame(true, $actual);
+        }
     }
 
     public static function provideBooleanAttributeCases(): array
     {
         return [
-            ['<foo />', 'bar', false],
+            ['<foo />', 'bar', false, true],
             ['<foo bar="" />', 'bar', false],
             ['<foo bar="false" />', 'bar', false],
             ['<foo bar="no" />', 'bar', false],
@@ -66,26 +70,30 @@ class ImportFromCifTraitTest extends TestCase
             ['<foo bar="yes" />', 'bar', true],
             ['<foo bar="on" />', 'bar', true],
             ['<foo bar="1" />', 'bar', true],
-            ['<foo bar="" />', 'baz', false],
-            ['<foo bar="false" />', 'baz', false],
-            ['<foo bar="no" />', 'baz', false],
-            ['<foo bar="off" />', 'baz', false],
-            ['<foo bar="0" />', 'baz', false],
-            ['<foo bar="true" />', 'baz', false],
-            ['<foo bar="yes" />', 'baz', false],
-            ['<foo bar="on" />', 'baz', false],
-            ['<foo bar="1" />', 'baz', false],
+            ['<foo bar="" />', 'baz', false, true],
+            ['<foo bar="false" />', 'baz', false, true],
+            ['<foo bar="no" />', 'baz', false, true],
+            ['<foo bar="off" />', 'baz', false, true],
+            ['<foo bar="0" />', 'baz', false, true],
+            ['<foo bar="true" />', 'baz', false, true],
+            ['<foo bar="yes" />', 'baz', false, true],
+            ['<foo bar="on" />', 'baz', false, true],
+            ['<foo bar="1" />', 'baz', false, true],
         ];
     }
 
     /**
      * @dataProvider provideBooleanAttributeCases
      */
-    public function testBooleanAttributes(string $xml, string $attributeName, bool $expected): void
+    public function testBooleanAttributes(string $xml, string $attributeName, bool $expected, bool $isDefaultFallback = false): void
     {
         $element = $this->parseXml($xml);
         $actual = self::getBoolFromCif($element[$attributeName]);
         $this->assertSame($expected, $actual);
+        if ($isDefaultFallback) {
+            $actual = self::getBoolFromCif($element[$attributeName], true);
+            $this->assertSame(true, $actual);
+        }
     }
 
     private function parseXml(string $xml): SimpleXMLElement

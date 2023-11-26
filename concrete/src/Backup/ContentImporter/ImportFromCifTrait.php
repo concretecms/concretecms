@@ -8,8 +8,12 @@ use SimpleXMLElement;
 
 trait ImportFromCifTrait
 {
-    protected static function getBoolFromCif(?SimpleXMLElement $elementOrAttribute): bool
+    protected static function getBoolFromCif(?SimpleXMLElement $elementOrAttribute, bool $default = false): bool
     {
-        return $elementOrAttribute === null ? false : filter_var((string) $elementOrAttribute, FILTER_VALIDATE_BOOLEAN);
+        if ($elementOrAttribute === null || $elementOrAttribute->getName() === '') {
+            return $default;
+        }
+
+        return filter_var((string) $elementOrAttribute, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE) ?? $default;
     }
 }
