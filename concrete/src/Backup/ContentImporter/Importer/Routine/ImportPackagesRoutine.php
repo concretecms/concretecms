@@ -2,6 +2,7 @@
 namespace Concrete\Core\Backup\ContentImporter\Importer\Routine;
 
 use Concrete\Core\Attribute\Type;
+use Concrete\Core\Backup\CifService;
 use Concrete\Core\Block\BlockType\BlockType;
 use Concrete\Core\Package\Package;
 use Concrete\Core\Permission\Category;
@@ -32,7 +33,7 @@ class ImportPackagesRoutine extends AbstractRoutine
 
                         $data = [];
 
-                        if (isset($p['full-content-swap'])) {
+                        if (CifService::getBool($p['full-content-swap'])) {
                             $data["pkgDoFullContentSwap"] = true;
                             // set this token to perform a full content swap when installing starting point packages
                             $data["ccm_token"] = $token->generate("install_options_selected");

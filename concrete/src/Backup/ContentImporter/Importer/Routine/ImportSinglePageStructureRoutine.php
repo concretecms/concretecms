@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\Backup\ContentImporter\Importer\Routine;
 
+use Concrete\Core\Backup\CifService;
 use Concrete\Core\Page\Single;
 use Concrete\Core\Support\Facade\Application;
 
@@ -25,13 +26,10 @@ class ImportSinglePageStructureRoutine extends AbstractRoutine implements Specif
             foreach ($sx->singlepages->page as $p) {
                 $pkg = static::getPackageObject($p['package']);
 
-                if (isset($p['global']) && (string) $p['global'] === 'true') {
+                if (CifService::getBool($p['global'])) {
                     $spl = Single::addGlobal($p['path'], $pkg);
                 } else {
-                    $root = false;
-                    if (isset($p['root']) && (string) $p['root'] === 'true') {
-                        $root = true;
-                    }
+                    $root = CifService::getBool($p['root']);
 
                     $siteTree = null;
                     if (isset($this->home)) {
