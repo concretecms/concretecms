@@ -6,6 +6,7 @@ use Concrete\Core\Block\BlockType\BlockType;
 use Concrete\Core\Package\Package;
 use Concrete\Core\Permission\Category;
 use Concrete\Core\Support\Facade\Facade;
+use Concrete\Core\Utility\Service\Xml;
 use Concrete\Core\Validation\BannedWord\BannedWord;
 use Concrete\Core\Package\PackageService;
 use Concrete\Core\Validation\CSRF\Token;
@@ -20,6 +21,7 @@ class ImportPackagesRoutine extends AbstractRoutine
     public function import(\SimpleXMLElement $sx)
     {
         if (isset($sx->packages)) {
+            $xml = app(Xml::class);
             foreach ($sx->packages->package as $p) {
                 $pkg = Package::getByHandle((string) $p['handle']);
                 if (!$pkg) {
@@ -32,7 +34,7 @@ class ImportPackagesRoutine extends AbstractRoutine
 
                         $data = [];
 
-                        if (isset($p['full-content-swap'])) {
+                        if ($xml->getBool($p['full-content-swap'])) {
                             $data["pkgDoFullContentSwap"] = true;
                             // set this token to perform a full content swap when installing starting point packages
                             $data["ccm_token"] = $token->generate("install_options_selected");
