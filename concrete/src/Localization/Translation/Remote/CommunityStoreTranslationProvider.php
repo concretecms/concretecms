@@ -9,6 +9,7 @@ use DateTime;
 use Exception;
 use Gettext\Translations;
 use GuzzleHttp\Exception\RequestException;
+use GuzzleHttp\Psr7\MultipartStream;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Response;
 
@@ -320,17 +321,19 @@ class CommunityStoreTranslationProvider implements ProviderInterface
      */
     public function fillTranslations(Translations $translations)
     {
-        $request = $this->buildRequest('fill-translations/po/')->setMethod('POST');
-        $files = $request->getFiles();
-        $files->set(
-            'f',
-            [
-                'formname' => 'file',
-                'filename' => 'translations.po',
-                'ctype' => 'application/octet-stream',
-                'data' => $translations->toPoString(),
-            ]
-        );
+        $request = $this->buildRequest('fill-translations/po/')
+            ->withMethod('POST')
+            ->withBody(new MultipartStream([
+                [
+                    'name' => 'file',
+                    'contents' => $translations->toPoString(),
+                    'filename' => 'translations.po',
+                    'headers' => [
+                        'Content-Type' => 'application/octet-stream',
+                    ],
+                ]
+            ]))
+        ;
         unset($translations);
         $client = $this->httpClientFactory->createFromConfig($this->config);
         $response = $client->send($request);
