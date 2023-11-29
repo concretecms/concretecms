@@ -354,11 +354,12 @@ class CommunityStoreTranslationProvider implements ProviderInterface
             $path = '/' . $path;
         }
 
-        $request = new Request('get', $this->getEntryPoint() . $path);
+        $headers = [];
         $apiToken = $this->getApiToken();
         if ($apiToken !== '') {
-            $request->withAddedHeader('API-Token', $apiToken);
+            $headers['API-Token'] = $apiToken;
         }
+        $request = new Request('GET', $this->getEntryPoint() . $path, $headers);
 
         return $request;
     }
