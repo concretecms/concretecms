@@ -217,7 +217,6 @@ class CommunityStoreTranslationProvider implements ProviderInterface
      */
     public function getAvailablePackageStats($packageHandle, $packageVersion, $progressLimit = null)
     {
-        $allLocales = [];
         if ($progressLimit === null) {
             $progressLimit = $this->getProgressLimit();
         }
@@ -280,7 +279,7 @@ class CommunityStoreTranslationProvider implements ProviderInterface
                 $version = $sampleStats->getVersion();
                 $total = $sampleStats->getTotal();
             }
-            $result = new Stats($version, 0, 0);
+            $result = new Stats($version, $total, 0);
         }
 
         return $result;
