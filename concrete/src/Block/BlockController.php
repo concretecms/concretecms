@@ -13,6 +13,7 @@ use Concrete\Core\Page\Type\Type;
 use Concrete\Core\Permission\Checker;
 use Concrete\Core\Statistics\UsageTracker\AggregateTracker;
 use Concrete\Core\StyleCustomizer\Inline\StyleSet;
+use Concrete\Core\Utility\Service\Xml;
 use Config;
 use Database;
 use Events;
@@ -378,6 +379,7 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
             $data = $blockNode->addChild('data');
             $data->addAttribute('table', $tbl);
             $columns = $db->MetaColumns($tbl);
+            $xml = $this->app->make(Xml::class);
             // remove columns we don't want
             unset($columns['bid']);
             $r = $db->Execute('select * from ' . $tbl . ' where bID = ?', [$this->bID]);
@@ -396,10 +398,7 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
                         } elseif (in_array($key, $this->btExportFileFolderColumns)) {
                             $tableRecord->addChild($key, ContentExporter::replaceFileFolderWithPlaceHolder($value));
                         } else {
-                            $cnode = $tableRecord->addChild($key);
-                            $node = dom_import_simplexml($cnode);
-                            $no = $node->ownerDocument;
-                            $node->appendChild($no->createCDataSection($value));
+                            $xml->createChildElement($tableRecord, $key, $value);
                         }
                     }
                 }
