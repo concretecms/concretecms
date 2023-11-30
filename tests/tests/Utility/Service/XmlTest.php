@@ -21,6 +21,14 @@ class XmlTest extends TestCase
     {
         self::$xml = app(Xml::class);
     }
+
+    public function testAlias(): void
+    {
+        $instanceFromAlias = app('helper/xml');
+        $instanceFromClassName = app(Xml::class);
+        $this->assertSame($instanceFromClassName, $instanceFromAlias);
+    }
+
     public static function provideBooleanValuesCases(): array
     {
         return [
@@ -124,24 +132,26 @@ class XmlTest extends TestCase
             ['<b>Test</b>!', '<![CDATA[<b>Test</b>!]]>'],
             ['"Hello" he said ', '"Hello" he said '],
             ["'Hello' she said ", "'Hello' she said "],
-            ["First & Second", "<![CDATA[First & Second]]>"],
+            ['First & Second', '<![CDATA[First & Second]]>'],
             ["First line{$lf}Second line", "First line{$lf}Second line"],
             ["<b>First</b> line{$lf}Second line", "<![CDATA[<b>First</b> line{$lf}Second line]]>"],
             // see https://www.w3.org/TR/2008/REC-xml-20081126/#sec-line-ends
-             ["First line{$crlf}Second line", "First line{$lf}Second line"],
+            ["First line{$crlf}Second line", "First line{$lf}Second line"],
             ["First line{$crlf}Second line", "First line&#13;{$lf}Second line", Xml::FLAG_PRESERVE_CARRIAGE_RETURNS],
             ["First line{$cr}Second line", "First line{$lf}Second line"],
-            ["First line{$cr}Second line", "First line&#13;Second line", Xml::FLAG_PRESERVE_CARRIAGE_RETURNS],
+            ["First line{$cr}Second line", 'First line&#13;Second line', Xml::FLAG_PRESERVE_CARRIAGE_RETURNS],
             ["<b>First</b> line{$cr}Second line", "<![CDATA[<b>First</b> line{$lf}Second line]]>"],
             ["<b>First</b> line{$crlf}Second line", "<![CDATA[<b>First</b> line{$lf}Second line]]>"],
             ["<b>First</b> line{$crlf}Second line", "&lt;b&gt;First&lt;/b&gt; line&#13;{$lf}Second line", Xml::FLAG_PRESERVE_CARRIAGE_RETURNS],
             ["<b>First</b> line{$cr}Second line", "<![CDATA[<b>First</b> line{$lf}Second line]]>"],
-            ["<b>First</b> line{$cr}Second line", "&lt;b&gt;First&lt;/b&gt; line&#13;Second line", Xml::FLAG_PRESERVE_CARRIAGE_RETURNS],
+            ["<b>First</b> line{$cr}Second line", '&lt;b&gt;First&lt;/b&gt; line&#13;Second line', Xml::FLAG_PRESERVE_CARRIAGE_RETURNS],
         ];
     }
 
     /**
      * @dataProvider proviteCreateElementData
+     *
+     * @param mixed $data
      */
     public function testCreateElement($data, string $expectedXml, int $flags = 0): void
     {
@@ -164,7 +174,7 @@ class XmlTest extends TestCase
     private function parseXml(string $xml): SimpleXMLElement
     {
         $element = simplexml_load_string($xml);
-        $this->assertInstanceOf(SimpleXMLElement::class, $element, "Failed to process XML: [$xml}");
+        $this->assertInstanceOf(SimpleXMLElement::class, $element, "Failed to process XML: {$xml}");
 
         return $element;
     }
