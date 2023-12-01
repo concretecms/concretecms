@@ -74,9 +74,7 @@
         </template>
     </summarytemplates>
     <boardtemplates>
-        <template handle="blog" name="Blog"
-                  icon="blank.png" package="">
-        </template>
+        <template handle="blog" name="Blog" icon="blank.png" package="" />
     </boardtemplates>
     <boardslottemplates>
         <template handle="blog_image_left" name="Blog Image Left"
