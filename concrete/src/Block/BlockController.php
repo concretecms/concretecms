@@ -366,12 +366,14 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
 
     public function export(\SimpleXMLElement $blockNode)
     {
-        $tables[] = $this->getBlockTypeDatabaseTable();
         if (isset($this->btExportTables)) {
             $tables = $this->btExportTables;
+        } else {
+            $tables = [$this->getBlockTypeDatabaseTable()];
         }
         $db = Database::connection();
 
+        $xml = $this->app->make(Xml::class);
         foreach ($tables as $tbl) {
             if (!$tbl) {
                 continue;
@@ -379,7 +381,6 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
             $data = $blockNode->addChild('data');
             $data->addAttribute('table', $tbl);
             $columns = $db->MetaColumns($tbl);
-            $xml = $this->app->make(Xml::class);
             // remove columns we don't want
             unset($columns['bid']);
             $r = $db->Execute('select * from ' . $tbl . ' where bID = ?', [$this->bID]);
@@ -413,6 +414,7 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
 
     public function import($page, $arHandle, \SimpleXMLElement $blockNode)
     {
+        $xml = $this->app->make(Xml::class);
         // handle the adodb stuff
         $args = $this->getImportData($blockNode, $page);
         $blockData = [];
@@ -440,8 +442,8 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
         $this->importAdditionalData($b, $blockNode);
 
         // now we handle container settings
-        $bCustomContainerSettings = (string) $blockNode['custom-container-settings'];
-        if ($bCustomContainerSettings === '0' || $bCustomContainerSettings === '1') {
+        $bCustomContainerSettings = $xml->getBool($blockNode['custom-container-settings'], null);
+        if ($bCustomContainerSettings !== null) {
             $b->setCustomContainerSettings($bCustomContainerSettings);
         }
 
@@ -452,10 +454,13 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
         }
 
         // now we handle block caching
-        $cache = (int) $blockNode['cache-output'];
-        if ($cache) {
-            $b->setCustomCacheSettings(true, $blockNode['cache-output-on-post'], $blockNode['cache-output-for-registered-users'],
-                $blockNode['cache-output-lifetime']);
+        if ($xml->getBool($blockNode['cache-output'])) {
+            $b->setCustomCacheSettings(
+                true,
+                $xml->getBool($blockNode['cache-output-on-post']),
+                $xml->getBool($blockNode['cache-output-for-registered-users']),
+                $xml->getBool($blockNode['cache-output-lifetime'])
+            );
         }
 
         if ($this instanceof FileTrackableInterface) {

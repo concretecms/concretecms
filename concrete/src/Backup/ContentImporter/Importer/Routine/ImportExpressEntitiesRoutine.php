@@ -7,6 +7,7 @@ use Concrete\Core\Entity\Express\Entity;
 use Concrete\Core\Permission\Category;
 use Concrete\Core\Support\Facade\Facade;
 use Concrete\Core\Tree\Type\ExpressEntryResults;
+use Concrete\Core\Utility\Service\Xml;
 use Concrete\Core\Validation\BannedWord\BannedWord;
 use Doctrine\ORM\Id\UuidGenerator;
 
@@ -24,6 +25,7 @@ class ImportExpressEntitiesRoutine extends AbstractRoutine
         $em->getClassMetadata('Concrete\Core\Entity\Express\Entity')->setIdGenerator(new \Doctrine\ORM\Id\AssignedGenerator());
 
         if (isset($sx->expressentities)) {
+            $xml = app(Xml::class);
             foreach ($sx->expressentities->entity as $entityNode) {
                 $entity = $em->find('Concrete\Core\Entity\Express\Entity', (string) $entityNode['id']);
                 if (!is_object($entity)) {
@@ -39,12 +41,9 @@ class ImportExpressEntitiesRoutine extends AbstractRoutine
                 $entity->setDescription((string) $entityNode['description']);
                 $entity->setName((string) $entityNode['name']);
                 $entity->setPackage(static::getPackageObject($entityNode['package']));
-                if (((string) $entityNode['include_in_public_list']) == '') {
-                    $entity->setIncludeInPublicList(false);
-                }
-                if (((string) $entityNode['use_separate_site_result_buckets']) === '1') {
-                    $entity->setUseSeparateSiteResultBuckets(true);
-                }
+                $entity->setSupportsCustomDisplayOrder($xml->getBool($entityNode['supports_custom_display_order']));
+                $entity->setIncludeInPublicList($xml->getBool($entityNode['include_in_public_list'], true));
+                $entity->setUseSeparateSiteResultBuckets($xml->getBool($entityNode['use_separate_site_result_buckets']));
                 $entity->setHandle((string) $entityNode['handle']);
                 $em->persist($entity);
 

@@ -6,6 +6,7 @@ use Concrete\Core\Entity\Express\FieldSet;
 use Concrete\Core\Entity\Express\Form;
 use Concrete\Core\Page\Template;
 use Concrete\Core\Permission\Category;
+use Concrete\Core\Utility\Service\Xml;
 use Concrete\Core\Validation\BannedWord\BannedWord;
 
 class ImportPageTemplatesRoutine extends AbstractRoutine
@@ -18,6 +19,7 @@ class ImportPageTemplatesRoutine extends AbstractRoutine
     public function import(\SimpleXMLElement $sx)
     {
         if (isset($sx->pagetemplates)) {
+            $xml = app(Xml::class);
             foreach ($sx->pagetemplates->pagetemplate as $pt) {
                 $pkg = static::getPackageObject($pt['package']);
                 $ptt = Template::getByHandle($pt['handle']);
@@ -27,7 +29,7 @@ class ImportPageTemplatesRoutine extends AbstractRoutine
                         (string) $pt['name'],
                         (string) $pt['icon'],
                         $pkg,
-                        (string) $pt['internal']
+                        $xml->getBool($pt['internal'])
                     );
                 }
             }
