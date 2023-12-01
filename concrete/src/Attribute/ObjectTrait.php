@@ -110,7 +110,7 @@ trait ObjectTrait
             if ($value instanceof EmptyRequestAttributeValue) {
                 // LEGACY SUPPORT
                 // If the passed $value object == EmptyRequestAttributeValue, we know we are dealing
-                // with a legacy attribute type that's not using Doctrine. We have not returned an 
+                // with a legacy attribute type that's not using Doctrine. We have not returned an
                 // attribute value value object.
                 $controller->saveForm($controller->post());
                 $value = false;

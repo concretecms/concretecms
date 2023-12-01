@@ -95,7 +95,7 @@ abstract class Tree extends ConcreteObject
     public static function import(SimpleXMLElement $sx)
     {
         $type = TreeType::getByHandle((string) $sx['type']);
-        $class = $type->getTreeTypeClass();
+        $class = app($type->getTreeTypeClass());
         $tree = call_user_func_array([$class, 'importDetails'], [$sx]);
         $parent = $tree->getRootTreeNodeObject();
         $parent->importChildren($sx);

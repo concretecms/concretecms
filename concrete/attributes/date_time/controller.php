@@ -8,6 +8,7 @@ use Concrete\Core\Attribute\SimpleTextExportableAttributeInterface;
 use Concrete\Core\Entity\Attribute\Key\Settings\DateTimeSettings;
 use Concrete\Core\Entity\Attribute\Value\Value\DateTimeValue;
 use Concrete\Core\Error\ErrorList\ErrorList;
+use Concrete\Core\Utility\Service\Xml;
 use DateTime;
 use Exception;
 
@@ -103,7 +104,8 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
     {
         $type = $this->getAttributeKeySettings();
         if (isset($akey->type)) {
-            $type->setUseNowIfEmpty($akey->type['use-now-if-empty']);
+            $xml = $this->app->make(Xml::class);
+            $type->setUseNowIfEmpty($xml->getBool($akey->type['use-now-if-empty']));
             $type->setMode($akey->type['mode']);
             $type->setTextCustomFormat(isset($akey->type['text-custom-format']) ? $akey->type['text-custom-format'] : '');
             $type->setTimeResolution($akey->type['time-resolution']);

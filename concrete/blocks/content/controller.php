@@ -8,6 +8,7 @@ use Concrete\Core\Feature\Features;
 use Concrete\Core\Feature\UsesFeatureInterface;
 use Concrete\Core\File\Tracker\FileTrackableInterface;
 use Concrete\Core\Page\Page;
+use Concrete\Core\Utility\Service\Xml;
 
 /**
  * The controller for the content block.
@@ -168,12 +169,8 @@ class Controller extends BlockController implements FileTrackableInterface, Uses
         $data = $blockNode->addChild('data');
         $data->addAttribute('table', $this->btTable);
         $record = $data->addChild('record');
-        $cnode = $record->addChild('content');
-        $node = dom_import_simplexml($cnode);
-        $no = $node->ownerDocument;
         $content = LinkAbstractor::export($this->content);
-        $cdata = $no->createCDataSection($content);
-        $node->appendChild($cdata);
+        $this->app->make(Xml::class)->createChildElement($record, 'content', $content);
     }
 
     /**
