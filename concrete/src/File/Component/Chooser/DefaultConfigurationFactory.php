@@ -75,8 +75,10 @@ class DefaultConfigurationFactory
         );
 
         foreach ($favoriteFolderEntries as $favoriteFolderEntry) {
-            /** @noinspection PhpUnhandledExceptionInspection */
-            $configuration->addChooser(new FolderBookmarkOption($favoriteFolderEntry));
+            if ($favoriteFolderEntry->getTreeNodeFolderObject()) {
+                /** @noinspection PhpUnhandledExceptionInspection */
+                $configuration->addChooser(new FolderBookmarkOption($favoriteFolderEntry));
+            }
         }
 
         return $configuration;
