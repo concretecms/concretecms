@@ -1608,7 +1608,7 @@
                                             <record>
                                                 <title>Tutorials</title>
                                                 <url>https://documentation.concretecms.org/rss/tutorials</url>
-                                                <dateFormat>longDate</dateFormat>
+                                                <dateFormat>:longDate:</dateFormat>
                                                 <itemsToDisplay>1</itemsToDisplay>
                                                 <showSummary>1</showSummary>
                                                 <launchInNewWindow>1</launchInNewWindow>
@@ -1625,7 +1625,7 @@
                                             <record>
                                                 <title>News from concretecms.com</title>
                                                 <url>https://www.concretecms.com/rss/blog</url>
-                                                <dateFormat>longDate</dateFormat>
+                                                <dateFormat>:longDate:</dateFormat>
                                                 <itemsToDisplay>3</itemsToDisplay>
                                                 <showSummary>1</showSummary>
                                                 <launchInNewWindow>1</launchInNewWindow>
