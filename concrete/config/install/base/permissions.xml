@@ -506,7 +506,7 @@
             <categories>
                 <category handle="page" />
                 <category handle="page_type" />
-                <category handle="basic_workflow" package=""/>
+                <category handle="basic_workflow" />
             </categories>
         </permissionaccessentitytype>
     </permissionaccessentitytypes>

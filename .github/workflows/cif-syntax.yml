@@ -1,0 +1,22 @@
+name: Check CIFs Syntax
+
+on:
+  pull_request:
+  push:
+    tags-ignore:
+      - "**"
+
+jobs:
+  check-cif-syntax:
+    name: Check
+    runs-on: ubuntu-latest
+    steps:
+      -
+        name: Checkout
+        uses: actions/checkout@v4
+      -
+        name: Download concrete-cif
+        run: curl -Lf -o /tmp/concrete-cif.jar https://github.com/concretecms/concrete-cif/releases/latest/download/concrete-cif.jar
+      -
+        name: Check
+        run: java -jar /tmp/concrete-cif.jar ./concrete
