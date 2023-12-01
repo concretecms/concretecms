@@ -1267,7 +1267,7 @@
                     </block>
                     <block type="core_area_layout" name="">
                         <arealayout type="theme-grid" columns="12">
-                            <columns>desktop_newsflow_latest
+                            <columns>
                                 <column span="4" offset="0">
                                     <block type="desktop_newsflow_latest" name="">
                                         <data table="btDesktopNewsflowLatest">
