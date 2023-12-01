@@ -263,8 +263,7 @@
                                                 <includeDescription><![CDATA[0]]></includeDescription>
                                                 <ptID>{ccm:export:pagetype:blog_entry}</ptID>
                                                 <pageListTitle>Related Posts</pageListTitle>
-                                                <relatedTopicAttributeKeyHandle>blog_entry_topics
-                                                </relatedTopicAttributeKeyHandle>
+                                                <relatedTopicAttributeKeyHandle>blog_entry_topics</relatedTopicAttributeKeyHandle>
                                             </record>
                                         </data>
                                     </block>
@@ -559,8 +558,7 @@
                                                 <pageListTitle>Related Projects</pageListTitle>
                                                 <noResultsMessage>
                                                     <![CDATA[No related projects found.]]></noResultsMessage>
-                                                <relatedTopicAttributeKeyHandle>project_topics
-                                                </relatedTopicAttributeKeyHandle>
+                                                <relatedTopicAttributeKeyHandle>project_topics</relatedTopicAttributeKeyHandle>
                                             </record>
                                         </data>
                                     </block>
@@ -616,8 +614,7 @@
                                                                 <buttonLinkText><![CDATA[]]></buttonLinkText>
                                                                 <includeName><![CDATA[1]]></includeName>
                                                                 <includeDescription><![CDATA[1]]></includeDescription>
-                                                                <includeAllDescendents>
-                                                                    <![CDATA[0]]></includeAllDescendents>
+                                                                <includeAllDescendents><![CDATA[0]]></includeAllDescendents>
                                                                 <paginate><![CDATA[1]]></paginate>
                                                                 <displayAliases><![CDATA[0]]></displayAliases>
                                                                 <ptID>{ccm:export:pagetype:blog_entry}</ptID>
@@ -626,8 +623,7 @@
                                                                 <displayFeaturedOnly><![CDATA[0]]></displayFeaturedOnly>
                                                                 <displayThumbnail><![CDATA[0]]></displayThumbnail>
                                                                 <truncateChars><![CDATA[0]]></truncateChars>
-                                                                <enableExternalFiltering>
-                                                                    <![CDATA[1]]></enableExternalFiltering>
+                                                                <enableExternalFiltering><![CDATA[1]]></enableExternalFiltering>
                                                                 <noResultsMessage>
                                                                     <![CDATA[No posts to this blog.]]></noResultsMessage>
                                                                 <includeDate><![CDATA[1]]></includeDate>
