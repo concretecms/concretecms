@@ -199,7 +199,7 @@ class Controller extends BlockController implements UsesFeatureInterface
                     /** @phpstan-ignore-next-line */
                     if ($occurrence->getEvent() && Event::isRelatedTo($occurrence->getEvent(), $event)) {
                         // this is a temporary hack. We need to ultimately make this make sure that
-                        // the event matches –but sometimes our events don't match because we imported them as series
+                        // the event matches -but sometimes our events don't match because we imported them as series
                         // events and not as  occurrences of one event.
                         // @TODO delete this code when we no longer need it and all related events are migrated into multidate events.
                         /** @phpstan-ignore-next-line */

@@ -72,7 +72,7 @@ if (!defined('DIRNAME_APP_UPDATED') && isset($updates['core'])) {
 /*
  * ----------------------------------------------------------------------------
  * ## If we're still here, we're proceeding through this concrete directory,
- * and it's time to load the rest of our hard-coded configuration options –
+ * and it's time to load the rest of our hard-coded configuration options –
  * the one we don't need a database to tell us about.
  *
  * Namespacing and Autoloading
