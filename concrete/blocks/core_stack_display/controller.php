@@ -8,6 +8,7 @@ use Concrete\Core\Page\Page;
 use Concrete\Core\Page\Stack\Stack;
 use Concrete\Core\Permission\Checker;
 use Concrete\Core\Statistics\UsageTracker\TrackableInterface;
+use Concrete\Core\Utility\Service\Xml;
 
 /**
  * The controller for the stack display block. This is an internal proxy block that is inserted when a stack's contents are displayed in a page.
@@ -208,10 +209,7 @@ class Controller extends BlockController implements TrackableInterface
     {
         $stack = $this->getStack(false);
         if ($stack !== null) {
-            $cnode = $blockNode->addChild('stack');
-            $node = dom_import_simplexml($cnode);
-            $no = $node->ownerDocument;
-            $node->appendChild($no->createCDataSection($stack->getCollectionName()));
+            $this->app->make(Xml::class)->createChildElement($blockNode, 'stack', $stack->getCollectionName());
         }
     }
 

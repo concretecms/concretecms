@@ -32,7 +32,7 @@ class DeleteAll extends BackendInterfaceController
             /** @var EditResponse $editResponse */
             $editResponse = new EditResponse();
 
-            if ($this->canAccess()) {
+            if ($this->validateAction()) {
                 /** @var Connection $db */
                 $db = $this->app->make(Connection::class);
 

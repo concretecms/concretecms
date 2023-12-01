@@ -295,7 +295,7 @@ class Controller extends AuthenticationTypeController
                 }
                 $mh->from($fromEmail, $fromName);
             }
-            $mh->addParameter('siteName', tc('SiteName', $this->app->make('site')->getSite()->getSiteName()));
+            $mh->addParameter('siteName', h(tc('SiteName', $this->app->make('site')->getSite()->getSiteName())));
             $mh->load('forgot_password');
             $mh->setIsThrowOnFailure(true);
             try {

@@ -15,7 +15,7 @@ class SiteGroup implements GroupInterface
 
     public function getEntryGroupLabel()
     {
-        return $this->site->getSiteName();
+        return h($this->site->getSiteName());
     }
 
     public function getEntryGroupIdentifier()

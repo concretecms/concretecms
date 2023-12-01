@@ -251,7 +251,7 @@ class InstallerOptions
      */
     public function getSiteName()
     {
-        return $this->siteName;
+        return h($this->siteName);
     }
 
     /**
