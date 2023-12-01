@@ -619,7 +619,7 @@ where treeNodeDisplayOrder > ? and treeNodeParentID = ?',
         $xnodes = $sx->children();
         foreach ($xnodes as $xn) {
             $type = NodeType::getByHandle($xn->getName());
-            $class = $type->getTreeNodeTypeClass();
+            $class = app($type->getTreeNodeTypeClass());
             $node = call_user_func_array([$class, 'importNode'], [$xn, $this]);
             call_user_func_array([$node, 'importChildren'], [$xn]);
         }
