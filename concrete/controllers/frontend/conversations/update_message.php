@@ -136,13 +136,13 @@ class UpdateMessage extends FrontendController
             return [];
         }
         $attachments = [];
-        $pp = new Checker($message->getConversationObject());
-        if (!$pp->canAddConversationMessageAttachments()) {
+        $conversation = $message->getConversationObject();
+        $pp = new Checker($conversation);
+        if (!$conversation || !$pp->canAddConversationMessageAttachments()) {
             $errors[] = t('You do not have permission to add attachments.');
         } else {
-            $blockController = $this->getBlockController();
             $u = $this->app->make(User::class);
-            $maxFiles = $u->isRegistered() ? $blockController->maxFilesRegistered : $blockController->maxFilesGuest;
+            $maxFiles = $u->isRegistered() ? $conversation->getConversationMaxFilesRegistered() : $conversation->getConversationMaxFilesGuest();
             $messageAttachmentCount = count($message->getAttachments($message->getConversationMessageID()));
             $totalCurrentAttachments = $messageAttachmentCount + count($attachmentIDs);
             if ($maxFiles > 0 && $totalCurrentAttachments > $maxFiles) {
