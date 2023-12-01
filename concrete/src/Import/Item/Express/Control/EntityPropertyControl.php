@@ -3,6 +3,7 @@ namespace Concrete\Core\Import\Item\Express\Control;
 
 use Concrete\Core\Entity\Express\Entity;
 use Concrete\Core\Import\Item\Express\ItemInterface;
+use Concrete\Core\Utility\Service\Xml;
 
 defined('C5_EXECUTE') or die("Access Denied.");
 
@@ -11,6 +12,7 @@ class EntityPropertyControl implements ItemInterface
 
     public function import(\SimpleXMLElement $xml, Entity $entity)
     {
+        $xmlService = app(Xml::class);
         switch((string) $xml['type-id']) {
             case 'text':
             default:
@@ -21,9 +23,7 @@ class EntityPropertyControl implements ItemInterface
         }
 
         $control->setCustomLabel((string) $xml['custom-label']);
-        if (((string) $xml['required']) == '1') {
-            $control->setIsRequired(true);
-        }
+        $control->setIsRequired($xmlService->getBool($xml['required']));
         $control->setId((string) $xml['id']);
         return $control;
     }

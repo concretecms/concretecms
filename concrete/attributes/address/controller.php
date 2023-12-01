@@ -23,6 +23,7 @@ use Concrete\Core\Localization\Service\AddressFormat;
 use Concrete\Core\Localization\Service\CountryList;
 use Concrete\Core\Localization\Service\StatesProvincesList;
 use Concrete\Core\Support\Facade\Application;
+use Concrete\Core\Utility\Service\Xml;
 
 class Controller extends AttributeTypeController implements
     MulticolumnTextExportableAttributeInterface,
@@ -338,8 +339,8 @@ class Controller extends AttributeTypeController implements
     {
         $type = $this->getAttributeKeySettings();
         if (isset($akey->type)) {
-            
-            $type->setHasCustomCountries(!empty($akey->type['custom-countries']));
+            $xml = $this->app->make(Xml::class);
+            $type->setHasCustomCountries($xml->getBool($akey->type['custom-countries']));
             $type->setDefaultCountry((string) $akey->type['default-country']);
             if (isset($akey->type->countries)) {
                 $countries = [];
@@ -348,7 +349,7 @@ class Controller extends AttributeTypeController implements
                 }
                 $type->setCustomCountries($countries);
             }
-            $type->setGeolocateCountry(!empty($akey->type['geolocate-country']));
+            $type->setGeolocateCountry($xml->getBool($akey->type['geolocate-country']));
         }
 
         return $type;

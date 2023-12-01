@@ -7,6 +7,7 @@ use Concrete\Core\Entity\Summary\Category;
 use Concrete\Core\Entity\Summary\Field;
 use Concrete\Core\Entity\Summary\Template;
 use Concrete\Core\Entity\Summary\TemplateField;
+use Concrete\Core\Utility\Service\Xml;
 
 class ImportSummaryTemplatesRoutine extends AbstractRoutine
 {
@@ -22,6 +23,7 @@ class ImportSummaryTemplatesRoutine extends AbstractRoutine
         $fieldRepository = $em->getRepository(Field::class);
         $tagRepository = $em->getRepository(DesignTag::class);
         if (isset($sx->summarytemplates)) {
+            $xml = app(Xml::class);
             foreach ($sx->summarytemplates->template as $pt) {
                 $pkg = static::getPackageObject($pt['package']);
                 $name = (string) $pt['name'];
@@ -66,20 +68,13 @@ class ImportSummaryTemplatesRoutine extends AbstractRoutine
                     if (isset($pt->fields)) {
                         foreach ($pt->fields->children() as $summaryTemplateField) {
                             $fieldHandle = (string) $summaryTemplateField;
-                            if ($fieldHandle !== null) {
-                                $required = false;
-                                $requiredNode = (string) $summaryTemplateField['required'];
-                                if ($requiredNode === '1') {
-                                    $required = true;
-                                }
-                                $field = $fieldRepository->findOneByHandle($fieldHandle);
-                                if ($field) {
-                                    $templateField = new TemplateField();
-                                    $templateField->setTemplate($template);
-                                    $templateField->setField($field);
-                                    $templateField->setIsRequired($required);                                    
-                                    $em->persist($templateField);
-                                }
+                            $field = $fieldHandle === '' ? null : $fieldRepository->findOneByHandle($fieldHandle);
+                            if ($field) {
+                                $templateField = new TemplateField();
+                                $templateField->setTemplate($template);
+                                $templateField->setField($field);
+                                $templateField->setIsRequired($xml->getBool($summaryTemplateField['required']));                                    
+                                $em->persist($templateField);
                             }
                             $em->persist($template);
                         }

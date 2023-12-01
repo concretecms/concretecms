@@ -14,10 +14,11 @@ class Xml
     /**
      * Extract a boolean from an element or an attribute value.
      *
-     * @param bool $default what should be returned if the element/attribute does not exist, or if it does not contain a boolean representation ('true', 'yes', 'on', '1', 'false', 'no', '0', '')
+     * @param bool|null $default what should be returned if the element/attribute does not exist, or if it does not contain a boolean representation ('true', 'yes', 'on', '1', 'false', 'no', '0', '')
      *
+     * @return bool|null returns NULL if and only if $default is null and the attribute/element doesn't exist (or it has an invalid value)
      */
-    public function getBool(?SimpleXMLElement $elementOrAttribute, bool $default = false): bool
+    public function getBool(?SimpleXMLElement $elementOrAttribute, ?bool $default = false): ?bool
     {
         /*
          * $element['nonExistingAttribute'] returns null

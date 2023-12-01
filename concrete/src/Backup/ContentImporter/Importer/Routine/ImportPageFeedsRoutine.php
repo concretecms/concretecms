@@ -2,6 +2,7 @@
 namespace Concrete\Core\Backup\ContentImporter\Importer\Routine;
 
 use Concrete\Core\Page\Feed;
+use Concrete\Core\Utility\Service\Xml;
 
 class ImportPageFeedsRoutine extends AbstractRoutine
 {
@@ -13,6 +14,7 @@ class ImportPageFeedsRoutine extends AbstractRoutine
     public function import(\SimpleXMLElement $sx)
     {
         if (isset($sx->pagefeeds)) {
+            $xml = app(Xml::class);
             foreach ($sx->pagefeeds->feed as $f) {
                 $feed = Feed::getByHandle((string) $f->handle);
                 $inspector = \Core::make('import/value_inspector');
@@ -27,15 +29,9 @@ class ImportPageFeedsRoutine extends AbstractRoutine
                 $feed->setTitle((string) $f->title);
                 $feed->setDescription((string) $f->description);
                 $feed->setHandle((string) $f->handle);
-                if ($f->descendents) {
-                    $feed->setIncludeAllDescendents(true);
-                }
-                if ($f->aliases) {
-                    $feed->setDisplayAliases(true);
-                }
-                if ($f->featured) {
-                    $feed->setDisplayFeaturedOnly(true);
-                }
+                $feed->setIncludeAllDescendents($xml->getBool($f->descendents));
+                $feed->setDisplayAliases($xml->getBool($f->aliases));
+                $feed->setDisplayFeaturedOnly($xml->getBool($f->featured));
                 if ($f->pagetype) {
                     $result = $inspector->inspect((string) $f->pagetype);
                     $pagetype = $result->getReplacedValue();
