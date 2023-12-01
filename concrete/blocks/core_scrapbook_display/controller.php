@@ -110,16 +110,26 @@ class Controller extends BlockController
      */
     public function export(\SimpleXMLElement $blockNode)
     {
-        $b = Block::getByID($this->bOriginalID);
-        /** @var BlockController|null $bc */
-        $bc = $b->getInstance();
-        if ($bc) {
-            $blockNode->addAttribute('type', $b->getBlockTypeHandle());
-            $blockNode->addAttribute('name', $b->getBlockName());
-            if ($b->getBlockFilename() != '') {
-                $blockNode->addAttribute('custom-template', $b->getBlockFilename());
+        $block = Block::getByID($this->bOriginalID);
+        if ($block) {
+            $clonedBlock = clone $blockNode;
+            $block->export($clonedBlock);
+            $otherBlockNode = $clonedBlock->children()[0];
+            foreach ($otherBlockNode->attributes() as $attribute) {
+                $blockNode[$attribute->getName()] = (string) $attribute;
             }
-            $bc->export($blockNode);
+            $this->exportChildren($otherBlockNode, $blockNode);
+        }
+    }
+
+    private function exportChildren(\SimpleXMLElement $from, \SimpleXMLElement $to)
+    {
+        foreach ($from->children() as $fromChild) {
+            $toChild = $to->addChild($fromChild->getName(), (string) $fromChild);
+            foreach ($fromChild->attributes() as $attribute) {
+                $toChild[$attribute->getName()] = (string) $attribute;
+            }
+            $this->exportChildren($fromChild, $toChild);
         }
     }
 
