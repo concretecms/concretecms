@@ -50,7 +50,7 @@
                                             <record>
                                                 <title>Tutorials</title>
                                                 <url>http://documentation.concretecms.org/rss/tutorials</url>
-                                                <dateFormat>longDate</dateFormat>
+                                                <dateFormat>:longDate:</dateFormat>
                                                 <itemsToDisplay>1</itemsToDisplay>
                                                 <showSummary>1</showSummary>
                                                 <launchInNewWindow>1</launchInNewWindow>
@@ -105,7 +105,7 @@
                             <record>
                                 <title>News from Concrete</title>
                                 <url>http://www.concretecms.com/rss/blog</url>
-                                <dateFormat>longDate</dateFormat>
+                                <dateFormat>:longDate:</dateFormat>
                                 <itemsToDisplay>3</itemsToDisplay>
                                 <showSummary>1</showSummary>
                                 <launchInNewWindow>1</launchInNewWindow>

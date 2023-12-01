@@ -56,7 +56,7 @@ class Controller extends CoreAttributeController implements
         }
         $sites = array('' => t('** Select Site'));
         foreach($this->app->make('site')->getList() as $site) {
-            $sites[$site->getSiteID()] = $site->getSiteName();
+            $sites[$site->getSiteID()] = h($site->getSiteName());
         }
         $form = $this->app->make('helper/form');
         print $form->select($this->field('siteID'), $sites, $siteID);
@@ -66,7 +66,7 @@ class Controller extends CoreAttributeController implements
     {
         $site = $this->getValue();
         if (is_object($site)) {
-            return $site->getSiteName();
+            return h($site->getSiteName());
         }
     }
 

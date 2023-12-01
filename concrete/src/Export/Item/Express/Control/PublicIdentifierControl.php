@@ -3,7 +3,6 @@ namespace Concrete\Core\Export\Item\Express\Control;
 
 use Concrete\Core\Export\Item\Express\Control;
 use Concrete\Core\Export\ExportableInterface;
-use Concrete\Core\Utility\Service\Xml;
 
 class PublicIdentifierControl extends Control
 {

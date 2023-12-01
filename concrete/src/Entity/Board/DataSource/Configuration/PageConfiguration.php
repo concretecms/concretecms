@@ -2,7 +2,6 @@
 
 namespace Concrete\Core\Entity\Board\DataSource\Configuration;
 
-use Concrete\Core\Utility\Service\Xml;
 use Doctrine\ORM\Mapping as ORM;
 
 /**

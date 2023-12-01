@@ -171,7 +171,7 @@ class BindingServiceTest extends TestCase
         $logger = M::mock(LoggerInterface::class);
         $service->setLogger($logger);
 
-        $logger->shouldReceive('warning')->once()->with('Bound user: User #{user} is now bound to "{binding}" in "{namespace}".', [
+        $logger->shouldReceive('info')->once()->with('Bound user: User #{user} is now bound to "{binding}" in "{namespace}".', [
             'user' => 43,
             'binding' => 'testing',
             'namespace' => 'test',

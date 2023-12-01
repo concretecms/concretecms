@@ -192,9 +192,6 @@ echo $userInterface->tabs([
                 </div>
 
                 <div data-row="related-topic">
-                    <div class="help-block">
-                        <?php echo t('Allows other blocks like the topic list block to pass search criteria to this page list block.') ?>
-                    </div>
 
                     <?php
                     $relatedTopicAttributeKeyHandles = [
@@ -321,6 +318,7 @@ echo $userInterface->tabs([
                 <div class="form-check">
                     <?php echo $form->checkbox("enableExternalFiltering", "1", $enableExternalFiltering); ?>
                     <?php echo $form->label("enableExternalFiltering", t("Enable Other Blocks to Filter This Page List."), ["class" => "form-check-label"]); ?>
+                    <i class="launch-tooltip fa fa-question-circle" title="<?php echo t('Allow other blocks, like the topic list block, to pass search criteria to this page list block.') ?>"></i>
                 </div>
 		
 		<div class="form-check">

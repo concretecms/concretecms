@@ -50,6 +50,11 @@ class BlockAssignment extends Assignment
         }
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Permission\Assignment\Assignment::getPermissionAccessObject()
+     */
     public function getPermissionAccessObject()
     {
         /**
@@ -81,7 +86,7 @@ class BlockAssignment extends Assignment
             $pae = $pk->getPermissionAccessObject();
         }
 
-        return $pae;
+        return $pae ?? null;
     }
 
     public function clearPermissionAssignment()

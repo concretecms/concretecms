@@ -14,6 +14,7 @@ use Gettext\Translations;
 use PDO;
 use SimpleXMLElement;
 use Concrete\Core\User\User;
+use Concrete\Core\Utility\Service\Xml;
 
 /**
  * @property bool|int|string $pkID
@@ -425,14 +426,15 @@ EOT
         } else {
             $pkg = null;
         }
+        $xml = app(Xml::class);
 
         return self::add(
             $pk['category'],
             $pk['handle'],
             $pk['name'],
             $pk['description'],
-            $pk['can-trigger-workflow'] ? 1 : 0,
-            $pk['has-custom-class'] ? 1 : 0,
+            $xml->getBool($pk['can-trigger-workflow']) ? 1 : 0,
+            $xml->getBool($pk['has-custom-class']) ? 1 : 0,
             $pkg
         );
     }
