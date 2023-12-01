@@ -3,6 +3,7 @@
 namespace Concrete\Core\Entity\File\Folder;
 
 use Concrete\Core\Entity\User\User;
+use Concrete\Core\Tree\Node\Node;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -76,4 +77,8 @@ class FavoriteFolder
         return $this;
     }
 
+    public function getTreeNodeFolderObject()
+    {
+        return Node::getByID($this->getTreeNodeFolderId());
+    }
 }
