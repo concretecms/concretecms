@@ -169,7 +169,7 @@ class Register extends PageController
                                 'display');
                     }
                     $mh->addParameter('attribs', $attribValues);
-                    $mh->addParameter('siteName', tc('SiteName', \Core::make('site')->getSite()->getSiteName()));
+                    $mh->addParameter('siteName', h(tc('SiteName', \Core::make('site')->getSite()->getSiteName())));
 
                     if ($config->get('concrete.email.register_notification.address')) {
                         if ($config->get('concrete.email.register_notification.name')) {

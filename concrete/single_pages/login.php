@@ -26,7 +26,7 @@ $attribute_mode = (isset($required_attributes) && count($required_attributes));
 $site = app('site')->getSite() ?? null;
 $siteName = '';
 if ($site) {
-    $siteName = $site->getSiteName();
+    $siteName = h($site->getSiteName());
 }
 
 ?>

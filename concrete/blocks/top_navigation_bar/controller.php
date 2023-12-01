@@ -126,7 +126,7 @@ class Controller extends BlockController implements UsesFeatureInterface, FileTr
     public function add()
     {
         $site = $this->app->make('site')->getSite();
-        $brandingText = $site->getSiteName();
+        $brandingText = h($site->getSiteName());
         /** @var Detector $detector */
         $detector = $this->app->make('multilingual/detector');
 
@@ -250,7 +250,7 @@ class Controller extends BlockController implements UsesFeatureInterface, FileTr
         }
         if ($this->includeBrandText && !$this->brandingText) {
             $site = $this->app->make('site')->getSite();
-            $brandingText = $site->getSiteName();
+            $brandingText = h($site->getSiteName());
             $this->set('brandingText', $brandingText);
         }
         if ($this->brandingTransparentLogo) {

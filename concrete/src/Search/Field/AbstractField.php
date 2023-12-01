@@ -73,10 +73,9 @@ abstract class AbstractField implements FieldInterface
 
     public function export(\SimpleXMLElement $element)
     {
-        $xml = new Xml();
         $fieldNode = $element->addChild('field');
         $fieldNode->addAttribute('key', $this->getKey());
-        $xml->createCDataNode($fieldNode, 'data', json_encode($this->data));
+        app(Xml::class)->createChildElement($fieldNode, 'data', json_encode($this->data));
     }
 
     public function denormalize(DenormalizerInterface $denormalizer, $data, $format = null, array $context = [])

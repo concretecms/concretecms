@@ -116,7 +116,7 @@ use Concrete\Core\View\View;
                 <?php foreach ($sites as $site) { ?>
                     <tr>
                         <td>
-                            <?php echo $site->getSiteName() ?>
+                            <?php echo h($site->getSiteName()); ?>
                         </td>
 
                         <td style="white-space: nowrap" class="text-center">

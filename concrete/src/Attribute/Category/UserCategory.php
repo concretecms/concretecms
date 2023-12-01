@@ -7,6 +7,7 @@ use Concrete\Core\Entity\Attribute\Key\UserKey;
 use Concrete\Core\Entity\Attribute\Type;
 use Concrete\Core\Entity\Package;
 use Concrete\Core\User\UserInfo;
+use Concrete\Core\Utility\Service\Xml;
 use Symfony\Component\HttpFoundation\Request;
 
 class UserCategory extends AbstractStandardCategory
@@ -175,12 +176,13 @@ class UserCategory extends AbstractStandardCategory
     public function import(Type $type, \SimpleXMLElement $element, ?Package $package = null)
     {
         $key = parent::import($type, $element, $package);
-        $key->setAttributeKeyDisplayedOnProfile((string) $element['profile-displayed'] == 1);
-        $key->setAttributeKeyEditableOnProfile((string) $element['profile-editable'] == 1);
-        $key->setAttributeKeyRequiredOnProfile((string) $element['profile-required'] == 1);
-        $key->setAttributeKeyEditableOnRegister((string) $element['register-editable'] == 1);
-        $key->setAttributeKeyRequiredOnRegister((string) $element['register-required'] == 1);
-        $key->setAttributeKeyDisplayedOnMemberList((string) $element['member-list-displayed'] == 1);
+        $xml = $this->application->make(Xml::class);
+        $key->setAttributeKeyDisplayedOnProfile($xml->getBool($element['profile-displayed']));
+        $key->setAttributeKeyEditableOnProfile($xml->getBool($element['profile-editable']));
+        $key->setAttributeKeyRequiredOnProfile($xml->getBool($element['profile-required']));
+        $key->setAttributeKeyEditableOnRegister($xml->getBool($element['register-editable']));
+        $key->setAttributeKeyRequiredOnRegister($xml->getBool($element['register-required']));
+        $key->setAttributeKeyDisplayedOnMemberList($xml->getBool($element['member-list-displayed']));
         // Save these settings to the database
         $this->entityManager->flush();
 

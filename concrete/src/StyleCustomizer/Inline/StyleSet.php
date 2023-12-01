@@ -6,6 +6,7 @@ use Concrete\Core\Entity\StyleCustomizer\Inline\StyleSet as StyleSetEntity;
 use Concrete\Core\Error\UserMessageException;
 use Concrete\Core\Page\Theme\GridFramework\GridFramework;
 use Concrete\Core\Support\Facade\Application;
+use Concrete\Core\Utility\Service\Xml;
 use Doctrine\ORM\EntityManagerInterface;
 use SimpleXMLElement;
 use Symfony\Component\HttpFoundation\Request;
@@ -51,6 +52,7 @@ class StyleSet
                 $o->setBackgroundImageFileID($fID);
             }
         }
+        $xmlService = app(Xml::class);
 
         $o->setBackgroundRepeat((string) $node->backgroundRepeat);
         $o->setBackgroundSize((string) $node->backgroundSize);
@@ -74,13 +76,17 @@ class StyleSet
         $o->setRotate((string) $node->rotate);
         $o->setBoxShadowHorizontal((string) $node->boxShadowHorizontal);
         $o->setBoxShadowVertical((string) $node->boxShadowVertical);
-        $o->setBoxShadowSpread((string) $node->boxShadowSpread);
         $o->setBoxShadowBlur((string) $node->boxShadowBlur);
+        $o->setBoxShadowSpread((string) $node->boxShadowSpread);
         $o->setBoxShadowColor((string) $node->boxShadowColor);
-        $o->setBoxShadowInset((bool) $node->boxShadowInset);
+        $o->setBoxShadowInset($xmlService->getBool($node->boxShadowInset));
         $o->setCustomClass((string) $node->customClass);
         $o->setCustomID((string) $node->customID);
         $o->setCustomElementAttribute((string) $node->customElementAttribute);
+        $o->setHideOnExtraSmallDevice($xmlService->getBool($node->hideOnExtraSmallDevice));
+        $o->setHideOnSmallDevice($xmlService->getBool($node->hideOnSmallDevice));
+        $o->setHideOnMediumDevice($xmlService->getBool($node->hideOnMediumDevice));
+        $o->setHideOnLargeDevice($xmlService->getBool($node->hideOnLargeDevice));
 
         $o->save();
 

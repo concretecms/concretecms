@@ -218,7 +218,7 @@ class Sites extends DashboardPageController
             $menu = null;
         } else {
             $breadcrumb = $this->app->make(DashboardBreadcrumbFactory::class)->getBreadcrumb($this->getPageObject());
-            $breadcrumb->add(new Item('', $site->getSiteName()));
+            $breadcrumb->add(new Item('', h($site->getSiteName())));
             $this->setBreadcrumb($breadcrumb);
             $menu = new Element('dashboard/system/multisite/site/menu', '', $this->getPageObject(), ['site' => $site]);
         }

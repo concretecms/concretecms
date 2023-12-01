@@ -116,7 +116,7 @@ class Bulk extends DashboardPageController
             }
             $siteName = $this->getSiteNameForLocale($locale);
         } else {
-            $siteName = $this->app->make('site')->getSite()->getSiteName();
+            $siteName = h($this->app->make('site')->getSite()->getSiteName());
         }
 
         return $siteName;

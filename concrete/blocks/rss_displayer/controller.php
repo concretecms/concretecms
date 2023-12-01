@@ -269,4 +269,25 @@ class Controller extends BlockController implements UsesFeatureInterface
 
         return $searchContent;
     }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Block\BlockController::getImportData()
+     */
+    protected function getImportData($blockNode, $page)
+    {
+        $data = parent::getImportData($blockNode, $page);
+        $dateFormat = $data['dateFormat'] ?? '';
+        if ($dateFormat !== '') {
+            if (array_key_exists($dateFormat, $this->getDefaultDateTimeFormats())) {
+                $data['standardDateFormat'] = $dateFormat;
+            } else {
+                $data['customDateFormat'] = $dateFormat;
+            }
+        }
+        unset($data['dateFormat']);
+
+        return $data;
+    }
 }
