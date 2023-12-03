@@ -1,13 +1,14 @@
 <?php
+
 namespace Concrete\Core\Workflow\Request;
 
 use Concrete\Core\Page\Page;
-use Concrete\Core\Workflow\Workflow;
-use HtmlObject\Element;
-use PermissionKey;
+use Concrete\Core\Permission\Key\Key as PermissionKey;
+use Concrete\Core\Workflow\Progress\PageProgress as PageWorkflowProgress;
 use Concrete\Core\Workflow\Progress\Progress as WorkflowProgress;
 use Concrete\Core\Workflow\Progress\Response as WorkflowProgressResponse;
-use Concrete\Core\Workflow\Progress\PageProgress as PageWorkflowProgress;
+use Concrete\Core\Workflow\Workflow;
+use HtmlObject\Element;
 
 abstract class PageRequest extends Request
 {
@@ -70,8 +71,7 @@ abstract class PageRequest extends Request
     {
         $span = new Element('i');
         $span->addClass('fas fa-file-alt');
+
         return $span;
     }
-
-
 }
