@@ -1,15 +1,15 @@
 <?php
 namespace Concrete\Core\Workflow\Request;
 
+use Concrete\Core\Page\Collection\Version\Version as CollectionVersion;
+use Concrete\Core\Page\Page;
 use HtmlObject\Element;
 use Workflow;
 use Loader;
-use Page;
 use Concrete\Core\Workflow\Description as WorkflowDescription;
 use Permissions;
 use PermissionKey;
 use Concrete\Core\Workflow\Progress\Progress as WorkflowProgress;
-use CollectionVersion;
 use Events;
 use Concrete\Core\Url\Resolver\Manager\ResolverManagerInterface;
 use Concrete\Core\Workflow\Progress\Action\Action as WorkflowProgressAction;
@@ -56,9 +56,9 @@ class ApprovePageRequest extends PageRequest
         $d = new WorkflowDescription();
         $c = Page::getByID($this->cID, 'RECENT');
         if ($c && !$c->isError()) {
-            $link = Loader::helper('navigation')->getLinkToCollection($c, true);
-            $v = $c->getVersionObject();
-            if (is_object($v)) {
+            $link = $c->getCollectionLink();
+            $v = CollectionVersion::get($c, $this->cvID);
+            if (is_object($v) && !$v->isError()) {
                 $comments = $c->getVersionObject()->getVersionComments();
 
                 if (!$this->isNewPageRequest()) {
@@ -77,6 +77,11 @@ class ApprovePageRequest extends PageRequest
                     $d->setInContextDescription(t("New Page %s submitted for approval.", $this->cvID));
                     $d->setShortStatus(t("New Page"));
                 }
+            } else {
+                $d->setEmailDescription(t('Deleted Version.'));
+                $d->setDescription(t('Deleted Version.'));
+                $d->setInContextDescription(t('Deleted Version.'));
+                $d->setShortStatus(t('Deleted Version.'));
             }
         } else {
             $d->setEmailDescription(t('Deleted Page.'));
