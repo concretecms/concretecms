@@ -1,9 +1,9 @@
 <?php
 namespace Concrete\Core\Workflow\Request;
 
+use Concrete\Core\Page\Page;
 use Concrete\Core\Workflow\Workflow;
 use HtmlObject\Element;
-use Page;
 use PermissionKey;
 use Concrete\Core\Workflow\Progress\Progress as WorkflowProgress;
 use Concrete\Core\Workflow\Progress\Response as WorkflowProgressResponse;
@@ -11,6 +11,8 @@ use Concrete\Core\Workflow\Progress\PageProgress as PageWorkflowProgress;
 
 abstract class PageRequest extends Request
 {
+    protected $cID;
+
     public function setRequestedPage($c)
     {
         $cID = ($c->getCollectionPointerOriginalID() > 0) ? $c->getCollectionPointerOriginalID() : $c->getCollectionID();

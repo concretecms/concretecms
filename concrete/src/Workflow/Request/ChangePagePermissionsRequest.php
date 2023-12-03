@@ -1,9 +1,8 @@
 <?php
 namespace Concrete\Core\Workflow\Request;
 
+use Concrete\Core\Page\Page;
 use Workflow;
-use Loader;
-use Page;
 use Concrete\Core\Workflow\Description as WorkflowDescription;
 use Permissions;
 use PermissionKey;
@@ -38,11 +37,18 @@ class ChangePagePermissionsRequest extends PageRequest
     {
         $d = new WorkflowDescription();
         $c = Page::getByID($this->cID, 'ACTIVE');
-        $link = Loader::helper('navigation')->getLinkToCollection($c, true);
-        $d->setEmailDescription(t("\"%s\" has pending permission changes. View the page here: %s.", $c->getCollectionName(), $link));
-        $d->setInContextDescription(t("Page Submitted for Permission Changes."));
-        $d->setDescription(t("<a href=\"%s\">%s</a> submitted for Permission Changes.", $link, $c->getCollectionName()));
-        $d->setShortStatus(t("Permission Changes"));
+        if ($c && !$c->isError()) {
+            $link = $c->getCollectionLink();
+            $d->setEmailDescription(t("\"%s\" has pending permission changes. View the page here: %s.", $c->getCollectionName(), $link));
+            $d->setInContextDescription(t("Page Submitted for Permission Changes."));
+            $d->setDescription(t("<a href=\"%s\">%s</a> submitted for Permission Changes.", $link, $c->getCollectionName()));
+            $d->setShortStatus(t("Permission Changes"));
+        } else {
+            $d->setEmailDescription(t('Deleted page.'));
+            $d->setInContextDescription(t('Deleted page.'));
+            $d->setDescription(t('Deleted page.'));
+            $d->setShortStatus(t('Deleted page.'));
+        }
 
         return $d;
     }

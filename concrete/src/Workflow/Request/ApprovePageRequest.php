@@ -5,7 +5,6 @@ use Concrete\Core\Page\Collection\Version\Version as CollectionVersion;
 use Concrete\Core\Page\Page;
 use HtmlObject\Element;
 use Workflow;
-use Loader;
 use Concrete\Core\Workflow\Description as WorkflowDescription;
 use Permissions;
 use PermissionKey;
@@ -18,6 +17,7 @@ use Concrete\Core\Workflow\Progress\Response as WorkflowProgressResponse;
 class ApprovePageRequest extends PageRequest
 {
     protected $wrStatusNum = 30;
+    protected $cvID;
     private $isScheduled = false;
     private $cvPublishDate;
     private $cvPublishEndDate;
@@ -54,12 +54,12 @@ class ApprovePageRequest extends PageRequest
     public function getWorkflowRequestDescriptionObject()
     {
         $d = new WorkflowDescription();
-        $c = Page::getByID($this->cID, 'RECENT');
+        $c = Page::getByID($this->cID, $this->cvID);
         if ($c && !$c->isError()) {
             $link = $c->getCollectionLink();
-            $v = CollectionVersion::get($c, $this->cvID);
+            $v = $c->getVersionObject();
             if (is_object($v) && !$v->isError()) {
-                $comments = $c->getVersionObject()->getVersionComments();
+                $comments = $v->getVersionComments();
 
                 if (!$this->isNewPageRequest()) {
                     // new version of existing page
@@ -78,10 +78,10 @@ class ApprovePageRequest extends PageRequest
                     $d->setShortStatus(t("New Page"));
                 }
             } else {
-                $d->setEmailDescription(t('Deleted Version.'));
-                $d->setDescription(t('Deleted Version.'));
-                $d->setInContextDescription(t('Deleted Version.'));
-                $d->setShortStatus(t('Deleted Version.'));
+                $d->setEmailDescription(t('Deleted Page Version.'));
+                $d->setDescription(t('Deleted Page Version.'));
+                $d->setInContextDescription(t('Deleted Page Version.'));
+                $d->setShortStatus(t('Deleted Page Version.'));
             }
         } else {
             $d->setEmailDescription(t('Deleted Page.'));

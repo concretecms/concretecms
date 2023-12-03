@@ -1,9 +1,9 @@
 <?php
 namespace Concrete\Core\Workflow\Request;
 
+use Concrete\Core\Page\Page;
 use Config;
 use Loader;
-use Page;
 use Stack;
 use Concrete\Core\Workflow\Description as WorkflowDescription;
 use PermissionKey;
@@ -25,15 +25,22 @@ class DeletePageRequest extends PageRequest
     {
         $d = new WorkflowDescription();
         $c = Page::getByID($this->cID, 'ACTIVE');
-        $item = t('page');
-        if ($c->getPageTypeHandle() == STACKS_PAGE_TYPE) {
-            $item = t('stack');
+        if ($c && !$c->isError()) {
+            $item = t('page');
+            if ($c->getPageTypeHandle() == STACKS_PAGE_TYPE) {
+                $item = t('stack');
+            }
+            $link = $c->getCollectionLink();
+            $d->setEmailDescription(t("\"%s\" has been marked for deletion. View the page here: %s.", $c->getCollectionName(), $link));
+            $d->setInContextDescription(t("This %s has been marked for deletion. ", $item));
+            $d->setDescription(t("<a href=\"%s\">%s</a> has been marked for deletion. ", $link, $c->getCollectionName()));
+            $d->setShortStatus(t("Pending Delete"));
+        } else {
+            $d->setEmailDescription(t('Deleted page.'));
+            $d->setInContextDescription(t('Deleted page.'));
+            $d->setDescription(t('Deleted page.'));
+            $d->setShortStatus(t('Deleted page.'));
         }
-        $link = Loader::helper('navigation')->getLinkToCollection($c, true);
-        $d->setEmailDescription(t("\"%s\" has been marked for deletion. View the page here: %s.", $c->getCollectionName(), $link));
-        $d->setInContextDescription(t("This %s has been marked for deletion. ", $item));
-        $d->setDescription(t("<a href=\"%s\">%s</a> has been marked for deletion. ", $link, $c->getCollectionName()));
-        $d->setShortStatus(t("Pending Delete"));
 
         return $d;
     }
