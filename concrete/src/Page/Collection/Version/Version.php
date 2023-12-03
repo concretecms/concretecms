@@ -11,6 +11,7 @@ use Concrete\Core\Localization\Service\Date;
 use Concrete\Core\Page\Collection\Collection;
 use Concrete\Core\Page\Page;
 use Concrete\Core\Utility\Service\Validation\Numbers;
+use Concrete\Core\Workflow\Command\DeletePageVersionRequestsCommand;
 use Doctrine\DBAL\Query\QueryBuilder;
 use PageType;
 use Permissions;
@@ -1000,6 +1001,10 @@ class Version extends ConcreteObject implements PermissionObjectInterface, Attri
         $q = "delete from CollectionVersions where cID = '{$cID}' and cvID='{$cvID}'";
         $db->executeQuery($q);
         $this->refreshCache();
+
+        // Delete uncompleted workflow requests for this version
+        $deletePageVersionRequestsCommand = new DeletePageVersionRequestsCommand($cID, $cvID);
+        $app->executeCommand($deletePageVersionRequestsCommand);
 
         $ev = new Event($c);
         $ev->setUser($u);

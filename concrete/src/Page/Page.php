@@ -45,6 +45,7 @@ use Concrete\Core\Summary\Category\CategoryMemberInterface;
 use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\Support\Facade\Facade;
 use Concrete\Core\User\User;
+use Concrete\Core\Workflow\Command\DeletePageRequestsCommand;
 use Config;
 use Core;
 use Database;
@@ -3009,6 +3010,10 @@ EOT
             $this->getCollectionName(),
             $this->getCollectionPath()
         ));
+
+        // Delete uncompleted workflow requests for this page (need to run before the page is deleted)
+        $deletePageRequestsCommand = new DeletePageRequestsCommand($cID);
+        $app->executeCommand($deletePageRequestsCommand);
 
         parent::delete();
 
