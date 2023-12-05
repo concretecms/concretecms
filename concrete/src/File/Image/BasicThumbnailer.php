@@ -308,6 +308,7 @@ class BasicThumbnailer implements ThumbnailerInterface, ApplicationAwareInterfac
         $version = null;
 
         $fh = $this->app->make('helper/file');
+        $th = $this->app->make('helper/text');
 
         $baseFilename = '';
         $extension = '';
@@ -317,6 +318,9 @@ class BasicThumbnailer implements ThumbnailerInterface, ApplicationAwareInterfac
                 $fID = $obj->getFileID();
                 $extension = $fh->getExtension($fr->getPath());
                 $baseFilename = md5(implode(':', [$fID, $maxWidth, $maxHeight, $crop, $fr->getTimestamp()]));
+                if ($obj->getTitle()) {
+                    $baseFilename = $th->sanitizeFileSystem(pathinfo($obj->getTitle(), PATHINFO_FILENAME)) . '-' . $baseFilename;
+                }
             } catch (Exception $e) {
                 $result = new \stdClass();
                 $result->src = '';
