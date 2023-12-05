@@ -36,6 +36,11 @@ defined('C5_EXECUTE') or die('Access Denied.');
                             <a href="#" data-control-type-id="<?= $type->getPageTypeComposerControlTypeID() ?>" data-control-identifier="<?= $control->getPageTypeComposerControlIdentifier() ?>">
                                 <?= $control->getPageTypeComposerControlIcon() ?>
                                 <?= $control->getPageTypeComposerControlDisplayName() ?>
+                                <?php if ($type->getPageTypeComposerControlTypeHandle() === 'collection_attribute') { ?>
+                                    <span class="text-muted small">
+                                        (<?= $control->getAttributeKeyObject()->getAttributeKeyHandle() ?>)
+                                    </span>
+                                <?php } ?>
                             </a>
                         </li>
                         <?php
