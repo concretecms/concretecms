@@ -1,3 +1,135 @@
+# 9.2.3
+
+## New Features
+
+## Behavioral Improvements
+
+* Renamed Twitter to “X” in the social networking and social sharing services.
+* Health: add a link from reports to the "Start a New Report" page (thanks mlocati)
+* Logs with long paths in their messages no longer display beneath the Dashboard panel in the Logs report.
+* Packages are now alphabetically sorted in the Dashboard listing interface (thanks JohnTheFish)
+* Add the package name and version to the package install success message (thanks JohnTheFish)
+* Translate package name in update message (thanks JohnTheFish)
+
+## Bug Fixes
+
+* Fixed error when saving a layout preset under PHP 8.
+* Fixed importing IP access log channels (thanks mlocati)
+* Fixed issue when importing trees and tree nodes when used with custom classes in packages.
+* Fixed: we export three custom styles for blocks and areas that we don’t import (thanks mlocati)
+* Fixed bug where if a file folder was added as a favorited and then deleted in the file manager the user would receive errors when using the file chooser.
+* Fixed weird behavior when using the content exporter to export pages with scrapbook pasted blocks in them (thanks mlocati)
+* Fixed importing RSS displayer blocks under certain conditions from CIF XML (thanks mlocati)
+* Bug fixes to CIF XML files (thanks mlocati)
+* Fixed: Topic List block: Add missing titleFormat to exported CIF (thanks mlocati)
+* Bug fixes to importing tree node types (thanks mlocati)
+* Bug fixes to importing site type skeletons (thanks mlocati)
+* Fix bug in c5:translate –fill (thanks mlocati)
+* Bug fixes to editing page types under PHP 8 in certain conditions (thanks mlocati)
+
+## Developer Notes
+
+* The X social networking service icon is provided as an SVG - meaning that your theme may need to be updated to properly style SVGs as well as font icons when displaying “Share this Page” or “Social Networking” service icons.
+* Cleanup of CIF XML files (thanks mlocati)
+* Improvements to the Xml service class (thanks mlocati)
+* We now accept boolean-like values when importing booleans from CIF XML files (thanks mlocati)
+
+## Security Fixes
+
+* Fixed [CVE-2023-44762](https://nvd.nist.gov/vuln/detail/CVE-2023-44762) Reflected XSS in Tags with [commit 11764](https://github.com/concretecms/concretecms/pull/11764/commits/af57186f2a9d6d8f597e4580f8b2ad05c7f5a609) This vulnerability only affects only Concrete version 9.2 through 9.2.2 since the file this touches is in Bedrock, using a custom library the project wrote for version 9.2.0.
+* Fixed [CVE-2023-44764](https://nvd.nist.gov/vuln/detail/CVE-2023-48651) Stored XSS in Concrete Site Installation in Name parameter with [commit 11764](https://github.com/concretecms/concretecms/pull/11764).
+* Fixed [CVE-2023-48652](https://nvd.nist.gov/vuln/detail/CVE-2023-48652) Cross Site Request Forgery (CSRF) via /ccm/system/dialogs/logs/delete_all/submit with [commit 11764]( https://github.com/concretecms/concretecms/pull/11764/commits/747d5bf776cc81c708f5d8f0d64a1e7eafb3f218) An attacker can force an admin user to delete server report logs on a web application to which they are currently authenticated. The Concrete CMS Security team scored this 6.3 with CVSS v3 vector [AV:N/AC:L/PR:N/UI:R/S:U/C:L/I:L/A:L](https://nvd.nist.gov/vuln-metrics/cvss/v3-calculator?vector=AV:N/AC:L/PR:N/UI:R/S:U/C:L/I:L/A:L&version=3.1). This does not affect versions below 9. Thanks Veshraj Ghimire for reporting. 
+* Fixed [CVE-2023-48651](https://nvd.nist.gov/vuln/detail/CVE-2023-48651) by updating Update Dialog endpoints to only accept Post requests with tokens included with [commit 11764]( https://github.com/concretecms/concretecms/pull/11764/commits/747d5bf776cc81c708f5d8f0d64a1e7eafb3f218) Prior to fix Cross Site Request Forgery (CSRF) to delete files vulnerability is present at /ccm/system/dialogs/file/delete/1/submit. The Concrete CMS Security team scored this 4.3 with CVSS v3 vector [AV:N/AC:L/PR:N/UI:R/S:U/C:N/I:N/A:L](https://nvd.nist.gov/vuln-metrics/cvss/v3-calculator?vector=AV:N/AC:L/PR:N/UI:R/S:U/C:N/I:N/A:L&version=3.1) This does not affect versions below 9. Thanks Veshraj Ghimire for reporting. 
+* Fixed [CVE-2023-48653](https://nvd.nist.gov/vuln/detail/CVE-2023-48653) Cross Site Request Forgery (CSRF) via ccm/calendar/dialogs/event/delete/submit by updating Dialog endpoints to only accept Post requests with tokens included with [commit 11764]( https://github.com/concretecms/concretecms/pull/11764/commits/747d5bf776cc81c708f5d8f0d64a1e7eafb3f218) for 9.2.3. Prior to fix, an attacker can force an admin to delete events on the site because the event ID is numeric and sequential. The Concrete CMS Security team scored this 4.3 with CVSS v3 vector [AV:N/AC:L/PR:N/UI:R/S:U/C:N/I:L/A:N](https://nvd.nist.gov/vuln-metrics/cvss/v3-calculator?vector=AV:N/AC:L/PR:N/UI:R/S:U/C:N/I:L/A:N&version=3.1) Thanks Veshraj Ghimire for reporting. 
+* Fixed [CVE-2023-48650](https://nvd.nist.gov/vuln/detail/CVE-2023-48650) Stored XSS in Layout Preset Name with [commit 11764](https://github.com/concretecms/concretecms/pull/11764) in 9.2.3 and [commit 11765](https://github.com/concretecms/concretecms/pull/11765) in 8.5.14. The Concrete CMS Security team scored this 3.5 with CVSS v3 vector [AV:N/AC:L/PR:H/UI:R/S:U/C:L/I:L/A:N](https://nvd.nist.gov/vuln-metrics/cvss/v3-calculator?vector=AV:N/AC:L/PR:H/UI:R/S:U/C:L/I:L/A:N&version=3.1)  Thanks Solar Security CMS Research, with [d0bby](https://hackerone.com/d0bby), [wezery0](https://hackerone.com/wezery0), [silvereniqma](https://hackerone.com/silvereniqma) in collaboration for reporting!
+* Fixed [CVE-2023-49337](https://nvd.nist.gov/vuln/detail/CVE-2023-49337) Stored XSS on Admin Dashboard via /dashboard/system/basics/name with [commit 07b4337]( https://github.com/concretecms/concretecms/commit/07b433799b888c4eb854e052ca58b032ebc6d36f) The Concrete CMS Security team scored this 2.4 with CVSS v3 vector [AV:N/AC:L/PR:H/UI:R/S:U/C:N/I:L/A:N](https://nvd.nist.gov/vuln-metrics/cvss/v3-calculator?vector=AV:N/AC:L/PR:H/UI:R/S:U/C:N/I:L/A:N&version=3.1) Thanks Ramshath MM for reporting H1 2232594. This vulnerability is not present in Concrete 8.5 and below. 
+
+# 9.2.2
+
+## New Features
+
+* Added a Switch Language option to the Top Navigation Bar, allowing the navigation bar to present a list of site languages and facilitate switching between them for the given page (thanks hissy)
+
+## Behavioral Improvements
+
+* Express Detail block now has support for getSearchableContent: pages that contain this block will have that block’s content properly added to the search index.
+* We now display the minimum and maximum username length when adding users in the Dashboard (thanks ounziw)
+* Prevent loading full tree views when not needed, improving performance with large topic trees in topic attributes, large file manager trees on Dashboard user and file manager pages. 
+* Add package name and version to the message displayed after a package update (thanks JohnTheFish)
+* Improvements to clarity in field layout when resetting a user’s password from the Dashboard (thanks iampedropiedade)
+* Page List block outputs canonical path only when ccm_paging_p is 2 or greater (thanks ccmEnlil)
+* Site-wide attributes will now be grouped by set if sets have been enabled for site attributes (thanks parasek)
+* Added links to the images in the Atomik blog summary templates.
+* Updating some automatically created directories to use the proper directory permissions (thanks mlocati)
+* Clicking the labels of the checkboxes in the Rich Text Editor Settings Dashboard page will not check the appropriate checkbox (thanks mlocati)
+
+## Bug Fixes
+
+* Fixed bug where page attributes were added to the attribute index immediately upon saving, even if the version they were joined to had not yet been approved. 
+* Fixed bug where announcements might not have been displayed to certain users who should see them.
+* Fixed bug when using advanced permissions in file manager with File Uploader access entity under certain conditions.
+* Fixed bug in the Atomik theme where a board would error if certain properties on a page were not set.
+* Fixed bug in advanced permissions that made it impossible to select a custom date/time range for a permission access entity.
+* Fixed: Page with gallery block breaks if deletes an image from the File manager.
+* jQuery UI is no longer required to use the core date/datetime attribute (thanks hamzaouibacha)
+* Fixed: Help block for related topics on page list form is incorrect (thanks ccmEnlil)
+* Fixed: Can't delete a user who is favoriting a folder in the file manager (thanks mlocati)
+* Fixed error where Page not found after updating URL slug of a page in composer.
+* Improved compatibility with PHP 8.2 and greater.
+* Fixed: ResponseAssetGroup::requireAsset required "core/rating" but "core/rating" is not a valid asset group handle
+* Fixed: Feature Link block: Undefined variable $buttonColor error on PHP8
+* Removed directory selector from File manager add file dialog because it could slow things down significantly.
+* Fixed bug where certain marketplace files would be marked as incompatible with the current version when they were not actually incompatible under PHP versions lower than 8.
+* Fixed Undefined variable $calendarID with PHP 8 when working with calendar boards configuration under PHP 8.
+* Fixed bug where Multi-site default site attributes at the Site Type level were not working.
+* Fixed: --env command option is ignored on v9 (thanks jscott-rawnet)
+* Fixed issue where users who were granted the ability to edit page type drafts were not actually able to publish those drafts.
+* Link settings in an image block will now export properly when using the Migration Tool (thanks hissy)
+* Fixed issue where if you’re filtering by a topic using custom code, similarly named topics would return objects assigned to both topics (thanks pszostok)
+* Fix error when an invalid file is passed into the download file single page (thanks JohnTheFish)
+* Fixed bug where nested groups would show HTML for their breadcrumbs when viewed in the user group search in the user advanced search.
+* Fixed some instances where the CollectionSearchIndexAttributes table might be updated based on the latest version instead of the approved version (thanks biplobice)
+* Fixed concrete/attributes/email/controller.php:33 Undefined array key "value" (thanks mlocati)
+* Fixed: PHP 8 deprecation warnings on login page (thanks mlocati)
+* Remove HTML from user_group attribute form.
+* Prevents PHP8 undefined key exception in Snippet::getByHandle() (thanks bikerdave)
+* "Invalid or Empty Node passed to getItem constructor." error on adding express form in certain languages (thanks hissy)
+* Bug fixes to the download file page under PHP8 (thanks JohnTheFish)
+* Fix error when logging in as another user with multisite enabled under PHP8.
+* Fixed Undefined variable $user on /login/session_invalidated under PHP 8 (thanks hissy)
+* Fixed bug where certain users may not have been able to dismiss announcements.
+* Fixed issue where "Subpage Permissions" setting is ignored when draft pages are inherited from defaults (thanks hissy)
+* Add missing t() in "Edit Page List" block view so it can be translated (thanks mlocati)
+* Fixed bug when trying to use Calendar summary templates to select a specific sub-set of summary templates as available for a particular event.
+* Fixed errors when accessing Express attribute keys programmatically if they had the phrase “get” at any point in them.
+* Load fresh version object instead of cached one when running update (thanks pszostok)
+* Fixed: Express Form Block's Form Name doesn't get changed after first setting (thanks hamzaouibacha)
+* Sanitize the output of the Accordion block title field (thanks ismeashim)
+* We now properly sanitize the output of files uploaded through Express Forms. 
+* Updated to Guzzle 7.8, remediating INSERT ISSUE HERE!!!
+* Updated League OAuth2 Server dependency to 8.4.2 to fix security issue.
+* Better sanitization of Plural handles in Express objects.
+* Better sanitizing of Custom labels in Express objects.
+
+## Developer Improvements
+
+* Added new capabilities for custom theme documentation pages (pages that use site page types and page templates for support elements, but still live in the documentation pages area.)
+* Made ReindexPageCommand fully synchronous, and added a new QueueReindexPageCommand that is asynchronous for use when developers want to queue a page for reindexing asynchronously.
+
+* Added new console command `concrete:theme:activate` and `concrete:theme:activate-skin`.
+* Added the ability to affect the new page’s display order and page path when using the on_page_duplicate event.
+* Enhance DeleteGroupCommand to customize its handling of sub-groups (thanks mlocati)
+* Developers can now override the PageItem and Navigation classes within the Top Navigation Bar using custom code if they choose to do so (thanks danklassen)
+
+
+## Security Fixes
+* Updated the Guzzle HTTP library to 7.8 to ensure Concrete CMS is not vulnerable to Guzzle [CVE-2023-29197](https://nvd.nist.gov/vuln/detail/CVE-2023-29197) Thank you Danilo Costa for reporting H1 2132287
+* Fixed <CVE Pending> Directories could be created with insecure permissions since file creation functions gave universal access (0777) to created folders by default. Excessive permissions could be granted when creating a directory with permissions greater than 0755 or when the permissions argument was not specified. The Concrete CMS Security team scored this 6.6 with CVSS v3 vector [AV:N/AC:H/PR:H/UI:N/S:U/C:H/I:H/A:H](https://nvd.nist.gov/vuln-metrics/cvss/v3-calculator?vector=AV:N/AC:H/PR:H/UI:N/S:U/C:H/I:H/A:H&version=3.1) Thanks tahabiyikli-vortex for reporting H12122245. Thanks Mlocati for providing the fix. Fixed in commit [11677](https://github.com/concretecms/concretecms/pull/11677)
+* Fixed <CVE Pending> stored XSS on the Concrete Admin page by sanitizing uploaded file 
+names. The Concrete CMS Security team scored this 3.5 with CVSS v3 vector [AV:N/AC:L/PR:L/UI:R/S:U/C:L/I:N/A:N](https://nvd.nist.gov/vuln-metrics/cvss/v3-calculator?vector=AV:N/AC:L/PR:L/UI:R/S:U/C:L/I:N/A:N&version=3.1) Thanks @akbar_jafarli for reporting H1 2149479. Fixed in commit [11695](https://github.com/concretecms/concretecms/pull/11695)  
+* Fixed [CVE-2023-44761](https://nvd.nist.gov/vuln/detail/CVE-2023-44761) Admin can add XSS via Data Objects with this [commit](https://github.com/concretecms/concretecms/commit/4990e68e8a4be2ee66e2d2bfcbfca38712614f76)
+* Fixed [CVE-2023-44765](https://nvd.nist.gov/vuln/detail/CVE-2023-44765) Stored XSS Associations (via data objects) with commit [11746](https://github.com/concretecms/concretecms/pull/11746)
+
 # 9.2.1
 
 ## New Features
