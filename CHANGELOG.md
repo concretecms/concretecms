@@ -1,3 +1,48 @@
+# 8.5.14
+
+## Bug Fixes
+
+* We continue to support TLS 1.2 in Zend Mail (thanks hissy, mlocati)
+
+## Security Fixes
+
+* Fixed [CVE-2023-48653](https://nvd.nist.gov/vuln/detail/CVE-2023-48653) Cross Site Request Forgery (CSRF) via ccm/calendar/dialogs/event/delete/submit by updating Update Dialog endpoints to only accept Post requests with tokens included with [commit 11765](https://github.com/concretecms/concretecms/pull/11765/files) for 8.5.14. Prior to fix, an attacker can force an admin to delete events on the site because the event ID is numeric and sequential. The Concrete CMS Security team scored this 4.3 with CVSS v3 vector [AV:N/AC:L/PR:N/UI:R/S:U/C:N/I:L/A:N](https://nvd.nist.gov/vuln-metrics/cvss/v3-calculator?vector=AV:N/AC:L/PR:N/UI:R/S:U/C:N/I:L/A:N&version=3.1) Thanks Veshraj Ghimire for reporting.
+* Fixed [CVE-2023-48650](https://nvd.nist.gov/vuln/detail/CVE-2023-48650) Stored XSS in Layout Preset Name with [commit 11765](https://github.com/concretecms/concretecms/pull/11765) in 8.5.14. The Concrete CMS Security team scored this 3.5 with CVSS v3 vector [AV:N/AC:L/PR:H/UI:R/S:U/C:L/I:L/A:N](https://nvd.nist.gov/vuln-metrics/cvss/v3-calculator?vector=AV:N/AC:L/PR:H/UI:R/S:U/C:L/I:L/A:N&version=3.1) Thanks Solar Security CMS Research, [d0bby](with https://hackerone.com/d0bby), [wezery0](https://hackerone.com/wezery0), [silvereniqma](https://hackerone.com/silvereniqma) in collaboration for reporting!
+
+# 8.5.13
+
+## Behavioral Improvements
+
+* CKEditor included version has been updated to the latest version 4.22.1 (thanks hissy)
+* Updating some automatically created directories to use the proper directory permissions (thanks mlocati)
+
+## Bug Fixes
+
+* Fixed bug where Express association control would be required if present in form even if the admin hadn’t marked it as required (thanks yildirimmurat)
+* Fixed link to user profile from Communty authentication (thanks mlocati)
+* Fixed some instances where the CollectionSearchIndexAttributes table might be updated based on the latest version instead of the approved version (thanks biplobice)
+* Fixed: Gettext uses deprecated array_key_exists() which throws a ConversionException on PHP 7.4 (thanks 1stthomas, mlocati)
+* We now properly sanitize the output of files uploaded through Express Forms. 
+
+## Developer Updates
+
+* Avoid installing commerceguys/addressing 1.4+ because it’s incompatible with PHP 7.3 (thanks mlocati)
+
+## Security Fixes
+
+* Better sanitization of Plural handles in Express objects.
+* Better sanitizing of Custom labels in Express objects.
+* Updated to Guzzle 6.5.8 to ensure Concrete CMS is not vulnerable to Guzzle [CVE-2023-29197](https://nvd.nist.gov/vuln/detail/CVE-2023-29197) Thank you Danilo Costa for reporting H1 2132287
+* Fixed <CVE Pending> Directories could be created with insecure permissions since file creation functions gave universal access (0777) to created folders by default. Excessive permissions could be granted when creating a directory with permissions greater than 0755 or when the permissions argument was not specified. The Concrete CMS Security team scored this 6.6 (Medium) with CVSS v3 vector [AV:N/AC:H/PR:H/UI:N/S:U/C:H/I:H/A:H](https://nvd.nist.gov/vuln-metrics/cvss/v3-calculator?vector=AV:N/AC:H/PR:H/UI:N/S:U/C:H/I:H/A:H&version=3.1) Thanks tahabiyikli-vortex for reporting H12122245. Thanks Mlocati for providing the fix. Fixed in commit [11739](https://github.com/concretecms/concretecms/pull/11739)
+* Fixed [CVE-2023-28477](https://nvd.nist.gov/vuln/detail/CVE-2023-28477) stored XSS on API Integrations via the name parameter in the 8.5 version. Previous fix was in version 9 only. Prior to the fix, while adding API Integrations on Concrete CMS, the parameter name accepted special characters enabling malicious JavaScript payloads impacting /dashboard/system/api/integrations and /dashboard/system/api/integrations/view_client/unique-id. The Concrete CMS Security team scored this 5.5 with CVSS v3.1 vector [AV:N/AC:L/PR:H/UI:N/S:U/C:H/I:L/A:N](https://nvd.nist.gov/vuln-metrics/cvss/v3-calculator?vector=AV:N/AC:L/PR:H/UI:N/S:U/C:H/I:L/A:N&version=3.1) Thanks Veshraj Ghimire for reporting H1 1753684 and providing the original fix. See [commit](https://github.com/concretecms/concretecms/commit/546cef6ec29208d5c079113635cd6e6b250e9f7c)
+* Fixed [CVE-2023-44761](https://nvd.nist.gov/vuln/detail/CVE-2023-44761) Admin can add XSS via Data Objects with this [commit](https://github.com/concretecms/concretecms/commit/4990e68e8a4be2ee66e2d2bfcbfca38712614f76) PLEASE report vulnerabilities directly to the Concrete Team so that we can fix them to make Concrete safer for all.
+* Fixed [CVE-2023-44765](https://nvd.nist.gov/vuln/detail/CVE-2023-44765) Concrete was vulnerable to stored XSS in Associations (via data objects). Fixed with [commit](https://github.com/concretecms/concretecms/commit/da516f7f0ee8782f0256d8db4e7d7d53d4a0963c) PLEASE report vulnerabilities directly to the Concrete Team
+* Fixed [CVE-2023-28475](https://nvd.nist.gov/vuln/detail/CVE-2023-28475) Concrete was vulnerable to reflected XSS on the Reply form because msgID was not sanitized in the 8.5 version. Previous fix was in version 9 only. Concrete CMS Team ranked this 4.2 (medium) With CVSS v3.1 vector [AV:N/AC:H/PR:N/UI:R/S:U/C:L/I:L/A:N](https://nvd.nist.gov/vuln-metrics/cvss/v3-calculator?vector=AV:N/AC:H/PR:N/UI:R/S:U/C:L/I:L/A:N&version=3.1) Thanks again Bogdan Tiron for the discovery. Fixed with [commit](https://github.com/concretecms/concretecms/commit/861ba66d248165c9ee9d6d11a0457908b97d68f0)
+* Fixed <CVE Pending> stored XSS on the Concrete Admin page by sanitizing uploaded file names. Fixed in commit [11739](https://github.com/concretecms/concretecms/pull/11739). Concrete CMS Security team scored this 3.5 (low) with CVSS v3 vector AV:N/AC:L/PR:L/UI:R/S:U/C:L/I:N/A:N Thanks @akbar_jafarli for reporting H1 2149479.
+* Fixed [CVE-2023-28819](https://nvd.nist.gov/vuln/detail/CVE-2023-28819) in version 8.5. Previously remediated in Concrete 9.1. Concrete was vulnerable to stored XSS in uploaded file and folder names since Concrete CMS was rendering data without sanitizing it. The Concrete CMS Security team scored this 3.5 with CVSS v3.1 vector [AV:N/AC:L/PR:H/UI:R/S:U/C:L/I:L/A:N](https://nvd.nist.gov/vuln-metrics/cvss/v3-calculator?vector=AV:N/AC:L/PR:H/UI:R/S:U/C:L/I:L/A:N&version=3.1). Thanks solov9ev for reporting H1 1472270. Fixed with commit [11749](https://github.com/concretecms/concretecms/pull/11749)  
+* Fixed [CVE-2023-28472](https://nvd.nist.gov/vuln/detail/CVE-2023-28472) in version 8.5 by updating the Survey Block Controller. We added support for the concrete.session.cookie.cookie_secure value to the ccmPoll cookie (which developers can set to true if they want to use secure cookies. This was previously done in Concrete 9.2. Concrete CMS Security team scored this 3.4 with CVSS v3.1 vector [AV:N/AC:H/PR:N/UI:R/S:C/C:L/I:N/A:N](https://nvd.nist.gov/vuln-metrics/cvss/v3-calculator?vector=AV:N/AC:H/PR:N/UI:R/S:C/C:L/I:N/A:N&version=3.1) Fixed with commit  [11749](https://github.com/concretecms/concretecms/pull/11749)
+* Fixed [CVE-2023-28473](https://nvd.nist.gov/vuln/detail/CVE-2023-28473) possible Auth bypass in the jobs section in version 8.5. This was previously remediated in Concrete 9.2. Concrete CMS Security team scored this 2.2 with CVSS v3.1 vector [AV:N/AC:H/PR:H/UI:N/S:U/C:N/I:L/A:N](https://nvd.nist.gov/vuln-metrics/cvss/v3-calculator?vector=AV:N/AC:H/PR:H/UI:N/S:U/C:N/I:L/A:N&version=3.1) Thanks Adrian Tiron from Fortbridge for Reporting H1 1772230. Fixed with commit [11749](https://github.com/concretecms/concretecms/pull/11749).
+
 # 8.5.12
 
 ## Bug Fixes
