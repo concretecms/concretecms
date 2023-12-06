@@ -48,6 +48,11 @@ class Info
      * @var string
      */
     protected $cache;
+    
+    /**
+     * @var string
+     */
+    protected $entities;
 
     /**
      * @var string
@@ -164,6 +169,10 @@ class Info
                 );
             }
             $this->cache = implode("\n", $cache);
+
+            $entities = [];
+            $entities[] = sprintf('Doctrine Development Mode - %s', $config->get('concrete.cache.doctrine_dev_mode')?'On':'Off');
+            $this->entities = implode("\n", $entities);
 
             $this->serverSoftware = \Request::getInstance()->server->get('SERVER_SOFTWARE', '');
 
@@ -344,6 +353,14 @@ class Info
     public function getCache()
     {
         return $this->cache;
+    }
+
+    /**
+     * @return string
+     */
+    public function getEntities()
+    {
+        return $this->entities;
     }
 
     /**
