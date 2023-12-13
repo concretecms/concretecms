@@ -67,7 +67,7 @@
         </attributekey>
     </attributekeys>
     <attributesets>
-        <attributeset handle="navigation" name="Navigation" category="collection">
+        <attributeset handle="navigation" name="Navigation" package="" category="collection">
             <attributekey handle="thumbnail"/>
             <attributekey handle="exclude_subpages_from_nav"/>
         </attributeset>
@@ -3087,7 +3087,7 @@
     <expressentities>
         <entity id="83ae65b1-79e8-4ded-bbca-e419bfd19bb6" handle="express_form_170" plural_handle="" name="Contact"
                 include_in_public_list="" description="" default_view_form="881b6bde-220f-4482-b8f9-ace40b5d169b"
-                default_edit_form="881b6bde-220f-4482-b8f9-ace40b5d169b" results-folder="/Forms">
+                default_edit_form="881b6bde-220f-4482-b8f9-ace40b5d169b" results-folder="/Forms" package="">
             <attributekeys>
                 <attributekey handle="contact_question_first_name" name="First Name" package="" searchable="1"
                               indexed="1" type="text" category="">
@@ -3156,7 +3156,7 @@
     </expressentities>
 
     <config>
-        <option name="concrete.calendar.topic_attribute">event_categories</option>
+        <option name="concrete.calendar.topic_attribute" package="">event_categories</option>
     </config>
 
 
