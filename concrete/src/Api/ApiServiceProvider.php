@@ -13,6 +13,7 @@ use Concrete\Core\Entity\OAuth\RefreshToken;
 use Concrete\Core\Entity\OAuth\Scope;
 use Concrete\Core\Entity\OAuth\UserRepository;
 use Concrete\Core\Entity\User\User;
+use Concrete\Core\Foundation\Environment\FunctionInspector;
 use Concrete\Core\Foundation\Service\Provider as ServiceProvider;
 use Concrete\Core\Routing\Router;
 use Doctrine\ORM\EntityManagerInterface;
@@ -102,6 +103,7 @@ class ApiServiceProvider extends ServiceProvider
             }
 
             // Save the keypair
+            $config->set('api.keypair', $keyPair);
             $config->save('api.keypair', $keyPair);
         }
 
@@ -110,16 +112,23 @@ class ApiServiceProvider extends ServiceProvider
 
     /**
      * Get a key by handle
-     * @param $handle privatekey | publickey
-     * @return string|null
+     * @param string $handle privatekey | publickey
+     *
+     * @return \League\OAuth2\Server\CryptKey|null
      */
-    private function getKey($handle)
+    private function getCryptKey($handle)
     {
         if (!$this->keyPair) {
             $this->keyPair = $this->getKeyPair();
         }
+        if (!isset($this->keyPair[$handle])) {
+            return null;
+        }
+        if (DIRECTORY_SEPARATOR === '\\') {
+            return $this->buildCryptKeyWindows($this->keyPair[$handle]);
+        }
 
-        return isset($this->keyPair[$handle]) ? $this->keyPair[$handle] : null;
+        return new CryptKey($this->keyPair[$handle]);
     }
 
     /**
@@ -129,17 +138,16 @@ class ApiServiceProvider extends ServiceProvider
     {
         // The ResourceServer deals with authenticating requests, in other words validating tokens
         $this->app->bind(ResourceServer::class, function() {
-            $cryptKey = new CryptKey($this->getKey(self::KEY_PUBLIC), null, DIRECTORY_SEPARATOR !== '\\');
             return $this->app->build(ResourceServer::class, [
                 $this->app->make(AccessTokenRepositoryInterface::class),
-                $cryptKey,
+                $this->getCryptKey(self::KEY_PUBLIC),
                 $this->app->make(DefaultValidator::class)
             ]);
         });
 
         // AuthorizationServer on the other hand deals with authorizing a session with a username and password and key and secret
-        $this->app->when(AuthorizationServer::class)->needs('$privateKey')->give($this->getKey(self::KEY_PRIVATE));
-        $this->app->when(AuthorizationServer::class)->needs('$publicKey')->give($this->getKey(self::KEY_PUBLIC));
+        $this->app->when(AuthorizationServer::class)->needs('$privateKey')->give($this->getCryptKey(self::KEY_PRIVATE));
+        $this->app->when(AuthorizationServer::class)->needs('$publicKey')->give($this->getCryptKey(self::KEY_PUBLIC));
         $this->app->when(AuthorizationServer::class)->needs(ResponseTypeInterface::class)->give(function() {
             return $this->app->make(IdTokenResponse::class);
         });
@@ -177,4 +185,36 @@ class ApiServiceProvider extends ServiceProvider
         $this->app->bind(UserRepositoryInterface::class, $this->repositoryFactory(UserRepository::class, User::class));
     }
 
+    /**
+     * @param string $key
+     *
+     * @return \League\OAuth2\Server\CryptKey
+     */
+    private function buildCryptKeyWindows($key)
+    {
+        $tmpDir = str_replace(DIRECTORY_SEPARATOR, '/', sys_get_temp_dir());
+        $keyPath = $tmpDir . '/' . sha1($key) . '.key';
+        if (is_file($keyPath)) {
+            return new CryptKey('file://' . $keyPath, null, false);
+        }
+        if ($this->app->make(FunctionInspector::class)->functionAvailable('exec')) {
+            $currentUser = get_current_user();
+            if (empty($currentUser) && isset($_ENV['USERNAME'])) {
+                $currentUser = $_ENV['USERNAME'];
+            }
+            if (!empty($currentUser)) {
+                if (touch($keyPath)) {
+                    $output = [];
+                    $rc = -1;
+                    exec('icacls.exe ' . escapeshellarg(str_replace('/', DIRECTORY_SEPARATOR, $keyPath)) . ' /q /inheritancelevel:r /grant ' . escapeshellarg($_ENV['USERNAME']) . ':rw 2>&1', $output, $rc);
+                    if ($rc === 0 && file_put_contents($keyPath, $key)) {
+                        return new CryptKey('file://' . $keyPath, null, false);
+                    }
+                    @unlink($keyPath);
+                }
+            }
+        }
+
+        return new CryptKey($key, null, false);
+    }
 }
