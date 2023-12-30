@@ -54,7 +54,9 @@ class DateTime
                             $h += 12;
                         }
                     }
-                    $value .= ' ' . substr("0$h", -2) . ':' . substr("0$m", -2) . ':' . substr("0$s", -2);
+                    if (!preg_match("/[0-9]{4}(-[0-9]{2}){2}T[0-9]{2}:[0-9]{2}/", $value)) {
+                            $value .= ' ' . substr("0$h", -2) . ':' . substr("0$m", -2) . ':' . substr("0$s", -2);
+                    }
                     try {
                         $datetime = new PHPDateTime($value, $dh->getTimezone('user'));
                     } catch (Exception $foo) {

@@ -126,7 +126,7 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
         if ($this->akDateDisplayMode === null) {
             $this->load();
         }
-        return $data['value'] != '';
+        return $data['value_dt'] != '';
     }
 
     public function search()

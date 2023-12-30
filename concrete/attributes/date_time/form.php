@@ -37,9 +37,10 @@ switch ($displayMode) {
         $value = $date->formatCustom('Y-m-d', $value);
         echo '<input type="date" class="ccm-input-text form-control" id="' . $view->field('value') . '" name="'. $view->field('value') .'" value="' . $value . '">';
         break;
+    case 'date_time':
     default:
-        $value = $date->formatCustom('Y-m-d H:i', $value);
-        echo '<input type="datetime-local" class="ccm-input-text form-control" id="' . $view->field('value') . '" name="'. $view->field('value') .'" value="' . $value . '">';
+        $value = $date->formatCustom('Y-m-d\TH:i', $value, $date->getUserTimeZoneID());
+        echo '<input type="datetime-local" class="ccm-input-text form-control" id="' . $view->field('value_dt') . '" name="'. $view->field('value_dt') .'" value="' . $value . '">';
         break;
 }
 
