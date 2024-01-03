@@ -1,6 +1,15 @@
 <?php
 defined('C5_EXECUTE') or die("Access Denied.");
-$mi = Marketplace::getInstance();
+$packageRepository = $packageRepository ?? null;
+$connection = $connection ?? null;
+
+if (!$packageRepository || !$connection) {
+    return;
+}
 ?>
 <h4><?= t("Project Page"); ?></h4>
-<p><?= t('Your marketplace project page URL is:'); ?><br/><a target="_blank" href="<?= $mi->getSitePageURL(); ?>"><?= $mi->getSitePageURL(); ?></a></p>
+<p>
+    <?= t('Your marketplace project ID is:'); ?>
+    <br/>
+    <?= $connection->getPublic() ?>
+</p>

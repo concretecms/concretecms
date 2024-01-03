@@ -3,6 +3,10 @@ namespace Concrete\Core\Marketplace;
 
 use Concrete\Core\Foundation\ConcreteObject;
 
+/**
+ * @Deprecated Will be removed in v8
+ * @see PackageRepositoryInterface::getPackages()
+ */
 class RemoteItemSet extends ConcreteObject
 {
     public function getMarketplaceRemoteSetName()

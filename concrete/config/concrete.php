@@ -961,6 +961,7 @@ return [
         'concrete' => 'http://marketplace.concretecms.com',
         'concrete_secure' => 'https://marketplace.concretecms.com',
         'concrete_community' => 'https://community.concretecms.com',
+        'package_repository' => 'http://cmprepo.test',
         'background_feed' => 'https://backgroundimages.concretecms.com/wallpaper',
         'privacy_policy' => '//www.concretecms.com/about/legal/privacy-policy',
         'background_feed_secure' => 'https://backgroundimages.concrete5.org/wallpaper',
@@ -976,6 +977,17 @@ return [
         ],
         'paths' => [
             'site_page' => '/private/sites',
+
+            'package_repository' => [
+                'connect' => '/concrete/connect',
+                'connect_validate' => '/concrete/connect/validate',
+                'list' => '/concrete/list',
+                'get' => '/concrete/package/%s',
+            ],
+
+            /**
+             * @deprecated This will be removed in version 10
+             */
             'marketplace' => [
                 'projects' => '/profile/projects/',
                 'connect' => '/marketplace/connect',

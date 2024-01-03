@@ -1,7 +1,10 @@
 <?php
 namespace Concrete\Controller\SinglePage\Dashboard\Extend;
 
+use Concrete\Core\Marketplace\Exception\InvalidConnectResponseException;
+use Concrete\Core\Marketplace\Exception\UnableToConnectException;
 use Concrete\Core\Marketplace\Marketplace;
+use Concrete\Core\Marketplace\PackageRepositoryInterface;
 use Concrete\Core\Page\Controller\DashboardPageController;
 use Concrete\Core\Permission\Checker;
 
@@ -20,26 +23,34 @@ class Connect extends DashboardPageController
 
     public function do_connect()
     {
+        $this->view();
         if (!$this->token->validate('do_connect')) {
             $this->error->add($this->token->getErrorMessage());
+            return;
         }
+
+        $repository = $this->app->make(PackageRepositoryInterface::class);
+        $current = $repository->getConnection();
+
+        if ($current) {
+            $this->error->add(t('This site is already connected.'));
+            return;
+        }
+
         $checker = new Checker();
         if (!$checker->canInstallPackages()) {
             $this->error->add(t('You do not have access to set community configuration values.'));
+            return;
         }
-        if (!$this->error->has()) {
-            $config = $this->app->make('config/database');
-            if ($this->request->request->has('disconnect')) {
-                $config->save('concrete.marketplace.token', null);
-                $config->save('concrete.marketplace.url_token', null);
-                $this->flash('success', t('The site has been disconnected from the marketplace.'));
-            } else {
-                $config->save('concrete.marketplace.token', $this->request->request->get('csToken'));
-                $config->save('concrete.marketplace.url_token', $this->request->request->get('csURLToken'));
-                $this->flash('success', t('Marketplace configuration saved successfully.'));
-            }
-            $this->redirect('/dashboard/extend/connect');
+
+        try {
+            $repository->connect();
+        } catch (UnableToConnectException $e) {
+            $this->error->add(t('Unable to connect: ' . $e->getMessage()));
+        } catch (InvalidConnectResponseException $e) {
+            $this->error->add(t('Connection failed, try again later.'));
         }
+        return $this->buildRedirect('/dashboard/extend/connect');
     }
 
 }

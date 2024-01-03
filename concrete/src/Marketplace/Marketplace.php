@@ -16,6 +16,10 @@ use Concrete\Core\Url\Resolver\PathUrlResolver;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 
+/**
+ * @Deprecated Will be removed in v8
+ * @see PackageRepositoryInterface
+ */
 class Marketplace implements ApplicationAwareInterface
 {
     use ApplicationAwareTrait;
