@@ -8,7 +8,7 @@ use Concrete\Core\Legacy\ItemList;
 use Concrete\Core\Package\Package;
 
 /**
- * @Deprecated Will be removed in v8
+ * @deprecated This will be removed in version 10
  * @see PackageRepositoryInterface::getPackages()
  */
 class RemoteItemList extends ItemList

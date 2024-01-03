@@ -17,7 +17,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 
 /**
- * @Deprecated Will be removed in v8
+ * @deprecated This will be removed in version 10
  * @see PackageRepositoryInterface
  */
 class Marketplace implements ApplicationAwareInterface

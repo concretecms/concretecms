@@ -11,7 +11,7 @@ use Concrete\Core\Foundation\ConcreteObject;
 use Exception;
 
 /**
- * @Deprecated Will be removed in v8
+ * @deprecated This will be removed in version 10
  * @see RemotePackage
  */
 class RemoteItem extends ConcreteObject
