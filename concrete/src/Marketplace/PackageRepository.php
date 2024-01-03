@@ -17,6 +17,7 @@ use Concrete\Core\Marketplace\Model\ValidateResult;
 use Concrete\Core\Url\Resolver\CanonicalUrlResolver;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\BadResponseException;
+use GuzzleHttp\Exception\ConnectException;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Uri;
 use GuzzleHttp\RequestOptions;
@@ -191,7 +192,9 @@ final class PackageRepository implements PackageRepositoryInterface
         $request = $this->requestFor('GET', 'connect');
 
         try {
-            $response = $this->client->send($request);
+            $response = $this->client->send($request, [
+                RequestOptions::TIMEOUT => 2,
+            ]);
             $contents = $response->getBody()->getContents();
             $data = json_decode($contents, true, 2, JSON_THROW_ON_ERROR);
 
@@ -203,7 +206,7 @@ final class PackageRepository implements PackageRepositoryInterface
 
             $result = $this->serializer->denormalize($data, ConnectResult::class);
             assert($result instanceof ConnectResult);
-        } catch (BadResponseException $e) {
+        } catch (BadResponseException|ConnectException $e) {
             throw new UnableToConnectException($e->getMessage(), $e->getCode(), $e);
         } catch (\JsonException|ExceptionInterface $e) {
             throw new InvalidConnectResponseException($contents ?? '');

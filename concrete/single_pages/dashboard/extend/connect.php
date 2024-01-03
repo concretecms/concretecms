@@ -1,16 +1,15 @@
 <?php
-use Concrete\Core\Marketplace\Marketplace;
 
 defined('C5_EXECUTE') or die("Access Denied.");
 
 /**
  * @var $permissions \Concrete\Core\Permission\Checker
- * @var $marketplace Marketplace
+ * @var \Concrete\Core\Marketplace\PackageRepository $marketplace
  */
 
-$credentials = $marketplace->getCredentials();
+$connection = $marketplace->getConnection();
 
-if (!$marketplace->isConnected()) {
+if (!$connection) {
     ?>
     <form action="<?= $this->action('do_connect') ?>">
         <?= $token->output('do_connect') ?>
@@ -25,7 +24,7 @@ if (!$marketplace->isConnected()) {
             <button class="btn btn-light input-group-btn" title="Copy" onclick="copyToClipboard()">
                 <i class="far fa-copy"></i>
             </button>
-            <input class="form-control" disabled value="<?= $credentials[0] ?>" />
+            <input class="form-control" disabled value="<?= $connection->getPublic() ?>" />
         </div>
     </div>
     <?php
@@ -38,7 +37,7 @@ if (!$marketplace->isConnected()) {
     function copyToClipboard() {
         navigator.permissions.query({name: "clipboard-write"}).then((result) => {
             if (result.state === "granted" || result.state === "prompt") {
-                navigator.clipboard.writeText(<?= json_encode($credentials[0]) ?>)
+                navigator.clipboard.writeText(<?= json_encode($connection ? $connection->getPublic() : '') ?>)
             }
         });
     }

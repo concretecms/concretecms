@@ -13,9 +13,15 @@ class Connect extends DashboardPageController
 
     public function view()
     {
+        if ($errors = $this->app->make('session')->getFlashBag()->get('errors')) {
+            foreach ($errors as $error) {
+                $this->error->addError($error);
+            }
+        }
+
         $config = $this->app->make('config');
         $this->set('permissions', new Checker());
-        $this->set('marketplace', Marketplace::getInstance());
+        $this->set('marketplace', $this->app->make(PackageRepositoryInterface::class));
         $this->set('dbConfig', $this->app->make('config/database'));
         $this->set('config', $config);
         $this->set('projectPageURL', $config->get('concrete.urls.concrete_secure') . $config->get('concrete.urls.paths.marketplace.projects'));
@@ -50,6 +56,11 @@ class Connect extends DashboardPageController
         } catch (InvalidConnectResponseException $e) {
             $this->error->add(t('Connection failed, try again later.'));
         }
+
+        if ($this->error->has()) {
+            $this->app->make('session')->getFlashBag()->set('errors', $this->error->getList());
+        }
+
         return $this->buildRedirect('/dashboard/extend/connect');
     }
 
