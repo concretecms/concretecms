@@ -2,6 +2,4 @@
 
 namespace Concrete\Core\Marketplace\Exception;
 
-class PackageAlreadyExistsException extends \RuntimeException implements Exception
-{
-}
+class PackageAlreadyExistsException extends \RuntimeException implements Exception {}

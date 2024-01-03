@@ -9,7 +9,6 @@ namespace Concrete\Core\Marketplace\Model;
  */
 class ConnectError
 {
-
     public string $error;
     public int $code;
 

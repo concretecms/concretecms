@@ -9,7 +9,6 @@ namespace Concrete\Core\Marketplace\Model;
  */
 class ConnectResult
 {
-
     public string $private;
     public string $public;
     public string $siteId;

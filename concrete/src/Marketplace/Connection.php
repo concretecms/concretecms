@@ -12,8 +12,8 @@ final class Connection implements ConnectionInterface
     public function __construct(
         string $public,
         #[\SensitiveParameter]
-        string $private)
-    {
+        string $private
+    ) {
         $this->public = $public;
         $this->private = $private;
     }
