@@ -104,7 +104,7 @@ class RecaptchaV3Controller extends AbstractController implements CaptchaInterfa
         $assetUrl = $config->get('captcha.recaptcha_v3.url.javascript_asset');
 
         $assetList->register('javascript', 'recaptcha_api', $assetUrl, ['local' => false]);
-        $assetList->register('javascript', 'recaptcha_render', 'js/captcha/recaptchav3.js', [], 'recaptcha_v3');
+        $assetList->register('javascript', 'recaptcha_render', 'js/captcha/recaptchav3.js', ['combine'=>false], 'recaptcha_v3');
 
         $assetList->registerGroup(
             'recaptcha_v3',
