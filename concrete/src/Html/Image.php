@@ -67,14 +67,17 @@ class Image
             }
             $sources = [];
             $fallbackSrc = $f->getRelativePath();
+            // In the default Picture tag all sources share the same aspect ratio 
+            $width = $f->getAttribute('width');
+            $height = $f->getAttribute('height');
             if (!$fallbackSrc) {
                 $fallbackSrc = $f->getURL();
             }
-            foreach ($this->theme->getThemeResponsiveImageMap() as $thumbnail => $width) {
+            foreach ($this->theme->getThemeResponsiveImageMap() as $thumbnail => $breakpointWidth) {
                 $type = Type::getByHandle($thumbnail);
                 if ($type != null) {
                     $src = $f->getThumbnailURL($type->getBaseVersion());
-                    $sources[] = ['src' => $src, 'width' => $width];
+                    $sources[] = ['src' => $src, 'breakpointWidth' => $breakpointWidth, 'width' => $width, 'height' => $height];
                     if ($width == 0) {
                         $fallbackSrc = $src;
                     }

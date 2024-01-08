@@ -91,6 +91,17 @@ class Picture extends Element
         foreach ($sources as $source) {
             $path = $source['src'];
             $width = $source['width'];
+
+            $height = 0;
+            if(isset($source['height'])) {
+                $height = $source['height'];
+            }
+
+            $breakpointWidth = 0;
+            if(isset($source['breakpointWidth'])) {
+                $breakpointWidth = $source['breakpointWidth'];
+            }
+
             $source = Source::create();
 
             if ($lazyLoadJavaScript) {
@@ -99,9 +110,13 @@ class Picture extends Element
                 $source->srcset($path);
             }
 
-            if ($width != 0) {
-                $source->media("(min-width: $width)");
+            if ($breakpointWidth != 0) {
+                $source->media("(min-width: $breakpointWidth)");
             }
+
+            $source->width($width);
+            $source->height($height);
+
             $this->setChild($source);
         }
 
@@ -133,6 +148,8 @@ class Picture extends Element
 
         $img = Image::create();
         $img->src($src);
+        $img->width(0);
+        $img->height(0);
 
         if ($lazyLoadNative) {
             $img->loading('lazy');
