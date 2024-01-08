@@ -41,17 +41,16 @@ $app = Application::getFacadeApplication();
 if (is_object($f) && $f->getFileID()) {
     $imageTag = new HtmlImage();
 
+    $fallbackSrc = $f->getRelativePath();
+
     if ($f->getTypeObject()->isSVG()) {
         $imageTag->setAttribute("src", $f->getRelativePath());
-
         if ($maxWidth > 0) {
             $imageTag->setAttribute("width", $maxWidth);
         }
-
         if ($maxHeight > 0) {
             $imageTag->setAttribute("height", $maxHeight);
         }
-
         $imageTag->addClass('ccm-svg');
     } else {
         switch ($sizingOption) {
@@ -59,12 +58,14 @@ if (is_object($f) && $f->getFileID()) {
                 /** @var Image $image */
                 $image = $app->make('html/image', ['f' => $f]);
                 $imageTag = $image->getTag();
+                $imageTag->setAttribute("width", $f->getAttribute('width'));
+                $imageTag->setAttribute("height", $f->getAttribute('height'));
                 break;
 
             case "thumbnails_configurable":
                 $sources = [];
 
-                $fallbackSrc = $f->getRelativePath();
+                $breakpointWidth = 0;
 
                 if (!$fallbackSrc) {
                     $fallbackSrc = $f->getURL();
@@ -72,13 +73,13 @@ if (is_object($f) && $f->getFileID()) {
 
                 foreach ($selectedThumbnailTypes as $breakpointHandle => $ftTypeID) {
 
-                    $width = 0;
-
                     foreach ($themeResponsiveImageMap as $themeBreakpointHandle => $themeWidth) {
+
                         if ($breakpointHandle == $themeBreakpointHandle) {
-                            $width = $themeWidth;
+                            $breakpointWidth = $themeWidth;
                             break;
                         }
+
                     }
 
                     if ($ftTypeID > 0) {
@@ -86,25 +87,35 @@ if (is_object($f) && $f->getFileID()) {
 
                         if ($type instanceof \Concrete\Core\Entity\File\Image\Thumbnail\Type\Type) {
                             $src = $f->getThumbnailURL($type->getBaseVersion());
+                            $width = $type->getBaseVersion()->getWidth();
+                            $height = $type->getBaseVersion()->getHeight();
+                            if($height == 0) {
+                                $height = 'auto';
+                            }
 
                             // Note, the above if statement used to also include $width > 0, but this
                             // was making it so that you couldn't use a thumbnail on the extra small screen size.
                             // I removed this part of the conditional and things seem ok ?! even though I would
                             // have thought this could result in double images. Let's keep an eye on this.
-                            $sources[] = ['src' => $src, 'width' => $width];
+                            $sources[] = ['src' => $src, 'breakpointWidth' => $breakpointWidth, 'width' => $width,  'height' => $height];
                         }
                     } else {
                         // We're displaying the "full size" image at this breakpoint
-                        $sources[] = ['src' => $fallbackSrc, 'width' => $width];
+                        $sources[] = ['src' => $fallbackSrc, 'width' => $f->getAttribute('width'),  'height' => $f->getAttribute('height')];
                     }
                 }
 
                 $imageTag = Picture::create($sources, $fallbackSrc);
+                $imageTag->setAttribute("width", $f->getAttribute('width'));
+                $imageTag->setAttribute("height", $f->getAttribute('height'));
 
                 break;
 
             case "full_size":
                 $imageTag->setAttribute("src", $f->getRelativePath());
+                $imageTag->setAttribute("width", $f->getAttribute('width'));
+                $imageTag->setAttribute("height", $f->getAttribute('height'));
+
                 break;
 
             case "constrain_size":
