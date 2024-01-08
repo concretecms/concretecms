@@ -75,8 +75,6 @@ $(document).ready(function(){
                 $f = File::getByID($row['fID']); ?>
                 <?php if (is_object($f)) {
                     $tag = Core::make('html/image', ['f' => $f])->getTag();
-                    $tag->setAttribute("width", $f->getAttribute('width'));
-                    $tag->setAttribute("height", $f->getAttribute('height'));
                     if ($row['title']) {
                         $tag->alt(h($row['title']));
                     } else {
