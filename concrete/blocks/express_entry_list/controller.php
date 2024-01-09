@@ -490,6 +490,14 @@ class Controller extends BlockController implements UsesFeatureInterface
             $data['enableKeywordSearch'] = 0;
         }
 
+        if (empty($data['enablePagination'])) {
+            $data['enablePagination'] = 0;
+        }
+
+        if (empty($data['enableItemsPerPageSelection'])) {
+            $data['enableItemsPerPageSelection'] = 0;
+        }
+
         $data['displayLimit'] = (int) $data['displayLimit'];
 
         $entity = $this->entityManager->find('Concrete\Core\Entity\Express\Entity', $data['exEntityID']);
