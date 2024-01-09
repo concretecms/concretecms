@@ -8,6 +8,7 @@ use Concrete\Core\Database\EntityManager\Provider\PackageProviderFactory;
 use Concrete\Core\Error\ErrorList\ErrorList;
 use Concrete\Core\Foundation\ClassAutoloader;
 use Concrete\Core\Localization\Localization;
+use Concrete\Core\Marketplace\PackageRepository;
 use Concrete\Core\User\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Throwable;
@@ -182,6 +183,38 @@ class PackageService
         }
 
         return $upgradeables;
+    }
+
+    public function checkPackageUpdates(PackageRepository $repository, array $skipHandles = []): void
+    {
+        $connection = $repository->getConnection();
+        if (!$connection) {
+            return;
+        }
+
+        $versions = [];
+        $remotePackages = $repository->getPackages($connection, true);
+        foreach ($remotePackages as $remotePackage) {
+            $versions[$remotePackage->handle] = $remotePackage->version;
+        }
+        $remotePackage = null;
+
+        $count = 0;
+        foreach ($this->getInstalledList() as $package) {
+            if (in_array($package->getPackageHandle(), $skipHandles, true)) {
+                continue;
+            }
+
+            $package->setPackageAvailableVersion($versions[$package->getPackageHandle()] ?? null);
+            if (++$count === 10) {
+                $count = 0;
+                $this->entityManager->flush();
+            }
+        }
+
+        if ($count > 0) {
+            $this->entityManager->flush();
+        }
     }
 
     /**

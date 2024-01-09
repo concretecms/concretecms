@@ -44,7 +44,18 @@ class Install extends DashboardPageController implements LoggerAwareInterface
 
     public function view()
     {
-        $this->set('packageRepository', $this->getPackageRepository());
+        // Get installed packages
+        $packages = $this->app->make(PackageService::class);
+        $packages->getRemotelyUpgradeablePackages();
+
+        $packageRepository = $this->getPackageRepository();
+
+        // Load available packages
+        $available = $packageRepository->getPackages($this->getConnection(), true);
+
+
+
+        $this->set('packageRepository', $packageRepository);
         $this->set('connection', $this->getConnection());
     }
 
