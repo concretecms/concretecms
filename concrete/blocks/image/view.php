@@ -89,8 +89,10 @@ if (is_object($f) && $f->getFileID()) {
                             $src = $f->getThumbnailURL($type->getBaseVersion());
                             $width = $type->getBaseVersion()->getWidth();
                             $height = $type->getBaseVersion()->getHeight();
+                            // If height is not set thumbnail retains original image proportions
                             if($height == 0) {
-                                $height = 'auto';
+                                $width = $f->getAttribute('width');
+                                $height = $f->getAttribute('height');
                             }
 
                             // Note, the above if statement used to also include $width > 0, but this
