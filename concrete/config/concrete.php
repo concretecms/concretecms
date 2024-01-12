@@ -981,8 +981,8 @@ return [
             'package_repository' => [
                 'connect' => '/concrete/connect',
                 'connect_validate' => '/concrete/connect/validate',
-                'list' => '/concrete/list',
-                'get' => '/concrete/package/%s',
+                'list' => '/concrete/market/list',
+                'get' => '/concrete/market/package/%s',
             ],
 
             /**

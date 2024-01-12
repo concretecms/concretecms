@@ -69,7 +69,6 @@ final class PackageRepository implements PackageRepositoryInterface
         $request = $this->authenticate($this->requestFor('GET', 'list'), $connection);
         try {
             $response = $this->client->send($request);
-            defined('TEST') && dd($request, $response->getBody()->getContents());
             $data = json_decode($response->getBody()->getContents(), true, 4, JSON_THROW_ON_ERROR);
             /** @var RemotePackage[] $result */
             $result = array_map(fn($item) => $this->serializer->denormalize($item, RemotePackage::class), $data);
