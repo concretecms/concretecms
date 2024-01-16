@@ -659,6 +659,13 @@ class Controller extends BlockController implements UsesFeatureInterface
 
     public function validate($args)
     {
+        $args += [
+            'rss' => null,
+            'rssHandle' => '',
+            'rssTitle' => '',
+            'rssDescription' => ''
+        ];
+
         $e = Core::make('helper/validation/error');
         $vs = Core::make('helper/validation/strings');
         $pf = false;

@@ -101,6 +101,11 @@ class Controller extends BlockController implements UsesFeatureInterface
      */
     public function validate($args)
     {
+        $args += [
+            'thumbnailHeight' => null,
+            'thumbnailWidth' => null
+        ];
+
         $error = $this->app->make('helper/validation/error');
 
         if (!is_numeric($args['thumbnailHeight'])) {
