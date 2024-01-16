@@ -116,7 +116,7 @@
             <div class="card-body">
                 <div class="row">
                     <div class="col-md-4 text-end"><b>{{ lang.startingPoint }}</b></div>
-                    <div class="col-md-8">{{ installOptions.startingPoint }}</div>
+                    <div class="col-md-8">{{ selectedStartingPointName }}</div>
                 </div>
             </div>
         </div>
@@ -138,10 +138,13 @@
 export default {
     components: {},
     methods: {},
-    computed: {},
     props: {
         logo: {
             type: String,
+            required: true
+        },
+        startingPoints: {
+            type: Array,
             required: true
         },
         lang: {
@@ -158,6 +161,17 @@ export default {
         showPassword: false,
         showDatabasePassword: false
     }),
+    computed: {
+        selectedStartingPointName() {
+            let name = ''
+            this.startingPoints.forEach((startingPoint) => {
+                if (startingPoint.handle === this.installOptions.startingPoint) {
+                    name = startingPoint.name
+                }
+            })
+            return name
+        }
+    },
     mounted() {
     }
 }

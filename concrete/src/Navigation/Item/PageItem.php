@@ -48,11 +48,6 @@ class PageItem implements SerializableItemInterface, SupportsChildrenItemInterfa
         return $this->page->getCollectionName();
     }
 
-    public function getUrl(): string
-    {
-        return (string) $this->page->getCollectionLink();
-    }
-
     public function getPageID(): int
     {
         return $this->page->getCollectionID();

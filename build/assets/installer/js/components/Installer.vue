@@ -69,6 +69,7 @@
                 v-else-if="step === 'confirm'"
                 :lang="lang"
                 :logo="logo"
+                :starting-points="loadedStartingPoints"
                 :install-options="installOptions"
                 @previous="previous"
                 @next="next"

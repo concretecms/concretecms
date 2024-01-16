@@ -14,6 +14,7 @@ use Concrete\Core\Tree\Type\Group as GroupTree;
 use Concrete\Core\User\Group\Command\AddGroupCommand;
 use Concrete\Core\User\Group\FolderManager;
 use Concrete\Core\User\RegistrationService;
+use Concrete\Core\User\User;
 
 class AddUsersRoutineHandler implements InstallOptionsAwareInterface
 {
@@ -96,10 +97,11 @@ class AddUsersRoutineHandler implements InstallOptionsAwareInterface
                 ->setForcedNewGroupID(ADMIN_GROUP_ID)
         );
 
-        $this->userRegistration->createSuperUser(
+        $superUser = $this->userRegistration->createSuperUser(
             $this->installOptions->getUserPasswordHash(),
             $this->installOptions->getUserEmail()
         );
+        User::loginByUserID($superUser->getUserID());
 
         $folderManager = new FolderManager();
         $folderManager->create();

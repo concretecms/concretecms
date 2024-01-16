@@ -5,6 +5,7 @@ namespace Concrete\Core\Install\StartingPoint\Installer\Routine\Frontend;
 use Concrete\Core\Backup\ContentImporter;
 use Concrete\Core\Install\StartingPoint\Installer\Routine\InstallOptionsAwareInterface;
 use Concrete\Core\Install\StartingPoint\Installer\Routine\Traits\InstallOptionsAwareTrait;
+use Concrete\Core\Install\StartingPoint\ThemeStartingPoint;
 use Concrete\Core\Install\StartingPointService;
 
 class ImportStartingPointFilesRoutineHandler implements InstallOptionsAwareInterface
@@ -32,7 +33,12 @@ class ImportStartingPointFilesRoutineHandler implements InstallOptionsAwareInter
     {
         $handle = $this->installOptions->getStartingPointHandle();
         $startingPoint = $this->startingPointService->getByHandle($handle);
-        $filesDirectory = $startingPoint->getDirectory() . DIRECTORY_SEPARATOR . 'files';
+        if ($startingPoint instanceof ThemeStartingPoint) {
+            // The content files are found in a `content_files` subdirectory of the package.
+            $filesDirectory = $startingPoint->getDirectory() . DIRECTORY_SEPARATOR . 'content_files';
+        } else {
+            $filesDirectory = $startingPoint->getDirectory() . DIRECTORY_SEPARATOR . 'files';
+        }
         if (is_dir($filesDirectory)) {
             $computeThumbnails = true;
             if ($startingPoint->providesThumbnails()) {

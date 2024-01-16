@@ -78,7 +78,7 @@ class StartingPointService
                         $theme = $this->app->make($themeClass);
                         if ($pkg->allowsFullContentSwap()) {
                             $directory = DIR_PACKAGES . DIRECTORY_SEPARATOR . $pkgHandle;
-                            $startingPoint = $this->startingPointFactory->createFromThemeClass($directory, $theme, $themeHandle);
+                            $startingPoint = $this->startingPointFactory->createFromThemeClass($directory, $pkg, $theme, $themeHandle);
                             if ($startingPoint) {
                                 $startingPoints[] = $startingPoint;
                             }

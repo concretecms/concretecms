@@ -7,14 +7,15 @@ use Concrete\Core\Install\StartingPoint\LegacyStartingPoint;
 use Concrete\Core\Install\StartingPoint\StartingPoint;
 use Concrete\Core\Install\StartingPoint\StartingPointInterface;
 use Concrete\Core\Install\StartingPoint\ThemeStartingPoint;
+use Concrete\Core\Package\Package;
 use Concrete\Core\Package\StartingPointPackage;
 
 class StartingPointFactory
 {
 
-    public function createFromThemeClass(string $directory, $class, $themeHandle): ?StartingPointInterface
+    public function createFromThemeClass(string $directory, Package $packageController, $class, $themeHandle): ?StartingPointInterface
     {
-        return new ThemeStartingPoint($directory, $class, $themeHandle);
+        return new ThemeStartingPoint($directory, $packageController, $class, $themeHandle);
     }
 
     public function createFromClass(string $directory, $class): ?StartingPointInterface

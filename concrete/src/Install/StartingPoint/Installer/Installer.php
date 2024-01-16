@@ -120,6 +120,14 @@ class Installer implements InstallerInterface
 
     public function getFrontendRoutines(): array
     {
+        $routines = $this->getBaseFrontendRoutines();
+        $routines[] = new ImportStartingPointFilesRoutine();
+        $routines[] = new ImportStartingPointContentRoutine();
+        return $routines;
+    }
+
+    protected function getBaseFrontendRoutines(): array
+    {
         $routines = [];
         $routines[] = new InstallFeatureContentRoutine(
             'frontend',
@@ -132,8 +140,6 @@ class Installer implements InstallerInterface
             $routines[] = $routine;
         }
         $routines[] = new InstallFeatureContentRoutine('base', Features::THEMES, t('Adding themes.'));
-        $routines[] = new ImportStartingPointFilesRoutine();
-        $routines[] = new ImportStartingPointContentRoutine();
         return $routines;
     }
 
