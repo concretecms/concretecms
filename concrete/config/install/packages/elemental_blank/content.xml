@@ -7,7 +7,7 @@
         <pagetemplate handle="full" name="Full" icon="full.png" package="" />
     </pagetemplates>
     <pagetypes>
-    <pagetype name="Page" handle="page" is-frequently-added="1" launch-in-composer="0">
+    <pagetype name="Page" handle="page" is-frequently-added="1" launch-in-composer="0" package="">
       <pagetemplates type="all" default="full"/>
       <target handle="all" package=""/>
       <composer>
