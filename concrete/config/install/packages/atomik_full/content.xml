@@ -32,7 +32,7 @@
         <pagetemplate icon="two_column.png" name="Resource Detail" handle="resource_detail" package="" internal=""/>
     </pagetemplates>
     <pagetypes>
-        <pagetype name="Page" handle="page" is-frequently-added="1" launch-in-composer="0">
+        <pagetype name="Page" handle="page" is-frequently-added="1" launch-in-composer="0" package="">
             <pagetemplates type="all" default="full"/>
             <target handle="all" package=""/>
             <composer>
@@ -333,7 +333,7 @@
         <entity id="02e83926-0518-11ec-bb64-2d8e40952e25" handle="mailing_list" plural_handle="" name="Mailing List"
                 supports_custom_display_order="" include_in_public_list="" use_separate_site_result_buckets=""
                 description="" default_view_form="02e860ae-0518-11ec-bb64-2d8e40952e25"
-                default_edit_form="02e860ae-0518-11ec-bb64-2d8e40952e25" results-folder="/Forms">
+                default_edit_form="02e860ae-0518-11ec-bb64-2d8e40952e25" results-folder="/Forms" package="">
             <attributekeys>
                 <attributekey handle="email_address" name="Email Address" package="" searchable="1" indexed="1"
                               type="email" category=""/>
@@ -355,7 +355,7 @@
         </entity>
         <entity id="83ae65b1-79e8-4ded-bbca-e419bfd19bb6" handle="express_form_170" plural_handle="" name="Contact"
                 include_in_public_list="" description="" default_view_form="881b6bde-220f-4482-b8f9-ace40b5d169b"
-                default_edit_form="881b6bde-220f-4482-b8f9-ace40b5d169b" results-folder="/Forms">
+                default_edit_form="881b6bde-220f-4482-b8f9-ace40b5d169b" results-folder="/Forms" package="">
             <attributekeys>
                 <attributekey handle="contact_question_first_name" name="First Name" package="" searchable="1"
                               indexed="1" type="text" category="">
