@@ -70,12 +70,14 @@ class PresetSkin implements SkinInterface
 
     public function getStylesheet(): Element
     {
+        $config = app('config');
+        $noCacheValue = "?ccm_nocache=" . sha1($noCacheValue = $config->get('concrete.version_installed') . '-' . $config->get('concrete.version_db') . "-" . $config->get('concrete.cache.last_cleared'));
         $theme = $this->getTheme();
         $path = $theme->getSkinDirectoryRecord()->getUrl();
         $stylesheet = $path . '/' . $this->getIdentifier() . '.css';
         $element = new Element('link', null);
         $element->setIsSelfClosing(true);
-        $element->rel('stylesheet')->type('text/css')->href($stylesheet);
+        $element->rel('stylesheet')->type('text/css')->href($stylesheet . $noCacheValue);
         return $element;
     }
 
