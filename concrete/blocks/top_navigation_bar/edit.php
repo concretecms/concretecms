@@ -39,6 +39,10 @@ $multilingualEnabled = $multilingualEnabled ?? false;
                 <input type="checkbox" class="form-check-input" id="includeSearchInput" name="includeSearchInput" value="1" v-model="includeSearchInput">
                 <label class="form-check-label" for="includeSearchInput"><?=t('Display search input within navigation bar.')?></label>
             </div>
+            <div class="form-check form-switch">
+                <input type="checkbox" class="form-check-input" id="ignorePermissions" name="ignorePermissions" value="1" v-model="ignorePermissions">
+                <label class="form-check-label" for="ignorePermissions"><?=t('Ignore page permissions.')?></label>
+            </div>
             <?php if ($multilingualEnabled) { ?>
             <div class="form-check form-switch">
                 <input type="checkbox" class="form-check-input" id="includeSwitchLanguage" name="includeSwitchLanguage" value="1" v-model="includeSwitchLanguage">
@@ -103,6 +107,7 @@ $multilingualEnabled = $multilingualEnabled ?? false;
                 brandingTransparentLogo: <?=(int) ($brandingTransparentLogo ?? null)?>,
                 searchInputFormActionPageID: <?=(int) ($searchInputFormActionPageID ?? null)?>,
                 brandingMode: '<?=$brandingMode?>',
+                ignorePermissions: <?=$ignorePermissions ? 'true' : 'false'?>,
             }
         })
     })
