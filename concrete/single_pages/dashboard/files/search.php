@@ -88,7 +88,7 @@ if ($fp->canAddFile() || $fp->canSearchFiles()) { ?>
             <tbody>
             <?php
             foreach ($result->getItems() as $item) { ?>
-                <tr data-details-url="<?=$item->getDetailsURL()?>"
+                <tr data-details-url="<?=$item->getDetailsURL()?>" data-details-fid="<?=$item->getResultFileID()?>"
                     <?php if (isset($highlightResults)
                         && in_array($item->getItem()->getTreeNodeID(), $highlightResults)) { ?>
                             class="table-row-highlight"<?php } ?>
