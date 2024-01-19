@@ -495,5 +495,6 @@ class Controller extends BlockController implements UsesFeatureInterface
         $this->set('do_search', true);
         $this->set('searchList', $ipl);
         $this->set('pagination', $pagination);
+        $this->set('search_paths', $search_paths);
     }
 }
