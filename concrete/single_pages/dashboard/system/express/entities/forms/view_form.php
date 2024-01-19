@@ -151,7 +151,7 @@ $token = $app->make(Token::class);
 
         <div class="ccm-item-set card" data-field-set="<?php echo $set->getID() ?>">
             <div class="card-header">
-                <ul class="ccm-item-set-controls" style="float: right;">
+                <ul class="ccm-item-set-controls float-end">
                     <li>
                         <!--suppress HtmlUnknownAttribute -->
                         <a href="<?php echo $view->action('add_control', $set->getID()) ?>"
