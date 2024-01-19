@@ -206,7 +206,7 @@ class ApiServiceProvider extends ServiceProvider
                 if (touch($keyPath)) {
                     $output = [];
                     $rc = -1;
-                    exec('icacls.exe ' . escapeshellarg(str_replace('/', DIRECTORY_SEPARATOR, $keyPath)) . ' /q /inheritancelevel:r /grant ' . escapeshellarg($_ENV['USERNAME']) . ':rw 2>&1', $output, $rc);
+                    exec('icacls.exe ' . escapeshellarg(str_replace('/', DIRECTORY_SEPARATOR, $keyPath)) . ' /q /inheritancelevel:r /grant ' . escapeshellarg($_ENV['USERNAME']) . ':F 2>&1', $output, $rc);
                     if ($rc === 0 && file_put_contents($keyPath, $key)) {
                         return new CryptKey('file://' . $keyPath, null, false);
                     }
