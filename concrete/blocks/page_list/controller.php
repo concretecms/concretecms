@@ -766,6 +766,7 @@ class Controller extends BlockController implements UsesFeatureInterface
             'ptID' => 0,
             'filterDateOption' => 'all',
             'cParentID' => null,
+            'ignorePermissions' => 0,
         ];
 
         if (is_numeric($args['cParentID'])) {
