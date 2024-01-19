@@ -4035,6 +4035,19 @@ EOT
         Section::registerPage($this);
     }
 
+    public function isCanonicalPathOnAnotherPageExist(string $path)
+    {
+        $em = \ORM::entityManager();
+        return $em->getRepository('\Concrete\Core\Entity\Page\PagePath')
+            ->createQueryBuilder('pp')
+            ->where('pp.cID != :cID')
+            ->andWhere('pp.cPath = :cPath')
+            ->setParameter('cID', $this->getCollectionID())
+            ->setParameter('cPath', $path)
+            ->getQuery()
+            ->getResult();
+    }
+
     /**
      * Read the data from the database.
      *

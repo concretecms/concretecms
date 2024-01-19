@@ -149,4 +149,27 @@ class Location extends BackendInterfacePageController
             $r->outputJSON();
         }
     }
+
+    public function check()
+    {
+        $checkResponse = new PageEditResponse();
+        if ($this->validateAction()) {
+            $req = Request::getInstance();
+
+            $pathArray = $req->request->get('path');
+            $paths = [];
+
+            if (is_array($pathArray)) {
+                foreach ($pathArray as $path) {
+                    if ($path) {
+                        if ($this->page->isCanonicalPathOnAnotherPageExist($path)) {
+                            $paths[] = $path;
+                        }
+                    }
+                }
+            }
+            $checkResponse->setAdditionalDataAttribute('paths', $paths);
+            $checkResponse->outputJSON();
+        }
+    }
 }
