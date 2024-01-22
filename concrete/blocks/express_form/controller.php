@@ -423,32 +423,21 @@ class Controller extends BlockController implements NotificationProviderInterfac
 
         // Add mode
         if (isset($data['exFormID']) && $data['exFormID'] !== '') {
-            $form = $entityManager->find(Form::class, $data['exFormID']);
-            if ($form && isset($data['formName']) && $data['formName'] !== '') {
-                $entity = $form->getEntity();
-                $entity->setName($data['formName']);
-                $entityManager->persist($entity);
-                $entityManager->flush();
-            }
             return parent::save($data);
         } else {
             $fieldSet = $this->getFormFieldSet();
             if ($fieldSet) {
                 $form = $fieldSet->getForm();
                 $entity = $form->getEntity();
-                if (isset($data['formName']) && $data['formName'] !== '') {
-                    $entity->setName($data['formName']);
-                }
                 $data['exFormID'] = $form->getId();
             }
 
             if ($this->exFormID === null) {
                 // Add block - totally new form. We have to publish it before it is live.
                 $entity->setIsPublished(true);
+                $entityManager->persist($entity);
+                $entityManager->flush();
             }
-
-            $entityManager->persist($entity);
-            $entityManager->flush();
         }
 
         if (!$entity) {
