@@ -124,7 +124,7 @@ $(function() {
 
         $.ajax({
             type: 'POST',
-            url: '<?= $controller->action('check') ?>',
+            url: <?= json_encode((string) $controller->action('check')) ?>,
             data: formData,
             success: (xhr) => {
                 let response = JSON.parse(xhr);
