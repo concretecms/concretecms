@@ -265,6 +265,7 @@ class Cloner
                 'cvIsApproved' => $options->forceUnapproved() ? 0 : $row['cvIsApproved'],
                 'pThemeID' => $row['pThemeID'],
                 'pTemplateID' => $row['pTemplateID'],
+                'pThemeSkinIdentifier' => $row['pThemeSkinIdentifier'],
             ]);
         }
         $this->copyData($options, [$cID, $newCID]);
@@ -316,6 +317,7 @@ class Cloner
             'cvIsNew' => $cvIsNew,
             'pThemeID' => $cvSource->pThemeID,
             'pTemplateID' => $cvSource->pTemplateID,
+            'pThemeSkinIdentifier' => $cvSource->pThemeSkinIdentifier,
             // important: cvPublishDate used to be the same for the new version as it is for the current,
             // but it made it impossible to create a version that wasn't scheduled once you scheduled a version
             // so I'm turning it off for now - AE

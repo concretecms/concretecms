@@ -25,7 +25,7 @@ trait ControllerTrait
      */
     abstract public function getObjects(): array;
 
-    abstract public function canEditAttributeKey(int $akID): bool;
+    abstract public function canEditAttributeKey(int $akID, ObjectInterface $object): bool;
 
     public function saveAttributes(): ?ErrorList
     {
@@ -46,7 +46,7 @@ trait ControllerTrait
                 if ($attributeKey) {
                     if (!in_array($attributeKey->getAttributeKeyID(), $selectedAttributes) &&
                         !in_array($attributeKey->getAttributeKeyID(), $ignoredAttributes) &&
-                        $this->canEditAttributeKey($attributeKey->getAttributeKeyID())) {
+                        $this->canEditAttributeKey($attributeKey->getAttributeKeyID(), $object)) {
                         // This is an attribute we have currently set on the object, but it's not
                         // in the request, and it is something we're allowed to edit, so that means it needs
                         // to be cleared
@@ -56,7 +56,7 @@ trait ControllerTrait
             }
 
             foreach ($selectedAttributes as $akID) {
-                if ($this->canEditAttributeKey($akID)) {
+                if ($this->canEditAttributeKey($akID, $object)) {
                     $ak = $this->category->getAttributeKeyByID($akID);
                     if ($ak) {
                         $controller = $ak->getController();

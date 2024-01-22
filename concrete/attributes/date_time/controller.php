@@ -211,9 +211,11 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
             case 'date':
             case 'date_time':
             default:
-                $dt = $this->app->make('helper/form/date_time');
-                /* @var \Concrete\Core\Form\Service\Widget\DateTime $dt */
-                $datetime = $dt->translate('value', $data, true);
+                // Start in the user's time zone.
+                $datetime = new \DateTime($data['value'], $dh->getTimezone('user'));
+                // Convert to system for saving:
+                $systemTimezone = $dh->getTimezone('system');
+                $datetime->setTimezone($systemTimezone); // See https://github.com/concretecms/concretecms/issues/11866
                 break;
         }
 
