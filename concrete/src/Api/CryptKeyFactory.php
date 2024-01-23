@@ -9,6 +9,9 @@ use League\OAuth2\Server\CryptKey;
 use phpseclib\Crypt\RSA;
 use RuntimeException;
 
+/**
+ * @deprecated since ConcreteCMS v9 key handling is much easier since keys aren't stored to file, so we don't need this class
+ */
 class CryptKeyFactory
 {
     /**
