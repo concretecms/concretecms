@@ -35,7 +35,7 @@ class FileTransformer extends TransformerAbstract
         $data['file_type'] = $version->getType();
         $data['extension'] = $version->getExtension();
         $data['tracked_url'] = (string) $version->getDownloadURL();
-        $data['folder'] = (int) $folderID;
+        $data['folder'] = $folderID;
         $data['date_added'] = Carbon::make($version->getDateAdded())->toAtomString();
         $data['size'] =
             [
