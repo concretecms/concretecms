@@ -2,6 +2,7 @@
 
 namespace Concrete\Tests\Localization\Adapter\Laminas\Translation\Loader\Gettext;
 
+use Concrete\Core\Cache\Level\ExpensiveCache;
 use Concrete\Core\Localization\Translator\Adapter\Laminas\Translation\Loader\Gettext\PackagesTranslationLoader;
 use Concrete\Core\Localization\Translator\Adapter\Laminas\TranslatorAdapterFactory;
 use Concrete\Core\Package\Package;
@@ -94,7 +95,8 @@ class PackagesTranslationLoaderTest extends ConcreteDatabaseTestCase
             $package->install();
         }
 
-        $factory = new TranslatorAdapterFactory();
+        $cache = \Mockery::spy(ExpensiveCache::class);
+        $factory = new TranslatorAdapterFactory($cache);
         $this->adapter = $factory->createTranslatorAdapter('fi_FI');
 
         $app = Facade::getFacadeApplication();

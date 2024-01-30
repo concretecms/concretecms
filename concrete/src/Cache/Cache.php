@@ -19,7 +19,7 @@ use Psr\Cache\InvalidArgumentException;
  *
  * @template T of mixed
  */
-abstract class Cache implements FlushableInterface
+abstract class Cache implements CacheItemPoolInterface, FlushableInterface
 {
     protected bool $enabled = false;
 
@@ -85,7 +85,7 @@ abstract class Cache implements FlushableInterface
      * @return CacheItemProxy<T>
      * @throws InvalidArgumentException
      */
-    public function getItem(string $key): CacheItemInterface
+    public function getItem($key): CacheItemInterface
     {
         $item = $this->pool->getItem($this->normalize($key));
         if ($item instanceof CacheItemProxy) {
@@ -155,5 +155,40 @@ abstract class Cache implements FlushableInterface
             ['†', '‡', '‹', '›', '™', '•', 'œ', 'Ÿ'],
             $key,
         );
+    }
+
+    public function getItems(array $keys = array()): array
+    {
+        return $this->pool->getItems(array_map($this->normalize(...), $keys));
+    }
+
+    public function hasItem($key): bool
+    {
+        return $this->pool->hasItem($this->normalize($key));
+    }
+
+    public function clear(): bool
+    {
+        return $this->pool->clear();
+    }
+
+    public function deleteItem($key): bool
+    {
+        return $this->pool->deleteItem($this->normalize($key));
+    }
+
+    public function deleteItems(array $keys): bool
+    {
+        return $this->pool->deleteItems(array_map($this->normalize(...), $keys));
+    }
+
+    public function saveDeferred(CacheItemInterface $item): bool
+    {
+        return $this->pool->saveDeferred($item);
+    }
+
+    public function commit(): bool
+    {
+        return $this->pool->commit();
     }
 }

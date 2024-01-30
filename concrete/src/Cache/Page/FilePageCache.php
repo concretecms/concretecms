@@ -73,7 +73,14 @@ class FilePageCache extends PageCache
         $lifetime = $c->getCollectionFullPageCachingLifetimeValue();
         $file = $this->getCacheFile($c);
         if ($file) {
-            $response = new PageCacheRecord($c, $content, $lifetime, $url);
+            $response = new PageCacheRecord(
+                $c,
+                $content,
+                $lifetime,
+                $url,
+                $this->getCacheKey($c),
+                $this->getCacheHeaders($c),
+            );
             if ($content) {
                 file_put_contents($file, serialize($response));
             }

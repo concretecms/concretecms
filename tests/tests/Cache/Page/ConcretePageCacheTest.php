@@ -25,7 +25,9 @@ class ConcretePageCacheTest extends TestCase
     protected Repository|MockInterface $mockConfig;
     private Page|MockInterface $mockPage;
 
-    #[Before]
+    /**
+     * @before
+     */
     public function before(): void
     {
         $this->mockPool = Mockery::mock(CacheItemPoolInterface::class);

@@ -6,6 +6,7 @@ namespace Concrete\Tests\Cache\Level;
 
 use Concrete\Core\Cache\Level;
 use Concrete\Tests\TestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class CacheLevelTest extends TestCase
 {
@@ -24,7 +25,7 @@ class CacheLevelTest extends TestCase
         $this->assertEquals($expectedOptions, $level->getOptionsConfigKey());
     }
 
-    protected function configKeyProvider(): array
+    public static function configKeyProvider(): array
     {
         return [
             [Level\CacheLevel::Expensive, Level\ExpensiveCache::class, 'concrete.cache.enabled', 'concrete.cache.levels.expensive'],

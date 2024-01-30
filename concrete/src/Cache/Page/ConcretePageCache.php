@@ -28,10 +28,21 @@ final class ConcretePageCache extends PageCache
     public function set(ConcretePage $c, string $content): void
     {
         $key = $this->getCacheKey($c);
-        $record = new PageCacheRecord($c, $content, null);
+        $record = new PageCacheRecord(
+            $c,
+            $content,
+            $c->getCollectionFullPageCachingLifetimeValue(),
+            null,
+            $key,
+            $this->getCacheHeaders($c),
+        );
         $this->cache->pool->save($this->cache->pool->getItem($key)->set($record));
     }
 
+    /**
+     * @deprecated use ConcretePageCache::purge() instead
+     * @see purge
+     */
     public function purgeByRecord(PageCacheRecord $rec): void
     {
         $this->purge($rec);

@@ -3,6 +3,7 @@
 namespace Concrete\Core\Cache\Page;
 
 use Concrete\Core\Cache\FlushableInterface;
+use Concrete\Core\Entity\Site\Site;
 use Concrete\Core\Http\Request;
 use Concrete\Core\Http\Response;
 use Concrete\Core\Page\Page as ConcretePage;
@@ -270,7 +271,7 @@ abstract class PageCache implements FlushableInterface
         }
 
         $site = $mixed->getSite();
-        if (is_object($site)) {
+        if ($site !== null) {
             $host = $site->getSiteCanonicalURL();
             if (!empty($host)) {
                 $host = preg_replace('#^https?://#', '', $host);
