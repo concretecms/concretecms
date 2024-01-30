@@ -225,21 +225,21 @@ return [
          *
          * @var bool
          */
-        'overrides' => true,
+        'overrides' => false,
 
         /*
          * Cache Blocks
          *
          * @var bool
          */
-        'blocks' => true,
+        'blocks' => false,
 
         /*
          * Cache Assets
          *
          * @var bool
          */
-        'assets' => true,
+        'assets' => false,
 
         /*
          * Cache Theme CSS/JS
@@ -253,7 +253,7 @@ return [
          *
          * @var bool|string (blocks|all)
          */
-        'pages' => 'all',
+        'pages' => false,
 
         /*
          * Use Doctrine development mode
@@ -304,7 +304,7 @@ return [
                 'pool' => [
                     'class' => \Symfony\Component\Cache\Adapter\FilesystemAdapter::class,
                     'options' => [
-                        'directory' => DIR_FILES_UPLOADED_STANDARD . '/cache_test',
+                        'directory' => DIR_FILES_UPLOADED_STANDARD . '/cache',
                         'namespace' => 'page'
                     ]
                 ]
@@ -313,7 +313,7 @@ return [
                 'pool' => [
                     'class' => \Symfony\Component\Cache\Adapter\FilesystemAdapter::class,
                     'options' => [
-                        'directory' => DIR_FILES_UPLOADED_STANDARD . '/cache_test',
+                        'directory' => DIR_FILES_UPLOADED_STANDARD . '/cache',
                         'namespace' => 'overrides'
                     ]
                 ], // Use this to specify a preferred driver
@@ -322,7 +322,7 @@ return [
                 'pool' => [
                     'class' => \Symfony\Component\Cache\Adapter\FilesystemAdapter::class,
                     'options' => [
-                        'directory' => DIR_FILES_UPLOADED_STANDARD . '/cache_test',
+                        'directory' => DIR_FILES_UPLOADED_STANDARD . '/cache',
                         'namespace' => 'expensive'
                     ]
                 ], // Use this to specify a preferred driver
