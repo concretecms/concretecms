@@ -16,6 +16,8 @@ use Psr\Cache\InvalidArgumentException;
  *
  * This class imports the various caching settings from Config class, sets
  * up the Stash pools and provides a basic caching API for all of Concrete5.
+ *
+ * @template T of mixed
  */
 abstract class Cache implements FlushableInterface
 {
@@ -80,7 +82,7 @@ abstract class Cache implements FlushableInterface
      *
      * @param string $key Name of the cache item ID
      *
-     * @return CacheItemInterface|CacheItemProxy
+     * @return CacheItemProxy<T>
      * @throws InvalidArgumentException
      */
     public function getItem(string $key): CacheItemInterface

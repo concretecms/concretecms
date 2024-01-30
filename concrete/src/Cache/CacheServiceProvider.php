@@ -5,6 +5,7 @@ namespace Concrete\Core\Cache;
 use Concrete\Core\Application\Application;
 use Concrete\Core\Cache\Command\ClearCacheCommandHandler;
 use Concrete\Core\Cache\Level\CacheLevel;
+use Concrete\Core\Cache\Page\ConcretePageCache;
 use Concrete\Core\Cache\Page\PageCache;
 use Concrete\Core\Config\Repository\Repository;
 use Concrete\Core\Foundation\Service\Provider as ServiceProvider;
@@ -32,7 +33,9 @@ class CacheServiceProvider extends ServiceProvider implements LoggerAwareInterfa
             'cache/request' => CacheLevel::Request,
             'cache/expensive' => CacheLevel::Expensive,
             'cache/overrides' => CacheLevel::Overrides,
+            'cache/pages' => CacheLevel::Pages,
         ];
+
         foreach ($caches as $alias => $enum) {
             $class = $enum->getCacheClass();
             $this->app->when($class)
@@ -44,6 +47,7 @@ class CacheServiceProvider extends ServiceProvider implements LoggerAwareInterfa
             $this->app->singleton($class);
             $this->app->alias($class, $alias);
         }
+
         $this->app->singleton('cache/page', function () {
             return PageCache::getLibrary();
         });

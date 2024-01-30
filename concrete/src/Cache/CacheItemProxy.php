@@ -4,6 +4,9 @@ namespace Concrete\Core\Cache;
 
 use Psr\Cache\CacheItemInterface;
 
+/**
+ * @template T
+ */
 class CacheItemProxy implements CacheItemInterface
 {
 
@@ -16,6 +19,9 @@ class CacheItemProxy implements CacheItemInterface
         return $this->cacheItem->getKey();
     }
 
+    /**
+     * @return T
+     */
     public function get()
     {
         return $this->cacheItem->get();
@@ -42,6 +48,9 @@ class CacheItemProxy implements CacheItemInterface
         return true;
     }
 
+    /**
+     * @param T $value
+     */
     public function set($value)
     {
         return $this->cacheItem->set($value);
@@ -55,5 +64,10 @@ class CacheItemProxy implements CacheItemInterface
     public function expiresAfter($time)
     {
         return $this->cacheItem->expiresAfter($time);
+    }
+
+    public function __call($method, $args)
+    {
+        $this->cacheItem->{$method}(...$args);
     }
 }

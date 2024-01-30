@@ -225,21 +225,21 @@ return [
          *
          * @var bool
          */
-        'overrides' => false,
+        'overrides' => true,
 
         /*
          * Cache Blocks
          *
          * @var bool
          */
-        'blocks' => false,
+        'blocks' => true,
 
         /*
          * Cache Assets
          *
          * @var bool
          */
-        'assets' => false,
+        'assets' => true,
 
         /*
          * Cache Theme CSS/JS
@@ -253,7 +253,7 @@ return [
          *
          * @var bool|string (blocks|all)
          */
-        'pages' => false,
+        'pages' => 'all',
 
         /*
          * Use Doctrine development mode
@@ -297,64 +297,40 @@ return [
          */
         'directory_relative' => null,
         'page' => [
-            'directory' => DIR_FILES_UPLOADED_STANDARD . '/cache/pages',
-            'adapter' => 'file',
+            'adapter' => 'concrete',
         ],
-
         'levels' => [
-            'overrides' => [
-                'pools' => [
-                    'core_ephemeral' => [
-                        'class' => \Symfony\Component\Cache\Adapter\ArrayAdapter::class,
-                    ],
-                    'core_filesystem' => [
-                        'class' => \Symfony\Component\Cache\Adapter\FilesystemAdapter::class,
-                        'options' => [
-                            'directory' => DIR_FILES_UPLOADED_STANDARD . '/cache_test/overrides'
-                        ]
-                    ],
-                    'redis' => [
-                        'class' => \Symfony\Component\Cache\Adapter\RedisAdapter::class,
-                        'options' => [
-                            'namespace' => 'concrete_overrides'
-                        ]
+            'pages' => [
+                'pool' => [
+                    'class' => \Symfony\Component\Cache\Adapter\FilesystemAdapter::class,
+                    'options' => [
+                        'directory' => DIR_FILES_UPLOADED_STANDARD . '/cache_test',
+                        'namespace' => 'page'
                     ]
-                ],
-                'pool' => 'core_filesystem', // Use this to specify a preferred driver
+                ]
+            ],
+            'overrides' => [
+                'pool' => [
+                    'class' => \Symfony\Component\Cache\Adapter\FilesystemAdapter::class,
+                    'options' => [
+                        'directory' => DIR_FILES_UPLOADED_STANDARD . '/cache_test',
+                        'namespace' => 'overrides'
+                    ]
+                ], // Use this to specify a preferred driver
             ],
             'expensive' => [
-                'pools' => [
-                    'core_ephemeral' => [
-                        'class' => \Symfony\Component\Cache\Adapter\ArrayAdapter::class,
-                    ],
-                    'core_filesystem' => [
-                        'class' => \Symfony\Component\Cache\Adapter\FilesystemAdapter::class,
-                        'options' => [
-                            'directory' => DIR_FILES_UPLOADED_STANDARD . '/cache_test/expensive'
-                        ]
-                    ],
-                    'redis' => [
-                        'class' => \Symfony\Component\Cache\Adapter\RedisAdapter::class,
-                        'options' => [
-                            'namespace' => 'concrete_expensive',
-                        ],
-                    ],
-                ],
-                'pool' => 'core_filesystem', // Use this to specify a preferred driver
+                'pool' => [
+                    'class' => \Symfony\Component\Cache\Adapter\FilesystemAdapter::class,
+                    'options' => [
+                        'directory' => DIR_FILES_UPLOADED_STANDARD . '/cache_test',
+                        'namespace' => 'expensive'
+                    ]
+                ], // Use this to specify a preferred driver
             ],
             'object' => [
-                'pools' => [
-                    'core_ephemeral' => [
-                        'class' => \Symfony\Component\Cache\Adapter\ArrayAdapter::class,
-                    ],
-                    'redis' => [
-                        'class' => \Symfony\Component\Cache\Adapter\RedisAdapter::class,
-                        'options' => [
-                            'namespace' => 'concrete_object',
-                        ],
-                    ],
+                'pool' => [
+                    'class' => \Symfony\Component\Cache\Adapter\ArrayAdapter::class,
                 ],
-                'pool' => 'core_ephemeral', // Use this to specify a preferred pool
             ],
         ],
 

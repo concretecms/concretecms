@@ -16,18 +16,18 @@ abstract class PageCache implements FlushableInterface
     /**
      * @deprecated what's deprecated is the "public" part: use the getLibrary() method to retrieve the library
      *
-     * @var \Concrete\Core\Cache\Page\PageCache|null
+     * @var PageCache|null
      */
-    public static $library;
+    public static PageCache|null $library = null;
 
     /**
      * Build a Response object starting from a cached page.
      *
-     * @param \Concrete\Core\Cache\Page\PageCacheRecord $record the cache record containing the cached page data
+     * @param PageCacheRecord $record the cache record containing the cached page data
      *
-     * @return \Concrete\Core\Http\Response
+     * @return Response
      */
-    public function deliver(PageCacheRecord $record)
+    public function deliver(PageCacheRecord $record): Response
     {
         $response = new Response();
         $headers = [];
@@ -45,9 +45,9 @@ abstract class PageCache implements FlushableInterface
     /**
      * Get the page cache library.
      *
-     * @return \Concrete\Core\Cache\Page\PageCache
+     * @return PageCache
      */
-    public static function getLibrary()
+    public static function getLibrary(): PageCache
     {
         if (!self::$library) {
             $app = Application::getFacadeApplication();
@@ -57,7 +57,8 @@ abstract class PageCache implements FlushableInterface
                 'Core\\Cache\\Page\\' . camelcase($adapter) . 'PageCache',
                 DIRNAME_CLASSES . '/Cache/Page/' . camelcase($adapter) . 'PageCache.php'
             );
-            self::$library = $app->build($class);
+
+            self::$library = $app->make($class);
         }
 
         return self::$library;
@@ -66,11 +67,11 @@ abstract class PageCache implements FlushableInterface
     /**
      * Determine if we should check if a page is in the cache.
      *
-     * @param \Concrete\Core\Http\Request $req
+     * @param Request $req
      *
      * @return bool
      */
-    public function shouldCheckCache(Request $req)
+    public function shouldCheckCache(Request $req): bool
     {
         if ($req->getMethod() === $req::METHOD_POST) {
             return false;
@@ -90,14 +91,14 @@ abstract class PageCache implements FlushableInterface
     /**
      * Send the cache-related HTTP headers for a page to the current response.
      *
-     * @deprecated Headers are no longer set directly. Instead, use the
+     * @param ConcretePage $c
+     *@deprecated Headers are no longer set directly. Instead, use the
      * <code>$pageCache->deliver()</code>
      * method to retrieve a response object and either return it from a controller method or, if you must, use
      * <code>$response->prepare($request)->send()</code>
      *
-     * @param \Concrete\Core\Page\Page $c
      */
-    public function outputCacheHeaders(ConcretePage $c)
+    public function outputCacheHeaders(ConcretePage $c): void
     {
         foreach ($this->getCacheHeaders($c) as $header) {
             header($header);
@@ -107,11 +108,11 @@ abstract class PageCache implements FlushableInterface
     /**
      * Get the cache-related HTTP headers for a page.
      *
-     * @param \Concrete\Core\Page\Page $c
+     * @param ConcretePage $c
      *
-     * @return array Keys are the header names; values are the header values
+     * @return array<string, string> Keys are the header names; values are the header values
      */
-    public function getCacheHeaders(ConcretePage $c)
+    public function getCacheHeaders(ConcretePage $c): array
     {
         $lifetime = $c->getCollectionFullPageCachingLifetimeValue();
         $expires = gmdate('D, d M Y H:i:s', time() + $lifetime) . ' GMT';
@@ -128,11 +129,11 @@ abstract class PageCache implements FlushableInterface
     /**
      * Check if a page contained in a PageView should be stored in the cache.
      *
-     * @param \Concrete\Core\Page\View\PageView $v
+     * @param PageView $v
      *
      * @return bool
      */
-    public function shouldAddToCache(PageView $v)
+    public function shouldAddToCache(PageView $v): bool
     {
         $c = $v->getPageObject();
         if (!is_object($c)) {
@@ -196,51 +197,17 @@ abstract class PageCache implements FlushableInterface
     /**
      * Get the key that identifies the cache entry for a page or a request.
      *
-     * @param \Concrete\Core\Page\Page|\Concrete\Core\Http\Request|\Concrete\Core\Cache\Page\PageCacheRecord|mixed $mixed
+     * @param ConcretePage|Request|PageCacheRecord|mixed $mixed
      *
      * @return string|null Returns NULL if $mixed is not a recognized type, a string otherwise
      */
-    public function getCacheKey($mixed)
+    public function getCacheKey(ConcretePage|Request|PageCacheRecord $mixed): string|null
     {
-        if ($mixed instanceof ConcretePage) {
-            $host = $this->getCacheHost($mixed);
-            if (empty($host)) {
-                // Default to the request host. This should only happen in case
-                // the canonical URL has not been set for the site that the page
-                // belongs to.
-                $host = Request::getInstance()->getHttpHost();
-            }
+        if ($mixed instanceof PageCacheRecord) {
+            return $mixed->getCacheRecordKey();
+        }
 
-            $collectionPath = (string) $mixed->getCollectionPath();
-
-            // Add the "extra" parts to the path that can be added to the URL
-            // because the page/page type controller can have request actions.
-            $ctrl = $mixed->getPageController();
-            if (is_object($ctrl) &&
-                !empty($action = $ctrl->getRequestAction())
-            ) {
-                $extra = [];
-                if ($action !== 'view') {
-                    $extra[] = $action;
-                }
-                $extra = array_merge(
-                    $extra,
-                    $ctrl->getRequestActionParameters()
-                );
-
-                if (count($extra) > 0) {
-                    $collectionPath .= '/' . implode('/', $extra);
-                }
-            }
-
-            $collectionPath = trim($collectionPath, '/');
-            if ($collectionPath !== '') {
-                return urlencode($host . '/' . $collectionPath);
-            }
-            if ($mixed->isHomePage()) {
-                return urlencode($host);
-            }
-        } elseif ($mixed instanceof Request) {
+        if ($mixed instanceof Request) {
             $host = $this->getCacheHost($mixed);
             $path = trim((string) $mixed->getPath(), '/');
             if ($path !== '') {
@@ -248,32 +215,68 @@ abstract class PageCache implements FlushableInterface
             }
 
             return urlencode($host);
-        } elseif ($mixed instanceof PageCacheRecord) {
-            return $mixed->getCacheRecordKey();
         }
+
+        $host = $this->getCacheHost($mixed);
+        if (empty($host)) {
+            // Default to the request host. This should only happen in case
+            // the canonical URL has not been set for the site that the page
+            // belongs to.
+            $host = Request::getInstance()->getHttpHost();
+        }
+
+        $collectionPath = (string) $mixed->getCollectionPath();
+
+        // Add the "extra" parts to the path that can be added to the URL
+        // because the page/page type controller can have request actions.
+        $ctrl = $mixed->getPageController();
+        if ($ctrl && is_object($ctrl) && !empty($action = $ctrl->getRequestAction())) {
+            $extra = [];
+            if ($action !== 'view') {
+                $extra[] = $action;
+            }
+            $extra = array_merge(
+                $extra,
+                $ctrl->getRequestActionParameters()
+            );
+
+            if (count($extra) > 0) {
+                $collectionPath .= '/' . implode('/', $extra);
+            }
+        }
+
+        $collectionPath = trim($collectionPath, '/');
+        if ($collectionPath !== '') {
+            return urlencode($host . '/' . $collectionPath);
+        }
+        if ($mixed->isHomePage()) {
+            return urlencode($host);
+        }
+
+        return null;
     }
 
     /**
      * Get the host name under which the page or request belongs to.
      *
-     * @param \Concrete\Core\Page\Page|\Concrete\Core\Http\Request|mixed $mixed
+     * @param ConcretePage|Request $mixed
      *
      * @return string|null Returns NULL if $mixed is not a recognized type, a string otherwise
      */
-    public function getCacheHost($mixed)
+    public function getCacheHost(ConcretePage|Request $mixed): string|null
     {
-        if ($mixed instanceof ConcretePage) {
-            $site = $mixed->getSite();
-            if (is_object($site)) {
-                $host = $site->getSiteCanonicalURL();
-                if (!empty($host)) {
-                    $host = preg_replace('#^https?://#', '', $host);
-                    $host = trim($host, '/'); // Do not want trailing slashes in the host.
-                    return $host;
-                }
-            }
-        } elseif ($mixed instanceof Request) {
+        if ($mixed instanceof Request) {
             return $mixed->getHttpHost();
+        }
+
+        $site = $mixed->getSite();
+        if (is_object($site)) {
+            $host = $site->getSiteCanonicalURL();
+            if (!empty($host)) {
+                $host = preg_replace('#^https?://#', '', $host);
+                $host = trim($host, '/'); // Do not want trailing slashes in the host.
+                return $host;
+            }
         }
 
         return null;
@@ -282,39 +285,38 @@ abstract class PageCache implements FlushableInterface
     /**
      * Get the cached item for a page or a request.
      *
-     * @param \Concrete\Core\Page\Page|\Concrete\Core\Http\Request|mixed $mixed
+     * @param ConcretePage|Request|mixed $mixed
      *
-     * @return \Concrete\Core\Cache\Page\PageCacheRecord|null Return NULL if $mixed is not a recognized type, or if it's the record is not in the cache
+     * @return PageCacheRecord|null Return NULL if $mixed is not a recognized type, or if it's the record is not in the cache
      */
-    abstract public function getRecord($mixed);
+    abstract public function getRecord(ConcretePage|Request|PageCacheRecord $mixed): PageCacheRecord|null;
 
     /**
      * Store a page in the cache.
      *
-     * @param \Concrete\Core\Page\Page $c The page to be stored in the cache
+     * @param ConcretePage $c The page to be stored in the cache
      * @param string $content The whole HTML of the page to be stored in the cache
      */
-    abstract public function set(ConcretePage $c, $content);
+    abstract public function set(ConcretePage $c, string $content): void;
 
     /**
      * Remove a cache entry given the record retrieved from the cache.
      *
-     * @param \Concrete\Core\Cache\Page\PageCacheRecord $rec
+     * @param PageCacheRecord $rec
      */
-    abstract public function purgeByRecord(PageCacheRecord $rec);
+    abstract public function purgeByRecord(PageCacheRecord $rec): void;
 
     /**
      * Remove a cache entry given the page.
      *
-     * @param \Concrete\Core\Cache\Page\PageCacheRecord $rec
      * @param ConcretePage $c
      */
-    abstract public function purge(ConcretePage $c);
+    abstract public function purge(ConcretePage $c): void;
 
     /**
      * {@inheritdoc}
      *
      * @see \Concrete\Core\Cache\FlushableInterface::flush()
      */
-    abstract public function flush();
+    abstract public function flush(): void;
 }
