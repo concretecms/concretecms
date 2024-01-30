@@ -28,4 +28,13 @@ interface CaptchaInterface
      * @return bool
      */
     public function check();
+	
+	 /**
+     * Check if the user input is valid for the captcha.
+     * Accepts an error list by reference.
+     *
+     * @param ErrorList $error
+     * @return bool
+     */
+    public function checkWithErrorList(ErrorList &$error);
 }
