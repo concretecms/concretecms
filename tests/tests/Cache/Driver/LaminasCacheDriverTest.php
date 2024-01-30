@@ -41,7 +41,7 @@ class LaminasCacheDriverTest extends TestCase
             /** @var RequestCache $cache */
             $cache = $app->make($cacheName);
             $item = $cache->getItem('laminas/' . $key);
-            if (!$item->isMiss()) {
+            if ($item->isHit()) {
                 $expires = $item->getExpiration()->getTimestamp();
                 $this->assertGreaterThanOrEqual($now, $expires);
                 $this->assertLessThan($now + 100, $expires);

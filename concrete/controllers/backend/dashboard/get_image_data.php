@@ -9,7 +9,7 @@ use Concrete\Core\Http\ResponseFactoryInterface;
 use Concrete\Core\Marketplace\Marketplace;
 use Concrete\Core\Url\Url;
 use Concrete\Core\Url\UrlInterface;
-use Stash\Interfaces\ItemInterface;
+use Psr\Cache\CacheItemInterface;
 use Symfony\Component\HttpFoundation\Response;
 
 defined('C5_EXECUTE') or die('Access Denied.');
@@ -50,7 +50,7 @@ class GetImageData extends AbstractController
         return is_string($image) && preg_match('/([0-9]+)\.jpg/i', $image) ? $image : '';
     }
 
-    protected function getCacheItem(string $image): ItemInterface
+    protected function getCacheItem(string $image): CacheItemInterface
     {
         return $this->app->make(ObjectCache::class)->getItem("dashboard_image_data/{$image}");
     }

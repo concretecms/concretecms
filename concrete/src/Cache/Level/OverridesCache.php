@@ -3,9 +3,6 @@ namespace Concrete\Core\Cache\Level;
 
 use Concrete\Core\Cache\Cache;
 use Config;
-use Stash\Driver\BlackHole;
-use Stash\Exception\InvalidArgumentException;
-use Stash\Pool;
 
 /**
  * Class ExpensiveCache
@@ -15,18 +12,4 @@ use Stash\Pool;
  */
 class OverridesCache extends Cache
 {
-    protected function init()
-    {
-        try {
-            if (Config::get('concrete.cache.overrides') == true) {
-                $driver = $this->loadConfig('overrides');
-                $this->pool = new Pool($driver);
-            } else {
-                $this->pool = new Pool(new BlackHole());
-            }
-        } catch(InvalidArgumentException $e) {
-            $this->pool = new Pool(new BlackHole());
-        }
-        $this->enable();
-    }
 }

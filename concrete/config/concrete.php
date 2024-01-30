@@ -303,82 +303,58 @@ return [
 
         'levels' => [
             'overrides' => [
-                'drivers' => [
+                'pools' => [
                     'core_ephemeral' => [
-                        'class' => '\Stash\Driver\Ephemeral',
-                        'options' => [],
+                        'class' => \Symfony\Component\Cache\Adapter\ArrayAdapter::class,
                     ],
-
                     'core_filesystem' => [
-                        'class' => \Concrete\Core\Cache\Driver\FileSystemStashDriver::class,
+                        'class' => \Symfony\Component\Cache\Adapter\FilesystemAdapter::class,
                         'options' => [
-                            'path' => DIR_FILES_UPLOADED_STANDARD . '/cache/overrides',
-                            'dirPermissions' => DIRECTORY_PERMISSIONS_MODE_COMPUTED,
-                            'filePermissions' => FILE_PERMISSIONS_MODE_COMPUTED,
-                        ],
+                            'directory' => DIR_FILES_UPLOADED_STANDARD . '/cache_test/overrides'
+                        ]
                     ],
                     'redis' => [
-                        'class' => \Concrete\Core\Cache\Driver\RedisStashDriver::class,
+                        'class' => \Symfony\Component\Cache\Adapter\RedisAdapter::class,
                         'options' => [
-                            /* Example configuration for servers
-                            'servers' => [
-                                [
-                                    'server' => 'localhost',
-                                    'port' => 6379,
-                                    'ttl' => 10 //Connection Timeout - not TTL for objects
-                                ],
-                                [
-                                    'server' => 'outside.server',
-                                    'port' => 6379,
-                                    'ttl' => 10
-                                ],
-                            ],*/
-                            'prefix' => 'concrete_overrides',
-                            'database' => 0, // Use different Redis Databases - optional
-                        ],
-                    ],
+                            'namespace' => 'concrete_overrides'
+                        ]
+                    ]
                 ],
-                'preferred_driver' => 'core_filesystem', // Use this to specify a preferred driver
+                'pool' => 'core_filesystem', // Use this to specify a preferred driver
             ],
             'expensive' => [
-                'drivers' => [
+                'pools' => [
                     'core_ephemeral' => [
-                        'class' => '\Stash\Driver\Ephemeral',
-                        'options' => [],
+                        'class' => \Symfony\Component\Cache\Adapter\ArrayAdapter::class,
                     ],
                     'core_filesystem' => [
-                        'class' => \Concrete\Core\Cache\Driver\FileSystemStashDriver::class,
+                        'class' => \Symfony\Component\Cache\Adapter\FilesystemAdapter::class,
                         'options' => [
-                            'path' => DIR_FILES_UPLOADED_STANDARD . '/cache/expensive',
-                            'dirPermissions' => DIRECTORY_PERMISSIONS_MODE_COMPUTED,
-                            'filePermissions' => FILE_PERMISSIONS_MODE_COMPUTED,
-                        ],
+                            'directory' => DIR_FILES_UPLOADED_STANDARD . '/cache_test/expensive'
+                        ]
                     ],
                     'redis' => [
-                        'class' => \Concrete\Core\Cache\Driver\RedisStashDriver::class,
+                        'class' => \Symfony\Component\Cache\Adapter\RedisAdapter::class,
                         'options' => [
-                            'prefix' => 'concrete_expensive',
-                            'database' => 0, // Use different Redis Databases - optional
+                            'namespace' => 'concrete_expensive',
                         ],
                     ],
                 ],
-                'preferred_driver' => 'core_filesystem', // Use this to specify a preferred driver
+                'pool' => 'core_filesystem', // Use this to specify a preferred driver
             ],
             'object' => [
-                'drivers' => [
+                'pools' => [
                     'core_ephemeral' => [
-                        'class' => '\Stash\Driver\Ephemeral',
-                        'options' => [],
+                        'class' => \Symfony\Component\Cache\Adapter\ArrayAdapter::class,
                     ],
                     'redis' => [
-                        'class' => \Concrete\Core\Cache\Driver\RedisStashDriver::class,
+                        'class' => \Symfony\Component\Cache\Adapter\RedisAdapter::class,
                         'options' => [
-                            'prefix' => 'concrete_object',
-                            'database' => 0, // Use different Redis Databases - optional
+                            'namespace' => 'concrete_object',
                         ],
                     ],
                 ],
-                'preferred_driver' => 'core_ephemeral', // Use this to specify a preferred driver
+                'pool' => 'core_ephemeral', // Use this to specify a preferred pool
             ],
         ],
 
