@@ -328,9 +328,6 @@ class DefaultBooter implements BootInterface, ApplicationAwareInterface
         // Register events first so that they can be used by other providers.
         $list->registerProvider($config->get('app.providers.core_events'));
 
-        // Register cache next
-        $list->registerProvider($config->get('app.providers.core_cache'));
-
         // Register all other providers
         $list->registerProviders($config->get('app.providers'));
     }
