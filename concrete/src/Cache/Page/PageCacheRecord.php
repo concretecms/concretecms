@@ -7,12 +7,17 @@ use Concrete\Core\Url\Url;
 
 class PageCacheRecord
 {
-    public function __construct(Page $c, $content, $lifetime, $url = null)
+    private int $expires;
+    private string|null $url = null;
+    private string $content;
+    private array $headers;
+    private string $cacheRecordKey;
+
+    public function __construct(Page $c, string $content, int $lifetime, string|null $url, string $key, array $headers)
     {
-        $cache = PageCache::getLibrary();
         $this->setCacheRecordLifetime($lifetime);
-        $this->setCacheRecordKey($cache->getCacheKey($c));
-        $this->setCacheRecordHeaders($cache->getCacheHeaders($c));
+        $this->setCacheRecordKey($key);
+        $this->setCacheRecordHeaders($headers);
         $this->setCanonicalURL($url);
         $this->setCacheRecordContent($content);
     }

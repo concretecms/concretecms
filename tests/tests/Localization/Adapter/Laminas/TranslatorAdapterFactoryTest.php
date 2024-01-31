@@ -2,6 +2,7 @@
 
 namespace Concrete\Tests\Localization\Adapter\Laminas;
 
+use Concrete\Core\Cache\Level\ExpensiveCache;
 use Concrete\Core\Localization\Translator\Adapter\Laminas\TranslatorAdapterFactory;
 use Concrete\Tests\TestCase;
 
@@ -17,7 +18,8 @@ class TranslatorAdapterFactoryTest extends TestCase
 
     public function setUp():void
     {
-        $this->factory = new TranslatorAdapterFactory();
+        $cache = \Mockery::spy(ExpensiveCache::class);
+        $this->factory = new TranslatorAdapterFactory($cache);
     }
 
     public function testCreateTranslatorAdapter()

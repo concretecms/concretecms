@@ -2,8 +2,6 @@
 namespace Concrete\Core\Cache\Level;
 
 use Concrete\Core\Cache\Cache;
-use Stash\Driver\Ephemeral;
-use Stash\Pool;
 
 /**
  * Class RequestCache
@@ -13,9 +11,4 @@ use Stash\Pool;
  */
 class RequestCache extends Cache
 {
-    protected function init()
-    {
-        $this->pool = new Pool(new Ephemeral());
-        $this->enable();
-    }
 }

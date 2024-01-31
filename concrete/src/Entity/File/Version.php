@@ -954,15 +954,13 @@ class Version implements ObjectInterface
             $app = Application::getFacadeApplication();
             $cf = $app->make('helper/concrete/file');
             $configuration = $fsl->getConfigurationObject();
-            if ($configuration->hasRelativePath()) {
-                $url = $configuration->getRelativePathToFile($cf->prefix($this->fvPrefix, $this->fvFilename));
+            if ($configuration && $configuration->hasRelativePath()) {
+                return $configuration->getRelativePathToFile($cf->prefix($this->fvPrefix, $this->fvFilename));
             }
-            if ($configuration->hasPublicURL() && !$url) {
-                $url = $configuration->getPublicURLToFile($cf->prefix($this->fvPrefix, $this->fvFilename));
+            if ($configuration && $configuration->hasPublicURL()) {
+                return $configuration->getPublicURLToFile($cf->prefix($this->fvPrefix, $this->fvFilename));
             }
-            if (!$url) {
-                $url = (string) $this->getDownloadURL();
-            }
+            return  (string) $this->getDownloadURL();
         }
 
         return $url;

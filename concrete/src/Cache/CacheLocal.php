@@ -44,7 +44,7 @@ class CacheLocal
         $cache = Core::make('cache/request');
         if ($cache->isEnabled()) {
             $item = $cache->getItem(self::key($type, $id));
-            if (!$item->isMiss()) {
+            if ($item->isHit()) {
                 return $item->get();
             }
         }

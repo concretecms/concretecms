@@ -8,6 +8,7 @@ use Concrete\Core\Support\Facade\Facade;
 use Core;
 use Doctrine\ORM\EntityManagerInterface;
 use Concrete\TestHelpers\Database\ConcreteDatabaseTestCase;
+use Psr\Cache\CacheItemInterface;
 
 
 class LinkAbstractorTest extends ConcreteDatabaseTestCase
@@ -116,12 +117,12 @@ class LinkAbstractorTest extends ConcreteDatabaseTestCase
         $mockPage->expects($this->once())
             ->method('getCollectionPath')
             ->willReturn('/test/page/path');
-        $pageCacheItem = $this->getMockBuilder('Stash\Item')
+        $pageCacheItem = $this->getMockBuilder(CacheItemInterface::class)
             ->disableOriginalConstructor()
             ->getMock();
         $pageCacheItem->expects($this->once())
-            ->method('isMiss')
-            ->willReturn(false);
+            ->method('isHit')
+            ->willReturn(true);
         $pageCacheItem->expects($this->once())
             ->method('get')
             ->willReturn($mockPage);

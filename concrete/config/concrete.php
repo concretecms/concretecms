@@ -297,88 +297,45 @@ return [
          */
         'directory_relative' => null,
         'page' => [
-            'directory' => DIR_FILES_UPLOADED_STANDARD . '/cache/pages',
-            'adapter' => 'file',
+            'adapter' => 'concrete',
         ],
-
         'levels' => [
+            'pages' => [
+                'pool' => [
+                    'class' => \Symfony\Component\Cache\Adapter\FilesystemAdapter::class,
+                    'options' => [
+                        'directory' => DIR_FILES_UPLOADED_STANDARD . '/cache',
+                        'namespace' => 'page'
+                    ]
+                ]
+            ],
             'overrides' => [
-                'drivers' => [
-                    'core_ephemeral' => [
-                        'class' => '\Stash\Driver\Ephemeral',
-                        'options' => [],
-                    ],
-
-                    'core_filesystem' => [
-                        'class' => \Concrete\Core\Cache\Driver\FileSystemStashDriver::class,
-                        'options' => [
-                            'path' => DIR_FILES_UPLOADED_STANDARD . '/cache/overrides',
-                            'dirPermissions' => DIRECTORY_PERMISSIONS_MODE_COMPUTED,
-                            'filePermissions' => FILE_PERMISSIONS_MODE_COMPUTED,
-                        ],
-                    ],
-                    'redis' => [
-                        'class' => \Concrete\Core\Cache\Driver\RedisStashDriver::class,
-                        'options' => [
-                            /* Example configuration for servers
-                            'servers' => [
-                                [
-                                    'server' => 'localhost',
-                                    'port' => 6379,
-                                    'ttl' => 10 //Connection Timeout - not TTL for objects
-                                ],
-                                [
-                                    'server' => 'outside.server',
-                                    'port' => 6379,
-                                    'ttl' => 10
-                                ],
-                            ],*/
-                            'prefix' => 'concrete_overrides',
-                            'database' => 0, // Use different Redis Databases - optional
-                        ],
-                    ],
-                ],
-                'preferred_driver' => 'core_filesystem', // Use this to specify a preferred driver
+                'pool' => [
+                    'class' => \Symfony\Component\Cache\Adapter\FilesystemAdapter::class,
+                    'options' => [
+                        'directory' => DIR_FILES_UPLOADED_STANDARD . '/cache',
+                        'namespace' => 'overrides'
+                    ]
+                ], // Use this to specify a preferred driver
             ],
             'expensive' => [
-                'drivers' => [
-                    'core_ephemeral' => [
-                        'class' => '\Stash\Driver\Ephemeral',
-                        'options' => [],
-                    ],
-                    'core_filesystem' => [
-                        'class' => \Concrete\Core\Cache\Driver\FileSystemStashDriver::class,
-                        'options' => [
-                            'path' => DIR_FILES_UPLOADED_STANDARD . '/cache/expensive',
-                            'dirPermissions' => DIRECTORY_PERMISSIONS_MODE_COMPUTED,
-                            'filePermissions' => FILE_PERMISSIONS_MODE_COMPUTED,
-                        ],
-                    ],
-                    'redis' => [
-                        'class' => \Concrete\Core\Cache\Driver\RedisStashDriver::class,
-                        'options' => [
-                            'prefix' => 'concrete_expensive',
-                            'database' => 0, // Use different Redis Databases - optional
-                        ],
-                    ],
-                ],
-                'preferred_driver' => 'core_filesystem', // Use this to specify a preferred driver
+                'pool' => [
+                    'class' => \Symfony\Component\Cache\Adapter\FilesystemAdapter::class,
+                    'options' => [
+                        'directory' => DIR_FILES_UPLOADED_STANDARD . '/cache',
+                        'namespace' => 'expensive'
+                    ]
+                ], // Use this to specify a preferred driver
             ],
             'object' => [
-                'drivers' => [
-                    'core_ephemeral' => [
-                        'class' => '\Stash\Driver\Ephemeral',
-                        'options' => [],
-                    ],
-                    'redis' => [
-                        'class' => \Concrete\Core\Cache\Driver\RedisStashDriver::class,
-                        'options' => [
-                            'prefix' => 'concrete_object',
-                            'database' => 0, // Use different Redis Databases - optional
-                        ],
-                    ],
+                'pool' => [
+                    'class' => \Symfony\Component\Cache\Adapter\ArrayAdapter::class,
                 ],
-                'preferred_driver' => 'core_ephemeral', // Use this to specify a preferred driver
+            ],
+            'request' => [
+                'pool' => [
+                    'class' => \Symfony\Component\Cache\Adapter\ArrayAdapter::class,
+                ],
             ],
         ],
 

@@ -9,14 +9,12 @@ use Concrete\Core\Entity\Site\Type;
 use Concrete\Core\Site\Resolver\ResolverFactory;
 use Concrete\Core\Site\Resolver\StandardDriver;
 use Concrete\Core\Site\Service;
-use Concrete\Core\Site\Type\Controller\Manager;
 use Concrete\Core\Site\Type\Controller\StandardController;
 use Concrete\Theme\Elemental\PageTheme;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
 use Concrete\Tests\TestCase;
-use Stash\Driver\Ephemeral;
-use Stash\Pool;
+use Symfony\Component\Cache\Adapter\ArrayAdapter;
 
 class SiteTest extends TestCase
 {
@@ -217,8 +215,7 @@ class SiteTest extends TestCase
         $config = \Core::make('config');
         $factory = new ResolverFactory(\Core::make('app'), new StandardDriver(\Core::make('Concrete\Core\Site\Factory')));
         $service = new Service($entityManager, \Core::make('app'), $config, $factory, $siteTypeService);
-        $cache = new Pool();
-        $cache->setDriver(new Ephemeral());
+        $cache = new \Concrete\Core\Cache\Level\ExpensiveCache(new ArrayAdapter());
         $service->setCache($cache);
         $retrieved = $service->getSite();
 

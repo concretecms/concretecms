@@ -12,6 +12,7 @@ use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Psr7\MultipartStream;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Response;
+use Psr\Cache\CacheItemInterface;
 
 class CommunityStoreTranslationProvider implements ProviderInterface
 {
@@ -225,8 +226,8 @@ class CommunityStoreTranslationProvider implements ProviderInterface
         $cacheLifetime = $this->getCacheLifetime();
         if ($cacheLifetime > 0 && $this->cache->isEnabled()) {
             $cacheItem = $this->cache->getItem('community_translation/' . $packageHandle . '@' . $packageVersion . 'L' . $progressLimit);
-            /* @var \Stash\Item $cacheItem */
-            if (!$cacheItem->isMiss()) {
+            /* @var CacheItemInterface $cacheItem */
+            if ($cacheItem->isHit()) {
                 $data = $cacheItem->get();
             }
         } else {

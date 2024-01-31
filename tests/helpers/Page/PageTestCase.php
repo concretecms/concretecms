@@ -5,13 +5,9 @@ namespace Concrete\TestHelpers\Page;
 
 use Concrete\Core\Support\Facade\Application;
 use Concrete\TestHelpers\Database\ConcreteDatabaseTestCase;
-use Core;
-use Doctrine\ORM\EntityManagerInterface;
 use Page;
 use PageTemplate;
 use PageType;
-use Stash\Driver\Ephemeral;
-use Stash\Pool;
 
 abstract class PageTestCase extends ConcreteDatabaseTestCase
 {

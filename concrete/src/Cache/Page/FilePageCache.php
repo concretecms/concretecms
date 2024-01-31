@@ -6,9 +6,12 @@ use Concrete\Core\Config\Repository\Repository;
 use Concrete\Core\Page\Page as ConcretePage;
 use Loader;
 
+/**
+ * @deprecated Use ConcretePageCache
+ */
 class FilePageCache extends PageCache
 {
-    public function getRecord($mixed)
+    public function getRecord($mixed): ?PageCacheRecord
     {
         $file = $this->getCacheFile($mixed);
         if (file_exists($file)) {
@@ -36,7 +39,7 @@ class FilePageCache extends PageCache
         }
     }
 
-    public function purgeByRecord(\Concrete\Core\Cache\Page\PageCacheRecord $rec)
+    public function purgeByRecord(\Concrete\Core\Cache\Page\PageCacheRecord $rec): void
     {
         $file = $this->getCacheFile($rec);
         if ($file && file_exists($file)) {
@@ -44,13 +47,13 @@ class FilePageCache extends PageCache
         }
     }
 
-    public function flush()
+    public function flush(): void
     {
         $fh = Loader::helper('file');
         $fh->removeAll(Config::get('concrete.cache.page.directory'));
     }
 
-    public function purge(ConcretePage $c)
+    public function purge(ConcretePage $c): void
     {
         $file = $this->getCacheFile($c);
         if ($file && file_exists($file)) {
@@ -58,7 +61,7 @@ class FilePageCache extends PageCache
         }
     }
 
-    public function set(ConcretePage $c, $content)
+    public function set(ConcretePage $c, $content): void
     {
         $config = app(Repository::class);
         $dir = $config->get('concrete.cache.page.directory');
@@ -70,7 +73,14 @@ class FilePageCache extends PageCache
         $lifetime = $c->getCollectionFullPageCachingLifetimeValue();
         $file = $this->getCacheFile($c);
         if ($file) {
-            $response = new PageCacheRecord($c, $content, $lifetime, $url);
+            $response = new PageCacheRecord(
+                $c,
+                $content,
+                $lifetime,
+                $url,
+                $this->getCacheKey($c),
+                $this->getCacheHeaders($c),
+            );
             if ($content) {
                 file_put_contents($file, serialize($response));
             }

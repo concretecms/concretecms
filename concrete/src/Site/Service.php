@@ -139,7 +139,7 @@ class Service
     public function getDefault()
     {
         $item = $this->cache->getItem(sprintf('/site/default'));
-        if (!$item->isMiss()) {
+        if ($item->isHit()) {
             $site = $item->get();
         } else {
             $factory = new Factory($this->config);

@@ -1,8 +1,11 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Concrete\Core\Cache\Level;
 
 use Concrete\Core\Cache\Cache;
 
-class ObjectCache extends Cache
+class PageCache extends Cache
 {
 }

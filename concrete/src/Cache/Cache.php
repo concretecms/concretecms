@@ -3,9 +3,8 @@ namespace Concrete\Core\Cache;
 
 use Concrete\Core\Support\Facade\Application;
 use Psr\Cache\CacheItemInterface;
-use Stash\Driver\BlackHole;
-use Stash\Driver\Composite;
-use Stash\Pool;
+use Psr\Cache\CacheItemPoolInterface;
+use Psr\Cache\InvalidArgumentException;
 
 /**
  * Base class for the three caching layers present in Concrete5:
@@ -17,111 +16,21 @@ use Stash\Pool;
  *
  * This class imports the various caching settings from Config class, sets
  * up the Stash pools and provides a basic caching API for all of Concrete5.
+ *
+ * @template T of mixed
  */
-abstract class Cache implements FlushableInterface
+abstract class Cache implements CacheItemPoolInterface, FlushableInterface
 {
-    /** @var Pool */
-    public $pool = null;
-    /** @var bool */
-    protected $enabled = false;
-    /** @var \Stash\Interfaces\DriverInterface */
-    protected $driver = null;
+    protected bool $enabled = false;
 
-    public function __construct()
-    {
-        $this->init();
-    }
+    public function __construct(
+        public readonly CacheItemPoolInterface $pool
+    ) {}
 
     /**
-     * Initializes the cache by setting up the cache pool and enabling the cache.
+     * @deprecated Interact with `->pool` directly
      */
-    abstract protected function init();
-
-    /**
-     * Loads the composite driver from constants.
-     *
-     * @param $level
-     *
-     * @return \Stash\Interfaces\DriverInterface
-     */
-    protected function loadConfig($level)
-    {
-        $app = Application::getFacadeApplication();
-        $drivers = [];
-        $driverConfigs = $app['config']->get("concrete.cache.levels.{$level}.drivers", []);
-        $preferredDriverName = $app['config']->get("concrete.cache.levels.{$level}.preferred_driver", null);
-
-        // Load the preferred driver(s) first
-        if (!empty($preferredDriverName)) {
-            if (is_array($preferredDriverName)) {
-                foreach ($preferredDriverName as $driverName) {
-                    $preferredDriver = array_get($driverConfigs, $driverName, []);
-                    $drivers[] = $this->buildDriver($preferredDriver);
-                }
-            } else {
-                $preferredDriver = array_get($driverConfigs, $preferredDriverName, []);
-                $drivers[] = $this->buildDriver($preferredDriver);
-            }
-        }
-        // If we dont have any perferred drivers or preferred drivers available
-        // Build Everything
-        if (empty($drivers)) {
-            foreach ($driverConfigs as $driverConfig) {
-                if (!$driverConfig) {
-                    continue;
-                }
-
-                $drivers[] = $this->buildDriver($driverConfig);
-            }
-        }
-
-        // Remove any empty arrays for an accurate count
-        array_filter($drivers);
-        $count = count($drivers);
-        if ($count > 1) {
-            $driver = new Composite(['drivers' => $drivers]);
-        } elseif ($count === 1) {
-            reset($drivers);
-            $driver = current($drivers);
-        } else {
-            $driver = new BlackHole();
-        }
-
-        return $driver;
-    }
-
-    /**
-     * Function used to build a driver from a driverConfig array.
-     *
-     * @param array $driverConfig The config item belonging to the driver
-     *
-     * @return null|\Stash\Interfaces\DriverInterface
-     */
-    private function buildDriver(array $driverConfig)
-    {
-        $class = array_get($driverConfig, 'class', '');
-        if ($class && class_exists($class)) {
-            $implements = class_implements($class);
-
-            // Make sure that the provided class implements the DriverInterface
-            if (isset($implements['Stash\Interfaces\DriverInterface'])) {
-                /* @var \Stash\Interfaces\DriverInterface $tempDriver */
-
-                // Only add if the driver is available
-                if ($class::isAvailable()) {
-                    $tempDriver = new $class(array_get($driverConfig, 'options', null));
-
-                    return $tempDriver;
-                }
-            } else {
-                throw new \RuntimeException('Cache driver class must implement \Stash\Interfaces\DriverInterface.');
-            }
-        }
-
-        return null;
-    }
-
-    public function getPool()
+    public function getPool(): CacheItemPoolInterface
     {
         return $this->pool;
     }
@@ -133,13 +42,13 @@ abstract class Cache implements FlushableInterface
      *
      * @return bool True if deleted, false if not
      */
-    public function delete($key)
+    public function delete(string $key): bool
     {
-        if ($this->enabled) {
-            return $this->pool->getItem($key)->clear();
-        } else {
+        if (!$this->enabled) {
             return false;
         }
+
+        return $this->pool->deleteItem($this->normalize($key));
     }
 
     /**
@@ -148,20 +57,22 @@ abstract class Cache implements FlushableInterface
      * @param string $key Name of the cache item ID
      *
      * @return bool True if exists, false if not
+     * @throws InvalidArgumentException
      */
-    public function exists($key)
+    public function exists(string $key): bool
     {
-        if ($this->enabled) {
-            return !$this->pool->getItem($key)->isMiss();
-        } else {
+
+        if (!$this->enabled) {
             return false;
         }
+
+        return !$this->pool->hasItem($this->normalize($key));
     }
 
     /**
      * Removes all values from the cache.
      */
-    public function flush()
+    public function flush(): bool
     {
         return $this->pool->clear();
     }
@@ -171,14 +82,20 @@ abstract class Cache implements FlushableInterface
      *
      * @param string $key Name of the cache item ID
      *
-     * @return \Stash\Interfaces\ItemInterface
+     * @return CacheItemProxy<T>
+     * @throws InvalidArgumentException
      */
-    public function getItem($key)
+    public function getItem($key): CacheItemInterface
     {
-        return $this->pool->getItem($key);
+        $item = $this->pool->getItem($this->normalize($key));
+        if ($item instanceof CacheItemProxy) {
+            return $item;
+        }
+
+        return new CacheItemProxy($item);
     }
 
-    public function save(CacheItemInterface $item)
+    public function save(CacheItemInterface $item): bool
     {
         return $this->pool->save($item);
     }
@@ -186,24 +103,16 @@ abstract class Cache implements FlushableInterface
     /**
      * Enables the cache.
      */
-    public function enable()
+    public function enable(): void
     {
-        if ($this->driver !== null) {
-            $this->pool->setDriver($this->driver);
-        }
         $this->enabled = true;
     }
 
     /**
      * Disables the cache.
      */
-    public function disable()
+    public function disable(): void
     {
-        // save the current driver if not yet black hole so it can be restored on enable()
-        if (!($this->pool->getDriver() instanceof BlackHole)) {
-            $this->driver = $this->pool->getDriver();
-        }
-        $this->pool->setDriver(new BlackHole());
         $this->enabled = false;
     }
 
@@ -212,7 +121,7 @@ abstract class Cache implements FlushableInterface
      *
      * @return bool
      */
-    public function isEnabled()
+    public function isEnabled(): bool
     {
         return $this->enabled;
     }
@@ -220,22 +129,66 @@ abstract class Cache implements FlushableInterface
     /**
      * Disables all cache levels.
      */
-    public static function disableAll()
+    public static function disableAll(): void
     {
         $app = Application::getFacadeApplication();
-        $app->make('cache/request')->disable();
-        $app->make('cache/expensive')->disable();
-        $app->make('cache')->disable();
+        $app->make('cache/request')?->disable();
+        $app->make('cache/expensive')?->disable();
+        $app->make('cache')?->disable();
     }
 
     /**
      * Enables all cache levels.
      */
-    public static function enableAll()
+    public static function enableAll(): void
     {
         $app = Application::getFacadeApplication();
-        $app->make('cache/request')->enable();
-        $app->make('cache/expensive')->enable();
-        $app->make('cache')->enable();
+        $app->make('cache/request')?->enable();
+        $app->make('cache/expensive')?->enable();
+        $app->make('cache')?->enable();
+    }
+
+    private function normalize(string $key): string
+    {
+        return str_replace(
+            ['{', '}', '(', ')', '/', '\\', '@', ':'],
+            ['†', '‡', '‹', '›', '™', '•', 'œ', 'Ÿ'],
+            $key,
+        );
+    }
+
+    public function getItems(array $keys = array()): array
+    {
+        return $this->pool->getItems(array_map($this->normalize(...), $keys));
+    }
+
+    public function hasItem($key): bool
+    {
+        return $this->pool->hasItem($this->normalize($key));
+    }
+
+    public function clear(): bool
+    {
+        return $this->pool->clear();
+    }
+
+    public function deleteItem($key): bool
+    {
+        return $this->pool->deleteItem($this->normalize($key));
+    }
+
+    public function deleteItems(array $keys): bool
+    {
+        return $this->pool->deleteItems(array_map($this->normalize(...), $keys));
+    }
+
+    public function saveDeferred(CacheItemInterface $item): bool
+    {
+        return $this->pool->saveDeferred($item);
+    }
+
+    public function commit(): bool
+    {
+        return $this->pool->commit();
     }
 }

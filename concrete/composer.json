@@ -31,7 +31,7 @@
     "bin/concrete5"
   ],
   "require": {
-    "php": "^7.3||^8.0",
+    "php": "^8.2",
     "ext-dom": "*",
     "ext-fileinfo": "*",
     "ext-gd": "*",
@@ -81,7 +81,6 @@
     "nesbot/carbon": "^2.1",
     "egulias/email-validator": "1.*",
     "punic/punic": "^3.0.1",
-    "tedivm/stash": "0.17.*",
     "lusitanian/oauth": "0.8.*",
     "concrete5/oauth-user-data": "~1.0",
     "mlocati/concrete5-translation-library": "^1.7.1",
