@@ -5,7 +5,6 @@ namespace Concrete\Core\Cache;
 use Concrete\Core\Application\Application;
 use Concrete\Core\Cache\Command\ClearCacheCommandHandler;
 use Concrete\Core\Cache\Level\CacheLevel;
-use Concrete\Core\Cache\Page\ConcretePageCache;
 use Concrete\Core\Cache\Page\PageCache;
 use Concrete\Core\Config\Repository\Repository;
 use Concrete\Core\Foundation\Service\Provider as ServiceProvider;
@@ -13,7 +12,6 @@ use Concrete\Core\Logging\Channels;
 use Concrete\Core\Logging\LoggerAwareInterface;
 use Concrete\Core\Logging\LoggerAwareTrait;
 use Concrete\Core\Logging\LoggerFactory;
-use Illuminate\Filesystem\FilesystemAdapter;
 use Psr\Cache\CacheItemPoolInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Cache\Adapter\ArrayAdapter;
@@ -63,8 +61,6 @@ class CacheServiceProvider extends ServiceProvider implements LoggerAwareInterfa
     private function getCachePool(CacheLevel $level): CacheItemPoolInterface
     {
         $config = $this->app->make(Repository::class);
-
-
         $enabledKey = $level->getEnabledConfigKey();
 
         if ($enabledKey && !$config->get($enabledKey)) {
@@ -82,19 +78,27 @@ class CacheServiceProvider extends ServiceProvider implements LoggerAwareInterfa
         return $this->poolFromConfig($pool);
     }
 
-    private function poolFromConfig(array $pool): CacheItemPoolInterface
+    private function poolFromConfig(array|string|CacheItemPoolInterface $pool): CacheItemPoolInterface
     {
-        $class = $pool['class'] ?? null;
-        if ($class instanceof CacheItemPoolInterface) {
-            return $class;
+        if (is_string($pool)) {
+            $class = $pool;
+            $args = [];
+        } elseif ($pool instanceof CacheItemPoolInterface) {
+            return $pool;
+        } else {
+            $class = $pool['class'] ?? null;
+            if ($class instanceof CacheItemPoolInterface) {
+                return $class;
+            }
+
+            $args = $pool['options'] ?? [];
+            if (!$class) {
+                return new ArrayAdapter();
+            }
         }
 
-        $args = $pool['options'] ?? [];
-        if (!$class) {
-            return new ArrayAdapter();
-        }
-
-        if ($class === ChainAdapter::class && is_array($args['adapters'])) {
+        $isChain = $class === ChainAdapter::class || is_subclass_of($class, ChainAdapter::class);
+        if ($isChain && is_array($args['adapters'])) {
             $args['adapters'] = array_map($this->poolFromConfig(...), $args['adapters']);
         }
 

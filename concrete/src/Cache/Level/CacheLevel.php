@@ -22,7 +22,6 @@ enum CacheLevel: string
     public function getOptionsConfigKey(): string|null
     {
         return match ($this) {
-            self::Request => null,
             default => "concrete.cache.levels.{$this->value}"
         };
     }

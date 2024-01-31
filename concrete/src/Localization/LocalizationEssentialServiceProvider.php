@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\Localization;
 
+use Concrete\Core\Cache\Level\ExpensiveCache;
 use Concrete\Core\Foundation\Service\Provider as ServiceProvider;
 use Concrete\Core\Localization\Translator\Adapter\Core\TranslatorAdapterFactory as CoreTranslatorAdapterFactory;
 use Concrete\Core\Localization\Translator\Adapter\Plain\TranslatorAdapterFactory as PlainTranslatorAdapterFactory;
@@ -45,7 +46,7 @@ class LocalizationEssentialServiceProvider extends ServiceProvider
                         ],
                     ]
                 );
-                $laminasFactory = new LaminasTranslatorAdapterFactory($loaderRepository, $loaderPluginManager);
+                $laminasFactory = new LaminasTranslatorAdapterFactory($app->make(ExpensiveCache::class), $loaderRepository, $loaderPluginManager);
                 $plainFactory = new PlainTranslatorAdapterFactory();
 
                 return new CoreTranslatorAdapterFactory($config, $plainFactory, $laminasFactory);

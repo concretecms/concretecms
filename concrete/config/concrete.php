@@ -332,6 +332,11 @@ return [
                     'class' => \Symfony\Component\Cache\Adapter\ArrayAdapter::class,
                 ],
             ],
+            'request' => [
+                'pool' => [
+                    'class' => \Symfony\Component\Cache\Adapter\ArrayAdapter::class,
+                ],
+            ],
         ],
 
         'clear' => [
