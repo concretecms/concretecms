@@ -2,7 +2,7 @@
 
 <div>
     <a href="<?=$link?>"><?=$title?></a>
-    <?php if ($description) { ?>
+    <?php if (isset($description) && $description) { ?>
         <div><?=$description?></div>
     <?php } ?>
 </div>
