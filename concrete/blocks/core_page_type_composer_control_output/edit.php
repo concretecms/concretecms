@@ -12,11 +12,16 @@ use Concrete\Core\Page\Type\Type as PageType;
 $ptComposerOutputControlID = $ptComposerOutputControlID ?? null;
 
 $c = Page::getCurrentPage();
-    // retrieve all block controls attached to this page template.
-    $pt = PageTemplate::getByID($c->getPageTemplateID());
-    $ptt = PageType::getByDefaultsPage($c);
+// retrieve all block controls attached to this page template.
+$pt = PageTemplate::getByID($c->getPageTemplateID());
+$ptt = PageType::getByDefaultsPage($c);
+
+// Allow for template or type subsequently deleted.
+if (is_object($pt) && is_object($ptt)) {
     $controls = PageTypeComposerOutputControl::getList($ptt, $pt);
-    $values = [];
+}
+$values = [];
+if (!empty($controls)) {
     foreach ($controls as $control) {
         $fls = PageTypeComposerFormLayoutSetControl::getByID($control->getPageTypeComposerFormLayoutSetControlID());
         if ($fls->getPageTypeComposerFormLayoutSetControlCustomLabel()) {
@@ -27,8 +32,10 @@ $c = Page::getCurrentPage();
         }
         $values[$control->getPageTypeComposerOutputControlID()] = $displayname;
     }
-?>
-<div class="form-group">
-	<label for="ptComposerOutputControlID" class="control-label form-label"><?=t('Control')?></label>
-	<?=$form->select('ptComposerOutputControlID', $values, $ptComposerOutputControlID ?? '')?>
-</div>
+    ?>
+    <div class="form-group">
+        <label for="ptComposerOutputControlID" class="control-label form-label"><?= t('Control') ?></label>
+        <?= $form->select('ptComposerOutputControlID', $values, $ptComposerOutputControlID ?? '') ?>
+    </div>
+    <?php
+}

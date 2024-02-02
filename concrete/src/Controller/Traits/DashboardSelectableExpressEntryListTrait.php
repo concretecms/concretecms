@@ -64,14 +64,14 @@ trait DashboardSelectableExpressEntryListTrait
         }
     }
 
-    public function csv_export($entityID = null, $searchMethod = null)
+    public function csv_export($entityID = null, $searchMethod = null, $savedSearchPresetId = null)
     {
         $r = $this->entityManager->getRepository(Entity::class);
         if ($entityID) {
             $entity = $r->findOneById($entityID);
         }
         if ($entity) {
-            return $this->exportCsv($entity, $searchMethod);
+            return $this->exportCsv($entity, $searchMethod, $savedSearchPresetId);
         } else {
             throw new UserMessageException(t('Invalid express entity ID.'));
         }

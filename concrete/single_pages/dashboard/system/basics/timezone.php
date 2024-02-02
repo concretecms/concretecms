@@ -81,7 +81,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
                 <?php echo t('User-Specific Timezones'); ?>
             </label>
             <div class="form-check">
-                <input class="form-check-input" type="checkbox" name="user_timezones" value="1"<?= $user_timezones ? ' checked="checked"' : ''; ?> />
+                <input class="form-check-input" type="checkbox" id="user_timezones" name="user_timezones" value="1"<?= $user_timezones ? ' checked="checked"' : ''; ?> />
                 <label class="form-check-label" for="user_timezones">
                     <?php echo t('Enable user defined time zones.'); ?>
                 </label>

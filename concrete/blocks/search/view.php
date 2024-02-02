@@ -19,8 +19,8 @@ if ($query === '') {
     ?><input name="search_paths[]" type="hidden"
              value="<?= htmlentities($baseSearchPath, ENT_COMPAT, APP_CHARSET) ?>" /><?php
 
-} elseif (isset($_REQUEST['search_paths']) && is_array($_REQUEST['search_paths'])) {
-    foreach ($_REQUEST['search_paths'] as $search_path) {
+} elseif (isset($search_paths) && is_array($search_paths)) {
+    foreach ($search_paths as $search_path) {
         if (is_string($search_path)) {
             ?><input name="search_paths[]" type="hidden"
                      value="<?= htmlentities($search_path, ENT_COMPAT, APP_CHARSET) ?>" /><?php

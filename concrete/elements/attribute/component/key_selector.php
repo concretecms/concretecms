@@ -105,7 +105,6 @@ defined('C5_EXECUTE') or die('Access Denied.');
                     var $content = $(this.$el).find("#ccm-attribute-key-" + attribute.akID)
                     $content.html(attribute.content)
                     $content.find('[data-vue]').each(function() {
-                        console.log($(this))
                         $(this).concreteVue({'context': $(this).attr('data-vue')})
                     })
                 },

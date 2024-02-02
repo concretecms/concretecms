@@ -50,7 +50,7 @@ View::element(
             $checkbox->addClass("form-check-input");
             $checkbox->setAttribute("id", $id);
 
-            $input = new Input('hidden', 'fsID:' . $fileset->getFileSetID(), $fileset->getFileSetID());
+            $input = new Input('hidden', 'fsID:' . $fileset->getFileSetID());
             $input->setAttribute('data-set-input', $fileset->getFileSetID());
 
             $found = 0;
@@ -96,7 +96,16 @@ View::element(
         $('#ccm-file-set-list input.tristate').tristate({
             change: function (state) {
                 let $input = $('input[data-set-input=' + $(this).attr('data-set') + ']');
-
+                if (state === null) {
+                    $input.val(1);
+                } else if (state === true) {
+                    $input.val(2);
+                } else if (state !== true) {
+                    $input.val(0);
+                }
+            },
+            init: function(state) {
+                let $input = $('input[data-set-input=' + $(this).attr('data-set') + ']');
                 if (state === null) {
                     $input.val(1);
                 } else if (state === true) {
@@ -105,7 +114,7 @@ View::element(
                     $input.val(0);
                 }
             }
-        });
+        })
         $('#ccm-file-set-list input[type=checkbox]:not(".tristate")').on('change', function () {
             let $input = $('input[data-set-input=' + $(this).attr('data-set') + ']');
 
@@ -114,6 +123,6 @@ View::element(
             } else {
                 $input.val(0);
             }
-        });
+        }).trigger('change')
     });
 </script>
