@@ -207,8 +207,15 @@ if ($view->controller->getAction() == 'preview_version') { ?>
 <hr class="mt-5 mb-4"/>
 
 <section>
-    <h3 class="mb-4"><?=t('URLs')?></h3>
+    <h3 class="mb-4"><?=t('URLs & IDs')?></h3>
     <dl>
+        <?php if ($file->hasFileUUID()) { ?>
+            <dt><?= t('Identifier') ?></dt>
+            <dd class="mb-5">
+                <input type="text" class="bg-white form-control" readonly onclick="this.select()" value="<?= h($fileVersion->getFileUUID()) ?>">
+                <div class="text-muted mt-2"><i><?= t('Use this identifier if you need to work with this file programmatically, or in a REST API operation.') ?></i></div>
+            </dd>
+        <?php } ?>
         <dt><?= t('Direct URL') ?></dt>
         <dd class="mb-5">
             <input type="text" class="bg-white form-control" readonly onclick="this.select()" value="<?= h($fileVersion->getURL()) ?>">
