@@ -19,5 +19,9 @@
         <field name="includeSearchInput" type="boolean" />
         <field name="searchInputFormActionPageID" type="integer" />
         <field name="includeSwitchLanguage" type="boolean" />
+        <field name="ignorePermissions" type="boolean">
+            <default value="0"/>
+            <notnull/>
+        </field>
     </table>
 </schema>

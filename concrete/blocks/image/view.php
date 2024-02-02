@@ -115,8 +115,8 @@ if (is_object($f) && $f->getFileID()) {
                 $thumb = $im->getThumbnail($f, $maxWidth, $maxHeight, $cropImage);
 
                 $imageTag->setAttribute("src", $thumb->src);
-                $imageTag->setAttribute("width", $thumb->width);
-                $imageTag->setAttribute("height", $thumb->height);
+                $imageTag->setAttribute("width", $thumb->width ?? null);
+                $imageTag->setAttribute("height", $thumb->height ?? null);
 
                 break;
         }

@@ -43,6 +43,9 @@ class Info extends DashboardPageController
 # Concrete Cache Settings
 {$info->getCache()}
 
+# Database Entities Settings
+{$info->getEntities()}
+
 # Server Software
 {$info->getServerSoftware()}
 
