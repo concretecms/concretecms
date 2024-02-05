@@ -65,7 +65,7 @@ if (is_object($f) && $f->getFileID()) {
             case "thumbnails_configurable":
                 $sources = [];
 
-                $breakpointWidth = 0;
+                $width = 0;
 
                 if (!$fallbackSrc) {
                     $fallbackSrc = $f->getURL();
@@ -76,7 +76,7 @@ if (is_object($f) && $f->getFileID()) {
                     foreach ($themeResponsiveImageMap as $themeBreakpointHandle => $themeWidth) {
 
                         if ($breakpointHandle == $themeBreakpointHandle) {
-                            $breakpointWidth = $themeWidth;
+                            $width = $themeWidth;
                             break;
                         }
 
@@ -87,23 +87,23 @@ if (is_object($f) && $f->getFileID()) {
 
                         if ($type instanceof \Concrete\Core\Entity\File\Image\Thumbnail\Type\Type) {
                             $src = $f->getThumbnailURL($type->getBaseVersion());
-                            $width = $type->getBaseVersion()->getWidth();
-                            $height = $type->getBaseVersion()->getHeight();
+                            $widthAttribute = $type->getBaseVersion()->getWidth();
+                            $heightAttribute = $type->getBaseVersion()->getHeight();
                             // If height is not set thumbnail retains original image proportions
-                            if($height == 0) {
-                                $width = $f->getAttribute('width');
-                                $height = $f->getAttribute('height');
+                            if($heightAttribute == 0) {
+                                $widthAttribute = $f->getAttribute('width');
+                                $heightAttribute = $f->getAttribute('height');
                             }
 
                             // Note, the above if statement used to also include $width > 0, but this
                             // was making it so that you couldn't use a thumbnail on the extra small screen size.
                             // I removed this part of the conditional and things seem ok ?! even though I would
                             // have thought this could result in double images. Let's keep an eye on this.
-                            $sources[] = ['src' => $src, 'breakpointWidth' => $breakpointWidth, 'width' => $width,  'height' => $height];
+                            $sources[] = ['src' => $src, 'width' => $width, 'widthAttribute' => $widthAttribute,  'heightAttribute' => $heightAttribute];
                         }
                     } else {
                         // We're displaying the "full size" image at this breakpoint
-                        $sources[] = ['src' => $fallbackSrc, 'width' => $f->getAttribute('width'),  'height' => $f->getAttribute('height')];
+                        $sources[] = ['src' => $fallbackSrc, 'widthAttribute' => $f->getAttribute('width'),  'heightAttribute' => $f->getAttribute('height')];
                     }
                 }
 
