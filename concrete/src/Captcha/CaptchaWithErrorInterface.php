@@ -14,5 +14,5 @@ interface CaptchaWithErrorInterface extends CaptchaInterface
      * @param ErrorList $error
      * @return bool
      */
-    public function checkWithErrorList(ErrorList &$error);
+    public function checkWithErrorList(ErrorList &$error): bool;
 }
