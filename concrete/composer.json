@@ -42,6 +42,7 @@
     "ext-SimpleXML": "*",
     "ext-curl": "*",
     "ext-zip": "*",
+    "psr/cache": "^1",
     "symfony/class-loader": "^3.4",
     "symfony/http-foundation": "^5.2",
     "symfony/routing": "^5.2",
