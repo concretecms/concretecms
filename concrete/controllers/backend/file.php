@@ -790,15 +790,15 @@ class File extends Controller
             try {
                 $url = Url::createFromUrl($u);
             } catch (RuntimeException $x) {
-                throw new UserMessageException(t('The URL "%s" is not valid: %s', $u, $x->getMessage()));
+                throw new UserMessageException(h(t('The URL "%s" is not valid: %s', $u, $x->getMessage())));
             }
             $scheme = (string)$url->getScheme();
             if ($scheme === '') {
-                throw new UserMessageException(t('The URL "%s" is not valid.', $u));
+                throw new UserMessageException(h(t('The URL "%s" is not valid.', $u)));
             }
             $host = trim((string)$url->getHost());
             if (in_array(strtolower($host), ['', '0', 'localhost'], true)) {
-                throw new UserMessageException(t('The URL "%s" is not valid.', $u));
+                throw new UserMessageException(h(t('The URL "%s" is not valid.', $u)));
             }
 
             // If we've already validated this hostname just skip it.
@@ -813,7 +813,7 @@ class File extends Controller
 
             foreach ($ipFormatBlocks as $block) {
                 if (preg_match($block, $host) !== 0) {
-                    throw new UserMessageException(t('The URL "%s" is not valid.', $u));
+                    throw new UserMessageException(h(t('The URL "%s" is not valid.', $u)));
                 }
             }
 
@@ -828,7 +828,7 @@ class File extends Controller
             }
 
             if ($ip !== null && $ip->getRangeType() !== IPRangeType::T_PUBLIC) {
-                throw new UserMessageException(t('The URL "%s" is not valid.', $u));
+                throw new UserMessageException(h(t('The URL "%s" is not valid.', $u)));
             }
 
             $validIps[$host] = $ip->toString();
