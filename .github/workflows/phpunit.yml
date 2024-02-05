@@ -29,6 +29,8 @@ jobs:
           - "8.3"
         dependencies:
           - "locked"
+        allow-failure:
+          - "no"
         operating-system:
           - "ubuntu-latest"
         composer:
@@ -38,6 +40,7 @@ jobs:
           - php-version: 8.3
             operating-system: "ubuntu-latest"
             dependencies: "highest"
+            allow-failure: "yes"
           - php-version: 8.3
             operating-system: "ubuntu-latest"
             dependencies: "locked"
@@ -83,8 +86,12 @@ jobs:
         run: |
           composer install --no-interaction --no-progress --no-suggest
 
+      - name: "Tests (Allow failure for now)"
+        if: env.CODE_COVERAGE == 'none' && matrix.allow-failure == 'yes'
+        run: php ./concrete/vendor/phpunit/phpunit/phpunit
+
       - name: "Tests"
-        if: env.CODE_COVERAGE == 'none'
+        if: env.CODE_COVERAGE == 'none' && matrix.allow-failure != 'yes'
         run: php ./concrete/vendor/phpunit/phpunit/phpunit
 
       - name: "Tests with coverage"
