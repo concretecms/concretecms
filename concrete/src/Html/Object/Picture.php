@@ -90,16 +90,16 @@ class Picture extends Element
 
         foreach ($sources as $source) {
             $path = $source['src'];
-            $width = $source['width'];
+            $widthAttribute = $source['widthAttribute'];
 
-            $height = 0;
-            if(isset($source['height'])) {
-                $height = $source['height'];
+            $heightAttribute = 0;
+            if(isset($source['heightAttribute'])) {
+                $heightAttribute = $source['heightAttribute'];
             }
 
             $breakpointWidth = 0;
-            if(isset($source['breakpointWidth'])) {
-                $breakpointWidth = $source['breakpointWidth'];
+            if(isset($source['width'])) {
+                $breakpointWidth = $source['width'];
             }
 
             $source = Source::create();
@@ -114,8 +114,8 @@ class Picture extends Element
                 $source->media("(min-width: $breakpointWidth)");
             }
 
-            $source->width($width);
-            $source->height($height);
+            $source->width($widthAttribute);
+            $source->height($heightAttribute);
 
             $this->setChild($source);
         }
