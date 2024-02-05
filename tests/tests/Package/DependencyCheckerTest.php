@@ -31,7 +31,7 @@ class DependencyCheckerTest extends TestCase
         self::$checker = self::$app->build(DependencyChecker::class);
     }
 
-    public function installProvider()
+    public static function installProvider()
     {
         $packages = [
             self::createPackage('handle0', '0.1', 'Name 0', []),
@@ -156,7 +156,7 @@ class DependencyCheckerTest extends TestCase
         $this->assertEquals($expectedErrors, $errors);
     }
 
-    public function uninstallProvider()
+    public static function uninstallProvider()
     {
         $packages = [
             self::createPackage('handle0', '0.1', 'Name 0', []),
@@ -219,9 +219,9 @@ class DependencyCheckerTest extends TestCase
      *
      * @return Package
      */
-    private function createPackage($handle, $version, $name, array $packageDependencies)
+    private static function createPackage($handle, $version, $name, array $packageDependencies)
     {
-        $package = $this->getMockForAbstractClass(Package::class, [], '', false);
+        $package = \Mockery::mock(Package::class)->makePartial();
         $reflectionClass = new ReflectionClass($package);
         foreach ([
             'pkgHandle' => $handle,

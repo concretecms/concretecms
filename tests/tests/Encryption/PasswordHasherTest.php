@@ -106,7 +106,7 @@ class PasswordHasherTest extends TestCase
         $this->assertTrue($this->hasher(PASSWORD_BCRYPT)->needsRehash($hash));
     }
 
-    private function testPasswords(): array
+    private static function testPasswords(): array
     {
         return [
             'test' => [
@@ -137,40 +137,40 @@ class PasswordHasherTest extends TestCase
     }
 
 
-    public function portableHashes(): iterable
+    public static function portableHashes(): iterable
     {
-        foreach ($this->testPasswords() as $password => $hashes) {
+        foreach (static::testPasswords() as $password => $hashes) {
             yield [$password, $hashes[0]];
         }
 
         $hasher = new PasswordHash(5, true);
-        foreach (array_keys($this->testPasswords()) as $password) {
+        foreach (array_keys(static::testPasswords()) as $password) {
             yield [$password, $hasher->HashPassword($password)];
         }
     }
 
-    public function bcryptHashes(): iterable
+    public static function bcryptHashes(): iterable
     {
-        foreach ($this->testPasswords() as $password => $hashes) {
+        foreach (self::testPasswords() as $password => $hashes) {
             yield [$password, $hashes[1]];
         }
 
         $hasher = new PasswordHash(5, false);
-        foreach (array_keys($this->testPasswords()) as $password) {
+        foreach (array_keys(static::testPasswords()) as $password) {
             yield [$password, $hasher->HashPassword($password)];
         }
     }
 
-    public function argon2IHashes(): iterable
+    public static function argon2IHashes(): iterable
     {
-        foreach ($this->testPasswords() as $password => $hashes) {
+        foreach (self::testPasswords() as $password => $hashes) {
             yield [$password, $hashes[2]];
         }
     }
 
-    public function argon2IDHashes(): iterable
+    public static function argon2IDHashes(): iterable
     {
-        foreach ($this->testPasswords() as $password => $hashes) {
+        foreach (self::testPasswords() as $password => $hashes) {
             yield [$password, $hashes[3]];
         }
     }

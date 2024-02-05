@@ -91,12 +91,12 @@ abstract class AttributeTestCase extends ConcreteDatabaseTestCase
      *
      * @return array
      */
-    abstract public function attributeValues();
+    abstract public static function attributeValues();
 
     /**
      * Get the test data for the testUnsetAttributes method.
      */
-    abstract public function attributeHandles();
+    abstract public static function attributeHandles();
 
     /**
      *  @dataProvider attributeValues

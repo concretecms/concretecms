@@ -73,7 +73,7 @@ class ZipTest extends TestCase
         }
     }
 
-    public function providerTestZip()
+    public static function providerTestZip()
     {
         return [
             [false, false],

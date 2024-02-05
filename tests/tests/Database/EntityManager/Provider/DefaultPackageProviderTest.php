@@ -50,10 +50,12 @@ class DefaultPackageProviderTest extends TestCase
     public function testGetDriversWithGetPackageEntityPath()
     {
         $package = new PackageControllerWithgetPackageEntityPath($this->app);
+        $this->createPackageFolderOfTestMetadataDriverLegacy($package->getPackageHandle());
+
         $dpp = new DefaultPackageProvider($this->app, $package);
         $drivers = $dpp->getDrivers();
         self::assertIsArray($drivers);
-        $c5Driver = $drivers[0];
+        $c5Driver = $drivers[0] ?? null;
         self::assertInstanceOf('Concrete\Core\Database\EntityManager\Driver\Driver', $c5Driver);
         self::assertInstanceOf('Doctrine\ORM\Mapping\Driver\AnnotationDriver', $c5Driver->getDriver());
         self::assertEquals($package->getNamespace() . '\Src', $c5Driver->getNamespace());
@@ -145,11 +147,11 @@ class DefaultPackageProviderTest extends TestCase
      *
      * @param \Exception $e
      */
-    protected function onNotSuccessfulTest(\Throwable $e):void
+    protected function onNotSuccessfulTest(\Throwable $e): never
     {
         $this->removePackageFolderOfTestMetadataDriverDefault();
-        $this->removePackageFolderOfTestMetadataDriverDefault();
         $this->removePackageFolderOfTestMetadataDriverAdditionalNamespace();
+        parent::onNotSuccessfulTest($e);
     }
 
     private function createPackageFolderOfTestMetadataDriverAdditionalNamespace()
@@ -204,25 +206,35 @@ class DefaultPackageProviderTest extends TestCase
         }
     }
 
-    private function createPackageFolderOfTestMetadataDriverLegacy()
+    private function createPackageFolderOfTestMetadataDriverLegacy($dirName = 'test_metadatadriver_legacy')
     {
-        $this->filesystem->makeDirectory(DIR_BASE . '/' .
-                DIRNAME_PACKAGES .
-                '/test_metadatadriver_legacy');
-        $this->filesystem->makeDirectory(DIR_BASE . '/' .
-                DIRNAME_PACKAGES .
-                '/test_metadatadriver_legacy/' .
-                DIRNAME_CLASSES);
+        $baseDir = DIR_BASE . '/' . DIRNAME_PACKAGES;
+        $this->filesystem->makeDirectory($baseDir . '/' . $dirName);
+        $this->filesystem->makeDirectory($baseDir . '/' . $dirName . '/' . DIRNAME_CLASSES);
     }
 
     private function removePackageFolderOfTestMetadataDriverLegacy()
     {
-        $packagePath = DIR_BASE . '/' .
-                DIRNAME_PACKAGES .
-                '/test_metadatadriver_legacy';
+        $basePath = DIR_BASE . '/' . DIRNAME_PACKAGES;
+        $packagePaths = [
+            $basePath . '/test_metadatadriver_legacy',
+            $basePath . '/test_metadatadriver_legacy_with_getpackageentitypath',
+        ];
 
-        if ($this->filesystem->isDirectory($packagePath)) {
-            $this->filesystem->deleteDirectory($packagePath);
+        foreach ($packagePaths as $packagePath) {
+            if ($this->filesystem->isDirectory($packagePath)) {
+                $this->filesystem->deleteDirectory($packagePath);
+            }
         }
+    }
+
+    /**
+     * @after
+     */
+    public function after()
+    {
+        $this->removePackageFolderOfTestMetadataDriverLegacy();
+        $this->removePackageFolderOfTestMetadataDriverDefault();
+        $this->removePackageFolderOfTestMetadataDriverAdditionalNamespace();
     }
 }

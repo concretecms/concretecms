@@ -171,7 +171,7 @@ class BlockActionTest extends TestCase
 
     }
 
-    public function blockControllerActionRoutingDataProvider()
+    public static function blockControllerActionRoutingDataProvider()
     {
         return [
             ['/ccm/system/block/action/add/123/Main/4/add_form/', 'Concrete\Controller\Backend\Block\Action::add'],

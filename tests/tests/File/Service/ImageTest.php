@@ -39,7 +39,7 @@ class ImageTest extends TestCase
         }
     }
 
-    public function legacyImageCreateDataProvider()
+    public static function legacyImageCreateDataProvider()
     {
         return [
             [
@@ -52,7 +52,7 @@ class ImageTest extends TestCase
                 90, 90, DIR_BASE . '/concrete/themes/elemental/images/background-slider-night-road.png', 90, 90, true,
             ],
             [
-                70, 70, DIR_BASE . '/concrete/config/install/packages/elemental_full/files/balloon.jpg', 70, 70, true,
+                70, 70, DIR_BASE . '/concrete/config/install/packages/elemental/files/balloon.jpg', 70, 70, true,
             ],
         ];
     }

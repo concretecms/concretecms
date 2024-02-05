@@ -191,7 +191,7 @@ class DateTest extends TestCase
     /**
      * @return array
      */
-    public function getTimezoneDataProvider()
+    public static function getTimezoneDataProvider()
     {
         return [
             ['system', new \DateTimeZone('UTC')],

@@ -29,7 +29,7 @@ class NumbersTest extends TestCase
         parent::tearDown();
     }
 
-    public function integerDataProvider()
+    public static function integerDataProvider()
     {
         return [
             [true, '0'],
@@ -71,7 +71,7 @@ class NumbersTest extends TestCase
         $this->assertEquals($expected, $this->object->integer($input1, $min, $max));
     }
 
-    public function numberDataProvider()
+    public static function numberDataProvider()
     {
         return [
             [true, '0'],

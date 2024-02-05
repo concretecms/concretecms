@@ -41,7 +41,7 @@ class FileTest extends TestCase
         }
     }
 
-    public function remoteUrlsToTry(): iterable
+    public static function remoteUrlsToTry(): iterable
     {
         // Local IP
         $simpleIp = '127.0.0.1';

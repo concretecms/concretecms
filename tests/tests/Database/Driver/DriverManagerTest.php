@@ -17,12 +17,13 @@ class DriverManagerTest extends TestCase
 
     public function testConfigLoad()
     {
+        $mock = \Mockery::mock(\Doctrine\DBAL\Driver::class);
         $this->driverManager->configExtensions(
             [
-                'test' => __CLASS__,
+                'test' => $mock::class,
             ]
         );
 
-        $this->assertInstanceOf(__CLASS__, $this->driverManager->driver('test'));
+        $this->assertInstanceOf($mock::class, $this->driverManager->driver('test'));
     }
 }

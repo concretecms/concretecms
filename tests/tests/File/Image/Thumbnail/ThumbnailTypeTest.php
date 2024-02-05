@@ -8,7 +8,7 @@ use Concrete\Tests\TestCase;
 
 class ThumbnailTypeTest extends TestCase
 {
-    public function typeShouldExistForProvider()
+    public static function typeShouldExistForProvider()
     {
         return [
             [100, 100, 10, 10, ThumbnailTypeEntity::RESIZE_PROPORTIONAL, false, true],

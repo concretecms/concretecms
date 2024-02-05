@@ -18,7 +18,7 @@ class FunctionInspectorTest extends TestCase
         self::$functionInspector = Application::getFacadeApplication()->make(FunctionInspector::class);
     }
 
-    public function functionAvailableProvider()
+    public static function functionAvailableProvider()
     {
         return [
             [[], 'not-existing-function', false],

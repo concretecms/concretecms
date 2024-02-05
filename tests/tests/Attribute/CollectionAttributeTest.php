@@ -43,7 +43,7 @@ class CollectionAttributeTest extends AttributeTestCase
         ]);
     }
 
-    public function attributeValues()
+    public static function attributeValues()
     {
         return [
             ['exclude_nav',
@@ -83,7 +83,7 @@ class CollectionAttributeTest extends AttributeTestCase
         ];
     }
 
-    public function attributeIndexTableValues()
+    public static function attributeIndexTableValues()
     {
         return [
             ['exclude_nav',
@@ -101,7 +101,7 @@ class CollectionAttributeTest extends AttributeTestCase
         ];
     }
 
-    public function attributeHandles()
+    public static function attributeHandles()
     {
         return [
             ['exclude_nav'],

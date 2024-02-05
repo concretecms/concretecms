@@ -12,7 +12,7 @@ use Mockery as M;
 
 class MinimumPHPVersionTest extends TestCase
 {
-    public function installProvider(): array
+    public static function installProvider(): array
     {
         return [
             [
@@ -100,7 +100,7 @@ class MinimumPHPVersionTest extends TestCase
         }
     }
 
-    private function createPackage(string $minPHPVersion): Package
+    private static function createPackage(string $minPHPVersion): Package
     {
         $dependencyChecker = M::mock(Application::class);
         /** @var \Mockery\MockInterface $dependencyChecker */

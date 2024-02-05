@@ -25,9 +25,8 @@ jobs:
     strategy:
       matrix:
         php-version:
-          - "7.3"
-          - "7.4"
-          - "8.0"
+          - "8.2"
+          - "8.3"
         dependencies:
           - "locked"
         operating-system:
@@ -36,22 +35,16 @@ jobs:
           - "composer:v2"
 
         include:
-          - php-version: 8.0
+          - php-version: 8.3
             operating-system: "ubuntu-latest"
             dependencies: "highest"
-          - php-version: 7.3
-            operating-system: "ubuntu-latest"
-            dependencies: "locked"
-          - php-version: 8.1
-            operating-system: "ubuntu-latest"
-            dependencies: "locked"
-          - php-version: 8.2
+          - php-version: 8.3
             operating-system: "ubuntu-latest"
             dependencies: "locked"
 
     steps:
       - name: Enable code coverage
-        if: matrix.php-version == '7.4' && startsWith(matrix.operating-system, 'ubuntu') && matrix.dependencies == 'locked' && github.repository_owner == 'concrete5'
+        if: matrix.php-version == '8.3' && startsWith(matrix.operating-system, 'ubuntu') && matrix.dependencies == 'locked' && github.repository_owner == 'concretecms'
         run: printf 'CODE_COVERAGE=pcov\n' >> "$GITHUB_ENV"
 
       - name: "Checkout"

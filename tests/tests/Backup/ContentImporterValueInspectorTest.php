@@ -37,7 +37,7 @@ class ContentImporterValueInspectorTest extends FileStorageTestCase
         $this->assertEquals(7, count($inspector->getInspectionRoutines()));
     }
 
-    public function providerMatchedSimpleValues()
+    public static function providerMatchedSimpleValues()
     {
         return [
             ['{ccm:export:page:/ok/here/we-go}', '/ok/here/we-go', '\Concrete\Core\Backup\ContentImporter\ValueInspector\Item\PageItem'],

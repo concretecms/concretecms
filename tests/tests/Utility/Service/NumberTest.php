@@ -7,7 +7,7 @@ use Concrete\Tests\TestCase;
 
 class NumberTest extends TestCase
 {
-    public function flexRoundDataProvider()
+    public static function flexRoundDataProvider()
     {
         return [
             ['00010.0000', 10],
@@ -31,7 +31,7 @@ class NumberTest extends TestCase
         $this->assertEquals($value, $numberService->flexround($test));
     }
 
-    public function trimDataProvider()
+    public static function trimDataProvider()
     {
         return [
             ['00010.0000', '10'],

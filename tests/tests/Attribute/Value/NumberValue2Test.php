@@ -17,7 +17,7 @@ class NumberValue2Test extends ConcreteDatabaseTestCase
         Value::class,
     ];
 
-    public function renderProvider()
+    public static  function renderProvider()
     {
         return [
             [null, null, ''],

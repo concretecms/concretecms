@@ -17,7 +17,7 @@ class ApacheRulesTest extends TestCase
      */
     private static $prettyUrlRule;
 
-    public function detectPrettyUrlProvider()
+    public static function detectPrettyUrlProvider()
     {
         self::prepareClass();
         $DIR_REL = DIR_REL;
@@ -111,7 +111,7 @@ EOT
         $this->assertSame($found, self::$configurator->hasRule($htaccess, self::$prettyUrlRule));
     }
 
-    public function addPrettyUrlProvider()
+    public static function addPrettyUrlProvider()
     {
         self::prepareClass();
         $DIR_REL = DIR_REL;
@@ -147,7 +147,7 @@ EOT
         $this->assertSame($after, $resulting);
     }
 
-    public function removePrettyUrlProvider()
+    public static function removePrettyUrlProvider()
     {
         self::prepareClass();
         $DIR_REL = DIR_REL;

@@ -244,7 +244,7 @@ class ApplicationDriverTest extends TestCase
      *
      * @return array
      */
-    public function dataProviderTestGetYMLDriver()
+    public static function dataProviderTestGetYMLDriver()
     {
         return [
             ['yml'],
@@ -280,7 +280,7 @@ class ApplicationDriverTest extends TestCase
      *
      * @return array
      */
-    public function dataProviderGetNamespace()
+    public static function dataProviderGetNamespace()
     {
         return [
             ['isLegacy' => true, 'namespace' => 'Application\Src'],
@@ -318,10 +318,12 @@ class ApplicationDriverTest extends TestCase
      *
      * @param \Exception $e
      */
-    protected function onNotSuccessfulTest(\Throwable $e):void
+    protected function onNotSuccessfulTest(\Throwable $e): never
     {
         $this->cleanupFolderSystem();
         $this->cleanupConfig();
+
+        parent::onNotSuccessfulTest($e);
     }
 
     /*

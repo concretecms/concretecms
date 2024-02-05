@@ -11,7 +11,7 @@ use PHPUnit\Framework\TestCase;
 class AttributeViewTest extends TestCase
 {
 
-    public function actionProvider()
+    public static function actionProvider()
     {
         return [
             [

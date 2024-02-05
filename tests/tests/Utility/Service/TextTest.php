@@ -34,7 +34,7 @@ class TextTest extends ConcreteDatabaseTestCase
         parent::tearDown();
     }
 
-    public function asciifyDataProvider()
+    public static function asciifyDataProvider()
     {
         return [
             ['Mixed with English and Germaen', 'Mixed with English and Germän', 'de_DE'],
@@ -47,7 +47,7 @@ class TextTest extends ConcreteDatabaseTestCase
         ];
     }
 
-    public function urlifyDataProvider()
+    public static function urlifyDataProvider()
     {
         return [
             ['jetudie-le-francais', " J'étudie le français "],
@@ -57,7 +57,7 @@ class TextTest extends ConcreteDatabaseTestCase
         ];
     }
 
-    public function shortenDataProvider()
+    public static function shortenDataProvider()
     {
         return [
             ['This is a simple test...', 'This is a simple test case', 24, '...'],
@@ -136,7 +136,7 @@ class TextTest extends ConcreteDatabaseTestCase
         $this->assertEquals($expected, $this->object->wordSafeShortText($input1, $input2, $input3));
     }
 
-    public function autolinkDataProvider()
+    public static function autolinkDataProvider()
     {
         return [
             ['', ''],
