@@ -7,13 +7,16 @@ use Concrete\Core\Support\Facade\Application;
 use Concrete\TestHelpers\Database\EntityManager\Provider\Fixtures\PackageControllerDefault;
 use Concrete\TestHelpers\Database\EntityManager\Provider\Fixtures\PackageControllerYaml;
 use Concrete\Tests\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * PackageProviderFactoryTest.
  *
  * @author Markus Liechti <markus@liechti.io>
- * @group orm_setup
  */
+#[Group('orm_setup')]
+#[CoversClass(\Concrete\Core\Database\EntityManager\Provider\PackageProviderFactory::class)]
 class PackageProviderFactoryTest extends TestCase
 {
     /**
@@ -33,8 +36,6 @@ class PackageProviderFactoryTest extends TestCase
     /**
      * Test PackageProviderFactory if a package controller with no interfaces is passed
      * This is de default behavior.
-     *
-     * @covers \Concrete\Core\Database\EntityManager\Provider\PackageProviderFactory::getEntityManagerProvider
      */
     public function testGetEntityManagerProviderDefaultBehavior()
     {
@@ -46,8 +47,6 @@ class PackageProviderFactoryTest extends TestCase
     /**
      * Test PackageProviderFactory if a package controller with a
      * ProviderInterface interface is passed.
-     *
-     * @covers \Concrete\Core\Database\EntityManager\Provider\PackageProviderFactory::getEntityManagerProvider
      */
     public function testGetEntityManagerProviderWithProviderInterface()
     {
@@ -59,8 +58,6 @@ class PackageProviderFactoryTest extends TestCase
     /*
      * Test PackageProviderFactory if a package controller with a
      * ProviderAggregateInterface is passed
-     *
-     * @covers \Concrete\Core\Database\EntityManager\Provider\PackageProviderFactory::getEntityManagerProvider
      */
 //    public function testGetEntityManagerProviderWithProviderAggregateInterface()
 //    {

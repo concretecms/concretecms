@@ -4,6 +4,7 @@ namespace Concrete\Tests\File\Service;
 
 use Core;
 use Concrete\Tests\TestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class FileTest extends TestCase
 {
@@ -17,7 +18,7 @@ class FileTest extends TestCase
         $this->fileHelper = Core::make('helper/file');
     }
 
-    public function splitFilenameDataProvider()
+    public static function splitFilenameDataProvider()
     {
         return [
             ['simple.txt', ['', 'simple', 'txt']],
@@ -33,11 +34,10 @@ class FileTest extends TestCase
     }
 
     /**
-     * @dataProvider splitFilenameDataProvider
-     *
      * @param mixed $full
      * @param mixed $splitted
      */
+    #[DataProvider('splitFilenameDataProvider')]
     public function testSplitFilename($full, $splitted)
     {
         $this->assertSame($splitted, $this->fileHelper->splitFilename($full));

@@ -5,10 +5,11 @@ namespace Concrete\Tests\File\Image\Thumbnail;
 use Concrete\Core\Entity\File\Image\Thumbnail\Type\Type as ThumbnailTypeEntity;
 use Concrete\Core\File\Image\Thumbnail\Type\Version as ThumbnailTypeVersion;
 use Concrete\Tests\TestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class ThumbnailTypeTest extends TestCase
 {
-    public function typeShouldExistForProvider()
+    public static function typeShouldExistForProvider()
     {
         return [
             [100, 100, 10, 10, ThumbnailTypeEntity::RESIZE_PROPORTIONAL, false, true],
@@ -49,8 +50,6 @@ class ThumbnailTypeTest extends TestCase
     }
 
     /**
-     * @dataProvider typeShouldExistForProvider
-     *
      * @param int|null $thumbnailWidth
      * @param int|null $thumbnailHeight
      * @param int|null $imageWidth
@@ -58,6 +57,7 @@ class ThumbnailTypeTest extends TestCase
      * @param string $sizingMode
      * @param bool $expectedResult
      */
+    #[DataProvider('typeShouldExistForProvider')]
     public function testTypeShouldExistFor($imageWidth, $imageHeight, $thumbnailWidth, $thumbnailHeight, $sizingMode, $upscalingEnabled, $expectedResult)
     {
         $version = new ThumbnailTypeVersion(

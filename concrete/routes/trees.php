@@ -23,7 +23,7 @@ $router->all('/ccm/system/dialogs/tree/node/add/category', '\Concrete\Controller
 $router->all('/ccm/system/dialogs/tree/node/add/category/add_category_node', '\Concrete\Controller\Dialog\Tree\Node\Category\Add::add_category_node');
 
 $router->all('/ccm/system/dialogs/tree/node/add/topic', '\Concrete\Controller\Dialog\Tree\Node\Topic\Add::view');
-$router->all('/ccm/system/dialogs/tree/node/add/topic/add_topic_node', '\Concrete\Controller\Dialog\Tree\Node\Topic\Add::add_topic_node');
+$router->all('/ccm/system/dialogs/tree/node/add/topic/add_topic_node', '\Concrete\Controller\Dialog\Tree\Node\Topic\Add::add_dashboard_page');
 
 $router->all('/ccm/system/dialogs/tree/node/edit/topic', '\Concrete\Controller\Dialog\Tree\Node\Topic\Edit::view');
 $router->all('/ccm/system/dialogs/tree/node/edit/topic/update_topic_node', '\Concrete\Controller\Dialog\Tree\Node\Topic\Edit::update_topic_node');

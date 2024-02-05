@@ -7,13 +7,15 @@ use Concrete\Core\Support\Facade\Application;
 use Concrete\TestHelpers\Database\EntityManager\Provider\Fixtures\PackageControllerYaml;
 use Concrete\TestHelpers\Database\Traits\DirectoryHelpers;
 use Concrete\Tests\TestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * YamlProviderTest.
  *
  * @author Markus Liechti <markus@liechti.io>
- * @group orm_setup
  */
+#[Group('orm_setup')]
 class YamlProviderTest extends TestCase
 {
     use DirectoryHelpers;
@@ -59,11 +61,10 @@ class YamlProviderTest extends TestCase
     /**
      * Test custom mapping location and namespace for YamlProvider.
      *
-     * @dataProvider dataProviderGetDriversAddManuallyLocationAndNamespace
-     *
      * @param mixed $namespace
      * @param mixed $locations
      */
+    #[DataProvider('dataProviderGetDriversAddManuallyLocationAndNamespace')]
     public function testGetDriversAddManuallyLocationAndNamespace($namespace, $locations)
     {
         $yamlProvider = new YamlProvider($this->packageStub, false);
@@ -88,7 +89,7 @@ class YamlProviderTest extends TestCase
         $this->assertEquals(ltrim($namespace, '\\'), $driverNamespace);
     }
 
-    public function dataProviderGetDriversAddManuallyLocationAndNamespace()
+    public static function dataProviderGetDriversAddManuallyLocationAndNamespace()
     {
         return [
             [

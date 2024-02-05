@@ -6,6 +6,7 @@ use Concrete\Core\Validation\SanitizeService;
 use Concrete\Tests\TestCase;
 use Concrete\TestHelpers\Validation\StringableClass;
 use Concrete\TestHelpers\Validation\NonStringableClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 /**
  * FILTER_SANITIZE_STRING is deprecated in PHP 8.1, so we re
@@ -22,9 +23,7 @@ class SanitizeTest extends TestCase
         self::$service = new SanitizeService();
     }
 
-    /**
-     * @dataProvider provideSanitizeStringCases
-     */
+    #[DataProvider('provideSanitizeStringCases')]
     public function testSanitizeString($value)
     {
         if (!defined('FILTER_SANITIZE_STRING')) {
@@ -43,7 +42,7 @@ class SanitizeTest extends TestCase
         $this->assertSame($expected, $actual);
     }
 
-    public function provideSanitizeStringCases(): array
+    public static function provideSanitizeStringCases(): array
     {
         return [
             ['plain text'],

@@ -68,7 +68,7 @@ class SelectValueTest extends AttributeValueTestCase
         return SelectValue::class;
     }
 
-    public function baseAttributeValues()
+    public static function baseAttributeValues()
     {
         return [
             [
@@ -86,7 +86,7 @@ class SelectValueTest extends AttributeValueTestCase
         ];
     }
 
-    public function displayAttributeValues()
+    public static function displayAttributeValues()
     {
         return [
             [
@@ -104,7 +104,7 @@ class SelectValueTest extends AttributeValueTestCase
         ];
     }
 
-    public function plaintextAttributeValues()
+    public static function plaintextAttributeValues()
     {
         return [
             [
@@ -122,7 +122,7 @@ class SelectValueTest extends AttributeValueTestCase
         ];
     }
 
-    public function searchIndexAttributeValues()
+    public static function searchIndexAttributeValues()
     {
         return [
             [

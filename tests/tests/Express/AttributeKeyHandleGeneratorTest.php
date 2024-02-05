@@ -23,7 +23,9 @@ class AttributeKeyHandleGeneratorTest extends ConcreteDatabaseTestCase
     public static function setupBeforeClass():void
     {
         parent::setUpBeforeClass();
-        Category::add('express');
+        if (!Category::getByHandle('express')) {
+            Category::add('express');
+        }
     }
 
     public function testExpressHandleGenerator()

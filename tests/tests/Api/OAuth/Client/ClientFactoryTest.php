@@ -9,7 +9,11 @@ use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Id\UuidGenerator;
 use Mockery as M;
 use Concrete\Tests\TestCase;
+use PHPUnit\Framework\Attributes\After;
+use PHPUnit\Framework\Attributes\Before;
+use PHPUnit\Framework\Attributes\CoversClass;
 
+#[CoversClass(\Concrete\Core\Api\OAuth\Client\ClientFactory::class)]
 class ClientFactoryTest extends TestCase
 {
     protected $app;
@@ -19,9 +23,7 @@ class ClientFactoryTest extends TestCase
     /** @var ClientFactory|\Mockery\Mock */
     protected $factory;
 
-    /**
-     * @before
-     */
+    #[Before]
     public function before():void
     {
         $this->app = M::mock(Application::class);
@@ -47,17 +49,12 @@ class ClientFactoryTest extends TestCase
         $this->uuidGenerator->shouldReceive('generate')->andReturn('uu-i-d');
     }
 
-    /**
-     * @after
-     */
+    #[After]
     public function after(): void
     {
         $this->app = $this->em = $this->uuidGenerator = $this->factory = null;
     }
 
-    /**
-     * @covers \Concrete\Core\Api\OAuth\Client\ClientFactory::generateCredentials
-     */
     public function testCredentials(): void
     {
         $defaultKeyLength = 64;
@@ -89,21 +86,14 @@ class ClientFactoryTest extends TestCase
         self::assertEquals($customSecretLength, strlen($credentials3->getSecret()), 'Custom size secret is the wrong size.');
     }
 
-    /**
-     * @covers \Concrete\Core\Api\OAuth\Client\ClientFactory::generateCredentials
-     * @return void
-     */
-    public function testShortKeysException():void
+    public function testShortKeysException(): void
     {
        $this->expectException(\InvalidArgumentException::class);
        $this->expectExceptionMessage('A key must have a length longer than 16');
        $this->factory->generateCredentials(10, 10);
     }
 
-    /**
-     * @covers \Concrete\Core\Api\OAuth\Client\ClientFactory::createClient
-     */
-    public function testCreateClient():void
+    public function testCreateClient(): void
     {
         $client = $this->factory->createClient(
             'Ritas Toaster',

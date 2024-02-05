@@ -11,6 +11,8 @@ use Concrete\Core\Url\Resolver\Manager\ResolverManagerInterface;
 use Concrete\Core\User\PostLoginLocation;
 use Concrete\Core\Utility\Service\Validation\Numbers;
 use Mockery as M;
+use PHPUnit\Framework\Attributes\After;
+use PHPUnit\Framework\Attributes\Before;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Concrete\Tests\TestCase;
 
@@ -38,9 +40,7 @@ class PostLoginLocationTest extends TestCase
     /** @var PostLoginLocation|\Mockery\MockInterface */
     protected $location;
 
-    /**
-     * @before
-     */
+    #[Before]
     public function prepare()
     {
         $this->config = M::mock(Repository::class);
@@ -59,9 +59,7 @@ class PostLoginLocationTest extends TestCase
             $this->siteService);
     }
 
-    /**
-     * @after
-     */
+    #[After]
     public function destroy()
     {
         $this->config =

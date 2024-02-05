@@ -8,6 +8,8 @@ use Concrete\Core\Session\SessionFactory;
 use Concrete\Core\Session\SessionFactoryInterface;
 use Concrete\Core\Session\Storage\Handler\NativeFileSessionHandler;
 use Concrete\Tests\TestCase;
+use PHPUnit\Framework\Attributes\PreserveGlobalState;
+use PHPUnit\Framework\Attributes\RunInSeparateProcess;
 
 class SessionFactoryTest extends TestCase
 {
@@ -54,10 +56,8 @@ class SessionFactoryTest extends TestCase
         $this->assertInstanceOf('Symfony\Component\HttpFoundation\Session\SessionInterface', $this->request->getSession());
     }
 
-    /**
-     * @runInSeparateProcess
-     * @preserveGlobalState disabled
-     */
+    #[RunInSeparateProcess]
+    #[PreserveGlobalState(false)]
     public function testHandlerConfiguration()
     {
         // Make the private `getSessionHandler` method accessible

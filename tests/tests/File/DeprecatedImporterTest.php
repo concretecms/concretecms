@@ -177,7 +177,7 @@ class DeprecatedImporterTest extends FileStorageTestCase
         $cf = $this->app->make('helper/concrete/file');
         $fh = $this->app->make('helper/file');
         $config = $this->app->make('config');
-        $file = DIR_BASE . '/concrete/config/install/packages/elemental_full/files/123412345678_plants.jpg';
+        $file = DIR_BASE . '/concrete/config/install/packages/elemental/files/123412345678_plants.jpg';
         $humbnailTypes = ThumbnailType::getList();
         foreach ([
             'auto' => ['jpg', IMAGETYPE_JPEG],

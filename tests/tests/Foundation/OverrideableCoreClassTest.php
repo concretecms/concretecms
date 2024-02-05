@@ -5,10 +5,11 @@ namespace Concrete\Tests\Foundation;
 use Concrete\Core\Foundation\Environment;
 use Concrete\Core\Support\Facade\Facade;
 use Concrete\TestHelpers\Foundation\ClassLoaderTestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class OverrideableCoreClassTest extends ClassLoaderTestCase
 {
-    public function coreClassCoreDataProvider()
+    public static function coreClassCoreDataProvider()
     {
         return [
             ['Block\Autonav\Controller', '\Concrete\Block\Autonav\Controller'],
@@ -25,7 +26,7 @@ class OverrideableCoreClassTest extends ClassLoaderTestCase
         ];
     }
 
-    public function coreClassPackageDataProvider()
+    public static function coreClassPackageDataProvider()
     {
         return [
             ['Block\FancyBlock\Controller', 'my_package', '\Concrete\Package\MyPackage\Block\FancyBlock\Controller', '\Concrete\Package\MyPackage\Block\FancyBlock\Controller'],
@@ -36,7 +37,7 @@ class OverrideableCoreClassTest extends ClassLoaderTestCase
         ];
     }
 
-    public function coreClassApplicationDataProvider()
+    public static function coreClassApplicationDataProvider()
     {
         return [
             ['Block\FancyBlock\Controller', '\Application\Block\FancyBlock\Controller', '\Application\Block\FancyBlock\Controller'],
@@ -46,7 +47,7 @@ class OverrideableCoreClassTest extends ClassLoaderTestCase
         ];
     }
 
-    public function overrideableCoreClassCoreDataProvider()
+    public static function overrideableCoreClassCoreDataProvider()
     {
         return [
             ['Core\Captcha\SecurimageController', DIRNAME_CLASSES . '/Captcha/SecurimageController.php', '\Concrete\Core\Captcha\SecurimageController'],
@@ -56,7 +57,7 @@ class OverrideableCoreClassTest extends ClassLoaderTestCase
         ];
     }
 
-    public function overrideableCoreClassPackageDataProvider()
+    public static function overrideableCoreClassPackageDataProvider()
     {
         return [
             ['recaptcha', 'Core\Captcha\RecaptchaController', DIRNAME_CLASSES . '/Captcha/RecaptchaController.php',
@@ -68,7 +69,7 @@ class OverrideableCoreClassTest extends ClassLoaderTestCase
         ];
     }
 
-    public function overrideableCoreClassApplicationOverrideDataProvider()
+    public static function overrideableCoreClassApplicationOverrideDataProvider()
     {
         return [
             ['Job\IndexSearch', DIRNAME_JOBS . '/index_search.php', '\Application\Job\IndexSearch', '\Application\Job\IndexSearch'],
@@ -77,11 +78,10 @@ class OverrideableCoreClassTest extends ClassLoaderTestCase
     }
 
     /**
-     * @dataProvider coreClassCoreDataProvider()
-     *
      * @param mixed $fragment
      * @param mixed $class
      */
+    #[DataProvider('coreClassCoreDataProvider')]
     public function testCoreClassCore($fragment, $class)
     {
         $this->assertEquals($class, core_class($fragment, false));
@@ -91,13 +91,12 @@ class OverrideableCoreClassTest extends ClassLoaderTestCase
     /**
      * Tests both legacy and non-legacy class generation.
      *
-     * @dataProvider coreClassPackageDataProvider()
-     *
      * @param mixed $fragment
      * @param mixed $prefix
      * @param mixed $legacyClass
      * @param mixed $class
      */
+    #[DataProvider('coreClassPackageDataProvider')]
     public function testCoreClassPackage($fragment, $prefix, $legacyClass, $class)
     {
         $legacyPackage = $this->getMockBuilder('Concrete\Core\Package\Package')
@@ -149,12 +148,11 @@ class OverrideableCoreClassTest extends ClassLoaderTestCase
     }
 
     /**
-     * @dataProvider coreClassApplicationDataProvider()
-     *
      * @param mixed $fragment
      * @param mixed $legacyClass
      * @param mixed $class
      */
+    #[DataProvider('coreClassApplicationDataProvider')]
     public function testCoreClassApplication($fragment, $legacyClass, $class)
     {
         \Config::save('app.enable_legacy_src_namespace', false);
@@ -165,12 +163,11 @@ class OverrideableCoreClassTest extends ClassLoaderTestCase
     }
 
     /**
-     * @dataProvider overrideableCoreClassCoreDataProvider()
-     *
      * @param mixed $fragment
      * @param mixed $path
      * @param mixed $class
      */
+    #[DataProvider('overrideableCoreClassCoreDataProvider')]
     public function testOverrideableCoreClassCore($fragment, $path, $class)
     {
         $this->assertEquals($class, overrideable_core_class($fragment, $path, false));
@@ -179,14 +176,13 @@ class OverrideableCoreClassTest extends ClassLoaderTestCase
     /**
      * Tests both legacy and non-legacy class generation.
      *
-     * @dataProvider overrideableCoreClassPackageDataProvider()
-     *
      * @param mixed $pkgHandle
      * @param mixed $fragment
      * @param mixed $path
      * @param mixed $legacyClass
      * @param mixed $class
      */
+    #[DataProvider('overrideableCoreClassPackageDataProvider')]
     public function testOverrideableCoreClassPackage($pkgHandle, $fragment, $path, $legacyClass, $class)
     {
         $legacyPackage = $this->getMockBuilder('Concrete\Core\Package\Package')
@@ -238,13 +234,12 @@ class OverrideableCoreClassTest extends ClassLoaderTestCase
     }
 
     /**
-     * @dataProvider overrideableCoreClassApplicationOverrideDataProvider()
-     *
      * @param mixed $fragment
      * @param mixed $path
      * @param mixed $legacyClass
      * @param mixed $class
      */
+    #[DataProvider('overrideableCoreClassApplicationOverrideDataProvider')]
     public function testOverrideableCoreClassApplicationOverride($fragment, $path, $legacyClass, $class)
     {
         $path = trim($path, '/');

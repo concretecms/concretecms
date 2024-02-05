@@ -174,7 +174,7 @@ class FileImporterTest extends FileStorageTestCase
         $cf = static::$app->make('helper/concrete/file');
         $fh = static::$app->make('helper/file');
         $config = static::$app->make('config');
-        $file = DIR_BASE . '/concrete/config/install/packages/elemental_full/files/123412345678_plants.jpg';
+        $file = DIR_BASE . '/concrete/config/install/packages/elemental/files/123412345678_plants.jpg';
         $humbnailTypes = ThumbnailType::getList();
         foreach ([
             'auto' => ['jpg', IMAGETYPE_JPEG],

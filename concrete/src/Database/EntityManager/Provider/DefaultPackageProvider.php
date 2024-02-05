@@ -23,7 +23,6 @@ class DefaultPackageProvider extends AbstractPackageProvider
      */
     public function getDrivers()
     {
-
         // The support for a custom Entity path location using the method 
         // 'getPackageEntityPath' was removed in version 8.0.0. Even though 
         // packages using this method still will to work in version 8.0.0, please
@@ -32,7 +31,14 @@ class DefaultPackageProvider extends AbstractPackageProvider
 
         // Now, we check to see if no src/ directory exists. If none exists, we return no entity manager
         if (!is_dir($this->pkg->getPackagePath() . '/' . DIRNAME_CLASSES)) {
+            if (defined('FOO')) {
+                dd('ded', $this->pkg->getPackagePath() . '/' . DIRNAME_CLASSES);
+            }
             return array();
+        }
+
+        if (defined('FOO')) {
+            dd($this->pkg->getPackagePath() . '/' . DIRNAME_CLASSES);
         }
 
         $reader = $this->getAnnotationReader();

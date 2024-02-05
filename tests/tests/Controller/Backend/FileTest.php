@@ -7,14 +7,15 @@ namespace Concrete\Tests\Controller\Backend;
 use Concrete\Controller\Backend\File;
 use Concrete\Core\Error\UserMessageException;
 use Concrete\Tests\TestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class FileTest extends TestCase
 {
 
     /**
-     * @dataProvider remoteUrlsToTry
      * @see File::checkRemoteURlsToImport()
      */
+    #[DataProvider('remoteUrlsToTry')]
     public function testCheckRemoteURlsToImport($urls, $exceptionClass = null, $exceptionRegexp = null)
     {
         $controller = new File();
@@ -41,7 +42,7 @@ class FileTest extends TestCase
         }
     }
 
-    public function remoteUrlsToTry(): iterable
+    public static function remoteUrlsToTry(): iterable
     {
         // Local IP
         $simpleIp = '127.0.0.1';
