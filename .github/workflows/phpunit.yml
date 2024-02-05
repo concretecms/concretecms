@@ -29,21 +29,15 @@ jobs:
           - "8.3"
         dependencies:
           - "locked"
-        allow-failure:
-          - "no"
         operating-system:
           - "ubuntu-latest"
         composer:
           - "composer:v2"
 
         include:
-          - php-version: 8.3
-            operating-system: "ubuntu-latest"
-            dependencies: "highest"
-            allow-failure: "yes"
-          - php-version: 8.3
-            operating-system: "ubuntu-latest"
-            dependencies: "locked"
+#          - php-version: 8.3
+#            operating-system: "ubuntu-latest"
+#            dependencies: "highest"
 
     steps:
       - name: Enable code coverage
@@ -86,13 +80,8 @@ jobs:
         run: |
           composer install --no-interaction --no-progress --no-suggest
 
-      - name: "Tests (Allow failure for now)"
-        if: env.CODE_COVERAGE == 'none' && matrix.allow-failure == 'yes'
-        continue-on-error: true
-        run: php ./concrete/vendor/phpunit/phpunit/phpunit
-
       - name: "Tests"
-        if: env.CODE_COVERAGE == 'none' && matrix.allow-failure != 'yes'
+        if: env.CODE_COVERAGE == 'none'
         run: php ./concrete/vendor/phpunit/phpunit/phpunit
 
       - name: "Tests with coverage"
