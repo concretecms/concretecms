@@ -7,6 +7,7 @@ use Concrete\Core\Entity\Attribute\Value\Value\Value;
 use Concrete\TestHelpers\Database\ConcreteDatabaseTestCase;
 use Database;
 use ORM;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class NumberValue2Test extends ConcreteDatabaseTestCase
 {
@@ -41,12 +42,11 @@ class NumberValue2Test extends ConcreteDatabaseTestCase
     }
 
     /**
-     * @dataProvider renderProvider
-     *
      * @param mixed $value
      * @param mixed $expectedGetValue
      * @param mixed $expectedToString
      */
+    #[DataProvider('renderProvider')]
     public function testRender($value, $expectedGetValue, $expectedToString)
     {
         $avID = static::$lastID + 1;

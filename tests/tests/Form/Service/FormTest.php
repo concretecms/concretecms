@@ -5,6 +5,7 @@ namespace Concrete\Tests\Form\Service;
 use Concrete\Core\Http\Request;
 use Core;
 use Concrete\Tests\TestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class FormTest extends TestCase
 {
@@ -959,13 +960,12 @@ class FormTest extends TestCase
     }
 
     /**
-     * @dataProvider providerTestCreateElements
-     *
      * @param mixed $method
      * @param array $args
      * @param mixed $expected
      * @param array $post
      */
+    #[DataProvider('providerTestCreateElements')]
     public function testCreateElements($method, array $args, $expected, array $post = [])
     {
         if (empty($post)) {

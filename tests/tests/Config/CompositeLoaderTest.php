@@ -7,6 +7,7 @@ use Concrete\Core\Config\CompositeLoader;
 use Concrete\Core\Config\LoaderInterface;
 use \Mockery as M;
 use Concrete\Tests\TestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class CompositeLoaderTest extends TestCase
 {
@@ -37,9 +38,7 @@ class CompositeLoaderTest extends TestCase
         $this->loader3 = null;
     }
 
-    /**
-     * @dataProvider simpleFlowMethods
-     */
+    #[DataProvider('simpleFlowMethods')]
     public function testFlowsThrough($method, $args, $return, callable $expect = null)
     {
         $this->loader1->shouldReceive($method)->once()->withArgs($args)->andReturn($return[0]);

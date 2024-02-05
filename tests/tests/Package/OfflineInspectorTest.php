@@ -7,6 +7,7 @@ use Concrete\Core\Package\Offline\Inspector;
 use Concrete\Core\Package\Offline\PackageInfo;
 use Concrete\Core\Support\Facade\Application;
 use Concrete\Tests\TestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class OfflineInspectorTest extends TestCase
 {
@@ -36,11 +37,10 @@ class OfflineInspectorTest extends TestCase
     }
 
     /**
-     * @dataProvider validPackagesProvider
-     *
      * @param string $filename
      * @param array $expectedInfo
      */
+    #[DataProvider('validPackagesProvider')]
     public function testExtractHandle($filename, array $expectedInfo)
     {
         $info = self::$inspector->inspectControllerFile(DIR_TESTS . '/assets/Package/offline/' . $filename);
@@ -49,11 +49,10 @@ class OfflineInspectorTest extends TestCase
     }
 
     /**
-     * @dataProvider validPackagesProvider
-     *
      * @param string $filename
      * @param array $expectedInfo
      */
+    #[DataProvider('validPackagesProvider')]
     public function testExtractVersion($filename, array $expectedInfo)
     {
         $info = self::$inspector->inspectControllerFile(DIR_TESTS . '/assets/Package/offline/' . $filename);
@@ -62,11 +61,10 @@ class OfflineInspectorTest extends TestCase
     }
 
     /**
-     * @dataProvider validPackagesProvider
-     *
      * @param string $filename
      * @param array $expectedInfo
      */
+    #[DataProvider('validPackagesProvider')]
     public function testExtractName($filename, array $expectedInfo)
     {
         $info = self::$inspector->inspectControllerFile(DIR_TESTS . '/assets/Package/offline/' . $filename);
@@ -75,11 +73,10 @@ class OfflineInspectorTest extends TestCase
     }
 
     /**
-     * @dataProvider validPackagesProvider
-     *
      * @param string $filename
      * @param array $expectedInfo
      */
+    #[DataProvider('validPackagesProvider')]
     public function testExtractDescription($filename, array $expectedInfo)
     {
         $info = self::$inspector->inspectControllerFile(DIR_TESTS . '/assets/Package/offline/' . $filename);
@@ -88,11 +85,10 @@ class OfflineInspectorTest extends TestCase
     }
 
     /**
-     * @dataProvider validPackagesProvider
-     *
      * @param string $filename
      * @param array $expectedInfo
      */
+    #[DataProvider('validPackagesProvider')]
     public function testExtractMinimumCoreVersion($filename, array $expectedInfo)
     {
         $info = self::$inspector->inspectControllerFile(DIR_TESTS . '/assets/Package/offline/' . $filename);
@@ -121,11 +117,10 @@ class OfflineInspectorTest extends TestCase
     }
 
     /**
-     * @dataProvider invalidPackagesByFileProvider
-     *
      * @param string $filename
      * @param int $expectedExceptionCode
      */
+    #[DataProvider('invalidPackagesByFileProvider')]
     public function testInvalidPackagesByFile($filename, $expectedExceptionCode)
     {
         try {
@@ -147,11 +142,10 @@ class OfflineInspectorTest extends TestCase
     }
 
     /**
-     * @dataProvider invalidPackagesByContentProvider
-     *
      * @param string $content
      * @param int $expectedExceptionCode
      */
+    #[DataProvider('invalidPackagesByContentProvider')]
     public function testInvalidPackagesByContent($content, $expectedExceptionCode)
     {
         try {

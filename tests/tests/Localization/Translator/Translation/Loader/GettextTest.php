@@ -5,6 +5,7 @@ namespace Concrete\Tests\Localization\Translator\Translation\Loader;
 use Concrete\Core\Localization\Translator\Loader\Gettext;
 use Concrete\Tests\TestCase;
 use Gettext\Languages\Language;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class GettextTest extends TestCase
 {
@@ -18,9 +19,7 @@ class GettextTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider provideActualNumPlurals
-     */
+    #[DataProvider('provideActualNumPlurals')]
     public function testFixingPlurals($actualNumPlurals)
     {
         $localeInfo = Language::getById('fr_FR');

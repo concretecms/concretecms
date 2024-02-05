@@ -5,6 +5,7 @@ namespace Concrete\Tests\Foundation\Environment;
 use Concrete\Core\Foundation\Environment\FunctionInspector;
 use Concrete\Core\Support\Facade\Application;
 use Concrete\Tests\TestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class FunctionInspectorTest extends TestCase
 {
@@ -31,12 +32,11 @@ class FunctionInspectorTest extends TestCase
     }
 
     /**
-     *  @dataProvider functionAvailableProvider
-     *
      * @param mixed $disabledFunctions
      * @param mixed $functionName
      * @param mixed $expected
      */
+    #[DataProvider('functionAvailableProvider')]
     public function testFunctionAvailable($disabledFunctions, $functionName, $expected)
     {
         self::$functionInspector->setDisabledFunctions($disabledFunctions);

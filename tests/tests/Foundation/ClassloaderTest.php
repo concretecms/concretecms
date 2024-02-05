@@ -5,6 +5,7 @@ namespace Concrete\Tests\Foundation;
 use Concrete\Core\Foundation\ClassLoader;
 use Concrete\Core\Package\Package;
 use Concrete\TestHelpers\Foundation\ClassLoaderTestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class ClassloaderTest extends ClassLoaderTestCase
 {
@@ -39,11 +40,10 @@ class ClassloaderTest extends ClassLoaderTestCase
     }
 
     /**
-     * @dataProvider aliasesClassesDataProvider
-     *
      * @param mixed $a
      * @param mixed $b
      */
+    #[DataProvider('aliasesClassesDataProvider')]
     public function testClassAliases($a, $b)
     {
         // We still need to enable class loaders here otherwise the aliases won't work
@@ -176,23 +176,21 @@ class ClassloaderTest extends ClassLoaderTestCase
     }
 
     /**
-     * @dataProvider coreClassesDataProvider
-     *
      * @param mixed $class
      */
+    #[DataProvider('coreClassesDataProvider')]
     public function testCoreClassExists($class)
     {
         $this->assertTrue($this->classExists($class), sprintf('Class %s failed to load', $class));
     }
 
     /**
-     * @dataProvider applicationClassesDataProvider
-     *
      * @param mixed $file
      * @param mixed $destination
      * @param mixed $class
      * @param mixed $exists
      */
+    #[DataProvider('applicationClassesDataProvider')]
     public function testApplicationCoreOverrideAutoloader($file, $destination, $class, $exists = true)
     {
         $destination = trim($destination, '/');
@@ -208,13 +206,12 @@ class ClassloaderTest extends ClassLoaderTestCase
     }
 
     /**
-     * @dataProvider applicationClassesLegacyDataProvider
-     *
      * @param mixed $file
      * @param mixed $destination
      * @param mixed $class
      * @param mixed $exists
      */
+    #[DataProvider('applicationClassesLegacyDataProvider')]
     public function testApplicationLegacyAutoloader($file, $destination, $class, $exists = true)
     {
         $destination = trim($destination, '/');
@@ -233,13 +230,12 @@ class ClassloaderTest extends ClassLoaderTestCase
     }
 
     /**
-     * @dataProvider applicationClassesLegacyCustomNamespaceDataProvider
-     *
      * @param mixed $namespace
      * @param mixed $file
      * @param mixed $destination
      * @param mixed $class
      */
+    #[DataProvider('applicationClassesLegacyCustomNamespaceDataProvider')]
     public function testApplicationLegacyCustomNamespaceAutoloader($namespace, $file, $destination, $class)
     {
         $destination = trim($destination, '/');
@@ -255,14 +251,13 @@ class ClassloaderTest extends ClassLoaderTestCase
     }
 
     /**
-     * @dataProvider packageClassesDataProvider
-     *
      * @param mixed $pkgHandle
      * @param mixed $file
      * @param mixed $destination
      * @param mixed $class
      * @param mixed $exists
      */
+    #[DataProvider('packageClassesDataProvider')]
     public function testPackageAutoloader($pkgHandle, $file, $destination, $class, $exists = true)
     {
         $destination = trim($destination, '/');
@@ -293,14 +288,13 @@ class ClassloaderTest extends ClassLoaderTestCase
     }
 
     /**
-     * @dataProvider packageClassesLegacyDataProvider
-     *
      * @param mixed $pkgHandle
      * @param mixed $file
      * @param mixed $destination
      * @param mixed $class
      * @param mixed $exists
      */
+    #[DataProvider('packageClassesLegacyDataProvider')]
     public function testPackageLegacyAutoloader($pkgHandle, $file, $destination, $class, $exists = true)
     {
         $destination = trim($destination, '/');
@@ -331,14 +325,13 @@ class ClassloaderTest extends ClassLoaderTestCase
     }
 
     /**
-     * @dataProvider packageCustomAutoloadersDataProvider
-     *
      * @param mixed $package
      * @param mixed $file
      * @param mixed $destination
      * @param mixed $classes
      * @param mixed $exists
      */
+    #[DataProvider('packageCustomAutoloadersDataProvider')]
     public function testPackageCustomAutoloaders($package, $file, $destination, $classes, $exists = true)
     {
         $destination = trim($destination, '/');

@@ -6,6 +6,7 @@ use Concrete\Core\Attribute\Type as AttributeType;
 use Concrete\TestHelpers\Database\ConcreteDatabaseTestCase;
 use Core;
 use Database;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 abstract class AttributeTestCase extends ConcreteDatabaseTestCase
 {
@@ -99,14 +100,13 @@ abstract class AttributeTestCase extends ConcreteDatabaseTestCase
     abstract public static function attributeHandles();
 
     /**
-     *  @dataProvider attributeValues
-     *
      * @param \Concrete\Core\Attribute\AttributeKeyInterface|string $handle
      * @param mixed $first
      * @param mixed $second
      * @param null|mixed $firstStatic
      * @param null|mixed $secondStatic
      */
+    #[DataProvider('attributeValues')]
     public function testSetAttribute($handle, $first, $second, $firstStatic = null, $secondStatic = null)
     {
         $this->getAttributeObjectForSet()->setAttribute($handle, $first);
@@ -119,14 +119,13 @@ abstract class AttributeTestCase extends ConcreteDatabaseTestCase
     }
 
     /**
-     *  @dataProvider attributeValues
-     *
      * @param \Concrete\Core\Attribute\AttributeKeyInterface|string $handle
      * @param mixed $first
      * @param mixed $second
      * @param null|mixed $firstStatic
      * @param null|mixed $secondStatic
      */
+    #[DataProvider('attributeValues')]
     public function testResetAttributes($handle, $first, $second, $firstStatic = null, $secondStatic = null)
     {
         $object = $this->getAttributeObjectForSet();
@@ -145,12 +144,11 @@ abstract class AttributeTestCase extends ConcreteDatabaseTestCase
     }
 
     /**
-     *  @dataProvider attributeIndexTableValues
-     *
      * @param \Concrete\Core\Attribute\AttributeKeyInterface|string $handle
      * @param mixed $value
      * @param mixed $columns
      */
+    #[DataProvider('attributeIndexTableValues')]
     public function testReindexing($handle, $value, $columns)
     {
         $object = $this->getAttributeObjectForSet();
@@ -168,10 +166,9 @@ abstract class AttributeTestCase extends ConcreteDatabaseTestCase
     }
 
     /**
-     *  @dataProvider attributeHandles
-     *
      * @param string $handle
      */
+    #[DataProvider('attributeHandles')]
     public function testUnsetAttributes($handle)
     {
         $object = $this->getAttributeObjectForSet();

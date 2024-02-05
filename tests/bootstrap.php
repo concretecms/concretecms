@@ -3,8 +3,6 @@
 use Concrete\Core\Http\Request;
 use Illuminate\Filesystem\Filesystem;
 use PHPUnit\Framework\Error\Notice;
-use Whoops\Handler\PlainTextHandler;
-use Whoops\Run;
 
 // Fix for phpstorm + tests run in separate processes
 if (!defined('PHPUNIT_COMPOSER_INSTALL')) {

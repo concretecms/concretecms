@@ -5,6 +5,7 @@ namespace Concrete\Tests\Backup;
 use Concrete\Core\File\Import\FileImporter;
 use Concrete\TestHelpers\File\FileStorageTestCase;
 use Core;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class ContentImporterValueInspectorTest extends FileStorageTestCase
 {
@@ -50,12 +51,11 @@ class ContentImporterValueInspectorTest extends FileStorageTestCase
     }
 
     /**
-     * @dataProvider providerMatchedSimpleValues
-     *
      * @param mixed $content
      * @param mixed $reference
      * @param mixed $itemClass
      */
+    #[DataProvider('providerMatchedSimpleValues')]
     public function testMatchedSimpleValues($content, $reference, $itemClass)
     {
         $inspector = Core::make('import/value_inspector');

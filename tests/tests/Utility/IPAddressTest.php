@@ -3,6 +3,7 @@
 namespace Concrete\Tests\Utility;
 
 use Concrete\Tests\TestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class IPAddressTest extends TestCase
 {
@@ -47,11 +48,10 @@ class IPAddressTest extends TestCase
     }
 
     /**
-     * @dataProvider loopbackDataProvider
-     *
      * @param mixed $ip
      * @param mixed $expected
      */
+    #[DataProvider('loopbackDataProvider')]
     public function testLoopback($ip, $expected)
     {
         $this->assertEquals($expected, $this->object->setIp($ip)->isLoopback());
@@ -81,11 +81,10 @@ class IPAddressTest extends TestCase
     }
 
     /**
-     * @dataProvider privateDataProvider
-     *
      * @param mixed $ip
      * @param mixed $expected
      */
+    #[DataProvider('privateDataProvider')]
     public function testPrivate($ip, $expected)
     {
         $this->assertEquals($expected, $this->object->setIp($ip)->isPrivate());
@@ -111,11 +110,10 @@ class IPAddressTest extends TestCase
     }
 
     /**
-     * @dataProvider linkedLocalDataProvider
-     *
      * @param mixed $ip
      * @param mixed $expected
      */
+    #[DataProvider('linkedLocalDataProvider')]
     public function testLinkedLocal($ip, $expected)
     {
         $this->assertEquals($expected, $this->object->setIp($ip)->isLinkLocal());
@@ -142,11 +140,10 @@ class IPAddressTest extends TestCase
     }
 
     /**
-     * @dataProvider ipTypeDataProvider
-     *
      * @param mixed $ip
      * @param mixed $expected
      */
+    #[DataProvider('ipTypeDataProvider')]
     public function testIpType($ip, $expected)
     {
         $this->object->setIp($ip);

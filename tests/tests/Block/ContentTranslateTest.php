@@ -4,6 +4,7 @@ namespace Concrete\Tests\Block;
 
 use Concrete\Core\Editor\LinkAbstractor;
 use Concrete\TestHelpers\Database\ConcreteDatabaseTestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class ContentTranslateTest extends ConcreteDatabaseTestCase
 {
@@ -26,11 +27,10 @@ class ContentTranslateTest extends ConcreteDatabaseTestCase
     /**
      * This is saving data from the content editor HTML INTO the database.
      *
-     *  @dataProvider contentsTo
-     *
      * @param mixed $from
      * @param mixed $to
      */
+    #[DataProvider('contentsTo')]
     public function testTo($from, $to)
     {
         $translated = LinkAbstractor::translateTo($from);
@@ -40,11 +40,10 @@ class ContentTranslateTest extends ConcreteDatabaseTestCase
     /**
      * This is taking data OUT of the database and sending it into the content editor.
      *
-     * @dataProvider contentsFromEditMode
-     *
      * @param mixed $to
      * @param mixed $from
      */
+    #[DataProvider('contentsFromEditMode')]
     public function testFromEditMode($to, $from)
     {
         $translated = LinkAbstractor::translateFromEditMode($from);
@@ -54,11 +53,10 @@ class ContentTranslateTest extends ConcreteDatabaseTestCase
     /**
      * This is taking data OUT of the database and sending it into the page.
      *
-     *  @dataProvider contentsFrom
-     *
      * @param mixed $from
      * @param mixed $to
      */
+    #[DataProvider('contentsFrom')]
     public function testFrom($from, $to)
     {
         $translated = LinkAbstractor::translateFrom($from);

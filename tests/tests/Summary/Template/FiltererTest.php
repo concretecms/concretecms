@@ -14,6 +14,7 @@ use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Mockery as M;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class FiltererTest extends TestCase
 {
@@ -40,9 +41,7 @@ class FiltererTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider templatesProvider
-     */
+    #[DataProvider('templatesProvider')]
     public function testGetTemplates($templateData, $collectionFields, $expectedFilteredTemplateHandles)
     {
         $entityManager = M::mock(EntityManager::class);

@@ -4,6 +4,7 @@ namespace Concrete\Tests\File\Service;
 
 use Core;
 use Concrete\Tests\TestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class FileTest extends TestCase
 {
@@ -33,11 +34,10 @@ class FileTest extends TestCase
     }
 
     /**
-     * @dataProvider splitFilenameDataProvider
-     *
      * @param mixed $full
      * @param mixed $splitted
      */
+    #[DataProvider('splitFilenameDataProvider')]
     public function testSplitFilename($full, $splitted)
     {
         $this->assertSame($splitted, $this->fileHelper->splitFilename($full));

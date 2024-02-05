@@ -6,6 +6,7 @@ use Concrete\Core\File\StorageLocation\Configuration\LocalConfiguration;
 use Concrete\Core\Support\Facade\Application;
 use Concrete\TestHelpers\File\Service\Fixtures\TestStorageLocation;
 use Concrete\Tests\TestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class ImageTest extends TestCase
 {
@@ -58,8 +59,6 @@ class ImageTest extends TestCase
     }
 
     /**
-     * @dataProvider legacyImageCreateDataProvider
-     *
      * @param mixed $expectedWidth
      * @param mixed $expectedHeight
      * @param mixed $path
@@ -67,6 +66,7 @@ class ImageTest extends TestCase
      * @param mixed $height
      * @param mixed $fit
      */
+    #[DataProvider('legacyImageCreateDataProvider')]
     public function testLegacyImageCreate($expectedWidth, $expectedHeight, $path, $width, $height, $fit = false)
     {
         $sl = $this->storageLocation;

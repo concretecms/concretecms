@@ -8,6 +8,7 @@ use Concrete\Core\Routing\MatchedRoute;
 use Concrete\Core\Routing\Router;
 use Concrete\Core\Support\Facade\Application as ApplicationFacade;
 use Concrete\Tests\TestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Throwable;
 
@@ -34,12 +35,12 @@ class CheckRoutesTest extends TestCase
         return $result;
     }
 
-    /** @dataProvider routeDestinationProvider
-     *
+    /**
      * @param $app Application
      * @param $path string
      * @param $callable mixed
      */
+    #[DataProvider('routeDestinationProvider')]
     public function testRouteDestination(Application $app, $path, $callable)
     {
         $checked = false;
@@ -89,9 +90,7 @@ class CheckRoutesTest extends TestCase
         return $result;
     }
 
-    /**
-     * @dataProvider provideRouteWithDefaultParameters
-     */
+    #[DataProvider('provideRouteWithDefaultParameters')]
     public function testRouteWithArguments(Application $app, bool $requestArgumentValue, bool $requestWithTrailingSlash, bool $routeWithTrailingShash, bool $routeWithDefaultArgumentValue): void
     {
         $router = $app->build(Router::class);

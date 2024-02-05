@@ -10,6 +10,7 @@ use Concrete\Core\Package\Dependency\VersionMismatchException;
 use Concrete\Core\Package\Package;
 use Concrete\Core\Support\Facade\Application;
 use Concrete\Tests\TestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 use ReflectionClass;
 use ReflectionException;
 
@@ -143,12 +144,11 @@ class DependencyCheckerTest extends TestCase
     }
 
     /**
-     * @dataProvider installProvider
-     *
      * @param Package $package
      * @param array $installedPackages
      * @param array $expectedErrors
      */
+    #[DataProvider('installProvider')]
     public function testTestForInstall(Package $package, array $installedPackages, array $expectedErrors = [])
     {
         self::$checker->setInstalledPackages($installedPackages);
@@ -198,12 +198,11 @@ class DependencyCheckerTest extends TestCase
     }
 
     /**
-     * @dataProvider uninstallProvider
-     *
      * @param Package $package
      * @param array $otherInstalledPackages
      * @param array $expectedErrors
      */
+    #[DataProvider('uninstallProvider')]
     public function testTestForUninstall(Package $package, array $otherInstalledPackages, array $expectedErrors = [])
     {
         self::$checker->setInstalledPackages(array_merge([$package], $otherInstalledPackages));

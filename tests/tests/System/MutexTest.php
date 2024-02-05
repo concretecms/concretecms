@@ -11,6 +11,7 @@ use Concrete\Core\System\Mutex\MutexInterface;
 use Concrete\Core\System\Mutex\SemaphoreMutex;
 use Exception;
 use Concrete\Tests\TestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Throwable;
 
 class MutexTest extends TestCase
@@ -26,11 +27,10 @@ class MutexTest extends TestCase
     }
 
     /**
-     * @dataProvider mutexProvider
-     *
      * @param string $mutexClass
      * @param Application $app
      */
+    #[DataProvider('mutexProvider')]
     public function testMutex(Application $app, $mutexClass)
     {
         $isSupported = $mutexClass . '::isSupported';
@@ -157,12 +157,11 @@ class MutexTest extends TestCase
     }
 
     /**
-     * @dataProvider mutexConfigurationProvider
-     *
      * @param \Concrete\Core\Application\Application $app
      * @param array $mutexConfig
      * @param string $expectedClassName
      */
+    #[DataProvider('mutexConfigurationProvider')]
     public function testMutexConfiguration(Application $app, array $mutexConfig, $expectedClassName)
     {
         $config = $app->make('config');

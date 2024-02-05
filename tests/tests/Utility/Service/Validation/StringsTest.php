@@ -3,6 +3,7 @@
 namespace Concrete\Tests\Utility\Service\Validation;
 
 use Concrete\Tests\TestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 use stdClass;
 
 class StringsTest extends TestCase
@@ -265,127 +266,116 @@ class StringsTest extends TestCase
     }
 
     /**
-     * @dataProvider emailDataProvider
-     *
      * @param mixed $expected
      * @param mixed $email
      * @param mixed $mxValidation
      */
+    #[DataProvider('emailDataProvider')]
     public function testEmail($expected, $email, $mxValidation)
     {
         $this->assertEquals($expected, $this->object->email($email, $mxValidation));
     }
 
     /**
-     * @dataProvider alphanumDataProvider
-     *
      * @param mixed $expected
      * @param mixed $value
      * @param mixed $allowSpaces
      * @param mixed $allowDashes
      */
+    #[DataProvider('alphanumDataProvider')]
     public function testAlphaNum($expected, $value, $allowSpaces = false, $allowDashes = false)
     {
         $this->assertEquals($expected, $this->object->alphanum($value, $allowSpaces, $allowDashes));
     }
 
     /**
-     * @dataProvider handleDataProvider
-     *
      * @param mixed $expected
      * @param mixed $value
      */
+    #[DataProvider('handleDataProvider')]
     public function testHandle($expected, $value)
     {
         $this->assertEquals($expected, $this->object->handle($value));
     }
 
     /**
-     * @dataProvider notEmptyDataProvider
-     *
      * @param mixed $expected
      * @param mixed $value
      */
+    #[DataProvider('notEmptyDataProvider')]
     public function testNotEmpty($expected, $value)
     {
         $this->assertEquals($expected, $this->object->notempty($value));
     }
 
     /**
-     * @dataProvider minDataProvider
-     *
      * @param mixed $expected
      * @param mixed $string
      * @param mixed $minLength
      */
+    #[DataProvider('minDataProvider')]
     public function testMin($expected, $string, $minLength)
     {
         $this->assertEquals($expected, $this->object->min($string, $minLength));
     }
 
     /**
-     * @dataProvider maxDataProvider
-     *
      * @param mixed $expected
      * @param mixed $string
      * @param mixed $maxLength
      */
+    #[DataProvider('maxDataProvider')]
     public function testMax($expected, $string, $maxLength)
     {
         $this->assertEquals($expected, $this->object->max($string, $maxLength));
     }
 
     /**
-     * @dataProvider containsNumberDataProvider
-     *
      * @param mixed $expected
      * @param mixed $string
      */
+    #[DataProvider('containsNumberDataProvider')]
     public function testContainsNumber($expected, $string)
     {
         $this->assertEquals($expected, $this->object->containsNumber($string));
     }
 
     /**
-     * @dataProvider containsUpperCaseDataProvider
-     *
      * @param mixed $expected
      * @param mixed $string
      */
+    #[DataProvider('containsUpperCaseDataProvider')]
     public function testContainsUpperCase($expected, $string)
     {
         $this->assertEquals($expected, $this->object->containsUpperCase($string));
     }
 
     /**
-     * @dataProvider containsLowerCaseDataProvider
-     *
      * @param mixed $expected
      * @param mixed $string
      */
+    #[DataProvider('containsLowerCaseDataProvider')]
     public function testContainsLowerCase($expected, $string)
     {
         $this->assertEquals($expected, $this->object->containsLowerCase($string));
     }
 
     /**
-     * @dataProvider containsSymbolDataProvider
-     *
      * @param mixed $expected
      * @param mixed $string
      */
+    #[DataProvider('containsSymbolDataProvider')]
     public function testContainsSymbol($expected, $string)
     {
         $this->assertEquals($expected, $this->object->containsSymbol($string));
     }
 
     /**
-     * @dataProvider isValidRegexProvider
-     *
      * @param bool $expected
      * @param string|mixed $pattern
      * @param bool $includesDelimiters
      */
+    #[DataProvider('isValidRegexProvider')]
     public function testIsValidRegex($expected, $pattern, $includesDelimiters)
     {
         if ($pattern === 'self') {

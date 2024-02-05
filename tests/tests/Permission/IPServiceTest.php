@@ -13,6 +13,7 @@ use Concrete\TestHelpers\Database\ConcreteDatabaseTestCase;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use IPLib\Factory as IPFactory;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class IPServiceTest extends ConcreteDatabaseTestCase
 {
@@ -75,10 +76,9 @@ class IPServiceTest extends ConcreteDatabaseTestCase
     }
 
     /**
-     * @dataProvider automaticBanEnabledProvider
-     *
      * @param mixed $allowedAttempts
      */
+    #[DataProvider('automaticBanEnabledProvider')]
     public function testAutomaticBanEnabled($allowedAttempts)
     {
         $this->category

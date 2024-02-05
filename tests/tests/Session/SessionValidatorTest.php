@@ -10,11 +10,10 @@ use Doctrine\ORM\EntityManagerInterface;
 use IPLib\Address\AddressInterface;
 use IPLib\Factory;
 use IPLib\ParseStringFlag;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use Symfony\Component\HttpFoundation\Session\Session;
 
-/**
- * @runTestsInSeparateProcesses
- */
+#[RunTestsInSeparateProcesses]
 class SessionValidatorTest extends TestCase
 {
     protected $preserveGlobalState = false;

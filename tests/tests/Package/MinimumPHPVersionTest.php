@@ -9,6 +9,7 @@ use Concrete\Core\Package\Package;
 use Concrete\TestHelpers\Package\PackageForTestingPHPVersion;
 use Concrete\Tests\TestCase;
 use Mockery as M;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class MinimumPHPVersionTest extends TestCase
 {
@@ -86,9 +87,7 @@ class MinimumPHPVersionTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider installProvider
-     */
+    #[DataProvider('installProvider')]
     public function testTestForInstall(Package $package, bool $shouldInstall)
     {
         $actual = $package->testForInstall(false);

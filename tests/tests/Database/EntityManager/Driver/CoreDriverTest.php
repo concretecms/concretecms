@@ -5,13 +5,14 @@ namespace Concrete\Tests\Database\EntityManager\Driver;
 use Concrete\Core\Database\EntityManager\Driver\CoreDriver;
 use Concrete\Core\Support\Facade\Application;
 use Concrete\Tests\TestCase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * CoreDriverTest.
  *
  * @author Markus Liechti <markus@liechti.io>
- * @group orm_setup
  */
+#[Group('orm_setup')]
 class CoreDriverTest extends TestCase
 {
     /**

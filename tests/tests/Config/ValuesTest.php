@@ -3,6 +3,7 @@
 namespace Concrete\Tests\Config;
 
 use Concrete\Tests\TestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class ValuesTest extends TestCase
 {
@@ -21,12 +22,11 @@ class ValuesTest extends TestCase
     }
 
     /**
-     * @dataProvider provideConfiguredAliases
-     *
      * @param string $configKey
      * @param string $alias
      * @param string $classFromConfig
      */
+    #[DataProvider('provideConfiguredAliases')]
     public function testConfiguredAliases($configKey, $alias, $classFromConfig)
     {
         $alias = ltrim($alias, '\\');

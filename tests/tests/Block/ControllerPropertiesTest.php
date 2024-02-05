@@ -9,6 +9,7 @@ use DoctrineXml\Parser;
 use Doctrine\DBAL\Schema\Column;
 use Doctrine\DBAL\Schema\Table;
 use Doctrine\DBAL\Types\Types;
+use PHPUnit\Framework\Attributes\DataProvider;
 use ReflectionClass;
 
 class ControllerPropertiesTest extends TestCase
@@ -45,9 +46,7 @@ class ControllerPropertiesTest extends TestCase
         return $result;
     }
 
-    /**
-     * @dataProvider provideBlocksWithDB
-     */
+    #[DataProvider('provideBlocksWithDB')]
     public function testBlockControllerDefinesDBFields(string $dirname): void
     {
         $dbFile = FILENAME_BLOCK_DB;

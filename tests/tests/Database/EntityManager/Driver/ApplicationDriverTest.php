@@ -6,13 +6,17 @@ use Concrete\Core\Database\EntityManager\Driver\ApplicationDriver;
 use Concrete\Core\Support\Facade\Application;
 use Illuminate\Filesystem\Filesystem;
 use Concrete\Tests\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * ApplicationDriverTest.
  *
  * @author Markus Liechti <markus@liechti.io>
- * @group orm_setup
  */
+#[Group('orm_setup')]
+#[CoversClass(\Concrete\Core\Database\EntityManager\Driver\ApplicationDriver::class)]
 class ApplicationDriverTest extends TestCase
 {
     /**
@@ -56,8 +60,6 @@ class ApplicationDriverTest extends TestCase
      * - empty CONFIG_ORM_METADATA_APPLICATION config setting
      * - a present application/src/Entity folder.
      *
-     * @covers \Concrete\Core\Database\EntityManager\Driver\ApplicationDriver::getDriver
-     *
      * @throws \Exception
      */
     public function testGetDefaultDriver()
@@ -83,8 +85,6 @@ class ApplicationDriverTest extends TestCase
 
     /**
      * Test default application driver with no folder at application/src/Entity.
-     *
-     * @covers \Concrete\Core\Database\EntityManager\Driver\ApplicationDriver::getDriver
      */
     public function testFailingGetDefaultDriverWithNoEntityDirectory()
     {
@@ -99,8 +99,6 @@ class ApplicationDriverTest extends TestCase
      * - empty CONFIG_ORM_METADATA_APPLICATION config setting
      * - a present application/src folder
      * - and config 'app.enable_legacy_src_namespace' = true.
-     *
-     * @covers \Concrete\Core\Database\EntityManager\Driver\ApplicationDriver::getDriver
      *
      * @throws \Exception
      */
@@ -128,8 +126,6 @@ class ApplicationDriverTest extends TestCase
      * - CONFIG_ORM_METADATA_APPLICATION = xml
      * - a existing application/src/Entity folder
      * - a existing application/config/xml.
-     *
-     * @covers \Concrete\Core\Database\EntityManager\Driver\ApplicationDriver::getDriver
      *
      * @throws \Exception
      */
@@ -161,8 +157,6 @@ class ApplicationDriverTest extends TestCase
 
     /**
      * Failing test for XMLDriver with missing application/config/xml directory.
-     *
-     * @covers \Concrete\Core\Database\EntityManager\Driver\ApplicationDriver::getDriver
      */
     public function testFailingGetXMLDriverWithNoConfigXMLDirectory()
     {
@@ -184,13 +178,11 @@ class ApplicationDriverTest extends TestCase
      * - a existing application/src/Entity folder
      * - a existing application/config/yaml.
      *
-     * @dataProvider dataProviderTestGetYMLDriver
-     * @covers \Concrete\Core\Database\EntityManager\Driver\ApplicationDriver::getDriver
-     *
      * @param string $setting
      *
      * @throws \Exception
      */
+    #[DataProvider('dataProviderTestGetYMLDriver')]
     public function testGetYMLDriver($setting)
     {
         // prepare
@@ -220,11 +212,9 @@ class ApplicationDriverTest extends TestCase
     /**
      * Failing test for XMLDriver with missing application/config/yaml directory.
      *
-     * @dataProvider dataProviderTestGetYMLDriver
-     * @covers \Concrete\Core\Database\EntityManager\Driver\ApplicationDriver::getDriver
-     *
      * @param string $setting
      */
+    #[DataProvider('dataProviderTestGetYMLDriver')]
     public function testFailingGetYMLDriverWithNoConfigYamlDirectory($setting)
     {
         $this->configRepository->set(CONFIG_ORM_METADATA_APPLICATION, $setting);
@@ -255,12 +245,10 @@ class ApplicationDriverTest extends TestCase
     /**
      * Test namespace.
      *
-     * @dataProvider dataProviderGetNamespace
-     * @covers \Concrete\Core\Database\EntityManager\Driver\ApplicationDriver::getNamespace
-     *
      * @param bool $isLegacy
      * @param string $namespace
      */
+    #[DataProvider('dataProviderGetNamespace')]
     public function testGetNamespace($isLegacy, $namespace)
     {
         if ($isLegacy) {

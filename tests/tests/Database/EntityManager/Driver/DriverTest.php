@@ -5,17 +5,20 @@ namespace Concrete\Tests\Database\EntityManager\Driver;
 use Concrete\Core\Database\EntityManager\Driver\Driver;
 use Doctrine\ORM\Mapping\Driver\YamlDriver;
 use Concrete\Tests\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * DriverTest.
  *
  * @author Markus Liechti <markus@liechti.io>
- * @group orm_setup
  */
+#[Group('orm_setup')]
+#[CoversClass(Driver::class)]
 class DriverTest extends TestCase
 {
     /**
-     * @var \Concrete\Core\Database\EntityManager\Driver\Driver
+     * @var Driver
      */
     protected $driver;
 
@@ -26,17 +29,11 @@ class DriverTest extends TestCase
         $this->driver = new Driver('Test\Namespace', $driver);
     }
 
-    /**
-     * @covers \Concrete\Core\Database\EntityManager\Driver\Driver::getDriver
-     */
     public function testGetDriver()
     {
         $this->assertInstanceOf('Doctrine\Persistence\Mapping\Driver\MappingDriver', $this->driver->getDriver());
     }
 
-    /**
-     * @covers \Concrete\Core\Database\EntityManager\Driver\Driver::getNamespace
-     */
     public function testGetNamespace()
     {
         $this->assertEquals('Test\Namespace', $this->driver->getNamespace());

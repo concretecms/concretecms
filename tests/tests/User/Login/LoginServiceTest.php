@@ -15,6 +15,7 @@ use Concrete\Core\User\Login\LoginService;
 use Concrete\Tests\User\Login\MockUser;
 use Mockery as M;
 use Concrete\Tests\TestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class LoginServiceTest extends TestCase
 {
@@ -42,9 +43,7 @@ class LoginServiceTest extends TestCase
         $this->assertTrue($result->isErrorCalled);
     }
 
-    /**
-     * @dataProvider loginErrors
-     */
+    #[DataProvider('loginErrors')]
     public function testLoginWithError($errorNum, $exceptionClass, $emailRegistration = false, $messageFormat = null)
     {
         $config = M::mock(Repository::class);

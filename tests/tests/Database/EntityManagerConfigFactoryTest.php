@@ -4,13 +4,15 @@ namespace Concrete\Tests\Database;
 
 use Concrete\Core\Support\Facade\Application;
 use Concrete\Tests\TestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * EntityManagerConfigFactoryTest.
  *
  * @author Markus Liechti <markus@liechti.io>
- * @group orm_setup
  */
+#[Group('orm_setup')]
 class EntityManagerConfigFactoryTest extends TestCase
 {
     /**
@@ -121,10 +123,9 @@ class EntityManagerConfigFactoryTest extends TestCase
      * Test the metadata implementation for entities located under application/src/Entity with YAML driver
      * In this case the folder application/config/xml is not present so it will fallback to default.
      *
-     * @dataProvider dataProviderGetConfigurationWithApplicationYmlDriver
-     *
      * @param string|int $setting
      */
+    #[DataProvider('dataProviderGetConfigurationWithApplicationYmlDriver')]
     public function testGetConfigurationWithApplicationYmlDriverFallbackToDefault($setting)
     {
         $entityManagerConfigFactory = $this->getEntityManagerFactoryWithStubConfigRepository($setting);
@@ -159,10 +160,9 @@ class EntityManagerConfigFactoryTest extends TestCase
      * Test the metadata implementation for entities located under application/src with Xml driver
      * In this case the folder application/config/xml is not present so it will fallback to default.
      *
-     * @dataProvider dataProviderGetConfigurationWithApplicationXmlDriver
-     *
      * @param string|int $setting
      */
+    #[DataProvider('dataProviderGetConfigurationWithApplicationXmlDriver')]
     public function testGetConfigurationWithApplicationXmlDriverFallbackToDefault($setting)
     {
         $entityManagerConfigFactory = $this->getEntityManagerFactoryWithStubConfigRepository($setting);

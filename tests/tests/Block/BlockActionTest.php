@@ -17,6 +17,7 @@ use Concrete\Core\Routing\Router;
 use Concrete\Core\Routing\SystemRouteList;
 use Concrete\Core\Support\Facade\Facade;
 use Concrete\Tests\TestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\Routing\Matcher\UrlMatcher;
 use Symfony\Component\Routing\RequestContext;
@@ -181,9 +182,9 @@ class BlockActionTest extends TestCase
         ];
     }
     /**
-     * @dataProvider blockControllerActionRoutingDataProvider
      * Test block routing to the add action method.
      */
+    #[DataProvider('blockControllerActionRoutingDataProvider')]
     public function testBlockControllerActionRouting($path, $class)
     {
         $router = new Router(new RouteCollection(), new RouteActionFactory());

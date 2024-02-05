@@ -8,6 +8,7 @@ use Concrete\Core\Localization\Translator\Adapter\Plain\TranslatorAdapterFactory
 use Concrete\Core\Localization\Translator\TranslatorAdapterRepository;
 use Concrete\Core\Support\Facade\Facade;
 use Concrete\Tests\TestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 /**
  * Tests for:
@@ -200,9 +201,7 @@ class DateTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider getTimezoneDataProvider
-     */
+    #[DataProvider('getTimezoneDataProvider')]
     public function testGetTimezone($timezone, $expected)
     {
         $date = new Date();

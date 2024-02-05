@@ -5,16 +5,13 @@ namespace Concrete\Tests\Config\Driver\Redis;
 use Concrete\Core\Config\Driver\Redis\RedisSaver;
 use Mockery as M;
 use Concrete\Tests\TestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Depends;
 
-/**
- * @depends Concrete\Tests\Config\Driver\Redis\RedisPaginatedTraitTest::testPaginatedScan
- */
 class RedisSaverTest extends TestCase
 {
 
-    /**
-     * @dataProvider namespacesToTest
-     */
+    #[DataProvider('namespacesToTest')]
     public function testSave($namespace)
     {
         $this->markTestSkipped('Something about these tests is broken. Not sure if it is latest PHP or the redis extension but these tests are way too precarious.');

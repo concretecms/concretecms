@@ -8,6 +8,7 @@ use Concrete\Core\Support\Facade\Application;
 use Illuminate\Filesystem\Filesystem;
 use Mockery;
 use Concrete\Tests\TestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class SanitizerTest extends TestCase
 {
@@ -69,8 +70,8 @@ class SanitizerTest extends TestCase
     /**
      * @param string $input
      * @param string $expectedOutput
-     * @dataProvider provideSanitizeWithDefaultSettings
      */
+    #[DataProvider('provideSanitizeWithDefaultSettings')]
     public function testSanitizeWithDefaultSettings($input, $expectedOutput)
     {
         $sanitized = self::$sanitizer->sanitizeData($input, self::$sanitizerOptions);
@@ -98,11 +99,9 @@ class SanitizerTest extends TestCase
     }
 
     /**
-     *
-     *
      * @param mixed $invalidSvgData
-     * @dataProvider provideInvalidData
      */
+    #[DataProvider('provideInvalidData')]
     public function testInvalidData($invalidSvgData)
     {
         $this->expectException(\Concrete\Core\File\Image\Svg\SanitizerException::class);

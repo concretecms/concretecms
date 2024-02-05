@@ -4,6 +4,7 @@ namespace Concrete\Tests\Validation;
 
 use Concrete\Core\Validation\BannedWord\Service;
 use Concrete\Tests\TestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class BannedWordTest extends TestCase
 {
@@ -27,10 +28,10 @@ EOT;
 EOT;
 
     /**
-     * @dataProvider matchBannedWordsProvider
      * @param string $bannedWord
      * @param string $string
      */
+    #[DataProvider('matchBannedWordsProvider')]
     public function testHasBannedWord(string $bannedWord, string $string): void
     {
         $service = new Service();
@@ -52,10 +53,10 @@ EOT;
     }
 
     /**
-     * @dataProvider doesNotMatchBannedWordsProvider
      * @param string $bannedWord
      * @param string $string
      */
+    #[DataProvider('doesNotMatchBannedWordsProvider')]
     public function testHasNotBannedWord(string $bannedWord, string $string): void
     {
         $service = new Service();
@@ -72,10 +73,10 @@ EOT;
     }
 
     /**
-     * @dataProvider invalidBannedWordsProvider
      * @param string $bannedWord
      * @param string $string
      */
+    #[DataProvider('invalidBannedWordsProvider')]
     public function testEscapeBannedWord(string $bannedWord, string $string): void
     {
         $service = new Service();

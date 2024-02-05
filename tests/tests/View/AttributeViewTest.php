@@ -6,6 +6,7 @@ use Concrete\Core\Attribute\AttributeKeyInterface;
 use Concrete\Core\Attribute\View;
 use Concrete\Core\Entity\Attribute\Type as AttributeType;
 use Mockery;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
 class AttributeViewTest extends TestCase
@@ -28,8 +29,8 @@ class AttributeViewTest extends TestCase
     /**
      * @param array $arguments
      * @param string $expectedResult
-     * @dataProvider actionProvider
      */
+    #[DataProvider('actionProvider')]
     public function testAction(array $arguments, $expectedResult)
     {
         $attributeType = Mockery::mock(AttributeType::class);

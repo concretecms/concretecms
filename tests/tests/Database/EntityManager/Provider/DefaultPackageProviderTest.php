@@ -11,13 +11,17 @@ use Concrete\TestHelpers\Database\EntityManager\Provider\Fixtures\PackageControl
 use Concrete\TestHelpers\Database\Traits\DirectoryHelpers;
 use Illuminate\Filesystem\Filesystem;
 use Concrete\Tests\TestCase;
+use PHPUnit\Framework\Attributes\After;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * PackageProviderFactoryTest.
  *
  * @author Markus Liechti <markus@liechti.io>
- * @group orm_setup
  */
+#[Group('orm_setup')]
+#[CoversClass(\Concrete\Core\Database\EntityManager\Provider\DefaultPackageProvider::class)]
 class DefaultPackageProviderTest extends TestCase
 {
     use DirectoryHelpers;
@@ -44,8 +48,6 @@ class DefaultPackageProviderTest extends TestCase
 
     /**
      * Test packages with removed getPackageEntityPath() method.
-     *
-     * @covers \Concrete\Core\Database\EntityManager\Provider\DefaultPackageProvider::getDrivers
      */
     public function testGetDriversWithGetPackageEntityPath()
     {
@@ -63,8 +65,6 @@ class DefaultPackageProviderTest extends TestCase
 
     /**
      * Test package with default driver and not existing source directory.
-     *
-     * @covers \Concrete\Core\Database\EntityManager\Provider\DefaultPackageProvider::getDrivers
      */
     public function testGetDriversWithNoExistingSrcDirectory()
     {
@@ -77,8 +77,6 @@ class DefaultPackageProviderTest extends TestCase
 
     /**
      * Covers real word case of a package with $appVersionRequired < 8.0.0.
-     *
-     * @covers \Concrete\Core\Database\EntityManager\Provider\DefaultPackageProvider::getDrivers
      */
     public function testGetDriversWithPackageWithLegacyNamespaceAndLegacyAnnotationReader()
     {
@@ -97,8 +95,6 @@ class DefaultPackageProviderTest extends TestCase
 
     /**
      * Covers real word case of a package with $appVersionRequired >= 8.0.0.
-     *
-     * @covers \Concrete\Core\Database\EntityManager\Provider\DefaultPackageProvider::getDrivers
      */
     public function testGetDriversWithPackageWithDefaultNamespaceAndDefaultAnnotationReader()
     {
@@ -118,8 +114,6 @@ class DefaultPackageProviderTest extends TestCase
 
     /**
      * Covers package with additional namespaces and with $appVersionRewuired >= 8.0.0.
-     *
-     * @covers \Concrete\Core\Database\EntityManager\Provider\DefaultPackageProvider::getDrivers
      */
     public function testGetDriversWithPackageWithAdditionalNamespaces()
     {
@@ -228,9 +222,7 @@ class DefaultPackageProviderTest extends TestCase
         }
     }
 
-    /**
-     * @after
-     */
+    #[After]
     public function after()
     {
         $this->removePackageFolderOfTestMetadataDriverLegacy();

@@ -11,6 +11,7 @@ use Loader;
 use Page;
 use PageTemplate;
 use PageType;
+use PHPUnit\Framework\Attributes\DataProvider;
 use SinglePage;
 
 class PageTest extends PageTestCase
@@ -160,11 +161,10 @@ class PageTest extends PageTestCase
     }
 
     /**
-     * @dataProvider pageNames
-     *
      * @param mixed $name
      * @param mixed $special
      */
+    #[DataProvider('pageNames')]
     public function testPageNames($name, $special)
     {
         $page = self::createPage($name);

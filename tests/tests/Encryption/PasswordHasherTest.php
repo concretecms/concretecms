@@ -8,6 +8,7 @@ use Concrete\Core\Config\Repository\Repository;
 use Concrete\Core\Encryption\PasswordHasher;
 use Concrete\Core\Legacy\PasswordHash;
 use Concrete\Tests\TestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class PasswordHasherTest extends TestCase
 {
@@ -31,25 +32,19 @@ class PasswordHasherTest extends TestCase
         return new PasswordHasher($config);
     }
 
-    /**
-     * @dataProvider portableHashes
-     */
+    #[DataProvider('portableHashes')]
     public function testPortableHashesSucceed(string $password, string $hash)
     {
         $this->assertTrue($this->hasher()->checkPassword($password, $hash));
     }
 
-    /**
-     * @dataProvider bcryptHashes
-     */
+    #[DataProvider('bcryptHashes')]
     public function testBcryptHashesSucceed(string $password, string $hash)
     {
         $this->assertTrue($this->hasher()->checkPassword($password, $hash));
     }
 
-    /**
-     * @dataProvider argon2IHashes
-     */
+    #[DataProvider('argon2IHashes')]
     public function testArgon2IHashesSucceed(string $password, string $hash)
     {
         if (!defined('PASSWORD_ARGON2I')) {
@@ -59,9 +54,7 @@ class PasswordHasherTest extends TestCase
         $this->assertTrue($this->hasher()->checkPassword($password, $hash));
     }
 
-    /**
-     * @dataProvider argon2IDHashes
-     */
+    #[DataProvider('argon2IDHashes')]
     public function testArgon2IDHashesSucceed(string $password, string $hash)
     {
         if (!defined('PASSWORD_ARGON2ID')) {
@@ -71,17 +64,13 @@ class PasswordHasherTest extends TestCase
         $this->assertTrue($this->hasher()->checkPassword($password, $hash));
     }
 
-    /**
-     * @dataProvider portableHashes
-     */
+    #[DataProvider('portableHashes')]
     public function testPortableRehash(string $password, string $hash)
     {
         $this->assertTrue($this->hasher()->needsRehash($hash));
     }
 
-    /**
-     * @dataProvider bcryptHashes
-     */
+    #[DataProvider('bcryptHashes')]
     public function testBcryptRehash(string $password, string $hash)
     {
         [, $cost,] = explode('$', $hash);
@@ -97,9 +86,7 @@ class PasswordHasherTest extends TestCase
         $this->assertTrue($this->hasher(PASSWORD_ARGON2I)->needsRehash($hash));
     }
 
-    /**
-     * @dataProvider argon2IHashes
-     */
+    #[DataProvider('argon2IHashes')]
     public function testArgonPasswordRehash(string $password, string $hash)
     {
         $this->assertFalse($this->hasher(PASSWORD_ARGON2I)->needsRehash($hash));

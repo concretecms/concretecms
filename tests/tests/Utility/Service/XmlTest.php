@@ -8,6 +8,7 @@ use Concrete\Core\Utility\Service\Xml;
 use Concrete\Tests\TestCase;
 use DateTimeImmutable;
 use DateTimeInterface;
+use PHPUnit\Framework\Attributes\DataProvider;
 use SimpleXMLElement;
 
 class XmlTest extends TestCase
@@ -57,9 +58,7 @@ class XmlTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider provideBooleanValuesCases
-     */
+    #[DataProvider('provideBooleanValuesCases')]
     public function testGetBooleanValues(string $xml, bool $expected, string $childName = '', bool $isDefaultFallback = false): void
     {
         $element = $this->parseXml($xml);
@@ -99,9 +98,7 @@ class XmlTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider provideBooleanAttributeCases
-     */
+    #[DataProvider('provideBooleanAttributeCases')]
     public function testGetBooleanAttributes(string $xml, string $attributeName, bool $expected, bool $isDefaultFallback = false): void
     {
         $element = $this->parseXml($xml);
@@ -149,10 +146,9 @@ class XmlTest extends TestCase
     }
 
     /**
-     * @dataProvider proviteCreateElementData
-     *
      * @param mixed $data
      */
+    #[DataProvider('proviteCreateElementData')]
     public function testCreateElement($data, string $expectedXml, int $flags = 0): void
     {
         $parent = $this->parseXml('<parent />');

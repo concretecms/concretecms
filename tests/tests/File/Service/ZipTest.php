@@ -6,6 +6,7 @@ use Core;
 use Exception;
 use Illuminate\Filesystem\Filesystem;
 use Concrete\Tests\TestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class ZipTest extends TestCase
 {
@@ -84,11 +85,10 @@ class ZipTest extends TestCase
     }
 
     /**
-     * @dataProvider providerTestZip
-     *
      * @param mixed $useNativeCommands
      * @param mixed $includeDotFiles
      */
+    #[DataProvider('providerTestZip')]
     public function testZip($useNativeCommands, $includeDotFiles)
     {
         if ($this->fileSystemProblem !== null) {

@@ -3,6 +3,7 @@
 namespace Concrete\Tests\Service;
 
 use Concrete\Tests\TestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class ApacheRulesTest extends TestCase
 {
@@ -101,11 +102,10 @@ EOT
     }
 
     /**
-     *  @dataProvider detectPrettyUrlProvider
-     *
      * @param mixed $found
      * @param mixed $htaccess
      */
+    #[DataProvider('detectPrettyUrlProvider')]
     public function testDetectPrettyUrl($found, $htaccess)
     {
         $this->assertSame($found, self::$configurator->hasRule($htaccess, self::$prettyUrlRule));
@@ -136,11 +136,10 @@ EOT
     }
 
     /**
-     *  @dataProvider addPrettyUrlProvider
-     *
      * @param mixed $before
      * @param mixed $after
      */
+    #[DataProvider('addPrettyUrlProvider')]
     public function testAddPrettyUrl($before, $after)
     {
         $resulting = self::$configurator->addRule($before, self::$prettyUrlRule);
@@ -172,11 +171,10 @@ EOT
     }
 
     /**
-     *  @dataProvider removePrettyUrlProvider
-     *
      * @param mixed $before
      * @param mixed $after
      */
+    #[DataProvider('removePrettyUrlProvider')]
     public function testRemovePrettyUrl($before, $after)
     {
         $resulting = self::$configurator->removeRule($before, self::$prettyUrlRule);
