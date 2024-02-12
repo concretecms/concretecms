@@ -34,7 +34,7 @@ jobs:
       - name: Install Node
         uses: actions/setup-node@v1
         with:
-          node-version: "10"
+          node-version: "16"
       - name: Install Grunt
         run: npm -g install grunt
       - name: Install dependencies

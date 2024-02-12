@@ -11,8 +11,18 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - name: Build
-        run: nvm i 7 && nvm use 7 && npm --global install grunt@1.0 && cd build/ && npm ci && grunt build-release
+      - name: Install Node
+        uses: actions/setup-node@v1
+        with:
+          node-version: "16"
+      - name: Install Grunt
+        run: npm -g install grunt
+      - name: Install dependencies
+        run: cd build && npm ci && cd ..
+      - name: Setup Composer
+        run: sudo composer selfupdate --1
+      - name: Build Release
+        run: cd build/ && grunt build-release
       - name: Upload Archive
         run: gh release upload ${{ github.event.release.tag_name }} build/${{ env.ARCHIVE_BASENAME }}.zip#archive
       - name: Upload Remote Update Archive

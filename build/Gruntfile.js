@@ -497,7 +497,7 @@ module.exports = function(grunt) {
         '<%= DIR_BASE %>/concrete/css/account.css': '<%= DIR_BASE %>/concrete/css/build/core/account.less',
         '<%= DIR_BASE %>/concrete/css/fancytree.css': '<%= DIR_BASE %>/concrete/css/build/vendor/jquery-fancytree/fancytree-bootstrap.less',
         '<%= DIR_BASE %>/concrete/css/sitemap.css': '<%= DIR_BASE %>/concrete/css/build/core/sitemap.less',
-        '<%= DIR_BASE %>/concrete/css/duration.css': '<%= DIR_BASE %>/concrete/css/build/core/date-time-duration.less',
+        '<%= DIR_BASE %>/concrete/css/duration.css': '<%= DIR_BASE %>/concrete/css/build/core/duration.less',
         '<%= DIR_BASE %>/concrete/css/file-manager.css': '<%= DIR_BASE %>/concrete/css/build/core/file-manager.less',
         '<%= DIR_BASE %>/concrete/css/conversations.css': '<%= DIR_BASE %>/concrete/css/build/core/conversations.less',
         '<%= DIR_BASE %>/concrete/css/gathering/display.css': '<%= DIR_BASE %>/concrete/css/build/core/gathering/display.less',
@@ -604,9 +604,17 @@ module.exports = function(grunt) {
 
     // Append webpack steps
     jsTargets.release.push('env:prod');
-    jsTargets.release.push('webpack:prod');
+    // Note: webpack/laravel mix does not work post update to laravel mix 6. This update HAS to
+    // Happen in order to make our build process work with modern tools. Let's leave this broken
+    // for now and comment out webpack prod an webpack dev because the only thing we need this
+    // for is building our user avatar picker (webpack/mix was mostly proof of concept in v8).
+    // Vue, laravel mix and webpack are used extensively in v9, but that uses a completely
+    // different set of build tools.
+    // tldr: Unless we have to update the user avatar picker for some reason in v8, we can leave
+    // these commented out for now.
+    //jsTargets.release.push('webpack:prod');
     jsTargets.debug.push('env:dev');
-    jsTargets.debug.push('webpack:dev');
+    //jsTargets.debug.push('webpack:dev');
 
 
     // Let's define the less section (for generating CSS files)
