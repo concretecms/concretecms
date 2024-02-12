@@ -1,9 +1,1 @@
-div.ccm-date-time-duration-wrapper {
-  position: relative;
-}
-div.ccm-date-time-duration-wrapper a.ccm-date-time-duration-delete {
-  position: absolute;
-  top: 0px;
-  right: 0px;
-  z-index: 2000;
-}
+div.ccm-date-time-duration-wrapper{position:relative}div.ccm-date-time-duration-wrapper a.ccm-date-time-duration-delete{position:absolute;top:0;right:0;z-index:2000}div.some-never-matching-rule-to-test-travis-ci-building-less-files-automatically{display:initial}

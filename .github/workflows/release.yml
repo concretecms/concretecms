@@ -12,7 +12,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
       - name: Build
-        run: nvm i 7 && nvm use 7 && npm --global install grunt@1.0 && cd build/ && npm ci && grunt build-release
+        run: composer selfupdate --1 && nvm i 7 && nvm use 7 && npm --global install grunt@1.0 && cd build/ && npm ci && grunt build-release
       - name: Upload Archive
         run: gh release upload ${{ github.event.release.tag_name }} build/${{ env.ARCHIVE_BASENAME }}.zip#archive
       - name: Upload Remote Update Archive
