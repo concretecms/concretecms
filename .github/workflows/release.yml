@@ -19,8 +19,6 @@ jobs:
         run: npm -g install grunt
       - name: Install dependencies
         run: cd build && npm ci && cd ..
-      - name: Setup Composer
-        run: composer selfupdate --1
       - name: Build Release
         run: cd build/ && grunt build-release
       - name: Upload Archive
