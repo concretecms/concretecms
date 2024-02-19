@@ -47,7 +47,7 @@ if ($skin) {
                     <input type="radio" class="form-check-input" name="pTemplateID" :id="template.pTemplateID" :value="template.pTemplateID" v-model="selectedTemplateID" />
                     <label class="form-check-label" :for="template.pTemplateID">
                         <span v-html="template.pTemplateIconImage"></span>
-                        {{template.pTemplateDisplayName}}
+                        {{template.pTemplateName}}
                     </label>
                 </div>
 
