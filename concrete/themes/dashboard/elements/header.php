@@ -27,7 +27,7 @@ $frontendPageID = $u->getPreviousFrontendPageID();
 if (!$frontendPageID) {
     $backLink = DIR_REL . '/';
 } else {
-    $backLink = Url::to(Page::getByID($frontendPageID));
+    $backLink = URL::to(Page::getByID($frontendPageID));
 }
 
 $show_titles = (bool) $config->get('concrete.accessibility.toolbar_titles');
