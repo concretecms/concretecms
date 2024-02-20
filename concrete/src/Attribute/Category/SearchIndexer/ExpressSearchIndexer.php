@@ -28,7 +28,7 @@ class ExpressSearchIndexer extends StandardSearchIndexer
         $isValid = parent::isValid($category);
 
         // Express category without a persisted entity are not valid for indexing
-        if ($isValid && $category instanceof ExpressCategory && $category->getExpressEntity()->getId() === null) {
+        if ($isValid && $category instanceof ExpressCategory && $category->getExpressEntity()->getHandle() === null) {
             $isValid = false;
         }
 
