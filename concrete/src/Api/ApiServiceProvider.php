@@ -15,6 +15,7 @@ use Concrete\Core\Entity\OAuth\UserRepository;
 use Concrete\Core\Entity\User\User;
 use Concrete\Core\Foundation\Service\Provider as ServiceProvider;
 use Concrete\Core\Routing\Router;
+use DateInterval;
 use Doctrine\ORM\EntityManagerInterface;
 use League\OAuth2\Server\AuthorizationServer;
 use League\OAuth2\Server\Grant\AuthCodeGrant;
@@ -28,17 +29,18 @@ use League\OAuth2\Server\Repositories\ScopeRepositoryInterface;
 use League\OAuth2\Server\Repositories\UserRepositoryInterface;
 use League\OAuth2\Server\ResourceServer;
 use League\OAuth2\Server\ResponseTypes\ResponseTypeInterface;
-use phpseclib\Crypt\RSA;
 use League\OAuth2\Server\Grant\ClientCredentialsGrant;
-use League\OAuth2\Server\CryptKey;
 
 class ApiServiceProvider extends ServiceProvider
 {
-
     const KEY_PRIVATE = 'privatekey';
+
     const KEY_PUBLIC = 'publickey';
 
-    private $keyPair;
+    /**
+     * @var \Concrete\Core\Api\CryptKeyFactory|null
+     */
+    private $cryptKeyFactory;
 
     /**
      * Register API related stuff
@@ -47,16 +49,84 @@ class ApiServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $config = $this->app->make("config");
-        if ($this->app->isInstalled() && $config->get('concrete.api.enabled')) {
+        $this->app->singleton(ScopeRegistryInterface::class, static function() {
+            return new ScopeRegistry();
+        });
+        if ($this->app->isInstalled() && $this->app->make('config')->get('concrete.api.enabled')) {
             $router = $this->app->make(Router::class);
             $list = new ApiRouteList();
             $list->loadRoutes($router);
             $this->registerAuthorizationServer();
         }
-        $this->app->singleton(ScopeRegistryInterface::class, function() {
-            return new ScopeRegistry();
+    }
+
+    /**
+     * Register the authorization and authentication server classes
+     */
+    protected function registerAuthorizationServer()
+    {
+        // The ResourceServer deals with authenticating requests, in other words validating tokens
+        $this->app->bind(ResourceServer::class, function() {
+            return $this->app->build(ResourceServer::class, [
+                $this->app->make(AccessTokenRepositoryInterface::class),
+                $this->getCryptKey(static::KEY_PUBLIC),
+                $this->app->make(DefaultValidator::class)
+            ]);
         });
+
+        // AuthorizationServer on the other hand deals with authorizing a session with a username and password and key and secret
+        $this->app->when(AuthorizationServer::class)->needs('$privateKey')->give(function() {
+            return $this->getCryptKey(static::KEY_PRIVATE);
+        });
+        $this->app->when(AuthorizationServer::class)->needs('$publicKey')->give(function() {
+            return $this->getCryptKey(static::KEY_PUBLIC);
+        });
+        $this->app->when(AuthorizationServer::class)->needs(ResponseTypeInterface::class)->give(function() {
+            return $this->app->make(IdTokenResponse::class);
+        });
+        $this->app->extend(AuthorizationServer::class, function (AuthorizationServer $server) {
+            $server->setEncryptionKey($this->app->make('config/database')->get('concrete.security.token.encryption'));
+            $oneHourTTL = new DateInterval('PT1H');
+            $oneDayTTL = new DateInterval('P1D');
+            $config = $this->app->make('config');
+            if ($config->get('concrete.api.grant_types.password_credentials')) {
+                $server->enableGrantType($this->app->make(PasswordGrant::class), $oneHourTTL);
+            }
+            if ($config->get('concrete.api.grant_types.client_credentials')) {
+                $server->enableGrantType($this->app->make(ClientCredentialsGrant::class), $oneHourTTL);
+            }
+            if ($config->get('concrete.api.grant_types.authorization_code')) {
+                $server->enableGrantType($this->app->make(AuthCodeGrant::class, ['authCodeTTL' => $oneDayTTL]), $oneDayTTL);
+            }
+            if ($config->get('concrete.api.grant_types.refresh_token')) {
+                $server->enableGrantType($this->app->make(RefreshTokenGrant::class), $oneHourTTL);
+            }
+
+            return $server;
+        });
+
+        // Register OAuth stuff
+        $this->app->bind(AccessTokenRepositoryInterface::class, $this->repositoryFor(AccessToken::class));
+        $this->app->bind(AuthCodeRepositoryInterface::class, $this->repositoryFor(AuthCode::class));
+        $this->app->bind(ClientRepositoryInterface::class, $this->repositoryFor(Client::class));
+        $this->app->bind(RefreshTokenRepositoryInterface::class, $this->repositoryFor(RefreshToken::class));
+        $this->app->bind(ScopeRepositoryInterface::class, $this->repositoryFor(Scope::class));
+        $this->app->bind(UserRepositoryInterface::class, $this->repositoryFactory(UserRepository::class, User::class));
+    }
+
+    /**
+     * Get a key by handle
+     *
+     * @param string $handle ApiServiceProvider::KEY_PRIVATE | ApiServiceProvider::KEY_PUBLIC
+     *
+     * @return \League\OAuth2\Server\CryptKey
+     */
+    private function getCryptKey($handle)
+    {
+        if ($this->cryptKeyFactory === null) {
+            $this->cryptKeyFactory = $this->app->make(CryptKeyFactory::class);
+        }
+        return $this->cryptKeyFactory->getCryptKey($handle);
     }
 
     private function repositoryFactory($factoryClass, $entityClass)
@@ -79,102 +149,4 @@ class ApiServiceProvider extends ServiceProvider
             return $em->getRepository($class);
         };
     }
-
-    /**
-     * Generate new RSA keys if needed
-     * @return string[] ['privatekey' => '...', 'publickey' => '...']
-     */
-    private function getKeyPair()
-    {
-        $config = $this->app->make('config/database');
-
-        // Seee if we already have a kypair
-        $keyPair = $config->get('api.keypair');
-
-        if (!$keyPair) {
-            $rsa = $this->app->make(RSA::class);
-
-            // Generate a new RSA key
-            $keyPair = $rsa->createKey(2048);
-
-            foreach ($keyPair as &$item) {
-                $item = str_replace("\r\n", "\n", $item);
-            }
-
-            // Save the keypair
-            $config->save('api.keypair', $keyPair);
-        }
-
-        return $keyPair;
-    }
-
-    /**
-     * Get a key by handle
-     * @param $handle privatekey | publickey
-     * @return string|null
-     */
-    private function getKey($handle)
-    {
-        if (!$this->keyPair) {
-            $this->keyPair = $this->getKeyPair();
-        }
-
-        return isset($this->keyPair[$handle]) ? $this->keyPair[$handle] : null;
-    }
-
-    /**
-     * Register the authorization and authentication server classes
-     */
-    protected function registerAuthorizationServer()
-    {
-        // The ResourceServer deals with authenticating requests, in other words validating tokens
-        $this->app->bind(ResourceServer::class, function() {
-            $cryptKey = new CryptKey($this->getKey(self::KEY_PUBLIC), null, DIRECTORY_SEPARATOR !== '\\');
-            return $this->app->build(ResourceServer::class, [
-                $this->app->make(AccessTokenRepositoryInterface::class),
-                $cryptKey,
-                $this->app->make(DefaultValidator::class)
-            ]);
-        });
-
-        // AuthorizationServer on the other hand deals with authorizing a session with a username and password and key and secret
-        $this->app->when(AuthorizationServer::class)->needs('$privateKey')->give($this->getKey(self::KEY_PRIVATE));
-        $this->app->when(AuthorizationServer::class)->needs('$publicKey')->give($this->getKey(self::KEY_PUBLIC));
-        $this->app->when(AuthorizationServer::class)->needs(ResponseTypeInterface::class)->give(function() {
-            return $this->app->make(IdTokenResponse::class);
-        });
-
-        $this->app->extend(AuthorizationServer::class, function (AuthorizationServer $server) {
-            $server->setEncryptionKey($this->app->make('config/database')->get('concrete.security.token.encryption'));
-
-            $oneHourTTL = new \DateInterval('PT1H');
-            $oneDayTTL = new \DateInterval('P1D');
-
-
-            $config = $this->app->make('config');
-
-            if ($config->get('concrete.api.grant_types.password_credentials')) {
-                $server->enableGrantType($this->app->make(PasswordGrant::class), $oneHourTTL);
-            }
-            if ($config->get('concrete.api.grant_types.client_credentials')) {
-                $server->enableGrantType($this->app->make(ClientCredentialsGrant::class), $oneHourTTL);
-            }
-            if ($config->get('concrete.api.grant_types.authorization_code')) {
-                $server->enableGrantType($this->app->make(AuthCodeGrant::class, ['authCodeTTL' => $oneDayTTL]), $oneDayTTL);
-            }
-            if ($config->get('concrete.api.grant_types.refresh_token')) {
-                $server->enableGrantType($this->app->make(RefreshTokenGrant::class), $oneHourTTL);
-            }
-            return $server;
-        });
-
-        // Register OAuth stuff
-        $this->app->bind(AccessTokenRepositoryInterface::class, $this->repositoryFor(AccessToken::class));
-        $this->app->bind(AuthCodeRepositoryInterface::class, $this->repositoryFor(AuthCode::class));
-        $this->app->bind(ClientRepositoryInterface::class, $this->repositoryFor(Client::class));
-        $this->app->bind(RefreshTokenRepositoryInterface::class, $this->repositoryFor(RefreshToken::class));
-        $this->app->bind(ScopeRepositoryInterface::class, $this->repositoryFor(Scope::class));
-        $this->app->bind(UserRepositoryInterface::class, $this->repositoryFactory(UserRepository::class, User::class));
-    }
-
 }
