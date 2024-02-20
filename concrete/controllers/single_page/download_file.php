@@ -147,6 +147,8 @@ class DownloadFile extends PageController
             }
         }
 
+        $this->set('fID', $fID); // ensure $fID is set to something for invalid requests
+
         if ($this->app->make('helper/validation/numbers')->integer($fID, 1)) {
             $file = File::getByID($fID);
 
@@ -207,6 +209,8 @@ class DownloadFile extends PageController
                 $fID  = null;
             }
         }
+
+        $this->set('fID', $fID); // ensure $fID is set to something for invalid requests
 
         if ($this->app->make('helper/validation/numbers')->integer($fID, 1)) {
             $f = File::getByID($fID);
