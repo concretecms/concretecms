@@ -46,7 +46,7 @@ class Update extends DashboardPageController
                 $packageController->upgradeCoreData();
                 $packageController->upgrade();
             });
-            $this->set('message', t('Package "%1$s" has been updated successfully from version %2$s to version %3$s.', $packageController->getPackageName(), $previousVersion, $packageController->getPackageVersion()));
+            $this->set('message', t('Package "%1$s" has been updated successfully from version %2$s to version %3$s.', t($packageController->getPackageName()), $previousVersion, $packageController->getPackageVersion()));
         } catch (UserMessageException $x) {
             $this->error->add($x);
         }

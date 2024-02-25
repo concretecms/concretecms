@@ -81,7 +81,7 @@ class ContentFileTranslateTest extends FileStorageTestCase
         $this->assertEquals('background-slider-blue-sky.png', $r->getFilename());
         $this->assertEquals($to, $translated);
 
-        $c = new \Concrete\Block\Content\Controller();
+        $c = app(\Concrete\Block\Content\Controller::class);
         $c->content = $from;
         $sx = new SimpleXMLElement('<test />');
         $c->export($sx);

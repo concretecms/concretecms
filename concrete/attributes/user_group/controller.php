@@ -23,6 +23,7 @@ use Concrete\Core\User\Group\Group;
 use Concrete\Core\User\Group\GroupList;
 use Concrete\Core\User\Group\GroupRepository;
 use Concrete\Core\User\User;
+use Concrete\Core\Utility\Service\Xml;
 use League\Fractal\Resource\Item;
 use League\Fractal\Resource\ResourceInterface;
 
@@ -331,9 +332,9 @@ class Controller extends AttributeTypeController implements
          * @var UserGroupSettings
          */
         if (isset($key->type)) {
+            $xml = $this->app->make(Xml::class);
             $akGroupSelectionMethod = (string) $key->type['group-selection-method'];
-            $akDisplayGroupsBeneathSpecificParent = (string) $key->type['display-groups-beneath-specific-parent'] == '1'
-                ? true : false;
+            $akDisplayGroupsBeneathSpecificParent = $xml->getBool($key->type['display-groups-beneath-specific-parent']);
             $settings->setGroupSelectionMethod($akGroupSelectionMethod);
             $settings->setDisplayGroupsBeneathSpecificParent($akDisplayGroupsBeneathSpecificParent);
             if ($akDisplayGroupsBeneathSpecificParent) {

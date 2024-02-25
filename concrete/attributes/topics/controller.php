@@ -116,12 +116,11 @@ class Controller extends AttributeTypeController implements
 
     public function exportValue(\SimpleXMLElement $akn)
     {
-        /** @var Xml $xml */
-        $xml = \Core::make('helper/xml');
+        $xml = $this->app->make(Xml::class);
         $avn = $akn->addChild('topics');
         $nodes = $this->attributeValue->getValue();
         foreach ($nodes as $topic) {
-            $xml->createCDataNode($avn, 'topic', $topic->getTreeNodeDisplayPath());
+            $xml->createChildElement($avn, 'topic', $topic->getTreeNodeDisplayPath());
         }
     }
 

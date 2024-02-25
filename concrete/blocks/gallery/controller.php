@@ -60,7 +60,7 @@ class Controller extends BlockController implements FileTrackableInterface, Uses
         // now we can do the entries.
         $entries = $this->getEntries();
         $entriesNode = $blockNode->addChild('entries');
-        $xml = new Xml();
+        $xml = $this->app->make(Xml::class);
         foreach ($entries as $entry) {
             $entryNode = $entriesNode->addChild('entry');
             $entryNode->addChild('fID', ContentExporter::replaceFileWithPlaceHolder($entry['id']));
@@ -69,7 +69,7 @@ class Controller extends BlockController implements FileTrackableInterface, Uses
                 foreach ($entry['displayChoices'] as $dckey => $displayChoice) {
                     $choiceNode = $choicesNode->addChild('choice');
                     $choiceNode->addChild('dckey', $dckey);
-                    $xml->createCDataNode($choiceNode, 'value', $displayChoice['value']);
+                    $xml->createChildElement($choiceNode, 'value', $displayChoice['value']);
                 }
             }
         }

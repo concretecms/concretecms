@@ -9,6 +9,7 @@ use DateTime;
 use Exception;
 use Gettext\Translations;
 use GuzzleHttp\Exception\RequestException;
+use GuzzleHttp\Psr7\MultipartStream;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Response;
 
@@ -217,7 +218,6 @@ class CommunityStoreTranslationProvider implements ProviderInterface
      */
     public function getAvailablePackageStats($packageHandle, $packageVersion, $progressLimit = null)
     {
-        $allLocales = [];
         if ($progressLimit === null) {
             $progressLimit = $this->getProgressLimit();
         }
@@ -280,7 +280,7 @@ class CommunityStoreTranslationProvider implements ProviderInterface
                 $version = $sampleStats->getVersion();
                 $total = $sampleStats->getTotal();
             }
-            $result = new Stats($version, 0, 0);
+            $result = new Stats($version, $total, 0);
         }
 
         return $result;
@@ -321,17 +321,19 @@ class CommunityStoreTranslationProvider implements ProviderInterface
      */
     public function fillTranslations(Translations $translations)
     {
-        $request = $this->buildRequest('fill-translations/po/')->setMethod('POST');
-        $files = $request->getFiles();
-        $files->set(
-            'f',
-            [
-                'formname' => 'file',
-                'filename' => 'translations.po',
-                'ctype' => 'application/octet-stream',
-                'data' => $translations->toPoString(),
-            ]
-        );
+        $request = $this->buildRequest('fill-translations/po/')
+            ->withMethod('POST')
+            ->withBody(new MultipartStream([
+                [
+                    'name' => 'file',
+                    'contents' => $translations->toPoString(),
+                    'filename' => 'translations.po',
+                    'headers' => [
+                        'Content-Type' => 'application/octet-stream',
+                    ],
+                ]
+            ]))
+        ;
         unset($translations);
         $client = $this->httpClientFactory->createFromConfig($this->config);
         $response = $client->send($request);
@@ -354,11 +356,12 @@ class CommunityStoreTranslationProvider implements ProviderInterface
             $path = '/' . $path;
         }
 
-        $request = new Request('get', $this->getEntryPoint() . $path);
+        $headers = [];
         $apiToken = $this->getApiToken();
         if ($apiToken !== '') {
-            $request->withAddedHeader('API-Token', $apiToken);
+            $headers['API-Token'] = $apiToken;
         }
+        $request = new Request('GET', $this->getEntryPoint() . $path, $headers);
 
         return $request;
     }

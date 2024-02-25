@@ -32,7 +32,7 @@
         <pagetemplate icon="two_column.png" name="Resource Detail" handle="resource_detail" package="" internal=""/>
     </pagetemplates>
     <pagetypes>
-        <pagetype name="Page" handle="page" is-frequently-added="1" launch-in-composer="0">
+        <pagetype name="Page" handle="page" is-frequently-added="1" launch-in-composer="0" package="">
             <pagetemplates type="all" default="full"/>
             <target handle="all" package=""/>
             <composer>
@@ -187,10 +187,8 @@
                                                             <filterDateDays><![CDATA[0]]></filterDateDays>
                                                             <filterDateStart><![CDATA[]]></filterDateStart>
                                                             <filterDateEnd><![CDATA[]]></filterDateEnd>
-                                                            <relatedTopicAttributeKeyHandle>
-                                                                <![CDATA[]]></relatedTopicAttributeKeyHandle>
-                                                            <customTopicAttributeKeyHandle>
-                                                                <![CDATA[]]></customTopicAttributeKeyHandle>
+                                                            <relatedTopicAttributeKeyHandle><![CDATA[]]></relatedTopicAttributeKeyHandle>
+                                                            <customTopicAttributeKeyHandle><![CDATA[]]></customTopicAttributeKeyHandle>
                                                             <customTopicTreeNodeID><![CDATA[0]]></customTopicTreeNodeID>
                                                             <includeName><![CDATA[1]]></includeName>
                                                             <includeDescription><![CDATA[1]]></includeDescription>
@@ -200,8 +198,7 @@
                                                             <displayAliases><![CDATA[0]]></displayAliases>
                                                             <displaySystemPages><![CDATA[0]]></displaySystemPages>
                                                             <ignorePermissions><![CDATA[0]]></ignorePermissions>
-                                                            <enableExternalFiltering>
-                                                                <![CDATA[0]]></enableExternalFiltering>
+                                                            <enableExternalFiltering><![CDATA[0]]></enableExternalFiltering>
                                                             <ptID>{ccm:export:pagetype:blog_entry}</ptID>
                                                             <pfID/>
                                                             <truncateSummaries><![CDATA[0]]></truncateSummaries>
@@ -336,7 +333,7 @@
         <entity id="02e83926-0518-11ec-bb64-2d8e40952e25" handle="mailing_list" plural_handle="" name="Mailing List"
                 supports_custom_display_order="" include_in_public_list="" use_separate_site_result_buckets=""
                 description="" default_view_form="02e860ae-0518-11ec-bb64-2d8e40952e25"
-                default_edit_form="02e860ae-0518-11ec-bb64-2d8e40952e25" results-folder="/Forms">
+                default_edit_form="02e860ae-0518-11ec-bb64-2d8e40952e25" results-folder="/Forms" package="">
             <attributekeys>
                 <attributekey handle="email_address" name="Email Address" package="" searchable="1" indexed="1"
                               type="email" category=""/>
@@ -358,7 +355,7 @@
         </entity>
         <entity id="83ae65b1-79e8-4ded-bbca-e419bfd19bb6" handle="express_form_170" plural_handle="" name="Contact"
                 include_in_public_list="" description="" default_view_form="881b6bde-220f-4482-b8f9-ace40b5d169b"
-                default_edit_form="881b6bde-220f-4482-b8f9-ace40b5d169b" results-folder="/Forms">
+                default_edit_form="881b6bde-220f-4482-b8f9-ace40b5d169b" results-folder="/Forms" package="">
             <attributekeys>
                 <attributekey handle="contact_question_first_name" name="First Name" package="" searchable="1"
                               indexed="1" type="text" category="">
@@ -441,12 +438,6 @@
         <attributekey handle="blog_entry_topics" name="Blog Entry Topics" package="" searchable="1" indexed="1"
                       type="topics" category="collection">
             <tree name="Blog Entries" path="/"/>
-        </attributekey>
-        <attributekey handle="thumbnail" name="Thumbnail" package="" searchable="1" indexed="1" type="image_file"
-                      category="collection"/>
-        <attributekey handle="exclude_subpages_from_nav" name="Exclude Sub-Pages From Nav" package="" searchable="1"
-                      indexed="1" type="boolean" category="collection">
-            <type checked="0"/>
         </attributekey>
     </attributekeys>
     <attributesets>
@@ -844,8 +835,7 @@ Aenean eu enim justo. Vestibulum aliquam hendrerit molestie.</p>
                                             <filterDateDays><![CDATA[0]]></filterDateDays>
                                             <filterDateStart><![CDATA[]]></filterDateStart>
                                             <filterDateEnd><![CDATA[]]></filterDateEnd>
-                                            <relatedTopicAttributeKeyHandle>
-                                                <![CDATA[]]></relatedTopicAttributeKeyHandle>
+                                            <relatedTopicAttributeKeyHandle><![CDATA[]]></relatedTopicAttributeKeyHandle>
                                             <customTopicAttributeKeyHandle><![CDATA[]]></customTopicAttributeKeyHandle>
                                             <customTopicTreeNodeID><![CDATA[0]]></customTopicTreeNodeID>
                                             <includeName><![CDATA[0]]></includeName>
@@ -1755,8 +1745,7 @@ Maecenas consequat lectus a euismod pellentesque. Pellentesque commodo quam nec 
                                             <filterDateDays><![CDATA[0]]></filterDateDays>
                                             <filterDateStart><![CDATA[]]></filterDateStart>
                                             <filterDateEnd><![CDATA[]]></filterDateEnd>
-                                            <relatedTopicAttributeKeyHandle>
-                                                <![CDATA[]]></relatedTopicAttributeKeyHandle>
+                                            <relatedTopicAttributeKeyHandle><![CDATA[]]></relatedTopicAttributeKeyHandle>
                                             <customTopicAttributeKeyHandle><![CDATA[]]></customTopicAttributeKeyHandle>
                                             <customTopicTreeNodeID><![CDATA[0]]></customTopicTreeNodeID>
                                             <includeName><![CDATA[1]]></includeName>
@@ -2423,8 +2412,7 @@ Nam massa mauris, euismod vel tortor vel, finibus accumsan sem. Sed varius vulpu
                                 <setMode><![CDATA[any]]></setMode>
                                 <onlyCurrentUser><![CDATA[0]]></onlyCurrentUser>
                                 <tags><![CDATA[]]></tags>
-                                <viewProperties>
-                                    <![CDATA[{"thumbnail":"1","filename":"5","tags":"-1","date":"5","extension":"-1","size":"5","description":"-1","ak_16":"-1","ak_17":"-1","ak_19":"-1"}]]></viewProperties>
+                                <viewProperties><![CDATA[{"thumbnail":"1","filename":"5","tags":"-1","date":"5","extension":"-1","size":"5","description":"-1","ak_16":"-1","ak_17":"-1","ak_19":"-1"}]]></viewProperties>
                                 <expandableProperties><![CDATA[[]]]></expandableProperties>
                                 <searchProperties></searchProperties>
                                 <orderBy><![CDATA[title]]></orderBy>
@@ -3018,8 +3006,7 @@ Nam massa mauris, euismod vel tortor vel, finibus accumsan sem. Sed varius vulpu
                             <record>
                                 <brandingText></brandingText>
                                 <brandingLogo>{ccm:export:file:atomik-logo.png}</brandingLogo>
-                                <brandingTransparentLogo>{ccm:export:file:atomik-logo-transparent.png}
-                                </brandingTransparentLogo>
+                                <brandingTransparentLogo>{ccm:export:file:atomik-logo-transparent.png}</brandingTransparentLogo>
                                 <includeBrandText><![CDATA[1]]></includeBrandText>
                                 <includeBrandLogo><![CDATA[1]]></includeBrandLogo>
                                 <includeTransparency>1</includeTransparency>

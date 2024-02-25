@@ -70,6 +70,10 @@ EOT
         $output->writeln($info->getCache());
 
         $output->writeln('');
+        $output->writeln('<info># Database Entities Settings</info>');
+        $output->writeln($info->getEntities());
+
+        $output->writeln('');
         $output->writeln('<info># Server API</info>');
         $output->writeln($info->getServerAPI());
 

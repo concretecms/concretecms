@@ -26,7 +26,10 @@
       "Concrete\\Core\\": "src"
     }
   },
-  "bin": [ "bin/concrete5" ],
+  "bin": [
+    "bin/concrete",
+    "bin/concrete5"
+  ],
   "require": {
     "php": "^7.3||^8.0",
     "ext-dom": "*",
@@ -46,6 +49,7 @@
     "symfony/event-dispatcher": "^5.2",
     "symfony/messenger": "^5.2",
     "symfony/serializer": "^5.2",
+    "symfony/service-contracts": "^2.5",
     "symfony/yaml":"^4",
     "scssphp/scssphp": "^1.4",
     "doctrine/annotations": "^1.13.2",

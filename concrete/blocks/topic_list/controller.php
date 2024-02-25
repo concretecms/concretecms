@@ -231,6 +231,7 @@ class Controller extends BlockController implements UsesFeatureInterface
             $path = '{ccm:export:page:' . $parent->getCollectionPath() . '}';
         }
         $data->addChild('cParentID', $path);
+        $data->addChild('titleFormat', $this->titleFormat);
     }
 
     /**

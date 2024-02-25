@@ -35,6 +35,7 @@ class PageTheme extends Theme
             Features::ACCORDIONS,
             Features::DESKTOP,
             Features::BASICS,
+            Features::SOCIAL,
             Features::TYPOGRAPHY,
             Features::DOCUMENTS,
             Features::CONVERSATIONS,

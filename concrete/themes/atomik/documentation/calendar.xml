@@ -66,8 +66,7 @@
                         <filterByTopicAttributeKeyID><![CDATA[0]]></filterByTopicAttributeKeyID>
                         <filterByTopicID><![CDATA[0]]></filterByTopicID>
                         <viewTypes><![CDATA[["month","basicWeek","basicDay"]]]></viewTypes>
-                        <viewTypesOrder>
-                            <![CDATA[["month_Month","basicWeek_Week","basicDay_Day"]]]></viewTypesOrder>
+                        <viewTypesOrder><![CDATA[["month_Month","basicWeek_Week","basicDay_Day"]]]></viewTypesOrder>
                         <defaultView><![CDATA[month]]></defaultView>
                         <navLinks><![CDATA[0]]></navLinks>
                         <eventLimit><![CDATA[0]]></eventLimit>

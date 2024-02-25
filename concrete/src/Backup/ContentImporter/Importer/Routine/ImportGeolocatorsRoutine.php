@@ -4,6 +4,7 @@ namespace Concrete\Core\Backup\ContentImporter\Importer\Routine;
 use Concrete\Core\Entity\Geolocator;
 use Concrete\Core\Geolocator\GeolocatorService;
 use Concrete\Core\Support\Facade\Application;
+use Concrete\Core\Utility\Service\Xml;
 
 class ImportGeolocatorsRoutine extends AbstractRoutine
 {
@@ -28,6 +29,7 @@ class ImportGeolocatorsRoutine extends AbstractRoutine
             $app = Application::getFacadeApplication();
             $service = $app->make(GeolocatorService::class);
             $em = $service->getEntityManager();
+            $xml = $app->make(Xml::class);
             foreach ($sx->geolocators->geolocator as $xGeolocator) {
                 $handle = (string) $xGeolocator['handle'];
                 if ($service->getByHandle($handle) === null) {
@@ -43,7 +45,7 @@ class ImportGeolocatorsRoutine extends AbstractRoutine
                         }
                         $geolocator->setGeolocatorConfiguration($configuration);
                     }
-                    if (!empty($xGeolocator['active'])) {
+                    if ($xml->getBool($xGeolocator['active'])) {
                         $service->setCurrent($geolocator);
                     }
                     $em->persist($geolocator);

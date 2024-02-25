@@ -3,6 +3,9 @@
 namespace Concrete\Core\Command\Task;
 
 use Concrete\Core\Entity\Automation\Task;
+use Concrete\Core\Entity\Command\ScheduledTask;
+use Concrete\Core\Entity\Command\TaskProcess;
+use Concrete\Core\Entity\Package;
 use Concrete\Core\Entity\User\User as UserEntity;
 use Concrete\Core\Localization\Service\Date;
 use Concrete\Core\User\User;
@@ -100,6 +103,29 @@ class TaskService
         $this->entityManager->flush();
     }
 
+    public function add(string $handle, Package $pkg = null)
+    {
+        $task = new Task();
+        $task->setHandle($handle);
+        $task->setPackage($pkg);
+        $this->entityManager->persist($task);
+        $this->entityManager->flush();
+        return $task;
+    }
 
-
+    public function delete(Task $task)
+    {
+        $taskProcessRepository = $this->entityManager->getRepository(TaskProcess::class);
+        $taskProcesses = $taskProcessRepository->findBy(['task' => $task]);
+        foreach ($taskProcesses as $taskProcess) {
+            $this->entityManager->remove($taskProcess);
+        }
+        $scheduledTaskRepository = $this->entityManager->getRepository(ScheduledTask::class);
+        $scheduledTasks = $scheduledTaskRepository->findBy(['task' => $task]);
+        foreach ($scheduledTasks as $scheduledTask) {
+            $this->entityManager->remove($scheduledTask);
+        }
+        $this->entityManager->remove($task);
+        $this->entityManager->flush();
+    }
 }

@@ -107,7 +107,7 @@ class Add extends BackendInterfacePageController
         foreach ($queryBuilder->execute()->fetchAll() as $row) {
             /*
              * Use the block id as key to prevent duplicates because of the second join statement. The "group by"
-             * statement results in sql_mode=only_full_group_by” MySQL-issue and all other solutions like executing
+             * statement results in sql_mode=only_full_group_by MySQL-issue and all other solutions like executing
              * sub-queries to get the area name are having a bad performance.
              */
             $orphanedBlockIds[$row["bID"]] = $row;

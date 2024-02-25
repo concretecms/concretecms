@@ -84,6 +84,13 @@ class File
     private $size;
 
     /**
+     * @OA\Property(type="int", title="Folder ID")
+     *
+     * @var int
+     */
+    private $folder;
+
+    /**
      * @OA\Property(type="array", title="Custom Attributes", @OA\Items(ref="#/components/schemas/CustomAttribute"))
      *
      * @var string

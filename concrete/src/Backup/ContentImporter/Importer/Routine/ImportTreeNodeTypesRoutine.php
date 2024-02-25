@@ -12,7 +12,7 @@ class ImportTreeNodeTypesRoutine extends AbstractRoutine
 
     public function import(\SimpleXMLElement $sx)
     {
-        if (isset($sx->treetypes)) {
+        if (isset($sx->treenodetypes)) {
             foreach ($sx->treenodetypes->treenodetype as $t) {
                 $type = NodeType::getByHandle((string) $t['handle']);
                 if (!$type) {
