@@ -98,7 +98,9 @@ trait HasSubBlocksTrait
             if ($expires && ($expires < $btCacheBlockOutputLifetime || $btCacheBlockOutputLifetime === 0)) {
                 $btCacheBlockOutputLifetime = $expires;
             }
+        }
 
+        foreach ($blocks as $b) {
             // Check if the sub block has any assets to register.
             $objController = $b->getController();
             if (is_callable([$objController, 'registerViewAssets'])) {
