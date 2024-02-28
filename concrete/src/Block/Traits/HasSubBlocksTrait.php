@@ -70,8 +70,6 @@ trait HasSubBlocksTrait
         $btCacheBlockOutputOnPost = true;
         $btCacheBlockOutputLifetime = 0;
 
-        $arrAssetBlocks = [];
-
         // Let's go through all the sub blocks in this container block and see if we can cache them.
         foreach ($blocks as $b) {
             // If we have a sub block that overrides area permissions, the output of the container block may change based on the user.
@@ -100,20 +98,14 @@ trait HasSubBlocksTrait
             }
         }
 
-        foreach ($blocks as $b) {
-            // Check if the sub block has any assets to register.
-            $objController = $b->getController();
-            if (is_callable([$objController, 'registerViewAssets'])) {
-                $arrAssetBlocks[] = $objController;
-            }
-        }
-
         $this->btCacheBlockOutput = $btCacheBlockOutput;
         $this->btCacheBlockOutputOnPost = $btCacheBlockOutputOnPost;
         $this->btCacheBlockOutputLifetime = $btCacheBlockOutputLifetime;
 
-        foreach ($arrAssetBlocks as $objController) {
-            if ($objController instanceof BlockController) {
+        foreach ($blocks as $b) {
+            // Check if the sub block has any assets to register.
+            $objController = $b->getController();
+            if (is_callable([$objController, 'registerViewAssets'])) {
                 $objController->on_start();
                 $objController->outputAutoHeaderItems();
                 $objController->registerViewAssets();
