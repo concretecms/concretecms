@@ -495,7 +495,7 @@ class Controller extends BlockController implements UsesFeatureInterface
                 foreach ($layout->getAreaLayoutColumns() as $column) {
                     $area = $column->getSubAreaObject();
                     if ($area) {
-                        foreach ($area->getAreaBlocksArray($c) as $block) {
+                        foreach ($area->getAreaBlocksArray($page) as $block) {
                             $blocks[] = $block;
                         }
                     }
