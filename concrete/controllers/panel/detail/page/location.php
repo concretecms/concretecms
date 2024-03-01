@@ -113,7 +113,7 @@ class Location extends BackendInterfacePageController
 
             // now we do additional page URLs
             $req = Request::getInstance();
-          
+
             $canonical = $req->request->get('canonical');
             $pathArray = $req->request->get('path');
 
@@ -121,7 +121,7 @@ class Location extends BackendInterfacePageController
             if($pathArray){
              $oc->clearPagePaths();
             }
-            
+
             if (isset($canonical) && $this->page->getCollectionID() == Page::getHomePageID()) {
                 throw new Exception('You cannot change the canonical path of the home page.');
             }
@@ -149,4 +149,41 @@ class Location extends BackendInterfacePageController
             $r->outputJSON();
         }
     }
+
+    public function check()
+    {
+        $checkResponse = new PageEditResponse();
+        if ($this->validateAction()) {
+            $req = Request::getInstance();
+
+            $pathArray = $req->request->get('path');
+            $paths = [];
+
+            if (is_array($pathArray)) {
+                foreach ($pathArray as $path) {
+                    if ($path) {
+                        if ($this->isCanonicalPathOnAnotherPageExist($this->page->getCollectionID(), $path)) {
+                            $paths[] = $path;
+                        }
+                    }
+                }
+            }
+            $checkResponse->setAdditionalDataAttribute('paths', $paths);
+            $checkResponse->outputJSON();
+        }
+    }
+
+    protected function isCanonicalPathOnAnotherPageExist(int $cID, string $path)
+    {
+        $em = \ORM::entityManager();
+        return $em->getRepository('\Concrete\Core\Entity\Page\PagePath')
+            ->createQueryBuilder('pp')
+            ->where('pp.cID != :cID')
+            ->andWhere('pp.cPath = :cPath')
+            ->setParameter('cID', $cID)
+            ->setParameter('cPath', $path)
+            ->getQuery()
+            ->getResult();
+    }
+
 }
