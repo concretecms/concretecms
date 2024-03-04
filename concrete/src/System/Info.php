@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\System;
 
+use Concrete\Core\Database\CharacterSetCollation\Resolver;
 use Localization;
 use Concrete\Core\Support\Facade\Facade;
 use Concrete\Core\Database\Connection\Connection;
@@ -93,6 +94,16 @@ class Info
      * @var string|null
      */
     private $dbmsSqlMode;
+    
+    /**
+     * @var string|null
+     */
+    private $dbCharset;
+
+    /**
+     * @var string|null
+     */
+    private $dbCollation;
 
     public function __construct()
     {
@@ -113,6 +124,10 @@ class Info
             $this->codeVersion = $config->get('concrete.version');
             $this->dbVersion = $config->get('concrete.version_db');
             $this->versionInstalled = $config->get('concrete.version_installed');
+
+            $resolver = $this->app->make(Resolver::class);
+            $db = $this->app->make('database')->connection();
+            [$this->dbCharset, $this->dbCollation] = $resolver->resolveCharacterSetAndCollation($db);
 
             $versions = ['Core Version - '. $this->codeVersion];
             if ($this->installed) {
@@ -450,6 +465,22 @@ class Info
     public function getDbVersion()
     {
         return $this->dbVersion;
+    }
+    
+    /**
+     * @return string
+     */
+    public function getDbCharset()
+    {
+        return $this->dbCharset;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDbCollation()
+    {
+        return $this->dbCollation;
     }
 
     /**
