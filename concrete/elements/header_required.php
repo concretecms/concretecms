@@ -61,7 +61,7 @@ if (is_object($c)) {
                 }
                 $seo->addTitleSegmentBefore($pageTitle);
             }
-            $seo->setSiteName(h(tc('SiteName', $site->getSiteName())));
+            $seo->setSiteName(tc('SiteName', $site->getSiteName()));
             $seo->setTitleFormat($appConfig->get('concrete.seo.title_format'));
             $seo->setTitleSegmentSeparator($appConfig->get('concrete.seo.title_segment_separator'));
             $pageTitle = $seo->getTitle();
