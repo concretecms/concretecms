@@ -20,7 +20,7 @@
 }
 
 
-body div.ccm-ui { // Added body for extra specificity
+body .ccm-ui { // Added body for extra specificity
   margin: 0; // 1
   font-family: var(--#{$prefix}body-font-family);
   // Concrete CMS

@@ -107,15 +107,15 @@ html.ccm-toolbar-visible {
   }
 
   .ui-widget {
-    font-family: inherit;
+    font-family: var(--bs-body-font-family); // Should inherit this variable from a wrapping .ccm-ui class.
   }
 
   .ui-widget-header {
-    color: inherit;
+    color: var(--bs-body-color); // Should inherit this variable from a wrapping .ccm-ui class.
   }
 
   .ui-widget-content {
-    color: inherit; // These inherits ensure that this comes from bootstrap not jQuery UI
+    color: var(--bs-body-color); // Should inherit this variable from a wrapping .ccm-ui class.
   }
 
   .ui-widget-overlay {
