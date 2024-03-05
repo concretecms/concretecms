@@ -119,7 +119,7 @@ class Attributes extends BackendInterfacePageController
                         $nvc->setAttribute($ak, $value, false);
                     } else {
                         // it is being removed
-                        $nvc->clearAttribute($ak);
+                        $nvc->clearAttribute($ak, false);
                     }
                     $processedAttributes[] = $ak->getAttributeKeyID();
                 }
