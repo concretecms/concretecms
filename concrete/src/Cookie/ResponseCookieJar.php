@@ -2,10 +2,21 @@
 
 namespace Concrete\Core\Cookie;
 
+use Concrete\Core\Http\Request;
 use Symfony\Component\HttpFoundation\Cookie;
 
 class ResponseCookieJar
 {
+    /**
+     * @var \Concrete\Core\Http\Request
+     */
+    protected $request;
+
+    public function __construct(Request $request)
+    {
+        $this->request = $request;
+    }
+
     /**
      * The list of new cookies to be added to the response.
      *
@@ -28,7 +39,7 @@ class ResponseCookieJar
      * @param int $expire The number of seconds until the cookie expires
      * @param string $path The path for the cookie
      * @param null|string $domain The domain the cookie is available to
-     * @param bool $secure whether the cookie should only be transmitted over a HTTPS connection from the client
+     * @param bool|null $secure whether the cookie should only be transmitted over a HTTPS connection from the client. Use NULL to to set the secure flag if the current request uses HTTPS
      * @param bool $httpOnly Whether the cookie will be made accessible only through the HTTP protocol
      * @param bool $raw Whether the cookie value should be sent with no url encoding
      * @param string|null $sameSite Whether the cookie will be available for cross-site requests
@@ -36,6 +47,11 @@ class ResponseCookieJar
      */
     public function addCookie($name, $value = null, $expire = 0, $path = '/', $domain = null, $secure = false, $httpOnly = true, $raw = false, $sameSite = null)
     {
+        if ($secure === null) {
+            $secure = $this->request->isSecure();
+        } else {
+            $secure = (bool) $secure;
+        }
         $cookie = new Cookie($name, $value, $expire, $path, $domain, $secure, $httpOnly, $raw, $sameSite);
         $this->addCookieObject($cookie);
 

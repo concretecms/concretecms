@@ -1043,7 +1043,8 @@ return [
             'cookie_path' => false, // set a specific path here if you know it, otherwise it'll default to relative
             'cookie_lifetime' => 0,
             'cookie_domain' => false,
-            'cookie_secure' => false,
+            // true: enable the 'secure' flag; false: disable the secure flag; null: enable the 'secure' flag for https requests only
+            'cookie_secure' => null,
             'cookie_httponly' => true,
             'cookie_raw' => false,
             'cookie_samesite' => null,
