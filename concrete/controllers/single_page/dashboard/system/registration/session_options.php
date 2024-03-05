@@ -20,7 +20,8 @@ class SessionOptions extends DashboardSitePageController
             $validation->addRequiredToken("update_cookie_options");
 
             if ($validation->test()) {
-                $config->save("concrete.session.cookie.cookie_secure", $this->request->request->has("secure"));
+                $secure = $this->request->request->get('secure');
+                $config->save("concrete.session.cookie.cookie_secure", $secure === 'auto' ? null : (bool) $secure);
                 $config->save("concrete.session.cookie.cookie_httponly", $this->request->request->has("httponly"));
                 $config->save("concrete.session.cookie.cookie_raw", $this->request->request->has("raw"));
                 $config->save("concrete.session.cookie.cookie_domain", strlen($this->request->request->get("domain")) > 0 ? $this->request->request->get("domain") : false);
@@ -31,11 +32,11 @@ class SessionOptions extends DashboardSitePageController
                 $this->error = $validation->getError();
             }
         }
-
-        $this->set("secure", (bool)$config->get("concrete.session.cookie.cookie_secure"));
+        $this->set('secure', $config->get('concrete.session.cookie.cookie_secure'));
         $this->set("httponly", (bool)$config->get("concrete.session.cookie.cookie_httponly"));
         $this->set("raw", (bool)$config->get("concrete.session.cookie.cookie_raw"));
         $this->set("domain", (string)$config->get("concrete.session.cookie.cookie_domain"));
         $this->set("samesite", (string)$config->get("concrete.session.cookie.cookie_samesite"));
+        $this->set('currentRequestIsSecure', $this->request->isSecure());
     }
 }
