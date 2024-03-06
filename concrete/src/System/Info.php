@@ -125,10 +125,6 @@ class Info
             $this->dbVersion = $config->get('concrete.version_db');
             $this->versionInstalled = $config->get('concrete.version_installed');
 
-            $resolver = $this->app->make(Resolver::class);
-            $db = $this->app->make('database')->connection();
-            [$this->dbCharset, $this->dbCollation] = $resolver->resolveCharacterSetAndCollation($db);
-
             $versions = ['Core Version - '. $this->codeVersion];
             if ($this->installed) {
                 $versions[] = 'Version Installed - ' . $this->versionInstalled;
@@ -466,12 +462,23 @@ class Info
     {
         return $this->dbVersion;
     }
-    
+
     /**
      * @return string
      */
     public function getDbCharset()
     {
+        if ($this->dbCharset === null) {
+            $this->dbCharset = '';
+            if ($this->installed) {
+                try {
+                    $resolver = $this->app->make(Resolver::class);
+                    $db = $this->app->make('database')->connection();
+                    [$this->dbCharset, $dbCollationIgnored] = $resolver->resolveCharacterSetAndCollation($db);
+                } catch (\Exception $x) {
+                }
+            }
+        }
         return $this->dbCharset;
     }
 
@@ -480,6 +487,17 @@ class Info
      */
     public function getDbCollation()
     {
+        if ($this->dbCollation === null) {
+            $this->dbCollation = '';
+            if ($this->installed) {
+                try {
+                    $resolver = $this->app->make(Resolver::class);
+                    $db = $this->app->make('database')->connection();
+                    [$dbCharsetIgnored, $this->dbCollation] = $resolver->resolveCharacterSetAndCollation($db);
+                } catch (\Exception $x) {
+                }
+            }
+        }
         return $this->dbCollation;
     }
 
