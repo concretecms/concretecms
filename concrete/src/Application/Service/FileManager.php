@@ -44,7 +44,7 @@ class FileManager
      *             ],
      *             [
      *                 'field' => 'extension',
-     *                 'extension' => ['.png', '.jpg'],
+     *                 'extension' => ['png', 'jpg'],
      *             ],
      *         ],
      *     ]
