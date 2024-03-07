@@ -9,12 +9,12 @@ class ReceiverLocator implements ServiceProviderInterface
 
     protected $receivers = [];
 
-    public function has($id)
+    public function has(string $id): bool
     {
         return array_key_exists($id, $this->receivers);
     }
 
-    public function get($id)
+    public function get(string $id): mixed
     {
         $receiver = $this->receivers[$id];
         if (is_callable($receiver)) {

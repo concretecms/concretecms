@@ -14,7 +14,7 @@ class SenderLocator implements ServiceProviderInterface
         $this->senders[$handle] = $sender;
     }
 
-    public function get($id)
+    public function get(string $id): mixed
     {
         $sender = $this->senders[$id];
         if (is_callable($sender)) {
@@ -23,7 +23,7 @@ class SenderLocator implements ServiceProviderInterface
         return $sender;
     }
 
-    public function has($id)
+    public function has(string $id): bool
     {
         return array_key_exists($id, $this->senders);
     }
