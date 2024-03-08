@@ -121,6 +121,11 @@ class CollectionAttributeControl extends Control
 
     public function shouldPageTypeComposerControlStripEmptyValuesFromPage()
     {
+        $ak = $this->getAttributeKeyObject();
+        if (is_object($ak) && $ak->getAttributeTypeHandle() === 'boolean') {
+            return false;
+        }
+
         return true;
     }
 
