@@ -1,23 +1,26 @@
 <?php
+
 namespace Concrete\Core\Workflow\Request;
 
+use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Foundation\ConcreteObject;
+use Concrete\Core\Permission\Key\Key as PermissionKey;
+use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\User\UserInfo;
+use Concrete\Core\Workflow\EmptyWorkflow;
+use Concrete\Core\Workflow\Progress\Progress as WorkflowProgress;
 use Concrete\Core\Workflow\Progress\SkippedResponse;
 use Symfony\Component\EventDispatcher\GenericEvent;
-use Workflow;
-use Concrete\Core\Workflow\EmptyWorkflow;
-use Database;
-use Concrete\Core\Workflow\Progress\Progress as WorkflowProgress;
-use PermissionKey;
-use Events;
 
 abstract class Request extends ConcreteObject
 {
     protected $currentWP;
+
     protected $uID;
+
     protected $wrStatusNum = 0;
-    protected $wrID = null;
+
+    protected $wrID;
 
     public function __construct($pk)
     {
@@ -71,42 +74,95 @@ abstract class Request extends ConcreteObject
 
     public static function getByID($wrID)
     {
-        $db = Database::connection();
-        $wrObject = $db->getOne('select wrObject from WorkflowRequestObjects where wrID = ?', array($wrID));
+        $app = Application::getFacadeApplication();
+        /** @var Connection $db */
+        $db = $app->make(Connection::class);
+        $wrObject = $db->fetchOne('select wrObject from WorkflowRequestObjects where wrID = ?', [$wrID]);
         if ($wrObject) {
-            $wr = unserialize($wrObject);
-
-            return $wr;
+            return unserialize($wrObject);
         }
     }
 
     public function delete()
     {
-        $db = Database::connection();
-        $db->Execute('delete from WorkflowRequestObjects where wrID = ?', array($this->wrID));
+        $app = Application::getFacadeApplication();
+        /** @var Connection $db */
+        $db = $app->make(Connection::class);
+        $db->delete('WorkflowRequestObjects', ['wrID' => $this->wrID]);
     }
 
     public function save()
     {
-        $db = Database::connection();
+        $app = Application::getFacadeApplication();
+        /** @var Connection $db */
+        $db = $app->make(Connection::class);
         if (!$this->wrID) {
             $wrObject = '';
-            $db->Execute('insert into WorkflowRequestObjects (wrObject) values (?)', array($wrObject));
-            $this->wrID = $db->Insert_ID();
+            $db->insert('WorkflowRequestObjects', ['wrObject' => $wrObject]);
+            $this->wrID = $db->lastInsertId();
         }
         $wrObject = serialize($this);
-        $db->Execute('update WorkflowRequestObjects set wrObject = ? where wrID = ?', array($wrObject, $this->wrID));
+        $db->update('WorkflowRequestObjects', ['wrObject' => $wrObject], ['wrID' => $this->wrID]);
     }
+
+    abstract public function addWorkflowProgress(\Concrete\Core\Workflow\Workflow $wf);
+
+    abstract public function getWorkflowRequestDescriptionObject();
+
+    abstract public function getWorkflowRequestStyleClass();
+
+    abstract public function getWorkflowRequestApproveButtonText();
+
+    abstract public function getWorkflowRequestApproveButtonClass();
+
+    abstract public function getWorkflowRequestApproveButtonInnerButtonRightHTML();
+
+    public function getWorkflowRequestAdditionalActions(WorkflowProgress $wp)
+    {
+        return [];
+    }
+
+    public function runTask($task, WorkflowProgress $wp)
+    {
+        if (method_exists($this, $task)) {
+            if ($task == 'approve') {
+                // we check to see if any other outstanding workflowprogress requests have this id
+                // if they don't we proceed
+                $app = Application::getFacadeApplication();
+                /** @var Connection $db */
+                $db = $app->make(Connection::class);
+                $num = $db->fetchOne(
+                    'select count(wpID) as total from WorkflowProgress where wpID <> ? and wrID = ? and wpIsCompleted = 0',
+                    [
+                        $wp->getWorkflowProgressID(),
+                        $this->getWorkflowRequestID(),
+                    ]
+                );
+                if ($num == 0) {
+                    return call_user_func_array([$this, $task], [$wp]);
+                }
+            } else {
+                return call_user_func_array([$this, $task], [$wp]);
+            }
+        }
+    }
+
+    public function getRequesterComment()
+    {
+        return false;
+    }
+
+    abstract public function getRequestIconElement();
 
     /**
      * Triggers a workflow request, queries a permission key to see what workflows are attached to it
      * and initiates them.
      *
-     * @param \PermissionKey $pk
+     * @param PermissionKey $pk
      *
-     * @return optional WorkflowProgress
+     * @return WorkflowProgress|null
      */
-    protected function triggerRequest(\PermissionKey $pk)
+    protected function triggerRequest(PermissionKey $pk)
     {
         if (!$this->wrID) {
             $this->save();
@@ -115,6 +171,8 @@ abstract class Request extends ConcreteObject
         if (!$pk->canPermissionKeyTriggerWorkflow()) {
             throw new \Exception(t('This permission key cannot start a workflow.'));
         }
+
+        $app = Application::getFacadeApplication();
 
         $pa = $pk->getPermissionAccessObject();
         $skipWorkflow = true;
@@ -132,7 +190,7 @@ abstract class Request extends ConcreteObject
                     }
                     $event = new GenericEvent();
                     $event->setArgument('progress', $wp);
-                    Events::dispatch('workflow_triggered', $event);
+                    $app['director']->dispatch('workflow_triggered', $event);
                 }
             }
         }
@@ -143,56 +201,9 @@ abstract class Request extends ConcreteObject
 
             $event = new GenericEvent();
             $event->setArgument('progress', $wp);
-            Events::dispatch('workflow_triggered', $event);
+            $app['director']->dispatch('workflow_triggered', $event);
 
             return $wp->getWorkflowProgressResponseObject();
         }
     }
-
-    abstract public function addWorkflowProgress(\Concrete\Core\Workflow\Workflow $wf);
-    abstract public function getWorkflowRequestDescriptionObject();
-    abstract public function getWorkflowRequestStyleClass();
-    abstract public function getWorkflowRequestApproveButtonText();
-    abstract public function getWorkflowRequestApproveButtonClass();
-    abstract public function getWorkflowRequestApproveButtonInnerButtonRightHTML();
-
-    public function getWorkflowRequestAdditionalActions(WorkflowProgress $wp)
-    {
-        return array();
-    }
-
-    public function runTask($task, WorkflowProgress $wp)
-    {
-        if (method_exists($this, $task)) {
-            if ($task == 'approve') {
-                // we check to see if any other outstanding workflowprogress requests have this id
-                // if they don't we proceed
-                $db = Database::connection();
-                $num = $db->GetOne(
-                    'select count(wpID) as total from WorkflowProgress where wpID <> ? and wrID = ? and wpIsCompleted = 0',
-                    array(
-                        $wp->getWorkflowProgressID(),
-                        $this->getWorkflowRequestID(),
-                    )
-                );
-                if ($num == 0) {
-                    $wpr = call_user_func_array(array($this, $task), array($wp));
-
-                    return $wpr;
-                }
-            } else {
-                $wpr = call_user_func_array(array($this, $task), array($wp));
-
-                return $wpr;
-            }
-        }
-    }
-
-    public function getRequesterComment()
-    {
-        return false;
-    }
-
-    abstract public function getRequestIconElement();
-
 }

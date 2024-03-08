@@ -1,22 +1,21 @@
 <?php
+
 namespace Concrete\Core\Workflow\Request;
 
-use HtmlObject\Element;
-use Workflow;
-use Loader;
-use Page;
+use Concrete\Core\Page\Collection\Version\Version as CollectionVersion;
+use Concrete\Core\Page\Page;
+use Concrete\Core\Permission\Key\Key as PermissionKey;
+use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\Workflow\Description as WorkflowDescription;
-use Permissions;
-use PermissionKey;
 use Concrete\Core\Workflow\Progress\Progress as WorkflowProgress;
-use CollectionVersion;
-use Events;
-use Concrete\Core\Workflow\Progress\Action\Action as WorkflowProgressAction;
 use Concrete\Core\Workflow\Progress\Response as WorkflowProgressResponse;
+use HtmlObject\Element;
 
 class UnapprovePageRequest extends PageRequest
 {
     protected $wrStatusNum = 30;
+
+    protected $cvID;
 
     public function __construct()
     {
@@ -38,13 +37,25 @@ class UnapprovePageRequest extends PageRequest
     {
         $d = new WorkflowDescription();
         $c = Page::getByID($this->cID, $this->cvID);
-        $link = Loader::helper('navigation')->getLinkToCollection($c, true);
-        $v = $c->getVersionObject();
-        if (is_object($v)) {
-            $d->setEmailDescription(t("Page unapproval requested for page: \"%s\".\n\nView the page here: %s.", $c->getCollectionName(), $link));
-            $d->setDescription(t("Page %s submitted for unapproval.", '<a target="_blank" href="' . $c->getCollectionLink() . '">' . $c->getCollectionName() . '</a>'));
-            $d->setInContextDescription(t("Page %s submitted for unapproval.", $c->getCollectionName()));
-            $d->setShortStatus(t("Page Version Unapproval"));
+        if ($c && !$c->isError()) {
+            $link = $c->getCollectionLink();
+            $v = $c->getVersionObject();
+            if (is_object($v) && !$v->isError()) {
+                $d->setEmailDescription(t("Page unapproval requested for page: \"%s\".\n\nView the page here: %s.", $c->getCollectionName(), $link));
+                $d->setDescription(t('Page %s submitted for unapproval.', '<a target="_blank" href="' . $c->getCollectionLink() . '">' . $c->getCollectionName() . '</a>'));
+                $d->setInContextDescription(t('Page %s submitted for unapproval.', $c->getCollectionName()));
+                $d->setShortStatus(t('Page Version Unapproval'));
+            } else {
+                $d->setEmailDescription(t('Deleted Page Version.'));
+                $d->setInContextDescription(t('Deleted Page Version.'));
+                $d->setDescription(t('Deleted Page Version.'));
+                $d->setShortStatus(t('Deleted Page Version.'));
+            }
+        } else {
+            $d->setEmailDescription(t('Deleted page.'));
+            $d->setInContextDescription(t('Deleted page.'));
+            $d->setDescription(t('Deleted page.'));
+            $d->setShortStatus(t('Deleted page.'));
         }
 
         return $d;
@@ -81,6 +92,7 @@ class UnapprovePageRequest extends PageRequest
     {
         $span = new Element('i');
         $span->addClass('fas fa-thumbs-down');
+
         return $span;
     }
 
@@ -93,7 +105,9 @@ class UnapprovePageRequest extends PageRequest
 
             $ev = new \Concrete\Core\Page\Collection\Version\Event($c);
             $ev->setCollectionVersionObject($v);
-            Events::dispatch('on_page_version_submit_deny', $ev);
+
+            $app = Application::getFacadeApplication();
+            $app['director']->dispatch('on_page_version_submit_deny', $ev);
 
             $wpr = new WorkflowProgressResponse();
             $wpr->setWorkflowProgressResponseURL(\URL::to($c));
@@ -101,6 +115,4 @@ class UnapprovePageRequest extends PageRequest
             return $wpr;
         }
     }
-
-
 }

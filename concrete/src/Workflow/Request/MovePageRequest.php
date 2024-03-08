@@ -1,16 +1,17 @@
 <?php
+
 namespace Concrete\Core\Workflow\Request;
 
-use Loader;
-use Page;
+use Concrete\Core\Page\Page;
+use Concrete\Core\Permission\Key\Key as PermissionKey;
 use Concrete\Core\Workflow\Description as WorkflowDescription;
-use PermissionKey;
 use Concrete\Core\Workflow\Progress\Progress as WorkflowProgress;
 use Concrete\Core\Workflow\Progress\Response as WorkflowProgressResponse;
 
 class MovePageRequest extends PageRequest
 {
     protected $targetCID;
+
     protected $wrStatusNum = 50;
 
     public function __construct()
@@ -39,12 +40,19 @@ class MovePageRequest extends PageRequest
         $d = new WorkflowDescription();
         $c = Page::getByID($this->cID, 'ACTIVE');
         $target = Page::getByID($this->targetCID, 'ACTIVE');
-        $link = Loader::helper('navigation')->getLinkToCollection($c, true);
-        $targetLink = Loader::helper('navigation')->getLinkToCollection($target, true);
-        $d->setEmailDescription(t("\"%s\" is pending a move to beneath \"%s\". Source Page: %s. Target Page: %s.", $c->getCollectionName(), $target->getCollectionName(), $link, $targetLink));
-        $d->setInContextDescription(t("This page is pending a move beneath <strong><a href=\"%s\">%s</a></strong>. ", $targetLink, $target->getCollectionName()));
-        $d->setDescription(t("<a href=\"%s\">%s</a> is pending a move beneath <strong><a href=\"%s\">%s</a></strong>. ", $link, $c->getCollectionName(), $targetLink, $target->getCollectionName()));
-        $d->setShortStatus(t("Pending Move"));
+        if ($c && $target && !$c->isError() && !$target->isError()) {
+            $link = $c->getCollectionLink();
+            $targetLink = $target->getCollectionLink();
+            $d->setEmailDescription(t('"%s" is pending a move to beneath "%s". Source Page: %s. Target Page: %s.', $c->getCollectionName(), $target->getCollectionName(), $link, $targetLink));
+            $d->setInContextDescription(t('This page is pending a move beneath <strong><a href="%s">%s</a></strong>. ', $targetLink, $target->getCollectionName()));
+            $d->setDescription(t('<a href="%s">%s</a> is pending a move beneath <strong><a href="%s">%s</a></strong>. ', $link, $c->getCollectionName(), $targetLink, $target->getCollectionName()));
+            $d->setShortStatus(t('Pending Move'));
+        } else {
+            $d->setEmailDescription(t('Deleted page.'));
+            $d->setInContextDescription(t('Deleted page.'));
+            $d->setDescription(t('Deleted page.'));
+            $d->setShortStatus(t('Deleted page.'));
+        }
 
         return $d;
     }

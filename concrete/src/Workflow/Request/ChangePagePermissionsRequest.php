@@ -1,22 +1,22 @@
 <?php
+
 namespace Concrete\Core\Workflow\Request;
 
-use Workflow;
-use Loader;
-use Page;
-use Concrete\Core\Workflow\Description as WorkflowDescription;
-use Permissions;
-use PermissionKey;
-use Concrete\Core\Workflow\Progress\Progress as WorkflowProgress;
+use Concrete\Core\Page\Page;
 use Concrete\Core\Permission\Access\Access as PermissionAccess;
-use Concrete\Core\Workflow\Progress\Action\Action as WorkflowProgressAction;
-use Concrete\Core\Workflow\Progress\Response as WorkflowProgressResponse;
+use Concrete\Core\Permission\Key\Key as PermissionKey;
 use Concrete\Core\Permission\Set as PermissionSet;
 use Concrete\Core\Url\Resolver\Manager\ResolverManagerInterface;
+use Concrete\Core\Workflow\Description as WorkflowDescription;
+use Concrete\Core\Workflow\Progress\Action\Action as WorkflowProgressAction;
+use Concrete\Core\Workflow\Progress\Progress as WorkflowProgress;
+use Concrete\Core\Workflow\Progress\Response as WorkflowProgressResponse;
 
 class ChangePagePermissionsRequest extends PageRequest
 {
     protected $wrStatusNum = 30;
+
+    protected $permissionSet;
 
     public function __construct()
     {
@@ -38,11 +38,18 @@ class ChangePagePermissionsRequest extends PageRequest
     {
         $d = new WorkflowDescription();
         $c = Page::getByID($this->cID, 'ACTIVE');
-        $link = Loader::helper('navigation')->getLinkToCollection($c, true);
-        $d->setEmailDescription(t("\"%s\" has pending permission changes. View the page here: %s.", $c->getCollectionName(), $link));
-        $d->setInContextDescription(t("Page Submitted for Permission Changes."));
-        $d->setDescription(t("<a href=\"%s\">%s</a> submitted for Permission Changes.", $link, $c->getCollectionName()));
-        $d->setShortStatus(t("Permission Changes"));
+        if ($c && !$c->isError()) {
+            $link = $c->getCollectionLink();
+            $d->setEmailDescription(t('"%s" has pending permission changes. View the page here: %s.', $c->getCollectionName(), $link));
+            $d->setInContextDescription(t('Page Submitted for Permission Changes.'));
+            $d->setDescription(t('<a href="%s">%s</a> submitted for Permission Changes.', $link, $c->getCollectionName()));
+            $d->setShortStatus(t('Permission Changes'));
+        } else {
+            $d->setEmailDescription(t('Deleted page.'));
+            $d->setInContextDescription(t('Deleted page.'));
+            $d->setDescription(t('Deleted page.'));
+            $d->setShortStatus(t('Deleted page.'));
+        }
 
         return $d;
     }
@@ -69,7 +76,7 @@ class ChangePagePermissionsRequest extends PageRequest
 
     public function getWorkflowRequestAdditionalActions(WorkflowProgress $wp)
     {
-        $buttons = array();
+        $buttons = [];
         $w = $wp->getWorkflowObject();
         if ($w->canApproveWorkflowProgressObject($wp)) {
             $c = Page::getByID($this->cID, 'ACTIVE');
