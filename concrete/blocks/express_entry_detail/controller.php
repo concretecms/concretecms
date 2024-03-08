@@ -96,11 +96,11 @@ class Controller extends BlockController implements UsesFeatureInterface
 
     public function view()
     {
-        $c = \Page::getCurrentPage();
+        $c = $this->getCollectionObject();
         $entity = null;
         if ($this->entryMode == 'A') {
             $ak = CollectionKey::getByHandle($this->exEntryAttributeKeyHandle);
-            if (is_object($ak)) {
+            if (is_object($ak) && is_object($c)) {
                 $settings = $ak->getAttributeKeySettings();
                 $value = $c->getAttribute($ak);
                 if (is_object($settings)) {
