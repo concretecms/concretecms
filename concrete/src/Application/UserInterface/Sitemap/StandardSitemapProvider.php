@@ -9,6 +9,7 @@ use Concrete\Core\Application\UserInterface\Sitemap\TreeCollection\StandardTreeC
 use Concrete\Core\Cookie\CookieJar;
 use Concrete\Core\Entity\Site\Tree;
 use Concrete\Core\Http\Request;
+use Concrete\Core\Page\Page;
 use Concrete\Core\Permission\Checker;
 use Concrete\Core\Site\Service;
 use Concrete\Core\Site\Tree\TreeInterface;
@@ -200,6 +201,15 @@ class StandardSitemapProvider implements ProviderInterface
                 $nodes = [$dh->getNode($this->request->query->get('cID'))];
             } else {
                 $nodes = $dh->getSubNodes($this->request->query->get('cParentID'));
+            }
+        } elseif ($this->request->query->has('startingPoint') && $this->request->query->get('startingPoint') > 1) {
+            $startingPoint = Page::getByID($this->request->query->get('startingPoint'));
+            if ($startingPoint && !$startingPoint->isError()) {
+                $dh->setExpandedNodes([$startingPoint->getCollectionID()]);
+                $node = $dh->getNode($startingPoint);
+                $nodes = [$node];
+            } else {
+                $nodes = $dh->getSubNodes($this->getRequestedSiteTree());
             }
         } else {
             $nodes = $dh->getSubNodes($this->getRequestedSiteTree());
