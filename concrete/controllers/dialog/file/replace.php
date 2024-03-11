@@ -24,6 +24,7 @@ class Replace extends Import
     {
         parent::setViewSets();
         $this->set('replacingFile', $this->getReplacingFile());
+        $this->set('reloadOnReplace', $this->getReloadOnReplace());
     }
 
     /**
@@ -98,5 +99,10 @@ class Replace extends Import
         $replacingFilePermissions = new Checker($replacingFile);
 
         return $replacingFilePermissions->canEditFileContents();
+    }
+
+    protected function getReloadOnReplace(): bool
+    {
+        return filter_var($this->request->query->get('reloadOnReplace'), FILTER_VALIDATE_BOOLEAN);
     }
 }

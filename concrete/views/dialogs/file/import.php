@@ -16,20 +16,23 @@ use Concrete\Core\Url\Resolver\Manager\ResolverManagerInterface;
 use Concrete\Controller\Dialog\File\Import;
 use Concrete\Core\View\DialogView;
 
-/* @var Import $controller */
-/* @var DialogView $view */
-/* @var Token $token */
-/* @var Form $form */
-/* @var UserInterface $ui */
-/* @var ResolverManagerInterface $resolverManager */
-/* @var string $formID */
-/* @var FileFolder|null $currentFolder */
-/* @var Page|null $originalPage */
-/* @var StorageLocation $incomingStorageLocation */
-/* @var string $incomingPath */
-/* @var array $incomingContents */
-/* @var string|null $incomingContentsError */
-/* @var File|null $replacingFile */
+/**
+ * @var Import $controller
+ * @var DialogView $view
+ * @var Token $token
+ * @var Form $form
+ * @var UserInterface $ui
+ * @var ResolverManagerInterface $resolverManager
+ * @var string $formID
+ * @var FileFolder|null $currentFolder
+ * @var Page|null $originalPage
+ * @var StorageLocation $incomingStorageLocation
+ * @var string $incomingPath
+ * @var array $incomingContents
+ * @var string|null $incomingContentsError
+ * @var File|null $replacingFile
+ * @var bool|null $reloadOnReplace (may be not set)
+ */
 
 $app = Application::getFacadeApplication();
 /** @var Identifier $idHelper */
@@ -54,6 +57,7 @@ $dropZoneId = "ccm-drop-zone-" . $idHelper->getString();
                 if ($replacingFile ?? null) {
                     ?>
                     :replace-file-id="<?= $replacingFile->getFileID() ?>"
+                    :reload-on-replace="<?= ($reloadOnReplace ?? false) ? 'true' : 'false' ?>"
                     <?php
                 }
                 ?>
