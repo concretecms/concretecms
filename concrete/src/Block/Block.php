@@ -949,7 +949,7 @@ EOT
             $co = $this->getBlockCollectionObject();
 
             $arHandle = $this->getAreaHandle();
-            if ($arHandle) {
+            if ($arHandle && is_object($co)) {
                 $a = $this->getBlockAreaObject();
                 if ($a->isGlobalArea()) {
                     // then we need to check against the global area name. We currently have the wrong area handle passed in
@@ -1765,72 +1765,75 @@ EOT
         $newBID = (int) $connection->lastInsertId(); // this is the latest inserted block ID
 
         // now, we duplicate the block-specific permissions
-        $oc = $this->getBlockCollectionObject();
-        $ocID = $oc->getCollectionID();
-        $ovID = $oc->getVersionID();
-
+        
         $ncID = $nc->getCollectionID();
         $nvID = $nc->getVersionID();
-
-        // Composer specific
-        $row = $connection->createQueryBuilder()
-            ->select('cID', 'cvID', 'arHandle', 'cbDisplayOrder', 'ptComposerFormLayoutSetControlID')
-            ->from('PageTypeComposerOutputBlocks')
-            ->where('cID = :cID')
-            ->andWhere('cvID = :cvID')
-            ->andWhere('bID = :bID')
-            ->andWhere('arHandle = :arHandle')
-            ->setParameter('cID', $ocID)
-            ->setParameter('cvID', $ovID)
-            ->setParameter('bID', $this->getBlockID())
-            ->setParameter('arHandle', $this->getAreaHandle())
-            ->execute()->fetchAssociative();
-        if ($row && is_array($row) && $row['cID']) {
-            $connection->insert('PageTypeComposerOutputBlocks', [
-                'cID' => $ncID,
-                'cvID' => $nvID,
-                'arHandle' => $this->getAreaHandle(),
-                'cbDisplayOrder' => $row['cbDisplayOrder'],
-                'ptComposerFormLayoutSetControlID' => $row['ptComposerFormLayoutSetControlID'],
-                'bID' => $newBID,
-            ]);
-        }
-
-        $r = $connection->createQueryBuilder()
-            ->select('paID', 'pkID')
-            ->from('BlockPermissionAssignments')
-            ->where('cID = :cID')
-            ->andWhere('bID = :bID')
-            ->andWhere('cvID = :cvID')
-            ->setParameter('cID', $ocID)
-            ->setParameter('bID', $this->getBlockID())
-            ->setParameter('cvID', $ovID)
-            ->execute()
-        ;
-
-        while ($row = $r->fetchAssociative()) {
-            $assignment = $connection->createQueryBuilder()
-                ->select('cID', 'cvID', 'bID', 'pkID', 'paID')
-                ->from('BlockPermissionAssignments')
+        
+        $oc = $this->getBlockCollectionObject();
+        if(is_object($oc)) {
+            $ocID = $oc->getCollectionID();
+            $ovID = $oc->getVersionID();
+    
+            // Composer specific
+            $row = $connection->createQueryBuilder()
+                ->select('cID', 'cvID', 'arHandle', 'cbDisplayOrder', 'ptComposerFormLayoutSetControlID')
+                ->from('PageTypeComposerOutputBlocks')
                 ->where('cID = :cID')
                 ->andWhere('cvID = :cvID')
                 ->andWhere('bID = :bID')
-                ->andWhere('pkID = :pkID')
-                ->andWhere('paID = :paID')
-                ->setParameter('cID', $ncID)
-                ->setParameter('cvID', $nvID)
-                ->setParameter('bID', $newBID)
-                ->setParameter('pkID', $row['pkID'])
-                ->setParameter('paID', $row['paID'])
-                ->execute()->fetchOne();
-            if ($assignment === false) {
-                $connection->insert('BlockPermissionAssignments', [
+                ->andWhere('arHandle = :arHandle')
+                ->setParameter('cID', $ocID)
+                ->setParameter('cvID', $ovID)
+                ->setParameter('bID', $this->getBlockID())
+                ->setParameter('arHandle', $this->getAreaHandle())
+                ->execute()->fetchAssociative();
+            if ($row && is_array($row) && $row['cID']) {
+                $connection->insert('PageTypeComposerOutputBlocks', [
                     'cID' => $ncID,
                     'cvID' => $nvID,
+                    'arHandle' => $this->getAreaHandle(),
+                    'cbDisplayOrder' => $row['cbDisplayOrder'],
+                    'ptComposerFormLayoutSetControlID' => $row['ptComposerFormLayoutSetControlID'],
                     'bID' => $newBID,
-                    'pkID' => $row['pkID'],
-                    'paID' => $row['paID'],
                 ]);
+            }
+    
+            $r = $connection->createQueryBuilder()
+                ->select('paID', 'pkID')
+                ->from('BlockPermissionAssignments')
+                ->where('cID = :cID')
+                ->andWhere('bID = :bID')
+                ->andWhere('cvID = :cvID')
+                ->setParameter('cID', $ocID)
+                ->setParameter('bID', $this->getBlockID())
+                ->setParameter('cvID', $ovID)
+                ->execute()
+            ;
+    
+            while ($row = $r->fetchAssociative()) {
+                $assignment = $connection->createQueryBuilder()
+                    ->select('cID', 'cvID', 'bID', 'pkID', 'paID')
+                    ->from('BlockPermissionAssignments')
+                    ->where('cID = :cID')
+                    ->andWhere('cvID = :cvID')
+                    ->andWhere('bID = :bID')
+                    ->andWhere('pkID = :pkID')
+                    ->andWhere('paID = :paID')
+                    ->setParameter('cID', $ncID)
+                    ->setParameter('cvID', $nvID)
+                    ->setParameter('bID', $newBID)
+                    ->setParameter('pkID', $row['pkID'])
+                    ->setParameter('paID', $row['paID'])
+                    ->execute()->fetchOne();
+                if ($assignment === false) {
+                    $connection->insert('BlockPermissionAssignments', [
+                        'cID' => $ncID,
+                        'cvID' => $nvID,
+                        'bID' => $newBID,
+                        'pkID' => $row['pkID'],
+                        'paID' => $row['paID'],
+                    ]);
+                }
             }
         }
 
@@ -1948,7 +1951,11 @@ EOT
 
         $cID = $this->getBlockCollectionID();
         $c = $this->getBlockCollectionObject();
-        $cvID = $c->getVersionID();
+        if(is_object($c)) {
+            $cvID = $c->getVersionID();
+        } else {
+            $cvID = null;
+        }
         $arHandle = $this->getAreaHandle();
 
         // if this block is located in a master collection, we're going to delete all the instances of the block,
