@@ -67,7 +67,7 @@ $timezone = $dateService->getTimezoneDisplayName($timezone);
 
 <?php if ($activeVersionExists || $scheduledVersionExists) { ?>
     <div class="form-group">
-        <div class="form-check form-switch">
+        <div id="version-scheduling" class="form-check form-switch">
         <?= $form->checkbox('keepOtherScheduling', 1, false) ?>
             <label for="keepOtherScheduling" class="form-check-label">
                 <span class="text-standard"><?= $scheduledVersionExists ? t('Activate to remove the current scheduled version.') : t('At the moment, the existing live version will remain.') ?></span>
@@ -90,17 +90,18 @@ $timezone = $dateService->getTimezoneDisplayName($timezone);
 </div>
 
 <style type="text/css">
-    .text-active, .info-active {
+    #version-scheduling .text-active,
+    #version-scheduling .info-active {
         display: none;
     }
 
-    #keepOtherScheduling:checked ~ .form-check-label .text-standard,
-    #keepOtherScheduling:checked ~ .help-block .info-standard {
+    #version-scheduling #keepOtherScheduling:checked ~ .form-check-label .text-standard,
+    #version-scheduling #keepOtherScheduling:checked ~ .help-block .info-standard {
         display: none;
     }
 
-    #keepOtherScheduling:checked ~ .form-check-label .text-active,
-    #keepOtherScheduling:checked ~ .help-block .info-active {
+    #version-scheduling #keepOtherScheduling:checked ~ .form-check-label .text-active,
+    #version-scheduling #keepOtherScheduling:checked ~ .help-block .info-active {
         display: inline;
     }
     div.ui-dialog button.ccm-check-in-schedule {
