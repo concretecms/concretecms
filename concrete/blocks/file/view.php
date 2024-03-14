@@ -10,7 +10,7 @@ if ($f && $fp->canViewFile()) {
     ?>
 	<div class="ccm-block-file">
 		<a href="<?php echo $forceDownload ? $f->getForceDownloadURL() : $f->getDownloadURL();
-    ?>"><?php echo stripslashes($controller->getLinkText()) ?></a>
+    ?>"><?php echo h(stripslashes($controller->getLinkText())) ?></a>
 	</div>
 
 

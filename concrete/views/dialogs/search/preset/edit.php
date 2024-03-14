@@ -7,7 +7,7 @@
         <?= $form->hidden('objectID', $controller->getObjectID()); ?>
         <div class="form-group">
             <?= $form->label('presetName', t('Name')); ?>
-            <?= $form->text('presetName', $searchPreset->getPresetName()); ?>
+            <?= $form->text('presetName', h($searchPreset->getPresetName())); ?>
         </div>
 
         <div class="dialog-buttons">
