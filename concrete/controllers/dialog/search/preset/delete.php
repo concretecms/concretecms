@@ -48,7 +48,7 @@ abstract class Delete extends UserInterface
                     }
                     if (!$this->error->has()) {
                         $response = new EditResponse();
-                        $response->setMessage(t('%s deleted successfully.', $searchPreset->getPresetName()));
+                        $response->setMessage(t('%s deleted successfully.', h($searchPreset->getPresetName())));
                         $response->setAdditionalDataAttribute('presetID', $presetID);
                         $em = $this->app->make(EntityManager::class);
                         $em->remove($searchPreset);
