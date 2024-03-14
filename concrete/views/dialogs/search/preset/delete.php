@@ -5,7 +5,7 @@
         <?= $token->output('remove_search_preset'); ?>
         <?= $form->hidden('presetID', $searchPreset->getId()); ?>
         <?= $form->hidden('objectID', $controller->getObjectID()); ?>
-        <p><?= t('Are you sure you want to remove the "%s" search preset?', $searchPreset->getPresetName()); ?></p>
+        <p><?= t('Are you sure you want to remove the "%s" search preset?', h($searchPreset->getPresetName())); ?></p>
 
         <div class="dialog-buttons">
             <button class="btn btn-default" data-dialog-action="cancel"><?= t('Cancel'); ?></button>
