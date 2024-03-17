@@ -10,15 +10,15 @@ defined('C5_EXECUTE') or die("Access Denied.");
             <legend><?= t('Basic Information'); ?></legend>
                 <div class="form-group">
                     <?= $form->label('title', t('Title')); ?>
-                    <?= $form->text('title', $file->getTitle()); ?>
+                    <?= $form->text('title', h($file->getTitle())); ?>
                 </div>
                 <div class="form-group">
                     <?= $form->label('description', t('Description')); ?>
-                    <?= $form->textarea('description', $file->getDescription()); ?>
+                    <?= $form->textarea('description', h($file->getDescription())); ?>
                 </div>
             <div class="form-group">
                 <?= $form->label('tags', t('Tags')); ?>
-                <?= $form->textarea('tags', $file->getTags()); ?>
+                <?= $form->textarea('tags', h($file->getTags())); ?>
             </div>
         </fieldset>
         <fieldset>

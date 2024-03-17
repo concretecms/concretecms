@@ -52,12 +52,12 @@ class FileTest extends TestCase
         $integer = '2130706433';
 
         // Test hexadecimal IPs get caught as local
-        yield ['https://' . $simpleIp, UserMessageException::class, '/The URL ".+?" is not valid./'];
-        yield ['https://' . $hex, UserMessageException::class, '/The URL ".+?" is not valid./'];
-        yield ['https://' . $octal, UserMessageException::class, '/The URL ".+?" is not valid./'];
-        yield ['https://' . $octal2, UserMessageException::class, '/The URL ".+?" is not valid./'];
-        yield ['https://' . $octal3, UserMessageException::class, '/The URL ".+?" is not valid./'];
-        yield ['https://' . $integer, UserMessageException::class, '/The URL ".+?" is not valid./'];
+        yield ['https://' . $simpleIp, UserMessageException::class, '/The URL &quot;.+?&quot; is not valid./'];
+        yield ['https://' . $hex, UserMessageException::class, '/The URL &quot;.+?&quot; is not valid./'];
+        yield ['https://' . $octal, UserMessageException::class, '/The URL &quot;.+?&quot; is not valid./'];
+        yield ['https://' . $octal2, UserMessageException::class, '/The URL &quot;.+?&quot; is not valid./'];
+        yield ['https://' . $octal3, UserMessageException::class, '/The URL &quot;.+?&quot; is not valid./'];
+        yield ['https://' . $integer, UserMessageException::class, '/The URL &quot;.+?&quot; is not valid./'];
 
         // Remote IP
         $simpleIp = '8.8.8.8';
@@ -69,11 +69,11 @@ class FileTest extends TestCase
 
         // Test hexadecimal IPs get caught as local
         yield ['http://' . $simpleIp]; // This is allowed because it's an external IP
-        yield ['http://' . $hex, UserMessageException::class, '/The URL ".+?" is not valid./'];
+        yield ['http://' . $hex, UserMessageException::class, '/The URL &quot;.+?&quot; is not valid./'];
         yield ['http://' . $octal]; // This form is allowed because it at least converts properly in ip-lib
         yield ['http://' . $octal2]; // Same as the first octal
-        yield ['http://' . $octal3, UserMessageException::class, '/The URL ".+?" is not valid./'];
-        yield ['http://' . $integer, UserMessageException::class, '/The URL ".+?" is not valid./'];
+        yield ['http://' . $octal3, UserMessageException::class, '/The URL &quot;.+?&quot; is not valid./'];
+        yield ['http://' . $integer, UserMessageException::class, '/The URL &quot;.+?&quot; is not valid./'];
     }
 
 }

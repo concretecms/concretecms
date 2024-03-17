@@ -141,6 +141,13 @@ class EventService implements ApplicationAwareInterface
 
     public function approve(CalendarEventVersion $version)
     {
+        // Note: without this, summary templates are not fully populated on first
+        // request because the attributes have just been set against the object
+        // and then their retrieval doesn't actually work until the next request.
+        // Ideally this wouldn't be necessary but this is the easiest fix with the lowest
+        // potential for side effects.
+        $this->app->make('cache/request')->disable();
+
         $currentlyApproved = $version->getEvent()->getApprovedVersion();
         if ($currentlyApproved) {
             $currentlyApproved->setIsApproved(false);
