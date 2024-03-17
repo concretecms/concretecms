@@ -209,7 +209,7 @@ class Add extends BackendInterfacePageController
          * Therefore all results will be fetched from the database and splitted with PHP.
          */
 
-        $curPage = (int)$this->request->request->get("curPage", 0);
+        $curPage = (int)$this->request->get("curPage", 0);
         $maxItems = 10;
 
         return $responseFactory->json(

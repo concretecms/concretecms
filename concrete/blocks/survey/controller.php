@@ -34,6 +34,8 @@ class Controller extends BlockController implements UsesFeatureInterface
 
     public $customMessage;
 
+    public $cID;
+
     public $requiresRegistration = false;
     /**
      * Used for localization. If we want to localize the name/description we have to include this.

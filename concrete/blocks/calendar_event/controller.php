@@ -221,7 +221,7 @@ class Controller extends BlockController implements UsesFeatureInterface
                 $results = $list->getResults();
             }
 
-            return $results[0];
+            return $results[0] ?? null;
         }
         if ($this->request->query->has('occurrenceID') && $this->mode == 'R') {
             // request mode
