@@ -24,6 +24,8 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 class Integrations extends DashboardPageController
 {
 
+    protected $redirects = [];
+
     public function view()
     {
         $config = $this->app->make("config");
@@ -74,19 +76,27 @@ class Integrations extends DashboardPageController
             $this->error->add(t('You must specify a name for this integration'));
         }
 
-        $redirect = $this->request->request->get('redirect');
-        if ($validator->notempty($redirect)) {
-            try {
-                $uri = Url::createFromUrl($redirect);
+        $redirects = (array) explode('|', (string) $this->request->request->get('redirect', ''));
+        $redirects = array_filter($redirects, static function (string $redirect) use ($validator) {
+            if ($validator->notempty($redirect)) {
+                try {
+                    $uri = Url::createFromUrl($redirect);
 
-                // Do some simple validation
-                if (!$uri->getHost() || !$uri->getScheme()) {
-                    throw new \RuntimeException('Invalid URI');
+                    // Do some simple validation
+                    return $uri->getHost()->get() && $uri->getScheme()->get();
+                } catch (\Exception $e) {
+                    return false;
                 }
-            } catch (\Exception $e) {
-                $this->error->add(t('That doesn\'t look like a valid URL.'));
             }
+
+            return false;
+        });
+
+        if (!count($redirects)) {
+            $this->error->add(t('That doesn\'t look like a valid URL.'));
         }
+
+        $this->redirects = array_unique($redirects ?: []);
     }
 
     public function edit($clientID = null)
@@ -126,7 +136,7 @@ class Integrations extends DashboardPageController
 
             $command = new UpdateOAuthClientCommand($client->getIdentifier());
             $command->setName($this->request->request->get('name'));
-            $command->setRedirect($this->request->request->get('redirect'));
+            $command->setRedirect(implode('|', $this->redirects));
             $command->setEnableDocumentation($this->request->request->getBoolean('enableDocumentation', false));
             $command->setConsentType($this->request->request->get('consentType', null));
             $hasCustomScopes = $this->request->request->getBoolean('hasCustomScopes', false);

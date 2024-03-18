@@ -41,8 +41,8 @@ class Client implements ClientEntityInterface, \JsonSerializable
     protected $name;
 
     /**
-     * @var string|string[]
-     * @ORM\Column(type="string")
+     * @var string
+     * @ORM\Column(type="text")
      */
     protected $redirectUri;
 

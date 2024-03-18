@@ -35,7 +35,7 @@ if (isset($client) && $client->hasCustomScopes()) {
             <div class="mb-3">
                 <label class="form-label" for="redirect"><?php echo t('Redirect'); ?></label>
                 <div class="input-group">
-                    <input type="url" class="form-control" autocomplete="off"  v-model="redirect">
+                    <input pattern="https?:\/\/.+" class="form-control" autocomplete="off"  v-model="redirect">
                     <span class="input-group-text"><i class="fas fa-asterisk"></i></span>
                 </div>
             </div>
