@@ -70,13 +70,13 @@ $timezone = $dateService->getTimezoneDisplayName($timezone);
         <div id="version-scheduling" class="form-check form-switch">
         <?= $form->checkbox('keepOtherScheduling', 1, false) ?>
             <label for="keepOtherScheduling" class="form-check-label">
-                <span class="text-standard"><?= $scheduledVersionExists ? t('Activate to remove the current scheduled version.') : t('At the moment, the existing live version will remain.') ?></span>
-                <span class="text-active"><?= $scheduledVersionExists ? t('Deactivate to leave current scheduled version.') : t('Deactivate to leave current live version online.') ?></span>
+                <span class="text-standard"><?= $scheduledVersionExists ? t('At the moment, the existing scheduled version will remain.') : t('At the moment, the existing live version will remain.') ?></span>
+                <span class="text-active"><?= $scheduledVersionExists ? t('At the moment, current scheduled version gets removed.') : t('At the moment, the current live version gets removed.') ?></span>
             </label>
             <span class="form-text help-block">
                 <i class="fa fa-info-circle" aria-hidden="true"></i>
-                <span class="info-standard"><?= $scheduledVersionExists ? t('At the moment, the existing scheduled version will remain.') : t('Activate to remove the current live version.') ?></span>
-                <span class="info-active"><?= $scheduledVersionExists ? t('At the moment, current scheduled version gets removed.') : t('At the moment, the current live version gets removed.') ?></span>
+                <span class="info-standard"><?= $scheduledVersionExists ? t('Activate to remove the current scheduled version.') : t('Activate to remove the current live version.') ?></span>
+                <span class="info-active"><?= $scheduledVersionExists ? t('Deactivate to leave current scheduled version.') : t('Deactivate to leave current live version online.') ?></span>
             </span>
         </div>
     </div>
