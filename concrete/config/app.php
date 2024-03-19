@@ -160,6 +160,7 @@ return [
         // Api - has to come after Express (and possibly other items)
         'core_api' => 'Concrete\Core\Api\ApiServiceProvider',
 
+        'core_marketplace' => \Concrete\Core\Marketplace\MarketplaceServiceProvider::class
     ],
 
     /*

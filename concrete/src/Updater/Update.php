@@ -7,6 +7,8 @@ use Concrete\Core\Cache\Command\ClearCacheCommand;
 use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Database\DatabaseStructureManager;
 use Concrete\Core\Foundation\Environment\FunctionInspector;
+use Concrete\Core\Marketplace\PackageRepositoryInterface;
+use Concrete\Core\Package\PackageService;
 use Concrete\Core\SiteInformation\SiteInformationSurvey;
 use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\Updater\Migrations\Configuration;
@@ -60,10 +62,14 @@ class Update
         }
 
         if ($queryWS) {
-            $mi = Marketplace::getInstance();
-            if ($mi->isConnected()) {
-                Marketplace::checkPackageUpdates();
+            $packageRepository = $app->make(PackageRepositoryInterface::class);
+            $skip = $config->get('concrete.updates.skip_packages');
+
+            if ($skip !== true) {
+                $packageService = $app->make(PackageService::class);
+                $packageService->checkPackageUpdates($packageRepository, (array) $skip);
             }
+
             $update = static::getLatestAvailableUpdate();
             $versionNum = null;
             if (is_object($update)) {
@@ -259,7 +265,7 @@ class Update
             $formParams = [
                 'LOCALE' =>  Localization::activeLocale(),
                 'BASE_URL_FULL' => (string) Application::getApplicationURL(),
-                'APP_VERSION' => APP_VERSION
+                'APP_VERSION' => '9.0.0'
             ];
             $survey = $app->make(SiteInformationSurvey::class);
             $results = $survey->getSaver()->getResults();
