@@ -4,6 +4,7 @@ namespace Concrete\Core\Backup\ContentImporter\Importer\Routine;
 use Concrete\Core\Block\BlockType\BlockType;
 use Concrete\Core\Permission\Category;
 use Concrete\Core\Validation\BannedWord\BannedWord;
+use Concrete\Core\Utility\Service\Xml;
 use Doctrine\ORM\Id\UuidGenerator;
 
 class ImportExpressAssociationsRoutine extends AbstractRoutine
@@ -20,6 +21,7 @@ class ImportExpressAssociationsRoutine extends AbstractRoutine
         $em->getClassMetadata('Concrete\Core\Entity\Express\Association')->setIdGenerator(new \Doctrine\ORM\Id\AssignedGenerator());
 
         if (isset($sx->expressentities)) {
+            $xml = app(Xml::class);
             foreach ($sx->expressentities->entity as $entityNode) {
                 if (isset($entityNode->associations)) {
                     foreach($entityNode->associations->association as $associationNode) {
@@ -34,12 +36,8 @@ class ImportExpressAssociationsRoutine extends AbstractRoutine
                          */
                         $association->setTargetPropertyName((string) $associationNode['target-property-name']);
                         $association->setInversedByPropertyName((string) $associationNode['inversed-by-property-name']);
-                        if (((string) $associationNode['is-owned']) == '1') {
-                            $association->setIsOwnedByAssociation(true);
-                        }
-                        if (((string) $associationNode['is-owner']) == '1') {
-                            $association->setIsOwningAssociation(true);
-                        }
+                        $association->setIsOwnedByAssociation($xml->getBool($associationNode['is-owned']));
+                        $association->setIsOwningAssociation($xml->getBool($associationNode['is-owner']));
                         $em->persist($association);
                     }
                 }

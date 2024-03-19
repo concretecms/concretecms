@@ -97,6 +97,14 @@ class Controller extends BlockController implements UsesFeatureInterface
 
     public function validate($args)
     {
+        $args += [
+            'apiKey' => null,
+            'location' => null,
+            'latitude' => '',
+            'longitude' => '',
+            'zoom' => null
+        ];
+
         $error = $this->app->make('helper/validation/error');
 
         if (!trim($args['apiKey'])) {

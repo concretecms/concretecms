@@ -6,6 +6,7 @@ use Concrete\Controller\Backend\UserInterface as BackendInterfaceController;
 use Concrete\Core\Attribute\Category\CategoryInterface;
 use Concrete\Core\Attribute\Category\CategoryService;
 use Concrete\Core\Attribute\Key\Component\KeySelector\ControllerTrait as KeySelectorControllerTrait;
+use Concrete\Core\Attribute\ObjectInterface;
 use Concrete\Core\Error\ErrorList\ErrorList;
 use Concrete\Core\Filesystem\ElementManager;
 use Concrete\Core\Page\EditResponse as PageEditResponse;
@@ -44,11 +45,6 @@ class Properties extends BackendInterfaceController
      */
     protected $canEdit = false;
 
-    /**
-     * @var int[]
-     */
-    protected $allowedEditAttributes = [];
-
     public function __construct(CategoryService $attributeCategoryService)
     {
         parent::__construct();
@@ -67,7 +63,6 @@ class Properties extends BackendInterfaceController
         parent::on_start();
 
         $this->populatePages();
-        $this->setupAllowedEditAttributes();
     }
 
     public function view()
@@ -126,9 +121,13 @@ class Properties extends BackendInterfaceController
      *
      * @see \Concrete\Core\Attribute\Key\Component\KeySelector\ControllerTrait::canEditAttributeKey()
      */
-    public function canEditAttributeKey(int $akID): bool
+    public function canEditAttributeKey(int $akID, ObjectInterface $object): bool
     {
-        return in_array($akID, $this->allowedEditAttributes);
+        $attributeKey = $this->category->getAttributeKeyByID($akID);
+        $key = Key::getByHandle('edit_page_properties');
+        $key->setPermissionObject($object);
+        $assignment = $key->getMyAssignment();
+        return $assignment->canEditAttributeKey($attributeKey);
     }
 
     /**
@@ -138,7 +137,11 @@ class Properties extends BackendInterfaceController
      */
     protected function canAccess()
     {
-        return ($this->getAction() === 'getAttribute' || $this->canEdit) && count($this->allowedEditAttributes) > 0;
+        $checker = new Checker(Page::getByPath('/dashboard/sitemap/search'));
+        if ($checker->canViewPage()) {
+            return $this->getAction() === 'getAttribute' || $this->canEdit;
+        }
+        return false;
     }
 
     protected function populatePages(): void
@@ -165,15 +168,6 @@ class Properties extends BackendInterfaceController
             }
         } else {
             $this->canEdit = false;
-        }
-    }
-
-    protected function setupAllowedEditAttributes(): void
-    {
-        $pk = Key::getByHandle('edit_page_properties');
-        $assignment = $pk->getMyAssignment();
-        if ($assignment) {
-            $this->allowedEditAttributes = $assignment->getAttributesAllowedArray();
         }
     }
 }

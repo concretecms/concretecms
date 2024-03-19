@@ -31,10 +31,11 @@ class Entities extends DashboardPageController
             $vs = \Core::make('helper/validation/strings');
 
             $name = $sec->sanitizeString($this->request->request->get('name'));
-            $handle = $sec->sanitizeString($this->request->request->get('handle'));
+            $handle = $this->request->request->get('handle');
+            $plural_handle = $this->request->request->get('plural_handle');
 
             if (!$vs->handle($handle)) {
-                $this->error->add(t('You must create a handle for your data object. It may contain only lowercase letters and underscores.'), 'handle');
+                $this->error->add(t('You must create a valid handle for your data object. It may contain only lowercase letters and underscores.'), 'handle');
             } else {
                 $entity = Express::getObjectByHandle($handle);
                 if (is_object($entity)) {
@@ -44,6 +45,10 @@ class Entities extends DashboardPageController
                 }
             }
 
+            if (!$vs->handle($plural_handle)) {
+                $this->error->add(t('You must create a valid plural handle for your data object. It may contain only lowercase letters and underscores.'), 'plural_handle');
+            }
+
             if (!$name) {
                 $this->error->add(t('You must give your data object a name.'), 'name');
             }
@@ -51,8 +56,8 @@ class Entities extends DashboardPageController
             if (!$this->error->has()) {
                 $entity = new Entity();
                 $entity->setName($this->request->request->get('name'));
-                $entity->setHandle($this->request->request->get('handle'));
-                $entity->setPluralHandle($this->request->request->get('plural_handle'));
+                $entity->setHandle($handle);
+                $entity->setPluralHandle($plural_handle);
                 $entity->setLabelMask($this->request->request->get('label_mask'));
                 $entity->setDescription($this->request->request->get('description'));
                 $entity->setIsPublished(false);
@@ -330,10 +335,11 @@ class Entities extends DashboardPageController
         $vs = \Core::make('helper/validation/strings');
 
         $name = $sec->sanitizeString($this->request->request->get('name'));
-        $handle = $sec->sanitizeString($this->request->request->get('handle'));
+        $handle = $this->request->request->get('handle');
+        $plural_handle = $this->request->request->get('plural_handle');
 
         if (!$vs->handle($handle)) {
-            $this->error->add(t('You must create a handle for your data object. It may contain only lowercase letters and underscores.'), 'handle');
+            $this->error->add(t('You must create a valid handle for your data object. It may contain only lowercase letters and underscores.'), 'handle');
         } else {
             $exist = Express::getObjectByHandle($handle);
             if (is_object($exist) && $exist->getID() != $id) {
@@ -341,6 +347,15 @@ class Entities extends DashboardPageController
             } else if (strlen($handle) > 34) {
                 $this->error->add(t('Your entity handle must be 34 characters or less.'));
             }
+        }
+
+        if (!$vs->handle($plural_handle)) {
+            $this->error->add(
+                t(
+                    'You must create a valid plural handle for your data object. It may contain only lowercase letters and underscores.'
+                ),
+                'plural_handle'
+            );
         }
 
         if (!$name) {
@@ -379,7 +394,7 @@ class Entities extends DashboardPageController
              */
             $entity->setName($name);
             $entity->setHandle($handle);
-            $entity->setPluralHandle($this->request->request->get('plural_handle'));
+            $entity->setPluralHandle($plural_handle);
             $entity->setLabelMask($this->request->request->get('label_mask'));
             $entity->setDescription($this->request->request->get('description'));
             $entity->setDefaultViewForm($viewForm);

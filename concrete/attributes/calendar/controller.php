@@ -7,6 +7,7 @@ use Concrete\Core\Api\Resources;
 use Concrete\Core\Attribute\FontAwesomeIconFormatter;
 use Concrete\Core\Calendar\Calendar;
 use Concrete\Core\Entity\Attribute\Value\Value\NumberValue;
+use Concrete\Core\Utility\Service\Xml;
 use League\Fractal\Resource\Item;
 use League\Fractal\Resource\ResourceInterface;
 
@@ -39,11 +40,8 @@ class Controller extends \Concrete\Attribute\Number\Controller implements ApiRes
     public function exportValue(\SimpleXMLElement $akv)
     {
         $val = $this->attributeValue->getValue();
-        $cnode = $akv->addChild('value');
-        $node = dom_import_simplexml($cnode);
-        $no = $node->ownerDocument;
-        $node->appendChild($no->createCDataSection($val->getName()));
-        return $cnode;
+
+        return $this->app->make(Xml::class)->createChildElement($akv, 'value', $val->getName());
     }
 
     public function createAttributeValueFromRequest()

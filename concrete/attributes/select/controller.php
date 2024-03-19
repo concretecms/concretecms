@@ -21,6 +21,7 @@ use Concrete\Core\Entity\Attribute\Value\Value\SelectValueUsedOption;
 use Concrete\Core\Error\ErrorList\ErrorList;
 use Concrete\Core\Error\UserMessageException;
 use Concrete\Core\Search\ItemList\Database\AttributedItemList;
+use Concrete\Core\Utility\Service\Xml;
 use Core;
 use Database;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -172,17 +173,12 @@ class Controller extends AttributeTypeController implements
          */
         $type = $this->getAttributeKeySettings();
         if (isset($akey->type)) {
-            $akSelectAllowMultipleValues = $akey->type['allow-multiple-values'];
-            $akDisplayMultipleValuesOnSelect = $akey->type['display-multiple-values'];
-            $akSelectOptionDisplayOrder = $akey->type['display-order'];
-            $akSelectAllowOtherValues = $akey->type['allow-other-values'];
-            $akHideNoneOption = $akey->type['hide-none-option'];
-
-            $type->setAllowMultipleValues(((string) $akSelectAllowMultipleValues) == '1' ? true : false);
-            $type->setDisplayOrder($akSelectOptionDisplayOrder);
-            $type->setAllowOtherValues(((string) $akSelectAllowOtherValues) == '1' ? true : false);
-            $type->setDisplayMultipleValuesOnSelect(((string) $akDisplayMultipleValuesOnSelect) == '1' ? true : false);
-            $type->setHideNoneOption(((string) $akHideNoneOption) == '1' ? true : false);
+            $xml = $this->app->make(Xml::class);
+            $type->setAllowMultipleValues($xml->getBool($akey->type['allow-multiple-values']));
+            $type->setDisplayOrder($akey->type['display-order']);
+            $type->setAllowOtherValues($xml->getBool($akey->type['allow-other-values']));
+            $type->setDisplayMultipleValuesOnSelect($xml->getBool($akey->type['display-multiple-values']));
+            $type->setHideNoneOption($xml->getBool($akey->type['hide-none-option']));
 
             $list = new SelectValueOptionList();
             if (isset($akey->type->options)) {
@@ -190,7 +186,7 @@ class Controller extends AttributeTypeController implements
                 foreach ($akey->type->options->children() as $option) {
                     $opt = new SelectValueOption();
                     $opt->setSelectAttributeOptionValue((string) $option['value']);
-                    $opt->setIsEndUserAdded((bool) $option['is-end-user-added']);
+                    $opt->setIsEndUserAdded($xml->getBool($option['is-end-user-added']));
                     $opt->setOptionList($list);
                     $opt->setDisplayOrder($displayOrder);
                     $list->getOptions()->add($opt);

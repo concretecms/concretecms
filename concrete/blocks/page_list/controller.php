@@ -411,9 +411,9 @@ class Controller extends BlockController implements UsesFeatureInterface
             $this->list->ignorePermissions();
         }
         if ($this->excludeCurrentPage) {
-	    $ID = Page::getCurrentPage()->getCollectionID();
-	    $this->list->getQueryObject()->andWhere($expr->neq('p.cID', $ID));
-	}
+            $ID = Page::getCurrentPage()->getCollectionID();
+            $this->list->getQueryObject()->andWhere($expr->neq('p.cID', $ID));
+        }
 
         $this->list->filter('cvName', '', '!=');
 
@@ -659,6 +659,13 @@ class Controller extends BlockController implements UsesFeatureInterface
 
     public function validate($args)
     {
+        $args += [
+            'rss' => null,
+            'rssHandle' => '',
+            'rssTitle' => '',
+            'rssDescription' => ''
+        ];
+
         $e = Core::make('helper/validation/error');
         $vs = Core::make('helper/validation/strings');
         $pf = false;
@@ -766,6 +773,7 @@ class Controller extends BlockController implements UsesFeatureInterface
             'ptID' => 0,
             'filterDateOption' => 'all',
             'cParentID' => null,
+            'ignorePermissions' => 0,
         ];
 
         if (is_numeric($args['cParentID'])) {

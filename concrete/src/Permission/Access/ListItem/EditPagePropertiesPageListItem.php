@@ -1,6 +1,8 @@
 <?php
 namespace Concrete\Core\Permission\Access\ListItem;
 
+use Concrete\Core\Attribute\AttributeKeyInterface;
+
 class EditPagePropertiesPageListItem extends PageListItem
 {
     protected $customAttributeKeyArray = array();
@@ -26,6 +28,11 @@ class EditPagePropertiesPageListItem extends PageListItem
     public function getAttributesAllowedArray()
     {
         return $this->customAttributeKeyArray;
+    }
+
+    public function canEditAttributeKey(AttributeKeyInterface $key): bool
+    {
+        return in_array($key->getAttributeKeyID(), $this->getAttributesAllowedArray());
     }
 
     public function setAllowEditName($allow)

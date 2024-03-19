@@ -93,16 +93,6 @@ class Controller extends BlockController implements UsesFeatureInterface
     public $customDateFormat;
 
     /**
-     * @var int|null
-     */
-    public $maxFilesRegistered;
-
-    /**
-     * @var int|null
-     */
-    public $maxFilesGuest;
-
-    /**
      * @var int
      */
     protected $btInterfaceWidth = 450;

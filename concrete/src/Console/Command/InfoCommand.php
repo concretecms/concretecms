@@ -48,6 +48,8 @@ EOT
             $output->writeln('<info># Database Information</info>');
             $output->writeln('Version - ' . $info->getDBMSVersion());
             $output->writeln('SQL Mode - ' . $info->getDBMSSqlMode());
+            $output->writeln('Character Set - ' . $info->getDbCharset());
+            $output->writeln('Collation - ' . $info->getDbCollation());
         }
 
         $output->writeln('');
@@ -66,6 +68,10 @@ EOT
         $output->writeln('');
         $output->writeln('<info># Cache Settings</info>');
         $output->writeln($info->getCache());
+
+        $output->writeln('');
+        $output->writeln('<info># Database Entities Settings</info>');
+        $output->writeln($info->getEntities());
 
         $output->writeln('');
         $output->writeln('<info># Server API</info>');

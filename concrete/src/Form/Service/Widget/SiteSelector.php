@@ -33,7 +33,7 @@ class SiteSelector
         foreach(\Core::make('site')->getList() as $site) {
             $sp = new \Permissions($site);
             if ($sp->canViewSiteInSelector()) {
-                $sites .= '<option ' . ($site->getSiteID() == $siteID ? 'selected' : '') . ' value="' . $site->getSiteID() . '">' . $site->getSiteName() . '</option>';
+                $sites .= '<option ' . ($site->getSiteID() == $siteID ? 'selected' : '') . ' value="' . $site->getSiteID() . '">' . h($site->getSiteName()) . '</option>';
             }
         }
 

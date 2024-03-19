@@ -274,8 +274,7 @@
                         <setMode><![CDATA[any]]></setMode>
                         <onlyCurrentUser><![CDATA[0]]></onlyCurrentUser>
                         <tags><![CDATA[]]></tags>
-                        <viewProperties>
-                            <![CDATA[{"thumbnail":"1","filename":"5","tags":"-1","date":"5","extension":"-1","size":"5","description":"-1","ak_16":"-1","ak_17":"-1","ak_19":"-1"}]]></viewProperties>
+                        <viewProperties><![CDATA[{"thumbnail":"1","filename":"5","tags":"-1","date":"5","extension":"-1","size":"5","description":"-1","ak_16":"-1","ak_17":"-1","ak_19":"-1"}]]></viewProperties>
                         <expandableProperties><![CDATA[[]]]></expandableProperties>
                         <searchProperties></searchProperties>
                         <orderBy><![CDATA[title]]></orderBy>
@@ -317,8 +316,7 @@
                         <setMode><![CDATA[any]]></setMode>
                         <onlyCurrentUser><![CDATA[0]]></onlyCurrentUser>
                         <tags><![CDATA[]]></tags>
-                        <viewProperties>
-                            <![CDATA[{"thumbnail":"1","filename":"5","tags":"-1","date":"5","extension":"-1","size":"5","description":"-1","ak_16":"-1","ak_17":"-1","ak_19":"-1"}]]></viewProperties>
+                        <viewProperties><![CDATA[{"thumbnail":"1","filename":"5","tags":"-1","date":"5","extension":"-1","size":"5","description":"-1","ak_16":"-1","ak_17":"-1","ak_19":"-1"}]]></viewProperties>
                         <expandableProperties><![CDATA[[]]]></expandableProperties>
                         <searchProperties></searchProperties>
                         <orderBy><![CDATA[title]]></orderBy>

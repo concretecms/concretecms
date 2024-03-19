@@ -18,9 +18,9 @@ class TextControl extends Control
     {
         $node = parent::export($control, $xml);
         $node->addAttribute('type-id', 'text');
-        $service = new Xml();
-        $service->createCDataNode($node, 'headline', $control->getHeadline());
-        $service->createCDataNode($node, 'body', $control->getBody());
+        $xml = app(Xml::class);
+        $xml->createChildElement($node, 'headline', $control->getHeadline());
+        $xml->createChildElement($node, 'body', $control->getBody());
     }
 
 }

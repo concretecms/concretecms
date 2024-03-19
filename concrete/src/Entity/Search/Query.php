@@ -4,7 +4,6 @@ namespace Concrete\Core\Entity\Search;
 use Concrete\Core\Foundation\Serializer\JsonSerializer;
 use Concrete\Core\Search\Field\FieldInterface;
 use Concrete\Core\Search\ProviderInterface;
-use Concrete\Core\Utility\Service\Xml;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Normalizer\DenormalizableInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;

@@ -108,8 +108,8 @@ class ApplicationUpdate
     {
         $version_file = DIR_CORE_UPDATES . "/{$dir}/" . DIRNAME_CORE . '/config/concrete.php';
 
-        $concrete = @include $version_file;
-        if ($concrete['version'] != false) {
+        $concrete = is_file($version_file) ? @include $version_file : null;
+        if (is_array($concrete) && !empty($concrete['version'])) {
             $obj = new self();
             $obj->version = $concrete['version'];
             $obj->identifier = $dir;

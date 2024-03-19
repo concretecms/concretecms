@@ -15,6 +15,7 @@ use Concrete\Core\Entity\Attribute\Value\Value\BooleanValue;
 use Concrete\Core\Error\ErrorList\ErrorList;
 use Concrete\Core\Search\ItemList\Database\AttributedItemList;
 use Concrete\Core\Utility\Service\Validation\Numbers;
+use Concrete\Core\Utility\Service\Xml;
 use Core;
 
 class Controller extends AttributeTypeController implements SimpleTextExportableAttributeInterface,
@@ -92,12 +93,10 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
     {
         $type = $this->getAttributeKeySettings();
         if (isset($akey->type)) {
-            $checked = (string) $akey->type['checked'];
+            $xml = $this->app->make(Xml::class);
+            $type->setIsCheckedByDefault($xml->getBool($akey->type['checked']));
             $label = (string) $akey->type['checkbox-label'];
-            if ($checked != '') {
-                $type->setIsCheckedByDefault(true);
-            }
-            if ($label != '') {
+            if ($label !== '') {
                 $type->setCheckboxLabel($label);
             }
         }
@@ -136,8 +135,7 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
     public function createAttributeValue($value)
     {
         $v = new BooleanValue();
-        $value = ($value == false || $value == '0') ? false : true;
-        $v->setValue($value);
+        $v->setValue(filter_var($value, FILTER_VALIDATE_BOOLEAN));
 
         return $v;
     }

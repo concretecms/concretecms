@@ -82,7 +82,10 @@ use Concrete\Core\Logging\Search\Result\Result;
 
                 <?php foreach ($item->getColumns() as $column) { ?>
                     <?php /** @var ItemColumn $column */ ?>
-                    <td>
+                    <td <?php if ($column->getColumn() instanceof
+                        \Concrete\Core\Logging\Search\ColumnSet\Column\MessageColumn) { ?>
+                        class="text-break"
+                        <?php } ?>>
                         <?php echo $column->getColumnValue(); ?>
                     </td>
                 <?php } ?>

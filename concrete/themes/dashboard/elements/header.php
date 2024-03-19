@@ -1,5 +1,6 @@
 <?php
 use Concrete\Core\Support\Facade\Application;
+use Concrete\Core\Page\Page;
 use Concrete\Controller\Panel\Dashboard as DashboardPanel;
 
 defined('C5_EXECUTE') or die('Access Denied.');
@@ -26,7 +27,7 @@ $frontendPageID = $u->getPreviousFrontendPageID();
 if (!$frontendPageID) {
     $backLink = DIR_REL . '/';
 } else {
-    $backLink = DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $frontendPageID;
+    $backLink = URL::to(Page::getByID($frontendPageID));
 }
 
 $show_titles = (bool) $config->get('concrete.accessibility.toolbar_titles');
