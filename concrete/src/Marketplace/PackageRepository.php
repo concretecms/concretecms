@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Concrete\Core\Marketplace;
 
+use Concrete\Core\Application\Application;
 use Concrete\Core\Config\Repository\Repository;
 use Concrete\Core\Marketplace\Exception\InvalidConnectResponseException;
 use Concrete\Core\Marketplace\Exception\InvalidPackageException;
@@ -14,6 +15,8 @@ use Concrete\Core\Marketplace\Model\ConnectError;
 use Concrete\Core\Marketplace\Model\ConnectResult;
 use Concrete\Core\Marketplace\Model\RemotePackage;
 use Concrete\Core\Marketplace\Model\ValidateResult;
+use Concrete\Core\Marketplace\Update\UpdatedFieldInterface;
+use Concrete\Core\Site\Service;
 use Concrete\Core\Url\Resolver\CanonicalUrlResolver;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\BadResponseException;
@@ -24,12 +27,15 @@ use GuzzleHttp\RequestOptions;
 use Psr\Http\Message\RequestInterface;
 use Symfony\Component\Serializer\Exception\ExceptionInterface;
 use Symfony\Component\Serializer\Serializer;
+use GuzzleHttp\Psr7\Utils;
 
 final class PackageRepository implements PackageRepositoryInterface
 {
     private Client $client;
     private Serializer $serializer;
     private Repository $config;
+    private Application $app;
+    private Service $siteService;
     private CanonicalUrlResolver $resolver;
     private string $baseUri;
     private array $paths;
@@ -38,6 +44,8 @@ final class PackageRepository implements PackageRepositoryInterface
         Client $client,
         Serializer $serializer,
         Repository $config,
+        Application $app,
+        Service $siteService,
         CanonicalUrlResolver $resolver,
         string $baseUri,
         array $paths
@@ -45,6 +53,8 @@ final class PackageRepository implements PackageRepositoryInterface
         $this->client = $client;
         $this->serializer = $serializer;
         $this->config = $config;
+        $this->app = $app;
+        $this->siteService = $siteService;
         $this->resolver = $resolver;
         $this->baseUri = $baseUri;
         $this->paths = $paths;
@@ -176,8 +186,9 @@ final class PackageRepository implements PackageRepositoryInterface
 
     public function getConnection(): ?ConnectionInterface
     {
-        $public = $this->config->get('concrete.marketplace.key.public');
-        $private = $this->config->get('concrete.marketplace.key.private');
+        $dbConfig = $this->app->make('config/database');
+        $public = $dbConfig->get('concrete.marketplace.key.public');
+        $private = $dbConfig->get('concrete.marketplace.key.private');
 
         if (!$public || !$private) {
             return null;
@@ -211,7 +222,8 @@ final class PackageRepository implements PackageRepositoryInterface
             throw new InvalidConnectResponseException($contents ?? '');
         }
 
-        $this->config->save('concrete.marketplace.key', [
+        $dbConfig = $this->app->make('config/database');
+        $dbConfig->save('concrete.marketplace.key', [
             'public' => $result->public,
             'private' => $result->private,
         ]);
@@ -241,6 +253,21 @@ final class PackageRepository implements PackageRepositoryInterface
         return $result->valid;
     }
 
+    /**
+     * @param ConnectionInterface $connection
+     * @param UpdatedFieldInterface[] $updatedFields
+     * @return void
+     */
+    public function update(ConnectionInterface $connection, array $updatedFields): void
+    {
+        $formParams = [];
+        foreach ($updatedFields as $field) {
+            $formParams[$field->getName()] = $field->getData();
+        }
+        $request = $this->authenticate($this->requestFor('POST', 'update'), $connection);
+        $response = $this->client->post($request->getUri(), ['form_params' => $formParams]);
+    }
+
     protected function authenticate(
         RequestInterface $request,
         ConnectionInterface $connection,
@@ -265,9 +292,10 @@ final class PackageRepository implements PackageRepositoryInterface
 
     protected function addQuery(RequestInterface $request): RequestInterface
     {
+        $site = $this->siteService->getDefault();
         return $request->withUri($request->getUri()->withQuery(http_build_query([
-            'csiURL' => (string) $this->resolver->resolve([]),
-            'csiName' => $this->config->get('site.sites.default.name'),
+            'csiURL' => $site->getSiteCanonicalURL(),
+            'csiName' => $site->getSiteName(),
             'csiVersion' => $this->config->get('concrete.version'),
             'ms' => $this->config->get('concrete.multisite.enabled') ? 1 : 0,
         ])));

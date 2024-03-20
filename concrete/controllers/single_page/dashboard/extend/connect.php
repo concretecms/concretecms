@@ -38,7 +38,7 @@ class Connect extends DashboardPageController
         $repository = $this->app->make(PackageRepositoryInterface::class);
         $current = $repository->getConnection();
 
-        if ($current) {
+        if ($current && $repository->validate($current)) {
             $this->error->add(t('This site is already connected.'));
             return;
         }

@@ -8,6 +8,7 @@ use Concrete\Core\Marketplace\Exception\PackageAlreadyExistsException;
 use Concrete\Core\Marketplace\Exception\UnableToConnectException;
 use Concrete\Core\Marketplace\Exception\UnableToPlacePackageException;
 use Concrete\Core\Marketplace\Model\RemotePackage;
+use Concrete\Core\Marketplace\Update\UpdatedFieldInterface;
 
 interface PackageRepositoryInterface
 {
@@ -49,4 +50,11 @@ interface PackageRepositoryInterface
      * Determine if a given connection is valid for the current site
      */
     public function validate(ConnectionInterface $connection): bool;
+
+    /**
+     * Sends one or more updated fields to the marketplace backend for optional stage in the remote site object.
+     * @param ConnectionInterface $connection
+     * @param UpdatedFieldInterface[] $updatedFields
+     */
+    public function update(ConnectionInterface $connection, array $updatedFields): void;
 }
