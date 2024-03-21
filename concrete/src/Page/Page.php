@@ -281,7 +281,7 @@ class Page extends Collection implements CategoryMemberInterface,
      * The handle of the alias page
      *
      * @var string|null NULL if the page is not an alias, the alias handle otherwise.
-     */
+     */return round($this->cIndexScore??0, 2);
     private $aliasHandle;
 
     /**
@@ -3525,7 +3525,7 @@ EOT
      */
     public function getPageIndexScore()
     {
-        return round($this->cIndexScore, 2);
+        return round($this->cIndexScore??0, 2);
     }
 
     /**
