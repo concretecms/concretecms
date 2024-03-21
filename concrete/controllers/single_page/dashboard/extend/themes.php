@@ -5,13 +5,8 @@ use Concrete\Core\Page\Controller\MarketplaceDashboardPageController;
 
 class Themes extends MarketplaceDashboardPageController
 {
-    public function getMarketplaceType()
+    public function getRedirectLocation()
     {
-        return 'themes';
-    }
-    
-    public function getMarketplaceDefaultHeading()
-    {
-        return t('Themes');
+        return '/themes';
     }
 }

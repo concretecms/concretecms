@@ -231,7 +231,13 @@ final class PackageRepository implements PackageRepositoryInterface
         return new Connection($result->public, $result->private);
     }
 
-    public function validate(ConnectionInterface $connection): bool
+    public function registerUrl(ConnectionInterface $connection): void
+    {
+        $request = $this->authenticate($this->requestFor('POST', 'register_url'), $connection);
+        $this->client->send($request);
+    }
+
+    public function validate(ConnectionInterface $connection, $returnFullObject = false): bool|ValidateResult
     {
         $request = $this->authenticate($this->requestFor('GET', 'connect_validate'), $connection);
 
@@ -239,7 +245,11 @@ final class PackageRepository implements PackageRepositoryInterface
             $response = $this->client->send($request);
 
             if ($response->getStatusCode() !== 200) {
-                return false;
+                if ($returnFullObject) {
+                    return new ValidateResult(false, '', '');
+                } else {
+                    return false;
+                }
             }
 
             $contents = $response->getBody()->getContents();
@@ -247,10 +257,18 @@ final class PackageRepository implements PackageRepositoryInterface
 
             $result = $this->serializer->denormalize($data, ValidateResult::class);
         } catch (BadResponseException|\JsonException|ExceptionInterface $e) {
-            return false;
+            if ($returnFullObject) {
+                return new ValidateResult(false, '', '', ValidateResult::VALIDATE_RESULT_ERROR);
+            } else {
+                return false;
+            }
         }
 
-        return $result->valid;
+        if ($returnFullObject) {
+            return $result;
+        } else {
+            return $result->valid;
+        }
     }
 
     /**

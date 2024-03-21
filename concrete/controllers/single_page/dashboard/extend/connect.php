@@ -50,7 +50,14 @@ class Connect extends DashboardPageController
         }
 
         try {
-            $repository->connect();
+            if ($this->request->request->get('connect') === 'connect_url') {
+                // The site URL does not match what we have in the record, so we need to add this URL to the
+                // connection.
+                $connection = $repository->getConnection();
+                $repository->registerUrl($connection);
+            } else {
+                $repository->connect();
+            }
         } catch (UnableToConnectException $e) {
             $this->error->add(t('Unable to connect: ' . $e->getMessage()));
         } catch (InvalidConnectResponseException $e) {

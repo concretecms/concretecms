@@ -1,5 +1,7 @@
 <?php
 
+use Concrete\Core\Marketplace\Model\ValidateResult;
+
 defined('C5_EXECUTE') or die("Access Denied.");
 
 /**
@@ -9,7 +11,8 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
 $connection = $marketplace->getConnection();
 if ($connection) {
-    if ($marketplace->validate($connection)) {
+    $result = $marketplace->validate($connection, true);
+    if ($result->valid) {
         if ($permissions->canInstallPackages()) { ?>
 
             <div class="form-group">
@@ -43,11 +46,16 @@ if ($connection) {
         }
     } else { ?>
 
-        <div class="alert alert-danger"><?=t('Unable to validate connection to the marketplace. Please connect again.')?></div>
+        <div class="alert alert-danger"><?=t('Error validating connection to marketplace. %s', h($result->error))?></div>
 
-        <form action="<?= $this->action('do_connect') ?>">
-            <?= $token->output('do_connect') ?>
-            <button type="submit" class="btn btn-success">Connect to Marketplace</button>
+
+        <form action="<?= $this->action('do_connect') ?>" method="post">
+                <?= $token->output('do_connect') ?>
+            <?php if ($result->code === ValidateResult::VALIDATE_RESULT_ERROR_URL_MISMATCH) { ?>
+                <button type="submit" name="connect" value="connect_url" class="btn btn-success"><?=t('Connect This URL to Marketplace')?></button>
+            <?php } else { ?>
+                <button type="submit" name="connect" value="connect" class="btn btn-success"><?=t('Connect to Marketplace')?></button>
+            <?php } ?>
         </form>
 
     <?php }

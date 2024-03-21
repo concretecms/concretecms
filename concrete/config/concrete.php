@@ -962,6 +962,7 @@ return [
         'concrete_secure' => 'https://marketplace.concretecms.com',
         'concrete_community' => 'https://community.concretecms.com',
         'package_repository' => 'http://dl.concretecms.com.test',
+        'marketplace' => 'http://depot.concretecms.com.test',
         'background_feed' => 'https://backgroundimages.concretecms.com/wallpaper',
         'privacy_policy' => '//www.concretecms.com/about/legal/privacy-policy',
         'background_feed_secure' => 'https://backgroundimages.concrete5.org/wallpaper',
@@ -982,24 +983,13 @@ return [
                 'connect' => '/concrete/connect',
                 'connect_validate' => '/concrete/connect/validate',
                 'update' => '/concrete/update',
-                'list' => '/concrete/market/list',
-                'get' => '/concrete/market/package/%s',
+                'register_url' => '/concrete/connect/register_url',
+                'list' => '/concrete/public/list',
+                'get' => '/concrete/public/package/%s',
             ],
 
-            /**
-             * @deprecated This will be removed in version 10
-             */
             'marketplace' => [
-                'projects' => '/profile/projects/',
-                'connect' => '/marketplace/connect',
-                'connect_success' => '/marketplace/connect/-/connected',
-                'connect_validate' => '/marketplace/connect/-/validate',
-                'connect_new_token' => '/marketplace/connect/-/generate_token',
-                'checkout' => '/cart/-/add',
-                'purchases' => '/marketplace/connect/-/get_available_licenses',
-                'item_information' => '/marketplace/connect/-/get_item_information',
-                'item_free_license' => '/marketplace/connect/-/enable_free_license',
-                'remote_item_list' => '/marketplace/',
+                'connect' => '/depot/connect',
             ],
         ],
     ],

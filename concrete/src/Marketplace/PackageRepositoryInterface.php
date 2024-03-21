@@ -8,6 +8,7 @@ use Concrete\Core\Marketplace\Exception\PackageAlreadyExistsException;
 use Concrete\Core\Marketplace\Exception\UnableToConnectException;
 use Concrete\Core\Marketplace\Exception\UnableToPlacePackageException;
 use Concrete\Core\Marketplace\Model\RemotePackage;
+use Concrete\Core\Marketplace\Model\ValidateResult;
 use Concrete\Core\Marketplace\Update\UpdatedFieldInterface;
 
 interface PackageRepositoryInterface
@@ -47,9 +48,17 @@ interface PackageRepositoryInterface
     public function connect(): ConnectionInterface;
 
     /**
+     * Registers a new canonical URL with an existing marketplace connection.
+     *
+     * @param ConnectionInterface $connection
+     * @return void
+     */
+    public function registerUrl(ConnectionInterface $connection): void;
+
+    /**
      * Determine if a given connection is valid for the current site
      */
-    public function validate(ConnectionInterface $connection): bool;
+    public function validate(ConnectionInterface $connection, bool $returnFullObject = false): bool|ValidateResult;
 
     /**
      * Sends one or more updated fields to the marketplace backend for optional stage in the remote site object.
