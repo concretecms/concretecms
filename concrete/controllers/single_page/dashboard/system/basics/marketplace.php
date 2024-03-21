@@ -26,11 +26,14 @@ class Marketplace extends DashboardPageController
         $this->set('dbConfig', $this->app->make('config/database'));
         $this->set('config', $config);
         $this->set('connection', $connection);
-        $this->set('projectPageURL',
-            $config->get('concrete.urls.marketplace')
-            . $config->get('concrete.urls.paths.marketplace.projects')
-            . '/' . $connection->getPublic()
-        );
+        if ($connection) {
+            $this->set(
+                'projectPageURL',
+                $config->get('concrete.urls.marketplace')
+                . $config->get('concrete.urls.paths.marketplace.projects')
+                . '/' . $connection->getPublic()
+            );
+        }
     }
 
     public function update_connection_settings()

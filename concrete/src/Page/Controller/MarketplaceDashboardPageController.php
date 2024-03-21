@@ -21,7 +21,9 @@ abstract class MarketplaceDashboardPageController extends DashboardPageControlle
             $config = $this->app->make('config');
             $url = $config->get('concrete.urls.marketplace')
                 . $config->get('concrete.urls.paths.marketplace.connect')
-                . '/' . $connection->getPublic() . '?redirect=' . h($this->getRedirectLocation());
+                . '/' . $connection->getPublic() . '?redirect=' . h($this->getRedirectLocation())
+                . '&source=' . (string) \URL::to('/dashboard/extend');
+
             return $this->buildRedirect($url);
         } else {
             return $this->buildRedirect('/dashboard/system/basics/marketplace');
