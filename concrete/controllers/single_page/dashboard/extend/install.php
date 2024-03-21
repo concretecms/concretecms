@@ -50,11 +50,6 @@ class Install extends DashboardPageController implements LoggerAwareInterface
 
         $packageRepository = $this->getPackageRepository();
 
-        // Load available packages
-        $available = $packageRepository->getPackages($this->getConnection(), true);
-
-
-
         $this->set('packageRepository', $packageRepository);
         $this->set('connection', $this->getConnection());
     }
@@ -68,17 +63,10 @@ class Install extends DashboardPageController implements LoggerAwareInterface
         return $this->repository;
     }
 
-    protected function getConnection(): ConnectionInterface
+    protected function getConnection(): ?ConnectionInterface
     {
         if (!isset($this->connection)) {
             $connection = $this->getPackageRepository()->getConnection();
-            if (!$connection) {
-                try {
-                    $connection = $this->getPackageRepository()->connect();
-                } catch (UnableToConnectException|InvalidConnectResponseException $e) {
-                    $connection = null;
-                }
-            }
             $this->connection = $connection;
         }
 

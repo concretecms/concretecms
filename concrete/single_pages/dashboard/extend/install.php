@@ -343,25 +343,9 @@ if ($this->controller->getTask() == 'install_package' && isset($showInstallOptio
                     <?php
                 }
             }
-            if ($connection) { ?>
-                <hr>
-                <?php
-                View::element('dashboard/marketplace_project_page', [
-                    'packageRepository' => $packageRepository,
-                    'connection' => $connection,
-                ]);
-            } elseif ($tp->canInstallPackages() && Config::get('concrete.marketplace.enabled') == true) {
-                ?>
-                <hr/>
-                <div class="card">
-                    <div class="card-body bg-light">
-                        <h4><?= t('Connect to Community'); ?></h4>
-                        <p><?= t('Your site is not connected to the Concrete community. Connecting lets you easily extend a site with themes and add-ons.'); ?></p>
-                        <a class="btn btn-primary" href="<?= $view->url('/dashboard/extend/connect'); ?>"><?= t("Connect to Community"); ?></a>
-                    </div>
-                </div>
-                <?php
-            }
+
+            View::element('dashboard/marketplace_connect_offer');
+
         }
     }
     ?>

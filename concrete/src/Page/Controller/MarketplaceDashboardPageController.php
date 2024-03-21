@@ -24,7 +24,7 @@ abstract class MarketplaceDashboardPageController extends DashboardPageControlle
                 . '/' . $connection->getPublic() . '?redirect=' . h($this->getRedirectLocation());
             return $this->buildRedirect($url);
         } else {
-            return $this->buildRedirect('/dashboard/extend/connect');
+            return $this->buildRedirect('/dashboard/system/basics/marketplace');
         }
     }
 }

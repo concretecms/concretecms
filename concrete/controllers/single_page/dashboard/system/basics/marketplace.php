@@ -1,16 +1,14 @@
 <?php
-namespace Concrete\Controller\SinglePage\Dashboard\Extend;
+namespace Concrete\Controller\SinglePage\Dashboard\System\Basics;
 
 use Concrete\Core\Marketplace\Exception\InvalidConnectResponseException;
 use Concrete\Core\Marketplace\Exception\UnableToConnectException;
-use Concrete\Core\Marketplace\Marketplace;
 use Concrete\Core\Marketplace\PackageRepositoryInterface;
 use Concrete\Core\Page\Controller\DashboardPageController;
 use Concrete\Core\Permission\Checker;
 
-class Connect extends DashboardPageController
+class Marketplace extends DashboardPageController
 {
-
     public function view()
     {
         if ($errors = $this->app->make('session')->getFlashBag()->get('errors')) {
@@ -19,12 +17,38 @@ class Connect extends DashboardPageController
             }
         }
 
+        $marketplace = $this->app->make(PackageRepositoryInterface::class);
+        $connection = $marketplace->getConnection();
+
         $config = $this->app->make('config');
         $this->set('permissions', new Checker());
-        $this->set('marketplace', $this->app->make(PackageRepositoryInterface::class));
+        $this->set('marketplace', $marketplace);
         $this->set('dbConfig', $this->app->make('config/database'));
         $this->set('config', $config);
-        $this->set('projectPageURL', $config->get('concrete.urls.concrete_secure') . $config->get('concrete.urls.paths.marketplace.projects'));
+        $this->set('connection', $connection);
+        $this->set('projectPageURL',
+            $config->get('concrete.urls.marketplace')
+            . $config->get('concrete.urls.paths.marketplace.projects')
+            . '/' . $connection->getPublic()
+        );
+    }
+
+    public function update_connection_settings()
+    {
+        if (!$this->token->validate('update_connection_settings')) {
+            $this->error->add($this->token->getErrorMessage());
+        }
+        $checker = new Checker();
+        if (!$checker->canInstallPackages()) {
+            $this->error->add(t('You do not have access to set community configuration values.'));
+        }
+        if (!$this->error->has()) {
+            $dbConfig = $this->app->make('config/database');
+            $dbConfig->save('concrete.marketplace.key.public', $this->request->request->get('publicKey'));
+            $dbConfig->save('concrete.marketplace.key.private', $this->request->request->get('privateKey'));
+            return $this->buildRedirect($this->action('view'));
+        }
+        $this->view();
     }
 
     public function do_connect()
@@ -68,7 +92,7 @@ class Connect extends DashboardPageController
             $this->app->make('session')->getFlashBag()->set('errors', $this->error->getList());
         }
 
-        return $this->buildRedirect('/dashboard/extend/connect');
+        return $this->buildRedirect('/dashboard/system/basics/marketplace');
     }
 
 }

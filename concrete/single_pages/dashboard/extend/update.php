@@ -16,7 +16,7 @@ $ch = Loader::helper('concrete/ui');
 $tp = new TaskPermission();
 
 $connection = $connection ?? null;
-if ($tp->canInstallPackages()) {
+if (!$tp->canInstallPackages()) {
     $connection = null;
 }
 
@@ -133,18 +133,6 @@ if (!$tp->canInstallPackages()) {
     ?>
 
 <?php
-} ?>
+}
 
-		<?php
-        if ($tp->canInstallPackages() && Config::get('concrete.marketplace.enabled') == true) {
-            ?>
-            <div class="card">
-                <div class="card-body bg-light">
-                    <h4><?=t('Connect to Community')?></h4>
-                    <p><?=t('Your site is not connected to the Concrete community. Connecting lets you easily extend a site with themes and add-ons. Connecting enables automatic updates.')?></p>
-                    <a class="btn btn-primary" href="<?=$view->url('/dashboard/extend/connect')?>"><?=t('Connect to Community')?></a>
-                </div>
-            </div>
-		<?php
-        } ?>
-
+View::element('dashboard/marketplace_connect_offer');

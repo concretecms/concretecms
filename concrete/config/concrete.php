@@ -990,6 +990,7 @@ return [
 
             'marketplace' => [
                 'connect' => '/depot/connect',
+                'projects' => '/account/sites/details',
             ],
         ],
     ],
