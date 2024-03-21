@@ -3525,7 +3525,7 @@ EOT
      */
     public function getPageIndexScore()
     {
-        return round($this->cIndexScore, 2);
+        return round($this->cIndexScore??0, 2);
     }
 
     /**
