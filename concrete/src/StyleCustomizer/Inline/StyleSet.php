@@ -247,8 +247,14 @@ class StyleSet
 
         $v = $post->get('customClass');
         if (is_array($v)) {
-            $set->setCustomClass(implode(' ', $v));
-            $return = true;
+            $v = array_filter($v, function ($class) {
+                return preg_match('/^-?[_a-zA-Z]+[_a-zA-Z0-9-]*$/', $class);
+            });
+
+            if (count($v) > 0) {
+                $set->setCustomClass(implode(' ', $v));
+                $return = true;
+            }
         }
 
         $v = trim($post->get('customID', ''));
