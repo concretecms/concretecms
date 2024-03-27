@@ -11,14 +11,14 @@
             <div class="form-inline">
             <?=$form->label('defaultBackgroundColor', t('Background'))?>
             &nbsp;
-            <?=$color->output('defaultBackgroundColor', $defaultBackgroundColor)?>
+            <?=$color->output('defaultBackgroundColor', h($defaultBackgroundColor))?>
             </div>
         </div>
         <div class="form-group col-sm-5">
             <div class="form-inline">
             <?=$form->label('defaultTextColor', t('Text'))?>
                 &nbsp;
-            <?=$color->output('defaultTextColor', $defaultTextColor)?>
+            <?=$color->output('defaultTextColor', h($defaultTextColor))?>
             </div>
         </div>
         </div>
@@ -53,8 +53,8 @@
                 <tr>
                     <td style="text-align: center; width: 10px"><?=$form->checkbox('override[]', $topic->getTreeNodeID(), $checked)?></td>
                     <td style="width: 50%"><?=$topic->getTreeNodeDisplayName()?></td>
-                    <td><?=$color->output('backgroundColor[' . $topic->getTreeNodeID() . ']', $backgroundColor)?></td>
-                    <td><?=$color->output('textColor[' . $topic->getTreeNodeID() . ']', $textColor)?></td>
+                    <td><?=$color->output('backgroundColor[' . $topic->getTreeNodeID() . ']', h($backgroundColor))?></td>
+                    <td><?=$color->output('textColor[' . $topic->getTreeNodeID() . ']', h($textColor))?></td>
                 </tr>
             <?php 
 }
