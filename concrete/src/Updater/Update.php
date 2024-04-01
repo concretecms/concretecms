@@ -8,6 +8,8 @@ use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Database\DatabaseStructureManager;
 use Concrete\Core\Foundation\Environment\FunctionInspector;
 use Concrete\Core\Marketplace\PackageRepositoryInterface;
+use Concrete\Core\Marketplace\Update\Command\UpdateRemoteDataCommand;
+use Concrete\Core\Marketplace\Update\Inspector;
 use Concrete\Core\Package\PackageService;
 use Concrete\Core\SiteInformation\SiteInformationSurvey;
 use Concrete\Core\Support\Facade\Application;
@@ -261,7 +263,19 @@ class Update
     {
         $app = Application::getFacadeApplication();
         $config = $app->make('config');
+        /**
+         * @var $inspector Inspector
+         */
+        $inspector = $app->make(Inspector::class);
         try {
+            $fields = [
+                $inspector->getUsersField(),
+                $inspector->getPrivilegedUsersField(),
+                $inspector->getSitesField(),
+                $inspector->getPackagesField(),
+            ];
+            $command = new UpdateRemoteDataCommand($fields);
+            $app->executeCommand($command);
             $formParams = [
                 'LOCALE' =>  Localization::activeLocale(),
                 'BASE_URL_FULL' => (string) Application::getApplicationURL(),
