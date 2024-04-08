@@ -15,6 +15,7 @@ $liveVersionStatusOnScheduledVersionApproval = (string) $appConfig->get('concret
 /** @var Form $form */
 $form = $app->make('helper/form');
 /** @var DateTimeWidget $datetime */
+
 $datetime = $app->make('helper/form/date_time');
 
 $publishDate = '';
@@ -41,70 +42,51 @@ $timezone = $dateService->getTimezoneDisplayName($timezone);
 ?>
 
 <div class="form-group form-group-last">
-    <label class="control-label form-label"><?= t('From') ?></label>
-    <?= $datetime->datetime(
-    'cvPublishDate',
-    $publishDate,
-    true,
-    true,
-    'light-panel-calendar'
-); ?>
+    <label class="control-label"><?= t('From') ?></label>
+    <?= $datetime->datetime('cvPublishDate', $publishDate, true, true, 'light-panel-calendar') ?>
 </div>
 <div class="form-group form-group-last">
-    <label class="control-label form-label"><?= t('To') ?></label>
-    <?= $datetime->datetime(
-    'cvPublishEndDate',
-    $publishEndDate,
-    true,
-    true,
-    'light-panel-calendar'
-); ?>
+    <label class="control-label"><?= t('To') ?></label>
+    <?= $datetime->datetime('cvPublishEndDate', $publishEndDate, true, true, 'light-panel-calendar') ?>
 </div>
 
-<div style="text-align: right">
+<div class="text-right">
     <span class="form-text help-block"><?= t('Time Zone: %s', $timezone) ?></span>
 </div>
 
 <?php if ($activeVersionExists || $scheduledVersionExists) { ?>
     <div class="form-group">
         <div id="version-scheduling" class="form-check form-switch">
-        <?= $form->checkbox('keepOtherScheduling', 1, false) ?>
+            <?= $form->checkbox('keepOtherScheduling', 1, false, ['id' => 'keepOtherScheduling']) ?>
             <label for="keepOtherScheduling" class="form-check-label">
                 <span class="text-standard"><?= $scheduledVersionExists ? t('At the moment, the existing scheduled version will remain.') : t('At the moment, the existing live version will remain.') ?></span>
-                <span class="text-active"><?= $scheduledVersionExists ? t('At the moment, current scheduled version gets removed.') : t('At the moment, the current live version gets removed.') ?></span>
+                <span class="text-active d-none"><?= $scheduledVersionExists ? t('At the moment, current scheduled version gets removed.') : t('At the moment, the current live version gets removed.') ?></span>
             </label>
             <span class="form-text help-block">
                 <i class="fa fa-info-circle" aria-hidden="true"></i>
                 <span class="info-standard"><?= $scheduledVersionExists ? t('Activate to remove the current scheduled version.') : t('Activate to remove the current live version.') ?></span>
-                <span class="info-active"><?= $scheduledVersionExists ? t('Deactivate to leave current scheduled version.') : t('Deactivate to leave current live version online.') ?></span>
+                <span class="info-active d-none"><?= $scheduledVersionExists ? t('Deactivate to leave current scheduled version.') : t('Deactivate to leave current live version online.') ?></span>
             </span>
         </div>
     </div>
 <?php } ?>
 
 <div class="dialog-buttons">
-    <button type="submit" name="action" value="schedule"
-            class="btn btn-primary ccm-check-in-schedule">
+    <button type="submit" name="action" value="schedule" class="btn btn-primary">
         <?= t('Schedule') ?>
     </button>
 </div>
 
-<style type="text/css">
-    #version-scheduling .text-active,
-    #version-scheduling .info-active {
-        display: none;
-    }
-
-    #version-scheduling #keepOtherScheduling:checked ~ .form-check-label .text-standard,
-    #version-scheduling #keepOtherScheduling:checked ~ .help-block .info-standard {
-        display: none;
-    }
-
-    #version-scheduling #keepOtherScheduling:checked ~ .form-check-label .text-active,
-    #version-scheduling #keepOtherScheduling:checked ~ .help-block .info-active {
-        display: inline;
-    }
-    div.ui-dialog button.ccm-check-in-schedule {
-        float: right;
-    }
-</style>
+<script>
+$(document).ready(function(){
+    $('#keepOtherScheduling').change(function(){
+        if(this.checked) {
+            $('.text-standard, .info-standard').addClass('d-none');
+            $('.text-active, .info-active').removeClass('d-none');
+        } else {
+            $('.text-standard, .info-standard').removeClass('d-none');
+            $('.text-active, .info-active').addClass('d-none');
+        }
+    });
+});
+</script>
