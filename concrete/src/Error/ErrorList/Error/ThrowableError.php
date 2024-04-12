@@ -20,7 +20,7 @@ class ThrowableError extends AbstractError
      * @param \Throwable $throwable
      * @param \Concrete\Core\Error\ErrorList\Field\FieldInterface|null $field
      */
-    public function __construct(Throwable $throwable, FieldInterface $field = null)
+    public function __construct(Throwable $throwable, ?FieldInterface $field = null)
     {
         $this->throwable = $throwable;
         if ($field) {

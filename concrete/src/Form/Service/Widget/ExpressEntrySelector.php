@@ -11,7 +11,7 @@ use HtmlObject\Element;
 class ExpressEntrySelector
 {
 
-    public function selectEntry(Entity $entity, $fieldName, Entry $entry = null)
+    public function selectEntry(Entity $entity, $fieldName, ?Entry $entry = null)
     {
         $permissionChecker = new Checker($entity);
         if ($permissionChecker->canViewExpressEntries()) {

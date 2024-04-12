@@ -32,7 +32,7 @@ class SkeletonSitemapProvider extends StandardSitemapProvider
         parent::__construct($app, $cookies, $siteService, $request);
     }
 
-    public function getTreeCollection(Tree $selectedTree = null)
+    public function getTreeCollection(?Tree $selectedTree = null)
     {
         $collection = new StandardTreeCollection();
 

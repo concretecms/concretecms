@@ -57,7 +57,7 @@ abstract class AbstractExporter
      * @param \League\Csv\Writer $writer the CSV Writer instance
      * @param \Concrete\Core\Attribute\Category\CategoryInterface|null $category the attribute category
      */
-    protected function __construct(Writer $writer, CategoryInterface $category = null)
+    protected function __construct(Writer $writer, ?CategoryInterface $category = null)
     {
         $this->setWriter($writer);
         if ($category !== null) {

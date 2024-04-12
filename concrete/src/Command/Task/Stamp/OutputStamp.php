@@ -21,7 +21,7 @@ class OutputStamp implements StampInterface, NormalizableInterface, Denormalizab
      * OutputStamp constructor.
      * @param $output
      */
-    public function __construct(OutputInterface $output = null)
+    public function __construct(?OutputInterface $output = null)
     {
         $this->output = $output;
     }
@@ -34,7 +34,7 @@ class OutputStamp implements StampInterface, NormalizableInterface, Denormalizab
         return $this->output;
     }
 
-    public function normalize(NormalizerInterface $normalizer, string $format = null, array $context = [])
+    public function normalize(NormalizerInterface $normalizer, ?string $format = null, array $context = [])
     {
         return [
             'type' => get_class($this->output),
@@ -42,7 +42,7 @@ class OutputStamp implements StampInterface, NormalizableInterface, Denormalizab
         ];
     }
 
-    public function denormalize(DenormalizerInterface $denormalizer, $data, string $format = null, array $context = [])
+    public function denormalize(DenormalizerInterface $denormalizer, $data, ?string $format = null, array $context = [])
     {
         $output = $denormalizer->denormalize($data['output'], $data['type']);
         $this->output = $output;

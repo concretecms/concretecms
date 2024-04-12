@@ -27,7 +27,7 @@ class StandardItem implements ItemInterface
      */
     protected $actions = [];
 
-    public function __construct(string $title, string $description, array $actions = [], IconInterface $icon = null)
+    public function __construct(string $title, string $description, array $actions = [], ?IconInterface $icon = null)
     {
         $this->title = $title;
         $this->description = $description;

@@ -14,7 +14,7 @@ class CalendarEventData implements DataInterface
      */
     protected $occurrenceID = 0;
 
-    public function __construct(CalendarEventVersionOccurrence $occurrence = null)
+    public function __construct(?CalendarEventVersionOccurrence $occurrence = null)
     {
         if ($occurrence) {
             $this->occurrenceID = $occurrence->getID();

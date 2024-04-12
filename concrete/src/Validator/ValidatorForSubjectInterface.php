@@ -20,5 +20,5 @@ interface ValidatorForSubjectInterface extends ValidatorInterface
      *
      * @return bool
      */
-    public function isValidFor($mixed, $subject = null, ArrayAccess $error = null);
+    public function isValidFor($mixed, $subject = null, ?ArrayAccess $error = null);
 }

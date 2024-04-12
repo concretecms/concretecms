@@ -56,7 +56,7 @@ class ElementReadyEvent extends GenericEvent
      *
      * @return $this
      */
-    public function setElement(SitemapElement $newElement = null)
+    public function setElement(?SitemapElement $newElement = null)
     {
         if ($newElement === null) {
             if ($this->element instanceof SitemapHeader) {

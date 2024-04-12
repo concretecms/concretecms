@@ -165,7 +165,7 @@ class EntryList extends DatabaseItemList implements PagerProviderInterface, Pagi
         return $fp->canViewExpressEntry();
     }
 
-    public function setPermissionsChecker(\Closure $checker = null)
+    public function setPermissionsChecker(?\Closure $checker = null)
     {
         $this->permissionsChecker = $checker;
     }

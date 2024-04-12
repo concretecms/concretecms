@@ -55,7 +55,7 @@ class Manager
      *
      * @throws \Exception
      */
-    public function apply($characterSet, $collation, $connectionName = '', $environment = '', callable $messageCallback = null, ErrorList $warnings = null)
+    public function apply($characterSet, $collation, $connectionName = '', $environment = '', ?callable $messageCallback = null, ?ErrorList $warnings = null)
     {
         if ($messageCallback === null) {
             $messageCallback = function ($message) { };
@@ -79,7 +79,7 @@ class Manager
     /**
      * Re-apply the configured character set and collation to all the database tables.
      */
-    public function reapply(Connection $connection, callable $messageCallback = null, ErrorList $warnings = null)
+    public function reapply(Connection $connection, ?callable $messageCallback = null, ?ErrorList $warnings = null)
     {
         if ($messageCallback === null) {
             $messageCallback = static function ($message) { };
@@ -110,7 +110,7 @@ class Manager
      *
      * @throws \Exception
      */
-    protected function convertTables(Connection $connection, $characterSet, $collation, callable $messageCallback, ErrorList $warnings = null)
+    protected function convertTables(Connection $connection, $characterSet, $collation, callable $messageCallback, ?ErrorList $warnings = null)
     {
         $schemaManager = $connection->getSchemaManager();
         $tableNames = $schemaManager->listTableNames();

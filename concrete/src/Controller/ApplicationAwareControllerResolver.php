@@ -15,7 +15,7 @@ class ApplicationAwareControllerResolver extends SymfonyControllerResolver imple
     /** @var \Psr\Log\LoggerInterface */
     protected $logger;
 
-    public function __construct(Application $app, LoggerInterface $logger = null)
+    public function __construct(Application $app, ?LoggerInterface $logger = null)
     {
         $this->setApplication($app);
         $this->logger = $logger;

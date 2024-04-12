@@ -73,7 +73,7 @@ class UniqueUserNameValidator extends AbstractTranslatableValidator implements V
      *
      * @see \Concrete\Core\Validator\ValidatorInterface::isValid()
      */
-    public function isValid($mixed, ArrayAccess $error = null)
+    public function isValid($mixed, ?ArrayAccess $error = null)
     {
         return $this->isValidFor($mixed, null, $error);
     }
@@ -85,7 +85,7 @@ class UniqueUserNameValidator extends AbstractTranslatableValidator implements V
      *
      * @param int|\Concrete\Core\User\User|\Concrete\Core\Entity\User\User|\Concrete\Core\User\UserInfo|null $subject
      */
-    public function isValidFor($mixed, $subject = null, ArrayAccess $error = null)
+    public function isValidFor($mixed, $subject = null, ?ArrayAccess $error = null)
     {
         if (!is_string($mixed)) {
             throw new InvalidArgumentException(t('Invalid type supplied to validator.'));

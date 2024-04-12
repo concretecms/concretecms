@@ -178,7 +178,7 @@ class Controller extends BlockController implements UsesFeatureInterface
         parent::save($args);
     }
 
-    public function getTagLink(SelectValueOption $option = null)
+    public function getTagLink(?SelectValueOption $option = null)
     {
         $target = $this->get('target');
         if (!is_object($target)) {

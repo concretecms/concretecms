@@ -21,7 +21,7 @@ class InstallFeatureContentRoutine extends AbstractRoutine
      */
     protected $feature;
 
-    public function __construct(string $domain, string $feature = null, string $text = null)
+    public function __construct(string $domain, ?string $feature = null, ?string $text = null)
     {
         $this->text = $text;
         $this->domain = $domain;

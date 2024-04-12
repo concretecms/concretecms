@@ -57,7 +57,7 @@ class ValidatorManager implements ValidatorManagerInterface
      *
      * @see \Concrete\Core\Validator\ValidatorManagerInterface::setValidator()
      */
-    public function setValidator($handle, ValidatorInterface $validator = null)
+    public function setValidator($handle, ?ValidatorInterface $validator = null)
     {
         $this->validators[$handle] = $validator;
     }
@@ -67,7 +67,7 @@ class ValidatorManager implements ValidatorManagerInterface
      *
      * @see \Concrete\Core\Validator\ValidatorInterface::isValid()
      */
-    public function isValid($mixed, ArrayAccess $error = null)
+    public function isValid($mixed, ?ArrayAccess $error = null)
     {
         $valid = true;
         foreach ($this->getValidators() as $validator) {

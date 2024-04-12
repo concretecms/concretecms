@@ -21,7 +21,7 @@ class SitemapFooter extends SitemapElement
      *
      * @see \Concrete\Core\Page\Sitemap\Element\SitemapElement::toXmlElement()
      */
-    public function toXmlElement(SimpleXMLElement $parentElement = null)
+    public function toXmlElement(?SimpleXMLElement $parentElement = null)
     {
     }
 }

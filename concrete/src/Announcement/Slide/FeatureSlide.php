@@ -24,7 +24,7 @@ class FeatureSlide extends AbstractSlide
      */
     protected $button;
 
-    public function __construct($title, array $items = [], ButtonInterface $button = null)
+    public function __construct($title, array $items = [], ?ButtonInterface $button = null)
     {
         $this->title = $title;
         $this->items = $items;

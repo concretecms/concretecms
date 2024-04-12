@@ -285,7 +285,7 @@ class Type extends ConcreteObject implements \Concrete\Core\Permission\ObjectInt
         }
     }
 
-    public function getPageTypePageTemplateDefaultPageObject(\Concrete\Core\Entity\Page\Template $template = null)
+    public function getPageTypePageTemplateDefaultPageObject(?\Concrete\Core\Entity\Page\Template $template = null)
     {
         if (!$template) {
             $template = $this->getPageTypeDefaultPageTemplateObject();

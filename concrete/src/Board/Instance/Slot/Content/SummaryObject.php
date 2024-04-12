@@ -17,7 +17,7 @@ class SummaryObject implements ObjectInterface
 
     protected $summaryObject;
     
-    public function __construct(SummaryObjectInterface $summaryObject = null)
+    public function __construct(?SummaryObjectInterface $summaryObject = null)
     {
         if ($summaryObject) {
             $this->summaryObject = $summaryObject;

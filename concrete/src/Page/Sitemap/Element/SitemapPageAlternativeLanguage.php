@@ -176,7 +176,7 @@ class SitemapPageAlternativeLanguage extends SitemapElement
      *
      * @see \Concrete\Core\Page\Sitemap\Element\SitemapElement::toXmlElement()
      */
-    public function toXmlElement(SimpleXMLElement $parentElement = null)
+    public function toXmlElement(?SimpleXMLElement $parentElement = null)
     {
         if ($parentElement === null) {
             throw new UserMessageException(t('The sitemap XML link should not be the first element.'));

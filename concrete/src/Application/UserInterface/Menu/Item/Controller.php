@@ -17,7 +17,7 @@ class Controller extends AbstractController implements ControllerInterface
      *
      * @param \Concrete\Core\Application\UserInterface\Menu\Item\ItemInterface|null $item if NULL, you have to call `setMenuItem()` later on.
      */
-    public function __construct(ItemInterface $item = null)
+    public function __construct(?ItemInterface $item = null)
     {
         parent::__construct();
         if ($item !== null) {

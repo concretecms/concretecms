@@ -23,7 +23,7 @@ class RunReportTestMessage extends Command implements NormalizableInterface, Den
      */
     protected $resultId;
 
-    public function __construct(string $resultId = null, TestInterface $test = null)
+    public function __construct(?string $resultId = null, ?TestInterface $test = null)
     {
         $this->resultId = $resultId;
         $this->test = $test;
@@ -61,7 +61,7 @@ class RunReportTestMessage extends Command implements NormalizableInterface, Den
         $this->test = $test;
     }
 
-    public function normalize(NormalizerInterface $normalizer, string $format = null, array $context = [])
+    public function normalize(NormalizerInterface $normalizer, ?string $format = null, array $context = [])
     {
         $data = [
             'class' => get_class($this->test),
@@ -71,7 +71,7 @@ class RunReportTestMessage extends Command implements NormalizableInterface, Den
         return $data;
     }
 
-    public function denormalize(DenormalizerInterface $denormalizer, $data, string $format = null, array $context = [])
+    public function denormalize(DenormalizerInterface $denormalizer, $data, ?string $format = null, array $context = [])
     {
         $test = app($data['class']);
         if ($test instanceof PageTestInterface) {

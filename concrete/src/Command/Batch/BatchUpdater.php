@@ -37,7 +37,7 @@ class BatchUpdater
         $this->app = $app;
     }
 
-    public function checkBatchProcessForClose(string $batchId, int $exitCode, string $exitMessage = null)
+    public function checkBatchProcessForClose(string $batchId, int $exitCode, ?string $exitMessage = null)
     {
         $entityManager = $this->app->make(EntityManager::class);
         $processUpdater = $this->app->make(ProcessUpdater::class);

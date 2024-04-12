@@ -20,7 +20,7 @@ class RebuildEntityIndexCommand extends AbstractRebuildIndexCommand
     /**
      * @param string $entityId
      */
-    public function __construct(string $entityId = null)
+    public function __construct(?string $entityId = null)
     {
         $this->entityId = $entityId;
     }
@@ -54,14 +54,14 @@ class RebuildEntityIndexCommand extends AbstractRebuildIndexCommand
         }
     }
 
-    public function normalize(NormalizerInterface $normalizer, string $format = null, array $context = [])
+    public function normalize(NormalizerInterface $normalizer, ?string $format = null, array $context = [])
     {
         return [
             'entityId' => $this->entityId
         ];
     }
 
-    public function denormalize(DenormalizerInterface $denormalizer, $data, string $format = null, array $context = [])
+    public function denormalize(DenormalizerInterface $denormalizer, $data, ?string $format = null, array $context = [])
     {
         $this->entityId = $data['entityId'];
     }

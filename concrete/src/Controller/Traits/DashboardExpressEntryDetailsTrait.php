@@ -25,7 +25,7 @@ trait DashboardExpressEntryDetailsTrait
                             ->getCollectionPath(), 'results', $entity->getId());
     }
 
-    protected function getCreateURL(Entity $entity, Entry $ownedBy = null)
+    protected function getCreateURL(Entity $entity, ?Entry $ownedBy = null)
     {
         $ownedByID = null;
         if (is_object($ownedBy)) {

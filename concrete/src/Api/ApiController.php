@@ -51,7 +51,7 @@ class ApiController implements ApplicationAwareInterface
      *
      * @return Item
      */
-    public function transform($object, TransformerAbstract $transformer, string $resourceKey = null)
+    public function transform($object, TransformerAbstract $transformer, ?string $resourceKey = null)
     {
         return new Item($object, $transformer, $resourceKey);
     }

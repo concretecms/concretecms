@@ -29,7 +29,7 @@ final class MiddlewareStack implements StackInterface, ApplicationAwareInterface
      * MiddlewareStack constructor.
      * Dispat
      */
-    public function __construct(DelegateInterface $dispatcher = null)
+    public function __construct(?DelegateInterface $dispatcher = null)
     {
         $this->dispatcher = $dispatcher;
     }

@@ -9,7 +9,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 class ConsoleContext extends AbstractContext
 {
 
-    public function dispatchCommand($command, array $stamps = null): void
+    public function dispatchCommand($command, ?array $stamps = null): void
     {
         $newStamps = [
             new SkipSendersStamp(),

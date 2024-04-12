@@ -26,7 +26,7 @@ class ImageVariable implements VariableInterface
      * ImageVariable constructor.
      * @param string $name
      */
-    public function __construct(string $name, string $url = null, $fID = null)
+    public function __construct(string $name, ?string $url = null, $fID = null)
     {
         $this->name = $name;
         $this->url = $url;

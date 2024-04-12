@@ -313,7 +313,7 @@ class Page extends Collection implements CategoryMemberInterface,
      *
      * @return \Concrete\Core\Page\Page
      */
-    public static function getByPath($path, $version = 'RECENT', TreeInterface $tree = null)
+    public static function getByPath($path, $version = 'RECENT', ?TreeInterface $tree = null)
     {
         $path = rtrim($path, '/'); // if the path ends in a / remove it.
         $cache = \Core::make('cache/request');
@@ -876,7 +876,7 @@ class Page extends Collection implements CategoryMemberInterface,
      *
      * @return \Concrete\Core\Page\Page
      */
-    public static function getDraftsParentPage(Site $site = null)
+    public static function getDraftsParentPage(?Site $site = null)
     {
         $db = Database::connection();
         $site = $site ? $site : \Core::make('site')->getSite();
@@ -2089,7 +2089,7 @@ class Page extends Collection implements CategoryMemberInterface,
      *
      * @param \Concrete\Core\Page\Type\Type|null $type
      */
-    public function setPageType(\Concrete\Core\Page\Type\Type $type = null)
+    public function setPageType(?\Concrete\Core\Page\Type\Type $type = null)
     {
         $ptID = 0;
         if (is_object($type)) {
@@ -2945,7 +2945,7 @@ EOT
      *
      * @return \Concrete\Core\Page\Page
      */
-    public function duplicateAll($nc = null, $preserveUserID = false, Site $site = null)
+    public function duplicateAll($nc = null, $preserveUserID = false, ?Site $site = null)
     {
         $nc2 = $this->duplicate($nc, $preserveUserID, $site);
         self::_duplicateAll($this, $nc2, $preserveUserID, $site);
@@ -2963,7 +2963,7 @@ EOT
      *
      * @return \Concrete\Core\Page\Page
      */
-    public function duplicate($nc = null, $preserveUserID = false, TreeInterface $site = null)
+    public function duplicate($nc = null, $preserveUserID = false, ?TreeInterface $site = null)
     {
         $app = Application::getFacadeApplication();
         $cloner = $app->make(Cloner::class);
@@ -3547,7 +3547,7 @@ EOT
      *
      * @return \Concrete\Core\Page\Page
      **/
-    public static function addHomePage(TreeInterface $siteTree = null)
+    public static function addHomePage(?TreeInterface $siteTree = null)
     {
         $app = Application::getFacadeApplication();
         // creates the home page of the site
@@ -3939,7 +3939,7 @@ EOT
      *
      * @see \Concrete\Core\Page\Collection\Collection::createCollection()
      */
-    public static function addStatic($data, TreeInterface $parent = null)
+    public static function addStatic($data, ?TreeInterface $parent = null)
     {
         $db = Database::connection();
         if ($parent instanceof self) {
@@ -4120,7 +4120,7 @@ EOT
      * @param mixed $cParent
      * @param mixed $cNewParent
      */
-    protected function _duplicateAll($cParent, $cNewParent, $preserveUserID = false, Site $site = null)
+    protected function _duplicateAll($cParent, $cNewParent, $preserveUserID = false, ?Site $site = null)
     {
         $db = Database::connection();
         $cID = $cParent->getCollectionID();

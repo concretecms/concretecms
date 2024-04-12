@@ -45,7 +45,7 @@ class DashboardStacksBreadcrumbFactory implements ApplicationAwareInterface
         $this->navigation = $navigation;
     }
 
-    public function getBreadcrumb(Page $dashboardPage, $stackOrFolder = null, array $sections = null, $locale = ''): BreadcrumbInterface
+    public function getBreadcrumb(Page $dashboardPage, $stackOrFolder = null, ?array $sections = null, $locale = ''): BreadcrumbInterface
     {
         $breadcrumb = $this->breadcrumbFactory->getBreadcrumb($dashboardPage);
         $breadcrumb->setSanitizeName(false);
