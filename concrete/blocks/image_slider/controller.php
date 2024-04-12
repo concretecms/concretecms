@@ -69,7 +69,7 @@ class Controller extends BlockController implements FileTrackableInterface, Uses
      * @param \Concrete\Core\Block\BlockType\BlockType|null $obj
      * @param \Concrete\Core\Statistics\UsageTracker\AggregateTracker|null $tracker
      */
-    public function __construct($obj = null, AggregateTracker $tracker = null)
+    public function __construct($obj = null, ?AggregateTracker $tracker = null)
     {
         parent::__construct($obj);
         $this->tracker = $tracker;

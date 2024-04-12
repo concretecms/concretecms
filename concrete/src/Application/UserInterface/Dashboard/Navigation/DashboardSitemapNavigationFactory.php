@@ -33,7 +33,7 @@ class DashboardSitemapNavigationFactory
      * @param PageItem|null $currentItem
      * @return Navigation
      */
-    protected function populateNavigation(Page $currentPage, Navigation $navigation, PageItem $currentItem = null)
+    protected function populateNavigation(Page $currentPage, Navigation $navigation, ?PageItem $currentItem = null)
     {
         if ($this->includePageInMenu($currentPage)) {
             $item = new DashboardPageItem($currentPage);

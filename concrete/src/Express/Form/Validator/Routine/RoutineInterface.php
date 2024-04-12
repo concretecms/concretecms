@@ -12,7 +12,7 @@ interface RoutineInterface
     /**
      * @return bool
      */
-    function validate(ErrorList $error, Form $form, Entry $entry = null);
+    function validate(ErrorList $error, Form $form, ?Entry $entry = null);
 
 
 }

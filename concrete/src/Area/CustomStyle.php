@@ -16,7 +16,7 @@ class CustomStyle extends AbstractCustomStyle
 
     protected $theme;
 
-    public function __construct(StyleSet $set = null, Area $area, $theme)
+    public function __construct(?StyleSet $set, Area $area, $theme)
     {
         $this->area = $area;
         $this->set = $set;

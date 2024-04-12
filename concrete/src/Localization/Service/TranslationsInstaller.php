@@ -132,7 +132,7 @@ class TranslationsInstaller
      *
      * @throws Exception
      */
-    private function installTranslations($localeID, Package $package = null)
+    private function installTranslations($localeID, ?Package $package = null)
     {
         if ($package === null) {
             $localStats = $this->localFactory->getCoreStats($localeID);

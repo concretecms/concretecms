@@ -39,7 +39,7 @@ class DeactivateUser extends UserInfoEvent implements SubjectInterface
      * @param \Concrete\Core\Entity\User\User|null $actorEntity
      * @param \DateTime|null $dateCreated
      */
-    public function __construct(UserEntity $user, UserEntity $actorEntity = null, DateTime $dateCreated = null)
+    public function __construct(UserEntity $user, ?UserEntity $actorEntity = null, ?DateTime $dateCreated = null)
     {
         $this->user = $user;
         $this->actor = $actorEntity;
@@ -107,7 +107,7 @@ class DeactivateUser extends UserInfoEvent implements SubjectInterface
      *
      * @return \Concrete\Core\User\Event\DeactivateUser
      */
-    public static function create(UserEntity $userEntity, UserEntity $actorEntity = null, DateTime $dateCreated = null)
+    public static function create(UserEntity $userEntity, ?UserEntity $actorEntity = null, ?DateTime $dateCreated = null)
     {
         return new self($userEntity, $actorEntity, $dateCreated);
     }

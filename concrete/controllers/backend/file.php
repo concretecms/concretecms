@@ -847,7 +847,7 @@ class File extends Controller
      * @throws \Concrete\Core\Error\UserMessageException in case of errors
      *
      */
-    protected function downloadRemoteURL($url, $temporaryDirectory, string $ip = null)
+    protected function downloadRemoteURL($url, $temporaryDirectory, ?string $ip = null)
     {
         /** @var Client $client */
         $client = $this->app->make(Client::class);

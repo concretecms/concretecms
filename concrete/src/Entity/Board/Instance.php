@@ -159,7 +159,7 @@ class Instance implements \JsonSerializable, ObjectInterface
     /**
      * @param mixed $site
      */
-    public function setSite(Site $site = null): void
+    public function setSite(?Site $site = null): void
     {
         $this->site = $site;
     }

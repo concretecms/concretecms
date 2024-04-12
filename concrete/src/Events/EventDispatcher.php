@@ -21,7 +21,7 @@ class EventDispatcher
     /**
      * {@inheritdoc}
      */
-    public function dispatch($eventName, object $event = null)
+    public function dispatch($eventName, ?object $event = null)
     {
         if (null === $event) {
             $event = new Event();

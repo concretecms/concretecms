@@ -25,7 +25,7 @@ class Field implements FieldInterface, DenormalizableInterface
      * @param string $key
      * @param string $value
      */
-    public function __construct(string $key = null, string $value = null)
+    public function __construct(?string $key = null, ?string $value = null)
     {
         $this->key = $key;
         $this->value = $value;
@@ -56,7 +56,7 @@ class Field implements FieldInterface, DenormalizableInterface
         ];
     }
 
-    public function denormalize(DenormalizerInterface $denormalizer, $data, string $format = null, array $context = [])
+    public function denormalize(DenormalizerInterface $denormalizer, $data, ?string $format = null, array $context = [])
     {
         $this->key = $data['key'];
         $this->value = $data['value'];

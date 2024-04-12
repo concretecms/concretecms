@@ -181,7 +181,7 @@ class DatabaseStructureManager
      *
      * @return bool
      */
-    public function installDatabaseFor(array $metadatas, Closure $queryFilter = null)
+    public function installDatabaseFor(array $metadatas, ?Closure $queryFilter = null)
     {
         if (count($metadatas) > 0) {
             // We need to create the SchemaDiff manually here because we want

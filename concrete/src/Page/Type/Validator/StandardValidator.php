@@ -48,7 +48,7 @@ class StandardValidator implements ValidatorInterface
         return $e;
     }
 
-    public function validatePublishLocationRequest(Page $target = null, Page $page = null)
+    public function validatePublishLocationRequest(?Page $target = null, ?Page $page = null)
     {
         $e = Core::make('error');
         if (!is_object($target) || $target->isError()) {
@@ -65,7 +65,7 @@ class StandardValidator implements ValidatorInterface
         return $e;
     }
 
-    public function validatePublishDraftRequest(Page $page = null)
+    public function validatePublishDraftRequest(?Page $page = null)
     {
         $e = Core::make('error');
         $controls = Control::getList($this->type);

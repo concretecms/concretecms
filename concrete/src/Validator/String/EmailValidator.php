@@ -120,7 +120,7 @@ class EmailValidator extends AbstractTranslatableValidator
      *
      * @see \Concrete\Core\Validator\ValidatorInterface::isValid()
      */
-    public function isValid($mixed, ArrayAccess $error = null)
+    public function isValid($mixed, ?ArrayAccess $error = null)
     {
         if ($mixed !== null && !is_string($mixed)) {
             throw new InvalidArgumentException(t('Invalid type supplied to validator.'));

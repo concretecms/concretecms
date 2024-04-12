@@ -210,7 +210,7 @@ EOT
      * </pre></code>
      * $handle and $value will be NULL if (and only if) errors occurred (added to the $errors parameter).
      */
-    public function decode($key, array $pickers, ArrayAccess $errors = null, $fieldDisplayName = null, array $data = null)
+    public function decode($key, array $pickers, ?ArrayAccess $errors = null, $fieldDisplayName = null, ?array $data = null)
     {
         $handle = null;
         $value = null;

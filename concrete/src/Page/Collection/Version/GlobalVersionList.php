@@ -15,7 +15,7 @@ class GlobalVersionList extends DatabaseItemList
     /**
      * @param \Concrete\Core\Search\StickyRequest|null $req
      */
-    public function __construct(StickyRequest $req = null)
+    public function __construct(?StickyRequest $req = null)
     {
         parent::__construct($req);
     }

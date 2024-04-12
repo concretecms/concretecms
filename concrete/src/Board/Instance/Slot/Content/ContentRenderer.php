@@ -43,7 +43,7 @@ class ContentRenderer implements LoggerAwareInterface
      * ContentRenderer constructor.
      * @param JsonSerializer $serializer
      */
-    public function __construct(Application $app, JsonSerializer $serializer, TemplateLocator $templateLocator, Page $currentPage = null)
+    public function __construct(Application $app, JsonSerializer $serializer, TemplateLocator $templateLocator, ?Page $currentPage = null)
     {
         $this->templateLocator = $templateLocator;
         $this->currentPage = $currentPage;

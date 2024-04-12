@@ -31,7 +31,7 @@ class BlockViewTemplate
     protected $packageList;
     protected $theme;
 
-    public function __construct($obj, PackageList $packageList = null)
+    public function __construct($obj, ?PackageList $packageList = null)
     {
         $this->btHandle = $obj->getBlockTypeHandle();
         $this->obj = $obj;

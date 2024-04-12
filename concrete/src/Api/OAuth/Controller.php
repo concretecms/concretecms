@@ -63,7 +63,7 @@ final class Controller implements LoggerAwareInterface
         Session $session,
         Token $token,
         Repository $config,
-        UserObject $user = null
+        ?UserObject $user = null
     ) {
         $this->oauthServer = $oauthServer;
         $this->entityManager = $entityManager;

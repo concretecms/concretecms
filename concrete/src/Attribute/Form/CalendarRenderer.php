@@ -10,7 +10,7 @@ class CalendarRenderer extends Renderer
 
     protected $calendar;
 
-    public function __construct(Calendar $calendar, ContextInterface $context, ObjectInterface $object = null)
+    public function __construct(Calendar $calendar, ContextInterface $context, ?ObjectInterface $object = null)
     {
         $this->calendar = $calendar;
         parent::__construct($context, $object);

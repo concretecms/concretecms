@@ -126,7 +126,7 @@ class IpAccessControlService implements LoggerAwareInterface
      *
      * @return bool
      */
-    public function isBlacklisted(AddressInterface $ipAddress = null)
+    public function isBlacklisted(?AddressInterface $ipAddress = null)
     {
         return $this->isDenylisted($ipAddress);
     }
@@ -138,7 +138,7 @@ class IpAccessControlService implements LoggerAwareInterface
      *
      * @return bool
      */
-    public function isDenylisted(AddressInterface $ipAddress = null)
+    public function isDenylisted(?AddressInterface $ipAddress = null)
     {
         $range = $this->getRange($ipAddress);
 
@@ -154,7 +154,7 @@ class IpAccessControlService implements LoggerAwareInterface
      *
      * @return bool
      */
-    public function isWhitelisted(AddressInterface $ipAddress = null)
+    public function isWhitelisted(?AddressInterface $ipAddress = null)
     {
         return $this->isAllowlisted($ipAddress);
     }
@@ -166,7 +166,7 @@ class IpAccessControlService implements LoggerAwareInterface
      *
      * @return bool
      */
-    public function isAllowlisted(AddressInterface $ipAddress = null)
+    public function isAllowlisted(?AddressInterface $ipAddress = null)
     {
         $range = $this->getRange($ipAddress);
 
@@ -181,7 +181,7 @@ class IpAccessControlService implements LoggerAwareInterface
      *
      * @return \Concrete\Core\Entity\Permission\IpAccessControlEvent|null
      */
-    public function registerEvent(AddressInterface $ipAddress = null, $evenIfDisabled = false)
+    public function registerEvent(?AddressInterface $ipAddress = null, $evenIfDisabled = false)
     {
         return $this->registerEventAt(new DateTime('now'), $ipAddress, $evenIfDisabled ? true : false);
     }
@@ -309,7 +309,7 @@ class IpAccessControlService implements LoggerAwareInterface
      *
      * @return bool
      */
-    public function isThresholdReached(AddressInterface $ipAddress = null, $evenIfDisabled = false)
+    public function isThresholdReached(?AddressInterface $ipAddress = null, $evenIfDisabled = false)
     {
         if (!$evenIfDisabled && !$this->getCategory()->isEnabled()) {
             return false;
@@ -355,7 +355,7 @@ class IpAccessControlService implements LoggerAwareInterface
      *
      * @return \Concrete\Core\Entity\Permission\IpAccessControlRange|null
      */
-    public function addToDenylistForThresholdReached(AddressInterface $ipAddress = null, $evenIfDisabled = false)
+    public function addToDenylistForThresholdReached(?AddressInterface $ipAddress = null, $evenIfDisabled = false)
     {
         if (!$evenIfDisabled && !$this->getCategory()->isEnabled()) {
             return null;
@@ -397,7 +397,7 @@ class IpAccessControlService implements LoggerAwareInterface
      *
      * @return \Concrete\Core\Entity\Permission\IpAccessControlRange
      */
-    public function createRange(RangeInterface $range, $type, DateTime $expiration = null)
+    public function createRange(RangeInterface $range, $type, ?DateTime $expiration = null)
     {
         $result = new IpAccessControlRange();
         $result
@@ -576,7 +576,7 @@ class IpAccessControlService implements LoggerAwareInterface
      *
      * @return \Concrete\Core\Entity\Permission\IpAccessControlRange|null
      */
-    public function getRange(AddressInterface $ipAddress = null)
+    public function getRange(?AddressInterface $ipAddress = null)
     {
         if ($ipAddress === null) {
             $ipAddress = $this->defaultIpAddress;

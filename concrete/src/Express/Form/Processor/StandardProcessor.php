@@ -23,7 +23,7 @@ class StandardProcessor implements ProcessorInterface
         return $validator;
     }
 
-    public function deliverResponse(Entry $entry, $requestType, RedirectResponse $response = null)
+    public function deliverResponse(Entry $entry, $requestType, ?RedirectResponse $response = null)
     {
         return $response;
     }

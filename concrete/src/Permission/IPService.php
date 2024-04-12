@@ -127,7 +127,7 @@ class IPService implements ApplicationAwareInterface, LoggerAwareInterface
      *
      * @return bool
      */
-    public function isDenylisted(AddressInterface $ip = null)
+    public function isDenylisted(?AddressInterface $ip = null)
     {
         return $this->getFailedLoginService()->isDenylisted($ip);
     }
@@ -139,7 +139,7 @@ class IPService implements ApplicationAwareInterface, LoggerAwareInterface
      *
      * @return bool
      */
-    public function isBlacklisted(AddressInterface $ip = null)
+    public function isBlacklisted(?AddressInterface $ip = null)
     {
         return $this->getFailedLoginService()->isBlacklisted($ip);
     }
@@ -151,7 +151,7 @@ class IPService implements ApplicationAwareInterface, LoggerAwareInterface
      *
      * @return bool
      */
-    public function isAllowlisted(AddressInterface $ip = null)
+    public function isAllowlisted(?AddressInterface $ip = null)
     {
         return $this->getFailedLoginService()->isAllowlisted($ip);
     }
@@ -163,7 +163,7 @@ class IPService implements ApplicationAwareInterface, LoggerAwareInterface
      *
      * @return bool
      */
-    public function isWhitelisted(AddressInterface $ip = null)
+    public function isWhitelisted(?AddressInterface $ip = null)
     {
         return $this->getFailedLoginService()->isWhitelisted($ip);
     }
@@ -184,7 +184,7 @@ class IPService implements ApplicationAwareInterface, LoggerAwareInterface
      * @param \IPLib\Address\AddressInterface|null $ip
      * @param bool $ignoreConfig
      */
-    public function logFailedLogin(AddressInterface $ip = null, $ignoreConfig = false)
+    public function logFailedLogin(?AddressInterface $ip = null, $ignoreConfig = false)
     {
         return $this->getFailedLoginService()->registerEvent($ip, $ignoreConfig);
     }
@@ -197,7 +197,7 @@ class IPService implements ApplicationAwareInterface, LoggerAwareInterface
      *
      * @return bool
      */
-    public function failedLoginsThresholdReached(AddressInterface $ip = null, $ignoreConfig = false)
+    public function failedLoginsThresholdReached(?AddressInterface $ip = null, $ignoreConfig = false)
     {
         return $this->getFailedLoginService()->isThresholdReached($ip, $ignoreConfig);
     }
@@ -208,7 +208,7 @@ class IPService implements ApplicationAwareInterface, LoggerAwareInterface
      * @param \IPLib\Address\AddressInterface $ip
      * @param bool $ignoreConfig
      */
-    public function addToDenylistForThresholdReached(AddressInterface $ip = null, $ignoreConfig = false)
+    public function addToDenylistForThresholdReached(?AddressInterface $ip = null, $ignoreConfig = false)
     {
         $this->getFailedLoginService()->addToDenylistForThresholdReached($ip, $ignoreConfig);
     }
@@ -222,7 +222,7 @@ class IPService implements ApplicationAwareInterface, LoggerAwareInterface
      *
      * @return \Concrete\Core\Permission\IPRange
      */
-    public function createRange(RangeInterface $range, $type, DateTime $expiration = null)
+    public function createRange(RangeInterface $range, $type, ?DateTime $expiration = null)
     {
         $rangeEntity = $this->getFailedLoginService()->createRange($range, $type, $expiration);
 

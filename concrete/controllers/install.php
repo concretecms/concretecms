@@ -69,7 +69,7 @@ class Install extends Controller
         return [$localLocales, $remoteLocales];
     }
 
-    public function view(string $locale = null)
+    public function view(?string $locale = null)
     {
         if ($locale) {
             Localization::changeLocale($locale);

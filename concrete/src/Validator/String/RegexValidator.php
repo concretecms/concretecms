@@ -70,7 +70,7 @@ class  RegexValidator extends AbstractTranslatableValidator
      *
      * @throws \RuntimeException invalid regex pattern
      */
-    public function isValid($mixed, ArrayAccess $error = null)
+    public function isValid($mixed, ?ArrayAccess $error = null)
     {
         if (!is_string($mixed)) {
             throw new InvalidArgumentException(t(/*i18n: %s is the name of a PHP class*/'%s only validates string length', __CLASS__));

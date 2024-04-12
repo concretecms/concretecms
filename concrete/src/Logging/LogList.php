@@ -169,7 +169,7 @@ class LogList extends ItemList implements PagerProviderInterface, PaginationProv
         return true;
     }
 
-    public function setPermissionsChecker(Closure $checker = null)
+    public function setPermissionsChecker(?Closure $checker = null)
     {
         $this->permissionsChecker = $checker;
     }

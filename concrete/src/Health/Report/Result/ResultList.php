@@ -65,7 +65,7 @@ class ResultList extends EntityItemList
      *
      * @return Result|null
      */
-    public static function getLatestResult(Task $task = null): ?Result
+    public static function getLatestResult(?Task $task = null): ?Result
     {
         $list = app(self::class);
         if ($task) {

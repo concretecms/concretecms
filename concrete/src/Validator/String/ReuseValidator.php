@@ -48,7 +48,7 @@ class ReuseValidator extends AbstractTranslatableValidator implements ValidatorF
      *
      * @return bool
      */
-    public function isValidFor($mixed, $subject = null, ArrayAccess $error = null)
+    public function isValidFor($mixed, $subject = null, ?ArrayAccess $error = null)
     {
         $id = $this->resolveUserID($subject);
 

@@ -44,7 +44,7 @@ class FavoritesNavigationFactory
         $this->serializer = $serializer;
     }
 
-    public function createNavigation(Page $startingPage = null): Navigation
+    public function createNavigation(?Page $startingPage = null): Navigation
     {
         if (!$this->cache->has()) {
             $navigation = null;

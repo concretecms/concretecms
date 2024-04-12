@@ -13,7 +13,7 @@ use Concrete\Core\Express\EntryList;
 class ValidateUniqueAttributesRoutine implements RoutineInterface
 {
 
-    public function validate(ErrorList $error, Form $form, Entry $entry = null)
+    public function validate(ErrorList $error, Form $form, ?Entry $entry = null)
     {
         $entity = $form->getEntity();
         $attributes = $entity->getAttributes();
