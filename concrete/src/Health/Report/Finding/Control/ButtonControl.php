@@ -13,7 +13,7 @@ class ButtonControl implements ControlInterface
      */
     protected $location;
 
-    public function __construct(LocationInterface $location = null)
+    public function __construct(?LocationInterface $location = null)
     {
         $this->location = $location;
     }
@@ -54,7 +54,7 @@ class ButtonControl implements ControlInterface
         return $data;
     }
 
-    public function denormalize(DenormalizerInterface $denormalizer, $data, string $format = null, array $context = [])
+    public function denormalize(DenormalizerInterface $denormalizer, $data, ?string $format = null, array $context = [])
     {
         $location = $denormalizer->denormalize($data['location'], $data['location']['class']);
         $this->location = $location;

@@ -71,7 +71,7 @@ class Cloner
      *
      * @return \Concrete\Core\Page\Page|\Concrete\Core\Page\Stack\Stack
      */
-    public function clonePage(Page $page, ClonerOptions $options, Page $newParentPage = null, TreeInterface $site = null)
+    public function clonePage(Page $page, ClonerOptions $options, ?Page $newParentPage = null, ?TreeInterface $site = null)
     {
         // If the provided page is an alias, let's add another alias of original page
         if ($page->isAliasPage()) {
@@ -346,7 +346,7 @@ class Cloner
      *
      * @return bool returns FALSE if $block is not cloned because it's already present in $destinationCollection, TRUE otherwise
      */
-    public function cloneBlock(Block $block, Collection $destinationCollection, int $displayOrder = null)
+    public function cloneBlock(Block $block, Collection $destinationCollection, ?int $displayOrder = null)
     {
         $bID = $block->getBlockID();
         $aHandle = $block->getAreaHandle();
@@ -449,7 +449,7 @@ class Cloner
      * @param int[] $cIDs An array with the ID of the source and destination collections
      * @param int[]|null $cvIDs An array with the source and destination collection versions, or NULL to copy the data of all the collection versions
      */
-    protected function copyData(ClonerOptions $options, array $cIDs, array $cvIDs = null)
+    protected function copyData(ClonerOptions $options, array $cIDs, ?array $cvIDs = null)
     {
         if ($options->copyAttributes()) {
             $this->copyAttributes($cIDs, $cvIDs);
@@ -472,7 +472,7 @@ class Cloner
      * @param int[] $cIDs An array with the ID of the source and destination collections
      * @param int[]|null $cvIDs An array with the source and destination collection versions, or NULL to copy the data of all the collection versions
      */
-    protected function copyAttributes(array $cIDs, array $cvIDs = null)
+    protected function copyAttributes(array $cIDs, ?array $cvIDs = null)
     {
         $query = ['cID' => $cIDs[0]];
         if ($cvIDs !== null) {
@@ -496,7 +496,7 @@ class Cloner
      * @param int[] $cIDs An array with the ID of the source and destination collections
      * @param int[]|null $cvIDs An array with the source and destination collection versions, or NULL to copy the data of all the collection versions
      */
-    protected function copyPageTypeComposerOutputBlocks(array $cIDs, array $cvIDs = null)
+    protected function copyPageTypeComposerOutputBlocks(array $cIDs, ?array $cvIDs = null)
     {
         $this->directCopy('PageTypeComposerOutputBlocks', 'arHandle, cbDisplayOrder, ptComposerFormLayoutSetControlID, bID', ['cID' => $cIDs, 'cvID' => $cvIDs]);
     }
@@ -507,7 +507,7 @@ class Cloner
      * @param int[] $cIDs An array with the ID of the source and destination collections
      * @param int[]|null $cvIDs An array with the source and destination collection versions, or NULL to copy the data of all the collection versions
      */
-    protected function copyCustomStyles(array $cIDs, array $cvIDs = null)
+    protected function copyCustomStyles(array $cIDs, ?array $cvIDs = null)
     {
         $this->directCopy('CollectionVersionThemeCustomStyles', 'pThemeID, scvlID, preset, sccRecordID', ['cID' => $cIDs, 'cvID' => $cvIDs]);
     }
@@ -520,7 +520,7 @@ class Cloner
      * @param int[]|null $bIDs An array with the source and destination block IDs, or NULL to copy all the blocks
      * @param int|null $newBlockDisplayOrder The display order of the new blocks (NULL: copy)
      */
-    protected function copyBlocks($cIDs, array $cvIDs = null, array $bIDs = null, $newBlockDisplayOrder = null)
+    protected function copyBlocks($cIDs, ?array $cvIDs = null, ?array $bIDs = null, $newBlockDisplayOrder = null)
     {
         $copyFields = 'arHandle, cbRelationID, cbOverrideAreaPermissions, cbIncludeAll, cbOverrideBlockTypeCacheSettings, cbOverrideBlockTypeContainerSettings, cbEnableBlockContainer';
         $copyFieldsFrom = "{$copyFields}, 0";
@@ -586,7 +586,7 @@ EOT
      * @param int[] $cIDs An array with the ID of the source and destination collections
      * @param int[]|null $cvIDs An array with the source and destination collection versions, or NULL to copy the data of all the collection versions
      */
-    protected function copyAreaStyles(array $cIDs, array $cvIDs = null)
+    protected function copyAreaStyles(array $cIDs, ?array $cvIDs = null)
     {
         $this->directCopy('CollectionVersionAreaStyles', 'arHandle, issID', ['cID' => $cIDs, 'cvID' => $cvIDs]);
     }

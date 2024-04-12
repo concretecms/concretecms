@@ -115,7 +115,7 @@ class SitemapPage extends SitemapElement
      * @param string $changeFrequency the page change frequency (one of the SitemapPage::CHANGEFREQUENCY_... constants, or an empty string in unavailable)
      * @param string $priority the page priority
      */
-    public function __construct(Page $page, UrlInterface $url, DateTime $lastModifiedAt = null, $changeFrequency = '', $priority = '')
+    public function __construct(Page $page, UrlInterface $url, ?DateTime $lastModifiedAt = null, $changeFrequency = '', $priority = '')
     {
         $this->page = $page;
         $this->setUrl($url);
@@ -175,7 +175,7 @@ class SitemapPage extends SitemapElement
      *
      * @return $this
      */
-    public function setLastModifiedAt(DateTime $lastModifiedAt = null)
+    public function setLastModifiedAt(?DateTime $lastModifiedAt = null)
     {
         $this->lastModifiedAt = $lastModifiedAt;
 
@@ -327,7 +327,7 @@ class SitemapPage extends SitemapElement
      *
      * @see \Concrete\Core\Page\Sitemap\Element\SitemapElement::toXmlElement()
      */
-    public function toXmlElement(SimpleXMLElement $parentElement = null)
+    public function toXmlElement(?SimpleXMLElement $parentElement = null)
     {
         if ($parentElement === null) {
             throw new UserMessageException(t('The sitemap XML page should not be the first element.'));

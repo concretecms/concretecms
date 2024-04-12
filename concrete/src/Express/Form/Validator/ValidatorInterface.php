@@ -15,7 +15,7 @@ interface ValidatorInterface
     /**
      * @return bool
      */
-    function validate(Form $form, Entry $entry = null);
+    function validate(Form $form, ?Entry $entry = null);
 
 
     /**

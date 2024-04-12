@@ -12,7 +12,7 @@ use Symfony\Component\HttpFoundation\Request;
 class CheckPermissionsRoutine implements RoutineInterface
 {
 
-    public function validate(ErrorList $error, Form $form, Entry $entry = null)
+    public function validate(ErrorList $error, Form $form, ?Entry $entry = null)
     {
         $entity = $form->getEntity();
         $permissions = new \Permissions($entity);

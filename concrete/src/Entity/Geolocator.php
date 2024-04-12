@@ -19,7 +19,7 @@ class Geolocator
     /**
      * Create a new Geolocator instance.
      */
-    public static function create($handle, $name, Package $package = null)
+    public static function create($handle, $name, ?Package $package = null)
     {
         $result = new static();
         $result
@@ -257,7 +257,7 @@ class Geolocator
      *
      * @return $this
      */
-    public function setGeolocatorPackage(Package $value = null)
+    public function setGeolocatorPackage(?Package $value = null)
     {
         $this->glPackage = $value;
 

@@ -119,7 +119,7 @@ class Import extends UserInterface
      *
      * @return $this
      */
-    protected function setCurrentFolder(FileFolder $value = null)
+    protected function setCurrentFolder(?FileFolder $value = null)
     {
         if ($value !== $this->currentFolder) {
             $this->currentFolder = $value;
@@ -189,7 +189,7 @@ class Import extends UserInterface
      *
      * @return $this
      */
-    protected function setOriginalPage(Page $value = null)
+    protected function setOriginalPage(?Page $value = null)
     {
         $this->originalPage = $value === null || $value->isError() ? null : $value;
 

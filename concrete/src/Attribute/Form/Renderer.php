@@ -12,7 +12,7 @@ class Renderer
     protected $context;
     protected $object;
 
-    public function __construct(ContextInterface $context, ObjectInterface $object = null)
+    public function __construct(ContextInterface $context, ?ObjectInterface $object = null)
     {
         $this->context = $context;
         $this->object = $object;

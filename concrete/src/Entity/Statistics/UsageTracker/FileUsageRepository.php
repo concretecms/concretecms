@@ -79,7 +79,7 @@ class FileUsageRepository extends \Doctrine\ORM\EntityRepository
      * @param null $offset
      * @return FileUsageRecord[]
      */
-    public function findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+    public function findBy(array $criteria, ?array $orderBy = null, $limit = null, $offset = null)
     {
         return parent::findBy($criteria, $orderBy, $limit, $offset);
     }

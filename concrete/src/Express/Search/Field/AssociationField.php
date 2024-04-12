@@ -50,7 +50,7 @@ class AssociationField extends AbstractField
     /**
      * Initialize the instance.
      */
-    public function __construct(Association $association = null)
+    public function __construct(?Association $association = null)
     {
         if ($association) {
             $this->loadAssociation($association);

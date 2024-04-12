@@ -35,7 +35,7 @@ class Image
      *     <li>bool|null `lazyLoadJavaScript`: If TRUE set the img `src` and/or source `srcset` image file path to `data-src` and/or `data-srcset` </li>
      * </ul>
      */
-    public function __construct(File $f = null, $options = null)
+    public function __construct(?File $f = null, $options = null)
     {
         if (!is_object($f)) {
             return false;

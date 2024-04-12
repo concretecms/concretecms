@@ -21,7 +21,7 @@ class BlockMessage implements MessageInterface
      */
     protected $content;
 
-    public function __construct(int $bID = null, string $content = null)
+    public function __construct(?int $bID = null, ?string $content = null)
     {
         $this->bID = $bID;
         $this->content = $content;
@@ -65,7 +65,7 @@ class BlockMessage implements MessageInterface
         return new BlockFormatter();
     }
 
-    public function denormalize(DenormalizerInterface $denormalizer, $data, string $format = null, array $context = [])
+    public function denormalize(DenormalizerInterface $denormalizer, $data, ?string $format = null, array $context = [])
     {
         $this->bID = $data['bID'];
         $this->content = $data['content'];

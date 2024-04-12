@@ -43,7 +43,7 @@ abstract class SitemapElement
      *
      * @return \SimpleXMLElement|null
      */
-    abstract public function toXmlElement(SimpleXMLElement $parentElement = null);
+    abstract public function toXmlElement(?SimpleXMLElement $parentElement = null);
 
     /**
      * Get the XML meta-header.

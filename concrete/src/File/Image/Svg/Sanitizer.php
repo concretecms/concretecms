@@ -92,7 +92,7 @@ class Sanitizer
      * ]
      * </code></pre>
      */
-    public function checkFile($inputFilename, SanitizerOptions $options = null)
+    public function checkFile($inputFilename, ?SanitizerOptions $options = null)
     {
         $data = $this->fileToData($inputFilename);
 
@@ -119,7 +119,7 @@ class Sanitizer
      * ]
      * </code></pre>
      */
-    public function checkData($data, SanitizerOptions $options = null)
+    public function checkData($data, ?SanitizerOptions $options = null)
     {
         $removedNodes = [];
         $this->sanitizeData($data, $options, $removedNodes);
@@ -137,7 +137,7 @@ class Sanitizer
      *
      * @throws \Concrete\Core\File\Image\Svg\SanitizerException in case of errors
      */
-    public function sanitizeFile($inputFilename, SanitizerOptions $options = null, $outputFilename = '', array &$removedNodes = [])
+    public function sanitizeFile($inputFilename, ?SanitizerOptions $options = null, $outputFilename = '', array &$removedNodes = [])
     {
         $data = $this->fileToData($inputFilename);
         $removedNodes = [];
@@ -162,7 +162,7 @@ class Sanitizer
      *
      * @return string
      */
-    public function sanitizeData($data, SanitizerOptions $options = null, array &$removedNodes = [])
+    public function sanitizeData($data, ?SanitizerOptions $options = null, array &$removedNodes = [])
     {
         $xml = $this->dataToXml($data);
         $removedNodes = [];
@@ -180,7 +180,7 @@ class Sanitizer
      *
      * @throws \Concrete\Core\File\Image\Svg\SanitizerException in case of errors
      */
-    protected function sanitizeXml(DOMDocument $xml, array &$removedNodes, SanitizerOptions $options = null)
+    protected function sanitizeXml(DOMDocument $xml, array &$removedNodes, ?SanitizerOptions $options = null)
     {
         if ($options === null) {
             $options = new SanitizerOptions();

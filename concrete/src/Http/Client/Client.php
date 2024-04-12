@@ -43,7 +43,7 @@ class Client extends GuzzleHttpClient implements LoggerAwareInterface
      *
      * @return static
      */
-    public function setLogger(LoggerInterface $value = null)
+    public function setLogger(?LoggerInterface $value = null)
     {
         $this->logger = $value;
 

@@ -128,7 +128,7 @@ class IpAccessControlEvent
      *
      * @return $this
      */
-    public function setSite(Site $value = null)
+    public function setSite(?Site $value = null)
     {
         $this->site = $value;
 

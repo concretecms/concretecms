@@ -70,7 +70,7 @@ class Composer
         return $publishTitle;
     }
 
-    public function displayPublishScheduleSettings(Page $c = null)
+    public function displayPublishScheduleSettings(?Page $c = null)
     {
         View::element('pages/schedule', array(
             'page' => $c,

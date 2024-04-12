@@ -61,7 +61,7 @@ class Column
         return $this->sortURL;
     }
 
-    public function __construct(Result $result, \Concrete\Core\Search\Column\Column $column = null)
+    public function __construct(Result $result, ?\Concrete\Core\Search\Column\Column $column = null)
     {
         if ($column instanceof DatabaseItemListColumn) {
             $this->isColumnSortable = $column->isColumnSortable();

@@ -39,7 +39,7 @@ abstract class AuthenticationTypeController extends Controller implements Logger
     /**
      * @param AuthenticationType $type This type may be null only for access points that do not rely on the type.
      */
-    public function __construct(AuthenticationType $type = null)
+    public function __construct(?AuthenticationType $type = null)
     {
         $this->authenticationType = $type;
         $this->app = Application::getFacadeApplication();

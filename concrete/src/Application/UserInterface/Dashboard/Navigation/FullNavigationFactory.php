@@ -38,7 +38,7 @@ class FullNavigationFactory
      * @param PageItem|null $currentItem
      * @return Navigation
      */
-    protected function populateNavigation(Page $currentPage, Navigation $navigation, PageItem $currentItem = null)
+    protected function populateNavigation(Page $currentPage, Navigation $navigation, ?PageItem $currentItem = null)
     {
         $permissions = new Checker($currentPage);
         if ($permissions->canViewPage() && !$currentPage->getAttribute('exclude_nav')) {

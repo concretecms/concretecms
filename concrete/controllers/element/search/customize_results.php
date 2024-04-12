@@ -35,7 +35,7 @@ class CustomizeResults extends ElementController
         $this->includeNumberOfResults = $includeNumberOfResults;
     }
 
-    public function __construct(ProviderInterface $provider, Query $query = null)
+    public function __construct(ProviderInterface $provider, ?Query $query = null)
     {
         parent::__construct();
         $this->provider = $provider;

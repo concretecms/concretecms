@@ -73,32 +73,32 @@ class Runner
 
     public function alert(
         $message,
-        ControlInterface $control = null,
-        string $findingHandle = null
+        ?ControlInterface $control = null,
+        ?string $findingHandle = null
     ): Finding {
         return $this->finding(new AlertFinding(), $message, $control, $findingHandle);
     }
 
     public function warning(
         $message,
-        ControlInterface $control = null,
-        string $findingHandle = null
+        ?ControlInterface $control = null,
+        ?string $findingHandle = null
     ): Finding {
         return $this->finding(new WarningFinding(), $message, $control, $findingHandle);
     }
 
     public function info(
         $message,
-        ControlInterface $control = null,
-        string $findingHandle = null
+        ?ControlInterface $control = null,
+        ?string $findingHandle = null
     ): Finding {
         return $this->finding(new InfoFinding(), $message, $control, $findingHandle);
     }
 
     public function success(
         $message,
-        ControlInterface $control = null,
-        string $findingHandle = null
+        ?ControlInterface $control = null,
+        ?string $findingHandle = null
     ): Finding {
         return $this->finding(new SuccessFinding(), $message, $control, $findingHandle);
     }
@@ -110,8 +110,8 @@ class Runner
     public function finding(
         Finding $finding,
         $message,
-        ControlInterface $control = null,
-        string $findingHandle = null
+        ?ControlInterface $control = null,
+        ?string $findingHandle = null
     ): Finding {
         if (!($message instanceof MessageInterface)) {
             $message = new Message($message);

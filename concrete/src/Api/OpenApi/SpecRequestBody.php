@@ -18,7 +18,7 @@ class SpecRequestBody implements \JsonSerializable
     /**
      * @param string $ref
      */
-    public function __construct(string $modelName = null, string $description = null)
+    public function __construct(?string $modelName = null, ?string $description = null)
     {
         $this->modelName = $modelName;
         $this->description = $description;

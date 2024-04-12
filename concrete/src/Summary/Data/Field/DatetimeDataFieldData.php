@@ -13,7 +13,7 @@ class DatetimeDataFieldData implements DataFieldDataInterface
      */
     protected $dateTime;
     
-    public function __construct(DateTime $dateTime = null)
+    public function __construct(?DateTime $dateTime = null)
     {
         if ($dateTime) {
             $this->dateTime = $dateTime;

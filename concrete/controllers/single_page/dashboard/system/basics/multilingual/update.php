@@ -98,7 +98,7 @@ class Update extends DashboardPageController
         $this->redirect($this->action(''));
     }
 
-    public function getLocaleRowHtml($localeID, $handle, RemoteStats $remote = null, LocalStats $local = null, $action = '')
+    public function getLocaleRowHtml($localeID, $handle, ?RemoteStats $remote = null, ?LocalStats $local = null, $action = '')
     {
         $dateHelper = $this->app->make('date');
         $hLocaleID = h($localeID);

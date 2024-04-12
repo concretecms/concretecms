@@ -190,7 +190,7 @@ class EventService implements ApplicationAwareInterface
         $this->entityManager->flush();
     }
 
-    public function duplicate(CalendarEvent $event, User $u, Calendar $calendar = null)
+    public function duplicate(CalendarEvent $event, User $u, ?Calendar $calendar = null)
     {
         $values = $this->eventCategory->getAttributeValues($event->getRecentVersion());
 
