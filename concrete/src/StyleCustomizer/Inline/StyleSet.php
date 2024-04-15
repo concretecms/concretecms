@@ -256,6 +256,10 @@ class StyleSet
 
         $v = $post->get('customClass');
         if (is_array($v)) {
+            //  divide class names with space between
+            $v = array_map(fn($class) => preg_split('/[\s]+/', $class), $v);
+            $v = array_reduce($v, 'array_merge', []);
+
             $v = array_filter($v, function ($class) {
                 return preg_match('/^-?[_a-zA-Z]+[_a-zA-Z0-9-:\[\]]*$/', $class);
             });
