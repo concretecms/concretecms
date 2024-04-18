@@ -6,6 +6,7 @@ namespace Concrete\Core\Marketplace;
 
 use Concrete\Core\Application\Application;
 use Concrete\Core\Config\Repository\Repository;
+use Concrete\Core\Entity\Site\Site;
 use Concrete\Core\Marketplace\Exception\InvalidConnectResponseException;
 use Concrete\Core\Marketplace\Exception\InvalidPackageException;
 use Concrete\Core\Marketplace\Exception\PackageAlreadyExistsException;
@@ -18,6 +19,7 @@ use Concrete\Core\Marketplace\Model\ValidateResult;
 use Concrete\Core\Marketplace\Update\UpdatedFieldInterface;
 use Concrete\Core\Site\Service;
 use Concrete\Core\Url\Resolver\CanonicalUrlResolver;
+use Concrete\Core\Url\Url;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\BadResponseException;
 use GuzzleHttp\Exception\ConnectException;
@@ -308,11 +310,24 @@ final class PackageRepository implements PackageRepositoryInterface
         return $this->addQuery(new Request($method, (new Uri($this->baseUri))->withPath($path)));
     }
 
+    private function getUrl(Site $site)
+    {
+        $url = (string) $site->getSiteCanonicalURL();
+        if ($url === '') {
+            try {
+                $urlFromServer = Url::createFromServer($_SERVER);
+                $url = $urlFromServer->getBaseUrl();
+            } catch (\Exception $e) {
+
+            }
+        }
+        return $url;
+    }
     protected function addQuery(RequestInterface $request): RequestInterface
     {
         $site = $this->siteService->getDefault();
         return $request->withUri($request->getUri()->withQuery(http_build_query([
-            'csiURL' => $site->getSiteCanonicalURL(),
+            'csiURL' => $this->getUrl($site),
             'csiName' => $site->getSiteName(),
             'csiVersion' => $this->config->get('concrete.version'),
             'ms' => $this->config->get('concrete.multisite.enabled') ? 1 : 0,

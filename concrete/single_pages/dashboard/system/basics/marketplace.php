@@ -48,11 +48,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
     <div class="mb-3"><?=t('Assign licenses to your Concrete site from your Concrete Project page, hosted on marketplace.concretecms.com.')?></div>
 
     <div class="mb-3">
-        <label class="form-label" for="projectPage"><?=t('Project Page URL')?></label>
-        <div class="input-group">
-          <input type="text" class="form-control" value="<?=$projectPageURL?>" readonly onclick="this.select()">
-          <a href="<?=$projectPageURL?>" class="btn btn-secondary" target="_blank"><?=t('Visit Page')?></a>
-        </div>
+        <a href="<?=$launchProjectPageUrl?>" class="btn btn-success" target="_blank"><?=t('Visit Page')?></a>
     </div>
 </fieldset>
 

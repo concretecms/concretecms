@@ -2,6 +2,7 @@
 namespace Concrete\Core\Page\Controller;
 
 use Concrete\Core\Marketplace\PackageRepositoryInterface;
+use Concrete\Core\Marketplace\PurchaseConnectionCoordinator;
 
 /**
  * Abstract controller for extending Concrete CMS through the Dashboard.
@@ -15,15 +16,15 @@ abstract class MarketplaceDashboardPageController extends DashboardPageControlle
     public function view()
     {
         $repository = $this->app->make(PackageRepositoryInterface::class);
+        $coordinator = $this->app->make(PurchaseConnectionCoordinator::class);
         $connection = $repository->getConnection();
         if ($repository->validate($connection)) {
             // Redirect the url to the marketplace with a verified connection
-            $config = $this->app->make('config');
-            $url = $config->get('concrete.urls.marketplace')
-                . $config->get('concrete.urls.paths.marketplace.connect')
-                . '/' . $connection->getPublic() . '?redirect=' . h($this->getRedirectLocation())
-                . '&source=' . (string) \URL::to('/dashboard/extend');
-
+            $url = $coordinator->createPurchaseConnectionUrl(
+                $connection,
+                $this->getRedirectLocation(),
+                (string) \URL::to('/dashboard/extend'),
+            );
             return $this->buildRedirect($url);
         } else {
             return $this->buildRedirect('/dashboard/system/basics/marketplace');

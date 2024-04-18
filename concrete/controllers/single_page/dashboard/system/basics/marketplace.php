@@ -4,6 +4,7 @@ namespace Concrete\Controller\SinglePage\Dashboard\System\Basics;
 use Concrete\Core\Marketplace\Exception\InvalidConnectResponseException;
 use Concrete\Core\Marketplace\Exception\UnableToConnectException;
 use Concrete\Core\Marketplace\PackageRepositoryInterface;
+use Concrete\Core\Marketplace\PurchaseConnectionCoordinator;
 use Concrete\Core\Page\Controller\DashboardPageController;
 use Concrete\Core\Permission\Checker;
 
@@ -27,11 +28,18 @@ class Marketplace extends DashboardPageController
         $this->set('config', $config);
         $this->set('connection', $connection);
         if ($connection) {
-            $this->set(
-                'projectPageURL',
-                $config->get('concrete.urls.marketplace')
+            $projectPageUrl = $config->get('concrete.urls.marketplace')
                 . $config->get('concrete.urls.paths.marketplace.projects')
-                . '/' . $connection->getPublic()
+                . '/' . $connection->getPublic();
+
+            $coordinator = $this->app->make(PurchaseConnectionCoordinator::class);
+            $this->set(
+                'launchProjectPageUrl',
+                $coordinator->createPurchaseConnectionUrl(
+                    $connection,
+                    $projectPageUrl,
+                    \URL::to('/dashboard/system/basics/marketplace')
+                )
             );
         }
     }

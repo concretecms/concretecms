@@ -13,6 +13,7 @@ use Concrete\Core\Database\DatabaseStructureManager;
 use Concrete\Core\Entity\OAuth\Scope;
 use Concrete\Core\File\Filesystem;
 use Concrete\Core\File\Service\File;
+use Concrete\Core\Logging\Channels;
 use Concrete\Core\Marketplace\PackageRepositoryInterface;
 use Concrete\Core\Messenger\Transport\DefaultAsync\DefaultAsyncConnection;
 use Concrete\Core\User\Group\Command\AddGroupCommand;
@@ -37,6 +38,7 @@ use Exception;
 use Group;
 use GroupTree;
 use League\OAuth2\Server\Repositories\ScopeRepositoryInterface;
+use Monolog\Logger;
 use Package as BasePackage;
 use Page;
 use PermissionKey;
@@ -613,16 +615,17 @@ class StartingPointPackage extends Package
         file_put_contents(DIR_CONFIG_SITE . '/database.php', $renderer->render());
         @chmod(DIR_CONFIG_SITE . '/database.php', $config->get('concrete.filesystem.permissions.file'));
 
+        // Connect to the marketplace if possible.
+        $repository = $this->app->make(PackageRepositoryInterface::class);
+//        try {
+            $repository->connect();
+  //      } catch (\Exception $e) {
+            // Fail silently, do not halt installation because of this.
+    //    }
+
         $siteConfig = \Site::getDefault()->getConfigRepository();
         if (isset($installConfiguration['canonical-url']) && $installConfiguration['canonical-url']) {
             $siteConfig->save('seo.canonical_url', $installConfiguration['canonical-url']);
-            $repository = $this->app->make(PackageRepositoryInterface::class);
-            try {
-                $repository->connect();
-            } catch (\Exception $e) {
-                echo $e->getMessage();exit;
-                // Fail silently, do not halt installation because of this.
-            }
         }
         unset($installConfiguration['canonical-url']);
         if (isset($installConfiguration['canonical-url-alternative']) && $installConfiguration['canonical-url-alternative']) {
