@@ -71,7 +71,7 @@ class FileExcluder implements FilterInterface
      *
      * @var int
      */
-    const EXCLUDE_TESTS = 0b1000000; // new constant for excluding tests directory
+    const EXCLUDE_TESTS = 0b1000000;
 
     /**
      * Files to exclude: phpunit.xml files.
