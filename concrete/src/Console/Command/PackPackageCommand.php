@@ -80,6 +80,20 @@ final class PackPackageCommand extends Command
     const KEEP_COMPOSER_LOCK = 'composer-lock';
 
     /**
+     * Keep tests directory.
+     *
+     * @var string
+     */
+    const KEEP_TESTS = 'tests';
+
+    /**
+     * Keep phpunit.xml file.
+     *
+     * @var string
+     */
+    const KEEP_PHPUNIT_XML = 'phpunitxml';
+
+    /**
      * Option for boolean/automatic flags: yes.
      *
      * @var string
@@ -138,6 +152,8 @@ final class PackPackageCommand extends Command
         $keepSources = self::KEEP_SOURCES;
         $keepComposerJson = self::KEEP_COMPOSER_JSON;
         $keepComposerLock = self::KEEP_COMPOSER_LOCK;
+        $tests = self::KEEP_TESTS;
+        $phpunitxml = self::KEEP_PHPUNIT_XML;
         $okExitCode = static::SUCCESS;
         $errExitCode = static::FAILURE;
         $this
@@ -169,6 +185,8 @@ To include in the zip archive the files and directories starting with a dot, use
 To include in the zip archive the source files for translations (.po files) and icons (.svg files) use the "-k $keepSources" option.
 To include in the zip archive the composer.json and composer.lock files, use the "-k $keepComposerLock" option.
 To include in the zip archive the composer.json file but not the composer.lock files, use the "-k $keepComposerJson" option.
+To include in the zip archive the tests directory, use the "-k $tests" option.
+To include in the zip archive the phpunit.xml file, use the "-k $phpunitxml" option.
 
 Please remark that this command can also parse legacy (pre-5.7) packages.
 
@@ -267,6 +285,8 @@ EOT
             self::KEEP_SOURCES => FileExcluder::EXCLUDE_POT | FileExcluder::EXCLUDE_PO | FileExcluder::EXCLUDE_SVGICON,
             self::KEEP_COMPOSER_JSON => FileExcluder::EXCLUDE_COMPOSER_JSON,
             self::KEEP_COMPOSER_LOCK => FileExcluder::EXCLUDE_COMPOSER_LOCK,
+            self::KEEP_TESTS => FileExcluder::EXCLUDE_TESTS,
+            self::KEEP_PHPUNIT_XML => FileExcluder::EXCLUDE_PHPUNIT_XML,
         ];
         $keepOptions = $this->input->getOption('keep');
         $invalidOptions = array_diff($keepOptions, array_keys($keepMap));
