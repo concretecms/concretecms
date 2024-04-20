@@ -616,12 +616,19 @@ class StartingPointPackage extends Package
         @chmod(DIR_CONFIG_SITE . '/database.php', $config->get('concrete.filesystem.permissions.file'));
 
         // Connect to the marketplace if possible.
-        $repository = $this->app->make(PackageRepositoryInterface::class);
-//        try {
-            $repository->connect();
-  //      } catch (\Exception $e) {
-            // Fail silently, do not halt installation because of this.
-    //    }
+        if ($this->installerOptions->isConnectToMarketplaceEnabled()) {
+            $repository = $this->app->make(PackageRepositoryInterface::class);
+            try {
+                $repository->connect();
+            } catch (\Exception $e) {
+                // Fail silently, do not halt installation because of this.
+                core_log(
+                    Logger::NOTICE,
+                    Channels::CHANNEL_MARKETPLACE,
+                    t('Unable to connect to marketplace on install: %s', $e->getMessage())
+                );
+            }
+        }
 
         $siteConfig = \Site::getDefault()->getConfigRepository();
         if (isset($installConfiguration['canonical-url']) && $installConfiguration['canonical-url']) {

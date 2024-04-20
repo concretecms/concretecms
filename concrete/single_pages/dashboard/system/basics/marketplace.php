@@ -89,11 +89,11 @@ if ($connection) {
         <p><?=t('You can manually connect to an existing project page using its public and private key. You can retrieve your marketplace public and private key from your project page on marketplace.concretecms.com.')?></p>
 
         <div class="form-group">
-            <label for="csURLToken" class="form-label"><?=t('ID')?></label>
+            <label for="publicKey" class="form-label"><?=t('ID')?></label>
             <?=$form->text('publicKey', $connection->getPublic())?>
         </div>
         <div class="form-group">
-            <label for="csURLToken" class="form-label"><?=t('Secret Key')?></label>
+            <label for="privateKey" class="form-label"><?=t('Secret Key')?></label>
             <?=$form->text('privateKey', $connection->getPrivate())?>
         </div>
     <button class="btn btn-primary" type="submit"><?=t('Save')?></button>

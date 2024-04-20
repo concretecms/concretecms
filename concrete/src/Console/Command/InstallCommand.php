@@ -84,6 +84,7 @@ class InstallCommand extends Command
             ->addOption('attach', null, InputOption::VALUE_NONE, 'Attach if database contains an existing instance')
             ->addOption('force-attach', null, InputOption::VALUE_NONE, 'Always attach')
             ->addOption('interactive', 'i', InputOption::VALUE_NONE, 'Install using interactive (wizard) mode')
+            ->addOption('disable-marketplace-connect', null, InputOption::VALUE_NONE, 'Do not automatically connect site to marketplace')
             ->addOption('ignore-warnings', null, InputOption::VALUE_NONE, 'Ignore warnings')
             ->setHelp(<<<EOT
 Returns codes:
@@ -747,6 +748,7 @@ EOT
             ->setUserEmail($options['admin-email'])
             ->setUserPasswordHash($hasher->hashPassword($options['admin-password']))
             ->setServerTimeZoneId($options['timezone'])
+            ->setIsConnectToMarketplaceEnabled($options['disable-marketplace-connect'] ? false : true);
         ;
 
         return $installer;
