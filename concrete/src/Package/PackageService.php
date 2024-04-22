@@ -9,6 +9,8 @@ use Concrete\Core\Error\ErrorList\ErrorList;
 use Concrete\Core\Foundation\ClassAutoloader;
 use Concrete\Core\Localization\Localization;
 use Concrete\Core\Marketplace\PackageRepository;
+use Concrete\Core\Marketplace\Update\Command\UpdateRemoteDataCommand;
+use Concrete\Core\Marketplace\Update\Inspector;
 use Concrete\Core\User\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Throwable;
@@ -250,6 +252,9 @@ class PackageService
         if ($cache) {
             $cache->flushAll();
         }
+        $inspector = $this->application->make(Inspector::class);
+        $command = new UpdateRemoteDataCommand([$inspector->getPackagesField()]);
+        $this->application->executeCommand($command);
     }
 
     /**
@@ -274,6 +279,10 @@ class PackageService
 
         $this->bootPackageEntityManager($p, true);
         $p->install($data);
+
+        $inspector = $this->application->make(Inspector::class);
+        $command = new UpdateRemoteDataCommand([$inspector->getPackagesField()]);
+        $this->application->executeCommand($command);
 
         $u = $this->application->make(User::class);
         $swapper = $p->getContentSwapper();
