@@ -11,8 +11,8 @@ class ValidateResult
 {
 
     const VALIDATE_RESULT_SUCCESS = 0;
-    const VALIDATE_RESULT_ERROR = 400;
-    CONST VALIDATE_RESULT_ERROR_URL_MISMATCH = 401;
+    const VALIDATE_RESULT_ERROR = 460;
+    CONST VALIDATE_RESULT_ERROR_URL_MISMATCH = 461;
 
     public bool $valid;
     public string $site;
