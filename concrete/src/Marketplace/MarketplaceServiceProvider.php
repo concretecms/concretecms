@@ -13,15 +13,15 @@ class MarketplaceServiceProvider extends Provider
     public function register()
     {
         $this->app->bind(PackageRepositoryInterface::class, PackageRepository::class);
-
-        $this->app->when(PackageRepository::class)->needs(Serializer::class)->give(function () {
-            return new Serializer([new ObjectNormalizer()], [new JsonEncoder()]);
-        });
-        $this->app->when(PackageRepository::class)->needs('$baseUri')->give(function () {
-            return $this->app->make(Repository::class)->get('concrete.urls.package_repository');
-        });
-        $this->app->when(PackageRepository::class)->needs('$paths')->give(function () {
-            return $this->app->make(Repository::class)->get('concrete.urls.paths.package_repository');
+        $this->app->bind(PackageRepository::class, function(): PackageRepository {
+            $config = $this->app->make(Repository::class);
+            return $this->app->make(PackageRepository::class, [
+                'serializer' => new Serializer([new ObjectNormalizer()], [new JsonEncoder()]),
+                'config' => $config,
+                'databaseConfig' => $this->app->make('config/database'),
+                'baseUri' => $config->get('concrete.urls.package_repository'),
+                'paths' => $config->get('concrete.urls.paths.package_repository'),
+            ]);
         });
     }
 }

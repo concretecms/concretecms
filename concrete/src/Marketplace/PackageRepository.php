@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Concrete\Core\Marketplace;
 
-use Concrete\Core\Application\Application;
 use Concrete\Core\Config\Repository\Repository;
 use Concrete\Core\Entity\Site\Site;
 use Concrete\Core\Marketplace\Exception\InvalidConnectResponseException;
@@ -18,7 +17,6 @@ use Concrete\Core\Marketplace\Model\RemotePackage;
 use Concrete\Core\Marketplace\Model\ValidateResult;
 use Concrete\Core\Marketplace\Update\UpdatedFieldInterface;
 use Concrete\Core\Site\Service;
-use Concrete\Core\Url\Resolver\CanonicalUrlResolver;
 use Concrete\Core\Url\Url;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\BadResponseException;
@@ -29,7 +27,6 @@ use GuzzleHttp\RequestOptions;
 use Psr\Http\Message\RequestInterface;
 use Symfony\Component\Serializer\Exception\ExceptionInterface;
 use Symfony\Component\Serializer\Serializer;
-use GuzzleHttp\Psr7\Utils;
 
 final class PackageRepository implements PackageRepositoryInterface
 {
@@ -39,12 +36,10 @@ final class PackageRepository implements PackageRepositoryInterface
     private $serializer;
     /** @var Repository  */
     private $config;
-    /** @var Application */
-    private $app;
+    /** @var Repository  */
+    private $databaseConfig;
     /** @var Service */
     private $siteService;
-    /** @var CanonicalUrlResolver */
-    private $resolver;
     /** @var string */
     private $baseUri;
     /** @var array<string, string> */
@@ -54,18 +49,16 @@ final class PackageRepository implements PackageRepositoryInterface
         Client $client,
         Serializer $serializer,
         Repository $config,
-        Application $app,
+        Repository $databaseConfig,
         Service $siteService,
-        CanonicalUrlResolver $resolver,
         string $baseUri,
         array $paths
     ) {
         $this->client = $client;
         $this->serializer = $serializer;
         $this->config = $config;
-        $this->app = $app;
+        $this->databaseConfig = $databaseConfig;
         $this->siteService = $siteService;
-        $this->resolver = $resolver;
         $this->baseUri = $baseUri;
         $this->paths = $paths;
     }
@@ -200,9 +193,8 @@ final class PackageRepository implements PackageRepositoryInterface
 
     public function getConnection(): ?ConnectionInterface
     {
-        $dbConfig = $this->app->make('config/database');
-        $public = $dbConfig->get('concrete.marketplace.key.public');
-        $private = $dbConfig->get('concrete.marketplace.key.private');
+        $public = $this->databaseConfig->get('concrete.marketplace.key.public');
+        $private = $this->databaseConfig->get('concrete.marketplace.key.private');
 
         if (!$public || !$private) {
             return null;
@@ -236,8 +228,7 @@ final class PackageRepository implements PackageRepositoryInterface
             throw new InvalidConnectResponseException($contents ?? '');
         }
 
-        $dbConfig = $this->app->make('config/database');
-        $dbConfig->save('concrete.marketplace.key', [
+        $this->databaseConfig->save('concrete.marketplace.key', [
             'public' => $result->public,
             'private' => $result->private,
         ]);
@@ -325,7 +316,7 @@ final class PackageRepository implements PackageRepositoryInterface
         return $this->addQuery(new Request($method, (new Uri($this->baseUri))->withPath($path)));
     }
 
-    private function getUrl(Site $site)
+    private function getUrl(Site $site): string
     {
         $url = (string) $site->getSiteCanonicalURL();
         if ($url === '') {
@@ -342,8 +333,8 @@ final class PackageRepository implements PackageRepositoryInterface
     {
         $site = $this->siteService->getDefault();
         return $request->withUri($request->getUri()->withQuery(http_build_query([
-            'csiURL' => $this->getUrl($site),
-            'csiName' => $site->getSiteName(),
+            'csiURL' => $site ? $this->getUrl($site) : null,
+            'csiName' => $site ? $site->getSiteName() : null,
             'csiVersion' => $this->config->get('concrete.version'),
             'ms' => $this->config->get('concrete.multisite.enabled') ? 1 : 0,
         ])));
