@@ -6,8 +6,10 @@ namespace Concrete\Core\Marketplace;
 
 final class Connection implements ConnectionInterface
 {
-    private string $public;
-    private string $private;
+    /** @var string */
+    private $public;
+    /** @var string */
+    private $private;
 
     public function __construct(
         string $public,

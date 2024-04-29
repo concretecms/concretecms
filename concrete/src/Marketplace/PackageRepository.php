@@ -33,14 +33,22 @@ use GuzzleHttp\Psr7\Utils;
 
 final class PackageRepository implements PackageRepositoryInterface
 {
-    private Client $client;
-    private Serializer $serializer;
-    private Repository $config;
-    private Application $app;
-    private Service $siteService;
-    private CanonicalUrlResolver $resolver;
-    private string $baseUri;
-    private array $paths;
+    /** @var Client */
+    private $client;
+    /** @var Serializer */
+    private $serializer;
+    /** @var Repository  */
+    private $config;
+    /** @var Application */
+    private $app;
+    /** @var Service */
+    private $siteService;
+    /** @var CanonicalUrlResolver */
+    private $resolver;
+    /** @var string */
+    private $baseUri;
+    /** @var array<string, string> */
+    private $paths;
 
     public function __construct(
         Client $client,
@@ -83,14 +91,18 @@ final class PackageRepository implements PackageRepositoryInterface
             $response = $this->client->send($request);
             $data = json_decode($response->getBody()->getContents(), true, 4, JSON_THROW_ON_ERROR);
             /** @var RemotePackage[] $result */
-            $result = array_map(fn($item) => $this->serializer->denormalize($item, RemotePackage::class), $data);
+            $result = array_map(function ($item) {
+                return $this->serializer->denormalize($item, RemotePackage::class);
+            }, $data);
         } catch (BadResponseException|\JsonException|ExceptionInterface $e) {
             return [];
         }
 
         if ($compatibleOnly) {
             $me = $this->config->get('concrete.version');
-            $result = array_filter($result, fn($item) => in_array($me, $item->compatibility, true));
+            $result = array_filter($result, function ($item) use ($me) {
+                return in_array($me, $item->compatibility, true);
+            });
         }
 
         $latest = [];
@@ -239,7 +251,10 @@ final class PackageRepository implements PackageRepositoryInterface
         $this->client->send($request);
     }
 
-    public function validate(ConnectionInterface $connection, $returnFullObject = false): bool|ValidateResult
+    /**
+     * @return bool|ValidateResult
+     */
+    public function validate(ConnectionInterface $connection, bool $returnFullObject = false)
     {
         $request = $this->authenticate($this->requestFor('GET', 'connect_validate'), $connection);
 
@@ -249,9 +264,9 @@ final class PackageRepository implements PackageRepositoryInterface
             if ($response->getStatusCode() !== 200) {
                 if ($returnFullObject) {
                     return new ValidateResult(false, '', '');
-                } else {
-                    return false;
                 }
+
+                return false;
             }
 
             $contents = $response->getBody()->getContents();
@@ -261,16 +276,16 @@ final class PackageRepository implements PackageRepositoryInterface
         } catch (BadResponseException|\JsonException|ExceptionInterface $e) {
             if ($returnFullObject) {
                 return new ValidateResult(false, '', '', ValidateResult::VALIDATE_RESULT_ERROR);
-            } else {
-                return false;
             }
+
+            return false;
         }
 
         if ($returnFullObject) {
             return $result;
-        } else {
-            return $result->valid;
         }
+
+        return $result->valid;
     }
 
     /**

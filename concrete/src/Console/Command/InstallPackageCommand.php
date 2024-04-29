@@ -68,7 +68,9 @@ EOT
                 break;
             case 'auto':
                 $associatedPackages = $connection ? $packageRepository->getPackages($connection) : [];
-                $getLanguages = (bool) array_first($associatedPackages, fn($pkg) => $pkg->handle = $pkgHandle);
+                $getLanguages = (bool) array_first($associatedPackages, function ($pkg) use ($pkgHandle) {
+                    return $pkg->handle = $pkgHandle;
+                });
                 break;
             default:
                 throw new InvalidOptionException('Invalid value for the --languages option. Valid values are "yes", "no", "auto"');
