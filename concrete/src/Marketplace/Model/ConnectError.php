@@ -7,7 +7,7 @@ namespace Concrete\Core\Marketplace\Model;
 /**
  * @readonly
  */
-class ConnectError
+final class ConnectError
 {
     public string $error;
     public int $code;

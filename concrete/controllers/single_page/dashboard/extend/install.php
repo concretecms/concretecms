@@ -42,7 +42,7 @@ class Install extends DashboardPageController implements LoggerAwareInterface
         @set_time_limit(0);
     }
 
-    public function view()
+    public function view(): void
     {
         // Get installed packages
         $packages = $this->app->make(PackageService::class);

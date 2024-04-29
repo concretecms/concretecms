@@ -7,10 +7,11 @@ use Concrete\Core\Marketplace\PackageRepositoryInterface;
 use Concrete\Core\Marketplace\PurchaseConnectionCoordinator;
 use Concrete\Core\Page\Controller\DashboardPageController;
 use Concrete\Core\Permission\Checker;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 
-class Marketplace extends DashboardPageController
+final class Marketplace extends DashboardPageController
 {
-    public function view()
+    public function view(): void
     {
         if ($errors = $this->app->make('session')->getFlashBag()->get('errors')) {
             foreach ($errors as $error) {
@@ -44,7 +45,7 @@ class Marketplace extends DashboardPageController
         }
     }
 
-    public function update_connection_settings()
+    public function update_connection_settings(): ?RedirectResponse
     {
         if (!$this->token->validate('update_connection_settings')) {
             $this->error->add($this->token->getErrorMessage());
@@ -59,15 +60,17 @@ class Marketplace extends DashboardPageController
             $dbConfig->save('concrete.marketplace.key.private', $this->request->request->get('privateKey'));
             return $this->buildRedirect($this->action('view'));
         }
+
         $this->view();
+        return null;
     }
 
-    public function do_connect()
+    public function do_connect(): ?RedirectResponse
     {
         $this->view();
         if (!$this->token->validate('do_connect')) {
             $this->error->add($this->token->getErrorMessage());
-            return;
+            return null;
         }
 
         $repository = $this->app->make(PackageRepositoryInterface::class);
@@ -75,13 +78,13 @@ class Marketplace extends DashboardPageController
 
         if ($current && $repository->validate($current)) {
             $this->error->add(t('This site is already connected.'));
-            return;
+            return null;
         }
 
         $checker = new Checker();
         if (!$checker->canInstallPackages()) {
             $this->error->add(t('You do not have access to set community configuration values.'));
-            return;
+            return null;
         }
 
         try {

@@ -8,4 +8,8 @@ use Concrete\Controller\Backend\UserInterface\MarketplaceItem;
  */
 class Checkout extends MarketplaceItem
 {
+    public function view()
+    {
+        throw new \RuntimeException('Please migrate to the new marketplace.');
+    }
 }

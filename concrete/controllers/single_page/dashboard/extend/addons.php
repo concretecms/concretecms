@@ -5,7 +5,7 @@ use Concrete\Core\Page\Controller\MarketplaceDashboardPageController;
 
 class Addons extends MarketplaceDashboardPageController
 {
-    public function getRedirectLocation()
+    public function getRedirectLocation(): string
     {
         return '/addons';
     }

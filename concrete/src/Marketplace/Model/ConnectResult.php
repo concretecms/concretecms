@@ -7,7 +7,7 @@ namespace Concrete\Core\Marketplace\Model;
 /**
  * @readonly
  */
-class ConnectResult
+final class ConnectResult
 {
     public string $private;
     public string $public;

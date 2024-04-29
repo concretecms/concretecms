@@ -7,7 +7,7 @@ namespace Concrete\Core\Marketplace\Model;
 /**
  * @readonly
  */
-class ValidateResult
+final class ValidateResult
 {
 
     const VALIDATE_RESULT_SUCCESS = 0;

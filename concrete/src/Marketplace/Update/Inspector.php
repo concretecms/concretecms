@@ -7,7 +7,7 @@ namespace Concrete\Core\Marketplace\Update;
 use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Package\PackageService;
 
-class Inspector
+final class Inspector
 {
 
     /**
@@ -61,7 +61,7 @@ class Inspector
         }
         return new UpdatedField(
             UpdatedFieldInterface::FIELD_PACKAGES,
-            json_encode($packageHandles)
+            json_encode($packageHandles, JSON_THROW_ON_ERROR)
         );
     }
 

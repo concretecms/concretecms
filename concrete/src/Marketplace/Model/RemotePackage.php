@@ -7,7 +7,7 @@ namespace Concrete\Core\Marketplace\Model;
 /**
  * @readonly
  */
-class RemotePackage
+final class RemotePackage
 {
     public string $handle;
     public string $name;
