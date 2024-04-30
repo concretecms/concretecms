@@ -7,18 +7,28 @@ namespace Concrete\Core\Marketplace\Model;
 /**
  * @readonly
  */
-class RemotePackage
+final class RemotePackage
 {
-    public string $handle;
-    public string $name;
-    public string $description;
-    public string $summary;
-    public string $download;
-    public string $icon;
-    public string $id;
-    public string $version;
-    public string $fileDescription;
-    public array $compatibility;
+    /** @var string */
+    public $handle;
+    /** @var string */
+    public $name;
+    /** @var string */
+    public $description;
+    /** @var string */
+    public $summary;
+    /** @var string */
+    public $download;
+    /** @var string */
+    public $icon;
+    /** @var string */
+    public $id;
+    /** @var string */
+    public $version;
+    /** @var string */
+    public $fileDescription;
+    /** @var array */
+    public $compatibility;
 
     public function __construct(
         string $handle,

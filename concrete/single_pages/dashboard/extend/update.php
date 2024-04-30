@@ -3,11 +3,11 @@
 use Michelf\Markdown;
 
 /** @var \Concrete\Core\Entity\Package[] $localUpdates */
-$localUpdates ??= [];
+$localUpdates = $localUpdates ?? [];
 /** @var \Concrete\Core\Entity\Package[] $remoteUpdates */
-$remoteUpdates ??= [];
+$remoteUpdates = $remoteUpdates ?? [];
 /** @var \Concrete\Core\Marketplace\Model\RemotePackage[] $remotePackages */
-$remotePackages ??= [];
+$remotePackages = $remotePackages ?? [];
 
 defined('C5_EXECUTE') or die('Access Denied.');
 $valt = Loader::helper('validation/token');
@@ -36,7 +36,9 @@ if (!$tp->canInstallPackages()) {
         <table class="table update-addons-table">
 			<?php
             foreach ($remoteUpdates as $pkg) {
-                $remotePackage = array_first($remotePackages, fn($remote) => $remote->handle === $pkg->getPackageHandle());
+                $remotePackage = array_first($remotePackages, function ($remote) use ($pkg) {
+                    return $remote->handle === $pkg->getPackageHandle();
+                });
                 ?>
 
 				<tr>

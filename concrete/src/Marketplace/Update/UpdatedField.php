@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Concrete\Core\Marketplace\Update;
 
-class UpdatedField implements UpdatedFieldInterface
+final class UpdatedField implements UpdatedFieldInterface
 {
-
-    protected $name = '';
-
+    /** @var string */
+    protected $name;
+    /** @var mixed */
     protected $data;
 
     public function __construct(string $name, $data)
@@ -17,9 +17,6 @@ class UpdatedField implements UpdatedFieldInterface
         $this->data = $data;
     }
 
-    /**
-     * @return string
-     */
     public function getName(): string
     {
         return $this->name;
@@ -32,7 +29,4 @@ class UpdatedField implements UpdatedFieldInterface
     {
         return $this->data;
     }
-
-
-
 }

@@ -57,8 +57,9 @@ interface PackageRepositoryInterface
 
     /**
      * Determine if a given connection is valid for the current site
+     * @return bool|ValidateResult
      */
-    public function validate(ConnectionInterface $connection, bool $returnFullObject = false): bool|ValidateResult;
+    public function validate(ConnectionInterface $connection, bool $returnFullObject = false);
 
     /**
      * Sends one or more updated fields to the marketplace backend for optional stage in the remote site object.

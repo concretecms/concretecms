@@ -4,7 +4,7 @@ namespace Concrete\Core\Marketplace;
 use Concrete\Core\Config\Repository\Repository;
 use Concrete\Core\Foundation\ConcreteObject;
 
-class PurchaseConnectionCoordinator
+final class PurchaseConnectionCoordinator
 {
 
     /**

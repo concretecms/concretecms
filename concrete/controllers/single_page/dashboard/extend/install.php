@@ -33,8 +33,10 @@ class Install extends DashboardPageController implements LoggerAwareInterface
 
     use LoggerAwareTrait;
 
-    protected PackageRepositoryInterface $repository;
-    protected ?Connection $connection;
+    /** @var PackageRepositoryInterface */
+    protected $repository;
+    /** @var Connection|null */
+    protected $connection;
 
     public function on_start()
     {
@@ -42,7 +44,7 @@ class Install extends DashboardPageController implements LoggerAwareInterface
         @set_time_limit(0);
     }
 
-    public function view()
+    public function view(): void
     {
         // Get installed packages
         $packages = $this->app->make(PackageService::class);
@@ -176,7 +178,9 @@ class Install extends DashboardPageController implements LoggerAwareInterface
                         $repository = $this->getPackageRepository();
                         $matchingPackages = array_filter(
                             $repository->getPackages($connection),
-                            fn(RemotePackage $rp) => $rp->handle === $p->getPackageHandle()
+                            function (RemotePackage $rp) use ($p) {
+                                return $rp->handle === $p->getPackageHandle();
+                            }
                         );
 
                         if (count($matchingPackages) > 0) {

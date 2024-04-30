@@ -7,17 +7,21 @@ namespace Concrete\Core\Marketplace\Model;
 /**
  * @readonly
  */
-class ValidateResult
+final class ValidateResult
 {
 
     const VALIDATE_RESULT_SUCCESS = 0;
     const VALIDATE_RESULT_ERROR = 460;
     CONST VALIDATE_RESULT_ERROR_URL_MISMATCH = 461;
 
-    public bool $valid;
-    public string $site;
-    public string $error;
-    public int $code;
+    /** @var bool */
+    public $valid;
+    /** @var string */
+    public $site;
+    /** @var string */
+    public $error;
+    /** @var int */
+    public $code;
 
     public function __construct(bool $valid, string $site, string $error = '', $code = 0)
     {

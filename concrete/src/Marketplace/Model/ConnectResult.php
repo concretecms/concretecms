@@ -7,11 +7,14 @@ namespace Concrete\Core\Marketplace\Model;
 /**
  * @readonly
  */
-class ConnectResult
+final class ConnectResult
 {
-    public string $private;
-    public string $public;
-    public string $siteId;
+    /** @var string */
+    public $private;
+    /** @var string */
+    public $public;
+    /** @var string */
+    public $siteId;
 
     public function __construct(string $private, string $public, string $site_id)
     {

@@ -7,7 +7,7 @@ namespace Concrete\Core\Marketplace\Update\Command;
 use Concrete\Core\Foundation\Command\Command;
 use Concrete\Core\Marketplace\Update\UpdatedFieldInterface;
 
-class UpdateRemoteDataCommand extends Command
+final class UpdateRemoteDataCommand extends Command
 {
 
     /**

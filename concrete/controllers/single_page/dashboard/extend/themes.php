@@ -5,7 +5,7 @@ use Concrete\Core\Page\Controller\MarketplaceDashboardPageController;
 
 class Themes extends MarketplaceDashboardPageController
 {
-    public function getRedirectLocation()
+    public function getRedirectLocation(): string
     {
         return '/themes';
     }

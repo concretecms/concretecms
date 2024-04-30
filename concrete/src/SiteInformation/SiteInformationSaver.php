@@ -6,7 +6,7 @@ use Concrete\Core\Marketplace\Update\Command\UpdateRemoteDataCommand;
 use Concrete\Core\Marketplace\Update\UpdatedField;
 use Symfony\Component\HttpFoundation\Request;
 
-class SiteInformationSaver extends DatabaseConfigSaver
+final class SiteInformationSaver extends DatabaseConfigSaver
 {
 
     /**
@@ -20,7 +20,7 @@ class SiteInformationSaver extends DatabaseConfigSaver
         $this->app = $app;
     }
 
-    public function saveFromRequest(Request $request)
+    public function saveFromRequest(Request $request): void
     {
         parent::saveFromRequest($request);
         $fields = [];
@@ -30,6 +30,4 @@ class SiteInformationSaver extends DatabaseConfigSaver
         $command = new UpdateRemoteDataCommand($fields);
         $this->app->executeCommand($command);
     }
-
-
 }

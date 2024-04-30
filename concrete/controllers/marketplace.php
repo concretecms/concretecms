@@ -12,10 +12,11 @@ use Exception;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use View;
 
-class Marketplace extends BackendUserInterfaceController
+final class Marketplace extends BackendUserInterfaceController
 {
 
     protected $validationToken = 'connect';
+
     /**
      * {@inheritdoc}
      *

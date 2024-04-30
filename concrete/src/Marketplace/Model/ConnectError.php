@@ -7,10 +7,12 @@ namespace Concrete\Core\Marketplace\Model;
 /**
  * @readonly
  */
-class ConnectError
+final class ConnectError
 {
-    public string $error;
-    public int $code;
+    /** @var string */
+    public $error;
+    /** @var int */
+    public $code;
 
     public function __construct(string $error, int $code)
     {

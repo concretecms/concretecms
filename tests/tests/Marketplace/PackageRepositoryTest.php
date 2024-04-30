@@ -3,6 +3,7 @@
 namespace Concrete\Tests\Marketplace;
 
 use Concrete\Core\Config\Repository\Repository;
+use Concrete\Core\Entity\Site\Site;
 use Concrete\Core\Marketplace\Connection;
 use Concrete\Core\Marketplace\ConnectionInterface;
 use Concrete\Core\Marketplace\Exception\InvalidConnectResponseException;
@@ -11,7 +12,7 @@ use Concrete\Core\Marketplace\Exception\PackageAlreadyExistsException;
 use Concrete\Core\Marketplace\Exception\UnableToConnectException;
 use Concrete\Core\Marketplace\Model\RemotePackage;
 use Concrete\Core\Marketplace\PackageRepository;
-use Concrete\Core\Url\Resolver\CanonicalUrlResolver;
+use Concrete\Core\Site\Service;
 use Concrete\Tests\TestCase;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\BadResponseException;
@@ -20,6 +21,8 @@ use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Response;
 use GuzzleHttp\Psr7\Uri;
 use GuzzleHttp\RequestOptions;
+use Mockery;
+use Mockery\MockInterface;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Component\Serializer\Serializer;
@@ -27,7 +30,7 @@ use Symfony\Component\Serializer\Serializer;
 class PackageRepositoryTest extends TestCase
 {
     /**
-     * @var Client|(Client&\Mockery\LegacyMockInterface)|(Client&\Mockery\MockInterface)|\Mockery\LegacyMockInterface|\Mockery\MockInterface
+     * @var Client&MockInterface
      */
     private $client;
 
@@ -37,16 +40,18 @@ class PackageRepositoryTest extends TestCase
     private $serializer;
 
     /**
-     * @var Repository|(Repository&\Mockery\LegacyMockInterface)|(Repository&\Mockery\MockInterface)|\Mockery\LegacyMockInterface|\Mockery\MockInterface
+     * @var Repository&MockInterface
      */
     private $config;
 
-    /**
-     * @var CanonicalUrlResolver|(CanonicalUrlResolver&\Mockery\LegacyMockInterface)|(CanonicalUrlResolver&\Mockery\MockInterface)|\Mockery\LegacyMockInterface|\Mockery\MockInterface
-     */
-    private $resolver;
+    /** @var RemotePackage */
+    private $fakePackage;
 
-    private RemotePackage $fakePackage;
+    /** @var Service&MockInterface */
+    private $siteService;
+
+    /** @var Site&MockInterface */
+    private $fakeSite;
 
     /**
      * @before
@@ -56,7 +61,10 @@ class PackageRepositoryTest extends TestCase
         $this->client = \Mockery::spy(Client::class);
         $this->serializer = new Serializer([new ObjectNormalizer()], [new JsonEncoder()]);
         $this->config = \Mockery::spy(Repository::class);
-        $this->resolver = \Mockery::spy(CanonicalUrlResolver::class);
+        $this->siteService = \Mockery::spy(Service::class);
+
+        $this->fakeSite = Mockery::spy(Site::class);
+        $this->siteService->shouldReceive('getDefault')->andReturn($this->fakeSite);
 
         $this->fakePackage = new RemotePackage(
             'foo',
@@ -78,7 +86,8 @@ class PackageRepositoryTest extends TestCase
             $this->client,
             $this->serializer,
             $this->config,
-            $this->resolver,
+            $this->config,
+            $this->siteService,
             $baseUri,
             $paths
         );
@@ -91,8 +100,8 @@ class PackageRepositoryTest extends TestCase
             'fake_key' => '/fake/%s/%s/path'
         ];
 
-        $this->resolver->expects('resolve')->andReturn('fake_url');
-        $this->config->expects('get')->with('site.sites.default.name')->andReturns('fake_name');
+        $this->fakeSite->expects('getSiteCanonicalURL')->andReturn('fake_url');
+        $this->fakeSite->expects('getSiteName')->andReturn('fake_name');
         $this->config->expects('get')->with('concrete.version')->andReturns('fake_version');
 
         $repository = $this->repository($baseUri, $paths);

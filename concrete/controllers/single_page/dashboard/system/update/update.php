@@ -98,7 +98,7 @@ class Update extends DashboardPageController
         }
 
         if (!$this->token->validate('download_update')) {
-//            $this->error->add($this->token->getErrorMessage());
+            $this->error->add($this->token->getErrorMessage());
         }
         if (!is_dir(DIR_CORE_UPDATES)) {
             $this->error->add(t('The directory %s does not exist.', DIR_CORE_UPDATES));
