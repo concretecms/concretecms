@@ -338,7 +338,7 @@ class PackageRepositoryTest extends TestCase
                 'compatibility' => $compat,
             ];
         };
-        
+
         $workingResponse = function() use ($package) {
             return new Response(200, [], json_encode([
                 $package('foo', '1234', '1.2.3', ['1.0.0']),
