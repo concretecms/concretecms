@@ -78,14 +78,14 @@ $timezone = $dateService->getTimezoneDisplayName($timezone);
 </div>
 
 <script>
-$(document).ready(function(){
-    $('#keepOtherScheduling').change(function(){
-        if(this.checked) {
-            $('.text-standard, .info-standard').addClass('d-none');
-            $('.text-active, .info-active').removeClass('d-none');
+$(document).ready(function() {
+    $('#keepOtherScheduling').change(function() {
+        if (this.checked) {
+            $('#version-scheduling .text-standard, #version-scheduling .info-standard').addClass('d-none');
+            $('#version-scheduling .text-active, #version-scheduling .info-active').removeClass('d-none');
         } else {
-            $('.text-standard, .info-standard').removeClass('d-none');
-            $('.text-active, .info-active').addClass('d-none');
+            $('#version-scheduling .text-standard, #version-scheduling .info-standard').removeClass('d-none');
+            $('#version-scheduling .text-active, #version-scheduling .info-active').addClass('d-none');
         }
     });
 });
