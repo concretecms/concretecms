@@ -323,24 +323,29 @@ class PackageRepositoryTest extends TestCase
         $this->connectRequestReturns('/get/packages', true, [new Response(200, [], '{"id":1}')]);
         $this->assertEmpty($repository->getPackages($connection));
 
-        $package = fn(string $handle, string $id, string $version, array $compat = [1, 2, 3, 4, 5]) => [
-            'handle' => $handle,
-            'name' => '',
-            'description' => '',
-            'summary' => '',
-            'download' => '',
-            'icon' => '',
-            'id' => $id,
-            'version' => $version,
-            'file_description' => '',
-            'compatibility' => $compat,
-        ];
-
-        $workingResponse = fn() => new Response(200, [], json_encode([
-            $package('foo', '1234', '1.2.3', ['1.0.0']),
-            $package('foo', '1235', '1.2.4'),
-            $package('baz', '1236', '1.0.0'),
-        ], JSON_THROW_ON_ERROR));
+        $package = function(string $handle, string $id, string $version, array $compat = null) {
+            $compat = $compat ?? [1, 2, 3, 4, 5];
+            return [
+                'handle' => $handle,
+                'name' => '',
+                'description' => '',
+                'summary' => '',
+                'download' => '',
+                'icon' => '',
+                'id' => $id,
+                'version' => $version,
+                'file_description' => '',
+                'compatibility' => $compat,
+            ];
+        };
+        
+        $workingResponse = function() use ($package) {
+            return new Response(200, [], json_encode([
+                $package('foo', '1234', '1.2.3', ['1.0.0']),
+                $package('foo', '1235', '1.2.4'),
+                $package('baz', '1236', '1.0.0'),
+            ], JSON_THROW_ON_ERROR));
+        };
 
         $this->connectRequestReturns('/get/packages', true, [
             $workingResponse(), $workingResponse(), $workingResponse(), $workingResponse()
