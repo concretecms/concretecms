@@ -6,7 +6,7 @@ use Concrete\Core\Console\Command;
 use Concrete\Core\Console\ConsoleAwareInterface;
 use Concrete\Core\Error\ErrorList\ErrorList;
 use Concrete\Core\Localization\Service\TranslationsInstaller;
-use Concrete\Core\Marketplace\Marketplace;
+use Concrete\Core\Marketplace\PackageRepositoryInterface;
 use Concrete\Core\Package\PackageService;
 use Concrete\Core\Support\Facade\Application;
 use Exception;
@@ -53,6 +53,9 @@ EOT
         $app = Application::getFacadeApplication();
         $config = $app->make('config');
         $packageService = $app->make(PackageService::class);
+        $packageRepository = $app->make(PackageRepositoryInterface::class);
+        $connection = $packageRepository->getConnection();
+
         $pkgHandle = $input->getArgument('package');
         switch (strtolower($input->getOption('languages'))) {
             case 'yes':
@@ -64,8 +67,10 @@ EOT
                 $getLanguages = false;
                 break;
             case 'auto':
-                $associatedPackages = Marketplace::getAvailableMarketplaceItems(false);
-                $getLanguages = isset($associatedPackages[$pkgHandle]);
+                $associatedPackages = $connection ? $packageRepository->getPackages($connection) : [];
+                $getLanguages = (bool) array_first($associatedPackages, function ($pkg) use ($pkgHandle) {
+                    return $pkg->handle = $pkgHandle;
+                });
                 break;
             default:
                 throw new InvalidOptionException('Invalid value for the --languages option. Valid values are "yes", "no", "auto"');

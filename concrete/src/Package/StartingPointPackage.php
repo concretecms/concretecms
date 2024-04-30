@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Core\Package;
 
 use AuthenticationType;
@@ -12,6 +13,8 @@ use Concrete\Core\Database\DatabaseStructureManager;
 use Concrete\Core\Entity\OAuth\Scope;
 use Concrete\Core\File\Filesystem;
 use Concrete\Core\File\Service\File;
+use Concrete\Core\Logging\Channels;
+use Concrete\Core\Marketplace\PackageRepositoryInterface;
 use Concrete\Core\Messenger\Transport\DefaultAsync\DefaultAsyncConnection;
 use Concrete\Core\User\Group\Command\AddGroupCommand;
 use Concrete\Core\Localization\Localization;
@@ -35,6 +38,7 @@ use Exception;
 use Group;
 use GroupTree;
 use League\OAuth2\Server\Repositories\ScopeRepositoryInterface;
+use Monolog\Logger;
 use Package as BasePackage;
 use Page;
 use PermissionKey;
@@ -63,7 +67,9 @@ class StartingPointPackage extends Package
     {
         parent::__construct($app);
         $this->routines = [
-            new StartingPointInstallRoutine('make_directories', 5, t('Starting installation and creating directories.')),
+            new StartingPointInstallRoutine(
+                'make_directories', 5, t('Starting installation and creating directories.')
+            ),
             new StartingPointInstallRoutine('install_database', 19, t('Creating database tables.')),
             new StartingPointInstallRoutine('install_site', 20, t('Creating site.')),
             new StartingPointInstallRoutine('add_users', 21, t('Adding admin user.')),
@@ -84,7 +90,11 @@ class StartingPointPackage extends Package
             new StartingPointInstallRoutine('install_page_types', 65, t('Page type basic setup.')),
             new StartingPointInstallRoutine('install_tasks', 66, t('Installing tasks.')),
             new StartingPointInstallRoutine('install_dashboard', 69, t('Installing dashboard.')),
-            new StartingPointInstallRoutine('install_required_single_pages', 75, t('Installing login and registration pages.')),
+            new StartingPointInstallRoutine(
+                'install_required_single_pages',
+                75,
+                t('Installing login and registration pages.')
+            ),
             new StartingPointInstallRoutine('install_config', 78, t('Configuring site.')),
             new StartingPointInstallRoutine('install_themes', 79, t('Adding themes.')),
             new StartingPointInstallRoutine('install_file_manager', 80, t('Installing file manager.')),
@@ -92,8 +102,8 @@ class StartingPointPackage extends Package
             new StartingPointInstallRoutine('install_content', 86, t('Adding pages and content.')),
             new StartingPointInstallRoutine('install_desktops', 92, t('Adding desktops.')),
             new StartingPointInstallRoutine('install_api', 93, t('Installing API.')),
-            new StartingPointInstallRoutine('install_site_permissions', 94, t('Setting site permissions.')),
-            new AttachModeInstallRoutine('finish', 95, t('Finishing.')),
+            new StartingPointInstallRoutine('install_site_permissions', 95, t('Setting site permissions.')),
+            new AttachModeInstallRoutine('finish', 98, t('Finishing.')),
         ];
     }
 
@@ -430,7 +440,9 @@ class StartingPointPackage extends Package
             throw new \Exception(
                 t(
                     'There are already %s tables in this database. Concrete must be installed in an empty database.',
-                    count($num)));
+                    count($num)
+                )
+            );
         }
         $installDirectory = DIR_BASE_CORE . '/config';
         try {
@@ -443,7 +455,10 @@ class StartingPointPackage extends Package
             \Doctrine\Common\Annotations\AnnotationReader::addGlobalIgnoredName('subpackages');
             \Doctrine\Common\Annotations\AnnotationReader::addGlobalIgnoredName('package');
             // Use default AnnotationReader
-            $driverImpl = $config->newDefaultAnnotationDriver(DIR_BASE_CORE . '/' . DIRNAME_CLASSES . '/' . DIRNAME_ENTITIES, false);
+            $driverImpl = $config->newDefaultAnnotationDriver(
+                DIR_BASE_CORE . '/' . DIRNAME_CLASSES . '/' . DIRNAME_ENTITIES,
+                false
+            );
             $config->setMetadataDriverImpl($driverImpl);
             $em = EntityManager::create(\Database::connection(), $config);
             $dbm = new DatabaseStructureManager($em);
@@ -497,23 +512,31 @@ class StartingPointPackage extends Package
         // create the groups our site users
         // specify the ID's since auto increment may not always be +1
         $command = new AddGroupCommand();
-        $this->app->executeCommand($command
-            ->setName(tc('GroupName', 'Guest'))
-            ->setDescription(tc('GroupDescription', 'The guest group represents unregistered visitors to your site.'))
-            ->setForcedNewGroupID(GUEST_GROUP_ID)
+        $this->app->executeCommand(
+            $command
+                ->setName(tc('GroupName', 'Guest'))
+                ->setDescription(
+                    tc('GroupDescription', 'The guest group represents unregistered visitors to your site.')
+                )
+                ->setForcedNewGroupID(GUEST_GROUP_ID)
         );
-        $this->app->executeCommand($command
-            ->setName(tc('GroupName', 'Registered Users'))
-            ->setDescription(tc('GroupDescription', 'The registered users group represents all user accounts.'))
-            ->setForcedNewGroupID(REGISTERED_GROUP_ID)
+        $this->app->executeCommand(
+            $command
+                ->setName(tc('GroupName', 'Registered Users'))
+                ->setDescription(tc('GroupDescription', 'The registered users group represents all user accounts.'))
+                ->setForcedNewGroupID(REGISTERED_GROUP_ID)
         );
-        $this->app->executeCommand($command
-            ->setName(tc('GroupName', 'Administrators'))
-            ->setDescription('')
-            ->setForcedNewGroupID(ADMIN_GROUP_ID)
+        $this->app->executeCommand(
+            $command
+                ->setName(tc('GroupName', 'Administrators'))
+                ->setDescription('')
+                ->setForcedNewGroupID(ADMIN_GROUP_ID)
         );
 
-        $superuser = UserInfo::addSuperUser($this->installerOptions->getUserPasswordHash(), $this->installerOptions->getUserEmail());
+        $superuser = UserInfo::addSuperUser(
+            $this->installerOptions->getUserPasswordHash(),
+            $this->installerOptions->getUserEmail()
+        );
         $u = User::getByUserID(USER_SUPER_ID, true, false);
 
         MailImporter::add(['miHandle' => 'private_message']);
@@ -528,10 +551,19 @@ class StartingPointPackage extends Package
 
         // Add Group Type + Default Role and assign them to the groups
         $db = Database::get();
-        $db->executeQuery('insert into GroupTypes (gtID, gtName, gtDefaultRoleID) values (?,?, ?)', [DEFAULT_GROUP_TYPE_ID, t("Group"), DEFAULT_GROUP_ROLE_ID]);
+        $db->executeQuery(
+            'insert into GroupTypes (gtID, gtName, gtDefaultRoleID) values (?,?, ?)',
+            [DEFAULT_GROUP_TYPE_ID, t("Group"), DEFAULT_GROUP_ROLE_ID]
+        );
         $db->executeQuery('insert into GroupRoles (grID, grName) values (?,?)', [DEFAULT_GROUP_ROLE_ID, t("Member")]);
-        $db->executeQuery('insert into GroupTypeSelectedRoles (gtID, grID) values (?,?)', [DEFAULT_GROUP_TYPE_ID, DEFAULT_GROUP_ROLE_ID]);
-        $db->executeQuery('update `Groups` set gtID = ?, gDefaultRoleID = ?', [DEFAULT_GROUP_TYPE_ID, DEFAULT_GROUP_ROLE_ID]);
+        $db->executeQuery(
+            'insert into GroupTypeSelectedRoles (gtID, grID) values (?,?)',
+            [DEFAULT_GROUP_TYPE_ID, DEFAULT_GROUP_ROLE_ID]
+        );
+        $db->executeQuery(
+            'update `Groups` set gtID = ?, gDefaultRoleID = ?',
+            [DEFAULT_GROUP_TYPE_ID, DEFAULT_GROUP_ROLE_ID]
+        );
         $db->executeQuery('update UserGroups set grID = ?', [DEFAULT_GROUP_ROLE_ID]);
 
         $config = $this->app->make(Repository::class);
@@ -560,10 +592,12 @@ class StartingPointPackage extends Package
         if (!is_dir(DIR_FILES_UPLOADED_STANDARD . REL_DIR_FILES_INCOMING)) {
             mkdir(
                 DIR_FILES_UPLOADED_STANDARD . REL_DIR_FILES_INCOMING,
-                Config::get('concrete.filesystem.permissions.directory'));
+                Config::get('concrete.filesystem.permissions.directory')
+            );
             chmod(
                 DIR_FILES_UPLOADED_STANDARD . REL_DIR_FILES_INCOMING,
-                Config::get('concrete.filesystem.permissions.directory'));
+                Config::get('concrete.filesystem.permissions.directory')
+            );
         }
     }
 
@@ -580,6 +614,21 @@ class StartingPointPackage extends Package
 
         file_put_contents(DIR_CONFIG_SITE . '/database.php', $renderer->render());
         @chmod(DIR_CONFIG_SITE . '/database.php', $config->get('concrete.filesystem.permissions.file'));
+
+        // Connect to the marketplace if possible.
+        if ($this->installerOptions->isConnectToMarketplaceEnabled()) {
+            $repository = $this->app->make(PackageRepositoryInterface::class);
+            try {
+                $repository->connect();
+            } catch (\Exception $e) {
+                // Fail silently, do not halt installation because of this.
+                core_log(
+                    Logger::NOTICE,
+                    Channels::CHANNEL_MARKETPLACE,
+                    t('Unable to connect to marketplace on install: %s', $e->getMessage())
+                );
+            }
+        }
 
         $siteConfig = \Site::getDefault()->getConfigRepository();
         if (isset($installConfiguration['canonical-url']) && $installConfiguration['canonical-url']) {

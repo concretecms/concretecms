@@ -3,12 +3,13 @@ namespace Concrete\Controller\Dialog\Marketplace;
 
 use Concrete\Controller\Backend\UserInterface\MarketplaceItem;
 
+/**
+ * @deprecated This will be removed in version 10
+ */
 class Checkout extends MarketplaceItem
 {
-    protected $viewPath = '/dialogs/marketplace/checkout';
-
     public function view()
     {
-        $this->set('mri', $this->item);
+        throw new \RuntimeException('Please migrate to the new marketplace.');
     }
 }

@@ -25,6 +25,10 @@ class InstallerOptions
      */
     protected $autoAttachEnabled = false;
 
+    /**
+     * @var bool
+     */
+    protected $isConnectToMarketplaceEnabled = true;
 
     /**
      * Whether the user has accepted the privacy policy from the front-end installation
@@ -99,7 +103,21 @@ class InstallerOptions
         $this->filesystem = $filesystem;
     }
 
+    /**
+     * @return bool
+     */
+    public function isConnectToMarketplaceEnabled(): bool
+    {
+        return $this->isConnectToMarketplaceEnabled;
+    }
 
+    /**
+     * @param bool $isConnectToMarketplaceEnabled
+     */
+    public function setIsConnectToMarketplaceEnabled(bool $isConnectToMarketplaceEnabled): void
+    {
+        $this->isConnectToMarketplaceEnabled = $isConnectToMarketplaceEnabled;
+    }
 
     /**
      * If the database already exists and is valid, lets just attach to it rather than installing over it?

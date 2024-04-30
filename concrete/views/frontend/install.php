@@ -478,13 +478,11 @@ if ($install_config) {
                 </div>
             </div>
             <div class="card card-default">
-                <div class="card-header" role="tab" id="headingThree">
-                    <a class="collapsed" role="button" data-bs-toggle="collapse"
-                       href="#advanced"><?= t('Advanced Options') ?>
-                    </a>
+                <div class="card-header">
+                    <?= t('Advanced Options') ?>
                 </div>
 
-                <div id="advanced" class="card-collapse collapse">
+                <div id="advanced">
                     <div class="card-body container">
 
                         <div class="row">

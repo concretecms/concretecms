@@ -8,6 +8,9 @@ use Concrete\Core\Database\EntityManager\Provider\PackageProviderFactory;
 use Concrete\Core\Error\ErrorList\ErrorList;
 use Concrete\Core\Foundation\ClassAutoloader;
 use Concrete\Core\Localization\Localization;
+use Concrete\Core\Marketplace\PackageRepository;
+use Concrete\Core\Marketplace\Update\Command\UpdateRemoteDataCommand;
+use Concrete\Core\Marketplace\Update\Inspector;
 use Concrete\Core\User\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Throwable;
@@ -184,6 +187,38 @@ class PackageService
         return $upgradeables;
     }
 
+    public function checkPackageUpdates(PackageRepository $repository, array $skipHandles = []): void
+    {
+        $connection = $repository->getConnection();
+        if (!$connection) {
+            return;
+        }
+
+        $versions = [];
+        $remotePackages = $repository->getPackages($connection, true);
+        foreach ($remotePackages as $remotePackage) {
+            $versions[$remotePackage->handle] = $remotePackage->version;
+        }
+        $remotePackage = null;
+
+        $count = 0;
+        foreach ($this->getInstalledList() as $package) {
+            if (in_array($package->getPackageHandle(), $skipHandles, true)) {
+                continue;
+            }
+
+            $package->setPackageAvailableVersion($versions[$package->getPackageHandle()] ?? null);
+            if (++$count === 10) {
+                $count = 0;
+                $this->entityManager->flush();
+            }
+        }
+
+        if ($count > 0) {
+            $this->entityManager->flush();
+        }
+    }
+
     /**
      * Initialize the entity manager for a package.
      *
@@ -217,6 +252,9 @@ class PackageService
         if ($cache) {
             $cache->flushAll();
         }
+        $inspector = $this->application->make(Inspector::class);
+        $command = new UpdateRemoteDataCommand([$inspector->getPackagesField()]);
+        $this->application->executeCommand($command);
     }
 
     /**
@@ -241,6 +279,10 @@ class PackageService
 
         $this->bootPackageEntityManager($p, true);
         $p->install($data);
+
+        $inspector = $this->application->make(Inspector::class);
+        $command = new UpdateRemoteDataCommand([$inspector->getPackagesField()]);
+        $this->application->executeCommand($command);
 
         $u = $this->application->make(User::class);
         $swapper = $p->getContentSwapper();

@@ -39,7 +39,6 @@ import './groups/group-manager';
 import './translator';
 
 // Marketplace support
-import './remote-marketplace';
 import 'magnific-popup'
 import '@concretecms/bedrock/assets/imagery/js/frontend/responsive-slides';
 
