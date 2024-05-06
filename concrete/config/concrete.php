@@ -821,8 +821,8 @@ return [
         ],
     ],
     'urls' => [
-        'concrete5' => 'http://marketplace.concretecms.com',
-        'concrete5_secure' => 'https://marketplace.concretecms.com',
+        'concrete5' => 'http://marketplace-blocked.concretecms.com',
+        'concrete5_secure' => 'https://marketplace-blocked.concretecms.com',
         'newsflow' => 'http://newsflow.concrete5.org',
         'background_feed' => '//backgroundimages.concrete5.org/wallpaper', // staying at concrete5.org for the momen
         'privacy_policy' => '//www.concretecms.com/about/legal/privacy-policy',
