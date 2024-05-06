@@ -2,9 +2,10 @@
 defined('C5_EXECUTE') or die("Access Denied.");
 ?>
 
-<div style="text-align: center">
-    <?=t('Upgrade to Concrete CMS 9.3 to access our new and improved marketplace!')?>
-    <br><br>
-    <a href="https://www.concretecms.org/marketplace-2024" target="_blank" class="btn btn-primary"><?=t('Learn More')?></a>
+<div style="text-align: left">
+    <div><?=t('You are using an older version of Concrete which no longer supports direct marketplace integration. You should explore upgrading to version 9.3 of Concrete CMS.')?></div>
+    <div style="margin-top: 2rem; text-align: center">
+        <a href="https://www.concretecms.com/about/new-marketplace" target="_blank" class="btn btn-primary"><?=t('Learn More')?></a>
+    </div>
 </div>
 
