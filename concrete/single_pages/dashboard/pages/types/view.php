@@ -103,7 +103,7 @@
         } else {
             ?>
 		<p><?= t('You have not created any page types yet.'); ?></p>
-		<a href="<?= URL::to('/dashboard/pages/types/add', $siteTypeID); ?>" class="btn btn-primary"><?=t('Add Page Type'); ?></a>
+		<a href="<?= URL::to('/dashboard/pages/types/add', $siteTypeID ?? ''); ?>" class="btn btn-primary"><?=t('Add Page Type'); ?></a>
 	<?php
         } ?>
 
