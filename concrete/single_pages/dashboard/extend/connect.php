@@ -14,7 +14,7 @@ if ($permissions->canInstallPackages()) { ?>
 
 
   <?php
-    if ($marketplace->hasConnectionError()) { ?>
+    if ($marketplace->hasConnectionError() && $marketplace->getConnectionError() !== Marketplace::E_GENERAL_CONNECTION_ERROR) { ?>
 
         <h4><?=t('Marketplace Error')?></h4>
 
@@ -75,7 +75,9 @@ if ($permissions->canInstallPackages()) { ?>
 
         <?php }
 
-    } ?>
+    }
+
+    if ($marketplace->getConnectionError() !== Marketplace::E_GENERAL_CONNECTION_ERROR) { ?>
 
 
             <fieldset>
@@ -105,6 +107,14 @@ if ($permissions->canInstallPackages()) { ?>
                     <button class="pull-right btn btn-primary" type="submit" ><?=t('Save')?></button>
                 </div>
             </div>
+
+        <?php } else {
+
+
+            View::element('dashboard/marketplace_upgrade');
+
+
+        } ?>
 
         </form>
 
