@@ -95,7 +95,6 @@ class StyleSet
 
     /**
      * @param string[] $cssClasses
-     * @return string
      */
     protected static function sanitizeCssClasses(array $cssClasses): ?string
     {
