@@ -65,6 +65,7 @@ class Dropzone extends ClientSideUploader
             'timeout' => $this->getTimeout() * 1000,
             'chunking' => $this->isChunkingEnabled(),
             'parallelUploads' => $this->getParallelUploads(),
+            'maxFilesize' => 4096, // 4GiB
         ] + $this->getLocalizationOptions();
         if ($options['chunking']) {
             // You cannot set both: uploadMultiple and chunking
