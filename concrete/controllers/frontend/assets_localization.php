@@ -222,6 +222,7 @@ var ccmi18n_sitemap = ' . json_encode([
     'viewing' => t('Viewing'),
     'visitExternalLink' => t('Visit'),
     'visitPage' => t('Visit'),
+    'editInComposer' => t('Edit in composer'),
 ]) . ';
 
 var ccmi18n_spellchecker = ' . json_encode([
