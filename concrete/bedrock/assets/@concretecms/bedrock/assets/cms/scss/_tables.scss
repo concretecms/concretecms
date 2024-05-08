@@ -102,7 +102,7 @@ div.ccm-ui {
     }
 
     tbody + tbody {
-      border-top: (2 * $table-border-width) solid $table-border-color;
+      border-top: calc(var(--bs-border-width) * 2) solid $table-border-color;
     }
 
     .ccm-search-results-em,
