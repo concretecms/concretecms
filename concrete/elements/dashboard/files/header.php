@@ -28,7 +28,7 @@ $folder = $file->getFileFolderObject();
                    title="<?=t('Upload a new file to be used everywhere this current file is referenced.')?>"
                    dialog-title="<?= t('Swap') ?>"
                    dialog-width="80%" dialog-height="600"
-                   href="<?= URL::to('/ccm/system/dialogs/file/replace')?>?fID=<?=$file->getFileID()?>"
+                   href="<?= URL::to('/ccm/system/dialogs/file/replace')?>?fID=<?=$file->getFileID()?>&reloadOnReplace=true"
                 ><?=t('Swap')?></a></li>
 
             <li><a class="dropdown-item launch-tooltip"
