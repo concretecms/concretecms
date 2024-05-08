@@ -689,7 +689,7 @@ div#ccm-menu-highlighter.ccm-block-highlight {
  */
 div.ccm-area-drag-area {
   height: 0;
-  line-height: 0;
+  line-height: 0 !important; // This needs !important so it overrides the line height set on .ccm-ui
   transition: none;
 
   span {
