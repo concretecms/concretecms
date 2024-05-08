@@ -1,6 +1,7 @@
 <?php
 defined('C5_EXECUTE') or die("Access Denied.");
 use Concrete\Core\Marketplace\Marketplace;
+
 $mi = Marketplace::getInstance();
 if ($mi->hasConnectionError() && $mi->getConnectionError() == Marketplace::E_MARKETPLACE_SUPPORT_MANUALLY_DISABLED) {
     ?>
@@ -12,7 +13,7 @@ if ($mi->hasConnectionError() && $mi->getConnectionError() == Marketplace::E_MAR
     ?>
 
 	<?php
-    if ($mi->hasConnectionError()) {
+    if ($mi->hasConnectionError() && $mi->getConnectionError() !== Marketplace::E_GENERAL_CONNECTION_ERROR) {
         ?>
 
         <br>
@@ -39,11 +40,10 @@ if ($mi->hasConnectionError() && $mi->getConnectionError() == Marketplace::E_MAR
         ?>
 		</div>
 
+    	<?php echo $h->button(t('Troubleshoot Connection'), View::url('/dashboard/extend/connect'), '', 'btn-primary')?>
 		<?php
-
     }
     ?>
-	
-	<?php echo $h->button(t('Troubleshoot Connection'), View::url('/dashboard/extend/connect'), '', 'btn-primary')?>
+
 <?php 
 } ?>

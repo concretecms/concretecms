@@ -118,6 +118,7 @@ class Controller extends BlockController implements UsesFeatureInterface
     {
         return [
             Features::CALENDAR,
+            Features::IMAGERY,
         ];
     }
 

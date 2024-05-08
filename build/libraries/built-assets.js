@@ -97,6 +97,7 @@ function getBuiltFiles()
         'js/features/desktop/frontend.js',
         'js/features/documents/frontend.js',
         'js/features/express/frontend.js',
+        'js/features/forms/frontend.js',
         'js/features/imagery/frontend.js',
         'js/features/maps/frontend.js',
         'js/features/multilingual/frontend.js',
