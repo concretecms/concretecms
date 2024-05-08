@@ -236,7 +236,7 @@ class User extends ConcreteObject
                         }
                     }
 
-                    if ($row['uID'] && $row['uIsValidated'] === '0' && $config->get(
+                    if ($row['uID'] && (int)$row['uIsValidated'] === 0 && $config->get(
                             'concrete.user.registration.validate_email'
                         )) {
                         $this->loadError(USER_NON_VALIDATED);

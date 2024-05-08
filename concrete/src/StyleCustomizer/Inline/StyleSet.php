@@ -94,6 +94,20 @@ class StyleSet
     }
 
     /**
+     * @param string[] $cssClasses
+     */
+    protected static function sanitizeCssClasses(array $cssClasses): ?string
+    {
+        $cssClasses = array_filter($cssClasses, function ($class) {
+            return preg_match('/^[^<>\'"]+$/', $class);
+        });
+        if (count($cssClasses) > 0) {
+            return implode(' ', $cssClasses);
+        }
+        return null;
+    }
+
+    /**
      * If the request contains any fields that are valid to save as a style set, we return the style set object
      * pre-save. If it's not (e.g. there's a background repeat but no actual background image, empty strings, etc...)
      * then we return null.
@@ -256,8 +270,11 @@ class StyleSet
 
         $v = $post->get('customClass');
         if (is_array($v)) {
-            $set->setCustomClass(implode(' ', $v));
-            $return = true;
+            $customClasses = self::sanitizeCssClasses($v);
+            if ($customClasses !== null) {
+                $set->setCustomClass($customClasses);
+                $return = true;
+            }
         }
 
         $v = trim($post->get('customID', ''));

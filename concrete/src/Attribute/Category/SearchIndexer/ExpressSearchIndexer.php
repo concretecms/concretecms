@@ -2,6 +2,8 @@
 
 namespace Concrete\Core\Attribute\Category\SearchIndexer;
 
+use Concrete\Core\Attribute\Category\CategoryInterface;
+use Concrete\Core\Attribute\Category\ExpressCategory;
 use Concrete\Core\Entity\Express\Entity;
 
 class ExpressSearchIndexer extends StandardSearchIndexer
@@ -19,5 +21,17 @@ class ExpressSearchIndexer extends StandardSearchIndexer
         if ($this->connection->tableExists($previousTable)) {
             $this->connection->execute(sprintf('alter table %s rename %s', $previousTable, $newTable));
         }
+    }
+
+    protected function isValid(CategoryInterface $category)
+    {
+        $isValid = parent::isValid($category);
+
+        // Express category without a persisted entity are not valid for indexing
+        if ($isValid && $category instanceof ExpressCategory && $category->getExpressEntity()->getHandle() === null) {
+            $isValid = false;
+        }
+
+        return $isValid;
     }
 }

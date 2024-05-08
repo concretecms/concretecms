@@ -134,6 +134,8 @@ class Controller extends BlockController implements UsesFeatureInterface
      */
     public $titleFormat;
 
+    public $entityManager;
+    
     protected $btInterfaceWidth = "640";
     protected $btInterfaceHeight = "400";
     protected $btTable = 'btExpressEntryList';
