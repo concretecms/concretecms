@@ -23,6 +23,8 @@ class LogEntry
     public $level;
     /** @var UserInfo|null */
     public $user;
+    /** @var int|null */
+    public $uID;
 
     public function __construct($row = null)
     {
