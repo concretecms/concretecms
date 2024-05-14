@@ -961,7 +961,7 @@ return [
         'concrete' => 'http://marketplace.concretecms.com',
         'concrete_secure' => 'https://marketplace.concretecms.com',
         'concrete_community' => 'https://community.concretecms.com',
-        'package_repository' => 'https://dl.market.stage.concretecms.com',
+        'package_repository' => 'http://dl.concretecms.com.test',
         'marketplace' => 'http://depot.concretecms.com.test',
         'background_feed' => 'https://backgroundimages.concretecms.com/wallpaper',
         'privacy_policy' => '//www.concretecms.com/about/legal/privacy-policy',

@@ -40,19 +40,11 @@ defined('C5_EXECUTE') or die("Access Denied.");
     ?>
 </fieldset>
 
-<?php if (isset($result) && $result->valid) { ?>
+<?php if (isset($result) && $result->valid) {
 
-<fieldset class="mb-3">
-    <legend><?=t('Project Page')?></legend>
+    Element::get('dashboard/marketplace/extend')->render();
 
-    <div class="mb-3"><?=t('Assign licenses to your Concrete site from your Concrete Project page, hosted on marketplace.concretecms.com.')?></div>
-
-    <div class="mb-3">
-        <a href="<?=$launchProjectPageUrl?>" class="btn btn-success" target="_blank"><?=t('Visit Page')?></a>
-    </div>
-</fieldset>
-
-<?php } ?>
+} ?>
 
 <?php
 if ($connection) {
@@ -88,15 +80,26 @@ if ($connection) {
         <legend><?= t('Advanced: Connection Information') ?></legend>
         <p><?=t('You can manually connect to an existing project page using its public and private key. You can retrieve your marketplace public and private key from your project page on marketplace.concretecms.com.')?></p>
 
-        <div class="form-group">
+        <div class="mb-3">
             <label for="publicKey" class="form-label"><?=t('ID')?></label>
             <?=$form->text('publicKey', $connection->getPublic())?>
         </div>
-        <div class="form-group">
+        <div class="mb-3">
             <label for="privateKey" class="form-label"><?=t('Secret Key')?></label>
             <?=$form->text('privateKey', $connection->getPrivate())?>
         </div>
-    <button class="btn btn-primary" type="submit"><?=t('Save')?></button>
+        <?php if (isset($result) && $result->valid) { ?>
+
+        <div class="mb-3">
+            <label class="form-label"><?=t('Project Page')?></label>
+            <div class="mb-3">
+                <?=t('Assign licenses to your Concrete site from your Concrete Project page, hosted on marketplace.concretecms.com.')?>
+                <a href="<?=$launchProjectPageUrl?>" target="_blank"><?=t('Visit Page')?></a>
+            </div>
+        </div>
+
+        <?php } ?>
+        <button class="btn btn-primary" type="submit"><?=t('Save')?></button>
     </fieldset>
 </form>
 <?php } ?>
