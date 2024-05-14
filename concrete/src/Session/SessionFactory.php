@@ -294,7 +294,7 @@ class SessionFactory implements SessionFactoryInterface
         if (count($servers) == 1) {
             // If we only have one server in our array then we just reconnect to it
             $server = $servers[0];
-            $redis = $this->app->make(Redis::class);
+            $redis = $this->app->make(Redis::class, ['options' => []]);
 
             if (isset($server['socket']) && $server['socket']) {
                 $redis->connect($server['socket']);
