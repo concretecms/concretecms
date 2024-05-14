@@ -234,7 +234,7 @@ class RedisStashDriver extends AbstractDriver
             // If we have a prefix delete only the prefix keys
             if (!empty($this->prefix)) {
                 // This attaches the prefix to the keys
-                $keys = $this->redis->getKeys('*');
+                $keys = method_exists($this->redis, 'keys') ? $this->redis->keys('*') : $this->redis->getKeys('*');
                 // Remove the prefix
                 $this->redis->setOption(\Redis::OPT_PREFIX, null);
                 // Delete all keys
