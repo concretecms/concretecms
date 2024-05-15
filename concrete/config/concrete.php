@@ -959,7 +959,7 @@ return [
     ],
     'urls' => [
         'concrete_community' => 'https://community.concretecms.com',
-        'package_repository' => 'https://dl.concretecms.com',
+        'package_repository' => 'https://dl.market.concretecms.com',
         'marketplace' => 'https://market.concretecms.com',
         'background_feed' => 'https://backgroundimages.concretecms.com/wallpaper',
         'privacy_policy' => '//www.concretecms.com/about/legal/privacy-policy',
