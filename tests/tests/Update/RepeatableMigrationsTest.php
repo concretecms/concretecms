@@ -14,6 +14,7 @@ class RepeatableMigrationsTest extends ConcreteDatabaseTestCase
         \Concrete\Core\Updater\Migrations\Migrations\Version20160725000000::class,
         \Concrete\Core\Updater\Migrations\Migrations\Version20210205193115::class,
         \Concrete\Core\Updater\Migrations\Migrations\Version20220316212429::class,
+        \Concrete\Core\Updater\Migrations\Migrations\Version20240515173142::class,
     ];
 
     public function testRepeatableMigrations()

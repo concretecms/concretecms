@@ -40,6 +40,18 @@ defined('C5_EXECUTE') or die("Access Denied.");
     ?>
 </fieldset>
 
+<?php if (isset($result) && !$result->valid) { ?>
+    <hr>
+    <form action="<?= $this->action('do_connect') ?>" class="mb-5">
+        <?= $token->output('do_connect') ?>
+        <fieldset>
+            <h5><?=t('Re-Connect')?></h5>
+            <p><?=t('If you have specified a public and private key but your site is still not connected to the marketplace, it may need to be re-connected. Click below to re-connect. Re-connecting will create a new site record in the Concrete CMS marketplace.')?></p>
+            <button class="btn btn-danger" type="submit"><?=t('Re-Connect')?></button>
+        </fieldset>
+    </form>
+    <?php } ?>
+
 <?php if (isset($result) && $result->valid) {
 
     Element::get('dashboard/marketplace/extend')->render();
@@ -104,15 +116,4 @@ if ($connection) {
 
 <?php } ?>
 
-<?php if (isset($result) && !$result->valid) { ?>
-    <hr>
-    <form action="<?= $this->action('do_connect') ?>">
-        <?= $token->output('do_connect') ?>
-        <fieldset>
-            <h5><?=t('Re-Connect')?></h5>
-            <p><?=t('If you have specified a public and private key but your site is still not connected to the marketplace, it may need to be re-connected. Click below to re-connect. Re-connecting will create a new site record in the Concrete CMS marketplace.')?></p>
-            <button class="btn btn-danger" type="submit"><?=t('Re-Connect')?></button>
-        </fieldset>
-    </form>
-    <?php } ?>
 <?php } ?>

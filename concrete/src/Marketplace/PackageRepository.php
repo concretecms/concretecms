@@ -70,7 +70,7 @@ final class PackageRepository implements PackageRepositoryInterface
             $response = $this->client->send($request);
             $data = json_decode($response->getBody()->getContents(), true, 4, JSON_THROW_ON_ERROR);
             $result = $this->serializer->denormalize($data, RemotePackage::class);
-        } catch (BadResponseException|\JsonException|ExceptionInterface $e) {
+        } catch (BadResponseException|\JsonException|ExceptionInterface|ConnectException $e) {
             return null;
         }
 
@@ -79,15 +79,15 @@ final class PackageRepository implements PackageRepositoryInterface
 
     public function getPackages(ConnectionInterface $connection, bool $latestOnly = false, bool $compatibleOnly = false): array
     {
-        $request = $this->authenticate($this->requestFor('GET', 'list'), $connection);
         try {
+            $request = $this->authenticate($this->requestFor('GET', 'list'), $connection);
             $response = $this->client->send($request);
             $data = json_decode($response->getBody()->getContents(), true, 4, JSON_THROW_ON_ERROR);
             /** @var RemotePackage[] $result */
             $result = array_map(function ($item) {
                 return $this->serializer->denormalize($item, RemotePackage::class);
             }, $data);
-        } catch (BadResponseException|\JsonException|ExceptionInterface $e) {
+        } catch (BadResponseException|\JsonException|ExceptionInterface|ConnectException $e) {
             return [];
         }
 
