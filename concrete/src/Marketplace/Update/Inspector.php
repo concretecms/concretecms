@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Concrete\Core\Marketplace\Update;
 
 use Concrete\Core\Database\Connection\Connection;
+use Concrete\Core\Localization\Localization;
 use Concrete\Core\Package\PackageService;
 
 final class Inspector
@@ -50,6 +51,11 @@ final class Inspector
             UpdatedFieldInterface::FIELD_SITES,
             (int)$this->db->fetchOne('select count(siteID) from Sites')
         );
+    }
+
+    public function getLocaleField(): UpdatedFieldInterface
+    {
+        return new UpdatedField(UpdatedFieldInterface::FIELD_LOCALE, Localization::activeLocale());
     }
 
     public function getPackagesField(): UpdatedFieldInterface

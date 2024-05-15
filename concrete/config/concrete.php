@@ -6,9 +6,9 @@ return [
      *
      * @var string
      */
-    'version' => '9.3.0a3',
-    'version_installed' => '9.3.0a3',
-    'version_db' => '20240508000000', // the key of the latest database migration
+    'version' => '9.3.0RC1',
+    'version_installed' => '9.3.0RC1',
+    'version_db' => '20240515173142', // the key of the latest database migration
 
     /*
      * Installation status
@@ -789,8 +789,8 @@ return [
         'enable_permissions_protection' => true,
         'check_threshold' => 172800,
         'services' => [
-            'get_available_updates' => 'https://marketplace.concretecms.com/tools/update_core',
-            'inspect_update' => 'https://marketplace.concretecms.com/tools/inspect_update',
+            'get_available_updates' => 'https://www.concretecms.com/api/remote_update/update_core',
+            'inspect_update' => 'https://www.concretecms.com/api/remote_update/inspect_update',
         ],
         // Set to true to skip checking if there's a newer core version available (useful for example if the core is upgraded via composer)
         'skip_core' => false,
@@ -960,7 +960,7 @@ return [
     'urls' => [
         'concrete_community' => 'https://community.concretecms.com',
         'package_repository' => 'https://dl.concretecms.com',
-        'marketplace' => 'http://market.concretecms.com',
+        'marketplace' => 'https://market.concretecms.com',
         'background_feed' => 'https://backgroundimages.concretecms.com/wallpaper',
         'privacy_policy' => '//www.concretecms.com/about/legal/privacy-policy',
         'background_info' => 'https://backgroundimages.concretecms.com/get_image_data.php',

@@ -65,8 +65,8 @@ final class PackageRepository implements PackageRepositoryInterface
 
     public function getPackage(ConnectionInterface $connection, string $packageId): ?RemotePackage
     {
-        $request = $this->authenticate($this->requestFor('GET', 'get', $packageId), $connection);
         try {
+            $request = $this->authenticate($this->requestFor('GET', 'get', $packageId), $connection);
             $response = $this->client->send($request);
             $data = json_decode($response->getBody()->getContents(), true, 4, JSON_THROW_ON_ERROR);
             $result = $this->serializer->denormalize($data, RemotePackage::class);
@@ -247,9 +247,8 @@ final class PackageRepository implements PackageRepositoryInterface
      */
     public function validate(ConnectionInterface $connection, bool $returnFullObject = false)
     {
-        $request = $this->authenticate($this->requestFor('GET', 'connect_validate'), $connection);
-
         try {
+            $request = $this->authenticate($this->requestFor('GET', 'connect_validate'), $connection);
             $response = $this->client->send($request);
 
             if ($response->getStatusCode() !== 200) {
@@ -264,7 +263,7 @@ final class PackageRepository implements PackageRepositoryInterface
             $data = json_decode($contents, true, 2, JSON_THROW_ON_ERROR);
 
             $result = $this->serializer->denormalize($data, ValidateResult::class);
-        } catch (BadResponseException|\JsonException|ExceptionInterface $e) {
+        } catch (BadResponseException|\JsonException|ExceptionInterface|ConnectException $e) {
             if ($returnFullObject) {
                 return new ValidateResult(false, '', '', ValidateResult::VALIDATE_RESULT_ERROR);
             }

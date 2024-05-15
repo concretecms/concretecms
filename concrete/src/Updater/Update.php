@@ -273,21 +273,14 @@ class Update
                 $inspector->getPrivilegedUsersField(),
                 $inspector->getSitesField(),
                 $inspector->getPackagesField(),
+                $inspector->getLocaleField(),
             ];
             $command = new UpdateRemoteDataCommand($fields);
             $app->executeCommand($command);
+            $appVersion = $config->get('concrete.version_installed');
             $formParams = [
-                'LOCALE' =>  Localization::activeLocale(),
-                'BASE_URL_FULL' => (string) Application::getApplicationURL(),
-                'APP_VERSION' => '9.0.0'
+                'APP_VERSION' => $appVersion,
             ];
-            $survey = $app->make(SiteInformationSurvey::class);
-            $results = $survey->getSaver()->getResults();
-            if ($results && is_array($results)) {
-                foreach ($results as $key => $value) {
-                    $formParams['INFO'][$key] = $value;
-                }
-            }
             $response = $app->make('http/client')->post($config->get('concrete.updates.services.get_available_updates'),
                 ['form_params' => $formParams]
             );
