@@ -89,7 +89,7 @@ if (!$tp->canInstallPackages()) {
                     <tr>
                         <td colspan="2" style="border-top: 0px">
                             <div class="block-message alert-message error">
-                                <p><?=t('Unable to locate this add-on on marketplace.concretecms.com')?></p>
+                                <p><?=t('Unable to locate this add-on on market.concretecms.com')?></p>
                             </div>
                         </td>
                     </tr>

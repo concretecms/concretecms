@@ -58,4 +58,8 @@ if (!$connection && ($checker->canInstallPackages() && $config->get('concrete.ma
 
 
 
-<?php } ?>
+<?php } else {
+
+    Element::get('dashboard/marketplace/extend')->render();
+
+} ?>

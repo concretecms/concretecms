@@ -40,19 +40,23 @@ defined('C5_EXECUTE') or die("Access Denied.");
     ?>
 </fieldset>
 
-<?php if (isset($result) && $result->valid) { ?>
+<?php if (isset($result) && !$result->valid) { ?>
+    <hr>
+    <form action="<?= $this->action('do_connect') ?>" class="mb-5">
+        <?= $token->output('do_connect') ?>
+        <fieldset>
+            <h5><?=t('Re-Connect')?></h5>
+            <p><?=t('If you have specified a public and private key but your site is still not connected to the marketplace, it may need to be re-connected. Click below to re-connect. Re-connecting will create a new site record in the Concrete CMS marketplace.')?></p>
+            <button class="btn btn-danger" type="submit"><?=t('Re-Connect')?></button>
+        </fieldset>
+    </form>
+    <?php } ?>
 
-<fieldset class="mb-3">
-    <legend><?=t('Project Page')?></legend>
+<?php if (isset($result) && $result->valid) {
 
-    <div class="mb-3"><?=t('Assign licenses to your Concrete site from your Concrete Project page, hosted on marketplace.concretecms.com.')?></div>
+    Element::get('dashboard/marketplace/extend')->render();
 
-    <div class="mb-3">
-        <a href="<?=$launchProjectPageUrl?>" class="btn btn-success" target="_blank"><?=t('Visit Page')?></a>
-    </div>
-</fieldset>
-
-<?php } ?>
+} ?>
 
 <?php
 if ($connection) {
@@ -85,18 +89,31 @@ if ($connection) {
 <form method="post" action="<?=$view->action('update_connection_settings')?>">
     <?=$token->output('update_connection_settings')?>
     <fieldset class="mb-3">
-        <legend><?= t('Advanced: Connection Information') ?></legend>
-        <p><?=t('You can manually connect to an existing project page using its public and private key. You can retrieve your marketplace public and private key from your project page on marketplace.concretecms.com.')?></p>
+        <legend><?= t('Advanced') ?></legend>
+        <h5><?=t('Connection Information')?></h5>
+        <p><?=t('You can manually connect to an existing Concrete marketplace Site record using its public and private key. You can retrieve your marketplace public and private key from your Concrete Site page on market.concretecms.com.')?></p>
 
-        <div class="form-group">
+        <div class="mb-3">
             <label for="publicKey" class="form-label"><?=t('ID')?></label>
             <?=$form->text('publicKey', $connection->getPublic())?>
         </div>
-        <div class="form-group">
+        <div class="mb-3">
             <label for="privateKey" class="form-label"><?=t('Secret Key')?></label>
             <?=$form->text('privateKey', $connection->getPrivate())?>
         </div>
-    <button class="btn btn-primary" type="submit"><?=t('Save')?></button>
+        <button class="btn btn-primary" type="submit"><?=t('Save')?></button>
     </fieldset>
 </form>
+
+<?php if (isset($result) && $result->valid) { ?>
+
+<hr>
+<fieldset>
+    <h5><?=t('Concrete Site Record')?></h5>
+    <p><?=t('Your site has a record saved for it in the marketplace. You can assign licenses to your Concrete Site directly from this page, hosted on market.concretecms.com')?></p>
+    <a href="<?=$launchProjectPageUrl?>" target="_blank" class="btn btn-secondary"><?=t('Visit Page')?></a>
+</fieldset>
+
+<?php } ?>
+
 <?php } ?>
