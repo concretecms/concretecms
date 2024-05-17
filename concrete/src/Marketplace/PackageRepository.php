@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Concrete\Core\Marketplace;
 
+use Psr\Log\LoggerInterface;
 use Concrete\Core\Config\Repository\Repository;
 use Concrete\Core\Entity\Site\Site;
 use Concrete\Core\File\Service\File;
@@ -49,6 +50,8 @@ final class PackageRepository implements PackageRepositoryInterface
     private $paths;
     /** @var File */
     private $fileHelper;
+    /** @var LoggerInterface */
+    private $logger;
 
     public function __construct(
         Client $client,
@@ -57,6 +60,7 @@ final class PackageRepository implements PackageRepositoryInterface
         Repository $databaseConfig,
         Service $siteService,
         File $fileHelper,
+        LoggerInterface  $logger,
         string $baseUri,
         array $paths
     ) {
@@ -66,6 +70,7 @@ final class PackageRepository implements PackageRepositoryInterface
         $this->databaseConfig = $databaseConfig;
         $this->siteService = $siteService;
         $this->fileHelper = $fileHelper;
+        $this->logger = $logger;
         $this->baseUri = $baseUri;
         $this->paths = $paths;
     }
@@ -296,12 +301,18 @@ final class PackageRepository implements PackageRepositoryInterface
      */
     public function update(ConnectionInterface $connection, array $updatedFields): void
     {
-        $formParams = [];
-        foreach ($updatedFields as $field) {
-            $formParams[$field->getName()] = $field->getData();
+        try {
+            $formParams = [];
+            foreach ($updatedFields as $field) {
+                $formParams[$field->getName()] = $field->getData();
+            }
+            $request = $this->authenticate($this->requestFor('POST', 'update'), $connection);
+            $response = $this->client->post($request->getUri(), ['form_params' => $formParams]);
+        } catch (\Exception $e) {
+            // https://github.com/concretecms/concretecms/issues/12079
+            // We don't want to be noisy _every_ when doing these updates.
+            $this->logger->warning(t('Error updating remote data: {message}'), ['message' => $e->getMessage()]);
         }
-        $request = $this->authenticate($this->requestFor('POST', 'update'), $connection);
-        $response = $this->client->post($request->getUri(), ['form_params' => $formParams]);
     }
 
     protected function authenticate(
