@@ -3,6 +3,7 @@
 namespace Concrete\Core\Marketplace;
 
 use Concrete\Core\Config\Repository\Repository;
+use Concrete\Core\File\Service\File;
 use Concrete\Core\Foundation\Service\Provider;
 use Concrete\Core\Site\Service;
 use GuzzleHttp\Client;
@@ -24,6 +25,7 @@ class MarketplaceServiceProvider extends Provider
                 $config,
                 $this->app->make('config/database'),
                 $this->app->make(Service::class),
+                $this->app->make(File::class),
                 $config->get('concrete.urls.package_repository'),
                 $config->get('concrete.urls.paths.package_repository')
             );

@@ -4,6 +4,7 @@ namespace Concrete\Tests\Marketplace;
 
 use Concrete\Core\Config\Repository\Repository;
 use Concrete\Core\Entity\Site\Site;
+use Concrete\Core\File\Service\File;
 use Concrete\Core\Marketplace\Connection;
 use Concrete\Core\Marketplace\ConnectionInterface;
 use Concrete\Core\Marketplace\Exception\InvalidConnectResponseException;
@@ -50,6 +51,9 @@ class PackageRepositoryTest extends TestCase
     /** @var Service&MockInterface */
     private $siteService;
 
+    /** @var File&MockInterface */
+    private $fileService;
+
     /** @var Site&MockInterface */
     private $fakeSite;
 
@@ -62,7 +66,7 @@ class PackageRepositoryTest extends TestCase
         $this->serializer = new Serializer([new ObjectNormalizer()], [new JsonEncoder()]);
         $this->config = \Mockery::spy(Repository::class);
         $this->siteService = \Mockery::spy(Service::class);
-
+        $this->fileService = \Mockery::spy(File::class);
         $this->fakeSite = Mockery::spy(Site::class);
         $this->siteService->shouldReceive('getDefault')->andReturn($this->fakeSite);
 
@@ -88,6 +92,7 @@ class PackageRepositoryTest extends TestCase
             $this->config,
             $this->config,
             $this->siteService,
+            $this->fileService,
             $baseUri,
             $paths
         );

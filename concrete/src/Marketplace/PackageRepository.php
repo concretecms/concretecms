@@ -6,6 +6,7 @@ namespace Concrete\Core\Marketplace;
 
 use Concrete\Core\Config\Repository\Repository;
 use Concrete\Core\Entity\Site\Site;
+use Concrete\Core\File\Service\File;
 use Concrete\Core\Marketplace\Exception\InvalidConnectResponseException;
 use Concrete\Core\Marketplace\Exception\InvalidPackageException;
 use Concrete\Core\Marketplace\Exception\PackageAlreadyExistsException;
@@ -44,6 +45,8 @@ final class PackageRepository implements PackageRepositoryInterface
     private $baseUri;
     /** @var array<string, string> */
     private $paths;
+    /** @var File */
+    private $fileHelper;
 
     public function __construct(
         Client $client,
@@ -51,6 +54,7 @@ final class PackageRepository implements PackageRepositoryInterface
         Repository $config,
         Repository $databaseConfig,
         Service $siteService,
+        File $fileHelper,
         string $baseUri,
         array $paths
     ) {
@@ -125,7 +129,7 @@ final class PackageRepository implements PackageRepositoryInterface
 
         // Try to start the download
         $request = $this->authenticate(new Request('GET', new Uri($package->download)), $connection);
-        $output = tempnam('/tmp', $package->handle);
+        $output = tempnam($this->fileHelper->getTemporaryDirectory(), $package->handle);
         $this->client->send($request, [
             RequestOptions::ALLOW_REDIRECTS => true,
             RequestOptions::SINK => $output,
