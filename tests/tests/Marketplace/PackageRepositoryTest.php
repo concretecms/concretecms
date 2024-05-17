@@ -74,9 +74,7 @@ class PackageRepositoryTest extends TestCase
         $this->logger = \Mockery::mock(LoggerInterface::class);
         $this->fakeSite = Mockery::spy(Site::class);
         $this->siteService->shouldReceive('getDefault')->andReturn($this->fakeSite);
-
         $this->fileService->shouldReceive('getTemporaryDirectory')->andReturn('/tmp');
-        
         $this->fakePackage = new RemotePackage(
             'foo',
             '',
