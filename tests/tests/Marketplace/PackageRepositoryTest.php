@@ -24,7 +24,6 @@ use GuzzleHttp\Psr7\Uri;
 use GuzzleHttp\RequestOptions;
 use Mockery;
 use Mockery\MockInterface;
-use Psr\Log\LoggerInterface;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Component\Serializer\Serializer;
@@ -55,9 +54,6 @@ class PackageRepositoryTest extends TestCase
     /** @var File&MockInterface */
     private $fileService;
 
-    /** @var LoggerInterface&MockInterface */
-    private $logger;
-
     /** @var Site&MockInterface */
     private $fakeSite;
 
@@ -71,7 +67,6 @@ class PackageRepositoryTest extends TestCase
         $this->config = \Mockery::spy(Repository::class);
         $this->siteService = \Mockery::spy(Service::class);
         $this->fileService = \Mockery::mock(File::class);
-        $this->logger = \Mockery::mock(LoggerInterface::class);
         $this->fakeSite = Mockery::spy(Site::class);
         $this->siteService->shouldReceive('getDefault')->andReturn($this->fakeSite);
         $this->fileService->shouldReceive('getTemporaryDirectory')->andReturn('/tmp');
@@ -98,7 +93,6 @@ class PackageRepositoryTest extends TestCase
             $this->config,
             $this->siteService,
             $this->fileService,
-            $this->logger,
             $baseUri,
             $paths
         );

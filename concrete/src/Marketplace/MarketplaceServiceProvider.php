@@ -28,7 +28,6 @@ class MarketplaceServiceProvider extends Provider
                 $this->app->make('config/database'),
                 $this->app->make(Service::class),
                 $this->app->make(File::class),
-                $this->app->make(LoggerFactory::class)->createLogger(Channels::CHANNEL_MARKETPLACE),
                 $config->get('concrete.urls.package_repository'),
                 $config->get('concrete.urls.paths.package_repository')
             );

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Concrete\Core\Marketplace;
 
+use Concrete\Core\Marketplace\Exception\ErrorSavingRemoteDataException;
 use Psr\Log\LoggerInterface;
 use Concrete\Core\Config\Repository\Repository;
 use Concrete\Core\Entity\Site\Site;
@@ -50,8 +51,6 @@ final class PackageRepository implements PackageRepositoryInterface
     private $paths;
     /** @var File */
     private $fileHelper;
-    /** @var LoggerInterface */
-    private $logger;
 
     public function __construct(
         Client $client,
@@ -60,7 +59,6 @@ final class PackageRepository implements PackageRepositoryInterface
         Repository $databaseConfig,
         Service $siteService,
         File $fileHelper,
-        LoggerInterface  $logger,
         string $baseUri,
         array $paths
     ) {
@@ -70,7 +68,6 @@ final class PackageRepository implements PackageRepositoryInterface
         $this->databaseConfig = $databaseConfig;
         $this->siteService = $siteService;
         $this->fileHelper = $fileHelper;
-        $this->logger = $logger;
         $this->baseUri = $baseUri;
         $this->paths = $paths;
     }
@@ -311,7 +308,7 @@ final class PackageRepository implements PackageRepositoryInterface
         } catch (\Exception $e) {
             // https://github.com/concretecms/concretecms/issues/12079
             // We don't want to be noisy _every_ when doing these updates.
-            $this->logger->warning(t('Error updating remote data: {message}'), ['message' => $e->getMessage()]);
+            throw new ErrorSavingRemoteDataException($e->getMessage());
         }
     }
 
