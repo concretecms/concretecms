@@ -194,12 +194,12 @@ class Install extends Controller
                 case 'http':
                     $canonicalUrl = (string) UrlImmutable::createFromUrl('http' . $m[2]);
                     $canonicalUrlAlternative = (string) UrlImmutable::createFromUrl('https' . $m[2]);
-                    $canonicalUrlChecked = true;
+                    //$canonicalUrlChecked = true;
                     break;
                 case 'https':
                     $canonicalUrl = (string) UrlImmutable::createFromUrl('https' . $m[2]);
                     $canonicalUrlAlternative = (string) UrlImmutable::createFromUrl('http' . $m[2]);
-                    $canonicalUrlChecked = true;
+                    //$canonicalUrlChecked = true;
                     break;
             }
         }
