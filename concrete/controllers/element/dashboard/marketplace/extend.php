@@ -33,7 +33,7 @@ class Extend extends ElementController
     public function __construct(
         PackageRepositoryInterface $packageRepository,
         PurchaseConnectionCoordinator $purchaseConnectionCoordinator,
-        PathUrlResolver $urlResolver,
+        PathUrlResolver $urlResolver
     ) {
         $this->packageRepository = $packageRepository;
         $this->purchaseConnectionCoordinator = $purchaseConnectionCoordinator;
