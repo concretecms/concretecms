@@ -124,6 +124,7 @@ if ($this->controller->getTask() == 'install_package' && isset($showInstallOptio
     $local = [];
     $remote = [];
     $pkgAvailableArray = [];
+
     if ($tp->canInstallPackages()) {
         $local = Package::getLocalUpgradeablePackages();
         $remote = Package::getRemotelyUpgradeablePackages();
@@ -183,6 +184,12 @@ if ($this->controller->getTask() == 'install_package' && isset($showInstallOptio
             $skipHandles[] = $ava->getPackageHandle();
         }
     }
+
+    $currentlyInstalledHandles = Package::getInstalledHandles();
+    foreach ($currentlyInstalledHandles as $packageHandle) {
+        $skipHandles[] = $packageHandle;
+    }
+
     $purchasedBlocks = [];
     foreach ($purchasedBlocksSource as $pb) {
         if (!in_array($pb->handle, $skipHandles)) {
