@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Concrete\Core\Marketplace;
 
 use Concrete\Core\Marketplace\Exception\ErrorSavingRemoteDataException;
-use Psr\Log\LoggerInterface;
 use Concrete\Core\Config\Repository\Repository;
 use Concrete\Core\Entity\Site\Site;
 use Concrete\Core\File\Service\File;
