@@ -11,6 +11,7 @@ use Concrete\Core\Logging\LoggerAwareTrait;
 use Concrete\Core\Marketplace\Connection;
 use Concrete\Core\Marketplace\ConnectionInterface;
 use Concrete\Core\Marketplace\Exception\InvalidConnectResponseException;
+use Concrete\Core\Marketplace\Exception\InvalidDownloadResponseException;
 use Concrete\Core\Marketplace\Exception\InvalidPackageException;
 use Concrete\Core\Marketplace\Exception\PackageAlreadyExistsException;
 use Concrete\Core\Marketplace\Exception\UnableToConnectException;
@@ -24,6 +25,7 @@ use Concrete\Core\Page\Controller\DashboardPageController;
 use Concrete\Core\Routing\RedirectResponse;
 use Concrete\Core\Support\Facade\Package;
 use Exception;
+use GuzzleHttp\Exception\ClientException;
 use Loader;
 use Psr\Log\LoggerInterface;
 use TaskPermission;
@@ -279,6 +281,18 @@ class Install extends DashboardPageController implements LoggerAwareInterface
                 ]
             );
             $this->error->add(t('Package file did not decompress to an installable package.'));
+            return;
+        } catch (InvalidDownloadResponseException $e) {
+            $this->getLogger()->error(
+                t('Unable to download package {name} for {handle}:{version}. Response message: {message}'),
+                [
+                    'name' => $remotePackage->name,
+                    'handle' => $remotePackage->handle,
+                    'version' => $remotePackage->version,
+                    'message' => $e->getMessage(),
+                ]
+            );
+            $this->error->add($e->getMessage());
             return;
         }
 

@@ -4,9 +4,12 @@ declare(strict_types=1);
 
 namespace Concrete\Core\Marketplace;
 
+use Concrete\Core\Marketplace\Exception\ErrorSavingRemoteDataException;
 use Concrete\Core\Config\Repository\Repository;
 use Concrete\Core\Entity\Site\Site;
+use Concrete\Core\File\Service\File;
 use Concrete\Core\Marketplace\Exception\InvalidConnectResponseException;
+use Concrete\Core\Marketplace\Exception\InvalidDownloadResponseException;
 use Concrete\Core\Marketplace\Exception\InvalidPackageException;
 use Concrete\Core\Marketplace\Exception\PackageAlreadyExistsException;
 use Concrete\Core\Marketplace\Exception\UnableToConnectException;
@@ -20,6 +23,7 @@ use Concrete\Core\Site\Service;
 use Concrete\Core\Url\Url;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\BadResponseException;
+use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Exception\ConnectException;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Uri;
@@ -44,6 +48,8 @@ final class PackageRepository implements PackageRepositoryInterface
     private $baseUri;
     /** @var array<string, string> */
     private $paths;
+    /** @var File */
+    private $fileHelper;
 
     public function __construct(
         Client $client,
@@ -51,6 +57,7 @@ final class PackageRepository implements PackageRepositoryInterface
         Repository $config,
         Repository $databaseConfig,
         Service $siteService,
+        File $fileHelper,
         string $baseUri,
         array $paths
     ) {
@@ -59,6 +66,7 @@ final class PackageRepository implements PackageRepositoryInterface
         $this->config = $config;
         $this->databaseConfig = $databaseConfig;
         $this->siteService = $siteService;
+        $this->fileHelper = $fileHelper;
         $this->baseUri = $baseUri;
         $this->paths = $paths;
     }
@@ -124,12 +132,16 @@ final class PackageRepository implements PackageRepositoryInterface
         }
 
         // Try to start the download
-        $request = $this->authenticate(new Request('GET', new Uri($package->download)), $connection);
-        $output = tempnam('/tmp', $package->handle);
-        $this->client->send($request, [
-            RequestOptions::ALLOW_REDIRECTS => true,
-            RequestOptions::SINK => $output,
-        ]);
+        try {
+            $request = $this->authenticate(new Request('GET', new Uri($package->download)), $connection);
+            $output = tempnam($this->fileHelper->getTemporaryDirectory(), $package->handle);
+            $this->client->send($request, [
+                RequestOptions::ALLOW_REDIRECTS => true,
+                RequestOptions::SINK => $output,
+            ]);
+        } catch (ClientException $e) {
+            throw new InvalidDownloadResponseException($e->getMessage());
+        }
 
         // Unzip the archive
         $unzipPath = '/tmp/' . uniqid($package->handle, true);
@@ -285,12 +297,18 @@ final class PackageRepository implements PackageRepositoryInterface
      */
     public function update(ConnectionInterface $connection, array $updatedFields): void
     {
-        $formParams = [];
-        foreach ($updatedFields as $field) {
-            $formParams[$field->getName()] = $field->getData();
+        try {
+            $formParams = [];
+            foreach ($updatedFields as $field) {
+                $formParams[$field->getName()] = $field->getData();
+            }
+            $request = $this->authenticate($this->requestFor('POST', 'update'), $connection);
+            $response = $this->client->post($request->getUri(), ['form_params' => $formParams]);
+        } catch (\Exception $e) {
+            // https://github.com/concretecms/concretecms/issues/12079
+            // We don't want to be noisy _every_ when doing these updates.
+            throw new ErrorSavingRemoteDataException($e->getMessage());
         }
-        $request = $this->authenticate($this->requestFor('POST', 'update'), $connection);
-        $response = $this->client->post($request->getUri(), ['form_params' => $formParams]);
     }
 
     protected function authenticate(
@@ -298,7 +316,7 @@ final class PackageRepository implements PackageRepositoryInterface
         ConnectionInterface $connection,
         string $algo = 'sha256'
     ): RequestInterface {
-        $now = new \DateTimeImmutable();
+        $now = new \DateTimeImmutable('', new \DateTimeZone('UTC'));
         $time = $now->setTime((int) $now->format('h'), (int) $now->format('i'));
         $nonce = $algo . ',' . hash_hmac($algo, (string) $time->getTimestamp(), $connection->getPrivate());
 
