@@ -11,6 +11,7 @@ use Concrete\Core\Logging\LoggerAwareTrait;
 use Concrete\Core\Marketplace\Connection;
 use Concrete\Core\Marketplace\ConnectionInterface;
 use Concrete\Core\Marketplace\Exception\InvalidConnectResponseException;
+use Concrete\Core\Marketplace\Exception\InvalidDownloadResponseException;
 use Concrete\Core\Marketplace\Exception\InvalidPackageException;
 use Concrete\Core\Marketplace\Exception\PackageAlreadyExistsException;
 use Concrete\Core\Marketplace\Exception\UnableToConnectException;
@@ -281,7 +282,7 @@ class Install extends DashboardPageController implements LoggerAwareInterface
             );
             $this->error->add(t('Package file did not decompress to an installable package.'));
             return;
-        } catch (ClientException $e) {
+        } catch (InvalidDownloadResponseException $e) {
             $this->getLogger()->error(
                 t('Unable to download package {name} for {handle}:{version}. Response message: {message}'),
                 [

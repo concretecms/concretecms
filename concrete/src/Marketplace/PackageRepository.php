@@ -8,6 +8,7 @@ use Concrete\Core\Config\Repository\Repository;
 use Concrete\Core\Entity\Site\Site;
 use Concrete\Core\File\Service\File;
 use Concrete\Core\Marketplace\Exception\InvalidConnectResponseException;
+use Concrete\Core\Marketplace\Exception\InvalidDownloadResponseException;
 use Concrete\Core\Marketplace\Exception\InvalidPackageException;
 use Concrete\Core\Marketplace\Exception\PackageAlreadyExistsException;
 use Concrete\Core\Marketplace\Exception\UnableToConnectException;
@@ -21,6 +22,7 @@ use Concrete\Core\Site\Service;
 use Concrete\Core\Url\Url;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\BadResponseException;
+use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Exception\ConnectException;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Uri;
@@ -129,12 +131,16 @@ final class PackageRepository implements PackageRepositoryInterface
         }
 
         // Try to start the download
-        $request = $this->authenticate(new Request('GET', new Uri($package->download)), $connection);
-        $output = tempnam($this->fileHelper->getTemporaryDirectory(), $package->handle);
-        $this->client->send($request, [
-            RequestOptions::ALLOW_REDIRECTS => true,
-            RequestOptions::SINK => $output,
-        ]);
+        try {
+            $request = $this->authenticate(new Request('GET', new Uri($package->download)), $connection);
+            $output = tempnam($this->fileHelper->getTemporaryDirectory(), $package->handle);
+            $this->client->send($request, [
+                RequestOptions::ALLOW_REDIRECTS => true,
+                RequestOptions::SINK => $output,
+            ]);
+        } catch (ClientException $e) {
+            throw new InvalidDownloadResponseException($e->getMessage());
+        }
 
         // Unzip the archive
         $unzipPath = '/tmp/' . uniqid($package->handle, true);
