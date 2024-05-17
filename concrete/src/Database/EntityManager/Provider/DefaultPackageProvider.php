@@ -63,10 +63,13 @@ class DefaultPackageProvider extends AbstractPackageProvider
         }
 
         // Now if there are any autoloader entries, we automatically make those entity locations as well.
-        foreach($this->pkg->getPackageAutoloaderRegistries() as $path => $prefix) {
-            $drivers[] = new Driver(trim($prefix, '\\'),
-                new AnnotationDriver($reader, $this->pkg->getPackagePath() . '/' . $path)
-            );
+        $registries = $this->pkg->getPackageAutoloaderRegistries();
+        if(!empty($registries)) {
+            foreach($this->pkg->getPackageAutoloaderRegistries() as $path => $prefix) {
+                $drivers[] = new Driver(trim($prefix, '\\'),
+                    new AnnotationDriver($reader, $this->pkg->getPackagePath() . '/' . $path)
+                );
+            }
         }
 
         return $drivers;
