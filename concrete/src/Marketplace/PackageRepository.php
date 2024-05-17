@@ -132,7 +132,7 @@ final class PackageRepository implements PackageRepositoryInterface
         ]);
 
         // Unzip the archive
-        $unzipPath = '/tmp/' . uniqid($package->handle, true);
+        $unzipPath = DIR_FILES_UPLOADED_STANDARD . DIRECTORY_SEPARATOR . 'tmp' . DIRECTORY_SEPARATOR . uniqid($package->handle, true);
         $archive = new \ZipArchive();
         $archive->open($output);
         $archive->extractTo($unzipPath);
