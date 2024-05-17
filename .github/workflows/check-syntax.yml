@@ -1,0 +1,27 @@
+name: Check Syntax
+
+on:
+  pull_request:
+  push:
+
+jobs:
+  check-syntax:
+    name: PHP
+    runs-on: ubuntu-latest
+    steps:
+      -
+        name: Checkout
+        uses: actions/checkout@v4
+      -
+        name: Install PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          # This should be the value of Concrete\Core\Install\Preconditions\PhpVersion::MINIMUM_PHP_VERSION
+          php-version: 7.3
+          extensions: opcache
+          ini-values: opcache.enable_cli=1
+          coverage: none
+          tools: none
+      -
+        name: Check syntax
+        run: php ./tests/check-syntax.php
