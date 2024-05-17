@@ -63,6 +63,7 @@ final class PackageRepository implements PackageRepositoryInterface
         $this->config = $config;
         $this->databaseConfig = $databaseConfig;
         $this->siteService = $siteService;
+        $this->fileHelper = $fileHelper;
         $this->baseUri = $baseUri;
         $this->paths = $paths;
     }
@@ -302,7 +303,7 @@ final class PackageRepository implements PackageRepositoryInterface
         ConnectionInterface $connection,
         string $algo = 'sha256'
     ): RequestInterface {
-        $now = new \DateTimeImmutable();
+        $now = new \DateTimeImmutable('', new \DateTimeZone('UTC'));
         $time = $now->setTime((int) $now->format('h'), (int) $now->format('i'));
         $nonce = $algo . ',' . hash_hmac($algo, (string) $time->getTimestamp(), $connection->getPrivate());
 
