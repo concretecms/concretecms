@@ -24,6 +24,7 @@ use Concrete\Core\Page\Controller\DashboardPageController;
 use Concrete\Core\Routing\RedirectResponse;
 use Concrete\Core\Support\Facade\Package;
 use Exception;
+use GuzzleHttp\Exception\ClientException;
 use Loader;
 use Psr\Log\LoggerInterface;
 use TaskPermission;
@@ -279,6 +280,18 @@ class Install extends DashboardPageController implements LoggerAwareInterface
                 ]
             );
             $this->error->add(t('Package file did not decompress to an installable package.'));
+            return;
+        } catch (ClientException $e) {
+            $this->getLogger()->error(
+                t('Unable to download package {name} for {handle}:{version}. Response message: {message}'),
+                [
+                    'name' => $remotePackage->name,
+                    'handle' => $remotePackage->handle,
+                    'version' => $remotePackage->version,
+                    'message' => $e->getMessage(),
+                ]
+            );
+            $this->error->add($e->getMessage());
             return;
         }
 
