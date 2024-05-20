@@ -23,8 +23,6 @@ class LogEntry
     public $level;
     /** @var UserInfo|null */
     public $user;
-    /** @var int|null */
-    public $uID;
 
     public function __construct($row = null)
     {
@@ -234,7 +232,7 @@ class LogEntry
      */
     public function getUserID()
     {
-        return $this->uID;
+        return $this->user->getUserID();
     }
 
     /**
