@@ -160,20 +160,39 @@ final class PackageRepository implements PackageRepositoryInterface
         // Move the files into place
         $packageDir = DIR_PACKAGES . '/' . $package->handle;
         if ($overwrite && file_exists($packageDir)) {
-            if (!rename($packageDir, $packageDir . '.old')) {
+            if (!$this->rename($packageDir, $packageDir . '.old')) {
                 throw new UnableToPlacePackageException();
             }
         }
 
-        if (!rename($unzipPath . '/' . $package->handle, $packageDir)) {
+        if (!$this->rename($unzipPath . '/' . $package->handle, $packageDir)) {
             if ($overwrite) {
-                rename($packageDir . '.old', $packageDir);
+                $this->rename($packageDir . '.old', $packageDir);
             }
             throw new UnableToPlacePackageException();
         }
 
         $this->rimraf($package->handle . '.old');
         rmdir($unzipPath);
+    }
+
+    protected function rename(string $old, string $new): bool
+    {
+        // First try calling rename, this is the most efficient way to rename things but unfortunately fails if old is a
+        // directory and on a different filesystem than new.
+        if (@rename($old, $new)) {
+            return true;
+        }
+
+        // Fallback to copying to new then deleting old
+        $this->fileHelper->copyAll($old, $new);
+        if (!file_exists($new)) {
+            return false;
+        }
+
+        // Remove the old directory
+        $this->fileHelper->removeAll($old, true);
+        return true;
     }
 
     protected function rimraf(string $handle)
