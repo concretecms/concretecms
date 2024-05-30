@@ -76,7 +76,7 @@ class ContentFileTranslateTest extends FileStorageTestCase
 
         $translated = \Concrete\Core\Editor\LinkAbstractor::translateFrom($from);
 
-        $to = '<p>This is really nice.</p><img src="' . $path . '" alt="Happy Cat" width="48" height="20">';
+        $to = '<p>This is really nice.</p><img src="http://www.dummyco.com' . $path . '" alt="Happy Cat" width="48" height="20">';
 
         $this->assertEquals('background-slider-blue-sky.png', $r->getFilename());
         $this->assertEquals($to, $translated);
