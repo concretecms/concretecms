@@ -1024,7 +1024,7 @@ class Version implements ObjectInterface
      * Get an URL that can be used to download the file.
      * This passes through the download_file single page.
      *
-     * @return \League\URL\URLInterface
+     * @return \League\Url\UrlInterface
      */
     public function getDownloadURL()
     {
@@ -1043,7 +1043,7 @@ class Version implements ObjectInterface
     /**
      * Get an URL that can be used to download the file (it will force the download of all file types, even if the browser can display them).
      *
-     * @return \League\URL\URLInterface
+     * @return \League\Url\UrlInterface
      */
     public function getForceDownloadURL()
     {
