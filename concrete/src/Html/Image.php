@@ -37,7 +37,7 @@ class Image
      */
     public function __construct(File $f = null, $options = null)
     {
-        if (!is_object($f)) {
+        if ($f === null) {
             return false;
         }
 
@@ -61,15 +61,12 @@ class Image
         }
 
         if ($this->usePictureTag) {
-            if (!isset($this->theme)) {
+            if ($this->theme === null) {
                 $c = Page::getCurrentPage();
                 $this->theme = $c->getCollectionThemeObject();
             }
             $sources = [];
-            $fallbackSrc = $f->getRelativePath();
-            if (!$fallbackSrc) {
-                $fallbackSrc = $f->getURL();
-            }
+            $fallbackSrc = $f->getURL();
             foreach ($this->theme->getThemeResponsiveImageMap() as $thumbnail => $width) {
                 $type = Type::getByHandle($thumbnail);
                 if ($type != null) {
@@ -82,11 +79,7 @@ class Image
             }
             $this->tag = Picture::create($sources, $fallbackSrc, [], $options['lazyLoadNative'], $options['lazyLoadJavaScript']);
         } else {
-            $path = $f->getRelativePath();
-            if (!$path) {
-                $path = $f->getURL();
-            }
-
+            $path = $f->getURL();
             if ($options['lazyLoadJavaScript']) {
                 // Return a simple img element wrapped in "<noscript></noscript>" and an img element with the
                 // image file path set to "data-src". Both img elements have the "loading" attribute optionally set to "lazy".
