@@ -206,6 +206,26 @@ class Controller extends GenericOauth2TypeController
     }
 
     /**
+     * Get the URL of the Concrete account associated to a user.
+     *
+     * @param \Concrete\Core\User\User|\Concrete\Core\User\UserInfo|\Concrete\Core\Entity\User\User|int $user
+     *
+     * @return string returns an empty string if the user is not bound to a Concrete account
+     */
+    public function getConcreteProfileURL($user): string
+    {
+        $binding = $this->getBindingForUser($user);
+        if (!$binding || !is_numeric($binding)) {
+            return '';
+        }
+        $concreteUserID = (int) $binding;
+        if ($concreteUserID < 1) {
+            return '';
+        }
+        return rtrim((string) $this->config->get('concrete.urls.concrete_community'), '/') . '/members/profile/' . $concreteUserID;
+    }
+
+    /**
      * Method for setting general data for all views.
      */
     private function setData()
