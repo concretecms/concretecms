@@ -40,8 +40,6 @@ class ResponseCookieJar
 
     /**
      * Get the value of the "secure" flag when it is set to null.
-     *
-     * @return $this
      */
     public function isSecureDefault(): bool
     {
