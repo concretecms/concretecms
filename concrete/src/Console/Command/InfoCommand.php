@@ -4,8 +4,8 @@ namespace Concrete\Core\Console\Command;
 use Concrete\Core\Console\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Concrete\Core\Support\Facade\Facade;
 use Concrete\Core\System\Info;
+use Concrete\Core\System\SystemUser;
 
 class InfoCommand extends Command
 {
@@ -30,11 +30,15 @@ EOT
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $info = Facade::getFacadeApplication()->make(Info::class);
-        /* @var Info $info */
+        $app = app();
+        $info = $app->make(Info::class);
 
         $output->writeln('<info># Hostname</info>');
         $output->writeln($info->getHostname());
+        $output->writeln('');
+        $output->writeln('<info># System User</info>');
+        $systemUser = $app->make(SystemUser::class)->getCurrentUserName();
+        $output->writeln($systemUser === '' ? '*unknown*' : $systemUser);
         $output->writeln('');
         $output->writeln('<info># Environment</info>');
         $output->writeln($info->getEnvironment());
