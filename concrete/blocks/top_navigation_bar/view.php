@@ -11,7 +11,7 @@ $c = Page::getCurrentPage();
                     <?php if (isset($transparentLogo)) { ?>
                         <img src="<?=$transparentLogo->getURL()?>" class="logo-transparent align-text-center">
                     <?php } ?>
-                    <?=$brandingText?>
+                    <?=h($brandingText)?>
                 <?php } ?>
                 <?php if ($logo && ($includeBrandLogo && !$includeBrandText)) { ?>
                     <img src="<?=$logo->getURL()?>" class="logo">
@@ -21,7 +21,7 @@ $c = Page::getCurrentPage();
                 <?php } ?>
 
                 <?php if (!$includeBrandLogo && $includeBrandText) { ?>
-                    <?=$brandingText?>
+                    <?=h($brandingText)?>
                 <?php } ?>
             </a>
 
@@ -42,7 +42,7 @@ $c = Page::getCurrentPage();
                 </button>
                 <div class="collapse navbar-collapse" id="top-navigation-bar-<?=$bID?>">
                     <?php if ($includeSearchInput) { ?>
-                        <form method="get" action="<?=$searchAction?>">
+                        <form method="get" action="<?=h($searchAction)?>">
                             <div class="input-group">
                                 <input class="form-control border-end-0 border" type="search" name="query" placeholder="<?=t('Search')?>" aria-label="<?=t('Search')?>">
                                 <span class="input-group-append">
@@ -78,7 +78,7 @@ $c = Page::getCurrentPage();
                             if (count($item->getChildren()) > 0) { ?>
                                 <li class="nav-item dropdown">
                                     <a class="nav-link<?= $item->isActiveParent() ? " nav-path-selected" : ""; ?> dropdown-toggle<?= $item->isActive() ? " active" : ""; ?>" data-concrete-toggle="dropdown" target="<?=$controller->getPageItemNavTarget($item)?>" href="<?= $item->getUrl() ?>">
-                                        <?=$item->getName()?>
+                                        <?=h($item->getName())?>
                                     </a>
                                     <ul class="dropdown-menu">
                                         <?php foreach ($item->getChildren() as $dropdownChild) { ?>
@@ -87,7 +87,7 @@ $c = Page::getCurrentPage();
                                     </ul>
                                 </li>
                             <?php } else { ?>
-                                <li class="nav-item"><a class="nav-link<?= $item->isActiveParent() ? " nav-path-selected" : ""; ?><?= $item->isActive() ? " active" : ""; ?>" target="<?=$controller->getPageItemNavTarget($item)?>" href="<?=$item->getUrl()?>"><?=$item->getName()?></a></li>
+                                <li class="nav-item"><a class="nav-link<?= $item->isActiveParent() ? " nav-path-selected" : ""; ?><?= $item->isActive() ? " active" : ""; ?>" target="<?=$controller->getPageItemNavTarget($item)?>" href="<?=$item->getUrl()?>"><?=h($item->getName())?></a></li>
                             <?php } ?>
                         <?php } ?>
                     </ul>
