@@ -23,7 +23,12 @@ class Service extends SocialNetworkService
         if (!is_object($c)) {
             $req = Request::getInstance();
             $c = $req->getCurrentPage();
-            $url = urlencode($req->getUri());
+            if($c){
+            	$url = urlencode(URL::to($c));
+            }
+            else{
+            	$url = urlencode($req->getUri());
+            }
         } elseif (!$c->isError()) {
             $url = urlencode(URL::to($c));
         }
