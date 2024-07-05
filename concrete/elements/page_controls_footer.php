@@ -54,7 +54,7 @@ if (isset($cp) && $cp->canViewToolbar() && (!$dh->inDashboard()) && !$view->isEd
     <div id="ccm-page-controls-wrapper" class="ccm-ui">
         <div id="ccm-toolbar" class="<?= $show_titles ? 'titles' : '' ?> <?= $large_font ? 'large-font' : '' ?>">
 						<?php
-              $mobileMenu = Element::get('dashboard/navigation/mobile');
+              $mobileMenu = Element::get('dashboard/navigation/mobile', ['section' => $c, 'currentPage' => $c]);
               $mobileMenu->render();
             ?> 
             <ul class="ccm-toolbar-item-list">
