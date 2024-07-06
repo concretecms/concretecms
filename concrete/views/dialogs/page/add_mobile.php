@@ -37,8 +37,11 @@ $drafts = $drafts ?? [];
         <?php if (count($frequentPageTypes) && count($otherPageTypes)) {
             ?>
             </ul>
-            <h5><?=t('Other')?></h5>
-            <ul class="item-select-list">
+            <h5>
+                <a href="#otherPageTypes" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="otherPageTypes">
+                    <i class="fas fa-caret-down"></i> <?=t('Other')?></a>
+            </h5>
+            <ul class="item-select-list collapse" id="otherPageTypes">
             <?php
         }
         ?>
@@ -66,6 +69,7 @@ $drafts = $drafts ?? [];
         <?php
     } ?>
     <?php if (count($drafts)) { ?>
+        <hr>
         <h5><?= t('Page Drafts') ?></h5>
         <ul class="item-select-list">
             <?php foreach ($drafts as $dc) { ?>
