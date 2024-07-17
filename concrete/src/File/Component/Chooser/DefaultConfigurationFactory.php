@@ -45,8 +45,8 @@ class DefaultConfigurationFactory
 
         $sets = Set::getMySets();
         $searches = $this->entityManager->getRepository(SavedFileSearch::class)->findAll();
-        $configuration->addChooser(new FileManagerOption());
         $configuration->addChooser(new RecentUploadsOption());
+        $configuration->addChooser(new FileManagerOption());
         $configuration->addChooser(new SearchOption());
         if (count($sets) > 0) {
             $configuration->addChooser(new FileSetsOption());
