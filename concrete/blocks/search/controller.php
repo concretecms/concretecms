@@ -135,6 +135,13 @@ class Controller extends BlockController implements UsesFeatureInterface
     protected $allow_user_options;
 
     /**
+     * Sort by index score asc (true) or desc (false).
+     *
+     * @var bool
+     */
+    protected $sortByRelevance = false;
+
+    /**
      * {@inheritdoc}
      */
     public function getBlockTypeName()
@@ -280,6 +287,7 @@ class Controller extends BlockController implements UsesFeatureInterface
         $this->set('postTo_cID', $this->postTo_cID);
         $this->set('allowUserOptions', $this->allow_user_options);
         $this->set('searchAll', $this->search_all);
+        $this->set('sortByRelevance', $this->sortByRelevance);
 
         if ((string) $this->resultsURL !== '') {
             $resultsPage = null;
@@ -328,6 +336,7 @@ class Controller extends BlockController implements UsesFeatureInterface
         $this->set('pageSelector', $this->app->make('helper/form/page_selector'));
         $this->set('searchAll', $this->search_all);
         $this->set('allowUserOptions', $this->allow_user_options);
+        $this->set('sortByRelevance', $this->sortByRelevance);
     }
 
     /**
@@ -353,6 +362,7 @@ class Controller extends BlockController implements UsesFeatureInterface
             'resultsURL' => '',
             'search_all' => 0,
             'allow_users_options' => 0,
+            'sortByRelevance' => (int) ($data['sortByRelevance'] ?? 0),
         ];
         switch ($data['baseSearchPath']) {
             case 'THIS':
@@ -484,6 +494,10 @@ class Controller extends BlockController implements UsesFeatureInterface
         $cak = CollectionKey::getByHandle('exclude_search_index');
         if (is_object($cak)) {
             $ipl->filterByExcludeSearchIndex(false);
+        }
+
+        if ($this->sortByRelevance && $query !== '') {
+            $ipl->sortByIndexSearch($query);
         }
 
         $pagination = $ipl->getPagination();

@@ -776,6 +776,22 @@ class PageList extends DatabaseItemList implements PagerProviderInterface, Pagin
         }
     }
 
+    public function sortByIndexSearch($plainKeywords)
+    {
+
+        $countExpr = "
+        (
+            (LENGTH(LOWER(psi.cName)) - LENGTH(REPLACE(LOWER(psi.cName), LOWER(:plainKeywords), ''))) +
+            (LENGTH(LOWER(psi.cDescription)) - LENGTH(REPLACE(LOWER(psi.cDescription), LOWER(:plainKeywords), ''))) +
+            (LENGTH(LOWER(psi.content)) - LENGTH(REPLACE(LOWER(psi.content), LOWER(:plainKeywords), '')))
+        ) / LENGTH(:plainKeywords) as cIndexScore";
+
+        $this->query->addSelect($countExpr);
+        $this->query->setParameter('plainKeywords', strtolower($plainKeywords));
+
+        $this->query->addOrderBy('cIndexScore', 'DESC');
+    }
+
     /**
      * @deprecated
      *
