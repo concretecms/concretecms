@@ -62,7 +62,7 @@ class Extend extends ElementController
     public function view()
     {
         $connection = $this->packageRepository->getConnection();
-        if ($this->packageRepository->validate($connection)) {
+        if ($connection && $this->packageRepository->validate($connection)) {
             $this->set('browseThemesUrl', $this->getPurchaseConnectionUrl($connection, '/themes'));
             $this->set('browseAddonsUrl', $this->getPurchaseConnectionUrl($connection, '/addons'));
             $this->set('browseIntegrationsUrl', $this->getPurchaseConnectionUrl($connection, '/integrations'));
