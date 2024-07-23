@@ -25,7 +25,7 @@ use Concrete\Core\Support\Facade\Application;
 /** @var bool $allowUserOptions */
 /** @var bool $searchAll */
 /** @var bool $allowUserOptions */
-/** @var bool $sortByRelevance */
+/** @var string $orderBy */
 
 $app = Application::getFacadeApplication();
 /** @var Service $siteService */
@@ -164,13 +164,19 @@ if ((string)$controller->baseSearchPath !== '') {
         </div>
     </div>
     <div class="form-group">
-        <?php echo $form->label('sortByScoreAsc', t('Sort')) ?>
-        <div class="form-check">
-            <label for="indexScoreAsc" class="form-check-label">
-                <?php echo $form->checkbox('sortByRelevance', 1, (int)$sortByRelevance === 1) ?>
-                <?php echo t('Sort by Relevance') ?>
-            </label>
-        </div>
+        <?php
+        echo $form->label("orderBy", t('Sort'));
+        echo $form->select("orderBy", [
+            "display_asc" => t('Sitemap order'),
+            "display_desc" => t('Reverse sitemap order'),
+            "chrono_desc" => t('Most recent first'),
+            "chrono_asc" => t('Earliest first'),
+            "alpha_asc" => t('Alphabetical order'),
+            "alpha_desc" => t('Reverse alphabetical order'),
+            "modified_desc" => t('Most recently modified first'),
+            "random" => t('Random')
+        ], $orderBy);
+        ?>
     </div>
 
 </fieldset>
