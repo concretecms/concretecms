@@ -117,11 +117,11 @@ class Update extends DashboardPageController
                 $client = $this->app->make(Client::class);
 
                 $location = $fileHelper->getTemporaryDirectory();
-                $file = uniqid(time(), true) . '.zip';
+                $file = uniqid(time(), true);
 
                 try {
                     $client->get($remote->getDirectDownloadURL(), [
-                        RequestOptions::SINK => $location . '/' . $file,
+                        RequestOptions::SINK => $location . '/' . $file . '.zip',
                         RequestOptions::QUERY => [
                             'csiURL' => (string)$this->app->make(CanonicalUrlResolver::class)->resolve([]),
                             'csiVersion' => APP_VERSION,
@@ -135,7 +135,7 @@ class Update extends DashboardPageController
                     // the file exists in the right spot
                     $ar = new UpdateArchive();
                     try {
-                        $ar->install($location . '/' . $file);
+                        $ar->install($file);
                     } catch (Throwable $e) {
                         $this->error->add($e->getMessage());
                     }

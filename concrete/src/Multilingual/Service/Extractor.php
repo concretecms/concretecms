@@ -11,11 +11,6 @@ use Gettext\Generators\Mo as MoGenerator;
 use Concrete\Core\Package\PackageList;
 use Concrete\Core\Support\Facade\Application;
 use C5TL\Options as C5TLOptions;
-use C5TL\Parser\Php as C5TLParserPhp;
-use C5TL\Parser\BlockTemplates as C5TLParserBlockTemplates;
-use C5TL\Parser\ThemePresets as C5TLParserThemePresets;
-use C5TL\Parser\ConfigFiles as C5TLParserConfigFiles;
-use C5TL\Parser\Dynamic as C5TLParserDynamic;
 
 defined('C5_EXECUTE') or die("Access Denied.");
 
@@ -31,11 +26,15 @@ class Extractor
         $translations->insert('SiteName', $app->make('site')->getSite()->getSiteName());
         $fh = $app->make('helper/file');
         C5TLOptions::setTemporaryDirectory($fh->getTemporaryDirectory());
-        $phpParser = new C5TLParserPhp();
-        $blockTemplatesParser = new C5TLParserBlockTemplates();
-        $themesPresetsParser = new C5TLParserThemePresets();
-        $configFilesParser = new C5TLParserConfigFiles();
-
+        $parserFactory = $app->make(\C5TL\ParserFactory::class);
+        $phpParser = $parserFactory->getParserByHandle('php');
+        /** @var \C5TL\Parser\Php $phpParser */
+        $blockTemplatesParser = $parserFactory->getParserByHandle('block_templates');
+        /** @var \C5TL\Parser\BlockTemplates $blockTemplatesParser */
+        $themesPresetsParser = $parserFactory->getParserByHandle('theme_presets');
+        /** @var \C5TL\Parser\ThemePresets $themesPresetsParser */
+        $configFilesParser = $parserFactory->getParserByHandle('config_files');
+        /** @var \C5TL\Parser\ConfigFiles $themesPresetsParser */
         $configFilesParser->parseDirectory(DIR_BASE, '', $translations);
 
         $processApplication = [
@@ -53,7 +52,7 @@ class Extractor
         foreach ($processApplication as $dirname => $parsers) {
             if (is_dir(DIR_APPLICATION.'/'.$dirname)) {
                 foreach ($parsers as $parser) {
-                    /* @var $parser \C5TL\Parser */
+                    /** @var $parser \C5TL\Parser */
                     $fullDirname = DIR_APPLICATION.'/'.$dirname;
                     if (is_dir($fullDirname)) {
                         $parser->parseDirectory(
@@ -91,7 +90,9 @@ class Extractor
         $app = Application::getFacadeApplication();
         $fh = $app->make('helper/file');
         C5TLOptions::setTemporaryDirectory($fh->getTemporaryDirectory());
-        $parser = new C5TLParserDynamic();
+        $parserFactory = $app->make(\C5TL\ParserFactory::class);
+        $parser = $parserFactory->getParserByHandle('dynamic');
+        /** @var \C5TL\Parser\Dynamic $parser */
 
         return $parser->parseRunningConcrete5();
     }

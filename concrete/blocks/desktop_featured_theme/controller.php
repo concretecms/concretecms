@@ -3,6 +3,8 @@
 namespace Concrete\Block\DesktopFeaturedTheme;
 
 use Concrete\Core\Block\BlockController;
+use Concrete\Core\Marketplace\Connection;
+use Concrete\Core\Marketplace\PackageRepositoryInterface;
 use Concrete\Core\Marketplace\RemoteItemList as MarketplaceRemoteItemList;
 
     /**
@@ -68,6 +70,6 @@ use Concrete\Core\Marketplace\RemoteItemList as MarketplaceRemoteItemList;
          */
         public function view()
         {
-
+            $this->set('connection', $this->app->make(PackageRepositoryInterface::class)->getConnection());
         }
     }
