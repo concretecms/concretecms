@@ -19,9 +19,12 @@ jobs:
           # This should be the value of Concrete\Core\Install\Preconditions\PhpVersion::MINIMUM_PHP_VERSION
           php-version: 5.5
           extensions: opcache
-          ini-values: opcache.enable_cli=1
           coverage: none
           tools: none
       -
         name: Check syntax
-        run: php ./tests/check-syntax.php
+        uses: mlocati/check-php-syntax@main
+        with:
+          directory: concrete
+          include: |
+            bin/concrete5
