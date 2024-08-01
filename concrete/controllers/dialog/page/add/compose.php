@@ -29,9 +29,14 @@ class Compose extends Controller
             $e->add(t('Invalid page type.'));
         }
 
-        $parent = Page::getByID($cParentID);
-        if (!is_object($parent) || $parent->isError()) {
-            $e->add(t('Invalid parent page.'));
+        if ($cParentID == 0) {
+            $parent = null;
+        } else {
+            $cParentID = intval($cParentID);
+            $parent = Page::getByID($cParentID);
+            if (!is_object($parent) || $parent->isError()) {
+                $e->add(t('Invalid parent page.'));
+            }
         }
 
         if (!$e->has()) {
@@ -107,6 +112,9 @@ class Compose extends Controller
 
                 $pagetype->publish($d, $publishDateTime, $publishEndDateTime, $keepOtherScheduling);
 
+                if ((int) $this->request->request->get('redirectAfterPublish')) {
+                    $pr->setRedirectURL($d->getCollectionLink(true));
+                }
                 $pr->setAdditionalDataAttribute('cParentID', $cParentID);
                 $pr->setMessage(t('Page Added Successfully.'));
             } else {

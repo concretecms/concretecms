@@ -4,12 +4,33 @@
  */
 ?>
 <?php
+
+use Concrete\Core\Page\Page;
 use Concrete\Core\Support\Facade\Url;
 use Concrete\Core\Url\Resolver\Manager\ResolverManagerInterface;
 ?>
 <li class="float-end ccm-toolbar-mobile-menu-button d-block d-md-none">
   <i class="fas fa-bars"></i>
 </li>
+<?php
+$c = Page::getCurrentPage();
+$app = Concrete\Core\Support\Facade\Facade::getFacadeApplication();
+$sh = $app->make('helper/concrete/dashboard/sitemap');
+if ($sh->canViewSitemapPanel()) {
+    ?>
+    <li class="float-end ccm-toolbar-mobile-add-pages-button d-block d-md-none">
+        <a href="<?= URL::to('/ccm/system/dialogs/page/add_mobile') ?>"
+           class="dialog-launch"
+           dialog-width="640"
+           dialog-height="640"
+           dialog-modal="false"
+           dialog-title="<?= t('Add Page') ?>">
+            <svg><use xlink:href="#icon-sitemap" /></svg>
+        </a>
+    </li>
+    <?php
+}
+?>
 
 <?php
 $walkNavigation = function(array $items) use (&$walkNavigation) {
@@ -37,10 +58,8 @@ $walkNavigation = function(array $items) use (&$walkNavigation) {
 ?>
 
 
-<?php 
-$c = Page::getCurrentPage();
+<?php
 $permissions = new Permissions($c);
-$app = Concrete\Core\Support\Facade\Facade::getFacadeApplication();
 
 
 $dh = $app->make('helper/concrete/dashboard');
