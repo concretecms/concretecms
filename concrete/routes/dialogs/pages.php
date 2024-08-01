@@ -13,6 +13,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
  */
 
 $router->all('/add', 'Add::view');
+$router->all('/add_mobile', 'AddMobile::view');
 $router->all('/versions', 'Versions::view');
 $router->all('/versions/duplicate', 'Versions::duplicate');
 $router->all('/versions/new_page', 'Versions::new_page');
