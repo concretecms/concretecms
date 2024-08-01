@@ -20,7 +20,7 @@ $instanceName = $instanceName ?? t('(No Name)');
 ?>
 <ul class="ccm-inline-toolbar ccm-ui" data-inline-toolbar="board">
     <li><a target="_blank" href="<?php echo Url::to('/dashboard/boards/instances/details', $boardInstanceId)?>">
-        <?=t('Instance: %s', $instanceName)?>
+        <?=t('Instance: %s', h($instanceName))?>
     </a></li>
     <?php
     /** @phpstan-ignore-next-line */

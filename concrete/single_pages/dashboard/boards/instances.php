@@ -25,15 +25,19 @@ defined('C5_EXECUTE') or die("Access Denied.");
                 </tr>
             </thead>
             <tbody>
-                <?php foreach($instances as $instance) {
+                <?php
+                foreach($instances as $instance) {
                     $instanceName = $instance->getBoardInstanceName();
+                    $href = URL::to('/dashboard/boards/instances/details', $instance->getBoardInstanceID());
                     if (!$instanceName) {
                         $instanceName = t('(Untitled)');
                     }
                     ?>
                     <tr>
-                        <td><a href="<?=URL::to('/dashboard/boards/instances/details',
-                            $instance->getBoardInstanceID())?>"><?=$instanceName?></a>
+                        <td>
+                            <a href="<?= $href ?>">
+                                <?= h($instanceName) ?>
+                            </a>
                         </td>
                         <td><?=$instance->getDateCreatedObject()->format('Y-m-d H:i:s')?></td>
 

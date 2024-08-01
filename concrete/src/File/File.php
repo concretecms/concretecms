@@ -35,7 +35,7 @@ class File
     /**
      * Return a file object for the given file UUID.
      *
-     * @param int $fUUID The file unique identifier
+     * @param string $fUUID The file unique identifier
      *
      * @return FileEntity|null
      */
