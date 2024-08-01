@@ -99,6 +99,10 @@
   display: block;
   float: left;
   width: 100%;
+  @media only screen and (max-width: 768px) {
+    display: flex;
+    flex-direction: column-reverse;
+  }
 }
 
 #ccm-dialog-attributes-menu {
@@ -107,6 +111,9 @@
   margin: 0;
   padding: 0;
   width: 30%;
+  @media only screen and (max-width: 768px) {
+    width: auto;
+  }
 }
 
 #ccm-dialog-attributes-detail {
@@ -115,6 +122,10 @@
   margin: 0 0 0 65px;
   padding: 0;
   width: calc(70% - 65px);
+  @media only screen and (max-width: 768px) {
+    margin: 0;
+    width: auto;
+  }
 }
 
 /**
