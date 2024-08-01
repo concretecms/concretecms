@@ -157,7 +157,7 @@ class Controller extends BlockController
                 ++$i;
             }
         } catch (\Exception $e) {
-            $this->set('errorMsg', $e->getMessage());
+            $this->set('errorMsg', t('Unable to load RSS posts.'));
         }
 
         $this->set('posts', $posts);

@@ -7,7 +7,7 @@
 <?php if (strlen($title) > 0) {
     ?>
     <div class="ccm-block-rss-displayer-header">
-    	<h5><?=$title?></h5>
+    	<h5><?=h($title)?></h5>
     </div>
 <?php 
 } ?>
