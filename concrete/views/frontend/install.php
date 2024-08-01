@@ -168,7 +168,8 @@ if ($install_config) {
                                             if ($preconditionMessage !== '') {
                                                 ?>
                                                 <i class="fas fa-question-circle launch-tooltip"
-                                                   title="<?= h($preconditionMessage) ?>"></i>
+                                                   data-bs-html="true"
+                                                   title="<?= htmlspecialchars(nl2br(h($preconditionMessage)), ENT_QUOTES, APP_CHARSET, true) ?>"></i>
                                                 <?php
                                             }
                                             ?>
