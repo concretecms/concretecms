@@ -44,7 +44,7 @@ $txt = Loader::helper('text'); ?>
 
                     <div class="form-group">
                         <?php echo $form->label('asName', t('Name'))?>
-                        <?php echo $form->text('asName', $set->getAttributeSetName())?>
+                        <?php echo $form->text('asName', $set->getAttributeSetDisplayName())?>
                     </div>
 
                     <div class="form-group">
