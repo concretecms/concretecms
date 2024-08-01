@@ -190,16 +190,16 @@
             "time": "2022-01-17T14:14:24+00:00"
         },
         {
-            "name": "concrete5/monolog-cascade",
+            "name": "concretecms/monolog-cascade",
             "version": "0.6.0",
             "source": {
                 "type": "git",
-                "url": "https://github.com/concrete5/monolog-cascade.git",
+                "url": "https://github.com/concretecms/monolog-cascade.git",
                 "reference": "2b9836dfab90148e6ae77b62967149329d96fd7d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/concrete5/monolog-cascade/zipball/2b9836dfab90148e6ae77b62967149329d96fd7d",
+                "url": "https://api.github.com/repos/concretecms/monolog-cascade/zipball/2b9836dfab90148e6ae77b62967149329d96fd7d",
                 "reference": "2b9836dfab90148e6ae77b62967149329d96fd7d",
                 "shasum": ""
             },
@@ -256,9 +256,8 @@
                 "monolog utils"
             ],
             "support": {
-                "source": "https://github.com/concrete5/monolog-cascade/tree/0.6.0"
+                "source": "https://github.com/concretecms/monolog-cascade/tree/0.6.0"
             },
-            "abandoned": "concretecms/monolog-cascade",
             "time": "2021-11-03T17:51:35+00:00"
         },
         {
