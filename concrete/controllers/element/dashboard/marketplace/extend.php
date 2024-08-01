@@ -9,6 +9,7 @@ use Concrete\Core\Marketplace\PackageRepositoryInterface;
 use Concrete\Core\Marketplace\PurchaseConnectionCoordinator;
 use Concrete\Core\Url\Resolver\PathUrlResolver;
 use Concrete\Core\Url\Resolver\UrlResolverInterface;
+use Concrete\Core\Marketplace\ConnectionInterface;
 
 defined('C5_EXECUTE') or die('Access Denied.');
 
@@ -62,7 +63,7 @@ class Extend extends ElementController
     public function view()
     {
         $connection = $this->packageRepository->getConnection();
-        if ($this->packageRepository->validate($connection)) {
+        if ($connection instanceof ConnectionInterface && $this->packageRepository->validate($connection)) {
             $this->set('browseThemesUrl', $this->getPurchaseConnectionUrl($connection, '/themes'));
             $this->set('browseAddonsUrl', $this->getPurchaseConnectionUrl($connection, '/addons'));
             $this->set('browseIntegrationsUrl', $this->getPurchaseConnectionUrl($connection, '/integrations'));
