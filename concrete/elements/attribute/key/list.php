@@ -3,7 +3,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
 foreach ($sortable_sets as $set) {
     ?>
-    <h4><?=$set->getAttributeSetName()?></h4>
+    <h4><?=$set->getAttributeSetDisplayName()?></h4>
     <ul class="item-select-list ccm-attribute-list-wrapper" data-sortable-attribute-set="<?=$set->getAttributeSetID()?>">
         <?php
         foreach ($set->getAttributeKeys() as $key) {

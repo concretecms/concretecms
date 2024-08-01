@@ -13,7 +13,7 @@
     "production": "mix --production"
   },
   "devDependencies": {
-    "@concretecms/bedrock": "1.5.0",
+    "@concretecms/bedrock": "^1.5.1",
     "cross-env": "^5.1.1",
     "download": "~8.0.0",
     "grunt": "^1.5.3",

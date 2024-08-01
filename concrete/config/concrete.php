@@ -6,9 +6,9 @@ return [
      *
      * @var string
      */
-    'version' => '9.3.2',
-    'version_installed' => '9.3.2',
-    'version_db' => '20240618202000', // the key of the latest database migration
+    'version' => '9.3.3',
+    'version_installed' => '9.3.3',
+    'version_db' => '20240711000000', // the key of the latest database migration
 
     /*
      * Installation status

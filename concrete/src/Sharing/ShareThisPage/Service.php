@@ -18,15 +18,24 @@ class Service extends SocialNetworkService
         }
     }
 
+    public function getServiceLinkTarget(): string
+    {
+        // @TODO - perhaps make this more modular and defined within each service's config.
+        if (in_array($this->getHandle(), ['email', 'print'])) {
+            return '';
+        } else {
+            return '_blank';
+        }
+    }
+
     public function getServiceLink(Page $c = null)
     {
         if (!is_object($c)) {
             $req = Request::getInstance();
             $c = $req->getCurrentPage();
-            if($c){
+            if($c) {
             	$url = urlencode(URL::to($c));
-            }
-            else{
+            } else {
             	$url = urlencode($req->getUri());
             }
         } elseif (!$c->isError()) {

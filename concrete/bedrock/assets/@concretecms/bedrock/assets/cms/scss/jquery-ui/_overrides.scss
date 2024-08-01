@@ -9,9 +9,15 @@ html.ccm-toolbar-visible {
 
   .ui-dialog {
     box-shadow: $modal-content-box-shadow-sm-up;
+    max-width: 100vw;
     padding: 0;
-
     z-index: $index-level-dialog;
+    @media only screen and (max-width: 768px) {
+      display: flex;
+      flex-direction: column;
+      max-height: 100vh;
+    }
+
     /* hide section titles for panels when those panels are shown in dialogs */
     section {
       header {
@@ -144,6 +150,5 @@ html.ccm-toolbar-visible {
     button {
       margin: $modal-footer-margin-between / 2;
     }
-
   }
 }

@@ -7,6 +7,9 @@ div#ccm-toolbar {
   position: fixed;
   top: 0;
   width: 100%;
+  @media only screen and (max-width: 768px) {
+    width: 100vw;
+  }
   z-index: $index-level-main-bar; /* over the top of the highlighter, which is 1000 */
 
   .ccm-toolbar-accessibility-title {
@@ -370,6 +373,22 @@ ul.ccm-mobile-menu {
   &.ccm-toolbar-mobile-menu-button-active {
     @include gradient-y(#c2ffc2, #b5eeb5);
     background-color: #b5eeb5;
+  }
+}
+
+.ccm-toolbar-mobile-add-pages-button {
+  border-left: 1px solid $gray-200;
+  cursor: pointer;
+  height: 47px;
+  padding: 14px 18px;
+
+  svg {
+    fill: $gray-600;
+    height: 16px;
+    margin: 0 auto;
+    transition: fill 0.25s ease-in-out;
+    vertical-align: baseline;
+    width: 16px;
   }
 }
 
