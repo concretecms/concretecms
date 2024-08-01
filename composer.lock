@@ -11387,20 +11387,19 @@
         },
         {
             "name": "zircote/swagger-php",
-            "version": "4.5.2",
+            "version": "4.9.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/zircote/swagger-php.git",
-                "reference": "8b55d616213cd0b05de84e0fabc34de74a4c6d1d"
+                "reference": "256d42cb07ba1c2206d66bc7516ee3d3e3e9f0b2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/zircote/swagger-php/zipball/8b55d616213cd0b05de84e0fabc34de74a4c6d1d",
-                "reference": "8b55d616213cd0b05de84e0fabc34de74a4c6d1d",
+                "url": "https://api.github.com/repos/zircote/swagger-php/zipball/256d42cb07ba1c2206d66bc7516ee3d3e3e9f0b2",
+                "reference": "256d42cb07ba1c2206d66bc7516ee3d3e3e9f0b2",
                 "shasum": ""
             },
             "require": {
-                "doctrine/annotations": "^1.7",
                 "ext-json": "*",
                 "php": ">=7.2",
                 "psr/log": "^1.1 || ^2.0 || ^3.0",
@@ -11410,10 +11409,14 @@
             },
             "require-dev": {
                 "composer/package-versions-deprecated": "^1.11",
-                "friendsofphp/php-cs-fixer": "^2.17 || ^3.0",
+                "doctrine/annotations": "^1.7 || ^2.0",
+                "friendsofphp/php-cs-fixer": "^2.17 || ^3.47.1",
                 "phpstan/phpstan": "^1.6",
                 "phpunit/phpunit": ">=8",
                 "vimeo/psalm": "^4.23"
+            },
+            "suggest": {
+                "doctrine/annotations": "^1.7 || ^2.0"
             },
             "bin": [
                 "bin/openapi"
@@ -11459,9 +11462,9 @@
             ],
             "support": {
                 "issues": "https://github.com/zircote/swagger-php/issues",
-                "source": "https://github.com/zircote/swagger-php/tree/4.5.2"
+                "source": "https://github.com/zircote/swagger-php/tree/4.9.2"
             },
-            "time": "2022-12-19T00:41:18+00:00"
+            "time": "2024-05-02T21:36:00+00:00"
         }
     ],
     "packages-dev": [
