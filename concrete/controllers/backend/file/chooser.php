@@ -67,7 +67,7 @@ class Chooser extends Controller
     {
         $list = new FileList();
         $list->sortByDateAddedDescending();
-        $list->setItemsPerPage(20);
+        $list->setItemsPerPage($this->getItemsPerPage());
         $list->setPermissionsChecker(function ($file) {
             $fp = new Checker($file);
             return $fp->canViewFileInFileManager();
@@ -97,7 +97,7 @@ class Chooser extends Controller
                     return $fp->canViewFileInFileManager();
                 });
                 $list->sortBy('f.fDateAdded', 'desc');
-                $list->setItemsPerPage(20);
+                $list->setItemsPerPage($this->getItemsPerPage());
 
                 return $this->buildFileListFractalResponse($list);
             }
@@ -168,7 +168,7 @@ class Chooser extends Controller
             $list->filterByParentFolder($folder);
             $list->getQueryObject()->addOrderBy('fv.fvType');
             $list->sortBy('name', 'asc');
-            $list->setItemsPerPage(20);
+            $list->setItemsPerPage($this->getItemsPerPage());
             $list->enableAutomaticSorting();
 
             return $this->buildFileListFractalResponse($list);
@@ -186,7 +186,7 @@ class Chooser extends Controller
         });
         $list->filterByKeywords($keyword);
         $list->sortBy('f.fDateAdded', 'desc');
-        $list->setItemsPerPage(20);
+        $list->setItemsPerPage($this->getItemsPerPage());
 
         return $this->buildFileListFractalResponse($list);
     }
@@ -326,7 +326,7 @@ class Chooser extends Controller
         $searchRequest = new ExternalSearchRequest();
 
         $currentPage = (int)$this->request->query->get("ccm_paging_fl", 0);
-        $itemsPerPage = (int)$this->request->query->get("itemsPerPage", 20);
+        $itemsPerPage = (int)$this->request->query->get("itemsPerPage", $this->getItemsPerPage());
         $orderBy = $this->request->query->get("ccm_order_by");
         $orderByDirection = $this->request->query->get("ccm_order_by_direction", "ASC");
 
@@ -359,5 +359,10 @@ class Chooser extends Controller
                 ]
             ]
         ]);
+    }
+
+    protected function getItemsPerPage(): int
+    {
+        return $this->app->make('config')->get('concrete.file_chooser.results');
     }
 }

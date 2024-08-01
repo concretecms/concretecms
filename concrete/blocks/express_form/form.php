@@ -225,7 +225,7 @@ $token = Core::make('token');
                     <div class="input-group-text">
                         <input type="checkbox" name="notifyMeOnSubmission" value="1" <?php if ($notifyMeOnSubmission == 1) { ?>checked<?php } ?>>
                     </div>
-                    <?=$form->text('recipientEmail', $recipientEmail, ['autocomplete' => 'off', 'style' => 'z-index:2000;']); ?>
+                    <?= $form->email('recipientEmail', $recipientEmail, ['autocomplete' => 'off', 'style' => 'z-index:2000;', 'multiple' => 'multiple']); ?>
                 </div>
                 <div class="help-block"><?=t('(Separate multiple emails with a comma)'); ?></div>
             </div>
