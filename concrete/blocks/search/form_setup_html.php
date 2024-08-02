@@ -25,6 +25,7 @@ use Concrete\Core\Support\Facade\Application;
 /** @var bool $allowUserOptions */
 /** @var bool $searchAll */
 /** @var bool $allowUserOptions */
+/** @var string $orderBy */
 
 $app = Application::getFacadeApplication();
 /** @var Service $siteService */
@@ -162,6 +163,22 @@ if ((string)$controller->baseSearchPath !== '') {
             <?php echo $form->text('resultsURL', $controller->resultsURL, ['maxlength' => 255]) ?>
         </div>
     </div>
+    <div class="form-group">
+        <?php
+        echo $form->label("orderBy", t('Sort'));
+        echo $form->select("orderBy", [
+            "display_asc" => t('Sitemap order'),
+            "display_desc" => t('Reverse sitemap order'),
+            "chrono_desc" => t('Most recent first'),
+            "chrono_asc" => t('Earliest first'),
+            "alpha_asc" => t('Alphabetical order'),
+            "alpha_desc" => t('Reverse alphabetical order'),
+            "modified_desc" => t('Most recently modified first'),
+            "random" => t('Random')
+        ], $orderBy);
+        ?>
+    </div>
+
 </fieldset>
 
 <script>

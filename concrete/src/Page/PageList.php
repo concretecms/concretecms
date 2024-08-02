@@ -775,7 +775,6 @@ class PageList extends DatabaseItemList implements PagerProviderInterface, Pagin
             $this->sortBy('cIndexScore', 'desc');
         }
     }
-
     /**
      * @deprecated
      *

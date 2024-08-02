@@ -135,6 +135,13 @@ class Controller extends BlockController implements UsesFeatureInterface
     protected $allow_user_options;
 
     /**
+     * Sort by index score asc (true) or desc (false).
+     *
+     * @var string|null
+     */
+    protected $orderBy;
+
+    /**
      * {@inheritdoc}
      */
     public function getBlockTypeName()
@@ -280,6 +287,7 @@ class Controller extends BlockController implements UsesFeatureInterface
         $this->set('postTo_cID', $this->postTo_cID);
         $this->set('allowUserOptions', $this->allow_user_options);
         $this->set('searchAll', $this->search_all);
+        $this->set('orderBy', $this->orderBy);
 
         if ((string) $this->resultsURL !== '') {
             $resultsPage = null;
@@ -328,6 +336,7 @@ class Controller extends BlockController implements UsesFeatureInterface
         $this->set('pageSelector', $this->app->make('helper/form/page_selector'));
         $this->set('searchAll', $this->search_all);
         $this->set('allowUserOptions', $this->allow_user_options);
+        $this->set('orderBy', $this->orderBy);
     }
 
     /**
@@ -353,6 +362,7 @@ class Controller extends BlockController implements UsesFeatureInterface
             'resultsURL' => '',
             'search_all' => 0,
             'allow_users_options' => 0,
+            'orderBy' => $data['orderBy'] ?? 0,
         ];
         switch ($data['baseSearchPath']) {
             case 'THIS':
@@ -484,6 +494,33 @@ class Controller extends BlockController implements UsesFeatureInterface
         $cak = CollectionKey::getByHandle('exclude_search_index');
         if (is_object($cak)) {
             $ipl->filterByExcludeSearchIndex(false);
+        }
+
+        switch ($this->orderBy) {
+            case 'display_asc':
+                $ipl->sortByDisplayOrder();
+                break;
+            case 'display_desc':
+                $ipl->sortByDisplayOrderDescending();
+                break;
+            case 'chrono_asc':
+                $ipl->sortByPublicDate();
+                break;
+            case 'modified_desc':
+                $ipl->sortByDateModifiedDescending();
+                break;
+            case 'random':
+                $ipl->sortBy('RAND()');
+                break;
+            case 'alpha_asc':
+                $ipl->sortByName();
+                break;
+            case 'alpha_desc':
+                $ipl->sortByNameDescending();
+                break;
+            default:
+                $ipl->sortByPublicDateDescending();
+                break;
         }
 
         $pagination = $ipl->getPagination();
