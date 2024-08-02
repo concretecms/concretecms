@@ -32,7 +32,8 @@ class Image
      * <ul>
      *     <li>bool|null `usePictureTag`: TRUE (use a `picture` tag), FALSE (use an `img` tag), NULL or not specified use the settings from the current page theme</li>
      *     <li>bool|null `lazyLoadNative`: If TRUE the `loading="lazy"` attribute will be added to the `img`</li>
-     *     <li>bool|null `lazyLoadJavaScript`: If TRUE set the img `src` and/or source `srcset` image file path to `data-src` and/or `data-srcset` </li>
+     *     <li>bool|null `lazyLoadJavaScript`: If TRUE set the img `src` and/or source `srcset` image file path to `data-src` and/or `data-srcset`</li>
+     *     <li>bool|null `forceAbsoluteURL`: If TRUE set the img `src` will always be absolute; if NULL or not specified, we'll read the </li>
      * </ul>
      */
     public function __construct(File $f = null, $options = null)
@@ -59,6 +60,7 @@ class Image
         } else {
             $this->loadPictureSettingsFromTheme();
         }
+        $forceAbsoluteURL = $options['forceAbsoluteURL'] ?? $this->getDefaultForceAbsoluteURL();
 
         if ($this->usePictureTag) {
             if ($this->theme === null) {
@@ -66,7 +68,10 @@ class Image
                 $this->theme = $c->getCollectionThemeObject();
             }
             $sources = [];
-            $fallbackSrc = $f->getURL();
+            $fallbackSrc = $forceAbsoluteURL ? null : $f->getRelativePath();
+            if (!$fallbackSrc) {
+                $fallbackSrc = $f->getURL();
+            }
             foreach ($this->theme->getThemeResponsiveImageMap() as $thumbnail => $width) {
                 $type = Type::getByHandle($thumbnail);
                 if ($type != null) {
@@ -79,7 +84,10 @@ class Image
             }
             $this->tag = Picture::create($sources, $fallbackSrc, [], $options['lazyLoadNative'], $options['lazyLoadJavaScript']);
         } else {
-            $path = $f->getURL();
+            $path = $forceAbsoluteURL ? null : $f->getRelativePath();
+            if (!$path) {
+                $path = $f->getURL();
+            }
             if ($options['lazyLoadJavaScript']) {
                 // Return a simple img element wrapped in "<noscript></noscript>" and an img element with the
                 // image file path set to "data-src". Both img elements have the "loading" attribute optionally set to "lazy".
@@ -129,5 +137,12 @@ class Image
                 $this->usePictureTag = count($th->getThemeResponsiveImageMap()) > 0;
             }
         }
+    }
+
+    protected function getDefaultForceAbsoluteURL(): bool
+    {
+        $site = app('site')->getSite();
+
+        return $site ? (bool) $site->getConfigRepository()->get('misc.img_src_absolute') : false;
     }
 }

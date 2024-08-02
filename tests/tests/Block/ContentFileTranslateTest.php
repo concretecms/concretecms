@@ -69,16 +69,23 @@ class ContentFileTranslateTest extends FileStorageTestCase
         mkdir($this->getStorageDirectory());
         $this->getStorageLocation();
 
-        $fi = Core::make(FileImporter::class);
+        $fi = app(FileImporter::class);
         $file = DIR_TESTS . '/assets/Block/background-slider-blue-sky.png';
         $r = $fi->importLocalFile($file, 'background-slider-blue-sky.png');
-        $path = $r->getRelativePath();
+        $this->assertEquals('background-slider-blue-sky.png', $r->getFilename());
 
+        $path = $r->getRelativePath();
+        $config = app('site')->getSite()->getConfigRepository();
+        $config->withKey('misc.img_src_absolute', true, static function() use ($from, $path) {
+            $translated = \Concrete\Core\Editor\LinkAbstractor::translateFrom($from);
+            $to = '<p>This is really nice.</p><img src="http://www.dummyco.com' . $path . '" alt="Happy Cat" width="48" height="20">';
+            self::assertEquals($to, $translated);
+        });
         $translated = \Concrete\Core\Editor\LinkAbstractor::translateFrom($from);
 
-        $to = '<p>This is really nice.</p><img src="http://www.dummyco.com' . $path . '" alt="Happy Cat" width="48" height="20">';
+        $to = '<p>This is really nice.</p><img src="' . $path . '" alt="Happy Cat" width="48" height="20">';
 
-        $this->assertEquals('background-slider-blue-sky.png', $r->getFilename());
+        
         $this->assertEquals($to, $translated);
 
         $c = app(\Concrete\Block\Content\Controller::class);
