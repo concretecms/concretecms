@@ -10,6 +10,7 @@ use Concrete\Core\Url\Resolver\Manager\ResolverManagerInterface;
 use Concrete\Core\User\Group\GroupList;
 use Concrete\Core\User\User;
 use InvalidArgumentException;
+use League\Uri\Uri;
 use League\Url\Url;
 
 class Controller extends GenericOauth2TypeController
@@ -206,13 +207,13 @@ class Controller extends GenericOauth2TypeController
     }
 
     /**
-     * Get the URL of the Concrete account associated to a user.
+     * Get the URL of the Concrete account associated to a user on the external website .
      *
      * @param \Concrete\Core\User\User|\Concrete\Core\User\UserInfo|\Concrete\Core\Entity\User\User|int $user
      *
-     * @return string returns an empty string if the user is not bound to a Concrete account
+     * @return string returns an empty string if the user is not bound, or if the URL of the external Concrete website is no (more) available
      */
-    public function getConcreteProfileURL($user): string
+    public function getExternalProfileURL($user): string
     {
         $binding = $this->getBindingForUser($user);
         if (!$binding || !is_numeric($binding)) {
@@ -222,7 +223,12 @@ class Controller extends GenericOauth2TypeController
         if ($concreteUserID < 1) {
             return '';
         }
-        return rtrim((string) $this->config->get('concrete.urls.concrete_community'), '/') . '/members/profile/' . $concreteUserID;
+        $url = $this->config->get('auth.external_concrete.url');
+        if (!filter_var($url, FILTER_VALIDATE_URL)) {
+            return '';
+        }
+
+        return (string) Uri::createFromBaseUri('/members/profile/' . $concreteUserID, $url);
     }
 
     /**
