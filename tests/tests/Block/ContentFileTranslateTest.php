@@ -8,7 +8,6 @@ use Concrete\Core\Attribute\Type as AttributeType;
 use Concrete\Core\Cache\CacheLocal;
 use Concrete\Core\File\Import\FileImporter;
 use Concrete\TestHelpers\File\FileStorageTestCase;
-use Core;
 use SimpleXMLElement;
 
 class ContentFileTranslateTest extends FileStorageTestCase
