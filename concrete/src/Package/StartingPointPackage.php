@@ -612,8 +612,10 @@ class StartingPointPackage extends Package
 
         $renderer = new Renderer($database);
 
-        file_put_contents(DIR_CONFIG_SITE . '/database.php', $renderer->render());
-        @chmod(DIR_CONFIG_SITE . '/database.php', $config->get('concrete.filesystem.permissions.file'));
+        if ($this->installerOptions->writeConfigFileOnInstallationCompletion()) {
+            file_put_contents(DIR_CONFIG_SITE . '/database.php', $renderer->render());
+            @chmod(DIR_CONFIG_SITE . '/database.php', $config->get('concrete.filesystem.permissions.file'));
+        }
 
         // Connect to the marketplace if possible.
         if ($this->installerOptions->isConnectToMarketplaceEnabled()) {
@@ -631,6 +633,8 @@ class StartingPointPackage extends Package
         }
 
         $siteConfig = \Site::getDefault()->getConfigRepository();
+        $siteConfig->save('name', $this->installerOptions->getSiteName());
+
         if (isset($installConfiguration['canonical-url']) && $installConfiguration['canonical-url']) {
             $siteConfig->save('seo.canonical_url', $installConfiguration['canonical-url']);
         }
@@ -679,7 +683,6 @@ class StartingPointPackage extends Package
     {
         \Core::make('site/type')->installDefault();
         $site = \Site::installDefault($this->installerOptions->getSiteLocaleId());
-        $site->getConfigRepository()->save('name', $this->installerOptions->getSiteName());
 
         $uiLocaleId = $this->installerOptions->getUiLocaleId();
         if ($uiLocaleId && $uiLocaleId !== Localization::BASE_LOCALE) {
