@@ -143,7 +143,7 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
 
             return $r;
         }
-        $ret = Package::installDB($path . '/' . FILENAME_BLOCK_DB);
+        $ret = Package::installDB($path . '/' . FILENAME_BLOCK_DB, false);
 
         return $ret;
     }

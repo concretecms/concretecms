@@ -962,7 +962,7 @@ abstract class Package implements LocalizablePackageInterface
     public function installDatabase()
     {
         $this->installEntitiesDatabase();
-        static::installDB($this->getPackagePath() . '/' . FILENAME_PACKAGE_DB);
+        static::installDB($this->getPackagePath() . '/' . FILENAME_PACKAGE_DB, false);
     }
 
     public function installEntitiesDatabase()
@@ -982,22 +982,34 @@ abstract class Package implements LocalizablePackageInterface
      * Installs a package database from an XML file.
      *
      * @param string $xmlFile Path to the database XML file
+     * @param bool $useExistingDatabaseSchema Whether to load the existing schema from the database or use an empty schema. Empty schema is faster.
      *
      * @throws \Doctrine\DBAL\ConnectionException
      *
      * @return bool|\stdClass Returns false if the XML file could not be found
      */
-    public static function installDB($xmlFile)
+    public static function installDB($xmlFile, bool $useExistingDatabaseSchema = true)
     {
         if (!file_exists($xmlFile)) {
             return false;
         }
         $db = app(Connection::class);
         $parser = Schema::getSchemaParser(simplexml_load_file($xmlFile));
-        $parser->setIgnoreExistingTables(false);
+        if ($useExistingDatabaseSchema) {
+            $parser->setIgnoreExistingTables(false);
+        } else {
+            // Since we're using an empty schema, we have to use the ignore existing tables option otherwise
+            // we might get duped tables like 'btContentLocal' attempting to be installed multiple times because
+            // it shows up in db.xml multiple times.
+            $parser->setIgnoreExistingTables(true);
+        }
         $toSchema = $parser->parse($db);
 
-        $fromSchema = $db->getSchemaManager()->createSchema();
+        if ($useExistingDatabaseSchema) {
+            $fromSchema = $db->getSchemaManager()->createSchema();
+        } else {
+            $fromSchema = new \Doctrine\DBAL\Schema\Schema();
+        }
         $comparator = new SchemaComparator();
         $schemaDiff = $comparator->compare($fromSchema, $toSchema);
         $saveQueries = $schemaDiff->toSaveSql($db->getDatabasePlatform());

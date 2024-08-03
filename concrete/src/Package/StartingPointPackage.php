@@ -465,7 +465,7 @@ class StartingPointPackage extends Package
             $dbm->destroyProxyClasses();
             $dbm->generateProxyClasses();
 
-            Package::installDB($installDirectory . '/db.xml');
+            Package::installDB($installDirectory . '/db.xml', false);
 
             $dbm->installDatabase();
             $this->indexAdditionalDatabaseFields();

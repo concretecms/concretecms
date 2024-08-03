@@ -156,6 +156,9 @@ EOT
                     $attach_mode = true;
                 }
             }
+            $db = app('database');
+            $db->executeQuery('set foreign_key_checks = 0');
+
             $routines = $spl->getInstallRoutines();
             foreach ($routines as $r) {
                 if ($attach_mode && !$r instanceof AttachModeCompatibleRoutineInterface) {

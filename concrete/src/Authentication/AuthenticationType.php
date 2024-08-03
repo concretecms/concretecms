@@ -162,7 +162,7 @@ class AuthenticationType extends ConcreteObject
         $est = self::getByHandle($atHandle);
         $r = $est->mapAuthenticationTypeFilePath(FILENAME_AUTHENTICATION_DB);
         if ($r->exists()) {
-            Package::installDB($r->file);
+            Package::installDB($r->file, false);
         }
 
         return $est;

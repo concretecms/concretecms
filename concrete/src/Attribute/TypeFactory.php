@@ -172,7 +172,7 @@ class TypeFactory
         $r = $this->environment->getRecord(DIRNAME_ATTRIBUTES . '/' . $type->getAttributeTypeHandle() . '/' . FILENAME_ATTRIBUTE_DB, $type->getPackageHandle());
         if ($r->exists()) {
             // db.xml legacy approach
-            \Concrete\Core\Package\Package::installDB($r->file);
+            \Concrete\Core\Package\Package::installDB($r->file, false);
         }
 
         if (is_dir(DIR_APPLICATION . '/' . DIRNAME_CLASSES . '/' .
