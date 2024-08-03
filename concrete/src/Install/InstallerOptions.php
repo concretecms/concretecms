@@ -33,7 +33,7 @@ class InstallerOptions
     /**
      * @var bool
      */
-    protected $writeConfigFileOnInstallationCompletion = true;
+    protected $deferInstallation = false;
 
     /**
      * Whether the user has accepted the privacy policy from the front-end installation
@@ -116,14 +116,14 @@ class InstallerOptions
         return $this->isConnectToMarketplaceEnabled;
     }
 
-    public function writeConfigFileOnInstallationCompletion(): bool
+    public function deferInstallation(): bool
     {
-        return $this->writeConfigFileOnInstallationCompletion;
+        return $this->deferInstallation;
     }
 
-    public function setWriteConfigFileOnInstallationCompletion(bool $writeConfigFileOnInstallationCompletion): self
+    public function setDeferInstallation(bool $deferInstallation): self
     {
-        $this->writeConfigFileOnInstallationCompletion = $writeConfigFileOnInstallationCompletion;
+        $this->deferInstallation = $deferInstallation;
         return $this;
     }
 

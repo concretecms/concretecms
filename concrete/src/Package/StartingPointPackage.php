@@ -612,11 +612,23 @@ class StartingPointPackage extends Package
 
         $renderer = new Renderer($database);
 
-        if ($this->installerOptions->writeConfigFileOnInstallationCompletion()) {
+        if (!$this->installerOptions->deferInstallation()) {
             file_put_contents(DIR_CONFIG_SITE . '/database.php', $renderer->render());
             @chmod(DIR_CONFIG_SITE . '/database.php', $config->get('concrete.filesystem.permissions.file'));
         }
 
+        // In attach mode we want to be able to update the email and the password hash. It's already been set
+        // in the create_users routine but let's support attach as well.
+        $em = app(EntityManager::class);
+        $adminUser = $em->getRepository(\Concrete\Core\Entity\User\User::class)
+            ->findOneByUName(USER_SUPER);
+        if ($adminUser) {
+            $adminUser->setUserPassword($this->installerOptions->getUserPasswordHash());
+            $adminUser->setUserEmail($this->installerOptions->getUserEmail());
+            $em->persist($adminUser);
+            $em->flush();
+        }
+        
         // Connect to the marketplace if possible.
         if ($this->installerOptions->isConnectToMarketplaceEnabled()) {
             $repository = $this->app->make(PackageRepositoryInterface::class);

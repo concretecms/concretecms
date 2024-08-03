@@ -85,7 +85,7 @@ class InstallCommand extends Command
             ->addOption('force-attach', null, InputOption::VALUE_NONE, 'Always attach')
             ->addOption('interactive', 'i', InputOption::VALUE_NONE, 'Install using interactive (wizard) mode')
             ->addOption('disable-marketplace-connect', null, InputOption::VALUE_NONE, 'Do not automatically connect site to marketplace')
-            ->addOption('disable-installation-completion', null, InputOption::VALUE_NONE, 'Do not write the final configuration files necessary to complete installation')
+            ->addOption('defer-installation', null, InputOption::VALUE_NONE, 'Defer installation to a later point; do not write the final configuration files necessary to complete installation')
             ->addOption('ignore-warnings', null, InputOption::VALUE_NONE, 'Ignore warnings')
             ->setHelp(<<<EOT
 Returns codes:
@@ -753,7 +753,7 @@ EOT
             ->setUserPasswordHash($hasher->hashPassword($options['admin-password']))
             ->setServerTimeZoneId($options['timezone'])
             ->setIsConnectToMarketplaceEnabled($options['disable-marketplace-connect'] ? false : true)
-            ->setWriteConfigFileOnInstallationCompletion($options['disable-installation-completion'] ? false : true);
+            ->setDeferInstallation($options['defer-installation'] ? true : false);
         ;
 
         return $installer;
