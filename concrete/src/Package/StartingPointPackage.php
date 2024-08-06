@@ -10,6 +10,7 @@ use Concrete\Core\Backup\ContentImporter;
 use Concrete\Core\Config\Renderer;
 use Concrete\Core\Config\Repository\Repository;
 use Concrete\Core\Database\DatabaseStructureManager;
+use Concrete\Core\Database\Schema\Schema;
 use Concrete\Core\Entity\OAuth\Scope;
 use Concrete\Core\File\Filesystem;
 use Concrete\Core\File\Service\File;
@@ -243,7 +244,7 @@ class StartingPointPackage extends Package
 
     protected function install_attributes()
     {
-        $ci = new ContentImporter();
+        $ci = new ContentImporter(ContentImporter::IMPORT_MODE_INSTALL);
         $ci->importContentFile(DIR_BASE_CORE . '/config/install/base/attributes.xml');
 
         $topicType = \Concrete\Core\Tree\TreeType::add('topic');
@@ -252,25 +253,25 @@ class StartingPointPackage extends Package
 
     protected function install_dashboard()
     {
-        $ci = new ContentImporter();
+        $ci = new ContentImporter(ContentImporter::IMPORT_MODE_INSTALL);
         $ci->importContentFile(DIR_BASE_CORE . '/config/install/base/single_pages/dashboard.xml');
     }
 
     protected function install_boards()
     {
-        $ci = new ContentImporter();
+        $ci = new ContentImporter(ContentImporter::IMPORT_MODE_INSTALL);
         $ci->importContentFile(DIR_BASE_CORE . '/config/install/base/boards.xml');
     }
 
     protected function install_page_types()
     {
-        $ci = new ContentImporter();
+        $ci = new ContentImporter(ContentImporter::IMPORT_MODE_INSTALL);
         $ci->importContentFile(DIR_BASE_CORE . '/config/install/base/page_types.xml');
     }
 
     protected function install_required_single_pages()
     {
-        $ci = new ContentImporter();
+        $ci = new ContentImporter(ContentImporter::IMPORT_MODE_INSTALL);
         $ci->importContentFile(DIR_BASE_CORE . '/config/install/base/single_pages/global.xml');
         $ci->importContentFile(DIR_BASE_CORE . '/config/install/base/single_pages/root.xml');
     }
@@ -280,7 +281,7 @@ class StartingPointPackage extends Package
      */
     protected function install_blocktypes()
     {
-        $ci = new ContentImporter();
+        $ci = new ContentImporter(ContentImporter::IMPORT_MODE_INSTALL);
         $ci->importContentFile(DIR_BASE_CORE . '/config/install/base/blocktypes_basic.xml');
         $ci->importContentFile(DIR_BASE_CORE . '/config/install/base/blocktypes_navigation.xml');
         $ci->importContentFile(DIR_BASE_CORE . '/config/install/base/blocktypes_form.xml');
@@ -294,61 +295,61 @@ class StartingPointPackage extends Package
 
     protected function install_blocktypes_basic()
     {
-        $ci = new ContentImporter();
+        $ci = new ContentImporter(ContentImporter::IMPORT_MODE_INSTALL);
         $ci->importContentFile(DIR_BASE_CORE . '/config/install/base/blocktypes_basic.xml');
     }
 
     protected function install_blocktypes_navigation()
     {
-        $ci = new ContentImporter();
+        $ci = new ContentImporter(ContentImporter::IMPORT_MODE_INSTALL);
         $ci->importContentFile(DIR_BASE_CORE . '/config/install/base/blocktypes_navigation.xml');
     }
 
     protected function install_blocktypes_form()
     {
-        $ci = new ContentImporter();
+        $ci = new ContentImporter(ContentImporter::IMPORT_MODE_INSTALL);
         $ci->importContentFile(DIR_BASE_CORE . '/config/install/base/blocktypes_form.xml');
     }
 
     protected function install_blocktypes_express()
     {
-        $ci = new ContentImporter();
+        $ci = new ContentImporter(ContentImporter::IMPORT_MODE_INSTALL);
         $ci->importContentFile(DIR_BASE_CORE . '/config/install/base/blocktypes_express.xml');
     }
 
     protected function install_blocktypes_social()
     {
-        $ci = new ContentImporter();
+        $ci = new ContentImporter(ContentImporter::IMPORT_MODE_INSTALL);
         $ci->importContentFile(DIR_BASE_CORE . '/config/install/base/blocktypes_social.xml');
     }
 
     protected function install_blocktypes_calendar()
     {
-        $ci = new ContentImporter();
+        $ci = new ContentImporter(ContentImporter::IMPORT_MODE_INSTALL);
         $ci->importContentFile(DIR_BASE_CORE . '/config/install/base/blocktypes_calendar.xml');
     }
 
     protected function install_blocktypes_multimedia()
     {
-        $ci = new ContentImporter();
+        $ci = new ContentImporter(ContentImporter::IMPORT_MODE_INSTALL);
         $ci->importContentFile(DIR_BASE_CORE . '/config/install/base/blocktypes_multimedia.xml');
     }
 
     protected function install_blocktypes_core_desktop()
     {
-        $ci = new ContentImporter();
+        $ci = new ContentImporter(ContentImporter::IMPORT_MODE_INSTALL);
         $ci->importContentFile(DIR_BASE_CORE . '/config/install/base/blocktypes_core_desktop.xml');
     }
 
     protected function install_blocktypes_other()
     {
-        $ci = new ContentImporter();
+        $ci = new ContentImporter(ContentImporter::IMPORT_MODE_INSTALL);
         $ci->importContentFile(DIR_BASE_CORE . '/config/install/base/blocktypes_other.xml');
     }
 
     protected function install_themes()
     {
-        $ci = new ContentImporter();
+        $ci = new ContentImporter(ContentImporter::IMPORT_MODE_INSTALL);
         $ci->importContentFile(DIR_BASE_CORE . '/config/install/base/summary.xml');
         $ci->importContentFile(DIR_BASE_CORE . '/config/install/base/themes.xml');
         // this remains for backward compatibility but no core themes use it.
@@ -359,13 +360,13 @@ class StartingPointPackage extends Package
 
     protected function install_tasks()
     {
-        $ci = new ContentImporter();
+        $ci = new ContentImporter(ContentImporter::IMPORT_MODE_INSTALL);
         $ci->importContentFile(DIR_BASE_CORE . '/config/install/base/tasks.xml');
     }
 
     protected function install_config()
     {
-        $ci = new ContentImporter();
+        $ci = new ContentImporter(ContentImporter::IMPORT_MODE_INSTALL);
         $ci->importContentFile(DIR_BASE_CORE . '/config/install/base/config.xml');
     }
 
@@ -404,18 +405,18 @@ class StartingPointPackage extends Package
     protected function import_files()
     {
         if (is_dir($this->getPackagePath() . '/files')) {
-            $ch = new ContentImporter();
+            $ci = new ContentImporter(ContentImporter::IMPORT_MODE_INSTALL);
             $computeThumbnails = true;
             if ($this->contentProvidesFileThumbnails()) {
                 $computeThumbnails = false;
             }
-            $ch->importFiles($this->getPackagePath() . '/files', $computeThumbnails);
+            $ci->importFiles($this->getPackagePath() . '/files', $computeThumbnails);
         }
     }
 
     protected function install_content()
     {
-        $ci = new ContentImporter();
+        $ci = new ContentImporter(ContentImporter::IMPORT_MODE_INSTALL);
         $ci->importContentFile($this->getPackagePath() . '/content.xml');
     }
 
@@ -465,7 +466,7 @@ class StartingPointPackage extends Package
             $dbm->destroyProxyClasses();
             $dbm->generateProxyClasses();
 
-            Package::installDB($installDirectory . '/db.xml', false);
+            Package::installDB($installDirectory . '/db.xml', ContentImporter::IMPORT_MODE_INSTALL);
 
             $dbm->installDatabase();
             $this->indexAdditionalDatabaseFields();
@@ -543,7 +544,7 @@ class StartingPointPackage extends Package
 
         // Install conversation default email
         \Conversation::setDefaultSubscribedUsers([$superuser]);
-        $ci = new ContentImporter();
+        $ci = new ContentImporter(ContentImporter::IMPORT_MODE_INSTALL);
         $ci->importContentFile(DIR_BASE_CORE . '/config/install/base/conversation.xml');
 
         $folderManager = new FolderManager();
@@ -687,7 +688,7 @@ class StartingPointPackage extends Package
 
     protected function install_permissions()
     {
-        $ci = new ContentImporter();
+        $ci = new ContentImporter(ContentImporter::IMPORT_MODE_INSTALL);
         $ci->importContentFile(DIR_BASE_CORE . '/config/install/base/permissions.xml');
     }
 
