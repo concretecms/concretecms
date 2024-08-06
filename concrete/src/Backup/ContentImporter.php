@@ -2,6 +2,7 @@
 namespace Concrete\Core\Backup;
 
 use Concrete\Core\Backup\ContentImporter\Importer\Routine\SpecifiableHomePageRoutineInterface;
+use Concrete\Core\Backup\ContentImporter\Importer\Routine\SpecifiableImportModeRoutineInterface;
 use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\File\File;
 use Concrete\Core\File\Importer;
@@ -65,6 +66,9 @@ class ContentImporter
             if (isset($this->home) && $routine instanceof SpecifiableHomePageRoutineInterface) {
                 $home = \Page::getByID($this->home->getCollectionID()); // we always need the most recent version.
                 $routine->setHomePage($home);
+            }
+            if ($routine instanceof SpecifiableImportModeRoutineInterface) {
+                $routine->setImportMode($this->importMode);
             }
             $routine->import($element);
             if (isset($this->home) && $routine instanceof SpecifiableHomePageRoutineInterface) {
