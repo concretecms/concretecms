@@ -962,7 +962,11 @@ abstract class Package implements LocalizablePackageInterface
     public function installDatabase()
     {
         $this->installEntitiesDatabase();
-        static::installDB($this->getPackagePath() . '/' . FILENAME_PACKAGE_DB);
+        // Note: this could and should use ContentImporter::IMPORT_MODE_INSTALL instead of IMPORT_MODE_UPGRADE, in order to get better
+        // performance, but I'm concerned there are packages out there using `installDatabase` on upgrade routines.
+        // If so, making this change would break those. So let's sacrifice performance for backward compatibility
+        // here.
+        static::installDB($this->getPackagePath() . '/' . FILENAME_PACKAGE_DB, ContentImporter::IMPORT_MODE_UPGRADE);
     }
 
     public function installEntitiesDatabase()
@@ -982,22 +986,40 @@ abstract class Package implements LocalizablePackageInterface
      * Installs a package database from an XML file.
      *
      * @param string $xmlFile Path to the database XML file
-     *
-     * @throws \Doctrine\DBAL\ConnectionException
-     *
+     * @param string $importMode - If set to ContentImporter::IMPORT_MODE_UPGRADE, the schema will be checked against
+     * the current schema, supporting upgrades at a performance penalty. If set to ContentImporter::IMPORT_MODE_INSTALL
+     * the schema will be compared against an empty schema, which is a much faster operation and should be used when
+     * you know the installation is taking place against an empty database. ContentImporter::IMPORT_MODE_UPGRADE
+     * preserves backward compatibility as this was the way things always used to be handled.
      * @return bool|\stdClass Returns false if the XML file could not be found
+     *@throws \Doctrine\DBAL\ConnectionException
+     *
      */
-    public static function installDB($xmlFile)
+    public static function installDB($xmlFile, string $importMode = ContentImporter::IMPORT_MODE_UPGRADE)
     {
         if (!file_exists($xmlFile)) {
             return false;
         }
+        if (!in_array($importMode, [ContentImporter::IMPORT_MODE_UPGRADE, ContentImporter::IMPORT_MODE_INSTALL])) {
+            throw new \RuntimeException(t('Invalid import mode specified: %s', $importMode));
+        }
         $db = app(Connection::class);
         $parser = Schema::getSchemaParser(simplexml_load_file($xmlFile));
-        $parser->setIgnoreExistingTables(false);
+        if ($importMode === ContentImporter::IMPORT_MODE_UPGRADE) {
+            $parser->setIgnoreExistingTables(false);
+        } else {
+            // Since we're using an empty schema, we have to use the ignore existing tables option otherwise
+            // we might get duped tables like 'btContentLocal' attempting to be installed multiple times because
+            // it shows up in db.xml multiple times.
+            $parser->setIgnoreExistingTables(true);
+        }
         $toSchema = $parser->parse($db);
 
-        $fromSchema = $db->getSchemaManager()->createSchema();
+        if ($importMode === ContentImporter::IMPORT_MODE_UPGRADE) {
+            $fromSchema = $db->getSchemaManager()->createSchema();
+        } else {
+            $fromSchema = new \Doctrine\DBAL\Schema\Schema();
+        }
         $comparator = new SchemaComparator();
         $schemaDiff = $comparator->compare($fromSchema, $toSchema);
         $saveQueries = $schemaDiff->toSaveSql($db->getDatabasePlatform());
@@ -1070,7 +1092,7 @@ abstract class Package implements LocalizablePackageInterface
             $this->destroyProxyClasses($em);
             $this->installEntitiesDatabase();
         }
-        static::installDB($this->getPackagePath() . '/' . FILENAME_PACKAGE_DB);
+        static::installDB($this->getPackagePath() . '/' . FILENAME_PACKAGE_DB, ContentImporter::IMPORT_MODE_UPGRADE);
     }
 
     /**

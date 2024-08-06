@@ -31,6 +31,11 @@ class InstallerOptions
     protected $isConnectToMarketplaceEnabled = true;
 
     /**
+     * @var bool
+     */
+    protected $deferInstallation = false;
+
+    /**
      * Whether the user has accepted the privacy policy from the front-end installation
      *
      * @var bool
@@ -111,12 +116,24 @@ class InstallerOptions
         return $this->isConnectToMarketplaceEnabled;
     }
 
+    public function deferInstallation(): bool
+    {
+        return $this->deferInstallation;
+    }
+
+    public function setDeferInstallation(bool $deferInstallation): self
+    {
+        $this->deferInstallation = $deferInstallation;
+        return $this;
+    }
+
     /**
      * @param bool $isConnectToMarketplaceEnabled
      */
-    public function setIsConnectToMarketplaceEnabled(bool $isConnectToMarketplaceEnabled): void
+    public function setIsConnectToMarketplaceEnabled(bool $isConnectToMarketplaceEnabled): self
     {
         $this->isConnectToMarketplaceEnabled = $isConnectToMarketplaceEnabled;
+        return $this;
     }
 
     /**

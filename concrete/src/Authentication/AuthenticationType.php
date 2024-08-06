@@ -2,6 +2,8 @@
 namespace Concrete\Core\Authentication;
 
 use Concrete\Authentication\Concrete\Controller;
+use Concrete\Core\Backup\ContentImporter;
+use Concrete\Core\Database\Schema\Schema;
 use Concrete\Core\Foundation\ConcreteObject;
 use Concrete\Core\Package\PackageList;
 use Core;
@@ -162,7 +164,7 @@ class AuthenticationType extends ConcreteObject
         $est = self::getByHandle($atHandle);
         $r = $est->mapAuthenticationTypeFilePath(FILENAME_AUTHENTICATION_DB);
         if ($r->exists()) {
-            Package::installDB($r->file);
+            Package::installDB($r->file, ContentImporter::IMPORT_MODE_INSTALL);
         }
 
         return $est;

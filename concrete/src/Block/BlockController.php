@@ -132,7 +132,7 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
      *
      * @return mixed boolean or object having ->result (boolean) and ->message (string) properties
      */
-    public function install($path)
+    public function install($path, string $importMode = ContentImporter::IMPORT_MODE_UPGRADE)
     {
         // passed path is the path to this block (try saying that ten times fast)
         // create the necessary table
@@ -143,7 +143,7 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
 
             return $r;
         }
-        $ret = Package::installDB($path . '/' . FILENAME_BLOCK_DB);
+        $ret = Package::installDB($path . '/' . FILENAME_BLOCK_DB, $importMode);
 
         return $ret;
     }
