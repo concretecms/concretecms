@@ -74,7 +74,7 @@ class AddBlock extends BackendInterfacePageController
                 $this->area->setCustomTemplate($btHandle, $template);
             }
         }
-        $bv->addScopeItems(array('a' => isset($this->a) ? $this->a : null, 'cp' => $this->permissions, 'ap' => $this->areaPermissions));
+        $bv->addScopeItems(array('a' => isset($this->areaToModify) ? $this->areaToModify : null, 'cp' => $this->permissions, 'ap' => $this->areaPermissions));
         $this->set('blockView', $bv);
         $this->set('blockType', $this->blockType);
         $this->set('btHandle', $this->blockType->getBlockTypeHandle());
