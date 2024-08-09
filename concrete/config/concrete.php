@@ -8,7 +8,7 @@ return [
      */
     'version' => '8.5.18',
     'version_installed' => '8.5.18',
-    'version_db' => '20220319043123', // the key of the latest database migration
+    'version_db' => '20240809105200', // the key of the latest database migration
 
     /*
      * Installation status
@@ -556,10 +556,11 @@ return [
 
         /*
          * Enable intelligent search integration
+         * Disabled since we switched to the new marketplace
          *
          * @var bool concrete.marketplace.intelligent_search
          */
-        'intelligent_search' => true,
+        'intelligent_search' => false,
 
         /*
          * Log requests
