@@ -1115,12 +1115,8 @@ class UserInfo extends ConcreteObject implements AttributeObjectInterface, Permi
      */
     public static function add($data)
     {
-        if (isset($this) && get_class($this) == __CLASS__) {
-            $app = $this->application;
-        } else {
-            $app = Facade::getFacadeApplication();
-        }
-        return $app->make('user/registration')->create($data);
+
+        return self::getApp()->make('user/registration')->create($data);
     }
 
     /**
@@ -1128,12 +1124,7 @@ class UserInfo extends ConcreteObject implements AttributeObjectInterface, Permi
      */
     public static function addSuperUser($uPasswordEncrypted, $uEmail)
     {
-        if (isset($this) && get_class($this) == __CLASS__) {
-            $app = $this->application;
-        } else {
-            $app = Facade::getFacadeApplication();
-        }
-        return $app->make('user/registration')->createSuperUser($uPasswordEncrypted, $uEmail);
+        return self::getApp()->make('user/registration')->createSuperUser($uPasswordEncrypted, $uEmail);
     }
 
     /**
@@ -1141,12 +1132,7 @@ class UserInfo extends ConcreteObject implements AttributeObjectInterface, Permi
      */
     public static function register($data)
     {
-        if (isset($this) && get_class($this) == __CLASS__) {
-            $app = $this->application;
-        } else {
-            $app = Facade::getFacadeApplication();
-        }
-        return $app->make('user/registration')->createFromPublicRegistration($data);
+        return self::getApp()->make('user/registration')->createFromPublicRegistration($data);
     }
 
     /**
@@ -1154,12 +1140,7 @@ class UserInfo extends ConcreteObject implements AttributeObjectInterface, Permi
      */
     public static function getByID($uID)
     {
-        if (isset($this) && get_class($this) == __CLASS__) {
-            $app = $this->application;
-        } else {
-            $app = Facade::getFacadeApplication();
-        }
-        return $app->make(UserInfoRepository::class)->getByID($uID);
+        return self::getApp()->make(UserInfoRepository::class)->getByID($uID);
     }
 
     /**
@@ -1167,12 +1148,7 @@ class UserInfo extends ConcreteObject implements AttributeObjectInterface, Permi
      */
     public static function getByUserName($uName)
     {
-        if (isset($this) && get_class($this) == __CLASS__) {
-            $app = $this->application;
-        } else {
-            $app = Facade::getFacadeApplication();
-        }
-        return $app->make(UserInfoRepository::class)->getByName($uName);
+        return self::getApp()->make(UserInfoRepository::class)->getByName($uName);
     }
 
     /**
@@ -1180,12 +1156,7 @@ class UserInfo extends ConcreteObject implements AttributeObjectInterface, Permi
      */
     public static function getByEmail($uEmail)
     {
-        if (isset($this) && get_class($this) == __CLASS__) {
-            $app = $this->application;
-        } else {
-            $app = Facade::getFacadeApplication();
-        }
-        return $app->make(UserInfoRepository::class)->getByEmail($uEmail);
+        return self::getApp()->make(UserInfoRepository::class)->getByEmail($uEmail);
     }
 
     /**
@@ -1193,11 +1164,14 @@ class UserInfo extends ConcreteObject implements AttributeObjectInterface, Permi
      */
     public static function getByValidationHash($uHash, $unredeemedHashesOnly = true)
     {
+        
+        return self::getApp()->make(UserInfoRepository::class)->getByValidationHash($uHash, $unredeemedHashesOnly);
+    }
+
+    private static function getApp () {
         if (isset($this) && get_class($this) == __CLASS__) {
-            $app = $this->application;
-        } else {
-            $app = Facade::getFacadeApplication();
+            return $this->application;
         }
-        return $app->make(UserInfoRepository::class)->getByValidationHash($uHash, $unredeemedHashesOnly);
+        return Facade::getFacadeApplication();
     }
 }
