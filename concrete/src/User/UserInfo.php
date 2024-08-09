@@ -656,7 +656,6 @@ class UserInfo extends ConcreteObject implements AttributeObjectInterface, Permi
                     [$this->getUserID()]
                 );
                 $userObject = $this->getUserObject();
-                $app = Facade::getFacadeApplication();
                 $logger = $this->application->make(LoggerFactory::class)->createLogger(Channels::CHANNEL_USERS);
                 foreach ($groupObjects as $group) {
                     $ue = new UserGroupEvent($userObject);
@@ -1164,7 +1163,6 @@ class UserInfo extends ConcreteObject implements AttributeObjectInterface, Permi
      */
     public static function getByValidationHash($uHash, $unredeemedHashesOnly = true)
     {
-        
         return app(UserInfoRepository::class)->getByValidationHash($uHash, $unredeemedHashesOnly);
     }
 }
