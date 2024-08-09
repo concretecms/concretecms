@@ -1111,67 +1111,60 @@ class UserInfo extends ConcreteObject implements AttributeObjectInterface, Permi
     }
 
     /**
-     * @deprecated Use $app->make('user/registration')->create()
+     * @deprecated Use app('user/registration')->create()
      */
     public static function add($data)
     {
 
-        return self::getApp()->make('user/registration')->create($data);
+        return app('user/registration')->create($data);
     }
 
     /**
-     * @deprecated Use $app->make('user/registration')->createSuperUser()
+     * @deprecated Use app('user/registration')->createSuperUser()
      */
     public static function addSuperUser($uPasswordEncrypted, $uEmail)
     {
-        return self::getApp()->make('user/registration')->createSuperUser($uPasswordEncrypted, $uEmail);
+        return app('user/registration')->createSuperUser($uPasswordEncrypted, $uEmail);
     }
 
     /**
-     * @deprecated Use $app->make('user/registration')->createFromPublicRegistration()
+     * @deprecated Use app('user/registration')->createFromPublicRegistration()
      */
     public static function register($data)
     {
-        return self::getApp()->make('user/registration')->createFromPublicRegistration($data);
+        return app('user/registration')->createFromPublicRegistration($data);
     }
 
     /**
-     * @deprecated use $app->make(\Concrete\Core\User\UserInfoRepository::class)->getByID()
+     * @deprecated use app(\Concrete\Core\User\UserInfoRepository::class)->getByID()
      */
     public static function getByID($uID)
     {
-        return self::getApp()->make(UserInfoRepository::class)->getByID($uID);
+        return app(UserInfoRepository::class)->getByID($uID);
     }
 
     /**
-     * @deprecated use $app->make(\Concrete\Core\User\UserInfoRepository::class)->getByName()
+     * @deprecated use app(\Concrete\Core\User\UserInfoRepository::class)->getByName()
      */
     public static function getByUserName($uName)
     {
-        return self::getApp()->make(UserInfoRepository::class)->getByName($uName);
+        return app(UserInfoRepository::class)->getByName($uName);
     }
 
     /**
-     * @deprecated use $app->make(\Concrete\Core\User\UserInfoRepository::class)->getByEmail()
+     * @deprecated use app(\Concrete\Core\User\UserInfoRepository::class)->getByEmail()
      */
     public static function getByEmail($uEmail)
     {
-        return self::getApp()->make(UserInfoRepository::class)->getByEmail($uEmail);
+        return app(UserInfoRepository::class)->getByEmail($uEmail);
     }
 
     /**
-     * @deprecated use $app->make(\Concrete\Core\User\UserInfoRepository::class)->getByValidationHash()
+     * @deprecated use app(\Concrete\Core\User\UserInfoRepository::class)->getByValidationHash()
      */
     public static function getByValidationHash($uHash, $unredeemedHashesOnly = true)
     {
         
-        return self::getApp()->make(UserInfoRepository::class)->getByValidationHash($uHash, $unredeemedHashesOnly);
-    }
-
-    private static function getApp () {
-        if (isset($this) && get_class($this) == __CLASS__) {
-            return $this->application;
-        }
-        return Facade::getFacadeApplication();
+        return app(UserInfoRepository::class)->getByValidationHash($uHash, $unredeemedHashesOnly);
     }
 }
