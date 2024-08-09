@@ -1116,7 +1116,7 @@ class UserInfo extends ConcreteObject implements AttributeObjectInterface, Permi
     public static function add($data)
     {
         if (isset($this) && get_class($this) == __CLASS__) {
-            $app = $this->application
+            $app = $this->application;
         } else {
             $app = Facade::getFacadeApplication();
         }
@@ -1129,7 +1129,7 @@ class UserInfo extends ConcreteObject implements AttributeObjectInterface, Permi
     public static function addSuperUser($uPasswordEncrypted, $uEmail)
     {
         if (isset($this) && get_class($this) == __CLASS__) {
-            $app = $this->application
+            $app = $this->application;
         } else {
             $app = Facade::getFacadeApplication();
         }
@@ -1142,7 +1142,7 @@ class UserInfo extends ConcreteObject implements AttributeObjectInterface, Permi
     public static function register($data)
     {
         if (isset($this) && get_class($this) == __CLASS__) {
-            $app = $this->application
+            $app = $this->application;
         } else {
             $app = Facade::getFacadeApplication();
         }
@@ -1155,7 +1155,7 @@ class UserInfo extends ConcreteObject implements AttributeObjectInterface, Permi
     public static function getByID($uID)
     {
         if (isset($this) && get_class($this) == __CLASS__) {
-            $app = $this->application
+            $app = $this->application;
         } else {
             $app = Facade::getFacadeApplication();
         }
@@ -1168,7 +1168,7 @@ class UserInfo extends ConcreteObject implements AttributeObjectInterface, Permi
     public static function getByUserName($uName)
     {
         if (isset($this) && get_class($this) == __CLASS__) {
-            $app = $this->application
+            $app = $this->application;
         } else {
             $app = Facade::getFacadeApplication();
         }
@@ -1181,7 +1181,7 @@ class UserInfo extends ConcreteObject implements AttributeObjectInterface, Permi
     public static function getByEmail($uEmail)
     {
         if (isset($this) && get_class($this) == __CLASS__) {
-            $app = $this->application
+            $app = $this->application;
         } else {
             $app = Facade::getFacadeApplication();
         }
@@ -1194,7 +1194,7 @@ class UserInfo extends ConcreteObject implements AttributeObjectInterface, Permi
     public static function getByValidationHash($uHash, $unredeemedHashesOnly = true)
     {
         if (isset($this) && get_class($this) == __CLASS__) {
-            $app = $this->application
+            $app = $this->application;
         } else {
             $app = Facade::getFacadeApplication();
         }
