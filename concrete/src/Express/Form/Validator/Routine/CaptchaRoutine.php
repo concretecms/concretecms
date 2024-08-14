@@ -24,11 +24,16 @@ class CaptchaRoutine implements RoutineInterface
      */
     public function validate(ErrorList $error, Form $form, Entry $entry = null)
     {
-        if (!$this->captchaValidator->check()) {
-            $error->add(t('Incorrect captcha code.'));
-
-            return false;
-        }
+		if (method_exists($this->captchaValidator, 'checkWithErrorList')) {
+			if (!$this->captchaValidator->checkWithErrorList($error)) {
+				return false;
+			}
+		} else {
+			if (!$this->captchaValidator->check()) {
+				$error->add(t('Incorrect captcha code.'));
+				return false;
+			}
+		}
 
         return true;
     }
