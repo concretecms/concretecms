@@ -26,6 +26,7 @@ class ServiceList
             ['stumbleupon', 'Stumbleupon', 'fab fa-stumbleupon'],
             ['skype', 'Skype', 'fab fa-skype'],
             ['vk', 'Vkontakte', 'fab fa-vk'],
+            ['discord', 'Discord', 'fab fa-discord'],
             ['personal_website', 'Personal Website', 'fa fa-external-link-alt'],
             ['email', 'Email', 'fa fa-envelope'],
             ['phone', 'Phone', 'fa fa-phone-square'],
