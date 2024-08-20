@@ -238,7 +238,7 @@ class IpAccessControlCategory
      *
      * @return $this
      */
-    public function setPackage(Package $value = null)
+    public function setPackage(?Package $value = null)
     {
         $this->package = $value;
 

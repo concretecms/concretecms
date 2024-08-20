@@ -16,7 +16,7 @@ use Concrete\Core\User\User;
 class FolderField extends AbstractField
 {
 
-    public function __construct(FileFolder $folder = null, $searchSubFolders = false)
+    public function __construct(?FileFolder $folder = null, $searchSubFolders = false)
     {
         if ($folder) {
             $this->data['folderID'] = $folder->getTreeNodeID();

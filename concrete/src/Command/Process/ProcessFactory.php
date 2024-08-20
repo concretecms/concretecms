@@ -50,7 +50,7 @@ class ProcessFactory
         $this->batchUpdater = $batchUpdater;
     }
 
-    public function createTaskProcess(TaskInterface $task, InputInterface $input = null)
+    public function createTaskProcess(TaskInterface $task, ?InputInterface $input = null)
     {
         $process = new TaskProcess();
         $process->setTask($task);

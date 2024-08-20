@@ -156,7 +156,7 @@ class Update
      *
      * @throws \Concrete\Core\Updater\Migrations\MigrationIncompleteException throws a MigrationIncompleteException exception if there's still some migration pending
      */
-    public static function updateToCurrentVersion(Configuration $configuration = null)
+    public static function updateToCurrentVersion(?Configuration $configuration = null)
     {
         $app = Application::getFacadeApplication();
         $functionInspector = $app->make(FunctionInspector::class);

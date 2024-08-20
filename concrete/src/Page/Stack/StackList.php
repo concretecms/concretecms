@@ -26,7 +26,7 @@ class StackList extends PageList
         $this->sortByName();
     }
 
-    public function performAutomaticSorting(StickyRequest $request = null)
+    public function performAutomaticSorting(?StickyRequest $request = null)
     {
         parent::performAutomaticSorting($request);
         if ($this->foldersFirst) {

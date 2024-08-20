@@ -167,7 +167,7 @@ class UsageTracker implements TrackerInterface
      * @return \Generator
      * @internal param bool $getController
      */
-    private function getTrackables(array $list, callable $transformer = null)
+    private function getTrackables(array $list, ?callable $transformer = null)
     {
         foreach ($list as $item) {
             if ($transformer) {

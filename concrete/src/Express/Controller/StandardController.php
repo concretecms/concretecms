@@ -33,7 +33,7 @@ class StandardController implements ControllerInterface
         return $this->app->make(EntryManager::class, ['request' => $request]);
     }
 
-    public function getNotifier(NotificationProviderInterface $provider = null)
+    public function getNotifier(?NotificationProviderInterface $provider = null)
     {
         /**
          * @var $notifier StandardNotifier

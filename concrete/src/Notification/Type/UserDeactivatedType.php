@@ -47,8 +47,8 @@ class UserDeactivatedType implements TypeInterface
     public function __construct(
         Application $app,
         StandardNotifier $notifier,
-        SubscriptionInterface $defaultSubscription = null,
-        FilterInterface $defaultFilter = null
+        ?SubscriptionInterface $defaultSubscription = null,
+        ?FilterInterface $defaultFilter = null
     ) {
         $this->app = $app;
         $this->notifier = $notifier;

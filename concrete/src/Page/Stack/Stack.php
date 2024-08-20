@@ -51,7 +51,7 @@ class Stack extends Page
      *
      * @return bool|\Concrete\Core\Page\Page
      */
-    public static function getByPath($path, $version = 'RECENT', TreeInterface $siteTree = null)
+    public static function getByPath($path, $version = 'RECENT', ?TreeInterface $siteTree = null)
     {
         $c = parent::getByPath(STACKS_PAGE_PATH . '/' . trim($path, '/'), $version, $siteTree);
         if (static::isValidStack($c)) {
@@ -84,7 +84,7 @@ class Stack extends Page
      *
      * @return self|false|null
      */
-    public static function getByName($stackName, $cvID = 'RECENT', TreeInterface $site = null, $multilingualContentSource = self::MULTILINGUAL_CONTENT_SOURCE_CURRENT)
+    public static function getByName($stackName, $cvID = 'RECENT', ?TreeInterface $site = null, $multilingualContentSource = self::MULTILINGUAL_CONTENT_SOURCE_CURRENT)
     {
         $c = Page::getCurrentPage();
         if (is_object($c) && (!$c->isError())) {
@@ -235,7 +235,7 @@ class Stack extends Page
      *
      * @return self|false
      */
-    public static function addStack($stack, Folder $folder = null)
+    public static function addStack($stack, ?Folder $folder = null)
     {
         $parent = \Page::getByPath(STACKS_PAGE_PATH);
         if ($folder) {

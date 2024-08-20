@@ -55,7 +55,7 @@ class Replace extends Import
      *
      * @return $this
      */
-    protected function setReplacingFile(File $value = null)
+    protected function setReplacingFile(?File $value = null)
     {
         if ($value !== $this->replacingFile) {
             $this->replacingFile = $value;

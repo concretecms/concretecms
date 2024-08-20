@@ -11,6 +11,6 @@ interface ContextInterface
 
     public function getOutput(): OutputInterface;
 
-    public function dispatchCommand($command, array $stamps = null): void;
+    public function dispatchCommand($command, ?array $stamps = null): void;
 
 }

@@ -23,7 +23,7 @@ class Search extends ElementController
         return 'groups/search/search';
     }
 
-    public function setQuery(Query $query = null): void
+    public function setQuery(?Query $query = null): void
     {
         $this->query = $query;
     }

@@ -20,7 +20,7 @@ class SpecSchema implements \JsonSerializable
      */
     protected $enum;
 
-    public function __construct(string $type = null, string $format = null, $enum = null)
+    public function __construct(?string $type = null, ?string $format = null, $enum = null)
     {
         $this->type = $type;
         $this->format = $format;

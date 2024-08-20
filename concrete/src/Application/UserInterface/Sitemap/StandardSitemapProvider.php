@@ -72,7 +72,7 @@ class StandardSitemapProvider implements ProviderInterface
      *
      * @return \Concrete\Core\Application\UserInterface\Sitemap\TreeCollection\StandardTreeCollection
      */
-    public function getTreeCollection(Tree $selectedTree = null)
+    public function getTreeCollection(?Tree $selectedTree = null)
     {
         $collection = new StandardTreeCollection();
         $sites = $this->siteService->getList();

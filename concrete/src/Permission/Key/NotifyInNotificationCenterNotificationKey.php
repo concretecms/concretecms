@@ -49,7 +49,7 @@ class NotifyInNotificationCenterNotificationKey extends NotificationKey
         */
     }
 
-    public function validate(SubscriptionInterface $subscription = null)
+    public function validate(?SubscriptionInterface $subscription = null)
     {
         $app = Application::getFacadeApplication();
         $u = $app->make(User::class);

@@ -14,7 +14,7 @@ class DropdownControl implements ControlInterface
      */
     protected $controls = [];
 
-    public function __construct(array $controls = null)
+    public function __construct(?array $controls = null)
     {
         $this->controls = $controls;
     }
@@ -47,7 +47,7 @@ class DropdownControl implements ControlInterface
         return $this->controls;
     }
 
-    public function denormalize(DenormalizerInterface $denormalizer, $data, string $format = null, array $context = [])
+    public function denormalize(DenormalizerInterface $denormalizer, $data, ?string $format = null, array $context = [])
     {
         foreach ($data['controls'] as $control) {
             $this->controls[] = $denormalizer->denormalize($control, $control['class']);

@@ -47,7 +47,7 @@ class BasicThumbnailer implements ThumbnailerInterface, ApplicationAwareInterfac
      */
     private $storageLocation;
 
-    public function __construct(StorageLocationInterface $storageLocation = null)
+    public function __construct(?StorageLocationInterface $storageLocation = null)
     {
         $this->storageLocation = $storageLocation;
     }

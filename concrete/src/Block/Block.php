@@ -406,7 +406,7 @@ EOT
         return $this->bFilename;
     }
 
-    public function setTempFilename(string $bFilename = null): void
+    public function setTempFilename(?string $bFilename = null): void
     {
         $this->bFilename = $bFilename;
 
@@ -1918,7 +1918,7 @@ EOT
      * @param \Concrete\Core\Page\Collection\Collection $c The collection to add the block alias to
      * @param int|null $displayOrder The number to display this block at. (optional)
      */
-    public function alias($c, int $displayOrder = null)
+    public function alias($c, ?int $displayOrder = null)
     {
         $app = Application::getFacadeApplication();
         /** @var Cloner $cloner */

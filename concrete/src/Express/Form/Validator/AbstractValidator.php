@@ -20,7 +20,7 @@ abstract class AbstractValidator implements ValidatorInterface
         $this->routines[] = $routine;
     }
 
-    public function validate(Form $form, Entry $entry = null)
+    public function validate(Form $form, ?Entry $entry = null)
     {
         $valid = true;
         foreach($this->routines as $routine) {

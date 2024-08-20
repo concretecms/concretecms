@@ -103,7 +103,7 @@ class TaskService
         $this->entityManager->flush();
     }
 
-    public function add(string $handle, Package $pkg = null)
+    public function add(string $handle, ?Package $pkg = null)
     {
         $task = new Task();
         $task->setHandle($handle);

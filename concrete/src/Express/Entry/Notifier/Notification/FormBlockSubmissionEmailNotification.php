@@ -11,7 +11,7 @@ class FormBlockSubmissionEmailNotification extends AbstractFormBlockSubmissionNo
     protected $replyTo;
     protected $attributeValues;
 
-    protected function getFromEmail(Entry $entry = null)
+    protected function getFromEmail(?Entry $entry = null)
     {
         if (!isset($this->from)) {
             $config = $this->app->make('config');

@@ -225,7 +225,7 @@ abstract class ItemList
     /**
      * @param StickyRequest $request
      */
-    public function performAutomaticSorting(StickyRequest $request = null)
+    public function performAutomaticSorting(?StickyRequest $request = null)
     {
         if ($this->enableAutomaticSorting) {
             if ($request) {

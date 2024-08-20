@@ -23,7 +23,7 @@ class PageItem extends Item
      * @param string $name
      * @param bool $isActive
      */
-    public function __construct(Page $page = null, bool $isActive = false)
+    public function __construct(?Page $page = null, bool $isActive = false)
     {
         if ($page) {
             $this->pageID = $page->getCollectionID();

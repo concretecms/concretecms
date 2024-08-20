@@ -147,7 +147,7 @@ class IpAccessControlRange
      *
      * @return $this
      */
-    public function setSite(Site $value = null)
+    public function setSite(?Site $value = null)
     {
         $this->site = $value;
 
@@ -231,7 +231,7 @@ class IpAccessControlRange
      *
      * @return $this
      */
-    public function setExpiration(DateTime $value = null)
+    public function setExpiration(?DateTime $value = null)
     {
         $this->expiration = $value;
 

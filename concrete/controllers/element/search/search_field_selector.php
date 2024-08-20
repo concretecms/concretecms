@@ -20,7 +20,7 @@ class SearchFieldSelector extends ElementController
     
     protected $includeJavaScript = false;
 
-    public function __construct(ManagerInterface $fieldManager, $addFieldAction, Query $query = null)
+    public function __construct(ManagerInterface $fieldManager, $addFieldAction, ?Query $query = null)
     {
         parent::__construct();
         $this->fieldManager = $fieldManager;

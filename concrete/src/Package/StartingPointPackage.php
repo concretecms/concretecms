@@ -97,7 +97,7 @@ class StartingPointPackage extends Package
         ];
     }
 
-    public function setInstallerOptions(InstallerOptions $installerOptions = null)
+    public function setInstallerOptions(?InstallerOptions $installerOptions = null)
     {
         $this->installerOptions = $installerOptions;
     }

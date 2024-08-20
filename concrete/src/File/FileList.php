@@ -37,7 +37,7 @@ class FileList extends DatabaseItemList implements PagerProviderInterface, Pagin
         'fv.fvSize',
     ];
 
-    public function __construct(StickyRequest $req = null)
+    public function __construct(?StickyRequest $req = null)
     {
         $u = Application::getFacadeApplication()->make(User::class);
         if ($u->isSuperUser()) {
@@ -61,7 +61,7 @@ class FileList extends DatabaseItemList implements PagerProviderInterface, Pagin
         return new VariableFactory($this, $this->getSearchRequest());
     }
 
-    public function setPermissionsChecker(\Closure $checker = null)
+    public function setPermissionsChecker(?\Closure $checker = null)
     {
         $this->permissionsChecker = $checker;
     }

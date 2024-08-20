@@ -24,7 +24,7 @@ class PushOutput implements OutputInterface, NormalizableInterface, Denormalizab
      */
     protected $processId;
 
-    public function __construct(MercureService $service = null, string $processId = null)
+    public function __construct(?MercureService $service = null, ?string $processId = null)
     {
         $this->service = $service;
         $this->processId = $processId;
@@ -35,14 +35,14 @@ class PushOutput implements OutputInterface, NormalizableInterface, Denormalizab
         $this->service->publish(new ProcessOutputEvent($this->processId, $message));
     }
 
-    public function normalize(NormalizerInterface $normalizer, string $format = null, array $context = [])
+    public function normalize(NormalizerInterface $normalizer, ?string $format = null, array $context = [])
     {
         return [
             'processId' => $this->processId,
         ];
     }
 
-    public function denormalize(DenormalizerInterface $denormalizer, $data, string $format = null, array $context = [])
+    public function denormalize(DenormalizerInterface $denormalizer, $data, ?string $format = null, array $context = [])
     {
         $this->service = app(MercureService::class);
         $this->processId = $data['processId'];

@@ -36,7 +36,7 @@ class AggregateOutput implements OutputInterface, NormalizableInterface, Denorma
         }
     }
 
-    public function normalize(NormalizerInterface $normalizer, string $format = null, array $context = [])
+    public function normalize(NormalizerInterface $normalizer, ?string $format = null, array $context = [])
     {
         $outputs = [];
         foreach($this->outputs as $output) {
@@ -45,7 +45,7 @@ class AggregateOutput implements OutputInterface, NormalizableInterface, Denorma
         return ['outputs' => $outputs];
     }
 
-    public function denormalize(DenormalizerInterface $denormalizer, $data, string $format = null, array $context = [])
+    public function denormalize(DenormalizerInterface $denormalizer, $data, ?string $format = null, array $context = [])
     {
         $outputs = [];
         foreach($data['outputs'] as $dataOutput) {

@@ -60,7 +60,7 @@ class ProcessUpdater
     /**
      * @param string|Process $process
      */
-    public function closeProcess($process, int $exitCode, string $exitMessage = null)
+    public function closeProcess($process, int $exitCode, ?string $exitMessage = null)
     {
         if (is_string($process)) {
             $process = $this->entityManager->find(Process::class, $process);

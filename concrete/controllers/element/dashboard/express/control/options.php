@@ -7,7 +7,7 @@ class Options extends ElementController
 {
     protected $control;
 
-    public function __construct(\Concrete\Core\Entity\Express\Control\Control $control = null)
+    public function __construct(?\Concrete\Core\Entity\Express\Control\Control $control = null)
     {
         $this->control = $control;
         parent::__construct();
