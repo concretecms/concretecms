@@ -1,17 +1,18 @@
 <?php
+
 namespace Concrete\Core\Workflow\Request;
 
-use Loader;
-use Page;
+use Concrete\Core\Page\Page;
+use Concrete\Core\Permission\Key\Key as PermissionKey;
 use Concrete\Core\Workflow\Description as WorkflowDescription;
-use Permissions;
-use PermissionKey;
 use Concrete\Core\Workflow\Progress\Progress as WorkflowProgress;
 use Concrete\Core\Workflow\Progress\Response as WorkflowProgressResponse;
 
 class ChangeSubpageDefaultsInheritanceRequest extends PageRequest
 {
     protected $wrStatusNum = 30;
+
+    protected $inheritance;
 
     public function __construct()
     {
@@ -33,15 +34,22 @@ class ChangeSubpageDefaultsInheritanceRequest extends PageRequest
     {
         $d = new WorkflowDescription();
         $c = Page::getByID($this->cID, 'ACTIVE');
-        $link = Loader::helper('navigation')->getLinkToCollection($c, true);
-        $d->setEmailDescription(t("\"%s\" has pending sub-page permission inhiterance changes. View the page here: %s.", $c->getCollectionName(), $link));
-        if ($this->inheritance == 0) {
-            $d->setInContextDescription(t("Sub-pages pending change to inherit permissions from page type."));
+        if ($c && !$c->isError()) {
+            $link = $c->getCollectionLink();
+            $d->setEmailDescription(t('"%s" has pending sub-page permission inhiterance changes. View the page here: %s.', $c->getCollectionName(), $link));
+            if ($this->inheritance == 0) {
+                $d->setInContextDescription(t('Sub-pages pending change to inherit permissions from page type.'));
+            } else {
+                $d->setInContextDescription(t('Sub-pages pending change to inherit permissions from parent.'));
+            }
+            $d->setDescription(t('<a href="%s">%s</a> has pending sub-page permission inhiterance changes.', $link, $c->getCollectionName()));
+            $d->setShortStatus(t('Sub-Page Inheritance Changes'));
         } else {
-            $d->setInContextDescription(t("Sub-pages pending change to inherit permissions from parent."));
+            $d->setEmailDescription(t('Deleted page.'));
+            $d->setInContextDescription(t('Deleted page.'));
+            $d->setDescription(t('Deleted page.'));
+            $d->setShortStatus(t('Deleted page.'));
         }
-        $d->setDescription(t("<a href=\"%s\">%s</a> has pending sub-page permission inhiterance changes.", $link, $c->getCollectionName()));
-        $d->setShortStatus(t("Sub-Page Inheritance Changes"));
 
         return $d;
     }

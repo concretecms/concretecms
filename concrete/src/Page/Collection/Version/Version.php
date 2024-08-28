@@ -8,7 +8,10 @@ use Concrete\Core\Entity\Attribute\Value\PageValue;
 use Concrete\Core\Foundation\ConcreteObject;
 use Block;
 use Concrete\Core\Localization\Service\Date;
+use Concrete\Core\Page\Collection\Collection;
 use Concrete\Core\Page\Page;
+use Concrete\Core\Utility\Service\Validation\Numbers;
+use Concrete\Core\Workflow\Command\DeletePageVersionRequestsCommand;
 use Doctrine\DBAL\Query\QueryBuilder;
 use PageType;
 use Permissions;
@@ -236,74 +239,81 @@ class Version extends ConcreteObject implements PermissionObjectInterface, Attri
      * Get a Version instance given the Collection and a version identifier.
      *
      * @param \Concrete\Core\Page\Collection\Collection $c the collection for which you want the version
-     * @param int|string $cvID the specific version ID (or 'ACTIVE', 'SCHEDULED', 'RECENT')
+     * @param int|string $cvID the specific version ID (or 'ACTIVE', 'SCHEDULED', 'RECENT', 'RECENT_UNAPPROVED')
      *
      * @return static
      */
     public static function get($c, $cvID)
     {
-        $app = Facade::getFacadeApplication();
-
-        /** @var RequestCache $cache */
-        $cache = $app->make('cache/request');
-        $key = '/Page/Collection/' . $c->getCollectionID() . '/Version/' . $cvID;
-        if ($cache->isEnabled()) {
-            $item = $cache->getItem($key);
-            if ($item->isHit()) {
-                return $item->get();
-            }
-        }
-
-        $db = $app->make('database')->connection();
-        $now = $app->make('date')->getOverridableNow();
-
-        $cID = false;
-        if ($c instanceof \Concrete\Core\Page\Page) {
-            $cID = $c->getCollectionPointerID();
-        }
-        if (!$cID) {
-            $cID = $c->getCollectionID();
-        }
-        $v = array($cID);
-
-        $q = "select * from CollectionVersions where cID = ?";
-
-        switch ($cvID) {
-            case 'ACTIVE':
-                $q .= ' and cvIsApproved = 1 and (cvPublishDate is null or cvPublishDate <= ?) and (cvPublishEndDate is null or cvPublishEndDate >= ?) order by cvPublishDate desc limit 1';
-                $v[] = $now;
-                $v[] = $now;
-                break;
-            case 'SCHEDULED':
-                $q .= ' and cvIsApproved = 1 and (cvPublishDate is not null and cvPublishDate > ?) order by cvPublishDate limit 1';
-                $v[] = $now;
-                break;
-            case 'RECENT':
-                $q .= ' order by cvID desc limit 1';
-                break;
-            case 'RECENT_UNAPPROVED':
-                $q .= 'and (cvIsApproved = 0 or cvIsApproved IS NULL) order by cvID desc limit 1';
-                break;
-            default:
-                $v[] = $cvID;
-                $q .= ' and cvID = ?';
-                break;
-        }
-
-        $row = $db->fetchAssoc($q, $v);
         $cv = new static();
 
-        if ($row !== false) {
-            $cv->setPropertiesFromArray($row);
+        $app = Facade::getFacadeApplication();
+        /** @var Numbers $numbers */
+        $numbers = $app->make(Numbers::class);
+
+        if ($c instanceof Collection && !$c->isError() && ($numbers->integer($cvID) || in_array($cvID, ['ACTIVE', 'SCHEDULED', 'RECENT', 'RECENT_UNAPPROVED']))) {
+            /** @var RequestCache $cache */
+            $cache = $app->make('cache/request');
+            $key = '/Page/Collection/' . $c->getCollectionID() . '/Version/' . $cvID;
+            if ($cache->isEnabled()) {
+                $item = $cache->getItem($key);
+                if ($item->isHit()) {
+                    return $item->get();
+                }
+            }
+
+            $db = $app->make('database')->connection();
+            $now = $app->make('date')->getOverridableNow();
+
+            $cID = false;
+            if ($c instanceof \Concrete\Core\Page\Page) {
+                $cID = $c->getCollectionPointerID();
+            }
+            if (!$cID) {
+                $cID = $c->getCollectionID();
+            }
+            $v = [$cID];
+
+            $q = 'select * from CollectionVersions where cID = ?';
+
+            switch ($cvID) {
+                case 'ACTIVE':
+                    $q .= ' and cvIsApproved = 1 and (cvPublishDate is null or cvPublishDate <= ?) and (cvPublishEndDate is null or cvPublishEndDate >= ?) order by cvPublishDate desc limit 1';
+                    $v[] = $now;
+                    $v[] = $now;
+                    break;
+                case 'SCHEDULED':
+                    $q .= ' and cvIsApproved = 1 and (cvPublishDate is not null and cvPublishDate > ?) order by cvPublishDate limit 1';
+                    $v[] = $now;
+                    break;
+                case 'RECENT':
+                    $q .= ' order by cvID desc limit 1';
+                    break;
+                case 'RECENT_UNAPPROVED':
+                    $q .= 'and (cvIsApproved = 0 or cvIsApproved IS NULL) order by cvID desc limit 1';
+                    break;
+                default:
+                    $v[] = $cvID;
+                    $q .= ' and cvID = ?';
+                    break;
+            }
+
+            $row = $db->fetchAssoc($q, $v);
+
+            if ($row !== false) {
+                $cv->setPropertiesFromArray($row);
+            } else {
+                $cv->loadError(VERSION_NOT_FOUND);
+            }
+
+            $cv->cID = $c->getCollectionID();
+
+            if (isset($item) && $item->isMiss()) {
+                $item->set($cv);
+                $cache->save($item);
+            }
         } else {
             $cv->loadError(VERSION_NOT_FOUND);
-        }
-
-        $cv->cID = $c->getCollectionID();
-
-        if (isset($item) && $item->isMiss()) {
-            $item->set($cv);
-            $cache->save($item);
         }
 
         return $cv;
@@ -996,6 +1006,10 @@ class Version extends ConcreteObject implements PermissionObjectInterface, Attri
         $q = "delete from CollectionVersions where cID = '{$cID}' and cvID='{$cvID}'";
         $db->executeQuery($q);
         $this->refreshCache();
+
+        // Delete uncompleted workflow requests for this version
+        $deletePageVersionRequestsCommand = new DeletePageVersionRequestsCommand($cID, $cvID);
+        $app->executeCommand($deletePageVersionRequestsCommand);
 
         $ev = new Event($c);
         $ev->setUser($u);

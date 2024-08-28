@@ -1,14 +1,13 @@
 <?php
+
 namespace Concrete\Core\Workflow\Request;
 
-use Config;
-use Loader;
-use Page;
-use Stack;
+use Concrete\Core\Page\Page;
+use Concrete\Core\Page\Stack\Stack;
+use Concrete\Core\Permission\Key\Key as PermissionKey;
+use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\Workflow\Description as WorkflowDescription;
-use PermissionKey;
 use Concrete\Core\Workflow\Progress\Progress as WorkflowProgress;
-use URL;
 use Concrete\Core\Workflow\Progress\Response as WorkflowProgressResponse;
 
 class DeletePageRequest extends PageRequest
@@ -25,15 +24,22 @@ class DeletePageRequest extends PageRequest
     {
         $d = new WorkflowDescription();
         $c = Page::getByID($this->cID, 'ACTIVE');
-        $item = t('page');
-        if ($c->getPageTypeHandle() == STACKS_PAGE_TYPE) {
-            $item = t('stack');
+        if ($c && !$c->isError()) {
+            $item = t('page');
+            if ($c->getPageTypeHandle() == STACKS_PAGE_TYPE) {
+                $item = t('stack');
+            }
+            $link = $c->getCollectionLink();
+            $d->setEmailDescription(t('"%s" has been marked for deletion. View the page here: %s.', $c->getCollectionName(), $link));
+            $d->setInContextDescription(t('This %s has been marked for deletion. ', $item));
+            $d->setDescription(t('<a href="%s">%s</a> has been marked for deletion. ', $link, $c->getCollectionName()));
+            $d->setShortStatus(t('Pending Delete'));
+        } else {
+            $d->setEmailDescription(t('Deleted page.'));
+            $d->setInContextDescription(t('Deleted page.'));
+            $d->setDescription(t('Deleted page.'));
+            $d->setShortStatus(t('Deleted page.'));
         }
-        $link = Loader::helper('navigation')->getLinkToCollection($c, true);
-        $d->setEmailDescription(t("\"%s\" has been marked for deletion. View the page here: %s.", $c->getCollectionName(), $link));
-        $d->setInContextDescription(t("This %s has been marked for deletion. ", $item));
-        $d->setDescription(t("<a href=\"%s\">%s</a> has been marked for deletion. ", $link, $c->getCollectionName()));
-        $d->setShortStatus(t("Pending Delete"));
 
         return $d;
     }
@@ -65,13 +71,14 @@ class DeletePageRequest extends PageRequest
             $c = Stack::getByID($this->getRequestedPageID());
             $c->delete();
             $wpr = new WorkflowProgressResponse();
-            $wpr->setWorkflowProgressResponseURL(URL::to(STACKS_LISTING_PAGE_PATH, 'stack_deleted'));
+            $wpr->setWorkflowProgressResponseURL(\URL::to(STACKS_LISTING_PAGE_PATH, 'stack_deleted'));
 
             return $wpr;
         }
 
         $cParentID = $c->getCollectionParentID();
-        if (Config::get('concrete.misc.enable_trash_can')) {
+        $app = Application::getFacadeApplication();
+        if ($app['config']->get('concrete.misc.enable_trash_can')) {
             $c->moveToTrash();
         } else {
             $c->delete();
