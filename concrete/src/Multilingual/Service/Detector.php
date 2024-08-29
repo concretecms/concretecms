@@ -178,7 +178,7 @@ class Detector implements ApplicationAwareInterface, SiteAggregateInterface
         }
 
         $relatedPage = null;
-        if ($currentPage->isGeneratedCollection()) {
+        if ($currentPage->isGeneratedCollection() && $currentPage->getSiteTreeID() == 0) {
             // If the current page is a single page, there is no translated page.
             $relatedPage = $currentPage;
         } else {
