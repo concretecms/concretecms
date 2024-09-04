@@ -2,6 +2,7 @@
 namespace Concrete\Controller\Panel\Page;
 
 use Concrete\Controller\Backend\UserInterface\Page as BackendInterfacePageController;
+use Concrete\Core\Error\ErrorList\ErrorList;
 use Concrete\Core\Form\Service\Widget\DateTime;
 use Concrete\Core\Support\Facade\Config;
 use Concrete\Core\User\User;
@@ -43,6 +44,7 @@ class CheckIn extends BackendInterfacePageController
         $c = $this->page;
         // verify this page type has all the items necessary to be approved.
         $e = Loader::helper('validation/error');
+
         if ($c->isPageDraft()) {
             if (!$c->getPageDraftTargetParentPageID()) {
                 $e->add(t('You haven\'t chosen where to publish this page.'));
@@ -76,6 +78,18 @@ class CheckIn extends BackendInterfacePageController
         return $e;
     }
 
+    protected function checkForScheduling(ErrorList $e)
+    {
+        $requestData = $this->request->request->all();
+        if ($requestData['action'] == 'schedule') {
+            if (isset($requestData['cvPublishDate_activate']) && $requestData['cvPublishDate_activate'] == 'on') {
+                if ($requestData['cvPublishDate_dt'] == '') {
+                    $e->add(t('Please specify a publish date.'));
+                }
+            }
+        }
+    }
+
     public function submit()
     {
         if ($this->validateAction()) {
@@ -95,6 +109,7 @@ class CheckIn extends BackendInterfacePageController
                 && $this->permissions->canApprovePageVersions()
             ) {
                 $e = $this->checkForPublishing();
+                $this->checkForScheduling($e);
                 $pr->setError($e);
                 if (!$e->has()) {
                     $pkr = new ApprovePagePageWorkflowRequest();
