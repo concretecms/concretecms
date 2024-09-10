@@ -983,6 +983,14 @@
                 </attributekey>
             </attributes>
         </page>
+        <page name="File Chooser Options" path="/dashboard/system/files/file_chooser"
+              filename="/dashboard/system/files/file_chooser.php" pagetype="" description="" package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>file, chooser</value>
+                </attributekey>
+            </attributes>
+        </page>
         <page name="File Manager Permissions" path="/dashboard/system/files/permissions"
               filename="/dashboard/system/files/permissions.php" pagetype="" description="" package="">
             <attributes>
