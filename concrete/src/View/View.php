@@ -297,7 +297,7 @@ class View extends AbstractView
         }
 
         // Render the template around it
-        if (file_exists($this->template)) {
+        if ($this->template != '' && file_exists($this->template)) {
             $contents = $this->renderTemplate($scopeItems, $contents);
         }
 
