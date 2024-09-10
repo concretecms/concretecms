@@ -77,13 +77,13 @@ class Controller extends BlockController
         $nextCollection = $this->getNextCollection();
         if (is_object($nextCollection) && !$nextCollection->isError()) {
             $nextLinkURL = $nextCollection->getCollectionLink();
-            $nextLinkText = $nextCollection->getCollectionName();
+            $nextLinkText = h($nextCollection->getCollectionName());
         }
 
         $this->set('nextCollection', $nextCollection);
         $this->set('nextLinkURL', $nextLinkURL);
         $this->set('nextLinkText', $nextLinkText);
-        $this->set('nextLabel', $this->nextLabel);
+        $this->set('nextLabel', h($this->nextLabel));
 
         // Previous
         $previousLinkURL = '';
@@ -92,13 +92,13 @@ class Controller extends BlockController
 
         if (is_object($previousCollection) && !$previousCollection->isError()) {
             $previousLinkURL = $previousCollection->getCollectionLink();
-            $previousLinkText = $previousCollection->getCollectionName();
+            $previousLinkText = h($previousCollection->getCollectionName());
         }
 
         $this->set('previousCollection', $previousCollection);
         $this->set('previousLinkURL', $previousLinkURL);
         $this->set('previousLinkText', $previousLinkText);
-        $this->set('previousLabel', $this->previousLabel);
+        $this->set('previousLabel', h($this->previousLabel));
 
         // Parent / Up
         $parentLinkURL = '';
@@ -109,7 +109,7 @@ class Controller extends BlockController
 
         $this->set('parentCollection', $parentCollection);
         $this->set('parentLinkURL', $parentLinkURL);
-        $this->set('parentLabel', $this->parentLabel);
+        $this->set('parentLabel', h($this->parentLabel));
     }
 
     public function add()
