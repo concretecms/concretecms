@@ -3,7 +3,7 @@
 const download = require('download');
 
 module.exports = function(grunt, config, parameters, done) {
-	var zipUrl = parameters.releaseSourceZip || 'https://github.com/concretecms/concretecms/archive/refs/tags/8.5.18.zip';
+	var zipUrl = parameters.releaseSourceZip || 'https://github.com/concretecms/concretecms/archive/refs/tags/8.5.19.zip';
 	var workFolder = parameters.releaseWorkFolder || './release';
 	function endForError(e) {
 		process.stderr.write(e.message || e);
