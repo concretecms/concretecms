@@ -970,18 +970,17 @@ class Version implements ObjectInterface
 
     /**
      * Get an URL that points to the file on disk (if not available, you'll get the result of the getDownloadURL method).
-     * Return NULL if the file storage location is invalid.
      * If the file is not directly accessible, you'll get the download URL.
      *
-     * @return string|null
+     * @return string
      */
     public function getURL()
     {
-        $url = null;
         $app = Application::getFacadeApplication();
         $cf = $app->make('helper/concrete/file');
         $configuration = $this->getFileStorageLocationConfiguration();
-        if ($this->hasPublicURL() && $configuration !== null) {
+        $url = null;
+        if ($configuration !== null && $this->hasPublicURL()) {
             $url = $configuration->getPublicURLToFile($cf->prefix($this->fvPrefix, $this->fvFilename));
         }
         if (!$url) {
@@ -1025,7 +1024,7 @@ class Version implements ObjectInterface
      * Get an URL that can be used to download the file.
      * This passes through the download_file single page.
      *
-     * @return \League\URL\URLInterface
+     * @return \League\Url\UrlInterface
      */
     public function getDownloadURL()
     {
@@ -1044,7 +1043,7 @@ class Version implements ObjectInterface
     /**
      * Get an URL that can be used to download the file (it will force the download of all file types, even if the browser can display them).
      *
-     * @return \League\URL\URLInterface
+     * @return \League\Url\UrlInterface
      */
     public function getForceDownloadURL()
     {
