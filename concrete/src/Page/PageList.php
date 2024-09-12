@@ -693,6 +693,12 @@ class PageList extends DatabaseItemList implements PagerProviderInterface, Pagin
         $this->query->setParameter('containerID', $containerID);
     }
 
+    public function filterByCacheSettings($value)
+    {
+        $this->query->andWhere('p.cCacheFullPageContent = :cacheSettings');
+        $this->query->setParameter('cacheSettings', $value);
+    }
+
 
     /**
      * Sorts this list by display order.

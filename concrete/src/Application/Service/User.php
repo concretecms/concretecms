@@ -41,7 +41,7 @@ class User
      *
      * @return bool
      *
-     * @deprecated Use `\Core::make('validator/password')->isValid($password, $error);`
+     * @deprecated Use `app('validator/password')->isValid($password, $error);`
      */
     public function validNewPassword($password, $errorObj = null)
     {

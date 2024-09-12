@@ -4,6 +4,7 @@ if (is_object($tree)) {
     if (!is_array($selectedNode)) {
         $selectedNode = [$selectedNode];
     }
+    $selectedNode = array_map('intval', $selectedNode);
     $selectNodesByKey = json_encode($selectedNode);
     ?>
 

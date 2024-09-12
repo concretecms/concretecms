@@ -26,7 +26,7 @@ class Ajax
      * @param mixed $result
      *
      * @deprecated You should switch to something like:
-     * return \Core::make(\Concrete\Core\Http\ResponseFactoryInterface::class)->json(...)
+     * return app(\Concrete\Core\Http\ResponseFactoryInterface::class)->json(...)
      */
     public function sendResult($result)
     {
@@ -49,7 +49,7 @@ class Ajax
      * @param mixed $error
      *
      * @deprecated You should switch to something like:
-     * return \Core::make(\Concrete\Core\Http\ResponseFactoryInterface::class)->json(...)
+     * return app(\Concrete\Core\Http\ResponseFactoryInterface::class)->json(...)
      */
     public function sendError($error)
     {
