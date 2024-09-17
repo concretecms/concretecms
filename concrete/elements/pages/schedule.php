@@ -88,5 +88,7 @@ $(document).ready(function() {
             $('#version-scheduling .text-active, #version-scheduling .info-active').addClass('d-none');
         }
     });
+
+    $('#cvPublishDate_dt_pub').attr('required', '');
 });
 </script>
