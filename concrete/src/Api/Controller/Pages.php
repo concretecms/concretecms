@@ -158,9 +158,9 @@ class Pages extends ApiController
         $list->getQueryObject()->andWhere('cPointerExternalLink is null');
 
         $list->setPermissionsChecker(
-            function ($file) {
-                $fp = new Checker($file);
-                return $fp->canViewPageInSitemap();
+            function ($page) {
+                $permissions = new Checker($page);
+                return $permissions->canViewPageInSitemap();
             }
         );
 
@@ -225,8 +225,8 @@ class Pages extends ApiController
 
         $list->setPermissionsChecker(
             function ($page) {
-                $fp = new Checker($page);
-                return $fp->canViewPageInSitemap();
+                $permissions = new Checker($page);
+                return $permissions->canViewPageInSitemap();
             }
         );
 
