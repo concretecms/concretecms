@@ -1,1 +1,1 @@
-﻿CKEDITOR.plugins.setLang("save","sr",{toolbar:"Сачувај"});
+CKEDITOR.plugins.setLang("save","sr",{toolbar:"Сачувај"});

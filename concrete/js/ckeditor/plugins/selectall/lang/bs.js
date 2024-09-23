@@ -1,1 +1,1 @@
-﻿CKEDITOR.plugins.setLang("selectall","bs",{toolbar:"Selektuj sve"});
+CKEDITOR.plugins.setLang("selectall","bs",{toolbar:"Selektuj sve"});

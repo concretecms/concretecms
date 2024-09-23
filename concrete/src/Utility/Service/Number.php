@@ -160,6 +160,7 @@ class Number
         if ($forceUnit === 'GB' || (abs($size) < 1024 && (!strlen($forceUnit)))) {
             return t(/*i18n %s is a number, GB means Gigabyte */'%s GB', $this->format($size, 2));
         }
+        $size /= 1024;
 
         return t(/*i18n %s is a number, TB means Terabyte */'%s TB', $this->format($size, 2));
     }

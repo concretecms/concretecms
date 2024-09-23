@@ -48,20 +48,14 @@ EOT
                 throw new Exception("Operation aborted.");
             }
         }
+        $cn = Database::get();
+        $cn->executeQuery('set foreign_key_checks = 0');
         if (Database::getDefaultConnection()) {
             $output->write("Listing tables... ");
-            $cn = Database::get();
             /* @var $cn \Concrete\Core\Database\Connection\Connection */
             $sm = $cn->getSchemaManager();
             $tables = $sm->listTables();
             $output->writeln('<info>done.</info>');
-            foreach ($tables as $table) {
-                foreach ($table->getForeignKeys() as $foreignKey) {
-                    $output->write("Dropping foreign key {$table->getName()}.{$foreignKey->getName()}... ");
-                    $sm->dropForeignKey($foreignKey, $table);
-                    $output->writeln('<info>done.</info>');
-                }
-            }
             foreach ($tables as $table) {
                 $output->write("Dropping table {$table->getName()}... ");
                 $sm->dropTable($table);

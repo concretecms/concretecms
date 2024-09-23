@@ -1,1 +1,1 @@
-﻿CKEDITOR.plugins.setLang("save","ka",{toolbar:"ჩაწერა"});
+CKEDITOR.plugins.setLang("save","ka",{toolbar:"ჩაწერა"});

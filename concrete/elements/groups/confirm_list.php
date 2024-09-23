@@ -1,28 +1,32 @@
 <?php
-defined('C5_EXECUTE') or die("Access Denied.");
 
-use Concrete\Core\User\Group\Group;
+defined('C5_EXECUTE') or die('Access Denied.');
 
-/** @var Group[] $groups */
+/**
+ * @var Concrete\Core\User\Group\Group[] $groups
+ */
 
 // used when confirming bulk group operations.. would you like to do xyz to the following groups??
-if (is_array($groups)) { ?>
+
+if (is_array($groups ?? null) && $groups !== []) {
+    ?>
     <table class="table table-striped">
         <thead>
-        <tr>
-            <th>
-                <?php echo t('Group Name') ?>
-            </th>
-        </tr>
+            <tr>
+                <th><?= t('Group Name') ?></th>
+            </tr>
         </thead>
         <tbody>
-        <?php foreach ($groups as $group) { ?>
-            <tr>
-                <td>
-                    <?php echo $group->getGroupName(); ?>
-                </td>
-            </tr>
-        <?php } ?>
+            <?php
+            foreach ($groups as $group) {
+                ?>
+                <tr>
+                    <td><?= $group->getGroupDisplayName(true, false) ?></td>
+                </tr>
+                <?php
+            }
+            ?>
         </tbody>
     </table>
-<?php } ?>
+    <?php
+}

@@ -155,6 +155,11 @@ class Controller extends BlockController implements UsesFeatureInterface
 
     public function save($args)
     {
+        $args += [
+            'cloudCount' => 0,
+            'targetCID' => 0
+        ];
+
         $ak = $this->loadAttribute();
         $cID = $this->request->request->get('cID');
         if (!$cID) {

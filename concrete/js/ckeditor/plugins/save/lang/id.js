@@ -1,1 +1,1 @@
-﻿CKEDITOR.plugins.setLang("save","id",{toolbar:"Simpan"});
+CKEDITOR.plugins.setLang("save","id",{toolbar:"Simpan"});

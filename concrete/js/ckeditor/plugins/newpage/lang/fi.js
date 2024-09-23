@@ -1,1 +1,1 @@
-﻿CKEDITOR.plugins.setLang("newpage","fi",{toolbar:"Tyhjennä"});
+CKEDITOR.plugins.setLang("newpage","fi",{toolbar:"Tyhjennä"});

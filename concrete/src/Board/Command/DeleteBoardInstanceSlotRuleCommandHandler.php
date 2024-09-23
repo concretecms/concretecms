@@ -2,8 +2,6 @@
 
 namespace Concrete\Core\Board\Command;
 
-use Concrete\Core\Entity\Board\Board;
-use Concrete\Core\Entity\Board\Instance;
 use Concrete\Core\Logging\Channels;
 use Concrete\Core\Logging\LoggerFactory;
 use Doctrine\ORM\EntityManager;

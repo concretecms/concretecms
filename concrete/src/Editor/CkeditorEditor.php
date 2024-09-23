@@ -123,6 +123,7 @@ class CkeditorEditor implements EditorInterface
             'customConfig' => '',
             'disableNativeSpellChecker' => false,
             'allowedContent' => true,
+            'versionCheck' => false,
             'baseFloatZIndex' => 1990, /* Must come below modal variable in variables.less */
             'image2_captionedClass' => 'content-editor-image-captioned',
             'image2_alignClasses' => [

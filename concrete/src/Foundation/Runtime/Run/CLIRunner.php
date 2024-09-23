@@ -5,7 +5,13 @@ use Concrete\Core\Application\ApplicationAwareInterface;
 use Concrete\Core\Application\ApplicationAwareTrait;
 use Concrete\Core\Console\Application as ConsoleApplication;
 use Concrete\Core\Console\CommandRegistry;
+use Concrete\Core\Console\OutputStyle;
+use Concrete\Core\Install\Preconditions\MemoryLimit;
+use Concrete\Core\Utility\Service\Number;
 use Symfony\Component\Console\Input\ArgvInput;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Output\ConsoleOutput;
+use Symfony\Component\Console\Output\OutputInterface;
 
 class CLIRunner implements RunInterface, ApplicationAwareInterface
 {
@@ -24,6 +30,25 @@ class CLIRunner implements RunInterface, ApplicationAwareInterface
         $app = $this->app;
         $console = $this->console;
         include DIR_APPLICATION . '/bootstrap/app.php';
+    }
+
+    private function testAvailableMemory(InputInterface $input, OutputInterface $output)
+    {
+        $number = new Number();
+        $recommended = $number->getBytes(MemoryLimit::MINIMUM_RECOMMENDED_MEMORY);
+        $memoryLimit = ini_get('memory_limit');
+        if (empty($memoryLimit) || $memoryLimit == -1) {
+            $memoryLimit = null;
+        } else {
+            $memoryLimit = $number->getBytes($memoryLimit);
+        }
+        if ($memoryLimit !== null && $memoryLimit < $recommended) {
+            $style = new OutputStyle($input, $output);
+            $style->warning(t('Concrete runs best with at least %1$s of RAM. Your memory limit is currently %2$s. You may experience silent failures or unexpected premature exits when running console commands.',
+                $number->formatSize($recommended),
+                $number->formatSize($memoryLimit)
+            ));
+        }
     }
 
     private function initializeSystemTimezone()
@@ -73,7 +98,10 @@ class CLIRunner implements RunInterface, ApplicationAwareInterface
 
         \Events::dispatch('on_before_console_run');
 
-        $console->run($input);
+        $output = new ConsoleOutput();
+        $this->testAvailableMemory($input, $output);
+
+        $console->run($input, $output);
 
         \Events::dispatch('on_after_console_run');
     }

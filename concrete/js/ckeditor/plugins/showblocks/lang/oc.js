@@ -1,1 +1,1 @@
-﻿CKEDITOR.plugins.setLang("showblocks","oc",{toolbar:"Afichar los blòts"});
+CKEDITOR.plugins.setLang("showblocks","oc",{toolbar:"Afichar los blòts"});

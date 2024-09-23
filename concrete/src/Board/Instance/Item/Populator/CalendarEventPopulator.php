@@ -4,15 +4,12 @@ namespace Concrete\Core\Board\Instance\Item\Populator;
 use Concrete\Core\Board\Instance\Item\Data\CalendarEventData;
 use Concrete\Core\Board\Instance\Item\Data\DataInterface;
 use Concrete\Core\Calendar\Event\EventOccurrenceList;
-use Concrete\Core\Entity\Board\Board;
 use Concrete\Core\Entity\Board\DataSource\Configuration\CalendarEventConfiguration;
-use Concrete\Core\Entity\Board\DataSource\Configuration\Configuration;
 use Concrete\Core\Entity\Board\DataSource\ConfiguredDataSource;
 use Concrete\Core\Entity\Board\Instance;
 use Concrete\Core\Entity\Calendar\Calendar;
 use Concrete\Core\Entity\Calendar\CalendarEventVersionOccurrence;
 use Concrete\Core\Entity\File\File;
-use Concrete\Core\Page\Search\Field\Field\SiteField;
 use Doctrine\ORM\EntityManager;
 
 defined('C5_EXECUTE') or die("Access Denied.");

@@ -85,7 +85,7 @@ class Dashboard
             }
         }
 
-        return $path === '/dashboard' || strpos($path, '/dashboard/') === 0;
+        return $path === '/dashboard' || strpos((string) $path, '/dashboard/') === 0;
     }
 
     /**

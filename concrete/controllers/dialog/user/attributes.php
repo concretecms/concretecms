@@ -12,6 +12,7 @@ use Concrete\Core\Attribute\Command\ClearAttributesCommand;
 use Concrete\Core\Attribute\Command\SaveAttributesCommand;
 use Concrete\Core\Attribute\Key\Component\KeySelector\ControllerTrait;
 use Concrete\Core\Attribute\Key\Component\KeySelector\KeySerializer;
+use Concrete\Core\Attribute\ObjectInterface;
 use Concrete\Core\Error\ErrorList\ErrorList;
 use Concrete\Core\Error\UserMessageException;
 use Concrete\Core\Filesystem\ElementManager;
@@ -106,7 +107,7 @@ class Attributes extends BackendInterfaceController
         return $this->category;
     }
 
-    public function canEditAttributeKey(int $akID): bool
+    public function canEditAttributeKey(int $akID, ObjectInterface $object): bool
     {
         return in_array($akID, $this->allowedEditAttributes);
     }

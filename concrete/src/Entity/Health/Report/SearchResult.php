@@ -22,7 +22,7 @@ class SearchResult extends Result
 
     /**
      *
-     * @ORM\Column(type="string", length="1")
+     * @ORM\Column(type="string", length=1)
      */
     protected $searchType;
 

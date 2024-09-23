@@ -25,7 +25,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
         <?php
         foreach ($types as $index => $type) {
             ?>
-            <div class="tab-pane fade <?= $index == 0 ? 'active' : ''; ?> " id="<?= $type->getPageTypeComposerControlTypeHandle() ?>">
+            <div class="tab-pane fade <?= $index == 0 ? 'active show' : ''; ?> " id="<?= $type->getPageTypeComposerControlTypeHandle() ?>">
                 <input class="form-control ccm-input-text" type="text" name="attribute-search" placeholder="<?= t('Search attributes') ?>" />
                 <ul data-list="page-type-composer-control-type" class="item-select-list">
                     <?php
@@ -36,6 +36,11 @@ defined('C5_EXECUTE') or die('Access Denied.');
                             <a href="#" data-control-type-id="<?= $type->getPageTypeComposerControlTypeID() ?>" data-control-identifier="<?= $control->getPageTypeComposerControlIdentifier() ?>">
                                 <?= $control->getPageTypeComposerControlIcon() ?>
                                 <?= $control->getPageTypeComposerControlDisplayName() ?>
+                                <?php if ($type->getPageTypeComposerControlTypeHandle() === 'collection_attribute') { ?>
+                                    <span class="text-muted small">
+                                        (<?= $control->getAttributeKeyObject()->getAttributeKeyHandle() ?>)
+                                    </span>
+                                <?php } ?>
                             </a>
                         </li>
                         <?php

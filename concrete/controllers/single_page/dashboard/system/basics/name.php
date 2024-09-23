@@ -8,6 +8,10 @@ use Concrete\Core\Attribute\Form\Renderer;
 use Concrete\Core\Attribute\Key\Category as AttributeKeyCategory;
 use Concrete\Core\Attribute\Key\SiteKey;
 use Concrete\Core\Entity\Attribute\Category;
+use Concrete\Core\Marketplace\PackageRepositoryInterface;
+use Concrete\Core\Marketplace\Update\Command\UpdateRemoteDataCommand;
+use Concrete\Core\Marketplace\Update\UpdatedField;
+use Concrete\Core\Marketplace\Update\UpdatedFieldInterface;
 use Concrete\Core\Page\Controller\DashboardSitePageController;
 use Concrete\Core\Site\Service;
 
@@ -49,9 +53,18 @@ class Name extends DashboardSitePageController
     {
         if ($this->token->validate('update_sitename')) {
             if ($this->isPost()) {
-                $this->site->setSiteName($this->request->request->get('SITE'));
+                $name = $this->request->request->get('SITE');
+                $this->site->setSiteName($name);
                 $this->entityManager->persist($this->site);
                 $this->entityManager->flush();
+
+                if ($this->site->isDefault()) {
+                    $repository = $this->app->make(PackageRepositoryInterface::class);
+                    if ($repository->getConnection()) {
+                        $command = new UpdateRemoteDataCommand([new UpdatedField(UpdatedFieldInterface::FIELD_NAME, $name)]);
+                        $this->app->executeCommand($command);
+                    }
+                }
 
                 $attributes = SiteKey::getList();
                 foreach ($attributes as $ak) {

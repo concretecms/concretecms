@@ -101,6 +101,11 @@ class Controller extends BlockController implements UsesFeatureInterface
      */
     public function validate($args)
     {
+        $args += [
+            'thumbnailHeight' => null,
+            'thumbnailWidth' => null
+        ];
+
         $error = $this->app->make('helper/validation/error');
 
         if (!is_numeric($args['thumbnailHeight'])) {
@@ -169,7 +174,7 @@ class Controller extends BlockController implements UsesFeatureInterface
                             $content = (string) $image->getTag();
                         }
                     } elseif (is_object($content_alt)) {
-                        if (is_array($content) && $content[0] instanceof \Concrete\Core\Tree\Node\Type\Topic) {
+                        if (is_array($content) && isset($content[0]) && $content[0] instanceof \Concrete\Core\Tree\Node\Type\Topic) {
                             $content = str_replace(', ', "\n", $content_alt->getDisplayValue());
                         } elseif ($content instanceof SelectValue) {
                             $content = h((string) $content);

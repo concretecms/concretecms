@@ -4,7 +4,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
 
 ?>
 
-<link rel="stylesheet" type="text/css" href="<?=ASSETS_URL?>/api/swagger/swagger-ui.css" />
+<link rel="stylesheet" type="text/css" href="<?=ASSETS_URL?>/api/swagger/swagger-ui.css">
 
 <div id="swagger-ui"></div>
 <script src="<?=ASSETS_URL?>/api/swagger/swagger-ui-bundle.js" charset="UTF-8"> </script>

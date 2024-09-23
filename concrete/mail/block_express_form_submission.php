@@ -3,9 +3,13 @@
 defined('C5_EXECUTE') or die("Access Denied.");
 
 /**
- * @var $entity \Concrete\Core\Entity\Express\Entity
- * @var $associations \Concrete\Core\Entity\Express\Entry\Association[]
+ * @var Concrete\Core\Entity\Express\Entity $entity
+ * @var string $formName
+ * @var bool|int|string|null $dataSaveEnabled
+ * @var Concrete\Core\Entity\Attribute\Value\ExpressValue[] $attributes
+ * @var Concrete\Core\Entity\Express\Entry\Association[] $associations
  */
+
 if (!isset($associations)) {
     $associations = [];
 }

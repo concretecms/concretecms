@@ -3,7 +3,9 @@ namespace Concrete\Core\Page\Stack;
 
 use Concrete\Core\Area\Area;
 use Concrete\Core\Multilingual\Page\Section\Section;
+use Concrete\Core\Page\Collection\Collection;
 use Concrete\Core\Page\Stack\Folder\Folder;
+use Concrete\Core\Permission\Checker;
 use Concrete\Core\Site\Tree\TreeInterface;
 use Doctrine\DBAL\Connection;
 use GlobalArea;
@@ -44,6 +46,32 @@ class Stack extends Page
         }
     }
 
+    /**
+     * Given an original collection that we're currently rendering, return a stack corresponding to a global
+     * area on that collection. (Note: the original collection is required because we check its permissions to
+     * determine what version of the stack to load.)
+     *
+     * @param Collection $collection
+     * @param string $arHandle
+     * @return void
+     */
+    public static function getGlobalAreaStackFromName(Collection $collection, string $arHandle): ?Stack
+    {
+        $db = app(Connection::class);
+        $checker = new Checker($collection);
+        $stackID = $db->executeQuery('select cID from Stacks where stName = ? and stType = ?', [
+            $arHandle, self::ST_TYPE_GLOBAL_AREA
+        ])->fetchOne();
+        if ($stackID) {
+            if ($checker->canViewPageVersions()) {
+                $s = Stack::getByID($stackID, 'RECENT');
+            } else {
+                $s = Stack::getByID($stackID, 'ACTIVE');
+            }
+            return $s;
+        }
+        return null;
+    }
     /**
      * @param string $path
      * @param string $version

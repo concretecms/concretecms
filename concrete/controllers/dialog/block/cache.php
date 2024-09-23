@@ -44,6 +44,7 @@ class Cache extends BackendInterfaceBlockController
             $pr->setAdditionalDataAttribute('aID', $this->area->getAreaID());
             $pr->setAdditionalDataAttribute('arHandle', $this->area->getAreaHandle());
             $pr->setAdditionalDataAttribute('bID', $b->getBlockID());
+            $pr->setAdditionalDataAttribute('originalBlockID', $this->block->getBlockID());
             $pr->setMessage(t('Advanced block settings saved successfully.'));
             $pr->outputJSON();
         }

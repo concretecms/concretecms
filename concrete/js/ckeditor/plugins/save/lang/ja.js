@@ -1,1 +1,1 @@
-﻿CKEDITOR.plugins.setLang("save","ja",{toolbar:"保存"});
+CKEDITOR.plugins.setLang("save","ja",{toolbar:"保存"});

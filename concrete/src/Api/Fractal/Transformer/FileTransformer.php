@@ -23,6 +23,10 @@ class FileTransformer extends TransformerAbstract
     public function transform(FileEntity $file)
     {
         $version = $file->getApprovedVersion();
+        $folderID = null;
+        if ($fileFolder = $file->getFileFolderObject()) {
+            $folderID = $fileFolder->getTreeNodeID();
+        }
         $data['id'] = $file->hasFileUUID() ? $file->getFileUUID() : $file->getFileID();
         $data['title'] = $version->getTitle();
         $data['description'] = $version->getDescription();
@@ -31,6 +35,7 @@ class FileTransformer extends TransformerAbstract
         $data['file_type'] = $version->getType();
         $data['extension'] = $version->getExtension();
         $data['tracked_url'] = (string) $version->getDownloadURL();
+        $data['folder'] = $folderID;
         $data['date_added'] = Carbon::make($version->getDateAdded())->toAtomString();
         $data['size'] =
             [

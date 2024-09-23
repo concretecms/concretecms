@@ -1,5 +1,6 @@
 <?php
 use Concrete\Core\Support\Facade\Application;
+use Concrete\Core\Page\Page;
 use Concrete\Controller\Panel\Dashboard as DashboardPanel;
 
 defined('C5_EXECUTE') or die('Access Denied.');
@@ -14,6 +15,7 @@ $valt = $app->make('helper/validation/token');
 
 $config = $app->make('config');
 
+$sitemapHelper = $app->make('helper/concrete/dashboard/sitemap');
 if (!isset($hideDashboardPanel)) {
     $hideDashboardPanel = false;
 }
@@ -26,7 +28,7 @@ $frontendPageID = $u->getPreviousFrontendPageID();
 if (!$frontendPageID) {
     $backLink = DIR_REL . '/';
 } else {
-    $backLink = DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $frontendPageID;
+    $backLink = URL::to(Page::getByID($frontendPageID));
 }
 
 $show_titles = (bool) $config->get('concrete.accessibility.toolbar_titles');
@@ -36,7 +38,7 @@ $large_font = (bool) $config->get('concrete.accessibility.toolbar_large_font');
 ?><!DOCTYPE html>
 <html<?= $hideDashboardPanel ? '' : ' class="ccm-panel-open ccm-panel-right"'; ?> lang="<?php echo Localization::activeLanguage() ?>">
 <head>
-    <link rel="stylesheet" type="text/css" href="<?=$this->getThemePath(); ?>/main.css" />
+    <link rel="stylesheet" type="text/css" href="<?=$this->getThemePath(); ?>/main.css">
     <?php View::element('header_required', ['disableTrackingCode' => true, 'pageTitle' => isset($pageTitle) ? $pageTitle : null]); ?>
 </head>
 <body <?php if (isset($bodyClass)) {
@@ -91,15 +93,18 @@ $large_font = (bool) $config->get('concrete.accessibility.toolbar_large_font');
                         <span class="ccm-toolbar-accessibility-title ccm-toolbar-accessibility-title-site-settings"><?= tc('toolbar', 'Dashboard'); ?></span>
                     </a>
                 </li>
-                <li class="float-end d-none d-sm-none d-md-block">
-                    <a <?php if ($show_tooltips) {
-                        ?>class="launch-tooltip"<?php
-                    } ?>  data-bs-toggle="tooltip" data-bs-placement="bottom" href="#" data-panel-url="<?= URL::to('/ccm/system/panels/sitemap'); ?>" title="<?= t('Add Pages and Navigate Your Site'); ?>" data-launch-panel="sitemap">
-                        <svg><use xlink:href="#icon-sitemap" /></svg>
-                        <span class="ccm-toolbar-accessibility-title ccm-toolbar-accessibility-title-add-page"><?= tc('toolbar', 'Pages'); ?></span>
-                    </a>
-                </li>
                 <?php
+                if ($sitemapHelper->canViewSitemapPanel()) { ?>
+                    <li class="float-end d-none d-sm-none d-md-block">
+                        <a <?php if ($show_tooltips) {
+                            ?>class="launch-tooltip"<?php
+                        } ?>  data-bs-toggle="tooltip" data-bs-placement="bottom" href="#" data-panel-url="<?= URL::to('/ccm/system/panels/sitemap'); ?>" title="<?= t('Add Pages and Navigate Your Site'); ?>" data-launch-panel="sitemap">
+                            <svg><use xlink:href="#icon-sitemap" /></svg>
+                            <span class="ccm-toolbar-accessibility-title ccm-toolbar-accessibility-title-add-page"><?= tc('toolbar', 'Pages'); ?></span>
+                        </a>
+                    </li>
+                <?php
+                }
                 $items = $ihm->getPageHeaderMenuItems('right');
                 foreach ($items as $ih) {
                     $cnt = $ih->getController();

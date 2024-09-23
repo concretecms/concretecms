@@ -988,6 +988,11 @@ class Version extends ConcreteObject implements PermissionObjectInterface, Attri
             $cvID,
         ));
 
+        $db->executeQuery('delete from CollectionVersionBlocks where cID = ? and cvID = ?', array(
+            $cID,
+            $cvID,
+        ));
+
         $q = "delete from CollectionVersions where cID = '{$cID}' and cvID='{$cvID}'";
         $db->executeQuery($q);
         $this->refreshCache();

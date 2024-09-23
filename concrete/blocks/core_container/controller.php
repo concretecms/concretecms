@@ -6,6 +6,7 @@ use Concrete\Core\Area\ContainerArea;
 use Concrete\Core\Block\Block;
 use Concrete\Core\Block\BlockController;
 use Concrete\Core\Block\BlockType\BlockType;
+use Concrete\Core\Block\Traits\HasSubBlocksTrait;
 use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Entity\Page\Container;
 use Concrete\Core\Feature\UsesFeatureInterface;
@@ -18,6 +19,8 @@ use Illuminate\Contracts\Container\BindingResolutionException;
 
 class Controller extends BlockController implements UsesFeatureInterface
 {
+    use HasSubBlocksTrait;
+
     /**
      * @var int|null
      */
@@ -37,16 +40,6 @@ class Controller extends BlockController implements UsesFeatureInterface
      * @var bool
      */
     protected $btIgnorePageThemeGridFrameworkContainer = true;
-
-    /**
-     * @var bool
-     */
-    protected $btCacheSettingsInitialized = false;
-
-    /**
-     * @var string[]
-     */
-    protected $requiredFeatures = [];
 
     /**
      * {@inheritdoc}
@@ -321,15 +314,9 @@ class Controller extends BlockController implements UsesFeatureInterface
     protected function setupCacheSettings(): void
     {
         $page = $this->getCollectionObject();
-        if ($this->btCacheSettingsInitialized || $page->isEditMode()) {
+        if ($this->isCacheSettingsInitialized() || $page->isEditMode()) {
             return;
         }
-
-        $this->btCacheSettingsInitialized = true;
-
-        $btCacheBlockOutput = true;
-        $btCacheBlockOutputOnPost = true;
-        $btCacheBlockOutputLifetime = 0;
 
         $blocks = [];
 
@@ -350,55 +337,6 @@ class Controller extends BlockController implements UsesFeatureInterface
             }
         }
 
-        $arrAssetBlocks = [];
-
-        /** @var Block $b */
-        foreach ($blocks as $b) {
-            if ($b->overrideAreaPermissions()) {
-                $btCacheBlockOutput = false;
-                $btCacheBlockOutputOnPost = false;
-                $btCacheBlockOutputLifetime = 0;
-                break;
-            }
-
-            $btCacheBlockOutputOnPost = $btCacheBlockOutputOnPost && $b->cacheBlockOutputOnPost();
-
-            //As soon as we find something which cannot be cached, entire block cannot be cached, so stop checking.
-            if (!$b->cacheBlockOutput()) {
-                $this->btCacheBlockOutput = false;
-                $this->btCacheBlockOutputOnPost = false;
-                $this->btCacheBlockOutputLifetime = 0;
-
-                return;
-            }
-            $expires = $b->getBlockOutputCacheLifetime();
-            if ($expires && $btCacheBlockOutputLifetime < $expires) {
-                $btCacheBlockOutputLifetime = $expires;
-            }
-
-            $objController = $b->getController();
-            if (is_callable([$objController, 'registerViewAssets'])) {
-                $arrAssetBlocks[] = $objController;
-            }
-        }
-
-        $this->btCacheBlockOutput = $btCacheBlockOutput;
-        $this->btCacheBlockOutputOnPost = $btCacheBlockOutputOnPost;
-        $this->btCacheBlockOutputLifetime = $btCacheBlockOutputLifetime;
-
-        foreach ($arrAssetBlocks as $objController) {
-            if ($objController instanceof BlockController) {
-                $objController->on_start();
-                $objController->outputAutoHeaderItems();
-                $objController->registerViewAssets();
-                if ($objController instanceof UsesFeatureInterface) {
-                    foreach ($objController->getRequiredFeatures() as $feature) {
-                        if (!in_array($feature, $this->requiredFeatures, true)) {
-                            $this->requiredFeatures[] = $feature;
-                        }
-                    }
-                }
-            }
-        }
+        $this->initializeSubBlockCacheSettings($page, $blocks);
     }
 }

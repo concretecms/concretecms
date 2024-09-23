@@ -3,16 +3,13 @@
 use Concrete\Core\Attribute\Key\Category as AttributeCategory;
 use Concrete\Core\Form\Service\Form;
 
+$packageRepository = $packageRepository ?? null;
+$connection = $connection ?? null;
+
 $app = Concrete\Core\Support\Facade\Application::getFacadeApplication();
 $ci = $app->make('helper/concrete/urls');
 $ch = $app->make('helper/concrete/ui');
 $tp = new TaskPermission();
-if ($tp->canInstallPackages()) {
-    $mi = Marketplace::getInstance();
-}
-if (!isset($mi) || !is_object($mi)) {
-    $mi = null;
-}
 $pkgArray = Package::getInstalledList();
 
 $ci = $app->make('helper/concrete/urls');
@@ -127,6 +124,7 @@ if ($this->controller->getTask() == 'install_package' && isset($showInstallOptio
     $local = [];
     $remote = [];
     $pkgAvailableArray = [];
+
     if ($tp->canInstallPackages()) {
         $local = Package::getLocalUpgradeablePackages();
         $remote = Package::getRemotelyUpgradeablePackages();
@@ -165,25 +163,40 @@ if ($this->controller->getTask() == 'install_package' && isset($showInstallOptio
         $availableArray[] = $p['pkg'];
     }
     // Load featured add-ons from the marketplace.
-    if ($mi !== null && $mi->isConnected() && Config::get('concrete.marketplace.enabled') && $tp->canInstallPackages()) {
-        $purchasedBlocksSource = Marketplace::getAvailableMarketplaceItems();
-    } else {
-        $purchasedBlocksSource = [];
+    $purchasedBlocksSource = [];
+    if (
+        $packageRepository instanceof \Concrete\Core\Marketplace\PackageRepositoryInterface &&
+        $connection instanceof \Concrete\Core\Marketplace\Connection &&
+        Config::get('concrete.marketplace.enabled') &&
+        $tp->canInstallPackages()
+    ) {
+        $purchasedBlocksSource = $packageRepository->getPackages($connection, true);
     }
+
     $skipHandles = [];
+    $handles = [];
+    foreach ($purchasedBlocksSource as $remotePackage) {
+        $handles[] = $remotePackage->handle;
+    }
+
     foreach ($availableArray as $ava) {
-        foreach ($purchasedBlocksSource as $pi) {
-            if ($pi->getHandle() == $ava->getPackageHandle()) {
-                $skipHandles[] = $ava->getPackageHandle();
-            }
+        if (in_array($ava->getPackageHandle(), $handles)) {
+            $skipHandles[] = $ava->getPackageHandle();
         }
     }
+
+    $currentlyInstalledHandles = Package::getInstalledHandles();
+    foreach ($currentlyInstalledHandles as $packageHandle) {
+        $skipHandles[] = $packageHandle;
+    }
+
     $purchasedBlocks = [];
     foreach ($purchasedBlocksSource as $pb) {
-        if (!in_array($pb->getHandle(), $skipHandles)) {
-            $purchasedBlocks[] = $pb;
+        if (!in_array($pb->handle, $skipHandles)) {
+            $purchasedBlocks[$pb->handle] = $pb;
         }
     }
+
     if (isset($pkg) && is_object($pkg)) {
         ?>
         <table class="table table-bordered table-striped">
@@ -287,27 +300,25 @@ if ($this->controller->getTask() == 'install_package' && isset($showInstallOptio
             <hr/>
             <h3><?= t('Awaiting Installation'); ?></h3>
             <?php
-            if (count($availableArray) == 0 && count($purchasedBlocks) == 0) {
-                if ($mi === null || !$mi->isConnected()) {
+            if (count($availableArray) === 0 && count($purchasedBlocks) === 0) {
+                if (!$connection) {
                     ?><p><?= t('Nothing currently available to install.'); ?></p><?php
                 }
             } else {
                 foreach ($purchasedBlocks as $pb) {
-                    $file = $pb->getRemoteFileURL();
-                    if (!empty($file)) {
-                        ?>
-                        <div class="d-flex border p-3">
-                            <img style="height: 50px" class="me-3" src="<?= $pb->getRemoteIconURL(); ?>" />
-                            <div>
-                                <h4><?= $pb->getName(); ?> <span class="badge bg-info" style="margin-right: 10px"><?= tc('AddonVersion', 'v.%s', $pb->getVersion()); ?></span></h4>
-                                <p><?= $pb->getDescription(); ?></p>
-                            </div>
-                            <div class="d-block ms-auto">
-                                <a href="<?= URL::to('/dashboard/extend/install', 'download', $pb->getMarketplaceItemID()); ?>" class="btn btn-sm btn-secondary"><?= t('Download'); ?></a>
-                            </div>
+                    assert($pb instanceof \Concrete\Core\Marketplace\Model\RemotePackage);
+                    ?>
+                    <div class="d-flex border p-3">
+                        <img style="height: 50px" class="me-3" src="<?= h($pb->icon); ?>" />
+                        <div>
+                            <h4><?= h($pb->name); ?> <span class="badge bg-info" style="margin-right: 10px"><?= tc('AddonVersion', 'v.%s', h($pb->version)); ?></span></h4>
+                            <p><?= h($pb->summary); ?></p>
                         </div>
-                        <?php
-                    }
+                        <div class="d-block ms-auto">
+                            <a href="<?= URL::to('/dashboard/extend/install', 'download', $pb->id); ?>" class="btn btn-sm btn-secondary"><?= t('Download'); ?></a>
+                        </div>
+                    </div>
+                    <?php
                 }
                 foreach ($availableArray as $obj) {
                     ?>
@@ -339,26 +350,9 @@ if ($this->controller->getTask() == 'install_package' && isset($showInstallOptio
                     <?php
                 }
             }
-            if ($mi !== null && $mi->isConnected()) { ?>
-                    <hr>
-                <?php
-                View::element('dashboard/marketplace_project_page');
-                ?>
-                <?php
-            } elseif ($mi !== null && $mi->hasConnectionError()) {
-                echo View::element('dashboard/marketplace_connect_failed');
-            } elseif ($tp->canInstallPackages() && Config::get('concrete.marketplace.enabled') == true) {
-                ?>
-                <hr/>
-                <div class="card">
-                    <div class="card-body bg-light">
-                        <h4><?= t('Connect to Community'); ?></h4>
-                        <p><?= t('Your site is not connected to the Concrete community. Connecting lets you easily extend a site with themes and add-ons.'); ?></p>
-                        <a class="btn btn-primary" href="<?= $view->url('/dashboard/extend/connect'); ?>"><?= t("Connect to Community"); ?></a>
-                    </div>
-                </div>
-                <?php
-            }
+
+            View::element('dashboard/marketplace_connect_offer');
+
         }
     }
     ?>

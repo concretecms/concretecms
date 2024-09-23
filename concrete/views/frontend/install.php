@@ -168,7 +168,8 @@ if ($install_config) {
                                             if ($preconditionMessage !== '') {
                                                 ?>
                                                 <i class="fas fa-question-circle launch-tooltip"
-                                                   title="<?= h($preconditionMessage) ?>"></i>
+                                                   data-bs-html="true"
+                                                   title="<?= htmlspecialchars(nl2br(h($preconditionMessage)), ENT_QUOTES, APP_CHARSET, true) ?>"></i>
                                                 <?php
                                             }
                                             ?>
@@ -379,6 +380,9 @@ if ($install_config) {
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
+                                    <div class="d-none">
+                                        <input type="text" name="username" value="<?= h(USER_SUPER) ?>" autocomplete="username" readonly="readonly" />
+                                    </div>
                                     <label for="uPassword"
                                            class="control-label form-label"><?= t('Administrator Password') ?></label>
                                     <?= $form->password('uPassword', $passwordAttributes) ?>
@@ -475,13 +479,11 @@ if ($install_config) {
                 </div>
             </div>
             <div class="card card-default">
-                <div class="card-header" role="tab" id="headingThree">
-                    <a class="collapsed" role="button" data-bs-toggle="collapse"
-                       href="#advanced"><?= t('Advanced Options') ?>
-                    </a>
+                <div class="card-header">
+                    <?= t('Advanced Options') ?>
                 </div>
 
-                <div id="advanced" class="card-collapse collapse">
+                <div id="advanced">
                     <div class="card-body container">
 
                         <div class="row">

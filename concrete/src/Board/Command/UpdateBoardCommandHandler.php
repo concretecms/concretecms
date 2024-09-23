@@ -2,7 +2,6 @@
 
 namespace Concrete\Core\Board\Command;
 
-use Concrete\Core\Entity\Board\Board;
 use Doctrine\ORM\EntityManager;
 
 class UpdateBoardCommandHandler

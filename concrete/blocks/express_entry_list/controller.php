@@ -134,6 +134,8 @@ class Controller extends BlockController implements UsesFeatureInterface
      */
     public $titleFormat;
 
+    public $entityManager;
+    
     protected $btInterfaceWidth = "640";
     protected $btInterfaceHeight = "400";
     protected $btTable = 'btExpressEntryList';
@@ -486,10 +488,12 @@ class Controller extends BlockController implements UsesFeatureInterface
         }
         $data['linkedProperties'] = json_encode($linkedProperties);
 
-        if (empty($data['enableKeywordSearch'])) {
-            $data['enableKeywordSearch'] = 0;
-        }
+        $data['enableKeywordSearch'] = $data['enableKeywordSearch'] ?? 0;
 
+        $data['enablePagination'] = $data['enablePagination'] ?? 0;
+
+        $data['enableItemsPerPageSelection'] = $data['enableItemsPerPageSelection'] ?? 0;
+        
         $data['displayLimit'] = (int) $data['displayLimit'];
 
         $entity = $this->entityManager->find('Concrete\Core\Entity\Express\Entity', $data['exEntityID']);

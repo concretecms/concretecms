@@ -341,7 +341,6 @@ class Controller extends BlockController implements UsesFeatureInterface
             'baseSearchPath' => '',
             'searchUnderCID' => 0,
             'postTo_cID' => 0,
-            'externalTarget' => 0,
             'resultsURL' => '',
             'resultsPageKind' => '',
             'allowUserOptions' => '',
@@ -495,5 +494,6 @@ class Controller extends BlockController implements UsesFeatureInterface
         $this->set('do_search', true);
         $this->set('searchList', $ipl);
         $this->set('pagination', $pagination);
+        $this->set('search_paths', $search_paths);
     }
 }

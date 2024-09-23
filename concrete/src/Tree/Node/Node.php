@@ -528,6 +528,7 @@ where treeNodeDisplayOrder > ? and treeNodeParentID = ?',
             $newParent->updateDateModified();
             $this->treeNodeParentID = $newParent->getTreeNodeID();
             $this->treeNodeDisplayOrder = $treeNodeDisplayOrder;
+            $newParent->clearLoadedChildren();
         }
     }
 
@@ -658,6 +659,19 @@ where treeNodeDisplayOrder > ? and treeNodeParentID = ?',
         }
     }
 
+    /**
+     * Clear the child nodes loaded by populateChildren() / populateDirectChildrenOnly().
+     *
+     * @return $this
+     */
+    public function clearLoadedChildren(): self
+    {
+        $this->childNodesLoaded = false;
+        $this->childNodes = [];
+
+        return $this;
+    }
+
     public function delete()
     {
         // do other nodes that aren't child nodes somehow
@@ -750,15 +764,22 @@ where treeNodeDisplayOrder > ? and treeNodeParentID = ?',
         }
     }
 
-    public static function getNodeByName($name)
+    public static function getNodeByName($name, $parentId = null)
     {
         $db = app(Connection::class);
         $treeNodeTypeHandle = uncamelcase(strrchr(get_called_class(), '\\'));
         $type = TreeNodeType::getByHandle($treeNodeTypeHandle);
-        $treeNodeID = $db->fetchColumn(
-            'select treeNodeID from TreeNodes where treeNodeName = ? and treeNodeTypeID = ?',
-            [$name, $type->getTreeNodeTypeID()]
-        );
+        if ($parentId) {
+            $treeNodeID = $db->fetchColumn(
+                'select treeNodeID from TreeNodes where treeNodeName = ? and treeNodeTypeID = ? and treeNodeParentId = ?',
+                [$name, $type->getTreeNodeTypeID(), $parentId]
+            );
+        } else {
+            $treeNodeID = $db->fetchColumn(
+                'select treeNodeID from TreeNodes where treeNodeName = ? and treeNodeTypeID = ?',
+                [$name, $type->getTreeNodeTypeID()]
+            );
+        }
         if ($treeNodeID) {
             return static::getByID($treeNodeID);
         }

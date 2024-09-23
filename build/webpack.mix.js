@@ -3,6 +3,8 @@
  */
 let mix = require('laravel-mix');
 const path = require('path');
+const fs = require('fs');
+
 mix.override((config) => {
     delete config.watchOptions;
 });
@@ -62,7 +64,17 @@ mix.copy('node_modules/@fortawesome/fontawesome-free/webfonts', '../concrete/css
 mix.copy('node_modules/@fortawesome/fontawesome-free/css/all.css', '../concrete/css/fontawesome/all.css');
 mix.copy('node_modules/bootstrap/dist/js/bootstrap.bundle.min.js', '../concrete/js/bootstrap.js');
 mix.copy('node_modules/bootstrap/dist/js/bootstrap.bundle.min.js.map', '../concrete/js/bootstrap.bundle.min.js.map');
-mix.copy('node_modules/ckeditor4', '../concrete/js/ckeditor');
+mix.copy('node_modules/ckeditor4/adapters', '../concrete/js/ckeditor/adapters');
+mix.copy('node_modules/ckeditor4/ckeditor.js', '../concrete/js/ckeditor/ckeditor.js');
+mix.copy('node_modules/ckeditor4/config.js', '../concrete/js/ckeditor/config.js');
+mix.copy('node_modules/ckeditor4/contents.css', '../concrete/js/ckeditor/contents.css');
+mix.copy('node_modules/ckeditor4/lang', '../concrete/js/ckeditor/lang');
+mix.copy('node_modules/ckeditor4/plugins', '../concrete/js/ckeditor/plugins');
+mix.copy('node_modules/ckeditor4/skins', '../concrete/js/ckeditor/skins');
+mix.copy('node_modules/ckeditor4/styles.js', '../concrete/js/ckeditor/styles.js');
+mix.copy('node_modules/ckeditor4/vendor', '../concrete/js/ckeditor/vendor');
+
+
 mix.copy('node_modules/ace-builds/src-min', '../concrete/js/ace');
 
 // Copy Bedrock assets so that themes can include them for style customization, etc...
@@ -430,6 +442,38 @@ mix.copy('node_modules/@concretecms/bedrock/assets/icons/sprites.svg', '../concr
 
 // Copy jquery ui icons into our repository
 mix.copy('node_modules/jquery-ui/themes/base/images/ui-*', '../concrete/images/');
+
+// Fix line endings
+mix.then((stats) => {
+    if (!stats?.compilation?.assets) {
+        return;
+    }
+    const UTF8_BOM = new Uint8Array([0xEF, 0xBB, 0xBF]);
+    const outputPath = stats.compilation.compiler.outputPath.replace(/[\/\\]$/, '') + path.sep;
+    for (const relativePath in stats.compilation.assets) {
+        if (!/\.(js|css|md|html|txt|php|ts)$/i.test(relativePath)) {
+            if (!/[\/\\](license|readme)$/i.test(relativePath)) {
+                continue;
+            }
+        }
+        const absolutePath = outputPath + relativePath.replace(/^[\/\\]/, '');
+        let fileContents = fs.readFileSync(absolutePath);
+        let changed = false;
+        if (fileContents.length >= UTF8_BOM.length && fileContents.compare(UTF8_BOM, 0, UTF8_BOM.length, 0, UTF8_BOM.length) === 0) {
+            fileContents = fileContents.subarray(UTF8_BOM.length);
+            changed = true;
+        }
+        fileContents = fileContents.toString('utf8')
+        if (fileContents.includes('\r')) {
+            fileContents = fileContents.replace(/\r\n/g, '\n').replace(/\r/g, '\n');
+            changed = true;
+        }
+        if (!changed) {
+            continue;
+        }
+        fs.writeFileSync(absolutePath, fileContents);
+    }
+});
 
 // Turn off notifications
 mix
