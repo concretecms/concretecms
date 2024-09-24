@@ -472,6 +472,9 @@ class Controller extends BlockController implements NotificationProviderInterfac
         $session = $this->app->make('session');
         $session->remove('block.express_form.new');
 
+        // allow redirect on form submission to be unset
+        $data['redirectCID'] = ($data['redirectCID'] === '') ? 0 : $data['redirectCID'];
+
         return parent::save($data);
     }
 
