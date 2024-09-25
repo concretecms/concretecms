@@ -206,7 +206,7 @@ class DeleteGroupCommandHandler
                 if ($numUndeletableGroups !== 0) {
                     $result->addUndeletableGrup(
                         $group->getGroupID(),
-                        t("The group \"%s\" can't be deleted because we coulnd't delete all its child groups", $group->getGroupDisplayName(false))
+                        t("The group \"%s\" can't be deleted because we couldn't delete all its child groups", $group->getGroupDisplayName(false))
                     );
 
                     return false;
