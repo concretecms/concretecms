@@ -120,8 +120,10 @@ class Controller extends AttributeTypeController implements
         $xml = $this->app->make(Xml::class);
         $avn = $akn->addChild('topics');
         $nodes = $this->attributeValue->getValue();
-        foreach ($nodes as $topic) {
-            $xml->createChildElement($avn, 'topic', $topic->getTreeNodeDisplayPath());
+        if (!empty($nodes)) {
+            foreach ($nodes as $topic) {
+                $xml->createChildElement($avn, 'topic', $topic->getTreeNodeDisplayPath());
+            }
         }
     }
 
