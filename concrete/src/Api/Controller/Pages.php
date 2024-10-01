@@ -160,7 +160,7 @@ class Pages extends ApiController
         $list->setPermissionsChecker(
             function ($page) {
                 $permissions = new Checker($page);
-                return $permissions->canViewPageInSitemap();
+                return $permissions->canViewPage();
             }
         );
 
@@ -226,7 +226,7 @@ class Pages extends ApiController
         $list->setPermissionsChecker(
             function ($page) {
                 $permissions = new Checker($page);
-                return $permissions->canViewPageInSitemap();
+                return $permissions->canViewPage();
             }
         );
 
