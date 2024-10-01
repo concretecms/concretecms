@@ -72,7 +72,7 @@ $timezone = $dateService->getTimezoneDisplayName($timezone);
 <?php } ?>
 
 <div class="dialog-buttons">
-    <button type="submit" name="action" value="schedule" class="btn btn-primary">
+    <button type="submit" name="action" value="schedule" class="btn btn-primary ccm-check-in-schedule">
         <?= t('Schedule') ?>
     </button>
 </div>
