@@ -139,6 +139,12 @@ foreach ($locales as $locale) {
                 <span><?= t('Always track user locale.') ?> <i class="launch-tooltip control-label fas fa-question-circle" title="<?= h(t('Tracking user locales requires the creation of session cookies. Disable this option to avoid tracking user locale in case the session cookie is not yet set.')) ?>"></i></span>
             </label>
         </div>
+        <div class="form-check">
+            <?= $form->checkbox('setAlternateHreflang', 1, $setAlternateHreflang) ?>
+            <label>
+                <span><?= t('Help search engines show the correct language version with Hreflang tags') ?></span>
+            </label>
+        </div>
     </div>
     <script>
         $(document).ready(function() {
