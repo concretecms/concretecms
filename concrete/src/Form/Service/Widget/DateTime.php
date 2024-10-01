@@ -324,8 +324,11 @@ $(function() {
   $('#{$id}_activate').click(function() {
     if ($(this).is(':checked')) {
       $('#{$id}_dw input,#{$id}_tw select').removeAttr('disabled');
+      // Set the date/time to the current date/time
+      $('#{$id}_dw input').datepicker('setDate', new Date());
     } else {
       $('#{$id}_dw input,#{$id}_tw select').attr('disabled', 'disabled');
+            $('#{$id}_dw input').datepicker('setDate', '');
     }
   });
 });
