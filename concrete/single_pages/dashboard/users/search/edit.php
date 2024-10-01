@@ -417,7 +417,7 @@ $userEntity = $user->getEntityObject();
                     <div v-if="groups.length === 0" class="mb-3"><?= t('None') ?></div>
 
                     <h4><?= t('Add Group') ?></h4>
-                    <concrete-group-chooser mode="select" @select="addGroup"></concrete-group-chooser>
+                    <concrete-group-chooser mode="select" @select="addGroup" filter="assign"></concrete-group-chooser>
 
                 </div>
                 <div class="modal-footer">

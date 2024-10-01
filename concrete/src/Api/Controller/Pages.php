@@ -160,7 +160,7 @@ class Pages extends ApiController
         $list->setPermissionsChecker(
             function ($page) {
                 $permissions = new Checker($page);
-                return $permissions->canViewPageInSitemap();
+                return $permissions->canViewPage();
             }
         );
 
@@ -226,7 +226,7 @@ class Pages extends ApiController
         $list->setPermissionsChecker(
             function ($page) {
                 $permissions = new Checker($page);
-                return $permissions->canViewPageInSitemap();
+                return $permissions->canViewPage();
             }
         );
 
@@ -383,7 +383,7 @@ class Pages extends ApiController
         }
 
         $checker = new Checker($page);
-        if (!$checker->canEditPage()) {
+        if (!$checker->canEditPageContents()) {
             return $this->error(t('You do not have access to edit this page.', 401));
         }
 

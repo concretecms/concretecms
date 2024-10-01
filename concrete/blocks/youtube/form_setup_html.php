@@ -155,7 +155,7 @@ echo $ui->tabs([
                 </div>
 
                 <div class="form-check">
-                    <?php echo $form->checkbox('iv_load_policy', '1', isset($iv_load_polict) && $iv_load_policy == 3); ?>
+                    <?php echo $form->checkbox('iv_load_policy', '1', isset($iv_load_policy) && $iv_load_policy == 3); ?>
                     <?php echo $form->label("iv_load_policy", t('Hide annotations by default'), ["class" => "form-check-label"]); ?>
                 </div>
 
