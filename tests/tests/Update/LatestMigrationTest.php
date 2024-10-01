@@ -12,7 +12,14 @@ class LatestMigrationTest extends TestCase
     {
         $configuredDBVersion = $this->getConfiguredDBVersion();
         $latestMigrationID = $this->getLatestMigrationID();
-        $this->assertSame($configuredDBVersion, $latestMigrationID, "The last migration should be {$configuredDBVersion} instead of {$latestMigrationID}");
+        $this->assertSame(
+            $configuredDBVersion,
+            $latestMigrationID,
+            <<<EOT
+The ID of the latest migration is {$latestMigrationID}, and it doesn't match the value of the concrete.version_db configuration key ({$configuredDBVersion}).
+If you added a new migration, you should also update the value of version_db in the /concrete/config/concrete.php file
+EOT
+        );
     }
 
     protected function getConfiguredDBVersion(): string
