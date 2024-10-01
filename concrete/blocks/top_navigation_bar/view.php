@@ -77,7 +77,15 @@ $c = Page::getCurrentPage();
                              */
                             if (count($item->getChildren()) > 0) { ?>
                                 <li class="nav-item dropdown">
-                                    <a class="nav-link<?= $item->isActiveParent() ? " nav-path-selected" : ""; ?> dropdown-toggle<?= $item->isActive() ? " active" : ""; ?>" data-bs-toggle="dropdown" target="<?=$controller->getPageItemNavTarget($item)?>" href="<?= $item->getUrl() ?>">
+                                    <?php
+                                    // IMPORTANT NOTE! TO ANYONE WHO MIGHT WANT TO SWAP OUT DATA-CONCRETE-TOGGLE WITH DATA-BS-TOGGLE (see here: https://github.com/concretecms/concretecms/pull/12172)
+                                    // These are `data-concrete-toggle` because we need some custom behavior here. We don't just want to toggle the dropdowns, we need them to behave differently than bootstrap.
+                                    // Our dropdowns toggle on hover, but when clicked we want them to GO to the page (see the bug reported here): https://github.com/concretecms/concretecms/issues/12226
+                                    // So what do we do? We make sure that we include the navigation feature. This SHOULD automatically be included by the Top Navigation Bar. And if your theme doesn't include
+                                    // it, then it is included by the fallback asset inclusion routine. I strongly suspect that the original poster in issue #12172 had marked their theme as already including the
+                                    // navigation feature, but they hadn't actually included navigation/frontend.js in their theme's javascript.
+                                    ?>
+                                    <a class="nav-link<?= $item->isActiveParent() ? " nav-path-selected" : ""; ?> dropdown-toggle<?= $item->isActive() ? " active" : ""; ?>" data-concrete-toggle="dropdown" target="<?=$controller->getPageItemNavTarget($item)?>" href="<?= $item->getUrl() ?>">
                                         <?=h($item->getName())?>
                                     </a>
                                     <ul class="dropdown-menu">
