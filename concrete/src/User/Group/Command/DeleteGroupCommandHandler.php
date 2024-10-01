@@ -149,7 +149,7 @@ class DeleteGroupCommandHandler
                 if ($rootNode === null) {
                     $result->addUndeletableGrup(
                         $group->getGroupID(),
-                        t("The group \"%s\" can't be deleted because we coulnd't find the root tree node", $group->getGroupDisplayName(false))
+                        t("The group \"%s\" can't be deleted because we couldn't find the root tree node", $group->getGroupDisplayName(false))
                     );
 
                     return false;
@@ -167,7 +167,7 @@ class DeleteGroupCommandHandler
                     if ($parentNode === null) {
                         $result->addUndeletableGrup(
                             $group->getGroupID(),
-                            t("The group \"%s\" can't be deleted because we coulnd't find the root tree node", $group->getGroupDisplayName(false))
+                            t("The group \"%s\" can't be deleted because we couldn't find the root tree node", $group->getGroupDisplayName(false))
                         );
 
                         return false;
