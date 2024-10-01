@@ -3077,7 +3077,7 @@
         <feed>
             <parent>{ccm:export:page:/blog}</parent>
             <title>Blog</title>
-            <description>concrete5 Blog</description>
+            <description>Concrete Blog</description>
             <handle>blog</handle>
             <pagetype>{ccm:export:pagetype:blog_entry}</pagetype>
             <contenttype type="description"/>
