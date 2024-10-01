@@ -686,9 +686,10 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
         }
 
         // This block is new for 9.0.2 – we need this because we're passing around blocks with page objects in them
-        // for file trackability, but without this code we lose the reference to the proper collection + collection version
+        // for file trackability, but without this code we lose the reference to the proper collection + collection version.
+        // We ignore blocks on system pages because they are stacks.
         $blockPage = $this->block->getBlockCollectionObject();
-        if ($blockPage) {
+        if ($blockPage && !$blockPage->isSystemPage()) {
             return $blockPage;
         }
 
