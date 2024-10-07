@@ -88,6 +88,10 @@ $(document).ready(function(){
                 $f = File::getByID($row['fID']); ?>
                 <?php if (is_object($f)) {
                     $tag = Core::make('html/image', ['f' => $f])->getTag();
+                    // Follow on from PR #11871 to add height and width attributes in the image block to add the same here
+                    $tag->setAttribute("width", $f->getAttribute('width'));
+                    $tag->setAttribute("height", $f->getAttribute('height'));
+                    // End Amendment
                     if ($row['title']) {
                         $tag->alt(h($row['title']));
                     } else {
