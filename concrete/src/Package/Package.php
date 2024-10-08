@@ -607,9 +607,14 @@ abstract class Package implements LocalizablePackageInterface
      * Install the package info row and the database (doctrine entities and db.xml).
      * Packages installing additional content should override this method, call the parent method (`parent::install()`).
      *
+     * @param array $data The data received from:
+     * - the dashboard/install element of the package when installing via web
+     * - the options passed to the CLI command when installing via CLI
+     * - <option name="..." value="..." /> elements defined under the <package> element when installing via CIF
+     *
      * @return \Concrete\Core\Entity\Package
      */
-    public function install()
+    public function install(/** array $data */)
     {
         PackageList::refreshCache();
         $em = $this->app->make(EntityManagerInterface::class);
