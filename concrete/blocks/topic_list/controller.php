@@ -246,7 +246,7 @@ class Controller extends BlockController implements UsesFeatureInterface
         $treeName = (string) $blockNode->data->tree;
         $page = (string) $blockNode->data->cParentID;
         $tree = TopicTree::getByName($treeName);
-        $args['topicTreeID'] = $tree->getTreeID();
+        $args['topicTreeID'] = $tree?->getTreeID() ?: null;
         $args['cParentID'] = 0;
         $args['title'] = (string) $blockNode->data->title;
         $args['mode'] = (string) $blockNode->data->mode;
