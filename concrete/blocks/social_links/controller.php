@@ -137,7 +137,7 @@ class Controller extends BlockController implements UsesFeatureInterface
     {
         $db = Database::get();
         $db->delete('btSocialLinks', ['bID' => $this->bID]);
-        $slIDs = (array) $args['slID'];
+        $slIDs = empty($args['slID']) ? [] : (array) $args['slID'];
 
         $statement = $db->prepare('insert into btSocialLinks (bID, slID, displayOrder) values (?, ?, ?)');
         $displayOrder = 0;
