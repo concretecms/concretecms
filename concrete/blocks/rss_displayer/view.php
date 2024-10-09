@@ -20,9 +20,6 @@ if (isset($errorMsg) && strlen($errorMsg) > 0) {
     echo $errorMsg;
 } else {
     foreach ($posts as $itemNumber => $item) {
-        if (intval($itemNumber) >= intval($rssObj->itemsToDisplay)) {
-            break;
-        }
         ?>
 		
 		<div class="ccm-block-rss-displayer-item">
