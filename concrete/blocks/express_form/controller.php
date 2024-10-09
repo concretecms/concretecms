@@ -981,4 +981,21 @@ class Controller extends BlockController implements NotificationProviderInterfac
         return $entityManager->getRepository(\Concrete\Core\Entity\Express\Form::class)
             ->findOneById($this->exFormID);
     }
+
+    /**
+     * @param string $method
+     * @param array $parameters
+     * @return bool
+     */
+    public function isValidControllerTask($method, $parameters = [])
+    {
+        $actions = ['action_form_success', 'action_submit'];
+        if (in_array($method, $actions)) {
+            if (isset($parameters[0]) && $this->bID != $parameters[0]) {
+                return false;
+            }
+        }
+
+        return parent::isValidControllerTask($method, $parameters);
+    }
 }
