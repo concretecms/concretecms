@@ -7,6 +7,10 @@ use Log;
 use Concrete\Core\Legacy\ItemList;
 use Concrete\Core\Package\Package;
 
+/**
+ * @deprecated This will be removed in version 10
+ * @see PackageRepositoryInterface::getPackages()
+ */
 class RemoteItemList extends ItemList
 {
     protected $includeInstalledItems = true;

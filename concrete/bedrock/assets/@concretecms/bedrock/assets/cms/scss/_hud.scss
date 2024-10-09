@@ -131,6 +131,11 @@ div#ccm-popup-alert-message {
   right: 30px;
   width: 380px;
   z-index: $index-level-page-alert;
+  @media only screen and (max-width: 768px) {
+    left: 0;
+    right: 0;
+    width: 100vw;
+  }
 }
 
 .ccm-notifications-box-header {

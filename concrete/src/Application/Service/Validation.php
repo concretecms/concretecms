@@ -43,7 +43,7 @@ class Validation
      *
      * @return bool
      *
-     * @deprecated Use `\Core::make('validator/password')->isValid($pass, $error);`
+     * @deprecated Use `app('validator/password')->isValid($pass, $error);`
      */
     public function password($pass)
     {

@@ -13,7 +13,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
     </div>
     <div class="col-8">
 
-        <h2><?=$instance->getBoardInstanceName()?></h2>
+        <h2><?= h($instance->getBoardInstanceName()) ?></h2>
 
         <hr>
 
@@ -42,7 +42,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
                 ?>
                 <tr>
                     <td><?=$formatter->getListIconElement()?></td>
-                    <td><?=$configuredSource->getName()?></td>
+                    <td><?= h($configuredSource->getName()) ?></td>
                     <td class="text-center"><span class="badge bg-info"><?=$itemCount?></span></td>
                 </tr>
             <?php } ?>

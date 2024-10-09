@@ -2,6 +2,7 @@
 namespace Concrete\Core\Page\Search\Field;
 
 use Concrete\Core\Attribute\Category\PageCategory;
+use Concrete\Core\Page\Search\Field\Field\CacheSettingField;
 use Concrete\Core\Page\Search\Field\Field\ContainsBlockTypeField;
 use Concrete\Core\Page\Search\Field\Field\ContainsContainerField;
 use Concrete\Core\Page\Search\Field\Field\DateAddedField;
@@ -48,7 +49,8 @@ class Manager extends FieldManager
             new DateLastModifiedField(),
             new DatePublicField(),
             new ContainsBlockTypeField(),
-            new ContainsContainerField()
+            new ContainsContainerField(),
+            new CacheSettingField(),
         ];
         $app = Facade::getFacadeApplication();
         $siteService = $app->make('site');

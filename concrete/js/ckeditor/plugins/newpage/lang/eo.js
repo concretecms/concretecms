@@ -1,1 +1,1 @@
-﻿CKEDITOR.plugins.setLang("newpage","eo",{toolbar:"Nova Paĝo"});
+CKEDITOR.plugins.setLang("newpage","eo",{toolbar:"Nova Paĝo"});

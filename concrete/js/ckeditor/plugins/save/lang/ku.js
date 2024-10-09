@@ -1,1 +1,1 @@
-﻿CKEDITOR.plugins.setLang("save","ku",{toolbar:"پاشکەوتکردن"});
+CKEDITOR.plugins.setLang("save","ku",{toolbar:"پاشکەوتکردن"});

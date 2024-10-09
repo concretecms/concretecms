@@ -2,10 +2,16 @@
 
 namespace Concrete\Core\Cookie;
 
+use Concrete\Core\Http\Request;
 use Symfony\Component\HttpFoundation\Cookie;
 
 class ResponseCookieJar
 {
+    /**
+     * @var bool
+     */
+    private $secureDefault = false;
+
     /**
      * The list of new cookies to be added to the response.
      *
@@ -21,6 +27,26 @@ class ResponseCookieJar
     protected $clearedCookies = [];
 
     /**
+     * Set the value of the "secure" flag when it is set to null.
+     *
+     * @return $this
+     */
+    public function setSecureDefault(bool $default): self
+    {
+        $this->secureDefault = $default;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of the "secure" flag when it is set to null.
+     */
+    public function isSecureDefault(): bool
+    {
+        return $this->secureDefault;
+    }
+
+    /**
      * Adds a Cookie object to the cookie pantry.
      *
      * @param string $name The cookie name
@@ -28,14 +54,19 @@ class ResponseCookieJar
      * @param int $expire The number of seconds until the cookie expires
      * @param string $path The path for the cookie
      * @param null|string $domain The domain the cookie is available to
-     * @param bool $secure whether the cookie should only be transmitted over a HTTPS connection from the client
+     * @param bool|null $secure whether the cookie should only be transmitted over a HTTPS connection from the client. Use NULL to to use the default value
      * @param bool $httpOnly Whether the cookie will be made accessible only through the HTTP protocol
      * @param bool $raw Whether the cookie value should be sent with no url encoding
      * @param string|null $sameSite Whether the cookie will be available for cross-site requests
      * @return \Symfony\Component\HttpFoundation\Cookie
      */
-    public function addCookie($name, $value = null, $expire = 0, $path = '/', $domain = null, $secure = false, $httpOnly = true, $raw = false, $sameSite = null)
+    public function addCookie($name, $value = null, $expire = 0, $path = '/', $domain = null, $secure = null, $httpOnly = true, $raw = false, $sameSite = null)
     {
+        if ($secure === null) {
+            $secure = $this->isSecureDefault();
+        } else {
+            $secure = (bool) $secure;
+        }
         $cookie = new Cookie($name, $value, $expire, $path, $domain, $secure, $httpOnly, $raw, $sameSite);
         $this->addCookieObject($cookie);
 
@@ -51,6 +82,7 @@ class ResponseCookieJar
      */
     public function addCookieObject(Cookie $cookie)
     {
+        $cookie->setSecureDefault($this->isSecureDefault());
         $name = $cookie->getName();
         $isNew = true;
         foreach ($this->cookies as $index => $value) {

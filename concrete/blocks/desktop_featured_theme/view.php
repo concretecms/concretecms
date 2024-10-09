@@ -1,24 +1,30 @@
-<?php defined('C5_EXECUTE') or die('Access Denied.'); ?>
-<?php if (isset($remoteItem) && is_object($remoteItem)) { ?>
+<?php defined('C5_EXECUTE') or die('Access Denied.');
 
-	<div class="ccm-block-desktop-featured-theme">
-		<div class="ccm-block-desktop-featured-theme-inner">
+/**
+ * @var $connection ?\Concrete\Core\Marketplace\ConnectionInterface
+ */
+?>
+<div class="ccm-block-desktop-featured-theme">
+    <div class="ccm-block-desktop-featured-theme-inner" style="display: flex">
 
-			<img src="<?=$remoteItem->getLargeThumbnail()->src?>" style="height: 250px" />
+        <img src="<?=ASSETS_URL_IMAGES?>/marketplace_upgrade_theme.png" style="height: 250px; border-right: 0"/>
 
-			<div class="ccm-block-desktop-featured-theme-description">
+        <div class="ccm-block-desktop-featured-theme-description">
+            <h6><?=t('Featured Theme')?></h6/>
 
-				<h6><?=t('Featured Theme')?></h6/>
+            <?php if ($connection) { ?>
+                <h3><?=t('Browse Themes')?></h3>
+                <p><?=t("Get access to hundreds of Concrete CMS themes for your site from the Concrete marketplace.")?></p>
+                <a target="_blank" href="https://market.concretecms.com/themes/" class="btn btn-info"><?=t('Browse Themes')?></a>
 
-				<h3><?=$remoteItem->getName()?></h3>
-				<p><?=$remoteItem->getDescription()?></p>
-				<div class="btn-group">
-					<a href="<?=$remoteItem->getRemoteURL()?>" class="btn btn-primary active"><?=$remoteItem->getDisplayPrice()?></a>
-					<a href="<?=$remoteItem->getRemoteURL()?>" class="btn btn-primary"><?=t('Learn More')?></a>
-				</div>
-			</div>
+            <?php } else { ?>
 
-		</div>
-	</div>
+                <h3><?=t('Connect to the Marketplace')?></h3>
+                <p><?=t("Connect your site to the Concrete CMS marketplace to browse themes.")?></p>
+                <a target="_blank" href="<?=URL::to('/dashboard/system/basics/marketplace')?>" class="btn btn-info"><?=t('Connect Site')?></a>
 
-<?php } ?>
+            <?php } ?>
+        </div>
+
+    </div>
+</div>

@@ -417,6 +417,7 @@ class Controller extends BlockController implements NotificationProviderInterfac
 
         // Make sure our data goes through correctly.
         $data['storeFormSubmission'] = isset($data['storeFormSubmission']) ?: 0;
+        $data['notifyMeOnSubmission'] = isset($data['notifyMeOnSubmission']) ?: 0;
 
         // Now, let's handle saving the form entity ID against the form block db record
         $entity = false;
@@ -471,6 +472,9 @@ class Controller extends BlockController implements NotificationProviderInterfac
 
         $session = $this->app->make('session');
         $session->remove('block.express_form.new');
+
+        // allow redirect on form submission to be unset
+        $data['redirectCID'] = ($data['redirectCID'] === '') ? 0 : $data['redirectCID'];
 
         return parent::save($data);
     }

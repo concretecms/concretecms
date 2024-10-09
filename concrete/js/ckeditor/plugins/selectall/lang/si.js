@@ -1,1 +1,1 @@
-﻿CKEDITOR.plugins.setLang("selectall","si",{toolbar:"සියල්ලම "});
+CKEDITOR.plugins.setLang("selectall","si",{toolbar:"සියල්ලම "});

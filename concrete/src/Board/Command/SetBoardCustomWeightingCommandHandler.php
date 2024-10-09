@@ -2,7 +2,6 @@
 
 namespace Concrete\Core\Board\Command;
 
-use Concrete\Core\Entity\Board\DataSource\ConfiguredDataSource;
 use Doctrine\ORM\EntityManager;
 
 class SetBoardCustomWeightingCommandHandler

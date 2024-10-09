@@ -4,6 +4,7 @@ namespace Concrete\Controller\SinglePage\Dashboard\System\Update;
 
 use Concrete\Controller\Upgrade;
 use Concrete\Core\Error\UserMessageException;
+use Concrete\Core\File\Service\File;
 use Concrete\Core\Http\ResponseFactoryInterface;
 use Concrete\Core\Marketplace\Marketplace;
 use Concrete\Core\Package\PackageService;
@@ -13,7 +14,11 @@ use Concrete\Core\Updater\ApplicationUpdate;
 use Concrete\Core\Updater\RemoteApplicationUpdate;
 use Concrete\Core\Updater\Update as UpdateService;
 use Concrete\Core\Updater\UpdateArchive;
+use Concrete\Core\Url\Resolver\CanonicalUrlResolver;
 use Concrete\Core\Url\Resolver\Manager\ResolverManagerInterface;
+use GuzzleHttp\Client;
+use GuzzleHttp\Exception\GuzzleException;
+use GuzzleHttp\RequestOptions;
 use Throwable;
 
 class Update extends DashboardPageController
@@ -97,28 +102,40 @@ class Update extends DashboardPageController
         }
         if (!is_dir(DIR_CORE_UPDATES)) {
             $this->error->add(t('The directory %s does not exist.', DIR_CORE_UPDATES));
-        } else {
-            if (!is_writable(DIR_CORE_UPDATES)) {
-                $this->error->add(t('The directory %s must be writable by the web server.', DIR_CORE_UPDATES));
-            }
+        } elseif (!is_writable(DIR_CORE_UPDATES)) {
+            $this->error->add(t('The directory %s must be writable by the web server.', DIR_CORE_UPDATES));
         }
 
         if (!$this->error->has()) {
             $remote = $this->app->make(UpdateService::class)->getApplicationUpdateInformation();
+
             if ($remote instanceof RemoteApplicationUpdate) {
                 $this->setCanExecuteForever();
+
                 // try to download
-                $r = $this->app->make(Marketplace::class)->downloadRemoteFile($remote->getDirectDownloadURL());
-                if (is_object($r)) {
-                    // error object
-                    $this->error->add($r);
+                $fileHelper = $this->app->make(File::class);
+                $client = $this->app->make(Client::class);
+
+                $location = $fileHelper->getTemporaryDirectory();
+                $file = uniqid(time(), true);
+
+                try {
+                    $client->get($remote->getDirectDownloadURL(), [
+                        RequestOptions::SINK => $location . '/' . $file . '.zip',
+                        RequestOptions::QUERY => [
+                            'csiURL' => (string)$this->app->make(CanonicalUrlResolver::class)->resolve([]),
+                            'csiVersion' => APP_VERSION,
+                        ]
+                    ]);
+                } catch (GuzzleException $e) {
+                    $this->error->add($e->getMessage());
                 }
 
                 if (!$this->error->has()) {
                     // the file exists in the right spot
                     $ar = new UpdateArchive();
                     try {
-                        $ar->install($r);
+                        $ar->install($file);
                     } catch (Throwable $e) {
                         $this->error->add($e->getMessage());
                     }

@@ -8,6 +8,6 @@
         <?php if ($checked) { ?> checked <?php } ?>
     >
     <label class="form-check-label" for="<?=$view->field('value')?>">
-        <?=t($controller->getCheckboxLabel())?>
+        <?=tc('AttributeKeyLabel', $controller->getCheckboxLabel())?>
     </label>
 </div>

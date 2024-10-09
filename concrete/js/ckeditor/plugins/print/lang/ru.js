@@ -1,1 +1,1 @@
-﻿CKEDITOR.plugins.setLang("print","ru",{toolbar:"Печать"});
+CKEDITOR.plugins.setLang("print","ru",{toolbar:"Печать"});

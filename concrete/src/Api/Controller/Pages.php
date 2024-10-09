@@ -158,9 +158,9 @@ class Pages extends ApiController
         $list->getQueryObject()->andWhere('cPointerExternalLink is null');
 
         $list->setPermissionsChecker(
-            function ($file) {
-                $fp = new Checker($file);
-                return $fp->canViewPageInSitemap();
+            function ($page) {
+                $permissions = new Checker($page);
+                return $permissions->canViewPage();
             }
         );
 
@@ -225,8 +225,8 @@ class Pages extends ApiController
 
         $list->setPermissionsChecker(
             function ($page) {
-                $fp = new Checker($page);
-                return $fp->canViewPageInSitemap();
+                $permissions = new Checker($page);
+                return $permissions->canViewPage();
             }
         );
 
@@ -383,7 +383,7 @@ class Pages extends ApiController
         }
 
         $checker = new Checker($page);
-        if (!$checker->canEditPage()) {
+        if (!$checker->canEditPageContents()) {
             return $this->error(t('You do not have access to edit this page.', 401));
         }
 

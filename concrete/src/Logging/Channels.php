@@ -79,6 +79,13 @@ class Channels
     const CHANNEL_EXPRESS = 'express';
 
     /**
+     * Channel identifier: marketplace.
+     *
+     * @var string
+     */
+    const CHANNEL_MARKETPLACE = 'marketplace';
+
+    /**
      * Channel identifier: content.
      *
      * @var string

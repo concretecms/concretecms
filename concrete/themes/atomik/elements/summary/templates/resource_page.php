@@ -7,7 +7,7 @@
         </div>
         <div class="col-md-8">
             <div>
-                <h5><a href="<?=$link?>"><?=$title?></a></h5>
+                <h5><a href="<?=$link?>"><?=h($title)?></a></h5>
                 <?php if (!empty($description)) { ?>
                     <p><?=$description?></p>
                 <?php } ?>

@@ -148,7 +148,8 @@ EOT
         
         // Parse the package directory
         $output->writeln('Parsing package contents');
-        foreach (\C5TL\Parser::getAllParsers() as $parser) {
+        $parserFactory = $this->app->make(\C5TL\ParserFactory::class);
+        foreach ($parserFactory->getParsers() as $parser) {
             if ($parser->canParseDirectory()) {
                 $output->write('- running parser "' . $parser->getParserName() . '"... ');
                 $parser->parseDirectory(

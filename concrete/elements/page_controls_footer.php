@@ -54,7 +54,7 @@ if (isset($cp) && $cp->canViewToolbar() && (!$dh->inDashboard()) && !$view->isEd
     <div id="ccm-page-controls-wrapper" class="ccm-ui">
         <div id="ccm-toolbar" class="<?= $show_titles ? 'titles' : '' ?> <?= $large_font ? 'large-font' : '' ?>">
 						<?php
-              $mobileMenu = Element::get('dashboard/navigation/mobile');
+              $mobileMenu = Element::get('dashboard/navigation/mobile', ['section' => $c, 'currentPage' => $c]);
               $mobileMenu->render();
             ?> 
             <ul class="ccm-toolbar-item-list">
@@ -182,7 +182,7 @@ if (isset($cp) && $cp->canViewToolbar() && (!$dh->inDashboard()) && !$view->isEd
                 } else {
                     ?>
                     <li class="float-end d-none d-md-block">
-                        <a <?php if ($show_tooltips) { ?>class="launch-tooltip"<?php } ?> data-bs-toggle="tooltip" data-bs-placement="bottom" href="<?=URL::to('/login', 'logout', $valt->generate('logout'))?>" title="<?=t('Sign Out')?>">
+                        <a <?php if ($show_tooltips) { ?>class="launch-tooltip"<?php } ?> data-bs-toggle="tooltip" data-bs-placement="bottom" href="<?=URL::to('/login', 'do_logout', $valt->generate('do_logout'))?>" title="<?=t('Sign Out')?>">
                             <i class="fas fa-sign-out-alt"></i><span class="ccm-toolbar-accessibility-title ccm-toolbar-accessibility-title-site-settings"><?= tc('toolbar', 'Sign Out') ?></span>
                         </a>
                     </li>

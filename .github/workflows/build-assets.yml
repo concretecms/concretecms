@@ -1,0 +1,86 @@
+name: Build assets
+
+on:
+  pull_request:
+  push:
+    branches:
+      - "**"      
+    tags-ignore:
+      - "**"
+
+jobs:
+  build-assets:
+    strategy:
+      matrix:
+        include:
+          - os: ubuntu-latest
+            nodejs-version: 18
+            # Just one case may have this set to yes
+            update-repo: yes
+    name: Build assets (node ${{ matrix.nodejs-version }} on ${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Setup NodeJS
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.nodejs-version }}
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Install NodeJS dependencies
+        run: |
+          cd "${{ github.workspace }}/build"
+          npm ci
+      - name: Build assets (dev)
+        run: |
+          cd "${{ github.workspace }}/build"
+          npm run-script dev
+      - name: Tell git to ignore the built files
+        run: |
+          cd "${{ github.workspace }}/build"
+          npm run-script git-skip
+      - name: Check that git thinks the repo is clean
+        run: |
+          cd "${{ github.workspace }}"
+          git diff --exit-code --name-status
+      - name: Revert changed files
+        run: |
+          cd "${{ github.workspace }}/build"
+          npm run-script git-revert
+      - name: Check that git thinks the repo is clean
+        run: |
+          cd "${{ github.workspace }}"
+          git diff --exit-code --name-status
+      - name: Build assets (prod)
+        run: |
+          cd "${{ github.workspace }}/build"
+          npm run-script prod
+      - name: Check if we need to create a pull request
+        if: matrix.update-repo == 'yes'
+        id: pr-test
+        run: |
+          cd '${{ github.workspace }}'
+          if git diff --exit-code --name-status; then
+            echo "We won't create a pull request because no change has been detected"
+          elif [ '${{ github.event_name }}' != 'push' ]; then
+            echo "We won't create a pull request because it's a '${{ github.event_name }}' operation and not a 'push' one"
+          elif [ '${{ github.repository }}' != 'concretecms/concretecms' ]; then
+            echo "We won't create a pull request because the current repository is '${{ github.repository }}' and not 'concretecms/concretecms'"
+          else
+            echo 'Changes detected and pull request needed!'
+            echo "result=yes" >>"$GITHUB_OUTPUT"
+            echo "branch-name=auto-assets/$(date --utc +%Y%m%d-%H%M%S)" >>"$GITHUB_OUTPUT"
+          fi
+      - name: Create pull request
+        id: pr-create
+        if: steps.pr-test.outputs.result == 'yes'
+        uses: peter-evans/create-pull-request@v5
+        with:
+          commit-message: Automatic assets rebuilding
+          committer: GitHub Action <noreply@concretecms.org>
+          author: GitHub Action <noreply@concretecms.org>
+          branch: '${{ steps.pr-test.outputs.branch-name }}'
+          title: "Automatic assets rebuilding for ${{ github.ref_name }}"
+          body: "Created by ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+      - name: Pull request info
+        if: steps.pr-test.outputs.result == 'yes'
+        run: printf 'Pull request created:\n%s' "${{ steps.pr-create.outputs.pull-request-url }}"

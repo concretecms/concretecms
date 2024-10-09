@@ -653,14 +653,6 @@
             </attributes>
         </page>
 
-        <page name="Connect to the Community" path="/dashboard/extend/connect" filename="/dashboard/extend/connect.php"
-              pagetype="" description="Connect to the Concrete community." package="">
-            <attributes>
-                <attributekey handle="meta_keywords">
-                    <value>concretecms.com, my account, marketplace</value>
-                </attributekey>
-            </attributes>
-        </page>
         <page name="Get More Themes" path="/dashboard/extend/themes" filename="/dashboard/extend/themes.php" pagetype=""
               description="Download themes from the marketplace." package="">
             <attributes>
@@ -694,6 +686,15 @@
             <attributes>
                 <attributekey handle="meta_keywords">
                     <value>website name, title</value>
+                </attributekey>
+            </attributes>
+        </page>
+
+        <page name="Marketplace" path="/dashboard/system/basics/marketplace" filename="/dashboard/system/basics/marketplace.php"
+              pagetype="" description="Connect to the Concrete CMS marketplace." package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>concretecms.com, my account, purchase, extensions, marketplace</value>
                 </attributekey>
             </attributes>
         </page>
@@ -979,6 +980,14 @@
             <attributes>
                 <attributekey handle="meta_keywords">
                     <value>security, files, media, extension, manager, upload</value>
+                </attributekey>
+            </attributes>
+        </page>
+        <page name="File Chooser Options" path="/dashboard/system/files/file_chooser"
+              filename="/dashboard/system/files/file_chooser.php" pagetype="" description="" package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>file, chooser</value>
                 </attributekey>
             </attributes>
         </page>

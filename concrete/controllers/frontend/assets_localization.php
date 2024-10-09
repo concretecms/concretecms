@@ -150,6 +150,8 @@ var ccmi18n_editor = ' . json_encode([
     'lightboxFeatures' => t('Lightbox Features'),
     'sitemap' => t('Sitemap'),
     'snippets' => t('Snippets'),
+    'cancelPrompt' => t('Are you sure you want to revert changes made to this block?'),
+    'cancelPromptButton' => t('Yes, revert changes'),
 ]) . ';
 
 var ccmi18n_express = ' . json_encode([
@@ -220,6 +222,7 @@ var ccmi18n_sitemap = ' . json_encode([
     'viewing' => t('Viewing'),
     'visitExternalLink' => t('Visit'),
     'visitPage' => t('Visit'),
+    'editInComposer' => t('Edit in composer'),
 ]) . ';
 
 var ccmi18n_spellchecker = ' . json_encode([

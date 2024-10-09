@@ -3,8 +3,6 @@ namespace Concrete\Core\Board\Instance\Slot\Content;
 
 use Concrete\Core\Board\Instance\Item\Data\DataInterface;
 use Concrete\Core\Board\Item\ItemProviderInterface;
-use Concrete\Core\Entity\Board\InstanceItem;
-use Concrete\Core\Entity\Board\Item;
 use Concrete\Core\Foundation\Serializer\JsonSerializer;
 use Concrete\Core\Logging\Channels;
 use Concrete\Core\Logging\LoggerAwareInterface;

@@ -1,1 +1,1 @@
-﻿CKEDITOR.plugins.setLang("sourcedialog","da",{toolbar:"Kilde",title:"Kilde"});
+CKEDITOR.plugins.setLang("sourcedialog","da",{toolbar:"Kilde",title:"Kilde"});

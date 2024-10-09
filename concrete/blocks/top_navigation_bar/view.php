@@ -11,7 +11,7 @@ $c = Page::getCurrentPage();
                     <?php if (isset($transparentLogo)) { ?>
                         <img src="<?=$transparentLogo->getURL()?>" class="logo-transparent align-text-center">
                     <?php } ?>
-                    <?=$brandingText?>
+                    <?=h($brandingText)?>
                 <?php } ?>
                 <?php if ($logo && ($includeBrandLogo && !$includeBrandText)) { ?>
                     <img src="<?=$logo->getURL()?>" class="logo">
@@ -21,7 +21,7 @@ $c = Page::getCurrentPage();
                 <?php } ?>
 
                 <?php if (!$includeBrandLogo && $includeBrandText) { ?>
-                    <?=$brandingText?>
+                    <?=h($brandingText)?>
                 <?php } ?>
             </a>
 
@@ -42,7 +42,7 @@ $c = Page::getCurrentPage();
                 </button>
                 <div class="collapse navbar-collapse" id="top-navigation-bar-<?=$bID?>">
                     <?php if ($includeSearchInput) { ?>
-                        <form method="get" action="<?=$searchAction?>">
+                        <form method="get" action="<?=h($searchAction)?>">
                             <div class="input-group">
                                 <input class="form-control border-end-0 border" type="search" name="query" placeholder="<?=t('Search')?>" aria-label="<?=t('Search')?>">
                                 <span class="input-group-append">
@@ -77,8 +77,16 @@ $c = Page::getCurrentPage();
                              */
                             if (count($item->getChildren()) > 0) { ?>
                                 <li class="nav-item dropdown">
+                                    <?php
+                                    // IMPORTANT NOTE! TO ANYONE WHO MIGHT WANT TO SWAP OUT DATA-CONCRETE-TOGGLE WITH DATA-BS-TOGGLE (see here: https://github.com/concretecms/concretecms/pull/12172)
+                                    // These are `data-concrete-toggle` because we need some custom behavior here. We don't just want to toggle the dropdowns, we need them to behave differently than bootstrap.
+                                    // Our dropdowns toggle on hover, but when clicked we want them to GO to the page (see the bug reported here): https://github.com/concretecms/concretecms/issues/12226
+                                    // So what do we do? We make sure that we include the navigation feature. This SHOULD automatically be included by the Top Navigation Bar. And if your theme doesn't include
+                                    // it, then it is included by the fallback asset inclusion routine. I strongly suspect that the original poster in issue #12172 had marked their theme as already including the
+                                    // navigation feature, but they hadn't actually included navigation/frontend.js in their theme's javascript.
+                                    ?>
                                     <a class="nav-link<?= $item->isActiveParent() ? " nav-path-selected" : ""; ?> dropdown-toggle<?= $item->isActive() ? " active" : ""; ?>" data-concrete-toggle="dropdown" target="<?=$controller->getPageItemNavTarget($item)?>" href="<?= $item->getUrl() ?>">
-                                        <?=$item->getName()?>
+                                        <?=h($item->getName())?>
                                     </a>
                                     <ul class="dropdown-menu">
                                         <?php foreach ($item->getChildren() as $dropdownChild) { ?>
@@ -87,7 +95,7 @@ $c = Page::getCurrentPage();
                                     </ul>
                                 </li>
                             <?php } else { ?>
-                                <li class="nav-item"><a class="nav-link<?= $item->isActiveParent() ? " nav-path-selected" : ""; ?><?= $item->isActive() ? " active" : ""; ?>" target="<?=$controller->getPageItemNavTarget($item)?>" href="<?=$item->getUrl()?>"><?=$item->getName()?></a></li>
+                                <li class="nav-item"><a class="nav-link<?= $item->isActiveParent() ? " nav-path-selected" : ""; ?><?= $item->isActive() ? " active" : ""; ?>" target="<?=$controller->getPageItemNavTarget($item)?>" href="<?=$item->getUrl()?>"><?=h($item->getName())?></a></li>
                             <?php } ?>
                         <?php } ?>
                     </ul>

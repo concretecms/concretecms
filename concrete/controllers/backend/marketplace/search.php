@@ -5,6 +5,12 @@ use Concrete\Controller\Backend\UserInterface;
 use Concrete\Core\Application\Service\Dashboard;
 use Concrete\Core\Marketplace\RemoteItemList;
 
+/**
+ * @deprecated This will be removed in version 10, OR this will be reworked to be used with the new marketplace
+ * at some unspecified point in the future.
+ *
+ * @see RemotePackage
+ */
 class Search extends UserInterface
 {
     public function view()
