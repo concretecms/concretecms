@@ -15,6 +15,7 @@ use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Database\Driver\PDOStatement;
 use Concrete\Core\Entity\Attribute\Value\PageValue;
 use Concrete\Core\Foundation\ConcreteObject;
+use Concrete\Core\Multilingual\Service\Detector as MultilingualDetector;
 use Concrete\Core\Page\Cloner;
 use Concrete\Core\Page\ClonerOptions;
 use Concrete\Core\Page\Collection\Version\VersionList;
@@ -28,7 +29,9 @@ use Concrete\Core\StyleCustomizer\Inline\StyleSet;
 use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\Support\Facade\Facade;
 use Config;
+use Doctrine\DBAL\Exception;
 use Doctrine\DBAL\FetchMode;
+use Illuminate\Contracts\Container\BindingResolutionException;
 use Loader;
 use Page;
 use PageCache;
@@ -957,7 +960,9 @@ public function outputCustomStyleHeaderItems($return = false)
     /**
      * Get all the global stacks loaded in this collection.
      *
-     * @return \Concrete\Core\Page\Stack\Stack[]
+     * @return Stack[]
+     * @throws Exception
+     * @throws BindingResolutionException
      */
     protected function getGlobalStacksForCollection()
     {
@@ -965,20 +970,28 @@ public function outputCustomStyleHeaderItems($return = false)
         /** @var Connection $db */
         $db = $app->make(Connection::class);
         $qb = $db->createQueryBuilder();
-        $rs = $qb->select('stName')
+        $q = $qb->select('stName')
             ->from('Stacks', 's')
             ->innerJoin('s', 'Areas', 'a', 'a.arHandle = s.stName')
             ->andWhere('a.arIsGlobal = 1')
             ->andWhere('a.cID = :cID')
             ->andWhere('s.stType = :stType')
             ->setParameter('cID', $this->getCollectionID())
-            ->setParameter('stType', Stack::ST_TYPE_GLOBAL_AREA)
-            ->execute()->fetchAll(FetchMode::COLUMN);
+            ->setParameter('stType', Stack::ST_TYPE_GLOBAL_AREA);
+
+        /** @var MultilingualDetector $md */
+        $md = $app->make(MultilingualDetector::class);
+        if ($md->isEnabled()) {
+            $ps = $md->getPreferredSection();
+            $q->andWhere('s.stMultilingualSection = :stMultilingualSection');
+            $q->setParameter('stMultilingualSection', $ps->getCollectionID());
+        }
+
+        $rs = $q->execute()->fetchAll(FetchMode::COLUMN);
 
         $stacks = [];
 
         if (count($rs) > 0) {
-            $pcp = new Permissions($this);
             foreach ($rs as $garHandle) {
                 $s = Stack::getGlobalAreaStackFromName($this, $garHandle);
                 if (is_object($s)) {
