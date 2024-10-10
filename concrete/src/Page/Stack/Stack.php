@@ -3,6 +3,7 @@ namespace Concrete\Core\Page\Stack;
 
 use Concrete\Core\Area\Area;
 use Concrete\Core\Multilingual\Page\Section\Section;
+use Concrete\Core\Multilingual\Service\Detector as MultilingualDetector;
 use Concrete\Core\Page\Collection\Collection;
 use Concrete\Core\Page\Stack\Folder\Folder;
 use Concrete\Core\Permission\Checker;
@@ -53,15 +54,30 @@ class Stack extends Page
      *
      * @param Collection $collection
      * @param string $arHandle
-     * @return void
+     * @return Stack|null
+     * @throws \Exception
      */
     public static function getGlobalAreaStackFromName(Collection $collection, string $arHandle): ?Stack
     {
         $db = app(Connection::class);
         $checker = new Checker($collection);
-        $stackID = $db->executeQuery('select cID from Stacks where stName = ? and stType = ?', [
-            $arHandle, self::ST_TYPE_GLOBAL_AREA
-        ])->fetchOne();
+        $qb = $db->createQueryBuilder();
+        $q = $qb->select('cID')
+            ->from('Stacks', 's')
+            ->andWhere('s.stName = :stName')
+            ->andWhere('s.stType = :stType')
+            ->setParameter('stName', $arHandle)
+            ->setParameter('stType', self::ST_TYPE_GLOBAL_AREA);
+
+        /** @var MultilingualDetector $md */
+        $md = app(MultilingualDetector::class);
+        if ($md->isEnabled()) {
+            $ps = $md->getPreferredSection();
+            $q->andWhere('s.stMultilingualSection = :stMultilingualSection');
+            $q->setParameter('stMultilingualSection', $ps->getCollectionID());
+        }
+
+        $stackID = $q->execute()->fetchOne();
         if ($stackID) {
             if ($checker->canViewPageVersions()) {
                 $s = Stack::getByID($stackID, 'RECENT');
@@ -72,6 +88,7 @@ class Stack extends Page
         }
         return null;
     }
+
     /**
      * @param string $path
      * @param string $version
