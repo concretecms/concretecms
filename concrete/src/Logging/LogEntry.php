@@ -232,7 +232,7 @@ class LogEntry
      */
     public function getUserID()
     {
-        return $this->uID;
+        return $this->user->getUserID();
     }
 
     /**
