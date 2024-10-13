@@ -35,6 +35,7 @@ class FileList extends DatabaseItemList implements PagerProviderInterface, Pagin
         'f.fDateAdded',
         'fv.fvDateAdded',
         'fv.fvSize',
+        'totalDownloads',
     ];
 
     public function __construct(StickyRequest $req = null)

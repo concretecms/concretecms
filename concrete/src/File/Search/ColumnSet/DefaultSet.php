@@ -72,4 +72,16 @@ class DefaultSet extends ColumnSet
         $type = $this->getColumnByKey('name');
         $this->setDefaultSortColumn($type, 'asc');
     }
+
+    public static function getDownloads($node)
+    {
+        if ($node->getTreeNodeTypeHandle() == 'file') {
+            $file = $node->getTreeNodeFileObject();
+            if (is_object($file)) {
+                return $file->getTotalDownloads();
+            }
+        }
+
+        return '';
+    }
 }
