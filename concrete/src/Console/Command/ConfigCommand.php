@@ -7,6 +7,7 @@ use Concrete\Core\Config\FileSaver;
 use Concrete\Core\Config\LoaderInterface;
 use Concrete\Core\Config\Repository\Repository;
 use Concrete\Core\Console\Command;
+use Concrete\Core\Support\Facade\Application;
 use Exception;
 use Illuminate\Filesystem\Filesystem;
 
