@@ -55,5 +55,5 @@ $config = $app->make('config');
             <?= t('Send IP') ?>
         </label>
     </div>
-    <div class="help-block"><?= t('For extra checks you can send the clients IP address to reCaptcha (this will effect your GDPR compliance).') ?></div>
+    <div class="help-block"><?= t('For extra checks you can send the client\'s IP address to reCaptcha (this will affect your GDPR compliance).') ?></div>
 </div>
