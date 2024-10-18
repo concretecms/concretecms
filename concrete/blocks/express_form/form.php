@@ -155,9 +155,9 @@ $token = Core::make('token');
                     <?=$form->label('storeFormSubmission', t('Store submitted results of form.'), ['class'=>'form-check-label']); ?>
                 </div>
                 <?php if ($formSubmissionConfig === false) { ?>
-                    <div class="alert alert-warning"><?=t('<strong>Warning!</strong> Form submissions are not allowed to be stored in the database. You must set a valid email in the Options tab.'); ?>                </div>
+                    <div class="alert alert-warning"><?=t('<strong>Warning!</strong> Form submissions are not allowed to be stored in the database. You must set a valid email address.'); ?>                </div>
                 <?php } else { ?>
-                    <div class="alert alert-warning"><?=t('<strong>Warning!</strong> If not checked submitted data will be only sent by email. You must set a valid email in the Options tab.'); ?></div>
+                    <div class="alert alert-warning"><?=t('<strong>Warning!</strong> If not checked submitted data will be only sent by email. You must set a valid email address.'); ?></div>
                 <?php } ?>
             </div>
 
@@ -170,6 +170,44 @@ $token = Core::make('token');
                 <?php } ?>
             </div>
 
+        </fieldset>
+        
+        <fieldset>
+            <legend><?=t('Email'); ?></legend>
+            <div class="form-group">
+                <?=$form->label('recipientEmail', t('Send form submissions to email addresses')); ?>
+                <div class="input-group">
+                    <div class="input-group-text">
+                        <input type="checkbox" name="notifyMeOnSubmission" value="1" <?php if ($notifyMeOnSubmission == 1) { ?>checked<?php } ?>>
+                    </div>
+                    <?= $form->email('recipientEmail', $recipientEmail, ['autocomplete' => 'off', 'style' => 'z-index:2000;', 'multiple' => 'multiple']); ?>
+                </div>
+                <div class="help-block"><?=t('(Separate multiple emails with a comma)'); ?></div>
+            </div>
+            <div data-view="form-options-email-reply-to"></div>
+        </fieldset>
+
+        <fieldset>
+            <legend><?=t('Files'); ?></legend>
+            <div class="form-group">
+                <label class="control-label form-label" for="ccm-form-fileset"><?=t('Add uploaded files to a set?'); ?></label>
+                    <?php
+
+                    $fileSets = Concrete\Core\File\Set\Set::getMySets();
+                    $sets = [0 => t('None')];
+                    foreach ($fileSets as $fileSet) {
+                        $sets[$fileSet->getFileSetID()] = $fileSet->getFileSetDisplayName();
+                    }
+                    echo $form->select('addFilesToSet', $sets, $addFilesToSet);
+                    ?>
+            </div>
+            <div class="form-group">
+                <label class="control-label form-label"><?=t('Add uploaded files to folder'); ?></label>
+                <?php
+                $selector = new \Concrete\Core\Form\Service\Widget\FileFolderSelector();
+                echo $selector->selectFileFolder('addFilesToFolder', $addFilesToFolder);
+                ?>
+            </div>
         </fieldset>
 
     </div>
@@ -215,42 +253,6 @@ $token = Core::make('token');
                     }
                     ?>
                 </div>
-            </div>
-        </fieldset>
-        <fieldset>
-            <legend><?=t('Email'); ?></legend>
-            <div class="form-group">
-                <?=$form->label('recipientEmail', t('Send form submissions to email addresses')); ?>
-                <div class="input-group">
-                    <div class="input-group-text">
-                        <input type="checkbox" name="notifyMeOnSubmission" value="1" <?php if ($notifyMeOnSubmission == 1) { ?>checked<?php } ?>>
-                    </div>
-                    <?= $form->email('recipientEmail', $recipientEmail, ['autocomplete' => 'off', 'style' => 'z-index:2000;', 'multiple' => 'multiple']); ?>
-                </div>
-                <div class="help-block"><?=t('(Separate multiple emails with a comma)'); ?></div>
-            </div>
-            <div data-view="form-options-email-reply-to"></div>
-        </fieldset>
-        <fieldset>
-            <legend><?=t('Files'); ?></legend>
-            <div class="form-group">
-                <label class="control-label form-label" for="ccm-form-fileset"><?=t('Add uploaded files to a set?'); ?></label>
-                    <?php
-
-                    $fileSets = Concrete\Core\File\Set\Set::getMySets();
-                    $sets = [0 => t('None')];
-                    foreach ($fileSets as $fileSet) {
-                        $sets[$fileSet->getFileSetID()] = $fileSet->getFileSetDisplayName();
-                    }
-                    echo $form->select('addFilesToSet', $sets, $addFilesToSet);
-                    ?>
-            </div>
-            <div class="form-group">
-                <label class="control-label form-label"><?=t('Add uploaded files to folder'); ?></label>
-                <?php
-                $selector = new \Concrete\Core\Form\Service\Widget\FileFolderSelector();
-                echo $selector->selectFileFolder('addFilesToFolder', $addFilesToFolder);
-                ?>
             </div>
         </fieldset>
     </div>
