@@ -320,6 +320,9 @@ class Controller extends BlockController implements UsesFeatureInterface
             $sortOrder = 0;
             foreach ($entries as $entry) {
                 // Add the entry row
+                if (isset($entry['description'])) {
+					$entry['description'] = LinkAbstractor::translateTo($entry['description']);
+				}
                 $db->executeStatement(
                     'INSERT INTO btAccordionEntries (bID, sortOrder, title, description) VALUES (?, ?, ?, ?)',
                     [(int) $this->bID, $sortOrder++, $entry['title'], $entry['description']]
