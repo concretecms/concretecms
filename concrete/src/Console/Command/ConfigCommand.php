@@ -7,6 +7,7 @@ use Concrete\Core\Config\FileSaver;
 use Concrete\Core\Config\LoaderInterface;
 use Concrete\Core\Config\Repository\Repository;
 use Concrete\Core\Console\Command;
+use Concrete\Core\Support\Facade\Application;
 use Exception;
 use Illuminate\Filesystem\Filesystem;
 
@@ -53,7 +54,7 @@ concrete %command.name% set concrete.test_item 1
 The new configuration item will have a numeric value of 1. If you want to save the string "1" you have to write
 concrete %command.name% set concrete.test_item '1'
 
-More info at http://documentation.concrete5.org/developers/appendix/cli-commands#c5-config
+More info at https://documentation.concretecms.org/9-x/developers/security/cli-jobs#c5-job
 EOT
             )
         ;
@@ -174,7 +175,7 @@ EOT
 
         $environment = $this->option('env') ?: $default_environment;
 
-        $app = $this->getApplication()->getConcrete5();
+        $app = Application::getFacadeApplication();
         $file_loader = $app->make(LoaderInterface::class);
         if ($this->option('generated-overrides')) {
             $file_saver = new FileSaver($filesystem);

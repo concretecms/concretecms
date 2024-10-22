@@ -22,7 +22,7 @@ Returns codes:
   $okExitCode operation completed successfully
   $errExitCode errors occurred
 
-More info at http://documentation.concrete5.org/developers/appendix/cli-commands#c5-info
+More info at https://documentation.concretecms.org/9-x/developers/security/cli-jobs#c5-info
 EOT
             )
         ;

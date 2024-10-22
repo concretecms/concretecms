@@ -29,9 +29,9 @@ To specify the command return code, the PHP script can return an integer or defi
 
 To pass options to the included script (via the $args variable), you can prepend them with --
 For example:
-/path/to/concrete/bin/concrete5 c5:exec your.php -- --option1 --option2=value argument1 argument2
+/path/to/concrete/bin/concrete c5:exec your.php -- --option1 --option2=value argument1 argument2
 
-More info at http://documentation.concrete5.org/developers/appendix/cli-commands#c5-exec
+More info at https://documentation.concretecms.org/9-x/developers/security/cli-jobs#c5-exec
 EOT
             )
         ;

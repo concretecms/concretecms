@@ -52,7 +52,7 @@ Return codes for the update operation:
   $okExitCode operation completed successfully
   $errExitCode errors occurred
 
-More info at http://documentation.concrete5.org/developers/appendix/cli-commands#c5-service
+More info at https://documentation.concretecms.org/9-x/developers/security/cli-jobs#c5-service
 EOT
         ;
         $this
