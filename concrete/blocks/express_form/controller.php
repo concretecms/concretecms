@@ -68,6 +68,11 @@ class Controller extends BlockController implements NotificationProviderInterfac
     public $notifyMeOnSubmission;
 
     /**
+     * @var bool|int|string|null
+     */
+    public $attachFilesToEmail;
+
+    /**
      * @var string|null
      */
     public $recipientEmail;
@@ -351,6 +356,7 @@ class Controller extends BlockController implements NotificationProviderInterfac
         $this->set('exFormID', null);
         $this->set('redirectCID', null);
         $this->set('notifyMeOnSubmission', false);
+        $this->set('attachFilesToEmail', false);
         $this->set('recipientEmail', '');
         $this->set('addFilesToSet', false);
         $this->set('replyToEmailControlID', null);
@@ -418,6 +424,7 @@ class Controller extends BlockController implements NotificationProviderInterfac
         // Make sure our data goes through correctly.
         $data['storeFormSubmission'] = isset($data['storeFormSubmission']) ?: 0;
         $data['notifyMeOnSubmission'] = isset($data['notifyMeOnSubmission']) ?: 0;
+        $data['attachFilesToEmail'] = isset($data['attachFilesToEmail']) ?: 0;
 
         // Now, let's handle saving the form entity ID against the form block db record
         $entity = false;
@@ -613,6 +620,7 @@ class Controller extends BlockController implements NotificationProviderInterfac
                 $express = $this->app->make('express');
                 $entity = $form->getEntity();
 
+                // Check Captcha
                 /** @var ControllerInterface $controller */
                 $controller = $express->getEntityController($entity);
                 $processor = $controller->getFormProcessor();
@@ -634,73 +642,89 @@ class Controller extends BlockController implements NotificationProviderInterfac
                     return false;
                 }
 
-
                 if ($this->areFormSubmissionsStored()) {
                     $entry = $manager->addEntry($entity, $this->app->make('site')->getSite());
                     $entry = $manager->saveEntryAttributesForm($form, $entry);
                     $values = $entity->getAttributeKeyCategory()->getAttributeValues($entry);
-                    // Check antispam
-                    $antispam = $this->app->make('helper/validation/antispam');
-                    $submittedData = '';
-                    foreach ($values as $value) {
-                        $submittedData .= $value->getAttributeKey()->getAttributeKeyDisplayName('text') . ":\r\n";
-                        $submittedData .= $value->getPlainTextValue() . "\r\n\r\n";
-                    }
+                } else {
+                    $entry = $manager->createEntry($entity);
+                    $values = $manager->getEntryAttributeValuesForm($form, $entry);
+                }
+                    
 
-                    if (!$antispam->check($submittedData, 'express_form_block')) {
-                        // Remove the entry and silently fail.
-                        $entityManager->refresh($entry);
-                        $entityManager->remove($entry);
-                        $entityManager->flush();
+                // Check antispam
+                $antispam = $this->app->make('helper/validation/antispam');
+                $submittedData = '';
+                foreach ($values as $value) {
+                    $submittedData .= $value->getAttributeKey()->getAttributeKeyDisplayName('text') . ":\r\n";
+                    $submittedData .= $value->getPlainTextValue() . "\r\n\r\n";
+                }
 
-                        $r = Redirect::page($this->request->getCurrentPage());
-                        $r->setTargetUrl($r->getTargetUrl() . '#form' . $this->bID);
-
-                        return $r;
-                    }
-
-                    // Handle file based items
-                    $set = null;
-                    $folder = null;
-                    $filesystem = new Filesystem();
-                    $rootFolder = $filesystem->getRootFolder();
-                    if ($this->addFilesToSet) {
-                        $set = Set::getByID($this->addFilesToSet);
-                    }
-                    if ($this->addFilesToFolder) {
-                        $folder = $filesystem->getFolder($this->addFilesToFolder);
-                    }
-                    $entityManager->refresh($entry);
+                if (!$antispam->check($submittedData, 'express_form_block')) {
+                    // Remove files
                     foreach ($values as $value) {
                         $value = $value->getValueObject();
                         if ($value instanceof FileProviderInterface) {
                             $files = $value->getFileObjects();
                             foreach ($files as $file) {
-                                if ($set) {
-                                    $set->addFileToSet($file);
-                                }
-                                if ($folder && $folder->getTreeNodeID() != $rootFolder->getTreeNodeID()) {
-                                    $fileNode = $file->getFileNodeObject();
-                                    if ($fileNode) {
-                                        $fileNode->move($folder);
-                                    }
+                                $file->delete();
+                            }
+                        }
+                    }
+                    // Remove the entry if it was stored
+                    if ($this->areFormSubmissionsStored()) {
+                        $entityManager->refresh($entry);
+                        $entityManager->remove($entry);
+                        $entityManager->flush();
+                    }
+                    
+                    // and silently fail.
+                    $r = Redirect::page($this->request->getCurrentPage());
+                    $r->setTargetUrl($r->getTargetUrl() . '#form' . $this->bID);
+                    
+                    return $r;
+                }
+
+                // Handle file based items
+                $set = null;
+                $folder = null;
+                $filesystem = new Filesystem();
+                $rootFolder = $filesystem->getRootFolder();
+                if ($this->addFilesToSet) {
+                    $set = Set::getByID($this->addFilesToSet);
+                }
+                if ($this->addFilesToFolder) {
+                    $folder = $filesystem->getFolder($this->addFilesToFolder);
+                }
+                // $entityManager->refresh($entry);
+                foreach ($values as $value) {
+                    $value = $value->getValueObject();
+                    if ($value instanceof FileProviderInterface) {
+                        $files = $value->getFileObjects();
+                        foreach ($files as $file) {
+                            if ($set) {
+                                $set->addFileToSet($file);
+                            }
+                            if ($folder && $folder->getTreeNodeID() != $rootFolder->getTreeNodeID()) {
+                                $fileNode = $file->getFileNodeObject();
+                                if ($fileNode) {
+                                    $fileNode->move($folder);
                                 }
                             }
                         }
                     }
-                } else {
-                    $entry = $manager->createEntry($entity);
                 }
+
                 if ($this->areFormSubmissionsStored()) {
-                    $submittedAttributeValues = $entry->getEntryAttributeValues();
-                } else {
-                    $submittedAttributeValues = $manager->getEntryAttributeValuesForm($form, $entry);
+                    $entityManager->persist($entry);
+                    $entityManager->flush();
                 }
+                
                 $notifier = $controller->getNotifier($this);
                 $notifications = $notifier->getNotificationList();
-                array_walk($notifications->getNotifications(), function ($notification) use ($submittedAttributeValues) {
+                array_walk($notifications->getNotifications(), function ($notification) use ($values) {
                     if (method_exists($notification, "setAttributeValues")) {
-                        $notification->setAttributeValues($submittedAttributeValues);
+                        $notification->setAttributeValues($values);
                     }
                 });
                 $notifier->sendNotifications($notifications, $entry, ProcessorInterface::REQUEST_TYPE_ADD);
@@ -835,6 +859,7 @@ class Controller extends BlockController implements NotificationProviderInterfac
 
         $this->set('entities', Express::getEntities());
         $this->set('notifyMeOnSubmission', (bool) $this->notifyMeOnSubmission);
+        $this->set('attachFilesToEmail', $this->attachFilesToEmail);
     }
 
     public function action_get_type_form()

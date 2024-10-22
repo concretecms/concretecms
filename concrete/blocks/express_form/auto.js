@@ -147,13 +147,21 @@ $(function() {
             controlTemplate = _.template($('script[data-template=express-form-form-control]').html()),
             questionTemplate = _.template($('script[data-template=express-form-form-question]').html());
 
-        $tabOptions.on('change', 'input[name=notifyMeOnSubmission]', function() {
-            var $emailReplyToView = $('#ccm-block-express-form-options div[data-view=form-options-email-reply-to]');
+        $tabResults.find('input[name=notifyMeOnSubmission]').on('change', function() {
+            var $emailReplyToView = $('#ccm-block-express-form-results div[data-view=form-options-email-reply-to]');
             $('input[name=recipientEmail]').focus();
             if ($(this).is(':checked')) {
                 $emailReplyToView.show();
             } else {
                 $emailReplyToView.hide();
+            }
+        }).trigger('change');
+
+        $tabResults.find('input[name=storeFormSubmission]').on('change', function() {
+            var $notifyMeOnSubmission = $tabResults.find('input[name=notifyMeOnSubmission]')
+            var $recipientEmail = $tabResults.find('input[name=recipientEmail]')
+            if (!$(this).is(':checked')) {
+                $notifyMeOnSubmission.prop('checked', true).trigger('change');
             }
         }).trigger('change');
 
@@ -410,7 +418,7 @@ $(function() {
     ConcreteBlockForm.prototype.rescanEmailFields = function($emailReplyToView) {
         // Gather all the email controls
         var $tabEdit = $('#ccm-block-express-form-edit'),
-            $emailReplyToView = $('#ccm-block-express-form-options div[data-view=form-options-email-reply-to]'),
+            $emailReplyToView = $('#ccm-block-express-form-results div[data-view=form-options-email-reply-to]'),
             emailReplyToTemplate = _.template($('script[data-template=express-form-reply-to-email]').html()),
             $controls = $tabEdit.find('li[data-form-control-id]'),
             selected = $emailReplyToView.find('select[name=replyToEmailControlID]').val(),
