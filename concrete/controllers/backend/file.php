@@ -497,7 +497,7 @@ class File extends Controller
                     throw new UserMessageException(t('Could not open with ZipArchive::CREATE'));
                 }
                 foreach ($files as $key => $f) {
-                    $filename = $f->getFilename();
+                    $filename = $f->getFileNameByPattern() ?? $f->getFilename();
 
                     // Change the filename if it's already in the zip
                     if ($zip->locateName($filename) !== false) {

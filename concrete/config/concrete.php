@@ -588,6 +588,9 @@ return [
             'file' => FILE_PERMISSIONS_MODE_COMPUTED,
             'directory' => DIRECTORY_PERMISSIONS_MODE_COMPUTED,
         ],
+        'download' => [
+            'filename_pattern' => '',
+        ],
     ],
 
     /*
