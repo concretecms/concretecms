@@ -36,6 +36,9 @@
     <field name="addFilesToFolder" type="integer">
       <default value="0"/>
     </field>
+    <field name="attachFilesToEmail" type="integer">
+      <default value="0"/>
+    </field>
   </table>
 
 </schema>

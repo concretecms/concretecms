@@ -68,6 +68,11 @@ class Controller extends BlockController implements NotificationProviderInterfac
     public $notifyMeOnSubmission;
 
     /**
+     * @var bool|int|string|null
+     */
+    public $attachFilesToEmail;
+
+    /**
      * @var string|null
      */
     public $recipientEmail;
@@ -351,6 +356,7 @@ class Controller extends BlockController implements NotificationProviderInterfac
         $this->set('exFormID', null);
         $this->set('redirectCID', null);
         $this->set('notifyMeOnSubmission', false);
+        $this->set('attachFilesToEmail', false);
         $this->set('recipientEmail', '');
         $this->set('addFilesToSet', false);
         $this->set('replyToEmailControlID', null);
@@ -418,6 +424,7 @@ class Controller extends BlockController implements NotificationProviderInterfac
         // Make sure our data goes through correctly.
         $data['storeFormSubmission'] = isset($data['storeFormSubmission']) ?: 0;
         $data['notifyMeOnSubmission'] = isset($data['notifyMeOnSubmission']) ?: 0;
+        $data['attachFilesToEmail'] = isset($data['attachFilesToEmail']) ?: 0;
 
         // Now, let's handle saving the form entity ID against the form block db record
         $entity = false;
@@ -852,6 +859,7 @@ class Controller extends BlockController implements NotificationProviderInterfac
 
         $this->set('entities', Express::getEntities());
         $this->set('notifyMeOnSubmission', (bool) $this->notifyMeOnSubmission);
+        $this->set('attachFilesToEmail', $this->attachFilesToEmail);
     }
 
     public function action_get_type_form()

@@ -190,6 +190,13 @@ $token = Core::make('token');
         <fieldset>
             <legend><?=t('Files'); ?></legend>
             <div class="form-group">
+                <label class="control-label form-label"><?=t('Add uploaded files to folder'); ?></label>
+                <?php
+                $selector = new \Concrete\Core\Form\Service\Widget\FileFolderSelector();
+                echo $selector->selectFileFolder('addFilesToFolder', $addFilesToFolder);
+                ?>
+            </div>
+            <div class="form-group">
                 <label class="control-label form-label" for="ccm-form-fileset"><?=t('Add uploaded files to a set?'); ?></label>
                     <?php
 
@@ -202,11 +209,12 @@ $token = Core::make('token');
                     ?>
             </div>
             <div class="form-group">
-                <label class="control-label form-label"><?=t('Add uploaded files to folder'); ?></label>
-                <?php
-                $selector = new \Concrete\Core\Form\Service\Widget\FileFolderSelector();
-                echo $selector->selectFileFolder('addFilesToFolder', $addFilesToFolder);
-                ?>
+                <label class="control-label form-label"><?=t('E-Mail'); ?></label>
+                <div class="form-check">
+                    <?=$form->checkbox('attachFilesToEmail', 1, $attachFilesToEmail); ?>
+                    <?=$form->label('attachFilesToEmail', t('Send File as Email Attachment'), ['class'=>'form-check-label'] ); ?>
+                </div>
+                <div class="help-block"><?=t('This is not suitable for large files'); ?></div>
             </div>
         </fieldset>
 
