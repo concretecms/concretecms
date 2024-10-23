@@ -69,7 +69,10 @@ class DefaultSet extends ColumnSet
         $this->addColumn(new TypeColumn());
         $this->addColumn(new DateModifiedColumn());
         $this->addColumn(new SizeColumn());
-        $type = $this->getColumnByKey('name');
-        $this->setDefaultSortColumn($type, 'asc');
+
+        $config = app('config')->get('concrete.file_manager');
+
+        $type = $this->getColumnByKey($config['sort_column'] ?? 'name');
+        $this->setDefaultSortColumn($type, $config['sort_direction'] ?? 'asc');
     }
 }
