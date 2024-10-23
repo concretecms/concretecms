@@ -73,6 +73,6 @@ class DefaultSet extends ColumnSet
         $config = app('config')->get('concrete.file_manager');
 
         $type = $this->getColumnByKey($config['sort_column'] ?? 'name');
-        $this->setDefaultSortColumn($type, $config['sort_order'] ?? 'asc');
+        $this->setDefaultSortColumn($type, $config['sort_direction'] ?? 'asc');
     }
 }

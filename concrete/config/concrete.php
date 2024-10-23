@@ -889,6 +889,8 @@ return [
          * Determines whether the list should keep folders on top when sorting by name.
          */
         'keep_folders_on_top' => false,
+        'sort_column' => '',
+        'sort_direction' => '',
     ],
 
     'search_users' => [
