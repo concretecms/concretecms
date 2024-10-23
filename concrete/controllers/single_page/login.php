@@ -196,7 +196,9 @@ class Login extends PageController implements LoggerAwareInterface
 
             $this->view();
 
-            return $this->getViewObject()->render();
+            $responseContent = $this->getViewObject()->render();
+
+            return $this->app->make(ResponseFactoryInterface::class)->create($responseContent);
         }
 
         $u->setLastAuthType($type);
