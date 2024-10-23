@@ -151,9 +151,6 @@ class Login extends PageController implements LoggerAwareInterface
         AuthenticationType $type,
         User $u
     ) {
-        if (!$type || !($type instanceof AuthenticationType)) {
-            return $this->view();
-        }
         $config = $this->app->make('config');
         if ($config->get('concrete.i18n.choose_language_login')) {
             $userLocale = $this->post('USER_LOCALE');
