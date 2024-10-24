@@ -235,6 +235,7 @@ class StatesProvincesList
                     'CUMB' =>tc('English County', 'Cumbria'),
                     'DERBY' =>tc('English County', 'Derbyshire'),
                     'DEVON' =>tc('English County', 'Devon'),
+                    'DORSET' =>tc('English County', 'Dorset'),
                     'EROY' =>tc('English County', 'East Riding of Yorkshire'),
                     'ESUS' =>tc('English County', 'East Sussex'),
                     'ESSEX' =>tc('English County', 'Essex'),
