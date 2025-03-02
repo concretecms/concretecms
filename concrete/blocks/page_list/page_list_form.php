@@ -17,6 +17,7 @@ use Concrete\Core\Page\Type\Type;
 use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\Support\Facade\Url;
 use Concrete\Core\Form\Service\Widget\DateTime;
+use Concrete\Core\Support\Facade\Config;
 
 /**
  * @var Controller $controller
@@ -43,7 +44,9 @@ use Concrete\Core\Form\Service\Widget\DateTime;
  * @var bool $includeDescription
  * @var bool $includeAllDescendents
  * @var bool $paginate
+ * @var bool $excludeCanonicalPaging
  * @var bool $displaySystemPages
+ * @var bool $excludeCurrentPage
  * @var bool $displayAliases
  * @var bool $ignorePermissions
  * @var bool $enableExternalFiltering
@@ -340,7 +343,13 @@ echo $userInterface->tabs([
                     <?php echo $form->checkbox("paginate", "1", $paginate); ?>
                     <?php echo $form->label("paginate", t("Display pagination interface if more items are available than are displayed."), ["class" => "form-check-label"]); ?>
                 </div>
-            </div>
+
+                <div class="form-check">
+                    <?php echo $form->checkbox("excludeCanonicalPaging", "1", $excludeCanonicalPaging); ?>
+                    <?php echo $form->label("excludeCanonicalPaging", t('Don\'t Canonicalize Pagination For This Page List'), ["class" => "form-check-label"]); ?>
+	            <i class="launch-tooltip fa fa-question-circle" title="<?php echo t('Exclude Pagination Key From Canonical URL') . ' (' . Config::get('concrete.seo.paging_string') . '_b#)' ?>"></i>
+                </div>
+	    </div>
         </fieldset>
 
         <fieldset>
