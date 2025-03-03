@@ -87,8 +87,9 @@ class ContentExporter
     {
         if ($cID > 0) {
             $c = Page::getByID($cID);
-
-            return '{ccm:export:page:' . $c->getCollectionPath() . '}';
+            if ($c && !$c->isError()) {
+                return '{ccm:export:page:' . $c->getCollectionPath() . '}';
+            }
         }
     }
 
