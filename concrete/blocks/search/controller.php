@@ -12,6 +12,8 @@ use Core;
 use Database;
 use Page;
 use Request;
+use Concrete\Core\Support\Facade\Config;
+use Concrete\Core\Url\SeoCanonical;
 
 class Controller extends BlockController implements UsesFeatureInterface
 {
@@ -267,6 +269,29 @@ class Controller extends BlockController implements UsesFeatureInterface
         }
 
         return $this->btCacheBlockOutput;
+    }
+
+    /**
+     * Default on_start().
+     */
+    public function on_start()
+    {
+        $seoCanonical = $this->app->make(SeoCanonical::class);
+        $includedQueryParams = $seoCanonical->getIncludedQuerystringParameters();
+        $paging = $this->request->request(Config::get('concrete.seo.paging_string'));
+        if ($paging && $paging >= 2) {
+            // ccm_paging_p hardwired in config // Seemingly no effect if removed // concrete/site.php
+            if (!in_array(Config::get('concrete.seo.paging_string'), $includedQueryParams)) {
+                $seoCanonical->addIncludedQuerystringParameter(Config::get('concrete.seo.paging_string'));
+            }
+            $this->addHeaderItem('<meta name="robots" content="noindex">');
+        }
+
+        if (!empty($this->request->request('query'))) {
+            if (!in_array('query', $includedQueryParams)) {
+                $seoCanonical->addIncludedQuerystringParameter('query');
+            }
+        }
     }
 
     /**
