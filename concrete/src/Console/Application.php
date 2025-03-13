@@ -19,7 +19,9 @@ class Application extends SymfonyApplication
     }
     
     /**
-     * @deprecated
+     * @deprecated use getConcrete()
+     *
+     * @return \Concrete\Core\Application\Application
      */
     public function getConcrete5()
     {
@@ -27,7 +29,8 @@ class Application extends SymfonyApplication
     }
 
     /**
-     * Get the concrete5 application instance
+     * Get the Concrete application instance
+     *
      * @return \Concrete\Core\Application\Application
      */
     public function getConcrete()
