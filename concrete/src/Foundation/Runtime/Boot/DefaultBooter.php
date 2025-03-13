@@ -206,11 +206,8 @@ class DefaultBooter implements BootInterface, ApplicationAwareInterface
 
         $middlewareCache = [];
         foreach ($middlewareConfig as $middleware) {
-            if (is_array($middleware)) {
-                $runBeforeCache = isset($middleware['run_during_cache']) && $middleware['run_during_cache'] === true;
-                if ($runBeforeCache) {
-                    $middlewareCache[] = $middleware;
-                }
+            if (is_array($middleware) && !empty($middleware['run_during_cache'])) {
+                $middlewareCache[] = $middleware;
             }
         }
 
@@ -223,14 +220,10 @@ class DefaultBooter implements BootInterface, ApplicationAwareInterface
          */
         $stack = $this->app->make(StackInterface::class);
         foreach ($middlewareCache as $middleware) {
-            if (is_array($middleware)) {
-                $stack = $stack->withMiddleware(
-                    $this->app->make($middleware['class']),
-                    $middleware['priority'] ?? 10
-                );
-            } elseif (is_string($middleware)) {
-                $stack = $stack->withMiddleware($this->app->make($middleware));
-            }
+            $stack = $stack->withMiddleware(
+                $this->app->make($middleware['class']),
+                $middleware['priority'] ?? 10
+            );
         }
 
         /**
