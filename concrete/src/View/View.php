@@ -11,6 +11,7 @@ use Concrete\Core\Page\View\Preview\SkinCustomizerPreviewRequest;
 use Concrete\Core\Site\Service;
 use Concrete\Core\StyleCustomizer\Skin\SkinInterface;
 use Concrete\Core\StyleCustomizer\Skin\Stylesheet\Stylesheet;
+use Concrete\Core\Template\TemplateService;
 use Environment;
 use Events;
 use Concrete\Core\Support\Facade\Facade;
@@ -330,21 +331,19 @@ class View extends AbstractView
      */
     protected function renderTemplate($scopeItems, $innerContent)
     {
-        // Extract the items into the current scope
-        extract($scopeItems);
-
         ob_start();
 
         // Fire a `before` event
         $this->onBeforeGetContents();
-        include $this->template;
+        $pre = ob_get_clean();
 
+        $contents = app(TemplateService::class)->renderTemplate($this->template, $scopeItems, $this);
+
+        ob_start();
         // Fire an `after` event
         $this->onAfterGetContents();
-        $contents = ob_get_contents();
-        ob_end_clean();
 
-        return $contents;
+        return $pre . $contents . ob_get_clean();
     }
 
     public function finishRender($contents)
@@ -531,7 +530,7 @@ class View extends AbstractView
             $_locator->addPackageLocation($_pkgHandle);
         }
 
-        $_record = $_locator->getRecord(DIRNAME_ELEMENTS . '/' . $_file . '.php');
+        $_record = $_locator->getRecord(DIRNAME_ELEMENTS . '/' . $_file, true);
         $_file = $_record->getFile();
 
         unset($_record);

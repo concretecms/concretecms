@@ -13,6 +13,7 @@ use Concrete\Core\Logging\Channels;
 use Concrete\Core\Logging\LoggerFactory;
 use Concrete\Core\Page\Theme\Theme;
 use Concrete\Core\Support\Facade\Application;
+use Concrete\Core\Template\TemplateService;
 use Concrete\Core\View\AbstractView;
 use Concrete\Core\Area\Area;
 use Concrete\Core\Foundation\Environment;
@@ -261,12 +262,8 @@ class BlockView extends AbstractView
 
         unset($shouldRender);
 
-        extract($scopeItems);
         if (!$this->outputContent) {
-            ob_start();
-            include $this->template;
-            $this->outputContent = ob_get_contents();
-            ob_end_clean();
+            $this->outputContent = $this->getTemplateService()->renderTemplate($this->template, $scopeItems, $this);
         }
 
         // In case the view changes any scope items, the block header/footer
@@ -377,7 +374,8 @@ class BlockView extends AbstractView
         $env = Environment::get();
         include $env->getPath(
             DIRNAME_BLOCKS . '/' . $this->blockType->getBlockTypeHandle() . '/' . $fileToInclude,
-            $this->blockTypePkgHandle
+            $this->blockTypePkgHandle,
+            true,
         );
     }
 
@@ -519,5 +517,10 @@ class BlockView extends AbstractView
         $app->make('director')->dispatch('on_block_output', $event);
 
         $this->outputContent = $event->getContents();
+    }
+
+    private function getTemplateService(): TemplateService
+    {
+        return app(TemplateService::class);
     }
 }

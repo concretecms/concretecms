@@ -17,6 +17,7 @@ class FileLocator
 
     protected $app;
 
+    /** @var LocationInterface[] */
     protected $locations = [];
 
     /**
@@ -79,20 +80,39 @@ class FileLocator
 
     /**
      * @param $file
+     * @param bool $template
      *
-     * @return Record
+     * @return Record|null
      */
-    public function getRecord($file)
+    public function getRecord($file, bool $template = false)
     {
         $this->addDefaultLocations();
         $key = $this->getCacheKey($file);
         $item = $this->cache->getItem($key);
         $record = null;
+
         if ($item->isMiss()) {
             $item->lock();
+
+            $extensions = ['.html.twig', '.php'];
+            if ($template) {
+                foreach ($extensions as $extension) {
+                    $file = str_ends_with($file, $extension) ? substr($file, 0, -strlen($extension)) : $file;
+                }
+            }
+
             foreach ($this->locations as $location) {
                 $location->setFilesystem($this->filesystem);
-                if ($record = $location->contains($file)) {
+                if ($template) {
+                    foreach ($extensions as $extension) {
+                        $fileWithExtension = $file . $extension;
+                        $found = $location->contains($fileWithExtension);
+                        if ($found && $found->exists()) {
+                            $record = $found;
+                            break 2;
+                        }
+                    }
+                } elseif ($record = $location->contains($file)) {
                     break;
                 }
             }
@@ -107,7 +127,7 @@ class FileLocator
     }
 
     /**
-     * @return array
+     * @return LocationInterface[]
      */
     public function getLocations()
     {
