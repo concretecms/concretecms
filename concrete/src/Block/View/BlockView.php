@@ -361,7 +361,7 @@ class BlockView extends AbstractView
         return $base;
     }
 
-    public function inc($fileToInclude, $args = [])
+    public function inc($fileToInclude, $args = [], bool $template = true)
     {
         extract($args);
         extract($this->getScopeItems());
@@ -369,7 +369,7 @@ class BlockView extends AbstractView
         include $env->getPath(
             DIRNAME_BLOCKS . '/' . $this->blockType->getBlockTypeHandle() . '/' . $fileToInclude,
             $this->blockTypePkgHandle,
-            true,
+            $template,
         );
     }
 

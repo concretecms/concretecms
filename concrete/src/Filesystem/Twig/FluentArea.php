@@ -51,4 +51,19 @@ class FluentArea
 
         return $this;
     }
+
+    public function ifPopulatedOrEditMode(?Page $c): ?FluentArea
+    {
+        return $this->ifEditMode($c) ?: $this->ifPopulated($c);
+    }
+
+    private function ifPopulated(?Page $c): ?FluentArea
+    {
+        return ($c && (int) $this->getTotalBlocksInArea($c) > 0) ? $this : null;
+    }
+
+    private function ifEditMode(?Page $c): ?FluentArea
+    {
+        return ($c && $c->isEditMode()) ? $this : null;
+    }
 }

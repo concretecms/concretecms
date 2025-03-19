@@ -123,7 +123,7 @@ class FileLocator
             }
 
             if ($template && !$record && isset($last)) {
-                // Use last non-existant .php file for backwards compatibility
+                // Use last non-existent .php file for backwards compatibility
                 $record = $last['.php'];
             }
 

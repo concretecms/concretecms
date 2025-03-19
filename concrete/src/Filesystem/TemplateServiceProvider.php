@@ -24,7 +24,8 @@ class TemplateServiceProvider extends Provider
                 new FilesystemCache($config['cache_dir'] ?? DIR_FILES_UPLOADED_STANDARD . '/cache/twig'),
                 (bool) ($config['debug'] ?? false)
             );
-            foreach ($config['extensions'] as $extension) {
+
+            foreach ($config['extensions'] ?? [] as $extension) {
                 $factory->addExtension($this->app->make($extension));
             }
 

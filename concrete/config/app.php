@@ -903,7 +903,9 @@ return [
     ],
 
     'twig' => [
+        'debug' => false,
         'extensions' => [
+            'debug' => \Twig\Extension\DebugExtension::class,
             'core' => \Concrete\Core\Filesystem\Twig\CoreExtension::class,
         ]
     ]

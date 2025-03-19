@@ -312,15 +312,7 @@ class View extends AbstractView
      */
     protected function renderInnerContents($scopeItems)
     {
-        // Extract the items into the current scope
-        extract($scopeItems);
-
-        ob_start();
-        include $this->innerContentFile;
-        $innerContent = ob_get_contents();
-        ob_end_clean();
-
-        return $innerContent;
+        return app(TemplateService::class)->renderTemplate($this->innerContentFile, $scopeItems, $this);
     }
 
     /**
