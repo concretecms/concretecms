@@ -94,7 +94,7 @@ class FileLocator
         if ($item->isMiss()) {
             $item->lock();
 
-            $extensions = ['.html.twig', '.php'];
+            $extensions = ['.php', '.html.twig'];
             if ($template) {
                 foreach ($extensions as $extension) {
                     $file = str_ends_with($file, $extension) ? substr($file, 0, -strlen($extension)) : $file;
@@ -104,18 +104,29 @@ class FileLocator
             foreach ($this->locations as $location) {
                 $location->setFilesystem($this->filesystem);
                 if ($template) {
+                    $last = [];
                     foreach ($extensions as $extension) {
                         $fileWithExtension = $file . $extension;
                         $found = $location->contains($fileWithExtension);
-                        if ($found && $found->exists()) {
-                            $record = $found;
-                            break 2;
+                        if ($found) {
+                            $last[$extension] = $found;
+                            if ($found->exists()) {
+                                $record = $found;
+                                break 2;
+                            }
                         }
+
                     }
                 } elseif ($record = $location->contains($file)) {
                     break;
                 }
             }
+
+            if ($template && !$record && isset($last)) {
+                // Use last non-existant .php file for backwards compatibility
+                $record = $last['.php'];
+            }
+
             if (isset($record)) {
                 $this->cache->save($item->set($record));
             }

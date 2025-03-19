@@ -337,6 +337,7 @@ class View extends AbstractView
         $this->onBeforeGetContents();
         $pre = ob_get_clean();
 
+        $scopeItems['innerContent'] = $scopeItems['innerContent'] ?? $innerContent;
         $contents = app(TemplateService::class)->renderTemplate($this->template, $scopeItems, $this);
 
         ob_start();
