@@ -1,6 +1,6 @@
 <?php
 
-namespace Concrete\Core\Template;
+namespace Concrete\Core\Filesystem;
 
 class TemplateService
 {

@@ -164,7 +164,7 @@ return [
         'core_api' => 'Concrete\Core\Api\ApiServiceProvider',
 
         'core_marketplace' => \Concrete\Core\Marketplace\MarketplaceServiceProvider::class,
-        'core_templates' => \Concrete\Core\Template\TemplateServiceProvider::class,
+        'core_templates' => \Concrete\Core\Filesystem\TemplateServiceProvider::class,
     ],
 
     /*
@@ -901,5 +901,11 @@ return [
     'command_handlers' => [
 
     ],
+
+    'twig' => [
+        'extensions' => [
+            'core' => \Concrete\Core\Filesystem\Twig\CoreExtension::class,
+        ]
+    ]
 
 ];

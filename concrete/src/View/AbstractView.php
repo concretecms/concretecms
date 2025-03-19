@@ -1,11 +1,10 @@
 <?php
 namespace Concrete\Core\View;
 
+use Concrete\Core\Filesystem\TemplateService;
 use Concrete\Core\Http\ResponseAssetGroup;
-use Concrete\Core\Template\TemplateService;
-use Request;
-use URL;
 use Core;
+use Request;
 
 /**
  * Abstract view class

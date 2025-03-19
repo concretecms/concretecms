@@ -5,21 +5,20 @@ use Concrete\Core\Asset\Asset;
 use Concrete\Core\Asset\Output\StandardFormatter;
 use Concrete\Core\Feature\Traits\HandleRequiredFeaturesTrait;
 use Concrete\Core\Filesystem\FileLocator;
+use Concrete\Core\Filesystem\TemplateService;
 use Concrete\Core\Http\ResponseAssetGroup;
 use Concrete\Core\Page\Theme\ThemeRouteCollection;
 use Concrete\Core\Page\View\Preview\SkinCustomizerPreviewRequest;
 use Concrete\Core\Site\Service;
 use Concrete\Core\StyleCustomizer\Skin\SkinInterface;
 use Concrete\Core\StyleCustomizer\Skin\Stylesheet\Stylesheet;
-use Concrete\Core\Template\TemplateService;
+use Concrete\Core\Support\Facade\Facade;
+use Config;
 use Environment;
 use Events;
-use Concrete\Core\Support\Facade\Facade;
-use HtmlObject\Element;
-use PageTheme;
-use Page;
-use Config;
 use Illuminate\Filesystem\Filesystem;
+use Page;
+use PageTheme;
 
 class View extends AbstractView
 {

@@ -1,25 +1,19 @@
 <?php
 namespace Concrete\Core\Block\View;
 
-use Concrete\Core\Asset\AssetList;
-use Concrete\Core\Block\BlockController;
+use Concrete\Core\Area\Area;
+use Concrete\Core\Block\Block;
 use Concrete\Core\Block\Events\BlockBeforeRender;
 use Concrete\Core\Block\Events\BlockOutput;
 use Concrete\Core\Config\Repository\Repository;
 use Concrete\Core\Feature\Traits\HandleRequiredFeaturesTrait;
-use Concrete\Core\Feature\UsesFeatureInterface;
-use Concrete\Core\Localization\Localization;
-use Concrete\Core\Logging\Channels;
-use Concrete\Core\Logging\LoggerFactory;
-use Concrete\Core\Page\Theme\Theme;
-use Concrete\Core\Support\Facade\Application;
-use Concrete\Core\Template\TemplateService;
-use Concrete\Core\View\AbstractView;
-use Concrete\Core\Area\Area;
+use Concrete\Core\Filesystem\TemplateService;
 use Concrete\Core\Foundation\Environment;
-use Concrete\Core\User\User;
+use Concrete\Core\Localization\Localization;
 use Concrete\Core\Page\Page;
-use Concrete\Core\Block\Block;
+use Concrete\Core\Support\Facade\Application;
+use Concrete\Core\User\User;
+use Concrete\Core\View\AbstractView;
 use Concrete\Core\View\View;
 
 /**

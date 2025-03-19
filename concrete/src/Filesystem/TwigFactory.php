@@ -1,6 +1,6 @@
 <?php
 
-namespace Concrete\Core\Template;
+namespace Concrete\Core\Filesystem;
 
 use Concrete\Core\Application\ApplicationAwareInterface;
 use Concrete\Core\Application\ApplicationAwareTrait;

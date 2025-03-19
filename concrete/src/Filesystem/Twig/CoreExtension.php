@@ -1,6 +1,6 @@
 <?php
 
-namespace Concrete\Core\Template\Twig;
+namespace Concrete\Core\Filesystem\Twig;
 
 use Concrete\Core\Area\Area;
 use Concrete\Core\Area\GlobalArea;

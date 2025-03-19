@@ -1,6 +1,6 @@
 <?php
 
-namespace Concrete\Core\Template;
+namespace Concrete\Core\Filesystem;
 
 use Concrete\Core\Config\Repository\Repository;
 use Concrete\Core\Foundation\Service\Provider;
