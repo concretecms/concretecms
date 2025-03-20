@@ -525,12 +525,7 @@ class View extends AbstractView
         $_record = $_locator->getRecord(DIRNAME_ELEMENTS . '/' . $_file, true);
         $_file = $_record->getFile();
 
-        unset($_record);
-        unset($_app);
-        unset($_fs);
-        unset($_locator);
-        unset($_theme);
-
-        include $_file;
+        $args['view'] = $view;
+        echo app(TemplateService::class)->renderTemplate($_file, $args);
     }
 }

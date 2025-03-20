@@ -5,12 +5,14 @@ namespace Concrete\Core\Filesystem\Twig;
 use Concrete\Core\Application\ApplicationAwareInterface;
 use Concrete\Core\Application\ApplicationAwareTrait;
 use Concrete\Core\Area\Area;
+use Concrete\Core\Area\ContainerArea;
 use Concrete\Core\Area\GlobalArea;
 use Concrete\Core\Authentication\AuthenticationType;
 use Concrete\Core\Block\View\BlockViewTemplate;
 use Concrete\Core\Config\Repository\Repository;
 use Concrete\Core\File\File;
 use Concrete\Core\Localization\Localization;
+use Concrete\Core\Page\Container\ContainerBlockInstance;
 use Concrete\Core\Page\Page;
 use Concrete\Core\Page\Stack\Stack;
 use Concrete\Core\Support\Facade\Url;
@@ -106,6 +108,8 @@ class CoreExtension extends AbstractExtension implements ApplicationAwareInterfa
 
             /** Translate strings */
             new TwigFunction('t', 't'),
+            new TwigFunction('t2', 't2'),
+            new TwigFunction('tc', 'tc'),
 
             /**
              * Escape HTML, this is rarely useful in twig since twig automatically escapes output for us. But it can be
@@ -160,11 +164,24 @@ class CoreExtension extends AbstractExtension implements ApplicationAwareInterfa
             }),
 
             /**
+             * Create a new ContainerArea
+             * Wrapped in `FluentArea` to allow for chaining
+             */
+            new TwigFunction('ContainerArea', function (
+                ContainerBlockInstance $container,
+                string $handle,
+                Page $c
+            ): FluentArea {
+                return new FluentArea(new ContainerArea($container, $handle), $c);
+            }),
+
+            /**
              * Create a new Stack
              * Wrapped in `FluentArea` to allow for chaining
              */
-            new TwigFunction('Stack', function (string $name): FluentArea {
-                return new FluentArea(Stack::getByName($name));
+            new TwigFunction('Stack', function (string $name): ?FluentArea {
+                $stack = Stack::getByName($name);
+                return $stack ? new FluentArea(Stack::getByName($name)) : null;
             }),
 
             /**
@@ -187,7 +204,7 @@ class CoreExtension extends AbstractExtension implements ApplicationAwareInterfa
     {
         return [
             /** Get a file by ID */
-            new TwigFunction('fileGetByID', [File::class, 'getByID']),
+            new TwigFunction('fileByID', [File::class, 'getByID']),
         ];
     }
 
