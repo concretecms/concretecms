@@ -11,6 +11,7 @@ use Concrete\Core\Authentication\AuthenticationType;
 use Concrete\Core\Block\View\BlockViewTemplate;
 use Concrete\Core\Config\Repository\Repository;
 use Concrete\Core\File\File;
+use Concrete\Core\Html\Image;
 use Concrete\Core\Localization\Localization;
 use Concrete\Core\Page\Container\ContainerBlockInstance;
 use Concrete\Core\Page\Page;
@@ -121,7 +122,7 @@ class CoreExtension extends AbstractExtension implements ApplicationAwareInterfa
                     return $this->app;
                 }
 
-                return $this->app->make($class, $args);
+                return $this->app->make($class, ...$args);
             }),
 
             /** Access config */
@@ -205,6 +206,9 @@ class CoreExtension extends AbstractExtension implements ApplicationAwareInterfa
         return [
             /** Get a file by ID */
             new TwigFunction('fileByID', [File::class, 'getByID']),
+            new TwigFunction('HtmlImage', function (?\Concrete\Core\Entity\File\File $file = null, array $options = []) {
+                return new Image($file, $options);
+            })
         ];
     }
 

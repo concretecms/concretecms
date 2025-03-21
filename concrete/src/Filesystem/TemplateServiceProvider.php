@@ -18,14 +18,18 @@ class TemplateServiceProvider extends Provider
         $this->app->singleton(TemplateService::class);
 
         $this->app->singleton(TwigFactory::class, function ($app) {
-            $config = $app->make(Repository::class)->get('app.twig', []) ?: [];
+            $config = $app->make(Repository::class);
+            $debugMode = $config->get('app.twig.debug');
+            $debug = $debugMode === true;
+            if ($debugMode === 'auto') {
+                // Enable debug if production mode is anything other than 'production'
+                $debug = $config->get('concrete.security.production.mode') !== 'production';
+            }
 
-            $factory = new TwigFactory(
-                new FilesystemCache($config['cache_dir'] ?? DIR_FILES_UPLOADED_STANDARD . '/cache/twig'),
-                (bool) ($config['debug'] ?? false)
-            );
+            $directory = $config->get('app.twig.cache_dir', DIR_FILES_UPLOADED_STANDARD . '/cache/twig');
+            $factory = new TwigFactory(new FilesystemCache($directory), $debug);
 
-            foreach ($config['extensions'] ?? [] as $extension) {
+            foreach ($config->get('app.twig.extensions', []) as $extension) {
                 $factory->addExtension($this->app->make($extension));
             }
 

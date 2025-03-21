@@ -903,7 +903,10 @@ return [
     ],
 
     'twig' => [
-        'debug' => false,
+        // bool|'auto' Set to `'auto'` to enable based on production mode
+        'debug' => 'auto',
+
+        // array<string, \Twig\Extension\ExtensionInterface> The twig extensions to enable
         'extensions' => [
             'debug' => \Twig\Extension\DebugExtension::class,
             'core' => \Concrete\Core\Filesystem\Twig\CoreExtension::class,
