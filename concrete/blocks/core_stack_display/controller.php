@@ -110,12 +110,16 @@ class Controller extends BlockController implements TrackableInterface, UsesFeat
      */
     public function getImportData($blockNode, $page)
     {
-        $args = [];
-        $content = (string) $blockNode->stack;
-        $stack = Stack::getByName($content);
-        $args['stID'] = 0;
-        if (is_object($stack)) {
-            $args['stID'] = $stack->getCollectionID();
+        $args = ['stID' => 0];
+        $pathOrName = isset($blockNode->stack) ? trim((string) $blockNode->stack) : '';
+        if ($pathOrName !== '') {
+            $stack = $pathOrName[0] === '/' ? Stack::getByPath($pathOrName) : null;
+            if (!$stack) {
+                $stack = Stack::getByName($pathOrName);
+            }
+            if ($stack) {
+                $args['stID'] = (int) $stack->getCollectionID();
+            }
         }
 
         return $args;
@@ -209,7 +213,26 @@ class Controller extends BlockController implements TrackableInterface, UsesFeat
     {
         $stack = $this->getStack(false);
         if ($stack !== null) {
-            $this->app->make(Xml::class)->createChildElement($blockNode, 'stack', $stack->getCollectionName());
+            if ($stack->getStackType() == Stack::ST_TYPE_GLOBAL_AREA) {
+                $pathOrName = $stack->getCollectionName();
+            } else {
+                $pathParts = [$stack->getCollectionHandle()];
+                $parentID = $stack->getCollectionParentID();
+                while ($parentID) {
+                    $parentPage = Page::getByID($parentID);
+                    if (!$parentPage || $parentPage->isError()) {
+                        break;
+                    }
+                    $pathPart = $parentPage->getCollectionHandle();
+                    if (ltrim(STACKS_PAGE_PATH, '/') === $pathPart) {
+                        break;
+                    }
+                    $pathParts[] = $pathPart;
+                    $parentID = $parentPage->getCollectionParentID();
+                }
+                $pathOrName = '/' . implode('/', array_reverse($pathParts));
+            }
+            $this->app->make(Xml::class)->createChildElement($blockNode, 'stack', $pathOrName);
         }
     }
 
