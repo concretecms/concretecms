@@ -4,6 +4,7 @@ namespace Concrete\Block\CoreScrapbookDisplay;
 use Concrete\Core\Block\BlockController;
 use Block;
 use Concrete\Core\Block\View\BlockViewTemplate;
+use Concrete\Core\Utility\Service\Xml;
 
 /**
  * The controller for the core scrapbook display block. This block is automatically used when a block is copied into a
@@ -66,15 +67,27 @@ class Controller extends BlockController
 
     public function export(\SimpleXMLElement $blockNode)
     {
-        $b = Block::getByID($this->bOriginalID);
-        $bc = $b->getInstance();
-        if ($bc) {
-            $blockNode['type'] = $b->getBlockTypeHandle();
-            $blockNode['name'] = $b->getBlockName();
-            if ($b->getBlockFilename() != '') {
-                $blockNode['custom-template'] = $b->getBlockFilename();
+        $block = Block::getByID($this->bOriginalID);
+        if ($block) {
+            $clonedBlock = clone $blockNode;
+            $block->export($clonedBlock);
+            $otherBlockNode = $clonedBlock->children()[0];
+            foreach ($otherBlockNode->attributes() as $attribute) {
+                $blockNode[$attribute->getName()] = (string) $attribute;
             }
-            return $bc->export($blockNode);
+            $this->exportChildren($otherBlockNode, $blockNode);
+        }
+    }
+
+    private function exportChildren(\SimpleXMLElement $from, \SimpleXMLElement $to)
+    {
+        $xml = $this->app->make(Xml::class);
+        foreach ($from->children() as $fromChild) {
+            $toChild = $xml->createChildElement($to, $fromChild->getName(), (string) $fromChild);
+            foreach ($fromChild->attributes() as $attribute) {
+                $toChild[$attribute->getName()] = (string) $attribute;
+            }
+            $this->exportChildren($fromChild, $toChild);
         }
     }
 
