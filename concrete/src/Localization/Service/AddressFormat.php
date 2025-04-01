@@ -317,6 +317,8 @@ class AddressFormat
             $lines[] = trim($postalAreaLine);
         }
 
+        $lines = array_map('h', $lines);
+
         if ($format === 'html') {
             return implode('<br>', $lines);
         }
