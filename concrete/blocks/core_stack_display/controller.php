@@ -8,6 +8,7 @@ use Permissions;
 use Page;
 use Concrete\Core\Block\BlockController;
 use Concrete\Core\Multilingual\Page\Section\Section;
+use Concrete\Core\Utility\Service\Xml;
 
 /**
  * The controller for the stack display block. This is an internal proxy block that is inserted when a stack's contents are displayed in a page.
@@ -67,7 +68,7 @@ class Controller extends BlockController implements TrackableInterface
         return $this->bOriginalID;
     }
 
-    public function getSearchableContent() 
+    public function getSearchableContent()
     {
         $searchableContent = '';
         $stack = Stack::getByID($this->stID);
@@ -84,14 +85,29 @@ class Controller extends BlockController implements TrackableInterface
         return $searchableContent;
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Block\BlockController::getImportData()
+     */
     public function getImportData($blockNode, $page)
     {
-        $args = array();
-        $content = (string) $blockNode->stack;
-        $stack = Stack::getByName($content);
-        $args['stID'] = 0;
-        if (is_object($stack)) {
-            $args['stID'] = $stack->getCollectionID();
+        $args = ['stID' => 0];
+        if (isset($blockNode->stack)) {
+            $stack = null;
+            $path = isset($blockNode->stack['path']) ? (string) $blockNode->stack['path'] : '';
+            if ($path !== '') {
+                $stack = Stack::getByPath($path);
+            }
+            if (!$stack) {
+                $name = trim((string) $blockNode->stack);
+                if ($name !== '') {
+                    $stack = Stack::getByName($name);
+                }
+            }
+            if ($stack) {
+                $args['stID'] = (int) $stack->getCollectionID();
+            }
         }
 
         return $args;
@@ -171,14 +187,33 @@ class Controller extends BlockController implements TrackableInterface
         return null;
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Block\BlockController::export()
+     */
     public function export(\SimpleXMLElement $blockNode)
     {
         $stack = $this->getStack(false);
         if ($stack !== null) {
-            $cnode = $blockNode->addChild('stack');
-            $node = dom_import_simplexml($cnode);
-            $no = $node->ownerDocument;
-            $node->appendChild($no->createCDataSection($stack->getCollectionName()));
+            $stackElement = $this->app->make(Xml::class)->createChildElement($blockNode, 'stack', $stack->getCollectionName());
+            if ($stack->getStackType() != Stack::ST_TYPE_GLOBAL_AREA) {
+                $pathParts = [$stack->getCollectionHandle()];
+                $parentID = $stack->getCollectionParentID();
+                while ($parentID) {
+                    $parentPage = Page::getByID($parentID);
+                    if (!$parentPage || $parentPage->isError()) {
+                        break;
+                    }
+                    $pathPart = $parentPage->getCollectionHandle();
+                    if (ltrim(STACKS_PAGE_PATH, '/') === $pathPart) {
+                        break;
+                    }
+                    $pathParts[] = $pathPart;
+                    $parentID = $parentPage->getCollectionParentID();
+                }
+                $stackElement['path'] = '/' . implode('/', array_reverse($pathParts));
+            }
         }
     }
 
