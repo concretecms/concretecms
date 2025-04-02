@@ -548,8 +548,7 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
                                     $result = $inspector->inspect((string) $node);
                                     $args[$node->getName()] = $result->getReplacedValue();
                             } else if (in_array($key, $this->btExportContentColumns)) {
-                                $result = $inspector->inspect((string) $node);
-                                $args[$node->getName()] = $result->getReplacedContent();
+                                $args[$node->getName()] = LinkAbstractor::import((string) $node);
                             } else {
                                 $args[$node->getName()] = (string) $node;
                             }
@@ -584,8 +583,7 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
                                         $result = $inspector->inspect((string) $node);
                                         $aar->{$nodeName} = $result->getReplacedValue();
                                 } else if (in_array($key, $this->btExportContentColumns)) {
-                                    $result = $inspector->inspect((string) $node);
-                                    $aar->{$nodeName} = $result->getReplacedContent();
+                                    $aar->{$nodeName} = LinkAbstractor::import((string) $node);
                                 } else {
                                     $aar->{$nodeName} = (string) $node;
                                 }
