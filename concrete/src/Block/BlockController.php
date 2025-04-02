@@ -544,10 +544,11 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
                                 || in_array($key, $this->btExportFileColumns)
                                 || in_array($key, $this->btExportPageTypeColumns)
                                 || in_array($key, $this->btExportPageFeedColumns)
-                                || in_array($key, $this->btExportFileFolderColumns)) {
-                                    $result = $inspector->inspect((string) $node);
-                                    $args[$node->getName()] = $result->getReplacedValue();
-                            } else if (in_array($key, $this->btExportContentColumns)) {
+                                || in_array($key, $this->btExportFileFolderColumns)
+                            ) {
+                                $result = $inspector->inspect((string) $node);
+                                $args[$node->getName()] = $result->getReplacedValue();
+                            } elseif (in_array($key, $this->btExportContentColumns)) {
                                 $args[$node->getName()] = LinkAbstractor::import((string) $node);
                             } else {
                                 $args[$node->getName()] = (string) $node;
@@ -579,10 +580,11 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
                                     || in_array($key, $this->btExportFileColumns)
                                     || in_array($key, $this->btExportPageTypeColumns)
                                     || in_array($key, $this->btExportPageFeedColumns)
-                                    || in_array($key, $this->btExportFileFolderColumns)) {
-                                        $result = $inspector->inspect((string) $node);
-                                        $aar->{$nodeName} = $result->getReplacedValue();
-                                } else if (in_array($key, $this->btExportContentColumns)) {
+                                    || in_array($key, $this->btExportFileFolderColumns)
+                                ) {
+                                    $result = $inspector->inspect((string) $node);
+                                    $aar->{$nodeName} = $result->getReplacedValue();
+                                } elseif (in_array($key, $this->btExportContentColumns)) {
                                     $aar->{$nodeName} = LinkAbstractor::import((string) $node);
                                 } else {
                                     $aar->{$nodeName} = (string) $node;
