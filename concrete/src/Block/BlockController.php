@@ -372,7 +372,11 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
                 $tableRecord = $data->addChild('record');
                 foreach ($record as $key => $value) {
                     if (isset($columns[strtolower($key)])) {
-                        if (in_array($key, $this->btExportPageColumns)) {
+                        if ($value === null) {
+                            $tableRecord->addChild($key)->addAttribute('null', 'true');
+                        } elseif ($value === 0 || $value === '0') {
+                            $tableRecord->addChild($key, '0');
+                        } elseif (in_array($key, $this->btExportPageColumns)) {
                             $tableRecord->addChild($key, ContentExporter::replacePageWithPlaceHolder($value));
                         } elseif (in_array($key, $this->btExportFileColumns)) {
                             $tableRecord->addChild($key, ContentExporter::replaceFileWithPlaceHolder($value));
@@ -455,8 +459,13 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
                 if ($data['table'] == $this->getBlockTypeDatabaseTable()) {
                     if (isset($data->record)) {
                         foreach ($data->record->children() as $node) {
-                            $result = $inspector->inspect((string) $node);
-                            $args[$node->getName()] = $result->getReplacedValue();
+                            $nodeValue = (string) $node;
+                            if ($nodeValue === '' && isset($node['null']) && filter_var((string) $node['null'], FILTER_VALIDATE_BOOLEAN)) {
+                                $args[$node->getName()] = null;
+                            } else {
+                                $result = $inspector->inspect((string) $node);
+                                $args[$node->getName()] = $result->getReplacedValue();
+                            }
                         }
                     }
                 }
@@ -479,8 +488,13 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
                             $aar->bID = $b->getBlockID();
                             foreach ($record->children() as $node) {
                                 $nodeName = $node->getName();
-                                $result = $inspector->inspect((string) $node);
-                                $aar->{$nodeName} = $result->getReplacedValue();
+                                $nodeValue = (string) $node;
+                                if ($nodeValue === '' && isset($node['null']) && filter_var((string) $node['null'], FILTER_VALIDATE_BOOLEAN)) {
+                                    $aar->{$nodeName} = null;
+                                } else {
+                                    $result = $inspector->inspect($nodeValue);
+                                    $aar->{$nodeName} = $result->getReplacedValue();
+                                }
                             }
                             $aar->Save();
                         }
