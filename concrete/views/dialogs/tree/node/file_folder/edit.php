@@ -25,7 +25,8 @@
             });
             ConcreteEvent.unsubscribe('AjaxFormSubmitSuccess.updateTreeNode');
             ConcreteEvent.subscribe('AjaxFormSubmitSuccess.updateTreeNode', function(e, data) {
-                if (data.form == 'edit-file-folder-node') {
+                if (data.form === 'edit-file-folder-node') {
+                    $('tr[data-details-url$="files/search/folder/' + data.response.treeNodeID + '"] td.ccm-search-results-name').text(data.response.title);
                     ConcreteEvent.publish('ConcreteTreeUpdateTreeNode', {'node': data.response});
                 }
             });
