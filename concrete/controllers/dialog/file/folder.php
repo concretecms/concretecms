@@ -5,7 +5,7 @@ use Concrete\Controller\Backend\UserInterface\File as BackendInterfaceFileContro
 use Concrete\Core\Error\UserMessageException;
 use Concrete\Core\File\EditResponse;
 use Concrete\Core\Tree\Node\Node;
-use URL;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 class Folder extends BackendInterfaceFileController
 {
@@ -44,13 +44,17 @@ class Folder extends BackendInterfaceFileController
             throw new UserMessageException(t('Invalid source file object.'));
         }
 
+		if ($sourceNode->getTreeNodeParentID() === $destNode->getTreeNodeID()) {
+			throw new UserMessageException(t('The selected destination is the same as the current folder.'));
+		}
+
         if ($this->validateAction()) {
             $sourceNode->move($destNode);
             $response = new EditResponse();
             $response->setFile($this->file);
             $response->setMessage(t('File moved to folder successfully.'));
             $response->setAdditionalDataAttribute('folder', $destNode->getTreeNodeJSON());
-            $response->outputJSON();
+			return new JsonResponse($response);
         }
     }
 }

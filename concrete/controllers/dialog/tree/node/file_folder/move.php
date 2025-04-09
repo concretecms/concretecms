@@ -52,10 +52,15 @@ class Move extends NodeController
             throw new UserMessageException(t('Invalid source file object.'));
         }
 
+		if ($sourceNode->getTreeNodeParentID() === $destNode->getTreeNodeID()) {
+			throw new UserMessageException(t('The selected destination is the same as the current folder.'));
+		}
+
         if ($this->validateAction()) {
             $sourceNode->move($destNode);
             $response = new EditResponse();
             $response->setMessage(t('File moved to folder successfully.'));
+			$response->setAdditionalDataAttribute('sourceFolder', $sourceNode->getTreeNodeJSON());
             $response->setAdditionalDataAttribute('folder', $destNode->getTreeNodeJSON());
             return new JsonResponse($response);
         }

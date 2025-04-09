@@ -44,6 +44,9 @@ $folderID = $currentFolder->getTreeNodeParentID();
             ConcreteEvent.unsubscribe('AjaxFormSubmitSuccess.updateFolder');
             ConcreteEvent.subscribe('AjaxFormSubmitSuccess.updateFolder', function (e, data) {
                 if (data.form === 'move-to-folder') {
+                    if (data.response.sourceFolder) {
+                        $('tr[data-details-url$="files/search/folder/' + data.response.sourceFolder.treeNodeID + '"]').remove();
+                    }
                     ConcreteEvent.publish('FolderUpdateRequestComplete', {
                         'folder': data.response.folder
                     });

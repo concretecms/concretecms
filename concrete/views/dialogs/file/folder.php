@@ -48,6 +48,11 @@ if (isset($f) && (is_object($f))) {
             ConcreteEvent.unsubscribe('AjaxFormSubmitSuccess.updateFolder');
             ConcreteEvent.subscribe('AjaxFormSubmitSuccess.updateFolder', function (e, data) {
                 if (data.form === 'move-to-folder') {
+                    if (data.response.files.length > 0) {
+                        data.response.files.forEach(function (file) {
+                            $('tr[data-details-url$="files/details/' + file.fID + '"]').remove();
+                        });
+                    }
                     ConcreteEvent.publish('FolderUpdateRequestComplete', {
                         'folder': data.response.folder
                     });
