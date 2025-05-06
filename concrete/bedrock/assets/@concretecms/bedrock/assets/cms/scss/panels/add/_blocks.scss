@@ -139,10 +139,3 @@ a.ccm-panel-add-block-draggable-block-type.ccm-stacked-list {
   }
 
 }
-
-@include color-mode(dark) {
-  a.ccm-panel-add-block-draggable-block-type,
-  a.ccm-panel-add-container-item {
-    color: $light;
-  }
-}
