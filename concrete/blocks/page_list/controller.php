@@ -200,6 +200,11 @@ class Controller extends BlockController implements UsesFeatureInterface
      */
     public $titleFormat;
 
+    /**
+     * @var string|null
+     */
+    public $relatedType;
+
     protected $btTable = 'btPageList';
     protected $btInterfaceWidth = 700;
     protected $btInterfaceHeight = 525;
@@ -210,6 +215,7 @@ class Controller extends BlockController implements UsesFeatureInterface
     protected $btCacheBlockOutput = null;
     protected $btCacheBlockOutputOnPost = true;
     protected $btCacheBlockOutputLifetime = 300;
+    /** @var \Concrete\Core\Page\PageList $list*/
     protected $list;
 
     /**
@@ -280,7 +286,7 @@ class Controller extends BlockController implements UsesFeatureInterface
         $controller->enableExternalFiltering = $this->request->get('enableExternalFiltering') ?? false;
         $controller->excludeCurrentPage = $this->request->get('excludeCurrentPage') ?? false;
         $controller->filterByRelated = $this->request->get('filterByRelated') ?? false;
-        $controller->relatedTopicAttributeKeyHandle = $this->request->get('relatedTopicAttributeKeyHandle');
+        $controller->relatedTopicAttributeKeyHandle = $this->getRelatedTopicAttributeKeyHandles();
         $controller->filterByCustomTopic = ($this->request->get('topicFilter') == 'custom') ? '1' : '0';
         $controller->customTopicAttributeKeyHandle = $this->request->get('customTopicAttributeKeyHandle');
         $controller->customTopicTreeNodeID = $this->request->get('customTopicTreeNodeID');
@@ -420,13 +426,37 @@ class Controller extends BlockController implements UsesFeatureInterface
         }
 
         if ($this->filterByRelated) {
-            $ak = CollectionKey::getByHandle($this->relatedTopicAttributeKeyHandle);
+            // TODO: fix to use all related ak intead first one
+            $ak = CollectionKey::getByHandle($this->getRelatedTopicAttributeKeyHandles()[0]);
             if (is_object($ak)) {
-                $topics = $c->getAttribute($ak->getAttributeKeyHandle());
+                $topics = [];
+                foreach ($this->getRelatedTopicAttributeKeyHandles() as $relatedTopicAttributeKeyHandle) {
+                    $ak = CollectionKey::getByHandle($relatedTopicAttributeKeyHandle);
+                    if (is_object($ak)) {
+                        $topic= $c->getAttribute($ak->getAttributeKeyHandle());
+                        if ($topic != null) {
+                            $topics = array_merge($topics, $topic);
+                        }
+                    }
+                }
+
                 if (is_array($topics) && count($topics) > 0) {
-                    $topic = $topics[array_rand($topics)];
                     $this->list->filter('p.cID', $c->getCollectionID(), '<>');
-                    $this->list->filterByTopic($topic);
+                    if (isset($this->relatedType)) {
+                        switch ($this->relatedType) {
+                            case 'all':
+                                $this->list->filterByAllTopics($topics);
+                                break;
+                            case 'any':
+                                $this->list->filterByAnyOfTopics($topics);
+                                break;
+                            default:
+                                $this->list->filterByTopic($topics[array_rand($topics)]);
+                                break;
+                        }
+                    } else {
+                        $this->list->filterByTopic($topics[array_rand($topics)]);
+                    }
                 }
             }
         }
@@ -547,6 +577,7 @@ class Controller extends BlockController implements UsesFeatureInterface
         $this->set('buttonLinkText', null);
         $this->set('pageListTitle', false);
         $this->set('noResultsMessage', false);
+        $this->set('relatedTypes', $this->getRelatedTopicAttributeKeyHandles());
         $this->loadKeys();
     }
 
@@ -576,6 +607,8 @@ class Controller extends BlockController implements UsesFeatureInterface
             $topicFilter = 'custom';
         }
         $this->set('topicFilter', $topicFilter);
+        $this->set('relatedTopicAttributeKeyHandle', $this->getRelatedTopicAttributeKeyHandles());
+        $this->set('relatedTypes', $this->getRelatedTopicTypes());
         $this->loadKeys();
     }
 
@@ -803,6 +836,13 @@ class Controller extends BlockController implements UsesFeatureInterface
 
         if (!$args['filterByRelated']) {
             $args['relatedTopicAttributeKeyHandle'] = '';
+        } else {
+            if (is_array($args['relatedTopicAttributeKeyHandle'])) {
+                $args['relatedTopicAttributeKeyHandle'] = implode(',', $args['relatedTopicAttributeKeyHandle']);
+            } else {
+                $args['relatedTopicAttributeKeyHandle'] = trim($args['relatedTopicAttributeKeyHandle']);
+            }
+            $args['relatedType'] = $args['relatedTopicAttributeKeyHandleType'] ?? 'random';
         }
 
         if (!$args['filterByCustomTopic'] || !$this->app->make('helper/number')->isInteger($args['customTopicTreeNodeID'])) {
@@ -923,5 +963,20 @@ class Controller extends BlockController implements UsesFeatureInterface
         }
         
         return '';
+    }
+
+    protected function getRelatedTopicAttributeKeyHandles(): array
+    {
+        $handles = explode(',', $this->relatedTopicAttributeKeyHandle);
+        return array_map('trim', $handles);
+    }
+
+    protected function getRelatedTopicTypes()
+    {
+        return [
+            'random' => t('Random'),
+            'any' => t('Any of the topics'),
+            'all' => t('All of the topics'),
+        ];
     }
 }

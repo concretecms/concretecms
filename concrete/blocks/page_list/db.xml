@@ -125,6 +125,9 @@
       <default value="h5" />
 	  <notnull/>
     </field>
+    <field name="relatedType" type="string" size="20">
+      <default value="random" />
+    </field>
     <index name="ptID">
       <col>ptID</col>
     </index>

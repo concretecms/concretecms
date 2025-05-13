@@ -61,6 +61,8 @@ use Concrete\Core\Form\Service\Widget\DateTime;
  * @var BlockType $thumbnailAttribute
  * @var bool $isOtherPage
  * @var Feed $rssFeed
+ * @var string $relatedType
+ * @var array $relatedTypes
  */
 
 if (!isset($filterDateDays)) {
@@ -194,7 +196,9 @@ echo $userInterface->tabs([
                 </div>
 
                 <div data-row="related-topic">
-
+                    <label class="control-label form-label">
+                        <?= t('Topics') ?>
+                    </label>
                     <?php
                     $relatedTopicAttributeKeyHandles = [
                         "" => t('Choose topics attribute.')
@@ -203,9 +207,31 @@ echo $userInterface->tabs([
                     foreach ($attributeKeys as $attributeKey) {
                         $relatedTopicAttributeKeyHandles[$attributeKey->getAttributeKeyHandle()] = $attributeKey->getAttributeKeyDisplayName();
                     }
-
-                    echo $form->select("relatedTopicAttributeKeyHandle", $relatedTopicAttributeKeyHandles, $relatedTopicAttributeKeyHandle);
                     ?>
+                    <div data-vue="cms">
+                        <concrete-select
+                                :multiple="true"
+                                name="relatedTopicAttributeKeyHandle[]"
+                                :options='<?=json_encode($relatedTopicAttributeKeyHandles)?>'
+                                :value='<?=json_encode($relatedTopicAttributeKeyHandle)?>'>
+
+                        </concrete-select>
+                    </div>
+                    <label class="control-label form-label">
+                        <?= t('Related Types') ?>
+                    </label>
+                    <select class="form-select" name="relatedTopicAttributeKeyHandleType"
+                            id="relatedTopicAttributeKeyHandleType">
+
+                        <?php foreach ($relatedTypes as $key => $label) { ?>
+                            <option value="<?= $key ?>"
+                                    <?php if ($relatedType == $key) {
+                                        echo 'selected';
+                                    } ?>>
+                                <?= $label ?>
+                            </option>
+                        <?php } ?>
+                    </select>
                 </div>
             </div>
         </fieldset>

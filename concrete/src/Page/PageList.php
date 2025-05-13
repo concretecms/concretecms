@@ -664,6 +664,77 @@ class PageList extends DatabaseItemList implements PagerProviderInterface, Pagin
     }
 
     /**
+     * Filters by one of a list of topics. Doesn't look at specific attributes –instead, actually joins to the topics table.
+     *
+     * @param array $topics
+     */
+    public function filterByAnyOfTopics($topics)
+    {
+        if (is_array($topics)) {
+            $treeNodeIDs = [];
+            foreach ($topics as $topic) {
+                if (is_object($topic)) {
+                    $treeNodeIDs[] = $topic->getTreeNodeID();
+                } else {
+                    $treeNodeIDs[] = $topic;
+                }
+            }
+            $paramName = implode(',', array_map([$this->query->getConnection(), 'quote'], $treeNodeIDs));
+        } else {
+            if (is_object($topics)) {
+                $treeNodeID = $topics->getTreeNodeID();
+            } else {
+                $treeNodeID = $topics;
+            }
+            $paramName = $this->query->createNamedParameter($treeNodeID, \PDO::PARAM_INT);
+        }
+        $query = $this->query->getConnection()->createQueryBuilder();
+        $query
+            ->select('cavTopics.cID', 'cavTopics.cvID')
+            ->from('CollectionAttributeValues', 'cavTopics')
+            ->innerJoin('cavTopics', 'AttributeValues', 'av', 'cavTopics.avID = av.avID')
+            ->innerJoin('av', 'atSelectedTopics', 'atst', 'av.avID = atst.avID')
+            ->where('atst.treeNodeID in (' . $paramName . ')')
+        ;
+        $this->query
+            ->andWhere(
+                $this->query->expr()->in('(cv.cID,cv.cvID)', $query->getSQL())
+            )
+        ;
+    }
+
+    /**
+     * Filters by all topics
+     *
+     * @param array $topics
+     */
+    public function filterByAllTopics(array $topics)
+    {
+        if (empty($topics)) {
+            return;
+        }
+
+        $topicIDs = array_map(function ($topic) {
+            return is_object($topic) ? $topic->getTreeNodeID() : $topic;
+        }, $topics);
+
+        $topicCount = count($topicIDs);
+        $connection = $this->query->getConnection();
+        $expr = $this->query->expr();
+
+        $subQuery = $connection->createQueryBuilder()
+            ->select('cav.cID')
+            ->from('CollectionAttributeValues', 'cav')
+            ->innerJoin('cav', 'AttributeValues', 'av', 'cav.avID = av.avID')
+            ->innerJoin('av', 'atSelectedTopics', 'atst', 'av.avID = atst.avID')
+            ->where($expr->in('atst.treeNodeID', $topicIDs))
+            ->groupBy('cav.cID')
+            ->having("COUNT(DISTINCT atst.treeNodeID) = $topicCount");
+
+        $this->query->andWhere($expr->in('p.cID', $subQuery->getSQL()));
+    }
+
+    /**
      * Filters a page list by a particular block type occurring in the version of a page.
      *
      * @param BlockType $bt
