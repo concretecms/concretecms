@@ -54,7 +54,7 @@ class OpenGraph
         $element = new Element('meta');
         $element->setIsSelfClosing(true);
         $element->property($property);
-        $element->content($content);
+        $element->content(htmlspecialchars($content, ENT_QUOTES, APP_CHARSET));
         return $element;
     }
 
@@ -75,7 +75,7 @@ class OpenGraph
         if ($valueFrom) {
             switch ($valueFrom) {
                 case 'page_attribute':
-                    $content = h((string) $page->getAttribute($field['attribute']));
+                    $content = (string) $page->getAttribute($field['attribute']);
                     break;
                 case 'page_property':
                     switch ($field['property']) {
@@ -138,10 +138,16 @@ class OpenGraph
         if ($imageAttribute['value_from'] === 'page_attribute') {
             $image = $page->getAttribute($imageAttribute['attribute']);
             if ($image instanceof File) {
+                $width = $image->getAttribute('width');
+                $height = $image->getAttribute('height');
                 $tags[] = $this->createTag(self::TAG_OG_IMAGE_URL, $image->getURL());
                 $tags[] = $this->createTag(self::TAG_OG_IMAGE_TYPE, $image->getMimeType());
-                $tags[] = $this->createTag(self::TAG_OG_IMAGE_WIDTH, $image->getAttribute('width'));
-                $tags[] = $this->createTag(self::TAG_OG_IMAGE_HEIGHT, $image->getAttribute('height'));
+                if ($width) {
+                    $tags[] = $this->createTag(self::TAG_OG_IMAGE_WIDTH, $width);
+                }
+                if ($height) {
+                    $tags[] = $this->createTag(self::TAG_OG_IMAGE_HEIGHT, $height);
+                }
             }
         }
 
