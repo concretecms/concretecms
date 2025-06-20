@@ -188,7 +188,7 @@ abstract class AbstractRepetition implements RepetitionInterface
             if (is_object($end_date_object)) {
                 $end_time = $end_date_object->getTimestamp();
             }
-            if (!$start_date) {
+            if (!$start_date && !$end_date) {
                 return null;
             }
             if ($start_date && $start_time > $now) {
@@ -196,6 +196,9 @@ abstract class AbstractRepetition implements RepetitionInterface
             }
             if ($end_date && $end_time < $now) {
                 return null;
+            }
+            if (!$start_date && $end_date) {
+                return $this->rangeFromTime(0, $end_time);
             }
 
             if ($end_date) {
