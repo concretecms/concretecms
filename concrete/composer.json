@@ -24,7 +24,11 @@
   "autoload": {
     "psr-4": {
       "Concrete\\Core\\": "src"
-    }
+    },
+    "exclude-from-classmap": [
+        "src/Support/.phpstorm.meta.php",
+        "src/Support/__IDE_SYMBOLS__.php"
+    ]
   },
   "bin": [ "bin/concrete5" ],
   "require": {
