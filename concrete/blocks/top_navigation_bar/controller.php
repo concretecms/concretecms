@@ -234,6 +234,9 @@ class Controller extends BlockController implements UsesFeatureInterface, FileTr
                 if ($this->includeSubPagesInNavigation($child)) {
                     $dropdownChildren = $child->getCollectionChildren('ACTIVE');
                     foreach ($dropdownChildren as $dropdownChild) {
+			if($dropdownChild instanceof Page && ($dropdownChild->isError() || !$dropdownChild->getCollectionName())) {
+                            continue; // avoids bug in https://github.com/concretecms/concretecms/issues/12597
+                        }
                         if ($this->includePageInNavigation($dropdownChild)) {
                             $dropdownChildItem = $this->app->make(PageItem::class, ['page' => $dropdownChild]);
                             if (in_array($dropdownChild->getCollectionID(), $parentIDs)) {
