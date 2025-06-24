@@ -143,7 +143,6 @@ class ImportExportTest extends PageTestCase
             )
         );
         $expectedUncoveredHandles = [
-            'breadcrumbs',
             'calendar',
             'calendar_event',
             'core_area_layout',
