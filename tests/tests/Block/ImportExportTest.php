@@ -139,7 +139,6 @@ class ImportExportTest extends PageTestCase
             )
         );
         $expectedUncoveredHandles = [
-            'autonav',
             'board',
             'breadcrumbs',
             'calendar',
