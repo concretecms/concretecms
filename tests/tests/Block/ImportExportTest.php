@@ -17,6 +17,7 @@ use Concrete\Core\File\StorageLocation\StorageLocationFactory;
 use Concrete\Core\File\StorageLocation\Type\Type as StorageLocationType;
 use Concrete\Core\Page\Page;
 use Concrete\TestHelpers\Page\PageTestCase;
+use Doctrine\ORM\EntityManagerInterface;
 use DOMDocument;
 use DOMXPath;
 use Illuminate\Filesystem\Filesystem;
@@ -54,6 +55,8 @@ class ImportExportTest extends PageTestCase
         return array_merge(parent::getEntityClassNames(), [
             Entity\Attribute\Key\FileKey::class,
             Entity\Attribute\Value\FileValue::class,
+            Entity\Board\Board::class,
+            Entity\Board\InstanceLog::class,
             Entity\Block\BlockType\BlockType::class,
             Entity\File\File::class,
             Entity\File\Image\Thumbnail\Type\Type::class,
@@ -101,6 +104,7 @@ class ImportExportTest extends PageTestCase
         $this->initializeFilesystem($storageDirectory->getPath());
         $this->importTestFiles();
         $blockPage = $this->createTestPages();
+        $this->createBoards();
         $blockType = BlockType::installBlockType($blockTypeHandle);
         $this->assertInstanceOf(BlockTypeEntity::class, $blockType);
         $blockType->loadController();
@@ -139,7 +143,6 @@ class ImportExportTest extends PageTestCase
             )
         );
         $expectedUncoveredHandles = [
-            'board',
             'breadcrumbs',
             'calendar',
             'calendar_event',
@@ -303,5 +306,14 @@ class ImportExportTest extends PageTestCase
         $this->createPage('Page 2');
 
         return $blockPage;
+    }
+
+    private function createBoards(): void
+    {
+        $board = new Entity\Board\Board();
+        $board->setBoardName('Blog');
+        $em = $this->app->make(EntityManagerInterface::class);
+        $em->persist($board);
+        $em->flush();
     }
 }
