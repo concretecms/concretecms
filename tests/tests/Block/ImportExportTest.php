@@ -58,6 +58,7 @@ class ImportExportTest extends PageTestCase
             Entity\Board\Board::class,
             Entity\Board\InstanceLog::class,
             Entity\Block\BlockType\BlockType::class,
+            Entity\Calendar\Calendar::class,
             Entity\File\File::class,
             Entity\File\Image\Thumbnail\Type\Type::class,
             Entity\File\StorageLocation\StorageLocation::class,
@@ -105,6 +106,7 @@ class ImportExportTest extends PageTestCase
         $this->importTestFiles();
         $blockPage = $this->createTestPages();
         $this->createBoards();
+        $this->createCalendars();
         $blockType = BlockType::installBlockType($blockTypeHandle);
         $this->assertInstanceOf(BlockTypeEntity::class, $blockType);
         $blockType->loadController();
@@ -143,7 +145,6 @@ class ImportExportTest extends PageTestCase
             )
         );
         $expectedUncoveredHandles = [
-            'calendar',
             'calendar_event',
             'core_area_layout',
             'core_board_slot',
@@ -313,6 +314,15 @@ class ImportExportTest extends PageTestCase
         $board->setBoardName('Blog');
         $em = $this->app->make(EntityManagerInterface::class);
         $em->persist($board);
+        $em->flush();
+    }
+
+    private function createCalendars(): void
+    {
+        $calendar = new Entity\Calendar\Calendar();
+        $calendar->setName('Calendar Name');
+        $em = $this->app->make(EntityManagerInterface::class);
+        $em->persist($calendar);
         $em->flush();
     }
 }
