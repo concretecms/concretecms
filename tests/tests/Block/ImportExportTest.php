@@ -145,7 +145,6 @@ class ImportExportTest extends PageTestCase
             'breadcrumbs',
             'calendar',
             'calendar_event',
-            'content',
             'core_area_layout',
             'core_board_slot',
             'core_container',
