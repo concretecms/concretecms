@@ -1,0 +1,13 @@
+{
+    "$schema": "../options-schema.json",
+    "fileUsageCount": 2,
+    "richTextsWithPages": {
+        "SELECT description FROM btAccordionEntries WHERE bID = :bID ORDER BY sortOrder LIMIT 0,1": 1
+    },
+    "richTextsWithFiles": {
+        "SELECT description FROM btAccordionEntries WHERE bID = :bID ORDER BY sortOrder LIMIT 1,1": 1        
+    },
+    "richTextsWithImages": {
+        "SELECT description FROM btAccordionEntries WHERE bID = :bID ORDER BY sortOrder LIMIT 1,1": 1        
+    }
+}
