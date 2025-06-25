@@ -33,6 +33,10 @@ class ImportExportTest extends PageTestCase
     protected function getTables()
     {
         return array_merge(parent::getTables(), [
+            'AreaLayouts',
+            'AreaLayoutColumns',
+            'AreaLayoutPresets',
+            'AreaLayoutThemeGridColumns',
             'Blocks',
             'BlockTypeSets',
             'TreeTypes',
@@ -145,7 +149,6 @@ class ImportExportTest extends PageTestCase
             )
         );
         $expectedUncoveredHandles = [
-            'core_area_layout',
             'core_board_slot',
             'core_container',
             'core_conversation',
