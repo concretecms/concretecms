@@ -15,7 +15,6 @@ use Concrete\Core\File\Import\ImportOptions;
 use Concrete\Core\File\Service\VolatileDirectory;
 use Concrete\Core\File\StorageLocation\StorageLocationFactory;
 use Concrete\Core\File\StorageLocation\Type\Type as StorageLocationType;
-use Concrete\Core\Page\Page;
 use Concrete\TestHelpers\Page\PageTestCase;
 use Doctrine\ORM\EntityManagerInterface;
 use DOMDocument;
@@ -25,6 +24,16 @@ use SimpleXMLElement;
 
 class ImportExportTest extends PageTestCase
 {
+    /**
+     * @var \Concrete\Core\File\Service\VolatileDirectory
+     */
+    private static $storageVolatileDirectory;
+
+    /**
+     * @var \Concrete\Core\Page\Page
+     */
+    private static $blockPage;
+
     /**
      * {@inheritdoc}
      *
@@ -73,6 +82,31 @@ class ImportExportTest extends PageTestCase
         ]);
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\TestHelpers\Page\PageTestCase::setupBeforeClass()
+     */
+    public static function setupBeforeClass(): void
+    {
+        parent::setUpBeforeClass();
+        self::createTestPages();
+        self::createFiles();
+        self::createBoards();
+        self::createCalendars();
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\TestHelpers\Database\ConcreteDatabaseTestCase::tearDownAfterClass()
+     */
+    public static function tearDownAfterClass(): void
+    {
+        parent::TearDownAfterClass();
+        self::$storageVolatileDirectory = null;
+    }
+
     public function provideCases(): array
     {
         $fs = new FileSystem();
@@ -105,12 +139,6 @@ class ImportExportTest extends PageTestCase
      */
     public function testCIFImportExport(string $blockTypeHandle, string $cifFile, array $options): void
     {
-        $storageDirectory = $this->app->make(VolatileDirectory::class, ['parentDirectory' => sys_get_temp_dir()]);
-        $this->initializeFilesystem($storageDirectory->getPath());
-        $this->importTestFiles();
-        $blockPage = $this->createTestPages();
-        $this->createBoards();
-        $this->createCalendars();
         $blockType = BlockType::installBlockType($blockTypeHandle);
         $this->assertInstanceOf(BlockTypeEntity::class, $blockType);
         $blockType->loadController();
@@ -118,7 +146,7 @@ class ImportExportTest extends PageTestCase
         $this->assertInstanceOf(BlockController::class, $blockController);
         $inputCif = simplexml_load_file($cifFile);
         $this->assertInstanceOf(SimpleXMLElement::class, $inputCif);
-        $block = $blockController->import($blockPage, 'Main', $inputCif);
+        $block = $blockController->import(self::$blockPage, 'Main', $inputCif);
         $this->assertInstanceOf(Block::class, $block);
         $this->checkFileUsageCount($block, $options['fileUsageCount'] ?? 0);
         if (isset($options['richTextsWithPages'])) {
@@ -216,14 +244,14 @@ class ImportExportTest extends PageTestCase
         $this->assertSame($expectedUsageCount, $actualUsageCount, "The block should use {$expectedUsageCount} instead of {$actualUsageCount} distinct file(s)");
     }
 
-    protected function checkFieldRegexes(Block $block, array $queriesAndMatchCounts, string $regex): void
+    private function checkFieldRegexes(Block $block, array $queriesAndMatchCounts, string $regex): void
     {
         foreach ($queriesAndMatchCounts as $query => $matchCount) {
             $this->checkFieldRegex($block, $query, $matchCount, $regex);
         }
     }
 
-    protected function checkFieldRegex(Block $block, string $query, int $expectedMatchCount, string $regex): void
+    private function checkFieldRegex(Block $block, string $query, int $expectedMatchCount, string $regex): void
     {
         $richText = app(Connection::class)->fetchOne($query, ['bID' => $block->getBlockID()]);
         $this->assertNotSame(false, $richText);
@@ -232,7 +260,7 @@ class ImportExportTest extends PageTestCase
         $this->assertSame($expectedMatchCount, $actualMatchCount, "The rich text\n{$richText}\nshould match {$regex} {$expectedMatchCount} time(s) instead of {$actualMatchCount}");
     }
 
-    protected function assertSameXML(string $expected, string $actual): void
+    private function assertSameXML(string $expected, string $actual): void
     {
         $expected = $this->normalizeXML($expected);
         $actual = $this->normalizeXML($actual);
@@ -277,23 +305,26 @@ class ImportExportTest extends PageTestCase
         return $doc->saveXML();
     }
 
-    private function initializeFilesystem(string $path): void
+    private static function createTestPages(): void
     {
+        self::$blockPage = static::createPage('Page 1');
+        static::createPage('Page 2');
+    }
+
+    private static function createFiles(): void
+    {
+        self::$storageVolatileDirectory = app(VolatileDirectory::class, ['parentDirectory' => sys_get_temp_dir()]);
         $storageLocationType = StorageLocationType::add('local', 'Local Storage');
         $storageLocationConfiguration = $storageLocationType->getConfigurationObject();
-        $storageLocationConfiguration->setRootPath($path);
+        $storageLocationConfiguration->setRootPath(self::$storageVolatileDirectory->getPath());
         $storageLocationConfiguration->setWebRootRelativePath('/application/files');
-        $storageLocationFactory = $this->app->make(StorageLocationFactory::class);
+        $storageLocationFactory = app(StorageLocationFactory::class);
         $storageLocation = $storageLocationFactory->create($storageLocationConfiguration, 'Default');
         $storageLocation->setIsDefault(true);
         $storageLocationFactory->persist($storageLocation);
-        $this->app->make(\Concrete\Core\File\Filesystem::class)->create();
-    }
-
-    private function importTestFiles(): void
-    {
-        $importer = $this->app->make(FileImporter::class);
-        $importOptions = $this->app->make(ImportOptions::class)
+        app(\Concrete\Core\File\Filesystem::class)->create();
+        $importer = app(FileImporter::class);
+        $importOptions = app(ImportOptions::class)
             ->setCanChangeLocalFile(false)
         ;
         $importOptions->setCustomPrefix('123456789012');
@@ -302,28 +333,20 @@ class ImportExportTest extends PageTestCase
         $importer->importLocalFile(DIR_TESTS . '/assets/Block/cif/file-2.png', 'file-2.png', $importOptions);
     }
 
-    private function createTestPages(): Page
-    {
-        $blockPage = $this->createPage('Page 1');
-        $this->createPage('Page 2');
-
-        return $blockPage;
-    }
-
-    private function createBoards(): void
+    private static function createBoards(): void
     {
         $board = new Entity\Board\Board();
         $board->setBoardName('Blog');
-        $em = $this->app->make(EntityManagerInterface::class);
+        $em = app(EntityManagerInterface::class);
         $em->persist($board);
         $em->flush();
     }
 
-    private function createCalendars(): void
+    private static function createCalendars(): void
     {
         $calendar = new Entity\Calendar\Calendar();
         $calendar->setName('Calendar Name');
-        $em = $this->app->make(EntityManagerInterface::class);
+        $em = app(EntityManagerInterface::class);
         $em->persist($calendar);
         $em->flush();
     }
