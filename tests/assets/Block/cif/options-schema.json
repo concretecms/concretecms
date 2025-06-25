@@ -5,6 +5,13 @@
     "$schema": {
       "type": "string"
     },
+    "requiredBlockTypes": {
+        "type": "array",
+        "items": {
+            "type": "string"
+        },
+        "uniqueItems": true
+    },
     "fileUsageCount": {
       "type": "integer",
       "minimum": 0

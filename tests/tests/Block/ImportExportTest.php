@@ -77,6 +77,9 @@ class ImportExportTest extends PageTestCase
             Entity\File\StorageLocation\StorageLocation::class,
             Entity\File\StorageLocation\Type\Type::class,
             Entity\File\Version::class,
+            Entity\Page\Container::class,
+            Entity\Page\Container\Instance::class,
+            Entity\Page\Container\InstanceArea::class,
             Entity\Statistics\UsageTracker\FileUsageRecord::class,
             Entity\StyleCustomizer\Inline\StyleSet::class,
         ]);
@@ -94,6 +97,7 @@ class ImportExportTest extends PageTestCase
         self::createFiles();
         self::createBoards();
         self::createCalendars();
+        self::createContainers();
     }
 
     /**
@@ -139,7 +143,14 @@ class ImportExportTest extends PageTestCase
      */
     public function testCIFImportExport(string $blockTypeHandle, string $cifFile, array $options): void
     {
-        $blockType = BlockType::installBlockType($blockTypeHandle);
+        foreach (($options['requiredBlockTypes'] ?? []) as $requiredBlockTypeHandle) {
+            if (BlockType::getByHandle($requiredBlockTypeHandle)) {
+                continue;
+            }
+            $requiredBlockType = BlockType::installBlockType($requiredBlockTypeHandle);
+            $this->assertInstanceOf(BlockTypeEntity::class, $requiredBlockType);
+        }
+        $blockType = BlockType::getByHandle($blockTypeHandle) ?: BlockType::installBlockType($blockTypeHandle);
         $this->assertInstanceOf(BlockTypeEntity::class, $blockType);
         $blockType->loadController();
         $blockController = $blockType->getController();
@@ -178,7 +189,6 @@ class ImportExportTest extends PageTestCase
         );
         $expectedUncoveredHandles = [
             'core_board_slot',
-            'core_container',
             'core_conversation',
             'core_page_type_composer_control_output',
             'core_scrapbook_display',
@@ -349,5 +359,16 @@ class ImportExportTest extends PageTestCase
         $em = app(EntityManagerInterface::class);
         $em->persist($calendar);
         $em->flush();
+    }
+
+    private static function createContainers(): void
+    {
+        $container = new Entity\Page\Container();
+        $container->setContainerIcon('full.png');
+        $container->setContainerHandle('container_1');
+        $container->setContainerName('Container One');
+        $em = app(EntityManagerInterface::class);
+        $em->persist($container);
+        $em->flush();        
     }
 }
