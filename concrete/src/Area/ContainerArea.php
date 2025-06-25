@@ -78,11 +78,7 @@ class ContainerArea
             $page = $area->getAreaCollectionObject();
             $subArea->load($page);
             $subArea->setSubAreaBlockObject($block);
-
-            $instanceAreas = $this->instance->getInstance()->getInstanceAreas();
-            if (!count($instanceAreas)) {
-                $this->refreshInstanceAreas($subArea);
-            }
+            $this->refreshInstanceAreas($subArea);
 
             return $subArea;
         }
@@ -107,6 +103,7 @@ class ContainerArea
         $instanceArea->setAreaID($subArea->getAreaID());
         $instanceArea->setInstance($this->instance->getInstance());
         $entityManager->persist($instanceArea);
+        $this->instance->getInstance()->getInstanceAreas()->add($instanceArea);
         $entityManager->flush();
     }
 
