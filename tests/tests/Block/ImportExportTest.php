@@ -48,6 +48,8 @@ class ImportExportTest extends PageTestCase
             'AreaLayoutThemeGridColumns',
             'Blocks',
             'BlockTypeSets',
+            'Conversations',
+            'ConversationSubscriptions',
             'TreeTypes',
             'Trees',
             'TreeFileFolderNodes',
@@ -55,6 +57,7 @@ class ImportExportTest extends PageTestCase
             'TreeNodes',
             'TreeNodePermissionAssignments',
             'TreeFileNodes',
+            'UserGroups',
         ]);
     }
 
@@ -93,7 +96,8 @@ class ImportExportTest extends PageTestCase
     public static function setupBeforeClass(): void
     {
         parent::setUpBeforeClass();
-        self::createTestPages();
+        self::createPages();
+        self::createUsers();
         self::createFiles();
         self::createBoards();
         self::createCalendars();
@@ -315,10 +319,29 @@ class ImportExportTest extends PageTestCase
         return $doc->saveXML();
     }
 
-    private static function createTestPages(): void
+    private static function createPages(): void
     {
         self::$blockPage = static::createPage('Page 1');
         static::createPage('Page 2');
+    }
+
+    private static function createUsers(): void
+    {
+        $registrationService = app('user/registration');
+        $registrationService->create([
+            'uName' => 'jane_doe',
+            'uPassword' => '12345',
+            'uEmail' => 'jane@doe.org',
+            'uDefaultLanguage' => 'en_US',
+            'uHomeFileManagerFolderID' => null,
+        ]);
+        $registrationService->create([
+            'uName' => 'john_doe',
+            'uPassword' => '54321',
+            'uEmail' => 'john@doe.org',
+            'uDefaultLanguage' => 'en_US',
+            'uHomeFileManagerFolderID' => null,
+        ]);
     }
 
     private static function createFiles(): void
@@ -369,6 +392,6 @@ class ImportExportTest extends PageTestCase
         $container->setContainerName('Container One');
         $em = app(EntityManagerInterface::class);
         $em->persist($container);
-        $em->flush();        
+        $em->flush();
     }
 }
