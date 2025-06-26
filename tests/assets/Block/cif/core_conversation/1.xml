@@ -1,0 +1,31 @@
+<block type="core_conversation" name="">
+   <data table="btCoreConversation">
+      <record>
+         <cnvID>1</cnvID>
+         <enablePosting>1</enablePosting>
+         <paginate>1</paginate>
+         <itemsPerPage>50</itemsPerPage>
+         <displayMode>threaded</displayMode>
+         <orderBy>rating</orderBy>
+         <enableOrdering>1</enableOrdering>
+         <enableCommentRating>1</enableCommentRating>
+         <enableTopCommentReviews>0</enableTopCommentReviews>
+         <displaySocialLinks>1</displaySocialLinks>
+         <reviewAggregateAttributeKey null="true" />
+         <displayPostingForm>bottom</displayPostingForm>
+         <addMessageLabel>Add Message!</addMessageLabel>
+         <dateFormat>custom</dateFormat>
+         <customDateFormat>Y</customDateFormat>
+         <attachmentOverridesEnabled>1</attachmentOverridesEnabled>
+         <attachmentsEnabled>1</attachmentsEnabled>
+         <maxFilesGuest>3</maxFilesGuest>
+         <maxFilesRegistered>10</maxFilesRegistered>
+         <maxFileSizeGuest>1</maxFileSizeGuest>
+         <maxFileSizeRegistered>10</maxFileSizeRegistered>
+         <notificationOverridesEnabled>1</notificationOverridesEnabled>
+         <notificationUser>john_doe</notificationUser>
+         <subscriptionEnabled>1</subscriptionEnabled>
+         <fileExtensions>jpg,gif,jpeg,png,doc,docx,zip</fileExtensions>
+      </record>
+   </data>
+</block>

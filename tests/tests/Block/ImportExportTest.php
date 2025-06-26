@@ -193,7 +193,6 @@ class ImportExportTest extends PageTestCase
         );
         $expectedUncoveredHandles = [
             'core_board_slot',
-            'core_conversation',
             'core_page_type_composer_control_output',
             'core_scrapbook_display',
             'core_stack_display',
