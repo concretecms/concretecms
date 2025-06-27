@@ -411,7 +411,8 @@ class ImportExportTest extends PageTestCase
         $storageLocation = $storageLocationFactory->create($storageLocationConfiguration, 'Default');
         $storageLocation->setIsDefault(true);
         $storageLocationFactory->persist($storageLocation);
-        app(\Concrete\Core\File\Filesystem::class)->create();
+        $fileManager = app(\Concrete\Core\File\Filesystem::class)->create();
+        $rootFileFolder = $fileManager->getRootTreeNodeObject();
         $importer = app(FileImporter::class);
         $importOptions = app(ImportOptions::class)
             ->setCanChangeLocalFile(false)
@@ -423,6 +424,10 @@ class ImportExportTest extends PageTestCase
         FileSet::create('Test File Set #1');
         FileSet::create('Test File Set #2');
         FileSet::create('Test File Set #3');
+        $rootFileFolder->add('Sample File Folder #1', $rootFileFolder);
+        $folder = $rootFileFolder->add('Sample File Folder #2', $rootFileFolder);
+        $rootFileFolder->add('Child Folder', $folder);
+        $rootFileFolder->add('Sample File Folder #3', $rootFileFolder);
     }
 
     private static function createBoards(): void
