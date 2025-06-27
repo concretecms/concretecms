@@ -13,6 +13,7 @@ use Concrete\Core\Entity\Block\BlockType\BlockType as BlockTypeEntity;
 use Concrete\Core\File\Import\FileImporter;
 use Concrete\Core\File\Import\ImportOptions;
 use Concrete\Core\File\Service\VolatileDirectory;
+use Concrete\Core\File\Set\Set as FileSet;
 use Concrete\Core\File\StorageLocation\StorageLocationFactory;
 use Concrete\Core\File\StorageLocation\Type\Type as StorageLocationType;
 use Concrete\Core\Page\Single as SinglePage;
@@ -56,6 +57,7 @@ class ImportExportTest extends PageTestCase
             'BlockTypeSets',
             'Conversations',
             'ConversationSubscriptions',
+            'FileSets',
             'PageTypeComposerControlTypes',
             'PageTypeComposerFormLayoutSetControls',
             'PageTypeComposerOutputControls',
@@ -418,6 +420,9 @@ class ImportExportTest extends PageTestCase
         $importer->importLocalFile(DIR_TESTS . '/assets/Block/cif/file-1.jpg', 'file-1.jpg', $importOptions);
         $importOptions->setCustomPrefix('210987654321');
         $importer->importLocalFile(DIR_TESTS . '/assets/Block/cif/file-2.png', 'file-2.png', $importOptions);
+        FileSet::create('Test File Set #1');
+        FileSet::create('Test File Set #2');
+        FileSet::create('Test File Set #3');
     }
 
     private static function createBoards(): void
