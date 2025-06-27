@@ -15,6 +15,9 @@ use Concrete\Core\File\Import\ImportOptions;
 use Concrete\Core\File\Service\VolatileDirectory;
 use Concrete\Core\File\StorageLocation\StorageLocationFactory;
 use Concrete\Core\File\StorageLocation\Type\Type as StorageLocationType;
+use Concrete\Core\Page\Single as SinglePage;
+use Concrete\Core\Page\Stack\Stack;
+use Concrete\Core\Page\Stack\Folder\FolderService as StackFolderService;
 use Concrete\Core\Page\Type\Composer\Control\Type\Type as ComposerControlType;
 use Concrete\Core\Page\Type\Type as PageType;
 use Concrete\TestHelpers\Page\PageTestCase;
@@ -57,6 +60,7 @@ class ImportExportTest extends PageTestCase
             'PageTypeComposerFormLayoutSetControls',
             'PageTypeComposerOutputControls',
             'PageTypePageTemplateDefaultPages',
+            'Stacks',
             'TreeTypes',
             'Trees',
             'TreeFileFolderNodes',
@@ -109,6 +113,7 @@ class ImportExportTest extends PageTestCase
         self::createBoards();
         self::createCalendars();
         self::createContainers();
+        self::createStacks();
     }
 
     /**
@@ -250,7 +255,6 @@ class ImportExportTest extends PageTestCase
         );
         $expectedUncoveredHandles = [
             'core_board_slot', // Does it make sense to test it?
-            'core_stack_display',
             'core_theme_documentation_breadcrumb',
             'core_theme_documentation_toc',
             'date_navigation',
@@ -454,5 +458,22 @@ class ImportExportTest extends PageTestCase
         $em = app(EntityManagerInterface::class);
         $em->persist($container);
         $em->flush();
+    }
+
+    private static function createStacks(): void
+    {
+        PageType::add([
+            'handle' => STACKS_PAGE_TYPE,
+            'name' => 'Stack',
+            'internal' => 1,
+        ]);
+        SinglePage::addGlobal(STACKS_PAGE_PATH);
+        $stackFolderService = app(StackFolderService::class);
+        Stack::addStack('Stack 1 in root folder');
+        Stack::addStack('Stack 2 in root folder');
+        $stackFolder1 = $stackFolderService->add('Stack Folder 1');
+        $stackFolder11 = $stackFolderService->add('Sub folder 1 of Stack Folder 1', $stackFolder1);
+        Stack::addStack('Stack 3 in sub folder', $stackFolder11);
+        Stack::addStack('Stack 4 in sub folder', $stackFolder11);
     }
 }
