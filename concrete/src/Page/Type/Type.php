@@ -446,10 +446,8 @@ class Type extends ConcreteObject implements \Concrete\Core\Permission\ObjectInt
         $data['ptIsFrequentlyAdded'] = $xml->getBool($node['is-frequently-added']) ? 1 : 0;
 
         $data['templates'] = $types;
-        $pkg = false;
-        if ($node['package']) {
-            $pkg = Package::getByHandle((string) $node['package']);
-        }
+        $pkgHandle = isset($node['package']) ? (string) $node['package'] : '';
+        $pkg = $pkgHandle === '' ? false : Package::getByHandle($pkgHandle);
 
         if ($ptID) {
             $cm = static::getByID($ptID);
