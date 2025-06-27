@@ -163,38 +163,38 @@ class ImportExportTest extends PageTestCase
         }
         $blockType = BlockType::getByHandle($blockTypeHandle) ?: BlockType::installBlockType($blockTypeHandle);
         $this->assertInstanceOf(BlockTypeEntity::class, $blockType);
-        $blockType->loadController();
-        $blockController = $blockType->getController();
-        $this->assertInstanceOf(BlockController::class, $blockController);
         $inputCif = simplexml_load_file($cifFile);
         $this->assertInstanceOf(SimpleXMLElement::class, $inputCif);
         $importerExporterMethod = $options['importerExporterMethod'] ?? 'importExportBlockType';
-        $outputCif = $this->{$importerExporterMethod}($blockController, $inputCif, $options);
+        $outputCif = $this->{$importerExporterMethod}($blockType, $inputCif, $options);
         $this->assertSameXML($inputCif->asXML(), $outputCif);
     }
 
-    private function importExportBlockType(BlockController $blockController, SimpleXMLElement $inputCif, array $options): string
+    private function importExportBlockType(BlockTypeEntity $blockType, SimpleXMLElement $inputCif, array $options, &$createdBlock = null): string
     {
-        $block = $blockController->import(self::$blockPage, 'Main', $inputCif);
-        $this->assertInstanceOf(Block::class, $block);
-        $this->checkFileUsageCount($block, $options['fileUsageCount'] ?? 0);
+        $blockType->loadController();
+        $blockController = $blockType->getController();
+        $this->assertInstanceOf(BlockController::class, $blockController);
+        $createdBlock = $blockController->import(self::$blockPage, 'Main', $inputCif);
+        $this->assertInstanceOf(Block::class, $createdBlock);
+        $this->checkFileUsageCount($createdBlock, $options['fileUsageCount'] ?? 0);
         if (isset($options['richTextsWithPages'])) {
-            $this->checkFieldRegexes($block, $options['richTextsWithPages'], '/\{CCM:CID_\d+\}/');
+            $this->checkFieldRegexes($createdBlock, $options['richTextsWithPages'], '/\{CCM:CID_\d+\}/');
         }
         if (isset($options['richTextsWithImages'])) {
-            $this->checkFieldRegexes($block, $options['richTextsWithImages'], '/<concrete-picture\b[^>]*\b(fid|fID)\s*=\s*["\']?[1-9]\d*\b"/s');
+            $this->checkFieldRegexes($createdBlock, $options['richTextsWithImages'], '/<concrete-picture\b[^>]*\b(fid|fID)\s*=\s*["\']?[1-9]\d*\b"/s');
         }
         if (isset($options['richTextsWithFiles'])) {
-            $this->checkFieldRegexes($block, $options['richTextsWithFiles'], '/\{CCM:FID_DL_[0-9a-fA-F][0-9a-fA-F\-]+[0-9a-fA-F]\}/');
+            $this->checkFieldRegexes($createdBlock, $options['richTextsWithFiles'], '/\{CCM:FID_DL_[0-9a-fA-F][0-9a-fA-F\-]+[0-9a-fA-F]\}/');
         }
         $outputCif = simplexml_load_string('<root />');
-        $block->export($outputCif);
+        $createdBlock->export($outputCif);
         $this->assertTrue(isset($outputCif->block));
 
         return $outputCif->block->asXML();
     }
 
-    private function importExportPageType1(BlockController $blockController, SimpleXMLElement $inputCif, array $options): string
+    private function importExportPageType1(BlockTypeEntity $blockType, SimpleXMLElement $inputCif, array $options): string
     {
         if (!ComposerControlType::getByHandle('block')) {
             ComposerControlType::add('block', 'Block');
