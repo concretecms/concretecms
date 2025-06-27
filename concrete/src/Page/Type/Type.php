@@ -88,7 +88,7 @@ class Type extends ConcreteObject implements \Concrete\Core\Permission\ObjectInt
     }
 
     /**
-     * @return \Concrete\Core\Page\Type\PublishTarget\Configuration\Configuration
+     * @return \Concrete\Core\Page\Type\PublishTarget\Configuration\Configuration|null
      */
     public function getPageTypePublishTargetObject()
     {
@@ -575,7 +575,9 @@ class Type extends ConcreteObject implements \Concrete\Core\Permission\ObjectInt
         }
 
         $target = $this->getPageTypePublishTargetObject();
-        $target->export($pagetype);
+        if ($target) {
+            $target->export($pagetype);
+        }
 
         $cfsn = $pagetype->addChild('composer');
         $fsn = $cfsn->addChild('formlayout');
