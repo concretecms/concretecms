@@ -733,7 +733,7 @@ class Type extends ConcreteObject implements \Concrete\Core\Permission\ObjectInt
      *
      * @param bool|Package $pkg This should be false if the type is not tied to a package, or a package object
      *
-     * @return static|mixed|null
+     * @return static
      */
     public static function add($data, $pkg = false)
     {
@@ -864,9 +864,9 @@ class Type extends ConcreteObject implements \Concrete\Core\Permission\ObjectInt
             $pe = PageOwnerPermissionAccessEntity::getOrCreate();
             $pa->addListItem($pe);
             $pt->assignPermissionAccess($pa);
-
-            return $ptt;
         }
+
+        return $ptt;
     }
 
     public function update($data)
