@@ -1,0 +1,34 @@
+<block type="document_library" name="">
+   <data table="btDocumentLibrary">
+      <record>
+         <folderID>{ccm:export:filefolder:/Sample File Folder #2/Child Folder}</folderID>
+         <setMode>any</setMode>
+         <onlyCurrentUser>1</onlyCurrentUser>
+         <tags>tag1</tags>
+         <viewProperties>{"thumbnail":"5","filename":"1","tags":"-1","date":"5","extension":"1","size":"-1","description":"-1"}</viewProperties>
+         <expandableProperties>[]</expandableProperties>
+         <searchProperties>[]</searchProperties>
+         <orderBy>title</orderBy>
+         <displayLimit>123</displayLimit>
+         <displayOrderDesc>1</displayOrderDesc>
+         <maxThumbWidth>331</maxThumbWidth>
+         <maxThumbHeight>112</maxThumbHeight>
+         <enableSearch>1</enableSearch>
+         <heightMode>fixed</heightMode>
+         <downloadFileMethod>force</downloadFileMethod>
+         <fixedHeightSize>321</fixedHeightSize>
+         <headerBackgroundColor>rgb(255, 0, 0)</headerBackgroundColor>
+         <headerBackgroundColorActiveSort>rgb(4, 244, 50)</headerBackgroundColorActiveSort>
+         <headerTextColor>rgb(41, 134, 204)</headerTextColor>
+         <allowFileUploading>1</allowFileUploading>
+         <allowInPageFileManagement>1</allowInPageFileManagement>
+         <tableName>Table Results</tableName>
+         <tableDescription>Table Description</tableDescription>
+         <tableStriped>1</tableStriped>
+         <rowBackgroundColorAlternate>rgb(255, 217, 102)</rowBackgroundColorAlternate>
+         <hideFolders>0</hideFolders>
+         <setNames>["Test File Set #3","Test File Set #1"]</setNames>
+         <addFilesToSetName />
+      </record>
+   </data>
+</block>
