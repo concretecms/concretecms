@@ -255,7 +255,6 @@ class ImportExportTest extends PageTestCase
         );
         $expectedUncoveredHandles = [
             'core_board_slot', // Does it make sense to test it?
-            'core_theme_documentation_toc',
             'date_navigation',
             'desktop_app_status',
             'desktop_concrete_latest',
