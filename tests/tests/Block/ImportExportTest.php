@@ -223,6 +223,19 @@ class ImportExportTest extends PageTestCase
         return $xml;
     }
 
+    private function exportCoreScrapbookDisplay1(BlockTypeEntity $blockType, SimpleXMLElement $inputCif, array $options): string
+    {
+        $contentBlockType = BlockType::getByHandle('content');
+        $contentBlock = null;
+        $this->importExportBlockType($contentBlockType, $inputCif, $options, $contentBlock);
+        $aliasBlock = self::$blockPage->addBlock($blockType, 'Main', ['bOriginalID' => $contentBlock->getBlockID()]);
+        $outputCif = simplexml_load_string('<root />');
+        $aliasBlock->export($outputCif);
+        $this->assertTrue(isset($outputCif->block));
+
+        return $outputCif->block->asXML();
+    }
+
     public function testBlockTypeCoverage(): void
     {
         $fs = new Filesystem();
@@ -237,7 +250,6 @@ class ImportExportTest extends PageTestCase
         );
         $expectedUncoveredHandles = [
             'core_board_slot', // Does it make sense to test it?
-            'core_scrapbook_display',
             'core_stack_display',
             'core_theme_documentation_breadcrumb',
             'core_theme_documentation_toc',
