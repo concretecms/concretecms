@@ -255,7 +255,6 @@ class ImportExportTest extends PageTestCase
         );
         $expectedUncoveredHandles = [
             'core_board_slot', // Does it make sense to test it?
-            'date_navigation',
             'desktop_app_status',
             'desktop_concrete_latest',
             'desktop_draft_list',
@@ -379,6 +378,7 @@ class ImportExportTest extends PageTestCase
     {
         self::$blockPage = static::createPage('Page 1');
         static::createPage('Page 2');
+        static::createPage('Page 3');
     }
 
     private static function createUsers(): void
