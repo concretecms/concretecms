@@ -15,6 +15,8 @@ use Concrete\Core\File\Import\ImportOptions;
 use Concrete\Core\File\Service\VolatileDirectory;
 use Concrete\Core\File\StorageLocation\StorageLocationFactory;
 use Concrete\Core\File\StorageLocation\Type\Type as StorageLocationType;
+use Concrete\Core\Page\Type\Composer\Control\Type\Type as ComposerControlType;
+use Concrete\Core\Page\Type\Type as PageType;
 use Concrete\TestHelpers\Page\PageTestCase;
 use Doctrine\ORM\EntityManagerInterface;
 use DOMDocument;
@@ -46,10 +48,15 @@ class ImportExportTest extends PageTestCase
             'AreaLayoutColumns',
             'AreaLayoutPresets',
             'AreaLayoutThemeGridColumns',
+            'AreaPermissionAssignments',
             'Blocks',
             'BlockTypeSets',
             'Conversations',
             'ConversationSubscriptions',
+            'PageTypeComposerControlTypes',
+            'PageTypeComposerFormLayoutSetControls',
+            'PageTypeComposerOutputControls',
+            'PageTypePageTemplateDefaultPages',
             'TreeTypes',
             'Trees',
             'TreeFileFolderNodes',
@@ -161,6 +168,13 @@ class ImportExportTest extends PageTestCase
         $this->assertInstanceOf(BlockController::class, $blockController);
         $inputCif = simplexml_load_file($cifFile);
         $this->assertInstanceOf(SimpleXMLElement::class, $inputCif);
+        $importerExporterMethod = $options['importerExporterMethod'] ?? 'importExportBlockType';
+        $outputCif = $this->{$importerExporterMethod}($blockController, $inputCif, $options);
+        $this->assertSameXML($inputCif->asXML(), $outputCif);
+    }
+
+    private function importExportBlockType(BlockController $blockController, SimpleXMLElement $inputCif, array $options): string
+    {
         $block = $blockController->import(self::$blockPage, 'Main', $inputCif);
         $this->assertInstanceOf(Block::class, $block);
         $this->checkFileUsageCount($block, $options['fileUsageCount'] ?? 0);
@@ -176,7 +190,37 @@ class ImportExportTest extends PageTestCase
         $outputCif = simplexml_load_string('<root />');
         $block->export($outputCif);
         $this->assertTrue(isset($outputCif->block));
-        $this->assertSameXML($inputCif->asXML(), $outputCif->block->asXML());
+
+        return $outputCif->block->asXML();
+    }
+
+    private function importExportPageType1(BlockController $blockController, SimpleXMLElement $inputCif, array $options): string
+    {
+        if (!ComposerControlType::getByHandle('block')) {
+            ComposerControlType::add('block', 'Block');
+        }
+        PageType::import($inputCif);
+        PageType::importContent($inputCif);
+        $importedPageType = PageType::getByHandle('test_page_type');
+        $this->assertInstanceOf(PageType::class, $importedPageType);
+        $outputCif = simplexml_load_string('<root />');
+        $importedPageType->export($outputCif);
+        $this->assertTrue(isset($outputCif->pagetype));
+        $pageNode = $outputCif->pagetype[0]->composer[0]->output[0]->pagetemplate[0]->page[0];
+        $blockNode = $pageNode->area[0]->blocks[0]->block[0];
+        $tempID = (string) $outputCif->pagetype[0]->composer[0]->formlayout[0]->set[0]->control[0]['output-control-id'];
+        $this->assertRegExp('/\w{5,}/', $tempID);
+        $this->assertNotSame("CCMTest1", $tempID);
+        $this->assertSame($tempID, (string) $blockNode->control[0]['output-control-id']);
+        unset($blockNode['mc-block-id']);
+        unset($pageNode['user']);
+        unset($pageNode['public-date']);
+        $xml = $outputCif->pagetype->asXML();
+        $xml = strtr($xml, [
+            " output-control-id=\"{$tempID}\"" => ' output-control-id="CCMTest1"',
+        ]);
+
+        return $xml;
     }
 
     public function testBlockTypeCoverage(): void
@@ -192,8 +236,7 @@ class ImportExportTest extends PageTestCase
             )
         );
         $expectedUncoveredHandles = [
-            'core_board_slot',
-            'core_page_type_composer_control_output',
+            'core_board_slot', // Does it make sense to test it?
             'core_scrapbook_display',
             'core_stack_display',
             'core_theme_documentation_breadcrumb',
@@ -328,15 +371,22 @@ class ImportExportTest extends PageTestCase
     {
         $registrationService = app('user/registration');
         $registrationService->create([
-            'uName' => 'jane_doe',
+            'uName' => USER_SUPER,
             'uPassword' => '12345',
+            'uEmail' => 'admin@example.com',
+            'uDefaultLanguage' => 'en_US',
+            'uHomeFileManagerFolderID' => null,
+        ]);
+        $registrationService->create([
+            'uName' => 'jane_doe',
+            'uPassword' => 'ABCDE',
             'uEmail' => 'jane@doe.org',
             'uDefaultLanguage' => 'en_US',
             'uHomeFileManagerFolderID' => null,
         ]);
         $registrationService->create([
             'uName' => 'john_doe',
-            'uPassword' => '54321',
+            'uPassword' => 'FGHIJ',
             'uEmail' => 'john@doe.org',
             'uDefaultLanguage' => 'en_US',
             'uHomeFileManagerFolderID' => null,

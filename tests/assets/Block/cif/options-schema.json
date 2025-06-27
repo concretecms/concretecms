@@ -8,9 +8,14 @@
     "requiredBlockTypes": {
         "type": "array",
         "items": {
-            "type": "string"
+            "type": "string",
+            "minLength": 1
         },
         "uniqueItems": true
+    },
+    "importerExporterMethod": {
+        "type": "string",
+        "minLength": 1
     },
     "fileUsageCount": {
       "type": "integer",
