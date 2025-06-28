@@ -362,7 +362,7 @@ class ImportExportTest extends PageTestCase
             $elementWithoutChildElements->replaceChild($cdata, $childNode);
         }
 
-        return $doc->saveXML();
+        return $doc->saveXML(null, LIBXML_NOEMPTYTAG);
     }
 
     private static function createPages(): void
