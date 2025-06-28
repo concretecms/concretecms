@@ -33,10 +33,10 @@ class Exporter implements ItemInterface
         $p->addAttribute('name', $mixed->getCollectionName());
         switch ($type) {
             case self::TYPE_EXTERNALLINK:
-                $p->addAttribute('path', $mixed->generatePagePath());
+                $p->addAttribute('path', $mixed->generatePagePath() ?? '');
                 break;
             default:
-                $p->addAttribute('path', $mixed->getCollectionPath());
+                $p->addAttribute('path', $mixed->getCollectionPath() ?? '');
                 break;
         }
         $uiRepository = app(UserInfoRepository::class);
@@ -62,7 +62,7 @@ class Exporter implements ItemInterface
             case self::TYPE_PAGE:
                 $p->addAttribute('user', $ui->getUserName());
                 $p->addAttribute('public-date', $mixed->getCollectionDatePublic());
-                $p->addAttribute('filename', $mixed->getCollectionFilename());
+                $p->addAttribute('filename',$mixed->getCollectionFilename() ?? '');
                 $p->addAttribute('pagetype', $mixed->getPageTypeHandle());
                 $locale = $this->getLocaleForHome($mixed);
                 if ($locale !== null) {
@@ -80,7 +80,7 @@ class Exporter implements ItemInterface
                         $p->addAttribute('template', $template->getPageTemplateHandle());
                     }
                 }
-                $p->addAttribute('description', $mixed->getCollectionDescription());
+                $p->addAttribute('description', $mixed->getCollectionDescription() ?? '');
                 if ($mixed->getCollectionParentID() == 0) {
                     if ($mixed->getSiteTreeID() == 0) {
                         $p->addAttribute('global', 'true');
