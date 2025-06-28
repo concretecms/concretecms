@@ -33,6 +33,13 @@ use SimpleXMLElement;
 class ImportExportTest extends PageTestCase
 {
     /**
+     * Set this constant to true when writing test CIF files.
+     *
+     * @var bool
+     */
+    private const NORMALIZE_INPUT_CIF = false;
+
+    /**
      * @var \Concrete\Core\File\Service\VolatileDirectory
      */
     private static $storageVolatileDirectory;
@@ -163,6 +170,12 @@ class ImportExportTest extends PageTestCase
      */
     public function testCIFImportExport(string $blockTypeHandle, string $cifFile, array $options): void
     {
+        if (empty($options['keepXmlElementsOrder'])) {
+            $inputCif = $this->loadNormalizedInputCif($cifFile);
+        } else {
+            $inputCif = simplexml_load_file($cifFile);
+            $this->assertInstanceOf(SimpleXMLElement::class, $inputCif);
+        }
         foreach (($options['requiredBlockTypes'] ?? []) as $requiredBlockTypeHandle) {
             if (BlockType::getByHandle($requiredBlockTypeHandle)) {
                 continue;
@@ -172,11 +185,26 @@ class ImportExportTest extends PageTestCase
         }
         $blockType = BlockType::getByHandle($blockTypeHandle) ?: BlockType::installBlockType($blockTypeHandle);
         $this->assertInstanceOf(BlockTypeEntity::class, $blockType);
-        $inputCif = simplexml_load_file($cifFile);
-        $this->assertInstanceOf(SimpleXMLElement::class, $inputCif);
         $importerExporterMethod = $options['importerExporterMethod'] ?? 'importExportBlockType';
         $outputCif = $this->{$importerExporterMethod}($blockType, $inputCif, $options);
         $this->assertSameXML($inputCif->asXML(), $outputCif, $options['keepXmlElementsOrder'] ?? false);
+    }
+
+    private function loadNormalizedInputCif(string $cifFile): SimpleXMLElement
+    {
+        $xml = file_get_contents($cifFile);
+        $this->assertNotSame(false, $xml, "Failed to load file {$cifFile}");
+        $normalizedXml = $this->normalizeXML($xml, false);
+        if (self::NORMALIZE_INPUT_CIF) {
+            if ($normalizedXml !== $xml) {
+                $this->assertNotSame(false, file_put_contents($cifFile, $normalizedXml), "Failed to update file {$cifFile}");
+            }
+        } else {
+            $this->assertSame($normalizedXml, $xml, "Please update the file {$cifFile} with the following changes (or set the NORMALIZE_INPUT_CIF constant to true)");
+        }
+        $sx = simplexml_load_string($normalizedXml);
+
+        return $sx;
     }
 
     private function importExportBlockType(BlockTypeEntity $blockType, SimpleXMLElement $inputCif, array $options, &$createdBlock = null): string
@@ -297,7 +325,7 @@ class ImportExportTest extends PageTestCase
         $this->assertSame([], array_diff($availableHandles, $coveredHandles, $expectedUncoveredHandles), 'Found block types lacking tests');
     }
 
-    protected function checkFileUsageCount(Block $block, int $expectedUsageCount): void
+    private function checkFileUsageCount(Block $block, int $expectedUsageCount): void
     {
         $actualUsageCount = (int) app(Connection::class)->fetchOne(
             'SELECT COUNT(*) FROM FileUsageRecord WHERE block_id = :bID',
@@ -324,7 +352,7 @@ class ImportExportTest extends PageTestCase
 
     private function assertSameXML(string $expected, string $actual, bool $keepXmlElementsOrder): void
     {
-        $expected = $this->normalizeXML($expected, $keepXmlElementsOrder);
+        $expected = $this->normalizeXML($expected, false);
         $actual = $this->normalizeXML($actual, $keepXmlElementsOrder);
 
         $this->assertSame($expected, $actual);
@@ -371,22 +399,25 @@ class ImportExportTest extends PageTestCase
         return $doc->saveXML(null, LIBXML_NOEMPTYTAG);
     }
 
-    private function sortXMLChildElements(DOMElement $parent): void
+    private function sortXMLChildElements(DOMElement $parentElement): void
     {
-        $childElements = array_filter(
-            iterator_to_array($parent->childNodes),
-            static function (DOMNode $node) use ($parent): bool {
-                if ($node instanceof DOMElement) {
-                    $parent->removeChild($node);
-
-                    return true;
+        $allChildElements = array_filter(
+            iterator_to_array($parentElement->childNodes),
+            static function (DOMNode $childNode) use ($parentElement): bool {
+                return $childNode instanceof DOMElement;
+            }
+        );
+        $childElementsToBeSorted = array_filter(
+            $allChildElements,
+            static function (DOMElement $childElement) use ($parentElement): bool {
+                if ($parentElement->tagName === 'block' && $childElement->tagName === 'data' && $childElement->hasAttribute('table')) {
+                    return false;
                 }
-
-                return false;
+                return true;
             }
         );
         $elementsByName = [];
-        foreach ($childElements as $childElement) {
+        foreach ($childElementsToBeSorted as $childElement) {
             if (isset($elementsByName[$childElement->tagName])) {
                 $elementsByName[$childElement->tagName][] = $childElement;
             } else {
@@ -396,9 +427,12 @@ class ImportExportTest extends PageTestCase
         ksort($elementsByName, SORT_NATURAL);
         foreach ($elementsByName as $elements) {
             foreach ($elements as $element) {
-                $parent->appendChild($element);
-                $this->sortXMLChildElements($element);
+                $parentElement->removeChild($element);
+                $parentElement->appendChild($element);
             }
+        }
+        foreach ($allChildElements as $childElement) {
+            $this->sortXMLChildElements($childElement);
         }
     }
 
