@@ -1,6 +1,7 @@
 <block type="event_list" name="">
     <data table="btEventList">
         <record>
+            <caNames>["Calendar Name"]</caNames>
 			<calendarAttributeKeyHandle />
 			<totalToRetrieve>70</totalToRetrieve>
 			<totalPerPage>9</totalPerPage>
@@ -13,7 +14,6 @@
 			<titleFormat>h3</titleFormat>
 			<eventPeriod>future_events</eventPeriod>
 			<eventOrder>most_recent_first</eventOrder>
-            <caNames>["Calendar Name"]</caNames>
         </record>
    </data>
 </block>

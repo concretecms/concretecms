@@ -24,6 +24,8 @@ use Concrete\Core\Page\Type\Type as PageType;
 use Concrete\TestHelpers\Page\PageTestCase;
 use Doctrine\ORM\EntityManagerInterface;
 use DOMDocument;
+use DOMElement;
+use DOMNode;
 use DOMXPath;
 use Illuminate\Filesystem\Filesystem;
 use SimpleXMLElement;
@@ -174,7 +176,7 @@ class ImportExportTest extends PageTestCase
         $this->assertInstanceOf(SimpleXMLElement::class, $inputCif);
         $importerExporterMethod = $options['importerExporterMethod'] ?? 'importExportBlockType';
         $outputCif = $this->{$importerExporterMethod}($blockType, $inputCif, $options);
-        $this->assertSameXML($inputCif->asXML(), $outputCif);
+        $this->assertSameXML($inputCif->asXML(), $outputCif, $options['keepXmlElementsOrder'] ?? false);
     }
 
     private function importExportBlockType(BlockTypeEntity $blockType, SimpleXMLElement $inputCif, array $options, &$createdBlock = null): string
@@ -320,15 +322,15 @@ class ImportExportTest extends PageTestCase
         $this->assertSame($expectedMatchCount, $actualMatchCount, "The rich text\n{$richText}\nshould match {$regex} {$expectedMatchCount} time(s) instead of {$actualMatchCount}");
     }
 
-    private function assertSameXML(string $expected, string $actual): void
+    private function assertSameXML(string $expected, string $actual, bool $keepXmlElementsOrder): void
     {
-        $expected = $this->normalizeXML($expected);
-        $actual = $this->normalizeXML($actual);
+        $expected = $this->normalizeXML($expected, $keepXmlElementsOrder);
+        $actual = $this->normalizeXML($actual, $keepXmlElementsOrder);
 
         $this->assertSame($expected, $actual);
     }
 
-    private function normalizeXML(string $xml): string
+    private function normalizeXML(string $xml, bool $keepXmlElementsOrder): string
     {
         $doc = new DOMDocument('1.0');
         $doc->preserveWhiteSpace = false;
@@ -361,8 +363,43 @@ class ImportExportTest extends PageTestCase
             $cdata = $doc->createCDATASection($text);
             $elementWithoutChildElements->replaceChild($cdata, $childNode);
         }
+        if (!$keepXmlElementsOrder) {
+            // Let's sort elements alphabetically (CIF usually doesn't rely on elements order)
+            $this->sortXMLChildElements($doc->documentElement);
+        }
 
         return $doc->saveXML(null, LIBXML_NOEMPTYTAG);
+    }
+
+    private function sortXMLChildElements(DOMElement $parent): void
+    {
+        $childElements = array_filter(
+            iterator_to_array($parent->childNodes),
+            static function (DOMNode $node) use ($parent): bool {
+                if ($node instanceof DOMElement) {
+                    $parent->removeChild($node);
+
+                    return true;
+                }
+
+                return false;
+            }
+        );
+        $elementsByName = [];
+        foreach ($childElements as $childElement) {
+            if (isset($elementsByName[$childElement->tagName])) {
+                $elementsByName[$childElement->tagName][] = $childElement;
+            } else {
+                $elementsByName[$childElement->tagName] = [$childElement];
+            }
+        }
+        ksort($elementsByName, SORT_NATURAL);
+        foreach ($elementsByName as $elements) {
+            foreach ($elements as $element) {
+                $parent->appendChild($element);
+                $this->sortXMLChildElements($element);
+            }
+        }
     }
 
     private static function createPages(): void
