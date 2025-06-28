@@ -1,16 +1,17 @@
+<?xml version="1.0"?>
 <block type="calendar_event" name="">
-   <data table="btCalendarEvent">
-      <record>
-         <mode>S</mode>
-         <calendarEventAttributeKeyHandle />
-         <allowExport>1</allowExport>
-         <enableLinkToPage>0</enableLinkToPage>
-         <displayEventName>1</displayEventName>
-         <displayEventDate>0</displayEventDate>
-         <displayEventDescription>1</displayEventDescription>
-         <calendarName>Calendar Name</calendarName>
-         <displayEventAttributes>[]</displayEventAttributes>
-         <event></event>
-      </record>
-   </data>
+  <data table="btCalendarEvent">
+    <record>
+      <allowExport>1</allowExport>
+      <calendarEventAttributeKeyHandle></calendarEventAttributeKeyHandle>
+      <calendarName>Calendar Name</calendarName>
+      <displayEventAttributes>[]</displayEventAttributes>
+      <displayEventDate>0</displayEventDate>
+      <displayEventDescription>1</displayEventDescription>
+      <displayEventName>1</displayEventName>
+      <enableLinkToPage>0</enableLinkToPage>
+      <event></event>
+      <mode>S</mode>
+    </record>
+  </data>
 </block>

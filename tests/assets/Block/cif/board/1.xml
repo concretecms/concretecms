@@ -1,5 +1,6 @@
+<?xml version="1.0"?>
 <block type="board" name="">
-   <data>
-      <board>Blog</board>
-   </data>
+  <data>
+    <board>Blog</board>
+  </data>
 </block>

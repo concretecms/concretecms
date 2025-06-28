@@ -1,3 +1,4 @@
+<?xml version="1.0"?>
 <block type="core_stack_display" name="">
-    <stack path="/stack-2-root-folder">Stack 2 in root folder</stack>
+  <stack path="/stack-2-root-folder">Stack 2 in root folder</stack>
 </block>

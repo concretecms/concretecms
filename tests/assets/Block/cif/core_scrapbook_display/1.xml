@@ -1,7 +1,8 @@
+<?xml version="1.0"?>
 <block type="content" name="">
-   <data table="btContentLocal">
-      <record>
-         <content>Content block copied to the clibpard</content>
-      </record>
-   </data>
+  <data table="btContentLocal">
+    <record>
+      <content>Content block copied to the clibpard</content>
+    </record>
+  </data>
 </block>
