@@ -1,4 +1,3 @@
-<?xml version="1.0"?>
 <block type="core_conversation" name="">
   <data table="btCoreConversation">
     <record>

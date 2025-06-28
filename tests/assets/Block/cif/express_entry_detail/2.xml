@@ -1,4 +1,3 @@
-<?xml version="1.0"?>
 <block type="express_entry_detail" name="">
   <data table="btExpressEntryDetail">
     <record>

@@ -1,4 +1,3 @@
-<?xml version="1.0"?>
 <block type="core_container" name="">
   <container handle="container_1">
     <containerarea name="Column 1"></containerarea>

@@ -395,7 +395,7 @@ class ImportExportTest extends PageTestCase
             $this->sortXMLChildElements($doc->documentElement);
         }
 
-        return $doc->saveXML(null, LIBXML_NOEMPTYTAG);
+        return $doc->saveXML($doc->documentElement, LIBXML_NOEMPTYTAG);
     }
 
     private function sortXMLChildElements(DOMElement $parentElement): void

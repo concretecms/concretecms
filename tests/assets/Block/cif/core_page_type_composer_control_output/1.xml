@@ -1,4 +1,3 @@
-<?xml version="1.0"?>
 <pagetype name="Test Page Type" handle="test_page_type" package="" launch-in-composer="0" is-frequently-added="1">
   <composer>
     <formlayout>
