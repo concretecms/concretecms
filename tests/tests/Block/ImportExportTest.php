@@ -37,7 +37,7 @@ class ImportExportTest extends PageTestCase
      *
      * @var bool
      */
-    private const NORMALIZE_INPUT_CIF = false;
+    private const NORMALIZE_INPUT_CIF = true;
 
     /**
      * @var \Concrete\Core\File\Service\VolatileDirectory
