@@ -1,7 +1,7 @@
 <block type="event_list" name="">
     <data table="btEventList">
         <record>
-			<caID>"0"</caID>
+			<caID>0</caID>
 			<calendarAttributeKeyHandle />
 			<totalToRetrieve>70</totalToRetrieve>
 			<totalPerPage>9</totalPerPage>

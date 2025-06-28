@@ -283,8 +283,10 @@ class Controller extends BlockController implements UsesFeatureInterface
     protected function getImportData($blockNode, $page)
     {
         $data = parent::getImportData($blockNode, $page);
-        if (!isset($data['caID'])) {
+        if (empty($data['chooseCalendar'])) {
             $data['chooseCalendar'] = 'site';
+        }
+        if (!isset($data['caID'])) {
             $data['caID'] = 0;
             if (!empty($data['caNames'])) {
                 $caNames = json_decode($data['caNames']);
