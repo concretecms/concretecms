@@ -15,7 +15,8 @@
     },
     "importerExporterMethod": {
         "type": "string",
-        "minLength": 1
+        "minLength": 1,
+        "pattern": "^(import|export)[a-zA-Z_][a-zA-Z0-9_]*$"
     },
     "keepXmlElementsOrder": {
       "type": "boolean"
