@@ -27,6 +27,7 @@ use DOMDocument;
 use DOMElement;
 use DOMNode;
 use DOMXPath;
+use Mockery as M;
 use Illuminate\Filesystem\Filesystem;
 use SimpleXMLElement;
 
@@ -271,6 +272,41 @@ class ImportExportTest extends PageTestCase
         $this->assertTrue(isset($outputCif->block));
 
         return $outputCif->block->asXML();
+    }
+
+    private function importExportExpressEntryDetail(BlockTypeEntity $blockType, SimpleXMLElement $inputCif, array $options): string
+    {
+        $emOriginal = $this->app->make(\Doctrine\ORM\EntityManager::class);
+        $em = M::mock($emOriginal)->makePartial();
+        $em->shouldReceive('find')->andReturnUsing(static function($className, $id) use ($emOriginal) {
+            switch ($className) {
+                case \Concrete\Core\Entity\Express\Entity::class:
+                    switch ($id) {
+                        case '1cafebab-babe-cafe-babe-1cafebabe1ca':
+                            $entity = new \Concrete\Core\Entity\Express\Entity();
+                            $entity->setId($id);
+                            $entity->setHandle('example_entity_n1');
+                            return $entity;
+                    }
+                    break;
+                case \Concrete\Core\Entity\Express\Form::class:
+                    switch ($id) {
+                        case '2cafebab-babe-cafe-babe-2cafebabe2ca':
+                            $entity = new \Concrete\Core\Entity\Express\Form();
+                            $entity->setId($id);
+                            $entity->setName('Example Form #1');
+                            return $entity;
+                    }
+                    break;
+            }
+            return call_user_func_array([$emOriginal, 'find'], func_get_args());
+        });
+        $this->app->singleton(\Doctrine\ORM\EntityManager::class, static function() use ($em) { return $em; });
+        try {
+            return $this->importExportBlockType($blockType, $inputCif, $options);
+        } finally {
+            $this->app->singleton(\Doctrine\ORM\EntityManager::class, static function() use ($emOriginal) { return $emOriginal; });
+        }
     }
 
     public function testBlockTypeCoverage(): void
