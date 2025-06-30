@@ -338,7 +338,6 @@ class ImportExportTest extends PageTestCase
         );
         $expectedUncoveredHandles = [
             'core_board_slot', // Does it make sense to test it?
-            'external_form',
             'faq',
             'feature',
             'feature_link',
