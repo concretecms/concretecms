@@ -5,6 +5,10 @@
     "$schema": {
       "type": "string"
     },
+    "skipReason": {
+      "type": "string",
+      "minLength": 1
+    },
     "requiredBlockTypes": {
         "type": "array",
         "items": {

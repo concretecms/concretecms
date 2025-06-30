@@ -171,6 +171,9 @@ class ImportExportTest extends PageTestCase
      */
     public function testCIFImportExport(string $blockTypeHandle, string $cifFile, array $options): void
     {
+        if (isset($options['skipReason'])) {
+            $this->markTestSkipped($options['skipReason']);
+        }
         if (empty($options['keepXmlElementsOrder'])) {
             $inputCif = $this->loadNormalizedInputCif($cifFile);
         } else {
