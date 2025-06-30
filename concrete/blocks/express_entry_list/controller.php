@@ -18,6 +18,7 @@ use Concrete\Core\Express\Search\SearchProvider;
 use Concrete\Core\Feature\Features;
 use Concrete\Core\Feature\UsesFeatureInterface;
 use Concrete\Core\Search\Column\AttributeKeyColumn;
+use Concrete\Core\Search\Column\Column as SearchColumn;
 use Concrete\Core\Search\Field\AttributeKeyField;
 use Concrete\Core\Search\Field\Field\KeywordsField;
 use Concrete\Core\Search\Field\ManagerFactory;
@@ -29,8 +30,12 @@ use Concrete\Core\Search\Query\QueryModifier;
 use Concrete\Core\Search\Result\ItemColumn;
 use Concrete\Core\Search\Result\ResultFactory;
 use Concrete\Core\Support\Facade\Facade;
+use Concrete\Core\Utility\Service\Xml;
+use Doctrine\ORM\EntityManagerInterface;
+use SimpleXMLElement;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Serializer\Encoder\JsonDecode;
 
 class Controller extends BlockController implements UsesFeatureInterface
 {
@@ -134,18 +139,22 @@ class Controller extends BlockController implements UsesFeatureInterface
      */
     public $titleFormat;
 
+    /**
+     * @var \Doctrine\ORM\EntityManagerInterface
+     */
     public $entityManager;
-    
+
     protected $btInterfaceWidth = "640";
     protected $btInterfaceHeight = "400";
     protected $btTable = 'btExpressEntryList';
     protected $entityAttributes = [];
+    protected $btExportPageColumns = ['detailPage'];
 
     public function on_start()
     {
         parent::on_start();
         $this->app = Facade::getFacadeApplication();
-        $this->entityManager = $this->app->make('database/orm')->entityManager();
+        $this->entityManager = $this->app->make(EntityManagerInterface::class);
     }
 
     public function getBlockTypeDescription()
@@ -198,6 +207,9 @@ class Controller extends BlockController implements UsesFeatureInterface
         $this->set('linkedPropertiesSelected', []);
     }
 
+    /**
+     * @return \Concrete\Core\Search\Field\ManagerInterface
+     */
     protected function getSearchFieldManager(Entity $entity)
     {
         $fieldManager = ManagerFactory::get('express');
@@ -289,6 +301,11 @@ class Controller extends BlockController implements UsesFeatureInterface
         }
     }
 
+    /**
+     * @param \Concrete\Core\Entity\Express\Entity $entity
+     *
+     * @return \stdClass[]
+     */
     protected function getSearchPropertiesJsonArray($entity)
     {
         $attributes = $entity->getAttributeKeyCategory()->getList();
@@ -303,6 +320,11 @@ class Controller extends BlockController implements UsesFeatureInterface
         return $select;
     }
 
+    /**
+     * @param \Concrete\Core\Entity\Express\Entity $entity
+     *
+     * @return \stdClass[]
+     */
     protected function getSearchAssociationsJsonArray($entity)
     {
         $associations = $entity->getAssociations();
@@ -453,6 +475,7 @@ class Controller extends BlockController implements UsesFeatureInterface
     public function save($data)
     {
         $this->on_start();
+        $fromCIF = ($data['_fromCIF'] ?? null) === true;
 
         if (isset($data['enableSearch']) && $data['enableSearch']) {
             if (isset($data['searchProperties']) && is_array($data['searchProperties'])) {
@@ -471,7 +494,7 @@ class Controller extends BlockController implements UsesFeatureInterface
 
             $data['searchAssociations'] = json_encode($searchAssociations);
 
-            if (empty($searchProperties) && empty($searchAssociations) && empty($linkedProperties) && empty($data['enableKeywordSearch'])) {
+            if (empty($searchProperties) && empty($searchAssociations) && empty($data['enableKeywordSearch'])) {
                 $data['enableSearch'] = 0;
             }
         } else {
@@ -493,13 +516,13 @@ class Controller extends BlockController implements UsesFeatureInterface
         $data['enablePagination'] = $data['enablePagination'] ?? 0;
 
         $data['enableItemsPerPageSelection'] = $data['enableItemsPerPageSelection'] ?? 0;
-        
+
         $data['displayLimit'] = (int) $data['displayLimit'];
 
         $entity = $this->entityManager->find('Concrete\Core\Entity\Express\Entity', $data['exEntityID']);
-        if (is_object($entity) && is_array($this->request->request->get('column'))) {
+        if (!$fromCIF && is_object($entity) && is_array($this->request->request->get('column'))) {
             $provider = $this->app->make(SearchProvider::class, ['entity' => $entity, 'category' => $entity->getAttributeKeyCategory()]);
-            $set = $this->app->make('Concrete\Core\Express\Search\ColumnSet\ColumnSet');
+            $set = $this->app->make(ColumnSet::class);
             $available = $provider->getAvailableColumnSet();
             foreach ($this->request->request->get('column') as $key) {
                 $set->addColumn($available->getColumnByKey($key));
@@ -511,13 +534,248 @@ class Controller extends BlockController implements UsesFeatureInterface
             $data['columns'] = serialize($set);
         }
 
-        if ($entity) {
+        if (!$fromCIF && $entity) {
             $manager = $this->getSearchFieldManager($entity);
             $filterFields = $manager->getFieldsFromRequest($this->request->request->all());
             $data['filterFields'] = serialize($filterFields);
         }
 
         parent::save($data);
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Block\BlockController::getImportData()
+     */
+    protected function getImportData($blockNode, $page)
+    {
+        $args = parent::getImportData($blockNode, $page);
+        $args['_fromCIF'] = true;
+        $xRecord = $blockNode->data[0]->record[0];
+        
+        $entityID = (string) ($args['exEntityID'] ?? '');
+        if ($entityID !== '') {
+            $entity = $this->app->make(EntityManagerInterface::class)->find(Entity::class, $entityID);
+            if ($entity === null) {
+                $entityHandle = (string) $xRecord->exEntityID[0]['handle'];
+                if ($entityHandle !== '') {
+                    $entity = $this->app->make(EntityManagerInterface::class)->getRepository(Entity::class)->findOneBy(['handle' => $entityHandle]);
+                    if ($entity !== null) {
+                        $args['exEntityID'] = $entity->getId();
+                    }
+                }
+            }
+        }
+        $entityAttributes = $entity ? $entity->getAttributes()->toArray() : [];
+        $entityAssociations = $entity ? $entity->getAssociations()->toArray() : [];
+
+        $linkedPropertyIDs = [];
+        foreach ($xRecord->linkedProperty as $xLinkedProperty) {
+            $linkedPropertyHandle = (string) $xLinkedProperty;
+            if ($linkedPropertyHandle === '') {
+                continue;
+            }
+            $linkedProperty = array_first(
+                $entityAttributes,
+                static function($attribute) use ($linkedPropertyHandle) {
+                    return $linkedPropertyHandle === $attribute->getAttributeKeyHandle();
+                }
+            );
+            if ($linkedProperty !== null) {
+                $linkedPropertyIDs[] = $linkedProperty->getAttributeKeyID();
+            }
+        }
+        $args['linkedProperties'] = $linkedPropertyIDs;
+
+        $searchPropertyIDs = [];
+        foreach ($xRecord->searchProperty as $xSearchProperty) {
+            $searchPropertyHandle = (string) $xSearchProperty;
+            if ($searchPropertyHandle === '') {
+                continue;
+            }
+            $searchProperty = array_first(
+                $entityAttributes,
+                static function($attribute) use ($searchPropertyHandle) {
+                    return $searchPropertyHandle === $attribute->getAttributeKeyHandle();
+                }
+            );
+            if ($searchProperty !== null) {
+                $searchPropertyIDs[] = $searchProperty->getAttributeKeyID();
+            }
+        }
+        $args['searchProperties'] = $searchPropertyIDs;
+
+        unset($args['searchAssociation']);
+        $searchAssociations = [];
+        foreach ($xRecord->searchAssociation as $xSearchAssociation) {
+            $searchAssociationUUID = (string) $xSearchAssociation;
+            $association = array_first(
+                $entityAssociations,
+                static function ($association) use ($searchAssociationUUID): bool {
+                    return $searchAssociationUUID !== '' && $association->getId() === $searchAssociationUUID;
+                }
+            );
+            if ($association === null) {
+                $searchAssociationName = (string) $xSearchAssociation['target-property-name'];
+                $association = array_first(
+                    $entityAssociations,
+                    static function ($association) use ($searchAssociationName): bool {
+                        return $searchAssociationName !== '' && $association->getTargetPropertyName() === $searchAssociationName;
+                    }
+                );
+            }
+            if ($association !== null) {
+                $searchAssociations[] = $association->getId();
+            }
+        }
+        $args['searchAssociations'] = $searchAssociations;
+
+        $filterFields = [];
+        if ($entity && isset($xRecord->filterFields[0]->field)) {
+            $searchFieldManager = $this->getSearchFieldManager($entity);
+            foreach ($xRecord->filterFields[0]->field as $xField) {
+                $field = $searchFieldManager->getFieldByKey((string) $xField['key']);
+                if ($field) {
+                    $field->loadDataFromImport($xField);
+                    $filterFields[] = $field;
+                }
+            }
+        }
+        $args['filterFields'] = serialize($filterFields);
+
+        $set = $this->app->make(ColumnSet::class);
+        if ($entity) {
+            $provider = $this->app->make(SearchProvider::class, ['entity' => $entity, 'category' => $entity->getAttributeKeyCategory()]);
+            $availableColumns = $provider->getAvailableColumnSet()->getColumns();
+            $findColumn = static function(string $key, string $name) use ($availableColumns) {
+                if ($key !== '') {
+                    $column = array_first(
+                        $availableColumns,
+                        static function ($column) use ($key) { return $column->getColumnKey() === $key; }
+                    );
+                    if ($column !== null) {
+                        return $column;
+                    }
+                }
+                if ($name !== '') {
+                    $column = array_first(
+                        $availableColumns,
+                        static function ($column) use ($name) { return $column->getColumnName() === $name; }
+                    );
+                    if ($column !== null) {
+                        return $column;
+                    }
+                }
+                return null;
+            };
+            $xColumns = $xRecord->columns[0];
+            $defaultSortColumn = $findColumn((string) $xColumns['default-sort-column-key'],  (string) $xColumns['default-sort-column-name']);
+            if ($defaultSortColumn instanceof SearchColumn) {
+                $set->setDefaultSortColumn($defaultSortColumn, (string) $xColumns['default-sort-column-direction']);
+            }
+            foreach ($xColumns->column as $xColumn) {
+                $column = $findColumn((string) $xColumn['key'],  (string) $xColumn['name']);
+                if ($column instanceof SearchColumn) {
+                    $column->setColumnSortDirection((string) $xColumn['sort-direction']);
+                    $set->addColumn($column);
+                }
+            }
+        }
+        $args['columns'] = serialize($set);
+
+        return $args;
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Block\BlockController::export()
+     */
+    public function export($data)
+    {
+        parent::export($data);
+        $this->on_start();
+        $xRecord = $data->data[0]->record[0];
+        $xml = $this->app->make(Xml::class);
+        $entity = $this->entityManager->find(Entity::class, $this->exEntityID);
+        if ($entity !== null) {
+            $xRecord->exEntityID[0]['handle'] = $entity->getHandle();
+        }
+        $entityAttributes = $entity ? $entity->getAttributes()->toArray() : [];
+        $entityAssociations = $entity ? $entity->getAssociations()->toArray() : [];
+
+        unset($xRecord->linkedProperties[0]);
+        $linkedPropertyIDs = array_map('intval', (array) json_decode($this->linkedProperties));
+        foreach ($linkedPropertyIDs as $linkedPropertyID) {
+            $linkedProperty = array_first(
+                $entityAttributes,
+                static function($attribute) use ($linkedPropertyID) {
+                    return $linkedPropertyID === (int) $attribute->getAttributeKeyID();
+                }
+            );
+            if ($linkedProperty !== null) {
+                $xml->createChildElement($xRecord, 'linkedProperty', $linkedProperty->getAttributeKeyHandle());
+            }
+        }
+
+        unset($xRecord->searchProperties[0]);
+        $searchPropertyIDs = array_map('intval', (array) json_decode($this->searchProperties));
+        foreach ($searchPropertyIDs as $searchPropertyID) {
+            $searchProperty = array_first(
+                $entityAttributes,
+                static function($attribute) use ($searchPropertyID): bool {
+                    return $searchPropertyID === (int) $attribute->getAttributeKeyID();
+                }
+                );
+            if ($searchProperty !== null) {
+                $xml->createChildElement($xRecord, 'searchProperty', $searchProperty->getAttributeKeyHandle());
+            }
+        }
+
+        $searchAssociationUUIDs = (array) json_decode($this->searchAssociations);
+        foreach ($searchAssociationUUIDs as $searchAssociationUUID) {
+            $association = array_first(
+                $entityAssociations,
+                static function ($association) use ($searchAssociationUUID): bool {
+                    return $association->getId() === $searchAssociationUUID;
+                }
+            );
+            $xNode = $xml->createChildElement($xRecord, 'searchAssociation', $searchAssociationUUID);
+            if ($association !== null) {
+                $xNode->addAttribute('target-property-name', (string) $association->getTargetPropertyName());
+            }
+        }
+        unset($xRecord->searchAssociations[0]);
+
+        unset($xRecord->filterFields[0]);
+        $xFilterFields = $xRecord->addChild('filterFields');
+        $filterFields = $this->filterFields ? unserialize($this->filterFields) : [];
+        if (is_array($filterFields)) {
+            foreach ($filterFields as $filterField) {
+                if ($filterField instanceof \Concrete\Core\Search\Field\FieldInterface) {
+                    $filterField->export($xFilterFields);
+                }
+            }
+        }
+
+        unset($xRecord->columns[0]);
+        $xColumns = $xRecord->addChild('columns');
+        $columnSet = $this->columns ? unserialize($this->columns) : null;
+        if ($columnSet instanceof ColumnSet) {
+            $defaultSortColumn = $columnSet->getDefaultSortColumn();
+            if ($defaultSortColumn) {
+                $xColumns['default-sort-column-key'] = $defaultSortColumn->getColumnKey();
+                $xColumns['default-sort-column-name'] = $defaultSortColumn->getColumnName();
+                $xColumns['default-sort-column-direction'] = $defaultSortColumn->getColumnSortDirection();
+            }
+            foreach ($columnSet->getColumns() as $column) {
+                $xColumn = $xColumns->addChild('column');
+                $xColumn->addAttribute('key', (string) $column->getColumnKey());
+                $xColumn->addAttribute('name', (string) $column->getColumnName());
+                $xColumn->addAttribute('sort-direction', (string) $column->getColumnSortDirection());
+            }
+        }
     }
 
     public function action_load_entity_data()
