@@ -279,26 +279,38 @@ class ImportExportTest extends PageTestCase
 
     private function importExportExpressEntryDetail(BlockTypeEntity $blockType, SimpleXMLElement $inputCif, array $options): string
     {
+        return $this->importExportExpress($blockType, $inputCif, $options);
+    }
+
+    private function importExportExpressForm(BlockTypeEntity $blockType, SimpleXMLElement $inputCif, array $options): string
+    {
+        return $this->importExportExpress($blockType, $inputCif, $options);
+    }
+
+    private function importExportExpress(BlockTypeEntity $blockType, SimpleXMLElement $inputCif, array $options): string
+    {
+        $sampleEntity =  new \Concrete\Core\Entity\Express\Entity();
+        $sampleEntity->setId('1cafebab-babe-cafe-babe-1cafebabe1ca');
+        $sampleEntity->setHandle('example_entity_n1');
+        $sampleForm = new \Concrete\Core\Entity\Express\Form();
+        $sampleForm->setId('2cafebab-babe-cafe-babe-2cafebabe2ca');
+        $sampleForm->setName('Example Form #1');
+        $sampleForm->setEntity($sampleEntity);
+
         $emOriginal = $this->app->make(\Doctrine\ORM\EntityManager::class);
         $em = M::mock($emOriginal)->makePartial();
-        $em->shouldReceive('find')->andReturnUsing(static function($className, $id) use ($emOriginal) {
+        $em->shouldReceive('find')->andReturnUsing(static function($className, $id) use ($emOriginal, $sampleForm) {
             switch ($className) {
                 case \Concrete\Core\Entity\Express\Entity::class:
                     switch ($id) {
                         case '1cafebab-babe-cafe-babe-1cafebabe1ca':
-                            $entity = new \Concrete\Core\Entity\Express\Entity();
-                            $entity->setId($id);
-                            $entity->setHandle('example_entity_n1');
-                            return $entity;
+                            return $sampleForm->getEntity();
                     }
                     break;
                 case \Concrete\Core\Entity\Express\Form::class:
                     switch ($id) {
                         case '2cafebab-babe-cafe-babe-2cafebabe2ca':
-                            $entity = new \Concrete\Core\Entity\Express\Form();
-                            $entity->setId($id);
-                            $entity->setName('Example Form #1');
-                            return $entity;
+                            return $sampleForm;
                     }
                     break;
             }
@@ -326,7 +338,6 @@ class ImportExportTest extends PageTestCase
         );
         $expectedUncoveredHandles = [
             'core_board_slot', // Does it make sense to test it?
-            'express_form',
             'external_form',
             'faq',
             'feature',
