@@ -1,0 +1,19 @@
+{
+    "$schema": "../options-schema.json",
+    "fileUsageCount": 2,
+    "richTextsWithPages": {
+        "SELECT description FROM btFaqEntries WHERE bID = :bID ORDER BY sortOrder LIMIT 0,1": 1,
+        "SELECT description FROM btFaqEntries WHERE bID = :bID ORDER BY sortOrder LIMIT 1,1": 0,
+        "SELECT description FROM btFaqEntries WHERE bID = :bID ORDER BY sortOrder LIMIT 2,1": 1
+    },
+    "richTextsWithFiles": {
+        "SELECT description FROM btFaqEntries WHERE bID = :bID ORDER BY sortOrder LIMIT 0,1": 0,
+        "SELECT description FROM btFaqEntries WHERE bID = :bID ORDER BY sortOrder LIMIT 1,1": 1,
+        "SELECT description FROM btFaqEntries WHERE bID = :bID ORDER BY sortOrder LIMIT 2,1": 0
+    },
+    "richTextsWithImages": {
+        "SELECT description FROM btFaqEntries WHERE bID = :bID ORDER BY sortOrder LIMIT 0,1": 0,
+        "SELECT description FROM btFaqEntries WHERE bID = :bID ORDER BY sortOrder LIMIT 1,1": 0,
+        "SELECT description FROM btFaqEntries WHERE bID = :bID ORDER BY sortOrder LIMIT 2,1": 1
+    }
+}
