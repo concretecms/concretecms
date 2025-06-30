@@ -275,6 +275,7 @@ class Controller extends BlockController implements UsesFeatureInterface
     {
         $args = parent::getImportData($blockNode, $page);
         $entityID = (string) ($args['exEntityID'] ?? '');
+        $entity = null;
         if ($entityID !== '') {
             $entity = $this->app->make(EntityManagerInterface::class)->find(Entity::class, $entityID);
             if ($entity === null) {
