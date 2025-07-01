@@ -391,7 +391,6 @@ class ImportExportTest extends PageTestCase
         $expectedUncoveredHandles = [
             'core_board_slot', // does it make sense to test it?
             'form', // old stuff that's not worth working on
-            'page_attribute_display',
             'page_list',
             'page_title',
             'rss_displayer',
