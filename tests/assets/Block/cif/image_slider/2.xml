@@ -1,0 +1,23 @@
+<block type="image_slider" name="">
+  <data table="btImageSlider">
+    <record>
+      <maxWidth>0</maxWidth>
+      <navigationType>2</navigationType>
+      <noAnimate>1</noAnimate>
+      <pause>1</pause>
+      <speed>123</speed>
+      <timeout>456</timeout>
+    </record>
+  </data>
+  <data table="btImageSliderEntries">
+    <record>
+      <cID>0</cID>
+      <description>Nothing special here</description>
+      <fID>{ccm:export:file:123456543210:file-3.png}</fID>
+      <internalLinkCID>0</internalLinkCID>
+      <linkURL></linkURL>
+      <sortOrder>0</sortOrder>
+      <title>Lonely Slide</title>
+    </record>
+  </data>
+</block>
