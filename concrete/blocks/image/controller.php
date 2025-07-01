@@ -13,7 +13,6 @@ use Concrete\Core\File\Tracker\FileTrackableInterface;
 use Concrete\Core\Form\Service\DestinationPicker\DestinationPicker;
 use Concrete\Core\Page\Page;
 use Concrete\Core\Page\Theme\Theme;
-use Concrete\Core\View\View;
 
 class Controller extends BlockController implements FileTrackableInterface, UsesFeatureInterface
 {
@@ -153,6 +152,11 @@ class Controller extends BlockController implements FileTrackableInterface, Uses
         $this->set('c', Page::getCurrentPage());
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Block\BlockController::importAdditionalData()
+     */
     public function importAdditionalData($b, $blockNode)
     {
         parent::importAdditionalData($b, $blockNode);
@@ -174,24 +178,6 @@ class Controller extends BlockController implements FileTrackableInterface, Uses
     public function export(\SimpleXMLElement $blockNode)
     {
         parent::export($blockNode);
-
-        if ($this->getInternalLinkCID()) {
-            $imageLinkHandle = 'page';
-            $imageLinkValue = $this->getInternalLinkCID();
-        } elseif ($this->getFileLinkID()) {
-            $imageLinkHandle = 'file';
-            $imageLinkValue = $this->getFileLinkID();
-        } elseif ((string) $this->getExternalLink() !== '') {
-            $imageLinkHandle = 'external_url';
-            $imageLinkValue = (string) $this->getExternalLink();
-        } else {
-            $imageLinkHandle = 'none';
-            $imageLinkValue = null;
-        }
-        /** @var DestinationPicker $destinationPicker */
-        $destinationPicker = $this->app->make(DestinationPicker::class);
-        $destinationPicker->export('imageLink', $imageLinkHandle, $imageLinkValue, $this, $blockNode);
-
         $thumbnailTypes = $this->getSelectedThumbnailTypes();
         if (count($thumbnailTypes)) {
             $thumbnails = $blockNode->addChild('thumbnails');
@@ -560,6 +546,7 @@ class Controller extends BlockController implements FileTrackableInterface, Uses
      */
     public function save($args)
     {
+        $fromCIF = ($args['__fromCIF'] ?? null) === true;
         /** @var Connection $db */
         $db = $this->app->make(Connection::class);
 
@@ -585,12 +572,12 @@ class Controller extends BlockController implements FileTrackableInterface, Uses
             $args['maxHeight'] = 0;
         }
 
-        // @TODO - this is not working on install. fix it.
-        list($imageLinkType, $imageLinkValue) = $this->app->make(DestinationPicker::class)->decode('imageLink', $this->getImageLinkPickers(), null, null, $args);
-
-        $args['internalLinkCID'] = $imageLinkType === 'page' ? $imageLinkValue : 0;
-        $args['fileLinkID'] = $imageLinkType === 'file' ? $imageLinkValue : 0;
-        $args['externalLink'] = $imageLinkType === 'external_url' ? $imageLinkValue : '';
+        if (!$fromCIF) {
+            list($imageLinkType, $imageLinkValue) = $this->app->make(DestinationPicker::class)->decode('imageLink', $this->getImageLinkPickers(), null, null, $args);
+            $args['internalLinkCID'] = $imageLinkType === 'page' ? $imageLinkValue : 0;
+            $args['fileLinkID'] = $imageLinkType === 'file' ? $imageLinkValue : 0;
+            $args['externalLink'] = $imageLinkType === 'external_url' ? $imageLinkValue : '';
+        }
 
         $args['openLinkInNewWindow'] = $args['openLinkInNewWindow'] ? 1 : 0;
 
@@ -598,6 +585,11 @@ class Controller extends BlockController implements FileTrackableInterface, Uses
         /** @noinspection PhpUnhandledExceptionInspection */
         $db->delete('btContentImageBreakpoints', ['bID' => $this->bID]);
 
+        $this->fID = $args['fID'] ?? 0;
+        
+        foreach ($this->btExportFileColumns as $field) {
+            $this->{$field} = $args[$field] ?? 0;
+        }
         parent::save($args);
 
         if (isset($args["selectedThumbnailTypes"]) && is_array($args["selectedThumbnailTypes"])) {
@@ -616,9 +608,40 @@ class Controller extends BlockController implements FileTrackableInterface, Uses
         }
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Block\BlockController::getImportData()
+     */
+    protected function getImportData($blockNode, $page)
+    {
+        $args = parent::getImportData($blockNode, $page);
+        $args['__fromCIF'] = true;
+        foreach (['internalLinkCID', 'fileLinkID'] as $field) {
+            $args[$field] = empty($args[$field]) ? 0 : (int) $args[$field];
+        }
+        if (!array_key_exists('externalLink', $args)) {
+            $args['externalLink'] = '';
+        }
+
+        return $args;
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\File\Tracker\FileTrackableInterface::getUsedFiles()
+     */
     public function getUsedFiles()
     {
-        return [$this->getFileID()];
+        $result = [];
+        foreach ($this->btExportFileColumns as $field) {
+            if (($fID = (int) $this->{$field}) !== 0) {
+                $result[] = $fID;
+            }
+        }
+
+        return $result;
     }
 
     /**
