@@ -219,14 +219,10 @@ class ImportExportTest extends PageTestCase
         $createdBlock = $blockController->import(self::$blockPage, 'Main', $inputCif);
         $this->assertInstanceOf(Block::class, $createdBlock);
         $this->checkFileUsageCount($createdBlock, $options['fileUsageCount'] ?? 0);
-        if (isset($options['richTextsWithPages'])) {
-            $this->checkFieldRegexes($createdBlock, $options['richTextsWithPages'], '/\{CCM:CID_\d+\}/');
-        }
-        if (isset($options['richTextsWithImages'])) {
-            $this->checkFieldRegexes($createdBlock, $options['richTextsWithImages'], '/<concrete-picture\b[^>]*\b(fid|fID)\s*=\s*["\']?[1-9]\d*\b"/s');
-        }
-        if (isset($options['richTextsWithFiles'])) {
-            $this->checkFieldRegexes($createdBlock, $options['richTextsWithFiles'], '/\{CCM:FID_DL_[0-9a-fA-F][0-9a-fA-F\-]+[0-9a-fA-F]\}/');
+        if (isset($options['richTexts'])) {
+            foreach ($options['richTexts'] as $query => $info) {
+                $this->checkRichText($createdBlock->getBlockID(), $query, $info);
+            }
         }
         $outputCif = simplexml_load_string('<root />');
         $createdBlock->export($outputCif);
@@ -380,20 +376,24 @@ class ImportExportTest extends PageTestCase
         $this->assertSame($expectedUsageCount, $actualUsageCount, "The block should use {$expectedUsageCount} instead of {$actualUsageCount} distinct file(s)");
     }
 
-    private function checkFieldRegexes(Block $block, array $queriesAndMatchCounts, string $regex): void
+    private function checkRichText(int $blockID, string $query, array $info): void
     {
-        foreach ($queriesAndMatchCounts as $query => $matchCount) {
-            $this->checkFieldRegex($block, $query, $matchCount, $regex);
-        }
-    }
+        $richText = (string) app(Connection::class)->fetchOne($query, ['bID' => $blockID]);
 
-    private function checkFieldRegex(Block $block, string $query, int $expectedMatchCount, string $regex): void
-    {
-        $richText = app(Connection::class)->fetchOne($query, ['bID' => $block->getBlockID()]);
-        $this->assertNotSame(false, $richText);
-        $this->assertNotNull($richText);
-        $actualMatchCount = preg_match_all($regex, $richText);
-        $this->assertSame($expectedMatchCount, $actualMatchCount, "The rich text\n{$richText}\nshould match {$regex} {$expectedMatchCount} time(s) instead of {$actualMatchCount}");
+        $pattern = '#{CCM:FID_DL_(?i:[0-9A-F][0-9A-F\-]+[0-9A-F])}#';
+        $expectedNum = $info['numFiles'] ?? 0;
+        $actualNum = preg_match_all($pattern, $richText);
+        $this->assertSame($expectedNum, $actualNum, "The rich text\n{$richText}\ncontain references to {$actualNum} file(s) instead of {$expectedNum}.\nPS: pattern used: {$pattern}\n");
+
+        $pattern = '/<concrete-picture\s[^>]*(?i:\bfid)\s*=\s*(?:([1-9]\d*)|"([1-9]\d*)"|\'([1-9]\d*)\')[\s>]/';
+        $expectedNum = $info['numImages'] ?? 0;
+        $actualNum = preg_match_all($pattern, $richText);
+        $this->assertSame($expectedNum, $actualNum, "The rich text\n{$richText}\ncontain references to {$actualNum} image(s) instead of {$expectedNum}.\nPS: pattern used: {$pattern}\n");
+
+        $pattern = '#{CCM:CID_[1-9]\d*}#';
+        $expectedNum = $info['numPages'] ?? 0;
+        $actualNum = preg_match_all($pattern, $richText);
+        $this->assertSame($expectedNum, $actualNum, "The rich text\n{$richText}\ncontain references to {$actualNum} pages(s) instead of {$expectedNum}.\nPS: pattern used: {$pattern}\n");
     }
 
     private function assertSameXML(string $expected, string $actual, bool $keepXmlElementsOrder): void
