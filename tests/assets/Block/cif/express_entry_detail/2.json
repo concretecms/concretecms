@@ -1,4 +1,4 @@
 {
-    "$schema": "../options-schema.json",
-    "importerExporterMethod": "importExportExpressEntryDetail"
+  "$schema": "../options-schema.json",
+  "importerExporterMethod": "importExportExpressEntryDetail"
 }
