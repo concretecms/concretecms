@@ -296,4 +296,9 @@ class Controller extends BlockController implements FileTrackableInterface, Uses
 
         return $result;
     }
+
+    public function getSearchableContent()
+    {
+        return "{$this->title} {$this->body}";
+    }
 }
