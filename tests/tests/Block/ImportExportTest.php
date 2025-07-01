@@ -100,6 +100,7 @@ class ImportExportTest extends PageTestCase
             Entity\Calendar\Calendar::class,
             Entity\File\File::class,
             Entity\File\Image\Thumbnail\Type\Type::class,
+            Entity\File\Image\Thumbnail\Type\TypeFileSet::class,
             Entity\File\StorageLocation\StorageLocation::class,
             Entity\File\StorageLocation\Type\Type::class,
             Entity\File\Version::class,
@@ -121,6 +122,7 @@ class ImportExportTest extends PageTestCase
         parent::setUpBeforeClass();
         self::createPages();
         self::createUsers();
+        self::createThumbnailTypes();
         self::createFiles();
         self::createBoards();
         self::createCalendars();
@@ -505,6 +507,19 @@ class ImportExportTest extends PageTestCase
             'uDefaultLanguage' => 'en_US',
             'uHomeFileManagerFolderID' => null,
         ]);
+    }
+
+    private static function createThumbnailTypes(): void
+    {
+        $em = app(EntityManagerInterface::class);
+        $type = new Entity\File\Image\Thumbnail\Type\Type();
+        $type->setHandle('thumbtype');
+        $type->setName('Thumb Type');
+        $type->setWidth(10);
+        $type->setHeight(10);
+        $type->setSizingMode(Entity\File\Image\Thumbnail\Type\Type::RESIZE_EXACT);
+        $em->persist($type);
+        $em->flush();
     }
 
     private static function createFiles(): void
