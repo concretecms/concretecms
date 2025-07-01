@@ -16,9 +16,10 @@ use Concrete\Core\File\Service\VolatileDirectory;
 use Concrete\Core\File\Set\Set as FileSet;
 use Concrete\Core\File\StorageLocation\StorageLocationFactory;
 use Concrete\Core\File\StorageLocation\Type\Type as StorageLocationType;
+use Concrete\Core\File\Tracker\FileTrackableInterface;
 use Concrete\Core\Page\Single as SinglePage;
-use Concrete\Core\Page\Stack\Stack;
 use Concrete\Core\Page\Stack\Folder\FolderService as StackFolderService;
+use Concrete\Core\Page\Stack\Stack;
 use Concrete\Core\Page\Type\Composer\Control\Type\Type as ComposerControlType;
 use Concrete\Core\Page\Type\Type as PageType;
 use Concrete\TestHelpers\Page\PageTestCase;
@@ -27,8 +28,8 @@ use DOMDocument;
 use DOMElement;
 use DOMNode;
 use DOMXPath;
-use Mockery as M;
 use Illuminate\Filesystem\Filesystem;
+use Mockery as M;
 use SimpleXMLElement;
 
 class ImportExportTest extends PageTestCase
@@ -141,7 +142,7 @@ class ImportExportTest extends PageTestCase
         self::$storageVolatileDirectory = null;
     }
 
-    public function provideCases(): array
+    public function provideCIFCases(): array
     {
         static $cases;
         if ($cases === null) {
@@ -171,8 +172,24 @@ class ImportExportTest extends PageTestCase
         return $cases;
     }
 
+    public function provideBlocksWithRichText(): array
+    {
+        $result = [];
+        foreach ($this->provideCIFCases() as [$blockTypeHandle,, $options]) {
+            if (in_array([$blockTypeHandle], $result, true)) {
+                continue;
+            }
+            if (($options['richTexts'] ?? []) === []) {
+                continue;
+            }
+            $result[] = [$blockTypeHandle];
+        }
+
+        return $result;
+    }
+
     /**
-     * @dataProvider provideCases
+     * @dataProvider provideCIFCases
      */
     public function testCIFImportExport(string $blockTypeHandle, string $cifFile, array $options): void
     {
@@ -197,6 +214,40 @@ class ImportExportTest extends PageTestCase
         $importerExporterMethod = $options['importerExporterMethod'] ?? 'importExportBlockType';
         $outputCif = $this->{$importerExporterMethod}($blockType, $inputCif, $options);
         $this->assertSameXML($inputCif->asXML(), $outputCif, $options['keepXmlElementsOrder'] ?? false);
+    }
+
+    /**
+     * @dataProvider provideBlocksWithRichText
+     */
+    public function testProvideContents(string $blockTypeHandle): void
+    {
+        $blockType = BlockType::getByHandle($blockTypeHandle);
+        if (!$blockType) {
+            $blockType = BlockType::installBlockType($blockTypeHandle);
+        }
+        $expectedMethod = 'getSearchableContent';
+        $controllerClass = ltrim($blockType->getBlockTypeClass(), '\\');
+        $this->assertTrue(
+            method_exists($controllerClass, $expectedMethod),
+            "Since the block type with handle {$blockTypeHandle} uses rich text, its controller ({$controllerClass}) should implement the {$expectedMethod}() method");
+    }
+
+    /**
+     * @dataProvider provideBlocksWithRichText
+     */
+    public function testImplementsFileTrackableInterface(string $blockTypeHandle): void
+    {
+        $blockType = BlockType::getByHandle($blockTypeHandle);
+        if (!$blockType) {
+            $blockType = BlockType::installBlockType($blockTypeHandle);
+        }
+        $expectedInterface = FileTrackableInterface::class;
+        $controllerClass = ltrim($blockType->getBlockTypeClass(), '\\');
+        $implementedInterfaces = class_implements($controllerClass);
+        $this->assertTrue(
+            in_array($expectedInterface, $implementedInterfaces, true),
+            "Since the block type with handle {$blockTypeHandle} uses rich text, its controller ({$controllerClass}) should implement the {$expectedInterface} interface"
+        );
     }
 
     private function loadNormalizedInputCif(string $cifFile): SimpleXMLElement
@@ -334,7 +385,7 @@ class ImportExportTest extends PageTestCase
                 static function (array $case): string {
                     return $case[0];
                 },
-                $this->provideCases()
+                $this->provideCIFCases()
             )
         );
         $expectedUncoveredHandles = [
