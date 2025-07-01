@@ -30,6 +30,9 @@ class AdvancedConfiguration implements ConfigurationInterface
             $allConfig = $config['loggers'][Channels::META_CHANNEL_ALL];
             $channels = array_merge(Channels::getCoreChannels(), [Channels::CHANNEL_APPLICATION]);
             foreach($channels as $channel) {
+                if (array_key_exists($channel, $config['loggers'])) {
+                    continue;
+                }
                 $config['loggers'][$channel] = $allConfig;
             }
             unset($config['loggers'][Channels::META_CHANNEL_ALL]);
