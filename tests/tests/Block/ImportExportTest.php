@@ -153,7 +153,7 @@ class ImportExportTest extends PageTestCase
                 $jsonFile = $file->getPath() . '/' . $file->getBasename('.xml') . '.json';
                 if ($fs->isFile($jsonFile)) {
                     $json = $fs->get($jsonFile);
-                    $options = json_decode($json, true, JSON_THROW_ON_ERROR);
+                    $options = json_decode($json, true, 512, JSON_THROW_ON_ERROR);
                 }
                 $cases[] = [
                     $blockTypeHandle,
@@ -334,7 +334,6 @@ class ImportExportTest extends PageTestCase
         );
         $expectedUncoveredHandles = [
             'core_board_slot', // Does it make sense to test it?
-            'feature',
             'feature_link',
             'file',
             'form',
