@@ -143,25 +143,28 @@ class ImportExportTest extends PageTestCase
 
     public function provideCases(): array
     {
-        $fs = new FileSystem();
-        $cases = [];
-        foreach ($fs->directories(DIR_TESTS . '/assets/Block/cif') as $blockTypeDirectory) {
-            $blockTypeHandle = basename($blockTypeDirectory);
-            foreach ($fs->allFiles($blockTypeDirectory) as $file) {
-                if (strcasecmp($file->getExtension(), 'xml') !== 0) {
-                    continue;
+        static $cases;
+        if ($cases === null) {
+            $fs = new FileSystem();
+            $cases = [];
+            foreach ($fs->directories(DIR_TESTS . '/assets/Block/cif') as $blockTypeDirectory) {
+                $blockTypeHandle = basename($blockTypeDirectory);
+                foreach ($fs->allFiles($blockTypeDirectory) as $file) {
+                    if (strcasecmp($file->getExtension(), 'xml') !== 0) {
+                        continue;
+                    }
+                    $options = [];
+                    $jsonFile = $file->getPath() . '/' . $file->getBasename('.xml') . '.json';
+                    if ($fs->isFile($jsonFile)) {
+                        $json = $fs->get($jsonFile);
+                        $options = json_decode($json, true, 512, JSON_THROW_ON_ERROR);
+                    }
+                    $cases[] = [
+                        $blockTypeHandle,
+                        str_replace(DIRECTORY_SEPARATOR, '/', $file->getPathname()),
+                        $options,
+                    ];
                 }
-                $options = [];
-                $jsonFile = $file->getPath() . '/' . $file->getBasename('.xml') . '.json';
-                if ($fs->isFile($jsonFile)) {
-                    $json = $fs->get($jsonFile);
-                    $options = json_decode($json, true, 512, JSON_THROW_ON_ERROR);
-                }
-                $cases[] = [
-                    $blockTypeHandle,
-                    str_replace(DIRECTORY_SEPARATOR, '/', $file->getPathname()),
-                    $options,
-                ];
             }
         }
 
