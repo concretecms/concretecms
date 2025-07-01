@@ -2,22 +2,21 @@
 
 namespace Concrete\Block\FeatureLink;
 
-use Concrete\Core\Application\Service\FileManager;
 use Concrete\Core\Block\BlockController;
 use Concrete\Core\Feature\Features;
 use Concrete\Core\Feature\UsesFeatureInterface;
 use Concrete\Core\File\File;
+use Concrete\Core\File\Tracker\FileTrackableInterface;
 use Concrete\Core\Form\Service\DestinationPicker\DestinationPicker;
+use Concrete\Core\Html\Service\FontAwesomeIcon;
 use Concrete\Core\Page\Page;
 use Concrete\Core\Page\Theme\Theme;
-use Concrete\Core\Permission\Checker;
 use HtmlObject\Link;
-use Concrete\Core\Html\Service\FontAwesomeIcon;
-
+use Concrete\Core\File\Tracker\RichTextExtractor;
 
 defined('C5_EXECUTE') or die('Access Denied.');
 
-class Controller extends BlockController implements UsesFeatureInterface
+class Controller extends BlockController implements FileTrackableInterface, UsesFeatureInterface
 {
     /**
      * @var string|null
@@ -90,8 +89,9 @@ class Controller extends BlockController implements UsesFeatureInterface
     protected $btCacheBlockRecord = true;
     protected $btCacheBlockOutput = true;
     protected $btCacheBlockOutputOnPost = true;
-    protected $btExportFileColumns = array('fID');
-    protected $btExportPageColumns = ['imageLink_page'];
+    protected $btExportFileColumns = ['buttonFileLinkID', 'fID'];
+    protected $btExportPageColumns = ['buttonInternalLinkCID'];
+    protected $btExportContentColumns = ['body'];
     protected $btCacheBlockOutputForRegisteredUsers = true;
     protected $btCacheBlockOutputLifetime = 300;
 
@@ -271,23 +271,56 @@ class Controller extends BlockController implements UsesFeatureInterface
 
     public function save($args)
     {
-        list($imageLinkType, $imageLinkValue) = $this->app->make(DestinationPicker::class)->decode('imageLink', $this->getImageLinkPickers(), null, null, $args);
-
-        $args['buttonInternalLinkCID'] = $imageLinkType === 'page' ? $imageLinkValue : 0;
-        $args['buttonFileLinkID'] = $imageLinkType === 'file' ? $imageLinkValue : 0;
-        $args['buttonExternalLink'] = $imageLinkType === 'external_url' ? $imageLinkValue : '';
+        $fromCIF = ($args['__fromCIF'] ?? null) === true;
+        if (!$fromCIF) {
+            list($imageLinkType, $imageLinkValue) = $this->app->make(DestinationPicker::class)->decode('imageLink', $this->getImageLinkPickers(), null, null, $args);
+            $args['buttonInternalLinkCID'] = $imageLinkType === 'page' ? $imageLinkValue : 0;
+            $args['buttonFileLinkID'] = $imageLinkType === 'file' ? $imageLinkValue : 0;
+            $args['buttonExternalLink'] = $imageLinkType === 'external_url' ? $imageLinkValue : '';
+        }
         $security = $this->app->make('helper/security');
         $args['icon'] = $security->sanitizeString($args['icon'] ?? '');
         $args = $args + [
             'fID' => 0,
         ];
         $args['fID'] = $args['fID'] != '' ? $args['fID'] : 0;
-
+        $this->body = $args['body'] ?? '';
+        $this->buttonFileLinkID = $args['buttonFileLinkID'] ?? 0;
+        $this->fID = $args['fID'] ?? 0;
         parent::save($args);
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Block\BlockController::getImportData()
+     */
+    public function getImportData($blockNode, $page)
+    {
+        $args = parent::getImportData($blockNode, $page);
+        $args += ['__fromCIF' => true];
+        foreach (['buttonInternalLinkCID', 'buttonFileLinkID', 'fID'] as $field) {
+            $args[$field] = empty($args[$field]) ? 0 : (int) $args[$field];
+        }
+
+        return $args;
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\File\Tracker\FileTrackableInterface::getUsedFiles()
+     */
     public function getUsedFiles()
     {
-        return [$this->getFileID()];
+        $result = $this->app->make(RichTextExtractor::class)->extractFiles($this->body);
+        if (($fID = (int) $this->buttonFileLinkID) > 0) {
+            $result[] = $fID;
+        }
+        if (($fID = (int) $this->fID) > 0) {
+            $result[] = $fID;
+        }
+
+        return $result;
     }
 }
