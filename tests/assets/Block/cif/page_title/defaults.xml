@@ -1,0 +1,17 @@
+<block type="page_title" name="">
+  <data table="btPageTitle">
+    <record>
+      <dateTextFormat>0</dateTextFormat>
+      <filterDateFormat>F Y</filterDateFormat>
+      <formatting>h1</formatting>
+      <tagTextFormat>upperWord</tagTextFormat>
+      <titleText>Home</titleText>
+      <topicTextFormat>0</topicTextFormat>
+      <useCustomTitle>0</useCustomTitle>
+      <useFilterDate>0</useFilterDate>
+      <useFilterTag>0</useFilterTag>
+      <useFilterTitle>0</useFilterTitle>
+      <useFilterTopic>0</useFilterTopic>
+    </record>
+  </data>
+</block>
