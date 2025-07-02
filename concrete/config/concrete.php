@@ -6,8 +6,8 @@ return [
      *
      * @var string
      */
-    'version' => '9.4.1',
-    'version_installed' => '9.4.1',
+    'version' => '9.4.2',
+    'version_installed' => '9.4.2',
     'version_db' => '20250227155410', // the key of the latest database migration
 
     /*
@@ -431,6 +431,23 @@ return [
             'delete_page_forever' => 100,
             'copy_page' => 10,
         ],
+    ],
+
+    /*
+     * ------------------------------------------------------------------------
+     * Boards settings
+     * ------------------------------------------------------------------------
+     */
+    'boards' => [
+        /*
+         * If true, we will attempt to automatically update boards
+         * when their content items (pages, events, etc...) change
+         * Set this to false via the web UI if you're using the console command
+         * or other means to keep the boards up to date.
+         *
+         * @var bool
+         */
+        'automatically_refresh_instances' => true,
     ],
 
     /*

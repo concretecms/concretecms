@@ -188,6 +188,7 @@ class PageList extends DatabaseItemList implements PagerProviderInterface, Pagin
 
     public function finalizeQuery(\Doctrine\DBAL\Query\QueryBuilder $query)
     {
+        $app = Application::getFacadeApplication();
         if ($this->includeAliases) {
             $query->from('Pages', 'p')
                 ->leftJoin('p', 'Pages', 'pa', 'p.cPointerID = pa.cID')
@@ -215,7 +216,7 @@ class PageList extends DatabaseItemList implements PagerProviderInterface, Pagin
             case self::PAGE_VERSION_RECENT_UNAPPROVED:
                 $query
                     ->andWhere('cv.cvID = (select max(cvID) from CollectionVersions where cID = cv.cID)')
-                    ->andWhere($expr->eq('cvIsApproved', 0));
+                    ->andWhere('cvIsApproved = 0');
                 break;
             case self::PAGE_VERSION_SCHEDULED:
                 $now = new \DateTime();
@@ -224,7 +225,6 @@ class PageList extends DatabaseItemList implements PagerProviderInterface, Pagin
                 break;
             case self::PAGE_VERSION_ACTIVE:
             default:
-                $app = Application::getFacadeApplication();
                 $query->andWhere('cv.cvID = (select max(cvID) from CollectionVersions where cID = cv.cID and cvIsApproved = 1 and ((cvPublishDate <= :cvPublishDate or cvPublishDate is null) and (cvPublishEndDate >= :cvPublishDate or cvPublishEndDate is null)))');
                 $query->setParameter('cvPublishDate', $app->make('date')->getOverridableNow());
                 break;

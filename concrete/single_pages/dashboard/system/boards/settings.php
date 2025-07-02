@@ -16,6 +16,19 @@
             </p>
         </div>
     </fieldset>
+    <fieldset>
+        <legend><?=t('Updates'); ?></legend>
+        <div class="form-group">
+            <div class="form-check">
+                <?= $form->checkbox('automatically_refresh_instances', 1, $automaticallyRefreshInstances); ?>
+                <?= $form->label('automatically_refresh_instances', t('Automatically Refresh Instances'), ['class' => 'form-check-label']); ?>
+            </div>
+
+            <p class="help-block">
+                <?= t('If enabled, automatically update boards when their content items change. Disable if you are using the console command to do this.'); ?>
+            </p>
+        </div>
+    </fieldset>
     <div class="ccm-dashboard-form-actions-wrapper">
         <div class="ccm-dashboard-form-actions">
             <button class="btn btn-primary float-end" type="submit"><?= t('Save'); ?></button>
