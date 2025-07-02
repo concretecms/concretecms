@@ -13,6 +13,7 @@ use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Entity;
 use Concrete\Core\Entity\Block\BlockType\BlockType as BlockTypeEntity;
 use Concrete\Core\Entity\Page\Feed as FeedEntity;
+use Concrete\Core\Entity\Sharing\SocialNetwork\Link as SocialLink;
 use Concrete\Core\File\Import\FileImporter;
 use Concrete\Core\File\Import\ImportOptions;
 use Concrete\Core\File\Service\VolatileDirectory;
@@ -132,6 +133,7 @@ class ImportExportTest extends PageTestCase
             Entity\Page\Container\Instance::class,
             Entity\Page\Container\InstanceArea::class,
             Entity\Page\Feed::class,
+            Entity\Sharing\SocialNetwork\Link::class,
             Entity\Statistics\UsageTracker\FileUsageRecord::class,
             Entity\StyleCustomizer\Inline\StyleSet::class,
         ]);
@@ -157,6 +159,7 @@ class ImportExportTest extends PageTestCase
         self::createCalendars();
         self::createContainers();
         self::createStacks();
+        self::createSocialLinks();
     }
 
     /**
@@ -810,5 +813,27 @@ class ImportExportTest extends PageTestCase
         $stackFolder11 = $stackFolderService->add('Sub folder 1 of Stack Folder 1', $stackFolder1);
         Stack::addStack('Stack 3 in sub folder', $stackFolder11);
         Stack::addStack('Stack 4 in sub folder', $stackFolder11);
+    }
+
+    private static function createSocialLinks(): void
+    {
+        $em = app(EntityManagerInterface::class);
+        $repo = $em->getRepository(SocialLink::class);
+        $site = self::$blockPage->getSite();
+        if ($repo->findOneBy(['site' => $site, 'ssHandle' => 'bluesky']) === null) {
+            $link = new SocialLink();
+            $link->setServiceHandle('bluesky');
+            $link->setSite($site);
+            $link->setURL('https://bsky.app/profile/concretecms.bsky.social');
+            $em->persist($link);            
+        }
+        if ($repo->findOneBy(['site' => $site, 'ssHandle' => 'github']) === null) {
+            $link = new SocialLink();
+            $link->setServiceHandle('github');
+            $link->setSite($site);
+            $link->setURL('https://github.com/concretecms');
+            $em->persist($link);
+        }
+        $em->flush();
     }
 }
