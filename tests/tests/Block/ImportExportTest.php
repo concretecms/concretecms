@@ -189,7 +189,7 @@ class ImportExportTest extends PageTestCase
                     }
                     $cases[] = [
                         $blockTypeHandle,
-                        str_replace(DIRECTORY_SEPARATOR, '/', $file->getPathname()),
+                        str_replace(DIRECTORY_SEPARATOR, '/', $file->getBasename('.xml')),
                         $options,
                     ];
                 }
@@ -218,11 +218,12 @@ class ImportExportTest extends PageTestCase
     /**
      * @dataProvider provideCIFCases
      */
-    public function testCIFImportExport(string $blockTypeHandle, string $cifFile, array $options): void
+    public function testCIFImportExport(string $blockTypeHandle, string $cifBaseFileName, array $options): void
     {
         if (isset($options['skipReason'])) {
             $this->markTestSkipped($options['skipReason']);
         }
+        $cifFile = DIR_TESTS . "/assets/Block/cif/{$blockTypeHandle}/{$cifBaseFileName}.xml";
         if (empty($options['keepXmlElementsOrder'])) {
             $inputCif = $this->loadNormalizedInputCif($cifFile);
         } else {
