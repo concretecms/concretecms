@@ -313,40 +313,18 @@ class Controller extends BlockController implements UsesFeatureInterface
             $data['filterByTopicID'] = 0;
         }
         $filterByTopicAttributeKey = (string) ($data['filterByTopicAttributeKey'] ?? '');
-        if ($filterByTopicAttributeKey !== '') {
-            $filterByTopicPaths = preg_split('{/}', (string) ($data['filterByTopicPath'] ?? ''), -1, PREG_SPLIT_NO_EMPTY);
-            if ($filterByTopicPaths !== []) {
-                $topicAttributeKey = $this->app->make(EventCategory::class)->getAttributeKeyByHandle($filterByTopicAttributeKey);
-                $topicController = $topicAttributeKey ? $topicAttributeKey->getController() : null;
-                if ($topicController instanceof TopicsController) {
-                    $tree = Tree::getByID($topicController->getTopicTreeID());
-                    if ($tree instanceof Tree) {
-                        $walk = null;
-                        $walk = static function ($parent) use (&$walk, &$filterByTopicPaths) {
-                            $name = array_shift($filterByTopicPaths);
-                            $found = null;
-                            $parent->populateDirectChildrenOnly();
-                            foreach ($parent->getChildNodes() as $child) {
-                                if ($child->getTreeNodeName() === $name) {
-                                    $found = $child;
-                                    break;
-                                }
-                            }
-                            if ($found === null) {
-                                return null;
-                            }
-                            if ($filterByTopicPaths !== []) {
-                                return $walk($found);
-                            }
-
-                            return $found;
-                        };
-                        $node = $walk($tree->getRootTreeNodeObject());
-                        if ($node) {
-                            $data['filterByTopicAttributeKeyID'] = $topicAttributeKey->getAttributeKeyID();
-                            $data['filterByTopicID'] = $node->getTreeNodeID();
-                        };
-                    }
+        $filterByTopicPath = (string) ($data['filterByTopicPath'] ?? '');
+        if ($filterByTopicAttributeKey !== '' && $filterByTopicPath !== '') {
+            $topicAttributeKey = $this->app->make(EventCategory::class)->getAttributeKeyByHandle($filterByTopicAttributeKey);
+            $topicController = $topicAttributeKey ? $topicAttributeKey->getController() : null;
+            if ($topicController instanceof TopicsController) {
+                $tree = Tree::getByID($topicController->getTopicTreeID());
+                if ($tree instanceof Tree) {
+                    $node = $tree->getNodeByDisplayPath($filterByTopicPath);
+                    if ($node) {
+                        $data['filterByTopicAttributeKeyID'] = $topicAttributeKey->getAttributeKeyID();
+                        $data['filterByTopicID'] = $node->getTreeNodeID();
+                    };
                 }
             }
         }
