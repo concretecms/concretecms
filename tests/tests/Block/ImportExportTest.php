@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Concrete\Tests\Block;
 
+use Concrete\Core\Attribute\Category\CategoryService as AttributeCategoryService;
+use Concrete\Core\Attribute\TypeFactory as AttributeTypeFactory;
 use Concrete\Core\Block\Block;
 use Concrete\Core\Block\BlockController;
 use Concrete\Core\Block\BlockType\BlockType;
@@ -22,6 +24,13 @@ use Concrete\Core\Page\Stack\Folder\FolderService as StackFolderService;
 use Concrete\Core\Page\Stack\Stack;
 use Concrete\Core\Page\Type\Composer\Control\Type\Type as ComposerControlType;
 use Concrete\Core\Page\Type\Type as PageType;
+use Concrete\Core\Permission\Access\Entity\Type AS PAEType;
+use Concrete\Core\Tree\Node\NodeType as TreeNodeType;
+use Concrete\Core\Tree\Node\Type\Topic as TopicTreeNode;
+use Concrete\Core\Tree\TreeType;
+use Concrete\Core\Tree\Type\Topic as TopicService;
+use Concrete\Core\User\Group\Command\AddGroupCommand;
+use Concrete\Core\User\Group\GroupRepository;
 use Concrete\TestHelpers\Page\PageTestCase;
 use Doctrine\ORM\EntityManagerInterface;
 use DOMDocument;
@@ -52,6 +61,11 @@ class ImportExportTest extends PageTestCase
     private static $blockPage;
 
     /**
+     * @var \Concrete\Core\Tree\Type\Topic
+     */
+    private static $topicsTree;
+
+    /**
      * {@inheritdoc}
      *
      * @see \Concrete\TestHelpers\Database\ConcreteDatabaseTestCase::getTables()
@@ -73,7 +87,10 @@ class ImportExportTest extends PageTestCase
             'PageTypeComposerFormLayoutSetControls',
             'PageTypeComposerOutputControls',
             'PageTypePageTemplateDefaultPages',
+            'PermissionAccessEntities',
+            'PermissionAccessEntityGroups',
             'Stacks',
+            'TopicTrees',
             'TreeTypes',
             'Trees',
             'TreeFileFolderNodes',
@@ -81,6 +98,7 @@ class ImportExportTest extends PageTestCase
             'TreeNodes',
             'TreeNodePermissionAssignments',
             'TreeFileNodes',
+            'TreeGroupNodes',
             'UserGroups',
         ]);
     }
@@ -93,7 +111,9 @@ class ImportExportTest extends PageTestCase
     protected function getEntityClassNames(): array
     {
         return array_merge(parent::getEntityClassNames(), [
+            Entity\Attribute\Category::class,
             Entity\Attribute\Key\FileKey::class,
+            Entity\Attribute\Type::class,
             Entity\Attribute\Value\FileValue::class,
             Entity\Board\Board::class,
             Entity\Board\InstanceLog::class,
@@ -106,8 +126,11 @@ class ImportExportTest extends PageTestCase
             Entity\File\StorageLocation\Type\Type::class,
             Entity\File\Version::class,
             Entity\Page\Container::class,
+            Entity\Attribute\Value\Value\TopicsValue::class,
+            Entity\Attribute\Key\Settings\TopicsSettings::class,
             Entity\Page\Container\Instance::class,
             Entity\Page\Container\InstanceArea::class,
+            Entity\Page\Feed::class,
             Entity\Statistics\UsageTracker\FileUsageRecord::class,
             Entity\StyleCustomizer\Inline\StyleSet::class,
         ]);
@@ -121,8 +144,12 @@ class ImportExportTest extends PageTestCase
     public static function setupBeforeClass(): void
     {
         parent::setUpBeforeClass();
+        self::createPermissions();
+        self::createTrees();
         self::createPages();
         self::createUsers();
+        self::createTopics();
+        self::createAttributes();
         self::createThumbnailTypes();
         self::createFiles();
         self::createBoards();
@@ -526,6 +553,32 @@ class ImportExportTest extends PageTestCase
         }
     }
 
+    private static function createPermissions(): void
+    {
+        if (!PAEType::getByHandle('group')) {
+            PAEType::add('group', 'Group');
+        }
+    }
+
+    private static function createTrees(): void
+    {
+        if (TreeType::getByHandle('group') === null) {
+            TreeType::add('group');
+        }
+        if (TreeType::getByHandle('topic') === null) {
+            TreeType::add('topic');
+        }
+        if (TreeNodeType::getByHandle('category') === null) {
+            TreeNodeType::add('category');
+        }
+        if (TreeNodeType::getByHandle('group') === null) {
+            TreeNodeType::add('group');
+        }
+        if (TreeNodeType::getByHandle('topic') === null) {
+            TreeNodeType::add('topic');
+        }
+    }
+
     private static function createPages(): void
     {
         self::$blockPage = static::createPage('Page 1');
@@ -535,6 +588,14 @@ class ImportExportTest extends PageTestCase
 
     private static function createUsers(): void
     {
+        $groupRepository = app(GroupRepository::class);
+        if ($groupRepository->getGroupById(GUEST_GROUP_ID) === null) {
+            $command = new AddGroupCommand();
+            $command->setName('Guest');
+            $command->setDescription('Guests');
+            $command->getForcedNewGroupID(GUEST_GROUP_ID);
+            app()->executeCommand($command);
+        }
         $registrationService = app('user/registration');
         $registrationService->create([
             'uName' => USER_SUPER,
@@ -557,6 +618,44 @@ class ImportExportTest extends PageTestCase
             'uDefaultLanguage' => 'en_US',
             'uHomeFileManagerFolderID' => null,
         ]);
+    }
+
+    private static function createTopics(): void
+    {
+        self::$topicsTree = TopicService::add('Test Topic Tree');
+        $root = self::$topicsTree->getRootTreeNodeObject();
+        $child = TopicTreeNode::add('Parent #1', $root);
+        TopicTreeNode::add('Child #1.1', $child);
+        $child = TopicTreeNode::add('Parent #2', $root);
+        TopicTreeNode::add('Child #2.1', $child);
+        TopicTreeNode::add('Child #2.2', $child);
+        TopicTreeNode::add('Child #2.3', $child);
+    }
+
+    private static function createAttributes(): void
+    {
+        $typeFactory = app(AttributeTypeFactory::class);
+        $categoryService = app(AttributeCategoryService::class);
+        if (($pageCategoryEntity = $categoryService->getByHandle('collection')) === null) {
+            $pageCategory = $categoryService->add('collection');
+        } else {
+            $pageCategory = $pageCategoryEntity->getController();
+        }
+        /** @var \Concrete\Core\Attribute\Category\PageCategory $pageCategory */
+        if (($topicsType = $typeFactory->getByHandle('topics')) === null) {
+            $topicsType = $typeFactory->add('topics', 'Topics');
+        }
+        $categoryTypes = $pageCategory->getAttributeTypes();
+        if (!$categoryTypes->contains($topicsType)) {
+            $categoryTypes->add($topicsType);
+        }
+        $topicsController = $topicsType->getController();
+        /** @var \Concrete\Attribute\Topics\Controller $topicsController */
+        $settings = $topicsController->createAttributeKeySettings();
+        /** @var \Concrete\Core\Entity\Attribute\Key\Settings\TopicsSettings $settings */
+        $settings->setTopicTreeID(self::$topicsTree->getTreeID());
+        $pageCategory->add($topicsType, ['akHandle' => 'test_topic', 'akName' => 'Test Topic'], $settings);
+        app(EntityManagerInterface::class)->flush();
     }
 
     private static function createThumbnailTypes(): void
