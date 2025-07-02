@@ -12,6 +12,7 @@ use Concrete\Core\Block\BlockType\BlockType;
 use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Entity;
 use Concrete\Core\Entity\Block\BlockType\BlockType as BlockTypeEntity;
+use Concrete\Core\Entity\Page\Feed as FeedEntity;
 use Concrete\Core\File\Import\FileImporter;
 use Concrete\Core\File\Import\ImportOptions;
 use Concrete\Core\File\Service\VolatileDirectory;
@@ -240,6 +241,7 @@ class ImportExportTest extends PageTestCase
         $blockType = BlockType::getByHandle($blockTypeHandle) ?: BlockType::installBlockType($blockTypeHandle);
         $this->assertInstanceOf(BlockTypeEntity::class, $blockType);
         $importerExporterMethod = $options['importerExporterMethod'] ?? 'importExportBlockType';
+        $this->assertTrue(method_exists($this, $importerExporterMethod), "The method '{$importerExporterMethod}' specified in the options does not exist");
         $outputCif = $this->{$importerExporterMethod}($blockType, $inputCif, $options);
         $this->assertSameXML($inputCif->asXML(), $outputCif, $options['keepXmlElementsOrder'] ?? false);
     }
@@ -404,6 +406,71 @@ class ImportExportTest extends PageTestCase
         }
     }
 
+    private function importExportPageListFeedExisting(BlockTypeEntity $blockType, SimpleXMLElement $inputCif, array $options): string
+    {
+        $em = app(EntityManagerInterface::class);
+        $repo = $em->getRepository(FeedEntity::class);
+        $feed = $repo->findOneBy(['pfHandle' => 'pagelist-feed-existing']);
+        if ($feed) {
+            $em->remove($feed);
+        }
+        $feed = new FeedEntity();
+        $feed->setHandle('pagelist-feed-existing');
+        $feed->setTitle('Original title');
+        $feed->setDescription('Original description');
+        $feed->setParentID(0x7FFFFFFF);
+        $em->persist($feed);
+        $em->flush();
+        try {
+            $result = $this->importExportBlockType($blockType, $inputCif, $options);
+            $feed2 = $repo->findOneBy(['pfHandle' => 'pagelist-feed-existing']);
+            $this->assertSame($feed, $feed2);
+            $this->assertSame('Title of the Existing Feed', $feed2->getTitle());
+            $this->assertSame('Description of the Existing Feed', $feed2->getDescription());
+            $this->assertNotSame(0x7FFFFFFF, (int) $feed->getParentID());
+        } finally {
+            try {
+                if (isset($feed)) {
+                    $em->remove($feed);
+                }
+                if (isset($feed2)) {
+                    $em->remove($feed2);
+                }
+                $em->flush();
+            } catch (\Throwable $_) {
+            }
+        }
+        return $result;
+    }
+
+    private function importExportPageListFeedNew(BlockTypeEntity $blockType, SimpleXMLElement $inputCif, array $options): string
+    {
+        $em = app(EntityManagerInterface::class);
+        $repo = $em->getRepository(FeedEntity::class);
+        $feed = $repo->findOneBy(['pfHandle' => 'pagelist-feed-new']);
+        if ($feed) {
+            $em->remove($feed);
+            $em->flush();
+        }
+        try {
+            $result = $this->importExportBlockType($blockType, $inputCif, $options);
+            $feed = $repo->findOneBy(['pfHandle' => 'pagelist-feed-new']);
+            $this->assertNotNull($feed, 'The Page List block type should create an RSS feed');
+            $this->assertSame('Title of the New Feed', $feed->getTitle());
+            $this->assertSame('Description of the New Feed', $feed->getDescription());
+        } finally {
+            if (isset($feed)) {
+                try {
+                    $em->remove($feed);
+                    $em->flush();
+                } catch (\Throwable $_) {
+                }
+            }
+        }
+
+        return $result;
+    }
+
     public function testBlockTypeCoverage(): void
     {
         $fs = new Filesystem();
@@ -419,7 +486,6 @@ class ImportExportTest extends PageTestCase
         $expectedUncoveredHandles = [
             'core_board_slot', // does it make sense to test it?
             'form', // old stuff that's not worth working on
-            'page_list',
             'page_title',
             'rss_displayer',
             'search',
