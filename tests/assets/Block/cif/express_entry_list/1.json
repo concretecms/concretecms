@@ -1,4 +1,4 @@
 {
   "$schema": "../options-schema.json",
-  "skipReason": "Too complex to implement tests with mocks - we'd need actual data in tables"
+  "importerExporterMethod": "importExportExpress"
 }

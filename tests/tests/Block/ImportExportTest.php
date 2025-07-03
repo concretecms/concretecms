@@ -14,6 +14,7 @@ use Concrete\Core\Entity;
 use Concrete\Core\Entity\Block\BlockType\BlockType as BlockTypeEntity;
 use Concrete\Core\Entity\Page\Feed as FeedEntity;
 use Concrete\Core\Entity\Sharing\SocialNetwork\Link as SocialLink;
+use Concrete\Core\Express\ObjectAssociationBuilder;
 use Concrete\Core\File\Import\FileImporter;
 use Concrete\Core\File\Import\ImportOptions;
 use Concrete\Core\File\Service\VolatileDirectory;
@@ -42,7 +43,6 @@ use DOMElement;
 use DOMNode;
 use DOMXPath;
 use Illuminate\Filesystem\Filesystem;
-use Mockery as M;
 use SimpleXMLElement;
 
 class ImportExportTest extends PageTestCase
@@ -68,6 +68,8 @@ class ImportExportTest extends PageTestCase
      * @var \Concrete\Core\Tree\Type\Topic
      */
     private static $topicsTree;
+
+    private static $expressSamples;
 
     /**
      * {@inheritdoc}
@@ -116,6 +118,7 @@ class ImportExportTest extends PageTestCase
     {
         return array_merge(parent::getEntityClassNames(), [
             Entity\Attribute\Category::class,
+            Entity\Attribute\Key\ExpressKey::class,
             Entity\Attribute\Key\FileKey::class,
             Entity\Attribute\Type::class,
             Entity\Attribute\Value\FileValue::class,
@@ -123,6 +126,10 @@ class ImportExportTest extends PageTestCase
             Entity\Board\InstanceLog::class,
             Entity\Block\BlockType\BlockType::class,
             Entity\Calendar\Calendar::class,
+            Entity\Express\Association::class,
+            Entity\Express\Entity::class,
+            Entity\Express\Entry::class,
+            Entity\Express\Form::class,
             Entity\File\File::class,
             Entity\File\Image\Thumbnail\Type\Type::class,
             Entity\File\Image\Thumbnail\Type\TypeFileSet::class,
@@ -162,6 +169,7 @@ class ImportExportTest extends PageTestCase
         self::createContainers();
         self::createStacks();
         self::createSocialLinks();
+        self::createExpressEntities();
     }
 
     /**
@@ -369,51 +377,16 @@ class ImportExportTest extends PageTestCase
         return $outputCif->block->asXML();
     }
 
-    private function importExportExpressEntryDetail(BlockTypeEntity $blockType, SimpleXMLElement $inputCif, array $options): string
-    {
-        return $this->importExportExpress($blockType, $inputCif, $options);
-    }
-
-    private function importExportExpressForm(BlockTypeEntity $blockType, SimpleXMLElement $inputCif, array $options): string
-    {
-        return $this->importExportExpress($blockType, $inputCif, $options);
-    }
-
     private function importExportExpress(BlockTypeEntity $blockType, SimpleXMLElement $inputCif, array $options): string
     {
-        $sampleEntity =  new \Concrete\Core\Entity\Express\Entity();
-        $sampleEntity->setId('1cafebab-babe-cafe-babe-1cafebabe1ca');
-        $sampleEntity->setHandle('example_entity_n1');
-        $sampleForm = new \Concrete\Core\Entity\Express\Form();
-        $sampleForm->setId('2cafebab-babe-cafe-babe-2cafebabe2ca');
-        $sampleForm->setName('Example Form #1');
-        $sampleForm->setEntity($sampleEntity);
+        $generatedXml = $this->importExportBlockType($blockType, $inputCif, $options);
 
-        $emOriginal = $this->app->make(\Doctrine\ORM\EntityManager::class);
-        $em = M::mock($emOriginal)->makePartial();
-        $em->shouldReceive('find')->andReturnUsing(static function($className, $id) use ($emOriginal, $sampleForm) {
-            switch ($className) {
-                case \Concrete\Core\Entity\Express\Entity::class:
-                    switch ($id) {
-                        case '1cafebab-babe-cafe-babe-1cafebabe1ca':
-                            return $sampleForm->getEntity();
-                    }
-                    break;
-                case \Concrete\Core\Entity\Express\Form::class:
-                    switch ($id) {
-                        case '2cafebab-babe-cafe-babe-2cafebabe2ca':
-                            return $sampleForm;
-                    }
-                    break;
-            }
-            return call_user_func_array([$emOriginal, 'find'], func_get_args());
-        });
-        $this->app->singleton(\Doctrine\ORM\EntityManager::class, static function() use ($em) { return $em; });
-        try {
-            return $this->importExportBlockType($blockType, $inputCif, $options);
-        } finally {
-            $this->app->singleton(\Doctrine\ORM\EntityManager::class, static function() use ($emOriginal) { return $emOriginal; });
-        }
+        return strtr($generatedXml, [
+            self::$expressSamples['entity1']->getId() => '1cafebab-babe-cafe-babe-1cafebabe1ca',
+            self::$expressSamples['form1']->getId() => '2cafebab-babe-cafe-babe-2cafebabe2ca',
+            self::$expressSamples['entity2']->getId() => '3cafebab-babe-cafe-babe-3cafebabe3ca',
+            self::$expressSamples['association1id'] => '4cafebab-babe-cafe-babe-4cafebabe4ca',
+        ]);
     }
 
     private function importExportPageListFeedExisting(BlockTypeEntity $blockType, SimpleXMLElement $inputCif, array $options): string
@@ -786,6 +759,9 @@ class ImportExportTest extends PageTestCase
         /** @var \Concrete\Core\Entity\Attribute\Key\Settings\TopicsSettings $settings */
         $settings->setTopicTreeID(self::$topicsTree->getTreeID());
         $pageCategory->add($topicsType, ['akHandle' => 'test_topic', 'akName' => 'Test Topic'], $settings);
+        if (($categoryService->getByHandle('express')) === null) {
+            $categoryService->add('express');
+        }
         app(EntityManagerInterface::class)->flush();
     }
 
@@ -906,5 +882,32 @@ class ImportExportTest extends PageTestCase
             $em->persist($link);
         }
         $em->flush();
+    }
+
+    private static function createExpressEntities(): void
+    {
+        $em = app(EntityManagerInterface::class);
+        $associator = app(ObjectAssociationBuilder::class);
+        $samples = [];
+        $samples['entity1'] = new Entity\Express\Entity();
+        $samples['entity1']->setName('Example Entity #1');
+        $samples['entity1']->setHandle('example_entity_n1');
+        $samples['entity1']->setPluralHandle('example_entities_n1');
+        $samples['entity1']->setEntityResultsNodeId(0); // ?
+        $samples['form1'] = new Entity\Express\Form();
+        $samples['form1']->setName('Example Form #1');
+        $samples['form1']->setEntity($samples['entity1']);
+        $samples['entity1']->getForms()->add($samples['form1']);
+        $em->persist($samples['entity1']);
+        $samples['entity2'] = new Entity\Express\Entity();
+        $samples['entity2']->setName('Example Entity #2');
+        $samples['entity2']->setHandle('example_entity_n2');
+        $samples['entity2']->setPluralHandle('example_entities_n2');
+        $samples['entity2']->setEntityResultsNodeId(0); // ?
+        $em->persist($samples['entity2']);
+        $associator->addOneToMany($samples['entity1'], $samples['entity2']);
+        $em->flush();
+        $samples['association1id'] = $samples['entity1']->getAssociations()->first()->getId();
+        self::$expressSamples = $samples;
     }
 }
