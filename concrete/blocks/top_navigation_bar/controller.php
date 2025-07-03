@@ -362,7 +362,7 @@ class Controller extends BlockController implements UsesFeatureInterface, FileTr
             $searchPage = Page::getByID($args['searchInputFormActionPageID']);
             if ($searchPage && !$searchPage->isError()) {
                 $checker = new Checker($searchPage);
-                if ($isCLI ||$checker->canViewPage()) {
+                if ($isCLI || $checker->canViewPage()) {
                     $searchInputFormActionPageID = $searchPage->getCollectionID();
                 }
             }
