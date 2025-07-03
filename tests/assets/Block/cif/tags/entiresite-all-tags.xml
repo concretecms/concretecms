@@ -1,0 +1,11 @@
+<block type="tags" name="">
+  <data table="btTags">
+    <record>
+      <cloudCount>0</cloudCount>
+      <displayMode>cloud</displayMode>
+      <targetCID>0</targetCID>
+      <title>Father and Son</title>
+      <titleFormat>h5</titleFormat>
+    </record>
+  </data>
+</block>
