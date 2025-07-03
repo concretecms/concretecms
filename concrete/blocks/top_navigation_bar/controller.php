@@ -101,6 +101,7 @@ class Controller extends BlockController implements UsesFeatureInterface, FileTr
     protected $btCacheBlockOutputForRegisteredUsers = true;
     protected $btCacheBlockOutputLifetime = 300;
     protected $btExportFileColumns = ['brandingLogo', 'brandingTransparentLogo'];
+    protected $btExportPageColumns = ['searchInputFormActionPageID'];
     protected $home;
 
     /**
