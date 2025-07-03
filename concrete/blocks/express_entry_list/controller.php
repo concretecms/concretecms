@@ -17,6 +17,7 @@ use Concrete\Core\Express\Search\ColumnSet\DefaultSet;
 use Concrete\Core\Express\Search\SearchProvider;
 use Concrete\Core\Feature\Features;
 use Concrete\Core\Feature\UsesFeatureInterface;
+use Concrete\Core\Localization\Localization;
 use Concrete\Core\Search\Column\AttributeKeyColumn;
 use Concrete\Core\Search\Column\Column as SearchColumn;
 use Concrete\Core\Search\Field\AttributeKeyField;
@@ -550,10 +551,17 @@ class Controller extends BlockController implements UsesFeatureInterface
      */
     protected function getImportData($blockNode, $page)
     {
+        return $this->app->make(Localization::class)->withContext(Localization::CONTEXT_SYSTEM, function() use ($blockNode, $page) {
+            return $this->doGetImportData($blockNode, $page);
+        });
+    }
+
+    private function doGetImportData(SimpleXMLElement $blockNode, $page): array
+    {
         $args = parent::getImportData($blockNode, $page);
         $args['_fromCIF'] = true;
         $xRecord = $blockNode->data[0]->record[0];
-        
+
         $entityID = (string) ($args['exEntityID'] ?? '');
         if ($entityID !== '') {
             $entity = $this->app->make(EntityManagerInterface::class)->find(Entity::class, $entityID);
@@ -692,11 +700,18 @@ class Controller extends BlockController implements UsesFeatureInterface
      *
      * @see \Concrete\Core\Block\BlockController::export()
      */
-    public function export($data)
+    public function export(SimpleXMLElement $blockNode)
     {
-        parent::export($data);
+        $this->app->make(Localization::class)->withContext(Localization::CONTEXT_SYSTEM, function() use ($blockNode) {
+            $this->doExport($blockNode);
+        });
+    }
+
+    private function doExport(SimpleXMLElement $blockNode): void
+    {
+        parent::export($blockNode);
         $this->on_start();
-        $xRecord = $data->data[0]->record[0];
+        $xRecord = $blockNode->data[0]->record[0];
         $xml = $this->app->make(Xml::class);
         $entity = $this->entityManager->find(Entity::class, $this->exEntityID);
         if ($entity !== null) {
