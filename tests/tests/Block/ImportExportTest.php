@@ -27,6 +27,8 @@ use Concrete\Core\Page\Stack\Stack;
 use Concrete\Core\Page\Type\Composer\Control\Type\Type as ComposerControlType;
 use Concrete\Core\Page\Type\Type as PageType;
 use Concrete\Core\Permission\Access\Entity\Type AS PAEType;
+use Concrete\Core\Permission\Category as PermissionCategory;
+use Concrete\Core\Permission\Key\Key as PermissionKey;
 use Concrete\Core\Tree\Node\NodeType as TreeNodeType;
 use Concrete\Core\Tree\Node\Type\Topic as TopicTreeNode;
 use Concrete\Core\Tree\TreeType;
@@ -647,6 +649,50 @@ class ImportExportTest extends PageTestCase
     {
         if (!PAEType::getByHandle('group')) {
             PAEType::add('group', 'Group');
+        }
+        $fileCategory = PermissionCategory::getByHandle('file');
+        if ($fileCategory === null) {
+            $fileCategory = PermissionCategory::add('file');
+        }
+        $fileKeyClass = $fileCategory->getPermissionKeyClass();
+        if (PermissionKey::getByHandle('view_file_in_file_manager') === null) {
+            call_user_func(
+                [$fileKeyClass, 'add'],
+                // $pkCategoryHandle
+                $fileCategory->getPermissionKeyCategoryHandle(),
+                // $pkHandle
+                'view_file_in_file_manager',
+                // $pkName
+                'View File in File Manager',
+                // $pkDescription
+                'Can access the File Manager.',
+                // $pkCanTriggerWorkflow
+                false,
+                // $pkHasCustomClass
+                false
+            );
+        }
+        $pageCategory = PermissionCategory::getByHandle('page');
+        if ($pageCategory === null) {
+            $pageCategory = PermissionCategory::add('page');
+        }
+        $pageKeyClass = $pageCategory->getPermissionKeyClass();
+        if (PermissionKey::getByHandle('view_page') === null) {
+            call_user_func(
+                [$pageKeyClass, 'add'],
+                // $pkCategoryHandle
+                $pageCategory->getPermissionKeyCategoryHandle(),
+                // $pkHandle
+                'view_page',
+                // $pkName
+                'View',
+                // $pkDescription
+                'Can see a page exists and read its content.',
+                // $pkCanTriggerWorkflow
+                false,
+                // $pkHasCustomClass
+                false
+            );
         }
     }
 
