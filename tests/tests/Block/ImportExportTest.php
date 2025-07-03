@@ -474,6 +474,35 @@ class ImportExportTest extends PageTestCase
         return $result;
     }
 
+    private function importExportSurvey(BlockTypeEntity $blockType, SimpleXMLElement $inputCif, array $options): string
+    {
+        $inputBaseIndex = 1000;
+        $cn = $this->app->make(Connection::class);
+        $outputBaseIndex = (int) $cn->fetchOne(
+            "SELECT AUTO_INCREMENT FROM information_schema.TABLES WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'btSurveyOptions'"
+        );
+        $outputXml = $this->importExportBlockType($blockType, $inputCif, $options);
+        $outputXmlForCompare = preg_replace_callback(
+            '#<optionID>\s*(?:<!\[CDATA\[\s*)?(?<id>\d+)\s*(?:\]\]>\s*)?</optionID>#',
+            static function (array $matches) use ($outputBaseIndex): string {
+                return str_replace(
+                    $matches['id'],
+                    '{{base}} + ' . (1 + ((int) $matches['id']) - $outputBaseIndex),
+                    $matches[0]
+                );
+            },
+            $outputXml
+        );
+        foreach ($inputCif->xpath('//optionID') as $xOptionID) {
+            $id = trim((string) $xOptionID[0]);
+            if (preg_match('/^\d+/', $id)) {
+                $xOptionID[0] = '{{base}} + ' . (((int) $id) - $inputBaseIndex);
+            }
+        }
+
+        return $outputXmlForCompare;
+    }
+
     public function testBlockTypeCoverage(): void
     {
         $fs = new Filesystem();
@@ -489,7 +518,6 @@ class ImportExportTest extends PageTestCase
         $expectedUncoveredHandles = [
             'core_board_slot', // does it make sense to test it?
             'form', // old stuff that's not worth working on
-            'survey',
             'switch_language',
             'tags',
             'testimonial',
@@ -824,7 +852,7 @@ class ImportExportTest extends PageTestCase
             $link->setServiceHandle('bluesky');
             $link->setSite($site);
             $link->setURL('https://bsky.app/profile/concretecms.bsky.social');
-            $em->persist($link);            
+            $em->persist($link);
         }
         if ($repo->findOneBy(['site' => $site, 'ssHandle' => 'github']) === null) {
             $link = new SocialLink();

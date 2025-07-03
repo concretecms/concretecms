@@ -1,0 +1,4 @@
+{
+  "$schema": "../options-schema.json",
+  "importerExporterMethod": "importExportSurvey"
+}

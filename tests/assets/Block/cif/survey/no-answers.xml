@@ -1,0 +1,28 @@
+<block type="survey" name="">
+  <data table="btSurvey">
+    <record>
+      <customMessage></customMessage>
+      <question>What do you think about that?</question>
+      <requiresRegistration>0</requiresRegistration>
+      <showResults>1</showResults>
+    </record>
+  </data>
+  <data table="btSurveyOptions">
+    <record>
+      <displayOrder>0</displayOrder>
+      <optionID>1001</optionID>
+      <optionName>Nice</optionName>
+    </record>
+    <record>
+      <displayOrder>1</displayOrder>
+      <optionID>1002</optionID>
+      <optionName>Great!</optionName>
+    </record>
+    <record>
+      <displayOrder>2</displayOrder>
+      <optionID>1003</optionID>
+      <optionName>Wonderful!!!</optionName>
+    </record>
+  </data>
+  <data table="btSurveyResults"></data>
+</block>
