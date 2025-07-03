@@ -1,0 +1,23 @@
+<block type="youtube" name="">
+  <data table="btYouTube">
+    <record>
+      <autoplay>0</autoplay>
+      <color>red</color>
+      <controls>1</controls>
+      <iv_load_policy>1</iv_load_policy>
+      <lazyLoad>0</lazyLoad>
+      <loopEnd>0</loopEnd>
+      <modestbranding>1</modestbranding>
+      <noCookie>0</noCookie>
+      <rel>0</rel>
+      <showCaptions>0</showCaptions>
+      <sizing>16:9</sizing>
+      <startTime></startTime>
+      <startTimeEnabled>0</startTimeEnabled>
+      <title></title>
+      <vHeight></vHeight>
+      <vWidth></vWidth>
+      <videoURL>https://www.youtube.com/watch?v=H5dpBWlRANE</videoURL>
+    </record>
+  </data>
+</block>
