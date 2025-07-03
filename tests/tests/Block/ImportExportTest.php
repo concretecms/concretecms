@@ -521,7 +521,6 @@ class ImportExportTest extends PageTestCase
             'core_board_slot', // does it make sense to test it?
             'form', // old stuff that's not worth working on
             'topic_list',
-            'top_navigation_bar',
             'video',
             'youtube',
         ];
