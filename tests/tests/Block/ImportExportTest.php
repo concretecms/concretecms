@@ -828,6 +828,12 @@ class ImportExportTest extends PageTestCase
         $importer->importLocalFile(DIR_TESTS . '/assets/Block/cif/file-2.png', 'file-2.png', $importOptions);
         $importOptions->setCustomPrefix('123456543210');
         $importer->importLocalFile(DIR_TESTS . '/assets/Block/cif/file-2.png', 'file-3.png', $importOptions);
+        $importOptions->setCustomPrefix('100000000001');
+        $importer->importLocalFile(DIR_TESTS . '/assets/Block/cif/fake-video.txt', 'fake-video.mp4', $importOptions);
+        $importOptions->setCustomPrefix('100000000002');
+        $importer->importLocalFile(DIR_TESTS . '/assets/Block/cif/fake-video.txt', 'fake-video.ogv', $importOptions);
+        $importOptions->setCustomPrefix('100000000003');
+        $importer->importLocalFile(DIR_TESTS . '/assets/Block/cif/fake-video.txt', 'fake-video.webm', $importOptions);
         FileSet::create('Test File Set #1');
         FileSet::create('Test File Set #2');
         FileSet::create('Test File Set #3');
