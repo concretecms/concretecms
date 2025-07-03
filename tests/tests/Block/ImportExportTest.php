@@ -184,22 +184,27 @@ class ImportExportTest extends PageTestCase
             foreach ($fs->directories(DIR_TESTS . '/assets/Block/cif') as $blockTypeDirectory) {
                 $blockTypeHandle = basename($blockTypeDirectory);
                 foreach ($fs->allFiles($blockTypeDirectory) as $file) {
-                    if (strcasecmp($file->getExtension(), 'xml') !== 0) {
+                    if (strcasecmp($file->getExtension(), 'xml') === 0) {
+                        $basename = $file->getBasename('.xml');
+                    } elseif (strcasecmp($file->getExtension(), 'json') === 0) {
+                        $basename = $file->getBasename('.json');
+                    } else {
+                        continue;
+                    }
+                    $key = "{$basename}@{$blockTypeHandle}";
+                    if (isset($cases[$key])) {
                         continue;
                     }
                     $options = [];
-                    $jsonFile = $file->getPath() . '/' . $file->getBasename('.xml') . '.json';
+                    $jsonFile = $file->getPath() . '/' . $basename . '.json';
                     if ($fs->isFile($jsonFile)) {
                         $json = $fs->get($jsonFile);
                         $options = json_decode($json, true, 512, JSON_THROW_ON_ERROR);
                     }
-                    $cases[] = [
-                        $blockTypeHandle,
-                        str_replace(DIRECTORY_SEPARATOR, '/', $file->getBasename('.xml')),
-                        $options,
-                    ];
+                    $cases[$key] = [$blockTypeHandle, $basename, $options];
                 }
             }
+            $cases = array_values($cases);
         }
 
         return $cases;
@@ -224,12 +229,12 @@ class ImportExportTest extends PageTestCase
     /**
      * @dataProvider provideCIFCases
      */
-    public function testCIFImportExport(string $blockTypeHandle, string $cifBaseFileName, array $options): void
+    public function testCIFImportExport(string $blockTypeHandle, string $basename, array $options): void
     {
         if (isset($options['skipReason'])) {
             $this->markTestSkipped($options['skipReason']);
         }
-        $cifFile = DIR_TESTS . "/assets/Block/cif/{$blockTypeHandle}/{$cifBaseFileName}.xml";
+        $cifFile = DIR_TESTS . "/assets/Block/cif/{$blockTypeHandle}/{$basename}.xml";
         if (empty($options['keepXmlElementsOrder'])) {
             $inputCif = $this->loadNormalizedInputCif($cifFile);
         } else {
@@ -517,13 +522,7 @@ class ImportExportTest extends PageTestCase
                 $this->provideCIFCases()
             )
         );
-        $expectedUncoveredHandles = [
-            'core_board_slot', // does it make sense to test it?
-            'form', // old stuff that's not worth working on
-        ];
-        $this->assertSame([], array_diff($expectedUncoveredHandles, $availableHandles), 'Found unknown block types marked as lacking tests');
-        $this->assertSame([], array_intersect($coveredHandles, $expectedUncoveredHandles), 'Found block types having tests but marked as lacking tests');
-        $this->assertSame([], array_diff($availableHandles, $coveredHandles, $expectedUncoveredHandles), 'Found block types lacking tests');
+        $this->assertSame([], array_values(array_diff($availableHandles, $coveredHandles)), 'Found block types lacking tests');
     }
 
     private function checkFileUsageCount(Block $block, int $expectedUsageCount): void
