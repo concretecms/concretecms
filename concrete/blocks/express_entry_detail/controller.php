@@ -256,12 +256,13 @@ class Controller extends BlockController implements UsesFeatureInterface
                 $entityIDNode['handle'] = $entity->getHandle();
             }
         }
-        $formIDNode = $blockNode[0]->data[0]->record[0]->exFormID;
+        $formIDNode = $blockNode[0]->data[0]->record[0]->exFormID[0];
         $formID = (string) $formIDNode;
         if ($formID !== '') {
             $form = $this->app->make(EntityManagerInterface::class)->find(Form::class, $formID);
             if ($form !== null) {
                 $formIDNode['name'] = $form->getName();
+                $formIDNode['owner-entity'] = $form->getEntity()->getHandle();
             }
         }
     }
@@ -274,28 +275,35 @@ class Controller extends BlockController implements UsesFeatureInterface
     protected function getImportData($blockNode, $page)
     {
         $args = parent::getImportData($blockNode, $page);
+        $em = $this->app->make(EntityManagerInterface::class);
         $entityID = (string) ($args['exEntityID'] ?? '');
         $entity = null;
         if ($entityID !== '') {
-            $entity = $this->app->make(EntityManagerInterface::class)->find(Entity::class, $entityID);
+            $entity = $em->find(Entity::class, $entityID);
             if ($entity === null) {
                 $entityHandle = (string) $blockNode[0]->data[0]->record[0]->exEntityID[0]['handle'];
                 if ($entityHandle !== '') {
-                    $entity = $this->app->make(EntityManagerInterface::class)->getRepository(Entity::class)->findOneBy(['handle' => $entityHandle]);
+                    $entity = $em->getRepository(Entity::class)->findOneBy(['handle' => $entityHandle]);
                     if ($entity !== null) {
                         $args['exEntityID'] = $entity->getId();
                     }
                 }
             }
         }
-        if ($entity !== null) {
-            $formID = (string) ($args['exFormID'] ?? '');
-            if ($formID !== '') {
-                $form = $this->app->make(EntityManagerInterface::class)->find(Form::class, $formID);
-                if ($form === null) {
-                    $formName = (string) $blockNode[0]->data[0]->record[0]->exFormID[0]['name'];
-                    if ($formName !== '') {
-                        $form = $this->app->make(EntityManagerInterface::class)->getRepository(Form::class)->findOneBy(['name' => $formName, 'entity' => $entity->getId()]);
+        $formID = (string) ($args['exFormID'] ?? '');
+        if ($formID !== '') {
+            $form = $em->find(Form::class, $formID);
+            if ($form === null) {
+                $formName = (string) $blockNode[0]->data[0]->record[0]->exFormID[0]['name'];
+                if ($formName !== '') {
+                    if ($entity === null) {
+                        $entityHandle = (string) $blockNode[0]->data[0]->record[0]->exFormID[0]['owner-entity'];
+                        if ($entityHandle !== '') {
+                            $entity = $em->getRepository(Entity::class)->findOneBy(['handle' => $entityHandle]);
+                        }
+                    }
+                    if ($entity !== null) {
+                        $form = $em->getRepository(Form::class)->findOneBy(['name' => $formName, 'entity' => $entity->getId()]);
                         if ($form !== null) {
                             $args['exFormID'] = $form->getId();
                         }
