@@ -27,7 +27,6 @@ class TwigServiceProvider extends Provider
     public function register(): void
     {
         $this->app->singleton(CacheInterface::class, function () {
-
             /**
              * @var ExpensiveCache $expensiveCache
              */

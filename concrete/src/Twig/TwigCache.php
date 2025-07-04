@@ -7,12 +7,12 @@ use Twig\Cache\RemovableCacheInterface;
 
 class TwigCache implements CacheInterface, RemovableCacheInterface
 {
+    public const CACHE_TTL = 86400;
+
     /**
      * @var iterable<CacheInterface>
      */
     private iterable $caches;
-
-    public const CACHE_TTL = 86400;
 
     /**
      * @param iterable<CacheInterface> $caches

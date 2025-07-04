@@ -35,6 +35,7 @@ class ExpensiveCacheAdapter implements CacheInterface
     public function getTimestamp(string $key): int
     {
         $cacheItem = $this->expensiveCache->getItem($key);
+
         return $cacheItem->getExpiration()->getTimestamp();
     }
 }

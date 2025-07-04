@@ -4,7 +4,12 @@ namespace Concrete\Core\Providers;
 
 use Concrete\Core\Config\Repository\Repository;
 use Concrete\Core\Foundation\Service\Provider;
+use Concrete\Core\Serializer\Normalizer\FileNormalizer;
 use Doctrine\Common\Annotations\AnnotationReader;
+use Symfony\Component\PropertyAccess\PropertyAccessor;
+use Symfony\Component\PropertyInfo\Extractor\PhpDocExtractor;
+use Symfony\Component\PropertyInfo\Extractor\ReflectionExtractor;
+use Symfony\Component\PropertyInfo\PropertyInfoExtractor;
 use Symfony\Component\Serializer\Encoder\CsvEncoder;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Encoder\XmlEncoder;
@@ -22,11 +27,6 @@ use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\Serializer\SerializerInterface;
-use Concrete\Core\Serializer\Normalizer\FileNormalizer;
-use Symfony\Component\PropertyInfo\Extractor\PhpDocExtractor;
-use Symfony\Component\PropertyInfo\Extractor\ReflectionExtractor;
-use Symfony\Component\PropertyInfo\PropertyInfoExtractor;
-use Symfony\Component\PropertyAccess\PropertyAccessor;
 
 class SerializerServiceProvider extends Provider
 {
@@ -107,6 +107,7 @@ class SerializerServiceProvider extends Provider
         ];
 
         $normalizers = array_merge($appNormalizers, $defaultNormalizers);
+
         return new Serializer($normalizers, $encoders);
     }
 }
