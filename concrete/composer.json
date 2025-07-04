@@ -126,7 +126,7 @@
     "symfony/form": "^5.2",
     "symfony/twig-bridge": "^5.2",
     "symfony/security-csrf": "^5.2",
-    "twig/twig": "^3.0",
+    "twig/twig": "^3.19",
     "twig/extra-bundle": "3.3.1",
     "symfony/translation": "^5.2",
     "pagerfanta/doctrine-orm-adapter": "v2.7.3",
