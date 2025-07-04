@@ -284,9 +284,6 @@ class Controller extends BlockController implements FileTrackableInterface, Uses
             'fID' => 0,
         ];
         $args['fID'] = $args['fID'] != '' ? $args['fID'] : 0;
-        $this->body = $args['body'] ?? '';
-        $this->buttonFileLinkID = $args['buttonFileLinkID'] ?? 0;
-        $this->fID = $args['fID'] ?? 0;
         parent::save($args);
     }
 

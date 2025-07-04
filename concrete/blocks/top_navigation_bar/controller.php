@@ -378,8 +378,6 @@ class Controller extends BlockController implements UsesFeatureInterface, FileTr
         if ($data['includeSearchInput']) {
             $data['searchInputFormActionPageID'] = $searchInputFormActionPageID;
         }
-        $this->brandingLogo = $data['brandingLogo'] ?? null;
-        $this->brandingTransparentLogo = $data['brandingTransparentLogo'] ?? null;
         parent::save($data);
     }
 

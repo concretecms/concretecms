@@ -199,9 +199,6 @@ class Controller extends BlockController implements FileTrackableInterface, Uses
             'title' =>  $data['title'],
         ];
         $args['width'] = $args['videoSize'] === 0 || $args['videoSize'] == 1 ? 0 : (int) $data['width'];
-        foreach ($this->btExportFileColumns as $field) {
-            $this->{$field} = $args[$field] ?? null;
-        }
         parent::save($args);
     }
 

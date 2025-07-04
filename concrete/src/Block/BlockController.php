@@ -283,6 +283,15 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
         }
 
         if ($this instanceof FileTrackableInterface) {
+            $fields = array_merge(
+                $this->btExportFileColumns ?: [],
+                $this->btExportContentColumns ?: []
+            );
+            foreach (array_merge($fields) as $field) {
+                if (property_exists($this, $field)) {
+                    $this->{$field} = $args[$field] ?? null;
+                }
+            }
             $this->app->make(AggregateTracker::class)->track($this);
         }
     }

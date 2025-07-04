@@ -237,8 +237,6 @@ class Controller extends BlockController implements FileTrackableInterface, Uses
         if ($errors->has()) {
             throw new UserMessageException($errors->toText());
         }
-        $this->fID = $args['fID'];
-        $this->paragraph = $args['paragraph'];
         parent::save($args);
     }
 

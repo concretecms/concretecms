@@ -145,8 +145,8 @@ class Controller extends BlockController implements FileTrackableInterface
      */
     public function save($args)
     {
-        $this->fID = $args['fID'] = (isset($args['fID']) && $args['fID'] != '') ? $args['fID'] : 0;
-        $this->awardImageID = $args['awardImageID'] = (isset($args['awardImageID']) && $args['awardImageID'] != '') ? $args['awardImageID'] : 0;
+        $args['fID'] = (isset($args['fID']) && $args['fID'] != '') ? $args['fID'] : 0;
+        $args['awardImageID'] = (isset($args['awardImageID']) && $args['awardImageID'] != '') ? $args['awardImageID'] : 0;
         parent::save($args);
     }
 

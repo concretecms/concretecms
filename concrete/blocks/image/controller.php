@@ -585,11 +585,6 @@ class Controller extends BlockController implements FileTrackableInterface, Uses
         /** @noinspection PhpUnhandledExceptionInspection */
         $db->delete('btContentImageBreakpoints', ['bID' => $this->bID]);
 
-        $this->fID = $args['fID'] ?? 0;
-        
-        foreach ($this->btExportFileColumns as $field) {
-            $this->{$field} = $args[$field] ?? 0;
-        }
         parent::save($args);
 
         if (isset($args["selectedThumbnailTypes"]) && is_array($args["selectedThumbnailTypes"])) {

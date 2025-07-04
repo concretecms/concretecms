@@ -65,7 +65,7 @@ class Controller extends BlockController implements FileTrackableInterface
 
     public function save($data)
     {
-        $this->content = $args['content'] = LinkAbstractor::translateTo($data['content'] ?? '');
+        $args['content'] = LinkAbstractor::translateTo($data['content'] ?? '');
         parent::save($args);
     }
 
