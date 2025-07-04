@@ -119,6 +119,7 @@ class Controller extends BlockController implements FileTrackableInterface, Uses
             $args = [];
         }
         $args['forceDownload'] = empty($args['forceDownload']) ? 0 : 1;
+        $this->fID = $args['fID'] ?? null;
 
         parent::save($args);
     }
