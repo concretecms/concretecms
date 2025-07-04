@@ -65,10 +65,10 @@ class FileNormalizer implements NormalizerInterface, DenormalizerInterface
         return [
             'id' => $object->getFileID(),
             'downloadUrl' => $version ? (string) $version->getDownloadURL() : null,
-            'relativePath' => $version?->getRelativePath(),
-            'fileName' => $version?->getFileName(),
-            'description' => $version?->getDescription(),
-            'title' => $version?->getTitle(),
+            'relativePath' => $version ? $version->getRelativePath() : null,
+            'fileName' => $version ? $version->getFileName() : null,
+            'description' => $version ? $version->getDescription() : null,
+            'title' => $version ? $version->getTitle() : null,
         ];
     }
 }
