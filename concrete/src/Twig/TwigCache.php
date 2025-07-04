@@ -2,47 +2,66 @@
 
 namespace Concrete\Core\Twig;
 
-use Concrete\Core\Cache\Level\ExpensiveCache;
 use Twig\Cache\CacheInterface;
+use Twig\Cache\RemovableCacheInterface;
 
-class TwigCache implements CacheInterface
+class TwigCache implements CacheInterface, RemovableCacheInterface
 {
+    /**
+     * @var iterable<CacheInterface>
+     */
+    private iterable $caches;
+
     public const CACHE_TTL = 86400;
 
     /**
-     * @var ExpensiveCache
+     * @param iterable<CacheInterface> $caches
      */
-    private $cache;
-
-    public function __construct(ExpensiveCache $cache)
+    public function __construct(iterable $caches)
     {
-        $this->cache = $cache;
+        $this->caches = $caches;
     }
 
-    public function generateKey($name, $className): string
+    public function generateKey(string $name, string $className): string
     {
         return $className . '/' . $name;
     }
 
-    public function write($key, $content): void
+    public function write(string $key, string $content): void
     {
-        $cacheItem = $this->cache->getItem($key);
-        $cacheItem->set($content)->setTTL(self::CACHE_TTL);
-        $this->cache->save($cacheItem);
+        foreach ($this->caches as $cache) {
+            $cache->write($key, $content);
+        }
     }
 
-    /**
-     * @param $key
-     *
-     * @return mixed
-     */
-    public function load($key)
+    public function load(string $key): void
     {
-        return $this->cache->getItem($key)->get();
+        foreach ($this->caches as $cache) {
+            $cache->load($key);
+            if (class_exists(explode('/', $key)[0], false)) {
+                break;
+            }
+        }
     }
 
-    public function getTimestamp($key): int
+    public function getTimestamp(string $key): int
     {
-        return $this->cache->getItem($key)->getExpiration()->getTimestamp();
+        foreach ($this->caches as $cache) {
+            $timestamp = $cache->getTimestamp($key);
+            if ($timestamp > 0) {
+                return $timestamp;
+            }
+        }
+
+        return 0;
+    }
+
+    public function remove(string $name, string $cls): void
+    {
+        foreach ($this->caches as $cache) {
+            if ($cache instanceof RemovableCacheInterface) {
+                $cache->remove($name, $cls);
+            }
+        }
     }
 }

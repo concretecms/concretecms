@@ -17,6 +17,7 @@ use Symfony\Component\Form\FormRenderer;
 use Symfony\Component\Translation\Loader\MoFileLoader;
 use Symfony\Component\Translation\Translator;
 use Symfony\Contracts\Translation\TranslatorInterface;
+use Twig\Cache\CacheInterface;
 use Twig\Environment;
 use Twig\Loader\FilesystemLoader;
 use Twig\RuntimeLoader\FactoryRuntimeLoader;
@@ -25,6 +26,21 @@ class TwigServiceProvider extends Provider
 {
     public function register(): void
     {
+        $this->app->singleton(CacheInterface::class, function () {
+
+            /**
+             * @var ExpensiveCache $expensiveCache
+             */
+            $expensiveCache = $this->app->make(ExpensiveCache::class);
+            $expensiveCacheAdapter = new ExpensiveCacheAdapter($expensiveCache);
+
+            $caches = [
+                $expensiveCacheAdapter,
+            ];
+
+            return new TwigCache($caches);
+        });
+
         $this->app->singleton(TranslatorInterface::class, function () {
             $locale = Localization::activeLocale();
             $translator = new Translator($locale);
@@ -43,23 +59,23 @@ class TwigServiceProvider extends Provider
              * @var Repository $config
              */
             $config = $this->app->make('config');
-            /** @var ExpensiveCache $expensiveCache */
-            $expensiveCache = $this->app->make('cache/expensive');
+            /** @var CacheInterface $cache */
+            $cache = $this->app->make(CacheInterface::class);
 
             $twig = new Environment(
                 $loader,
                 [
                     'debug' => $config->get('concrete.debug.display_errors'),
-                    'cache' => $expensiveCache->isEnabled() ? new TwigCache($expensiveCache) : false,
+                    'cache' => $cache,
                 ]
             );
             $additionalThemePaths = $config->get('app.twig_additional_theme_paths', []);
             $themes = array_merge([
                 'form_div_layout.html.twig',
                 'bootstrap_5_layout.html.twig',
-                '@concrete/file_selector.html.twig',
-                '@concrete/wysiwyg.html.twig',
-                '@concrete/page_selector.html.twig',
+                '@concrete/twig/form/file_selector.html.twig',
+                '@concrete/twig/form/wysiwyg.html.twig',
+                '@concrete/twig/form/page_selector.html.twig',
             ], $additionalThemePaths);
 
             $formEngine = new TwigRendererEngine($themes, $twig);
@@ -73,8 +89,8 @@ class TwigServiceProvider extends Provider
             $twig->addExtension(new TranslationExtension($translatorInterface));
 
             $twig->getLoader()->addPath(DIR_BASE . '/concrete/vendor/symfony/twig-bridge/Resources/views/Form');
-            $twig->getLoader()->addPath(DIR_BASE . '/concrete/views/twig/form', 'concrete');
-            $twig->getLoader()->addPath(DIR_BASE . '/application/views/twig/form', 'application');
+            $twig->getLoader()->addPath(DIR_BASE . '/concrete/views', 'concrete');
+            $twig->getLoader()->addPath(DIR_BASE . '/application/views', 'application');
 
             $twig->addExtension(new PagerfantaExtension());
 
