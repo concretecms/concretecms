@@ -287,7 +287,7 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
                 $this->btExportFileColumns ?: [],
                 $this->btExportContentColumns ?: []
             );
-            foreach (array_merge($fields) as $field) {
+            foreach ($fields as $field) {
                 if (property_exists($this, $field)) {
                     $this->{$field} = $args[$field] ?? null;
                 }
