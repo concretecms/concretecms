@@ -56,9 +56,7 @@ class Factory
         }
 
         if (isset($url)) {
-            $result['proxy'] = [
-                'http' => (string) $url
-            ];
+            $result['proxy'] = (string) $url;
         }
 
         return $result;
