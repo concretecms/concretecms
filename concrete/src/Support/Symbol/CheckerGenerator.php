@@ -177,7 +177,16 @@ class CheckerGenerator
             }
             if (preg_match('/^(\w.*)\.php/i', $name, $matches)) {
                 $className = $namespacePrefix . '\\' . $matches[1];
-                if (class_exists($className)) {
+                $classExists = null;
+                if (strpos($className, 'Concrete\\Core\\Support\\CodingStyle\\') === 0) {
+                    if (!class_exists('PhpCsFixer\\AbstractFixer')) {
+                        $classExists = false;
+                    }
+                }
+                if ($classExists === null) {
+                    $classExists = class_exists($className);
+                }
+                if ($classExists) {
                     $interfaces = class_implements($className);
                     if (in_array(ObjectInterface::class, $interfaces)) {
                         $result = array_merge($result, $this->analyzeObjectInterfaceClass($className));
