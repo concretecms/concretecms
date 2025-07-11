@@ -81,6 +81,10 @@ class CheckIn extends BackendInterfacePageController
         if ($this->validateAction()) {
             $comments = $this->request->request('comments');
             $comments = is_string($comments) ? trim($comments) : '';
+            if (strlen($comments) > 255) {
+                $rf = $this->app->make(ResponseFactoryInterface::class);
+                return $rf->create(t('Version comments cannot be longer than 255 characters.'), 400);
+            }
             if ($comments === '' && $this->app->make('config')->get('concrete.misc.require_version_comments')) {
                 $rf = $this->app->make(ResponseFactoryInterface::class);
                 return $rf->create(t('Please specify the version comments'), 400);
