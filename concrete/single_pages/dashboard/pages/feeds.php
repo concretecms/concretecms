@@ -264,10 +264,15 @@ if ($controller->getAction() == 'add'
         <ul class="item-select-list">
             <?php foreach ($feeds as $feed) {
                 ?>
-                <li>
-                    <a href="<?= $view->action('edit', $feed->getID()) ?>">
+                <li class="d-flex">
+
+                    <a class="flex-fill" href="<?= $view->action('edit', $feed->getID()) ?>">
                         <i class="fas fa-rss"></i> <?= $feed->getFeedDisplayTitle() ?>
                     </a>
+                    <a class="text-primary" href="<?= \Concrete\Core\Support\Facade\Url::to('/rss/'. $feed->getHandle());?>" target="_blank">
+                        <i class="fas fa-link"></i> <?= t('View Feed URL'); ?>
+                    </a>
+
                 </li>
                 <?php
             }
