@@ -15,6 +15,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
  * @var string $handler
  * @var string $logFile
  * @var string $loggingMode
+ * @var bool $logStackTrace
  */
 
 ?>
@@ -101,6 +102,10 @@ defined('C5_EXECUTE') or die('Access Denied.');
 
     <fieldset>
         <legend><?=t('Reporting'); ?></legend>
+        <div class="form-check">
+            <?= $form->checkbox('log_stack_trace', 1, $logStackTrace); ?>
+            <?= $form->label('log_stack_trace', t('Log Stack Traces of Uncaught Exceptions'), ['class' => 'form-check-label']) ?>
+        </div>
         <div class="form-group">
             <div class="form-check">
                 <?= $form->checkbox('enable_dashboard_report', 1, $enableDashboardReport); ?>
