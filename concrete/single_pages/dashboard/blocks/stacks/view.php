@@ -231,6 +231,38 @@ if (isset($neutralStack)) {
                             }
                         }
                         ?>
+
+                        <li class="nav-item dropdown">
+                            <a class="dropdown-toggle nav-link" data-bs-toggle="dropdown" data-bs-auto-close="outside" href="#">
+                                <?= t('Background') ?> <span class="caret"></span>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <div class="dropdown-item">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="ccm-stack-container-bg" checked value="" id="ccm-stack-container-bg-default" />
+                                            <label class="form-check-label" for="ccm-stack-container-bg-default"><?= tc('Color', 'Default') ?></label>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="dropdown-item">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="ccm-stack-container-bg" value="dark" id="ccm-stack-container-bg-dark" />
+                                            <label class="form-check-label" for="ccm-stack-container-bg-dark"><?= tc('Color', 'Dark') ?></label>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="dropdown-item">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="ccm-stack-container-bg" value="light" id="ccm-stack-container-bg-light" />
+                                            <label class="form-check-label" for="ccm-stack-container-bg-light"><?= tc('Color', 'Light') ?></label>
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
+                        </li>
                     </ul>
 
                     <?php if ($showApprovalButton) { ?>
@@ -266,6 +298,42 @@ if (isset($neutralStack)) {
                     // But the footer element has a closing DIV we need.
                 ?>
             </div>
+            <script>
+            (function() {
+                function ready() {
+                    const area = document.querySelector('#ccm-stack-container');
+                    const radios = document.querySelectorAll('input[name="ccm-stack-container-bg"]');
+                    function update(color) {
+                        if (typeof color !== 'string') {
+                            color = '';
+                            radios.forEach((radio) => {
+                                if (radio.checked) {
+                                    color = radio.value;
+                                }
+                            });
+                        }
+                        radios.forEach((radio) => radio.checked = color === radio.value);
+                        area.classList.toggle('dark', color === 'dark');
+                        area.classList.toggle('light', color === 'light');
+                        window.localStorage.setItem('ccm-stack-container-bg', color);
+                    }
+                    radios.forEach((radio) => {
+                        radio.addEventListener('change', () => {
+                            if (radio.checked) {
+                                update(radio.value);
+                            }
+                        });
+                    });
+                    update(window.localStorage.getItem('ccm-stack-container-bg'));
+                }
+                
+                if (document.readyState === 'loading') {
+                    document.addEventListener('DOMContentLoaded', ready);
+                } else {
+                    ready();
+                }
+            })();
+            </script>
 
         <?php
         if ($deleteLabels !== null) {
