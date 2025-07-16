@@ -18,7 +18,7 @@ $app = Concrete\Core\Support\Facade\Facade::getFacadeApplication();
 $sh = $app->make('helper/concrete/dashboard/sitemap');
 if ($sh->canViewSitemapPanel()) {
     ?>
-    <li class="float-end d-block d-md-none">
+    <li class="float-end ccm-toolbar-mobile-add-pages-button d-block d-md-none">
         <a href="<?= URL::to('/ccm/system/dialogs/page/add_mobile') ?>"
            class="dialog-launch"
            dialog-width="640"
