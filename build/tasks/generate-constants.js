@@ -4,10 +4,12 @@ module.exports = function(grunt, config, parameters, done) {
 		done(false);
 	}
 	try {
-		var fs = require('fs'), c5fs = require('../libraries/fs'), exec = require('child_process').exec;
+		var fs = require('fs'), c5fs = require('../libraries/fs'), execFile = require('child_process').execFile, path = require('path');
 		var webRoot = fs.realpathSync(config.DIR_BASE);
-		exec(
-			'php -d short_open_tag=On ' + c5fs.escapeShellArg(__dirname + '/../libraries/generate-constants.php') + ' ' + c5fs.escapeShellArg(webRoot),
+		var phpScript = path.join(__dirname, '..', 'libraries', 'generate-constants.php');
+		execFile(
+			'php',
+			['-d', 'short_open_tag=On', phpScript, webRoot],
 			{},
 			function(error, stdout, stderr) {
 				if(error) {
