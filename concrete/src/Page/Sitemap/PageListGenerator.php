@@ -208,7 +208,8 @@ class PageListGenerator
     public function getSite()
     {
         if ($this->site === false) {
-            $this->site = $this->app->make('site')->getDefault();
+            $siteService = $this->app->make('site');
+            $this->site = $siteService->getActiveSiteForEditing() ?: $siteService->getDefault();
         }
 
         return $this->site;

@@ -98,6 +98,11 @@ class SitemapWriter
     /**
      * @var string
      */
+    private $siteOutputFilename = '';
+
+    /**
+     * @var string
+     */
     private $temporaryDirectory = '';
 
     public function __construct(Application $app, Filesystem $filesystem, EventDispatcher $director)
@@ -216,7 +221,7 @@ class SitemapWriter
      */
     public function setOutputFilename($outputFilename)
     {
-        $this->outputFilename = (string) $outputFilename;
+        $this->siteOutputFilename = (string) $outputFilename;
 
         return $this;
     }
@@ -226,19 +231,39 @@ class SitemapWriter
      *
      * @return string
      */
-    public function getOutputFilename()
+    public function getSiteOutputFilename()
     {
-        $result = $this->outputFilename;
+        $result = $this->siteOutputFilename;
         if ($result === '') {
             $config = $this->app->make('config');
-            $relativeName = '/' . ltrim(str_replace(DIRECTORY_SEPARATOR, '/', (string) $config->get('concrete.sitemap_xml.file')), '/');
+            $relativeName = '/' . ltrim(str_replace(\DIRECTORY_SEPARATOR, '/', (string) $config->get('concrete.sitemap_xml.file')), '/');
             if ($relativeName === '/') {
                 $relativeName = '/sitemap.xml';
             }
-            $result = rtrim(DIR_BASE, '/') . $relativeName;
+            $result = rtrim(\DIR_BASE, '/') . $relativeName;
         }
 
         return $result;
+    }
+
+    /**
+     * Get the path to the sitemap to be generated.
+     *
+     * @return string
+     */
+    public function getOutputFilename()
+    {
+        if ($this->outputFilename === '') {
+            $outputDir = \DIR_FILES_UPLOADED_STANDARD . \DIRECTORY_SEPARATOR . 'sitemaps';
+            if (!is_dir($outputDir)) {
+                @mkdir($outputDir);
+            }
+
+            $site = $this->app->make('site')->getSite();
+            $this->outputFilename = $outputDir . \DIRECTORY_SEPARATOR . $site->getSiteHandle() . '.xml';
+        }
+
+        return $this->outputFilename;
     }
 
     /**
@@ -248,7 +273,7 @@ class SitemapWriter
      */
     public function getSitemapUrl()
     {
-        $outputFilename = $this->getOutputFilename();
+        $outputFilename = $this->getSiteOutputFilename();
         if (strpos($outputFilename, DIR_BASE . '/') === 0) {
             $result = (string) $this->getSitemapGenerator()->resolveUrl(substr($outputFilename, strlen(DIR_BASE)));
         } else {
