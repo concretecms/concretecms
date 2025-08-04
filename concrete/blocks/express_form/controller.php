@@ -556,7 +556,7 @@ class Controller extends BlockController implements NotificationProviderInterfac
         $e = $this->app->make('helper/validation/error');
         if (!empty($args['notifyMeOnSubmission']) && filter_var($args['notifyMeOnSubmission'], FILTER_VALIDATE_BOOLEAN)) {
             if (empty($args['recipientEmail'])) {
-                $e->add(t('The Send form submissions to email addresses box is checked. Please enter at least one email address.'));;
+                $e->add(t('The option "%s" is checked. Please enter at least one email address.', t('Send form submissions to email addresses')));
             }
         }
         if (!empty($args['recipientEmail'])) {
