@@ -48,7 +48,8 @@ class DefaultSet extends ColumnSet
         $app = Application::getFacadeApplication();
         /** @var Connection $db */
         $db = $app->make(Connection::class);
-        return (string)$db->fetchColumn("SELECT treeNodeName FROM TreeNodes WHERE treeNodeId = ? LIMIT 1", [$ui->getUserHomeFolderId()]);
+        $folderName = (string)$db->fetchColumn("SELECT treeNodeName FROM TreeNodes WHERE treeNodeId = ? LIMIT 1", [$ui->getUserHomeFolderId()]);
+        return h($folderName);
     }
 
     public function __construct()

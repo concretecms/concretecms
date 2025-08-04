@@ -678,7 +678,7 @@ class Search extends DashboardPageController
         $rows = $db->fetchAll("SELECT tn.treeNodeId, tn.treeNodeName FROM TreeNodes AS tn LEFT JOIN TreeNodeTypes AS tnt ON (tn.treeNodeTypeID = tnt.treeNodeTypeID) WHERE tnt.treeNodeTypeHandle = 'file_folder' AND tn.treeNodeName != ''");
 
         foreach ($rows as $row) {
-            $folderList[$row["treeNodeId"]] = $row["treeNodeName"];
+            $folderList[$row["treeNodeId"]] = h($row["treeNodeName"]);
         }
 
         return $folderList;
