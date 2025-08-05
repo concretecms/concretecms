@@ -3,6 +3,8 @@ namespace Concrete\Controller\Panel\Detail\Page;
 
 use Concrete\Controller\Backend\UserInterface\Page as BackendInterfacePageController;
 use Concrete\Core\Entity\Page\PagePath;
+use Concrete\Core\Page\PagePathEvent;
+use Events;
 use PageEditResponse;
 use PermissionKey;
 use Exception;
@@ -134,6 +136,11 @@ class Location extends BackendInterfacePageController
                         $p->setPageObject($this->page);
                         if ($canonical == $i) {
                             $p->setPagePathIsCanonical(true);
+                            
+                            // Dispatch event when adding a canonical path
+                            $event = new PagePathEvent($this->page);
+                            $event->setPagePath($p->getPagePath());
+                            Events::dispatch('on_add_canonical_page_path', $event);
                         }
                         \ORM::entityManager()->persist($p);
                     }
