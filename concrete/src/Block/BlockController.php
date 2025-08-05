@@ -283,6 +283,15 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
         }
 
         if ($this instanceof FileTrackableInterface) {
+            $fields = array_merge(
+                $this->btExportFileColumns ?: [],
+                $this->btExportContentColumns ?: []
+            );
+            foreach ($fields as $field) {
+                if (property_exists($this, $field)) {
+                    $this->{$field} = $args[$field] ?? null;
+                }
+            }
             $this->app->make(AggregateTracker::class)->track($this);
         }
     }
@@ -461,17 +470,17 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
                         } elseif ($value === 0 || $value === '0') {
                             $tableRecord->addChild($key, '0');
                         } elseif (in_array($key, $btExportPageColumns)) {
-                            $tableRecord->addChild($key, ContentExporter::replacePageWithPlaceHolder($value));
+                            $xml->createChildElement($tableRecord, $key, ContentExporter::replacePageWithPlaceHolder($value));
                         } elseif (in_array($key, $this->btExportFileColumns)) {
-                            $tableRecord->addChild($key, ContentExporter::replaceFileWithPlaceHolder($value));
+                            $xml->createChildElement($tableRecord, $key, ContentExporter::replaceFileWithPlaceHolder($value));
                         } elseif (in_array($key, $this->btExportPageTypeColumns)) {
-                            $tableRecord->addChild($key, ContentExporter::replacePageTypeWithPlaceHolder($value));
+                            $xml->createChildElement($tableRecord, $key, ContentExporter::replacePageTypeWithPlaceHolder($value));
                         } elseif (in_array($key, $this->btExportPageFeedColumns)) {
-                            $tableRecord->addChild($key, ContentExporter::replacePageFeedWithPlaceHolder($value));
+                            $xml->createChildElement($tableRecord, $key, ContentExporter::replacePageFeedWithPlaceHolder($value));
                         } elseif (in_array($key, $this->btExportFileFolderColumns)) {
-                            $tableRecord->addChild($key, ContentExporter::replaceFileFolderWithPlaceHolder($value));
+                            $xml->createChildElement($tableRecord, $key, ContentExporter::replaceFileFolderWithPlaceHolder($value));
                         } elseif (in_array($key, $this->btExportContentColumns)) {
-                            $tableRecord->addChild($key, LinkAbstractor::export((string) $value));
+                            $xml->createChildElement($tableRecord, $key, LinkAbstractor::export((string) $value));
                         } else {
                             $xml->createChildElement($tableRecord, $key, $value);
                         }

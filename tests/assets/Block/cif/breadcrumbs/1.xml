@@ -1,0 +1,9 @@
+<block type="breadcrumbs" name="">
+  <data table="btBreadcrumbs">
+    <record>
+      <ignoreExcludeNav>1</ignoreExcludeNav>
+      <ignorePermission>0</ignorePermission>
+      <includeCurrent>1</includeCurrent>
+    </record>
+  </data>
+</block>

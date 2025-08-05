@@ -1,0 +1,7 @@
+<block type="external_form" name="">
+  <data table="btExternalForm">
+    <record>
+      <filename>test_form_1.php</filename>
+    </record>
+  </data>
+</block>

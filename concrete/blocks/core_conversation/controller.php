@@ -11,6 +11,9 @@ use Concrete\Core\Feature\Features;
 use Concrete\Core\Feature\UsesFeatureInterface;
 use Concrete\Core\Page\Page;
 use Concrete\Core\User\UserInfo;
+use Concrete\Core\User\UserInfoRepository;
+use Concrete\Core\Utility\Service\Xml;
+use SimpleXMLElement;
 
 /**
  * The controller for the conversation block. This block is used to display conversations in a page.
@@ -21,72 +24,72 @@ class Controller extends BlockController implements UsesFeatureInterface
      * @var int|string|null
      */
     public $cnvID;
-    
+
     /**
      * @var int|string|null
      */
     public $enablePosting;
-    
+
     /**
      * @var bool|int|string|null
      */
     public $paginate;
-    
+
     /**
      * @var int|string|null
      */
     public $itemsPerPage;
-    
+
     /**
      * @var string|null
      */
     public $displayMode;
-    
+
     /**
      * @var string|null
      */
     public $orderBy;
-    
+
     /**
      * @var bool|int|string|null
      */
     public $enableOrdering;
-    
+
     /**
      * @var bool|int|string|null
      */
     public $enableCommentRating;
-    
+
     /**
      * @var bool|int|string|null
      */
     public $enableTopCommentReviews;
-    
+
     /**
      * @var bool|int|string|null
      */
     public $displaySocialLinks;
-    
+
     /**
      * @var int|string|null
      */
     public $reviewAggregateAttributeKey;
-    
+
     /**
      * @var string|null
      */
     public $displayPostingForm;
-    
+
     /**
      * @var string|null
      */
     public $addMessageLabel;
-    
+
     /**
      * @var string|null
      */
     public $dateFormat;
-    
+
     /**
      * @var string|null
      */
@@ -348,13 +351,12 @@ class Controller extends BlockController implements UsesFeatureInterface
         $helperFile = $this->app->make('helper/concrete/file');
         $db = $this->app->make('database');
         $cnvID = $db->fetchColumn('select cnvID from btCoreConversation where bID = ?', [$this->bID]);
-        if (!$cnvID) {
+        $conversation = $cnvID ? Conversation::getByID($cnvID) : null;
+        if (!$conversation) {
             $conversation = Conversation::add();
             $b = $this->getBlockObject();
             $xc = $b->getBlockCollectionObject();
             $conversation->setConversationPageObject($xc);
-        } else {
-            $conversation = Conversation::getByID($cnvID);
         }
         $values = $post + [
             'attachmentOverridesEnabled' => null,
@@ -409,14 +411,16 @@ class Controller extends BlockController implements UsesFeatureInterface
         if ($values['notificationOverridesEnabled']) {
             $conversation->setConversationNotificationOverridesEnabled(true);
             $users = [];
-            if (is_array($this->post('notificationUsers'))) {
-                foreach ($this->post('notificationUsers') as $uID) {
-                    $ui = UserInfo::getByID($uID);
-                    if (is_object($ui)) {
-                        $users[] = $ui;
+            if (is_array($post['notificationUsers'] ?? null)) {
+                $userInfoRepository = $this->app->make(UserInfoRepository::class);
+                foreach ($post['notificationUsers'] as $uID) {
+                    $ui = $userInfoRepository->getByID($uID);
+                    if ($ui && !isset($users[$ui->getUserID()])) {
+                        $users[$ui->getUserID()] = $ui;
                     }
                 }
             }
+            $users = array_values($users);
             $conversation->setConversationSubscribedUsers($users);
             $conversation->setConversationSubscriptionEnabled((int) ($values['subscriptionEnabled']));
         } else {
@@ -432,6 +436,72 @@ class Controller extends BlockController implements UsesFeatureInterface
 
         $values['cnvID'] = $conversation->getConversationID();
         parent::save($values);
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Block\BlockController::export()
+     */
+    public function export(SimpleXMLElement $blockNode)
+    {
+        $xml = $this->app->make(Xml::class);
+        parent::export($blockNode);
+        $recordNode = $blockNode->data[0]->record[0];
+        $conversation = $this->getConversationObject();
+        if ($conversation) {
+            $recordNode->addChild('attachmentOverridesEnabled', $conversation->getConversationAttachmentOverridesEnabled() ? '1' : '0');
+            $recordNode->addChild('attachmentsEnabled', $conversation->getConversationAttachmentsEnabled() ? '1' : '0');
+            $recordNode->addChild('maxFilesGuest', (string) $conversation->getConversationMaxFilesGuest());
+            $recordNode->addChild('maxFilesRegistered', (string) $conversation->getConversationMaxFilesRegistered());
+            $recordNode->addChild('maxFileSizeGuest', (string) $conversation->getConversationMaxFileSizeGuest());
+            $recordNode->addChild('maxFileSizeRegistered', (string) $conversation->getConversationMaxFilesRegistered());
+            $recordNode->addChild('notificationOverridesEnabled', $conversation->getConversationNotificationOverridesEnabled() ? '1' : '0');
+            if ($conversation->getConversationNotificationOverridesEnabled()) {
+                foreach ($conversation->getConversationSubscribedUsers() as $ui) {
+                    $xml->createChildElement($recordNode, 'notificationUser', $ui->getUserName());
+                }
+            }
+            $recordNode->addChild('subscriptionEnabled', $conversation->getConversationSubscriptionEnabled() ? '1' : '0');
+            if ($conversation->getConversationAttachmentOverridesEnabled()) {
+                $xml->createChildElement(
+                    $recordNode,
+                    'fileExtensions',
+                    implode(
+                        ',',
+                        $this->app->make('helper/concrete/file')->unSerializeUploadFileExtensions(
+                            $conversation->getConversationFileExtensions()
+                        )
+                    )
+                );
+            }
+        }
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Block\BlockController::getImportData()
+     */
+    protected function getImportData($blockNode, $page)
+    {
+        $args = parent::getImportData($blockNode, $page);
+        unset($args['notificationUser']);
+        $notificationUsers = [];
+        if (isset($blockNode->data[0]->record[0]->notificationUser)) {
+            $userInfoRepository = $this->app->make(UserInfoRepository::class);
+            foreach ($blockNode->data[0]->record[0]->notificationUser as $notificationUserNode) {
+                if (($uName = trim((string) $notificationUserNode)) !== '') {
+                    $ui = $userInfoRepository->getByName($uName);
+                    if ($ui) {
+                        $notificationUsers[] = $ui->getUserID();
+                    }
+                }
+            }
+        }
+        $args['notificationUsers'] = $notificationUsers;
+
+        return $args;
     }
 
     /**

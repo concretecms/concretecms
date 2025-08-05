@@ -88,7 +88,7 @@ class Type extends ConcreteObject implements \Concrete\Core\Permission\ObjectInt
     }
 
     /**
-     * @return \Concrete\Core\Page\Type\PublishTarget\Configuration\Configuration
+     * @return \Concrete\Core\Page\Type\PublishTarget\Configuration\Configuration|null
      */
     public function getPageTypePublishTargetObject()
     {
@@ -446,10 +446,8 @@ class Type extends ConcreteObject implements \Concrete\Core\Permission\ObjectInt
         $data['ptIsFrequentlyAdded'] = $xml->getBool($node['is-frequently-added']) ? 1 : 0;
 
         $data['templates'] = $types;
-        $pkg = false;
-        if ($node['package']) {
-            $pkg = Package::getByHandle((string) $node['package']);
-        }
+        $pkgHandle = isset($node['package']) ? (string) $node['package'] : '';
+        $pkg = $pkgHandle === '' ? false : Package::getByHandle($pkgHandle);
 
         if ($ptID) {
             $cm = static::getByID($ptID);
@@ -577,7 +575,9 @@ class Type extends ConcreteObject implements \Concrete\Core\Permission\ObjectInt
         }
 
         $target = $this->getPageTypePublishTargetObject();
-        $target->export($pagetype);
+        if ($target) {
+            $target->export($pagetype);
+        }
 
         $cfsn = $pagetype->addChild('composer');
         $fsn = $cfsn->addChild('formlayout');
@@ -733,7 +733,7 @@ class Type extends ConcreteObject implements \Concrete\Core\Permission\ObjectInt
      *
      * @param bool|Package $pkg This should be false if the type is not tied to a package, or a package object
      *
-     * @return static|mixed|null
+     * @return static
      */
     public static function add($data, $pkg = false)
     {
@@ -864,9 +864,9 @@ class Type extends ConcreteObject implements \Concrete\Core\Permission\ObjectInt
             $pe = PageOwnerPermissionAccessEntity::getOrCreate();
             $pa->addListItem($pe);
             $pt->assignPermissionAccess($pa);
-
-            return $ptt;
         }
+
+        return $ptt;
     }
 
     public function update($data)

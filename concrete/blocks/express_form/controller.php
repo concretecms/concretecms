@@ -39,9 +39,11 @@ use Concrete\Core\Support\Facade\Url;
 use Concrete\Core\Tree\Node\Node;
 use Concrete\Core\Tree\Node\Type\ExpressEntryCategory;
 use Concrete\Core\Tree\Type\ExpressEntryResults;
+use Concrete\Core\Utility\Service\Xml;
 use Concrete\Core\Validator\String\EmailValidator;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Id\UuidGenerator;
+use SimpleXMLElement;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Concrete\Core\Permission\Checker;
 
@@ -107,6 +109,7 @@ class Controller extends BlockController implements NotificationProviderInterfac
     protected $btCacheBlockOutput = false;
     protected $btTable = 'btExpressForm';
     protected $btExportPageColumns = ['redirectCID'];
+    protected $btExportFileFolderColumns = ['addFilesToFolder'];
     protected $btCopyWhenPropagate = true;
 
     const FORM_RESULTS_CATEGORY_NAME = 'Forms';
@@ -479,6 +482,76 @@ class Controller extends BlockController implements NotificationProviderInterfac
         return parent::save($data);
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Block\BlockController::export()
+     */
+    public function export(SimpleXMLElement $blockNode)
+    {
+        parent::export($blockNode);
+        $xml = $this->app->make(Xml::class);
+        $xRecord = $blockNode->data[0]->record[0];
+
+        $form = $this->getFormEntity();
+        if ($form) {
+            $xRecord->exFormID[0]->addAttribute('name', (string) $form->getName());
+            $xEntity = $xml->createChildElement($xRecord, 'exEntityID', $form->getEntity()->getId());
+            $xEntity->addAttribute('handle', (string) $form->getEntity()->getHandle());
+        }
+
+        $set = Set::getByID($this->addFilesToSet);
+        if ($set) {
+            $xRecord->addFilesToSet[0]->addAttribute('name', (string) $set->getFileSetName());
+        }
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Block\BlockController::getImportData()
+     */
+    protected function getImportData($blockNode, $page)
+    {
+        $args = parent::getImportData($blockNode, $page);
+        $xRecord = $blockNode->data[0]->record[0];
+        $em = $this->app->make(EntityManagerInterface::class);
+
+        if (!empty($args['exFormID'])) {
+            $form = $em->find(Form::class, $args['exFormID']);
+            if (!$form) {
+                $formName = (string) $xRecord->exFormID[0]['name'];
+                if ($formName !== '') {
+                    $entityID = (string) $xRecord->exEntityID;
+                    $entity = $entityID === '' ? null : $em->find(Entity::class, $entityID);
+                    if ($entity === null) {
+                        $entityHandle = (string) $xRecord->exEntityID['handle'];
+                        $entity = $entityHandle === '' ? null : $em->getRepository(Entity::class)->findOneBy(['handle' => $entityHandle]);
+                    }
+                    if ($entity !== null) {
+                        $form = array_first(
+                            $entity->getForms()->toArray(),
+                            static function ($form) use ($formName) { return $form->getName() === $formName; }
+                        );
+                    }
+                }
+                if ($form) {
+                    $args['exFormID'] = $form->getId();
+                }
+            }
+        }
+
+        $fileSetName = (string) $xRecord->addFilesToSet[0]['name'];
+        if ($fileSetName !== '') {
+            $set = Set::getByName($fileSetName);
+            if ($set) {
+                $args['addFilesToSet'] = $set->getFileSetID();
+            }
+        }
+
+        return $args;
+    }
+
     public function view()
     {
         $form = $this->getFormEntity();
@@ -556,7 +629,7 @@ class Controller extends BlockController implements NotificationProviderInterfac
         $e = $this->app->make('helper/validation/error');
         if (!empty($args['notifyMeOnSubmission']) && filter_var($args['notifyMeOnSubmission'], FILTER_VALIDATE_BOOLEAN)) {
             if (empty($args['recipientEmail'])) {
-                $e->add(t('The Send form submissions to email addresses box is checked. Please enter at least one email address.'));;
+                $e->add(t('The option "%s" is checked. Please enter at least one email address.', t('Send form submissions to email addresses')));
             }
         }
         if (!empty($args['recipientEmail'])) {
@@ -984,7 +1057,7 @@ class Controller extends BlockController implements NotificationProviderInterfac
     protected function getFormEntity()
     {
         $entityManager = $this->app->make(EntityManagerInterface::class);
-        return $entityManager->getRepository(\Concrete\Core\Entity\Express\Form::class)
-            ->findOneById($this->exFormID);
+
+        return $entityManager->find(Form::class, $this->exFormID);
     }
 }

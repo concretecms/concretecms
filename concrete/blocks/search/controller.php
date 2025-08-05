@@ -411,6 +411,34 @@ class Controller extends BlockController implements UsesFeatureInterface
     }
 
     /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Block\BlockController::getImportData()
+     */
+    protected function getImportData($blockNode, $page)
+    {
+        $args = parent::getImportData($blockNode, $page);
+        $baseSearchPath = (string) $args['baseSearchPath'];
+        $args['baseSearchPath'] = empty($args['search_all']) ? 'EVERYWHERE' : 'ALL';
+        if ($baseSearchPath !== '') {
+            $c = Page::getByPath($baseSearchPath);
+            if ($c && !$c->isError()) {
+                $args['baseSearchPath'] = 'OTHER';
+                $args['searchUnderCID'] = $c->getCollectionID();
+            }
+        }
+        $postTo_cID = (int) ($args['postTo_cID'] ?? 0);
+        if ($postTo_cID !== 0) {
+            $args['resultsPageKind'] = 'CID'; 
+        } elseif ((string) ($args['resultsURL'] ?? '') !== '') {
+            $args['resultsPageKind'] = 'URL';
+        }
+        $args['allowUserOptions'] = empty($args['allowUserOptions']) ? 0 : 'ALLOW';
+
+        return $args;
+    }
+
+    /**
      * Perform the search.
      *
      * @return null|false

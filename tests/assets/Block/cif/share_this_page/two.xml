@@ -1,0 +1,6 @@
+<block type="share_this_page" name="">
+  <data>
+    <service>bluesky</service>
+    <service>email</service>
+  </data>
+</block>

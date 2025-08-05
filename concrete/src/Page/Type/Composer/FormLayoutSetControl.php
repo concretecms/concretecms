@@ -138,12 +138,12 @@ class FormLayoutSetControl extends ConcreteObject
     public function export($fxml)
     {
         $node = $fxml->addChild('control');
-        $node->addAttribute('custom-template', $this->getPageTypeComposerFormLayoutSetControlCustomTemplate());
+        $node->addAttribute('custom-template', (string) $this->getPageTypeComposerFormLayoutSetControlCustomTemplate());
         if ($this->isPageTypeComposerFormLayoutSetControlRequired()) {
             $node->addAttribute('required', true);
         }
         $node->addAttribute('custom-label', $this->getPageTypeComposerFormLayoutSetControlCustomLabel());
-        $node->addAttribute('description', $this->getPageTypeComposerFormLayoutSetControlDescription());
+        $node->addAttribute('description', (string) $this->getPageTypeComposerFormLayoutSetControlDescription());
         $app = Application::getFacadeApplication();
         $db = $app->make('database')->connection();
         $cnt = $db->fetchColumn('select count(*) from PageTypeComposerOutputControls where ptComposerFormLayoutSetControlID = ?', [$this->ptComposerFormLayoutSetControlID]);

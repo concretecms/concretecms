@@ -6,6 +6,7 @@ use Concrete\Core\Attribute\Key\CollectionKey;
 use Concrete\Core\Attribute\Key\EventKey;
 use Concrete\Core\Block\BlockController;
 use Concrete\Core\Calendar\Calendar;
+use Concrete\Core\Calendar\Calendar\CalendarService;
 use Concrete\Core\Calendar\CalendarServiceProvider;
 use Concrete\Core\Calendar\Event\Event;
 use Concrete\Core\Calendar\Event\EventOccurrence;
@@ -15,6 +16,9 @@ use Concrete\Core\Feature\Features;
 use Concrete\Core\Feature\UsesFeatureInterface;
 use Concrete\Core\Page\Page;
 use Concrete\Core\Url\SeoCanonical;
+use Concrete\Core\Utility\Service\Xml;
+use Doctrine\ORM\EntityManagerInterface;
+use SimpleXMLElement;
 
 defined('C5_EXECUTE') or die('Access Denied.');
 
@@ -273,6 +277,104 @@ class Controller extends BlockController implements UsesFeatureInterface
         }
         $formatter = $provider->getDateFormatter();
         $this->set('formatter', $formatter);
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Block\BlockController::export()
+     */
+    public function export(SimpleXMLElement $blockNode)
+    {
+        $xml = $this->app->make(Xml::class);
+        parent::export($blockNode);
+        $recordNode = $blockNode->xpath('./data[@table="btCalendarEvent"]/record')[0];
+
+        $calendarName = '';
+        if ($this->calendarID) {
+            $calendar = $this->app->make(CalendarService::class)->getByID($this->calendarID);
+            if ($calendar !== null) {
+                $calendarName = $calendar->getName();
+            }
+        }
+        unset($recordNode->calendarID);
+        $xml->createChildElement($recordNode, 'calendarName', $calendarName);
+
+        $displayEventAttributes = [];
+        $attributeIDs = $this->displayEventAttributes ? (array) json_decode($this->displayEventAttributes) : [];
+        foreach ($attributeIDs as $attributeID) {
+            if (($attributeID = (int) $attributeID) < 1) {
+                continue;
+            }
+            if (!($ak = EventKey::getByID($attributeID))) {
+                continue;
+            }
+            $displayEventAttributes[] = $ak->getAttributeKeyHandle();
+        }
+        unset($recordNode->displayEventAttributes);
+        $xml->createChildElement($recordNode, 'displayEventAttributes', json_encode($displayEventAttributes));
+
+        $serializedEvent = '';
+        if ($this->mode !== 'P') {
+            $event = $this->getEvent();
+            $eventVersion = $event ? $event->getSelectedVersion() : null;
+            $eventOccurrence = $eventVersion ? $eventVersion->getOccurrences()->first() : null;
+            if ($eventOccurrence) {
+                $serializedEvent = json_encode(['startTime' => $eventOccurrence->getOccurrence()->getStart(), 'name' => $eventVersion->getName()]);
+            }
+        }
+        unset($recordNode->eventID);
+        $xml->createChildElement($recordNode, 'event', $serializedEvent);
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Block\BlockController::getImportData()
+     */
+    protected function getImportData($blockNode, $page)
+    {
+        $data = parent::getImportData($blockNode, $page);
+        $calendar = null;
+        if (is_string($calendarName = $data['calendarName'] ?? null) && ($calendarName = trim($calendarName)) !== '') {
+            $calendar = $this->app->make(CalendarService::class)->getByName($calendarName);
+        }
+        $event = null;
+        if ($calendar) {
+            $serializedEvent = empty($data['event']) ? null : json_decode($data['event'], true);
+            if (isset($serializedEvent['startTime']) && isset($serializedEvent['name'])) {
+                $qb = $this->app->make(EntityManagerInterface::class)->createQueryBuilder();
+                $qb
+                    ->setParameter('calendarID', $calendar->getID())
+                    ->setParameter('eventName', (string) $serializedEvent['name'])
+                    ->setParameter('startTime', (int) $serializedEvent['startTime'])
+                    ->select('event')
+                    ->from(CalendarEvent::class, 'event')
+                    ->innerJoin('event.versions', 'version')
+                    ->innerJoin('version.occurrences', 'versionOccurrence')
+                    ->innerJoin('versionOccurrence.occurrence', 'occurrence')
+                    ->andWhere('event.calendar = :calendarID')
+                    ->andWhere('version.evName = :eventName')
+                    ->andWhere('occurrence.startTime = :startTime')
+                    ->setMaxResults(1)
+                ;
+                $event = $qb->getQuery()->execute()[0] ?? null;
+            }
+        }
+        $data['calendarID'] = $calendar ? $calendar->getID() : 0;
+        $data['eventID'] = $event ? $event->getID() : 0;
+        $displayEventAttributes = [];
+        if (!empty($data['displayEventAttributes']) && is_array($handles = json_decode($data['displayEventAttributes']))) {
+            foreach ($handles as $handle) {
+                $ak = EventKey::getByHandle($handle);
+                if ($ak) {
+                    $displayEventAttributes[] = $ak->getAttributeKeyID();
+                }
+            }
+        }
+        $data['displayEventAttributes'] = $displayEventAttributes;
+
+        return $data;
     }
 
     /**

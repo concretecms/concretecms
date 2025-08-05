@@ -1,0 +1,14 @@
+<block type="autonav" name="">
+  <data table="btNavigation">
+    <record>
+      <displayPages>custom</displayPages>
+      <displayPagesCID>{ccm:export:page:/page-1}</displayPagesCID>
+      <displayPagesIncludeSelf>0</displayPagesIncludeSelf>
+      <displaySubPageLevels>enough_plus1</displaySubPageLevels>
+      <displaySubPageLevelsNum>0</displaySubPageLevelsNum>
+      <displaySubPages>relevant</displaySubPages>
+      <displayUnavailablePages>0</displayUnavailablePages>
+      <orderBy>alpha_asc</orderBy>
+    </record>
+  </data>
+</block>

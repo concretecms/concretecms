@@ -1,0 +1,22 @@
+<block type="accordion" name="">
+  <data table="btAccordion">
+    <record>
+      <alwaysOpen>1</alwaysOpen>
+      <flush>1</flush>
+      <initialState>openfirst</initialState>
+      <itemHeadingFormat>h4</itemHeadingFormat>
+    </record>
+  </data>
+  <data table="btAccordionEntries">
+    <record>
+      <description><![CDATA[<a href="{ccm:export:page:/page-2}">Link to page</a>]]></description>
+      <sortOrder>0</sortOrder>
+      <title>Title #1</title>
+    </record>
+    <record>
+      <description><![CDATA[<a href="{ccm:export:file:123456789012:file-1.jpg}"><concrete-picture file="210987654321:file-2.png" /></a>]]></description>
+      <sortOrder>1</sortOrder>
+      <title>Title #2</title>
+    </record>
+  </data>
+</block>

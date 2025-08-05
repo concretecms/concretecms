@@ -58,7 +58,11 @@ class Client extends GuzzleHttpClient implements LoggerAwareInterface
         if ($logger !== null) {
             $statusCode = $response->getStatusCode();
             try {
-                $body = $response->getBody();
+                $responseBody = $response->getBody();
+                $body = $responseBody->getContents();
+                if ($responseBody->isSeekable()) {
+                    $responseBody->rewind();
+                }
             } catch (Exception $x) {
                 $body = '';
             } catch (Throwable $x) {

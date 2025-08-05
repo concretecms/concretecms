@@ -155,10 +155,14 @@ class Controller extends BlockController implements FileTrackableInterface
      */
     public function getUsedFiles()
     {
-        if ($this->fID) {
-            return [$this->fID];
+        $result = [];
+        if (($fID = (int) $this->fID) !== 0) {
+            $result[] = $fID;
+        }
+        if (($fID = (int) $this->awardImageID) !== 0) {
+            $result[] = $fID;
         }
 
-        return [];
+        return $result;
     }
 }

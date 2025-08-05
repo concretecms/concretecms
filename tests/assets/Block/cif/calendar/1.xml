@@ -1,0 +1,16 @@
+<block type="calendar" name="">
+  <data table="btCalendar">
+    <record>
+      <caName>Calendar Name</caName>
+      <calendarAttributeKeyHandle></calendarAttributeKeyHandle>
+      <defaultView>basicDay</defaultView>
+      <eventLimit>0</eventLimit>
+      <filterByTopicAttributeKeyHandle></filterByTopicAttributeKeyHandle>
+      <filterByTopicPath></filterByTopicPath>
+      <lightboxProperties>["linkToPage"]</lightboxProperties>
+      <navLinks>1</navLinks>
+      <viewTypes>["month","basicDay","listYear"]</viewTypes>
+      <viewTypesOrder>["basicDay_Day","month_Month","listYear_List Year"]</viewTypesOrder>
+    </record>
+  </data>
+</block>

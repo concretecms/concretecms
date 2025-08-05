@@ -346,6 +346,7 @@ class Controller extends BlockController implements UsesFeatureInterface
         $em = $this->app->make(EntityManagerInterface::class);
         parent::export($blockNode);
         foreach (($blockNode->xpath('./data[@table="btSurveyResults"]/record') ?: []) as $resultNode) {
+            unset($resultNode->resultID[0]);
             $uID = isset($resultNode->uID) ? (int) $resultNode->uID : 0;
             $u = $uID > 0 ? $em->find(\Concrete\Core\Entity\User\User::class, $uID) : 0;
             $resultNode->uID = $u ? "user:{$u->getUserName()}" : '';

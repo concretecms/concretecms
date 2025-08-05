@@ -1,0 +1,4 @@
+<block type="social_links" name="">
+  <link service="bluesky"></link>
+  <link service="github"></link>
+</block>
