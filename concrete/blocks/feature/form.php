@@ -60,7 +60,7 @@ $fileManager = $app->make(FileManager::class);
         <?php echo $form->label('paragraph', t('Paragraph:'));?>
         <?php
             $editor = Core::make('editor');
-            echo $editor->outputBlockEditModeEditor('paragraph', $controller->getParagraphEditMode());
+            echo $editor->outputBlockEditModeEditor('paragraph', htmlspecialchars($controller->getParagraphEditMode(), ENT_QUOTES, APP_CHARSET));
         ?>
     </div>
 
