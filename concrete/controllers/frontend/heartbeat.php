@@ -3,7 +3,6 @@
 namespace Concrete\Controller\Frontend;
 
 use Concrete\Core\Controller\Controller;
-use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Http\ResponseFactoryInterface;
 use Concrete\Core\Page\Page;
 use Concrete\Core\Session\SessionValidator;
@@ -28,21 +27,11 @@ class Heartbeat extends Controller
 
     private function refreshPageEditMode(User $loggedInUser): void
     {
-        if (($cID = $this->request->query->getInt('cID')) <= 0) {
-            return;
+        if (($cID = $this->request->query->getInt('cID')) !== 0) {
+            $page = Page::getByID($cID);
+            if ($page && !$page->isError() && $page->isCheckedOutByMe()) {
+                $loggedInUser->refreshCollectionEdit($page);
+            }
         }
-        $page = Page::getByID($cID);
-        if (!$page || $page->isError() || !$page->isCheckedOutByMe()) {
-            return;
-        }
-        $cn = $this->app->make(Connection::class);
-        $cn->executeStatement(
-            'UPDATE Pages SET cCheckedOutDatetimeLastEdit = ? WHERE cID = ? AND cCheckedOutUID = ? LIMIT 1',
-            [
-                $this->app->make('helper/date')->getOverridableNow(),
-                $cID,
-                (int) $loggedInUser->getUserID(),
-            ]
-        );
     }
 }
