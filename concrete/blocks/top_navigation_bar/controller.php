@@ -101,6 +101,7 @@ class Controller extends BlockController implements UsesFeatureInterface, FileTr
     protected $btCacheBlockOutputForRegisteredUsers = true;
     protected $btCacheBlockOutputLifetime = 300;
     protected $btExportFileColumns = ['brandingLogo', 'brandingTransparentLogo'];
+    protected $btExportPageColumns = ['searchInputFormActionPageID'];
     protected $home;
 
     /**
@@ -304,6 +305,7 @@ class Controller extends BlockController implements UsesFeatureInterface, FileTr
 
     public function save($args)
     {
+        $isCLI = $this->app->isRunThroughCommandLineInterface();
         $data = [];
         $data['includeNavigation'] = !empty($args['includeNavigation']) ? 1 : 0;
         $data['includeNavigationDropdowns'] = !empty($args['includeNavigationDropdowns']) ? 1 : 0;
@@ -340,7 +342,7 @@ class Controller extends BlockController implements UsesFeatureInterface, FileTr
             $file = File::getByID($args['brandingLogo']);
             if ($file) {
                 $checker = new Checker($file);
-                if ($checker->canViewFileInFileManager()) {
+                if ($isCLI || $checker->canViewFileInFileManager()) {
                     $brandingLogo = $file->getFileID();
                 }
             }
@@ -350,7 +352,7 @@ class Controller extends BlockController implements UsesFeatureInterface, FileTr
             $file = File::getByID($args['brandingTransparentLogo']);
             if ($file) {
                 $checker = new Checker($file);
-                if ($checker->canViewFileInFileManager()) {
+                if ($isCLI || $checker->canViewFileInFileManager()) {
                     $brandingTransparentLogo = $file->getFileID();
                 }
             }
@@ -360,7 +362,7 @@ class Controller extends BlockController implements UsesFeatureInterface, FileTr
             $searchPage = Page::getByID($args['searchInputFormActionPageID']);
             if ($searchPage && !$searchPage->isError()) {
                 $checker = new Checker($searchPage);
-                if ($checker->canViewPage()) {
+                if ($isCLI || $checker->canViewPage()) {
                     $searchInputFormActionPageID = $searchPage->getCollectionID();
                 }
             }

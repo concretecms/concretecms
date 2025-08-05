@@ -1,0 +1,32 @@
+<block type="express_entry_list" name="">
+  <data table="btExpressEntryList">
+    <record>
+      <columns default-sort-column-key="e.exEntryDateCreated" default-sort-column-name="Date Created" default-sort-column-direction="desc">
+        <column key="e.exEntryDateCreated" name="Date Created" sort-direction="desc"></column>
+        <column key="e.exEntryDateModified" name="Date Modified" sort-direction="asc"></column>
+        <column key="e.uID" name="Author" sort-direction="asc"></column>
+      </columns>
+      <detailPage>{ccm:export:page:/page-2}</detailPage>
+      <displayLimit>123</displayLimit>
+      <enableItemsPerPageSelection>1</enableItemsPerPageSelection>
+      <enableKeywordSearch>1</enableKeywordSearch>
+      <enablePagination>1</enablePagination>
+      <enableSearch>1</enableSearch>
+      <exEntityID handle="example_entity_n1">1cafebab-babe-cafe-babe-1cafebabe1ca</exEntityID>
+      <filterFields>
+        <field key="keywords">
+          <data>{"keywords":"searchbyme"}</data>
+        </field>
+      </filterFields>
+      <headerBackgroundColor>rgb(201, 0, 118)</headerBackgroundColor>
+      <headerBackgroundColorActiveSort>rgb(244, 204, 204)</headerBackgroundColorActiveSort>
+      <headerTextColor>rgb(255, 217, 102)</headerTextColor>
+      <rowBackgroundColorAlternate>rgb(143, 206, 0)</rowBackgroundColorAlternate>
+      <searchAssociation target-property-name="example_entities_n2">4cafebab-babe-cafe-babe-4cafebabe4ca</searchAssociation>
+      <tableDescription>Description of Design</tableDescription>
+      <tableName>Name of Design</tableName>
+      <tableStriped>1</tableStriped>
+      <titleFormat>h3</titleFormat>
+    </record>
+  </data>
+</block>

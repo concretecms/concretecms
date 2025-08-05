@@ -6,8 +6,9 @@ use Concrete\Core\Block\BlockController;
 use Concrete\Core\Feature\Features;
 use Concrete\Core\Feature\UsesFeatureInterface;
 use Concrete\Core\File\File;
+use Concrete\Core\File\Tracker\FileTrackableInterface;
 
-class Controller extends BlockController implements UsesFeatureInterface
+class Controller extends BlockController implements FileTrackableInterface, UsesFeatureInterface
 {
     /**
      * @var int|string|null
@@ -198,7 +199,6 @@ class Controller extends BlockController implements UsesFeatureInterface
             'title' =>  $data['title'],
         ];
         $args['width'] = $args['videoSize'] === 0 || $args['videoSize'] == 1 ? 0 : (int) $data['width'];
-
         parent::save($args);
     }
 
@@ -218,5 +218,22 @@ class Controller extends BlockController implements UsesFeatureInterface
         $this->set('mp4URL', ($mp4File === null || $mp4File->getApprovedVersion() === null) ? '' : $mp4File->getApprovedVersion()->getURL());
         $this->set('webmURL', ($webmFile === null || $webmFile->getApprovedVersion() === null) ? '' : $webmFile->getApprovedVersion()->getURL());
         $this->set('oggURL', ($oggFile === null || $oggFile->getApprovedVersion() === null) ? '' : $oggFile->getApprovedVersion()->getURL());
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\File\Tracker\FileTrackableInterface::getUsedFiles()
+     */
+    public function getUsedFiles()
+    {
+        $result = [];
+        foreach ($this->btExportFileColumns as $field) {
+            if (($fID = (int) $this->{$field}) !== 0) {
+                $result[] = $fID;
+            }
+        }
+
+        return $result;
     }
 }

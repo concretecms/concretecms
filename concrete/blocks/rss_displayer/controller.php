@@ -263,14 +263,12 @@ class Controller extends BlockController implements UsesFeatureInterface
     {
         $data = parent::getImportData($blockNode, $page);
         $dateFormat = $data['dateFormat'] ?? '';
-        if ($dateFormat !== '') {
-            if (array_key_exists($dateFormat, $this->getDefaultDateTimeFormats())) {
-                $data['standardDateFormat'] = $dateFormat;
-            } else {
-                $data['customDateFormat'] = $dateFormat;
-            }
+        if (array_key_exists($dateFormat, $this->getDefaultDateTimeFormats())) {
+            $data['standardDateFormat'] = $dateFormat;
+        } else {
+            $data['standardDateFormat'] = ':custom:';
+            $data['customDateFormat'] = $dateFormat;
         }
-        unset($data['dateFormat']);
 
         return $data;
     }

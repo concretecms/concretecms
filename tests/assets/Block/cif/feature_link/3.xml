@@ -1,0 +1,18 @@
+<block type="feature_link" name="">
+  <data table="btFeatureLink">
+    <record>
+      <body><![CDATA[Just a <a href="{ccm:export:page:/page-2}">link to a page</a>]]></body>
+      <buttonColor>light</buttonColor>
+      <buttonExternalLink>/ext/url</buttonExternalLink>
+      <buttonFileLinkID>0</buttonFileLinkID>
+      <buttonInternalLinkCID>0</buttonInternalLinkCID>
+      <buttonSize>lg</buttonSize>
+      <buttonStyle>outline</buttonStyle>
+      <buttonText>ButText</buttonText>
+      <fID>{ccm:export:file:123456543210:file-3.png}</fID>
+      <icon>fas fa-address-card</icon>
+      <title>Link Title</title>
+      <titleFormat>h2</titleFormat>
+    </record>
+  </data>
+</block>

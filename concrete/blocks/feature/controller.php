@@ -7,11 +7,13 @@ use Concrete\Core\Error\UserMessageException;
 use Concrete\Core\Feature\Features;
 use Concrete\Core\Feature\UsesFeatureInterface;
 use Concrete\Core\File\File;
+use Concrete\Core\File\Tracker\FileTrackableInterface;
+use Concrete\Core\File\Tracker\RichTextExtractor;
 use Concrete\Core\Form\Service\DestinationPicker\DestinationPicker;
 use Concrete\Core\Html\Service\FontAwesomeIcon;
 use Concrete\Core\Page\Page;
 
-class Controller extends BlockController implements UsesFeatureInterface
+class Controller extends BlockController implements FileTrackableInterface, UsesFeatureInterface
 {
     /**
      * @var string|null
@@ -248,9 +250,19 @@ class Controller extends BlockController implements UsesFeatureInterface
         return parent::getImportData($blockNode, $page) + ['_fromCIF' => true];
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\File\Tracker\FileTrackableInterface::getUsedFiles()
+     */
     public function getUsedFiles()
     {
-        return [$this->getFileID()];
+        $result = $this->app->make(RichTextExtractor::class)->extractFiles($this->paragraph);
+        if ($this->fID) {
+            $result[] = (int) $this->fID;
+        }
+
+        return $result;
     }
 
     protected function getLinkDestinationPickers(): array

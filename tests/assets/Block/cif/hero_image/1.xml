@@ -1,0 +1,19 @@
+<block type="hero_image" name="">
+  <data table="btHeroImage">
+    <record>
+      <body></body>
+      <buttonColor></buttonColor>
+      <buttonExternalLink></buttonExternalLink>
+      <buttonFileLinkID>0</buttonFileLinkID>
+      <buttonInternalLinkCID>0</buttonInternalLinkCID>
+      <buttonSize></buttonSize>
+      <buttonStyle></buttonStyle>
+      <buttonText></buttonText>
+      <height>60</height>
+      <icon></icon>
+      <image>{ccm:export:file:123456543210:file-3.png}</image>
+      <title></title>
+      <titleFormat>h1</titleFormat>
+    </record>
+  </data>
+</block>

@@ -12,6 +12,9 @@ use Concrete\Core\Feature\UsesFeatureInterface;
 use Concrete\Core\Html\Object\HeadLink;
 use Concrete\Core\Permission\Checker;
 use Concrete\Core\Support\Facade\Url;
+use Concrete\Core\Tree\Node\Node as TreeNode;
+use Concrete\Core\Utility\Service\Xml;
+use SimpleXMLElement;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 class Controller extends BlockController implements UsesFeatureInterface
@@ -401,6 +404,10 @@ class Controller extends BlockController implements UsesFeatureInterface
      */
     public function save($args)
     {
+        if (($args['_fromCIF'] ?? null) === true) {
+            parent::save($args);
+            return;
+        }
         if ($args['chooseCalendar'] === 'specific') {
             $args['caID'] = (int) $args['caID'];
             $args['calendarAttributeKeyHandle'] = '';
@@ -459,5 +466,127 @@ class Controller extends BlockController implements UsesFeatureInterface
             $this->set('calendar', $calendar);
             $this->set('viewTypeString', $this->getViewTypeString((array) json_decode($this->viewTypesOrder)));
         }
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Block\BlockController::export()
+     */
+    public function export(SimpleXMLElement $blockNode)
+    {
+        $xml = $this->app->make(Xml::class);
+        parent::export($blockNode);
+        $recordNode = $blockNode->xpath('./data[@table="btCalendar"]/record')[0];
+
+        $caName = '';
+        if ($this->caID) {
+            $calendar = $this->getCalendar();
+            if ($calendar !== null) {
+                $caName = $calendar->getName();
+            }
+        }
+        unset($recordNode->caID);
+        $xml->createChildElement($recordNode, 'caName', $caName);
+
+        $filterByTopicAttributeKeyHandle = '';
+        $filterByTopicPath = '';
+        $ak = $this->filterByTopicAttributeKeyID ? EventKey::getByID($this->filterByTopicAttributeKeyID) : null;
+        if ($ak) {
+            $filterByTopicAttributeKeyHandle = $ak->getAttributeKeyHandle();
+            $node = $this->filterByTopicID ? TreeNode::getByID($this->filterByTopicID) : null;
+            if ($node) {
+                $filterByTopicPath = $node->getTreeNodeDisplayPath();
+            }
+        }
+        unset($recordNode->filterByTopicAttributeKeyID);
+        $xml->createChildElement($recordNode, 'filterByTopicAttributeKeyHandle', $filterByTopicAttributeKeyHandle);
+        unset($recordNode->filterByTopicID);
+        $xml->createChildElement($recordNode, 'filterByTopicPath', $filterByTopicPath);
+
+        $lightboxProperties = [];
+        $m = null;
+        foreach ($this->getSelectedLightboxProperties() as $prop) {
+            if (preg_match('/^ak_(?<id>[1-9]\d*)$/', (string) $prop, $m)) {
+                $ak = EventKey::getByID((int) $m['id']);
+                if (!$ak) {
+                    continue;
+                }
+                $prop = 'ak_' . $ak->getAttributeKeyHandle();
+            }
+            $lightboxProperties[] = $prop;
+        }
+        unset($recordNode->lightboxProperties);
+        $xml->createChildElement($recordNode, 'lightboxProperties', json_encode($lightboxProperties));
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Block\BlockController::getImportData()
+     */
+    protected function getImportData($blockNode, $page)
+    {
+        $data = parent::getImportData($blockNode, $page);
+        $data['_fromCIF'] = true;
+        $data['caID'] = 0;
+        if (is_string($caName = $data['caName'] ?? null) && ($caName = trim($caName)) !== '') {
+            $calendar = Calendar::getByName($caName);
+            if ($calendar) {
+                $data['caID'] = $calendar->getID();
+            }
+        }
+        $data['filterByTopicAttributeKeyID'] = 0;
+        $data['filterByTopicID'] = 0;
+        if (is_string($akHandle = $data['filterByTopicAttributeKeyHandle'] ?? null) && ($akHandle = trim($akHandle)) !== '') {
+            $ak = EventKey::getByHandle($akHandle);
+            if ($ak) {
+                $data['filterByTopicAttributeKeyID'] = $ak->getAttributeKeyID();
+                if (is_string($filterByTopicPath = $data['filterByTopicPath'] ?? null) && ($filterByTopicPath = trim($filterByTopicPath)) !== '') {
+                    $c = $ak->getController();
+                    if ($c instanceof \Concrete\Attribute\Topics\Controller) {
+                        $treeID = $c->getTopicTreeID();
+                        $tree = $treeID ? \Concrete\Core\Tree\Tree::getByID($treeID) : null;
+                        if ($tree) {
+                            $node = $tree->getNodeByDisplayPath($filterByTopicPath);
+                            if ($node) {
+                                $data['filterByTopicID'] = $node->getTreeNodeID();
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        $lightboxProperties = [];
+        $props = ($data['lightboxProperties'] ?? null) ? json_decode($data['lightboxProperties'], true) : null;
+        if (is_array($props)) {
+            $m = null;
+            foreach ($props as $prop) {
+                if (preg_match('/^ak_(?<handle>\w+)$/', (string) $prop, $m)) {
+                    $ak = EventKey::getByHandle($m['handle']);
+                    if (!$ak) {
+                        continue;
+                    }
+                    $prop = 'ak_' . $ak->getAttributeKeyID();
+                }
+                $lightboxProperties[] = $prop;
+            }
+        }
+        $data['lightboxProperties'] = json_encode($lightboxProperties);
+        foreach ([
+            'viewTypes',
+            'viewTypesOrder',
+        ] as $field) {
+            $value = ($data[$field] ?? null) ? json_decode($data[$field], true) : [];
+            $data[$field] = json_encode(is_array($value) ? $value : []);
+        }
+        foreach ([
+            'navLinks',
+            'eventLimit',
+        ] as $field) {
+            $data[$field] = ($data[$field] ?? false) ? 1 : 0;
+        }
+
+        return $data;
     }
 }

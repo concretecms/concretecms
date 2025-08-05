@@ -1,0 +1,15 @@
+<block type="google_map" name="">
+  <data table="btGoogleMap">
+    <record>
+      <height>456px</height>
+      <latitude>45.8095</latitude>
+      <location>Piazza San Fedele, Como, CO, IT</location>
+      <longitude>9.084</longitude>
+      <scrollwheel>1</scrollwheel>
+      <title>The Rhythm of the Night</title>
+      <titleFormat>h4</titleFormat>
+      <width>97%</width>
+      <zoom>13</zoom>
+    </record>
+  </data>
+</block>

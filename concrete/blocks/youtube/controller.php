@@ -288,7 +288,7 @@ class Controller extends BlockController implements UsesFeatureInterface
             'color' => $data['color'],
 
             'rel' => $data['rel'] ? 1 : 0,
-            'iv_load_policy' => $data['iv_load_policy'] ? 3 : 1,
+            'iv_load_policy' => ((int) $data['iv_load_policy']) ?: 1,
             'autoplay' => $data['autoplay'] ? 1 : 0,
             'loopEnd' => $data['loopEnd'] ? 1 : 0,
 

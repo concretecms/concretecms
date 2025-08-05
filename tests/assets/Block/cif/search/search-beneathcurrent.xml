@@ -1,0 +1,13 @@
+<block type="search" name="">
+  <data table="btSearch">
+    <record>
+      <allow_user_options>0</allow_user_options>
+      <baseSearchPath>/page-1</baseSearchPath>
+      <buttonText>This is the button test</buttonText>
+      <postTo_cID null="true"></postTo_cID>
+      <resultsURL></resultsURL>
+      <search_all>0</search_all>
+      <title>This is the title</title>
+    </record>
+  </data>
+</block>

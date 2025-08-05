@@ -1,0 +1,60 @@
+{
+  "$schema": "https://json-schema.org/draft-07/schema",
+  "type": "object",
+  "properties": {
+    "$schema": {
+      "type": "string"
+    },
+    "skipReason": {
+      "type": "string",
+      "minLength": 1
+    },
+    "requiredBlockTypes": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "uniqueItems": true
+    },
+    "importerExporterMethod": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "^(import|export)[a-zA-Z0-9_]+$"
+    },
+    "keepXmlElementsOrder": {
+      "type": "boolean"
+    },
+    "fileUsageCount": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "richTexts": {
+      "type": "object",
+      "propertyNames": {
+        "pattern": "^(?i:SELECT\\s[^;]+)$"
+      },
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "numFiles": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "numImages": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "numPages": {
+            "type": "integer",
+            "minimum": 0
+          }
+        },
+        "required": [],
+        "additionalProperties": false
+      }
+    }
+  },
+  "required": [],
+  "additionalProperties": false
+}
