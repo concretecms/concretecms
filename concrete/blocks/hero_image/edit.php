@@ -41,7 +41,7 @@ $icon = $icon ?? '';
     <div class="mb-3">
         <label class="form-label" for="body"><?=t('Body')?></label>
         <?php
-        echo $editor->outputBlockEditModeEditor('body', isset($body) ? LinkAbstractor::translateFromEditMode($body) : null);
+        echo $editor->outputBlockEditModeEditor('body', isset($body) ? htmlspecialchars(LinkAbstractor::translateFromEditMode($body), ENT_QUOTES, APP_CHARSET) : null);
         ?>
     </div>
 </fieldset>
