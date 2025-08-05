@@ -5,6 +5,7 @@ namespace Concrete\Tests\Logging;
 use Concrete\Core\Application\Application;
 use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Entity\Page\PagePath;
+use Concrete\Core\Entity\User;
 use Concrete\Core\Logging\Channels;
 use Concrete\Core\Logging\Configuration\AdvancedConfiguration;
 use Concrete\Core\Logging\Configuration\ConfigurationFactory;
@@ -12,6 +13,7 @@ use Concrete\Core\Logging\Configuration\SimpleDatabaseConfiguration;
 use Concrete\Core\Logging\Configuration\SimpleFileConfiguration;
 use Concrete\Core\Logging\GroupLogger;
 use Concrete\Core\Logging\Handler\DatabaseHandler;
+use Concrete\Core\Logging\LogEntry;
 use Concrete\Core\Logging\LoggerFactory;
 use Concrete\Core\Logging\Processor\ConcretePageProcessor;
 use Concrete\Core\Logging\Processor\ConcreteUserProcessor;
@@ -22,9 +24,7 @@ use Illuminate\Filesystem\Filesystem;
 use Mockery as M;
 use Monolog\Formatter\LineFormatter;
 use Monolog\Logger;
-use Concrete\Core\Logging\LogEntry;
 use Monolog\Processor\PsrLogMessageProcessor;
-use Concrete\Core\Entity\User;
 
 class LogTest extends ConcreteDatabaseTestCase
 {
