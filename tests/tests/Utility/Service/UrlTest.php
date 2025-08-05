@@ -43,8 +43,8 @@ class UrlTest extends \PHPUnit_Framework_TestCase
         // REQUEST_URI contained both " and ' → must be percent-encoded
         $this->assertContains('/list%22items%27here', $out, 'Base path quotes must be encoded.');
         // Ensure no CR/LF made it through
-        $this->assertContains("\r", $out);
-        $this->assertContains("\n", $out);
+        $this->assertNotContains("\r", $out);
+        $this->assertNotContains("\n", $out);
     }
 
     /**
