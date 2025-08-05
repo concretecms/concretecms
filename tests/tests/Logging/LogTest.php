@@ -15,8 +15,7 @@ use Concrete\Core\Logging\GroupLogger;
 use Concrete\Core\Logging\Handler\DatabaseHandler;
 use Concrete\Core\Logging\LogEntry;
 use Concrete\Core\Logging\LoggerFactory;
-use Concrete\Core\Logging\Processor\ConcretePageProcessor;
-use Concrete\Core\Logging\Processor\ConcreteUserProcessor;
+use Concrete\Core\Logging\Processor;
 use Concrete\Core\Support\Facade\Facade;
 use Concrete\Core\Support\Facade\Log;
 use Concrete\TestHelpers\Database\ConcreteDatabaseTestCase;
@@ -383,9 +382,9 @@ class LogTest extends ConcreteDatabaseTestCase
         $noop = function($data) { return $data; };
 
         $app = M::mock(Application::class);
-        $app->shouldReceive('make')->withArgs([ConcreteUserProcessor::class])->andReturn($noop);
+        $app->shouldReceive('make')->withArgs([Processor\ConcreteUserProcessor::class])->andReturn($noop);
         $app->shouldReceive('make')->withArgs([PsrLogMessageProcessor::class])->andReturn($noop);
-        $app->shouldReceive('make')->withArgs([ConcretePageProcessor::class])->andReturn($noop);
+        $app->shouldReceive('make')->withArgs([Processor\ConcretePageProcessor::class])->andReturn($noop);
 
         return $app;
     }
