@@ -414,6 +414,8 @@ class Controller extends AttributeTypeController implements
         $this->load();
 
         $options = [];
+        $keyType = $this->attributeKey->getAttributeKeySettings();
+        $optionList = $keyType->getOptionList();
 
         if ($value != null) {
             if (is_array($value) && $this->akSelectAllowMultipleValues) {
@@ -429,6 +431,7 @@ class Controller extends AttributeTypeController implements
                         $option = new SelectValueOption();
                         $option->setIsEndUserAdded(true);
                         $option->setSelectAttributeOptionValue($v);
+                        $option->setOptionList($optionList);
                     }
 
                     if (is_object($option)) {
@@ -445,6 +448,7 @@ class Controller extends AttributeTypeController implements
                 } else {
                     $option = $this->getOptionByValue($value, $this->attributeKey);
                 }
+                $option->setOptionList($optionList);
 
                 if (is_object($option)) {
                     $options[] = $option;
