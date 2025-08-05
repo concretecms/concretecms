@@ -58,7 +58,7 @@ class LogTest extends ConcreteDatabaseTestCase
         $processors = $applicationLogger->getProcessors();
         $handlers = $applicationLogger->getHandlers();
         $this->assertCount(1, $handlers);
-        $this->assertCount(3, $processors);
+        $this->assertCount(4, $processors);
         $this->assertInstanceOf(DatabaseHandler::class, $handlers[0]);
         $this->assertEquals(Logger::DEBUG, $handlers[0]->getLevel());
 
@@ -171,7 +171,7 @@ class LogTest extends ConcreteDatabaseTestCase
         $filesystem->delete($file);
 
         $this->assertCount(1, $logger->getHandlers());
-        $this->assertCount(3, $logger->getProcessors()); // needs to have psr processor and the Concrete processors.
+        $this->assertCount(4, $logger->getProcessors()); // needs to have psr processor and the Concrete processors.
     }
 
     public function testLoggingFacade()
@@ -385,6 +385,7 @@ class LogTest extends ConcreteDatabaseTestCase
         $app->shouldReceive('make')->withArgs([Processor\ConcreteUserProcessor::class])->andReturn($noop);
         $app->shouldReceive('make')->withArgs([PsrLogMessageProcessor::class])->andReturn($noop);
         $app->shouldReceive('make')->withArgs([Processor\ConcretePageProcessor::class])->andReturn($noop);
+        $app->shouldReceive('make')->withArgs([Processor\StackTraceProcessor::class])->andReturn($noop);
 
         return $app;
     }
