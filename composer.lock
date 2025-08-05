@@ -35,7 +35,7 @@
                     "hash": "e2a5dd43ca137fd4803f9f35257a7ada4d1e1cdd",
                     "list": [
                         {
-                            "from-package": "concretecms/dependency-patches 1.7.6",
+                            "from-package": "concretecms/dependency-patches 1.7.7",
                             "path": "anahkiasen/html-object/php8.1-compatibility.patch",
                             "description": "Add PHP 8.1 compatibility"
                         }
@@ -365,6 +365,70 @@
             "time": "2022-07-07T22:35:21+00:00"
         },
         {
+            "name": "concretecms/monolog-cascade",
+            "version": "0.5.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/concretecms/monolog-cascade.git",
+                "reference": "034f018e9814c7a057ad2f64242f25e07aaad174"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/concretecms/monolog-cascade/zipball/034f018e9814c7a057ad2f64242f25e07aaad174",
+                "reference": "034f018e9814c7a057ad2f64242f25e07aaad174",
+                "shasum": ""
+            },
+            "require": {
+                "monolog/monolog": "^1.13",
+                "php": "^5.3.9 || ^7.0",
+                "symfony/config": "^2.7 || ^3.0 || ^4.0 || ^5.0",
+                "symfony/options-resolver": "^2.7 || ^3.0 || ^4.0 || ^5.0",
+                "symfony/serializer": "^2.7 || ^3.0 || ^4.0 || ^5.0",
+                "symfony/yaml": "^2.7 || ^3.0 || ^4.0 || ^5.0"
+            },
+            "require-dev": {
+                "mikey179/vfsstream": "^1.6",
+                "php-coveralls/php-coveralls": "^1.0",
+                "phpunit/phpcov": "^2.0",
+                "phpunit/phpunit": "^4.8",
+                "squizlabs/php_codesniffer": "^2.5"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "0.5.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Cascade\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Raphaël Antonmattei",
+                    "email": "rantonmattei@theorchard.com",
+                    "homepage": "https://github.com/rantonmattei"
+                }
+            ],
+            "description": "Monolog extension to configure multiple loggers in the blink of an eye and access them from anywhere",
+            "homepage": "https://github.com/theorchard/monolog-cascade",
+            "keywords": [
+                "cascade",
+                "log",
+                "logger",
+                "monolog",
+                "monolog extension",
+                "monolog plugin",
+                "monolog utils"
+            ],
+            "time": "2020-09-12T14:44:09+00:00"
+        },
+        {
             "name": "container-interop/container-interop",
             "version": "1.2.0",
             "source": {
@@ -540,7 +604,7 @@
                     "hash": "82e8d7bd5d0530366e7da28f81a2cef0f28bab55",
                     "list": [
                         {
-                            "from-package": "concretecms/dependency-patches 1.7.6",
+                            "from-package": "concretecms/dependency-patches 1.7.7",
                             "path": "doctrine/annotations/access-array-offset-on-null.patch",
                             "description": "Fix access array offset on value of type null"
                         }
@@ -1166,12 +1230,12 @@
                     "hash": "cc001a5b63de854ea8b786e0c6cb3d79460c36d2",
                     "list": [
                         {
-                            "from-package": "concretecms/dependency-patches 1.7.6",
+                            "from-package": "concretecms/dependency-patches 1.7.7",
                             "path": "doctrine/orm/UnitOfWork-createEntity-continue.patch",
                             "description": "Fix UnitOfWork::createEntity()"
                         },
                         {
-                            "from-package": "concretecms/dependency-patches 1.7.6",
+                            "from-package": "concretecms/dependency-patches 1.7.7",
                             "path": "doctrine/orm/access-array-offset-on-null.patch",
                             "description": "Fix access array offset on value of type null"
                         }
@@ -1403,7 +1467,7 @@
                     "hash": "fc20e1dcce554bb50ef5a2583fae08dd3a7b8e93",
                     "list": [
                         {
-                            "from-package": "concretecms/dependency-patches 1.7.6",
+                            "from-package": "concretecms/dependency-patches 1.7.7",
                             "path": "gettext/gettext/php8-compatibility.patch",
                             "description": "Fix PHP 8 compatibility"
                         }
@@ -2742,7 +2806,7 @@
                     "hash": "cf09d5571fb17829c242450582ed83792df24c88",
                     "list": [
                         {
-                            "from-package": "concretecms/dependency-patches 1.7.6",
+                            "from-package": "concretecms/dependency-patches 1.7.7",
                             "path": "league/url/php8.1-compatibility.patch",
                             "description": "Add PHP 8.1 compatibility"
                         }
@@ -3271,12 +3335,12 @@
             "version": "1.39.1",
             "source": {
                 "type": "git",
-                "url": "https://github.com/briannesbitt/Carbon.git",
+                "url": "https://github.com/CarbonPHP/carbon.git",
                 "reference": "4be0c005164249208ce1b5ca633cd57bdd42ff33"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/briannesbitt/Carbon/zipball/4be0c005164249208ce1b5ca633cd57bdd42ff33",
+                "url": "https://api.github.com/repos/CarbonPHP/carbon/zipball/4be0c005164249208ce1b5ca633cd57bdd42ff33",
                 "reference": "4be0c005164249208ce1b5ca633cd57bdd42ff33",
                 "shasum": ""
             },
@@ -3721,7 +3785,7 @@
                     "hash": "d22f2364a834b1917b3b4fa5d3e7227b29575733",
                     "list": [
                         {
-                            "from-package": "concretecms/dependency-patches 1.7.6",
+                            "from-package": "concretecms/dependency-patches 1.7.7",
                             "path": "primal/color/php8-compatibility.patch",
                             "description": "Fix PHP 8 compatibility"
                         }
@@ -4090,12 +4154,12 @@
                     "hash": "3285e37f0b32ba746ab47014a697ea90a981abfb",
                     "list": [
                         {
-                            "from-package": "concretecms/dependency-patches 1.7.6",
+                            "from-package": "concretecms/dependency-patches 1.7.7",
                             "path": "sunra/php-simple-html-dom-parser/minus-in-regular-expressions.patch",
                             "description": "Fix minus in regular expressions"
                         },
                         {
-                            "from-package": "concretecms/dependency-patches 1.7.6",
+                            "from-package": "concretecms/dependency-patches 1.7.7",
                             "path": "sunra/php-simple-html-dom-parser/php8.1-compatibility.patch",
                             "description": "Add PHP 8.1 compatibility"
                         }
@@ -5834,12 +5898,12 @@
                     "hash": "c8ec7f9d85bbbe7d89dd1fe73ea17f64a508e3f9",
                     "list": [
                         {
-                            "from-package": "concretecms/dependency-patches 1.7.6",
+                            "from-package": "concretecms/dependency-patches 1.7.7",
                             "path": "tedivm/jshrink/fix-minifier-loop.patch",
                             "description": "Fix continue switch in Minifier"
                         },
                         {
-                            "from-package": "concretecms/dependency-patches 1.7.6",
+                            "from-package": "concretecms/dependency-patches 1.7.7",
                             "path": "tedivm/jshrink/update-upstream-1.3.2.patch",
                             "description": "Update to upstream version 1.3.2"
                         }
@@ -5928,70 +5992,6 @@
                 "sessions"
             ],
             "time": "2017-04-23T17:16:57+00:00"
-        },
-        {
-            "name": "theorchard/monolog-cascade",
-            "version": "0.5.3",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/theorchard/monolog-cascade.git",
-                "reference": "034f018e9814c7a057ad2f64242f25e07aaad174"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/theorchard/monolog-cascade/zipball/034f018e9814c7a057ad2f64242f25e07aaad174",
-                "reference": "034f018e9814c7a057ad2f64242f25e07aaad174",
-                "shasum": ""
-            },
-            "require": {
-                "monolog/monolog": "^1.13",
-                "php": "^5.3.9 || ^7.0",
-                "symfony/config": "^2.7 || ^3.0 || ^4.0 || ^5.0",
-                "symfony/options-resolver": "^2.7 || ^3.0 || ^4.0 || ^5.0",
-                "symfony/serializer": "^2.7 || ^3.0 || ^4.0 || ^5.0",
-                "symfony/yaml": "^2.7 || ^3.0 || ^4.0 || ^5.0"
-            },
-            "require-dev": {
-                "mikey179/vfsstream": "^1.6",
-                "php-coveralls/php-coveralls": "^1.0",
-                "phpunit/phpcov": "^2.0",
-                "phpunit/phpunit": "^4.8",
-                "squizlabs/php_codesniffer": "^2.5"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "0.5.x-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Cascade\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Raphaël Antonmattei",
-                    "email": "rantonmattei@theorchard.com",
-                    "homepage": "https://github.com/rantonmattei"
-                }
-            ],
-            "description": "Monolog extension to configure multiple loggers in the blink of an eye and access them from anywhere",
-            "homepage": "https://github.com/theorchard/monolog-cascade",
-            "keywords": [
-                "cascade",
-                "log",
-                "logger",
-                "monolog",
-                "monolog extension",
-                "monolog plugin",
-                "monolog utils"
-            ],
-            "time": "2020-09-12T14:44:09+00:00"
         },
         {
             "name": "true/punycode",
@@ -6386,7 +6386,7 @@
                     "hash": "43aec57a6422c48c002031806c8a8ca01b6208cf",
                     "list": [
                         {
-                            "from-package": "concretecms/dependency-patches 1.7.6",
+                            "from-package": "concretecms/dependency-patches 1.7.7",
                             "path": "zendframework/zend-code/switch-continue.patch",
                             "description": "Fix continue switch in FileGenerator and MethodReflection"
                         }
@@ -6609,7 +6609,7 @@
                     "hash": "b1172d4359d8b116dcf51b148427b53e41d1ae2a",
                     "list": [
                         {
-                            "from-package": "concretecms/dependency-patches 1.7.6",
+                            "from-package": "concretecms/dependency-patches 1.7.7",
                             "path": "zendframework/zend-http/no-x-original-url-x-rewrite.patch",
                             "description": "Remove support for the X-Original-Url and X-Rewrite-Url headers"
                         }
@@ -6747,7 +6747,7 @@
                     "hash": "0dd457fc56b70541be390d5087fe4a4757e62d84",
                     "list": [
                         {
-                            "from-package": "concretecms/dependency-patches 1.7.6",
+                            "from-package": "concretecms/dependency-patches 1.7.7",
                             "path": "zendframework/zend-i18n/gettext-loader-php7.4.patch",
                             "description": "Add support for PHP 7.4 to Gettext Loader"
                         }
@@ -6859,12 +6859,17 @@
                     "config-provider": "Zend\\Mail\\ConfigProvider"
                 },
                 "patches_applied": {
-                    "hash": "2eef0fc6a76db7a14e55b9d0717ffd9092bce7ce",
+                    "hash": "61244db32f9890c1611bf06341862ee234960019",
                     "list": [
                         {
-                            "from-package": "concretecms/dependency-patches 1.7.6",
+                            "from-package": "concretecms/dependency-patches 1.7.7",
                             "path": "zendframework/zend-mail/fix-idn_to_ascii-deprecation-warning.patch",
                             "description": "Fix idn_to_ascii deprecation warning"
+                        },
+                        {
+                            "from-package": "concretecms/dependency-patches 1.7.7",
+                            "path": "zendframework/zend-mail/allow_any_TLS_version.patch",
+                            "description": "Allow any TLS version"
                         }
                     ]
                 }
@@ -7039,7 +7044,7 @@
                     "hash": "8d3d823a714a3a76d8a616d01922aa7491e13302",
                     "list": [
                         {
-                            "from-package": "concretecms/dependency-patches 1.7.6",
+                            "from-package": "concretecms/dependency-patches 1.7.7",
                             "path": "zendframework/zend-stdlib/ArrayObject-unserialize-continue.patch",
                             "description": "Fix ArrayObject::unserialize()"
                         }
@@ -7168,7 +7173,7 @@
                     "hash": "37d53a3bf7979793505330148334c2e97b2f7a0a",
                     "list": [
                         {
-                            "from-package": "concretecms/dependency-patches 1.7.6",
+                            "from-package": "concretecms/dependency-patches 1.7.7",
                             "path": "zendframework/zend-validator/fix-idn_to_-deprecation-warning.patch",
                             "description": "Fix idn_to_ascii/idn_to_utf8 deprecation warning"
                         }
@@ -8184,7 +8189,7 @@
                     "hash": "b230cedd50b7175de81a87b2ec86ad380ee748f9",
                     "list": [
                         {
-                            "from-package": "concretecms/dependency-patches 1.7.6",
+                            "from-package": "concretecms/dependency-patches 1.7.7",
                             "path": "phpunit/phpunit/Getopt-each.patch",
                             "description": "Avoid each() in Getopt"
                         }

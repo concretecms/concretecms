@@ -93,7 +93,7 @@
     "symfony/psr-http-message-bridge": "^1.0",
     "guzzlehttp/guzzle": "^6.3",
     "league/fractal": "^0.17.0",
-    "theorchard/monolog-cascade": "0.5.*",
+    "concretecms/monolog-cascade": "0.5.*",
     "commerceguys/addressing": "^1.0 <1.4",
     "enshrined/svg-sanitize": "^0.14.0",
     "concretecms/dependency-patches": "^1.7.2"
