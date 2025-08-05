@@ -196,7 +196,7 @@ class LogTest extends ConcreteDatabaseTestCase
         $this->assertEquals(1, count($log->getHandlers()));
 
         $handler = new \Monolog\Handler\TestHandler(Logger::CRITICAL, false);
-        $listener = \Events::addListener('on_logger_create', function ($event) use ($handler) {
+        \Events::addListener('on_logger_create', function ($event) use ($handler) {
             $logger = $event->getLogger();
             $formatter = new \Monolog\Formatter\LineFormatter();
             $handler->setFormatter($formatter);
