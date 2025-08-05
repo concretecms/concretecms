@@ -16,7 +16,7 @@ trait DashboardBulkUpdaterTrait
     protected function populateItemsFromRequest(): bool
     {
         if (!isset($this->items)) {
-            if (is_array($_REQUEST['item'])) {
+            if (is_array($_REQUEST['item'] ?? null)) {
                 foreach ($_REQUEST['item'] as $id) {
                     $object = $this->getObjectFromRequestId($id);
                     if ($object) {
@@ -24,6 +24,10 @@ trait DashboardBulkUpdaterTrait
                     }
                 }
             }
+        }
+
+        if ($this->items === null) {
+            $this->items = [];
         }
 
         if (count($this->items) > 0) {
