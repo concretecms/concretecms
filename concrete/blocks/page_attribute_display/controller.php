@@ -66,7 +66,7 @@ class Controller extends BlockController implements UsesFeatureInterface
     /** @var bool */
     protected $btCacheBlockOutputOnPost = true;
     /** @var bool */
-    protected $btCacheBlockOutputForRegisteredUsers = null;
+    protected $btCacheBlockOutputForRegisteredUsers = false;
     /** @var bool */
     protected $btCacheBlockOutputOnEditMode = false;
 
@@ -132,20 +132,6 @@ class Controller extends BlockController implements UsesFeatureInterface
         return [
             Features::BASICS
         ];
-    }
-
-    public function cacheBlockOutputForRegisteredUsers()
-    {
-        if ($this->btCacheBlockOutputForRegisteredUsers === null) {
-            $templateHandle = $this->getTemplateHandle();
-            /**
-             * Date helper may change output depends on the user's timezone or language, so we can't cache output.
-             * Otherwise, we can cache output.
-             */
-            $this->btCacheBlockOutputForRegisteredUsers = $templateHandle !== 'date_time';
-        }
-
-        return $this->btCacheBlockOutputForRegisteredUsers;
     }
 
     /**
