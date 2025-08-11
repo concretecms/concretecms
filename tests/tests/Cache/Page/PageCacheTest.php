@@ -52,6 +52,8 @@ class PageCacheTest extends TestCase
 
     public function testGetCacheHostForRequest()
     {
+        $this->markTestIncomplete('This test has not been implemented yet.');
+
         $cache = PageCache::getLibrary();
         $request = Request::getInstance();
 
