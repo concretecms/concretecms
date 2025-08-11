@@ -30,9 +30,9 @@ class Controller extends BlockController implements UsesFeatureInterface
     protected $btCacheBlockRecord = true;
     /** @var bool|null */
     protected $btCacheBlockOutput = null;
-    /** @var bool  */
+    /** @var bool */
     protected $btCacheBlockOutputOnPost = true;
-    /** @var bool  */
+    /** @var bool */
     protected $btCacheBlockOutputForRegisteredUsers = true;
     /** @var bool  */
     protected $btCacheBlockOutputOnEditMode = true;
@@ -98,6 +98,7 @@ class Controller extends BlockController implements UsesFeatureInterface
             $factory = $this->app->make(PageBreadcrumbFactory::class);
             $factory->setIncludeCurrent((bool) $this->includeCurrent);
             $factory->setIgnoreExcludeNav((bool) $this->ignoreExcludeNav);
+            $factory->setIgnorePermission((bool) $this->ignorePermission);
 
             $breadcrumb = $factory->getBreadcrumb($page);
             $this->set('breadcrumb', $breadcrumb);
