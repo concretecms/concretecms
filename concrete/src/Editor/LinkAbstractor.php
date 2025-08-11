@@ -427,7 +427,11 @@ class LinkAbstractor extends ConcreteObject
         if (is_object($r)) {
             foreach ($r->find('concrete-picture') as $picture) {
                 $fID = $picture->fid;
-                $f = \Concrete\Core\File\File::getByUUIDOrID($fID);
+                if (is_string($fID) && uuid_is_valid($fID)) {
+                    $f = \Concrete\Core\File\File::getByUUID($fID);
+                } else {
+                    $f = \Concrete\Core\File\File::getByID($fID);
+                }
                 $fv = $f ? $f->getApprovedVersion() : null;
                 if ($fv) {
                     $picture->fid = false;
