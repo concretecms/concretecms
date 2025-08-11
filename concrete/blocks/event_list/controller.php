@@ -93,6 +93,8 @@ class Controller extends BlockController implements UsesFeatureInterface
     protected $btInterfaceHeight = 340;
     protected $btTable = 'btEventList';
     protected $btExportPageColumns = ['linkToPage'];
+    protected $btCacheBlockOutput = true;
+    protected $btCacheBlockOutputLifetime = 300;
 
     public function getRequiredFeatures(): array
     {
