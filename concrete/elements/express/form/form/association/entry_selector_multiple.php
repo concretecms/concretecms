@@ -1,5 +1,8 @@
 <?php defined('C5_EXECUTE') or die('Access Denied.'); ?>
 <?php
+
+use Concrete\Core\Express\Component\ExpressEntrySelectInstanceFactory;
+
 $options = [];
 $selectedIDs = [];
 if (isset($selectedEntities)) {
@@ -11,6 +14,11 @@ if (isset($selectedEntities)) {
         $selectedIDs[] = $selectedEntity->getID();
     }
 }
+
+$targetEntityHandle = $control->getAssociation()->getTargetEntity()->getHandle();
+$factory = app(ExpressEntrySelectInstanceFactory::class);
+$instance = $factory->createInstance($targetEntityHandle);
+
 ?>
 <div class="mb-3">
     <?php if ($view->supportsLabel()) {
@@ -22,38 +30,12 @@ if (isset($selectedEntities)) {
         <span class="text-muted small"><?=t('Required')?></span>
     <?php } ?>
 
-    <input data-select-and-add="<?= $control->getId(); ?>" style="width: 100%;display: none" name="express_association_<?= $control->getId(); ?>" value="" />
+    <div data-vue="cms">
+        <concrete-express-entry-select
+                :entry-id='<?=json_encode($selectedIDs)?>'
+                input-name="express_association_<?= $control->getId(); ?>[]"
+                access-token="<?=$instance->getAccessToken()?>"
+                entity="<?=$targetEntityHandle?>">
+        </concrete-express-entry-select>
+    </div>
 </div>
-
-<script type="text/javascript">
-    $(function() {
-        $('input[data-select-and-add=<?= $control->getId(); ?>]').selectize({
-            plugins: ['remove_button'],
-            valueField: 'exEntryID',
-            labelField: 'label',
-            searchField: 'label',
-            create: false,
-            delimiter: ',',
-            maxItems: 500,
-            options: <?= json_encode($options); ?>,
-            items: <?= json_encode($selectedIDs); ?>,
-            load: function(query, callback) {
-                if (!query.length) return callback();
-                $.ajax({
-                    url: "<?= \URL::to('/ccm/system/express/entry/get_json'); ?>",
-                    data: {
-                        'exEntityID': '<?= $control->getAssociation()->getTargetEntity()->getID(); ?>',
-                        'keyword': query
-                    },
-                    dataType: 'json',
-                    error: function() {
-                        callback();
-                    },
-                    success: function(res) {
-                        callback(res.entries.slice(0, 10));
-                    }
-                });
-            }
-        });
-    });
-</script>

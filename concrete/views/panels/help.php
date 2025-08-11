@@ -15,16 +15,15 @@ defined('C5_EXECUTE') or die('Access Denied.');
 */
 ?>
 
-<div class="ccm-panel-close"><a href="#"><button type="button" class="btn-close"></button></a></div>
+<?php if (!$page->isSystemPage()) { ?>
+    <div class="ccm-panel-close"><a href="#"><button type="button" class="btn-close"></button></a></div>
+<?php } ?>
+
 <?php
-if ($message === null) {
-    if ($page === null || !$page->isSystemPage()) {
-        View::element('help/introduction');
-        echo '<hr />';
-    }
-} else {
+if ($message !== null) {
+    echo '<div class="mb-5">';
     View::element('help/message', compact('message', 'messageFormatter'));
-    echo '<hr />';
+    echo '</div>';
 }
 View::element('help/resources', compact('config'));
 ?>

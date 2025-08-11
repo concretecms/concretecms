@@ -100,6 +100,21 @@ $thumbnailTypes['0'] = t('Full Size');
 
 <fieldset>
     <legend>
+        <?= t('Lazy load'); ?>
+    </legend>
+
+    <div class="form-group">
+        <div class="form-check">
+            <?php
+            echo $form->checkbox('lazyLoad', 1, !empty($lazyLoad));
+            echo $form->label('lazyLoad', t('Lazy load image'), ['class' => 'form-check-label']);
+            ?>
+        </div>
+    </div>
+</fieldset>
+
+<fieldset>
+    <legend>
         <?php echo t('Sizing'); ?>
     </legend>
 
@@ -133,7 +148,7 @@ $thumbnailTypes['0'] = t('Full Size');
                         </span>
                     </div>
 
-                    <?php echo $form->select('selectedThumbnailTypes['  . $breakpointHandle . ']', $thumbnailTypes, $selectedThumbnailTypes[$breakpointHandle]); ?>
+                    <?php echo $form->select('selectedThumbnailTypes['  . $breakpointHandle . ']', $thumbnailTypes, $selectedThumbnailTypes[$breakpointHandle] ?? null); ?>
                 </div>
             </div>
         <?php } ?>
@@ -156,7 +171,7 @@ $thumbnailTypes['0'] = t('Full Size');
     </div>
 
     <div data-fields="constrain-image" class="d-none">
-        <div class="well">
+        <div class="card card-body bg-light">
             <div class="form-group">
                 <div class="form-check">
                     <?php echo $form->checkbox('cropImage', 1, isset($cropImage) ? $cropImage : false); ?>

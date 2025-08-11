@@ -37,7 +37,7 @@ defined('C5_EXECUTE') or die("Access Denied."); ?>
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h4 class="mt-2 modal-title"><?= t('Task Options') ?></h4>
+                        <h4 class="modal-title"><?= t('Task Options') ?></h4>
                         <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="<?= t('Close') ?>"></button>
                     </div>
                     <div class="modal-body">
@@ -67,7 +67,7 @@ defined('C5_EXECUTE') or die("Access Denied."); ?>
                     </div>
                     <div class="modal-footer">
                         <div class="modal-footer d-flex justify-content-between w-100">
-                            <button type="button" data-bs-dismiss="modal" class="btn btn-default border float-start"><?php echo t('Cancel') ?></button>
+                            <button type="button" data-bs-dismiss="modal" class="btn btn-secondary border float-start"><?php echo t('Cancel') ?></button>
                             <button type="button" @click="runTask(true)" class="btn btn-primary float-end"><?php echo t('Run Task') ?></button>
                         </div>
                     </div>

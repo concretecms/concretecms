@@ -122,13 +122,13 @@ class FileCategory extends AbstractStandardCategory
      */
     public function getAttributeValue(Key $key, $file)
     {
-        $r = $this->entityManager->getRepository('\Concrete\Core\Entity\Attribute\Value\FileValue');
-        $value = $r->findOneBy([
+        $cacheKey = sprintf('attribute/value/%s/file/%d/%d', $key->getAttributeKeyHandle(), $file->getFileID(), $file->getFileVersionID());
+        $parameters = [
             'fID' => $file->getFileID(),
             'fvID' => $file->getFileVersionID(),
             'attribute_key' => $key,
-        ]);
+        ];
 
-        return $value;
+        return $this->getAttributeValueEntity($cacheKey, $parameters);
     }
 }

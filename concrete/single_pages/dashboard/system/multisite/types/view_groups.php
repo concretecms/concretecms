@@ -50,7 +50,7 @@ if ($group !== null) {
                         <?php
                     }
                     ?>
-                    <button class="pull-right btn btn-primary" type="submit" ><?= $group->getSiteGroupID() === null ? t('Add') : t('Save') ?></button>
+                    <button class="btn btn-primary" type="submit" ><?= $group->getSiteGroupID() === null ? t('Add') : t('Save') ?></button>
                 </div>
             </div>
         </div>

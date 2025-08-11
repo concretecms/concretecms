@@ -6,9 +6,7 @@ use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Entity\Notification\GroupCreateNotification;
 use Concrete\Core\Entity\User\GroupCreate;
 use Concrete\Core\Notification\Type\GroupCreateType;
-use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\Tree\Node\Node as TreeNode;
-use Concrete\Core\User\Group\Command\Traits\ParentNodeRetrieverTrait;
 use Concrete\Core\User\Group\Event;
 use Concrete\Core\User\Group\GroupRepository;
 use Concrete\Core\User\User;
@@ -48,7 +46,8 @@ class AddGroupCommandHandler
 
     public function __invoke(AddGroupCommand $command)
     {
-        $user = new User();
+        $app = app();
+        $user = $app->make(User::class);
 
         $data = [
             'gName' => $command->getName(),
@@ -56,12 +55,21 @@ class AddGroupCommandHandler
             'pkgID' => (int) $command->getPackageID(),
             'gAuthorID' => (int) $user->getUserID()
         ];
+        $newGroupID = $command->getForcedNewGroupID();
+        if ($newGroupID !== null && $newGroupID > 0) {
+            $data['gID'] = $newGroupID;
+        } else {
+            $newGroupID = null;
+        }
         $this->connection->insert(
             $this->connection->getDatabasePlatform()->quoteSingleIdentifier('Groups'),
             $data
         );
 
-        $ng = $this->groupRepository->getGroupById($this->connection->lastInsertId());
+        if ($newGroupID === null) {
+            $newGroupID = (int) $this->connection->lastInsertId();
+        }
+        $ng = $this->groupRepository->getGroupById($newGroupID);
         $node = null;
         if ($command->getParentGroupID()) {
             $node = GroupNode::getTreeNodeByGroupID($command->getParentGroupID());
@@ -78,11 +86,10 @@ class AddGroupCommandHandler
         if (is_object($node)) {
             GroupNode::add($ng, $node);
         }
+        $ng->rescanGroupPath();
 
         $ge = new Event($ng);
         $this->dispatcher->dispatch('on_group_add', $ge);
-
-        $app = Application::getFacadeApplication();
 
         if ($user->isRegistered()) {
             /** @noinspection PhpUnhandledExceptionInspection */
@@ -94,11 +101,10 @@ class AddGroupCommandHandler
                 $subscription = $type->getSubscription($subject);
                 $users = $notifier->getUsersToNotify($subscription, $subject);
                 $notification = new GroupCreateNotification($subject);
+                $subject->getNotifications()->add($notification);
                 $notifier->notify($users, $notification);
             }
         }
-
-        $ng->rescanGroupPath();
 
         return $ng;
     }

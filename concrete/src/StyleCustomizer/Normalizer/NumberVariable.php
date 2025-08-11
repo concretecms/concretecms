@@ -74,6 +74,7 @@ class NumberVariable implements VariableInterface
         return $this->getNumber() . $this->getUnit();
     }
 
+    #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
         return [

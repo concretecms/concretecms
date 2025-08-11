@@ -348,6 +348,22 @@ class PageTest extends PageTestCase
         }
     }
 
+    public function testPageAliasDuplicate()
+    {
+        extract($aliases = $this->setupAliases());
+        $aliasID = $contact->addCollectionAlias($search);
+        $alias = Page::getByID($aliasID);
+        $this->assertEquals('/search/contact-us', $alias->getCollectionPath());
+        $duplicated = $alias->duplicate($awesome);
+        $this->assertEquals('/awesome/contact-us', $duplicated->getCollectionPath());
+        $this->assertTrue($duplicated->isAliasPage());
+        $this->assertEquals($contact->getCollectionID(), $duplicated->getCollectionPointerID());
+
+        foreach ($aliases as $alias) {
+            $alias->delete();
+        }
+    }
+
     public function testPageMoveToTrashNoAliases()
     {
         \SinglePage::add(Config::get('concrete.paths.trash'));

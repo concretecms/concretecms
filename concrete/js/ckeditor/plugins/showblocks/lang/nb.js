@@ -1,1 +1,1 @@
-﻿CKEDITOR.plugins.setLang("showblocks","nb",{toolbar:"Vis blokker"});
+CKEDITOR.plugins.setLang("showblocks","nb",{toolbar:"Vis blokker"});

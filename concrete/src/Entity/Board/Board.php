@@ -100,8 +100,6 @@ class Board implements ObjectInterface, AssignableObjectInterface, \JsonSerializ
     public function __construct()
     {
         $this->data_sources = new ArrayCollection();
-        $this->items = new ArrayCollection();
-        $this->batches = new ArrayCollection();
         $this->instances = new ArrayCollection();
         $this->custom_slot_templates = new ArrayCollection();
     }
@@ -314,6 +312,7 @@ class Board implements ObjectInterface, AssignableObjectInterface, \JsonSerializ
         $manager->setPermissionsToOverride($this);
     }
 
+    #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
         return [

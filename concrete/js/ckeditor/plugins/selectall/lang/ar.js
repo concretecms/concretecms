@@ -1,1 +1,1 @@
-﻿CKEDITOR.plugins.setLang("selectall","ar",{toolbar:"تحديد الكل"});
+CKEDITOR.plugins.setLang("selectall","ar",{toolbar:"تحديد الكل"});

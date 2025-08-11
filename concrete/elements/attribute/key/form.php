@@ -133,19 +133,18 @@ if ($key !== null) {
     </fieldset>
 
 <?php
-    if ($category && $category instanceof \Concrete\Core\Attribute\Category\StandardCategoryInterface &&
-        !$category instanceof \Concrete\Core\Attribute\Category\ExpressCategory) {
+    if ($category && $category instanceof \Concrete\Core\Attribute\Category\StandardCategoryInterface) {
 
         echo $form->hidden('akCategoryID', $category->getCategoryEntity()->getAttributeKeyCategoryID());
 
         if ($category->getCategoryEntity()->getPackageHandle()) {
             $element = Element::get(
                 'attribute/categories/' . $category->getCategoryEntity()->getAttributeKeyCategoryHandle(),
-                ['key' => $key],
+                ['key' => $key, 'type' => $type],
                 $category->getCategoryEntity()->getPackageHandle()
             );
         } else {
-            $element = Element::get('attribute/categories/' . $category->getCategoryEntity()->getAttributeKeyCategoryHandle(), ['key' => $key]);
+            $element = Element::get('attribute/categories/' . $category->getCategoryEntity()->getAttributeKeyCategoryHandle(), ['key' => $key, 'type' => $type]);
         }
         if ($element->exists()) {
             $element->render();

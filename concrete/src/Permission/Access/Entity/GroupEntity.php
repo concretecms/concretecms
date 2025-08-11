@@ -8,6 +8,7 @@ use Concrete\Core\User\Group\Group;
 use Config;
 use Concrete\Core\Permission\Access\Access as PermissionAccess;
 use URL;
+use function count;
 
 class GroupEntity extends Entity
 {
@@ -61,13 +62,15 @@ class GroupEntity extends Entity
             }
             $ingids[] = $group->getGroupID();
         }
-        $instr = implode(',', $ingids);
-        $peIDs = $db->GetCol('select pae.peID from PermissionAccessEntities pae inner join PermissionAccessEntityTypes paet on pae.petID = paet.petID inner join PermissionAccessEntityGroups paeg on pae.peID = paeg.peID where petHandle = \'group\' and paeg.gID in (' . $instr . ')');
-        if (is_array($peIDs)) {
-            foreach ($peIDs as $peID) {
-                $entity = \Concrete\Core\Permission\Access\Entity\Entity::getByID($peID);
-                if (is_object($entity)) {
-                    $entities[] = $entity;
+        if (count($ingids) > 0) {
+            $instr = implode(',', $ingids);
+            $peIDs = $db->GetCol('select pae.peID from PermissionAccessEntities pae inner join PermissionAccessEntityTypes paet on pae.petID = paet.petID inner join PermissionAccessEntityGroups paeg on pae.peID = paeg.peID where petHandle = \'group\' and paeg.gID in (' . $instr . ')');
+            if (is_array($peIDs)) {
+                foreach ($peIDs as $peID) {
+                    $entity = \Concrete\Core\Permission\Access\Entity\Entity::getByID($peID);
+                    if (is_object($entity)) {
+                        $entities[] = $entity;
+                    }
                 }
             }
         }

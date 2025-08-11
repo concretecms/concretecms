@@ -46,7 +46,6 @@ foreach ($optionResults as &$value) {
         $value = round($value / $totalVotes * 100, 0);
     }
 }
-$show_graph = (count($optionNamesAbbrev) && !$_GET['dontGraphPoll'] && $totalVotes > 0);
 ?>
 
 <div class="poll">
@@ -62,7 +61,7 @@ $show_graph = (count($optionNamesAbbrev) && !$_GET['dontGraphPoll'] && $totalVot
             <h3><?= t("You've voted on this survey.") ?></h3>
 
             <div class="row">
-                <div<?= $show_graph ? ' class="col-sm-9"' : '' ?>>
+                <div>
                     <div id="surveyQuestion">
                         <strong><?= t('Question') ?>:</strong> <span><?= h($controller->getQuestion()) ?></span>
                     </div>
@@ -99,32 +98,11 @@ $show_graph = (count($optionNamesAbbrev) && !$_GET['dontGraphPoll'] && $totalVot
                         </div>
                     </div>
                 </div>
-                <?php
-                if ($show_graph) {
-                    ?>
-                    <div class="col-sm-3">
-                        <img
-                                border=""
-                                src="//chart.apis.google.com/chart?chf=bg,s,FFFFFF00&cht=p&chd=t:<?= implode(
-                        ',',
-                        $optionResults
-                    ) ?>&chs=180x180&chco=<?= implode(
-                                        ',',
-                                        $graphColors
-                                    ) ?>"
-                                alt="<?php echo t('survey results');
-                                ?>"/>
-                    </div>
-                    <?php
-
-                }
-
-                ?>
             </div>
             <div class="spacer">&nbsp;</div>
 
             <?php
-            if ($_GET['dontGraphPoll']) {
+            if (isset($_GET['dontGraphPoll']) && $_GET['dontGraphPoll']) {
                 ?>
                 <div class="small right" style="margin-top:8px">
                     <a class="arrow" href="<?= DIR_REL ?>/?cID=<?= $b->getBlockCollectionID() ?>">

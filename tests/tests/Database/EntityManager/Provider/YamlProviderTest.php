@@ -30,8 +30,8 @@ class YamlProviderTest extends TestCase
      */
     public function setUp():void
     {
-        $this->app = Application::getFacadeApplication();
-        $this->packageStub = new PackageControllerYaml($this->app);
+        $app = Application::getFacadeApplication();
+        $this->packageStub = new PackageControllerYaml($app);
         parent::setUp();
     }
 

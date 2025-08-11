@@ -62,7 +62,7 @@ class CalendarFeed extends Controller
                     $writer->addEntry($entry);
                 }
 
-                return Response::create($writer->export('rss'), 200, array('Content-Type' => 'text/xml'));
+                return new Response($writer->export('rss'), 200, array('Content-Type' => 'text/xml'));
             }
         }
 

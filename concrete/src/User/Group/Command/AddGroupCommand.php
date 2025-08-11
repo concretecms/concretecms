@@ -14,6 +14,11 @@ class AddGroupCommand extends Command
      */
     protected $pkgID;
 
+    /**
+     * @var int|null
+     */
+    protected $forcedNewGroupID;
+
     public function getPackageID(): ?int
     {
         return $this->pkgID;
@@ -25,6 +30,21 @@ class AddGroupCommand extends Command
     public function setPackageID(?int $pkgID): object
     {
         $this->pkgID = $pkgID;
+
+        return $this;
+    }
+
+    public function getForcedNewGroupID(): ?int
+    {
+        return $this->forcedNewGroupID;
+    }
+
+    /**
+     * @return $this
+     */
+    public function setForcedNewGroupID(?int $value): self
+    {
+        $this->forcedNewGroupID = $value;
 
         return $this;
     }

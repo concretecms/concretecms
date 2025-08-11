@@ -54,11 +54,11 @@ $token = $app->make(Token::class);
             <?php echo $form->label('overrideTarget', t('Target Property Name')) ?>
 
             <div class="input-group">
-                
+
                 <div class="input-group-text">
                     <input type="checkbox" name="overrideTarget" value="1" data-toggle="association-property">
                 </div>
-                
+
                 <?php echo $form->hidden('target_property_name', '') ?>
                 <?php echo $form->text('target_property_name', '', ['disabled' => 'disabled']) ?>
             </div>
@@ -116,9 +116,9 @@ $token = $app->make(Token::class);
             $('input[name=target_property_name]').val(value);
 
             if ($('select[name=type]').val() == 'ManyToMany' || $('select[name=type]').val() == 'ManyToOne') {
-                var value = '<?php echo $entity->getPluralHandle()?>';
+                var value = <?php echo json_encode((string) $entity->getPluralHandle()) ?>;
             } else {
-                var value = '<?php echo $entity->getHandle()?>';
+                var value = <?php echo json_encode((string) $entity->getHandle()) ?>;
             }
             $('input[name=inversed_property_name]').val(value);
 

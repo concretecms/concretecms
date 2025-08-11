@@ -78,9 +78,9 @@ class Register extends PageController
         $token = $this->app->make('token');
 
         if ($token->validate('register.do_register')) {
-            $username = $_POST['uName'];
-            $password = $_POST['uPassword'];
-            $passwordConfirm = $_POST['uPasswordConfirm'];
+            $username = $_POST['uName'] ?? '';
+            $password = $_POST['uPassword'] ?? '';
+            $passwordConfirm = $_POST['uPasswordConfirm'] ?? '';
 
             // clean the username
             $username = trim($username);
@@ -169,19 +169,19 @@ class Register extends PageController
                                 'display');
                     }
                     $mh->addParameter('attribs', $attribValues);
-                    $mh->addParameter('siteName', tc('SiteName', \Core::make('site')->getSite()->getSiteName()));
+                    $mh->addParameter('siteName', h(tc('SiteName', \Core::make('site')->getSite()->getSiteName())));
 
                     if ($config->get('concrete.email.register_notification.address')) {
-                        if (Config::get('concrete.email.register_notification.name')) {
-                            $fromName = Config::get('concrete.email.register_notification.name');
+                        if ($config->get('concrete.email.register_notification.name')) {
+                            $fromName = $config->get('concrete.email.register_notification.name');
                         } else {
                             $fromName = t('Website Registration Notification');
                         }
-                        $mh->from(Config::get('concrete.email.register_notification.address'), $fromName);
+                        $mh->from($config->get('concrete.email.register_notification.address'), $fromName);
                     } else {
-                        $adminUser = UserInfo::getByID(USER_SUPER_ID);
-                        if (is_object($adminUser)) {
-                            $mh->from($adminUser->getUserEmail(), t('Website Registration Notification'));
+                        $fromEmail = (string) $config->get('concrete.email.default.address');
+                        if ($fromEmail !== '') {
+                            $mh->from($fromEmail, t('Website Registration Notification'));
                         }
                     }
 
@@ -210,6 +210,8 @@ class Register extends PageController
                 // we need to default the new user to inactive (uIsActive=0).
                 $process->deactivate();
 
+                $redirectMethod = null;
+
                 // now we check whether we need to validate this user's email address
                 if ($config->get('concrete.user.registration.validate_email')) {
                     $this->app->make('user/status')->sendEmailValidation($process);
@@ -233,7 +235,8 @@ class Register extends PageController
                     }
                 }
 
-                if ($_REQUEST['format'] != 'JSON') {
+                $requestFormat = $_REQUEST['format'] ?? null;
+                if ($requestFormat != 'JSON') {
                     $this->redirect('/register', $redirectMethod, $rcID);
                 }
             }

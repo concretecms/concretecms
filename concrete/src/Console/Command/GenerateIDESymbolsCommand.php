@@ -27,7 +27,7 @@ Returns codes:
   $okExitCode operation completed successfully
   $errExitCode errors occurred
 
-More info at http://documentation.concrete5.org/developers/appendix/cli-commands#c5-ide-symbols
+More info at https://documentation.concretecms.org/9-x/developers/security/cli-jobs#c5-ide-symbols
 EOT
             )
         ;
@@ -42,14 +42,13 @@ EOT
             if ($p !== false) {
                 unset($what[$p]);
             }
-            $output->write('Generating fake PHP classes to help IDE... ');
-            if (!Core::make('app')->isInstalled()) {
-                $output->writeln('<error>failed: Concrete is not installed.</error>');
-                $rc = static::FAILURE;
+            if (app()->isInstalled()) {
+                $output->write('Generating fake PHP classes to help IDE... ');
             } else {
-                $this->generateIDEClasses();
-                $output->writeln('<info>done.</info>');
+                $output->write('Generating fake PHP classes to help IDE <fg=yellow>(PARTIAL since Concrete is not installed)</>... ');
             }
+            $this->generateIDEClasses();
+            $output->writeln('<info>done.</info>');
         }
         $p = array_search('phpstorm', $what);
         if ($p !== false || in_array('all', $what)) {

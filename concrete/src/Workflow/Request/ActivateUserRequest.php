@@ -2,12 +2,10 @@
 namespace Concrete\Core\Workflow\Request;
 
 use Concrete\Core\Entity\User\User;
+use Concrete\Core\Permission\Key\Key;
 use Concrete\Core\User\Event\DeactivateUser;
 use Concrete\Core\User\UserInfo;
 use Doctrine\ORM\EntityManager;
-use PermissionKey;
-use Loader;
-use Config;
 use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\Workflow\Description as WorkflowDescription;
 use Concrete\Core\Workflow\Progress\Progress as WorkflowProgress;
@@ -21,7 +19,7 @@ class ActivateUserRequest extends UserRequest
 
     public function __construct()
     {
-        $pk = PermissionKey::getByHandle('activate_user');
+        $pk = Key::getByHandle('activate_user');
         parent::__construct($pk);
     }
 
@@ -133,18 +131,18 @@ class ActivateUserRequest extends UserRequest
 
     public function sendActivationEmail(UserInfo $ui)
     {
-        $mh = Loader::helper('mail');
+        $mh = app('mail');
+        $config = app('config');
         $mh->to($ui->getUserEmail());
-        if (Config::get('concrete.email.register_notification.address')) {
-            if (Config::get('concrete.email.register_notification.name')) {
-                $fromName = Config::get('concrete.email.register_notification.name');
+        if ($config->get('concrete.email.register_notification.address')) {
+            if ($config->get('concrete.email.register_notification.name')) {
+                $fromName = $config->get('concrete.email.register_notification.name');
             } else {
                 $fromName = t('Website Registration Notification');
             }
-            $mh->from(Config::get('concrete.email.register_notification.address'), $fromName);
+            $mh->from($config->get('concrete.email.register_notification.address'), $fromName);
         } else {
-            $adminUser = UserInfo::getByID(USER_SUPER_ID);
-            $mh->from($adminUser->getUserEmail(), t('Website Registration Notification'));
+            $mh->from($config->get('concrete.email.default.address'), t('Website Registration Notification'));
         }
         $mh->addParameter('uID', $ui->getUserID());
         $mh->addParameter('user', $ui);

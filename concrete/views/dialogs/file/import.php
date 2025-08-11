@@ -3,6 +3,7 @@
 defined('C5_EXECUTE') or die('Access Denied.');
 
 use Concrete\Core\Entity\File\File;
+use Concrete\Core\File\Upload\Dropzone;
 use Concrete\Core\Page\Page;
 use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\Tree\Node\Type\FileFolder;
@@ -15,20 +16,23 @@ use Concrete\Core\Url\Resolver\Manager\ResolverManagerInterface;
 use Concrete\Controller\Dialog\File\Import;
 use Concrete\Core\View\DialogView;
 
-/* @var Import $controller */
-/* @var DialogView $view */
-/* @var Token $token */
-/* @var Form $form */
-/* @var UserInterface $ui */
-/* @var ResolverManagerInterface $resolverManager */
-/* @var string $formID */
-/* @var FileFolder|null $currentFolder */
-/* @var Page|null $originalPage */
-/* @var StorageLocation $incomingStorageLocation */
-/* @var string $incomingPath */
-/* @var array $incomingContents */
-/* @var string|null $incomingContentsError */
-/* @var File|null $replacingFile */
+/**
+ * @var Import $controller
+ * @var DialogView $view
+ * @var Token $token
+ * @var Form $form
+ * @var UserInterface $ui
+ * @var ResolverManagerInterface $resolverManager
+ * @var string $formID
+ * @var FileFolder|null $currentFolder
+ * @var Page|null $originalPage
+ * @var StorageLocation $incomingStorageLocation
+ * @var string $incomingPath
+ * @var array $incomingContents
+ * @var string|null $incomingContentsError
+ * @var File|null $replacingFile
+ * @var bool|null $reloadOnReplace (may be not set)
+ */
 
 $app = Application::getFacadeApplication();
 /** @var Identifier $idHelper */
@@ -46,9 +50,20 @@ $dropZoneId = "ccm-drop-zone-" . $idHelper->getString();
     ?>
 
     <div class="tab-content">
-        <div class="tab-pane fade show active" id="local" role="tabpanel" aria-labelledby="local-tab">
+        <div class="tab-pane active" id="local" role="tabpanel" aria-labelledby="local-tab">
 
-            <concrete-file-uploader <?php if (isset($replacingFile) && $replacingFile) { ?>replace-file-id="<?=$replacingFile->getFileID()?>"<?php } ?> :max-files="1"></concrete-file-uploader>
+            <concrete-file-uploader
+                <?php
+                if ($replacingFile ?? null) {
+                    ?>
+                    :replace-file-id="<?= $replacingFile->getFileID() ?>"
+                    :reload-on-replace="<?= ($reloadOnReplace ?? false) ? 'true' : 'false' ?>"
+                    <?php
+                }
+                ?>
+                :max-files="1"
+                :dropzone-options="<?= h(json_encode($app->make(Dropzone::class)->getConfigurationOptions())) ?>"
+            ></concrete-file-uploader>
 
         </div>
 

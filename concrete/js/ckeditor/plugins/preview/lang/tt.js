@@ -1,1 +1,1 @@
-﻿CKEDITOR.plugins.setLang("preview","tt",{preview:"Карап алу"});
+CKEDITOR.plugins.setLang("preview","tt",{preview:"Карап алу"});

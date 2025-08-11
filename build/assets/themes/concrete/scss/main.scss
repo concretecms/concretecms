@@ -9,8 +9,8 @@
 @import "@concretecms/bedrock/assets/cms/scss/forms";
 @import "@concretecms/bedrock/assets/cms/scss/login-page";
 
+@import "./features/account/account";
 @import "./features/desktop/desktop";
-@import "@concretecms/bedrock/assets/account/scss/frontend/sidebar/navigation";
 
 @import "container";
 @import "install";

@@ -29,6 +29,13 @@ class BasicThumbnailer implements ThumbnailerInterface, ApplicationAwareInterfac
     protected $jpegCompression = null;
 
     /**
+     * The currently configured WEBP compression level.
+     *
+     * @var int|null
+     */
+    protected $webpCompression = null;
+
+    /**
      * The currently configured PNG compression level.
      *
      * @var int|null
@@ -47,7 +54,7 @@ class BasicThumbnailer implements ThumbnailerInterface, ApplicationAwareInterfac
      */
     private $storageLocation;
 
-    public function __construct(StorageLocationInterface $storageLocation = null)
+    public function __construct(?StorageLocationInterface $storageLocation = null)
     {
         $this->storageLocation = $storageLocation;
     }
@@ -110,6 +117,34 @@ class BasicThumbnailer implements ThumbnailerInterface, ApplicationAwareInterfac
         }
 
         return $this->jpegCompression;
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see ThumbnailerInterface::setWebpCompression()
+     */
+    public function setWebpCompression($level)
+    {
+        if (is_int($level) || is_float($level) || (is_string($level) && is_numeric($level))) {
+            $this->webpCompression = min(max((int) $level, 0), 100);
+        }
+
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see ThumbnailerInterface::getWebpCompression()
+     */
+    public function getWebpCompression()
+    {
+        if ($this->webpCompression === null) {
+            $this->webpCompression = $this->app->make(BitmapFormat::class)->getDefaultWebpQuality();
+        }
+
+        return $this->webpCompression;
     }
 
     /**
@@ -189,6 +224,7 @@ class BasicThumbnailer implements ThumbnailerInterface, ApplicationAwareInterfac
         }
         $thumbnailOptions = [
             'jpeg_quality' => $this->getJpegCompression(),
+            'webp_quality' => $this->getWebpCompression(),
             'png_compression_level' => $this->getPngCompression(),
         ];
         $filesystem = $this->getStorageLocation()->getFileSystemObject();
@@ -272,6 +308,7 @@ class BasicThumbnailer implements ThumbnailerInterface, ApplicationAwareInterfac
         $version = null;
 
         $fh = $this->app->make('helper/file');
+        $th = $this->app->make('helper/text');
 
         $baseFilename = '';
         $extension = '';
@@ -281,6 +318,9 @@ class BasicThumbnailer implements ThumbnailerInterface, ApplicationAwareInterfac
                 $fID = $obj->getFileID();
                 $extension = $fh->getExtension($fr->getPath());
                 $baseFilename = md5(implode(':', [$fID, $maxWidth, $maxHeight, $crop, $fr->getTimestamp()]));
+                if ($obj->getTitle()) {
+                    $baseFilename = $th->sanitizeFileSystem(pathinfo($obj->getTitle(), PATHINFO_FILENAME)) . '-' . $baseFilename;
+                }
             } catch (Exception $e) {
                 $result = new \stdClass();
                 $result->src = '';

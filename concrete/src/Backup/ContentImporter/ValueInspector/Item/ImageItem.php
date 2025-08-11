@@ -1,23 +1,36 @@
 <?php
+
 namespace Concrete\Core\Backup\ContentImporter\ValueInspector\Item;
 
 class ImageItem extends FileItem
 {
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Backup\ContentImporter\ValueInspector\Item\ItemInterface::getDisplayName()
+     * @see \Concrete\Core\Backup\ContentImporter\ValueInspector\Item\FileItem::getDisplayName()
+     */
     public function getDisplayName()
     {
         return t('Image');
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Backup\ContentImporter\ValueInspector\Item\ItemInterface::getContentValue()
+     * @see \Concrete\Core\Backup\ContentImporter\ValueInspector\Item\FileItem::getContentValue()
+     *
+     * @return string|null
+     */
     public function getContentValue()
     {
-        if ($o = $this->getContentObject()) {
-            if ($o->getFileUUID()) {
-                $identifier = $o->getFileUUID();
-            } else {
-                $identifier = $o->getFileID();
-            }
-            return sprintf("{CCM:FID_%s}", $identifier);
+        $file = $this->getContentObject();
+        if ($file === null) {
+            return null;
         }
-    }
+        $uuid = $file->getFileUUID();
 
+        return sprintf('{CCM:FID_%s}', $uuid ?: $file->getFileID());
+    }
 }

@@ -4,7 +4,7 @@ namespace Concrete\Core\Foundation\Runtime\Run;
 use Concrete\Core\Application\ApplicationAwareInterface;
 use Concrete\Core\Application\ApplicationAwareTrait;
 use Concrete\Core\Config\Repository\Repository;
-use Concrete\Core\Foundation\ClassAliasList;
+use Concrete\Core\Foundation\ClassAutoloader;
 use Concrete\Core\Http\Request;
 use Concrete\Core\Http\Response;
 use Concrete\Core\Http\ResponseFactoryInterface;
@@ -122,6 +122,9 @@ class DefaultRunner implements RunInterface, ApplicationAwareInterface
         $request = $this->createRequest();
 
         if (!$response) {
+            if ($this->shouldProcessRequest($request) === false) {
+                return null;
+            }
             $response = $this->server->handleRequest($request);
         }
 
@@ -146,7 +149,7 @@ class DefaultRunner implements RunInterface, ApplicationAwareInterface
                 $url = rtrim((string) $resolver->resolve([]), '/');
                 define('BASE_URL', $url);
             } catch (Exception $x) {
-                return Response::create($x->getMessage(), 500);
+                return new Response($x->getMessage(), 500);
             }
         }
     }
@@ -242,7 +245,7 @@ class DefaultRunner implements RunInterface, ApplicationAwareInterface
      */
     protected function preloadClassAliases()
     {
-        ClassAliasList::getInstance()->resolveRequired();
+        ClassAutoloader::getInstance()->autoloadAliasesAtBoot();
     }
 
     /**
@@ -543,5 +546,10 @@ class DefaultRunner implements RunInterface, ApplicationAwareInterface
         $this->eventDispatcher = $urlResolver;
 
         return $this;
+    }
+
+    protected function shouldProcessRequest(Request $request): bool
+    {
+        return defined('C5_ENVIRONMENT_ONLY') && C5_ENVIRONMENT_ONLY ? false : true;
     }
 }

@@ -8,7 +8,9 @@ use Concrete\Core\Feature\Features;
 use Concrete\Core\Feature\UsesFeatureInterface;
 use Concrete\Core\File\File;
 use Concrete\Core\File\Tracker\FileTrackableInterface;
+use Concrete\Core\File\Tracker\RichTextExtractor;
 use Concrete\Core\Form\Service\DestinationPicker\DestinationPicker;
+use Concrete\Core\Html\Service\FontAwesomeIcon;
 use Concrete\Core\Page\Page;
 use Concrete\Core\Page\Theme\Theme;
 use Concrete\Core\Permission\Checker;
@@ -18,15 +20,74 @@ defined('C5_EXECUTE') or die('Access Denied.');
 
 class Controller extends BlockController implements FileTrackableInterface, UsesFeatureInterface
 {
+    /**
+     * @var int|string|null
+     */
+    public $image;
+
+    /**
+     * @var string|null
+     */
+    public $title;
+
+    /**
+     * @var string|null
+     */
+    public $body;
+
+    /**
+     * @var string|null
+     */
+    public $buttonText;
+
+    /**
+     * @var string|null
+     */
+    public $buttonExternalLink;
+
+    /**
+     * @var int|string|null
+     */
+    public $buttonInternalLinkCID;
+
+    /**
+     * @var int|string|null
+     */
+    public $buttonFileLinkID;
+
+    /**
+     * @var string|null
+     */
+    public $height;
+
+    /**
+     * @var string|null
+     */
+    public $buttonColor;
+
+    /**
+     * @var string|null
+     */
+    public $buttonStyle;
+
+    /**
+     * @var string|null
+     */
+    public $buttonSize;
+
+    /**
+     * @var string|null
+     */
+    public $titleFormat;
+
+    /**
+     * @var string|null
+     */
+    protected $icon;
+
     public $helpers = ['form'];
 
-    public $buttonInternalLinkCID;
-    public $buttonExternalLink;
-    public $buttonFileLinkID;
-    public $buttonText;
-    public $buttonSize;
-    public $buttonStyle;
-    public $buttonColor;
+    public $buttonIcon;
 
     protected $btInterfaceWidth = 640;
     protected $btInterfaceHeight = 500;
@@ -39,7 +100,9 @@ class Controller extends BlockController implements FileTrackableInterface, Uses
     protected $btCacheBlockOutputOnEditMode = true;
     protected $btCacheBlockOutputLifetime = 300;
     protected $btIgnorePageThemeGridFrameworkContainer = true;
-    protected $btExportFileColumns = ['image'];
+    protected $btExportFileColumns = ['buttonFileLinkID', 'image'];
+    protected $btExportPageColumns = ['buttonInternalLinkCID'];
+    protected $btExportContentColumns = ['body'];
 
     /**
      * {@inheritdoc}
@@ -83,6 +146,7 @@ class Controller extends BlockController implements FileTrackableInterface, Uses
     public function add()
     {
         $this->set('height', '60');
+        $this->set('titleFormat', 'h1');
         $this->edit();
     }
 
@@ -141,26 +205,20 @@ class Controller extends BlockController implements FileTrackableInterface, Uses
     {
         $this->set('image', File::getByID($this->image));
 
-        if ((string) $this->buttonText === '') {
-            $button = null;
-        } else {
+        if ($this->buttonText || $this->getLinkURL()) {
             $button = new Link($this->getLinkURL(), $this->buttonText);
-
-            $theme = Theme::getSiteTheme();
-            if ($theme && $theme->supportsFeature(Features::TYPOGRAPHY)) {
-                $button->addClass('btn');
-                $styleClass = '';
-                if ($this->buttonStyle == 'outline') {
-                    $styleClass = 'outline-';
-                }
-                $colorClass = 'btn-' . $styleClass . $this->buttonColor;
-                $button->addClass($colorClass);
-                if ($this->buttonSize) {
-                    $button->addClass('btn-' . $this->buttonSize);
-                }
-            }
+            $this->set('button', $button);
         }
-        $this->set('button', $button);
+
+        $theme = Theme::getSiteTheme();
+        if ($theme && $theme->supportsFeature(Features::TYPOGRAPHY)) {
+            $this->set('theme', $theme);
+        }
+
+        $this->set('linkURL', $this->getLinkURL());
+        $this->set('buttonIcon', $this->icon);
+        $this->set('iconTag', FontAwesomeIcon::getFromClassNames(h($this->icon)));
+        $this->set('titleFormat', $this->titleFormat ?? 'h1');
     }
 
     public function validate($args)
@@ -173,30 +231,72 @@ class Controller extends BlockController implements FileTrackableInterface, Uses
                 if (!$checker->canViewFileInFileManager()) {
                     $e->add(t('Access Denied. You do not have access to that file.'));
                 }
-            } else {
-                $e->add(t('You must provide a valid file object.'));
             }
         }
+
         return $e;
     }
 
     public function save($args)
     {
-        list($imageLinkType, $imageLinkValue) = $this->app->make(DestinationPicker::class)->decode('imageLink', $this->getImageLinkPickers(), null, null, $args);
+        $fromCIF = ($args['__fromCIF'] ?? null) === true;
+        $args += [
+            'image' => 0,
+            'icon' => ''
+        ];
+        if (!$fromCIF) {
+            list($imageLinkType, $imageLinkValue) = $this->app->make(DestinationPicker::class)->decode('imageLink', $this->getImageLinkPickers(), null, null, $args);
+            $args['buttonInternalLinkCID'] = $imageLinkType === 'page' ? $imageLinkValue : 0;
+            $args['buttonFileLinkID'] = $imageLinkType === 'file' ? $imageLinkValue : 0;
+            $args['buttonExternalLink'] = $imageLinkType === 'external_url' ? $imageLinkValue : '';
+        }
 
-        $args['buttonInternalLinkCID'] = $imageLinkType === 'page' ? $imageLinkValue : 0;
-        $args['buttonFileLinkID'] = $imageLinkType === 'file' ? $imageLinkValue : 0;
-        $args['buttonExternalLink'] = $imageLinkType === 'external_url' ? $imageLinkValue : '';
+        $args['image'] = is_numeric($args['image']) ? $args['image'] : 0;
+        $security = $this->app->make('helper/security');
+        $args['icon'] = $security->sanitizeString($args['icon']);
 
         parent::save($args); // TODO: Change the autogenerated stub
     }
 
-    public function getUsedFiles()
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Block\BlockController::getImportData()
+     */
+    protected function getImportData($blockNode, $page)
     {
-        if (isset($this->image)) {
-            return [$this->image];
+        $args = parent::getImportData($blockNode, $page);
+        $args['__fromCIF'] = true;
+        foreach (['buttonInternalLinkCID', 'buttonFileLinkID'] as $field) {
+            $args[$field] = empty($args[$field]) ? 0 : (int) $args[$field];
         }
-        return [];
+        if (!array_key_exists('buttonExternalLink', $args)) {
+            $args['buttonExternalLink'] = '';
+        }
+
+        return $args;
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\File\Tracker\FileTrackableInterface::getUsedFiles()
+     */
+    public function getUsedFiles()
+    {
+        $result = $this->app->make(RichTextExtractor::class)->extractFiles($this->body);
+        if (($fID = (int) $this->buttonFileLinkID) > 0) {
+            $result[] = $fID;
+        }
+        if (($fID = (int) $this->image) > 0) {
+            $result[] = $fID;
+        }
+
+        return $result;
+    }
+
+    public function getSearchableContent()
+    {
+        return "{$this->title} {$this->body}";
+    }
 }

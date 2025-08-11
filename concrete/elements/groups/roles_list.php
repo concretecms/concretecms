@@ -81,7 +81,7 @@ $id = "ccm-role-list-" . $idHelper->getString();
         <input type="hidden" name="roles[<%=id%>][id]" value="<%=id%>" />
 
         <td>
-            <input type="text" name="roles[<%=id%>][name]" value="<%=name%>" class="form-control ccm-role-name"
+            <input type="text" name="roles[<%=id%>][name]" value="<%-name%>" class="form-control ccm-role-name"
                    placeholder="<?php echo t("Please enter a role name..."); ?>"/>
         </td>
 
@@ -162,13 +162,13 @@ $id = "ccm-role-list-" . $idHelper->getString();
 
                 var addRole = function (role) {
                     $rolesContainer.find("tbody").append(_.template($("#ccm-roles-row").html())(role));
-                    $rolesContainer.find("select[name=defaultRole]").append($("<option/>").attr("value", role.id).html(role.name));
+                    $rolesContainer.find("select[name=defaultRole]").append($("<option/>").attr("value", role.id).text(role.name));
 
                     var $row = $("#ccm-row-" + role.id);
 
                     $row.find(".ccm-role-name").change(function () {
                         var $option = $rolesContainer.find("select[name=defaultRole] option[value=" + role.id + "]");
-                        $option.html($(this).val());
+                        $option.text($(this).val());
                     });
 
                     $row.find(".ccm-remove-role").click(function () {

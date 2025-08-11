@@ -3,7 +3,7 @@
 /** @var \Concrete\Core\Form\Service\Form $form */
 use Concrete\Core\Application\Service\UserInterface;
 use Concrete\Core\Support\Facade\Application;
-
+use Concrete\Core\Editor\CkeditorEditor;
 $app = Application::getFacadeApplication();
 
 /** @var Concrete\Core\Application\Service\UserInterface $userInterface */
@@ -13,13 +13,20 @@ echo $userInterface->tabs([
     ['accordion-content', t('Content'), true],
     ['accordion-settings', t('Settings')],
 ]);
+
+$editor = $app->make(CkeditorEditor::class);
+// Note - unless you explicitly call this when using the ckeditor component, it will be loaded from cdn.ckeditor.com
+// and it won't have access to any plugins.
+$editor->requireEditorAssets();
+// This has to be run in order to use the file manager, snippets, etc... all the Concrete-specific stuff.
+$config = $editor->getOptions();
 ?>
 
 <div class="tab-content">
 
-  <div class="tab-pane show active" id="accordion-content" role="tabpanel">
+  <div class="tab-pane active" id="accordion-content" role="tabpanel">
 
-    <div data-vue="accordion-block">
+    <div data-vue-app="accordion-block">
 
       <input type="hidden" name="accordionBlockData" :value="JSON.stringify(entries)" />
 
@@ -27,11 +34,12 @@ echo $userInterface->tabs([
           <button type="button" class="btn-sm btn btn-secondary" @click="addEntry"><i class="fas fa-plus-circle"></i> <?=t('Add Entry')?></button>
       </div>
 
-      <draggable class="image-container" v-model="entries">
+      <draggable class="image-container" v-model="entries" :options="{handle:'.accordion-entry-move'}">
           <div v-for="(entry, index) in entries" :class="{'position-relative': true, 'p-2': true, 'm-2': true, 'bg-light': true, 'bg-opacity-50': !entry.expanded}">
               <div class="btn-group" style="position: absolute; top: 0; right: 0">
                   <a href="javascript:void(0)" v-if="entry.expanded" class="d-flex align-items-center btn btn-secondary btn-sm" @click="entry.expanded = false"><i class="fas fa-compress-alt"></i></a>
                   <a href="javascript:void(0)" v-if="!entry.expanded" class="d-flex align-items-center btn btn-secondary btn-sm" @click="entry.expanded = true"><i class="fas fa-expand-alt"></i></a>
+                  <a href="javascript:void(0)" class="d-flex align-items-center btn btn-secondary btn-sm accordion-entry-move"><i class="fa fa-arrows-alt"></i></a>
                   <a href="javascript:void(0)" @click="deleteEntry(index)" class="d-flex align-items-center btn btn-secondary btn-sm"><i class="fas fa-times"></i></a>
               </div>
               <div v-if="entry.expanded">
@@ -41,7 +49,7 @@ echo $userInterface->tabs([
                   </div>
                   <div>
                       <label class="form-label"><?=t('Body')?></label>
-                      <ckeditor v-model="entry.description"></ckeditor>
+                      <ckeditor :config='<?=json_encode($config)?>' v-model="entry.description"></ckeditor>
                   </div>
               </div>
               <div v-else>
@@ -92,9 +100,8 @@ echo $userInterface->tabs([
 <script>
     $(function() {
         Concrete.Vue.activateContext('accordion', function (Vue, config) {
-            Vue.use(config.components.CKEditor) // I don't understand why this is required :(
             new Vue({
-                el: 'div[data-vue=accordion-block]',
+                el: 'div[data-vue-app=accordion-block]',
                 components: config.components,
                 data: {
                     entries: <?=json_encode($entries ?? [])?>

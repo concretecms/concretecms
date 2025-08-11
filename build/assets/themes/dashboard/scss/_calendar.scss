@@ -1,0 +1,99 @@
+table.ccm-dashboard-calendar {
+  width: 100%;
+}
+
+table.ccm-dashboard-calendar > thead > tr  {
+  border-width: 0 0 0 0 !important;
+}
+table.ccm-dashboard-calendar > thead > tr > td {
+  border-width: 0 0 0 0 !important;
+}
+
+table.ccm-dashboard-calendar > thead > tr > td h4 {
+  text-align: center;
+}
+
+table.ccm-dashboard-calendar td {
+  min-height: 100px;
+}
+
+div.ccm-dashboard-calendar-date-wrap {
+  min-height: 80px;
+}
+
+div.ccm-dashboard-calendar-date {
+  text-align: right;
+  font-size: 1.1em;
+  margin-bottom: 20px;
+  color: #666;
+}
+
+td.ccm-dashboard-calendar-today {
+  background-color: rgba(91, 192, 222, 0.15);
+}
+
+div.ccm-dashboard-calendar-date-event {
+  padding: 0px;
+}
+
+div.ccm-dashboard-calendar-date-event > a {
+  display: block;
+  text-decoration: none;
+  color: #fff;
+  padding: 2px 10px 2px 10px;
+  margin-left: -8px;
+  margin-right: -8px;
+  text-decoration: none;
+  position: relative;
+  border-top: 1px solid white;
+}
+div.ccm-dashboard-calendar-date-event > a i.fa {
+  position: absolute;
+  top: 6px;
+  right: 8px;
+}
+
+
+.ccm-calendar-date-event-pending {
+  opacity: 0.3;
+}
+
+.ccm-calendar-date-event-cancelled {
+  background-color: #3988ED;
+  display: block;
+  text-decoration: none;
+  color: #fff;
+  padding: 2px 10px 2px 10px;
+  margin-left: -8px;
+  margin-right: -8px;
+  cursor: not-allowed;
+  opacity: .5;
+}
+
+div.ccm-dashboard-calendar-date-event > a:hover {
+  color: #ccc;
+}
+
+div#calendar-header {
+  position: relative;
+  text-align: center;
+}
+
+h3#calendar-month-name {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  margin-top: 0px;
+}
+
+div#calendar-topics {
+  position: absolute;
+  top: 0px;
+  right: 0px;
+}
+
+@include color-mode(dark) {
+  div.ccm-dashboard-calendar-date {
+    color: #aaa;
+  }
+}

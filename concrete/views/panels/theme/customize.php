@@ -17,7 +17,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
     </a>
 </header>
 
-<section data-vue="theme-customizer">
+<section data-vue-app="theme-customizer">
 
     <theme-customizer
             <?php if (isset($skinIdentifier) && $skinIdentifier) { ?>
@@ -48,7 +48,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
     $(function() {
         Concrete.Vue.activateContext('cms', function (Vue, config) {
             new Vue({
-                el: 'section[data-vue=theme-customizer]',
+                el: 'section[data-vue-app=theme-customizer]',
                 components: config.components
             })
         })

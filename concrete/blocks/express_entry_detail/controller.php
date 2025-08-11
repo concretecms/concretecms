@@ -4,6 +4,8 @@ namespace Concrete\Block\ExpressEntryDetail;
 
 use Concrete\Core\Attribute\Key\CollectionKey;
 use Concrete\Core\Block\BlockController;
+use Concrete\Core\Entity\Express\Entity;
+use Concrete\Core\Entity\Express\Form;
 use Concrete\Core\Express\Form\Context\FrontendViewContext;
 use Concrete\Core\Express\Form\Renderer;
 use Concrete\Core\Feature\Features;
@@ -13,7 +15,9 @@ use Concrete\Core\Html\Service\Seo;
 use Concrete\Core\Support\Facade\Express;
 use Concrete\Core\Support\Facade\Facade;
 use Concrete\Core\Url\SeoCanonical;
+use Doctrine\ORM\EntityManagerInterface;
 use Exception;
+use SimpleXMLElement;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 class Controller extends BlockController implements UsesFeatureInterface
@@ -24,8 +28,18 @@ class Controller extends BlockController implements UsesFeatureInterface
 
     protected $btTable = 'btExpressEntryDetail';
 
+    public $exEntityID;
+
+    public $exSpecificEntryID;
+
+    public $exEntryAttributeKeyHandle;
+
+    public $exFormID;
+
+    public $entryMode;
+
     /**
-     * @var \Doctrine\ORM\EntityManager
+     * @var \Doctrine\ORM\EntityManagerInterface
      */
     protected $entityManager;
 
@@ -33,7 +47,7 @@ class Controller extends BlockController implements UsesFeatureInterface
     {
         parent::on_start();
         $this->app = Facade::getFacadeApplication();
-        $this->entityManager = $this->app->make('database/orm')->entityManager();
+        $this->entityManager = $this->app->make(EntityManagerInterface::class);
     }
 
     public function getBlockTypeDescription()
@@ -61,13 +75,18 @@ class Controller extends BlockController implements UsesFeatureInterface
     public function add()
     {
         $this->loadData();
+        $this->set('entryMode', 'L');
+        $this->set('exEntityID', null);
+        $this->set('entity', null);
+        $this->set('exEntryAttributeKeyHandle', null);
+        $this->set('exFormID', null);
     }
 
     public function edit()
     {
         $this->loadData();
         if ($this->exEntityID) {
-            $entity = $this->entityManager->find('Concrete\Core\Entity\Express\Entity', $this->exEntityID);
+            $entity = $this->entityManager->find(Entity::class, $this->exEntityID);
             if (is_object($entity)) {
                 $this->set('entity', $entity);
             }
@@ -75,15 +94,16 @@ class Controller extends BlockController implements UsesFeatureInterface
                 $this->set('entry', Express::getEntry($this->exSpecificEntryID));
             }
         }
+        $this->set('exEntryAttributeKeyHandle', $this->exEntryAttributeKeyHandle ?? null);
     }
 
     public function view()
     {
-        $c = \Page::getCurrentPage();
+        $c = $this->getCollectionObject();
         $entity = null;
         if ($this->entryMode == 'A') {
             $ak = CollectionKey::getByHandle($this->exEntryAttributeKeyHandle);
-            if (is_object($ak)) {
+            if (is_object($ak) && is_object($c)) {
                 $settings = $ak->getAttributeKeySettings();
                 $value = $c->getAttribute($ak);
                 if (is_object($settings)) {
@@ -95,7 +115,7 @@ class Controller extends BlockController implements UsesFeatureInterface
                 }
             }
         } else {
-            $entity = $this->entityManager->find('Concrete\Core\Entity\Express\Entity', $this->exEntityID);
+            $entity = $this->entityManager->find(Entity::class, $this->exEntityID);
             if (is_object($entity)) {
                 $this->set('entity', $entity);
 
@@ -107,7 +127,7 @@ class Controller extends BlockController implements UsesFeatureInterface
 
         $form = null;
         try {
-            $form = $this->entityManager->find('Concrete\Core\Entity\Express\Form', $this->exFormID);
+            $form = $this->entityManager->find(Form::class, $this->exFormID);
         } catch (Exception $e) {
             $logger = $this->app->make('log/exceptions');
             $logger->addEmergency($e->getMessage());
@@ -129,7 +149,7 @@ class Controller extends BlockController implements UsesFeatureInterface
 
     public function action_view_express_entity($exEntryID = null)
     {
-        $entry = $this->entityManager->find('Concrete\Core\Entity\Express\Entry', $exEntryID);
+        $entry = $this->entityManager->find(Entity::class, $exEntryID);
         if (is_object($entry)) {
             $entity = $this->entityManager->find('Concrete\Core\Entity\Express\Entity', $this->exEntityID);
             if ($entry->getEntity()->getID() == $entity->getID()) {
@@ -145,6 +165,36 @@ class Controller extends BlockController implements UsesFeatureInterface
                 $this->view();
             }
         }
+    }
+
+    public function getSearchableContent()
+    {
+        // The entity manager doesn't appear to be available in the CLI version of task running? At least not
+        // at the block level when retrieving searchable content? So let's manually create it.
+        if (!isset($this->entityManager)) {
+            $this->entityManager = $this->app->make(EntityManagerInterface::class);
+        }
+        // Let's run the view() method so we can populate the renderer object and the entry that we're supposed
+        // to render.
+        $this->view();
+
+        // Now, if we do indeed have the renderer and entry defined within the block controller, let's retrieve them.
+        if (($renderer = $this->get('renderer')) && ($entry = $this->get('entry'))) {
+
+            // Since we have the entry and renderer, let's actually render the thing. This will result in printing
+            // out actual HTML, so let's output-buffer it.
+            ob_start();
+            $renderer->render($entry);
+            $content = ob_get_contents();
+            ob_end_clean();
+
+            // Finally, let's do some quirk and dirty removal of HTML and the massive newlines that
+            // such an operation will create. NOTE: This is not meant to be perfect or meant to look
+            // particularly beautiful if rendered - it is meant to populate the search index.
+            $content = str_replace(["\r", "\n"], " ", strip_tags($content));
+            return $content;
+        }
+        return '';
     }
 
     public function action_load_entity_data()
@@ -188,5 +238,80 @@ class Controller extends BlockController implements UsesFeatureInterface
             }
         }
         $this->set('expressAttributes', $attributeKeys);
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Block\BlockController::export()
+     */
+    public function export(SimpleXMLElement $blockNode)
+    {
+        parent::export($blockNode);
+        $entityIDNode = $blockNode[0]->data[0]->record[0]->exEntityID;
+        $entityID = (string) $entityIDNode;
+        if ($entityID !== '') {
+            $entity = $this->app->make(EntityManagerInterface::class)->find(Entity::class, $entityID);
+            if ($entity !== null) {
+                $entityIDNode['handle'] = $entity->getHandle();
+            }
+        }
+        $formIDNode = $blockNode[0]->data[0]->record[0]->exFormID[0];
+        $formID = (string) $formIDNode;
+        if ($formID !== '') {
+            $form = $this->app->make(EntityManagerInterface::class)->find(Form::class, $formID);
+            if ($form !== null) {
+                $formIDNode['name'] = $form->getName();
+                $formIDNode['owner-entity'] = $form->getEntity()->getHandle();
+            }
+        }
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Block\BlockController::getImportData()
+     */
+    protected function getImportData($blockNode, $page)
+    {
+        $args = parent::getImportData($blockNode, $page);
+        $em = $this->app->make(EntityManagerInterface::class);
+        $entityID = (string) ($args['exEntityID'] ?? '');
+        $entity = null;
+        if ($entityID !== '') {
+            $entity = $em->find(Entity::class, $entityID);
+            if ($entity === null) {
+                $entityHandle = (string) $blockNode[0]->data[0]->record[0]->exEntityID[0]['handle'];
+                if ($entityHandle !== '') {
+                    $entity = $em->getRepository(Entity::class)->findOneBy(['handle' => $entityHandle]);
+                    if ($entity !== null) {
+                        $args['exEntityID'] = $entity->getId();
+                    }
+                }
+            }
+        }
+        $formID = (string) ($args['exFormID'] ?? '');
+        if ($formID !== '') {
+            $form = $em->find(Form::class, $formID);
+            if ($form === null) {
+                $formName = (string) $blockNode[0]->data[0]->record[0]->exFormID[0]['name'];
+                if ($formName !== '') {
+                    if ($entity === null) {
+                        $entityHandle = (string) $blockNode[0]->data[0]->record[0]->exFormID[0]['owner-entity'];
+                        if ($entityHandle !== '') {
+                            $entity = $em->getRepository(Entity::class)->findOneBy(['handle' => $entityHandle]);
+                        }
+                    }
+                    if ($entity !== null) {
+                        $form = $em->getRepository(Form::class)->findOneBy(['name' => $formName, 'entity' => $entity->getId()]);
+                        if ($form !== null) {
+                            $args['exFormID'] = $form->getId();
+                        }
+                    }
+                }
+            }
+        }
+
+        return $args;
     }
 }

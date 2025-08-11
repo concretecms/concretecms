@@ -2,28 +2,23 @@
 
 namespace Concrete\Core\Notification\Events;
 
-use Concrete\Core\Application\Application;
 use Concrete\Core\Config\Repository\Repository;
-use Concrete\Core\Foundation\Serializer\JsonSerializer;
-use Concrete\Core\Notification\Events\ServerEvent\EventInterface;
-use Concrete\Core\Url\Resolver\Manager\ResolverManagerInterface;
-use Symfony\Component\Mercure\PublisherInterface;
-use Lcobucci\JWT\Builder;
-use Lcobucci\JWT\Signer\Hmac\Sha256;
-use Lcobucci\JWT\Signer\Key;
-use Symfony\Component\Mercure\Publisher;
-use Symfony\Component\Mercure\Update;
+use Concrete\Core\Logging\Channels;
+use Concrete\Core\Logging\LoggerAwareInterface;
+use Concrete\Core\Logging\LoggerAwareTrait;
+use Concrete\Core\Notification\Events\ServerEvent\ServerEventInterface;
+use Symfony\Component\Mercure\Hub;
+use Concrete\Core\Application\Application;
 
-/**
- * An object-oriented wrapper for working with Channel objects with the Symfony Mercure service.
- */
-class MercureService
+class MercureService implements LoggerAwareInterface
 {
 
-    /**
-     * @var JsonSerializer
-     */
-    protected $serializer;
+    use LoggerAwareTrait;
+
+    public function getLoggerChannel()
+    {
+        return Channels::CHANNEL_MESSENGER;
+    }
 
     /**
      * @var Repository
@@ -36,21 +31,19 @@ class MercureService
     protected $app;
 
     /**
-     * @var PublisherInterface
+     * @var Hub
      */
-    protected $publisher;
+    protected $hub;
 
     /**
-     * @var ResolverManagerInterface
+     * @var Subscriber
      */
-    protected $urlResolver;
+    protected $subscriber;
 
-    public function __construct(JsonSerializer $serializer, Application $app, Repository $config, ResolverManagerInterface $urlResolver)
+    public function __construct(Application $app, Repository $config)
     {
-        $this->serializer = $serializer;
         $this->app = $app;
         $this->config = $config;
-        $this->urlResolver = $urlResolver;
     }
 
     /**
@@ -66,42 +59,40 @@ class MercureService
         return (string) $this->config->get('concrete.notification.mercure.default.publish_url');
     }
 
-    /**
-     * @return PublisherInterface
-     */
-    public function getPublisher(): PublisherInterface
+    public function getHub(): Hub
     {
-        if (!isset($this->publisher)) {
-            $config = $this->config;
-            $dbConfig = $this->app->make('config/database');
-            $tokenFunction = function () use ($config, $dbConfig) {
-                $token = (new Builder())
-                    ->withClaim('mercure', ['publish' => ['*']])
-                    ->getToken(
-                        new Sha256(),
-                        new Key(
-                            $dbConfig->get('concrete.notification.mercure.default.jwt_key')
-                        )
-                    );
-
-                return (string) $token;
-            };
-
-            $this->publisher = new Publisher(
-                $this->getPublisherUrl(),
-                $tokenFunction
-            );
+        if (!isset($this->hub)) {
+            $this->hub = $this->app->make(Hub::class);
         }
-        return $this->publisher;
+        return $this->hub;
     }
 
-    public function sendUpdate(EventInterface $event): void
+    /**
+     * Wrapper for getting the hub directly and publishing an update. Useful for ensuring Mercure doesn't
+     * raise undue errors.
+     *
+     * @param ServerEventInterface $event
+     */
+    public function publish(ServerEventInterface $event)
     {
-        $publisher = $this->getPublisher();
-//        $url = $this->urlResolver->resolve(['/ccm/events', $event->getEvent()]);
-        $url = '/ccm/events/' . $event->getEvent();
-        $update = new Update((string) $url, $this->serializer->serialize($event, 'json'));
-        $publisher($update);
+        $hub = $this->getHub();
+        $update = $event->getUpdate();
+        try {
+            $hub->publish($update);
+        } catch (\Exception $e) {
+            $this->logger->notice(t('Attempted to send update to Mercure service and failed: %s', $e->getMessage()));
+        }
     }
+
+    public function getSubscriber(): Subscriber
+    {
+        if (!isset($this->subscriber)) {
+            $this->subscriber = $this->app->make(Subscriber::class);
+        }
+        return $this->subscriber;
+    }
+
+
+
 }
 

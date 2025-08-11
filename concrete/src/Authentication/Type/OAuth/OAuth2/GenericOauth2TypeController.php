@@ -8,6 +8,7 @@ use OAuth\Common\Exception\Exception;
 use OAuth\Common\Http\Exception\TokenResponseException;
 use OAuth\OAuth2\Service\AbstractService;
 use Concrete\Core\User\User;
+use OAuth\OAuth2\Service\Exception\InvalidAuthorizationStateException;
 
 abstract class GenericOauth2TypeController extends GenericOauthTypeController
 {
@@ -24,20 +25,35 @@ abstract class GenericOauth2TypeController extends GenericOauthTypeController
 
     public function handle_authentication_callback()
     {
-        $user = $this->app->make(User::class);
-        if ($user && !$user->isError() && $user->isLoggedIn()) {
-            // We should NOT allow you to complete the authentication flow and potentially rebind the
-            // logged-in user here. Instead we halt the authentication flow.
-            $this->showError(t('You are already logged in.'));
-            return false;
-        }
-
         try {
+            $service = $this->getService();
             $code = \Request::getInstance()->get('code');
-            $token = $this->getService()->requestAccessToken($code);
+            $state = \Request::getInstance()->get('state') ?: null;
+
+            // If state is required update this variable to be never null
+            if ($service->needsStateParameterInAuthUrl()) {
+                $state = $state ?: '';
+
+                if (substr($state, 0, 7) === 'attach:') {
+                    return $this->handle_attach_callback();
+                }
+            }
+
+            $user = $this->app->make(User::class);
+            if ($user && !$user->isError() && $user->isRegistered()) {
+                // We should NOT allow you to complete the authentication flow and potentially rebind the
+                // logged-in user here. Instead we halt the authentication flow.
+                $this->showError(t('You are already logged in.'));
+                exit();
+            }
+
+            $token = $service->requestAccessToken($code, $state);
             $this->setToken($token);
         } catch (TokenResponseException $e) {
             $this->showError(t('Failed authentication: %s', $e->getMessage()));
+            exit;
+        } catch (InvalidAuthorizationStateException $e) {
+            $this->showError(t('Invalid state token provided, please try again.'));
             exit;
         }
 
@@ -66,7 +82,15 @@ abstract class GenericOauth2TypeController extends GenericOauthTypeController
 
     public function handle_attach_attempt()
     {
-        $url = $this->getService()->getAuthorizationUri($this->getAdditionalRequestParameters());
+        $user = $this->app->make(User::class);
+
+        if (!$user->isRegistered()) {
+            $this->showError(t('A user must be logged in to attach a remote OAuth account.'));
+            exit;
+        }
+
+        $state = 'attach:' . bin2hex(random_bytes(16));
+        $url = $this->getService()->getAuthorizationUri($this->getAdditionalRequestParameters() + ['state' => $state]);
 
         id(new RedirectResponse((string) $url))->send();
         exit;
@@ -81,10 +105,24 @@ abstract class GenericOauth2TypeController extends GenericOauthTypeController
         }
 
         try {
+            $service = $this->getService();
             $code = \Request::getInstance()->get('code');
-            $token = $this->getService()->requestAccessToken($code);
+            $state = \Request::getInstance()->get('state') ?: null;
+
+            // If state is required update this variable to be never null
+            if ($service->needsStateParameterInAuthUrl()) {
+                $state = $state ?: '';
+            }
+
+            $token = $service->requestAccessToken($code, $state);
         } catch (TokenResponseException $e) {
             $this->showError(t('Failed authentication: %s', $e->getMessage()));
+            exit;
+        } catch (InvalidAuthorizationStateException $e) {
+            $this->showError(t('Invalid state token provided, please try again.'));
+            exit;
+        } catch (\Throwable $e) {
+            $this->showError($e->getMessage());
             exit;
         }
 
@@ -131,6 +169,6 @@ abstract class GenericOauth2TypeController extends GenericOauthTypeController
      */
     public function isAuthenticated(User $u)
     {
-        return $u->isLoggedIn();
+        return $u->isRegistered();
     }
 }

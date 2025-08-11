@@ -31,7 +31,7 @@ class Menu extends ElementController
         $this->wrapperClass = $wrapperClass;
     }
 
-    public function __construct(Page $startingParentPage, Page $currentPage = null)
+    public function __construct(Page $startingParentPage, ?Page $currentPage = null)
     {
         parent::__construct();
         $this->startingParentPage = $startingParentPage;
@@ -79,7 +79,7 @@ class Menu extends ElementController
         return implode(' ', $classes);
     }
 
-    public function displayDivider(Page $page, Page $next = null)
+    public function displayDivider(Page $page, ?Page $next = null)
     {
         return false;
     }

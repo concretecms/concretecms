@@ -2,15 +2,9 @@
 
 namespace Concrete\Core\Board\Command;
 
-use Concrete\Core\Foundation\Command\Command;
+use Concrete\Core\Foundation\Command\AsyncCommandInterface;
 
-class RefreshBoardInstanceCommand extends Command
+class RefreshBoardInstanceCommand extends AbstractBoardInstanceCommand implements AsyncCommandInterface
 {
-    
-    use BoardInstanceTrait;
 
-    
-    
-
-    
 }

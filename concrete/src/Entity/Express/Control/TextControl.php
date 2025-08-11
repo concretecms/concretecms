@@ -67,13 +67,16 @@ class TextControl extends Control
 
     public function getControlLabel()
     {
+        $label = null;
         if ($this->getHeadline()) {
             $label = h($this->getHeadline());
         } else if ($this->getBody()) {
             $text = \Core::make('helper/text');
             $label = $text->sanitize($this->getBody(), 32);
         }
-
+        if (!$label) {
+            $label = t('Empty');
+        }
         $label .= ' ' . t('(Text)');
         return $label;
     }

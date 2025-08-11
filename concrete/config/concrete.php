@@ -6,9 +6,9 @@ return [
      *
      * @var string
      */
-    'version' => '9.0.3a1',
-    'version_installed' => '9.0.3a1',
-    'version_db' => '20220301185614', // the key of the latest database migration
+    'version' => '9.4.3',
+    'version_installed' => '9.4.3',
+    'version_db' => '20250227155410', // the key of the latest database migration
 
     /*
      * Installation status
@@ -44,103 +44,11 @@ return [
      */
     'debug' => [
         /*
-         * Display errors
-         *
-         * @var bool
-         */
-        'display_errors' => true,
-
-        /*
-         * Site debug level
-         *
-         * @var string (message|debug)
-         */
-        'detail' => 'debug',
-
-        /*
          * Error reporting level
          *
          * @var int|null
          */
         'error_reporting' => null,
-
-        /**
-         * Hide specified superglobal keys and config items from whoops error output.
-         * If you wanted to hide an environment variable named "DB_PASSWORD", you'd specify it like this:
-         * ```
-         * '_ENV' => ['DB_PASSWORD'],
-         * ```
-         *
-         * The same applies for all superglobals.
-         *
-         * @var array<string, string[]>
-         */
-        'hide_keys' => [
-            /** @var string[] */
-            '_ENV' => [
-                // Likely database environment variables
-                'DB_PASSWORD',
-                'DB_USERNAME',
-                'DB_HOSTNAME',
-                'DB_HOST',
-                'DB_SERVER',
-                'DATABASE_PASSWORD',
-                'DATABASE_USERNAME',
-                'DATABASE_HOSTNAME',
-                'DATABASE_HOST',
-                'DATABASE_SERVER',
-            ],
-
-            /** @var string[] */
-            '_SERVER' => [
-                // Likely database environment variables
-                'DB_PASSWORD',
-                'DB_USERNAME',
-                'DB_HOSTNAME',
-                'DB_HOST',
-                'DB_SERVER',
-                'DATABASE_PASSWORD',
-                'DATABASE_USERNAME',
-                'DATABASE_HOSTNAME',
-                'DATABASE_HOST',
-                'DATABASE_SERVER',
-            ],
-
-            /** @var string[] */
-            '_GET' => [],
-
-            /** @var string[] */
-            '_POST' => [],
-
-            /** @var string[] */
-            '_FILES' => [],
-
-            /** @var string[] */
-            '_COOKIE' => [
-                'CONCRETE',
-            ],
-
-            /** @var string[] */
-            '_SESSION' => [],
-
-            /**
-             * Hide specified config keys from whoops error output
-             * `concrete.debug.display_errors` will hide that specific config item while `concrete.debug` will hide
-             * all items in the `concrete.debug` array.
-             *
-             * @var string[]
-             */
-            'config' => [
-                'concrete.proxy.password',
-                'concrete.mail.methods.smtp.password',
-                'concrete.email.default.address',
-                'concrete.email.form_block.address',
-                'concrete.email.forgot_password.address',
-                'concrete.email.validate_registration.address',
-                'concrete.email.workflow_notification.address',
-                'concrete.debug.hide_keys',
-            ],
-        ]
     ],
 
     /*
@@ -168,7 +76,7 @@ return [
          */
         'extensions' => '*.flv;*.jpg;*.gif;*.jpeg;*.ico;*.docx;*.xla;*.png;*.psd;*.swf;*.doc;*.txt;*.xls;*.xlsx;' .
             '*.csv;*.pdf;*.tiff;*.rtf;*.m4a;*.mov;*.wmv;*.mpeg;*.mpg;*.wav;*.3gp;*.avi;*.m4v;*.mp4;*.mp3;*.qt;*.ppt;' .
-            '*.pptx;*.kml;*.xml;*.svg;*.webm;*.ogg;*.ogv',
+            '*.pptx;*.kml;*.xml;*.svg;*.webm;*.webp;*.ogg;*.ogv',
         /*
          * Disallowed file extension list (takes the precedence over the extensions allowlist).
          *
@@ -176,9 +84,14 @@ return [
          */
         'extensions_denylist' => '*.php;*.php2;*.php3;*.php4;*.php5;*.php7;*.php8;*.phtml;*.phar;*.htaccess;*.pl;*.phpsh;*.pht;*.shtml;*.cgi',
 
+        /*
+         * Number of maximum parallel uploads
+         */
+        'parallel' => 4,
+
         'chunking' => [
             // Enable uploading files in chunks?
-            'enabled' => true,
+            'enabled' => false,
             // The chunk size (if empty we'll automatically determine it)
             'chunkSize' => null,
         ],
@@ -258,14 +171,14 @@ return [
          *
          * @var bool
          */
-        'overrides' => true,
+        'overrides' => false,
 
         /*
          * Cache Blocks
          *
          * @var bool
          */
-        'blocks' => true,
+        'blocks' => false,
 
         /*
          * Cache Assets
@@ -301,6 +214,13 @@ return [
          * @var string
          */
         'full_page_lifetime' => 'default',
+
+        /**
+         * Respect lifetime of each block on the page
+         *
+         * @var bool
+         */
+        'full_page_lifetime_block' => false,
 
         /*
          * Custom lifetime value, only used if concrete.cache.full_page_lifetime is 'custom'
@@ -411,6 +331,10 @@ return [
         'clear' => [
             'thumbnails' => false,
         ],
+        /**
+         * Timestamp of the last time that the cache was cleared, this is used when generating assets.
+         */
+        'last_cleared' => 1648642409,
     ],
 
     'design' => [
@@ -424,9 +348,7 @@ return [
      * ------------------------------------------------------------------------
      */
     'processes' => [
-
         'logging' => [
-
             /*
              * Do we log task process output (triggered in the dashboard or in the CLI) to a file somewhere?
              *
@@ -435,46 +357,38 @@ return [
             'method' => 'none',
 
             'file' => [
-
                 /*
                  * The directory that holds process logs
                  *
                  * @var string
                  */
                 'directory' => '',
-
             ],
-
         ],
 
         'scheduler' => [
-
             /*
              * Are scheduled tasks available? Scheduled tasks require running a console command every minute.
              *
              * @var bool
              */
             'enable' => false,
-
         ],
-
 
         /**
          * The point after which old completed are automatically removed from the system.
          */
-        'delete_threshold' => 7 // days
-
+        'delete_threshold' => 7, // days
     ],
 
     'messenger' => [
-
         'default_bus' => 'default',
 
         'buses' => [
             'default' => [
                 'default_middleware' => true,
                 'middleware' => [],
-            ]
+            ],
         ],
 
         'routing' => [
@@ -486,8 +400,14 @@ return [
             'Concrete\Core\Messenger\Transport\DefaultAsync\DefaultSyncTransport', // used for tests and advanced configuration
         ],
 
-        'consume' => [
+        'failure' => [
+            'default_receiver' => 'failed',
+            'transports' => [
+                'Concrete\Core\Messenger\Transport\DefaultFailed\DefaultFailedTransport',
+            ],
+        ],
 
+        'consume' => [
             /**
              * Listener. If set to app, then queueable operations like rescanning files and deleting bulk pages
              * will be polled and executed through browser XHR processes. If set to worker you must run
@@ -497,7 +417,6 @@ return [
              * @var string (app|worker)
              */
             'method' => 'app',
-
         ],
 
         /*
@@ -512,31 +431,76 @@ return [
             'delete_page_forever' => 100,
             'copy_page' => 10,
         ],
-
-
     ],
 
     /*
- * ------------------------------------------------------------------------
- * Events settings
- * ------------------------------------------------------------------------
- */
+     * ------------------------------------------------------------------------
+     * Boards settings
+     * ------------------------------------------------------------------------
+     */
+    'boards' => [
+        /*
+         * If true, we will attempt to automatically update boards
+         * when their content items (pages, events, etc...) change
+         * Set this to false via the web UI if you're using the console command
+         * or other means to keep the boards up to date.
+         *
+         * @var bool
+         */
+        'automatically_refresh_instances' => true,
+    ],
+
+    /*
+     * ------------------------------------------------------------------------
+     * Events settings
+     * ------------------------------------------------------------------------
+     */
     'events' => [
-
         'broadcast' => [
-
             /*
              * Driver
              *
              * @var string (redis|none)
              */
-            'driver' => ''
-
+            'driver' => '',
         ],
-
-
     ],
 
+    /*
+     * ------------------------------------------------------------------------
+     * Error handling settings
+     * ------------------------------------------------------------------------
+     */
+    'error' => [
+        'handling' => [
+            'error' => [
+                'halt' => true, // HAS to be true - no way to recover and not halt.
+                'logLevel' => 'EMERGENCY',
+            ],
+            'warning' => [
+                'halt' => false,
+                'logLevel' => 'WARNING',
+            ],
+            'notice' => [
+                'halt' => false,
+                'logLevel' => 'NOTICE',
+            ],
+            'deprecated' => [
+                'halt' => false, // HAS to be false - Symfony will not let us throw exceptions on deprecated errors.
+                'logLevel' => '', // by default let's not log these.
+            ],
+        ],
+        'display' => [
+            /*
+             * @var string (generic|message|debug)
+             */
+            'guests' => 'message',
+            /*
+             * @var string (generic|message|debug)
+             */
+            'privileged' => 'debug',
+        ]
+    ],
 
     /*
      * ------------------------------------------------------------------------
@@ -550,13 +514,6 @@ return [
          * @var bool
          */
         'emails' => true,
-
-        /*
-         * Whether to log Errors
-         *
-         * @var bool
-         */
-        'errors' => true,
 
         /*
          * Whether to log Spam
@@ -573,6 +530,16 @@ return [
         'api' => false,
 
         'enable_dashboard_report' => true,
+
+        'boards' => [
+
+            /*
+             * Whether to log Board instance generation (note, this is handled by a custom, separate log mechanism)
+             *
+             * @var bool
+             */
+            'instances' => true,
+        ],
 
         'configuration' => [
             /*
@@ -623,6 +590,9 @@ return [
             'file' => FILE_PERMISSIONS_MODE_COMPUTED,
             'directory' => DIRECTORY_PERMISSIONS_MODE_COMPUTED,
         ],
+        'download' => [
+            'filename_pattern' => '',
+        ],
     ],
 
     /*
@@ -638,7 +608,7 @@ return [
          */
         'enabled' => true,
         'default' => [
-            'address' => 'concrete-cms-noreply@concretecms',
+            'address' => '',
             'name' => '',
         ],
         'form_block' => [
@@ -768,11 +738,16 @@ return [
          */
         'default_jpeg_image_compression' => 80,
         /*
+         * The WEBP compression level (in range 0... 100)
+         */
+        'default_webp_image_compression' => 80,
+        /*
          * The PNG compression level (in range 0... 9)
          */
         'default_png_image_compression' => 9,
         /*
-         * The default thumbnail format: jpeg, png, auto (if auto: we'll create a jpeg if the source image is jpeg, we'll create a png otherwise).
+         * The default thumbnail format: jpeg, png, webp, auto
+         * (if auto: we'll keep original format if it is supported, we'll create a webp otherwise).
          */
         'default_thumbnail_format' => 'auto',
         /*
@@ -785,7 +760,16 @@ return [
          * @var string (now|async)
          */
         'basic_thumbnailer_generation_strategy' => 'now',
+        'help_overlay' => true,
         'require_version_comments' => false,
+        /*
+        * Changes the "Keep Live Version Approved"-Toggle-Button behaviour on the site page version scheduling element
+        * unapproved: removes live or scheduled version of the site page, if the changed site page gets scheduled
+        * approved: keeps live or scheduled version of the site page approved, if the changed site page gets scheduled
+        *
+        * @var string (approved | unapproved)
+        */
+        'live_version_status_on_scheduled_version_approval' => 'unapproved',
         /*
          * Control whether a block type can me moved to different block type sets
          *
@@ -810,8 +794,8 @@ return [
         'enable_permissions_protection' => true,
         'check_threshold' => 172800,
         'services' => [
-            'get_available_updates' => 'https://marketplace.concretecms.com/tools/update_core',
-            'inspect_update' => 'https://marketplace.concretecms.com/tools/inspect_update',
+            'get_available_updates' => 'https://www.concretecms.com/api/remote_update/update_core',
+            'inspect_update' => 'https://www.concretecms.com/api/remote_update/inspect_update',
         ],
         // Set to true to skip checking if there's a newer core version available (useful for example if the core is upgraded via composer)
         'skip_core' => false,
@@ -843,9 +827,10 @@ return [
             'height' => 500,
         ],
         'user_avatar' => [
-            'width' => 80,
-            'height' => 80,
+            'width' => 120,
+            'height' => 120,
             'default' => ASSETS_URL_IMAGES . '/avatar_none.png',
+            'resolution' => '2', // Set this to 1 if you want width and height to match in the cropper exactly.
         ],
     ],
 
@@ -888,7 +873,29 @@ return [
          *
          * @var int
          */
-        'results' => 10,
+        'results' => 50,
+         /*
+          * The maximim width (in pixels) for the uploaded images
+          */
+        'restrict_max_width' => null,
+        /*
+         * The maximim height (in pixels) for the uploaded images
+         */
+        'restrict_max_height' => null,
+        /*
+         * Don't resize the files with these mime types (space-separated list)
+         */
+        'dont_resize_mimetypes' => 'image/gif',
+        /**
+         * Enable asciify to sanitize name of uploaded files
+         */
+        'enable_filename_asciify' => true,
+        /**
+         * Determines whether the list should keep folders on top when sorting by name.
+         */
+        'keep_folders_on_top' => false,
+        'sort_column' => '',
+        'sort_direction' => '',
     ],
 
     'search_users' => [
@@ -931,6 +938,20 @@ return [
 
     /*
      * ------------------------------------------------------------------------
+     * Appearance
+     * ------------------------------------------------------------------------
+     */
+    'appearance' => [
+        /*
+         * Show titles in the toolbars
+         *
+        * @var string (auto | light | dark)
+         */
+        'color_scheme' => 'auto',
+    ],
+
+    /*
+     * ------------------------------------------------------------------------
      * Internationalization
      * ------------------------------------------------------------------------
      */
@@ -958,33 +979,33 @@ return [
         ],
     ],
     'urls' => [
-        'concrete' => 'http://marketplace.concretecms.com',
-        'concrete_secure' => 'https://marketplace.concretecms.com',
-        'background_feed' => '//backgroundimages.concretecms.com/wallpaper',
+        'concrete_community' => 'https://community.concretecms.com',
+        'package_repository' => 'https://dl.market.concretecms.com',
+        'marketplace' => 'https://market.concretecms.com',
+        'background_feed' => 'https://backgroundimages.concretecms.com/wallpaper',
         'privacy_policy' => '//www.concretecms.com/about/legal/privacy-policy',
-        'background_feed_secure' => 'https://backgroundimages.concrete5.org/wallpaper',
-        'background_info' => 'http://backgroundimages.concretecms.com/get_image_data.php',
+        'background_info' => 'https://backgroundimages.concretecms.com/get_image_data.php',
         'videos' => 'https://www.youtube.com/user/concrete5cms/videos',
         'activity_slots' => 'https://marketing.concretecms.com/ccm/marketing/activity_slots',
         'help' => [
             'developer' => 'https://documentation.concretecms.org/developers',
             'user' => 'https://documentation.concretecms.org/user-guide',
             'forum' => 'https://forums.concretecms.org',
+            'support' => 'https://www.concretecms.com/support/hiring-help',
             'remote_search' => 'https://documentation.concretecms.org/ccm/documentation/remote_search',
         ],
         'paths' => [
-            'site_page' => '/private/sites',
+            'package_repository' => [
+                'connect' => '/concrete/connect',
+                'connect_validate' => '/concrete/connect/validate',
+                'update' => '/concrete/update',
+                'register_url' => '/concrete/connect/register_url',
+                'list' => '/concrete/public/list',
+                'get' => '/concrete/public/package/%s',
+            ],
             'marketplace' => [
-                'projects' => '/profile/projects/',
-                'connect' => '/marketplace/connect',
-                'connect_success' => '/marketplace/connect/-/connected',
-                'connect_validate' => '/marketplace/connect/-/validate',
-                'connect_new_token' => '/marketplace/connect/-/generate_token',
-                'checkout' => '/cart/-/add',
-                'purchases' => '/marketplace/connect/-/get_available_licenses',
-                'item_information' => '/marketplace/connect/-/get_item_information',
-                'item_free_license' => '/marketplace/connect/-/enable_free_license',
-                'remote_item_list' => '/marketplace/',
+                'connect' => '/depot/connect',
+                'projects' => '/account/sites/details',
             ],
         ],
     ],
@@ -1023,7 +1044,6 @@ return [
          * @var null|string Custom URL for background image.
          */
         'background_url' => null,
-
     ],
     'session' => [
         'name' => 'CONCRETE',
@@ -1044,7 +1064,8 @@ return [
             'cookie_path' => false, // set a specific path here if you know it, otherwise it'll default to relative
             'cookie_lifetime' => 0,
             'cookie_domain' => false,
-            'cookie_secure' => false,
+            // true: enable the 'secure' flag; false: disable the secure flag; null: enable the 'secure' flag for https requests only
+            'cookie_secure' => null,
             'cookie_httponly' => true,
             'cookie_raw' => false,
             'cookie_samesite' => null,
@@ -1136,13 +1157,26 @@ return [
 
         /*
          * --------------------------------------------------------------------
-         * Gravatar Settings
+         * Edit Profile form settings.
+         * --------------------------------------------------------------------
+         */
+        'edit_profile' => [
+            /*
+             * Determines whether the username field is displayed when editing profile
+             */
+            'display_username_field' => true,
+        ],
+
+        /*
+         * --------------------------------------------------------------------
+         * Group Settings
          * --------------------------------------------------------------------
          */
         'group' => [
             'badge' => [
                 'default_point_value' => 50,
             ],
+            'delete_requires_superuser' => true,
         ],
 
         'username' => [
@@ -1162,6 +1196,7 @@ return [
             'required_lower_case' => 0,
             'required_upper_case' => 0,
             'reuse' => 0,
+            'max_age' => null, // Max age (in days) before users have to change their password
             'custom_regex' => [],
 
             /**
@@ -1187,6 +1222,10 @@ return [
             'hash_cost_log2' => 12,
 
             'legacy_salt' => '',
+            'reset_message' => [
+                'password_reset' => '',
+                'password_expired' => '',
+            ],
         ],
         'email' => [
             'test_mx_record' => false,
@@ -1255,11 +1294,22 @@ return [
 
             'invalidate_on_ip_mismatch' => true,
 
+            'ignored_ip_mismatches' => [],
+
+            'enable_user_specific_ignored_ip_mismatches' => false,
+
             'invalidate_inactive_users' => [
                 // Is the automatically logout inactive users setting enabled?
                 'enabled' => false,
                 // Time window (in seconds) for inactive users to be automatically logout
                 'time' => 300,
+            ],
+        ],
+        'production' => [
+            'mode' => 'production',
+            'staging' => [
+                // Whether to always show the staging notification bar, even for logged-out users.
+                'show_notification_to_unregistered_users' => false,
             ],
         ],
         'misc' => [
@@ -1326,6 +1376,7 @@ return [
     'seo' => [
         'exclude_words' => 'a, an, as, at, before, but, by, for, from, is, in, into, like, of, off, on, onto, per, ' .
             'since, than, the, this, that, to, up, via, with',
+        'enable_slug_asciify' => true,
 
         /*
          * URL rewriting
@@ -1424,6 +1475,16 @@ return [
          */
         'server_sent_events' => false,
 
+        'mercure' => [
+            'jwt' => [
+                'publisher' => [
+                    'expires_at' => '+30 minutes',
+                ],
+                'subscriber' => [
+                    'expires_at' => '+30 minutes',
+                ],
+            ],
+        ],
     ],
 
     'mutex' => [
@@ -1444,4 +1505,8 @@ return [
             // Where 'icon' is the handle of a FontAwesome 4 icon (see https://fontawesome.com/v4.7.0/icons/ )
         ],
     ],
+
+    'file_chooser' => [
+        'results' => 20,
+    ]
 ];

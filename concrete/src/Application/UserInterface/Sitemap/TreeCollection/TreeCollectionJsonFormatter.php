@@ -26,6 +26,7 @@ final class TreeCollectionJsonFormatter implements JsonSerializable
      *
      * @see \JsonSerializable::jsonSerialize()
      */
+    #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
         $response = [];

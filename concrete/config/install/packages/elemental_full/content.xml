@@ -1,5 +1,8 @@
 <?xml version="1.0"?>
 <concrete5-cif version="1.0">
+    <themes>
+        <theme handle="elemental" package="" activated="1"/>
+    </themes>
     <attributekeys>
         <attributekey handle="job_posting_department" name="Department" package="" searchable="1" indexed="1"
                       type="select" category="collection">
@@ -17,12 +20,6 @@
                       category="collection">
             <type mode="text"/>
         </attributekey>
-        <attributekey handle="exclude_subpages_from_nav" name="Exclude Sub-Pages From Nav" package="" searchable="1"
-                      indexed="1" type="boolean" category="collection">
-            <type checked="0"/>
-        </attributekey>
-        <attributekey handle="thumbnail" name="Thumbnail" package="" searchable="1" indexed="1" type="image_file"
-                      category="collection"/>
         <attributekey handle="blog_entry_topics" name="Blog Entry Topics" package="" searchable="1" indexed="1"
                       type="topics" category="collection">
             <tree name="Blog Entries" path="/"/>
@@ -70,7 +67,7 @@
         </attributekey>
     </attributekeys>
     <attributesets>
-        <attributeset handle="navigation" name="Navigation" category="collection">
+        <attributeset handle="navigation" name="Navigation" package="" category="collection">
             <attributekey handle="thumbnail"/>
             <attributekey handle="exclude_subpages_from_nav"/>
         </attributeset>
@@ -266,8 +263,7 @@
                                                 <includeDescription><![CDATA[0]]></includeDescription>
                                                 <ptID>{ccm:export:pagetype:blog_entry}</ptID>
                                                 <pageListTitle>Related Posts</pageListTitle>
-                                                <relatedTopicAttributeKeyHandle>blog_entry_topics
-                                                </relatedTopicAttributeKeyHandle>
+                                                <relatedTopicAttributeKeyHandle>blog_entry_topics</relatedTopicAttributeKeyHandle>
                                             </record>
                                         </data>
                                     </block>
@@ -290,11 +286,6 @@
                                                 <addMessageLabel><![CDATA[Add Message]]></addMessageLabel>
                                                 <dateFormat><![CDATA[default]]></dateFormat>
                                                 <customDateFormat><![CDATA[]]></customDateFormat>
-                                                <maxFilesGuest><![CDATA[0]]></maxFilesGuest>
-                                                <maxFilesRegistered><![CDATA[0]]></maxFilesRegistered>
-                                                <maxFileSizeGuest><![CDATA[0]]></maxFileSizeGuest>
-                                                <maxFileSizeRegistered><![CDATA[0]]></maxFileSizeRegistered>
-                                                <fileExtensions><![CDATA[]]></fileExtensions>
                                             </record>
                                         </data>
                                     </block>
@@ -567,8 +558,7 @@
                                                 <pageListTitle>Related Projects</pageListTitle>
                                                 <noResultsMessage>
                                                     <![CDATA[No related projects found.]]></noResultsMessage>
-                                                <relatedTopicAttributeKeyHandle>project_topics
-                                                </relatedTopicAttributeKeyHandle>
+                                                <relatedTopicAttributeKeyHandle>project_topics</relatedTopicAttributeKeyHandle>
                                             </record>
                                         </data>
                                     </block>
@@ -624,8 +614,7 @@
                                                                 <buttonLinkText><![CDATA[]]></buttonLinkText>
                                                                 <includeName><![CDATA[1]]></includeName>
                                                                 <includeDescription><![CDATA[1]]></includeDescription>
-                                                                <includeAllDescendents>
-                                                                    <![CDATA[0]]></includeAllDescendents>
+                                                                <includeAllDescendents><![CDATA[0]]></includeAllDescendents>
                                                                 <paginate><![CDATA[1]]></paginate>
                                                                 <displayAliases><![CDATA[0]]></displayAliases>
                                                                 <ptID>{ccm:export:pagetype:blog_entry}</ptID>
@@ -634,8 +623,7 @@
                                                                 <displayFeaturedOnly><![CDATA[0]]></displayFeaturedOnly>
                                                                 <displayThumbnail><![CDATA[0]]></displayThumbnail>
                                                                 <truncateChars><![CDATA[0]]></truncateChars>
-                                                                <enableExternalFiltering>
-                                                                    <![CDATA[1]]></enableExternalFiltering>
+                                                                <enableExternalFiltering><![CDATA[1]]></enableExternalFiltering>
                                                                 <noResultsMessage>
                                                                     <![CDATA[No posts to this blog.]]></noResultsMessage>
                                                                 <includeDate><![CDATA[1]]></includeDate>
@@ -2175,7 +2163,6 @@
                                                 <maxHeight><![CDATA[0]]></maxHeight>
                                                 <externalLink><![CDATA[]]></externalLink>
                                                 <internalLinkCID><![CDATA[0]]></internalLinkCID>
-                                                <forceImageToMatchDimensions><![CDATA[0]]></forceImageToMatchDimensions>
                                                 <altText><![CDATA[Blank Image]]></altText>
                                                 <title><![CDATA[Blank Image]]></title>
                                             </record>
@@ -2266,11 +2253,6 @@
                                 <addMessageLabel><![CDATA[Add Message]]></addMessageLabel>
                                 <dateFormat><![CDATA[default]]></dateFormat>
                                 <customDateFormat><![CDATA[]]></customDateFormat>
-                                <maxFilesGuest><![CDATA[0]]></maxFilesGuest>
-                                <maxFilesRegistered><![CDATA[0]]></maxFilesRegistered>
-                                <maxFileSizeGuest><![CDATA[0]]></maxFileSizeGuest>
-                                <maxFileSizeRegistered><![CDATA[0]]></maxFileSizeRegistered>
-                                <fileExtensions><![CDATA[]]></fileExtensions>
                             </record>
                         </data>
                     </block>
@@ -2337,11 +2319,6 @@
                                 <addMessageLabel><![CDATA[Add Message]]></addMessageLabel>
                                 <dateFormat><![CDATA[default]]></dateFormat>
                                 <customDateFormat><![CDATA[]]></customDateFormat>
-                                <maxFilesGuest><![CDATA[0]]></maxFilesGuest>
-                                <maxFilesRegistered><![CDATA[0]]></maxFilesRegistered>
-                                <maxFileSizeGuest><![CDATA[0]]></maxFileSizeGuest>
-                                <maxFileSizeRegistered><![CDATA[0]]></maxFileSizeRegistered>
-                                <fileExtensions><![CDATA[]]></fileExtensions>
                             </record>
                         </data>
                     </block>
@@ -2408,11 +2385,6 @@
                                 <addMessageLabel><![CDATA[Add Message]]></addMessageLabel>
                                 <dateFormat><![CDATA[default]]></dateFormat>
                                 <customDateFormat><![CDATA[]]></customDateFormat>
-                                <maxFilesGuest><![CDATA[0]]></maxFilesGuest>
-                                <maxFilesRegistered><![CDATA[0]]></maxFilesRegistered>
-                                <maxFileSizeGuest><![CDATA[0]]></maxFileSizeGuest>
-                                <maxFileSizeRegistered><![CDATA[0]]></maxFileSizeRegistered>
-                                <fileExtensions><![CDATA[]]></fileExtensions>
                             </record>
                         </data>
                     </block>
@@ -2545,7 +2517,6 @@
                                                 <maxHeight><![CDATA[0]]></maxHeight>
                                                 <externalLink><![CDATA[]]></externalLink>
                                                 <internalLinkCID><![CDATA[0]]></internalLinkCID>
-                                                <forceImageToMatchDimensions><![CDATA[0]]></forceImageToMatchDimensions>
                                                 <altText><![CDATA[]]></altText>
                                             </record>
                                         </data>
@@ -2638,7 +2609,6 @@
                                                 <maxHeight><![CDATA[0]]></maxHeight>
                                                 <externalLink><![CDATA[]]></externalLink>
                                                 <internalLinkCID><![CDATA[0]]></internalLinkCID>
-                                                <forceImageToMatchDimensions><![CDATA[0]]></forceImageToMatchDimensions>
                                                 <altText><![CDATA[]]></altText>
                                             </record>
                                         </data>
@@ -2697,7 +2667,6 @@
                                                 <maxHeight><![CDATA[0]]></maxHeight>
                                                 <externalLink><![CDATA[]]></externalLink>
                                                 <internalLinkCID><![CDATA[0]]></internalLinkCID>
-                                                <forceImageToMatchDimensions><![CDATA[0]]></forceImageToMatchDimensions>
                                                 <altText><![CDATA[]]></altText>
                                             </record>
                                         </data>
@@ -2731,7 +2700,6 @@
                                                 <maxHeight><![CDATA[0]]></maxHeight>
                                                 <externalLink><![CDATA[]]></externalLink>
                                                 <internalLinkCID><![CDATA[0]]></internalLinkCID>
-                                                <forceImageToMatchDimensions><![CDATA[0]]></forceImageToMatchDimensions>
                                                 <altText><![CDATA[]]></altText>
                                             </record>
                                         </data>
@@ -2774,7 +2742,6 @@
                                 <maxHeight><![CDATA[0]]></maxHeight>
                                 <externalLink><![CDATA[]]></externalLink>
                                 <internalLinkCID><![CDATA[0]]></internalLinkCID>
-                                <forceImageToMatchDimensions><![CDATA[0]]></forceImageToMatchDimensions>
                                 <altText><![CDATA[]]></altText>
                             </record>
                         </data>
@@ -3110,7 +3077,7 @@
         <feed>
             <parent>{ccm:export:page:/blog}</parent>
             <title>Blog</title>
-            <description>concrete5 Blog</description>
+            <description>Concrete Blog</description>
             <handle>blog</handle>
             <pagetype>{ccm:export:pagetype:blog_entry}</pagetype>
             <contenttype type="description"/>
@@ -3120,7 +3087,7 @@
     <expressentities>
         <entity id="83ae65b1-79e8-4ded-bbca-e419bfd19bb6" handle="express_form_170" plural_handle="" name="Contact"
                 include_in_public_list="" description="" default_view_form="881b6bde-220f-4482-b8f9-ace40b5d169b"
-                default_edit_form="881b6bde-220f-4482-b8f9-ace40b5d169b" results-folder="/Forms">
+                default_edit_form="881b6bde-220f-4482-b8f9-ace40b5d169b" results-folder="/Forms" package="">
             <attributekeys>
                 <attributekey handle="contact_question_first_name" name="First Name" package="" searchable="1"
                               indexed="1" type="text" category="">
@@ -3189,7 +3156,7 @@
     </expressentities>
 
     <config>
-        <option name="concrete.calendar.topic_attribute">event_categories</option>
+        <option name="concrete.calendar.topic_attribute" package="">event_categories</option>
     </config>
 
 

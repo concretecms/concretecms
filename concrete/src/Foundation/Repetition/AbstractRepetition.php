@@ -908,6 +908,7 @@ abstract class AbstractRepetition implements RepetitionInterface
         return $fromUTC->diff($toUTC);
     }
 
+    #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
         $repeatPeriod = null;

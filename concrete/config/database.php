@@ -23,11 +23,6 @@ return [
      * This feature will be removed when DBAL will support it, so don't use this feature.
      */
     'text_indexes' => [
-        'PagePaths' => [
-            'cPath' => [
-                ['cPath', 255],
-            ],
-        ],
         'Groups' => [
             'gPath' => [
                 ['gPath', 255],

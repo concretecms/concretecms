@@ -39,7 +39,7 @@ class Stats
      * @param string $version the version of the file
      * @param DateTime $updatedOn the date/time of the last update of the translations (null if and only if no translated string is present)
      */
-    public function __construct($formatHandle, $filename, $version, DateTime $updatedOn = null)
+    public function __construct($formatHandle, $filename, $version, ?DateTime $updatedOn = null)
     {
         $this->formatHandle = $formatHandle;
         $this->filename = $filename;

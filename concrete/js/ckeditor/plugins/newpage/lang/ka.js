@@ -1,1 +1,1 @@
-﻿CKEDITOR.plugins.setLang("newpage","ka",{toolbar:"ახალი გვერდი"});
+CKEDITOR.plugins.setLang("newpage","ka",{toolbar:"ახალი გვერდი"});

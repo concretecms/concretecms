@@ -2,7 +2,14 @@
 
 defined('C5_EXECUTE') or die("Access Denied.");
 
-$subject = t("Forgot Password");
+/**
+ * @var string $uName
+ * @var bool $isForgotPassword
+ * @var League\URL\URLInterface|string $changePassURL
+ * @var string $siteName
+ */
+
+$subject = empty($isForgotPassword) ? t('Password Reset') : t('Forgot Password');
 $body = t("
 
 Dear %s,

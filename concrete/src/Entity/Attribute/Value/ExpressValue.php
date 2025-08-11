@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\Entity\Attribute\Value;
 
+use Concrete\Core\Entity\Express\Entry;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -20,7 +21,7 @@ class ExpressValue extends AbstractValue
     protected $entry;
 
     /**
-     * @return mixed
+     * @return Entry
      */
     public function getEntry()
     {

@@ -32,7 +32,7 @@ class Presets extends BackendInterfaceController
         $presets = array();
         $presets['-1'] = t('** New');
         foreach ($presetlist as $preset) {
-            $presets[$preset->getAreaLayoutPresetID()] = $preset->getAreaLayoutPresetName();
+            $presets[$preset->getAreaLayoutPresetID()] = h($preset->getAreaLayoutPresetName());
         }
 
         $this->set('arLayout', $arLayout);
@@ -64,6 +64,7 @@ class Presets extends BackendInterfaceController
     public function submit($arLayoutID)
     {
         if ($this->validateAction()) {
+            $existingPreset = null;
             $arLayout = AreaLayout::getByID($arLayoutID);
             if (!is_object($arLayout)) {
                 throw new Exception(t('Invalid layout object.'));

@@ -4,6 +4,7 @@ namespace Concrete\Controller\Element\Users\Search;
 
 use Concrete\Core\Controller\ElementController;
 use Concrete\Core\Entity\Search\Query;
+use Concrete\Core\Permission\Checker;
 use Concrete\Core\User\Search\SearchProvider;
 use Concrete\Core\Form\Service\Form;
 use Concrete\Core\Utility\Service\Url;
@@ -41,12 +42,14 @@ class Menu extends ElementController
 
     public function view()
     {
+        $permissions = new Checker();
         $itemsPerPage = (isset($this->query)) ? $this->query->getItemsPerPage() : $this->searchProvider->getItemsPerPage();
         $this->set('itemsPerPage', $itemsPerPage);
         $this->set('itemsPerPageOptions', $this->searchProvider->getItemsPerPageOptions());
         $this->set('form', $this->app->make(Form::class));
         $this->set('token', $this->app->make(Token::class));
         $this->set('urlHelper', $this->app->make(Url::class));
+        $this->set('canExportUsers', $permissions->canAccessUserSearchExport());
         $this->set('exportURL', $this->exportURL);
     }
 

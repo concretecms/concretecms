@@ -34,6 +34,7 @@ class TextDecorationValue extends Value
         $this->textDecoration = $textDecoration;
     }
 
+    #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
         return [

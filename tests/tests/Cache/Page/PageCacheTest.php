@@ -63,7 +63,7 @@ class PageCacheTest extends TestCase
 
     public function testGetCacheKeyForPage()
     {
-        return; // broken since I reworked this for multi-site page caching.
+        $this->markTestSkipped('Broken since this has been reworked for multi-site page caching.');
 
         $app = Facade::getFacadeApplication();
 

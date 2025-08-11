@@ -199,7 +199,7 @@ class BindingService implements LoggerAwareInterface
         }
 
         if ($this->logger) {
-            $this->logger->warning('Bound user: User #{user} is now bound to "{binding}" in "{namespace}".', [
+            $this->logger->info('Bound user: User #{user} is now bound to "{binding}" in "{namespace}".', [
                 'user' => $id,
                 'binding' => $binding,
                 'namespace' => $namespace,

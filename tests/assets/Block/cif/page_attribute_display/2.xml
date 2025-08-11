@@ -1,0 +1,13 @@
+<block type="page_attribute_display" name="">
+  <data table="btPageAttributeDisplay">
+    <record>
+      <attributeHandle>is_featured</attributeHandle>
+      <attributeTitleText>The Sound of Silence</attributeTitleText>
+      <dateFormat>Y-m-d H:i:s</dateFormat>
+      <delimiter>break</delimiter>
+      <displayTag>div</displayTag>
+      <thumbnailHeight>654</thumbnailHeight>
+      <thumbnailWidth>456</thumbnailWidth>
+    </record>
+  </data>
+</block>

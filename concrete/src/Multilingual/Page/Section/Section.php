@@ -85,9 +85,8 @@ class Section extends Page
      *
      * @param int $cID
      * @param int|string $cvID
-     * @param string $class
      *
-     * @return MultilingualSection|false
+     * @return self|false
      */
     public static function getByID($cID, $cvID = 'RECENT')
     {
@@ -221,7 +220,7 @@ class Section extends Page
         return (array) $this->locale->getPluralCases();
     }
 
-    public static function getIDList(Site $site = null)
+    public static function getIDList(?Site $site = null)
     {
         if (!$site) {
             $site = \Site::getSite();
@@ -245,7 +244,7 @@ class Section extends Page
         return $ids;
     }
 
-    public static function getList(Site $site = null)
+    public static function getList(?Site $site = null)
     {
         $ids = self::getIDList($site);
         $pages = [];
@@ -383,7 +382,7 @@ class Section extends Page
      *
      * @return Section|false
      */
-    public static function getByLanguage($language, Site $site = null)
+    public static function getByLanguage($language, ?Site $site = null)
     {
         if (!$site) {
             $site = \Core::make('site')->getSite();
@@ -411,7 +410,7 @@ class Section extends Page
      *
      * @return Section|false
      */
-    public static function getByLocale($locale, Site $site = null)
+    public static function getByLocale($locale, ?Site $site = null)
     {
         if (!$site) {
             $site = \Core::make('site')->getSite();
@@ -482,7 +481,7 @@ class Section extends Page
         return $locale;
     }
 
-    public static function getDefaultSection(Site $site = null)
+    public static function getDefaultSection(?Site $site = null)
     {
         if (!is_object($site)) {
             $site = \Site::getSite();
@@ -606,7 +605,7 @@ class Section extends Page
         }
     }
 
-    public function isDefaultMultilingualSection(Site $site = null)
+    public function isDefaultMultilingualSection(?Site $site = null)
     {
         if (!is_object($site)) {
             $site = \Site::getSite();

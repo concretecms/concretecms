@@ -4,6 +4,7 @@ use Concrete\Core\Page\Type\Composer\FormLayoutSetControl as PageTypeComposerFor
 use Concrete\Core\Url\Resolver\Manager\ResolverManagerInterface;
 
 $resolverManager = app(ResolverManagerInterface::class);
+$showHideOptions = [''=>t('Set displayed by default'), 'collapsed'=>t('Set hidden by default'), 'never'=>t('Not collapsable')];
 ?>
 
 <div style="display: none">
@@ -18,6 +19,10 @@ $resolverManager = app(ResolverManagerInterface::class);
 				<?= $form->label('ptComposerFormLayoutSetDescription', tc('Description of a set', 'Set Description')) ?>
 				<?= $form->textarea('ptComposerFormLayoutSetDescription') ?>
 			</div>
+            <div class="form-group">
+                <?= $form->label('ptComposerFormLayoutSetCollapseType', t('Show/Hide Controls')) ?>
+                <?= $form->select('ptComposerFormLayoutSetCollapseType', $showHideOptions) ?>
+            </div>
 		</form>
 		<div class="dialog-buttons">
 			<button class="btn btn-secondary float-start" onclick="jQuery.fn.dialog.closeTop()"><?= t('Cancel') ?></button>
@@ -77,6 +82,10 @@ $resolverManager = app(ResolverManagerInterface::class);
                         <div class="form-group">
                             <?= $form->label('ptComposerFormLayoutSetDescription', tc('Description of a set', 'Set Description')) ?>
                             <?= $form->textarea('ptComposerFormLayoutSetDescription', $set->getPageTypeComposerFormLayoutSetDescription()) ?>
+                        </div>
+                        <div class="form-group">
+                            <?= $form->label('ptComposerFormLayoutSetCollapseType', t('Show/Hide Controls')) ?>
+                            <?= $form->select('ptComposerFormLayoutSetCollapseType', $showHideOptions, $set->getPageTypeComposerFormLayoutSetCollapseType()) ?>
                         </div>
                         <div class="dialog-buttons">
                             <button class="btn btn-secondary float-start" onclick="jQuery.fn.dialog.closeTop();"><?= t('Cancel') ?></button>

@@ -1,10 +1,11 @@
 <?php
+
 namespace Concrete\Core\Entity\Notification;
 
-use Concrete\Core\Conversation\Message\NewMessage;
-use Concrete\Core\Entity\User\UserSignup;
+use Concrete\Core\Conversation\Message\Message;
 use Concrete\Core\Notification\Subject\SubjectInterface;
-use Concrete\Core\Notification\View\UserSignupListView;
+use Concrete\Core\Notification\View\NewConversationMessageListView;
+use Concrete\Core\Notification\View\StandardListView;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -15,26 +16,45 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class NewConversationMessageNotification extends Notification
 {
-
     /**
      * @ORM\Column(type="integer", options={"unsigned":true})
+     *
+     * @var int
      */
     protected $cnvMessageID;
 
     /**
-     * UserSignupNotification constructor.
-     * @param $message NewMessage
+     * @param \Concrete\Core\Conversation\Message\NewMessage $message
      */
     public function __construct(SubjectInterface $message)
     {
-        $this->cnvMessageID = $message->getConversationMessage()->getConversationMessageID();
+        $this->cnvMessageID = $message->getConversationMessageID();
         parent::__construct($message);
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Entity\Notification\Notification::getListView()
+     */
     public function getListView()
     {
-
+        return new NewConversationMessageListView($this);
     }
+
+    /**
+     * @return int
+     */
+    public function getConversationMessageID(): int
+    {
+        return $this->cnvMessageID;
+    }
+
+    public function getConversationMessageObject()
+    {
+        return Message::getByID($this->getConversationMessageID());
+    }
+
 
 
 }

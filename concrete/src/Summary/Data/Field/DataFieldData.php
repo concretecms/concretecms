@@ -30,6 +30,7 @@ class DataFieldData implements DataFieldDataInterface
         return (string) $this->data;
     }
     
+    #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
         return [

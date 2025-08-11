@@ -35,7 +35,7 @@ class Installer
         if (!$parent || ($parent && $parent->isError())) {
             $type = Type::getByHandle(THEME_DOCUMENTATION_CATEGORY_PAGE_TYPE);
             $documentation = Page::getByPath(THEME_DOCUMENTATION_PAGE_PATH);
-            $parent = $documentation->add($type, ['name' => $theme->getThemeName(), 'handle' => $theme->getThemeHandle()]);
+            $parent = $documentation->add($type, ['name' => $theme->getThemeName(), 'cHandle' => $theme->getThemeHandle()]);
             $parent->setTheme($theme);
         }
 

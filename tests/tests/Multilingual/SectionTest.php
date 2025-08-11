@@ -4,6 +4,7 @@ namespace Concrete\Tests\Multilingual;
 use Concrete\Core\Entity\Site\Site;
 use Concrete\Core\Multilingual\Page\Section\Section;
 use Concrete\Core\Multilingual\Service\Detector;
+use Concrete\Core\Page\Page;
 use Concrete\TestHelpers\Page\PageTestCase;
 use Doctrine\ORM\EntityManagerInterface;
 
@@ -19,7 +20,7 @@ class SectionTest extends PageTestCase
         $em = $this->app->make(EntityManagerInterface::class);
         // gotta do this for php8
         $this->app->bind('multilingual/detector', function () {
-            $detector = new Detector();
+            $detector = new Detector($this->app->make('cache/request'));
             $detector->setApplication($this->app);
             return $detector;
         });
@@ -103,5 +104,28 @@ class SectionTest extends PageTestCase
         $oldPage->delete();
         $newPage->delete();
         $newPageInSecondLocale->delete();
+    }
+
+    public function testDuplicateAliasMultilingual()
+    {
+        $default = Section::getDefaultSection();
+        $parent = self::createPage('Parent', $default);
+        $original = self::createPage('Awesome', $parent);
+        $aliasID = $original->addCollectionAlias($default);
+        $alias = Page::getByID($aliasID);
+        $this->assertEquals($original->getCollectionID(), $alias->getCollectionPointerID());
+
+        $second = Section::getByLocale('de_CH');
+        $secondParent = $parent->duplicate($second);
+        $secondOriginal = $original->duplicate($secondParent);
+        $secondAlias = $alias->duplicate($second);
+        $this->assertEquals($secondOriginal->getCollectionID(), $secondAlias->getCollectionID());
+
+        $parent->delete();
+        $original->delete();
+        $alias->delete();
+        $secondParent->delete();
+        $secondOriginal->delete();
+        $secondAlias->delete();
     }
 }

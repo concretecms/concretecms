@@ -32,7 +32,7 @@
             <?= $form->label('title', t('Map Title (optional)')) ?>
 		    <div class="input-group">
             	<?= $form->text('title', $title) ?>
-				<?php echo $form->select('titleFormat', \Concrete\Core\Block\BlockController::$btTitleFormats, $titleFormat, array('style' => 'width:105px;flex-grow:0;', 'class' => 'form-select')); ?>
+				<?php echo $form->select('titleFormat', \Concrete\Core\Block\BlockController::$btTitleFormats, $titleFormat ?? null, array('style' => 'width:105px;flex-grow:0;', 'class' => 'form-select')); ?>
 			</div>
 		</div>
 

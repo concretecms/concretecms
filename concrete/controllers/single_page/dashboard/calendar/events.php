@@ -8,6 +8,7 @@ use Concrete\Core\Calendar\Calendar;
 use Concrete\Core\Calendar\CalendarServiceProvider;
 use URL;
 use Concrete\Core\Calendar\Utility\Preferences;
+use Punic\Calendar as PunicCalendar;
 
 class Events extends DashboardCalendarPageController
 {
@@ -47,6 +48,7 @@ class Events extends DashboardCalendarPageController
         $previousLink = URL::to('/dashboard/calendar/events/view', $calendar->getID(), $previousLinkYear, $previousLinkMonth);
         $todayLink = URL::to('/dashboard/calendar/events/view', $calendar->getID());
 
+        $this->set('topic', null);
         if ($topic_id) {
             $topic_id = intval($topic_id, 10);
             $topic = Node::getByID($topic_id);
@@ -72,7 +74,7 @@ class Events extends DashboardCalendarPageController
         $this->set('monthText', $dh->date('F', $monthYearTimestamp, $todayDate->getTimezone()));
         $this->set('month', $month);
         $this->set('year', $year);
-        $this->set('daysInMonth', date('t', $monthYearTimestamp));
+        $this->set('daysInMonth', (int) date('t', $monthYearTimestamp));
         $this->set('firstDayInMonthNum', $firstDayInMonthNum);
         $this->set('nextLink', $nextLink);
         $this->set('previousLink', $previousLink);
@@ -81,12 +83,14 @@ class Events extends DashboardCalendarPageController
         $serviceProvider = $this->app->make(CalendarServiceProvider::class);
         $this->set('dateFormatter', $serviceProvider->getDateFormatter());
         $this->set('linkFormatter', $serviceProvider->getLinkFormatter());
-
+        $weekdays = [PunicCalendar::getFirstWeekday()];
+        for ($index = 1; $index <= 6; $index++) {
+            $weekdays[$index] = ($weekdays[$index - 1] + 1) % 7;
+        }
+        $this->set('weekdays', $weekdays);
         // Process the given edit ID if there is one
         $initialEdit = (int) $this->request->get('edit');
-        if ($initialEdit > 0) {
-            $this->set('initialEdit', $initialEdit);
-        }
+        $this->set('initialEdit', $initialEdit > 0 ? $initialEdit : null);
 
         $editor = $this->app->make('editor');
         $editor->requireEditorAssets();

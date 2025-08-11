@@ -21,6 +21,7 @@ class BooleanField extends Field
         $command->addOption($this->getKey(), null, InputOption::VALUE_NONE, $this->getDescription());
     }
 
+    #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
         $data = parent::jsonSerialize();

@@ -16,6 +16,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
  * @var bool $displayUsernameField
  * @var bool $displayConfirmPasswordField
  * @var bool $enableRegistrationCaptcha
+ * @var bool $displayUsernameFieldEdit
  */
 ?>
 
@@ -75,6 +76,13 @@ defined('C5_EXECUTE') or die('Access Denied.');
         <div class="form-check">
             <?= $form->checkbox('enable_registration_captcha', '1', $enableRegistrationCaptcha, $registrationType === 'disabled' ? ['disabled' => 'disabled'] : []) ?>
             <label class="form-check-label" for="enable_registration_captcha"><?= t('CAPTCHA required') ?></label>
+        </div>
+    </div>
+    <div class="form-group">
+        <?= $form->label('display_username_field_on_edit', t('Edit Profile form')) ?>
+        <div class="form-check">
+            <?= $form->checkbox('display_username_field_on_edit', '1', $displayUsernameFieldEdit) ?>
+            <label class="form-check-label" for="display_username_field_on_edit"><?= t('Username required') ?></label>
         </div>
     </div>
     <div class="ccm-dashboard-form-actions-wrapper">

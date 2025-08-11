@@ -59,6 +59,7 @@ class EditResponse extends PageEditResponse
             $obj->cvApproverUserName = $v->getVersionApproverUserName();
             $obj->cvComments = $v->getVersionComments();
             $obj->cIsStack = ($c->getPageTypeHandle() === STACKS_PAGE_TYPE);
+            $obj->cIsDraft = $c->isPageDraft();
             $versions[] = $obj;
         }
         $o->versions = $versions;

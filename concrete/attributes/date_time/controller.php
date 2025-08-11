@@ -8,12 +8,13 @@ use Concrete\Core\Attribute\SimpleTextExportableAttributeInterface;
 use Concrete\Core\Entity\Attribute\Key\Settings\DateTimeSettings;
 use Concrete\Core\Entity\Attribute\Value\Value\DateTimeValue;
 use Concrete\Core\Error\ErrorList\ErrorList;
+use Concrete\Core\Utility\Service\Xml;
 use DateTime;
 use Exception;
 
 class Controller extends AttributeTypeController implements SimpleTextExportableAttributeInterface
 {
-    public $helpers = ['form', 'date', 'form/date_time'];
+    public $helpers = ['form', 'date'];
 
     protected $searchIndexFieldDefinition = ['type' => 'datetime', 'options' => ['notnull' => false]];
 
@@ -103,7 +104,8 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
     {
         $type = $this->getAttributeKeySettings();
         if (isset($akey->type)) {
-            $type->setUseNowIfEmpty($akey->type['use-now-if-empty']);
+            $xml = $this->app->make(Xml::class);
+            $type->setUseNowIfEmpty($xml->getBool($akey->type['use-now-if-empty']));
             $type->setMode($akey->type['mode']);
             $type->setTextCustomFormat(isset($akey->type['text-custom-format']) ? $akey->type['text-custom-format'] : '');
             $type->setTimeResolution($akey->type['time-resolution']);
@@ -124,23 +126,10 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
         if ($this->akDateDisplayMode === null) {
             $this->load();
         }
-        switch ($this->akDateDisplayMode) {
-            case 'date_time':
-                if (empty($data['value_dt']) || (!is_numeric($data['value_h'])) || (!is_numeric($data['value_m']))) {
-                    return false;
-                }
-                $dh = $this->app->make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service\Date */
-                switch ($dh->getTimeFormat()) {
-                    case 12:
-                        if (empty($data['value_a'])) {
-                            return false;
-                        }
-                        break;
-                }
-
-                return true;
-            default:
-                return $data['value'] != '';
+        if (is_array($data) && isset($data['value']) && $data['value'] != '') {
+            return true;
+        } else {
+            return false;
         }
     }
 
@@ -226,9 +215,16 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
             case 'date':
             case 'date_time':
             default:
-                $dt = $this->app->make('helper/form/date_time');
-                /* @var \Concrete\Core\Form\Service\Widget\DateTime $dt */
-                $datetime = $dt->translate('value', $data, true);
+                $value = (string) $data['value'] ?? '';
+                if ($value !== '') {
+                    // Start in the user's time zone.
+                    $datetime = new \DateTime($data['value'], $dh->getTimezone('user'));
+                    // Convert to system for saving:
+                    $systemTimezone = $dh->getTimezone('system');
+                    $datetime->setTimezone(
+                        $systemTimezone
+                    ); // See https://github.com/concretecms/concretecms/issues/11866
+                }
                 break;
         }
 

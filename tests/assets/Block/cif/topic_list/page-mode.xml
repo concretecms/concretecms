@@ -1,0 +1,10 @@
+<block type="topic_list" name="">
+  <data>
+    <cParentID></cParentID>
+    <mode>P</mode>
+    <title>Here we're talking about...</title>
+    <titleFormat>p</titleFormat>
+    <topicAttributeKeyHandle>test_topic</topicAttributeKeyHandle>
+    <tree>Test Topic Tree</tree>
+  </data>
+</block>

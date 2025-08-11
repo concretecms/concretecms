@@ -8,7 +8,7 @@ use Concrete\Core\Form\Control\ValueInterface;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\MappedSuperClass
+ * @ORM\MappedSuperclass
  */
 abstract class AbstractValue implements AttributeValueInterface
 {

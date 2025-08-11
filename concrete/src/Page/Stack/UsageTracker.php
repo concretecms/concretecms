@@ -114,7 +114,8 @@ class UsageTracker implements TrackerInterface
         $buffer = 0;
 
         foreach ($blocks as $block) {
-
+            // Reset controller and php8+ warning fix
+            $controller = null;
             if ($block instanceof Controller) {
                 $controller = $block;
                 $block = $controller->getBlockObject();

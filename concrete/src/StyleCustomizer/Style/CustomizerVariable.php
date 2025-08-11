@@ -55,6 +55,7 @@ class CustomizerVariable implements \JsonSerializable
         $this->value = $value;
     }
 
+    #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
         return ['variable' => $this->getVariable(), 'value' => $this->getValue()];

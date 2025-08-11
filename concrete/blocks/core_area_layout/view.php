@@ -13,11 +13,13 @@ $columns = $columns ?? [];
     /** @var \Concrete\Core\Page\Theme\GridFramework\GridFramework $themeGridFramework */
     $a = $b->getBlockAreaObject();
 
-    $rootContainer = $formatter->getLayoutContainerHtmlObject();
-    if (!empty($rootContainer)) {
-        $container = $rootContainer;
-        while ($container->hasChildren()) {
-            $container = $container->getChildren()[0];
+    if (isset($formatter) && is_object($formatter)) {
+        $rootContainer = $formatter->getLayoutContainerHtmlObject();
+        if (!empty($rootContainer)) {
+            $container = $rootContainer;
+            while ($container->hasChildren()) {
+                $container = $container->getChildren()[0];
+            }
         }
     }
 
@@ -30,4 +32,6 @@ $columns = $columns ?? [];
         }
     }
 
-    echo $rootContainer;
+    if (isset($rootContainer)) {
+        echo $rootContainer;
+    }

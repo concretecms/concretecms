@@ -59,6 +59,7 @@ class PreviewSkin extends BackendInterfaceController
                 $req = Request::getInstance();
                 $req->setCurrentPage($page);
                 $controller = $page->getPageController();
+                $controller->disableEditing();
                 $view = $controller->getViewObject();
                 $previewRequest = new ThemeCustomizerRequest();
 
@@ -90,7 +91,6 @@ class PreviewSkin extends BackendInterfaceController
                 $previewRequest->setCustomCss($result);
                 $view->setCustomPreviewRequest($previewRequest);
 
-                $req->setCustomRequestUser(-1);
                 $response = new Response();
                 $content = $view->render();
                 $response->setContent($content);

@@ -2,38 +2,42 @@
 
 namespace Concrete\Tests\Backup;
 
+use Concrete\Core\Backup\ContentImporter\ValueInspector\ValueInspectorInterface;
 use Concrete\Core\File\Import\FileImporter;
 use Concrete\TestHelpers\File\FileStorageTestCase;
-use Core;
 
 class ContentImporterValueInspectorTest extends FileStorageTestCase
 {
-    public function __construct($name = null, array $data = [], $dataName = '')
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\TestHelpers\Database\ConcreteDatabaseTestCase::getTables()
+     */
+    protected function getTables()
     {
-        parent::__construct($name, $data, $dataName);
-
-        $this->tables = array_merge($this->tables, [
-            'Users',
+        return array_merge(parent::getTables(), [
             'PermissionAccessEntityTypes',
         ]);
     }
 
     public function testMake()
     {
-        $inspector = Core::make('import/value_inspector/core');
-        $this->assertInstanceOf('\Concrete\Core\Backup\ContentImporter\ValueInspector\ValueInspectorInterface', $inspector);
+        $inspector = app('import/value_inspector/core');
+        $this->assertInstanceOf(ValueInspectorInterface::class, $inspector);
     }
 
     public function testRegister()
     {
-        $inspector = Core::make('import/value_inspector/core');
+        $inspector = app('import/value_inspector/core');
         $inspector->registerInspectionRoutine(new \Concrete\Core\Backup\ContentImporter\ValueInspector\InspectionRoutine\PageRoutine());
         $this->assertEquals(1, count($inspector->getInspectionRoutines()));
     }
 
     public function testMakeCore()
     {
-        $inspector = Core::make('import/value_inspector');
+        $inspector = app('import/value_inspector');
+        $inspector2 = app(ValueInspectorInterface::class);
+        $this->assertSame($inspector, $inspector2);
         $this->assertEquals(7, count($inspector->getInspectionRoutines()));
     }
 
@@ -58,7 +62,7 @@ class ContentImporterValueInspectorTest extends FileStorageTestCase
      */
     public function testMatchedSimpleValues($content, $reference, $itemClass)
     {
-        $inspector = Core::make('import/value_inspector');
+        $inspector = app('import/value_inspector');
         $result = $inspector->inspect($content, false);
         $items = $result->getMatchedItems();
         $this->assertEquals(1, count($items));
@@ -78,7 +82,7 @@ class ContentImporterValueInspectorTest extends FileStorageTestCase
         Excellent! <a href="{ccm:export:page:/}">See you later!</a>
 EOL;
 
-        $inspector = Core::make('import/value_inspector');
+        $inspector = app('import/value_inspector');
         $result = $inspector->inspect($content);
         $items = $result->getMatchedItems();
         $this->assertEquals(4, count($items));
@@ -100,7 +104,7 @@ EOL;
         Finally, we're also going to link to a pagetype here: {ccm:export:pagetype:blog_entry}.
 EOL;
 
-        $inspector = Core::make('import/value_inspector');
+        $inspector = app('import/value_inspector');
         $result = $inspector->inspect($content);
         $items = $result->getMatchedItems();
         $this->assertEquals(4, count($items));
@@ -121,7 +125,7 @@ EOL;
         $this->getStorageLocation();
 
 
-        $importer = Core::make(FileImporter::class);
+        $importer = app(FileImporter::class);
         $prefix = $importer->generatePrefix();
         \Concrete\Core\File\File::add('test.jpg', $prefix);
 
@@ -135,7 +139,7 @@ EOL;
         <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip <concrete-picture fID="1" /></p>
 EOL;
 
-        $inspector = Core::make('import/value_inspector');
+        $inspector = app('import/value_inspector');
         $result = $inspector->inspect($content);
 
         $this->assertEquals($expected, $result->getReplacedContent());

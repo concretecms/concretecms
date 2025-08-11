@@ -34,6 +34,7 @@ class TextTransformValue extends Value
         $this->textTransform = $textTransform;
     }
 
+    #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
         return [

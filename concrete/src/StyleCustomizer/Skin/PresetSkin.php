@@ -3,6 +3,8 @@
 namespace Concrete\Core\StyleCustomizer\Skin;
 
 use Concrete\Core\Page\Theme\Theme;
+use Concrete\Core\StyleCustomizer\Skin\Stylesheet\PresetSkinStylesheet;
+use Concrete\Core\StyleCustomizer\Skin\Stylesheet\StylesheetInterface;
 use HtmlObject\Element;
 
 class PresetSkin implements SkinInterface
@@ -43,6 +45,7 @@ class PresetSkin implements SkinInterface
         return $this->identifier;
     }
 
+    #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
         return [
@@ -67,16 +70,8 @@ class PresetSkin implements SkinInterface
         $this->theme = $theme;
     }
 
-    public function getStylesheet(): Element
+    public function getStylesheet(): StylesheetInterface
     {
-        $theme = $this->getTheme();
-        $path = $theme->getSkinDirectoryRecord()->getUrl();
-        $stylesheet = $path . '/' . $this->getIdentifier() . '.css';
-        $element = new Element('link', null);
-        $element->rel('stylesheet')->type('text/css')->href($stylesheet);
-        return $element;
+        return new PresetSkinStylesheet($this);
     }
-
-
-
 }

@@ -5,6 +5,7 @@ use Concrete\Core\Attribute\Type;
 use Concrete\Core\Block\BlockType\BlockType;
 use Concrete\Core\Captcha\Library;
 use Concrete\Core\Permission\Category;
+use Concrete\Core\Utility\Service\Xml;
 use Concrete\Core\Validation\BannedWord\BannedWord;
 
 class ImportSystemCaptchaLibrariesRoutine extends AbstractRoutine
@@ -17,13 +18,14 @@ class ImportSystemCaptchaLibrariesRoutine extends AbstractRoutine
     public function import(\SimpleXMLElement $sx)
     {
         if (isset($sx->systemcaptcha)) {
+            $xml = app(Xml::class);
             foreach ($sx->systemcaptcha->library as $th) {
                 $pkg = static::getPackageObject($th['package']);
                 $scl = Library::getByHandle((string) $th['handle']);
                 if (!is_object($scl)) {
                     $scl = Library::add($th['handle'], $th['name'], $pkg);
                 }
-                if ($th['activated'] == '1') {
+                if ($xml->getBool($th['activated'])) {
                     $scl->activate();
                 }
             }

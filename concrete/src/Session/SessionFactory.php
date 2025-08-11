@@ -72,7 +72,7 @@ class SessionFactory implements SessionFactoryInterface
 
         /* @TODO Remove this call. We should be able to set this against the request somewhere much higher than this */
         /*       At the very least we should have an observer that can track the session status and set this */
-        $this->app->make(\Concrete\Core\Http\Request::class)->setSession($session);
+        $this->app->make(Request::class)->setSession($session);
 
         return $session;
     }
@@ -186,6 +186,14 @@ class SessionFactory implements SessionFactoryInterface
 
         if (array_get($options, 'cookie_path', false) === false) {
             $options['cookie_path'] = $app['app_relative_path'] . '/';
+        }
+        if (array_get($options, 'cookie_secure') === null) {
+            $options['cookie_secure'] = $this->app->make(Request::class)->isSecure();
+        }
+
+        $sameSite = array_get($options, 'samesite');
+        if ($sameSite) {
+            $options['cookie_samesite'] = $sameSite;
         }
 
         $storage->setOptions($options);
@@ -418,7 +426,7 @@ class SessionFactory implements SessionFactoryInterface
                 yield $server;
             }
         } else {
-            yield ['host' => '127.0.0.1', 'port' => '6379', 'timeout' => 5, 'database'=>$database];
+            yield ['scheme' => 'tcp', 'host' => '127.0.0.1', 'port' => 6379, 'timeout' => 5, 'database' => $database];
         }
     }
 }

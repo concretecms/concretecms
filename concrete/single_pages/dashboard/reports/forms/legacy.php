@@ -124,10 +124,10 @@ EOT
                             <?php $valt->output('deleteFormAnswers') ?>
                             <div class="btn-group">
                                 <a href="<?php echo URL::to($c->getCollectionPath() . '?qsid=' . $qsid) ?>"
-                                   class="btn btn-default btn-sm">
+                                   class="btn btn-secondary btn-sm">
                                     <?php echo t('View Responses') ?>
                                 </a>
-                                <a class="btn btn-default btn-sm" href="<?php echo $url?>">
+                                <a class="btn btn-secondary btn-sm" href="<?php echo $url?>">
                                     <?php echo t('Open Page') ?>
                                 </a>
                                 <button class="btn btn-danger btn-sm delete-form-answers"
@@ -187,7 +187,7 @@ EOT
             <table class="table table-striped">
                 <thead>
                 <tr>
-                    <?php if ($_REQUEST['sortBy'] == 'chrono') { ?>
+                    <?php if (($_REQUEST['sortBy'] ?? '') === 'chrono') { ?>
                     <th class="header headerSortDown">
                         <a href="<?php echo $text->entities($urlhelper->unsetVariable('sortBy')) ?>">
                             <?php } else { ?>
@@ -243,10 +243,10 @@ EOT
                             } else {
                                 if ($question['inputType'] == 'text') {
                                     echo '<td>' . $text->entities(
-                                            $answerSet['answers'][$questionId]['answerLong']) . '</td>';
+                                            $answerSet['answers'][$questionId]['answerLong'] ?? '') . '</td>';
                                 } else {
                                     echo '<td>' . $text->entities(
-                                            $answerSet['answers'][$questionId]['answer']) . '</td>';
+                                            $answerSet['answers'][$questionId]['answer'] ?? '') . '</td>';
                                 }
                             }
                         }

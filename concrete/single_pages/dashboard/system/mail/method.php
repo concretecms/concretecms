@@ -1,11 +1,14 @@
 <?php
 defined('C5_EXECUTE') or die('Access Denied.');
 
-// Arguments
-/* @var Concrete\Core\Config\Repository\Repository $config */
-/* @var \Concrete\Core\Form\Service\Form $form */
+/**
+ * @var Concrete\Core\Config\Repository\Repository $config
+ * @var Concrete\Core\Form\Service\Form $form
+ * @var Concrete\Core\Page\View\PageView $view
+ * @var Concrete\Core\Application\Service\UserInterface $interface
+ * @var Concrete\Core\Validation\CSRF\Token $token
+ */
 
-$enabledVals = ['0' => t('No'), '1' => t('Yes')];
 $secureVals = ['' => t('None'), 'SSL' => tc('Encryption', 'SSL'), 'TLS' => tc('Encryption', 'TLS')];
 ?>
 
@@ -56,7 +59,15 @@ $secureVals = ['' => t('None'), 'SSL' => tc('Encryption', 'SSL'), 'TLS' => tc('E
 
         <div class="form-group">
             <?= $form->label('MAIL_SEND_METHOD_SMTP_PASSWORD', t('Password')) ?>
-            <?= $form->password('MAIL_SEND_METHOD_SMTP_PASSWORD', $config->get('concrete.mail.methods.smtp.password'), ['autocomplete' => 'off']) ?>
+            <div class="input-group">
+                <div class="input-group-text">
+                    <label>
+                        <?= $form->checkbox('MAIL_SEND_METHOD_SMTP_PASSWORD_CHANGE', 1) ?>
+                        <?= t('Change') ?>
+                    </label>
+                </div>
+                <?= $form->password('MAIL_SEND_METHOD_SMTP_PASSWORD', '', ['autocomplete' => 'off', 'disabled' => 'disabled']) ?>
+            </div>
         </div>
 
         <div class="form-group">
@@ -83,19 +94,29 @@ $secureVals = ['' => t('None'), 'SSL' => tc('Encryption', 'SSL'), 'TLS' => tc('E
 
     <div class="ccm-dashboard-form-actions-wrapper">
         <div class="ccm-dashboard-form-actions">
-            <a href="<?= $this->action('test') ?>" class="btn btn-secondary float-start"><?= t('Test Settings') ?></a>
+            <a href="<?= $view->action('test') ?>" class="btn btn-secondary float-start"><?= t('Test Settings') ?></a>
             <?= $interface->submit(t('Save'), 'mail-settings-form', 'right', 'btn-primary') ?>
         </div>
     </div>
 </form>
 
-<script type="text/javascript">
-$('input[name=MAIL_SEND_METHOD]')
-    .change(function() {
-        if ($('input[name="MAIL_SEND_METHOD"]:checked').val() === 'SMTP') {
-            $('#ccm-settings-mail-smtp').show();
-        } else {
-            $('#ccm-settings-mail-smtp').hide();
-        }
-    });
+<script>
+$(document).ready(function() {
+    $('input[name=MAIL_SEND_METHOD]')
+        .on('change', function() {
+            if ($('input[name="MAIL_SEND_METHOD"]:checked').val() === 'SMTP') {
+                $('#ccm-settings-mail-smtp').show();
+            } else {
+                $('#ccm-settings-mail-smtp').hide();
+            }
+        })
+        .trigger('change')
+    ;
+    $('#MAIL_SEND_METHOD_SMTP_PASSWORD_CHANGE')
+        .on('change', function() {
+            $('#MAIL_SEND_METHOD_SMTP_PASSWORD').prop('disabled', !$('#MAIL_SEND_METHOD_SMTP_PASSWORD_CHANGE').is(':checked'));
+        })
+        .trigger('change')
+    ;
+});
 </script>

@@ -1,13 +1,9 @@
 <?php
+
 namespace Concrete\Core\Entity\Notification;
 
-use Concrete\Core\Entity\User\UserSignup;
-use Concrete\Core\Notification\Subject\SubjectInterface;
 use Concrete\Core\Notification\View\NewPrivateMessageListView;
-use Concrete\Core\Notification\View\UserSignupListView;
-use Concrete\Core\Notification\View\WorkflowProgressListView;
 use Concrete\Core\User\PrivateMessage\PrivateMessage;
-use Concrete\Core\Workflow\Progress\Progress;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -18,36 +14,44 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class NewPrivateMessageNotification extends Notification
 {
-
+    /**
+     * @var \Concrete\Core\User\PrivateMessage\PrivateMessage|null
+     */
     protected $message;
 
     /**
      * @ORM\Column(type="integer", options={"unsigned":true})
+     *
+     * @var int
      */
     protected $msgID;
 
-    /**
-     * @param $message PrivateMessage
-     */
     public function __construct(PrivateMessage $message)
     {
         $this->msgID = $message->getMessageID();
+        $this->message = $message;
         parent::__construct($message);
     }
 
-
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Entity\Notification\Notification::getListView()
+     */
     public function getListView()
     {
         return new NewPrivateMessageListView($this);
     }
 
+    /**
+     * @return \Concrete\Core\User\PrivateMessage\PrivateMessage|null may be NULL if the message has been deleted
+     */
     public function getMessageObject()
     {
-        if (!isset($this->message)) {
+        if ($this->message === null) {
             $this->message = PrivateMessage::getByID($this->msgID);
         }
+
         return $this->message;
     }
-
-
 }

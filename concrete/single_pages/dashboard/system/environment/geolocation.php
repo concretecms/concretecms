@@ -87,11 +87,11 @@ if (isset($geolocator)) {
                         data-editurl="<?= $this->action('details', $geolocator->getGeolocatorID()); ?>"
                         data-geolocator-id="<?= $geolocator->getGeolocatorID(); ?>"
                         data-geolocator-name="<?= $geolocator->getGeolocatorDisplayName(); ?>"
-                        class="geolocator <?= $geolocator->isActive() ? 'success' : ''; ?>"
+                        class="geolocator <?= $geolocator->isActive() ? 'table-success' : ''; ?>"
                     >
                         <td><?= $geolocator->getGeolocatorHandle(); ?></td>
                         <td><?= $geolocator->getGeolocatorDisplayName(); ?></td>
-                        <td><button class="btn btn-info btn-xs geolocator-test-launcher"><?= t('Test'); ?></button></td>
+                        <td><button class="btn btn-info btn-sm geolocator-test-launcher"><?= t('Test'); ?></button></td>
                     </tr>
                     <?php
                 } ?>

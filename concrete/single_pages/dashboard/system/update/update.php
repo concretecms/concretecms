@@ -16,7 +16,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
  */
 ?>
 
-<fieldset>
+<fieldset class="mb-3">
     <legend><?= t('Current Version') ?></legend>
     <?= t('You are currently running Concrete version %s', '<strong>' . h($currentVersion) . '</strong>') ?>
 </fieldset>
@@ -24,7 +24,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
 <?php
 if ($remoteUpdate !== null) {
     ?>
-    <form method="POST" action="<?= $controller->action('download_update') ?>">
+    <form method="POST" action="<?= $controller->action('download_update') ?>" class="mb-3">
         <?php $token->output('download_update') ?>
         <input type="submit" id="ccm-update-download-submit" class="d-none" />
         <fieldset>

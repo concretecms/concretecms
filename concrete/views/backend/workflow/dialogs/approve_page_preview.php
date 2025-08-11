@@ -23,7 +23,7 @@ if ($liveVersionID !== $recentVersionID) {
 <div class="ccm-ui ccm-workflow-dialog-approve-page-preview">
     <?= $ui->tabs($tabs) ?>
     <div class="tab-content">
-        <div class="tab-pane show active" id="ccm-workflow-requested-version" role="tabpanel">
+        <div class="tab-pane active" id="ccm-workflow-requested-version" role="tabpanel">
             <iframe src="<?= h($resolverManager->resolve(['/ccm/system/page/preview_version']) . '?cvID=' . $requestedVersion->getVersionID() . '&cID=' . $requestedVersion->getCollectionID()) ?>"></iframe>
        </div>
        <div class="tab-pane" id="ccm-workflow-live-version" role="tabpanel">

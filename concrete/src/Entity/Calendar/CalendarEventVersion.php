@@ -33,7 +33,7 @@ class CalendarEventVersion implements ObjectInterface, \JsonSerializable
 
     /**
      * @ORM\ManyToOne(targetEntity="\Concrete\Core\Entity\User\User")
-     * @ORM\JoinColumn(name="uID", referencedColumnName="uID")
+     * @ORM\JoinColumn(name="uID", referencedColumnName="uID", onDelete="SET NULL")
      */
     protected $author;
 
@@ -282,8 +282,9 @@ class CalendarEventVersion implements ObjectInterface, \JsonSerializable
     }
 
     /**
-     * @return \stdClass
+     * @return array
      */
+    #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
         $o = array();

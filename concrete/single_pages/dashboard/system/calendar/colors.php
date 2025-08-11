@@ -6,27 +6,13 @@
     <?=$token->output('save')?>
     <fieldset>
         <legend><?=t('Default Colors')?></legend>
-        <div class="row">
-            <div class="form-group col-sm-6 col-sm-offset-1">
-                <div class="row row-cols-auto g-0 align-items-center">
-                    <div class="col-auto">
-                        <?=$form->label('defaultBackgroundColor', t('Background'))?>
-                    </div>
-                    <div class="col-auto">
-                        <?=$color->output('defaultBackgroundColor', $defaultBackgroundColor)?>
-                    </div>
-                </div>
-            </div>
-            <div class="form-group col-sm-5">
-                <div class="row row-cols-auto g-0 align-items-center">
-                    <div class="col-auto">
-                        <?=$form->label('defaultTextColor', t('Text'))?>
-                    </div>
-                    <div class="col-auto">
-                        <?=$color->output('defaultTextColor', $defaultTextColor)?>
-                    </div>
-                </div>
-            </div>
+        <div class="form-group">
+            <?=$form->label('defaultBackgroundColor', t('Background'))?>
+            <?=$color->output('defaultBackgroundColor', h($defaultBackgroundColor))?>
+        </div>
+        <div class="form-group">
+            <?=$form->label('defaultTextColor', t('Text'))?>
+            <?=$color->output('defaultTextColor', h($defaultTextColor))?>
         </div>
     </fieldset>
 
@@ -59,10 +45,10 @@
                 <tr>
                     <td style="text-align: center; width: 10px"><?=$form->checkbox('override[]', $topic->getTreeNodeID(), $checked)?></td>
                     <td style="width: 50%"><?=$topic->getTreeNodeDisplayName()?></td>
-                    <td><?=$color->output('backgroundColor[' . $topic->getTreeNodeID() . ']', $backgroundColor)?></td>
-                    <td><?=$color->output('textColor[' . $topic->getTreeNodeID() . ']', $textColor)?></td>
+                    <td><?=$color->output('backgroundColor[' . $topic->getTreeNodeID() . ']', h($backgroundColor))?></td>
+                    <td><?=$color->output('textColor[' . $topic->getTreeNodeID() . ']', h($textColor))?></td>
                 </tr>
-            <?php 
+            <?php
 }
     ?>
             </table>

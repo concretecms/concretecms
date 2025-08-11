@@ -28,7 +28,7 @@ foreach ($accessTypes as $accessType => $title) {
 <tr>
     <td>
     <a href="javascript:void(0)" class="icon-link float-end" style="margin-left: 10px" onclick="ccm_deleteAccessEntityAssignment(<?=$pae->getAccessEntityID()?>)"><i class="fas fa-trash"></i></a>
-	<a href="<?= h($resolverManager->resolve(['/ccm/system/permissions/access/entity']) . "?peID={$pae->getAccessEntityID()}?>&pdID={$pdID}&accessType={$accessType}") ?>" dialog-width="510" dialog-height="500" dialog-title="<?=t('Add Access Entity')?>" class="<?php if (!is_object($pa->getPermissionDurationObject())) {
+	<a href="<?= h($resolverManager->resolve(['/ccm/system/permissions/access/entity']) . "?peID={$pae->getAccessEntityID()}&pdID={$pdID}&accessType={$accessType}") ?>" dialog-width="510" dialog-height="500" dialog-title="<?=t('Time Settings')?>" class="<?php if (!is_object($pa->getPermissionDurationObject())) {
     ?>icon-link<?php
 }
     ?> float-end dialog-launch"><i class="fas fa-clock <?php if (is_object($pa->getPermissionDurationObject())) {

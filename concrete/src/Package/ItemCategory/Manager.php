@@ -170,6 +170,16 @@ class Manager extends CoreManager
         return new Workflow();
     }
 
+    public function createTreeTypeDriver()
+    {
+        return new TreeType();
+    }
+
+    public function createTreeNodeTypeDriver()
+    {
+        return new TreeNodeType();
+    }
+
     public function createExpressEntityDriver()
     {
         return $this->app->make(ExpressEntity::class);

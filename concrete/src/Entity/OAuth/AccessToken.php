@@ -43,7 +43,7 @@ class AccessToken implements AccessTokenEntityInterface
     /**
      * @var \League\OAuth2\Server\Entities\ScopeEntityInterface[]
      * @ORM\ManyToOne(targetEntity="Client")
-     * @ORM\JoinColumn(name="client", referencedColumnName="identifier")
+     * @ORM\JoinColumn(name="client", referencedColumnName="identifier", onDelete="CASCADE")
      */
     protected $client;
 

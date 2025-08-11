@@ -18,7 +18,7 @@ abstract class UserGroup extends Group
      */
     protected $user;
 
-    public function __construct(User $user, \Concrete\Core\User\Group\Group $group, User $applier = null)
+    public function __construct(User $user, \Concrete\Core\User\Group\Group $group, ?User $applier = null)
     {
         $this->user = $user;
         parent::__construct($group, $applier);

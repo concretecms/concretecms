@@ -2,41 +2,46 @@
 
 namespace Concrete\Core\Board\Instance\Slot\Planner;
 
-use Concrete\Core\Board\Instance\Slot\Content\ObjectCollection;
-use Concrete\Core\Board\Instance\Slot\Template\AvailableTemplateCollectionFactory;
+use Concrete\Core\Board\Instance\Logger\LoggerFactory;
 use Concrete\Core\Entity\Board\Instance;
-use Concrete\Core\Entity\Board\SlotTemplate;
-use Concrete\Core\Logging\Channels;
-use Concrete\Core\Logging\LoggerAwareInterface;
-use Concrete\Core\Logging\LoggerAwareTrait;
 
-class Planner implements LoggerAwareInterface
+class Planner
 {
 
     const MAX_VERIFICATION_CHECKS = 15;
     const VERIFICATION_FAILURE_LOGGING_THRESHOLD = 5; // At what point do we start logging high numbers of failures.
 
-    use LoggerAwareTrait;
-
-    public function getLoggerChannel()
-    {
-        return Channels::CHANNEL_CONTENT;
-    }
+    protected $verificationChecksRun = 0;
 
     /**
      * @var SlotFilterer
      */
     protected $slotFilterer;
 
-    public function __construct(SlotFilterer $slotFilterer)
+    /**
+     * @var LoggerFactory
+     */
+    protected $loggerFactory;
+
+    public function __construct(SlotFilterer $slotFilterer, LoggerFactory $loggerFactory)
     {
         $this->slotFilterer = $slotFilterer;
+        $this->loggerFactory = $loggerFactory;
+    }
+
+    /**
+     * @return int
+     */
+    public function getVerificationChecksRun(): int
+    {
+        return $this->verificationChecksRun;
     }
 
     protected function planSlot(
         PlannedInstance $plannedInstance,
         int $slot
     ): ?PlannedSlot {
+        $logger = $this->loggerFactory->createFromInstance($plannedInstance->getInstance());
         $templateChoices = $this->slotFilterer->getPotentialSlotTemplates($plannedInstance, $slot);
         if (count($templateChoices)) {
             $selectedTemplate = $this->slotFilterer->findValidTemplateForSlot(
@@ -50,21 +55,21 @@ class Planner implements LoggerAwareInterface
                 $plannedSlot->setTemplate($selectedTemplate);
                 return $plannedSlot;
             } else {
-                $this->logger->notice(
+                $logger->write(
                     t(
-                        'No template was able to be selected for slot {slot} on board instance {instance}. Total content objects remaining: {remaining}'
-                    ),
-                    [
-                        'slot' => $slot,
-                        'instance' => $plannedInstance->getInstance()->getBoardInstanceID(),
-                        'remaining' => count($plannedInstance->getContentObjectGroups())
-                    ]
+                        'No template was able to be selected for slot %s on board instance %s. Total content objects remaining: %s',
+                        $slot,
+                        $plannedInstance->getInstance()->getBoardInstanceID(),
+                        count($plannedInstance->getContentObjectGroups())
+                    )
                 );
             }
         } else {
-            $this->logger->notice(
-                t('While planning slot {slot} on board instance {instance}, no valid template choices were returned.'),
-                ['slot' => $slot, 'instance' => $plannedInstance->getInstance()->getBoardInstanceID()]
+            $logger->write(
+                t('While planning slot %s on board instance %s no valid template choices were returned.',
+                    $slot,
+                    $plannedInstance->getInstance()->getBoardInstanceID()
+                )
             );
         }
 
@@ -109,19 +114,21 @@ class Planner implements LoggerAwareInterface
         int $startingSlot,
         int $totalSlots
     ): PlannedInstance {
+        $logger = $this->loggerFactory->createFromInstance($instance);
         $isValidInstance = null;
-        $verificationChecks = 0;
-        while ($isValidInstance !== true && $verificationChecks <= self::MAX_VERIFICATION_CHECKS) {
-            if ($verificationChecks > self::VERIFICATION_FAILURE_LOGGING_THRESHOLD) {
-                $this->logger->notice(
+        $this->verificationChecksRun = 0;
+        while ($isValidInstance !== true && $this->verificationChecksRun <= self::MAX_VERIFICATION_CHECKS) {
+            if ($this->verificationChecksRun > self::VERIFICATION_FAILURE_LOGGING_THRESHOLD) {
+                $logger->write(
                     t(
-                        'High number of board planner verification checks on board instance generation for instance {instance}. Current check: {checkNumber}'
-                    ),
-                    ['instance' => $instance->getBoardInstanceID(), 'checkNumber' => $verificationChecks]
+                        'High number of board planner verification checks on board instance generation for instance %s. Current check: %s',
+                        $instance->getBoardInstanceID(),
+                        $this->verificationChecksRun
+                    )
                 );
             }
 
-            $verificationChecks++;
+            $this->verificationChecksRun++;
             $plannedInstance = $this->createPlannedInstance(
                 $instance,
                 $contentObjectGroups,
@@ -131,7 +138,14 @@ class Planner implements LoggerAwareInterface
             $isValidInstance = $this->isValidInstance($plannedInstance);
         }
 
-        if ($verificationChecks >= self::MAX_VERIFICATION_CHECKS) {
+        if ($this->verificationChecksRun >= self::MAX_VERIFICATION_CHECKS) {
+            $logger->write(
+                t(
+                    'Max verification checks limit of %s reached while generating board instance %s',
+                    self::MAX_VERIFICATION_CHECKS,
+                    $instance->getBoardInstanceID()
+                )
+            );
             throw new \Exception(
                 t(
                     'Max verification checks limit of %s reached while generating board instance %s',

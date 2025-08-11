@@ -70,7 +70,7 @@ class EmailPicker implements PickerInterface
      *
      * @see \Concrete\Core\Form\Service\DestinationPicker\PickerInterface::decode()
      */
-    public function decode(array $data, $pickerKey, array $options, ArrayAccess $errors = null, $fieldDisplayName = null)
+    public function decode(array $data, $pickerKey, array $options, ?ArrayAccess $errors = null, $fieldDisplayName = null)
     {
         $result = null;
         $postValue = array_get($data, $pickerKey);

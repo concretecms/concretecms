@@ -3,7 +3,9 @@ namespace Concrete\Core\Package;
 
 
 use Concrete\Core\Backup\ContentImporter;
+use Concrete\Core\Events\EventDispatcher;
 use Concrete\Core\File\FileList;
+use Concrete\Core\Package\Event\ContentSwapEvent;
 use Concrete\Core\Page\Page;
 use Concrete\Core\Page\PageList;
 use Concrete\Core\Page\Stack\StackList;
@@ -50,6 +52,10 @@ class ContentSwapper implements ContentSwapperInterface
             \Core::make('cache/request')->disable();
 
             $pl = new PageList();
+            $pl->ignorePermissions();
+            $pl->includeAliases();
+            $pl->includeInactivePages();
+            $pl->setPageVersionToRetrieve(PageList::PAGE_VERSION_RECENT);
             $pages = $pl->getResults();
             foreach ($pages as $c) {
                 $c->delete();
@@ -86,6 +92,11 @@ class ContentSwapper implements ContentSwapperInterface
 
             // now we add in any files that this package has
             if (is_dir($package->getPackagePath() . '/content_files')) {
+
+                $app = Application::getFacadeApplication();
+                $eventDispatcher = $app->make(EventDispatcher::class);
+                $eventDispatcher->dispatch('on_before_swap_content_import_files', new ContentSwapEvent($package));
+
                 $ch = new ContentImporter();
                 $computeThumbnails = true;
                 if ($package->contentProvidesFileThumbnails()) {

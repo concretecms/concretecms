@@ -1,1 +1,1 @@
-﻿CKEDITOR.plugins.setLang("preview","sk",{preview:"Náhľad"});
+CKEDITOR.plugins.setLang("preview","sk",{preview:"Náhľad"});

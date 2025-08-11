@@ -136,6 +136,9 @@ class FileFolder extends TreeNode
         $db->executeQuery('DELETE FROM TreeFileFolderNodes WHERE treeNodeID = ?', [
             $this->treeNodeID,
         ]);
+        $db->executeQuery('DELETE FROM UserFavoriteFolders WHERE treeNodeFolderId = ?', [
+            $this->treeNodeID,
+        ]);
     }
 
     /**

@@ -177,28 +177,32 @@ class File extends Controller
             if (!$token->validate()) {
                 throw new UserMessageException($token->getErrorMessage(), 401);
             }
-            if ($this->request->files->has('file')) {
-                $importedFileVersion = $this->handleUpload('file');
-                if ($importedFileVersion !== null) {
-                    $importedFileVersions[] = $importedFileVersion;
-                }
-            }
-            $postedFiles = $this->request->files->get('files');
-            if (is_array($postedFiles)) {
-                if (count($postedFiles) > 1 && $replacingFile !== null) {
-                    throw new UserMessageException(t('Only one file should be uploaded when replacing a file.'));
-                }
-                $importedFileVersions = [];
-                foreach (array_keys($postedFiles) as $i) {
-                    try {
-                        $importedFileVersion = $this->handleUpload('files', $i);
-                        if ($importedFileVersion !== null) {
-                            $importedFileVersions[] = $importedFileVersion;
-                        }
-                    } catch (UserMessageException $x) {
-                        $errors->add($x);
+            $receivedFiles = $this->getReceivedFiles();
+            switch (count($receivedFiles)) {
+                case 0:
+                    break;
+                case 1:
+                    $importedFileVersion = $this->handleUploadedFile($receivedFiles[0]);
+                    if ($importedFileVersion !== null) {
+                        $importedFileVersions[] = $importedFileVersion;
                     }
-                }
+                    break;
+                default:
+                    if ($replacingFile !== null) {
+                        throw new UserMessageException(t('Only one file should be uploaded when replacing a file.'));
+                    }
+                    $importedFileVersions = [];
+                    foreach ($receivedFiles as $receivedFile) {
+                        try {
+                            $importedFileVersion = $this->handleUploadedFile($receivedFile);
+                            if ($importedFileVersion !== null) {
+                                $importedFileVersions[] = $importedFileVersion;
+                            }
+                        } catch (UserMessageException $x) {
+                            $errors->add($x);
+                        }
+                    }
+                    break;
             }
         } catch (UserMessageException $e) {
             $errors->add($e);
@@ -493,7 +497,7 @@ class File extends Controller
                     throw new UserMessageException(t('Could not open with ZipArchive::CREATE'));
                 }
                 foreach ($files as $key => $f) {
-                    $filename = $f->getFilename();
+                    $filename = $f->getFileNameForPresentation();
 
                     // Change the filename if it's already in the zip
                     if ($zip->locateName($filename) !== false) {
@@ -593,6 +597,14 @@ class File extends Controller
         if (!$file instanceof UploadedFile) {
             throw new UserMessageException(Importer::getErrorMessage(Importer::E_FILE_INVALID));
         }
+        return $this->handleUploadedFile($file);
+    }
+
+    /**
+     * @throws \Concrete\Core\Error\UserMessageException
+     */
+    protected function handleUploadedFile(UploadedFile $file): ?FileVersionEntity
+    {
         if (!$file->isValid()) {
             throw new UserMessageException(Importer::getErrorMessage($file->getError()));
         }
@@ -778,15 +790,15 @@ class File extends Controller
             try {
                 $url = Url::createFromUrl($u);
             } catch (RuntimeException $x) {
-                throw new UserMessageException(t('The URL "%s" is not valid: %s', $u, $x->getMessage()));
+                throw new UserMessageException(h(t('The URL "%s" is not valid: %s', $u, $x->getMessage())));
             }
             $scheme = (string)$url->getScheme();
             if ($scheme === '') {
-                throw new UserMessageException(t('The URL "%s" is not valid.', $u));
+                throw new UserMessageException(h(t('The URL "%s" is not valid.', $u)));
             }
             $host = trim((string)$url->getHost());
             if (in_array(strtolower($host), ['', '0', 'localhost'], true)) {
-                throw new UserMessageException(t('The URL "%s" is not valid.', $u));
+                throw new UserMessageException(h(t('The URL "%s" is not valid.', $u)));
             }
 
             // If we've already validated this hostname just skip it.
@@ -801,7 +813,7 @@ class File extends Controller
 
             foreach ($ipFormatBlocks as $block) {
                 if (preg_match($block, $host) !== 0) {
-                    throw new UserMessageException(t('The URL "%s" is not valid.', $u));
+                    throw new UserMessageException(h(t('The URL "%s" is not valid.', $u)));
                 }
             }
 
@@ -816,7 +828,7 @@ class File extends Controller
             }
 
             if ($ip !== null && $ip->getRangeType() !== IPRangeType::T_PUBLIC) {
-                throw new UserMessageException(t('The URL "%s" is not valid.', $u));
+                throw new UserMessageException(h(t('The URL "%s" is not valid.', $u)));
             }
 
             $validIps[$host] = $ip->toString();
@@ -835,7 +847,7 @@ class File extends Controller
      * @throws \Concrete\Core\Error\UserMessageException in case of errors
      *
      */
-    protected function downloadRemoteURL($url, $temporaryDirectory, string $ip = null)
+    protected function downloadRemoteURL($url, $temporaryDirectory, ?string $ip = null)
     {
         /** @var Client $client */
         $client = $this->app->make(Client::class);
@@ -940,10 +952,11 @@ class File extends Controller
     {
         $deleteFile = false;
         $post = $this->request->request;
-        $dzuuid = $post->get('dzuuid');
+        $dzuuid = preg_replace('/[^a-z0-9\-]/i', '', $post->get('dzuuid'));
         $dzIndex = $post->get('dzchunkindex');
-        $dzTotalChunks = $post->get('dztotalchunkcount');
-        if ($dzuuid !== null && $dzIndex !== null && $dzTotalChunks !== null) {
+        $dzTotalChunks = max(0, $post->get('dztotalchunkcount'));
+        if ($dzuuid && !is_null($dzIndex) && $dzTotalChunks > 0) {
+            $dzIndex = (int) $dzIndex;
             $file->move($file->getPath(), $dzuuid . $dzIndex);
             if ($this->isFullChunkFilePresent($dzuuid, $file->getPath(), $dzTotalChunks)) {
                 $deleteFile = true;
@@ -1177,8 +1190,17 @@ class File extends Controller
                 $incomingStorageLocation = $incoming->getIncomingStorageLocation()->getDisplayName();
 
                 $files = $incoming->getIncomingFilesystem()->listContents($incomingPath);
+                $files = array_values(array_filter(
+                    $files,
+                    static function (array $item) {
+                        return $item['type'] === 'file'; 
+                    }
+                ));
 
                 foreach (array_keys($files) as $index) {
+                    if (!isset($files[$index]['extension'])) {
+                        $files[$index]['extension'] = '';
+                    }
                     $files[$index]['allowed'] = $fh->extension($files[$index]['basename']);
                     $files[$index]['thumbnail'] = FileTypeList::getType($files[$index]['extension'])->getThumbnail();
                     $files[$index]['displaySize'] = $nh->formatSize($files[$index]['size'], 'KB');
@@ -1197,5 +1219,26 @@ class File extends Controller
         $editResponse->setAdditionalDataAttribute("incomingStorageLocation", $incomingStorageLocation);
 
         return $responseFactory->json($editResponse);
+    }
+
+    /**
+     * @return \Symfony\Component\HttpFoundation\File\UploadedFile[]
+     */
+    private function getReceivedFiles(): array
+    {
+        $receivedFiles = [];
+        foreach (['file', 'files'] as $fieldName) {
+            $fieldValue = $this->request->files->get($fieldName);
+            if ($fieldValue instanceof UploadedFile) {
+                $receivedFiles[] = $fieldValue;
+            } elseif (is_array($fieldValue)) {
+                foreach ($fieldValue as $fieldValueItem) {
+                    if ($fieldValueItem instanceof UploadedFile) {
+                        $receivedFiles[] = $fieldValueItem;
+                    }
+                }
+            }
+        }
+        return $receivedFiles;
     }
 }

@@ -14,9 +14,14 @@ use Doctrine\DBAL\Types\TextType;
 class UpdateTest extends ConcreteDatabaseTestCase
 {
     protected $fixtures = [];
-    protected $tables = ['Blocks', 'CollectionVersionBlocks', 'Logs', 'SystemDatabaseMigrations', 'Widgets'];
 
-    protected $metadatas = [
+    protected $tables = [
+        'Blocks',
+        'CollectionVersionBlocks',
+        'Logs',
+    ];
+
+    protected $entityClassNames = [
         BlockType::class,
         File::class,
     ];

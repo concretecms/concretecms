@@ -9,6 +9,8 @@ use Concrete\Core\Feature\Features;
 use Concrete\Core\Feature\UsesFeatureInterface;
 use Concrete\Core\Page\Page;
 use Concrete\Core\Localization\Service\Date;
+use Concrete\Core\User\User;
+use Concrete\Core\User\UserInfo;
 
 defined('C5_EXECUTE') or die('Access Denied.');
 
@@ -17,11 +19,48 @@ defined('C5_EXECUTE') or die('Access Denied.');
  */
 class Controller extends BlockController implements UsesFeatureInterface
 {
+    /**
+     * @var string|null
+     */
+    public $attributeHandle;
+
+    /**
+     * @var string|null
+     */
+    public $attributeTitleText;
+
+    /**
+     * @var string|null
+     */
+    public $displayTag;
+
+    /**
+     * @var string|null
+     */
+    public $dateFormat;
+
+    /**
+     * Thumbnail height.
+     *
+     * @var int|string|null
+     */
+    public $thumbnailHeight = 250;
+
+    /**
+     * Thumbnail width.
+     *
+     * @var int|string|null
+     */
+    public $thumbnailWidth = 250;
+
+    /**
+     * @var string|null
+     */
+    public $delimiter;
+
     protected $btTable = 'btPageAttributeDisplay';
     protected $btInterfaceWidth = "500";
     protected $btInterfaceHeight = "365";
-    /** @var string|null */
-    public $dateFormat;
     /** @var bool */
     protected $btCacheBlockOutput = true;
     /** @var bool */
@@ -30,22 +69,6 @@ class Controller extends BlockController implements UsesFeatureInterface
     protected $btCacheBlockOutputForRegisteredUsers = null;
     /** @var bool */
     protected $btCacheBlockOutputOnEditMode = false;
-
-    /**
-     * @var int thumbnail height
-     */
-    public $thumbnailHeight = 250;
-
-    /**
-     * @var int thumbnail width
-     */
-    public $thumbnailWidth = 250;
-    /** @var string|null */
-    public $attributeHandle;
-    /** @var string|null */
-    public $attributeTitleText;
-    /** @var string|null */
-    public $displayTag;
 
     public function getBlockTypeDescription()
     {
@@ -82,12 +105,17 @@ class Controller extends BlockController implements UsesFeatureInterface
      */
     public function validate($args)
     {
+        $args += [
+            'thumbnailHeight' => null,
+            'thumbnailWidth' => null
+        ];
+
         $error = $this->app->make('helper/validation/error');
 
         if (!is_numeric($args['thumbnailHeight'])) {
             $error->add(t('Thumbnail Height must be a number.'));
         }
-        
+
         if (!is_numeric($args['thumbnailWidth'])) {
             $error->add(t('Thumbnail Width must be a number.'));
         }
@@ -143,6 +171,20 @@ class Controller extends BlockController implements UsesFeatureInterface
             case "rpv_pageDatePublic":
                 $content = $c->getCollectionDatePublic();
                 break;
+            case 'rpv_pageUserName':
+                $cu_id = $c->getCollectionUserID();
+                $cu = User::getByUserID($cu_id);
+                if(is_object($cu)) {
+                    $content = $cu->getUserName();
+                }
+                break;
+            case 'rpv_pageUserEmail':
+                $cu_id = $c->getCollectionUserID();
+                $cu = User::getByUserID($cu_id);
+                if(is_object($cu)){
+                    $content = $cu->getUserInfoObject()->getUserEmail();
+                }
+                break;
             default:
                 $content = $c->getAttribute($this->attributeHandle);
                 if ($content instanceof \DateTime) {
@@ -163,10 +205,10 @@ class Controller extends BlockController implements UsesFeatureInterface
                             $content = (string) $image->getTag();
                         }
                     } elseif (is_object($content_alt)) {
-                        if (is_array($content) && $content[0] instanceof \Concrete\Core\Tree\Node\Type\Topic) {
+                        if (is_array($content) && isset($content[0]) && $content[0] instanceof \Concrete\Core\Tree\Node\Type\Topic) {
                             $content = str_replace(', ', "\n", $content_alt->getDisplayValue());
                         } elseif ($content instanceof SelectValue) {
-                            $content = (string) $content;
+                            $content = h((string) $content);
                         } else {
                             $content = $content_alt->getDisplayValue();
                         }
@@ -260,6 +302,8 @@ class Controller extends BlockController implements UsesFeatureInterface
             'rpv_pageDateCreated' => t('Page Date Created'),
             'rpv_pageDatePublic' => t('Page Date Published'),
             'rpv_pageDateLastModified' => t('Page Date Modified'),
+            'rpv_pageUserName' => t('Created by User Name'),
+            'rpv_pageUserEmail' => t('Created by User Email'),
         ];
     }
 
@@ -335,8 +379,8 @@ class Controller extends BlockController implements UsesFeatureInterface
     {
       // only use the type specific template if there is NOT a custom template defined
       $b = $this->getBlockObject();
-      if ($b->getBlockFilename()) {      
-        // custom template  
+      if ($b->getBlockFilename()) {
+        // custom template
       } else {
         $templateHandle = $this->getTemplateHandle();
         if (in_array($templateHandle, ['date_time', 'boolean'])) {

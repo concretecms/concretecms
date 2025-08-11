@@ -43,11 +43,18 @@ class PackageInfo
     private $description = '';
 
     /**
-     * The minimum concrete5 version.
+     * The minimum Concrete version.
      *
      * @var string
      */
     private $minimumCoreVersion = '';
+
+    /**
+     * The minimum PHP version.
+     *
+     * @var string
+     */
+    private $minimumPHPVersion = '';
 
     /**
      * Create a new instance of this class.
@@ -180,7 +187,7 @@ class PackageInfo
     }
 
     /**
-     * Get the minimum concrete5 version.
+     * Get the minimum Concrete version.
      *
      * @return string
      */
@@ -190,7 +197,7 @@ class PackageInfo
     }
 
     /**
-     * Get the mayor minimum concrete5 version.
+     * Get the major minimum Concrete version.
      *
      * @return string
      *
@@ -208,7 +215,7 @@ class PackageInfo
     }
 
     /**
-     * Set the minimum concrete5 version.
+     * Set the minimum Concrete version.
      *
      * @param string $value
      *
@@ -217,6 +224,26 @@ class PackageInfo
     public function setMinimumCoreVersion($value)
     {
         $this->minimumCoreVersion = $value;
+
+        return $this;
+    }
+
+    /**
+     * Get the minimum PHP version.
+     */
+    public function getMinimumPHPVersion(): string
+    {
+        return $this->minimumPHPVersion;
+    }
+
+    /**
+     * Set the minimum PHP version.
+     *
+     * @return $this
+     */
+    public function setMinimumPHPVersion(string $value): self
+    {
+        $this->minimumPHPVersion = $value;
 
         return $this;
     }

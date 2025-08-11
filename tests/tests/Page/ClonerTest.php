@@ -24,7 +24,7 @@ class ClonerTest extends PageTestCase
         }
         $home = Page::getByID(Page::getHomePageID());
         $pageType = PageType::getByID(1);
-        
+
         $page1 = $home->add($pageType, ['cName' => 'Cloner Test - Page 1'])->getVersionToModify();
         $page1->addBlock($bt, (new Area(''))->create($page1, 'Main'), ['content' => 'Content #1']);
         $this->assertSame('Content #1', trim($indexer->getBodyContentFromPage($page1)));
@@ -38,38 +38,34 @@ class ClonerTest extends PageTestCase
         $this->assertTrue($block->isAlias());
         $newBlock = $block->duplicate($page2);
         $block->deleteBlock();
-        
+
         $newBlock->update(['content' => 'Content #2']);
         $this->assertSame('Content #2', trim($indexer->getBodyContentFromPage($page2)));
         $this->assertSame('Content #1', trim($indexer->getBodyContentFromPage($page1)));
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
+     *
      * @see \Concrete\TestHelpers\Database\ConcreteDatabaseTestCase::getTables()
      */
     protected function getTables()
     {
-        foreach(['Blocks', 'CollectionVersionBlocksOutputCache'] as $t) {
-            if (!in_array($t, $this->tables, true)) {
-                $this->tables[] = $t;
-            }
-        }
-
-        return parent::getTables();
+        return array_merge(parent::getTables(), [
+            'Blocks',
+            'CollectionVersionBlocksOutputCache',
+        ]);
     }
 
     /**
      * {@inheritdoc}
      *
-     * @see \Concrete\TestHelpers\Database\ConcreteDatabaseTestCase::getMetadatas()
+     * @see \Concrete\TestHelpers\Database\ConcreteDatabaseTestCase::getEntityClassNames()
      */
-    protected function getMetadatas()
+    protected function getEntityClassNames(): array
     {
-        if (!in_array(BlockTypeEntity::class, $this->metadatas, true)) {
-            $this->metadatas[] = BlockTypeEntity::class;
-        }
-
-        return parent::getMetadatas();
+        return array_merge(parent::getEntityClassNames(), [
+            BlockTypeEntity::class,
+        ]);
     }
 }

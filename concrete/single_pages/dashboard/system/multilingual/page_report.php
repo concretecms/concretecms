@@ -11,14 +11,9 @@ if (count($sections) > 0) {
         <div class="ccm-search-fields-row">
             <div class="form-group">
                 <?= $form->label('keywords', t('Search')) ?>
-                <div class="ccm-search-field-content row">
-                    <div class="input-group col-md-11">
-                        <?= $form->search('keywords', array('placeholder' => t('Keywords'))) ?>
-                        <span class="input-group-text ccm-search-main-lookup-field"><i class="fas fa-search"></i></span>
-                    </div>
-                    <div class="col-md-1">
-                        <button type="submit" class="btn btn-primary" tabindex="-1"><?= t('Search') ?></button>
-                    </div>
+                <div class="input-group">
+                    <span class="input-group-text"><i class="fas fa-search"></i></span>
+                    <?= $form->search('keywords', array('placeholder' => t('Keywords'))) ?>
                 </div>
             </div>
         </div>
@@ -73,7 +68,7 @@ if (count($sections) > 0) {
                 </div>
             </div>
         </div>
-        <div class="ccm-search-fields-submit">
+        <div class="ccm-search-fields-submit clearfix">
             <button type="submit" class="btn btn-primary float-end"><?= t('Search') ?></button>
         </div>
     </form>
@@ -147,7 +142,7 @@ if (count($sections) > 0) {
                                                     }
                                                     if (!$cID) {
                                                         ?>
-                                                        <button class="btn btn-success btn-xs" type="button"
+                                                        <button class="btn btn-success btn-sm" type="button"
                                                             data-btn-action="create"
                                                             data-btn-url="<?= $multilingualController->action('create_new') ?>"
                                                             data-btn-multilingual-page-source="<?= $pc->getCollectionID() ?>"
@@ -156,7 +151,7 @@ if (count($sections) > 0) {
                                                         <?php
                                                     }
                                                     ?>
-                                                    <button class="btn btn-info btn-xs" type="button"
+                                                    <button class="btn btn-info btn-sm" type="button"
                                                         data-btn-action="map"
                                                         data-btn-url="<?= $multilingualController->action('assign') ?>"
                                                         data-btn-multilingual-page-source="<?= $pc->getCollectionID() ?>"
@@ -165,7 +160,7 @@ if (count($sections) > 0) {
                                                     <?php
                                                     if ($cID !== '0' && !$cID) {
                                                         ?>
-                                                        <button class="btn btn-warning btn-xs" type="button"
+                                                        <button class="btn btn-warning btn-sm" type="button"
                                                             data-btn-action="ignore"
                                                             data-btn-url="<?= $multilingualController->action('ignore') ?>"
                                                             data-btn-multilingual-page-source="<?= $pc->getCollectionID() ?>"
@@ -175,7 +170,7 @@ if (count($sections) > 0) {
                                                     }
                                                     if ($cID) {
                                                         ?>
-                                                        <button class="btn btn-danger btn-xs" type="button"
+                                                        <button class="btn btn-danger btn-sm" type="button"
                                                             data-btn-action="unmap"
                                                             data-btn-url="<?= $multilingualController->action('unmap') ?>"
                                                             data-btn-multilingual-page-source="<?= $pc->getCollectionID() ?>"

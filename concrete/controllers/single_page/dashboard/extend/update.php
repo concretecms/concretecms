@@ -1,81 +1,106 @@
 <?php
+
 namespace Concrete\Controller\SinglePage\Dashboard\Extend;
 
-use Concrete\Core\Page\Controller\DashboardPageController;
-use TaskPermission;
-use Package;
-use Marketplace;
+use Concrete\Core\Config\Repository\Repository;
+use Concrete\Core\Error\UserMessageException;
+use Concrete\Core\Localization\Localization;
+use Concrete\Core\Marketplace\Marketplace;
+use Concrete\Core\Marketplace\PackageRepositoryInterface;
 use Concrete\Core\Marketplace\RemoteItem as MarketplaceRemoteItem;
-use Localization;
-use Loader;
-use Exception;
+use Concrete\Core\Package\PackageService;
+use Concrete\Core\Page\Controller\DashboardPageController;
+use Concrete\Core\Permission\Checker;
 
 class Update extends DashboardPageController
 {
+    public function view()
+    {
+        $packageRepository = $this->app->make(PackageRepositoryInterface::class);
+        $packageService = $this->app->make(PackageService::class);
+
+        $tp = new Checker();
+        if ($tp->canInstallPackages()) {
+            $skip = $this->app->make(Repository::class)->get('concrete.updates.skip_packages');
+
+            if ($skip !== true) {
+                $packageService->checkPackageUpdates($packageRepository, (array) $skip);
+            }
+        }
+
+        $connection = $packageRepository->getConnection();
+        $this->set('connection', $connection);
+        $this->set('remotePackages', $connection ? $packageRepository->getPackages($connection, true) : []);
+        $this->set('localUpdates', $packageService->getLocalUpgradeablePackages());
+        $this->set('remoteUpdates', $packageService->getRemotelyUpgradeablePackages());
+    }
+
     public function do_update($pkgHandle = false)
     {
-        $tp = new TaskPermission();
-        if ($tp->canInstallPackages()) {
-            if ($pkgHandle) {
-                $pkg = \Concrete\Core\Support\Facade\Package::getClass($pkgHandle);
-                $r = $pkg->testForUpgrade();
-                if ($r !== true) {
-                    $this->error->add($r);
-                } else {
-                    $p = Package::getByHandle($pkgHandle);
-                    $loc = Localization::getInstance();
-                    $loc->pushActiveContext(Localization::CONTEXT_SYSTEM);
-                    try {
-                        $p->upgradeCoreData();
-                        $p->upgrade();
-                        $loc->popActiveContext();
-                        $this->set('message', t('The package has been updated successfully.'));
-                    } catch (Exception $e) {
-                        $loc->popActiveContext();
-                        $this->error->add($e);
-                    }
-                }
+        if (!$pkgHandle) {
+            return $this->view();
+        }
+        try {
+            $tp = new Checker();
+            if (!$tp->canInstallPackages()) {
+                throw new UserMessageException(t('Access Denied.'));
             }
+            $packageService = $this->app->make(PackageService::class);
+            $packageController = $packageService->getClass($pkgHandle);
+            $testResult = $packageController->testForUpgrade();
+            if ($testResult !== true) {
+                $this->error->add($testResult);
+
+                return $this->view();
+            }
+            $previousVersion = $packageController->getPackageEntity()->getPackageVersion();
+            Localization::getInstance()->withContext(Localization::CONTEXT_SYSTEM, static function () use ($packageController) {
+                $packageController->upgradeCoreData();
+                $packageController->upgrade();
+            });
+            $this->set('message',
+                t('Package "%1$s" has been updated successfully from version %2$s to version %3$s.',
+                    t($packageController->getPackageName()) ?: $packageController->getPackageHandle(),
+                    $previousVersion,
+                    $packageController->getPackageVersion()
+                )
+            );
+        } catch (UserMessageException $x) {
+            $this->error->add($x);
         }
         $this->view();
     }
 
-    public function view()
-    {
-        $tp = new TaskPermission();
-        if ($tp->canInstallPackages()) {
-            $mi = Marketplace::getInstance();
-            if ($mi->isConnected()) {
-                Marketplace::checkPackageUpdates();
-            }
-        }
-    }
-
     public function prepare_remote_upgrade($remoteMPID = 0)
     {
-        $tp = new TaskPermission();
-        if ($tp->canInstallPackages()) {
-            $mri = MarketplaceRemoteItem::getByID($remoteMPID);
+        $packageRepository = $this->app->make(PackageRepositoryInterface::class);
+        $packageService = $this->app->make(PackageService::class);
 
-            if (!is_object($mri)) {
-                $this->set('error', array(t('Invalid marketplace item ID.')));
-
-                return;
+        try {
+            $tp = new Checker();
+            if (!$tp->canInstallPackages()) {
+                throw new UserMessageException(t('Access Denied.'));
             }
 
-            $local = Package::getbyHandle($mri->getHandle());
-            if (!is_object($local) || $local->isPackageInstalled() == false) {
-                $this->error->add(t('Package Not Found.'));
-                return;
+            $connection = $packageRepository->getConnection();
+            if (!$connection) {
+                throw new UserMessageException(t('Site not connected to marketplace.'));
             }
 
-            $r = $mri->downloadUpdate();
-
-            if ($r != false) {
-                $this->error->add($r);
-            } else {
-                $this->redirect('/dashboard/extend/update', 'do_update', $mri->getHandle());
+            $mri = $packageRepository->getPackage($connection, $remoteMPID);
+            if (!$mri) {
+                throw new UserMessageException(t('Invalid marketplace item ID.'));
             }
+            $local = $packageService->getByHandle($mri->handle);
+            if ($local === null || !$local->isPackageInstalled()) {
+                throw new UserMessageException(t('Package Not Found.'));
+            }
+
+            $packageRepository->download($connection, $mri, true);
+            return $this->buildRedirect(['/dashboard/extend/update', 'do_update', $mri->handle]);
+        } catch (UserMessageException $x) {
+            $this->error->add($x);
         }
+        $this->view();
     }
 }

@@ -32,6 +32,8 @@ return [
                 'modern_tile_thumbnail_bgcolor' => null,
                 // theme-color meta-tag (eg color of toolbar for Chrome 39+ on Android)
                 'browser_toolbar_color' => null,
+                // Default value for the forceAbsoluteURL option of Concrete\Core\Html\Image
+                'img_src_absolute' => false,
             ],
             'editor' => [
                 'concrete' => [
@@ -154,6 +156,28 @@ return [
                     ],
                 ],
             ],
+            'social' => [
+                'opengraph' => [
+                    'enabled' => true,
+                    'field_og_type' => [
+                        'value_from' => 'value',
+                        'value' => 'website',
+                    ],
+                    'field_og_title' => [
+                        'value_from' => 'page_property',
+                        'property' => 'title',
+                    ],
+                    'field_og_description' => [
+                        'value_from' => 'page_property',
+                        'property' => 'description',
+                    ],
+                    'field_og_thumbnail' => [
+                        'value_from' => 'page_attribute',
+                        'attribute' => 'thumbnail',
+                    ],
+                    'field_fb_app_id' => '',
+                ]
+            ]
         ],
     ],
 ];

@@ -33,7 +33,7 @@ abstract class QueueableJob extends AbstractJob
     /**
      * Process a QueueMessage
      *
-     * @param \ZendQueue\Message $msg
+     * @param JobQueueMessage $msg
      * @return void
      */
     abstract public function processQueueItem(JobQueueMessage $msg);

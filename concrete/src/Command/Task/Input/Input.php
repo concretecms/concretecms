@@ -51,6 +51,7 @@ class Input implements InputInterface, DenormalizableInterface
         return $this->fields;
     }
 
+    #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
         return [
@@ -58,7 +59,7 @@ class Input implements InputInterface, DenormalizableInterface
         ];
     }
 
-    public function denormalize(DenormalizerInterface $denormalizer, $data, string $format = null, array $context = [])
+    public function denormalize(DenormalizerInterface $denormalizer, $data, ?string $format = null, array $context = [])
     {
         foreach ($data['fields'] as $field) {
             $field = $denormalizer->denormalize($field, Field::class, 'json', $context);

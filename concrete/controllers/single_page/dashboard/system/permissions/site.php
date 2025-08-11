@@ -21,7 +21,7 @@ class Site extends DashboardPageController
             return;
         }
 
-        $home = Page::getByID(1, 'RECENT');
+        $home = Page::getByID(Page::getHomePageID(), 'RECENT');
         $pk = PermissionKey::getByHandle('view_page');
         $pk->setPermissionObject($home);
         $assignments = $pk->getAccessListItems();

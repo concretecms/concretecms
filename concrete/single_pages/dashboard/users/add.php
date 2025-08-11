@@ -20,26 +20,38 @@ $fileFolderSelector = $app->make(FileFolderSelector::class);
 <form method="post" action="<?= $view->action('submit'); ?>">
     <?= $form->getAutocompletionDisabler(); ?>
 	<fieldset>
-		<legend><?= t('Basic Details'); ?></legend>
+		<legend><?= t('Account Details'); ?></legend>
 		
 		<div class="form-group">
             <?= $form->label('uName', t('Username')) ?>
             <div class="float-end">
             <span class="text-muted small">
                 <?php echo t('Required') ?>
+                <?php 
+                    $config  = $app->make( 'config' );
+                    $minimumLength = $config->get( 'concrete.user.username.minimum' );
+                    $maximumLength = $config->get( 'concrete.user.username.maximum' );
+                    if ( $minimumLength && $maximumLength ) {
+                        echo t( 'Between %s and %s characters long.', $minimumLength, $maximumLength );
+                    } elseif ( $minimumLength ) {
+                        echo t( 'At least %s characters long.', $minimumLength );
+                    } elseif ( $maximumLength ) {
+                        echo t( 'At most %s characters long.', $maximumLength );
+                    }
+                ?>
             </span>
             </div>
             <?= $form->text('uName', ['autofocus' => 'autofocus', 'autocomplete' => 'off']); ?>
 		</div>
 
-        <div class="form-group">
+        <div class="form-group" data-vue-app="password">
             <?= $form->label('uPassword', t('Password')) ?>
             <div class="float-end">
             <span class="text-muted small">
                 <?php echo t('Required') ?>
             </span>
             </div>
-            <?= $form->password('uPassword', ['autocomplete' => 'off']); ?>
+            <password-input name="uPassword" :strength-meter="true"/>
 		</div>
 
 		<div class="form-group">
@@ -117,3 +129,14 @@ $fileFolderSelector = $app->make(FileFolderSelector::class);
 		</div>
 	</div>
 </form>
+
+<script type="text/javascript">
+    $(function() {
+        Concrete.Vue.activateContext('cms', function(Vue, config) {
+            new Vue({
+                el: 'div[data-vue-app]',
+                components: config.components
+            })
+        })
+    });
+</script>

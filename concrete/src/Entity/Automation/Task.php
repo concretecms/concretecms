@@ -92,6 +92,11 @@ class Task implements \JsonSerializable, TaskInterface
         $this->lastRunBy = $lastRunBy;
     }
 
+    public function isRunning(): bool
+    {
+        return $this->getDateLastStarted() > 0 && $this->getDateLastCompleted() === null;
+    }
+
     /**
      * @return mixed
      */
@@ -152,6 +157,7 @@ class Task implements \JsonSerializable, TaskInterface
         }
     }
 
+    #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
         $controller = $this->getController();

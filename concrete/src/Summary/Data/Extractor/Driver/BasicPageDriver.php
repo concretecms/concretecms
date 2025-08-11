@@ -13,6 +13,7 @@ use Concrete\Core\Summary\Data\Field\DatetimeDataFieldData;
 use Concrete\Core\Summary\Data\Field\FieldInterface;
 use Concrete\Core\Summary\Data\Field\LazyPageLinkDataFieldData;
 use Concrete\Core\Summary\Data\Field\LinkDataFieldData;
+use Concrete\Core\Summary\Data\Field\PagePathLinkDataFieldData;
 use Concrete\Core\User\UserInfoRepository;
 
 class BasicPageDriver implements DriverInterface
@@ -62,9 +63,14 @@ class BasicPageDriver implements DriverInterface
         if ($this->installationService->isMultisiteEnabled()) {
             $collection->addField(new DataField(FieldInterface::FIELD_LINK, new LazyPageLinkDataFieldData()));
         } else {
-            $collection->addField(
-                new DataField(FieldInterface::FIELD_LINK, new LinkDataFieldData($mixed->getCollectionLink()))
-            );
+            $pagePath = $mixed->getCollectionPath();
+            if ($pagePath) {
+                $collection->addField(
+                    new DataField(FieldInterface::FIELD_LINK, new PagePathLinkDataFieldData($pagePath))
+                );
+            } else {
+                $collection->addField(new DataField(FieldInterface::FIELD_LINK, new LazyPageLinkDataFieldData()));
+            }
         }
         $collection->addField(
             new DataField(

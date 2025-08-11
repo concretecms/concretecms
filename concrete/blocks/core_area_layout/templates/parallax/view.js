@@ -3,6 +3,10 @@ $(function () {
     // div containing the special custom template class. Because it's this DIV that should
     // have the parallax image close to it.
 
+    // Note, this relies on parallax-image.js loading from the block's custom template js/ directory. This is done this
+    // way for backward compatibility, but a better way to do this would be to add this functionality directly to the
+    // theme
+
     var $parallax = $('div[data-stripe-wrapper=parallax]');
 
     $parallax.each(function () {

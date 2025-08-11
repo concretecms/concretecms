@@ -2,32 +2,84 @@
 
 namespace Concrete\Block\FeatureLink;
 
-use Concrete\Core\Application\Service\FileManager;
 use Concrete\Core\Block\BlockController;
 use Concrete\Core\Feature\Features;
 use Concrete\Core\Feature\UsesFeatureInterface;
 use Concrete\Core\File\File;
+use Concrete\Core\File\Tracker\FileTrackableInterface;
 use Concrete\Core\Form\Service\DestinationPicker\DestinationPicker;
+use Concrete\Core\Html\Service\FontAwesomeIcon;
 use Concrete\Core\Page\Page;
 use Concrete\Core\Page\Theme\Theme;
-use Concrete\Core\Permission\Checker;
 use HtmlObject\Link;
-use Concrete\Core\Html\Service\FontAwesomeIcon;
-
+use Concrete\Core\File\Tracker\RichTextExtractor;
 
 defined('C5_EXECUTE') or die('Access Denied.');
 
-class Controller extends BlockController implements UsesFeatureInterface
+class Controller extends BlockController implements FileTrackableInterface, UsesFeatureInterface
 {
+    /**
+     * @var string|null
+     */
+    public $title;
+
+    /**
+     * @var string|null
+     */
+    public $body;
+
+    /**
+     * @var string|null
+     */
+    public $buttonText;
+
+    /**
+     * @var string|null
+     */
+    public $buttonExternalLink;
+
+    /**
+     * @var int|string|null
+     */
+    public $buttonInternalLinkCID;
+
+    /**
+     * @var int|string|null
+     */
+    public $buttonFileLinkID;
+
+    /**
+     * @var string|null
+     */
+    public $buttonColor;
+
+    /**
+     * @var string|null
+     */
+    public $buttonStyle;
+
+    /**
+     * @var string|null
+     */
+    public $buttonSize;
+
+    /**
+     * @var string|null
+     */
+    public $titleFormat;
+
+    /**
+     * @var string|null
+     */
+    protected $icon;
+
+    /**
+     * @var int|string|null
+     */
+    public $fID;
+
     public $helpers = ['form'];
 
-    public $buttonInternalLinkCID;
-    public $buttonExternalLink;
-    public $buttonFileLinkID;
-    public $buttonText;
-    public $buttonSize;
-    public $buttonStyle;
-    public $buttonColor;
     public $buttonIcon;
 
     protected $btDefaultSet = 'basic';
@@ -37,11 +89,12 @@ class Controller extends BlockController implements UsesFeatureInterface
     protected $btCacheBlockRecord = true;
     protected $btCacheBlockOutput = true;
     protected $btCacheBlockOutputOnPost = true;
+    protected $btExportFileColumns = ['buttonFileLinkID', 'fID'];
+    protected $btExportPageColumns = ['buttonInternalLinkCID'];
+    protected $btExportContentColumns = ['body'];
     protected $btCacheBlockOutputForRegisteredUsers = true;
     protected $btCacheBlockOutputOnEditMode = true;
     protected $btCacheBlockOutputLifetime = 300;
-
-    protected $icon;
 
     /**
      * {@inheritdoc}
@@ -86,6 +139,7 @@ class Controller extends BlockController implements UsesFeatureInterface
     {
         $this->set('titleFormat', 'h2');
         $this->edit();
+        $this->set('bf', null);
     }
 
     public function edit()
@@ -108,6 +162,62 @@ class Controller extends BlockController implements UsesFeatureInterface
             $this->set('imageLinkHandle', 'none');
             $this->set('imageLinkValue', null);
         }
+         // Image file object
+         $bf = null;
+         if ($this->getFileID() > 0) {
+             $bf = $this->getFileObject();
+         }
+         $this->set('bf', $bf);
+    }
+
+    /**
+     * @return bool
+     */
+    public function isComposerControlDraftValueEmpty()
+    {
+        $f = $this->getFileObject();
+        if (is_object($f) && $f->getFileID()) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * @return int
+     */
+    public function getFileID()
+    {
+        return isset($this->record->fID) ? $this->record->fID : (isset($this->fID) ? $this->fID : null);
+    }
+
+    /**
+     * @return \Concrete\Core\Entity\File\File|null
+     */
+    public function getFileObject()
+    {
+        return File::getByID($this->getFileID());
+    }
+
+    /**
+     * @return \Concrete\Core\Entity\File\File|null
+     */
+    public function getImageFeatureDetailFileObject()
+    {
+        // i don't know why this->fID isn't sticky in some cases, leading us to query
+        // every damn time
+        $db = $this->app->make('database')->connection();
+
+        $file = null;
+        $fID = $db->fetchColumn('SELECT fID FROM btContentImage WHERE bID = ?', [$this->bID], 0);
+        if ($fID) {
+            $f = File::getByID($fID);
+            if (is_object($f) && $f->getFileID()) {
+                $file = $f;
+            }
+        }
+
+        return $file;
     }
 
     /**
@@ -155,24 +265,65 @@ class Controller extends BlockController implements UsesFeatureInterface
         $this->set('buttonIcon', $this->icon);
         $this->set('iconTag', FontAwesomeIcon::getFromClassNames(h($this->icon)));
       }
+      // Check for a valid File in the view
+      $f = $this->getFileObject();
+      $this->set('f', $f);
     }
-
-
-
 
     public function save($args)
     {
-        list($imageLinkType, $imageLinkValue) = $this->app->make(DestinationPicker::class)->decode('imageLink', $this->getImageLinkPickers(), null, null, $args);
-
-        $args['buttonInternalLinkCID'] = $imageLinkType === 'page' ? $imageLinkValue : 0;
-        $args['buttonFileLinkID'] = $imageLinkType === 'file' ? $imageLinkValue : 0;
-        $args['buttonExternalLink'] = $imageLinkType === 'external_url' ? $imageLinkValue : '';
-        /** @var SanitizeService $security */
+        $fromCIF = ($args['__fromCIF'] ?? null) === true;
+        if (!$fromCIF) {
+            list($imageLinkType, $imageLinkValue) = $this->app->make(DestinationPicker::class)->decode('imageLink', $this->getImageLinkPickers(), null, null, $args);
+            $args['buttonInternalLinkCID'] = $imageLinkType === 'page' ? $imageLinkValue : 0;
+            $args['buttonFileLinkID'] = $imageLinkType === 'file' ? $imageLinkValue : 0;
+            $args['buttonExternalLink'] = $imageLinkType === 'external_url' ? $imageLinkValue : '';
+        }
         $security = $this->app->make('helper/security');
-        $args['icon'] = $security->sanitizeString($args['icon']);
-
+        $args['icon'] = $security->sanitizeString($args['icon'] ?? '');
+        $args = $args + [
+            'fID' => 0,
+        ];
+        $args['fID'] = $args['fID'] != '' ? $args['fID'] : 0;
         parent::save($args);
     }
-    
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Block\BlockController::getImportData()
+     */
+    public function getImportData($blockNode, $page)
+    {
+        $args = parent::getImportData($blockNode, $page);
+        $args += ['__fromCIF' => true];
+        foreach (['buttonInternalLinkCID', 'buttonFileLinkID', 'fID'] as $field) {
+            $args[$field] = empty($args[$field]) ? 0 : (int) $args[$field];
+        }
+
+        return $args;
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\File\Tracker\FileTrackableInterface::getUsedFiles()
+     */
+    public function getUsedFiles()
+    {
+        $result = $this->app->make(RichTextExtractor::class)->extractFiles($this->body);
+        if (($fID = (int) $this->buttonFileLinkID) > 0) {
+            $result[] = $fID;
+        }
+        if (($fID = (int) $this->fID) > 0) {
+            $result[] = $fID;
+        }
+
+        return $result;
+    }
+
+    public function getSearchableContent()
+    {
+        return "{$this->title} {$this->body}";
+    }
 }

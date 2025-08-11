@@ -9,7 +9,7 @@ use Concrete\TestHelpers\Database\ConcreteDatabaseTestCase;
 class TypeTest extends ConcreteDatabaseTestCase
 {
     protected $fixtures = [];
-    protected $metadatas = [
+    protected $entityClassNames = [
         StorageLocationType::class,
     ];
 

@@ -1,91 +1,106 @@
-<?php /** @noinspection PhpUnused */
-
-/** @noinspection PhpDeprecationInspection */
+<?php
 
 namespace Concrete\Controller\Dialog\Groups\Bulk;
 
 use Concrete\Controller\Backend\UserInterface as BackendInterfaceController;
 use Concrete\Core\Application\EditResponse;
-use Concrete\Core\Support\Facade\Facade;
+use Concrete\Core\Error\UserMessageException;
+use Concrete\Core\Form\Service\Form;
+use Concrete\Core\Http\ResponseFactoryInterface;
+use Concrete\Core\Permission\Checker;
+use Concrete\Core\User\Group\CanDeleteGroupsTrait;
 use Concrete\Core\User\Group\Command\DeleteGroupCommand;
 use Concrete\Core\User\Group\Group;
-use Concrete\Core\User\User;
-use Concrete\Core\Support\Facade\Url;
+use Concrete\Core\User\Group\GroupRepository;
+use Concrete\Core\Validation\CSRF\Token;
 use Concrete\Core\Validation\SanitizeService;
-use Exception;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
 
 class Delete extends BackendInterfaceController
 {
+    use CanDeleteGroupsTrait;
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Controller\Controller::$viewPath
+     */
     protected $viewPath = '/dialogs/groups/bulk/delete';
-    /** @var Group[] */
-    protected $groups = [];
-    protected $canEdit = false;
 
-    public function view()
+    public function view(): ?Response
     {
-        $this->set('groups', $this->groups);
+        $this->set('form', $this->app->make(Form::class));
+        $this->set('groups', $this->resolveGroups());
+
+        return null;
     }
 
-    public function submit()
+    public function submit(): JsonResponse
     {
-        $app = Facade::getFacadeApplication();
-        $r = new EditResponse();
-
         if (!$this->validateAction()) {
-            $r->setError(new Exception(t('Invalid Token')));
-            $r->outputJSON();
-            $this->app->shutdown();
+            throw new UserMessageException($this->app->make(Token::class)->getErrorMessage());
+        }
+        $groups = $this->resolveGroups();
+        $result = new DeleteGroupCommand\Result();
+        $command = new DeleteGroupCommand(0);
+        $command
+            ->setExtendedResults(true)
+            ->setOnChildGroups($this->request->request->getInt('subGroupsOperation'))
+            ->setOnlyIfEmpty((bool) $this->request->request->get('onlyIfEmpty'))
+        ;
+        foreach ($groups as $group) {
+            $command->setGroupID($group->getGroupID());
+            $result->merge($this->app->executeCommand($command));
+        }
+        $response = new EditResponse();
+        $response->setTitle(t('Groups Deleted'));
+        if ($result->getNumberOfDeletedGroups() === 0) {
+            $response->setMessage(nl2br(h((string) $result)));
+        } else {
+            $this->flash('success', (string) $result);
+            $response->setReloadCurrentPage(true);
         }
 
-        /** @var User $u */
-        $u = $this->app->make(User::class);
+        return $this->app->make(ResponseFactoryInterface::class)->json($response);
+    }
 
-        if (!$u->isSuperUser()) {
-            $r->setError(new Exception(t('You need to be a super user to delete groups.')));
-            $r->outputJSON();
-            $this->app->shutdown();
-        }
-
-        $count = 0;
-
-        if (count($this->groups) > 0) {
-            foreach ($this->groups as $group) {
-
-                if ($app->executeCommand(new DeleteGroupCommand($group->getGroupID())) !== false) {
-                    $count++;
+    /**
+     * @return \Concrete\Core\User\Group\Group[]
+     */
+    protected function resolveGroups(): array
+    {
+        $groups = [];
+        $items = $this->request('item');
+        if (is_array($items)) {
+            $sh = $this->app->make(SanitizeService::class);
+            $repo = $this->app->make(GroupRepository::class);
+            foreach ($items as $uID) {
+                $group = $repo->getGroupById($sh->sanitizeInt($uID));
+                if ($group !== null && !isset($groups[$group->getGroupID()])) {
+                    $gp = new Checker($group);
+                    if ($gp->canEditGroup()) {
+                        $groups[$group->getGroupID()] = $group;
+                    }
                 }
             }
         }
+        $groups = array_values($groups);
+        // Sort groups by path (the deepest ones first)
+        usort($groups, static function (Group $a, Group $b): int {
+            return count(explode('/', $b->getGroupPath())) - count(explode('/', $a->getGroupPath()));
+        });
 
-        $r->setMessage(t2('%s group deleted', '%s groups deleted', $count));
-        $r->setTitle(t('Groups Deleted'));
-        $r->setRedirectURL(Url::to('/dashboard/users/groups'));
-        $r->outputJSON();
+        return $groups;
     }
 
-    protected function canAccess()
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Controller\Backend\UserInterface::canAccess()
+     */
+    protected function canAccess(): bool
     {
-        $this->populateGroups();
-        return $this->canEdit;
-    }
-
-    protected function populateGroups()
-    {
-        /** @var SanitizeService $sh */
-        $sh = $this->app->make(SanitizeService::class);
-
-        if (is_array($this->request('item'))) {
-            $this->groups = [];
-            foreach ($this->request('item') as $uID) {
-                $group = Group::getByID($sh->sanitizeInt($uID));
-                if ($group instanceof Group) {
-                    $this->groups[] = $group;
-                }
-            }
-        }
-
-        $this->canEdit = true;
-
-        return $this->canEdit;
+        return $this->userCanDeleteGroups();
     }
 }

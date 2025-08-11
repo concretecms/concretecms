@@ -1,7 +1,7 @@
 <?php
+
 namespace Concrete\Core\Entity\Notification;
 
-use Concrete\Core\Entity\User\GroupCreate;
 use Concrete\Core\Notification\View\GroupCreateListView;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -13,16 +13,16 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class GroupCreateNotification extends Notification
 {
-
     /**
      * @ORM\ManyToOne(targetEntity="\Concrete\Core\Entity\User\GroupCreate", cascade={"persist", "remove"}, inversedBy="notifications"),
      * @ORM\JoinColumn(name="id", referencedColumnName="id")
+     *
+     * @var \Concrete\Core\Entity\User\GroupCreate
      */
     protected $create;
 
     /**
-     * GroupEnterNotification constructor.
-     * @param GroupCreate $create
+     * @param \Concrete\Core\Entity\User\GroupCreate $create
      */
     public function __construct($create)
     {
@@ -31,16 +31,20 @@ class GroupCreateNotification extends Notification
     }
 
     /**
-     * @return GroupCreate
+     * @return \Concrete\Core\Entity\User\GroupCreate
      */
     public function getCreate()
     {
         return $this->create;
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Entity\Notification\Notification::getListView()
+     */
     public function getListView()
     {
         return new GroupCreateListView($this);
     }
-
 }

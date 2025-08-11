@@ -1,0 +1,5 @@
+{
+  "$schema": "../options-schema.json",
+  "requiredBlockTypes": ["content"],
+  "importerExporterMethod": "importExportPageType1"
+}

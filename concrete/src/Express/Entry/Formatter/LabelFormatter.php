@@ -28,10 +28,13 @@ class LabelFormatter implements EntryFormatterInterface
             if ($key === 'id') {
                 return $entry->getID();
             }
-            
-            $attribute = $entry->getAttribute($key);
-            if ($attribute) {
-                return $attribute;
+
+            $attributeValue = $entry->getAttributeValueObject($key);
+            if ($attributeValue) {
+                $attribute = $attributeValue->getPlainTextValue();
+                if ($attribute) {
+                    return $attribute;
+                }
             }
 
             $association = $entry->getAssociation($key);

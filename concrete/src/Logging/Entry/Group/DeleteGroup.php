@@ -8,7 +8,7 @@ class DeleteGroup extends Group
     public function getEntryMessage()
     {
         return t('Group %1$s (ID %2$s) was deleted by an automated process.',
-            $this->group->getGroupName(),
+            $this->group->getGroupPath(),
             $this->group->getGroupID()
         );
     }
@@ -18,7 +18,7 @@ class DeleteGroup extends Group
         return t('User %1$s (ID %2$s) deleted group %3$s (ID %4$s).',
             $this->applier->getUserName(),
             $this->applier->getUserID(),
-            $this->group->getGroupName(),
+            $this->group->getGroupPath(),
             $this->group->getGroupID()
         );
     }

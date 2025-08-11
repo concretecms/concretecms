@@ -406,6 +406,12 @@
             </access>
         </permissionkey>
 
+        <permissionkey handle="view_debug_error_information" name="View Debug Error Information" package="" category="admin">
+            <access>
+                <group name="Administrators" description=""/>
+            </access>
+        </permissionkey>
+
         <permissionkey handle="manage_layout_presets" name="Manage Layout Presets" package="" category="admin">
             <access>
                 <group name="Administrators" description=""/>
@@ -461,8 +467,16 @@
         </permissionkey>
 
         <permissionkey handle="access_api" name="Access API" package="" category="admin">
+            <access>
+                <group name="Administrators" description=""/>
+            </access>
         </permissionkey>
 
+        <permissionkey handle="view_announcement_content" name="View Announcement Content" package="" description="Controls whether a user sees the Announcement modal interstitial, including upgrades and help, upon login." category="admin">
+            <access>
+                <group name="Administrators" description=""/>
+            </access>
+        </permissionkey>
 
         <permissionkey handle="edit_topic_tree" name="Edit Topic Tree" package="" category="admin">
             <access>
@@ -624,7 +638,7 @@
             <categories>
                 <category handle="page" />
                 <category handle="page_type" />
-                <category handle="basic_workflow" package=""/>
+                <category handle="basic_workflow" />
             </categories>
         </permissionaccessentitytype>
     </permissionaccessentitytypes>

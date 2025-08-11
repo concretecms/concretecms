@@ -15,7 +15,7 @@ class BatchStamp implements StampInterface
     /**
      * @param string $batchId
      */
-    public function __construct(string $batchId = null)
+    public function __construct(?string $batchId = null)
     {
         $this->batchId = $batchId;
     }

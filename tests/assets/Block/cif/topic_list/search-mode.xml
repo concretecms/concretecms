@@ -1,0 +1,10 @@
+<block type="topic_list" name="">
+  <data>
+    <cParentID>{ccm:export:page:/page-2}</cParentID>
+    <mode>S</mode>
+    <title>This is the Title!</title>
+    <titleFormat>h1</titleFormat>
+    <topicAttributeKeyHandle>test_topic</topicAttributeKeyHandle>
+    <tree>Test Topic Tree</tree>
+  </data>
+</block>

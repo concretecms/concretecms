@@ -3,14 +3,18 @@
 $c = Page::getCurrentPage();
 $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
 
+/** @var \Concrete\Core\Express\Entry\Search\Result\Result|null $result */
+$result = $result ?? null;
+$items = $result ? $result->getItems() : [];
+
 if ($tableName) { ?>
     <<?php echo $titleFormat; ?>><?=$tableName?></<?php echo $titleFormat; ?>>
 <?php } ?>
 <?php if ($tableDescription) { ?>
     <p><?=$tableDescription?></p>
-<?php } 
-	
-if ($entity) { ?>
+<?php }
+
+if (isset($entity)) { ?>
     <?php if ($enableSearch) { ?>
         <form method="get" action="<?=$c->getCollectionLink()?>">
 
@@ -46,16 +50,15 @@ if ($entity) { ?>
                 </div>
             <?php } ?>
 
-            <div class="mb-3">
-                <button type="submit" class="btn btn-primary pull-right" name="search"><?=t('Search')?></button>
+            <div class="mb-3 clearfix">
+                <button type="submit" class="btn btn-primary float-end" name="search"><?=t('Search')?></button>
             </div>
         </form>
     <?php }
 
-    $results = $result->getItemListObject()->getResults();
-    if (count($results)) { ?>
+    if ($result && $items) { ?>
 
-        <?php if ($enableItemsPerPageSelection) { ?>
+        <?php if (isset($enableItemsPerPageSelection) && $enableItemsPerPageSelection) { ?>
             <div class="mt-3 mb-3">
                 <div class="row row-cols-auto align-items-center">
                     <div class="col-auto">
@@ -83,14 +86,16 @@ if ($entity) { ?>
             <thead>
                 <tr>
                 <?php foreach ($result->getColumns() as $column) { ?>
-                    <th class="<?=$column->getColumnStyleClass()?>"><a href="<?=$column->getColumnSortURL()?>"><?=$column->getColumnTitle()?></a></th>
+                    <th class="<?=$column->getColumnStyleClass()?>">
+                        <a href="<?=h($column->getColumnSortURL())?>"><?=$column->getColumnTitle()?></a>
+                    </th>
                 <?php } ?>
                 </tr>
             </thead>
             <tbody>
             <?php
             $rowClass = 'ccm-block-express-entry-list-row-a';
-            foreach ($result->getItems() as $item) { ?>
+            foreach ($items as $item) { ?>
                 <tr class="<?=$rowClass?>">
                 <?php foreach ($item->getColumns() as $column) {
                     if ($controller->linkThisColumn($column)) { ?>
@@ -109,7 +114,7 @@ if ($entity) { ?>
             </tbody>
         </table>
 
-        <?php if ($enablePagination && $pagination) { ?>
+        <?php if (isset($enablePagination) && $enablePagination && $pagination) { ?>
             <?=$pagination ?>
         <?php } ?>
 

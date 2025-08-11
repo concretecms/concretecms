@@ -9,11 +9,15 @@ defined('C5_EXECUTE') or die("Access Denied.");
 class NullOutput implements OutputInterface
 {
 
-    public function write($message)
+    public function write($message): void
     {
-        return null;
+        // nothing
     }
 
+    public function writeError($message): void
+    {
+        // nothing
+    }
 
 
 }

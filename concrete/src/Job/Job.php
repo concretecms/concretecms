@@ -101,7 +101,7 @@ abstract class Job extends ConcreteObject
         // 1. Does the security token for jobs md5 correctly? If so, good.
 
         $val = \Core::make('config/database')->get('concrete.security.token.jobs') . ':' . DIRNAME_JOBS;
-        if (md5($val) == $auth) {
+        if (md5($val) === $auth) {
             return true;
         }
     }

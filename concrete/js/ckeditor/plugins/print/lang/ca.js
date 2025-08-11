@@ -1,1 +1,1 @@
-﻿CKEDITOR.plugins.setLang("print","ca",{toolbar:"Imprimeix"});
+CKEDITOR.plugins.setLang("print","ca",{toolbar:"Imprimeix"});

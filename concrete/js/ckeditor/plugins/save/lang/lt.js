@@ -1,1 +1,1 @@
-﻿CKEDITOR.plugins.setLang("save","lt",{toolbar:"Išsaugoti"});
+CKEDITOR.plugins.setLang("save","lt",{toolbar:"Išsaugoti"});

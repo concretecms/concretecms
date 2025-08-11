@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Block\CoreThemeDocumentationBreadcrumb;
 
 use Concrete\Core\Block\BlockController;
@@ -7,19 +8,35 @@ use Concrete\Core\Page\Theme\Theme;
 
 class Controller extends BlockController
 {
+    /**
+     * @var bool
+     */
     protected $btIsInternal = true;
 
-    public function getBlockTypeDescription()
+    /**
+     * {@inheritdoc}
+     *
+     * @return string
+     */
+    public function getBlockTypeDescription(): string
     {
-        return t("Adds breadcrumb navigation for use with internal theme documentation.");
+        return t('Adds breadcrumb navigation for use with internal theme documentation.');
     }
 
-    public function getBlockTypeName()
+    /**
+     * {@inheritdoc}
+     *
+     * @return string
+     */
+    public function getBlockTypeName(): string
     {
-        return t("Theme Documentation Breadcrumb");
+        return t('Theme Documentation Breadcrumb');
     }
 
-    public function view()
+    /**
+     * @return void
+     */
+    public function view(): void
     {
         $c = $this->getCollectionObject();
         $navigation = new Navigation();
@@ -31,5 +48,4 @@ class Controller extends BlockController
         $this->set('currentPage', $c);
         $this->set('theme', $theme);
     }
-
 }

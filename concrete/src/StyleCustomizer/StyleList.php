@@ -39,6 +39,7 @@ class StyleList implements \JsonSerializable
         return $this->sets;
     }
 
+    #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
         return [

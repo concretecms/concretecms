@@ -7,20 +7,38 @@ use Concrete\Core\Config\Repository\Repository;
 use Concrete\Core\Http\ResponseFactory;
 use Concrete\Core\Page\Controller\DashboardPageController;
 use Concrete\Core\Page\Page;
+use Concrete\Core\Session\SessionValidator;
 use Concrete\Core\Url\Resolver\Manager\ResolverManager;
 use Concrete\Core\Utility\Service\Validation\Numbers;
+use IPLib\Factory;
+use IPLib\Address\AddressInterface;
 
 class AutomatedLogout extends DashboardPageController
 {
-    public const ITEM_IP = 'concrete.security.session.invalidate_on_ip_mismatch';
+    /**
+     * @deprecated Use \Concrete\Core\Session\SessionValidator::CONFIGKEY_IP_MISMATCH
+     */
+    public const ITEM_IP = SessionValidator::CONFIGKEY_IP_MISMATCH;
 
-    public const ITEM_USER_AGENT = 'concrete.security.session.invalidate_on_user_agent_mismatch';
+    /**
+     * @deprecated Use \Concrete\Core\Session\SessionValidator::CONFIGKEY_USERAGENT_MISMATCH
+     */
+    public const ITEM_USER_AGENT = SessionValidator::CONFIGKEY_USERAGENT_MISMATCH;
 
-    public const ITEM_SESSION_INVALIDATE = 'concrete.session.valid_since';
+    /**
+     * @deprecated Use \Concrete\Core\Session\SessionValidator::CONFIGKEY_SESSION_INVALIDATE
+     */
+    public const ITEM_SESSION_INVALIDATE = SessionValidator::CONFIGKEY_SESSION_INVALIDATE;
 
-    public const ITEM_INVALIDATE_INACTIVE_USERS = 'concrete.security.session.invalidate_inactive_users.enabled';
+    /**
+     * @deprecated Use \Concrete\Core\Session\SessionValidator::CONFIGKEY_INVALIDATE_INACTIVE_USERS
+     */
+    public const ITEM_INVALIDATE_INACTIVE_USERS = SessionValidator::CONFIGKEY_INVALIDATE_INACTIVE_USERS;
 
-    public const ITEM_INVALIDATE_INACTIVE_USERS_TIME = 'concrete.security.session.invalidate_inactive_users.time';
+    /**
+     * @deprecated Use \Concrete\Core\Session\SessionValidator::CONFIGKEY_INVALIDATE_INACTIVE_USERS_TIME
+     */
+    public const ITEM_INVALIDATE_INACTIVE_USERS_TIME = SessionValidator::CONFIGKEY_INVALIDATE_INACTIVE_USERS_TIME;
 
     /**
      * The response factory we use to generate responses.
@@ -59,10 +77,13 @@ class AutomatedLogout extends DashboardPageController
     public function view()
     {
         $this->set('trustedProxyUrl', $this->urls->resolve(['/dashboard/system/permissions/trusted_proxies']));
-        $this->set('invalidateOnIPMismatch', (bool) $this->config->get(static::ITEM_IP));
-        $this->set('invalidateOnUserAgentMismatch', (bool) $this->config->get(static::ITEM_USER_AGENT));
-        $this->set('invalidateInactiveUsers', (bool) $this->config->get(static::ITEM_INVALIDATE_INACTIVE_USERS));
-        $this->set('inactiveTime', ((int) $this->config->get(static::ITEM_INVALIDATE_INACTIVE_USERS_TIME)) ?: null);
+        $this->set('invalidateOnIPMismatch', (bool) $this->config->get(SessionValidator::CONFIGKEY_IP_MISMATCH));
+        $this->set('enableUserSpecificIgnoredIPMismatches', (bool) $this->config->get(SessionValidator::CONFIGKEY_ENABLE_USERSPECIFIC_IP_MISMATCH_ALLOWLIST));
+        $this->set('ignoredIPMismatches', (array) $this->config->get(SessionValidator::CONFIGKEY_IP_MISMATCH_ALLOWLIST));
+        $this->set('myIPAddress', $this->app->make(AddressInterface::class));
+        $this->set('invalidateOnUserAgentMismatch', (bool) $this->config->get(SessionValidator::CONFIGKEY_USERAGENT_MISMATCH));
+        $this->set('invalidateInactiveUsers', (bool) $this->config->get(SessionValidator::CONFIGKEY_INVALIDATE_INACTIVE_USERS));
+        $this->set('inactiveTime', ((int) $this->config->get(SessionValidator::CONFIGKEY_INVALIDATE_INACTIVE_USERS_TIME)) ?: null);
         $this->set('confirmInvalidateString', $this->getConfirmInvalidateString());
     }
 
@@ -78,7 +99,21 @@ class AutomatedLogout extends DashboardPageController
         if (!$this->token->validate('save_automated_logout')) {
             $this->error->add($this->token->getErrorMessage());
         }
-
+        $invalidateOnIPMismatch = (bool) $post->get('invalidateOnIPMismatch');
+        if ($invalidateOnIPMismatch) {
+            $ignoredIPMismatches = [];
+            foreach (preg_split('/\s+/', (string) $post->get('ignoredIPMismatches'), -1, PREG_SPLIT_NO_EMPTY) as $ignoredIPMismatch) {
+                $range = Factory::parseRangeString($ignoredIPMismatch);
+                if ($range === null) {
+                    $this->error->add(t('The IP address range %s is not valid.', $ignoredIPMismatch));
+                } else {
+                    $range = (string) $range;
+                    if (!in_array($range, $ignoredIPMismatches, true)) {
+                        $ignoredIPMismatches[] = $range;
+                    }
+                }
+            }
+        }
         $invalidateInactiveUsers = (bool) $post->get('invalidateInactiveUsers');
         if ($invalidateInactiveUsers) {
             $inactiveTime = $post->get('inactiveTime');
@@ -93,11 +128,15 @@ class AutomatedLogout extends DashboardPageController
         }
 
         // Save the posted settings
-        $this->config->save(static::ITEM_IP, (bool) $post->get('invalidateOnIPMismatch'));
-        $this->config->save(static::ITEM_USER_AGENT, (bool) $post->get('invalidateOnUserAgentMismatch'));
-        $this->config->save(static::ITEM_INVALIDATE_INACTIVE_USERS, $invalidateInactiveUsers);
+        $this->config->save(SessionValidator::CONFIGKEY_IP_MISMATCH, $invalidateOnIPMismatch);
+        $this->config->save(SessionValidator::CONFIGKEY_USERAGENT_MISMATCH, (bool) $post->get('invalidateOnUserAgentMismatch'));
+        $this->config->save(SessionValidator::CONFIGKEY_INVALIDATE_INACTIVE_USERS, $invalidateInactiveUsers);
+        if ($invalidateOnIPMismatch) {
+            $this->config->save(SessionValidator::CONFIGKEY_ENABLE_USERSPECIFIC_IP_MISMATCH_ALLOWLIST, (bool) $post->get('enableUserSpecificIgnoredIPMismatches'));
+            $this->config->save(SessionValidator::CONFIGKEY_IP_MISMATCH_ALLOWLIST, $ignoredIPMismatches);
+        }
         if ($invalidateInactiveUsers) {
-            $this->config->save(static::ITEM_INVALIDATE_INACTIVE_USERS_TIME, $inactiveTime);
+            $this->config->save(SessionValidator::CONFIGKEY_INVALIDATE_INACTIVE_USERS_TIME, $inactiveTime);
         }
 
         $this->flash('message', t('Successfully saved Session Security settings'));
@@ -144,7 +183,7 @@ class AutomatedLogout extends DashboardPageController
     protected function invalidateSessions()
     {
         // Save the configuration that invalidates sessions
-        $this->config->save(static::ITEM_SESSION_INVALIDATE, Carbon::now('utc')->getTimestamp());
+        $this->config->save(SessionValidator::CONFIGKEY_SESSION_INVALIDATE, Carbon::now('utc')->getTimestamp());
 
         // Invalidate the current session explicitly so that we get back to the login page with a nice error message
         $this->app->make('session')->invalidate();

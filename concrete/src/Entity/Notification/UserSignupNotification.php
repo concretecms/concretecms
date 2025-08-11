@@ -1,7 +1,7 @@
 <?php
+
 namespace Concrete\Core\Entity\Notification;
 
-use Concrete\Core\Entity\User\UserSignup;
 use Concrete\Core\Notification\Subject\SubjectInterface;
 use Concrete\Core\Notification\View\UserSignupListView;
 use Doctrine\ORM\Mapping as ORM;
@@ -14,16 +14,16 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class UserSignupNotification extends Notification
 {
-
     /**
      * @ORM\ManyToOne(targetEntity="\Concrete\Core\Entity\User\UserSignup", cascade={"persist", "remove"}, inversedBy="notifications"),
      * @ORM\JoinColumn(name="usID", referencedColumnName="usID")
+     *
+     * @var \Concrete\Core\Entity\User\UserSignup
      */
     protected $signup;
 
     /**
-     * UserSignupNotification constructor.
-     * @param $signup UserSignup
+     * @param \Concrete\Core\Entity\User\UserSignup $signup
      */
     public function __construct(SubjectInterface $signup)
     {
@@ -32,14 +32,18 @@ class UserSignupNotification extends Notification
     }
 
     /**
-     * @return mixed
+     * @return \Concrete\Core\Entity\User\UserSignup
      */
     public function getSignupRequest()
     {
         return $this->signup;
     }
 
-
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Entity\Notification\Notification::getListView()
+     */
     public function getListView()
     {
         return new UserSignupListView($this);

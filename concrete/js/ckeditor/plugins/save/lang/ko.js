@@ -1,1 +1,1 @@
-﻿CKEDITOR.plugins.setLang("save","ko",{toolbar:"저장"});
+CKEDITOR.plugins.setLang("save","ko",{toolbar:"저장"});

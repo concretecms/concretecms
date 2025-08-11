@@ -7,7 +7,7 @@ if (!defined('PHP_VERSION_ID') || PHP_VERSION_ID < 70209) {
 /*
  * ----------------------------------------------------------------------------
  * Set required constants, including directory names, attempt to include site configuration file with database
- * information, attempt to determine if we ought to skip to an updated core, etc...
+ * information, attempt to determine if we ought to skip to an updated core, etc.
  * ----------------------------------------------------------------------------
  */
 require __DIR__ . '/bootstrap/configure.php';

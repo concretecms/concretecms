@@ -22,6 +22,7 @@ class Open extends DashboardPageController
         $this->set('displayUsernameField', (bool) $config->get('concrete.user.registration.display_username_field'));
         $this->set('displayConfirmPasswordField', (bool) $config->get('concrete.user.registration.display_confirm_password_field'));
         $this->set('enableRegistrationCaptcha', (bool) $config->get('concrete.user.registration.captcha'));
+        $this->set('displayUsernameFieldEdit', (bool) $config->get('concrete.user.edit_profile.display_username_field'));
     }
 
     public function update_registration_type()
@@ -71,6 +72,7 @@ class Open extends DashboardPageController
         $config->save('concrete.user.registration.display_username_field', (bool) $this->get('display_username_field'));
         $config->save('concrete.user.registration.display_confirm_password_field', (bool) $post->get('display_confirm_password_field'));
         $config->save('concrete.user.registration.captcha', (bool) $post->get('enable_registration_captcha'));
+        $config->save('concrete.user.edit_profile.display_username_field', (bool) $this->get('display_username_field_on_edit'));
 
         $this->flash('success', t('Registration settings have been saved.'));
 

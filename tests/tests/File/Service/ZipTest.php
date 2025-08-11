@@ -14,9 +14,15 @@ class ZipTest extends TestCase
      */
     protected $zipHelper;
 
-    protected $rootDir = null;
+    /**
+     * @var string|null
+     */
+    protected $workDir;
 
-    protected $fileSystemProblem = null;
+    /**
+     * @var string|null
+     */
+    protected $fileSystemProblem;
 
     public function setUp():void
     {

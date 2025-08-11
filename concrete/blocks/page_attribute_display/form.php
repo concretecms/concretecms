@@ -41,7 +41,7 @@ echo $ui->tabs([
 ?>
 
 <div class="tab-content">
-    <div class="tab-pane show active" id="add" role="tabpanel">
+    <div class="tab-pane active" id="add" role="tabpanel">
         <div class="form-group">
             <?php echo $form->label("attributeHandle", t('Property to Display')); ?>
             <?php echo $form->select("attributeHandle", [
@@ -84,6 +84,7 @@ echo $ui->tabs([
         <div class="form-group">
             <?php echo $form->label("delimiter", t('Delimiter for Multiple Items')); ?>
             <?php echo $form->select("delimiter", [
+                "" => t('None'),
                 "comma" => t('Comma (",")'),
                 "commaSpace" => t('Comma With Space After (", ")'),
                 "pipe" => t('Pipe ("|")'),

@@ -116,7 +116,7 @@ class Bulk extends DashboardPageController
             }
             $siteName = $this->getSiteNameForLocale($locale);
         } else {
-            $siteName = $this->app->make('site')->getSite()->getSiteName();
+            $siteName = h($this->app->make('site')->getSite()->getSiteName());
         }
 
         return $siteName;
@@ -137,6 +137,7 @@ class Bulk extends DashboardPageController
             if ($pc && !$pc->isError()) {
                 if ($searchRequest['cParentAll']) {
                     $cPath = $pc->getCollectionPath();
+		    $pageList->filterBySite($pc->getSite());
                     $pageList->filterByPath($cPath);
                 } else {
                     $pageList->filterByParentID($searchRequest['cParentIDSearchField']);

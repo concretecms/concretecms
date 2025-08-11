@@ -33,6 +33,8 @@ class EntryList extends DatabaseItemList implements PagerProviderInterface, Pagi
      */
     protected $enableAutomaticSorting = false;
 
+    protected $permissionsChecker = null;
+
     /**
      * Columns in this array can be sorted via the request.
      *
@@ -151,8 +153,7 @@ class EntryList extends DatabaseItemList implements PagerProviderInterface, Pagi
 
     public function checkPermissions($mixed)
     {
-
-        if (isset($this->permissionsChecker)) {
+        if ($this->permissionsChecker !== null) {
             if ($this->permissionsChecker === -1) {
                 return true;
             } else {
@@ -164,7 +165,7 @@ class EntryList extends DatabaseItemList implements PagerProviderInterface, Pagi
         return $fp->canViewExpressEntry();
     }
 
-    public function setPermissionsChecker(\Closure $checker = null)
+    public function setPermissionsChecker(?\Closure $checker = null)
     {
         $this->permissionsChecker = $checker;
     }
@@ -176,7 +177,7 @@ class EntryList extends DatabaseItemList implements PagerProviderInterface, Pagi
 
     public function enablePermissions()
     {
-        unset($this->permissionsChecker);
+        $this->permissionsChecker = null;
     }
 
     public function ignorePermissions()
@@ -219,6 +220,7 @@ class EntryList extends DatabaseItemList implements PagerProviderInterface, Pagi
     public function filterByAssociatedEntry(Association $association, Entry $entry)
     {
         // Find the inverse association to this one.
+        $matches = 0;
         $sourceEntity = $association->getSourceEntity();
         $targetEntity = $association->getTargetEntity();
         foreach($targetEntity->getAssociations() as $targetAssociation) {
@@ -226,6 +228,7 @@ class EntryList extends DatabaseItemList implements PagerProviderInterface, Pagi
                 // we have a match.
                 $entryAssociation = $entry->getEntryAssociation($targetAssociation);
                 if ($entryAssociation) {
+                    $matches++;
                     $entryAssociationTable = 'a' . $entryAssociation->getID();
                     $entryAssociationEntriesTable = 'ae' . $entryAssociation->getID();
 
@@ -236,10 +239,11 @@ class EntryList extends DatabaseItemList implements PagerProviderInterface, Pagi
                     $this->query->andWhere($entryAssociationEntriesTable . '.exEntryID = :selectedEntryID' . $entryAssociation->getID());
                     $this->query->setParameter('entryAssociationID' . $entryAssociation->getID(), $association->getID());
                     $this->query->setParameter('selectedEntryID' . $entryAssociation->getID(), $entry->getID());
-                } else {
-                    $this->query->andWhere('1 = 0');
                 }
             }
+        }
+        if (!$matches) {
+            $this->query->andWhere('1 = 0');
         }
     }
 

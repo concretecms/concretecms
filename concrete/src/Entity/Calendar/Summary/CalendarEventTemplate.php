@@ -96,6 +96,7 @@ class CalendarEventTemplate implements RenderableTemplateInterface
         $this->data = $data;
     }
 
+    #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
         $data = [

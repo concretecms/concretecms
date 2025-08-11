@@ -2,6 +2,7 @@
 namespace Concrete\Core\Backup;
 
 use Concrete\Core\Backup\ContentImporter\Importer\Routine\SpecifiableHomePageRoutineInterface;
+use Concrete\Core\Backup\ContentImporter\Importer\Routine\SpecifiableImportModeRoutineInterface;
 use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\File\File;
 use Concrete\Core\File\Importer;
@@ -12,9 +13,29 @@ use Core;
 class ContentImporter
 {
 
+    public const IMPORT_MODE_INSTALL = 'install';
+    public const IMPORT_MODE_UPGRADE = 'upgrade';
+
     protected static $mcBlockIDs = array();
     protected static $ptComposerOutputControlIDs = array();
     protected $home;
+    protected $importMode = self::IMPORT_MODE_INSTALL;
+
+    /**
+     * @param string $importMode - a constant mapping to self::IMPORT_MODE_INSTALL or self::IMPORT_MODE_UPGRADE
+     * If upgrade is specified, any routines will work off existing database schema if applicable (note: not all
+     * CIF elements always support upgrade context.). If INSTALL is specified, we use empty database schemas for
+     * improved performance. For backward compatibility, UPGRADE is the default.
+     */
+    public function __construct(string $importMode = self::IMPORT_MODE_UPGRADE)
+    {
+        $this->importMode = $importMode;
+    }
+
+    public function setImportMode(string $importMode): void
+    {
+        $this->importMode = $importMode;
+    }
 
     public function importContentFile($file)
     {
@@ -45,6 +66,9 @@ class ContentImporter
             if (isset($this->home) && $routine instanceof SpecifiableHomePageRoutineInterface) {
                 $home = \Page::getByID($this->home->getCollectionID()); // we always need the most recent version.
                 $routine->setHomePage($home);
+            }
+            if ($routine instanceof SpecifiableImportModeRoutineInterface) {
+                $routine->setImportMode($this->importMode);
             }
             $routine->import($element);
             if (isset($this->home) && $routine instanceof SpecifiableHomePageRoutineInterface) {

@@ -87,7 +87,7 @@ class Sets extends DashboardPageController
             $file_set = FileSet::getByID($this->post('fsID'));
 
 
-            $file_set->update($setName, $fsOverrideGlobalPermissions);
+            $file_set->update($setName);
             $file_set->updateFileSetDisplayOrder($this->post('fsDisplayOrder'));
 
             $this->redirect("/dashboard/files/sets", 'view_detail', $this->post('fsID'), 'file_set_updated');

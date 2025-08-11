@@ -28,18 +28,25 @@ class Controller extends DefaultController
         return new FontAwesomeIconFormatter('envelope');
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Attribute\DefaultController::validateForm()
+     */
     public function validateForm($data)
     {
-        if (!$data['value']) {
-            return new FieldNotPresentError(new AttributeField($this->getAttributeKey()));
-        } else {
-            $e = $this->app->make('error');
-            if (!$this->app->make(EmailValidator::class)->isValid($data['value'], $e)) {
-                return new Error($e->toText(), new AttributeField($this->getAttributeKey()));
-            } else {
-                return true;
-            }
+        if (!is_array($data)) {
+            $data = [];
         }
+        if (empty($data['value'])) {
+            return new FieldNotPresentError(new AttributeField($this->getAttributeKey()));
+        }
+        $e = $this->app->make('error');
+        if (!$this->app->make(EmailValidator::class)->isValid($data['value'], $e)) {
+            return new Error($e->toText(), new AttributeField($this->getAttributeKey()));
+        }
+
+        return true;
     }
 
     /**

@@ -6,6 +6,8 @@ use Concrete\Controller\Backend\UserInterface as BackendInterfaceController;
 use Concrete\Core\Attribute\Category\CategoryInterface;
 use Concrete\Core\Attribute\Category\CategoryService;
 use Concrete\Core\Attribute\Key\Component\KeySelector\ControllerTrait as KeySelectorControllerTrait;
+use Concrete\Core\Attribute\ObjectInterface;
+use Concrete\Core\Error\ErrorList\ErrorList;
 use Concrete\Core\Filesystem\ElementManager;
 use Concrete\Core\User\EditResponse as UserEditResponse;
 use Concrete\Core\User\UserInfoRepository;
@@ -93,10 +95,14 @@ class Properties extends BackendInterfaceController
     public function submit()
     {
         if ($this->validateAction()) {
-            $this->saveAttributes();
+            $attributesResponse = $this->saveAttributes();
             $r = new UserEditResponse();
             $r->setUsers($this->users);
-            $r->setMessage(t('Attributes updated successfully.'));
+            if ($attributesResponse instanceof ErrorList) {
+                $r->setError($attributesResponse);
+            } else {
+                $r->setMessage(t('Attributes updated successfully.'));
+            }
 
             return new JsonResponse($r);
         }
@@ -127,7 +133,7 @@ class Properties extends BackendInterfaceController
      *
      * @see \Concrete\Core\Attribute\Key\Component\KeySelector\ControllerTrait::canEditAttributeKey()
      */
-    public function canEditAttributeKey(int $akID): bool
+    public function canEditAttributeKey(int $akID, ObjectInterface $object): bool
     {
         return in_array($akID, $this->allowedEditAttributes);
     }

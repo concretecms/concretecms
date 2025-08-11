@@ -1,7 +1,7 @@
 <?php
+
 namespace Concrete\Core\Entity\Notification;
 
-use Concrete\Core\Entity\User\GroupRoleChange;
 use Concrete\Core\Notification\Subject\SubjectInterface;
 use Concrete\Core\Notification\View\GroupRoleChangeListView;
 use Doctrine\ORM\Mapping as ORM;
@@ -17,13 +17,13 @@ class GroupRoleChangeNotification extends Notification
     /**
      * @ORM\ManyToOne(targetEntity="\Concrete\Core\Entity\User\GroupRoleChange", cascade={"persist", "remove"}, inversedBy="notifications"),
      * @ORM\JoinColumn(name="id", referencedColumnName="id")
+     *
+     * @var \Concrete\Core\Entity\User\GroupRoleChange
      */
     protected $groupRoleChange;
 
-
     /**
-     * GroupRoleChangeNotification constructor.
-     * @param GroupRoleChange $groupRoleChange
+     * @param \Concrete\Core\Entity\User\GroupRoleChange $groupRoleChange
      */
     public function __construct($groupRoleChange)
     {
@@ -32,16 +32,20 @@ class GroupRoleChangeNotification extends Notification
     }
 
     /**
-     * @return GroupRoleChange
+     * @return \Concrete\Core\Entity\User\GroupRoleChange
      */
     public function getGroupRoleChange(): SubjectInterface
     {
         return $this->groupRoleChange;
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Entity\Notification\Notification::getListView()
+     */
     public function getListView()
     {
         return new GroupRoleChangeListView($this);
     }
-
 }

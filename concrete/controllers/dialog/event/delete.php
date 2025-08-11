@@ -38,42 +38,47 @@ class Delete extends BackendInterfaceController
 
     public function submit()
     {
-        $event = $this->eventService->getByID($_REQUEST['eventID'], EventService::EVENT_VERSION_RECENT);
-        $e = \Core::make('error');
-        if (!$event) {
-            $e->add(t('Invalid event.'));
-        }
-        if (!$this->canAccess()) {
-            $e->add(t('Access Denied.'));
-        }
-
-        $r = new EditResponse($e);
-        $year = date('Y');
-        $month = date('m');
-        $r->setRedirectURL(
-            \URL::to(
-                $this->preferences->getPreferredViewPath(),
-                'view',
-                $event->getCalendar()->getID(),
-                $year,
-                $month
-            )
-        );
-
-        if (!$e->has()) {
-            $u = $this->app->make(User::class);
-            $pkr = new DeleteCalendarEventRequest();
-            $pkr->setCalendarEventVersionID($event->getRecentVersion()->getID());
-            $pkr->setRequesterUserID($u->getUserID());
-            $response = $pkr->trigger();
-            if ($response instanceof Response) {
-                $this->flash('success', t('Event deleted successfully.'));
-            } else {
-                $this->flash('success', t('Event deletion pending. This request must be approved before the event is fully removed.'));
+        if ($this->validateAction()) {
+            $event = $this->eventService->getByID($_REQUEST['eventID'], EventService::EVENT_VERSION_RECENT);
+            $e = \Core::make('error');
+            if (!$event) {
+                $e->add(t('Invalid event.'));
             }
-        }
+            if (!$this->canAccess()) {
+                $e->add(t('Access Denied.'));
+            }
 
-        $r->outputJSON();
+            $r = new EditResponse($e);
+            $year = date('Y');
+            $month = date('m');
+            $r->setRedirectURL(
+                \URL::to(
+                    $this->preferences->getPreferredViewPath(),
+                    'view',
+                    $event->getCalendar()->getID(),
+                    $year,
+                    $month
+                )
+            );
+
+            if (!$e->has()) {
+                $u = $this->app->make(User::class);
+                $pkr = new DeleteCalendarEventRequest();
+                $pkr->setCalendarEventVersionID($event->getRecentVersion()->getID());
+                $pkr->setRequesterUserID($u->getUserID());
+                $response = $pkr->trigger();
+                if ($response instanceof Response) {
+                    $this->flash('success', t('Event deleted successfully.'));
+                } else {
+                    $this->flash(
+                        'success',
+                        t('Event deletion pending. This request must be approved before the event is fully removed.')
+                    );
+                }
+            }
+
+            $r->outputJSON();
+        }
     }
 
 

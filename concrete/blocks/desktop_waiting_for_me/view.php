@@ -1,13 +1,14 @@
 <?php
-defined('C5_EXECUTE') or die("Access Denied.");
-/* @var Concrete\Core\Block\View\BlockView $view */
-/* @var Concrete\Core\Form\Service\Form $form */
 
-/* @var Concrete\Core\Entity\Notification\NotificationAlert[] $items */
-/* @var array $filterValues */
-/* @var string $filter */
-/* @var Concrete\Core\Validation\CSRF\Token $token */
-/* @var Concrete\Core\Search\Pagination\Pagination $pagination */
+defined('C5_EXECUTE') or die('Access Denied.');
+/** @var Concrete\Core\Block\View\BlockView $view */
+/** @var Concrete\Core\Form\Service\Form $form */
+
+/** @var Concrete\Core\Entity\Notification\NotificationAlert[] $items */
+/** @var array $filterValues */
+/** @var string $filter */
+/** @var Concrete\Core\Validation\CSRF\Token $token */
+/** @var Concrete\Core\Search\Pagination\Pagination<Concrete\Core\Entity\Notification\NotificationAlert>|null $pagination */
 ?>
 <div class="card ccm-block-desktop-waiting-for-me" data-wrapper="desktop-waiting-for-me">
 
@@ -32,7 +33,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
             foreach($items as $item) {
                 $notification = $item->getNotification();
                 /**
-                 * @var $listView \Concrete\Core\Notification\View\ListViewInterface
+                 * @var \Concrete\Core\Notification\View\ListViewInterface $listView
                  */
                 $listView = $notification->getListView();
                 $action = $listView->getFormAction();
@@ -45,17 +46,17 @@ defined('C5_EXECUTE') or die("Access Denied.");
                     <form action="<?=$action?>" method="post">
                 <?php }  ?>
 
-                    <div class="ccm-block-desktop-waiting-for-me-icon">
-                        <?php print $listView->renderIcon() ?>
-                    </div>
+                <div class="ccm-block-desktop-waiting-for-me-icon">
+                    <?php echo $listView->renderIcon() ?>
+                </div>
 
-                    <div class="ccm-block-desktop-waiting-for-me-details">
-                        <?php print $listView->renderDetails() ?>
-                    </div>
+                <div class="ccm-block-desktop-waiting-for-me-details">
+                    <?php echo $listView->renderDetails() ?>
+                </div>
 
-                    <div class="ccm-block-desktop-waiting-for-me-menu">
-                        <?php print $listView->renderMenu() ?>
-                    </div>
+                <div class="ccm-block-desktop-waiting-for-me-menu">
+                    <?php echo $listView->renderMenu() ?>
+                </div>
 
 
                 <?php if ($action) { ?>
@@ -73,18 +74,15 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
             <?php if ($pagination && $pagination->haveToPaginate()) {
                 $pagination->setBaseURL($view->action('reload_results') . '?filter=' . rawurlencode($filter));
-                ?>
 
-                <?php
-                $c = Page::getCurrentPage();
+                $c = \Concrete\Core\Page\Page::getCurrentPage();
                 $theme = $c->getController()->getTheme();
-                if (is_string($theme) && ($theme === VIEW_CORE_THEME || $theme === 'dashboard')) { ?>
-                    <?= $pagination->renderView('dashboard'); ?>
-                <?php } else { ?>
-                    <?= $pagination->renderDefaultView(); ?>
-                <?php } ?>
-
-            <?php } ?>
+                if ($theme === VIEW_CORE_THEME || $theme === 'dashboard') {
+                    echo $pagination->renderView('dashboard');
+                 } else {
+                    echo $pagination->renderDefaultView();
+                }
+            } ?>
 
         </div>
     </div>

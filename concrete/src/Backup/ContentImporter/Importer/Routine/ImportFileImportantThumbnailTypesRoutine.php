@@ -6,6 +6,7 @@ use Concrete\Core\Entity\File\Image\Thumbnail\Type\Type as ThumbnailType;
 use Concrete\Core\Entity\File\Image\Thumbnail\Type\TypeFileSet;
 use Concrete\Core\File\Set\Set as FileSet;
 use Concrete\Core\Support\Facade\Application;
+use Concrete\Core\Utility\Service\Xml;
 use Doctrine\ORM\EntityManagerInterface;
 use SimpleXMLElement;
 
@@ -18,10 +19,11 @@ class ImportFileImportantThumbnailTypesRoutine extends AbstractRoutine
 
     public function import(SimpleXMLElement $sx)
     {
-        $app = Application::getFacadeApplication();
-        $em = $app->make(EntityManagerInterface::class);
-        $repo = $em->getRepository(ThumbnailType::class);
         if (isset($sx->thumbnailtypes)) {
+            $app = Application::getFacadeApplication();
+            $em = $app->make(EntityManagerInterface::class);
+            $repo = $em->getRepository(ThumbnailType::class);
+            $xml = $app->make(Xml::class);
             foreach ($sx->thumbnailtypes->thumbnailtype as $l) {
                 $handle = (string) $l['handle'];
                 if ($repo->findOneBy(['ftTypeHandle' => $handle]) !== null) {
@@ -33,23 +35,18 @@ class ImportFileImportantThumbnailTypesRoutine extends AbstractRoutine
                 if (isset($l['sizingMode'])) {
                     $type->setSizingMode((string) $l['sizingMode']);
                 }
-                $type->setIsUpscalingEnabled(isset($l['upscalingEnabled']) && $l['upscalingEnabled']);
-                $type->setKeepAnimations(isset($l['keepAnimations']) && $l['keepAnimations']);
+                $type->setIsUpscalingEnabled($xml->getBool($l['upscalingEnabled']));
+                $type->setKeepAnimations($xml->getBool($l['keepAnimations']));
                 if (isset($l['width'])) {
                     $type->setWidth((string) $l['width']);
                 }
                 if (isset($l['height'])) {
                     $type->setHeight((string) $l['height']);
                 }
-                if (isset($l['required'])) {
-                    $required = (string) $l['required'];
-                    if ($required) {
-                        $type->requireType();
-                    }
+                if ($xml->getBool($l['required'])) {
+                    $type->requireType();
                 }
-                if (isset($l['limitedToFileSets'])) {
-                    $type->setLimitedToFileSets((bool) (string) $l['limitedToFileSets']);
-                }
+                $type->setLimitedToFileSets($xml->getBool($l['limitedToFileSets']));
                 if (isset($l->filesets)) {
                     foreach ($l->filesets->fileset as $xFileSet) {
                         $name = isset($xFileSet['name']) ? trim((string) $xFileSet['name']) : '';

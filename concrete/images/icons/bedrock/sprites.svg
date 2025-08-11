@@ -146,11 +146,7 @@
                 xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
             <g id="Page-1" stroke="none" stroke-width="1" fill-rule="evenodd">
                 <g id="Dialog---Add-Page-List" transform="translate(-1021.000000, -105.000000)">
-                    <mask id="mask-2" fill="white">
-                        <use xlink:href="#path-1"></use>
-                    </mask>
-                    <use id="Rectangle" fill-opacity="0.6" xlink:href="#path-1"></use>
-                    <g id="Group" mask="url(#mask-2)">
+                    <g id="Group">
                         <g transform="translate(315.000000, 80.000000)">
                             <g id="icons8-info-(1)" stroke-width="1" fill="none" fill-rule="evenodd"
                                transform="translate(706.000000, 25.000000)">

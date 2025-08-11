@@ -5,10 +5,15 @@ namespace Concrete\Controller\Backend\User;
 use Concrete\Core\Controller\Controller;
 use Concrete\Core\Error\UserMessageException;
 use Concrete\Core\Http\ResponseFactoryInterface;
+use Concrete\Core\Permission\Checker;
 use Concrete\Core\Search\Pagination\PaginationFactory;
+use Concrete\Core\User\Component\UserSelectInstance;
+use Concrete\Core\User\Component\UserSelectInstanceFactory;
 use Concrete\Core\User\UserInfo;
+use Concrete\Core\User\UserInfoRepository;
 use Concrete\Core\User\UserList;
 use Concrete\Core\Validation\CSRF\Token;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 
 defined('C5_EXECUTE') or die('Access Denied.');
@@ -22,62 +27,53 @@ class Autocomplete extends Controller
      */
     protected const MAX_RESULTS = 7;
 
+    public function checkAccess(): UserSelectInstance
+    {
+        $instanceFactory = $this->app->make(UserSelectInstanceFactory::class);
+        $requestInstance = $instanceFactory->createInstanceFromRequest($this->request);
+
+        if (!$instanceFactory->instanceMatchesAccessToken($requestInstance, $this->request->request->get('accessToken') ?? '')) {
+            throw new UserMessageException($this->app->make('token')->getErrorMessage());
+        }
+
+        return $requestInstance;
+    }
+
     public function view(): Response
     {
-        $this->checkCSRF();
-        $result = $this->getResult();
-
-        return $this->app->make(ResponseFactoryInterface::class)->json($result);
-    }
-
-    protected function getCSRFAction(): string
-    {
-        $key = $this->request->request->get('key', $this->request->query->get('key'));
-
-        return 'quick_user_select_' . (is_string($key) ? $key : '');
-    }
-
-    /**
-     * @throws \Concrete\Core\Error\UserMessageException
-     */
-    protected function checkCSRF(): void
-    {
-        $valt = $this->app->make(Token::class);
-        $token = $this->request->request->get('token', $this->request->query->get('token'));
-        if (!$valt->validate($this->getCSRFAction(), $token)) {
-            throw new UserMessageException($valt->getErrorMessage());
-        }
-    }
-
-    protected function getSearchTerm(): string
-    {
-        $term = $this->request->request->get('term', $this->request->query->get('term'));
-
-        return is_string($term) ? $term : '';
-    }
-
-    protected function buildResultItem(UserInfo $ui): array
-    {
-        return [
-            'text' => $ui->getUserDisplayName(),
-            'value' => $ui->getUserID(),
-        ];
-    }
-
-    protected function getResult(): array
-    {
-        $term = $this->getSearchTerm();
+        $requestInstance = $this->checkAccess();
+        $query = $this->request->request->get('query', $this->request->query->get('query'));
         $userList = new UserList();
-        $userList->filterByFuzzyUserName($term);
+        $userList->filterByFuzzyUserName($query);
         $userList->sortByUserName();
         $userList->setItemsPerPage(static::MAX_RESULTS);
         $factory = new PaginationFactory($this->request);
         $pagination = $factory->createPaginationObject($userList);
-        $result = [];
+        $results = [];
         foreach ($pagination->getCurrentPageResults() as $ui) {
-            $result[] = $this->buildResultItem($ui);
+            $results[] = $requestInstance->createResultFromUser($ui);
         }
 
-        return $result;
+        return new JsonResponse($results);
     }
+
+    public function getSelectedUsers(): JsonResponse
+    {
+        $requestInstance = $this->checkAccess();
+        $results = [];
+        foreach ((array) $this->request->request->get('userId') as $uID) {
+            $user = $this->app->make(UserInfoRepository::class)->getByID($uID);
+            if ($user) {
+                $checker = new Checker($user);
+                if (!$checker->canViewUser()) {
+                    throw new \Exception(t('Access Denied.'));
+                } else {
+                    $results[] = $requestInstance->createResultFromUser($user);
+                }
+            }
+        }
+        return new JsonResponse($results);
+    }
+
+
 }

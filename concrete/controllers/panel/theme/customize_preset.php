@@ -130,7 +130,7 @@ class CustomizePreset extends BackendInterfaceController
                     if ($this->request->request->has('customCss')) {
                         $command->setCustomCss($this->request->request->get('customCss'));
                     }
-                    $command->setStyles($this->request->request->get('styles'));
+                    $command->setStyles(json_decode($this->request->request->get('styles'), true));
                     $this->app->executeCommand($command);
 
                     $editResponse = new EditResponse();

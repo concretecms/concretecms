@@ -60,6 +60,7 @@ class WebFont implements \JsonSerializable
         $this->type = $type;
     }
 
+    #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
         return ['name' => $this->getName(), 'type' => $this->getType()];

@@ -1,1 +1,1 @@
-﻿CKEDITOR.plugins.setLang("preview","ar",{preview:"معاينة الصفحة"});
+CKEDITOR.plugins.setLang("preview","ar",{preview:"معاينة الصفحة"});

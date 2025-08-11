@@ -71,11 +71,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
                         <label class="form-label"><?=t('From')?></label>
                         <div class="row mb-3">
                             <div class="col-6">
-                                <v-date-picker
-                                        :masks="{'input': 'YYYY-MM-DD'}"
-                                        v-model='startDate'
-                                        :input-props='{name: "startDate", class: ["form-control", {"is-invalid": invalidStartDate}]}'
-                                ></v-date-picker>
+                                <input type="date" v-model="startDate" :class="{'form-control': true, 'is-invalid': invalidStartDate}">
                             </div>
                             <div class="col-6">
                                 <input type="time" class="form-control" v-model="startTime">
@@ -86,11 +82,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
                         <label class="form-label"><?=t('To')?></label>
                         <div class="row">
                             <div class="col-6">
-                                <v-date-picker
-                                        :masks="{'input': 'YYYY-MM-DD'}"
-                                        v-model='endDate'
-                                        :input-props='{name: "end", class: ["form-control", {"is-invalid": invalidEndDate}]}'
-                                ></v-date-picker>
+                                <input type="date" v-model="endDate" :class="{'form-control': true, 'is-invalid': invalidEndDate}">
                             </div>
                             <div class="col-6">
                                 <input type="time" class="form-control" v-model="endTime">

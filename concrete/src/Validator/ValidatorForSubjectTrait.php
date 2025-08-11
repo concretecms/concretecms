@@ -13,7 +13,7 @@ trait ValidatorForSubjectTrait
     /**
      * @see \Concrete\Core\Validator\ValidatorInterface::isValid()
      */
-    public function isValid($mixed, ArrayAccess $error = null)
+    public function isValid($mixed, ?ArrayAccess $error = null)
     {
         return $this->isValidFor($mixed, null, $error);
     }

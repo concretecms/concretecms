@@ -6,14 +6,14 @@ use Concrete\TestHelpers\Attribute\AttributeValueTestCase;
 
 class TextValueTest extends AttributeValueTestCase
 {
-    public function __construct($name = null, array $data = [], $dataName = '')
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\TestHelpers\Database\ConcreteDatabaseTestCase::getEntityClassNames()
+     */
+    protected function getEntityClassNames(): array
     {
-        parent::__construct($name, $data, $dataName);
-
-        $this->tables = array_merge($this->tables, [
-        ]);
-
-        $this->metadatas = array_merge($this->metadatas, [
+        return array_merge(parent::getEntityClassNames(), [
             'Concrete\Core\Entity\Attribute\Key\Settings\TextSettings',
             'Concrete\Core\Entity\Attribute\Value\Value\TextValue',
         ]);

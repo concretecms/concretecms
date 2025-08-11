@@ -3,7 +3,6 @@
 namespace Concrete\Core\Board\Command;
 
 use Concrete\Core\Entity\Board\InstanceItem;
-use Concrete\Core\Entity\Board\InstanceItemBatch;
 use Doctrine\ORM\EntityManager;
 
 class ClearBoardInstanceCommandHandler

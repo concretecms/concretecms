@@ -3,10 +3,14 @@ namespace Concrete\Core\Messenger;
 
 use Closure;
 use Concrete\Core\Application\Application;
+use Concrete\Core\Command\Batch\Stamp\BatchStamp;
+use Concrete\Core\Command\Batch\BatchAwareInterface;
 use Concrete\Core\Command\Task\Output\OutputAwareInterface;
 use Concrete\Core\Command\Task\Stamp\OutputStamp;
 use Concrete\Core\Config\Repository\Repository;
+use Concrete\Core\Entity\Command\Batch;
 use Concrete\Core\Foundation\Command\HandlerAwareCommandInterface;
+use Doctrine\ORM\EntityManager;
 use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\Exception\NoHandlerForMessageException;
 use Symfony\Component\Messenger\Handler\HandlerDescriptor;
@@ -25,10 +29,16 @@ class HandlersLocator implements HandlersLocatorInterface
      */
     protected $app;
 
-    public function __construct(Application $app, Repository $config)
+    /**
+     * @var EntityManager
+     */
+    protected $entityManager;
+
+    public function __construct(Application $app, Repository $config, EntityManager $entityManager)
     {
         $this->app = $app;
         $this->config = $config;
+        $this->entityManager = $entityManager;
     }
 
     public function getHandlers(Envelope $envelope): iterable
@@ -51,6 +61,18 @@ class HandlersLocator implements HandlersLocatorInterface
                      * @var $outputStamp OutputStamp
                      */
                     $builtClass->setOutput($outputStamp->getOutput());
+                }
+            }
+            if ($builtClass instanceof BatchAwareInterface) {
+                $batchStamp = $envelope->last(BatchStamp::class);
+                if ($batchStamp) {
+                    /**
+                     * @var $batchStamp BatchStamp
+                     */
+                    $batch = $this->entityManager->find(Batch::class, $batchStamp->getBatchId());
+                    if ($batch) {
+                        $builtClass->setBatch($batch);
+                    }
                 }
             }
             $callable = [$builtClass, '__invoke'];

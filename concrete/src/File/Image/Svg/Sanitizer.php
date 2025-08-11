@@ -79,7 +79,7 @@ class Sanitizer
      * @param \Concrete\Core\File\Image\Svg\SanitizerOptions|null $options the sanitizer options (if NULL, we'll use the default ones)
      *
      * @return array
-     * 
+     *
      * @example <pre><code>
      * [
      *     'attributes' => [
@@ -92,7 +92,7 @@ class Sanitizer
      * ]
      * </code></pre>
      */
-    public function checkFile($inputFilename, SanitizerOptions $options = null)
+    public function checkFile($inputFilename, ?SanitizerOptions $options = null)
     {
         $data = $this->fileToData($inputFilename);
 
@@ -106,7 +106,7 @@ class Sanitizer
      * @param \Concrete\Core\File\Image\Svg\SanitizerOptions|null $options the sanitizer options (if NULL, we'll use the default ones)
      *
      * @return array
-     * 
+     *
      * @example <pre><code>
      * [
      *     'attributes' => [
@@ -119,11 +119,11 @@ class Sanitizer
      * ]
      * </code></pre>
      */
-    public function checkData($data, SanitizerOptions $options = null)
+    public function checkData($data, ?SanitizerOptions $options = null)
     {
         $removedNodes = [];
         $this->sanitizeData($data, $options, $removedNodes);
-        
+
         return $removedNodes;
     }
 
@@ -137,7 +137,7 @@ class Sanitizer
      *
      * @throws \Concrete\Core\File\Image\Svg\SanitizerException in case of errors
      */
-    public function sanitizeFile($inputFilename, SanitizerOptions $options = null, $outputFilename = '', array &$removedNodes = [])
+    public function sanitizeFile($inputFilename, ?SanitizerOptions $options = null, $outputFilename = '', array &$removedNodes = [])
     {
         $data = $this->fileToData($inputFilename);
         $removedNodes = [];
@@ -162,7 +162,7 @@ class Sanitizer
      *
      * @return string
      */
-    public function sanitizeData($data, SanitizerOptions $options = null, array &$removedNodes = [])
+    public function sanitizeData($data, ?SanitizerOptions $options = null, array &$removedNodes = [])
     {
         $xml = $this->dataToXml($data);
         $removedNodes = [];
@@ -180,7 +180,7 @@ class Sanitizer
      *
      * @throws \Concrete\Core\File\Image\Svg\SanitizerException in case of errors
      */
-    protected function sanitizeXml(DOMDocument $xml, array &$removedNodes, SanitizerOptions $options = null)
+    protected function sanitizeXml(DOMDocument $xml, array &$removedNodes, ?SanitizerOptions $options = null)
     {
         if ($options === null) {
             $options = new SanitizerOptions();
@@ -258,7 +258,12 @@ class Sanitizer
         if (!is_string($data)) {
             throw SanitizerException::create(SanitizerException::ERROR_FAILED_TO_PARSE_XML);
         }
+
+        // In PHP 8.0 and later, PHP uses libxml versions from 2.9.0, libxml_disable_entity_loader is deprecated.
+        // (it's safe to not call it because we don't set LIBXML_NOENT)
+        $disabled = PHP_VERSION_ID >= 80000 ? null : libxml_disable_entity_loader(true);
         $xml = new DOMDocument();
+
         $error = null;
         try {
             $loaded = $xml->loadXML($data, $this->getLoadFlags());
@@ -266,7 +271,12 @@ class Sanitizer
             $error = $x;
         } catch (Throwable $x) {
             $error = $x;
+        } finally {
+            if ($disabled !== null) {
+                libxml_disable_entity_loader($disabled);
+            }
         }
+
         if ($error !== null || $loaded === false) {
             throw SanitizerException::create(SanitizerException::ERROR_FAILED_TO_PARSE_XML, $error ? $error->getMessage() : '');
         }

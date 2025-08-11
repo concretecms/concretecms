@@ -1,1 +1,1 @@
-﻿CKEDITOR.plugins.setLang("sourcedialog","uk",{toolbar:"Джерело",title:"Джерело"});
+CKEDITOR.plugins.setLang("sourcedialog","uk",{toolbar:"Джерело",title:"Джерело"});

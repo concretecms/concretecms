@@ -130,6 +130,10 @@ class Types extends DashboardPageController
         if ($type->isDefault()) {
             $this->error->add(t('You may not delete the default site type.'));
         }
+        $sites = $this->app->make('site')->getByType($type);
+        if (count($sites) > 0) {
+            $this->error->add(t('You must delete all sites of this type before you can remove this site type.'));
+        }
         if (!$this->error->has()) {
             $service->delete($type);
             $this->flash('success', t('Site type removed successfully.'));
@@ -151,7 +155,7 @@ class Types extends DashboardPageController
             return $this->buildRedirect($this->action());
         }
         $this->setCurrentSiteType($type);
-        $this->prepareSkelpeton($type, true);
+        $this->prepareSkeleton($type, true);
         $this->render('/dashboard/system/multisite/types/view_skeleton');
     }
 
@@ -302,7 +306,7 @@ class Types extends DashboardPageController
         }
 
         $this->setCurrentSiteType($type);
-        $this->prepareSkelpeton($type, false);
+        $this->prepareSkeleton($type, false);
 
         $category = $this->getCategoryObject();
         $skeleton = $this->get('skeleton');
@@ -400,7 +404,7 @@ class Types extends DashboardPageController
         return $skeletonService->createSkeleton($type, $locale);
     }
 
-    protected function prepareSkelpeton(?Type $type, bool $createIfNotFound): void
+    protected function prepareSkeleton(?Type $type, bool $createIfNotFound): void
     {
         $this->set('skeleton', $this->getTypeSkeleton($type, $createIfNotFound));
     }

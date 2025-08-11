@@ -203,6 +203,10 @@ var ConcretePageComposerDetail = {
             }
         });
 
+        ConcreteEvent.subscribe('ExitComposerForm', function () {
+            my.disableAutosave();
+        });
+
         if (this.saver) {
             this.saver.enable();
         }

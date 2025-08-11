@@ -7,7 +7,7 @@ use Concrete\Core\Editor\LinkAbstractor;
 use Concrete\Core\Feature\Features;
 use Concrete\Core\Feature\UsesFeatureInterface;
 use Concrete\Core\File\Tracker\FileTrackableInterface;
-use Concrete\Core\Page\Page;
+use Concrete\Core\File\Tracker\RichTextExtractor;
 
 /**
  * The controller for the content block.
@@ -80,6 +80,13 @@ class Controller extends BlockController implements FileTrackableInterface, Uses
      * @var int
      */
     protected $btCacheBlockOutputLifetime = 0; //until manually updated or cleared
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Block\BlockController::$btExportContentColumns
+     */
+    protected $btExportContentColumns = ['content'];
 
     /**
      * {@inhertdoc}.
@@ -159,38 +166,6 @@ class Controller extends BlockController implements FileTrackableInterface, Uses
     }
 
     /**
-     * @param \SimpleXMLElement $blockNode
-     * @param Page $page
-     *
-     * @return array<string, string>
-     */
-    public function getImportData($blockNode, $page)
-    {
-        $content = $blockNode->data->record->content;
-        $content = LinkAbstractor::import($content);
-
-        return ['content' => $content];
-    }
-
-    /**
-     * @param \SimpleXMLElement $blockNode
-     *
-     * @return void
-     */
-    public function export(\SimpleXMLElement $blockNode)
-    {
-        $data = $blockNode->addChild('data');
-        $data->addAttribute('table', $this->btTable);
-        $record = $data->addChild('record');
-        $cnode = $record->addChild('content');
-        $node = dom_import_simplexml($cnode);
-        $no = $node->ownerDocument;
-        $content = LinkAbstractor::export($this->content);
-        $cdata = $no->createCDataSection($content);
-        $node->appendChild($cdata);
-    }
-
-    /**
      * @param array<string,string> $args
      */
     public function save($args)
@@ -202,24 +177,23 @@ class Controller extends BlockController implements FileTrackableInterface, Uses
     }
 
     /**
-     * @return int[]|string[]
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\File\Tracker\FileTrackableInterface::getUsedFiles()
      */
     public function getUsedFiles()
     {
-        return array_merge(
-            $this->getUsedFilesImages(),
-            $this->getUsedFilesDownload()
-        );
+        return $this->app->make(RichTextExtractor::class)->extractFiles($this->content);
     }
 
     /**
-     * @return int[]|string[]
+     * @deprecated use \Concrete\Core\File\Tracker\RichTextExtractor
      */
     protected function getUsedFilesImages()
     {
         $files = [];
         $matches = [];
-        if (preg_match_all('/\<concrete-picture[^>]*?fID\s*=\s*[\'"]([^\'"]*?)[\'"]/i', $this->content, $matches)) {
+        if ($this->content && preg_match_all('/\<concrete-picture[^>]*?fID\s*=\s*[\'"]([^\'"]*?)[\'"]/i', $this->content, $matches)) {
             list(, $ids) = $matches;
             foreach ($ids as $id) {
                 $files[] = $id;
@@ -230,10 +204,13 @@ class Controller extends BlockController implements FileTrackableInterface, Uses
     }
 
     /**
-     * @return int[]|string[]
+     * @deprecated use \Concrete\Core\File\Tracker\RichTextExtractor
      */
     protected function getUsedFilesDownload()
     {
+        if (!$this->content) {
+            return [];
+        }
         preg_match_all('(FID_DL_\d+)', $this->content, $matches);
 
         return array_map(

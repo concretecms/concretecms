@@ -6,6 +6,8 @@ use Concrete\Core\Attribute\Category\CategoryInterface;
 use Concrete\Core\Attribute\Command\ClearAttributesCommand;
 use Concrete\Core\Attribute\Command\SaveAttributesCommand;
 use Concrete\Core\Attribute\ObjectInterface;
+use Concrete\Core\Error\ErrorList\ErrorList;
+use Concrete\Core\Validation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 /**
@@ -23,15 +25,15 @@ trait ControllerTrait
      */
     abstract public function getObjects(): array;
 
-    abstract public function canEditAttributeKey(int $akID): bool;
+    abstract public function canEditAttributeKey(int $akID, ObjectInterface $object): bool;
 
-    public function saveAttributes()
+    public function saveAttributes(): ?ErrorList
     {
         // Let's retrieve a list of attribute keys that we're trying to set.
-        $selectedAttributes = (array) $this->request->request->get('selectedKeys', []);
+        $selectedAttributes = (array)$this->request->request->get('selectedKeys', []);
 
         // In case of non modified Multiple Valued attribute in bulk edit
-        $ignoredAttributes = (array) $this->request->request->get('ignoredKeys', []);
+        $ignoredAttributes = (array)$this->request->request->get('ignoredKeys', []);
 
         foreach ($this->getObjects() as $object) {
             // Now, let's divide attributes into piles of those we need to save, and those we need to clear
@@ -44,7 +46,7 @@ trait ControllerTrait
                 if ($attributeKey) {
                     if (!in_array($attributeKey->getAttributeKeyID(), $selectedAttributes) &&
                         !in_array($attributeKey->getAttributeKeyID(), $ignoredAttributes) &&
-                        $this->canEditAttributeKey($attributeKey->getAttributeKeyID())) {
+                        $this->canEditAttributeKey($attributeKey->getAttributeKeyID(), $object)) {
                         // This is an attribute we have currently set on the object, but it's not
                         // in the request, and it is something we're allowed to edit, so that means it needs
                         // to be cleared
@@ -54,10 +56,24 @@ trait ControllerTrait
             }
 
             foreach ($selectedAttributes as $akID) {
-                if ($this->canEditAttributeKey($akID)) {
+                if ($this->canEditAttributeKey($akID, $object)) {
                     $ak = $this->category->getAttributeKeyByID($akID);
                     if ($ak) {
-                        $attributesToSave[] = $ak;
+                        $controller = $ak->getController();
+                        $validator = $controller->getValidator();
+                        /**
+                         * @var $response Response
+                         */
+                        $response = $validator->validateSaveValueRequest(
+                            $controller,
+                            $this->request,
+                            false // In this case we should allow field not present errors because we're not on registration or in user profile
+                        );
+                        if ($response->isValid()) {
+                            $attributesToSave[] = $ak;
+                        } else {
+                            return $response->getErrorObject();
+                        }
                     }
                 }
             }
@@ -65,6 +81,8 @@ trait ControllerTrait
             $this->app->executeCommand(new ClearAttributesCommand($attributesToClear, $object));
             $this->app->executeCommand(new SaveAttributesCommand($attributesToSave, $object));
         }
+
+        return null;
     }
 
     public function getAttribute()

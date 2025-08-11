@@ -10,7 +10,7 @@
         </div>
         <div class="form-group">
             <?= $form->label('fileFolderFileStorageLocation', t('Storage Location')); ?>
-            <?= $form->select('fileFolderFileStorageLocation', $locations); ?>
+            <?= $form->select('fileFolderFileStorageLocation', $locations, $selectedLocationID); ?>
         </div>
         <div class="dialog-buttons">
             <button class="btn btn-secondary float-end" data-dialog-action="cancel"><?= t('Cancel'); ?></button>

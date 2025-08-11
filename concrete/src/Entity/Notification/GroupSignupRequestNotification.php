@@ -1,7 +1,7 @@
 <?php
+
 namespace Concrete\Core\Entity\Notification;
 
-use Concrete\Core\Entity\User\GroupSignupRequest;
 use Concrete\Core\Notification\Subject\SubjectInterface;
 use Concrete\Core\Notification\View\GroupSignupRequestListView;
 use Doctrine\ORM\Mapping as ORM;
@@ -14,16 +14,16 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class GroupSignupRequestNotification extends Notification
 {
-
     /**
      * @ORM\ManyToOne(targetEntity="\Concrete\Core\Entity\User\GroupSignupRequest", cascade={"persist", "remove"}, inversedBy="notifications"),
      * @ORM\JoinColumn(name="id", referencedColumnName="id")
+     *
+     * @var \Concrete\Core\Entity\User\GroupSignupRequest
      */
     protected $signupRequest;
 
     /**
-     * GroupSignupRequestNotification constructor.
-     * @param GroupSignupRequest $group
+     * @param \Concrete\Core\Entity\User\GroupSignupRequest $signupRequest
      */
     public function __construct(SubjectInterface $signupRequest)
     {
@@ -32,7 +32,7 @@ class GroupSignupRequestNotification extends Notification
     }
 
     /**
-     * @return GroupSignupRequest
+     * @return \Concrete\Core\Entity\User\GroupSignupRequest
      */
     public function getSignupRequest(): SubjectInterface
     {
@@ -40,18 +40,24 @@ class GroupSignupRequestNotification extends Notification
     }
 
     /**
-     * @param SubjectInterface $signupRequest
-     * @return GroupSignupRequestNotification
+     * @param \Concrete\Core\Entity\User\GroupSignupRequest $signupRequest
+     *
+     * @return $this
      */
-    public function setSignupRequest(SubjectInterface $signupRequest): GroupSignupRequestNotification
+    public function setSignupRequest(SubjectInterface $signupRequest): self
     {
         $this->signupRequest = $signupRequest;
+
         return $this;
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Entity\Notification\Notification::getListView()
+     */
     public function getListView()
     {
         return new GroupSignupRequestListView($this);
     }
-
 }

@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\Page\Theme;
 
+use Concrete\Core\Backup\ContentImporter;
 use Concrete\Core\Cache\Level\RequestCache;
 use Concrete\Core\Entity\Page\Theme\CustomSkin;
 use Concrete\Core\Entity\Permission\IpAccessControlCategory;
@@ -352,6 +353,7 @@ class Theme extends ConcreteObject implements \JsonSerializable
     /**
      * @return mixed|void
      */
+    #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
         $hasSkins = $this->hasSkins();
@@ -516,9 +518,24 @@ class Theme extends ConcreteObject implements \JsonSerializable
      */
     public static function getByHandle($pThemeHandle)
     {
+        /** @var RequestCache $cache */
+        $cache = Facade::getFacadeApplication()->make('cache/request');
+        $key = '/PageTheme/handle/' . $pThemeHandle;
+        if ($cache->isEnabled()) {
+            $item = $cache->getItem($key);
+            if ($item->isHit()) {
+                return $item->get();
+            }
+        }
+
         $where = 'pThemeHandle = ?';
         $args = [$pThemeHandle];
         $pt = static::populateThemeQuery($where, $args);
+
+        if (isset($item) && $item->isMiss()) {
+            $item->set($pt);
+            $cache->save($item);
+        }
 
         return $pt;
     }
@@ -925,10 +942,6 @@ class Theme extends ConcreteObject implements \JsonSerializable
             $documentationList->setSiteTreeToAll();
             $documentationList->includeSystemPages();
             $documentationList->filterByPath($parentPage->getCollectionPath());
-            $documentationList->filterByPageTypeHandle([
-                THEME_DOCUMENTATION_PAGE_TYPE,
-                THEME_DOCUMENTATION_CATEGORY_PAGE_TYPE]
-            );
             $documentationList->sortByDisplayOrder();
             $themeDocumentationPages = $documentationList->getResults();
             return $themeDocumentationPages;
@@ -1208,7 +1221,7 @@ class Theme extends ConcreteObject implements \JsonSerializable
      *
      * @param \Concrete\Core\Entity\Site\Site|null $site if null, we'll use the current site.
      */
-    public function applyToSite(Site $site = null)
+    public function applyToSite(?Site $site = null)
     {
         if (!is_object($site)) {
             $site = \Core::make('site')->getSite();
@@ -1218,6 +1231,15 @@ class Theme extends ConcreteObject implements \JsonSerializable
         $entityManager->persist($site);
         $entityManager->flush();
 
+        $env = Environment::get();
+        $record = $env->getRecord(
+            DIRNAME_THEMES . DIRECTORY_SEPARATOR . $this->getThemeHandle() . DIRECTORY_SEPARATOR . FILENAME_CONTENT_XML,
+            $this->getPackageHandle()
+        );
+        if ($record->exists()) {
+            $importer = app(ContentImporter::class);
+            $importer->importContentFile($record->file);
+        }
 
         $treeIDs = [0];
         foreach($site->getLocales() as $locale) {

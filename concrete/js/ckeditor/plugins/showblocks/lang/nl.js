@@ -1,1 +1,1 @@
-﻿CKEDITOR.plugins.setLang("showblocks","nl",{toolbar:"Toon blokken"});
+CKEDITOR.plugins.setLang("showblocks","nl",{toolbar:"Toon blokken"});

@@ -25,6 +25,7 @@ $router->all('/ccm/system/panels/details/page/composer/publish', '\Concrete\Cont
 $router->all('/ccm/system/panels/details/page/composer/save_and_exit', '\Concrete\Controller\Panel\Detail\Page\Composer::saveAndExit');
 $router->all('/ccm/system/panels/details/page/location', '\Concrete\Controller\Panel\Detail\Page\Location::view');
 $router->all('/ccm/system/panels/details/page/location/submit', '\Concrete\Controller\Panel\Detail\Page\Location::submit');
+$router->all('/ccm/system/panels/details/page/location/check', '\Concrete\Controller\Panel\Detail\Page\Location::check');
 $router->all('/ccm/system/panels/details/page/permissions', '\Concrete\Controller\Panel\Detail\Page\Permissions::view');
 $router->all('/ccm/system/panels/details/page/permissions/save_simple', '\Concrete\Controller\Panel\Detail\Page\Permissions::save_simple');
 $router->all('/ccm/system/panels/details/page/preview', '\Concrete\Controller\Panel\Page\Design::preview');

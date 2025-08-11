@@ -2,7 +2,9 @@
 namespace Concrete\Core\Page\Search\ColumnSet;
 
 use Concrete\Core\Page\Search\ColumnSet\Column\PageIDColumn;
+use Concrete\Core\Page\Search\ColumnSet\Column\PageTemplateColumn;
 use Concrete\Core\Page\Search\ColumnSet\Column\SitemapDisplayOrderColumn;
+use Concrete\Core\Page\Search\ColumnSet\Column\UrlPathColumn;
 use Concrete\Core\Search\Column\Column;
 use Concrete\Core\Support\Facade\Application;
 
@@ -41,6 +43,8 @@ class Available extends DefaultSet
     {
         $this->addColumn(new SitemapDisplayOrderColumn());
         $this->addColumn(new PageIDColumn());
+        $this->addColumn(new PageTemplateColumn());
+        $this->addColumn(new UrlPathColumn());
         parent::__construct();
         $this->addColumn(new Column('cvStatus', t('Version Status'), ['\Concrete\Core\Page\Search\ColumnSet\Available', 'getCollectionVersionStatus'], false));
     }

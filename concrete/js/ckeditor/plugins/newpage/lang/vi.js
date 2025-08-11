@@ -1,1 +1,1 @@
-﻿CKEDITOR.plugins.setLang("newpage","vi",{toolbar:"Trang mới"});
+CKEDITOR.plugins.setLang("newpage","vi",{toolbar:"Trang mới"});

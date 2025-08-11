@@ -60,19 +60,28 @@ class PageListTest extends PageTestCase
         ],
     ];
 
-    public function __construct($name = null, array $data = [], $dataName = '')
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\TestHelpers\Database\ConcreteDatabaseTestCase::getTables()
+     */
+    protected function getTables()
     {
-        parent::__construct($name, $data, $dataName);
-
-        // Add extra tables
-        $this->tables = array_merge($this->tables, [
+        return array_merge(parent::getTables(), [
             'PermissionAccessList',
             'PageTypeComposerFormLayoutSets',
             'PermissionAccessEntityTypes',
         ]);
+    }
 
-        // Add extra metadata
-        $this->metadatas = array_merge($this->metadatas, [
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\TestHelpers\Database\ConcreteDatabaseTestCase::getEntityClassNames()
+     */
+    protected function getEntityClassNames(): array
+    {
+        return array_merge(parent::getEntityClassNames(), [
             \Concrete\Core\Entity\Attribute\Type::class,
             \Concrete\Core\Entity\Attribute\Category::class,
             \Concrete\Core\Entity\Page\Feed::class,
@@ -310,7 +319,8 @@ class PageListTest extends PageTestCase
         $nl = new \Concrete\Core\Page\PageList();
         $nl->includeAliases();
         $nl->ignorePermissions();
-        $nl->sortByName();
+        $nl->getQueryObject()->addOrderBy('cv.cvName', 'asc');
+        $nl->getQueryObject()->addOrderBy('p.cID', 'asc');
         $total = $nl->getPagination()->getTotalResults();
         $results = $nl->getPagination()->setMaxPerPage(10)->getCurrentPageResults();
         $this->assertEquals(18, $total);
@@ -365,6 +375,34 @@ class PageListTest extends PageTestCase
         $nl->filterByPath('/test-page-1', false);
         $pagination = $nl->getPagination();
         $this->assertEquals(1, $pagination->getNBResults());
+    }
+
+    public function testFilterByMultiplePaths()
+    {
+        $this->createPage('More Fun', '/test-page-1/foobler');
+        $this->createPage('Extreme Fun', '/test-page-2');
+
+        $this->list->filterByPath('/test-page-1');
+        $this->list->filterByPath('/test-page-2');
+        $totalResults = $this->list->getTotalResults();
+        $this->assertEquals(4, $totalResults);
+    }
+
+    public function testFilterByPathWithArray()
+    {
+        $this->createPage('More Fun', '/test-page-1/foobler');
+
+        $this->list->filterByPath(['/test-page-1']);
+        $totalResults = $this->list->getTotalResults();
+        $this->assertEquals(18, $totalResults);
+    }
+
+    public function testFilterByPagesWithCustomStyles()
+    {
+        $this->list->filterByPagesWithCustomStyles();
+        $this->list->filterByPagesWithCustomStyles();
+        $totalResults = $this->list->getTotalResults();
+        $this->assertEquals(0, $totalResults);
     }
 
     public function testBasicFeedSave()

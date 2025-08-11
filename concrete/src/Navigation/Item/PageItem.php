@@ -23,12 +23,12 @@ class PageItem extends Item
      * @param string $name
      * @param bool $isActive
      */
-    public function __construct(Page $page = null, bool $isActive = false)
+    public function __construct(?Page $page = null, bool $isActive = false)
     {
         if ($page) {
             $this->pageID = $page->getCollectionID();
             $this->keywords = (string)$page->getAttribute("meta_keywords");
-            parent::__construct($page->getCollectionLink(), $page->getCollectionName(), $isActive);
+            parent::__construct($this->getURL(), (string) $page->getCollectionName(), $isActive);
         }
         if ($this->keywords === null) {
             $this->keywords = '';
@@ -51,6 +51,23 @@ class PageItem extends Item
         $this->pageID = $pageID;
     }
 
+    /**
+     * @return string
+     */
+    public function getURL(): string
+    {
+        $p = Page::getByID($this->pageID);
+        if ($p->isExternalLink()) {
+            $url = $p->getCollectionPointerExternalLink();
+        } else if ($p->getAttribute('replace_link_with_first_in_nav')) {
+            $child = $p->getFirstChild();
+            $url = $child instanceof Page ? $child->getCollectionLink() : $p->getCollectionLink();
+        } else {
+            $url = $p->getCollectionLink();
+        }
+        return $url;
+    }
+    
     /**
      * @return string
      */
@@ -79,12 +96,14 @@ class PageItem extends Item
         return t(parent::getName());
     }
 
+    #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
         return [
             // We need to use the parent's getName method (it's in English)
             'name' => parent::getName(),
             'pageID' => $this->getPageID(),
+            'url' => $this->getURL(),
             'keywords' => $this->getKeywords(),
         ] + parent::jsonSerialize();
     }

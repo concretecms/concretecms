@@ -40,40 +40,87 @@ $(function() {
 
         if (data.task == 'add') {
             $tabsContainer.hide();
+            // Disable the add block button until we've chosen a form.
+            my.disableBlockForm()
+            $chooseContainer.find('button').on('click', function() {
+                var action = $(this).attr('data-button-action');
+                if (action == 'choose-new-form') {
+                    my.chooseFormType('new', 'add');
+                } else {
+                    my.chooseFormType('existing', 'add');
+                }
+            });
         } else {
-            my.chooseFormType(data.mode);
+            my.chooseFormType(data.mode, 'edit');
         }
-
-        $chooseContainer.find('button').on('click', function() {
-            var action = $(this).attr('data-action');
-            if (action == 'choose-new-form') {
-                my.chooseFormType('new');
-            } else {
-                my.chooseFormType('existing');
-            }
-        });
     }
 
-    ConcreteBlockForm.prototype.chooseFormType = function(mode) {
+    ConcreteBlockForm.prototype.disableBlockForm = function() {
+        // disable the button
+        $('div.ui-dialog.ccm-ui .ui-dialog-buttonpane a.btn-primary').addClass('disabled')
+        // disable the form events.
+        $('form#ccm-block-form').on('submit.addExpressForm', function(e) {
+            e.preventDefault()
+            e.stopPropagation()
+            return false
+        })
+    }
+
+    ConcreteBlockForm.prototype.enableBlockForm = function() {
+        // disable the button
+        $('div.ui-dialog.ccm-ui .ui-dialog-buttonpane a.btn-primary').removeClass('disabled')
+        // disable the form events.
+        $('form#ccm-block-form').unbind('submit.addExpressForm');
+    }
+
+    ConcreteBlockForm.prototype.chooseFormType = function(mode, task) {
         var my = this,
             $chooseContainer = $('#ccm-block-express-form-choose-type'),
-            $tabsContainer = $('#ccm-block-express-form-tabs');
+            $tabsContainer = $('#ccm-block-express-form-tabs'),
+            addBlockForm = $('#ccm-block-form').get(0)
+
 
         switch(mode) {
             case 'new':
-                $tabsContainer.find('li').eq(2).remove();
+                if (task === 'edit') {
+                    $tabsContainer.find('li').eq(2).remove();
+                    const firstTab = new bootstrap.Tab($tabsContainer.find('li').eq(0).find('a'))
+                    firstTab.show()
+                    $tabsContainer.show();
+                    $chooseContainer.remove();
+                } else {
+                    if (addBlockForm.checkValidity()) {
+                        // Try to create the form on the backend
+                        $.concreteAjax({
+                            url: $chooseContainer.attr('data-add-new-form-action'),
+                            data: {
+                                'ccm_token': $chooseContainer.attr('data-add-new-form-token'),
+                                'formName': $('input#newFormName').val()
+                            },
+                            success: function (r) {
+                                $tabsContainer.find('li').eq(2).remove();
+                                const firstTab = new bootstrap.Tab($tabsContainer.find('li').eq(0).find('a'))
+                                firstTab.show()
+                                $tabsContainer.show();
+                                $chooseContainer.hide();
+                                my.enableBlockForm()
+                            }
+                        });
+                    } else {
+                        addBlockForm.reportValidity()
+                    }
+                }
                 break;
             case 'existing':
                 $tabsContainer.find('li').eq(0).remove();
                 $tabsContainer.find('li').eq(0).remove();
+                const firstTab = new bootstrap.Tab($tabsContainer.find('li').eq(0).find('a'))
+                firstTab.show()
+                $tabsContainer.show();
+                $chooseContainer.remove();
+                my.enableBlockForm()
                 break;
         }
-
-        const firstTab = new bootstrap.Tab($tabsContainer.find('li').eq(0).find('a'))
-        firstTab.show()
-
-        $tabsContainer.show();
-        $chooseContainer.hide();
     }
 
     ConcreteBlockForm.prototype.destroyContents = function($element) {
@@ -140,6 +187,7 @@ $(function() {
         $tabAdd.on('click', 'button[data-action=add-question]', function() {
             var $form = $tabAdd.find(':input');
             var data = $form.serializeArray();
+            data.push({'name': 'ccm_token', 'value': $tabAdd.attr('data-token')})
             jQuery.fn.dialog.showLoader();
             $.concreteAjax({
                 url: $tabAdd.attr('data-action'),
@@ -166,9 +214,10 @@ $(function() {
         $tabEdit.on('click', 'button[data-action=update-question]', function() {
             var $form = $tabEdit.find(':input');
             var data = $form.serializeArray();
+            data.push({'name': 'ccm_token', 'value': $tabEdit.attr('data-update-token')})
             jQuery.fn.dialog.showLoader();
             $.concreteAjax({
-                url: $tabEdit.attr('data-action'),
+                url: $tabEdit.attr('data-update-action'),
                 data: data,
                 success: function(r) {
                     var $fields = $tabEdit.find('[data-view=form-fields]'),
@@ -196,14 +245,23 @@ $(function() {
 
 
         $tabEdit.on('click', 'a[data-action=delete-control]', function() {
-            $(this).closest('li').queue(function() {
-                $(this).addClass('animated bounceOutLeft');
-                $(this).dequeue();
-            }).delay(500).queue(function () {
-                $(this).remove();
-                my.rescanEmailFields();
-                $(this).dequeue();
-            })
+            var $control = $(this)
+
+            $.concreteAjax({
+                url: $tabEdit.attr('data-delete-action'),
+                data: {'control': $control.attr('data-control-id'), 'ccm_token': $tabEdit.attr('data-delete-token')},
+                success: function(r) {
+                    $control.closest('li').queue(function() {
+                        $(this).addClass('animated bounceOutLeft');
+                        $(this).dequeue();
+                    }).delay(500).queue(function () {
+                        $(this).remove();
+                        my.rescanEmailFields();
+                        $(this).dequeue();
+                    })
+                }
+            });
+
         });
 
         $tabEdit.on('click', 'button[data-action=cancel-edit]', function() {
@@ -221,7 +279,7 @@ $(function() {
             $.concreteAjax({
                 url: $control.attr('data-action'),
                 type: 'get',
-                data: {'control': $control.attr('data-form-control-id')},
+                data: {'control': $control.attr('data-form-control-id'), 'ccm_token': $control.attr('data-token')},
                 success: function(r) {
                     var $fields = $tabEdit.find('[data-view=form-fields]'),
                         $editQuestion = $tabEdit.find('[data-view=edit-question]'),
@@ -258,13 +316,28 @@ $(function() {
             });
         });
 
-        $tabEdit.find('ul').sortable({
+        var $tabEditControlList = $tabEdit.find('ul')
+
+        $tabEditControlList.sortable({
             placeholder: "ui-state-highlight",
             axis: "y",
             handle: "i.fa-arrows-alt",
             cursor: "move",
             update: function() {
+                var sortAction = $tabEdit.attr('data-sort-action'),
+                    sortControls = []
 
+                $tabEditControlList.find('li').each(function() {
+                    sortControls.push($(this).attr('data-form-control-id'))
+                })
+
+                $.concreteAjax({
+                    url: sortAction,
+                    data: {'controls': sortControls, 'ccm_token': $tabEdit.attr('data-sort-token')},
+                    success: function(r) {
+
+                    }
+                });
             }
         });
 
@@ -278,7 +351,7 @@ $(function() {
                 $types.find('i.fa-refresh').show();
                 $.concreteAjax({
                     url: $types.attr('data-action'),
-                    data: {'id': value},
+                    data: {'id': value, 'ccm_token': $types.attr('data-token')},
                     loader: false,
                     success: function(r) {
                         _.each(r.assets.css, function(css) {

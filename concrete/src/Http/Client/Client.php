@@ -7,6 +7,7 @@ use GuzzleHttp\Client as GuzzleHttpClient;
 
 use Psr\Http\Message\RequestInterface;
 use Concrete\Core\Logging\LoggerAwareInterface;
+use Psr\Http\Message\ResponseInterface;
 use Psr\Log\LoggerInterface;
 use Exception;
 use Throwable;
@@ -42,7 +43,7 @@ class Client extends GuzzleHttpClient implements LoggerAwareInterface
      *
      * @return static
      */
-    public function setLogger(LoggerInterface $value = null)
+    public function setLogger(?LoggerInterface $value = null)
     {
         $this->logger = $value;
 
@@ -50,14 +51,18 @@ class Client extends GuzzleHttpClient implements LoggerAwareInterface
     }
 
 
-    public function send(RequestInterface $request, array $options = [])
+    public function send(RequestInterface $request, array $options = []): ResponseInterface
     {
         $response = parent::send($request, $options);
         $logger = $this->getLogger();
         if ($logger !== null) {
             $statusCode = $response->getStatusCode();
             try {
-                $body = $response->getBody();
+                $responseBody = $response->getBody();
+                $body = $responseBody->getContents();
+                if ($responseBody->isSeekable()) {
+                    $responseBody->rewind();
+                }
             } catch (Exception $x) {
                 $body = '';
             } catch (Throwable $x) {
@@ -82,7 +87,7 @@ class Client extends GuzzleHttpClient implements LoggerAwareInterface
         return $response;
     }
 
-    public function request($method, $uri = '', array $options = [])
+    public function request($method, $uri = '', array $options = []): ResponseInterface
     {
         $logger = $this->getLogger();
         if ($logger !== null) {

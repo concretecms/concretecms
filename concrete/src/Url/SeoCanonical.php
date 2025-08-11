@@ -166,4 +166,13 @@ class SeoCanonical
     {
         $this->includedQuerystringParameters[] = $parameter;
     }
+
+    /**
+     * @since 9.2.X
+     * @return array
+     */
+    public function getIncludedQuerystringParameters()
+    {
+        return $this->includedQuerystringParameters;
+    }
 }

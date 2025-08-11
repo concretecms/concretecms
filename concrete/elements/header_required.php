@@ -6,6 +6,7 @@ use Concrete\Core\Localization\Localization;
 use Concrete\Core\Multilingual\Page\Section\Section;
 use Concrete\Core\Support\Facade\Application;
 use Symfony\Component\EventDispatcher\GenericEvent;
+use Concrete\Core\Sharing\OpenGraph\OpenGraph;
 
 defined('C5_EXECUTE') or die("Access Denied.");
 
@@ -25,12 +26,8 @@ $isArrangeMode = false;
 if (!isset($pageTitle) || !is_string($pageTitle) || $pageTitle === '') {
     $pageTitle = null;
 }
-if (!isset($pageDescription)) {
-    $pageDescription = null;
-}
-if (!isset($pageMetaKeywords)) {
-    $pageMetaKeywords = null;
-}
+$pageDescription = $pageDescription ?? '';
+$pageMetaKeywords = $pageMetaKeywords ?? '';
 $defaultPageTitle = $pageTitle;
 $app = Application::getFacadeApplication();
 $site = $app->make('site')->getSite();
@@ -72,16 +69,16 @@ if (is_object($c)) {
         }
     }
 
-    if (!$pageDescription) {
+    if ($pageDescription === '') {
         // we aren't getting it dynamically.
-        $pageDescription = $c->getAttribute('meta_description');
-        if (!$pageDescription) {
-            $pageDescription = $c->getCollectionDescription();
+        $pageDescription = (string) $c->getAttribute('meta_description');
+        if ($pageDescription === '') {
+            $pageDescription = (string) $c->getCollectionDescription();
         }
         $pageDescription = trim($pageDescription);
     }
-    if (!$pageMetaKeywords) {
-        $pageMetaKeywords = trim($c->getAttribute('meta_keywords'));
+    if ($pageMetaKeywords === '') {
+        $pageMetaKeywords = trim((string) $c->getAttribute('meta_keywords'));
     }
 
     // @deprecated – this is support for page level customizations custom CSS records, which are only available to
@@ -101,38 +98,38 @@ if (is_object($c)) {
     $c = null;
 }
 $metaTags = [];
-$metaTags['charset'] = sprintf('<meta http-equiv="content-type" content="text/html; charset=%s"/>', APP_CHARSET);
-if ($pageDescription) {
-    $metaTags['description'] = sprintf('<meta name="description" content="%s"/>', htmlspecialchars($pageDescription, ENT_COMPAT, APP_CHARSET));
+$metaTags['charset'] = sprintf('<meta http-equiv="content-type" content="text/html; charset=%s">', APP_CHARSET);
+if ($pageDescription !== '') {
+    $metaTags['description'] = sprintf('<meta name="description" content="%s">', htmlspecialchars($pageDescription, ENT_COMPAT, APP_CHARSET));
 }
-if ($pageMetaKeywords) {
-    $metaTags['keywords'] = sprintf('<meta name="keywords" content="%s"/>', htmlspecialchars($pageMetaKeywords, ENT_COMPAT, APP_CHARSET));
+if ($pageMetaKeywords !== '') {
+    $metaTags['keywords'] = sprintf('<meta name="keywords" content="%s">', htmlspecialchars($pageMetaKeywords, ENT_COMPAT, APP_CHARSET));
 }
 if ($c !== null && $c->getAttribute('exclude_search_index')) {
-    $metaTags['robots'] = sprintf('<meta name="robots" content="%s"/>', 'noindex');
+    $metaTags['robots'] = sprintf('<meta name="robots" content="%s">', 'noindex');
 }
 if ($appConfig->get('concrete.misc.generator_tag_display_in_header')) {
-    $metaTags['generator'] = sprintf('<meta name="generator" content="%s"/>', 'Concrete CMS');
+    $metaTags['generator'] = sprintf('<meta name="generator" content="%s">', 'Concrete CMS');
 }
 if (($modernIconFID = (int) $config->get('misc.modern_tile_thumbnail_fid')) && ($modernIconFile = File::getByID($modernIconFID))) {
-    $metaTags['msapplication-TileImage'] = sprintf('<meta name="msapplication-TileImage" content="%s"/>', $modernIconFile->getURL());
+    $metaTags['msapplication-TileImage'] = sprintf('<meta name="msapplication-TileImage" content="%s">', $modernIconFile->getURL());
     $modernIconBGColor = (string) $config->get('misc.modern_tile_thumbnail_bgcolor');
     if ($modernIconBGColor !== '') {
-        $metaTags['msapplication-TileColor'] = sprintf('<meta name="msapplication-TileColor" content="%s"/>', $modernIconBGColor);
+        $metaTags['msapplication-TileColor'] = sprintf('<meta name="msapplication-TileColor" content="%s">', h($modernIconBGColor));
     }
 }
 $linkTags = [];
 if (($favIconFID = (int) $config->get('misc.favicon_fid')) && ($favIconFile = File::getByID($favIconFID))) {
     $favIconFileURL = $favIconFile->getURL();
-    $linkTags['shortcut icon'] = sprintf('<link rel="shortcut icon" href="%s" type="image/x-icon"/>', $favIconFileURL);
-    $linkTags['icon'] = sprintf('<link rel="icon" href="%s" type="image/x-icon"/>', $favIconFileURL);
+    $linkTags['shortcut icon'] = sprintf('<link rel="shortcut icon" href="%s" type="image/x-icon">', $favIconFileURL);
+    $linkTags['icon'] = sprintf('<link rel="icon" href="%s" type="image/x-icon">', $favIconFileURL);
 }
 if (($appleIconFID = (int) $config->get('misc.iphone_home_screen_thumbnail_fid')) && ($appleIconFile = File::getByID($appleIconFID))) {
-    $linkTags['apple-touch-icon'] = sprintf('<link rel="apple-touch-icon" href="%s"/>', $appleIconFile->getURL());
+    $linkTags['apple-touch-icon'] = sprintf('<link rel="apple-touch-icon" href="%s">', $appleIconFile->getURL());
 }
 $browserToolbarColor = (string) $config->get('misc.browser_toolbar_color');
 if ($browserToolbarColor !== '') {
-    $metaTags['browserToolbarColor'] = sprintf('<meta name="theme-color" content="%s"/>', h($browserToolbarColor));
+    $metaTags['browserToolbarColor'] = sprintf('<meta name="theme-color" content="%s">', h($browserToolbarColor));
 }
 if ($config->get('seo.canonical_tag.enabled')) {
     if (($canonicalLink = $app->make(SeoCanonical::class)->getPageCanonicalURLTag($c, Request::getInstance())) !== null) {
@@ -150,9 +147,19 @@ if ($c !== null && $config->get('multilingual.set_alternate_hreflang') && !$c->i
                 $relatedPage = Page::getByID($relatedID);
                 if ($relatedPage && !$relatedPage->isError()) {
                     $url = $urlManager->resolve([$relatedPage]);
-                    $alternateHreflangTags[] = '<link rel="alternate" hreflang="'.str_replace('_', '-', $ms->getLocale()).'" href="'.$url.'" />';
+                    $alternateHreflangTags[] = '<link rel="alternate" hreflang="'.str_replace('_', '-', $ms->getLocale()).'" href="'.$url.'">';
                 }
             }
+        }
+    }
+}
+
+if ($c !== null) {
+    $openGraph = app(OpenGraph::class);
+    if ($openGraph->isEnabled()) {
+        echo "\n\n\t";
+        foreach ($openGraph->getTags($c) as $tag) {
+            echo $tag . "\n\t";
         }
     }
 }
@@ -197,7 +204,9 @@ if (!empty($alternateHreflangTags)) {
 <?php
 $v = View::getRequestInstance();
 if ($cp) {
-    View::element('page_controls_header', ['cp' => $cp, 'c' => $c]);
+    if (!$v->isEditingDisabled()) {
+        View::element('page_controls_header', ['cp' => $cp, 'c' => $c]);
+    }
     if ($isEditMode) {
         $cookie = $app->make('cookie');
         if ($cookie->get('ccmLoadAddBlockWindow')) {

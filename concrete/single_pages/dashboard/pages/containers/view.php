@@ -28,7 +28,7 @@ if (count($containers) == 0) {
             <li>
                 <a href="<?= $view->action('edit', $container->getContainerID()); ?>">
                     <span><?= $container->getContainerIconImage(); ?></span>
-                    <?=$container->getContainerName(); ?>
+                    <?=h($container->getContainerName()); ?>
                 </a>
             </li>
         <?php

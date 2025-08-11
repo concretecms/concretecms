@@ -26,6 +26,7 @@ class PageController extends Controller
     protected $requestValidated;
     /** @var BlockController[] */
     protected $blocks = [];
+    protected $editingDisabled = false;
 
     /** @var bool A flag to track whether we've loaded sets from the session flash bags */
     private $hasCheckedSessionMessages = false;
@@ -206,6 +207,25 @@ class PageController extends Controller
     public function getRequestActionParameters()
     {
         return $this->parameters;
+    }
+
+    /**
+     * Disables the display of an editing toolbar on the page. This does not impact permissions – it's an additional
+     * check that is used when pages are previewed (e.g. when we want to show a page but not the toolbar, even if the
+     * user is logged in.) This has to be a separate check because sometimes pages are protected but we still
+     * want to act like the user can't edit the page. We can't just use setCustomRequestUser and set it to -1.
+     */
+    public function disableEditing()
+    {
+        $this->editingDisabled = true;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isEditingDisabled()
+    {
+        return $this->editingDisabled;
     }
 
     public function getControllerActionPath()

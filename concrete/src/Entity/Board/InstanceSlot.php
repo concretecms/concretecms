@@ -45,7 +45,6 @@ class InstanceSlot
 
     public function __construct()
     {
-        $this->content_slots = new ArrayCollection();
     }
 
     /**
@@ -102,22 +101,6 @@ class InstanceSlot
     public function setInstance($instance): void
     {
         $this->instance = $instance;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getContentSlots()
-    {
-        return $this->content_slots;
-    }
-
-    /**
-     * @param mixed $content_slots
-     */
-    public function setContentSlots($content_slots): void
-    {
-        $this->content_slots = $content_slots;
     }
 
     /**

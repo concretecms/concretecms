@@ -97,15 +97,9 @@ class CkeditorEditor implements EditorInterface
         $this->site = $site;
     }
 
-    /**
-     * Generate the Javascript code that initialize the plugin.
-     *
-     * @param array $dynamicOptions a list of custom options that override the default ones
-     *
-     * @return string
-     */
-    public function getEditorInitJSFunction($dynamicOptions = [])
+    public function getOptions($dynamicOptions = []): array
     {
+
         $pluginManager = $this->getPluginManager();
 
         if ($this->allowFileManager()) {
@@ -113,8 +107,6 @@ class CkeditorEditor implements EditorInterface
         } else {
             $pluginManager->deselect(['concretefilemanager', 'concreteuploadimage']);
         }
-
-        $this->requireEditorAssets();
         $plugins = $pluginManager->getSelectedPlugins();
         $snippetsAndClasses = $this->getEditorSnippetsAndClasses();
 
@@ -131,6 +123,7 @@ class CkeditorEditor implements EditorInterface
             'customConfig' => '',
             'disableNativeSpellChecker' => false,
             'allowedContent' => true,
+            'versionCheck' => false,
             'baseFloatZIndex' => 1990, /* Must come below modal variable in variables.less */
             'image2_captionedClass' => 'content-editor-image-captioned',
             'image2_alignClasses' => [
@@ -149,7 +142,24 @@ class CkeditorEditor implements EditorInterface
             $customOptions = [];
         }
 
-        $options = json_encode($dynamicOptions + $customOptions + $defaultOptions);
+        $options = $dynamicOptions + $customOptions + $defaultOptions;
+        return $options;
+    }
+
+    /**
+     * Generate the Javascript code that initialize the plugin.
+     *
+     * @param array $dynamicOptions a list of custom options that override the default ones
+     *
+     * @return string
+     */
+    public function getEditorInitJSFunction($dynamicOptions = [])
+    {
+
+        $this->requireEditorAssets();
+
+        $options = json_encode($this->getOptions($dynamicOptions));
+
         $removeEmptyIcon = '$removeEmpty[\'i\']';
 
         $jsfunc = <<<EOL
@@ -380,6 +390,12 @@ EOL;
      */
     public function outputPageComposerEditor($key, $content)
     {
+        $pluginManager = $this->getPluginManager();
+        if ($pluginManager->isSelected('sourcearea')) {
+            // Sourcearea conflicts with composer
+            // See https://github.com/concrete5/concrete5/issues/10232
+            $pluginManager->deselect('sourcearea');
+        }
         return $this->outputStandardEditor($key, $content);
     }
 
@@ -511,8 +527,7 @@ EOL;
      */
     protected function getLanguageOption()
     {
-        $langPath = DIR_BASE_CORE . '/js/ckeditor4/vendor/lang/';
-        $useLanguage = 'en';
+        $langPath = DIR_BASE_CORE . '/js/ckeditor/lang/';
 
         $language = strtolower(str_replace('_', '-', Localization::activeLocale()));
         if (file_exists($langPath . $language . '.js')) {

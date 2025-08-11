@@ -286,7 +286,7 @@ class AddMessage extends FrontendController
         if (!$u->isRegistered()) {
             $captcha = $this->app->make('captcha');
             if (!$captcha->check()) {
-                $errors[] = t('Incorrect image validation code. Please check the image and re-enter the letters or numbers as necessary.');
+                $errors[] = t("The captcha didn't recognise you as a human. Please try again.");
             }
         }
     }

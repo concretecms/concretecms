@@ -1,33 +1,27 @@
 <?php
 namespace Concrete\Core\Board\Instance;
 
+use Concrete\Core\Board\Instance\Logger\LoggerFactory;
 use Concrete\Core\Entity\Board\Instance;
 use Concrete\Core\Entity\Board\InstanceItem;
-use Concrete\Core\Entity\Board\Item;
-use Concrete\Core\Logging\Channels;
-use Concrete\Core\Logging\LoggerAwareInterface;
-use Concrete\Core\Logging\LoggerAwareTrait;
-use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\EntityManager;
 
-class ItemSegmenter implements LoggerAwareInterface
+class ItemSegmenter
 {
-
-    use LoggerAwareTrait;
-
-    public function getLoggerChannel()
-    {
-        return Channels::CHANNEL_CONTENT;
-    }
-
     /**
      * @var EntityManager
      */
     protected $entityManager;
 
-    public function __construct(EntityManager $entityManager)
+    /**
+     * @var LoggerFactory
+     */
+    protected $loggerFactory;
+
+    public function __construct(EntityManager $entityManager, LoggerFactory $loggerFactory)
     {
         $this->entityManager = $entityManager;
+        $this->loggerFactory = $loggerFactory;
     }
 
     /**
@@ -51,18 +45,21 @@ class ItemSegmenter implements LoggerAwareInterface
         switch ($board->getSortBy()) {
             case $board::ORDER_BY_RELEVANT_DATE_ASC:
                 $qb->orderBy('item.relevantDate', 'asc');
-                $qb->andWhere($qb->expr()->gte('item.relevantDate', time()));
+                $qb->andWhere($qb->expr()->gte('item.relevantDate', ':currentTime'));
                 break;
             default:
-                $qb->andWhere($qb->expr()->lte('item.relevantDate', time()));
+                $qb->andWhere($qb->expr()->lte('item.relevantDate', ':currentTime'));
                 $qb->orderBy('item.relevantDate', 'desc');
                 break;
         }
+        $qb->setParameter('currentTime', time());
+
+        $logger = $this->loggerFactory->createFromInstance($instance);
 
         $items = $qb->getQuery()->execute();
-        $this->logger->debug(t('%s items returned from item segmenter', count($items)));
+        $logger->write(t('%s items returned from item segmenter', count($items)));
         $items = $this->filterItemsByDataSource($instance, $items);
-        $this->logger->debug(t('%s items returned from data source filterer.', count($items)));
+        $logger->write(t('%s items returned from data source filterer.', count($items)));
         if ($items) {
             return $items;
         }

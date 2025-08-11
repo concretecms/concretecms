@@ -13,10 +13,16 @@ use Site;
 
 class PageControllerTest extends PageTestCase
 {
-    public function __construct($name = null, array $data = [], $dataName = '')
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\TestHelpers\Database\ConcreteDatabaseTestCase::getEntityClassNames()
+     */
+    protected function getEntityClassNames(): array
     {
-        parent::__construct($name, $data, $dataName);
-        $this->metadatas[] = Package::class;
+        return array_merge(parent::getEntityClassNames(), [
+            Package::class,
+        ]);
     }
 
     public function tearDown(): void
@@ -114,7 +120,7 @@ class PageControllerTest extends PageTestCase
         $p->setPackageID(1);
         SinglePage::add('/testerson/foo', $p);
         $fooPage = Page::getByPath('/testerson/foo');
-        $fooPage->pkgHandle = 'awesome_package';
+        self::setNonPublicPropertyValue($fooPage, 'pkgHandle', 'awesome_package');
         $controller = $fooPage->getPageController();
 
         $fs = new Filesystem();
@@ -142,7 +148,7 @@ class PageControllerTest extends PageTestCase
 
         SinglePage::add('/testerson/foo', $pkg);
         $fooPage = Page::getByPath('/testerson/foo');
-        $fooPage->pkgHandle = 'awesome_package';
+        self::setNonPublicPropertyValue($fooPage, 'pkgHandle', 'awesome_package');
         $controller = $fooPage->getPageController();
         $fooPage->delete();
 

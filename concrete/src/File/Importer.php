@@ -252,7 +252,7 @@ class Importer
      *
      * @return \Concrete\Core\Entity\File\Version|int
      */
-    public function importUploadedFile(UploadedFile $uploadedFile = null, $fr = false)
+    public function importUploadedFile(?UploadedFile $uploadedFile = null, $fr = false)
     {
         $options = $this->buildOptions($fr)->setCanChangeLocalFile(true);
         $this->useDeprecatedProcessors();

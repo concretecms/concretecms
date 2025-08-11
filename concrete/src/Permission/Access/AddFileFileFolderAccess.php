@@ -68,7 +68,7 @@ class AddFileFileFolderAccess extends FileFolderAccess
         $db->executeQuery(
             'DELETE FROM FilePermissionFileTypeAccessListCustom WHERE paID = ?',
             array($this->getPermissionAccessID()));
-        if (is_array($args['fileTypesIncluded'])) {
+        if (isset($args['fileTypesIncluded']) && is_array($args['fileTypesIncluded'])) {
             foreach ($args['fileTypesIncluded'] as $peID => $permission) {
                 $v = array($this->getPermissionAccessID(), $peID, $permission);
                 $db->executeQuery(
@@ -77,7 +77,7 @@ class AddFileFileFolderAccess extends FileFolderAccess
             }
         }
 
-        if (is_array($args['fileTypesExcluded'])) {
+        if (isset($args['fileTypesExcluded']) && is_array($args['fileTypesExcluded'])) {
             foreach ($args['fileTypesExcluded'] as $peID => $permission) {
                 $v = array($this->getPermissionAccessID(), $peID, $permission);
                 $db->executeQuery(
@@ -86,7 +86,7 @@ class AddFileFileFolderAccess extends FileFolderAccess
             }
         }
 
-        if (is_array($args['extensionInclude'])) {
+        if (isset($args['extensionInclude']) && is_array($args['extensionInclude'])) {
             foreach ($args['extensionInclude'] as $peID => $extensions) {
                 foreach ($extensions as $extension) {
                     $v = array($this->getPermissionAccessID(), $peID, $extension);
@@ -97,7 +97,7 @@ class AddFileFileFolderAccess extends FileFolderAccess
             }
         }
 
-        if (is_array($args['extensionExclude'])) {
+        if (isset($args['extensionExclude']) && is_array($args['extensionExclude'])) {
             foreach ($args['extensionExclude'] as $peID => $extensions) {
                 foreach ($extensions as $extension) {
                     $v = array($this->getPermissionAccessID(), $peID, $extension);

@@ -1,7 +1,14 @@
-<?php
+ <?php
+ 
+defined('C5_EXECUTE') or die('Access Denied.');
 
-defined('C5_EXECUTE') or die("Access Denied.");
+use Concrete\Core\ImageEditor\ImageEditorService;
 
-// @TODO - reinstate this functionality
+/**
+ * @var Concrete\Core\Entity\File\Version $fv
+ * @var Concrete\Core\Application\Application $app
+ */
 
-exit;
+/** @var ImageEditorService $editorService */
+/** @var \Concrete\Core\File\Image\Thumbnail\Type\Version $thumbnailTypeVersion */
+$editorService->renderActiveThumbnailEditor($fv, $thumbnailTypeVersion);

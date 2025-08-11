@@ -1,0 +1,13 @@
+<block type="testimonial" name="">
+  <data table="btTestimonial">
+    <record>
+      <awardImageID>0</awardImageID>
+      <company></company>
+      <companyURL></companyURL>
+      <fID>0</fID>
+      <name></name>
+      <paragraph></paragraph>
+      <position></position>
+    </record>
+  </data>
+</block>

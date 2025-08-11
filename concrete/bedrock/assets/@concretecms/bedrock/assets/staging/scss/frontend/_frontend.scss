@@ -1,0 +1,14 @@
+@import 'variables';
+
+div.ccm-production-notice-staging {
+  background-color: black;
+  bottom: 0;
+  color: white;
+  font-weight: bold;
+  left: 0;
+  padding: 10px;
+  position: fixed;
+  text-align: center;
+  width: 100%;
+  z-index: $index-level-stage-notice;
+}

@@ -27,7 +27,9 @@ class LogList extends ItemList implements PagerProviderInterface, PaginationProv
      */
     protected $autoSortColumns = ['l.logID', 'l.channel', 'l.time', 'l.message', 'l.level', 'l.uID'];
 
-    /** @var Closure|integer|null */
+    /**
+     * @var Closure|integer|null 
+     */
     protected $permissionsChecker = -1;
 
     public function createQuery()
@@ -102,7 +104,7 @@ class LogList extends ItemList implements PagerProviderInterface, PaginationProv
             $time = new DateTime($time);
         }
 
-        $this->query->andWhere('l.time > :start_date')->setParameter('start_date', $time->format('Y-m-d H:i:s'));
+        $this->query->andWhere('l.time > :start_date')->setParameter('start_date', $time->getTimestamp());
     }
 
     public function filterByEndTime($time)
@@ -111,11 +113,11 @@ class LogList extends ItemList implements PagerProviderInterface, PaginationProv
             $time = new DateTime($time);
         }
 
-        $this->query->andWhere('l.time < :end_date')->setParameter('end_date', $time->format('Y-m-d H:i:s'));
+        $this->query->andWhere('l.time < :end_date')->setParameter('end_date', $time->getTimestamp());
     }
 
     /**
-     * @param array $queryRow
+     * @param  array $queryRow
      * @return LogEntry
      */
     public function getResult($queryRow)
@@ -125,7 +127,7 @@ class LogList extends ItemList implements PagerProviderInterface, PaginationProv
 
     public function getTotalResults()
     {
-        if ($this->permissionsChecker === -1) {
+        if (isset($this->permissionsChecker) && $this->permissionsChecker === -1) {
             return $this->deliverQueryObject()
                 ->resetQueryParts(['groupBy', 'orderBy'])
                 ->select('count(distinct l.logID)')
@@ -149,11 +151,13 @@ class LogList extends ItemList implements PagerProviderInterface, PaginationProv
 
     function getPaginationAdapter()
     {
-        return new DoctrineDbalAdapter($this->deliverQueryObject(), function ($query) {
-            $query->resetQueryParts(['groupBy', 'orderBy'])
-                ->select('count(distinct l.logID)')
-                ->setMaxResults(1);
-        });
+        return new DoctrineDbalAdapter(
+            $this->deliverQueryObject(), function ($query) {
+                $query->resetQueryParts(['groupBy', 'orderBy'])
+                    ->select('count(distinct l.logID)')
+                    ->setMaxResults(1);
+            }
+        );
     }
 
     public function checkPermissions($mixed)
@@ -169,7 +173,7 @@ class LogList extends ItemList implements PagerProviderInterface, PaginationProv
         return true;
     }
 
-    public function setPermissionsChecker(Closure $checker = null)
+    public function setPermissionsChecker(?Closure $checker = null)
     {
         $this->permissionsChecker = $checker;
     }

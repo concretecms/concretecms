@@ -126,6 +126,9 @@ EOT
         }
         foreach ($changes as $file => $change) {
             $this->output->writeln(sprintf('### CHANGES REQUIRED IN FILE %s ###', $file));
+            if ($this->output->isVerbose()) {
+                $this->output->writeln(sprintf('(Applied fixers: %s)', implode(', ', $change['appliedFixers'])));
+            }
             $this->output->writeln($change['diff']);
         }
     }

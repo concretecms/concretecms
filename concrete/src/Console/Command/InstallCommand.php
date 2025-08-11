@@ -71,7 +71,8 @@ class InstallCommand extends Command
             ->addOption('site', null, InputOption::VALUE_REQUIRED, 'Name of the site', 'Concrete Site')
             ->addOption('canonical-url', null, InputOption::VALUE_REQUIRED, 'Canonical URL', '')
             ->addOption('canonical-url-alternative', null, InputOption::VALUE_REQUIRED, 'Alternative canonical URL', '')
-            ->addOption('starting-point', null, InputOption::VALUE_REQUIRED, 'Starting point to use', 'elemental_blank')
+            ->addOption('starting-point', null, InputOption::VALUE_REQUIRED, 'Starting point to use', 'atomik_blank')
+            ->addOption('session-handler', null, InputOption::VALUE_REQUIRED, 'Session Handler. Use "file" or "database".', '')
             ->addOption('admin-email', null, InputOption::VALUE_REQUIRED, 'Email of the admin user of the install', 'admin@example.com')
             ->addOption('admin-password', null, InputOption::VALUE_REQUIRED, 'Password of the admin user of the install')
             ->addOption('demo-username', null, InputOption::VALUE_REQUIRED, 'Additional user username')
@@ -83,13 +84,15 @@ class InstallCommand extends Command
             ->addOption('attach', null, InputOption::VALUE_NONE, 'Attach if database contains an existing instance')
             ->addOption('force-attach', null, InputOption::VALUE_NONE, 'Always attach')
             ->addOption('interactive', 'i', InputOption::VALUE_NONE, 'Install using interactive (wizard) mode')
+            ->addOption('disable-marketplace-connect', null, InputOption::VALUE_NONE, 'Do not automatically connect site to marketplace')
+            ->addOption('defer-installation', null, InputOption::VALUE_NONE, 'Defer installation to a later point; do not write the final configuration files necessary to complete installation')
             ->addOption('ignore-warnings', null, InputOption::VALUE_NONE, 'Ignore warnings')
             ->setHelp(<<<EOT
 Returns codes:
   $okExitCode operation completed successfully
   $errExitCode errors occurred
 
-More info at http://documentation.concrete5.org/developers/appendix/cli-commands#c5-install
+More info at https://documentation.concretecms.org/9-x/developers/security/cli-jobs#c5-install
 EOT
             );
     }
@@ -154,6 +157,9 @@ EOT
                     $attach_mode = true;
                 }
             }
+            $db = app('database');
+            $db->executeQuery('set foreign_key_checks = 0');
+
             $routines = $spl->getInstallRoutines();
             foreach ($routines as $r) {
                 if ($attach_mode && !$r instanceof AttachModeCompatibleRoutineInterface) {
@@ -515,10 +521,10 @@ EOT
             'canonical-url-alternative',
             [
                 'starting-point',
-                'elemental_blank',
+                'atomik_blank',
                 function (Question $question, InputInterface $input) {
                     $available = array_map(function($item) { return $item->getPackageHandle(); }, StartingPointPackage::getAvailableList());
-                    $available = array_unique(array_merge($available, ['elemental_blank', 'elemental_full']));
+                    $available = array_unique(array_merge($available, ['atomik_blank', 'elemental_full', 'atomik_full']));
 
                     return new ChoiceQuestion($question->getQuestion(), $available, $question->getDefault());
                 },
@@ -734,6 +740,7 @@ EOT
                         ],
                     ],
                 ],
+                'session-handler' => $options['session-handler'] ?: null,
                 'canonical-url' => $options['canonical-url'] ?: '',
                 'canonical-url-alternative' => $options['canonical-url-alternative'] ?: '',
             ])
@@ -745,6 +752,8 @@ EOT
             ->setUserEmail($options['admin-email'])
             ->setUserPasswordHash($hasher->hashPassword($options['admin-password']))
             ->setServerTimeZoneId($options['timezone'])
+            ->setIsConnectToMarketplaceEnabled($options['disable-marketplace-connect'] ? false : true)
+            ->setDeferInstallation($options['defer-installation'] ? true : false);
         ;
 
         return $installer;

@@ -125,8 +125,7 @@
                         <linkedProperties><![CDATA[[]]]></linkedProperties>
                         <searchProperties><![CDATA[[]]]></searchProperties>
                         <searchAssociations><![CDATA[[]]]></searchAssociations>
-                        <columns>
-                            <![CDATA[O:48:"Concrete\Core\Express\Search\ColumnSet\ColumnSet":2:{s:10:"]]></columns>
+                        <columns><![CDATA[O:48:"Concrete\Core\Express\Search\ColumnSet\ColumnSet":2:{s:10:"]]></columns>
                         <filterFields><![CDATA[a:0:{}]]></filterFields>
                         <displayLimit><![CDATA[20]]></displayLimit>
                         <enableItemsPerPageSelection><![CDATA[0]]></enableItemsPerPageSelection>

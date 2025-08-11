@@ -3,15 +3,18 @@ namespace Concrete\Core\Command\Task;
 
 use Concrete\Core\Application\Application;
 use Concrete\Core\Command\Task\Controller\CheckAutomatedGroupsController;
+use Concrete\Core\Command\Task\Controller\CustomJavascriptReportController;
+use Concrete\Core\Command\Task\Controller\PageCacheReportController;
+use Concrete\Core\Command\Task\Controller\ProductionStatusController;
 use Concrete\Core\Command\Task\Controller\ClearCacheController;
 use Concrete\Core\Command\Task\Controller\DeactivateUsersController;
 use Concrete\Core\Command\Task\Controller\GenerateSitemapController;
 use Concrete\Core\Command\Task\Controller\GenerateThumbnailsController;
 use Concrete\Core\Command\Task\Controller\ProcessEmailController;
 use Concrete\Core\Command\Task\Controller\ReindexContentController;
-use Concrete\Core\Command\Task\Controller\RemoveUnvalidatedUsersController;
 use Concrete\Core\Command\Task\Controller\RemoveOldFileAttachmentsController;
 use Concrete\Core\Command\Task\Controller\RemoveOldPageVersionsController;
+use Concrete\Core\Command\Task\Controller\RemoveUnvalidatedUsersController;
 use Concrete\Core\Command\Task\Controller\RescanFilesController;
 use Concrete\Core\Command\Task\Controller\UpdateStatisticsController;
 use Concrete\Core\Support\Manager as CoreManager;
@@ -78,6 +81,21 @@ class Manager extends CoreManager
     public function createRemoveUnvalidatedUsersDriver()
     {
         return $this->container->make(RemoveUnvalidatedUsersController::class);
+    }
+
+    public function createProductionStatusDriver()
+    {
+        return $this->container->make(ProductionStatusController::class);
+    }
+
+    public function createCustomJavascriptReportDriver()
+    {
+        return $this->container->make(CustomJavascriptReportController::class);
+    }
+
+    public function createPageCacheReportDriver()
+    {
+        return $this->container->make(PageCacheReportController::class);
     }
 
     public function __construct(Application $app)

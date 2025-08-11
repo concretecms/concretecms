@@ -9,6 +9,7 @@ abstract class AbstractField implements FieldInterface
         return $this->getDisplayName();
     }
 
+    #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
         return ['element' => $this->getFieldElementName(), 'name' => $this->getDisplayName()];

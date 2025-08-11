@@ -1,0 +1,7 @@
+<block type="desktop_site_activity" name="">
+  <data>
+    <type>workflow</type>
+    <type>form_submissions</type>
+    <type>signups</type>
+  </data>
+</block>

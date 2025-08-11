@@ -206,6 +206,15 @@ class Element implements LocatableFileInterface
         $view->render();
     }
 
+    public function getContents(): string
+    {
+        ob_start();
+        $this->render();
+        $contents = ob_get_contents();
+        ob_end_clean();
+        return $contents;
+    }
+
     /**
      * @return \Concrete\Core\Filesystem\FileLocator
      */

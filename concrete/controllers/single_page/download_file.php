@@ -47,12 +47,15 @@ class DownloadFile extends PageController
             }
         }
 
+        $this->set('fID', $fID); // ensure $fID is set to something for invalid requests
+
         // get the file
         if ($this->app->make('helper/validation/numbers')->integer($fID, 1)) {
             $file = File::getByID($fID);
 
             if ($file instanceof FileEntity && $file->getFileID() > 0) {
-                $rcID = $this->app->make('helper/security')->sanitizeInt($rcID);
+                $rcID = (int) $rcID;
+                $rc = null;
 
                 if ($rcID > 0) {
                     $rc = Page::getByID($rcID, 'ACTIVE');
@@ -70,6 +73,8 @@ class DownloadFile extends PageController
                         }
                     }
                 }
+
+                $rcID = is_object($rc) ? $rc->getCollectionID() : null;
 
                 $permissionChecker = new Checker($file);
                 $responseObject = $permissionChecker->getResponseObject();
@@ -102,7 +107,6 @@ class DownloadFile extends PageController
                     // otherwise show the form
                     $this->set('force', $this->force);
                     $this->set('rcID', $rcID);
-                    $this->set('fID', $fID);
                     $this->set('filename', $approvedVersion->getFilename());
 
                     try {
@@ -146,6 +150,8 @@ class DownloadFile extends PageController
             }
         }
 
+        $this->set('fID', $fID); // ensure $fID is set to something for invalid requests
+
         if ($this->app->make('helper/validation/numbers')->integer($fID, 1)) {
             $file = File::getByID($fID);
 
@@ -153,7 +159,7 @@ class DownloadFile extends PageController
             $responseObject = $permissionChecker->getResponseObject();
 
             try {
-                if (!$responseObject->validate("view_file")) {
+                if (!is_object($responseObject) || !$responseObject->validate("view_file")) {
                     return false;
                 }
             } catch (Exception $err) {
@@ -175,15 +181,13 @@ class DownloadFile extends PageController
                 $mimeType = $approvedVersion->getMimeType();
                 if (is_string($mimeType) &&
                     (
-                        $mimeType === "text/plain" ||
+                        $mimeType === "text/plain" || $mimeType === "application/pdf" ||
                         (strpos($mimeType, "/") > 0 && in_array(explode("/", $mimeType)[0], ["image", "video"]))
                     )
                 ) {
                     header("Content-type: $mimeType");
                     echo $approvedVersion->getFileContents();
                     $this->app->shutdown();
-                } else {
-                    return false;
                 }
             }
         }
@@ -207,11 +211,12 @@ class DownloadFile extends PageController
             }
         }
 
+        $this->set('fID', $fID); // ensure $fID is set to something for invalid requests
+
         if ($this->app->make('helper/validation/numbers')->integer($fID, 1)) {
             $f = File::getByID($fID);
 
             $rcID = $this->post('rcID');
-            $rcID = $this->app->make('helper/security')->sanitizeInt($rcID);
 
             if ($f->getPassword() == $this->post('password')) {
                 if ($this->post('force')) {
@@ -248,7 +253,7 @@ class DownloadFile extends PageController
             return $this->responseFactory->redirect($fv->getURL(), Response::HTTP_TEMPORARY_REDIRECT)->send();
         } else {
             /** @noinspection PhpDeprecationInspection */
-            return $fv->forceDownload();
+            return $fv->buildNonpublicURLDownloadResponse();
         }
     }
 
@@ -268,7 +273,7 @@ class DownloadFile extends PageController
 
         if ($approvedVersion instanceof Version) {
             /** @noinspection PhpDeprecationInspection */
-            return $approvedVersion->forceDownload();
+            return $approvedVersion->buildForceDownloadResponse();
         }
     }
 }

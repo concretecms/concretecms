@@ -20,7 +20,7 @@ class ExceptionError extends AbstractError
      * @param \Exception $exception
      * @param \Concrete\Core\Error\ErrorList\Field\FieldInterface|null $field
      */
-    public function __construct(Exception $exception, FieldInterface $field = null)
+    public function __construct(Exception $exception, ?FieldInterface $field = null)
     {
         $this->exception = $exception;
         if ($field) {

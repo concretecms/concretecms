@@ -7,6 +7,10 @@ use Log;
 use Concrete\Core\Legacy\ItemList;
 use Concrete\Core\Package\Package;
 
+/**
+ * @deprecated This will be removed in version 10
+ * @see PackageRepositoryInterface::getPackages()
+ */
 class RemoteItemList extends ItemList
 {
     protected $includeInstalledItems = true;
@@ -22,7 +26,7 @@ class RemoteItemList extends ItemList
             $sets = $r->get();
         } else {
             $r->lock();
-            $url = Config::get('concrete.urls.concrete') . Config::get('concrete.urls.paths.marketplace.remote_item_list');
+            $url = Config::get('concrete.urls.concrete_secure') . Config::get('concrete.urls.paths.marketplace.remote_item_list');
             $url .= $type . '/-/get_remote_item_sets';
             if (Config::get('concrete.marketplace.log_requests')) {
                 Log::info($url);
@@ -113,7 +117,7 @@ class RemoteItemList extends ItemList
 
         $uh = Core::make('helper/url');
 
-        $url = Config::get('concrete.urls.concrete') . Config::get('concrete.urls.paths.marketplace.remote_item_list');
+        $url = Config::get('concrete.urls.concrete_secure') . Config::get('concrete.urls.paths.marketplace.remote_item_list');
         $url = $uh->buildQuery($url . $this->type . '/-/get_remote_list', $params);
         if (Config::get('concrete.marketplace.log_requests')) {
             Log::info($url);

@@ -12,6 +12,7 @@ class ImageVariable extends BaseImageVariable
         return "'" . $this->getComputedUrl() . "'";
     }
 
+    #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
         $data = parent::jsonSerialize();

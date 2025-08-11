@@ -13,6 +13,6 @@ interface ProcessorInterface
     const REQUEST_TYPE_UPDATE = 2;
 
     function getValidator(Request $request);
-    function deliverResponse(Entry $entry, $requestType, RedirectResponse $response = null);
+    function deliverResponse(Entry $entry, $requestType, ?RedirectResponse $response = null);
 
 }

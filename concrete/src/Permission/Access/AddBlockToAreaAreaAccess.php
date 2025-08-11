@@ -104,21 +104,21 @@ class AddBlockToAreaAreaAccess extends AreaAccess
         parent::save($args);
         $db->executeQuery('delete from AreaPermissionBlockTypeAccessList where paID = ?', [$this->getPermissionAccessID()]);
         $db->executeQuery('delete from AreaPermissionBlockTypeAccessListCustom where paID = ?', [$this->getPermissionAccessID()]);
-        if (is_array($args['blockTypesIncluded'])) {
+        if (isset($args['blockTypesIncluded']) && is_array($args['blockTypesIncluded'])) {
             foreach ($args['blockTypesIncluded'] as $peID => $permission) {
                 $v = [$this->getPermissionAccessID(), $peID, $permission];
                 $db->executeQuery('insert into AreaPermissionBlockTypeAccessList (paID, peID, permission) values (?, ?, ?)', $v);
             }
         }
 
-        if (is_array($args['blockTypesExcluded'])) {
+        if (isset($args['blockTypesExcluded']) && is_array($args['blockTypesExcluded'])) {
             foreach ($args['blockTypesExcluded'] as $peID => $permission) {
                 $v = [$this->getPermissionAccessID(), $peID, $permission];
                 $db->executeQuery('insert into AreaPermissionBlockTypeAccessList (paID, peID, permission) values (?, ?, ?)', $v);
             }
         }
 
-        if (is_array($args['btIDInclude'])) {
+        if (isset($args['btIDInclude']) && is_array($args['btIDInclude'])) {
             foreach ($args['btIDInclude'] as $peID => $btIDs) {
                 foreach ($btIDs as $btID) {
                     $v = [$this->getPermissionAccessID(), $peID, $btID];
@@ -127,7 +127,7 @@ class AddBlockToAreaAreaAccess extends AreaAccess
             }
         }
 
-        if (is_array($args['btIDExclude'])) {
+        if (isset($args['btIDExclude']) && is_array($args['btIDExclude'])) {
             foreach ($args['btIDExclude'] as $peID => $btIDs) {
                 foreach ($btIDs as $btID) {
                     $v = [$this->getPermissionAccessID(), $peID, $btID];

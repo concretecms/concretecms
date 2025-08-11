@@ -44,6 +44,7 @@ class FolderItemList extends AttributedItemList implements PagerProviderInterfac
         'f.fID',
         'fv.fvFilename',
         'fv.fvTitle',
+        'totalDownloads',
     ];
 
     public function __construct()
@@ -100,11 +101,24 @@ class FolderItemList extends AttributedItemList implements PagerProviderInterfac
 
     public function createQuery()
     {
-        $this->query->select('distinct n.treeNodeID')
-            ->addSelect('if(nt.treeNodeTypeHandle=\'file\', fv.fvTitle, n.treeNodeName) as name')
-            ->addSelect('if(nt.treeNodeTypeHandle=\'file\', fv.fvDateAdded, n.dateModified) as dateModified')
+        $subQueryBuilder = $this->query->getConnection()->createQueryBuilder();
+        $subQuery = $subQueryBuilder
+            ->select('COUNT(ds.dsID)')
+            ->from('DownloadStatistics', 'ds')
+            ->where('ds.fID = f.fID')
+            ->getSQL();
+
+        $this->query->select('distinct n.treeNodeID');
+        $config = Application::getFacadeApplication()->make('config');
+        if ($config->get('concrete.file_manager.keep_folders_on_top')) {
+            $this->query->addSelect('if(nt.treeNodeTypeHandle=\'file\', concat("1", fv.fvTitle), concat("0", n.treeNodeName)) as name');
+        } else {
+            $this->query->addSelect('if(nt.treeNodeTypeHandle=\'file\', fv.fvTitle, n.treeNodeName) as name');
+        }
+        $this->query->addSelect('if(nt.treeNodeTypeHandle=\'file\', fv.fvDateAdded, n.dateModified) as dateModified')
             ->addSelect('case when nt.treeNodeTypeHandle=\'file_folder\' then 1 else (10 + fvType) end as type')
             ->addSelect('fv.fvSize as size')
+            ->addSelect('(' . $subQuery . ') AS totalDownloads')
             ->from('TreeNodes', 'n')
             ->innerJoin('n', 'TreeNodeTypes', 'nt', 'nt.treeNodeTypeID = n.treeNodeTypeID')
             ->leftJoin('n', 'TreeFileNodes', 'tf', 'tf.treeNodeID = n.treeNodeID')
@@ -128,11 +142,9 @@ class FolderItemList extends AttributedItemList implements PagerProviderInterfac
 
     public function getPaginationAdapter()
     {
-        $adapter = new DoctrineDbalAdapter($this->deliverQueryObject(), function ($query) {
+        return new DoctrineDbalAdapter($this->deliverQueryObject(), function ($query) {
             $query->resetQueryParts(['groupBy', 'orderBy'])->select('count(distinct n.treeNodeID)')->setMaxResults(1);
         });
-
-        return $adapter;
     }
 
     public function getResult($queryRow)
@@ -184,9 +196,10 @@ class FolderItemList extends AttributedItemList implements PagerProviderInterfac
         ));
     }
 
-    public function filterByOriginalPageID($ocID)
+    public function filterByAddedToPageID($ocID)
     {
-        $this->query->andWhere('f.ocID = :ocID');
+        $this->query->leftJoin('f', 'FileUsageRecord', 'fu', 'f.fID = fu.file_id');
+        $this->query->andWhere('fu.collection_id = :ocID');
         $this->query->setParameter('ocID', $ocID);
     }
 
@@ -276,6 +289,7 @@ class FolderItemList extends AttributedItemList implements PagerProviderInterfac
     {
         $expressions = [
             $this->query->expr()->like('fv.fvFilename', ':keywords'),
+            $this->query->expr()->like('fv.fvTitle', ':keywords'),
             $this->query->expr()->like('fv.fvDescription', ':keywords'),
             $this->query->expr()->like('treeNodeName', ':keywords'),
             $this->query->expr()->like('fv.fvTags', ':keywords'),
@@ -364,7 +378,6 @@ class FolderItemList extends AttributedItemList implements PagerProviderInterfac
                      */
                     if (!$pa->validateAccessEntities($accessEntitiesWithoutFileUploader)) {
                         $query
-                            ->leftJoin('tf', 'Files', 'f', 'tf.fID = f.fID')
                             ->andWhere('(f.uID = :fileUploaderID OR f.fOverrideSetPermissions = 1) OR nt.treeNodeTypeHandle != \'file\'')
                             ->setParameter('fileUploaderID', $u->getUserID())
                         ;
@@ -389,5 +402,21 @@ class FolderItemList extends AttributedItemList implements PagerProviderInterfac
     protected function getAttributeKeyClassName()
     {
         return '\\Concrete\\Core\\Attribute\\Key\\FileKey';
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Search\ItemList\Database\ItemList::executeSanitizedSortBy()
+     */
+    protected function executeSanitizedSortBy($column, $direction = 'asc')
+    {
+        switch ($column) {
+            case 'fv.fvTitle':
+                $column = 'if(nt.treeNodeTypeHandle=\'file\', fv.fvTitle, n.treeNodeName)';
+                break;
+        }
+
+        return parent::executeSanitizedSortBy($column, $direction);
     }
 }

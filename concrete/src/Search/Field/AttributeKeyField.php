@@ -52,7 +52,7 @@ class AttributeKeyField extends AbstractField
      *
      * @param Key $attributeKey the attribute key instance
      */
-    public function __construct(Key $attributeKey = null)
+    public function __construct(?Key $attributeKey = null)
     {
         if ($attributeKey) {
             $this->attributeKey = $attributeKey;
@@ -118,6 +118,7 @@ class AttributeKeyField extends AbstractField
     /**
      * @return array|mixed
      */
+    #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
         $json = parent::jsonSerialize();

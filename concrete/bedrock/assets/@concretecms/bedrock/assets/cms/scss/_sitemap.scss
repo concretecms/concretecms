@@ -1,3 +1,5 @@
+/* stylelint-disable selector-max-compound-selectors */
+
 .ccm-ui {
   #fancytree-drop-marker {
     &.fancytree-drop-over {
@@ -210,6 +212,36 @@
         display: inline-block;
         margin-left: 30px;
         padding: 0;
+      }
+    }
+  }
+}
+
+@include color-mode(dark) {
+  .ccm-ui {
+    ul.ui-fancytree {
+      li[role=treeitem] {
+        span.fancytree-node {
+          span.fancytree-expander,
+          span.icon-folder,
+          span.icon-home,
+          span.icon-page {
+            filter: invert(1);
+          }
+
+          span.fancytree-active {
+            span.fancytree-expander,
+            span.icon-folder,
+            span.icon-home,
+            span.icon-page {
+              filter: none;
+            }
+          }
+
+          span.fancytree-title {
+            color: $sitemap-normal-item-text-color-dark;
+          }
+        }
       }
     }
   }

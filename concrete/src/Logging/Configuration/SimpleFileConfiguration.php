@@ -2,8 +2,7 @@
 
 namespace Concrete\Core\Logging\Configuration;
 
-use Concrete\Core\Entity\Site\Site;
-use Monolog\Handler\StreamHandler;
+use Concrete\Core\Logging\Handler\StreamHandler;
 use Monolog\Logger;
 
 class SimpleFileConfiguration extends SimpleConfiguration
@@ -37,7 +36,6 @@ class SimpleFileConfiguration extends SimpleConfiguration
      */
     public function createHandler($level)
     {
-        $handler = new StreamHandler($this->filename, $this->coreLevel);
-        return $handler;
+        return new StreamHandler($this->filename, $this->coreLevel);
     }
 }

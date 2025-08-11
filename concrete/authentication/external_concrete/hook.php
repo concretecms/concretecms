@@ -8,7 +8,7 @@
 </div>
 <div class="form-group">
     <a href="<?= $attachUrl ?>" class="btn btn-primary btn-success btn-external-concrete">
-        <img src="<?= $assetUrl ?>/concrete/images/logo.svg" class="concrete-icon" />
+        <img src="<?= $assetUrl ?? '' ?>/concrete/images/logo.svg" class="concrete-icon" />
         <?= t('Attach your %s account', h($name)) ?>
     </a>
 </div>

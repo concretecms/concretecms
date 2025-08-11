@@ -1,1 +1,1 @@
-﻿CKEDITOR.plugins.setLang("preview","id",{preview:"Pratinjau"});
+CKEDITOR.plugins.setLang("preview","id",{preview:"Pratinjau"});

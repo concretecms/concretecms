@@ -12,6 +12,8 @@ use Page;
 use Concrete\Core\Workflow\Request\ApprovePageRequest as ApprovePagePageWorkflowRequest;
 use PageEditResponse;
 use Concrete\Core\Http\ResponseFactoryInterface;
+use Concrete\Core\Support\Facade\Application;
+use Concrete\Core\Config\Repository\Repository;
 
 class CheckIn extends BackendInterfacePageController
 {
@@ -79,6 +81,10 @@ class CheckIn extends BackendInterfacePageController
         if ($this->validateAction()) {
             $comments = $this->request->request('comments');
             $comments = is_string($comments) ? trim($comments) : '';
+            if (mb_strlen($comments) > 255) {
+                $rf = $this->app->make(ResponseFactoryInterface::class);
+                return $rf->create(t('Version comments cannot be longer than 255 characters.'), 400);
+            }
             if ($comments === '' && $this->app->make('config')->get('concrete.misc.require_version_comments')) {
                 $rf = $this->app->make(ResponseFactoryInterface::class);
                 return $rf->create(t('Please specify the version comments'), 400);
@@ -105,7 +111,12 @@ class CheckIn extends BackendInterfacePageController
                         $dateTime = new DateTime();
                         $publishDateTime = $dateTime->translate('cvPublishDate');
                         $publishEndDateTime = $dateTime->translate('cvPublishEndDate');
-                        if ($this->request->request->get('keepOtherScheduling')) {
+                        $app = Application::getFacadeApplication();
+                        $appConfig = $app->make(Repository::class);
+                        $liveVersionStatusOnScheduledVersionApproval = (string)$appConfig->get('concrete.misc.live_version_status_on_scheduled_version_approval');
+                        $isUnapproved = $liveVersionStatusOnScheduledVersionApproval === 'unapproved';
+                        $isKeepOtherScheduling = (bool)$this->request->request->get('keepOtherScheduling');
+                        if ($isUnapproved === !$isKeepOtherScheduling) {
                             $pkr->setKeepOtherScheduling(true);
                         }
                         $pkr->scheduleVersion($publishDateTime, $publishEndDateTime);

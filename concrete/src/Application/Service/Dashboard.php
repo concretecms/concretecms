@@ -81,11 +81,11 @@ class Dashboard
             }
             $page = Page::getCurrentPage();
             if ($page instanceof Page && !$page->isError()) {
-                $path = $page->getCollectionPath();
+                $path = (string) $page->getCollectionPath();
             }
         }
 
-        return $path === '/dashboard' || strpos($path, '/dashboard/') === 0;
+        return $path === '/dashboard' || strpos((string) $path, '/dashboard/') === 0;
     }
 
     /**

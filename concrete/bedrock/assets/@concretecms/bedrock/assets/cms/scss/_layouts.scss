@@ -88,3 +88,19 @@ div.ccm-area-layout-control-bar i {
   position: absolute;
   top: -2px;
 }
+
+// Ensure that many grids will display properly within our layout tools.
+// NOTE: If you implement a custom grid framework you must ensure that your row DIVs appear
+// with position: relative within the following two IDs.
+// This ensures that the layout tools work with this theme grid.
+// Note: This HAD been a part of the bedrock frontend toolkit, meant to be included by themes when they include
+// Bedrock. However, if a theme wasn't built on bedrock then it was borking in the layout tools, including Elemental
+// So instead, let's include the very basic implementation of this here, with div.row (which should catch BS4, BS5
+// and other derived grid frameworks). If you have a different series of classes you'll have to figure out your own
+// implementation based on this.
+div#ccm-theme-grid-temp,
+div#ccm-theme-grid-edit-mode-row-wrapper {
+  div.row {
+    position: relative; // This is necessary in order for the javascript to correctly use jquery position() calls
+  }
+}

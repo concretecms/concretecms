@@ -24,7 +24,7 @@ if ($permissions->canAddBoard()) {
 
             <li>
                 <a href="<?=URL::to('/dashboard/boards/details', 'view', $board->getBoardID())?>">
-                    <i class="fas fa-th"></i> <?=$board->getBoardName()?>
+                    <i class="fas fa-th"></i> <?= h($board->getBoardName()); ?>
                 </a>
             </li>
             <?php

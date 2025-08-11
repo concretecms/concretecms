@@ -2,6 +2,10 @@
  * New selector style
  */
 .ccm-item-selector-group {
+  .btn-group {
+    max-width: 100%;
+  }
+
   .btn {
     padding-left: 1rem;
     padding-right: 1rem;
@@ -28,6 +32,12 @@
       margin-right: 0.5rem;
       max-height: 20px;
       max-width: 20px;
+    }
+  }
+
+  &.is-invalid {
+    .btn {
+      border-color: $danger;
     }
   }
 

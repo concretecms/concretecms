@@ -4,9 +4,16 @@ namespace Concrete\Core\User\Group\Search\ColumnSet;
 
 use Concrete\Core\Tree\Node\Node;
 use Concrete\Core\User\Group\Group;
+use Concrete\Core\User\Group\Search\ColumnSet\Column\GroupIdColumn;
 
 class Available extends DefaultSet
 {
+
+    public function __construct()
+    {
+        parent::__construct();
+        $this->addColumn(new GroupIdColumn());
+    }
 
     /**
      * @param Node $node
@@ -29,7 +36,7 @@ class Available extends DefaultSet
                         $groupType = $group->getGroupType();
 
                         if (is_object($groupType)) {
-                            return $groupType->getName();
+                            return $groupType->getDisplayName();
                         }
                     }
                 }
@@ -41,7 +48,7 @@ class Available extends DefaultSet
      * @param Node $node
      * @return mixed
      */
-    public function getMemberCount($node)
+    public static function getMemberCount($node)
     {
         if ($node->getTreeNodeTypeHandle() == 'group_folder') {
             return '';
@@ -72,7 +79,7 @@ class Available extends DefaultSet
      * @param Node $node
      * @return mixed
      */
-    public function getGroupName($node)
+    public static function getGroupName($node)
     {
         if ($node->getTreeNodeTypeHandle() == 'group_folder') {
             return $node->getTreeNodeName();

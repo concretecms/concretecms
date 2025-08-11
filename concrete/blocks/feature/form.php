@@ -1,15 +1,36 @@
 <?php
-defined('C5_EXECUTE') or die("Access Denied.");
-/** @var \Concrete\Block\Feature\Controller $controller */
-/** @var \Concrete\Core\Form\Service\Form $form */
+
+use Concrete\Core\Application\Service\FileManager;
+use Concrete\Core\Support\Facade\Application;
+
+defined('C5_EXECUTE') or die('Access Denied.');
+
+/**
+ * @var \Concrete\Block\Feature\Controller $controller
+ * @var \Concrete\Core\Form\Service\Form $form
+ * @var Concrete\Core\Form\Service\DestinationPicker\DestinationPicker $destinationPicker
+ * @var array $linkDestinationPickers
+ * @var string $linkDestinationHandle
+ * @var mixed $linkDestinationValue
+ * @var string $sizingOption
+ * @var array $themeResponsiveImageMap
+ * @var array $selectedThumbnailTypes
+ * @var array $imageLinkPickers
+ * @var string $imageLinkHandle
+ * @var mixed $imageLinkValue
+ * @var int $constrainImage
+ * @var Concrete\Core\Entity\File\File|null $bf
+ */
+
 $bID = $bID ?? 0;
 $icon = $icon ?? '';
 $title = $title ?? '';
 $titleFormat = $titleFormat ?? '';
-$internalLinkCID = $internalLinkCID ?? 0;
-$externalLink = $externalLink ?? '';
-?>
 
+$app = Application::getFacadeApplication();
+$fileManager = $app->make(FileManager::class);
+
+?>
 <fieldset>
     <legend><?=t('Display')?></legend>
     <div class="form-group ccm-block-select-icon">
@@ -17,6 +38,14 @@ $externalLink = $externalLink ?? '';
         <div id="ccm-icon-selector-<?= h($bID) ?>">
             <icon-selector name="icon" selected="<?= h($icon) ?>" title="<?= t('Choose Icon') ?>" empty-option-label="<?= h(tc('Icon', '** None Selected')) ?>" />
         </div>
+    </div>
+
+    <div class="form-group">
+        <?php
+        echo $form->label('ccm-b-image', t('Image'));
+        echo $fileManager->image('ccm-b-image', 'fID', t('Choose Image'), $bf);
+        ?>
+        <p class="text-muted small">If Image is set, no icon will appear</p>
     </div>
 
     <div class="form-group">
@@ -31,7 +60,7 @@ $externalLink = $externalLink ?? '';
         <?php echo $form->label('paragraph', t('Paragraph:'));?>
         <?php
             $editor = Core::make('editor');
-            echo $editor->outputBlockEditModeEditor('paragraph', $controller->getParagraphEditMode());
+            echo $editor->outputBlockEditModeEditor('paragraph', htmlspecialchars($controller->getParagraphEditMode(), ENT_QUOTES, APP_CHARSET));
         ?>
     </div>
 
@@ -39,25 +68,7 @@ $externalLink = $externalLink ?? '';
 
 <fieldset>
     <legend><?=t('Link')?></legend>
-
-    <div class="form-group">
-        <select name="linkType" data-select="feature-link-type" class="form-select">
-            <option value="0" <?=(empty($externalLink) && empty($internalLinkCID) ? 'selected="selected"' : '')?>><?=t('None')?></option>
-            <option value="1" <?=(empty($externalLink) && !empty($internalLinkCID) ? 'selected="selected"' : '')?>><?=t('Another Page')?></option>
-            <option value="2" <?=(!empty($externalLink) ? 'selected="selected"' : '')?>><?=t('External URL')?></option>
-        </select>
-    </div>
-
-    <div data-select-contents="feature-link-type-internal" style="display: none;" class="form-group">
-        <?=$form->label('internalLinkCID', t('Choose Page:'))?>
-        <?= Loader::helper('form/page_selector')->selectPage('internalLinkCID', $internalLinkCID); ?>
-    </div>
-
-    <div data-select-contents="feature-link-type-external" style="display: none;" class="form-group">
-        <?=$form->label('externalLink', t('URL'))?>
-        <?= $form->text('externalLink', $externalLink); ?>
-    </div>
-
+    <?= $destinationPicker->generate('link', $linkDestinationPickers, $linkDestinationHandle, $linkDestinationValue) ?>
 </fieldset>
 
 <script type="text/javascript">
@@ -68,20 +79,6 @@ $(function() {
             components: config.components
         })
     })
-    $('select[data-select=feature-link-type]').on('change', function() {
-       if ($(this).val() == '0') {
-           $('div[data-select-contents=feature-link-type-internal]').hide();
-           $('div[data-select-contents=feature-link-type-external]').hide();
-       }
-       if ($(this).val() == '1') {
-           $('div[data-select-contents=feature-link-type-internal]').show();
-           $('div[data-select-contents=feature-link-type-external]').hide();
-       }
-       if ($(this).val() == '2') {
-           $('div[data-select-contents=feature-link-type-internal]').hide();
-           $('div[data-select-contents=feature-link-type-external]').show();
-       }
-    }).trigger('change');
 });
 </script>
 

@@ -15,7 +15,6 @@ use Concrete\Core\User\Search\Result\ItemColumn;
 use Concrete\Core\Support\Facade\Url;
 use Concrete\Core\User\Menu;
 use Concrete\Core\User\UserInfo;
-use Concrete\Core\User\Search\ColumnSet\Column\UsernameColumn;
 
 /** @var MenuInterface $menu */
 /** @var Result $result */
@@ -54,7 +53,7 @@ use Concrete\Core\User\Search\ColumnSet\Column\UsernameColumn;
                 <?php /** @var Column $column */ ?>
                 <th class="<?php echo $column->getColumnStyleClass() ?>">
                     <?php if ($column->isColumnSortable()): ?>
-                        <a href="<?php echo $column->getColumnSortURL() ?>">
+                        <a href="<?php echo h($column->getColumnSortURL()) ?>">
                             <?php echo $column->getColumnTitle() ?>
                         </a>
                     <?php else: ?>
@@ -74,7 +73,7 @@ use Concrete\Core\User\Search\ColumnSet\Column\UsernameColumn;
             /** @var UserInfo $user */
             $user = $item->getItem();
             ?>
-            <tr data-details-url="javascript:void(0)">
+            <tr data-details-url="<?=URL::to('/dashboard/users/search', 'edit', $user->getUserID())?>">
                 <td class="ccm-search-results-checkbox">
                     <?php if ($user instanceof UserInfo) { ?>
                         <!--suppress HtmlFormInputWithoutLabel -->
@@ -132,12 +131,6 @@ use Concrete\Core\User\Search\ColumnSet\Column\UsernameColumn;
         $(function () {
             let searchResultsTable = new window.ConcreteSearchResultsTable($("#ccm-search-results-table"));
             searchResultsTable.setupBulkActions();
-
-            $('#ccm-search-results-table').on('click', 'a[data-user-id]', function () {
-                window.location.href = '<?=rtrim(URL::to('/dashboard/users/search', 'edit'), '/')?>/' + $(this).attr('data-user-id');
-                return false;
-            });
-
         });
     })(jQuery);
 </script>

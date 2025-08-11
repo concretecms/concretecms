@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <schema
   xmlns="http://www.concrete5.org/doctrine-xml/0.5"
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.concrete5.org/doctrine-xml/0.5 http://concrete5.github.io/doctrine-xml/doctrine-xml-0.5.xsd">
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.concrete5.org/doctrine-xml/0.5 https://concretecms.github.io/doctrine-xml/doctrine-xml-0.5.xsd">
 
   <table name="PageTypes">
     <field name="ptID" type="integer" size="10">
@@ -19,6 +19,9 @@
       <unsigned/>
     </field>
     <field name="ptDefaultPageTemplateID" type="integer" size="10">
+      <unsigned/>
+    </field>
+    <field name="ptDefaultThemeID" type="integer" size="10">
       <unsigned/>
     </field>
     <field name="ptAllowedPageTemplates" type="string" size="1">
@@ -174,6 +177,7 @@
     </field>
     <field name="ptComposerFormLayoutSetName" type="string" size="255"/>
     <field name="ptComposerFormLayoutSetDescription" type="text" size="65535"/>
+    <field name="ptComposerFormLayoutSetCollapseType" type="string" size="12"/>
     <field name="ptComposerFormLayoutSetDisplayOrder" type="integer" size="10">
       <unsigned/>
       <default value="0"/>
@@ -3135,6 +3139,9 @@
       <notnull/>
     </field>
     <field name="message" type="text"/>
+    <field name="cID" type="integer" size="10">
+      <unsigned/>
+    </field>
     <field name="uID" type="integer" size="10">
       <unsigned/>
     </field>
@@ -3146,6 +3153,9 @@
     </index>
     <index name="uID">
       <col>uID</col>
+    </index>
+    <index name="cID">
+      <col>cID</col>
     </index>
   </table>
 

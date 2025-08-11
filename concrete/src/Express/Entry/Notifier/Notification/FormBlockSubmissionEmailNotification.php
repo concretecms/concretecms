@@ -3,7 +3,6 @@ namespace Concrete\Core\Express\Entry\Notifier\Notification;
 
 use Concrete\Core\Entity\Attribute\Value\ExpressValue;
 use Concrete\Core\Entity\Express\Entry;
-use Concrete\Core\User\UserInfoRepository;
 use Doctrine\ORM\EntityManager;
 
 class FormBlockSubmissionEmailNotification extends AbstractFormBlockSubmissionNotification
@@ -12,22 +11,17 @@ class FormBlockSubmissionEmailNotification extends AbstractFormBlockSubmissionNo
     protected $replyTo;
     protected $attributeValues;
 
-    protected function getFromEmail(Entry $entry = null)
+    protected function getFromEmail(?Entry $entry = null)
     {
         if (!isset($this->from)) {
             $config = $this->app->make('config');
-            if ($entry && $config->get('concrete.email.form_block.'. $entry->getEntity()->getHandle() .'.address') && strstr($config->get('concrete.email.form_block.'. $entry->getEntity()->getHandle() .'.address'), '@')) {
-                $this->from = $config->get('concrete.email.form_block.'. $entry->getEntity()->getHandle() .'.address');
+            $this->from = (string) $config->get('concrete.email.form_block.'. $entry->getEntity()->getHandle() .'.address');
+            if (strpos($this->from, '@') === false) {
+                $this->from = (string) $config->get('concrete.email.form_block.address');
+                if (strpos($this->from, '@') === false) {
+                    $this->from = (string) $config->get('concrete.email.default.address');
+                }
             }
-            else{
-                if ($config->get('concrete.email.form_block.address') && strstr($config->get('concrete.email.form_block.address'), '@')) {
-                $this->from = $config->get('concrete.email.form_block.address');
-            } else {
-                $adminUserInfo = $this->app->make(UserInfoRepository::class)->getByID(USER_SUPER_ID);
-                $this->from = $adminUserInfo->getUserEmail();
-            }
-            }
-            
         }
 
         return $this->from;
@@ -71,6 +65,16 @@ class FormBlockSubmissionEmailNotification extends AbstractFormBlockSubmissionNo
         return $this->attributeValues;
     }
 
+    protected function getAssociations(Entry $entry)
+    {
+        $associations = [];
+        // Have to do this so Doctrine gets converted to an object properly.
+        foreach ($entry->getAssociations() as $association) {
+            $associations[] = $association;
+        }
+        return $associations;
+    }
+
     /**
      * @param ExpressValue[] $attributeValues
      */
@@ -111,6 +115,7 @@ class FormBlockSubmissionEmailNotification extends AbstractFormBlockSubmissionNo
                 }
             }
             $mh->addParameter('attributes', $this->getAttributeValues($entry));
+            $mh->addParameter('associations', $this->getAssociations($entry));
             $mh->load('block_express_form_submission');
             if (empty($mh->getSubject())) {
                 $mh->setSubject(t('Website Form Submission – %s', $this->getFormName($entry)));

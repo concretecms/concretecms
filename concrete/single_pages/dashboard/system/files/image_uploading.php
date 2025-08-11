@@ -8,6 +8,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
 /* @var array $manipulation_libraries */
 /* @var string $manipulation_library */
 /* @var int $jpeg_quality */
+/* @var int $webp_quality */
 /* @var int $png_compression */
 /* @var int $restrict_max_width */
 /* @var int $restrict_max_height */
@@ -44,6 +45,11 @@ defined('C5_EXECUTE') or die('Access Denied.');
     <div class="form-group">
         <?= $form->label('jpeg_quality', t('JPEG quality'), ['class' => 'launch-tooltip control-label form-label', 'title' => t('JPEG quality ranges from 0 (worst quality, smaller file) to 100 (best quality, biggest file)')]) ?>
         <?= $form->number('jpeg_quality', $jpeg_quality, ['required' => 'required', 'min' => '0', 'max' => '100']) ?>
+    </div>
+
+    <div class="form-group">
+        <?= $form->label('webp_quality', t('WEBP quality'), ['class' => 'launch-tooltip control-label form-label', 'title' => t('WEBP quality ranges from 0 (worst quality, smaller file) to 100 (best quality, biggest file)')]) ?>
+        <?= $form->number('webp_quality', $webp_quality, ['required' => 'required', 'min' => '0', 'max' => '100']) ?>
     </div>
 
     <div class="form-group">

@@ -32,6 +32,7 @@ class NormalizedVariableCollection extends ArrayCollection implements \JsonSeria
         return null;
     }
 
+    #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
         return $this->toArray();

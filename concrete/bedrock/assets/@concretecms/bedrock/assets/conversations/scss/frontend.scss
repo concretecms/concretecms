@@ -1,4 +1,12 @@
 // This is an entry point so it just includes the partial that includes everything else.
 // That way if we want to include full support in our theme we just include the partial (rather
 // than including the entry point because I think it's bad practice.)
+
+// Include the variables that we need. We don't need to include these if frontend/frontend is being
+// included by another entrypoint that already has access to them.
+@import 'bootstrap/scss/functions';
+@import 'bootstrap/scss/variables';
+@import 'bootstrap/scss/mixins';
+@import '../../cms/scss/variables';
+
 @import 'frontend/frontend';

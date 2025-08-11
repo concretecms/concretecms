@@ -10,7 +10,14 @@ class CustomStyle extends AbstractCustomStyle
     protected $set;
     protected $theme;
 
-    public function __construct(StyleSet $set = null, Block $b, $theme = null)
+    /**
+     * @deprecated What's deprecated is the "public" part.
+     *
+     * @var \Concrete\Core\Block\Block
+     */
+    public $block;
+
+    public function __construct(?StyleSet $set, Block $b, $theme = null)
     {
         $this->block = $b;
         $this->set = $set;
@@ -103,7 +110,7 @@ class CustomStyle extends AbstractCustomStyle
         || $set->getBoxShadowBlur()
         || $set->getBoxShadowHorizontal()
         || $set->getBoxShadowVertical())) {
-            $groups[''][] = 'box-shadow: ' . $set->getBoxShadowHorizontal() . ' ' . $set->getBoxShadowVertical() . ' ' . $set->getBoxShadowBlur() . ' ' . $set->getBoxShadowSpread() . ' ' . $set->getBoxShadowColor();
+            $groups[''][] = 'box-shadow: ' .($set->getBoxShadowInset() ? 'inset ':'') . $set->getBoxShadowHorizontal() . ' ' . $set->getBoxShadowVertical() . ' ' . $set->getBoxShadowBlur() . ' ' . $set->getBoxShadowSpread() . ' ' . $set->getBoxShadowColor();
         }
 
         if ($set->getLinkColor()) {

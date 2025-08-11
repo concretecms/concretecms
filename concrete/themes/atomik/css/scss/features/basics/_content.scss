@@ -1,0 +1,11 @@
+div.theme-atomik {
+  .ccm-block-content, .ccm-block-content-edit-inline {
+    img {
+      // Make sure images that are in the content block scale intelligently
+      // https://github.com/concretecms/concretecms/issues/10864
+      height: auto;
+      max-width: 100%;
+    }
+  }
+}
+

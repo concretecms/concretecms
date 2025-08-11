@@ -10,6 +10,13 @@ class Preset implements PresetInterface
     protected $identifier;
     protected $formatter;
 
+    /**
+     * @deprecated What's deprecated is the "public" part: use the getColumns() method.
+     *
+     * @var \Concrete\Core\Area\Layout\ColumnInterface[]
+     */
+    public $columns = [];
+
     public function __construct($identifier, $name, FormatterInterface $formatter, $columns = array())
     {
         $this->name = $name;

@@ -5,7 +5,7 @@
                 use_separate_site_result_buckets=""
                 description="This is sample content for the Atomik theme documentation. It may be removed without hurting the site. "
                 default_view_form="77c4ef3e-136c-11ec-9fc5-8aa7a7509c1c"
-                default_edit_form="77c4ef3e-136c-11ec-9fc5-8aa7a7509c1c" results-folder="/">
+                default_edit_form="77c4ef3e-136c-11ec-9fc5-8aa7a7509c1c" results-folder="/" package="">
             <attributekeys>
                 <attributekey handle="employee_first_name" name="First Name" package="" searchable="1" indexed="1"
                               type="text" category="">

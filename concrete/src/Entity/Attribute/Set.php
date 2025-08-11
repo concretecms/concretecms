@@ -227,6 +227,7 @@ class Set implements ExportableInterface, \JsonSerializable
         $this->keys->add($setKey);
     }
 
+    #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
         return [

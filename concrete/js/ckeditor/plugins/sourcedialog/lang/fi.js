@@ -1,1 +1,1 @@
-﻿CKEDITOR.plugins.setLang("sourcedialog","fi",{toolbar:"Koodi",title:"Koodi"});
+CKEDITOR.plugins.setLang("sourcedialog","fi",{toolbar:"Koodi",title:"Koodi"});

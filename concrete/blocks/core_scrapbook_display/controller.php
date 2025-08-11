@@ -1,9 +1,11 @@
 <?php
+
 namespace Concrete\Block\CoreScrapbookDisplay;
 
+use Concrete\Core\Block\Block;
 use Concrete\Core\Block\BlockController;
-use Block;
 use Concrete\Core\Block\View\BlockViewTemplate;
+use Concrete\Core\Utility\Service\Xml;
 
 /**
  * The controller for the core scrapbook display block. This block is automatically used when a block is copied into a
@@ -12,17 +14,37 @@ use Concrete\Core\Block\View\BlockViewTemplate;
  * @package    Blocks
  * @subpackage Core Scrapbook/Clipboard Display
  *
- * @author     Andrew Embler <andrew@concrete5.org>
- * @copyright  Copyright (c) 2003-2012 Concrete5. (http://www.concrete5.org)
- * @license    http://www.concrete5.org/license/     MIT License
+ * @author     Andrew Embler <andrew@concretecms.org>
+ * @copyright  Copyright (c) 2003-2022 concreteCMS. (http://www.concretecms.org)
+ * @license    http://www.concretecms.org/license/     MIT License
  */
 class Controller extends BlockController
 {
-    protected $btCacheBlockRecord = true;
+    /**
+     * @var string
+     */
     protected $btTable = 'btCoreScrapbookDisplay';
+
+    /**
+     * @var bool
+     */
     protected $btIsInternal = true;
+
+    /**
+     * @var BlockController|null
+     */
     protected $passthruController;
 
+    /**
+     * @var int Original Block ID
+     */
+    protected $bOriginalID;
+
+    /**
+     * {@inheritdoc}
+     *
+     * @return bool
+     */
     public function ignorePageThemeGridFrameworkContainer()
     {
         $bc = $this->getScrapbookBlockController();
@@ -34,50 +56,91 @@ class Controller extends BlockController
     }
 
     /**
-     * @var int Original Block ID
+     * @return string
      */
-    protected $bOriginalID;
-
     public function getBlockTypeDescription()
     {
-        return t("Proxy block for blocks pasted through the scrapbook.");
+        return t('Proxy block for blocks pasted through the scrapbook.');
     }
 
+    /**
+     * @return string
+     */
     public function getBlockTypeName()
     {
-        return t("Scrapbook Display");
+        return t('Scrapbook Display');
     }
 
+    /**
+     * @return int
+     */
     public function getOriginalBlockID()
     {
         return $this->bOriginalID;
     }
 
+    /**
+     * @throws \Doctrine\DBAL\Exception
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     *
+     * @return BlockController|false|null
+     */
     public function getScrapbookBlockController()
     {
         if (!isset($this->passthruController)) {
             $b = Block::getByID($this->bOriginalID);
-            $bc = ($b) ? $b->getInstance() : false;
+            $bc = false;
+            if ($b) {
+                $b->setProxyBlock($this->getBlockObject());
+                $bc = $b->getController();
+                $bc->setAreaObject($this->getAreaObject());
+            }
             $this->passthruController = $bc;
         }
 
         return $this->passthruController;
     }
 
+    /**
+     * @param \SimpleXMLElement $blockNode
+     *
+     * @throws \Doctrine\DBAL\Exception
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     *
+     * @return void
+     */
     public function export(\SimpleXMLElement $blockNode)
     {
-        $b = Block::getByID($this->bOriginalID);
-        $bc = $b->getInstance();
-        if ($bc) {
-            $blockNode['type'] = $b->getBlockTypeHandle();
-            $blockNode['name'] = $b->getBlockName();
-            if ($b->getBlockFilename() != '') {
-                $blockNode['custom-template'] = $b->getBlockFilename();
+        $block = Block::getByID($this->bOriginalID);
+        if ($block) {
+            $clonedBlock = clone $blockNode;
+            $block->export($clonedBlock);
+            $otherBlockNode = $clonedBlock->children()[0];
+            foreach ($otherBlockNode->attributes() as $attribute) {
+                $blockNode[$attribute->getName()] = (string) $attribute;
             }
-            return $bc->export($blockNode);
+            $this->exportChildren($otherBlockNode, $blockNode);
         }
     }
 
+    private function exportChildren(\SimpleXMLElement $from, \SimpleXMLElement $to)
+    {
+        $xml = $this->app->make(Xml::class);
+        foreach ($from->children() as $fromChild) {
+            $toChild = $xml->createChildElement($to, $fromChild->getName(), (string) $fromChild);
+            foreach ($fromChild->attributes() as $attribute) {
+                $toChild[$attribute->getName()] = (string) $attribute;
+            }
+            $this->exportChildren($fromChild, $toChild);
+        }
+    }
+
+    /**
+     * @throws \Doctrine\DBAL\Exception
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     *
+     * @return string
+     */
     public function getSearchableContent()
     {
         $bc = $this->getScrapbookBlockController();
@@ -85,10 +148,19 @@ class Controller extends BlockController
         if ($bc && method_exists($bc, 'getSearchableContent')) {
             return $bc->getSearchableContent();
         }
+
+        return  '';
     }
 
-    public function getPassThruActionAndParameters($method, $parameters = array())
+    /**
+     * @param string $method
+     * @param array<string,mixed> $parameters
+     *
+     * @return mixed[]
+     */
+    public function getPassThruActionAndParameters($method, $parameters = [])
     {
+        /** @phpstan-ignore-next-line */
         $return = parent::getPassThruActionAndParameters($method, $parameters);
 
         $parameters = $return[1];
@@ -104,7 +176,16 @@ class Controller extends BlockController
         return $return;
     }
 
-    public function isValidControllerTask($method, $parameters = array())
+    /**
+     * @param string $method
+     * @param mixed[] $parameters
+     *
+     * @throws \Doctrine\DBAL\Exception
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     *
+     * @return bool
+     */
+    public function isValidControllerTask($method, $parameters = [])
     {
         $bc = $this->getScrapbookBlockController();
 
@@ -115,6 +196,12 @@ class Controller extends BlockController
         return false;
     }
 
+    /**
+     * @throws \Doctrine\DBAL\Exception
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     *
+     * @return void|mixed
+     */
     public function on_start()
     {
         $bc = $this->getScrapbookBlockController();
@@ -124,6 +211,12 @@ class Controller extends BlockController
         }
     }
 
+    /**
+     * @throws \Doctrine\DBAL\Exception
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     *
+     *  @return void|mixed
+     */
     public function on_before_render()
     {
         $bc = $this->getScrapbookBlockController();
@@ -133,24 +226,51 @@ class Controller extends BlockController
         }
     }
 
-    public function runAction($action, $parameters = array())
+    /**
+     * @param string $action
+     * @param mixed[] $parameters
+     *
+     * @throws \Doctrine\DBAL\Exception
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     *
+     * @return mixed
+     */
+    public function runAction($action, $parameters = [])
     {
         $bc = $this->getScrapbookBlockController();
 
         if (is_object($bc)) {
             return $bc->runAction($action, $parameters);
         }
+
+        return null;
     }
 
+    /**
+     * @param string $outputContent
+     *
+     * @throws \Doctrine\DBAL\Exception
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     *
+     * @return void
+     */
     public function registerViewAssets($outputContent = '')
     {
         $bc = $this->getScrapbookBlockController();
 
-        if (is_object($bc) && is_callable(array($bc, 'registerViewAssets'))) {
+        if (is_object($bc) && is_callable([$bc, 'registerViewAssets'])) {
             $bc->registerViewAssets($outputContent);
         }
     }
 
+    /**
+     * @param \Concrete\Core\Page\Page $page
+     *
+     * @throws \Doctrine\DBAL\Exception
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     *
+     * @return mixed|void
+     */
     public function on_page_view($page)
     {
         $bc = $this->getScrapbookBlockController();
@@ -160,6 +280,12 @@ class Controller extends BlockController
         }
     }
 
+    /**
+     * @throws \Doctrine\DBAL\Exception
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     *
+     * @return void
+     */
     public function outputAutoHeaderItems()
     {
         $b = Block::getByID($this->bOriginalID);
@@ -170,6 +296,12 @@ class Controller extends BlockController
         }
     }
 
+    /**
+     * @throws \Doctrine\DBAL\Exception
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     *
+     * @return bool
+     */
     public function cacheBlockOutput()
     {
         $bc = $this->getScrapbookBlockController();
@@ -177,8 +309,16 @@ class Controller extends BlockController
         if ($bc) {
             return $bc->cacheBlockOutput();
         }
+
+        return false;
     }
 
+    /**
+     * @throws \Doctrine\DBAL\Exception
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     *
+     * @return bool
+     */
     public function cacheBlockOutputForRegisteredUsers()
     {
         $bc = $this->getScrapbookBlockController();
@@ -186,6 +326,8 @@ class Controller extends BlockController
         if ($bc) {
             return $bc->cacheBlockOutputForRegisteredUsers();
         }
+
+        return false;
     }
 
     public function cacheBlockOutputOnEditMode()
@@ -197,6 +339,12 @@ class Controller extends BlockController
         }
     }
 
+    /**
+     * @throws \Doctrine\DBAL\Exception
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     *
+     * @return bool
+     */
     public function cacheBlockOutputOnPost()
     {
         $bc = $this->getScrapbookBlockController();
@@ -204,8 +352,16 @@ class Controller extends BlockController
         if ($bc) {
             return $bc->cacheBlockOutputOnPost();
         }
+
+        return false;
     }
 
+    /**
+     * @throws \Doctrine\DBAL\Exception
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     *
+     * @return int
+     */
     public function getBlockTypeCacheOutputLifetime()
     {
         $bc = $this->getScrapbookBlockController();
@@ -213,5 +369,7 @@ class Controller extends BlockController
         if ($bc) {
             return $bc->getBlockTypeCacheOutputLifetime();
         }
+
+        return $this->btCacheBlockOutputLifetime;
     }
 }

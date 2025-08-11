@@ -43,6 +43,11 @@ class Feed
     protected $iconFID = 0;
 
     /**
+     * @var \Concrete\Core\Page\Page|null|false
+     */
+    private $parentPage = false;
+
+    /**
      * @return mixed
      */
     public function getIconFileID()
@@ -64,6 +69,7 @@ class Feed
     public function setParentID($cParentID)
     {
         $this->cParentID = $cParentID;
+        $this->parentPage = false;
     }
 
     /**
@@ -409,19 +415,13 @@ class Feed
                 return $pa->validateAccessEntities([$access]);
             });
         }
-        $parent = null;
-        if ($this->cParentID) {
-            $parent = \Page::getByID($this->cParentID);
-            if (!is_object($parent) || $parent->isError()) {
-                $parent = null;
-            }
-        }
+        $parent = $this->getParentPage();
         if ($parent !== null) {
             $pl->setSiteTreeObject($parent->getSiteTreeObject());
             if ($this->pfIncludeAllDescendents) {
                 $pl->filterByPath($parent->getCollectionPath());
             } else {
-                $pl->filterByParentID($this->cParentID);
+                $pl->filterByParentID($parent->getCollectionID());
             }
         } else {
             $app = Application::getFacadeApplication();
@@ -487,8 +487,8 @@ class Feed
     {
         $pl = $this->getPageListObject();
         $link = false;
-        if ($this->cParentID) {
-            $parent = Page::getByID($this->cParentID);
+        $parent = $this->getParentPage();
+        if ($parent !== null) {
             $link = $parent->getCollectionLink();
         } else {
             $link = \URL::to('/');
@@ -546,5 +546,16 @@ class Feed
         $link = new HeadLink($this->getFeedURL(), 'alternate', 'application/rss+xml');
 
         return $link;
+    }
+
+    protected function getParentPage(): ?Page
+    {
+        if ($this->parentPage === false) {
+            $parentPageID = $this->getParentID();
+            $parentPage = $parentPageID && $parentPageID > 0 ? Page::getByID($parentPageID) : null;
+            $this->parentPage = $parentPage && !$parentPage->isError() && !$parentPage->isInTrash() ? $parentPage : null;
+        }
+
+        return $this->parentPage;
     }
 }

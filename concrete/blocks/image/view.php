@@ -31,6 +31,7 @@ $app = Application::getFacadeApplication();
  * @var array $imgPaths May be empty, or may contain two strings (with keys 'default' and 'hover')
  * @var string $altText
  * @var string|null $title
+ * @var int|null $lazyLoad
  * @var string $linkURL
  * @var bool $openLinkInNewWindow
  * @var array $selectedThumbnailTypes Array keys are the breakpoint handles, array values are the breakpoint IDs
@@ -41,17 +42,16 @@ $app = Application::getFacadeApplication();
 if (is_object($f) && $f->getFileID()) {
     $imageTag = new HtmlImage();
 
+    $fallbackSrc = $f->getRelativePath();
+
     if ($f->getTypeObject()->isSVG()) {
         $imageTag->setAttribute("src", $f->getRelativePath());
-
         if ($maxWidth > 0) {
             $imageTag->setAttribute("width", $maxWidth);
         }
-
         if ($maxHeight > 0) {
             $imageTag->setAttribute("height", $maxHeight);
         }
-
         $imageTag->addClass('ccm-svg');
     } else {
         switch ($sizingOption) {
@@ -59,12 +59,14 @@ if (is_object($f) && $f->getFileID()) {
                 /** @var Image $image */
                 $image = $app->make('html/image', ['f' => $f]);
                 $imageTag = $image->getTag();
+                $imageTag->setAttribute("width", $f->getAttribute('width'));
+                $imageTag->setAttribute("height", $f->getAttribute('height'));
                 break;
 
             case "thumbnails_configurable":
                 $sources = [];
 
-                $fallbackSrc = $f->getRelativePath();
+                $width = 0;
 
                 if (!$fallbackSrc) {
                     $fallbackSrc = $f->getURL();
@@ -72,13 +74,13 @@ if (is_object($f) && $f->getFileID()) {
 
                 foreach ($selectedThumbnailTypes as $breakpointHandle => $ftTypeID) {
 
-                    $width = 0;
-
                     foreach ($themeResponsiveImageMap as $themeBreakpointHandle => $themeWidth) {
+
                         if ($breakpointHandle == $themeBreakpointHandle) {
                             $width = $themeWidth;
                             break;
                         }
+
                     }
 
                     if ($ftTypeID > 0) {
@@ -86,25 +88,37 @@ if (is_object($f) && $f->getFileID()) {
 
                         if ($type instanceof \Concrete\Core\Entity\File\Image\Thumbnail\Type\Type) {
                             $src = $f->getThumbnailURL($type->getBaseVersion());
+                            $widthAttribute = $type->getBaseVersion()->getWidth();
+                            $heightAttribute = $type->getBaseVersion()->getHeight();
+                            // If height is not set thumbnail retains original image proportions
+                            if($heightAttribute == 0) {
+                                $widthAttribute = $f->getAttribute('width');
+                                $heightAttribute = $f->getAttribute('height');
+                            }
 
                             // Note, the above if statement used to also include $width > 0, but this
                             // was making it so that you couldn't use a thumbnail on the extra small screen size.
                             // I removed this part of the conditional and things seem ok ?! even though I would
                             // have thought this could result in double images. Let's keep an eye on this.
-                            $sources[] = ['src' => $src, 'width' => $width];
+                            $sources[] = ['src' => $src, 'width' => $width, 'widthAttribute' => $widthAttribute,  'heightAttribute' => $heightAttribute];
                         }
                     } else {
                         // We're displaying the "full size" image at this breakpoint
-                        $sources[] = ['src' => $fallbackSrc, 'width' => $width];
+                        $sources[] = ['src' => $fallbackSrc, 'widthAttribute' => $f->getAttribute('width'),  'heightAttribute' => $f->getAttribute('height')];
                     }
                 }
 
                 $imageTag = Picture::create($sources, $fallbackSrc);
+                $imageTag->setAttribute("width", $f->getAttribute('width'));
+                $imageTag->setAttribute("height", $f->getAttribute('height'));
 
                 break;
 
             case "full_size":
                 $imageTag->setAttribute("src", $f->getRelativePath());
+                $imageTag->setAttribute("width", $f->getAttribute('width'));
+                $imageTag->setAttribute("height", $f->getAttribute('height'));
+
                 break;
 
             case "constrain_size":
@@ -114,10 +128,16 @@ if (is_object($f) && $f->getFileID()) {
                 $thumb = $im->getThumbnail($f, $maxWidth, $maxHeight, $cropImage);
 
                 $imageTag->setAttribute("src", $thumb->src);
-                $imageTag->setAttribute("width", $thumb->width);
-                $imageTag->setAttribute("height", $thumb->height);
+                $imageTag->setAttribute("width", $thumb->width ?? null);
+                $imageTag->setAttribute("height", $thumb->height ?? null);
 
                 break;
+        }
+
+        // Add image dimensions
+        if (empty($imageTag->getAttribute('width')) || empty($imageTag->getAttribute('height'))) {
+            $imageTag->setAttribute('width', $f->getAttribute('width'));
+            $imageTag->setAttribute('height', $f->getAttribute('height'));
         }
     }
 
@@ -138,6 +158,10 @@ if (is_object($f) && $f->getFileID()) {
         $imageTag->addClass('ccm-image-block-hover');
         $imageTag->setAttribute('data-default-src', $imgPaths['default']);
         $imageTag->setAttribute('data-hover-src', $imgPaths['hover']);
+    }
+
+    if (!empty($lazyLoad)) {
+        $imageTag->setAttribute('loading', 'lazy');
     }
 
     if ($linkURL) {

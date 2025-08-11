@@ -68,7 +68,7 @@ class Attributes extends DashboardAttributesPageController
     public function delete($id = null, $akID = null)
     {
         $entity = $this->getEntity($id);
-        $factory = $this->app->make('Concrete\Core\Attribute\Category\ExpressCategory');
+        $factory = $this->app->make('Concrete\Core\Attribute\Category\ExpressCategory', ['entity' => $entity]);
         $key = $factory->getAttributeKeyByID($akID);
         $this->set('entity', $entity);
         $this->executeDelete($key,

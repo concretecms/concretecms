@@ -16,6 +16,11 @@ class ExpressKey extends Key
     protected $entity;
 
     /**
+     * @ORM\Column(type="boolean", nullable=false, options={"comment": "Enables SKU-type attributes"})
+     */
+    protected $eakUnique = false;
+
+    /**
      * @return mixed
      */
     public function getEntity()
@@ -35,4 +40,22 @@ class ExpressKey extends Key
     {
         return $this->entity->getAttributeKeyCategory();
     }
+
+    /**
+     * @return bool
+     */
+    public function isAttributeKeyUnique(): bool
+    {
+        return $this->eakUnique;
+    }
+
+    /**
+     * @param bool $eakUnique
+     */
+    public function setIsAttributeKeyUnique(bool $eakUnique): void
+    {
+        $this->eakUnique = $eakUnique;
+    }
+
+
 }

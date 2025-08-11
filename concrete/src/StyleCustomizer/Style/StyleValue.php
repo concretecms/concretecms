@@ -44,6 +44,7 @@ class StyleValue implements \JsonSerializable
         return $this->value;
     }
 
+    #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
         return ['style' => $this->style, 'value' => $this->value];

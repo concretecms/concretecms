@@ -69,7 +69,7 @@ class Renderer implements LoggerAwareInterface
         FileLocator $fileLocator,
         SummaryObjectExtractor $summaryObjectExtractor,
         SummaryObjectInspector $summaryObjectInspector,
-        Page $currentPage = null
+        ?Page $currentPage = null
     ) {
         $this->serializer = $serializer;
         $this->rendererFilterer = $rendererFilterer;
@@ -144,7 +144,7 @@ class Renderer implements LoggerAwareInterface
         }
     }
 
-    public function renderSummaryForObject(CategoryMemberInterface $object, string $templateHandle = null)
+    public function renderSummaryForObject(CategoryMemberInterface $object, ?string $templateHandle = null)
     {
         $categoryTemplate = null;
         if ($templateHandle) {

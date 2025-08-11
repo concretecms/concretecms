@@ -53,7 +53,9 @@ class Entry implements \JsonSerializable, PermissionObjectInterface, AttributeOb
         if (substr($nm, 0, 3) == 'get') {
             $nm = preg_replace('/(?!^)[[:upper:]]/', '_\0', $nm);
             $nm = strtolower($nm);
-            $identifier = str_replace('get_', '', $nm);
+            // Strip off the first four characters ("get_") in order to get the handle identifier of either the
+            // association or the attribute key.
+            $identifier = substr($nm, 4);
 
             // check for association
             $association = $this->getAssociation($identifier);
@@ -369,8 +371,8 @@ class Entry implements \JsonSerializable, PermissionObjectInterface, AttributeOb
     public function getOwnedByEntry()
     {
         foreach ($this->associations as $association) {
-            if ($association->getAssociation()->isOwnedByAssociation()) {
-                return $association->getEntry();
+            if ($association->getAssociation()->isOwnedByAssociation() && $association instanceof OneAssociation) {
+                return $association->getSelectedEntry();
             }
         }
     }
@@ -382,7 +384,6 @@ class Entry implements \JsonSerializable, PermissionObjectInterface, AttributeOb
     {
         $this->attributes = new ArrayCollection();
         $this->associations = new ArrayCollection();
-        $this->containing_associations = new ArrayCollection();
         $this->exEntryDateCreated = new \DateTime();
         $this->exEntryDateModified = new \DateTime();
     }
@@ -426,6 +427,7 @@ class Entry implements \JsonSerializable, PermissionObjectInterface, AttributeOb
     /**
      * @return array|mixed
      */
+    #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
         $app = Application::getFacadeApplication();

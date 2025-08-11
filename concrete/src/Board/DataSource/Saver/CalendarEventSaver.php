@@ -3,7 +3,6 @@ namespace Concrete\Core\Board\DataSource\Saver;
 
 use Concrete\Core\Entity\Board\DataSource\Configuration\CalendarEventConfiguration;
 use Concrete\Core\Entity\Board\DataSource\Configuration\Configuration;
-use Concrete\Core\Entity\Board\DataSource\ConfiguredDataSource;
 use Concrete\Core\Entity\Calendar\Calendar;
 use Concrete\Core\Entity\Search\Query;
 use Concrete\Core\Calendar\Event\Search\Field\Manager;

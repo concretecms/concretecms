@@ -39,6 +39,7 @@ class ErrorList implements ArrayAccess, JsonSerializable
      *
      * @see \ArrayAccess::offsetExists()
      */
+    #[\ReturnTypeWillChange]
     public function offsetExists($offset)
     {
         return $this->errors[$offset];
@@ -51,6 +52,7 @@ class ErrorList implements ArrayAccess, JsonSerializable
      *
      * @return \Concrete\Core\Error\ErrorList\Error\ErrorInterface|null
      */
+    #[\ReturnTypeWillChange]
     public function offsetGet($offset)
     {
         return array_get($this->errors, $offset);
@@ -61,6 +63,7 @@ class ErrorList implements ArrayAccess, JsonSerializable
      *
      * @see \ArrayAccess::offsetSet()
      */
+    #[\ReturnTypeWillChange]
     public function offsetSet($offset, $value)
     {
         if ($offset === null) {
@@ -75,6 +78,7 @@ class ErrorList implements ArrayAccess, JsonSerializable
      *
      * @see \ArrayAccess::offsetUnset()
      */
+    #[\ReturnTypeWillChange]
     public function offsetUnset($offset)
     {
         unset($this->errors[$offset]);
@@ -163,7 +167,7 @@ class ErrorList implements ArrayAccess, JsonSerializable
     }
 
     /**
-     * Returns whether or not this error list has more than one error registered within it.
+     * Returns whether or not this error list has more than zero error registered within it.
      *
      * @return bool
      */
@@ -205,6 +209,7 @@ class ErrorList implements ArrayAccess, JsonSerializable
      *
      * @return array|null
      */
+    #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
         $formatter = new JsonFormatter($this);

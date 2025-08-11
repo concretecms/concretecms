@@ -54,13 +54,25 @@ class MessageBusManager implements ContainerInterface
         }
     }
 
+    public function registerBus(string $handle, \Closure $closure)
+    {
+        $this->buses[$handle] = $closure;
+    }
+
     public function getBus(string $handle): ?MessageBusInterface
     {
         if (isset($this->buses[$handle])) {
-            return $this->buses[$handle];
+            if ($this->buses[$handle] instanceof MessageBusInterface) {
+                return $this->buses[$handle];
+            }
+            if ($this->buses[$handle] instanceof \Closure) {
+                $bus = $this->buses[$handle]();
+            }
         }
 
-        $bus = $this->buildBusFromConfig($handle);
+        if (!isset($bus)) {
+            $bus = $this->buildBusFromConfig($handle);
+        }
 
         if ($bus) {
             $this->buses[$handle] = $bus;
@@ -72,31 +84,34 @@ class MessageBusManager implements ContainerInterface
 
     private function buildBusFromConfig(string $handle): ?MessageBusInterface
     {
-        $busConfig = $this->config->get('concrete.messenger.buses')[$handle];
-        $customConfigMiddleware = $busConfig['middleware'];
-        if ($busConfig['default_middleware']) {
-            $middleware = [
-                new AddBusNameStampMiddleware($handle),
-                new RejectRedeliveredMessageMiddleware(),
-                new DispatchAfterCurrentBusMiddleware(),
-                new FailedMessageProcessingMiddleware()
-            ];
+        $busConfig = $this->config->get('concrete.messenger.buses')[$handle] ?? null;
+        if ($busConfig) {
+            $customConfigMiddleware = $busConfig['middleware'];
+            if ($busConfig['default_middleware']) {
+                $middleware = [
+                    new AddBusNameStampMiddleware($handle),
+                    new RejectRedeliveredMessageMiddleware(),
+                    new DispatchAfterCurrentBusMiddleware(),
+                    new FailedMessageProcessingMiddleware()
+                ];
 
-            foreach ($customConfigMiddleware as $middlewareClass) {
-                $middleware[] = $this->app->make($middlewareClass);
+                foreach ($customConfigMiddleware as $middlewareClass) {
+                    $middleware[] = $this->app->make($middlewareClass);
+                }
+
+                foreach ($this->customMiddleware as $middlewareClass) {
+                    $middleware[] = $this->app->make($middlewareClass);
+                }
+
+                $middleware[] = new SendMessageMiddleware($this->app->make(SendersLocator::class));
+                $middleware[] = new HandleMessageMiddleware($this->app->make(HandlersLocator::class));
+            } else {
+                $middleware = $customConfigMiddleware; // I'm not really sure how you could _really_ use this through config but let's provide the option
             }
-
-            foreach($this->customMiddleware as $middlewareClass) {
-                $middleware[] = $this->app->make($middlewareClass);
-            }
-
-            $middleware[] = new SendMessageMiddleware($this->app->make(SendersLocator::class));
-            $middleware[] = new HandleMessageMiddleware($this->app->make(HandlersLocator::class));
-        } else {
-            $middleware = $customConfigMiddleware; // I'm not really sure how you could _really_ use this through config but let's provide the option
+            $bus = new MessageBus($middleware);
+            return $bus;
         }
-        $bus = new MessageBus($middleware);
-        return $bus;
+        return null;
     }
 
     public function has($id)

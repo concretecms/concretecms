@@ -10,6 +10,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
  * @var Concrete\Core\Application\Service\UserInterface $interface
  * @var Concrete\Controller\SinglePage\Dashboard\System\Registration\GlobalPasswordReset $controller
  * @var string $resetText
+ * @var string $defaultResetMessage
  * @var string $resetMessage
  * @var bool $disableForm
  */
@@ -28,7 +29,7 @@ $readonlyAttr = $disableForm ? ['readonly' => 'readonly'] : [];
 
     <div class="form-group">
         <?= $form->label('resetMessage', t('Edit message')) ?>
-        <?= $form->textarea('resetMessage', $resetMessage, ['rows' => '4', 'required' => 'required'] + $readonlyAttr) ?>
+        <?= $form->textarea('resetMessage', $resetMessage, ['rows' => '4', 'placeholder' => $defaultResetMessage] + $readonlyAttr) ?>
         <small class="text-muted"><?= t('This message will be shown to users the next time they log in.') ?></small>
     </div>
 

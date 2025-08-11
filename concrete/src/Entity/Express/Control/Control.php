@@ -125,6 +125,7 @@ abstract class Control implements \JsonSerializable, ExportableInterface, Contro
 
     abstract public function getType();
 
+    #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
         return [
@@ -153,7 +154,7 @@ abstract class Control implements \JsonSerializable, ExportableInterface, Contro
     public function getDisplayLabel()
     {
         return $this->getCustomLabel() ?
-            $this->getCustomLabel() :
+            h($this->getCustomLabel()) :
             $this->getControlLabel();
     }
 

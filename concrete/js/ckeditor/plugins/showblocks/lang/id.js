@@ -1,1 +1,1 @@
-﻿CKEDITOR.plugins.setLang("showblocks","id",{toolbar:"Perlihatkan Blok"});
+CKEDITOR.plugins.setLang("showblocks","id",{toolbar:"Perlihatkan Blok"});

@@ -3,8 +3,10 @@ namespace Concrete\Core\Attribute;
 
 use Concrete\Core\Attribute\Category\CategoryInterface;
 use Concrete\Core\Attribute\Value\EmptyRequestAttributeValue;
+use Concrete\Core\Cache\Level\RequestCache;
 use Concrete\Core\Entity\Attribute\Value\Value as AttributeValue;
 use Concrete\Core\Entity\Attribute\Value\Value\Value;
+use Concrete\Core\Support\Facade\Application;
 
 trait ObjectTrait
 {
@@ -71,6 +73,16 @@ trait ObjectTrait
      */
     public function setAttribute($ak, $value, $doReindexImmediately = true)
     {
+        $app = Application::getFacadeApplication();
+        /** @var RequestCache $cache */
+        $cache = $app->make('cache/request');
+        if (is_object($ak)) {
+            $akHandle = $ak->getAttributeKeyHandle();
+        } else {
+            $akHandle = $ak;
+        }
+        $cache->delete('attribute/value/' . $akHandle);
+
         $orm = \Database::connection()->getEntityManager();
 
         $this->clearAttribute($ak, $doReindexImmediately);
@@ -98,10 +110,10 @@ trait ObjectTrait
             if ($value instanceof EmptyRequestAttributeValue) {
                 // LEGACY SUPPORT
                 // If the passed $value object == EmptyRequestAttributeValue, we know we are dealing
-                // with a legacy attribute type that's not using Doctrine. We have not returned an 
+                // with a legacy attribute type that's not using Doctrine. We have not returned an
                 // attribute value value object.
                 $controller->saveForm($controller->post());
-                unset($value);
+                $value = false;
             } else {
                 /**
                  * @var $value AttributeValue\AbstractValue

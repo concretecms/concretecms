@@ -1,7 +1,9 @@
 <?php
 namespace Concrete\Core\File\Search\ColumnSet;
 
+use Concrete\Core\File\Search\ColumnSet\Column\DownloadsColumn;
 use Concrete\Core\File\Search\ColumnSet\Column\FileIDColumn;
+use Concrete\Core\File\Search\ColumnSet\Column\FileVersionDateAddedColumn;
 use Concrete\Core\File\Search\ColumnSet\Column\FileVersionFilenameColumn;
 use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\Search\Column\Column;
@@ -31,12 +33,7 @@ class Available extends DefaultSet
             case 'file':
                 $file = $node->getTreeNodeFileObject();
                 if (is_object($file)) {
-                    $type = $file->getTypeObject();
-                    if (is_object($type)) {
-                        return $type->getGenericDisplayType();
-                    } else {
-                        return t('Unknown');
-                    }
+                    return $file->getGenericTypeText(true);
                 }
                 break;
         }
@@ -73,6 +70,18 @@ class Available extends DefaultSet
         return $app->make('date')->formatDateTime($f->getDateAdded()->getTimestamp());
     }
 
+    public static function getDownloads($node)
+    {
+        if ($node->getTreeNodeTypeHandle() == 'file') {
+            $file = $node->getTreeNodeFileObject();
+            if (is_object($file)) {
+                return $file->getTotalDownloads();
+            }
+        }
+
+        return '';
+    }
+
     public function __construct()
     {
         parent::__construct();
@@ -80,5 +89,7 @@ class Available extends DefaultSet
             [self::class, 'getAuthorName'], false));
         $this->addColumn(new FileIDColumn());
         $this->addColumn(new FileVersionFilenameColumn());
+        $this->addColumn(new FileVersionDateAddedColumn());
+        $this->addColumn(new DownloadsColumn());
     }
 }

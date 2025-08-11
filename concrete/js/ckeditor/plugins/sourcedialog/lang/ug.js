@@ -1,1 +1,1 @@
-﻿CKEDITOR.plugins.setLang("sourcedialog","ug",{toolbar:"مەنبە",title:"مەنبە"});
+CKEDITOR.plugins.setLang("sourcedialog","ug",{toolbar:"مەنبە",title:"مەنبە"});

@@ -22,7 +22,7 @@ $form = $app->make(Form::class);
 <form method="post" class="ccm-dashboard-content-form" action="<?php echo $view->action('add') ?>">
     <?php echo $token->output('add_entity') ?>
 
-    <div class="form-group <?php if ($error->containsField('name')) { ?>has-error<?php } ?>">
+    <div class="form-group <?php if ($error->containsField('name')) { ?>has-validation<?php } ?>">
         <?php echo $form->label('name', t('Name')); ?>
 
         <div class="float-end">
@@ -31,14 +31,17 @@ $form = $app->make(Form::class);
             </span>
         </div>
 
-        <?php echo $form->text('name', '', ['autofocus' => 'autofocus']) ?>
+        <?php echo $form->text('name', '', [
+            'class' => $error->containsField('name') ? 'is-invalid' : null,
+            'autofocus' => 'autofocus'
+        ]) ?>
 
         <p class="help-block">
             <?php echo t('The name is how your entity will appear in the Dashboard.') ?>
         </p>
     </div>
 
-    <div class="form-group <?php if ($error->containsField('handle')) { ?>has-error<?php } ?>">
+    <div class="form-group <?php if ($error->containsField('handle')) { ?>has-validation<?php } ?>">
         <?php echo $form->label('handle', t('Handle')); ?>
 
         <div class="float-end">
@@ -47,16 +50,22 @@ $form = $app->make(Form::class);
             </span>
         </div>
 
-        <?php echo $form->text('handle') ?>
+        <?php echo $form->text('handle', ['class' => $error->containsField('handle') ? 'is-invalid' : null]) ?>
 
         <p class="help-block">
             <?php echo t('A unique string consisting of lowercase letters and underscores only.') ?>
         </p>
     </div>
 
-    <div class="form-group">
+    <div class="form-group <?php if ($error->containsField('plural_handle')) { ?>has-validation<?php } ?>">
+        <div class="float-end">
+            <span class="text-muted small">
+                <?php echo t('Required') ?>
+            </span>
+        </div>
+
         <?php echo $form->label('plural_handle', t('Plural Handle')); ?>
-        <?php echo $form->text('plural_handle') ?>
+        <?php echo $form->text('plural_handle', ['class' => $error->containsField('plural_handle') ? 'is-invalid' : null]) ?>
 
         <p class="help-block">
             <?php echo t('The plural representation of the handle above. Used to retrieve this entity if it is used in associations.') ?>
@@ -101,6 +110,21 @@ $form = $app->make(Form::class);
                         <?php echo $form->label("supports_custom_display_order", t('This entity supports custom display ordering via Dashboard interfaces.'), ["class" => "form-check-label"]) ?>
                     </div>
                 </div>
+
+                <?php
+                if (Config::get('concrete.api.enabled')) { ?>
+
+                    <div class="form-group">
+                        <?php echo $form->label("include_in_rest_api_header", t('REST API')); ?>
+
+                        <div class="form-check">
+                            <?php echo $form->checkbox('include_in_rest_api', 1) ?>
+                            <?php echo $form->label("include_in_rest_api", t('Include this entity in REST API integrations.'), ["class" => "form-check-label"]) ?>
+                        </div>
+                    </div>
+
+                <?php } ?>
+
 
                 <div class="form-group">
                     <?php echo $form->label('owned_by', t('Owned By')); ?>

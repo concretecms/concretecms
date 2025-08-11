@@ -11,7 +11,13 @@ defined('C5_EXECUTE') or die('Access Denied.');
  * @var int $upperCase
  * @var int $lowerCase
  * @var int $passwordReuse
+ * @var int|null $maxAge
  * @var array $customRegex
+ * @var string $defaultPasswordResetMessage
+ * @var string $passwordResetMessage
+ * @var string $defaultPasswordExpiredMessage
+ * @var string $passwordExpiredMessage
+ * @var string $passwordExpiredDaysPlaceholder
  */
 
 $customRegexList = [];
@@ -48,6 +54,13 @@ foreach ($customRegex as $regex => $description) {
                     <?= t('Track previous %s passwords', $form->number('passwordReuse', ['v-model.trim' => 'passwordReuse', 'v-bind:required' => 'isPasswordReuse', 'style' => 'width: 5rem;', 'class' => 'form-control-sm ms-1 me-1'])) ?>
                 </div>
             </div>
+            <div class="form-check">
+                <?= $form->checkbox('hasMaxAge', '1', false, ['v-model' => 'hasMaxAge']) ?>
+                <label class="form-check-label" for="hasMaxAge"><?= t('Users must change their password every') ?></label>
+                <div class="form-group row row-cols-auto g-0 align-items-center" v-if="hasMaxAge">
+                    <?= t('%s days', $form->number('maxAge', ['v-model.trim' => 'maxAge', 'v-bind:required' => 'hasMaxAge', 'min' => '1', 'style' => 'width: 5rem;', 'class' => 'form-control-sm ms-1 me-1'])) ?>
+                </div>
+            </div>
         </div>
     </fieldset>
 
@@ -66,6 +79,25 @@ foreach ($customRegex as $regex => $description) {
                 <?= $form->text('regex_desc[]', '', ['autocomplete' => 'off', 'v-model.trim' => 'regex.description', 'placeholder' => t('Description (optional)')]) ?>
                 <a href="#" class="btn btn-outline-danger" v-on:click.prevent="removeRegex(regexIndex)"><i class="fas fa-trash"></i></a>
             </div>
+        </div>
+    </fieldset>
+
+    <fieldset>
+        <legend>
+            <?= t('Password Change Message') ?>
+        </legend>
+        <p>
+            <?= t('These messages will be shown to users the next time they log in.') ?>
+        </p>
+        <div class="form-group">
+            <?= $form->label('passwordResetMessage', t('When their password has been reset')) ?>
+            <?= $form->textarea('passwordResetMessage', $passwordResetMessage, ['rows' => '4', 'placeholder' => $defaultPasswordResetMessage]) ?>
+        </div>
+
+        <div class="form-group">
+            <?= $form->label('passwordExpiredMessage', t('When their password has expired')) ?>
+            <?= $form->textarea('passwordExpiredMessage', $passwordExpiredMessage, ['rows' => '4', 'placeholder' => $defaultPasswordExpiredMessage]) ?>
+            <div class="small text-muted"><?= t('Please remark that you can use %s to represent the number of days.', '<code>' . h($passwordExpiredDaysPlaceholder) . '</code>') ?></div>
         </div>
     </fieldset>
 
@@ -94,7 +126,9 @@ $(document).ready(function() {
                 return {
                     isPasswordReuse: <?= json_encode($passwordReuse > 0) ?>,
                     passwordReuse: <?= json_encode($passwordReuse > 0 ? $passwordReuse : null) ?>,
-                    regexes: <?= json_encode($customRegexList) ?>
+                    regexes: <?= json_encode($customRegexList) ?>,
+                    hasMaxAge: <?= json_encode($maxAge !== null) ?>,
+                    maxAge: <?= json_encode($maxAge ?: 90) ?>,
                 };
             },
             methods: {

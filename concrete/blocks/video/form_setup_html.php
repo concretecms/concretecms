@@ -87,7 +87,21 @@ $width = $width ?? null;
             </span>
         </div>
     </div>
+
+
 </fieldset>
+
+
+<fieldset>
+    <legend>
+        <?php echo t('Title'); ?>
+    </legend>
+
+    <div class="form-group">
+        <?php echo $form->text('title', $title ?? ''); ?>
+    </div>
+</fieldset>
+
 
 <script>
     $(document).ready(function () {

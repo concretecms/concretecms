@@ -19,6 +19,7 @@ use Concrete\Core\Support\Facade\Database;
 use Concrete\Core\Tree\Node\Node;
 use Concrete\Core\Tree\Node\NodeType;
 use Concrete\Core\Tree\Node\Type\FileFolder;
+use Concrete\Core\Url\UrlInterface;
 use Concrete\Core\User\User;
 use Core;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -367,8 +368,11 @@ class File implements \Concrete\Core\Permission\ObjectInterface, AttributeObject
         $app = Application::getFacadeApplication();
         $db = $app->make(Connection::class);
         $rows = $db->fetchAll('select fsID from FileSetFiles where fID = ?', [$this->getFileID()]);
-
-        return array_map('intval', array_map('array_pop', $rows));
+        $ids = [];
+        foreach ($rows as $row) {
+            $ids[] = (int) $row['fsID'];
+        }
+        return $ids;
     }
 
     /**
@@ -563,7 +567,7 @@ class File implements \Concrete\Core\Permission\ObjectInterface, AttributeObject
     }
 
     /**
-     * @return NodeType
+     * @return \Concrete\Core\Tree\Node\Type\FileFolder|null
      */
     public function getFileFolderObject()
     {
@@ -1004,6 +1008,16 @@ class File implements \Concrete\Core\Permission\ObjectInterface, AttributeObject
         if ($fv !== null) {
             return $fv->setAttribute($ak, $value);
         }
+    }
+
+    /**
+     * Returns a URL to the file in the file manager
+     *
+     * @return UrlInterface
+     */
+    public function getDetailsURL(): UrlInterface
+    {
+        return \URL::to('/dashboard/files/details', $this->getFileID());
     }
 
     /**

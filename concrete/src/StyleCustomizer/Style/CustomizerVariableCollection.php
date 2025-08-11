@@ -16,6 +16,7 @@ class CustomizerVariableCollection extends ArrayCollection implements \JsonSeria
         return parent::add($variable);
     }
 
+    #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
         return $this->toArray();

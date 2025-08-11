@@ -1,0 +1,7 @@
+<block type="desktop_draft_list" name="">
+  <data table="btDesktopDraftList">
+    <record>
+      <draftsPerPage>7</draftsPerPage>
+    </record>
+  </data>
+</block>

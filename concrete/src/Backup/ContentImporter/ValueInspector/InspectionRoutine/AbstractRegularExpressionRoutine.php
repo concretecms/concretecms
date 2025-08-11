@@ -1,17 +1,21 @@
 <?php
+
 namespace Concrete\Core\Backup\ContentImporter\ValueInspector\InspectionRoutine;
 
 abstract class AbstractRegularExpressionRoutine implements RoutineInterface
 {
-    abstract public function getRegularExpression();
-    abstract public function getItem($identifier);
-
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Backup\ContentImporter\ValueInspector\InspectionRoutine\RoutineInterface::match()
+     */
     public function match($content)
     {
-        $items = array();
+        $items = [];
         if (is_scalar($content)) {
-            if (preg_match_all($this->getRegularExpression(), $content, $matches)) {
-                if ($matches[1]) {
+            $matches = null;
+            if (preg_match_all($this->getRegularExpression(), (string) $content, $matches)) {
+                if (isset($matches[1])) {
                     foreach ($matches[1] as $identifier) {
                         $items[] = $this->getItem($identifier);
                     }
@@ -22,24 +26,42 @@ abstract class AbstractRegularExpressionRoutine implements RoutineInterface
         return $items;
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Backup\ContentImporter\ValueInspector\InspectionRoutine\RoutineInterface::replaceContent()
+     */
     public function replaceContent($content)
     {
-        $routine = $this;
         if (is_scalar($content)) {
             $content = preg_replace_callback(
                 $this->getRegularExpression(),
-                function ($matches) use ($routine) {
+                function (array $matches) {
                     if (isset($matches[1])) {
-                        $identifier = $matches[1];
-                        $item = $routine->getItem($identifier);
-
-                        return $item->getContentValue();
+                        return $this->getItem($matches[1])->getContentValue();
                     }
                 },
-                $content
+                (string) $content
             );
         }
 
         return $content;
     }
+
+    /**
+     * Get the regular expression to be used to extract the identifier.
+     * The identifier must be the first capture group.
+     *
+     * @return string
+     */
+    abstract public function getRegularExpression();
+
+    /**
+     * Resolves an item given its identifier.
+     *
+     * @param string $identifier
+     *
+     * @return \Concrete\Core\Backup\ContentImporter\ValueInspector\Item\ItemInterface
+     */
+    abstract public function getItem($identifier);
 }

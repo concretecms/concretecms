@@ -138,6 +138,7 @@ class ColorValue extends Value
         return (string) $this->a !== '';
     }
 
+    #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
         return [

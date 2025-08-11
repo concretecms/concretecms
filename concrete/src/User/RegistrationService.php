@@ -90,7 +90,7 @@ class RegistrationService implements RegistrationServiceInterface
             $uIsFullRecord = 1;
         }
 
-        $password_to_insert = isset($data['uPassword']) ? $data['uPassword'] : null;
+        $password_to_insert = $data['uPassword'] ?? '';
         $hash = $hasher->hashPassword($password_to_insert);
 
         $uDefaultLanguage = null;
@@ -149,6 +149,7 @@ class RegistrationService implements RegistrationServiceInterface
             $subscription = $type->getSubscription($signup);
             $notified = $notifier->getUsersToNotify($subscription, $signup);
             $notification = $type->createNotification($signup);
+            $signup->getNotifications()->add($notification);
             $notifier->notify($notified, $notification);
         }
 

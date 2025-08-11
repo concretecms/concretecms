@@ -54,6 +54,7 @@ abstract class Parser
             ->setName($this->getPackageName($tokens, $className, $classStart, $classEnd))
             ->setDescription($this->getPackageDescription($tokens, $className, $classStart, $classEnd))
             ->setMinimumCoreVersion($this->getPackageMinimumCodeVersion($tokens, $className, $classStart, $classEnd))
+            ->setMinimumPHPVersion($this->getPackageMinimumPHPVersion($tokens, $className, $classStart, $classEnd))
         ;
     }
 
@@ -249,7 +250,7 @@ abstract class Parser
     }
 
     /**
-     * Get the minimum supported core version version.
+     * Get the minimum supported core version.
      *
      * @param array $tokens the PHP tokens of the package controlller.php file
      * @param string $className the  class name of the package controller
@@ -265,6 +266,25 @@ abstract class Parser
         $fromProperty = $this->getPropertyValue($tokens, '$appVersionRequired', $classStart, $classEnd);
 
         return (string) $fromProperty === '' ? $this->getDefaultPackageMinimumCodeVersion() : $fromProperty;
+    }
+
+    /**
+     * Get the minimum supported PHP version.
+     *
+     * @param array $tokens the PHP tokens of the package controlller.php file
+     * @param string $className the  class name of the package controller
+     * @param int $classStart the index of the first PHP token of the class body (its first '{')
+     * @param int $classEnd the index of the last PHP token of the class body (its last '}'}
+     *
+     * @throws \Concrete\Core\Package\Offline\Exception in case of problems
+     *
+     * @return string
+     */
+    protected function getPackageMinimumPHPVersion(array $tokens, string $className, int $classStart, int $classEnd): string
+    {
+        $fromProperty = $this->getPropertyValue($tokens, '$phpVersionRequired', $classStart, $classEnd);
+        
+        return (string) $fromProperty;
     }
 
     /**

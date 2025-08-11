@@ -170,7 +170,7 @@ class Controller extends BlockController implements UsesFeatureInterface
 
         return $this->hText;
     }
-    
+
     public function getRequiredFeatures(): array
     {
         return [
@@ -291,7 +291,11 @@ class Controller extends BlockController implements UsesFeatureInterface
             } else {
                 $resultsPage = null;
                 $c = Page::getCurrentPage();
-                $resultsURL = $c->getCollectionPath();
+                if (is_object($c)) {
+                    $resultsURL = $c->getCollectionPath();
+                } else {
+                    $resultsURL = '/';
+                }
             }
         }
 
@@ -306,7 +310,11 @@ class Controller extends BlockController implements UsesFeatureInterface
 
         //run query if display results elsewhere not set, or the cID of this page is set
         if ($resultsPage === null && (string) $this->resultsURL === '') {
-            if ((string) $this->request->request('query') !== '' || $this->request->request('akID') || $this->request->request('month')) {
+            $query = $this->request->request('query');
+            if (!is_string($query)) {
+                $query = '';
+            }
+            if ($query !== '' || $this->request->request('akID') || $this->request->request('month')) {
                 $this->do_search();
             }
         }
@@ -341,7 +349,6 @@ class Controller extends BlockController implements UsesFeatureInterface
             'baseSearchPath' => '',
             'searchUnderCID' => 0,
             'postTo_cID' => 0,
-            'externalTarget' => 0,
             'resultsURL' => '',
             'resultsPageKind' => '',
             'allowUserOptions' => '',
@@ -401,6 +408,34 @@ class Controller extends BlockController implements UsesFeatureInterface
         }
 
         parent::save($args);
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Block\BlockController::getImportData()
+     */
+    protected function getImportData($blockNode, $page)
+    {
+        $args = parent::getImportData($blockNode, $page);
+        $baseSearchPath = (string) $args['baseSearchPath'];
+        $args['baseSearchPath'] = empty($args['search_all']) ? 'EVERYWHERE' : 'ALL';
+        if ($baseSearchPath !== '') {
+            $c = Page::getByPath($baseSearchPath);
+            if ($c && !$c->isError()) {
+                $args['baseSearchPath'] = 'OTHER';
+                $args['searchUnderCID'] = $c->getCollectionID();
+            }
+        }
+        $postTo_cID = (int) ($args['postTo_cID'] ?? 0);
+        if ($postTo_cID !== 0) {
+            $args['resultsPageKind'] = 'CID'; 
+        } elseif ((string) ($args['resultsURL'] ?? '') !== '') {
+            $args['resultsPageKind'] = 'URL';
+        }
+        $args['allowUserOptions'] = empty($args['allowUserOptions']) ? 0 : 'ALLOW';
+
+        return $args;
     }
 
     /**
@@ -473,6 +508,9 @@ class Controller extends BlockController implements UsesFeatureInterface
         $search_paths = $this->request->request('search_paths');
         if (is_array($search_paths)) {
             foreach ($search_paths as $path) {
+                if (!is_string($path)) {
+                    continue;
+                }
                 if ($path === '') {
                     continue;
                 }
@@ -495,5 +533,6 @@ class Controller extends BlockController implements UsesFeatureInterface
         $this->set('do_search', true);
         $this->set('searchList', $ipl);
         $this->set('pagination', $pagination);
+        $this->set('search_paths', $search_paths);
     }
 }

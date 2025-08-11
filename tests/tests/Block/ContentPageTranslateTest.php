@@ -8,11 +8,14 @@ class ContentPageTranslateTest extends PageTestCase
 {
     protected $fixtures = [];
 
-    public function __construct($name = null, array $data = [], $dataName = '')
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\TestHelpers\Database\ConcreteDatabaseTestCase::getTables()
+     */
+    protected function getTables()
     {
-        parent::__construct($name, $data, $dataName);
-
-        $this->tables = array_merge($this->tables, [
+        return array_merge(parent::getTables(), [
             'SystemContentEditorSnippets',
         ]);
     }

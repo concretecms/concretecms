@@ -81,10 +81,7 @@ class AreaResponse extends Response
 
         if (
         $this->canEditAreaContents() ||
-        $this->canEditAreaPermissions() ||
-        $this->canAddBlockToArea() ||
-        $this->canAddStackToArea() ||
-        $this->canAddLayoutToArea()) {
+        $this->canEditAreaPermissions()) {
             return true;
         }
 

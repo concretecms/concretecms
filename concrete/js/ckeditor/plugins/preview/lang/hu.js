@@ -1,1 +1,1 @@
-﻿CKEDITOR.plugins.setLang("preview","hu",{preview:"Előnézet"});
+CKEDITOR.plugins.setLang("preview","hu",{preview:"Előnézet"});

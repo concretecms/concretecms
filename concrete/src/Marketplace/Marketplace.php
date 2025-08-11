@@ -16,6 +16,10 @@ use Concrete\Core\Url\Resolver\PathUrlResolver;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 
+/**
+ * @deprecated This will be removed in version 10
+ * @see PackageRepositoryInterface
+ */
 class Marketplace implements ApplicationAwareInterface
 {
     use ApplicationAwareTrait;
@@ -105,7 +109,7 @@ class Marketplace implements ApplicationAwareInterface
                 $ms = '&ms=1';
             }
             $csiURL = urlencode($this->getSiteURL());
-            $url = $this->config->get('concrete.urls.concrete') . $this->config->get('concrete.urls.paths.marketplace.connect_validate') . "?csToken={$csToken}&csiURL=" . $csiURL . '&csiVersion=' . APP_VERSION . $ms;
+            $url = $this->config->get('concrete.urls.concrete_secure') . $this->config->get('concrete.urls.paths.marketplace.connect_validate') . "?csToken={$csToken}&csiURL=" . $csiURL . '&csiVersion=' . APP_VERSION . $ms;
             $vn = $this->app->make('helper/validation/numbers');
             $r = $this->get($url);
 
@@ -168,8 +172,9 @@ class Marketplace implements ApplicationAwareInterface
         } else {
             while (!feof($handle)) {
                 $data = fread($handle, $chunksize);
+                $data = is_numeric($data) ? (int) $data : $data;
 
-                if ($data == Package::E_PACKAGE_INVALID_APP_VERSION) {
+                if ($data === Package::E_PACKAGE_INVALID_APP_VERSION) {
                     $error->add(t('This package isn\'t currently available for this version of Concrete . Please contact the maintainer of this package for assistance.'));
                 } else {
                     fwrite($fp, $data, strlen($data));
@@ -243,7 +248,7 @@ class Marketplace implements ApplicationAwareInterface
         // Retrieve the URL contents
         $csToken = $marketplace->databaseConfig->get('concrete.marketplace.token');
         $csiURL = urlencode($marketplace->getSiteURL());
-        $url = $marketplace->config->get('concrete.urls.concrete') . $marketplace->config->get('concrete.urls.paths.marketplace.purchases');
+        $url = $marketplace->config->get('concrete.urls.concrete_secure') . $marketplace->config->get('concrete.urls.paths.marketplace.purchases');
         $url .= "?csToken={$csToken}&csiURL=" . $csiURL . '&csiVersion=' . APP_VERSION;
         $json = $marketplace->get($url);
 
@@ -288,7 +293,7 @@ class Marketplace implements ApplicationAwareInterface
     public function getSitePageURL(): string
     {
         $token = $this->databaseConfig->get('concrete.marketplace.url_token');
-        $url = $this->config->get('concrete.urls.concrete') . $this->config->get('concrete.urls.paths.site_page');
+        $url = $this->config->get('concrete.urls.concrete_secure') . $this->config->get('concrete.urls.paths.site_page');
 
         return $url . '/' . $token;
     }
@@ -389,7 +394,7 @@ class Marketplace implements ApplicationAwareInterface
     public function generateSiteToken()
     {
         return $this->get(
-            $this->config->get('concrete.urls.concrete') .
+            $this->config->get('concrete.urls.concrete_secure') .
             $this->config->get('concrete.urls.paths.marketplace.connect_new_token')
         );
     }

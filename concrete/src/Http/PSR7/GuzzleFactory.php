@@ -90,7 +90,7 @@ class GuzzleFactory implements HttpMessageFactoryInterface
     {
         return new PsrUploadedFile(
             $symfonyUploadedFile->getRealPath(),
-            $symfonyUploadedFile->getClientSize(),
+            $symfonyUploadedFile->getSize(),
             $symfonyUploadedFile->getError(),
             $symfonyUploadedFile->getClientOriginalName(),
             $symfonyUploadedFile->getClientMimeType()

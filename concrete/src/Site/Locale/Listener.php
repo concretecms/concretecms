@@ -43,7 +43,11 @@ EOT
         $cn->query(str_replace(':cIDs:', $pageIDsJoined, $updateMultilingualRelation));
         $childPageIDs = $cn->query('SELECT cID FROM Pages WHERE cParentID IN (' . $pageIDsJoined . ')')->fetchAll();
         if (!empty($childPageIDs)) {
-            $childPageIDs = array_map('intval', array_map('array_pop', $childPageIDs));
+            $tempChildPageIDs = array();
+            foreach ($childPageIDs as $oneChildPage) {
+                $tempChildPageIDs[] = intval($oneChildPage['cID']);
+            }
+            $childPageIDs = $tempChildPageIDs;
             foreach (array_chunk($childPageIDs, 500) as $chunk) {
                 $this->fixMultilingualPageRelations($cn, $updateMultilingualRelation, $chunk);
             }

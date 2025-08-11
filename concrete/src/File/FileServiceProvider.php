@@ -36,6 +36,7 @@ class FileServiceProvider extends ServiceProvider
         foreach ($singletons as $key => $value) {
             $this->app->singleton($key, $value);
         }
+        $this->app->alias('helper/image', Image\Thumbnail\ThumbnailerInterface::class);
 
         $this->app->singleton(\Concrete\Core\File\Image\Thumbnail\ThumbnailFormatService::class);
 
@@ -62,12 +63,13 @@ class FileServiceProvider extends ServiceProvider
             return StorageLocation::getDefault();
         });
 
-        $this->app->bindIf(Service\VolatileDirectory::class, function (Application $app) {
-            return new VolatileDirectory(
-                $app->make(\Illuminate\Filesystem\Filesystem::class),
-                $app->make('helper/file')->getTemporaryDirectory()
-            );
-        });
+        $this->app
+            ->when(Service\VolatileDirectory::class)
+            ->needs('$parentDirectory')
+            ->give(static function (Application $app) {
+                return $app->make('helper/file')->getTemporaryDirectory();
+            })
+        ;
 
         $this->app->bind(ProcessorManager::class, function (Application $app) {
             $config = $app->make('config');
@@ -85,5 +87,7 @@ class FileServiceProvider extends ServiceProvider
         $this->app->singleton(ChooserConfigurationInterface::class, function($app) {
             return $this->app->make(DefaultConfigurationFactory::class)->createConfiguration();
         });
+
+        $this->app->bindIf(Upload\ClientSideUploader::class, Upload\Dropzone::class);
     }
 }

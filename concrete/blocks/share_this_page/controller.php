@@ -13,6 +13,21 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
 class Controller extends BlockController implements UsesFeatureInterface
 {
+    /**
+     * @var int|string|null
+     */
+    public $btShareThisPageID;
+
+    /**
+     * @var string|null
+     */
+    public $service;
+
+    /**
+     * @var int|string|null
+     */
+    public $displayOrder;
+
     public $helpers = array('form');
 
     protected $btInterfaceWidth = 400;
@@ -78,8 +93,10 @@ class Controller extends BlockController implements UsesFeatureInterface
     public function duplicate($newBlockID)
     {
         $db = Database::get();
+        $displayOrder = 0;
         foreach ($this->getSelectedServices() as $service) {
-            $db->insert('btShareThisPage', array('bID' => $newBlockID, 'service' => $service->getHandle(), 'displayOrder' => $this->displayOrder));
+            $db->insert('btShareThisPage', array('bID' => $newBlockID, 'service' => $service->getHandle(), 'displayOrder' => $displayOrder));
+            $displayOrder++;
         }
     }
 

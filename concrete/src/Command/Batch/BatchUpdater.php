@@ -8,6 +8,7 @@ use Concrete\Core\Entity\Command\Batch as BatchEntity;
 use Concrete\Core\Entity\Command\Process;
 use Concrete\Core\Notification\Events\MercureService;
 use Concrete\Core\Notification\Events\ServerEvent\BatchUpdated;
+use Concrete\Core\Notification\Events\ServerEvent\BatchUpdatedEvent;
 use Doctrine\ORM\EntityManager;
 
 class BatchUpdater
@@ -36,7 +37,7 @@ class BatchUpdater
         $this->app = $app;
     }
 
-    public function checkBatchProcessForClose(string $batchId, int $exitCode, string $exitMessage = null)
+    public function checkBatchProcessForClose(string $batchId, int $exitCode, ?string $exitMessage = null)
     {
         $entityManager = $this->app->make(EntityManager::class);
         $processUpdater = $this->app->make(ProcessUpdater::class);
@@ -72,7 +73,8 @@ class BatchUpdater
         if ($mercureService->isEnabled()) {
             $batch = $entityManager->find(BatchEntity::class, $batchId);
             $entityManager->refresh($batch);
-            $mercureService->sendUpdate(new BatchUpdated($batch));
+            $event = new BatchUpdatedEvent($batch);
+            $mercureService->publish($event);
         }
     }
 

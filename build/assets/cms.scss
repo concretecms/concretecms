@@ -1,3 +1,6 @@
+// Support dark mode set by browsers:
+//$color-mode-type: media-query;
+
 // Bootstrap Core First
 @import 'bootstrap/scss/functions';
 @import 'bootstrap/scss/mixins';
@@ -11,6 +14,9 @@
 // You will want to, because it will be cleaner and it will let you use Bootstrap variables within our own variables.
 // But stay strong – without this being broken out AFTER our own variables we can't customizable Bootstrap colors, etc...
 @import 'bootstrap/scss/variables';
+
+// New in BS 5.2, we need to include this after maps but before root-modified
+@import "bootstrap/scss/maps";
 
 // Import the subset of Bootstrap that is required in the CMS entry point.
 // Make sure to namespace it to .ccm-ui
@@ -57,7 +63,8 @@
   @import "bootstrap/scss/list-group";
   @import "bootstrap/scss/close";
   @import "bootstrap/scss/toasts";
-  //@import "bootstrap/scss/modal";
+  @import "bootstrap/scss/modal";
+
   @import "bootstrap/scss/tooltip";
   @import "bootstrap/scss/popover";
   //@import "carousel";
@@ -69,10 +76,27 @@
 
   // Utilities
   @import "bootstrap/scss/utilities/api";
-
-  // Plugins
-  @import "bootstrap-select/sass/bootstrap-select";
 }
 
-// This is the actual public entry point to the cms.css on the front-end
+// Modal fixes - Bootstrap SCSS uses & selectors that append the parent class, but it adds .ccm-ui
+// in our case since we wrap everything with ccm-ui making the following directives in _modal.scss
+// not work
+// When fading in the modal, animate it to slide down
+.ccm-ui .modal.fade .modal-dialog {
+  @include transition($modal-transition);
+  transform: $modal-fade-transform;
+}
+.ccm-ui .modal.show .modal-dialog {
+  transform: $modal-show-transform;
+}
+
+// When trying to close, animate focus to scale
+.ccm-ui .modal.modal-static .modal-dialog {
+  transform: $modal-scale-transform;
+}
+
+// Define where to find our concrete directory relative to where this file is built
+// This is used for things like background images in CSS (like the mobile preview, jQuery UI icons)
+// It is only a part of the CMS base, not a part of Concrete bedrock
+$concrete-path: "../../concrete";
 @import "@concretecms/bedrock/assets/cms/scss/base";

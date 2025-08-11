@@ -8,9 +8,6 @@ class Service
 {
     public function outputDisplay($value)
     {
-        $v = View::getInstance();
-        $v->requireAsset('core/rating');
-
         $html = '';
         $star1 = 'fa-star-o';
         $star2 = 'fa-star-o';
@@ -61,9 +58,6 @@ class Service
 
     public function output($field, $value)
     {
-        $v = View::getInstance();
-        $v->requireAsset('core/rating');
-
         $form = Loader::helper("form");
         $v = $form->getRequestValue($field);
         if ($v !== false) {

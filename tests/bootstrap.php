@@ -3,8 +3,6 @@
 use Concrete\Core\Http\Request;
 use Illuminate\Filesystem\Filesystem;
 use PHPUnit\Framework\Error\Notice;
-use Whoops\Handler\PlainTextHandler;
-use Whoops\Run;
 
 // Fix for phpstorm + tests run in separate processes
 if (!defined('PHPUNIT_COMPOSER_INSTALL')) {
@@ -12,7 +10,7 @@ if (!defined('PHPUNIT_COMPOSER_INSTALL')) {
 }
 
 // Define test constants
-putenv('CONCRETE5_ENV=travis');
+putenv('CONCRETE5_ENV=ccm_test');
 define('DIR_TESTS', str_replace(DIRECTORY_SEPARATOR, '/', __DIR__));
 define('DIR_CONFIG_SITE', DIR_TESTS . '/config');
 define('DIR_BASE', dirname(DIR_TESTS));
@@ -50,17 +48,14 @@ Request::setInstance(new Request(
 $app = require DIR_BASE_CORE . '/bootstrap/start.php';
 /* @var Concrete\Core\Application\Application $app */
 
-// Configure error reporting (test more strictly than core settings)
-error_reporting(E_ALL & ~E_STRICT & ~E_DEPRECATED);
-
 // Initialize the database
-$cn = $app->make('database')->connection('travisWithoutDB');
+$cn = $app->make('database')->connection('ccm_testWithoutDB');
 $cn->connect();
 if (!$cn->isConnected()) {
-    throw new Exception('Unable to connect to test database, please create a user "travis" with no password with full privileges to a database "concrete5_tests"');
+    throw new Exception('Unable to connect to test database, please create a user "ccm_test" with no password with full privileges to a database "ccm_tests"');
 }
-$cn->query('DROP DATABASE IF EXISTS concrete5_tests');
-$cn->query('CREATE DATABASE concrete5_tests');
+$cn->query('DROP DATABASE IF EXISTS ccm_tests');
+$cn->query('CREATE DATABASE ccm_tests');
 $cn->close();
 
 // Unset variables, so that PHPUnit won't consider them as global variables.

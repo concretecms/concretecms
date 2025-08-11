@@ -1,1 +1,1 @@
-﻿CKEDITOR.plugins.setLang("save","bs",{toolbar:"Snimi"});
+CKEDITOR.plugins.setLang("save","bs",{toolbar:"Snimi"});

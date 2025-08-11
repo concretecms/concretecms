@@ -3,18 +3,24 @@
 namespace Concrete\Block\CoreContainer;
 
 use Concrete\Core\Area\ContainerArea;
+use Concrete\Core\Block\Block;
 use Concrete\Core\Block\BlockController;
 use Concrete\Core\Block\BlockType\BlockType;
+use Concrete\Core\Block\Traits\HasSubBlocksTrait;
 use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Entity\Page\Container;
+use Concrete\Core\Feature\UsesFeatureInterface;
 use Concrete\Core\Page\Container\ContainerBlockInstance;
 use Concrete\Core\Page\Container\ContainerExporter;
 use Concrete\Core\Page\Container\TemplateLocator;
 use Concrete\Core\StyleCustomizer\Inline\StyleSet;
 use Doctrine\ORM\EntityManager;
+use Illuminate\Contracts\Container\BindingResolutionException;
 
-class Controller extends BlockController
+class Controller extends BlockController implements UsesFeatureInterface
 {
+    use HasSubBlocksTrait;
+
     /**
      * @var int|null
      */
@@ -204,6 +210,56 @@ class Controller extends BlockController
     }
 
     /**
+     * @throws BindingResolutionException
+     *
+     * @return bool
+     */
+    public function cacheBlockOutput()
+    {
+        $this->setupCacheSettings();
+
+        return $this->btCacheBlockOutput;
+    }
+
+    /**
+     * @throws BindingResolutionException
+     *
+     * @return bool
+     */
+    public function cacheBlockOutputOnPost()
+    {
+        $this->setupCacheSettings();
+
+        return $this->btCacheBlockOutputOnPost;
+    }
+
+    /**
+     * @throws BindingResolutionException
+     *
+     * @return int
+     */
+    public function getBlockTypeCacheOutputLifetime()
+    {
+        $this->setupCacheSettings();
+
+        return $this->btCacheBlockOutputLifetime;
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @throws BindingResolutionException
+     *
+     * @return string[]
+     */
+    public function getRequiredFeatures(): array
+    {
+        $this->setupCacheSettings();
+
+        return $this->requiredFeatures;
+    }
+
+    /**
      * Import additional data about this block.
      *
      * @param \Concrete\Core\Block\Block $b
@@ -248,5 +304,39 @@ class Controller extends BlockController
                 $btc->import($page, $subArea->getAreaHandle(), $bx);
             }
         }
+    }
+
+    /**
+     * @throws BindingResolutionException
+     *
+     * @return void
+     */
+    protected function setupCacheSettings(): void
+    {
+        $page = $this->getCollectionObject();
+        if ($this->isCacheSettingsInitialized() || $page->isEditMode()) {
+            return;
+        }
+
+        $blocks = [];
+
+        $instance = $this->getContainerInstanceObject();
+        if ($instance) {
+            $block = $this->getBlockObject();
+            $entityManager = $this->app->make(EntityManager::class);
+            foreach ($instance->getInstanceAreas() as $instanceArea) {
+                $containerBlockInstance = new ContainerBlockInstance(
+                    $block,
+                    $instance,
+                    $entityManager
+                );
+                $containerArea = new ContainerArea($containerBlockInstance, $instanceArea->getContainerAreaName());
+                foreach ($containerArea->getAreaBlocksArray($page) as $subBlock) {
+                    $blocks[] = $subBlock;
+                }
+            }
+        }
+
+        $this->initializeSubBlockCacheSettings($page, $blocks);
     }
 }

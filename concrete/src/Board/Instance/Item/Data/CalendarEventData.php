@@ -1,7 +1,6 @@
 <?php
 namespace Concrete\Core\Board\Instance\Item\Data;
 
-use Concrete\Core\Entity\Calendar\CalendarEvent;
 use Concrete\Core\Entity\Calendar\CalendarEventVersionOccurrence;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 
@@ -15,7 +14,7 @@ class CalendarEventData implements DataInterface
      */
     protected $occurrenceID = 0;
 
-    public function __construct(CalendarEventVersionOccurrence $occurrence = null)
+    public function __construct(?CalendarEventVersionOccurrence $occurrence = null)
     {
         if ($occurrence) {
             $this->occurrenceID = $occurrence->getID();
@@ -30,6 +29,7 @@ class CalendarEventData implements DataInterface
         return $this->occurrenceID;
     }
 
+    #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
         return ['occurrenceID' => $this->occurrenceID];

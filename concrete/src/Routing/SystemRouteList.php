@@ -144,5 +144,10 @@ class SystemRouteList implements RouteListInterface
             ->setPrefix('/ccm/frontend/conversations')
             ->routes('conversations.php')
         ;
+
+        $router->buildGroup()->setNamespace('Concrete\Controller\Frontend')
+            ->setPrefix('/ccm/frontend/multilingual')
+            ->routes('multilingual.php')
+        ;
     }
 }

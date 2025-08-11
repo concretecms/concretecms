@@ -99,6 +99,10 @@
   display: block;
   float: left;
   width: 100%;
+  @media only screen and (max-width: 768px) {
+    display: flex;
+    flex-direction: column-reverse;
+  }
 }
 
 #ccm-dialog-attributes-menu {
@@ -107,6 +111,9 @@
   margin: 0;
   padding: 0;
   width: 30%;
+  @media only screen and (max-width: 768px) {
+    width: auto;
+  }
 }
 
 #ccm-dialog-attributes-detail {
@@ -115,6 +122,10 @@
   margin: 0 0 0 65px;
   padding: 0;
   width: calc(70% - 65px);
+  @media only screen and (max-width: 768px) {
+    margin: 0;
+    width: auto;
+  }
 }
 
 /**
@@ -149,8 +160,8 @@
 
     // Selectable attributes
     &[data-attribute-key-id] {
-      background-color: #f9f9f9; // ~ $panel-background-color
-      border: 2px solid #e8e8e8;
+      background-color: $panel-background-color;
+      border: 2px solid darken($panel-background-color, 0.2);
       padding: 12px 45px 15px 48px;
 
       [data-remove-attribute-key] {
@@ -160,6 +171,29 @@
         margin-left: -32px;
         margin-right: 8px;
         vertical-align: middle;
+      }
+    }
+  }
+}
+
+@include color-mode(dark) {
+  #ccm-detail-page-attributes {
+    .form-group {
+      &[data-attribute-key-id] {
+        background-color: $panel-background-color-dark;
+        border: 2px solid lighten($panel-background-color-dark, 0.3);
+      }
+    }
+  }
+
+  #ccm-menu-page-attributes {
+    .ccm-menu-page-attributes-set {
+      a[data-attribute-key] {
+        color: $panel-menu-item-color-dark;
+
+        &:hover {
+          background-color: $panel-menu-item-hover-bg-color-dark;
+        }
       }
     }
   }

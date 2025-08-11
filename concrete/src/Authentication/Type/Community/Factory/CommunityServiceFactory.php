@@ -2,12 +2,14 @@
 
 namespace Concrete\Core\Authentication\Type\Community\Factory;
 
+use Concrete\Core\Authentication\Type\ExternalConcrete\ExternalConcreteService;
 use Concrete\Core\Config\Repository\Repository;
 use Concrete\Core\Http\Request;
 use Concrete\Core\Url\Resolver\Manager\ResolverManagerInterface;
 use Concrete\Core\Url\Url;
 use League\Url\UrlInterface;
 use OAuth\Common\Consumer\Credentials;
+use OAuth\Common\Http\Uri\Uri;
 use OAuth\Common\Storage\SymfonySession;
 use OAuth\ServiceFactory;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -79,8 +81,12 @@ class CommunityServiceFactory
         // Create a new session storage object and pass it the active session
         $storage = new SymfonySession($this->session, false);
 
+        $baseApiUrl = new Uri($this->config->get('concrete.urls.concrete_community'));
+
         // Create the service using the oauth service factory
-        return $factory->createService('community', $credentials, $storage);
+        return $factory->createService('community', $credentials, $storage, [
+            ExternalConcreteService::SCOPE_OPENID,
+        ], $baseApiUrl);
     }
 
 }

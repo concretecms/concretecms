@@ -1,1 +1,1 @@
-﻿CKEDITOR.plugins.setLang("selectall","az",{toolbar:"Hamısını seç"});
+CKEDITOR.plugins.setLang("selectall","az",{toolbar:"Hamısını seç"});

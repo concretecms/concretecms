@@ -1,0 +1,51 @@
+<?xml version="1.0"?>
+<concrete5-cif version="1.0">
+    <tasks>
+        <task handle="production_status" package=""/>
+        <task handle="page_cache_report" package=""/>
+        <task handle="custom_javascript_report" package=""/>
+    </tasks>
+    <tasksets>
+        <taskset handle="site_health" name="Site Health" package="">
+            <task handle="production_status"/>
+            <task handle="page_cache_report"/>
+            <task handle="custom_javascript_report"/>
+        </taskset>
+    </tasksets>
+    <singlepages>
+        <page name="Site Health" path="/dashboard/reports/health" filename="/dashboard/reports/health.php" pagetype=""
+              description="" package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>health, check, site check, optimization</value>
+                </attributekey>
+            </attributes>
+        </page>
+        <page name="Report Details" path="/dashboard/reports/health/details" filename="/dashboard/reports/health/details.php" pagetype=""
+              description="" package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>page types</value>
+                </attributekey>
+                <attributekey handle="exclude_nav">
+                    <value><![CDATA[1]]></value>
+                </attributekey>
+            </attributes>
+        </page>
+        <page name="Site Health" path="/dashboard/welcome/health" filename="/dashboard/welcome/health.php" pagetype="" template=""
+              description="" package="">
+        </page>
+    </singlepages>
+
+    <blocktypes>
+        <blocktype handle="desktop_latest_health_result" package=""/>
+    </blocktypes>
+
+    <blocktypesets>
+        <blocktypeset handle="core_desktop" name="Desktop" package="">
+            <blocktype handle="desktop_latest_health_result"/>
+        </blocktypeset>
+    </blocktypesets>
+
+
+</concrete5-cif>

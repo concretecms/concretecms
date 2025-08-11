@@ -14,7 +14,7 @@ class ImageDataFieldData implements DataFieldDataInterface
      */
     protected $fID;
     
-    public function __construct(FileEntity $f = null)
+    public function __construct(?FileEntity $f = null)
     {
         if ($f) {
             $this->fID = $f->getFileID();
@@ -47,6 +47,7 @@ class ImageDataFieldData implements DataFieldDataInterface
         }
     }
     
+    #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
         return [

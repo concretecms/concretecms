@@ -1,1 +1,1 @@
-﻿CKEDITOR.plugins.setLang("save","gl",{toolbar:"Gardar"});
+CKEDITOR.plugins.setLang("save","gl",{toolbar:"Gardar"});

@@ -6,9 +6,45 @@ use Concrete\Core\Block\BlockController;
 use Concrete\Core\Feature\Features;
 use Concrete\Core\Feature\UsesFeatureInterface;
 use Concrete\Core\File\File;
+use Concrete\Core\File\Tracker\FileTrackableInterface;
 
-class Controller extends BlockController implements UsesFeatureInterface
+class Controller extends BlockController implements FileTrackableInterface, UsesFeatureInterface
 {
+    /**
+     * @var int|string|null
+     */
+    protected $webmfID;
+
+    /**
+     * @var int|string|null
+     */
+    protected $oggfID;
+
+    /**
+     * @var int|string|null
+     */
+    protected $posterfID;
+
+    /**
+     * @var int|string|null
+     */
+    protected $mp4fID;
+
+    /**
+     * @var int|string|null
+     */
+    protected $videoSize;
+
+    /**
+     * @var int|string|null
+     */
+    protected $width;
+
+    /**
+     * @var string|null
+     */
+    public $title;
+
     /**
      * @var int
      */
@@ -53,36 +89,6 @@ class Controller extends BlockController implements UsesFeatureInterface
      * @var string
      */
     protected $btWrapperClass = 'ccm-ui';
-
-    /**
-     * @var int|null
-     */
-    protected $mp4fID;
-
-    /**
-     * @var int|null
-     */
-    protected $webmfID;
-
-    /**
-     * @var int|null
-     */
-    protected $oggfID;
-
-    /**
-     * @var int|null
-     */
-    protected $posterfID;
-
-    /**
-     * @var int|null
-     */
-    protected $videoSize;
-
-    /**
-     * @var int|null
-     */
-    protected $width;
 
     /**
      * @var string[]
@@ -192,6 +198,7 @@ class Controller extends BlockController implements UsesFeatureInterface
             'posterfID' => 0,
             'width' => 0,
             'videoSize' => 0,
+            'title' => '',
         ];
         $args = [
             'webmfID' => max(0, (int) $data['webmfID']),
@@ -199,9 +206,9 @@ class Controller extends BlockController implements UsesFeatureInterface
             'mp4fID' => max(0, (int) $data['mp4fID']),
             'posterfID' => max(0, (int) $data['posterfID']),
             'videoSize' => max(0, (int) $data['videoSize']),
+            'title' =>  $data['title'],
         ];
         $args['width'] = $args['videoSize'] === 0 || $args['videoSize'] == 1 ? 0 : (int) $data['width'];
-
         parent::save($args);
     }
 
@@ -221,5 +228,22 @@ class Controller extends BlockController implements UsesFeatureInterface
         $this->set('mp4URL', ($mp4File === null || $mp4File->getApprovedVersion() === null) ? '' : $mp4File->getApprovedVersion()->getURL());
         $this->set('webmURL', ($webmFile === null || $webmFile->getApprovedVersion() === null) ? '' : $webmFile->getApprovedVersion()->getURL());
         $this->set('oggURL', ($oggFile === null || $oggFile->getApprovedVersion() === null) ? '' : $oggFile->getApprovedVersion()->getURL());
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\File\Tracker\FileTrackableInterface::getUsedFiles()
+     */
+    public function getUsedFiles()
+    {
+        $result = [];
+        foreach ($this->btExportFileColumns as $field) {
+            if (($fID = (int) $this->{$field}) !== 0) {
+                $result[] = $fID;
+            }
+        }
+
+        return $result;
     }
 }

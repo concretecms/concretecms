@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\Session\Storage\Handler;
 
+use Concrete\Core\Config\Repository\Repository;
 use SessionHandler;
 
 /**
@@ -48,7 +49,7 @@ class NativeFileSessionHandler extends SessionHandler
 
         try {
             if ($baseDir && !is_dir($baseDir)) {
-                mkdir($baseDir, 0777, true);
+                mkdir($baseDir, app(Repository::class)->get('concrete.filesystem.permissions.directory'), true);
             }
 
             ini_set('session.save_path', $savePath);

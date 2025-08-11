@@ -68,7 +68,7 @@ class PageCategory extends AbstractStandardCategory
                     'onDelete' => 'CASCADE',
                 ],
             ],
-            'index' => ['exclude_page_list', 'is_featured']
+            'index' => ['exclude_page_list', 'is_featured'],
         ];
     }
 
@@ -103,12 +103,10 @@ class PageCategory extends AbstractStandardCategory
      */
     public function getAttributeValues($page)
     {
-        $values = $this->getAttributeValueRepository()->findBy([
+        return $this->getAttributeValueRepository()->findBy([
             'cID' => $page->getCollectionID(),
             'cvID' => $page->getVersionID(),
         ]);
-
-        return $values;
     }
 
     /**
@@ -123,12 +121,13 @@ class PageCategory extends AbstractStandardCategory
      */
     public function getAttributeValue(Key $key, $page)
     {
-        $value = $this->getAttributeValueRepository()->findOneBy([
+        $cacheKey = sprintf('attribute/value/%s/page/%d/%d', $key->getAttributeKeyHandle(), $page->getCollectionID(), $page->getVersionID());
+        $parameters = [
             'cID' => $page->getCollectionID(),
             'cvID' => $page->getVersionID(),
             'attribute_key' => $key,
-        ]);
+        ];
 
-        return $value;
+        return $this->getAttributeValueEntity($cacheKey, $parameters);
     }
 }

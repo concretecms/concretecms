@@ -9,11 +9,11 @@ class DatetimeDataFieldData implements DataFieldDataInterface
 {
 
     /**
-     * @var DateTime
+     * @var DateTime | null
      */
     protected $dateTime;
     
-    public function __construct(DateTime $dateTime = null)
+    public function __construct(?DateTime $dateTime = null)
     {
         if ($dateTime) {
             $this->dateTime = $dateTime;
@@ -22,29 +22,39 @@ class DatetimeDataFieldData implements DataFieldDataInterface
 
     public function __toString()
     {
-        return (string) $this->dateTime->getTimestamp();
+        return ($this->dateTime !== null) ? (string) $this->dateTime->getTimestamp() : '';
     }
 
     /**
-     * @return DateTime
+     * @return DateTime|null
      */
     public function getDateTime()
     {
         return $this->dateTime;
     }
     
+    #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
+
+        if ($this->dateTime !== null) {
+            return [
+                'class' => self::class,
+                'timestamp' => (string) $this->dateTime->getTimestamp(),
+                'timezone' => (string) $this->dateTime->getTimezone()->getName()
+            ];
+        }
+
         return [
             'class' => self::class,
-            'timestamp' => (string) $this->dateTime->getTimestamp(),
-            'timezone' => (string) $this->dateTime->getTimezone()->getName()
+            'timestamp' => '',
+            'timezone' => ''
         ];
     }
     
     public function denormalize(DenormalizerInterface $denormalizer, $data, $format = null, array $context = [])
     {
-        if (isset($data['timestamp'])) {
+        if (!empty($data['timestamp'])) {
             $dateTime = new DateTime();
             $dateTime->setTimestamp($data['timestamp']);
             $dateTime->setTimezone(new DateTimeZone($data['timezone']));

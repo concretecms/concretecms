@@ -76,8 +76,8 @@ $token = \Core::make('token');
         </div>
     </fieldset>
     <div class="ccm-dashboard-form-actions-wrapper">
-        <div class="ccm-dashboard-form-actions">
-            <button class='btn btn-primary pull-right'><?php echo t('Save'); ?></button>
+        <div class="ccm-dashboard-form-actions clearfix">
+            <button class='btn btn-primary float-end'><?php echo t('Save'); ?></button>
         </div>
     </div>
 </form>

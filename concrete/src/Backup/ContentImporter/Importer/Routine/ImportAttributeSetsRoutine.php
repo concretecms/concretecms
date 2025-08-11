@@ -5,6 +5,7 @@ namespace Concrete\Core\Backup\ContentImporter\Importer\Routine;
 use Concrete\Core\Attribute\Category\CategoryService;
 use Concrete\Core\Attribute\SetFactory;
 use Concrete\Core\Support\Facade\Application;
+use Concrete\Core\Utility\Service\Xml;
 use SimpleXMLElement;
 
 class ImportAttributeSetsRoutine extends AbstractRoutine
@@ -28,6 +29,7 @@ class ImportAttributeSetsRoutine extends AbstractRoutine
     {
         if (isset($sx->attributesets)) {
             $app = Application::getFacadeApplication();
+            $xml = $app->make(Xml::class);
             $setFactory = $app->make(SetFactory::class);
             $categoryService = $app->make(CategoryService::class);
             foreach ($sx->attributesets->attributeset as $as) {
@@ -37,7 +39,7 @@ class ImportAttributeSetsRoutine extends AbstractRoutine
                 $manager = $controller->getSetManager();
                 if ($set === null) {
                     $pkg = static::getPackageObject($as['package']);
-                    $set = $manager->addSet((string) $as['handle'], (string) $as['name'], $pkg, $as['locked']);
+                    $set = $manager->addSet((string) $as['handle'], (string) $as['name'], $pkg, $xml->getBool($as['locked']));
                 }
                 foreach ($as->children() as $ask) {
                     $ak = $controller->getAttributeKeyByHandle((string) $ask['handle']);

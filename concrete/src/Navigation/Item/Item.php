@@ -129,6 +129,7 @@ class Item implements ItemInterface, \JsonSerializable
         $this->isActiveParent = $isActiveParent;
     }
 
+    #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
         return [

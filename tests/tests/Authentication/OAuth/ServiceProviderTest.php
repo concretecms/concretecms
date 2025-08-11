@@ -4,11 +4,12 @@ namespace Concrete\Tests\Authentication\OAuth;
 
 use Concrete\Core\Application\Application;
 use Concrete\Core\Authentication\Type\OAuth\ServiceProvider;
+use Concrete\Core\Routing\RoutingServiceProvider;
 use Concrete\TestHelpers\Authentication\OAuth\Fixture\ExtractorFixture;
 use Concrete\TestHelpers\Authentication\OAuth\Fixture\ServiceFixture;
-use OAuth\UserData\Extractor\ExtractorInterface;
-use OAuth\UserData\ExtractorFactoryInterface;
 use Concrete\Tests\TestCase;
+use OAuth\UserData\ExtractorFactoryInterface;
+use OAuth\UserData\Extractor\ExtractorInterface;
 
 class ServiceProviderTest extends TestCase
 {
@@ -16,6 +17,7 @@ class ServiceProviderTest extends TestCase
     {
         $app = new Application();
 
+        (new RoutingServiceProvider($app))->register();
         $provider = new ServiceProvider($app);
         $provider->register();
 

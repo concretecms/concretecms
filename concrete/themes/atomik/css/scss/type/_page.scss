@@ -9,12 +9,17 @@
   }
 
   // Let's add the same spacing even in edit mode.
+  // Actually, let's remove this as part of in-page container design styling updates in 9.2.0. We'll keep the
+  // code around in case we need to revisit but in-page styling is getting a significant amount of additional
+  // spacing in edit mode so this is probably no longer necessary and is excessive.
+  /*
   div[data-container=block] {
     > div.container {
       margin-top: 3rem;
       margin-bottom: 3rem;
     }
   }
+   */
 
 }
 

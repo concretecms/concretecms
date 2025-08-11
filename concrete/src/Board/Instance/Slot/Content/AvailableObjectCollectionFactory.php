@@ -2,7 +2,6 @@
 
 namespace Concrete\Core\Board\Instance\Slot\Content;
 
-use Concrete\Core\Board\Item\ItemProviderInterface;
 use Concrete\Core\Entity\Board\SlotTemplate;
 
 class AvailableObjectCollectionFactory
@@ -86,6 +85,7 @@ class AvailableObjectCollectionFactory
             $slots[$i] = $availableObjects;
         }
 
+        $collections = [];
         if ($contentSlots > 1) {
             $combinations = $this->generateCombinations($slots);
             foreach($combinations as $combination) {

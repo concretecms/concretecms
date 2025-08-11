@@ -1,0 +1,82 @@
+div.ccm-account-avatar-cropper {
+  .card-body {
+    align-items: center;
+    display: flex;
+    height: 400px;
+    padding: 0;
+    position: relative;
+    width: 100%;
+  }
+
+  div.ccm-account-avatar-cropper-drop {
+    cursor: pointer;
+    height: 100%;
+    position: absolute;
+    transition: all 0.1s linear;
+    width: 100%;
+    z-index: 100;
+
+    input[type=file] {
+      display: none;
+    }
+
+    &.ccm-account-avatar-crop-drop-hover,
+    &:hover {
+      background-color: rgba($primary, 0.1);
+    }
+  }
+
+  .ccm-account-avatar-cropper-focus {
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .ccm-account-avatar-cropper-icon {
+    height: 120px;
+    margin-left: auto;
+    margin-right: auto;
+    width: 120px;
+  }
+
+  .ccm-account-avatar-cropper-text {
+    color: $secondary;
+  }
+
+  .ccm-account-avatar-cropper-controls {
+    left: 20px;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+
+    a {
+      align-items: center;
+      background-color: rgba(0, 0, 0, 0.8);
+      cursor: pointer;
+      display: flex;
+      height: 40px;
+      margin-bottom: 10px;
+      text-align: center;
+      width: 40px;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+
+      &:hover {
+        background-color: $primary;
+      }
+
+      svg {
+        margin-left: auto;
+        margin-right: auto;
+      }
+    }
+  }
+
+  .ccm-account-avatar-cropper-save {
+    bottom: 20px;
+    left: 20px;
+    position: absolute;
+    right: 20px;
+  }
+}

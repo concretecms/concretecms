@@ -5,6 +5,9 @@ namespace Concrete\Core\Entity\User;
 use Concrete\Core\Notification\Subject\SubjectInterface;
 use Concrete\Core\User\Group\Group;
 use Concrete\Core\User\UserInfo;
+use DateTime;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -16,124 +19,116 @@ use Doctrine\ORM\Mapping as ORM;
 class GroupSignup implements SubjectInterface
 {
     /**
-     * @var int
      * @ORM\Id
      * @ORM\Column(type="integer", options={"unsigned":true})
      * @ORM\GeneratedValue(strategy="AUTO")
+     *
+     * @var int|null NULL if not yet flushed to the database
      */
     protected $id;
 
     /**
-     * @var int
      * @ORM\OneToMany(targetEntity="\Concrete\Core\Entity\Notification\GroupSignupNotification", mappedBy="signup", cascade={"remove"}),
+     *
+     * @var \Doctrine\Common\Collections\Collection
      */
     protected $notifications;
 
     /**
-     * @var int
      * @ORM\Column(type="integer", options={"unsigned":true})
+     *
+     * @var int
      */
     protected $gID;
 
     /**
-     * @var User
      * @ORM\ManyToOne(targetEntity="\Concrete\Core\Entity\User\User")
      * @ORM\JoinColumn(name="uID", referencedColumnName="uID", onDelete="SET NULL")
+     *
+     * @var \Concrete\Core\Entity\User\User|null
      */
     protected $user;
 
     /**
-     * @var \DateTime
      * @ORM\Column(type="datetime")
+     *
+     * @var \DateTime
      */
-    protected $requested = null;
+    protected $requested;
 
     /**
-     * GroupSignupRequest constructor.
-     * @param Group $group
-     * @param \Concrete\Core\User\User $user
-     * @throws \Exception
+     * @param \Concrete\Core\User\Group\Group|null $group
+     * @param \Concrete\Core\User\User|null $user
      */
     public function __construct($group = null, $user = null)
     {
+        $this->notifications = new ArrayCollection();
         if ($group instanceof Group) {
             $this->gID = $group->getGroupID();
         }
-
         if ($user instanceof \Concrete\Core\User\User) {
             if ($user->getUserInfoObject() instanceof UserInfo) {
                 $this->user = $user->getUserInfoObject()->getEntityObject();
             }
         }
-
-        $this->requested = new \DateTime();
+        $this->requested = new DateTime();
     }
 
     /**
-     * @return Group
+     * @return \Concrete\Core\User\Group\Group|null
      */
     public function getGroup()
     {
         return Group::getByID($this->getGID());
     }
 
-    /**
-     * @return int
-     */
     public function getGID(): int
     {
         return $this->gID;
     }
 
     /**
-     * @param int $gID
-     * @return GroupSignup
+     * @return $this
      */
-    public function setGID(int $gID): GroupSignup
+    public function setGID(int $gID): self
     {
         $this->gID = $gID;
+
         return $this;
     }
 
-    /**
-     * @return User
-     */
-    public function getUser(): User
+    public function getUser(): ?User
     {
         return $this->user;
     }
 
     /**
-     * @param User $user
-     * @return GroupSignup
+     * @return $this
      */
-    public function setUser(User $user): GroupSignup
+    public function setUser(User $user): self
     {
         $this->user = $user;
+
         return $this;
     }
 
-    /**
-     * @return \DateTime
-     */
-    public function getRequested(): \DateTime
+    public function getRequested(): DateTime
     {
         return $this->requested;
     }
 
     /**
-     * @param \DateTime $requested
-     * @return GroupSignup
+     * @return $this
      */
-    public function setRequested(\DateTime $requested): GroupSignup
+    public function setRequested(\DateTime $requested): self
     {
         $this->requested = $requested;
+
         return $this;
     }
 
-
     /**
-     * Get the date of this notification
+     * Get the date of this notification.
      *
      * @return \DateTime
      */
@@ -145,5 +140,13 @@ class GroupSignup implements SubjectInterface
     public function getUsersToExcludeFromNotification()
     {
         return [];
+    }
+
+    /**
+     * @return \Concrete\Core\Entity\Notification\GroupSignupNotification[]
+     */
+    public function getNotifications(): Collection
+    {
+        return $this->notifications;
     }
 }

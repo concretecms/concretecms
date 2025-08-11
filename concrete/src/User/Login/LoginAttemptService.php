@@ -162,7 +162,7 @@ class LoginAttemptService
      * @param \DateTime|null $before The date to prune before. This MUST be in UTC, if not passed this value is derived
      *                               from config
      */
-    public function pruneAttempts(DateTime $before = null)
+    public function pruneAttempts(?DateTime $before = null)
     {
         if (!$before) {
             $duration = (int) $this->config->get('concrete.user.deactivation.authentication_failure.duration');

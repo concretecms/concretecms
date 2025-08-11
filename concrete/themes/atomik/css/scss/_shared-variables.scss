@@ -101,6 +101,19 @@ $utilities-colors: map-merge(
 $utilities-text-colors: map-loop($utilities-colors, rgba-css-var, "$key", "text");
 $utilities-bg-colors: map-loop($utilities-colors, rgba-css-var, "$key", "bg");
 
+// https://github.com/concretecms/concretecms/issues/12587
+// Bootstrap 5.3 does not automatically generate the associated --bs-{color}-{type} CSS variables (like --bs-dark-accent-bg-subtle, --bs-dark-accent-text-emphasis, etc.) for custom colors.
+// Let's loop through them and create the various utility variables for all our custom colors.
+:root {
+    @each $name, $color in $custom-colors {
+        --bs-#{$name}: #{$color};
+        --bs-#{$name}-rgb: #{to-rgb($color)};
+        --bs-#{$name}-bg-subtle: #{tint-color($color, 90%)};
+        --bs-#{$name}-border-subtle: #{tint-color($color, 60%)};
+        --bs-#{$name}-text-emphasis: #{$color};
+    }
+}
+
 // Top Navigation Bar
 $navbar-nav-link-padding-x: 1.25rem;
 $dropdown-padding-y: 0;

@@ -14,7 +14,7 @@ class PageData implements DataInterface
      */
     protected $cID = 0;
 
-    public function __construct(Page $c = null)
+    public function __construct(?Page $c = null)
     {
         if ($c) {
             $this->cID = $c->getCollectionID();
@@ -37,7 +37,7 @@ class PageData implements DataInterface
         $this->cID = $cID;
     }
 
-
+    #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
         return ['cID' => $this->cID];

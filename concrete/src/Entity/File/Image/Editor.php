@@ -3,6 +3,10 @@
 namespace Concrete\Core\Entity\File\Image;
 
 use Concrete\Core\Entity\PackageTrait;
+use Concrete\Core\Filesystem\Element;
+use Concrete\Core\Filesystem\ElementManager;
+use Concrete\Core\ImageEditor\Controller\EditorControllerInterface;
+use Concrete\Core\ImageEditor\Manager;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -61,5 +65,28 @@ class Editor
         $this->handle = $handle;
         return $this;
     }
+
+    public function getController(): EditorControllerInterface
+    {
+        return app(Manager::class)->driver($this->getHandle());
+    }
+
+    public function getImageEditorElement(): ?Element
+    {
+        $handle = $this->getController()->getImageEditorHandle();
+        $elementManager = app(ElementManager::class);
+        $element = $elementManager->get('files/edit/image_editor/' . $handle, null, null, $this->getPackageHandle());
+        return $element;
+    }
+
+    public function getThumbnailEditorHandle(): ?Element
+    {
+        $handle = $this->getController()->getThumbnailEditorHandle();
+        $elementManager = app(ElementManager::class);
+        $element = $elementManager->get('files/edit/thumbnail_editor/' . $handle, null, null, $this->getPackageHandle());
+        return $element;
+    }
+
+
 
 }

@@ -6,6 +6,11 @@ use Concrete\Tests\TestCase;
 
 class EntityManagerClassLoaderTest extends TestCase
 {
+    /**
+     * @var \Concrete\Core\Application\Application
+     */
+    protected $app;
+
     public function setUp():void
     {
         parent::setUp();

@@ -25,6 +25,15 @@ class InstallerOptions
      */
     protected $autoAttachEnabled = false;
 
+    /**
+     * @var bool
+     */
+    protected $isConnectToMarketplaceEnabled = true;
+
+    /**
+     * @var bool
+     */
+    protected $deferInstallation = false;
 
     /**
      * Whether the user has accepted the privacy policy from the front-end installation
@@ -99,7 +108,33 @@ class InstallerOptions
         $this->filesystem = $filesystem;
     }
 
+    /**
+     * @return bool
+     */
+    public function isConnectToMarketplaceEnabled(): bool
+    {
+        return $this->isConnectToMarketplaceEnabled;
+    }
 
+    public function deferInstallation(): bool
+    {
+        return $this->deferInstallation;
+    }
+
+    public function setDeferInstallation(bool $deferInstallation): self
+    {
+        $this->deferInstallation = $deferInstallation;
+        return $this;
+    }
+
+    /**
+     * @param bool $isConnectToMarketplaceEnabled
+     */
+    public function setIsConnectToMarketplaceEnabled(bool $isConnectToMarketplaceEnabled): self
+    {
+        $this->isConnectToMarketplaceEnabled = $isConnectToMarketplaceEnabled;
+        return $this;
+    }
 
     /**
      * If the database already exists and is valid, lets just attach to it rather than installing over it?
@@ -251,7 +286,7 @@ class InstallerOptions
      */
     public function getSiteName()
     {
-        return $this->siteName;
+        return h($this->siteName);
     }
 
     /**

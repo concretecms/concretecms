@@ -121,13 +121,14 @@ class Template implements \JsonSerializable
         return $iconImg;
     }
 
+    #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
         return [
             'pTemplateID' => $this->getPageTemplateID(),
             'pTemplateHandle' => $this->getPageTemplateHandle(),
             'pTemplateName' => $this->getPageTemplateName(),
-            'pTemplateDisplayName' => $this->getPageTemplateDisplayName(),
+            'pTemplateDisplayName' => $this->getPageTemplateDisplayName('text'),
             'pTemplateIconImage' => $this->getPageTemplateIconImage(),
         ];
     }

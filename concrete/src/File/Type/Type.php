@@ -428,7 +428,7 @@ class Type
     public function supportsThumbnails()
     {
         $typeName = strtoupper($this->getName());
-        if ($typeName == 'PNG' || $typeName == 'JPEG'|| $typeName == 'GIF') {
+        if ($typeName == 'PNG' || $typeName == 'JPEG'|| $typeName == 'GIF' || $typeName == 'WEBP') {
             return true;
         }
     }

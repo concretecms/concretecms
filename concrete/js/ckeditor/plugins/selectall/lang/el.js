@@ -1,1 +1,1 @@
-﻿CKEDITOR.plugins.setLang("selectall","el",{toolbar:"Επιλογή όλων"});
+CKEDITOR.plugins.setLang("selectall","el",{toolbar:"Επιλογή όλων"});

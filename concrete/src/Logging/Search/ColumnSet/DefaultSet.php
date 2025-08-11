@@ -9,8 +9,10 @@ use Concrete\Core\Logging\Search\ColumnSet\Column\ChannelColumn;
 use Concrete\Core\Logging\Search\ColumnSet\Column\LevelColumn;
 use Concrete\Core\Logging\Search\ColumnSet\Column\LogIdentifierColumn;
 use Concrete\Core\Logging\Search\ColumnSet\Column\MessageColumn;
+use Concrete\Core\Logging\Search\ColumnSet\Column\PageColumn;
 use Concrete\Core\Logging\Search\ColumnSet\Column\TimeColumn;
 use Concrete\Core\Logging\Search\ColumnSet\Column\UserIdentifierColumn;
+use Concrete\Core\Page\Page;
 use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\User\UserInfo;
 use Concrete\Core\Utility\Service\Text as TextService;
@@ -41,13 +43,28 @@ class DefaultSet extends ColumnSet
      * @return string
      * @noinspection PhpUnused
      */
-    public static function getCollectionUser($logEntry)
+    public static function getUser($logEntry)
     {
         $user = $logEntry->getUser();
         if ($user instanceof UserInfo) {
-            return $logEntry->getUser()->getUserName();
+            return '<a href="' . \URL::to('/dashboard/users/search', 'edit', $logEntry->getUser()->getUserID()) . '">' . h($logEntry->getUser()->getUserName()) . '</a>';
         } else {
-            return "";
+            return t('None');
+        }
+    }
+
+        /**
+     * @param LogEntry $logEntry
+     * @return string
+     * @noinspection PhpUnused
+     */
+    public static function getPage($logEntry)
+    {
+        $page = $logEntry->getPage();
+        if ($page instanceof Page) {
+            return '<a href="' . (string) $page->getCollectionLink() . '">' . h($page->getCollectionName()) . '</a>';
+        } else {
+            return t('None');
         }
     }
 
@@ -56,7 +73,7 @@ class DefaultSet extends ColumnSet
      * @return string
      * @noinspection PhpUnused
      */
-    public function getCollectionLevel($logEntry)
+    public static function getCollectionLevel($logEntry)
     {
         return Levels::getLevelDisplayName($logEntry->getLevel());
     }
@@ -66,7 +83,7 @@ class DefaultSet extends ColumnSet
      * @return string
      * @throws \Illuminate\Contracts\Container\BindingResolutionException
      */
-    public function getFormattedMessage($logEntry)
+    public static function getFormattedMessage($logEntry)
     {
         $app = Application::getFacadeApplication();
         /** @var TextService $textHelper */
@@ -82,6 +99,7 @@ class DefaultSet extends ColumnSet
         $this->addColumn(new LevelColumn());
         $this->addColumn(new MessageColumn());
         $this->addColumn(new TimeColumn());
+        $this->addColumn(new PageColumn());
         $this->addColumn(new UserIdentifierColumn());
         $date = $this->getColumnByKey('l.logID');
         $this->setDefaultSortColumn($date, 'desc');

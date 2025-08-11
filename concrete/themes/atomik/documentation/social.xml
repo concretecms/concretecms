@@ -203,8 +203,7 @@
                         <company><![CDATA[Testimonial Company]]></company>
                         <companyURL><![CDATA[https://www.concretecms.com]]></companyURL>
                         <paragraph><![CDATA[This is the bio/quote. ]]></paragraph>
-                        <awardImageID>{ccm:export:file:atomik-documentation-image-wide-01.jpg}
-                        </awardImageID>
+                        <awardImageID>{ccm:export:file:atomik-documentation-image-wide-01.jpg}</awardImageID>
                     </record>
                 </data>
             </block>

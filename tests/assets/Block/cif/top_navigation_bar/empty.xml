@@ -1,0 +1,19 @@
+<block type="top_navigation_bar" name="">
+  <data table="btTopNavigationBar">
+    <record>
+      <brandingLogo null="true"></brandingLogo>
+      <brandingText></brandingText>
+      <brandingTransparentLogo null="true"></brandingTransparentLogo>
+      <ignorePermissions>0</ignorePermissions>
+      <includeBrandLogo>0</includeBrandLogo>
+      <includeBrandText>1</includeBrandText>
+      <includeNavigation>0</includeNavigation>
+      <includeNavigationDropdowns>0</includeNavigationDropdowns>
+      <includeSearchInput>0</includeSearchInput>
+      <includeStickyNav>0</includeStickyNav>
+      <includeSwitchLanguage>0</includeSwitchLanguage>
+      <includeTransparency>0</includeTransparency>
+      <searchInputFormActionPageID null="true"></searchInputFormActionPageID>
+    </record>
+  </data>
+</block>

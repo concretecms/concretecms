@@ -1,0 +1,23 @@
+<block type="youtube" name="">
+  <data table="btYouTube">
+    <record>
+      <autoplay>1</autoplay>
+      <color>white</color>
+      <controls>0</controls>
+      <iv_load_policy>3</iv_load_policy>
+      <lazyLoad>0</lazyLoad>
+      <loopEnd>1</loopEnd>
+      <modestbranding>0</modestbranding>
+      <noCookie>0</noCookie>
+      <rel>1</rel>
+      <showCaptions>1</showCaptions>
+      <sizing>fixed</sizing>
+      <startTime>123s</startTime>
+      <startTimeEnabled>1</startTimeEnabled>
+      <title>Fruit Joy</title>
+      <vHeight>345</vHeight>
+      <vWidth>654</vWidth>
+      <videoURL>https://www.youtube.com/watch?v=H5dpBWlRANE</videoURL>
+    </record>
+  </data>
+</block>

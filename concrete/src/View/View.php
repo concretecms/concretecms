@@ -10,6 +10,7 @@ use Concrete\Core\Page\Theme\ThemeRouteCollection;
 use Concrete\Core\Page\View\Preview\SkinCustomizerPreviewRequest;
 use Concrete\Core\Site\Service;
 use Concrete\Core\StyleCustomizer\Skin\SkinInterface;
+use Concrete\Core\StyleCustomizer\Skin\Stylesheet\Stylesheet;
 use Environment;
 use Events;
 use Concrete\Core\Support\Facade\Facade;
@@ -35,7 +36,7 @@ class View extends AbstractView
 
     protected function constructView($path = false)
     {
-        $path = '/'.trim($path, '/');
+        $path = '/' . trim((string) $path, '/');
         $this->viewPath = $path;
     }
 
@@ -143,6 +144,16 @@ class View extends AbstractView
         return $ret;
     }
 
+    /**
+     * Fix https://github.com/concretecms/concretecms/issues/11283
+     *
+     * @return bool
+     */
+    public function isEditingDisabled(): bool
+    {
+        return false;
+    }
+
     public function setViewTheme($theme)
     {
         if (is_object($theme)) {
@@ -196,11 +207,11 @@ class View extends AbstractView
             switch ($this->themeHandle) {
                 case VIEW_CORE_THEME:
                     $this->themeObject = new \Concrete\Theme\Concrete\PageTheme();
-                    $this->pkgHandle = false;
+                    $this->themePkgHandle = false;
                     break;
                 case 'dashboard':
                     $this->themeObject = new \Concrete\Theme\Dashboard\PageTheme();
-                    $this->pkgHandle = false;
+                    $this->themePkgHandle = false;
                     break;
                 default:
                     if (!isset($this->themeObject)) {
@@ -233,8 +244,21 @@ class View extends AbstractView
         // programmatically we already have a theme.
         $this->loadViewThemeObject();
         $env = Environment::get();
-        if (!$this->innerContentFile) { // will already be set in a legacy tools file
-            $this->setInnerContentFile($env->getPath($this->viewRootDirectoryName.'/'.trim($this->viewPath, '/').'.php', $this->viewPkgHandle));
+        if (!$this->innerContentFile) {
+            $innerContentFilePath = null;
+            // This modification allows us to have things like views/oauth/authorize.php within our packages/whatever_theme
+            // And override the core with it. This should _already_ work because of themeroutecollection but it wasn't
+            // being checked properly.
+            if (!isset($this->viewPkgHandle) && !empty($this->themePkgHandle)) {
+                $this->viewPkgHandle = $this->themePkgHandle;
+            }
+            $themeRec = $env->getRecord($this->viewRootDirectoryName.'/'.trim($this->viewPath, '/').'.php', $this->viewPkgHandle);
+            if ($themeRec->exists()) {
+                $innerContentFilePath = $themeRec->file;
+            } else {
+                $innerContentFilePath = $env->getPath($this->viewRootDirectoryName.'/'.trim($this->viewPath, '/').'.php');
+            }
+            $this->setInnerContentFile($innerContentFilePath);
         }
         if ($this->themeHandle) {
             if (is_object($this->controller)) {
@@ -274,7 +298,7 @@ class View extends AbstractView
         }
 
         // Render the template around it
-        if (file_exists($this->template)) {
+        if ($this->template != '' && file_exists($this->template)) {
             $contents = $this->renderTemplate($scopeItems, $contents);
         }
 
@@ -474,7 +498,7 @@ class View extends AbstractView
         }
         $skin = $this->themeObject->getSkinByIdentifier($skinIdentifier);
         $stylesheet = $skin->getStylesheet();
-        return $stylesheet;
+        return $stylesheet->getElement();
     }
 
 

@@ -32,7 +32,7 @@ class LevelField extends AbstractField
      */
     public function filterList(ItemList $list)
     {
-        $list->filter('level', $this->getData('level'));
+        $list->filterByLevels($this->normalizeArray($this->getData('level')));
     }
 
     public function renderSearchField()
@@ -44,7 +44,19 @@ class LevelField extends AbstractField
         foreach (Monolog::getLevels() as $level) {
             $levels[$level] = Levels::getLevelDisplayName($level);
         }
-        return $form->selectMultiple('level[]', $levels, $this->getData('level'));
+        return $form->selectMultiple('level[]', $levels, $this->normalizeArray($this->getData('level')));
+    }
+
+    private function normalizeArray($data)
+    {
+        if (is_array($data) && is_array($data[0])) {
+            $result = [];
+            foreach ($data as $array) {
+                $result = array_merge($result, $array);
+            }
+            return $result;
+        }
+        return $data;
     }
 }
 

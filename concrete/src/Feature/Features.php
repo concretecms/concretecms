@@ -134,6 +134,11 @@ class Features
     const SEARCH = 'search';
 
     /**
+     * Accessory feature: support for the staging bar when a site is in staging mode
+     */
+    const STAGING = 'staging';
+
+    /**
      * Accessory feature: support for maps
      */
     const MAPS = 'maps';

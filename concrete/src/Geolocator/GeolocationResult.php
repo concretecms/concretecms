@@ -147,7 +147,7 @@ class GeolocationResult implements JsonSerializable
      * @param string $message the error message
      * @param Exception|null $innerException the underlying exception causing the error (if available)
      */
-    public function setError($code, $message = '', Exception $innerException = null)
+    public function setError($code, $message = '', ?Exception $innerException = null)
     {
         if ($code == static::ERR_NONE && !$message && $innerException === null) {
             $this->errorCode = static::ERR_NONE;
@@ -489,6 +489,7 @@ class GeolocationResult implements JsonSerializable
      *
      * @see JsonSerializable::jsonSerialize()
      */
+    #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
         return [

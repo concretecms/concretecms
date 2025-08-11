@@ -14,7 +14,7 @@ class ExpressEntryDataFieldData implements DataFieldDataInterface
      */
     protected $entry;
     
-    public function __construct(Entry $entry = null)
+    public function __construct(?Entry $entry = null)
     {
         if ($entry !== null) {
             $this->entry = $entry;
@@ -31,6 +31,7 @@ class ExpressEntryDataFieldData implements DataFieldDataInterface
         return (string) $this->entry->getLabel();
     }
     
+    #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
         return [

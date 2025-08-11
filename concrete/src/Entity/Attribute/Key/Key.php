@@ -22,7 +22,10 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(
  *     name="AttributeKeys",
  *     indexes={
- *     @ORM\Index(name="pkgID", columns={"pkgID"})
+ *     @ORM\Index(name="pkgID", columns={"pkgID"}),
+ *     @ORM\Index(name="akHandle", columns={"akHandle"}),
+ *     @ORM\Index(name="akIsSearchable", columns={"akIsSearchable"}),
+ *     @ORM\Index(name="akIsInternal", columns={"akIsInternal"})
  *     }
  * )
  */
@@ -330,6 +333,7 @@ class Key implements AttributeKeyInterface, ExportableInterface, ControlInterfac
         return array();
     }
 
+    #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
         return [

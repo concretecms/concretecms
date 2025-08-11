@@ -17,6 +17,16 @@ use Illuminate\Filesystem\Filesystem;
  */
 class SiteTranslationLoaderTest extends LocalizationTestsBase
 {
+    /**
+     * @var \Concrete\Core\Localization\Translator\TranslatorAdapterFactoryInterface
+     */
+    protected $adapter;
+
+    /**
+     * @var \Concrete\Core\Localization\Translator\Translation\TranslationLoaderInterface
+     */
+    protected $loader;
+
     public static function setUpBeforeClass():void
     {
         parent::setUpBeforeClass();

@@ -1,15 +1,18 @@
-<?php defined('C5_EXECUTE') or die("Access Denied.");
+<?php defined('C5_EXECUTE') or die("Access Denied."); ?>
 
+<div class="ccm-form-block-design">
+
+<?php
 $set = $b->getCustomStyle();
 $btHandle = $b->getBlockTypeHandle();
-if ($btHandle == BLOCK_HANDLE_SCRAPBOOK_PROXY) {
+if ($btHandle === BLOCK_HANDLE_SCRAPBOOK_PROXY) {
     $bx = Block::getByID($b->getController()->getOriginalBlockID());
     if (is_object($bx)) {
         $btHandle = $bx->getBlockTypeHandle();
     }
 }
 if (is_object($set) && isset($styleHeader)) { ?>
-    ?>
+    
     <script type="text/javascript">
         $('head').append('<style type="text/css"><?=addslashes($styleHeader)?></style>');
     </script>
@@ -20,10 +23,7 @@ if (is_object($set) && isset($styleHeader)) { ?>
 $pt = $c->getCollectionThemeObject();
 
 $blockClasses = $pt->getThemeBlockClasses();
-$customClasses = array();
-if (isset($blockClasses[$btHandle])) {
-    $customClasses = $blockClasses[$btHandle];
-}
+$customClasses = $blockClasses[$btHandle] ?? [];
 
 if (isset($blockClasses['*'])) {
     $customClasses = array_unique(array_merge($customClasses, $blockClasses['*']));
@@ -42,6 +42,7 @@ $gf = $pt->getThemeGridFrameworkObject();
 
 if (Config::get('concrete.design.enable_custom')) {
     Loader::element('custom_style', array(
+        'page' => $c,
         'saveAction' => $controller->action('submit'),
         'resetAction' => $controller->action('reset'),
         'style' => $b->getCustomStyle(true),
@@ -57,6 +58,7 @@ if (Config::get('concrete.design.enable_custom')) {
 }
 else {
     Loader::element('custom_block_template', array(
+        'page' => $c,
         'saveAction' => $controller->action('submit'),
         'resetAction' => $controller->action('reset'),
         'style' => $b->getCustomStyle(true),
@@ -68,3 +70,7 @@ else {
 
 $pt->registerAssets();
 $bv->render('view');
+
+?>
+
+</div>

@@ -27,7 +27,7 @@
        value="<?= isset($miniSurveyInfo['questionSetId']) ? (int) ($miniSurveyInfo['questionSetId']) : 0 ?>"/>
 <input type="hidden" id="msqID" name="msqID" value="<?= isset($msqID) ? (int) $msqID : 0 ?>"/>
 <div class="tab-content">
-    <div class="tab-pane<?= $addSelected ? ' show active' : '' ?>" id="form-add" role="tabpanel">
+    <div class="tab-pane<?= $addSelected ? ' active' : '' ?>" id="form-add" role="tabpanel">
         <fieldset id="newQuestionBox">
             <legend><?php echo t('New Question') ?></legend>
 

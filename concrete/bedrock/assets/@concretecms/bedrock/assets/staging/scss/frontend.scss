@@ -1,0 +1,4 @@
+// This is an entry point so it just includes the partial that includes everything else.
+// That way if we want to include full support in our theme we just include the partial (rather
+// than including the entry point because I think it's bad practice.)
+@import 'frontend/frontend';

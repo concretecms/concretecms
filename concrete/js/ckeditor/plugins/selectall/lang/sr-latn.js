@@ -1,1 +1,1 @@
-﻿CKEDITOR.plugins.setLang("selectall","sr-latn",{toolbar:"Označi sve"});
+CKEDITOR.plugins.setLang("selectall","sr-latn",{toolbar:"Označi sve"});

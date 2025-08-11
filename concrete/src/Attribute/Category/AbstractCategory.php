@@ -88,23 +88,23 @@ abstract class AbstractCategory implements CategoryInterface, StandardSearchInde
      */
     public function getSearchIndexer()
     {
-        $indexer = $this->application->make(StandardSearchIndexer::class);
-
-        return $indexer;
+        return $this->application->make(StandardSearchIndexer::class);
     }
 
     /**
      * {@inheritdoc}
      *
-     * @see \Concrete\Core\Attribute\Category\CategoryInterface::getList()
-     *
      * @return \Concrete\Core\Entity\Attribute\Key\Key[]
+     *
+     * @see \Concrete\Core\Attribute\Category\CategoryInterface::getList()
      */
     public function getList()
     {
-        return $this->getAttributeKeyRepository()->findBy([
-            'akIsInternal' => false,
-        ]);
+        return $this->getAttributeKeyRepository()->findBy(
+            [
+                'akIsInternal' => false,
+            ]
+        );
     }
 
     /**
@@ -114,9 +114,11 @@ abstract class AbstractCategory implements CategoryInterface, StandardSearchInde
      */
     public function getSearchableList()
     {
-        return $this->getAttributeKeyRepository()->findBy([
-            'akIsSearchable' => true,
-        ]);
+        return $this->getAttributeKeyRepository()->findBy(
+            [
+                'akIsSearchable' => true,
+            ]
+        );
     }
 
     /**
@@ -126,55 +128,73 @@ abstract class AbstractCategory implements CategoryInterface, StandardSearchInde
      */
     public function getSearchableIndexedList()
     {
-        return $this->getAttributeKeyRepository()->findBy([
-            'akIsSearchableIndexed' => true,
-        ]);
+        return $this->getAttributeKeyRepository()->findBy(
+            [
+                'akIsSearchableIndexed' => true,
+            ]
+        );
+    }
+
+    public function getCacheNamespace()
+    {
+        $class = substr(get_class($this), strrpos(get_class($this), '\\') + 1);
+        $category = strtolower(substr($class, 0, strpos($class, 'Category')));
+
+        return '/attribute/' . $category;
     }
 
     /**
      * {@inheritdoc}
      *
-     * @see \Concrete\Core\Attribute\Category\CategoryInterface::getAttributeKeyByHandle()
-     *
      * @return \Concrete\Core\Entity\Attribute\Key\Key|null
+     *
+     * @see \Concrete\Core\Attribute\Category\CategoryInterface::getAttributeKeyByHandle()
      */
     public function getAttributeKeyByHandle($handle)
     {
         $cache = $this->application->make('cache/request');
-        $class = substr(get_class($this), strrpos(get_class($this), '\\') + 1);
-        $category = strtolower(substr($class, 0, strpos($class, 'Category')));
-        $item = $cache->getItem(sprintf('/attribute/%s/handle/%s', $category, $handle));
+        $cacheKey = $this->getCacheNamespace() . '/handle/' . $handle;
+        $item = $cache->getItem($cacheKey);
         if (!$item->isMiss()) {
             $key = $item->get();
         } else {
-            $key = $this->getAttributeKeyRepository()->findOneBy([
-                'akHandle' => $handle,
-            ]);
+            $item->lock();
+            $key = $this->getAttributeKeyByHandleUncached($handle);
             $cache->save($item->set($key));
         }
 
         return $key;
     }
 
+    public function getAttributeKeyByHandleUncached($handle)
+    {
+        return $this->getAttributeKeyRepository()->findOneBy(
+            [
+                'akHandle' => $handle,
+            ]
+        );
+    }
+
     /**
      * {@inheritdoc}
      *
-     * @see \Concrete\Core\Attribute\Category\CategoryInterface::getAttributeKeyByID()
-     *
      * @return \Concrete\Core\Entity\Attribute\Key\Key|null
+     *
+     * @see \Concrete\Core\Attribute\Category\CategoryInterface::getAttributeKeyByID()
      */
     public function getAttributeKeyByID($akID)
     {
         $cache = $this->application->make('cache/request');
-        $class = substr(get_class($this), strrpos(get_class($this), '\\') + 1);
-        $category = strtolower(substr($class, 0, strpos($class, 'Category')));
-        $item = $cache->getItem(sprintf('/attribute/%s/id/%s', $category, $akID));
+        $cacheKey = $this->getCacheNamespace() . '/id/' . $akID;
+        $item = $cache->getItem($cacheKey);
         if (!$item->isMiss()) {
             $key = $item->get();
         } else {
-            $key = $this->getAttributeKeyRepository()->findOneBy([
-                'akID' => $akID,
-            ]);
+            $key = $this->getAttributeKeyRepository()->findOneBy(
+                [
+                    'akID' => $akID,
+                ]
+            );
             $cache->save($item->set($key));
         }
 
@@ -209,7 +229,7 @@ abstract class AbstractCategory implements CategoryInterface, StandardSearchInde
     {
         if (is_string($type)) {
             $typeFactory = $this->application->make(TypeFactory::class);
-            /* @var TypeFactory $typeFactory */
+            // @var TypeFactory $typeFactory
             $type = $typeFactory->getByHandle($type);
         }
 
@@ -259,7 +279,7 @@ abstract class AbstractCategory implements CategoryInterface, StandardSearchInde
         $this->entityManager->persist($key);
         $this->entityManager->flush();
 
-        /* legacy support, attribute set */
+        // legacy support, attribute set
 
         if ($asID) {
             $manager = $this->getSetManager();
@@ -276,9 +296,9 @@ abstract class AbstractCategory implements CategoryInterface, StandardSearchInde
     /**
      * {@inheritdoc}
      *
-     * @see \Concrete\Core\Attribute\Category\CategoryInterface::addFromRequest()
-     *
      * @return \Concrete\Core\Entity\Attribute\Key\Key
+     *
+     * @see \Concrete\Core\Attribute\Category\CategoryInterface::addFromRequest()
      */
     public function addFromRequest(AttributeType $type, Request $request)
     {
@@ -309,7 +329,7 @@ abstract class AbstractCategory implements CategoryInterface, StandardSearchInde
      *
      * @return \Concrete\Core\Entity\Attribute\Key\Key
      */
-    public function import(AttributeType $type, SimpleXMLElement $element, Package $package = null)
+    public function import(AttributeType $type, SimpleXMLElement $element, ?Package $package = null)
     {
         $key = $this->createAttributeKey();
         $loader = $this->getImportLoader();
@@ -397,7 +417,7 @@ abstract class AbstractCategory implements CategoryInterface, StandardSearchInde
      */
     public function deleteValue(AttributeValueInterface $attributeValue)
     {
-        /* @var \Concrete\Core\Entity\Attribute\Value\AbstractValue $attributeValue */
+        // @var \Concrete\Core\Entity\Attribute\Value\AbstractValue $attributeValue
 
         $genericValue = $attributeValue->getGenericValue();
         if ($genericValue !== null) {

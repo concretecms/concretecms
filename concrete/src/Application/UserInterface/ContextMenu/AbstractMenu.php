@@ -28,6 +28,7 @@ abstract class AbstractMenu implements ModifiableMenuInterface
         $this->items->add($item);
     }
 
+    #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
         $html = (string) $this->getMenuElement();

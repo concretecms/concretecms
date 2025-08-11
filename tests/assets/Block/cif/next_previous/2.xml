@@ -1,0 +1,11 @@
+<block type="next_previous" name="">
+  <data table="btNextPrevious">
+    <record>
+      <loopSequence>1</loopSequence>
+      <nextLabel>Go ahead</nextLabel>
+      <orderBy>display_desc</orderBy>
+      <parentLabel>Jump</parentLabel>
+      <previousLabel>Come Back</previousLabel>
+    </record>
+  </data>
+</block>

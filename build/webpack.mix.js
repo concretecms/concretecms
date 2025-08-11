@@ -2,7 +2,15 @@
  * Import and configure laravel mix.
  */
 let mix = require('laravel-mix');
+const path = require('path');
+const fs = require('fs');
+
+mix.override((config) => {
+    delete config.watchOptions;
+});
+
 mix.webpackConfig({
+    cache: false,
     resolve: {
         symlinks: false
     },
@@ -12,6 +20,8 @@ mix.webpackConfig({
         vue: 'Vue',
         moment: 'moment'
     },
+    // NOTE: This doesn't work with Laravel Mix 6 so I'm commenting it out for now. Someone more versed in this
+    // will have to fix this if it's still required.
     // Override the default js compile settings to replace exclude with something that doesn't exclude node_modules.
     // @see node_modules/laravel-mix/src/components/JavaScript.js for the original
     module: {
@@ -54,7 +64,17 @@ mix.copy('node_modules/@fortawesome/fontawesome-free/webfonts', '../concrete/css
 mix.copy('node_modules/@fortawesome/fontawesome-free/css/all.css', '../concrete/css/fontawesome/all.css');
 mix.copy('node_modules/bootstrap/dist/js/bootstrap.bundle.min.js', '../concrete/js/bootstrap.js');
 mix.copy('node_modules/bootstrap/dist/js/bootstrap.bundle.min.js.map', '../concrete/js/bootstrap.bundle.min.js.map');
-mix.copy('node_modules/ckeditor4', '../concrete/js/ckeditor');
+mix.copy('node_modules/ckeditor4/adapters', '../concrete/js/ckeditor/adapters');
+mix.copy('node_modules/ckeditor4/ckeditor.js', '../concrete/js/ckeditor/ckeditor.js');
+mix.copy('node_modules/ckeditor4/config.js', '../concrete/js/ckeditor/config.js');
+mix.copy('node_modules/ckeditor4/contents.css', '../concrete/js/ckeditor/contents.css');
+mix.copy('node_modules/ckeditor4/lang', '../concrete/js/ckeditor/lang');
+mix.copy('node_modules/ckeditor4/plugins', '../concrete/js/ckeditor/plugins');
+mix.copy('node_modules/ckeditor4/skins', '../concrete/js/ckeditor/skins');
+mix.copy('node_modules/ckeditor4/styles.js', '../concrete/js/ckeditor/styles.js');
+mix.copy('node_modules/ckeditor4/vendor', '../concrete/js/ckeditor/vendor');
+
+
 mix.copy('node_modules/ace-builds/src-min', '../concrete/js/ace');
 
 // Copy Bedrock assets so that themes can include them for style customization, etc...
@@ -82,6 +102,7 @@ if (mix.inProduction()) {
     mix.copy('node_modules/@concretecms/bedrock/assets/imagery/scss', '../concrete/bedrock/assets/@concretecms/bedrock/assets/imagery/scss');
     mix.copy('node_modules/@concretecms/bedrock/assets/maps/scss', '../concrete/bedrock/assets/@concretecms/bedrock/assets/maps/scss');
     mix.copy('node_modules/@concretecms/bedrock/assets/multilingual/scss', '../concrete/bedrock/assets/@concretecms/bedrock/assets/multilingual/scss');
+    mix.copy('node_modules/@concretecms/bedrock/assets/staging/scss', '../concrete/bedrock/assets/@concretecms/bedrock/assets/staging/scss');
     mix.copy('node_modules/@concretecms/bedrock/assets/navigation/scss', '../concrete/bedrock/assets/@concretecms/bedrock/assets/navigation/scss');
     mix.copy('node_modules/@concretecms/bedrock/assets/polls/scss', '../concrete/bedrock/assets/@concretecms/bedrock/assets/polls/scss');
     mix.copy('node_modules/@concretecms/bedrock/assets/profile/scss', '../concrete/bedrock/assets/@concretecms/bedrock/assets/profile/scss');
@@ -98,18 +119,22 @@ if (mix.inProduction()) {
 
     // Fullcalendar
     mix.copy('node_modules/fullcalendar/dist', '../concrete/bedrock/assets/fullcalendar/dist');
+
+    // Moment JS
+    mix.copy('node_modules/moment/min/moment.min.js', '../concrete/js/moment.js');
+    mix.copy('node_modules/moment/min/moment.min.js.map', '../concrete/js/moment.min.js.map');
 }
 
-/**
- * Build shared assets
- */
+// Build shared assets
 // Fullcalendar
 mix
     .copy('node_modules/fullcalendar/dist/fullcalendar.min.css', '../concrete/css/fullcalendar.css')
     .js('node_modules/@concretecms/bedrock/assets/calendar/js/vendor/fullcalendar.js', 'js/fullcalendar.js');
 
+
 // CKEditor
 mix
+    .copy('node_modules/@concretecms/bedrock/assets/ckeditor/js/concrete/concretestyles/icons/snippet.png', '../concrete/js/ckeditor/plugins/concretestyles/icons/snippet.png')
     .sass('node_modules/@concretecms/bedrock/assets/ckeditor/scss/concrete.scss', 'css/ckeditor/concrete.css', {
         sassOptions: {
             includePaths: [
@@ -118,6 +143,8 @@ mix
         }
     })
     .js('node_modules/@concretecms/bedrock/assets/ckeditor/js/concrete.js', 'js/ckeditor/concrete.js');
+
+
 
 // TUI Image Editor
 mix
@@ -130,19 +157,16 @@ mix
         }
     });
 
+
 // Version Compare
 mix.sass('assets/htmldiff.scss', '../concrete/css/htmldiff.css');
 
-/**
- * Build Block Components
- */
-mix.js('assets/blocks/gallery/gallery.js', '../concrete/blocks/gallery/auto.js');
-mix.js('assets/blocks/accordion/accordion.js', '../concrete/blocks/accordion/auto.js');
+// Block components
+mix.js('assets/blocks/gallery/gallery.js', '../concrete/blocks/gallery/auto.js').vue()
+mix.js('assets/blocks/accordion/accordion.js', '../concrete/blocks/accordion/auto.js').vue()
 
 
-/**
- * Build accessory Features
- */
+// Accessory Features
 mix
     .sass('node_modules/@concretecms/bedrock/assets/accordions/scss/frontend.scss', 'css/features/accordions/frontend.css', {
         sassOptions: {
@@ -151,7 +175,7 @@ mix
             ]
         }
     })
-    .js('node_modules/@concretecms/bedrock/assets/accordions/js/frontend.js', 'js/features/accordions/frontend.js');
+    .js('node_modules/@concretecms/bedrock/assets/accordions/js/frontend.js', 'js/features/accordions/frontend.js').vue()
 
 mix
     .sass('node_modules/@concretecms/bedrock/assets/account/scss/frontend.scss', 'css/features/account/frontend.css', {
@@ -161,7 +185,7 @@ mix
             ]
         }
     })
-    .js('node_modules/@concretecms/bedrock/assets/account/js/frontend.js', 'js/features/account/frontend.js');
+    .js('node_modules/@concretecms/bedrock/assets/account/js/frontend.js', 'js/features/account/frontend.js').vue()
 
 mix
     .sass('node_modules/@concretecms/bedrock/assets/profile/scss/frontend.scss', 'css/features/profile/frontend.css', {
@@ -179,8 +203,7 @@ mix
             ]
         }
     })
-    .js('node_modules/@concretecms/bedrock/assets/desktop/js/frontend.js', 'js/features/desktop/frontend.js');
-
+    .js('node_modules/@concretecms/bedrock/assets/desktop/js/frontend.js', 'js/features/desktop/frontend.js').vue()
 
 
 mix
@@ -191,10 +214,10 @@ mix
             ]
         }
     })
-    .js('node_modules/@concretecms/bedrock/assets/boards/js/frontend.js', 'js/features/boards/frontend.js');
+    .js('node_modules/@concretecms/bedrock/assets/boards/js/frontend.js', 'js/features/boards/frontend.js').vue()
 
 mix
-    .js('node_modules/@concretecms/bedrock/assets/navigation/js/frontend.js', 'js/features/navigation/frontend.js')
+    .js('node_modules/@concretecms/bedrock/assets/navigation/js/frontend.js', 'js/features/navigation/frontend.js').vue()
     .sass('node_modules/@concretecms/bedrock/assets/navigation/scss/frontend.scss', 'css/features/navigation/frontend.css', {
         sassOptions: {
             includePaths: [
@@ -222,6 +245,9 @@ mix
     })
 
 mix
+    .js('node_modules/@concretecms/bedrock/assets/forms/js/frontend.js', 'js/features/forms/frontend.js').vue()
+
+mix
     .sass('node_modules/@concretecms/bedrock/assets/imagery/scss/frontend.scss', 'css/features/imagery/frontend.css', {
         sassOptions: {
             includePaths: [
@@ -229,7 +255,7 @@ mix
             ]
         }
     })
-    .js('node_modules/@concretecms/bedrock/assets/imagery/js/frontend.js', 'js/features/imagery/frontend.js');
+    .js('node_modules/@concretecms/bedrock/assets/imagery/js/frontend.js', 'js/features/imagery/frontend.js').vue()
 
 mix
     .sass('node_modules/@concretecms/bedrock/assets/calendar/scss/frontend.scss', 'css/features/calendar/frontend.css', {
@@ -239,7 +265,7 @@ mix
             ]
         }
     })
-    .js('node_modules/@concretecms/bedrock/assets/calendar/js/frontend.js', 'js/features/calendar/frontend.js');
+    .js('node_modules/@concretecms/bedrock/assets/calendar/js/frontend.js', 'js/features/calendar/frontend.js').vue()
 
 mix
     .sass('node_modules/@concretecms/bedrock/assets/conversations/scss/frontend.scss', 'css/features/conversations/frontend.css', {
@@ -249,7 +275,7 @@ mix
             ]
         }
     })
-    .js('node_modules/@concretecms/bedrock/assets/conversations/js/frontend.js', 'js/features/conversations/frontend.js');
+    .js('node_modules/@concretecms/bedrock/assets/conversations/js/frontend.js', 'js/features/conversations/frontend.js').vue()
 
 mix
     .sass('node_modules/@concretecms/bedrock/assets/documents/scss/frontend.scss', 'css/features/documents/frontend.css', {
@@ -259,7 +285,8 @@ mix
             ]
         }
     })
-    .js('node_modules/@concretecms/bedrock/assets/documents/js/frontend.js', 'js/features/documents/frontend.js');
+    .js('node_modules/@concretecms/bedrock/assets/documents/js/frontend.js', 'js/features/documents/frontend.js').vue()
+
 
 mix
     .sass('node_modules/@concretecms/bedrock/assets/basics/scss/frontend.scss', 'css/features/basics/frontend.css', {
@@ -296,11 +323,20 @@ mix
             ]
         }
     })
-    .js('node_modules/@concretecms/bedrock/assets/express/js/frontend.js', 'js/features/express/frontend.js');
+    .js('node_modules/@concretecms/bedrock/assets/express/js/frontend.js', 'js/features/express/frontend.js').vue()
 
 mix
-    .js('node_modules/@concretecms/bedrock/assets/multilingual/js/frontend.js', 'js/features/multilingual/frontend.js')
+    .js('node_modules/@concretecms/bedrock/assets/multilingual/js/frontend.js', 'js/features/multilingual/frontend.js').vue()
     .sass('node_modules/@concretecms/bedrock/assets/multilingual/scss/frontend.scss', 'css/features/multilingual/frontend.css', {
+        sassOptions: {
+            includePaths: [
+                path.resolve(__dirname, './node_modules/')
+            ]
+        }
+    });
+
+mix
+    .sass('node_modules/@concretecms/bedrock/assets/staging/scss/frontend.scss', 'css/features/staging/frontend.css', {
         sassOptions: {
             includePaths: [
                 path.resolve(__dirname, './node_modules/')
@@ -316,7 +352,7 @@ mix
             ]
         }
     })
-    .js('node_modules/@concretecms/bedrock/assets/maps/js/frontend.js', 'js/features/maps/frontend.js');
+    .js('node_modules/@concretecms/bedrock/assets/maps/js/frontend.js', 'js/features/maps/frontend.js').vue()
 
 mix
     .sass('node_modules/@concretecms/bedrock/assets/testimonials/scss/frontend.scss', 'css/features/testimonials/frontend.css', {
@@ -354,10 +390,10 @@ mix
             ]
         }
     })
-    .js('assets/cms.js', 'js/cms.js');
+    .js('assets/cms.js', 'js/cms.js').vue()
 
 // Elemental Theme
-mix.js('assets/themes/elemental/js/main.js', 'themes/elemental');
+mix.js('assets/themes/elemental/js/main.js', 'themes/elemental').vue()
 
 // Atomik Theme
 mix
@@ -375,7 +411,43 @@ mix
             ]
         }
     })
-    .js('assets/themes/atomik/js/main.js', 'themes/atomik');
+    .sass('../concrete/themes/atomik/css/presets/coastal-breeze/main.scss', 'themes/atomik/css/skins/coastal-breeze.css', {
+        sassOptions: {
+            includePaths: [
+                path.resolve(__dirname, './node_modules/')
+            ]
+        }
+    })
+    .sass('../concrete/themes/atomik/css/presets/golden-meadow/main.scss', 'themes/atomik/css/skins/golden-meadow.css', {
+        sassOptions: {
+            includePaths: [
+                path.resolve(__dirname, './node_modules/')
+            ]
+        }
+    })
+    .sass('../concrete/themes/atomik/css/presets/misty-sage/main.scss', 'themes/atomik/css/skins/misty-sage.css', {
+        sassOptions: {
+            includePaths: [
+                path.resolve(__dirname, './node_modules/')
+            ]
+        }
+    })
+    .sass('../concrete/themes/atomik/css/presets/amber-twilight/main.scss', 'themes/atomik/css/skins/amber-twilight.css', {
+        sassOptions: {
+            includePaths: [
+                path.resolve(__dirname, './node_modules/')
+            ]
+        }
+    })
+    .sass('../concrete/themes/atomik/css/presets/midnight-velvet/main.scss', 'themes/atomik/css/skins/midnight-velvet.css', {
+        sassOptions: {
+            includePaths: [
+                path.resolve(__dirname, './node_modules/')
+            ]
+        }
+    })
+    .js('assets/themes/atomik/js/main.js', 'themes/atomik').vue()
+
 // Dashboard Theme
 mix
     .sass('assets/themes/dashboard/scss/main.scss', 'themes/dashboard', {
@@ -385,11 +457,9 @@ mix
             ]
         }
     })
-    .js('assets/themes/dashboard/js/main.js', 'themes/dashboard');
+    .js('assets/themes/dashboard/js/main.js', 'themes/dashboard').vue()
 
-/**
- * Build core themes
- */
+// Core Themes
 // Concrete Theme
 mix
     .sass('assets/themes/concrete/scss/main.scss', 'themes/concrete', {
@@ -399,21 +469,47 @@ mix
             ]
         }
     })
-    .js('assets/themes/concrete/js/main.js', 'themes/concrete');
+    .js('assets/themes/concrete/js/main.js', 'themes/concrete').vue()
 
-/**
- * Copy bedrock SVGs into our repository
- */
+// Copy bedrock
 mix.copy('node_modules/@concretecms/bedrock/assets/icons/sprites.svg', '../concrete/images/icons/bedrock/sprites.svg');
 
-/**
- * Copy jquery ui icons into our repository
- */
+// Copy jquery ui icons into our repository
 mix.copy('node_modules/jquery-ui/themes/base/images/ui-*', '../concrete/images/');
 
-/**
- * Turn off notifications
- */
+// Fix line endings
+mix.then((stats) => {
+    if (!stats?.compilation?.assets) {
+        return;
+    }
+    const UTF8_BOM = new Uint8Array([0xEF, 0xBB, 0xBF]);
+    const outputPath = stats.compilation.compiler.outputPath.replace(/[\/\\]$/, '') + path.sep;
+    for (const relativePath in stats.compilation.assets) {
+        if (!/\.(js|css|md|html|txt|php|ts)$/i.test(relativePath)) {
+            if (!/[\/\\](license|readme)$/i.test(relativePath)) {
+                continue;
+            }
+        }
+        const absolutePath = outputPath + relativePath.replace(/^[\/\\]/, '');
+        let fileContents = fs.readFileSync(absolutePath);
+        let changed = false;
+        if (fileContents.length >= UTF8_BOM.length && fileContents.compare(UTF8_BOM, 0, UTF8_BOM.length, 0, UTF8_BOM.length) === 0) {
+            fileContents = fileContents.subarray(UTF8_BOM.length);
+            changed = true;
+        }
+        fileContents = fileContents.toString('utf8')
+        if (fileContents.includes('\r')) {
+            fileContents = fileContents.replace(/\r\n/g, '\n').replace(/\r/g, '\n');
+            changed = true;
+        }
+        if (!changed) {
+            continue;
+        }
+        fs.writeFileSync(absolutePath, fileContents);
+    }
+});
+
+// Turn off notifications
 mix
     .disableNotifications()
     .options({

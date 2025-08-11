@@ -80,7 +80,7 @@ class FileImporter
      *
      * @return \Concrete\Core\Entity\File\Version
      */
-    public function importLocalFile($localFilename, $concreteFilename = '', ImportOptions $options = null)
+    public function importLocalFile($localFilename, $concreteFilename = '', ?ImportOptions $options = null)
     {
         if ($options === null) {
             $options = $this->app->make(ImportOptions::class);
@@ -110,7 +110,7 @@ class FileImporter
      *
      * @return \Concrete\Core\Entity\File\Version
      */
-    public function importFromIncoming($incomingFilename, $concreteFilename = '', ImportOptions $options = null)
+    public function importFromIncoming($incomingFilename, $concreteFilename = '', ?ImportOptions $options = null)
     {
         $localFilename = $this->resolveIncomingFilename($incomingFilename, $copiedLocally, $volatileDirectory);
         if ($copiedLocally) {
@@ -144,7 +144,7 @@ class FileImporter
      * }
      * </code></pre>
      */
-    public function importUploadedFile(UploadedFile $uploadedFile = null, $concreteFilename = '', ImportOptions $options = null)
+    public function importUploadedFile(?UploadedFile $uploadedFile = null, $concreteFilename = '', ?ImportOptions $options = null)
     {
         if ($uploadedFile === null) {
             throw ImportException::fromErrorCode(ImportException::E_PHP_NO_FILE);
@@ -332,7 +332,7 @@ class FileImporter
      *
      * @return string
      */
-    protected function resolveIncomingFilename($incomingFilename, &$copiedLocally, VolatileDirectory &$volatileDirectory = null)
+    protected function resolveIncomingFilename($incomingFilename, &$copiedLocally, ?VolatileDirectory &$volatileDirectory = null)
     {
         $copiedLocally = false;
         $incoming = $this->app->make(Incoming::class);

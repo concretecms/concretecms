@@ -52,9 +52,11 @@ class Set
     public $fsName;
 
     /**
+     * @deprecated this field is not used anymore since ConcreteCMS 8
+     *
      * @var int
      */
-    //public $fsOverrideGlobalPermissions;
+    public $fsOverrideGlobalPermissions;
 
     /**
      * @var int
@@ -218,7 +220,7 @@ class Set
     public static function __callStatic($name, $arguments)
     {
         if (strcasecmp($name, 'add') === 0) {
-            return call_user_func_array('static::create', $arguments);
+            return static::create(... $arguments);
         }
         trigger_error("Call to undefined method ".__CLASS__."::$name()", E_USER_ERROR);
     }

@@ -49,10 +49,19 @@ class Flag
         }
     }
 
+    /**
+     * @param \Concrete\Core\Page\Page|\Concrete\Core\Multilingual\Page\Section\Section $page
+     * @param bool $filePathOnly
+     *
+     * @return string|\HtmlObject\Image|null
+     */
     public static function getSectionFlagIcon($page, $filePathOnly = false)
     {
-        $db = Database::get();
-        $section = Section::getBySectionOfSite($page);
+        if ($page instanceof Section) {
+            $section = $page;
+        } else {
+            $section = Section::getBySectionOfSite($page);
+        }
         $icon = $section->getCountry();
         return self::getFlagIcon($icon, $filePathOnly);
     }

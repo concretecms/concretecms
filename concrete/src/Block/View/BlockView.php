@@ -34,7 +34,7 @@ class BlockView extends AbstractView
 {
 
     use HandleRequiredFeaturesTrait;
-
+    /** @var Block|null */
     protected $block;
     protected $area;
     protected $blockType;
@@ -176,10 +176,8 @@ class BlockView extends AbstractView
                         $bvt->setBlockCustomTemplate(
                             $bFilename
                         ); // this is PROBABLY already set by the method above, but in the case that it's passed by area we have to set it here
-                    } else {
-                        if ($customFilenameToRender) {
-                            $bvt->setBlockCustomRender($customFilenameToRender);
-                        }
+                    } elseif ($customFilenameToRender) {
+                        $bvt->setBlockCustomRender($customFilenameToRender);
                     }
 
                     $this->setViewTemplate($bvt->getTemplate());
@@ -382,6 +380,16 @@ class BlockView extends AbstractView
             DIRNAME_BLOCKS . '/' . $this->blockType->getBlockTypeHandle() . '/' . $fileToInclude,
             $this->blockTypePkgHandle
         );
+    }
+
+    /**
+     * @return Block|null
+     *
+     * @since 9.0.3a1
+     */
+    public function getBlock():?Block
+    {
+        return $this->block;
     }
 
     public function getScopeItems()

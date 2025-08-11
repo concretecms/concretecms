@@ -7,7 +7,12 @@ use Monolog\Logger as Monolog;
 class GroupLogger
 {
     protected $level;
-    protected $messages = array();
+    protected $messages = [];
+
+    /**
+     * @var \Psr\Log\LoggerInterface
+     */
+    protected $logger;
 
     public function __construct($channel = false, $level = Logger::DEBUG)
     {
@@ -25,8 +30,7 @@ class GroupLogger
     public function close($context = array())
     {
         $method = 'add' . ucfirst(strtolower(Monolog::getLevelName($this->level)));
-        $arguments = array(implode("\n", $this->messages), $context);
 
-        return call_user_func_array(array($this->logger, $method), $arguments);
+        return call_user_func([$this->logger, $method], implode("\n", $this->messages), $context);
     }
 }

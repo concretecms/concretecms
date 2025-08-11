@@ -25,9 +25,9 @@ class CoreDriverTest extends TestCase
     protected $coreDriver;
 
     /**
-     * @var \Doctrine\Common\Persistence\Mapping\Driver\MappingDriverChain
+     * @var \Doctrine\Persistence\Mapping\Driver\MappingDriverChain
      */
-    protected $dirverChain;
+    protected $driverChain;
 
     /**
      * Setup.

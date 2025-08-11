@@ -9,10 +9,41 @@ use Core;
 
 class Controller extends BlockController implements UsesFeatureInterface
 {
-    public $itemsToDisplay = "5";
-    public $showSummary = "1";
-    public $launchInNewWindow = "1";
-    public $title = "";
+    /**
+     * @var string|null
+     */
+    public $title = '';
+
+    /**
+     * @var string|null
+     */
+    public $url;
+
+    /**
+     * @var string|null
+     */
+    public $dateFormat;
+
+    /**
+     * @var int|string|null
+     */
+    public $itemsToDisplay = 5;
+
+    /**
+     * @var bool|int|string|null
+     */
+    public $showSummary = 1;
+
+    /**
+     * @var bool|int|string|null
+     */
+    public $launchInNewWindow = 1;
+
+    /**
+     * @var string|null
+     */
+    public $titleFormat;
+
     protected $btTable = 'btRssDisplay';
     protected $btInterfaceWidth = 400;
     protected $btInterfaceHeight = 550;
@@ -26,7 +57,7 @@ class Controller extends BlockController implements UsesFeatureInterface
     /**
      * Default number of seconds that the output of this block should be cached
      * (Can be overridden by the user within C5 UI).
-     * 
+     *
      * @var int
      */
     protected $btCacheBlockOutputLifetime = 3600;
@@ -34,17 +65,17 @@ class Controller extends BlockController implements UsesFeatureInterface
     /**
      * Number of seconds that the RSS feed itself should be cached before fetching
      * a fresh copy.
-     * 
+     *
      * (Perhaps this could eventually become a user-setting?)
-     * 
+     *
      * Caching is important as fetching a remote URL can significantly delay
      * the rendering of a PHP page.
-     * 
+     *
      * Setting to "null" should cache it indefinitely until cache is manually cleared.
-     * 
+     *
      * Should probably be less than $btCacheBlockOutputLifetime above, otherwise the
      * block will be re-rendered using the same stale RSS data.
-     * 
+     *
      * @var int
      */
     protected $rssFeedCacheLifetime = 1800;
@@ -90,6 +121,16 @@ class Controller extends BlockController implements UsesFeatureInterface
         return $result;
     }
 
+    public function add()
+    {
+        $this->set('url', '');
+        $this->set('title', '');
+        $this->set('titleFormat', 'h5');
+        $this->set('dateFormat', ':longDate:shortTime:');
+        $this->set('itemsToDisplay', '5');
+        $this->set('showSummary', true);
+        $this->set('launchInNewWindow', true);
+    }
     /**
      * Format a \DateTime instance accordingly to $format.
      *
@@ -150,16 +191,9 @@ class Controller extends BlockController implements UsesFeatureInterface
 
         try {
             $channel = $fp->load($this->url, $this->rssFeedCacheLifetime);
-            $i = 0;
-            foreach ($channel as $post) {
-                $posts[] = $post;
-                if (($i + 1) == intval($this->itemsToDisplay)) {
-                    break;
-                }
-                ++$i;
-            }
+            $posts = array_slice($fp->getPosts($channel), 0, intval($this->itemsToDisplay));
         } catch (\Exception $e) {
-            $this->set('errorMsg', $e->getMessage());
+            $this->set('errorMsg', t('Unable to load RSS posts.'));
         }
 
         if (empty($this->titleFormat)) {
@@ -209,14 +243,7 @@ class Controller extends BlockController implements UsesFeatureInterface
             // We manually set cache time to 2hrs here as getSearchableContent()
             // can probably cope with slightly older data
             $channel = $fp->load($this->url, 7200);
-            $i = 0;
-            foreach ($channel as $post) {
-                $posts[] = $post;
-                if (($i + 1) == intval($this->itemsToDisplay)) {
-                    break;
-                }
-                ++$i;
-            }
+            $posts = array_slice($fp->getPosts($channel), 0, intval($this->itemsToDisplay));
         } catch (\Exception $e) {
         }
 
@@ -226,5 +253,24 @@ class Controller extends BlockController implements UsesFeatureInterface
         }
 
         return $searchContent;
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Block\BlockController::getImportData()
+     */
+    protected function getImportData($blockNode, $page)
+    {
+        $data = parent::getImportData($blockNode, $page);
+        $dateFormat = $data['dateFormat'] ?? '';
+        if (array_key_exists($dateFormat, $this->getDefaultDateTimeFormats())) {
+            $data['standardDateFormat'] = $dateFormat;
+        } else {
+            $data['standardDateFormat'] = ':custom:';
+            $data['customDateFormat'] = $dateFormat;
+        }
+
+        return $data;
     }
 }

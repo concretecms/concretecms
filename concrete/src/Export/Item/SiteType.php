@@ -95,28 +95,28 @@ class SiteType implements ItemInterface
                 /**
                  * @var $locale SkeletonLocale
                  */
+                $exporter = new Exporter();
+                
                 $localeExporter = $locale->getExporter();
-                $skeletonLocalesNode = $localeExporter->export($locale, $skeletonNode);
-                $skeletonPagesNode = $skeletonLocalesNode->addChild('pages');
+                $skeletonLocaleNode = $localeExporter->export($locale, $skeletonNode);
 
                 $list = new PageList();
                 $list->setSiteTreeObject($locale->getSiteTree());
                 $list->ignorePermissions();
                 $list->sortByDisplayOrder();
                 $pages = $list->getResults();
-
-                $exporter = new Exporter();
-
-                foreach($pages as $page) {
-                    $exporter->export($page, $skeletonPagesNode);
+                if ($pages !== []) {
+                    $skeletonPagesNode = $skeletonLocaleNode->addChild('pages');
+                    foreach($pages as $page) {
+                        $exporter->export($page, $skeletonPagesNode);
+                    }
                 }
 
                 $stackList = new StackList();
                 $stackList->setSiteTreeObject($locale->getSiteTree());
                 $stacks = $stackList->getResults();
-
-                if (count($stacks)) {
-                    $skeletonStacksNode = $skeletonNode->addChild('stacks');
+                if ($stacks !== []) {
+                    $skeletonStacksNode = $skeletonLocaleNode->addChild('stacks');
                     foreach($stacks as $stack) {
                         $exporter->export($stack, $skeletonStacksNode);
                     }

@@ -69,13 +69,13 @@ switch ($controller->getTask()) {
                     <?= $form->label('fslIsDefault', t('Default Location')); ?>
                     <div class="form-check">
                         <?= $form->radio('fslIsDefault', 1, $fslIsDefault, $args); ?>
-                        <label>
+                        <label class="form-check-label" for="fslIsDefault1">
                             <?= t('Yes, make this the default storage location for new files.'); ?>
                         </label>
                     </div>
                     <div class="form-check">
                         <?= $form->radio('fslIsDefault', 0, $fslIsDefault, $args); ?>
-                        <label>
+                        <label class="form-check-label" for="fslIsDefault2">
                             <?= t('No, this is not the default storage location.'); ?>
                         </label>
                     </div>

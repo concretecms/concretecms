@@ -40,46 +40,55 @@ class DeleteOccurrence extends BackendInterfaceController
 
     public function submit()
     {
-        $occurrence = $this->eventOccurrenceService->getByID($this->request->request->get('versionOccurrenceID'));
-        $e = \Core::make('error');
-        if (!$occurrence) {
-            $e->add(t('Invalid occurrence.'));
-        }
-        if (!$this->canAccess()) {
-            $e->add(t('Access Denied.'));
-        }
-
-        $r = new EditResponse($e);
-        $year = date('Y', $occurrence->getStart());
-        $month = date('m', $occurrence->getStart());
-        $r->setRedirectURL(
-            \URL::to(
-                $this->preferences->getPreferredViewPath(),
-                'view',
-                $occurrence->getEvent()->getCalendar()->getID(),
-                $year,
-                $month
-            )
-        );
-
-        if (!$e->has()) {
-            $u = $this->app->make(User::class);
-            $eventVersion = $this->eventService->getVersionToModify($occurrence->getEvent(), $u);
-            $this->eventService->addEventVersion($eventVersion->getEvent(), $eventVersion->getEvent()->getCalendar(), $eventVersion);
-            $this->eventOccurrenceService->delete($eventVersion, $occurrence->getOccurrence());
-
-            $pkr = new ApproveCalendarEventRequest();
-            $pkr->setCalendarEventVersionID($eventVersion->getID());
-            $pkr->setRequesterUserID($u->getUserID());
-            $response = $pkr->trigger();
-            if ($response instanceof Response) {
-                $this->flash('success', t('Event occurrence removed.'));
-            } else {
-                $this->flash('success', t('Event occurrence removal requested. This must be approved before it is fully removed.'));
+        if ($this->validateAction()) {
+            $occurrence = $this->eventOccurrenceService->getByID($this->request->request->get('versionOccurrenceID'));
+            $e = \Core::make('error');
+            if (!$occurrence) {
+                $e->add(t('Invalid occurrence.'));
             }
-        }
+            if (!$this->canAccess()) {
+                $e->add(t('Access Denied.'));
+            }
 
-        $r->outputJSON();
+            $r = new EditResponse($e);
+            $year = date('Y', $occurrence->getStart());
+            $month = date('m', $occurrence->getStart());
+            $r->setRedirectURL(
+                \URL::to(
+                    $this->preferences->getPreferredViewPath(),
+                    'view',
+                    $occurrence->getEvent()->getCalendar()->getID(),
+                    $year,
+                    $month
+                )
+            );
+
+            if (!$e->has()) {
+                $u = $this->app->make(User::class);
+                $eventVersion = $this->eventService->getVersionToModify($occurrence->getEvent(), $u);
+                $this->eventService->addEventVersion(
+                    $eventVersion->getEvent(),
+                    $eventVersion->getEvent()->getCalendar(),
+                    $eventVersion
+                );
+                $this->eventOccurrenceService->delete($eventVersion, $occurrence->getOccurrence());
+
+                $pkr = new ApproveCalendarEventRequest();
+                $pkr->setCalendarEventVersionID($eventVersion->getID());
+                $pkr->setRequesterUserID($u->getUserID());
+                $response = $pkr->trigger();
+                if ($response instanceof Response) {
+                    $this->flash('success', t('Event occurrence removed.'));
+                } else {
+                    $this->flash(
+                        'success',
+                        t('Event occurrence removal requested. This must be approved before it is fully removed.')
+                    );
+                }
+            }
+
+            $r->outputJSON();
+        }
     }
 
 

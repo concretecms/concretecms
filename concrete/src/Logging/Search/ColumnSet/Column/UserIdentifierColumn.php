@@ -27,7 +27,7 @@ class UserIdentifierColumn extends Column implements PagerColumnInterface
 
     public function getColumnCallback()
     {
-        return ['\Concrete\Core\Logging\Search\ColumnSet\DefaultSet', 'getCollectionUser'];
+        return ['\Concrete\Core\Logging\Search\ColumnSet\DefaultSet', 'getUser'];
     }
 
     /**

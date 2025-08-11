@@ -1,6 +1,6 @@
 <phpunit
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/sebastianbergmann/phpunit/4.8.36/phpunit.xsd"
+        xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/sebastianbergmann/phpunit/8.5.20/phpunit.xsd"
         bootstrap="./tests/bootstrap.php"
         colors="true"
         convertErrorsToExceptions="true"
@@ -30,10 +30,10 @@
     <groups>
         <exclude>
             <group>online</group>
-            <group>docker</group>
         </exclude>
     </groups>
     <php>
         <ini name="memory_limit" value="-1"/>
+        <ini name="error_reporting" value="-1"/>
     </php>
 </phpunit>

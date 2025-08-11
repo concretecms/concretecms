@@ -6,6 +6,7 @@ use Concrete\Core\Application\Application;
 use Concrete\Core\Entity\Site\SiteTree;
 use Concrete\Core\Form\Service\Form;
 use Concrete\Core\Http\Request;
+use Concrete\Core\Page\Component\PageSelectInstanceFactory;
 use Concrete\Core\Support\Facade\Facade;
 use URL;
 use Concrete\Core\Utility\Service\Identifier;
@@ -75,7 +76,7 @@ EOL;
         return $html;
     }
 
-    public function quickSelect($key, $cID = false, $miscFields = [])
+    public function quickSelect($key, $cID = false)
     {
         $selectedCID = null;
 
@@ -83,12 +84,9 @@ EOL;
 
         /** @var Request $request */
         $request = $app->make(Request::class);
-        /** @var Token $valt */
-        $valt = $app->make(Token::class);
-        /** @var Identifier $idHelper */
-        $idHelper = $app->make(Identifier::class);
-        /** @var Form $form */
-        $form = $app->make(Form::class);
+        /** @var PageSelectInstanceFactory $pageSelectInstanceFactory */
+        $pageSelectInstanceFactory = $app->make(PageSelectInstanceFactory::class);
+        $pageSelectInstance = $pageSelectInstanceFactory->createInstance();
 
         if ($request->request->has($key)) {
             $selectedCID = $request->request->get($key);
@@ -98,64 +96,38 @@ EOL;
             $selectedCID = $cID;
         }
 
-        $token = $valt->generate('quick_page_select_' . $key);
-        $identifier = $idHelper->getString(32);
-
-        $pageList = [];
-
         if ($selectedCID && $app->make(Numbers::class)->integer($selectedCID, 1)) {
             $page = $app->make(Page::class)->getByID((int)$selectedCID);
             $cp = new Permissions($page);
-            if ($cp->canViewPage()) {
-                $pageList[(int)$selectedCID] = $page->getCollectionName();
+            if (!$cp->canViewPage()) {
+                unset($page);
             }
         } else {
             $page = null;
         }
 
-        $selectedCID = (is_object($page) && !$page->isError()) ? $page->getCollectionID() : null;
-        $element = (string)new Element(
-            'span',
-            $form->select($key, $pageList, $selectedCID, $miscFields),
-            [
-                'class' => 'ccm-quick-page-selector',
-                'id' => 'ccm-quick-page-selector-' . $identifier,
-            ]
-        );
-
-        $args = [
-            'ajax' => [
-                'url' => (string) URL::to('/ccm/system/page/autocomplete'),
-                'data' => [
-                    'term' => '{{{q}}}',
-                    'key' => $key,
-                    'token' => $token,
-                ],
-            ],
-            'locale' => [
-                'currentlySelected' => t('Currently Selected'),
-                'emptyTitle' => t('Select and begin typing'),
-                'errorText' => t('Unable to retrieve results'),
-                'searchPlaceholder' => t('Search...'),
-                'statusInitialized' => t('Start typing a search query'),
-                'statusNoResults' => t('No Results'),
-                'statusSearching' => t('Searching...'),
-                'statusTooShort' => t('Please enter more characters'),
-            ],
-            'preserveSelected' => false,
-            'minLength' => 2,
-        ];
-
-        $args = json_encode($args);
-
+        $selectedCID = (is_object($page) && !$page->isError()) ? $page->getCollectionID() : 'null';
+        $identifier = $app->make(Identifier::class)->getString(32);
         $html = <<<EOL
-        $element
-        <script type="text/javascript">
-        $(function() {
-            $('#ccm-quick-page-selector-{$identifier} select').selectpicker({liveSearch: true}).ajaxSelectPicker({$args});
-        });
-        </script>
+<div data-concrete-select-page-input="{$identifier}">
+    <concrete-page-select 
+    access-token="{$pageSelectInstance->getAccessToken()}" 
+    :page-id="{$selectedCID}" 
+    input-name="{$key}"
+    ></concrete-page-select>
+</div>
+<script type="text/javascript">
+$(function() {
+    Concrete.Vue.activateContext('cms', function (Vue, config) {
+        new Vue({
+            el: 'div[data-concrete-select-page-input="{$identifier}"]',
+            components: config.components
+        })
+    })
+});
+</script>
 EOL;
+        return $html;
 
         return $html;
     }

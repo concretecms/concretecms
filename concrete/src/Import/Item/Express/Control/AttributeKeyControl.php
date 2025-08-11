@@ -6,6 +6,7 @@ use Concrete\Core\Attribute\Category\ExpressCategory;
 use Concrete\Core\Entity\Attribute\Key\ExpressKey;
 use Concrete\Core\Entity\Express\Entity;
 use Concrete\Core\Import\Item\Express\ItemInterface;
+use Concrete\Core\Utility\Service\Xml;
 use Doctrine\ORM\EntityManager;
 
 defined('C5_EXECUTE') or die("Access Denied.");
@@ -29,12 +30,11 @@ class AttributeKeyControl implements ItemInterface
     public function import(\SimpleXMLElement $xml, Entity $entity)
     {
         if (isset($xml->attributekey)) {
+            $xmlService = app(Xml::class);
             $category = new ExpressCategory($entity, $this->application, $this->entityManager);
             $control = new \Concrete\Core\Entity\Express\Control\AttributeKeyControl();
             $control->setCustomLabel((string) $xml['custom-label']);
-            if (((string) $xml['required']) == '1') {
-                $control->setIsRequired(true);
-            }
+            $control->setIsRequired($xmlService->getBool($xml['required']));
             $control->setId((string) $xml['id']);
             $ak = $xml->attributekey;
             //$key = $category->getAttributeKeyByHandle((string) $ak['handle']);

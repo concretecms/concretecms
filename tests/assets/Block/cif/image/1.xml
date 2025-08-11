@@ -1,0 +1,19 @@
+<block type="image" name="">
+  <data table="btContentImage">
+    <record>
+      <altText></altText>
+      <cropImage>0</cropImage>
+      <externalLink></externalLink>
+      <fID>{ccm:export:file:123456789012:file-1.jpg}</fID>
+      <fOnstateID>0</fOnstateID>
+      <fileLinkID>0</fileLinkID>
+      <internalLinkCID>0</internalLinkCID>
+      <lazyLoad>0</lazyLoad>
+      <maxHeight>0</maxHeight>
+      <maxWidth>0</maxWidth>
+      <openLinkInNewWindow>0</openLinkInNewWindow>
+      <sizingOption>thumbnails_default</sizingOption>
+      <title></title>
+    </record>
+  </data>
+</block>

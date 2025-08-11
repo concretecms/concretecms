@@ -8,10 +8,17 @@ div.theme-atomik {
     a {
       @extend .badge;
       color: $dark;
+      svg {
+        max-height: 10px;
+        fill: $dark;
+      }
       background-color: $light;
 
       &:hover {
         color: $primary;
+        svg {
+          fill: $primary;
+        }
       }
     }
   }

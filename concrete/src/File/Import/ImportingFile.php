@@ -261,7 +261,7 @@ class ImportingFile
      */
     public function saveImage()
     {
-        $imageType = $this->bitmapFormat->getFormatFromMimeType($this->getMimeType(), BitmapFormat::FORMAT_PNG);
+        $imageType = $this->bitmapFormat->getFormatFromMimeType($this->getMimeType(), BitmapFormat::FORMAT_WEBP);
         $imageOptions = $this->bitmapFormat->getFormatImagineSaveOptions($imageType);
         if ($imageType === BitmapFormat::FORMAT_GIF && $this->image->layers()->count() > 1) {
             $imageOptions['animated'] = true;

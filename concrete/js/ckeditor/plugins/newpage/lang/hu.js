@@ -1,1 +1,1 @@
-﻿CKEDITOR.plugins.setLang("newpage","hu",{toolbar:"Új oldal"});
+CKEDITOR.plugins.setLang("newpage","hu",{toolbar:"Új oldal"});

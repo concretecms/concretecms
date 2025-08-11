@@ -50,6 +50,7 @@ class AttributeKeyControl extends Control
         return 'attribute_key';
     }
 
+    #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
         $data = parent::jsonSerialize();

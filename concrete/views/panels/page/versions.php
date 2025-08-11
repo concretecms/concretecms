@@ -76,7 +76,7 @@ use Concrete\Core\Support\Facade\Url;
 
             <% if (cvComments) { %>
                 <p class="ccm-panel-page-versions-description">
-                    <%-cvComments%>
+                    <%=cvComments%>
                 </p>
             <% } %>
 
@@ -124,7 +124,7 @@ use Concrete\Core\Support\Facade\Url;
 
             <div class="popover fade" data-menu="ccm-panel-page-versions-version-menu-<%-cvID%>">
                 <div class="dropdown-menu">
-                    <% if (cvIsApproved) { %>
+                    <% if (cvIsApproved || cIsDraft) { %>
                         <span class="dropdown-item ui-state-disabled">
                             <?php echo t('Approve') ?>
                         </span>

@@ -10,6 +10,8 @@ use Concrete\Core\Page\Type\Type as PageType;
 use Concrete\Core\Page\Page;
 use Concrete\Core\User\User;
 use Concrete\Core\View\View;
+use Concrete\Core\Support\Facade\Application;
+use Concrete\Core\Config\Repository\Repository;
 use Exception;
 
 class Composer extends BackendInterfacePageController
@@ -92,13 +94,19 @@ class Composer extends BackendInterfacePageController
                     $dateTime = new DateTime();
                     $publishDateTime = $dateTime->translate('cvPublishDate');
                     $publishEndDateTime = $dateTime->translate('cvPublishEndDate');
-                    if ($this->request->request->get('keepOtherScheduling')) {
+                    $app = Application::getFacadeApplication();
+                    $appConfig = $app->make(Repository::class);
+                    $liveVersionStatusOnScheduledVersionApproval = (string)$appConfig->get('concrete.misc.live_version_status_on_scheduled_version_approval');
+                    $isUnapproved = $liveVersionStatusOnScheduledVersionApproval === 'unapproved';
+                    $isKeepOtherScheduling = (bool)$this->request->request->get('keepOtherScheduling');
+                    if ($isUnapproved === !$isKeepOtherScheduling) {
                         $keepOtherScheduling = true;
                     }
                 }
 
                 $pagetype->publish($c, $publishDateTime, $publishEndDateTime, $keepOtherScheduling);
-                $ptr->setRedirectURL($this->app->make('helper/navigation')->getLinkToCollection($c));
+                $nc = Page::getByID($c->getCollectionID(), 'ACTIVE');
+                $ptr->setRedirectURL($this->app->make('helper/navigation')->getLinkToCollection($nc));
             }
             $ptr->outputJSON();
         } else {

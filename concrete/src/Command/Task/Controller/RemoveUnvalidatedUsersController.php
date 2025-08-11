@@ -48,13 +48,11 @@ class RemoveUnvalidatedUsersController extends AbstractController
                 $thresholdDateTime = new \DateTime();
                 $thresholdDateTime->sub(new \DateInterval('PT' . $threshold . 'S'));
                 $qb = $this->db->createQueryBuilder();
-                // Get users recently registered but not validated and also not signed in yet.
+                // Get users recently registered but not validated.
                 $result = $qb->select('u.uID')
                     ->from('Users', 'u')
                     ->andWhere('u.uIsValidated = :uIsValidated')
                     ->setParameter('uIsValidated', false)
-                    ->andWhere('u.uNumLogins = :uNumLogins')
-                    ->setParameter('uNumLogins', 0)
                     ->andWhere($qb->expr()->comparison(
                         'u.uDateAdded',
                         '<',

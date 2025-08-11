@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\System;
 
+use Concrete\Core\Database\CharacterSetCollation\Resolver;
 use Localization;
 use Concrete\Core\Support\Facade\Facade;
 use Concrete\Core\Database\Connection\Connection;
@@ -48,6 +49,11 @@ class Info
      * @var string
      */
     protected $cache;
+    
+    /**
+     * @var string
+     */
+    protected $entities;
 
     /**
      * @var string
@@ -88,6 +94,16 @@ class Info
      * @var string|null
      */
     private $dbmsSqlMode;
+    
+    /**
+     * @var string|null
+     */
+    private $dbCharset;
+
+    /**
+     * @var string|null
+     */
+    private $dbCollation;
 
     public function __construct()
     {
@@ -165,6 +181,10 @@ class Info
             }
             $this->cache = implode("\n", $cache);
 
+            $entities = [];
+            $entities[] = sprintf('Doctrine Development Mode - %s', $config->get('concrete.cache.doctrine_dev_mode')?'On':'Off');
+            $this->entities = implode("\n", $entities);
+
             $this->serverSoftware = \Request::getInstance()->server->get('SERVER_SOFTWARE', '');
 
             $this->serverAPI = PHP_SAPI;
@@ -229,12 +249,26 @@ class Info
             $phpSettings = [
                 "max_execution_time - $maxExecutionTime",
             ];
+
+            $doNotFilter = [
+                'allow_url_fopen',
+                'allow_url_include',
+                'short_open_tag',
+                'error_log',
+                'file_uploads',
+            ];
+            
             foreach ($phpinfo as $name => $section) {
                 foreach ($section as $key => $val) {
                     if (preg_match('/.*max_execution_time*/', $key)) {
                         continue;
                     }
-                    if (strpos($key, 'limit') === false && strpos($key, 'safe') === false && strpos($key, 'max') === false) {
+                    if (strpos($key, 'limit') === false &&
+                        strpos($key, 'safe') === false &&
+                        strpos($key, 'max') === false &&
+                        strpos($key, 'version') === false &&
+                        !in_array($key, $doNotFilter)
+                    ) {
                         continue;
                     }
                     if (is_array($val)) {
@@ -349,6 +383,14 @@ class Info
     /**
      * @return string
      */
+    public function getEntities()
+    {
+        return $this->entities;
+    }
+
+    /**
+     * @return string
+     */
     public function getServerSoftware()
     {
         return $this->serverSoftware;
@@ -438,6 +480,44 @@ class Info
     /**
      * @return string
      */
+    public function getDbCharset()
+    {
+        if ($this->dbCharset === null) {
+            $this->dbCharset = '';
+            if ($this->installed) {
+                try {
+                    $resolver = $this->app->make(Resolver::class);
+                    $db = $this->app->make('database')->connection();
+                    [$this->dbCharset, $dbCollationIgnored] = $resolver->resolveCharacterSetAndCollation($db);
+                } catch (\Exception $x) {
+                }
+            }
+        }
+        return $this->dbCharset;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDbCollation()
+    {
+        if ($this->dbCollation === null) {
+            $this->dbCollation = '';
+            if ($this->installed) {
+                try {
+                    $resolver = $this->app->make(Resolver::class);
+                    $db = $this->app->make('database')->connection();
+                    [$dbCharsetIgnored, $this->dbCollation] = $resolver->resolveCharacterSetAndCollation($db);
+                } catch (\Exception $x) {
+                }
+            }
+        }
+        return $this->dbCollation;
+    }
+
+    /**
+     * @return string
+     */
     public function getDBMSVersion()
     {
         if ($this->dbmsVersion === null) {
@@ -471,5 +551,15 @@ class Info
         }
 
         return $this->dbmsSqlMode;
+    }
+
+    public function getHostname()
+    {
+        return gethostname();
+    }
+
+    public function getEnvironment()
+    {
+        return $this->app->environment();
     }
 }

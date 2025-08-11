@@ -2,7 +2,6 @@
 namespace Concrete\Core\Board\Instance\Slot\Content;
 
 use Concrete\Core\Board\Item\ItemProviderInterface;
-use Concrete\Core\Entity\Board\InstanceItem;
 
 class ItemObjectGroup
 {

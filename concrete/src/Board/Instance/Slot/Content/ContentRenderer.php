@@ -36,14 +36,14 @@ class ContentRenderer implements LoggerAwareInterface
 
     public function getLoggerChannel()
     {
-        return Channels::CHANNEL_CONTENT;
+        return Channels::CHANNEL_BOARD;
     }
 
     /**
      * ContentRenderer constructor.
      * @param JsonSerializer $serializer
      */
-    public function __construct(Application $app, JsonSerializer $serializer, TemplateLocator $templateLocator, Page $currentPage = null)
+    public function __construct(Application $app, JsonSerializer $serializer, TemplateLocator $templateLocator, ?Page $currentPage = null)
     {
         $this->templateLocator = $templateLocator;
         $this->currentPage = $currentPage;
@@ -69,7 +69,7 @@ class ContentRenderer implements LoggerAwareInterface
             return $content;
         } else if ($template->getHandle()) {
             $this->logger->notice(t('Error rendering board slot template on page %s - Unable to locate file for template: %s',
-                    $this->currentPage->getCollectionID(), $template->getHandle())
+            isset($this->currentPage) ? $this->currentPage->getCollectionID() : -1, $template->getHandle())
             );
         }
     }

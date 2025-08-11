@@ -1,3 +1,4 @@
+
 div.ccm-block-desktop-waiting-for-me {
   i.ccm-block-desktop-waiting-for-me-loader {
     display: none;
@@ -76,14 +77,13 @@ div.ccm-block-desktop-waiting-for-me {
       top: 20px;
 
       .btn {
-        border-color: #c6c6c6;
+        border-color: $gray-300;
         border-radius: 50%;
         box-shadow: none;
         display: block;
         font-size: 1rem;
         font-weight: bold;
         height: 40px;
-        line-height: 50px;
         padding: 0;
         position: relative;
         text-align: center;
@@ -91,15 +91,16 @@ div.ccm-block-desktop-waiting-for-me {
         transition: none;
         width: 40px !important;
 
+        &:hover {
+          background-color: transparent !important;
+        }
+
         &.btn-close {
-          border: 1px solid #c6c6c6; // This needs to be explicit because .btn-close has strong styling otherwise
+          border: 1px solid $gray-300; // This needs to be explicit because .btn-close has strong styling otherwise
         }
 
         i {
-          color: #ccc;
-          left: 10px;
-          position: absolute;
-          top: 10px;
+          color: $gray-300;
         }
 
         &:active {
@@ -117,4 +118,24 @@ div.ccm-block-desktop-waiting-for-me {
     text-align: center;
   }
 
+}
+
+@include color-mode(dark) {
+  div.ccm-block-desktop-waiting-for-me {
+    border: 1px solid $gray-700;
+
+    div.ccm-block-desktop-waiting-for-me-item {
+      div.ccm-block-desktop-waiting-for-me-menu {
+        .btn {
+          &.btn-close {
+            border: 1px solid $gray-700;
+          }
+
+          i {
+            color: 1px solid $gray-700;
+          }
+        }
+      }
+    }
+  }
 }

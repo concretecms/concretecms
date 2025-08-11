@@ -29,6 +29,26 @@ class Controller extends BlockController implements FileTrackableInterface, Uses
     protected $btExportFileColumns = ['fID'];
 
     /**
+     * @var string
+     */
+    public $fileLinkText;
+
+    /**
+     * @var int|null
+     */
+    public $fID;
+
+    /**
+     * @var boolean|null
+     */
+    public $forceDownload;
+
+    /**
+     * @var boolean|null
+     */
+    public $filePassword;
+
+    /**
      * Used for localization. If we want to localize the name/description we have to include this.
      */
     public function getBlockTypeDescription()
@@ -97,9 +117,10 @@ class Controller extends BlockController implements FileTrackableInterface, Uses
 
     public function save($args)
     {
-        if (is_array($args) && isset($args['forceDownload'])) {
-            $args['forceDownload'] = ($args['forceDownload']) ? '1' : '0';
+        if (!is_array($args)) {
+            $args = [];
         }
+        $args['forceDownload'] = empty($args['forceDownload']) ? 0 : 1;
 
         parent::save($args);
     }
@@ -140,8 +161,9 @@ class Controller extends BlockController implements FileTrackableInterface, Uses
             return $this->fileLinkText;
         }
         $f = $this->getFileObject();
-
-        return $f->getTitle();
+        if ($f) {
+            return $f->getTitle();
+        }
     }
 
     public function getUsedFiles()

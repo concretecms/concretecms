@@ -10,7 +10,7 @@ if (!isset($query) || !is_string($query)) {
 }
 
 ?>
-    <form class="hstack gap-3" action="<?= $view->url($resultTarget) ?>" method="get" class="ccm-search-block-form"><?php
+    <form class="hstack gap-3 ccm-search-block-form" action="<?= $view->url($resultTarget) ?>" method="get"><?php
 if (isset($title) && ($title !== '')) {
     ?><h3><?= h($title) ?></h3><?php
 
@@ -19,8 +19,8 @@ if ($query === '') {
     ?><input name="search_paths[]" type="hidden"
              value="<?= htmlentities($baseSearchPath, ENT_COMPAT, APP_CHARSET) ?>" /><?php
 
-} elseif (isset($_REQUEST['search_paths']) && is_array($_REQUEST['search_paths'])) {
-    foreach ($_REQUEST['search_paths'] as $search_path) {
+} elseif (isset($search_paths) && is_array($search_paths)) {
+    foreach ($search_paths as $search_path) {
         if (is_string($search_path)) {
             ?><input name="search_paths[]" type="hidden"
                      value="<?= htmlentities($search_path, ENT_COMPAT, APP_CHARSET) ?>" /><?php
@@ -28,8 +28,7 @@ if ($query === '') {
         }
     }
 }
-?><input name="query" class="form-control" type="text" value="<?= htmlentities($query, ENT_COMPAT, APP_CHARSET) ?>"
-         class="ccm-search-block-text" /><?php
+?><input name="query" class="form-control ccm-search-block-text" type="text" value="<?= htmlentities($query, ENT_COMPAT, APP_CHARSET) ?>" /><?php
 if (isset($buttonText) && ($buttonText !== '')) {
     ?> <input name="submit" type="submit" value="<?= h($buttonText) ?>"
               class="btn btn-secondary ccm-search-block-submit" /><?php

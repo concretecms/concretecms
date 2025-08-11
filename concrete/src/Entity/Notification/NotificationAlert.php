@@ -1,16 +1,7 @@
 <?php
+
 namespace Concrete\Core\Entity\Notification;
 
-use Concrete\Core\Attribute\AttributeValueInterface;
-use Concrete\Core\Entity\Attribute\Key\Key;
-use Concrete\Core\Notification\Formatter\StandardFormatter;
-use Concrete\Core\Notification\Formatter\UserSignupFormatter;
-use Concrete\Core\Notification\Subject\SubjectInterface;
-use Concrete\Core\Notification\View\ListableInterface;
-use Concrete\Core\Notification\View\ListViewPopulatorInterface;
-use Concrete\Core\Notification\View\UserSignupView;
-use Concrete\Core\Notification\View\ViewInterface;
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -21,32 +12,39 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class NotificationAlert
 {
-
     /**
      * @ORM\Id @ORM\Column(type="integer", options={"unsigned":true})
      * @ORM\GeneratedValue(strategy="AUTO")
+     *
+     * @var int|null NULL if not yet flushed to the database
      */
     protected $naID;
 
     /**
      * @ORM\ManyToOne(targetEntity="Concrete\Core\Entity\User\User", inversedBy="alerts")
      * @ORM\JoinColumn(name="uID", referencedColumnName="uID")
+     *
+     * @var \Concrete\Core\Entity\User\User
      */
     protected $user;
 
     /**
      * @ORM\ManyToOne(targetEntity="\Concrete\Core\Entity\Notification\Notification", inversedBy="alerts")
      * @ORM\JoinColumn(name="nID", referencedColumnName="nID")
+     *
+     * @var \Concrete\Core\Entity\Notification\Notification
      */
     protected $notification;
 
     /**
      * @ORM\Column(type="boolean")
+     *
+     * @var bool
      */
     protected $naIsArchived = false;
 
     /**
-     * @return mixed
+     * @return bool
      */
     public function isNotificationArchived()
     {
@@ -54,7 +52,7 @@ class NotificationAlert
     }
 
     /**
-     * @param mixed $nIsArchived
+     * @param bool $naIsArchived
      */
     public function setNotificationIsArchived($naIsArchived)
     {
@@ -62,7 +60,7 @@ class NotificationAlert
     }
 
     /**
-     * @return mixed
+     * @return \Concrete\Core\Entity\User\User
      */
     public function getUser()
     {
@@ -70,7 +68,7 @@ class NotificationAlert
     }
 
     /**
-     * @param mixed $user
+     * @param \Concrete\Core\Entity\User\User $user
      */
     public function setUser($user)
     {
@@ -78,7 +76,7 @@ class NotificationAlert
     }
 
     /**
-     * @return mixed
+     * @return \Concrete\Core\Entity\Notification\Notification
      */
     public function getNotification()
     {
@@ -86,7 +84,7 @@ class NotificationAlert
     }
 
     /**
-     * @param mixed $notification
+     * @param \Concrete\Core\Entity\Notification\Notification $notification
      */
     public function setNotification($notification)
     {
@@ -94,12 +92,10 @@ class NotificationAlert
     }
 
     /**
-     * @return mixed
+     * @return int|null returns NULL if not yet flushed to the database
      */
     public function getNotificationAlertID()
     {
         return $this->naID;
     }
-
-
 }

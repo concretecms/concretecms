@@ -3,6 +3,7 @@ namespace Concrete\Core\Backup\ContentImporter\Importer\Routine;
 
 use Concrete\Core\Page\Single;
 use Concrete\Core\Support\Facade\Application;
+use Concrete\Core\Utility\Service\Xml;
 
 class ImportSinglePageStructureRoutine extends AbstractRoutine implements SpecifiableHomePageRoutineInterface
 {
@@ -18,20 +19,17 @@ class ImportSinglePageStructureRoutine extends AbstractRoutine implements Specif
 
     public function import(\SimpleXMLElement $sx)
     {
-
         if (isset($sx->singlepages)) {
             $app = Application::getFacadeApplication();
+            $xml = $app->make(Xml::class);
             $defaultSite = $app->make('site')->getDefault();
             foreach ($sx->singlepages->page as $p) {
                 $pkg = static::getPackageObject($p['package']);
 
-                if (isset($p['global']) && (string) $p['global'] === 'true') {
+                if ($xml->getBool($p['global'])) {
                     $spl = Single::addGlobal($p['path'], $pkg);
                 } else {
-                    $root = false;
-                    if (isset($p['root']) && (string) $p['root'] === 'true') {
-                        $root = true;
-                    }
+                    $root = $xml->getBool($p['root']);
 
                     $siteTree = null;
                     if (isset($this->home)) {

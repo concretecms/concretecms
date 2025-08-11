@@ -94,7 +94,7 @@ class Statistics extends Controller
             ]
         );
 
-        return StreamedResponse::create(
+        return new StreamedResponse(
             function () use ($bom, $writer) {
                 echo $bom;
                 $writer->insertHeaders()->insertRecords();

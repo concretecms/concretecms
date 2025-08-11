@@ -171,7 +171,7 @@ if ($editingJobSet !== null) {
     <div class="tab-content">
 
         <div class="alert alert-warning"><?=t('<b>Important!</b> Jobs have been deprecated in Concrete version 9 and may not run in future versions. Additionally, job queueing is no longer supported at all. Instead, look at using <a href="%s">tasks</a> instead. Tasks support queueing, asynchronous operation, full logging, parameters, scheduling and more.', URL::to('/dashboard/system/automation/tasks'))?></div>
-        <div class="tab-pane<?= $activeTab === 'jobs' ? ' show active' : '' ?>" id="jobs" role="tabpanel">
+        <div class="tab-pane<?= $activeTab === 'jobs' ? ' active' : '' ?>" id="jobs" role="tabpanel">
             <?php
             if ($installedJobs !== []) {
                 ?>
@@ -290,7 +290,7 @@ if ($editingJobSet !== null) {
             ?>
         </div>
 
-        <div class="tab-pane<?= $activeTab === 'jobSets' ? ' show active' : '' ?>" id="jobSets" role="tabpanel">
+        <div class="tab-pane<?= $activeTab === 'jobSets' ? ' active' : '' ?>" id="jobSets" role="tabpanel">
             <?php
             if ($jobSets !== []) {
                 ?>

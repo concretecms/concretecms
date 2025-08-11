@@ -26,6 +26,7 @@ class FileTypeFilter implements FilterInterface
         return $this->type;
     }
 
+    #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
         return ['filter' => 'type', 'type' => $this->type];

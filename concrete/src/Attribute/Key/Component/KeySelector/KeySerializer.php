@@ -71,6 +71,7 @@ class KeySerializer implements \JsonSerializable
     /**
      * @return array
      */
+    #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
         ob_start();

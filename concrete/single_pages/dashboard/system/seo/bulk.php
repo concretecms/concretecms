@@ -84,7 +84,7 @@ if(empty($pages)) {
     return;
 }
 ?>
-<div class="tab-pane show active" id="ccm-seobulk-results" role="tabpanel" v-cloak>
+<div class="tab-pane active" id="ccm-seobulk-results" role="tabpanel" v-cloak>
     <table class="ccm-search-results-table table table-sm">
         <tbody>
             <tr v-for="(page, pageIndex) in pages" v-bind:key="pageIndex">

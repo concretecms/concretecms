@@ -6,6 +6,8 @@ defined('C5_EXECUTE') or die('Access Denied.');
 /* @var Concrete\Core\Page\View\PageView $view */
 
 /* @var bool $csvAddBom */
+/* @var string $datetimeFormat */
+/* @var array $predefinedConstants */
 ?>
 <form method="POST" action="<?= $view->action('submit') ?>">
     <?= $token->output('ccm-export-options') ?>
@@ -17,6 +19,8 @@ defined('C5_EXECUTE') or die('Access Denied.');
             <?= t('Include the BOM (Byte-Order Mark) in generated CSV files') ?>
         </label>
     </div>
+    <?= $form->label('datetimeFormat', t('Date Format')); ?>
+    <?= $form->select('datetimeFormat', $predefinedConstants, $datetimeFormat); ?>
 
     <div class="ccm-dashboard-form-actions-wrapper">
         <div class="ccm-dashboard-form-actions">

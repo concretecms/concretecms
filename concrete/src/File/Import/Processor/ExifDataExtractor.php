@@ -197,7 +197,7 @@ class ExifDataExtractor implements PostProcessorInterface
               (?=[A-Z][a-z])  # and before upper-then-lower case.
             /x';
         foreach ($metadata->toArray() as $key => $value) {
-            if (substr($key, 0, 5) === 'exif.' && (string) $value !== '') {
+            if (substr($key, 0, 5) === 'exif.' && !empty($value)) {
                 $matches = preg_split($re, substr($key, 5));
                 $label = implode(' ', $matches);
                 yield $label => $value;

@@ -115,4 +115,25 @@ class NodeType extends ConcreteObject
 
         return $list;
     }
+
+    public static function getList()
+    {
+        $db = Database::connection();
+        $list = array();
+        $r = $db->Execute('select treeNodeTypeID from TreeNodeTypes order by treeNodeTypeID asc');
+        while ($row = $r->fetch()) {
+            $list[] = TreeNodeType::getByID($row['treeNodeTypeID']);
+        }
+
+        return $list;
+    }
+
+    public function export(\SimpleXMLElement $node)
+    {
+        $node = $node->addChild('treenodetype');
+        $node->addAttribute('handle', $this->getTreeNodeTypeHandle());
+        $node->addAttribute('package', $this->getPackageHandle());
+        return $node;
+    }
+
 }

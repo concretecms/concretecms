@@ -10,9 +10,7 @@
     ];
 
     ?>
-	<?php echo $form->select('akTextareaDisplayMode', $akTextareaDisplayModeOptions, $akTextareaDisplayMode ?? 'rich_text', [
-        'class' => 'span8',
-    ])?>
+	<?php echo $form->select('akTextareaDisplayMode', $akTextareaDisplayModeOptions, $akTextareaDisplayMode ?? 'text')?>
 </div>
 
 </fieldset>

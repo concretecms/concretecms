@@ -2,7 +2,6 @@
 
 namespace Concrete\Core\Board\Command;
 
-use Concrete\Core\Entity\Board\Board;
 use Concrete\Core\Entity\Board\Template;
 use Concrete\Core\Entity\Site\Site;
 

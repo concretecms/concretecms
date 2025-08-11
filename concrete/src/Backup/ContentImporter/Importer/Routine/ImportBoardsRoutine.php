@@ -7,9 +7,11 @@ use Concrete\Core\Entity\Board\Board;
 use Concrete\Core\Entity\Board\DataSource\Configuration\Configuration;
 use Concrete\Core\Entity\Board\DataSource\ConfiguredDataSource;
 use Concrete\Core\Entity\Board\DataSource\DataSource;
+use Concrete\Core\Entity\Board\SlotTemplate;
 use Concrete\Core\Entity\Board\Template;
+use Concrete\Core\Utility\Service\Xml;
 use Doctrine\ORM\EntityManager;
-use Concrete\Core\ENtity\Board\SlotTemplate;
+
 class ImportBoardsRoutine extends AbstractRoutine
 {
     public function getHandle()
@@ -19,9 +21,10 @@ class ImportBoardsRoutine extends AbstractRoutine
 
     public function import(\SimpleXMLElement $sx)
     {
-        $app = app();
-        $em = $app->make(EntityManager::class);
         if (isset($sx->boards)) {
+            $app = app();
+            $em = $app->make(EntityManager::class);
+            $xml = $app->make(Xml::class);
             foreach ($sx->boards->board as $b) {
                 $board = $em->getRepository(Board::class)->findOneByBoardName((string) $b['name']);
                 if (!$board) {
@@ -66,8 +69,7 @@ class ImportBoardsRoutine extends AbstractRoutine
                         }
                     }
 
-                    if (((string) $b['uses-custom-template-subset']) == '1') {
-
+                    if ($xml->getBool($b['uses-custom-template-subset'])) {
                         $templateIds = [];
                         foreach ($b->templates->template as $templateNode) {
                             $templateNodeEntity = $em->getRepository(SlotTemplate::class)->findOneByHandle((string) $templateNode['handle']);

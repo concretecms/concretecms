@@ -4,7 +4,7 @@ namespace Concrete\StartingPointPackage\ElementalFull;
 
 use Concrete\Core\Package\StartingPointPackage;
 
-class controller extends StartingPointPackage
+class Controller extends StartingPointPackage
 {
     protected $pkgHandle = 'elemental_full';
     protected $pkgContentProvidesFileThumbnails = true;

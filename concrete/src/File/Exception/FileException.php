@@ -15,7 +15,7 @@ class FileException extends \Exception
         $file,
         $message = "",
         $code = 0,
-        \Exception $previous = null
+        ?\Exception $previous = null
     ) {
         $this->fileObject = $file;
         parent::__construct($message, $code, $previous);

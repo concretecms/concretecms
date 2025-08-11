@@ -46,6 +46,7 @@ class FontFamilyStyle extends Style
         return $variable;
     }
 
+    #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
         $data = parent::jsonSerialize();

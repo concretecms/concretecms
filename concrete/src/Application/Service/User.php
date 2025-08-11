@@ -1,13 +1,14 @@
 <?php
 namespace Concrete\Core\Application\Service;
 
+use Concrete\Core\Session\SessionValidator;
 use Loader;
 use TaskPermission;
 
 class User
 {
     /**
-     * @param $uo \User
+     * @param $uo \Concrete\Core\User\User|int
      * @param bool $showSpacer
      *
      * @return mixed
@@ -22,8 +23,8 @@ class User
             $db = Loader::db();
             $ul = $db->getOne("select uLastOnline from Users where uID = {$uo}");
         }
-
-        $online = (time() - $ul) <= ONLINE_NOW_TIMEOUT;
+        $onlineTimeout = app(SessionValidator::class)->getUserActivityThreshold();
+        $online = (time() - $ul) <= $onlineTimeout;
 
         if ($online) {
             return ONLINE_NOW_SRC_ON;
@@ -40,7 +41,7 @@ class User
      *
      * @return bool
      *
-     * @deprecated Use `\Core::make('validator/password')->isValid($password, $error);`
+     * @deprecated Use `app('validator/password')->isValid($password, $error);`
      */
     public function validNewPassword($password, $errorObj = null)
     {

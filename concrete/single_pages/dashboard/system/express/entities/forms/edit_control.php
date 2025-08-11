@@ -66,9 +66,7 @@ $token = $app->make(Token::class);
             $(this).concreteAjaxForm({
                 'dataType': 'html',
                 success: function (r) {
-                    var control = $('tr[data-field-set-control=' + controlID + ']');
-                    control.replaceWith(r);
-                    jQuery.fn.dialog.closeTop();
+                    window.location.reload()
                 }
             });
         });

@@ -5,6 +5,7 @@ use Concrete\Core\Attribute\Type;
 use Concrete\Core\Block\BlockType\BlockType;
 use Concrete\Core\Editor\Snippet;
 use Concrete\Core\Permission\Category;
+use Concrete\Core\Utility\Service\Xml;
 use Concrete\Core\Validation\BannedWord\BannedWord;
 
 class ImportSystemContentEditorSnippetsRoutine extends AbstractRoutine
@@ -17,10 +18,14 @@ class ImportSystemContentEditorSnippetsRoutine extends AbstractRoutine
     public function import(\SimpleXMLElement $sx)
     {
         if (isset($sx->systemcontenteditorsnippets)) {
+            $xml = app(Xml::class);
             foreach ($sx->systemcontenteditorsnippets->snippet as $th) {
                 $pkg = static::getPackageObject($th['package']);
-                $scs = Snippet::add($th['handle'], $th['name'], $pkg);
-                if ($th['activated'] == '1') {
+                $scs = Snippet::getByHandle((string) $th['handle']);
+                if (!$scs) {
+                    $scs = Snippet::add($th['handle'], $th['name'], $pkg);
+                }
+                if ($xml->getBool($th['activated'])) {
                     $scs->activate();
                 }
             }

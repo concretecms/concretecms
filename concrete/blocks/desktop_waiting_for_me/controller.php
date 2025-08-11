@@ -1,40 +1,58 @@
 <?php
+
 namespace Concrete\Block\DesktopWaitingForMe;
 
 use Concrete\Core\Block\BlockController;
 use Concrete\Core\Block\View\BlockView;
 use Concrete\Core\Feature\Features;
 use Concrete\Core\Feature\UsesFeatureInterface;
+use Concrete\Core\Notification\Alert\AlertList;
 use Concrete\Core\Notification\Alert\Filter\FilterListFactory;
 use Concrete\Core\User\User;
-use Concrete\Core\Workflow\Progress\Category;
-use Core;
-use Concrete\Core\Notification\Alert\AlertList;
 
-defined('C5_EXECUTE') or die("Access Denied.");
+defined('C5_EXECUTE') or die('Access Denied.');
 
 class Controller extends BlockController implements UsesFeatureInterface
 {
-    public $helpers = array('form');
-
+    /**
+     * @var int
+     */
     protected $btInterfaceWidth = 450;
+
+    /**
+     * @var int
+     */
     protected $btInterfaceHeight = 560;
 
+    /**
+     * @return array|string[]
+     */
     public function getRequiredFeatures(): array
     {
         return [Features::DESKTOP];
     }
 
+    /**
+     * @return string
+     */
     public function getBlockTypeDescription()
     {
-        return t("Displays workflow actions waiting for you.");
+        return t('Displays workflow actions waiting for you.');
     }
 
+    /**
+     * @return string
+     */
     public function getBlockTypeName()
     {
-        return t("Waiting for Me");
+        return t('Waiting for Me');
     }
 
+    /**
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     *
+     * @return void
+     */
     public function view()
     {
         $filterValues = ['' => t('** Show All')];
@@ -42,11 +60,12 @@ class Controller extends BlockController implements UsesFeatureInterface
         $factory = $this->app->make(FilterListFactory::class);
         $filterList = $factory->createList();
         $filters = $filterList->getFilters();
-        foreach($filters as $filter) {
+        foreach ($filters as $filter) {
             $filterValues[$filter->getKey()] = $filter->getName();
         }
 
         $u = $this->app->make(User::class);
+        /** @var AlertList $list */
         $list = $this->app->make(AlertList::class, ['user' => $u]);
         $filter = (string) $this->request->query->get('filter');
         if ($filter !== '') {
@@ -70,6 +89,9 @@ class Controller extends BlockController implements UsesFeatureInterface
         $this->set('filter', $filter);
     }
 
+    /**
+     * @return void
+     */
     public function action_reload_results()
     {
         $b = $this->getBlockObject();
@@ -77,5 +99,4 @@ class Controller extends BlockController implements UsesFeatureInterface
         $bv->render('view');
         exit;
     }
-
 }

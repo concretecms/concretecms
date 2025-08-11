@@ -25,32 +25,45 @@ class DeprecatedImporterTest extends FileStorageTestCase
     public function __construct($name = null, array $data = [], $dataName = '')
     {
         parent::__construct($name, $data, $dataName);
+        $this->app = Facade::getFacadeApplication();;
+        $this->app->make('config')->set('concrete.upload.extensions', '*.txt;*.jpg;*.jpeg;*.png');
+    }
 
-        $this->tables = array_merge($this->tables, [
-            'Users',
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\TestHelpers\Database\ConcreteDatabaseTestCase::getTables()
+     */
+    protected function getTables()
+    {
+        return array_merge(parent::getTables(), [
             'PermissionAccessEntityTypes',
-            'FileImageThumbnailTypes',
             'FileImageThumbnailPaths',
             'FilePermissionAssignments',
             'ConfigStore',
             'Logs',
             'FileVersionLog',
         ]);
-        $this->metadatas = array_merge($this->metadatas, [
-            'Concrete\Core\Entity\Attribute\Key\Settings\NumberSettings',
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\TestHelpers\Database\ConcreteDatabaseTestCase::getEntityClassNames()
+     */
+    protected function getEntityClassNames(): array
+    {
+        return array_merge(parent::getEntityClassNames(), [
             'Concrete\Core\Entity\Attribute\Key\Settings\Settings',
             'Concrete\Core\Entity\Attribute\Key\Settings\EmptySettings',
             'Concrete\Core\Entity\Attribute\Key\FileKey',
             'Concrete\Core\Entity\Attribute\Value\FileValue',
             'Concrete\Core\Entity\Attribute\Key\Key',
-            'Concrete\Core\Entity\Attribute\Value\Value',
             'Concrete\Core\Entity\Attribute\Value\Value\NumberValue',
             'Concrete\Core\Entity\Attribute\Value\Value\Value',
             'Concrete\Core\Entity\Attribute\Type',
             'Concrete\Core\Entity\Attribute\Category',
         ]);
-        $this->app = Facade::getFacadeApplication();;
-        $this->app->make('config')->set('concrete.upload.extensions', '*.txt;*.jpg;*.jpeg;*.png');
     }
 
     /**

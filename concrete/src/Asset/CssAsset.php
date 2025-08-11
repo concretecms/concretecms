@@ -1,8 +1,8 @@
 <?php
 namespace Concrete\Core\Asset;
 
+use Concrete\Core\Config\Repository\Repository;
 use Concrete\Core\Html\Object\HeadLink;
-use Config;
 
 class CssAsset extends Asset
 {
@@ -73,16 +73,15 @@ class CssAsset extends Asset
      */
     protected static function getOutputDirectory()
     {
-        if (!file_exists(Config::get('concrete.cache.directory').'/'.DIRNAME_CSS)) {
-            $proceed = @mkdir(Config::get('concrete.cache.directory').'/'.DIRNAME_CSS);
+        $config = app(Repository::class);
+        $path = $config->get('concrete.cache.directory') . '/' . DIRNAME_CSS;
+        if (!file_exists($path)) {
+            $proceed = @mkdir($path, $config->get('concrete.filesystem.permissions.directory'));
         } else {
             $proceed = true;
         }
-        if ($proceed) {
-            return Config::get('concrete.cache.directory').'/'.DIRNAME_CSS;
-        } else {
-            return false;
-        }
+        
+        return $proceed ? $path : false;
     }
 
     /**

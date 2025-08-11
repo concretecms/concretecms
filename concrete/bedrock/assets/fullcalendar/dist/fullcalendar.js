@@ -1,5 +1,5 @@
 /*!
- * FullCalendar v3.10.2
+ * FullCalendar v3.10.5
  * Docs & License: https://fullcalendar.io/
  * (c) 2019 Adam Shaw
  */
@@ -1976,7 +1976,7 @@ function isHitPropsWithin(subHit, superHit) {
 /***/ (function(module, exports, __webpack_require__) {
 
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.version = '3.10.2';
+exports.version = '3.10.5';
 // When introducing internal API incompatibilities (where fullcalendar plugins would break),
 // the minor version of the calendar should be upped (ex: 2.7.2 -> 2.8.0)
 // and the below integer should be incremented.

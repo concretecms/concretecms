@@ -7,8 +7,9 @@ use Symfony\Component\Messenger\Transport\TransportInterface as WrappedTransport
  */
 interface TransportInterface
 {
-
+    const DEFAULT_SYNC = 'sync';
     const DEFAULT_ASYNC = 'async';
+    const DEFAULT_FAILED = 'failed';
 
     /**
      * @return callable[]

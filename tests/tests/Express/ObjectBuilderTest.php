@@ -2,6 +2,7 @@
 
 namespace Concrete\Tests\Express;
 
+use Concrete\Core\Attribute\Key\Category;
 use Concrete\TestHelpers\Database\ConcreteDatabaseTestCase;
 use Core;
 use Express;
@@ -25,7 +26,7 @@ class ObjectBuilderTest extends ConcreteDatabaseTestCase
         'Groups',
     ];
 
-    protected $metadatas = [
+    protected $entityClassNames = [
         'Concrete\Core\Entity\Express\Entity',
         'Concrete\Core\Entity\Express\Entry',
         'Concrete\Core\Entity\Express\Association',
@@ -35,6 +36,7 @@ class ObjectBuilderTest extends ConcreteDatabaseTestCase
         'Concrete\Core\Entity\Express\Control\AttributeKeyControl',
         'Concrete\Core\Entity\Express\Control\TextControl',
         'Concrete\Core\Entity\Package',
+        'Concrete\Core\Entity\Attribute\Category',
         'Concrete\Core\Entity\Attribute\Type',
         'Concrete\Core\Entity\Attribute\Key\ExpressKey',
         'Concrete\Core\Entity\Attribute\Key\Key',
@@ -65,6 +67,8 @@ class ObjectBuilderTest extends ConcreteDatabaseTestCase
         $em->flush();
 
         $this->pkg = $pkg;
+
+        Category::add('express');
 
         $factory = \Core::make('\Concrete\Core\Attribute\TypeFactory');
         $factory->add('text', 'Text');

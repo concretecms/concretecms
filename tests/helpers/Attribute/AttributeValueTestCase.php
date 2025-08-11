@@ -15,7 +15,7 @@ use Page;
 abstract class AttributeValueTestCase extends ConcreteDatabaseTestCase
 {
     protected $fixtures = [];
-    protected $metadatas = [
+    protected $entityClassNames = [
         'Concrete\Core\Entity\Site\Site',
         'Concrete\Core\Entity\Site\Type',
         'Concrete\Core\Entity\Site\Locale',
@@ -25,7 +25,6 @@ abstract class AttributeValueTestCase extends ConcreteDatabaseTestCase
         'Concrete\Core\Entity\Attribute\Type',
         'Concrete\Core\Entity\Attribute\Key\Key',
         'Concrete\Core\Entity\Attribute\Key\PageKey',
-        'Concrete\Core\Entity\Attribute\Value\Value',
         'Concrete\Core\Entity\Attribute\Value\Value\Value',
         'Concrete\Core\Entity\Attribute\Value\PageValue',
         'Concrete\Core\Entity\Page\PagePath',
@@ -38,6 +37,16 @@ abstract class AttributeValueTestCase extends ConcreteDatabaseTestCase
         'PageThemes',
         'Groups',
     ];
+
+    /**
+     * @var \Concrete\Core\Attribute\Category\CategoryInterface
+     */
+    protected $category;
+
+    /**
+     * @var \Concrete\Core\Page\Page|\Concrete\Core\Attribute\ObjectInterface
+     */
+    protected $object;
 
     public function setUp(): void
     {

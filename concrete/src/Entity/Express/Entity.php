@@ -1,18 +1,25 @@
 <?php
+
 namespace Concrete\Core\Entity\Express;
 
 use Concrete\Core\Attribute\CategoryObjectInterface;
+use Concrete\Core\Entity\Attribute\Key\ExpressKey;
 use Concrete\Core\Entity\PackageTrait;
 use Concrete\Core\Entity\Site\Site;
 use Concrete\Core\Export\ExportableInterface;
+use Concrete\Core\Express\Controller\ControllerInterface;
 use Concrete\Core\Express\Search\ColumnSet\ColumnSet;
 use Concrete\Core\Express\Search\ColumnSet\DefaultSet;
 use Concrete\Core\Permission\ObjectInterface;
 use Concrete\Core\Tree\Node\Node;
 use Concrete\Core\Tree\Node\Type\ExpressEntryResults;
-use Doctrine\Common\Collections\ArrayCollection;
 use Concrete\Core\Export\Item\Express\Entity as EntityExporter;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use League\Url\UrlInterface;
+use Concrete\Block\ExpressForm\Controller as ExpressFormBlockController;
+
 /**
  * @ORM\Entity(repositoryClass="\Concrete\Core\Entity\Express\EntityRepository")
  * @ORM\Table(name="ExpressEntities")
@@ -70,6 +77,16 @@ class Entity implements CategoryObjectInterface, ObjectInterface, ExportableInte
      * @ORM\Column(type="boolean")
      */
     protected $include_in_public_list = true;
+
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    protected $is_published = true;
+
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    protected $include_in_rest_api = false;
 
     /**
      * @ORM\Column(type="integer")
@@ -244,6 +261,22 @@ class Entity implements CategoryObjectInterface, ObjectInterface, ExportableInte
     }
 
     /**
+     * @return bool
+     */
+    public function isPublished(): bool
+    {
+        return $this->is_published;
+    }
+
+    /**
+     * @param bool $is_published
+     */
+    public function setIsPublished(bool $is_published): void
+    {
+        $this->is_published = $is_published;
+    }
+
+    /**
      * @return string
      */
     public function getLabelMask()
@@ -329,7 +362,7 @@ class Entity implements CategoryObjectInterface, ObjectInterface, ExportableInte
     }
 
     /**
-     * @return mixed
+     * @return Form|null
      */
     public function getDefaultViewForm()
     {
@@ -337,7 +370,7 @@ class Entity implements CategoryObjectInterface, ObjectInterface, ExportableInte
     }
 
     /**
-     * @param mixed $default_view_form
+     * @param Form|null $default_view_form
      */
     public function setDefaultViewForm($default_view_form)
     {
@@ -345,7 +378,7 @@ class Entity implements CategoryObjectInterface, ObjectInterface, ExportableInte
     }
 
     /**
-     * @return mixed
+     * @return Form|null
      */
     public function getDefaultEditForm()
     {
@@ -353,7 +386,7 @@ class Entity implements CategoryObjectInterface, ObjectInterface, ExportableInte
     }
 
     /**
-     * @param mixed $default_edit_form
+     * @param Form|null $default_edit_form
      */
     public function setDefaultEditForm($default_edit_form)
     {
@@ -430,7 +463,7 @@ class Entity implements CategoryObjectInterface, ObjectInterface, ExportableInte
     }
 
     /**
-     * @return ArrayCollection[]
+     * @return Collection<int, ExpressKey>|ExpressKey[]
      */
     public function getAttributes()
     {
@@ -443,7 +476,7 @@ class Entity implements CategoryObjectInterface, ObjectInterface, ExportableInte
     }
 
     /**
-     * @return Association[]
+     * @return Collection<int, Association>|Association[]
      */
     public function getAssociations()
     {
@@ -459,7 +492,7 @@ class Entity implements CategoryObjectInterface, ObjectInterface, ExportableInte
     }
 
     /**
-     * @return mixed
+     * @return Collection<int, Form>|Form[]
      */
     public function getForms()
     {
@@ -491,7 +524,7 @@ class Entity implements CategoryObjectInterface, ObjectInterface, ExportableInte
         return $this->entity_results_node_id;
     }
 
-    public function getEntityResultsNodeObject(Site $site = null)
+    public function getEntityResultsNodeObject(?Site $site = null)
     {
         $node = Node::getByID($this->getEntityResultsNodeId());
         if ($node) {
@@ -573,8 +606,61 @@ class Entity implements CategoryObjectInterface, ObjectInterface, ExportableInte
         return new EntityExporter();
     }
 
+    /**
+     * @return ControllerInterface
+     */
     public function getController()
     {
-
+        return app('express')->getEntityController($this);
     }
+
+    /**
+     * @TODO - add a new interface for managing this within an express entity's controller, perhaps in 9.2.0.
+     * It should have the same functionality in the StandardController, but this will allow custom controllers
+     * to change how this functions
+     *
+     * @return UrlInterface
+     */
+    public function getEntryListingUrl(): UrlInterface
+    {
+        $node = $this->getEntityResultsNodeObject();
+        $parent = $node->getTreeNodeParentObject();
+        $url = app('url/resolver/path');
+        if ($parent && $parent->getTreeNodeTypeHandle() == 'express_entry_category' && $parent->getTreeNodeName() ==
+            ExpressFormBlockController::FORM_RESULTS_CATEGORY_NAME) {
+            return $url->resolve(['/dashboard/reports/forms/results', $this->getId()]);
+        } else {
+            return $url->resolve(['/dashboard/express/entries/results', $this->getId()]);
+        }
+    }
+
+    public function __clone()
+    {
+        $this->id = null;
+        $this->attributes = new ArrayCollection();
+        $this->associations = new ArrayCollection();
+        $this->entries = new ArrayCollection();
+        $this->forms = new ArrayCollection();
+        $this->default_edit_form = null;
+        $this->default_view_form = null;
+        $this->created_date = new \DateTime();
+    }
+
+    /**
+     * @return bool
+     */
+    public function getIncludeInRestApi(): bool
+    {
+        return $this->include_in_rest_api;
+    }
+
+    /**
+     * @param bool $include_in_rest_api
+     */
+    public function setIncludeInRestApi(bool $include_in_rest_api): void
+    {
+        $this->include_in_rest_api = $include_in_rest_api;
+    }
+
+
 }

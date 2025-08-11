@@ -88,7 +88,7 @@ class PageList extends DatabaseItemList implements PagerProviderInterface, Pagin
      */
     protected $includeInactivePages = false;
 
-    public function __construct(StickyRequest $req = null)
+    public function __construct(?StickyRequest $req = null)
     {
         $u = Application::getFacadeApplication()->make(User::class);
         if ($u->isSuperUser()) {
@@ -138,7 +138,7 @@ class PageList extends DatabaseItemList implements PagerProviderInterface, Pagin
         $this->includeSystemPages = true;
     }
 
-    public function setPermissionsChecker(\Closure $checker = null)
+    public function setPermissionsChecker(?\Closure $checker = null)
     {
         $this->permissionsChecker = $checker;
     }
@@ -188,7 +188,7 @@ class PageList extends DatabaseItemList implements PagerProviderInterface, Pagin
 
     public function finalizeQuery(\Doctrine\DBAL\Query\QueryBuilder $query)
     {
-        $expr = $query->expr();
+        $app = Application::getFacadeApplication();
         if ($this->includeAliases) {
             $query->from('Pages', 'p')
                 ->leftJoin('p', 'Pages', 'pa', 'p.cPointerID = pa.cID')
@@ -216,7 +216,7 @@ class PageList extends DatabaseItemList implements PagerProviderInterface, Pagin
             case self::PAGE_VERSION_RECENT_UNAPPROVED:
                 $query
                     ->andWhere('cv.cvID = (select max(cvID) from CollectionVersions where cID = cv.cID)')
-                    ->andWhere($expr->eq('cvIsApproved', 0));
+                    ->andWhere('cvIsApproved = 0');
                 break;
             case self::PAGE_VERSION_SCHEDULED:
                 $now = new \DateTime();
@@ -225,7 +225,6 @@ class PageList extends DatabaseItemList implements PagerProviderInterface, Pagin
                 break;
             case self::PAGE_VERSION_ACTIVE:
             default:
-                $app = Application::getFacadeApplication();
                 $query->andWhere('cv.cvID = (select max(cvID) from CollectionVersions where cID = cv.cID and cvIsApproved = 1 and ((cvPublishDate <= :cvPublishDate or cvPublishDate is null) and (cvPublishEndDate >= :cvPublishDate or cvPublishEndDate is null)))');
                 $query->setParameter('cvPublishDate', $app->make('date')->getOverridableNow());
                 break;
@@ -245,13 +244,13 @@ class PageList extends DatabaseItemList implements PagerProviderInterface, Pagin
             } else {
                 switch ($this->siteTree) {
                     case self::SITE_TREE_CURRENT:
-                        $c = \Page::getCurrentPage();
+                        $c = Page::getCurrentPage();
                         $tree = false;
                         if (is_object($c) && !$c->isError()) {
                             $tree = $c->getSiteTreeObject();
                         }
                         if (!is_object($tree)) {
-                            $site = \Core::make('site')->getSite();
+                            $site = $app->make('site')->getSite();
                             $tree = $site->getSiteTreeObject();
                         }
                         break;
@@ -301,7 +300,7 @@ class PageList extends DatabaseItemList implements PagerProviderInterface, Pagin
 
     public function getTotalResults()
     {
-        if ($this->permissionsChecker === -1) {
+        if (isset($this->permissionsChecker) && $this->permissionsChecker === -1) {
             $query = $this->deliverQueryObject();
             // We need to reset the potential custom order by here because otherwise, if we've added
             // items to the select parts, and we're ordering by them, we get a SQL error
@@ -331,21 +330,22 @@ class PageList extends DatabaseItemList implements PagerProviderInterface, Pagin
      */
     public function getResult($queryRow)
     {
+        $permissionsDisabled = isset($this->permissionsChecker) && $this->permissionsChecker === -1;
         $c = Page::getByID($queryRow['cID']);
         if (is_object($c) && $this->checkPermissions($c)) {
             if ($this->pageVersionToRetrieve == self::PAGE_VERSION_RECENT) {
                 $cp = new \Permissions($c);
-                if ($cp->canViewPageVersions() || $this->permissionsChecker === -1) {
+                if ($cp->canViewPageVersions() || $permissionsDisabled) {
                     $c->loadVersionObject('RECENT');
                 }
             } elseif ($this->pageVersionToRetrieve == self::PAGE_VERSION_SCHEDULED) {
                 $cp = new \Permissions($c);
-                if ($cp->canViewPageVersions() || $this->permissionsChecker === -1) {
+                if ($cp->canViewPageVersions() || $permissionsDisabled) {
                     $c->loadVersionObject('SCHEDULED');
                 }
             } elseif ($this->pageVersionToRetrieve == self::PAGE_VERSION_RECENT_UNAPPROVED) {
                 $cp = new \Permissions($c);
-                if ($cp->canViewPageVersions() || $this->permissionsChecker === -1) {
+                if ($cp->canViewPageVersions() || $permissionsDisabled) {
                     $c->loadVersionObject('RECENT_UNAPPROVED');
                 }
             } else {
@@ -479,6 +479,10 @@ class PageList extends DatabaseItemList implements PagerProviderInterface, Pagin
      */
     public function filterByPagesWithCustomStyles()
     {
+        if ($this->queryHasAlias('cvStyles')) {
+            return;
+        }
+
         $this->query->innerJoin(
             'cv',
             'CollectionVersionThemeCustomStyles',
@@ -561,7 +565,14 @@ class PageList extends DatabaseItemList implements PagerProviderInterface, Pagin
      */
     public function filterByPath($path, $includeAllChildren = true)
     {
-        $this->query->leftJoin('p', 'PagePaths', 'pp', 'p.cID = pp.cID and pp.ppIsCanonical = true');
+        if (!is_string($path)) {
+            return;
+        }
+
+        if (!$this->queryHasAlias('pp')) {
+            $this->query->leftJoin('p', 'PagePaths', 'pp', 'p.cID = pp.cID and pp.ppIsCanonical = true');
+        }
+
         if (!$includeAllChildren) {
             $this->query->andWhere('pp.cPath = :cPath');
             $this->query->setParameter('cPath', $path);
@@ -690,6 +701,12 @@ class PageList extends DatabaseItemList implements PagerProviderInterface, Pagin
             $this->query->expr()->in('p.cID', $query->getSQL())
         );
         $this->query->setParameter('containerID', $containerID);
+    }
+
+    public function filterByCacheSettings($value)
+    {
+        $this->query->andWhere('p.cCacheFullPageContent = :cacheSettings');
+        $this->query->setParameter('cacheSettings', $value);
     }
 
 
@@ -825,5 +842,35 @@ class PageList extends DatabaseItemList implements PagerProviderInterface, Pagin
             $selects[0] = 'distinct p.cID';
             $this->query->select($selects);
         }
+    }
+
+    /**
+     * Checks whether the query already contains the given alias.
+     *
+     * This avoids the following kind of query exceptions in case the join would
+     * be added multiple times:
+     * The given alias 'pp' is not unique in FROM and JOIN clause table.
+     *
+     * This can happen e.g. at Concrete\Block\Search\Controller due to the
+     * `filterByPath` method potentially called multiple times.
+     *
+     * @property string $alias The alias to look for in the join statements.
+     *
+     * @example <code><pre>
+     * $this->queryHasAlias('pp');
+     * </code></pre>
+     */
+    protected function queryHasAlias($alias): bool
+    {
+        $queryParts = $this->query->getQueryPart('join');
+        foreach ($queryParts as $tableJoins) {
+            foreach ($tableJoins as $join) {
+                $value = $join['joinAlias'] ?? null;
+                if ($value === $alias) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 }

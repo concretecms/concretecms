@@ -2,25 +2,14 @@
 namespace Concrete\Core\Board\Instance\Slot\Content;
 
 use Concrete\Core\Board\Instance\Item\Data\DataInterface;
+use Concrete\Core\Board\Instance\Logger\LoggerFactory;
 use Concrete\Core\Board\Item\ItemProviderInterface;
 use Concrete\Core\Entity\Board\InstanceItem;
-use Concrete\Core\Entity\Board\Item;
 use Concrete\Core\Foundation\Serializer\JsonSerializer;
-use Concrete\Core\Logging\Channels;
-use Concrete\Core\Logging\LoggerAwareInterface;
-use Concrete\Core\Logging\LoggerAwareTrait;
 use Doctrine\ORM\EntityManager;
 
-class ContentPopulator implements LoggerAwareInterface
+class ContentPopulator
 {
-
-    use LoggerAwareTrait;
-
-    public function getLoggerChannel()
-    {
-        return Channels::CHANNEL_CONTENT;
-    }
-
     /**
      * @var JsonSerializer
      */
@@ -31,10 +20,16 @@ class ContentPopulator implements LoggerAwareInterface
      */
     protected $entityManager;
 
-    public function __construct(EntityManager $entityManager, JsonSerializer $serializer)
+    /**
+     * @var LoggerFactory
+     */
+    protected $loggerFactory;
+
+    public function __construct(EntityManager $entityManager, JsonSerializer $serializer, LoggerFactory $loggerFactory)
     {
         $this->entityManager = $entityManager;
         $this->serializer = $serializer;
+        $this->loggerFactory = $loggerFactory;
     }
 
     /**
@@ -57,10 +52,16 @@ class ContentPopulator implements LoggerAwareInterface
             if (!($itemData instanceof DataInterface)) {
                 $itemData = $this->serializer->denormalize($item->getData(), $contentPopulator->getDataClass(), 'json');
             }
-            $this->logger->debug(t('Item ID %s was transformed into content data %s',
-                $item->getBoardItemID(), json_encode($itemData)
-            ));
-            $contentObjects = $contentPopulator->createContentObjects($itemData);
+            $logger = null;
+            if ($instanceItem instanceof InstanceItem) {
+                $logger = $this->loggerFactory->createFromInstance($instanceItem->getInstance());
+                $logger->write(t('Item ID %s was transformed into content',
+                    $item->getBoardItemID()
+                ), $itemData);
+            } else {
+                $logger = $this->loggerFactory->createNullLogger();
+            }
+            $contentObjects = $contentPopulator->createContentObjects($itemData, $logger);
             $groups[] = new ItemObjectGroup($instanceItem, $contentObjects);
         }
         return $groups;

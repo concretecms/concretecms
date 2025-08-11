@@ -53,6 +53,8 @@ class GenerateThumbnailCommandHandler
                                         $fileVersion->generateThumbnail($thumbnailTypeVersion);
                                     }
                                 }
+
+                                $fileVersion->releaseImagineImage();
                             }
                         }
                     }

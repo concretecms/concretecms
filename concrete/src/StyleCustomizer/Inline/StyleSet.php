@@ -6,6 +6,7 @@ use Concrete\Core\Entity\StyleCustomizer\Inline\StyleSet as StyleSetEntity;
 use Concrete\Core\Error\UserMessageException;
 use Concrete\Core\Page\Theme\GridFramework\GridFramework;
 use Concrete\Core\Support\Facade\Application;
+use Concrete\Core\Utility\Service\Xml;
 use Doctrine\ORM\EntityManagerInterface;
 use SimpleXMLElement;
 use Symfony\Component\HttpFoundation\Request;
@@ -39,51 +40,69 @@ class StyleSet
      */
     public static function import(SimpleXMLElement $node)
     {
+        $xmlService = app(Xml::class);
         $o = new StyleSetEntity();
+        $o->setCustomClass((string) $node->customClass);
+        $o->setCustomID((string) $node->customID);
+        $o->setCustomElementAttribute((string) $node->customElementAttribute);
         $o->setBackgroundColor((string) $node->backgroundColor);
         $filename = (string) $node->backgroundImage;
         if ($filename) {
-            $app = Application::getFacadeApplication();
-            $inspector = $app->make('import/value_inspector');
+            $inspector = app('import/value_inspector');
             $result = $inspector->inspect($filename);
             $fID = $result->getReplacedValue();
             if ($fID) {
                 $o->setBackgroundImageFileID($fID);
             }
         }
-
         $o->setBackgroundRepeat((string) $node->backgroundRepeat);
         $o->setBackgroundSize((string) $node->backgroundSize);
         $o->setBackgroundPosition((string) $node->backgroundPosition);
-        $o->setBorderWidth((string) $node->borderWidth);
         $o->setBorderColor((string) $node->borderColor);
         $o->setBorderStyle((string) $node->borderStyle);
+        $o->setBorderWidth((string) $node->borderWidth);
         $o->setBorderRadius((string) $node->borderRadius);
         $o->setBaseFontSize((string) $node->baseFontSize);
         $o->setAlignment((string) $node->alignment);
         $o->setTextColor((string) $node->textColor);
         $o->setLinkColor((string) $node->linkColor);
-        $o->setPaddingTop((string) $node->paddingTop);
-        $o->setPaddingBottom((string) $node->paddingBottom);
-        $o->setPaddingLeft((string) $node->paddingLeft);
-        $o->setPaddingRight((string) $node->paddingRight);
         $o->setMarginTop((string) $node->marginTop);
         $o->setMarginBottom((string) $node->marginBottom);
         $o->setMarginLeft((string) $node->marginLeft);
         $o->setMarginRight((string) $node->marginRight);
+        $o->setPaddingTop((string) $node->paddingTop);
+        $o->setPaddingBottom((string) $node->paddingBottom);
+        $o->setPaddingLeft((string) $node->paddingLeft);
+        $o->setPaddingRight((string) $node->paddingRight);
         $o->setRotate((string) $node->rotate);
         $o->setBoxShadowHorizontal((string) $node->boxShadowHorizontal);
         $o->setBoxShadowVertical((string) $node->boxShadowVertical);
-        $o->setBoxShadowSpread((string) $node->boxShadowSpread);
         $o->setBoxShadowBlur((string) $node->boxShadowBlur);
+        $o->setBoxShadowSpread((string) $node->boxShadowSpread);
         $o->setBoxShadowColor((string) $node->boxShadowColor);
-        $o->setCustomClass((string) $node->customClass);
-        $o->setCustomID((string) $node->customID);
-        $o->setCustomElementAttribute((string) $node->customElementAttribute);
+        $o->setBoxShadowInset($xmlService->getBool($node->boxShadowInset));
+        $o->setHideOnExtraSmallDevice($xmlService->getBool($node->hideOnExtraSmallDevice));
+        $o->setHideOnSmallDevice($xmlService->getBool($node->hideOnSmallDevice));
+        $o->setHideOnMediumDevice($xmlService->getBool($node->hideOnMediumDevice));
+        $o->setHideOnLargeDevice($xmlService->getBool($node->hideOnLargeDevice));
 
         $o->save();
 
         return $o;
+    }
+
+    /**
+     * @param string[] $cssClasses
+     */
+    protected static function sanitizeCssClasses(array $cssClasses): ?string
+    {
+        $cssClasses = array_filter($cssClasses, function ($class) {
+            return preg_match('/^[^<>\'"]+$/', $class);
+        });
+        if (count($cssClasses) > 0) {
+            return implode(' ', $cssClasses);
+        }
+        return null;
     }
 
     /**
@@ -235,20 +254,25 @@ class StyleSet
             $boxShadowVertical = trim($post->get('boxShadowVertical', '')) ?: '0px';
             $boxShadowBlur = trim($post->get('boxShadowBlur', '')) ?: '0px';
             $boxShadowSpread = trim($post->get('boxShadowSpread', '')) ?: '0px';
+            $boxShadowInset = (bool) $post->get('boxShadowInset');
             if ($boxShadowHorizontal !== '0px' || $boxShadowVertical !== '0px' || $boxShadowBlur !== '0px' || $boxShadowSpread !== '0px') {
                 $set->setBoxShadowColor($post->get('boxShadowColor'));
                 $set->setBoxShadowBlur($boxShadowBlur);
                 $set->setBoxShadowHorizontal($boxShadowHorizontal);
                 $set->setBoxShadowVertical($boxShadowVertical);
                 $set->setBoxShadowSpread($boxShadowSpread);
+                $set->setBoxShadowInset($boxShadowInset);
                 $return = true;
             }
         }
 
         $v = $post->get('customClass');
         if (is_array($v)) {
-            $set->setCustomClass(implode(' ', $v));
-            $return = true;
+            $customClasses = self::sanitizeCssClasses($v);
+            if ($customClasses !== null) {
+                $set->setCustomClass($customClasses);
+                $return = true;
+            }
         }
 
         $v = trim($post->get('customID', ''));

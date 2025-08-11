@@ -79,6 +79,7 @@ class SizeValue extends Value
         return $this->unit;
     }
 
+    #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
         return [

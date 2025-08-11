@@ -107,7 +107,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 </script>
 <div class="ccm-panel-detail-form-actions dialog-buttons">
     <button class="float-start btn btn-secondary" type="button" data-dialog-action="cancel" data-panel-detail-action="cancel"><?=t('Cancel')?></button>
-    <button class="float-end btn btn-success" type="button" data-dialog-action="submit" data-panel-detail-action="submit"><?=t('Save Changes')?></button>
+    <button class="float-end btn btn-success" type="button" data-dialog-action="submit"><?= t('Save Changes') ?></button>
 </div>
 
 <script type="text/javascript">
@@ -117,6 +117,32 @@ var renderPagePath = _.template(
 );
 
 $(function() {
+
+    $('button[data-dialog-action="submit"]').on('click', function(e) {
+        e.preventDefault();
+        let formData = $('form[data-dialog-form="location"]').serialize();
+
+        $.ajax({
+            type: 'POST',
+            url: <?= json_encode((string) $controller->action('check')) ?>,
+            data: formData,
+            success: (xhr) => {
+                let response = JSON.parse(xhr);
+
+                if (response.paths && response.paths.length) {
+                    let pathsList = response.paths.map(path => `<li>${path}</li>`).join('');
+                    let errorMessage = `<?= t('The following page paths already exist:') ?> <ul>${pathsList}</ul> <?= t('Do you want to continue?')?>`;
+
+                    ConcreteAlert.confirm(errorMessage, function () {
+                        $('form[data-dialog-form="location"]').submit();
+                    });
+                } else {
+                    $('form[data-dialog-form="location"]').submit();
+                }
+            }
+        });
+    });
+
 
 	$('form[data-panel-detail-form=location]').on('click', 'a[data-action=remove-page-path]', function(e) {
 		e.preventDefault();

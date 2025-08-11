@@ -31,21 +31,21 @@ class NotifyInNotificationCenterNotificationAccess extends NotificationAccess
         $db = Database::connection();
         $db->executeQuery('delete from NotificationPermissionSubscriptionList where paID = ?', [$this->getPermissionAccessID()]);
         $db->executeQuery('delete from NotificationPermissionSubscriptionListCustom where paID = ?', [$this->getPermissionAccessID()]);
-        if (is_array($args['subscriptionsIncluded'])) {
+        if (isset($args['subscriptionsIncluded']) && is_array($args['subscriptionsIncluded'])) {
             foreach ($args['subscriptionsIncluded'] as $peID => $permission) {
                 $v = [$this->getPermissionAccessID(), $peID, $permission];
                 $db->executeQuery('insert into NotificationPermissionSubscriptionList (paID, peID, permission) values (?, ?, ?)', $v);
             }
         }
 
-        if (is_array($args['subscriptionsExcluded'] ?? null)) {
+        if (isset($args['subscriptionsExcluded']) && is_array($args['subscriptionsExcluded'])) {
             foreach ($args['subscriptionsExcluded'] as $peID => $permission) {
                 $v = [$this->getPermissionAccessID(), $peID, $permission];
                 $db->executeQuery('insert into NotificationPermissionSubscriptionList (paID, peID, permission) values (?, ?, ?)', $v);
             }
         }
 
-        if (is_array($args['subscriptionIdentifierInclude'] ?? null)) {
+        if (isset($args['subscriptionIdentifierInclude']) && is_array($args['subscriptionIdentifierInclude'])) {
             foreach ($args['subscriptionIdentifierInclude'] as $peID => $pThemeIDs) {
                 foreach ($pThemeIDs as $pThemeID) {
                     $v = [$this->getPermissionAccessID(), $peID, $pThemeID];
@@ -54,7 +54,7 @@ class NotifyInNotificationCenterNotificationAccess extends NotificationAccess
             }
         }
 
-        if (is_array($args['subscriptionIdentifierExclude'] ?? null)) {
+        if (isset($args['subscriptionIdentifierExclude']) && is_array($args['subscriptionIdentifierExclude'])) {
             foreach ($args['subscriptionIdentifierExclude'] as $peID => $pThemeIDs) {
                 foreach ($pThemeIDs as $pThemeID) {
                     $v = [$this->getPermissionAccessID(), $peID, $pThemeID];

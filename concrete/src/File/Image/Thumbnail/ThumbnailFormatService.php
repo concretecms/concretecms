@@ -118,7 +118,16 @@ class ThumbnailFormatService
      */
     public function getAutomaticFormatForFileExtension($extension)
     {
-        return preg_match('/^\.?p?jpe?g$/i', $extension) ? BitmapFormat::FORMAT_JPEG : BitmapFormat::FORMAT_PNG;
+        switch (strtolower($extension)) {
+            case 'jpg':
+            case 'jpeg':
+                return BitmapFormat::FORMAT_JPEG;
+            case 'png':
+                return BitmapFormat::FORMAT_PNG;
+            case 'webp':
+            default:
+                return BitmapFormat::FORMAT_WEBP;
+        }
     }
 
     /**

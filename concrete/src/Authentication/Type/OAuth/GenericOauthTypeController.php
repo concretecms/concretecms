@@ -4,13 +4,15 @@ namespace Concrete\Core\Authentication\Type\OAuth;
 use Concrete\Core\Authentication\AuthenticationType;
 use Concrete\Core\Authentication\AuthenticationTypeController;
 use Concrete\Core\Database\Connection\Connection;
+use Concrete\Core\Routing\RedirectResponse;
 use Concrete\Core\User\User;
+use Concrete\Core\Validation\CSRF\Token;
 use OAuth\Common\Exception\Exception;
 use OAuth\Common\Service\AbstractService;
+use OAuth\Common\Token\Exception\ExpiredTokenException;
 use OAuth\Common\Token\TokenInterface;
 use OAuth\UserData\Extractor\Extractor;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
-use Concrete\Core\Validation\CSRF\Token;
 
 abstract class GenericOauthTypeController extends AuthenticationTypeController
 {
@@ -22,7 +24,7 @@ abstract class GenericOauthTypeController extends AuthenticationTypeController
     protected $service;
 
     /**
-     * @var Extractor
+     * @var Extractor|null
      */
     protected $extractor;
 
@@ -49,7 +51,7 @@ abstract class GenericOauthTypeController extends AuthenticationTypeController
     /** @var BindingService|null The service used to manage oauth user bindings */
     protected $bindingService;
 
-    public function __construct(AuthenticationType $type = null)
+    public function __construct(?AuthenticationType $type = null)
     {
         parent::__construct($type);
         $manager = $this->app->make(Connection::class)->getSchemaManager();
@@ -94,7 +96,7 @@ abstract class GenericOauthTypeController extends AuthenticationTypeController
         if ($error) {
             $this->markError($error);
         }
-        id(new \RedirectResponse(\URL::to('/login/callback/' . $this->getHandle() . '/handle_error')))->send();
+        id(new RedirectResponse(\URL::to('/login/callback/' . $this->getHandle() . '/handle_error')))->send();
     }
 
     public function markError($error)
@@ -118,7 +120,7 @@ abstract class GenericOauthTypeController extends AuthenticationTypeController
         if ($message) {
             $this->markSuccess($message);
         }
-        id(new \RedirectResponse(\URL::to('/login/callback/' . $this->getHandle() . '/handle_success')))->send();
+        id(new RedirectResponse(\URL::to('/login/callback/' . $this->getHandle() . '/handle_success')))->send();
     }
 
     public function markSuccess($message)
@@ -195,6 +197,7 @@ abstract class GenericOauthTypeController extends AuthenticationTypeController
         if ($user_id && $user_id > 0) {
             $user = User::loginByUserID($user_id);
             if ($user && !$user->isError()) {
+                $this->app->make('session')->migrate();
                 return $user;
             }
         }
@@ -298,7 +301,7 @@ abstract class GenericOauthTypeController extends AuthenticationTypeController
 
     protected function isValid()
     {
-        return $this->extractor->supportsUniqueId();
+        return $this->getExtractor()->supportsUniqueId();
     }
 
     /**
@@ -331,7 +334,7 @@ abstract class GenericOauthTypeController extends AuthenticationTypeController
     protected function createUser()
     {
         // Make sure that this extractor supports everything we need.
-        if (!$this->supportsEmail() && $this->supportsUniqueId()) {
+        if (!($this->supportsEmail() && $this->supportsUniqueId())) {
             throw new Exception('Email and unique ID support are required for user creation.');
         }
 
@@ -555,10 +558,12 @@ abstract class GenericOauthTypeController extends AuthenticationTypeController
         $uID = $user->getUserID();
         $namespace = $this->getHandle();
         $binding = $this->getBindingForUser($user);
-
-        $this->getService()->request('/' . $binding . '/permissions', 'DELETE');
         try {
-            $this->getBindingService()->clearBinding($uID, $namespace, $binding);
+            $this->getService()->request('/' . $binding . '/permissions', 'DELETE');
+        } catch (ExpiredTokenException $_) {
+        }
+        try {
+            $this->getBindingService()->clearBinding($uID, $binding, $namespace);
             $this->showSuccess(t('Successfully detached.'));
             exit;
         } catch (\Exception $e) {

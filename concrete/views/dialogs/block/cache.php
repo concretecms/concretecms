@@ -124,5 +124,18 @@ $responseObject = $permissionChecker->getResponseObject();
                 $('div[data-settings=block-cache]').hide();
             }
         }).trigger('change');
+
+        ConcreteEvent.unsubscribe('AjaxFormSubmitSuccess.updateCache');
+        ConcreteEvent.subscribe('AjaxFormSubmitSuccess.updateCache', function (e, data) {
+            if (data.form === 'block-cache') {
+                ConcreteToolbar.disableDirectExit()
+                let r = data.response
+                if (r.originalBlockID !== r.bID) {
+                    let $blocks = $('div[data-block-id=' + r.originalBlockID + ']')
+                    $blocks.data('block-id', r.bID)
+                    Concrete.getEditMode().scanBlocks()
+                }
+            }
+        });
     });
 </script>

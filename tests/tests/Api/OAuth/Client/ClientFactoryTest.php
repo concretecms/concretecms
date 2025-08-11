@@ -120,7 +120,8 @@ class ClientFactoryTest extends TestCase
                 'http://example.com',
                 //['test', 'scopes'],
                 'key',
-                'secret'
+                'secret',
+                false,
             ],
             [
                 $client->getIdentifier(),
@@ -128,7 +129,8 @@ class ClientFactoryTest extends TestCase
                 $client->getRedirectUri(),
                 //$client->getScopes(),
                 $client->getClientKey(),
-                $client->getClientSecret()
+                $client->getClientSecret(),
+                $client->isDocumentationEnabled()
             ]
         );
         return;

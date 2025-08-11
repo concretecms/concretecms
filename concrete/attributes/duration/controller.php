@@ -2,16 +2,25 @@
 
 namespace Concrete\Attribute\Duration;
 
+use Concrete\Core\Api\Attribute\OpenApiSpecifiableInterface;
+use Concrete\Core\Api\Attribute\SimpleApiAttributeValueInterface;
+use Concrete\Core\Api\Attribute\SupportsAttributeValueFromJsonInterface;
+use Concrete\Core\Api\OpenApi\SpecProperty;
+use Concrete\Core\Api\OpenApi\SpecPropertyRef;
 use Concrete\Core\Attribute\AttributeValueInterface;
 use Concrete\Core\Attribute\Controller as AttributeTypeController;
 use Concrete\Core\Attribute\FontAwesomeIconFormatter;
+use Concrete\Core\Entity\Attribute\Key\Key;
 use Concrete\Core\Entity\Attribute\Key\Settings\DurationSettings;
 use Concrete\Core\Entity\Attribute\Value\Value\DurationValue;
 use Concrete\Core\Utility\Service\Text;
 use /** @noinspection PhpComposerExtensionStubsInspection */
     SimpleXMLElement;
 
-class Controller extends AttributeTypeController
+class Controller extends AttributeTypeController implements
+    OpenApiSpecifiableInterface,
+    SupportsAttributeValueFromJsonInterface,
+    SimpleApiAttributeValueInterface
 {
     protected $unitTypes = [];
     protected $unitType = 'seconds';
@@ -178,4 +187,27 @@ class Controller extends AttributeTypeController
 
         $this->set('value', $value);
     }
+
+    public function getOpenApiSpecProperty(Key $key): SpecProperty
+    {
+        return new SpecProperty(
+            $key->getAttributeKeyHandle(),
+            $key->getAttributeKeyDisplayName(),
+            'number'
+        );
+    }
+
+    public function createAttributeValueFromNormalizedJson($json)
+    {
+        return $this->createAttributeValue($json);
+    }
+
+    public function getApiAttributeValue()
+    {
+        return [
+            'value' => $this->getSearchIndexValue(),
+            'unit' => $this->unitType,
+        ];
+    }
+
 }

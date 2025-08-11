@@ -17,7 +17,12 @@ if (isset($cp)) {
         <script type="text/javascript">
             <?php
             $valt = Loader::helper('validation/token');
-            echo "var CCM_SECURITY_TOKEN = '" . $valt->generate() . "';";
+            echo "var CCM_SECURITY_TOKEN = '" . $valt->generate() . "';\n";
+
+            $mercureService = app(MercureService::class);
+            if ($mercureService->isEnabled()) {
+                echo "var CCM_SERVER_EVENTS_URL = '" . $mercureService->getPublisherUrl() . "';\n";
+            }
             ?>
         </script>
 
@@ -96,18 +101,6 @@ EOL;
                     '<script type="text/javascript">$(function() { ConcreteQueueConsumer.consume(\'' . $valt->generate('consume_messages') . '\') });</script>'
                 );
             }
-        }
-        $mercureService = app(MercureService::class);
-        if ($mercureService->isEnabled()) {
-            $resolver = app(ResolverManagerInterface::class);
-            //$siteUrl = $resolver->resolve(['/ccm/events']);
-            $siteUrl = '/ccm/events';
-            /**
-             * @var \Concrete\Core\Url\UrlImmutable $siteUrl
-             */
-            $v->addFooterItem(
-                '<script type="text/javascript">$(function() { ConcreteServerEvents.listen(\'' . $mercureService->getPublisherUrl() . '\', \'' . (string) $siteUrl . '\') });</script>'
-            );
         }
     }
 }

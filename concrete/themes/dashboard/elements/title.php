@@ -39,7 +39,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
                 </a>
             <?php } ?>
 
-            <h1><?= (isset($pageTitle) && $pageTitle) ? t($pageTitle) : '&nbsp;'; ?></h1>
+            <h1><?= (isset($pageTitle) && $pageTitle) ? h(t($pageTitle)) : '&nbsp;'; ?></h1>
         </div>
 
         <div class="ccm-dashboard-header-menu">

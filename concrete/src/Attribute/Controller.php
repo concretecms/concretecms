@@ -8,6 +8,7 @@ use Concrete\Core\Controller\AbstractController;
 use Concrete\Core\Entity\Attribute\Key\Settings\EmptySettings;
 use Concrete\Core\Form\Context\ContextInterface;
 use Concrete\Core\Search\ItemList\Database\AttributedItemList;
+use Concrete\Core\Utility\Service\Xml;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityNotFoundException;
 use SimpleXMLElement;
@@ -18,6 +19,13 @@ class Controller extends AbstractController implements AttributeInterface
      * @var EntityManager
      */
     protected $entityManager;
+
+    /**
+     * @deprecated What's deprecated is the "public" part.
+     *
+     * @var \Concrete\Core\Entity\Attribute\Type|null
+     */
+    public $attributeType;
 
     /**
      * @var \Concrete\Core\Entity\Attribute\Key\Key|null
@@ -92,7 +100,9 @@ class Controller extends AbstractController implements AttributeInterface
     }
 
     /**
-     * @param ObjectInterface $object
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Attribute\AttributeInterface::setAttributeObject()
      */
     public function setAttributeObject(ObjectInterface $object)
     {
@@ -342,9 +352,12 @@ class Controller extends AbstractController implements AttributeInterface
 
     /**
      * @param SimpleXMLElement $element
+     *
+     * @return \Concrete\Core\Entity\Attribute\Key\Settings\Settings|null
      */
     public function importKey(SimpleXMLElement $element)
     {
+        return null;
     }
 
     /**
@@ -388,12 +401,7 @@ class Controller extends AbstractController implements AttributeInterface
             $val = json_encode($val);
         }
 
-        $cnode = $akv->addChild('value');
-        $node = dom_import_simplexml($cnode);
-        $no = $node->ownerDocument;
-        $node->appendChild($no->createCDataSection($val));
-
-        return $cnode;
+        return $this->app->make(Xml::class)->createChildElement($akv, 'value', $val);
     }
 
     /**

@@ -10,6 +10,26 @@
     margin-bottom: $form-group-margin-bottom;
   }
 
+  .form-label {
+    color: $gray-700;
+  }
+}
+
+@include color-mode(dark) {
+  .ccm-ui {
+    .form-control,
+    .form-select {
+      color: $light-blue;
+
+      &:focus {
+        color: $light-blue;
+      }
+    }
+
+    .form-label {
+      color: $gray-300;
+    }
+  }
 }
 
 .form-control {

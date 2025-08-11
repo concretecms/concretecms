@@ -214,8 +214,8 @@ class Block extends ConcreteObject implements ObjectInterface
             $b = $cache->getItem('/block/' . $bID . ':' . $cID . ':' . $cvID . ':' . $arHandle);
         }
 
-        if ($b instanceof self) {
-            return $b;
+        if ($b->isHit()) {
+            return $b->get();
         }
 
         /** @var Connection $db */
@@ -404,6 +404,23 @@ EOT
     public function getBlockFilename()
     {
         return $this->bFilename;
+    }
+
+    public function setTempFilename(?string $bFilename = null): void
+    {
+        $this->bFilename = $bFilename;
+
+    }
+
+    /**
+     * Removes the block cache records (on this object) to null
+     * disables all cache on the cache object
+     */
+    public function temporaryClearBlockCache():void
+    {
+        $this->btCachedBlockRecord = null;
+        $this->btCacheBlockOutputForRegisteredUsers = false;
+        $this->getBlockCacheSettingsObject()->temporarilyDisableCache();
     }
 
     /**
@@ -859,17 +876,21 @@ EOT
             return $r->rowCount() > 0;
         }
 
-        return $this->isOriginal();
+        return !$this->isOriginal();
     }
 
-    public function setOriginal(bool $isOrignal): void
+    public function setOriginal(bool $isOriginal): void
     {
-        $this->isOriginal = $isOrignal;
+        $this->isOriginal = $isOriginal;
     }
 
-    public function isOriginal(): bool
+    public function isOriginal(): ?bool
     {
-        return isset($this->isOriginal) && !$this->isOriginal;
+        if (!isset($this->isOriginal)) {
+            return null;
+        }
+        
+        return (bool)$this->isOriginal;
     }
 
     /**
@@ -879,7 +900,9 @@ EOT
      */
     public function isAliasOfMasterCollection()
     {
-        return $this->getBlockCollectionObject()->isBlockAliasedFromMasterCollection($this);
+        $blockCollection = $this->getBlockCollectionObject();
+
+        return $blockCollection ? $blockCollection->isBlockAliasedFromMasterCollection($this) : false;
     }
 
     /**
@@ -922,33 +945,11 @@ EOT
      */
     public function getCustomStyleSetID()
     {
-        /** @var Connection $db */
-        $db = app(Connection::class);
         if (!isset($this->issID)) {
-            $co = $this->getBlockCollectionObject();
-
-            $arHandle = $this->getAreaHandle();
-            if ($arHandle) {
-                $a = $this->getBlockAreaObject();
-                if ($a->isGlobalArea()) {
-                    // then we need to check against the global area name. We currently have the wrong area handle passed in
-                    $arHandle = STACKS_AREA_NAME;
-                }
-
-                $v = [
-                    $co->getCollectionID(),
-                    $co->getVersionID(),
-                    $arHandle,
-                    $this->getBlockID(),
-                ];
-
-                $this->issID = (int) $db->fetchOne(
-                    'select issID from CollectionVersionBlockStyles where cID = ? and cvID = ? and arHandle = ? and bID = ?',
-                    $v
-                );
-            } else {
-                $this->issID = 0;
-            }
+            /** @var \Concrete\Core\Block\CustomStyleRepository $customStyleRepository */
+            $customStyleRepository = app(CustomStyleRepository::class);
+            $issID = $customStyleRepository->getBlockStyleID($this);
+            $this->issID = $issID ?: 0;
         }
 
         return $this->issID;
@@ -1717,16 +1718,19 @@ EOT
     }
 
     /**
-     * Duplicate this block to a new collection.
+     * Duplicate this block to a new collection. Runs the $controllerMethodToTryAndRun on the block controller to
+     * copy relevant data for a particular context. Valid options for $controllerMethodToTryAndRun are
+     * 'duplicate', 'duplicate_master' and 'duplicate_clipboard'. If a method is specified but does not exist
+     * we fall back to duplicate in all situations.
      *
      * @param \Concrete\Core\Page\Collection\Collection $nc The destination collection
-     * @param bool $isCopyFromMasterCollectionPropagation
+     * @param string $controllerMethodToTryAndRun
      *
      * @throws \Doctrine\DBAL\Exception|\Doctrine\DBAL\Driver\Exception|\Illuminate\Contracts\Container\BindingResolutionException
      *
      * @return \Concrete\Core\Block\Block|false returns false if the block type can't be found; the new block instance otherwise
      */
-    public function duplicate($nc, $isCopyFromMasterCollectionPropagation = false)
+    public function duplicate($nc, string $controllerMethodToTryAndRun = 'duplicate')
     {
         $app = Facade::getFacadeApplication();
         /** @var Connection $connection */
@@ -1753,78 +1757,81 @@ EOT
         $newBID = (int) $connection->lastInsertId(); // this is the latest inserted block ID
 
         // now, we duplicate the block-specific permissions
-        $oc = $this->getBlockCollectionObject();
-        $ocID = $oc->getCollectionID();
-        $ovID = $oc->getVersionID();
-
+        
         $ncID = $nc->getCollectionID();
         $nvID = $nc->getVersionID();
-
-        // Composer specific
-        $row = $connection->createQueryBuilder()
-            ->select('cID', 'cvID', 'arHandle', 'cbDisplayOrder', 'ptComposerFormLayoutSetControlID')
-            ->from('PageTypeComposerOutputBlocks')
-            ->where('cID = :cID')
-            ->andWhere('cvID = :cvID')
-            ->andWhere('bID = :bID')
-            ->andWhere('arHandle = :arHandle')
-            ->setParameter('cID', $ocID)
-            ->setParameter('cvID', $ovID)
-            ->setParameter('bID', $this->getBlockID())
-            ->setParameter('arHandle', $this->getAreaHandle())
-            ->execute()->fetchAssociative();
-        if ($row && is_array($row) && $row['cID']) {
-            $connection->insert('PageTypeComposerOutputBlocks', [
-                'cID' => $ncID,
-                'cvID' => $nvID,
-                'arHandle' => $this->getAreaHandle(),
-                'cbDisplayOrder' => $row['cbDisplayOrder'],
-                'ptComposerFormLayoutSetControlID' => $row['ptComposerFormLayoutSetControlID'],
-                'bID' => $newBID,
-            ]);
-        }
-
-        $r = $connection->createQueryBuilder()
-            ->select('paID', 'pkID')
-            ->from('BlockPermissionAssignments')
-            ->where('cID = :cID')
-            ->andWhere('bID = :bID')
-            ->andWhere('cvID = :cvID')
-            ->setParameter('cID', $ocID)
-            ->setParameter('bID', $this->getBlockID())
-            ->setParameter('cvID', $ovID)
-            ->execute()
-        ;
-
-        while ($row = $r->fetchAssociative()) {
-            $assignment = $connection->createQueryBuilder()
-                ->select('cID', 'cvID', 'bID', 'pkID', 'paID')
-                ->from('BlockPermissionAssignments')
+        
+        $oc = $this->getBlockCollectionObject();
+        if(is_object($oc)) {
+            $ocID = $oc->getCollectionID();
+            $ovID = $oc->getVersionID();
+    
+            // Composer specific
+            $row = $connection->createQueryBuilder()
+                ->select('cID', 'cvID', 'arHandle', 'cbDisplayOrder', 'ptComposerFormLayoutSetControlID')
+                ->from('PageTypeComposerOutputBlocks')
                 ->where('cID = :cID')
                 ->andWhere('cvID = :cvID')
                 ->andWhere('bID = :bID')
-                ->andWhere('pkID = :pkID')
-                ->andWhere('paID = :paID')
-                ->setParameter('cID', $ncID)
-                ->setParameter('cvID', $nvID)
-                ->setParameter('bID', $newBID)
-                ->setParameter('pkID', $row['pkID'])
-                ->setParameter('paID', $row['paID'])
-                ->execute()->fetchOne();
-            if ($assignment === false) {
-                $connection->insert('BlockPermissionAssignments', [
+                ->andWhere('arHandle = :arHandle')
+                ->setParameter('cID', $ocID)
+                ->setParameter('cvID', $ovID)
+                ->setParameter('bID', $this->getBlockID())
+                ->setParameter('arHandle', $this->getAreaHandle())
+                ->execute()->fetchAssociative();
+            if ($row && is_array($row) && $row['cID']) {
+                $connection->insert('PageTypeComposerOutputBlocks', [
                     'cID' => $ncID,
                     'cvID' => $nvID,
+                    'arHandle' => $this->getAreaHandle(),
+                    'cbDisplayOrder' => $row['cbDisplayOrder'],
+                    'ptComposerFormLayoutSetControlID' => $row['ptComposerFormLayoutSetControlID'],
                     'bID' => $newBID,
-                    'pkID' => $row['pkID'],
-                    'paID' => $row['paID'],
                 ]);
+            }
+    
+            $r = $connection->createQueryBuilder()
+                ->select('paID', 'pkID')
+                ->from('BlockPermissionAssignments')
+                ->where('cID = :cID')
+                ->andWhere('bID = :bID')
+                ->andWhere('cvID = :cvID')
+                ->setParameter('cID', $ocID)
+                ->setParameter('bID', $this->getBlockID())
+                ->setParameter('cvID', $ovID)
+                ->execute()
+            ;
+    
+            while ($row = $r->fetchAssociative()) {
+                $assignment = $connection->createQueryBuilder()
+                    ->select('cID', 'cvID', 'bID', 'pkID', 'paID')
+                    ->from('BlockPermissionAssignments')
+                    ->where('cID = :cID')
+                    ->andWhere('cvID = :cvID')
+                    ->andWhere('bID = :bID')
+                    ->andWhere('pkID = :pkID')
+                    ->andWhere('paID = :paID')
+                    ->setParameter('cID', $ncID)
+                    ->setParameter('cvID', $nvID)
+                    ->setParameter('bID', $newBID)
+                    ->setParameter('pkID', $row['pkID'])
+                    ->setParameter('paID', $row['paID'])
+                    ->execute()->fetchOne();
+                if ($assignment === false) {
+                    $connection->insert('BlockPermissionAssignments', [
+                        'cID' => $ncID,
+                        'cvID' => $nvID,
+                        'bID' => $newBID,
+                        'pkID' => $row['pkID'],
+                        'paID' => $row['paID'],
+                    ]);
+                }
             }
         }
 
         // we duplicate block-specific sub-content
-        if ($isCopyFromMasterCollectionPropagation && method_exists($bc, 'duplicate_master')) {
-            $bc->duplicate_master($newBID, $nc);
+        if ($controllerMethodToTryAndRun !== 'duplicate' && method_exists($bc, $controllerMethodToTryAndRun)) {
+            $bc->$controllerMethodToTryAndRun($newBID, $nc);
         } else {
             $bc->duplicate($newBID);
         }
@@ -1906,7 +1913,7 @@ EOT
      * @param \Concrete\Core\Page\Collection\Collection $c The collection to add the block alias to
      * @param int|null $displayOrder The number to display this block at. (optional)
      */
-    public function alias($c, int $displayOrder = null)
+    public function alias($c, ?int $displayOrder = null)
     {
         $app = Application::getFacadeApplication();
         /** @var Cloner $cloner */
@@ -1936,7 +1943,11 @@ EOT
 
         $cID = $this->getBlockCollectionID();
         $c = $this->getBlockCollectionObject();
-        $cvID = $c->getVersionID();
+        if(is_object($c)) {
+            $cvID = $c->getVersionID();
+        } else {
+            $cvID = null;
+        }
         $arHandle = $this->getAreaHandle();
 
         // if this block is located in a master collection, we're going to delete all the instances of the block,
@@ -1977,6 +1988,7 @@ EOT
 
             // now that the block's subcontent delete() method has been run, we delete the block from the Blocks table
             $db->executeStatement('delete from Blocks where bID = ?', $v);
+            $db->executeStatement("delete from PileContents where itemType = 'BLOCK' and itemID = ?", [$bID]);
 
             // Aaaand then we delete all scrapbooked blocks to this entry
             $r = $db->executeQuery(
@@ -2021,7 +2033,9 @@ EOT
                 $style = $this->getCustomStyle();
                 if (is_object($style)) {
                     $set = $style->getStyleSet();
-                    $set->export($blockNode);
+                    if ($set) {
+                        $set->export($blockNode);
+                    }
                 }
                 if ($this->overrideBlockTypeCacheSettings()) {
                     $settings = $this->getBlockCacheSettingsObject();

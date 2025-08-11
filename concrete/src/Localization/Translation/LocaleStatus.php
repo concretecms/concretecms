@@ -107,7 +107,7 @@ class LocaleStatus
     }
 
     /**
-     * @return RemoteStats[]
+     * @return LocalStats[]
      */
     public function getOnlyLocal()
     {

@@ -26,6 +26,7 @@ class FileExtensionFilter implements FilterInterface
         return $this->extensions;
     }
 
+    #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
         return ['filter' => 'extension', 'extensions' => $this->extensions];

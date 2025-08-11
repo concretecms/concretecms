@@ -10,15 +10,17 @@ if (isset($response)) {
 
 <form method="post" action="<?=$view->action('test_search')?>">
 
-    <p><?=$message?></p>
+    <?php if (isset($message)) { ?>
+        <p><?=$message?></p>
+    <?php } ?>
 
-    <div class="form-group">
-        <label class="control-label form-label"><?=t('Test')?></label>
+    <div class="mb-3">
+        <label class="form-label"><?=t('Test')?></label>
         <?=$form->text('test_text_field')?>
     </div>
 
-    <div class="form-group">
-        <input type="submit" name="submit" value="submit" class="btn btn-default" />
+    <div class="mb-3">
+        <input type="submit" name="submit" value="submit" class="btn btn-secondary" />
     </div>
 
 </form>

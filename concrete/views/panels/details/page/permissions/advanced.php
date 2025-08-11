@@ -107,7 +107,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
 </section>
 
 <div id="ccm-page-permissions-confirm-dialog" style="display: none">
-    <?=t('Changing this setting will affect this page immediately. Are you sure?')?>
+    <?=t('Changing this setting will apply the new permission set immediately. If inheriting from page type defaults, ensure that those defaults are set properly prior to changing this setting. Are you sure you wish to proceed?')?>
     <div id="dialog-buttons-start">
         <input type="button" class="btn btn-secondary me-2" value="Cancel" onclick="jQuery.fn.dialog.closeTop()" />
         <input type="button" class="btn btn-primary" value="Ok" onclick="ccm_pagePermissionsConfirmInheritanceChange()" />
@@ -183,8 +183,8 @@ defined('C5_EXECUTE') or die('Access Denied.');
             jQuery.fn.dialog.open({
                 element: '#ccm-page-permissions-confirm-dialog',
                 title: '<?=t('Confirm Change')?>',
-                width: 280,
-                height: 160,
+                width: 360,
+                height: 240,
                 onClose: function() {
                     ccm_pagePermissionsCancelInheritance();
                 }

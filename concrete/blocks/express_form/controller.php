@@ -9,10 +9,12 @@ use Concrete\Core\Attribute\Type;
 use Concrete\Core\Block\BlockController;
 use Concrete\Core\Entity\Attribute\Key\ExpressKey;
 use Concrete\Core\Entity\Express\Control\AttributeKeyControl;
+use Concrete\Core\Entity\Express\Control\Control;
 use Concrete\Core\Entity\Express\Control\TextControl;
 use Concrete\Core\Entity\Express\Entity;
 use Concrete\Core\Entity\Express\FieldSet;
 use Concrete\Core\Entity\Express\Form;
+use Concrete\Core\Error\UserMessageException;
 use Concrete\Core\Express\Attribute\AttributeKeyHandleGenerator;
 use Concrete\Core\Express\Controller\ControllerInterface;
 use Concrete\Core\Express\Entry\Notifier\Notification\FormBlockSubmissionEmailNotification;
@@ -37,14 +39,71 @@ use Concrete\Core\Support\Facade\Url;
 use Concrete\Core\Tree\Node\Node;
 use Concrete\Core\Tree\Node\Type\ExpressEntryCategory;
 use Concrete\Core\Tree\Type\ExpressEntryResults;
+use Concrete\Core\Utility\Service\Xml;
 use Concrete\Core\Validator\String\EmailValidator;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Id\UuidGenerator;
+use SimpleXMLElement;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Concrete\Core\Permission\Checker;
 
 class Controller extends BlockController implements NotificationProviderInterface, UsesFeatureInterface
 {
+    /**
+     * @var string|null
+     */
+    public $exFormID;
+
+    /**
+     * @var string|null
+     */
+    public $submitLabel;
+
+    /**
+     * @var string|null
+     */
+    public $thankyouMsg;
+
+    /**
+     * @var bool|int|string|null
+     */
+    public $notifyMeOnSubmission;
+
+    /**
+     * @var string|null
+     */
+    public $recipientEmail;
+
+    /**
+     * @var int|string|null
+     */
+    public $displayCaptcha;
+
+    /**
+     * @var bool|int|string|null
+     */
+    public $storeFormSubmission = 1;
+
+    /**
+     * @var int|string|null
+     */
+    public $redirectCID;
+
+    /**
+     * @var string|null
+     */
+    public $replyToEmailControlID;
+
+    /**
+     * @var int|string|null
+     */
+    public $addFilesToSet;
+
+    /**
+     * @var int|string|null
+     */
+    public $addFilesToFolder;
+
     protected $btInterfaceWidth = 640;
     protected $btInterfaceHeight = 700;
     protected $btCacheBlockOutput = true;
@@ -53,11 +112,8 @@ class Controller extends BlockController implements NotificationProviderInterfac
     protected $btCacheBlockOutputOnEditMode = true;
     protected $btTable = 'btExpressForm';
     protected $btExportPageColumns = ['redirectCID'];
-
-    public $notifyMeOnSubmission;
-    public $recipientEmail;
-    public $replyToEmailControlID;
-    public $storeFormSubmission = 1;
+    protected $btExportFileFolderColumns = ['addFilesToFolder'];
+    protected $btCopyWhenPropagate = true;
 
     const FORM_RESULTS_CATEGORY_NAME = 'Forms';
 
@@ -81,6 +137,422 @@ class Controller extends BlockController implements NotificationProviderInterfac
         return [
             Features::FORMS
         ];
+    }
+
+    public function action_add_new_form()
+    {
+        $token = app('token');
+        if ($token->validate('add_new_form')) {
+            $session = $this->app->make('session');
+            $entityManager = $this->app->make(EntityManagerInterface::class);
+            $formName = $this->request->request->get('formName') ?? null;
+            if ($formName) {
+                $existingEntity = $entityManager->getRepository(Entity::class)
+                    ->findOneByName($formName);
+                if ($existingEntity) {
+                    throw new UserMessageException(
+                        t('An entity with the name "%s" already exists. Please choose another', h($formName))
+                    );
+                }
+            } else {
+                throw new UserMessageException(t('You must specify a valid name for your form.'));
+            }
+
+            $node = ExpressEntryCategory::getNodeByName(self::FORM_RESULTS_CATEGORY_NAME);
+            $node = \Concrete\Core\Tree\Node\Type\ExpressEntryResults::add($formName, $node);
+
+            $entity = new Entity();
+            $entity->setName($formName);
+            $entity->setIncludeInPublicList(false);
+            $entity->setIsPublished(false);
+            $generator = new EntityHandleGenerator($entityManager);
+            $entity->setHandle($generator->generate($entity));
+            $entity->setEntityResultsNodeId($node->getTreeNodeID());
+            $entityManager->persist($entity);
+            $entityManager->flush();
+
+            $form = new Form();
+            $form->setName(t('Form'));
+            $form->setEntity($entity);
+            $entity->setDefaultViewForm($form);
+            $entity->setDefaultEditForm($form);
+            $entityManager->persist($form);
+            $entityManager->flush();
+
+            // Create a Field Set and a Form
+            $fieldSet = new FieldSet();
+            $fieldSet->setForm($form);
+            $entityManager->persist($fieldSet);
+            $entityManager->flush();
+
+            $session->set('block.express_form.new', $form->getId());
+
+            return new JsonResponse($form);
+        } else {
+            throw new \Exception($token->getErrorMessage());
+        }
+    }
+
+    public function action_update_control_order()
+    {
+        $token = app('token');
+        if ($token->validate('update_control_order')) {
+            $fieldSet = $this->getFormFieldSet();
+            $controlIds = $this->request->request->get('controls') ?? [];
+            $entityManager = $this->app->make(EntityManagerInterface::class);
+
+            $position = 0;
+            foreach ($controlIds as $controlId) {
+                $control = $entityManager->find(Control::class, $controlId);
+                if ($control && $control->getFieldSet()->getId() === $fieldSet->getId()) {
+                    $control->setPosition($position);
+                    $entityManager->persist($control);
+                }
+                $position++;
+            }
+            $entityManager->flush();
+            $entityManager->refresh($fieldSet);
+            return new JsonResponse($fieldSet);
+        } else {
+            throw new \Exception(t($token->getErrorMessage()));
+        }
+    }
+
+    public function action_delete_control()
+    {
+        $token = app('token');
+        if ($token->validate('delete_control')) {
+            $fieldSet = $this->getFormFieldSet();
+            $controlId = $this->request->request->get('control') ?? null;
+            $entityManager = $this->app->make(EntityManagerInterface::class);
+
+            if ($controlId) {
+                $control = $entityManager->find(Control::class, $controlId);
+                if ($control && $control->getFieldSet()->getId() === $fieldSet->getId()) {
+                    if ($control instanceof AttributeKeyControl) {
+                        $key = $control->getAttributeKey();
+                        $entityManager->remove($key);
+                    }
+                    $entityManager->remove($control);
+                }
+            }
+            $entityManager->flush();
+            $entityManager->refresh($fieldSet);
+            return new JsonResponse($fieldSet);
+        } else {
+            throw new \Exception(t($token->getErrorMessage()));
+        }
+    }
+
+    protected function getFormFieldSet(): FieldSet
+    {
+        $session = $this->app->make('session');
+        $entityManager = $this->app->make(EntityManagerInterface::class);
+        $formId = null;
+        if (isset($this->exFormID)) {
+            $formId = $this->exFormID;
+        } else {
+            $formId = $session->get('block.express_form.new');
+        }
+
+        if ($formId) {
+            $form = $entityManager->find(Form::class, $formId);
+            if ($form) {
+                $fieldSet = $form->getFieldSets()[0];
+                if ($fieldSet) {
+                    return $fieldSet;
+                }
+            }
+        }
+
+        throw new UserMessageException(t('Unable to retrieve active field set from session.'));
+    }
+
+    public function action_add_control()
+    {
+        $token = app('token');
+        if ($token->validate('add_control')) {
+            $entityManager = $this->app->make(EntityManagerInterface::class);
+            $post = $this->request->request->all();
+            $fieldSet = $this->getFormFieldSet();
+            $entity = $fieldSet->getForm()->getEntity();
+
+            $attributeKeyCategory = $entity->getAttributeKeyCategory();
+            $attributeKeyHandleGenerator = new AttributeKeyHandleGenerator($attributeKeyCategory);
+
+            $field = explode('|', $this->request->request->get('type'));
+            switch ($field[0]) {
+                case 'attribute_key':
+                    $type = Type::getByID($field[1]);
+                    if (is_object($type)) {
+                        $control = new AttributeKeyControl();
+                        $control->setId((new UuidGenerator())->generate($entityManager, $control));
+                        $key = new ExpressKey();
+                        $key->setAttributeKeyName($post['question']);
+                        $key->setAttributeKeyHandle($attributeKeyHandleGenerator->generate($key));
+                        $key->setEntity($entity);
+                        if ($post['required']) {
+                            $control->setIsRequired(true);
+                        }
+                        $key->setAttributeType($type);
+                        if (!$post['question']) {
+                            $e = $this->app->make('error');
+                            $e->add(t('You must give this question a name.'));
+
+                            return new JsonResponse($e);
+                        }
+                        $controller = $type->getController();
+                        $key = $this->saveAttributeKeySettings($controller, $key, $post);
+                        $entityManager->persist($key);
+                        $entityManager->flush();
+
+                        $this->runAttributeIndexer($entity, $key);
+
+                        $control->setAttributeKey($key);
+                    }
+                    break;
+                case 'entity_property':
+                    /** @var EntityPropertyType $propertyType */
+                    $propertyType = $this->app->make(EntityPropertyType::class);
+
+                    $control = $propertyType->createControlByIdentifier($field[1]);
+                    $control->setId((new UuidGenerator())->generate($entityManager, $control));
+                    $saver = $control->getControlSaveHandler();
+                    $control = $saver->saveFromRequest($control, $this->request);
+                    break;
+            }
+
+            if (!isset($control)) {
+                $e = $this->app->make('error');
+                $e->add(t('You must choose a valid field type.'));
+
+                return new JsonResponse($e);
+            } else {
+                $totalControls = $fieldSet->getControls()->count();
+                $control->setFieldSet($fieldSet);
+                $control->setPosition(
+                    $totalControls
+                ); // If there are 2 controls, they have are zero-indexed, so the new one has to be at 2.
+                $entityManager->persist($control);
+                $entityManager->flush();
+
+                return new JsonResponse($control);
+            }
+        } else {
+            throw new \Exception(t($token->getErrorMessage()));
+        }
+    }
+
+    public function add()
+    {
+        $this->set('formName', $this->request->getCurrentPage()->getCollectionName());
+        $this->set('submitLabel', t('Submit'));
+        $this->set('thankyouMsg', t('Thanks!'));
+        $this->edit();
+        $this->set('resultsFolder', $this->get('formResultsRootFolderNodeID'));
+        $this->set('addFilesToFolder', (new Filesystem())->getRootFolder());
+        $this->set('storeFormSubmission', $this->areFormSubmissionsStored());
+        $this->set('formSubmissionConfig', $this->getFormSubmissionConfigValue());
+        $this->set('displayCaptcha', 1);
+        $this->set('exFormID', null);
+        $this->set('redirectCID', null);
+        $this->set('notifyMeOnSubmission', false);
+        $this->set('recipientEmail', '');
+        $this->set('addFilesToSet', false);
+        $this->set('replyToEmailControlID', null);
+    }
+
+    public function action_update_control()
+    {
+        $token = app('token');
+        if ($token->validate('update_control')) {
+            $fieldSet = $this->getFormFieldSet();
+            $post = $this->request->request->all();
+            $entity = $fieldSet->getForm()->getEntity();
+            $controlId = $post['id'] ?? null;
+            $entityManager = $this->app->make(EntityManagerInterface::class);
+
+            if ($controlId) {
+                $control = $entityManager->find(Control::class, $controlId);
+                if ($control && $control->getFieldSet()->getId() === $fieldSet->getId()) {
+                    if ($control instanceof AttributeKeyControl) {
+                        $key = $control->getAttributeKey();
+                        $key->setAttributeKeyName($post['question']);
+
+                        if (!$post['question']) {
+                            $e = $this->app->make('error');
+                            $e->add(t('You must give this question a name.'));
+                            return new JsonResponse($e);
+                        }
+
+                        if ($post['requiredEdit']) {
+                            $control->setIsRequired(true);
+                        } else {
+                            $control->setIsRequired(false);
+                        }
+
+                        $controller = $key->getController();
+                        $key = $this->saveAttributeKeySettings($controller, $key, $post);
+                        $entityManager->persist($key);
+                        $entityManager->flush();
+                        $this->runAttributeIndexer($entity, $key, true);
+                        $control->setAttributeKey($key);
+                    } else {
+                        if ($control instanceof TextControl) {
+                            /** @var EntityPropertyType $propertyType */
+                            $type = $this->app->make(EntityPropertyType::class);
+
+                            $saver = $control->getControlSaveHandler();
+                            $control = $saver->saveFromRequest($control, $this->request);
+                        }
+                    }
+
+                    $entityManager->persist($control);
+                    $entityManager->flush();
+                    return new JsonResponse($control);
+                }
+            }
+        } else {
+            throw new \Exception(t($token->getErrorMessage()));
+        }
+    }
+
+    public function save($data)
+    {
+        $entityManager = $this->app->make(EntityManagerInterface::class);
+
+        // Make sure our data goes through correctly.
+        $data['storeFormSubmission'] = !empty($data['storeFormSubmission']) ? 1 : 0;
+        $data['notifyMeOnSubmission'] = !empty($data['notifyMeOnSubmission']) ? 1 : 0;
+
+        // Now, let's handle saving the form entity ID against the form block db record
+        $entity = false;
+
+        // Add mode
+        if (isset($data['exFormID']) && $data['exFormID'] !== '') {
+            return parent::save($data);
+        } else {
+            $fieldSet = $this->getFormFieldSet();
+            if ($fieldSet) {
+                $form = $fieldSet->getForm();
+                $entity = $form->getEntity();
+                $data['exFormID'] = $form->getId();
+            }
+
+            if ($this->exFormID === null) {
+                // Add block - totally new form. We have to publish it before it is live.
+                $entity->setIsPublished(true);
+                $entityManager->persist($entity);
+                $entityManager->flush();
+            }
+        }
+
+        if (!$entity) {
+            throw new \Exception(t('Invalid Express object selected.'));
+        }
+
+        // Now, we handle the entity results folder.
+        $resultsNode = Node::getByID($entity->getEntityResultsNodeId());
+        $folder = Node::getByID($data['resultsFolder']);
+        if (is_object($folder)) {
+            $resultsNode->move($folder);
+        }
+
+        // File manager folder
+        $addFilesToFolderFromPost = $data['addFilesToFolder'];
+        $existingAddFilesToFolder = $this->addFilesToFolder;
+        unset($data['addFilesToFolder']);
+
+        if ($addFilesToFolderFromPost && $addFilesToFolderFromPost != $existingAddFilesToFolder) {
+            $filesystem = new Filesystem();
+            $addFilesToFolder = $filesystem->getFolder($addFilesToFolderFromPost);
+            $fp = new Checker($addFilesToFolder);
+            if ($fp->canSearchFiles()) {
+                $data['addFilesToFolder'] = $addFilesToFolderFromPost;
+            }
+        }
+
+        if (!isset($data['addFilesToFolder'])) {
+            $data['addFilesToFolder'] = $existingAddFilesToFolder;
+        }
+
+        $session = $this->app->make('session');
+        $session->remove('block.express_form.new');
+
+        // allow redirect on form submission to be unset
+        $data['redirectCID'] = ($data['redirectCID'] === '') ? 0 : $data['redirectCID'];
+
+        return parent::save($data);
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Block\BlockController::export()
+     */
+    public function export(SimpleXMLElement $blockNode)
+    {
+        parent::export($blockNode);
+        $xml = $this->app->make(Xml::class);
+        $xRecord = $blockNode->data[0]->record[0];
+
+        $form = $this->getFormEntity();
+        if ($form) {
+            $xRecord->exFormID[0]->addAttribute('name', (string) $form->getName());
+            $xEntity = $xml->createChildElement($xRecord, 'exEntityID', $form->getEntity()->getId());
+            $xEntity->addAttribute('handle', (string) $form->getEntity()->getHandle());
+        }
+
+        $set = Set::getByID($this->addFilesToSet);
+        if ($set) {
+            $xRecord->addFilesToSet[0]->addAttribute('name', (string) $set->getFileSetName());
+        }
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Block\BlockController::getImportData()
+     */
+    protected function getImportData($blockNode, $page)
+    {
+        $args = parent::getImportData($blockNode, $page);
+        $xRecord = $blockNode->data[0]->record[0];
+        $em = $this->app->make(EntityManagerInterface::class);
+
+        if (!empty($args['exFormID'])) {
+            $form = $em->find(Form::class, $args['exFormID']);
+            if (!$form) {
+                $formName = (string) $xRecord->exFormID[0]['name'];
+                if ($formName !== '') {
+                    $entityID = (string) $xRecord->exEntityID;
+                    $entity = $entityID === '' ? null : $em->find(Entity::class, $entityID);
+                    if ($entity === null) {
+                        $entityHandle = (string) $xRecord->exEntityID['handle'];
+                        $entity = $entityHandle === '' ? null : $em->getRepository(Entity::class)->findOneBy(['handle' => $entityHandle]);
+                    }
+                    if ($entity !== null) {
+                        $form = array_first(
+                            $entity->getForms()->toArray(),
+                            static function ($form) use ($formName) { return $form->getName() === $formName; }
+                        );
+                    }
+                }
+                if ($form) {
+                    $args['exFormID'] = $form->getId();
+                }
+            }
+        }
+
+        $fileSetName = (string) $xRecord->addFilesToSet[0]['name'];
+        if ($fileSetName !== '') {
+            $set = Set::getByName($fileSetName);
+            if ($set) {
+                $args['addFilesToSet'] = $set->getFileSetID();
+            }
+        }
+
+        return $args;
     }
 
     public function view()
@@ -113,25 +585,6 @@ class Controller extends BlockController implements NotificationProviderInterfac
             $this->app->make('log')
                 ->warning(t('Form block on page %s (ID: %s) could not be loaded. Its express object or express form no longer exists.', $page->getCollectionName(), $page->getCollectionID()));
         }
-    }
-
-    protected function clearSessionControls()
-    {
-        $session = $this->app->make('session');
-        $session->remove('block.express_form.new');
-    }
-
-    public function add()
-    {
-        $this->set('formName', $this->request->getCurrentPage()->getCollectionName());
-        $this->set('submitLabel', t('Submit'));
-        $this->set('thankyouMsg', t('Thanks!'));
-        $this->edit();
-        $this->set('resultsFolder', $this->get('formResultsRootFolderNodeID'));
-        $this->set('addFilesToFolder', (new Filesystem())->getRootFolder());
-        $this->set('storeFormSubmission', $this->areFormSubmissionsStored());
-        $this->set('formSubmissionConfig', $this->getFormSubmissionConfigValue());
-        $this->set('displayCaptcha', 1);
     }
 
     protected function areFormSubmissionsStored()
@@ -177,6 +630,11 @@ class Controller extends BlockController implements NotificationProviderInterfac
     public function validate($args)
     {
         $e = $this->app->make('helper/validation/error');
+        if (!empty($args['notifyMeOnSubmission']) && filter_var($args['notifyMeOnSubmission'], FILTER_VALIDATE_BOOLEAN)) {
+            if (empty($args['recipientEmail'])) {
+                $e->add(t('The option "%s" is checked. Please enter at least one email address.', t('Send form submissions to email addresses')));
+            }
+        }
         if (!empty($args['recipientEmail'])) {
             $inputtedEmails = array_map('trim', explode(',', $args['recipientEmail']));
             $validator = new EmailValidator();
@@ -188,6 +646,24 @@ class Controller extends BlockController implements NotificationProviderInterfac
         }
 
         return $e;
+    }
+
+    public function duplicate_clipboard($newBID)
+    {
+        $newBlockRecord = parent::duplicate($newBID);
+
+        if ($newBlockRecord !== null && is_object($form = $this->getFormEntity())) {
+            $entity = $form->getEntity();
+            if (!$entity->getIncludeInPublicList()) {
+                $controls = [];
+                $cloner = $this->app->make(\Concrete\Core\Express\Entity\Cloner::class);
+                $newEntity = $cloner->cloneEntity($entity, $controls);
+                $newBlockRecord->exFormID = $newEntity->getDefaultEditForm()->getId();
+                $newBlockRecord->Save();
+            }
+        }
+
+        return $newBlockRecord;
     }
 
     public function delete()
@@ -230,7 +706,7 @@ class Controller extends BlockController implements NotificationProviderInterfac
                     );
                 }
 
-                $validator->validate($form, ProcessorInterface::REQUEST_TYPE_ADD);
+                $validator->validate($form);
                 $manager = $controller->getEntryManager($this->request);
                 $e = $validator->getErrorList();
                 if ($e->has()) {
@@ -252,7 +728,7 @@ class Controller extends BlockController implements NotificationProviderInterfac
                         $submittedData .= $value->getPlainTextValue() . "\r\n\r\n";
                     }
 
-                    if (!$antispam->check($submittedData, 'form_block')) {
+                    if (!$antispam->check($submittedData, 'express_form_block')) {
                         // Remove the entry and silently fail.
                         $entityManager->refresh($entry);
                         $entityManager->remove($entry);
@@ -297,13 +773,14 @@ class Controller extends BlockController implements NotificationProviderInterfac
                     $entry = $manager->createEntry($entity);
                 }
                 if ($this->areFormSubmissionsStored()) {
-                    $submittedAttributeValues = $entry->getAttributeValues();
+                    $submittedAttributeValues = $entry->getEntryAttributeValues();
                 } else {
                     $submittedAttributeValues = $manager->getEntryAttributeValuesForm($form, $entry);
                 }
                 $notifier = $controller->getNotifier($this);
                 $notifications = $notifier->getNotificationList();
-                array_walk($notifications->getNotifications(), function ($notification) use ($submittedAttributeValues) {
+                $notificationList = $notifications->getNotifications();
+                array_walk($notificationList, function ($notification) use ($submittedAttributeValues) {
                     if (method_exists($notification, "setAttributeValues")) {
                         $notification->setAttributeValues($submittedAttributeValues);
                     }
@@ -315,7 +792,7 @@ class Controller extends BlockController implements NotificationProviderInterfac
                     if (is_object($c) && !$c->isError()) {
                         $r = Redirect::page($c);
                         $target = strpos($r->getTargetUrl(),"?") === false ? $r->getTargetUrl()."?" : $r->getTargetUrl()."&";
-                        $r->setTargetUrl($target . 'form_success=1&entry=' . $entry->getID());
+                        $r->setTargetUrl($target . 'form_success=1&entry=' . $entry->getPublicIdentifier());
                     }
                 }
 
@@ -337,66 +814,6 @@ class Controller extends BlockController implements NotificationProviderInterfac
         $this->set('formResultsRootFolderNodeID', $folder->getTreeNodeID());
     }
 
-    public function action_add_control()
-    {
-        $entityManager = $this->app->make(EntityManagerInterface::class);
-        $post = $this->request->request->all();
-        $session = $this->app->make('session');
-        $controls = $session->get('block.express_form.new');
-
-        if (!is_array($controls)) {
-            $controls = [];
-        }
-
-        $field = explode('|', $this->request->request->get('type'));
-        switch ($field[0]) {
-            case 'attribute_key':
-                $type = Type::getByID($field[1]);
-                if (is_object($type)) {
-                    $control = new AttributeKeyControl();
-                    $control->setId((new UuidGenerator())->generate($entityManager, $control));
-                    $key = new ExpressKey();
-                    $key->setAttributeKeyName($post['question']);
-                    if ($post['required']) {
-                        $control->setIsRequired(true);
-                    }
-                    $key->setAttributeType($type);
-                    if (!$post['question']) {
-                        $e = $this->app->make('error');
-                        $e->add(t('You must give this question a name.'));
-
-                        return new JsonResponse($e);
-                    }
-                    $controller = $type->getController();
-                    $key = $this->saveAttributeKeySettings($controller, $key, $post);
-
-                    $control->setAttributeKey($key);
-                }
-                break;
-            case 'entity_property':
-                /** @var EntityPropertyType $propertyType */
-                $propertyType = $this->app->make(EntityPropertyType::class);
-
-                $control = $propertyType->createControlByIdentifier($field[1]);
-                $control->setId((new UuidGenerator())->generate($entityManager, $control));
-                $saver = $control->getControlSaveHandler();
-                $control = $saver->saveFromRequest($control, $this->request);
-                break;
-        }
-
-        if (!isset($control)) {
-            $e = $this->app->make('error');
-            $e->add(t('You must choose a valid field type.'));
-
-            return new JsonResponse($e);
-        }
-
-        $controls[$control->getId()]= $control;
-        $session->set('block.express_form.new', $controls);
-
-        return new JsonResponse($control);
-    }
-
     /**
      * @param \Concrete\Core\Attribute\Controller $controller
      * @param ExpressKey $key
@@ -406,6 +823,7 @@ class Controller extends BlockController implements NotificationProviderInterfac
      */
     protected function saveAttributeKeySettings($controller, ExpressKey $key, $post)
     {
+        $entityManager = $this->app->make(EntityManagerInterface::class);
         $settings = $controller->saveKey($post);
         if (!is_object($settings)) {
             $settings = $controller->getAttributeKeySettings();
@@ -413,306 +831,33 @@ class Controller extends BlockController implements NotificationProviderInterfac
 
         $settings->setAttributeKey($key);
         $key->setAttributeKeySettings($settings);
-
+        $entityManager->persist($settings);
         return $key;
     }
 
-    public function action_update_control()
+    /**
+     * @param \Concrete\Core\Entity\Express\Entity $entity
+     * @param ExpressKey $key
+     * @param bool update
+     *
+     * This method should always preserve the attribute's handle when updating
+     */
+    protected function runAttributeIndexer(Entity $entity, ExpressKey $key, $update = false)
     {
-        $entityManager = $this->app->make(EntityManagerInterface::class);
-        $post = $this->request->request->all();
-        $session = $this->app->make('session');
+        $category = $entity->getAttributeKeyCategory();
 
-        $sessionControls = $session->get('block.express_form.new');
-        if (is_array($sessionControls)) {
-            foreach ($sessionControls as $sessionControl) {
-                if ($sessionControl->getId() == $this->request->request->get('id')) {
-                    $control = $sessionControl;
-                    break;
-                }
-            }
-        }
+        if (is_object($category)) {
+            $indexer = $category->getSearchIndexer();
 
-        if (!isset($control)) {
-            $control = $entityManager->getRepository(\Concrete\Core\Entity\Express\Control\Control::class)
-                ->findOneById($this->request->request->get('id'));
-        }
-
-        $field = explode('|', $this->request->request->get('type'));
-        switch ($field[0]) {
-            case 'attribute_key':
-                $type = Type::getByID($field[1]);
-                if (is_object($type)) {
-                    $key = $control->getAttributeKey();
-                    $key->setAttributeKeyName($post['question']);
-
-                    if (!$post['question']) {
-                        $e = $this->app->make('error');
-                        $e->add(t('You must give this question a name.'));
-
-                        return new JsonResponse($e);
-                    }
-
-                    if ($post['requiredEdit']) {
-                        $control->setIsRequired(true);
-                    } else {
-                        $control->setIsRequired(false);
-                    }
-
-                    $controller = $key->getController();
-                    $key = $this->saveAttributeKeySettings($controller, $key, $post);
-                    $control->setAttributeKey($key);
-                }
-
-                break;
-            case 'entity_property':
-                /** @var EntityPropertyType $propertyType */
-                $type = $this->app->make(EntityPropertyType::class);
-
-                $saver = $control->getControlSaveHandler();
-                $control = $saver->saveFromRequest($control, $this->request);
-
-                break;
-        }
-
-        if (!is_object($type)) {
-            $e = $this->app->make('error');
-            $e->add(t('You must choose a valid field type.'));
-
-            return new JsonResponse($e);
-        }
-
-        $sessionControls[$control->getId()]= $control;
-        $session->set('block.express_form.new', $sessionControls);
-
-        return new JsonResponse($control);
-    }
-    public function save($data)
-    {
-        $data['storeFormSubmission'] = isset($data['storeFormSubmission']) ?: 0;
-        if (isset($data['exFormID']) && '' != $data['exFormID']) {
-            return parent::save($data);
-        }
-
-        $requestControls = (array) $this->request->request->get('controlID');
-        $entityManager = $this->app->make(EntityManagerInterface::class);
-        $session = $this->app->make('session');
-        $sessionControls = $session->get('block.express_form.new');
-
-        $name = $data['formName'] ? $data['formName'] : t('Form');
-
-        if (!$this->exFormID) {
-            // This is a new submission.
-            $c = \Page::getCurrentPage();
-
-            // Create a results node
-            $node = ExpressEntryCategory::getNodeByName(self::FORM_RESULTS_CATEGORY_NAME);
-            $node = \Concrete\Core\Tree\Node\Type\ExpressEntryResults::add($name, $node);
-
-            $entity = new Entity();
-            $entity->setName($name);
-            $entity->setIncludeInPublicList(false);
-            $generator = new EntityHandleGenerator($entityManager);
-            $entity->setHandle($generator->generate($entity));
-            $entity->setEntityResultsNodeId($node->getTreeNodeID());
-            $entityManager->persist($entity);
-            $entityManager->flush();
-
-            $form = new Form();
-            $form->setName(t('Form'));
-            $form->setEntity($entity);
-            $entity->setDefaultViewForm($form);
-            $entity->setDefaultEditForm($form);
-            $entityManager->persist($form);
-            $entityManager->flush();
-
-            // Create a Field Set and a Form
-            $fieldSet = new FieldSet();
-            $fieldSet->setForm($form);
-            $entityManager->persist($fieldSet);
-            $entityManager->flush();
-        } else {
-            // We check save the order as well as potentially deleting orphaned controls.
-
-            /* @var Form $form */
-            $form = $entityManager->getRepository(\Concrete\Core\Entity\Express\Form::class)
-                ->findOneById($this->exFormID);
-
-            /* @var FieldSet $fieldSet */
-            $fieldSet = $form->getFieldSets()[0];
-
-            $entity = $form->getEntity();
-            $entity->setName($name);
-
-            $entityManager->persist($entity);
-            $entityManager->flush();
-
-            $nodeId = $entity->getEntityResultsNodeId();
-            $node = Node::getByID($nodeId);
-            $node->setTreeNodeName($name);
-        }
-
-        $attributeKeyCategory = $entity->getAttributeKeyCategory();
-        $attributeKeyHandleGenerator = new AttributeKeyHandleGenerator($attributeKeyCategory);
-
-        // First, we get the existing controls, so we can check them
-        // to see if controls should be removed later.
-        $existingControls = $form->getControls();
-        $existingControlIDs = [];
-        foreach ($existingControls as $control) {
-            $existingControlIDs[] = $control->getId();
-        }
-
-        // Now, let's loop through our request controls
-        $indexKeys = [];
-        $position = 0;
-
-        foreach ($requestControls as $id) {
-            if (isset($sessionControls[$id])) {
-                $control = $sessionControls[$id];
-                if (!in_array($id, $existingControlIDs)) {
-                    // Possibility 1: This is a new control.
-                    if ($control instanceof AttributeKeyControl) {
-                        $key = $control->getAttributeKey();
-                        $type = $key->getAttributeType();
-                        $settings = $key->getAttributeKeySettings();
-
-                        // We have to merge entities back into the entity manager because they have been
-                        // serialized. First type, because if we merge key first type gets screwed
-                        $mergedType = $entityManager->merge($type);
-
-                        // Now key, because we need key to set as the primary key for settings.
-                        // Note - we rename the objects in order to get spl_object_hash to not screw them up
-                        // Ref: https://github.com/concrete5/concrete5/issues/5584#issuecomment-403652601
-                        $mergedKey = $entityManager->merge($key);
-                        $mergedKey->setAttributeType($mergedType);
-                        $mergedKey->setEntity($entity);
-                        $mergedKey->setAttributeKeyHandle($attributeKeyHandleGenerator->generate($mergedKey));
-                        $entityManager->persist($mergedKey);
-                        $entityManager->flush();
-
-                        // Now attribute settings.
-                        $settings->setAttributeKey($mergedKey);
-                        $mergedSettings = $entityManager->merge($settings);
-                        $entityManager->persist($mergedSettings);
-                        $entityManager->flush();
-
-                        $control->setAttributeKey($mergedKey);
-                        $indexKeys[] = $mergedKey;
-                    }
-
-                    $control->setFieldSet($fieldSet);
-                    $control->setPosition($position);
-                    $entityManager->persist($control);
-                    $entityManager->flush();
+            if (is_object($indexer)) {
+                if ($update) {
+                    // when updating we do not change the attribute Handle even if we change the Name
+                    $indexer->updateRepositoryColumns($category, $key, $key->getAttributeKeyHandle());
                 } else {
-                    // Possibility 2: This is an existing control that has an updated version.
-                    foreach ($existingControls as $existingControl) {
-                        if ($existingControl->getId() == $id) {
-                            if ($control instanceof AttributeKeyControl) {
-                                $settings = $control->getAttributeKey()->getAttributeKeySettings();
-                                $key = $existingControl->getAttributeKey();
-                                $type = $key->getAttributeType();
-                                $type = $entityManager->merge($type);
-
-                                // question name
-                                $key->setAttributeKeyName($control->getAttributeKey()->getAttributeKeyName());
-                                $key->setAttributeKeyHandle($attributeKeyHandleGenerator->generate($key));
-
-                                // Key Type
-                                $key = $entityManager->merge($key);
-                                $key->setAttributeType($type);
-
-                                $type = $control->getAttributeKey()->getAttributeType();
-                                $type = $entityManager->merge($type);
-                                $key->setAttributeType($type);
-                                $settings = $control->getAttributeKey()->getAttributeKeySettings();
-                                $settings->setAttributeKey($key);
-                                $settings = $settings->mergeAndPersist($entityManager);
-
-                                // Required
-                                $existingControl->setIsRequired($control->isRequired());
-
-                                // Finalize control
-                                $existingControl->setAttributeKey($key);
-
-                                $indexKeys[] = $key;
-                            } elseif ($control instanceof TextControl) {
-                                // Wish we had a better way of doing this that wasn't so hacky.
-                                $existingControl->setHeadline($control->getHeadline());
-                                $existingControl->setBody($control->getBody());
-                            }
-
-                            // save it.
-                            $entityManager->persist($existingControl);
-                        }
-                    }
-                }
-            } else {
-                // Possibility 3: This is an existing control that doesn't have a new version. But we still
-                // want to update its position.
-                foreach ($existingControls as $control) {
-                    if ($control->getId() == $id) {
-                        $control->setPosition($position);
-                        $entityManager->persist($control);
-                    }
+                    $indexer->updateRepositoryColumns($category, $key);
                 }
             }
-
-            ++$position;
         }
-
-        // Now, we look through all existing controls to see whether they should be removed.
-        foreach ($existingControls as $control) {
-            // Does this control exist in the request? If not, it gets axed
-            if (!is_array($requestControls) || !in_array($control->getId(), $requestControls)) {
-                $entityManager->remove($control);
-            }
-        }
-
-        $entityManager->flush();
-
-        $category = new ExpressCategory($entity, $this->app, $entityManager);
-        $indexer = $category->getSearchIndexer();
-        foreach ($indexKeys as $key) {
-            // The key might not be fully initialized and it might be coming
-            // from session and might not have all the right info in it.
-            // This is to fix a bug where packaged attribute types weren't being seen
-            // as being in a package because the package handle property on the object wasn't set.
-            $entityManager->refresh($key->getAttributeType());
-            $indexer->updateRepositoryColumns($category, $key);
-        }
-
-        // Now, we handle the entity results folder.
-        $resultsNode = Node::getByID($entity->getEntityResultsNodeId());
-        $folder = Node::getByID($data['resultsFolder']);
-        if (is_object($folder)) {
-            $resultsNode->move($folder);
-        }
-
-        // File manager folder
-        $addFilesToFolderFromPost = $data['addFilesToFolder'];
-        $existingAddFilesToFolder = $this->addFilesToFolder;
-        unset($data['addFilesToFolder']);
-
-        if ($addFilesToFolderFromPost && $addFilesToFolderFromPost != $existingAddFilesToFolder) {
-            $filesystem = new Filesystem();
-            $addFilesToFolder = $filesystem->getFolder($addFilesToFolderFromPost);
-            $fp = new Checker($addFilesToFolder);
-            if ($fp->canSearchFiles()) {
-                $data['addFilesToFolder'] = $addFilesToFolderFromPost;
-            }
-        }
-
-        if (!$data['addFilesToFolder']) {
-            $data['addFilesToFolder'] = $existingAddFilesToFolder;
-        }
-
-        $data['exFormID'] = $form->getId();
-
-        $this->clearSessionControls();
-
-        parent::save($data);
     }
 
     public function edit()
@@ -720,7 +865,6 @@ class Controller extends BlockController implements NotificationProviderInterfac
         $this->set('formSubmissionConfig', $this->getFormSubmissionConfigValue());
         $this->set('storeFormSubmission', $this->areFormSubmissionsStored());
         $this->loadResultsFolderInformation();
-        $this->clearSessionControls();
         $list = Type::getList("express");
 
         $attribute_fields = [];
@@ -772,49 +916,55 @@ class Controller extends BlockController implements NotificationProviderInterfac
         }
 
         $this->set('entities', Express::getEntities());
+        $this->set('notifyMeOnSubmission', (bool) $this->notifyMeOnSubmission);
     }
 
     public function action_get_type_form()
     {
-        $field = explode('|', $this->request->request->get('id'));
-        if ('attribute_key' == $field[0]) {
-            $type = Type::getByID($field[1]);
-            if (is_object($type)) {
-                ob_start();
-                echo $type->render(new AttributeTypeSettingsContext());
-                $html = ob_get_contents();
-                ob_end_clean();
-
-                $obj = new \stdClass();
-                $obj->content = $html;
-                $obj->showControlRequired = true;
-                $obj->showControlName = true;
-                $obj->assets = $this->getAssetsDefinedDuringOutput();
-            }
-        } elseif ('entity_property' == $field[0]) {
-            $obj = new \stdClass();
-            switch ($field[1]) {
-                case 'text':
-                    $controller = new TextOptions();
+        $token = app('token');
+        if ($token->validate('get_type_form')) {
+            $field = explode('|', $this->request->request->get('id'));
+            if ('attribute_key' == $field[0]) {
+                $type = Type::getByID($field[1]);
+                if (is_object($type)) {
                     ob_start();
-                    echo $controller->render();
+                    echo $type->render(new AttributeTypeSettingsContext());
                     $html = ob_get_contents();
                     ob_end_clean();
 
                     $obj = new \stdClass();
                     $obj->content = $html;
-                    $obj->showControlRequired = false;
-                    $obj->showControlName = false;
+                    $obj->showControlRequired = true;
+                    $obj->showControlName = true;
                     $obj->assets = $this->getAssetsDefinedDuringOutput();
-                    break;
+                }
+            } elseif ('entity_property' == $field[0]) {
+                $obj = new \stdClass();
+                switch ($field[1]) {
+                    case 'text':
+                        $controller = new TextOptions();
+                        ob_start();
+                        echo $controller->render();
+                        $html = ob_get_contents();
+                        ob_end_clean();
+
+                        $obj = new \stdClass();
+                        $obj->content = $html;
+                        $obj->showControlRequired = false;
+                        $obj->showControlName = false;
+                        $obj->assets = $this->getAssetsDefinedDuringOutput();
+                        break;
+                }
             }
-        }
 
-        if (isset($obj)) {
-            return new JsonResponse($obj);
+            if (isset($obj)) {
+                return new JsonResponse($obj);
+            }
+        } else {
+            throw new \Exception(t($token->getErrorMessage()));
         }
-
         $this->app->shutdown();
+
     }
 
     /**
@@ -840,59 +990,68 @@ class Controller extends BlockController implements NotificationProviderInterfac
 
     public function action_get_control()
     {
-        $entityManager = $this->app->make(EntityManagerInterface::class);
-        $session = $this->app->make('session');
-        $sessionControls = $session->get('block.express_form.new');
-        if (is_array($sessionControls)) {
-            foreach ($sessionControls as $sessionControl) {
-                if ($sessionControl->getID() == $this->request->query->get('control')) {
-                    $control = $sessionControl;
-                    break;
-                }
-            }
-        }
-
-        if (!isset($control)) {
-            $control = $entityManager->getRepository(\Concrete\Core\Entity\Express\Control\Control::class)
+        $token = app('token');
+        if ($token->validate('get_control')) {
+            $entityManager = $this->app->make(EntityManagerInterface::class);
+            $control = $entityManager->getRepository(Control::class)
                 ->findOneById($this->request->query->get('control'));
-        }
 
-        if (is_object($control)) {
-            $obj = new \stdClass();
+            if (is_object($control)) {
+                /**
+                 * @var $control Control
+                 */
+                $controlForm = $control->getFieldSet()->getForm();
+                if (isset($this->exFormID)) {
+                    $exFormID = $this->exFormID;
+                } else {
+                    $fieldSet = $this->getFormFieldSet();
+                    if ($fieldSet) {
+                        $exFormID = $fieldSet->getForm()->getId();
+                    }
+                }
 
-            if ($control instanceof AttributeKeyControl) {
-                $type = $control->getAttributeKey()->getAttributeType();
-                ob_start();
-                echo $type->render(new AttributeTypeSettingsContext(), $control->getAttributeKey());
-                $html = ob_get_contents();
-                ob_end_clean();
+                if ($controlForm && $controlForm->getId() == $exFormID) {
+                    $obj = new \stdClass();
 
-                $obj->question = $control->getDisplayLabel();
-                $obj->isRequired = $control->isRequired();
-                $obj->showControlRequired = true;
-                $obj->showControlName = true;
-                $obj->type = 'attribute_key|' . $type->getAttributeTypeID();
-                $obj->typeDisplayName = $type->getAttributeTypeDisplayName();
+                    if ($control instanceof AttributeKeyControl) {
+                        $type = $control->getAttributeKey()->getAttributeType();
+                        ob_start();
+                        echo $type->render(new AttributeTypeSettingsContext(), $control->getAttributeKey());
+                        $html = ob_get_contents();
+                        ob_end_clean();
+
+                        $obj->question = $control->getDisplayLabel();
+                        $obj->isRequired = $control->isRequired();
+                        $obj->showControlRequired = true;
+                        $obj->showControlName = true;
+                        $obj->type = 'attribute_key|' . $type->getAttributeTypeID();
+                        $obj->typeDisplayName = $type->getAttributeTypeDisplayName();
+                    } else {
+                        $controller = $control->getControlOptionsController();
+                        ob_start();
+                        echo $controller->render();
+                        $html = ob_get_contents();
+                        ob_end_clean();
+
+                        $obj->showControlRequired = false;
+                        $obj->showControlName = false;
+                        $obj->type = 'entity_property|text';
+                    }
+
+                    $obj->id = $control->getID();
+                    $obj->assets = $this->getAssetsDefinedDuringOutput();
+                    $obj->typeContent = $html;
+
+                    return new JsonResponse($obj);
+                } else {
+                    throw new \Exception(t('Express Control is not contained within the form attached to this block.'));
+                }
             } else {
-                $controller = $control->getControlOptionsController();
-                ob_start();
-                echo $controller->render();
-                $html = ob_get_contents();
-                ob_end_clean();
-
-                $obj->showControlRequired = false;
-                $obj->showControlName = false;
-                $obj->type = 'entity_property|text';
+                throw new \Exception(t('Invalid Express object control ID.'));
             }
-
-            $obj->id = $control->getID();
-            $obj->assets = $this->getAssetsDefinedDuringOutput();
-            $obj->typeContent = $html;
-
-            return new JsonResponse($obj);
+        } else {
+            throw new \Exception(t($token->getErrorMessage()));
         }
-
-        $this->app->shutdown();
     }
 
     /**
@@ -901,7 +1060,7 @@ class Controller extends BlockController implements NotificationProviderInterfac
     protected function getFormEntity()
     {
         $entityManager = $this->app->make(EntityManagerInterface::class);
-        return $entityManager->getRepository(\Concrete\Core\Entity\Express\Form::class)
-            ->findOneById($this->exFormID);
+
+        return $entityManager->find(Form::class, $this->exFormID);
     }
 }

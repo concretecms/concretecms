@@ -1,14 +1,14 @@
 <?php
 namespace Concrete\Core\Tree;
 
-use Concrete\Core\Cache\Level\RequestCache;
+use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Foundation\ConcreteObject;
 use Concrete\Core\Localization\Localization;
-use Gettext\Translations;
-use SimpleXMLElement;
+use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\Tree\Node\Node as TreeNode;
 use Exception;
-use Concrete\Core\Support\Facade\Application;
+use Gettext\Translations;
+use SimpleXMLElement;
 
 abstract class Tree extends ConcreteObject
 {
@@ -95,7 +95,7 @@ abstract class Tree extends ConcreteObject
     public static function import(SimpleXMLElement $sx)
     {
         $type = TreeType::getByHandle((string) $sx['type']);
-        $class = $type->getTreeTypeClass();
+        $class = app($type->getTreeTypeClass());
         $tree = call_user_func_array([$class, 'importDetails'], [$sx]);
         $parent = $tree->getRootTreeNodeObject();
         $parent->importChildren($sx);
@@ -106,6 +106,9 @@ abstract class Tree extends ConcreteObject
         return $this->treeID;
     }
 
+    /**
+     * @return \Concrete\Core\Tree\Node\Node|null
+     */
     public function getRootTreeNodeObject()
     {
         return TreeNode::getByID($this->rootTreeNodeID);
@@ -232,33 +235,37 @@ abstract class Tree extends ConcreteObject
         return $treeID;
     }
 
+    /**
+     * @param int|mixed $treeID
+     *
+     * @return \Concrete\Core\Tree\Tree|null
+     */
     final public static function getByID($treeID)
     {
-        $app = Application::getFacadeApplication();
-        /** @var RequestCache $cache */
+        $treeID = (int) $treeID;
+        if ($treeID === 0) {
+            return null;
+        }
+        $app = app();
         $cache = $app->make('cache/request');
-        $key = '/Tree/' . $treeID;
         if ($cache->isEnabled()) {
-            $item = $cache->getItem($key);
+            $item = $cache->getItem('/Tree/' . $treeID);
             if ($item->isHit()) {
                 return $item->get();
             }
         }
-
-        $tree = null;
-        $db = $app->make('database')->connection();
-        $row = $db->fetchAssoc('select * from Trees where treeID = ?', [$treeID]);
-        if ($row) {
-            $tt = TreeType::getByID($row['treeTypeID']);
-            $class = $tt->getTreeTypeClass();
-            $tree = $app->make($class);
-            $tree->setPropertiesFromArray($row);
-            $tree->loadDetails();
+        $db = $app->make(Connection::class);
+        $row = $db->fetchAssociative('select * from Trees where treeID = ?', [$treeID]);
+        if ($row === false) {
+            return null;
         }
-
-        if (is_object($tree) && isset($item) && $item->isMiss()) {
-            $item->set($tree);
-            $cache->save($item);
+        $tt = TreeType::getByID($row['treeTypeID']);
+        $class = $tt->getTreeTypeClass();
+        $tree = $app->make($class);
+        $tree->setPropertiesFromArray($row);
+        $tree->loadDetails();
+        if (isset($item)) {
+            $cache->save($item->set($tree));
         }
 
         return $tree;

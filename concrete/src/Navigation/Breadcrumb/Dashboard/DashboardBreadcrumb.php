@@ -14,6 +14,27 @@ class DashboardBreadcrumb implements BreadcrumbInterface, \Iterator
     protected $items = [];
 
     /**
+     * @var bool
+     */
+    protected $sanitizeName = true;
+
+    /**
+     * @return bool
+     */
+    public function sanitizeName(): bool
+    {
+        return $this->sanitizeName;
+    }
+
+    /**
+     * @param bool $sanitizeName
+     */
+    public function setSanitizeName(bool $sanitizeName): void
+    {
+        $this->sanitizeName = $sanitizeName;
+    }
+
+    /**
      * {@inheritdoc}
      *
      * @see \Concrete\Core\Navigation\NavigationInterface::add()
@@ -50,26 +71,56 @@ class DashboardBreadcrumb implements BreadcrumbInterface, \Iterator
         return $this;
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Iterator::rewind()
+     */
+    #[\ReturnTypeWillChange]
     public function rewind()
     {
         reset($this->items);
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Iterator::current()
+     */
+    #[\ReturnTypeWillChange]
     public function current()
     {
         return current($this->items);
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Iterator::key()
+     */
+    #[\ReturnTypeWillChange]
     public function key()
     {
         return key($this->items);
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Iterator::next()
+     */
+    #[\ReturnTypeWillChange]
     public function next()
     {
         next($this->items);
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Iterator::valid()
+     */
+    #[\ReturnTypeWillChange]
     public function valid()
     {
         return $this->current() !== false;

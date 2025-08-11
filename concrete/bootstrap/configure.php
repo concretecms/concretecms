@@ -72,7 +72,7 @@ if (!defined('DIRNAME_APP_UPDATED') && isset($updates['core'])) {
 /*
  * ----------------------------------------------------------------------------
  * ## If we're still here, we're proceeding through this concrete directory,
- * and it's time to load the rest of our hard-coded configuration options –
+ * and it's time to load the rest of our hard-coded configuration options –
  * the one we don't need a database to tell us about.
  *
  * Namespacing and Autoloading
@@ -229,6 +229,7 @@ const FILENAME_CONVERSATION_EDITOR_OPTIONS = 'options.php';
 const FILENAME_STYLE_CUSTOMIZER_STYLES = 'styles.xml';
 const FILENAME_STYLE_CUSTOMIZER_DEFAULT_PRESET_NAME = 'defaults.less';
 const FILENAME_THEMES_SKIN_STYLESHEET_ENTRYPOINT = 'main.css';
+const FILENAME_CONTENT_XML = 'content.xml';
 
 /*
  * ----------------------------------------------------------------------------
@@ -314,9 +315,9 @@ const VIEW_CORE_THEME = 'concrete';
 /* -- Users -- */
 const USER_SUPER = 'admin';
 const USER_SUPER_ID = 1;
-const GUEST_GROUP_ID = '1';
-const REGISTERED_GROUP_ID = '2';
-const ADMIN_GROUP_ID = '3';
+const GUEST_GROUP_ID = 1;
+const REGISTERED_GROUP_ID = 2;
+const ADMIN_GROUP_ID = 3;
 const DEFAULT_GROUP_TYPE_ID = '1';
 const DEFAULT_GROUP_ROLE_ID = '1';
 
@@ -325,6 +326,9 @@ const DEFAULT_GROUP_ROLE_ID = '1';
  */
 const USER_FOREVER_COOKIE_LIFETIME = 1209600; // 14 days
 const USER_CHANGE_PASSWORD_URL_LIFETIME = 7200;
+/**
+ * @deprecated use app(\Concrete\Core\Session\SessionValidator::class)->getUserActivityThreshold()
+ */
 const ONLINE_NOW_TIMEOUT = 300;
 const UVTYPE_REGISTER = 0;
 const UVTYPE_CHANGE_PASSWORD = 1;
@@ -352,15 +356,13 @@ const USER_INACTIVE = 21;
 const USER_NON_VALIDATED = 22;
 const USER_SESSION_EXPIRED = 23;
 const USER_PASSWORD_RESET = 24;
+const USER_PASSWORD_EXPIRED = 25;
 const COLLECTION_MASTER_UNAUTH = 30;
 const COLLECTION_PRIVATE = 40;
 const BLOCK_NOT_AVAILABLE = 50;
 
 /* -- Debugging and Logging -- */
-defined('DEFAULT_ERROR_REPORTING') or define('DEFAULT_ERROR_REPORTING', E_ALL & ~E_NOTICE & ~E_STRICT & ~E_DEPRECATED);
-const DEBUG_DISPLAY_PRODUCTION = 0;
-const DEBUG_DISPLAY_ERRORS = 1;
-const DEBUG_DISPLAY_ERRORS_SQL = 2; // not used
+defined('INITIAL_ERROR_REPORTING') or define('INITIAL_ERROR_REPORTING', E_ALL & ~E_NOTICE & ~E_DEPRECATED);
 
 /* -- Deprecated - use the Channels class instead */
 const LOG_TYPE_EMAILS = 'sent_emails';
@@ -371,7 +373,7 @@ const LOG_TYPE_EXCEPTIONS = 'exceptions';
  * concrete5 depends on some more forgiving error handling.
  * ----------------------------------------------------------------------------
  */
-error_reporting(DEFAULT_ERROR_REPORTING);
+error_reporting(INITIAL_ERROR_REPORTING);
 
 /*
  * ----------------------------------------------------------------------------

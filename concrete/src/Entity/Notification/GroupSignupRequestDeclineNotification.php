@@ -1,8 +1,7 @@
 <?php
+
 namespace Concrete\Core\Entity\Notification;
 
-use Concrete\Core\Entity\User\GroupSignupRequestDecline;
-use Concrete\Core\Notification\Subject\SubjectInterface;
 use Concrete\Core\Notification\View\GroupSignupRequestDeclineListView;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -14,16 +13,16 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class GroupSignupRequestDeclineNotification extends Notification
 {
-
     /**
      * @ORM\ManyToOne(targetEntity="\Concrete\Core\Entity\User\GroupSignupRequestDecline", cascade={"persist", "remove"}, inversedBy="notifications"),
      * @ORM\JoinColumn(name="id", referencedColumnName="id")
+     *
+     * @var \Concrete\Core\Entity\User\GroupSignupRequestDecline
      */
     protected $signup;
 
     /**
-     * GroupEnterNotification constructor.
-     * @param GroupSignupRequestDecline $group
+     * @param \Concrete\Core\Entity\User\GroupSignupRequestDecline $signup
      */
     public function __construct($signup)
     {
@@ -32,16 +31,20 @@ class GroupSignupRequestDeclineNotification extends Notification
     }
 
     /**
-     * @return GroupSignupRequestDecline
+     * @return \Concrete\Core\Entity\User\GroupSignupRequestDecline
      */
     public function getSignupRequestDecline()
     {
         return $this->signup;
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Entity\Notification\Notification::getListView()
+     */
     public function getListView()
     {
         return new GroupSignupRequestDeclineListView($this);
     }
-
 }

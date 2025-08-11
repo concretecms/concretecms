@@ -2,6 +2,7 @@
 
 namespace Concrete\Core\Block\BlockType;
 
+use Concrete\Core\Backup\ContentImporter;
 use Concrete\Core\Cache\Level\RequestCache;
 use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Entity\Block\BlockType\BlockType as BlockTypeEntity;
@@ -82,7 +83,7 @@ class BlockType
      *
      * @return \Concrete\Core\Entity\Block\BlockType\BlockType
      */
-    public static function installBlockType($btHandle, $pkg = false)
+    public static function installBlockType($btHandle, $pkg = false, string $importMode = ContentImporter::IMPORT_MODE_UPGRADE)
     {
         $app = Application::getFacadeApplication();
         $em = $app->make(EntityManagerInterface::class);
@@ -97,7 +98,7 @@ class BlockType
         $path = dirname($locator->getRecord(DIRNAME_BLOCKS . '/' . $btHandle . '/' . FILENAME_BLOCK_DB)->getFile());
 
         //Attempt to run the subclass methods (install schema from db.xml, etc.)
-        $bta->install($path);
+        $bta->install($path, $importMode);
 
         // Prevent the database records being stored in wrong language
         $loc = $app->make(Localization::class);
@@ -188,8 +189,8 @@ class BlockType
      *
      * @return \Concrete\Core\Entity\Block\BlockType\BlockType
      */
-    public static function installBlockTypeFromPackage($btHandle, $pkg)
+    public static function installBlockTypeFromPackage($btHandle, $pkg, string $importMode = ContentImporter::IMPORT_MODE_UPGRADE)
     {
-        return static::installBlockType($btHandle, $pkg);
+        return static::installBlockType($btHandle, $pkg, $importMode);
     }
 }

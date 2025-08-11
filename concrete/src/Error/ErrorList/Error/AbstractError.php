@@ -84,6 +84,7 @@ abstract class AbstractError implements HtmlAwareErrorInterface
      *
      * @see \JsonSerializable::jsonSerialize()
      */
+    #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
         $r = [

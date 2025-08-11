@@ -14,7 +14,7 @@ class Header extends ElementController
      *
      * @param $nodeId
      */
-    public function __construct($nodeId, Entity $entity = null)
+    public function __construct($nodeId, ?Entity $entity = null)
     {
         parent::__construct();
         $this->entity = $entity;

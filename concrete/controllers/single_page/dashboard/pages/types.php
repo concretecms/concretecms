@@ -5,6 +5,7 @@ use Concrete\Controller\Element\Dashboard\Pages\Types\Header;
 use Concrete\Core\Error\ErrorList\ErrorList;
 use Concrete\Core\Page\Controller\DashboardPageController;
 use Concrete\Core\Page\Controller\DashboardSitePageController;
+use Concrete\Core\Page\Theme\Theme;
 use PageType;
 use Loader;
 use PageTemplate;
@@ -156,8 +157,18 @@ class Types extends DashboardPageController
         if (!is_object($defaultTemplate)) {
             $this->error->add(t('You must choose a valid default page template.'));
         }
+
+        $defaultTheme = null;
+
+        if ($this->post('ptDefaultThemeID')) {
+            $defaultTheme = Theme::getByID($this->post('ptDefaultThemeID'));
+            if (!is_object($defaultTheme)) {
+                $this->error->add(t('You must choose a valid theme.'));
+            }
+        }
+
         $templates = array();
-        if (is_array($_POST['ptPageTemplateID'])) {
+        if (isset($_POST['ptPageTemplateID']) && is_array($_POST['ptPageTemplateID'])) {
             foreach ($this->post('ptPageTemplateID') as $pageTemplateID) {
                 $pt = PageTemplate::getByID($pageTemplateID);
                 if (is_object($pt)) {
@@ -183,6 +194,7 @@ class Types extends DashboardPageController
                 'handle' => $handle,
                 'name' => $name,
                 'defaultTemplate' => $defaultTemplate,
+                'defaultTheme' => $defaultTheme,
                 'ptLaunchInComposer' => $this->post('ptLaunchInComposer'),
                 'ptIsFrequentlyAdded' => $this->post('ptIsFrequentlyAdded'),
                 'allowedTemplates' => $this->post('ptAllowedPageTemplates'),

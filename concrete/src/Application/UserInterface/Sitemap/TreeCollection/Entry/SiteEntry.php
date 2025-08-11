@@ -19,7 +19,7 @@ class SiteEntry extends Entry
 
     public function getLabel()
     {
-        return $this->site->getSiteName();
+        return h($this->site->getSiteName());
     }
 
     public function getSiteTreeID()

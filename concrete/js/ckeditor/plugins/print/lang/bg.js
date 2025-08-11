@@ -1,1 +1,1 @@
-﻿CKEDITOR.plugins.setLang("print","bg",{toolbar:"Печат"});
+CKEDITOR.plugins.setLang("print","bg",{toolbar:"Печат"});

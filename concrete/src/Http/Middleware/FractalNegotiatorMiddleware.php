@@ -5,7 +5,6 @@ namespace Concrete\Core\Http\Middleware;
 use League\Fractal\Manager;
 use League\Fractal\Resource\ResourceInterface;
 use League\Fractal\Scope;
-use League\Fractal\Serializer\ArraySerializer;
 use League\Fractal\Serializer\DataArraySerializer;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -23,11 +22,15 @@ class FractalNegotiatorMiddleware implements MiddlewareInterface
     public function __construct(Manager $fractal)
     {
         $this->fractal = $fractal;
+        $request = Request::createFromGlobals();
+        if ($request->query->has('includes')) {
+            $this->fractal->parseIncludes($request->query->get('includes'));
+        }
     }
 
     public function getSerializer()
     {
-        return isset($this->serializer) ? $this->serializer : new DataArraySerializer();
+        return $this->serializer;
     }
 
     /**
@@ -36,6 +39,13 @@ class FractalNegotiatorMiddleware implements MiddlewareInterface
     public function setSerializer($serializer)
     {
         $this->serializer = $serializer;
+    }
+
+    private function getDefaultSerializer()
+    {
+        $url = rtrim(app('site')->getSite()->getSiteCanonicalURL(), '/');
+        $serializer = new DataArraySerializer();
+        return $serializer;
     }
 
     /**
@@ -49,7 +59,11 @@ class FractalNegotiatorMiddleware implements MiddlewareInterface
     {
         $response = $frame->next($request);
 
-        $this->fractal->setSerializer($this->getSerializer());
+        $serializer = $this->getSerializer();
+        if (!$serializer) {
+            $serializer = $this->getDefaultSerializer();
+        }
+        $this->fractal->setSerializer($serializer);
 
         // Handle a Resource
         if ($response instanceof ResourceInterface) {

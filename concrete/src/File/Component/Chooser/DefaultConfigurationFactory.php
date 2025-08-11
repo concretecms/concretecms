@@ -45,8 +45,19 @@ class DefaultConfigurationFactory
 
         $sets = Set::getMySets();
         $searches = $this->entityManager->getRepository(SavedFileSearch::class)->findAll();
-        $configuration->addChooser(new FileManagerOption());
-        $configuration->addChooser(new RecentUploadsOption());
+
+        $choosers = [new FileManagerOption(), new RecentUploadsOption()];
+
+        $fileChooserDefaultTab = app()['config']->get('concrete.file_chooser.default_tab');
+
+        if ($fileChooserDefaultTab == 'recent_uploads') {
+            $choosers = array_reverse($choosers);
+        }
+
+        foreach($choosers as $chooser) {
+            $configuration->addChooser($chooser);
+        }
+
         $configuration->addChooser(new SearchOption());
         if (count($sets) > 0) {
             $configuration->addChooser(new FileSetsOption());
@@ -75,8 +86,10 @@ class DefaultConfigurationFactory
         );
 
         foreach ($favoriteFolderEntries as $favoriteFolderEntry) {
-            /** @noinspection PhpUnhandledExceptionInspection */
-            $configuration->addChooser(new FolderBookmarkOption($favoriteFolderEntry));
+            if ($favoriteFolderEntry->getTreeNodeFolderObject()) {
+                /** @noinspection PhpUnhandledExceptionInspection */
+                $configuration->addChooser(new FolderBookmarkOption($favoriteFolderEntry));
+            }
         }
 
         return $configuration;

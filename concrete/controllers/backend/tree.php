@@ -1,6 +1,9 @@
 <?php
 namespace Concrete\Controller\Backend;
 
+use Concrete\Core\Localization\Localization;
+use Concrete\Core\Multilingual\Page\Section\Section;
+use Concrete\Core\Page\Page;
 use Concrete\Core\Tree\Node\Node;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
@@ -39,6 +42,15 @@ class Tree extends UserInterface
                 }
             }
             $tree->setSelectedTreeNodeIDs($selectedIDs);
+        }
+
+        if ($this->request->request('cID') > 0) {
+            $c = Page::getByID($this->request->request('cID'));
+            $al = Section::getBySectionOfSite($c);
+            if ($al !== null) {
+                $locale = $al->getLocale();
+                Localization::changeLocale($locale);
+            }
         }
 
         $tree->setRequest($this->request->request());

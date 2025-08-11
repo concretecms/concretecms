@@ -5,60 +5,102 @@ defined('C5_EXECUTE') or die('Access Denied.');
 use Concrete\Core\Form\Service\Widget\FileFolderSelector;
 use Concrete\Core\Localization\Localization;
 use Concrete\Core\Support\Facade\Application;
+use Concrete\Core\User\Component\AvatarCropperInstanceFactory;
 
 /**
+ * @var Concrete\Core\Page\View\PageView $view
+ * @var Concrete\Core\Form\Service\Form $form
+ * @var Concrete\Core\Validation\CSRF\Token $token
  * @var Concrete\Core\User\UserInfo $user
+ * @var string[] $folderList
+ * @var bool $canEditAvatar
+ * @var bool $canEditUserName
+ * @var bool $canEditEmail
+ * @var bool $canEditPassword
+ * @var bool $canEditHomeFileManagerFolderID
+ * @var bool $canEditTimezone
+ * @var bool $canEditLanguage
+ * @var bool $canViewAccountModal
+ * @var string[] $allowedEditAttributes
+ * @var bool $canAddGroup
+ * @var bool $shouldViewIgnoredIPMismatches
+ * @var bool $canEditIgnoredIPMismatches
+ * @var string $groupsJSON
+ * @var Doctrine\ORM\PersistentCollection $attributeSets
+ * @var Concrete\Core\Entity\Attribute\Key\UserKey[] $unassigned
+ * @var Concrete\Core\Url\UrlImmutable $saveAvatarUrl
  */
-
 $app = Application::getFacadeApplication();
-/** @var FileFolderSelector $fileFolderSelector */
+
 $fileFolderSelector = $app->make(FileFolderSelector::class);
+/** @var Concrete\Core\Form\Service\Widget\FileFolderSelector $fileFolderSelector */
 
 $dh = $app->make('helper/date');
-// @var $dh \Concrete\Core\Localization\Service\Date
+/** @var $dh Concrete\Core\Localization\Service\Date */
+
 $languages = Localization::getAvailableInterfaceLanguages();
 $locales = [];
-if (count($languages) > 0) {
+if ($languages !== []) {
     array_unshift($languages, Localization::BASE_LOCALE);
-}
-if (count($languages) > 0) {
     foreach ($languages as $lang) {
         $locales[$lang] = \Punic\Language::getName($lang, $lang);
     }
     asort($locales);
     $locales = array_merge(['' => tc('Default locale', '** Default')], $locales);
 }
-
+$userEntity = $user->getEntityObject();
 ?>
 
-<h3 class="mb-4"><?= t('Basic Details') ?></h3>
-<section data-section="basics" class="row">
+<section data-section="basics" class="mb-3 row">
     <div class="col-lg-12">
         <div class="ccm-user-detail-basics">
             <div class="ccm-user-detail-basics-avatar">
                 <?php if ($canEditAvatar) { ?>
-                    <avatar-cropper v-bind:height="<?= Config::get('concrete.icons.user_avatar.height') ?>"
-                                    v-bind:width="<?= Config::get('concrete.icons.user_avatar.width') ?>"
-                                    uploadurl="<?= $saveAvatarUrl ?>"
-                                    src="<?= $user->getUserAvatar()->getPath() ?>">
-                    </avatar-cropper>
+                    <a href="#"
+                       data-bs-toggle="modal" data-bs-target="#edit-avatar-modal"
+                       class="ccm-user-detail-basics-avatar-edit"><?= $user->getUserAvatar()->output() ?></a>
                 <?php } else { ?>
                     <?= $user->getUserAvatar()->output() ?>
                 <?php } ?>
             </div>
-            <div>
-                <h5><?= $user->getUserName() ?></h5>
-                <a href="mailto:<?= $user->getUserEmail() ?>"><?= $user->getUserEmail() ?></a>
+            <div class="ccm-user-detail-basics-name">
+                <h5 class="mb-2"><?= $userEntity->getUserName() ?></h5>
+                <div class="mb-2"><a href="mailto:<?= $userEntity->getUserEmail() ?>"><?= $userEntity->getUserEmail() ?></a></div>
+                <?php
+                $privateMessagesEnabled = $user->getAttribute('profile_private_messages_enabled');
+                $profileURL = $user->getUserPublicProfileURL();
+                if ($profileURL || $privateMessagesEnabled) {
+                ?>
+                <div>
+                    <div class="btn-group btn-group-sm">
+                        <?php
+                        if ($privateMessagesEnabled) {
+                            $u = Core::make(Concrete\Core\User\User::class);
+                            if ($u->getUserID() != $userEntity->getUserID()) { ?>
+                                <a href="<?php echo View::url('/account/messages', 'write', $userEntity->getUserID())?>" class="btn btn-secondary"><?php echo t("Send Private Message")?></a>
+                            <?php } ?>
+                        <?php } ?>
+
+                        <?php
+                        if ($profileURL) {
+                            ?>
+                            <a href="<?=$profileURL?>" class="btn btn-secondary"><?=t("View Public Profile")?></a>
+                            <?php
+                        } ?>
+
+                    </div>
+                </div>
+                <?php } ?>
             </div>
         </div>
     </div>
 </section>
 
-<hr class="mt-2 mb-4"/>
+<hr class="mb-4"/>
 
 <?php if ($canViewAccountModal) { ?>
 <div id="folderSelectorSourceContainer" class="d-none">
-    <?php echo $fileFolderSelector->selectFileFolder('uHomeFileManagerFolderID', $user->getUserHomeFolderId()); ?>
+    <?php echo $fileFolderSelector->selectFileFolder('uHomeFileManagerFolderID', $userEntity->getHomeFileManagerFolderID()); ?>
 </div>
 <?php } ?>
 
@@ -72,15 +114,32 @@ if (count($languages) > 0) {
     <dl class="ccm-user-detail-account">
         <dt><?= t('Date Created') ?></dt>
         <dd>
-            <div><?= $dh->formatDateTime($user->getUserDateAdded()) ?></div>
+            <div><?= $dh->formatDateTime($userEntity->getUserDateAdded()) ?></div>
         </dd>
         <dt><?= t('Last IP Address') ?></dt>
         <dd>
-            <div><?= $user->getLastIPAddress() ? $user->getLastIPAddress() : t('None') ?></div>
+            <div><?= $user->getLastIPAddress() ?? t('None') ?></div>
+        </dd>
+        <dt><?= t('Last Password Change') ?></dt>
+        <dd>
+            <div><?= $userEntity->getUserLastPasswordChange() === null ? t('Never') : $dh->formatDateTime($userEntity->getUserLastPasswordChange()) ?></div>
+        </dd>
+        <dt><?= t('Last Login') ?></dt>
+        <dd>
+            <div><?= $userEntity->getUserLastLogin() ? $dh->formatDateTime($userEntity->getUserLastLogin()) : t('Never') ?></div>
+        </dd>
+
+        <dt><?= t('Last Seen Online') ?></dt>
+        <dd>
+            <div><?= $userEntity->getUserLastOnline() ? $dh->formatDateTime($userEntity->getUserLastOnline()) : t('Never') ?></div>
+        </dd>
+        <dt><?= t('# Logins') ?></dt>
+        <dd>
+            <div><?= $userEntity->getUserTotalLogins() ?></div>
         </dd>
         <?php
         if (Config::get('concrete.misc.user_timezones')) {
-            $uTimezone = $user->getUserTimezone();
+            $uTimezone = $userEntity->getUserTimezone();
             if (empty($uTimezone)) {
                 $uTimezone = date_default_timezone_get();
             }
@@ -97,9 +156,9 @@ if (count($languages) > 0) {
         if (count($languages) > 0) {
             ?>
             <dt><?= t('Language') ?></dt>
-            <?php if ($user->getUserDefaultLanguage()) { ?>
+            <?php if ($userEntity->getUserDefaultLanguage()) { ?>
                 <dd>
-                    <div><?= h(Punic\Language::getName($user->getUserDefaultLanguage())) ?></div>
+                    <div><?= h(Punic\Language::getName($userEntity->getUserDefaultLanguage())) ?></div>
                 </dd>
             <?php } else { ?>
                 <dd>
@@ -114,22 +173,39 @@ if (count($languages) > 0) {
         </dt>
         <dd>
             <div>
-                <?php echo isset($folderList[$user->getUserHomeFolderId()]) && $user->getUserHomeFolderId() !== null ? $folderList[$user->getUserHomeFolderId()] : t('None') ?>
+                <?php echo $userEntity->getHomeFileManagerFolderID() !== null && isset($folderList[$userEntity->getHomeFileManagerFolderID()]) ? $folderList[$userEntity->getHomeFileManagerFolderID()] : t('None') ?>
             </div>
         </dd>
-
         <?php
+        if ($shouldViewIgnoredIPMismatches) {
+            ?>
+            <dt>
+                <?= t('Ignored IP changes for') ?>
+            </dt>
+            <dd>
+                <div>
+                    <?php
+                    if ($userEntity->getIgnoredIPMismatches() === []) {
+                        echo t('None');
+                    } else {
+                        echo nl2br(htmlspecialchars(implode("\n", $userEntity->getIgnoredIPMismatches())));
+                    }
+                    ?>
+                </div>
+            </dd>
+            <?php
+        }
         if (Config::get('concrete.user.registration.validate_email')) {
             ?>
             <dt><?= t('Full Registration Record') ?></dt>
             <dd>
-                <div><?= ($user->isFullRecord()) ? t('Yes') : t('No') ?></div>
+                <div><?= ($userEntity->isUserFullRecord()) ? t('Yes') : t('No') ?></div>
             </dd>
             <dt><?= t('Email Validated') ?></dt>
             <dd>
                 <div>
                     <?php
-                    switch ($user->isValidated()) {
+                    switch ($userEntity->isUserValidated()) {
                         case '-1':
                             print t('Unknown');
                             break;
@@ -149,6 +225,41 @@ if (count($languages) > 0) {
 
     </dl>
 
+    <?php if ($canEditAvatar) {
+        $avatarUploadUrl = $view->action('update_avatar', $user->getUserID());
+        $cropper = app(AvatarCropperInstanceFactory::class)->createInstance();
+        $cropper->setUploadUrl($avatarUploadUrl);
+        $config = app('config');
+        $width = $config->get('concrete.icons.user_avatar.width');
+        $height = $config->get('concrete.icons.user_avatar.height');
+        ?>
+
+        <div class="modal fade" tabindex="-1" role="dialog" id="edit-avatar-modal">
+            <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title"><?= t('Edit Profile Picture') ?></h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="<?= t('Close') ?>"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="text-center" v-if="avatar">
+                            <div class="mb-3">
+                                <div class="d-inline-block" style="max-width: <?=$width?>px; max-height: <?=$height?>px">
+                                    <?=$user->getUserAvatar()->output()?>
+                                </div>
+                            </div>
+                            <button @click="deleteAvatar" class="btn-danger btn"><?=t('Delete')?></button>
+                        </div>
+                        <div v-else>
+                            <?=$cropper->getTag()?>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    <?php } ?>
+
     <?php if ($canViewAccountModal) { ?>
 
         <form method="post" @submit.prevent="saveAccount">
@@ -162,40 +273,71 @@ if (count($languages) > 0) {
                         <div class="modal-body">
                             <fieldset>
                                 <legend><?= t('Basic Information'); ?></legend>
-                                <?php if ($canEditUserName) { ?>
+                                <?php
+                                if ($canEditUserName) {
+                                    ?>
                                     <div class="form-group">
                                         <?= $form->label('uName', t('Username')); ?>
-                                        <?= $form->text('uName', $user->getUserName()); ?>
+                                        <?= $form->text('uName', $userEntity->getUserName()); ?>
                                     </div>
-                                <?php } ?>
-                                <?php if ($canEditEmail) { ?>
+                                    <?php
+                                }
+                                if ($canEditEmail) {
+                                    ?>
                                     <div class="form-group">
                                         <?= $form->label('uEmail', t('Email')); ?>
-                                        <?= $form->text('uEmail', $user->getUserEmail()); ?>
+                                        <?= $form->text('uEmail', $userEntity->getUserEmail()); ?>
                                     </div>
-                                <?php } ?>
-                                <?php if ($canEditTimezone) { ?>
-                                    <?php if (Config::get('concrete.misc.user_timezones')) { ?>
+                                    <?php
+                                }
+                                if ($canEditTimezone) {
+                                    if (Config::get('concrete.misc.user_timezones')) {
+                                        ?>
                                         <div class="form-group">
                                             <?= $form->label('uTimezone', t('Time Zone')); ?>
-                                            <?= $form->select('uTimezone', $dh->getTimezones(), ($user->getUserTimezone() ? $user->getUserTimezone() : date_default_timezone_get())); ?>
+                                            <?= $form->select('uTimezone', $dh->getTimezones(), $userEntity->getUserTimezone() ?? date_default_timezone_get()); ?>
                                         </div>
-                                    <?php } ?>
-                                <?php } ?>
-                                <?php if ($canEditLanguage) { ?>
-                                    <?php if (is_array($locales) && count($locales)) { ?>
+                                        <?php
+                                    }
+                                }
+                                if ($canEditLanguage) {
+                                    if (is_array($locales) && count($locales)) {
+                                        ?>
                                         <div class="form-group">
                                             <?= $form->label('uDefaultLanguage', t('Language')); ?>
                                             <?= $form->select('uDefaultLanguage', $locales, Localization::activeLocale()); ?>
                                         </div>
-                                    <?php } ?>
-                                <?php } ?>
-                                <?php if ($canEditHomeFileManagerFolderID) { ?>
+                                        <?php
+                                    }
+                                }
+                                if ($canEditHomeFileManagerFolderID) {
+                                    ?>
                                     <div class="form-group">
                                         <?php echo $form->label('uHomeFileManagerFolderID', t('Home Folder')); ?>
                                         <div id="folderSelectorDestinationContainer"></div>
                                     </div>
-                                <?php } ?>
+                                    <?php
+                                }
+                                if ($shouldViewIgnoredIPMismatches && $canEditIgnoredIPMismatches) {
+                                    ?>
+                                    <div class="form-group">
+                                        <?= $form->label('ignoredIPMismatches', t('Ignored IP changes for')) ?>
+                                        <?= $form->textarea('ignoredIPMismatches', implode("\n", $userEntity->getIgnoredIPMismatches())) ?>
+                                        <div class="small text-muted">
+                                            <?= t('Separate IP addresses with spaces or new lines.') ?><br />
+                                            <?= t(
+                                                'Accepted values are single addresses (IPv4 like %1$s, and IPv6 like %2$s) and ranges in subnet format (IPv4 like %3$s, and IPv6 like %4$s).',
+                                                '<code>127.0.0.1</code>',
+                                                '<code>::1</code>',
+                                                '<code>127.0.0.1/24</code>',
+                                                '<code>::1/8</code>'
+                                            ) ?><br />
+                                            <?= t('Please remark that you may also define global IP ranges.') ?>
+                                        </div>
+                                    </div>
+                                    <?php
+                                }
+                                ?>
                             </fieldset>
                             <?php if ($canEditPassword) { ?>
                                 <fieldset>
@@ -204,19 +346,20 @@ if (count($languages) > 0) {
                                     </legend>
 
                                     <div class="form-group">
-                                        <?php echo $form->label('uPasswordMine', t('Your Current Password')); ?>
-                                        <?php echo $form->password('uPasswordMine', ['autocomplete' => 'off']); ?>
-                                    </div>
-
-                                    <div class="form-group">
                                         <?php echo $form->label('uPasswordNew', t('New Password')); ?>
-                                        <?php echo $form->password('uPasswordNew', ['autocomplete' => 'off']); ?>
+                                        <password-input name="uPasswordNew" :strength-meter="true"/>
                                     </div>
 
                                     <div class="form-group">
                                         <?php echo $form->label('uPasswordNewConfirm', t('Confirm New Password')); ?>
-                                        <?php echo $form->password('uPasswordNewConfirm', ['autocomplete' => 'off']); ?>
+                                        <password-input name="uPasswordNewConfirm"/>
                                     </div>
+
+                                    <div class="form-group">
+                                        <?php echo $form->label('uPasswordMine', t('Your Password (for additional security)')); ?>
+                                        <password-input name="uPasswordMine"/>
+                                    </div>
+
                                     <div class="help-block"><?php echo h(t('Leave blank to leave the password unchanged.')); ?></div>
                                 </fieldset>
                             <?php } ?>
@@ -274,7 +417,7 @@ if (count($languages) > 0) {
                     <div v-if="groups.length === 0" class="mb-3"><?= t('None') ?></div>
 
                     <h4><?= t('Add Group') ?></h4>
-                    <concrete-group-chooser mode="select" @select="addGroup"></concrete-group-chooser>
+                    <concrete-group-chooser mode="select" @select="addGroup" filter="assign"></concrete-group-chooser>
 
                 </div>
                 <div class="modal-footer">
@@ -293,7 +436,7 @@ if (count($languages) > 0) {
     if (count($allowedEditAttributes)) {
         ?>
         <a class="dialog-launch btn-section btn btn-secondary"
-           href="<?=URL::to('/ccm/system/dialogs/user/attributes', $user->getUserID())?>"
+           href="<?=URL::to('/ccm/system/dialogs/user/attributes', $userEntity->getUserID())?>"
            dialog-width="800" dialog-height="640" dialog-title="<?=t('Edit Attributes')?>">
         <?= t('Edit') ?></a>
     <?php } ?>
@@ -342,7 +485,8 @@ if (count($languages) > 0) {
 
 <script>
     $(document).ready(function () {
-        Concrete.Vue.activateContext('frontend', function (Vue, config) {
+
+        Concrete.Vue.activateContext('backend', function (Vue, config) {
             new Vue({
                 el: '[data-section=basics]',
                 components: config.components
@@ -353,18 +497,29 @@ if (count($languages) > 0) {
             new Vue({
                 components: config.components,
                 el: 'section[data-section=account]',
-                data: {},
-                mounted() {
-
+                data: {
+                    avatar: <?=$user->hasAvatar() ? json_encode(['path' => $user->getUserAvatar()->getPath()]) : 'null' ?>
                 },
                 methods: {
+                    deleteAvatar() {
+                        var data = []
+                        var my = this
+                        data.push({'name': 'ccm_token', 'value': '<?=$token->generate('delete_avatar')?>'})
+                        $.concreteAjax({
+                            url: "<?=$view->action('delete_avatar', $userEntity->getUserID())?>",
+                            data: data,
+                            success: function (r) {
+                                my.avatar = null
+                            }
+                        });
+                    },
                     saveAccount() {
                         var my = this
                         var data = $(this.$el).find("form").serializeArray()
                         data.push({'name': 'ccm_token', 'value': '<?=$token->generate('save_account')?>'})
 
                         $.concreteAjax({
-                            url: "<?=$view->action('save_account', $user->getUserID())?>",
+                            url: "<?=$view->action('save_account', $userEntity->getUserID())?>",
                             data: data,
                             success: function (r) {
                                 window.location.reload()
@@ -390,7 +545,7 @@ if (count($languages) > 0) {
                             url: "<?=URL::to('/ccm/system/user/add_group')?>",
                             data: {
                                 gID: group.gID,
-                                uID: '<?=$user->getUserID()?>',
+                                uID: '<?=$userEntity->getUserID()?>',
                                 ccm_token: '<?= $token->generate('add_group') ?>'
                             },
                             success: function (r) {
@@ -406,7 +561,7 @@ if (count($languages) > 0) {
                             url: "<?=URL::to('/ccm/system/user/remove_group')?>",
                             data: {
                                 gID: gID,
-                                uID: '<?=$user->getUserID()?>',
+                                uID: '<?=$userEntity->getUserID()?>',
                                 ccm_token: '<?= $token->generate('remove_group') ?>'
                             },
                             success: function (r) {
@@ -430,6 +585,9 @@ if (count($languages) > 0) {
          *
          * @todo: Create a vue version of file folder selector and replace this hacky workaround with the vue component
          */
-        $("#folderSelectorDestinationContainer").before($("#folderSelectorSourceContainer").removeClass("d-none"));
+        setTimeout(function() {
+            // setTimeout needed for https://github.com/concretecms/concretecms/issues/11152
+            $("#folderSelectorDestinationContainer").before($("#folderSelectorSourceContainer").removeClass("d-none"));
+        }, 500);
     });
 </script>

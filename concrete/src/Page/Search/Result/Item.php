@@ -10,6 +10,16 @@ use Permissions;
 class Item extends SearchResultItem
 {
     public $cID;
+    public $cPointerID;
+    public $link;
+    public $canEditPageProperties;
+    public $canEditPageSpeedSettings;
+    public $canEditPagePermissions;
+    public $canEditPageDesign;
+    public $canEditPageType;
+    public $canViewPageVersions;
+    public $canDeletePage;
+    public $cvName;
 
     public function __construct(SearchResult $result, Set $columns, $item)
     {

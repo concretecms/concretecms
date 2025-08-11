@@ -4,7 +4,6 @@ namespace Concrete\Core\Board\Instance\Slot;
 
 use Concrete\Core\Entity\Board\Instance;
 use Concrete\Core\Entity\Board\InstanceSlotRule;
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManager;
 
 /**
@@ -22,7 +21,7 @@ class RenderedSlotCollectionFactory
         $this->entityManager = $entityManager;
     }
 
-    public function getCurrentRules(Instance $instance, array $ruleTypes = null)
+    public function getCurrentRules(Instance $instance, ?array $ruleTypes = null)
     {
         $now = new \DateTime();
         $now->setTimezone(new \DateTimeZone($instance->getSite()->getTimezone()));

@@ -1,0 +1,41 @@
+<block type="page_list" name="">
+  <data table="btPageList">
+    <record>
+      <buttonLinkText>Link Text</buttonLinkText>
+      <cParentID>0</cParentID>
+      <cThis>0</cThis>
+      <cThisParent>1</cThisParent>
+      <customTopicAttributeKeyHandle></customTopicAttributeKeyHandle>
+      <customTopicTreeNodePath></customTopicTreeNodePath>
+      <displayAliases>0</displayAliases>
+      <displayFeaturedOnly>0</displayFeaturedOnly>
+      <displaySystemPages>0</displaySystemPages>
+      <displayThumbnail>1</displayThumbnail>
+      <enableExternalFiltering>0</enableExternalFiltering>
+      <excludeCurrentPage>0</excludeCurrentPage>
+      <filterByCustomTopic>0</filterByCustomTopic>
+      <filterByRelated>0</filterByRelated>
+      <filterDateDays>0</filterDateDays>
+      <filterDateEnd null="true"></filterDateEnd>
+      <filterDateOption>all</filterDateOption>
+      <filterDateStart null="true"></filterDateStart>
+      <ignorePermissions>0</ignorePermissions>
+      <includeAllDescendents>0</includeAllDescendents>
+      <includeDate>1</includeDate>
+      <includeDescription>1</includeDescription>
+      <includeName>0</includeName>
+      <noResultsMessage>Message to Display When No Pages Listed</noResultsMessage>
+      <num>10</num>
+      <orderBy>chrono_asc</orderBy>
+      <pageListTitle>Title of Page List</pageListTitle>
+      <paginate>0</paginate>
+      <pfID>0</pfID>
+      <ptID>0</ptID>
+      <relatedTopicAttributeKeyHandle></relatedTopicAttributeKeyHandle>
+      <titleFormat>h2</titleFormat>
+      <truncateChars>123</truncateChars>
+      <truncateSummaries>1</truncateSummaries>
+      <useButtonForLink>1</useButtonForLink>
+    </record>
+  </data>
+</block>

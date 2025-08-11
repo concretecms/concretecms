@@ -48,35 +48,29 @@ class SiteListController extends Controller
                 $this->page->getPageController() instanceof DashboardPageController && method_exists($this->page->getPageController(), 'getSite'))) {
 
             $request = \Request::getInstance();
-            $token = \Core::make('token')->getParameter($request->getRequestURI());
+            $token = \Core::make('token')->generate($request->getRequestURI());
 
             $element = new Element('div');
             $element->setAttribute('class', 'ccm-menu-item-site-list-container');
+            $element->setAttribute('data-vue', 'cms');
 
             $icon = new Element('i');
             $icon->addClass('fas fa-globe');
             $element->appendChild($icon);
 
-            $select = new Element('select', null, [
-                'class' => 'selectpicker',
-                'data-live-search' => 'true',
-                'data-size' => '5',
-                'data-select' => 'ccm-header-site-list'
-            ]);
+            $sites = [];
             foreach($this->service->getList() as $site) {
                 $permissions = new \Permissions($site);
                 if ($permissions->canViewSiteInSelector()) {
-                    if ($this->service->getActiveSiteForEditing()->getSiteID() == $site->getSiteID()) {
-                        $selected = true;
-                    } else {
-                        $selected = false;
-                    }
-
-                    $url = \URL::to('/ccm/site/redirect', $site->getSiteID()) . '?rUri=' . urlencode($request->getRequestURI()) . '&' . $token;
-                    $option = new Element('option', $site->getSiteName(), ['selected' => $selected, 'value' => $url]);
-                    $select->appendChild($option);
+                    $sites[] = $site;
                 }
             }
+            $select = new Element('concrete-toolbar-site-list', null, [
+                ':sites' => json_encode($sites),
+                'token' => $token,
+                'uri' => $request->getRequestURI(),
+                'selected-site' => $this->service->getActiveSiteForEditing()->getSiteID(),
+            ]);
 
             $element->appendChild($select);
 

@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\Console\Command;
 
+use Concrete\Core\Config\Repository\Repository;
 use Concrete\Core\Console\Command;
 use Concrete\Core\Localization\Localization;
 use Concrete\Core\Localization\Translation\Remote\ProviderInterface as RemoteTranslationProvider;
@@ -51,7 +52,7 @@ Returns codes:
   $okExitCode operation completed successfully
   $errExitCode errors occurred
             
-More info at http://documentation.concrete5.org/developers/appendix/cli-commands#c5-package-translate
+More info at https://documentation.concretecms.org/9-x/developers/security/cli-jobs#c5-package-translate
 EOT
         )
         ;
@@ -65,6 +66,7 @@ EOT
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $this->app = Application::getFacadeApplication();
+        $config = $this->app->make(Repository::class);
         
         $vsh = $this->app->make('helper/validation/strings');
         /* @var \Concrete\Core\Utility\Service\Validation\Strings $vsh */
@@ -146,7 +148,8 @@ EOT
         
         // Parse the package directory
         $output->writeln('Parsing package contents');
-        foreach (\C5TL\Parser::getAllParsers() as $parser) {
+        $parserFactory = $this->app->make(\C5TL\ParserFactory::class);
+        foreach ($parserFactory->getParsers() as $parser) {
             if ($parser->canParseDirectory()) {
                 $output->write('- running parser "' . $parser->getParserName() . '"... ');
                 $parser->parseDirectory(
@@ -163,7 +166,7 @@ EOT
         // Save the pot file
         $output->write('Saving .pot file... ');
         if (!is_dir($packageLanguagesDirectory)) {
-            @mkdir($packageLanguagesDirectory, 0775, true);
+            @mkdir($packageLanguagesDirectory, $config->get('concrete.filesystem.permissions.directory'), true);
             if (!is_dir($packageLanguagesDirectory)) {
                 throw new Exception("Unable to create the directory $packageLanguagesDirectory");
             }
@@ -207,7 +210,7 @@ EOT
             }
             $output->write('- saving .po file... ');
             if (!is_dir($poDirectory)) {
-                @mkdir($poDirectory, 0775, true);
+                @mkdir($poDirectory, $config->get('concrete.filesystem.permissions.directory'), true);
                 if (!is_dir($poDirectory)) {
                     throw new Exception("Unable to create the directory $poDirectory");
                 }

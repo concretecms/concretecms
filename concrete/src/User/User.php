@@ -4,6 +4,7 @@ namespace Concrete\Core\User;
 
 use Concrete\Core\Application\UserInterface\Dashboard\Navigation\NavigationCache;
 use Concrete\Core\Config\Repository\Repository;
+use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Database\Query\LikeBuilder;
 use Concrete\Core\Entity\Notification\GroupSignupNotification;
 use Concrete\Core\Entity\User\GroupSignup;
@@ -23,6 +24,7 @@ use Concrete\Core\User\Group\GroupRepository;
 use Concrete\Core\User\Group\GroupRole;
 use Concrete\Core\Permission\Access\Entity\Entity as PermissionAccessEntity;
 use Concrete\Core\Encryption\PasswordHasher;
+use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 
@@ -135,14 +137,7 @@ class User extends ConcreteObject
                     return false;
                 }
 
-                $session->set('uOnlineCheck', time());
-                if (($session->get('uOnlineCheck') - $session->get('uLastOnline') > (ONLINE_NOW_TIMEOUT / 2))) {
-                    // This code throttles the writing of uLastOnline to the database, so that we're not constantly
-                    // updating the Users table. If you need to have the exact up to date metric on when a session
-                    // last looked at a page, use uOnlineCheck.
-                    $db->query('update Users set uLastOnline = ? where uID = ?', [$session->get('uOnlineCheck'), $this->uID]);
-                    $session->set('uLastOnline', $session->get('uOnlineCheck'));
-                }
+                $this->updateOnlineCheck();
 
                 return true;
             } else {
@@ -151,6 +146,26 @@ class User extends ConcreteObject
         }
 
         return false;
+    }
+
+    /**
+     * This code throttles the writing of uLastOnline to the database, so that we're not constantly
+     * updating the Users table. If you need to have the exact up to date metric on when a session
+     * last looked at a page, use the uOnlineCheck session key.
+     */
+    public function updateOnlineCheck(): void
+    {
+        $now = time();
+        $session = app('session');
+        $session->set('uOnlineCheck', $now);
+        $activityThreshold = app(SessionValidator::class)->getUserActivityThreshold();
+        $saveThreshold = $activityThreshold / 2;
+        $elapsedTime = $now - $session->get('uLastOnline');
+        if ($elapsedTime > $saveThreshold) {
+            $db = app(Connection::class);
+            $db->update('Users', ['uLastOnline' => $now], ['uID' => $this->getUserID()]);
+            $session->set('uLastOnline', $now);
+        }
     }
 
     /**
@@ -194,9 +209,10 @@ class User extends ConcreteObject
             if ($r) {
                 $row = $r->fetch();
                 if ($row) {
-                    $pw_is_valid_legacy = ($config->get(
-                            'concrete.user.password.legacy_salt'
-                        ) && self::legacyEncryptPassword($password) == $row['uPassword']);
+                    $pw_is_valid_legacy = false;
+                    if ($config->get('concrete.user.password.legacy_salt')) {
+                        $pw_is_valid_legacy = self::legacyEncryptPassword($password) === $row['uPassword'];
+                    }
 
                     $pw_is_valid = $pw_is_valid_legacy || $hasher->checkPassword($password, $row['uPassword']);
                     if ($pw_is_valid && $hasher->needsRehash($row['uPassword'])) {
@@ -220,13 +236,15 @@ class User extends ConcreteObject
                         }
                     }
 
-                    if ($row['uID'] && $row['uIsValidated'] === '0' && $config->get(
+                    if ($row['uID'] && (int)$row['uIsValidated'] === 0 && $config->get(
                             'concrete.user.registration.validate_email'
                         )) {
                         $this->loadError(USER_NON_VALIDATED);
                     } elseif ($row['uID'] && $row['uIsActive'] && $pw_is_valid) {
                         if ($row['uIsPasswordReset']) {
                             $this->loadError(USER_PASSWORD_RESET);
+                        } elseif ($this->isPasswordExpired($db, $config, $row['uLastPasswordChange'])) {
+                            $this->loadError(USER_PASSWORD_EXPIRED);
                         } else {
                             $this->uID = $row['uID'];
                             $this->uName = $row['uName'];
@@ -464,12 +482,17 @@ class User extends ConcreteObject
 
     /**
      * @param bool $hard
+     *
+     * @return \Symfony\Component\HttpFoundation\Response|null
      */
     public function logout($hard = true)
     {
         $app = Application::getFacadeApplication();
-        $events = $app['director'];
+        $events = $app->make('director');
         $logger = $app->make(LoggerFactory::class)->createLogger(Channels::CHANNEL_AUTHENTICATION);
+        $currentUser = $app->make(User::class);
+        $event = new Event\Logout((int) $currentUser->getUserID());
+        $events->dispatch('on_before_user_logout', $event);
         $logger->info(t('Logout from user {user} (ID {id}) requested'), [
             'user' => $this->getUserName(),
             'id' => $this->getUserID(),
@@ -480,15 +503,14 @@ class User extends ConcreteObject
         $this->unloadAuthenticationTypes();
 
         $this->invalidateSession($hard);
-        $app->singleton(User::class, function () {
+        $app->singleton(User::class, static function () {
             return new User();
         });
-        $events->dispatch('on_user_logout');
-
-        $app = Application::getFacadeApplication();
-        /** @var NavigationCache $navigationCache */
         $navigationCache = $app->make(NavigationCache::class);
         $navigationCache->clear();
+        $events->dispatch('on_user_logout', $event);
+
+        return $event->getResponse();
     }
 
     /**
@@ -789,6 +811,7 @@ class User extends ConcreteObject
                     $subscription = $type->getSubscription($subject);
                     $users = $notifier->getUsersToNotify($subscription, $subject);
                     $notification = new GroupSignupNotification($subject);
+                    $subject->getNotifications()->add($notification);
                     $notifier->notify($users, $notification);
                 }
             }
@@ -1012,7 +1035,7 @@ class User extends ConcreteObject
      */
     public function refreshCollectionEdit(&$c)
     {
-        if ($this->isLoggedIn() && $c->getCollectionCheckedOutUserID() == $this->getUserID()) {
+        if ($this->isRegistered() && $c->getCollectionCheckedOutUserID() == $this->getUserID()) {
             $app = Application::getFacadeApplication();
             $db = $app['database']->connection();
             $cID = $c->getCollectionID();
@@ -1083,7 +1106,9 @@ class User extends ConcreteObject
             // $secure
             $config->get('concrete.session.cookie.cookie_secure'),
             // $httpOnly
-            $config->get('concrete.session.cookie.cookie_httponly')
+            $config->get('concrete.session.cookie.cookie_httponly'),
+            // $sameSite
+            $config->get('concrete.session.cookie.samesite')
         );
 
         if ($cache_interface) {
@@ -1098,5 +1123,28 @@ class User extends ConcreteObject
     public function logIn($cache_interface = true)
     {
         $this->persist($cache_interface);
+    }
+
+    /**
+     * @param string|null $uLastPasswordChange
+     * @return bool
+     */
+    private function isPasswordExpired(Connection $cn, Repository $config, $uLastPasswordChange)
+    {
+        if (!$uLastPasswordChange) {
+            return false;
+        }
+        $maxAge = (int) ($config->get('concrete.user.password.max_age') ?? 0);
+        if ($maxAge <= 0) {
+            return false;
+        }
+        $lastChangeDateTime = DateTimeImmutable::createFromFormat($cn->getDatabasePlatform()->getDateTimeFormatString(), $uLastPasswordChange);
+        if (!$lastChangeDateTime) {
+            return false;
+        }
+        $ageInSeconds = time() - $lastChangeDateTime->getTimestamp();
+        $ageInDays = floor($ageInSeconds / 86400);
+
+        return $ageInDays >= $maxAge;
     }
 }

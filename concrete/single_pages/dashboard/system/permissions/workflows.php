@@ -47,18 +47,14 @@ $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
 		
 			<legend><?=t('Add Workflow')?></legend>
 			
-			<div class="form-group">
-				<div class="input-group">
-                    <?=$form->label('wfName', t('Name'), ['class'=>'input-group-text'])?>
-					<?=$form->text('wfName', $wfName)?>
-                    <div class="input-group-text"><i class="fas fa-asterisk"></i></div>
-				</div>
+			<div class="mb-3">
+                <?=$form->label('wfName', t('Name'))?>
+                <?=$form->text('wfName', $wfName ?? null, ['required' => 'required'])?>
 			</div>
 			
-			<div class="form-group">
-				<div class="input-group">
-                <?=$form->label('wftID', t('Type'), ['class'=>'input-group-text'])?></div>
-                <?=$form->select('wftID', $types, ['class'=>'form-select'])?>
+			<div class="mb-3">
+                <?=$form->label('wftID', t('Type'))?>
+                <?=$form->select('wftID', $types)?>
 			</div>
 
 			<?php foreach ($typeObjects as $type) {

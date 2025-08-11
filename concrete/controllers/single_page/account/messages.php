@@ -119,7 +119,7 @@ class Messages extends AccountPageController
         $uID = $msg->getMessageRelevantUserID();
         $this->validateUser($uID);
         $this->set('backURL', View::url('/account/messages', 'view_message', $boxID, $msgID));
-        $this->set('msgID', $msgID);
+        $this->set('msgID', $msg->getMessageID());
         $this->set('box', $boxID);
         $this->set('msg', $msg);
 

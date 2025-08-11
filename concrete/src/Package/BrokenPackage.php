@@ -7,12 +7,41 @@ use Concrete\Core\Error\UserMessageException;
 
 class BrokenPackage extends Package
 {
-    public function __construct($pkgHandle, Application $application)
+    /**
+     * @var string
+     */
+    protected $pkgHandle;
+
+    /**
+     * @var string
+     */
+    protected $pkgVersion;
+
+    /**
+     * @var string
+     */
+    protected $pkgName;
+
+    /**
+     * @var string
+     */
+    protected $pkgDescription;
+
+    /**
+     * @var string
+     */
+    private $errorDetails;
+
+    /**
+     * @param string $pkgHandle
+     */
+    public function __construct($pkgHandle, Application $application, string $errorDetails = '')
     {
         $this->pkgHandle = $pkgHandle;
         $this->pkgVersion = '0.0';
         $this->pkgName = 'Unknown Package';
         $this->pkgDescription = sprintf('Broken package (handle %s).', $pkgHandle);
+        $this->errorDetails = $errorDetails;
         parent::__construct($application);
     }
 
@@ -43,6 +72,11 @@ class BrokenPackage extends Package
 
     public function getInstallErrorMessage()
     {
-        return t('Unable to install %s. Please check that this package has been updated for 5.7.', $this->pkgHandle);
+        $result = t('Unable to install %s. Make sure it has a valid controller.php file and that it has been updated for Concrete 5.7.0 and later.', $this->pkgHandle);
+        if ($this->errorDetails !== '') {
+            $result .= "\n\n" . t('Error Details: %s', $this->errorDetails);
+        }
+
+        return $result;
     }
 }

@@ -32,7 +32,7 @@ if ($query === '') {
          class="ccm-search-block-text" /><?php
 if (isset($buttonText) && ($buttonText !== '')) {
     ?> <input name="submit" type="submit" value="<?= h($buttonText) ?>"
-              class="btn btn-default ccm-search-block-submit" /><?php
+              class="btn btn-secondary ccm-search-block-submit" /><?php
 
 } ?>
 

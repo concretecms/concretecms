@@ -1,1 +1,1 @@
-﻿CKEDITOR.plugins.setLang("print","hu",{toolbar:"Nyomtatás"});
+CKEDITOR.plugins.setLang("print","hu",{toolbar:"Nyomtatás"});

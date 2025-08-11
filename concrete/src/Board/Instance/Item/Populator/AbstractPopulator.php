@@ -6,8 +6,6 @@ use Concrete\Core\Board\Instance\Item\Data\DataInterface;
 use Concrete\Core\Entity\Board\DataSource\ConfiguredDataSource;
 use Concrete\Core\Entity\Board\DataSource\DataSource;
 use Concrete\Core\Entity\Board\Instance;
-use Concrete\Core\Entity\Board\InstanceItemCategory;
-use Concrete\Core\Entity\Board\InstanceItemTag;
 use Concrete\Core\Entity\Board\Item;
 use Concrete\Core\Entity\Board\ItemCategory;
 use Concrete\Core\Entity\Board\ItemTag;
@@ -27,8 +25,6 @@ abstract class AbstractPopulator implements PopulatorInterface
     abstract public function getObjectRelevantDate($mixed) : int;
 
     abstract public function getObjectRelevantThumbnail($mixed): ?File;
-
-    abstract public function getObjectUniqueItemId($mixed) : ?string;
 
     abstract public function getObjectName($mixed) : ?string;
 

@@ -3,6 +3,7 @@
 namespace Concrete\Core\User\Group;
 
 use CacheLocal;
+use Concrete\Core\Config\Repository\Repository;
 use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Entity\Notification\GroupRoleChangeNotification;
 use Concrete\Core\Entity\Notification\GroupSignupRequestNotification;
@@ -20,7 +21,6 @@ use Concrete\Core\User\Group\Command\AddGroupCommand;
 use Concrete\Core\User\Group\Command\DeleteGroupCommand;
 use Concrete\Core\User\User;
 use Concrete\Core\User\UserInfoRepository;
-use Config;
 use Database;
 use Doctrine\DBAL\Exception;
 use Events;
@@ -29,6 +29,7 @@ use Gettext\Translations;
 use GroupTree;
 use GroupTreeNode;
 use Concrete\Core\User\UserList;
+use Illuminate\Contracts\Container\BindingResolutionException;
 use Symfony\Component\Messenger\MessageBusInterface;
 
 class Group extends ConcreteObject implements \Concrete\Core\Permission\ObjectInterface, \JsonSerializable
@@ -42,7 +43,7 @@ class Group extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
 
     public function getPermissionObjectIdentifier()
     {
-        return $this->gID;
+        return $this->getGroupID();
     }
 
     public function getPermissionResponseClassName()
@@ -111,7 +112,7 @@ class Group extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
         $db = Database::connection();
         $path = '';
         // first, we get the group node for this group.
-        $node = GroupTreeNode::getTreeNodeByGroupID($this->gID);
+        $node = GroupTreeNode::getTreeNodeByGroupID($this->getGroupID());
         if (is_object($node)) {
             $parents = $node->getTreeNodeParentArray();
             $parents = array_reverse($parents);
@@ -128,14 +129,14 @@ class Group extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
         $path .= '/' . $this->gName;
         $this->gPath = $path;
 
-        $db->executeQuery('update ' . $db->getDatabasePlatform()->quoteSingleIdentifier('Groups') . ' set gPath = ? where gID = ?', [$path, $this->gID]);
+        $db->executeQuery('update ' . $db->getDatabasePlatform()->quoteSingleIdentifier('Groups') . ' set gPath = ? where gID = ?', [$path, $this->getGroupID()]);
     }
 
     public function rescanGroupPathRecursive()
     {
         $this->rescanGroupPath();
 
-        $node = GroupTreeNode::getTreeNodeByGroupID($this->gID);
+        $node = GroupTreeNode::getTreeNodeByGroupID($this->getGroupID());
         $node->populateDirectChildrenOnly();
         foreach ($node->getChildNodes() as $child) {
             if ($child instanceof \Concrete\Core\Tree\Node\Type\Group) {
@@ -174,7 +175,7 @@ class Group extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
             /* @var Connection $db */
             $value = $db->fetchColumn(
                 'select ugEntered from UserGroups where gID = ? and uID = ?',
-                [$this->gID, $userID]
+                [$this->getGroupID(), $userID]
             );
             if ($value) {
                 $result = $value;
@@ -184,9 +185,12 @@ class Group extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
         return $result;
     }
 
+    /**
+     * @return int|null
+     */
     public function getGroupID()
     {
-        return $this->gID;
+        return $this->gID === null ? null : (int) $this->gID;
     }
 
     public function getOverrideGroupTypeSettings()
@@ -219,6 +223,7 @@ class Group extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
                     $subscription = $type->getSubscription($subject);
                     $users = $notifier->getUsersToNotify($subscription, $subject);
                     $notification = new GroupRoleChangeNotification($subject);
+                    $subject->getNotifications()->add($notification);
                     $notifier->notify($users, $notification);
                 }
 
@@ -259,6 +264,7 @@ class Group extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
                 $subscription = $type->getSubscription($subject);
                 $users = $notifier->getUsersToNotify($subscription, $subject);
                 $notification = new GroupSignupRequestNotification($subject);
+                $subject->getNotifications()->add($notification);
                 $notifier->notify($users, $notification);
             }
 
@@ -553,17 +559,13 @@ class Group extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
 
     public function getParentGroups()
     {
-        $node = GroupTreeNode::getTreeNodeByGroupID($this->gID);
+        $parents = $this->getParentNodes();
         $parentGroups = [];
-        if (is_object($node)) {
-            $parents = $node->getTreeNodeParentArray();
-            $parents = array_reverse($parents);
-            foreach ($parents as $node) {
-                if ($node instanceof \Concrete\Core\Tree\Node\Type\Group) {
-                    $g = $node->getTreeNodeGroupObject();
-                    if (is_object($g)) {
-                        $parentGroups[] = $g;
-                    }
+        foreach ($parents as $node) {
+            if ($node instanceof \Concrete\Core\Tree\Node\Type\Group) {
+                $g = $node->getTreeNodeGroupObject();
+                if (is_object($g)) {
+                    $parentGroups[] = $g;
                 }
             }
         }
@@ -571,9 +573,22 @@ class Group extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
         return $parentGroups;
     }
 
+    public function getParentNodes(): array
+    {
+        $node = GroupTreeNode::getTreeNodeByGroupID($this->getGroupID());
+        if (is_object($node)) {
+            $parents = $node->getTreeNodeParentArray();
+            $parents = array_reverse($parents);
+            array_shift($parents); // Remove the top level node because it's always "All Groups"
+            return $parents;
+        }
+        return [];
+    }
+
+
     public function getChildGroups()
     {
-        $node = GroupTreeNode::getTreeNodeByGroupID($this->gID);
+        $node = GroupTreeNode::getTreeNodeByGroupID($this->getGroupID());
         $children = [];
         if (is_object($node)) {
             $node->populateDirectChildrenOnly();
@@ -591,31 +606,32 @@ class Group extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
         return $children;
     }
 
+    /**
+     * @return \Concrete\Core\User\Group\Group|null
+     */
     public function getParentGroup()
     {
-        $node = GroupTreeNode::getTreeNodeByGroupID($this->gID);
+        $node = GroupTreeNode::getTreeNodeByGroupID($this->getGroupID());
         $parent = $node->getTreeNodeParentObject();
-        if ($parent) {
-            return $parent->getTreeNodeGroupObject();
-        }
+
+        return $parent instanceof \Concrete\Core\Tree\Node\Type\Group ? $parent->getTreeNodeGroupObject() : null;
     }
 
     public function getGroupDisplayName($includeHTML = true, $includePath = true)
     {
         $return = '';
         if ($includePath) {
-            $parentGroups = $this->getParentGroups();
-            if (count($parentGroups) > 0) {
+            $parentNodes = $this->getParentNodes();
+            if ($parentNodes !== []) {
+                $separator = app(Repository::class)->get('concrete.seo.group_name_separator');
                 if ($includeHTML) {
                     $return .= '<span class="ccm-group-breadcrumb">';
                 }
-                foreach ($parentGroups as $pg) {
-                    $return .= h(tc('GroupName', $pg->getGroupName()));
-                    $return .= ' ' . Config::get('concrete.seo.group_name_separator') . ' ';
+                foreach ($parentNodes as $pg) {
+                    $return .= h(tc('GroupName', $pg->getTreeNodeName())) . " {$separator} ";
                 }
-                $return = trim($return);
                 if ($includeHTML) {
-                    $return .= '</span> ';
+                    $return = rtrim($return) . '</span> ';
                 }
             }
         }
@@ -715,7 +731,7 @@ class Group extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
         $class = $this->getGroupAutomationControllerClass();
         try {
             $c = \Core::make($class, ['g' => $this]);
-        } catch (\ReflectionException $e) {
+        } catch (BindingResolutionException $e) {
             $c = \Core::make(core_class('\\Core\\User\\Group\\AutomatedGroup\\DefaultAutomation'), ['g' => $this]);
         }
 
@@ -823,12 +839,13 @@ class Group extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
     public function update($gName, $gDescription)
     {
         $db = Database::connection();
-        if ($this->gID) {
-            CacheLocal::delete('group', $this->gID);
-            $v = [$gName, $gDescription, $this->gID];
+        $gID = $this->getGroupID();
+        if ($gID) {
+            CacheLocal::delete('group', $gID);
+            $v = [$gName, $gDescription, $gID];
             $r = $db->prepare('update ' . $db->getDatabasePlatform()->quoteSingleIdentifier('Groups') . ' set gName = ?, gDescription = ? where gID = ?');
             $db->Execute($r, $v);
-            $group = static::getByID($this->gID);
+            $group = static::getByID($gID);
             $group->rescanGroupPathRecursive();
 
             $ge = new Event($this);
@@ -980,7 +997,7 @@ class Group extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
         $db = Database::connection();
         $db->executeQuery(
             'update ' . $db->getDatabasePlatform()->quoteSingleIdentifier('Groups') . ' set gIsBadge = 1, gBadgeFID = ?, gBadgeDescription = ?, gBadgeCommunityPointValue = ? where gID = ?',
-            [intval($gBadgeFID), $gBadgeDescription, $gBadgeCommunityPointValue, $this->gID]
+            [intval($gBadgeFID), $gBadgeDescription, $gBadgeCommunityPointValue, $this->getGroupID()]
         );
     }
 
@@ -997,7 +1014,7 @@ class Group extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
                 intval($gCheckAutomationOnRegister),
                 intval($gCheckAutomationOnLogin),
                 intval($gCheckAutomationOnJobRun),
-                $this->gID,
+                $this->getGroupID(),
             ]
         );
     }
@@ -1007,17 +1024,17 @@ class Group extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
         $db = Database::connection();
         $db->executeQuery(
             'update ' . $db->getDatabasePlatform()->quoteSingleIdentifier('Groups') . ' set gUserExpirationIsEnabled = 1, gUserExpirationMethod = \'SET_TIME\', gUserExpirationInterval = 0, gUserExpirationSetDateTime = ?, gUserExpirationAction = ? where gID = ?',
-            [$datetime, $action, $this->gID]
+            [$datetime, $action, $this->getGroupID()]
         );
     }
 
-    public function setGroupExpirationByInterval($days, $hours, $minutes, $action)
+    public function setGroupExpirationByInterval(int $days, int $hours, int $minutes, $action)
     {
         $db = Database::connection();
         $interval = $minutes + ($hours * 60) + ($days * 1440);
         $db->executeQuery(
             'update ' . $db->getDatabasePlatform()->quoteSingleIdentifier('Groups') . ' set gUserExpirationIsEnabled = 1, gUserExpirationMethod = \'INTERVAL\', gUserExpirationSetDateTime = null, gUserExpirationInterval = ?, gUserExpirationAction = ? where gID = ?',
-            [$interval, $action, $this->gID]
+            [$interval, $action, $this->getGroupID()]
         );
     }
 
@@ -1069,7 +1086,7 @@ class Group extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
 
     /**
      * @param string $gPath The group path
-     * @return Group
+     * @return Group|null
      * @deprecated
      * This is deprecated, user the grouprepository instead.
      */
@@ -1083,12 +1100,13 @@ class Group extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
     /**
      * @return mixed|void
      */
+    #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
         return [
             'gID' => $this->getGroupID(),
             'gName' => $this->getGroupName(),
-            'gDisplayName' => $this->getGroupDisplayName(false)
+            'gDisplayName' => $this->getGroupDisplayName(false),
         ];
     }
 

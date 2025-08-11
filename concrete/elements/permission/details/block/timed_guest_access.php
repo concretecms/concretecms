@@ -13,7 +13,6 @@ use Concrete\Core\View\View;
 use Concrete\Core\Permission\Category;
 
 /** @var Block $b */
-/** @var int $rcID */
 
 $app = Application::getFacadeApplication();
 /** @var Form $form */

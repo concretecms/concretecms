@@ -68,7 +68,7 @@ class InstanceSlotRule implements \JsonSerializable, ObjectInterface
 
     /**
      * @ORM\ManyToOne(targetEntity="\Concrete\Core\Entity\User\User")
-     * @ORM\JoinColumn(name="uID", referencedColumnName="uID")
+     * @ORM\JoinColumn(name="uID", referencedColumnName="uID", onDelete="SET NULL")
      */
     protected $user;
 
@@ -320,6 +320,7 @@ class InstanceSlotRule implements \JsonSerializable, ObjectInterface
         $this->batchIdentifier = $batchIdentifier;
     }
 
+    #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
         $checker = new Checker($this);

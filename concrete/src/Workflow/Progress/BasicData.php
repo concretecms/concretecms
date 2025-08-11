@@ -9,7 +9,7 @@ class BasicData
     {
         $db = Loader::db();
         $r = $db->GetRow('select * from BasicWorkflowProgressData where wpID = ?', array($wp->getWorkflowProgressID()));
-        if (is_array($r) && $r['wpID']) {
+        if (!empty($r) && $r['wpID']) {
             $this->uIDStarted = $r['uIDStarted'];
             $this->uIDCompleted = $r['uIDCompleted'];
             $this->wpDateCompleted = $r['wpDateCompleted'];

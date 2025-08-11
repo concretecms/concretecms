@@ -18,48 +18,50 @@ use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\Support\Facade\Url;
 use Concrete\Core\Form\Service\Widget\DateTime;
 
-/** @var Controller $controller */
-/** @var int $num */
-/** @var string $orderBy */
-/** @var int $cParentID */
-/** @var bool $cThis */
-/** @var bool $cThisParent */
-/** @var bool $useButtonForLink */
-/** @var string $buttonLinkText */
-/** @var string $pageListTitle */
-/** @var bool $filterByRelated */
-/** @var bool $filterByCustomTopic */
-/** @var string $topicFilter */
-/** @var string $filterDateOption */
-/** @var int $filterDateDays */
-/** @var string $filterDateStart */
-/** @var string $filterDateEnd */
-/** @var string $relatedTopicAttributeKeyHandle */
-/** @var string $customTopicAttributeKeyHandle */
-/** @var int $customTopicTreeNodeID */
-/** @var bool $includeName */
-/** @var bool $includeDate */
-/** @var bool $includeDescription */
-/** @var bool $includeAllDescendents */
-/** @var bool $paginate */
-/** @var bool $displaySystemPages */
-/** @var bool $displayAliases */
-/** @var bool $ignorePermissions */
-/** @var bool $enableExternalFiltering */
-/** @var int $ptID */
-/** @var int $pfID */
-/** @var int $truncateSummaries */
-/** @var bool $displayFeaturedOnly */
-/** @var string $noResultsMessage */
-/** @var bool $displayThumbnail */
-/** @var int $truncateChars */
-/** @var Urls $uh */
-/** @var BlockType $bt */
-/** @var CollectionKey $featuredAttribute */
-/** @var Category[] $attributeKeys */
-/** @var BlockType $thumbnailAttribute */
-/** @var bool $isOtherPage */
-/** @var Feed $rssFeed */
+/**
+ * @var Controller $controller
+ * @var int $num
+ * @var string $orderBy
+ * @var int $cParentID
+ * @var bool $cThis
+ * @var bool $cThisParent
+ * @var bool $useButtonForLink
+ * @var string $buttonLinkText
+ * @var string $pageListTitle
+ * @var bool $filterByRelated
+ * @var bool $filterByCustomTopic
+ * @var string $topicFilter
+ * @var string $filterDateOption
+ * @var int $filterDateDays
+ * @var string $filterDateStart
+ * @var string $filterDateEnd
+ * @var string $relatedTopicAttributeKeyHandle
+ * @var string $customTopicAttributeKeyHandle
+ * @var int $customTopicTreeNodeID
+ * @var bool $includeName
+ * @var bool $includeDate
+ * @var bool $includeDescription
+ * @var bool $includeAllDescendents
+ * @var bool $paginate
+ * @var bool $displaySystemPages
+ * @var bool $displayAliases
+ * @var bool $ignorePermissions
+ * @var bool $enableExternalFiltering
+ * @var int $ptID
+ * @var int $pfID
+ * @var int $truncateSummaries
+ * @var bool $displayFeaturedOnly
+ * @var string $noResultsMessage
+ * @var bool $displayThumbnail
+ * @var int $truncateChars
+ * @var Urls $uh
+ * @var BlockType $bt
+ * @var string $featuredAttributeUnusableReason
+ * @var Category[] $attributeKeys
+ * @var BlockType $thumbnailAttribute
+ * @var bool $isOtherPage
+ * @var Feed $rssFeed
+ */
 
 if (!isset($filterDateDays)) {
     $filterDateDays = false;
@@ -117,13 +119,13 @@ echo $userInterface->tabs([
 ?>
 
 <div class="tab-content">
-    <div class="tab-pane show active pagelist-form" id="page-list-settings" role="tabpanel">
+    <div class="tab-pane active pagelist-form" id="page-list-settings" role="tabpanel">
         <input type="hidden" name="pageListPreviewPane" value="<?= h($controller->getActionURL('preview_pane')) ?>"/>
 
         <fieldset>
             <div class="form-group">
                 <?php echo $form->label('num', t('Number of Pages to Display')); ?>
-                <?php echo $form->number("num", $num); ?>
+                <?php echo $form->number("num", $num, ['min' => 0]); ?>
             </div>
 
             <div class="form-group">
@@ -192,9 +194,6 @@ echo $userInterface->tabs([
                 </div>
 
                 <div data-row="related-topic">
-                    <div class="help-block">
-                        <?php echo t('Allows other blocks like the topic list block to pass search criteria to this page list block.') ?>
-                    </div>
 
                     <?php
                     $relatedTopicAttributeKeyHandles = [
@@ -286,21 +285,22 @@ echo $userInterface->tabs([
                         "name" => "displayFeaturedOnly"
                     ];
 
-                    if (!is_object($featuredAttribute)) {
+                    if (!empty($featuredAttributeUnusableReason)) {
                         $miscFields["disabled"] = "disabled";
                     }
 
                     echo $form->checkbox("displayFeaturedOnly", "1", $displayFeaturedOnly, $miscFields);
                     echo $form->label("featuredPagesOnly", t("Featured pages only."), ["class" => "form-check-label"]);
-                    ?>
 
-                    <?php if (!is_object($featuredAttribute)) { ?>
-                        <div class="help-block">
-                            <?php echo t(
-                                '(<strong>Note</strong>: You must create the "is_featured" page attribute first.)');
-                            ?>
+                    if (!empty($featuredAttributeUnusableReason)) {
+                        ?>
+                        <div class="alert alert-info">
+                            <strong><?= t('Note') ?></strong>
+                            <?= $featuredAttributeUnusableReason ?>
                         </div>
-                    <?php } ?>
+                        <?php
+                    }
+                    ?>
                 </div>
 
                 <div class="form-check">
@@ -321,6 +321,13 @@ echo $userInterface->tabs([
                 <div class="form-check">
                     <?php echo $form->checkbox("enableExternalFiltering", "1", $enableExternalFiltering); ?>
                     <?php echo $form->label("enableExternalFiltering", t("Enable Other Blocks to Filter This Page List."), ["class" => "form-check-label"]); ?>
+                    <i class="launch-tooltip fa fa-question-circle" title="<?php echo t('Allow other blocks, like the topic list block, to pass search criteria to this page list block.') ?>"></i>
+                </div>
+		
+		<div class="form-check">
+                    <?php echo $form->checkbox("excludeCurrentPage", "1", $excludeCurrentPage); ?>
+                    <?php echo $form->label("excludeCurrentPage", t("Exclude Current Page"), ["class" => "form-check-label"]); ?>
+		    <i class="launch-tooltip fa fa-question-circle" title="<?php echo t('If the currently rendered page is in the list, exclude it.') ?>"></i>
                 </div>
             </div>
         </fieldset>
@@ -422,7 +429,7 @@ echo $userInterface->tabs([
                     <?php } else { ?>
                         <div class="form-group">
                             <?php echo $form->label('num', t('RSS Feed Title')); ?>
-                            <?php echo $form->text("rssTitle", $num, ["id" => "ccm-pagelist-rssTitle", "name" => "rssTitle"]); ?>
+                            <?php echo $form->text("rssTitle", null, ["id" => "ccm-pagelist-rssTitle", "name" => "rssTitle"]); ?>
                         </div>
 
                         <div class="form-group">
@@ -572,12 +579,12 @@ echo $userInterface->tabs([
                 <?php echo $form->label('pageListTitle', t('Title of Page List')); ?>
 			    <div class="input-group">
                 	<?php echo $form->text("pageListTitle", $pageListTitle); ?>
-					<?php echo $form->select('titleFormat', \Concrete\Core\Block\BlockController::$btTitleFormats, $titleFormat, array('style' => 'width:105px;flex-grow:0;', 'class' => 'form-select')); ?>
+					<?php echo $form->select('titleFormat', \Concrete\Core\Block\BlockController::$btTitleFormats, $titleFormat ?? null, array('style' => 'width:105px;flex-grow:0;', 'class' => 'form-select')); ?>
 				</div>
 			</div>
 
             <div class="form-group">
-                <?php echo $form->label("noResultsMessage", ('Message to Display When No Pages Listed.')); ?>
+                <?php echo $form->label("noResultsMessage", t('Message to Display When No Pages Listed')); ?>
                 <?php echo $form->textarea("noResultsMessage", $noResultsMessage); ?>
             </div>
 

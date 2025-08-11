@@ -25,7 +25,7 @@ class ResolverManager implements ResolverManagerInterface
      * @param string $default_handle
      * @param \Concrete\Core\Url\Resolver\UrlResolverInterface|null $default_resolver
      */
-    public function __construct($default_handle = '', UrlResolverInterface $default_resolver = null)
+    public function __construct($default_handle = '', ?UrlResolverInterface $default_resolver = null)
     {
         if ($default_resolver) {
             $this->addResolver($default_handle, $default_resolver);

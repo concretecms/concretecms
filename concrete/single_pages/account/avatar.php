@@ -16,12 +16,6 @@ use Concrete\Core\View\View;
 $app = Application::getFacadeApplication();
 /** @var Token $token */
 $token = $app->make(Token::class);
-/** @var Repository $config */
-$config = $app->make(Repository::class);
-
-$saveUrl = Url::createFromUrl($view->action('save_avatar'))->setQuery(array(
-    'ccm_token' => $token->generate('avatar/save_avatar'),
-));
 
 ?>
 
@@ -31,24 +25,28 @@ $saveUrl = Url::createFromUrl($view->action('save_avatar'))->setQuery(array(
         <?php echo t('Change the picture attached to my posts.') ?>
     </p>
 
-    <avatar-cropper
-            v-bind:height="<?php echo h($config->get('concrete.icons.user_avatar.height')) ?>"
-            v-bind:width="<?php echo h($config->get('concrete.icons.user_avatar.width')) ?>"
-            uploadurl="<?php echo h($saveUrl) ?>"
-            uploadtoken="<?php echo h($token->generate()) ?>"
-            cancel-confirm-text="<?= h(t('Are you sure you want to quit?')) ?>"
-            canceled-text="<?= h(t('Upload canceled.')) ?>"
-            src="<?php echo h($profile->getUserAvatar()->getPath()) ?>">
-    </avatar-cropper>
-
     <?php if ($profile->hasAvatar()) { ?>
         <form method="post" action="<?php echo $view->action('delete') ?>">
             <?php echo $token->output('delete_avatar') ?>
+
+            <div class="mb-3">
+                <div class="d-inline-block" style="max-width: <?=$width?>px; max-height: <?=$height?>px">
+                    <?=$profile->getUserAvatar()->output()?>
+                </div>
+            </div>
+
 
             <button class="btn btn-danger btn-sm">
                 <?php echo t('Delete Avatar') ?>
             </button>
         </form>
+    <?php } else { ?>
+
+        <?php
+        $tag = $avatarCropperInstance->getTag();
+        echo $tag;
+        ?>
+
     <?php } ?>
 
     <br/>

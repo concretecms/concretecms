@@ -1,0 +1,45 @@
+div.ccm-image-thumbnail-editor {
+  .ccm-image-thumbnail-editor-cropper {
+    background: #ddd;
+    height: 600px;
+    width: 100%;
+  }
+
+  .ccm-image-thumbnail-editor-controls {
+    left: 20px;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+
+    a {
+      align-items: center;
+      background-color: rgba(0, 0, 0, 0.8);
+      cursor: pointer;
+      display: flex;
+      height: 40px;
+      margin-bottom: 10px;
+      text-align: center;
+      width: 40px;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+
+      &:hover {
+        background-color: $primary;
+      }
+
+      svg {
+        margin-left: auto;
+        margin-right: auto;
+      }
+    }
+  }
+
+  .ccm-image-thumbnail-editor-save {
+    bottom: 20px;
+    left: 20px;
+    position: absolute;
+    right: 20px;
+  }
+}

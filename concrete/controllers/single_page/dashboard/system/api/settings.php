@@ -11,13 +11,7 @@ class Settings extends DashboardPageController
     {
         $config = $this->app->make("config");
         $enable_api = (bool) $config->get('concrete.api.enabled');
-        if ($enable_api) {
-            $r = $this->app->make(ClientRepositoryInterface::class);
-            $clients = $r->findAll();
-            $this->set('clients', $clients);
-        }
         $this->set("enable_api", $enable_api);
-
         $grantTypes = (array) $config->get('concrete.api.grant_types');
         $this->set('grantTypes', $grantTypes);
         $this->set('availableGrantTypes', $this->getAvailableGrantTypes());
@@ -37,6 +31,11 @@ class Settings extends DashboardPageController
     {
         if (!$this->token->validate('submit')) {
             $this->error->add($this->token->getErrorMessage());
+        }
+
+        $defaultSite = $this->app->make('site')->getSite();
+        if (!$defaultSite->getSiteCanonicalURL()) {
+            $this->error->add(t('Your default site must define a canonical URL to enable the REST API.'));
         }
 
         if (!$this->error->has()) {
@@ -59,6 +58,7 @@ class Settings extends DashboardPageController
             $this->flash('success', t("API Settings updated successfully."));
             return $this->redirect('/dashboard/system/api/settings');
         }
+        $this->view();
     }
 
 }

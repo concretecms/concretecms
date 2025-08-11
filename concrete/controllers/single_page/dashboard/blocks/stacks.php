@@ -96,6 +96,21 @@ class Stacks extends DashboardPageController
             $this->set('neutralStack', $neutralStack);
             $this->set('stackToEdit', $stackToEdit);
             $this->set('isGlobalArea', $isGlobalArea);
+            $this->addHeaderItem(
+                <<<'EOT'
+                <style>
+                #ccm-stack-container {
+                    background-color: var(--bs-body-bg);
+                }
+                #ccm-stack-container.dark {
+                    background-color: var(--bs-black);
+                } 
+                #ccm-stack-container.light {
+                    background-color: var(--bs-white);
+                } 
+                </style>
+                EOT
+            );
         } else {
             $folder = StackFolder::getByID($cID);
             if (is_object($folder)) {
@@ -547,7 +562,7 @@ class Stacks extends DashboardPageController
             $moveFolder->getPage()->move($destinationPage);
         }
 
-        return JsonResponse::create(
+        return new JsonResponse(
             t2('%d item has been moved under the folder %s', '%d items have been moved under the folder %s', count($sourceIDs), count($sourceIDs), h($destinationPage->getCollectionName()))
         );
     }

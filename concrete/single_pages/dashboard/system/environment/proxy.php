@@ -19,12 +19,12 @@
     <fieldset>
         <div class="form-group">
             <?= $form->label('http_proxy_host', t('Proxy Host')); ?>
-            <?= $form->text('http_proxy_host', $http_proxy_host); ?>
+            <?= $form->url('http_proxy_host', $http_proxy_host); ?>
         </div>
 
         <div class="form-group">
             <?= $form->label('http_proxy_port', t('Proxy Port')); ?>
-            <?= $form->text('http_proxy_port', $http_proxy_port); ?>
+            <?= $form->number('http_proxy_port', $http_proxy_port); ?>
         </div>
 
         <div class="form-group">

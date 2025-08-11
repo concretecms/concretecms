@@ -1,1 +1,1 @@
-﻿CKEDITOR.plugins.setLang("sourcedialog","fr-ca",{toolbar:"Source",title:"Source"});
+CKEDITOR.plugins.setLang("sourcedialog","fr-ca",{toolbar:"Source",title:"Source"});

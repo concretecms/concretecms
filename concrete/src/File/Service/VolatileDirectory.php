@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\File\Service;
 
+use Concrete\Core\Config\Repository\Repository;
 use Exception;
 use Illuminate\Filesystem\Filesystem;
 
@@ -41,7 +42,8 @@ class VolatileDirectory
         for ($i = 0; ; ++$i) {
             $path = $parentDirectory . '/volatile-' . $i . '-' . uniqid();
             if (!$this->filesystem->exists($path)) {
-                if (@$this->filesystem->makeDirectory($path, DIRECTORY_PERMISSIONS_MODE_COMPUTED)) {
+                $permissions = app(Repository::class)->get('concrete.filesystem.permissions.directory');
+                if (@$this->filesystem->makeDirectory($path, $permissions)) {
                     break;
                 }
             }

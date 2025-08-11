@@ -1,24 +1,38 @@
 <?php
+
 namespace Concrete\Core\Package;
 
+use Concrete\Core\Cache\CacheLocal;
+use Concrete\Core\Entity\Package as PackageEntity;
 use Concrete\Core\Foundation\ConcreteObject;
-use Loader;
-use CacheLocal;
+use Doctrine\ORM\EntityManagerInterface;
 
 class PackageList extends ConcreteObject
 {
-    protected $packages = array();
+    /**
+     * @var \Concrete\Core\Entity\Package[]
+     */
+    protected $packages = [];
 
+    /**
+     * @param \Concrete\Core\Entity\Package $pkg
+     */
     public function add($pkg)
     {
         $this->packages[] = $pkg;
     }
 
+    /**
+     * @return \Concrete\Core\Entity\Package[]
+     */
     public function getPackages()
     {
         return $this->packages;
     }
 
+    /**
+     * @param \SimpleXMLElement $xml
+     */
     public static function export($xml)
     {
         $packages = static::get()->getPackages();
@@ -29,26 +43,26 @@ class PackageList extends ConcreteObject
         }
     }
 
+    /**
+     * @param int|null $pkgID
+     *
+     * @return string|false
+     */
     public static function getHandle($pkgID)
     {
         if ($pkgID < 1) {
             return false;
         }
         $packageList = CacheLocal::getEntry('packageHandleList', false);
-        if (is_array($packageList)) {
-            return $packageList[$pkgID];
+        if (!$packageList) {
+            $packageList = [];
+            foreach (static::get(true)->getPackages() as $packageEntity) {
+                $packageList[$packageEntity->getPackageID()] = $packageEntity->getPackageHandle();
+            }
+            CacheLocal::set('packageHandleList', false, $packageList);
+
         }
-
-        $packageList = array();
-        $db = Loader::db();
-        $r = $db->Execute('select pkgID, pkgHandle from Packages where pkgIsInstalled = 1');
-        while ($row = $r->fetch()) {
-            $packageList[$row['pkgID']] = $row['pkgHandle'];
-        }
-
-        CacheLocal::set('packageHandleList', false, $packageList);
-
-        return $packageList[$pkgID];
+        return $packageList[$pkgID] ?? false;
     }
 
     public static function refreshCache()
@@ -60,19 +74,20 @@ class PackageList extends ConcreteObject
 
     /**
      * @deprecated
-     * @param int $pkgIsInstalled
+     * @param bool|int $pkgIsInstalled
      * @return static
      */
     public static function get($pkgIsInstalled = 1)
     {
+        $pkgIsInstalled = $pkgIsInstalled ? 1 : 0;
         $pkgList = CacheLocal::getEntry('pkgList', $pkgIsInstalled);
-        if ($pkgList != false) {
+        if ($pkgList) {
             return $pkgList;
         }
 
-        $em = \Database::connection()->getEntityManager();
-        $r = $em->getRepository('\Concrete\Core\Entity\Package');
-        $packages = $r->findBy(array('pkgIsInstalled' => true), array('pkgID' => 'asc'));
+        $em = app(EntityManagerInterface::class);
+        $r = $em->getRepository(PackageEntity::class);
+        $packages = $r->findBy(['pkgIsInstalled' => $pkgIsInstalled], ['pkgID' => 'asc']);
         $list = new static();
         foreach($packages as $pkg) {
             $list->add($pkg);

@@ -56,9 +56,7 @@ class Factory
         }
 
         if (isset($url)) {
-            $result['proxy'] = [
-                'http' => (string) $url
-            ];
+            $result['proxy'] = (string) $url;
         }
 
         return $result;
@@ -107,5 +105,15 @@ class Factory
         }
 
         return $client;
+    }
+
+    /**
+     * Get the default options for the HTTP client.
+     *
+     * @return array
+     */
+    public function getDefaultOptions(Repository $config)
+    {
+        return $this->getOptions($config);
     }
 }

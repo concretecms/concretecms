@@ -43,12 +43,12 @@ class Devices extends BackendInterfacePageController
                 }
             }
 
-            $spoofed_request->setCustomRequestUser(-1);
             $spoofed_request->setCurrentPage($c);
 
             \Request::setInstance($spoofed_request);
 
             $controller = $c->getPageController();
+            $controller->disableEditing();
             $controller->runTask('view', array());
             $view = $controller->getViewObject();
             $response = new \Response();

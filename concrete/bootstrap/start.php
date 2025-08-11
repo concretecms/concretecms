@@ -1,5 +1,7 @@
 <?php
 
+use Concrete\Core\Foundation\ClassAutoloader;
+
 defined('C5_EXECUTE') or die("Access Denied.");
 
 /*
@@ -39,6 +41,7 @@ $app->instance('app', $app);
 // Bind fully application qualified class names
 $app->instance('Concrete\Core\Application\Application', $app);
 $app->instance('Illuminate\Container\Container', $app);
+$app->instance(ClassAutoloader::class, ClassAutoloader::getInstance());
 
 // Boot the runtime
 $app->getRuntime()->boot();

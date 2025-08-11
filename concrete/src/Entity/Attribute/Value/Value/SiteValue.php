@@ -39,7 +39,7 @@ class SiteValue extends AbstractValue
     public function __toString()
     {
         if (is_object($this->site)) {
-            return (string) $this->site->getSiteName();
+            return (string) h($this->site->getSiteName());
         }
         return '';
     }

@@ -1,1 +1,1 @@
-﻿CKEDITOR.plugins.setLang("print","lv",{toolbar:"Drukāt"});
+CKEDITOR.plugins.setLang("print","lv",{toolbar:"Drukāt"});

@@ -294,7 +294,7 @@ class BlockType
     }
 
     /**
-     * If true, this block is not versioned on a page – it is included as is on all versions of the page, even when updated.
+     * If true, this block is not versioned on a page – it is included as is on all versions of the page, even when updated.
      *
      * @return bool
      */

@@ -10,6 +10,51 @@ use Config;
 
 class Controller extends BlockController implements UsesFeatureInterface
 {
+    /**
+     * @var string|null
+     */
+    public $title;
+
+    /**
+     * @var string|null
+     */
+    public $location;
+
+    /**
+     * @var float|string|null
+     */
+    public $latitude;
+
+    /**
+     * @var float|string|null
+     */
+    public $longitude;
+
+    /**
+     * @var int|string|null
+     */
+    public $zoom;
+
+    /**
+     * @var string|null
+     */
+    public $width;
+
+    /**
+     * @var string|null
+     */
+    public $height;
+
+    /**
+     * @var bool|int|string|null
+     */
+    public $scrollwheel;
+
+    /**
+     * @var string|null
+     */
+    public $titleFormat;
+
     protected $btTable = 'btGoogleMap';
 
     protected $btInterfaceWidth = 525;
@@ -56,13 +101,21 @@ class Controller extends BlockController implements UsesFeatureInterface
 
     public function validate($args)
     {
+        $args += [
+            'apiKey' => null,
+            'location' => null,
+            'latitude' => '',
+            'longitude' => '',
+            'zoom' => null
+        ];
+
         $error = $this->app->make('helper/validation/error');
 
         if (!trim($args['apiKey'])) {
             $error->add(t('Please enter a valid API key.'));
         }
 
-        if (empty($args['location']) || $args['latitude'] === '' || $args['longtitude'] === '') {
+        if (empty($args['location']) || $args['latitude'] === '' || $args['longitude'] === '') {
             $error->add(t('You must select a valid location.'));
         }
 
@@ -109,8 +162,8 @@ class Controller extends BlockController implements UsesFeatureInterface
         $args['title'] = trim($data['title']);
         $args['location'] = trim($data['location']);
         $args['zoom'] = ((int) ($data['zoom']) >= 0 && (int) ($data['zoom']) <= 21) ? (int) ($data['zoom']) : 14;
-        $args['latitude'] = is_numeric($data['latitude']) ? $data['latitude'] : 0;
-        $args['longitude'] = is_numeric($data['longitude']) ? $data['longitude'] : 0;
+        $args['latitude'] = !empty($data['latitude']) ? $data['latitude'] : 0;
+        $args['longitude'] = !empty($data['longitude']) ? $data['longitude'] : 0;
         $args['width'] = $data['width'];
         $args['height'] = $data['height'];
         $args['scrollwheel'] = $data['scrollwheel'] ? 1 : 0;

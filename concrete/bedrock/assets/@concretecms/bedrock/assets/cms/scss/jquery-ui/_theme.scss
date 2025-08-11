@@ -33,28 +33,28 @@
 }
 
 .ui-widget.ui-widget-content {
-  border: 1px solid #c5c5c5/*{borderColorDefault}*/;
+  border: 1px solid var(--bs-secondary-bg);
 }
 
 .ui-widget-content {
-  background: #fff;
-  border: 1px solid #ddd;
-  color: #333;
+  background: var(--bs-body-bg);
+  border: 1px solid var(--bs-secondary-bg);
+  color: var(--bs-body-color);
 }
 
 .ui-widget-content a {
-  color: #333;
+  color: var(--bs-body-color);
 }
 
 .ui-widget-header {
   background: #e9e9e9/*{bgColorHeader}*/ /*{bgImgUrlHeader}*/ /*{bgHeaderXPos}*/ /*{bgHeaderYPos}*/ /*{bgHeaderRepeat}*/;
   border: 1px solid #ddd;
-  color: #333;
+  color: var(--bs-body-color);
   font-weight: bold;
 }
 
 .ui-widget-header a {
-  color: #333;
+  color: var(--bs-body-color);
 }
 
 /* Interaction states
@@ -242,11 +242,7 @@ a.ui-button:active,
 }
 
 /* Overlays */
-.ui-widget-overlay {
-  background: #aaa;
-  filter: Alpha(Opacity=30)/*{opacityFilterOverlay}*/; /* support: IE8 */
-  opacity: 0.3;
-}
+/* Removed because it's screwing up CSS animation performance due to our CSS overrides of the property elsewhere */
 
 .ui-widget-shadow {
   -webkit-box-shadow: 0 0 5px #666#666;
@@ -265,37 +261,37 @@ a.ui-button:active,
 
 .ui-icon,
 .ui-widget-content .ui-icon {
-  background-image: url('/concrete/images/ui-icons_444444_256x240.png');
+  background-image: url($concrete-path + '/images/ui-icons_444444_256x240.png');
 }
 
 .ui-widget-header .ui-icon {
-  background-image: url('/concrete/images/ui-icons_444444_256x240.png');
+  background-image: url($concrete-path + '/images/ui-icons_444444_256x240.png');
 }
 
 .ui-state-hover .ui-icon,
 .ui-state-focus .ui-icon,
 .ui-button:hover .ui-icon,
 .ui-button:focus .ui-icon {
-  background-image: url('/concrete/images/ui-icons_555555_256x240.png');
+  background-image: url($concrete-path + '/images/ui-icons_555555_256x240.png');
 }
 
 .ui-state-active .ui-icon,
 .ui-button:active .ui-icon {
-  background-image: url('/concrete/images/ui-icons_ffffff_256x240.png');
+  background-image: url($concrete-path + '/images/ui-icons_ffffff_256x240.png');
 }
 
 .ui-state-highlight .ui-icon,
 .ui-button .ui-state-highlight.ui-icon {
-  background-image: url('/concrete/images/ui-icons_777620_256x240.png');
+  background-image: url($concrete-path + '/images/ui-icons_777620_256x240.png');
 }
 
 .ui-state-error .ui-icon,
 .ui-state-error-text .ui-icon {
-  background-image: url('/concrete/images/ui-icons_cc0000_256x240.png');
+  background-image: url($concrete-path + '/images/ui-icons_cc0000_256x240.png');
 }
 
 .ui-button .ui-icon {
-  background-image: url('/concrete/images/ui-icons_777777_256x240.png');
+  background-image: url($concrete-path + '/images/ui-icons_777777_256x240.png');
 }
 
 /* positioning */

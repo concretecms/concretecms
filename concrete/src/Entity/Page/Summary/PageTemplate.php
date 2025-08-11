@@ -100,6 +100,7 @@ class PageTemplate implements RenderableTemplateInterface
         $this->data = $data;
     }
 
+    #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
         $data = [

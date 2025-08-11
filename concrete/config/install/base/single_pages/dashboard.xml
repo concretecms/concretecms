@@ -374,6 +374,25 @@
                 </attributekey>
             </attributes>
         </page>
+        <page name="Site Health" path="/dashboard/reports/health" filename="/dashboard/reports/health.php" pagetype=""
+              description="" package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>health, check, site check, optimization</value>
+                </attributekey>
+            </attributes>
+        </page>
+        <page name="Report Details" path="/dashboard/reports/health/details" filename="/dashboard/reports/health/details.php" pagetype=""
+              description="" package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>page types</value>
+                </attributekey>
+                <attributekey handle="exclude_nav">
+                    <value><![CDATA[1]]></value>
+                </attributekey>
+            </attributes>
+        </page>
         <page name="Surveys" path="/dashboard/reports/surveys" filename="/dashboard/reports/surveys.php" pagetype=""
               description="" package="">
             <attributes>
@@ -634,14 +653,6 @@
             </attributes>
         </page>
 
-        <page name="Connect to the Community" path="/dashboard/extend/connect" filename="/dashboard/extend/connect.php"
-              pagetype="" description="Connect to the Concrete community." package="">
-            <attributes>
-                <attributekey handle="meta_keywords">
-                    <value>concretecms.com, my account, marketplace</value>
-                </attributekey>
-            </attributes>
-        </page>
         <page name="Get More Themes" path="/dashboard/extend/themes" filename="/dashboard/extend/themes.php" pagetype=""
               description="Download themes from the marketplace." package="">
             <attributes>
@@ -678,22 +689,45 @@
                 </attributekey>
             </attributes>
         </page>
-        <page name="Accessibility" path="/dashboard/system/basics/accessibility"
-              filename="/dashboard/system/basics/accessibility.php" pagetype="" description="" package="">
+
+        <page name="Marketplace" path="/dashboard/system/basics/marketplace" filename="/dashboard/system/basics/marketplace.php"
+              pagetype="" description="Connect to the Concrete CMS marketplace." package="">
             <attributes>
                 <attributekey handle="meta_keywords">
-                    <value>accessibility, easy mode</value>
+                    <value>concretecms.com, my account, purchase, extensions, marketplace</value>
                 </attributekey>
             </attributes>
         </page>
-        <page name="Social Links" path="/dashboard/system/basics/social" filename="/dashboard/system/basics/social.php"
+
+        <page name="Production Mode" path="/dashboard/system/basics/production_mode"
+              filename="/dashboard/system/basics/production_mode.php"
               pagetype="" description="" package="">
             <attributes>
                 <attributekey handle="meta_keywords">
-                    <value>sharing, facebook, twitter</value>
+                    <value>production, staging, site copy, development copy, local</value>
                 </attributekey>
             </attributes>
         </page>
+
+        <page name="Appearance" path="/dashboard/system/basics/appearance"
+              filename="/dashboard/system/basics/appearance.php" pagetype="" description="" package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>accessibility, appearance, dark mode, tooltips</value>
+                </attributekey>
+            </attributes>
+        </page>
+
+        <page name="Site Information" path="/dashboard/system/basics/site_information"
+              filename="/dashboard/system/basics/site_information.php"
+              pagetype="" description="" package="">
+            <attributes>
+                <attributekey handle="exclude_search_index">
+                    <value>1</value>
+                </attributekey>
+            </attributes>
+        </page>
+
         <page name="Bookmark Icons" path="/dashboard/system/basics/icons" filename="/dashboard/system/basics/icons.php"
               pagetype="" description="Bookmark icon and mobile home screen icon setup." package="">
             <attributes>
@@ -765,6 +799,27 @@
             </attributes>
         </page>
 
+        <page name="Social &amp; Sharing" path="/dashboard/system/social" filename="/dashboard/system/social.php"
+              pagetype="" description="" package="">
+        </page>
+
+        <page name="Social Links" path="/dashboard/system/social/social_links" filename="/dashboard/system/social/social_links.php"
+              pagetype="" description="" package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>sharing, facebook, twitter</value>
+                </attributekey>
+            </attributes>
+        </page>
+
+        <page name="Open Graph" path="/dashboard/system/social/opengraph" filename="/dashboard/system/social/opengraph.php"
+              pagetype="" description="" package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>sharing, opengraph, schema</value>
+                </attributekey>
+            </attributes>
+        </page>
 
         <page name="Express" path="/dashboard/system/express" filename="/dashboard/system/express/view.php" pagetype=""
               description="Express" package=""/>
@@ -923,6 +978,14 @@
                 </attributekey>
             </attributes>
         </page>
+        <page name="URL Slug" path="/dashboard/system/seo/url_slug"
+              filename="/dashboard/system/seo/url_slug.php" pagetype="" description="" package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>url, slug</value>
+                </attributekey>
+            </attributes>
+        </page>
         <page name="Files" path="/dashboard/system/files" filename="/dashboard/system/files/view.php" pagetype=""
               description="" package=""/>
         <page name="Allowed File Types" path="/dashboard/system/files/filetypes"
@@ -930,6 +993,14 @@
             <attributes>
                 <attributekey handle="meta_keywords">
                     <value>security, files, media, extension, manager, upload</value>
+                </attributekey>
+            </attributes>
+        </page>
+        <page name="File Chooser Options" path="/dashboard/system/files/file_chooser"
+              filename="/dashboard/system/files/file_chooser.php" pagetype="" description="" package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>file, chooser</value>
                 </attributekey>
             </attributes>
         </page>
@@ -1000,6 +1071,14 @@
                 </attributekey>
             </attributes>
         </page>
+        <page name="Upload Settings" path="/dashboard/system/files/uploads"
+              filename="/dashboard/system/files/uploads.php" pagetype="" description="" package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>files, upload, parallel, upload_max_filesize, post_max_size, limit, resize, chunk</value>
+                </attributekey>
+            </attributes>
+        </page>
         <page name="Automation" path="/dashboard/system/automation"
               filename="/dashboard/system/automation/view.php" pagetype="" description="Run and automate commands."
               package=""/>
@@ -1016,6 +1095,14 @@
             <attributes>
                 <attributekey handle="meta_keywords">
                     <value>processes, queues, jobs, running</value>
+                </attributekey>
+            </attributes>
+        </page>
+        <page name="Failed Messages" path="/dashboard/system/automation/failed"
+              filename="/dashboard/system/automation/failed.php" pagetype="" description="" package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>failed messages, retry</value>
                 </attributekey>
             </attributes>
         </page>
@@ -1304,7 +1391,7 @@
               filename="/dashboard/system/calendar/import.php" pagetype=""
               description="" package=""/>
 
-        <page name="Boards" path="/dashboard/system/boards"
+        <page name="Boards &amp; Summary" path="/dashboard/system/boards"
               filename="/dashboard/system/boards/view.php" pagetype=""
               description="Manage global board settings" package=""/>
         <page name="Board Settings" path="/dashboard/system/boards/settings"
@@ -1313,7 +1400,9 @@
         <page name="Permissions" path="/dashboard/system/boards/permissions"
               filename="/dashboard/system/boards/permissions.php" pagetype=""
               description="" package=""/>
-
+        <page name="Summary Templates" path="/dashboard/system/boards/summary_templates"
+              filename="/dashboard/system/boards/summary_templates.php" pagetype=""
+              description="" package=""/>
         <page name="Conversations" path="/dashboard/system/conversations"
               filename="/dashboard/system/conversations/view.php" pagetype=""
               description="Manage your conversations settings" package="">
@@ -1402,11 +1491,11 @@
                 </attributekey>
             </attributes>
         </page>
-        <page name="Debug Settings" path="/dashboard/system/environment/debug"
-              filename="/dashboard/system/environment/debug.php" pagetype="" description="" package="">
+        <page name="Error Handling" path="/dashboard/system/environment/errors"
+              filename="/dashboard/system/environment/errors.php" pagetype="" description="" package="">
             <attributes>
                 <attributekey handle="meta_keywords">
-                    <value>errors, exceptions, develop, support, help</value>
+                    <value>error, exception, debug</value>
                 </attributekey>
             </attributes>
         </page>
@@ -1452,6 +1541,14 @@
                 </attributekey>
             </attributes>
         </page>
+        <page name="Security Policy" path="/dashboard/system/environment/security"
+              filename="/dashboard/system/environment/security.php" pagetype="" description="" package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>security, content security policy, csp, strict transport security, hsts, x-frame-options</value>
+                </attributekey>
+            </attributes>
+        </page>
         <page name="Update Concrete" path="/dashboard/system/update" filename="/dashboard/system/update/view.php"
               pagetype="" description="" package="">
         </page>
@@ -1467,6 +1564,17 @@
         <page name="API" path="/dashboard/system/api" filename="/dashboard/system/api/view.php"
               pagetype="" description="" package="">
         </page>
+
+        <page name="API Integrations" path="/dashboard/system/api/integrations"
+              filename="/dashboard/system/api/integrations.php" pagetype=""
+              description="" package="">
+        </page>
+
+        <page name="Scopes" path="/dashboard/system/api/scopes"
+              filename="/dashboard/system/api/scopes.php" pagetype=""
+              description="" package="">
+        </page>
+
         <page name="API Settings" path="/dashboard/system/api/settings"
               filename="/dashboard/system/api/settings.php" pagetype="" description="" package="">
             <attributes>
@@ -1475,20 +1583,6 @@
                 </attributekey>
             </attributes>
         </page>
-
-        <page name="API Integrations" path="/dashboard/system/api/integrations"
-              filename="/dashboard/system/api/integrations.php" pagetype=""
-              description="" package="">
-            <attributes>
-                <attributekey handle="exclude_nav">
-                    <value><![CDATA[1]]></value>
-                </attributekey>
-                <attributekey handle="exclude_search_index">
-                    <value><![CDATA[1]]></value>
-                </attributekey>
-            </attributes>
-        </page>
-
 
         <page name="Welcome" path="/dashboard/welcome" filename="/dashboard/welcome.php" description="" package="">
             <attributes>
@@ -1512,9 +1606,6 @@
                                     <block type="desktop_latest_form" name=""/>
                                 </column>
                                 <column span="4" offset="0">
-                                    <block type="desktop_featured_addon" name=""/>
-                                </column>
-                                <column span="4" offset="0">
                                     <block type="desktop_site_activity" name="">
                                         <data>
                                             <type>form_submissions</type>
@@ -1525,6 +1616,9 @@
                                         </data>
                                     </block>
                                 </column>
+                                <column span="4" offset="0">
+                                    <block type="desktop_latest_health_result" name=""/>
+                                </column>
                             </columns>
                         </arealayout>
                     </block>
@@ -1533,12 +1627,12 @@
                             <columns>
 
                                 <column span="4" offset="0">
-                                    <block type="rss_displayer" name="">
+                                    <block type="rss_displayer" name="" cache-output="1" cache-output-on-post="1" cache-output-for-registered-users="1" cache-output-lifetime="7200">
                                         <data table="btRssDisplay">
                                             <record>
                                                 <title>Tutorials</title>
                                                 <url>https://documentation.concretecms.org/rss/tutorials</url>
-                                                <dateFormat>longDate</dateFormat>
+                                                <dateFormat>:longDate:</dateFormat>
                                                 <itemsToDisplay>1</itemsToDisplay>
                                                 <showSummary>1</showSummary>
                                                 <launchInNewWindow>1</launchInNewWindow>
@@ -1547,7 +1641,21 @@
                                     </block>
                                 </column>
                                 <column span="8" offset="0">
-                                    <block type="desktop_featured_theme" name=""/>
+                                    <block type="rss_displayer" name="" cache-output="1" cache-output-on-post="1" cache-output-for-registered-users="1" cache-output-lifetime="7200">
+                                        <style>
+                                            <customClass>concrete-blog-stories</customClass>
+                                        </style>
+                                        <data table="btRssDisplay">
+                                            <record>
+                                                <title>News from concretecms.com</title>
+                                                <url>https://www.concretecms.com/rss/blog</url>
+                                                <dateFormat>:longDate:</dateFormat>
+                                                <itemsToDisplay>3</itemsToDisplay>
+                                                <showSummary>1</showSummary>
+                                                <launchInNewWindow>1</launchInNewWindow>
+                                            </record>
+                                        </data>
+                                    </block>
                                 </column>
                             </columns>
                         </arealayout>
@@ -1556,7 +1664,7 @@
                         <arealayout type="theme-grid" columns="12">
                             <columns>
                                 <column span="4" offset="0">
-                                    <block type="desktop_concrete_latest" name="">
+                                    <block type="desktop_concrete_latest" name="" cache-output="1" cache-output-on-post="1" cache-output-for-registered-users="1" cache-output-lifetime="7200">
                                         <data table="btDesktopConcreteLatest">
                                             <record>
                                                 <slot>A</slot>
@@ -1565,7 +1673,7 @@
                                     </block>
                                 </column>
                                 <column span="4" offset="0">
-                                    <block type="desktop_concrete_latest" name="">
+                                    <block type="desktop_concrete_latest" name="" cache-output="1" cache-output-on-post="1" cache-output-for-registered-users="1" cache-output-lifetime="7200">
                                         <data table="btDesktopConcreteLatest">
                                             <record>
                                                 <slot>B</slot>
@@ -1574,7 +1682,7 @@
                                     </block>
                                 </column>
                                 <column span="4" offset="0">
-                                    <block type="desktop_concrete_latest" name="">
+                                    <block type="desktop_concrete_latest" name="" cache-output="1" cache-output-on-post="1" cache-output-for-registered-users="1" cache-output-lifetime="7200">
                                         <data table="btDesktopConcreteLatest">
                                             <record>
                                                 <slot>C</slot>
@@ -1585,26 +1693,13 @@
                             </columns>
                         </arealayout>
                     </block>
-                    <block type="rss_displayer" name="">
-                        <style>
-                            <customClass>concrete-blog-stories</customClass>
-                        </style>
-                        <data table="btRssDisplay">
-                            <record>
-                                <title>News from concretecms.com</title>
-                                <url>https://www.concretecms.com/rss/blog</url>
-                                <dateFormat>longDate</dateFormat>
-                                <itemsToDisplay>3</itemsToDisplay>
-                                <showSummary>1</showSummary>
-                                <launchInNewWindow>1</launchInNewWindow>
-                            </record>
-                        </data>
-                    </block>
                 </blocks>
             </area>
 
         </page>
-
+        <page name="Site Health" path="/dashboard/welcome/health" filename="/dashboard/welcome/health.php" pagetype="" template=""
+              description="" package="">
+        </page>
     </singlepages>
     <pagetypes>
         <pagetype handle="core_stack" name="Stack" internal="1" package=""/>

@@ -7,7 +7,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
     <?php } ?>
 
     <?php if ($context->getTooltip()): ?>
-        <i class="fas fa-question-circle launch-tooltip" title="" data-original-title="<?=$context->getTooltip()?>"></i>
+        <i class="fas fa-question-circle launch-tooltip" data-bs-toggle="tooltip" title="<?= h($context->getTooltip()); ?>"></i>
     <?php endif; ?>
 
     <?php $view->renderControl()?>

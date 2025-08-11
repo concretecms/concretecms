@@ -14,6 +14,13 @@ class TranslatorAdapterRepository implements TranslatorAdapterRepositoryInterfac
 {
     const KEY_SEPARATOR = '@';
 
+    /**
+     * @deprecated What's deprecated is the "public" part.
+     *
+     * @var TranslatorAdapterFactoryInterface
+     */
+    public $translatorAdapterFactory;
+
     /** @var Application */
     protected $app;
 

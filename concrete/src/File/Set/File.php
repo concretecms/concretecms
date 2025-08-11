@@ -7,6 +7,31 @@ use Loader;
 
 class File
 {
+    /**
+     * @var int|string
+     */
+    public $fsfID;
+
+    /**
+     * @var int|string
+     */
+    public $fID;
+
+    /**
+     * @var int|string
+     */
+    public $fsID;
+
+    /**
+     * @var string
+     */
+    public $timestamp;
+
+    /**
+     * @var int|string
+     */
+    public $fsDisplayOrder;
+
     public static function getFileSetFiles(Set $fs)
     {
         $db = Loader::db();

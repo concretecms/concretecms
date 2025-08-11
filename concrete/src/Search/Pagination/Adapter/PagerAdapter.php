@@ -11,6 +11,11 @@ class PagerAdapter implements AdapterInterface
 
     protected $itemList;
 
+    /**
+     * @var mixed|null
+     */
+    public $firstResult;
+
     public function __construct(ItemList $itemList)
     {
         $this->itemList = $itemList;
@@ -54,7 +59,7 @@ class PagerAdapter implements AdapterInterface
             foreach($results as $result) {
                 if ($this->checkPermissions($checker, $result)) {
 
-                    if (!isset($this->firstResult)) {
+                    if ($this->firstResult === null) {
                         $this->firstResult = $result;
                     }
 

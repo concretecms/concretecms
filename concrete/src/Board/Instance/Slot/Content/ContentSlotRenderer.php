@@ -3,11 +3,6 @@
 namespace Concrete\Core\Board\Instance\Slot\Content;
 
 use Concrete\Core\Application\Application;
-use Concrete\Core\Block\Block;
-use Concrete\Core\Block\View\BlockView;
-use Concrete\Core\Entity\Board\Instance;
-use Doctrine\Common\Collections\Criteria;
-use Doctrine\ORM\PersistentCollection;
 
 class ContentSlotRenderer
 {

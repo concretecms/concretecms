@@ -69,6 +69,7 @@ class Sets extends BackendInterfaceController
                     foreach ($this->files as $file) {
                         if ($fsp->canAddFile($file)) {
                             switch ($value) {
+                                case '':
                                 case '0':
                                     if ($file->inFileSet($fs)) {
                                         $fs->removeFileFromSet($file);

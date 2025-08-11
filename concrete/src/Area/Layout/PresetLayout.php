@@ -46,6 +46,17 @@ class PresetLayout extends Layout
         return $this->presetObject;
     }
 
+    public function getDisplayName()
+    {
+        $presetObject = $this->getPresetObject();
+        if ($presetObject === null) {
+            $name = t('Unknown');
+        } else {
+           $name = $presetObject->getName();
+        }
+        return t('%s Layout Preset', $name);
+    }
+
     protected function loadColumnNumber()
     {
         $preset = $this->getPresetObject();

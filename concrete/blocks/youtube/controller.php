@@ -11,7 +11,17 @@ class Controller extends BlockController implements UsesFeatureInterface
     /**
      * @var string|null
      */
+    public $title;
+
+    /**
+     * @var string|null
+     */
     public $videoURL;
+
+    /**
+     * @var string|null
+     */
+    public $vHeight;
 
     /**
      * @var string|null
@@ -21,7 +31,67 @@ class Controller extends BlockController implements UsesFeatureInterface
     /**
      * @var string|null
      */
-    public $vHeight;
+    public $sizing;
+
+    /**
+     * @var bool|int|string|null
+     */
+    public $startTimeEnabled;
+
+    /**
+     * @var string|null
+     */
+    public $startTime;
+
+    /**
+     * @var bool|int|string|null
+     */
+    public $noCookie;
+
+    /**
+     * @var bool|int|string|null
+     */
+    public $autoplay;
+
+    /**
+     * @var string|null
+     */
+    public $color;
+
+    /**
+     * @var int|string|null
+     */
+    public $controls;
+
+    /**
+     * @var int|string|null
+     */
+    public $iv_load_policy;
+
+    /**
+     * @var bool|int|string|null
+     */
+    public $loopEnd;
+
+    /**
+     * @var bool|int|string|null
+     */
+    public $modestbranding;
+
+    /**
+     * @var bool|int|string|null
+     */
+    public $lazyLoad;
+
+    /**
+     * @var bool|int|string|null
+     */
+    public $rel;
+
+    /**
+     * @var bool|int|string|null
+     */
+    public $showCaptions;
 
     protected $btTable = 'btYouTube';
 
@@ -223,7 +293,7 @@ class Controller extends BlockController implements UsesFeatureInterface
             'color' => $data['color'],
 
             'rel' => $data['rel'] ? 1 : 0,
-            'iv_load_policy' => $data['iv_load_policy'] ? 3 : 1,
+            'iv_load_policy' => ((int) $data['iv_load_policy']) ?: 1,
             'autoplay' => $data['autoplay'] ? 1 : 0,
             'loopEnd' => $data['loopEnd'] ? 1 : 0,
 

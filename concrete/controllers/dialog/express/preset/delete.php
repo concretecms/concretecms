@@ -71,7 +71,7 @@ class Delete extends PresetDelete
                     }
                     if (!$this->error->has()) {
                         $response = new EditResponse();
-                        $response->setMessage(t('%s deleted successfully.', $searchPreset->getPresetName()));
+                        $response->setMessage(t('%s deleted successfully.', h($searchPreset->getPresetName())));
                         $response->setAdditionalDataAttribute('presetID', $presetID);
                         $em = $this->app->make(\Doctrine\ORM\EntityManager::class);
                         $em->remove($searchPreset);

@@ -109,7 +109,7 @@ class ImportSiteTypeSkeletonsRoutine extends AbstractRoutine
 
                         $importer = new ContentImporter();
                         $importer->setHomePage($home);
-                        $importer->importXml($type->skeleton->locale);
+                        $importer->importXml($localeNode);
 
                     }
 

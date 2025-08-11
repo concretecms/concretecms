@@ -7,6 +7,8 @@ use HtmlObject\Element;
 
 class HtmlColumn implements ColumnInterface
 {
+    public $class;
+
     public function __construct($class)
     {
         $this->class = $class;

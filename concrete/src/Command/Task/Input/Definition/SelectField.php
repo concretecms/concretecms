@@ -49,6 +49,7 @@ class SelectField extends Field
         }
     }
 
+    #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
         $data = parent::jsonSerialize();

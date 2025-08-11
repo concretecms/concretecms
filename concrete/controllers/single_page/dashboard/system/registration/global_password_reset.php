@@ -4,20 +4,21 @@ namespace Concrete\Controller\SinglePage\Dashboard\System\Registration;
 
 use Concrete\Core\Page\Controller\DashboardPageController;
 use Concrete\Core\Url\Resolver\Manager\ResolverManagerInterface;
+use Concrete\Core\User\Login\PasswordUpgrade;
 use Concrete\Core\User\User;
 use Concrete\Core\User\UserInfo;
 use Concrete\Core\User\UserList;
 
 class GlobalPasswordReset extends DashboardPageController
 {
-    public const PASSWORD_RESET_MESSAGE_KEY = 'concrete.password.reset.message';
-
     public function view()
     {
-        $defaultMessage = t('Your user account is being upgraded and requires a new password. Please enter your email address below to create this now.');
-        $resetMessage = $this->app->make('config/database')->get(static::PASSWORD_RESET_MESSAGE_KEY, $defaultMessage);
+        $service = $this->app->make(PasswordUpgrade::class);
+        $defaultResetMessage = $service->getDefaultPasswordResetMessage($service::PASSWORD_RESET_KEY, false);
+        $resetMessage = $service->getPasswordResetMessage($service::PASSWORD_RESET_KEY, false);
 
         $this->set('resetText', $this->getResetText());
+        $this->set('defaultResetMessage', $defaultResetMessage);
         $this->set('resetMessage', $resetMessage);
 
         $disableForm = $this->isFormDisabled();
@@ -33,8 +34,8 @@ class GlobalPasswordReset extends DashboardPageController
             return $this->view();
         }
 
-        $post = $this->request->request;
-        $this->app->make('config/database')->save(static::PASSWORD_RESET_MESSAGE_KEY, (string) $post->get('resetMessage'));
+        $service = $this->app->make(PasswordUpgrade::class);
+        $service->setPasswordResetMessage($service::PASSWORD_RESET_KEY, (string) $this->request->request->get('resetMessage'));
 
         $this->resetUserPasswords();
 

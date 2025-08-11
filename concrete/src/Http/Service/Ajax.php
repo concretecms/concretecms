@@ -12,16 +12,12 @@ class Ajax
      * @param Request $request
      *
      * @return bool
+     *
+     * @deprecated use the isXmlHttpRequest() method of the request object
      */
     public function isAjaxRequest(Request $request)
     {
-        $result = false;
-        $requestedWith = $request->server->get('HTTP_X_REQUESTED_WITH');
-        if (is_string($requestedWith) && strcasecmp($requestedWith, 'XMLHttpRequest') === 0) {
-            $result = true;
-        }
-
-        return $result;
+        return $request->isXmlHttpRequest();
     }
 
     /**
@@ -30,7 +26,7 @@ class Ajax
      * @param mixed $result
      *
      * @deprecated You should switch to something like:
-     * return \Core::make(\Concrete\Core\Http\ResponseFactoryInterface::class)->json(...)
+     * return app(\Concrete\Core\Http\ResponseFactoryInterface::class)->json(...)
      */
     public function sendResult($result)
     {
@@ -53,7 +49,7 @@ class Ajax
      * @param mixed $error
      *
      * @deprecated You should switch to something like:
-     * return \Core::make(\Concrete\Core\Http\ResponseFactoryInterface::class)->json(...)
+     * return app(\Concrete\Core\Http\ResponseFactoryInterface::class)->json(...)
      */
     public function sendError($error)
     {

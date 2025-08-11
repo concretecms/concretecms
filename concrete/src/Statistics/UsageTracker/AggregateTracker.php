@@ -2,33 +2,43 @@
 namespace Concrete\Core\Statistics\UsageTracker;
 
 use Concrete\Core\Application\ApplicationAwareInterface;
-use InvalidArgumentException;
 use Concrete\Core\Application\ApplicationAwareTrait;
+use InvalidArgumentException;
 
 /**
- * Class PolyTracker
- * A tracker that employes `\Illuminate\Support\Manager` to keep track of a list of Trackers.
- * When `::track` is called, `PolyTracker` forwards the call to each of its drivers.
+ * A tracker that wraps a list of trackers.
+ * When `::track()` is called, this class forwards the call to each of its trackers.
  */
 final class AggregateTracker implements TrackerManagerInterface, ApplicationAwareInterface
 {
-
     use ApplicationAwareTrait;
 
-    /** @var TrackerInterface[] */
-    protected $trackers = [];
-
-    /** @var callable[] */
-    protected $creators = [];
-
-    /** @var string[] */
-    protected $map = [];
+    /**
+     * A list of all the registered tracker handles.
+     *
+     * @var string[]
+     */
+    private $map = [];
 
     /**
-     * Track a trackable object
-     * Any object could be passed to this method so long as it implements TrackableInterface
-     * @param \Concrete\Core\Statistics\UsageTracker\TrackableInterface $trackable
-     * @return static|TrackerInterface
+     * The registered tracker creators, mapped by their handle.
+     * Once a creator is invoked, it's removed from this map.
+     *
+     * @var array|callable[]
+     */
+    private $creators = [];
+
+    /**
+     * The trackers created by the tracker creators, mapped by their handle.
+     *
+     * @var \Concrete\Core\Statistics\UsageTracker\TrackerInterface[]
+     */
+    private $trackers = [];
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Statistics\UsageTracker\TrackerInterface::track()
      */
     public function track(TrackableInterface $trackable)
     {
@@ -40,10 +50,9 @@ final class AggregateTracker implements TrackerManagerInterface, ApplicationAwar
     }
 
     /**
-     * Forget a trackable object
-     * Any object could be passed to this method so long as it implements TrackableInterface
-     * @param \Concrete\Core\Statistics\UsageTracker\TrackableInterface $trackable
-     * @return static|TrackerInterface
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Statistics\UsageTracker\TrackerInterface::forget()
      */
     public function forget(TrackableInterface $trackable)
     {
@@ -55,41 +64,39 @@ final class AggregateTracker implements TrackerManagerInterface, ApplicationAwar
     }
 
     /**
-     * Register a custom tracker creator Closure.
+     * {@inheritdoc}
      *
-     * @param  string $tracker The handle of the tracker
-     * @param  callable $creator The closure responsible for returning the new tracker instance
-     * @return static
+     * @see \Concrete\Core\Statistics\UsageTracker\TrackerManagerInterface::addTracker()
      */
     public function addTracker($tracker, callable $creator)
     {
         $this->creators[$tracker] = $creator;
-        $this->map[] = $tracker;
-
-        if (isset($this->trackers[$tracker])) {
-            unset($this->trackers[$tracker]);
+        if (($i = array_search($tracker, $this->map, true)) !== false) {
+            array_splice($this->map, $i, 1);
         }
+        $this->map[] = $tracker;
+        unset($this->trackers[$tracker]);
 
         return $this;
     }
 
     /**
-     * Get a tracker by handle
-     * @param $tracker
-     * @return TrackerInterface
+     * Get a tracker by handle.
+     *
+     * @param string $tracker
+     *
+     * @throws \InvalidArgumentException if $tracker an unknown tracker handle
+     *
+     * @return \Concrete\Core\Statistics\UsageTracker\TrackerInterface
      */
     public function tracker($tracker)
     {
-        // We've already made this tracker, so just return it.
-        if ($cached = array_get($this->trackers, $tracker)) {
+        if ($cached = $this->trackers[$tracker] ?? null) {
             return $cached;
         }
 
-        // We've got a creator, lets create the tracker
-        if ($creator = array_get($this->creators, $tracker)) {
-            // Create through Container
+        if ($creator = $this->creators[$tracker] ?? null) {
             $created = $this->app->call($creator);
-
             $this->trackers[$tracker] = $created;
             unset($this->creators[$tracker]);
 
@@ -100,7 +107,9 @@ final class AggregateTracker implements TrackerManagerInterface, ApplicationAwar
     }
 
     /**
-     * @return \Generator|TrackerInterface[]
+     * Generate a list of all the registered trackers.
+     *
+     * @return \Generator|\Concrete\Core\Statistics\UsageTracker\TrackerInterface[]
      */
     private function getTrackerGenerator()
     {
@@ -108,5 +117,4 @@ final class AggregateTracker implements TrackerManagerInterface, ApplicationAwar
             yield $this->tracker($tracker);
         }
     }
-
 }

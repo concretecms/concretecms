@@ -73,9 +73,10 @@ class Options extends DashboardPageController
     protected function getThumbnailsFormats()
     {
         return [
+            BitmapFormat::FORMAT_WEBP => t('Always create WEBP thumbnails (smallest file size, transparency is kept)'),
             BitmapFormat::FORMAT_PNG => t('Always create PNG thumbnails (slightly bigger file size, transparency is kept)'),
             BitmapFormat::FORMAT_JPEG => t('Always create JPEG thumbnails (slightly smaller file size, transparency is not available)'),
-            ThumbnailFormatService::FORMAT_AUTO => t('Automatic: create a JPEG thumbnail if the source image is in JPEG format, otherwise create a PNG thumbnail'),
+            ThumbnailFormatService::FORMAT_AUTO => t('Automatic: keep source format if it is supported, otherwise create a WEBP thumbnail'),
         ];
     }
 }

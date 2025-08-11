@@ -11,75 +11,75 @@ return [
      * Core Aliases
      */
     'aliases' => [
-        'Area' => '\Concrete\Core\Area\Area',
-        'Asset' => '\Concrete\Core\Asset\Asset',
-        'AssetList' => '\Concrete\Core\Asset\AssetList',
-        'AttributeSet' => '\Concrete\Core\Attribute\Set',
-        'AuthenticationType' => '\Concrete\Core\Authentication\AuthenticationType',
-        'Block' => '\Concrete\Core\Block\Block',
-        'BlockType' => '\Concrete\Core\Block\BlockType\BlockType',
-        'BlockTypeList' => '\Concrete\Core\Block\BlockType\BlockTypeList',
-        'BlockTypeSet' => '\Concrete\Core\Block\BlockType\Set',
-        'Cache' => '\Concrete\Core\Cache\Cache',
-        'Request' => '\Concrete\Core\Http\Request',
-        'CacheLocal' => '\Concrete\Core\Cache\CacheLocal',
-        'Collection' => '\Concrete\Core\Page\Collection\Collection',
-        'CollectionAttributeKey' => '\Concrete\Core\Attribute\Key\CollectionKey',
-        'CollectionVersion' => '\Concrete\Core\Page\Collection\Version\Version',
-        'ConcreteAuthenticationTypeController' => '\Concrete\Authentication\Concrete\Controller',
-        'Controller' => '\Concrete\Core\Controller\Controller',
-        'Conversation' => '\Concrete\Core\Conversation\Conversation',
-        'ConversationEditor' => '\Concrete\Core\Conversation\Editor\Editor',
-        'ConversationFlagType' => '\Concrete\Core\Conversation\FlagType\FlagType',
-        'ConversationMessage' => '\Concrete\Core\Conversation\Message\Message',
-        'ConversationRatingType' => '\Concrete\Core\Conversation\Rating\Type',
-        'Environment' => '\Concrete\Core\Foundation\Environment',
-        'FacebookAuthenticationTypeController' => '\Concrete\Authentication\Facebook\Controller',
-        'File' => '\Concrete\Core\File\File',
-        'FileAttributeKey' => '\Concrete\Core\Attribute\Key\FileKey',
-        'FileImporter' => '\Concrete\Core\File\Importer',
-        'FileList' => '\Concrete\Core\File\FileList',
-        'FilePermissions' => '\Concrete\Core\Legacy\FilePermissions',
-        'FileSet' => '\Concrete\Core\File\Set\Set',
-        'GlobalArea' => '\Concrete\Core\Area\GlobalArea',
-        'Group' => '\Concrete\Core\User\Group\Group',
-        'GroupList' => '\Concrete\Core\User\Group\GroupList',
-        'GroupSet' => '\Concrete\Core\User\Group\GroupSet',
-        'GroupSetList' => '\Concrete\Core\User\Group\GroupSetList',
-        'GroupTree' => '\Concrete\Core\Tree\Type\Group',
-        'GroupTreeNode' => '\Concrete\Core\Tree\Node\Type\Group',
-        'Job' => '\Concrete\Core\Job\Job',
-        'JobSet' => '\Concrete\Core\Job\Set',
-        'Loader' => '\Concrete\Core\Legacy\Loader',
-        'Localization' => '\Concrete\Core\Localization\Localization',
-        'Marketplace' => '\Concrete\Core\Marketplace\Marketplace',
-        'Package' => '\Concrete\Core\Package\Package',
-        'Page' => '\Concrete\Core\Page\Page',
-        'PageCache' => '\Concrete\Core\Cache\Page\PageCache',
-        'PageController' => '\Concrete\Core\Page\Controller\PageController',
-        'PageEditResponse' => '\Concrete\Core\Page\EditResponse',
-        'PageList' => '\Concrete\Core\Page\PageList',
-        'PageTemplate' => '\Concrete\Core\Page\Template',
-        'PageTheme' => '\Concrete\Core\Page\Theme\Theme',
-        'PageType' => '\Concrete\Core\Page\Type\Type',
-        'PermissionAccess' => '\Concrete\Core\Permission\Access\Access',
-        'PermissionKey' => '\Concrete\Core\Permission\Key\Key',
-        'PermissionKeyCategory' => '\Concrete\Core\Permission\Category',
-        'Permissions' => '\Concrete\Core\Permission\Checker',
-        'Redirect' => '\Concrete\Core\Routing\Redirect',
-        'RedirectResponse' => '\Concrete\Core\Routing\RedirectResponse',
-        'Response' => '\Concrete\Core\Http\Response',
-        'Router' => '\Concrete\Core\Routing\Router',
-        'SinglePage' => '\Concrete\Core\Page\Single',
-        'Stack' => '\Concrete\Core\Page\Stack\Stack',
-        'StackList' => '\Concrete\Core\Page\Stack\StackList',
-        'StartingPointPackage' => '\Concrete\Core\Package\StartingPointPackage',
-        'TaskPermission' => '\Concrete\Core\Legacy\TaskPermission',
-        'User' => '\Concrete\Core\User\User',
-        'UserAttributeKey' => '\Concrete\Core\Attribute\Key\UserKey',
-        'UserList' => '\Concrete\Core\User\UserList',
-        'View' => '\Concrete\Core\View\View',
-        'Workflow' => '\Concrete\Core\Workflow\Workflow',
+        'Area' => 'Concrete\Core\Area\Area',
+        'Asset' => 'Concrete\Core\Asset\Asset',
+        'AssetList' => 'Concrete\Core\Asset\AssetList',
+        'AttributeSet' => 'Concrete\Core\Attribute\Set',
+        'AuthenticationType' => 'Concrete\Core\Authentication\AuthenticationType',
+        'Block' => 'Concrete\Core\Block\Block',
+        'BlockType' => 'Concrete\Core\Block\BlockType\BlockType',
+        'BlockTypeList' => 'Concrete\Core\Block\BlockType\BlockTypeList',
+        'BlockTypeSet' => 'Concrete\Core\Block\BlockType\Set',
+        'Cache' => 'Concrete\Core\Cache\Cache',
+        'Request' => 'Concrete\Core\Http\Request',
+        'CacheLocal' => 'Concrete\Core\Cache\CacheLocal',
+        'Collection' => 'Concrete\Core\Page\Collection\Collection',
+        'CollectionAttributeKey' => 'Concrete\Core\Attribute\Key\CollectionKey',
+        'CollectionVersion' => 'Concrete\Core\Page\Collection\Version\Version',
+        'ConcreteAuthenticationTypeController' => 'Concrete\Authentication\Concrete\Controller',
+        'Controller' => 'Concrete\Core\Controller\Controller',
+        'Conversation' => 'Concrete\Core\Conversation\Conversation',
+        'ConversationEditor' => 'Concrete\Core\Conversation\Editor\Editor',
+        'ConversationFlagType' => 'Concrete\Core\Conversation\FlagType\FlagType',
+        'ConversationMessage' => 'Concrete\Core\Conversation\Message\Message',
+        'ConversationRatingType' => 'Concrete\Core\Conversation\Rating\Type',
+        'Environment' => 'Concrete\Core\Foundation\Environment',
+        'FacebookAuthenticationTypeController' => 'Concrete\Authentication\Facebook\Controller',
+        'File' => 'Concrete\Core\File\File',
+        'FileAttributeKey' => 'Concrete\Core\Attribute\Key\FileKey',
+        'FileImporter' => 'Concrete\Core\File\Importer',
+        'FileList' => 'Concrete\Core\File\FileList',
+        'FilePermissions' => 'Concrete\Core\Legacy\FilePermissions',
+        'FileSet' => 'Concrete\Core\File\Set\Set',
+        'GlobalArea' => 'Concrete\Core\Area\GlobalArea',
+        'Group' => 'Concrete\Core\User\Group\Group',
+        'GroupList' => 'Concrete\Core\User\Group\GroupList',
+        'GroupSet' => 'Concrete\Core\User\Group\GroupSet',
+        'GroupSetList' => 'Concrete\Core\User\Group\GroupSetList',
+        'GroupTree' => 'Concrete\Core\Tree\Type\Group',
+        'GroupTreeNode' => 'Concrete\Core\Tree\Node\Type\Group',
+        'Job' => 'Concrete\Core\Job\Job',
+        'JobSet' => 'Concrete\Core\Job\Set',
+        'Loader' => 'Concrete\Core\Legacy\Loader',
+        'Localization' => 'Concrete\Core\Localization\Localization',
+        'Marketplace' => 'Concrete\Core\Marketplace\Marketplace',
+        'Package' => 'Concrete\Core\Package\Package',
+        'Page' => 'Concrete\Core\Page\Page',
+        'PageCache' => 'Concrete\Core\Cache\Page\PageCache',
+        'PageController' => 'Concrete\Core\Page\Controller\PageController',
+        'PageEditResponse' => 'Concrete\Core\Page\EditResponse',
+        'PageList' => 'Concrete\Core\Page\PageList',
+        'PageTemplate' => 'Concrete\Core\Page\Template',
+        'PageTheme' => 'Concrete\Core\Page\Theme\Theme',
+        'PageType' => 'Concrete\Core\Page\Type\Type',
+        'PermissionAccess' => 'Concrete\Core\Permission\Access\Access',
+        'PermissionKey' => 'Concrete\Core\Permission\Key\Key',
+        'PermissionKeyCategory' => 'Concrete\Core\Permission\Category',
+        'Permissions' => 'Concrete\Core\Permission\Checker',
+        'Redirect' => 'Concrete\Core\Routing\Redirect',
+        'RedirectResponse' => 'Concrete\Core\Routing\RedirectResponse',
+        'Response' => 'Concrete\Core\Http\Response',
+        'Router' => 'Concrete\Core\Routing\Router',
+        'SinglePage' => 'Concrete\Core\Page\Single',
+        'Stack' => 'Concrete\Core\Page\Stack\Stack',
+        'StackList' => 'Concrete\Core\Page\Stack\StackList',
+        'StartingPointPackage' => 'Concrete\Core\Package\StartingPointPackage',
+        'TaskPermission' => 'Concrete\Core\Legacy\TaskPermission',
+        'User' => 'Concrete\Core\User\User',
+        'UserAttributeKey' => 'Concrete\Core\Attribute\Key\UserKey',
+        'UserList' => 'Concrete\Core\User\UserList',
+        'View' => 'Concrete\Core\View\View',
+        'Workflow' => 'Concrete\Core\Workflow\Workflow',
     ],
 
     /*
@@ -95,14 +95,15 @@ return [
         'core_messenger' => '\Concrete\Core\Messenger\MessengerServiceProvider',
         'core_cache' => '\Concrete\Core\Cache\CacheServiceProvider', // needs to come before api
         'core_file' => '\Concrete\Core\File\FileServiceProvider',
-        'core_encryption' => '\Concrete\Core\Encryption\EncryptionServiceProvider',
         'core_validation' => '\Concrete\Core\Validation\ValidationServiceProvider',
         'core_localization' => '\Concrete\Core\Localization\LocalizationServiceProvider',
         'core_exporter' => '\Concrete\Core\Export\ExportServiceProvider',
         'core_multilingual' => '\Concrete\Core\Multilingual\MultilingualServiceProvider',
         'core_feed' => '\Concrete\Core\Feed\FeedServiceProvider',
+        'core_health' => '\Concrete\Core\Health\HealthServiceProvider',
         'core_html' => '\Concrete\Core\Html\HtmlServiceProvider',
         'core_editor' => '\Concrete\Core\Editor\EditorServiceProvider',
+        'core_image_editor' => '\Concrete\Core\ImageEditor\ImageEditorServiceProvider',
         'core_mail' => '\Concrete\Core\Mail\MailServiceProvider',
         'core_application' => '\Concrete\Core\Application\ApplicationServiceProvider',
         'core_utility' => '\Concrete\Core\Utility\UtilityServiceProvider',
@@ -114,18 +115,19 @@ return [
         'core_manager_search_fields' => '\Concrete\Core\Search\Field\ManagerServiceProvider',
         'core_permissions' => '\Concrete\Core\Permission\PermissionServiceProvider',
         'core_automation' => '\Concrete\Core\Command\Task\ServiceProvider',
-        'core_api' => 'Concrete\Core\Api\ApiServiceProvider',
+        'core_announcement' => '\Concrete\Core\Announcement\AnnouncementServiceProvider',
         'core_form' => '\Concrete\Core\Form\FormServiceProvider',
         'core_session' => '\Concrete\Core\Session\SessionServiceProvider',
+        'core_sharing' => '\Concrete\Core\Sharing\SharingServiceProvider',
         'core_cookie' => '\Concrete\Core\Cookie\CookieServiceProvider',
         'core_http' => '\Concrete\Core\Http\HttpServiceProvider',
-        'core_whoops' => '\Concrete\Core\Error\Provider\WhoopsServiceProvider',
+        'core_error' => '\Concrete\Core\Error\Provider\ErrorHandlingServiceProvider',
         'core_element' => '\Concrete\Core\Filesystem\FilesystemServiceProvider',
         'core_notification' => '\Concrete\Core\Notification\NotificationServiceProvider',
+        'core_mercure' => '\Concrete\Core\Notification\Events\MercureServiceProvider',
         'core_package' => '\Concrete\Core\Package\PackageServiceProvider',
         'core_url' => '\Concrete\Core\Url\UrlServiceProvider',
         'core_devices' => '\Concrete\Core\Device\DeviceServiceProvider',
-
         'core_user' => '\Concrete\Core\User\UserServiceProvider',
         'core_service_manager' => '\Concrete\Core\Service\Manager\ServiceManagerServiceProvider',
         'core_site' => '\Concrete\Core\Site\ServiceProvider',
@@ -135,6 +137,8 @@ return [
         'core_summary' => '\Concrete\Core\Summary\ServiceProvider',
         'core_boards' => '\Concrete\Core\Board\ServiceProvider',
         'core_page' => \Concrete\Core\Page\PageServiceProvider::class,
+        'core_block' => \Concrete\Core\Block\BlockServiceProvider::class,
+        'core_area' => \Concrete\Core\Area\AreaServiceProvider::class,
 
         // Authentication
         'core_oauth' => '\Concrete\Core\Authentication\Type\OAuth\ServiceProvider',
@@ -155,6 +159,11 @@ return [
         //
         // Tracker
         'core_usagetracker' => '\Concrete\Core\Statistics\UsageTracker\ServiceProvider',
+
+        // Api - has to come after Express (and possibly other items)
+        'core_api' => 'Concrete\Core\Api\ApiServiceProvider',
+
+        'core_marketplace' => \Concrete\Core\Marketplace\MarketplaceServiceProvider::class
     ],
 
     /*
@@ -191,6 +200,8 @@ return [
         'authentication_type',
         'block_type',
         'block_type_set',
+        'tree_type',
+        'tree_node_type',
         'express_entity',
         'captcha_library',
         'container',
@@ -225,6 +236,8 @@ return [
     'importer_routines' => [
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportSiteTypesRoutine',
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportGroupsRoutine',
+        'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportTreeTypesRoutine',
+        'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportTreeNodeTypesRoutine',
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportSinglePageStructureRoutine',
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportStacksStructureRoutine',
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportBlockTypesRoutine',
@@ -321,6 +334,7 @@ return [
         'JPEG' => ['jpg,jpeg,jpe', FileType::T_IMAGE, 'image', 'image', 'image'],
         'GIF' => ['gif', FileType::T_IMAGE, 'image', 'image', 'image'],
         'PNG' => ['png', FileType::T_IMAGE, 'image', 'image', 'image'],
+        'WebP' => ['webp', FileType::T_IMAGE, 'image', 'image', 'image'],
         'Windows Bitmap' => ['bmp', FileType::T_IMAGE, 'image'],
         'TIFF' => ['tif,tiff', FileType::T_IMAGE, 'image'],
         'HTML' => ['htm,html', FileType::T_DOCUMENT],
@@ -417,7 +431,7 @@ return [
         ],
 
         'moment' => [
-            ['javascript', 'js/moment.js', ['minify' => false, 'combine' => false, 'version' => '2.24.0']],
+            ['javascript', 'js/moment.js', ['minify' => false, 'combine' => false]],
             ['javascript-localized', '/ccm/assets/localization/moment/js'],
         ],
 
@@ -514,6 +528,10 @@ return [
             ['css', 'css/features/faq/frontend.css', ['minify' => false]],
         ],
 
+        'feature/forms/frontend' => [
+            ['javascript', 'js/features/forms/frontend.js', ['minify' => false]],
+        ],
+
         'feature/basics/frontend' => [
             ['css', 'css/features/basics/frontend.css', ['minify' => false]],
         ],
@@ -554,6 +572,15 @@ return [
             ['css', 'css/features/maps/frontend.css', ['minify' => false]],
         ],
 
+        'feature/multilingual/frontend' => [
+            ['javascript', 'js/features/multilingual/frontend.js', ['minify' => false]],
+            ['css', 'css/features/multilingual/frontend.css', ['minify' => false]],
+        ],
+
+        'feature/staging/frontend' => [
+            ['css', 'css/features/staging/frontend.css', ['minify' => false]],
+        ],
+
         'tui-image-editor' => [
             [
                 'css',
@@ -569,6 +596,13 @@ return [
             ['javascript', 'js/translator.js', ['minify' => false]],
             ['javascript-localized', '/ccm/assets/localization/translator/js'],
             ['css', 'css/translator.css', ['minify' => false]],
+        ],
+
+        // Todo: remove this when jQuery UI is fully removed from concrete/js/cms.js. This is a separate
+        // asset because we need the dynamic endpoint to load translations for jQuery UI
+        // See (https://github.com/concretecms/concretecms/issues/11901)
+        'jquery/ui' => [
+            ['javascript-localized', '/ccm/assets/localization/jquery/ui/js'],
         ],
 
         'htmldiff' => [
@@ -612,6 +646,7 @@ return [
                 ['javascript', 'ckeditor'],
                 ['javascript', 'ckeditor/concrete'],
                 ['css', 'ckeditor/concrete'],
+                ['javascript-localized', 'core/cms'],
             ],
         ],
         'ace' => [
@@ -629,6 +664,7 @@ return [
                 ['javascript', 'core/cms'],
                 ['javascript-localized', 'core/cms'],
                 ['css', 'core/cms'],
+                ['javascript-localized', 'jquery/ui'],
             ],
         ],
         'fullcalendar' => [
@@ -683,6 +719,7 @@ return [
 
         'feature/calendar/frontend' => [
             [
+                ['javascript', 'moment'],
                 ['javascript', 'feature/calendar/frontend'],
                 ['css', 'feature/calendar/frontend'],
             ],
@@ -706,6 +743,12 @@ return [
         'feature/faq/frontend' => [
             [
                 ['css', 'feature/faq/frontend'],
+            ],
+        ],
+
+        'feature/forms/frontend' => [
+            [
+                ['javascript', 'feature/forms/frontend'],
             ],
         ],
 
@@ -749,9 +792,22 @@ return [
             ],
         ],
 
+        'feature/multilingual/frontend' => [
+            [
+                ['javascript', 'feature/multilingual/frontend'],
+                ['css', 'feature/multilingual/frontend'],
+            ],
+        ],
+
         'feature/search/frontend' => [
             [
                 ['css', 'feature/search/frontend'],
+            ],
+        ],
+
+        'feature/staging/frontend' => [
+            [
+                ['css', 'feature/staging/frontend'],
             ],
         ],
 

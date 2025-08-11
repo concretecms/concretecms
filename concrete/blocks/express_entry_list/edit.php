@@ -59,7 +59,7 @@ echo $userInterface->tabs([
 ?>
 
 <div class="tab-content">
-    <div class="tab-pane show active" id="search" role="tabpanel">
+    <div class="tab-pane active" id="search" role="tabpanel">
         <div class="form-group">
             <?php echo $form->label('exEntityID', t('Entity')) ?>
             <?php echo $form->select('exEntityID', $entities, $exEntityID, [
@@ -97,7 +97,7 @@ echo $userInterface->tabs([
 
     <div class="tab-pane" id="filtering" role="tabpanel">
         <div data-container="search-field-selector">
-            <?php if ($searchFieldSelectorElement) { ?>
+            <?php if (isset($searchFieldSelectorElement)) { ?>
                 <?php $searchFieldSelectorElement->render() ?>
             <?php } else { ?>
                 <?php echo t('You must choose an entity before you can customize its filtering.') ?>
@@ -113,11 +113,11 @@ echo $userInterface->tabs([
 
         <div class="form-group">
             <div class="form-check">
-                <?php echo $form->checkbox('enablePagination', 1, $enablePagination) ?>
+                <?php echo $form->checkbox('enablePagination', 1, $enablePagination ?? null) ?>
                 <?php echo $form->label('enablePagination', t('Display pagination interface in results.'), ["class" => "form-check-label"]) ?>
             </div>
             <div class="form-check">
-                <?php echo $form->checkbox('enableItemsPerPageSelection', 1, $enableItemsPerPageSelection) ?>
+                <?php echo $form->checkbox('enableItemsPerPageSelection', 1, $enableItemsPerPageSelection ?? null) ?>
                 <?php echo $form->label('enableItemsPerPageSelection', t('Allow users to select items per page.'), ["class" => "form-check-label"]) ?>
             </div>
         </div>
@@ -130,7 +130,7 @@ echo $userInterface->tabs([
         </div>
 
         <div data-container="customize-results">
-            <?php if ($customizeElement) { ?>
+            <?php if (isset($customizeElement)) { ?>
                 <?php $customizeElement->render() ?>
             <?php } else { ?>
                 <?php echo t('You must choose an entity before you can customize its search results.') ?>
@@ -144,7 +144,7 @@ echo $userInterface->tabs([
                 <?php echo $form->label('tableName', t('Name')) ?>
 			    <div class="input-group">
                 	<?php echo $form->text('tableName', $tableName, array('maxlength' => '128')) ?>
-					<?php echo $form->select('titleFormat', \Concrete\Core\Block\BlockController::$btTitleFormats, $titleFormat, array('style' => 'width:105px;flex-grow:0;', 'class' => 'form-select')); ?>
+					<?php echo $form->select('titleFormat', \Concrete\Core\Block\BlockController::$btTitleFormats, $titleFormat ?? null, array('style' => 'width:105px;flex-grow:0;', 'class' => 'form-select')); ?>
 				</div>
 			</div>
 
@@ -253,11 +253,11 @@ echo $userInterface->tabs([
 <script>
     $(function(){
         Concrete.event.publish('block.express_entry_list.open', {
-            'searchProperties': <?php echo json_encode($searchProperties)?>,
-            'searchPropertiesSelected': <?php echo json_encode($searchPropertiesSelected)?>,
-            'searchAssociations': <?php echo json_encode($searchAssociations)?>,
-            'searchAssociationsSelected': <?php echo json_encode($searchAssociationsSelected)?>,
-            'linkedPropertiesSelected': <?php echo json_encode($linkedPropertiesSelected)?>
+            'searchProperties': <?php echo json_encode($searchProperties ?? null)?>,
+            'searchPropertiesSelected': <?php echo json_encode($searchPropertiesSelected ?? null)?>,
+            'searchAssociations': <?php echo json_encode($searchAssociations ?? null)?>,
+            'searchAssociationsSelected': <?php echo json_encode($searchAssociationsSelected ?? null)?>,
+            'linkedPropertiesSelected': <?php echo json_encode($linkedPropertiesSelected ?? null)?>
         });
     });
 </script>

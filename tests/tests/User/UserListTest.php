@@ -88,6 +88,14 @@ class UserListTest extends UserTestCase
         $this->assertEquals('andrew', $results[1]->getUserName());
     }
 
+    public function testBogusGroup()
+    {
+        $this->expectException(\RuntimeException::class);
+        $nl2 = new UserList();
+        $nl2->filterByGroup('BogusName');
+        $results = $nl2->getTotalResults();
+    }
+
     public function testUserIDs()
     {
         $this->list->sortByUserID();

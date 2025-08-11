@@ -11,6 +11,7 @@ use Concrete\Core\Messenger\Transport\TransportManager;
 use Concrete\Core\Validation\CSRF\Token;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Messenger\EventListener\StopWorkerOnMessageLimitListener;
 use Symfony\Component\Messenger\EventListener\StopWorkerOnTimeLimitListener;
 use Symfony\Component\Messenger\RoutableMessageBus;
@@ -67,7 +68,7 @@ class Messenger extends AbstractController
             $this->eventDispatcher->addSubscriber(new StopWorkerOnMessageLimitListener(5, $logger));
             $this->eventDispatcher->addSubscriber(new StopWorkerOnTimeLimitListener(5, $logger));
             $worker = new Worker(
-                [$this->transportManager->getReceivers()->get(TransportInterface::DEFAULT_ASYNC)],
+                [TransportInterface::DEFAULT_ASYNC => $this->transportManager->getReceivers()->get(TransportInterface::DEFAULT_ASYNC)],
                 $this->bus,
                 $this->eventDispatcher,
                 $logger
@@ -75,7 +76,7 @@ class Messenger extends AbstractController
             $worker->run();
             return $this->responseFactory->createResponse();
         }
-        throw new \Exception(t('Access Denied'));
+        return new JsonResponse(t('Access Denied'), 401);
     }
 
 }

@@ -23,15 +23,12 @@ class ExecutableFilesTest extends TestCase
                 && strpos($file, 'concrete/vendor/') !== 0
                 && strpos($file, 'packages/') !== 0
                 && strpos($file, 'updates/') !== 0
-                && strpos($file, '.travis/') !== 0
             ;
         });
         sort($actual);
         $expected = [
             'concrete/bin/concrete',
             'concrete/bin/concrete5',
-            'tests/assets/Docker/run-install.sh',
-            'tests/assets/Docker/run-update.sh',
         ];
         $this->assertSame(
             $expected,

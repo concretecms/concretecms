@@ -7,9 +7,12 @@ defined('C5_EXECUTE') or die('Access Denied.');
  * @var Concrete\Controller\SinglePage\Dashboard\System\Registration\AutomatedLogout $controller
  * @var Concrete\Core\Url\UrlImmutable $trustedProxyUrl
  * @var bool $invalidateOnIPMismatch
+ * @var bool $enableUserSpecificIgnoredIPMismatches
  * @var bool $invalidateOnUserAgentMismatch
  * @var bool $invalidateInactiveUsers
  * @var int|null $inactiveTime
+ * @var string[] $ignoredIPMismatches
+ * @var IPLib\Address\AddressInterface $myIPAddress
  * @var string $confirmInvalidateString
  */
 ?>
@@ -26,6 +29,10 @@ defined('C5_EXECUTE') or die('Access Denied.');
             <label class="form-check-label" for="invalidateOnIPMismatch"><?= t('Log users out if their IP changes') ?></label>
         </div>
         <div class="form-check">
+            <?= $form->checkbox('enableUserSpecificIgnoredIPMismatches', '1', $enableUserSpecificIgnoredIPMismatches) ?>
+            <label class="form-check-label" for="enableUserSpecificIgnoredIPMismatches"><?= t('Enable user-specific IP addresses to be ignored') ?></label>
+        </div>
+        <div class="form-check">
             <?= $form->checkbox('invalidateOnUserAgentMismatch', '1', $invalidateOnUserAgentMismatch) ?>
             <label class="form-check-label" for="invalidateOnUserAgentMismatch"><?= t("Log users out if their browser's user agent changes") ?></label>
         </div>
@@ -39,6 +46,22 @@ defined('C5_EXECUTE') or die('Access Denied.');
 ) ?>
                 </span>
             </label>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <?= $form->label('ignoredIPMismatches', t('Prevent logout if changed IP addresses are in the following ranges')) ?>
+        <?= $form->textarea('ignoredIPMismatches', implode("\n", $ignoredIPMismatches)) ?>
+        <div class="small text-muted">
+            <?= t('Separate IP addresses with spaces or new lines.') ?><br />
+            <?= t(
+                'Accepted values are single addresses (IPv4 like %1$s, and IPv6 like %2$s) and ranges in subnet format (IPv4 like %3$s, and IPv6 like %4$s).',
+                '<code>127.0.0.1</code>',
+                '<code>::1</code>',
+                '<code>127.0.0.1/24</code>',
+                '<code>::1/8</code>'
+            ) ?><br />
+            <?= t('Your IP address:') ?> <code><?= h((string) $myIPAddress) ?></code>
         </div>
     </div>
 
@@ -68,7 +91,13 @@ defined('C5_EXECUTE') or die('Access Denied.');
 
 <script>
 $(document).ready(function() {
-
+    $('#invalidateOnIPMismatch')
+        .on('change', function() {
+            var enabled = $('#invalidateOnIPMismatch').is(':checked');
+            $('#enableUserSpecificIgnoredIPMismatches,#ignoredIPMismatches').attr('disabled', !enabled);
+        })
+        .trigger('change')
+    ;
     $('#invalidateInactiveUsers')
         .on('change', function() {
             $('#inactiveTime').attr('disabled', $(this).is(':checked') ? null : 'disabled');

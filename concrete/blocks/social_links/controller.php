@@ -12,6 +12,21 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
 class Controller extends BlockController implements UsesFeatureInterface
 {
+    /**
+     * @var int|string|null
+     */
+    public $btSocialLinkID;
+
+    /**
+     * @var int|string|null
+     */
+    public $slID;
+
+    /**
+     * @var int|string|null
+     */
+    public $displayOrder;
+
     public $helpers = ['form'];
 
     protected $btInterfaceWidth = 400;
@@ -58,6 +73,7 @@ class Controller extends BlockController implements UsesFeatureInterface
     {
         $links = Link::getList();
         $this->set('links', $links);
+        $this->set('selectedLinks', []);
     }
 
     protected function getSelectedLinks()
@@ -111,8 +127,10 @@ class Controller extends BlockController implements UsesFeatureInterface
     public function duplicate($newBlockID)
     {
         $db = Database::get();
+        $displayOrder = 0;
         foreach ($this->getSelectedLinks() as $link) {
-            $db->insert('btSocialLinks', ['bID' => $newBlockID, 'slID' => $link->getID(), 'displayOrder' => $this->displayOrder]);
+            $db->insert('btSocialLinks', ['bID' => $newBlockID, 'slID' => $link->getID(), 'displayOrder' => $displayOrder]);
+            $displayOrder++;
         }
     }
 
@@ -120,7 +138,7 @@ class Controller extends BlockController implements UsesFeatureInterface
     {
         $db = Database::get();
         $db->delete('btSocialLinks', ['bID' => $this->bID]);
-        $slIDs = (array) $args['slID'];
+        $slIDs = empty($args['slID']) ? [] : (array) $args['slID'];
 
         $statement = $db->prepare('insert into btSocialLinks (bID, slID, displayOrder) values (?, ?, ?)');
         $displayOrder = 0;

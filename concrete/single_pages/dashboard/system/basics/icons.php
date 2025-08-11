@@ -42,7 +42,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
         </div>
         <div class="form-group">
             <label class="control-label form-label"><?= t('Background Color') ?></label>
-            <div><?= $form_color->output('modernThumbBG', $modernThumbBG) ?></div>
+            <div><?= $form_color->output('modernThumbBG', h($modernThumbBG)) ?></div>
         </div>
     </fieldset>
 
@@ -51,7 +51,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
         <div class="help-block"><?= t('This value may be used by some browsers (for example Chrome and Opera on Android) to set the toolbar color.') ?></div>
         <div class="form-group">
             <label class="control-label form-label"><?= t('Color') ?></label>
-            <div><?= $form_color->output('browserToolbarColor', $browserToolbarColor) ?></div>
+            <div><?= $form_color->output('browserToolbarColor', h($browserToolbarColor)) ?></div>
         </div>
     </fieldset>
 

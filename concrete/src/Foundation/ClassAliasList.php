@@ -1,22 +1,19 @@
 <?php
+
 namespace Concrete\Core\Foundation;
 
+/**
+ * @deprecated
+ *
+ * @see \Concrete\Core\Foundation\ClassAutoloader
+ */
 class ClassAliasList
 {
-    private static $loc = null;
-    public $aliases = array();
-
-    /**
-     * List of class aliases to be resolved as soon as possible.
-     * @deprecated it will be removed in future versions
-     *
-     * @var string[]
-     */
-    private $requiredAliases = [];
+    private static $loc;
 
     public function getRegisteredAliases()
     {
-        return $this->aliases;
+        return ClassAutoloader::getInstance()->getClassAliases();
     }
 
     public static function getInstance()
@@ -30,46 +27,46 @@ class ClassAliasList
 
     public function register($alias, $class)
     {
-        $this->aliases[$alias] = $class;
+        ClassAutoloader::getInstance()->addClassAlias($alias, $class, false);
     }
 
     public function registerMultiple($array)
     {
-        foreach ($array as $alias => $class) {
-            $this->register($alias, $class);
-        }
+        ClassAutoloader::getInstance()->addClassAliases($array, false);
     }
 
-    /**
-     * Register a class alias to be resolved as soon as possible.
-     * @deprecated Don't use this method: it will be removed in future versions (use register)
-     * @param string $alias
-     * @param string $class
-     */
     public function registerRequired($alias, $class)
     {
-        $this->register($alias, $class);
-        $this->requiredAliases[] = $alias;
+        ClassAutoloader::getInstance()->addClassAlias($alias, $class, true);
     }
 
-    /**
-     * Register a list of class aliases to be pre-resolved as soon as possible.
-     * @deprecated Don't use this method: it will be removed in future versions (use registerMultiple)
-     */
     public function registerMultipleRequired($array)
     {
-        $this->registerMultiple($array);
-        $this->requiredAliases = array_merge($this->requiredAliases, array_keys($array));
+        ClassAutoloader::getInstance()->addClassAliases($array, true);
     }
 
-    /**
-     * Pre-load the class aliases marked as required.
-     * @deprecated Don't use this method: it will be removed in future versions.
-     */
     public function resolveRequired()
     {
-        foreach ($this->requiredAliases as $requiredAlias) {
-            class_exists($requiredAlias);
+        ClassAutoloader::getInstance()->autoloadAliasesAtBoot();
+    }
+
+    public function __get($name)
+    {
+        if ($name === 'aliases') {
+            return ClassAutoloader::getInstance()->getClassAliases();
         }
+        $trace = debug_backtrace();
+        trigger_error("Undefined property {$name} in {$trace[0]['file']} on line {$trace[0]['line']}", E_USER_NOTICE);
+
+        return null;
+    }
+
+    public function __set($name, $value)
+    {
+        if ($name === 'aliases') {
+            ClassAutoloader::getInstance()->addClassAliases($value, false);
+        }
+        $trace = debug_backtrace();
+        trigger_error("Undefined property {$name} in {$trace[0]['file']} on line {$trace[0]['line']}", E_USER_NOTICE);
     }
 }

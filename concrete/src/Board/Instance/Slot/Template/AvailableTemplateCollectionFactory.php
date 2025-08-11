@@ -4,7 +4,6 @@ namespace Concrete\Core\Board\Instance\Slot\Template;
 
 use Concrete\Core\Entity\Board\Board;
 use Concrete\Core\Entity\Board\Instance;
-use Concrete\Core\Entity\Board\InstanceSlotRule;
 use Concrete\Core\Entity\Board\SlotTemplate;
 use Doctrine\ORM\EntityManager;
 

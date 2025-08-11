@@ -12,22 +12,167 @@ use Concrete\Core\File\Filesystem;
 use Concrete\Core\File\FolderItemList;
 use Concrete\Core\File\Import\FileImporter;
 use Concrete\Core\File\Import\ImportException;
+use Concrete\Core\File\Import\ImportOptions;
 use Concrete\Core\File\Set\Set;
 use Concrete\Core\File\Set\SetList;
 use Concrete\Core\File\Type\Type;
 use Concrete\Core\Http\ResponseFactory;
 use Concrete\Core\Http\ResponseFactoryInterface;
+use Concrete\Core\Permission\Checker;
 use Concrete\Core\Tree\Node\Node;
 use Concrete\Core\Tree\Node\Type\File;
 use Concrete\Core\Tree\Node\Type\FileFolder;
 use Concrete\Core\Url\UrlImmutable;
 use Concrete\Core\User\User;
+use Concrete\Core\Utility\Service\Xml;
 use Doctrine\DBAL\Connection;
 use FileAttributeKey;
+use League\Url\Url;
+use SimpleXMLElement;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class Controller extends BlockController implements UsesFeatureInterface
 {
+    /**
+     * @var string|null
+     */
+    public $setIds;
+
+    /**
+     * @var int|string|null
+     */
+    protected $folderID = 0;
+
+    /**
+     * @var string|null
+     */
+    public $setMode;
+
+    /**
+     * @var int|string|null
+     */
+    public $onlyCurrentUser;
+
+    /**
+     * @var string|null
+     */
+    public $tags;
+
+    /**
+     * @var string|null
+     */
+    public $viewProperties;
+
+    /**
+     * @var string|null
+     */
+    public $expandableProperties;
+
+    /**
+     * @var string|null
+     */
+    public $searchProperties;
+
+    /**
+     * @var string|null
+     */
+    public $orderBy;
+
+    /**
+     * @var int|string|null
+     */
+    public $displayLimit;
+
+    /**
+     * @var bool|int|string|null
+     */
+    public $displayOrderDesc;
+
+    /**
+     * @var int|string|null
+     */
+    public $addFilesToSetID;
+
+    /**
+     * @var int|string|null
+     */
+    public $maxThumbWidth;
+
+    /**
+     * @var int|string|null
+     */
+    public $maxThumbHeight;
+
+    /**
+     * @var int|string|null
+     */
+    public $enableSearch;
+
+    /**
+     * @var string|null
+     */
+    public $heightMode;
+
+    /**
+     * @var string|null
+     */
+    public $downloadFileMethod;
+
+    /**
+     * @var int|string|null
+     */
+    public $fixedHeightSize;
+
+    /**
+     * @var string|null
+     */
+    public $headerBackgroundColor;
+
+    /**
+     * @var string|null
+     */
+    public $headerBackgroundColorActiveSort;
+
+    /**
+     * @var string|null
+     */
+    public $headerTextColor;
+
+    /**
+     * @var int|string|null
+     */
+    public $allowFileUploading;
+
+    /**
+     * @var int|string|null
+     */
+    public $allowInPageFileManagement;
+
+    /**
+     * @var string|null
+     */
+    public $tableName;
+
+    /**
+     * @var string|null
+     */
+    public $tableDescription;
+
+    /**
+     * @var bool|int|string|null
+     */
+    public $tableStriped;
+
+    /**
+     * @var string|null
+     */
+    public $rowBackgroundColorAlternate;
+
+    /**
+     * @var int|string|null
+     */
+    public $hideFolders;
+
     protected $btInterfaceWidth = '640';
     protected $btInterfaceHeight = '400';
     protected $btTable = 'btDocumentLibrary';
@@ -36,9 +181,6 @@ class Controller extends BlockController implements UsesFeatureInterface
 
     /** @var FileFolder|null */
     protected $rootNode = null;
-
-    /** @var int */
-    protected $folderID = 0;
 
     public function getBlockTypeDescription()
     {
@@ -284,6 +426,11 @@ class Controller extends BlockController implements UsesFeatureInterface
                     $subselect
                         ->select('count(distinct fsf.fsID) as sets')
                         ->addSelect('fsf.fID')
+                        // fsID and fsDisplayOrder are only needed if ordering by fileset.
+                        // Although when including files that are in all filesets
+                        // ordering by fileset doesn't always make sense let's do it anyway!
+                        ->addSelect('fsf.fsID')
+                        ->addSelect('fsf.fsDisplayOrder')
                         ->from('FileSetFiles', 'fsf')
                         ->where('fsf.fsID in (:sets)')
                         ->groupBy('fsf.fID');
@@ -307,6 +454,11 @@ class Controller extends BlockController implements UsesFeatureInterface
 
                     $query->andWhere($expr);
                     break;
+            }
+
+            if ($this->orderBy == 'set') {
+                $order = $this->displayOrderDesc ? 'desc' : 'asc';
+                $query->orderBy('fsf.fsID', 'asc')->addOrderBy('fsf.fsDisplayOrder', $order);
             }
         }
 
@@ -335,12 +487,11 @@ class Controller extends BlockController implements UsesFeatureInterface
             foreach ($results as $file) {
                 if ($file instanceof File) {
                     $fileObject = $file->getTreeNodeFileObject();
-                }
-
-                $fp = new \Permissions($fileObject);
-                if ($fp->canEditFileProperties()) {
-                    $return[] = 'edit_properties';
-                    break;
+                    $fp = new \Permissions($fileObject);
+                    if ($fp->canEditFileProperties()) {
+                        $return[] = 'edit_properties';
+                        break;
+                    }
                 }
             }
         }
@@ -436,7 +587,7 @@ class Controller extends BlockController implements UsesFeatureInterface
             $order = 'asc';
         }
 
-        $url = \URL::to($c);
+        $url = Url::createFromServer($_SERVER);
         if ($query = $url->getQuery()) {
             $query['sort'] = $key;
             $query['dir'] = $order;
@@ -500,10 +651,6 @@ class Controller extends BlockController implements UsesFeatureInterface
     {
         $query = $list->getQueryObject();
 
-        $category = $this->app->make(FileCategory::class);
-        $table = $category->getIndexedSearchTable();
-        $query->leftJoin('fv', $table, 'fis', 'fv.fID = fis.fID');
-
         $searchProperties = (array) json_decode($this->searchProperties);
         $type = $this->request->query->get('type');
         $extension = $this->request->query->get('extension');
@@ -543,15 +690,17 @@ class Controller extends BlockController implements UsesFeatureInterface
                     }
                     break;
                 default:
-                    $akID = substr($column, 3);
-                    $ak = FileKey::getByID($akID);
-                    if (is_object($ak)) {
-                        $this->enableSubFolderSearch($list);
-                        $type = $ak->getAttributeType();
-                        $cnt = $type->getController();
-                        $cnt->setRequestArray($allQueries);
-                        $cnt->setAttributeKey($ak);
-                        $cnt->searchForm($list);
+                    if ($this->request->query->has('search')) {
+                        $akID = substr($column, 3);
+                        $ak = FileKey::getByID($akID);
+                        if (is_object($ak)) {
+                            $this->enableSubFolderSearch($list);
+                            $type = $ak->getAttributeType();
+                            $cnt = $type->getController();
+                            $cnt->setRequestArray($allQueries);
+                            $cnt->setAttributeKey($ak);
+                            $cnt->searchForm($list);
+                        }
                     }
                     break;
             }
@@ -604,9 +753,9 @@ class Controller extends BlockController implements UsesFeatureInterface
                     $file->getFileID(), t('Details'));
             case 'title':
                 if ($this->downloadFileMethod == 'force') {
-                    return sprintf('<a href="%s">%s</a>', $file->getForceDownloadURL(), $file->getTitle());
+                    return sprintf('<a href="%1$s" download="%2$s">%2$s</a>', $file->getForceDownloadURL(), h($file->getTitle()));
                 } else {
-                    return sprintf('<a href="%s">%s</a>', $file->getDownloadURL(), $file->getTitle());
+                    return sprintf('<a href="%1$s" download="%2$s">%2$s</a>', $file->getDownloadURL(), h($file->getTitle()));
                 }
             case 'filename':
                 return $file->getFileName();
@@ -636,7 +785,7 @@ class Controller extends BlockController implements UsesFeatureInterface
 
     /**
      * @param int |false $bID BlockID
-     * @return Symfony\Component\HttpFoundation\Response | void
+     * @return \Symfony\Component\HttpFoundation\Response | void
      * @throws UserMessageException
      * @throws \Illuminate\Contracts\Container\BindingResolutionException
      */
@@ -645,7 +794,12 @@ class Controller extends BlockController implements UsesFeatureInterface
         $files = [];
         $r = new \Concrete\Core\File\EditResponse();
         if ($this->bID == $bID) {
-            $fp = \FilePermissions::getGlobal();
+            $folder = $this->getRootFolder();
+            $fp = new Checker($folder);
+            if (!$fp->canAddFiles()) {
+                throw new UserMessageException(t("You don't have the permission to upload to %s", $folder->getTreeNodeDisplayName()), 400);
+            }
+
             /** @var \Concrete\Core\File\Service\File $cf */
             $cf = $this->app->make('helper/file');
 
@@ -660,26 +814,29 @@ class Controller extends BlockController implements UsesFeatureInterface
                         /** @var \Concrete\Core\File\Import\FileImporter $importer */
                         $importer = $this->app->make(FileImporter::class);
                         try {
-                                $response = $importer->importUploadedFile($file);
-                            } catch (ImportException $x) {
-                                throw new UserMessageException($x->getMessage());
-                            }
-                            $file = $response->getFile();
-                            if ($this->addFilesToSetID) {
-                                $fs = \FileSet::getByID($this->addFilesToSetID);
-                                if (is_object($fs)) {
-                                    $fs->addFileToSet($file);
-                                }
-                            }
-                            /* @var \Concrete\Core\Entity\File\File $file */
-                            $files[] = $file;
-                            if (!$this->allowInPageFileManagement) {
-                                // We're going to set a message to display the next time the page loads.
-                                $this->app->make('session')->getFlashBag()->add('document_library_success_message',
-                                    t2('File added successfully', 'Files added successfully', count($files)));
-                            }
+                            $options = $this->app->make(ImportOptions::class);
+                            $options->setImportToFolder($folder);
+                            $response = $importer->importUploadedFile($file, '', $options);
+                        } catch (ImportException $x) {
+                            throw new UserMessageException($x->getMessage());
+                        }
 
-                            $r->setFiles($files);
+                        $file = $response->getFile();
+                        if ($this->addFilesToSetID) {
+                            $fs = \FileSet::getByID($this->addFilesToSetID);
+                            if (is_object($fs)) {
+                                $fs->addFileToSet($file);
+                            }
+                        }
+                        /* @var \Concrete\Core\Entity\File\File $file */
+                        $files[] = $file;
+                        if (!$this->allowInPageFileManagement) {
+                            // We're going to set a message to display the next time the page loads.
+                            $this->app->make('session')->getFlashBag()->add('document_library_success_message',
+                                t2('File added successfully', 'Files added successfully', count($files)));
+                        }
+
+                        $r->setFiles($files);
                     }
                 } else {
                     throw new UserMessageException(ImportException::describeErrorCode(ImportException::E_PHP_NO_FILE));
@@ -727,11 +884,15 @@ class Controller extends BlockController implements UsesFeatureInterface
         $list = $this->setupFolderFileFolderFilter($list);
         $list->ignorePermissions();
 
-        $order = $this->displayOrderDesc ? 'desc' : 'asc';
-        $orderBy = $this->getSortColumnKey($this->orderBy, 'filelist');
-        if ($orderBy) {
-            $list->getQueryObject()->addSelect($orderBy);
-            $list->sortBy($orderBy, $order);
+        // Ordering by FileSet Order is dealt with in setupFolderFileSetFilter()
+        // No need to run this code here then
+        if ($this->orderBy != 'set') {
+            $order = $this->displayOrderDesc ? 'desc' : 'asc';
+            $orderBy = $this->getSortColumnKey($this->orderBy, 'filelist');
+            if ($orderBy) {
+                $list->getQueryObject()->addSelect($orderBy);
+                $list->sortBy($orderBy, $order);
+            }
         }
 
         if ($keywords = $this->request('keywords')) {
@@ -808,6 +969,7 @@ class Controller extends BlockController implements UsesFeatureInterface
             $success = $success[0];
             $this->set('success', $success);
         }
+        $this->set('advancedSearchDisplayed', $this->request->query->get('advancedSearchDisplayed') ? true : false);
     }
 
     public function save($args)
@@ -876,6 +1038,65 @@ class Controller extends BlockController implements UsesFeatureInterface
             }
         }
         parent::save($data);
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Block\BlockController::export()
+     */
+    public function export(SimpleXMLElement $blockNode)
+    {
+        parent::export($blockNode);
+        $record = $blockNode->data[0]->record[0];
+        $this->fixExportSetIds($record);
+        $this->fixExportAttributeKeyArray($record, 'viewProperties', true);
+        $this->fixExportAttributeKeyArray($record, 'expandableProperties', false);
+        $this->fixExportAttributeKeyArray($record, 'searchProperties', false);
+        $addFilesToSet = null;
+        if (isset($record->addFilesToSetID)) {
+            $setID = (int) (string) $record->addFilesToSetID[0];
+            $addFilesToSet = $setID > 0 ? Set::getByID($setID) : null;
+            unset($record->addFilesToSetID[0]);
+        }
+        app(Xml::class)->createChildElement($record, 'addFilesToSetName', $addFilesToSet ? $addFilesToSet->getFileSetName() : '');
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Block\BlockController::getImportData()
+     */
+    protected function getImportData($blockNode, $page)
+    {
+        $data = parent::getImportData($blockNode, $page);
+        if (($json = (string) ($data['setNames'] ?? '')) !== '') {
+            $setNames = json_decode($json);
+            if (is_array($setNames) && $setNames !== []) {
+                $setIds = [];
+                foreach ($setNames as $setName) {
+                    $set = Set::getByName($setName);
+                    if ($set) {
+                        $setIds[] = $set->getFileSetID();
+                    }
+                }
+                $data['fsID'] = $setIds;
+            }
+        }
+        $this->fixImportAttributeKeyArray($data, 'viewProperties', true);
+        $this->fixImportAttributeKeyArray($data, 'expandableProperties', false);
+        $this->fixImportAttributeKeyArray($data, 'searchProperties', false);
+        if (is_string($addFilesToSetName = $data['addFilesToSetName'] ?? null) && $addFilesToSetName !== '') {
+            $addFilesToSet = Set::getByName($addFilesToSetName);
+            if ($addFilesToSet) {
+                $data['addFilesToSetID'] = $addFilesToSet->getFileSetID();
+            }
+        }
+        if (!isset($data['showFolders']) && isset($data['hideFolders'])) {
+            $data['showFolders'] = filter_var($data['hideFolders'], FILTER_VALIDATE_BOOLEAN) ? 0 : 1;
+        }
+
+        return $data;
     }
 
     /**
@@ -989,5 +1210,90 @@ class Controller extends BlockController implements UsesFeatureInterface
         $query->setParameter('keywords', '%' . $keywords . '%');
 
         return $list;
+    }
+
+    private function fixExportSetIds(SimpleXMLElement $recordNode): void
+    {
+        $json = isset($recordNode->setIds) ? (string) $recordNode->setIds : '';
+        if (!$json) {
+            return;
+        }
+        $setIds = json_decode($json);
+        if (!is_array($setIds) || $setIds === []) {
+            return;
+        }
+        unset($recordNode->setIds[0]);
+        $xml = $this->app->make(Xml::class);
+        $setNames = [];
+        foreach ($setIds as $setId) {
+            $setId = is_numeric($setId) ? (int) $setId : 0;
+            $set = $setId > 0 ? Set::getByID($setId) : null;
+            if ($set) {
+                $setNames[] = $set->getFileSetName();
+            }
+        }
+        $xml->createChildElement($recordNode, 'setNames', json_encode($setNames));
+    }
+
+    private function fixExportAttributeKeyArray(SimpleXMLElement $recordNode, string $fieldName, bool $replaceKeys): void
+    {
+        $json = isset($recordNode->{$fieldName}) ? (string) $recordNode->{$fieldName} : '';
+        if (!$json) {
+            return;
+        }
+        $array = json_decode($json, true);
+        if (!is_array($array) || $array === []) {
+            return;
+        }
+        $serialized = [];
+        $m = null;
+        $attributeCategory = $this->app->make(FileCategory::class);
+        foreach ($array as $key => $value) {
+            if (preg_match('/^ak_(?<id>[1-9]\d*)$/', (string) ($replaceKeys ? $key : $value), $m)) {
+                $ak = $attributeCategory->getAttributeKeyByID((int) $m['id']);
+                if ($ak) {
+                    if ($replaceKeys) {
+                        $key = "ak_{$ak->getAttributeKeyHandle()}";
+                    } else {
+                        $value = "ak_{$ak->getAttributeKeyHandle()}";
+                    }
+                }
+            }
+            $serialized[$key] = $value;
+        }
+        if ($serialized === $array) {
+            return;
+        }
+        unset($recordNode->{$fieldName}[0]);
+        $this->app->make(Xml::class)->createChildElement($recordNode, $fieldName, json_encode($serialized));
+    }
+
+    private function fixImportAttributeKeyArray(array &$data, string $fieldName, bool $replaceKeys): void
+    {
+        $json = $data[$fieldName] ?? null;
+        if (!$json) {
+            return;
+        }
+        $array = json_decode($json, true);
+        if (!is_array($array) || $array === []) {
+            return;
+        }
+        $decoded = [];
+        $m = null;
+        $attributeCategory = $this->app->make(FileCategory::class);
+        foreach ($array as $key => $value) {
+            if (preg_match('/^ak_(?<handle>\S+)$/', (string) ($replaceKeys ? $key : $value), $m)) {
+                $ak = $attributeCategory->getAttributeKeyByHandle($m['handle']);
+                if ($ak) {
+                    if ($replaceKeys) {
+                        $key = "ak_{$ak->getAttributeKeyID()}";
+                    } else {
+                        $value = "ak_{$ak->getAttributeKeyID()}";
+                    }
+                }
+            }
+            $decoded[$key] = $value;
+        }
+        $data[$fieldName] = $decoded;
     }
 }

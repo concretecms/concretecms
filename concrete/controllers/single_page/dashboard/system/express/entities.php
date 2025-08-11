@@ -2,6 +2,7 @@
 
 namespace Concrete\Controller\SinglePage\Dashboard\System\Express;
 
+use Concrete\Core\Api\Command\SynchronizeScopesCommand;
 use Concrete\Core\Attribute\Category\SearchIndexer\ExpressSearchIndexer;
 use Concrete\Core\Entity\Express\Entity;
 use Concrete\Core\Entity\Express\Form;
@@ -30,15 +31,22 @@ class Entities extends DashboardPageController
             $vs = \Core::make('helper/validation/strings');
 
             $name = $sec->sanitizeString($this->request->request->get('name'));
-            $handle = $sec->sanitizeString($this->request->request->get('handle'));
+            $handle = $this->request->request->get('handle');
+            $plural_handle = $this->request->request->get('plural_handle');
 
             if (!$vs->handle($handle)) {
-                $this->error->add(t('You must create a handle for your data object. It may contain only lowercase letters and underscores.'), 'handle');
+                $this->error->add(t('You must create a valid handle for your data object. It may contain only lowercase letters and underscores.'), 'handle');
             } else {
                 $entity = Express::getObjectByHandle($handle);
                 if (is_object($entity)) {
                     $this->error->add(t('An express object with this handle already exists.'));
+                } else if (strlen($handle) > 34) {
+                    $this->error->add(t('Your entity handle must be 34 characters or less.'));
                 }
+            }
+
+            if (!$vs->handle($plural_handle)) {
+                $this->error->add(t('You must create a valid plural handle for your data object. It may contain only lowercase letters and underscores.'), 'plural_handle');
             }
 
             if (!$name) {
@@ -48,13 +56,20 @@ class Entities extends DashboardPageController
             if (!$this->error->has()) {
                 $entity = new Entity();
                 $entity->setName($this->request->request->get('name'));
-                $entity->setHandle($this->request->request->get('handle'));
-                $entity->setPluralHandle($this->request->request->get('plural_handle'));
+                $entity->setHandle($handle);
+                $entity->setPluralHandle($plural_handle);
                 $entity->setLabelMask($this->request->request->get('label_mask'));
                 $entity->setDescription($this->request->request->get('description'));
+                $entity->setIsPublished(false);
 
                 if ($this->request->request->get('supports_custom_display_order')) {
                     $entity->setSupportsCustomDisplayOrder(true);
+                }
+
+                if ($this->app->make('config')->get('concrete.api.enabled')) {
+                    $entity->setIncludeInRestApi(
+                        $this->request->request->getBoolean('include_in_rest_api', false)
+                    );
                 }
 
                 $form = new Form();
@@ -85,6 +100,10 @@ class Entities extends DashboardPageController
                     }
                 }
 
+                if ($this->app->make('config')->get('concrete.api.enabled')) {
+                    $command = new SynchronizeScopesCommand();
+                    $this->app->executeCommand($command);
+                }
                 $this->flash('success', t('Object added successfully.'));
                 return Redirect::to('/dashboard/system/express/entities', 'view_entity', $entity->getId());
             }
@@ -104,6 +123,27 @@ class Entities extends DashboardPageController
     {
         $r = $this->entityManager->getRepository('\Concrete\Core\Entity\Express\Entity');
         $entities = [];
+        $unpublishedEntities = [];
+        foreach($r->findBy(array('is_published' => true), array('name' => 'asc')) as $entity) {
+            $permissions = new Checker($entity);
+            if ($permissions->canViewExpressEntries()) {
+                $entities[] = $entity;
+            }
+        }
+        foreach($r->findBy(array('is_published' => false), array('name' => 'asc')) as $entity) {
+            $permissions = new Checker($entity);
+            if ($permissions->canViewExpressEntries()) {
+                $unpublishedEntities[] = $entity;
+            }
+        }
+        $this->set('entities', $entities);
+        $this->set('unpublishedEntities', $unpublishedEntities);
+    }
+
+    public function include_unpublished_entities()
+    {
+        $r = $this->entityManager->getRepository('\Concrete\Core\Entity\Express\Entity');
+        $entities = [];
         foreach($r->findBy(array(), array('name' => 'asc')) as $entity) {
             $permissions = new Checker($entity);
             if ($permissions->canViewExpressEntries()) {
@@ -111,6 +151,7 @@ class Entities extends DashboardPageController
             }
         }
         $this->set('entities', $entities);
+        $this->set('unpublishedEntities', []);
     }
 
     public function delete()
@@ -200,6 +241,29 @@ class Entities extends DashboardPageController
         return Redirect::to('/dashboard/system/express/entities', 'view_entity', $entity->getId());
     }
 
+    /**
+     * @return \Concrete\Core\Routing\RedirectResponse
+     */
+    public function publish()
+    {
+        /** @var \Concrete\Core\Entity\Express\Entity $entity */
+        $entity = $this->entityManager->getRepository('\Concrete\Core\Entity\Express\Entity')->findOneById($this->request->request->get('entity_id'));
+
+        if (!is_object($entity)) {
+            $this->error->add(t('Invalid express entity.'));
+        }
+
+        if (!$this->token->validate('publish')) {
+            $this->error->add($this->token->getErrorMessage());
+        }
+
+        $entity->setIsPublished(true);
+        $this->entityManager->flush();
+
+        $this->flash('success', t('Entity published successfully.'));
+        return Redirect::to('/dashboard/system/express/entities', 'view_entity', $entity->getId());
+    }
+
     public function clear_entries($id = null)
     {
         $entity = $this->entityManager->getRepository('\Concrete\Core\Entity\Express\Entity')->findOneById($id);
@@ -271,15 +335,27 @@ class Entities extends DashboardPageController
         $vs = \Core::make('helper/validation/strings');
 
         $name = $sec->sanitizeString($this->request->request->get('name'));
-        $handle = $sec->sanitizeString($this->request->request->get('handle'));
+        $handle = $this->request->request->get('handle');
+        $plural_handle = $this->request->request->get('plural_handle');
 
         if (!$vs->handle($handle)) {
-            $this->error->add(t('You must create a handle for your data object. It may contain only lowercase letters and underscores.'), 'handle');
+            $this->error->add(t('You must create a valid handle for your data object. It may contain only lowercase letters and underscores.'), 'handle');
         } else {
             $exist = Express::getObjectByHandle($handle);
             if (is_object($exist) && $exist->getID() != $id) {
                 $this->error->add(t('An express object with this handle already exists.'));
+            } else if (strlen($handle) > 34) {
+                $this->error->add(t('Your entity handle must be 34 characters or less.'));
             }
+        }
+
+        if (!$vs->handle($plural_handle)) {
+            $this->error->add(
+                t(
+                    'You must create a valid plural handle for your data object. It may contain only lowercase letters and underscores.'
+                ),
+                'plural_handle'
+            );
         }
 
         if (!$name) {
@@ -318,7 +394,7 @@ class Entities extends DashboardPageController
              */
             $entity->setName($name);
             $entity->setHandle($handle);
-            $entity->setPluralHandle($this->request->request->get('plural_handle'));
+            $entity->setPluralHandle($plural_handle);
             $entity->setLabelMask($this->request->request->get('label_mask'));
             $entity->setDescription($this->request->request->get('description'));
             $entity->setDefaultViewForm($viewForm);
@@ -331,6 +407,12 @@ class Entities extends DashboardPageController
                 $entity->setSupportsCustomDisplayOrder(true);
             }
 
+            if ($this->app->make('config')->get('concrete.api.enabled')) {
+                $entity->setIncludeInRestApi(
+                    $this->request->request->getBoolean('include_in_rest_api', false)
+                );
+            }
+
             $this->entityManager->persist($entity);
             $this->entityManager->flush();
 
@@ -341,9 +423,15 @@ class Entities extends DashboardPageController
             $indexer->updateRepository($previousEntity, $entity);
 
             $resultsNode = Node::getByID($entity->getEntityResultsNodeId());
+            $resultsNode->setTreeNodeName($name);
             $folder = Node::getByID($this->request->request('entity_results_parent_node_id'));
             if (is_object($folder)) {
                 $resultsNode->move($folder);
+            }
+
+            if ($this->app->make('config')->get('concrete.api.enabled')) {
+                $command = new SynchronizeScopesCommand();
+                $this->app->executeCommand($command);
             }
 
             $this->flash('success', t('Object updated successfully.'));

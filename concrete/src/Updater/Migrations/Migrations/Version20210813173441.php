@@ -13,15 +13,9 @@ final class Version20210813173441 extends AbstractMigration implements Repeatabl
 
     public function upgradeDatabase()
     {
-        $key = Key::getByHandle('add_group_folder');
-        if (!$key) {
-            $key = Key::add('group_folder', 'add_group_folder', t("Add Group Folder"), t("Add Group Folder"), false, false);
-        }
-        $key = Key::getByHandle('assign_groups');
-        if (!$key) {
-            $key = Key::add('group_folder', 'assign_groups', t("Assign Groups"), t("Can assign the groups within this folder."), false, false);
-        }
-
+        \Concrete\Core\Database\Schema\Schema::refreshCoreXMLSchema([
+            'PageTypes',
+        ]);
     }
 
 }

@@ -12,6 +12,14 @@ class PageTheme extends \Concrete\Core\Page\Theme\Theme
         registerAssets as bedrockRegisterAssets;
     }
 
+    public function getThemeSupportedFeatures()
+    {
+        return [
+            Features::ACCOUNT,
+            Features::DESKTOP,
+        ];
+    }
+
     public function registerAssets()
     {
         $this->bedrockRegisterAssets();

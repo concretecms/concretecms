@@ -8,6 +8,7 @@ trait OptionSerializableTrait
         return $this->getComponentKey();
     }
 
+    #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
         return [

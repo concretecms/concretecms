@@ -31,27 +31,8 @@
         <pagetemplate icon="right_sidebar.png" name="Right Sidebar" handle="right_sidebar" package="" internal=""/>
         <pagetemplate icon="two_column.png" name="Resource Detail" handle="resource_detail" package="" internal=""/>
     </pagetemplates>
-    <boardtemplates>
-        <template handle="blog" name="Blog"
-                  icon="blank.png" package="">
-        </template>
-    </boardtemplates>
-    <boardslottemplates>
-        <template handle="blog_image_left" name="Blog Image Left"
-                  icon="blank.png" package="">
-        </template>
-        <template handle="blog_image_right" name="Blog Image Right"
-                  icon="blank.png" package="">
-        </template>
-        <template handle="blog_two_up" name="Blog Two Up"
-                  icon="blank.png" package="">
-        </template>
-        <template handle="blog_three_up" name="Blog Three Up"
-                  icon="blank.png" package="">
-        </template>
-    </boardslottemplates>
     <pagetypes>
-        <pagetype name="Page" handle="page" is-frequently-added="1" launch-in-composer="0">
+        <pagetype name="Page" handle="page" is-frequently-added="1" launch-in-composer="0" package="">
             <pagetemplates type="all" default="full"/>
             <target handle="all" package=""/>
             <composer>
@@ -206,10 +187,8 @@
                                                             <filterDateDays><![CDATA[0]]></filterDateDays>
                                                             <filterDateStart><![CDATA[]]></filterDateStart>
                                                             <filterDateEnd><![CDATA[]]></filterDateEnd>
-                                                            <relatedTopicAttributeKeyHandle>
-                                                                <![CDATA[]]></relatedTopicAttributeKeyHandle>
-                                                            <customTopicAttributeKeyHandle>
-                                                                <![CDATA[]]></customTopicAttributeKeyHandle>
+                                                            <relatedTopicAttributeKeyHandle><![CDATA[]]></relatedTopicAttributeKeyHandle>
+                                                            <customTopicAttributeKeyHandle><![CDATA[]]></customTopicAttributeKeyHandle>
                                                             <customTopicTreeNodeID><![CDATA[0]]></customTopicTreeNodeID>
                                                             <includeName><![CDATA[1]]></includeName>
                                                             <includeDescription><![CDATA[1]]></includeDescription>
@@ -219,8 +198,7 @@
                                                             <displayAliases><![CDATA[0]]></displayAliases>
                                                             <displaySystemPages><![CDATA[0]]></displaySystemPages>
                                                             <ignorePermissions><![CDATA[0]]></ignorePermissions>
-                                                            <enableExternalFiltering>
-                                                                <![CDATA[0]]></enableExternalFiltering>
+                                                            <enableExternalFiltering><![CDATA[0]]></enableExternalFiltering>
                                                             <ptID>{ccm:export:pagetype:blog_entry}</ptID>
                                                             <pfID/>
                                                             <truncateSummaries><![CDATA[0]]></truncateSummaries>
@@ -278,7 +256,7 @@
                 </formlayout>
                 <output>
                     <pagetemplate handle="resource_detail">
-                        <page name="" path="" public-date="2021-08-28 07:31:35" filename="" pagetype="resource"
+                        <page name="" path="" filename="" pagetype="resource"
                               template="resource_detail" user="admin" description="" package="" root="true">
                             <area name="Page Header">
                                 <blocks>
@@ -346,7 +324,7 @@
     </pagetypes>
     <sociallinks>
         <link service="facebook" url="https://www.facebook.com/concretecms"/>
-        <link service="github" url="https://github.com/concrete5/concrete5"/>
+        <link service="github" url="https://github.com/concretecms/concretecms"/>
         <link service="instagram" url="https://www.instagram.com/concretecms/"/>
         <link service="twitter" url="https://twitter.com/concrete_cms"/>
         <link service="youtube" url="https://www.youtube.com/channel/UCywmkk3TWHLcYyKafNDFCUA"/>
@@ -355,7 +333,7 @@
         <entity id="02e83926-0518-11ec-bb64-2d8e40952e25" handle="mailing_list" plural_handle="" name="Mailing List"
                 supports_custom_display_order="" include_in_public_list="" use_separate_site_result_buckets=""
                 description="" default_view_form="02e860ae-0518-11ec-bb64-2d8e40952e25"
-                default_edit_form="02e860ae-0518-11ec-bb64-2d8e40952e25" results-folder="/Forms">
+                default_edit_form="02e860ae-0518-11ec-bb64-2d8e40952e25" results-folder="/Forms" package="">
             <attributekeys>
                 <attributekey handle="email_address" name="Email Address" package="" searchable="1" indexed="1"
                               type="email" category=""/>
@@ -377,7 +355,7 @@
         </entity>
         <entity id="83ae65b1-79e8-4ded-bbca-e419bfd19bb6" handle="express_form_170" plural_handle="" name="Contact"
                 include_in_public_list="" description="" default_view_form="881b6bde-220f-4482-b8f9-ace40b5d169b"
-                default_edit_form="881b6bde-220f-4482-b8f9-ace40b5d169b" results-folder="/Forms">
+                default_edit_form="881b6bde-220f-4482-b8f9-ace40b5d169b" results-folder="/Forms" package="">
             <attributekeys>
                 <attributekey handle="contact_question_first_name" name="First Name" package="" searchable="1"
                               indexed="1" type="text" category="">
@@ -461,12 +439,6 @@
                       type="topics" category="collection">
             <tree name="Blog Entries" path="/"/>
         </attributekey>
-        <attributekey handle="thumbnail" name="Thumbnail" package="" searchable="1" indexed="1" type="image_file"
-                      category="collection"/>
-        <attributekey handle="exclude_subpages_from_nav" name="Exclude Sub-Pages From Nav" package="" searchable="1"
-                      indexed="1" type="boolean" category="collection">
-            <type checked="0"/>
-        </attributekey>
     </attributekeys>
     <attributesets>
         <attributeset handle="blog" name="Blog" package="" locked="0" category="collection">
@@ -475,7 +447,7 @@
     </attributesets>
 
     <pages>
-        <page name="Home" path="" public-date="2021-08-20 15:36:55" filename="" pagetype="page" template="full"
+        <page name="Home" path="" filename="" pagetype="page" template="full"
               user="admin" description="" package="" root="true">
             <area name="Page Header">
                 <blocks>
@@ -507,8 +479,7 @@
                                 <block type="feature_link" name="">
                                     <data table="btFeatureLink">
                                         <record>
-                                            <title><![CDATA[
-                                                Leverage agile frameworks to provide a robust synopsis]]></title>
+                                            <title><![CDATA[Leverage agile frameworks to provide a robust synopsis]]></title>
                                             <body><![CDATA[<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas varius tortor nibh, sit amet tempor nibh finibus et. Aenean eu enim justo.&nbsp;</p>
 ]]></body>
                                             <buttonText><![CDATA[Learn More]]></buttonText>
@@ -772,8 +743,7 @@ Aenean eu enim justo. Vestibulum aliquam hendrerit molestie.</p>
                                 <block type="feature_link" name="">
                                     <data table="btFeatureLink">
                                         <record>
-                                            <title><![CDATA[
-                                                Leverage agile frameworks to provide a robust synopsis]]></title>
+                                            <title><![CDATA[Leverage agile frameworks to provide a robust synopsis]]></title>
                                             <body><![CDATA[<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas varius tortor nibh, sit amet tempor nibh finibus et. Aenean eu enim justo.&nbsp;</p>
 ]]></body>
                                             <buttonText><![CDATA[Learn More]]></buttonText>
@@ -865,8 +835,7 @@ Aenean eu enim justo. Vestibulum aliquam hendrerit molestie.</p>
                                             <filterDateDays><![CDATA[0]]></filterDateDays>
                                             <filterDateStart><![CDATA[]]></filterDateStart>
                                             <filterDateEnd><![CDATA[]]></filterDateEnd>
-                                            <relatedTopicAttributeKeyHandle>
-                                                <![CDATA[]]></relatedTopicAttributeKeyHandle>
+                                            <relatedTopicAttributeKeyHandle><![CDATA[]]></relatedTopicAttributeKeyHandle>
                                             <customTopicAttributeKeyHandle><![CDATA[]]></customTopicAttributeKeyHandle>
                                             <customTopicTreeNodeID><![CDATA[0]]></customTopicTreeNodeID>
                                             <includeName><![CDATA[0]]></includeName>
@@ -991,7 +960,7 @@ Aenean eu enim justo. Vestibulum aliquam hendrerit molestie.</p>
                 </blocks>
             </area>
         </page>
-        <page name="About" path="/about" public-date="2021-08-18 16:20:23" filename="" pagetype="page" template="full"
+        <page name="About" path="/about" filename="" pagetype="page" template="full"
               user="admin" description="" package="">
             <area name="Main">
                 <blocks>
@@ -1045,8 +1014,7 @@ Aenean eu enim justo. Vestibulum aliquam hendrerit molestie.</p>
                                 <block type="feature_link" name="">
                                     <data table="btFeatureLink">
                                         <record>
-                                            <title><![CDATA[
-                                                Leverage agile frameworks to provide a robust synopsis]]></title>
+                                            <title><![CDATA[Leverage agile frameworks to provide a robust synopsis]]></title>
                                             <body><![CDATA[<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas varius tortor nibh, sit amet tempor nibh finibus et. Aenean eu enim justo.&nbsp;</p>
 ]]></body>
                                             <buttonText><![CDATA[Learn More]]></buttonText>
@@ -1228,8 +1196,7 @@ Aenean eu enim justo. Vestibulum aliquam hendrerit molestie.</p>
                                 <block type="feature_link" name="">
                                     <data table="btFeatureLink">
                                         <record>
-                                            <title><![CDATA[
-                                                Leverage agile frameworks to provide a robust synopsis]]></title>
+                                            <title><![CDATA[Leverage agile frameworks to provide a robust synopsis]]></title>
                                             <body><![CDATA[<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas varius tortor nibh, sit amet tempor nibh finibus et. Aenean eu enim justo.&nbsp;</p>
 ]]></body>
                                             <buttonText><![CDATA[Learn More]]></buttonText>
@@ -1447,7 +1414,7 @@ Aenean eu enim justo. Vestibulum aliquam hendrerit molestie.</p>
                 </blocks>
             </area>
         </page>
-        <page name="Services" path="/about/services" public-date="2021-08-18 16:20:35" filename="" pagetype="page"
+        <page name="Services" path="/about/services" filename="" pagetype="page"
               template="full" user="admin" description="" package="">
             <area name="Page Header">
                 <blocks>
@@ -1708,7 +1675,7 @@ Maecenas consequat lectus a euismod pellentesque. Pellentesque commodo quam nec 
                 </blocks>
             </area>
         </page>
-        <page name="Blog" path="/about/blog" public-date="2021-07-31 16:20:28" filename="" pagetype="blog"
+        <page name="Blog" path="/about/blog" filename="" pagetype="blog"
               template="full" user="admin" description="" package="">
             <attributes>
                 <attributekey handle="exclude_subpages_from_nav">
@@ -1778,8 +1745,7 @@ Maecenas consequat lectus a euismod pellentesque. Pellentesque commodo quam nec 
                                             <filterDateDays><![CDATA[0]]></filterDateDays>
                                             <filterDateStart><![CDATA[]]></filterDateStart>
                                             <filterDateEnd><![CDATA[]]></filterDateEnd>
-                                            <relatedTopicAttributeKeyHandle>
-                                                <![CDATA[]]></relatedTopicAttributeKeyHandle>
+                                            <relatedTopicAttributeKeyHandle><![CDATA[]]></relatedTopicAttributeKeyHandle>
                                             <customTopicAttributeKeyHandle><![CDATA[]]></customTopicAttributeKeyHandle>
                                             <customTopicTreeNodeID><![CDATA[0]]></customTopicTreeNodeID>
                                             <includeName><![CDATA[1]]></includeName>
@@ -1849,7 +1815,7 @@ Maecenas consequat lectus a euismod pellentesque. Pellentesque commodo quam nec 
                 </blocks>
             </area>
         </page>
-        <page name="Contact Us" path="/about/contact" public-date="2021-08-18 16:20:35" filename="" pagetype="page"
+        <page name="Contact Us" path="/about/contact" filename="" pagetype="page"
               template="full" user="admin" description="" package="">
             <area name="Page Header">
                 <blocks>
@@ -1949,7 +1915,7 @@ Aenean eu enim justo. Vestibulum aliquam hendrerit molestie.</p>
                 </blocks>
             </area>
         </page>
-        <page name="Resources" path="/resources" public-date="2021-08-18 16:20:40" filename="" pagetype="page"
+        <page name="Resources" path="/resources" filename="" pagetype="page"
               template="full" user="admin" description="" package="">
             <attributes>
                 <attributekey handle="exclude_subpages_from_nav">
@@ -2022,7 +1988,7 @@ Aenean eu enim justo. Vestibulum aliquam hendrerit molestie.</p>
                 </blocks>
             </area>
         </page>
-        <page name="Tips to Build a Beautiful Blog" public-date="2021-08-01 07:43:00"
+        <page name="Tips to Build a Beautiful Blog"
               path="/about/blog/tips-build-beautiful-blog" filename=""
               pagetype="blog_entry" template="right_sidebar" user="admin"
               description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas varius tortor nibh, sit amet tempor nibh finibus et."
@@ -2050,8 +2016,7 @@ Aenean eu enim justo. Vestibulum aliquam hendrerit molestie.</p>
                         <data table="btContentLocal">
                             <record>
                                 <content>
-                                    <![CDATA[
-<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi non justo ultricies, facilisis erat quis, vehicula leo. Duis massa ipsum, hendrerit et eleifend ut, eleifend ut metus. Sed venenatis dui sem, sit amet feugiat tortor porttitor interdum. Nulla feugiat risus ac tristique porta. Nulla facilisi. Nam ullamcorper dignissim velit at vestibulum. Suspendisse in libero nec augue aliquet hendrerit. Curabitur tincidunt nisi in tortor efficitur, quis commodo ex tincidunt. Nunc risus enim, dictum sit amet commodo tincidunt, tincidunt sit amet eros. Vivamus dapibus ac nibh eu congue. In rhoncus urna arcu, mattis vehicula augue convallis a. Integer a dui urna. Fusce sit amet neque id metus faucibus convallis. Duis lobortis orci at mollis iaculis. Aliquam lobortis semper turpis, non porttitor metus bibendum sit amet.
+                                    <![CDATA[<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi non justo ultricies, facilisis erat quis, vehicula leo. Duis massa ipsum, hendrerit et eleifend ut, eleifend ut metus. Sed venenatis dui sem, sit amet feugiat tortor porttitor interdum. Nulla feugiat risus ac tristique porta. Nulla facilisi. Nam ullamcorper dignissim velit at vestibulum. Suspendisse in libero nec augue aliquet hendrerit. Curabitur tincidunt nisi in tortor efficitur, quis commodo ex tincidunt. Nunc risus enim, dictum sit amet commodo tincidunt, tincidunt sit amet eros. Vivamus dapibus ac nibh eu congue. In rhoncus urna arcu, mattis vehicula augue convallis a. Integer a dui urna. Fusce sit amet neque id metus faucibus convallis. Duis lobortis orci at mollis iaculis. Aliquam lobortis semper turpis, non porttitor metus bibendum sit amet.
 </p>
 <p>
 Praesent efficitur iaculis mauris, vitae maximus lectus lacinia vitae. Aenean in mi augue. Donec eu consectetur purus. Quisque non laoreet lectus. Vestibulum nulla ex, sagittis a lacinia non, accumsan gravida ligula. Sed non euismod enim. Aliquam placerat felis sed turpis tempus sodales. Curabitur fringilla eros arcu, at porta nunc sagittis finibus.
@@ -2088,7 +2053,7 @@ Nam massa mauris, euismod vel tortor vel, finibus accumsan sem. Sed varius vulpu
                 <blocks/>
             </area>
         </page>
-        <page name="New Product Launch" public-date="2021-08-04 12:00:00" path="/about/blog/new-product-launch"
+        <page name="New Product Launch" path="/about/blog/new-product-launch"
               filename=""
               pagetype="blog_entry" template="right_sidebar" user="admin"
               description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas varius tortor nibh, sit amet tempor nibh finibus et."
@@ -2116,8 +2081,7 @@ Nam massa mauris, euismod vel tortor vel, finibus accumsan sem. Sed varius vulpu
                         <data table="btContentLocal">
                             <record>
                                 <content>
-                                    <![CDATA[
-<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi non justo ultricies, facilisis erat quis, vehicula leo. Duis massa ipsum, hendrerit et eleifend ut, eleifend ut metus. Sed venenatis dui sem, sit amet feugiat tortor porttitor interdum. Nulla feugiat risus ac tristique porta. Nulla facilisi. Nam ullamcorper dignissim velit at vestibulum. Suspendisse in libero nec augue aliquet hendrerit. Curabitur tincidunt nisi in tortor efficitur, quis commodo ex tincidunt. Nunc risus enim, dictum sit amet commodo tincidunt, tincidunt sit amet eros. Vivamus dapibus ac nibh eu congue. In rhoncus urna arcu, mattis vehicula augue convallis a. Integer a dui urna. Fusce sit amet neque id metus faucibus convallis. Duis lobortis orci at mollis iaculis. Aliquam lobortis semper turpis, non porttitor metus bibendum sit amet.
+                                    <![CDATA[<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi non justo ultricies, facilisis erat quis, vehicula leo. Duis massa ipsum, hendrerit et eleifend ut, eleifend ut metus. Sed venenatis dui sem, sit amet feugiat tortor porttitor interdum. Nulla feugiat risus ac tristique porta. Nulla facilisi. Nam ullamcorper dignissim velit at vestibulum. Suspendisse in libero nec augue aliquet hendrerit. Curabitur tincidunt nisi in tortor efficitur, quis commodo ex tincidunt. Nunc risus enim, dictum sit amet commodo tincidunt, tincidunt sit amet eros. Vivamus dapibus ac nibh eu congue. In rhoncus urna arcu, mattis vehicula augue convallis a. Integer a dui urna. Fusce sit amet neque id metus faucibus convallis. Duis lobortis orci at mollis iaculis. Aliquam lobortis semper turpis, non porttitor metus bibendum sit amet.
 </p>
 <p>
 Praesent efficitur iaculis mauris, vitae maximus lectus lacinia vitae. Aenean in mi augue. Donec eu consectetur purus. Quisque non laoreet lectus. Vestibulum nulla ex, sagittis a lacinia non, accumsan gravida ligula. Sed non euismod enim. Aliquam placerat felis sed turpis tempus sodales. Curabitur fringilla eros arcu, at porta nunc sagittis finibus.
@@ -2154,7 +2118,7 @@ Nam massa mauris, euismod vel tortor vel, finibus accumsan sem. Sed varius vulpu
                 <blocks/>
             </area>
         </page>
-        <page name="More Fine Posts Here" public-date="2021-08-07 12:00:00" path="/about/blog/more-fine-posts-here"
+        <page name="More Fine Posts Here" path="/about/blog/more-fine-posts-here"
               filename=""
               pagetype="blog_entry" template="right_sidebar" user="admin"
               description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas varius tortor nibh, sit amet tempor nibh finibus et."
@@ -2182,8 +2146,7 @@ Nam massa mauris, euismod vel tortor vel, finibus accumsan sem. Sed varius vulpu
                         <data table="btContentLocal">
                             <record>
                                 <content>
-                                    <![CDATA[
-<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi non justo ultricies, facilisis erat quis, vehicula leo. Duis massa ipsum, hendrerit et eleifend ut, eleifend ut metus. Sed venenatis dui sem, sit amet feugiat tortor porttitor interdum. Nulla feugiat risus ac tristique porta. Nulla facilisi. Nam ullamcorper dignissim velit at vestibulum. Suspendisse in libero nec augue aliquet hendrerit. Curabitur tincidunt nisi in tortor efficitur, quis commodo ex tincidunt. Nunc risus enim, dictum sit amet commodo tincidunt, tincidunt sit amet eros. Vivamus dapibus ac nibh eu congue. In rhoncus urna arcu, mattis vehicula augue convallis a. Integer a dui urna. Fusce sit amet neque id metus faucibus convallis. Duis lobortis orci at mollis iaculis. Aliquam lobortis semper turpis, non porttitor metus bibendum sit amet.
+                                    <![CDATA[<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi non justo ultricies, facilisis erat quis, vehicula leo. Duis massa ipsum, hendrerit et eleifend ut, eleifend ut metus. Sed venenatis dui sem, sit amet feugiat tortor porttitor interdum. Nulla feugiat risus ac tristique porta. Nulla facilisi. Nam ullamcorper dignissim velit at vestibulum. Suspendisse in libero nec augue aliquet hendrerit. Curabitur tincidunt nisi in tortor efficitur, quis commodo ex tincidunt. Nunc risus enim, dictum sit amet commodo tincidunt, tincidunt sit amet eros. Vivamus dapibus ac nibh eu congue. In rhoncus urna arcu, mattis vehicula augue convallis a. Integer a dui urna. Fusce sit amet neque id metus faucibus convallis. Duis lobortis orci at mollis iaculis. Aliquam lobortis semper turpis, non porttitor metus bibendum sit amet.
 </p>
 <p>
 Praesent efficitur iaculis mauris, vitae maximus lectus lacinia vitae. Aenean in mi augue. Donec eu consectetur purus. Quisque non laoreet lectus. Vestibulum nulla ex, sagittis a lacinia non, accumsan gravida ligula. Sed non euismod enim. Aliquam placerat felis sed turpis tempus sodales. Curabitur fringilla eros arcu, at porta nunc sagittis finibus.
@@ -2220,7 +2183,7 @@ Nam massa mauris, euismod vel tortor vel, finibus accumsan sem. Sed varius vulpu
                 <blocks/>
             </area>
         </page>
-        <page name="Here's a Tip You Might Not Know" public-date="2021-08-11 12:00:00"
+        <page name="Here's a Tip You Might Not Know"
               path="/about/blog/heres-tip-you-might-not-know" filename=""
               pagetype="blog_entry" template="right_sidebar" user="admin"
               description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas varius tortor nibh, sit amet tempor nibh finibus et."
@@ -2248,8 +2211,7 @@ Nam massa mauris, euismod vel tortor vel, finibus accumsan sem. Sed varius vulpu
                         <data table="btContentLocal">
                             <record>
                                 <content>
-                                    <![CDATA[
-<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi non justo ultricies, facilisis erat quis, vehicula leo. Duis massa ipsum, hendrerit et eleifend ut, eleifend ut metus. Sed venenatis dui sem, sit amet feugiat tortor porttitor interdum. Nulla feugiat risus ac tristique porta. Nulla facilisi. Nam ullamcorper dignissim velit at vestibulum. Suspendisse in libero nec augue aliquet hendrerit. Curabitur tincidunt nisi in tortor efficitur, quis commodo ex tincidunt. Nunc risus enim, dictum sit amet commodo tincidunt, tincidunt sit amet eros. Vivamus dapibus ac nibh eu congue. In rhoncus urna arcu, mattis vehicula augue convallis a. Integer a dui urna. Fusce sit amet neque id metus faucibus convallis. Duis lobortis orci at mollis iaculis. Aliquam lobortis semper turpis, non porttitor metus bibendum sit amet.
+                                    <![CDATA[<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi non justo ultricies, facilisis erat quis, vehicula leo. Duis massa ipsum, hendrerit et eleifend ut, eleifend ut metus. Sed venenatis dui sem, sit amet feugiat tortor porttitor interdum. Nulla feugiat risus ac tristique porta. Nulla facilisi. Nam ullamcorper dignissim velit at vestibulum. Suspendisse in libero nec augue aliquet hendrerit. Curabitur tincidunt nisi in tortor efficitur, quis commodo ex tincidunt. Nunc risus enim, dictum sit amet commodo tincidunt, tincidunt sit amet eros. Vivamus dapibus ac nibh eu congue. In rhoncus urna arcu, mattis vehicula augue convallis a. Integer a dui urna. Fusce sit amet neque id metus faucibus convallis. Duis lobortis orci at mollis iaculis. Aliquam lobortis semper turpis, non porttitor metus bibendum sit amet.
 </p>
 <p>
 Praesent efficitur iaculis mauris, vitae maximus lectus lacinia vitae. Aenean in mi augue. Donec eu consectetur purus. Quisque non laoreet lectus. Vestibulum nulla ex, sagittis a lacinia non, accumsan gravida ligula. Sed non euismod enim. Aliquam placerat felis sed turpis tempus sodales. Curabitur fringilla eros arcu, at porta nunc sagittis finibus.
@@ -2286,7 +2248,7 @@ Nam massa mauris, euismod vel tortor vel, finibus accumsan sem. Sed varius vulpu
                 <blocks/>
             </area>
         </page>
-        <page name="Time to Freshen Up Your Website" public-date="2021-08-17 12:00:00"
+        <page name="Time to Freshen Up Your Website"
               path="/about/blog/freshen-up-your-website" filename=""
               pagetype="blog_entry" template="right_sidebar" user="admin"
               description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas varius tortor nibh, sit amet tempor nibh finibus et."
@@ -2314,8 +2276,7 @@ Nam massa mauris, euismod vel tortor vel, finibus accumsan sem. Sed varius vulpu
                         <data table="btContentLocal">
                             <record>
                                 <content>
-                                    <![CDATA[
-<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi non justo ultricies, facilisis erat quis, vehicula leo. Duis massa ipsum, hendrerit et eleifend ut, eleifend ut metus. Sed venenatis dui sem, sit amet feugiat tortor porttitor interdum. Nulla feugiat risus ac tristique porta. Nulla facilisi. Nam ullamcorper dignissim velit at vestibulum. Suspendisse in libero nec augue aliquet hendrerit. Curabitur tincidunt nisi in tortor efficitur, quis commodo ex tincidunt. Nunc risus enim, dictum sit amet commodo tincidunt, tincidunt sit amet eros. Vivamus dapibus ac nibh eu congue. In rhoncus urna arcu, mattis vehicula augue convallis a. Integer a dui urna. Fusce sit amet neque id metus faucibus convallis. Duis lobortis orci at mollis iaculis. Aliquam lobortis semper turpis, non porttitor metus bibendum sit amet.
+                                    <![CDATA[<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi non justo ultricies, facilisis erat quis, vehicula leo. Duis massa ipsum, hendrerit et eleifend ut, eleifend ut metus. Sed venenatis dui sem, sit amet feugiat tortor porttitor interdum. Nulla feugiat risus ac tristique porta. Nulla facilisi. Nam ullamcorper dignissim velit at vestibulum. Suspendisse in libero nec augue aliquet hendrerit. Curabitur tincidunt nisi in tortor efficitur, quis commodo ex tincidunt. Nunc risus enim, dictum sit amet commodo tincidunt, tincidunt sit amet eros. Vivamus dapibus ac nibh eu congue. In rhoncus urna arcu, mattis vehicula augue convallis a. Integer a dui urna. Fusce sit amet neque id metus faucibus convallis. Duis lobortis orci at mollis iaculis. Aliquam lobortis semper turpis, non porttitor metus bibendum sit amet.
 </p>
 <p>
 Praesent efficitur iaculis mauris, vitae maximus lectus lacinia vitae. Aenean in mi augue. Donec eu consectetur purus. Quisque non laoreet lectus. Vestibulum nulla ex, sagittis a lacinia non, accumsan gravida ligula. Sed non euismod enim. Aliquam placerat felis sed turpis tempus sodales. Curabitur fringilla eros arcu, at porta nunc sagittis finibus.
@@ -2352,7 +2313,7 @@ Nam massa mauris, euismod vel tortor vel, finibus accumsan sem. Sed varius vulpu
                 <blocks/>
             </area>
         </page>
-        <page name="Meet Our New Hires!" public-date="2021-08-21 12:00:00" path="/about/blog/meet-our-new-hires"
+        <page name="Meet Our New Hires!" path="/about/blog/meet-our-new-hires"
               filename=""
               pagetype="blog_entry" template="right_sidebar" user="admin"
               description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas varius tortor nibh, sit amet tempor nibh finibus et."
@@ -2380,8 +2341,7 @@ Nam massa mauris, euismod vel tortor vel, finibus accumsan sem. Sed varius vulpu
                         <data table="btContentLocal">
                             <record>
                                 <content>
-                                    <![CDATA[
-<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi non justo ultricies, facilisis erat quis, vehicula leo. Duis massa ipsum, hendrerit et eleifend ut, eleifend ut metus. Sed venenatis dui sem, sit amet feugiat tortor porttitor interdum. Nulla feugiat risus ac tristique porta. Nulla facilisi. Nam ullamcorper dignissim velit at vestibulum. Suspendisse in libero nec augue aliquet hendrerit. Curabitur tincidunt nisi in tortor efficitur, quis commodo ex tincidunt. Nunc risus enim, dictum sit amet commodo tincidunt, tincidunt sit amet eros. Vivamus dapibus ac nibh eu congue. In rhoncus urna arcu, mattis vehicula augue convallis a. Integer a dui urna. Fusce sit amet neque id metus faucibus convallis. Duis lobortis orci at mollis iaculis. Aliquam lobortis semper turpis, non porttitor metus bibendum sit amet.
+                                    <![CDATA[<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi non justo ultricies, facilisis erat quis, vehicula leo. Duis massa ipsum, hendrerit et eleifend ut, eleifend ut metus. Sed venenatis dui sem, sit amet feugiat tortor porttitor interdum. Nulla feugiat risus ac tristique porta. Nulla facilisi. Nam ullamcorper dignissim velit at vestibulum. Suspendisse in libero nec augue aliquet hendrerit. Curabitur tincidunt nisi in tortor efficitur, quis commodo ex tincidunt. Nunc risus enim, dictum sit amet commodo tincidunt, tincidunt sit amet eros. Vivamus dapibus ac nibh eu congue. In rhoncus urna arcu, mattis vehicula augue convallis a. Integer a dui urna. Fusce sit amet neque id metus faucibus convallis. Duis lobortis orci at mollis iaculis. Aliquam lobortis semper turpis, non porttitor metus bibendum sit amet.
 </p>
 <p>
 Praesent efficitur iaculis mauris, vitae maximus lectus lacinia vitae. Aenean in mi augue. Donec eu consectetur purus. Quisque non laoreet lectus. Vestibulum nulla ex, sagittis a lacinia non, accumsan gravida ligula. Sed non euismod enim. Aliquam placerat felis sed turpis tempus sodales. Curabitur fringilla eros arcu, at porta nunc sagittis finibus.
@@ -2418,7 +2378,7 @@ Nam massa mauris, euismod vel tortor vel, finibus accumsan sem. Sed varius vulpu
                 <blocks/>
             </area>
         </page>
-        <page name="Documents" path="/documents" public-date="2021-08-18 16:20:35" filename="" pagetype="page"
+        <page name="Documents" path="/documents" filename="" pagetype="page"
               template="full" user="admin" description="" package="">
             <area name="Page Header">
                 <blocks>
@@ -2452,8 +2412,7 @@ Nam massa mauris, euismod vel tortor vel, finibus accumsan sem. Sed varius vulpu
                                 <setMode><![CDATA[any]]></setMode>
                                 <onlyCurrentUser><![CDATA[0]]></onlyCurrentUser>
                                 <tags><![CDATA[]]></tags>
-                                <viewProperties>
-                                    <![CDATA[{"thumbnail":"1","filename":"5","tags":"-1","date":"5","extension":"-1","size":"5","description":"-1","ak_16":"-1","ak_17":"-1","ak_19":"-1"}]]></viewProperties>
+                                <viewProperties><![CDATA[{"thumbnail":"1","filename":"5","tags":"-1","date":"5","extension":"-1","size":"5","description":"-1","ak_16":"-1","ak_17":"-1","ak_19":"-1"}]]></viewProperties>
                                 <expandableProperties><![CDATA[[]]]></expandableProperties>
                                 <searchProperties></searchProperties>
                                 <orderBy><![CDATA[title]]></orderBy>
@@ -2483,7 +2442,7 @@ Nam massa mauris, euismod vel tortor vel, finibus accumsan sem. Sed varius vulpu
             </area>
         </page>
 
-        <page name="Thanks for Subscribing" path="/subscribe-thanks" public-date="2021-08-24 13:16:00" filename=""
+        <page name="Thanks for Subscribing" path="/subscribe-thanks" filename=""
               pagetype="page" template="full" user="admin" description="" package="">
             <attributes>
                 <attributekey handle="exclude_nav">
@@ -2513,7 +2472,7 @@ Nam massa mauris, euismod vel tortor vel, finibus accumsan sem. Sed varius vulpu
                 <blocks/>
             </area>
         </page>
-        <page name="Search" path="/search" public-date="2021-08-24 13:16:00" filename="" pagetype="page" template="full"
+        <page name="Search" path="/search" filename="" pagetype="page" template="full"
               user="admin" description="" package="">
             <attributes>
                 <attributekey handle="exclude_nav">
@@ -2568,7 +2527,7 @@ Nam massa mauris, euismod vel tortor vel, finibus accumsan sem. Sed varius vulpu
                 <blocks/>
             </area>
         </page>
-        <page name="Blog Search" path="/blog-search" public-date="2021-09-06 15:02:43" filename="" pagetype="page"
+        <page name="Blog Search" path="/blog-search" filename="" pagetype="page"
               template="full" user="admin" description="" package="">
             <attributes>
                 <attributekey handle="exclude_nav">
@@ -2650,7 +2609,7 @@ Nam massa mauris, euismod vel tortor vel, finibus accumsan sem. Sed varius vulpu
                 <blocks/>
             </area>
         </page>
-        <page name="Resource One" path="/resources/resource-one" public-date="2021-08-28 07:49:00" filename=""
+        <page name="Resource One" path="/resources/resource-one" filename=""
               pagetype="resource" template="resource_detail" user="admin"
               description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas varius tortor nibh, sit amet tempor nibh finibus et. "
               package="">
@@ -2727,7 +2686,7 @@ Nam massa mauris, euismod vel tortor vel, finibus accumsan sem. Sed varius vulpu
                 </blocks>
             </area>
         </page>
-        <page name="Resource Two" path="/resources/resource-two" public-date="2021-08-27 07:49:00" filename=""
+        <page name="Resource Two" path="/resources/resource-two" filename=""
               pagetype="resource" template="resource_detail" user="admin"
               description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas varius tortor nibh, sit amet tempor nibh finibus et. "
               package="">
@@ -2775,7 +2734,7 @@ Nam massa mauris, euismod vel tortor vel, finibus accumsan sem. Sed varius vulpu
                 </blocks>
             </area>
         </page>
-        <page name="Resource Three" path="/resources/resource-three" public-date="2021-08-26 07:49:00" filename=""
+        <page name="Resource Three" path="/resources/resource-three" filename=""
               pagetype="resource" template="resource_detail" user="admin"
               description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas varius tortor nibh, sit amet tempor nibh finibus et. "
               package="">
@@ -2823,7 +2782,7 @@ Nam massa mauris, euismod vel tortor vel, finibus accumsan sem. Sed varius vulpu
                 </blocks>
             </area>
         </page>
-        <page name="Resource Four" path="/resources/resource-four" public-date="2021-08-25 07:49:00" filename=""
+        <page name="Resource Four" path="/resources/resource-four" filename=""
               pagetype="resource" template="resource_detail" user="admin"
               description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas varius tortor nibh, sit amet tempor nibh finibus et. "
               package="">
@@ -2871,7 +2830,7 @@ Nam massa mauris, euismod vel tortor vel, finibus accumsan sem. Sed varius vulpu
                 </blocks>
             </area>
         </page>
-        <page name="Resource Five" path="/resources/resource-five" public-date="2021-08-24 07:49:00" filename=""
+        <page name="Resource Five" path="/resources/resource-five" filename=""
               pagetype="resource" template="resource_detail" user="admin"
               description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas varius tortor nibh, sit amet tempor nibh finibus et. "
               package="">
@@ -2919,7 +2878,7 @@ Nam massa mauris, euismod vel tortor vel, finibus accumsan sem. Sed varius vulpu
                 </blocks>
             </area>
         </page>
-        <page name="Resource Six" path="/resources/resource-six" public-date="2021-08-23 07:49:00" filename=""
+        <page name="Resource Six" path="/resources/resource-six" filename=""
               pagetype="resource" template="resource_detail" user="admin"
               description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas varius tortor nibh, sit amet tempor nibh finibus et. "
               package="">
@@ -2967,7 +2926,7 @@ Nam massa mauris, euismod vel tortor vel, finibus accumsan sem. Sed varius vulpu
                 </blocks>
             </area>
         </page>
-        <page name="Privacy Policy" path="/privacy-policy" public-date="2021-09-09 15:00:00" filename="" pagetype="page"
+        <page name="Privacy Policy" path="/privacy-policy" filename="" pagetype="page"
               template="left_sidebar" user="admin" description="" package="">
             <attributes>
                 <attributekey handle="exclude_nav">
@@ -3045,10 +3004,9 @@ Nam massa mauris, euismod vel tortor vel, finibus accumsan sem. Sed varius vulpu
                     <block type="top_navigation_bar" name="">
                         <data table="btTopNavigationBar">
                             <record>
-                                <brandingText><![CDATA[Concrete Site]]></brandingText>
+                                <brandingText></brandingText>
                                 <brandingLogo>{ccm:export:file:atomik-logo.png}</brandingLogo>
-                                <brandingTransparentLogo>{ccm:export:file:atomik-logo-transparent.png}
-                                </brandingTransparentLogo>
+                                <brandingTransparentLogo>{ccm:export:file:atomik-logo-transparent.png}</brandingTransparentLogo>
                                 <includeBrandText><![CDATA[1]]></includeBrandText>
                                 <includeBrandLogo><![CDATA[1]]></includeBrandLogo>
                                 <includeTransparency>1</includeTransparency>

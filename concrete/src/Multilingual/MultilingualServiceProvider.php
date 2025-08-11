@@ -7,14 +7,13 @@ class MultilingualServiceProvider extends ServiceProvider
 {
     public function register()
     {
-        $singletons = array(
-            'multilingual/interface/flag' => '\Concrete\Core\Multilingual\Service\UserInterface\Flag',
-            'multilingual/detector' => '\Concrete\Core\Multilingual\Service\Detector',
-            'multilingual/extractor' => '\Concrete\Core\Multilingual\Service\Extractor',
-        );
-
-        foreach ($singletons as $key => $value) {
-            $this->app->singleton($key, $value);
+        $this->app->bind('multilingual/interface/flag', Service\UserInterface\Flag::class);
+        $this->app->bind('multilingual/extractor', Service\Extractor::class);
+        foreach ([
+            'multilingual/detector' => Service\Detector::class,
+        ] as $alias => $class) {
+            $this->app->singleton($class);
+            $this->app->alias($class, $alias);
         }
     }
 }

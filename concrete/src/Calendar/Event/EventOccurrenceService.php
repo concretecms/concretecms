@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\Calendar\Event;
 
+use Concrete\Core\Board\Command\RegenerateRelevantBoardInstancesCommand;
 use Doctrine\ORM\EntityManagerInterface;
 use Concrete\Core\Entity\Calendar\CalendarEventOccurrence;
 use Concrete\Core\Entity\Calendar\CalendarEventVersion;
@@ -52,6 +53,8 @@ class EventOccurrenceService
 
     public function delete(CalendarEventVersion $version, CalendarEventOccurrence $occurrence)
     {
+        app()->executeCommand(new RegenerateRelevantBoardInstancesCommand('calendar_event', $version->getEvent()));
+
         $this->entityManager->refresh($version);
         foreach($version->getOccurrences() as $versionOccurrence) {
             if ($versionOccurrence->getOccurrence()->getID() == $occurrence->getID()) {

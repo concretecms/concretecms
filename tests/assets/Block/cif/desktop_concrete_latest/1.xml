@@ -1,0 +1,7 @@
+<block type="desktop_concrete_latest" name="">
+  <data table="btDesktopConcreteLatest">
+    <record>
+      <slot>B</slot>
+    </record>
+  </data>
+</block>

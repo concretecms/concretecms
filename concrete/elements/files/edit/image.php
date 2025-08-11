@@ -11,4 +11,4 @@ use Concrete\Core\ImageEditor\ImageEditorService;
 
 /** @var ImageEditorService $editorService */
 $editorService = $app->make(ImageEditorService::class);
-$editorService->renderActiveEditor($fv);
+$editorService->renderActiveImageEditor($fv);

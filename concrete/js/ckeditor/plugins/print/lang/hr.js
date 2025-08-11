@@ -1,1 +1,1 @@
-﻿CKEDITOR.plugins.setLang("print","hr",{toolbar:"Ispiši"});
+CKEDITOR.plugins.setLang("print","hr",{toolbar:"Ispiši"});

@@ -6,13 +6,21 @@ use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Editor\LinkAbstractor;
 use Concrete\Core\Feature\Features;
 use Concrete\Core\Feature\UsesFeatureInterface;
+use Concrete\Core\File\Tracker\FileTrackableInterface;
+use Concrete\Core\File\Tracker\RichTextExtractor;
 
-class Controller extends BlockController implements UsesFeatureInterface
+class Controller extends BlockController implements FileTrackableInterface, UsesFeatureInterface
 {
+    /**
+     * @var string|null
+     */
+    public $blockTitle;
+
     protected $btInterfaceWidth = 600;
     protected $btInterfaceHeight = 465;
     protected $btTable = 'btFaq';
     protected $btExportTables = ['btFaq', 'btFaqEntries'];
+    protected $btExportContentColumns = ['description'];
     protected $btWrapperClass = 'ccm-ui';
     protected $btCacheBlockOutput = true;
     protected $btCacheBlockOutputOnPost = true;
@@ -28,7 +36,7 @@ class Controller extends BlockController implements UsesFeatureInterface
     {
         return t('Frequently Asked Questions Block');
     }
-    
+
     public function getRequiredFeatures(): array
     {
         return [
@@ -48,6 +56,11 @@ class Controller extends BlockController implements UsesFeatureInterface
         }
 
         return $content;
+    }
+
+    public function add()
+    {
+        $this->set('rows', []);
     }
 
     public function edit()
@@ -123,5 +136,55 @@ class Controller extends BlockController implements UsesFeatureInterface
             );
             ++$i;
         }
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Block\BlockController::export()
+     */
+    public function export(\SimpleXMLElement $blockNode)
+    {
+        parent::export($blockNode);
+        $nodesToRemove = $blockNode->xpath('./data[@table="btFaqEntries"]/record/id');
+        if ($nodesToRemove) {
+            foreach ($nodesToRemove as $nodeToRemove) {
+                unset($nodeToRemove[0]);
+            }
+        }
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\File\Tracker\FileTrackableInterface::getUsedFiles()
+     */
+    public function getUsedFiles()
+    {
+        $result = [];
+        $extractor = $this->app->make(RichTextExtractor::class);
+        $db = $this->app->make(Connection::class);
+        $descriptions = $db->fetchFirstColumn('SELECT description FROM btFaqEntries WHERE bID = ?', [$this->bID]);
+        foreach ($descriptions as $description) {
+            $result = array_merge($result, $extractor->extractFiles($description));
+        }
+
+        return $result;
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Block\BlockController::importAdditionalData()
+     */
+    protected function importAdditionalData($b, $blockNode)
+    {
+        $nodesToRemove = $blockNode->xpath('./data[@table="btFaqEntries"]/record/id');
+        if ($nodesToRemove) {
+            foreach ($nodesToRemove as $nodeToRemove) {
+                unset($nodeToRemove[0]);
+            }
+        }
+        parent::importAdditionalData($b, $blockNode);
     }
 }

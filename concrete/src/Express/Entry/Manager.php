@@ -63,7 +63,7 @@ class Manager implements EntryManagerInterface
         return $displayOrder;
     }
 
-    public function createEntry(Entity $entity, UserEntity $author = null, Site $site = null)
+    public function createEntry(Entity $entity, ?UserEntity $author = null, ?Site $site = null)
     {
         $entry = new Entry();
         if (!$author) {
@@ -88,7 +88,7 @@ class Manager implements EntryManagerInterface
         return $entry;
     }
 
-    public function addEntry(Entity $entity, Site $site = null)
+    public function addEntry(Entity $entity, ?Site $site = null)
     {
         $entry = $this->createEntry($entity, null, $site);
         $this->entityManager->persist($entry);

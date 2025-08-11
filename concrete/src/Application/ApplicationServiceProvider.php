@@ -4,7 +4,6 @@ namespace Concrete\Core\Application;
 use Concrete\Core\Foundation\Environment;
 use Concrete\Core\Foundation\Serializer\JsonSerializer;
 use Concrete\Core\Foundation\Service\Provider as ServiceProvider;
-use Concrete\Core\Notification\Events\ServerEventNormlizer;
 use Psr\Container\ContainerInterface;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Normalizer\CustomNormalizer;
@@ -63,7 +62,6 @@ class ApplicationServiceProvider extends ServiceProvider
 
         $this->app->singleton(JsonSerializer::class, function($app) {
             $serializer = new JsonSerializer([
-                 new ServerEventNormlizer(),
                  new JsonSerializableNormalizer(),
                  new CustomNormalizer(),
              ], [

@@ -4,12 +4,14 @@ namespace Concrete\Core\Multilingual\Service;
 
 use Concrete\Core\Application\ApplicationAwareInterface;
 use Concrete\Core\Application\ApplicationAwareTrait;
+use Concrete\Core\Cache\Level\RequestCache;
 use Concrete\Core\Entity\Site\Site;
 use Concrete\Core\Localization\Localization;
 use Concrete\Core\Multilingual\Page\Section\Section;
 use Concrete\Core\Page\Page;
 use Concrete\Core\Session\SessionValidatorInterface;
 use Concrete\Core\Site\SiteAggregateInterface;
+use Concrete\Core\Url\Resolver\Manager\ResolverManagerInterface;
 use Concrete\Core\User\User;
 use Concrete\Core\Utility\Service\Validation\Strings;
 use Punic\Misc;
@@ -21,12 +23,33 @@ class Detector implements ApplicationAwareInterface, SiteAggregateInterface
 {
     use ApplicationAwareTrait;
 
-    /** @var bool */
+    /**
+     * @var bool
+     */
     protected $enabled;
-    /** @var bool|Section */
+
+    /**
+     * @var bool|Section
+     */
     protected $preferredSection = false;
-    /** @var Site */
+
+    /**
+     * @var Site
+     */
     protected $site;
+
+    /**
+     * @var RequestCache
+     */
+    protected $cache;
+
+    /**
+     * @param RequestCache $cache
+     */
+    public function __construct(RequestCache $cache)
+    {
+        $this->cache = $cache;
+    }
 
     /**
      * @return Site
@@ -38,6 +61,161 @@ class Detector implements ApplicationAwareInterface, SiteAggregateInterface
         }
 
         return $this->site;
+    }
+
+    /**
+     * Returns the Multilingual Page Section based on the Page object.
+     *
+     * @param Page $c
+     *
+     * @return Section|null
+     */
+    public function getActiveSection(Page $c): ?Section
+    {
+        if ($this->cache->isEnabled()) {
+            $key = '/multilingual/detector/section/' . $c->getCollectionID();
+            $item = $this->cache->getItem($key);
+            if ($item->isHit()) {
+                return $item->get();
+            }
+        }
+
+        $locale = null;
+        $al = Section::getBySectionOfSite($c);
+        if ($al) {
+            $locale = $al->getLocale();
+        }
+        if (!$locale) {
+            $locale = Localization::activeLocale();
+            $al = Section::getByLocale($locale);
+        }
+
+        if ($al) {
+            if (isset($item) && $item->isMiss()) {
+                $item->set($al);
+                $this->cache->save($item);
+            }
+
+            return $al;
+        }
+
+        return null;
+    }
+
+    /**
+     * Returns the locale string (e.g. en_US) based on the Page object.
+     *
+     * @param Page $c
+     *
+     * @return string
+     */
+    public function getActiveLocale(Page $c): string
+    {
+        if ($this->cache->isEnabled()) {
+            $key = '/multilingual/detector/locale/' . $c->getCollectionID();
+            $item = $this->cache->getItem($key);
+            if ($item->isHit()) {
+                return $item->get();
+            }
+        }
+
+        $al = $this->getActiveSection($c);
+        if ($al) {
+            $locale = $al->getLocale();
+        } else {
+            $locale = Localization::activeLocale();
+        }
+
+        if (isset($item) && $item->isMiss()) {
+            $item->set($locale);
+            $this->cache->save($item);
+        }
+
+        return $locale;
+    }
+
+    /**
+     * Returns all Multilingual Sections on the current site.
+     *
+     * @return Section[]
+     */
+    public function getAvailableSections(): array
+    {
+        if ($this->cache->isEnabled()) {
+            $key = '/multilingual/detector/section/list';
+            $item = $this->cache->getItem($key);
+            if ($item->isHit()) {
+                return $item->get();
+            }
+        }
+
+        $sections = Section::getList($this->getSite());
+
+        if (isset($item) && $item->isMiss()) {
+            $item->set($sections);
+            $this->cache->save($item);
+        }
+
+        return $sections;
+    }
+
+    /**
+     * Returns a translated page based on the Page object.
+     *
+     * @param Page $currentPage
+     * @param Section $targetSection
+     *
+     * @return Section|Page
+     */
+    public function getRelatedPage(Page $currentPage, Section $targetSection): Page
+    {
+        if ($this->cache->isEnabled()) {
+            $key = '/multilingual/detector/link/' . $currentPage->getCollectionID() . '/' . $targetSection->getCollectionID();
+            $item = $this->cache->getItem($key);
+            if ($item->isHit()) {
+                return $item->get();
+            }
+        }
+
+        $relatedPage = null;
+        if ($currentPage->isGeneratedCollection() && $currentPage->getSiteTreeID() == 0) {
+            // If the current page is a single page, there is no translated page.
+            $relatedPage = $currentPage;
+        } else {
+            $relatedID = $targetSection->getTranslatedPageID($currentPage);
+            if ($relatedID) {
+                $c = Page::getByID($relatedID);
+                if ($c) {
+                    $relatedPage = $c;
+                }
+            }
+        }
+
+        // If we fail to get a translated page, get the home page of the target language as a fallback.
+        if (!$relatedPage) {
+            $relatedPage = $targetSection;
+        }
+
+        if (isset($item) && $item->isMiss()) {
+            $item->set($relatedPage);
+            $this->cache->save($item);
+        }
+
+        return $relatedPage;
+    }
+
+    /**
+     * Get a switch language link URL to redirect to the target section from the current page.
+     *
+     * @param mixed $currentPageID
+     * @param mixed $targetSectionID
+     */
+    public function getSwitchLink($currentPageID, $targetSectionID): string
+    {
+        /** @var ResolverManagerInterface $resolver */
+        $resolver = $this->app->make(ResolverManagerInterface::class);
+
+        return (string) $resolver->resolve(['/ccm/frontend/multilingual/switch_language', $currentPageID, $targetSectionID]);
     }
 
     /**
@@ -139,7 +317,7 @@ class Detector implements ApplicationAwareInterface, SiteAggregateInterface
      *
      * @throws \Exception
      */
-    public function setupSiteInterfaceLocalization(Page $c = null)
+    public function setupSiteInterfaceLocalization(?Page $c = null)
     {
         $loc = $this->app->make(Localization::class);
         $locale = null;
@@ -212,6 +390,18 @@ class Detector implements ApplicationAwareInterface, SiteAggregateInterface
         }
 
         return $this->enabled;
+    }
+
+    /**
+     * Assume that the site is multilingual enabled.
+     *
+     * @return $this
+     */
+    public function assumeEnabled()
+    {
+        $this->enabled = true;
+
+        return $this;
     }
 
     /**

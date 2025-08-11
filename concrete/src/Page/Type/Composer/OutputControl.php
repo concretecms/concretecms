@@ -58,7 +58,7 @@ class OutputControl extends ConcreteObject
     {
         $db = Loader::db();
         $r = $db->GetRow('select * from PageTypeComposerOutputControls where ptComposerOutputControlID = ?', array($ptComposerOutputControlID));
-        if (is_array($r) && $r['ptComposerOutputControlID']) {
+        if (is_array($r) && isset($r['ptComposerOutputControlID'])) {
             $cm = new static();
             $cm->setPropertiesFromArray($r);
 

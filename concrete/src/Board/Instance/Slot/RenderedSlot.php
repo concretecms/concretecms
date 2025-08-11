@@ -151,6 +151,7 @@ class RenderedSlot implements \JsonSerializable
         $this->boardInstanceSlotRuleID = $boardInstanceSlotRuleID;
     }
 
+    #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
         return [

@@ -79,17 +79,14 @@ function tc($context, $text, ...$args)
  */
 function h($input)
 {
-    return (new Text())->specialchars($input);
+    static $text;
+    return ($text ?? $text = new Text())->specialchars($input);
 }
 
 /**
- * Class member access on instantiation.
- *
- *     id(new Block)->render();
- *
- * @param mixed $mixed
- *
- * @return mixed mixed
+ * @deprecated
+ * Since PHP 5.4 you can write: (new Block())->render();
+ * Since PHP 8.4 you can write: new Block()->render();
  */
 function id($mixed)
 {
@@ -170,6 +167,7 @@ function overrideable_core_class($class, $path, $pkgHandle = null)
  */
 function camelcase($string, $leaveSlashes = false)
 {
+    $string = (string) $string;
     $return = '';
     $string = trim($string, '_-/\\');
     if (strpos($string, '/')) {
@@ -288,7 +286,7 @@ function core_log(
     $logger = Core::make(LoggerFactory::class)->createLogger($channel);
     $context = [];
     if (is_array($message)) {
-        $context = $message[1];$
+        $context = $message[1];
         $message = $message[0];
     }
     $logger->log($level, $message, $context);

@@ -1,1 +1,1 @@
-﻿CKEDITOR.plugins.setLang("pagebreak","et",{alt:"Lehevahetuskoht",toolbar:"Lehevahetuskoha sisestamine"});
+CKEDITOR.plugins.setLang("pagebreak","et",{alt:"Lehevahetuskoht",toolbar:"Lehevahetuskoha sisestamine"});

@@ -18,15 +18,15 @@ $alwaysOpen = $alwaysOpen ?? false;
       foreach ($entries as $entry) {
         $i++;
         $entryClass = '';
-        if(($initialState === 'openfirst' && $i == 1) || $initialState === 'open') {
+        if (($initialState === 'openfirst' && $i == 1) || $initialState === 'open') {
           $entryClass = ' show';
         }
       ?>
         <div class="accordion-item">
 
             <<?php echo $itemHeadingFormat; ?> class="accordion-header">
-                <button class="accordion-button <?php if($i != 1){echo 'collapsed'; }?>" type="button" data-bs-toggle="collapse" data-bs-target="#collapse<?=$entry->getId()?>">
-                    <?=$entry->getTitle()?>
+                <button class="accordion-button <?php if($entryClass !== ' show'){echo 'collapsed'; }?>" type="button" data-bs-toggle="collapse" data-bs-target="#collapse<?=$entry->getId()?>">
+                    <?=h($entry->getTitle())?>
                 </button>
             </<?php echo $itemHeadingFormat; ?>>
 

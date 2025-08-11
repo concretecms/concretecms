@@ -7,7 +7,7 @@ use Core;
 
 class CustomStyle extends AbstractCustomStyle
 {
-    protected $area;
+    public $area;
 
     /**
      * @var StyleSet
@@ -16,7 +16,7 @@ class CustomStyle extends AbstractCustomStyle
 
     protected $theme;
 
-    public function __construct(StyleSet $set = null, Area $area, $theme)
+    public function __construct(?StyleSet $set, Area $area, $theme)
     {
         $this->area = $area;
         $this->set = $set;
@@ -100,7 +100,7 @@ class CustomStyle extends AbstractCustomStyle
         || $set->getBoxShadowBlur()
         || $set->getBoxShadowHorizontal()
         || $set->getBoxShadowVertical())) {
-            $groups[''][] = 'box-shadow: ' . $set->getBoxShadowHorizontal() . ' ' . $set->getBoxShadowVertical() . ' ' . $set->getBoxShadowBlur() . ' ' . $set->getBoxShadowSpread() . ' ' . $set->getBoxShadowColor();
+            $groups[''][] = 'box-shadow: ' . ($set->getBoxShadowInset() ? 'inset ':'') . $set->getBoxShadowHorizontal() . ' ' . $set->getBoxShadowVertical() . ' ' . $set->getBoxShadowBlur() . ' ' . $set->getBoxShadowSpread() . ' ' . $set->getBoxShadowColor();
         }
         if ($set->getLinkColor()) {
             $groups[' a'][] = 'color:' . $set->getLinkColor() . ' !important';

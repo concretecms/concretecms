@@ -25,15 +25,17 @@ class GroupLoggingTest extends TestCase
         $user->shouldReceive('getUserID')->andReturn(33);
         $group->shouldReceive('getGroupID')->andReturn(5);
         $group->shouldReceive('getGroupName')->andReturn('Editors');
+        $group->shouldReceive('getGroupPath')->andReturn('/Editors');
 
         $entry = new EnterGroup($user, $group);
-        $this->assertEquals('User andrew (ID 33) was added to group Editors (ID 5) by an automated process.',
+        $this->assertEquals('User andrew (ID 33) was added to group /Editors (ID 5) by an automated process.',
             $entry->getMessage());
         $this->assertEquals([
             'user_id' => 33,
             'user_name' => 'andrew',
             'group_id' => 5,
             'group_name' => 'Editors',
+            'group_path' => '/Editors',
             'operation' => 'enter_group'
         ], $entry->getContext());
 
@@ -42,13 +44,14 @@ class GroupLoggingTest extends TestCase
         $applier->shouldReceive('isRegistered')->andReturn(true);
 
         $entry = new EnterGroup($user, $group, $applier);
-        $this->assertEquals('User andrew (ID 33) was added to group Editors (ID 5) by admin (ID 1).',
+        $this->assertEquals('User andrew (ID 33) was added to group /Editors (ID 5) by admin (ID 1).',
             $entry->getMessage());
         $this->assertEquals([
             'user_id' => 33,
             'user_name' => 'andrew',
             'group_id' => 5,
             'group_name' => 'Editors',
+            'group_path' => '/Editors',
             'applier_id' => 1,
             'applier_name' => 'admin',
             'operation' => 'enter_group'
@@ -65,15 +68,17 @@ class GroupLoggingTest extends TestCase
         $user->shouldReceive('getUserID')->andReturn(33);
         $group->shouldReceive('getGroupID')->andReturn(5);
         $group->shouldReceive('getGroupName')->andReturn('Editors');
+        $group->shouldReceive('getGroupPath')->andReturn('/Editors');
 
         $entry = new ExitGroup($user, $group);
-        $this->assertEquals('User andrew (ID 33) was removed from group Editors (ID 5) by an automated process.',
+        $this->assertEquals('User andrew (ID 33) was removed from group /Editors (ID 5) by an automated process.',
             $entry->getMessage());
         $this->assertEquals([
             'user_id' => 33,
             'user_name' => 'andrew',
             'group_id' => 5,
             'group_name' => 'Editors',
+            'group_path' => '/Editors',
             'operation' => 'exit_group'
         ], $entry->getContext());
 
@@ -82,13 +87,14 @@ class GroupLoggingTest extends TestCase
         $applier->shouldReceive('isRegistered')->andReturn(true);
 
         $entry = new ExitGroup($user, $group, $applier);
-        $this->assertEquals('User andrew (ID 33) was removed from group Editors (ID 5) by admin (ID 1).',
+        $this->assertEquals('User andrew (ID 33) was removed from group /Editors (ID 5) by admin (ID 1).',
             $entry->getMessage());
         $this->assertEquals([
             'user_id' => 33,
             'user_name' => 'andrew',
             'group_id' => 5,
             'group_name' => 'Editors',
+            'group_path' => '/Editors',
             'applier_id' => 1,
             'applier_name' => 'admin',
             'operation' => 'exit_group'
@@ -102,13 +108,15 @@ class GroupLoggingTest extends TestCase
 
         $group->shouldReceive('getGroupID')->andReturn(5);
         $group->shouldReceive('getGroupName')->andReturn('Editors');
+        $group->shouldReceive('getGroupPath')->andReturn('/Editors');
 
         $entry = new AddGroup($group);
-        $this->assertEquals('Group Editors (ID 5) was created by an automated process.',
+        $this->assertEquals('Group /Editors (ID 5) was created by an automated process.',
             $entry->getMessage());
         $this->assertEquals([
             'group_id' => 5,
             'group_name' => 'Editors',
+            'group_path' => '/Editors',
             'operation' => 'add_group'
         ], $entry->getContext());
 
@@ -117,11 +125,12 @@ class GroupLoggingTest extends TestCase
         $applier->shouldReceive('isRegistered')->andReturn(true);
 
         $entry = new AddGroup($group, $applier);
-        $this->assertEquals('User admin (ID 1) created group Editors (ID 5).',
+        $this->assertEquals('User admin (ID 1) created group /Editors (ID 5).',
             $entry->getMessage());
         $this->assertEquals([
             'group_id' => 5,
             'group_name' => 'Editors',
+            'group_path' => '/Editors',
             'applier_id' => 1,
             'applier_name' => 'admin',
             'operation' => 'add_group'
@@ -135,13 +144,15 @@ class GroupLoggingTest extends TestCase
 
         $group->shouldReceive('getGroupID')->andReturn(5);
         $group->shouldReceive('getGroupName')->andReturn('Editors');
+        $group->shouldReceive('getGroupPath')->andReturn('/Editors');
 
         $entry = new UpdateGroup($group);
-        $this->assertEquals('Group Editors (ID 5) was updated by an automated process.',
+        $this->assertEquals('Group /Editors (ID 5) was updated by an automated process.',
             $entry->getMessage());
         $this->assertEquals([
             'group_id' => 5,
             'group_name' => 'Editors',
+            'group_path' => '/Editors',
             'operation' => 'update_group'
         ], $entry->getContext());
 
@@ -150,11 +161,12 @@ class GroupLoggingTest extends TestCase
         $applier->shouldReceive('isRegistered')->andReturn(true);
 
         $entry = new UpdateGroup($group, $applier);
-        $this->assertEquals('User admin (ID 1) updated group Editors (ID 5).',
+        $this->assertEquals('User admin (ID 1) updated group /Editors (ID 5).',
             $entry->getMessage());
         $this->assertEquals([
             'group_id' => 5,
             'group_name' => 'Editors',
+            'group_path' => '/Editors',
             'applier_id' => 1,
             'applier_name' => 'admin',
             'operation' => 'update_group'
@@ -168,13 +180,15 @@ class GroupLoggingTest extends TestCase
 
         $group->shouldReceive('getGroupID')->andReturn(5);
         $group->shouldReceive('getGroupName')->andReturn('Editors');
+        $group->shouldReceive('getGroupPath')->andReturn('/Editors');
 
         $entry = new DeleteGroup($group);
-        $this->assertEquals('Group Editors (ID 5) was deleted by an automated process.',
+        $this->assertEquals('Group /Editors (ID 5) was deleted by an automated process.',
             $entry->getMessage());
         $this->assertEquals([
             'group_id' => 5,
             'group_name' => 'Editors',
+            'group_path' => '/Editors',
             'operation' => 'delete_group'
         ], $entry->getContext());
 
@@ -183,11 +197,12 @@ class GroupLoggingTest extends TestCase
         $applier->shouldReceive('isRegistered')->andReturn(true);
 
         $entry = new DeleteGroup($group, $applier);
-        $this->assertEquals('User admin (ID 1) deleted group Editors (ID 5).',
+        $this->assertEquals('User admin (ID 1) deleted group /Editors (ID 5).',
             $entry->getMessage());
         $this->assertEquals([
             'group_id' => 5,
             'group_name' => 'Editors',
+            'group_path' => '/Editors',
             'applier_id' => 1,
             'applier_name' => 'admin',
             'operation' => 'delete_group'

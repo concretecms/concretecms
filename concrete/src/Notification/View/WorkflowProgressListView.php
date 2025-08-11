@@ -1,28 +1,32 @@
 <?php
-namespace Concrete\Core\Notification\View;
 
+namespace Concrete\Core\Notification\View;
 
 use Concrete\Core\Application\UserInterface\ContextMenu\Item\LinkItem;
 use Concrete\Core\Entity\Notification\Notification;
-use Concrete\Core\Entity\Notification\UserSignupNotification;
 use Concrete\Core\Notification\View\Menu\WorkflowProgressListViewMenu;
 use Concrete\Core\Workflow\Progress\SiteProgressInterface;
 use HtmlObject\Element;
 
 class WorkflowProgressListView extends StandardListView
 {
-
     protected $progress;
 
     protected $workflow;
 
     protected $request;
 
-    protected $actions = array();
+    protected $actions = [];
+
+    /**
+     * @var \Concrete\Core\Entity\Notification\WorkflowProgressNotification
+     */
+    protected $notification;
 
     /**
      * WorkflowProgressListView constructor.
-     * @param Notification WorkflowProgressNotification
+     *
+     * @param \Concrete\Core\Entity\Notification\WorkflowProgressNotification $notification
      */
     public function __construct(Notification $notification)
     {
@@ -32,11 +36,6 @@ class WorkflowProgressListView extends StandardListView
         $this->request = $this->progress->getWorkflowRequestObject();
         $this->actions = $this->progress->getWorkflowProgressActions();
     }
-
-    /**
-     * @var UserSignupNotification
-     */
-    protected $notification;
 
     public function getTitle()
     {
@@ -53,7 +52,6 @@ class WorkflowProgressListView extends StandardListView
     {
         return $this->request->getRequestIconElement();
     }
-
 
     public function getInitiatorUserObject()
     {
@@ -74,11 +72,6 @@ class WorkflowProgressListView extends StandardListView
         return $this->workflow->getWorkflowProgressCurrentComment($this->progress);
     }
 
-    protected function getRequestedByElement()
-    {
-        return new Element('span', t('Submitted By '));
-    }
-
     public function getFormAction()
     {
         return $this->progress->getWorkflowProgressFormAction();
@@ -97,22 +90,22 @@ class WorkflowProgressListView extends StandardListView
     public function getMenu()
     {
         $menu = new WorkflowProgressListViewMenu();
-        foreach($this->actions as $action) {
+        foreach ($this->actions as $action) {
             if ($action->getWorkflowProgressActionURL() != '') {
                 $class = '';
                 if (strpos($action->getWorkflowProgressActionStyleClass(), 'dialog-launch') > -1) {
                     $class = 'dialog-launch';
                 }
-                $parameters = array_merge(array('class' => $class), $action->getWorkflowProgressActionExtraButtonParameters());
+                $parameters = array_merge(['class' => $class], $action->getWorkflowProgressActionExtraButtonParameters());
                 $item = new LinkItem(
                     $action->getWorkflowProgressActionURL() . '&source=dashboard',
                     $action->getWorkflowProgressActionLabel(),
                     $parameters
                 );
             } else {
-                $parameters = array_merge(array(
+                $parameters = array_merge([
                     'data-workflow-task' => $action->getWorkflowProgressActionTask(),
-                ), $action->getWorkflowProgressActionExtraButtonParameters());
+                ], $action->getWorkflowProgressActionExtraButtonParameters());
 
                 $item = new LinkItem(
                     '#',
@@ -122,7 +115,12 @@ class WorkflowProgressListView extends StandardListView
             }
             $menu->addItem($item);
         }
+
         return $menu;
     }
 
+    protected function getRequestedByElement()
+    {
+        return new Element('span', t('Submitted By '));
+    }
 }

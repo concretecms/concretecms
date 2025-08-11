@@ -1,12 +1,17 @@
 <?php
 namespace Concrete\Attribute\Calendar;
 
+use Concrete\Core\Api\ApiResourceValueInterface;
+use Concrete\Core\Api\Fractal\Transformer\CalendarTransformer;
+use Concrete\Core\Api\Resources;
 use Concrete\Core\Attribute\FontAwesomeIconFormatter;
-use Concrete\Core\Entity\Attribute\Value\Value\NumberValue;
 use Concrete\Core\Calendar\Calendar;
-use Concrete\Core\Entity\Calendar\CalendarEvent;
+use Concrete\Core\Entity\Attribute\Value\Value\NumberValue;
+use Concrete\Core\Utility\Service\Xml;
+use League\Fractal\Resource\Item;
+use League\Fractal\Resource\ResourceInterface;
 
-class Controller extends \Concrete\Attribute\Number\Controller
+class Controller extends \Concrete\Attribute\Number\Controller implements ApiResourceValueInterface
 {
     protected $helpers = ['form'];
     protected $calendar;
@@ -17,7 +22,7 @@ class Controller extends \Concrete\Attribute\Number\Controller
     }
 
     /**
-     * @param $value CalendarEvent
+     * @param $value Calendar
      */
     public function createAttributeValue($value)
     {
@@ -35,11 +40,8 @@ class Controller extends \Concrete\Attribute\Number\Controller
     public function exportValue(\SimpleXMLElement $akv)
     {
         $val = $this->attributeValue->getValue();
-        $cnode = $akv->addChild('value');
-        $node = dom_import_simplexml($cnode);
-        $no = $node->ownerDocument;
-        $node->appendChild($no->createCDataSection($val->getName()));
-        return $cnode;
+
+        return $this->app->make(Xml::class)->createChildElement($akv, 'value', $val->getName());
     }
 
     public function createAttributeValueFromRequest()
@@ -51,8 +53,19 @@ class Controller extends \Concrete\Attribute\Number\Controller
         } else {
             $av = new NumberValue();
             $av->setValue(0);
-
             return $av;
+        }
+    }
+
+    public function getDisplayValue()
+    {
+        $caID = $this->getAttributeValue()->getValue();
+        if ($caID) {
+            $calendar = Calendar::getByID($caID);
+            if ($calendar) {
+                $url = app('url');
+                return sprintf('<a href="%s">%s</a>', $url->to('/dashboard/calendar/events', 'view', $calendar->getID()), $calendar->getName());
+            }
         }
     }
 
@@ -79,4 +92,24 @@ class Controller extends \Concrete\Attribute\Number\Controller
         }
         $this->set('calendars', $calendars);
     }
+
+    public function createAttributeValueFromNormalizedJson($json)
+    {
+        $av = new NumberValue();
+        if ($json) {
+            $av->setValue($json);
+        } else {
+            $av->setValue(0);
+        }
+        return $av;
+    }
+
+    public function getApiValueResource(): ?ResourceInterface
+    {
+        if ($calendar = $this->getValue()) {
+            return new Item($calendar, new CalendarTransformer(), Resources::RESOURCE_CALENDARS);
+        }
+        return null;
+    }
+
 }

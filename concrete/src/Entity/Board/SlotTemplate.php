@@ -152,6 +152,7 @@ class SlotTemplate implements \JsonSerializable, ProvidesTagsInterface
         $template->addAttribute('package', $this->getPackageHandle());
     }
 
+    #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
         return [

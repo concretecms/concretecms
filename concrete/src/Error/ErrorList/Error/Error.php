@@ -19,7 +19,7 @@ class Error extends AbstractError
      * @param string|mixed $message a string, a scalar, or an object that implements the __toString() method
      * @param \Concrete\Core\Error\ErrorList\Field\FieldInterface|null $field
      */
-    public function __construct($message, FieldInterface $field = null)
+    public function __construct($message, ?FieldInterface $field = null)
     {
         $this->setMessage($message);
         if ($field) {

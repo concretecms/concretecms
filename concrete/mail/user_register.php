@@ -23,7 +23,7 @@ ob_start();
 	</ul>
 <?php endif ?>
 <br />
-<?php t('This account may be managed directly at') ?><br />
+<?= t('This account may be managed directly at') ?><br />
 <a href="<?= View::url('/dashboard/users/search', 'view', $uID) ?>"><?= View::url('/dashboard/users/search', 'view', $uID) ?></a>
 <?php
 
@@ -53,7 +53,7 @@ ob_start();
 	<?php endforeach ?>
 <?php endif ?>
 
-<?php t('This account may be managed directly at') ?>
+<?= t('This account may be managed directly at') ?>
 
 <?= View::url('/dashboard/users/search', 'view', $uID) ?>
 <?php

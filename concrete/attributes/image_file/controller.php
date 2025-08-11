@@ -2,10 +2,16 @@
 
 namespace Concrete\Attribute\ImageFile;
 
+use Concrete\Core\Api\ApiResourceValueInterface;
+use Concrete\Core\Api\Attribute\OpenApiSpecifiableInterface;
+use Concrete\Core\Api\Attribute\SupportsAttributeValueFromJsonInterface;
+use Concrete\Core\Api\OpenApi\SpecProperty;
+use Concrete\Core\Api\Resources;
 use Concrete\Core\Attribute\Controller as AttributeTypeController;
 use Concrete\Core\Attribute\FontAwesomeIconFormatter;
 use Concrete\Core\Attribute\SimpleTextExportableAttributeInterface;
 use Concrete\Core\Backup\ContentExporter;
+use Concrete\Core\Entity\Attribute\Key\Key;
 use Concrete\Core\Entity\Attribute\Key\Settings\ImageFileSettings;
 use Concrete\Core\Entity\Attribute\Value\Value\ImageFileValue;
 use Concrete\Core\Entity\File\File as FileEntity;
@@ -14,13 +20,23 @@ use Concrete\Core\Error\ErrorList\Error\Error;
 use Concrete\Core\Error\ErrorList\Error\FieldNotPresentError;
 use Concrete\Core\Error\ErrorList\ErrorList;
 use Concrete\Core\Error\ErrorList\Field\AttributeField;
+use Concrete\Core\Api\Fractal\Transformer\FileTransformer;
 use Concrete\Core\File\Importer;
 use Concrete\Core\File\Tracker\FileTrackableInterface;
-use Core;
-use File;
+use Concrete\Core\File\File;
+use Concrete\Core\Page\Page;
+use League\Fractal\Resource\Item;
+use League\Fractal\Resource\ResourceAbstract;
+use League\Fractal\Resource\ResourceInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
-class Controller extends AttributeTypeController implements SimpleTextExportableAttributeInterface, FileTrackableInterface
+class Controller extends AttributeTypeController implements
+    SimpleTextExportableAttributeInterface,
+    FileTrackableInterface,
+    OpenApiSpecifiableInterface,
+    SupportsAttributeValueFromJsonInterface,
+    ApiResourceValueInterface
+
 {
     protected $searchIndexFieldDefinition = ['type' => 'integer', 'options' => ['default' => 0, 'notnull' => false]];
 
@@ -50,7 +66,7 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
 
     public function type_form()
     {
-        $this->set('form', \Core::make('helper/form'));
+        $this->set('form', app('helper/form'));
         $this->set('mode', $this->getAttributeKeySettings()->getMode());
     }
 
@@ -76,7 +92,7 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
         if (is_object($f)) {
             $type = strtolower($f->getTypeObject()->getGenericDisplayType());
 
-            return '<a target="_blank" href="' . $f->getDownloadURL() . '" class="ccm-attribute-image-file ccm-attribute-image-file-' . $type . '">' . $f->getTitle() . '</a>';
+            return '<a target="_blank" href="' . $f->getDownloadURL() . '" class="ccm-attribute-image-file ccm-attribute-image-file-' . $type . '">' . h($f->getTitle()) . '</a>';
         }
     }
 
@@ -89,7 +105,7 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
         }
         return $url;
     }
-    
+
     public function exportValue(\SimpleXMLElement $akn)
     {
         $av = $akn->addChild('value');
@@ -130,8 +146,13 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
     public function form()
     {
         $bf = false;
-        if (is_object($this->attributeValue)) {
-            $bf = $this->getAttributeValue()->getValue();
+        if ($this->request->isPost()) {
+            $bfID = $this->request('value');
+            $bf = File::getByID($bfID);
+        } else {
+            if (is_object($this->attributeValue)) {
+                $bf = $this->getAttributeValue()->getValue();
+            }
         }
         $this->set('mode', $this->getAttributeKeySettings()->getMode());
         $this->set('file', $bf ?: null);
@@ -157,7 +178,7 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
     {
         if (isset($akv->value->fID)) {
             $fIDVal = (string) $akv->value->fID;
-            $inspector = \Core::make('import/value_inspector');
+            $inspector = app('import/value_inspector');
             $result = $inspector->inspect($fIDVal);
             $fID = $result->getReplacedValue();
             if ($fID) {
@@ -185,7 +206,7 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
     public function validateValue()
     {
         $f = $this->getAttributeValue()->getValue();
-        $e = Core::make('helper/validation/error');
+        $e = app('helper/validation/error');
         if (!is_object($f)) {
             return new CustomFieldNotPresentError(
                 t('You must specify a valid file for %s', $this->attributeKey->getAttributeKeyDisplayName())
@@ -197,6 +218,12 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
 
     public function validateForm($data)
     {
+        if (!is_array($data)) {
+            $data = [];
+        }
+        if (!isset($data['value'])) {
+            $data['value'] = null;
+        }
         if ($this->getAttributeKeySettings()->isModeFileManager()) {
             if ((int) ($data['value']) > 0) {
                 $f = File::getByID((int) ($data['value']));
@@ -336,6 +363,32 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
             }
         }
         return $files;
+    }
+
+    public function getOpenApiSpecProperty(Key $key): SpecProperty
+    {
+        return new SpecProperty(
+            $key->getAttributeKeyHandle(),
+            $key->getAttributeKeyDisplayName(),
+            'number'
+        );
+    }
+
+    public function createAttributeValueFromNormalizedJson($json)
+    {
+        return $this->createAttributeValue($json);
+    }
+
+    public function getApiValueResource(): ?ResourceInterface
+    {
+        $attributeValue = $this->getAttributeValue();
+        if ($attributeValue) {
+            $f = $attributeValue->getValue();
+            if ($f) {
+                return new Item($f, new FileTransformer(), Resources::RESOURCE_FILES);
+            }
+        }
+        return null;
     }
 
 }

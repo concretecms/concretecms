@@ -10,6 +10,7 @@ use Concrete\Core\Application\UserInterface\ContextMenu\DropdownMenu;
 use Concrete\Core\Application\UserInterface\ContextMenu\MenuInterface;
 use Concrete\Core\File\Search\ColumnSet\Column\NameColumn;
 use Concrete\Core\File\Search\Result\Result;
+use Concrete\Core\File\Upload\Dropzone;
 use Concrete\Core\Form\Service\Form;
 use Concrete\Core\Legacy\FilePermissions;
 use Concrete\Core\Search\Result\Column;
@@ -67,7 +68,7 @@ if ($fp->canAddFile() || $fp->canSearchFiles()) { ?>
                         <?php
                         if ($column->isColumnSortable()) { ?>
                             <a href="<?php
-                            echo $column->getColumnSortURL() ?>">
+                            echo h($column->getColumnSortURL()) ?>">
                                 <?php
                                 echo $column->getColumnTitle() ?>
                             </a>
@@ -87,7 +88,7 @@ if ($fp->canAddFile() || $fp->canSearchFiles()) { ?>
             <tbody>
             <?php
             foreach ($result->getItems() as $item) { ?>
-                <tr data-details-url="javascript:void(0)"
+                <tr data-details-url="<?=$item->getDetailsURL()?>"
                     <?php if (isset($highlightResults)
                         && in_array($item->getItem()->getTreeNodeID(), $highlightResults)) { ?>
                             class="table-row-highlight"<?php } ?>
@@ -137,11 +138,7 @@ if ($fp->canAddFile() || $fp->canSearchFiles()) { ?>
                         /** @noinspection PhpUndefinedMethodInspection */
                         if ($column->getColumn() instanceof NameColumn) { ?>
                             <td class="ccm-search-results-name">
-                                <a href="<?php
-                                echo $item->getDetailsURL(); ?>">
-                                    <?php
-                                    echo $column->getColumnValue($item); ?>
-                                </a>
+                                <?php echo $column->getColumnValue($item); ?>
                             </td>
                         <?php } else { ?>
                             <td class="<?=$class?? '' ?>">
@@ -196,7 +193,8 @@ if ($fp->canAddFile() || $fp->canSearchFiles()) { ?>
         (function ($) {
             $(function () {
                 $('table[data-search-results=files]').concreteFileManagerTable({
-                    'folderID': '<?php echo $folderID; ?>'
+                    folderID: '<?php echo $folderID ?? null; ?>',
+                    dropzone: <?= json_encode($app->make(Dropzone::class)->getConfigurationOptions(true)) ?>,
                 });
             });
         })(jQuery);

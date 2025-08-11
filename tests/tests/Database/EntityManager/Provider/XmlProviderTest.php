@@ -30,8 +30,8 @@ class XmlProviderTest extends TestCase
      */
     public function setUp():void
     {
-        $this->app = Application::getFacadeApplication();
-        $this->packageStub = new PackageControllerXml($this->app);
+        $app = Application::getFacadeApplication();
+        $this->packageStub = new PackageControllerXml($app);
         parent::setUp();
     }
 

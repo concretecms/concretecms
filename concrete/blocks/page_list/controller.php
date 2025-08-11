@@ -3,6 +3,8 @@ namespace Concrete\Block\PageList;
 
 use BlockType;
 use CollectionAttributeKey;
+use Concrete\Attribute\Topics\Controller as TopicsController;
+use Concrete\Core\Attribute\Category\PageCategory;
 use Concrete\Core\Attribute\Key\CollectionKey;
 use Concrete\Core\Block\BlockController;
 use Concrete\Core\Block\View\BlockView;
@@ -16,14 +18,192 @@ use Concrete\Core\Package\Offline\Exception;
 use Concrete\Core\Page\Feed;
 use Concrete\Core\Tree\Node\Node;
 use Concrete\Core\Tree\Node\Type\Topic;
+use Concrete\Core\Tree\Tree;
 use Core;
 use Concrete\Core\Url\SeoCanonical;
+use Concrete\Core\Utility\Service\Xml;
 use Database;
 use Page;
 use PageList;
+use SimpleXMLElement;
 
 class Controller extends BlockController implements UsesFeatureInterface
 {
+    /**
+     * @var int|string|null
+     */
+    public $num;
+
+    /**
+     * @var string|null
+     */
+    public $orderBy;
+
+    /**
+     * @var int|string|null
+     */
+    public $cParentID;
+
+    /**
+     * @var bool|int|string|null
+     */
+    public $cThis;
+
+    /**
+     * @var bool|int|string|null
+     */
+    public $cThisParent;
+
+    /**
+     * @var bool|int|string|null
+     */
+    public $useButtonForLink;
+
+    /**
+     * @var string|null
+     */
+    public $buttonLinkText;
+
+    /**
+     * @var string|null
+     */
+    public $pageListTitle;
+
+    /**
+     * @var bool|int|string|null
+     */
+    public $filterByRelated;
+
+    /**
+     * @var bool|int|string|null
+     */
+    public $filterByCustomTopic;
+
+    /**
+     * @var string|null
+     */
+    public $filterDateOption;
+
+    /**
+     * @var int|string|null
+     */
+    public $filterDateDays;
+
+    /**
+     * @var string|null
+     */
+    public $filterDateStart;
+
+    /**
+     * @var string|null
+     */
+    public $filterDateEnd;
+
+    /**
+     * @var string|null
+     */
+    public $relatedTopicAttributeKeyHandle;
+
+    /**
+     * @var string|null
+     */
+    public $customTopicAttributeKeyHandle;
+
+    /**
+     * @var int|string|null
+     */
+    public $customTopicTreeNodeID;
+
+    /**
+     * @var bool|int|string|null
+     */
+    public $includeName;
+
+    /**
+     * @var bool|int|string|null
+     */
+    public $includeDescription;
+
+    /**
+     * @var bool|int|string|null
+     */
+    public $includeDate;
+
+    /**
+     * @var bool|int|string|null
+     */
+    public $includeAllDescendents;
+
+    /**
+     * @var bool|int|string|null
+     */
+    public $paginate;
+
+    /**
+     * @var bool|int|string|null
+     */
+    public $displayAliases;
+
+    /**
+     * @var bool|int|string|null
+     */
+    public $displaySystemPages;
+
+    /**
+     * @var bool|int|string|null
+     */
+    public $ignorePermissions;
+
+    /**
+     * @var bool|int|string|null
+     */
+    public $enableExternalFiltering;
+
+    /**
+     * @var bool|int|string|null
+     */
+    public $excludeCurrentPage;
+
+    /**
+     * @var int|string|null
+     */
+    public $ptID;
+
+    /**
+     * @var int|string|null
+     */
+    public $pfID;
+
+    /**
+     * @var int|string|null
+     */
+    public $truncateSummaries;
+
+    /**
+     * @var bool|int|string|null
+     */
+    public $displayFeaturedOnly;
+
+    /**
+     * @var string|null
+     */
+    public $noResultsMessage;
+
+    /**
+     * @var bool|int|string|null
+     */
+    public $displayThumbnail;
+
+    /**
+     * @var int|string|null
+     */
+    public $truncateChars;
+
+    /**
+     * @var string|null
+     */
+    public $titleFormat;
+
     protected $btTable = 'btPageList';
     protected $btInterfaceWidth = 700;
     protected $btInterfaceHeight = 525;
@@ -36,20 +216,19 @@ class Controller extends BlockController implements UsesFeatureInterface
     protected $btCacheBlockOutputLifetime = 300;
     protected $list;
 
-    public $orderBy;
-    public $filterDateOption;
-    public $displayFeaturedOnly;
-    public $displayAliases;
-    public $displaySystemPages;
-    public $ptID;
-    public $filterByRelated;
-    public $filterByCustomTopic;
-    public $cParentID;
-    public $num;
-    public $pfID;
-    public $truncateSummaries;
-    public $displayThumbnail;
-    public $includeName;
+    /**
+     * @deprecated What's deprecated is the "public" part.
+     *
+     * @var int|null
+     */
+    public $cID;
+
+    /**
+     * @deprecated What's deprecated is the "public" part.
+     *
+     * @var int|null
+     */
+    public $cPID;
 
     public function getRequiredFeatures(): array
     {
@@ -73,55 +252,56 @@ class Controller extends BlockController implements UsesFeatureInterface
 
     public function action_preview_pane()
     {
-        $bt = BlockType::getByHandle('page_list');
+        $bt = BlockType::getByHandle($this->btHandle);
         $controller = $bt->getController();
 
-        // @TODO - clean up this old code.
+        $this->request->query->set('num', ($this->request->get('num') > 0) ? 20 : 0);
+        $this->request->query->set('cThis', ($this->request->get('cParentID') == $this->request->get('current_page')) ? '1' : '0');
+        $this->request->query->set('cParentID', ($this->request->get('cParentID') === 'OTHER') ? $this->request->get('cParentIDValue') : $this->request->get('cParentID'));
 
-        $_REQUEST['num'] = ($_REQUEST['num'] > 0) ? $_REQUEST['num'] : 0;
-        $_REQUEST['cThis'] = ($_REQUEST['cParentID'] == $_REQUEST['current_page']) ? '1' : '0';
-        $_REQUEST['cParentID'] = ($_REQUEST['cParentID'] == 'OTHER') ? $_REQUEST['cParentIDValue'] : $_REQUEST['cParentID'];
-
-        if ($_REQUEST['filterDateOption'] != 'between') {
-            $_REQUEST['filterDateStart'] = null;
-            $_REQUEST['filterDateEnd'] = null;
+        if ($this->request->get('filterDateOption') !== 'between') {
+            $this->request->query->set('filterDateStart', null);
+            $this->request->query->set('filterDateEnd', null);
         }
 
-        if ($_REQUEST['filterDateOption'] == 'past') {
-            $_REQUEST['filterDateDays'] = $_REQUEST['filterDatePast'];
-        } elseif ($_REQUEST['filterDateOption'] == 'future') {
-            $_REQUEST['filterDateDays'] = $_REQUEST['filterDateFuture'];
+        if ($this->request->get('filterDateOption') === 'past') {
+            $this->request->query->set('filterDateDays', $this->request->get('filterDatePast'));
+        } elseif ($this->request->get('filterDateOption') === 'future') {
+            $this->request->query->set('filterDateDays', $this->request->get('filterDateFuture'));
         } else {
-            $_REQUEST['filterDateDays'] = null;
+            $this->request->query->set('filterDateDays', null);
         }
 
-        $controller->num = $_REQUEST['num'];
-        $controller->cParentID = $_REQUEST['cParentID'];
-        $controller->cThis = $_REQUEST['cThis'];
-        $controller->orderBy = $_REQUEST['orderBy'];
-        $controller->ptID = $_REQUEST['ptID'];
-        $controller->rss = $_REQUEST['rss'];
-        $controller->displayFeaturedOnly = $_REQUEST['displayFeaturedOnly'] ?? false;
-        $controller->displayAliases = $_REQUEST['displayAliases'] ?? false;
-        $controller->paginate = $_REQUEST['paginate'] ?? false;
-        $controller->enableExternalFiltering = $_REQUEST['enableExternalFiltering'] ?? false;
-        $controller->filterByRelated = $_REQUEST['filterByRelated'] ?? false;
-        $controller->relatedTopicAttributeKeyHandle = $_REQUEST['relatedTopicAttributeKeyHandle'];
-        $controller->filterByCustomTopic = ($_REQUEST['topicFilter'] == 'custom') ? '1' : '0';
-        $controller->customTopicAttributeKeyHandle = $_REQUEST['customTopicAttributeKeyHandle'];
-        $controller->customTopicTreeNodeID = $_REQUEST['customTopicTreeNodeID'];
-        $controller->includeAllDescendents = $_REQUEST['includeAllDescendents'] ?? false;
-        $controller->includeDate = $_REQUEST['includeDate'] ?? false;
-        $controller->displayThumbnail = $_REQUEST['displayThumbnail'] ?? false;
-        $controller->includeDescription = $_REQUEST['includeDescription'] ?? false;
-        $controller->useButtonForLink = $_REQUEST['useButtonForLink'] ?? false;
-        $controller->filterDateOption = $_REQUEST['filterDateOption'];
-        $controller->filterDateStart = $_REQUEST['filterDateStart'];
-        $controller->filterDateEnd = $_REQUEST['filterDateEnd'];
-        $controller->filterDateDays = $_REQUEST['filterDateDays'];
+        $controller->num = $this->request->get('num');
+        $controller->cParentID = $this->request->get('cParentID');
+        $controller->cThis = $this->request->get('cThis');
+        $controller->orderBy = $this->request->get('orderBy');
+        $controller->ptID = $this->request->get('ptID');
+        $controller->rss = $this->request->get('rss');
+        $controller->displayFeaturedOnly = $this->request->get('displayFeaturedOnly') ?? false;
+        $controller->displayAliases = $this->request->get('displayAliases') ?? false;
+        $controller->paginate = $this->request->get('paginate') ?? false;
+        $controller->enableExternalFiltering = $this->request->get('enableExternalFiltering') ?? false;
+        $controller->excludeCurrentPage = $this->request->get('excludeCurrentPage') ?? false;
+        $controller->filterByRelated = $this->request->get('filterByRelated') ?? false;
+        $controller->relatedTopicAttributeKeyHandle = $this->request->get('relatedTopicAttributeKeyHandle');
+        $controller->filterByCustomTopic = ($this->request->get('topicFilter') == 'custom') ? '1' : '0';
+        $controller->customTopicAttributeKeyHandle = $this->request->get('customTopicAttributeKeyHandle');
+        $controller->customTopicTreeNodeID = $this->request->get('customTopicTreeNodeID');
+        $controller->includeAllDescendents = $this->request->get('includeAllDescendents') ?? false;
+        $controller->includeDate = $this->request->get('includeDate') ?? false;
+        $controller->displayThumbnail = $this->request->get('displayThumbnail') ?? false;
+        $controller->includeDescription = $this->request->get('includeDescription') ?? false;
+        $controller->useButtonForLink = $this->request->get('useButtonForLink') ?? false;
+        $controller->filterDateOption = $this->request->get('filterDateOption');
+        $controller->filterDateStart = $this->request->get('filterDateStart');
+        $controller->filterDateEnd = $this->request->get('filterDateEnd');
+        $controller->filterDateDays = $this->request->get('filterDateDays');
+        $controller->noResultsMessage = $this->request->get('noResultsMessage');
         $controller->set('includeEntryText', true);
         $controller->set('includeName', true);
         $controller->set('displayThumbnail', $controller->displayThumbnail);
+        $controller->set('noResultsMessage', $controller->noResultsMessage);
         $bv = new BlockView($bt);
         ob_start();
         $bv->render('view');
@@ -137,6 +317,7 @@ class Controller extends BlockController implements UsesFeatureInterface
         $this->list = new PageList();
         $this->list->disableAutomaticSorting();
         $this->list->setNameSpace('b' . $this->bID);
+        $expr = $this->list->getQueryObject()->expr(); // Get Query Expression Object
 
         $cArray = [];
 
@@ -218,8 +399,7 @@ class Controller extends BlockController implements UsesFeatureInterface
         }
 
         if ($this->displayFeaturedOnly == 1) {
-            $cak = CollectionAttributeKey::getByHandle('is_featured');
-            if (is_object($cak)) {
+            if ($this->checkSearchablePageAttributeKey('is_featured') === '') {
                 $this->list->filterByIsFeatured(1);
             }
         }
@@ -231,6 +411,10 @@ class Controller extends BlockController implements UsesFeatureInterface
         }
         if (isset($this->ignorePermissions) && $this->ignorePermissions) {
             $this->list->ignorePermissions();
+        }
+        if ($this->excludeCurrentPage) {
+            $ID = Page::getCurrentPage()->getCollectionID();
+            $this->list->getQueryObject()->andWhere($expr->neq('p.cID', $ID));
         }
 
         $this->list->filter('cvName', '', '!=');
@@ -273,9 +457,12 @@ class Controller extends BlockController implements UsesFeatureInterface
         }
 
         if ($this->paginate) {
-            /** @var SeoCanonical $seoCanonical */
-            $seoCanonical = $this->app->make(SeoCanonical::class);
-            $seoCanonical->addIncludedQuerystringParameter($this->list->getQueryPaginationPageParameter());
+            $paging = $this->request->request($this->list->getQueryPaginationPageParameter());
+            if ($paging && $paging >= 2) { // Canonicalize page 2 and greater only
+                /** @var SeoCanonical $seoCanonical */
+                $seoCanonical = $this->app->make(SeoCanonical::class);
+                $seoCanonical->addIncludedQuerystringParameter($this->list->getQueryPaginationPageParameter());
+            }
         }
 
         return $this->list;
@@ -328,8 +515,8 @@ class Controller extends BlockController implements UsesFeatureInterface
         $this->set('uh', $uh);
         $this->set('includeDescription', true);
         $this->set('includeName', true);
-        $this->set('bt', BlockType::getByHandle('page_list'));
-        $this->set('featuredAttribute', CollectionAttributeKey::getByHandle('is_featured'));
+        $this->set('bt', BlockType::getByHandle($this->btHandle));
+        $this->set('featuredAttributeUnusableReason', $this->checkSearchablePageAttributeKey('is_featured'));
         $this->set('thumbnailAttribute', CollectionAttributeKey::getByHandle('thumbnail'));
         $this->set('titleFormat', 'h5');
         $this->set('topicFilter', '');
@@ -347,6 +534,7 @@ class Controller extends BlockController implements UsesFeatureInterface
         $this->set('displaySystemPages', false);
         $this->set('ignorePermissions', false);
         $this->set('enableExternalFiltering', false);
+        $this->set('excludeCurrentPage', false);
         $this->set('paginate', false);
         $this->set('cParentID', 0);
         $this->set('cThis', false);
@@ -382,8 +570,8 @@ class Controller extends BlockController implements UsesFeatureInterface
         }
         $uh = Core::make('helper/concrete/urls');
         $this->set('uh', $uh);
-        $this->set('bt', BlockType::getByHandle('page_list'));
-        $this->set('featuredAttribute', CollectionAttributeKey::getByHandle('is_featured'));
+        $this->set('bt', BlockType::getByHandle($this->btHandle));
+        $this->set('featuredAttributeUnusableReason', $this->checkSearchablePageAttributeKey('is_featured'));
         $this->set('thumbnailAttribute', CollectionAttributeKey::getByHandle('thumbnail'));
         $topicFilter = '';
         if ($this->filterByRelated) {
@@ -473,6 +661,13 @@ class Controller extends BlockController implements UsesFeatureInterface
 
     public function validate($args)
     {
+        $args += [
+            'rss' => null,
+            'rssHandle' => '',
+            'rssTitle' => '',
+            'rssDescription' => ''
+        ];
+
         $e = Core::make('helper/validation/error');
         $vs = Core::make('helper/validation/strings');
         $pf = false;
@@ -550,6 +745,8 @@ class Controller extends BlockController implements UsesFeatureInterface
 
     public function save($args)
     {
+        $fromCIF = ($args['__fromCIF'] ?? null) === true;
+
         // If we've gotten to the process() function for this class, we assume that we're in
         // the clear, as far as permissions are concerned (since we check permissions at several
         // points within the dispatcher)
@@ -572,12 +769,15 @@ class Controller extends BlockController implements UsesFeatureInterface
             'displayThumbnail' => 0,
             'displayAliases' => 0,
             'displaySystemPages' => 0,
+            'excludeCurrentPage' => 0,
             'truncateChars' => 0,
             'paginate' => 0,
             'rss' => 0,
             'pfID' => 0,
+            'ptID' => 0,
             'filterDateOption' => 'all',
             'cParentID' => null,
+            'ignorePermissions' => 0,
         ];
 
         if (is_numeric($args['cParentID'])) {
@@ -585,22 +785,29 @@ class Controller extends BlockController implements UsesFeatureInterface
         }
 
         $args['num'] = ($args['num'] > 0) ? $args['num'] : 0;
-        $args['cThis'] = ($args['cParentID'] === $this->cID) ? '1' : '0';
-        $args['cThisParent'] = ($args['cParentID'] === $this->cPID) ? '1' : '0';
-        $args['cParentID'] = ($args['cParentID'] === 'OTHER') ? (empty($args['cParentIDValue']) ? null : $args['cParentIDValue']) : $args['cParentID'];
-        if (!$args['cParentID']) {
-            $args['cParentID'] = 0;
+        if (!$fromCIF) {
+            $args['cThis'] = ($args['cParentID'] === $this->cID) ? '1' : '0';
+            $args['cThisParent'] = ($args['cParentID'] === $this->cPID) ? '1' : '0';
+            $args['cParentID'] = ($args['cParentID'] === 'OTHER') ? (empty($args['cParentIDValue']) ? null : $args['cParentIDValue']) : $args['cParentID'];
+            if (!$args['cParentID']) {
+                $args['cParentID'] = 0;
+            }
+            $args['filterByRelated'] = ($args['topicFilter'] == 'related') ? '1' : '0';
+            $args['filterByCustomTopic'] = ($args['topicFilter'] == 'custom') ? '1' : '0';
+            if (!$args['filterByCustomTopic'] || !$this->app->make('helper/number')->isInteger($args['customTopicTreeNodeID'])) {
+                $args['customTopicAttributeKeyHandle'] = '';
+                $args['customTopicTreeNodeID'] = 0;
+            }
         }
         $args['enableExternalFiltering'] = ($args['enableExternalFiltering']) ? '1' : '0';
         $args['includeAllDescendents'] = ($args['includeAllDescendents']) ? '1' : '0';
         $args['includeDate'] = ($args['includeDate']) ? '1' : '0';
         $args['truncateSummaries'] = ($args['truncateSummaries']) ? '1' : '0';
         $args['displayFeaturedOnly'] = ($args['displayFeaturedOnly']) ? '1' : '0';
-        $args['filterByRelated'] = ($args['topicFilter'] == 'related') ? '1' : '0';
-        $args['filterByCustomTopic'] = ($args['topicFilter'] == 'custom') ? '1' : '0';
         $args['displayThumbnail'] = ($args['displayThumbnail']) ? '1' : '0';
         $args['displayAliases'] = ($args['displayAliases']) ? '1' : '0';
         $args['displaySystemPages'] = ($args['displaySystemPages']) ? '1' : '0';
+        $args['excludeCurrentPage'] = ($args['excludeCurrentPage']) ? '1' : '0';
         $args['truncateChars'] = (int) ($args['truncateChars']);
         $args['paginate'] = (int) ($args['paginate']);
         $args['rss'] = (int) ($args['rss']);
@@ -610,23 +817,23 @@ class Controller extends BlockController implements UsesFeatureInterface
             $args['relatedTopicAttributeKeyHandle'] = '';
         }
 
-        if (!$args['filterByCustomTopic'] || !$this->app->make('helper/number')->isInteger($args['customTopicTreeNodeID'])) {
-            $args['customTopicAttributeKeyHandle'] = '';
-            $args['customTopicTreeNodeID'] = 0;
-        }
-
         if ($args['rss']) {
-            if (isset($this->pfID) && $this->pfID) {
-                $pf = Feed::getByID($this->pfID);
+            if ($fromCIF) {
+                $pfID = (int) ($args['pfID'] ?? 0);
+            } else {
+                $pfID = (int) $this->pfID;
             }
-
-            if (!is_object($pf)) {
+            $pf = $pfID === 0 ? null : Feed::getByID($pfID);
+            if (!$pf) {
                 $pf = new \Concrete\Core\Entity\Page\Feed();
-                $pf->setTitle($args['rssTitle']);
-                $pf->setDescription($args['rssDescription']);
+            }
+            if ((string) ($args['rssHandle'] ?? '') !== '') {
                 $pf->setHandle($args['rssHandle']);
             }
-
+            if ((string) ($args['rssTitle'] ?? '') !== '') {
+                $pf->setTitle($args['rssTitle']);
+            }
+            $pf->setDescription($args['rssDescription'] ?? '');
             $pf->setParentID($args['cParentID']);
             $pf->setPageTypeID($args['ptID']);
             $pf->setIncludeAllDescendents($args['includeAllDescendents']);
@@ -654,14 +861,14 @@ class Controller extends BlockController implements UsesFeatureInterface
         }
 
         if ($args['filterDateOption'] == 'past') {
-            $args['filterDateDays'] = $args['filterDatePast'];
+            $args['filterDateDays'] = $args['filterDateDays'] ?? $args['filterDatePast'];
         } elseif ($args['filterDateOption'] == 'future') {
-            $args['filterDateDays'] = $args['filterDateFuture'];
+            $args['filterDateDays'] = $args['filterDateDays'] ?? $args['filterDateFuture'];
         } else {
             $args['filterDateDays'] = null;
         }
 
-        $args['pfID'] = (int) ($args['pfID']);
+        $args['pfID'] = (int) $args['pfID'];
         parent::save($args);
     }
 
@@ -710,5 +917,106 @@ class Controller extends BlockController implements UsesFeatureInterface
             }
         }
         $this->set('attributeKeys', $attributeKeys);
+    }
+
+    /**
+     * @return string the reason why the attribute key is not usable (or an empty string if it's usable)
+     */
+    protected function checkSearchablePageAttributeKey(string $handle): string
+    {
+        $category = $this->app->make(PageCategory::class);
+        $key = $category->getAttributeKeyByHandle($handle);
+        if ($key === null) {
+            return t('You must create the %s page attribute first.', "<code>{$handle}</code>");
+        }
+        if (!$key->isAttributeKeyContentIndexed()) {
+            return t('The %s page attribute must be indexed.', "<code>{$handle}</code>");
+        }
+
+        return '';
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Block\BlockController::export()
+     */
+    public function export(SimpleXMLElement $blockNode)
+    {
+        parent::export($blockNode);
+        $xml = $this->app->make(Xml::class);
+        $xRecord = $blockNode->data[0]->record[0];
+
+        $customTopicTreeNode = null;
+        $customTopicAttributeKeyHandle = (string) $this->customTopicAttributeKeyHandle;
+        $customTopicTreeNodeID = (int) $this->customTopicTreeNodeID;
+        if ($customTopicAttributeKeyHandle !== '' && $customTopicTreeNodeID > 0) {
+            $customTopicTreeNode = Node::getByID($customTopicTreeNodeID);
+        }
+        unset($xRecord->customTopicTreeNodeID[0]);
+        $xml->createChildElement($xRecord, 'customTopicTreeNodePath', $customTopicTreeNode ? $customTopicTreeNode->getTreeNodeDisplayPath() : '');
+        $feed = $this->pfID ? Feed::getByID($this->pfID) : null;
+        if ($feed) {
+            $xml->createChildElement($xRecord, 'rssHandle', $feed->getHandle());
+            $xml->createChildElement($xRecord, 'rssTitle', $feed->getTitle());
+            $xml->createChildElement($xRecord, 'rssDescription', $feed->getDescription());
+        }
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Block\BlockController::getImportData()
+     */
+    protected function getImportData($blockNode, $page)
+    {
+        if (!$this->cID && $page) {
+            $this->cID = $page->getCollectionID();
+        }
+        $args = parent::getImportData($blockNode, $page);
+        $args['__fromCIF'] = true;
+        $args['customTopicTreeNodeID'] = 0;
+        $customTopicAttributeKeyHandle = (string) ($args['customTopicAttributeKeyHandle'] ?? '');
+        $customTopicTreeNodePath = (string) ($args['customTopicTreeNodePath'] ?? '');
+        if ($customTopicAttributeKeyHandle !== '' && $customTopicTreeNodePath !== '') {
+            $topicAttributeKey = $this->app->make(PageCategory::class)->getAttributeKeyByHandle($customTopicAttributeKeyHandle);
+            $topicController = $topicAttributeKey ? $topicAttributeKey->getController() : null;
+            if ($topicController instanceof TopicsController) {
+                $tree = Tree::getByID($topicController->getTopicTreeID());
+                if ($tree instanceof Tree) {
+                    $customTopicTreeNode = $tree->getNodeByDisplayPath($customTopicTreeNodePath);
+                    if ($customTopicTreeNode) {
+                        $args['customTopicTreeNodeID'] = $customTopicTreeNode->getTreeNodeID();
+                    };
+                }
+            }
+        }
+        if ($args['customTopicTreeNodeID'] === 0) {
+            $args['filterByCustomTopic'] = 0;
+            $args['customTopicAttributeKeyHandle'] = '';
+        } else {
+            $args['filterByCustomTopic'] = empty($args['filterByCustomTopic']) ? 0 : 1;
+            $args['customTopicAttributeKeyHandle'] = $customTopicAttributeKeyHandle;
+        }
+        $args['cThis'] = empty($args['cThis']) ? 0 : 1;
+        $args['cThisParent'] = empty($args['cThisParent']) ? 0 : 1;
+        $args['cParentID'] = empty($args['cParentID']) ? 0 : (int) $args['cParentID'];
+        $args['filterByRelated'] = empty($args['filterByRelated']) ? 0 : 1;
+        $args['filterByCustomTopic'] = empty($args['filterByCustomTopic']) ? 0 : 1;
+        $feed = empty($args['pfID']) ? null : Feed::getByID($args['pfID']);
+        $feedHandle = (string) ($args['rssHandle'] ?? '');
+        if ($feed || $feedHandle !== '') {
+            $args['rss'] = 1;
+            $args['pfID'] = $feed ? $feed->getID() : null;
+            $args['rssHandle'] = $feedHandle !== '' ? $feedHandle : $feed->getHandle();
+            if ((string) ($args['rssTitle'] ?? '') === '') {
+                $args['rssHandle'] = $feed ? $feed->getTitle() : $feedHandle;
+            }
+            if ((string) ($args['rssDescription'] ?? '') === '') {
+                $args['rssDescription'] = $feed ? $feed->getDescription() : '';
+            }
+        }
+
+        return $args;
     }
 }

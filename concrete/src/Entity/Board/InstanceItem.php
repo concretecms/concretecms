@@ -136,6 +136,7 @@ class InstanceItem implements \JsonSerializable, ItemProviderInterface
         $this->item = $item;
     }
 
+    #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
         $file = $this->item->getRelevantThumbnail();

@@ -2,6 +2,7 @@
 
 namespace Concrete\Controller\SinglePage\Dashboard\System\Optimization;
 
+use Concrete\Core\Cache\Command\ClearCacheCommand;
 use Concrete\Core\Page\Controller\DashboardPageController;
 
 class Cache extends DashboardPageController
@@ -18,6 +19,7 @@ class Cache extends DashboardPageController
         $this->set('enableOverrideCache', (bool) $config->get('concrete.cache.overrides'));
         $this->set('fullPageCacheGlobal', (string) $config->get('concrete.cache.pages'));
         $this->set('fullPageCacheLifetime', (string) $config->get('concrete.cache.full_page_lifetime'));
+        $this->set('fullPageCacheLifetimeBlock', (bool) $config->get('concrete.cache.full_page_lifetime_block'));
         $this->set('defaultCacheLifetime', (int) $config->get('concrete.cache.lifetime'));
         $this->set('fullPageCacheCustomLifetime', (int) $config->get('concrete.cache.full_page_lifetime_value') ?: null);
     }
@@ -46,10 +48,15 @@ class Cache extends DashboardPageController
         $config->save('concrete.cache.overrides', (bool) $post->get('ENABLE_OVERRIDE_CACHE'));
         $config->save('concrete.cache.pages', (string) $this->post('FULL_PAGE_CACHE_GLOBAL'));
         $config->save('concrete.cache.full_page_lifetime', (string) $post->get('FULL_PAGE_CACHE_LIFETIME'));
+        $config->save('concrete.cache.full_page_lifetime_block', (bool) $post->get('FULL_PAGE_CACHE_BLOCK_LIFETIME'));
         if (isset($customFullPageLifetimeValue)) {
             $config->save('concrete.cache.full_page_lifetime_value', $customFullPageLifetimeValue);
         }
-        $this->app->clearCaches();
+
+        $command = new ClearCacheCommand();
+        $command->setLogCacheClear(true);
+        $this->app->executeCommand($command);
+
         $this->flash('success', t('Cache settings saved.'));
 
         return $this->buildRedirect($this->action(''));

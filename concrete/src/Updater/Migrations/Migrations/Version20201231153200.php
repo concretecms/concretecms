@@ -25,7 +25,7 @@ final class Version20201231153200 extends AbstractMigration implements Repeatabl
         if (!is_object($type)) {
             $type = Type::add('duration', 'Duration');
 
-            foreach (['file', 'user', 'collection', 'site', 'event', 'site_type'] as $category) {
+            foreach (['file', 'user', 'collection', 'site', 'event', 'site_type', 'express'] as $category) {
                 $cat = Category::getByHandle($category);
                 $cat->getController()->associateAttributeKeyType($type);
             }

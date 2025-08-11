@@ -14,6 +14,10 @@ use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\Utility\Service\Identifier;
 use Concrete\Core\Validation\CSRF\Token;
 
+if (!isset($bID)) {
+    $bID = null;
+}
+
 $fp = FilePermissions::getGlobal();
 $tp = new TaskPermission();
 
@@ -48,7 +52,7 @@ echo $userInterface->tabs([
 ?>
 
 <div class="tab-content">
-    <div class="tab-pane show active" id="slides-<?php echo $id; ?>" role="tabpanel">
+    <div class="tab-pane active" id="slides-<?php echo $id; ?>" role="tabpanel">
         <div class="ccm-image-slider-block-container">
             <div class="ccm-image-slider-entries ccm-image-slider-entries-<?php echo $bID; ?>">
 
@@ -236,7 +240,7 @@ echo $userInterface->tabs([
             link_url: '<?php echo $row['linkURL']; ?>',
             link_type: '<?php echo $linkType; ?>',
             title: '<?php echo addslashes(h($row['title'])); ?>',
-            description: '<?php echo str_replace(["\t", "\r", "\n"], "", addslashes(h($row['description']))); ?>',
+            description: <?= json_encode((string) $row['description']) ?>,
             sort_order: '<?php echo $row['sortOrder']; ?>'
         }));
         sliderEntriesContainer.find('.ccm-image-slider-entry-<?php echo $bID; ?>:last-child div[data-field=entry-link-page-selector]').concretePageSelector({
@@ -456,7 +460,7 @@ echo $userInterface->tabs([
             <!--suppress HtmlFormInputWithoutLabel -->
             <textarea id="ccm-slide-editor-<%= _.uniqueId() %>" style="display: none"
                       class="editor-content editor-content-<?php echo $bID; ?>"
-                      name="<?php echo $view->field('description'); ?>[]"><%=description%></textarea>
+                      name="<?php echo $view->field('description'); ?>[]"><%- description %></textarea>
         </div>
         <div class="form-group">
             <label class="control-label form-label"><?php echo t('Link'); ?></label>
@@ -473,7 +477,7 @@ echo $userInterface->tabs([
         </div>
         <div data-field="entry-link-url" class="form-group hide-slide-link">
             <label class="control-label form-label"><?php echo t('URL:'); ?></label>
-            <textarea class="form-control" name="<?php echo $view->field('linkURL'); ?>[]"><%=link_url%></textarea>
+            <input type="text" class="form-control" name="<?php echo $view->field('linkURL'); ?>[]" value="<%=link_url%>"></input>
         </div>
         <div data-field="entry-link-page-selector" class="form-group hide-slide-link">
             <label class="control-label form-label"><?php echo t('Choose Page:'); ?></label>

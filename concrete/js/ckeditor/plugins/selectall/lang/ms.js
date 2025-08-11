@@ -1,1 +1,1 @@
-﻿CKEDITOR.plugins.setLang("selectall","ms",{toolbar:"Pilih Semua"});
+CKEDITOR.plugins.setLang("selectall","ms",{toolbar:"Pilih Semua"});

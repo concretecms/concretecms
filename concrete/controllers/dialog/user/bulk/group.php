@@ -85,15 +85,15 @@ class Group extends BackendInterfaceController
 
         foreach ($groupIDs as $gID) {
             $group = UserGroup::getByID($sh->sanitizeInt($gID));
+            $gp = new Permissions($group);
+            /* @var $up \Concrete\Core\Permission\Checker */
+            if (!$gp->canAssignGroup()) {
+                continue;
+            }
 
             foreach ($this->users as $ui) {
                 /* @var $ui \Concrete\Core\User\UserInfo: */
 
-                $up = new Permissions($ui);
-                /* @var $up \Concrete\Core\Permission\Checker */
-                if (!$up->canAssignGroup()) {
-                    continue;
-                }
 
                 $uo = $ui->getUserObject();
 
@@ -140,7 +140,7 @@ class Group extends BackendInterfaceController
 
     protected function populateUsers()
     {
-        $pk = PermissionKey::getByHandle('assign_group');
+        $pk = PermissionKey::getByHandle('access_group_search');
         /* @var $pk \Concrete\Core\Permission\Key\UserKey */
         if (!$pk->can()) {
             $this->canEdit = false;

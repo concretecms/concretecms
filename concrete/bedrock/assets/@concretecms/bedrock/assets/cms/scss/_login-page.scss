@@ -1,3 +1,7 @@
+.body-page-login {
+  background-color: #94959a;
+}
+
 .login-page {
   background-color: $blue;
   box-shadow: $modal-content-box-shadow-sm-up;
@@ -7,12 +11,6 @@
 
   .login-page-header {
     padding: 40px 0;
-  }
-
-  .external-auth-option {
-    margin-left: auto;
-    margin-right: auto;
-    max-width: 360px;
   }
 
   h2.login-page-title {

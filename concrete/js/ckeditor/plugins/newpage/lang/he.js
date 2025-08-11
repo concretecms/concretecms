@@ -1,1 +1,1 @@
-﻿CKEDITOR.plugins.setLang("newpage","he",{toolbar:"דף חדש"});
+CKEDITOR.plugins.setLang("newpage","he",{toolbar:"דף חדש"});

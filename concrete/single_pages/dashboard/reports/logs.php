@@ -17,7 +17,6 @@ use Concrete\Core\Logging\Search\Result\Result;
 // @var MenuInterface $menu
 // @var Result $result
 // @var DropdownMenu $resultsBulkMenu
-
 ?>
 <div id="ccm-search-results-table">
     <table class="ccm-search-results-table" data-search-results="pages">
@@ -51,7 +50,7 @@ use Concrete\Core\Logging\Search\Result\Result;
                 <?php /** @var Column $column */ ?>
                 <th class="<?php echo $column->getColumnStyleClass(); ?>">
                     <?php if ($column->isColumnSortable()) { ?>
-                        <a href="<?php echo $column->getColumnSortURL(); ?>">
+                        <a href="<?php echo h($column->getColumnSortURL()); ?>">
                             <?php echo $column->getColumnTitle(); ?>
                         </a>
                     <?php } else { ?>
@@ -83,7 +82,10 @@ use Concrete\Core\Logging\Search\Result\Result;
 
                 <?php foreach ($item->getColumns() as $column) { ?>
                     <?php /** @var ItemColumn $column */ ?>
-                    <td>
+                    <td <?php if ($column->getColumn() instanceof
+                        \Concrete\Core\Logging\Search\ColumnSet\Column\MessageColumn) { ?>
+                        class="text-break"
+                        <?php } ?>>
                         <?php echo $column->getColumnValue(); ?>
                     </td>
                 <?php } ?>

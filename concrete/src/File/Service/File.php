@@ -371,8 +371,13 @@ class File
      */
     public function sanitize($file)
     {
-        // Let's build an ASCII-only version of name, to avoid filesystem-specific encoding issues.
-        $asciiName = Core::make('helper/text')->asciify($file);
+        $app = CoreApplication::getFacadeApplication();
+        if ($app['config']->get('concrete.file_manager.enable_filename_asciify', true)) {
+            // Let's build an ASCII-only version of name, to avoid filesystem-specific encoding issues.
+            $asciiName = $app->make('helper/text')->asciify($file);
+        } else {
+            $asciiName = $file;
+        }
         // Let's keep only letters, numbers, underscore and dots.
         $asciiName = trim(preg_replace(["/[\\s]/", "/[^0-9A-Z_a-z-.]/"], ["_", ""], $asciiName));
         // Trim underscores at start and end

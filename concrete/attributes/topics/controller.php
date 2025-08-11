@@ -2,9 +2,16 @@
 
 namespace Concrete\Attribute\Topics;
 
+use Concrete\Core\Api\ApiResourceValueInterface;
+use Concrete\Core\Api\Attribute\OpenApiSpecifiableInterface;
+use Concrete\Core\Api\Attribute\SupportsAttributeValueFromJsonInterface;
+use Concrete\Core\Api\Fractal\Transformer\TopicTreeNodeTransformer;
+use Concrete\Core\Api\OpenApi\SpecProperty;
+use Concrete\Core\Api\Resources;
 use Concrete\Core\Attribute\Controller as AttributeTypeController;
 use Concrete\Core\Attribute\FontAwesomeIconFormatter;
 use Concrete\Core\Attribute\SimpleTextExportableAttributeInterface;
+use Concrete\Core\Entity\Attribute\Key\Key;
 use Concrete\Core\Entity\Attribute\Key\Settings\TopicsSettings;
 use Concrete\Core\Entity\Attribute\Value\Value\SelectedTopic;
 use Concrete\Core\Entity\Attribute\Value\Value\TopicsValue;
@@ -19,8 +26,14 @@ use Concrete\Core\Tree\Type\Topic as TopicTree;
 use Concrete\Core\Utility\Service\Xml;
 use Core;
 use Database;
+use League\Fractal\Resource\Collection;
+use League\Fractal\Resource\ResourceInterface;
 
-class Controller extends AttributeTypeController implements SimpleTextExportableAttributeInterface
+class Controller extends AttributeTypeController implements
+    SimpleTextExportableAttributeInterface,
+    OpenApiSpecifiableInterface,
+    SupportsAttributeValueFromJsonInterface,
+    ApiResourceValueInterface
 {
     public $akTopicParentNodeID;
     public $akTopicTreeID;
@@ -50,6 +63,7 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
 
         $expressions = [];
         $qb = $list->getQueryObject();
+        $expr = $qb->expr();
         foreach ($topics as $value) {
             if ($value instanceof TreeNode) {
                 $topic = $value;
@@ -60,11 +74,12 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
                     $topic instanceof \Concrete\Core\Tree\Node\Type\Topic ||
                     $topic instanceof Category)) {
                 $column = 'ak_' . $this->attributeKey->getAttributeKeyHandle();
-                $expressions[] = $qb->expr()->like($column, $qb->createNamedParameter('%||' . $topic->getTreeNodeDisplayPath() . '%||'));
+                $topicPath = rtrim($topic->getTreeNodeDisplayPath(), '/');
+                $expressions[] = $expr->like($column, $qb->createNamedParameter('%||' . $topicPath . '||%'));
+                $expressions[] = $expr->like($column, $qb->createNamedParameter('%||' . $topicPath . '/%'));
             }
         }
 
-        $expr = $qb->expr();
         $qb->andWhere(call_user_func_array([$expr, 'orX'], $expressions));
     }
 
@@ -103,12 +118,13 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
 
     public function exportValue(\SimpleXMLElement $akn)
     {
-        /** @var Xml $xml */
-        $xml = \Core::make('helper/xml');
+        $xml = $this->app->make(Xml::class);
         $avn = $akn->addChild('topics');
         $nodes = $this->attributeValue->getValue();
-        foreach ($nodes as $topic) {
-            $xml->createCDataNode($avn, 'topic', $topic->getTreeNodeDisplayPath());
+        if (!empty($nodes)) {
+            foreach ($nodes as $topic) {
+                $xml->createChildElement($avn, 'topic', $topic->getTreeNodeDisplayPath());
+            }
         }
     }
 
@@ -202,34 +218,36 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
     public function form($additionalClass = false)
     {
         $this->load();
-        if (is_object($this->attributeValue)) {
-            $valueIDs = [];
-            $valueObject = $this->attributeValue->getValueObject();
-            if ($valueObject) {
-                foreach ($valueObject->getSelectedTopics() as $value) {
-                    $valueID = $value->getTreeNodeID();
-                    $withinParentScope = false;
-                    $nodeObj = TreeNode::getByID($value->getTreeNodeID());
-                    if (is_object($nodeObj)) {
-                        $parentNodeArray = $nodeObj->getTreeNodeParentArray();
-                        // check to see if selected node is still within parent scope, in case it has been changed.
-                        foreach ($parentNodeArray as $parent) {
-                            if ($parent->treeNodeID == $this->akTopicParentNodeID) {
-                                $withinParentScope = true;
-                                break;
+        $valueIDs = [];
+        if ($this->request->isPost()) {
+            $valueIDs = (array) $this->request->request->get('topics_' . $this->attributeKey->getAttributeKeyID());
+        } else {
+            if (is_object($this->attributeValue)) {
+                $valueIDs = [];
+                $valueObject = $this->attributeValue->getValueObject();
+                if ($valueObject) {
+                    foreach ($valueObject->getSelectedTopics() as $value) {
+                        $valueID = $value->getTreeNodeID();
+                        $withinParentScope = false;
+                        $nodeObj = TreeNode::getByID($value->getTreeNodeID());
+                        if (is_object($nodeObj)) {
+                            $parentNodeArray = $nodeObj->getTreeNodeParentArray();
+                            // check to see if selected node is still within parent scope, in case it has been changed.
+                            foreach ($parentNodeArray as $parent) {
+                                if ($parent->treeNodeID == $this->akTopicParentNodeID) {
+                                    $withinParentScope = true;
+                                    break;
+                                }
                             }
-                        }
-                        if ($withinParentScope) {
-                            $valueIDs[] = $valueID;
+                            if ($withinParentScope) {
+                                $valueIDs[] = $valueID;
+                            }
                         }
                     }
                 }
             }
-            $this->set('valueIDs', implode(',', $valueIDs));
-        } else {
-            $valueIDs = null;
-            $this->set('valueIDs', null);
         }
+        $this->set('valueIDs', implode(',', $valueIDs));
         $this->set('valueIDArray', $valueIDs);
         $ak = $this->getAttributeKey();
         $this->set('akID', $ak->getAttributeKeyID());
@@ -329,7 +347,7 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
 
         $e = $this->app->make('error');
 
-        if (!$data['akTopicParentNodeID'] || !$data['akTopicTreeID']) {
+        if (empty($data['akTopicParentNodeID']) || empty($data['akTopicTreeID'])) {
             $e->add(t('You must specify a valid topic tree parent node ID and topic tree ID.'));
         }
 
@@ -345,7 +363,7 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
 
     public function validateForm($p)
     {
-        $topicsArray = $_POST['topics_' . $this->attributeKey->getAttributeKeyID()];
+        $topicsArray = $_POST['topics_' . $this->attributeKey->getAttributeKeyID()] ?? null;
 
         return is_array($topicsArray) && count($topicsArray) > 0;
     }
@@ -437,7 +455,7 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
                 $this->load();
             }
             $initialized = false;
-            preg_match_all('/tid:(\d+)$/', $textRepresentation, $matches);
+            preg_match_all('/tid:(\d+)\b/', $textRepresentation, $matches);
             $nodeIDs = array_unique(array_map('intval', $matches[1]));
             foreach ($nodeIDs as $nodeID) {
                 $node = TreeNode::getByID($nodeID);
@@ -490,4 +508,54 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
             $this->akTopicAllowMultipleValues = $type->allowMultipleValues();
         }
     }
+
+    public function getOpenApiSpecProperty(Key $key): SpecProperty
+    {
+        return new SpecProperty(
+            $key->getAttributeKeyHandle(),
+            $key->getAttributeKeyDisplayName(),
+            'array',
+            null,
+            ['type' => 'integer'],
+        );
+    }
+
+    public function createAttributeValueFromNormalizedJson($json)
+    {
+        $av = new TopicsValue();
+        foreach ((array) $json as $topicId) {
+            $topicId = (int) $topicId;
+            if ($topicId) {
+                $topic = new SelectedTopic();
+                $topic->setAttributeValue($av);
+                $topic->setTreeNodeID($topicId);
+                $av->getSelectedTopics()->add($topic);
+            }
+        }
+        return $av;
+    }
+
+    public function getApiValueResource(): ?ResourceInterface
+    {
+        $value = $this->getAttributeValueObject();
+        if ($value) {
+            /**
+             * @var $value TopicsValue
+             */
+            $topics = [];
+            $selectedTopics = $value->getSelectedTopics();
+            foreach ($selectedTopics as $selectedTopic) {
+                /**
+                 * @var $selectedTopic SelectedTopic
+                 */
+                $node = Node::getByID($selectedTopic->getTreeNodeID());
+                if ($node instanceof Topic) {
+                    $topics[] = $node;
+                }
+            }
+            return new Collection($topics, new TopicTreeNodeTransformer(), Resources::RESOURCE_TOPICS);
+        }
+        return null;
+    }
+
 }

@@ -18,11 +18,21 @@ use Illuminate\Filesystem\Filesystem;
  */
 class PackagesTranslationLoaderTest extends ConcreteDatabaseTestCase
 {
-    protected $metadatas = [
+    protected $entityClassNames = [
         \Concrete\Core\Entity\Package::class,
     ];
 
     private static $packagesInstalled = false;
+
+    /**
+     * @var \Concrete\Core\Localization\Translator\TranslatorAdapterInterface|null
+     */
+    protected $adapter;
+
+    /**
+     * @var \Concrete\Core\Localization\Translator\Translation\TranslationLoaderInterface|null
+     */
+    protected $loader;
 
     /**
      * Move a couple of test packages to the packages folder to be used by
@@ -81,7 +91,7 @@ class PackagesTranslationLoaderTest extends ConcreteDatabaseTestCase
         $installPackages = self::getTestPackages();
         foreach ($installPackages as $pkg => $dir) {
             $package = Package::getClass($pkg);
-            $p = $package->install();
+            $package->install();
         }
 
         $factory = new TranslatorAdapterFactory();

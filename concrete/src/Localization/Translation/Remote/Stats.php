@@ -39,7 +39,7 @@ class Stats
      * @param int $translated the number of translated strings
      * @param DateTime|null $updatedOn The date/time of the last update of the translations (null if and only if $translated is null)
      */
-    public function __construct($version, $total, $translated, DateTime $updatedOn = null)
+    public function __construct($version, $total, $translated, ?DateTime $updatedOn = null)
     {
         $this->version = (string) $version;
         $this->total = (int) $total;

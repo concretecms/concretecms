@@ -3,6 +3,7 @@ use Concrete\Core\Localization\Localization;
 use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\User\User;
 use Concrete\Core\View\View;
+use Concrete\Core\Support\Facade\Element;
 
 defined('C5_EXECUTE') or die('Access Denied.');
 
@@ -17,6 +18,7 @@ $app = Application::getFacadeApplication();
 $c = Page::getCurrentPage();
 $site = $app->make('site')->getSite();
 $config = $site->getConfigRepository();
+$dh = $app->make('helper/concrete/dashboard');
 $localization = Localization::getInstance();
 $cp = is_object($c) ? new Permissions($c) : null;
 if ($cp !== null) {
@@ -26,6 +28,11 @@ if ($cp !== null) {
     } finally {
         $localization->popActiveContext();
     }
+}
+
+if (!$dh->inDashboard()) {
+    $element = Element::get('production/notice');
+    $element->render();
 }
 
 if (empty($disableTrackingCode)) {
@@ -41,7 +48,6 @@ if ($display_account_menu) {
     if ($cp === null || !$cp->canViewToolbar()) {
         $u = $app->make(User::class);
         if ($u->isRegistered()) {
-            $dh = $app->make('helper/concrete/dashboard');
             if (!$dh->inDashboard($c)) {
                 $localization->pushActiveContext(Localization::CONTEXT_UI);
                 try {

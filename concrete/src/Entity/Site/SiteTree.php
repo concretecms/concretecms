@@ -49,7 +49,7 @@ class SiteTree extends Tree
 
     public function getDisplayName()
     {
-        return $this->getLocale()->getSite()->getSiteName();
+        return h($this->getLocale()->getSite()->getSiteName());
     }
 
 }

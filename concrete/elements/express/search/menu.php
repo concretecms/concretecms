@@ -6,7 +6,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
  */
 ?>
 
-    <div class="row row-cols-auto align-items-center">
+<div class="row row-cols-auto g-0 align-items-center">
 
     <?php
     if (!empty($itemsPerPageOptions)) { ?>
@@ -24,7 +24,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
                     ?>
                     <li data-items-per-page="<?= $itemsPerPageOption; ?>">
                         <a class="dropdown-item <?= ($itemsPerPageOption === $itemsPerPage) ? 'active' : ''; ?>"
-                           href="<?=$url?>"><?= $itemsPerPageOption; ?></a>
+                           href="<?= h($url) ?>"><?= $itemsPerPageOption; ?></a>
                     </li>
                 <?php } ?>
             </ul>
@@ -33,16 +33,25 @@ defined('C5_EXECUTE') or die("Access Denied.");
     ?>
 
         <ul class="ccm-dashboard-header-icons">
+            <?php if (isset($manageURL)) { ?>
+                <li><a href="<?= $manageURL ?>" class="ccm-hover-icon launch-tooltip"
+                       title="<?= t('Manage Object') ?>"
+                    >
+                        <i class="fas fa-cog"></i>
+                    </a></li>
+            <?php } ?>
             <?php if ($exportURL) { ?>
-            <li>
-                <a href="<?= $exportURL ?>" class="link-primary">
-                    <i class="fas fa-download"></i> <?= t('Export to CSV') ?>
-                </a>
-            </li>
+            <li><a href="<?= $exportURL ?>" class="ccm-hover-icon launch-tooltip"
+                title="<?= t('Export to CSV') ?>"
+                >
+                    <i class="fas fa-download"></i>
+                </a></li>
             <?php } ?>
             <?php if ($createURL) { ?>
-            <li><a href="<?= $createURL ?>" class="link-primary"><i class="fas fa-plus"></i> <?= t('New %s',
-                        $entity->getEntityDisplayName()) ?></a></li>
+            <li><a href="<?= $createURL ?>" class="ccm-hover-icon launch-tooltip"
+                title="<?= t('New %s',
+                             $entity->getEntityDisplayName()) ?>"><i class="fas fa-plus"></i></a>
+            </li>
             <?php } ?>
         </ul>
 </div>

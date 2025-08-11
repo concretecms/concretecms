@@ -10,6 +10,11 @@ use Imagine\Image\ImagineInterface;
  */
 interface ThumbnailerInterface
 {
+
+    public const THUMBNAIL_EXISTS = 1;
+    public const THUMBNAIL_NOT_EXISTS = 0;
+    public const THUMBNAIL_GENERATING = -1;
+
     /**
      * Get the storage location to use.
      *
@@ -42,6 +47,23 @@ interface ThumbnailerInterface
      * @return int
      */
     public function getJpegCompression();
+
+    /**
+     * Overrides the default WEBP compression level per instance of the image helper.
+     * This allows for a single-use for a particularly low or high compression value.
+     *
+     * @param int $level the level of compression (in the range 0...100)
+     *
+     * @return static
+     */
+    public function setWebpCompression($level);
+
+    /**
+     * Get the currently set WEBP compression level.
+     *
+     * @return int
+     */
+    public function getWebpCompression();
 
     /**
      * Overrides the default PNG compression level per instance of the image helper.

@@ -49,6 +49,7 @@ class UserProgress extends Progress
             'wpID' => $this->getWorkflowProgressID(),
             $token::DEFAULT_TOKEN_NAME => $token->generate('save_user_workflow_progress')
         ]);
+        return (string) $url->setQuery($query);
     }
 
     public function getPendingWorkflowProgressList()

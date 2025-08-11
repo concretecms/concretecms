@@ -17,6 +17,13 @@ use Concrete\Core\Legacy\DatabaseItemList;
  */
 class VersionList extends DatabaseItemList
 {
+    /**
+     * @deprecated What's deprecated is the "public" part.
+     *
+     * @var \Concrete\Core\Page\Collection\Collection
+     */
+    public $c;
+
     public function __construct($c)
     {
         $this->c = $c;

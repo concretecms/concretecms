@@ -199,7 +199,7 @@ class Repository extends \Illuminate\Config\Repository
     /**
      * Register a package for cascading configuration.
      *
-     * @param string $package
+     * @param \Concrete\Core\Package\Package|\Concrete\Core\Package\Package $package
      * @param string|null $hint
      * @param string|null $namespace
      */
@@ -477,16 +477,18 @@ class Repository extends \Illuminate\Config\Repository
     /**
      * Get the configuration namespace for a package.
      *
-     * @param string|\Concrete\Core\Package\Package $package
+     * @param string|\Concrete\Core\Package\Package|\Concrete\Core\Entity\Package $package
      * @param string $namespace
      *
      * @return string
      */
     protected function getPackageNamespace($package, $namespace)
     {
-        $package = is_object($package) ? $package->getPackageHandle() : $package;
+        if ($namespace) {
+            return $namespace;
+        }
 
-        return $namespace ?: $package;
+        return is_object($package) ? $package->getPackageHandle() : $package;
     }
 
     /**

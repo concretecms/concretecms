@@ -23,13 +23,14 @@ class RedisPaginatedTraitTest extends TestCase
             M::getConfiguration()->setInternalClassMethodParamMap('Redis', 'scan', [
                 '&$iterator',
                 '$pattern = null',
-                '$count = 0'
+                '$count = null',
+                '$type = null',
             ]);
         }
 
 
         $redis = M::mock('Redis');
-        $expectedIterators = [0, 127, 135, 205];
+        $expectedIterators = [null, 127, 135, 205];
         $returnValues = [['cfg=foo', 'cfg=bar'], ['cfg=baz'], false];
 
         $redis->shouldReceive('scan')->times(3)->with(

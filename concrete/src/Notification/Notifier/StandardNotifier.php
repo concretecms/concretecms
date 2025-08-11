@@ -93,6 +93,7 @@ class StandardNotifier implements NotifierInterface
             $alert = new NotificationAlert();
             $alert->setUser($user->getEntityObject());
             $alert->setNotification($notification);
+            $notification->getAlerts()->add($alert);
             $this->entityManager->persist($alert);
         }
 

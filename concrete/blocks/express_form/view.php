@@ -12,27 +12,34 @@ defined('C5_EXECUTE') or die('Access Denied.');
 /** @var string $submitLabel */
 ?>
 <div class="ccm-block-express-form">
-    <?php if (isset($renderer)) {
-    ?>
+    <?php
+    if (isset($renderer)) {
+        ?>
         <div class="ccm-form">
-            <a name="form<?=$bID; ?>"></a>
+            <a name="form<?= $bID ?>"></a>
 
-            <?php if (isset($success)) {
-        ?>
-                <div class="alert alert-success">
-                    <?=$success; ?>
-                </div>
             <?php
-    } ?>
-
-            <?php if (isset($error) && is_object($error)) {
-        ?>
-                <div class="alert alert-danger">
-                    <?=$error->output(); ?>
+            if (isset($success)) {
+                ?>
+                <div class="alert alert-success">
+                    <?= $success ?>
                 </div>
-            <?php } ?>
+                <?php
+            }
+            ?>
 
-            <form enctype="multipart/form-data" class="form-stacked" method="post" action="<?=$view->action('submit')?>#form<?=$bID?>">
+            <?php
+            if (isset($error) && is_object($error)) {
+                ?>
+                <div class="alert alert-danger">
+                    <?= $error->output() ?>
+                </div>
+                <?php
+            }
+            ?>
+
+            <form enctype="multipart/form-data" class="form-stacked" method="post"
+                  action="<?= $view->action('submit') ?>#form<?= $bID ?>">
                 <?php
                 $renderer->render();
 
@@ -43,23 +50,28 @@ defined('C5_EXECUTE') or die('Access Denied.');
                         $captchaLabel = $captcha->label();
                         if (!empty($captchaLabel)) {
                             ?>
-                            <label class="control-label form-label"><?php echo $captchaLabel; ?></label>
-                            <?php } ?>
+                            <label class="control-label form-label"><?= $captchaLabel ?></label>
+                            <?php
+                        }
+                        ?>
 
                         <div><?php $captcha->display(); ?></div>
                         <div><?php $captcha->showInput(); ?></div>
                     </div>
-                <?php } ?>
+                    <?php
+                }
+                ?>
 
                 <div class="form-actions">
-                    <button type="submit" name="Submit" class="btn btn-primary"><?=t($submitLabel); ?></button>
+                    <button type="submit" name="Submit" class="btn btn-primary"><?= t($submitLabel) ?></button>
                 </div>
             </form>
         </div>
-    <?php
-} else {
+        <?php
+    } else {
         ?>
-        <p><?=t('This form is unavailable.'); ?></p>
-    <?php
-    } ?>
+        <p><?= t('This form is unavailable.') ?></p>
+        <?php
+    }
+    ?>
 </div>

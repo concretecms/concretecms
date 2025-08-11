@@ -179,6 +179,7 @@ class ImportResult implements JsonSerializable
      *
      * @see \JsonSerializable::jsonSerialize()
      */
+    #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
         $jsonErrors = $this->errors->jsonSerialize();
@@ -201,7 +202,7 @@ class ImportResult implements JsonSerializable
      *
      * @return $this
      */
-    public function setDataCollected(array $value = null)
+    public function setDataCollected(?array $value = null)
     {
         $this->dataCollected = $value;
 

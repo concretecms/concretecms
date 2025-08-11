@@ -11,6 +11,42 @@ class Set implements \JsonSerializable
         $this->columns[] = $col;
     }
 
+    /**
+     * Add a column after a specific key.
+     * @param \Concrete\Core\Search\Column\ColumnInterface $col
+     * @param string $key
+     * @return void
+     */
+    public function addColumnAfterKey($col, $key)
+    {
+        $columns = [];
+        foreach($this->columns as $column) {
+            $columns[] = $column;
+            if ($column->getColumnKey() == $key) {
+                $columns[] = $col;
+            }
+        }
+        $this->columns = $columns;
+    }
+
+    /**
+     * Add a column before a specific key.
+     * @param \Concrete\Core\Search\Column\ColumnInterface $col
+     * @param string $key
+     * @return void
+     */
+    public function addColumnBeforeKey($col, $key)
+    {
+        $columns = [];
+        foreach($this->columns as $column) {
+            if ($column->getColumnKey() == $key) {
+                $columns[] = $col;
+            }
+            $columns[] = $column;
+        }
+        $this->columns = $columns;
+    }
+
     public function removeColumnByKey($key)
     {
         foreach($this->columns as $i => $column) {
@@ -33,14 +69,7 @@ class Set implements \JsonSerializable
             if (!$col) {
                 unset($this->columns[$i]); // Somehow a null column was saved in the result set.
             }
-
-            if ($col instanceof AttributeKeyColumn) {
-                $ak = $this->getAttributeKeyColumn(substr($col->getColumnKey(), 3));
-                if (!is_object($ak)) {
-                    unset($this->columns[$i]);
-                }
-            }
-            ++$i;
+            $i++;
         }
     }
 
@@ -98,6 +127,7 @@ class Set implements \JsonSerializable
         }
     }
 
+    #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
         $data = [
@@ -105,6 +135,7 @@ class Set implements \JsonSerializable
         ];
         if ($this->getDefaultSortColumn()) {
             $data['sortColumn'] = $this->getDefaultSortColumn()->getColumnKey();
+            $data['sortColumnDirection'] = $this->getDefaultSortColumn()->getColumnSortDirection();
         }
         return $data;
     }
@@ -116,18 +147,21 @@ class Set implements \JsonSerializable
 
     public function contains($col)
     {
-        foreach ($this->columns as $_col) {
-            if ($col instanceof ColumnInterface) {
-                if ($_col->getColumnKey() == $col->getColumnKey()) {
-                    return true;
-                }
-            } elseif (is_a($col, '\Concrete\Core\Attribute\AttributeKeyInterface')) {
-                if ($_col->getColumnKey() == 'ak_' . $col->getAttributeKeyHandle()) {
-                    return true;
+        if ($col) {
+            foreach ($this->columns as $_col) {
+                if ($_col) {
+                    if ($col instanceof ColumnInterface) {
+                        if ($_col->getColumnKey() == $col->getColumnKey()) {
+                            return true;
+                        }
+                    } elseif (is_a($col, '\Concrete\Core\Attribute\AttributeKeyInterface')) {
+                        if ($_col->getColumnKey() == 'ak_' . $col->getAttributeKeyHandle()) {
+                            return true;
+                        }
+                    }
                 }
             }
         }
-
         return false;
     }
 }

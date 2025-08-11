@@ -56,16 +56,7 @@ class RefreshBoardInstanceCommandHandler
                     ]
                 );
                 if ($contentObjectCollection) {
-                    $updatedObjectCollection = new ObjectCollection();
-                    /**
-                     * @var ObjectCollection $contentObjectCollection
-                     */
-                    $objects = $contentObjectCollection->getContentObjects();
-                    foreach ($objects as $contentSlot => $object) {
-                        $object->refresh($this->app);
-                        $updatedObjectCollection->addContentObject($contentSlot, $object);
-                    }
-
+                    $updatedObjectCollection = $contentObjectCollection->refresh();
                     $json = $this->serializer->serialize($updatedObjectCollection, 'json');
 
                     $blockController->save(

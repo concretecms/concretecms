@@ -7,6 +7,7 @@ use Concrete\Core\Controller\AbstractController;
 use Concrete\Core\File\Service\File;
 use Concrete\Core\Http\ResponseFactoryInterface;
 use Concrete\Core\Marketplace\Marketplace;
+use Concrete\Core\Marketplace\PackageRepositoryInterface;
 use Concrete\Core\Url\Url;
 use Concrete\Core\Url\UrlInterface;
 use Stash\Interfaces\ItemInterface;
@@ -57,10 +58,12 @@ class GetImageData extends AbstractController
 
     protected function getImageDataUrl(string $baseUrl, string $image): UrlInterface
     {
+        $connection = $this->app->make(PackageRepositoryInterface::class)->getConnection();
+
         $url = Url::createFromUrl($baseUrl, false);
         $url->getQuery()->modify([
             'image' => $image,
-            'cfToken' => Marketplace::getSiteToken(),
+            'cfToken' => $connection ? $connection->getPublic() : null,
         ]);
 
         return $url;

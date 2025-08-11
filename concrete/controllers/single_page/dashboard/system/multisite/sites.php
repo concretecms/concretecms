@@ -15,6 +15,7 @@ use Concrete\Core\Page\Theme\Theme;
 use Concrete\Core\Site\Type\OptionsFormProvider;
 use Concrete\Core\Url\Resolver\Manager\ResolverManagerInterface;
 use Concrete\Core\Url\Url;
+use Concrete\Core\Url\UrlImmutable;
 
 class Sites extends DashboardPageController
 {
@@ -161,22 +162,34 @@ class Sites extends DashboardPageController
                 $this->error->add(t('This site type does not have a theme assigned to it.'));
             }
         }
+        /** @var \Concrete\Core\Site\Service $service */
+        $service = $this->app->make('site');
         $handle = (string) $this->request->request->get('handle');
         if ($handle === '') {
             $this->error->add(t('Handle required.'));
         } elseif (!$vs->handle($handle)) {
             $this->error->add(t('Handles must contain only letters, numbers or the underscore symbol.'));
+        } else {
+            $site = $service->getByHandle($handle);
+            if ($site !== null) {
+                $this->error->add(t('A site with this handle already exists.'));
+            }
         }
         $name = trim((string) $this->request->request->get('name'));
         if ($name === '') {
             $this->error->add(t('Name required.'));
         }
 
+        try {
+            $canonicalURL = (string) UrlImmutable::createFromUrl($this->post('canonical_url'));
+        } catch (\RuntimeException $x) {
+            $this->error->add(t('The canonical URL is not valid.'));
+        }
+
         if (!$this->error->has()) {
-            $service = $this->app->make('site');
             $site = $service->add($type, $theme, $handle, $name, 'en_US');
             $siteConfig = $site->getConfigRepository();
-            $siteConfig->save('seo.canonical_url', $this->post('canonical_url'));
+            $siteConfig->save('seo.canonical_url', $canonicalURL);
             $siteConfig->save('timezone', $this->request->request->get('timezone'));
             $this->flash('success', t('Site created successfully.'));
 
@@ -218,7 +231,7 @@ class Sites extends DashboardPageController
             $menu = null;
         } else {
             $breadcrumb = $this->app->make(DashboardBreadcrumbFactory::class)->getBreadcrumb($this->getPageObject());
-            $breadcrumb->add(new Item('', $site->getSiteName()));
+            $breadcrumb->add(new Item('', h($site->getSiteName())));
             $this->setBreadcrumb($breadcrumb);
             $menu = new Element('dashboard/system/multisite/site/menu', '', $this->getPageObject(), ['site' => $site]);
         }

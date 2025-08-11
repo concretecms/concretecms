@@ -1,0 +1,33 @@
+@import url(//fonts.googleapis.com/css?family=Nunito:400,600);
+@import url(//fonts.googleapis.com/css?family=Merriweather:500);
+@import url(//fonts.googleapis.com/css?family=Barlow:800);
+
+// Colors - Base Bootstrap
+$success: #66BB6A; // Fresh green
+$danger: #E53935; // Bold red
+$warning: #FDD835; // Golden yellow
+$info: #1976D2; // Bright blue
+$dark: #6A3E8E; // Deep purple
+$gray-500: #A1887F; // Warm muted brown
+
+// Display Headings
+$display-font-family: "Merriweather" !default;
+$display-font-weight: 500 !default;
+$display-line-height: 1em;
+$display-font-sizes: (
+        1: 4rem,
+        2: 3.5rem,
+        3: 3rem,
+        4: 2rem
+);
+
+// Regular Headings
+$headings-font-family: "Barlow" !default;
+$headings-font-weight: 800 !default;
+
+// Links
+$link-color: $primary;
+$link-decoration: none;
+
+// Doc Library
+$theme-document-library-icon-filter: none;

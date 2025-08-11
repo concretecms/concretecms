@@ -1,1 +1,1 @@
-﻿CKEDITOR.plugins.setLang("save","et",{toolbar:"Salvestamine"});
+CKEDITOR.plugins.setLang("save","et",{toolbar:"Salvestamine"});

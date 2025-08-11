@@ -4,6 +4,7 @@ namespace Concrete\Controller\Frontend;
 
 use Concrete\Core\File\Image\BitmapFormat;
 use Concrete\Core\File\Type\Type as FileType;
+use Concrete\Core\File\Upload\Dropzone;
 use Concrete\Core\Filesystem\FileLocator;
 use Concrete\Core\Http\ResponseFactoryInterface;
 use Concrete\Core\Localization\Localization;
@@ -42,6 +43,7 @@ var ccmi18n = ' . json_encode([
     'changeBlockCSS' => t('Design'),
     'changeBlockTemplate' => t('Block Template'),
     'chooseFont' => t('Choose Font'),
+    'chooseGroup' => t('Choose a Group'),
     'chooseUser' => t('Choose a User'),
     'clear' => t('Clear'),
     'closeWindow' => t('Close'),
@@ -71,7 +73,7 @@ var ccmi18n = ' . json_encode([
     'editMode' => t('Edit Mode'),
     'editModeMsg' => t('Let\'s start editing a page.'),
     'editStackContents' => t('Manage Stack Contents'),
-    'emptyArea' => t('Empty %s Area', '<%- area_handle %>'),
+    'emptyArea' => t('Empty Area'),
     'error' => t('Error'),
     'errorCustomStylePresetNoName' => t('You must give your custom style preset a name.'),
     'errorDetails' => t('Details'),
@@ -148,6 +150,8 @@ var ccmi18n_editor = ' . json_encode([
     'lightboxFeatures' => t('Lightbox Features'),
     'sitemap' => t('Sitemap'),
     'snippets' => t('Snippets'),
+    'cancelPrompt' => t('Are you sure you want to revert changes made to this block?'),
+    'cancelPromptButton' => t('Yes, revert changes'),
 ]) . ';
 
 var ccmi18n_express = ' . json_encode([
@@ -218,6 +222,7 @@ var ccmi18n_sitemap = ' . json_encode([
     'viewing' => t('Viewing'),
     'visitExternalLink' => t('Visit'),
     'visitPage' => t('Visit'),
+    'editInComposer' => t('Edit in composer'),
 ]) . ';
 
 var ccmi18n_spellchecker = ' . json_encode([
@@ -307,6 +312,7 @@ var ccmi18n_filemanager = ' . json_encode([
     'sets' => t('Sets'),
     'specifyName' => t('Please enter a name...'),
     'thumbnailImages' => t('Thumbnail Images'),
+    'thumbnailImageSaved' => t('Thumbnail image saved successfully.'),
     'title' => t('File Manager'),
     'upload' => t('Upload'),
     'uploadComplete' => t('Upload Complete'),
@@ -316,6 +322,9 @@ var ccmi18n_filemanager = ' . json_encode([
     'uploadProgress' => t('Upload Progress'),
     'view' => t('View'),
     'uploadFiles' => t('Upload Files'),
+    'width' => t('Width'),
+    'height' => t('Height'),
+    'size' => t('Size'),
 ]) . ';
 
 var ccmi18n_chosen = ' . json_encode([
@@ -506,6 +515,15 @@ var ccmi18n_processes = ' . json_encode([
     'confirmDeletion' => t('Delete this process log entry? The record of the process along with any logs will be removed.'),
     'close' => t('Close'),
     'delete' => t('Delete'),
+]) . ';
+
+var ccmi18n_passwordInput = ' . json_encode([
+    'invalid' => tc('Password', 'Invalid'),
+    'tooWeak' => tc('Password', 'Too Weak'),
+    'weak' => tc('Password', 'Weak'),
+    'medium' => tc('Password', 'Medium'),
+    'strong' => tc('Password', 'Strong'),
+    'veryStrong' => tc('Password', 'Very Strong'),
 ]) . ';
         ';
 
@@ -780,92 +798,13 @@ ccmTranslator.setI18NDictionart(' . json_encode([
      */
     public function getDropzoneJavascript()
     {
-        $config = $this->app->make('config');
-        $token = $this->app->make('token');
-
-        $maxExecutionTime = (int) ini_get('max_execution_time');
-        $maxInputType = (int) ini_get('max_input_time');
-        $timeout = $maxExecutionTime <= 0 ? 24 * 60 * 60 : $maxExecutionTime;
-        if ($maxInputType === 0) {
-            $timeout += 24 * 60 * 60;
-        } elseif ($maxInputType > 0) {
-            $timeout += $maxInputType;
-        }
-        $options = [
-            'dictDefaultMessage' => t('Drop files here or click to upload.'),
-            'dictFallbackMessage' => t("Your browser does not support drag'n'drop file uploads."),
-            'dictFallbackText' => t('Please use the fallback form below to upload your files like in the olden days.'),
-            'dictFileTooBig' => t('File is too big ({{filesize}}MiB). Max filesize: {{maxFilesize}}MiB.'),
-            'dictInvalidFileType' => t('You can\'t upload files of this type.'),
-            'dictResponseError' => t('Server responded with {{statusCode}} code.'),
-            'dictCancelUpload' => t('Cancel upload'),
-            'dictCancelUploadConfirmation' => t('Are you sure you want to cancel this upload?'),
-            'dictRemoveFile' => t('Remove file'),
-            'dictMaxFilesExceeded' => t('You can not upload any more files.'),
-            // See below - this is not the right place for anything except multilingual strings.
-            //'resizeQuality' => $this->app->make(BitmapFormat::class)->getDefaultJpegQuality() / 100,
-            //'chunking' => (bool) $config->get('concrete.upload.chunking.enabled'),
-            //'chunkSize' => $this->getDropzoneChunkSize(),
-            //'timeout' => 1000 * $timeout,
-        ];
-
-        // Note - this entire method is not really used anymore. We should probably bring back the previous snippets
-        // because we need the ability to have dropzone be translated. HOWEVER, the snippets below are problematic
-        // (specifically including the ccm_token in here), so we're not going to bring those back as is. This is not
-        // the appropriate place for these config values and settings anyway.
-        /*
-        $maxWidth = (int) $config->get('concrete.file_manager.restrict_max_width');
-        if ($maxWidth > 0) {
-            $options['resizeWidth'] = $maxWidth;
-        }
-        $maxHeight = (int) $config->get('concrete.file_manager.restrict_max_height');
-        if ($maxHeight > 0) {
-            $options['resizeHeight'] = $maxHeight;
-        }*/
+        $options = $this->app->make(Dropzone::class)->getLocalizationOptions();
 
         $content = '';
         foreach ($options as $optionKey => $optionValue) {
             $content .= 'Dropzone.prototype.defaultOptions[' . json_encode($optionKey) . '] = ' . json_encode($optionValue) . ";\n";
         }
-        /*
-        if ($maxWidth > 0 || $maxHeight > 0) {
-            $content .= <<<'EOT'
-Dropzone.prototype.defaultOptions.accept = function(file, done) {
-    if (file && file.type === 'image/gif') {
-        this.options.resizeWidth = null;
-        this.options.resizeHeight = null;
-    } else {
-        this.options.resizeWidth = Dropzone.prototype.defaultOptions.resizeWidth;
-        this.options.resizeHeight = Dropzone.prototype.defaultOptions.resizeHeight;
-    }
-    return done();
-};
-EOT
-            ;
-        }
 
-        // Add extra parameters to the default params by calling the original
-        // method first which adds the chunked file transfer headers to the
-        // params to be sent to the server.
-        $extraParamsString = json_encode([
-            $token::DEFAULT_TOKEN_NAME => $token->generate(),
-        ]);
-        $content .= 'Dropzone.prototype.defaultOptions.defaultParams = Dropzone.prototype.defaultOptions.params;' . "\n";
-        $content .= <<<EOT
-Dropzone.prototype.defaultOptions.params = function(files, xhr, chunk) {
-    var params = this.options.defaultParams.call(this, files, xhr, chunk) || {};
-    var extraParams = {$extraParamsString};
-
-    var keys = Object.keys(extraParams);
-    for (var i = 0; i < keys.length; i++) {
-        params[keys[i]] = extraParams[keys[i]];
-    }
-
-    return params;
-};
-EOT
-        ;
-*/
         return $this->createJavascriptResponse($content);
     }
 
@@ -940,42 +879,7 @@ jQuery.fn.concreteConversationAttachments.localize(' . json_encode([
             200,
             [
                 'Content-Type' => 'application/javascript; charset=' . APP_CHARSET,
-                'Content-Length' => strlen($content),
             ]
         );
-    }
-
-    /**
-     * @return int
-     */
-    private function getDropzoneChunkSize()
-    {
-        $config = $this->app->make('config');
-        $chunkSize = (int) $config->get('concrete.upload.chunking.chunkSize');
-
-        return $chunkSize > 0 ? $chunkSize : $this->getDropzoneAutomaticChunkSize();
-    }
-
-    /**
-     * @return int
-     */
-    private function getDropzoneAutomaticChunkSize()
-    {
-        $nh = $this->app->make('helper/number');
-        // Maximum size of an uploaded file, minus a small value (just in case)
-        $uploadMaxFilesize = (int) $nh->getBytes(ini_get('upload_max_filesize')) - 100;
-        // Max size of post data allowed, minus enough space to consider other posted fields.
-        $postMaxSize = (int) $nh->getBytes(ini_get('post_max_size')) - 10000;
-        if ($uploadMaxFilesize < 1 && $postMaxSize < 1) {
-            return 2000000;
-        }
-        if ($uploadMaxFilesize < 1) {
-            return $postMaxSize;
-        }
-        if ($postMaxSize < 1) {
-            return $uploadMaxFilesize;
-        }
-
-        return min($uploadMaxFilesize, $postMaxSize);
     }
 }

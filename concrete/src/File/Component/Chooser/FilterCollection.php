@@ -22,6 +22,7 @@ class FilterCollection implements FilterCollectionInterface
         $this->filters[] = $filter;
     }
 
+    #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
         return $this->filters;

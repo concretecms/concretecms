@@ -3,17 +3,19 @@ defined('C5_EXECUTE') or die("Access Denied.");
 ?>
 <section class="ccm-ui" data-view="choose-summary-templates">
     <header><h3><?= t('Summary Templates') ?></h3></header>
-    <form method="post" action="<?= $controller->action('submit') ?>" data-dialog-form="summary-templates"
+    <form v-cloak method="post" action="<?= $controller->action('submit') ?>" data-dialog-form="summary-templates"
           data-panel-detail-form="summary-templates">
 
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-8 ps-0">
-                    <p class="text-muted"><small><?=t('Review your summary templates to make sure they look good at different sizes of the browser window.')?></small></p>
+                    <?=t('Review your summary templates to make sure they look good at different sizes of the browser window.')?>
                 </div>
-                <div class="col-4 text-end">
-                    <toggle-button class="pe-2 mb-0" v-model="hasCustomSummaryTemplates" name="hasCustomSummaryTemplates"></toggle-button>
-                    <span class="text-muted"><small><?= t('Use only specific templates.') ?></small></span>
+                <div class="col-4">
+                    <div class="float-end form-check form-switch">
+                        <input class="form-check-input" v-model="hasCustomSummaryTemplates" type="checkbox" role="switch" id="hasCustomSummaryTemplates" name="hasCustomSummaryTemplates">
+                        <label class="form-check-label" for="hasCustomSummaryTemplates"><small><?= t('Use only specific templates.') ?></small></label>
+                    </div>
                 </div>
             </div>
             <div class="row">
@@ -32,9 +34,9 @@ defined('C5_EXECUTE') or die("Access Denied.");
                 <?php
                 foreach ($templates as $instanceTemplate) {
                     $template = $instanceTemplate->getTemplate();
-                    $checked = "false";
+                    $checked = false;
                     if (!$object->hasCustomSummaryTemplates() || in_array($template->getID(), $selectedTemplateIDs)) {
-                        $checked = "true";
+                        $checked = true;
                     }
 
                     ?>
@@ -42,8 +44,10 @@ defined('C5_EXECUTE') or die("Access Denied.");
                         <div class="col-6 ps-0">
                             <p class="text-muted"><?=$template->getName()?></p>
                         </div>
-                        <div class="col-6 text-end">
-                            <toggle-button v-show="hasCustomSummaryTemplates" name="template_<?=$template->getID()?>" :value="<?=$checked?>"></toggle-button>
+                        <div class="col-6">
+                            <div class="float-end form-check form-switch">
+                                <input v-show="hasCustomSummaryTemplates" <?php if ($checked) { ?>checked<?php } ?> value="1" class="form-check-input" type="checkbox" role="switch" name="template_<?=$template->getID()?>">
+                            </div>
                         </div>
                     </div>
                     <div class="row">

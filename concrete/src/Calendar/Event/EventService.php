@@ -3,6 +3,7 @@ namespace Concrete\Core\Calendar\Event;
 
 use Concrete\Core\Application\ApplicationAwareInterface;
 use Concrete\Core\Application\ApplicationAwareTrait;
+use Concrete\Core\Board\Command\RegenerateRelevantBoardInstancesCommand;
 use Concrete\Core\Calendar\Event\Summary\Template\Populator;
 use Concrete\Core\Config\Repository\Repository;
 use Concrete\Core\Foundation\Repetition\Comparator;
@@ -31,7 +32,7 @@ class EventService implements ApplicationAwareInterface
     const INTERVAL_VERSION = 1200; // 20 minutes
 
     use ApplicationAwareTrait;
-    
+
     public function __construct(EntityManagerInterface $entityManagerInterface, Repository $config, EventOccurrenceFactory $occurrenceFactory, EventCategory $eventCategory, EventDispatcher $dispatcher)
     {
         $this->entityManager = $entityManagerInterface;
@@ -83,7 +84,8 @@ class EventService implements ApplicationAwareInterface
 
         $now = new \DateTime('now', new \DateTimeZone($event->getCalendar()->getTimezone()));
         $recentVersionDate = $recent->getDateAdded();
-        if ($recent->getAuthor()->getUserID() == $u->getUserID() && !$recent->isApproved() && (
+        $author = $recent->getAuthor();
+        if ($author && $recent && $author->getUserID() == $u->getUserID() && !$recent->isApproved() && (
             ($now->getTimestamp() - $recentVersionDate->getTimestamp()) < self::INTERVAL_VERSION
             )) {
             // We can use the same version.
@@ -141,6 +143,13 @@ class EventService implements ApplicationAwareInterface
 
     public function approve(CalendarEventVersion $version)
     {
+        // Note: without this, summary templates are not fully populated on first
+        // request because the attributes have just been set against the object
+        // and then their retrieval doesn't actually work until the next request.
+        // Ideally this wouldn't be necessary but this is the easiest fix with the lowest
+        // potential for side effects.
+        $this->app->make('cache/request')->disable();
+
         $currentlyApproved = $version->getEvent()->getApprovedVersion();
         if ($currentlyApproved) {
             $currentlyApproved->setIsApproved(false);
@@ -174,6 +183,8 @@ class EventService implements ApplicationAwareInterface
 
         $populator = $this->app->make(Populator::class);
         $populator->updateAvailableSummaryTemplates($event);
+
+        $this->app->executeCommand(new RegenerateRelevantBoardInstancesCommand('calendar_event', $event));
     }
 
     public function unapprove(CalendarEvent $event)
@@ -183,7 +194,7 @@ class EventService implements ApplicationAwareInterface
         $this->entityManager->flush();
     }
 
-    public function duplicate(CalendarEvent $event, User $u, Calendar $calendar = null)
+    public function duplicate(CalendarEvent $event, User $u, ?Calendar $calendar = null)
     {
         $values = $this->eventCategory->getAttributeValues($event->getRecentVersion());
 
@@ -209,7 +220,7 @@ class EventService implements ApplicationAwareInterface
             $this->entityManager->persist($value);
         }
         $this->entityManager->flush();
-        
+
         $this->generateDefaultOccurrences($version);
 
         $duplicateEvent = new DuplicateEventEvent($this);
@@ -222,9 +233,12 @@ class EventService implements ApplicationAwareInterface
 
     public function delete(CalendarEvent $event)
     {
-        if ($event->getPageID() && $event->getRelatedPageRelationType() == 'C') {
-            $calendarPage = Page::getByID($this->cID);
-            if ($calendarPage && !$calendarPage->isError()) {
+        $this->app->executeCommand(new RegenerateRelevantBoardInstancesCommand('calendar_event', $event));
+
+        $version = $event->getSelectedVersion() ?: $event->getApprovedVersion();
+        if ($version && $version->getRelatedPageRelationType() === 'C') {
+            $calendarPage = $version->getPageObject();
+            if ($calendarPage) {
                 if ($this->config->get('concrete.misc.enable_trash_can')) {
                     $calendarPage->moveToTrash();
                 } else {

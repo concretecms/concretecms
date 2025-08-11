@@ -23,7 +23,7 @@ abstract class ApplierEntry implements EntryInterface
      */
     protected $applier;
 
-    public function __construct(User $applier = null)
+    public function __construct(?User $applier = null)
     {
         $this->applier = $applier;
     }

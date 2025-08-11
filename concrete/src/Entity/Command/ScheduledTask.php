@@ -142,13 +142,12 @@ class ScheduledTask implements \JsonSerializable
         return new CronExpression($this->getCronExpression());
     }
 
+    #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
-        $timezone = date_default_timezone_get();
-        $dateScheduledString = (new \DateTime('@' . $this->getDateScheduled()))
-            ->setTimezone(new \DateTimeZone($timezone))
-            ->format('F d, Y g:i a');
-
+        /** @var \Concrete\Core\Localization\Service\Date $date */
+        $date = app('helper/date');
+        $dateScheduledString = $date->formatPrettyDateTime($this->getDateScheduled());
         $cronExpression = $this->getCronExpressionObject();
 
         $data = [
@@ -158,7 +157,7 @@ class ScheduledTask implements \JsonSerializable
             'dateScheduled' => $this->getDateScheduled(),
             'dateScheduledString' => $dateScheduledString,
             'cronExpression' => $this->getCronExpression(),
-            'nextRunDate' => $cronExpression->getNextRunDate()->format('Y-m-d H:i:s'),
+            'nextRunDate' => $date->formatPrettyDateTime($cronExpression->getNextRunDate()),
             'user' => $this->getUser(),
         ];
         return $data;

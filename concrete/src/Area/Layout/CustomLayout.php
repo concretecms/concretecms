@@ -48,6 +48,11 @@ class CustomLayout extends Layout
         return $this->arLayoutIsCustom;
     }
 
+    public function getDisplayName()
+    {
+        return t2('%s Column Custom Layout', '%s Columns Custom Layout', $this->getAreaLayoutNumColumns());
+    }
+
     /**
      * @param \SimpleXMLElement $node
      */

@@ -4,7 +4,6 @@ namespace Concrete\Core\Entity\Search;
 use Concrete\Core\Foundation\Serializer\JsonSerializer;
 use Concrete\Core\Search\Field\FieldInterface;
 use Concrete\Core\Search\ProviderInterface;
-use Concrete\Core\Utility\Service\Xml;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Normalizer\DenormalizableInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
@@ -73,6 +72,7 @@ class Query implements \JsonSerializable, DenormalizableInterface
         $this->columns = $columns;
     }
 
+    #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
         return [
@@ -115,10 +115,17 @@ class Query implements \JsonSerializable, DenormalizableInterface
         foreach($data['columnSet']['columns'] as $columnRecord) {
             $column = $all->getColumnByKey($columnRecord['columnKey']);
             $columnSet->addColumn($column);
-            if ($data['columnSet']['sortColumn'] == $columnRecord['columnKey']) {
-                $columnSet->setDefaultSortColumn($column);
+        }
+        if (isset($data['columnSet']['sortColumn'])) {
+            $sortColumn = $all->getColumnByKey($data['columnSet']['sortColumn']);
+            if ($sortColumn) {
+                $columnSet->setDefaultSortColumn($sortColumn);
+                if (isset($data['columnSet']['sortColumnDirection'])) {
+                    $sortColumn->setColumnSortDirection($data['columnSet']['sortColumnDirection'] === 'desc' ? 'desc' : 'asc');
+                }
             }
         }
+
         $this->setColumns($columnSet);
         $this->itemsPerPage = $data['itemsPerPage'];
     }

@@ -7,8 +7,8 @@
             <img class="card-img-top" src="<?=$thumbnail->getThumbnailURL('blog_entry_thumbnail')?>">
         </div>
         <div class="card-body">
-            <h5 class="card-title"><?=$title?></h5>
-            <?php if ($date) { ?>
+            <h5 class="card-title"><?=h($title)?></h5>
+            <?php if (isset($date)) { ?>
                 <p class="card-text text-center"><small class="text-muted"><?=date('F d, Y', (string) $date)?></small></p>
             <?php } ?>
         </div>

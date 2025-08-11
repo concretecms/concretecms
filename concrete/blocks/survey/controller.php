@@ -3,14 +3,18 @@
 namespace Concrete\Block\Survey;
 
 use Concrete\Core\Block\BlockController;
+use Concrete\Core\Cookie\CookieJar;
+use Concrete\Core\Cookie\ResponseCookieJar;
 use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Error\ErrorList\ErrorList;
 use Concrete\Core\Feature\Features;
 use Concrete\Core\Feature\UsesFeatureInterface;
+use Concrete\Core\Routing\RedirectResponse;
 use Concrete\Core\User\User;
 use Core;
 use Database;
 use Doctrine\DBAL\Types\Types;
+use Doctrine\ORM\EntityManagerInterface;
 use Page;
 
 class Controller extends BlockController implements UsesFeatureInterface
@@ -25,6 +29,15 @@ class Controller extends BlockController implements UsesFeatureInterface
 
     protected $btExportTables = ['btSurvey', 'btSurveyOptions', 'btSurveyResults'];
 
+    public $question;
+
+    public $showResults;
+
+    public $customMessage;
+
+    public $cID;
+
+    public $requiresRegistration = false;
     /**
      * Used for localization. If we want to localize the name/description we have to include this.
      */
@@ -126,9 +139,9 @@ class Controller extends BlockController implements UsesFeatureInterface
         $u = $this->app->make(User::class);
         $db = Database::connection();
         $bo = $this->getBlockObject();
-        if ($this->post('rcID')) {
+        if ($this->request->request->has('rcID')) {
             // we pass the rcID through the form so we can deal with stacks
-            $c = Page::getByID($this->post('rcID'));
+            $c = Page::getByID($this->request->request->get('rcID'));
         } else {
             $c = $this->getCollectionObject();
         }
@@ -156,7 +169,7 @@ class Controller extends BlockController implements UsesFeatureInterface
                 $ip = $iph->getRequestIP();
                 $ip = ($ip === false) ? ('') : ($ip->getIp($ip::FORMAT_IP_STRING));
                 $v = [
-                    $_REQUEST['optionID'],
+                    $this->request->get('optionID'),
                     $this->bID,
                     $duID,
                     $ip,
@@ -164,8 +177,22 @@ class Controller extends BlockController implements UsesFeatureInterface
                 ];
                 $q = 'INSERT INTO btSurveyResults (optionID, bID, uID, ipAddress, cID) VALUES (?, ?, ?, ?, ?)';
                 $db->query($q, $v);
-                setcookie('ccmPoll' . $this->bID . '-' . $this->cID, 'voted', time() + 1296000, DIR_REL . '/');
-                $this->redirect($c->getCollectionPath() . '?survey_voted=1');
+                $cookieJar = $this->app->make(ResponseCookieJar::class);
+                $cookieKey = 'ccmPoll' . $this->bID . '-' . $this->cID;
+                $config = $this->app->make('config');
+                $cookieJar->addCookie(
+                    $cookieKey,
+                    'voted',
+                    time() + 1296000,
+                    DIR_REL . '/',
+                    // $domain
+                    $config->get('concrete.session.cookie.cookie_domain'),
+                    // $secure
+                    $config->get('concrete.session.cookie.cookie_secure'),
+                    // $httpOnly
+                    $config->get('concrete.session.cookie.cookie_httponly')
+                );
+                return new RedirectResponse($c->getCollectionPath() . '?survey_voted=1');
             }
         }
     }
@@ -178,6 +205,12 @@ class Controller extends BlockController implements UsesFeatureInterface
     public function hasVoted()
     {
         $u = $this->app->make(User::class);
+        $cookieJar = $this->app->make(CookieJar::class);
+        $cookieKey = 'ccmPoll' . $this->bID . '-' . $this->cID;
+        $cookieHasVoted = false;
+        if ($cookieJar->has($cookieKey) && $cookieJar->get($cookieKey) == 'voted') {
+            $cookieHasVoted = true;
+        }
         if ($u->isRegistered()) {
             $db = Database::connection();
             $v = [$u->getUserID(), $this->bID, $this->cID];
@@ -186,7 +219,7 @@ class Controller extends BlockController implements UsesFeatureInterface
             if ($result > 0) {
                 return true;
             }
-        } elseif ($_COOKIE['ccmPoll' . $this->bID . '-' . $this->cID] == 'voted') {
+        } else if ($cookieHasVoted) {
             return true;
         }
 
@@ -243,7 +276,7 @@ class Controller extends BlockController implements UsesFeatureInterface
     public function save($args)
     {
         $sanitizer = $this->app->make('helper/security');
-        if (!$args['showResults']) {
+        if (empty($args['showResults'])) {
             $args['showResults'] = 0;
             $args['customMessage'] = '';
         }
@@ -301,5 +334,88 @@ class Controller extends BlockController implements UsesFeatureInterface
             'optionID',
             'SELECT optionID from btSurveyOptions WHERE bID = :bID'
         ))->andWhere($queryBuilder->expr()->eq('bID', ':bID'))->setParameter('bID', (int) $this->bID, Types::INTEGER)->execute();
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Block\BlockController::export()
+     */
+    public function export(\SimpleXMLElement $blockNode)
+    {
+        $em = $this->app->make(EntityManagerInterface::class);
+        parent::export($blockNode);
+        foreach (($blockNode->xpath('./data[@table="btSurveyResults"]/record') ?: []) as $resultNode) {
+            unset($resultNode->resultID[0]);
+            $uID = isset($resultNode->uID) ? (int) $resultNode->uID : 0;
+            $u = $uID > 0 ? $em->find(\Concrete\Core\Entity\User\User::class, $uID) : 0;
+            $resultNode->uID = $u ? "user:{$u->getUserName()}" : '';
+            $cID = isset($resultNode->cID) ? (int) $resultNode->cID : 0;
+            $p = $cID > 0 ? \Concrete\Core\Page\Page::getByID($cID) : null;
+            $resultNode->cID = $p && !$p->isError() ? ('/' . ltrim((string) $p->getCollectionPath(), '/')) : '';
+        }
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Block\BlockController::importAdditionalData()
+     */
+    protected function importAdditionalData($b, $blockNode)
+    {
+        $cn = $this->app->make(Connection::class);
+        // First import the btSurveyOptions rows, storing a mapping from the optionID in the XML and the new optionID generated by the database
+        $optionIDMap = [];
+        foreach (($blockNode->xpath('./data[@table="btSurveyOptions"]/record') ?: []) as $optionNode) {
+            $originalOptionID = isset($optionNode->optionID) ? (int) (string) $optionNode->optionID : 0;
+            $cn->insert('btSurveyOptions', [
+                'bID' => $b->getBlockID(),
+                'optionName' => isset($optionNode->optionName) ? (string) $optionNode->optionName : '',
+                'displayOrder' => isset($optionNode->displayOrder) ? (int) (string) $optionNode->displayOrder : 0,
+            ]);
+            if ($originalOptionID > 0) {
+                $optionIDMap[$originalOptionID] = $cn->lastInsertId();
+            }
+        }
+        $em = $this->app->make(EntityManagerInterface::class);
+        $userRepo = $em->getRepository(\Concrete\Core\Entity\User\User::class);
+        // Next, let's import the btSurveyResults rows
+        foreach (($blockNode->xpath('./data[@table="btSurveyResults"]/record') ?: []) as $resultNode) {
+            $originalOptionID = isset($resultNode->optionID) ? (int) (string) $resultNode->optionID : 0;
+            if ($originalOptionID < 1 || !isset($optionIDMap[$originalOptionID])) {
+                continue;
+            }
+            $data = [
+                'bID' => $b->getBlockID(),
+                'optionID' => $optionIDMap[$originalOptionID],
+                'ipAddress' => isset($resultNode->ipAddress) ? (string) $resultNode->ipAddress : '',
+                'uID' => 0,
+                'cID' => 0,
+            ];
+            $timestamp = isset($resultNode->timestamp) ? (string) $resultNode->timestamp : '';
+            if ($timestamp !== '') {
+                $data['timestamp'] = $timestamp;
+            }
+            $serializedUser = explode(':', isset($resultNode->uID) ? (string) $resultNode->uID : '', 2);
+            if (!empty($serializedUser[1]) && $serializedUser[0] === 'user') {
+                $user = $userRepo->findOneBy(['uName' => $serializedUser[1]]);
+                if ($user) {
+                    $data['uID'] = $user->getUserID();
+                }
+            }
+            $serializedPage = isset($resultNode->cID) ? (string) $resultNode->cID : '';
+            if ($serializedPage !== '' && $serializedPage[0] == '/') {
+                if ($serializedPage === '/') {
+                    $cID = Page::getHomePageID();
+                    $page = $cID ? Page::getByID($cID) : null;
+                } else {
+                    $page = Page::getByPath($serializedPage);
+                }
+                if ($page && !$page->isError()) {
+                    $data['cID'] = $page->getCollectionID();
+                }
+            }
+            $cn->insert('btSurveyResults', $data);
+        }
     }
 }

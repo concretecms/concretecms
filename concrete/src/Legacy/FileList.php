@@ -186,11 +186,6 @@ class FileList extends DatabaseItemList
         $this->filter('f.fDateAdded', $date, $comparison);
     }
 
-    public function filterByOriginalPageID($ocID)
-    {
-        $this->filter('f.ocID', $ocID);
-    }
-
     /**
      * filters a FileList by the uID of the approving User.
      *

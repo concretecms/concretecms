@@ -5,10 +5,12 @@ namespace Concrete\Controller\Panel;
 use Concrete\Controller\Backend\UserInterface\Page as BackendInterfacePageController;
 use Concrete\Core\Application\EditResponse;
 use Concrete\Core\Application\Service\Urls;
+use Concrete\Core\Area\Area;
 use Concrete\Core\Block\Block;
 use Concrete\Core\Block\BlockType\BlockType;
 use Concrete\Core\Block\BlockType\BlockTypeList;
 use Concrete\Core\Block\BlockType\Set as BlockTypeSet;
+use Concrete\Core\Entity\Block\BlockType\BlockType as BlockTypeEntity;
 use Concrete\Core\Block\View\BlockView;
 use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Entity\Page\Container;
@@ -24,6 +26,7 @@ use Concrete\Core\Support\Facade\StackFolder;
 use Concrete\Core\Validation\CSRF\Token;
 use Concrete\Core\View\View;
 use Doctrine\ORM\EntityManager;
+use Illuminate\Support\Arr;
 
 class Add extends BackendInterfacePageController
 {
@@ -105,7 +108,7 @@ class Add extends BackendInterfacePageController
         foreach ($queryBuilder->execute()->fetchAll() as $row) {
             /*
              * Use the block id as key to prevent duplicates because of the second join statement. The "group by"
-             * statement results in sql_mode=only_full_group_by” MySQL-issue and all other solutions like executing
+             * statement results in sql_mode=only_full_group_by MySQL-issue and all other solutions like executing
              * sub-queries to get the area name are having a bad performance.
              */
             $orphanedBlockIds[$row["bID"]] = $row;
@@ -207,7 +210,7 @@ class Add extends BackendInterfacePageController
          * Therefore all results will be fetched from the database and splitted with PHP.
          */
 
-        $curPage = (int)$this->request->request->get("curPage", 0);
+        $curPage = (int)$this->request->get("curPage", 0);
         $maxItems = 10;
 
         return $responseFactory->json(
@@ -268,13 +271,14 @@ class Add extends BackendInterfacePageController
                             if (!$orphanedBlockFound) {
                                 $errorList->add(t("The given block is not orphaned."));
                             } else {
-                                $block = Block::getByID($blockId);
-
+                                $arID = $request->request->get('arId');
+                                $areaHandle = Area::getAreaHandleFromID($arID);
+                                $block = Block::getByID($blockId, $this->page, $areaHandle);
                                 if (!$block instanceof Block) {
                                     //$errorList->add(t("Error while removing orphaned block."));
                                 } else {
                                     // returns false because the area no longer exists in the theme.
-                                    $block->deleteBlock(true);
+                                    $block->deleteBlock();
                                 }
                             }
                         }
@@ -311,15 +315,16 @@ class Add extends BackendInterfacePageController
         if (count($arrOrphanedBlocks) === 0) {
             $errorList->add(t("There are no blocks to remove."));
         } else {
-            foreach ($this->getOrphanedBlockIds($usedAreas) as $arrOrphanedBlock) {
+            foreach ($arrOrphanedBlocks as $arrOrphanedBlock) {
                 $bID = (int)$arrOrphanedBlock["bID"];
-                $block = Block::getByID($bID);
+                $arHandle = $arrOrphanedBlock["arHandle"];
+                $block = Block::getByID($bID, $this->page, $arHandle);
 
                 if (!$block instanceof Block) {
                     $errorList->add(t("Error while removing orphaned block."));
                 } else {
                     // returns false because the area no longer exists in the theme.
-                    $block->deleteBlock(true);
+                    $block->deleteBlock();
                 }
             }
         }
@@ -433,6 +438,12 @@ class Add extends BackendInterfacePageController
      */
     protected function buildSetsAndBlockTypes()
     {
+        // Grabbing the concrete config key block_add_panel_order.alpha
+        $appConfig = $this->app->make('config');
+        $blockOrder = $appConfig->get('concrete.block_add_panel_order.alpha', false);
+
+        // $blockSetHandles will list the sets' handles that require alphabetical ordering
+        $blockSetHandles = [];
         $allowedBlockTypes = [];
         $btl = new BlockTypeList();
         foreach ($btl->get() as $blockType) {
@@ -464,6 +475,12 @@ class Add extends BackendInterfacePageController
             }
             if (!empty($blockTypesForSet)) {
                 $key = $set->getBlockTypeSetDisplayName();
+                
+                // let's only add sets that actually require ordering
+                if (is_array($blockOrder) && in_array($set->getBlockTypeSetHandle(), $blockOrder)) {
+                    $blockSetHandles[$key] = $set->getBlockTypeSetHandle();
+                }
+                
                 if (isset($blockTypesForSets[$key])) {
                     $blockTypesForSets[$key] = array_merge($blockTypesForSets[$key], $blockTypesForSet);
                 } else {
@@ -480,6 +497,13 @@ class Add extends BackendInterfacePageController
             }
             if (!empty($blockTypesForSet)) {
                 $key = t('Other');
+                
+                // The 'Other' block type set doesn't have a handle
+                // So let's accept 'other' as a handle for ordering
+                if (is_array($blockOrder) && in_array('other', $blockOrder)) {
+                    $blockSetHandles[$key] = 'other';
+                }
+                
                 if (isset($blockTypesForSets[$key])) {
                     $blockTypesForSets[$key] = array_merge($blockTypesForSets[$key], $blockTypesForSet);
                 } else {
@@ -487,7 +511,29 @@ class Add extends BackendInterfacePageController
                 }
             }
         }
+        
+        // We should now order the sets if any
+        if ($blockOrder) {
+            foreach ($blockTypesForSets as $key => $blockList) {
+                // at this point $blockOrder is either boolean True (or equivalent) or an array
+                // so it's either an array or not
+                $shouldOrder = !is_array($blockOrder) || isset($blockSetHandles[$key]);
 
+                // whether all sets should be ordered or this one specifically, we process it
+                if ($shouldOrder) {
+                    $blockTypesForSets[$key] = array_values(
+                        Arr::sort(
+                            $blockTypesForSets[$key], 
+                            function (BlockTypeEntity $bte) {
+                                return $bte->getBlockTypeInSetName();
+                            }
+                        )
+                    );
+                }
+            }
+
+        }
+        
         return $blockTypesForSets;
     }
 }

@@ -7,6 +7,7 @@ use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 abstract class AbstractLazyDataFieldData implements LazyDataFieldDataInterface
 {
 
+    #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
         return [

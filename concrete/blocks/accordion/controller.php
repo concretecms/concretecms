@@ -7,6 +7,8 @@ use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Editor\LinkAbstractor;
 use Concrete\Core\Feature\Features;
 use Concrete\Core\Feature\UsesFeatureInterface;
+use Concrete\Core\File\Tracker\FileTrackableInterface;
+use Concrete\Core\File\Tracker\RichTextExtractor;
 use InvalidArgumentException;
 
 class AccordionEntry implements \JsonSerializable
@@ -88,6 +90,7 @@ class AccordionEntry implements \JsonSerializable
         $this->id = $id;
     }
 
+    #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
         return [
@@ -99,8 +102,28 @@ class AccordionEntry implements \JsonSerializable
     }
 }
 
-class Controller extends BlockController implements UsesFeatureInterface
+class Controller extends BlockController implements FileTrackableInterface, UsesFeatureInterface
 {
+    /**
+     * @var string|null
+     */
+    public $initialState;
+
+    /**
+     * @var string|null
+     */
+    public $itemHeadingFormat;
+
+    /**
+     * @var int|string|null
+     */
+    public $alwaysOpen;
+
+    /**
+     * @var int|string|null
+     */
+    public $flush;
+
     /**
      * @var int
      */
@@ -125,6 +148,13 @@ class Controller extends BlockController implements UsesFeatureInterface
      * @var string[]
      */
     protected $btExportTables = ['btAccordion', 'btAccordionEntries'];
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Block\BlockController::$btExportContentColumns
+     */
+    protected $btExportContentColumns = ['description'];
 
     /**
      * @var string
@@ -174,10 +204,10 @@ class Controller extends BlockController implements UsesFeatureInterface
     }
 
     /**
-     * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     * @return string
      * @throws \Doctrine\DBAL\Exception
      *
-     * @return string
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
      */
     public function getSearchableContent()
     {
@@ -195,20 +225,27 @@ class Controller extends BlockController implements UsesFeatureInterface
     }
 
     /**
-     * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     * @return void
      * @throws \Doctrine\DBAL\Exception
      *
-     * @return void
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
      */
     public function edit()
     {
         /** @var Connection $db */
         $db = $this->app->make(Connection::class);
-        $query = $db->fetchAllAssociative('SELECT * FROM btAccordionEntries WHERE bID = ? ORDER BY sortOrder', [$this->bID]);
+        $query = $db->fetchAllAssociative(
+            'SELECT * FROM btAccordionEntries WHERE bID = ? ORDER BY sortOrder',
+            [$this->bID]
+        );
 
         $entries = [];
         foreach ($query as $row) {
-            $entry = new AccordionEntry($row['id'], $row['title'], LinkAbstractor::translateFromEditMode($row['description']));
+            $entry = new AccordionEntry(
+                $row['id'],
+                $row['title'],
+                LinkAbstractor::translateFromEditMode($row['description'])
+            );
             $entries[] = $entry;
         }
 
@@ -216,16 +253,19 @@ class Controller extends BlockController implements UsesFeatureInterface
     }
 
     /**
-     * @throws \Doctrine\DBAL\Exception
+     * @return void
      * @throws \Illuminate\Contracts\Container\BindingResolutionException
      *
-     * @return void
+     * @throws \Doctrine\DBAL\Exception
      */
     public function view()
     {
         /** @var Connection $db */
         $db = $this->app->make(Connection::class);
-        $query = $db->fetchAllAssociative('SELECT * FROM btAccordionEntries WHERE bID = ? ORDER BY sortOrder', [$this->bID]);
+        $query = $db->fetchAllAssociative(
+            'SELECT * FROM btAccordionEntries WHERE bID = ? ORDER BY sortOrder',
+            [$this->bID]
+        );
 
         $entries = [];
         foreach ($query as $row) {
@@ -239,10 +279,10 @@ class Controller extends BlockController implements UsesFeatureInterface
     /**
      * @param int $newBID
      *
-     * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     * @return null
      * @throws \Doctrine\DBAL\Exception
      *
-     * @return null
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
      */
     public function duplicate($newBID)
     {
@@ -270,10 +310,10 @@ class Controller extends BlockController implements UsesFeatureInterface
     }
 
     /**
-     * @throws \Doctrine\DBAL\Exception
+     * @return void
      * @throws \Illuminate\Contracts\Container\BindingResolutionException
      *
-     * @return void
+     * @throws \Doctrine\DBAL\Exception
      */
     public function delete()
     {
@@ -286,10 +326,10 @@ class Controller extends BlockController implements UsesFeatureInterface
     /**
      * @param mixed[] $args
      *
-     * @throws \Doctrine\DBAL\Exception
+     * @return void
      * @throws \Illuminate\Contracts\Container\BindingResolutionException
      *
-     * @return void
+     * @throws \Doctrine\DBAL\Exception
      */
     public function save($args)
     {
@@ -304,12 +344,65 @@ class Controller extends BlockController implements UsesFeatureInterface
             $sortOrder = 0;
             foreach ($entries as $entry) {
                 // Add the entry row
+                if (isset($entry['description'])) {
+                    $entry['description'] = LinkAbstractor::translateTo($entry['description']);
+                }
                 $db->executeStatement(
                     'INSERT INTO btAccordionEntries (bID, sortOrder, title, description) VALUES (?, ?, ?, ?)',
-                    [(int) $this->bID, $sortOrder++, $entry['title'], $entry['description']]
+                    [(int)$this->bID, $sortOrder++, $entry['title'], $entry['description']]
                 );
             }
         }
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Block\BlockController::export()
+     */
+    public function export(\SimpleXMLElement $blockNode)
+    {
+        parent::export($blockNode);
+        $nodesToRemove = $blockNode->xpath('./data[@table="btAccordionEntries"]/record/id');
+        if ($nodesToRemove) {
+            foreach ($nodesToRemove as $nodeToRemove) {
+                unset($nodeToRemove[0]);
+            }
+        }
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\File\Tracker\FileTrackableInterface::getUsedFiles()
+     */
+    public function getUsedFiles()
+    {
+        $result = [];
+        $extractor = $this->app->make(RichTextExtractor::class);
+        $db = $this->app->make(Connection::class);
+        $descriptions = $db->fetchFirstColumn('SELECT description FROM btAccordionEntries WHERE bID = ?', [$this->bID]);
+        foreach ($descriptions as $description) {
+            $result = array_merge($result, $extractor->extractFiles($description));
+        }
+
+        return $result;
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Block\BlockController::importAdditionalData()
+     */
+    protected function importAdditionalData($b, $blockNode)
+    {
+        $nodesToRemove = $blockNode->xpath('./data[@table="btAccordionEntries"]/record/id');
+        if ($nodesToRemove) {
+            foreach ($nodesToRemove as $nodeToRemove) {
+                unset($nodeToRemove[0]);
+            }
+        }
+        parent::importAdditionalData($b, $blockNode);
     }
 
     /**
@@ -317,9 +410,9 @@ class Controller extends BlockController implements UsesFeatureInterface
      *
      * @param array<string,mixed> $args The equivalent to the $_POST submitted
      *
+     * @return array<string,mixed>
      * @throws InvalidArgumentException If the $args or the json are invalid
      *
-     * @return array<string,mixed>
      */
     protected function processJson(array $args): array
     {

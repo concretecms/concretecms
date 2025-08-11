@@ -4,8 +4,10 @@ namespace Concrete\Core\Form\Service\DestinationPicker;
 
 use ArrayAccess;
 use Concrete\Core\Application\Application;
+use Concrete\Core\Block\BlockController;
 use Concrete\Core\Form\Service\Form;
 use Concrete\Core\Http\Request;
+use Concrete\Core\Utility\Service\Xml;
 use RuntimeException;
 
 class DestinationPicker
@@ -208,7 +210,7 @@ EOT
      * </pre></code>
      * $handle and $value will be NULL if (and only if) errors occurred (added to the $errors parameter).
      */
-    public function decode($key, array $pickers, ArrayAccess $errors = null, $fieldDisplayName = null, array $data = null)
+    public function decode($key, array $pickers, ?ArrayAccess $errors = null, $fieldDisplayName = null, ?array $data = null)
     {
         $handle = null;
         $value = null;
@@ -237,6 +239,29 @@ EOT
         }
 
         return [$handle, $value];
+    }
+
+    /**
+     * Add child nodes that compatible with importing via the destination picker to exporting blocks in CIF format xml
+     *
+     * @param string $key The field name
+     * @param string $selectedPickerHandle The handle of selected picker
+     * @param string|int $value The value to export
+     * @param BlockController $blockController The controller of the block you export
+     * @param \SimpleXMLElement $blockNode The xml element that passed to export function
+     * @return void
+     */
+    public function export(string $key, string $selectedPickerHandle, $value, BlockController $blockController, \SimpleXMLElement $blockNode): void
+    {
+        if (isset($blockNode->data)) {
+            $xml = $this->app->make(Xml::class);
+            foreach ($blockNode->data as $data) {
+                if (isset($data->record) && ((string)$data['table'] === $blockController->getBlockTypeDatabaseTable())) {
+                    $xml->createChildElement($data->record, "{$key}__which", $selectedPickerHandle);
+                    $xml->createChildElement($data->record, "{$key}_{$selectedPickerHandle}", $value);
+                }
+            }
+        }
     }
 
     /**

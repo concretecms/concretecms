@@ -27,7 +27,7 @@ Returns codes:
   $okExitCode operation completed successfully
   $errExitCode errors occurred
 
-More info at http://documentation.concrete5.org/developers/appendix/cli-commands#c5-reset
+More info at https://documentation.concretecms.org/9-x/developers/security/cli-jobs#c5-reset
 EOT
             )
         ;
@@ -48,20 +48,14 @@ EOT
                 throw new Exception("Operation aborted.");
             }
         }
+        $cn = Database::get();
+        $cn->executeQuery('set foreign_key_checks = 0');
         if (Database::getDefaultConnection()) {
             $output->write("Listing tables... ");
-            $cn = Database::get();
             /* @var $cn \Concrete\Core\Database\Connection\Connection */
             $sm = $cn->getSchemaManager();
             $tables = $sm->listTables();
             $output->writeln('<info>done.</info>');
-            foreach ($tables as $table) {
-                foreach ($table->getForeignKeys() as $foreignKey) {
-                    $output->write("Dropping foreign key {$table->getName()}.{$foreignKey->getName()}... ");
-                    $sm->dropForeignKey($foreignKey, $table);
-                    $output->writeln('<info>done.</info>');
-                }
-            }
             foreach ($tables as $table) {
                 $output->write("Dropping table {$table->getName()}... ");
                 $sm->dropTable($table);
@@ -113,7 +107,7 @@ EOT
         foreach ($createEmptyDirs as $shownName => $fullpath) {
             if (!file_exists($fullpath)) {
                 $output->write("Creating directory $shownName... ");
-                if (@mkdir($fullpath) === false) {
+                if (@mkdir($fullpath, DIRECTORY_PERMISSIONS_MODE_COMPUTED) === false) {
                     throw new Exception("Failed to create directory $fullpath");
                 }
                 $output->writeln('<info>done.</info>');
