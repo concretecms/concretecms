@@ -16,6 +16,13 @@ use Concrete\Core\Html\Service\Seo;
 use Concrete\Core\Http\ResponseFactoryInterface;
 use Concrete\Core\Package\Offline\Exception;
 use Concrete\Core\Page\Feed;
+use Concrete\Core\Page\PageList;
+use Concrete\Core\Page\Search\ColumnSet\Column\CollectionVersionColumn;
+use Concrete\Core\Page\Search\ColumnSet\Column\DateLastModifiedColumn;
+use Concrete\Core\Page\Search\ColumnSet\Column\DatePublicColumn;
+use Concrete\Core\Page\Search\ColumnSet\Column\RandomColumn;
+use Concrete\Core\Page\Search\ColumnSet\Column\SitemapDisplayOrderColumn;
+use Concrete\Core\Search\Pagination\PaginationFactory;
 use Concrete\Core\Tree\Node\Node;
 use Concrete\Core\Tree\Node\Type\Topic;
 use Concrete\Core\Tree\Tree;
@@ -24,7 +31,6 @@ use Concrete\Core\Url\SeoCanonical;
 use Concrete\Core\Utility\Service\Xml;
 use Database;
 use Page;
-use PageList;
 use SimpleXMLElement;
 
 class Controller extends BlockController implements UsesFeatureInterface
@@ -214,6 +220,7 @@ class Controller extends BlockController implements UsesFeatureInterface
     protected $btCacheBlockOutput = null;
     protected $btCacheBlockOutputOnPost = true;
     protected $btCacheBlockOutputLifetime = 300;
+    /** @var PageList|null */
     protected $list;
 
     /**
@@ -323,28 +330,44 @@ class Controller extends BlockController implements UsesFeatureInterface
 
         switch ($this->orderBy) {
             case 'display_asc':
-                $this->list->sortByDisplayOrder();
+                $sortColumn = new SitemapDisplayOrderColumn();
+                $sortColumn->setColumnSortDirection('asc');
+                $this->list->sortBySearchColumn($sortColumn);
                 break;
             case 'display_desc':
-                $this->list->sortByDisplayOrderDescending();
+                $sortColumn = new SitemapDisplayOrderColumn();
+                $sortColumn->setColumnSortDirection('desc');
+                $this->list->sortBySearchColumn($sortColumn);
                 break;
             case 'chrono_asc':
-                $this->list->sortByPublicDate();
+                $sortColumn = new DatePublicColumn();
+                $sortColumn->setColumnSortDirection('asc');
+                $this->list->sortBySearchColumn($sortColumn);
                 break;
             case 'modified_desc':
-                $this->list->sortByDateModifiedDescending();
+                $sortColumn = new DateLastModifiedColumn();
+                $sortColumn->setColumnSortDirection('desc');
+                $this->list->sortBySearchColumn($sortColumn);
                 break;
             case 'random':
-                $this->list->sortBy('RAND()');
+                $sortColumn = new RandomColumn();
+                $this->list->sortBySearchColumn($sortColumn);
+                $this->list->sortBy('RAND(' . rand() . ')');
                 break;
             case 'alpha_asc':
-                $this->list->sortByName();
+                $sortColumn = new CollectionVersionColumn();
+                $sortColumn->setColumnSortDirection('asc');
+                $this->list->sortBySearchColumn($sortColumn);
                 break;
             case 'alpha_desc':
-                $this->list->sortByNameDescending();
+                $sortColumn = new CollectionVersionColumn();
+                $sortColumn->setColumnSortDirection('desc');
+                $this->list->sortBySearchColumn($sortColumn);
                 break;
             default:
-                $this->list->sortByPublicDateDescending();
+                $sortColumn = new DatePublicColumn();
+                $sortColumn->setColumnSortDirection('desc');
+                $this->list->sortBySearchColumn($sortColumn);
                 break;
         }
 
@@ -488,7 +511,9 @@ class Controller extends BlockController implements UsesFeatureInterface
         $showPagination = false;
         if ($this->num > 0) {
             $list->setItemsPerPage($this->num);
-            $pagination = $list->getPagination();
+            $paginationFactory = new PaginationFactory($this->request);
+            $permissionedStylePagination = $this->paginate ? PaginationFactory::PERMISSIONED_PAGINATION_STYLE_FULL : PaginationFactory::PERMISSIONED_PAGINATION_STYLE_PAGER;
+            $pagination = $paginationFactory->createPaginationObject($list, $permissionedStylePagination);
             $pages = $pagination->getCurrentPageResults();
             if ($pagination->haveToPaginate() && $this->paginate) {
                 $showPagination = true;
