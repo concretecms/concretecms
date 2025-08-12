@@ -111,6 +111,15 @@ class Composer
         return $publishTitle;
     }
 
+    public function getApproveButtonTitle(Page $c)
+    {
+        if ($this->canSubmitWorkflow($c)) {
+            return t('Submit to Workflow');
+        }
+
+        return t('Approve');
+    }
+
     public function displayPublishScheduleSettings(?Page $c = null)
     {
         View::element('pages/schedule', array(
