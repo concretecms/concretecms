@@ -98,7 +98,7 @@ class ApplicationTest extends TestCase
             // Edge case: same pattern in subdir (also off-by-one)
             'subdir with 11index.php' => [
                 '/mysite/11index.php',
-                '/mysite', // Used to produce"/mysite/1" but it really should just produce /mysite
+                '', // Used to produce "/mysite/1"
             ],
 
             // Truncated dispatcher (no match → false → treated as 0, yields empty)
@@ -107,10 +107,55 @@ class ApplicationTest extends TestCase
                 '',
             ],
 
+            'truncated dispatcher /index.ph' => [
+                '/foo/baz/index.ph',
+                '',
+            ],
+
+            'missing leading slash index.php' => [
+                'index.php',
+                '',
+            ],
+
+            'double leading slash index.php' => [
+                '//index.php',
+                '',
+            ],
+
+            'missing leading slash index.php with path' => [
+                'foo/bar/index.php',
+                '/foo/bar',
+            ],
+
+            'double leading slash index.php with path' => [
+                '//foo/bar/index.php',
+                '/foo/bar',
+            ],
+
+            'double slash within path index.php' => [
+                '/foo//bar/index.php',
+                '/foo/bar',
+            ],
+
+            'double slash within path' => [
+                '/foo//bar/index.php',
+                '/foo/bar',
+            ],
+
+            'multiple slash within path' => [
+                '/foo/////bar/index.php',
+                '/foo/bar',
+            ],
+
             // Deeper normal path (sanity)
             'deep path index.php' => [
                 '/deep/site/path/index.php',
                 '/deep/site/path',
+            ],
+
+            'deep path index.php with periods' => [
+                '/deep/some.site.com/path/index.php',
+                '/deep/some.site.com/path',
             ],
         ];
     }

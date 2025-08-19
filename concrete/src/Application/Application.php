@@ -348,26 +348,15 @@ class Application extends Container
         $scriptName = $r->server->get('SCRIPT_NAME');
         // First normalize the directory separator
         $scriptName = str_replace(DIRECTORY_SEPARATOR, '/', $scriptName);
-        foreach (explode('/', $scriptName) as $part) {
-            if (empty($part)) {
-                continue; // Continue on weird parts or empty segments
-            }
-            // Loop through all path segments, discarding any that look like filenames.
-            // If a filename is encountered, the path is considered done.
-            if (strpos($part, '.') > -1) {
-                break;
-            } else {
-                $relativePath .= '/' . $part;
-            }
+        if ($scriptName === DISPATCHER_FILENAME) {
+            $relativePath = '';
+        } else {
+            // Remove duplicate slashes
+            $scriptName = preg_replace('~/{2,}~', '/', $scriptName);
+            $indexPhpLocation = strpos($scriptName, '/' . DISPATCHER_FILENAME);
+            $relativePath = '/' . trim(substr($scriptName, 0, $indexPhpLocation), '/');
         }
-        // Strip off any trailing or ending slashes
-        $relativePath = trim($relativePath, '/');
-        // Finally, make sure that if there is a relative path, it does, in fact, start with
-        // a slash
-        if ($relativePath !== '') {
-            $relativePath = '/' . $relativePath;
-        }
-        $this['app_relative_path'] = $relativePath;
+        $this['app_relative_path'] = $relativePath === '/' ? '' : $relativePath;
 
         $args = $this->isRunThroughCommandLineInterface() && isset($_SERVER['argv']) ? $_SERVER['argv'] : null;
 
