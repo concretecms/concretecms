@@ -2,22 +2,22 @@
 
 namespace Concrete\Tests\Application;
 
-use PHPUnit\Framework\TestCase;
+use PHPUnit_Framework_TestCase;
 use Concrete\Core\Http\Request;
 use Concrete\Core\Application\Application;
 
-class ApplicationTest extends TestCase
+class ApplicationTest extends PHPUnit_Framework_TestCase
 {
     /** @var \Concrete\Core\Http\Request|null */
     private $oldRequest;
 
-    protected function setUp(): void
+    protected function setUp()
     {
         parent::setUp();
         $this->oldRequest = Request::getInstance();
     }
 
-    protected function tearDown(): void
+    protected function tearDown()
     {
         // Restore the original Request instance even if a case failed
         if ($this->oldRequest) {
@@ -29,7 +29,7 @@ class ApplicationTest extends TestCase
     /**
      * @dataProvider scriptNameProvider
      */
-    public function testAppRelativePath(string $scriptName, string $expectedRelativePath): void
+    public function testAppRelativePath($scriptName, $expectedRelativePath)
     {
         // Swap in a synthetic Request with the SCRIPT_NAME we want to test
         Request::setInstance(new Request(
@@ -61,7 +61,7 @@ class ApplicationTest extends TestCase
      *   - Takes substring up to that position
      *   - Normalizes slashes and trims trailing '/'
      */
-    public static function scriptNameProvider(): array
+    public static function scriptNameProvider()
     {
         return [
             // Web root (correct)
