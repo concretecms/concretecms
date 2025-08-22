@@ -366,7 +366,7 @@ class Controller extends BlockController implements UsesFeatureInterface
         }
 
         $properties = [
-            'title' => 'fv.fvTitle',
+            'title' => 'name',
             'filename' => 'fv.fvFilename',
             'tags' => 'fv.fvTags',
             'date' => 'fv.fvDateAdded',
@@ -890,7 +890,9 @@ class Controller extends BlockController implements UsesFeatureInterface
             $order = $this->displayOrderDesc ? 'desc' : 'asc';
             $orderBy = $this->getSortColumnKey($this->orderBy, 'filelist');
             if ($orderBy) {
-                $list->getQueryObject()->addSelect($orderBy);
+                if ($orderBy !== 'name') {
+                    $list->getQueryObject()->addSelect($orderBy);
+                }
                 $list->sortBy($orderBy, $order);
             }
         }
@@ -902,8 +904,11 @@ class Controller extends BlockController implements UsesFeatureInterface
         if ($getSort) {
             $getSort = $this->getSortColumnKey($getSort);
             if ($getSort) {
-                $list->getQueryObject()->addSelect($getSort);
+                if ($getSort !== 'name') {
+                    $list->getQueryObject()->addSelect($getSort);
+                }
                 $sortDir = $this->request->query->get('dir');
+
                 if ($sortDir) {
                     $list->sortBy($getSort, $sortDir);
                 } else {
