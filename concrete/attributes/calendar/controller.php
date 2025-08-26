@@ -22,12 +22,12 @@ class Controller extends \Concrete\Attribute\Number\Controller implements ApiRes
     }
 
     /**
-     * @param $value Calendar
+     * @param Calendar|null $value
      */
     public function createAttributeValue($value)
     {
         $av = new NumberValue();
-        $av->setValue($value->getID());
+        $av->setValue($value ? $value->getID() : null);
 
         return $av;
     }
