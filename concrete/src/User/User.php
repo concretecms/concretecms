@@ -1044,7 +1044,7 @@ class User extends ConcreteObject
             $datetime = $dh->getOverridableNow();
 
             $q = 'update Pages set cCheckedOutDatetimeLastEdit = ? where cID = ?';
-            $r = $db->executeQuery($q, [$datetime, $cID]);
+            $db->executeQuery($q, [$datetime, $cID]);
 
             $c->cCheckedOutDatetimeLastEdit = $datetime;
         }
