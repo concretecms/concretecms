@@ -298,7 +298,7 @@ class Controller extends AttributeTypeController implements
         if ($data instanceof AddressValue) {
             return clone $data;
         }
-        extract($data);
+        extract($data ?? []);
         $av = new AddressValue();
         if (isset($address1)) {
             $av->setAddress1($address1);
