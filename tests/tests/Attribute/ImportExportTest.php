@@ -8,7 +8,6 @@ use Concrete\Core\Attribute\AttributeValueInterface;
 use Concrete\Core\Attribute\Category\CategoryService;
 use Concrete\Core\Attribute\TypeFactory;
 use Concrete\Core\Calendar\Event\EventRepetition;
-use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Entity;
 use Concrete\Core\Entity\Calendar\CalendarEventRepetition;
 use Concrete\Core\Entity\User\User;
@@ -402,6 +401,7 @@ class ImportExportTest extends PageTestCase
             $optionsSimpleXml = simplexml_load_string('<attributekey />');
         }
         $this->assertInstanceOf(SimpleXMLElement::class, $optionsSimpleXml);
+        $this->assertSame('attributekey', $optionsSimpleXml->getName());
         $optionsSimpleXml['category'] = self::ATTRIBUTEKEY_CATEGORY_HANDLE;
         $optionsSimpleXml['type'] = $type->getAttributeTypeHandle();
         $optionsSimpleXml['handle'] = "{$attributeTypeHandle}_key_{$keyIndex}";
