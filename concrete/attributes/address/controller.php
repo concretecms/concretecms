@@ -284,12 +284,12 @@ class Controller extends AttributeTypeController implements
         $avn = $akn->addChild('value');
         $address = $this->getAttributeValue()->getValue();
         if ($address) {
-            $avn->addAttribute('address1', $address->getAddress1());
-            $avn->addAttribute('address2', $address->getAddress2());
-            $avn->addAttribute('city', $address->getCity());
-            $avn->addAttribute('state-province', $address->getStateProvince());
-            $avn->addAttribute('country', $address->getCountry());
-            $avn->addAttribute('postal-code', $address->getPostalCode());
+            $avn->addAttribute('address1', (string) $address->getAddress1());
+            $avn->addAttribute('address2', (string) $address->getAddress2());
+            $avn->addAttribute('city', (string) $address->getCity());
+            $avn->addAttribute('state-province', (string) $address->getStateProvince());
+            $avn->addAttribute('country', (string) $address->getCountry());
+            $avn->addAttribute('postal-code', (string) $address->getPostalCode());
         }
     }
 
