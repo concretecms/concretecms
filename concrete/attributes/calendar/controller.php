@@ -41,7 +41,7 @@ class Controller extends \Concrete\Attribute\Number\Controller implements ApiRes
     {
         $val = $this->attributeValue->getValue();
 
-        return $this->app->make(Xml::class)->createChildElement($akv, 'value', $val->getName());
+        return $this->app->make(Xml::class)->createChildElement($akv, 'value', $val ? $val->getName() : '');
     }
 
     public function createAttributeValueFromRequest()
