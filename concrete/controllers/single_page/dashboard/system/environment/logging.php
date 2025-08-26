@@ -53,6 +53,7 @@ class Logging extends DashboardPageController
         $this->set('coreLoggingLevel', $config->get('concrete.log.configuration.simple.core_logging_level'));
         $this->set('handler', $config->get('concrete.log.configuration.simple.handler'));
         $this->set('logFile', $config->get('concrete.log.configuration.simple.file.file'));
+        $this->set('logStackTrace', (bool) $config->get('concrete.log.stack_trace'));
     }
 
     /**
@@ -125,6 +126,7 @@ class Logging extends DashboardPageController
         $config->save('concrete.log.configuration.simple.file.file', $logFile);
         $config->save('concrete.log.configuration.simple.core_logging_level', $loggingLevel);
         $config->save('concrete.log.configuration.simple.handler', $handler);
+        $config->save('concrete.log.stack_trace', filter_var($request->request->get('log_stack_trace'), FILTER_VALIDATE_BOOLEAN));
 
         return new RedirectResponse($this->action('logging_saved'));
     }
