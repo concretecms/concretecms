@@ -167,7 +167,11 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
         if ($value) {
             if (!($value instanceof DateTime)) {
                 $timestamp = strtotime($value);
-                $value = new DateTime(date('Y-m-d H:i:s', $timestamp));
+                if ($timestamp === false) {
+                    $value = null;
+                } else {
+                    $value = new DateTime(date('Y-m-d H:i:s', $timestamp));
+                }
             }
         } else {
             $value = null;
