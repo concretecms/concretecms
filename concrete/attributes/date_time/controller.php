@@ -384,7 +384,7 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
         }
 
         $type = $ak->getAttributeKeySettings();
-        /* @var DateTimeType $type */
+        /* @var DateTimeSettings $type */
         $this->akUseNowIfEmpty = $type->getUseNowIfEmpty();
         $this->set('akUseNowIfEmpty', $this->akUseNowIfEmpty);
         $this->akDateDisplayMode = (string) $type->getMode();
