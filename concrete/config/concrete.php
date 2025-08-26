@@ -529,6 +529,11 @@ return [
          */
         'api' => false,
 
+        /*
+         * Whether to log stack traces of uncaught exceptions
+         */
+        'stack_trace' => false,
+
         'enable_dashboard_report' => true,
 
         'boards' => [
