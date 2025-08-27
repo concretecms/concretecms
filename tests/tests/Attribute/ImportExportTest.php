@@ -498,6 +498,7 @@ class ImportExportTest extends PageTestCase
             $controller->setAttributeKey($key);
             $settings = $controller->createAttributeKeySettings();
             $expressKey = $category->add($labelAttributeType, $key, $settings);
+            $expressKey->setEntity($entity);
             $entity->getAttributes()->add($expressKey);
 
             return $expressKey;
