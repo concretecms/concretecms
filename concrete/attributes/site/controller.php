@@ -12,8 +12,10 @@ use Concrete\Core\Attribute\FontAwesomeIconFormatter;
 use Concrete\Core\Entity\Attribute\Key\Key;
 use Concrete\Core\Entity\Attribute\Value\Value\SiteValue;
 use Concrete\Core\Entity\Site\Site;
+use Concrete\Core\Utility\Service\Xml;
 use League\Fractal\Resource\Item;
 use League\Fractal\Resource\ResourceInterface;
+use SimpleXMLElement;
 
 class Controller extends CoreAttributeController implements
     OpenApiSpecifiableInterface,
@@ -118,5 +120,29 @@ class Controller extends CoreAttributeController implements
         return null;
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Attribute\Controller::importValue()
+     */
+    public function importValue(SimpleXMLElement $akv)
+    {
+        $siteHandle = trim((string) parent::importValue($akv));
 
+        return $siteHandle === '' ? null : $this->app->make('site')->getByHandle($siteHandle);
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Attribute\Controller::exportValue()
+     */
+    public function exportValue(SimpleXMLElement $akv)
+    {
+        $attributeValue = $this->getAttributeValue();
+        $site = $attributeValue ? $attributeValue->getValue() : null;
+        $handle = $site ? $site->getSiteHandle() : '';
+
+        return $this->app->make(Xml::class)->createChildElement($akv, 'value', $handle);
+    }
 }
