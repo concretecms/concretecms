@@ -9,6 +9,12 @@ use Concrete\Core\Attribute\Category\CategoryService;
 use Concrete\Core\Attribute\TypeFactory;
 use Concrete\Core\Calendar\Event\EventRepetition;
 use Concrete\Core\Entity;
+use Concrete\Core\File\Import\FileImporter;
+use Concrete\Core\File\Import\ImportOptions;
+use Concrete\Core\File\Service\VolatileDirectory;
+use Concrete\Core\File\Set\Set as FileSet;
+use Concrete\Core\File\StorageLocation\StorageLocationFactory;
+use Concrete\Core\File\StorageLocation\Type\Type as StorageLocationType;
 use Concrete\Core\User\Group\Command\AddGroupCommand;
 use Concrete\Core\User\Group\GroupRepository;
 use Concrete\TestHelpers\Page\PageTestCase;
@@ -46,6 +52,11 @@ class ImportExportTest extends PageTestCase
     private static $attributeOwner;
 
     /**
+     * @var \Concrete\Core\File\Service\VolatileDirectory
+     */
+    private static $storageVolatileDirectory;
+
+    /**
      * {@inheritdoc}
      *
      * @see \Concrete\TestHelpers\Database\ConcreteDatabaseTestCase::getTables()
@@ -53,9 +64,15 @@ class ImportExportTest extends PageTestCase
     protected function getTables()
     {
         return array_merge(parent::getTables(), [
-            'TreeTypes',
-            'Trees',
+            'FileSets',
+            'TreeFileFolderNodes',
+            'TreeFileNodes',
             'TreeGroupNodes',
+            'TreeNodePermissionAssignments',
+            'TreeNodes',
+            'TreeNodeTypes',
+            'Trees',
+            'TreeTypes',
             'UserGroups',
         ]);
     }
@@ -72,16 +89,23 @@ class ImportExportTest extends PageTestCase
             [
                 Entity\Attribute\Category::class,
                 Entity\Attribute\Key\ExpressKey::class,
-                Entity\Attribute\Value\ExpressValue::class,
+                Entity\Attribute\Key\FileKey::class,
                 Entity\Attribute\Type::class,
+                Entity\Attribute\Value\ExpressValue::class,
+                Entity\Attribute\Value\FileValue::class,
                 Entity\Calendar\Calendar::class,
                 Entity\Calendar\CalendarEvent::class,
+                Entity\Calendar\CalendarEventOccurrence::class,
                 Entity\Calendar\CalendarEventRepetition::class,
                 Entity\Calendar\CalendarEventVersion::class,
-                Entity\Calendar\CalendarEventOccurrence::class,
                 Entity\Calendar\CalendarEventVersionOccurrence::class,
                 Entity\Express\Entity::class,
                 Entity\Express\Entry::class,
+                Entity\File\File::class,
+                Entity\File\Image\Thumbnail\Type\Type::class,
+                Entity\File\StorageLocation\StorageLocation::class,
+                Entity\File\StorageLocation\Type\Type::class,
+                Entity\File\Version::class,
             ],
             self::listAttributeEntities()
         );
@@ -97,8 +121,20 @@ class ImportExportTest extends PageTestCase
         parent::setUpBeforeClass();
         self::createAttributeOwner();
         self::createUsers();
+        self::createFiles();
         self::createCalendars();
         self::createExpressEntities();
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\TestHelpers\Database\ConcreteDatabaseTestCase::tearDownAfterClass()
+     */
+    public static function tearDownAfterClass(): void
+    {
+        parent::TearDownAfterClass();
+        self::$storageVolatileDirectory = null;
     }
 
     public function provideCIFCases(): array
@@ -343,6 +379,38 @@ class ImportExportTest extends PageTestCase
             'uDefaultLanguage' => 'en_US',
             'uHomeFileManagerFolderID' => null,
         ]);
+    }
+
+    private static function createFiles(): void
+    {
+        self::$storageVolatileDirectory = app(VolatileDirectory::class, ['parentDirectory' => sys_get_temp_dir()]);
+        $storageLocationType = StorageLocationType::add('local', 'Local Storage');
+        $storageLocationConfiguration = $storageLocationType->getConfigurationObject();
+        $storageLocationConfiguration->setRootPath(self::$storageVolatileDirectory->getPath());
+        $storageLocationConfiguration->setWebRootRelativePath('/application/files');
+        $storageLocationFactory = app(StorageLocationFactory::class);
+        $storageLocation = $storageLocationFactory->create($storageLocationConfiguration, 'Default');
+        $storageLocation->setIsDefault(true);
+        $storageLocationFactory->persist($storageLocation);
+        $fileManager = app(\Concrete\Core\File\Filesystem::class)->create();
+        $rootFileFolder = $fileManager->getRootTreeNodeObject();
+        $importer = app(FileImporter::class);
+        $importOptions = app(ImportOptions::class)
+            ->setCanChangeLocalFile(false)
+        ;
+        $importOptions->setCustomPrefix('123456789012');
+        $importer->importLocalFile(DIR_TESTS . '/assets/Attribute/cif/test.jpg', 'file-1.jpg', $importOptions);
+        $importOptions->setCustomPrefix('210987654321');
+        $importer->importLocalFile(DIR_TESTS . '/assets/Attribute/cif/test.jpg', 'file-2.jpg', $importOptions);
+        $importOptions->setCustomPrefix('123456543210');
+        $importer->importLocalFile(DIR_TESTS . '/assets/Attribute/cif/test.jpg', 'file-3.jpg', $importOptions);
+        FileSet::create('Test File Set #1');
+        FileSet::create('Test File Set #2');
+        FileSet::create('Test File Set #3');
+        $rootFileFolder->add('Sample File Folder #1', $rootFileFolder);
+        $folder = $rootFileFolder->add('Sample File Folder #2', $rootFileFolder);
+        $rootFileFolder->add('Child Folder', $folder);
+        $rootFileFolder->add('Sample File Folder #3', $rootFileFolder);
     }
 
     private static function createCalendars(): void
