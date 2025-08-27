@@ -2,23 +2,20 @@
 namespace Concrete\Attribute\Express;
 
 use Concrete\Core\Api\ApiResourceValueInterface;
-use Concrete\Core\Api\Attribute\OpenApiSpecifiableInterface;
 use Concrete\Core\Api\Attribute\SupportsAttributeValueFromJsonInterface;
 use Concrete\Core\Api\Fractal\Transformer\ExpressEntryTransformer;
-use Concrete\Core\Api\Fractal\Transformer\FileTransformer;
-use Concrete\Core\Api\Resources;
-use Concrete\Core\Attribute\FontAwesomeIconFormatter;
 use Concrete\Core\Attribute\Controller as AttributeTypeController;
+use Concrete\Core\Attribute\FontAwesomeIconFormatter;
 use Concrete\Core\Entity\Attribute\Key\Settings\ExpressSettings;
 use Concrete\Core\Entity\Attribute\Value\Value\ExpressValue;
+use Concrete\Core\Entity\Express\Entry;
 use Concrete\Core\Error\ErrorList\Error\FieldNotPresentError;
 use Concrete\Core\Error\ErrorList\ErrorList;
 use Concrete\Core\Error\ErrorList\Field\AttributeField;
 use Concrete\Core\Express\ObjectManager;
-use Doctrine\ORM\Query\Expr;
 use League\Fractal\Resource\Collection;
-use League\Fractal\Resource\ResourceAbstract;
 use League\Fractal\Resource\ResourceInterface;
+use SimpleXMLElement;
 
 class Controller extends AttributeTypeController implements
     SupportsAttributeValueFromJsonInterface,
@@ -67,7 +64,7 @@ class Controller extends AttributeTypeController implements
     }
 
 
-    public function importKey(\SimpleXMLElement $akey)
+    public function importKey(SimpleXMLElement $akey)
     {
         $type = $this->getAttributeKeySettings();
         /**
@@ -175,6 +172,9 @@ class Controller extends AttributeTypeController implements
         }
     }
 
+    /**
+     * @return \Concrete\Core\Entity\Express\Entity|null
+     */
     protected function getEntity()
     {
         $type = $this->getAttributeKeySettings();
