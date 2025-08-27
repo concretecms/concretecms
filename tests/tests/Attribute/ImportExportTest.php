@@ -9,8 +9,6 @@ use Concrete\Core\Attribute\Category\CategoryService;
 use Concrete\Core\Attribute\TypeFactory;
 use Concrete\Core\Calendar\Event\EventRepetition;
 use Concrete\Core\Entity;
-use Concrete\Core\Entity\Calendar\CalendarEventRepetition;
-use Concrete\Core\Entity\User\User;
 use Concrete\Core\User\Group\Command\AddGroupCommand;
 use Concrete\Core\User\Group\GroupRepository;
 use Concrete\TestHelpers\Page\PageTestCase;
@@ -73,6 +71,8 @@ class ImportExportTest extends PageTestCase
             parent::getEntityClassNames(),
             [
                 Entity\Attribute\Category::class,
+                Entity\Attribute\Key\ExpressKey::class,
+                Entity\Attribute\Value\ExpressValue::class,
                 Entity\Attribute\Type::class,
                 Entity\Calendar\Calendar::class,
                 Entity\Calendar\CalendarEvent::class,
@@ -80,6 +80,8 @@ class ImportExportTest extends PageTestCase
                 Entity\Calendar\CalendarEventVersion::class,
                 Entity\Calendar\CalendarEventOccurrence::class,
                 Entity\Calendar\CalendarEventVersionOccurrence::class,
+                Entity\Express\Entity::class,
+                Entity\Express\Entry::class,
             ],
             self::listAttributeEntities()
         );
@@ -96,6 +98,7 @@ class ImportExportTest extends PageTestCase
         self::createAttributeOwner();
         self::createUsers();
         self::createCalendars();
+        self::createExpressEntities();
     }
 
     public function provideCIFCases(): array
@@ -345,7 +348,7 @@ class ImportExportTest extends PageTestCase
     private static function createCalendars(): void
     {
         $em = app(EntityManagerInterface::class);
-        $user = $em->find(User::class, USER_SUPER_ID);
+        $user = $em->find(Entity\User\User::class, USER_SUPER_ID);
         $calendar = new Entity\Calendar\Calendar();
         $calendar->setName('Calendar Name #1');
         $em->persist($calendar);
@@ -364,7 +367,7 @@ class ImportExportTest extends PageTestCase
             $calendarEventRepetitionObject = new EventRepetition();
             $calendarEventRepetitionObject->setStartDateAllDay(0);
             $calendarEventRepetitionObject->setRepeatPeriod(EventRepetition::REPEAT_NONE);
-            $calendarEventRepetition = new CalendarEventRepetition($calendarEventRepetitionObject);
+            $calendarEventRepetition = new Entity\Calendar\CalendarEventRepetition($calendarEventRepetitionObject);
             $calendarEventVersionOccurrence = new Entity\Calendar\CalendarEventVersionOccurrence(
                 $calendarEventVersion,
                 $calendarEventRepetition,
@@ -381,18 +384,24 @@ class ImportExportTest extends PageTestCase
         $em->clear(); // @todo remove this line when collections are managed correctly
     }
 
+    private static function getOrCreateAttributeType(string $attributeTypeHandle): Entity\Attribute\Type
+    {
+        $typeFactory = app(TypeFactory::class);
+        $type = $typeFactory->getByHandle($attributeTypeHandle);
+        if ($type === null) {
+            $type = $typeFactory->add($attributeTypeHandle, "Name of {$attributeTypeHandle} attribute type");
+        }
+
+        return $type;
+    }
+
     private function createAttributeKey(string $attributeTypeHandle, string $basename): Entity\Attribute\Key\Key
     {
         static $keyIndex;
 
         $keyIndex = ($keyIndex ?? 0) + 1;
 
-        $typeFactory = app(TypeFactory::class);
-        $type = $typeFactory->getByHandle($attributeTypeHandle);
-        if ($type === null) {
-            $type = $typeFactory->add($attributeTypeHandle, "Name of {$attributeTypeHandle} attribute type");
-        }
-        $this->assertInstanceOf(Entity\Attribute\Type::class, $type);
+        $type = self::getOrCreateAttributeType($attributeTypeHandle);
 
         $optionsFullname = DIR_TESTS . "/assets/Attribute/cif/{$attributeTypeHandle}/{$basename}.options.xml";
         if (is_file($optionsFullname)) {
@@ -464,5 +473,67 @@ class ImportExportTest extends PageTestCase
         }
 
         return $result;
+    }
+
+    private static function createExpressEntities(): void
+    {
+        $categoryService = app(CategoryService::class);
+        if (($categoryService->getByHandle('express')) === null) {
+            $categoryService->add('express');
+        }
+        $em = app(EntityManagerInterface::class);
+        $labelAttributeType = self::getOrCreateAttributeType('text');
+
+        $createLabelAttribute = static function (Entity\Express\Entity $entity) use ($labelAttributeType): Entity\Attribute\Key\ExpressKey
+        {
+            static $keyIndex;
+            $keyIndex = ($keyIndex ?? 0) + 1;
+            $category = $entity->getAttributeKeyCategory();
+            /** @var \Concrete\Core\Attribute\Category\ExpressCategory $category */
+            $key = $category->createAttributeKey();
+            $key->setAttributeKeyName("Express Label {$keyIndex}");
+            $key->setAttributeKeyHandle("express_label_{$keyIndex}");
+            $key->setIsAttributeKeySearchable(false);
+            $controller = $labelAttributeType->getController();
+            $controller->setAttributeKey($key);
+            $settings = $controller->createAttributeKeySettings();
+            $expressKey = $category->add($labelAttributeType, $key, $settings);
+            $entity->getAttributes()->add($expressKey);
+
+            return $expressKey;
+        };
+
+        $createEntry = static function (Entity\Express\Entity $entity, Entity\Attribute\Key\ExpressKey $labelAttribute, string $label) use ($em): Entity\Express\Entry {
+            $entry = new Entity\Express\Entry();
+            $em->persist($entry);
+            $entry->setEntity($entity);
+            $entity->getEntries()->add($entry);
+            $attribute = $entry->setAttribute($labelAttribute, $label, false);
+            $entry->getAttributes()->add($attribute);
+
+            return $entry;
+        };
+
+        $em->persist($entity = new Entity\Express\Entity());
+        $entity->setName('Example Entity #1');
+        $entity->setHandle('example_entity_n1');
+        $entity->setPluralHandle('example_entities_n1');
+        $entity->setEntityResultsNodeId(0); // ?
+        $em->flush();
+        $labelAttribute = $createLabelAttribute($entity);
+        $createEntry($entity, $labelAttribute, 'Entry #1 of Entity #1');
+        $createEntry($entity, $labelAttribute, 'Entry #2 of Entity #1');
+
+        $em->persist($entity = new Entity\Express\Entity());
+        $entity->setName('Example Entity #2');
+        $entity->setHandle('example_entity_n2');
+        $entity->setPluralHandle('example_entities_n2');
+        $entity->setEntityResultsNodeId(0); // ?
+        $em->flush();
+        $labelAttribute = $createLabelAttribute($entity);
+        $createEntry($entity, $labelAttribute, 'Entry #1 of Entity #2');
+        $createEntry($entity, $labelAttribute, 'Entry #2 of Entity #2');
+
+        $em->flush();
     }
 }
