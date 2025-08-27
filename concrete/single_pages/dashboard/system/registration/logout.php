@@ -10,6 +10,8 @@ defined('C5_EXECUTE') or die('Access Denied.');
  * @var bool $enableUserSpecificIgnoredIPMismatches
  * @var bool $invalidateOnUserAgentMismatch
  * @var bool $invalidateInactiveUsers
+ * @var bool $displayLogoutMessage
+ * @var string $logoutMessage
  * @var int|null $inactiveTime
  * @var string[] $ignoredIPMismatches
  * @var IPLib\Address\AddressInterface $myIPAddress
@@ -17,10 +19,25 @@ defined('C5_EXECUTE') or die('Access Denied.');
  */
 ?>
 <form method="POST" action="<?= $controller->action('save') ?>">
-    <?php $token->output('save_automated_logout') ?>
+    <?php $token->output('save_logout') ?>
 
-    <div class="form-group">
-        <?= $form->label('', t('Session Security')) ?>
+    <fieldset>
+        <legend><?=t('Logout Message')?></legend>
+        <div class="mb-3">
+            <div class="form-check">
+                <?= $form->checkbox('displayLogoutMessage', '1', $displayLogoutMessage) ?>
+                <label class="form-check-label" for="displayLogoutMessage"><?= t('Display a confirmation message when a successful logout occurs.') ?></label>
+            </div>
+        </div>
+        <div class="mb-3">
+            <?= $form->label('logoutMessage', t('Logout Message')) ?>
+            <?= $form->textarea('logoutMessage', $logoutMessage) ?>
+        </div>
+    </fieldset>
+
+
+    <fieldset>
+        <legend><?=t('Session Security')?></legend>
         <div class="alert alert-info">
             <?= t('These settings help prevent a user from stealing other logged in user sessions. You may want to configure %s"Trusted Proxies"%s instead', '<a href="' . $trustedProxyUrl . '">', '</a>') ?>
         </div>
@@ -47,7 +64,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
                 </span>
             </label>
         </div>
-    </div>
+    </fieldset>
 
     <div class="form-group">
         <?= $form->label('ignoredIPMismatches', t('Prevent logout if changed IP addresses are in the following ranges')) ?>
@@ -67,26 +84,29 @@ defined('C5_EXECUTE') or die('Access Denied.');
 
     <div class="ccm-dashboard-form-actions-wrapper">
         <div class="ccm-dashboard-form-actions">
-            <div class="float-end">
+            <div class="d-flex">
                 <a href="javascript:void(0)" class="btn btn-danger" id="invalidate-sessions-button"><?= t('Log out all active users') ?></a>
-                <button class="btn btn-primary" type="submit"><?= t('Save') ?></button>
+                <button class="ms-auto btn btn-primary" type="submit"><?= t('Save') ?></button>
             </div>
         </div>
     </div>
 </form>
 
-<form method="POST" id="invalidate-sessions-form" action="<?= $controller->action('invalidate_sessions') ?>">
-    <?php $token->output('invalidate_sessions') ?>
+<fieldset>
+    <legend><?=t('Invalidate Active Sessions') ?></legend>
 
-    <div class="form-group">
-        <?= $form->label('', t('Invalidate Active Sessions')) ?>
-        <?= $form->text('confirmation', '', ['autocomplete' => 'off']) ?>
-        <small class="text-muted">
-            <?= t('Type %s in the above box to proceed.', "<code>{$confirmInvalidateString}</code>") ?>
-        </small>
-    </div>
+    <form method="POST" id="invalidate-sessions-form" action="<?= $controller->action('invalidate_sessions') ?>">
+        <?php $token->output('invalidate_sessions') ?>
 
-</form>
+        <div class="form-group">
+            <?= $form->text('confirmation', '', ['autocomplete' => 'off']) ?>
+            <small class="text-muted">
+                <?= t('Type %s in the above box to proceed.', "<code>{$confirmInvalidateString}</code>") ?>
+            </small>
+        </div>
+
+    </form>
+</fieldset>
 
 
 <script>

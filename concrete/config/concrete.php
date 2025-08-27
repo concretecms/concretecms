@@ -6,9 +6,9 @@ return [
      *
      * @var string
      */
-    'version' => '9.4.3',
-    'version_installed' => '9.4.3',
-    'version_db' => '20250227155410', // the key of the latest database migration
+    'version' => '9.4.4b1',
+    'version_installed' => '9.4.4b1',
+    'version_db' => '20250827152432', // the key of the latest database migration
 
     /*
      * Installation status
@@ -1170,6 +1170,18 @@ return [
              * Determines whether the username field is displayed when editing profile
              */
             'display_username_field' => true,
+        ],
+
+        'logout' => [
+            /**
+             * Determines whether to show a logout message on successful logout.
+             */
+            'display_logout_message' => false,
+
+            /**
+             * Message to display
+             */
+            'logout_message' => 'You have been successfully logged out.',
         ],
 
         /*

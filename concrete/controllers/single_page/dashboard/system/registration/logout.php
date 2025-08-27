@@ -13,7 +13,7 @@ use Concrete\Core\Utility\Service\Validation\Numbers;
 use IPLib\Factory;
 use IPLib\Address\AddressInterface;
 
-class AutomatedLogout extends DashboardPageController
+class Logout extends DashboardPageController
 {
     /**
      * @deprecated Use \Concrete\Core\Session\SessionValidator::CONFIGKEY_IP_MISMATCH
@@ -77,6 +77,8 @@ class AutomatedLogout extends DashboardPageController
     public function view()
     {
         $this->set('trustedProxyUrl', $this->urls->resolve(['/dashboard/system/permissions/trusted_proxies']));
+        $this->set('displayLogoutMessage', (bool) $this->config->get('concrete.user.logout.display_logout_message'));
+        $this->set('logoutMessage', (string) $this->config->get('concrete.user.logout.logout_message'));
         $this->set('invalidateOnIPMismatch', (bool) $this->config->get(SessionValidator::CONFIGKEY_IP_MISMATCH));
         $this->set('enableUserSpecificIgnoredIPMismatches', (bool) $this->config->get(SessionValidator::CONFIGKEY_ENABLE_USERSPECIFIC_IP_MISMATCH_ALLOWLIST));
         $this->set('ignoredIPMismatches', (array) $this->config->get(SessionValidator::CONFIGKEY_IP_MISMATCH_ALLOWLIST));
@@ -96,7 +98,7 @@ class AutomatedLogout extends DashboardPageController
     public function save()
     {
         $post = $this->request->request;
-        if (!$this->token->validate('save_automated_logout')) {
+        if (!$this->token->validate('save_logout')) {
             $this->error->add($this->token->getErrorMessage());
         }
         $invalidateOnIPMismatch = (bool) $post->get('invalidateOnIPMismatch');
@@ -138,8 +140,9 @@ class AutomatedLogout extends DashboardPageController
         if ($invalidateInactiveUsers) {
             $this->config->save(SessionValidator::CONFIGKEY_INVALIDATE_INACTIVE_USERS_TIME, $inactiveTime);
         }
-
-        $this->flash('message', t('Successfully saved Session Security settings'));
+        $this->config->save('concrete.user.logout.display_logout_message', (bool) $post->get('displayLogoutMessage'));
+        $this->config->save('concrete.user.logout.logout_message', (string) $post->get('logoutMessage'));
+        $this->flash('success', t('Logout settings saved successfully.'));
 
         return $this->buildRedirect($this->action());
     }
