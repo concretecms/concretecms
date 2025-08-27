@@ -66,12 +66,15 @@ class Controller extends AttributeTypeController implements
     public function createAttributeValue($values)
     {
         $av = new SocialLinksValue();
-
-        foreach ($values as $service => $serviceInfo) {
-            if ($serviceInfo) {
+        if (is_iterable($values)) {
+            $textHelper = $this->app->make('helper/text');
+            foreach ($values as $service => $serviceInfo) {
+                if (!$serviceInfo) {
+                    continue;
+                }
                 $serviceInfo = filter_var($serviceInfo, FILTER_SANITIZE_URL);
-                $service = $this->app->make('helper/text')->entities($service);
-                $serviceInfo = $this->app->make('helper/text')->entities($serviceInfo);
+                $service = $textHelper->entities($service);
+                $serviceInfo = $textHelper->entities($serviceInfo);
                 $link = new SelectedSocialLink();
                 $link->setService($service);
                 $link->setServiceInfo($serviceInfo);
