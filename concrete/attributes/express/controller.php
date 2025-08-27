@@ -82,6 +82,51 @@ class Controller extends AttributeTypeController implements
         return $type;
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Attribute\Controller::exportValue()
+     */
+    public function exportValue(SimpleXMLElement $akv)
+    {
+        $xValue = $akv->addChild('value');
+        $value = $this->getAttributeValue();
+        $expressValue = $value ? $value->getValue() : null;
+        if ($expressValue instanceof ExpressValue) {
+            foreach ($expressValue->getSelectedEntries() as $entry) {
+                $xValue->addChild('entry')['label'] = (string) $entry->getLabel();
+            }
+        }
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Attribute\Controller::importValue()
+     *
+     * @return \Concrete\Core\Entity\Express\Entry[]
+     */
+    public function importValue(SimpleXMLElement $akv)
+    {
+        $labels = [];
+        if (isset($akv->value->entry)) {
+            foreach ($akv->value->entry as $xEntry) {
+                if (($label = trim((string) $xEntry['label'])) !== '') {
+                    $labels[] = $label;
+                }
+            }
+        }
+        if ($labels === [] || !($entity = $this->getEntity())) {
+            return [];
+        }
+
+        return $entity->getEntries()
+            ->filter(static function (Entry $entry) use ($labels): bool {
+                return in_array($entry->getLabel(), $labels, true);
+            })
+            ->toArray()
+        ;
+    }
 
     public function type_form()
     {
