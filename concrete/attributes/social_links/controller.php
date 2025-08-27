@@ -96,6 +96,27 @@ class Controller extends AttributeTypeController implements
         }
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Attribute\Controller::importValue()
+     */
+    public function importValue(SimpleXMLElement $akn)
+    {
+        $result = [];
+        if (isset($akn->link)) {
+            foreach ($akn->link as $xLink) {
+                $service = trim((string) $xLink['service']);
+                if ($service === '') {
+                    continue;
+                }
+                $result[$service] = (string) $xLink['detail'];
+            }
+        }
+
+        return $result;
+    }
+
     public function getDisplayValue()
     {
         $html = '';
