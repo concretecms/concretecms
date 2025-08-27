@@ -11,6 +11,7 @@ use Concrete\Core\Attribute\Controller as CoreAttributeController;
 use Concrete\Core\Attribute\FontAwesomeIconFormatter;
 use Concrete\Core\Entity\Attribute\Key\Key;
 use Concrete\Core\Entity\Attribute\Value\Value\SiteValue;
+use Concrete\Core\Entity\Site\Site;
 use League\Fractal\Resource\Item;
 use League\Fractal\Resource\ResourceInterface;
 
@@ -70,7 +71,9 @@ class Controller extends CoreAttributeController implements
 	public function createAttributeValue($site)
 	{
 		$av = new SiteValue();
-		$av->setSite($site);
+		if ($site instanceof Site) {
+            $av->setSite($site);
+		}
 		return $av;
 	}
 
