@@ -182,13 +182,21 @@ class ImportExportTest extends PageTestCase
         }
         [$inputSimpleXml, $expectedSimpleXml] = $this->loadTestXml($attributeTypeHandle, $basename, $options);
         $key = $this->createAttributeKey($attributeTypeHandle, $basename);
+        $keyHandle = $key->getAttributeKeyHandle();
         $keyController = $key->getController();
         $importedValue = $keyController->importValue($inputSimpleXml);
         $value = self::$attributeOwner->setAttribute($key, $importedValue, false);
         $this->assertInstanceOf(AttributeValueInterface::class, $value);
-        $keyController->setAttributeValue($value);
+
+        $em = app(EntityManagerInterface::class);
+        $em->clear();
+
+        $key2 = self::$attributeOwner->getObjectAttributeCategory()->getAttributeKeyByHandle($keyHandle);
+        $keyController2 = $key2->getController();
+        $value2 = self::$attributeOwner->getAttributeValueObject($key2, false);
+        $keyController2->setAttributeValue($value2);
         $actualSimpleXml = simplexml_load_string('<attributekey />');
-        $keyController->exportValue($actualSimpleXml);
+        $keyController2->exportValue($actualSimpleXml);
 
         $this->assertSameXml($expectedSimpleXml->asXML(), $actualSimpleXml->asXML(), $options['keepXmlElementsOrder'] ?? false);
     }
