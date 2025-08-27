@@ -4,17 +4,14 @@ namespace Concrete\Attribute\Site;
 use Concrete\Core\Api\ApiResourceValueInterface;
 use Concrete\Core\Api\Attribute\OpenApiSpecifiableInterface;
 use Concrete\Core\Api\Attribute\SupportsAttributeValueFromJsonInterface;
-use Concrete\Core\Api\Fractal\Transformer\PageTransformer;
 use Concrete\Core\Api\Fractal\Transformer\SiteTransformer;
 use Concrete\Core\Api\OpenApi\SpecProperty;
 use Concrete\Core\Api\Resources;
+use Concrete\Core\Attribute\Controller as CoreAttributeController;
 use Concrete\Core\Attribute\FontAwesomeIconFormatter;
 use Concrete\Core\Entity\Attribute\Key\Key;
 use Concrete\Core\Entity\Attribute\Value\Value\SiteValue;
-use Concrete\Core\Attribute\Controller as CoreAttributeController;
-use Concrete\Core\Page\Page;
 use League\Fractal\Resource\Item;
-use League\Fractal\Resource\ResourceAbstract;
 use League\Fractal\Resource\ResourceInterface;
 
 class Controller extends CoreAttributeController implements
