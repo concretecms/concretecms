@@ -8,7 +8,6 @@ use Concrete\Core\Api\Attribute\SupportsAttributeValueFromJsonInterface;
 use Concrete\Core\Api\Fractal\Transformer\SocialLinkTransformer;
 use Concrete\Core\Api\OpenApi\SpecProperty;
 use Concrete\Core\Api\OpenApi\SpecPropertyRef;
-use Concrete\Core\Api\OpenApi\SpecPropertyRefItems;
 use Concrete\Core\Api\Resources;
 use Concrete\Core\Attribute\Controller as AttributeTypeController;
 use Concrete\Core\Attribute\FontAwesomeIconFormatter;
@@ -16,8 +15,6 @@ use Concrete\Core\Attribute\Form\Control\View\GroupedView;
 use Concrete\Core\Attribute\SimpleTextExportableAttributeInterface;
 use Concrete\Core\Entity\Attribute\Key\Key;
 use Concrete\Core\Entity\Attribute\Value\Value\SelectedSocialLink;
-use Concrete\Core\Entity\Attribute\Value\Value\SelectValue;
-use Concrete\Core\Entity\Attribute\Value\Value\SelectValueOption;
 use Concrete\Core\Entity\Attribute\Value\Value\SocialLinksValue;
 use Concrete\Core\Error\ErrorList\ErrorList;
 use Concrete\Core\Sharing\SocialNetwork\Service as Service;
@@ -26,6 +23,7 @@ use Environment;
 use League\Fractal\Resource\Collection;
 use League\Fractal\Resource\ResourceInterface;
 use Loader;
+use SimpleXMLElement;
 
 class Controller extends AttributeTypeController implements
     SimpleTextExportableAttributeInterface,
@@ -85,7 +83,7 @@ class Controller extends AttributeTypeController implements
         return $av;
     }
 
-    public function exportValue(\SimpleXMLElement $akn)
+    public function exportValue(SimpleXMLElement $akn)
     {
         $services = $this->attributeValue->getValue()->getSelectedLinks();
         foreach ($services as $link) {
