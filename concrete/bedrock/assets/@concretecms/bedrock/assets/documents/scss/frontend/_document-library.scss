@@ -28,6 +28,12 @@ table.ccm-block-document-library-table thead th.ccm-block-document-library-colum
   width: 1px;
 }
 
+table.ccm-block-document-library-table {
+  td {
+    vertical-align: middle;
+  }
+}
+
 a.ccm-block-document-library-details::after {
   border-color: transparent transparent #000;
   border-style: solid;
