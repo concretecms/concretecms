@@ -30,7 +30,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
             </div>
         </div>
         <div class="mb-3">
-            <?= $form->label('', t('Logout Message')) ?>
+            <?= $form->label('logoutMessage', t('Logout Message')) ?>
             <?= $form->textarea('logoutMessage', $logoutMessage) ?>
         </div>
     </fieldset>

@@ -31,7 +31,7 @@ if ($site) {
     $siteName = h($site->getSiteName());
 }
 
-if (isset($logoutComplete) && $logoutComplete) { ?>
+if (!empty($logoutComplete)) { ?>
 
     <div class="login-page">
         <div class="container">

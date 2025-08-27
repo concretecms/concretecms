@@ -142,7 +142,7 @@ class Logout extends DashboardPageController
         }
         $this->config->save('concrete.user.logout.display_logout_message', (bool) $post->get('displayLogoutMessage'));
         $this->config->save('concrete.user.logout.logout_message', (string) $post->get('logoutMessage'));
-        $this->flash('success', t('Successfully saved Session Security settings'));
+        $this->flash('success', t('Logout settings saved successfully.'));
 
         return $this->buildRedirect($this->action());
     }
