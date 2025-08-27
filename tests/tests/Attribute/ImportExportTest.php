@@ -119,6 +119,7 @@ class ImportExportTest extends PageTestCase
     public static function setupBeforeClass(): void
     {
         parent::setUpBeforeClass();
+        self::createPages();
         self::createAttributeOwner();
         self::createUsers();
         self::createFiles();
@@ -343,6 +344,13 @@ class ImportExportTest extends PageTestCase
         foreach ($allChildElements as $childElement) {
             $this->sortXmlChildElements($childElement);
         }
+    }
+
+    private static function createPages(): void
+    {
+        static::createPage('Test Page 1');
+        static::createPage('Test Page 2');
+        static::createPage('Test Page 3');
     }
 
     private static function createAttributeOwner(): void
