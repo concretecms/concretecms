@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft-07/schema",
+  "type": "object",
+  "properties": {
+    "$schema": {
+      "type": "string"
+    },
+    "skipReason": {
+      "type": "string",
+      "minLength": 1
+    },
+    "keepXmlElementsOrder": {
+      "type": "boolean"
+    }
+  },
+  "required": [],
+  "additionalProperties": false
+}
