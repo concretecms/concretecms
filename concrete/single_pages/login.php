@@ -44,7 +44,7 @@ if (!empty($logoutComplete)) { ?>
             </div>
             <div class="row login-page-content">
                 <div class="col-12 text-center">
-                    <p><?=$logoutMessage?></p>
+                    <p><?=h($logoutMessage)?></p>
 
                     <div class="mt-3">
                         <a href="<?=URL::to('/')?>" class="btn btn-secondary"><?=t('Back to Home')?></a>
