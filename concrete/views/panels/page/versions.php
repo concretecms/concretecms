@@ -2,6 +2,7 @@
 
 defined('C5_EXECUTE') or die('Access Denied.');
 
+use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\Support\Facade\Url;
 
 /** @var Concrete\Controller\Panel\Page\Versions $controller */
@@ -9,6 +10,9 @@ use Concrete\Core\Support\Facade\Url;
 /** @var Concrete\Core\Page\Collection\Version\EditResponse $response */
 /** @var Concrete\Core\Page\Page $c */
 /** @var bool|null $isDialogMode  */
+/** @var \Concrete\Core\Application\Service\Composer $composer */
+$composer = Application::getFacadeApplication()->make('helper/concrete/composer');
+$approveTitle = $composer->getApproveButtonTitle($c);
 ?>
 
 <script type="text/template" class="tbody">
@@ -126,11 +130,11 @@ use Concrete\Core\Support\Facade\Url;
                 <div class="dropdown-menu">
                     <% if (cvIsApproved || cIsDraft) { %>
                         <span class="dropdown-item ui-state-disabled">
-                            <?php echo t('Approve') ?>
+                            <?php echo $approveTitle ?>
                         </span>
                     <% } else { %>
                         <a href="#" data-version-menu-task="approve" data-version-id="<%-cvID%>" class="dropdown-item">
-                            <?php echo t('Approve') ?>
+                            <?php echo $approveTitle ?>
                         </a>
                     <%  } %>
 
