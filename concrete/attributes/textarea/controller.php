@@ -9,24 +9,61 @@ use Concrete\Core\Entity\Attribute\Key\Settings\TextareaSettings;
 use Concrete\Core\Entity\Attribute\Value\Value\TextValue;
 use Core;
 
+/**
+ * @method \Concrete\Core\Entity\Attribute\Key\Settings\TextareaSettings getAttributeKeySettings()
+ */
 class Controller extends DefaultController
 {
+    /**
+     * Mode: Plain Text
+     *
+     * @var string
+     */
     public const MODE_TEXT = 'text';
 
+    /**
+     * Mode: Rich Text
+     *
+     * @var string
+     */
     public const MODE_RICHTEXT = 'rich_text';
 
+    /**
+     * The default mode
+     *
+     * @var unknown
+     */
     public const MODE_DEFAULT = self::MODE_TEXT;
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Controller\AbstractController::$helpers
+     */
     public $helpers = ['form'];
 
+    /**
+     * @var string|null
+     */
     protected $akTextareaDisplayMode;
+
     protected $akTextareaDisplayModeCustomOptions;
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Attribute\Controller::getIconFormatter()
+     */
     public function getIconFormatter()
     {
         return new FontAwesomeIconFormatter('font');
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Attribute\Controller::saveKey()
+     */
     public function saveKey($data)
     {
         $type = $this->getAttributeKeySettings();
@@ -43,6 +80,9 @@ class Controller extends DefaultController
         return $type;
     }
 
+    /**
+     * @return string|null
+     */
     public function getValue()
     {
         $this->load();
@@ -68,6 +108,11 @@ class Controller extends DefaultController
         return $value;
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Attribute\DefaultController::getDisplayValue()
+     */
     public function getDisplayValue()
     {
         $value = $this->getValue();
@@ -84,6 +129,11 @@ class Controller extends DefaultController
         return nl2br(h($value));
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Attribute\DefaultController::form()
+     */
     public function form()
     {
         $this->load();
@@ -106,6 +156,11 @@ class Controller extends DefaultController
         $this->form();
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Attribute\DefaultController::searchForm()
+     */
     public function searchForm($list)
     {
         $list->filterByAttribute($this->attributeKey->getAttributeKeyHandle(), '%' . $this->request('value') . '%', 'like');
@@ -113,6 +168,11 @@ class Controller extends DefaultController
         return $list;
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Attribute\DefaultController::search()
+     */
     public function search()
     {
         $f = Core::make('helper/form');
@@ -125,11 +185,21 @@ class Controller extends DefaultController
         $this->load();
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Attribute\DefaultController::getAttributeValueClass()
+     */
     public function getAttributeValueClass()
     {
         return TextValue::class;
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Attribute\Controller::exportKey()
+     */
     public function exportKey($akey)
     {
         $this->load();
@@ -138,6 +208,11 @@ class Controller extends DefaultController
         return $akey;
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Attribute\DefaultController::createAttributeValue()
+     */
     public function createAttributeValue($value)
     {
         $this->load();
@@ -151,6 +226,11 @@ class Controller extends DefaultController
         return $av;
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Attribute\Controller::importKey()
+     */
     public function importKey(\SimpleXMLElement $akey)
     {
         $type = $this->getAttributeKeySettings();
@@ -162,11 +242,19 @@ class Controller extends DefaultController
         return $type;
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Attribute\DefaultController::getAttributeKeySettingsClass()
+     */
     public function getAttributeKeySettingsClass()
     {
         return TextareaSettings::class;
     }
 
+    /**
+     * @return false|null returns false if the attribute key is not set
+     */
     protected function load()
     {
         $ak = $this->getAttributeKey();
@@ -175,9 +263,6 @@ class Controller extends DefaultController
         }
 
         $type = $ak->getAttributeKeySettings();
-        /**
-         * @var TextareaSettings
-         */
         $this->akTextareaDisplayMode = $type->getMode();
         $this->set('akTextareaDisplayMode', $type->getMode());
     }
