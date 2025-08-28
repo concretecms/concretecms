@@ -235,7 +235,6 @@ class Controller extends DefaultController
     {
         $type = $this->getAttributeKeySettings();
         if (isset($akey->type)) {
-            $data['akTextareaDisplayMode'] = $akey->type['mode'];
             $type->setMode((string) $akey->type['mode']);
         }
 
