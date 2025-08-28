@@ -135,10 +135,10 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
 
     public function search()
     {
-        $dt = $this->app->make('helper/form/date_time');
-        $html = $dt->date($this->field('from'), $this->request('from'), true);
+        $form = $this->app->make('helper/form');
+        $html = $form->date($this->field('from'));
         $html .= ' ' . t('to') . ' ';
-        $html .= $dt->date($this->field('to'), $this->request('to'), true);
+        $html .= $form->date($this->field('to'));
         echo $html;
     }
 
