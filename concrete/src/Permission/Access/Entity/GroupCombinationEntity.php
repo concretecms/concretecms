@@ -207,8 +207,7 @@ class GroupCombinationEntity extends Entity
                     $this->label .= $g->getGroupDisplayName();
                     if ($i + 1 < count($gIDs)) {
                         $this->label .= t(
-                            /*i18n: used for combining Group Display Names,
-                             eg GroupName1 + GroupName2 */
+                            /*i18n: used for combining Group Display Names, eg GroupName1 + GroupName2 */
                             ' + '
                         );
                     }
