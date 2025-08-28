@@ -135,9 +135,9 @@ class Controller extends AttributeTypeController implements
             foreach ($akn->topics->topic as $topicPath) {
                 $selected[] = (string) $topicPath;
             }
-
-            return $this->createAttributeValue($selected);
         }
+
+        return $this->createAttributeValue($selected);
     }
 
     /**
@@ -163,7 +163,7 @@ class Controller extends AttributeTypeController implements
         $tree = Tree::getByID($this->akTopicTreeID);
         if ($nodes instanceof Topic) {
             $selected[] = $nodes->getTreeNodeID();
-        } else {
+        } elseif (is_iterable($nodes)) {
             foreach ($nodes as $topicPath) {
                 if ($topicPath instanceof Topic) {
                     $selected[] = $topicPath->getTreeNodeID();
