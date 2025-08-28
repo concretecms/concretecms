@@ -67,15 +67,7 @@ class Controller extends DefaultController
     public function saveKey($data)
     {
         $type = $this->getAttributeKeySettings();
-        $data += [
-            'akTextareaDisplayMode' => null,
-        ];
-        $akTextareaDisplayMode = $data['akTextareaDisplayMode'];
-        if (!$akTextareaDisplayMode) {
-            $akTextareaDisplayMode = static::MODE_DEFAULT;
-        }
-
-        $type->setMode($akTextareaDisplayMode);
+        $type->setMode($this->getKnownMode($data['akTextareaDisplayMode'] ?? null));
 
         return $type;
     }
@@ -234,9 +226,13 @@ class Controller extends DefaultController
     public function importKey(\SimpleXMLElement $akey)
     {
         $type = $this->getAttributeKeySettings();
-        if (isset($akey->type)) {
-            $type->setMode((string) $akey->type['mode']);
-        }
+        $type->setMode(
+            $this->getKnownMode(
+                isset($akey->type)
+                ? (string) $akey->type['mode']
+                : null
+            )
+        );
 
         return $type;
     }
@@ -257,12 +253,41 @@ class Controller extends DefaultController
     protected function load()
     {
         $ak = $this->getAttributeKey();
-        if (!is_object($ak)) {
-            return false;
+        if (is_object($ak)) {
+            $type = $ak->getAttributeKeySettings();
+            $this->akTextareaDisplayMode = $this->getKnownMode($type->getMode());
+            $result = null;
+        } else {
+            $this->akTextareaDisplayMode = static::MODE_DEFAULT;
+            $result = false;
         }
+        $this->set('akTextareaDisplayMode', $this->akTextareaDisplayMode);
 
-        $type = $ak->getAttributeKeySettings();
-        $this->akTextareaDisplayMode = $type->getMode();
-        $this->set('akTextareaDisplayMode', $type->getMode());
+        return $result;
+    }
+
+    /**
+     * Get all the available modes.
+     *
+     * @return string[]
+     */
+    protected function getAllModes(): array
+    {
+        return [
+            static::MODE_TEXT,
+            static::MODE_RICHTEXT,
+        ];
+    }
+
+    /**
+     * Check that a wanted mode is valid, otherwise returns the default one.
+     *
+     * @param string|mixed $wanted
+     *
+     * @return string
+     */
+    protected function getKnownMode($wanted): string
+    {
+        return in_array($wanted, $this->getAllModes(), true) ? $wanted : static::MODE_DEFAULT;
     }
 }
