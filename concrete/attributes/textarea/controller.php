@@ -7,6 +7,8 @@ use Concrete\Core\Attribute\FontAwesomeIconFormatter;
 use Concrete\Core\Editor\LinkAbstractor;
 use Concrete\Core\Entity\Attribute\Key\Settings\TextareaSettings;
 use Concrete\Core\Entity\Attribute\Value\Value\TextValue;
+use Concrete\Core\Utility\Service\Xml;
+use SimpleXMLElement;
 
 /**
  * @method \Concrete\Core\Entity\Attribute\Key\Settings\TextareaSettings getAttributeKeySettings()
@@ -185,6 +187,58 @@ class Controller extends DefaultController
     /**
      * {@inheritdoc}
      *
+     * @see \Concrete\Core\Attribute\Controller::importKey()
+     */
+    public function importKey(SimpleXMLElement $akey)
+    {
+        $type = $this->getAttributeKeySettings();
+        $type->setMode(
+            $this->getKnownMode(
+                isset($akey->type)
+                ? (string) $akey->type['mode']
+                : null
+            )
+        );
+
+        return $type;
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Attribute\Controller::exportValue()
+     */
+    public function exportValue(SimpleXMLElement $akv)
+    {
+        $this->load();
+        $attributeValue = $this->getAttributeValue();
+        $value = is_object($attributeValue) ? (string) $attributeValue->getValueObject() : '';
+        if ($this->akTextareaDisplayMode === static::MODE_RICHTEXT) {
+            $value = LinkAbstractor::export($value);
+        }
+
+        return $this->app->make(Xml::class)->createChildElement($akv, 'value', $value);
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Attribute\Controller::importValue()
+     */
+    public function importValue(SimpleXMLElement $akv)
+    {
+        $this->load();
+        $value = (string) parent::importValue($akv);
+        if ($this->akTextareaDisplayMode === static::MODE_RICHTEXT) {
+            $value = LinkAbstractor::import($value);
+        }
+
+        return $value;
+    }
+
+    /**
+     * {@inheritdoc}
+     *
      * @see \Concrete\Core\Attribute\DefaultController::createAttributeValue()
      */
     public function createAttributeValue($value)
@@ -198,25 +252,6 @@ class Controller extends DefaultController
         $av->setValue($value);
 
         return $av;
-    }
-
-    /**
-     * {@inheritdoc}
-     *
-     * @see \Concrete\Core\Attribute\Controller::importKey()
-     */
-    public function importKey(\SimpleXMLElement $akey)
-    {
-        $type = $this->getAttributeKeySettings();
-        $type->setMode(
-            $this->getKnownMode(
-                isset($akey->type)
-                ? (string) $akey->type['mode']
-                : null
-            )
-        );
-
-        return $type;
     }
 
     /**
