@@ -11,6 +11,31 @@
     },
     "keepXmlElementsOrder": {
       "type": "boolean"
+    },
+    "richTexts": {
+      "type": "object",
+      "propertyNames": {
+        "pattern": "^(?i:SELECT\\s[^;]+)$"
+      },
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "numFiles": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "numImages": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "numPages": {
+            "type": "integer",
+            "minimum": 0
+          }
+        },
+        "required": [],
+        "additionalProperties": false
+      }
     }
   },
   "required": [],

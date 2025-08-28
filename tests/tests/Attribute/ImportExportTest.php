@@ -8,6 +8,7 @@ use Concrete\Core\Attribute\AttributeValueInterface;
 use Concrete\Core\Attribute\Category\CategoryService;
 use Concrete\Core\Attribute\TypeFactory;
 use Concrete\Core\Calendar\Event\EventRepetition;
+use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Entity;
 use Concrete\Core\File\Import\FileImporter;
 use Concrete\Core\File\Import\ImportOptions;
@@ -193,8 +194,15 @@ class ImportExportTest extends PageTestCase
         $em->clear();
 
         $key2 = self::$attributeOwner->getObjectAttributeCategory()->getAttributeKeyByHandle($keyHandle);
-        $keyController2 = $key2->getController();
         $value2 = self::$attributeOwner->getAttributeValueObject($key2, false);
+
+        if (isset($options['richTexts'])) {
+            foreach ($options['richTexts'] as $query => $info) {
+                $this->checkRichText($value2, $query, $info);
+            }
+        }
+
+        $keyController2 = $key2->getController();
         $keyController2->setAttributeValue($value2);
         $actualSimpleXml = simplexml_load_string('<attributekey />');
         $keyController2->exportValue($actualSimpleXml);
@@ -508,6 +516,26 @@ class ImportExportTest extends PageTestCase
         $key = $categoryController->import($type, $optionsSimpleXml);
 
         return $key;
+    }
+
+    private function checkRichText(\Concrete\Core\Entity\Attribute\Value\AbstractValue $value, string $query, array $info): void
+    {
+        $richText = (string) app(Connection::class)->fetchOne($query, ['avID' => $value->getAttributeValueID()]);
+
+        $pattern = '#{CCM:FID_DL_(?i:[0-9A-F][0-9A-F\-]+[0-9A-F])}#';
+        $expectedNum = $info['numFiles'] ?? 0;
+        $actualNum = preg_match_all($pattern, $richText);
+        $this->assertSame($expectedNum, $actualNum, "The rich text\n{$richText}\ncontain references to {$actualNum} file(s) instead of {$expectedNum}.\nPS: pattern used: {$pattern}\n");
+
+        $pattern = '/<concrete-picture\s[^>]*(?i:\bfid)\s*=\s*(?:([1-9]\d*)|"([1-9]\d*)"|\'([1-9]\d*)\')[\s>]/';
+        $expectedNum = $info['numImages'] ?? 0;
+        $actualNum = preg_match_all($pattern, $richText);
+        $this->assertSame($expectedNum, $actualNum, "The rich text\n{$richText}\ncontain references to {$actualNum} image(s) instead of {$expectedNum}.\nPS: pattern used: {$pattern}\n");
+
+        $pattern = '#{CCM:CID_[1-9]\d*}#';
+        $expectedNum = $info['numPages'] ?? 0;
+        $actualNum = preg_match_all($pattern, $richText);
+        $this->assertSame($expectedNum, $actualNum, "The rich text\n{$richText}\ncontain references to {$actualNum} pages(s) instead of {$expectedNum}.\nPS: pattern used: {$pattern}\n");
     }
 
     /**
