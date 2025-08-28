@@ -267,7 +267,6 @@ class ImportExportTest extends PageTestCase
 
     public function testAttributeTypeCoverage(): void
     {
-        $this->markTestSkipped('@todo Enable this test once all the attribute types are covered');
         $fs = new Filesystem();
         $availableHandles = array_map('basename', $fs->directories(DIR_BASE_CORE . '/' . DIRNAME_ATTRIBUTES));
         $coveredHandles = array_unique(
