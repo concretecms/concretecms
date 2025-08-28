@@ -16,6 +16,11 @@ use Concrete\Core\File\Service\VolatileDirectory;
 use Concrete\Core\File\Set\Set as FileSet;
 use Concrete\Core\File\StorageLocation\StorageLocationFactory;
 use Concrete\Core\File\StorageLocation\Type\Type as StorageLocationType;
+use Concrete\Core\Permission\Access\Entity\Type AS PAEType;
+use Concrete\Core\Tree\Node\NodeType as TreeNodeType;
+use Concrete\Core\Tree\Node\Type\Topic as TopicTreeNode;
+use Concrete\Core\Tree\TreeType;
+use Concrete\Core\Tree\Type\Topic as TopicService;
 use Concrete\Core\User\Group\Command\AddGroupCommand;
 use Concrete\Core\User\Group\GroupRepository;
 use Concrete\TestHelpers\Page\PageTestCase;
@@ -66,6 +71,9 @@ class ImportExportTest extends PageTestCase
     {
         return array_merge(parent::getTables(), [
             'FileSets',
+            'PermissionAccessEntities',
+            'PermissionAccessEntityGroups',
+            'TopicTrees',
             'TreeFileFolderNodes',
             'TreeFileNodes',
             'TreeGroupNodes',
@@ -120,9 +128,12 @@ class ImportExportTest extends PageTestCase
     public static function setupBeforeClass(): void
     {
         parent::setUpBeforeClass();
+        self::createPermissions();
+        self::createTrees();
         self::createPages();
         self::createAttributeOwner();
         self::createUsers();
+        self::createTopics();
         self::createFiles();
         self::createCalendars();
         self::createExpressEntities();
@@ -354,6 +365,26 @@ class ImportExportTest extends PageTestCase
         }
     }
 
+    private static function createPermissions(): void
+    {
+        if (!PAEType::getByHandle('group')) {
+            PAEType::add('group', 'Group');
+        }
+    }
+
+    private static function createTrees(): void
+    {
+        if (TreeNodeType::getByHandle('category') === null) {
+            TreeNodeType::add('category');
+        }
+        if (TreeType::getByHandle('topic') === null) {
+            TreeType::add('topic');
+        }
+        if (TreeNodeType::getByHandle('topic') === null) {
+            TreeNodeType::add('topic');
+        }
+    }
+
     private static function createPages(): void
     {
         static::createPage('Test Page 1');
@@ -403,6 +434,18 @@ class ImportExportTest extends PageTestCase
             'uDefaultLanguage' => 'en_US',
             'uHomeFileManagerFolderID' => null,
         ]);
+    }
+
+    private static function createTopics(): void
+    {
+        $topicsTree = TopicService::add('Test Topic Tree');
+        $root = $topicsTree->getRootTreeNodeObject();
+        $child = TopicTreeNode::add('Parent #1', $root);
+        TopicTreeNode::add('Child #1.1', $child);
+        $child = TopicTreeNode::add('Parent #2', $root);
+        TopicTreeNode::add('Child #2.1', $child);
+        TopicTreeNode::add('Child #2.2', $child);
+        TopicTreeNode::add('Child #2.3', $child);
     }
 
     private static function createFiles(): void
