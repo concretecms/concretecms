@@ -20,7 +20,9 @@ use Concrete\Core\Permission\Access\Entity\Type AS PAEType;
 use Concrete\Core\Tree\Node\NodeType as TreeNodeType;
 use Concrete\Core\Tree\Node\Type\Topic as TopicTreeNode;
 use Concrete\Core\Tree\TreeType;
+use Concrete\Core\Tree\Type\Group as GroupType;
 use Concrete\Core\Tree\Type\Topic as TopicService;
+use Concrete\Core\Tree\Node\Type\Group as GroupNode;
 use Concrete\Core\User\Group\Command\AddGroupCommand;
 use Concrete\Core\User\Group\GroupRepository;
 use Concrete\TestHelpers\Page\PageTestCase;
@@ -383,6 +385,13 @@ class ImportExportTest extends PageTestCase
         if (TreeNodeType::getByHandle('topic') === null) {
             TreeNodeType::add('topic');
         }
+        if (TreeType::getByHandle('group') === null) {
+            TreeType::add('group');
+        }
+        if (TreeNodeType::getByHandle('group') === null) {
+            TreeNodeType::add('group');
+        }
+        GroupType::add();
     }
 
     private static function createPages(): void
@@ -410,6 +419,18 @@ class ImportExportTest extends PageTestCase
             $command->setName('Guest');
             $command->setDescription('Guests');
             $command->getForcedNewGroupID(GUEST_GROUP_ID);
+            app()->executeCommand($command);
+        }
+        for ($i = 1; $i <= 3; $i++) {
+            $command = new AddGroupCommand();
+            $command->setName("Sample User Group #{$i}");
+            $command->setDescription('This is a test user group');
+            $parentGroup = app()->executeCommand($command);
+            $parentGroupNode = GroupNode::getTreeNodeByGroupID($parentGroup->getGroupID());
+            $command = new AddGroupCommand();
+            $command->setName('Child Group Name');
+            $command->setDescription('Group at 2nd level');
+            $command->setParentNodeID((int) $parentGroupNode->getTreeNodeID());
             app()->executeCommand($command);
         }
         $registrationService = app('user/registration');
