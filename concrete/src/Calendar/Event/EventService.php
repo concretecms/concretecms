@@ -44,6 +44,9 @@ class EventService implements ApplicationAwareInterface
 
     public function getByID($id, $retrieveVersion = self::EVENT_VERSION_APPROVED)
     {
+        if (!$id) {
+            return null;
+        }
         $r = $this->entityManager->getRepository(CalendarEvent::class);
         $event = $r->findOneById($id);
         if ($event) {
@@ -65,6 +68,9 @@ class EventService implements ApplicationAwareInterface
 
     public function getVersionByID($id)
     {
+        if (!$id) {
+            return null;
+        }
         $r = $this->entityManager->getRepository(CalendarEventVersion::class);
         return $r->findOneByEventVersionID($id);
     }

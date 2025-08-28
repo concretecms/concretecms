@@ -59,11 +59,9 @@ class Controller extends AttributeTypeController implements
 
     public function createAttributeValue($rating)
     {
+        $rating = filter_var($rating, FILTER_VALIDATE_FLOAT);
         $value = new NumberValue();
-        if ($rating == '') {
-            $rating = 0;
-        }
-        $value->setValue($rating);
+        $value->setValue($rating === false ? 0 : $rating);
 
         return $value;
     }

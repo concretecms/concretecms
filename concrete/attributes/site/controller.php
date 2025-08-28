@@ -4,18 +4,18 @@ namespace Concrete\Attribute\Site;
 use Concrete\Core\Api\ApiResourceValueInterface;
 use Concrete\Core\Api\Attribute\OpenApiSpecifiableInterface;
 use Concrete\Core\Api\Attribute\SupportsAttributeValueFromJsonInterface;
-use Concrete\Core\Api\Fractal\Transformer\PageTransformer;
 use Concrete\Core\Api\Fractal\Transformer\SiteTransformer;
 use Concrete\Core\Api\OpenApi\SpecProperty;
 use Concrete\Core\Api\Resources;
+use Concrete\Core\Attribute\Controller as CoreAttributeController;
 use Concrete\Core\Attribute\FontAwesomeIconFormatter;
 use Concrete\Core\Entity\Attribute\Key\Key;
 use Concrete\Core\Entity\Attribute\Value\Value\SiteValue;
-use Concrete\Core\Attribute\Controller as CoreAttributeController;
-use Concrete\Core\Page\Page;
+use Concrete\Core\Entity\Site\Site;
+use Concrete\Core\Utility\Service\Xml;
 use League\Fractal\Resource\Item;
-use League\Fractal\Resource\ResourceAbstract;
 use League\Fractal\Resource\ResourceInterface;
+use SimpleXMLElement;
 
 class Controller extends CoreAttributeController implements
     OpenApiSpecifiableInterface,
@@ -73,7 +73,9 @@ class Controller extends CoreAttributeController implements
 	public function createAttributeValue($site)
 	{
 		$av = new SiteValue();
-		$av->setSite($site);
+		if ($site instanceof Site) {
+            $av->setSite($site);
+		}
 		return $av;
 	}
 
@@ -118,5 +120,29 @@ class Controller extends CoreAttributeController implements
         return null;
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Attribute\Controller::importValue()
+     */
+    public function importValue(SimpleXMLElement $akv)
+    {
+        $siteHandle = trim((string) parent::importValue($akv));
 
+        return $siteHandle === '' ? null : $this->app->make('site')->getByHandle($siteHandle);
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Attribute\Controller::exportValue()
+     */
+    public function exportValue(SimpleXMLElement $akv)
+    {
+        $attributeValue = $this->getAttributeValue();
+        $site = $attributeValue ? $attributeValue->getValue() : null;
+        $handle = $site ? $site->getSiteHandle() : '';
+
+        return $this->app->make(Xml::class)->createChildElement($akv, 'value', $handle);
+    }
 }

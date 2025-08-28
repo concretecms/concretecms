@@ -167,7 +167,11 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
         if ($value) {
             if (!($value instanceof DateTime)) {
                 $timestamp = strtotime($value);
-                $value = new DateTime(date('Y-m-d H:i:s', $timestamp));
+                if ($timestamp === false) {
+                    $value = null;
+                } else {
+                    $value = new DateTime(date('Y-m-d H:i:s', $timestamp));
+                }
             }
         } else {
             $value = null;
@@ -384,7 +388,7 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
         }
 
         $type = $ak->getAttributeKeySettings();
-        /* @var DateTimeType $type */
+        /* @var DateTimeSettings $type */
         $this->akUseNowIfEmpty = $type->getUseNowIfEmpty();
         $this->set('akUseNowIfEmpty', $this->akUseNowIfEmpty);
         $this->akDateDisplayMode = (string) $type->getMode();
