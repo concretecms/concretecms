@@ -1,5 +1,6 @@
 <?php
 /**
+ * @var Concrete\Attribute\Textarea\Controller $controller
  * @var Concrete\Core\Attribute\View $view
  * @var Concrete\Core\Form\Service\Form $form
  * @var string $akTextareaDisplayMode
@@ -9,7 +10,7 @@
 $value = $value ?? '';
 
 // switch display type here
-if ($akTextareaDisplayMode == 'text' || $akTextareaDisplayMode == '') { ?>
+if ($akTextareaDisplayMode == $controller::MODE_TEXT || $akTextareaDisplayMode == '') { ?>
 
     <?php
     echo $form->textarea(

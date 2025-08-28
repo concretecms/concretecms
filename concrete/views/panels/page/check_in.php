@@ -15,11 +15,13 @@ $require_version_comments = (bool) Config::get('concrete.misc.require_version_co
 
     $composer = Core::make('helper/concrete/composer');
     $publishTitle = $composer->getPublishButtonTitle($c);
-
+    $publishButtonActivated = $composer->getPublishButtonActivated($c);
     ?>
 <div class="ccm-panel-check-in-publish">
-    <?php $publishAction = (is_object($publishErrors) && $publishErrors->has()) ? false : true ?>
-    <div class="btn-group d-flex" role="group">
+    <?php $publishAction = !((isset($publishErrors) && is_object($publishErrors) && $publishErrors->has()) || !$publishButtonActivated) ?>
+    <div class="btn-group d-flex" role="group"
+         data-panel-check-in-btns="publish"
+        <?php if (!$publishButtonActivated) { ?> title="<?= t('This version is already submitted to Workflow.') ?>"<?php } ?>>
         <button id="ccm-check-in-publish" type="submit" name="action" value="publish"
                 class="pe-3 ps-3 btn btn-primary" <?=$publishAction ?: 'disabled' ?>>
             <?=$publishTitle?>
@@ -108,6 +110,11 @@ $(function() {
     $("#ccm-check-in-schedule, #ccm-check-in-schedule-wrapper .remove").click(function () {
         toggleScheduler();
     });
+
+    let publishBtnWrapper = document.querySelector('div[data-panel-check-in-btns=publish]');
+    if (publishBtnWrapper) {
+        new bootstrap.Tooltip(publishBtnWrapper);
+    }
 });
 </script>
 

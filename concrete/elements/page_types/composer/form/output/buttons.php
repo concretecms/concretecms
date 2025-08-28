@@ -7,15 +7,20 @@ $publishDate = $v->getPublishDate();
 ?>
 
 <?php if ($cp->canApprovePageVersions()) {
-
+    /** @var \Concrete\Core\Application\Service\Composer $composer */
     $composer = Core::make('helper/concrete/composer');
     $publishTitle = $composer->getPublishButtonTitle($page);
-
+    $publishButtonActivated = $composer->getPublishButtonActivated($page);
     ?>
 
-    <div class="float-end btn-group" data-page-type-composer-form-btns="publish">
-        <button type="button" data-page-type-composer-form-btn="publish" class="ps-3 pe-3 btn btn-primary"><?=$publishTitle?></button>
-        <button data-page-type-composer-form-btn="schedule" type="button" class="ps-3 pe-3 btn btn-primary <?php if ($publishDate) { ?>active<?php } ?>">
+    <div class="float-end btn-group"
+         data-page-type-composer-form-btns="publish"
+        <?php if (!$publishButtonActivated) { ?> title="<?= t('This version is already submitted to Workflow.') ?>"<?php } ?>>
+        <button type="button"
+                data-page-type-composer-form-btn="publish"
+                class="ps-3 pe-3 btn btn-primary"
+                <?php if (!$publishButtonActivated) { ?> disabled<?php } ?>><?=$publishTitle?></button>
+        <button data-page-type-composer-form-btn="schedule" type="button" class="ps-3 pe-3 btn btn-primary <?php if ($publishDate) { ?>active<?php } ?>"<?php if (!$publishButtonActivated) { ?> disabled<?php } ?>>
             <i class="fas fa-clock"></i>
         </button>
     </div>
@@ -148,5 +153,9 @@ $publishDate = $v->getPublishDate();
                 }
             });
         });
+        let publishBtnWrapper = document.querySelector('div[data-page-type-composer-form-btns=publish]');
+        if (publishBtnWrapper) {
+            new bootstrap.Tooltip(publishBtnWrapper);
+        }
     });
 </script>

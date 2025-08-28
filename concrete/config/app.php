@@ -841,47 +841,40 @@ return [
     ],
     // HTTP Client options
     'http_client' => [
-        // FALSE to stop from verifying the peer's certificate.
-        'sslverifypeer' => true,
-        // FALSE to stop from verifying the peer's name (used only with Socket connections, not with cURL ones).
-        'sslverifypeername' => false,
-        // The name of a file holding one or more certificates to verify the peer with (used only if sslverifypeer is not falsy).
-        'sslcafile' => null,
-        // A directory that holds multiple CA certificates to verify the peer with (used only if sslverifypeer is not falsy).
-        'sslcapath' => null,
-        // The number of seconds to wait while trying to connect.
-        'connecttimeout' => 5,
-        // The maximum number of seconds to allow response from remote server.
+        // SSL certificate verification. Set to false to allow self-signed certs (insecure!).
+        // You may also set this to a path to a CA bundle file.
+        // @see https://docs.guzzlephp.org/en/latest/request-options.html#verify
+        'verify' => true,
+
+        // Client certificate (PEM). Optionally provide [path, password].
+        // @see https://docs.guzzlephp.org/en/latest/request-options.html#cert
+        // 'cert' => ['/path/to/client.pem', 'password'],
+
+        // Connection timeout (seconds) and total request timeout (seconds).
+        // @see https://docs.guzzlephp.org/en/latest/request-options.html#connect-timeout
+        // @see https://docs.guzzlephp.org/en/latest/request-options.html#timeout
+        'connect_timeout' => 5,
         'timeout' => 60,
-        // Whether to enable keep-alive connections with the server. Useful and might improve performance if several consecutive requests to the same server are performed.
-        'keepalive' => false,
-        // Maximum number of redirections to follow (0 = none).
-        'maxredirects' => 5,
-        // Whether to strictly adhere to RFC 3986 (in practice, this means replacing "+" with "%20").
-        'rfc3986strict' => false,
-        // Path to a PEM encoded SSL certificate.
-        'sslcert' => null,
-        // Passphrase for the SSL certificate file.
-        'sslpassphrase' => null,
-        // Whether to store last response for later retrieval with getLastResponse(). If set to FALSE, getLastResponse() will return NULL.
-        'storeresponse' => true,
-        // Directory where to store temporary streams by default (if empty, we'll use the default concrete temporry directory).
-        'streamtmpdir' => null,
-        // Whether to strictly follow the RFC when redirecting (see https://framework.zend.com/manual/2.4/en/modules/zend.http.client.advanced.html#http-redirections )
-        'strictredirects' => false,
-        // User agent identifier string.
-        'useragent' => 'Concrete CMS',
-        // Whether to pass the cookie value through urlencode/urldecode. Enabling this breaks support with some web servers. Disabling this limits the range of values the cookies can contain.
-        'encodecookies' => true,
-        // HTTP protocol version (usually '1.1' or '1.0').
-        'httpversion' => '1.1',
-        // SSL transport layer ['ssl', 'sslv2', 'sslv3', 'tls'] (applicable only to Socket adapters).
-        'ssltransport' => 'tls',
-        // Whether to allow self-signed certificates (applicable only to Socket adapters).
-        'sslallowselfsigned' => false,
-        // Whether to use persistent TCP connections (applicable only to Socket adapters).
-        'persistent' => false,
-        // The name of a class that implements Psr\Log\LoggerInterface
+
+        // Redirect handling: max redirects and strict RFC behavior.
+        // @see https://docs.guzzlephp.org/en/latest/request-options.html#allow-redirects
+        'allow_redirects' => [
+            'max' => 5,
+            'strict' => false,
+            'referer' => true,
+        ],
+
+        // Default headers.
+        'headers' => [
+            'User-Agent' => 'Concrete CMS',
+        ],
+
+        // HTTP protocol version ('1.1' or '2' when supported by handler).
+        // @see https://docs.guzzlephp.org/en/latest/request-options.html#version
+        'version' => '1.1',
+
+        // The name of a class that implements Psr\Log\LoggerInterface.
+        // This is consumed by Concrete's HTTP client factory to attach a logger.
         'logger' => null,
     ],
 
