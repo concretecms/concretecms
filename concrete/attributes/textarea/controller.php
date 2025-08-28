@@ -73,28 +73,17 @@ class Controller extends DefaultController
     }
 
     /**
-     * @return string|null
+     * @return string
      */
     public function getValue()
     {
         $this->load();
-        if ($this->akTextareaDisplayMode == static::MODE_TEXT) {
-            $value = $this->getAttributeValue()->getValueObject();
-
-            return (string) $value;
-        }
-
-        $value = null;
-        if (is_object($this->attributeValue)) {
-            $value = $this->getAttributeValue()->getValueObject();
-
-            if ($value) {
-                $this->load();
-                $value = (string) $value;
-                if ($this->akTextareaDisplayMode == static::MODE_RICHTEXT) {
-                    $value = LinkAbstractor::translateFrom($value);
-                }
-            }
+        $attributeValue = $this->getAttributeValue();
+        $value = is_object($attributeValue) ? (string) $attributeValue->getValueObject() : '';
+        switch ($this->akTextareaDisplayMode) {
+            case static::MODE_RICHTEXT:
+                $value = LinkAbstractor::translateFrom($value);
+                break;
         }
 
         return $value;
@@ -108,7 +97,7 @@ class Controller extends DefaultController
     public function getDisplayValue()
     {
         $value = $this->getValue();
-        if ($this->akTextareaDisplayMode == static::MODE_RICHTEXT) {
+        if ($this->akTextareaDisplayMode === static::MODE_RICHTEXT) {
             return htmLawed($value, [
                 'balance' => 0, // off
                 'comment' => 3, // allow
@@ -129,17 +118,11 @@ class Controller extends DefaultController
     public function form()
     {
         $this->load();
-        $value = null;
-        if (is_object($this->attributeValue)) {
-            $value = $this->getAttributeValue()->getValueObject();
-
-            if ($value) {
-                if ($this->akTextareaDisplayMode == static::MODE_RICHTEXT) {
-                    $value = LinkAbstractor::translateFromEditMode($value);
-                }
-            }
+        $attributeValue = $this->getAttributeValue();
+        $value = is_object($attributeValue) ? (string) $attributeValue->getValueObject() : '';
+        if ($this->akTextareaDisplayMode === static::MODE_RICHTEXT) {
+            $value = LinkAbstractor::translateFromEditMode($value);
         }
-        $this->set('akTextareaDisplayMode', $this->akTextareaDisplayMode);
         $this->set('value', $value);
     }
 
@@ -208,7 +191,7 @@ class Controller extends DefaultController
     public function createAttributeValue($value)
     {
         $this->load();
-        if ($this->akTextareaDisplayMode == static::MODE_RICHTEXT) {
+        if ($this->akTextareaDisplayMode === static::MODE_RICHTEXT) {
             $value = LinkAbstractor::translateTo($value);
         }
 
