@@ -85,7 +85,7 @@ class Controller extends AttributeTypeController implements
         if ($value instanceof User) {
             $value = $value->getUserID();
         }
-        $av->setValue($value);
+        $av->setValue(filter_var($value, FILTER_VALIDATE_INT) ?: null);
 
         return $av;
     }
@@ -117,20 +117,33 @@ class Controller extends AttributeTypeController implements
 
     public function importValue(\SimpleXMLElement $akv)
     {
-        if (isset($akv->value)) {
-            $user = User::getByUserID($akv->value);
-            if (is_object($user)) {
-                return $user->getUserID();
+        $userInfo = null;
+        $email = isset($akv->value) ? trim((string) $akv->value['email']) : '';
+        if ($email !== '') {
+            $userInfo = $this->app->make(UserInfoRepository::class)->getByEmail($email);
+        }
+        if ($userInfo === null) {
+            $username = isset($akv->value) ? trim((string) $akv->value['username']) : '';
+            if ($username !== '') {
+                $userInfo = $this->app->make(UserInfoRepository::class)->getByName($username);
             }
         }
+
+        return $userInfo ? $userInfo->getUserID() : null;
     }
 
     public function exportValue(\SimpleXMLElement $akn)
     {
-        if (is_object($this->attributeValue)) {
-            $uID = $this->getAttributeValue()->getValue();
-            $user = User::getByUserID($uID);
-            $avn = $akn->addChild('value', $user->getUserID());
+        $attributeValue = $this->getAttributeValue();
+        $value = is_object($attributeValue) ? $this->getAttributeValue()->getValue() : 0;
+        $uID = filter_var($value, FILTER_VALIDATE_INT);
+        if ($uID) {
+            $userInfo = $this->app->make(UserInfoRepository::class)->getByID($uID);
+            if ($userInfo) {
+                $xValue = $akn->addChild('value');
+                $xValue['email'] = (string) $userInfo->getUserEmail();
+                $xValue['username'] = (string) $userInfo->getUserName();
+            }
         }
     }
 
