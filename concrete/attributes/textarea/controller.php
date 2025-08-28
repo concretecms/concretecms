@@ -11,6 +11,12 @@ use Core;
 
 class Controller extends DefaultController
 {
+    public const MODE_TEXT = 'text';
+
+    public const MODE_RICHTEXT = 'rich_text';
+
+    public const MODE_DEFAULT = self::MODE_TEXT;
+
     public $helpers = ['form'];
 
     protected $akTextareaDisplayMode;
@@ -29,7 +35,7 @@ class Controller extends DefaultController
         ];
         $akTextareaDisplayMode = $data['akTextareaDisplayMode'];
         if (!$akTextareaDisplayMode) {
-            $akTextareaDisplayMode = 'text';
+            $akTextareaDisplayMode = static::MODE_DEFAULT;
         }
 
         $type->setMode($akTextareaDisplayMode);
@@ -40,7 +46,7 @@ class Controller extends DefaultController
     public function getValue()
     {
         $this->load();
-        if ($this->akTextareaDisplayMode == 'text') {
+        if ($this->akTextareaDisplayMode == static::MODE_TEXT) {
             $value = $this->getAttributeValue()->getValueObject();
 
             return (string) $value;
@@ -53,7 +59,7 @@ class Controller extends DefaultController
             if ($value) {
                 $this->load();
                 $value = (string) $value;
-                if ($this->akTextareaDisplayMode == 'rich_text') {
+                if ($this->akTextareaDisplayMode == static::MODE_RICHTEXT) {
                     $value = LinkAbstractor::translateFrom($value);
                 }
             }
@@ -65,7 +71,7 @@ class Controller extends DefaultController
     public function getDisplayValue()
     {
         $value = $this->getValue();
-        if ($this->akTextareaDisplayMode == 'rich_text') {
+        if ($this->akTextareaDisplayMode == static::MODE_RICHTEXT) {
             return htmLawed($value, [
                 'balance' => 0, // off
                 'comment' => 3, // allow
@@ -86,7 +92,7 @@ class Controller extends DefaultController
             $value = $this->getAttributeValue()->getValueObject();
 
             if ($value) {
-                if ($this->akTextareaDisplayMode == 'rich_text') {
+                if ($this->akTextareaDisplayMode == static::MODE_RICHTEXT) {
                     $value = LinkAbstractor::translateFromEditMode($value);
                 }
             }
@@ -135,7 +141,7 @@ class Controller extends DefaultController
     public function createAttributeValue($value)
     {
         $this->load();
-        if ($this->akTextareaDisplayMode == 'rich_text') {
+        if ($this->akTextareaDisplayMode == static::MODE_RICHTEXT) {
             $value = LinkAbstractor::translateTo($value);
         }
 
