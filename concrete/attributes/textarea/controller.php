@@ -31,10 +31,6 @@ class Controller extends DefaultController
         if (!$akTextareaDisplayMode) {
             $akTextareaDisplayMode = 'text';
         }
-        $options = [];
-        if ($akTextareaDisplayMode == 'rich_text_custom') {
-            $options = $data['akTextareaDisplayModeCustomOptions'];
-        }
 
         $type->setMode($akTextareaDisplayMode);
 
