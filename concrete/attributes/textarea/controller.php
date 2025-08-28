@@ -7,7 +7,6 @@ use Concrete\Core\Attribute\FontAwesomeIconFormatter;
 use Concrete\Core\Editor\LinkAbstractor;
 use Concrete\Core\Entity\Attribute\Key\Settings\TextareaSettings;
 use Concrete\Core\Entity\Attribute\Value\Value\TextValue;
-use Core;
 
 /**
  * @method \Concrete\Core\Entity\Attribute\Key\Settings\TextareaSettings getAttributeKeySettings()
@@ -150,7 +149,7 @@ class Controller extends DefaultController
      */
     public function search()
     {
-        $f = Core::make('helper/form');
+        $f = $this->app->make('helper/form');
         echo $f->text($this->field('value'), $this->request('value'));
     }
 
