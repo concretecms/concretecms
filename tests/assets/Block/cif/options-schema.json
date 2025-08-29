@@ -9,6 +9,9 @@
       "type": "string",
       "minLength": 1
     },
+    "skipSilent": {
+      "type": "boolean"
+    },
     "requiredBlockTypes": {
       "type": "array",
       "items": {
