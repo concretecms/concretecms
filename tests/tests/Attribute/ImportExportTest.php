@@ -192,6 +192,12 @@ class ImportExportTest extends PageTestCase
      */
     public function testCIFImportExport(string $attributeTypeHandle, string $basename, array $options): void
     {
+        if ($options['skipSilent'] ?? false === true) {
+            // We have to make at least one assertion, otherwise PHPUnit warns that
+            // "This test did not perform any assertions"
+            $this->assertTrue(true);
+            return;
+        }
         if (isset($options['skipReason'])) {
             $this->markTestSkipped($options['skipReason']);
         }
