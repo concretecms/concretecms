@@ -1,8 +1,8 @@
 ## Folder Structure
 
-Creae a folder for every block type.
+Create a folder for every block type.
 
-The folder name must much the handle of the block type.
+The folder name must match the handle of the block type.
 
 In every folder we can have one or more test cases.
 
