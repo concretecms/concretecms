@@ -10,6 +10,7 @@ use Concrete\Core\File\File;
 use Concrete\Core\File\Tracker\FileTrackableInterface;
 use Concrete\Core\File\Tracker\RichTextExtractor;
 use Concrete\Core\Form\Service\DestinationPicker\DestinationPicker;
+use Concrete\Core\Html\Object\HeadLink;
 use Concrete\Core\Html\Service\FontAwesomeIcon;
 use Concrete\Core\Page\Page;
 use Concrete\Core\Page\Theme\Theme;
@@ -202,7 +203,13 @@ class Controller extends BlockController implements FileTrackableInterface, Uses
 
     public function view()
     {
-        $this->set('image', File::getByID($this->image));
+        $f = File::getByID($this->image);
+        $this->set('image', $f);
+        if ($f) {
+            $link = new HeadLink($f->getURL(), 'preload', $f->getMimeType());
+            $link->setAttribute('as', 'image');
+            $this->addHeaderItem($link);
+        }
 
         if ($this->buttonText || $this->getLinkURL()) {
             $button = new Link($this->getLinkURL(), $this->buttonText);
