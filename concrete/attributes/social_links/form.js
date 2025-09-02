@@ -1,47 +1,58 @@
 var ConcreteSocialLinksAttribute = {
+    init: function (akID) {
+        var $root = $('[data-attribute-key-id="' + akID + '"]');
+        if (!$root.length) return;
 
-    init: function() {
-        $('.ccm-social-link-attribute-add-service').click(function() {
-            $($('.ccm-social-link-attribute').get(0)).
-                clone().
-                appendTo($('.ccm-social-link-attribute-wrapper')).
-                find('input').
-                val('').
-                closest('.ccm-social-link-attribute').
-                find('select').
-                trigger('change');
-            $('button.ccm-social-link-attribute-remove-line').show();
-            $('button.ccm-social-link-attribute-remove-line:first').hide();
+        // Add a new row (scoped to this akID)
+        $root.on('click', '.ccm-social-link-attribute-add-service', function (e) {
+            e.preventDefault();
+
+            var $wrapper = $root.find('.ccm-social-link-attribute-wrapper').first();
+            var $template = $wrapper.find('.ccm-social-link-attribute').first();
+            var $clone = $template.clone();
+
+            $clone.find('input').val('');
+            $clone.appendTo($wrapper);
+            $clone.find('select').trigger('change');
+
+            var $buttons = $wrapper.find('button.ccm-social-link-attribute-remove-line');
+            $buttons.show().first().hide();
         });
-        $('.ccm-social-link-attribute-wrapper').on('click', 'button.ccm-social-link-attribute-remove-line', function() {
+
+        // Remove a row (scoped)
+        $root.on('click', 'button.ccm-social-link-attribute-remove-line', function (e) {
+            e.preventDefault();
+
+            var $wrapper = $(this).closest('.ccm-social-link-attribute-wrapper');
             $(this).closest('.ccm-social-link-attribute').remove();
+
+            var $buttons = $wrapper.find('button.ccm-social-link-attribute-remove-line');
+            $buttons.show().first().hide();
         });
-        $('.ccm-social-link-attribute-wrapper').on('change', 'select', function() {
-            var opt = $($(this).find(':selected'));
-            var $parentContainer = $(this).closest('.ccm-social-link-attribute');
-            $('button.ccm-social-link-attribute-remove-line').show();
-            $('button.ccm-social-link-attribute-remove-line:first').hide();
 
-            if (opt.attr('data-icon') == 'phone-square' ||
-                opt.attr('data-icon') == 'envelope' ||
-                opt.attr('data-icon') == 'external-link-alt'
-            ) {
-              faClass = "fas";
-            } else {
-              faClass = "fab";
-            }
+        // Change handler (scoped)
+        $root.on('change', 'select', function () {
+            var $select = $(this);
+            var $opt = $select.find(':selected');
+            var $row = $select.closest('.ccm-social-link-attribute');
 
-            $parentContainer.
-                find('.ccm-social-link-service-text-wrapper').
-                addClass('input-prepend').
-                find('.ccm-social-link-service-add-on-wrapper').show().
-                find('.add-on i').
-                removeClass().
-                addClass(faClass+' fa-'+opt.attr('data-icon'));
+            var icon = $opt.attr('data-icon') || '';
+            var faClass = (icon === 'phone-square' || icon === 'envelope' || icon === 'external-link-alt') ? 'fas' : 'fab';
 
+            $row.find('.ccm-social-link-service-text-wrapper').addClass('input-prepend');
+            $row.find('.ccm-social-link-service-add-on-wrapper').show();
+            $row.find('.add-on i').attr('class', (faClass + ' fa-' + icon).trim());
+
+            var $wrapper = $select.closest('.ccm-social-link-attribute-wrapper');
+            var $buttons = $wrapper.find('button.ccm-social-link-attribute-remove-line');
+            $buttons.show().first().hide();
         });
-        $('.ccm-social-link-attribute-wrapper select').trigger('change');
+
+        // Initial state for this akID only
+        $root.find('.ccm-social-link-attribute-wrapper select').trigger('change');
+        $root.find('.ccm-social-link-attribute-wrapper').each(function () {
+            var $buttons = $(this).find('button.ccm-social-link-attribute-remove-line');
+            $buttons.show().first().hide();
+        });
     }
 };
-
-
