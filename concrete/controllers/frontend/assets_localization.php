@@ -108,6 +108,7 @@ var ccmi18n = ' . json_encode([
     'permissionsOverrideWarning' => t('Changing this setting will affect this page immediately. Are you sure?'),
     'permissionsUpdatedMessage' => t('The permissions has been successfully updated.'),
     'permissionsUpdatedTitle' => t('Permissions Updated'),
+    'confirmBulkPagePermissionsChange' => t('This change will affect permissions for all selected pages immediately. Are you sure?'),
     'previous' => t('Previous'),
     'progressiveOperationLoading' => t('Determining items remaining...'),
     'properties' => t('Page Saved'),
