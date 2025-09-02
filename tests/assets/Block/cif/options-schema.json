@@ -6,10 +6,16 @@
       "type": "string"
     },
     "skipReason": {
+      "$comment": "Use this option to document why testing this attribute is skipped during import/export tests.",
       "type": "string",
       "minLength": 1
     },
+    "skipSilent": {
+      "$comment": "Set to true to silently skip testing this attribute during import/export tests.",
+      "type": "boolean"
+    },
     "requiredBlockTypes": {
+      "$comment": "The handles of the block types that must be installed prior to performing this test.",
       "type": "array",
       "items": {
         "type": "string",
@@ -18,18 +24,22 @@
       "uniqueItems": true
     },
     "importerExporterMethod": {
+      "$comment": "The method to use for testing importing and/or exporting. If not specified we'll use the default one.",
       "type": "string",
       "minLength": 1,
       "pattern": "^(import|export)[a-zA-Z0-9_]+$"
     },
     "keepXmlElementsOrder": {
+      "$comment": "Set to true to avoid sorting automatically the XML elements.",
       "type": "boolean"
     },
     "fileUsageCount": {
+      "$comment": "The number of files that should be tracked when importing the XML for this test case.",
       "type": "integer",
       "minimum": 0
     },
     "richTexts": {
+      "$comment": "Use this option to check if a value contains rich text elements and the number of such elements. The keys are the SQL queries used to fetch the values (they should return just one row with just one field). Use the :bID parameter to filter the results by the ID of the block instance.",
       "type": "object",
       "propertyNames": {
         "pattern": "^(?i:SELECT\\s[^;]+)$"
@@ -38,14 +48,17 @@
         "type": "object",
         "properties": {
           "numFiles": {
+            "$comment": "The number of file links in the rich text.",
             "type": "integer",
             "minimum": 0
           },
           "numImages": {
+            "$comment": "The number of image links in the rich text.",
             "type": "integer",
             "minimum": 0
           },
           "numPages": {
+            "$comment": "The number of page links in the rich text.",
             "type": "integer",
             "minimum": 0
           }

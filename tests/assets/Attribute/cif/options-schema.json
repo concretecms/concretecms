@@ -6,9 +6,13 @@
       "type": "string"
     },
     "skipReason": {
-      "$comment": "Use this option to document why this attribute is skipped during import/export tests.",
+      "$comment": "Use this option to document why testing this attribute is skipped during import/export tests.",
       "type": "string",
       "minLength": 1
+    },
+    "skipSilent": {
+      "$comment": "Set to true to silently skip testing this attribute during import/export tests.",
+      "type": "boolean"
     },
     "keepXmlElementsOrder": {
       "$comment": "Set to true to avoid sorting automatically the XML elements.",

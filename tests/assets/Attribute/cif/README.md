@@ -1,8 +1,8 @@
 ## Folder Structure
 
-Creae a folder for every attribute type.
+Create a folder for every attribute type.
 
-The folder name must much the handle of the attribute type.
+The folder name must match the handle of the attribute type.
 
 In every folder we can have one or more test cases.
 
