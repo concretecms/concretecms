@@ -97,7 +97,7 @@ EOL;
                     $width = (100 / count($columns));
                     $css .= <<<EOL
 
-	#{$wrapper} div.ccm-layout-column {
+	#{$wrapper} > div.ccm-layout-column {
 	width: {$width}%;
 	}
 EOL;
@@ -105,16 +105,16 @@ EOL;
 
                 $css .= <<<EOL
 
-	#{$wrapper} div.ccm-layout-column-inner {
+	#{$wrapper} > div.ccm-layout-column > div.ccm-layout-column-inner {
 	margin-right: {$margin}px;
 	margin-left: {$margin}px;
 	}
 
-	#{$wrapper} div.ccm-layout-column:first-child div.ccm-layout-column-inner {
+	#{$wrapper} > div.ccm-layout-column:first-child > div.ccm-layout-column-inner {
 	margin-left: 0px;
 	}
 
-	#{$wrapper} div.ccm-layout-column:last-child div.ccm-layout-column-inner  {
+	#{$wrapper} > div.ccm-layout-column:last-child > div.ccm-layout-column-inner  {
 	margin-right: 0px;
 	}
 EOL;
