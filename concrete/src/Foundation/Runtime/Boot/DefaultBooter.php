@@ -220,8 +220,12 @@ class DefaultBooter implements BootInterface, ApplicationAwareInterface
          */
         $stack = $this->app->make(StackInterface::class);
         foreach ($middlewareCache as $middleware) {
+            if (isset($middleware['package'])) {
+                $this->app->setupPackageAutoload($middleware['package']);
+            }
+            $class = $middleware['class'];
             $stack = $stack->withMiddleware(
-                $this->app->make($middleware['class']),
+                $this->app->make($class),
                 $middleware['priority'] ?? 10
             );
         }
