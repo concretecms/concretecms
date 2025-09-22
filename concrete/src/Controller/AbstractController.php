@@ -9,6 +9,7 @@ use Concrete\Core\Command\Process\ProcessFactory;
 use Concrete\Core\Command\Process\ProcessResponseFactory;
 use Concrete\Core\Http\ResponseAssetGroup;
 use Concrete\Core\Http\ResponseFactoryInterface;
+use Concrete\Core\Page\Page;
 use Concrete\Core\Url\Resolver\Manager\ResolverManagerInterface;
 use Core;
 use League\Url\UrlInterface;
@@ -276,7 +277,7 @@ abstract class AbstractController implements ApplicationAwareInterface
     /**
      * Build a response that redirects clients to a specific URL/page (specify path(s) as argument(s) of $args).
      *
-     * @param array|string|\League\Url\UrlInterface $destination use an Url object to specify the destination URL, or a string/array of strings to build the URL with the resolver
+     * @param array|string|\League\Url\UrlInterface|\Concrete\Core\Page\Page $destination use an Url object to specify the destination URL, or a Page object or string/array of strings to build the URL with the resolver
      * @param int $httpResponseCode the HTTP response code
      *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
@@ -284,6 +285,7 @@ abstract class AbstractController implements ApplicationAwareInterface
     public function buildRedirect($destination, $httpResponseCode = Response::HTTP_FOUND)
     {
         if (!$destination instanceof UrlInterface) {
+            $destination = $destination instanceof Page ? [$destination] : (array)$destination;
             $destination = $this->app->make(ResolverManagerInterface::class)->resolve((array) $destination);
         }
 
