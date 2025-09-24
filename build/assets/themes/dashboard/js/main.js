@@ -125,6 +125,9 @@ var setupDetailsURLs = function () {
                     }
                 }
             });
+        if ($(this).is(':hover')) {
+            $(this).addClass('ccm-search-select-hover');
+        }
     });
     $('div.ccm-details-panel[data-details-url]').each(function () {
         $(this)
