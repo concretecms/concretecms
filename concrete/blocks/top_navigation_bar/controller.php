@@ -155,6 +155,10 @@ class Controller extends BlockController implements UsesFeatureInterface, FileTr
 
     public function edit()
     {
+        $logo = File::getByID($this->brandingLogo);
+        if ($logo === null) {
+            $this->set('brandingLogo', null);
+        }
         $this->set('fileManager', new FileManager());
         $this->set('editor', $this->app->make('editor'));
         /** @var Detector $detector */
