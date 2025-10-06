@@ -512,7 +512,8 @@ class Controller extends BlockController implements UsesFeatureInterface
         if ($this->num > 0) {
             $list->setItemsPerPage($this->num);
             $paginationFactory = new PaginationFactory($this->request);
-            $pagination = $paginationFactory->createPaginationObject($list, PaginationFactory::PERMISSIONED_PAGINATION_STYLE_PAGER);
+            $permissionedStylePagination = $this->paginate ? PaginationFactory::PERMISSIONED_PAGINATION_STYLE_FULL : PaginationFactory::PERMISSIONED_PAGINATION_STYLE_PAGER;
+            $pagination = $paginationFactory->createPaginationObject($list, $permissionedStylePagination);
             $pages = $pagination->getCurrentPageResults();
             if ($pagination->haveToPaginate() && $this->paginate) {
                 $showPagination = true;
