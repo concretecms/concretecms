@@ -171,6 +171,8 @@ class Themes extends DashboardSitePageController
             $this->setBreadcrumb($breadcrumb);
 
             $themeSkinIdentifier = null;
+            $themeSkinIdentifierDark = null;
+            $skins = [];
             if ($theme->hasSkins()) {
                 $themeSkinIdentifier = $this->site->getThemeSkinIdentifier();
                 if (!$themeSkinIdentifier) {
@@ -182,11 +184,10 @@ class Themes extends DashboardSitePageController
                 foreach ($themeSkins as $skin) {
                     $skins[$skin->getIdentifier()] = $skin->getName();
                 }
-                $this->set('skins', $skins);
-                $this->set('activeSkinIdentifier', $themeSkinIdentifier);
-                $this->set('activeSkinIdentifierDark', $themeSkinIdentifierDark);
             }
-
+            $this->set('skins', $skins);
+            $this->set('activeSkinIdentifier', $themeSkinIdentifier);
+            $this->set('activeSkinIdentifierDark', $themeSkinIdentifierDark);
             $this->set('configureTheme', $theme);
             $this->render('/dashboard/pages/themes/configure');
         } else {
