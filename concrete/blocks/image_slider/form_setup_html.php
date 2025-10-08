@@ -182,6 +182,9 @@ echo $userInterface->tabs([
                 ConcreteFileManager.launchDialog(function (data) {
                     ConcreteFileManager.getFileDetails(data.fID, function (r) {
                         jQuery.fn.dialog.hideLoader();
+                        if (!r) {
+                            return;
+                        }
                         let file = r.files[0];
                         oldLauncher.html(file.resultsThumbnailImg);
                         oldLauncher.next('.image-fID').val(file.fID);
