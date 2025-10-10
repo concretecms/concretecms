@@ -56,8 +56,9 @@ class RemoveOldPageVersionsController extends AbstractController
         $query->orderBy('p.cID', 'asc');
 
         $batch = Batch::create();
-        foreach($query->execute()->fetchAll() as $result) {
-            $batch->add(new RemoveOldPageVersionsTaskCommand($result['cID']));
+        $result = $query->execute();
+        foreach ($result->iterateColumn() as $cID) {
+            $batch->add(new RemoveOldPageVersionsTaskCommand((int) $cID));
         }
 
         return new BatchProcessTaskRunner($task, $batch, $input, t('Page version removal beginning...'));
