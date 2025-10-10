@@ -20,17 +20,37 @@ class RemoveOldPageVersionsTaskCommandHandler implements OutputAwareInterface
     {
         $versionCount = 0;
         $page = Page::getByID($command->getPageID());
+        if (!($page && !$page->isError())) {
+            $this->output->write(t('Skipped invalid page ID: %s', $command->getPageID()));
+            return;
+        }
         $pvl = new VersionList($page);
-        foreach (array_slice($pvl->get(), 10) as $v) {
-            if ($v instanceof Version && !$v->isApproved() && !$v->isMostRecent()) {
-                $v->delete();
-                ++$versionCount;
+        $batchSize = 100;
+        $offset = 10; // keep the 10 most recent versions intact
+        while (true) {
+            $versions = $pvl->get($batchSize, $offset);
+            if (empty($versions)) {
+                break;
+            }
+            $deletedInPass = 0;
+            foreach ($versions as $v) {
+                if ($v instanceof Version && !$v->isApproved() && !$v->isMostRecent()) {
+                    try {
+                        $v->delete();
+                        ++$versionCount;
+                        ++$deletedInPass;
+                    } catch (\Throwable $e) {
+                        // Swallow exception to continue processing other versions
+                    }
+                }
+            }
+            unset($versions);
+            if ($deletedInPass === 0) {
+                // Nothing deletable left beyond the 10 most recent
+                break;
             }
         }
 
         $this->output->write(t('Scanned page ID: %s, removed versions: %s', $command->getPageID(), $versionCount));
-
     }
-
-
 }
