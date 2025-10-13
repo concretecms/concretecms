@@ -78,7 +78,11 @@ class ContainerArea
             $page = $area->getAreaCollectionObject();
             $subArea->load($page);
             $subArea->setSubAreaBlockObject($block);
-            $this->refreshInstanceAreas($subArea);
+
+            $instanceAreas = $this->instance->getInstance()->getInstanceAreas();
+            if (!count($instanceAreas)) {
+                $this->refreshInstanceAreas($subArea);
+            }
 
             return $subArea;
         }
