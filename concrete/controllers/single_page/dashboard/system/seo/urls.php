@@ -2,11 +2,15 @@
 
 namespace Concrete\Controller\SinglePage\Dashboard\System\Seo;
 
+use Concrete\Core\Error\UserMessageException;
 use Concrete\Core\Form\Service\Form;
+use Concrete\Core\Http\ResponseFactoryInterface;
 use Concrete\Core\Page\Controller\DashboardSitePageController;
 use Concrete\Core\Service\Manager\ServiceManager;
+use Concrete\Core\Url\Resolver\Manager\ResolverManagerInterface;
 use Concrete\Core\Url\UrlImmutable;
 use Punic\Misc;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 class Urls extends DashboardSitePageController
 {
@@ -30,6 +34,21 @@ class Urls extends DashboardSitePageController
         $this->set('redirectToCanonicalUrl', (bool) $globalConfig->get('concrete.seo.redirect_to_canonical_url'));
         $this->set('urlRewriting', (bool) $globalConfig->get('concrete.seo.url_rewriting'));
         $this->set('canonicalTag', (bool) $siteConfig->get('seo.canonical_tag.enabled'));
+        $checkPrettyUrlsAction = $globalConfig->withKey('concrete.seo.url_rewriting', true, function () use ($globalConfig): string {
+            return $globalConfig->withKey('concrete.seo.url_rewriting_all', true, function () use ($globalConfig): string {
+                return (string) $this->action('check_pretty_urls');
+            });
+        });
+        $this->set('checkPrettyUrlsAction', $checkPrettyUrlsAction);
+    }
+
+    public function check_pretty_urls(): JsonResponse
+    {
+        if (!$this->token->validate(__FUNCTION__)) {
+            throw new UserMessageException($this->token->getErrorMessage());
+        }
+
+        return $this->app->make(ResponseFactoryInterface::class)->json(['it' => 'works!']);
     }
 
     public function save_urls()
