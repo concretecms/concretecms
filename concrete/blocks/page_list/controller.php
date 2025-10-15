@@ -22,6 +22,7 @@ use Concrete\Core\Page\Search\ColumnSet\Column\DateLastModifiedColumn;
 use Concrete\Core\Page\Search\ColumnSet\Column\DatePublicColumn;
 use Concrete\Core\Page\Search\ColumnSet\Column\RandomColumn;
 use Concrete\Core\Page\Search\ColumnSet\Column\SitemapDisplayOrderColumn;
+use Concrete\Core\Search\ItemList\Pager\PagerProviderInterface;
 use Concrete\Core\Search\Pagination\PaginationFactory;
 use Concrete\Core\Tree\Node\Node;
 use Concrete\Core\Tree\Node\Type\Topic;
@@ -511,6 +512,8 @@ class Controller extends BlockController implements UsesFeatureInterface
         $showPagination = false;
         if ($this->num > 0) {
             $list->setItemsPerPage($this->num);
+            $manager = $list->getPagerManager();
+            $manager->sortListByCursor($list, $list->getActiveSortDirection());
             $paginationFactory = new PaginationFactory($this->request);
             $pagination = $paginationFactory->createPaginationObject($list, PaginationFactory::PERMISSIONED_PAGINATION_STYLE_PAGER);
             $pages = $pagination->getCurrentPageResults();
