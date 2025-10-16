@@ -69,6 +69,8 @@ class Application extends Container
      * @param array $options Array of options for disabling certain things during shutdown
      *      Add `'jobs' => true` to disable scheduled jobs
      *      Add `'log_queries' => true` to disable query logging
+     *
+     * @return never
      */
     public function shutdown($options = [])
     {
