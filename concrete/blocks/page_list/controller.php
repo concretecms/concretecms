@@ -511,7 +511,8 @@ class Controller extends BlockController implements UsesFeatureInterface
             $manager = $list->getPagerManager();
             $manager->sortListByCursor($list, $list->getActiveSortDirection());
             $paginationFactory = new PaginationFactory($this->request);
-            $pagination = $paginationFactory->createPaginationObject($list, PaginationFactory::PERMISSIONED_PAGINATION_STYLE_PAGER);
+            $permissionedStylePagination = $this->paginate ? PaginationFactory::PERMISSIONED_PAGINATION_STYLE_FULL : PaginationFactory::PERMISSIONED_PAGINATION_STYLE_PAGER;
+            $pagination = $paginationFactory->createPaginationObject($list, $permissionedStylePagination);
             $pages = $pagination->getCurrentPageResults();
             if ($pagination->haveToPaginate() && $this->paginate) {
                 $showPagination = true;
