@@ -82,7 +82,7 @@ $(function () {
         placement: 'bottom',
     },{
         element: '#url_rewriting_works',
-        content: <?= json_encode('<h3>' . t('Pretty URLs') . '</h3>' . t('This icon tells you if ConcreteCMS should work when index.php is removed from URLs.')) ?>,
+        content: <?= json_encode('<h3>' . t('Pretty URLs') . '</h3>' . t('This icon tells you if Concrete CMS should continue to function when index.php is removed from URLs.')) ?>,
         placement: 'right',
     },{
         element: 'input[name=canonical_url]',
@@ -127,9 +127,9 @@ $(function () {
     function setUrlRewritingWorks(works) {
         const icon = document.querySelector('#url_rewriting_works');
         if (works === true) {
-            icon.innerHTML = '<i class="fas fa-check text-success" title="' + <?= json_encode(h(t('ConcreteCMS should work when index.php is removed from URLs.'))) ?> + '"></i>';
+            icon.innerHTML = '<i class="fas fa-check text-success" title="' + <?= json_encode(h(t('Concrete CMS should continue to function when index.php is removed from URLs.'))) ?> + '"></i>';
         } else if (works === false) {
-            icon.innerHTML = '<i class="fas fa-ban text-danger" title="' + <?= json_encode(h(t('ConcreteCMS should NOT work when index.php is removed from URLs.'))) ?> + '"></i>';
+            icon.innerHTML = '<i class="fas fa-ban text-danger" title="' + <?= json_encode(h(t('Your web server does not appear to be properly configured to function when index.php is removed from URLs. It is strongly recommended that you fix this issue before continuing.'))) ?> + '"></i>';
             const checkbox = document.querySelector('#url_rewriting');
             checkbox.addEventListener('click', (e) => {
                 if (!checkbox.checked) {
@@ -137,7 +137,7 @@ $(function () {
                 }
                 e.preventDefault();
                 ConcreteAlert.confirm(
-                    <?= json_encode(t('ConcreteCMS should NOT work when index.php is removed from URLs.')) ?> + '<br/>' + <?= json_encode(t('Are you sure you want to do it anyway?')) ?>,
+                    <?= json_encode(t('Your web server is not returning a proper response when index.php is removed from URLs. It is strongly recommended that you do not continue until you fix this issue. Are you sure you want to do it anyway?')) ?>,
                     () => {
                         jQuery.fn.dialog.closeTop();
                         checkbox.checked = true;
@@ -147,7 +147,7 @@ $(function () {
                 );
             });
         } else {
-            icon.innerHTML = '<i class="far fa-question-circle text-warning" title="' + <?= json_encode(h(t('Unable to determine if ConcreteCMS works when index.php is removed from the URLs.'))) ?> + '"></i>';
+            icon.innerHTML = '<i class="far fa-question-circle text-warning" title="' + <?= json_encode(h(t('Unable to determine if your web server is properly configured to continue rendering this website, when index.php is removed from the URLs.'))) ?> + '"></i>';
         }
         new bootstrap.Tooltip(icon.firstChild, {container: '#ccm-tooltip-holder'});
     }

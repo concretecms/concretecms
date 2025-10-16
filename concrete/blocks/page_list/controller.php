@@ -8,13 +8,10 @@ use Concrete\Core\Attribute\Category\PageCategory;
 use Concrete\Core\Attribute\Key\CollectionKey;
 use Concrete\Core\Block\BlockController;
 use Concrete\Core\Block\View\BlockView;
-use Concrete\Core\Config\Repository\Repository;
-use Concrete\Core\Entity\Site\Site;
 use Concrete\Core\Feature\Features;
 use Concrete\Core\Feature\UsesFeatureInterface;
 use Concrete\Core\Html\Service\Seo;
 use Concrete\Core\Http\ResponseFactoryInterface;
-use Concrete\Core\Package\Offline\Exception;
 use Concrete\Core\Page\Feed;
 use Concrete\Core\Page\PageList;
 use Concrete\Core\Page\Search\ColumnSet\Column\CollectionVersionColumn;
@@ -26,9 +23,9 @@ use Concrete\Core\Search\Pagination\PaginationFactory;
 use Concrete\Core\Tree\Node\Node;
 use Concrete\Core\Tree\Node\Type\Topic;
 use Concrete\Core\Tree\Tree;
-use Core;
 use Concrete\Core\Url\SeoCanonical;
 use Concrete\Core\Utility\Service\Xml;
+use Core;
 use Database;
 use Page;
 use SimpleXMLElement;
@@ -511,8 +508,11 @@ class Controller extends BlockController implements UsesFeatureInterface
         $showPagination = false;
         if ($this->num > 0) {
             $list->setItemsPerPage($this->num);
+            $manager = $list->getPagerManager();
+            $manager->sortListByCursor($list, $list->getActiveSortDirection());
             $paginationFactory = new PaginationFactory($this->request);
-            $pagination = $paginationFactory->createPaginationObject($list, PaginationFactory::PERMISSIONED_PAGINATION_STYLE_PAGER);
+            $permissionedStylePagination = $this->paginate ? PaginationFactory::PERMISSIONED_PAGINATION_STYLE_FULL : PaginationFactory::PERMISSIONED_PAGINATION_STYLE_PAGER;
+            $pagination = $paginationFactory->createPaginationObject($list, $permissionedStylePagination);
             $pages = $pagination->getCurrentPageResults();
             if ($pagination->haveToPaginate() && $this->paginate) {
                 $showPagination = true;
