@@ -266,6 +266,8 @@ abstract class AbstractController implements ApplicationAwareInterface
      *
      * @deprecated you should return a Response instance from your methods
      * @see \Concrete\Core\Controller\AbstractController::buildRedirect()
+     *
+     * @return never
      */
     public function redirect()
     {
