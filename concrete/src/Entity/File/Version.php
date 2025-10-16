@@ -2073,6 +2073,8 @@ class Version implements ObjectInterface
 
     /**
      * @deprecated Use buildForceDownloadResponse
+     *
+     * @return never
      */
     public function forceDownload()
     {
@@ -2084,7 +2086,6 @@ class Version implements ObjectInterface
         ob_end_clean();
         $response->send();
         $app->shutdown();
-        exit;
     }
 
     /**

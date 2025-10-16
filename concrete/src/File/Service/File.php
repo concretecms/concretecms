@@ -218,7 +218,9 @@ class File
     /**
      * Takes a path to a file and sends it to the browser, streaming it, and closing the HTTP connection afterwards. Basically a force download method.
      *
-     * @param stings $file
+     * @param string $file
+     *
+     * @return never
      */
     public function forceDownload($file)
     {
