@@ -9,5 +9,6 @@ class PageServiceProvider extends Provider
     public function register()
     {
         $this->app->singleton(HandleGenerator::class);
+        $this->app->bind(DraftService::class);
     }
 }
