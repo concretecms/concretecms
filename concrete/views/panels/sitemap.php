@@ -66,7 +66,7 @@
           $(function () {
             $('#ccm-sitemap-panel-sitemap').concreteSitemap({
               onClickNode: function (node) {
-                window.location.href = CCM_DISPATCHER_FILENAME + '?cID=' + node.data.cID;
+                window.location.href = node.data.link;
               }
             });
           });
