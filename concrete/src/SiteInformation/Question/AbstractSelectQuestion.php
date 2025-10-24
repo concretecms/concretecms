@@ -6,7 +6,6 @@ use HtmlObject\Element;
 
 abstract class AbstractSelectQuestion extends AbstractQuestion
 {
-
     abstract public function getOptions(): array;
 
     public function getTag(array $results): Element
@@ -24,7 +23,7 @@ abstract class AbstractSelectQuestion extends AbstractQuestion
                 'name' => $this->getKey(),
                 'id' => 'q_' . $this->getKey(),
                 'required' => 'required',
-                'class' => 'form-select'
+                'class' => 'form-select',
             ]
         );
         $select->appendChild((new Element('option'))->setAttribute('value', '')->setValue(t('** Choose')));
@@ -36,6 +35,7 @@ abstract class AbstractSelectQuestion extends AbstractQuestion
             $select->appendChild($option);
         }
         $wrapper->appendChild($select);
+
         return $wrapper;
     }
 }
