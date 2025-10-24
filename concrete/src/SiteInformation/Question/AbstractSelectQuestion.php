@@ -27,7 +27,7 @@ abstract class AbstractSelectQuestion extends AbstractQuestion
                 'class' => 'form-select'
             ]
         );
-        $select->appendChild((new Element('option'))->setAttribute('value', '')->setValue('** Choose'));
+        $select->appendChild((new Element('option'))->setAttribute('value', '')->setValue(t('** Choose')));
         foreach ($this->getOptions() as $key => $value) {
             $option = (new Element('option'))->setAttribute('value', $key)->setValue($value);
             if (isset($results[$this->getKey()]) && $results[$this->getKey()] === $key) {
