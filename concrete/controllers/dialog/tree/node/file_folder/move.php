@@ -24,7 +24,7 @@ class Move extends NodeController
     {
         $node = $this->getNode();
         if (!($node instanceof FileFolder)) {
-            throw new \UserMessageException(t('You may not move this folder node.'));
+            throw new UserMessageException(t('You may not move this folder node.'));
         }
         $this->set('currentFolder', $node);
     }
