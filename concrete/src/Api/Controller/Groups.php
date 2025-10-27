@@ -66,7 +66,7 @@ class Groups extends ApiController
             return $this->error(t('Group not found.'), 404);
         } else {
             $permissions = new Checker($group);
-            if (!$permissions->canSearchUserGroup()) {
+            if (!$permissions->canSearchUsersInGroup()) {
                 return $this->error(t('You do not have access to get information about this group.'), 401);
             }
         }
