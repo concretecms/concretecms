@@ -62,7 +62,7 @@ class Channels
      *
      * @var string
      */
-    const CHANNEL_SITE_ORGANIZATION = 'site_organization';
+    const CHANNEL_PAGES = 'pages';
 
     /**
      * Channel identifier: users.
@@ -164,7 +164,7 @@ class Channels
             self::CHANNEL_AUTHENTICATION,
             self::CHANNEL_PERMISSIONS,
             self::CHANNEL_SPAM,
-            self::CHANNEL_SITE_ORGANIZATION,
+            self::CHANNEL_PAGES,
             self::CHANNEL_NETWORK,
             self::CHANNEL_USERS,
             self::CHANNEL_OPERATIONS,
@@ -218,8 +218,8 @@ class Channels
                 return tc('Log channel', 'Packages');
             case self::CHANNEL_SPAM:
                 return tc('Log channel', 'Spam');
-            case self::CHANNEL_SITE_ORGANIZATION:
-                return tc('Log channel', 'Site Organization');
+            case self::CHANNEL_PAGES:
+                return tc('Log channel', 'Pages');
             case self::CHANNEL_USERS:
                 return tc('Log channel', 'Users');
             case self::CHANNEL_API:

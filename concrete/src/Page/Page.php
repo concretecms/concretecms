@@ -3059,7 +3059,7 @@ EOT
         }
 
         $app = Facade::getFacadeApplication();
-        $logger = $app->make('log/factory')->createLogger(Channels::CHANNEL_SITE_ORGANIZATION);
+        $logger = $app->make('log/factory')->createLogger(Channels::CHANNEL_PAGES);
         $logger->notice(t('Page "%s" at path "%s" deleted',
             $this->getCollectionName(),
             $this->getCollectionPath()
@@ -3130,7 +3130,7 @@ EOT
 
         $trash = self::getByPath(Config::get('concrete.paths.trash'));
         $app = Facade::getFacadeApplication();
-        $logger = $app->make('log/factory')->createLogger(Channels::CHANNEL_SITE_ORGANIZATION);
+        $logger = $app->make('log/factory')->createLogger(Channels::CHANNEL_PAGES);
         $logger->notice(t('Page "%s" at path "%s" Moved to trash',
             $this->getCollectionName(),
             $this->getCollectionPath()
