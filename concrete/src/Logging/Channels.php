@@ -79,6 +79,13 @@ class Channels
     const CHANNEL_EXPRESS = 'express';
 
     /**
+     * Channel identifier: site organization.
+     *
+     * @var string
+     */
+    const CHANNEL_CALENDAR = 'calendar';
+
+    /**
      * Channel identifier: marketplace.
      *
      * @var string

@@ -11,6 +11,8 @@ use Concrete\Core\Entity\Attribute\Value\PageValue;
 use Concrete\Core\Foundation\ConcreteObject;
 use Block;
 use Concrete\Core\Localization\Service\Date;
+use Concrete\Core\Logging\Channels;
+use Concrete\Core\Logging\LoggerFactory;
 use Concrete\Core\Page\Page;
 use Doctrine\DBAL\Query\QueryBuilder;
 use PageType;
@@ -815,6 +817,10 @@ class Version extends ConcreteObject implements PermissionObjectInterface, Attri
             $c->reindex(true); // We must reindex immediately so that summary templates are available for boards.
             $app->executeCommand(new RegenerateRelevantBoardInstancesCommand('page', $c));
         }
+
+        $loggerFactory = app(LoggerFactory::class);
+        $logger = $loggerFactory->createLogger(Channels::CHANNEL_PAGES);
+        $logger->info(t('Page version %s for page %s approved by %s', $cvID, $c->getCollectionID(), $u->getUserName()));
 
         $ev = new Event($c);
         $ev->setUser($u);
