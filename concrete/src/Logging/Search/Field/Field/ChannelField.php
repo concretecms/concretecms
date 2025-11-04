@@ -31,6 +31,9 @@ class ChannelField extends AbstractField
      */
     public function filterList(ItemList $list)
     {
+        if ($this->getData('channel') === null || $this->getData('channel') === '') {
+            return;
+        }
         $list->filterByChannel($this->getData('channel'));
     }
 
