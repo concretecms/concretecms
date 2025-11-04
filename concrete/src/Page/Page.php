@@ -2621,7 +2621,7 @@ EOT
         $this->loadVersionObject($cvID);
 
         $logger = $app->make('log/factory')->createLogger(Channels::CHANNEL_PAGES);
-        $logger->info(t('Page updated: %s (cID %s)', $this->getCollectionName(), $this->getCollectionID()));
+        $logger->info(t('Page updated: %s (%s)', $this->getCollectionName(), $this->getCollectionID()));
 
         $pe = new Event($this);
         Events::dispatch('on_page_update', $pe);

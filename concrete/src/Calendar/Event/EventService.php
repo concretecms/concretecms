@@ -252,7 +252,7 @@ class EventService implements ApplicationAwareInterface, LoggerAwareInterface
         $duplicateEvent->setNewEventObject($new);
         $this->dispatcher->dispatch('on_calendar_event_duplicate', $duplicateEvent);
 
-        $this->logger->info(t('Duplicated event %s (ID %s) to new event ID %s', $event->getName(), $event->getID(), $new->getID()));
+        $this->logger->info(t('Duplicated event %s (%s) to new event ID %s', $event->getName(), $event->getID(), $new->getID()));
         return $new;
     }
 
@@ -277,7 +277,7 @@ class EventService implements ApplicationAwareInterface, LoggerAwareInterface
         $this->entityManager->remove($event);
         $this->entityManager->flush();
 
-        $this->logger->info(t('Calendar event %s (ID %s) deleted successfully.', $event->getName(), $eventID));
+        $this->logger->info(t('Calendar event %s (%s) deleted successfully.', $event->getName(), $eventID));
     }
 
     public function deleteVersion(CalendarEventVersion $version)
