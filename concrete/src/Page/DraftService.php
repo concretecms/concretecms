@@ -36,7 +36,7 @@ class DraftService implements LoggerAwareInterface
         foreach ($controls as $cn) {
             $cn->onPageDraftCreate($p);
         }
-        $this->logger->info(t('Created new page draft (cID %s) of type %s', $p->getCollectionID(), $type->getPageTypeHandle()));
+        $this->logger->info(t('Created new page draft (%s) of type %s', $p->getCollectionID(), $type->getPageTypeHandle()));
         return $p;
     }
 }
