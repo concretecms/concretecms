@@ -5,10 +5,6 @@ use Concrete\Core\Logging\Channels;
 use Concrete\Core\Logging\LoggerAwareInterface;
 use Concrete\Core\Logging\LoggerAwareTrait;
 use Concrete\Core\Site\Service;
-use Concrete\Core\Tree\Node\Node;
-use Concrete\Core\Tree\Node\Type\ExpressEntryResults;
-use Concrete\Core\Tree\Node\Type\ExpressEntrySiteResults;
-use Doctrine\DBAL\Connection;
 use Doctrine\ORM\EntityManager;
 
 class PublishEntityCommandHandler implements LoggerAwareInterface
