@@ -29,6 +29,7 @@ class EntryCacheTest extends ConcreteDatabaseTestCase
         'PermissionKeys',
         'PermissionKeyCategories',
         'Groups',
+        'Logs',
     ];
 
     protected $entityClassNames = [

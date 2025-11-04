@@ -8,6 +8,9 @@ use Concrete\Core\Calendar\Event\Summary\Template\Populator;
 use Concrete\Core\Config\Repository\Repository;
 use Concrete\Core\Foundation\Repetition\Comparator;
 use Concrete\Core\Calendar\Event\Event\DuplicateEventEvent;
+use Concrete\Core\Logging\Channels;
+use Concrete\Core\Logging\LoggerAwareInterface;
+use Concrete\Core\Logging\LoggerAwareTrait;
 use Concrete\Core\Page\Page;
 use Concrete\Core\Page\Type\Type;
 use Concrete\Core\User\User;
@@ -19,8 +22,10 @@ use Concrete\Core\Entity\Calendar\CalendarEventVersion;
 use Concrete\Core\Entity\Calendar\CalendarRelatedEvent;
 use Concrete\Core\Events\EventDispatcher;
 
-class EventService implements ApplicationAwareInterface
+class EventService implements ApplicationAwareInterface, LoggerAwareInterface
 {
+    use LoggerAwareTrait;
+
     protected $entityManager;
     protected $config;
     protected $occurrenceFactory;
@@ -40,6 +45,11 @@ class EventService implements ApplicationAwareInterface
         $this->occurrenceFactory = $occurrenceFactory;
         $this->eventCategory = $eventCategory;
         $this->dispatcher = $dispatcher;
+    }
+
+    public function getLoggerChannel()
+    {
+        return Channels::CHANNEL_CALENDAR;
     }
 
     public function getByID($id, $retrieveVersion = self::EVENT_VERSION_APPROVED)
@@ -133,6 +143,12 @@ class EventService implements ApplicationAwareInterface
             $version->setRepetitions($repetitions);
         }
 
+        if (!$event->getID()) {
+            $this->logger->info(t('Creating new event %s', $version->getName()));
+        }
+
+        $this->logger->info(t('Adding new version %s to event %s', $version->getID(), $version->getName()));
+
         $this->entityManager->persist($version);
         $event->getVersions()->add($version);
         $event->setCalendar($calendar);
@@ -191,6 +207,8 @@ class EventService implements ApplicationAwareInterface
         $populator->updateAvailableSummaryTemplates($event);
 
         $this->app->executeCommand(new RegenerateRelevantBoardInstancesCommand('calendar_event', $event));
+
+        $this->logger->info(t('Approved version %s of event %s', $version->getID(), $version->getName()));
     }
 
     public function unapprove(CalendarEvent $event)
@@ -234,6 +252,7 @@ class EventService implements ApplicationAwareInterface
         $duplicateEvent->setNewEventObject($new);
         $this->dispatcher->dispatch('on_calendar_event_duplicate', $duplicateEvent);
 
+        $this->logger->info(t('Duplicated event %s (%s) to new event ID %s', $event->getName(), $event->getID(), $new->getID()));
         return $new;
     }
 
@@ -253,14 +272,20 @@ class EventService implements ApplicationAwareInterface
             }
         }
 
+        $eventID = $event->getID();
+
         $this->entityManager->remove($event);
         $this->entityManager->flush();
+
+        $this->logger->info(t('Calendar event %s (%s) deleted successfully.', $event->getName(), $eventID));
     }
 
     public function deleteVersion(CalendarEventVersion $version)
     {
         $this->entityManager->remove($version);
         $this->entityManager->flush();
+
+        $this->logger->info(t('Calendar event version %s deleted successfully.', $version->getID()));
     }
 
     public function isRelatedTo(CalendarEvent $event1, CalendarEvent $event2)

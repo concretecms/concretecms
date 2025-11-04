@@ -784,7 +784,7 @@ class File implements \Concrete\Core\Permission\ObjectInterface, AttributeObject
             $em->commit();
 
             try {
-                $logger->notice(t("File %s successfully deleted.", $fileName));
+                $logger->notice(t("File %s (%s) successfully deleted.", $fileName, $this->fID));
             } catch (\Exception $err) {
                 // Skip any errors while logging to pass the automated tests
             }

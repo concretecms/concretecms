@@ -4,11 +4,21 @@ namespace Concrete\Core\Page;
 
 use Concrete\Core\Entity\Page\Template;
 use Concrete\Core\Entity\Site\Site;
+use Concrete\Core\Logging\Channels;
+use Concrete\Core\Logging\LoggerAwareInterface;
+use Concrete\Core\Logging\LoggerAwareTrait;
 use Concrete\Core\Page\Type\Composer\Control\Control as PageTypeComposerControl;
 use Concrete\Core\Page\Type\Type;
 
-class DraftService
+class DraftService implements LoggerAwareInterface
 {
+    use LoggerAwareTrait;
+
+    public function getLoggerChannel()
+    {
+        return Channels::CHANNEL_PAGES;
+    }
+
     public function createDraft(Type $type, Template $template, ?Site $site = null): Page
     {
         $parent = Page::getDraftsParentPage($site);
@@ -26,7 +36,7 @@ class DraftService
         foreach ($controls as $cn) {
             $cn->onPageDraftCreate($p);
         }
-
+        $this->logger->info(t('Created new page draft (%s) of type %s', $p->getCollectionID(), $type->getPageTypeHandle()));
         return $p;
     }
 }
