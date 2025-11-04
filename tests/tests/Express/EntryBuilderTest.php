@@ -24,6 +24,7 @@ class EntryBuilderTest extends ConcreteDatabaseTestCase
         'PermissionKeys',
         'PermissionKeyCategories',
         'Groups',
+        'Logs',
     ];
 
     protected $entityClassNames = [
