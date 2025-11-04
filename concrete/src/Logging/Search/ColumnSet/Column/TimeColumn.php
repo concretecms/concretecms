@@ -27,7 +27,7 @@ class TimeColumn extends Column implements PagerColumnInterface
 
     public function getColumnCallback()
     {
-        return ['\Concrete\Core\Logging\Search\ColumnSet\DefaultSet', 'getCollectionTime'];
+        return ['\Concrete\Core\Logging\Search\ColumnSet\DefaultSet', 'getEntryTime'];
     }
 
     /**
