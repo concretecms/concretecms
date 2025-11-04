@@ -24,18 +24,19 @@ class DefaultSet extends ColumnSet
     protected $attributeClass = 'CollectionAttributeKey';
 
     /**
-     * @param LogEntry $logEntry
-     * @return string
-     * @throws Exception
-     * @throws BadArgumentType
-     * @noinspection PhpUnused
+     * @deprecated
      */
     public static function getCollectionTime($logEntry)
+    {
+        return self::getEntryTime($logEntry);
+    }
+
+    public static function getEntryTime($logEntry)
     {
         $app = Application::getFacadeApplication();
         /** @var Date $dateHelper */
         $dateHelper = $app->make(Date::class);
-        return $dateHelper->formatDateTime($logEntry->getTime());
+        return $dateHelper->formatDateTime($logEntry->getTime(), false, true);
     }
 
     /**
