@@ -13,8 +13,9 @@ class ConcreteBootstrap5View extends TwitterBootstrap5View implements ViewInterf
     public function getArguments()
     {
         return array(
-            'prev_message' => tc('Pagination', '&larr; Previous'),
-            'next_message' => tc('Pagination', 'Next &rarr;'),
+            'prev_message' => tc('Pagination', '<'),
+            'next_message' => tc('Pagination', '>'),
+            'proximity' => 1,
             'active_suffix' => '<span class="visually-hidden">' . tc('Pagination', '(current)') . '</span>',
         );
     }
