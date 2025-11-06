@@ -38,7 +38,6 @@ class PageTheme extends Theme
             Features::SOCIAL,
             Features::TYPOGRAPHY,
             Features::DOCUMENTS,
-            Features::CONVERSATIONS,
             Features::FAQ,
             Features::PROFILE,
             Features::NAVIGATION,
