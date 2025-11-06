@@ -241,16 +241,6 @@ class Controller extends BlockController implements UsesFeatureInterface
     }
 
     /**
-     * @param string $outputContent
-     *
-     * @return void
-     */
-    public function registerViewAssets($outputContent = '')
-    {
-        $this->requireAsset('core/conversation');
-    }
-
-    /**
      * @throws \Illuminate\Contracts\Container\BindingResolutionException
      *
      * @return void
