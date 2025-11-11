@@ -27,6 +27,7 @@ class Users extends ApiController
      * @OA\Get(
      *     path="/ccm/api/1.0/users/{userID}",
      *     tags={"users"},
+     *     operationId="getUserById",
      *     summary="Find a user by its ID",
      *     security={
      *         {"authorization": {"users:read"}}
@@ -82,6 +83,7 @@ class Users extends ApiController
      * @OA\Get(
      *     path="/ccm/api/1.0/users",
      *     tags={"users"},
+     *     operationId="getUsers",
      *     summary="Returns a list of user objects, sorted by date added descending. The most recent user objects appear first.",
      *     security={
      *         {"authorization": {"users:read"}}
@@ -160,6 +162,7 @@ class Users extends ApiController
      * @OA\Post(
      *     path="/ccm/api/1.0/users",
      *     tags={"users"},
+     *     operationId="addUser",
      *     summary="Adds a user object.",
      *     security={
      *         {"authorization": {"users:add"}}
@@ -199,6 +202,7 @@ class Users extends ApiController
      * @OA\Delete(
      *     path="/ccm/api/1.0/users/{userID}",
      *     tags={"users"},
+     *     operationId="deleteUserById",
      *     summary="Delete a user by its ID",
      *     security={
      *         {"authorization": {"users:delete"}}
@@ -253,6 +257,7 @@ class Users extends ApiController
      * @OA\Put(
      *     path="/ccm/api/1.0/users/{userID}",
      *     tags={"users"},
+     *     operationId="updateUserById",
      *     summary="Update a user by its ID",
      *     security={
      *         {"authorization": {"users:update"}}
@@ -339,6 +344,7 @@ class Users extends ApiController
      * @OA\Post(
      *     path="/ccm/api/1.0/users/{userID}/change_password",
      *     tags={"users"},
+     *     operationId="changeUserPassword",
      *     summary="Change a user's password",
      *     security={
      *         {"authorization": {"users:update"}}

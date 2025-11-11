@@ -21,6 +21,7 @@ class Versions extends ApiController
      * @OA\Get(
      *     path="/ccm/api/1.0/page_versions/{pageID}/{versionID}",
      *     tags={"page_versions"},
+     *     operationId="getPageVersionByPageIdAndVersionId",
      *     summary="Find a page version by its ID and the ID of its page.",
      *     security={
      *         {"authorization": {"pages:versions:read"}}
@@ -81,6 +82,7 @@ class Versions extends ApiController
      * @OA\Get(
      *     path="/ccm/api/1.0/page_versions/{pageID}",
      *     tags={"page_versions"},
+     *     operationId="getPageVersionsByPageId",
      *     summary="Returns a list of page version objects for a given page ID, sorted by date created descending.",
      *     security={
      *         {"authorization": {"pages:versions:read"}}
@@ -145,6 +147,7 @@ class Versions extends ApiController
      * @OA\Delete(
      *     path="/ccm/api/1.0/page_versions/{pageID}/{versionID}",
      *     tags={"page_versions"},
+     *     operationId="deletePageVersionByPageIdAndVersionId",
      *     summary="Delete a page version.",
      *     security={
      *         {"authorization": {"pages:versions:delete"}}
@@ -211,6 +214,7 @@ class Versions extends ApiController
      * @OA\Put(
      *     path="/ccm/api/1.0/page_versions/{pageID}/{versionID}",
      *     tags={"page_versions"},
+     *     operationId="updatePageVersionByPageIdAndVersionId",
      *     summary="Update a page version",
      *     security={
      *         {"authorization": {"pages:versions:update"}}
