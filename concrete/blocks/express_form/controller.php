@@ -473,6 +473,17 @@ class Controller extends BlockController implements NotificationProviderInterfac
             $data['addFilesToFolder'] = $existingAddFilesToFolder;
         }
 
+        // Make form name actually saveable. Fixes #12753
+        $formName = (string) $data['formName'];
+        $entity->setName($formName);
+
+        $entityManager->persist($entity);
+        $entityManager->flush();
+
+        $nodeId = $entity->getEntityResultsNodeId();
+        $node = Node::getByID($nodeId);
+        $node->setTreeNodeName($formName);
+
         $session = $this->app->make('session');
         $session->remove('block.express_form.new');
 
