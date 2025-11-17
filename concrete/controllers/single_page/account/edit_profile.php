@@ -122,7 +122,8 @@ class EditProfile extends AccountPageController
 
         // Username validation
         $username = $this->post('uName');
-        if ($username) {
+        if (array_key_exists('uName', $data)) {
+            $data['uName'] = (string) $data['uName'];
             $app->make('validator/user/name')->isValidFor($username, $ui, $this->error);
         }
 
