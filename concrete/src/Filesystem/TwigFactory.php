@@ -1,0 +1,76 @@
+<?php
+
+namespace Concrete\Core\Filesystem;
+
+use Concrete\Core\Application\ApplicationAwareInterface;
+use Concrete\Core\Application\ApplicationAwareTrait;
+use Twig\Cache\CacheInterface;
+use Twig\Environment;
+use Twig\Extension\ExtensionInterface;
+
+class TwigFactory implements ApplicationAwareInterface
+{
+    use ApplicationAwareTrait;
+
+    /**
+     * @var CacheInterface
+     */
+    protected $cache;
+
+    protected $debug;
+
+    /** @var array<string, mixed>  */
+    protected $globals = [];
+
+    /** @var ExtensionInterface[] */
+    protected $extensions = [];
+
+    public function __construct(CacheInterface $cache, bool $debug)
+    {
+        $this->cache = $cache;
+        $this->debug = $debug;
+    }
+
+    public function create(string $baseDir, array $options = []): Environment
+    {
+        $options = $options === [] ? $this->defaultOptions() : array_merge($this->defaultOptions(), $options);
+        $loader = new \Twig\Loader\FilesystemLoader($baseDir);
+        $twig = new \Twig\Environment($loader, $options);
+
+        foreach ($this->globals as $name => $value) {
+            $twig->addGlobal($name, $value);
+        }
+
+        foreach ($this->extensions as &$extension) {
+            if (is_string($extension)) {
+                $extension = $this->app->make($extension);
+            }
+            $twig->addExtension($extension);
+        }
+
+        return $twig;
+    }
+
+    /**
+     * @param mixed $value
+     */
+    public function addGlobal(string $name, $value): void
+    {
+        $this->globals[$name] = $value;
+    }
+
+    public function addExtension(ExtensionInterface $extension): void
+    {
+        $this->extensions[] = $extension;
+    }
+
+    protected function defaultOptions(): array
+    {
+        return [
+            'debug' => $this->debug,
+            'cache' => $this->cache,
+            'auto_reload' => true,
+            'use_yield' => PHP_VERSION_ID >= 80000,
+        ];
+    }
+}
