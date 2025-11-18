@@ -103,6 +103,7 @@ $(function() {
                                 firstTab.show()
                                 $tabsContainer.show();
                                 $chooseContainer.hide();
+                                $('#ccm-block-express-form-options input[name=formName]').val(r.exFormEntityName);
                                 my.enableBlockForm()
                             }
                         });

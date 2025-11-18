@@ -887,6 +887,8 @@ class Version implements ObjectInterface
                 $updateTypeAttributeID,
             ]
         );
+        $logger = $app->make(LoggerFactory::class)->createLogger(Channels::CHANNEL_FILES);
+        $logger->info(t('File version update requested. Update type: %s for version %s (File %s (%s))', $updateTypeID, $this->getFileVersionID(), $this->getFileName(), $this->getFileID()));
     }
 
     /**
@@ -2073,6 +2075,8 @@ class Version implements ObjectInterface
 
     /**
      * @deprecated Use buildForceDownloadResponse
+     *
+     * @return never
      */
     public function forceDownload()
     {
@@ -2084,7 +2088,6 @@ class Version implements ObjectInterface
         ob_end_clean();
         $response->send();
         $app->shutdown();
-        exit;
     }
 
     /**

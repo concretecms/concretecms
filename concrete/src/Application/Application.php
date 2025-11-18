@@ -69,6 +69,8 @@ class Application extends Container
      * @param array $options Array of options for disabling certain things during shutdown
      *      Add `'jobs' => true` to disable scheduled jobs
      *      Add `'log_queries' => true` to disable query logging
+     *
+     * @return never
      */
     public function shutdown($options = [])
     {
@@ -316,7 +318,7 @@ class Application extends Container
     {
         $path = $request->getPathInfo();
         // If this isn't the homepage
-        if ($path && $path != '/') {
+        if ($path && $path != '/' && $request->isMethod('GET')) {
             $config = $this->make('config');
             $trailing_slashes = $config->get('concrete.seo.trailing_slash');
             // If the trailing slash doesn't match the config, return a redirect response

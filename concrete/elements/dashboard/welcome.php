@@ -54,11 +54,11 @@ if (!isset($showCustomizeButton)) {
 </nav>
 
 <?php if ($showCustomizeButton) { ?>
-<div class="ccm-dashboard-welcome-customize">
-    <form method="post" data-form="check-in" action="<?=$approveAction?>">
-        <?php if ($canEdit) { ?>
-            <input type="hidden" name="comments" value="<?= h(t('Welcome page updated')) ?>" />
-        <?php } ?>
+    <div class="ccm-dashboard-welcome-customize">
+        <form method="post" data-form="check-in" action="<?=$approveAction?>">
+            <?php if ($canEdit) { ?>
+                <input type="hidden" name="comments" value="<?= h(t('Welcome page updated')) ?>" />
+            <?php } ?>
             <?php if ($canEdit) { ?>
                 <?php if ($c->isEditMode()) { ?>
                     <a href="#" id="ccm-dashboard-welcome-check-in" class="btn btn-secondary"><?= t('Save Changes'); ?></a>
@@ -67,17 +67,17 @@ if (!isset($showCustomizeButton)) {
                     <a href="<?= h($resolver->resolve(["/ccm/system/page/checkout/{$c->getCollectionID()}/-/" . $token->generate()])) ?>" id="ccm-nav-check-out" class="btn btn-secondary"><?= t('Customize'); ?></a>
                 <?php } ?>
             <?php } ?>
-        <?php if ($canEdit) { ?>
-            <input type="hidden" name="cID" value="<?=$c->getCollectionID()?>">
-            <input type="hidden" name="action" value="publish">
-        <?php } ?>
-    </form>
-</div>
+            <?php if ($canEdit) { ?>
+                <input type="hidden" name="cID" value="<?=$c->getCollectionID()?>">
+                <input type="hidden" name="action" value="publish">
+            <?php } ?>
+        </form>
+    </div>
 
-<script type="text/javascript">
-    $(function() {
+    <script type="text/javascript">
+        $(function() {
 
-        <?php if ($canEdit) { ?>
+            <?php if ($canEdit) { ?>
             $('#ccm-dashboard-welcome-check-in').on('click', function(e) {
                 e.preventDefault();
                 $(this).closest('form').submit();
@@ -92,27 +92,18 @@ if (!isset($showCustomizeButton)) {
                 blockType.addToDragArea(_.last(area.getDragAreas()));
             });
 
-            ConcreteEvent.on('EditModeAfterInit', function(event, data) {
-                var areas = data.editMode.getAreas();
-                _.each(areas, function(area) {
-                    area.bindEvent("EditModeAddBlocksToArea.area",
-                        function(e, myData) {
-                            if (myData.area === area) {
-                                var arHandle = myData.area.getHandle();
-                                $.fn.dialog.open({
-                                    width: 550,
-                                    height: 380,
-                                    title: '<?=t('Add Block')?>',
-                                    href: CCM_DISPATCHER_FILENAME + '/ccm/system/dialogs/page/add_block_list?cID=<?=$c->getCollectionID()?>&arHandle=' + encodeURIComponent(arHandle)});
-                            }
-                        }
-                    )
-                });
-            });
-        <?php } ?>
+            ConcreteEvent.on('EditModeAddBlocksToArea.area', function(e, data) {
+                var arHandle = data.area.getHandle();
+                $.fn.dialog.open({
+                    width: 550,
+                    height: 380,
+                    title: '<?=t('Add Block')?>',
+                    href: CCM_DISPATCHER_FILENAME + '/ccm/system/dialogs/page/add_block_list?cID=<?=$c->getCollectionID()?>&arHandle=' + encodeURIComponent(arHandle)});
+            })
+            <?php } ?>
 
-    });
-</script>
+        });
+    </script>
 
 <?php } ?>
 

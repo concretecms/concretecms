@@ -25,6 +25,8 @@ class Ajax
      *
      * @param mixed $result
      *
+     * @return never
+     *
      * @deprecated You should switch to something like:
      * return app(\Concrete\Core\Http\ResponseFactoryInterface::class)->json(...)
      */
@@ -45,8 +47,9 @@ class Ajax
     /**
      * Sends an error to the client and ends the execution.
      *
-     * @param string|Exception|\Concrete\Core\Error\Error $result the error to send to the client
-     * @param mixed $error
+     * @param string|Exception|\Concrete\Core\Error\Error $error the error to send to the client
+     *
+     * @return never
      *
      * @deprecated You should switch to something like:
      * return app(\Concrete\Core\Http\ResponseFactoryInterface::class)->json(...)

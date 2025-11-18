@@ -3,6 +3,7 @@ namespace Concrete\Controller\Dialog\Page\Add;
 
 use Concrete\Core\Controller\Controller;
 use Concrete\Core\Form\Service\Widget\DateTime;
+use Concrete\Core\Page\DraftService;
 use Concrete\Core\Page\EditResponse;
 use Concrete\Core\Page\Template;
 use Concrete\Core\Page\Type\Type;
@@ -87,7 +88,9 @@ class Compose extends Controller
         $pr->setError($e);
 
         if (!$e->has()) {
-            $d = $pagetype->createDraft($template);
+            /** @var DraftService $draftService */
+            $draftService = $this->app->make(DraftService::class);
+            $d = $draftService->createDraft($pagetype, $template, $parent->getSite());
             $d->setPageDraftTargetParentPageID($cParentID);
             $saver = $pagetype->getPageTypeSaverObject();
             $saver->saveForm($d);

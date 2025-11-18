@@ -24,6 +24,7 @@ class ObjectBuilderTest extends ConcreteDatabaseTestCase
         'PermissionKeys',
         'PermissionKeyCategories',
         'Groups',
+        'Logs',
     ];
 
     protected $entityClassNames = [

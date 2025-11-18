@@ -12,9 +12,9 @@ use Laminas\Feed\Writer\Feed as LaminasFeed;
 
 class CalendarFeed extends Controller
 {
-    public function view($identifier)
+    public function view($calendar_id)
     {
-        $calendar = Calendar::getByID($identifier);
+        $calendar = Calendar::getByID($calendar_id);
         if (is_object($calendar)) {
             $cp = new \Permissions($calendar);
             if ($cp->canAccessCalendarRssFeed()) {

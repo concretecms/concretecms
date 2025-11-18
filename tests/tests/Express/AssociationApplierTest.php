@@ -22,6 +22,7 @@ class AssociationApplierTest extends ConcreteDatabaseTestCase
         'PermissionKeys',
         'PermissionKeyCategories',
         'Groups',
+        'Logs',
     ];
 
     protected $entityClassNames = [

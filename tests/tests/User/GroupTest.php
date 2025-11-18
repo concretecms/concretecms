@@ -174,6 +174,38 @@ class GroupTest extends UserTestCase
         $this->assertFalse($userB->inGroup($group4));
     }
 
+    public function testNotInGroup()
+    {
+        $groupX = Group::add('Group X', 'This is a test group X');
+        $groupY = Group::add('Group Y', 'This is a test group Y');
+        $users = [
+            ['testX', 'testuserX@concrete5.org'],
+            ['testXY', 'testuserXY@concrete5.org'],
+            ['testY', 'testuserY@concrete5.org'],
+        ];
+        $i = 0;
+        foreach ($users as $user) {
+            $ui = $this->createUser($user[0], $user[1]);
+            $user = $ui->getUserObject();
+            if ($i === 0) {
+                $user->enterGroup($groupX);
+            }
+            if ($i === 1) {
+                $user->enterGroup($groupX);
+                $user->enterGroup($groupY);
+            }
+            if ($i === 2) {
+                $user->enterGroup($groupY);
+            }
+            $i++;
+        }
+        $list = new UserList();
+        $list->filterByGroup($groupX, false);
+        $results = $list->getResults();
+        $this->assertCount(1, $results);
+        $this->assertEquals('testY', $results[0]->getUserName());
+    }
+
     public function testInMultipleGroups()
     {
         $groupA = Group::add('Group A', 'This is a test group A');

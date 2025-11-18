@@ -32,6 +32,7 @@ class ContentFileTranslateTest extends FileStorageTestCase
             'ConfigStore',
             'SystemContentEditorSnippets',
             'FileVersionLog',
+            'Logs',
         ]);
     }
 

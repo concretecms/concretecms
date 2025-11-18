@@ -18,6 +18,7 @@ class AttributeKeyHandleGeneratorTest extends ConcreteDatabaseTestCase
     protected $tables = [
         'Trees',
         'TreeTypes',
+        'Logs',
     ];
 
     public static function setupBeforeClass():void
