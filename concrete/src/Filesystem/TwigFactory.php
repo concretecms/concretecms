@@ -7,6 +7,7 @@ use Concrete\Core\Application\ApplicationAwareTrait;
 use Twig\Cache\CacheInterface;
 use Twig\Environment;
 use Twig\Extension\ExtensionInterface;
+use Twig\Loader\LoaderInterface;
 
 class TwigFactory implements ApplicationAwareInterface
 {
@@ -31,10 +32,9 @@ class TwigFactory implements ApplicationAwareInterface
         $this->debug = $debug;
     }
 
-    public function create(string $baseDir, array $options = []): Environment
+    public function create(LoaderInterface $loader, array $options = []): Environment
     {
         $options = $options === [] ? $this->defaultOptions() : array_merge($this->defaultOptions(), $options);
-        $loader = new \Twig\Loader\FilesystemLoader($baseDir);
         $twig = new \Twig\Environment($loader, $options);
 
         foreach ($this->globals as $name => $value) {

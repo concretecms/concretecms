@@ -2,6 +2,8 @@
 
 namespace Concrete\Core\Filesystem;
 
+use Twig\Loader\FilesystemLoader;
+
 class TemplateService
 {
     /**
@@ -46,7 +48,7 @@ class TemplateService
     private function renderTwigTemplate(string $path, array $data): string
     {
         return $this->twigFactory
-            ->create(dirname($path))
+            ->create(new FilesystemLoader(dirname($path)))
             ->render(basename($path), $data);
     }
 }

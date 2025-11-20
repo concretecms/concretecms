@@ -2,6 +2,7 @@
 namespace Concrete\Core\Package;
 
 use Concrete\Core\Application\Application;
+use Concrete\Core\Application\UserInterface\Dashboard\Navigation\FavoritesNavigationCache;
 use Concrete\Core\Application\UserInterface\Dashboard\Navigation\NavigationCache;
 use Concrete\Core\Backup\ContentImporter;
 use Concrete\Core\Config\Repository\Liaison;
@@ -1082,6 +1083,8 @@ abstract class Package implements LocalizablePackageInterface
         $navigationCache = $this->app->make(NavigationCache::class);
         $navigationCache->clear();
 
+        $navigationCache = $this->app->make(FavoritesNavigationCache::class);
+        $navigationCache->clear();
     }
 
     /**
