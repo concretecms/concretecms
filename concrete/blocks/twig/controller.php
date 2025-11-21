@@ -40,9 +40,6 @@ class Controller extends BlockController
     {
         $factory = $this->app->make(TwigFactory::class);
         $environment = $factory->create(new ArrayLoader(['block' => (string) $this->content]));
-        $content = $environment->render('block', [
-            'c' => Page::getCurrentPage(),
-        ]);
-        $this->set('content', $content);
+        $this->set('environment', $environment);
     }
 }
