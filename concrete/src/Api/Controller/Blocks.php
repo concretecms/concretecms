@@ -15,6 +15,7 @@ class Blocks extends ApiController
      * @OA\Get(
      *     path="/ccm/api/1.0/blocks/{blockID}",
      *     tags={"blocks"},
+     *     operationId="getBlockById",
      *     summary="Find a block by its ID",
      *     security={
      *         {"authorization": {"blocks:read"}}
@@ -72,6 +73,7 @@ class Blocks extends ApiController
      * @OA\Delete(
      *     path="/ccm/api/1.0/blocks/{blockID}",
      *     tags={"blocks"},
+     *     operationId="deleteBlockById",
      *     summary="Delete a block by its ID",
      *     security={
      *         {"authorization": {"blocks:delete"}}

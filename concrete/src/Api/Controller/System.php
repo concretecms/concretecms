@@ -13,6 +13,7 @@ class System
      * @OA\Get(
      *     path="/ccm/api/1.0/system/info",
      *     tags={"system"},
+     *     operationId="getSystemInfo",
      *     security={
      *         {"clientCredentials": {"system:info:read"}}
      *     },
