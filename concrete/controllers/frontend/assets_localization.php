@@ -2,7 +2,6 @@
 
 namespace Concrete\Controller\Frontend;
 
-use Concrete\Core\File\Image\BitmapFormat;
 use Concrete\Core\File\Type\Type as FileType;
 use Concrete\Core\File\Upload\Dropzone;
 use Concrete\Core\Filesystem\FileLocator;
@@ -736,6 +735,18 @@ jQuery.ui.fancytree.prototype.options.strings.loadError = ' . json_encode(t('Loa
             $content = @file_get_contents($found);
             if ($content === false) {
                 $content = "/* jQueryUI: failed to read translations for {$alternative} */";
+            } else {
+                $content = <<<EOT
+                (function() {
+                    function ready() {
+                        {$content}
+                    }
+                    if (window.jQuery?.datepicker || document.readyState !== 'loading') {
+                        return ready();
+                    }
+                    document.addEventListener('DOMContentLoaded', ready);
+                })();
+                EOT;
             }
         } else {
             $content = '/* jQueryUI: no translations for ' . implode(', ', $alternatives) . ' */';
