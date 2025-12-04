@@ -21,7 +21,7 @@
     "mlocati/ci-info": "^1"
   },
   "config": {
-  "process-timeout": 0,
+    "process-timeout": 0,
     "vendor-dir": "./concrete/vendor",
     "platform": {
       "php": "7.3"
