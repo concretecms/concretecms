@@ -1,20 +1,30 @@
 <?php
 namespace Concrete\Core\Mail\Transport;
 
+use Concrete\Core\Application\ApplicationAwareInterface;
+use Concrete\Core\Application\ApplicationAwareTrait;
 use Concrete\Core\Config\Repository\Repository;
-use Concrete\Core\Mail\Transport\LimitedSmtp as LimitedSmtpTransport;
-use Laminas\Mail\Transport\Sendmail as SendmailTransport;
-use Laminas\Mail\Transport\Smtp as SmtpTransport;
-use Laminas\Mail\Transport\SmtpOptions;
+use Concrete\Core\Logging\Channels;
+use Concrete\Core\Logging\LoggerAwareInterface;
+use Concrete\Core\Logging\LoggerAwareTrait;
+use Illuminate\Contracts\Container\BindingResolutionException;
+use Symfony\Component\EventDispatcher\EventDispatcher;
+use Symfony\Component\Mailer\Transport\SendmailTransport;
+use Symfony\Component\Mailer\Transport\Smtp\EsmtpTransport;
+use Symfony\Component\Mailer\Transport\TransportInterface;
 
-class Factory
+class Factory implements FactoryInterface, ApplicationAwareInterface, LoggerAwareInterface
 {
+    use ApplicationAwareTrait;
+    use LoggerAwareTrait;
+
     /**
-     * * Create a Transport instance from a configuration repository.
+     * Create a Transport instance from a configuration repository.
      *
      * @param Repository $config
      *
-     * @return \Laminas\Mail\Transport\TransportInterface
+     * @return TransportInterface
+     * @deprecated
      */
     public function createTransportFromConfig(Repository $config)
     {
@@ -26,7 +36,7 @@ class Factory
      *
      * @param array $array
      *
-     * @return \Laminas\Mail\Transport\TransportInterface
+     * @return TransportInterface
      */
     public function createTransportFromArray(array $array)
     {
@@ -41,57 +51,47 @@ class Factory
 
     /**
      * @param array $array
-     *
-     * @return \Laminas\Mail\Transport\Sendmail
+     * @return SendmailTransport
      */
     public function createPhpMailTransportFromArray(array $array)
     {
-        $parameters = isset($array['parameters']) ? $array['parameters'] : '';
-
-        return new SendmailTransport($parameters);
+        return new SendmailTransport(
+            ($array['parameters'] ?? '') ?: null,
+            $this->getDispatcher(),
+            $this->logger
+        );
     }
 
     /**
      * @param array $array
-     *
-     * @return \Concrete\Core\Mail\Transport\Smtp|\Concrete\Core\Mail\Transport\LimitedSmtp
+     * @return EsmtpTransport
      */
     public function createSmtpTransportFromArray(array $array)
     {
-        $options = [
-            'host' => (string) array_get($array, 'server'),
-        ];
-        $username = (string) array_get($array, 'username', '');
-        if ($username !== '') {
-            $options['connection_class'] = 'login';
-            $options['connection_config'] = [
-                'username' => $username,
-                'password' => (string) array_get($array, 'password'),
-            ];
-        }
-        $port = array_get($array, 'port');
-        if ($port) {
-            $options['port'] = (int) $array['port'];
-        }
-        $encryption = array_get($array, 'encryption');
-        if ($encryption) {
-            $options['connection_config']['ssl'] = (string) $encryption;
-        }
-        $heloDomain = (string) array_get($array, 'helo_domain');
-        if ($heloDomain !== '') {
-            $options['name'] = $heloDomain;
-        }
-        $mpc = array_get($array, 'messages_per_connection');
-        $messagesPerConnection = $mpc ? (int) $mpc : 0;
+        return (new EsmtpTransport(
+            (string) ($array['server'] ?? ''),
+            (int) ($array['port'] ?? 0),
+            (string) ($array['encryption'] ?? ''),
+            $this->getDispatcher(),
+            $this->logger,
+        ))
+            ->setRestartThreshold(max(0, (int) ($array['messages_per_connection'] ?? 0)))
+            ->setUsername((string) ($array['username'] ?? ''))
+            ->setPassword((string) ($array['password'] ?? ''))
+            ->setLocalDomain((string) ($array['helo_domain'] ?? ''));
+    }
 
-        $smtp = new SmtpTransport(new SmtpOptions($options));
-
-        if ($messagesPerConnection >= 1) {
-            $result = new LimitedSmtpTransport($smtp, $messagesPerConnection);
-        } else {
-            $result = $smtp;
+    protected function getDispatcher(): ?EventDispatcher
+    {
+        try {
+            return $this->app->make('director')->getEventDispatcher();
+        } catch (BindingResolutionException $e) {
+            return null;
         }
+    }
 
-        return $result;
+    public function getLoggerChannel()
+    {
+        return Channels::CHANNEL_EMAIL;
     }
 }

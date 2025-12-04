@@ -1,9 +1,13 @@
 <?php
 namespace Concrete\Core\Mail;
 
+use Concrete\Core\Application\Application;
+use Concrete\Core\Config\Repository\Repository;
 use Concrete\Core\Foundation\Service\Provider as ServiceProvider;
 use Concrete\Core\Mail\Transport\Factory as TransportFactory;
-use Laminas\Mail\Transport\TransportInterface;
+use Concrete\Core\Mail\Transport\FactoryInterface as TransportFactoryInterface;
+use Symfony\Component\Mailer\Mailer;
+use Symfony\Component\Mailer\MailerInterface;
 
 class MailServiceProvider extends ServiceProvider
 {
@@ -17,11 +21,28 @@ class MailServiceProvider extends ServiceProvider
             $this->app->bind($key, $value);
         }
 
-        $this->app->bind(TransportInterface::class, function () {
-            $factory = $this->app->make(TransportFactory::class);
+        $this->app->bind(TransportFactoryInterface::class, TransportFactory::class);
 
-            return $factory->createTransportFromConfig($this->app->make('config'));
+        $this->app->bind(MailerInterface::class, function (Application $app) {
+            $dispatcher = $app->make('director')->getEventDispatcher();
+            $factory = $app->make(TransportFactoryInterface::class);
+            $config = $app->make(Repository::class);
+            $transport = $factory->createTransportFromArray($config->get('concrete.mail'));
+
+            return new Mailer($transport, null, $dispatcher);
         });
+
+        $this->app->bind(Service::class, function (Application $app) {
+            $mailer = $app->make(MailerInterface::class);
+            $config = $app->make(Repository::class);
+            $emailClass = $config->get('concrete.email.email_class');
+            if ($emailClass) {
+                return new Service($config, $mailer, $emailClass);
+            }
+
+            return new Service($config, $mailer);
+        });
+
         $this->app->extend(
             SenderConfiguration::class,
             function (SenderConfiguration $configuration): SenderConfiguration {
