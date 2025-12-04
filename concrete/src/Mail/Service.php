@@ -112,7 +112,7 @@ class Service
         $this->template = '';
         $this->testing = false;
         $this->throwOnFailure = false;
-        $this->email = new ($this->emailClass)();
+        $this->email = new $this->emailClass();
     }
 
     /**
@@ -548,7 +548,7 @@ class Service
             $l->write(t('Template Used') . ': ' . $this->template);
             if ($this->isBodyLoggingEnabled()) {
                 /** @var T $email */
-                $email = new ($this->emailClass)();
+                $email = new $this->emailClass();
                 $email->setHeaders(clone $this->email->getHeaders());
 
                 if ($this->email->getTextBody()) {
