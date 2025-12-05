@@ -211,7 +211,7 @@ class Service
         $part = new DataPart(
             $content,
             $filename,
-            $headers['mimeType'] ?? 'application/octet-stream',
+            $headers['mimetype'] ?? 'application/octet-stream',
             $headers['encoding'] ?? 'base64',
         );
         $partHeaders = $part->getHeaders();

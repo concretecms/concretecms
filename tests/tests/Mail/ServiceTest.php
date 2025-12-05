@@ -164,4 +164,50 @@ class ServiceTest extends TestCase
             return $address->toString();
         }, $addresses);
     }
+
+    public function testSupportsAttachmentAttributes(): void
+    {
+        $email = $this->service->getEmail();
+        $this->assertEmpty($email->getAttachments());
+
+        $this->service->addRawAttachment('foo', 'foo.baz', 'application/x-baz');
+        $this->assertEquals(
+            $this->rn(<<<BASIC
+                Content-Type: application/x-baz; name=foo.baz
+                Content-Transfer-Encoding: base64
+                Content-Disposition: attachment; name=foo.baz; filename=foo.baz
+                
+                Zm9v
+                BASIC),
+            $email->getAttachments()[0]->toString()
+        );
+
+        $this->service->addRawAttachmentWithHeaders('foo', 'foo.baz', [
+            'mimetype' => 'foo/baz',
+            'disposition' => 'inline',
+            'encoding' => '8bit',
+            'charset' => 'chars',
+            'description' => 'desc',
+            'location' => 'loc',
+            'language' => 'lang',
+        ]);
+        $this->assertEquals(
+            $this->rn(<<<BASIC
+                Content-Type: foo/baz; charset=chars; name=foo.baz
+                Content-Description: desc
+                Content-Location: loc
+                Content-Language: lang
+                Content-Transfer-Encoding: 8bit
+                Content-Disposition: inline; name=foo.baz; filename=foo.baz
+                
+                foo
+                BASIC),
+            $email->getAttachments()[1]->toString()
+        );
+    }
+
+    private function rn(string $string): string
+    {
+        return str_replace("\n", "\r\n", $string);
+    }
 }
