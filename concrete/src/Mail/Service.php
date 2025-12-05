@@ -11,6 +11,7 @@ use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Address;
 use Symfony\Component\Mime\Email;
 use Symfony\Component\Mime\Header\HeaderInterface;
+use Symfony\Component\Mime\Part\DataPart;
 use Throwable;
 
 /**
@@ -151,6 +152,12 @@ class Service
      * @param array $headers Additional headers fo the MIME part. Valid values are:
      * - filename: The name to give to the attachment (it will be used as the filename part of the Content-Disposition header) [default: the filename of the File instance]
      * - mimetype: the main value of the Content-Type header [default: the content type of the file]
+     * - disposition: the main value of the Content-Disposition header attachment, inline, or form-data [default: attachment]
+     * - encoding: the value of the Content-Transfer-Encoding header [default: base64]
+     * - charset: the charset value of the Content-Type header
+     * - description: the value of the Content-Description header
+     * - location: the value of the Content-Location header
+     * - language: the value of the Content-Language header
      */
     public function addAttachmentWithHeaders(File $file, array $headers)
     {
@@ -190,12 +197,68 @@ class Service
      *
      * @param string|resource $content The binary data of or resource pointing to the attachment
      * @param string $filename The name to give to the attachment (it will be used as the filename part of the Content-Disposition header)
-     * @param array $headers Additional headers fo the MIME part. Valid values are:
+     * @param array $headers Additional headers of the MIME part. Valid values are:
      * - mimetype: the main value of the Content-Type header [default: application/octet-stream]
+     * - disposition: the main value of the Content-Disposition header attachment, inline, or form-data [default: attachment]
+     * - encoding: the value of the Content-Transfer-Encoding header [default: base64]
+     * - charset: the charset value of the Content-Type header
+     * - description: the value of the Content-Description header
+     * - location: the value of the Content-Location header
+     * - language: the value of the Content-Language header
      */
     public function addRawAttachmentWithHeaders($content, $filename, array $headers = [])
     {
-        $this->email->attach($content, $filename, $headers['mimeType'] ?? 'application/octet-stream');
+        $part = new DataPart(
+            $content,
+            $filename,
+            $headers['mimeType'] ?? 'application/octet-stream',
+            $headers['encoding'] ?? 'base64',
+        );
+        $partHeaders = $part->getHeaders();
+
+        $disposition = $headers['disposition'] ?? 'attachment';
+        if ($disposition) {
+            $part = $part->setDisposition($disposition);
+        }
+
+        $charset = $headers['charset'] ?? null;
+        if ($charset) {
+            // We have to manually set the content-type header to add the charset because it defaults to null otherwise.
+            // This works because the prepareHeaders() method modifies the existing header rather than adding a new one.
+            $partHeaders->addParameterizedHeader(
+                'Content-Type',
+                $part->getMediaType() . '/' . $part->getMediaSubtype(),
+                ['charset' => $charset]
+            );
+        }
+
+        //$boundary = $headers['boundary'] ?? null;
+        //if ($boundary) {
+            // Setting the boundary isn't supported.
+        //}
+
+        //$id = $headers['id'] ?? null;
+        //if ($id) {
+            /* @see DataPart::getContentID() */
+            // Content IDs aren't configurable, they are generated automatically when the part is prepared by the email.
+        //}
+
+        $description = $headers['description'] ?? null;
+        if ($description) {
+            $partHeaders->addTextHeader('Content-Description', $description);
+        }
+
+        $location = $headers['location'] ?? null;
+        if ($location) {
+            $partHeaders->addTextHeader('Content-Location', $location);
+        }
+
+        $language = $headers['language'] ?? null;
+        if ($language) {
+            $partHeaders->addTextHeader('Content-Language', $language);
+        }
+
+        $this->email->attachPart($part);
     }
 
     /**

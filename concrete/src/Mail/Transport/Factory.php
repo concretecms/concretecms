@@ -75,7 +75,7 @@ class Factory implements FactoryInterface, ApplicationAwareInterface, LoggerAwar
             $this->getDispatcher(),
             $this->logger,
         ))
-            ->setRestartThreshold(max(0, (int) ($array['messages_per_connection'] ?? 0)))
+            ->setRestartThreshold(max(0, (int) ($array['messages_per_connection'] ?? 100)))
             ->setUsername((string) ($array['username'] ?? ''))
             ->setPassword((string) ($array['password'] ?? ''))
             ->setLocalDomain((string) ($array['helo_domain'] ?? ''));
