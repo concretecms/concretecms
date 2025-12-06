@@ -9,6 +9,9 @@ use Symfony\Component\Mailer\Envelope;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Address;
 use Symfony\Component\Mime\Email;
+use Symfony\Component\Mime\Part\DataPart;
+use Symfony\Component\Mime\Part\Multipart\RelatedPart;
+use Symfony\Component\Mime\Part\TextPart;
 use Symfony\Component\Mime\RawMessage;
 
 class ServiceTest extends TestCase
@@ -74,6 +77,7 @@ class ServiceTest extends TestCase
         $properties = $reflection->getProperties();
         foreach ($properties as $property) {
             if ($property->isProtected() || $property->isPrivate()) {
+                $property->setAccessible(true);
                 $allProperties[$property->getName()] = $property->getValue($this->service);
             }
         }
