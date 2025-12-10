@@ -55,7 +55,7 @@ class Controller extends BlockController implements UsesFeatureInterface
      */
     public function getBlockTypeDescription()
     {
-        return t("List pages based on type, area.");
+        return t("List tags for a page.");
     }
 
     public function getBlockTypeName()
