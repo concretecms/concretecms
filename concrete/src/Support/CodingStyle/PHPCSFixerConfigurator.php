@@ -32,9 +32,6 @@ final class PHPCSFixerConfigurator
     {
         self::checkPHPCSFixerVersion();
         $minimumPHPVersion = self::parseMinimumPHPVersionFormat($minimumPHPVersion);
-        require_once __DIR__ . '/FileFlag.php';
-        require_once __DIR__ . '/FixerRegistry.php';
-        require_once __DIR__ . '/RuleCustomisationPolicy.php';
         $this->fixerRegistry = new FixerRegistry();
         $this->ruleCustomisationPolicy = new RuleCustomisationPolicy($this->fixerRegistry, $minimumPHPVersion, $this->detectCoreVersion());
     }

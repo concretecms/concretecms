@@ -15,28 +15,33 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 defined('C5_EXECUTE') or die('Access Denied.');
 
-class PhpCodingStyleCommand extends Command
+final class PhpCodingStyleCommand extends Command
 {
-    protected const DEFAULT_WEBROOT = DIR_BASE;
+    private const DEFAULT_WEBROOT = DIR_BASE;
 
-    protected const DEFAULT_PHPCSFIXER_PATH = 'php-cs-fixer';
+    private const DEFAULT_PHPCSFIXER_PATH = 'php-cs-fixer';
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Console\Command::$description
+     */
     protected $description = 'Check or fix the PHP coding style.';
 
     /**
      * @var \Concrete\Core\File\Service\File
      */
-    protected $fileService;
+    private $fileService;
 
     /**
      * @var \Illuminate\Filesystem\Filesystem
      */
-    protected $fileSystem;
+    private $fileSystem;
 
     public function __construct($name = null)
     {
-        $defaultWebRoot = static::DEFAULT_WEBROOT;
-        $defaultPhpCsFixerPath = static::DEFAULT_PHPCSFIXER_PATH;
+        $defaultWebRoot = self::DEFAULT_WEBROOT;
+        $defaultPhpCsFixerPath = self::DEFAULT_PHPCSFIXER_PATH;
         $defaultMinimumPHPVersion = PhpVersion::MINIMUM_PHP_VERSION;
 
         $this->signature = <<<EOT
@@ -70,7 +75,7 @@ class PhpCodingStyleCommand extends Command
         } catch (UserMessageException $x) {
             $this->output->error($x->getMessage());
 
-            return static::FAILURE;
+            return self::FAILURE;
         } finally {
             if ($configFile !== null) {
                 $this->fileSystem->delete($configFile);
@@ -85,8 +90,8 @@ class PhpCodingStyleCommand extends Command
      */
     protected function configure(): void
     {
-        $okExitCode = static::SUCCESS;
-        $errExitCode = static::FAILURE;
+        $okExitCode = self::SUCCESS;
+        $errExitCode = self::FAILURE;
 
         $this->setHelp(
             <<<EOT
@@ -114,9 +119,9 @@ class PhpCodingStyleCommand extends Command
         parent::initialize($input, $output);
     }
 
-    protected function resolvePhpCsFixerQuotedPath(): string
+    private function resolvePhpCsFixerQuotedPath(): string
     {
-        $raw = $this->input->getOption('pcfpath') ?: static::DEFAULT_PHPCSFIXER_PATH;
+        $raw = $this->input->getOption('pcfpath') ?: self::DEFAULT_PHPCSFIXER_PATH;
         $raw = str_replace('/', DIRECTORY_SEPARATOR, $raw);
         $path = realpath($raw);
         if ($path !== false && !is_file($path)) {
@@ -165,7 +170,7 @@ class PhpCodingStyleCommand extends Command
         return $quotedPath;
     }
 
-    protected function resolveMinimumPHPVersion(): string
+    private function resolveMinimumPHPVersion(): string
     {
         $minimumPHPVersion = $this->input->getOption('php');
         if ($minimumPHPVersion === '') {
@@ -178,7 +183,7 @@ class PhpCodingStyleCommand extends Command
         }
     }
 
-    protected function resolveDryRun(): bool
+    private function resolveDryRun(): bool
     {
         $action = $this->input->getArgument('action');
         switch ($action) {
@@ -195,7 +200,7 @@ class PhpCodingStyleCommand extends Command
     /**
      * @return \SplFileInfo[]
      */
-    protected function resolveFiles(bool $dryRun): array
+    private function resolveFiles(bool $dryRun): array
     {
         $paths = [];
         foreach ($this->input->getArgument('path') as $path) {
@@ -216,17 +221,17 @@ class PhpCodingStyleCommand extends Command
     /**
      * @param \SplFileInfo[] $paths
      */
-    protected function resolveWebRoot(array $paths): string
+    private function resolveWebRoot(array $paths): string
     {
         $webroot = (string) $this->input->getOption('webroot');
         if ($webroot !== '' && $webroot === '-') {
             return $this->resolveWebRootFromStartingPoint($paths[0]->getPathname());
         }
 
-        return static::DEFAULT_WEBROOT;
+        return self::DEFAULT_WEBROOT;
     }
 
-    protected function resolveWebRootFromStartingPoint(string $startingPoint): string
+    private function resolveWebRootFromStartingPoint(string $startingPoint): string
     {
         if (is_file($startingPoint)) {
             $startingPoint = dirname($startingPoint);
@@ -245,8 +250,32 @@ class PhpCodingStyleCommand extends Command
         return $this->resolveWebRootFromStartingPoint(dirname($startingPoint));
     }
 
-    protected function createConfigFile(string $webroot, string $minimumPHPVersion): string
+    private function createConfigFileContent(string $webroot, string $minimumPHPVersion): string
     {
+        $dirBase = "'" . addcslashes($webroot, "'\\") . "'";
+        $minimumPHPVersion = "'" . addcslashes($minimumPHPVersion, "'\\") . "'";
+
+        return <<<EOT
+        <?php
+        use Concrete\Core\Support\CodingStyle\PHPCSFixerConfigurator;
+        const DIR_BASE = {$dirBase};
+        require_once DIR_BASE . '/concrete/bootstrap/configure.php';
+        require_once DIR_BASE_CORE . '/src/Support/CodingStyle/autoload.php';
+        try {
+            return (new PHPCSFixerConfigurator({$minimumPHPVersion}))
+                ->setEnvironmentVariables()
+                ->createConfig()
+            ;
+        } catch (RuntimeException \$x) {
+            fwrite(STDERR, trim(\$x->getMessage()) . "\\n");
+            exit(1);
+        }
+        EOT;
+    }
+
+    private function createConfigFile(string $webroot, string $minimumPHPVersion): string
+    {
+        $contents = $this->createConfigFileContent($webroot, $minimumPHPVersion);
         $tempDir = $this->fileService->getTemporaryDirectory();
         $tempFile = tempnam($tempDir, 'ccm');
         if (!$tempFile) {
@@ -255,43 +284,23 @@ class PhpCodingStyleCommand extends Command
         $tempFile = str_replace(DIRECTORY_SEPARATOR, '/', $tempFile);
         $delete = true;
         try {
-            $dirBase = "'" . addcslashes($webroot, "'\\") . "'";
-            $minimumPHPVersion = "'" . addcslashes($minimumPHPVersion, "'\\") . "'";
-            if (!$this->fileSystem->put(
-                $tempFile,
-                <<<EOT
-                <?php
-                use Concrete\Core\Support\CodingStyle\PHPCSFixerConfigurator;
-                const DIR_BASE = {$dirBase};
-                require_once DIR_BASE . '/concrete/bootstrap/configure.php';
-                require_once DIR_BASE_CORE . '/src/Support/CodingStyle/PHPCSFixerConfigurator.php';
-                try {
-                    return (new PHPCSFixerConfigurator({$minimumPHPVersion}))
-                        ->setEnvironmentVariables()
-                        ->createConfig()
-                    ;
-                } catch (RuntimeException \$x) {
-                    fwrite(STDERR, trim(\$x->getMessage()) . "\\n");
-                    exit(1);
-                }
-                EOT
-            )) {
+            if (!$this->fileSystem->put($tempFile, $contents)) {
                 throw new UserMessageException('Failed to set the content of a temporary file');
             }
             $delete = false;
-
-            return $tempFile;
         } finally {
             if ($delete) {
                 $this->fileSystem->delete($tempFile);
             }
         }
+
+        return $tempFile;
     }
 
     /**
      * @param \SplFileInfo[] $paths
      */
-    protected function launchPhpCsFixer(string $phpCsFixerQuotedPath, bool $dryRun, string $configFile, string $webroot, array $paths): int
+    private function launchPhpCsFixer(string $phpCsFixerQuotedPath, bool $dryRun, string $configFile, string $webroot, array $paths): int
     {
         $commandLine = "{$phpCsFixerQuotedPath} fix";
         $commandLine .= $this->output->isDecorated() ? ' --ansi' : ' --no-ansi';
@@ -348,7 +357,7 @@ class PhpCodingStyleCommand extends Command
      *
      * @return \Generator<string>
      */
-    protected function resolveRelativePaths(string $webroot, array $paths): \Generator
+    private function resolveRelativePaths(string $webroot, array $paths): \Generator
     {
         $stripPrefix = $webroot . '/';
         $stripPrefixLength = strlen($stripPrefix);
@@ -360,7 +369,7 @@ class PhpCodingStyleCommand extends Command
         }
     }
 
-    protected function escapeShellArg(string $s): string
+    private function escapeShellArg(string $s): string
     {
         $safe = '\w:/.=\-';
         if (DIRECTORY_SEPARATOR === '\\') {
@@ -370,7 +379,7 @@ class PhpCodingStyleCommand extends Command
         return preg_match('#^[' . $safe . ']+$#D', $s) ? $s : escapeshellarg($s);
     }
 
-    protected function isPHPFile(string $path): bool
+    private function isPHPFile(string $path): bool
     {
         if (!$this->fileSystem->isReadable($path) || !$this->fileSystem->isFile($path)) {
             return false;

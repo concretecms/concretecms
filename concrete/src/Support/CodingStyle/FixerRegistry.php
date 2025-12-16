@@ -900,7 +900,6 @@ final class FixerRegistry
         $namespacePrefix = __NAMESPACE__ . '\\Fixer\\';
         foreach (is_dir($dirPrefix) ? scandir($dirPrefix) : [] as $file) {
             if (preg_match('/^\w+\.php$/', $file)) {
-                require_once $dirPrefix . $file;
                 $className = $namespacePrefix . substr($file, 0, -4);
                 $customFixers[] = new $className();
             }

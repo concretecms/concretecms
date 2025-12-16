@@ -8,7 +8,7 @@ define('DIR_BASE', str_replace(DIRECTORY_SEPARATOR, '/', __DIR__));
 
 require_once DIR_BASE . '/concrete/bootstrap/configure.php';
 
-require_once DIR_BASE_CORE . '/src/Support/CodingStyle/PHPCSFixerConfigurator.php';
+require_once DIR_BASE_CORE . '/src/Support/CodingStyle/autoload.php';
 
 $minimumPHPVersion = $_ENV['C5_PHPCS_MIN_PHP_VERSION'] ?? '';
 if (!is_string($minimumPHPVersion) || ($minimumPHPVersion = trim($minimumPHPVersion)) === '') {

@@ -19,8 +19,6 @@ use PhpCsFixer\Tokenizer\Tokens;
 
 defined('C5_EXECUTE') or die('Access Denied.');
 
-require_once __DIR__ . '/Traits/DefinedOrDie.php';
-
 final class EnsureDefinedOrDieFixer extends AbstractFixer implements ConfigurableFixerInterface, WhitespacesAwareFixerInterface
 {
     use DefinedOrDie;
