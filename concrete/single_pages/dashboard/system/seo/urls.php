@@ -143,7 +143,7 @@ $(function () {
                         checkbox.checked = true;
                     },
                     'btn-danger',
-                    <?= json_encode(t('Procced Anyway')) ?>
+                    <?= json_encode(t('Proceed anyway')) ?>
                 );
             });
         } else {
