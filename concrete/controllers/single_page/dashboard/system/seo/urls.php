@@ -7,7 +7,6 @@ use Concrete\Core\Form\Service\Form;
 use Concrete\Core\Http\ResponseFactoryInterface;
 use Concrete\Core\Page\Controller\DashboardSitePageController;
 use Concrete\Core\Service\Manager\ServiceManager;
-use Concrete\Core\Url\Resolver\Manager\ResolverManagerInterface;
 use Concrete\Core\Url\UrlImmutable;
 use Punic\Misc;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -71,7 +70,7 @@ class Urls extends DashboardSitePageController
         $siteConfig->save('seo.canonical_tag.enabled', (bool) $post->get('canonical_tag'));
         $globalConfig->save('concrete.seo.url_rewriting', $urlRewriting);
         $prettyUrlState = $this->applyUrlRewriting($urlRewriting);
-        $this->flash('success', h('Settings Saved.') . '<br />' . $this->getPrettyUrlStateMessage($urlRewriting, $prettyUrlState), true);
+        $this->flash('success', h(t('Settings Saved.')) . '<br />' . $this->getPrettyUrlStateMessage($urlRewriting, $prettyUrlState), true);
 
         return $this->buildRedirect($this->action(''));
     }
@@ -200,7 +199,7 @@ class Urls extends DashboardSitePageController
                         break;
                 }
 
-                return h($message) .'<br>'. $this->getServerCodeHtml($rule->getCode());
+                return h($message) . '<br>' . $this->getServerCodeHtml($rule->getCode());
         }
     }
 
