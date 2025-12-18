@@ -16,7 +16,7 @@ final class PHPCSFixerConfigurator
     /**
      * @var string
      */
-    private const MINIMUM_PHPCSFIXER_VERSION = '3.92.0';
+    private const MINIMUM_PHPCSFIXER_VERSION = '3.92.3';
 
     /**
      * @var \Concrete\Core\Support\CodingStyle\FixerRegistry
