@@ -841,18 +841,12 @@ final class FixerRegistry
             // Arguments lists, array destructuring lists, arrays that are multi-line, `match`-lines and parameters lists must have a trailing comma.
             ->registerFixer(
                 'trailing_comma_in_multiline',
-                ['after_heredoc' => false, 'elements' => ['arrays', 'array_destructuring', 'match', 'arguments', 'parameters']],
+                ['after_heredoc' => false, 'elements' => ['arrays', 'array_destructuring', 'match', 'parameters']],
                 static function (int $fileFlags, string $minimumPHPVersion) {
-                    if ($fileFlags & FileFlag::ENTRYPOINT || version_compare($minimumPHPVersion, '7.3') < 0) {
+                    if ($fileFlags & FileFlag::ENTRYPOINT || version_compare($minimumPHPVersion, '8.0') < 0) {
                         return self::createConfigurableFixer(
                             Fixer\ControlStructure\TrailingCommaInMultilineFixer::class,
-                            ['after_heredoc' => false, 'elements' => ['arrays', 'array_destructuring', 'match']],
-                        );
-                    }
-                    if (version_compare($minimumPHPVersion, '8.0') < 0) {
-                        return self::createConfigurableFixer(
-                            Fixer\ControlStructure\TrailingCommaInMultilineFixer::class,
-                            ['after_heredoc' => false, 'elements' => ['arrays', 'array_destructuring', 'match', 'arguments']],
+                            ['after_heredoc' => false, 'elements' => ['arrays', 'array_destructuring']],
                         );
                     }
 
