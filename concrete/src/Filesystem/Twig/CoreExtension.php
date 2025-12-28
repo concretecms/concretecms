@@ -11,6 +11,8 @@ use Concrete\Core\Authentication\AuthenticationType;
 use Concrete\Core\Block\View\BlockViewTemplate;
 use Concrete\Core\Config\Repository\Repository;
 use Concrete\Core\File\File;
+use Concrete\Core\Filesystem\Twig\Extension\FormProxy;
+use Concrete\Core\Form\Service\Form;
 use Concrete\Core\Html\Image;
 use Concrete\Core\Localization\Localization;
 use Concrete\Core\Page\Container\ContainerBlockInstance;
@@ -20,11 +22,12 @@ use Concrete\Core\Support\Facade\Url;
 use Concrete\Core\Url\Resolver\Manager\ResolverManagerInterface;
 use Concrete\Core\View\View;
 use Twig\Extension\AbstractExtension;
+use Twig\Extension\GlobalsInterface;
 use Twig\Markup;
 use Twig\TwigFilter;
 use Twig\TwigFunction;
 
-class CoreExtension extends AbstractExtension implements ApplicationAwareInterface
+class CoreExtension extends AbstractExtension implements ApplicationAwareInterface, GlobalsInterface
 {
     use ApplicationAwareTrait;
 
@@ -62,6 +65,13 @@ class CoreExtension extends AbstractExtension implements ApplicationAwareInterfa
                 $return = $object->$method(...$args);
                 return ob_get_clean();
             }),
+        ];
+    }
+
+    public function getGlobals(): array
+    {
+        return [
+            'form_html' => new FormProxy($this->app->make(Form::class)),
         ];
     }
 
@@ -198,6 +208,12 @@ class CoreExtension extends AbstractExtension implements ApplicationAwareInterfa
                 View::element(...$args);
                 return ob_get_clean();
             }),
+
+            new TwigFunction('csrfToken', function($tokenName): string {
+                ob_start();
+                $this->app->make('token')->output($tokenName);
+                return ob_get_clean();
+            }, ['is_safe' => ['html']]),
         ];
     }
 
