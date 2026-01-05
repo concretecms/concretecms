@@ -572,6 +572,10 @@ return [
             ['css', 'css/features/maps/frontend.css', ['minify' => false]],
         ],
 
+        'feature/polls/frontend' => [
+            ['css', 'css/features/polls/frontend.css', ['minify' => false]],
+        ],
+
         'feature/multilingual/frontend' => [
             ['javascript', 'js/features/multilingual/frontend.js', ['minify' => false]],
             ['css', 'css/features/multilingual/frontend.css', ['minify' => false]],
@@ -789,6 +793,12 @@ return [
             [
                 ['javascript', 'feature/maps/frontend'],
                 ['css', 'feature/maps/frontend'],
+            ],
+        ],
+
+        'feature/polls/frontend' => [
+            [
+                ['css', 'feature/polls/frontend'],
             ],
         ],
 
