@@ -18,6 +18,9 @@ use Concrete\Core\Page\Page;
 use Concrete\Core\Page\Stack\Stack;
 use Concrete\Core\Support\Facade\Url;
 use Concrete\Core\Url\Resolver\Manager\ResolverManagerInterface;
+use Concrete\Core\User\User;
+use Concrete\Core\User\UserInfo;
+use Concrete\Core\User\UserInfoRepository;
 use Concrete\Core\View\View;
 use Twig\Extension\AbstractExtension;
 use Twig\Markup;
@@ -28,22 +31,31 @@ class CoreExtension extends AbstractExtension implements ApplicationAwareInterfa
 {
     use ApplicationAwareTrait;
 
-    /**
-     * @var Repository
-     */
+    /** @var UserInfoRepository */
+    private $userInfoRepository;
+    /** @var Repository */
     private $config;
-    /**
-     * @var ResolverManagerInterface
-     */
+    /** @var ResolverManagerInterface */
     private $urls;
 
-    public function __construct(Repository $config, ResolverManagerInterface $urls)
-    {
+    /** @var User|null  */
+    private $user = null;
+    /** @var UserInfo|null  */
+    private $userInfo = null;
+    /** @var bool */
+    private $userLoaded = false;
+
+    public function __construct(
+        UserInfoRepository $userInfoRepository,
+        Repository $config,
+        ResolverManagerInterface $urls
+    ) {
+        $this->userInfoRepository = $userInfoRepository;
         $this->config = $config;
         $this->urls = $urls;
     }
 
-    public function getFilters()
+    public function getFilters(): array
     {
         return [
             /** Preg_replace filter, {{ "baz" | preg_replace('/z/', 'r') }} outputs `bar` */
@@ -65,19 +77,18 @@ class CoreExtension extends AbstractExtension implements ApplicationAwareInterfa
         ];
     }
 
-    public function getFunctions()
+    public function getFunctions(): array
     {
-        $functions = array_merge(
+        return array_merge(
             $this->getBasicFunctions(),
             $this->getFileFunctions(),
             $this->getPageFunctions(),
             $this->getAuthFunctions(),
+            $this->getUserFunctions(),
         );
-
-        return $functions;
     }
 
-    private function getBasicFunctions(): array
+    protected function getBasicFunctions(): array
     {
         return [
             /** Include PHP files */
@@ -201,18 +212,18 @@ class CoreExtension extends AbstractExtension implements ApplicationAwareInterfa
         ];
     }
 
-    private function getFileFunctions(): array
+    protected function getFileFunctions(): array
     {
         return [
             /** Get a file by ID */
             new TwigFunction('fileByID', [File::class, 'getByID']),
             new TwigFunction('HtmlImage', function (?\Concrete\Core\Entity\File\File $file = null, array $options = []) {
                 return new Image($file, $options);
-            })
+            }),
         ];
     }
 
-    private function getPageFunctions(): array
+    protected function getPageFunctions(): array
     {
         return [
             /** Get the current page */
@@ -222,7 +233,7 @@ class CoreExtension extends AbstractExtension implements ApplicationAwareInterfa
         ];
     }
 
-    private function getAuthFunctions(): array
+    protected function getAuthFunctions(): array
     {
         return [
             /** Get a list of authentication types */
@@ -232,5 +243,41 @@ class CoreExtension extends AbstractExtension implements ApplicationAwareInterfa
             /** Get authentication type by ID */
             new TwigFunction('authTypeByID', [AuthenticationType::class, 'getByID']),
         ];
+    }
+
+    protected function getUserFunctions(): array
+    {
+        return [
+            new TwigFunction('currentUser', function(): ?User {
+                return $this->loadUser();
+            }),
+            new TwigFunction('currentUserInfo', function(): ?UserInfo {
+                return $this->loadUserInfo();
+            }),
+        ];
+    }
+
+    private function loadUser(): ?User
+    {
+        if (!$this->userLoaded) {
+            $this->userLoaded = true;
+            $user = $this->app->make(User::class);
+            if ($user->checkLogin()) {
+                $this->user = $user;
+                $this->userInfo = $user->getUserInfoObject();
+            }
+        }
+
+        return $this->user;
+    }
+
+    private function loadUserInfo(): ?UserInfo
+    {
+        $user = $this->loadUser();
+        if ($user !== null && $this->userInfo === null) {
+            $this->userInfo = $this->userInfoRepository->getByID($user->getUserID());
+        }
+
+        return $this->userInfo;
     }
 }
