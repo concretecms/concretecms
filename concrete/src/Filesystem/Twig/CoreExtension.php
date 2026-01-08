@@ -69,7 +69,7 @@ class CoreExtension extends AbstractExtension implements ApplicationAwareInterfa
             }),
 
             /** Capture output of method that would otherwise output to  */
-            new TwigFilter('bufferMethod', function ($object, $method, $args, &$return = null) {
+            new TwigFilter('bufferMethod', function ($object, $method, $args = [], &$return = null) {
                 ob_start();
                 $return = $object->$method(...$args);
                 return ob_get_clean();
