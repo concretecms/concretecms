@@ -36,6 +36,7 @@ class TwigFactory implements ApplicationAwareInterface
         $options = $options === [] ? $this->defaultOptions() : array_merge($this->defaultOptions(), $options);
         $loader = new \Twig\Loader\FilesystemLoader($baseDir);
         $twig = new \Twig\Environment($loader, $options);
+        $twig->addGlobal('app', $this->app);
 
         foreach ($this->globals as $name => $value) {
             $twig->addGlobal($name, $value);
