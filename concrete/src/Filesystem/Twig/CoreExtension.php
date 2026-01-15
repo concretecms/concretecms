@@ -209,11 +209,16 @@ class CoreExtension extends AbstractExtension implements ApplicationAwareInterfa
                 return ob_get_clean();
             }),
 
-            new TwigFunction('csrfToken', function($tokenName): string {
+            new TwigFunction('csrf_token', function($tokenName): string {
                 ob_start();
                 $this->app->make('token')->output($tokenName);
                 return ob_get_clean();
             }, ['is_safe' => ['html']]),
+
+            new TwigFunction('csrf_token_value', function($tokenName): string {
+                return $this->app->make('token')->generate($tokenName);
+            }, ['is_safe' => ['html']]),
+
         ];
     }
 
