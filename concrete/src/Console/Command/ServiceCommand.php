@@ -67,7 +67,7 @@ EOT
         ;
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $rc = static::SUCCESS;
         $manager = Core::make('Concrete\Core\Service\Manager\ServiceManager');

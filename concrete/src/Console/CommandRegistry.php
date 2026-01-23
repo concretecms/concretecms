@@ -30,14 +30,14 @@ class CommandRegistry implements ApplicationAwareInterface
     /**
      * @var Application
      */
-    protected $console;
+    protected Application $console;
 
     /**
      * Commands that are always available.
      *
      * @var string[]
      */
-    protected $commands = [
+    protected array $commands = [
         Command\InfoCommand::class,
         Command\InstallCommand::class,
         Command\IsInstalledCommand::class,
@@ -57,7 +57,7 @@ class CommandRegistry implements ApplicationAwareInterface
      *
      * @var string[]
      */
-    protected $installedCommands = [
+    protected array $installedCommands = [
         Command\CompareSchemaCommand::class,
         Command\ClearCacheCommand::class,
         Command\InstallPackageCommand::class,
@@ -91,7 +91,7 @@ class CommandRegistry implements ApplicationAwareInterface
      *
      * @var string[]
      */
-    protected $migrationCommands = [
+    protected array $migrationCommands = [
         \Doctrine\Migrations\Tools\Console\Command\DiffCommand::class,
         \Doctrine\Migrations\Tools\Console\Command\ExecuteCommand::class,
         \Doctrine\Migrations\Tools\Console\Command\GenerateCommand::class,
@@ -109,7 +109,7 @@ class CommandRegistry implements ApplicationAwareInterface
         $this->console = $console;
     }
 
-    public function registerCommands()
+    public function registerCommands(): void
     {
         $this->setupDefaultCommands();
         $this->setupInstalledCommands();
@@ -117,7 +117,7 @@ class CommandRegistry implements ApplicationAwareInterface
         $this->setupTaskCommands();
     }
 
-    protected function setupDefaultCommands()
+    protected function setupDefaultCommands(): void
     {
         // Add commands that always work
         foreach($this->commands as $commandClass) {
@@ -125,7 +125,7 @@ class CommandRegistry implements ApplicationAwareInterface
         }
     }
 
-    public function setupInstalledCommands()
+    public function setupInstalledCommands(): void
     {
         if ($this->app->isInstalled()) {
             foreach ($this->installedCommands as $commandClass) {
@@ -134,7 +134,7 @@ class CommandRegistry implements ApplicationAwareInterface
         }
     }
 
-    public function setupDoctrineCommands()
+    public function setupDoctrineCommands(): void
     {
         if ($this->app->isInstalled()) {
             // Set the doctrine helperset to the CLI
@@ -161,7 +161,7 @@ class CommandRegistry implements ApplicationAwareInterface
         }
     }
 
-    protected function setupTaskCommands()
+    protected function setupTaskCommands(): void
     {
         if ($this->app->isInstalled()) {
             try {

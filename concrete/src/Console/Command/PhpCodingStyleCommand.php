@@ -108,11 +108,11 @@ EOT
      *
      * @see \Concrete\Core\Console\Command::initialize()
      */
-    protected function initialize(InputInterface $input, OutputInterface $output)
+    protected function initialize(InputInterface $input, OutputInterface $output): void
     {
         $this->canRunAsRoot = $input->getArgument('action') !== 'fix';
 
-        return parent::initialize($input, $output);
+        parent::initialize($input, $output);
     }
 
     /**

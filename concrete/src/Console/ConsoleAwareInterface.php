@@ -22,7 +22,7 @@ interface ConsoleAwareInterface
      * @param \Symfony\Component\Console\Input\InputInterface|null $input
      * @return static Returns itself
      */
-    public function setConsole(SymfonyApplication $console, ?OutputInterface $output = null, ?InputInterface $input = null);
+    public function setConsole(SymfonyApplication $console, ?OutputInterface $output = null, ?InputInterface $input = null): static;
 
     /**
      * Set the output object to use
@@ -30,7 +30,7 @@ interface ConsoleAwareInterface
      * @param \Symfony\Component\Console\Output\OutputInterface $output
      * @return static Returns itself
      */
-    public function setOutput(OutputInterface $output);
+    public function setOutput(OutputInterface $output): static;
 
     /**
      * Set the input object to use
@@ -38,6 +38,6 @@ interface ConsoleAwareInterface
      * @param \Symfony\Component\Console\Input\InputInterface $input
      * @return static Returns itself
      */
-    public function setInput(InputInterface $input);
+    public function setInput(InputInterface $input): static;
 
 }

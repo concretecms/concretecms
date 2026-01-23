@@ -32,11 +32,6 @@ class InstallLanguageCommand extends Command
     protected $translationsInstaller;
 
     /**
-     * @var OutputInterface|null
-     */
-    protected $output;
-
-    /**
      * @var bool|null
      */
     protected $shouldClearLocalizationCache;
@@ -85,7 +80,7 @@ EOT
             );
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         if (!$input->getOption('update') && count($input->getOption('add')) === 0) {
             throw new Exception('Please specify at least the --update or the --add option');
@@ -94,7 +89,6 @@ EOT
         $this->app = Application::getFacadeApplication();
         $this->translationsChecker = $this->app->make(TranslationsChecker::class);
         $this->translationsInstaller = $this->app->make(TranslationsInstaller::class);
-        $this->output = $output;
         $this->shouldClearLocalizationCache = false;
 
         $processCore = $this->checkCoreFlag($input);

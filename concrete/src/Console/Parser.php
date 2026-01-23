@@ -21,7 +21,7 @@ class Parser
      *
      * @throws \InvalidArgumentException
      */
-    public static function parse($expression)
+    public static function parse(string $expression): array
     {
         $name = static::name($expression);
 
@@ -40,7 +40,7 @@ class Parser
      * @param  string  $expression
      * @return string
      */
-    protected static function name($expression)
+    protected static function name(string $expression): string
     {
         if (trim($expression) === '') {
             throw new InvalidArgumentException('Console command definition is empty.');
@@ -59,7 +59,7 @@ class Parser
      * @param  array  $tokens
      * @return array
      */
-    protected static function parameters(array $tokens)
+    protected static function parameters(array $tokens): array
     {
         $arguments = [];
 
@@ -82,7 +82,7 @@ class Parser
      * @param  string  $token
      * @return \Symfony\Component\Console\Input\InputArgument
      */
-    protected static function parseArgument($token)
+    protected static function parseArgument(string $token): InputArgument
     {
         list($token, $description) = static::extractDescription($token);
 
@@ -108,7 +108,7 @@ class Parser
      * @param  string  $token
      * @return \Symfony\Component\Console\Input\InputOption
      */
-    protected static function parseOption($token)
+    protected static function parseOption(string $token): InputOption
     {
         list($token, $description) = static::extractDescription($token);
 
@@ -141,7 +141,7 @@ class Parser
      * @param  string  $token
      * @return array
      */
-    protected static function extractDescription($token)
+    protected static function extractDescription(string $token): array
     {
         $parts = preg_split('/\s+:\s+/', trim($token), 2);
 

@@ -103,7 +103,7 @@ abstract class Command extends SymfonyCommand
      *
      * @var string
      */
-    protected $signature;
+    protected $signature = null;
 
     /**
      * Can this command be executed as root?
@@ -117,7 +117,7 @@ abstract class Command extends SymfonyCommand
      */
     protected $canRunAsRoot = true;
 
-    public function __construct($name = null)
+    public function __construct(?string $name = null)
     {
         if ($this->signature) {
             $this->configureUsingFluentDefinition();
@@ -158,7 +158,7 @@ abstract class Command extends SymfonyCommand
      *
      * @return int
      */
-    public function call($command, array $arguments = [])
+    public function call(string $command, array $arguments = []): int
     {
         $arguments['command'] = $command;
 
@@ -176,7 +176,7 @@ abstract class Command extends SymfonyCommand
      *
      * @return int
      */
-    public function callSilent($command, array $arguments = [])
+    public function callSilent(string $command, array $arguments = []): int
     {
         $arguments['command'] = $command;
 
@@ -193,7 +193,7 @@ abstract class Command extends SymfonyCommand
      *
      * @return bool
      */
-    public function hasArgument($name)
+    public function hasArgument($name): bool
     {
         return $this->input->hasArgument($name);
     }
@@ -205,7 +205,7 @@ abstract class Command extends SymfonyCommand
      *
      * @return string|array
      */
-    public function argument($key = null)
+    public function argument(?string $key = null)
     {
         if ($key === null) {
             return $this->input->getArguments();
@@ -219,7 +219,7 @@ abstract class Command extends SymfonyCommand
      *
      * @return array
      */
-    public function arguments()
+    public function arguments(): array
     {
         return $this->argument();
     }
@@ -231,7 +231,7 @@ abstract class Command extends SymfonyCommand
      *
      * @return bool
      */
-    public function hasOption($name)
+    public function hasOption(string $name): bool
     {
         return $this->input->hasOption($name);
     }
@@ -243,7 +243,7 @@ abstract class Command extends SymfonyCommand
      *
      * @return string|array
      */
-    public function option($key = null)
+    public function option(?string $key = null)
     {
         if ($key === null) {
             return $this->input->getOptions();
@@ -257,7 +257,7 @@ abstract class Command extends SymfonyCommand
      *
      * @return array
      */
-    public function options()
+    public function options(): array
     {
         return $this->option();
     }
@@ -270,7 +270,7 @@ abstract class Command extends SymfonyCommand
      *
      * @return bool
      */
-    public function confirm($question, $default = false)
+    public function confirm(string $question, bool $default = false): bool
     {
         return $this->output->confirm($question, $default);
     }
@@ -283,7 +283,7 @@ abstract class Command extends SymfonyCommand
      *
      * @return string
      */
-    public function ask($question, $default = null)
+    public function ask(string $question, ?string $default = null): string
     {
         return $this->output->ask($question, $default);
     }
@@ -299,7 +299,7 @@ abstract class Command extends SymfonyCommand
      *
      * @return string
      */
-    public function askWithCompletion($question, array $choices, $default = null, $attempts = null, $strict = null)
+    public function askWithCompletion(string $question, array $choices, ?string $default = null, ?int $attempts = null, ?bool $strict = null): string
     {
         return $this->output->askWithCompletion($question, $choices, $default, $attempts, $strict);
     }
@@ -312,7 +312,7 @@ abstract class Command extends SymfonyCommand
      *
      * @return string
      */
-    public function secret($question, $fallback = true)
+    public function secret(string $question, bool $fallback = true): string
     {
         return $this->output->secret($question, $fallback);
     }
@@ -328,7 +328,7 @@ abstract class Command extends SymfonyCommand
      *
      * @return string
      */
-    public function choice($question, array $choices, $default = null, $attempts = null, $multiple = null)
+    public function choice(string $question, array $choices, ?string $default = null, $attempts = null, ?bool $multiple = null): string
     {
         return $this->output->choice($question, $choices, $default, $attempts, $multiple);
     }
@@ -343,7 +343,7 @@ abstract class Command extends SymfonyCommand
      *
      * @return void
      */
-    public function table(array $headers, array $rows, $tableStyle = 'default', array $columnStyles = [])
+    public function table(array $headers, array $rows, string $tableStyle = 'default', array $columnStyles = []): void
     {
         $this->output->table($headers, $rows, $tableStyle, $columnStyles);
     }
@@ -353,7 +353,7 @@ abstract class Command extends SymfonyCommand
      *
      * @return \Symfony\Component\Console\Application|\Concrete\Core\Console\Application
      */
-    public function getApplication()
+    public function getApplication(): Application
     {
         return parent::getApplication();
     }
@@ -363,7 +363,7 @@ abstract class Command extends SymfonyCommand
      *
      * @return void
      */
-    protected function configureUsingFluentDefinition()
+    protected function configureUsingFluentDefinition(): void
     {
         list($name, $arguments, $options) = Parser::parse($this->signature);
         parent::__construct($this->name = $name);
@@ -383,7 +383,7 @@ abstract class Command extends SymfonyCommand
      *
      * @return void
      */
-    protected function specifyParameters()
+    protected function specifyParameters(): void
     {
         // We will loop through all of the arguments and options for the command and
         // set them all on the base command instance. This specifies what can get
@@ -403,7 +403,7 @@ abstract class Command extends SymfonyCommand
      *
      * @return array [[$name, $mode = null, $description = '', $default = null], ...]
      */
-    protected function getArguments()
+    protected function getArguments(): array
     {
         return [];
     }
@@ -415,7 +415,7 @@ abstract class Command extends SymfonyCommand
      *
      * @return array [[$name, $shortcut = null, $mode = null, $description = '', $default = null], ...]
      */
-    protected function getOptions()
+    protected function getOptions(): array
     {
         return [];
     }
@@ -425,7 +425,7 @@ abstract class Command extends SymfonyCommand
      *
      * @see \Symfony\Component\Console\Command\Command::initialize()
      */
-    protected function initialize(InputInterface $input, OutputInterface $output)
+    protected function initialize(InputInterface $input, OutputInterface $output): void
     {
         if (!$this->canRunAsRoot && $this->isRunningAsRoot() === true) {
             $this->confirmRunningAsRoot($input, $output);
@@ -441,7 +441,7 @@ abstract class Command extends SymfonyCommand
      * @deprecated Use $this->output to manage your output
      * @see OutputStyle::error()
      */
-    protected function writeError(OutputInterface $output, $error)
+    protected function writeError(OutputInterface $output, $error): void
     {
         $result = [trim($error->getMessage())];
 
@@ -468,7 +468,7 @@ abstract class Command extends SymfonyCommand
      *
      * @return Command
      */
-    protected function addEnvOption()
+    protected function addEnvOption(): static
     {
         $this->addOption(
             'env',
@@ -491,7 +491,7 @@ abstract class Command extends SymfonyCommand
      *
      * @return $this
      */
-    protected function setCanRunAsRoot($canRunAsRoot)
+    protected function setCanRunAsRoot(bool $canRunAsRoot): static
     {
         $canRunAsRoot = (bool) $canRunAsRoot;
         if ($canRunAsRoot !== $this->canRunAsRoot) {
@@ -518,7 +518,7 @@ abstract class Command extends SymfonyCommand
      *
      * @return bool|null NULL if unknown, or boolean if determined
      */
-    protected function isRunningAsRoot()
+    protected function isRunningAsRoot(): ?bool
     {
         $app = ApplicationFacade::getFacadeApplication();
 
@@ -531,7 +531,7 @@ abstract class Command extends SymfonyCommand
      *
      * @throws UserMessageException
      */
-    protected function confirmRunningAsRoot(InputInterface $input, OutputInterface $output)
+    protected function confirmRunningAsRoot(InputInterface $input, OutputInterface $output): void
     {
         if (!($input->hasOption(static::ALLOWASROOT_OPTION) && $input->getOption(static::ALLOWASROOT_OPTION)) && !@getenv(static::ALLOWASROOT_ENV)) {
             if (!$input->isInteractive()) {
@@ -558,7 +558,7 @@ abstract class Command extends SymfonyCommand
      *
      * @see \Symfony\Component\Console\Command\Command::execute()
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         if (!method_exists($this, 'handle')) {
             throw new LogicException('You must define the public handle() method in the command implementation.');

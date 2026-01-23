@@ -15,13 +15,13 @@ trait ConsoleAwareTrait
 {
 
     /** @var SymfonyApplication|null */
-    protected $traitConsole;
+    protected ?SymfonyApplication $traitConsole;
 
     /** @var OutputInterface|null */
-    protected $traitOutput;
+    protected ?OutputInterface $traitOutput;
 
     /** @var InputInterface|null */
-    protected $traitInput;
+    protected ?InputInterface $traitInput;
 
     /**
      * Set the console object
@@ -73,7 +73,7 @@ trait ConsoleAwareTrait
      *
      * @return OutputInterface
      */
-    protected function getOutput()
+    protected function getOutput(): OutputInterface
     {
         return $this->traitOutput ?: new NullOutput();
     }
@@ -83,7 +83,7 @@ trait ConsoleAwareTrait
      *
      * @return InputInterface
      */
-    protected function getInput()
+    protected function getInput(): InputInterface
     {
         return $this->traitInput ?: new StringInput('');
     }
@@ -92,7 +92,7 @@ trait ConsoleAwareTrait
      * Find out if we are in console context
      * @return bool
      */
-    protected function hasConsole()
+    protected function hasConsole(): bool
     {
         return $this->traitConsole !== null;
     }

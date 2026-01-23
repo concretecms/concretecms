@@ -97,7 +97,7 @@ EOT
             );
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $app = Application::getFacadeApplication();
         if ($app->isInstalled()) {

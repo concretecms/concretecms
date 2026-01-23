@@ -36,14 +36,14 @@ class OutputStyle extends SymfonyStyle
     /**
      * Ask a question with autocompletion
      *
-     * @param $question
+     * @param string $question
      * @param array $choices
      * @param null $default
      * @param null $attempts
      * @param bool $strict
      * @return string
      */
-    public function askWithCompletion($question, array $choices, $default = null, $attempts = null, $strict = false)
+    public function askWithCompletion(string $question, array $choices, $default = null, $attempts = null, bool $strict = false): string
     {
         $question = new Question($question, $default);
         $question->setMaxAttempts($attempts)->setAutocompleterValues($choices);
@@ -66,7 +66,7 @@ class OutputStyle extends SymfonyStyle
     /**
      * @see askSecretQuestion
      */
-    public function secret($question, $fallback = true)
+    public function secret(string $question, bool $fallback = true): string
     {
         return $this->askSecretQuestion($question, $fallback);
     }
@@ -74,11 +74,11 @@ class OutputStyle extends SymfonyStyle
     /**
      * Ask a question while hiding the response
      *
-     * @param $question
+     * @param string $question
      * @param bool $fallback
      * @return string
      */
-    public function askSecretQuestion($question, $fallback = true)
+    public function askSecretQuestion(string $question, bool $fallback = true): string
     {
         $question = new Question($question);
         $question->setHidden(true)->setHiddenFallback($fallback);
@@ -95,7 +95,7 @@ class OutputStyle extends SymfonyStyle
      * @param null $multiple
      * @return mixed
      */
-    public function choice($question, array $choices, $default = null, $attempts = null, $multiple = null)
+    public function choice(string $question, array $choices, $default = null, $attempts = null, $multiple = null)
     {
         $question = new ChoiceQuestion($question, $choices, $default);
         $question->setMaxAttempts($attempts)->setMultiselect($multiple);
@@ -111,7 +111,7 @@ class OutputStyle extends SymfonyStyle
      * @param string $tableStyle
      * @param array $columnStyles
      */
-    public function table(array $headers, array $rows, $tableStyle = 'default', array $columnStyles = [])
+    public function table(array $headers, array $rows, string $tableStyle = 'default', array $columnStyles = []): void
     {
         $table = new Table($this);
         $table->setHeaders($headers)->setRows($rows)->setStyle($tableStyle);
@@ -131,7 +131,7 @@ class OutputStyle extends SymfonyStyle
      * @param string $tableStyle
      * @param array $columnStyles
      */
-    public function columns(array $values, $width = 5, $tableStyle = 'compact', array $columnStyles = [])
+    public function columns(array $values, int $width = 5, string $tableStyle = 'compact', array $columnStyles = []): void
     {
         $table = new Table($this);
         $table->setHeaders([])->setRows(iterator_to_array($this->chunk($values, $width)))->setStyle($tableStyle);
@@ -146,7 +146,7 @@ class OutputStyle extends SymfonyStyle
         $table->render();
     }
 
-    protected function chunk(array $values, $size)
+    protected function chunk(array $values, int $size)
     {
         $chunk = [];
         foreach ($values as $value) {
@@ -160,7 +160,7 @@ class OutputStyle extends SymfonyStyle
         yield $chunk;
     }
 
-    private function getColumnWidths($width)
+    private function getColumnWidths(int $width): array
     {
         $terminal = new Terminal();
         $totalWidth = $terminal->getWidth();

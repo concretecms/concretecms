@@ -63,7 +63,7 @@ EOT
      */
     protected $app;
     
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $this->app = Application::getFacadeApplication();
         $config = $this->app->make(Repository::class);
