@@ -28,31 +28,28 @@ class InstallCommand extends Command
 {
     /**
      * @var int
-     * @access private
      */
-    const OPTIONPRECONDITIONS_ERROR = 1;
+    public const OPTIONPRECONDITIONS_ERROR = 1;
 
     /**
      * @var int
-     * @access private
      */
-    const OPTIONPRECONDITIONS_WARNINGS = 2;
+    public const OPTIONPRECONDITIONS_WARNINGS = 2;
 
     /**
      * @var int
-     * @access private
      */
-    const OPTIONPRECONDITIONS_SUCCESS = 3;
+    public const OPTIONPRECONDITIONS_SUCCESS = 3;
 
     /**
      * @var bool|null
      */
-    private $preconditionsPassed = null;
+    private $preconditionsPassed;
 
     /**
      * @var Installer|null
      */
-    private $configuredInstaller = null;
+    private $configuredInstaller;
 
     protected function configure()
     {
@@ -87,14 +84,16 @@ class InstallCommand extends Command
             ->addOption('disable-marketplace-connect', null, InputOption::VALUE_NONE, 'Do not automatically connect site to marketplace')
             ->addOption('defer-installation', null, InputOption::VALUE_NONE, 'Defer installation to a later point; do not write the final configuration files necessary to complete installation')
             ->addOption('ignore-warnings', null, InputOption::VALUE_NONE, 'Ignore warnings')
-            ->setHelp(<<<EOT
+            ->setHelp(
+                <<<EOT
 Returns codes:
-  $okExitCode operation completed successfully
-  $errExitCode errors occurred
+  {$okExitCode} operation completed successfully
+  {$errExitCode} errors occurred
 
 More info at https://documentation.concretecms.org/9-x/developers/security/cli-jobs#c5-install
 EOT
-            );
+            )
+        ;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -174,7 +173,7 @@ EOT
             throw $ex;
         }
         if (
-            isset($options['demo-username']) && isset($options['demo-password']) && isset($options['demo-email'])
+            isset($options['demo-username'], $options['demo-password'], $options['demo-email'])
             &&
             ((string) $options['demo-username'] !== '') && ((string) $options['demo-password'] !== '') && ((string) $options['demo-email'] !== '')
         ) {
@@ -206,9 +205,9 @@ EOT
         if ($input->getOption('interactive')) {
             $app = Application::getFacadeApplication();
             $helper = $this->getHelper('question');
-            /* @var \Symfony\Component\Console\Helper\QuestionHelper $helper */
+            // @var \Symfony\Component\Console\Helper\QuestionHelper $helper
 
-            for (; ;) {
+            for (;;) {
                 // Get the wizard generator
                 $wizard = $this->getWizard($input, $output);
                 $hidden = [];
@@ -414,7 +413,7 @@ EOT
                 $firstKey = null;
             }
 
-            if (in_array($question[0], ['demo-password', 'demo-email'], true) && '' === (string) $input->getOption('demo-username')) {
+            if (in_array($question[0], ['demo-password', 'demo-email'], true) && (string) $input->getOption('demo-username') === '') {
                 continue;
             }
 
@@ -439,7 +438,7 @@ EOT
      */
     private function getQuestionString(InputOption $option, $default)
     {
-        if ('' !== (string) $default) {
+        if ((string) $default !== '') {
             if (stripos($option->getName(), 'password') !== false) {
                 return sprintf('%s? [<options=bold>HIDDEN</>]: ', $option->getDescription(), $default);
             }
@@ -523,7 +522,7 @@ EOT
                 'starting-point',
                 'atomik_blank',
                 function (Question $question, InputInterface $input) {
-                    $available = array_map(function($item) { return $item->getPackageHandle(); }, StartingPointPackage::getAvailableList());
+                    $available = array_map(function ($item) { return $item->getPackageHandle(); }, StartingPointPackage::getAvailableList());
                     $available = array_unique(array_merge($available, ['atomik_blank', 'elemental_full', 'atomik_full']));
 
                     return new ChoiceQuestion($question->getQuestion(), $available, $question->getDefault());
@@ -618,7 +617,7 @@ EOT
     {
         $result = true;
         $service = $app->make(PreconditionService::class);
-        /* @var PreconditionService $service */
+        // @var PreconditionService $service
         $requiredPreconditions = [];
         $optionalPreconditions = [];
         foreach ($service->getPreconditions(false) as $precondition) {
@@ -698,7 +697,7 @@ EOT
                 throw new Exception('The configuration file did not returned an array.');
             }
             foreach ($configOptions as $k => $v) {
-                if (!$input->hasParameterOption("--$k")) {
+                if (!$input->hasParameterOption("--{$k}")) {
                     $options[$k] = $v;
                 }
             }
@@ -744,8 +743,8 @@ EOT
                 'canonical-url' => $options['canonical-url'] ?: '',
                 'canonical-url-alternative' => $options['canonical-url-alternative'] ?: '',
             ])
-            ->setSiteLocaleId(isset($options['site-locale']) ? $options['site-locale'] : Localization::BASE_LOCALE)
-            ->setUiLocaleId(isset($options['language']) ? $options['language'] : Localization::BASE_LOCALE)
+            ->setSiteLocaleId($options['site-locale'] ?? Localization::BASE_LOCALE)
+            ->setUiLocaleId($options['language'] ?? Localization::BASE_LOCALE)
             ->setAutoAttachEnabled($options['auto_attach'])
             ->setStartingPointHandle($options['starting-point'])
             ->setSiteName($options['site'])
@@ -753,7 +752,7 @@ EOT
             ->setUserPasswordHash($hasher->hashPassword($options['admin-password']))
             ->setServerTimeZoneId($options['timezone'])
             ->setIsConnectToMarketplaceEnabled($options['disable-marketplace-connect'] ? false : true)
-            ->setDeferInstallation($options['defer-installation'] ? true : false);
+            ->setDeferInstallation($options['defer-installation'] ? true : false)
         ;
 
         return $installer;
@@ -840,10 +839,11 @@ EOT
 
         if ($result === false) {
             return self::OPTIONPRECONDITIONS_ERROR;
-        } elseif ($someWarnings === true) {
-            return self::OPTIONPRECONDITIONS_WARNINGS;
-        } else {
-            return self::OPTIONPRECONDITIONS_SUCCESS;
         }
+        if ($someWarnings === true) {
+            return self::OPTIONPRECONDITIONS_WARNINGS;
+        }
+
+        return self::OPTIONPRECONDITIONS_SUCCESS;
     }
 }

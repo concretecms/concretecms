@@ -1,102 +1,20 @@
 <?php
+
 namespace Concrete\Core\Console\Command;
 
 use Concrete\Core\Console\Command;
-use Symfony\Component\Console\Input\InputArgument;
-use Symfony\Component\Console\Input\InputOption;
-use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Output\OutputInterface;
-use Concrete\Core\Service\ServiceInterface;
-use Concrete\Core\Service\Rule\RuleInterface;
 use Concrete\Core\Service\Rule\ConfigurableRuleInterface;
+use Concrete\Core\Service\Rule\RuleInterface;
+use Concrete\Core\Service\ServiceInterface;
 use Core;
 use Exception;
+use Symfony\Component\Console\Input\InputArgument;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console\Output\OutputInterface;
 
 final class ServiceCommand extends Command
 {
-    protected function configure()
-    {
-        $okExitCode = static::SUCCESS;
-        $errExitCode = static::FAILURE;
-        $errInvalid = static::INVALID;
-        $serviceHandles = [];
-        $help = '';
-        $manager = Core::make('Concrete\Core\Service\Manager\ServiceManager');
-        /* @var \Concrete\Core\Service\Manager\ServiceManager $manager */
-        foreach ($manager->getAllServices() as $serviceHandle => $service) {
-            $serviceHandles[] = $serviceHandle;
-            foreach ($service->getGenerator()->getRules() as $ruleHandle => $rule) {
-                if ($rule instanceof ConfigurableRuleInterface) {
-                    /* @var ConfigurableRuleInterface $rule */
-                    foreach ($rule->getOptions() as $optionHandle => $option) {
-                        $help .= "Rule option for service $serviceHandle, rule $ruleHandle:\n";
-                        $help .= "  - $optionHandle: " . $option->getDescription();
-                        if ($option->isRequired()) {
-                            $help .= ' [required]';
-                        } else {
-                            $help .= ' [optional]';
-                        }
-                        $help .= "\n";
-                    }
-                }
-            }
-        }
-        $help .= <<<EOT
-
-Return codes for the check operation:
-  $okExitCode operation completed successfully
-  $errInvalid web server configuration is not aligned
-  $errExitCode errors occurred
-
-Return codes for the update operation:
-  $okExitCode operation completed successfully
-  $errExitCode errors occurred
-
-More info at https://documentation.concretecms.org/9-x/developers/security/cli-jobs#c5-service
-EOT
-        ;
-        $this
-            ->setName('c5:service')
-            ->setDescription('Check or update the web server configuration')
-            ->addEnvOption()
-            ->addOption('service-version', 'r', InputOption::VALUE_REQUIRED, 'The specific version of the web server software', '')
-            ->addArgument('service', InputArgument::REQUIRED, 'The web server to use (' . implode('|', $serviceHandles) . ')')
-            ->addArgument('operation', InputArgument::REQUIRED, 'The operation to perform (check|update)')
-            ->addArgument('rule-options', InputArgument::IS_ARRAY, 'List of key-value pairs to pass to the rules (example: foo=bar baz=foo)')
-            ->setHelp(trim($help))
-        ;
-    }
-
-    protected function execute(InputInterface $input, OutputInterface $output): int
-    {
-        $rc = static::SUCCESS;
-        $manager = Core::make('Concrete\Core\Service\Manager\ServiceManager');
-        /* @var \Concrete\Core\Service\Manager\ServiceManager $manager */
-        $service = $manager->getService($input->getArgument('service'), $input->getOption('service-version'));
-        if ($service === null) {
-            $msg = 'Unknown web server handle: ' . $input->getArgument('service');
-            $msg .= PHP_EOL;
-            $msg .= 'Valid handles: ' . implode(', ', $manager->getExtensions());
-            throw new Exception($msg);
-        }
-        $operation = $input->getArgument('operation');
-        $ruleOptions = $this->parseRuleOptions($input);
-        switch ($operation) {
-            case 'check':
-                if ($this->checkConfiguration($service, $ruleOptions, $output) === false) {
-                    $rc = static::INVALID;
-                }
-                break;
-            case 'update':
-                $this->updateConfiguration($service, $ruleOptions, $output);
-                break;
-            default:
-                throw new Exception('Invalid value of the operation argument (valid values: check or update');
-        }
-
-        return $rc;
-    }
-
     public function checkConfiguration(ServiceInterface $service, array $ruleOptions, OutputInterface $output)
     {
         $storage = $service->getStorage();
@@ -112,14 +30,14 @@ EOT
             $shouldHave = $rule->isEnabled();
             if ($shouldHave !== null) {
                 if ($shouldHave) {
-                    $output->write("Checking presence of rule $ruleHandle... ");
+                    $output->write("Checking presence of rule {$ruleHandle}... ");
                     if ($configurator->hasRule($configuration, $rule)) {
                         $output->writeln('<info>found (ok).</info>');
                     } else {
                         $output->writeln('<error>NOT FOUND!</error>');
                     }
                 } else {
-                    $output->write("Checking absence of rule $ruleHandle... ");
+                    $output->write("Checking absence of rule {$ruleHandle}... ");
                     if ($configurator->hasRule($configuration, $rule)) {
                         $output->writeln('<error>FOUND!</error>');
                     } else {
@@ -153,42 +71,125 @@ EOT
 
             if ($shouldHave === true) {
                 // This rule should be present in the configuration
-                $output->write("Checking presence of rule $ruleHandle... ");
+                $output->write("Checking presence of rule {$ruleHandle}... ");
                 if ($configurator->hasRule($configuration, $rule)) {
                     // The rule is already in the configuration
-                    $output->writeln("<info>already present.</info>");
+                    $output->writeln('<info>already present.</info>');
                 } else {
                     // The rule is not in the configuration: let's add it
-                    $output->write("not found. Adding it... ");
+                    $output->write('not found. Adding it... ');
                     $configuration = $configurator->addRule($configuration, $rule);
-                    $output->writeln("<info>done.</info>");
+                    $output->writeln('<info>done.</info>');
                     $configurationUpdated = true;
                 }
             } elseif ($shouldHave === false) {
                 // This rule should not be present in the configuration
-                $output->write("Checking absence of rule $ruleHandle... ");
+                $output->write("Checking absence of rule {$ruleHandle}... ");
                 if ($configurator->hasRule($configuration, $rule)) {
                     // The rule is in the configuration: let's remove it
-                    $output->write("found. Removing it... ");
+                    $output->write('found. Removing it... ');
                     $configuration = $configurator->removeRule($configuration, $rule);
-                    $output->writeln("<info>done.</info>");
+                    $output->writeln('<info>done.</info>');
                     $configurationUpdated = true;
                 } else {
                     // The rule is not in the configuration
-                    $output->writeln("<info>already absent.</info>");
+                    $output->writeln('<info>already absent.</info>');
                 }
             }
         }
 
         if ($configurationUpdated) {
             // Some rule has been added or removed from the configuration: let's save it
-            $output->write("Persisting new configuration... ");
+            $output->write('Persisting new configuration... ');
             if (!$storage->canWrite()) {
                 throw new Exception('Unable to write the current server configuration for ' . $service->getFullName());
             }
             $storage->write($configuration);
-            $output->writeln("<info>done.</info>");
+            $output->writeln('<info>done.</info>');
         }
+    }
+
+    protected function configure()
+    {
+        $okExitCode = static::SUCCESS;
+        $errExitCode = static::FAILURE;
+        $errInvalid = static::INVALID;
+        $serviceHandles = [];
+        $help = '';
+        $manager = Core::make('Concrete\Core\Service\Manager\ServiceManager');
+        // @var \Concrete\Core\Service\Manager\ServiceManager $manager
+        foreach ($manager->getAllServices() as $serviceHandle => $service) {
+            $serviceHandles[] = $serviceHandle;
+            foreach ($service->getGenerator()->getRules() as $ruleHandle => $rule) {
+                if ($rule instanceof ConfigurableRuleInterface) {
+                    // @var ConfigurableRuleInterface $rule
+                    foreach ($rule->getOptions() as $optionHandle => $option) {
+                        $help .= "Rule option for service {$serviceHandle}, rule {$ruleHandle}:\n";
+                        $help .= "  - {$optionHandle}: " . $option->getDescription();
+                        if ($option->isRequired()) {
+                            $help .= ' [required]';
+                        } else {
+                            $help .= ' [optional]';
+                        }
+                        $help .= "\n";
+                    }
+                }
+            }
+        }
+        $help .= <<<EOT
+
+Return codes for the check operation:
+  {$okExitCode} operation completed successfully
+  {$errInvalid} web server configuration is not aligned
+  {$errExitCode} errors occurred
+
+Return codes for the update operation:
+  {$okExitCode} operation completed successfully
+  {$errExitCode} errors occurred
+
+More info at https://documentation.concretecms.org/9-x/developers/security/cli-jobs#c5-service
+EOT
+        ;
+        $this
+            ->setName('c5:service')
+            ->setDescription('Check or update the web server configuration')
+            ->addEnvOption()
+            ->addOption('service-version', 'r', InputOption::VALUE_REQUIRED, 'The specific version of the web server software', '')
+            ->addArgument('service', InputArgument::REQUIRED, 'The web server to use (' . implode('|', $serviceHandles) . ')')
+            ->addArgument('operation', InputArgument::REQUIRED, 'The operation to perform (check|update)')
+            ->addArgument('rule-options', InputArgument::IS_ARRAY, 'List of key-value pairs to pass to the rules (example: foo=bar baz=foo)')
+            ->setHelp(trim($help))
+        ;
+    }
+
+    protected function execute(InputInterface $input, OutputInterface $output): int
+    {
+        $rc = static::SUCCESS;
+        $manager = Core::make('Concrete\Core\Service\Manager\ServiceManager');
+        // @var \Concrete\Core\Service\Manager\ServiceManager $manager
+        $service = $manager->getService($input->getArgument('service'), $input->getOption('service-version'));
+        if ($service === null) {
+            $msg = 'Unknown web server handle: ' . $input->getArgument('service');
+            $msg .= PHP_EOL;
+            $msg .= 'Valid handles: ' . implode(', ', $manager->getExtensions());
+            throw new Exception($msg);
+        }
+        $operation = $input->getArgument('operation');
+        $ruleOptions = $this->parseRuleOptions($input);
+        switch ($operation) {
+            case 'check':
+                if ($this->checkConfiguration($service, $ruleOptions, $output) === false) {
+                    $rc = static::INVALID;
+                }
+                break;
+            case 'update':
+                $this->updateConfiguration($service, $ruleOptions, $output);
+                break;
+            default:
+                throw new Exception('Invalid value of the operation argument (valid values: check or update');
+        }
+
+        return $rc;
     }
 
     /**
@@ -204,7 +205,7 @@ EOT
     {
         $ruleOptions = [];
         foreach ($input->getArgument('rule-options') as $keyValuePair) {
-            list($key, $value) = explode('=', $keyValuePair, 2);
+            [$key, $value] = explode('=', $keyValuePair, 2);
             $key = trim($key);
             if (substr($key, -2) === '[]') {
                 $isArray = true;

@@ -14,23 +14,22 @@ use SplFileObject;
 
 class ExportCommand extends Command
 {
-
     /**
-     * Our command description
+     * Our command description.
      *
      * @var string
      */
     protected $description = 'Export express entries';
 
     /**
-     * The signature for this command
+     * The signature for this command.
      *
      * @var string
      */
     protected $signature = 'c5:express:export {entity : Which entity to export entries from}';
 
     /**
-     * Handle processing calls to this command
+     * Handle processing calls to this command.
      *
      * @param \Doctrine\ORM\EntityManagerInterface $entityManager
      * @param \Concrete\Core\Application\Application $app
@@ -51,12 +50,13 @@ class ExportCommand extends Command
         $repository = $entityManager->getRepository(Entity::class);
         /** @var Entity $entity */
         $entity = $repository->findOneBy([
-            'handle' => $entityHandle
+            'handle' => $entityHandle,
         ]);
 
         // Make sure we found a proper entity
         if (!$entity) {
             $this->output->error('Invalid entity handle.');
+
             return static::INVALID;
         }
 
@@ -64,7 +64,7 @@ class ExportCommand extends Command
     }
 
     /**
-     * Output the entries as CSV
+     * Output the entries as CSV.
      *
      * @param \Concrete\Core\Entity\Express\Entity $entity
      * @param \Concrete\Core\Application\Application $app
@@ -81,7 +81,7 @@ class ExportCommand extends Command
         $file = new SplFileObject('php://output', 'w');
         $csv = $factory->createFromFileObject($file);
         $writer = $app->make(CsvWriter::class, [
-            'writer' => $csv
+            'writer' => $csv,
         ]);
 
         // Insert BOM if needed
@@ -91,7 +91,7 @@ class ExportCommand extends Command
 
         // Write out data
         $entryList = $app->make(EntryList::class, [
-            'entity' => $entity
+            'entity' => $entity,
         ]);
         $entryList->ignorePermissions();
         $writer->insertHeaders($entity);
@@ -100,5 +100,4 @@ class ExportCommand extends Command
         // Success
         return static::SUCCESS;
     }
-
 }

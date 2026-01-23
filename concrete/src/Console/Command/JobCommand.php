@@ -1,11 +1,12 @@
 <?php
+
 namespace Concrete\Core\Console\Command;
 
+use Concrete\Core\Console\Command;
 use Concrete\Core\Console\ConsoleAwareInterface;
 use Job;
 use JobSet;
 use RuntimeException;
-use Concrete\Core\Console\Command;
 use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -29,10 +30,11 @@ class JobCommand extends Command
                 InputArgument::IS_ARRAY,
                 t('Jobs to run (separate multiple jobs with a space)')
             )
-            ->setHelp(<<<EOT
+            ->setHelp(
+                <<<EOT
 Returns codes:
-  $okExitCode operation completed successfully
-  $errExitCode errors occurred
+  {$okExitCode} operation completed successfully
+  {$errExitCode} errors occurred
 
 More info at https://documentation.concretecms.org/9-x/developers/security/cli-jobs#c5-job
 EOT
@@ -119,7 +121,8 @@ EOT
                         if ($output->getVerbosity() >= OutputInterface::VERBOSITY_NORMAL) {
                             $output->writeln(
                                 $formatter->formatSection(
-                                    $job->getJobHandle(), '<error>' . t('Job Failed: %s', $result->getResultMessage()) . '</error>'
+                                    $job->getJobHandle(),
+                                    '<error>' . t('Job Failed: %s', $result->getResultMessage()) . '</error>'
                                 )
                             );
                         }

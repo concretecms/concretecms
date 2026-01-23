@@ -17,7 +17,7 @@ class Application extends SymfonyApplication
         $this->app = $app;
         parent::__construct('concrete', $this->app->make('config')->get('concrete.version'));
     }
-    
+
     /**
      * @deprecated
      */
@@ -27,7 +27,8 @@ class Application extends SymfonyApplication
     }
 
     /**
-     * Get the concrete5 application instance
+     * Get the concrete5 application instance.
+     *
      * @return \Concrete\Core\Application\Application
      */
     public function getConcrete()

@@ -27,7 +27,8 @@ class UpdateCommand extends Command
             ->addOption('rerun', null, InputOption::VALUE_NONE, '(Re)apply already executed migrations')
             ->addOption('after', 'a', InputOption::VALUE_REQUIRED, '(Re)apply migrations after a specific version or migration (requires --rerun)')
             ->addOption('since', 's', InputOption::VALUE_REQUIRED, '(Re)apply migrations starting from a specific version or migration (requires --rerun)')
-            ->setHelp(<<<EOT
+            ->setHelp(
+                <<<EOT
 Examples:
 
   ./concrete/bin/concrete c5:update
@@ -49,8 +50,8 @@ Examples:
     Execute the migrations starting from the 20171218000000 migration (even if they have already been marked as executed)
 
 Returns codes:
-  $okExitCode operation completed successfully
-  $errExitCode errors occurred
+  {$okExitCode} operation completed successfully
+  {$errExitCode} errors occurred
 EOT
             )
         ;

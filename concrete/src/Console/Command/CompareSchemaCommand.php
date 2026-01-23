@@ -22,10 +22,11 @@ class CompareSchemaCommand extends Command
             ->setName('c5:compare-schema')
             ->setDescription('Compares db.xml in Concrete XML schema, Concrete entities, and all installed package schemas and entities with the contents of the database and prints the difference.')
             ->addEnvOption()
-            ->setHelp(<<<EOT
+            ->setHelp(
+                <<<EOT
 Returns codes:
-  $okExitCode operation completed successfully
-  $errExitCode errors occurred
+  {$okExitCode} operation completed successfully
+  {$errExitCode} errors occurred
 EOT
             )
         ;
@@ -89,7 +90,7 @@ EOT
             $i = 1;
             foreach ($saveQueries as $query) {
                 $output->writeln(sprintf('%s: %s', $i, $query));
-                ++$i;
+                $i++;
             }
         } else {
             $output->writeln(t('No differences found between schema and database.'));

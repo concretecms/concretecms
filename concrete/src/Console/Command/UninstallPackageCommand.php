@@ -1,15 +1,16 @@
 <?php
+
 namespace Concrete\Core\Console\Command;
 
 use Concrete\Core\Console\Command;
 use Concrete\Core\Console\ConsoleAwareInterface;
 use Concrete\Core\Error\ErrorList\ErrorList;
-use Symfony\Component\Console\Input\InputInterface;
+use Exception;
+use Package;
 use Symfony\Component\Console\Input\InputArgument;
+use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Package;
-use Exception;
 
 class UninstallPackageCommand extends Command
 {
@@ -28,10 +29,11 @@ class UninstallPackageCommand extends Command
             ->addOption('trash', null, InputOption::VALUE_NONE, 'If this option is specified the package directory will be moved to the trash directory')
             ->addArgument('package', InputArgument::REQUIRED, 'The handle of the package to be uninstalled')
             ->setDescription('Uninstall a Concrete package')
-            ->setHelp(<<<EOT
+            ->setHelp(
+                <<<EOT
 Returns codes:
-  $okExitCode operation completed successfully
-  $errExitCode errors occurred
+  {$okExitCode} operation completed successfully
+  {$errExitCode} errors occurred
 
 More info at https://documentation.concretecms.org/9-x/developers/security/cli-jobs#c5-package-uninstall
 EOT
@@ -43,7 +45,7 @@ EOT
     {
         $pkgHandle = $input->getArgument('package');
 
-        $output->write("Looking for package '$pkgHandle'... ");
+        $output->write("Looking for package '{$pkgHandle}'... ");
         $pkg = null;
         foreach (Package::getInstalledList() as $installed) {
             if ($installed->getPackageHandle() === $pkgHandle) {
@@ -65,9 +67,7 @@ EOT
         $output->write('Checking preconditions... ');
         $test = $pkg->testForUninstall();
         if (is_object($test)) {
-            /*
-             * @var Error $test
-             */
+            // @var Error $test
             throw new Exception(implode("\n", $test->getList()));
         }
         $output->writeln('<info>good.</info>');

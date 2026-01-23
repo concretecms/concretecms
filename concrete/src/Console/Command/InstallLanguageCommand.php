@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Core\Console\Command;
 
 use Concrete\Core\Console\Command;
@@ -41,16 +42,17 @@ class InstallLanguageCommand extends Command
         $okExitCode = static::SUCCESS;
         $errExitCode = static::FAILURE;
         $this
-        ->setName('c5:language-install')
-        ->setAliases(['c5:install-language'])
-        ->setDescription('Install or update Concrete languages')
-        ->addEnvOption()
-        ->setCanRunAsRoot(false)
-        ->addOption('--update', 'u', InputOption::VALUE_NONE, 'Update any outdated language files')
-        ->addOption('--add', 'a', InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, 'Add new language files')
-        ->addOption('--core', 'c', InputOption::VALUE_NONE, 'Process only a the core')
-        ->addOption('--packages', 'p', InputOption::VALUE_OPTIONAL | InputOption::VALUE_IS_ARRAY, 'Process only packages (you can specify one or more package handle too)')
-        ->setHelp(<<<EOT
+            ->setName('c5:language-install')
+            ->setAliases(['c5:install-language'])
+            ->setDescription('Install or update Concrete languages')
+            ->addEnvOption()
+            ->setCanRunAsRoot(false)
+            ->addOption('--update', 'u', InputOption::VALUE_NONE, 'Update any outdated language files')
+            ->addOption('--add', 'a', InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, 'Add new language files')
+            ->addOption('--core', 'c', InputOption::VALUE_NONE, 'Process only a the core')
+            ->addOption('--packages', 'p', InputOption::VALUE_OPTIONAL | InputOption::VALUE_IS_ARRAY, 'Process only packages (you can specify one or more package handle too)')
+            ->setHelp(
+                <<<EOT
 Examples:
             
 # to update all the outdated language files (for the core and for all the packages)
@@ -72,12 +74,13 @@ $ concrete/bin/concrete c5:language-install --add it_IT --add de_DE
 $ concrete/bin/concrete c5:language-install --add it_IT --add de_DE --core
             
 Returns codes:
-  $okExitCode operation completed successfully
-  $errExitCode errors occurred
+  {$okExitCode} operation completed successfully
+  {$errExitCode} errors occurred
             
 More info at https://documentation.concretecms.org/9-x/developers/security/cli-jobs#c5-language-install
 EOT
-            );
+            )
+        ;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -143,7 +146,7 @@ EOT
                 $pkgList = [];
             }
             $ps = $this->app->make(PackageService::class);
-            /* @var PackageService $ps */
+            // @var PackageService $ps
             $allPackages = $ps->getAvailablePackages(false);
             if (count($pkgList) === 0) {
                 $result = $allPackages;
@@ -246,7 +249,7 @@ EOT
                     $this->translationsInstaller->installPackageTranslations($package, $localeID);
                 }
                 $this->shouldClearLocalizationCache = true;
-                ++$result;
+                $result++;
                 if ($this->output->getVerbosity() > OutputInterface::VERBOSITY_NORMAL) {
                     $this->output->writeln('done.');
                 }
@@ -279,7 +282,7 @@ EOT
         $numAdded = 0;
         foreach ($data as $details) {
             if ($this->addLanguageFor($details->getOnlyRemote(), $localeID, ($details instanceof PackageLocaleStatus) ? $details->getPackage() : null)) {
-                ++$numAdded;
+                $numAdded++;
             }
         }
         if ($this->output->getVerbosity() >= OutputInterface::VERBOSITY_NORMAL) {

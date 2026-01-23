@@ -28,98 +28,98 @@ final class PackPackageCommand extends Command
      *
      * @var string
      */
-    const SHORTTAGS_ALL = 'all';
+    public const SHORTTAGS_ALL = 'all';
 
     /**
      * Convert short PHP tags to long PHP tags (excluding short echo tags).
      *
      * @var string
      */
-    const SHORTTAGS_KEEPECHO = 'keep-echo';
+    public const SHORTTAGS_KEEPECHO = 'keep-echo';
 
     /**
      * Use SHORTTAGS_ALL for Concrete 5.x packages, SHORTTAGS_KEEPECHO for Concrete 8+ packages.
      *
      * @var string
      */
-    const SHORTTAGS_AUTO = 'auto';
+    public const SHORTTAGS_AUTO = 'auto';
 
     /**
      * Do not convert any short PHP tags.
      *
      * @var string
      */
-    const SHORTTAGS_NO = 'no';
+    public const SHORTTAGS_NO = 'no';
 
     /**
      * Keep files starting with a dot.
      *
      * @var string
      */
-    const KEEP_DOT = 'dot';
+    public const KEEP_DOT = 'dot';
 
     /**
      * Keep translation .po files and icon source .svg files.
      *
      * @var string
      */
-    const KEEP_SOURCES = 'sources';
+    public const KEEP_SOURCES = 'sources';
 
     /**
      * Keep composer.json files.
      *
      * @var string
      */
-    const KEEP_COMPOSER_JSON = 'composer-json';
+    public const KEEP_COMPOSER_JSON = 'composer-json';
 
     /**
      * Keep composer.json and composer.lock files.
      *
      * @var string
      */
-    const KEEP_COMPOSER_LOCK = 'composer-lock';
+    public const KEEP_COMPOSER_LOCK = 'composer-lock';
 
     /**
      * Keep tests directory.
      *
      * @var string
      */
-    const KEEP_TESTS = 'tests';
+    public const KEEP_TESTS = 'tests';
 
     /**
      * Keep phpunit.xml file.
      *
      * @var string
      */
-    const KEEP_PHPUNIT_XML = 'phpunitxml';
+    public const KEEP_PHPUNIT_XML = 'phpunitxml';
 
     /**
      * Option for boolean/automatic flags: yes.
      *
      * @var string
      */
-    const YNA_YES = 'yes';
+    public const YNA_YES = 'yes';
 
     /**
      * Option for boolean/automatic flags: automatic.
      *
      * @var string
      */
-    const YNA_AUTO = 'auto';
+    public const YNA_AUTO = 'auto';
 
     /**
      * Option for boolean/automatic flags: no.
      *
      * @var string
      */
-    const YNA_NO = 'no';
+    public const YNA_NO = 'no';
 
     /**
      * Value of the zip option to be used to automatically determine the .zip file name.
      *
      * @var string
      */
-    const ZIPOUT_AUTO = '-';
+    public const ZIPOUT_AUTO = '-';
 
     /**
      * Execute the command.
@@ -173,26 +173,27 @@ final class PackPackageCommand extends Command
             ->addOption('zip', 'z', InputOption::VALUE_OPTIONAL, 'Create a zip archive of the package (and optionally set its path)', self::ZIPOUT_AUTO)
             ->addOption('copy', 'c', InputOption::VALUE_REQUIRED, 'Copy the package files to another directory')
             ->addOption('overwrite', 'o', InputOption::VALUE_NONE, 'Copy the package files to another directory even if it already exists')
-            ->setHelp(<<<EOT
+            ->setHelp(
+                <<<EOT
 You have to specify at least the -z option (to create a zip file) and/or the -u option (to update the package directory).
 
 If the -u option is not specified, the package directory is not touched.
 
-If the -z option is specified without a value (or with a value of "$zipAuto"), the zip file will be created in the directory containing the package folder.
+If the -z option is specified without a value (or with a value of "{$zipAuto}"), the zip file will be created in the directory containing the package folder.
 If the -z option is set and the zip file already exists, it will be overwritten.
 
-To include in the zip archive the files and directories starting with a dot, use the "-k $keepDot" option.
-To include in the zip archive the source files for translations (.po files) and icons (.svg files) use the "-k $keepSources" option.
-To include in the zip archive the composer.json and composer.lock files, use the "-k $keepComposerLock" option.
-To include in the zip archive the composer.json file but not the composer.lock files, use the "-k $keepComposerJson" option.
-To include in the zip archive the tests directory, use the "-k $tests" option.
-To include in the zip archive the phpunit.xml file, use the "-k $phpunitxml" option.
+To include in the zip archive the files and directories starting with a dot, use the "-k {$keepDot}" option.
+To include in the zip archive the source files for translations (.po files) and icons (.svg files) use the "-k {$keepSources}" option.
+To include in the zip archive the composer.json and composer.lock files, use the "-k {$keepComposerLock}" option.
+To include in the zip archive the composer.json file but not the composer.lock files, use the "-k {$keepComposerJson}" option.
+To include in the zip archive the tests directory, use the "-k {$tests}" option.
+To include in the zip archive the phpunit.xml file, use the "-k {$phpunitxml}" option.
 
 Please remark that this command can also parse legacy (pre-5.7) packages.
 
 Returns codes:
-  $okExitCode operation completed successfully
-  $errExitCode errors occurred
+  {$okExitCode} operation completed successfully
+  {$errExitCode} errors occurred
 
 More info at https://documentation.concretecms.org/9-x/developers/security/cli-jobs#c5-package-pack
 EOT

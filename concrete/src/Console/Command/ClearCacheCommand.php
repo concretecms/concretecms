@@ -1,14 +1,15 @@
 <?php
+
 namespace Concrete\Core\Console\Command;
 
+use Concrete\Core\Cache\Command\ClearCacheCommand as ClearCacheCommandCommand;
 use Concrete\Core\Config\Repository\Repository;
 use Concrete\Core\Console\Command;
+use Core;
+use Exception;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Core;
-use Exception;
-use Concrete\Core\Cache\Command\ClearCacheCommand as ClearCacheCommandCommand;
 
 class ClearCacheCommand extends Command
 {
@@ -19,15 +20,16 @@ class ClearCacheCommand extends Command
         $this
             ->setName('c5:clear-cache')
             ->setDescription('Clear the cache')
-            ->addOption('thumbnails', 't', InputOption::VALUE_REQUIRED, "Should the thumbnails be removed from the cache? [Y/N]")
+            ->addOption('thumbnails', 't', InputOption::VALUE_REQUIRED, 'Should the thumbnails be removed from the cache? [Y/N]')
             ->addEnvOption()
             ->setCanRunAsRoot(false)
-            ->setHelp(<<<EOT
+            ->setHelp(
+                <<<EOT
 If the --thumbnails options is not specified, we'll use the last value set in the dashboard.
 
 Returns codes:
-  $okExitCode operation completed successfully
-  $errExitCode errors occurred
+  {$okExitCode} operation completed successfully
+  {$errExitCode} errors occurred
 
 More info at https://documentation.concretecms.org/9-x/developers/security/cli-jobs#c5-clear-cache
 EOT

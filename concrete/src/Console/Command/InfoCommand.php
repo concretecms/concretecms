@@ -1,11 +1,12 @@
 <?php
+
 namespace Concrete\Core\Console\Command;
 
 use Concrete\Core\Console\Command;
-use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Output\OutputInterface;
 use Concrete\Core\System\Info;
 use Concrete\Core\System\SystemUser;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Output\OutputInterface;
 
 class InfoCommand extends Command
 {
@@ -17,10 +18,11 @@ class InfoCommand extends Command
             ->setName('c5:info')
             ->setDescription('Get detailed information about this installation.')
             ->addEnvOption()
-            ->setHelp(<<<EOT
+            ->setHelp(
+                <<<EOT
 Returns codes:
-  $okExitCode operation completed successfully
-  $errExitCode errors occurred
+  {$okExitCode} operation completed successfully
+  {$errExitCode} errors occurred
 
 More info at https://documentation.concretecms.org/9-x/developers/security/cli-jobs#c5-info
 EOT

@@ -16,7 +16,7 @@ use Symfony\Component\Messenger\Command\FailedMessagesRetryCommand;
 use Symfony\Component\Messenger\Command\FailedMessagesShowCommand;
 
 /**
- * Adds commands to the console
+ * Adds commands to the console.
  *
  * Important note: this used to be a part of the Console service provider (which has been removed). We had to remove it
  * because it fired too early. Packages could not modify the dependencies passed to the command classes because they
@@ -24,7 +24,6 @@ use Symfony\Component\Messenger\Command\FailedMessagesShowCommand;
  */
 class CommandRegistry implements ApplicationAwareInterface
 {
-
     use ApplicationAwareTrait;
 
     /**
@@ -83,7 +82,7 @@ class CommandRegistry implements ApplicationAwareInterface
         FailedMessagesShowCommand::class,
         FailedMessagesRetryCommand::class,
         FailedMessagesRemoveCommand::class,
-        Command\BulkUserAssignCommand::class
+        Command\BulkUserAssignCommand::class,
     ];
 
     /**
@@ -102,6 +101,7 @@ class CommandRegistry implements ApplicationAwareInterface
 
     /**
      * CommandRegistry constructor.
+     *
      * @param Application $console
      */
     public function __construct(Application $console)
@@ -115,14 +115,6 @@ class CommandRegistry implements ApplicationAwareInterface
         $this->setupInstalledCommands();
         $this->setupDoctrineCommands();
         $this->setupTaskCommands();
-    }
-
-    protected function setupDefaultCommands(): void
-    {
-        // Add commands that always work
-        foreach($this->commands as $commandClass) {
-            $this->console->add($this->app->make($commandClass));
-        }
     }
 
     public function setupInstalledCommands(): void
@@ -161,12 +153,20 @@ class CommandRegistry implements ApplicationAwareInterface
         }
     }
 
+    protected function setupDefaultCommands(): void
+    {
+        // Add commands that always work
+        foreach ($this->commands as $commandClass) {
+            $this->console->add($this->app->make($commandClass));
+        }
+    }
+
     protected function setupTaskCommands(): void
     {
         if ($this->app->isInstalled()) {
             try {
                 $tasks = $this->app->make(TaskService::class)->getList();
-                foreach($tasks as $task) {
+                foreach ($tasks as $task) {
                     $this->console->add(new TaskCommand($task));
                 }
             } catch (\Throwable $e) {
@@ -189,8 +189,4 @@ class CommandRegistry implements ApplicationAwareInterface
 
         return $migrationsConfiguration;
     }
-
-
-
-
 }

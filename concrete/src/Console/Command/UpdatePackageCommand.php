@@ -1,14 +1,15 @@
 <?php
+
 namespace Concrete\Core\Console\Command;
 
 use Concrete\Core\Console\Command;
 use Concrete\Core\Console\ConsoleAwareInterface;
-use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
-use Symfony\Component\Console\Input\InputArgument;
-use Symfony\Component\Console\Output\OutputInterface;
 use Concrete\Core\Support\Facade\Package;
 use Exception;
+use Symfony\Component\Console\Input\InputArgument;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console\Output\OutputInterface;
 
 class UpdatePackageCommand extends Command
 {
@@ -28,10 +29,11 @@ class UpdatePackageCommand extends Command
             ->addOption('force', 'f', InputOption::VALUE_NONE, 'Force update even if the package is already at last version')
             ->addArgument('packages', InputArgument::IS_ARRAY, 'The handle of the package to be updated (multiple values allowed)')
             ->setDescription('Update a Concrete package')
-            ->setHelp(<<<EOT
+            ->setHelp(
+                <<<EOT
 Returns codes:
-  $okExitCode operation completed successfully
-  $errExitCode errors occurred
+  {$okExitCode} operation completed successfully
+  {$errExitCode} errors occurred
 
 More info at https://documentation.concretecms.org/9-x/developers/security/cli-jobs#c5-package-update
 EOT
@@ -53,14 +55,14 @@ EOT
                     $updatableHandles[] = $pkgHandle;
                 }
                 if (empty($updatableHandles)) {
-                    $output->writeln("No package has been found.");
+                    $output->writeln('No package has been found.');
                 }
             } else {
                 foreach (Package::getLocalUpgradeablePackages() as $pkg) {
                     $updatableHandles[] = $pkg->getPackageHandle();
                 }
                 if (empty($updatableHandles)) {
-                    $output->writeln("No package needs to be updated.");
+                    $output->writeln('No package needs to be updated.');
                 }
             }
         } else {
@@ -83,7 +85,7 @@ EOT
 
     protected function updatePackage($pkgHandle, OutputInterface $output, InputInterface $input, $force)
     {
-        $output->write("Looking for package '$pkgHandle'... ");
+        $output->write("Looking for package '{$pkgHandle}'... ");
         $pkg = null;
         foreach (Package::getInstalledList() as $installed) {
             if ($installed->getPackageHandle() === $pkgHandle) {
@@ -111,7 +113,7 @@ EOT
             }
         }
         if ($upPkg === null && $force !== true) {
-            $output->writeln(sprintf("<info>the package is already up-to-date (v%s)</info>", $pkg->getPackageVersion()));
+            $output->writeln(sprintf('<info>the package is already up-to-date (v%s)</info>', $pkg->getPackageVersion()));
         } else {
             $test = $pkg->testForUpgrade();
             if ($test !== true) {

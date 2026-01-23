@@ -4,12 +4,12 @@ namespace Concrete\Core\Console\Command;
 
 use Concrete\Core\Console\Command;
 use Concrete\Core\Database\DatabaseStructureManager;
+use Concrete\Core\Events\EventDispatcher;
 use Concrete\Core\Package\Event\PackageEntities;
 use Concrete\Core\Support\Facade\Application;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Concrete\Core\Events\EventDispatcher;
 
 class RefreshEntitiesCommand extends Command
 {
@@ -23,7 +23,8 @@ class RefreshEntitiesCommand extends Command
             ->setDescription('Refresh the Doctrine database entities')
             ->addEnvOption()
             ->setCanRunAsRoot(false)
-            ->setHelp(<<<EOT
+            ->setHelp(
+                <<<EOT
 This command will refresh the Doctrine database entities and set the following return codes
 
   {$okExitCode} operation completed successfully

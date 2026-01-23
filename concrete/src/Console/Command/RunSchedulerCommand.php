@@ -11,14 +11,6 @@ use Doctrine\ORM\EntityManager;
 
 class RunSchedulerCommand extends Command
 {
-    protected function configure()
-    {
-        $this
-            ->setName('concrete:scheduler:run')
-            ->setDescription('Runs the task scheduler, dispatching any tasks whose time has come.');
-        ;
-    }
-
     public function handle(Repository $config, EntityManager $em)
     {
         $timezone = new \DateTimeZone($config->get('app.server_timezone'));
@@ -26,15 +18,24 @@ class RunSchedulerCommand extends Command
         $schedules = $em->getRepository(ScheduledTask::class)->findAll();
         $app = Facade::getFacadeApplication();
         foreach ($schedules as $scheduledTask) {
-           if ($scheduledTask->getCronExpressionObject()->isDue($now->format('Y-m-d H:i:s'))) {
-               // Execute the task since it's the right time.
-               $input = $scheduledTask->getTaskInput();
-               $task = $scheduledTask->getTask();
+            if ($scheduledTask->getCronExpressionObject()->isDue($now->format('Y-m-d H:i:s'))) {
+                // Execute the task since it's the right time.
+                $input = $scheduledTask->getTaskInput();
+                $task = $scheduledTask->getTask();
 
-               $command = new ExecuteConsoleTaskCommand($task, $input, $this->output);
-               $app->executeCommand($command);
-           }
+                $command = new ExecuteConsoleTaskCommand($task, $input, $this->output);
+                $app->executeCommand($command);
+            }
         }
+
         return static::SUCCESS;
+    }
+
+    protected function configure()
+    {
+        $this
+            ->setName('concrete:scheduler:run')
+            ->setDescription('Runs the task scheduler, dispatching any tasks whose time has come.')
+        ;
     }
 }

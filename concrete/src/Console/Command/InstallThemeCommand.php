@@ -1,11 +1,12 @@
 <?php
+
 namespace Concrete\Core\Console\Command;
 
 use Concrete\Core\Console\Command;
-use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\Page\Theme\Theme;
-use Loader;
+use Concrete\Core\Support\Facade\Application;
 use Exception;
+use Loader;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -15,10 +16,11 @@ class InstallThemeCommand extends Command
     protected function configure()
     {
         $this->setName('c5:theme:install')
-        ->addOption('activate', 'a', InputOption::VALUE_NONE, 'Activate this theme after install', null)
-        ->setDescription('Install a Concrete Theme')
-        ->setCanRunAsRoot(false)
-        ->addArgument('theme-handle', null, InputOption::VALUE_REQUIRED, 'The handle name of the theme');
+            ->addOption('activate', 'a', InputOption::VALUE_NONE, 'Activate this theme after install', null)
+            ->setDescription('Install a Concrete Theme')
+            ->setCanRunAsRoot(false)
+            ->addArgument('theme-handle', null, InputOption::VALUE_REQUIRED, 'The handle name of the theme')
+        ;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)

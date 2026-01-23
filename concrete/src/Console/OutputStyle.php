@@ -12,19 +12,21 @@ use Symfony\Component\Console\Terminal;
 
 /**
  * Concrete's output style.
- * Inspiration goes to illuminate/console
+ * Inspiration goes to illuminate/console.
  */
 class OutputStyle extends SymfonyStyle
 {
-
-    /** @var \Symfony\Component\Console\Output\OutputInterface */
+    /**
+     * @var \Symfony\Component\Console\Output\OutputInterface
+     */
     private $output;
 
     /**
      * Create a new Console OutputStyle instance.
      *
-     * @param  \Symfony\Component\Console\Input\InputInterface  $input
-     * @param  \Symfony\Component\Console\Output\OutputInterface  $output
+     * @param \Symfony\Component\Console\Input\InputInterface $input
+     * @param \Symfony\Component\Console\Output\OutputInterface $output
+     *
      * @return void
      */
     public function __construct(InputInterface $input, OutputInterface $output)
@@ -34,13 +36,14 @@ class OutputStyle extends SymfonyStyle
     }
 
     /**
-     * Ask a question with autocompletion
+     * Ask a question with autocompletion.
      *
      * @param string $question
      * @param array $choices
      * @param null $default
      * @param null $attempts
      * @param bool $strict
+     *
      * @return string
      */
     public function askWithCompletion(string $question, array $choices, $default = null, $attempts = null, bool $strict = false): string
@@ -49,11 +52,12 @@ class OutputStyle extends SymfonyStyle
         $question->setMaxAttempts($attempts)->setAutocompleterValues($choices);
 
         if ($strict) {
-            $question->setValidator(function($result) use ($choices) {
+            $question->setValidator(function ($result) use ($choices) {
                 if (!in_array($result, $choices)) {
                     throw new \InvalidArgumentException(sprintf(
                         'The provided answer is ambiguous. Value should be one of %s',
-                        implode(' or ', $choices)));
+                        implode(' or ', $choices)
+                    ));
                 }
 
                 return $result;
@@ -72,40 +76,45 @@ class OutputStyle extends SymfonyStyle
     }
 
     /**
-     * Ask a question while hiding the response
+     * Ask a question while hiding the response.
      *
      * @param string $question
      * @param bool $fallback
+     *
      * @return string
      */
     public function askSecretQuestion(string $question, bool $fallback = true): string
     {
         $question = new Question($question);
         $question->setHidden(true)->setHiddenFallback($fallback);
+
         return $this->askQuestion($question);
     }
 
     /**
-     * Ask a question with a list of allowed answers
+     * Ask a question with a list of allowed answers.
      *
      * @param string $question
      * @param array $choices
      * @param null $default
      * @param null $attempts
      * @param null $multiple
+     *
      * @return mixed
      */
     public function choice(string $question, array $choices, $default = null, $attempts = null, $multiple = null)
     {
         $question = new ChoiceQuestion($question, $choices, $default);
         $question->setMaxAttempts($attempts)->setMultiselect($multiple);
+
         return $this->askQuestion($question);
     }
 
     /**
-     * Create a table instance
+     * Create a table instance.
      *
      * @see Table::initStyles()
+     *
      * @param array $headers
      * @param array $rows
      * @param string $tableStyle
@@ -124,7 +133,7 @@ class OutputStyle extends SymfonyStyle
     }
 
     /**
-     * Output in even width columns
+     * Output in even width columns.
      *
      * @param array $values
      * @param int $width

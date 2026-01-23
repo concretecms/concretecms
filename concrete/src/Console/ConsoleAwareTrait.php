@@ -9,26 +9,32 @@ use Symfony\Component\Console\Output\NullOutput;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * A trait that provides awareness of the console to objects
+ * A trait that provides awareness of the console to objects.
  */
 trait ConsoleAwareTrait
 {
-
-    /** @var SymfonyApplication|null */
+    /**
+     * @var SymfonyApplication|null
+     */
     protected ?SymfonyApplication $traitConsole;
 
-    /** @var OutputInterface|null */
+    /**
+     * @var OutputInterface|null
+     */
     protected ?OutputInterface $traitOutput;
 
-    /** @var InputInterface|null */
+    /**
+     * @var InputInterface|null
+     */
     protected ?InputInterface $traitInput;
 
     /**
-     * Set the console object
+     * Set the console object.
      *
      * @param \Symfony\Component\Console\Application $console
      * @param \Symfony\Component\Console\Output\OutputInterface|null $output
      * @param \Symfony\Component\Console\Input\InputInterface|null $input
+     *
      * @return static
      */
     public function setConsole(SymfonyApplication $console, ?OutputInterface $output = null, ?InputInterface $input = null)
@@ -45,31 +51,35 @@ trait ConsoleAwareTrait
     }
 
     /**
-     * Set the output object to use
+     * Set the output object to use.
      *
      * @param \Symfony\Component\Console\Output\OutputInterface $output
+     *
      * @return static
      */
     public function setOutput(OutputInterface $output)
     {
         $this->traitOutput = $output;
+
         return $this;
     }
 
     /**
-     * Set the input object to use
+     * Set the input object to use.
      *
      * @param \Symfony\Component\Console\Input\InputInterface $input
+     *
      * @return static
      */
     public function setInput(InputInterface $input)
     {
         $this->traitInput = $input;
+
         return $this;
     }
 
     /**
-     * Get an output object
+     * Get an output object.
      *
      * @return OutputInterface
      */
@@ -79,7 +89,7 @@ trait ConsoleAwareTrait
     }
 
     /**
-     * Get an input object
+     * Get an input object.
      *
      * @return InputInterface
      */
@@ -89,12 +99,12 @@ trait ConsoleAwareTrait
     }
 
     /**
-     * Find out if we are in console context
+     * Find out if we are in console context.
+     *
      * @return bool
      */
     protected function hasConsole(): bool
     {
         return $this->traitConsole !== null;
     }
-
 }

@@ -28,12 +28,13 @@ class GenerateSitemapCommand extends Command
             ->addOption('url', 'u', InputOption::VALUE_REQUIRED, 'The canonical URL of the site (required if no canonical URL is defined for the site).')
             ->addOption('output', 'o', InputOption::VALUE_REQUIRED, 'The full path of the file where the sitemap will be saved')
         ;
-        $this->setHelp(<<<EOT
+        $this->setHelp(
+            <<<EOT
 Returns codes:
   {$okExitCode} operation completed successfully
   {$errExitCode} errors occurred
 EOT
-            );
+        );
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -74,7 +75,7 @@ EOT
         $writer->generate(function (SitemapElement $element) use ($progressBar, &$numPages) {
             if ($element instanceof SitemapPage) {
                 $progressBar->advance();
-                ++$numPages;
+                $numPages++;
             }
         });
         $progressBar->clear();

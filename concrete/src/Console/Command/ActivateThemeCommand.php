@@ -6,7 +6,6 @@ use Concrete\Core\Console\Command;
 use Concrete\Core\Page\Theme\Theme;
 use Concrete\Core\Site\Service;
 use Concrete\Core\Support\Facade\Application;
-use Doctrine\ORM\EntityManager;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -25,7 +24,8 @@ class ActivateThemeCommand extends Command
                 null
             )
             ->setDescription('Activate a theme.')
-            ->addArgument('theme', InputArgument::REQUIRED, 'The name of the theme.');
+            ->addArgument('theme', InputArgument::REQUIRED, 'The name of the theme.')
+        ;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -41,6 +41,7 @@ class ActivateThemeCommand extends Command
         }
         if (!$site) {
             $output->writeln('<fg=red>' . t('Invalid site.') . '</>');
+
             return static::FAILURE;
         }
 
@@ -52,6 +53,7 @@ class ActivateThemeCommand extends Command
                 $availableThemeIdentifiers[] = $availableTheme->getThemeHandle();
             }
             $output->writeln('<fg=red>' . t('No theme found with the handle "%s"! Available themes include: %s.', $themeIdentifier, implode(', ', $availableThemeIdentifiers)) . '</>');
+
             return static::FAILURE;
         }
 
@@ -59,6 +61,7 @@ class ActivateThemeCommand extends Command
         $theme->applyToSite($site);
 
         $output->writeln('<fg=green>' . t('Theme activation complete!') . '</>');
+
         return static::SUCCESS;
     }
 }

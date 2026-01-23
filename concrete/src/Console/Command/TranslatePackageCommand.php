@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Core\Console\Command;
 
 use Concrete\Core\Config\Repository\Repository;
@@ -16,6 +17,11 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class TranslatePackageCommand extends Command
 {
+    /**
+     * @var \Concrete\Core\Application\Application
+     */
+    protected $app;
+
     protected function configure()
     {
         $okExitCode = static::SUCCESS;
@@ -26,16 +32,17 @@ class TranslatePackageCommand extends Command
                 'c5:package-translate',
                 'c5:translate-package',
             ])
-        ->addArgument('package', InputArgument::REQUIRED, 'The handle of the package to be translated (or the path to a directory containing a Concrete package)')
-        ->addEnvOption()
-        ->setCanRunAsRoot(false)
-        ->addOption('locale', 'l', InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, 'List of locale codes to handle')
-        ->addOption('contact', 'c', InputOption::VALUE_REQUIRED, 'Contact information to be put in the language files to report bugs to (eg the "Report-Msgid-Bugs-To" gettext header)', '')
-        ->addOption('translator', 't', InputOption::VALUE_REQUIRED, 'Translator to be put in the language files (eg the "Last-Translator" gettext header)', '')
-        ->addOption('exclude-3rdparty', 'x', InputOption::VALUE_NONE, 'Specify this option to avoid parsing 3rd party folders')
-        ->addOption('fill', 'f', InputOption::VALUE_NONE, 'Fill-in already known translations using an online service')
-        ->setDescription('Creates or updates translations of a Concrete package')
-        ->setHelp(<<<EOT
+            ->addArgument('package', InputArgument::REQUIRED, 'The handle of the package to be translated (or the path to a directory containing a Concrete package)')
+            ->addEnvOption()
+            ->setCanRunAsRoot(false)
+            ->addOption('locale', 'l', InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, 'List of locale codes to handle')
+            ->addOption('contact', 'c', InputOption::VALUE_REQUIRED, 'Contact information to be put in the language files to report bugs to (eg the "Report-Msgid-Bugs-To" gettext header)', '')
+            ->addOption('translator', 't', InputOption::VALUE_REQUIRED, 'Translator to be put in the language files (eg the "Last-Translator" gettext header)', '')
+            ->addOption('exclude-3rdparty', 'x', InputOption::VALUE_NONE, 'Specify this option to avoid parsing 3rd party folders')
+            ->addOption('fill', 'f', InputOption::VALUE_NONE, 'Fill-in already known translations using an online service')
+            ->setDescription('Creates or updates translations of a Concrete package')
+            ->setHelp(
+                <<<EOT
 If the locale option(s) is not specified, we'll generate/update translations for the currently defined locales for the package.
 If currently no locale is defined, we'll generate/update translations for all the currently installed locales of the core of Concrete.
 In order to don't generate the locale files but only the master translations file (.pot), specify "--locale=-" (or "-l-")
@@ -49,30 +56,25 @@ Examples:
 Please remark that this command can also parse legacy (pre-5.7) packages.
             
 Returns codes:
-  $okExitCode operation completed successfully
-  $errExitCode errors occurred
+  {$okExitCode} operation completed successfully
+  {$errExitCode} errors occurred
             
 More info at https://documentation.concretecms.org/9-x/developers/security/cli-jobs#c5-package-translate
 EOT
-        )
+            )
         ;
     }
-    
-    /**
-     * @var \Concrete\Core\Application\Application
-     */
-    protected $app;
-    
+
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $this->app = Application::getFacadeApplication();
         $config = $this->app->make(Repository::class);
-        
+
         $vsh = $this->app->make('helper/validation/strings');
-        /* @var \Concrete\Core\Utility\Service\Validation\Strings $vsh */
+        // @var \Concrete\Core\Utility\Service\Validation\Strings $vsh
         $fh = $this->app->make('helper/file');
-        /* @var \Concrete\Core\File\Service\File $fh */
-        
+        // @var \Concrete\Core\File\Service\File $fh
+
         // Let's determine the package handle, directory and version
         $packageHandle = null;
         $packageDirectory = null;
@@ -81,10 +83,10 @@ EOT
         if (is_dir($p) || !$vsh->handle($p)) {
             $packageDirectory = @realpath($p);
             if ($packageDirectory === false) {
-                throw new Exception("Unable to find the directory '$p'");
+                throw new Exception("Unable to find the directory '{$p}'");
             }
             $packageDirectory = str_replace(DIRECTORY_SEPARATOR, '/', $packageDirectory);
-            list($packageHandle, $packageVersion) = $this->guessPackageDetails($packageDirectory);
+            [$packageHandle, $packageVersion] = $this->guessPackageDetails($packageDirectory);
             if ($packageHandle === null) {
                 $packageHandle = basename($packageDirectory);
             }
@@ -98,11 +100,11 @@ EOT
                 }
             }
             if ($packageHandle === null) {
-                throw new Exception("Unable to find a package with handle '$p'");
+                throw new Exception("Unable to find a package with handle '{$p}'");
             }
         }
         $packageLanguagesDirectory = $packageDirectory . '/' . DIRNAME_LANGUAGES;
-        
+
         // Determine the locales to translate
         $locales = [];
         $localeOption = $input->getOption('locale');
@@ -111,7 +113,7 @@ EOT
         } elseif (empty($localeOption)) {
             // List the currently package locales
             foreach ($fh->getDirectoryContents($packageLanguagesDirectory) as $item) {
-                if (is_file("$packageLanguagesDirectory/$item/LC_MESSAGES/messages.mo") || is_file("$packageLanguagesDirectory/$item/LC_MESSAGES/messages.po")) {
+                if (is_file("{$packageLanguagesDirectory}/{$item}/LC_MESSAGES/messages.mo") || is_file("{$packageLanguagesDirectory}/{$item}/LC_MESSAGES/messages.po")) {
                     $locales[] = $item;
                 }
             }
@@ -138,14 +140,14 @@ EOT
                 $locales[] = implode('_', $chunks);
             }
         }
-        
+
         // Initialize the master translations file (.pot)
         $pot = new Translations();
-        $pot->setHeader('Project-Id-Version', "$packageHandle $packageVersion");
+        $pot->setHeader('Project-Id-Version', "{$packageHandle} {$packageVersion}");
         $pot->setLanguage(Localization::BASE_LOCALE);
         $pot->setHeader('Report-Msgid-Bugs-To', $input->getOption('contact'));
         $pot->setHeader('Last-Translator', $input->getOption('translator'));
-        
+
         // Parse the package directory
         $output->writeln('Parsing package contents');
         $parserFactory = $this->app->make(\C5TL\ParserFactory::class);
@@ -154,35 +156,35 @@ EOT
                 $output->write('- running parser "' . $parser->getParserName() . '"... ');
                 $parser->parseDirectory(
                     $packageDirectory,
-                    "packages/$packageHandle",
+                    "packages/{$packageHandle}",
                     $pot,
                     false,
                     $input->getOption('exclude-3rdparty')
-                    );
+                );
                 $output->writeln('<info>done.</info>');
             }
         }
-        
+
         // Save the pot file
         $output->write('Saving .pot file... ');
         if (!is_dir($packageLanguagesDirectory)) {
             @mkdir($packageLanguagesDirectory, $config->get('concrete.filesystem.permissions.directory'), true);
             if (!is_dir($packageLanguagesDirectory)) {
-                throw new Exception("Unable to create the directory $packageLanguagesDirectory");
+                throw new Exception("Unable to create the directory {$packageLanguagesDirectory}");
             }
         }
-        $potFilename = "$packageLanguagesDirectory/messages.pot";
+        $potFilename = "{$packageLanguagesDirectory}/messages.pot";
         if ($pot->toPoFile($potFilename) === false) {
-            throw new Exception("Unable to save the .pot file to $potFilename");
+            throw new Exception("Unable to save the .pot file to {$potFilename}");
         }
         $output->writeln('<info>done.</info>');
-        
+
         $remoteTranslationsProvider = $this->app->make(RemoteTranslationProvider::class);
-        /* @var RemoteTranslationProvider $remoteTranslationsProvider */
+        // @var RemoteTranslationProvider $remoteTranslationsProvider
         // Creating/updating the locale files
         foreach ($locales as $locale) {
-            $output->writeln("Working on locale $locale");
-            $poDirectory = "$packageLanguagesDirectory/$locale/LC_MESSAGES";
+            $output->writeln("Working on locale {$locale}");
+            $poDirectory = "{$packageLanguagesDirectory}/{$locale}/LC_MESSAGES";
             $po = clone $pot;
             $po->setLanguage($locale);
             if ($input->getOption('fill')) {
@@ -190,8 +192,8 @@ EOT
                 $po = $remoteTranslationsProvider->fillTranslations($po);
                 $output->writeln('<info>done.</info>');
             }
-            $poFile = "$poDirectory/messages.po";
-            $moFile = "$poDirectory/messages.mo";
+            $poFile = "{$poDirectory}/messages.po";
+            $moFile = "{$poDirectory}/messages.mo";
             if (is_file($poFile)) {
                 $output->write('- reading current .po file... ');
                 $oldPo = Translations::fromPoFile($poFile);
@@ -212,7 +214,7 @@ EOT
             if (!is_dir($poDirectory)) {
                 @mkdir($poDirectory, $config->get('concrete.filesystem.permissions.directory'), true);
                 if (!is_dir($poDirectory)) {
-                    throw new Exception("Unable to create the directory $poDirectory");
+                    throw new Exception("Unable to create the directory {$poDirectory}");
                 }
             }
             $po->toPoFile($poFile);
@@ -224,17 +226,17 @@ EOT
 
         return static::SUCCESS;
     }
-    
+
     private function guessPackageDetails($packageDirectory)
     {
         $packageHandle = null;
         $packageVersion = null;
         $controllerFile = $packageDirectory . '/' . FILENAME_CONTROLLER;
         if (!is_file($controllerFile)) {
-            throw new Exception("The directory '$packageDirectory' does not seems to contain a valid Concrete package");
+            throw new Exception("The directory '{$packageDirectory}' does not seems to contain a valid Concrete package");
         }
         $fh = $this->app->make('helper/file');
-        /* @var \Concrete\Core\File\Service\File $fh */
+        // @var \Concrete\Core\File\Service\File $fh
         $controllerContents = $fh->getContents($controllerFile);
         if ($controllerContents) {
             $allTokens = @token_get_all($controllerContents);
@@ -253,33 +255,33 @@ EOT
                                         break;
                                 }
                             }
-                            
+
                             return $keep;
                         }
                     )
                 );
                 // Look for package version
-                for ($i = 0; $i < count($tokens) - 2; ++$i) {
+                for ($i = 0; $i < count($tokens) - 2; $i++) {
                     if (
                         $packageHandle === null
                         && is_array($tokens[$i + 0]) && $tokens[$i + 0][0] === T_VARIABLE && $tokens[$i + 0][1] === '$pkgHandle'
                         && is_string($tokens[$i + 1]) && $tokens[$i + 1] === '='
                         && is_array($tokens[$i + 2]) && $tokens[$i + 2][0] === T_CONSTANT_ENCAPSED_STRING
                         ) {
-                            $packageHandle = @eval('return ' . $tokens[$i + 2][1] . ';');
-                        }
-                        if (
+                        $packageHandle = @eval('return ' . $tokens[$i + 2][1] . ';');
+                    }
+                    if (
                             $packageVersion === null
                             && is_array($tokens[$i + 0]) && $tokens[$i + 0][0] === T_VARIABLE && $tokens[$i + 0][1] === '$pkgVersion'
                             && is_string($tokens[$i + 1]) && $tokens[$i + 1] === '='
                             && is_array($tokens[$i + 2]) && $tokens[$i + 2][0] === T_CONSTANT_ENCAPSED_STRING
                             ) {
-                                $packageVersion = @eval('return ' . $tokens[$i + 2][1] . ';');
-                            }
+                        $packageVersion = @eval('return ' . $tokens[$i + 2][1] . ';');
+                    }
                 }
             }
         }
-        
+
         return [$packageHandle, $packageVersion];
     }
 }

@@ -11,10 +11,10 @@ use Concrete\Core\User\Group\Group;
 use Concrete\Core\User\Group\GroupRepository;
 use Concrete\Core\User\UserInfo;
 use Concrete\Core\User\UserInfoRepository;
+use Exception;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Exception;
 
 class BulkUserAssignCommand extends Command
 {
@@ -26,14 +26,17 @@ class BulkUserAssignCommand extends Command
             ->addOption('csv-file', 'c', InputOption::VALUE_REQUIRED, 'Path to CSV file.')
             ->addOption('group-id', 'g', InputOption::VALUE_REQUIRED, 'The id of the target group.')
             ->addOption('remove-unlisted-users', 'r', InputOption::VALUE_OPTIONAL, 'Remove users from this group if they don\'t appear in CSV.')
-            ->addOption('dry-run', 'd', InputOption::VALUE_OPTIONAL, 'Perform a dry run.');
+            ->addOption('dry-run', 'd', InputOption::VALUE_OPTIONAL, 'Perform a dry run.')
+        ;
     }
 
     /**
      * @param InputInterface $input
      * @param OutputInterface $output
-     * @return int
+     *
      * @throws Exception
+     *
+     * @return int
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
@@ -58,13 +61,10 @@ class BulkUserAssignCommand extends Command
         $targetGroup = $groupRepository->getGroupByID($groupId);
 
         if ($targetGroup instanceof Group) {
-
             if (strtolower(pathinfo($csvFile, PATHINFO_EXTENSION)) === 'csv') {
                 $csvData = $fileHelper->getContents($csvFile);
 
-                /*
-                 * Validate the CSV and extract all mail addresses.
-                 */
+                // Validate the CSV and extract all mail addresses.
 
                 foreach (explode(PHP_EOL, $csvData) as $line) {
                     $rows = str_getcsv($line);
@@ -72,7 +72,7 @@ class BulkUserAssignCommand extends Command
                     if (count($rows) === 1) {
                         if (filter_var($rows[0], FILTER_VALIDATE_EMAIL)) {
                             $mailAddresses[] = $rows[0];
-                        } else if ($rows[0] !== null) {
+                        } elseif ($rows[0] !== null) {
                             throw new Exception('The given CSV contains invalid mail addresses.');
                         }
                     } else {
@@ -90,9 +90,7 @@ class BulkUserAssignCommand extends Command
         $totalUsersAddedToTargetGroup = 0;
         $totalUsersRemovedFromTargetGroup = 0;
 
-        /*
-         * Add the given users to the target group.
-         */
+        // Add the given users to the target group.
 
         foreach ($mailAddresses as $mailAddress) {
             $userInfo = $userInfoRepository->getByEmail($mailAddress);
@@ -110,9 +108,7 @@ class BulkUserAssignCommand extends Command
             }
         }
 
-        /*
-         * Remove all users from the target group that are not part of the given CSV file if this option is selected.
-         */
+        // Remove all users from the target group that are not part of the given CSV file if this option is selected.
 
         if ($removeUnlistedUsers) {
             foreach ($targetGroup->getGroupMembers() as $groupMember) {
@@ -129,7 +125,8 @@ class BulkUserAssignCommand extends Command
             }
         }
 
-        $output->writeln(sprintf('<info>Done! %s user records are found in the given CSV. %s users were added to the target group and %s users were removed from target group. For further details please check the logs.</info>',
+        $output->writeln(sprintf(
+            '<info>Done! %s user records are found in the given CSV. %s users were added to the target group and %s users were removed from target group. For further details please check the logs.</info>',
             $totalUsersProvided,
             $totalUsersAddedToTargetGroup,
             $totalUsersRemovedFromTargetGroup
@@ -137,5 +134,4 @@ class BulkUserAssignCommand extends Command
 
         return static::SUCCESS;
     }
-
 }

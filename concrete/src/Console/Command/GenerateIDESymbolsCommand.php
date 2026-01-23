@@ -1,14 +1,14 @@
 <?php
+
 namespace Concrete\Core\Console\Command;
 
+use Concrete\Core\Console\Command;
 use Concrete\Core\Support\Symbol\ClassSymbol\ClassSymbol;
 use Concrete\Core\Support\Symbol\ClassSymbol\MethodSymbol\MethodSymbol;
-use Concrete\Core\Console\Command;
+use Exception;
+use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Input\InputArgument;
-use Exception;
-use Core;
 
 class GenerateIDESymbolsCommand extends Command
 {
@@ -22,10 +22,11 @@ class GenerateIDESymbolsCommand extends Command
             ->addEnvOption()
             ->setCanRunAsRoot(false)
             ->addArgument('generate-what', InputArgument::IS_ARRAY, 'Elements to generate [all|ide-classes|phpstorm]', ['all'])
-            ->setHelp(<<<EOT
+            ->setHelp(
+                <<<EOT
 Returns codes:
-  $okExitCode operation completed successfully
-  $errExitCode errors occurred
+  {$okExitCode} operation completed successfully
+  {$errExitCode} errors occurred
 
 More info at https://documentation.concretecms.org/9-x/developers/security/cli-jobs#c5-ide-symbols
 EOT

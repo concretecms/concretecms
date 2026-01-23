@@ -25,7 +25,8 @@ class ActivateThemeSkinCommand extends Command
                 null
             )
             ->setDescription('Activate a theme skin.')
-            ->addArgument('skin', InputArgument::REQUIRED, 'The name of the skin.');
+            ->addArgument('skin', InputArgument::REQUIRED, 'The name of the skin.')
+        ;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -42,12 +43,14 @@ class ActivateThemeSkinCommand extends Command
         }
         if (!$site) {
             $output->writeln('<fg=red>' . t('Invalid site.') . '</>');
+
             return static::FAILURE;
         }
 
         $theme = Theme::getByID($site->getThemeID());
         if (!$theme) {
             $output->writeln('<fg=red>' . t('Site has no active theme!') . '</>');
+
             return static::FAILURE;
         }
 
@@ -60,6 +63,7 @@ class ActivateThemeSkinCommand extends Command
                 $availableSkinIdentifiers[] = $availableSkin->getIdentifier();
             }
             $output->writeln('<fg=red>' . t('There is no skin named "%s" found in this theme. Active skins include: %s.', $skinIdentifier, implode(', ', $availableSkinIdentifiers)) . '</>');
+
             return static::FAILURE;
         }
 
@@ -68,6 +72,7 @@ class ActivateThemeSkinCommand extends Command
         $entityManager->persist($site);
         $entityManager->flush();
         $output->writeln('<fg=green>' . t('Theme skin activation complete!') . '</>');
+
         return static::SUCCESS;
     }
 }

@@ -10,9 +10,11 @@ use Throwable;
 
 class IsInstalledCommand extends Command
 {
-    const CONCRETE_IS_INSTALLED = self::SUCCESS;
-    const CONCRETE_IS_NOT_INSTALLED = 1;
-    const FAILURE = 2;
+    public const CONCRETE_IS_INSTALLED = self::SUCCESS;
+
+    public const CONCRETE_IS_NOT_INSTALLED = 1;
+
+    public const FAILURE = 2;
 
     protected function configure()
     {
@@ -24,13 +26,14 @@ class IsInstalledCommand extends Command
             ->setName('c5:is-installed')
             ->setDescription('Check if Concrete is already installed')
             ->addEnvOption()
-            ->setHelp(<<<EOT
+            ->setHelp(
+                <<<EOT
 This command will print out if Concrete CMS is already installed (unless the --quiet option is specified),
 and set the following return codes
 
-  $installedExitCode Concrete is installed
-  $notInstalledExitCode Concrete is not installed
-  $errExitCode errors occurred
+  {$installedExitCode} Concrete is installed
+  {$notInstalledExitCode} Concrete is not installed
+  {$errExitCode} errors occurred
 EOT
             )
         ;
@@ -48,6 +51,7 @@ EOT
             return $isInstalled ? static::CONCRETE_IS_INSTALLED : static::CONCRETE_IS_NOT_INSTALLED;
         } catch (Throwable $error) {
             $this->writeError($output, $error);
+
             return static::FAILURE;
         }
     }

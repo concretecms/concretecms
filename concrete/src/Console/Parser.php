@@ -4,22 +4,23 @@ namespace Concrete\Core\Console;
 
 use Illuminate\Support\Str;
 use InvalidArgumentException;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputArgument;
+use Symfony\Component\Console\Input\InputOption;
 
 /**
  * Console command parser
- * This was taken directly from illuminate/console
+ * This was taken directly from illuminate/console.
  */
 class Parser
 {
     /**
      * Parse the given console command definition into an array.
      *
-     * @param  string  $expression
-     * @return array
+     * @param string $expression
      *
      * @throws \InvalidArgumentException
+     *
+     * @return array
      */
     public static function parse(string $expression): array
     {
@@ -37,7 +38,8 @@ class Parser
     /**
      * Extract the name of the command from the expression.
      *
-     * @param  string  $expression
+     * @param string $expression
+     *
      * @return string
      */
     protected static function name(string $expression): string
@@ -46,7 +48,7 @@ class Parser
             throw new InvalidArgumentException('Console command definition is empty.');
         }
 
-        if (! preg_match('/[^\s]+/', $expression, $matches)) {
+        if (!preg_match('/[^\s]+/', $expression, $matches)) {
             throw new InvalidArgumentException('Unable to determine command name from signature.');
         }
 
@@ -56,7 +58,8 @@ class Parser
     /**
      * Extract all of the parameters from the tokens.
      *
-     * @param  array  $tokens
+     * @param array $tokens
+     *
      * @return array
      */
     protected static function parameters(array $tokens): array
@@ -79,12 +82,13 @@ class Parser
     /**
      * Parse an argument expression.
      *
-     * @param  string  $token
+     * @param string $token
+     *
      * @return \Symfony\Component\Console\Input\InputArgument
      */
     protected static function parseArgument(string $token): InputArgument
     {
-        list($token, $description) = static::extractDescription($token);
+        [$token, $description] = static::extractDescription($token);
 
         switch (true) {
             case Str::endsWith($token, '?*'):
@@ -105,12 +109,13 @@ class Parser
     /**
      * Parse an option expression.
      *
-     * @param  string  $token
+     * @param string $token
+     *
      * @return \Symfony\Component\Console\Input\InputOption
      */
     protected static function parseOption(string $token): InputOption
     {
-        list($token, $description) = static::extractDescription($token);
+        [$token, $description] = static::extractDescription($token);
 
         $matches = preg_split('/\s*\|\s*/', $token, 2);
 
@@ -138,7 +143,8 @@ class Parser
     /**
      * Parse the token into its token and description segments.
      *
-     * @param  string  $token
+     * @param string $token
+     *
      * @return array
      */
     protected static function extractDescription(string $token): array

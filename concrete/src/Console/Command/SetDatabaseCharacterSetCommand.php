@@ -33,10 +33,10 @@ EOT
         }
         $connection = $databaseManager->connection($connectionName);
         try {
-            list($characterSet, $collation) = $resolver->setCharacterSet($this->argument('charset'))->setCollation('')->resolveCharacterSetAndCollation($connection);
+            [$characterSet, $collation] = $resolver->setCharacterSet($this->argument('charset'))->setCollation('')->resolveCharacterSetAndCollation($connection);
         } catch (UnsupportedCharacterSetException $x) {
             try {
-                list($characterSet, $collation) = $resolver->setCharacterSet('')->setCollation($this->argument('charset'))->resolveCharacterSetAndCollation($connection);
+                [$characterSet, $collation] = $resolver->setCharacterSet('')->setCollation($this->argument('charset'))->resolveCharacterSetAndCollation($connection);
             } catch (UnsupportedCollationException $x) {
                 $this->output->error(sprintf('"%s" is neither a valid character set nor a valid collation.', $this->argument('charset')));
 

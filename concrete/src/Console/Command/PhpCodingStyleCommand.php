@@ -4,6 +4,7 @@ namespace Concrete\Core\Console\Command;
 
 use Concrete\Core\Console\Command;
 use Concrete\Core\Error\UserMessageException;
+use Concrete\Core\Events\EventDispatcher;
 use Concrete\Core\Support\CodingStyle\PhpFixer;
 use Concrete\Core\Support\CodingStyle\PhpFixerOptions;
 use PhpCsFixer\Error\ErrorsManager;
@@ -12,7 +13,6 @@ use RuntimeException;
 use SplFileInfo;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Concrete\Core\Events\EventDispatcher;
 
 class PhpCodingStyleCommand extends Command
 {
@@ -70,10 +70,10 @@ EOT
             ->setIsCacheDisabled($this->input->getOption('no-cache'))
             ->setMinimumPhpVersion($this->input->getOption('php'))
         ;
-        list($counters, $changes, $errors) = $fixer->fix($this->input, $this->output, $splFileInfos, $dryRun);
-        /* @var array $counters */
-        /* @var array $changes */
-        /* @var \PhpCsFixer\Error\ErrorsManager $errors */
+        [$counters, $changes, $errors] = $fixer->fix($this->input, $this->output, $splFileInfos, $dryRun);
+        // @var array $counters
+        // @var array $changes
+        // @var \PhpCsFixer\Error\ErrorsManager $errors
         $this->printChanges($changes, $dryRun);
         $this->printErrors($errors, $dryRun);
         $this->printCountersTable($counters, $dryRun);
@@ -89,7 +89,8 @@ EOT
         $okExitCode = static::SUCCESS;
         $errExitCode = static::FAILURE;
 
-        $this->setHelp(<<<EOT
+        $this->setHelp(
+            <<<EOT
 Check or fix the PHP coding style.
 
 Return values when checking the coding style:

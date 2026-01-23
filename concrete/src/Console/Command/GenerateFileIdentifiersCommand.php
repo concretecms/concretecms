@@ -18,13 +18,19 @@ class GenerateFileIdentifiersCommand extends Command
         $this
             ->setName('c5:files:generate-identifiers')
             ->setDescription('Create unique identifiers for existing files.')
-            ->addOption('reset', 'a', InputOption::VALUE_NONE,
-                "Reset all generated unique identifiers.")
-            ->setHelp(<<<EOT
+            ->addOption(
+                'reset',
+                'a',
+                InputOption::VALUE_NONE,
+                'Reset all generated unique identifiers.'
+            )
+            ->setHelp(
+                <<<'EOT'
 This command will create unique identifiers for existing files. This is required for enabling
 the secure download feature.
 EOT
-            );
+            )
+        ;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -51,7 +57,7 @@ EOT
 
         $entityManager->flush();
 
-        $output->writeln(sprintf("Unique identifier has been successfully changed for %s files.", $fileList->getTotalResults()));
+        $output->writeln(sprintf('Unique identifier has been successfully changed for %s files.', $fileList->getTotalResults()));
 
         return static::SUCCESS;
     }

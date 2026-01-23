@@ -38,6 +38,7 @@ class ConfigCommand extends Command
                 return $this->doSetAction($repository, $item);
             default:
                 $this->output->error('Invalid action specified, please specify either "set" or "get"');
+
                 return static::FAILURE;
         }
     }

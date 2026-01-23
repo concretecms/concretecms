@@ -37,10 +37,11 @@ class InstallPackageCommand extends Command
             ->setCanRunAsRoot(false)
             ->addArgument('package', InputArgument::REQUIRED, 'The handle of the package to be installed')
             ->addArgument('package-options', InputArgument::IS_ARRAY, 'List of key-value pairs to pass to the package install routine (example: foo=bar baz=foo)')
-            ->setHelp(<<<EOT
+            ->setHelp(
+                <<<EOT
 Returns codes:
-  $okExitCode operation completed successfully
-  $errExitCode errors occurred
+  {$okExitCode} operation completed successfully
+  {$errExitCode} errors occurred
 
 More info at https://documentation.concretecms.org/9-x/developers/security/cli-jobs#c5-package-install
 EOT
@@ -77,7 +78,7 @@ EOT
         }
         $packageOptions = [];
         foreach ($input->getArgument('package-options') as $keyValuePair) {
-            list($key, $value) = explode('=', $keyValuePair, 2);
+            [$key, $value] = explode('=', $keyValuePair, 2);
             $key = trim($key);
             if (substr($key, -2) === '[]') {
                 $isArray = true;
@@ -98,7 +99,7 @@ EOT
             }
         }
 
-        $output->write("Looking for package '$pkgHandle'... ");
+        $output->write("Looking for package '{$pkgHandle}'... ");
         foreach ($packageService->getInstalledList() as $installed) {
             if ($installed->getPackageHandle() === $pkgHandle) {
                 throw new Exception(sprintf("The package '%s' (%s) is already installed", $pkgHandle, $installed->getPackageName()));
@@ -149,7 +150,7 @@ EOT
                     } elseif ($result === false) {
                         $output->writeln(" - {$localeID}: <error>non available</error>");
                     } else {
-                        $output->writeln(" - $localeID: <error>" . ((string) $result) . '</error>');
+                        $output->writeln(" - {$localeID}: <error>" . ((string) $result) . '</error>');
                     }
                 }
             }
@@ -164,9 +165,9 @@ EOT
                 $contentSwapTemplateNames = [];
                 $index = 1;
 
-                foreach($pkg->getContentSwapFiles() as $contentSwapFile => $contentSwapTemplateName) {
+                foreach ($pkg->getContentSwapFiles() as $contentSwapFile => $contentSwapTemplateName) {
                     $contentSwapFiles[$index] = $contentSwapFile;
-                    $contentSwapTemplateNames[] = sprintf("%s: %s", $index, $contentSwapTemplateName);
+                    $contentSwapTemplateNames[] = sprintf('%s: %s', $index, $contentSwapTemplateName);
                     $index++;
                 }
                 $io = new SymfonyStyle($input, $output);
@@ -176,7 +177,7 @@ EOT
                 $selectedContentSwapFile = $helper->ask($input, $output, new Question('Select the number of the content swap file you want to install: ', 1));
 
                 if (isset($contentSwapFiles[$selectedContentSwapFile])) {
-                    $options["contentSwapFile"] = $contentSwapFiles[$selectedContentSwapFile];
+                    $options['contentSwapFile'] = $contentSwapFiles[$selectedContentSwapFile];
                 }
             }
 

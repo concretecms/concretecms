@@ -22,14 +22,14 @@ class DenylistClear extends Command
      *
      * @var string
      */
-    const DELETE_AUTOMATIC_BANS_ALL = 'all';
+    public const DELETE_AUTOMATIC_BANS_ALL = 'all';
 
     /**
      * Value for the '--automatic-bans' option: expired bans.
      *
      * @var string
      */
-    const DELETE_AUTOMATIC_BANS_EXPIRED = 'expired';
+    public const DELETE_AUTOMATIC_BANS_EXPIRED = 'expired';
 
     protected function configure()
     {
@@ -46,15 +46,16 @@ class DenylistClear extends Command
             ->addOption('automatic-bans', 'b', InputOption::VALUE_REQUIRED, "Clear automatic bans (\"{$automaticBansExpired}\" to only delete expired bans, \"{$automaticBansAll}\" to delete the current bans too)")
             ->addOption('list', 'l', InputOption::VALUE_NONE, 'List the available IP Access Control Category handles')
             ->addOption('failed-login-age', 'f', InputOption::VALUE_REQUIRED, '*DEPRECATED* use --min-age')
-            ->setHelp(<<<EOT
+            ->setHelp(
+                <<<EOT
 You can use this command to clear the data related to IP address denylist.
 
 To clear the events data, use the --min-age option.
 To clear the automatic bans, use the --automatic-bans option.
 
 Returns codes:
-  $okExitCode operation completed successfully
-  $errExitCode errors occurred
+  {$okExitCode} operation completed successfully
+  {$errExitCode} errors occurred
 
 More info at https://documentation.concretecms.org/9-x/developers/security/cli-jobs#c5-denylist-clear
 EOT

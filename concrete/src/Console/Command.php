@@ -37,7 +37,7 @@ abstract class Command extends SymfonyCommand
     public const RETURN_CODE_ON_FAILURE = self::FAILURE;
 
     /**
-     * Concrete requires symfony/console ^5.2, and the INVALID constant has been introduced in symfony/console 5.3.0
+     * Concrete requires symfony/console ^5.2, and the INVALID constant has been introduced in symfony/console 5.3.0.
      *
      * @var int
      */
@@ -103,7 +103,7 @@ abstract class Command extends SymfonyCommand
      *
      * @var string
      */
-    protected $signature = null;
+    protected $signature;
 
     /**
      * Can this command be executed as root?
@@ -365,7 +365,7 @@ abstract class Command extends SymfonyCommand
      */
     protected function configureUsingFluentDefinition(): void
     {
-        list($name, $arguments, $options) = Parser::parse($this->signature);
+        [$name, $arguments, $options] = Parser::parse($this->signature);
         parent::__construct($this->name = $name);
         // After parsing the signature we will spin through the arguments and options
         // and set them on this command. These will already be changed into proper
