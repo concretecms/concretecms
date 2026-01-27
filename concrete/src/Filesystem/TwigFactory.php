@@ -53,6 +53,7 @@ class TwigFactory implements ApplicationAwareInterface
     {
         $options = $options === [] ? $this->defaultOptions() : array_merge($this->defaultOptions(), $options);
         $twig = new \Twig\Environment($loader, $options);
+        $twig->addGlobal('app', $this->app);
 
         if ($loader instanceof FilesystemLoader) {
             $this->addNamespaces($loader);
