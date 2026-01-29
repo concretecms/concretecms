@@ -92,11 +92,13 @@ class FileUsageTrackerTest extends TestCase
     {
         list($collection, $trackable) = $this->getFileTrackableMock([], 10, 5);
 
-        $blockClass = $this->getMockClass(Block::class, [
-            'getBlockID',
-            'getController',
-        ]);
-        $block = new $blockClass();
+        $block = $this
+            ->getMockBuilder(Block::class)
+            ->onlyMethods([
+                'getBlockID',
+                'getController',
+            ])
+            ->getMock();
         $block->method('getBlockID')->willReturn(105);
 
         $controller = $this->getMockForAbstractClass(TrackableBlockController::class, [], '', false, true, true, [
@@ -144,8 +146,7 @@ class FileUsageTrackerTest extends TestCase
      */
     private function getFileTrackableMock($usedFiles, $collectionID, $collectionVersionID)
     {
-        $collectionClass = $this->getMockClass(Collection::class);
-        $collection = new $collectionClass();
+        $collection = $this->getMockBuilder(Collection::class)->getMock();
         $collection->method('getCollectionID')->willReturn($collectionID);
         $collection->method('getVersionID')->willReturn($collectionVersionID);
 
