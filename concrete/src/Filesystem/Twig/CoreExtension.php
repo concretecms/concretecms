@@ -276,8 +276,8 @@ class CoreExtension extends AbstractExtension implements ApplicationAwareInterfa
                 return $this->loadUserInfo();
             }),
             new TwigFunction('authLink', function (
-                string $loginLabel = null,
-                string $logoutLabel = null
+                ?string $loginLabel = null,
+                ?string $logoutLabel = null
             ): array {
                 $u     = $this->app->make(User::class);
                 $token = $this->app->make('token');
