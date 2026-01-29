@@ -11,6 +11,8 @@ use Concrete\Core\Authentication\AuthenticationType;
 use Concrete\Core\Block\View\BlockViewTemplate;
 use Concrete\Core\Config\Repository\Repository;
 use Concrete\Core\File\File;
+use Concrete\Core\Filesystem\Twig\Extension\FormProxy;
+use Concrete\Core\Form\Service\Form;
 use Concrete\Core\Html\Image;
 use Concrete\Core\Localization\Localization;
 use Concrete\Core\Page\Container\ContainerBlockInstance;
@@ -23,11 +25,12 @@ use Concrete\Core\User\UserInfo;
 use Concrete\Core\User\UserInfoRepository;
 use Concrete\Core\View\View;
 use Twig\Extension\AbstractExtension;
+use Twig\Extension\GlobalsInterface;
 use Twig\Markup;
 use Twig\TwigFilter;
 use Twig\TwigFunction;
 
-class CoreExtension extends AbstractExtension implements ApplicationAwareInterface
+class CoreExtension extends AbstractExtension implements ApplicationAwareInterface, GlobalsInterface
 {
     use ApplicationAwareTrait;
 
@@ -74,6 +77,14 @@ class CoreExtension extends AbstractExtension implements ApplicationAwareInterfa
                 $return = $object->$method(...$args);
                 return ob_get_clean();
             }),
+        ];
+    }
+
+    public function getGlobals(): array
+    {
+        return [
+            'form_html' => new FormProxy($this->app->make(Form::class)),
+            'user' => $this->app->make(User::class),
         ];
     }
 
@@ -209,6 +220,16 @@ class CoreExtension extends AbstractExtension implements ApplicationAwareInterfa
                 View::element(...$args);
                 return ob_get_clean();
             }),
+
+            new TwigFunction('csrfToken', function($tokenName): string {
+                ob_start();
+                $this->app->make('token')->output($tokenName);
+                return ob_get_clean();
+            }, ['is_safe' => ['html']]),
+
+            new TwigFunction('csrfTokenValue', function($tokenName): string {
+                return $this->app->make('token')->generate($tokenName);
+            }, ['is_safe' => ['html']]),
         ];
     }
 
@@ -253,6 +274,45 @@ class CoreExtension extends AbstractExtension implements ApplicationAwareInterfa
             }),
             new TwigFunction('currentUserInfo', function(): ?UserInfo {
                 return $this->loadUserInfo();
+            }),
+            new TwigFunction('authLink', function (
+                ?string $loginLabel = null,
+                ?string $logoutLabel = null
+            ): array {
+                $u     = $this->app->make(User::class);
+                $token = $this->app->make('token');
+
+                $loginLabel  = $loginLabel  ?? t('Log In');
+                $logoutLabel = $logoutLabel ?? t('Log Out');
+
+                if (!$u->isRegistered()) {
+                    return [
+                        'url'       => (string) URL::to('/login'),
+                        'label'     => $loginLabel,
+                        'logged_in' => false,
+                    ];
+                }
+
+                return [
+                    'url'       => (string) URL::to('/login', 'do_logout', $token->generate('do_logout')),
+                    'label'     => $logoutLabel,
+                    'logged_in' => true,
+                ];
+            }),
+            new TwigFunction('userAvatar', function($user) {
+                $userInfo = null;
+                if ($user instanceof User) {
+                    $userInfo = $user->getUserInfoObject();
+                } elseif (is_int($user)) {
+                    $userInfo = $this->app->make(UserInfoRepository::class)->getByID($user);
+                } else if ($user instanceof UserEntity) {
+                    $userInfo = $user->getUserInfoObject();
+                }
+                if ($userInfo) {
+                    return $userInfo->getUserAvatar();
+                } else {
+                    return null;
+                }
             }),
         ];
     }
