@@ -36,15 +36,19 @@ class CoreExtension extends AbstractExtension implements ApplicationAwareInterfa
 
     /** @var UserInfoRepository */
     private $userInfoRepository;
+
     /** @var Repository */
     private $config;
+
     /** @var ResolverManagerInterface */
     private $urls;
 
-    /** @var User|null  */
+    /** @var User|null */
     private $user = null;
-    /** @var UserInfo|null  */
+
+    /** @var UserInfo|null */
     private $userInfo = null;
+
     /** @var bool */
     private $userLoaded = false;
 
@@ -68,13 +72,15 @@ class CoreExtension extends AbstractExtension implements ApplicationAwareInterfa
                 }
 
                 array_splice($args, 2, 0, $subject);
+
                 return preg_replace(...$args);
             }),
 
-            /** Capture output of method that would otherwise output to  */
-            new TwigFilter('bufferMethod', function ($object, $method, $args = [], &$return = null) {
+            /** Capture output of a method that would otherwise echo directly */
+            new TwigFilter('buffer_method', function ($object, $method, $args = [], &$return = null) {
                 ob_start();
                 $return = $object->$method(...$args);
+
                 return ob_get_clean();
             }),
         ];
@@ -108,6 +114,7 @@ class CoreExtension extends AbstractExtension implements ApplicationAwareInterfa
                 unset($scopeItems['__file']);
                 extract($scopeItems);
                 $result = include $__file;
+
                 return ob_get_clean();
             }),
 
@@ -117,6 +124,7 @@ class CoreExtension extends AbstractExtension implements ApplicationAwareInterfa
                 unset($scopeItems['__file']);
                 extract($scopeItems);
                 $result = require $__file;
+
                 return ob_get_clean();
             }),
 
@@ -126,6 +134,7 @@ class CoreExtension extends AbstractExtension implements ApplicationAwareInterfa
                 unset($scopeItems['__file']);
                 extract($scopeItems);
                 $result = require $__file;
+
                 return ob_get_clean();
             }),
 
@@ -139,6 +148,7 @@ class CoreExtension extends AbstractExtension implements ApplicationAwareInterfa
              * useful in some cases, like when interpolating translations: `{{ t('Hello, <em>%s</em>', h($name)) }}`
              */
             new TwigFunction('h', 'h'),
+
             new TwigFunction('app', function (?string $class = null, ...$args) {
                 if ($class === null) {
                     return $this->app;
@@ -152,6 +162,7 @@ class CoreExtension extends AbstractExtension implements ApplicationAwareInterfa
                 if ($item === null) {
                     return $this->config;
                 }
+
                 return $this->config->get($item);
             }),
 
@@ -161,12 +172,12 @@ class CoreExtension extends AbstractExtension implements ApplicationAwareInterfa
             }),
 
             /** Get the active locale */
-            new TwigFunction('activeLocale', function (): string {
+            new TwigFunction('active_locale', function (): string {
                 return Localization::activeLocale();
             }),
 
             /** Get the active language */
-            new TwigFunction('activeLanguage', function (): string {
+            new TwigFunction('active_language', function (): string {
                 return Localization::activeLanguage();
             }),
 
@@ -174,7 +185,7 @@ class CoreExtension extends AbstractExtension implements ApplicationAwareInterfa
              * Create a new Area
              * Wrapped in `FluentArea` to allow for chaining
              */
-            new TwigFunction('Area', function (string $handle, ?Page $c = null): FluentArea {
+            new TwigFunction('area', function (string $handle, ?Page $c = null): FluentArea {
                 return new FluentArea(new Area($handle), $c);
             }),
 
@@ -182,7 +193,7 @@ class CoreExtension extends AbstractExtension implements ApplicationAwareInterfa
              * Create a new GlobalArea
              * Wrapped in `FluentArea` to allow for chaining
              */
-            new TwigFunction('GlobalArea', function (string $handle, ?Page $c = null): FluentArea {
+            new TwigFunction('global_area', function (string $handle, ?Page $c = null): FluentArea {
                 return new FluentArea(new GlobalArea($handle), $c);
             }),
 
@@ -190,7 +201,7 @@ class CoreExtension extends AbstractExtension implements ApplicationAwareInterfa
              * Create a new ContainerArea
              * Wrapped in `FluentArea` to allow for chaining
              */
-            new TwigFunction('ContainerArea', function (
+            new TwigFunction('container_area', function (
                 ContainerBlockInstance $container,
                 string $handle,
                 Page $c
@@ -202,15 +213,16 @@ class CoreExtension extends AbstractExtension implements ApplicationAwareInterfa
              * Create a new Stack
              * Wrapped in `FluentArea` to allow for chaining
              */
-            new TwigFunction('Stack', function (string $name): ?FluentArea {
+            new TwigFunction('stack', function (string $name): ?FluentArea {
                 $stack = Stack::getByName($name);
+
                 return $stack ? new FluentArea(Stack::getByName($name)) : null;
             }),
 
             /**
              * Create a new BlockViewTemplate. This is useful in some cases when wanting to render original core blocks
              */
-            new TwigFunction('BlockViewTemplate', function ($b): BlockViewTemplate {
+            new TwigFunction('block_view_template', function ($b): BlockViewTemplate {
                 return new BlockViewTemplate($b);
             }),
 
@@ -218,16 +230,18 @@ class CoreExtension extends AbstractExtension implements ApplicationAwareInterfa
             new TwigFunction('element', function (...$args): string {
                 ob_start();
                 View::element(...$args);
+
                 return ob_get_clean();
             }),
 
-            new TwigFunction('csrfToken', function($tokenName): string {
+            new TwigFunction('csrf_token', function ($tokenName): string {
                 ob_start();
                 $this->app->make('token')->output($tokenName);
+
                 return ob_get_clean();
             }, ['is_safe' => ['html']]),
 
-            new TwigFunction('csrfTokenValue', function($tokenName): string {
+            new TwigFunction('csrf_token_value', function ($tokenName): string {
                 return $this->app->make('token')->generate($tokenName);
             }, ['is_safe' => ['html']]),
         ];
@@ -237,8 +251,8 @@ class CoreExtension extends AbstractExtension implements ApplicationAwareInterfa
     {
         return [
             /** Get a file by ID */
-            new TwigFunction('fileByID', [File::class, 'getByID']),
-            new TwigFunction('HtmlImage', function (?\Concrete\Core\Entity\File\File $file = null, array $options = []) {
+            new TwigFunction('file_by_id', [File::class, 'getByID']),
+            new TwigFunction('html_image', function (?\Concrete\Core\Entity\File\File $file = null, array $options = []) {
                 return new Image($file, $options);
             }),
         ];
@@ -248,9 +262,9 @@ class CoreExtension extends AbstractExtension implements ApplicationAwareInterfa
     {
         return [
             /** Get the current page */
-            new TwigFunction('getCurrentPage', [Page::class, 'getCurrentPage']),
-            /** Get the current page by ID */
-            new TwigFunction('pageByID', [Page::class, 'getByID']),
+            new TwigFunction('current_page', [Page::class, 'getCurrentPage']),
+            /** Get the page by ID */
+            new TwigFunction('page_by_id', [Page::class, 'getByID']),
         ];
     }
 
@@ -258,61 +272,66 @@ class CoreExtension extends AbstractExtension implements ApplicationAwareInterfa
     {
         return [
             /** Get a list of authentication types */
-            new TwigFunction('authTypeGetList', [AuthenticationType::class, 'getList']),
+            new TwigFunction('auth_type_list', [AuthenticationType::class, 'getList']),
             /** Get authentication type by handle */
-            new TwigFunction('authTypeByHandle', [AuthenticationType::class, 'getByHandle']),
+            new TwigFunction('auth_type_by_handle', [AuthenticationType::class, 'getByHandle']),
             /** Get authentication type by ID */
-            new TwigFunction('authTypeByID', [AuthenticationType::class, 'getByID']),
+            new TwigFunction('auth_type_by_id', [AuthenticationType::class, 'getByID']),
         ];
     }
 
     protected function getUserFunctions(): array
     {
         return [
-            new TwigFunction('currentUser', function(): ?User {
+            new TwigFunction('current_user', function (): ?User {
                 return $this->loadUser();
             }),
-            new TwigFunction('currentUserInfo', function(): ?UserInfo {
+
+            new TwigFunction('current_user_info', function (): ?UserInfo {
                 return $this->loadUserInfo();
             }),
-            new TwigFunction('authLink', function (
+
+            new TwigFunction('auth_link', function (
                 ?string $loginLabel = null,
                 ?string $logoutLabel = null
             ): array {
-                $u     = $this->app->make(User::class);
+                $u = $this->app->make(User::class);
                 $token = $this->app->make('token');
 
-                $loginLabel  = $loginLabel  ?? t('Log In');
+                $loginLabel = $loginLabel ?? t('Log In');
                 $logoutLabel = $logoutLabel ?? t('Log Out');
 
                 if (!$u->isRegistered()) {
                     return [
-                        'url'       => (string) URL::to('/login'),
-                        'label'     => $loginLabel,
+                        'url' => (string) URL::to('/login'),
+                        'label' => $loginLabel,
                         'logged_in' => false,
                     ];
                 }
 
                 return [
-                    'url'       => (string) URL::to('/login', 'do_logout', $token->generate('do_logout')),
-                    'label'     => $logoutLabel,
+                    'url' => (string) URL::to('/login', 'do_logout', $token->generate('do_logout')),
+                    'label' => $logoutLabel,
                     'logged_in' => true,
                 ];
             }),
-            new TwigFunction('userAvatar', function($user) {
+
+            new TwigFunction('user_avatar', function ($user) {
                 $userInfo = null;
+
                 if ($user instanceof User) {
                     $userInfo = $user->getUserInfoObject();
                 } elseif (is_int($user)) {
                     $userInfo = $this->app->make(UserInfoRepository::class)->getByID($user);
-                } else if ($user instanceof UserEntity) {
+                } elseif ($user instanceof UserEntity) {
                     $userInfo = $user->getUserInfoObject();
                 }
+
                 if ($userInfo) {
                     return $userInfo->getUserAvatar();
-                } else {
-                    return null;
                 }
+
+                return null;
             }),
         ];
     }
