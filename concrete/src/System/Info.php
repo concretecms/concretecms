@@ -94,7 +94,12 @@ class Info
      * @var string|null
      */
     private $dbmsSqlMode;
-    
+
+    /**
+     * @var int|null
+     */
+    private $dbmsMaxConnections;
+
     /**
      * @var string|null
      */
@@ -551,6 +556,21 @@ class Info
         }
 
         return $this->dbmsSqlMode;
+    }
+
+    public function getDBMSMaxConnections(): ?int
+    {
+        if ($this->dbmsMaxConnections === null) {
+            if ($this->installed) {
+                try {
+                    $cn = $this->app->make(Connection::class);
+                    $this->dbmsMaxConnections = (int) $cn->fetchColumn('select @@max_connections');
+                } catch (\Throwable $x) {
+                }
+            }
+        }
+
+        return $this->dbmsMaxConnections;
     }
 
     public function getHostname()

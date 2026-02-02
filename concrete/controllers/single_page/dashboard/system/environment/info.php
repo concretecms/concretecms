@@ -23,7 +23,8 @@ class Info extends DashboardPageController
         $dbInfos = '';
         if ($info->isInstalled()) {
             $dbInfos = "\n# Database Information\nVersion: {$info->getDBMSVersion()}\nSQL Mode: {$info->getDBMSSqlMode()}\n".
-                "Character Set: {$info->getDbCharset()}\nCollation: {$info->getDbCollation()}\n";
+                "Character Set: {$info->getDbCharset()}\nCollation: {$info->getDbCollation()}\n".
+                "Max Connections: {$info->getDBMSMaxConnections()}\n";
         }
 
         $packages = $info->getPackages() ?: 'None';
