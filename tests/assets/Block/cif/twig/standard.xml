@@ -1,7 +1,0 @@
-<block type="twig" name="">
-  <data table="btContentLocal">
-    <record>
-      <content>Hello {{ world }}</content>
-    </record>
-  </data>
-</block>

@@ -29,8 +29,12 @@ class TemplateServiceProvider extends Provider
             $directory = $config->get('app.twig.cache_dir', DIR_FILES_UPLOADED_STANDARD . '/cache/twig');
             $factory = new TwigFactory(new FilesystemCache($directory), $debug);
 
-            foreach ($config->get('app.twig.extensions', []) as $extension) {
-                $factory->addExtension($this->app->make($extension));
+            // Twig kills the installation process. This is not ideal - we should
+            // probably find a better way to handle this.
+            if ($app->isInstalled()) {
+                foreach ($config->get('app.twig.extensions', []) as $extension) {
+                    $factory->addExtension($this->app->make($extension));
+                }
             }
 
             return $factory;
