@@ -12,8 +12,7 @@ final class Version20251120183116 extends AbstractMigration implements Repeatabl
 {
     public function upgradeDatabase()
     {
-        $importer = new ContentImporter();
-        $this->output(t('Adding TWIG support...'));
-        $importer->importContentFile(DIR_BASE_CORE . '/config/install/upgrade/twig.xml');
+        // Empty migration. There used to be a twig block in here but
+        // that block is too powerful to automatically be installed in the core
     }
 }
