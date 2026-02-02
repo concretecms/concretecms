@@ -33,6 +33,7 @@ use Concrete\Core\Search\Result\ResultFactory;
 use Concrete\Core\Support\Facade\Facade;
 use Concrete\Core\Utility\Service\Xml;
 use Doctrine\ORM\EntityManagerInterface;
+use Illuminate\Support\Arr;
 use SimpleXMLElement;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -584,7 +585,7 @@ class Controller extends BlockController implements UsesFeatureInterface
             if ($linkedPropertyHandle === '') {
                 continue;
             }
-            $linkedProperty = array_first(
+            $linkedProperty = Arr::first(
                 $entityAttributes,
                 static function($attribute) use ($linkedPropertyHandle) {
                     return $linkedPropertyHandle === $attribute->getAttributeKeyHandle();
@@ -602,7 +603,7 @@ class Controller extends BlockController implements UsesFeatureInterface
             if ($searchPropertyHandle === '') {
                 continue;
             }
-            $searchProperty = array_first(
+            $searchProperty = Arr::first(
                 $entityAttributes,
                 static function($attribute) use ($searchPropertyHandle) {
                     return $searchPropertyHandle === $attribute->getAttributeKeyHandle();
@@ -618,7 +619,7 @@ class Controller extends BlockController implements UsesFeatureInterface
         $searchAssociations = [];
         foreach ($xRecord->searchAssociation as $xSearchAssociation) {
             $searchAssociationUUID = (string) $xSearchAssociation;
-            $association = array_first(
+            $association = Arr::first(
                 $entityAssociations,
                 static function ($association) use ($searchAssociationUUID): bool {
                     return $searchAssociationUUID !== '' && $association->getId() === $searchAssociationUUID;
@@ -626,7 +627,7 @@ class Controller extends BlockController implements UsesFeatureInterface
             );
             if ($association === null) {
                 $searchAssociationName = (string) $xSearchAssociation['target-property-name'];
-                $association = array_first(
+                $association = Arr::first(
                     $entityAssociations,
                     static function ($association) use ($searchAssociationName): bool {
                         return $searchAssociationName !== '' && $association->getTargetPropertyName() === $searchAssociationName;
@@ -658,7 +659,7 @@ class Controller extends BlockController implements UsesFeatureInterface
             $availableColumns = $provider->getAvailableColumnSet()->getColumns();
             $findColumn = static function(string $key, string $name) use ($availableColumns) {
                 if ($key !== '') {
-                    $column = array_first(
+                    $column = Arr::first(
                         $availableColumns,
                         static function ($column) use ($key) { return $column->getColumnKey() === $key; }
                     );
@@ -667,7 +668,7 @@ class Controller extends BlockController implements UsesFeatureInterface
                     }
                 }
                 if ($name !== '') {
-                    $column = array_first(
+                    $column = Arr::first(
                         $availableColumns,
                         static function ($column) use ($name) { return $column->getColumnName() === $name; }
                     );
@@ -723,7 +724,7 @@ class Controller extends BlockController implements UsesFeatureInterface
         unset($xRecord->linkedProperties[0]);
         $linkedPropertyIDs = array_map('intval', (array) json_decode($this->linkedProperties));
         foreach ($linkedPropertyIDs as $linkedPropertyID) {
-            $linkedProperty = array_first(
+            $linkedProperty = Arr::first(
                 $entityAttributes,
                 static function($attribute) use ($linkedPropertyID) {
                     return $linkedPropertyID === (int) $attribute->getAttributeKeyID();
@@ -737,7 +738,7 @@ class Controller extends BlockController implements UsesFeatureInterface
         unset($xRecord->searchProperties[0]);
         $searchPropertyIDs = array_map('intval', (array) json_decode($this->searchProperties));
         foreach ($searchPropertyIDs as $searchPropertyID) {
-            $searchProperty = array_first(
+            $searchProperty = Arr::first(
                 $entityAttributes,
                 static function($attribute) use ($searchPropertyID): bool {
                     return $searchPropertyID === (int) $attribute->getAttributeKeyID();
@@ -750,7 +751,7 @@ class Controller extends BlockController implements UsesFeatureInterface
 
         $searchAssociationUUIDs = (array) json_decode($this->searchAssociations);
         foreach ($searchAssociationUUIDs as $searchAssociationUUID) {
-            $association = array_first(
+            $association = Arr::first(
                 $entityAssociations,
                 static function ($association) use ($searchAssociationUUID): bool {
                     return $association->getId() === $searchAssociationUUID;

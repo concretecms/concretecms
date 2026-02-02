@@ -43,6 +43,7 @@ use Concrete\Core\Utility\Service\Xml;
 use Concrete\Core\Validator\String\EmailValidator;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Id\UuidGenerator;
+use Illuminate\Support\Arr;
 use SimpleXMLElement;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Concrete\Core\Permission\Checker;
@@ -540,7 +541,7 @@ class Controller extends BlockController implements NotificationProviderInterfac
                         $entity = $entityHandle === '' ? null : $em->getRepository(Entity::class)->findOneBy(['handle' => $entityHandle]);
                     }
                     if ($entity !== null) {
-                        $form = array_first(
+                        $form = Arr::first(
                             $entity->getForms()->toArray(),
                             static function ($form) use ($formName) { return $form->getName() === $formName; }
                         );

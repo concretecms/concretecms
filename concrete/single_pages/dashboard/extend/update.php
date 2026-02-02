@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Support\Arr;
 use Michelf\Markdown;
 
 /** @var \Concrete\Core\Entity\Package[] $localUpdates */
@@ -36,7 +37,7 @@ if (!$tp->canInstallPackages()) {
         <table class="table update-addons-table">
 			<?php
             foreach ($remoteUpdates as $pkg) {
-                $remotePackage = array_first($remotePackages, function ($remote) use ($pkg) {
+                $remotePackage = Arr::first($remotePackages, function ($remote) use ($pkg) {
                     return $remote->handle === $pkg->getPackageHandle();
                 });
                 ?>
