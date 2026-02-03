@@ -33,8 +33,8 @@ class NameColumn extends Column implements PagerColumnInterface
         $query = $itemList->getQueryObject();
         $sort = $this->getColumnSortDirection() == 'desc' ? '<' : '>';
         $name = '';
-        if ($mixed->getTreeNodeDisplayName()) {
-            $name = $mixed->getTreeNodeDisplayName();
+        if ($mixed->getTreeNodeDisplayName('text')) {
+            $name = $mixed->getTreeNodeDisplayName('text');
         }
         $config = Application::getFacadeApplication()->make('config');
         if ($config->get('concrete.file_manager.keep_folders_on_top')) {
