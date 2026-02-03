@@ -33,6 +33,7 @@ class Areas extends ApiController implements ApplicationAwareInterface
      * @OA\Post(
      *     path="/ccm/api/1.0/pages/{pageID}/{areaHandle}",
      *     tags={"areas"},
+     *     operationId="addBlockToPageArea",
      *     summary="Adds a block to a page area.",
      *     security={
      *         {"authorization": {"pages:areas:add_blocks"}}
@@ -99,6 +100,7 @@ class Areas extends ApiController implements ApplicationAwareInterface
      * @OA\Delete(
      *     path="/ccm/api/1.0/pages/{pageID}/{areaHandle}/{blockID}",
      *     tags={"areas"},
+     *     operationId="deleteBlockFromPageArea",
      *     summary="Deletes a block from a page area.",
      *     security={
      *         {"authorization": {"pages:areas:delete_blocks"}}
@@ -185,6 +187,7 @@ class Areas extends ApiController implements ApplicationAwareInterface
      * @OA\Put(
      *     path="/ccm/api/1.0/pages/{pageID}/{areaHandle}/{blockID}",
      *     tags={"areas"},
+     *     operationId="updateBlockInPageArea",
      *     summary="Updates a block within a page area.",
      *     security={
      *         {"authorization": {"pages:areas:update_blocks"}}

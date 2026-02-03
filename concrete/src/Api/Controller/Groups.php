@@ -28,6 +28,7 @@ class Groups extends ApiController
      * @OA\Get(
      *     path="/ccm/api/1.0/groups/{groupID}",
      *     tags={"groups"},
+     *     operationId="getGroupById",
      *     summary="Find a user group by its ID",
      *     security={
      *         {"authorization": {"groups:read"}}
@@ -78,6 +79,7 @@ class Groups extends ApiController
      * @OA\Get(
      *     path="/ccm/api/1.0/groups",
      *     tags={"groups"},
+     *     operationId="getGroups",
      *     summary="Returns a list of Group objects, sorted by ID ascending.",
      *     security={
      *         {"authorization": {"groups:read"}}
@@ -136,6 +138,7 @@ class Groups extends ApiController
      * @OA\Post(
      *     path="/ccm/api/1.0/groups",
      *     tags={"groups"},
+     *     operationId="addGroup",
      *     summary="Adds a Group object.",
      *     security={
      *         {"authorization": {"groups:add"}}
