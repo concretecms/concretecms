@@ -34,6 +34,7 @@ class Files extends ApiController
      * @OA\Get(
      *     path="/ccm/api/1.0/files/{fileID}",
      *     tags={"files"},
+     *     operationId="getFileById",
      *     summary="Find a file by its ID",
      *     security={
      *         {"authorization": {"files:read"}}
@@ -87,6 +88,7 @@ class Files extends ApiController
      * @OA\Get(
      *     path="/ccm/api/1.0/files",
      *     tags={"files"},
+     *     operationId="getFiles",
      *     summary="Returns a list of file objects, sorted by last updated descending. The most recent file objects appear first.",
      *     security={
      *         {"authorization": {"files:read"}}
@@ -166,6 +168,7 @@ class Files extends ApiController
      * @OA\Post(
      *     path="/ccm/api/1.0/files",
      *     tags={"files"},
+     *     operationId="addFile",
      *     summary="Adds a file object.",
      *     security={
      *         {"authorization": {"files:add"}}
@@ -228,6 +231,7 @@ class Files extends ApiController
      * @OA\Delete(
      *     path="/ccm/api/1.0/files/{fileID}",
      *     tags={"files"},
+     *     operationId="deleteFileById",
      *     summary="Delete a file by its ID",
      *     security={
      *         {"authorization": {"files:delete"}}
@@ -274,6 +278,7 @@ class Files extends ApiController
      * @OA\Put(
      *     path="/ccm/api/1.0/files/{fileID}",
      *     tags={"files"},
+     *     operationId="updateFileById",
      *     summary="Update a file by its ID",
      *     security={
      *         {"authorization": {"files:update"}}
@@ -340,6 +345,7 @@ class Files extends ApiController
      * @OA\Post(
      *     path="/ccm/api/1.0/files/{fileID}/move",
      *     tags={"files"},
+     *     operationId="moveFileToLocation",
      *     summary="Move a file to a new location",
      *     security={
      *         {"authorization": {"files:update"}}

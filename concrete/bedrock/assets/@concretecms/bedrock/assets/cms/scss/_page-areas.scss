@@ -562,9 +562,11 @@ div#ccm-menu-click-proxy {
 div#ccm-menu-highlighter {
   background-color: transparent;
   height: 0;
+  opacity: 0;
   position: absolute;
-  transition: background-color 0.5s cubic-bezier(0.19, 1, 0.22, 1);
+  transition: background-color 0.5s cubic-bezier(0.19, 1, 0.22, 1), opacity cubic-bezier(0.19, 1, 0.22, 1);
   width: 0;
+  will-change: opacity, background-color;
   z-index: $index-level-in-context-menu-highlighter;
 }
 

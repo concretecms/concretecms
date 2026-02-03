@@ -1,0 +1,8 @@
+<attributekey>
+  <type allow-multiple-values="" display-order="display_asc" display-multiple-values="" allow-other-values="" hide-none-option="">
+    <options>
+      <option value="A" is-end-user-added=""/>
+      <option value="B" is-end-user-added=""/>
+    </options>
+  </type>
+</attributekey>

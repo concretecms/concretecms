@@ -5,6 +5,7 @@ namespace Concrete\Block\ExpressEntryDetail;
 use Concrete\Core\Attribute\Key\CollectionKey;
 use Concrete\Core\Block\BlockController;
 use Concrete\Core\Entity\Express\Entity;
+use Concrete\Core\Entity\Express\Entry;
 use Concrete\Core\Entity\Express\Form;
 use Concrete\Core\Express\Form\Context\FrontendViewContext;
 use Concrete\Core\Express\Form\Renderer;
@@ -151,11 +152,14 @@ class Controller extends BlockController implements UsesFeatureInterface
         }
     }
 
+    /**
+     * @param int|string|null $exEntryID
+     */
     public function action_view_express_entity($exEntryID = null)
     {
-        $entry = $this->entityManager->find(Entity::class, $exEntryID);
-        if (is_object($entry)) {
-            $entity = $this->entityManager->find('Concrete\Core\Entity\Express\Entity', $this->exEntityID);
+        $entry = $exEntryID ? $this->entityManager->find(Entry::class, $exEntryID) : null;
+        if ($entry) {
+            $entity = $this->entityManager->find(Entity::class, $this->exEntityID);
             if ($entry->getEntity()->getID() == $entity->getID()) {
                 /** @var Seo $seo */
                 $seo = $this->app->make('helper/seo');

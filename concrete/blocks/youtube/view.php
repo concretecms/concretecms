@@ -102,6 +102,7 @@ if (is_object($c) && $c->isEditMode()) {
     <div id="youtube<?= $bID; ?>" class="youtubeBlock <?php echo $responsiveClass; ?>">
         <iframe class="youtube-player" <?php echo $sizeargs; ?> <?php echo $title ? 'title="' . h($title) . '"' : ''; ?>
             src="<?= $source ?>"
+            referrerpolicy="strict-origin-when-cross-origin"
             allow="autoplay" allowfullscreen <?= $lazyLoadAttribute; ?>></iframe>
     </div>
     <?php

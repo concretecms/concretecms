@@ -216,7 +216,7 @@ $form = $app->make(Form::class);
                                     var accessEntityId = $(this).data("accessEntityId");
                                     var accessId = $(this).data("accessId");
 
-                                    ConcreteAlert.confirm(ccmi18n.areYouSure, function () {
+                                    ConcreteAlert.confirm(ccmi18n.confirmBulkPagePermissionsChange, function () {
                                         $.fn.dialog.closeTop();
 
                                         new ConcreteAjaxRequest({

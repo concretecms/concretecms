@@ -358,6 +358,8 @@ class UserInfo extends ConcreteObject implements AttributeObjectInterface, Permi
      */
     public function markAsPasswordReset()
     {
+        $ue = new UserInfoEvent($this);
+        $this->getDirector()->dispatch('on_user_reset_password', $ue);
         $this->connection->executeQuery('UPDATE Users SET uIsPasswordReset = 1 WHERE uID = ? limit 1', [$this->getUserID()]);
     }
 
@@ -798,7 +800,7 @@ class UserInfo extends ConcreteObject implements AttributeObjectInterface, Permi
 
     /**
      * @param int $length
-     *
+     * @TODO: Deprecate or remove this method - I don't believe it's being used anywhere.
      * @return string|null
      */
     public function resetUserPassword($length = 256)
@@ -808,10 +810,6 @@ class UserInfo extends ConcreteObject implements AttributeObjectInterface, Permi
             $id = $this->application->make(Identifier::class);
             $newPassword = $id->getString($length);
             $this->changePassword($newPassword);
-
-            $ue = new UserInfoEvent($this);
-            $this->getDirector()->dispatch('on_user_reset_password', $ue);
-
             return $newPassword;
         }
     }

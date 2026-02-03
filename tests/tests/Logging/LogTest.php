@@ -5,6 +5,7 @@ namespace Concrete\Tests\Logging;
 use Concrete\Core\Application\Application;
 use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Entity\Page\PagePath;
+use Concrete\Core\Entity\User;
 use Concrete\Core\Logging\Channels;
 use Concrete\Core\Logging\Configuration\AdvancedConfiguration;
 use Concrete\Core\Logging\Configuration\ConfigurationFactory;
@@ -12,9 +13,9 @@ use Concrete\Core\Logging\Configuration\SimpleDatabaseConfiguration;
 use Concrete\Core\Logging\Configuration\SimpleFileConfiguration;
 use Concrete\Core\Logging\GroupLogger;
 use Concrete\Core\Logging\Handler\DatabaseHandler;
+use Concrete\Core\Logging\LogEntry;
 use Concrete\Core\Logging\LoggerFactory;
-use Concrete\Core\Logging\Processor\ConcretePageProcessor;
-use Concrete\Core\Logging\Processor\ConcreteUserProcessor;
+use Concrete\Core\Logging\Processor;
 use Concrete\Core\Support\Facade\Facade;
 use Concrete\Core\Support\Facade\Log;
 use Concrete\TestHelpers\Database\ConcreteDatabaseTestCase;
@@ -22,9 +23,7 @@ use Illuminate\Filesystem\Filesystem;
 use Mockery as M;
 use Monolog\Formatter\LineFormatter;
 use Monolog\Logger;
-use Concrete\Core\Logging\LogEntry;
 use Monolog\Processor\PsrLogMessageProcessor;
-use Concrete\Core\Entity\User;
 
 class LogTest extends ConcreteDatabaseTestCase
 {
@@ -59,7 +58,7 @@ class LogTest extends ConcreteDatabaseTestCase
         $processors = $applicationLogger->getProcessors();
         $handlers = $applicationLogger->getHandlers();
         $this->assertCount(1, $handlers);
-        $this->assertCount(3, $processors);
+        $this->assertCount(4, $processors);
         $this->assertInstanceOf(DatabaseHandler::class, $handlers[0]);
         $this->assertEquals(Logger::DEBUG, $handlers[0]->getLevel());
 
@@ -172,7 +171,7 @@ class LogTest extends ConcreteDatabaseTestCase
         $filesystem->delete($file);
 
         $this->assertCount(1, $logger->getHandlers());
-        $this->assertCount(3, $logger->getProcessors()); // needs to have psr processor and the Concrete processors.
+        $this->assertCount(4, $logger->getProcessors()); // needs to have psr processor and the Concrete processors.
     }
 
     public function testLoggingFacade()
@@ -196,7 +195,7 @@ class LogTest extends ConcreteDatabaseTestCase
         $this->assertEquals(1, count($log->getHandlers()));
 
         $handler = new \Monolog\Handler\TestHandler(Logger::CRITICAL, false);
-        $listener = \Events::addListener('on_logger_create', function ($event) use ($handler) {
+        \Events::addListener('on_logger_create', function ($event) use ($handler) {
             $logger = $event->getLogger();
             $formatter = new \Monolog\Formatter\LineFormatter();
             $handler->setFormatter($formatter);
@@ -383,9 +382,10 @@ class LogTest extends ConcreteDatabaseTestCase
         $noop = function($data) { return $data; };
 
         $app = M::mock(Application::class);
-        $app->shouldReceive('make')->withArgs([ConcreteUserProcessor::class])->andReturn($noop);
+        $app->shouldReceive('make')->withArgs([Processor\ConcreteUserProcessor::class])->andReturn($noop);
         $app->shouldReceive('make')->withArgs([PsrLogMessageProcessor::class])->andReturn($noop);
-        $app->shouldReceive('make')->withArgs([ConcretePageProcessor::class])->andReturn($noop);
+        $app->shouldReceive('make')->withArgs([Processor\ConcretePageProcessor::class])->andReturn($noop);
+        $app->shouldReceive('make')->withArgs([Processor\StackTraceProcessor::class])->andReturn($noop);
 
         return $app;
     }

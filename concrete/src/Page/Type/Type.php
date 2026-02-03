@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\Page\Type;
 
+use Concrete\Core\Page\DraftService;
 use Concrete\Core\Page\Theme\Theme;
 use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\Attribute\Key\CollectionKey;
@@ -1207,31 +1208,19 @@ class Type extends ConcreteObject implements \Concrete\Core\Permission\ObjectInt
     }
 
 
+    /**
+     * @deprecated Use \Concrete\Core\Page\DraftService::createDraft instead
+     * @param \Concrete\Core\Entity\Page\Template $pt
+     * @param $u
+     * @return \Concrete\Core\Page\Page
+     */
     public function createDraft(\Concrete\Core\Entity\Page\Template $pt, $u = false)
     {
         $app = Application::getFacadeApplication();
-        if (!is_object($u)) {
-            $u = $app->make(User::class);
-        }
-        $db = Loader::db();
-        $ptID = $this->getPageTypeID();
-        $parent = Page::getDraftsParentPage();
-        $data = array('cvIsApproved' => 0, 'cIsDraft' => 1, 'cIsActive' => false, 'cAcquireComposerOutputControls' => true);
-        $p = $parent->add($this, $data, $pt);
+        /** @var DraftService $service */
+        $service = $app->make(DraftService::class);
 
-        // now we setup in the initial configurated page target
-        $target = $this->getPageTypePublishTargetObject();
-        $cParentID = $target->getDefaultParentPageID();
-        if ($cParentID > 0) {
-            $p->setPageDraftTargetParentPageID($cParentID);
-        }
-
-        $controls = PageTypeComposerControl::getList($this);
-        foreach ($controls as $cn) {
-            $cn->onPageDraftCreate($p);
-        }
-
-        return $p;
+        return $service->createDraft($this, $pt);
     }
 
     public function renderComposerOutputForm($page = null, $targetPage = null)

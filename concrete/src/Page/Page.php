@@ -512,12 +512,7 @@ class Page extends Collection implements CategoryMemberInterface,
                 $prefix = $r->override ? true : $pt->getPackageHandle();
                 $class = core_class('Controller\\PageType\\' . camelcase($ptHandle), $prefix);
             } elseif ($this->isGeneratedCollection()) {
-                $file = $this->getCollectionFilename();
-                if (strpos($file, '/' . FILENAME_COLLECTION_VIEW) !== false) {
-                    $path = substr($file, 0, strpos($file, '/' . FILENAME_COLLECTION_VIEW));
-                } else {
-                    $path = substr($file, 0, strpos($file, '.php'));
-                }
+                $path = $this->getCollectionPath();
                 $r = $env->getRecord(DIRNAME_CONTROLLERS . '/' . DIRNAME_PAGE_CONTROLLERS . $path . '.php', $this->getPackageHandle());
                 $prefix = $r->override ? true : $this->getPackageHandle();
                 $class = core_class('Controller\\SinglePage\\' . str_replace('/', '\\', camelcase($path, true)), $prefix);
@@ -2620,6 +2615,9 @@ EOT
         // load new version object
         $this->loadVersionObject($cvID);
 
+        $logger = $app->make('log/factory')->createLogger(Channels::CHANNEL_PAGES);
+        $logger->info(t('Page updated: %s (%s)', $this->getCollectionName(), $this->getCollectionID()));
+
         $pe = new Event($this);
         Events::dispatch('on_page_update', $pe);
     }
@@ -3059,7 +3057,7 @@ EOT
         }
 
         $app = Facade::getFacadeApplication();
-        $logger = $app->make('log/factory')->createLogger(Channels::CHANNEL_SITE_ORGANIZATION);
+        $logger = $app->make('log/factory')->createLogger(Channels::CHANNEL_PAGES);
         $logger->notice(t('Page "%s" at path "%s" deleted',
             $this->getCollectionName(),
             $this->getCollectionPath()
@@ -3130,7 +3128,7 @@ EOT
 
         $trash = self::getByPath(Config::get('concrete.paths.trash'));
         $app = Facade::getFacadeApplication();
-        $logger = $app->make('log/factory')->createLogger(Channels::CHANNEL_SITE_ORGANIZATION);
+        $logger = $app->make('log/factory')->createLogger(Channels::CHANNEL_PAGES);
         $logger->notice(t('Page "%s" at path "%s" Moved to trash',
             $this->getCollectionName(),
             $this->getCollectionPath()

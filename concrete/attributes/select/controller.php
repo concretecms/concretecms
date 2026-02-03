@@ -448,9 +448,8 @@ class Controller extends AttributeTypeController implements
                 } else {
                     $option = $this->getOptionByValue($value, $this->attributeKey);
                 }
-                $option->setOptionList($optionList);
-
                 if (is_object($option)) {
+                    $option->setOptionList($optionList);
                     $options[] = $option;
                 }
             }

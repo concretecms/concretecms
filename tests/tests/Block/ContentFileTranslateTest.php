@@ -32,6 +32,7 @@ class ContentFileTranslateTest extends FileStorageTestCase
             'ConfigStore',
             'SystemContentEditorSnippets',
             'FileVersionLog',
+            'Logs',
         ]);
     }
 
@@ -96,6 +97,7 @@ class ContentFileTranslateTest extends FileStorageTestCase
 
         $this->assertEquals($to, $translated);
 
+        $from .= sprintf('<p>This is really nice.</p><concrete-picture fID="%s" alt="Happy Cat" />', $r->getFileUUID());
         $c = app(\Concrete\Block\Content\Controller::class);
         $btSchema = \DoctrineXml\Parser::fromFile(DIR_BASE_CORE . '/blocks/content/db.xml', new MySqlPlatform());
         $btTables = $btSchema->getTables();
@@ -121,6 +123,7 @@ class ContentFileTranslateTest extends FileStorageTestCase
 
         $content = (string) $sx->data->record->content;
         $prefix = $r->getPrefix();
-        $this->assertEquals('<p>This is really nice.</p><concrete-picture alt="Happy Cat" file="' . $prefix . ':background-slider-blue-sky.png" />', $content);
+        $expected = '<p>This is really nice.</p><concrete-picture alt="Happy Cat" file="' . $prefix . ':background-slider-blue-sky.png" />';
+        $this->assertEquals($expected . $expected, $content);
     }
 }

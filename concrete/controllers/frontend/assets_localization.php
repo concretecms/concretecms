@@ -2,7 +2,6 @@
 
 namespace Concrete\Controller\Frontend;
 
-use Concrete\Core\File\Image\BitmapFormat;
 use Concrete\Core\File\Type\Type as FileType;
 use Concrete\Core\File\Upload\Dropzone;
 use Concrete\Core\Filesystem\FileLocator;
@@ -108,6 +107,7 @@ var ccmi18n = ' . json_encode([
     'permissionsOverrideWarning' => t('Changing this setting will affect this page immediately. Are you sure?'),
     'permissionsUpdatedMessage' => t('The permissions has been successfully updated.'),
     'permissionsUpdatedTitle' => t('Permissions Updated'),
+    'confirmBulkPagePermissionsChange' => t('This change will affect permissions for all selected pages immediately. Are you sure?'),
     'previous' => t('Previous'),
     'progressiveOperationLoading' => t('Determining items remaining...'),
     'properties' => t('Page Saved'),
@@ -735,6 +735,18 @@ jQuery.ui.fancytree.prototype.options.strings.loadError = ' . json_encode(t('Loa
             $content = @file_get_contents($found);
             if ($content === false) {
                 $content = "/* jQueryUI: failed to read translations for {$alternative} */";
+            } else {
+                $content = <<<EOT
+                (function() {
+                    function ready() {
+                        {$content}
+                    }
+                    if (window.jQuery?.datepicker || document.readyState !== 'loading') {
+                        return ready();
+                    }
+                    document.addEventListener('DOMContentLoaded', ready);
+                })();
+                EOT;
             }
         } else {
             $content = '/* jQueryUI: no translations for ' . implode(', ', $alternatives) . ' */';

@@ -43,6 +43,7 @@ use Concrete\Core\Utility\Service\Xml;
 use Concrete\Core\Validator\String\EmailValidator;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Id\UuidGenerator;
+use Illuminate\Support\Arr;
 use SimpleXMLElement;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Concrete\Core\Permission\Checker;
@@ -472,6 +473,17 @@ class Controller extends BlockController implements NotificationProviderInterfac
             $data['addFilesToFolder'] = $existingAddFilesToFolder;
         }
 
+        // Make form name actually saveable. Fixes #12753
+        $formName = (string) $data['formName'];
+        $entity->setName($formName);
+
+        $entityManager->persist($entity);
+        $entityManager->flush();
+
+        $nodeId = $entity->getEntityResultsNodeId();
+        $node = Node::getByID($nodeId);
+        $node->setTreeNodeName($formName);
+
         $session = $this->app->make('session');
         $session->remove('block.express_form.new');
 
@@ -528,7 +540,7 @@ class Controller extends BlockController implements NotificationProviderInterfac
                         $entity = $entityHandle === '' ? null : $em->getRepository(Entity::class)->findOneBy(['handle' => $entityHandle]);
                     }
                     if ($entity !== null) {
-                        $form = array_first(
+                        $form = Arr::first(
                             $entity->getForms()->toArray(),
                             static function ($form) use ($formName) { return $form->getName() === $formName; }
                         );
@@ -1055,6 +1067,9 @@ class Controller extends BlockController implements NotificationProviderInterfac
      */
     protected function getFormEntity()
     {
+        if ((string) $this->exFormID === '') {
+            return null;
+        }
         $entityManager = $this->app->make(EntityManagerInterface::class);
 
         return $entityManager->find(Form::class, $this->exFormID);

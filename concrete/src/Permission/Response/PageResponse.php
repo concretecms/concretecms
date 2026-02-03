@@ -26,6 +26,20 @@ class PageResponse extends Response
         return $this->validate('edit_page_contents');
     }
 
+    public function validate($permissionHandle, $args = array())
+    {
+        /**
+         * @var $page Page
+         */
+        $page = $this->object;
+        if ($page->isMasterCollection()) {
+            $key = Key::getByHandle('access_page_defaults');
+            return $key->validate();
+        } else {
+            return parent::validate($permissionHandle, $args);
+        }
+    }
+
     public function canReadVersions()
     {
         return $this->validate('view_page_versions');

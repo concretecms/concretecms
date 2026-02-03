@@ -7,69 +7,98 @@ use Concrete\Core\Attribute\FontAwesomeIconFormatter;
 use Concrete\Core\Editor\LinkAbstractor;
 use Concrete\Core\Entity\Attribute\Key\Settings\TextareaSettings;
 use Concrete\Core\Entity\Attribute\Value\Value\TextValue;
-use Core;
+use Concrete\Core\Utility\Service\Xml;
+use SimpleXMLElement;
 
+/**
+ * @method \Concrete\Core\Entity\Attribute\Key\Settings\TextareaSettings getAttributeKeySettings()
+ */
 class Controller extends DefaultController
 {
+    /**
+     * Mode: Plain Text
+     *
+     * @var string
+     */
+    public const MODE_TEXT = 'text';
+
+    /**
+     * Mode: Rich Text
+     *
+     * @var string
+     */
+    public const MODE_RICHTEXT = 'rich_text';
+
+    /**
+     * The default mode
+     *
+     * @var unknown
+     */
+    public const MODE_DEFAULT = self::MODE_TEXT;
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Controller\AbstractController::$helpers
+     */
     public $helpers = ['form'];
 
+    /**
+     * @var string|null
+     */
     protected $akTextareaDisplayMode;
+
     protected $akTextareaDisplayModeCustomOptions;
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Attribute\Controller::getIconFormatter()
+     */
     public function getIconFormatter()
     {
         return new FontAwesomeIconFormatter('font');
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Attribute\Controller::saveKey()
+     */
     public function saveKey($data)
     {
         $type = $this->getAttributeKeySettings();
-        $data += [
-            'akTextareaDisplayMode' => null,
-        ];
-        $akTextareaDisplayMode = $data['akTextareaDisplayMode'];
-        if (!$akTextareaDisplayMode) {
-            $akTextareaDisplayMode = 'text';
-        }
-        $options = [];
-        if ($akTextareaDisplayMode == 'rich_text_custom') {
-            $options = $data['akTextareaDisplayModeCustomOptions'];
-        }
-
-        $type->setMode($akTextareaDisplayMode);
+        $type->setMode($this->getKnownMode($data['akTextareaDisplayMode'] ?? null));
 
         return $type;
     }
 
+    /**
+     * @return string
+     */
     public function getValue()
     {
         $this->load();
-        if ($this->akTextareaDisplayMode == 'text') {
-            $value = $this->getAttributeValue()->getValueObject();
-
-            return (string) $value;
-        }
-
-        $value = null;
-        if (is_object($this->attributeValue)) {
-            $value = $this->getAttributeValue()->getValueObject();
-
-            if ($value) {
-                $this->load();
-                $value = (string) $value;
-                if ($this->akTextareaDisplayMode == 'rich_text') {
-                    $value = LinkAbstractor::translateFrom($value);
-                }
-            }
+        $attributeValue = $this->getAttributeValue();
+        $value = is_object($attributeValue) ? (string) $attributeValue->getValueObject() : '';
+        switch ($this->akTextareaDisplayMode) {
+            case static::MODE_RICHTEXT:
+                $value = LinkAbstractor::translateFrom($value);
+                break;
         }
 
         return $value;
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Attribute\DefaultController::getDisplayValue()
+     */
     public function getDisplayValue()
     {
         $value = $this->getValue();
-        if ($this->akTextareaDisplayMode == 'rich_text') {
+        if ($this->akTextareaDisplayMode === static::MODE_RICHTEXT) {
             return htmLawed($value, [
                 'balance' => 0, // off
                 'comment' => 3, // allow
@@ -82,20 +111,19 @@ class Controller extends DefaultController
         return nl2br(h($value));
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Attribute\DefaultController::form()
+     */
     public function form()
     {
         $this->load();
-        $value = null;
-        if (is_object($this->attributeValue)) {
-            $value = $this->getAttributeValue()->getValueObject();
-
-            if ($value) {
-                if ($this->akTextareaDisplayMode == 'rich_text') {
-                    $value = LinkAbstractor::translateFromEditMode($value);
-                }
-            }
+        $attributeValue = $this->getAttributeValue();
+        $value = is_object($attributeValue) ? (string) $attributeValue->getValueObject() : '';
+        if ($this->akTextareaDisplayMode === static::MODE_RICHTEXT) {
+            $value = LinkAbstractor::translateFromEditMode($value);
         }
-        $this->set('akTextareaDisplayMode', $this->akTextareaDisplayMode);
         $this->set('value', $value);
     }
 
@@ -104,6 +132,11 @@ class Controller extends DefaultController
         $this->form();
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Attribute\DefaultController::searchForm()
+     */
     public function searchForm($list)
     {
         $list->filterByAttribute($this->attributeKey->getAttributeKeyHandle(), '%' . $this->request('value') . '%', 'like');
@@ -111,9 +144,14 @@ class Controller extends DefaultController
         return $list;
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Attribute\DefaultController::search()
+     */
     public function search()
     {
-        $f = Core::make('helper/form');
+        $f = $this->app->make('helper/form');
         echo $f->text($this->field('value'), $this->request('value'));
     }
 
@@ -123,11 +161,21 @@ class Controller extends DefaultController
         $this->load();
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Attribute\DefaultController::getAttributeValueClass()
+     */
     public function getAttributeValueClass()
     {
         return TextValue::class;
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Attribute\Controller::exportKey()
+     */
     public function exportKey($akey)
     {
         $this->load();
@@ -136,10 +184,67 @@ class Controller extends DefaultController
         return $akey;
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Attribute\Controller::importKey()
+     */
+    public function importKey(SimpleXMLElement $akey)
+    {
+        $type = $this->getAttributeKeySettings();
+        $type->setMode(
+            $this->getKnownMode(
+                isset($akey->type)
+                ? (string) $akey->type['mode']
+                : null
+            )
+        );
+
+        return $type;
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Attribute\Controller::exportValue()
+     */
+    public function exportValue(SimpleXMLElement $akv)
+    {
+        $this->load();
+        $attributeValue = $this->getAttributeValue();
+        $value = is_object($attributeValue) ? (string) $attributeValue->getValueObject() : '';
+        if ($this->akTextareaDisplayMode === static::MODE_RICHTEXT) {
+            $value = LinkAbstractor::export($value);
+        }
+
+        return $this->app->make(Xml::class)->createChildElement($akv, 'value', $value);
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Attribute\Controller::importValue()
+     */
+    public function importValue(SimpleXMLElement $akv)
+    {
+        $this->load();
+        $value = (string) parent::importValue($akv);
+        if ($this->akTextareaDisplayMode === static::MODE_RICHTEXT) {
+            $value = LinkAbstractor::import($value);
+        }
+
+        return $value;
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Attribute\DefaultController::createAttributeValue()
+     */
     public function createAttributeValue($value)
     {
         $this->load();
-        if ($this->akTextareaDisplayMode == 'rich_text') {
+        if ($this->akTextareaDisplayMode === static::MODE_RICHTEXT) {
             $value = LinkAbstractor::translateTo($value);
         }
 
@@ -149,34 +254,57 @@ class Controller extends DefaultController
         return $av;
     }
 
-    public function importKey(\SimpleXMLElement $akey)
-    {
-        $type = $this->getAttributeKeySettings();
-        if (isset($akey->type)) {
-            $data['akTextareaDisplayMode'] = $akey->type['mode'];
-            $type->setMode((string) $akey->type['mode']);
-        }
-
-        return $type;
-    }
-
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Attribute\DefaultController::getAttributeKeySettingsClass()
+     */
     public function getAttributeKeySettingsClass()
     {
         return TextareaSettings::class;
     }
 
+    /**
+     * @return false|null returns false if the attribute key is not set
+     */
     protected function load()
     {
         $ak = $this->getAttributeKey();
-        if (!is_object($ak)) {
-            return false;
+        if (is_object($ak)) {
+            $type = $ak->getAttributeKeySettings();
+            $this->akTextareaDisplayMode = $this->getKnownMode($type->getMode());
+            $result = null;
+        } else {
+            $this->akTextareaDisplayMode = static::MODE_DEFAULT;
+            $result = false;
         }
+        $this->set('akTextareaDisplayMode', $this->akTextareaDisplayMode);
 
-        $type = $ak->getAttributeKeySettings();
-        /**
-         * @var TextareaSettings
-         */
-        $this->akTextareaDisplayMode = $type->getMode();
-        $this->set('akTextareaDisplayMode', $type->getMode());
+        return $result;
+    }
+
+    /**
+     * Get all the available modes.
+     *
+     * @return string[]
+     */
+    protected function getAllModes(): array
+    {
+        return [
+            static::MODE_TEXT,
+            static::MODE_RICHTEXT,
+        ];
+    }
+
+    /**
+     * Check that a wanted mode is valid, otherwise returns the default one.
+     *
+     * @param string|mixed $wanted
+     *
+     * @return string
+     */
+    protected function getKnownMode($wanted): string
+    {
+        return in_array($wanted, $this->getAllModes(), true) ? $wanted : static::MODE_DEFAULT;
     }
 }

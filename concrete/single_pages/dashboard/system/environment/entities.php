@@ -6,7 +6,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
  * @var Concrete\Core\Html\Service\Html $html
  * @var Concrete\Core\Page\View\PageView $view
  * @var Concrete\Core\Validation\CSRF\Token $token
- * @var Doctrine\ORM\Mapping\Driver\AnnotationDriver[] $drivers
+ * @var Doctrine\Persistence\Mapping\Driver\MappingDriver[] $drivers
  * @var string $doctrine_dev_mode
  */
 
@@ -39,6 +39,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
 
         <div class="form-group">
             <?php
+            $stripShownPath = rtrim(str_replace(DIRECTORY_SEPARATOR, '/', DIR_BASE), '/') . '/';
             foreach ($drivers as $namespace => $driver) {
                 ?>
                 <h4><?= $namespace; ?></h4>
@@ -50,13 +51,21 @@ defined('C5_EXECUTE') or die('Access Denied.');
                                 $paths = $driver->getPaths();
                             } elseif ($driver instanceof \Doctrine\Persistence\Mapping\Driver\FileDriver) {
                                 $paths = $driver->getLocator()->getPaths();
+                            } elseif ($driver instanceof \Doctrine\ORM\Mapping\Driver\AttributeDriver) {
+                                $paths = $driver->getPaths();
                             } else {
                                 $paths = [];
                             }
-
                             if (!empty($paths)) {
                                 foreach ($paths as $path) {
-                                    $shownPath = str_replace('/', DIRECTORY_SEPARATOR, strpos($path, DIR_BASE) === 0 ? substr($path, strlen(DIR_BASE) + 1) : $path); ?><small><?= $shownPath; ?></small><br><?php
+                                    $shownPath = str_replace(DIRECTORY_SEPARATOR, '/', $path);
+                                    if (str_starts_with($shownPath, $stripShownPath)) {
+                                        $shownPath = substr($shownPath, strlen($stripShownPath));
+                                    }
+                                    $shownPath = str_replace('/', DIRECTORY_SEPARATOR, $shownPath);
+                                    ?>
+                                    <small><?= $shownPath ?></small><br />
+                                    <?php
                                 }
                             }
                         ?>

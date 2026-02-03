@@ -31,6 +31,7 @@ class FileListTest extends FileStorageTestCase
             'FileSets',
             'FileVersionLog',
             'FileSetFiles',
+            'Logs',
         ]);
     }
 

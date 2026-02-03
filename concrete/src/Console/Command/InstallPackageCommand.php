@@ -10,6 +10,7 @@ use Concrete\Core\Marketplace\PackageRepositoryInterface;
 use Concrete\Core\Package\PackageService;
 use Concrete\Core\Support\Facade\Application;
 use Exception;
+use Illuminate\Support\Arr;
 use Symfony\Component\Console\Exception\InvalidOptionException;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -68,7 +69,7 @@ EOT
                 break;
             case 'auto':
                 $associatedPackages = $connection ? $packageRepository->getPackages($connection) : [];
-                $getLanguages = (bool) array_first($associatedPackages, function ($pkg) use ($pkgHandle) {
+                $getLanguages = (bool) Arr::first($associatedPackages, function ($pkg) use ($pkgHandle) {
                     return $pkg->handle = $pkgHandle;
                 });
                 break;
@@ -77,7 +78,7 @@ EOT
         }
         $packageOptions = [];
         foreach ($input->getArgument('package-options') as $keyValuePair) {
-            list($key, $value) = explode('=', $keyValuePair, 2);
+            [$key, $value] = explode('=', $keyValuePair, 2);
             $key = trim($key);
             if (substr($key, -2) === '[]') {
                 $isArray = true;

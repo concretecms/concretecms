@@ -6,6 +6,7 @@ use Concrete\Core\Api\Fractal\Transformer\CalendarTransformer;
 use Concrete\Core\Api\Resources;
 use Concrete\Core\Attribute\FontAwesomeIconFormatter;
 use Concrete\Core\Calendar\Calendar;
+use Concrete\Core\Calendar\Calendar\CalendarService;
 use Concrete\Core\Entity\Attribute\Value\Value\NumberValue;
 use Concrete\Core\Utility\Service\Xml;
 use League\Fractal\Resource\Item;
@@ -22,12 +23,12 @@ class Controller extends \Concrete\Attribute\Number\Controller implements ApiRes
     }
 
     /**
-     * @param $value Calendar
+     * @param Calendar|null $value
      */
     public function createAttributeValue($value)
     {
         $av = new NumberValue();
-        $av->setValue($value->getID());
+        $av->setValue($value ? $value->getID() : null);
 
         return $av;
     }
@@ -37,11 +38,23 @@ class Controller extends \Concrete\Attribute\Number\Controller implements ApiRes
         return '1';
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Attribute\Controller::importValue()
+     */
+    public function importValue(\SimpleXMLElement $akv)
+    {
+        $calendarName = trim((string) parent::importValue($akv));
+
+        return $calendarName === '' ? null : $this->app->make(CalendarService::class)->getByName($calendarName);
+    }
+
     public function exportValue(\SimpleXMLElement $akv)
     {
         $val = $this->attributeValue->getValue();
 
-        return $this->app->make(Xml::class)->createChildElement($akv, 'value', $val->getName());
+        return $this->app->make(Xml::class)->createChildElement($akv, 'value', $val ? $val->getName() : '');
     }
 
     public function createAttributeValueFromRequest()

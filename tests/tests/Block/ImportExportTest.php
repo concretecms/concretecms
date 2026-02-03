@@ -239,6 +239,12 @@ class ImportExportTest extends PageTestCase
      */
     public function testCIFImportExport(string $blockTypeHandle, string $basename, array $options): void
     {
+        if ($options['skipSilent'] ?? false === true) {
+            // We have to make at least one assertion, otherwise PHPUnit warns that
+            // "This test did not perform any assertions"
+            $this->assertTrue(true);
+            return;
+        }
         if (isset($options['skipReason'])) {
             $this->markTestSkipped($options['skipReason']);
         }
@@ -350,7 +356,7 @@ class ImportExportTest extends PageTestCase
         $pageNode = $outputCif->pagetype[0]->composer[0]->output[0]->pagetemplate[0]->page[0];
         $blockNode = $pageNode->area[0]->blocks[0]->block[0];
         $tempID = (string) $outputCif->pagetype[0]->composer[0]->formlayout[0]->set[0]->control[0]['output-control-id'];
-        $this->assertRegExp('/\w{5,}/', $tempID);
+        $this->assertMatchesRegularExpression('/\w{5,}/', $tempID);
         $this->assertNotSame("CCMTest1", $tempID);
         $this->assertSame($tempID, (string) $blockNode->control[0]['output-control-id']);
         unset($blockNode['mc-block-id']);

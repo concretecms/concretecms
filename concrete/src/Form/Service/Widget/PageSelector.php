@@ -2,24 +2,19 @@
 
 namespace Concrete\Core\Form\Service\Widget;
 
-use Concrete\Core\Application\Application;
 use Concrete\Core\Entity\Site\SiteTree;
 use Concrete\Core\Form\Service\Form;
 use Concrete\Core\Http\Request;
 use Concrete\Core\Page\Component\PageSelectInstanceFactory;
+use Concrete\Core\Page\Page;
 use Concrete\Core\Support\Facade\Facade;
-use URL;
 use Concrete\Core\Utility\Service\Identifier;
 use Concrete\Core\Utility\Service\Validation\Numbers;
-use Concrete\Core\Validation\CSRF\Token;
 use Core;
-use HtmlObject\Element;
-use Page;
 use Permissions;
 
 class PageSelector
 {
-
     /**
      * Creates form fields and JavaScript page chooser for choosing a page. For use with inclusion in blocks.
      * <code>
@@ -35,7 +30,7 @@ class PageSelector
     {
         $selectedCID = 0;
         if (isset($_REQUEST[$fieldName])) {
-            $selectedCID = (int)($_REQUEST[$fieldName]);
+            $selectedCID = (int) ($_REQUEST[$fieldName]);
         } else {
             if ($cID > 0) {
                 $selectedCID = $cID;
@@ -73,6 +68,7 @@ $(function() {
 });
 </script>
 EOL;
+
         return $html;
     }
 
@@ -97,7 +93,7 @@ EOL;
         }
 
         if ($selectedCID && $app->make(Numbers::class)->integer($selectedCID, 1)) {
-            $page = $app->make(Page::class)->getByID((int)$selectedCID);
+            $page = $app->make(Page::class)->getByID((int) $selectedCID);
             $cp = new Permissions($page);
             if (!$cp->canViewPage()) {
                 unset($page);
@@ -108,11 +104,12 @@ EOL;
 
         $selectedCID = (is_object($page) && !$page->isError()) ? $page->getCollectionID() : 'null';
         $identifier = $app->make(Identifier::class)->getString(32);
-        $html = <<<EOL
+
+        return <<<EOL
 <div data-concrete-select-page-input="{$identifier}">
-    <concrete-page-select 
-    access-token="{$pageSelectInstance->getAccessToken()}" 
-    :page-id="{$selectedCID}" 
+    <concrete-page-select
+    access-token="{$pageSelectInstance->getAccessToken()}"
+    :page-id="{$selectedCID}"
     input-name="{$key}"
     ></concrete-page-select>
 </div>
@@ -127,22 +124,20 @@ $(function() {
 });
 </script>
 EOL;
-        return $html;
-
-        return $html;
     }
 
     public function selectMultipleFromSitemap($field, $pages = [], $startingPoint = 'HOME_CID', $filters = [])
     {
         $identifier = new \Concrete\Core\Utility\Service\Identifier();
         $identifier = $identifier->getString(32);
+        $startingPoint = $startingPoint === 'HOME_CID' ? Page::getHomePageID() : $startingPoint;
 
         $args = new \stdClass();
         $selected = [];
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             if (isset($_POST[$field]) && is_array($_POST[$field])) {
                 foreach ($_POST[$field] as $value) {
-                    $selected[] = (int)$value;
+                    $selected[] = (int) $value;
                 }
             }
         } else {
@@ -151,12 +146,20 @@ EOL;
             }
         }
 
+        $selectedPath = null;
+        if ($selected) {
+            foreach ($selected as $selectedItem) {
+                $selectedPath[] = $this->getPathFromStartingPoint($startingPoint, $selectedItem);
+            }
+        }
+
         $args->identifier = $identifier;
         $args->selected = $selected;
+        $args->selectedPath = $selectedPath;
         $args->mode = 'multiple';
         $args->token = Core::make('token')->generate('select_sitemap');
         $args->inputName = $field;
-        $args->startingPoint = $startingPoint === 'HOME_CID' ? Page::getHomePageID() : $startingPoint;
+        $args->startingPoint = $startingPoint;
         if (count($filters)) {
             $args->filters = $filters;
         }
@@ -183,21 +186,29 @@ EOL;
     ) {
         $identifier = new \Concrete\Core\Utility\Service\Identifier();
         $identifier = $identifier->getString(32);
+        $startingPoint = $startingPoint === 'HOME_CID' ? Page::getHomePageID() : $startingPoint;
 
         $args = new \stdClass();
         $selected = 0;
 
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             if (isset($_POST[$field])) {
-                $selected = (int)($_POST[$field]);
+                $selected = (int) ($_POST[$field]);
             }
         } elseif ($page) {
             $selected = is_object($page) ? $page->getCollectionID() : $page;
         }
+
+        $selectedPath = null;
+        if ($selected) {
+            $selectedPath = $this->getPathFromStartingPoint($startingPoint, $selected);
+        }
+
         $args->identifier = $identifier;
         $args->selected = $selected;
+        $args->selectedPath = $selectedPath;
         $args->inputName = $field;
-        $args->startingPoint = $startingPoint === 'HOME_CID' ? Page::getHomePageID() : $startingPoint;
+        $args->startingPoint = $startingPoint;
         if ($siteTree) {
             $args->siteTreeID = $siteTree->getSiteTreeID();
         }
@@ -217,5 +228,34 @@ EOL;
 EOL;
 
         return $html;
+    }
+
+    private function getPathFromStartingPoint($startingPoint, $selected): array
+    {
+        $pages = [];
+
+        $currentPage = Page::getByID($selected);
+
+        while ($currentPage && !$currentPage->isError()) {
+            $pages[] = $currentPage;
+            $parentID = $currentPage->getCollectionParentID();
+
+            if ($currentPage->getCollectionID() === $startingPoint) {
+                break;
+            }
+
+            $currentPage = Page::getByID($parentID);
+        }
+
+        $reversedPages = array_reverse($pages);
+
+        $pageIds = [];
+        foreach ($reversedPages as $reversedPage) {
+            $pageIds[] = $reversedPage->getCollectionID();
+        }
+
+        array_pop($pageIds);
+
+        return $pageIds;
     }
 }

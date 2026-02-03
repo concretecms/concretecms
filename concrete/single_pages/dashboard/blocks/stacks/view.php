@@ -688,10 +688,13 @@ if ($showGlobalAreasFolder || !empty($stacks)) {
             } else {
                 echo t('No stacks found in this folder.');
             }
-            ?></div><?php
-        }
-        ?>
+            ?>
+        </div>
     </div>
+    <?php
+}
+    ?>
+
     <div class="ccm-dashboard-header-buttons">
         <?php
         if ($controller->getAction() != 'view_global_areas') {

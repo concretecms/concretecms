@@ -20,8 +20,10 @@ if (
     && !$b->ignorePageThemeGridFrameworkContainer()
 ) {
     $gf = $pt->getThemeGridFrameworkObject();
-    echo '</div>';
-    echo $gf->getPageThemeGridFrameworkRowEndHTML();
+    if ($b->getBlockTypeHandle() !== BLOCK_HANDLE_LAYOUT_PROXY) {
+        echo '</div>';
+        echo $gf->getPageThemeGridFrameworkRowEndHTML();
+    }
     echo $gf->getPageThemeGridFrameworkContainerEndHTML();
 }
 
