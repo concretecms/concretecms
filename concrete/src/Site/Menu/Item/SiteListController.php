@@ -66,7 +66,7 @@ class SiteListController extends Controller
                 }
             }
             $select = new Element('concrete-toolbar-site-list', null, [
-                ':sites' => json_encode($sites),
+                ':sites' => htmlspecialchars(json_encode($sites), ENT_QUOTES, APP_CHARSET),
                 'token' => $token,
                 'uri' => $request->getRequestURI(),
                 'selected-site' => $this->service->getActiveSiteForEditing()->getSiteID(),
