@@ -1,6 +1,13 @@
 #!/usr/bin/env php
 <?php
 
+/*
+ * Supported environment variables
+ *
+ * CCM_ALLOW_XDEBUG
+ * set to 1 to allow running with Xdebug enabled without restarting PHP without it
+ */
+
 if (!defined('DIR_BASE')) {
     if (!isset($DIR_BASE)) {
         // Try to detect the webroot directory starting from the current working directory

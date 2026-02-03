@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\Foundation\Runtime\Run;
 
+use Composer\XdebugHandler\XdebugHandler;
 use Concrete\Core\Application\ApplicationAwareInterface;
 use Concrete\Core\Application\ApplicationAwareTrait;
 use Concrete\Core\Console\Application as ConsoleApplication;
@@ -63,18 +64,20 @@ class CLIRunner implements RunInterface, ApplicationAwareInterface
 
     /**
      * Run the runtime.
-     *
-     * @return mixed
      */
     public function run()
     {
+        $input = new ArgvInput();
+        $output = new ConsoleOutput();
+
+        $this->checkXdebug($input, $output);
+
         $console = $this->console;
         $this->app->instance('console', $console);
 
         $this->loadBootstrap();
         $this->initializeSystemTimezone();
 
-        $input = new ArgvInput();
         if ($this->app->isInstalled()) {
             $this->app->setupPackageAutoloaders();
             if ($input->getFirstArgument() !== 'c5:update') {
@@ -98,7 +101,6 @@ class CLIRunner implements RunInterface, ApplicationAwareInterface
 
         \Events::dispatch('on_before_console_run');
 
-        $output = new ConsoleOutput();
         $this->testAvailableMemory($input, $output);
 
         $console->run($input, $output);
@@ -109,5 +111,20 @@ class CLIRunner implements RunInterface, ApplicationAwareInterface
     protected function shouldRunCommands(): bool
     {
         return defined('C5_ENVIRONMENT_ONLY') && C5_ENVIRONMENT_ONLY ? false : true;
+    }
+
+    protected function checkXdebug(InputInterface $input, OutputInterface $output): void
+    {
+        if (!$this->shouldRunCommands()) {
+            return;
+        }
+        if (XdebugHandler::isXdebugActive() === false) {
+            return;
+        }
+        $handler = new XdebugHandler('CCM');
+        $handler->check();
+        if ($input->hasParameterOption(['-vv', '-vvv'], true)) {
+            $output->writeln('Xdebug is active (Concrete is operating slower than normal)');
+        }
     }
 }
