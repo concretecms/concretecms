@@ -28,6 +28,7 @@ class Sites extends ApiController
      * @OA\Get(
      *     path="/ccm/api/1.0/sites/{siteID}",
      *     tags={"sites"},
+     *     operationId="getSiteById",
      *     summary="Find a site by its ID",
      *     security={
      *         {"clientCredentials": {"sites:read"}}
@@ -67,6 +68,7 @@ class Sites extends ApiController
      * @OA\Get(
      *     path="/ccm/api/1.0/sites",
      *     tags={"sites"},
+     *     operationId="getSites",
      *     summary="Returns a list of site objects, sorted by date added ascending.",
      *     security={
      *         {"clientCredentials": {"sites:read"}}
@@ -104,6 +106,7 @@ class Sites extends ApiController
      * @OA\Get(
      *     path="/ccm/api/1.0/sites/default",
      *     tags={"sites"},
+     *     operationId="getDefaultSite",
      *     summary="Retrieve the default site for your Concrete installation",
      *     security={
      *         {"clientCredentials": {"sites:read"}}
