@@ -6,7 +6,7 @@ use Concrete\Core\Config\Repository\Repository;
 use Concrete\Core\Entity\File\File;
 use Concrete\Core\Logging\Channels;
 use Concrete\Core\Logging\GroupLogger;
-use Monolog\Logger;
+use Concrete\Core\Logging\LoggerAwareInterface;use Concrete\Core\Logging\LoggerAwareTrait;use Monolog\Logger;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Address;
 use Symfony\Component\Mime\Email;
@@ -17,8 +17,9 @@ use Throwable;
 /**
  * @template T of Email
  */
-class Service
+class Service implements LoggerAwareInterface
 {
+    use LoggerAwareTrait;
     /**
      * The config repository.
      *
@@ -208,6 +209,22 @@ class Service
      */
     public function addRawAttachmentWithHeaders($content, $filename, array $headers = [])
     {
+        if (
+            (array_key_exists('boundary', $headers) && $headers['boundary'])
+            || (array_key_exists('id', $headers) && $headers['id'])
+        ) {
+            $message = <<<ERR
+                The "boundary" and "id" headers are no longer supported for attachments. Instead custom boundary settings
+                can be configured using symfony mime parts directly.
+                
+                See https://github.com/concretecms/concretecms/issues/12814
+                ERR;
+            if ($this->logger) {
+                $this->logger->critical($message);
+            }
+            throw new \InvalidArgumentException($message);
+        }
+
         $part = new DataPart(
             $content,
             $filename,
@@ -646,5 +663,10 @@ class Service
         }
 
         return $sendError === null;
+    }
+
+    public function getLoggerChannel(): string
+    {
+        return Channels::CHANNEL_EMAIL;
     }
 }
