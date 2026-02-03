@@ -917,7 +917,7 @@ class Controller extends BlockController implements NotificationProviderInterfac
 
         if ($this->addFilesToFolder) {
             $filesystem = new Filesystem();
-            $addFilesToFolder = $filesystem->getFolder($this->addFilesToFolder);
+            $addFilesToFolder = $filesystem->getFolder($this->addFilesToFolder)?:$filesystem->getRootFolder();
             $fp = new Checker($addFilesToFolder);
             if ($fp->canSearchFiles()) {
                 $this->set('addFilesToFolder', $addFilesToFolder);
