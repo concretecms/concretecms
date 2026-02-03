@@ -36,6 +36,8 @@ class Update extends DashboardPageController
 
             return null;
         }
+        $config = $this->app->make('config');
+        $this->set('skipCoreUpdates', (bool) $config->get('concrete.updates.skip_core'));
         $upd = $this->app->make(UpdateService::class);
         $updates = $upd->getLocalAvailableUpdates();
         if (count($updates) === 1) {
@@ -44,7 +46,7 @@ class Update extends DashboardPageController
             return;
         }
         $this->set('dh', $this->app->make('date'));
-        $this->set('currentVersion', $this->app->make('config')->get('concrete.version'));
+        $this->set('currentVersion', $config->get('concrete.version'));
         $this->set('updates', $updates);
         $remote = $upd->getApplicationUpdateInformation();
         if ($remote instanceof RemoteApplicationUpdate && version_compare($remote->getVersion(), APP_VERSION, '>')) {
@@ -96,11 +98,11 @@ class Update extends DashboardPageController
         if (!$this->userHasUpgradePermission()) {
             return $this->buildRedirect($this->action());
         }
-
         if (!$this->token->validate('download_update')) {
             $this->error->add($this->token->getErrorMessage());
-        }
-        if (!is_dir(DIR_CORE_UPDATES)) {
+        } elseif ($this->app->make('config')->get('concrete.updates.skip_core')) {
+            $this->error->add(t('Updates are currently disabled via your site configuration.'));
+        } elseif (!is_dir(DIR_CORE_UPDATES)) {
             $this->error->add(t('The directory %s does not exist.', DIR_CORE_UPDATES));
         } elseif (!is_writable(DIR_CORE_UPDATES)) {
             $this->error->add(t('The directory %s must be writable by the web server.', DIR_CORE_UPDATES));
@@ -158,18 +160,22 @@ class Update extends DashboardPageController
         if (!$this->userHasUpgradePermission()) {
             return $this->buildRedirect($this->action());
         }
-        $updateVersion = (string) $this->request->request->get('version', '');
-        if ($updateVersion === '') {
-            $this->error->add(t('Invalid version'));
+        if ($this->app->make('config')->get('concrete.updates.skip_core')) {
+            $this->error->add(t('Updates are currently disabled via your site configuration.'));
         } else {
-            $upd = ApplicationUpdate::getByVersionNumber($updateVersion);
-            if ($upd == null) {
+            $updateVersion = (string) $this->request->request->get('version', '');
+            if ($updateVersion === '') {
                 $this->error->add(t('Invalid version'));
             } else {
-                if (version_compare($upd->getUpdateVersion(), APP_VERSION, '<=')) {
-                    $this->error->add(
-                        t('You may only apply updates with a greater version number than the version you are currently running.')
-                    );
+                $upd = ApplicationUpdate::getByVersionNumber($updateVersion);
+                if ($upd == null) {
+                    $this->error->add(t('Invalid version'));
+                } else {
+                    if (version_compare($upd->getUpdateVersion(), APP_VERSION, '<=')) {
+                        $this->error->add(
+                            t('You may only apply updates with a greater version number than the version you are currently running.')
+                        );
+                    }
                 }
             }
         }
