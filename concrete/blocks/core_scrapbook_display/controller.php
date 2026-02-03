@@ -330,6 +330,15 @@ class Controller extends BlockController
         return false;
     }
 
+    public function cacheBlockOutputOnEditMode()
+    {
+        $bc = $this->getScrapbookBlockController();
+
+        if ($bc) {
+            return $bc->cacheBlockOutputOnEditMode();
+        }
+    }
+
     /**
      * @throws \Doctrine\DBAL\Exception
      * @throws \Illuminate\Contracts\Container\BindingResolutionException
