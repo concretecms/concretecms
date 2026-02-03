@@ -3,6 +3,7 @@
 namespace Concrete\Core\Board\Instance\Slot\Content\Populator;
 
 use Concrete\Core\Board\Instance\Logger\Logger;
+use Concrete\Core\Board\Instance\Logger\LoggerInterface;
 use Concrete\Core\Board\Instance\Slot\Content\ObjectInterface;
 use Concrete\Core\Board\Instance\Item\Data\DataInterface;
 
@@ -21,6 +22,6 @@ interface PopulatorInterface
      * @param Logger|null $logger
      * @return array
      */
-    public function createContentObjects(DataInterface $data, ?Logger $logger = null) : array;
+    public function createContentObjects(DataInterface $data, LoggerInterface $logger) : array;
 
 }

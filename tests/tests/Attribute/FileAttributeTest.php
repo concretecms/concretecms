@@ -16,19 +16,28 @@ class FileAttributeTest extends AttributeTestCase
 
     protected $indexQuery = 'select * from FileSearchIndexAttributes where fID = 1';
 
-    public function __construct($name = null, array $data = [], $dataName = '')
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\TestHelpers\Database\ConcreteDatabaseTestCase::getTables()
+     */
+    protected function getTables()
     {
-        parent::__construct($name, $data, $dataName);
+        return array_merge(parent::getTables(), [
+            'FileVersionLog',
+        ]);
+    }
 
-        $this->tables = array_merge($this->tables, [
-                'FileStorageLocationTypes',
-                'FileVersionLog',
-            ]
-        );
-        $this->metadatas = array_merge($this->metadatas, [
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\TestHelpers\Database\ConcreteDatabaseTestCase::getEntityClassNames()
+     */
+    protected function getEntityClassNames(): array
+    {
+        return array_merge(parent::getEntityClassNames(), [
             'Concrete\Core\Entity\File\Version',
             'Concrete\Core\Entity\File\File',
-            'Concrete\Core\Entity\Attribute\Key\Settings\NumberSettings',
             'Concrete\Core\Entity\Attribute\Key\FileKey',
             'Concrete\Core\Entity\Attribute\Key\Key',
             'Concrete\Core\Entity\Attribute\Value\Value\NumberValue',

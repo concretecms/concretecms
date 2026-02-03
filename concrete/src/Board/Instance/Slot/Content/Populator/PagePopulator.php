@@ -4,6 +4,7 @@ namespace Concrete\Core\Board\Instance\Slot\Content\Populator;
 use Concrete\Core\Board\Instance\Item\Data\DataInterface;
 use Concrete\Core\Board\Instance\Item\Data\PageData;
 use Concrete\Core\Board\Instance\Logger\Logger;
+use Concrete\Core\Board\Instance\Logger\LoggerInterface;
 use Concrete\Core\Board\Instance\Slot\Content\SummaryObjectCreatorTrait;
 use Concrete\Core\Page\Page;
 
@@ -24,7 +25,7 @@ class PagePopulator extends AbstractPopulator
      * @param Logger|null $logger
      * @return array
      */
-    public function createContentObjects(DataInterface $data, ?Logger $logger = null): array
+    public function createContentObjects(DataInterface $data, LoggerInterface $logger): array
     {
         $page = Page::getByID($data->getPageID(), 'ACTIVE');
         if ($page && !$page->isError()) {

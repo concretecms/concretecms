@@ -1,1 +1,5 @@
+$color-mode-type: data;
+
+@import 'bootstrap/scss/mixins/color-mode';
+@import '../../../../assets/cms/scss/variables';
 @import 'waiting-for-me';

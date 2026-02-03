@@ -1,0 +1,9 @@
+{
+  "$schema": "../options-schema.json",
+  "fileUsageCount": 2,
+  "richTexts": {
+    "SELECT body FROM btHeroImage WHERE bID = :bID": {
+      "numPages": 1
+    }
+  }
+}

@@ -11,6 +11,8 @@ class Settings extends DashboardPageController
         $config = $this->app->make('config');
         $logBoardInstances = (int) $config->get('concrete.log.boards.instances');
         $this->set('logBoardInstances', $logBoardInstances);
+        $automaticallyRefreshInstances = (int) $config->get('concrete.boards.automatically_refresh_instances');
+        $this->set('automaticallyRefreshInstances', $automaticallyRefreshInstances);
     }
 
     public function save()
@@ -22,7 +24,9 @@ class Settings extends DashboardPageController
             $config = $this->app->make('config');
             $logBoardInstances = $this->request->request->getBoolean('log_board_instances');
             $config->save('concrete.log.boards.instances', $logBoardInstances);
-            $this->flash('success', t('Board instance logging configuration saved.'));
+            $automaticallyRefreshInstances = $this->request->request->getBoolean('automatically_refresh_instances');
+            $config->save('concrete.boards.automatically_refresh_instances', $automaticallyRefreshInstances);
+            $this->flash('success', t('Board settings saved.'));
             return $this->buildRedirect($this->action('view'));
         }
         $this->view();

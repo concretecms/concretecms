@@ -22,52 +22,66 @@ use Group;
 
 class LoginTest extends PageTestCase
 {
-    public function __construct($name = null, array $data = [], $dataName = '')
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\TestHelpers\Database\ConcreteDatabaseTestCase::getTables()
+     */
+    protected function getTables()
     {
-        parent::__construct($name, $data, $dataName);
+        return array_merge(parent::getTables(), [
+            // General
+            'Config',
+            // Pages
+            'PageThemeCustomStyles',
+            // Files
+            'FileImageThumbnailPaths',
+            // Users & permissions
+            'UserGroups',
+            'Groups',
+            'TreeTypes',
+            'TreeNodes',
+            'TreeNodePermissionAssignments',
+            'AreaPermissionAssignments',
+            'PermissionAccess',
+            'PermissionAccessEntities',
+            'PermissionAccessEntityGroups',
+            'PermissionAccessList',
+            'PermissionKeyCategories',
+            'PermissionKeys',
+            'TreeNodeTypes',
+            'Trees',
+            'TreeGroupNodes',
+            // Logging in/out the users
+            'AuthenticationTypes',
+            // Blocks
+            'btCoreStackDisplay',
+            'Blocks',
+            // Stacks
+            'Stacks',
+        ]);
+    }
 
-        // General
-        $this->tables[] = 'Config';
-        // Pages
-        $this->tables[] = 'PageThemeCustomStyles';
-        // Files
-        $this->tables[] = 'FileImageThumbnailPaths';
-        // Users & permissions
-        $this->tables[] = 'UserGroups';
-        $this->tables[] = 'Groups';
-        $this->tables[] = 'TreeTypes';
-        $this->tables[] = 'TreeNodes';
-        $this->tables[] = 'TreeNodePermissionAssignments';
-        $this->tables[] = 'AreaPermissionAssignments';
-        $this->tables[] = 'PermissionAccess';
-        $this->tables[] = 'PermissionAccessEntities';
-        $this->tables[] = 'PermissionAccessEntityGroups';
-        $this->tables[] = 'PermissionAccessList';
-        $this->tables[] = 'PermissionKeyCategories';
-        $this->tables[] = 'PermissionKeys';
-        $this->tables[] = 'TreeNodeTypes';
-        $this->tables[] = 'Trees';
-        $this->tables[] = 'TreeGroupNodes';
-        // Logging in/out the users
-        $this->tables[] = 'AuthenticationTypes';
-        // Blocks
-        $this->tables[] = 'BlockTypes';
-        $this->tables[] = 'Blocks';
-        // Stacks
-        $this->tables[] = 'Stacks';
-
-        // Users
-        $this->metadatas[] = 'Concrete\Core\Entity\User\User';
-        $this->metadatas[] = 'Concrete\Core\Entity\User\UserSignup';
-        $this->metadatas[] = 'Concrete\Core\Entity\Attribute\Category';
-        $this->metadatas[] = 'Concrete\Core\Entity\Attribute\Key\Key';
-        $this->metadatas[] = 'Concrete\Core\Entity\Attribute\Key\UserValue';
-        $this->metadatas[] = 'Concrete\Core\Entity\Attribute\Key\UserKey';
-        // Permissions
-        $this->metadatas[] = 'Concrete\Core\Entity\Permission\IpAccessControlCategory';
-        $this->metadatas[] = 'Concrete\Core\Entity\Permission\IpAccessControlRange';
-        // Blocks
-        $this->metadatas[] = 'Concrete\Core\Entity\Block\BlockType\BlockType';
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\TestHelpers\Database\ConcreteDatabaseTestCase::getEntityClassNames()
+     */
+    protected function getEntityClassNames(): array
+    {
+        return array_merge(parent::getEntityClassNames(), [
+            // Users
+            'Concrete\Core\Entity\User\User',
+            'Concrete\Core\Entity\User\UserSignup',
+            'Concrete\Core\Entity\Attribute\Category',
+            'Concrete\Core\Entity\Attribute\Key\Key',
+            'Concrete\Core\Entity\Attribute\Key\UserKey',
+            // Permissions
+            'Concrete\Core\Entity\Permission\IpAccessControlCategory',
+            'Concrete\Core\Entity\Permission\IpAccessControlRange',
+            // Blocks
+            'Concrete\Core\Entity\Block\BlockType\BlockType',
+        ]);
     }
 
     public static function setUpBeforeClass():void

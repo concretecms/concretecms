@@ -154,11 +154,13 @@ if ($c !== null && $config->get('multilingual.set_alternate_hreflang') && !$c->i
     }
 }
 
-$openGraph = app(OpenGraph::class);
-if ($openGraph->isEnabled()) {
-    echo "\n\n\t";
-    foreach ($openGraph->getTags($c) as $tag) {
-        echo $tag . "\n\t";
+if ($c !== null) {
+    $openGraph = app(OpenGraph::class);
+    if ($openGraph->isEnabled()) {
+        echo "\n\n\t";
+        foreach ($openGraph->getTags($c) as $tag) {
+            echo $tag . "\n\t";
+        }
     }
 }
 

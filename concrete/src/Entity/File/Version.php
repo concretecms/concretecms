@@ -887,6 +887,8 @@ class Version implements ObjectInterface
                 $updateTypeAttributeID,
             ]
         );
+        $logger = $app->make(LoggerFactory::class)->createLogger(Channels::CHANNEL_FILES);
+        $logger->info(t('File version update requested. Update type: %s for version %s (File %s (%s))', $updateTypeID, $this->getFileVersionID(), $this->getFileName(), $this->getFileID()));
     }
 
     /**
@@ -1853,7 +1855,8 @@ class Version implements ObjectInterface
      */
     public function getDetailThumbnailImage()
     {
-        if ($this->getTypeObject()->supportsThumbnails()) {
+        $result = $this->getTypeObject()->getThumbnail();
+        if ($this->getTypeObject()->supportsThumbnails() || $this->getTypeObject()->isSVG()) {
             $app = Application::getFacadeApplication();
             $config = $app->make('config');
             $type = ThumbnailType::getByHandle($config->get('concrete.icons.file_manager_detail.handle'));
@@ -1869,8 +1872,8 @@ class Version implements ObjectInterface
                 /** @var ThumbnailPlaceholderService $thumbnailPlaceholderService */
                 $thumbnailPlaceholderService = $app->make(ThumbnailPlaceholderService::class);
                 $result = $thumbnailPlaceholderService->getThumbnailPlaceholder($this, $type->getBaseVersion());
-            } else {
-                $result = $this->getTypeObject()->getThumbnail();
+            } elseif ($this->getTypeObject()->isSVG()) {
+                $result = '<img class="ccm-file-manager-detail-thumbnail" src="' . $this->getThumbnailURL($type->getBaseVersion()) . '" />';
             }
         }
 
@@ -1884,7 +1887,8 @@ class Version implements ObjectInterface
      */
     public function getListingThumbnailImage()
     {
-        if ($this->getTypeObject()->supportsThumbnails()) {
+        // SVG will not have an existing thumbnail nor will it be generating one so it will be handled and displayed as a source image.
+        if ($this->getTypeObject()->supportsThumbnails() || $this->getTypeObject()->isSVG()) {
             $app = Application::getFacadeApplication();
             $config = $app->make('config');
             $listingType = ThumbnailType::getByHandle($config->get('concrete.icons.file_manager_listing.handle'));
@@ -2071,6 +2075,8 @@ class Version implements ObjectInterface
 
     /**
      * @deprecated Use buildForceDownloadResponse
+     *
+     * @return never
      */
     public function forceDownload()
     {
@@ -2082,7 +2088,6 @@ class Version implements ObjectInterface
         ob_end_clean();
         $response->send();
         $app->shutdown();
-        exit;
     }
 
     /**

@@ -2,13 +2,14 @@
 namespace Concrete\Core\Board\Instance\Slot\Content;
 
 use Concrete\Core\Board\Instance\Logger\Logger;
+use Concrete\Core\Board\Instance\Logger\LoggerInterface;
 use Concrete\Core\Summary\Category\CategoryMemberInterface;
 use Concrete\Core\Summary\SummaryObject as BaseSummaryObject;
 
 trait SummaryObjectCreatorTrait
 {
 
-    public function createSummaryContentObjects(CategoryMemberInterface $mixed, ?Logger $logger = null) : array
+    public function createSummaryContentObjects(CategoryMemberInterface $mixed, LoggerInterface $logger) : array
     {
         $objects = [];
         if ($mixed->hasCustomSummaryTemplates()) {

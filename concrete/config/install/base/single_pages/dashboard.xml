@@ -709,11 +709,11 @@
             </attributes>
         </page>
 
-        <page name="Accessibility" path="/dashboard/system/basics/accessibility"
-              filename="/dashboard/system/basics/accessibility.php" pagetype="" description="" package="">
+        <page name="Appearance" path="/dashboard/system/basics/appearance"
+              filename="/dashboard/system/basics/appearance.php" pagetype="" description="" package="">
             <attributes>
                 <attributekey handle="meta_keywords">
-                    <value>accessibility, easy mode</value>
+                    <value>accessibility, appearance, dark mode, tooltips</value>
                 </attributekey>
             </attributes>
         </page>
@@ -1298,9 +1298,9 @@
         <page name="User Deactivation Settings" path="/dashboard/system/registration/deactivation"
               filename="/dashboard/system/registration/deactivation.php" pagetype="" description="" package="">
         </page>
-        <page name="Automated Logout" path="/dashboard/system/registration/automated_logout"
-              filename="/dashboard/system/registration/automated_logout.php" pagetype=""
-              description="Automate when users are logged out, or do it manually" package="">
+        <page name="Logout Options" path="/dashboard/system/registration/logout"
+              filename="/dashboard/system/registration/logout.php" pagetype=""
+              description="Control when logout occurs and how it operates." package="">
             <attributes>
                 <attributekey handle="meta_keywords">
                     <value>login, logout, user, agent, ip, change, security, session, invalidation, invalid</value>

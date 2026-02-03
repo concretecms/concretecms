@@ -27,6 +27,7 @@ if (isset($cp) && $cp->canViewToolbar() && (!$dh->inDashboard()) && !$view->isEd
     $show_titles = (bool) $config->get('concrete.accessibility.toolbar_titles');
     $show_tooltips = (bool) $config->get('concrete.accessibility.toolbar_tooltips');
     $large_font = (bool) $config->get('concrete.accessibility.toolbar_large_font');
+    $colorScheme = $config->get('concrete.appearance.color_scheme');
 
     $canApprovePageVersions = $cp->canApprovePageVersions();
     $vo = $c->getVersionObject();
@@ -51,7 +52,19 @@ if (isset($cp) && $cp->canViewToolbar() && (!$dh->inDashboard()) && !$view->isEd
     <?php } ?>
 
     <?=View::element('icons')?>
-    <div id="ccm-page-controls-wrapper" class="ccm-ui">
+    <div id="ccm-page-controls-wrapper" class="ccm-ui"
+         <?php if ($colorScheme === 'dark') { ?>data-bs-theme="dark"<?php }
+         else if ($colorScheme === 'light') { ?>data-bs-theme="light"<?php }
+         else { ?>data-bs-theme-select="auto"<?php } ?>>
+        <?php if ($colorScheme === 'auto') {
+            // Yes, this is really ugly. But if we don't do this _right_ away and inline we get a flash of the
+            // light toolbar replaced with the dark toolbar, which is arguably much clunkier.
+            ?>
+            <script type="text/javascript">
+                let scheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+                document.querySelector('#ccm-page-controls-wrapper').setAttribute('data-bs-theme', scheme)
+            </script>
+        <?php } ?>
         <div id="ccm-toolbar" class="<?= $show_titles ? 'titles' : '' ?> <?= $large_font ? 'large-font' : '' ?>">
 						<?php
               $mobileMenu = Element::get('dashboard/navigation/mobile', ['section' => $c, 'currentPage' => $c]);

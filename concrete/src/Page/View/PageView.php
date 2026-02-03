@@ -9,6 +9,9 @@ use Concrete\Core\Page\View\Preview\SkinPreviewRequest;
 use Concrete\Core\Page\View\Preview\ThemeCustomizerRequest;
 use Concrete\Core\StyleCustomizer\Normalizer\NormalizedVariableCollectionFactory;
 use Concrete\Core\StyleCustomizer\Skin\SkinInterface;
+use Concrete\Core\StyleCustomizer\Skin\Stylesheet\SiteStylesheet;
+use Concrete\Core\StyleCustomizer\Skin\Stylesheet\Stylesheet;
+use Concrete\Core\StyleCustomizer\Skin\Stylesheet\StylesheetInterface;
 use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\User\User;
 use Concrete\Core\View\View;
@@ -268,6 +271,7 @@ class PageView extends View
     public function getThemeStyles()
     {
         $customStyles = null;
+        $stylesheet = null;
         if (isset($this->customPreviewRequest)) {
             if ($this->customPreviewRequest instanceof SkinPreviewRequest) {
                 $skinIdentifier = $this->customPreviewRequest->getSkin()->getIdentifier();
@@ -278,22 +282,27 @@ class PageView extends View
                 $customStyles = $this->customPreviewRequest->getCustomCss();
             }
         } else {
-            $skin = $this->c->getPageSkin();
-            if (!$skin) {
-                // This shouldn't happen during normal run, but in some cases like we're previewing a board
-                // in the dashboard we might have a page that has no skin (because it's a dashboard page)
-                // but rendering in a theme that does, so we should default to the theme's default skin in that case
-                $skin = $this->themeObject->getSkinByIdentifier(SkinInterface::SKIN_DEFAULT);
+            $skinIdentifier = $this->c->getPageSkinIdentifier(false);
+            if ($skinIdentifier) {
+                // The page has a custom skin identifier
+                $skin = $this->themeObject->getSkinByIdentifier($skinIdentifier);
+                $stylesheet = $skin->getStylesheet();
+            } else {
+                $site = $this->c->getSite();
+                if (!$site) {
+                    $site = app('site')->getSite();
+                }
+                $stylesheet = new SiteStylesheet($site);
             }
-            $stylesheet = $skin->getStylesheet();
         }
         if ($customStyles) {
             $styles = new Element('style', $customStyles);
             $styles->type('text/css');
             return $styles;
-        } else {
-            return $stylesheet;
+        } else if ($stylesheet instanceof StylesheetInterface) {
+            return $stylesheet->getElement();
         }
+        return '';
     }
 
     /**

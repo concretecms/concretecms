@@ -34,12 +34,21 @@ if (!$frontendPageID) {
 $show_titles = (bool) $config->get('concrete.accessibility.toolbar_titles');
 $show_tooltips = (bool) $config->get('concrete.accessibility.toolbar_tooltips');
 $large_font = (bool) $config->get('concrete.accessibility.toolbar_large_font');
+$colorScheme = $config->get('concrete.appearance.color_scheme');
 
 ?><!DOCTYPE html>
-<html<?= $hideDashboardPanel ? '' : ' class="ccm-panel-open ccm-panel-right"'; ?> lang="<?php echo Localization::activeLanguage() ?>">
+<html<?= $hideDashboardPanel ? '' : ' class="ccm-panel-open ccm-panel-right"'; ?>
+    <?php if ($colorScheme === 'dark') { ?>data-bs-theme="dark"<?php } else { ?>data-bs-theme="light"<?php } ?>
+    lang="<?php echo Localization::activeLanguage() ?>">
 <head>
     <link rel="stylesheet" type="text/css" href="<?=$this->getThemePath(); ?>/main.css">
     <?php View::element('header_required', ['disableTrackingCode' => true, 'pageTitle' => isset($pageTitle) ? $pageTitle : null]); ?>
+    <?php if ($colorScheme === 'auto') { ?>
+        <script type="text/javascript">
+            let scheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+            document.documentElement.setAttribute('data-bs-theme', scheme)
+        </script>
+    <?php } ?>
 </head>
 <body <?php if (isset($bodyClass)) {
     ?>class="<?=$bodyClass; ?>"<?php

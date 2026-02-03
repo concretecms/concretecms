@@ -2,6 +2,7 @@
 namespace Concrete\Core\Foundation;
 
 use Closure;
+use Illuminate\Support\Arr;
 
 /**
  * Class EnvironmentDetector.
@@ -115,7 +116,7 @@ class EnvironmentDetector
      */
     protected function getEnvironmentArgument(array $args)
     {
-        return array_first($args, function ($v) {
+        return Arr::first($args, function ($v) {
             return starts_with($v, '--env');
         });
     }

@@ -31,6 +31,11 @@ class LoggerFactory implements ApplicationAwareInterface
         $this->config = $config;
     }
 
+    public function createNullLogger(): NullLogger
+    {
+        return new NullLogger();
+    }
+
     public function createFromInstance(Instance $instance): LoggerInterface
     {
         if ($this->config->get('concrete.log.boards.instances')) {
@@ -46,7 +51,7 @@ class LoggerFactory implements ApplicationAwareInterface
             }
             return $this->app->make(Logger::class, ['instanceLog' => $log]);
         } else {
-            return new NullLogger();
+            return $this->createNullLogger();
         }
     }
 }

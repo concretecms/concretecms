@@ -5,28 +5,34 @@ declare(strict_types=1);
 namespace Concrete\Core\Support\CodingStyle\Fixer;
 
 use PhpCsFixer\AbstractFixer;
-use PhpCsFixer\Fixer\ConfigurationDefinitionFixerInterface;
+use PhpCsFixer\Fixer\ConfigurableFixerInterface;
+use PhpCsFixer\Fixer\ConfigurableFixerTrait;
 use PhpCsFixer\FixerConfiguration\FixerConfigurationResolver;
+use PhpCsFixer\FixerConfiguration\FixerConfigurationResolverInterface;
 use PhpCsFixer\FixerConfiguration\FixerOptionBuilder;
 use PhpCsFixer\FixerDefinition\CodeSample;
 use PhpCsFixer\FixerDefinition\FixerDefinition;
+use PhpCsFixer\FixerDefinition\FixerDefinitionInterface;
 use PhpCsFixer\Tokenizer\Token;
 use PhpCsFixer\Tokenizer\Tokens;
-use SplFileInfo;
 
-final class InlineTagFixer extends AbstractFixer implements ConfigurationDefinitionFixerInterface
+defined('C5_EXECUTE') or die('Access Denied.');
+
+final class InlineTagFixer extends AbstractFixer implements ConfigurableFixerInterface
 {
-    public const OPTION_SPACEBEFORE = 'space_before';
+    use ConfigurableFixerTrait;
 
-    public const OPTION_SPACEAFTER = 'space_after';
+    private const OPTION_SPACEBEFORE = 'space_before';
 
-    public const OPTION_SEMICOLON = 'semicolon';
+    private const OPTION_SPACEAFTER = 'space_after';
 
-    public const SPACE_MINIMUM = 'minimum';
+    private const OPTION_SEMICOLON = 'semicolon';
 
-    public const SPACE_ONE = 'one';
+    private const SPACE_MINIMUM = 'minimum';
 
-    public const SPACE_KEEP = 'keep';
+    private const SPACE_ONE = 'one';
+
+    private const SPACE_KEEP = 'keep';
 
     private const SUPPORTED_SPACEBEFORE_OPTIONS = [
         self::SPACE_MINIMUM,
@@ -45,7 +51,7 @@ final class InlineTagFixer extends AbstractFixer implements ConfigurationDefinit
      *
      * @see \PhpCsFixer\AbstractFixer::getName()
      */
-    public function getName()
+    public function getName(): string
     {
         return 'ConcreteCMS/' . parent::getName();
     }
@@ -53,18 +59,16 @@ final class InlineTagFixer extends AbstractFixer implements ConfigurationDefinit
     /**
      * {@inheritdoc}
      *
-     * @see \PhpCsFixer\Fixer\DefinedFixerInterface::getDefinition()
+     * @see \PhpCsFixer\Fixer\FixerInterface::getDefinition()
      */
-    public function getDefinition()
+    public function getDefinition(): FixerDefinitionInterface
     {
         $sample = <<<'EOT'
-<?=1?> <?= 1 ?> <?=  1  ?>
-<?=2;?> <?= 2; ?> <?=  2;  ?>
-<?=3  ;?> <?= 3  ;?> <?=3  ;?> <?=  3  ;  ?>
-<?php   echo 4  ;  ?>
-
-EOT
-        ;
+        <?=1?> <?= 1 ?> <?=  1  ?>
+        <?=2;?> <?= 2; ?> <?=  2;  ?>
+        <?=3  ;?> <?= 3  ;?> <?=3  ;?> <?=  3  ;  ?>
+        <?php   echo 4  ;  ?>
+        EOT;
 
         return new FixerDefinition(
             'Changes spaces and semicolons in inline PHP tags.',
@@ -77,7 +81,6 @@ EOT
                 new CodeSample($sample, [self::OPTION_SEMICOLON => null]),
                 new CodeSample($sample, [self::OPTION_SEMICOLON => true]),
             ],
-            null
         );
     }
 
@@ -86,7 +89,7 @@ EOT
      *
      * @see \PhpCsFixer\Fixer\FixerInterface::isCandidate()
      */
-    public function isCandidate(Tokens $tokens)
+    public function isCandidate(Tokens $tokens): bool
     {
         if (
             $this->configuration[self::OPTION_SPACEBEFORE] === self::SPACE_KEEP
@@ -102,9 +105,28 @@ EOT
     /**
      * {@inheritdoc}
      *
+     * @see \PhpCsFixer\AbstractFixer::applyFix()
+     */
+    protected function applyFix(\SplFileInfo $file, Tokens $tokens): void
+    {
+        $index = 0;
+        while (true) {
+            $range = $this->findApplicableRange($tokens, $index);
+            if ($range === null) {
+                return;
+            }
+            $newRange = $this->fixRange($range);
+            $tokens->overrideRange($index, $index + count($range) - 1, $newRange);
+            $index += count($newRange);
+        }
+    }
+
+    /**
+     * {@inheritdoc}
+     *
      * @see \PhpCsFixer\AbstractFixer::createConfigurationDefinition()
      */
-    protected function createConfigurationDefinition()
+    protected function createConfigurationDefinition(): FixerConfigurationResolverInterface
     {
         return new FixerConfigurationResolver([
             (new FixerOptionBuilder(self::OPTION_SPACEBEFORE, 'The desired number of spaces at the beginning of the tag.'))
@@ -123,26 +145,7 @@ EOT
     }
 
     /**
-     * {@inheritdoc}
-     *
-     * @see \PhpCsFixer\AbstractFixer::applyFix()
-     */
-    protected function applyFix(SplFileInfo $file, Tokens $tokens)
-    {
-        $index = 0;
-        for (;;) {
-            $range = $this->findApplicableRange($tokens, $index);
-            if ($range === null) {
-                return;
-            }
-            $newRange = $this->fixRange($range);
-            $tokens->overrideRange($index, $index + count($range) - 1, $newRange);
-            $index += count($newRange);
-        }
-    }
-
-    /**
-     * Find the next range of tokens that should be fixes.
+     * @param mixed $start
      *
      * @return \PhpCsFixer\Tokenizer\Token[]|null
      */
@@ -151,23 +154,21 @@ EOT
         $maxIndex = $tokens->count() - 1;
         for (; $start < $maxIndex; $start++) {
             $token = $tokens[$start];
-            /** @var \PhpCsFixer\Tokenizer\Token $token */
             if (!$token->isGivenKind([T_OPEN_TAG, T_OPEN_TAG_WITH_ECHO])) {
                 continue;
             }
-            if (strpos($token->getContent(), "\n") !== false) {
+            if (str_contains($token->getContent(), "\n")) {
                 continue;
             }
             $result = [$token];
             for ($nextIndex = $start + 1; $nextIndex <= $maxIndex; $nextIndex++) {
                 $token = $tokens[$nextIndex];
-                /** @var \PhpCsFixer\Tokenizer\Token $token */
                 if ($token->isGivenKind(T_CLOSE_TAG)) {
                     $result[] = $token;
 
                     return $result;
                 }
-                if (strpos($token->getContent(), "\n") !== false) {
+                if (str_contains($token->getContent(), "\n")) {
                     break;
                 }
                 $result[] = $token;
@@ -267,7 +268,7 @@ EOT
     private function popWhitespacesAndSemicolons(array &$tokens, bool $semicolons, bool $whitespaces): array
     {
         $result = [];
-        for (;;) {
+        while (true) {
             $token = array_pop($tokens);
             if ($token === null) {
                 break;
@@ -290,15 +291,11 @@ EOT
      */
     private function needsSemicolonAfter(array $tokens): bool
     {
-        $count = count($tokens);
-        if ($count === 0) {
-            return false;
-        }
-        $token = $tokens[$count - 1];
-        if ($token->getContent() === '}') {
+        $token = array_pop($tokens);
+        if ($token === null) {
             return false;
         }
 
-        return true;
+        return $token->getContent() !== '}';
     }
 }

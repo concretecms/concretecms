@@ -1,0 +1,57 @@
+<block type="survey" name="">
+  <data table="btSurvey">
+    <record>
+      <customMessage></customMessage>
+      <question>What do you think about that?</question>
+      <requiresRegistration>1</requiresRegistration>
+      <showResults>0</showResults>
+    </record>
+  </data>
+  <data table="btSurveyOptions">
+    <record>
+      <displayOrder>0</displayOrder>
+      <optionID>1001</optionID>
+      <optionName>Nice</optionName>
+    </record>
+    <record>
+      <displayOrder>1</displayOrder>
+      <optionID>1002</optionID>
+      <optionName>Great!</optionName>
+    </record>
+    <record>
+      <displayOrder>2</displayOrder>
+      <optionID>1003</optionID>
+      <optionName>Wonderful!!!</optionName>
+    </record>
+  </data>
+  <data table="btSurveyResults">
+    <record>
+      <cID>/page-1</cID>
+      <ipAddress>127.0.0.1</ipAddress>
+      <optionID>1002</optionID>
+      <timestamp>2025-07-03 00:14:16</timestamp>
+      <uID>user:admin</uID>
+    </record>
+    <record>
+      <cID>/page-1</cID>
+      <ipAddress>127.0.0.1</ipAddress>
+      <optionID>1003</optionID>
+      <timestamp>2025-07-03 07:51:08</timestamp>
+      <uID></uID>
+    </record>
+    <record>
+      <cID>/page-1</cID>
+      <ipAddress>127.0.0.1</ipAddress>
+      <optionID>1001</optionID>
+      <timestamp>2025-07-03 07:52:20</timestamp>
+      <uID></uID>
+    </record>
+    <record>
+      <cID>/page-1</cID>
+      <ipAddress>::1</ipAddress>
+      <optionID>1003</optionID>
+      <timestamp>2025-07-03 07:59:08</timestamp>
+      <uID>user:jane_doe</uID>
+    </record>
+  </data>
+</block>

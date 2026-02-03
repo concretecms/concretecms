@@ -399,6 +399,31 @@ class Login extends PageController implements LoggerAwareInterface
         }
     }
 
+    private function logoutAndRedirect(): RedirectResponse
+    {
+        $u = $this->app->make(User::class);
+        $response = null;
+        if ($u->isRegistered()) {
+            $response = $u->logout();
+        }
+        if ($response instanceof RedirectResponse) {
+            return $response;
+        } else {
+            $displayLogoutMessage = $this->app->make('config')->get('concrete.user.logout.display_logout_message');
+            if ($displayLogoutMessage) {
+                return $this->buildRedirect(['/login', 'logout_complete']);
+            } else {
+                return $this->buildRedirect('/');
+            }
+        }
+    }
+
+    public function logout_complete()
+    {
+        $this->set('logoutComplete', true);
+        $this->set('logoutMessage', (string) $this->app->make('config')->get('concrete.user.logout.logout_message'));
+    }
+
     /**
      * @deprecated Use do_logout instead
      *
@@ -410,7 +435,7 @@ class Login extends PageController implements LoggerAwareInterface
     {
         $valt = $this->app->make('token');
         if ($valt->validate('logout', $token)) {
-            $response = $this->app->make(User::class)->logout() ?? $this->buildRedirect('/');
+            $response = $this->logoutAndRedirect();
             $response->send();
             exit();
         }
@@ -428,7 +453,7 @@ class Login extends PageController implements LoggerAwareInterface
             return $this->app->make(ResponseFactoryInterface::class)->error($valt->getErrorMessage());
         }
 
-        return $this->app->make(User::class)->logout() ?? $this->buildRedirect('/');
+        return $this->logoutAndRedirect();
     }
 
     public function forward($cID = 0)

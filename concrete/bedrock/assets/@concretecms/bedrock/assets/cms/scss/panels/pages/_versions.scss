@@ -82,6 +82,17 @@ section#ccm-panel-page-versions {
   }
 }
 
+@include color-mode(dark) {
+  section#ccm-panel-page-versions {
+    table {
+      th,
+      td {
+        background-color: $panel-background-color-accent-dark;
+      }
+    }
+  }
+}
+
 div#ccm-panel-detail-page-versions {
   div.ccm-panel-detail-content {
     height: 100%;

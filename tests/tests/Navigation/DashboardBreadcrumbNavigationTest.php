@@ -3,15 +3,14 @@
 namespace Concrete\Tests\Navigation;
 
 use Concrete\Core\Html\Service\Navigation;
+use Concrete\Core\Navigation\Breadcrumb\Dashboard\DashboardBreadcrumb;
+use Concrete\Core\Navigation\Breadcrumb\Dashboard\DashboardBreadcrumbFactory;
 use Concrete\Core\Page\Page;
 use Concrete\Tests\TestCase;
-use Concrete\Core\Navigation\Breadcrumb\Dashboard\DashboardBreadcrumbFactory;
 use Mockery as M;
 
 class DashboardBreadcrumbNavigationTest extends TestCase
 {
-
-
     public function testCreateNavigation()
     {
         $data = [
@@ -33,6 +32,6 @@ class DashboardBreadcrumbNavigationTest extends TestCase
         $navigation->shouldReceive('getTrailToCollection')->andReturn($pages);
         $factory = new DashboardBreadcrumbFactory($navigation);
         $breadcrumb = $factory->getBreadcrumb($breadcrumbPage);
+        $this->assertInstanceOf(DashboardBreadcrumb::class, $breadcrumb);
     }
-
 }

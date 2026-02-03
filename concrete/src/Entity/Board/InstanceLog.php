@@ -65,7 +65,14 @@ class InstanceLog implements \JsonSerializable
         return $this->entries;
     }
 
-    public function jsonSerialize()
+    /**
+     * {@inheritdoc}
+     *
+     * @see \JsonSerializable::jsonSerialize()
+     *
+     * @return \Concrete\Core\Entity\Board\InstanceLogEntry[]
+     */
+    public function jsonSerialize(): array
     {
         $entries = $this->getEntries();
         $return = [];
@@ -77,8 +84,7 @@ class InstanceLog implements \JsonSerializable
                 }
             }
         }
+
         return $return;
     }
-
-
 }

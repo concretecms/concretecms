@@ -1,0 +1,7 @@
+{
+  "$schema": "../options-schema.json",
+  "fileUsageCount": 0,
+  "richTexts": {
+    "SELECT content FROM btContentLocal WHERE bID = :bID": {}
+  }
+}

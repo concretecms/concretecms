@@ -1,0 +1,16 @@
+<block type="testimonial" name="">
+  <data table="btTestimonial">
+    <record>
+      <awardImageID>{ccm:export:file:210987654321:file-2.png}</awardImageID>
+      <company><![CDATA[Best Ones & Co.]]></company>
+      <companyURL>https://listen.to/me</companyURL>
+      <fID>{ccm:export:file:123456789012:file-1.jpg}</fID>
+      <name>Mark Knopfler</name>
+      <paragraph>Mark Knopfler is a British guitarist, singer, and songwriter best known as the frontman of Dire Straits.
+
+As he once said:
+"The music just comes when I play - it's not about flash, it's about feel".</paragraph>
+      <position>Guitarist</position>
+    </record>
+  </data>
+</block>

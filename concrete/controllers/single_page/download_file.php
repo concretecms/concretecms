@@ -188,8 +188,6 @@ class DownloadFile extends PageController
                     header("Content-type: $mimeType");
                     echo $approvedVersion->getFileContents();
                     $this->app->shutdown();
-                } else {
-                    $this->force_download($file);
                 }
             }
         }

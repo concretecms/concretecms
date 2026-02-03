@@ -29,9 +29,10 @@ class EntryCacheTest extends ConcreteDatabaseTestCase
         'PermissionKeys',
         'PermissionKeyCategories',
         'Groups',
+        'Logs',
     ];
 
-    protected $metadatas = [
+    protected $entityClassNames = [
         'Concrete\Core\Entity\Express\Entity',
         'Concrete\Core\Entity\Express\Entry',
         'Concrete\Core\Entity\Express\Entry\Association',

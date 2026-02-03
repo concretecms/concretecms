@@ -7,10 +7,11 @@ div#ccm-toolbar {
   position: fixed;
   top: 0;
   width: 100%;
+  z-index: $index-level-main-bar; /* over the top of the highlighter, which is 1000 */
+
   @media only screen and (max-width: 768px) {
     width: 100vw;
   }
-  z-index: $index-level-main-bar; /* over the top of the highlighter, which is 1000 */
 
   .ccm-toolbar-accessibility-title {
     display: none;
@@ -59,11 +60,11 @@ div#ccm-toolbar {
         border-right: 1px solid $gray-200;
         box-sizing: border-box;
         color: $gray-600;
-
         display: flex;
         height: 47px;
         position: relative;
         text-decoration: none;
+        transition: $transition-base;
         width: 58px;
 
         i,
@@ -154,6 +155,7 @@ div#ccm-toolbar {
         img {
           height: 24px;
         }
+
       }
     }
 
@@ -302,6 +304,64 @@ div#ccm-toolbar {
 
 }
 
+@include color-mode(dark) {
+  div#ccm-toolbar {
+    background-color: $gray-800;
+    border-bottom: 1px solid $gray-700;
+
+    > ul {
+      > li {
+        > a {
+          border-right: 1px solid $gray-700;
+          color: $gray-200;
+
+          svg {
+            fill: $gray-200;
+          }
+
+          &:hover {
+            background-color: $gray-900;
+            color: $gray-200;
+          }
+        }
+      }
+
+      li.ccm-logo {
+        span {
+          border-right: 1px solid $gray-700;
+        }
+      }
+
+      li.ccm-toolbar-search {
+        background-color: black;
+        border-left: 1px solid $gray-700;
+        color: $gray-200;
+
+        input {
+          background-color: black;
+          border-right: 1px solid $gray-700;
+          color: $gray-200;
+        }
+
+        svg {
+          fill: $gray-200;
+        }
+      }
+
+      li.ccm-toolbar-last-left-child {
+        border-right: 1px solid $gray-700;
+      }
+    }
+
+    ul {
+      li {
+        div.ccm-menu-item-site-list-container {
+          border-right: 1px solid $gray-700;
+        }
+      }
+    }
+  }
+}
 
 /* Disabling the toolbar */
 div#ccm-toolbar-disabled {

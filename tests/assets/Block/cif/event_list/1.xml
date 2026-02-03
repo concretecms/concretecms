@@ -1,0 +1,19 @@
+<block type="event_list" name="">
+  <data table="btEventList">
+    <record>
+      <caID>0</caID>
+      <calendarAttributeKeyHandle></calendarAttributeKeyHandle>
+      <eventListTitle>Great Events</eventListTitle>
+      <eventOrder>most_recent_first</eventOrder>
+      <eventPeriod>future_events</eventPeriod>
+      <filterByFeatured>1</filterByFeatured>
+      <filterByPageTopicAttributeKeyHandle>blog_entry_topics</filterByPageTopicAttributeKeyHandle>
+      <filterByTopicAttributeKeyID>0</filterByTopicAttributeKeyID>
+      <filterByTopicID>0</filterByTopicID>
+      <linkToPage>0</linkToPage>
+      <titleFormat>h3</titleFormat>
+      <totalPerPage>9</totalPerPage>
+      <totalToRetrieve>70</totalToRetrieve>
+    </record>
+  </data>
+</block>

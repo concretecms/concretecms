@@ -3,8 +3,11 @@
 namespace Concrete\Block\Html;
 
 use Concrete\Core\Block\BlockController;
+use Concrete\Core\Editor\LinkAbstractor;
+use Concrete\Core\File\Tracker\FileTrackableInterface;
+use Concrete\Core\File\Tracker\RichTextExtractor;
 
-class Controller extends BlockController
+class Controller extends BlockController implements FileTrackableInterface
 {
     public $content = '';
 
@@ -26,6 +29,8 @@ class Controller extends BlockController
 
     protected $btIgnorePageThemeGridFrameworkContainer = true;
 
+    protected $btExportContentColumns = ['content'];
+
     public function getBlockTypeDescription()
     {
         return t('For adding HTML by hand.');
@@ -38,17 +43,18 @@ class Controller extends BlockController
 
     public function view()
     {
-        $this->set('content', $this->content);
+        $this->set('content', LinkAbstractor::translateFrom($this->content));
     }
 
     public function add()
     {
-        $this->set('content', '');
+        $this->content = '';
         $this->edit();
     }
 
     public function edit()
     {
+        $this->set('content', LinkAbstractor::translateFromEditMode($this->content));
         $this->requireAsset('ace');
     }
 
@@ -59,7 +65,7 @@ class Controller extends BlockController
 
     public function save($data)
     {
-        $args['content'] = $data['content'] ?? '';
+        $args['content'] = LinkAbstractor::translateTo($data['content'] ?? '');
         parent::save($args);
     }
 
@@ -98,5 +104,15 @@ class Controller extends BlockController
         );
 
         return nl2br($s);
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\File\Tracker\FileTrackableInterface::getUsedFiles()
+     */
+    public function getUsedFiles()
+    {
+        return $this->app->make(RichTextExtractor::class)->extractFiles($this->content);
     }
 }

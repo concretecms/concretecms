@@ -58,6 +58,8 @@ class ContentPopulator
                 $logger->write(t('Item ID %s was transformed into content',
                     $item->getBoardItemID()
                 ), $itemData);
+            } else {
+                $logger = $this->loggerFactory->createNullLogger();
             }
             $contentObjects = $contentPopulator->createContentObjects($itemData, $logger);
             $groups[] = new ItemObjectGroup($instanceItem, $contentObjects);

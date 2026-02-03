@@ -8,12 +8,14 @@ use Page;
 
 class PageListTopicTest extends PageTestCase
 {
-
-    public function __construct($name = null, array $data = [], $dataName = '')
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\TestHelpers\Database\ConcreteDatabaseTestCase::getTables()
+     */
+    protected function getTables()
     {
-        parent::__construct($name, $data, $dataName);
-
-        $this->tables = array_merge($this->tables, [
+        return array_merge(parent::getTables(), [
             'TreeTypes',
             'TopicTrees',
             'TreeNodes',
@@ -26,7 +28,16 @@ class PageListTopicTest extends PageTestCase
             'Groups',
             'TreeNodePermissionAssignments'
         ]);
-        $this->metadatas = array_merge($this->metadatas, [
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\TestHelpers\Database\ConcreteDatabaseTestCase::getEntityClassNames()
+     */
+    protected function getEntityClassNames(): array
+    {
+        return array_merge(parent::getEntityClassNames(), [
             'Concrete\Core\Entity\Attribute\Type',
             'Concrete\Core\Entity\Attribute\Category',
             'Concrete\Core\Entity\Attribute\Key\Settings\Settings',

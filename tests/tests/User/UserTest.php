@@ -11,17 +11,22 @@ use Core;
 
 class UserTest extends UserTestCase
 {
-    public function __construct($name = null, array $data = [], $dataName = '')
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\TestHelpers\Database\ConcreteDatabaseTestCase::getEntityClassNames()
+     */
+    protected function getEntityClassNames(): array
     {
-        parent::__construct($name, $data, $dataName);
-
-        $this->metadatas[] = 'Concrete\Core\Entity\File\StorageLocation\StorageLocation';
-        $this->metadatas[] = 'Concrete\Core\Entity\File\StorageLocation\Type\Type';
-        $this->metadatas[] = 'Concrete\Core\Entity\Site\Site';
-        $this->metadatas[] = 'Concrete\Core\Entity\Site\Locale';
-        $this->metadatas[] = 'Concrete\Core\Entity\Site\Type';
-        $this->metadatas[] = 'Concrete\Core\Entity\Site\Tree';
-        $this->metadatas[] = 'Concrete\Core\Entity\Site\SiteTree';
+        return array_merge(parent::getEntityClassNames(), [
+            'Concrete\Core\Entity\File\StorageLocation\StorageLocation',
+            'Concrete\Core\Entity\File\StorageLocation\Type\Type',
+            'Concrete\Core\Entity\Site\Site',
+            'Concrete\Core\Entity\Site\Locale',
+            'Concrete\Core\Entity\Site\Type',
+            'Concrete\Core\Entity\Site\Tree',
+            'Concrete\Core\Entity\Site\SiteTree',
+        ]);
     }
 
     public function tearDown(): void

@@ -16,6 +16,12 @@
   }
 }
 
+@include color-mode(dark) {
+  .ccm-file-manager-details-preview-thumbnail {
+    background-color: $gray-800;
+  }
+}
+
 @media (min-width: map-get($grid-breakpoints, "md")) {
   .ccm-file-manager-details-sets,
   .ccm-file-manager-details-attributes,

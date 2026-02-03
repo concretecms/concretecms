@@ -1,0 +1,4 @@
+<attributekey>
+  <link service="bluesky" detail="https://www1.example.org"></link>
+  <link service="twitter" detail="https://www2.example.org"></link>
+</attributekey>

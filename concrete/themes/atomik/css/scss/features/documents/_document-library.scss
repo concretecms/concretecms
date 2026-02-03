@@ -12,4 +12,10 @@ div.theme-atomik {
   a.ccm-block-document-library-add-files-open::after {
     border-color: transparent transparent $white;
   }
+
+  .ccm-block-document-library-icon-grid-image {
+    img {
+      filter: $theme-document-library-icon-filter;
+    }
+  }
 }

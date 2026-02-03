@@ -6,11 +6,16 @@ class RegenerateRelevantBoardInstancesCommandHandler extends AbstractUpdateBoard
 {
     public function __invoke(RegenerateRelevantBoardInstancesCommand $command)
     {
-        foreach ($this->getInstances($command) as $instance) {
-            $regenerateCommand = new RegenerateBoardInstanceCommand();
-            $regenerateCommand->setDefer(true);
-            $regenerateCommand->setInstance($instance);
-            $this->app->executeCommand($regenerateCommand);
+        if ($this->performUpdate()) {
+            $this->logger->debug(t('Automatic board instance regeneration triggered.'));
+            foreach ($this->getInstances($command) as $instance) {
+                $regenerateCommand = new RegenerateBoardInstanceCommand();
+                $regenerateCommand->setDefer(true);
+                $regenerateCommand->setInstance($instance);
+                $this->app->executeCommand($regenerateCommand);
+            }
+        } else {
+            $this->logger->debug(t('Automatic board instance regeneration requested but skipped due to configuration.'));
         }
     }
 

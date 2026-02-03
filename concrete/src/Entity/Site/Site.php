@@ -56,6 +56,12 @@ class Site implements TreeInterface, ObjectInterface, PermissionObjectInterface,
      */
     protected $pThemeSkinIdentifier;
 
+    /**
+     * A theme skin to use for this site (dark mode)
+     *
+     * @ORM\Column(type="string", nullable=true)
+     */
+    protected $pThemeSkinIdentifierDark;
 
     /**
      * Is this the default site?
@@ -544,6 +550,23 @@ class Site implements TreeInterface, ObjectInterface, PermissionObjectInterface,
     {
         $this->pThemeSkinIdentifier = $pThemeSkinIdentifier;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getThemeSkinIdentifierDark()
+    {
+        return $this->pThemeSkinIdentifierDark;
+    }
+
+    /**
+     * @param mixed $pThemeSkinIdentifierDark
+     */
+    public function setThemeSkinIdentifierDark($pThemeSkinIdentifierDark): void
+    {
+        $this->pThemeSkinIdentifierDark = $pThemeSkinIdentifierDark;
+    }
+
 
 
 }

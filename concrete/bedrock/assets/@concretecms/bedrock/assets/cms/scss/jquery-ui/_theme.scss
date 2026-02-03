@@ -33,28 +33,28 @@
 }
 
 .ui-widget.ui-widget-content {
-  border: 1px solid #c5c5c5/*{borderColorDefault}*/;
+  border: 1px solid var(--bs-secondary-bg);
 }
 
 .ui-widget-content {
-  background: #fff;
-  border: 1px solid #ddd;
-  color: #333;
+  background: var(--bs-body-bg);
+  border: 1px solid var(--bs-secondary-bg);
+  color: var(--bs-body-color);
 }
 
 .ui-widget-content a {
-  color: #333;
+  color: var(--bs-body-color);
 }
 
 .ui-widget-header {
   background: #e9e9e9/*{bgColorHeader}*/ /*{bgImgUrlHeader}*/ /*{bgHeaderXPos}*/ /*{bgHeaderYPos}*/ /*{bgHeaderRepeat}*/;
   border: 1px solid #ddd;
-  color: #333;
+  color: var(--bs-body-color);
   font-weight: bold;
 }
 
 .ui-widget-header a {
-  color: #333;
+  color: var(--bs-body-color);
 }
 
 /* Interaction states

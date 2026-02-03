@@ -11,12 +11,21 @@ use Request;
 
 class AreaLayoutTest extends ConcreteDatabaseTestCase
 {
-    protected $tables = ['AreaLayoutPresets', 'AreaLayouts', 'AreaLayoutColumns',
-        'AreaLayoutCustomColumns', 'AreaLayoutThemeGridColumns', 'PageThemes', 'Pages', 'Collections',
-        'CollectionVersions', 'SiteTrees'];
+    protected $tables = [
+        'AreaLayoutPresets',
+        'AreaLayouts',
+        'AreaLayoutColumns',
+        'AreaLayoutCustomColumns',
+        'AreaLayoutThemeGridColumns',
+        'PageThemes',
+        'Pages',
+        'Collections',
+        'CollectionVersions',
+    ];
+
     protected $fixtures = [];
 
-    protected $metadatas = [
+    protected $entityClassNames = [
         'Concrete\Core\Entity\Site\Locale',
         'Concrete\Core\Entity\Site\Site',
         'Concrete\Core\Entity\Site\Type',
@@ -40,6 +49,12 @@ class AreaLayoutTest extends ConcreteDatabaseTestCase
         $formatter = $layout->getFormatter();
         $this->assertInstanceOf('\Concrete\Core\Area\Layout\Formatter\CustomFormatter', $formatter);
         $this->assertEquals('<div class="ccm-layout-column-wrapper" id="ccm-layout-column-wrapper-1"></div>', (string) $formatter->getLayoutContainerHtmlObject());
+    }
+
+    public function testUnexistingLayoutContainer(): void
+    {
+        $layout = Layout::getByID(1337);
+        $this->assertNull($layout);
     }
 
     public function testThemeGridAreaLayoutContainer()
@@ -80,6 +95,47 @@ class AreaLayoutTest extends ConcreteDatabaseTestCase
         $formatter = $layout->getFormatter();
         $this->assertInstanceOf('\Concrete\Core\Area\Layout\Formatter\ThemeGridFormatter', $formatter);
         $this->assertEquals('<div class="row"></div>', (string) $formatter->getLayoutContainerHtmlObject());
+
+        $req->clearCurrentPage();
+    }
+
+    public function testThemeGridAreaLayoutContainerWithoutFramework()
+    {
+        $this->truncateTables();
+
+        $layout = ThemeGridLayout::add();
+        $layout->addLayoutColumn()->setAreaLayoutColumnSpan(4);
+        $column = $layout->addLayoutColumn();
+        $column->setAreaLayoutColumnSpan(2);
+        $column->setAreaLayoutColumnOffset(2);
+        $layout->addLayoutColumn()->setAreaLayoutColumnSpan(6);
+
+        $elemental = \Concrete\Core\Page\Theme\Theme::add('elemental');
+        $service = Core::make('site/type');
+        if (!$service->getDefault()) {
+            $service->installDefault();
+        }
+        $service = Core::make('site');
+        if (!$service->getDefault()) {
+            $service->installDefault();
+        }
+
+        $themeStub = $this->createStub(get_class($elemental));
+        $themeStub->method('supportsGridFramework')->willReturn(false);
+
+        Page::addHomePage();
+        Core::make('cache/request')->disable();
+
+        $pageStub = $this->createStub(Page::class);
+        $pageStub->method('getCollectionThemeObject')->willReturn($themeStub);
+
+        $req = Request::getInstance();
+        $req->setCurrentPage($pageStub);
+
+        $layout = Layout::getByID(1);
+        $this->assertInstanceOf(ThemeGridLayout::class, $layout);
+
+        $this->assertEquals('3 Columns  Layout', $layout->getDisplayName());
 
         $req->clearCurrentPage();
     }

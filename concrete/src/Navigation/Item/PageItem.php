@@ -28,7 +28,7 @@ class PageItem extends Item
         if ($page) {
             $this->pageID = $page->getCollectionID();
             $this->keywords = (string)$page->getAttribute("meta_keywords");
-            parent::__construct($this->getURL(), $page->getCollectionName(), $isActive);
+            parent::__construct($this->getURL(), (string) $page->getCollectionName(), $isActive);
         }
         if ($this->keywords === null) {
             $this->keywords = '';

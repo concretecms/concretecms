@@ -1,0 +1,10 @@
+<block type="file" name="">
+  <data table="btContentFile">
+    <record>
+      <fID>{ccm:export:file:123456789012:file-1.jpg}</fID>
+      <fileLinkText>Text of the link</fileLinkText>
+      <filePassword null="true"></filePassword>
+      <forceDownload>0</forceDownload>
+    </record>
+  </data>
+</block>

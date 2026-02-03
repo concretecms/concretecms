@@ -84,13 +84,9 @@ function h($input)
 }
 
 /**
- * Class member access on instantiation.
- *
- *     id(new Block)->render();
- *
- * @param mixed $mixed
- *
- * @return mixed mixed
+ * @deprecated
+ * Since PHP 5.4 you can write: (new Block())->render();
+ * Since PHP 8.4 you can write: new Block()->render();
  */
 function id($mixed)
 {

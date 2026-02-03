@@ -5,6 +5,7 @@ namespace Concrete\Block\CoreScrapbookDisplay;
 use Concrete\Core\Block\Block;
 use Concrete\Core\Block\BlockController;
 use Concrete\Core\Block\View\BlockViewTemplate;
+use Concrete\Core\Utility\Service\Xml;
 
 /**
  * The controller for the core scrapbook display block. This block is automatically used when a block is copied into a
@@ -124,8 +125,9 @@ class Controller extends BlockController
 
     private function exportChildren(\SimpleXMLElement $from, \SimpleXMLElement $to)
     {
+        $xml = $this->app->make(Xml::class);
         foreach ($from->children() as $fromChild) {
-            $toChild = $to->addChild($fromChild->getName(), (string) $fromChild);
+            $toChild = $xml->createChildElement($to, $fromChild->getName(), (string) $fromChild);
             foreach ($fromChild->attributes() as $attribute) {
                 $toChild[$attribute->getName()] = (string) $attribute;
             }

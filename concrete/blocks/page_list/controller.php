@@ -3,25 +3,32 @@ namespace Concrete\Block\PageList;
 
 use BlockType;
 use CollectionAttributeKey;
+use Concrete\Attribute\Topics\Controller as TopicsController;
 use Concrete\Core\Attribute\Category\PageCategory;
 use Concrete\Core\Attribute\Key\CollectionKey;
 use Concrete\Core\Block\BlockController;
 use Concrete\Core\Block\View\BlockView;
-use Concrete\Core\Config\Repository\Repository;
-use Concrete\Core\Entity\Site\Site;
 use Concrete\Core\Feature\Features;
 use Concrete\Core\Feature\UsesFeatureInterface;
 use Concrete\Core\Html\Service\Seo;
 use Concrete\Core\Http\ResponseFactoryInterface;
-use Concrete\Core\Package\Offline\Exception;
 use Concrete\Core\Page\Feed;
+use Concrete\Core\Page\PageList;
+use Concrete\Core\Page\Search\ColumnSet\Column\CollectionVersionColumn;
+use Concrete\Core\Page\Search\ColumnSet\Column\DateLastModifiedColumn;
+use Concrete\Core\Page\Search\ColumnSet\Column\DatePublicColumn;
+use Concrete\Core\Page\Search\ColumnSet\Column\RandomColumn;
+use Concrete\Core\Page\Search\ColumnSet\Column\SitemapDisplayOrderColumn;
+use Concrete\Core\Search\Pagination\PaginationFactory;
 use Concrete\Core\Tree\Node\Node;
 use Concrete\Core\Tree\Node\Type\Topic;
-use Core;
+use Concrete\Core\Tree\Tree;
 use Concrete\Core\Url\SeoCanonical;
+use Concrete\Core\Utility\Service\Xml;
+use Core;
 use Database;
 use Page;
-use PageList;
+use SimpleXMLElement;
 
 class Controller extends BlockController implements UsesFeatureInterface
 {
@@ -215,6 +222,7 @@ class Controller extends BlockController implements UsesFeatureInterface
     protected $btCacheBlockOutput = null;
     protected $btCacheBlockOutputOnPost = true;
     protected $btCacheBlockOutputLifetime = 300;
+    /** @var PageList|null */
     protected $list;
 
     /**
@@ -325,28 +333,44 @@ class Controller extends BlockController implements UsesFeatureInterface
 
         switch ($this->orderBy) {
             case 'display_asc':
-                $this->list->sortByDisplayOrder();
+                $sortColumn = new SitemapDisplayOrderColumn();
+                $sortColumn->setColumnSortDirection('asc');
+                $this->list->sortBySearchColumn($sortColumn);
                 break;
             case 'display_desc':
-                $this->list->sortByDisplayOrderDescending();
+                $sortColumn = new SitemapDisplayOrderColumn();
+                $sortColumn->setColumnSortDirection('desc');
+                $this->list->sortBySearchColumn($sortColumn);
                 break;
             case 'chrono_asc':
-                $this->list->sortByPublicDate();
+                $sortColumn = new DatePublicColumn();
+                $sortColumn->setColumnSortDirection('asc');
+                $this->list->sortBySearchColumn($sortColumn);
                 break;
             case 'modified_desc':
-                $this->list->sortByDateModifiedDescending();
+                $sortColumn = new DateLastModifiedColumn();
+                $sortColumn->setColumnSortDirection('desc');
+                $this->list->sortBySearchColumn($sortColumn);
                 break;
             case 'random':
-                $this->list->sortBy('RAND()');
+                $sortColumn = new RandomColumn();
+                $this->list->sortBySearchColumn($sortColumn);
+                $this->list->sortBy('RAND(' . rand() . ')');
                 break;
             case 'alpha_asc':
-                $this->list->sortByName();
+                $sortColumn = new CollectionVersionColumn();
+                $sortColumn->setColumnSortDirection('asc');
+                $this->list->sortBySearchColumn($sortColumn);
                 break;
             case 'alpha_desc':
-                $this->list->sortByNameDescending();
+                $sortColumn = new CollectionVersionColumn();
+                $sortColumn->setColumnSortDirection('desc');
+                $this->list->sortBySearchColumn($sortColumn);
                 break;
             default:
-                $this->list->sortByPublicDateDescending();
+                $sortColumn = new DatePublicColumn();
+                $sortColumn->setColumnSortDirection('desc');
+                $this->list->sortBySearchColumn($sortColumn);
                 break;
         }
 
@@ -490,7 +514,11 @@ class Controller extends BlockController implements UsesFeatureInterface
         $showPagination = false;
         if ($this->num > 0) {
             $list->setItemsPerPage($this->num);
-            $pagination = $list->getPagination();
+            $manager = $list->getPagerManager();
+            $manager->sortListByCursor($list, $list->getActiveSortDirection());
+            $paginationFactory = new PaginationFactory($this->request);
+            $permissionedStylePagination = $this->paginate ? PaginationFactory::PERMISSIONED_PAGINATION_STYLE_FULL : PaginationFactory::PERMISSIONED_PAGINATION_STYLE_PAGER;
+            $pagination = $paginationFactory->createPaginationObject($list, $permissionedStylePagination);
             $pages = $pagination->getCurrentPageResults();
             if ($pagination->haveToPaginate() && $this->paginate) {
                 $showPagination = true;
@@ -748,6 +776,8 @@ class Controller extends BlockController implements UsesFeatureInterface
 
     public function save($args)
     {
+        $fromCIF = ($args['__fromCIF'] ?? null) === true;
+
         // If we've gotten to the process() function for this class, we assume that we're in
         // the clear, as far as permissions are concerned (since we check permissions at several
         // points within the dispatcher)
@@ -787,19 +817,25 @@ class Controller extends BlockController implements UsesFeatureInterface
         }
 
         $args['num'] = ($args['num'] > 0) ? $args['num'] : 0;
-        $args['cThis'] = ($args['cParentID'] === $this->cID) ? '1' : '0';
-        $args['cThisParent'] = ($args['cParentID'] === $this->cPID) ? '1' : '0';
-        $args['cParentID'] = ($args['cParentID'] === 'OTHER') ? (empty($args['cParentIDValue']) ? null : $args['cParentIDValue']) : $args['cParentID'];
-        if (!$args['cParentID']) {
-            $args['cParentID'] = 0;
+        if (!$fromCIF) {
+            $args['cThis'] = ($args['cParentID'] === $this->cID) ? '1' : '0';
+            $args['cThisParent'] = ($args['cParentID'] === $this->cPID) ? '1' : '0';
+            $args['cParentID'] = ($args['cParentID'] === 'OTHER') ? (empty($args['cParentIDValue']) ? null : $args['cParentIDValue']) : $args['cParentID'];
+            if (!$args['cParentID']) {
+                $args['cParentID'] = 0;
+            }
+            $args['filterByRelated'] = ($args['topicFilter'] == 'related') ? '1' : '0';
+            $args['filterByCustomTopic'] = ($args['topicFilter'] == 'custom') ? '1' : '0';
+            if (!$args['filterByCustomTopic'] || !$this->app->make('helper/number')->isInteger($args['customTopicTreeNodeID'])) {
+                $args['customTopicAttributeKeyHandle'] = '';
+                $args['customTopicTreeNodeID'] = 0;
+            }
         }
         $args['enableExternalFiltering'] = ($args['enableExternalFiltering']) ? '1' : '0';
         $args['includeAllDescendents'] = ($args['includeAllDescendents']) ? '1' : '0';
         $args['includeDate'] = ($args['includeDate']) ? '1' : '0';
         $args['truncateSummaries'] = ($args['truncateSummaries']) ? '1' : '0';
         $args['displayFeaturedOnly'] = ($args['displayFeaturedOnly']) ? '1' : '0';
-        $args['filterByRelated'] = ($args['topicFilter'] == 'related') ? '1' : '0';
-        $args['filterByCustomTopic'] = ($args['topicFilter'] == 'custom') ? '1' : '0';
         $args['displayThumbnail'] = ($args['displayThumbnail']) ? '1' : '0';
         $args['displayAliases'] = ($args['displayAliases']) ? '1' : '0';
         $args['displaySystemPages'] = ($args['displaySystemPages']) ? '1' : '0';
@@ -814,24 +850,23 @@ class Controller extends BlockController implements UsesFeatureInterface
             $args['relatedTopicAttributeKeyHandle'] = '';
         }
 
-        if (!$args['filterByCustomTopic'] || !$this->app->make('helper/number')->isInteger($args['customTopicTreeNodeID'])) {
-            $args['customTopicAttributeKeyHandle'] = '';
-            $args['customTopicTreeNodeID'] = 0;
-        }
-
         if ($args['rss']) {
-            $pf = null;
-            if (isset($this->pfID) && $this->pfID) {
-                $pf = Feed::getByID($this->pfID);
+            if ($fromCIF) {
+                $pfID = (int) ($args['pfID'] ?? 0);
+            } else {
+                $pfID = (int) $this->pfID;
             }
-
-            if (!is_object($pf)) {
+            $pf = $pfID === 0 ? null : Feed::getByID($pfID);
+            if (!$pf) {
                 $pf = new \Concrete\Core\Entity\Page\Feed();
-                $pf->setTitle($args['rssTitle']);
-                $pf->setDescription($args['rssDescription']);
+            }
+            if ((string) ($args['rssHandle'] ?? '') !== '') {
                 $pf->setHandle($args['rssHandle']);
             }
-
+            if ((string) ($args['rssTitle'] ?? '') !== '') {
+                $pf->setTitle($args['rssTitle']);
+            }
+            $pf->setDescription($args['rssDescription'] ?? '');
             $pf->setParentID($args['cParentID']);
             $pf->setPageTypeID($args['ptID']);
             $pf->setIncludeAllDescendents($args['includeAllDescendents']);
@@ -859,14 +894,14 @@ class Controller extends BlockController implements UsesFeatureInterface
         }
 
         if ($args['filterDateOption'] == 'past') {
-            $args['filterDateDays'] = $args['filterDatePast'];
+            $args['filterDateDays'] = $args['filterDateDays'] ?? $args['filterDatePast'];
         } elseif ($args['filterDateOption'] == 'future') {
-            $args['filterDateDays'] = $args['filterDateFuture'];
+            $args['filterDateDays'] = $args['filterDateDays'] ?? $args['filterDateFuture'];
         } else {
             $args['filterDateDays'] = null;
         }
 
-        $args['pfID'] = (int) ($args['pfID']);
+        $args['pfID'] = (int) $args['pfID'];
         parent::save($args);
     }
 
@@ -930,7 +965,91 @@ class Controller extends BlockController implements UsesFeatureInterface
         if (!$key->isAttributeKeyContentIndexed()) {
             return t('The %s page attribute must be indexed.', "<code>{$handle}</code>");
         }
-        
+
         return '';
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Block\BlockController::export()
+     */
+    public function export(SimpleXMLElement $blockNode)
+    {
+        parent::export($blockNode);
+        $xml = $this->app->make(Xml::class);
+        $xRecord = $blockNode->data[0]->record[0];
+
+        $customTopicTreeNode = null;
+        $customTopicAttributeKeyHandle = (string) $this->customTopicAttributeKeyHandle;
+        $customTopicTreeNodeID = (int) $this->customTopicTreeNodeID;
+        if ($customTopicAttributeKeyHandle !== '' && $customTopicTreeNodeID > 0) {
+            $customTopicTreeNode = Node::getByID($customTopicTreeNodeID);
+        }
+        unset($xRecord->customTopicTreeNodeID[0]);
+        $xml->createChildElement($xRecord, 'customTopicTreeNodePath', $customTopicTreeNode ? $customTopicTreeNode->getTreeNodeDisplayPath() : '');
+        $feed = $this->pfID ? Feed::getByID($this->pfID) : null;
+        if ($feed) {
+            $xml->createChildElement($xRecord, 'rssHandle', $feed->getHandle());
+            $xml->createChildElement($xRecord, 'rssTitle', $feed->getTitle());
+            $xml->createChildElement($xRecord, 'rssDescription', $feed->getDescription());
+        }
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Block\BlockController::getImportData()
+     */
+    protected function getImportData($blockNode, $page)
+    {
+        if (!$this->cID && $page) {
+            $this->cID = $page->getCollectionID();
+        }
+        $args = parent::getImportData($blockNode, $page);
+        $args['__fromCIF'] = true;
+        $args['customTopicTreeNodeID'] = 0;
+        $customTopicAttributeKeyHandle = (string) ($args['customTopicAttributeKeyHandle'] ?? '');
+        $customTopicTreeNodePath = (string) ($args['customTopicTreeNodePath'] ?? '');
+        if ($customTopicAttributeKeyHandle !== '' && $customTopicTreeNodePath !== '') {
+            $topicAttributeKey = $this->app->make(PageCategory::class)->getAttributeKeyByHandle($customTopicAttributeKeyHandle);
+            $topicController = $topicAttributeKey ? $topicAttributeKey->getController() : null;
+            if ($topicController instanceof TopicsController) {
+                $tree = Tree::getByID($topicController->getTopicTreeID());
+                if ($tree instanceof Tree) {
+                    $customTopicTreeNode = $tree->getNodeByDisplayPath($customTopicTreeNodePath);
+                    if ($customTopicTreeNode) {
+                        $args['customTopicTreeNodeID'] = $customTopicTreeNode->getTreeNodeID();
+                    };
+                }
+            }
+        }
+        if ($args['customTopicTreeNodeID'] === 0) {
+            $args['filterByCustomTopic'] = 0;
+            $args['customTopicAttributeKeyHandle'] = '';
+        } else {
+            $args['filterByCustomTopic'] = empty($args['filterByCustomTopic']) ? 0 : 1;
+            $args['customTopicAttributeKeyHandle'] = $customTopicAttributeKeyHandle;
+        }
+        $args['cThis'] = empty($args['cThis']) ? 0 : 1;
+        $args['cThisParent'] = empty($args['cThisParent']) ? 0 : 1;
+        $args['cParentID'] = empty($args['cParentID']) ? 0 : (int) $args['cParentID'];
+        $args['filterByRelated'] = empty($args['filterByRelated']) ? 0 : 1;
+        $args['filterByCustomTopic'] = empty($args['filterByCustomTopic']) ? 0 : 1;
+        $feed = empty($args['pfID']) ? null : Feed::getByID($args['pfID']);
+        $feedHandle = (string) ($args['rssHandle'] ?? '');
+        if ($feed || $feedHandle !== '') {
+            $args['rss'] = 1;
+            $args['pfID'] = $feed ? $feed->getID() : null;
+            $args['rssHandle'] = $feedHandle !== '' ? $feedHandle : $feed->getHandle();
+            if ((string) ($args['rssTitle'] ?? '') === '') {
+                $args['rssHandle'] = $feed ? $feed->getTitle() : $feedHandle;
+            }
+            if ((string) ($args['rssDescription'] ?? '') === '') {
+                $args['rssDescription'] = $feed ? $feed->getDescription() : '';
+            }
+        }
+
+        return $args;
     }
 }

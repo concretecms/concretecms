@@ -9,6 +9,7 @@ div.ccm-ui {
     thead {
       th {
         border-bottom-width: 1px;
+        color: $gray-500;
         font-size: 0.75rem;
 
         > a {
@@ -149,6 +150,54 @@ div.ccm-ui {
       .ccm-search-results-menu-launcher {
         button {
           visibility: visible;
+        }
+      }
+    }
+  }
+}
+
+@include color-mode(dark) {
+  .ccm-ui {
+    .ccm-search-results-table {
+      thead {
+        th {
+          > a {
+            color: $gray-300;
+
+            &:hover {
+              color: white;
+            }
+          }
+
+          &.ccm-results-list-active-sort-asc,
+          &.ccm-results-list-active-sort-desc {
+            a {
+              &:hover {
+                color: white;
+              }
+            }
+          }
+        }
+      }
+
+      .ccm-search-results-em,
+      .ccm-search-results-name {
+        color: $gray-200;
+      }
+
+      tr.ccm-search-results-hoverable:hover,
+      tr.ccm-menu-item-active,
+      tr.ccm-parent-menu-item-active,
+      tr.ccm-search-select-hover,
+      tr.ccm-parent-menu-item-hover,
+      tr.ccm-search-select-selected {
+        td {
+          background-color: $gray-700;
+          color: $gray-100;
+
+          &.ccm-search-results-name {
+            color: $gray-100;
+          }
         }
       }
     }

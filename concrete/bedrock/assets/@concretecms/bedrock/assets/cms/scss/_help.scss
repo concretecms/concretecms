@@ -137,11 +137,21 @@ div#ccm-toolbar {
 
   .help-block {
     background-color: $light-blue;
+    border-radius: 2px;
     color: $gray-700;
     display: block;
     font-style: italic;
     margin: 10px 0;
     padding: 10px 20px;
+  }
+}
+
+@include color-mode(dark) {
+  .ccm-ui {
+    .help-block {
+      background-color: $dark-blue;
+      color: $gray-200;
+    }
   }
 }
 

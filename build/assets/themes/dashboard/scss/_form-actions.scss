@@ -14,8 +14,8 @@ div#ccm-dashboard-content {
       @include clearfix();
       padding: 20px 35px;
       margin: 0 -15px;
-      border-top: 1px solid $gray-200;
-      background-color: $body-bg;
+      border-top: 1px solid var(--bs-secondary-bg);
+      background-color: var(--bs-body-bg);
     }
   }
 

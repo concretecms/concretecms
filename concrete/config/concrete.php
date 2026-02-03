@@ -6,9 +6,9 @@ return [
      *
      * @var string
      */
-    'version' => '9.4.0b1',
-    'version_installed' => '9.4.0b1',
-    'version_db' => '20250302004500', // the key of the latest database migration
+    'version' => '9.4.7',
+    'version_installed' => '9.4.7',
+    'version_db' => '20250827152432', // the key of the latest database migration
 
     /*
      * Installation status
@@ -435,6 +435,23 @@ return [
 
     /*
      * ------------------------------------------------------------------------
+     * Boards settings
+     * ------------------------------------------------------------------------
+     */
+    'boards' => [
+        /*
+         * If true, we will attempt to automatically update boards
+         * when their content items (pages, events, etc...) change
+         * Set this to false via the web UI if you're using the console command
+         * or other means to keep the boards up to date.
+         *
+         * @var bool
+         */
+        'automatically_refresh_instances' => true,
+    ],
+
+    /*
+     * ------------------------------------------------------------------------
      * Events settings
      * ------------------------------------------------------------------------
      */
@@ -511,6 +528,11 @@ return [
          * @var bool
          */
         'api' => false,
+
+        /*
+         * Whether to log stack traces of uncaught exceptions
+         */
+        'stack_trace' => false,
 
         'enable_dashboard_report' => true,
 
@@ -921,6 +943,20 @@ return [
 
     /*
      * ------------------------------------------------------------------------
+     * Appearance
+     * ------------------------------------------------------------------------
+     */
+    'appearance' => [
+        /*
+         * Show titles in the toolbars
+         *
+        * @var string (auto | light | dark)
+         */
+        'color_scheme' => 'auto',
+    ],
+
+    /*
+     * ------------------------------------------------------------------------
      * Internationalization
      * ------------------------------------------------------------------------
      */
@@ -1134,6 +1170,18 @@ return [
              * Determines whether the username field is displayed when editing profile
              */
             'display_username_field' => true,
+        ],
+
+        'logout' => [
+            /**
+             * Determines whether to show a logout message on successful logout.
+             */
+            'display_logout_message' => false,
+
+            /**
+             * Message to display
+             */
+            'logout_message' => 'You have been successfully logged out.',
         ],
 
         /*

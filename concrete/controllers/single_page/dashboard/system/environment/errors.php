@@ -43,7 +43,7 @@ class Errors extends DashboardPageController
         $config->set('concrete.error.display.guests', $this->request->query->get('errorDisplay'));
         $config->set('concrete.error.display.privileged', $this->request->query->get('errorDisplay'));
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'debug_example';
-        throw new ExampleException('Sample Output!');
+        throw new class('Sample Output!') extends \Exception {};
     }
 
     public function submit()
@@ -67,7 +67,4 @@ class Errors extends DashboardPageController
 
         return new JsonResponse($this->error);
     }
-}
-class ExampleException extends \Exception
-{
 }

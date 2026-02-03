@@ -81,6 +81,7 @@ View::element(
             $div = new Element('div');
 
             $div->addClass("form-check");
+            $div->addClass('li');
 
             /** @noinspection PhpParamsInspection */
             $div->appendChild($checkbox)->appendChild($label)->appendChild($input);

@@ -20,7 +20,7 @@ class IPServiceTest extends ConcreteDatabaseTestCase
         'Logs',
     ];
 
-    protected $metadatas = [
+    protected $entityClassNames = [
         Site::class,
         IpAccessControlCategory::class,
         IpAccessControlEvent::class,

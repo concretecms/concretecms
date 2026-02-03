@@ -14,6 +14,14 @@ ul.ccm-item-set-controls a {
   color: #333;
 }
 
+@include color-mode(dark) {
+  ul.ccm-item-set-controls {
+    a {
+      color: #ccc;
+    }
+  }
+}
+
 ul.ccm-item-set-controls a i {
   position: relative;
 }

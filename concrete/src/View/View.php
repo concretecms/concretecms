@@ -10,6 +10,7 @@ use Concrete\Core\Page\Theme\ThemeRouteCollection;
 use Concrete\Core\Page\View\Preview\SkinCustomizerPreviewRequest;
 use Concrete\Core\Site\Service;
 use Concrete\Core\StyleCustomizer\Skin\SkinInterface;
+use Concrete\Core\StyleCustomizer\Skin\Stylesheet\Stylesheet;
 use Environment;
 use Events;
 use Concrete\Core\Support\Facade\Facade;
@@ -497,7 +498,7 @@ class View extends AbstractView
         }
         $skin = $this->themeObject->getSkinByIdentifier($skinIdentifier);
         $stylesheet = $skin->getStylesheet();
-        return $stylesheet;
+        return $stylesheet->getElement();
     }
 
 

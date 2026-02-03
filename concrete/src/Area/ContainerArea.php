@@ -78,36 +78,59 @@ class ContainerArea
             $page = $area->getAreaCollectionObject();
             $subArea->load($page);
             $subArea->setSubAreaBlockObject($block);
-
-            $instanceAreas = $this->instance->getInstance()->getInstanceAreas();
-            if (!count($instanceAreas)) {
-                $this->refreshInstanceAreas($subArea);
-            }
+            $this->refreshInstanceAreas($subArea);
 
             return $subArea;
         }
         return null;
     }
 
-    protected function refreshInstanceAreas(SubArea $subArea)
+    protected function refreshInstanceAreas(SubArea $subArea): void
     {
         $app = Facade::getFacadeApplication();
-        $entityManager = $app->make(EntityManager::class);
+        /** @var EntityManager $em */
+        $em = $app->make(EntityManager::class);
 
-        $query = $entityManager->createQueryBuilder()
-            ->delete(InstanceArea::class, 'i')
-            ->where('i.instance = :instanceID')
-            ->andWhere('i.containerAreaName = :areaHandle');
-        $query->setParameter('instanceID', $this->instance->getInstance()->getContainerInstanceID());
-        $query->setParameter('areaHandle', $this->areaDisplayName);
-        $query->getQuery()->execute();
+        $instance = $this->instance->getInstance();
 
+        // Lightweight existence check: select only the PK, max 1 row.
+        $exists = $em->getRepository(InstanceArea::class)
+            ->createQueryBuilder('i')
+            ->select('i')
+            ->where('i.instance = :instance')
+            ->andWhere('i.containerAreaName = :handle')
+            ->setParameters([
+                'instance' => $instance,
+                'handle'   => $this->areaDisplayName,
+            ])
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getOneOrNullResult();
+
+        if ($exists) {
+            // Already present; nothing to do.
+            return;
+        }
+
+        // Insert (first time only).
         $instanceArea = new InstanceArea();
         $instanceArea->setContainerAreaName($this->areaDisplayName);
         $instanceArea->setAreaID($subArea->getAreaID());
-        $instanceArea->setInstance($this->instance->getInstance());
-        $entityManager->persist($instanceArea);
-        $entityManager->flush();
+        $instanceArea->setInstance($instance);
+
+        $em->persist($instanceArea);
+        // Keep inverse side up to date if you maintain the collection.
+        $instance->getInstanceAreas()->add($instanceArea);
+
+        // In case a concurrent request inserts the same row between the check and flush,
+        // ignore a unique-key violation (see note below about adding a unique index).
+        try {
+            // Optionally: $em->flush($instanceArea); to scope the flush.
+            $em->flush();
+        } catch (UniqueConstraintViolationException $e) {
+            // Another request inserted it; safe to ignore.
+            $em->clear($instanceArea); // optional: detach the transient entity
+        }
     }
 
     public function getTotalBlocksInArea(Page $page): int

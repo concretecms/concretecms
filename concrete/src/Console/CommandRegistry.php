@@ -78,7 +78,6 @@ class CommandRegistry implements ApplicationAwareInterface
         Command\RunSchedulerInForegroundCommand::class,
         Command\Express\ExportCommand::class,
         Command\FixDatabaseForeignKeys::class,
-        Command\ReindexCommand::class,
         Command\GenerateFileIdentifiersCommand::class,
         ConsumeMessagesCommand::class,
         FailedMessagesShowCommand::class,

@@ -425,13 +425,17 @@ class LinkAbstractor extends ConcreteObject
         $dom = new HtmlDomParser();
         $r = $dom->str_get_html($text, true, true, DEFAULT_TARGET_CHARSET, false);
         if (is_object($r)) {
-            $entityManager = $app->make(EntityManagerInterface::class);
             foreach ($r->find('concrete-picture') as $picture) {
                 $fID = $picture->fid;
-                $f = $entityManager->find(File::class, $fID);
-                if (is_object($f)) {
+                if (is_string($fID) && uuid_is_valid($fID)) {
+                    $f = \Concrete\Core\File\File::getByUUID($fID);
+                } else {
+                    $f = \Concrete\Core\File\File::getByID($fID);
+                }
+                $fv = $f ? $f->getApprovedVersion() : null;
+                if ($fv) {
                     $picture->fid = false;
-                    $picture->file = $f->getPrefix() . ':' . $f->getFilename();
+                    $picture->file = $fv->getPrefix() . ':' . $fv->getFilename();
                 }
             }
             $text = (string) $r->restore_noise($r);

@@ -7,7 +7,7 @@ use Concrete\TestHelpers\Database\ConcreteDatabaseTestCase;
 class CustomCssRecordTest extends ConcreteDatabaseTestCase
 {
     protected $fixtures = [];
-    protected $metadatas = ['Concrete\Core\Entity\StyleCustomizer\CustomCssRecord'];
+    protected $entityClassNames = ['Concrete\Core\Entity\StyleCustomizer\CustomCssRecord'];
 
     public function testCustomStyleRecord()
     {

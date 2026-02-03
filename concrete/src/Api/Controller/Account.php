@@ -27,6 +27,7 @@ class Account implements ApplicationAwareInterface
     /**
      * @OA\Get(
      *     path="/ccm/api/1.0/account",
+     *     operationId="getAccount",
      *     tags={"account"},
      *     security={
      *         {"authorization": {"account:read"}}

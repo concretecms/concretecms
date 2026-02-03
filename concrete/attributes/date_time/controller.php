@@ -126,7 +126,7 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
         if ($this->akDateDisplayMode === null) {
             $this->load();
         }
-        if (isset($data['value']) && $data['value'] != '') {
+        if (is_array($data) && isset($data['value']) && $data['value'] != '') {
             return true;
         } else {
             return false;
@@ -135,10 +135,10 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
 
     public function search()
     {
-        $dt = $this->app->make('helper/form/date_time');
-        $html = $dt->date($this->field('from'), $this->request('from'), true);
+        $form = $this->app->make('helper/form');
+        $html = $form->date($this->field('from'));
         $html .= ' ' . t('to') . ' ';
-        $html .= $dt->date($this->field('to'), $this->request('to'), true);
+        $html .= $form->date($this->field('to'));
         echo $html;
     }
 
@@ -167,7 +167,11 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
         if ($value) {
             if (!($value instanceof DateTime)) {
                 $timestamp = strtotime($value);
-                $value = new DateTime(date('Y-m-d H:i:s', $timestamp));
+                if ($timestamp === false) {
+                    $value = null;
+                } else {
+                    $value = new DateTime(date('Y-m-d H:i:s', $timestamp));
+                }
             }
         } else {
             $value = null;
@@ -384,7 +388,7 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
         }
 
         $type = $ak->getAttributeKeySettings();
-        /* @var DateTimeType $type */
+        /* @var DateTimeSettings $type */
         $this->akUseNowIfEmpty = $type->getUseNowIfEmpty();
         $this->set('akUseNowIfEmpty', $this->akUseNowIfEmpty);
         $this->akDateDisplayMode = (string) $type->getMode();

@@ -1,0 +1,39 @@
+<block type="gallery" name="">
+  <entries>
+    <entry>
+      <displaychoices>
+        <choice>
+          <dckey>caption</dckey>
+          <value></value>
+        </choice>
+        <choice>
+          <dckey>hover_caption</dckey>
+          <value></value>
+        </choice>
+        <choice>
+          <dckey>size</dckey>
+          <value>standard</value>
+        </choice>
+      </displaychoices>
+      <fID>{ccm:export:file:123456789012:file-1.jpg}</fID>
+    </entry>
+    <entry>
+      <displaychoices>
+        <choice>
+          <dckey>caption</dckey>
+          <value>Wide entry</value>
+        </choice>
+        <choice>
+          <dckey>hover_caption</dckey>
+          <value>Entry hover caption</value>
+        </choice>
+        <choice>
+          <dckey>size</dckey>
+          <value>wide</value>
+        </choice>
+      </displaychoices>
+      <fID>{ccm:export:file:210987654321:file-2.png}</fID>
+    </entry>
+  </entries>
+  <includeDownloadLink>0</includeDownloadLink>
+</block>

@@ -38,6 +38,7 @@ use Concrete\Core\Permission\AssignableObjectInterface;
 use Concrete\Core\Permission\AssignableObjectTrait;
 use Concrete\Core\Permission\Key\PageKey as PagePermissionKey;
 use Concrete\Core\Production\Modes;
+use Concrete\Core\Search\Index\IndexManagerInterface;
 use Concrete\Core\Site\SiteAggregateInterface;
 use Concrete\Core\Site\Tree\TreeInterface;
 use Concrete\Core\StyleCustomizer\Skin\SkinInterface;
@@ -2350,7 +2351,9 @@ EOT
             while ($row = $r->fetchAssociative()) {
                 if ($row['cID'] > 0) {
                     $c = self::getByID($row['cID'], $version);
-                    $children[] = $c;
+                    if ($c && !$c->isError() && $c->getVersionID() > 0) {
+                        $children[] = $c;
+                    }
                 }
             }
         }
@@ -2616,6 +2619,9 @@ EOT
 
         // load new version object
         $this->loadVersionObject($cvID);
+
+        $logger = $app->make('log/factory')->createLogger(Channels::CHANNEL_PAGES);
+        $logger->info(t('Page updated: %s (%s)', $this->getCollectionName(), $this->getCollectionID()));
 
         $pe = new Event($this);
         Events::dispatch('on_page_update', $pe);
@@ -3056,7 +3062,7 @@ EOT
         }
 
         $app = Facade::getFacadeApplication();
-        $logger = $app->make('log/factory')->createLogger(Channels::CHANNEL_SITE_ORGANIZATION);
+        $logger = $app->make('log/factory')->createLogger(Channels::CHANNEL_PAGES);
         $logger->notice(t('Page "%s" at path "%s" deleted',
             $this->getCollectionName(),
             $this->getCollectionPath()
@@ -3108,6 +3114,9 @@ EOT
             Section::unregisterPage($this);
         }
 
+        $indexer = $app->make(IndexManagerInterface::class);
+        $indexer->forget(Page::class, $this->getCollectionID());
+
         $cache = PageCache::getLibrary();
         $cache->purge($this);
     }
@@ -3124,7 +3133,7 @@ EOT
 
         $trash = self::getByPath(Config::get('concrete.paths.trash'));
         $app = Facade::getFacadeApplication();
-        $logger = $app->make('log/factory')->createLogger(Channels::CHANNEL_SITE_ORGANIZATION);
+        $logger = $app->make('log/factory')->createLogger(Channels::CHANNEL_PAGES);
         $logger->notice(t('Page "%s" at path "%s" Moved to trash',
             $this->getCollectionName(),
             $this->getCollectionPath()
@@ -3132,6 +3141,9 @@ EOT
 
         $this->move($trash);
         $this->deactivate();
+
+        $indexer = $app->make(IndexManagerInterface::class);
+        $indexer->forget(Page::class, $this->getCollectionID());
 
         // if this page has a custom canonical path we need to clear it
         $path = $this->getCollectionPathObject();
@@ -3146,6 +3158,7 @@ EOT
         $db = Database::connection();
         foreach ($pages as $page) {
             $db->executeQuery('update Pages set cIsActive = 0 where cID = ?', [$page['cID']]);
+            $indexer->forget(Page::class, $page['cID']);
         }
     }
 
@@ -4211,12 +4224,12 @@ EOT
         }
     }
 
-    public function getPageSkin()
+    public function getPageSkinIdentifier(bool $fallbackToSite = true): ?string
     {
-        $skinIdentifier = null;
         if (isset($this->vObj->pThemeSkinIdentifier)) {
-            $skinIdentifier = $this->vObj->pThemeSkinIdentifier;
-        } else {
+            return $this->vObj->pThemeSkinIdentifier;
+        } else if ($fallbackToSite) {
+            $skinIdentifier = null;
             $site = $this->getSite();
             if (!$site) {
                 $site = Core::make('site')->getSite();
@@ -4224,13 +4237,12 @@ EOT
             if ($site->getThemeSkinIdentifier()) {
                 $skinIdentifier = $site->getThemeSkinIdentifier();
             }
+            if (!$skinIdentifier) {
+                $skinIdentifier = SkinInterface::SKIN_DEFAULT;
+            }
+            return $skinIdentifier;
         }
-        if (!$skinIdentifier) {
-            $skinIdentifier = SkinInterface::SKIN_DEFAULT;
-        }
-        $theme = $this->getCollectionThemeObject();
-        $skin = $theme->getSkinByIdentifier($skinIdentifier);
-        return $skin;
+        return null;
     }
 
     /**

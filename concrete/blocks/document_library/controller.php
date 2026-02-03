@@ -24,9 +24,11 @@ use Concrete\Core\Tree\Node\Type\File;
 use Concrete\Core\Tree\Node\Type\FileFolder;
 use Concrete\Core\Url\UrlImmutable;
 use Concrete\Core\User\User;
+use Concrete\Core\Utility\Service\Xml;
 use Doctrine\DBAL\Connection;
 use FileAttributeKey;
 use League\Url\Url;
+use SimpleXMLElement;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class Controller extends BlockController implements UsesFeatureInterface
@@ -364,7 +366,7 @@ class Controller extends BlockController implements UsesFeatureInterface
         }
 
         $properties = [
-            'title' => 'fv.fvTitle',
+            'title' => 'name',
             'filename' => 'fv.fvFilename',
             'tags' => 'fv.fvTags',
             'date' => 'fv.fvDateAdded',
@@ -753,7 +755,7 @@ class Controller extends BlockController implements UsesFeatureInterface
                 if ($this->downloadFileMethod == 'force') {
                     return sprintf('<a href="%1$s" download="%2$s">%2$s</a>', $file->getForceDownloadURL(), h($file->getTitle()));
                 } else {
-                    return sprintf('<a href="%1$s" download="%2$s">%2$s</a>', $file->getDownloadURL(), h($file->getTitle()));
+                    return sprintf('<a href="%1$s">%2$s</a>', $file->getDownloadURL(), h($file->getTitle()));
                 }
             case 'filename':
                 return $file->getFileName();
@@ -888,7 +890,9 @@ class Controller extends BlockController implements UsesFeatureInterface
             $order = $this->displayOrderDesc ? 'desc' : 'asc';
             $orderBy = $this->getSortColumnKey($this->orderBy, 'filelist');
             if ($orderBy) {
-                $list->getQueryObject()->addSelect($orderBy);
+                if ($orderBy !== 'name') {
+                    $list->getQueryObject()->addSelect($orderBy);
+                }
                 $list->sortBy($orderBy, $order);
             }
         }
@@ -900,8 +904,11 @@ class Controller extends BlockController implements UsesFeatureInterface
         if ($getSort) {
             $getSort = $this->getSortColumnKey($getSort);
             if ($getSort) {
-                $list->getQueryObject()->addSelect($getSort);
+                if ($getSort !== 'name') {
+                    $list->getQueryObject()->addSelect($getSort);
+                }
                 $sortDir = $this->request->query->get('dir');
+
                 if ($sortDir) {
                     $list->sortBy($getSort, $sortDir);
                 } else {
@@ -1039,6 +1046,65 @@ class Controller extends BlockController implements UsesFeatureInterface
     }
 
     /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Block\BlockController::export()
+     */
+    public function export(SimpleXMLElement $blockNode)
+    {
+        parent::export($blockNode);
+        $record = $blockNode->data[0]->record[0];
+        $this->fixExportSetIds($record);
+        $this->fixExportAttributeKeyArray($record, 'viewProperties', true);
+        $this->fixExportAttributeKeyArray($record, 'expandableProperties', false);
+        $this->fixExportAttributeKeyArray($record, 'searchProperties', false);
+        $addFilesToSet = null;
+        if (isset($record->addFilesToSetID)) {
+            $setID = (int) (string) $record->addFilesToSetID[0];
+            $addFilesToSet = $setID > 0 ? Set::getByID($setID) : null;
+            unset($record->addFilesToSetID[0]);
+        }
+        app(Xml::class)->createChildElement($record, 'addFilesToSetName', $addFilesToSet ? $addFilesToSet->getFileSetName() : '');
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Block\BlockController::getImportData()
+     */
+    protected function getImportData($blockNode, $page)
+    {
+        $data = parent::getImportData($blockNode, $page);
+        if (($json = (string) ($data['setNames'] ?? '')) !== '') {
+            $setNames = json_decode($json);
+            if (is_array($setNames) && $setNames !== []) {
+                $setIds = [];
+                foreach ($setNames as $setName) {
+                    $set = Set::getByName($setName);
+                    if ($set) {
+                        $setIds[] = $set->getFileSetID();
+                    }
+                }
+                $data['fsID'] = $setIds;
+            }
+        }
+        $this->fixImportAttributeKeyArray($data, 'viewProperties', true);
+        $this->fixImportAttributeKeyArray($data, 'expandableProperties', false);
+        $this->fixImportAttributeKeyArray($data, 'searchProperties', false);
+        if (is_string($addFilesToSetName = $data['addFilesToSetName'] ?? null) && $addFilesToSetName !== '') {
+            $addFilesToSet = Set::getByName($addFilesToSetName);
+            if ($addFilesToSet) {
+                $data['addFilesToSetID'] = $addFilesToSet->getFileSetID();
+            }
+        }
+        if (!isset($data['showFolders']) && isset($data['hideFolders'])) {
+            $data['showFolders'] = filter_var($data['hideFolders'], FILTER_VALIDATE_BOOLEAN) ? 0 : 1;
+        }
+
+        return $data;
+    }
+
+    /**
      * @param bool $realRoot
      *
      * @return FileFolder
@@ -1149,5 +1215,90 @@ class Controller extends BlockController implements UsesFeatureInterface
         $query->setParameter('keywords', '%' . $keywords . '%');
 
         return $list;
+    }
+
+    private function fixExportSetIds(SimpleXMLElement $recordNode): void
+    {
+        $json = isset($recordNode->setIds) ? (string) $recordNode->setIds : '';
+        if (!$json) {
+            return;
+        }
+        $setIds = json_decode($json);
+        if (!is_array($setIds) || $setIds === []) {
+            return;
+        }
+        unset($recordNode->setIds[0]);
+        $xml = $this->app->make(Xml::class);
+        $setNames = [];
+        foreach ($setIds as $setId) {
+            $setId = is_numeric($setId) ? (int) $setId : 0;
+            $set = $setId > 0 ? Set::getByID($setId) : null;
+            if ($set) {
+                $setNames[] = $set->getFileSetName();
+            }
+        }
+        $xml->createChildElement($recordNode, 'setNames', json_encode($setNames));
+    }
+
+    private function fixExportAttributeKeyArray(SimpleXMLElement $recordNode, string $fieldName, bool $replaceKeys): void
+    {
+        $json = isset($recordNode->{$fieldName}) ? (string) $recordNode->{$fieldName} : '';
+        if (!$json) {
+            return;
+        }
+        $array = json_decode($json, true);
+        if (!is_array($array) || $array === []) {
+            return;
+        }
+        $serialized = [];
+        $m = null;
+        $attributeCategory = $this->app->make(FileCategory::class);
+        foreach ($array as $key => $value) {
+            if (preg_match('/^ak_(?<id>[1-9]\d*)$/', (string) ($replaceKeys ? $key : $value), $m)) {
+                $ak = $attributeCategory->getAttributeKeyByID((int) $m['id']);
+                if ($ak) {
+                    if ($replaceKeys) {
+                        $key = "ak_{$ak->getAttributeKeyHandle()}";
+                    } else {
+                        $value = "ak_{$ak->getAttributeKeyHandle()}";
+                    }
+                }
+            }
+            $serialized[$key] = $value;
+        }
+        if ($serialized === $array) {
+            return;
+        }
+        unset($recordNode->{$fieldName}[0]);
+        $this->app->make(Xml::class)->createChildElement($recordNode, $fieldName, json_encode($serialized));
+    }
+
+    private function fixImportAttributeKeyArray(array &$data, string $fieldName, bool $replaceKeys): void
+    {
+        $json = $data[$fieldName] ?? null;
+        if (!$json) {
+            return;
+        }
+        $array = json_decode($json, true);
+        if (!is_array($array) || $array === []) {
+            return;
+        }
+        $decoded = [];
+        $m = null;
+        $attributeCategory = $this->app->make(FileCategory::class);
+        foreach ($array as $key => $value) {
+            if (preg_match('/^ak_(?<handle>\S+)$/', (string) ($replaceKeys ? $key : $value), $m)) {
+                $ak = $attributeCategory->getAttributeKeyByHandle($m['handle']);
+                if ($ak) {
+                    if ($replaceKeys) {
+                        $key = "ak_{$ak->getAttributeKeyID()}";
+                    } else {
+                        $value = "ak_{$ak->getAttributeKeyID()}";
+                    }
+                }
+            }
+            $decoded[$key] = $value;
+        }
+        $data[$fieldName] = $decoded;
     }
 }

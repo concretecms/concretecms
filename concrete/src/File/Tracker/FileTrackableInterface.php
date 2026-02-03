@@ -2,15 +2,17 @@
 
 namespace Concrete\Core\File\Tracker;
 
-use Concrete\Core\Page\Collection\Collection;
 use Concrete\Core\Statistics\UsageTracker\TrackableInterface;
 
+/**
+ * Implement this interface to declare files usage.
+ */
 interface FileTrackableInterface extends TrackableInterface
 {
-
     /**
-     * @return array An array of file IDs or file objects
+     * Get the used files.
+     *
+     * @return array An array of File entities, file UUIDs or file IDs
      */
     public function getUsedFiles();
-
 }

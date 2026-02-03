@@ -7,6 +7,7 @@ use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Editor\LinkAbstractor;
 use Concrete\Core\Feature\Features;
 use Concrete\Core\File\Tracker\FileTrackableInterface;
+use Concrete\Core\File\Tracker\RichTextExtractor;
 use Concrete\Core\Feature\UsesFeatureInterface;
 use Concrete\Core\Statistics\UsageTracker\AggregateTracker;
 use Core;
@@ -95,13 +96,8 @@ class Controller extends BlockController implements FileTrackableInterface, Uses
     public function getSearchableContent()
     {
         $content = '';
-        $db = Database::get();
-        $v = [$this->bID];
-        $q = 'select * from btImageSliderEntries where bID = ?';
-        $r = $db->query($q, $v);
-        foreach ($r as $row) {
-            $content .= $row['title'] . ' ';
-            $content .= $row['description'] . ' ';
+        foreach ($this->getRawEntries() as $entry) {
+            $content .= "{$entry['title']} {$entry['description']} ";
         }
 
         return $content;
@@ -109,9 +105,15 @@ class Controller extends BlockController implements FileTrackableInterface, Uses
 
     public function edit()
     {
-        $db = Database::get();
-        $query = $db->GetAll('SELECT * from btImageSliderEntries WHERE bID = ? ORDER BY sortOrder', [$this->bID]);
-        $this->set('rows', $query);
+        $entries = array_map(
+            static function (array $row): array {
+                $row['description'] = LinkAbstractor::translateFromEditMode($row['description']);
+
+                return $row;
+            },
+            $this->getRawEntries()
+        );
+        $this->set('rows', $entries);
     }
 
     public function add()
@@ -133,21 +135,19 @@ class Controller extends BlockController implements FileTrackableInterface, Uses
 
     public function getEntries()
     {
-        $db = Database::get();
-        $r = $db->GetAll('SELECT * from btImageSliderEntries WHERE bID = ? ORDER BY sortOrder', [$this->bID]);
-        // in view mode, linkURL takes us to where we need to go whether it's on our site or elsewhere
-        $rows = [];
-        foreach ($r as $q) {
-            if (!$q['linkURL'] && $q['internalLinkCID']) {
-                $c = Page::getByID($q['internalLinkCID'], 'ACTIVE');
-                $q['linkURL'] = $c->getCollectionLink();
-                $q['linkPage'] = $c;
-            }
-            $q['description'] = LinkAbstractor::translateFrom($q['description']);
-            $rows[] = $q;
-        }
+        return array_map(
+            static function (array $row): array {
+                if (!$row['linkURL'] && $row['internalLinkCID']) {
+                    $c = Page::getByID($row['internalLinkCID'], 'ACTIVE');
+                    $row['linkURL'] = $c->getCollectionLink();
+                    $row['linkPage'] = $c;
+                }
+                $row['description'] = LinkAbstractor::translateFrom($row['description']);
 
-        return $rows;
+                return $row;
+            },
+            $this->getRawEntries()
+        );
     }
 
     public function view()
@@ -205,8 +205,8 @@ class Controller extends BlockController implements FileTrackableInterface, Uses
         ];
         $args['timeout'] = (int) $args['timeout'];
         $args['speed'] = (int) $args['speed'];
-        $args['noAnimate'] = isset($args['noAnimate']) ? 1 : 0;
-        $args['pause'] = isset($args['pause']) ? 1 : 0;
+        $args['noAnimate'] = empty($args['noAnimate']) ? 0 : 1;
+        $args['pause'] = empty($args['pause']) ? 0 : 1;
         $args['maxWidth'] = isset($args['maxWidth']) ? (int) $args['maxWidth'] : 0;
 
         $db = Database::get();
@@ -252,11 +252,64 @@ class Controller extends BlockController implements FileTrackableInterface, Uses
         }
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\File\Tracker\FileTrackableInterface::getUsedFiles()
+     */
     public function getUsedFiles()
     {
-        return array_map(function ($entry) {
-            return $entry['fID'];
-        }, $this->getEntries());
+        $result = [];
+        $richTextExtractor = $this->app->make(RichTextExtractor::class);
+        foreach ($this->getRawEntries() as $entry) {
+            $result = array_merge($result, $richTextExtractor->extractFiles($entry['description']));
+            if (($fID = (int) $entry['fID']) > 0) {
+                $result[] = $fID;
+            }
+        }
+
+        return $result;
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Block\BlockController::export()
+     */
+    public function export(\SimpleXMLElement $blockNode)
+    {
+        parent::export($blockNode);
+        $nodesToRemove = $blockNode->xpath('./data[@table="btImageSliderEntries"]/record/id');
+        if ($nodesToRemove) {
+            foreach ($nodesToRemove as $nodeToRemove) {
+                unset($nodeToRemove[0]);
+            }
+        }
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Block\BlockController::importAdditionalData()
+     */
+    protected function importAdditionalData($b, $blockNode)
+    {
+        $nodesToRemove = $blockNode->xpath('./data[@table="btImageSliderEntries"]/record/id');
+        if ($nodesToRemove) {
+            foreach ($nodesToRemove as $nodeToRemove) {
+                unset($nodeToRemove[0]);
+            }
+        }
+        parent::importAdditionalData($b, $blockNode);
+    }
+
+    private function getRawEntries(): array
+    {
+        $db = $this->app->make(Connection::class);
+
+        return $db->fetchAllAssociative(
+            'SELECT * FROM btImageSliderEntries WHERE bID = ? ORDER BY sortOrder',
+            [$this->bID]
+        );
+    }
 }

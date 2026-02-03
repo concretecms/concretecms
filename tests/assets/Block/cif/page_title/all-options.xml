@@ -1,0 +1,17 @@
+<block type="page_title" name="">
+  <data table="btPageTitle">
+    <record>
+      <dateTextFormat>uppercase</dateTextFormat>
+      <filterDateFormat>Y-m</filterDateFormat>
+      <formatting>h6</formatting>
+      <tagTextFormat>lowercase</tagTextFormat>
+      <titleText>House</titleText>
+      <topicTextFormat>upperFirst</topicTextFormat>
+      <useCustomTitle>1</useCustomTitle>
+      <useFilterDate>1</useFilterDate>
+      <useFilterTag>1</useFilterTag>
+      <useFilterTitle>1</useFilterTitle>
+      <useFilterTopic>1</useFilterTopic>
+    </record>
+  </data>
+</block>

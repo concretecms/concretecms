@@ -61,7 +61,7 @@ class Instance
     }
 
     /**
-     * @return InstanceArea[]
+     * @return \Doctrine\Common\Collections\Collection|InstanceArea[]
      */
     public function getInstanceAreas()
     {

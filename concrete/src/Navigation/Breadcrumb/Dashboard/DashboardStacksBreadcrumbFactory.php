@@ -61,6 +61,13 @@ class DashboardStacksBreadcrumbFactory implements ApplicationAwareInterface
             }
             $stacks = array_reverse($this->navigation->getTrailToCollection($stackOrFolder));
             array_shift($stacks); // Remove the top "Stacks" page.
+            if ($stackOrFolder instanceof Stack && !$stackOrFolder->isNeutralStack()) {
+                $section = $stackOrFolder->getMultilingualSection();
+                if ($section !== null) {
+                    $locale = $section->getLocale();
+                }
+                $stackOrFolder = $stackOrFolder->getNeutralStack() ?: $stackOrFolder;
+            }
             $stacks[] = $stackOrFolder;
             foreach($stacks as $stack) {
                 $breadcrumb->add(new Item(
@@ -85,16 +92,11 @@ class DashboardStacksBreadcrumbFactory implements ApplicationAwareInterface
                     );
                 }
                 $breadcrumb->add($multilingualMenuItem);
-                if ($stackOrFolder->isNeutralStack()) {
-                    $neutralStack = $stackOrFolder;
-                } else {
-                    $neutralStack = $stackOrFolder->getNeutralStack();
-                }
 
                 $children = [
                     new Item(
                         $this->app->make('url')->to(
-                            '/dashboard/blocks/stacks', 'view_details', $neutralStack->getCollectionID()
+                            '/dashboard/blocks/stacks', 'view_details', $stackOrFolder->getCollectionID()
                         ),
                         '<strong>' . h(tc('Locale', 'Default Content')) . '</strong>',
                         $locale === ''
@@ -104,14 +106,13 @@ class DashboardStacksBreadcrumbFactory implements ApplicationAwareInterface
                 foreach ($sections as $sectionLocale => $section) {
                     /** @var \Concrete\Core\Multilingual\Page\Section\Section $section */
                     $localizedStackName = Flag::getSectionFlagIcon($section) . ' ' . h($section->getLanguageText());
-                    if ($neutralStack->getLocalizedStack($section) !== null) {
+                    if ($stackOrFolder->getLocalizedStack($section) !== null) {
                         $localizedStackName = '<strong>' . $localizedStackName . '</strong>';
                     }
                     $children[] = new Item(
                         $this->app->make('url')->to(
                             '/dashboard/blocks/stacks', 'view_details',
-                            $neutralStack->getCollectionID() . rawurlencode('@' . $sectionLocale
-                            )
+                            $stackOrFolder->getCollectionID() . rawurlencode('@' . $sectionLocale)
                         ),
                         $localizedStackName . ' <span class="text-muted">(' . h($sectionLocale) . ')</span>',
                         $locale === $sectionLocale

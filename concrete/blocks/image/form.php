@@ -51,8 +51,7 @@ $thumbnailTypes['0'] = t('Full Size');
             </small>
         </label>
 
-        <i class="fas fa-question-circle launch-tooltip" title=""
-           data-original-title="<?php echo t('The image hover effect requires constraining the image size.'); ?>"></i>
+        <i class="launch-tooltip fa fa-question-circle" title="<?php echo t('The image hover effect requires constraining the image size.'); ?>"></i>
 
         <?php echo $fileManager->image('ccm-b-image-onstate', 'fOnstateID', t('Choose Image On-State'), $bfo); ?>
     </div>

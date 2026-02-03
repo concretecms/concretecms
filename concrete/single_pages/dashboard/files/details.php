@@ -80,17 +80,29 @@ if ($view->controller->getAction() == 'preview_version') { ?>
                             </li>
                             <?php
                         }
-                        if ($genericType === \Concrete\Core\File\Type\Type::T_IMAGE
+                        if ($genericType === \Concrete\Core\File\Type\Type::T_IMAGE 
                             && $filePermissions->canEditFileContents()) {
+                            // If it's an SVG there will be not thumbnails to edit, so we don't show the thumbnails option. It would also make no sense given the nature of SVG as an image format.
+                            if ($fileVersion->getTypeObject()->isSVG()) {
+                                $dialogURL = '/ccm/system/file/view?fID=';
+                                $dialogLinkLabel = t('View');
+                                $dialogLinkTitle = t('View this SVG.');
+                                $dialogTitle = t('View');
+                            } else {
+                                $dialogURL = '/ccm/system/dialogs/file/thumbnails?fID=';
+                                $dialogLinkLabel = t('Thumbnails');
+                                $dialogLinkTitle = t('Adjust the thumbnails for this image.');
+                                $dialogTitle = t('Edit');
+                            }
                             ?>
                             <li><a
                                     data-bs-placement="left"
                                     class="dropdown-item launch-tooltip dialog-launch"
-                                    dialog-title="<?= t('Edit') ?>"
+                                    dialog-title="<?= $dialogTitle ?>"
                                     dialog-width="90%" dialog-height="75%"
-                                    title="<?= t('Adjust the thumbnails for this image.') ?>"
-                                    href="<?=URL::to('/ccm/system/dialogs/file/thumbnails?fID=' . $file->getFileID())?>"
-                            ><?= t('Thumbnails') ?></a></li>
+                                    title="<?= $dialogLinkTitle ?>"
+                                    href="<?=URL::to($dialogURL . $file->getFileID())?>"
+                            ><?= $dialogLinkLabel ?></a></li>
                             <?php
                         }
                         if ($fileVersion->canEdit() && $filePermissions->canEditFileContents()) {
@@ -212,18 +224,18 @@ if ($view->controller->getAction() == 'preview_version') { ?>
         <?php if ($file->hasFileUUID()) { ?>
             <dt><?= t('Identifier') ?></dt>
             <dd class="mb-5">
-                <input type="text" class="bg-white form-control" readonly onclick="this.select()" value="<?= h($fileVersion->getFileUUID()) ?>">
+                <input type="text" class="form-control" readonly onclick="this.select()" value="<?= h($fileVersion->getFileUUID()) ?>">
                 <div class="text-muted mt-2"><i><?= t('Use this identifier if you need to work with this file programmatically, or in a REST API operation.') ?></i></div>
             </dd>
         <?php } ?>
         <dt><?= t('Direct URL') ?></dt>
         <dd class="mb-5">
-            <input type="text" class="bg-white form-control" readonly onclick="this.select()" value="<?= h($fileVersion->getURL()) ?>">
+            <input type="text" class="form-control" readonly onclick="this.select()" value="<?= h($fileVersion->getURL()) ?>">
             <div class="text-muted mt-2"><i><?= t('If you need to embed an image directly in HTML, use this URL.') ?></i></div>
         </dd>
         <dt><?= t('Tracking URL') ?></dt>
         <dd>
-            <input type="text" class="bg-white form-control" readonly onclick="this.select()" value="<?= h($fileVersion->getDownloadURL()) ?>">
+            <input type="text" class="form-control" readonly onclick="this.select()" value="<?= h($fileVersion->getDownloadURL()) ?>">
             <div class="text-muted mt-2"><i><?= t("By using this URL Concrete will still be able to manage permissions and track statistics on its use.") ?></i></div>
         </dd>
     </dl>

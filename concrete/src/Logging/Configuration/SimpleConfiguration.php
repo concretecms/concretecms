@@ -5,10 +5,9 @@ namespace Concrete\Core\Logging\Configuration;
 use Concrete\Core\Application\ApplicationAwareInterface;
 use Concrete\Core\Application\ApplicationAwareTrait;
 use Concrete\Core\Logging\Channels;
-use Concrete\Core\Logging\Processor\ConcretePageProcessor;
+use Concrete\Core\Logging\Processor;
 use Monolog\Logger;
 use Monolog\Processor\PsrLogMessageProcessor;
-use Concrete\Core\Logging\Processor\ConcreteUserProcessor;
 
 abstract class SimpleConfiguration implements ConfigurationInterface, ApplicationAwareInterface
 {
@@ -61,8 +60,9 @@ abstract class SimpleConfiguration implements ConfigurationInterface, Applicatio
 
         $logger->pushHandler($handler);
         $logger->pushProcessor($this->app->make(PsrLogMessageProcessor::class));
-        $logger->pushProcessor($this->app->make(ConcreteUserProcessor::class));
-        $logger->pushProcessor($this->app->make(ConcretePageProcessor::class));
+        $logger->pushProcessor($this->app->make(Processor\ConcreteUserProcessor::class));
+        $logger->pushProcessor($this->app->make(Processor\ConcretePageProcessor::class));
+        $logger->pushProcessor($this->app->make(Processor\StackTraceProcessor::class));
 
         return $logger;
     }

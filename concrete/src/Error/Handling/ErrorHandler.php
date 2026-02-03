@@ -120,7 +120,9 @@ class ErrorHandler extends SymfonyErrorHandler
     {
         $levels = [];
         foreach ($errors as $errorCode) {
-            $levels[$errorCode] = constant(LogLevel::class . '::' . $errorConfiguration[$key]['logLevel']);
+            $level = $errorConfiguration[$key]['logLevel'] ?? 'INFO';
+            $const = LogLevel::class . '::' . $level;
+            $levels[$errorCode] = defined($const) ? constant($const) : LogLevel::INFO;
         }
         return $levels;
     }

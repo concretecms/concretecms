@@ -1,6 +1,8 @@
 <?php
 namespace Concrete\Core\Permission\Assignment;
 
+use Concrete\Core\Area\GlobalArea;
+use Concrete\Core\Page\Stack\Stack;
 use Concrete\Core\Permission\Access\Access;
 use Concrete\Core\Block\Block;
 use Concrete\Core\Area\Area;
@@ -41,7 +43,10 @@ class BlockAssignment extends Assignment
                     } else {
                         $this->permissionObjectToCheck = $ma->getAreaCollectionObject();
                     }
-                } else {
+                } elseif ($a instanceof GlobalArea) {
+                     // There's gotta be a better way than this?
+                    $this->permissionObjectToCheck = Stack::getByName($a->getAreaHandle());
+               } else {
                     $this->permissionObjectToCheck = $a->getAreaCollectionObject();
                 }
             } else {

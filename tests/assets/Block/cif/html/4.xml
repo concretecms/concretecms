@@ -1,0 +1,7 @@
+<block type="html" name="">
+  <data table="btContentLocal">
+    <record>
+      <content><![CDATA[Image within link <a href="{ccm:export:page:/page-2}"><concrete-picture file="210987654321:file-2.png" /></a>]]></content>
+    </record>
+  </data>
+</block>

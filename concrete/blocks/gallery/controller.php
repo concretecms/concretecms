@@ -91,7 +91,7 @@ class Controller extends BlockController implements FileTrackableInterface, Uses
                 $result = $inspector->inspect((string)$entryNode->fID);
                 $db->insert(
                     'btGalleryEntries',
-                    ['idx' => $idx, 'bID' => $b->getBlockID(), 'fID' => $result->getReplacedValue()]
+                    ['idx' => $idx++, 'bID' => $b->getBlockID(), 'fID' => $result->getReplacedValue()]
                 );
                 $entryID = $db->lastInsertID();
                 if (isset($entryNode->displaychoices->choice)) {

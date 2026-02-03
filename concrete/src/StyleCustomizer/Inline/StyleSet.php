@@ -40,39 +40,40 @@ class StyleSet
      */
     public static function import(SimpleXMLElement $node)
     {
+        $xmlService = app(Xml::class);
         $o = new StyleSetEntity();
+        $o->setCustomClass((string) $node->customClass);
+        $o->setCustomID((string) $node->customID);
+        $o->setCustomElementAttribute((string) $node->customElementAttribute);
         $o->setBackgroundColor((string) $node->backgroundColor);
         $filename = (string) $node->backgroundImage;
         if ($filename) {
-            $app = Application::getFacadeApplication();
-            $inspector = $app->make('import/value_inspector');
+            $inspector = app('import/value_inspector');
             $result = $inspector->inspect($filename);
             $fID = $result->getReplacedValue();
             if ($fID) {
                 $o->setBackgroundImageFileID($fID);
             }
         }
-        $xmlService = app(Xml::class);
-
         $o->setBackgroundRepeat((string) $node->backgroundRepeat);
         $o->setBackgroundSize((string) $node->backgroundSize);
         $o->setBackgroundPosition((string) $node->backgroundPosition);
-        $o->setBorderWidth((string) $node->borderWidth);
         $o->setBorderColor((string) $node->borderColor);
         $o->setBorderStyle((string) $node->borderStyle);
+        $o->setBorderWidth((string) $node->borderWidth);
         $o->setBorderRadius((string) $node->borderRadius);
         $o->setBaseFontSize((string) $node->baseFontSize);
         $o->setAlignment((string) $node->alignment);
         $o->setTextColor((string) $node->textColor);
         $o->setLinkColor((string) $node->linkColor);
-        $o->setPaddingTop((string) $node->paddingTop);
-        $o->setPaddingBottom((string) $node->paddingBottom);
-        $o->setPaddingLeft((string) $node->paddingLeft);
-        $o->setPaddingRight((string) $node->paddingRight);
         $o->setMarginTop((string) $node->marginTop);
         $o->setMarginBottom((string) $node->marginBottom);
         $o->setMarginLeft((string) $node->marginLeft);
         $o->setMarginRight((string) $node->marginRight);
+        $o->setPaddingTop((string) $node->paddingTop);
+        $o->setPaddingBottom((string) $node->paddingBottom);
+        $o->setPaddingLeft((string) $node->paddingLeft);
+        $o->setPaddingRight((string) $node->paddingRight);
         $o->setRotate((string) $node->rotate);
         $o->setBoxShadowHorizontal((string) $node->boxShadowHorizontal);
         $o->setBoxShadowVertical((string) $node->boxShadowVertical);
@@ -80,9 +81,6 @@ class StyleSet
         $o->setBoxShadowSpread((string) $node->boxShadowSpread);
         $o->setBoxShadowColor((string) $node->boxShadowColor);
         $o->setBoxShadowInset($xmlService->getBool($node->boxShadowInset));
-        $o->setCustomClass((string) $node->customClass);
-        $o->setCustomID((string) $node->customID);
-        $o->setCustomElementAttribute((string) $node->customElementAttribute);
         $o->setHideOnExtraSmallDevice($xmlService->getBool($node->hideOnExtraSmallDevice));
         $o->setHideOnSmallDevice($xmlService->getBool($node->hideOnSmallDevice));
         $o->setHideOnMediumDevice($xmlService->getBool($node->hideOnMediumDevice));

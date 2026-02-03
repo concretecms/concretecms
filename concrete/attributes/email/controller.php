@@ -35,6 +35,9 @@ class Controller extends DefaultController
      */
     public function validateForm($data)
     {
+        if (!is_array($data)) {
+            $data = [];
+        }
         if (empty($data['value'])) {
             return new FieldNotPresentError(new AttributeField($this->getAttributeKey()));
         }

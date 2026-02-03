@@ -34,8 +34,13 @@ $view->inc('view_header.php');
     $rowClass = 'ccm-block-document-library-row-a';
     foreach($results as $f) { ?>
         <tr class="<?=$rowClass?>">
-        <?php foreach($tableColumns as $column) { ?>
-            <td><?=$controller->getColumnValue($column, $f)?></td>
+        <?php foreach($tableColumns as $column) { 
+             $col_value = $controller->getColumnValue($column, $f);
+             if(is_array($col_value)) {
+                $col_value = implode(', ', $col_value);
+             }
+            ?>
+            <td><?= $col_value ?></td>
         <?php } ?>
         </tr>
         <?php

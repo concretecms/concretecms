@@ -1,0 +1,11 @@
+<block type="express_entry_detail" name="">
+  <data table="btExpressEntryDetail">
+    <record>
+      <entryMode>A</entryMode>
+      <exEntityID></exEntityID>
+      <exEntryAttributeKeyHandle>page_expr_entity_attrib</exEntryAttributeKeyHandle>
+      <exFormID name="Example Form #1" owner-entity="example_entity_n1">2cafebab-babe-cafe-babe-2cafebabe2ca</exFormID>
+      <exSpecificEntryID>0</exSpecificEntryID>
+    </record>
+  </data>
+</block>

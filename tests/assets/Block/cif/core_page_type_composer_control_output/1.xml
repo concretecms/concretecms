@@ -1,0 +1,23 @@
+<pagetype name="Test Page Type" handle="test_page_type" package="" launch-in-composer="0" is-frequently-added="1">
+  <composer>
+    <formlayout>
+      <set name="Content" description="" collapseType="">
+        <control custom-template="" custom-label="Body" description="" output-control-id="CCMTest1" type="block" handle="content"></control>
+      </set>
+    </formlayout>
+    <output>
+      <pagetemplate handle="full">
+        <page name="" path="" filename="" pagetype="test_page_type" template="full" description="" root="true" package="">
+          <area name="Main">
+            <blocks>
+              <block type="core_page_type_composer_control_output" name="">
+                <control output-control-id="CCMTest1"></control>
+              </block>
+            </blocks>
+          </area>
+        </page>
+      </pagetemplate>
+    </output>
+  </composer>
+  <pagetemplates type="all" default="full"></pagetemplates>
+</pagetype>

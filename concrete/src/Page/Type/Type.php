@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\Page\Type;
 
+use Concrete\Core\Page\DraftService;
 use Concrete\Core\Page\Theme\Theme;
 use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\Attribute\Key\CollectionKey;
@@ -88,7 +89,7 @@ class Type extends ConcreteObject implements \Concrete\Core\Permission\ObjectInt
     }
 
     /**
-     * @return \Concrete\Core\Page\Type\PublishTarget\Configuration\Configuration
+     * @return \Concrete\Core\Page\Type\PublishTarget\Configuration\Configuration|null
      */
     public function getPageTypePublishTargetObject()
     {
@@ -446,10 +447,8 @@ class Type extends ConcreteObject implements \Concrete\Core\Permission\ObjectInt
         $data['ptIsFrequentlyAdded'] = $xml->getBool($node['is-frequently-added']) ? 1 : 0;
 
         $data['templates'] = $types;
-        $pkg = false;
-        if ($node['package']) {
-            $pkg = Package::getByHandle((string) $node['package']);
-        }
+        $pkgHandle = isset($node['package']) ? (string) $node['package'] : '';
+        $pkg = $pkgHandle === '' ? false : Package::getByHandle($pkgHandle);
 
         if ($ptID) {
             $cm = static::getByID($ptID);
@@ -577,7 +576,9 @@ class Type extends ConcreteObject implements \Concrete\Core\Permission\ObjectInt
         }
 
         $target = $this->getPageTypePublishTargetObject();
-        $target->export($pagetype);
+        if ($target) {
+            $target->export($pagetype);
+        }
 
         $cfsn = $pagetype->addChild('composer');
         $fsn = $cfsn->addChild('formlayout');
@@ -733,7 +734,7 @@ class Type extends ConcreteObject implements \Concrete\Core\Permission\ObjectInt
      *
      * @param bool|Package $pkg This should be false if the type is not tied to a package, or a package object
      *
-     * @return static|mixed|null
+     * @return static
      */
     public static function add($data, $pkg = false)
     {
@@ -864,9 +865,9 @@ class Type extends ConcreteObject implements \Concrete\Core\Permission\ObjectInt
             $pe = PageOwnerPermissionAccessEntity::getOrCreate();
             $pa->addListItem($pe);
             $pt->assignPermissionAccess($pa);
-
-            return $ptt;
         }
+
+        return $ptt;
     }
 
     public function update($data)
@@ -1207,31 +1208,19 @@ class Type extends ConcreteObject implements \Concrete\Core\Permission\ObjectInt
     }
 
 
+    /**
+     * @deprecated Use \Concrete\Core\Page\DraftService::createDraft instead
+     * @param \Concrete\Core\Entity\Page\Template $pt
+     * @param $u
+     * @return \Concrete\Core\Page\Page
+     */
     public function createDraft(\Concrete\Core\Entity\Page\Template $pt, $u = false)
     {
         $app = Application::getFacadeApplication();
-        if (!is_object($u)) {
-            $u = $app->make(User::class);
-        }
-        $db = Loader::db();
-        $ptID = $this->getPageTypeID();
-        $parent = Page::getDraftsParentPage();
-        $data = array('cvIsApproved' => 0, 'cIsDraft' => 1, 'cIsActive' => false, 'cAcquireComposerOutputControls' => true);
-        $p = $parent->add($this, $data, $pt);
+        /** @var DraftService $service */
+        $service = $app->make(DraftService::class);
 
-        // now we setup in the initial configurated page target
-        $target = $this->getPageTypePublishTargetObject();
-        $cParentID = $target->getDefaultParentPageID();
-        if ($cParentID > 0) {
-            $p->setPageDraftTargetParentPageID($cParentID);
-        }
-
-        $controls = PageTypeComposerControl::getList($this);
-        foreach ($controls as $cn) {
-            $cn->onPageDraftCreate($p);
-        }
-
-        return $p;
+        return $service->createDraft($this, $pt);
     }
 
     public function renderComposerOutputForm($page = null, $targetPage = null)

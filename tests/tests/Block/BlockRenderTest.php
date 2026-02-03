@@ -32,29 +32,46 @@ class BlockRenderTest extends PageTestCase
 
     protected $btHandle = 'content';
 
-    public function __construct($name = null, array $data = [], $dataName = '')
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\TestHelpers\Database\ConcreteDatabaseTestCase::getTables()
+     */
+    protected function getTables()
     {
-        parent::__construct($name, $data, $dataName);
+        return array_merge(parent::getTables(), [
+            // Basics for the blocks
+            'Blocks',
+            'Config',
+            // Logging in/out the users
+            'AuthenticationTypes',
+            // General for the users
+            // Adding groups
+            'UserGroups',
+            'Trees',
+            'TreeGroupNodes',
+            'TreeTypes',
+            // Adding content blocks
+            'SystemContentEditorSnippets',
+        ]);
+    }
 
-        // Basics for the blocks
-        $this->tables[] = 'Blocks';
-        $this->tables[] = 'Config';
-        $this->metadatas[] = 'Concrete\Core\Entity\Block\BlockType\BlockType';
-        // Logging in/out the users
-        $this->tables[] = 'AuthenticationTypes';
-        // General for the users
-        $this->metadatas[] = 'Concrete\Core\Entity\User\User';
-        $this->metadatas[] = 'Concrete\Core\Entity\User\UserSignup';
-        // Adding groups
-        $this->tables[] = 'UserGroups';
-        $this->tables[] = 'Trees';
-        $this->tables[] = 'TreeGroupNodes';
-        $this->tables[] = 'TreeTypes';
-        // Adding content blocks
-        $this->tables[] = 'btContentLocal';
-        $this->tables[] = 'SystemContentEditorSnippets';
-        // Adding themes
-        $this->metadatas[] = 'Concrete\Core\Entity\Package';
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\TestHelpers\Database\ConcreteDatabaseTestCase::getEntityClassNames()
+     */
+    protected function getEntityClassNames(): array
+    {
+        return array_merge(parent::getEntityClassNames(), [
+            // Basics for the blocks
+            'Concrete\Core\Entity\Block\BlockType\BlockType',
+            // General for the users
+            'Concrete\Core\Entity\User\User',
+            'Concrete\Core\Entity\User\UserSignup',
+            // Adding themes
+            'Concrete\Core\Entity\Package',
+        ]);
     }
 
     public static function setUpBeforeClass():void

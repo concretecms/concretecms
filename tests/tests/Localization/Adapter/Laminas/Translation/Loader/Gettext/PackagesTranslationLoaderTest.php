@@ -18,7 +18,7 @@ use Illuminate\Filesystem\Filesystem;
  */
 class PackagesTranslationLoaderTest extends ConcreteDatabaseTestCase
 {
-    protected $metadatas = [
+    protected $entityClassNames = [
         \Concrete\Core\Entity\Package::class,
     ];
 

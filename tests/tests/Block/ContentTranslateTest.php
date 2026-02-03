@@ -12,7 +12,7 @@ class ContentTranslateTest extends ConcreteDatabaseTestCase
         'SystemContentEditorSnippets',
     ];
 
-    protected $metadatas = [
+    protected $entityClassNames = [
         'Concrete\Core\Entity\File\File',
     ];
 

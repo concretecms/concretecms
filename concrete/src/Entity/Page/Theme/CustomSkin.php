@@ -3,8 +3,9 @@ namespace Concrete\Core\Entity\Page\Theme;
 
 use Concrete\Core\Page\Theme\Theme;
 use Concrete\Core\StyleCustomizer\Skin\SkinInterface;
+use Concrete\Core\StyleCustomizer\Skin\Stylesheet\CustomSkinStylesheet;
+use Concrete\Core\StyleCustomizer\Skin\Stylesheet\StylesheetInterface;
 use Doctrine\ORM\Mapping as ORM;
-use HtmlObject\Element;
 
 /**
  * @ORM\Entity
@@ -255,15 +256,10 @@ class CustomSkin implements \JsonSerializable, SkinInterface
         return Theme::getByID($this->getThemeID());
     }
 
-    public function getStylesheet(): Element
+    public function getStylesheet(): StylesheetInterface
     {
-        $config = app('config');
-        $noCacheValue = "?ccm_nocache=" . sha1($noCacheValue = $config->get('concrete.version_installed') . '-' . $config->get('concrete.version_db') . "-" . $config->get('concrete.cache.last_cleared'));
-        $stylesheet = REL_DIR_FILES_UPLOADED_STANDARD . '/' . DIRNAME_STYLE_CUSTOMIZER_PRESETS . '/' . $this->getIdentifier() . '.css';
-        $element = new Element('link', null);
-        $element->setIsSelfClosing(true);
-        $element->rel('stylesheet')->type('text/css')->href($stylesheet . $noCacheValue);
-        return $element;
+        return new CustomSkinStylesheet($this);
     }
+
 
 }

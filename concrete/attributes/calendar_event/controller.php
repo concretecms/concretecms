@@ -7,13 +7,17 @@ use Concrete\Core\Api\Fractal\Transformer\CalendarTransformer;
 use Concrete\Core\Api\Resources;
 use Concrete\Core\Attribute\FontAwesomeIconFormatter;
 use Concrete\Core\Calendar\Calendar;
+use Concrete\Core\Calendar\Calendar\CalendarService;
 use Concrete\Core\Calendar\Event\Event;
 use Concrete\Core\Calendar\Event\Formatter\LinkFormatter;
 use Concrete\Core\Calendar\Event\Formatter\LinkFormatterInterface;
 use Concrete\Core\Entity\Attribute\Value\Value\NumberValue;
 use Concrete\Core\Entity\Calendar\CalendarEvent;
+use Concrete\Core\Utility\Service\Xml;
+use Doctrine\ORM\EntityManagerInterface;
 use League\Fractal\Resource\Item;
 use League\Fractal\Resource\ResourceInterface;
+use SimpleXMLElement;
 
 class Controller extends \Concrete\Attribute\Number\Controller implements ApiResourceValueInterface
 {
@@ -26,12 +30,12 @@ class Controller extends \Concrete\Attribute\Number\Controller implements ApiRes
     }
 
     /**
-     * @param $value CalendarEvent
+     * @param CalendarEvent|null $value
      */
     public function createAttributeValue($value)
     {
         $av = new NumberValue();
-        $av->setValue($value->getID());
+        $av->setValue($value ? $value->getID() : null);
 
         return $av;
     }
@@ -78,6 +82,9 @@ class Controller extends \Concrete\Attribute\Number\Controller implements ApiRes
         }
     }
 
+    /**
+     * @return \Concrete\Core\Entity\Calendar\CalendarEvent|null
+     */
     public function getValue()
     {
         $value = $this->getAttributeValue()->getValueObject();
@@ -162,4 +169,64 @@ class Controller extends \Concrete\Attribute\Number\Controller implements ApiRes
         return null;
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Attribute\Controller::exportValue()
+     */
+    public function exportValue(SimpleXMLElement $akv)
+    {
+        $xValue = $akv->addChild('value');
+        $event = $this->getValue();
+        $eventVersion = $event ? $event->getApprovedVersion() : '';
+        $eventOccurrence = $eventVersion ? $eventVersion->getOccurrences()->first() : null;
+        $calendar = $event ? $event->getCalendar() : null;
+        if (!$eventOccurrence || !$calendar) {
+            return;
+        }
+        $xValue['calendar'] = $calendar->getName();
+        $xValue['event'] = $eventVersion->getName();
+        $xValue['startTime'] = $eventOccurrence->getOccurrence()->getStart();
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Attribute\Controller::exportValue()
+     *
+     * @return \Concrete\Core\Entity\Calendar\CalendarEvent|null
+     */
+    public function importValue(SimpleXMLElement $akv)
+    {
+        if (($calendarName = trim((string) $akv->value['calendar'])) === '') {
+            return null;
+        }
+        if (($eventName = trim((string) $akv->value['event'])) === '') {
+            return null;
+        }
+        if (($startTime = (int) trim((string) $akv->value['startTime'])) === 0) {
+            return null;
+        }
+        $calendar = $calendarName === '' ? null : $this->app->make(CalendarService::class)->getByName($calendarName);
+        if ($calendar === null) {
+            return null;
+        }
+        $qb = $this->app->make(EntityManagerInterface::class)->createQueryBuilder();
+        $qb
+            ->setParameter('calendarID', $calendar->getID())
+            ->setParameter('eventName', $eventName)
+            ->setParameter('startTime', $startTime)
+            ->select('event')
+            ->from(CalendarEvent::class, 'event')
+            ->innerJoin('event.versions', 'version')
+            ->innerJoin('version.occurrences', 'versionOccurrence')
+            ->innerJoin('versionOccurrence.occurrence', 'occurrence')
+            ->andWhere('event.calendar = :calendarID')
+            ->andWhere('version.evName = :eventName')
+            ->andWhere('occurrence.startTime = :startTime')
+            ->setMaxResults(1)
+        ;
+
+        return $qb->getQuery()->execute()[0] ?? null;
+    }
 }

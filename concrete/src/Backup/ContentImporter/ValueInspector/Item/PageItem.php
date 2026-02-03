@@ -1,38 +1,66 @@
 <?php
+
 namespace Concrete\Core\Backup\ContentImporter\ValueInspector\Item;
 
 use Concrete\Core\Page\Page;
 
 class PageItem extends AbstractItem
 {
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Backup\ContentImporter\ValueInspector\Item\ItemInterface::getDisplayName()
+     */
     public function getDisplayName()
     {
         return t('Page');
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Backup\ContentImporter\ValueInspector\Item\ItemInterface::getContentObject()
+     *
+     * @return \Concrete\Core\Page\Page|null
+     */
     public function getContentObject()
     {
-        if ($this->getReference() == '/' || $this->getReference() == '') {
-            return Page::getByID(Page::getHomePageID(), 'ACTIVE');
+        $reference = (string) $this->getReference();
+        if ($reference === '' || $reference === '/') {
+            $page = Page::getByID(Page::getHomePageID(), 'ACTIVE');
+        } else {
+            $page = Page::getByPath($reference, 'ACTIVE');
         }
 
-        $c = Page::getByPath($this->getReference(), 'ACTIVE');
-        if (is_object($c) && !$c->isError()) {
-            return $c;
-        }
+        return $page && !$page->isError() ? $page : null;
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Backup\ContentImporter\ValueInspector\Item\ItemInterface::getContentValue()
+     * @see \Concrete\Core\Backup\ContentImporter\ValueInspector\Item\AbstractItem::getContentValue()
+     *
+     * @return string|null
+     */
     public function getContentValue()
     {
-        if ($o = $this->getContentObject()) {
-            return sprintf("{CCM:CID_%s}", $o->getCollectionID());
-        }
+        $page = $this->getContentObject();
+
+        return $page ? sprintf('{CCM:CID_%s}', $page->getCollectionID()) : null;
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Backup\ContentImporter\ValueInspector\Item\ItemInterface::getFieldValue()
+     *
+     * @return int|null
+     */
     public function getFieldValue()
     {
-        if ($o = $this->getContentObject()) {
-            return $o->getCollectionID();
-        }
+        $page = $this->getContentObject();
+
+        return $page ? $page->getCollectionID() : null;
     }
 }

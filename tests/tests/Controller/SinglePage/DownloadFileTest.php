@@ -24,63 +24,72 @@ use RecursiveIteratorIterator;
 
 class DownloadFileTest extends PageTestCase
 {
-    public function __construct($name = null, array $data = [], $dataName = '')
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\TestHelpers\Database\ConcreteDatabaseTestCase::getTables()
+     */
+    protected function getTables()
     {
-        parent::__construct($name, $data, $dataName);
+        return array_merge(parent::getTables(), [
+            // Files
+            'FileImageThumbnailPaths',
+            // Users & permissions
+            'UserGroups',
+            'Groups',
+            'TreeTypes',
+            'TreeNodes',
+            'TreeNodePermissionAssignments',
+            'AreaPermissionAssignments',
+            'FilePermissionAssignments',
+            'PermissionAccess',
+            'PermissionAccessEntities',
+            'PermissionAccessEntityGroups',
+            'PermissionAccessList',
+            'PermissionKeyCategories',
+            'PermissionKeys',
+            'TreeNodeTypes',
+            'Trees',
+            'TreeGroupNodes',
+            'TreeFileFolderNodes',
+            'TreeFileNodes',
+            // Blocks
+            'Blocks',
+            // Stacks
+            'Stacks',
+        ]);
+    }
 
-        // Files
-        $this->tables[] = 'FileImageThumbnailPaths';
-
-        // Users & permissions
-        $this->tables[] = 'UserGroups';
-        $this->tables[] = 'Groups';
-        $this->tables[] = 'TreeTypes';
-        $this->tables[] = 'TreeNodes';
-        $this->tables[] = 'TreeNodePermissionAssignments';
-        $this->tables[] = 'AreaPermissionAssignments';
-        $this->tables[] = 'FilePermissionAssignments';
-        $this->tables[] = 'PermissionAccess';
-        $this->tables[] = 'PermissionAccessEntities';
-        $this->tables[] = 'PermissionAccessEntityGroups';
-        $this->tables[] = 'PermissionAccessList';
-        $this->tables[] = 'PermissionKeyCategories';
-        $this->tables[] = 'PermissionKeys';
-        $this->tables[] = 'TreeNodeTypes';
-        $this->tables[] = 'Trees';
-        $this->tables[] = 'TreeGroupNodes';
-        $this->tables[] = 'TreeFileFolderNodes';
-        $this->tables[] = 'TreeFileNodes';
-
-        // Blocks
-        $this->tables[] = 'Blocks';
-
-        // Stacks
-        $this->tables[] = 'Stacks';
-
-        // Files
-        $this->metadatas[] = 'Concrete\Core\Entity\File\DownloadStatistics';
-        $this->metadatas[] = 'Concrete\Core\Entity\File\File';
-        $this->metadatas[] = 'Concrete\Core\Entity\File\Version';
-
-        // Users
-        $this->metadatas[] = 'Concrete\Core\Entity\User\User';
-        $this->metadatas[] = 'Concrete\Core\Entity\Attribute\Category';
-        $this->metadatas[] = 'Concrete\Core\Entity\Attribute\Key\Key';
-        $this->metadatas[] = 'Concrete\Core\Entity\Attribute\Key\UserKey';
-        $this->metadatas[] = 'Concrete\Core\Entity\Attribute\Value\UserValue';
-
-        // Blocks
-        $this->metadatas[] = 'Concrete\Core\Entity\Block\BlockType\BlockType';
-
-        // Files
-        $this->metadatas[] = 'Concrete\Core\Entity\File\DownloadStatistics';
-        $this->metadatas[] = 'Concrete\Core\Entity\File\File';
-        $this->metadatas[] = 'Concrete\Core\Entity\File\Version';
-        $this->metadatas[] = 'Concrete\Core\Entity\Attribute\Key\FileKey';
-        $this->metadatas[] = 'Concrete\Core\Entity\Attribute\Value\FileValue';
-        $this->metadatas[] = 'Concrete\Core\Entity\File\Image\Thumbnail\Type\Type';
-        $this->metadatas[] = 'Concrete\Core\Entity\File\StorageLocation\Type\Type';
-        $this->metadatas[] = 'Concrete\Core\Entity\File\StorageLocation\StorageLocation';
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\TestHelpers\Database\ConcreteDatabaseTestCase::getEntityClassNames()
+     */
+    protected function getEntityClassNames(): array
+    {
+        return array_merge(parent::getEntityClassNames(), [
+            // Files
+            'Concrete\Core\Entity\File\DownloadStatistics',
+            'Concrete\Core\Entity\File\File',
+            'Concrete\Core\Entity\File\Version',
+            // Users
+            'Concrete\Core\Entity\User\User',
+            'Concrete\Core\Entity\Attribute\Category',
+            'Concrete\Core\Entity\Attribute\Key\Key',
+            'Concrete\Core\Entity\Attribute\Key\UserKey',
+            'Concrete\Core\Entity\Attribute\Value\UserValue',
+            // Blocks
+            'Concrete\Core\Entity\Block\BlockType\BlockType',
+            // Files
+            'Concrete\Core\Entity\File\DownloadStatistics',
+            'Concrete\Core\Entity\File\File',
+            'Concrete\Core\Entity\File\Version',
+            'Concrete\Core\Entity\Attribute\Key\FileKey',
+            'Concrete\Core\Entity\Attribute\Value\FileValue',
+            'Concrete\Core\Entity\File\Image\Thumbnail\Type\Type',
+            'Concrete\Core\Entity\File\StorageLocation\Type\Type',
+            'Concrete\Core\Entity\File\StorageLocation\StorageLocation',
+        ]);
     }
 
     public static function setUpBeforeClass():void

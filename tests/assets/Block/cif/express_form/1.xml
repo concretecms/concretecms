@@ -1,0 +1,18 @@
+<block type="express_form" name="">
+  <data table="btExpressForm">
+    <record>
+      <addFilesToFolder>{ccm:export:filefolder:/Sample File Folder #1}</addFilesToFolder>
+      <addFilesToSet name="Test File Set #1">1</addFilesToSet>
+      <displayCaptcha>1</displayCaptcha>
+      <exEntityID handle="example_entity_n1">1cafebab-babe-cafe-babe-1cafebabe1ca</exEntityID>
+      <exFormID name="Example Form #1">2cafebab-babe-cafe-babe-2cafebabe2ca</exFormID>
+      <notifyMeOnSubmission>1</notifyMeOnSubmission>
+      <recipientEmail>jane@doe.com,jonh@doe.com</recipientEmail>
+      <redirectCID>{ccm:export:page:/page-2}</redirectCID>
+      <replyToEmailControlID null="true"></replyToEmailControlID>
+      <storeFormSubmission>1</storeFormSubmission>
+      <submitLabel>Send the form, please</submitLabel>
+      <thankyouMsg>Thank you a lot ;)</thankyouMsg>
+    </record>
+  </data>
+</block>

@@ -60,7 +60,7 @@ jobs:
           fetch-depth: 2
 
       - name: "Install PHP"
-        uses: shivammathur/setup-php@2.11.0
+        uses: shivammathur/setup-php@v2
         with:
           php-version: "${{ matrix.php-version }}"
           extensions: mbstring, xml, ctype, iconv, intl, pdo_mysql, mysql

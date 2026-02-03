@@ -1,0 +1,9 @@
+<attributekey>
+  <type allow-multiple-values="" display-order="display_asc" display-multiple-values="" allow-other-values="" hide-none-option="">
+    <options>
+      <option value="ES 2.1"/>
+      <option value="ES 2.2"/>
+      <option value="ES 2.3"/>
+    </options>
+  </type>
+</attributekey>

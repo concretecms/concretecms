@@ -62,6 +62,8 @@ class Service extends SocialNetworkService
                     return "https://plus.google.com/share?url=$url";
                 case 'reddit':
                     return "https://www.reddit.com/submit?url={$url}";
+                case 'bluesky':
+                    return 'https://bsky.app/intent/compose?text=' . rawurlencode($title . "\n") . $url;
                 case 'print':
                     return "javascript:window.print();";
                 case 'email':

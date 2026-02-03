@@ -696,11 +696,11 @@ class Controller extends BlockController
         $info = $miniSurvey->getMiniSurveyBlockInfo($this->bID);
 
         //get all answer sets
-        $q = "SELECT asID FROM {$this->btAnswerSetTablename} WHERE questionSetId = " . (int) ($info['questionSetId']);
+        $q = "SELECT asID FROM {$this->btAnswerSetTablename} WHERE questionSetId = " . (int) ($info['questionSetId'] ?? 0);
         $answerSetsRS = $db->query($q);
 
         //delete the questions
-        $deleteData['questionsIDs'] = $db->fetchAll("SELECT qID FROM {$this->btQuestionsTablename} WHERE questionSetId = " . (int) ($info['questionSetId']) . ' AND bID=' . (int) ($this->bID));
+        $deleteData['questionsIDs'] = $db->fetchAll("SELECT qID FROM {$this->btQuestionsTablename} WHERE questionSetId = " . (int) ($info['questionSetId'] ?? 0) . ' AND bID=' . (int) ($this->bID));
         foreach ($deleteData['questionsIDs'] as $questionData) {
             $db->query("DELETE FROM {$this->btQuestionsTablename} WHERE qID=" . (int) ($questionData['qID']));
         }

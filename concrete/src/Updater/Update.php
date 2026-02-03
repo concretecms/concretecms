@@ -6,6 +6,7 @@ use Concrete\Core\Cache\Cache;
 use Concrete\Core\Cache\Command\ClearCacheCommand;
 use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Database\DatabaseStructureManager;
+use Concrete\Core\Entity\Site\Site;
 use Concrete\Core\Foundation\Environment\FunctionInspector;
 use Concrete\Core\Marketplace\PackageRepositoryInterface;
 use Concrete\Core\Marketplace\Update\Command\UpdateRemoteDataCommand;
@@ -16,6 +17,7 @@ use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\Updater\Migrations\Configuration;
 use Concrete\Core\Utility\Service\Validation\Numbers;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\Tools\SchemaTool;
 use Exception;
 use Localization;
 use Marketplace;
@@ -195,6 +197,15 @@ class Update
         $dbm->destroyProxyClasses('ConcreteCore');
         $dbm->generateProxyClasses();
 
+        // Refresh those entities and database tables that are so potentially wide-reaching and problematic
+        // That they _have_ to be checked prior to upgrade
+        $tool = new SchemaTool($em);
+        $entityClasses = [];
+        foreach ([Site::class] as $entity) {
+            $entityClasses[] = $em->getClassMetadata($entity);
+        }
+        $tool->updateSchema($entityClasses, true);
+        
         if (!$configuration) {
             $configuration = new Configuration();
         }

@@ -67,10 +67,12 @@ class SearchProvider extends AbstractSearchProvider
         $list = new PageList();
         $list->setSiteTreeObject($site);
         $list->setupAutomaticSorting();
-        $list->setPermissionsChecker(function ($page) {
-            $checker = new Checker($page);
-            return $checker->canViewPageInSitemap();
-        });
+        if ($list->getPermissionsChecker() !== -1) {
+            $list->setPermissionsChecker(function ($page) {
+                $checker = new Checker($page);
+                return $checker->canViewPageInSitemap();
+            });
+        }
         return $list;
     }
 

@@ -37,7 +37,7 @@ use ScssPhp\ScssPhp\Compiler;
 class ThemeCustomizerTest extends ConcreteDatabaseTestCase
 {
 
-    protected $metadatas = [
+    protected $entityClassNames = [
         'Concrete\Core\Entity\Page\Theme\CustomSkin',
     ];
 
@@ -55,7 +55,7 @@ class ThemeCustomizerTest extends ConcreteDatabaseTestCase
         $theme->setThemeHandle('atomik');
         $this->assertTrue($theme->hasPresetSkins());
         $skins = $theme->getPresetSkins();
-        $this->assertCount(2, $skins);
+        $this->assertCount(7, $skins);
     }
 
     public function testGetElementalThemeSkins()
@@ -94,8 +94,8 @@ class ThemeCustomizerTest extends ConcreteDatabaseTestCase
         $theme->setThemeHandle('atomik');
         $customizer = $theme->getThemeCustomizer();
         $presets = $customizer->getPresets($theme);
-        $this->assertCount(2, $presets);
-        foreach (['Default', 'Rustic Elegance'] as $i => $presetName) {
+        $this->assertCount(7, $presets);
+        foreach (['Default', 'Amber Twilight', 'Coastal Breeze', 'Golden Meadow', 'Midnight Velvet', 'Misty Sage', 'Rustic Elegance'] as $i => $presetName) {
             $this->assertEquals($presets[$i]->getName(), $presetName);
         }
     }
@@ -107,7 +107,7 @@ class ThemeCustomizerTest extends ConcreteDatabaseTestCase
         $customizer = $theme->getThemeCustomizer();
         $presets = $customizer->getPresets($theme);
         $this->assertCount(4, $presets);
-        foreach (['Blue Sky', 'Sunrise', 'Night Road', 'Royal'] as $i => $presetName) {
+        foreach (['Blue Sky', 'Night Road', 'Royal', 'Sunrise'] as $i => $presetName) {
             $this->assertEquals($presets[$i]->getName(), $presetName);
         }
     }

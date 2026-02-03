@@ -22,22 +22,31 @@ class CollectionAttributeTest extends AttributeTestCase
 
     protected $indexQuery = 'select * from CollectionSearchIndexAttributes where cID = 1';
 
-    public function __construct($name = null, array $data = [], $dataName = '')
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\TestHelpers\Database\ConcreteDatabaseTestCase::getTables()
+     */
+    protected function getTables()
     {
-        parent::__construct($name, $data, $dataName);
-
-        $this->tables = array_merge($this->tables, [
+        return array_merge(parent::getTables(), [
             'Collections',
-            'CollectionAttributeValues',
             'Pages',
             'PageSearchIndex',
             'PageTypes',
-            'CollectionSearchIndexAttributes',
             'CollectionVersions',
             'CollectionVersionBlocks',
-            ]
-        );
-        $this->metadatas = array_merge($this->metadatas, [
+        ]);
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\TestHelpers\Database\ConcreteDatabaseTestCase::getEntityClassNames()
+     */
+    protected function getEntityClassNames(): array
+    {
+        return array_merge(parent::getEntityClassNames(), [
             'Concrete\Core\Entity\Page\PagePath',
             'Concrete\Core\Entity\Page\Template',
         ]);

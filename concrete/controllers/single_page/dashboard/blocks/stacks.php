@@ -96,6 +96,21 @@ class Stacks extends DashboardPageController
             $this->set('neutralStack', $neutralStack);
             $this->set('stackToEdit', $stackToEdit);
             $this->set('isGlobalArea', $isGlobalArea);
+            $this->addHeaderItem(
+                <<<'EOT'
+                <style>
+                #ccm-stack-container {
+                    background-color: var(--bs-body-bg);
+                }
+                #ccm-stack-container.dark {
+                    background-color: var(--bs-black);
+                } 
+                #ccm-stack-container.light {
+                    background-color: var(--bs-white);
+                } 
+                </style>
+                EOT
+            );
         } else {
             $folder = StackFolder::getByID($cID);
             if (is_object($folder)) {

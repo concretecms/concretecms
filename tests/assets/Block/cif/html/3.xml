@@ -1,0 +1,7 @@
+<block type="html" name="">
+  <data table="btContentLocal">
+    <record>
+      <content><![CDATA[Link to <a href="{ccm:export:page:/page-2}">page</a>]]></content>
+    </record>
+  </data>
+</block>

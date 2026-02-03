@@ -27,8 +27,16 @@ class CalendarService
         }
     }
 
+    /**
+     * @param int|null $id
+     *
+     * @return \Concrete\Core\Entity\Calendar\Calendar|null
+     */
     public function getByID($id)
     {
+        if (!$id) {
+            return null;
+        }
         $r = $this->entityManager->getRepository(Calendar::class);
         return $r->findOneById($id);
     }

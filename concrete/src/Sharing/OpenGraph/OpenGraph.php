@@ -5,6 +5,7 @@ use Concrete\Core\Entity\File\File;
 use Concrete\Core\Page\Page;
 use Concrete\Core\Site\Config\Liaison;
 use Concrete\Core\Site\Service;
+use Concrete\Core\Url\Resolver\Manager\ResolverManagerInterface;
 use HtmlObject\Element;
 
 class OpenGraph
@@ -38,10 +39,16 @@ class OpenGraph
      */
     protected $siteService;
 
-    public function __construct(Service $siteService)
+    /**
+     * @var \Concrete\Core\Url\Resolver\Manager\ResolverManagerInterface
+     */
+    protected $resolverManager;
+
+    public function __construct(Service $siteService, ResolverManagerInterface $resolverManager)
     {
         $this->siteService = $siteService;
         $this->config = $siteService->getSite()->getConfigRepository();
+        $this->resolverManager = $resolverManager;
     }
 
     /**
@@ -54,7 +61,7 @@ class OpenGraph
         $element = new Element('meta');
         $element->setIsSelfClosing(true);
         $element->property($property);
-        $element->content($content);
+        $element->content(htmlspecialchars($content, ENT_QUOTES, APP_CHARSET));
         return $element;
     }
 
@@ -75,7 +82,7 @@ class OpenGraph
         if ($valueFrom) {
             switch ($valueFrom) {
                 case 'page_attribute':
-                    $content = h((string) $page->getAttribute($field['attribute']));
+                    $content = (string) $page->getAttribute($field['attribute']);
                     break;
                 case 'page_property':
                     switch ($field['property']) {
@@ -130,18 +137,23 @@ class OpenGraph
         if ($tag = $this->createTagFromConfig($page, 'field_fb_app_id', self::TAG_FB_APP_ID)) {
             $tags[] = $tag;
         }
-        $canonicalUrl = $site->getSiteCanonicalURL();
-        if ($canonicalUrl) {
-            $tags[] = $this->createTag(self::TAG_OG_URL, $canonicalUrl);
+        if ($site->getSiteCanonicalURL()) {
+            $tags[] = $this->createTag(self::TAG_OG_URL, (string) $this->resolverManager->resolve([$page]));
         }
         $imageAttribute = $this->config->get('social.opengraph.field_og_thumbnail');
         if ($imageAttribute['value_from'] === 'page_attribute') {
             $image = $page->getAttribute($imageAttribute['attribute']);
             if ($image instanceof File) {
+                $width = $image->getAttribute('width');
+                $height = $image->getAttribute('height');
                 $tags[] = $this->createTag(self::TAG_OG_IMAGE_URL, $image->getURL());
                 $tags[] = $this->createTag(self::TAG_OG_IMAGE_TYPE, $image->getMimeType());
-                $tags[] = $this->createTag(self::TAG_OG_IMAGE_WIDTH, $image->getAttribute('width'));
-                $tags[] = $this->createTag(self::TAG_OG_IMAGE_HEIGHT, $image->getAttribute('height'));
+                if ($width) {
+                    $tags[] = $this->createTag(self::TAG_OG_IMAGE_WIDTH, $width);
+                }
+                if ($height) {
+                    $tags[] = $this->createTag(self::TAG_OG_IMAGE_HEIGHT, $height);
+                }
             }
         }
 

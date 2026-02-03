@@ -119,6 +119,7 @@ class InstanceLogEntry implements \JsonSerializable
         $this->data = $data;
     }
 
+    #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
         $data = $this->getData();

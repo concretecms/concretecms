@@ -105,7 +105,7 @@ class Controller extends AttributeTypeController implements
         }
         return $url;
     }
-    
+
     public function exportValue(\SimpleXMLElement $akn)
     {
         $av = $akn->addChild('value');
@@ -218,6 +218,12 @@ class Controller extends AttributeTypeController implements
 
     public function validateForm($data)
     {
+        if (!is_array($data)) {
+            $data = [];
+        }
+        if (!isset($data['value'])) {
+            $data['value'] = null;
+        }
         if ($this->getAttributeKeySettings()->isModeFileManager()) {
             if ((int) ($data['value']) > 0) {
                 $f = File::getByID((int) ($data['value']));
