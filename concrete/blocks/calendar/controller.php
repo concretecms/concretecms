@@ -85,6 +85,26 @@ class Controller extends BlockController implements UsesFeatureInterface
     protected $btTable = 'btCalendar';
 
     /**
+     * @var bool
+     */
+    protected $btCacheBlockOutput = true;
+
+    /**
+     * @var bool
+     */
+    protected $btCacheBlockOutputForRegisteredUsers = false;
+
+    /**
+     * @var bool
+     */
+    protected $btCacheBlockOutputOnPost = true;
+
+    /**
+     * @var int
+     */
+    protected $btCacheBlockOutputLifetime = 0;
+
+    /**
      * @var \Concrete\Core\Entity\Attribute\Key\EventKey[]
      */
     protected $eventAttributes;

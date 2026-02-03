@@ -71,6 +71,16 @@ class Controller extends BlockController implements FileTrackableInterface, Uses
     protected $btCacheBlockOutputOnPost = true;
 
     /**
+     * @var bool
+     */
+    protected $btCacheBlockOutputForRegisteredUsers = true;
+
+    /**
+     * @var bool
+     */
+    protected $btCacheBlockOutputOnEditMode = false;
+
+    /**
      * @var string[]
      */
     protected $btExportFileColumns = ['webmfID', 'oggfID', 'posterfID', 'mp4fID'];

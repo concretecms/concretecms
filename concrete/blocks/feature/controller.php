@@ -56,6 +56,7 @@ class Controller extends BlockController implements FileTrackableInterface, Uses
     protected $btCacheBlockOutput = true;
     protected $btCacheBlockOutputOnPost = true;
     protected $btCacheBlockOutputForRegisteredUsers = true;
+    protected $btCacheBlockOutputOnEditMode = true;
     protected $btExportPageColumns = ['internalLinkCID'];
     protected $btExportFileColumns = ['fID'];
     protected $btExportContentColumns = ['paragraph'];

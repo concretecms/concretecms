@@ -7,6 +7,7 @@ use Concrete\Core\Block\Events\BlockBeforeRender;
 use Concrete\Core\Block\Events\BlockOutput;
 use Concrete\Core\Config\Repository\Repository;
 use Concrete\Core\Feature\Traits\HandleRequiredFeaturesTrait;
+use Concrete\Core\Http\Request;
 use Concrete\Core\Filesystem\TemplateService;
 use Concrete\Core\Foundation\Environment;
 use Concrete\Core\Localization\Localization;
@@ -395,17 +396,32 @@ class BlockView extends AbstractView
 
     protected function useBlockCache()
     {
-        $u = app(User::class);
-        $config = app(Repository::class);
+        $app = Application::getFacadeApplication();
+        $config = $app->make(Repository::class);
         $c = Page::getCurrentPage();
         if ($this->viewToRender == 'view' && $config->get('concrete.cache.blocks') && $this->block instanceof Block
             && $this->block->cacheBlockOutput() && is_object($c) && $c->isPageDraft() === false
         ) {
-            if ((!$u->isRegistered() || ($this->block->cacheBlockOutputForRegisteredUsers())) &&
-                (($_SERVER['REQUEST_METHOD'] != 'POST' || ($this->block->cacheBlockOutputOnPost() == true)))
-            ) {
-                return true;
+            $u = $app->make(User::class);
+            if ($u->isRegistered()) {
+                // If the block doesn't allow cache for registered users, we can't cache this block.
+                if (!$this->block->cacheBlockOutputForRegisteredUsers()) {
+                    return false;
+                }
+                // If the current page is in edit mode and the block doesn't allow cache, we can't cache it.
+                if (!$this->block->cacheBlockOutputOnEditMode() && $c->isEditMode()) {
+                    return false;
+                }
             }
+
+            // If the block doesn't allow cache for post method, we can't cache this block.
+            $request = $app->make(Request::class);
+            if ($request->isMethod('POST') && !$this->block->cacheBlockOutputOnPost()) {
+                return false;
+            }
+
+            // Finally, we can cache this block!
+            return true;
         }
 
         return false;
