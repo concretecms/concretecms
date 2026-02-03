@@ -13,7 +13,24 @@ use Concrete\Core\Logging\Search\Result\Column;
 use Concrete\Core\Logging\Search\Result\Item;
 use Concrete\Core\Logging\Search\Result\ItemColumn;
 use Concrete\Core\Logging\Search\Result\Result;
+use Concrete\Core\Support\Facade\Application;
+?>
+<?php
+$app = Application::getFacadeApplication();
+$config = app('config');
+$handler = $config->get('concrete.log.configuration.simple.handler');
 
+if ($handler === 'file') :
+?>
+    <div class="alert alert-info">
+        <?php
+        echo t('Note: Logs stored in files are not displayed. Only database logs are shown.');
+        ?>
+    </div>
+<?php
+endif;
+?>
+<?php
 // @var MenuInterface $menu
 // @var Result $result
 // @var DropdownMenu $resultsBulkMenu
