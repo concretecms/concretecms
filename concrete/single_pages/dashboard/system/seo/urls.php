@@ -143,7 +143,7 @@ $(function () {
                         checkbox.checked = true;
                     },
                     'btn-danger',
-                    <?= json_encode(t('Procced Anyway')) ?>
+                    <?= json_encode(t('Proceed anyway')) ?>
                 );
             });
         } else {
@@ -153,7 +153,7 @@ $(function () {
     }
 
     new ConcreteAjaxRequest({
-        url: <?=json_encode($checkPrettyUrlsAction) ?>,
+        url: <?= json_encode($checkPrettyUrlsAction) ?>,
         data: {
             <?= json_encode($token::DEFAULT_TOKEN_NAME) ?>: <?= json_encode($token->generate('check_pretty_urls')) ?>,
         },
