@@ -54,6 +54,7 @@ EOT
             $output->writeln('SQL Mode - ' . $info->getDBMSSqlMode());
             $output->writeln('Character Set - ' . $info->getDbCharset());
             $output->writeln('Collation - ' . $info->getDbCollation());
+            $output->writeln('Max Connections - ' . $info->getDBMSMaxConnections());
         }
 
         $output->writeln('');
