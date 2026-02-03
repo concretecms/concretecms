@@ -179,9 +179,7 @@ class CheckerGenerator
                 $className = $namespacePrefix . '\\' . $matches[1];
                 $classExists = null;
                 if (strpos($className, 'Concrete\\Core\\Support\\CodingStyle\\') === 0) {
-                    if (!class_exists('PhpCsFixer\\AbstractFixer')) {
-                        $classExists = false;
-                    }
+                    $classExists = false;
                 }
                 if ($classExists === null) {
                     $classExists = class_exists($className);
