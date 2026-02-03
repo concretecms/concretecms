@@ -48,6 +48,7 @@
     "ext-zip": "*",
     "anahkiasen/html-object": "~1.4",
     "commerceguys/addressing": "1.3.0",
+    "composer/xdebug-handler": "^2.0",
     "concrete5/oauth-user-data": "~1.0",
     "concretecms/dependency-patches": "^1.7.2",
     "concretecms/doctrine-xml": "^1.2.0",
