@@ -44,7 +44,7 @@ final class AuthenticationTypeTest extends TestCase
         $this->assertEquals($actual, 'foo');
     }
 
-    public function basicRenderProvider()
+    public static function basicRenderProvider()
     {
         return [['hook'], ['hooked']];
     }

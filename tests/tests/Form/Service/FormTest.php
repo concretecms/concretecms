@@ -25,7 +25,7 @@ class FormTest extends TestCase
         self::$formHelper->setRequest(self::$request);
     }
 
-    public function providerTestCreateElements()
+    public static function providerTestCreateElements()
     {
         return [
             // submit

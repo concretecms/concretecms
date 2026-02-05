@@ -183,7 +183,7 @@ class ImportExportTest extends PageTestCase
         self::$storageVolatileDirectory = null;
     }
 
-    public function provideCIFCases(): array
+    public static function provideCIFCases(): array
     {
         static $cases;
         if ($cases === null) {
@@ -218,10 +218,10 @@ class ImportExportTest extends PageTestCase
         return $cases;
     }
 
-    public function provideBlocksWithRichText(): array
+    public static function provideBlocksWithRichText(): array
     {
         $result = [];
-        foreach ($this->provideCIFCases() as [$blockTypeHandle,, $options]) {
+        foreach (self::provideCIFCases() as [$blockTypeHandle,, $options]) {
             if (in_array([$blockTypeHandle], $result, true)) {
                 continue;
             }

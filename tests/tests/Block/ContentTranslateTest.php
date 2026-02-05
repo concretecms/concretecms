@@ -65,7 +65,7 @@ class ContentTranslateTest extends ConcreteDatabaseTestCase
         $this->assertEquals($to, $translated);
     }
 
-    public function contentsTo()
+    public static function contentsTo()
     {
         return [
            ['Simple', 'Simple'],
@@ -80,7 +80,7 @@ class ContentTranslateTest extends ConcreteDatabaseTestCase
         ];
     }
 
-    public function contentsFromEditMode()
+    public static function contentsFromEditMode()
     {
         return [
             ['Simple', 'Simple'],
@@ -93,7 +93,7 @@ class ContentTranslateTest extends ConcreteDatabaseTestCase
         ];
     }
 
-    public function contentsFrom()
+    public static function contentsFrom()
     {
         return [
             ['Simple', 'Simple'],

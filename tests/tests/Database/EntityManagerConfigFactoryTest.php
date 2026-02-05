@@ -147,7 +147,7 @@ class EntityManagerConfigFactoryTest extends TestCase
             $driverPaths[0]);
     }
 
-    public function dataProviderGetConfigurationWithApplicationYmlDriver()
+    public static function dataProviderGetConfigurationWithApplicationYmlDriver()
     {
         return [
             ['yml'],
@@ -184,7 +184,7 @@ class EntityManagerConfigFactoryTest extends TestCase
             $driverPaths[0]);
     }
 
-    public function dataProviderGetConfigurationWithApplicationXmlDriver()
+    public static function dataProviderGetConfigurationWithApplicationXmlDriver()
     {
         return [
             ['xml'],

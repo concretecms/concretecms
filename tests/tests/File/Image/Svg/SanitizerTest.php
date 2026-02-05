@@ -52,7 +52,7 @@ class SanitizerTest extends TestCase
     /**
      * @return array
      */
-    public function provideSanitizeWithDefaultSettings()
+    public static function provideSanitizeWithDefaultSettings()
     {
         return [
             ['<svg/>', '<svg></svg>'],
@@ -90,7 +90,7 @@ class SanitizerTest extends TestCase
     /**
      * @return array
      */
-    public function provideInvalidData()
+    public static function provideInvalidData()
     {
         return [
             ['<svg'],

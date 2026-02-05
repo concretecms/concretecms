@@ -63,7 +63,7 @@ class FactoryTest extends TestCase
         ]);
     }
 
-    public function provideSendmail(): iterable
+    public static function provideSendmail(): iterable
     {
         $methods = ['PHP_MAIL', 'foo', null];
         $params = ['sendmail -bs', 'sendmail -t', '', null];
@@ -99,7 +99,7 @@ class FactoryTest extends TestCase
         $this->assertEquals('pass', $transport->getPassword());
     }
 
-    public function provideSmtp(): iterable
+    public static function provideSmtp(): iterable
     {
         return collect(['TLS', 'SSL', 'tls', '', null])->crossJoin();
     }

@@ -157,7 +157,7 @@ class ServiceTest extends TestCase
         $this->assertStringContainsString('HTML Body', $message->getHtmlBody());
     }
 
-    public function trueFalseProvider(): array
+    public static function trueFalseProvider(): array
     {
         return [[true], [false]];
     }

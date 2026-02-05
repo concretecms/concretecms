@@ -33,7 +33,7 @@ class IPAddressTest extends TestCase
         parent::tearDown();
     }
 
-    public function loopbackDataProvider()
+    public static function loopbackDataProvider()
     {
         return [
             ['127.0.0.0', true],
@@ -57,7 +57,7 @@ class IPAddressTest extends TestCase
         $this->assertEquals($expected, $this->object->setIp($ip)->isLoopback());
     }
 
-    public function privateDataProvider()
+    public static function privateDataProvider()
     {
         return [
             ['192.168.0.1', true],
@@ -91,7 +91,7 @@ class IPAddressTest extends TestCase
         $this->assertEquals($expected, $this->object->setIp($ip)->isPrivate());
     }
 
-    public function linkedLocalDataProvider()
+    public static function linkedLocalDataProvider()
     {
         return [
             ['169.254.255.255', true],
@@ -121,7 +121,7 @@ class IPAddressTest extends TestCase
         $this->assertEquals($expected, $this->object->setIp($ip)->isLinkLocal());
     }
 
-    public function ipTypeDataProvider()
+    public static function ipTypeDataProvider()
     {
         return [
             ['169.254.255.255', 4],
