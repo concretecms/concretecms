@@ -118,31 +118,16 @@
     "predis/predis": "^1.1",
     "enshrined/svg-sanitize": "^0.22.0",
     "laminas/laminas-feed": "^2.16",
-    "laminas/laminas-mail": "^2.16",
     "laminas/laminas-cache": "^3.1.2",
     "laminas/laminas-i18n": "^2.13",
-    "laminas/laminas-cache-storage-adapter-memory": "^2.0",
     "tubalmartin/cssmin": "^4.1",
     "ssddanbrown/htmldiff": "^1.0",
     "zircote/swagger-php": "4.9.2",
     "concretecms/dependency-patches": "^1.7.2",
     "twig/twig": "^3.11"
   },
-  "replace": {
-    "laminas/laminas-cache-storage-adapter-apc": "*",
-    "laminas/laminas-cache-storage-adapter-apcu": "*",
-    "laminas/laminas-cache-storage-adapter-blackhole": "*",
-    "laminas/laminas-cache-storage-adapter-dba": "*",
-    "laminas/laminas-cache-storage-adapter-ext-mongodb": "*",
-    "laminas/laminas-cache-storage-adapter-filesystem": "*",
-    "laminas/laminas-cache-storage-adapter-memcache": "*",
-    "laminas/laminas-cache-storage-adapter-memcached": "*",
-    "laminas/laminas-cache-storage-adapter-mongodb": "*",
-    "laminas/laminas-cache-storage-adapter-redis": "*",
-    "laminas/laminas-cache-storage-adapter-session": "*",
-    "laminas/laminas-cache-storage-adapter-wincache": "*",
-    "laminas/laminas-cache-storage-adapter-xcache": "*",
-    "laminas/laminas-cache-storage-adapter-zend-server": "*"
+  "provide": {
+    "laminas/laminas-cache-storage-implementation": "1.0"
   },
   "extra": {
     "branch-alias": {
