@@ -34,6 +34,9 @@
   "replace": {
     "concrete5/core": "self.version"
   },
+  "provide": {
+    "laminas/laminas-cache-storage-implementation": "1.0"
+  },
   "extra": {
     "r1": "This is using the wikimedia plugin to merge our core/composer.json file.",
     "r2": "By doing this, we greatly simplify the requirements for setting up a subtree split",

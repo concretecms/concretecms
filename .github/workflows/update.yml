@@ -16,8 +16,8 @@ jobs:
           - 9.0.1
           - latest
         php-version:
-          - "7.3"
-          - "8.5"
+          - "7.4"
+          - "8.2"
     steps:
       -
         name: Configure environment
