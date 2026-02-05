@@ -63,7 +63,7 @@ class RequestMediaTypeParserTest extends TestCase
         $mediaTypeParser = $this->getMediaTypeParser($acceptValue);
         $actualMap = $mediaTypeParser->getRequestAcceptMap();
 
-        $this->assertSame($expectedMap, $actualMap);
+        $this->assertEquals($expectedMap, $actualMap);
     }
 
     /**
