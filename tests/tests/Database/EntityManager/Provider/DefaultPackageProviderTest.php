@@ -50,10 +50,11 @@ class DefaultPackageProviderTest extends TestCase
     public function testGetDriversWithGetPackageEntityPath()
     {
         $package = new PackageControllerWithgetPackageEntityPath($this->app);
+
         $dpp = new DefaultPackageProvider($this->app, $package);
         $drivers = $dpp->getDrivers();
         self::assertIsArray($drivers);
-        $c5Driver = $drivers[0];
+        $c5Driver = $drivers[0] ?? null;
         self::assertInstanceOf('Concrete\Core\Database\EntityManager\Driver\Driver', $c5Driver);
         self::assertInstanceOf('Doctrine\ORM\Mapping\Driver\AnnotationDriver', $c5Driver->getDriver());
         self::assertEquals($package->getNamespace() . '\Src', $c5Driver->getNamespace());
@@ -110,8 +111,6 @@ class DefaultPackageProviderTest extends TestCase
         self::assertInstanceOf('Concrete\Core\Database\EntityManager\Driver\Driver', $c5Driver);
         self::assertInstanceOf('Doctrine\ORM\Mapping\Driver\AnnotationDriver', $c5Driver->getDriver());
         self::assertEquals($package->getNamespace() . '\Entity', $c5Driver->getNamespace());
-
-        $this->removePackageFolderOfTestMetadataDriverDefault();
     }
 
     /**
@@ -136,18 +135,10 @@ class DefaultPackageProviderTest extends TestCase
 
         $pathsOfDriver1 = $driver1->getPaths();
         self::assertEquals('src/PortlandLabs/Concrete5/MigrationTool', $this->folderPathCleaner($pathsOfDriver1[0], 4));
-
-        $this->removePackageFolderOfTestMetadataDriverAdditionalNamespace();
     }
 
-    /**
-     * Clean up if a Exception is thrown.
-     *
-     * @param \Exception $e
-     */
-    protected function onNotSuccessfulTest(\Throwable $e):void
+    public function tearDown(): void
     {
-        $this->removePackageFolderOfTestMetadataDriverDefault();
         $this->removePackageFolderOfTestMetadataDriverDefault();
         $this->removePackageFolderOfTestMetadataDriverAdditionalNamespace();
     }

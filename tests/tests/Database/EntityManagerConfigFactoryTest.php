@@ -209,7 +209,8 @@ class EntityManagerConfigFactoryTest extends TestCase
                     false,
                     [],
                     false,
-                    $setting
+                    $setting,
+                    null,
                 ));
         $entityManagerConfigFactory = new \Concrete\Core\Database\EntityManagerConfigFactory($this->app, $config, $configRepoStub);
 

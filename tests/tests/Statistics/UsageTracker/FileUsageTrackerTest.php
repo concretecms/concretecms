@@ -29,7 +29,7 @@ class FileUsageTrackerTest extends TestCase
         $builder = $this->getMockBuilder(TrackableBlockController::class);
         $builder->disableProxyingToOriginalMethods();
         $builder->disableOriginalConstructor();
-        $builder->setMethods([
+        $builder->onlyMethods([
             'getCollectionObject',
             'getBlockObject',
             'getUsedFiles',

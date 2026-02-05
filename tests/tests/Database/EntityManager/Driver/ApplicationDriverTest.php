@@ -45,7 +45,7 @@ class ApplicationDriverTest extends TestCase
     /**
      * Clean up after each tests.
      */
-    public function TearDown():void
+    public function tearDown():void
     {
         $this->cleanupFolderSystem();
         $this->cleanupConfig();
@@ -311,17 +311,6 @@ class ApplicationDriverTest extends TestCase
     {
         $this->configRepository->save('app.enable_legacy_src_namespace', false);
         $this->configRepository->set(CONFIG_ORM_METADATA_APPLICATION, '');
-    }
-
-    /**
-     * Clean up if a Exception is thrown.
-     *
-     * @param \Exception $e
-     */
-    protected function onNotSuccessfulTest(\Throwable $e): never
-    {
-        $this->cleanupFolderSystem();
-        $this->cleanupConfig();
     }
 
     /*

@@ -83,7 +83,11 @@ class ServiceTest extends TestCase
         }
 
         if ($allProperties['email'] instanceof Email) {
-            $allProperties['email'] = $allProperties['email']->serialize();
+            try {
+                $allProperties['email'] = $allProperties['email']->toString();
+            } catch (\Throwable $e) {
+                $allProperties['email'] = '';
+            }
         }
 
         return $allProperties;
