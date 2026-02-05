@@ -11,6 +11,7 @@ use Concrete\TestHelpers\Database\EntityManager\Provider\Fixtures\PackageControl
 use Concrete\TestHelpers\Database\Traits\DirectoryHelpers;
 use Illuminate\Filesystem\Filesystem;
 use Concrete\Tests\TestCase;
+use Mockery\MockInterface;
 
 /**
  * PackageProviderFactoryTest.
@@ -23,7 +24,7 @@ class DefaultPackageProviderTest extends TestCase
     use DirectoryHelpers;
 
     /**
-     * @var \Concrete\Core\Application\Application
+     * @var \Concrete\Core\Application\Application&MockInterface
      */
     protected $app;
 
@@ -38,7 +39,13 @@ class DefaultPackageProviderTest extends TestCase
     public function setUp():void
     {
         parent::setUp();
-        $this->app = Application::getFacadeApplication();
+
+        $annotationReader = \Mockery::mock(\Doctrine\Common\Annotations\SimpleAnnotationReader::class);
+        $this->app = \Mockery::mock(\Concrete\Core\Application\Application::class);
+        $this->app->shouldReceive('make')->with('orm/cachedSimpleAnnotationReader')->andReturns($annotationReader);
+
+        $cachedReader = \Mockery::mock(\Doctrine\Common\Annotations\AnnotationReader::class);
+        $this->app->shouldReceive('make')->with('orm/cachedAnnotationReader')->andReturns($cachedReader);
         $this->filesystem = new Filesystem();
     }
 
