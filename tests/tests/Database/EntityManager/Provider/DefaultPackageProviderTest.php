@@ -57,14 +57,26 @@ class DefaultPackageProviderTest extends TestCase
     public function testGetDriversWithGetPackageEntityPath()
     {
         $package = new PackageControllerWithgetPackageEntityPath($this->app);
+        $fs = new Filesystem();
+        $deleteAfter = false;
+        try {
+            if (!is_dir(DIR_PACKAGES . '/' . $package->getPackageHandle())) {
+                $deleteAfter = true;
+                $fs->makeDirectory(DIR_PACKAGES . '/' . $package->getPackageHandle() . '/src', 0755, true);
+            }
 
-        $dpp = new DefaultPackageProvider($this->app, $package);
-        $drivers = $dpp->getDrivers();
-        self::assertIsArray($drivers);
-        $c5Driver = $drivers[0] ?? null;
-        self::assertInstanceOf('Concrete\Core\Database\EntityManager\Driver\Driver', $c5Driver);
-        self::assertInstanceOf('Doctrine\ORM\Mapping\Driver\AnnotationDriver', $c5Driver->getDriver());
-        self::assertEquals($package->getNamespace() . '\Src', $c5Driver->getNamespace());
+            $dpp = new DefaultPackageProvider($this->app, $package);
+            $drivers = $dpp->getDrivers();
+            self::assertIsArray($drivers);
+            $c5Driver = $drivers[0] ?? null;
+            self::assertInstanceOf('Concrete\Core\Database\EntityManager\Driver\Driver', $c5Driver);
+            self::assertInstanceOf('Doctrine\ORM\Mapping\Driver\AnnotationDriver', $c5Driver->getDriver());
+            self::assertEquals($package->getNamespace() . '\Src', $c5Driver->getNamespace());
+        } finally {
+            if ($deleteAfter) {
+                $fs->deleteDirectory(DIR_PACKAGES . '/' . $package->getPackageHandle());
+            }
+        }
     }
 
     /**
