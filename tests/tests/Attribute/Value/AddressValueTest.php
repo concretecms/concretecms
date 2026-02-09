@@ -48,33 +48,33 @@ class AddressValueTest extends AttributeValueTestCase
         return 'Concrete\Core\Entity\Attribute\Value\Value\AddressValue';
     }
 
-    public function baseAttributeValues()
+    public static function baseAttributeValues()
     {
         return [
             [
-                $this->getAddress1(),
-                $this->getAddress1(),
+                self::getAddress1(),
+                self::getAddress1(),
             ],
             [
-                $this->getAddress1(false),
-                $this->getAddress1(),
+                self::getAddress1(false),
+                self::getAddress1(),
             ],
             [
-                $this->getAddress2(),
-                $this->getAddress2(),
+                self::getAddress2(),
+                self::getAddress2(),
             ],
             [
-                $this->getAddress2(false),
-                $this->getAddress2(),
+                self::getAddress2(false),
+                self::getAddress2(),
             ],
         ];
     }
 
-    public function displayAttributeValues()
+    public static function displayAttributeValues()
     {
         return [
             [
-                $this->getAddress1(),
+                self::getAddress1(),
                 (
                     '<div class="ccm-address-text">' . "\n" .
                     '<span class="address-line1">123 Fake St.</span>' .
@@ -92,21 +92,21 @@ class AddressValueTest extends AttributeValueTestCase
         ];
     }
 
-    public function plaintextAttributeValues()
+    public static function plaintextAttributeValues()
     {
         return [
             [
-                $this->getAddress1(),
+                self::getAddress1(),
                 "123 Fake St.\nSuite 100\nPortland, Oregon 90000\nUnited States",
             ],
         ];
     }
 
-    public function searchIndexAttributeValues()
+    public static function searchIndexAttributeValues()
     {
         return [
             [
-                $this->getAddress2(),
+                self::getAddress2(),
                 [
                     'address1' => '500 SW Test',
                     'address2' => 'Suite 1',
@@ -199,7 +199,7 @@ class AddressValueTest extends AttributeValueTestCase
         return $value;
     }
 
-    protected function getAddress1($asObject = true)
+    protected static function getAddress1($asObject = true)
     {
         if ($asObject) {
             $object = new \Concrete\Core\Entity\Attribute\Value\Value\AddressValue();
@@ -223,7 +223,7 @@ class AddressValueTest extends AttributeValueTestCase
         }
     }
 
-    protected function getAddress2($asObject = true)
+    protected static function getAddress2($asObject = true)
     {
         if ($asObject) {
             $object = new \Concrete\Core\Entity\Attribute\Value\Value\AddressValue();

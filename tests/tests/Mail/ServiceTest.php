@@ -83,7 +83,11 @@ class ServiceTest extends TestCase
         }
 
         if ($allProperties['email'] instanceof Email) {
-            $allProperties['email'] = $allProperties['email']->serialize();
+            try {
+                $allProperties['email'] = $allProperties['email']->toString();
+            } catch (\Throwable $e) {
+                $allProperties['email'] = '';
+            }
         }
 
         return $allProperties;
@@ -157,7 +161,7 @@ class ServiceTest extends TestCase
         $this->assertStringContainsString('HTML Body', $message->getHtmlBody());
     }
 
-    public function trueFalseProvider(): array
+    public static function trueFalseProvider(): array
     {
         return [[true], [false]];
     }

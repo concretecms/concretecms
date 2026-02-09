@@ -108,7 +108,7 @@ class PageListTest extends PageTestCase
             'name' => 'Another',
         ]);
 
-        $self = new static();
+        $self = new static('');
         foreach ($self->pageData as $data) {
             $c = call_user_func_array([$self, 'createPage'], $data);
             $c->reindex();

@@ -188,9 +188,7 @@ return [
         'URL' => '\Concrete\Core\Support\Facade\Url',
     ],
 
-    'entity_namespaces' => [
-        'calendar' => 'Concrete\Core\Entity\Calendar',
-    ],
+    'entity_namespaces' => [],
 
     'package_items' => [
         'antispam_library',
