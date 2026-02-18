@@ -166,8 +166,8 @@ class Controller extends BlockController implements UsesFeatureInterface
             return $fulltext;
         }
 
-        $this->hText = $fulltext;
-        $this->hHighlight = $highlight;
+        $this->hText = h($fulltext);
+        $this->hHighlight = h($highlight);
         $this->hText = @preg_replace('#' . preg_quote($this->hHighlight, '#') . '#ui', '<span style="background-color:' . $this->hColor . ';">$0</span>', $this->hText);
 
         return $this->hText;
