@@ -280,11 +280,13 @@ class MiniSurvey
                  */
                 $html .= '<div class="checkboxList">' . "\r\n";
                 for ($i = 0; $i < count($options); $i++) {
-                    if (strlen(trim($options[$i])) == 0) {
+                    $option = trim($options[$i]);
+                    if (strlen($option) == 0) {
                         continue;
                     }
-                    $checked = (Request::request('Question' . $msqID . '_' . $i) == trim($options[$i])) ? 'checked' : '';
-                    $html .= '  <div class="form-check"><input id="question_'. $msqID . '_'.$i.($showEdit ? '_preview' : '').'" name="Question' . $msqID . '_' . $i . '" class="form-check-input" type="checkbox" value="' . trim($options[$i]) . '" ' . $checked . ' /><label class="form-check-label" for="question_'. $msqID . '_'.$i. ($showEdit ? '_preview' : '').'"> <span>' . $options[$i] . '</span></label></div>' . "\r\n";
+                    $safeOption = h($option);
+                    $checked = (Request::request('Question' . $msqID . '_' . $i) == $option) ? 'checked' : '';
+                    $html .= '  <div class="form-check"><input id="question_'. $msqID . '_'.$i.($showEdit ? '_preview' : '').'" name="Question' . $msqID . '_' . $i . '" class="form-check-input" type="checkbox" value="' . $safeOption . '" ' . $checked . ' /><label class="form-check-label" for="question_'. $msqID . '_'.$i. ($showEdit ? '_preview' : '').'"> <span>' . $safeOption . '</span></label></div>' . "\r\n";
                 }
                 $html .= '</div>';
                 //}
@@ -295,19 +297,23 @@ class MiniSurvey
                     $html .= '<option value="" ' . $selected . '>----</option>';
                 }
                 foreach ($options as $option) {
-                    $checked = (Request::request('Question' . $msqID) == trim($option)) ? 'selected="selected"' : '';
-                    $html .= '<option ' . $checked . '>' . trim($option) . '</option>';
+                    $option = trim($option);
+                    $safeOption = h($option);
+                    $checked = (Request::request('Question' . $msqID) == $option) ? 'selected="selected"' : '';
+                    $html .= '<option value="' . $safeOption . '" ' . $checked . '>' . $safeOption . '</option>';
                 }
 
                 return '<select class="form-control" name="Question' . $msqID . '" id="Question' . $msqID . '" >' . $html . '</select>';
             case 'radios':
                 $index = 1;
                 foreach ($options as $option) {
-                    if (strlen(trim($option)) == 0) {
+                    $option = trim($option);
+                    if (strlen($option) == 0) {
                         continue;
                     }
-                    $checked = (Request::request('Question' . $msqID) == trim($option)) ? 'checked' : '';
-                    $html .= '<div class="form-check"><input class="form-check-input" id="Question' . $msqID . '_'.$index.'" name="Question' . $msqID . '" type="radio" value="' . trim($option) . '" ' . $checked . ' /><label for="Question' . $msqID . '_'.$index.'" class="form-check-label"> <span>' . $option . '</span></label></div>';
+                    $safeOption = h($option);
+                    $checked = (Request::request('Question' . $msqID) == $option) ? 'checked' : '';
+                    $html .= '<div class="form-check"><input class="form-check-input" id="Question' . $msqID . '_'.$index.'" name="Question' . $msqID . '" type="radio" value="' . $safeOption . '" ' . $checked . ' /><label for="Question' . $msqID . '_'.$index.'" class="form-check-label"> <span>' . $safeOption . '</span></label></div>';
                     $index++;
                 }
 
