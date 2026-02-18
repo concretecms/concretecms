@@ -63,7 +63,7 @@ if (isset($do_search) && $do_search) { ?>
             $currentPageBody = $this->controller->highlightedExtendedMarkup($r->getPageIndexContent(), $query);
             ?>
             <div class="searchResult">
-            <h3><a href="<?= $r->getCollectionLink() ?>"><?= $r->getCollectionName() ?></a></h3>
+            <h3><a href="<?= $r->getCollectionLink() ?>"><?= h($r->getCollectionName()) ?></a></h3>
             <p><?php
                 if ($r->getCollectionDescription()) {
                     echo $this->controller->highlightedMarkup($tt->shortText($r->getCollectionDescription()), $query);
