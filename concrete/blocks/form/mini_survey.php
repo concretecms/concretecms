@@ -215,7 +215,7 @@ class MiniSurvey
                  */
                 $requiredSymbol = ($questionRow['required']) ? '&nbsp;<span class="required">*</span>' : '';
                 echo '<div class="form-group">
-                    <label class="control-label form-label" for="Question' . (int) ($questionRow['msqID']) . '">' . $questionRow['question'] . '' . $requiredSymbol . '</label></td>
+                    <label class="control-label form-label" for="Question' . (int) ($questionRow['msqID']) . '">' . h($questionRow['question']) . '' . $requiredSymbol . '</label></td>
                     <div>' . $this->loadInputType($questionRow, $showEdit) . '</div>
                 </div>';
                 //}
@@ -245,7 +245,7 @@ class MiniSurvey
                 $requiredSymbol = ($questionRow['required']) ? '<span class="required">*</span>' : '';
                 ?>
 					<li id="miniSurveyQuestionRow<?php echo $questionRow['msqID']?>" class="miniSurveyQuestionRow list-group-item">
-						<div class="miniSurveyQuestion"><?php echo $questionRow['question'] . ' ' . $requiredSymbol?></div>
+						<div class="miniSurveyQuestion"><?php echo h($questionRow['question']) . ' ' . $requiredSymbol?></div>
 						<?php  /* <div class="miniSurveyResponse"><?php echo $this->loadInputType($questionRow,$showEdit)?></div> */ ?>
 						<div class="miniSurveyOptions">
 							<a href="javascript:void(0)" class="ccm-icon-wrapper" onclick="miniSurvey.moveUp(this,<?php echo $questionRow['msqID']?>);return false"><i class="fas fa-chevron-up"></i></a>
