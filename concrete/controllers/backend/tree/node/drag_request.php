@@ -3,12 +3,20 @@ namespace Concrete\Controller\Backend\Tree\Node;
 
 use Concrete\Controller\Backend\UserInterface;
 use Concrete\Core\Application\EditResponse;
+use Concrete\Core\Error\UserMessageException;
 use Concrete\Core\Tree\Node\Node;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Concrete\Core\Legacy\Loader;
 
 class DragRequest extends UserInterface
 {
+    /**
+     * Keep compatibility with existing AJAX callers sending CCM_SECURITY_TOKEN.
+     *
+     * @var string
+     */
+    protected $validationToken = '';
+
     protected function getNodes()
     {
         $sourceNodes = array();
@@ -64,6 +72,10 @@ class DragRequest extends UserInterface
 
     public function execute()
     {
+        if (!$this->validateAction()) {
+            throw new UserMessageException($this->error->toText());
+        }
+
         $message = new EditResponse();
         list($sourceNodes, $destNode) = $this->getNodes();
         if (is_array($sourceNodes)) {
@@ -87,6 +99,9 @@ class DragRequest extends UserInterface
     }
 
     public function updateChildren() {
+        if (!$this->validateAction()) {
+            throw new UserMessageException($this->error->toText());
+        }
 
         $message = new EditResponse();
         list($sourceNodes, $destNode) = $this->getNodes();
