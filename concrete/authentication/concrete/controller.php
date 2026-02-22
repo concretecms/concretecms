@@ -331,7 +331,7 @@ class Controller extends AuthenticationTypeController
                 if (isset($_POST['uPassword']) && strlen($_POST['uPassword'])) {
                     $this->app->make('validator/password')->isValidFor($_POST['uPassword'], $ui, $e);
 
-                    if (strlen($_POST['uPassword']) && $_POST['uPasswordConfirm'] != $_POST['uPassword']) {
+                    if (strlen($_POST['uPassword']) && $_POST['uPasswordConfirm'] !== $_POST['uPassword']) {
                         $e->add(t('The two passwords provided do not match.'));
                     }
 
