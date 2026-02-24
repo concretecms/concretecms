@@ -43,7 +43,7 @@ class SanitizeTest extends TestCase
         $this->assertSame($expected, $actual);
     }
 
-    public function provideSanitizeStringCases(): array
+    public static function provideSanitizeStringCases(): array
     {
         return [
             ['plain text'],

@@ -8,6 +8,7 @@ use Concrete\Core\Board\Instance\Slot\SlotRenderer;
 use Concrete\Core\Board\Template\TemplateLocator;
 use Concrete\Core\Entity\Board\Instance;
 use Concrete\Core\Filesystem\FileLocator;
+use Concrete\Core\Filesystem\TemplateService;
 
 class Renderer implements ApplicationAwareInterface
 {
@@ -48,23 +49,26 @@ class Renderer implements ApplicationAwareInterface
         $site = $instance->getsite();
         $home = $site->getSiteHomePageObject();
         $theme = $home->getCollectionThemeObject();
+        $templateService = app(TemplateService::class);
 
         $file = $this->templateLocator->getFileToRender($theme, $instance->getBoard()->getTemplate());
         if ($file) {
             if ($this->enableEditing) {
-                include $this->fileLocator->getRecord(DIRNAME_ELEMENTS . '/' . DIRNAME_BOARDS . '/instance_header.php')
+                $header = $this->fileLocator->getRecord(DIRNAME_ELEMENTS . '/' . DIRNAME_BOARDS . '/instance_header.php')
                     ->getFile();
+                echo $templateService->renderTemplate($header, get_defined_vars(), $this);
             }
             $slotCollectionFactory = $this->app->make(RenderedSlotCollectionFactory::class);
             $slotCollection = $slotCollectionFactory->createCollection($instance);
             $slot = $this->app->make(SlotRenderer::class, ['renderedSlotCollection' => $slotCollection]);
             $slot->setEnableEditing($this->enableEditing);
 
-            include $file;
+            echo $templateService->renderTemplate($file, get_defined_vars(), $this);
 
             if ($this->enableEditing) {
-                include $this->fileLocator->getRecord(DIRNAME_ELEMENTS . '/' . DIRNAME_BOARDS . '/instance_footer.php')
+                $footer = $this->fileLocator->getRecord(DIRNAME_ELEMENTS . '/' . DIRNAME_BOARDS . '/instance_footer.php')
                     ->getFile();
+                echo $templateService->renderTemplate($footer, get_defined_vars(), $this);
             }
         }
 

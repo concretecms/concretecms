@@ -73,7 +73,7 @@ abstract class ConcreteDatabaseTestCase extends TestCase
     {
         Cache::disableAll();
         // Make sure tables are imported
-        $testCase = new static();
+        $testCase = new static('');
         $testCase->importTables();
         $testCase->importMetadatas();
         // Call parent setup
@@ -89,11 +89,11 @@ abstract class ConcreteDatabaseTestCase extends TestCase
     /**
      * Tear down after class has completed.
      */
-    public static function TearDownAfterClass():void
+    public static function tearDownAfterClass(): void
     {
         Cache::enableAll();
         // Make sure tables are removed
-        $testCase = new static();
+        $testCase = new static('');
         $testCase->removeTables();
 
         // Call parent teardown

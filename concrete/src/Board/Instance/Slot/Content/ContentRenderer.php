@@ -3,6 +3,7 @@ namespace Concrete\Core\Board\Instance\Slot\Content;
 
 use Concrete\Core\Application\Application;
 use Concrete\Core\Entity\Board\SlotTemplate;
+use Concrete\Core\Filesystem\TemplateService;
 use Concrete\Core\Foundation\Serializer\JsonSerializer;
 use Concrete\Core\Logging\Channels;
 use Concrete\Core\Logging\LoggerAwareInterface;
@@ -62,11 +63,12 @@ class ContentRenderer implements LoggerAwareInterface
         $file = $this->templateLocator->getFileToRender($template);
         if ($file) {
             $slot = $this->app->make(ContentSlotRenderer::class, ['data' => $collection]);
-            ob_start();
-            include $file;
-            $content = ob_get_contents();
-            ob_end_clean();
-            return $content;
+            return app(TemplateService::class)->renderTemplate($file, [
+                'slot' => $slot,
+                'collection' => $collection,
+                'template' => $template,
+                'file' => $file,
+            ], $this);
         } else if ($template->getHandle()) {
             $this->logger->notice(t('Error rendering board slot template on page %s - Unable to locate file for template: %s',
             isset($this->currentPage) ? $this->currentPage->getCollectionID() : -1, $template->getHandle())

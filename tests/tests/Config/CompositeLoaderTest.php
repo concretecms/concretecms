@@ -55,11 +55,11 @@ class CompositeLoaderTest extends TestCase
         parent::assertPostConditions();
     }
 
-    public function simpleFlowMethods()
+    public static function simpleFlowMethods()
     {
         $matches = function($match) {
             return function($results) use ($match) {
-                $this->assertEquals($match, $results);
+                self::assertEquals($match, $results);
             };
         };
 

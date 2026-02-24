@@ -72,7 +72,7 @@ class FileListTest extends FileStorageTestCase
         FileKey::add($number, ['akHandle' => 'width', 'akName' => 'Width']);
         FileKey::add($number, ['akHandle' => 'height', 'akName' => 'Height']);
 
-        $self = new static();
+        $self = new static('');
         if (!is_dir($self->getStorageDirectory())) {
             mkdir($self->getStorageDirectory());
         }

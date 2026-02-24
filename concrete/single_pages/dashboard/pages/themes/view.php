@@ -40,8 +40,6 @@ if (count($tArray)) { ?>
                 <li><a href="javascript:void(0)"
                        data-dialog="activate-theme-<?= $t->getThemeID() ?>"
                        class="dropdown-item"><?= t('Activate') ?></a></li>
-                <li><a href="<?= $view->action('inspect', $t->getThemeID()) ?>"
-                       class="dropdown-item"><?= t('Page Templates') ?></a></li>
                 <li><a href="<?= $view->action(
                         'remove',
                         $t->getThemeID(),

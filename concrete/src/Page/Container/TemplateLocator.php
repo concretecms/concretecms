@@ -34,7 +34,7 @@ class TemplateLocator
      * @param Container $container
      * @return string file
      */
-    public function getFileToRender(Page $page, Container $container)
+    public function getFileToRender(Page $page, Container $container, bool $template = false)
     {
         $theme = $page->getCollectionThemeObject();
         if ($theme) {
@@ -43,7 +43,8 @@ class TemplateLocator
                 $filename = DIRNAME_ELEMENTS . '/' . DIRNAME_CONTAINERS . '/' . $handle . '.php';
                 $this->themeLocation->setTheme($theme);
                 $this->fileLocator->addLocation($this->themeLocation);
-                $record = $this->fileLocator->getRecord($filename);
+
+                $record = $this->fileLocator->getRecord($filename, $template);
                 if ($record->exists()) {
                     return $record->getFile();
                 }

@@ -13,7 +13,7 @@ jobs:
         php-version:
           # This list should include at least the value of Concrete\Core\Install\Preconditions\PhpVersion::MINIMUM_PHP_VERSION
           - "7.3"
-          - "8.4"
+          - "8.5"
     steps:
       -
         name: Checkout

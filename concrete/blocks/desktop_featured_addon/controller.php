@@ -32,6 +32,7 @@ use Concrete\Core\Marketplace\RemoteItemList as MarketplaceRemoteItemList;
          * @var bool
          */
         protected $btCacheBlockOutputForRegisteredUsers = true;
+        protected $btCacheBlockOutputOnEditMode = true;
 
         /**
          * @var int

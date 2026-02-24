@@ -152,7 +152,7 @@ class ImportExportTest extends PageTestCase
         self::$storageVolatileDirectory = null;
     }
 
-    public function provideCIFCases(): array
+    public static function provideCIFCases(): array
     {
         static $cases;
         if ($cases === null) {

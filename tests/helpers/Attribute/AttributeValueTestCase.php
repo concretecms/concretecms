@@ -93,8 +93,10 @@ abstract class AttributeValueTestCase extends ConcreteDatabaseTestCase
 
     abstract public function getAttributeValueClassName();
 
+    abstract public static function baseAttributeValues();
+
     /**
-     *  @dataProvider baseAttributeValues
+     * @dataProvider baseAttributeValues
      *
      * @param mixed $input
      * @param mixed $expectedBaseValue
@@ -120,8 +122,10 @@ abstract class AttributeValueTestCase extends ConcreteDatabaseTestCase
         $this->assertInstanceOf($this->getAttributeValueClassName(), $value->getValueObject());
     }
 
+    abstract public static function displayAttributeValues();
+
     /**
-     *  @dataProvider displayAttributeValues
+     * @dataProvider displayAttributeValues
      *
      * @param mixed $input
      * @param mixed $expectedDisplayValue
@@ -154,8 +158,10 @@ abstract class AttributeValueTestCase extends ConcreteDatabaseTestCase
         $this->assertEquals($expectedDisplayValue, $displayValue1);
     }
 
+    abstract public static function plaintextAttributeValues();
+
     /**
-     *  @dataProvider plaintextAttributeValues
+     * @dataProvider plaintextAttributeValues
      *
      * @param mixed $input
      * @param mixed $expectedPlainTextOutput
@@ -176,6 +182,8 @@ abstract class AttributeValueTestCase extends ConcreteDatabaseTestCase
 
         $this->assertEquals($expectedPlainTextOutput, $plainTextValue);
     }
+
+    abstract public static function searchIndexAttributeValues();
 
     /**
      *  @dataProvider searchIndexAttributeValues

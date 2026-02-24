@@ -12,6 +12,7 @@
       <displaySystemPages>0</displaySystemPages>
       <displayThumbnail>1</displayThumbnail>
       <enableExternalFiltering>0</enableExternalFiltering>
+      <excludeCanonicalPaging>0</excludeCanonicalPaging>
       <excludeCurrentPage>0</excludeCurrentPage>
       <filterByCustomTopic>0</filterByCustomTopic>
       <filterByRelated>0</filterByRelated>

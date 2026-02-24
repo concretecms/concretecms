@@ -62,7 +62,7 @@ class TemplateLocator
                     if ($template->getPackageHandle()) {
                         $this->fileLocator->addPackageLocation($template->getPackageHandle());
                     }
-                    $record = $this->fileLocator->getRecord($filename);
+                    $record = $this->fileLocator->getRecord($filename, true);
                     if ($record->exists()) {
                         return $record->getFile();
                     }

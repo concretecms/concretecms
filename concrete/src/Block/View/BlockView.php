@@ -1,24 +1,20 @@
 <?php
 namespace Concrete\Core\Block\View;
 
-use Concrete\Core\Asset\AssetList;
-use Concrete\Core\Block\BlockController;
+use Concrete\Core\Area\Area;
+use Concrete\Core\Block\Block;
 use Concrete\Core\Block\Events\BlockBeforeRender;
 use Concrete\Core\Block\Events\BlockOutput;
 use Concrete\Core\Config\Repository\Repository;
 use Concrete\Core\Feature\Traits\HandleRequiredFeaturesTrait;
-use Concrete\Core\Feature\UsesFeatureInterface;
-use Concrete\Core\Localization\Localization;
-use Concrete\Core\Logging\Channels;
-use Concrete\Core\Logging\LoggerFactory;
-use Concrete\Core\Page\Theme\Theme;
-use Concrete\Core\Support\Facade\Application;
-use Concrete\Core\View\AbstractView;
-use Concrete\Core\Area\Area;
+use Concrete\Core\Http\Request;
+use Concrete\Core\Filesystem\TemplateService;
 use Concrete\Core\Foundation\Environment;
-use Concrete\Core\User\User;
+use Concrete\Core\Localization\Localization;
 use Concrete\Core\Page\Page;
-use Concrete\Core\Block\Block;
+use Concrete\Core\Support\Facade\Application;
+use Concrete\Core\User\User;
+use Concrete\Core\View\AbstractView;
 use Concrete\Core\View\View;
 
 /**
@@ -261,12 +257,8 @@ class BlockView extends AbstractView
 
         unset($shouldRender);
 
-        extract($scopeItems);
         if (!$this->outputContent) {
-            ob_start();
-            include $this->template;
-            $this->outputContent = ob_get_contents();
-            ob_end_clean();
+            $this->outputContent = $this->getTemplateService()->renderTemplate($this->template, $scopeItems, $this);
         }
 
         // In case the view changes any scope items, the block header/footer
@@ -370,14 +362,15 @@ class BlockView extends AbstractView
         return $base;
     }
 
-    public function inc($fileToInclude, $args = [])
+    public function inc($fileToInclude, $args = [], bool $template = true)
     {
         extract($args);
         extract($this->getScopeItems());
         $env = Environment::get();
         include $env->getPath(
             DIRNAME_BLOCKS . '/' . $this->blockType->getBlockTypeHandle() . '/' . $fileToInclude,
-            $this->blockTypePkgHandle
+            $this->blockTypePkgHandle,
+            $template,
         );
     }
 
@@ -403,17 +396,32 @@ class BlockView extends AbstractView
 
     protected function useBlockCache()
     {
-        $u = app(User::class);
-        $config = app(Repository::class);
+        $app = Application::getFacadeApplication();
+        $config = $app->make(Repository::class);
         $c = Page::getCurrentPage();
         if ($this->viewToRender == 'view' && $config->get('concrete.cache.blocks') && $this->block instanceof Block
             && $this->block->cacheBlockOutput() && is_object($c) && $c->isPageDraft() === false
         ) {
-            if ((!$u->isRegistered() || ($this->block->cacheBlockOutputForRegisteredUsers())) &&
-                (($_SERVER['REQUEST_METHOD'] != 'POST' || ($this->block->cacheBlockOutputOnPost() == true)))
-            ) {
-                return true;
+            $u = $app->make(User::class);
+            if ($u->isRegistered()) {
+                // If the block doesn't allow cache for registered users, we can't cache this block.
+                if (!$this->block->cacheBlockOutputForRegisteredUsers()) {
+                    return false;
+                }
+                // If the current page is in edit mode and the block doesn't allow cache, we can't cache it.
+                if (!$this->block->cacheBlockOutputOnEditMode() && $c->isEditMode()) {
+                    return false;
+                }
             }
+
+            // If the block doesn't allow cache for post method, we can't cache this block.
+            $request = $app->make(Request::class);
+            if ($request->isMethod('POST') && !$this->block->cacheBlockOutputOnPost()) {
+                return false;
+            }
+
+            // Finally, we can cache this block!
+            return true;
         }
 
         return false;
@@ -519,5 +527,10 @@ class BlockView extends AbstractView
         $app->make('director')->dispatch('on_block_output', $event);
 
         $this->outputContent = $event->getContents();
+    }
+
+    private function getTemplateService(): TemplateService
+    {
+        return app(TemplateService::class);
     }
 }
