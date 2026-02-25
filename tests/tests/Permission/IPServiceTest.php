@@ -65,7 +65,7 @@ class IPServiceTest extends ConcreteDatabaseTestCase
         $this->ipService = $app->make('failed_login');
     }
 
-    public static function automaticBanEnabledProvider()
+    public function automaticBanEnabledProvider()
     {
         return [
             [1],

@@ -42,31 +42,31 @@ class Environment
         $logger->warn('overrideCoreByPackage no longer functions in 8.2.');
     }
 
-    public function getRecord($segment, $pkgHandle = false, bool $template = false)
+    public function getRecord($segment, $pkgHandle = false)
     {
         $app = Facade::getFacadeApplication();
         $locator = $app->make(FileLocator::class);
         if ($pkgHandle) {
             $locator->addLocation(new FileLocator\PackageLocation($pkgHandle));
         }
-        return $locator->getRecord($segment, $template);
+        return $locator->getRecord($segment);
     }
 
-    public function getUncachedRecord($segment, $pkgHandle = false, bool $template = false)
+    public function getUncachedRecord($segment, $pkgHandle = false)
     {
-        return $this->getRecord($segment, $pkgHandle, $template);
+        return $this->getRecord($segment, $pkgHandle);
     }
 
-    public function getPath($subpath, $pkgIdentifier = false, bool $template = false)
+    public function getPath($subpath, $pkgIdentifier = false)
     {
-        $r = $this->getRecord($subpath, $pkgIdentifier, $template);
+        $r = $this->getRecord($subpath, $pkgIdentifier);
 
         return $r->getFile();
     }
 
-    public function getURL($subpath, $pkgIdentifier = false, bool $template = false)
+    public function getURL($subpath, $pkgIdentifier = false)
     {
-        $r = $this->getRecord($subpath, $pkgIdentifier, $template);
+        $r = $this->getRecord($subpath, $pkgIdentifier);
 
         return $r->getURL();
     }

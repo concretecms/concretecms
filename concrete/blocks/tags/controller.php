@@ -42,10 +42,9 @@ class Controller extends BlockController implements UsesFeatureInterface
     protected $btExportPageColumns = array('targetCID');
 
     protected $btCacheBlockRecord = true;
-    protected $btCacheBlockOutput = false;
+    protected $btCacheBlockOutput = true;
     protected $btCacheBlockOutputOnPost = false;
     protected $btCacheBlockOutputForRegisteredUsers = false;
-    protected $btCacheBlockOutputOnEditMode = false;
     protected $btWrapperClass = 'ccm-ui';
 
     public $attributeHandle = 'tags';
@@ -107,7 +106,6 @@ class Controller extends BlockController implements UsesFeatureInterface
 
     public function view()
     {
-        $options = array();
         $ak = $this->loadAttribute();
         $options = array();
         if ($this->displayMode == "cloud") {

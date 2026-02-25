@@ -45,10 +45,7 @@ class InjectionPreventionTest extends TestCase
         $escaper = new EscapeFormula();
 
         $stream = tmpfile();
-        if (method_exists(Writer::class, 'from')) {
-
-        }
-        $writer = method_exists(Writer::class, 'from') ? Writer::from($stream) : Writer::createFromStream($stream);
+        $writer = Writer::createFromStream($stream);
         $writer->addFormatter($escaper);
 
         // Write all the input items to the stream
@@ -79,7 +76,7 @@ class InjectionPreventionTest extends TestCase
 
         $writer = $factory->createFromString('');
         $writer->insertAll($this->input);
-        $reader = method_exists(Reader::class, 'fromString') ? Reader::fromString($writer->toString()) : Reader::createFromString($writer->toString());
+        $reader = Reader::createFromString($writer->toString());
         $stream = $reader->getIterator();
         $stream->rewind();
 

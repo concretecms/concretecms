@@ -39,7 +39,7 @@ class ImageTest extends TestCase
         }
     }
 
-    public static function legacyImageCreateDataProvider()
+    public function legacyImageCreateDataProvider()
     {
         return [
             [

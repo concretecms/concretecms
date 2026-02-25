@@ -78,22 +78,17 @@ class Controller extends BlockController implements UsesFeatureInterface
     /**
      * @var bool
      */
-    protected $btCacheBlockOutput = null;
+    protected $btCacheBlockOutput = true;
 
     /**
      * @var bool
      */
-    protected $btCacheBlockOutputOnPost = null;
+    protected $btCacheBlockOutputOnPost = true;
 
     /**
      * @var bool
      */
-    protected $btCacheBlockOutputForRegisteredUsers = null;
-
-    /**
-     * @var bool
-     */
-    protected $btCacheBlockOutputOnEditMode = null;
+    protected $btCacheBlockOutputForRegisteredUsers = false;
 
     /**
      * @var string
@@ -176,40 +171,15 @@ class Controller extends BlockController implements UsesFeatureInterface
         $this->set('title', $this->getTitleText());
     }
 
-    public function cacheBlockOutput()
+    /**
+     * @return void
+     */
+    public function on_start()
     {
-        if ($this->btCacheBlockOutput === null) {
-            $this->btCacheBlockOutput = !$this->useFilterTitle;
+        if ($this->useFilterTitle) {
+            $this->btCacheBlockOutput = false;
+            $this->btCacheBlockOutputOnPost = false;
         }
-
-        return $this->btCacheBlockOutput;
-    }
-
-    public function cacheBlockOutputOnPost()
-    {
-        if ($this->btCacheBlockOutputOnPost === null) {
-            $this->btCacheBlockOutputOnPost = !$this->useFilterTitle;
-        }
-
-        return $this->btCacheBlockOutputOnPost;
-    }
-
-    public function cacheBlockOutputForRegisteredUsers()
-    {
-        if ($this->btCacheBlockOutputForRegisteredUsers === null) {
-            $this->btCacheBlockOutputForRegisteredUsers = !$this->useFilterTitle;
-        }
-
-        return $this->btCacheBlockOutputForRegisteredUsers;
-    }
-
-    public function cacheBlockOutputOnEditMode()
-    {
-        if ($this->btCacheBlockOutputOnEditMode === null) {
-            $this->btCacheBlockOutputOnEditMode = !$this->useFilterTitle;
-        }
-
-        return $this->btCacheBlockOutputOnEditMode;
     }
 
     /**

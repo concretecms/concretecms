@@ -156,10 +156,8 @@ class BlockActionTest extends TestCase
 
     /**
      * Test view block action
-     * @runInSeparateProcess
-     * @preserveGlobalState disabled
      */
-    public function testBlockViewAction()
+    public function testBLockViewAction()
     {
         $view = $this->getTestBlockViewEditObject();
         $view->controller->runAction('view');
@@ -170,9 +168,10 @@ class BlockActionTest extends TestCase
         $url = $view->action('get_control', 114, 'xy');
 
         $this->assertEquals('http://www.dummyco.com/path/to/server/index.php/about/get_control/114/xy/1184', (string)$url);
+
     }
 
-    public static function blockControllerActionRoutingDataProvider()
+    public function blockControllerActionRoutingDataProvider()
     {
         return [
             ['/ccm/system/block/action/add/123/Main/4/add_form/', 'Concrete\Controller\Backend\Block\Action::add'],

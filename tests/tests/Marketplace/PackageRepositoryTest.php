@@ -425,7 +425,7 @@ class PackageRepositoryTest extends TestCase
         }
     }
 
-    public static function downloadPackageAlreadyExistsProvider()
+    public function downloadPackageAlreadyExistsProvider()
     {
         return [
             [true],

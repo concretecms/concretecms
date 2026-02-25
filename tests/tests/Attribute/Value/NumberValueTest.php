@@ -49,7 +49,7 @@ class NumberValueTest extends AttributeValueTestCase
         return 'Concrete\Core\Entity\Attribute\Value\Value\NumberValue';
     }
 
-    public static function baseAttributeValues()
+    public function baseAttributeValues()
     {
         return [
             [
@@ -67,7 +67,7 @@ class NumberValueTest extends AttributeValueTestCase
         ];
     }
 
-    public static function displayAttributeValues()
+    public function displayAttributeValues()
     {
         return [
             [
@@ -77,7 +77,7 @@ class NumberValueTest extends AttributeValueTestCase
         ];
     }
 
-    public static function plaintextAttributeValues()
+    public function plaintextAttributeValues()
     {
         return [
             [
@@ -87,7 +87,7 @@ class NumberValueTest extends AttributeValueTestCase
         ];
     }
 
-    public static function searchIndexAttributeValues()
+    public function searchIndexAttributeValues()
     {
         return [
             [

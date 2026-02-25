@@ -49,7 +49,7 @@ class TextValueTest extends AttributeValueTestCase
         return 'Concrete\Core\Entity\Attribute\Value\Value\TextValue';
     }
 
-    public static function baseAttributeValues()
+    public function baseAttributeValues()
     {
         return [
             [
@@ -59,7 +59,7 @@ class TextValueTest extends AttributeValueTestCase
         ];
     }
 
-    public static function displayAttributeValues()
+    public function displayAttributeValues()
     {
         return [
             [
@@ -69,7 +69,7 @@ class TextValueTest extends AttributeValueTestCase
         ];
     }
 
-    public static function plaintextAttributeValues()
+    public function plaintextAttributeValues()
     {
         return [
             [
@@ -79,7 +79,7 @@ class TextValueTest extends AttributeValueTestCase
         ];
     }
 
-    public static function searchIndexAttributeValues()
+    public function searchIndexAttributeValues()
     {
         return [
             [

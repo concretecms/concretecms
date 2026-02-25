@@ -137,8 +137,9 @@ class Element implements LocatableFileInterface
      */
     public function exists()
     {
-        $record = $this->getFileLocatorRecord();
-        return $record && $record->exists();
+        $record = $this->locator->getRecord($this->getElementPath());
+
+        return $record->exists();
     }
 
     /**
@@ -148,7 +149,7 @@ class Element implements LocatableFileInterface
      */
     public function getFileLocatorRecord()
     {
-        return $this->locator->getRecord($this->getElementPath(), true);
+        return $this->locator->getRecord($this->getElementPath());
     }
 
     /**

@@ -13,7 +13,7 @@ if ($container) {
     $container->startRender();
 
     if ($fileToRender) {
-        echo $templateService->renderTemplate($fileToRender, get_defined_vars());
+        include $fileToRender;
     } else {
         if (is_object($c) && $c->isEditMode()) { ?>
             <div class="ccm-edit-mode-disabled-item">

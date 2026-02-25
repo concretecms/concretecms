@@ -9,7 +9,6 @@ class Controller extends BlockController
     protected $btCacheBlockOutput = true;
     protected $btCacheBlockOutputOnPost = true;
     protected $btCacheBlockOutputForRegisteredUsers = true;
-    protected $btCacheBlockOutputOnEditMode = true;
     protected $btIgnorePageThemeGridFrameworkContainer = true;
 
     public function getBlockTypeDescription()

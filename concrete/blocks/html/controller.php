@@ -27,8 +27,6 @@ class Controller extends BlockController implements FileTrackableInterface
 
     protected $btCacheBlockOutputForRegisteredUsers = true;
 
-    protected $btCacheBlockOutputOnEditMode = true;
-
     protected $btIgnorePageThemeGridFrameworkContainer = true;
 
     protected $btExportContentColumns = ['content'];

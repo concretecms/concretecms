@@ -56,11 +56,6 @@ abstract class AttributeTestCase extends ConcreteDatabaseTestCase
      */
     protected $keys = [];
 
-    public static function attributeIndexTableValues()
-    {
-        return [];
-    }
-
     /**
      * {@inheritdoc}
      *
@@ -93,15 +88,15 @@ abstract class AttributeTestCase extends ConcreteDatabaseTestCase
      *
      * @return array
      */
-    abstract public static function attributeValues();
+    abstract public function attributeValues();
 
     /**
      * Get the test data for the testUnsetAttributes method.
      */
-    abstract public static function attributeHandles();
+    abstract public function attributeHandles();
 
     /**
-     * @dataProvider attributeValues
+     *  @dataProvider attributeValues
      *
      * @param \Concrete\Core\Attribute\AttributeKeyInterface|string $handle
      * @param mixed $first

@@ -17,7 +17,6 @@ class FileLocator
 
     protected $app;
 
-    /** @var LocationInterface[] */
     protected $locations = [];
 
     /**
@@ -80,53 +79,23 @@ class FileLocator
 
     /**
      * @param $file
-     * @param bool $template
      *
-     * @return Record|null
+     * @return Record
      */
-    public function getRecord($file, bool $template = false)
+    public function getRecord($file)
     {
         $this->addDefaultLocations();
         $key = $this->getCacheKey($file);
         $item = $this->cache->getItem($key);
         $record = null;
-
         if ($item->isMiss()) {
             $item->lock();
-
-            $extensions = ['.php', '.html.twig'];
-            if ($template) {
-                foreach ($extensions as $extension) {
-                    $file = str_ends_with($file, $extension) ? substr($file, 0, -strlen($extension)) : $file;
-                }
-            }
-
             foreach ($this->locations as $location) {
                 $location->setFilesystem($this->filesystem);
-                if ($template) {
-                    $last = [];
-                    foreach ($extensions as $extension) {
-                        $fileWithExtension = $file . $extension;
-                        $found = $location->contains($fileWithExtension);
-                        if ($found) {
-                            $last[$extension] = $found;
-                            if ($found->exists()) {
-                                $record = $found;
-                                break 2;
-                            }
-                        }
-
-                    }
-                } elseif ($record = $location->contains($file)) {
+                if ($record = $location->contains($file)) {
                     break;
                 }
             }
-
-            if ($template && !$record && isset($last)) {
-                // Use last non-existent .php file for backwards compatibility
-                $record = $last['.php'];
-            }
-
             if (isset($record)) {
                 $this->cache->save($item->set($record));
             }
@@ -138,7 +107,7 @@ class FileLocator
     }
 
     /**
-     * @return LocationInterface[]
+     * @return array
      */
     public function getLocations()
     {

@@ -28,14 +28,12 @@ class Controller extends BlockController implements UsesFeatureInterface
     protected $btTable = 'btBreadcrumbs';
     /** @var bool  */
     protected $btCacheBlockRecord = true;
-    /** @var bool|null */
-    protected $btCacheBlockOutput = null;
-    /** @var bool */
-    protected $btCacheBlockOutputOnPost = true;
-    /** @var bool */
-    protected $btCacheBlockOutputForRegisteredUsers = true;
     /** @var bool  */
-    protected $btCacheBlockOutputOnEditMode = true;
+    protected $btCacheBlockOutput = true;
+    /** @var bool  */
+    protected $btCacheBlockOutputOnPost = true;
+    /** @var bool  */
+    protected $btCacheBlockOutputForRegisteredUsers = true;
     /** @var int  */
     protected $btCacheBlockOutputLifetime = 0;
 
@@ -98,23 +96,9 @@ class Controller extends BlockController implements UsesFeatureInterface
             $factory = $this->app->make(PageBreadcrumbFactory::class);
             $factory->setIncludeCurrent((bool) $this->includeCurrent);
             $factory->setIgnoreExcludeNav((bool) $this->ignoreExcludeNav);
-            $factory->setIgnorePermission((bool) $this->ignorePermission);
 
             $breadcrumb = $factory->getBreadcrumb($page);
             $this->set('breadcrumb', $breadcrumb);
         }
-    }
-
-    public function cacheBlockOutput()
-    {
-        if ($this->btCacheBlockOutput === null) {
-            if ($this->ignorePermission) {
-                $this->btCacheBlockOutput = true;
-            } else {
-                $this->btCacheBlockOutput = false;
-            }
-        }
-
-        return $this->btCacheBlockOutput;
     }
 }

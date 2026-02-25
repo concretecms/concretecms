@@ -45,7 +45,7 @@ class ApplicationDriverTest extends TestCase
     /**
      * Clean up after each tests.
      */
-    public function tearDown():void
+    public function TearDown():void
     {
         $this->cleanupFolderSystem();
         $this->cleanupConfig();
@@ -244,7 +244,7 @@ class ApplicationDriverTest extends TestCase
      *
      * @return array
      */
-    public static function dataProviderTestGetYMLDriver()
+    public function dataProviderTestGetYMLDriver()
     {
         return [
             ['yml'],
@@ -280,7 +280,7 @@ class ApplicationDriverTest extends TestCase
      *
      * @return array
      */
-    public static function dataProviderGetNamespace()
+    public function dataProviderGetNamespace()
     {
         return [
             ['isLegacy' => true, 'namespace' => 'Application\Src'],
@@ -311,6 +311,17 @@ class ApplicationDriverTest extends TestCase
     {
         $this->configRepository->save('app.enable_legacy_src_namespace', false);
         $this->configRepository->set(CONFIG_ORM_METADATA_APPLICATION, '');
+    }
+
+    /**
+     * Clean up if a Exception is thrown.
+     *
+     * @param \Exception $e
+     */
+    protected function onNotSuccessfulTest(\Throwable $e):void
+    {
+        $this->cleanupFolderSystem();
+        $this->cleanupConfig();
     }
 
     /*

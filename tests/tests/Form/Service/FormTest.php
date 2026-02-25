@@ -25,7 +25,7 @@ class FormTest extends TestCase
         self::$formHelper->setRequest(self::$request);
     }
 
-    public static function providerTestCreateElements()
+    public function providerTestCreateElements()
     {
         return [
             // submit
@@ -982,7 +982,7 @@ class FormTest extends TestCase
                 $chunk = preg_quote($chunk, '/');
             });
             $rx = '/^' . implode('\d+', $chunks) . '$/';
-            $this->assertMatchesRegularExpression($rx, $calculated);
+            $this->assertRegExp($rx, $calculated);
         }
     }
 }

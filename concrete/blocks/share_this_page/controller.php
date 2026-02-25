@@ -34,7 +34,6 @@ class Controller extends BlockController implements UsesFeatureInterface
     protected $btCacheBlockOutput = true;
     protected $btCacheBlockOutputOnPost = true;
     protected $btCacheBlockOutputForRegisteredUsers = true;
-    protected $btCacheBlockOutputOnEditMode = true;
     protected $btInterfaceHeight = 400;
     protected $btTable = 'btShareThisPage';
 

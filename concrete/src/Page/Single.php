@@ -55,47 +55,42 @@ class Single
     public static function getPathToNode($node, $pkg)
     {
         $node = static::sanitizePath($node);
+        // checks to see whether a passed $node is a static content node
+        // (static content nodes exist within the views directory)
 
-        // Determine the directories we should search, in order of priority.
-        $dirs = [];
+        // first, we look to see if the exact path exists (plus .php)
+        $pathToFile = null;
         if (is_object($pkg)) {
-            // Package context
             if (is_dir(DIR_PACKAGES . '/' . $pkg->getPackageHandle())) {
                 $dirp = DIR_PACKAGES . '/' . $pkg->getPackageHandle();
             } else {
                 $dirp = DIR_PACKAGES_CORE . '/' . $pkg->getPackageHandle();
             }
-            $dirs[] = $dirp . '/' . DIRNAME_PAGES;
+
+            $file1 = $dirp . '/' . DIRNAME_PAGES . '/' . $node . '/' . FILENAME_COLLECTION_VIEW;
+            $file2 = $dirp . '/' . DIRNAME_PAGES . '/' . $node . '.php';
         } else {
-            // Application / core content context
-            $dirs[] = DIR_FILES_CONTENT;
-            $dirs[] = DIR_FILES_CONTENT_REQUIRED;
+            $file1 = DIR_FILES_CONTENT . '/' . $node . '/' . FILENAME_COLLECTION_VIEW;
+            $file2 = DIR_FILES_CONTENT . '/' . $node . '.php';
+            $file3 = DIR_FILES_CONTENT_REQUIRED . '/' . $node . '/' . FILENAME_COLLECTION_VIEW;
+            $file4 = DIR_FILES_CONTENT_REQUIRED . '/' . $node . '.php';
         }
 
-        // Relative paths to try, in order of preference.
-        // Order preserves old behavior, then adds twig:
-        //   1) node/view.php
-        //   2) node.php
-        //   3) node/view.html.twig
-        //   4) node.html.twig
-        $relativeCandidates = [
-            $node . '/' . FILENAME_COLLECTION_VIEW, // usually "view.php"
-            $node . '.php',
-            $node . '/view.html.twig',
-            $node . '.html.twig',
-        ];
-
-        foreach ($dirs as $dir) {
-            foreach ($relativeCandidates as $relative) {
-                $fullPath = $dir . '/' . $relative;
-                if (file_exists($fullPath)) {
-                    // We return a path relative to the views/pages dir, as before.
-                    return '/' . $relative;
-                }
-            }
+        if (file_exists($file1)) {
+            $pathToFile = "/{$node}/" . FILENAME_COLLECTION_VIEW;
+        } elseif (file_exists($file2)) {
+            $pathToFile = "/{$node}.php";
+        } elseif (isset($file3) && file_exists($file3)) {
+            $pathToFile = "/{$node}/" . FILENAME_COLLECTION_VIEW;
+        } elseif (isset($file4) && file_exists($file4)) {
+            $pathToFile = "/{$node}.php";
         }
 
-        return false;
+        if (!$pathToFile) {
+            $pathToFile = false;
+        }
+
+        return $pathToFile;
     }
 
     public static function refresh(CorePage $c)

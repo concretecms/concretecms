@@ -53,7 +53,7 @@ class SetTest extends TestCase
     private function getDummyColumn($key)
     {
         $mock = $this->getMockBuilder('\Concrete\Core\Search\Column\Column')
-            ->onlyMethods(['getColumnKey'])
+            ->setMethods(['getColumnKey'])
             ->getMock();
         $mock->method('getColumnKey')
             ->willReturn($key);

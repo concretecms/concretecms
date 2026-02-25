@@ -48,7 +48,7 @@ class SessionValidatorTest extends TestCase
 
         $store = [];
         $mock = $this->getMockBuilder('Symfony\Component\HttpFoundation\Session\Session')
-            ->onlyMethods(['has', 'get', 'set', 'invalidate', 'all'])
+            ->setMethods(['has', 'get', 'set', 'invalidate', 'all'])
             ->getMock();
 
         $mock->expects($this->any())

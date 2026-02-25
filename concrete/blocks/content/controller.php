@@ -69,12 +69,7 @@ class Controller extends BlockController implements FileTrackableInterface, Uses
     /**
      * @var bool
      */
-    protected $btCacheBlockOutputForRegisteredUsers = null;
-
-    /**
-     * @var bool
-     */
-    protected $btCacheBlockOutputOnEditMode = false;
+    protected $btCacheBlockOutputForRegisteredUsers = false;
 
     /**
      * @var int
@@ -112,15 +107,6 @@ class Controller extends BlockController implements FileTrackableInterface, Uses
     public function getBlockTypeName()
     {
         return t('Content');
-    }
-
-    public function cacheBlockOutputForRegisteredUsers()
-    {
-        if ($this->btCacheBlockOutputForRegisteredUsers === null) {
-            $this->btCacheBlockOutputForRegisteredUsers = strrpos($this->content, 'data-scs') === false;
-        }
-
-        return $this->btCacheBlockOutputForRegisteredUsers;
     }
 
     /**

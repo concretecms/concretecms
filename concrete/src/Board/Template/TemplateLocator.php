@@ -40,7 +40,7 @@ class TemplateLocator
             $filename = DIRNAME_ELEMENTS . '/' . DIRNAME_BOARDS . '/' . $handle . '.php';
             $this->themeLocation->setTheme($theme);
             $this->fileLocator->addLocation($this->themeLocation);
-            $record = $this->fileLocator->getRecord($filename, true);
+            $record = $this->fileLocator->getRecord($filename);
             if ($record->exists()) {
                 return $record->getFile();
             }

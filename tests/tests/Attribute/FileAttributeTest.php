@@ -47,7 +47,7 @@ class FileAttributeTest extends AttributeTestCase
         ]);
     }
 
-    public static function attributeValues()
+    public function attributeValues()
     {
         return [
             [
@@ -67,7 +67,7 @@ class FileAttributeTest extends AttributeTestCase
         ];
     }
 
-    public static function attributeIndexTableValues()
+    public function attributeIndexTableValues()
     {
         return [
             [
@@ -80,7 +80,7 @@ class FileAttributeTest extends AttributeTestCase
         ];
     }
 
-    public static function attributeHandles()
+    public function attributeHandles()
     {
         return [
             ['width'],

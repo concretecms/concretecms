@@ -181,7 +181,7 @@ class PageTest extends PageTestCase
         $page->delete();
     }
 
-    public static function pageNames()
+    public function pageNames()
     {
         return [
             ['normal page', false],

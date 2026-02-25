@@ -65,10 +65,6 @@ class Navigation
         return $this->getLinkToCollection($cObj);
     }
 
-    /**
-     * @deprecated - Use authLink() in Twig templates to return URLs and labels.
-     * @return string
-     */
     public function getLogInOutLink()
     {
         $app = Application::getFacadeApplication();

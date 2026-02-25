@@ -6,7 +6,6 @@ use Concrete\Core\Application\ApplicationAwareTrait;
 use Concrete\Core\Board\Command\RegenerateRelevantBoardInstancesCommand;
 use Concrete\Core\Calendar\Event\Summary\Template\Populator;
 use Concrete\Core\Config\Repository\Repository;
-use Concrete\Core\Entity\Calendar\CalendarEventVersionOccurrence;
 use Concrete\Core\Foundation\Repetition\Comparator;
 use Concrete\Core\Calendar\Event\Event\DuplicateEventEvent;
 use Concrete\Core\Logging\Channels;
@@ -306,7 +305,7 @@ class EventService implements ApplicationAwareInterface, LoggerAwareInterface
     public function generateDefaultOccurrences(CalendarEventVersion $version)
     {
         $repetitions = $version->getRepetitionEntityCollection();
-        $query = $this->entityManager->createQuery('delete from ' . CalendarEventVersionOccurrence::class . ' o where o.version = :version');
+        $query = $this->entityManager->createQuery('delete from calendar:CalendarEventVersionOccurrence o where o.version = :version');
         $query->setParameter('version', $version);
         $query->execute();
 

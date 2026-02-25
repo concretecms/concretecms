@@ -2,13 +2,13 @@
 
 namespace Concrete\Core\Authentication;
 
-use Concrete\Core\Controller\Controller;
 use Concrete\Core\Logging\Channels;
 use Concrete\Core\Logging\LoggerAwareInterface;
 use Concrete\Core\Logging\LoggerAwareTrait;
 use Concrete\Core\Http\Request;
 use Concrete\Core\User\User;
 use Page;
+use Controller;
 use Concrete\Core\Support\Facade\Application;
 
 abstract class AuthenticationTypeController extends Controller implements LoggerAwareInterface,

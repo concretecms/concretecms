@@ -45,7 +45,7 @@ abstract class ElementController extends AbstractController
             if ($this->pkgHandle) {
                 $locator->addPackageLocation($this->pkgHandle);
             }
-            $r = $locator->getRecord(DIRNAME_ELEMENTS . '/' . $this->getElement(), true);
+            $r = $locator->getRecord(DIRNAME_ELEMENTS . '/' . $this->getElement() . '.php');
             $this->view = new BasicFileView($r->getFile());
             $this->view->setController($this);
         }

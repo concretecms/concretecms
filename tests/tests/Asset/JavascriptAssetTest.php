@@ -28,7 +28,7 @@ class JavascriptAssetTest extends TestCase
         $this->assertInstanceOf(JavascriptModuleAsset::class, $asset);
         $this->assertTrue($asset->isAssetLocal());
         $this->assertEquals('javascript-module', $asset->getAssetType());
-        $this->assertMatchesRegularExpression('%^/path/to/server/concrete/js/path/to/test/module.js\?ccm_nocache=[A-Fa-f0-9]+$%', $asset->getAssetURL());
+        $this->assertRegExp('%^/path/to/server/concrete/js/path/to/test/module.js\?ccm_nocache=[A-Fa-f0-9]+$%', $asset->getAssetURL());
     }
 
     public function testCanRegisterImportmap()
@@ -62,7 +62,7 @@ class JavascriptAssetTest extends TestCase
         $this->assertInstanceOf(JavascriptModuleAsset::class, $asset);
         $this->assertTrue($asset->isAssetLocal());
         $this->assertEquals('javascript-module', $asset->getAssetType());
-        $this->assertMatchesRegularExpression('%^/path/to/server/packages/testing_package/js/test.bundle.js\?ccm_nocache=[A-Fa-f0-9]+$%', $asset->getAssetURL());
+        $this->assertRegExp('%^/path/to/server/packages/testing_package/js/test.bundle.js\?ccm_nocache=[A-Fa-f0-9]+$%', $asset->getAssetURL());
     }
 
     public function testCanRegisterImportmapFromPackage()

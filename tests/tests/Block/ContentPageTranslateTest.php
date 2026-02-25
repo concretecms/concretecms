@@ -42,7 +42,7 @@ class ContentPageTranslateTest extends PageTestCase
         $this->assertEquals($to, $translated);
     }
 
-    public static function contentsFrom()
+    public function contentsFrom()
     {
         \Core::forgetInstance('url/canonical');
 

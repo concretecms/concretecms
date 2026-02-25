@@ -181,11 +181,6 @@ class Controller extends BlockController implements FileTrackableInterface, Uses
      */
     protected $btCacheBlockOutputForRegisteredUsers = true;
 
-    /**
-     * @var bool
-     */
-    protected $btCacheBlockOutputOnEditMode = true;
-
     public function getBlockTypeName()
     {
         return t('Accordion');

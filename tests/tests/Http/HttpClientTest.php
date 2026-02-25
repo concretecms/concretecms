@@ -30,7 +30,7 @@ class HttpClientTest extends TestCase
         self::$testRemoteURI = getenv('CONCRETE5TESTS_TEST_REMOTE_URI') ?: 'https://www.concrete5.org/';
     }
 
-    public static function adapterListProvider()
+    public function adapterListProvider()
     {
         return [
             [CurlHandler::class],
@@ -38,10 +38,10 @@ class HttpClientTest extends TestCase
         ];
     }
 
-    public static function sslOptionsProvider()
+    public function sslOptionsProvider()
     {
         $result = [];
-        foreach (self::adapterListProvider() as $al) {
+        foreach ($this->adapterListProvider() as $al) {
             $adapterClass = $al[0];
             $result[] = [
                 $adapterClass,

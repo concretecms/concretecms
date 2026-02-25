@@ -18,7 +18,7 @@ use Mockery as M;
 class FiltererTest extends TestCase
 {
     
-    public static function templatesProvider()
+    public function templatesProvider()
     {
         return [
             [

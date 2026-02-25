@@ -6,7 +6,7 @@ use Concrete\Tests\TestCase;
 
 class ValuesTest extends TestCase
 {
-    public static function provideConfiguredAliases()
+    public function provideConfiguredAliases()
     {
         $config = app('config');
         $result = [];

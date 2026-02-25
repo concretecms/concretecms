@@ -13,7 +13,7 @@ class RequestMediaTypeParserTest extends TestCase
     /**
      * @return array
      */
-    public static function provideMediaTypeMap()
+    public function provideMediaTypeMap()
     {
         return [
             [
@@ -69,7 +69,7 @@ class RequestMediaTypeParserTest extends TestCase
     /**
      * @return array
      */
-    public static function provideAcceptMediaType()
+    public function provideAcceptMediaType()
     {
         return [
             [null, 'text/html', null, false],

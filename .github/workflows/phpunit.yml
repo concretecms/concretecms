@@ -48,9 +48,6 @@ jobs:
           - php-version: 8.2
             operating-system: "ubuntu-latest"
             dependencies: "locked"
-          - php-version: 8.5
-            operating-system: "ubuntu-latest"
-            dependencies: "highest-unlocked"
 
     steps:
       - name: Enable code coverage
@@ -79,25 +76,19 @@ jobs:
       - name: "Install lowest dependencies"
         if: ${{ matrix.dependencies == 'lowest' }}
         run: |
-          composer update --prefer-lowest --no-interaction --no-progress
+          composer update --prefer-lowest --no-interaction --no-progress --no-suggest
           # Run twice for mediawiki merge
-          composer update --prefer-lowest --no-interaction --no-progress
+          composer update --prefer-lowest --no-interaction --no-progress --no-suggest
 
       - name: "Install highest dependencies"
         if: ${{ matrix.dependencies == 'highest' }}
         run: |
-          composer update --no-interaction --no-progress
+          composer update --no-interaction --no-progress --no-suggest
 
       - name: "Install locked dependencies"
         if: ${{ matrix.dependencies == 'locked' }}
         run: |
-          composer install --no-interaction --no-progress
-
-      - name: "Install highest unlocked dependencies"
-        if: ${{ matrix.dependencies == 'highest-unlocked' }}
-        run: |
-          composer config --unset platform.php
-          composer update --no-interaction --no-progress
+          composer install --no-interaction --no-progress --no-suggest
 
       - name: "Tests"
         if: env.CODE_COVERAGE == 'none'

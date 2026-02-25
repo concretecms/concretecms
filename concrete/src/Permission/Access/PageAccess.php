@@ -26,16 +26,7 @@ class PageAccess extends Access implements SiteAccessInterface
             // they support it but this is better for performance.
             try {
                 $db = \Database::get();
-                $q = <<<SQL
-                    select pal.paID
-                    from PagePermissionAssignments ppa
-                             inner join PermissionAccessList pal on (ppa.paID = pal.paID)
-                             inner join PermissionAccessEntities pae on pal.peID = pae.peID
-                             inner join PermissionAccessEntityTypes paet on pae.petID = paet.petID
-                    where paet.petHandle not in ('group', 'user', 'group_set', 'group_combination', 'file_uploader')
-                    limit 1
-                    SQL;
-
+                $q = "select pal.paID from PagePermissionAssignments ppa inner join PermissionAccessList pal on (ppa.paID = pal.paID) inner join PermissionAccessEntities pae on pal.peID = pae.peID inner join PermissionAccessEntityTypes paet on pae.petID = paet.petID  where paet.petHandle not in ('group', 'user', 'group_set', 'group_combination', 'file_uploader')";
                 $paID = $db->GetOne($q);
                 if ($paID) {
                     $usePermissionsCollectionID = false;

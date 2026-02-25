@@ -10,7 +10,6 @@ use Concrete\Core\Block\Traits\HasSubBlocksTrait;
 use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Entity\Page\Container;
 use Concrete\Core\Feature\UsesFeatureInterface;
-use Concrete\Core\Filesystem\TemplateService;
 use Concrete\Core\Page\Container\ContainerBlockInstance;
 use Concrete\Core\Page\Container\ContainerExporter;
 use Concrete\Core\Page\Container\TemplateLocator;
@@ -95,8 +94,7 @@ class Controller extends BlockController implements UsesFeatureInterface
             // no this is not a typo. Aesthetically it looks nice to pass $container to the container area
             // constructor, but we need the instance object, not just the outer container object.
             $this->set('container', $containerBlockInstance);
-            $this->set('fileToRender', $locator->getFileToRender($this->getCollectionObject(), $container, true));
-            $this->set('templateService', $this->app->make(TemplateService::class));
+            $this->set('fileToRender', $locator->getFileToRender($this->getCollectionObject(), $container));
         }
     }
 
