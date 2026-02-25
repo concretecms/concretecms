@@ -50,7 +50,7 @@ class RedisSaverTest extends TestCase
         $saver->save('foo', ['test' => 10, 'subarray' => ['subtest' => true], 'baz' => 'boo'], 'testing', 'test', $namespace);
     }
 
-    public static function namespacesToTest()
+    public function namespacesToTest()
     {
         return [
             [''],

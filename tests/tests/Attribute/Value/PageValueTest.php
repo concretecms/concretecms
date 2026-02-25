@@ -100,7 +100,7 @@ class PageValueTest extends AttributeValueTestCase
         return 'Concrete\Core\Entity\Attribute\Value\Value\NumberValue';
     }
 
-    public static function baseAttributeValues()
+    public function baseAttributeValues()
     {
         return [
             [
@@ -114,19 +114,7 @@ class PageValueTest extends AttributeValueTestCase
         ];
     }
 
-    public static function displayAttributeValues()
-    {
-        return [
-            [
-                function () {
-                    return \Page::getByID(1);
-                },
-                'Home',
-            ],
-        ];
-    }
-
-    public static function plaintextAttributeValues()
+    public function displayAttributeValues()
     {
         return [
             [
@@ -138,7 +126,19 @@ class PageValueTest extends AttributeValueTestCase
         ];
     }
 
-    public static function searchIndexAttributeValues()
+    public function plaintextAttributeValues()
+    {
+        return [
+            [
+                function () {
+                    return \Page::getByID(1);
+                },
+                'Home',
+            ],
+        ];
+    }
+
+    public function searchIndexAttributeValues()
     {
         return [
             [

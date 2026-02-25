@@ -52,21 +52,6 @@ defined('C5_EXECUTE') or die("Access Denied.");
         <?php
     } ?>
 
-    <section class="container-fluid gx-0 mb-4">
-        <div class="row gx-5">
-            <div class="col-md-8">
-                <h3><?= t('Page Templates') ?></h3>
-                <p class="fw-light"><?= t(
-                        'Create page templates based on the files detected in the theme.'
-                    ) ?>
-                </p>
-                <a href="<?=URL::to('/dashboard/pages/themes/inspect', $configureTheme->getThemeID()) ?>"
-                   class="btn btn-outline-secondary"><?= t('Activate Templates') ?></a>
-            </div>
-        </div>
-    </section>
-    <hr>
-
     <?php
     if ($configureTheme->isThemeCustomizable()) { ?>
         <section class="container-fluid gx-0 mb-4">

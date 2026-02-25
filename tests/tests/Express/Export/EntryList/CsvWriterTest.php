@@ -25,8 +25,6 @@ use Concrete\Tests\TestCase;
 
 class CsvWriterTest extends TestCase
 {
-    protected $headers = [];
-    protected $entries = [];
 
     public function testCsvValueOrder()
     {
@@ -42,7 +40,7 @@ class CsvWriterTest extends TestCase
             $this->attributeValue($entityKeys['foo'], 'Foo value'),
         ];
 
-        [$entity, $list, $writer, $csvWriter] = $this->getCsvWriterMock($entityKeys, $values);
+        list($entity, $list, $writer, $csvWriter) = $this->getCsvWriterMock($entityKeys, $values);
 
         $csvWriter->insertHeaders($entity);
         $csvWriter->insertEntryList($list);
@@ -56,7 +54,7 @@ class CsvWriterTest extends TestCase
             'foo' => 'Foo',
             'bar' => 'Bar',
             'baz' => 'Baz',
-        ], $this->headers);
+        ], $writer->headers);
 
         $this->assertSame([
             [
@@ -69,7 +67,7 @@ class CsvWriterTest extends TestCase
                 'bar' => 'BAR value',
                 'baz' => 'Baz value',
             ]
-        ], $this->entries);
+        ], $writer->entries);
     }
 
     /**
@@ -89,7 +87,7 @@ class CsvWriterTest extends TestCase
             $this->attributeValue($keys['foo'], 'Foo value', $controller),
         ];
 
-        [$entity, $list, $writer, $csvWriter] = $this->getCsvWriterMock($keys, $values);
+        list($entity, $list, $writer, $csvWriter) = $this->getCsvWriterMock($keys, $values);
         $csvWriter->insertHeaders($entity);
         $csvWriter->insertEntryList($list);
 
@@ -103,7 +101,7 @@ class CsvWriterTest extends TestCase
             'foo.foo' => 'Foo - foo',
             'foo.bar' => 'Foo - bar',
             'foo.baz' => 'Foo - baz',
-        ], $this->headers);
+        ], $writer->headers);
 
         $this->assertSame([
             [
@@ -117,7 +115,7 @@ class CsvWriterTest extends TestCase
                 'foo.bar' => 'Barz',
                 'foo.baz' => 'Bazz',
             ]
-        ], $this->entries);
+        ], $writer->entries);
     }
 
     private function attributeKey($handle, $name, $controller = null)
@@ -175,16 +173,9 @@ class CsvWriterTest extends TestCase
             return $arg;
         });
 
-        $writer = M::mock(Writer::class);
-        $writer->shouldReceive('insertOne')->with(M::capture($this->headers))->andReturnUsing(function ($given) {
-            $this->headers = $given instanceof \Iterator ? iterator_to_array($given) : $given;
-            return 1;
-        });
-        $writer->shouldReceive('insertAll')->andReturnUsing(function (iterable $given) {
-            $given = $given instanceof \Iterator ? iterator_to_array($given) : $given;
-            $this->entries = $given;
-            return count($given);
-        });
+        $writer = M::mock(TestWriter::class);
+        $writer->shouldReceive('insertOne')->passthru();
+        $writer->shouldReceive('insertAll')->passthru();
 
         $dateFormatter = M::mock(Date::class);
         $dateFormatter->shouldReceive('formatCustom')->andReturn('not now');
@@ -200,11 +191,5 @@ class CsvWriterTest extends TestCase
         // Mock the site service
         $csvWriter->setSiteService($siteService);
         return array($entity, $list, $writer, $csvWriter);
-    }
-
-    protected function tearDown(): void
-    {
-        $this->entries = [];
-        $this->headers = [];
     }
 }

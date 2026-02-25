@@ -26,7 +26,7 @@ class OfflineInspectorTest extends TestCase
         self::$inspector = self::$app->build(Inspector::class);
     }
 
-    public static function validPackagesProvider()
+    public function validPackagesProvider()
     {
         return [
             ['good01.php', ['handle' => 'nice_legacy', 'version' => '0.9.1', 'name' => 'Legacy package!', 'description' => 'This is a nice legacy package.', 'minimumCoreVersion' => '5.5']],
@@ -100,7 +100,7 @@ class OfflineInspectorTest extends TestCase
         $this->assertSame($expectedInfo['minimumCoreVersion'], $info->getMinimumCoreVersion());
     }
 
-    public static function invalidPackagesByFileProvider()
+    public function invalidPackagesByFileProvider()
     {
         return [
             ['not-existing.php', Exception::ERRORCODE_FILENOTFOUND],
@@ -138,7 +138,7 @@ class OfflineInspectorTest extends TestCase
         $this->assertSame($expectedExceptionCode, $exception->getCode());
     }
 
-    public static function invalidPackagesByContentProvider()
+    public function invalidPackagesByContentProvider()
     {
         return [
             [null, Exception::ERRORCODE_BADPARAM],

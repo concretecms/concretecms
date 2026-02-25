@@ -6,25 +6,26 @@ use Concrete\Core\Cache\Adapter\LaminasCacheDriver;
 use Concrete\Core\Cache\Level\RequestCache;
 use Concrete\Core\Support\Facade\Application;
 use Concrete\Tests\TestCase;
-use Psr\Cache\CacheItemInterface;
-use Psr\Cache\CacheItemPoolInterface;
 
 class LaminasCacheDriverTest extends TestCase
 {
     public function testGetLaminasCacheItem()
     {
+        $key = 'test/get';
+        $value = 'example';
+        $cacheName = 'cache/request';
         $app = Application::getFacadeApplication();
-        $cache = 'cache/' . uuid_create();
+        /** @var RequestCache $cache */
+        $cache = $app->make($cacheName);
+        $item = $cache->getItem('laminas/' . $key);
+        $item->set($value);
+        $cache->save($item);
 
-        $mockItem = \Mockery::mock(CacheItemInterface::class);
-        $mockItem->shouldReceive('get')->andReturn('example');
-        $mockItem->shouldReceive('isMiss')->andReturn(false);
-        $mockCache = \Mockery::mock(CacheItemPoolInterface::class);
-        $mockCache->shouldReceive('getItem')->with('laminas/test/key')->andReturn($mockItem);
-        $app->instance($cache, $mockCache);
+        $driver = new LaminasCacheDriver($cacheName, 50);
+        $result = $driver->getItem($key);
+        $this->assertEquals($value, $result);
 
-        $driver = new LaminasCacheDriver($cache, 50);
-        $this->assertEquals('example', $driver->getItem('test/key'));
+        $item->clear();
     }
 
     public function testSetLaminasCacheItem()

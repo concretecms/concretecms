@@ -19,7 +19,7 @@ class RichTextExtractorTest extends TestCase
         self::$extractor = new RichTextExtractor();
     }
 
-    public static function provideExtractFilesCases(): array
+    public function provideExtractFilesCases(): array
     {
         return [
             [

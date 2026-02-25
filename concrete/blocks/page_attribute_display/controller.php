@@ -67,8 +67,6 @@ class Controller extends BlockController implements UsesFeatureInterface
     protected $btCacheBlockOutputOnPost = true;
     /** @var bool */
     protected $btCacheBlockOutputForRegisteredUsers = false;
-    /** @var bool */
-    protected $btCacheBlockOutputOnEditMode = false;
 
     public function getBlockTypeDescription()
     {
@@ -133,6 +131,7 @@ class Controller extends BlockController implements UsesFeatureInterface
             Features::BASICS
         ];
     }
+
 
     /**
      * @return mixed AttributeValue

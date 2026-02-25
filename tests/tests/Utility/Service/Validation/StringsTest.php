@@ -31,7 +31,7 @@ class StringsTest extends TestCase
         parent::tearDown();
     }
 
-    public static function emailDataProvider()
+    public function emailDataProvider()
     {
         return [
             //no mx record validation
@@ -57,7 +57,7 @@ class StringsTest extends TestCase
         ];
     }
 
-    public static function alphanumDataProvider()
+    public function alphanumDataProvider()
     {
         return [
             [false, null, false, false],
@@ -82,7 +82,7 @@ class StringsTest extends TestCase
         ];
     }
 
-    public static function handleDataProvider()
+    public function handleDataProvider()
     {
         return [
             [false, null],
@@ -104,7 +104,7 @@ class StringsTest extends TestCase
         ];
     }
 
-    public static function notEmptyDataProvider()
+    public function notEmptyDataProvider()
     {
         return [
             [false, null],
@@ -125,7 +125,7 @@ class StringsTest extends TestCase
         ];
     }
 
-    public static function minDataProvider()
+    public function minDataProvider()
     {
         return [
             [false, null, 1],
@@ -144,7 +144,7 @@ class StringsTest extends TestCase
         ];
     }
 
-    public static function maxDataProvider()
+    public function maxDataProvider()
     {
         return [
             [false, null, 1],
@@ -164,7 +164,7 @@ class StringsTest extends TestCase
         ];
     }
 
-    public static function containsNumberDataProvider()
+    public function containsNumberDataProvider()
     {
         return [
             [0, null],
@@ -182,7 +182,7 @@ class StringsTest extends TestCase
         ];
     }
 
-    public static function containsUpperCaseDataProvider()
+    public function containsUpperCaseDataProvider()
     {
         return [
             [0, null],
@@ -200,7 +200,7 @@ class StringsTest extends TestCase
         ];
     }
 
-    public static function containsLowerCaseDataProvider()
+    public function containsLowerCaseDataProvider()
     {
         return [
             [0, null],
@@ -218,7 +218,7 @@ class StringsTest extends TestCase
         ];
     }
 
-    public static function containsSymbolDataProvider()
+    public function containsSymbolDataProvider()
     {
         return [
             [0, null],
@@ -236,13 +236,13 @@ class StringsTest extends TestCase
         ];
     }
 
-    public static function isValidRegexProvider()
+    public function isValidRegexProvider()
     {
         return [
             [false, null, false],
             [false, null, true],
-            [false, 'this', false],
-            [false, 'this', true],
+            [false, $this, false],
+            [false, $this, true],
             [false, [], false],
             [false, [], true],
             [false, 1, false],
@@ -388,7 +388,6 @@ class StringsTest extends TestCase
      */
     public function testIsValidRegex($expected, $pattern, $includesDelimiters)
     {
-        $pattern = $pattern === 'this' ? $this : $pattern;
         $this->assertSame($expected, $this->object->isValidRegex($pattern, $includesDelimiters));
     }
 }

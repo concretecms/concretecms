@@ -5,8 +5,6 @@ namespace Concrete\Core\Validator\String;
 use ArrayAccess;
 use Concrete\Core\Validator\AbstractTranslatableValidator;
 use Egulias\EmailValidator\EmailValidator as EguliasEmailValidator;
-use Egulias\EmailValidator\Validation;
-use Egulias\EmailValidator\Warning;
 use InvalidArgumentException;
 
 /**
@@ -147,28 +145,20 @@ class EmailValidator extends AbstractTranslatableValidator
      */
     protected function checkEmail($mixed)
     {
-        if (!is_string($mixed) || $mixed === '') {
-            return false;
-        }
-
-        $eev = $this->getEguliasEmailValidator();
-        $validators = [$this->isStrict() ? new Validation\NoRFCWarningsValidation() : new Validation\RFCValidation()];
-
-        $testMX = $this->isTestMXRecord();
-        if ($testMX) {
-            $validators[] = new Validation\DNSCheckValidation();
-        }
-
-        $isValid = $eev->isValid($mixed, new Validation\MultipleValidationWithAnd($validators));
-        if ($isValid && $testMX) {
-            foreach ($eev->getWarnings() as $warning) {
-                if ($warning instanceof Warning\NoMXRecord) {
-                    return false;
+        $result = false;
+        if (is_string($mixed) && $mixed !== '') {
+            $eev = $this->getEguliasEmailValidator();
+            $testMX = $this->isTestMXRecord();
+            if ($eev->isValid($mixed, $testMX, $this->isStrict())) {
+                if ($testMX) {
+                    $result = !in_array(EguliasEmailValidator::DNSWARN_NO_RECORD, $eev->getWarnings(), true);
+                } else {
+                    $result = true;
                 }
             }
         }
 
-        return $isValid;
+        return $result;
     }
 
     /**

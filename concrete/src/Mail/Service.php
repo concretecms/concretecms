@@ -2,56 +2,101 @@
 
 namespace Concrete\Core\Mail;
 
+use Concrete\Core\Application\Application;
 use Concrete\Core\Config\Repository\Repository;
 use Concrete\Core\Entity\File\File;
 use Concrete\Core\Logging\Channels;
 use Concrete\Core\Logging\GroupLogger;
-use Concrete\Core\Logging\LoggerAwareInterface;use Concrete\Core\Logging\LoggerAwareTrait;use Monolog\Logger;
-use Symfony\Component\Mailer\MailerInterface;
-use Symfony\Component\Mime\Address;
-use Symfony\Component\Mime\Email;
-use Symfony\Component\Mime\Header\HeaderInterface;
-use Symfony\Component\Mime\Part\DataPart;
+use Concrete\Core\Support\Facade\Application as ApplicationFacade;
+use Exception;
+use Monolog\Logger;
 use Throwable;
+use Laminas\Mail\Header\MessageId as MessageIdHeader;
+use Laminas\Mail\Headers;
+use Laminas\Mail\Message;
+use Laminas\Mail\Transport\TransportInterface;
+use Laminas\Mime\Message as MimeMessage;
+use Laminas\Mime\Mime;
+use Laminas\Mime\Part as MimePart;
 
-/**
- * @template T of Email
- */
-class Service implements LoggerAwareInterface
+class Service
 {
-    use LoggerAwareTrait;
     /**
-     * The config repository.
+     * The application instance.
      *
-     * @var Repository
+     * @var Application
      */
-    protected $config;
+    protected $app;
 
     /**
      * The transport to be used to delivery the messages.
      *
-     * @var MailerInterface
+     * @var TransportInterface
      */
-    protected $mailer;
+    protected $transport;
 
     /**
-     * The email class to be used to create the email messages.
+     * Additional email message headers.
      *
-     * @var class-string<Email>
+     * @var array
      */
-    protected $emailClass;
+    protected $headers;
 
     /**
-     * @var Email
+     * List of "To" recipients (every item is an array with at key 0 the email address and at key 1 an optional name).
+     *
+     * @var array[array]
      */
-    protected $email;
+    protected $to;
+
+    /**
+     * List of "Reply-To" recipients (every item is an array with at key 0 the email address and at key 1 an optional name).
+     *
+     * @var array[array]
+     */
+    protected $replyto;
+
+    /**
+     * List of "CC" recipients (every item is an array with at key 0 the email address and at key 1 an optional name).
+     *
+     * @var array[array]
+     */
+    protected $cc;
+
+    /**
+     * List of "BCC" recipients (every item is an array with at key 0 the email address and at key 1 an optional name).
+     *
+     * @var array[array]
+     */
+    protected $bcc;
+
+    /**
+     * The sender email address and its name.
+     *
+     * @var string[]
+     */
+    protected $from;
 
     /**
      * A dictionary with the parameters to be sent to the template.
      *
      * @var array
      */
-    protected $data = [];
+    protected $data;
+
+    /**
+     * The message subject.
+     *
+     * @var string
+     */
+    protected $subject;
+
+    /**
+     * The message attachments.
+     *
+     * @var MimePart[]
+     */
+    protected $attachments;
 
     /**
      * The last leaded message template file.
@@ -59,6 +104,20 @@ class Service implements LoggerAwareInterface
      * @var string
      */
     protected $template;
+
+    /**
+     * The plain text body.
+     *
+     * @var string|false
+     */
+    protected $body;
+
+    /**
+     * The HTML body.
+     *
+     * @var string|false
+     */
+    protected $bodyHTML;
 
     /**
      * Are we testing this service?
@@ -81,27 +140,21 @@ class Service implements LoggerAwareInterface
     /**
      * Initialize the instance.
      *
-     * @param Repository $config the config repository instance
-     * @param MailerInterface $mailer the mailer to be used to delivery the messages
-     * @param class-string<T> $emailClass the email class to be used to create the email messages
+     * @param Application $app the application instance
+     * @param TransportInterface $transport the transport to be used to delivery the messages
      */
-    public function __construct(Repository $config, MailerInterface $mailer, string $emailClass = Email::class)
+    public function __construct(Application $app, TransportInterface $transport)
     {
-        $this->config = $config;
-        $this->mailer = $mailer;
-        $this->emailClass = $emailClass;
-        if ($this->emailClass !== Email::class && !is_subclass_of($this->emailClass, Email::class)) {
-            throw new \InvalidArgumentException(t('The email class must be an instance of %s', Email::class));
-        }
+        $this->app = $app;
+        $this->transport = $transport;
         $this->reset();
     }
 
     public function __destruct()
     {
         try {
-            $this->mailer = null;
+            $this->transport = null;
         } catch (Throwable $x) {
-            // Ignore error
         }
     }
 
@@ -110,19 +163,20 @@ class Service implements LoggerAwareInterface
      */
     public function reset()
     {
+        $this->headers = [];
+        $this->to = [];
+        $this->replyto = [];
+        $this->cc = [];
+        $this->bcc = [];
+        $this->from = [];
         $this->data = [];
+        $this->subject = '';
+        $this->attachments = [];
         $this->template = '';
+        $this->body = false;
+        $this->bodyHTML = false;
         $this->testing = false;
         $this->throwOnFailure = false;
-        $this->email = new $this->emailClass();
-    }
-
-    /**
-     * @return T
-     */
-    public function getEmail(): Email
-    {
-        return $this->email;
     }
 
     /**
@@ -153,9 +207,11 @@ class Service implements LoggerAwareInterface
      * @param array $headers Additional headers fo the MIME part. Valid values are:
      * - filename: The name to give to the attachment (it will be used as the filename part of the Content-Disposition header) [default: the filename of the File instance]
      * - mimetype: the main value of the Content-Type header [default: the content type of the file]
-     * - disposition: the main value of the Content-Disposition header attachment, inline, or form-data [default: attachment]
+     * - disposition: the main value of the Content-Disposition header [default: attachment]
      * - encoding: the value of the Content-Transfer-Encoding header [default: base64]
      * - charset: the charset value of the Content-Type header
+     * - boundary: the boundary value of the Content-Type header
+     * - id: the value of the Content-ID header (without angular brackets)
      * - description: the value of the Content-Description header
      * - location: the value of the Content-Location header
      * - language: the value of the Content-Language header
@@ -164,7 +220,6 @@ class Service implements LoggerAwareInterface
     {
         $fileVersion = $file->getVersion();
         $resource = $fileVersion->getFileResource();
-
         if (array_key_exists('filename', $headers)) {
             $filename = $headers['filename'];
             unset($headers['filename']);
@@ -177,105 +232,71 @@ class Service implements LoggerAwareInterface
         $this->addRawAttachmentWithHeaders(
             $resource->read(),
             $filename,
-            $headers,
+            $headers
         );
     }
 
     /**
      * Add a mail attachment by specifying its raw binary data.
      *
-     * @param string|resource $content The binary data of or resource pointing to the attachment
+     * @param string $content The binary data of the attachemt
      * @param string $filename The name to give to the attachment (it will be used as the filename part of the Content-Disposition header)
      * @param string $mimetype The MIME type of the attachment (it will be the main value of the Content-Type header)
      */
     public function addRawAttachment($content, $filename, $mimetype = 'application/octet-stream')
     {
-        $this->addRawAttachmentWithHeaders($content, $filename, ['mimetype' => $mimetype]);
+        $this->addRawAttachmentWithHeaders(
+            $content,
+            $filename,
+            [
+                'mimetype' => $mimetype,
+            ]
+        );
     }
 
     /**
      * Add a mail attachment by specifying its raw binary data, specifying the headers of the mail MIME part.
      *
-     * @param string|resource $content The binary data of or resource pointing to the attachment
+     * @param string $content The binary data of the attachemt
      * @param string $filename The name to give to the attachment (it will be used as the filename part of the Content-Disposition header)
-     * @param array $headers Additional headers of the MIME part. Valid values are:
+     * @param array $headers Additional headers fo the MIME part. Valid values are:
      * - mimetype: the main value of the Content-Type header [default: application/octet-stream]
-     * - disposition: the main value of the Content-Disposition header attachment, inline, or form-data [default: attachment]
+     * - disposition: the main value of the Content-Disposition header [default: attachment]
      * - encoding: the value of the Content-Transfer-Encoding header [default: base64]
      * - charset: the charset value of the Content-Type header
+     * - boundary: the boundary value of the Content-Type header
+     * - id: the value of the Content-ID header (without angular brackets)
      * - description: the value of the Content-Description header
      * - location: the value of the Content-Location header
      * - language: the value of the Content-Language header
      */
     public function addRawAttachmentWithHeaders($content, $filename, array $headers = [])
     {
-        if (
-            (array_key_exists('boundary', $headers) && $headers['boundary'])
-            || (array_key_exists('id', $headers) && $headers['id'])
-        ) {
-            $message = <<<ERR
-                The "boundary" and "id" headers are no longer supported for attachments. Instead custom boundary settings
-                can be configured using symfony mime parts directly.
-                
-                See https://github.com/concretecms/concretecms/issues/12814
-                ERR;
-            if ($this->logger) {
-                $this->logger->critical($message);
-            }
-            throw new \InvalidArgumentException($message);
-        }
-
-        $part = new DataPart(
-            $content,
-            $filename,
-            $headers['mimetype'] ?? 'application/octet-stream',
-            $headers['encoding'] ?? 'base64',
-        );
-        $partHeaders = $part->getHeaders();
-
-        $disposition = $headers['disposition'] ?? 'attachment';
-        if ($disposition) {
-            $part = $part->setDisposition($disposition);
-        }
-
-        $charset = $headers['charset'] ?? null;
-        if ($charset) {
-            // We have to manually set the content-type header to add the charset because it defaults to null otherwise.
-            // This works because the prepareHeaders() method modifies the existing header rather than adding a new one.
-            $partHeaders->addParameterizedHeader(
-                'Content-Type',
-                $part->getMediaType() . '/' . $part->getMediaSubtype(),
-                ['charset' => $charset]
-            );
-        }
-
-        //$boundary = $headers['boundary'] ?? null;
-        //if ($boundary) {
-            // Setting the boundary isn't supported.
-        //}
-
-        //$id = $headers['id'] ?? null;
-        //if ($id) {
-            /* @see DataPart::getContentID() */
-            // Content IDs aren't configurable, they are generated automatically when the part is prepared by the email.
-        //}
-
-        $description = $headers['description'] ?? null;
-        if ($description) {
-            $partHeaders->addTextHeader('Content-Description', $description);
-        }
-
-        $location = $headers['location'] ?? null;
-        if ($location) {
-            $partHeaders->addTextHeader('Content-Location', $location);
-        }
-
-        $language = $headers['language'] ?? null;
-        if ($language) {
-            $partHeaders->addTextHeader('Content-Language', $language);
-        }
-
-        $this->email->attachPart($part);
+        $headers += [
+            'mimetype' => 'application/octet-stream',
+            'disposition' => Mime::DISPOSITION_ATTACHMENT,
+            'encoding' => Mime::ENCODING_BASE64,
+            'charset' => '',
+            'boundary' => '',
+            'id' => '',
+            'description' => '',
+            'location' => '',
+            'language' => '',
+        ];
+        $mp = new MimePart($content);
+        $mp
+            ->setFileName($filename)
+            ->setType($headers['mimetype'])
+            ->setDisposition($headers['disposition'])
+            ->setEncoding($headers['encoding'])
+            ->setCharset($headers['charset'])
+            ->setBoundary($headers['boundary'])
+            ->setId($headers['id'])
+            ->setDescription($headers['description'])
+            ->setLocation($headers['location'])
+            ->setLanguage($headers['language'])
+        ;
+        $this->attachments[] = $mp;
     }
 
     /**
@@ -288,7 +309,6 @@ class Service implements LoggerAwareInterface
     {
         extract($this->data);
 
-        ob_start();
         if (file_exists(DIR_FILES_EMAIL_TEMPLATES . "/{$template}.php")) {
             include DIR_FILES_EMAIL_TEMPLATES . "/{$template}.php";
         } else {
@@ -302,32 +322,28 @@ class Service implements LoggerAwareInterface
                 include DIR_FILES_EMAIL_TEMPLATES_CORE . "/{$template}.php";
             }
         }
-        ob_end_clean();
 
-        $from = $from ?? null;
-        $subject = $subject ?? null;
-
-        if (is_array($from) && isset($from[0])) {
-            $this->from(...$from);
+        if (isset($from) && is_array($from) && isset($from[0])) {
+            $this->from($from[0], isset($from[1]) ? $from[1] : null);
         }
         $this->template = $template;
 
-        if ($subject) {
-            $this->setSubject($subject);
+        if (isset($subject)) {
+            $this->subject = $subject;
         }
 
-        $this->setBody($body ?? null);
-        $this->setBodyHTML($bodyHtml ?? null);
+        $this->body = (isset($body) && is_string($body)) ? $body : false;
+        $this->bodyHTML = (isset($bodyHTML) && is_string($bodyHTML)) ? $bodyHTML : false;
     }
 
     /**
      * Manually set the plain text body of a mail message (typically the body is set in the template + load method).
      *
-     * @param resource|string|null|false $body Set the text body (false to not use a plain text body)
+     * @param string|false $body Set the text body (false to not use a plain text body)
      */
     public function setBody($body)
     {
-        $this->email = $this->email->text($body === false ? null : $body);
+        $this->body = $body;
     }
 
     /**
@@ -337,7 +353,7 @@ class Service implements LoggerAwareInterface
      */
     public function setSubject($subject)
     {
-        $this->email = $this->email->subject($subject);
+        $this->subject = $subject;
     }
 
     /**
@@ -347,53 +363,50 @@ class Service implements LoggerAwareInterface
      */
     public function getSubject()
     {
-        return $this->email->getSubject() ?? '';
+        return $this->subject;
     }
 
     /**
      * Get the plain text body.
      *
-     * @return resource|string|false
+     * @return string|false
      */
     public function getBody()
     {
-        return $this->email->getTextBody() ?? false;
+        return $this->body;
     }
 
     /**
      * Get the html body.
      *
-     * @return resource|string|false
+     * @return string|false
      */
     public function getBodyHTML()
     {
-        return $this->email->getHtmlBody() ?? false;
+        return $this->bodyHTML;
     }
 
     /**
      * Manually set the HTML body of a mail message (typically the body is set in the template + load method).
      *
-     * @param string|resource|null|false $html Set the html body (false to not use an HTML body)
+     * @param string|false $html Set the html body (false to not use an HTML body)
      */
     public function setBodyHTML($html)
     {
-        $this->email->html($html, APP_CHARSET);
+        $this->bodyHTML = $html;
     }
 
     /**
-     * @param Importer\MailImporter $importer
+     * @param \Concrete\Core\Mail\Importer\MailImporter $importer
      * @param array $data
      */
     public function enableMailResponseProcessing($importer, $data)
     {
-        /**
-         * @TODO make sure this works
-         */
-        foreach ($this->email->getTo() as $address) {
-            $importer->setupValidation($address->getAddress(), $data);
+        foreach ($this->to as $em) {
+            $importer->setupValidation($em[0], $data);
         }
         $this->from($importer->getMailImporterEmail());
-        $this->body = $importer->setupBody(($this->getBody() === false) ? '' : $this->getBody());
+        $this->body = $importer->setupBody(($this->body === false) ? '' : $this->body);
     }
 
     /**
@@ -404,17 +417,7 @@ class Service implements LoggerAwareInterface
      */
     public function from($email, $name = null)
     {
-        $this->email = $this->email->from(new Address($email, $name ?? ''));
-    }
-
-    protected function parseEmailList(string $emailList, ?string $name = null): array
-    {
-        $emails = [];
-        $emailArray = explode(',', $emailList);
-        foreach ($emailArray as $email) {
-            $emails[] = new Address($email, $name ?? '');
-        }
-        return $emails;
+        $this->from = [$email, $name];
     }
 
     /**
@@ -425,12 +428,14 @@ class Service implements LoggerAwareInterface
      */
     public function to($email, $name = null)
     {
-        $this->email = $this->email->addTo(...$this->parseEmailList($email, $name));
-    }
-
-    public function resetTo(): void
-    {
-        $this->email = $this->email->to();
+        if (strpos($email, ',') > 0) {
+            $email = explode(',', $email);
+            foreach ($email as $em) {
+                $this->to[] = [$em, $name];
+            }
+        } else {
+            $this->to[] = [$email, $name];
+        }
     }
 
     /**
@@ -441,12 +446,14 @@ class Service implements LoggerAwareInterface
      */
     public function cc($email, $name = null)
     {
-        $this->email = $this->email->addCc(...$this->parseEmailList($email, $name));
-    }
-
-    public function resetCc(): void
-    {
-        $this->email = $this->email->cc();
+        if (strpos($email, ',') > 0) {
+            $email = explode(',', $email);
+            foreach ($email as $em) {
+                $this->cc[] = [$em, $name];
+            }
+        } else {
+            $this->cc[] = [$email, $name];
+        }
     }
 
     /**
@@ -457,12 +464,14 @@ class Service implements LoggerAwareInterface
      */
     public function bcc($email, $name = null)
     {
-        $this->email = $this->email->addBcc(...$this->parseEmailList($email, $name));
-    }
-
-    public function resetBcc(): void
-    {
-        $this->email = $this->email->bcc();
+        if (strpos($email, ',') > 0) {
+            $email = explode(',', $email);
+            foreach ($email as $em) {
+                $this->bcc[] = [$em, $name];
+            }
+        } else {
+            $this->bcc[] = [$email, $name];
+        }
     }
 
     /**
@@ -473,12 +482,14 @@ class Service implements LoggerAwareInterface
      */
     public function replyto($email, $name = null)
     {
-        $this->email = $this->email->addReplyTo(...$this->parseEmailList($email, $name));
-    }
-
-    public function resetReplyto(): void
-    {
-        $this->email = $this->email->replyTo();
+        if (strpos($email, ',') > 0) {
+            $email = explode(',', $email);
+            foreach ($email as $em) {
+                $this->replyto[] = [$em, $name];
+            }
+        } else {
+            $this->replyto[] = [$email, $name];
+        }
     }
 
     /**
@@ -488,7 +499,7 @@ class Service implements LoggerAwareInterface
      */
     public function setTesting($testing)
     {
-        $this->testing = (bool) $testing;
+        $this->testing = $testing ? true : false;
     }
 
     /**
@@ -528,24 +539,17 @@ class Service implements LoggerAwareInterface
     /**
      * Set additional message headers.
      *
-     * @param array<string|HeaderInterface> $headers
+     * @param array $headers
      */
     public function setAdditionalHeaders($headers)
     {
-        $emailHeaders = $this->email->getHeaders();
-        foreach ($headers as $header) {
-            if (is_string($header)) {
-                $split = array_map('trim', explode(':', $header, 2));
-                $emailHeaders->addTextHeader($split[0] ?? '', $split[1] ?? '');
-            } else {
-                $emailHeaders->add($header);
-            }
-        }
+        $this->headers = $headers;
     }
 
-    private function isMetaDataLoggingEnabled()
-    {
-        $logging = $this->config->get('concrete.log.emails');
+    private function isMetaDataLoggingEnabled() {
+        /** @var Repository $config */
+        $config = $this->app->make(Repository::class);
+        $logging = $config->get('concrete.log.emails');
 
         if ((is_numeric($logging) && $logging == 1) || $logging === true) {
             // legacy support
@@ -555,9 +559,10 @@ class Service implements LoggerAwareInterface
         }
     }
 
-    private function isBodyLoggingEnabled()
-    {
-        $logging = $this->config->get('concrete.log.emails');
+    private function isBodyLoggingEnabled() {
+        /** @var Repository $config */
+        $config = $this->app->make(Repository::class);
+        $logging = $config->get('concrete.log.emails');
 
         if ((is_numeric($logging) && $logging == 1) || $logging === true) {
             // legacy support
@@ -572,32 +577,105 @@ class Service implements LoggerAwareInterface
      *
      * @param bool $resetData Whether or not to reset the service to its default when this method is done
      *
-     * @return bool Returns true upon success, or false if the delivery fails and if the service is not in "testing" state and throwOnFailure is false
-     * @throws Throwable Throws an exception if the delivery fails and if the service is in "testing" state or throwOnFailure is true
+     * @throws Exception Throws an exception if the delivery fails and if the service is in "testing" state or throwOnFailure is true
      *
+     * @return bool Returns true upon success, or false if the delivery fails and if the service is not in "testing" state and throwOnFailure is false
      */
     public function sendMail($resetData = true)
     {
-        $config = $this->config;
+        $config = $this->app->make('config');
+        $fromStr = $this->generateEmailStrings([$this->from]);
+        $toStr = $this->generateEmailStrings($this->to);
+        $replyStr = $this->generateEmailStrings($this->replyto);
+        $mail = (new Message())->setEncoding(APP_CHARSET);
 
-        if (count($this->email->getFrom()) === 0) {
-            $this->email = $this->email->from(
-                new Address(
-                    $config->get('concrete.email.default.address'),
-                    $config->get('concrete.email.default.name'),
-                ),
-            );
+        if (is_array($this->from) && count($this->from)) {
+            if ($this->from[0] != '') {
+                $from = $this->from;
+            }
+        }
+        if (!isset($from)) {
+            $from = [$config->get('concrete.email.default.address'), $config->get('concrete.email.default.name')];
+            $fromStr = $config->get('concrete.email.default.address');
         }
 
-        $headers = $this->email->getHeaders();
-        if (!$headers->has('Message-ID')) {
-            $headers->addIdHeader('Message-ID', $this->email->generateMessageId());
+        // The currently included Laminas library has a bug in setReplyTo that
+        // adds the Reply-To address as a recipient of the email. We must
+        // set the Reply-To before any header with addresses and then clear
+        // all recipients so that a copy is not sent to the Reply-To address.
+        if (is_array($this->replyto)) {
+            foreach ($this->replyto as $reply) {
+                $mail->setReplyTo($reply[0], $reply[1]);
+            }
         }
+
+        $mail->setFrom($from[0], $from[1]);
+        $mail->setSubject($this->subject);
+        foreach ($this->to as $to) {
+            $mail->addTo($to[0], $to[1]);
+        }
+
+        if (is_array($this->cc) && count($this->cc)) {
+            foreach ($this->cc as $cc) {
+                $mail->addCc($cc[0], $cc[1]);
+            }
+        }
+
+        if (is_array($this->bcc) && count($this->bcc)) {
+            foreach ($this->bcc as $bcc) {
+                $mail->addBcc($bcc[0], $bcc[1]);
+            }
+        }
+        $headers = $mail->getHeaders();
+        if ($headers->has('messageid')) {
+            $messageIdHeader = $headers->get('messageid');
+        } else {
+            $messageIdHeader = new MessageIdHeader();
+            $headers->addHeader($messageIdHeader);
+        }
+
+        $headers->addHeaders($this->headers);
+
+        $messageIdHeader->setId();
+
+        $body = new MimeMessage();
+        $textPart = $this->buildTextPart();
+        $htmlPart = $this->buildHtmlPart();
+        if ($textPart === null && $htmlPart === null) {
+            $emptyPart = new MimePart('');
+            $emptyPart->setType(Mime::TYPE_TEXT);
+            $emptyPart->setCharset(APP_CHARSET);
+            $body->addPart($emptyPart);
+        } elseif ($textPart !== null && $htmlPart !== null) {
+            $alternatives = new MimeMessage();
+            $alternatives->addPart($textPart);
+            $alternatives->addPart($htmlPart);
+            $alternativesPart = new MimePart($alternatives->generateMessage());
+            $alternativesPart->setType(Mime::MULTIPART_ALTERNATIVE);
+            $alternativesPart->setBoundary($alternatives->getMime()->boundary());
+            $body->addPart($alternativesPart);
+        } else {
+            if ($textPart !== null) {
+                $body->addPart($textPart);
+            }
+            if ($htmlPart !== null) {
+                $body->addPart($htmlPart);
+            }
+        }
+        foreach ($this->attachments as $attachment) {
+            if (!$this->isInlineAttachment($attachment)) {
+                $body->addPart($attachment);
+            }
+        }
+
+        $mail->setBody($body);
 
         $sendError = null;
         if ($config->get('concrete.email.enabled')) {
             try {
-                $this->mailer->send($this->email);
+                $this->transport->send($mail);
+            } catch (Exception $x) {
+                $sendError = $x;
             } catch (Throwable $x) {
                 $sendError = $x;
             }
@@ -614,6 +692,14 @@ class Service implements LoggerAwareInterface
 
         if ($this->isMetaDataLoggingEnabled() && !$this->getTesting()) {
             $l = new GroupLogger(Channels::CHANNEL_EMAIL, Logger::NOTICE);
+            $l->write(t('Template Used') . ': ' . $this->template);
+            $l->write(t('To') . ': ' . $toStr);
+            $l->write(t('From') . ': ' . $fromStr);
+            if (isset($this->replyto)) {
+                $l->write(t('Reply-To') . ': ' . $replyStr);
+            }
+            $l->write(t('Subject') . ': ' . $this->subject);
+            $l->write(t('Body') . ': ' . $this->body);
 
             if ($config->get('concrete.email.enabled')) {
                 if ($sendError === null) {
@@ -624,27 +710,43 @@ class Service implements LoggerAwareInterface
             } else {
                 $l->write('**' . t('EMAILS ARE DISABLED. THIS EMAIL WAS LOGGED BUT NOT SENT') . '**');
             }
-
             $l->write(t('Template Used') . ': ' . $this->template);
-            if ($this->isBodyLoggingEnabled()) {
-                /** @var T $email */
-                $email = new $this->emailClass();
-                $email->setHeaders(clone $this->email->getHeaders());
 
-                if ($this->email->getTextBody()) {
-                    $email->text($this->email->getTextBody(), $this->email->getTextCharset());
+            if ($this->isBodyLoggingEnabled()) {
+                // Clone the mail without attachments for logging
+                $mailWithoutAttachments = clone $mail;
+
+                $attachedFiles = [];
+
+                if ($mailWithoutAttachments->getBody() instanceof \Laminas\Mime\Message) {
+                    $parts = $mailWithoutAttachments->getBody()->getParts();
+
+                    if (is_array($parts)) {
+                        foreach ($parts as $key => $part) {
+                            $partHeaders = $part->getHeadersArray();
+
+                            if (!(isset($partHeaders["disposition"]) && $partHeaders["disposition"] === Mime::DISPOSITION_ATTACHMENT)) {
+                                $attachedFiles[] = $part->getFileName();
+                                unset($parts[$key]);
+                            }
+                        }
+
+                        $mailWithoutAttachments->getBody()->setParts($parts);
+                    }
                 }
-                if ($this->email->getHtmlBody()) {
-                    $email->html($this->email->getHtmlBody(), $this->email->getHtmlCharset());
+
+                $mailDetails = $mailWithoutAttachments->toString();
+                $encoding = $mailWithoutAttachments->getHeaders()->get('Content-Transfer-Encoding');
+                if (is_object($encoding) && $encoding->getFieldValue() === 'quoted-printable') {
+                    $mailDetails = quoted_printable_decode($mailDetails);
                 }
 
                 // append the attached file names to the mail log
-                $mailDetails = $email->toString();
-                foreach ($this->email->getAttachments() as $attachedFile) {
-                    $mailDetails .= "\n" . t("[Attached File: %s]", $attachedFile->asDebugString());
+                foreach($attachedFiles as $attachedFile) {
+                    $mailDetails .= t("[Attached File: %s]" , $attachedFile) . Headers::EOL;
                 }
 
-                $l->write(t('Mail Details: %s', htmlspecialchars("\n{$mailDetails}")));
+                $l->write(t('Mail Details: %s', $mailDetails));
             }
 
             $l->close();
@@ -665,8 +767,112 @@ class Service implements LoggerAwareInterface
         return $sendError === null;
     }
 
-    public function getLoggerChannel(): string
+    /**
+     * @deprecated To get the mail transport, call \Core::make(\Laminas\Mail\Transport\TransportInterface::class)
+     */
+    public static function getMailerObject()
     {
-        return Channels::CHANNEL_EMAIL;
+        $app = ApplicationFacade::getFacadeApplication();
+
+        return [
+            'mail' => (new Message())->setEncoding(APP_CHARSET),
+            'transport' => $app->make(TransportInterface::class),
+        ];
+    }
+
+    /**
+     * Convert a list of email addresses to a string.
+     *
+     * @param array $arr
+     *
+     * @return string
+     */
+    protected function generateEmailStrings($arr)
+    {
+        $str = '';
+        for ($i = 0; $i < count($arr); ++$i) {
+            $v = $arr[$i];
+            if (isset($v[1])) {
+                $str .= '"' . $v[1] . '" <' . $v[0] . '>';
+            } elseif (isset($v[0])) {
+                $str .= $v[0];
+            }
+            if (($i + 1) < count($arr)) {
+                $str .= ', ';
+            }
+        }
+
+        return $str;
+    }
+
+    /**
+     * Get the MIME part for the plain text body (if available).
+     *
+     * @return MimePart|null
+     */
+    protected function buildTextPart()
+    {
+        if ($this->body === false) {
+            $result = null;
+        } else {
+            $result = new MimePart($this->body);
+            $result->setType(Mime::TYPE_TEXT);
+            $result->setCharset(APP_CHARSET);
+            $result->setEncoding(Mime::ENCODING_QUOTEDPRINTABLE);
+        }
+
+        return $result;
+    }
+
+    /**
+     * Determine if an attachment should be used as an inline attachment associated to the HTML body.
+     *
+     * @param MimePart $attachment
+     *
+     * @return bool
+     */
+    protected function isInlineAttachment(MimePart $attachment)
+    {
+        return $this->bodyHTML !== false
+            && $attachment->getId()
+            && in_array((string) $attachment->getDisposition(), ['', Mime::DISPOSITION_INLINE], true)
+        ;
+    }
+
+    /**
+     * Get the MIME part for the plain text body (if available).
+     *
+     * @return MimePart|null
+     */
+    protected function buildHtmlPart()
+    {
+        if ($this->bodyHTML === false) {
+            $result = null;
+        } else {
+            $html = new MimePart($this->bodyHTML);
+            $html->setType(Mime::TYPE_HTML);
+            $html->setCharset(APP_CHARSET);
+            $html->setEncoding(Mime::ENCODING_QUOTEDPRINTABLE);
+            $inlineAttachments = [];
+            foreach ($this->attachments as $attachment) {
+                if ($this->isInlineAttachment($attachment)) {
+                    $inlineAttachments[] = $attachment;
+                }
+            }
+            if (empty($inlineAttachments)) {
+                $result = $html;
+            } else {
+                $related = new MimeMessage();
+                $related->addPart($html);
+                foreach ($inlineAttachments as $inlineAttachment) {
+                    $related->addPart($inlineAttachment);
+                }
+                $result = new MimePart($related->generateMessage());
+                $result->setType(Mime::MULTIPART_RELATED);
+                $result->setBoundary($related->getMime()->boundary());
+            }
+        }
+
+        return $result;
     }
 }

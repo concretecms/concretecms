@@ -163,8 +163,7 @@ return [
         // Api - has to come after Express (and possibly other items)
         'core_api' => 'Concrete\Core\Api\ApiServiceProvider',
 
-        'core_marketplace' => \Concrete\Core\Marketplace\MarketplaceServiceProvider::class,
-        'core_templates' => \Concrete\Core\Filesystem\TemplateServiceProvider::class,
+        'core_marketplace' => \Concrete\Core\Marketplace\MarketplaceServiceProvider::class
     ],
 
     /*
@@ -188,7 +187,9 @@ return [
         'URL' => '\Concrete\Core\Support\Facade\Url',
     ],
 
-    'entity_namespaces' => [],
+    'entity_namespaces' => [
+        'calendar' => 'Concrete\Core\Entity\Calendar',
+    ],
 
     'package_items' => [
         'antispam_library',
@@ -902,16 +903,5 @@ return [
     'command_handlers' => [
 
     ],
-
-    'twig' => [
-        // bool|'auto' Set to `'auto'` to enable based on production mode
-        'debug' => 'auto',
-
-        // array<string, \Twig\Extension\ExtensionInterface> The twig extensions to enable
-        'extensions' => [
-            'debug' => \Twig\Extension\DebugExtension::class,
-            'core' => \Concrete\Core\Filesystem\Twig\CoreExtension::class,
-        ]
-    ]
 
 ];

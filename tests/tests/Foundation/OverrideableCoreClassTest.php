@@ -8,7 +8,7 @@ use Concrete\TestHelpers\Foundation\ClassLoaderTestCase;
 
 class OverrideableCoreClassTest extends ClassLoaderTestCase
 {
-    public static function coreClassCoreDataProvider()
+    public function coreClassCoreDataProvider()
     {
         return [
             ['Block\Autonav\Controller', '\Concrete\Block\Autonav\Controller'],
@@ -25,7 +25,7 @@ class OverrideableCoreClassTest extends ClassLoaderTestCase
         ];
     }
 
-    public static function coreClassPackageDataProvider()
+    public function coreClassPackageDataProvider()
     {
         return [
             ['Block\FancyBlock\Controller', 'my_package', '\Concrete\Package\MyPackage\Block\FancyBlock\Controller', '\Concrete\Package\MyPackage\Block\FancyBlock\Controller'],
@@ -36,7 +36,7 @@ class OverrideableCoreClassTest extends ClassLoaderTestCase
         ];
     }
 
-    public static function coreClassApplicationDataProvider()
+    public function coreClassApplicationDataProvider()
     {
         return [
             ['Block\FancyBlock\Controller', '\Application\Block\FancyBlock\Controller', '\Application\Block\FancyBlock\Controller'],
@@ -46,7 +46,7 @@ class OverrideableCoreClassTest extends ClassLoaderTestCase
         ];
     }
 
-    public static function overrideableCoreClassCoreDataProvider()
+    public function overrideableCoreClassCoreDataProvider()
     {
         return [
             ['Core\Captcha\SecurimageController', DIRNAME_CLASSES . '/Captcha/SecurimageController.php', '\Concrete\Core\Captcha\SecurimageController'],
@@ -56,7 +56,7 @@ class OverrideableCoreClassTest extends ClassLoaderTestCase
         ];
     }
 
-    public static function overrideableCoreClassPackageDataProvider()
+    public function overrideableCoreClassPackageDataProvider()
     {
         return [
             ['recaptcha', 'Core\Captcha\RecaptchaController', DIRNAME_CLASSES . '/Captcha/RecaptchaController.php',
@@ -68,7 +68,7 @@ class OverrideableCoreClassTest extends ClassLoaderTestCase
         ];
     }
 
-    public static function overrideableCoreClassApplicationOverrideDataProvider()
+    public function overrideableCoreClassApplicationOverrideDataProvider()
     {
         return [
             ['Job\IndexSearch', DIRNAME_JOBS . '/index_search.php', '\Application\Job\IndexSearch', '\Application\Job\IndexSearch'],

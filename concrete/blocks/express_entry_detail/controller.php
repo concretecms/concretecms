@@ -29,10 +29,6 @@ class Controller extends BlockController implements UsesFeatureInterface
 
     protected $btTable = 'btExpressEntryDetail';
 
-    protected $btCacheBlockOutput = null;
-
-    protected $btCacheBlockOutputLifetime = 300;
-
     public $exEntityID;
 
     public $exSpecificEntryID;
@@ -321,18 +317,5 @@ class Controller extends BlockController implements UsesFeatureInterface
         }
 
         return $args;
-    }
-
-    public function cacheBlockOutput()
-    {
-        if ($this->btCacheBlockOutput === null) {
-            if ($this->entryMode !== 'E') {
-                $this->btCacheBlockOutput = true;
-            } else {
-                $this->btCacheBlockOutput = false;
-            }
-        }
-
-        return $this->btCacheBlockOutput;
     }
 }

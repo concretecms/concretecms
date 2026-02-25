@@ -181,7 +181,7 @@ class Localization2Test extends LocalizationTestsBase
         $origDirector = $app->make('director');
 
         $director = $this->getMockBuilder('Concrete\Core\Events\EventDispatcher')
-            ->onlyMethods(['dispatch', '__call'])
+            ->setMethods(['dispatch', 'addListener'])
             ->disableOriginalConstructor()
             ->getMock();
 

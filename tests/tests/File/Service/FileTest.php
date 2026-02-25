@@ -17,7 +17,7 @@ class FileTest extends TestCase
         $this->fileHelper = Core::make('helper/file');
     }
 
-    public static function splitFilenameDataProvider()
+    public function splitFilenameDataProvider()
     {
         return [
             ['simple.txt', ['', 'simple', 'txt']],

@@ -102,10 +102,8 @@ class BlockViewTemplate
 
         if ($bFilename) {
             $record = $locator->getRecord(
-                DIRNAME_BLOCKS . '/' . $obj->getBlockTypeHandle() . '/' . DIRNAME_BLOCK_TEMPLATES . '/' . $bFilename,
-                true,
-            );
-            if ($record && $record->exists()) {
+                DIRNAME_BLOCKS . '/' . $obj->getBlockTypeHandle() . '/' . DIRNAME_BLOCK_TEMPLATES . '/' . $bFilename);
+            if ($record->exists()) {
                 if (is_dir($record->getFile())) {
                     $this->template = $record->getFile() . '/' . FILENAME_BLOCK_VIEW;
                     $this->baseURL = $record->getUrl();
@@ -113,8 +111,7 @@ class BlockViewTemplate
                 } else {
                     $this->template = $record->getFile();
                     $record = $locator->getRecord(
-                        DIRNAME_BLOCKS . '/' . $obj->getBlockTypeHandle() . '/' . $this->render,
-                        true,
+                        DIRNAME_BLOCKS . '/' . $obj->getBlockTypeHandle() . '/' . $this->render
                     );
                     $this->baseURL = dirname($record->getUrl());
                     $this->basePath = dirname($record->getFile());
@@ -125,8 +122,7 @@ class BlockViewTemplate
 
             if ($bFilename !== $bFilenameWithoutDotPhp) {
                 $record = $locator->getRecord(
-                    DIRNAME_BLOCKS . '/' . $obj->getBlockTypeHandle() . '/' . DIRNAME_BLOCK_TEMPLATES . '/' . $bFilenameWithoutDotPhp,
-                    true,
+                    DIRNAME_BLOCKS . '/' . $obj->getBlockTypeHandle() . '/' . DIRNAME_BLOCK_TEMPLATES . '/' . $bFilenameWithoutDotPhp
                 );
                 if ($record->exists() && is_dir($record->getFile())) {
                     $this->template = $record->getFile() . '/' . $this->render;
@@ -138,8 +134,7 @@ class BlockViewTemplate
         }
 
         $record = $locator->getRecord(
-            DIRNAME_BLOCKS . '/' . $obj->getBlockTypeHandle() . '/' . $this->render,
-            true,
+            DIRNAME_BLOCKS . '/' . $obj->getBlockTypeHandle() . '/' . $this->render
         );
         if ($record->exists()) {
             $this->baseURL = dirname($record->getUrl());

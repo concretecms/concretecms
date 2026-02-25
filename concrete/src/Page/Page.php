@@ -512,7 +512,12 @@ class Page extends Collection implements CategoryMemberInterface,
                 $prefix = $r->override ? true : $pt->getPackageHandle();
                 $class = core_class('Controller\\PageType\\' . camelcase($ptHandle), $prefix);
             } elseif ($this->isGeneratedCollection()) {
-                $path = $this->getCollectionPath();
+                $file = $this->getCollectionFilename();
+                if (strpos($file, '/' . FILENAME_COLLECTION_VIEW) !== false) {
+                    $path = substr($file, 0, strpos($file, '/' . FILENAME_COLLECTION_VIEW));
+                } else {
+                    $path = substr($file, 0, strpos($file, '.php'));
+                }
                 $r = $env->getRecord(DIRNAME_CONTROLLERS . '/' . DIRNAME_PAGE_CONTROLLERS . $path . '.php', $this->getPackageHandle());
                 $prefix = $r->override ? true : $this->getPackageHandle();
                 $class = core_class('Controller\\SinglePage\\' . str_replace('/', '\\', camelcase($path, true)), $prefix);

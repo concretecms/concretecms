@@ -2,7 +2,7 @@
 namespace Concrete\Core\Permission\Response;
 
 use Concrete\Core\Permission\Access\Entity\GroupEntity as GroupPermissionAccessEntity;
-use Concrete\Core\Permission\Key\Key;
+use PermissionKey;
 use Group;
 
 class BlockResponse extends Response
@@ -29,17 +29,6 @@ class BlockResponse extends Response
         return $this->validate('edit_block_permissions');
     }
 
-    public function validate($permissionHandle, $args = array())
-    {
-        $page = $this->object->getBlockCollectionObject();
-        if ($page->isMasterCollection()) {
-            $key = Key::getByHandle('access_page_defaults');
-            return $key->validate();
-        } else {
-            return parent::validate($permissionHandle, $args);
-        }
-    }
-
     public function canViewEditInterface()
     {
         return $this->canEditBlock() ||
@@ -53,17 +42,17 @@ class BlockResponse extends Response
 
     public function canGuestsViewThisBlock()
     {
-        $pk = Key::getByHandle('view_block');
+        $pk = PermissionKey::getByHandle('view_block');
         $pk->setPermissionObject($this->getPermissionObject());
         $gg = GroupPermissionAccessEntity::getOrCreate(Group::getByID(GUEST_GROUP_ID));
         $accessEntities = array($gg);
         $valid = false;
-        $list = $pk->getAccessListItems(Key::ACCESS_TYPE_ALL, $accessEntities);
+        $list = $pk->getAccessListItems(PermissionKey::ACCESS_TYPE_ALL, $accessEntities);
         foreach ($list as $l) {
-            if ($l->getAccessType() == Key::ACCESS_TYPE_INCLUDE) {
+            if ($l->getAccessType() == PermissionKey::ACCESS_TYPE_INCLUDE) {
                 $valid = true;
             }
-            if ($l->getAccessType() == Key::ACCESS_TYPE_EXCLUDE) {
+            if ($l->getAccessType() == PermissionKey::ACCESS_TYPE_EXCLUDE) {
                 $valid = false;
             }
         }

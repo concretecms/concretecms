@@ -183,7 +183,7 @@ class ImportExportTest extends PageTestCase
         self::$storageVolatileDirectory = null;
     }
 
-    public static function provideCIFCases(): array
+    public function provideCIFCases(): array
     {
         static $cases;
         if ($cases === null) {
@@ -218,10 +218,10 @@ class ImportExportTest extends PageTestCase
         return $cases;
     }
 
-    public static function provideBlocksWithRichText(): array
+    public function provideBlocksWithRichText(): array
     {
         $result = [];
-        foreach (self::provideCIFCases() as [$blockTypeHandle,, $options]) {
+        foreach ($this->provideCIFCases() as [$blockTypeHandle,, $options]) {
             if (in_array([$blockTypeHandle], $result, true)) {
                 continue;
             }
@@ -356,7 +356,7 @@ class ImportExportTest extends PageTestCase
         $pageNode = $outputCif->pagetype[0]->composer[0]->output[0]->pagetemplate[0]->page[0];
         $blockNode = $pageNode->area[0]->blocks[0]->block[0];
         $tempID = (string) $outputCif->pagetype[0]->composer[0]->formlayout[0]->set[0]->control[0]['output-control-id'];
-        $this->assertMatchesRegularExpression('/\w{5,}/', $tempID);
+        $this->assertRegExp('/\w{5,}/', $tempID);
         $this->assertNotSame("CCMTest1", $tempID);
         $this->assertSame($tempID, (string) $blockNode->control[0]['output-control-id']);
         unset($blockNode['mc-block-id']);

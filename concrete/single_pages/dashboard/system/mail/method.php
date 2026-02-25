@@ -9,8 +9,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
  * @var Concrete\Core\Validation\CSRF\Token $token
  */
 
-$secureVals = ['' => t('None'), 'TLS' => tc('Encryption', 'TLS')];
-$isTls = ((string) $config->get('concrete.mail.methods.smtp.encryption') !== '');
+$secureVals = ['' => t('None'), 'SSL' => tc('Encryption', 'SSL'), 'TLS' => tc('Encryption', 'TLS')];
 ?>
 
 <form method="post" action="<?= $view->action('save_settings') ?>" id="mail-settings-form">
@@ -73,7 +72,7 @@ $isTls = ((string) $config->get('concrete.mail.methods.smtp.encryption') !== '')
 
         <div class="form-group">
             <?= $form->label('MAIL_SEND_METHOD_SMTP_ENCRYPTION', t('Encryption')) ?>
-            <?= $form->select('MAIL_SEND_METHOD_SMTP_ENCRYPTION', $secureVals, $isTls ? 'TLS' : '') ?>
+            <?= $form->select('MAIL_SEND_METHOD_SMTP_ENCRYPTION', $secureVals, $config->get('concrete.mail.methods.smtp.encryption')) ?>
         </div>
 
         <div class="form-group">

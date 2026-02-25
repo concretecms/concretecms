@@ -147,7 +147,7 @@ class EntityManagerConfigFactoryTest extends TestCase
             $driverPaths[0]);
     }
 
-    public static function dataProviderGetConfigurationWithApplicationYmlDriver()
+    public function dataProviderGetConfigurationWithApplicationYmlDriver()
     {
         return [
             ['yml'],
@@ -184,7 +184,7 @@ class EntityManagerConfigFactoryTest extends TestCase
             $driverPaths[0]);
     }
 
-    public static function dataProviderGetConfigurationWithApplicationXmlDriver()
+    public function dataProviderGetConfigurationWithApplicationXmlDriver()
     {
         return [
             ['xml'],
@@ -209,8 +209,7 @@ class EntityManagerConfigFactoryTest extends TestCase
                     false,
                     [],
                     false,
-                    $setting,
-                    null,
+                    $setting
                 ));
         $entityManagerConfigFactory = new \Concrete\Core\Database\EntityManagerConfigFactory($this->app, $config, $configRepoStub);
 

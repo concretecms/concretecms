@@ -199,7 +199,6 @@
                                                             <displaySystemPages><![CDATA[0]]></displaySystemPages>
                                                             <ignorePermissions><![CDATA[0]]></ignorePermissions>
                                                             <enableExternalFiltering><![CDATA[0]]></enableExternalFiltering>
-                                                            <excludeCanonicalPaging>0</excludeCanonicalPaging>
                                                             <ptID>{ccm:export:pagetype:blog_entry}</ptID>
                                                             <pfID/>
                                                             <truncateSummaries><![CDATA[0]]></truncateSummaries>
@@ -848,7 +847,6 @@ Aenean eu enim justo. Vestibulum aliquam hendrerit molestie.</p>
                                             <displaySystemPages><![CDATA[0]]></displaySystemPages>
                                             <ignorePermissions><![CDATA[0]]></ignorePermissions>
                                             <enableExternalFiltering><![CDATA[0]]></enableExternalFiltering>
-                                            <excludeCanonicalPaging>0</excludeCanonicalPaging>
                                             <ptID>{ccm:export:pagetype:blog_entry}</ptID>
                                             <pfID/>
                                             <truncateSummaries><![CDATA[0]]></truncateSummaries>
@@ -1759,7 +1757,6 @@ Maecenas consequat lectus a euismod pellentesque. Pellentesque commodo quam nec 
                                             <displaySystemPages><![CDATA[0]]></displaySystemPages>
                                             <ignorePermissions><![CDATA[0]]></ignorePermissions>
                                             <enableExternalFiltering><![CDATA[0]]></enableExternalFiltering>
-                                            <excludeCanonicalPaging>0</excludeCanonicalPaging>
                                             <ptID>{ccm:export:pagetype:resource}</ptID>
                                             <pfID/>
                                             <truncateSummaries><![CDATA[0]]></truncateSummaries>
@@ -1956,7 +1953,6 @@ Aenean eu enim justo. Vestibulum aliquam hendrerit molestie.</p>
                                 <displaySystemPages><![CDATA[0]]></displaySystemPages>
                                 <ignorePermissions><![CDATA[0]]></ignorePermissions>
                                 <enableExternalFiltering><![CDATA[1]]></enableExternalFiltering>
-                                <excludeCanonicalPaging>0</excludeCanonicalPaging>
                                 <ptID>{ccm:export:pagetype:resource}</ptID>
                                 <pfID/>
                                 <truncateSummaries><![CDATA[0]]></truncateSummaries>
@@ -2575,7 +2571,6 @@ Nam massa mauris, euismod vel tortor vel, finibus accumsan sem. Sed varius vulpu
                                 <displaySystemPages><![CDATA[0]]></displaySystemPages>
                                 <ignorePermissions><![CDATA[0]]></ignorePermissions>
                                 <enableExternalFiltering><![CDATA[1]]></enableExternalFiltering>
-                                <excludeCanonicalPaging>0</excludeCanonicalPaging>
                                 <ptID>{ccm:export:pagetype:blog_entry}</ptID>
                                 <pfID/>
                                 <truncateSummaries><![CDATA[0]]></truncateSummaries>

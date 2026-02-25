@@ -28,7 +28,7 @@ class ClassloaderTest extends ClassLoaderTestCase
         $coreAutoloader->enable();
     }
 
-    public static function aliasesClassesDataProvider()
+    public function aliasesClassesDataProvider()
     {
         return [
             ['\Controller', '\Concrete\Core\Controller\Controller'],
@@ -55,7 +55,7 @@ class ClassloaderTest extends ClassLoaderTestCase
         $this->assertEquals($class1, $class2);
     }
 
-    public static function applicationClassesDataProvider()
+    public function applicationClassesDataProvider()
     {
         return [
             // Overrides, Modified autoloader
@@ -77,7 +77,7 @@ class ClassloaderTest extends ClassLoaderTestCase
         ];
     }
 
-    public static function packageClassesDataProvider()
+    public function packageClassesDataProvider()
     {
         return [
             // Overrides, Modified autoloader
@@ -95,7 +95,7 @@ class ClassloaderTest extends ClassLoaderTestCase
         ];
     }
 
-    public static function applicationClassesLegacyDataProvider()
+    public function applicationClassesLegacyDataProvider()
     {
         return [
             ['TestClass.php', 'src/Testing/', 'Application\Src\Testing\TestClass'],
@@ -103,27 +103,33 @@ class ClassloaderTest extends ClassLoaderTestCase
         ];
     }
 
-    public static function packageClassesLegacyDataProvider()
+    public function packageClassesLegacyDataProvider()
     {
         return [
 ['legacy_foo', 'packages/legacy_foo/src/My/Custom.php', '/legacy_foo/src/My/', 'Concrete\Package\LegacyFoo\Src\My\Custom'],
         ];
     }
 
-    public static function applicationClassesLegacyCustomNamespaceDataProvider()
+    public function applicationClassesLegacyCustomNamespaceDataProvider()
     {
         return [
             ['Foobar', 'TestCustomNamespaceClass.php', 'src/Testing/', 'Foobar\Src\Testing\TestCustomNamespaceClass'],
         ];
     }
 
-    public static function packageCustomAutoloadersDataProvider()
+    public function packageCustomAutoloadersDataProvider()
     {
-        $package1 = \Mockery::mock(\Concrete\Core\Package\Package::class);
-        $package1->shouldReceive('getPackageAutoloaderRegistries')->andreturns([
-            'src/PortlandLabs/Foo' => 'PortlandLabs\Foo',
-        ]);
-        $package1->shouldReceive('getPackageHandle')->andreturns('advanced_test');
+        $package1 = $this->getMockBuilder('Concrete\Core\Package\Package')
+            ->disableOriginalConstructor()
+            ->getMock();
+        $package1->expects($this->any())
+            ->method('getPackageAutoloaderRegistries')
+            ->will($this->returnValue([
+                'src/PortlandLabs/Foo' => 'PortlandLabs\Foo',
+            ]));
+        $package1->expects($this->any())
+            ->method('getPackageHandle')
+            ->will($this->returnValue('advanced_test'));
 
         return [
             // Overrides, Modified autoloader
@@ -135,7 +141,7 @@ class ClassloaderTest extends ClassLoaderTestCase
         ];
     }
 
-    public static function coreClassesDataProvider()
+    public function coreClassesDataProvider()
     {
         return [
             // Strict autoloader

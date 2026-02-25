@@ -8,7 +8,6 @@ class CacheSettings
 {
     protected $btCacheBlockOutputOnPost = false;
     protected $btCacheBlockOutputForRegisteredUsers = false;
-    protected $btCacheBlockOutputOnEditMode = false;
     protected $btCacheBlockOutput = false;
     protected $btCacheBlockOutputLifetime = 0;
 
@@ -39,7 +38,6 @@ class CacheSettings
                 $o->btCacheBlockOutput = (bool) $r['btCacheBlockOutput'];
                 $o->btCacheBlockOutputOnPost = (bool) $r['btCacheBlockOutputOnPost'];
                 $o->btCacheBlockOutputForRegisteredUsers = (bool) $r['btCacheBlockOutputForRegisteredUsers'];
-                $o->btCacheBlockOutputOnEditMode = (bool) $r['btCacheBlockOutputForRegisteredUsers']; // Not a typo, use same value for edit mode
                 $o->btCacheBlockOutputLifetime = $r['btCacheBlockOutputLifetime'];
             }
         }
@@ -49,14 +47,12 @@ class CacheSettings
                 $o->btCacheBlockOutput = $controller->cacheBlockOutput();
                 $o->btCacheBlockOutputOnPost = $controller->cacheBlockOutputOnPost();
                 $o->btCacheBlockOutputForRegisteredUsers = $controller->cacheBlockOutputForRegisteredUsers();
-                $o->btCacheBlockOutputOnEditMode = $controller->cacheBlockOutputOnEditMode();
                 $o->btCacheBlockOutputLifetime = $controller->getBlockTypeCacheOutputLifetime();
             } else {
                 $o = new static();
                 $o->btCacheBlockOutput = false;
                 $o->btCacheBlockOutputOnPost = false;
                 $o->btCacheBlockOutputForRegisteredUsers = false;
-                $o->btCacheBlockOutputOnEditMode = false;
                 $o->btCacheBlockOutputLifetime = false;
             }
         }
@@ -83,11 +79,6 @@ class CacheSettings
     public function cacheBlockOutputForRegisteredUsers()
     {
         return $this->btCacheBlockOutputForRegisteredUsers;
-    }
-
-    public function cacheBlockOutputOnEditMode()
-    {
-        return $this->btCacheBlockOutputOnEditMode;
     }
 
     public function getBlockOutputCacheLifetime()

@@ -90,26 +90,6 @@ class Controller extends BlockController implements UsesFeatureInterface
     protected $btTable = 'btCalendarEvent';
 
     /**
-     * @var bool|null
-     */
-    protected $btCacheBlockOutput = null;
-
-    /**
-     * @var bool
-     */
-    protected $btCacheBlockOutputForRegisteredUsers = true;
-
-    /**
-     * @var bool
-     */
-    protected $btCacheBlockOutputOnPost = true;
-
-    /**
-     * @var int
-     */
-    protected $btCacheBlockOutputLifetime = 3600;
-
-    /**
      * {@inheritdoc}
      */
     public function getRequiredFeatures(): array
@@ -414,18 +394,5 @@ class Controller extends BlockController implements UsesFeatureInterface
         }
 
         return $event;
-    }
-
-    public function cacheBlockOutput()
-    {
-        if ($this->btCacheBlockOutput === null) {
-            if ($this->mode !== 'R') {
-                $this->btCacheBlockOutput = true;
-            } else {
-                $this->btCacheBlockOutput = false;
-            }
-        }
-
-        return $this->btCacheBlockOutput;
     }
 }

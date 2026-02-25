@@ -15,7 +15,7 @@ use Throwable;
 
 class MutexTest extends TestCase
 {
-    public static function mutexProvider()
+    public function mutexProvider()
     {
         $app = ApplicationFacade::getFacadeApplication();
 
@@ -95,7 +95,7 @@ class MutexTest extends TestCase
         }
     }
 
-    public static function mutexConfigurationProvider()
+    public function mutexConfigurationProvider()
     {
         $app = ApplicationFacade::getFacadeApplication();
 

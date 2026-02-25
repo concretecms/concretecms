@@ -200,7 +200,7 @@ class RequestMediaTypeParser
                 switch (strtolower($matches[1])) {
                     case 'q':
                         if (is_numeric($matches[2])) {
-                            $result[$foundMediaType]['q'] = (float) min(max((float) $matches[2], 0), 1.0);
+                            $result[$foundMediaType]['q'] = min(max((float) $matches[2], 0), 1);
                         }
                         break;
                     default:

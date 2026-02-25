@@ -123,12 +123,7 @@ class Controller extends BlockController implements UsesFeatureInterface
     /**
      * @var bool
      */
-    protected $btCacheBlockOutputForRegisteredUsers = true;
-
-    /**
-     * @var bool
-     */
-    protected $btCacheBlockOutputOnEditMode = false;
+    protected $btCacheBlockOutputForRegisteredUsers = false;
 
     /**
      * {@inheritdoc}

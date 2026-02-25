@@ -31,7 +31,7 @@ class DependencyCheckerTest extends TestCase
         self::$checker = self::$app->build(DependencyChecker::class);
     }
 
-    public static function installProvider()
+    public function installProvider()
     {
         $packages = [
             self::createPackage('handle0', '0.1', 'Name 0', []),
@@ -156,7 +156,7 @@ class DependencyCheckerTest extends TestCase
         $this->assertEquals($expectedErrors, $errors);
     }
 
-    public static function uninstallProvider()
+    public function uninstallProvider()
     {
         $packages = [
             self::createPackage('handle0', '0.1', 'Name 0', []),
@@ -219,13 +219,28 @@ class DependencyCheckerTest extends TestCase
      *
      * @return Package
      */
-    private static function createPackage($handle, $version, $name, array $packageDependencies)
+    private function createPackage($handle, $version, $name, array $packageDependencies)
     {
-        $package = \Mockery::mock(Package::class);
-        $package->shouldReceive('getPackageHandle')->andReturn($handle);
-        $package->shouldReceive('getPackageVersion')->andReturn($version);
-        $package->shouldReceive('getPackageName')->andReturn($name);
-        $package->shouldReceive('getPackageDependencies')->andReturn($packageDependencies);
+        $package = $this->getMockForAbstractClass(Package::class, [], '', false);
+        $reflectionClass = new ReflectionClass($package);
+        foreach ([
+            'pkgHandle' => $handle,
+            'pkgVersion' => $version,
+            'pkgName' => $name,
+            'packageDependencies' => $packageDependencies,
+        ] as $propertyName => $propertyValue) {
+            try {
+                $reflectionProperty = $reflectionClass->getProperty($propertyName);
+            } catch (ReflectionException $x) {
+                $reflectionProperty = null;
+            }
+            if ($reflectionProperty === null) {
+                $package->$propertyName = $propertyValue;
+            } else {
+                $reflectionProperty->setAccessible(true);
+                $reflectionProperty->setValue($package, $propertyValue);
+            }
+        }
 
         return $package;
     }

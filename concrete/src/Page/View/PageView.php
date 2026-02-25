@@ -66,51 +66,31 @@ class PageView extends View
         $cFilename = trim($cFilename, '/');
 
         // if we have this exact template in the theme, we use that as the outer wrapper and we don't do an inner content file
-        $exactThemeTemplate = $env->getRecord(
-            DIRNAME_THEMES . '/' . $this->themeHandle . '/' . $cFilename,
-            $this->themePkgHandle,
-            true,
-        );
+        $exactThemeTemplate = $env->getRecord(DIRNAME_THEMES . '/' . $this->themeHandle . '/' . $cFilename, $this->themePkgHandle);
         if ($exactThemeTemplate->exists()) {
             $this->setViewTemplate($exactThemeTemplate->file);
         } else {
             // use a content wrapper from themes/core if specified
             // e.g. $this->render('your/page', 'none') would use themes/core/none.php to print the $innerContent without a wrapper
-            $coreThemeTemplate = $env->getRecord(
-                DIRNAME_THEMES . '/' . DIRNAME_THEMES_CORE . '/' . $this->themePkgHandle,
-                false,
-                true
-            );
+            $coreThemeTemplate = $env->getRecord(DIRNAME_THEMES . '/' . DIRNAME_THEMES_CORE . '/' . $this->themePkgHandle . '.php');
             if ($coreThemeTemplate->exists()) {
                 $this->setViewTemplate($coreThemeTemplate->file);
             } else {
                 // check for other themes or in a package if one was specified
-                $themeTemplate = $env->getRecord(
-                    DIRNAME_THEMES . '/' . $this->themeHandle . '/' . $this->controller->getThemeViewTemplate(),
-                    $this->themePkgHandle,
-                    true,
-                );
+                $themeTemplate = $env->getRecord(DIRNAME_THEMES . '/' . $this->themeHandle . '/' . $this->controller->getThemeViewTemplate(), $this->themePkgHandle);
                 if ($themeTemplate->exists()) {
                     $this->setViewTemplate($themeTemplate->file);
                 } else {
                     // fall back to the active theme wrapper if nothing else was found
                     $fallbackTheme = PageTheme::getByHandle($this->themeHandle);
                     $fallbackPkgHandle = ($fallbackTheme instanceof PageTheme) ? $fallbackTheme->getPackageHandle() : $this->themePkgHandle;
-                    $fallbackTemplate = $env->getRecord(
-                        DIRNAME_THEMES . '/' . $this->themeHandle . '/' . $this->controller->getThemeViewTemplate(),
-                        $fallbackPkgHandle,
-                        true,
-                    );
+                    $fallbackTemplate = $env->getRecord(DIRNAME_THEMES . '/' . $this->themeHandle . '/' . $this->controller->getThemeViewTemplate(), $fallbackPkgHandle);
                     $path = $fallbackTemplate->file;
                     if (basename($path) != FILENAME_THEMES_VIEW) {
                         // We're going to check to see if this file actually exists in the theme. Otherwise we're going to use the default wrapper.
                         // Ideally this would happen in getThemeViewTemplate but it's hard to add the logic there.
                         if (!$fallbackTemplate->exists()) {
-                            $path = $env->getPath(
-                                DIRNAME_THEMES . '/' . $this->themeHandle . '/' . FILENAME_THEMES_VIEW,
-                                $fallbackPkgHandle,
-                                true,
-                            );
+                            $path = $env->getPath(DIRNAME_THEMES . '/' . $this->themeHandle . '/' . FILENAME_THEMES_VIEW, $fallbackPkgHandle);
                         }
                     }
                     $this->setViewTemplate($path);
@@ -125,8 +105,7 @@ class PageView extends View
             $this->setInnerContentFile(
                 $env->getPath(
                     DIRNAME_PAGES . '/' . $cFilename,
-                    $pkgHandle,
-                    true,
+                    $pkgHandle
                 )
             );
         }
@@ -150,48 +129,33 @@ class PageView extends View
             $rec = null;
             if ($pt) {
                 $rec = $env->getRecord(
-                    DIRNAME_THEMES . '/' . $this->themeHandle . '/' . $pt->getPageTemplateHandle(),
-                    $this->themePkgHandle,
-                    true,
-                );
+                    DIRNAME_THEMES . '/' . $this->themeHandle . '/' . $pt->getPageTemplateHandle() . '.php',
+                    $this->themePkgHandle);
             }
             if ($rec && $rec->exists()) {
                 $this->setViewTemplate(
                     $env->getPath(
-                        DIRNAME_THEMES . '/' . $this->themeHandle . '/' . $pt->getPageTemplateHandle(),
-                        $this->themePkgHandle,
-                        true,
-                    ));
+                        DIRNAME_THEMES . '/' . $this->themeHandle . '/' . $pt->getPageTemplateHandle() . '.php',
+                        $this->themePkgHandle));
             } else {
                 $pTemplatePkgHandle = isset($this->pTemplatePkgHandle) ? $this->pTemplatePkgHandle : null;
                 $rec = $env->getRecord(
-                    DIRNAME_PAGE_TEMPLATES . '/' . $this->c->getPageTemplateHandle(),
-                    $pTemplatePkgHandle,
-                    true,
-                );
+                    DIRNAME_PAGE_TEMPLATES . '/' . $this->c->getPageTemplateHandle() . '.php',
+                    $pTemplatePkgHandle);
                 if ($rec->exists()) {
                     $this->setInnerContentFile(
                         $env->getPath(
-                            DIRNAME_PAGE_TEMPLATES . '/' . $this->c->getPageTemplateHandle(),
-                            $pTemplatePkgHandle,
-                            true,
-                        )
-                    );
+                            DIRNAME_PAGE_TEMPLATES . '/' . $this->c->getPageTemplateHandle() . '.php',
+                            $pTemplatePkgHandle));
                     $this->setViewTemplate(
                         $env->getPath(
                             DIRNAME_THEMES . '/' . $this->themeHandle . '/' . $this->controller->getThemeViewTemplate(),
-                            $this->themePkgHandle,
-                            true,
-                        )
-                    );
+                            $this->themePkgHandle));
                 } else {
                     $this->setViewTemplate(
                         $env->getPath(
                             DIRNAME_THEMES . '/' . $this->themeHandle . '/' . FILENAME_THEMES_DEFAULT,
-                            $this->themePkgHandle,
-                            true
-                        )
-                    );
+                            $this->themePkgHandle));
                 }
             }
         }
@@ -372,8 +336,7 @@ class PageView extends View
         $relative = REL_DIR_FILES_CACHE . '/pages/' . $this->c->getCollectionID() . '/' . DIRNAME_CSS . '/' . $this->getThemeHandle();
         $r = $env->getRecord(
             DIRNAME_THEMES . '/' . $this->themeObject->getThemeHandle() . '/' . DIRNAME_CSS . '/' . $stylesheet,
-            $this->themeObject->getPackageHandle()
-        );
+            $this->themeObject->getPackageHandle());
         if ($r->exists()) {
             $sheetObject = new \Concrete\Core\StyleCustomizer\Stylesheet(
                 $stylesheet,

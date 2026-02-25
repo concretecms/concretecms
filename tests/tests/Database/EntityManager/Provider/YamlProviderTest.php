@@ -88,7 +88,7 @@ class YamlProviderTest extends TestCase
         $this->assertEquals(ltrim($namespace, '\\'), $driverNamespace);
     }
 
-    public static function dataProviderGetDriversAddManuallyLocationAndNamespace()
+    public function dataProviderGetDriversAddManuallyLocationAndNamespace()
     {
         return [
             [
