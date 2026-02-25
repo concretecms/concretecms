@@ -77,8 +77,14 @@ class CustomStyleRepository
         return $styles;
     }
 
-    protected function loadCollectionVersionAreaStyleRecords(int $collectionID, int $versionID): void
+    protected function loadCollectionVersionAreaStyleRecords(int $collectionID, ?int $versionID): void
     {
+        if ($versionID === null) {
+            $this->styles[$collectionID] = [];
+
+            return;
+        }
+
         if (!isset($this->styles[$collectionID])) {
             $qb = $this->connection->createQueryBuilder();
             $qb->select('arHandle', 'issID')
