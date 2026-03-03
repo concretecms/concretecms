@@ -41,24 +41,27 @@ class Antispam extends DashboardPageController
         $this->view();
     }
 
-    public function save()
+    public function update_library()
     {
         $this->view();
         if (!isset($this->groups[$_POST['group_id']])) {
             $this->error->add('Invalid Group');
-
-            return;
         }
-        Config::save('concrete.spam.allowlist_group', $_POST['group_id']);
-    }
+        if (!$this->token->validate('update_library')) {
+            $this->error->add($this->token->getErrorMessage());
+        }
+        if ($this->post('activeLibrary')) {
+            $scl = SystemAntispamLibrary::getByHandle((string)$this->post('activeLibrary'));
+            if (!$scl) {
+                $this->error->add(t('Invalid anti-spam library'));
+            }
+        }
 
-    public function update_library()
-    {
-        $this->save();
-        if (!$this->error->has() && Loader::helper('validation/token')->validate('update_library')) {
+        if (!$this->error->has()) {
+            Config::save('concrete.spam.allowlist_group', $_POST['group_id']);
             if ($this->post('activeLibrary')) {
                 $scl = SystemAntispamLibrary::getByHandle($this->post('activeLibrary'));
-                if (is_object($scl)) {
+                if ($scl instanceof SystemAntispamLibrary) {
                     $scl->activate();
                     Config::save('concrete.spam.notify_email', $this->post('ANTISPAM_NOTIFY_EMAIL'));
                     Config::save('concrete.log.spam', $this->post('ANTISPAM_LOG_SPAM'));
@@ -67,19 +70,10 @@ class Antispam extends DashboardPageController
                         $controller->saveOptions($this->post());
                     }
                     $this->redirect('/dashboard/system/permissions/antispam', 'saved');
-                } else {
-                    $this->error->add(t('Invalid anti-spam library.'));
                 }
             } else {
                 SystemAntispamLibrary::deactivateAll();
             }
-        } else {
-            $this->error->add(Loader::helper('validation/token')->getErrorMessage());
-        }
-        if ($this->error->has()) {
-            $this->view();
-        } else {
-            $this->redirect('/dashboard/system/permissions/antispam', 'saved');
         }
     }
 }

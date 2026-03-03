@@ -478,6 +478,10 @@ class Controller extends BlockController implements UsesFeatureInterface
     {
         $this->on_start();
         $fromCIF = ($data['_fromCIF'] ?? null) === true;
+        if (!$fromCIF) {
+            $data['columns'] = '';
+            $data['filterFields'] = '';
+        }
 
         if (isset($data['enableSearch']) && $data['enableSearch']) {
             if (isset($data['searchProperties']) && is_array($data['searchProperties'])) {
