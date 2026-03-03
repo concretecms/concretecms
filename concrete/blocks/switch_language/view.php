@@ -32,7 +32,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
 
     <form method="post" class="row row-cols-auto g-0 align-items-center">
         <div class="col-auto me-3">
-            <?= $label ?>
+            <?= h($label) ?>
         </div>
         <div class="col-auto">
             <?= $form->select(

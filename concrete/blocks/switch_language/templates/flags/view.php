@@ -29,7 +29,7 @@ $ih = Core::make('multilingual/interface/flag');
 /** @var \Concrete\Core\Multilingual\Service\Detector $detector */
 ?>
 <div class="ccm-block-switch-language-flags">
-    <div class="ccm-block-switch-language-flags-label"><?= $label ?></div>
+    <div class="ccm-block-switch-language-flags-label"><?= h($label) ?></div>
     <?php
     foreach ($languageSections as $ml) {
         ?>
