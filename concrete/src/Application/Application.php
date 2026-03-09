@@ -7,6 +7,7 @@ use Concrete\Core\Cache\Page\PageCache;
 use Concrete\Core\Cache\Page\PageCacheRecord;
 use Concrete\Core\Entity\Site\Site;
 use Concrete\Core\Foundation\ClassAutoloader;
+use Concrete\Core\Foundation\ClassLoader;
 use Concrete\Core\Foundation\EnvironmentDetector;
 use Concrete\Core\Foundation\Runtime\DefaultRuntime;
 use Concrete\Core\Foundation\Runtime\RuntimeInterface;
@@ -39,7 +40,7 @@ class Application extends Container
 {
     protected $installed = null;
     protected $environment = null;
-  
+
     /**
      * @var \Concrete\Core\Package\Package[]
      */
@@ -224,6 +225,21 @@ class Application extends Container
             $this->make(MutexInterface::class)->execute(Update::MUTEX_KEY, function () {
                 Update::updateToCurrentVersion();
             });
+        }
+    }
+
+    public function setupPackageAutoload(string $handle)
+    {
+        /**
+         * @var PackageService $packageService
+         */
+        $packageService = $this->make(PackageService::class);
+        $config = $this->make('config');
+        $packageEntity = $packageService->getByHandle($handle);
+        $packageController = $packageService->getClass($packageEntity->getPackageHandle());
+        if (!$packageController instanceof BrokenPackage) {
+            $config->package($packageController);
+            $this->packages[] = $packageController;
         }
     }
 
@@ -518,5 +534,5 @@ class Application extends Container
     {
         return $this->singleton($abstract, $concrete);
     }
-    
+
 }

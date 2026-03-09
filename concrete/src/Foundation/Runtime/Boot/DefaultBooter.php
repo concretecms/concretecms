@@ -8,6 +8,8 @@ use Concrete\Core\Application\ApplicationAwareTrait;
 use Concrete\Core\Asset\AssetList;
 use Concrete\Core\File\Type\TypeList;
 use Concrete\Core\Foundation\ClassAutoloader;
+use Concrete\Core\Http\Middleware\DispatcherDelegate;
+use Concrete\Core\Http\Middleware\StackInterface;
 use Concrete\Core\Http\Request;
 use Concrete\Core\Routing\RedirectResponse;
 use Concrete\Core\Routing\SystemRouteList;
@@ -168,6 +170,16 @@ class DefaultBooter implements BootInterface, ApplicationAwareInterface
              * ----------------------------------------------------------------------------
              */
             if ($response = $this->checkCache($app, $request)) {
+                /*
+                 * ----------------------------------------------------------------------------
+                 * Execute middleware before returning page cache
+                 * ----------------------------------------------------------------------------
+                 */
+                $middlewareResponse = $this->executeCacheMiddleware($request, $config);
+                if ($middlewareResponse instanceof Response) {
+                    return $middlewareResponse;
+                }
+
                 return $response;
             }
 
@@ -178,6 +190,54 @@ class DefaultBooter implements BootInterface, ApplicationAwareInterface
              */
             $this->initializePackages($app);
         }
+    }
+
+    /**
+     * Execute middleware that should run before returning page cache.
+     *
+     * @param Request $request
+     * @param Repository $config
+     *
+     * @return Response|null
+     */
+    private function executeCacheMiddleware(Request $request, Repository $config): ?Response
+    {
+        $middlewareConfig = $config->get('app.middleware', []);
+
+        $middlewareCache = [];
+        foreach ($middlewareConfig as $middleware) {
+            if (is_array($middleware) && !empty($middleware['run_during_cache'])) {
+                $middlewareCache[] = $middleware;
+            }
+        }
+
+        if (empty($middlewareCache)) {
+            return null;
+        }
+
+        /**
+         * @var StackInterface $stack
+         */
+        $stack = $this->app->make(StackInterface::class);
+        foreach ($middlewareCache as $middleware) {
+            if (isset($middleware['package'])) {
+                $this->app->setupPackageAutoload($middleware['package']);
+            }
+            $class = $middleware['class'];
+            $stack = $stack->withMiddleware(
+                $this->app->make($class),
+                $middleware['priority'] ?? 10
+            );
+        }
+
+        /**
+         * @var DispatcherDelegate $dispatcherDelegate
+         */
+        $dispatcherDelegate = $this->app->make(DispatcherDelegate::class);
+
+        $stack = $stack->withDispatcher($dispatcherDelegate);
+
+        return $stack->process($request);
     }
 
     /**
@@ -312,7 +372,7 @@ class DefaultBooter implements BootInterface, ApplicationAwareInterface
         $autoloader
             ->addClassAliases($config->get('app.aliases', []), true)
             ->addClassAliases($config->get('app.facades', []), false)
-        ;        
+        ;
         // Autoload aliases to prevent typehinting errors
         class_exists('Request');
     }
