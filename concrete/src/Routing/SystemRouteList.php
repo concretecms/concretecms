@@ -102,6 +102,8 @@ class SystemRouteList implements RouteListInterface
             ->routes('search.php')
         ;
 
+        $router->buildGroup()->routes('sitemap.php');
+
         $router->buildGroup()->routes('express.php');
 
         $router->buildGroup()->routes('marketplace.php');
