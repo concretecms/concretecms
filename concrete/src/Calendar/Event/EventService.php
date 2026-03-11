@@ -145,11 +145,11 @@ class EventService implements ApplicationAwareInterface, LoggerAwareInterface
         }
 
         if (!$event->getID()) {
-            $this->logger->info(t('Creating new event %s', $version->getName()));
+            $this->logger->info(t('Creating new event %s', $version->getName()));            
         }
 
         $this->logger->info(t('Adding new version %s to event %s', $version->getID(), $version->getName()));
-
+        
         $this->entityManager->persist($version);
         $event->getVersions()->add($version);
         $event->setCalendar($calendar);
