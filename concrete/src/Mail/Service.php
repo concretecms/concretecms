@@ -74,13 +74,6 @@ class Service implements LoggerAwareInterface
      */
     protected $throwOnFailure;
 
-    /**
-     * Contains excpetion thrown during sending process, null otherwise
-     *
-     * @var \Exception|null
-     */
-    protected ?\Exception $sendError;
-
     const LOG_MAILS_NONE = '';
     const LOG_MAILS_ONLY_METADATA = 'metadata';
     const LOG_MAILS_METADATA_AND_BODY = 'metadata_and_body';
@@ -324,7 +317,7 @@ class Service implements LoggerAwareInterface
         }
 
         $this->setBody($body ?? null);
-        $this->setBodyHTML($bodyHtml ?? $bodyHTML ?? null); //added $bodyHTML to accomodate templates which specify as such
+        $this->setBodyHTML($bodyHTML ?? null); 
     }
 
     /**
@@ -601,21 +594,21 @@ class Service implements LoggerAwareInterface
             $headers->addIdHeader('Message-ID', $this->email->generateMessageId());
         }
 
-        $this->sendError = null;
+        $sendError = null;
         if ($config->get('concrete.email.enabled')) {
             try {
                 $this->mailer->send($this->email);
             } catch (Throwable $x) {
-                $this->sendError = $x;
+                $sendError = $x;
             }
         }
-        if ($this->sendError !== null) {
+        if ($sendError !== null) {
             if ($this->getTesting()) {
-                throw $this->sendError;
+                throw $sendError;
             }
             $l = new GroupLogger(Channels::CHANNEL_EXCEPTIONS, Logger::CRITICAL);
-            $l->write(t('Mail Exception Occurred. Unable to send mail: ') . $this->sendError->getMessage());
-            $l->write($this->sendError->getTraceAsString());
+            $l->write(t('Mail Exception Occurred. Unable to send mail: ') . $sendError->getMessage());
+            $l->write($sendError->getTraceAsString());
             $l->close();
         }
 
@@ -623,7 +616,7 @@ class Service implements LoggerAwareInterface
             $l = new GroupLogger(Channels::CHANNEL_EMAIL, Logger::NOTICE);
 
             if ($config->get('concrete.email.enabled')) {
-                if ($this->sendError === null) {
+                if ($sendError === null) {
                     $l->write('**' . t('EMAILS ARE ENABLED. THIS EMAIL HAS BEEN SENT') . '**');
                 } else {
                     $l->write('**' . t('EMAILS ARE ENABLED. THIS EMAIL HAS NOT BEEN SENT') . '**');
@@ -657,11 +650,11 @@ class Service implements LoggerAwareInterface
             $l->close();
         }
 
-        if ($this->sendError !== null && $this->isThrowOnFailure()) {
+        if ($sendError !== null && $this->isThrowOnFailure()) {
             if ($resetData) {
                 $this->reset();
             }
-            throw $this->sendError;
+            throw $sendError;
         }
 
         // clear data if applicable
@@ -669,7 +662,7 @@ class Service implements LoggerAwareInterface
             $this->reset();
         }
 
-        return $this->sendError === null;
+        return $sendError === null;
     }
 
     public function getLoggerChannel(): string
@@ -685,7 +678,7 @@ class Service implements LoggerAwareInterface
      */
     public function getSendErrorException(): ?\Exception
     {
-        return $this->sendError;
+        return $sendError;
     }
 
 }
