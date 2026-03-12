@@ -74,6 +74,13 @@ class Service implements LoggerAwareInterface
      */
     protected $throwOnFailure;
 
+    /**
+     * Contains excpetion thrown during sending process, null otherwise
+     *
+     * @var \Exception|null
+     */
+    protected ?\Exception $sendError;
+
     const LOG_MAILS_NONE = '';
     const LOG_MAILS_ONLY_METADATA = 'metadata';
     const LOG_MAILS_METADATA_AND_BODY = 'metadata_and_body';
@@ -594,21 +601,21 @@ class Service implements LoggerAwareInterface
             $headers->addIdHeader('Message-ID', $this->email->generateMessageId());
         }
 
-        $sendError = null;
+        $this->sendError = null;
         if ($config->get('concrete.email.enabled')) {
             try {
                 $this->mailer->send($this->email);
             } catch (Throwable $x) {
-                $sendError = $x;
+                $this->sendError = $x;
             }
         }
-        if ($sendError !== null) {
+        if ($this->sendError !== null) {
             if ($this->getTesting()) {
-                throw $sendError;
+                throw $this->sendError;
             }
             $l = new GroupLogger(Channels::CHANNEL_EXCEPTIONS, Logger::CRITICAL);
-            $l->write(t('Mail Exception Occurred. Unable to send mail: ') . $sendError->getMessage());
-            $l->write($sendError->getTraceAsString());
+            $l->write(t('Mail Exception Occurred. Unable to send mail: ') . $this->sendError->getMessage());
+            $l->write($this->sendError->getTraceAsString());
             $l->close();
         }
 
@@ -616,7 +623,7 @@ class Service implements LoggerAwareInterface
             $l = new GroupLogger(Channels::CHANNEL_EMAIL, Logger::NOTICE);
 
             if ($config->get('concrete.email.enabled')) {
-                if ($sendError === null) {
+                if ($this->sendError === null) {
                     $l->write('**' . t('EMAILS ARE ENABLED. THIS EMAIL HAS BEEN SENT') . '**');
                 } else {
                     $l->write('**' . t('EMAILS ARE ENABLED. THIS EMAIL HAS NOT BEEN SENT') . '**');
@@ -650,11 +657,11 @@ class Service implements LoggerAwareInterface
             $l->close();
         }
 
-        if ($sendError !== null && $this->isThrowOnFailure()) {
+        if ($this->sendError !== null && $this->isThrowOnFailure()) {
             if ($resetData) {
                 $this->reset();
             }
-            throw $sendError;
+            throw $this->sendError;
         }
 
         // clear data if applicable
@@ -662,11 +669,23 @@ class Service implements LoggerAwareInterface
             $this->reset();
         }
 
-        return $sendError === null;
+        return $this->sendError === null;
     }
 
     public function getLoggerChannel(): string
     {
         return Channels::CHANNEL_EMAIL;
     }
+
+        
+    /**
+     * Returns exception encoutered during sending if one exists. 
+     *
+     * @return Exception or null if no excpetion
+     */
+    public function getSendErrorException(): ?\Exception
+    {
+        return $this->sendError;
+    }
+
 }
