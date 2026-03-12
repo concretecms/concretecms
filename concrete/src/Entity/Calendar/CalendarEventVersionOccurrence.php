@@ -60,14 +60,21 @@ class CalendarEventVersionOccurrence implements ObjectInterface, CategoryMemberI
      */
     protected $occurrence;
 
-    public function getJSONObject()
+    /**
+     * Returns json object with basic event details.  Includes data from this occurence and the current event version.
+     * 
+     * @param  bool $getAttributes - Optional parameter, True if attrbitues should be included in the object, false otherwise.  Defaults to false.  
+     * @param  mixed $displayMode - Optional parameter, if set to 'display' will return the display value, or, set to false will return the value.  Defaults to false.  If getAttributes=false, this paramter has no impact.
+     * @return object
+     */
+    public function getJSONObject($getAttributes=false,$displayMode=false)
     {
         $ev = $this->getEvent();
         $r = array();
         $r['start'] = $this->occurrence->getStart();
         $r['end'] = $this->occurrence->getEnd();
 
-        return (object) array_merge($r, (array) $ev->getJSONObject());
+        return (object) array_merge($r, (array) $ev->getJSONObject($getAttributes,$displayMode));
     }
 
     public function __construct(CalendarEventVersion $version, CalendarEventRepetition $repetition, $start, $end, $cancelled = false)

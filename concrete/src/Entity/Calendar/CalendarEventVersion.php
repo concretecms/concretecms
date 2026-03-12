@@ -283,6 +283,38 @@ class CalendarEventVersion implements ObjectInterface, \JsonSerializable
     }
 
     /**
+     * Returns json object with basic event details
+     * 
+     * @param  bool $getAttributes - Optional parameter, True if attrbitues should be included in the object, false otherwise.  Defaults to false.  
+     * @param  mixed $displayMode - Optional parameter, if set to 'display' will return the display value, or, set to false will return the value.  Defaults to false.  If getAttributes=false, this paramter has no impact.
+     * @return object
+     */
+    public function getJSONobject(bool $getAttributes=false, mixed $displayMode=false):object
+    {
+        
+        $o=new \stdClass();
+        $o->id = $this->event->getID();
+        $o->name = $this->getName();
+        $o->versionId = $this->getID();
+        $o->description = $this->getDescription();        
+
+        if($getAttributes){
+            foreach(EventKey::getList() AS $attribute){
+                $handle=$attribute->getAttributeKeyHandle();                        
+                if($displayMode && $av=$this->getAttributeValueObject($attribute)){
+                    $value=$av->getDisplayValue();
+                }else{
+                    $value=$this->getAttribute($handle);
+                }                
+                $o->$handle=$value;
+            }
+        }
+
+        return $o;
+        
+    }
+    
+    /**
      * @return array
      */
     #[\ReturnTypeWillChange]
