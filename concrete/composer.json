@@ -82,7 +82,7 @@
     "sunra/php-simple-html-dom-parser": "^1.5.2",
     "jbroadway/urlify": "^1.2.2-stable",
     "dapphp/securimage": "3.*",
-    "anahkiasen/html-object": "~1.4",
+    "kylekatarnls/html-object": "^1.5.2",
     "primal/color": "1.0.*",
     "nesbot/carbon": "^2.1",
     "punic/punic": "^3.0.1",
