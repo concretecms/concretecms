@@ -7,6 +7,7 @@ use Concrete\Core\Cache\Command\ClearCacheCommand;
 use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Database\DatabaseStructureManager;
 use Concrete\Core\Entity\Site\Site;
+use Concrete\Core\Foundation\Composer;
 use Concrete\Core\Foundation\Environment\FunctionInspector;
 use Concrete\Core\Marketplace\PackageRepositoryInterface;
 use Concrete\Core\Marketplace\Update\Command\UpdateRemoteDataCommand;
@@ -68,10 +69,13 @@ class Update
         if ($queryWS) {
             $packageRepository = $app->make(PackageRepositoryInterface::class);
             $skip = $config->get('concrete.updates.skip_packages');
-
             if ($skip !== true) {
+                $skipHandles = array_merge(
+                    is_array($skip) ? $skip : [],
+                    $app->make(Composer::class)->getPackagesInstalledViaComposer()
+                );
                 $packageService = $app->make(PackageService::class);
-                $packageService->checkPackageUpdates($packageRepository, (array) $skip);
+                $packageService->checkPackageUpdates($packageRepository, $skipHandles);
             }
 
             $update = static::getLatestAvailableUpdate();

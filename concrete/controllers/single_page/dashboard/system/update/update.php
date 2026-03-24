@@ -5,6 +5,7 @@ namespace Concrete\Controller\SinglePage\Dashboard\System\Update;
 use Concrete\Controller\Upgrade;
 use Concrete\Core\Error\UserMessageException;
 use Concrete\Core\File\Service\File;
+use Concrete\Core\Foundation\Composer;
 use Concrete\Core\Http\ResponseFactoryInterface;
 use Concrete\Core\Marketplace\Marketplace;
 use Concrete\Core\Package\PackageService;
@@ -37,7 +38,13 @@ class Update extends DashboardPageController
             return null;
         }
         $config = $this->app->make('config');
-        $this->set('skipCoreUpdates', (bool) $config->get('concrete.updates.skip_core'));
+        if ($this->app->make(Composer::class)->isCoreInstalledViaComposer() === true) {
+            $this->set('skipCoreUpdates', t('ConcreteCMS has been installed via Composer: you should use it to upgrade the currently installed version.'));
+        } elseif ($config->get('concrete.updates.skip_core')) {
+            $this->set('skipCoreUpdates', t('Updates are currently disabled via your site configuration.'));
+        } else {
+            $this->set('skipCoreUpdates', '');
+        }
         $upd = $this->app->make(UpdateService::class);
         $updates = $upd->getLocalAvailableUpdates();
         if (count($updates) === 1) {
@@ -100,6 +107,8 @@ class Update extends DashboardPageController
         }
         if (!$this->token->validate('download_update')) {
             $this->error->add($this->token->getErrorMessage());
+        } elseif ($this->app->make(Composer::class)->isCoreInstalledViaComposer() === true) {
+            $this->error->add(t('ConcreteCMS has been installed via Composer: you should use it to upgrade the currently installed version.'));
         } elseif ($this->app->make('config')->get('concrete.updates.skip_core')) {
             $this->error->add(t('Updates are currently disabled via your site configuration.'));
         } elseif (!is_dir(DIR_CORE_UPDATES)) {
@@ -160,7 +169,9 @@ class Update extends DashboardPageController
         if (!$this->userHasUpgradePermission()) {
             return $this->buildRedirect($this->action());
         }
-        if ($this->app->make('config')->get('concrete.updates.skip_core')) {
+        if ($this->app->make(Composer::class)->isCoreInstalledViaComposer() === true) {
+            $this->error->add(t('ConcreteCMS has been installed via Composer: you should use it to upgrade the currently installed version.'));
+        } elseif ($this->app->make('config')->get('concrete.updates.skip_core')) {
             $this->error->add(t('Updates are currently disabled via your site configuration.'));
         } else {
             $updateVersion = (string) $this->request->request->get('version', '');

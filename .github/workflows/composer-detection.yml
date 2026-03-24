@@ -1,0 +1,139 @@
+name: Composer detection
+
+on:
+  pull_request:
+  push:
+
+jobs:
+  composer-detection:
+    name: composer v${{ matrix.composer-version }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+            -
+              php-version: "7.3"
+              composer-version: 2.1.0
+            -
+              php-version: "8.0"
+              composer-version: 2.2
+            -
+              php-version: "8.3"
+              composer-version: 2
+    steps:
+      -
+        name: Install PHP ${{ matrix.php-version }}
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php-version }}
+          coverage: none
+          tools: composer:${{ matrix.composer-version }}
+      -
+        name: Show composer version
+        run: composer --version
+      -
+        name: Get composer cache directory
+        id: composer-cache-dir
+        run: echo "dir=$(composer config --global --no-interaction cache-files-dir)" >>$GITHUB_OUTPUT
+      -
+        name: Cache dependencies
+        uses: actions/cache@v5
+        with:
+          path: ${{ steps.composer-cache-dir.outputs.dir }}
+          key: composer${{ matrix.composer-version }}-php${{ matrix.php-version }}
+      -
+        name: Checkout repo
+        uses: actions/checkout@v6
+        with:
+          path: repo
+      -
+        name: Install dependencies
+        working-directory: repo
+        run: composer install --ansi --no-interaction --no-suggest --no-progress
+      -
+        name: Test core not detected as installed via composer
+        run: |
+          cat <<'EOF' >test.php
+          <?php
+          $composer = app(Concrete\Core\Foundation\Composer::class);
+          if ($composer->isCoreInstalledViaComposer() !== false) {
+            echo "Core has been detected as installed via composer, but it should not be\n";
+            return 1;
+          }
+          echo "Core has been detected as not installed via composer, as expected\n";
+          return 0;
+          EOF
+          ./repo/concrete/bin/concrete c5:exec --ansi --no-interaction test.php
+      -
+        name: Test no packages detected as installed via composer
+        run: |
+          cat <<'EOF' >test.php
+          <?php
+          $composer = app(Concrete\Core\Foundation\Composer::class);
+          $packages = $composer->getPackagesInstalledViaComposer();
+          if ($packages !== []) {
+            echo "Packages have been detected as installed via composer, but there should be none: " . implode(', ', $packages) . "\n";
+            return 1;
+          }
+          echo "No packages have been detected as installed via composer, as expected\n";
+          return 0;
+          EOF
+          ./repo/concrete/bin/concrete c5:exec --ansi --no-interaction test.php
+      -
+        name: Create composer-based installation
+        uses: actions/checkout@v6
+        with:
+          repository: mlocati/concretecms-skeleton
+          ref: main
+          path: composer-repo
+      -
+        name: Install dependencies
+        working-directory: composer-repo
+        run: composer update --ansi --no-interaction --no-progress
+      -
+        name: Replace concrete core
+        run: |
+          rm -rf composer-repo/web/concrete
+          rsync -a --exclude=/vendor ./repo/concrete/ ./composer-repo/web/concrete/
+      -
+        name: Test core detected as installed via composer
+        run: |
+          cat <<'EOF' >test.php
+          <?php
+          $composer = app(Concrete\Core\Foundation\Composer::class);
+          if ($composer->isCoreInstalledViaComposer() !== true) {
+            echo "Core has not been detected as installed via composer, but it should be\n";
+            return 1;
+          }
+          echo "Core has been detected as installed via composer, as expected\n";
+          return 0;
+          EOF
+          ./composer-repo/web/concrete/bin/concrete c5:exec --ansi --no-interaction test.php
+      -
+        name: Install a package via composer
+        working-directory: composer-repo
+        run: composer require --ansi --no-interaction --no-progress concrete5-community/blocks_cloner
+      -
+        name: Test package detected as installed via composer
+        run: |
+          cat <<'EOF' >test.php
+          <?php
+          $composer = app(Concrete\Core\Foundation\Composer::class);
+          $packages = $composer->getPackagesInstalledViaComposer();
+          if ($packages === []) {
+            echo "No packages have been detected as installed via composer, but there should be one\n";
+            return 1;
+          }
+          if ($packages !== ['blocks_cloner']) {
+            echo "Unexpected packages detected as installed via composer: " . implode(', ', $packages) . "\n";
+            return 1;
+          }
+          if ($composer->isPackageInstalledViaComposer('blocks_cloner') !== true) {
+            echo "Package has not been detected as installed via composer, but it should be\n";
+            return 1;
+          }
+          echo "Package has been detected as installed via composer, as expected\n";
+          return 0;
+          EOF
+          ./composer-repo/web/concrete/bin/concrete c5:exec --ansi --no-interaction test.php
