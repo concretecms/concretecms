@@ -7,7 +7,6 @@ use Concrete\Core\Error\UserMessageException;
 use Concrete\Core\File\Service\File;
 use Concrete\Core\Foundation\Composer;
 use Concrete\Core\Http\ResponseFactoryInterface;
-use Concrete\Core\Marketplace\Marketplace;
 use Concrete\Core\Package\PackageService;
 use Concrete\Core\Page\Controller\DashboardPageController;
 use Concrete\Core\Permission\Checker;

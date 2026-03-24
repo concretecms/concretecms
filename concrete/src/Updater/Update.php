@@ -13,15 +13,12 @@ use Concrete\Core\Marketplace\PackageRepositoryInterface;
 use Concrete\Core\Marketplace\Update\Command\UpdateRemoteDataCommand;
 use Concrete\Core\Marketplace\Update\Inspector;
 use Concrete\Core\Package\PackageService;
-use Concrete\Core\SiteInformation\SiteInformationSurvey;
 use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\Updater\Migrations\Configuration;
 use Concrete\Core\Utility\Service\Validation\Numbers;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Tools\SchemaTool;
 use Exception;
-use Localization;
-use Marketplace;
 
 class Update
 {
