@@ -7,21 +7,42 @@ use Concrete\Core\Localization\Localization;
 
 defined('C5_EXECUTE') or die('Access Denied.');
 
-/* @var Concrete\Controller\Install $controller */
-/* @var Concrete\Core\Form\Service\Form $form */
-/* @var Concrete\Core\Html\Service\Html $html */
-/* @var Concrete\Core\View\View $this */
-/* @var Concrete\Core\View\View $view */
-/* @var Concrete\Core\Url\Resolver\UrlResolverInterface $urlResolver */
-/* @var Concrete\Core\Url\Resolver\Manager\ResolverManagerInterface $urlResolver */
-
-/* @var int $backgroundFade */
-/* @var string $pageTitle */
-/* @var string $image */
-/* @var string $imagePath */
-/* @var string $concreteVersion */
-
-/* @var int $installStep */
+/**
+ * @var Concrete\Controller\Install $controller
+ * @var Concrete\Core\Form\Service\Form $form
+ * @var Concrete\Core\Html\Service\Html $html
+ * @var Concrete\Core\View\View $this
+ * @var Concrete\Core\View\View $view
+ * @var Concrete\Core\Url\Resolver\Manager\ResolverManagerInterface $urlResolver
+ * @var string $pageTitle
+ * @var string $concreteVersion
+ * @var string|null $locale (may be unset)
+ * @var int $installStep
+ *
+ * // When $installStep === $controller::STEP_CHOOSELOCALE
+ * @var array $locales
+ * @var array $onlineLocales
+ * 
+ * // When $installStep === $controller::STEP_CONFIGURATION
+ * @var array $passwordAttributes
+ * @var array $languages
+ * @var array $countries
+ * @var string $computedSiteLocaleLanguage
+ * @var string $computedSiteLocaleCountry
+ * @var bool $setInitialState
+ * @var string $canonicalUrl
+ * @var bool $canonicalUrlChecked
+ * @var string $canonicalUrlAlternative
+ * @var bool $canonicalUrlAlternativeChecked
+ * @var string $SERVER_TIMEZONE
+ * @var array $availableTimezones
+ * @var Concrete\Core\Error\ErrorList\ErrorList $warnings
+ * 
+ * // When $installStep === $controller::STEP_INSTALL
+ * @var string $installPackage
+ * @var Concrete\Core\Package\StartingPointInstallRoutine[] $installRoutines
+ * @var string $successMessage
+ */
 
 $locale = $locale ?? Localization::BASE_LOCALE;
 
