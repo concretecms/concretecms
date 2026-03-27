@@ -96,6 +96,7 @@ jobs:
       - name: "Install highest unlocked dependencies"
         if: ${{ matrix.dependencies == 'highest-unlocked' }}
         run: |
+          echo "CCM_TEST_SKIP_CHECKCOMPOSERPLATFORM=1" >>"$GITHUB_ENV"
           composer config --unset platform.php
           composer update --no-interaction --no-progress
 
