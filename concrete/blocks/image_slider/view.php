@@ -81,7 +81,7 @@ $(document).ready(function(){
                 <li>
                 <?php if ($row['linkURL']) {
                 ?>
-                    <a href="<?php echo $row['linkURL']; ?>" class="mega-link-overlay"></a>
+                    <a href="<?php echo h($row['linkURL']); ?>" class="mega-link-overlay"></a>
                 <?php
             } ?>
                 <?php
