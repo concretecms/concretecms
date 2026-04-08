@@ -15,6 +15,7 @@ use Concrete\Core\Express\Form\Control\SaveHandler\SaveHandlerInterface;
 use Concrete\Core\Logging\Channels;
 use Concrete\Core\Logging\LoggerAwareInterface;
 use Concrete\Core\Logging\LoggerAwareTrait;
+use Concrete\Core\Logging\LoggerFactory;
 use Concrete\Core\User\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Query;
@@ -37,6 +38,7 @@ class Manager implements EntryManagerInterface, LoggerAwareInterface
         $this->request = $request;
         $this->entityManager = $entityManager;
         $this->app = $app;
+        $this->logger = $app->make(LoggerFactory::class)->createLogger(Channels::CHANNEL_EXPRESS);     
     }
 
     public function getLoggerChannel()
