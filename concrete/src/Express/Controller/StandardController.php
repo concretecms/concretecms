@@ -6,6 +6,8 @@ use Concrete\Core\Express\Entry\Manager as EntryManager;
 use Concrete\Core\Express\Entry\Notifier\NotificationProviderInterface;
 use Concrete\Core\Express\Entry\Notifier\StandardNotifier;
 use Concrete\Core\Express\Form\Processor\StandardProcessor;
+use Concrete\Core\Logging\Channels;
+use Concrete\Core\Logging\LoggerFactory;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -30,7 +32,11 @@ class StandardController implements ControllerInterface
 
     public function getEntryManager(Request $request)
     {
-        return $this->app->make(EntryManager::class, ['request' => $request]);
+        $manager = $this->app->make(EntryManager::class, ['request' => $request]);
+        $manager->setLogger(
+            $this->app->make(LoggerFactory::class)->createLogger(Channels::CHANNEL_EXPRESS)
+        );
+        return $manager;
     }
 
     public function getNotifier(?NotificationProviderInterface $provider = null)
