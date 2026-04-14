@@ -13,17 +13,13 @@ use Concrete\Core\Entity\User\User as UserEntity;
 use Concrete\Core\Express\Event\Event;
 use Concrete\Core\Express\Form\Control\SaveHandler\SaveHandlerInterface;
 use Concrete\Core\Logging\Channels;
-use Concrete\Core\Logging\LoggerAwareInterface;
-use Concrete\Core\Logging\LoggerAwareTrait;
 use Concrete\Core\User\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Query;
 use Symfony\Component\HttpFoundation\Request;
 
-class Manager implements EntryManagerInterface, LoggerAwareInterface
+class Manager implements EntryManagerInterface
 {
-    use LoggerAwareTrait;
-
     protected $entityManager;
     protected $request;
 
@@ -37,11 +33,7 @@ class Manager implements EntryManagerInterface, LoggerAwareInterface
         $this->request = $request;
         $this->entityManager = $entityManager;
         $this->app = $app;
-    }
-
-    public function getLoggerChannel()
-    {
-        return Channels::CHANNEL_EXPRESS;
+        $this->logger = $this->app->make('log/factory')->createLogger(Channels::CHANNEL_EXPRESS);
     }
 
     public function getEntityManager()
