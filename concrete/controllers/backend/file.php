@@ -169,7 +169,8 @@ class File extends Controller
         $replacingFile = $this->getFileToBeReplaced();
         try {
             if ($post_max_size = $this->app->make('helper/number')->getBytes(ini_get('post_max_size'))) {
-                if ($post_max_size < $_SERVER['CONTENT_LENGTH']) {
+                $contentLength = (int) $this->request->server->get('CONTENT_LENGTH', 0);
+                if ($contentLength > 0 && $post_max_size < $contentLength) {
                     throw new UserMessageException(Importer::getErrorMessage(Importer::E_FILE_EXCEEDS_POST_MAX_FILE_SIZE), 400);
                 }
             }
