@@ -13,11 +13,11 @@ class Ajax
      *
      * @return bool
      *
-     * @deprecated use the isXmlHttpRequest() method of the request object
+     * @deprecated use the isXmlHttpRequest() and/or the getPreferredFormat() methods of the request object
      */
     public function isAjaxRequest(Request $request)
     {
-        return $request->isXmlHttpRequest();
+        return $request->isXmlHttpRequest() || in_array($request->getPreferredFormat(), ['json', 'jsonld'], true);
     }
 
     /**
