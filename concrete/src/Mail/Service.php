@@ -317,7 +317,7 @@ class Service implements LoggerAwareInterface
         }
 
         $this->setBody($body ?? null);
-        $this->setBodyHTML($bodyHtml ?? null);
+        $this->setBodyHTML($bodyHTML ?? null);
     }
 
     /**
