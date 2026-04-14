@@ -57,6 +57,9 @@ class EventRepetitionService
                 $pd->setTimezone($timezone);
 
                 if ($r->get($namespace . '_pdStartDateAllDayActivate_' . $repetitionSetID)) {
+                    if (!$dateEnd) {
+                        $dateEnd = $dateStart;
+                    }
                     $pd->setStartDateAllDay(true);
                     $pd->setEndDateAllDay(true);
                     $dateStart = date('Y-m-d 00:00:00', strtotime($dateStart));
