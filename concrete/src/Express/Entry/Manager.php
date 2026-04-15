@@ -13,13 +13,17 @@ use Concrete\Core\Entity\User\User as UserEntity;
 use Concrete\Core\Express\Event\Event;
 use Concrete\Core\Express\Form\Control\SaveHandler\SaveHandlerInterface;
 use Concrete\Core\Logging\Channels;
+use Concrete\Core\Logging\LoggerAwareInterface;
+use Concrete\Core\Logging\LoggerAwareTrait;
 use Concrete\Core\User\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Query;
 use Symfony\Component\HttpFoundation\Request;
 
-class Manager implements EntryManagerInterface
+class Manager implements EntryManagerInterface, LoggerAwareInterface
 {
+    use LoggerAwareTrait;
+
     protected $entityManager;
     protected $request;
 
@@ -33,7 +37,11 @@ class Manager implements EntryManagerInterface
         $this->request = $request;
         $this->entityManager = $entityManager;
         $this->app = $app;
-        $this->logger = $this->app->make('log/factory')->createLogger(Channels::CHANNEL_EXPRESS);
+    }
+
+    public function getLoggerChannel()
+    {
+        return Channels::CHANNEL_EXPRESS;
     }
 
     public function getEntityManager()
@@ -95,7 +103,9 @@ class Manager implements EntryManagerInterface
         $this->entityManager->persist($entry);
         $this->entityManager->flush();
 
-        $this->logger->info(t('Created new Express entry %s', $entry->getID()));
+        if ($this->logger) {
+            $this->logger->info(t('Created new Express entry %s', $entry->getID()));
+        }
 
         return $entry;
     }
@@ -124,7 +134,9 @@ class Manager implements EntryManagerInterface
 
         $this->entityManager->refresh($entry);
 
-        $this->logger->info(t('Saved Express entry attributes for %s (%s)', $entry->getLabel(), $entry->getID()));
+        if ($this->logger) {
+            $this->logger->info(t('Saved Express entry attributes for %s (%s)', $entry->getLabel(), $entry->getID()));
+        }
         return $ev->getEntry();
     }
 
