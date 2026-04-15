@@ -296,12 +296,7 @@ class CalendarEventVersion implements ObjectInterface, \JsonSerializable
 
         return $o;
     }
-
-    public function getJSONObject()
-    {
-        return (object) $this->jsonSerialize();
-    }
-
+    
     /**
      * @return mixed
      */
