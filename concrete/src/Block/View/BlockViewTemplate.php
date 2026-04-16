@@ -94,49 +94,36 @@ class BlockViewTemplate
             $bFilename = substr($bFilename, 10);
         }
 
-        // The filename might be a directory name with .php-appended (BlockView does that), strip it.
-        $bFilenameWithoutDotPhp = $bFilename;
-        if (substr($bFilename, -4) === ".php") {
-            $bFilenameWithoutDotPhp = substr($bFilename, 0, strlen($bFilename) - 4);
-        }
-
         if ($bFilename) {
-            $record = $locator->getRecord(
-                DIRNAME_BLOCKS . '/' . $obj->getBlockTypeHandle() . '/' . DIRNAME_BLOCK_TEMPLATES . '/' . $bFilename,
-                true,
-            );
-            if ($record && $record->exists()) {
-                if (is_dir($record->getFile())) {
-                    $this->template = $record->getFile() . '/' . FILENAME_BLOCK_VIEW;
-                    $this->baseURL = $record->getUrl();
-                    $this->basePath = $record->getFile();
-                } else {
-                    $this->template = $record->getFile();
-                    $record = $locator->getRecord(
-                        DIRNAME_BLOCKS . '/' . $obj->getBlockTypeHandle() . '/' . $this->render,
-                        true,
-                    );
-                    $this->baseURL = dirname($record->getUrl());
-                    $this->basePath = dirname($record->getFile());
-                }
-
+            // Use case a - bFilename that is a template file
+            if (str_ends_with($bFilename, '.php') || str_ends_with($bFilename, '.html.twig')) {
+                $record = $locator->getRecord(
+                    DIRNAME_BLOCKS . '/' . $obj->getBlockTypeHandle() . '/' . DIRNAME_BLOCK_TEMPLATES . '/' . $bFilename,
+                    true,
+                );
+                $this->template = $record->getFile();
+                $record = $locator->getRecord(
+                    DIRNAME_BLOCKS . '/' . $obj->getBlockTypeHandle() . '/' . $this->render,
+                    true,
+                );
+                $this->baseURL = dirname($record->getUrl());
+                $this->basePath = dirname($record->getFile());
                 return;
             }
 
-            if ($bFilename !== $bFilenameWithoutDotPhp) {
-                $record = $locator->getRecord(
-                    DIRNAME_BLOCKS . '/' . $obj->getBlockTypeHandle() . '/' . DIRNAME_BLOCK_TEMPLATES . '/' . $bFilenameWithoutDotPhp,
-                    true,
-                );
-                if ($record->exists() && is_dir($record->getFile())) {
-                    $this->template = $record->getFile() . '/' . $this->render;
-                    $this->baseURL = $record->getUrl();
-                    $this->basePath = $record->getFile();
-                    return;
-                }
+            // Use case b - bFilename that is a directory
+            $record = $locator->getRecord(
+                DIRNAME_BLOCKS . '/' . $obj->getBlockTypeHandle() . '/' . DIRNAME_BLOCK_TEMPLATES . '/' . $bFilename,
+            );
+            if ($record->exists() && is_dir($record->getFile())) {
+                $this->template = $record->getFile() . '/' . $this->render;
+                $this->baseURL = $record->getUrl();
+                $this->basePath = $record->getFile();
+                return;
             }
         }
 
+        // Use case c - no bFilename
         $record = $locator->getRecord(
             DIRNAME_BLOCKS . '/' . $obj->getBlockTypeHandle() . '/' . $this->render,
             true,
@@ -146,7 +133,6 @@ class BlockViewTemplate
             $this->template = $record->getFile();
             $this->basePath = dirname($this->template);
         }
-
     }
 
     public function getBasePath()

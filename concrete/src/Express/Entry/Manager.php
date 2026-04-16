@@ -103,7 +103,9 @@ class Manager implements EntryManagerInterface, LoggerAwareInterface
         $this->entityManager->persist($entry);
         $this->entityManager->flush();
 
-        $this->logger->info(t('Created new Express entry %s', $entry->getID()));
+        if ($this->logger) {
+            $this->logger->info(t('Created new Express entry %s', $entry->getID()));
+        }
 
         return $entry;
     }
@@ -132,7 +134,9 @@ class Manager implements EntryManagerInterface, LoggerAwareInterface
 
         $this->entityManager->refresh($entry);
 
-        $this->logger->info(t('Saved Express entry attributes for %s (%s)', $entry->getLabel(), $entry->getID()));
+        if ($this->logger) {
+            $this->logger->info(t('Saved Express entry attributes for %s (%s)', $entry->getLabel(), $entry->getID()));
+        }
         return $ev->getEntry();
     }
 
