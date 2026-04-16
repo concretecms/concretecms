@@ -715,12 +715,61 @@ class Page extends Collection implements CategoryMemberInterface,
     {
         $area_handle = Area::getAreaHandleFromID($area_id);
         $db = Database::connection();
+        $cID = $this->getCollectionID();
+        $cvID = $this->getVersionID();
 
-        // Remove the moved block from its old area, and all blocks from the destination area.
-        $db->executeQuery('UPDATE CollectionVersionBlockStyles SET arHandle = ?  WHERE cID = ? and cvID = ? and bID = ?',
-                     [$area_handle, $this->getCollectionID(), $this->getVersionID(), $moved_block_id]);
-        $db->executeQuery('UPDATE CollectionVersionBlocks SET arHandle = ?  WHERE cID = ? and cvID = ? and bID = ?',
-                     [$area_handle, $this->getCollectionID(), $this->getVersionID(), $moved_block_id]);
+        // Capture the block's current area handle before moving it.
+        $oldAreaHandle = $db->fetchOne(
+            'SELECT arHandle FROM CollectionVersionBlocks WHERE cID = ? AND cvID = ? AND bID = ?',
+            [$cID, $cvID, $moved_block_id]
+        );
+
+        // Move the block to the destination area.
+        $db->executeQuery(
+            'UPDATE CollectionVersionBlockStyles SET arHandle = ? WHERE cID = ? and cvID = ? and bID = ?',
+            [$area_handle, $cID, $cvID, $moved_block_id]
+        );
+        $db->executeQuery(
+            'UPDATE CollectionVersionBlocks SET arHandle = ? WHERE cID = ? and cvID = ? and bID = ?',
+            [$area_handle, $cID, $cvID, $moved_block_id]
+        );
+
+        // If the block moved to a different area and it's a core_container,
+        // migrate the sub-area handles for all blocks inside it. Sub-area
+        // handles are prefixed with the parent area handle, so moving a
+        // container changes the prefix for all its nested content.
+        if ($oldAreaHandle !== $area_handle) {
+            $containerInstanceID = $db->fetchOne(
+                'SELECT containerInstanceID FROM btCoreContainer WHERE bID = ?',
+                [$moved_block_id]
+            );
+            if ($containerInstanceID) {
+                $delimiter = \Concrete\Core\Area\SubArea::AREA_SUB_DELIMITER;
+                $oldPrefix = $oldAreaHandle . $delimiter . $containerInstanceID . $delimiter;
+                $newPrefix = $area_handle . $delimiter . $containerInstanceID . $delimiter;
+
+                $db->executeQuery(
+                    'UPDATE CollectionVersionBlocks SET arHandle = REPLACE(arHandle, ?, ?) WHERE cID = ? AND cvID = ? AND arHandle LIKE ?',
+                    [$oldPrefix, $newPrefix, $cID, $cvID, $oldPrefix . '%']
+                );
+                $db->executeQuery(
+                    'UPDATE CollectionVersionBlockStyles SET arHandle = REPLACE(arHandle, ?, ?) WHERE cID = ? AND cvID = ? AND arHandle LIKE ?',
+                    [$oldPrefix, $newPrefix, $cID, $cvID, $oldPrefix . '%']
+                );
+                $db->executeQuery(
+                    'UPDATE CollectionVersionBlocksCacheSettings SET arHandle = REPLACE(arHandle, ?, ?) WHERE cID = ? AND cvID = ? AND arHandle LIKE ?',
+                    [$oldPrefix, $newPrefix, $cID, $cvID, $oldPrefix . '%']
+                );
+                $db->executeQuery(
+                    'DELETE FROM CollectionVersionBlocksOutputCache WHERE cID = ? AND cvID = ? AND arHandle LIKE ?',
+                    [$cID, $cvID, $oldPrefix . '%']
+                );
+                $db->executeQuery(
+                    'UPDATE Areas SET arHandle = REPLACE(arHandle, ?, ?) WHERE cID = ? AND arHandle LIKE ?',
+                    [$oldPrefix, $newPrefix, $cID, $oldPrefix . '%']
+                );
+            }
+        }
 
         $update_query = 'UPDATE CollectionVersionBlocks SET cbDisplayOrder = CASE bID';
         $when_statements = [];
@@ -734,7 +783,7 @@ class Page extends Collection implements CategoryMemberInterface,
         $update_query .= ' ' . implode(' ', $when_statements) . ' END WHERE bID in (' .
             implode(',', array_pad([], count($block_order), '?')) . ') AND cID = ? AND cvID = ?';
         $values = array_merge($update_values, $block_order);
-        $values = array_merge($values, [$this->getCollectionID(), $this->getVersionID()]);
+        $values = array_merge($values, [$cID, $cvID]);
 
         $db->executeQuery($update_query, $values);
     }
