@@ -8,7 +8,7 @@ return [
      */
     'version' => '9.5.0RC2',
     'version_installed' => '9.5.0RC2',
-    'version_db' => '20260203004500', // the key of the latest database migration
+    'version_db' => '20260415000000', // the key of the latest database migration 
 
     /*
      * Installation status
@@ -1525,5 +1525,10 @@ return [
 
     'file_chooser' => [
         'results' => 20,
-    ]
+    ],
+
+    'early404' => [
+        'enabled' => false,
+        'regexes' => "#/wp-(admin|content|login|temp)#\n#/wp-\w+\.php#i\n#/\.env#\n#/\.git#\n#/\.ht#",
+    ],
 ];

@@ -1249,6 +1249,14 @@
                 </attributekey>
             </attributes>
         </page>
+        <page name="Early Page Not Found" path="/dashboard/system/permissions/early_page_not_found"
+              filename="/dashboard/system/permissions/early_404.php" pagetype="" description="" package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>404, crawler, hack, crack, spy, wp-admin, wp-login, found</value>
+                </attributekey>
+            </attributes>
+        </page>
 
         <page name="Login &amp; Registration" path="/dashboard/system/registration"
               filename="/dashboard/system/registration/view.php" pagetype=""
