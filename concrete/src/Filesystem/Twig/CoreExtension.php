@@ -24,7 +24,7 @@ use Concrete\Core\User\User;
 use Concrete\Core\User\UserInfo;
 use Concrete\Core\User\UserInfoRepository;
 use Concrete\Core\View\View;
-use Symfony\Component\HttpFoundation\Request;
+use Concrete\Core\Http\Request;
 use Twig\Extension\AbstractExtension;
 use Twig\Extension\GlobalsInterface;
 use Twig\Markup;
