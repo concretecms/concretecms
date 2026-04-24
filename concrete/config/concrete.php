@@ -1252,13 +1252,6 @@ return [
             'throttle_max' => 20,
             'throttle_max_timespan' => 15, // minutes
         ],
-        /*
-         * Absolute post-login redirect URLs are only allowed when they match one of these base URLs.
-         * If empty, Concrete will default to the current canonical base URL.
-         *
-         * @var string[]
-         */
-        'post_login_redirect_url_allowlist' => [],
 
         'deactivation' => [
             'enable_login_threshold_deactivation' => false,
@@ -1336,6 +1329,13 @@ return [
                 'show_notification_to_unregistered_users' => false,
             ],
         ],
+        /*
+         * Absolute post-login redirect URLs are only allowed when they match one of these base URLs.
+         * If empty, Concrete will default to the current canonical base URL.
+         *
+         * @var string[]
+         */
+        'post_login_redirect_url_allowlist' => [],
         'misc' => [
             /**
              * Content Security Policy (CSP) HTTP response header
