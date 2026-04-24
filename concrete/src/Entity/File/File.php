@@ -461,7 +461,7 @@ class File implements \Concrete\Core\Permission\ObjectInterface, AttributeObject
      *
      * @return Version
      */
-    public function getVersionToModify($forceCreateNew = false)
+    public function getVersionToModify($newFilename = null, $newPrefix = null)
     {
         $u = Core::make(User::class);
         $createNew = false;
@@ -480,12 +480,19 @@ class File implements \Concrete\Core\Permission\ObjectInterface, AttributeObject
             $createNew = true;
         }
 
-        if ($forceCreateNew) {
+        if ($newFilename) {
             $createNew = true;
         }
 
         if ($createNew) {
             $fv2 = $fv->duplicate();
+
+            if ($newFilename && $newPrefix) {
+                $fv2->updateFile(
+                    $newFilename,
+                    $newPrefix
+                );
+            }
 
             // Are the recent and active versions the same? If so, we approve this new version we just made
             if ($fv->getFileVersionID() == $fav->getFileVersionID()) {
