@@ -262,24 +262,21 @@ class Add extends BackendInterfacePageController
                         } else {
                             $orphanedBlockFound = false;
 
-                            foreach ($this->getOrphanedBlockIds($usedAreas) as $arrOrphanedBlock) {
+                            foreach ($arrOrphanedBlocks as $arrOrphanedBlock) {
                                 if ($blockId === (int)$arrOrphanedBlock["bID"]) {
                                     $orphanedBlockFound = true;
+                                    $block = Block::getByID($blockId, $this->page, $arrOrphanedBlock["arHandle"]);
+                                    if (!$block instanceof Block) {
+                                        $errorList->add(t("Error while removing orphaned block."));
+                                    } else {
+                                        $block->deleteBlock();
+                                    }
+                                    break;
                                 }
                             }
 
                             if (!$orphanedBlockFound) {
                                 $errorList->add(t("The given block is not orphaned."));
-                            } else {
-                                $arID = $request->request->get('arId');
-                                $areaHandle = Area::getAreaHandleFromID($arID);
-                                $block = Block::getByID($blockId, $this->page, $areaHandle);
-                                if (!$block instanceof Block) {
-                                    //$errorList->add(t("Error while removing orphaned block."));
-                                } else {
-                                    // returns false because the area no longer exists in the theme.
-                                    $block->deleteBlock();
-                                }
                             }
                         }
                     }
