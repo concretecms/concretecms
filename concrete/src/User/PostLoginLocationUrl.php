@@ -7,7 +7,7 @@ use Concrete\Core\Url\Resolver\CanonicalUrlResolver;
 use Concrete\Core\Url\UrlImmutable;
 use Throwable;
 
-class PostLocationLocationUrl
+class PostLoginLocationUrl
 {
     /**
      * @var \Concrete\Core\Config\Repository\Repository
@@ -32,7 +32,7 @@ class PostLocationLocationUrl
      *
      * @return string
      */
-    public function getAllowedRedirectUrl($url)
+    public function getAllowedRedirectUrl($url): string
     {
         $url = trim((string) $url);
         if ($url === '') {
@@ -67,7 +67,7 @@ class PostLocationLocationUrl
     /**
      * @return string[]
      */
-    public function getAllowedRedirectUrlBases()
+    public function getAllowedRedirectUrlBases(): array
     {
         $configured = $this->config->get('concrete.security.post_login_redirect_url_allowlist', []);
         if (is_array($configured) && $configured !== []) {
@@ -87,7 +87,7 @@ class PostLocationLocationUrl
      *
      * @return \Concrete\Core\Url\UrlImmutable|null
      */
-    protected function createAbsoluteUrl($url)
+    protected function createAbsoluteUrl($url): ?UrlImmutable
     {
         try {
             $url = UrlImmutable::createFromUrl(trim((string) $url));
@@ -107,7 +107,7 @@ class PostLocationLocationUrl
      *
      * @return int
      */
-    protected function getUrlPort(UrlImmutable $url)
+    protected function getUrlPort(UrlImmutable $url): int
     {
         $port = (int) $url->getPort()->get();
         if ($port > 0) {
@@ -130,7 +130,7 @@ class PostLocationLocationUrl
      *
      * @return bool
      */
-    protected function matchesAllowedPath($allowedPath, $redirectPath)
+    protected function matchesAllowedPath($allowedPath, $redirectPath): bool
     {
         $allowedPath = $this->normalizePathForComparison($allowedPath);
         $redirectPath = $this->normalizePathForComparison($redirectPath);
@@ -146,7 +146,7 @@ class PostLocationLocationUrl
      *
      * @return string
      */
-    protected function normalizePathForComparison($path)
+    protected function normalizePathForComparison($path): string
     {
         $path = '/' . ltrim((string) $path, '/');
         if ($path !== '/') {
