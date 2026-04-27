@@ -11,6 +11,7 @@ use Concrete\Core\Logging\LoggerAwareInterface;
 use Concrete\Core\Logging\LoggerAwareTrait;
 use Concrete\Core\Routing\RedirectResponse;
 use Concrete\Core\User\PostLoginLocation;
+use Concrete\Core\User\PostLoginLocationUrl;
 use Exception;
 use PageController;
 use Concrete\Core\User\User;
@@ -464,6 +465,17 @@ class Login extends PageController implements LoggerAwareInterface
             $this->set('rcID', $rcID);
             $pll = $this->app->make(PostLoginLocation::class);
             $pll->setSessionPostLoginUrl($rcID);
+        }
+        $this->view();
+    }
+
+    public function redirect(): void
+    {
+        $pll = $this->app->make(PostLoginLocation::class);
+        $urlHelper = $this->app->make(PostLoginLocationUrl::class);
+        $rcURL = $urlHelper->getAllowedRedirectUrl($this->request->query->get('rcURL'));
+        if ($rcURL !== '') {
+            $pll->setSessionPostLoginUrl($rcURL);
         }
         $this->view();
     }
