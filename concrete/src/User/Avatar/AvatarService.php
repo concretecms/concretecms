@@ -4,6 +4,7 @@ namespace Concrete\Core\User\Avatar;
 use Concrete\Core\Application\Application;
 use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Site\Service;
+use Concrete\Core\User\Event\UserInfo as UserInfoEvent;
 use Concrete\Core\User\UserInfo;
 
 class AvatarService implements AvatarServiceInterface
@@ -28,6 +29,8 @@ class AvatarService implements AvatarServiceInterface
     public function removeAvatar(UserInfo $ui)
     {
         $this->connection->update('Users', array('uHasAvatar' => 0), array('uID' => $ui->getUserID()));
+
+        $this->application->make('director')->dispatch('on_user_update', new UserInfoEvent($ui));
     }
 
     public function getAvatar(UserInfo $ui)

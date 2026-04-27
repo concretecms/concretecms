@@ -57,7 +57,9 @@ use Concrete\Core\Events\EventDispatcher;
 
 class UserInfo extends ConcreteObject implements AttributeObjectInterface, PermissionObjectInterface, ExportableInterface
 {
-    use ObjectTrait;
+    use ObjectTrait {
+        setAttribute as protected setAttributeValue;
+    }
 
     /**
      * @var AvatarServiceInterface
@@ -1013,12 +1015,10 @@ class UserInfo extends ConcreteObject implements AttributeObjectInterface, Permi
             $controller = $uak->getController();
             $controller->setAttributeObject($this);
             $value = $controller->createAttributeValueFromRequest();
-            $this->setAttribute($uak, $value);
+            $this->setAttributeValue($uak, $value);
         }
 
-        $ue = new UserInfoWithAttributesEvent($this);
-        $ue->setAttributes($attributes);
-        $this->getDirector()->dispatch('on_user_attributes_saved', $ue);
+        $this->dispatchUserAttributesSavedEvent($attributes);
     }
 
     /**
@@ -1031,10 +1031,32 @@ class UserInfo extends ConcreteObject implements AttributeObjectInterface, Permi
             if (method_exists($controller, 'createDefaultAttributeValue')) {
                 $value = $controller->createDefaultAttributeValue();
                 if ($value !== null) {
-                    $this->setAttribute($uak, $value);
+                    $this->setAttributeValue($uak, $value);
                 }
             }
         }
+        $this->dispatchUserAttributesSavedEvent($attributes);
+    }
+
+    /**
+     * Sets one user attribute and dispatches the user attributes saved event for just that attribute.
+     *
+     * @param \Concrete\Core\Attribute\AttributeKeyInterface|string $ak
+     * @param mixed $value
+     * @param bool $doReindexImmediately
+     *
+     * @return \Concrete\Core\Attribute\AttributeValueInterface
+     */
+    public function setAttribute($ak, $value, $doReindexImmediately = true)
+    {
+        $attributeValue = $this->setAttributeValue($ak, $value, $doReindexImmediately);
+        $this->dispatchUserAttributesSavedEvent([$attributeValue->getAttributeKey()]);
+
+        return $attributeValue;
+    }
+
+    protected function dispatchUserAttributesSavedEvent(array $attributes)
+    {
         $ue = new UserInfoWithAttributesEvent($this);
         $ue->setAttributes($attributes);
         $this->getDirector()->dispatch('on_user_attributes_saved', $ue);
