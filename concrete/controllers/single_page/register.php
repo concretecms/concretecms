@@ -6,14 +6,14 @@ use Concrete\Core\Attribute\Context\FrontendFormContext;
 use Concrete\Core\Attribute\Form\Renderer;
 use Concrete\Core\Attribute\Key\UserKey as UserAttributeKey;
 use Concrete\Core\Config\Repository\Repository;
-use Concrete\Core\Controller\Traits\SetSessionPostLoginUrlTrait;
+use Concrete\Core\Controller\Traits\ForwardToUrlTrait;
 use Concrete\Core\Page\Controller\PageController;
 use Concrete\Core\Support\Facade\UserInfo;
 use Concrete\Core\User\User;
 
 class Register extends PageController
 {
-    use SetSessionPostLoginUrlTrait;
+    use ForwardToUrlTrait;
 
     public $helpers = ['form', 'html'];
 

@@ -4,7 +4,7 @@ namespace Concrete\Controller\SinglePage;
 use Concrete\Core\Application\UserInterface\Dashboard\Navigation\NavigationCache;
 use Concrete\Core\Authentication\AuthenticationType;
 use Concrete\Core\Authentication\AuthenticationTypeFailureException;
-use Concrete\Core\Controller\Traits\SetSessionPostLoginUrlTrait;
+use Concrete\Core\Controller\Traits\ForwardToUrlTrait;
 use Concrete\Core\Http\ResponseFactoryInterface;
 use Concrete\Core\Localization\Localization;
 use Concrete\Core\Logging\Channels;
@@ -12,18 +12,17 @@ use Concrete\Core\Logging\LoggerAwareInterface;
 use Concrete\Core\Logging\LoggerAwareTrait;
 use Concrete\Core\Routing\RedirectResponse;
 use Concrete\Core\User\PostLoginLocation;
-use Concrete\Core\User\PostLoginLocationUrl;
+use Concrete\Core\User\User;
 use Exception;
 use PageController;
-use Concrete\Core\User\User;
 use UserAttributeKey;
 use UserInfo;
 
 class Login extends PageController implements LoggerAwareInterface
 {
     use LoggerAwareTrait;
-    use SetSessionPostLoginUrlTrait {
-        redirect as postLoginRedirect;
+    use ForwardToUrlTrait {
+        forward_to_url as forwardToUrl;
     }
 
     public function getLoggerChannel()
@@ -473,9 +472,9 @@ class Login extends PageController implements LoggerAwareInterface
         $this->view();
     }
 
-    public function redirect(): void
+    public function forward_to_url(): void
     {
-        $this->postLoginRedirect();
+        $this->forwardToUrl();
         $this->view();
     }
 }
