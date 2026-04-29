@@ -2,9 +2,9 @@
 
 namespace Concrete\Core\Controller\Traits;
 
-use Concrete\Core\Site\InstallationService;
 use Concrete\Core\User\PostLoginLocation;
 use Concrete\Core\User\PostLoginLocationUrl;
+
 trait SetSessionPostLoginUrlTrait
 {
 
