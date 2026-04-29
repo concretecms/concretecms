@@ -462,9 +462,12 @@ class Login extends PageController implements LoggerAwareInterface
         $nh = $this->app->make('helper/validation/numbers');
         $rcURL = '';
         if ($this->request->query->has('rcURL')) {
-            $pll = $this->app->make(PostLoginLocation::class);
-            $urlHelper = $this->app->make(PostLoginLocationUrl::class);
-            $rcURL = $urlHelper->getAllowedRedirectUrl($this->request->query->get('rcURL'));
+            $requestRcURL = $this->request->query->get('rcURL');
+            if (is_string($requestRcURL)) {
+                $pll = $this->app->make(PostLoginLocation::class);
+                $urlHelper = $this->app->make(PostLoginLocationUrl::class);
+                $rcURL = $urlHelper->getAllowedRedirectUrl($requestRcURL);
+            }
         }
         if ($rcURL !== '') {
             $pll->setSessionPostLoginUrl($rcURL);

@@ -71,7 +71,10 @@ class Register extends PageController
         if ($this->request->query->has('rcURL')) {
             $pll = $this->app->make(PostLoginLocation::class);
             $urlHelper = $this->app->make(PostLoginLocationUrl::class);
-            $rcURL = $urlHelper->getAllowedRedirectUrl($this->request->query->get('rcURL'));
+            $requestRcURL = $this->request->query->get('rcURL');
+            if (is_string($requestRcURL)) {
+                $rcURL = $urlHelper->getAllowedRedirectUrl($requestRcURL);
+            }
         }
         if ($rcURL !== '') {
             $pll->setSessionPostLoginUrl($rcURL);
