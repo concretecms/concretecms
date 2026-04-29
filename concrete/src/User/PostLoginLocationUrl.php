@@ -32,7 +32,7 @@ class PostLoginLocationUrl
      *
      * @return string
      */
-    public function getAllowedRedirectUrl($url): string
+    public function getAllowedRedirectUrl(string $url): string
     {
         $url = trim((string) $url);
         if ($url === '') {
