@@ -4,7 +4,6 @@ namespace Concrete\Controller\SinglePage;
 use Concrete\Core\Application\UserInterface\Dashboard\Navigation\NavigationCache;
 use Concrete\Core\Authentication\AuthenticationType;
 use Concrete\Core\Authentication\AuthenticationTypeFailureException;
-use Concrete\Core\Controller\Traits\ForwardToUrlTrait;
 use Concrete\Core\Http\ResponseFactoryInterface;
 use Concrete\Core\Localization\Localization;
 use Concrete\Core\Logging\Channels;
@@ -12,6 +11,7 @@ use Concrete\Core\Logging\LoggerAwareInterface;
 use Concrete\Core\Logging\LoggerAwareTrait;
 use Concrete\Core\Routing\RedirectResponse;
 use Concrete\Core\User\PostLoginLocation;
+use Concrete\Core\User\PostLoginLocationUrl;
 use Concrete\Core\User\User;
 use Exception;
 use PageController;
@@ -21,9 +21,6 @@ use UserInfo;
 class Login extends PageController implements LoggerAwareInterface
 {
     use LoggerAwareTrait;
-    use ForwardToUrlTrait {
-        forward_to_url as forwardToUrl;
-    }
 
     public function getLoggerChannel()
     {
@@ -463,18 +460,23 @@ class Login extends PageController implements LoggerAwareInterface
     public function forward($cID = 0)
     {
         $nh = $this->app->make('helper/validation/numbers');
-        if ($nh->integer($cID, 1)) {
+        $rcURL = '';
+        if ($this->request->query->has('rcURL')) {
+            $requestRcURL = $this->request->query->get('rcURL');
+            if (is_string($requestRcURL)) {
+                $pll = $this->app->make(PostLoginLocation::class);
+                $urlHelper = $this->app->make(PostLoginLocationUrl::class);
+                $rcURL = $urlHelper->getAllowedRedirectUrl($requestRcURL);
+            }
+        }
+        if ($rcURL !== '') {
+            $pll->setSessionPostLoginUrl($rcURL);
+        } elseif ($nh->integer($cID, 1)) {
             $rcID = (int) $cID;
             $this->set('rcID', $rcID);
             $pll = $this->app->make(PostLoginLocation::class);
             $pll->setSessionPostLoginUrl($rcID);
         }
-        $this->view();
-    }
-
-    public function forward_to_url(): void
-    {
-        $this->forwardToUrl();
         $this->view();
     }
 }
