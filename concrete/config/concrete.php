@@ -6,8 +6,8 @@ return [
      *
      * @var string
      */
-    'version' => '9.5.0RC2',
-    'version_installed' => '9.5.0RC2',
+    'version' => '9.5.0',
+    'version_installed' => '9.5.0',
     'version_db' => '20260415000000', // the key of the latest database migration 
 
     /*
@@ -1329,6 +1329,13 @@ return [
                 'show_notification_to_unregistered_users' => false,
             ],
         ],
+        /*
+         * Absolute post-login redirect URLs are only allowed when they match one of these base URLs.
+         * If empty, Concrete will default to the current canonical base URL.
+         *
+         * @var string[]
+         */
+        'post_login_redirect_url_allowlist' => [],
         'misc' => [
             /**
              * Content Security Policy (CSP) HTTP response header

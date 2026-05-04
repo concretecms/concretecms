@@ -12,6 +12,7 @@ use Concrete\Core\Entity\Express\Control\AttributeKeyControl;
 use Concrete\Core\Entity\Express\Control\Control;
 use Concrete\Core\Entity\Express\Control\TextControl;
 use Concrete\Core\Entity\Express\Entity;
+use Concrete\Core\Entity\Express\Entry;
 use Concrete\Core\Entity\Express\FieldSet;
 use Concrete\Core\Entity\Express\Form;
 use Concrete\Core\Error\UserMessageException;
@@ -781,7 +782,7 @@ class Controller extends BlockController implements NotificationProviderInterfac
                     $entry = $manager->createEntry($entity);
                 }
                 if ($this->areFormSubmissionsStored()) {
-                    $submittedAttributeValues = $entry->getEntryAttributeValues();
+                    $submittedAttributeValues = $this->getStoredSubmittedAttributeValuesInFormOrder($form, $entry);
                 } else {
                     $submittedAttributeValues = $manager->getEntryAttributeValuesForm($form, $entry);
                 }
@@ -814,6 +815,37 @@ class Controller extends BlockController implements NotificationProviderInterfac
             }
         }
         $this->view();
+    }
+
+    /**
+     * When submissions are stored, use the persisted values but present them in form control order.
+     */
+    protected function getStoredSubmittedAttributeValuesInFormOrder(Form $form, Entry $entry): array
+    {
+        $attributeValuesByKeyID = [];
+        foreach ($entry->getEntryAttributeValues() as $attributeValue) {
+            $attributeKey = $attributeValue->getAttributeKey();
+            if ($attributeKey) {
+                $attributeValuesByKeyID[$attributeKey->getAttributeKeyID()] = $attributeValue;
+            }
+        }
+
+        $submittedAttributeValues = [];
+        foreach ($form->getControls() as $control) {
+            if (!$control instanceof AttributeKeyControl) {
+                continue;
+            }
+            $attributeKey = $control->getAttributeKey();
+            if (!$attributeKey) {
+                continue;
+            }
+            $attributeKeyID = $attributeKey->getAttributeKeyID();
+            if (isset($attributeValuesByKeyID[$attributeKeyID])) {
+                $submittedAttributeValues[] = $attributeValuesByKeyID[$attributeKeyID];
+            }
+        }
+
+        return $submittedAttributeValues;
     }
 
     protected function loadResultsFolderInformation()

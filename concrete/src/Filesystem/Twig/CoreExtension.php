@@ -24,6 +24,7 @@ use Concrete\Core\User\User;
 use Concrete\Core\User\UserInfo;
 use Concrete\Core\User\UserInfoRepository;
 use Concrete\Core\View\View;
+use Concrete\Core\Http\Request;
 use Twig\Extension\AbstractExtension;
 use Twig\Extension\GlobalsInterface;
 use Twig\Markup;
@@ -52,14 +53,19 @@ class CoreExtension extends AbstractExtension implements ApplicationAwareInterfa
     /** @var bool */
     private $userLoaded = false;
 
+    /** @var Request */
+    private $request;
+
     public function __construct(
         UserInfoRepository $userInfoRepository,
         Repository $config,
-        ResolverManagerInterface $urls
+        ResolverManagerInterface $urls,
+        Request $request
     ) {
         $this->userInfoRepository = $userInfoRepository;
         $this->config = $config;
         $this->urls = $urls;
+        $this->request = $request;
     }
 
     public function getFilters(): array
@@ -169,6 +175,10 @@ class CoreExtension extends AbstractExtension implements ApplicationAwareInterfa
             /** Create a url */
             new TwigFunction('url', function (...$args): ?\League\URL\URLInterface {
                 return $this->urls->resolve($args);
+            }),
+
+            new TwigFunction('current_url', function (): string {
+                return $this->request->getUri();
             }),
 
             /** Get the active locale */

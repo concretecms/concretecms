@@ -1654,8 +1654,8 @@ EOT
             $bName = $data['bName'];
         }
         if (isset($data['bFilename'])) {
-            // Check bFilename for valid Block filename. Must contain only alpha numeric and slashes/dashes, but it MAY
-            // end in ".php"
+            // Check bFilename for a valid block filename. It may contain only letters, numbers, dashes, and
+            // underscores, and it MAY end in ".php"
             $bFilename = $data['bFilename'];
             if (!empty($bFilename)) {
                 if (substr($bFilename, -4) === '.php') {
