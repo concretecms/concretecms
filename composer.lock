@@ -13438,7 +13438,8 @@
         "ext-pdo_mysql": "*",
         "ext-simplexml": "*",
         "ext-curl": "*",
-        "ext-zip": "*"
+        "ext-zip": "*",
+        "composer-runtime-api": "^2.1"
     },
     "platform-dev": {},
     "platform-overrides": {

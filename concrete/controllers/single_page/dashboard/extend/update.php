@@ -4,10 +4,9 @@ namespace Concrete\Controller\SinglePage\Dashboard\Extend;
 
 use Concrete\Core\Config\Repository\Repository;
 use Concrete\Core\Error\UserMessageException;
+use Concrete\Core\Foundation\Composer;
 use Concrete\Core\Localization\Localization;
-use Concrete\Core\Marketplace\Marketplace;
 use Concrete\Core\Marketplace\PackageRepositoryInterface;
-use Concrete\Core\Marketplace\RemoteItem as MarketplaceRemoteItem;
 use Concrete\Core\Package\PackageService;
 use Concrete\Core\Page\Controller\DashboardPageController;
 use Concrete\Core\Permission\Checker;
@@ -22,9 +21,12 @@ class Update extends DashboardPageController
         $tp = new Checker();
         if ($tp->canInstallPackages()) {
             $skip = $this->app->make(Repository::class)->get('concrete.updates.skip_packages');
-
             if ($skip !== true) {
-                $packageService->checkPackageUpdates($packageRepository, (array) $skip);
+                $skipHandles = array_merge(
+                    is_array($skip) ? $skip : [],
+                    $this->app->make(Composer::class)->getPackagesInstalledViaComposer()
+                );
+                $packageService->checkPackageUpdates($packageRepository, $skipHandles);
             }
         }
 
