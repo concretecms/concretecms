@@ -80,28 +80,17 @@ class ResponseFactory implements ResponseFactoryInterface, ApplicationAwareInter
         return new JsonResponse($data, $code, $headers);
     }
 
-    public function cachedNotFound($content, $code = Response::HTTP_NOT_FOUND, $headers = [])
+
+    public function cachedNotFound($code = Response::HTTP_NOT_FOUND, $headers = [])
     {
         $this->eventDispatcher->dispatch('on_page_not_found');
-        if ($this->request->isXmlHttpRequest() || in_array($this->request->getPreferredFormat(), ['json', 'jsonld'], true)) {
-            $this->localization->pushActiveContext(Localization::CONTEXT_SITE);
-            $responseData = [
-                'error' => t('Page not found'),
-                'errors' => [t('Page not found')],
-            ];
-            $this->localization->popActiveContext();
-
-            return $this->json($responseData, $code, $headers);
-        }
-
         $record = $this->cache->getItem('page_not_found');
         if ($record->isHit()) {
             /** @var Response */
             return $record->get();
         }
-
         $item = '/page_not_found';
-        $c = Page::getByPath($item, 'APPROVED');
+        $c = Page::getByPath($item);
         if (is_object($c) && !$c->isError()) {
             $this->request->setCurrentPage($c);
             $response = $this->controller($c->getPageController(), $code, $headers);

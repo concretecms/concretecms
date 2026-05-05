@@ -61,7 +61,7 @@ class Early404Middleware implements MiddlewareInterface, ApplicationAwareInterfa
         // Note: I would love to typehint the ResponseFactoryInterface into this class,
         // but doing so causes problems because it builds this class too early, and
         // for some reason doesn't include the header/footer when outputting the 404 (?!?)
-        return $this->app->make(ResponseFactoryInterface::class)->cachedNotFound('');
+        return $this->app->make(ResponseFactoryInterface::class)->cachedNotFound();
     }
 
     private function containsPathTraversal(string $path): bool
