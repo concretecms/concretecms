@@ -138,7 +138,7 @@ class DragRequest extends UserInterfaceController
         $successMessages = [];
         $destipationPage = $dragRequestData->getDestinationPage();
         foreach ($dragRequestData->getOriginalPages() as $originalPage) {
-            if ($originalPage->isAlias()) {
+            if ($originalPage->isAliasPage() && !$originalPage->isExternalLink()) {
                 $newPageID = $originalPage->addCollectionAlias($destipationPage);
                 $newPage = Page::getByID($newPageID);
             } else {
