@@ -7,20 +7,18 @@ use Concrete\Core\Cache\Command\ClearCacheCommand;
 use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Database\DatabaseStructureManager;
 use Concrete\Core\Entity\Site\Site;
+use Concrete\Core\Foundation\Composer;
 use Concrete\Core\Foundation\Environment\FunctionInspector;
 use Concrete\Core\Marketplace\PackageRepositoryInterface;
 use Concrete\Core\Marketplace\Update\Command\UpdateRemoteDataCommand;
 use Concrete\Core\Marketplace\Update\Inspector;
 use Concrete\Core\Package\PackageService;
-use Concrete\Core\SiteInformation\SiteInformationSurvey;
 use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\Updater\Migrations\Configuration;
 use Concrete\Core\Utility\Service\Validation\Numbers;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Tools\SchemaTool;
 use Exception;
-use Localization;
-use Marketplace;
 
 class Update
 {
@@ -68,10 +66,13 @@ class Update
         if ($queryWS) {
             $packageRepository = $app->make(PackageRepositoryInterface::class);
             $skip = $config->get('concrete.updates.skip_packages');
-
             if ($skip !== true) {
+                $skipHandles = array_merge(
+                    is_array($skip) ? $skip : [],
+                    $app->make(Composer::class)->getPackagesInstalledViaComposer()
+                );
                 $packageService = $app->make(PackageService::class);
-                $packageService->checkPackageUpdates($packageRepository, (array) $skip);
+                $packageService->checkPackageUpdates($packageRepository, $skipHandles);
             }
 
             $update = static::getLatestAvailableUpdate();
