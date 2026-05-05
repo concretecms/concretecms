@@ -378,7 +378,7 @@ class Controller extends BlockController implements UsesFeatureInterface
             $template->setBlockCustomTemplate("templates/" . $this->attributeHandle . '.php');
             $info = pathinfo($template->getTemplate());
 
-            if ($info['basename'] != 'view.php') {
+            if ($info['basename'] != 'view.php' && file_exists($template->getTemplate())) {
                 $this->render('templates/' . $info['filename'] );
             }
         }
