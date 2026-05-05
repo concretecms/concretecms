@@ -71,7 +71,7 @@ class Factory implements FactoryInterface, ApplicationAwareInterface, LoggerAwar
         return (new EsmtpTransport(
             (string) ($array['server'] ?? ''),
             (int) ($array['port'] ?? 0),
-            (string) ($array['encryption'] ?? ''),
+            $this->normalizeSmtpEncryption($array['encryption'] ?? null),
             $this->getDispatcher(),
             $this->logger,
         ))
@@ -79,6 +79,20 @@ class Factory implements FactoryInterface, ApplicationAwareInterface, LoggerAwar
             ->setUsername((string) ($array['username'] ?? ''))
             ->setPassword((string) ($array['password'] ?? ''))
             ->setLocalDomain((string) ($array['helo_domain'] ?? ''));
+    }
+
+    protected function normalizeSmtpEncryption($value): ?bool
+    {
+        $value = strtoupper(trim((string) $value));
+        switch ($value) {
+            case 'TLS':
+            case 'SSL':
+                return true;
+            case 'STARTTLS':
+                return false;
+            default:
+                return null;
+        }
     }
 
     protected function getDispatcher(): ?EventDispatcher

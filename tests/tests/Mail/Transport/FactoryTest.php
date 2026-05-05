@@ -73,7 +73,7 @@ class FactoryTest extends TestCase
     /**
      * @dataProvider provideSmtp
      */
-    public function testCreateSmtpTransportFromArray(?string $encryption): void
+    public function testCreateSmtpTransportFromArray(?string $encryption, string $expectedScheme): void
     {
         $server = uuid_create();
         $transport = $this->factory->createTransportFromArray([
@@ -92,8 +92,7 @@ class FactoryTest extends TestCase
         ]);
 
         $this->assertInstanceOf(EsmtpTransport::class, $transport);
-        $s = $encryption ? 's' : '';
-        $this->assertEquals("smtp{$s}://{$server}:999", (string) $transport);
+        $this->assertEquals("{$expectedScheme}://{$server}:999", (string) $transport);
         $this->assertEquals('foo', $transport->getLocalDomain());
         $this->assertEquals('user', $transport->getUsername());
         $this->assertEquals('pass', $transport->getPassword());
@@ -101,6 +100,12 @@ class FactoryTest extends TestCase
 
     public static function provideSmtp(): iterable
     {
-        return collect(['TLS', 'SSL', 'tls', '', null])->crossJoin();
+        yield 'TLS uses implicit TLS' => ['TLS', 'smtps'];
+        yield 'SSL uses implicit TLS' => ['SSL', 'smtps'];
+        yield 'lowercase tls uses implicit TLS' => ['tls', 'smtps'];
+        yield 'STARTTLS uses explicit upgrade' => ['STARTTLS', 'smtp'];
+        yield 'unknown defers to Symfony defaults' => ['foo', 'smtp'];
+        yield 'empty defers to Symfony defaults' => ['', 'smtp'];
+        yield 'null defers to Symfony defaults' => [null, 'smtp'];
     }
 }
