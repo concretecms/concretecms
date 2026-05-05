@@ -896,7 +896,8 @@ return [
         'core_cookie' => \Concrete\Core\Http\Middleware\CookieMiddleware::class,
         'core_csp' => \Concrete\Core\Http\Middleware\ContentSecurityPolicyMiddleware::class,
         'core_hsts' => \Concrete\Core\Http\Middleware\StrictTransportSecurityMiddleware::class,
-        'core_xframeoptions' => \Concrete\Core\Http\Middleware\FrameOptionsMiddleware::class
+        'core_xframeoptions' => \Concrete\Core\Http\Middleware\FrameOptionsMiddleware::class,
+        'core_early_404' => \Concrete\Core\Http\Middleware\Early404Middleware::class,
     ],
 
     'command_handlers' => [

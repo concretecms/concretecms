@@ -4,9 +4,11 @@ namespace Concrete\Core\Http;
 use Concrete\Controller\Frontend\PageForbidden;
 use Concrete\Core\Application\ApplicationAwareInterface;
 use Concrete\Core\Application\ApplicationAwareTrait;
+use Concrete\Core\Cache\Level\ExpensiveCache;
 use Concrete\Core\Command\Process\Menu\Item\RunningProcessesItem;
 use Concrete\Core\Config\Repository\Repository;
 use Concrete\Core\Controller\Controller;
+use Concrete\Core\Events\EventDispatcher;
 use Concrete\Core\Localization\Localization;
 use Concrete\Core\Page\Collection\Collection;
 use Concrete\Core\Page\Controller\PageController;
@@ -43,8 +45,20 @@ class ResponseFactory implements ResponseFactoryInterface, ApplicationAwareInter
      */
     private $config;
 
-    public function __construct(Request $request, Localization $localization, Repository $config)
+    /**
+     * @var EventDispatcher
+     */
+    private $eventDispatcher;
+
+    /**
+     * @var ExpensiveCache
+     */
+    private $cache;
+
+    public function __construct(ExpensiveCache $cache, EventDispatcher $eventDispatcher, Request $request, Localization $localization, Repository $config)
     {
+        $this->cache = $cache;
+        $this->eventDispatcher = $eventDispatcher;
         $this->request = $request;
         $this->localization = $localization;
         $this->config = $config;
@@ -66,11 +80,45 @@ class ResponseFactory implements ResponseFactoryInterface, ApplicationAwareInter
         return new JsonResponse($data, $code, $headers);
     }
 
+    public function cachedNotFound($content, $code = Response::HTTP_NOT_FOUND, $headers = [])
+    {
+        $this->eventDispatcher->dispatch('on_page_not_found');
+        if ($this->request->isXmlHttpRequest() || in_array($this->request->getPreferredFormat(), ['json', 'jsonld'], true)) {
+            $this->localization->pushActiveContext(Localization::CONTEXT_SITE);
+            $responseData = [
+                'error' => t('Page not found'),
+                'errors' => [t('Page not found')],
+            ];
+            $this->localization->popActiveContext();
+
+            return $this->json($responseData, $code, $headers);
+        }
+
+        $record = $this->cache->getItem('page_not_found');
+        if ($record->isHit()) {
+            /** @var Response */
+            return $record->get();
+        }
+
+        $item = '/page_not_found';
+        $c = Page::getByPath($item, 'APPROVED');
+        if (is_object($c) && !$c->isError()) {
+            $this->request->setCurrentPage($c);
+            $response = $this->controller($c->getPageController(), $code, $headers);
+        } else {
+            $cnt = $this->app->make(PageForbidden::class);
+            $response = $this->controller($cnt, $code, $headers);
+        }
+        $record->set($response)->expiresAfter(1800)->save();
+        return $response;
+    }
+
     /**
      * {@inheritdoc}
      */
     public function notFound($content, $code = Response::HTTP_NOT_FOUND, $headers = [])
     {
+        $this->eventDispatcher->dispatch('on_page_not_found');
         if ($this->request->isXmlHttpRequest() || in_array($this->request->getPreferredFormat(), ['json', 'jsonld'], true)) {
             $this->localization->pushActiveContext(Localization::CONTEXT_SITE);
             $responseData = [
