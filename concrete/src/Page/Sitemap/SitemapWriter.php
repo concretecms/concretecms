@@ -1,13 +1,18 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Concrete\Core\Page\Sitemap;
 
 use Concrete\Core\Application\Application;
+use Concrete\Core\Entity\Site\Site;
 use Concrete\Core\Error\UserMessageException;
+use Concrete\Core\Events\EventDispatcher;
 use Concrete\Core\Page\Sitemap\Element\SitemapHeader;
 use Concrete\Core\Page\Sitemap\Element\SitemapPage;
 use Illuminate\Filesystem\Filesystem;
-use Concrete\Core\Events\EventDispatcher;
+
+defined('C5_EXECUTE') or die('Access Denied.');
 
 class SitemapWriter
 {
@@ -16,42 +21,42 @@ class SitemapWriter
      *
      * @var string
      */
-    const EVENTNAME_ELEMENTREADY = 'on_sitemap_xml_element';
+    public const EVENTNAME_ELEMENTREADY = 'on_sitemap_xml_element';
 
     /**
      * Name of the deprecated event called when a page is going to be added to the sitemap.
      *
      * @var string
      */
-    const EVENTNAME_PAGEREADY_DEPRECATED = 'on_sitemap_xml_addingpage';
+    public const EVENTNAME_PAGEREADY_DEPRECATED = 'on_sitemap_xml_addingpage';
 
     /**
      * Name of the event called when the whole XML is ready.
      *
      * @var string
      */
-    const EVENTNAME_XMLREADY = 'on_sitemap_xml_ready';
+    public const EVENTNAME_XMLREADY = 'on_sitemap_xml_ready';
 
     /**
      * Write mode: automatic (MODE_HIGHMEMORY if the on_sitemap_xml_addingpage/on_sitemap_xml_ready events are hooked, MODE_LOWMEMORY otherwise).
      *
      * @var int
      */
-    const MODE_AUTO = 0;
+    public const MODE_AUTO = 0;
 
     /**
      * Write mode: use less memory (the on_sitemap_xml_addingpage/on_sitemap_xml_ready events won't be fired).
      *
      * @var int
      */
-    const MODE_LOWMEMORY = 1;
+    public const MODE_LOWMEMORY = 1;
 
     /**
      * Write mode: use more memory (the on_sitemap_xml_addingpage/on_sitemap_xml_ready event will be called).
      *
      * @var int
      */
-    const MODE_HIGHMEMORY = 2;
+    public const MODE_HIGHMEMORY = 2;
 
     /**
      * @var \Concrete\Core\Application\Application
@@ -196,8 +201,6 @@ class SitemapWriter
     /**
      * Set the SitemapGenerator instance to be used.
      *
-     * @param SitemapGenerator $sitemapGenerator
-     *
      * @return $this
      */
     public function setSitemapGenerator(SitemapGenerator $sitemapGenerator)
@@ -249,13 +252,97 @@ class SitemapWriter
     public function getSitemapUrl()
     {
         $outputFilename = $this->getOutputFilename();
-        if (strpos($outputFilename, DIR_BASE . '/') === 0) {
+        if (str_starts_with($outputFilename, DIR_BASE . '/')) {
             $result = (string) $this->getSitemapGenerator()->resolveUrl(substr($outputFilename, strlen(DIR_BASE)));
         } else {
             $result = '';
         }
 
         return $result;
+    }
+
+    /**
+     * Return the absolute filesystem path where the static sitemap file for a given site should be written.
+     *
+     * The filename convention is `sitemap-<siteHandle>.xml` directly under DIR_BASE, e.g.
+     * `/var/www/html/sitemap-default.xml`. Every site gets a unique file, so multisite
+     * installs never overwrite each other.
+     *
+     * @return string Absolute path, e.g. `/var/www/html/sitemap-default.xml`.
+     */
+    public static function getOutputFilenameForSite(Site $site): string
+    {
+        return rtrim(DIR_BASE, '/') . '/sitemap-' . $site->getSiteHandle() . '.xml';
+    }
+
+    /**
+     * Return the public URL at which the per-site static sitemap file can be reached.
+     *
+     * Combines the site's canonical URL with the relative path of the file returned by
+     * getOutputFilenameForSite(). Returns an empty string when the output file falls
+     * outside the web root (DIR_BASE).
+     *
+     * @return string Absolute URL, e.g. `https://example.com/sitemap-default.xml`, or `''`.
+     */
+    public function getSitemapUrlForSite(Site $site): string
+    {
+        $filename = static::getOutputFilenameForSite($site);
+        if (str_starts_with($filename, DIR_BASE . '/')) {
+            return rtrim($site->getSiteCanonicalURL(), '/') . substr($filename, strlen(DIR_BASE));
+        }
+
+        return '';
+    }
+
+    /**
+     * Generate a static sitemap file scoped to a single site.
+     *
+     * Scopes the underlying generator to $site (page list filter + canonical host), writes
+     * to `sitemap-<handle>.xml` under DIR_BASE, then restores all generator and writer state
+     * in a finally block so concurrent or sequential calls for other sites are unaffected.
+     *
+     * If the caller has already called setOutputFilename() before invoking this method,
+     * that filename is respected and will not be overridden with the per-site default.
+     * The finally block restores the original value in either case.
+     *
+     * @param Site $site site to generate for
+     * @param string $canonicalUrlOverride optional base URL; overrides $site->getSiteCanonicalURL()
+     * @param callable|null $pulse called once per SitemapElement during generation
+     *
+     * @throws \RuntimeException if the site has no canonical URL and $canonicalUrlOverride is empty
+     */
+    public function generateForSite(Site $site, string $canonicalUrlOverride = '', ?callable $pulse = null): void
+    {
+        $canonicalUrl = $canonicalUrlOverride !== '' ? $canonicalUrlOverride : $site->getSiteCanonicalURL();
+        if ($canonicalUrl === '') {
+            throw new \RuntimeException(sprintf(
+                'Site "%s" has no canonical URL configured. Set one in SEO settings or pass it as $canonicalUrlOverride.',
+                $site->getSiteHandle()
+            ));
+        }
+
+        $generator = $this->getSitemapGenerator();
+        $pageListGenerator = $generator->getPageListGenerator();
+
+        $prevSite = $pageListGenerator->getSite();
+        $prevCustomUrl = $generator->getCustomSiteCanonicalUrl();
+        $prevOutputFilename = $this->outputFilename;
+
+        $pageListGenerator->setSite($site);
+        $generator->setCustomSiteCanonicalUrl($canonicalUrl);
+        if ($this->outputFilename === '') {
+            $this->outputFilename = static::getOutputFilenameForSite($site);
+        }
+
+        try {
+            $this->generate($pulse);
+        } finally {
+            if ($prevSite !== null) {
+                $pageListGenerator->setSite($prevSite);
+            }
+            $generator->setCustomSiteCanonicalUrl($prevCustomUrl);
+            $this->outputFilename = $prevOutputFilename;
+        }
     }
 
     /**
@@ -394,7 +481,7 @@ class SitemapWriter
     protected function checkOutputFilename($outputFilename)
     {
         $outputFilename = str_replace(DIRECTORY_SEPARATOR, '/', $outputFilename);
-        if (strpos($outputFilename, DIR_BASE . '/') === 0) {
+        if (str_starts_with($outputFilename, DIR_BASE . '/')) {
             $displayFilename = substr($outputFilename, strlen(DIR_BASE));
         } else {
             $displayFilename = $outputFilename;

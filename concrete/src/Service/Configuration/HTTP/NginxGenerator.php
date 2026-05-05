@@ -16,6 +16,37 @@ class NginxGenerator extends Generator implements GeneratorInterface
     {
         parent::__construct();
         $this->addRule('pretty_urls', $this->getPrettyUrlRule());
+        $this->addRule('well_known_files', $this->getWellKnownRule());
+    }
+
+    /**
+     * @return RuleInterface
+     */
+    protected function getWellKnownRule()
+    {
+        return new Rule(
+            implode("\n", [
+                '# Block direct HTTP access to the per-site storage directory.',
+                'location ^~ /application/files/site-specific/ { deny all; return 404; }',
+                '',
+                '# Validate the Host header before using it as a filesystem path.',
+                '# $ccm_site_dir is empty for invalid hostnames, so try_files falls through to the',
+                '# webroot file instead of resolving a traversal path like "site-specific/../...".',
+                'set $ccm_site_dir "";',
+                'if ($host ~* ^[a-z0-9][a-z0-9.\-]*[a-z0-9]$) { set $ccm_site_dir /application/files/site-specific/$host; }',
+                '',
+                'location = /robots.txt               { try_files $ccm_site_dir/robots.txt   /robots.txt               =404; }',
+                'location = /sitemap.xml              { try_files $ccm_site_dir/sitemap.xml  /sitemap.xml              =404; }',
+                'location = /ads.txt                  { try_files $ccm_site_dir/ads.txt      /ads.txt                  =404; }',
+                'location = /humans.txt               { try_files $ccm_site_dir/humans.txt   /humans.txt               =404; }',
+                'location = /llms.txt                 { try_files $ccm_site_dir/llms.txt     /llms.txt                 =404; }',
+                '# security.txt is stored flat but served at /.well-known/security.txt (RFC 9116).',
+                'location = /.well-known/security.txt { try_files $ccm_site_dir/security.txt /.well-known/security.txt =404; }',
+            ]),
+            true,
+            '# -- concrete well-known start --',
+            '# -- concrete well-known end --'
+        );
     }
 
     /**
