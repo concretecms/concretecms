@@ -823,7 +823,7 @@ class Controller extends BlockController implements NotificationProviderInterfac
     protected function getStoredSubmittedAttributeValuesInFormOrder(Form $form, Entry $entry): array
     {
         $attributeValuesByKeyID = [];
-        foreach ($entry->getEntryAttributeValues() as $attributeValue) {
+        foreach ($entry->getAttributes() as $attributeValue) {
             $attributeKey = $attributeValue->getAttributeKey();
             if ($attributeKey) {
                 $attributeValuesByKeyID[$attributeKey->getAttributeKeyID()] = $attributeValue;
