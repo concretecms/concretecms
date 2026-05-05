@@ -877,8 +877,6 @@ class Controller extends BlockController implements UsesFeatureInterface
 
     public function view()
     {
-        $this->loadData();
-
         $list = new FolderItemList();
         $list = $this->setupFolderFileSetFilter($list);
         $list = $this->setupFolderFileFolderFilter($list);
