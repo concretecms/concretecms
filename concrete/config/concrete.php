@@ -1222,7 +1222,7 @@ return [
              */
             'hash_algorithm' => PASSWORD_ARGON2ID,
             'hash_options' => [
-                 'cost' => '12', // Bcrypt cost
+                // 'cost' => '12', // Bcrypt cost
                 // 'memory_cost' => '1024', // Argon2 memory cost in bytes, defaults to PASSWORD_ARGON2_DEFAULT_MEMORY_COST
                 // 'time_cost' => '10', // Argon2 time cost in milliseconds, defaults to PASSWORD_ARGON2_DEFAULT_TIME_COST
             ],
