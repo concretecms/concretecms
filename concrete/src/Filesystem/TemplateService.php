@@ -37,7 +37,7 @@ class TemplateService
         };
 
         if ($bindTo) {
-            $include = $include->bindTo($bindTo);
+            $include = $include->bindTo($bindTo, get_class($bindTo));
         }
 
         ob_start();

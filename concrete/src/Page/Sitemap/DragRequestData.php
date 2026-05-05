@@ -406,6 +406,10 @@ class DragRequestData
      */
     protected function whyCantMove()
     {
+        $error = $this->whyCantReparentSystemPages();
+        if ($error !== '') {
+            return $error;
+        }
         $destinationPageChecker = new Checker($this->getDestinationPage());
         $destinationPageID = $this->getDestinationPage()->getCollectionID();
         foreach ($this->getOriginalPages() as $originalPage) {
@@ -438,6 +442,10 @@ class DragRequestData
      */
     protected function whyCantAlias()
     {
+        $error = $this->whyCantReparentSystemPages();
+        if ($error !== '') {
+            return $error;
+        }
         if ($this->isSomeOriginalPageAnAlias()) {
             return t('It\'s not possible to create aliases of aliases.');
         }
@@ -466,6 +474,10 @@ class DragRequestData
      */
     protected function whyCantCopy()
     {
+        $error = $this->whyCantReparentSystemPages();
+        if ($error !== '') {
+            return $error;
+        }
         $destinationPageChecker = new Checker($this->getDestinationPage());
         foreach ($this->getOriginalPages() as $originalPage) {
             $originalPageChecker = new Checker($originalPage);
@@ -519,6 +531,10 @@ class DragRequestData
      */
     protected function whyCantCopyVersion()
     {
+        $error = $this->whyCantReparentSystemPages();
+        if ($error !== '') {
+            return $error;
+        }
         $originalPage = $this->getSingleOriginalPage();
         if ($originalPage === null) {
             return t("It's possible to copy just one page version at a time.");
@@ -536,6 +552,23 @@ class DragRequestData
         $pc = new Checker($destinationPage);
         if (!$pc->canWrite()) {
             return t('You don\'t have the permission to edit the contents of "%s".', $destinationPage->getCollectionName());
+        }
+
+        return '';
+    }
+
+    /**
+     * Get the reason why system pages can't be dragged to a different parent.
+     *
+     * @return string empty string if the drag request CAN be performed
+     */
+    protected function whyCantReparentSystemPages()
+    {
+        $destinationPageID = $this->getDestinationPage()->getCollectionID();
+        foreach ($this->getOriginalPages() as $originalPage) {
+            if ($originalPage->isSystemPage() && $originalPage->getCollectionParentID() != $destinationPageID) {
+                return t("System pages can be reordered, but they can't be dragged beneath another page.");
+            }
         }
 
         return '';
