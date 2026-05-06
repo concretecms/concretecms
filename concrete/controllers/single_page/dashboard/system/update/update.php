@@ -168,7 +168,11 @@ class Update extends DashboardPageController
         if (!$this->userHasUpgradePermission()) {
             return $this->buildRedirect($this->action());
         }
-        if ($this->app->make(Composer::class)->isCoreInstalledViaComposer() === true) {
+        if (!$this->request->isMethod('POST')) {
+            $this->error->add(t('Invalid request method.'));
+        } elseif (!$this->token->validate('do_update')) {
+            $this->error->add($this->token->getErrorMessage());
+        } elseif ($this->app->make(Composer::class)->isCoreInstalledViaComposer() === true) {
             $this->error->add(t('ConcreteCMS has been installed via Composer: you should use it to upgrade the currently installed version.'));
         } elseif ($this->app->make('config')->get('concrete.updates.skip_core')) {
             $this->error->add(t('Updates are currently disabled via your site configuration.'));

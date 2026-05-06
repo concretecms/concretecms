@@ -60,7 +60,10 @@ if (!$tp->canInstallPackages()) {
                         ?>
 						<td class="ccm-marketplace-list-install-button">
                             <a class="btn" target="_blank" href="#"><?=t('More Information')?></a>
-                            <?=$ch->button(t('Download and Install'), View::url('/dashboard/extend/update', 'prepare_remote_upgrade', $remotePackage->id), '', 'primary')?>
+                            <form method="post" action="<?= View::url('/dashboard/extend/update', 'prepare_remote_upgrade', $remotePackage->id) ?>" class="d-inline">
+                                <?= $valt->output('prepare_remote_upgrade') ?>
+                                <button type="submit" class="btn btn-secondary primary"><?= t('Download and Install') ?></button>
+                            </form>
                         </td>
 					    <?php
                     }
@@ -107,7 +110,12 @@ if (!$tp->canInstallPackages()) {
 					<td class="ccm-addon-list-description"><h3><?=$pkg->getPackageName()?></h3><p><?=$pkg->getPackageDescription()?></p>
 					<p><strong><?=t('New Version: %s. Upgrading from: %s.', $pkg->getPackageVersion(), $entity->getPackageVersion())?></strong></p>
 					</td>
-					<td class="ccm-marketplace-list-install-button"><?=$ch->button(t('Update Add-On'), View::url('/dashboard/extend/update', 'do_update', $pkg->getPackageHandle()), '', 'btn-primary')?></td>
+					<td class="ccm-marketplace-list-install-button">
+                        <form method="post" action="<?= View::url('/dashboard/extend/update', 'do_update', $pkg->getPackageHandle()) ?>" class="d-inline">
+                            <?= $valt->output('update_addon') ?>
+                            <button type="submit" class="btn btn-secondary btn-primary"><?= t('Update Add-On') ?></button>
+                        </form>
+                    </td>
 				</tr>
 				<tr>
 					<td colspan="2" style="border-top: 0px">

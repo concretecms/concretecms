@@ -315,7 +315,10 @@ if ($this->controller->getTask() == 'install_package' && isset($showInstallOptio
                             <p><?= h($pb->summary); ?></p>
                         </div>
                         <div class="d-block ms-auto">
-                            <a href="<?= URL::to('/dashboard/extend/install', 'download', $pb->id); ?>" class="btn btn-sm btn-secondary"><?= t('Download'); ?></a>
+                            <form method="post" action="<?= URL::to('/dashboard/extend/install', 'download', $pb->id); ?>" class="d-inline">
+                                <?= $token->output('download_package'); ?>
+                                <button type="submit" class="btn btn-sm btn-secondary"><?= t('Download'); ?></button>
+                            </form>
                         </div>
                     </div>
                     <?php
@@ -338,7 +341,10 @@ if ($this->controller->getTask() == 'install_package' && isset($showInstallOptio
                         } else {
                             ?>
                             <div class="btn-group ms-auto d-block">
-                                <a href="<?= URL::to('/dashboard/extend/install', 'install_package', $obj->getPackageHandle()); ?>" class="btn btn-sm btn-secondary"><?= t('Install'); ?></a><?php
+                                <form method="post" action="<?= URL::to('/dashboard/extend/install', 'install_package', $obj->getPackageHandle()); ?>" class="d-inline">
+                                    <?= $token->output('install_package'); ?>
+                                    <button type="submit" class="btn btn-sm btn-secondary"><?= t('Install'); ?></button>
+                                </form><?php
                                 if ($displayDeleteBtn) {
                                     ?><a href="javascript:void(0)" class="btn btn-sm btn-danger" onclick="deletePackage('<?= $obj->getPackageHandle() ?>', '<?= $obj->getPackageName() ?>')"><?= t('Delete') ?></a>
                                     <?php
