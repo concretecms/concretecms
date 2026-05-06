@@ -7,12 +7,15 @@ use Concrete\Core\Block\BlockController;
 use Concrete\Core\Entity\Express\Entity;
 use Concrete\Core\Entity\Express\Entry;
 use Concrete\Core\Entity\Express\Form;
+use Concrete\Core\Error\UserMessageException;
 use Concrete\Core\Express\Form\Context\FrontendViewContext;
 use Concrete\Core\Express\Form\Renderer;
+use Concrete\Core\Express\ObjectManager;
 use Concrete\Core\Feature\Features;
 use Concrete\Core\Feature\UsesFeatureInterface;
 use Concrete\Core\Form\Context\ContextFactory;
 use Concrete\Core\Html\Service\Seo;
+use Concrete\Core\Permission\Checker;
 use Concrete\Core\Support\Facade\Express;
 use Concrete\Core\Support\Facade\Facade;
 use Concrete\Core\Url\SeoCanonical;
@@ -157,9 +160,14 @@ class Controller extends BlockController implements UsesFeatureInterface
      */
     public function action_view_express_entity($exEntryID = null)
     {
-        $entry = $exEntryID ? $this->entityManager->find(Entry::class, $exEntryID) : null;
+        $objectManager = $this->app->make(ObjectManager::class);
+        $entry = $exEntryID ? $objectManager->getEntryByPublicIdentifier($exEntryID) : null;
         if ($entry) {
             $entity = $this->entityManager->find(Entity::class, $this->exEntityID);
+            $checker = new Checker($entity);
+            if (!$checker->canViewExpressEntries()) {
+                throw new UserMessageException(t('Access Denied.'));
+            }
             if ($entry->getEntity()->getID() == $entity->getID()) {
                 /** @var Seo $seo */
                 $seo = $this->app->make('helper/seo');
