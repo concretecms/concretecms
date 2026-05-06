@@ -201,7 +201,7 @@ class AddMessage extends FrontendController
     }
 
     /**
-     * @return int[]
+     * @return string[]
      */
     protected function getAttachmentIDs(): array
     {
@@ -213,8 +213,8 @@ class AddMessage extends FrontendController
         return array_values( // Reset array indexes
             array_unique( // Remove duplicates
                 array_filter( // Remove zeroes
-                    array_map( // Ensure integer types
-                        'intval',
+                    array_map( // Ensure string types
+                        'strval',
                         $attachmentIDs
                     )
                 )
@@ -245,8 +245,10 @@ class AddMessage extends FrontendController
             } else {
                 $em = $this->app->make(EntityManagerInterface::class);
                 foreach ($attachmentIDs as $attachmentID) {
-                    $file = $em->find(File::class, $attachmentID);
+                    $file = $em->getRepository(File::class)->findOneBy(['fUUID' => $attachmentID]);
                     if ($file === null) {
+                        $errors[] = t('Invalid file specified.');
+                    } elseif (!(new Checker($file))->canViewFile()) {
                         $errors[] = t('Invalid file specified.');
                     } else {
                         $attachments[] = $file;
