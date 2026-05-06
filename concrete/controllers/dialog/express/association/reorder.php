@@ -79,13 +79,17 @@ class Reorder extends BackendInterfaceController
                 }
 
                 $associatedEntries = $handler->getAssociatedEntriesFromRequest($control, $this->request);
+                $entryAssociation = $selectedEntry->getAssociation($association);
                 foreach($associatedEntries as $entry) {
+                    $associationEntry = $entryAssociation ? $entryAssociation->getAssociationEntry($entry) : null;
+                    if (!$associationEntry) {
+                        continue;
+                    }
+
                     if ($supportsCustomDisplayOrder) {
                         $entry->setEntryDisplayOrder($i);
                         $em->persist($entry);
                     } else {
-                        $entryAssociation = $selectedEntry->getAssociation($association);
-                        $associationEntry = $entryAssociation->getAssociationEntry($entry);
                         $associationEntry->setDisplayOrder($i);
                         $em->persist($associationEntry);
                     }
