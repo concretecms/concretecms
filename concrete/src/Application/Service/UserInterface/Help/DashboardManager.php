@@ -202,6 +202,9 @@ class DashboardManager extends AbstractManager
             '/dashboard/system/files/image_uploading' => implode('', [
                 '<p>' . t('Control maximum dimensions for all images uploaded to your website. Ensures that enormous images will be resized.') . ' ' . t('Auto-rotate images accordingly to EXIF metadata.') . '<br />' . t('Set PNG and JPEG compression options.') . '</p>',
             ]),
+            '/dashboard/system/permissions/early_page_not_found' => 
+                '<p>' . t("Use this page to define patterns for request paths that should return an immediate 404 (Page Not Found) response.") . ' ' . t('This reduces server load by fast-tracking requests likely performed by bots or hackers, preventing unnecessary processing by Concrete CMS.') . '</p>'
+            ,
         ]);
     }
 }
