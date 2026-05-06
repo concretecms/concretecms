@@ -25,7 +25,10 @@ use Concrete\Core\Page\Page as CorePage;
 use Concrete\Core\Permission\Checker;
 use Concrete\Core\Tree\Node\Node;
 use Concrete\Core\Tree\Node\Type\FileFolder;
-use Concrete\Core\Url\Url;
+use Concrete\Core\Url\Validation\InvalidRemoteUrlException;
+use Concrete\Core\Url\Validation\RemoteUrlRequestOptionsBuilder;
+use Concrete\Core\Url\Validation\RemoteUrlValidator;
+use Concrete\Core\Url\Validation\ValidatedRemoteUrl;
 use Concrete\Core\Utility\Service\Number;
 use Concrete\Core\Utility\Service\Validation\Strings;
 use Concrete\Core\Validation\CSRF\Token;
@@ -35,12 +38,7 @@ use Exception;
 use FileSet;
 use GuzzleHttp\Client;
 use GuzzleHttp\Psr7\Request;
-use GuzzleHttp\RequestOptions;
-use IPLib\Factory as IPFactory;
-use IPLib\ParseStringFlag as IPParseStringFlag;
-use IPLib\Range\Type as IPRangeType;
 use Permissions as ConcretePermissions;
-use RuntimeException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use ZipArchive;
 
@@ -423,7 +421,7 @@ class File extends Controller
                     break;
             }
 
-            $validIps = (array) $this->checkRemoteURlsToImport($urls);
+            $validatedUrls = (array) $this->checkRemoteURlsToImport($urls);
 
             $originalPage = $this->getImportOriginalPage();
             $fi = $this->app->make(Importer::class);
@@ -431,7 +429,7 @@ class File extends Controller
             foreach ($urls as $url) {
                 try {
                     $host = (string) \League\Url\Url::createFromUrl($url)->getHost();
-                    $downloadedFile = $this->downloadRemoteURL($url, $volatileDirectory->getPath(), $validIps[$host] ?? null);
+                    $downloadedFile = $this->downloadRemoteURL($url, $volatileDirectory->getPath(), $validatedUrls[$host] ?? null);
                     $fileVersion = $fi->import($downloadedFile, false, $replacingFile ?: $this->getDestinationFolder());
                     if (!$fileVersion instanceof FileVersionEntity) {
                         $errors->add($url . ': ' . $fi->getErrorMessage($fileVersion));
@@ -780,7 +778,7 @@ class File extends Controller
      * Check that a list of strings are valid "incoming" file names.
      *
      * @param string $urls
-     * @return array<string, string> An array of domains and their validated IPs
+     * @return array<string, \Concrete\Core\Url\Validation\ValidatedRemoteUrl> An array of domains and their validated URLs
      *
      * @throws \Concrete\Core\Error\UserMessageException in case one or more of the specified URLs are not valid
      *
@@ -788,56 +786,28 @@ class File extends Controller
      */
     protected function checkRemoteURlsToImport(array $urls)
     {
-        $validIps = [];
+        $validator = new RemoteUrlValidator();
+        $validatedUrls = [];
         foreach ($urls as $u) {
             try {
-                $url = Url::createFromUrl($u);
-            } catch (RuntimeException $x) {
-                throw new UserMessageException(h(t('The URL "%s" is not valid: %s', $u, $x->getMessage())));
-            }
-            $scheme = (string)$url->getScheme();
-            if ($scheme === '') {
+                $validatedUrl = $validator->validate((string) $u);
+            } catch (InvalidRemoteUrlException $x) {
+                if ($x->getPrevious() !== null) {
+                    throw new UserMessageException(h(t('The URL "%s" is not valid: %s', $u, $x->getMessage())));
+                }
                 throw new UserMessageException(h(t('The URL "%s" is not valid.', $u)));
             }
-            $host = trim((string)$url->getHost());
-            if (in_array(strtolower($host), ['', '0', 'localhost'], true)) {
-                throw new UserMessageException(h(t('The URL "%s" is not valid.', $u)));
-            }
+            $host = $validatedUrl->getHost();
 
             // If we've already validated this hostname just skip it.
-            if (array_key_exists($host, $validIps)) {
+            if (array_key_exists($host, $validatedUrls)) {
                 continue;
             }
 
-            $ipFormatBlocks = [
-                '/^\d+$/', // No fully integer / octal hostnames http://2130706433 http://017700000001
-                '/^0x[0-9a-f]+$/i', // No Hexadecimal hostnames http://0x07f000001
-            ];
-
-            foreach ($ipFormatBlocks as $block) {
-                if (preg_match($block, $host) !== 0) {
-                    throw new UserMessageException(h(t('The URL "%s" is not valid.', $u)));
-                }
-            }
-
-            $ipFlags = IPParseStringFlag::IPV4_MAYBE_NON_DECIMAL | IPParseStringFlag::IPV4ADDRESS_MAYBE_NON_QUAD_DOTTED | IPParseStringFlag::MAY_INCLUDE_PORT | IPParseStringFlag::MAY_INCLUDE_ZONEID;
-            $ip = IPFactory::parseAddressString($host, $ipFlags);
-            if ($ip === null) {
-                $dnsList = @dns_get_record($host, DNS_A | DNS_AAAA);
-                while ($ip === null && $dnsList !== false && count($dnsList) > 0) {
-                    $dns = array_shift($dnsList);
-                    $ip = IPFactory::parseAddressString($dns['ip']);
-                }
-            }
-
-            if ($ip !== null && $ip->getRangeType() !== IPRangeType::T_PUBLIC) {
-                throw new UserMessageException(h(t('The URL "%s" is not valid.', $u)));
-            }
-
-            $validIps[$host] = $ip->toString();
+            $validatedUrls[$host] = $validatedUrl;
         }
 
-        return $validIps;
+        return $validatedUrls;
     }
 
     /**
@@ -850,24 +820,13 @@ class File extends Controller
      * @throws \Concrete\Core\Error\UserMessageException in case of errors
      *
      */
-    protected function downloadRemoteURL($url, $temporaryDirectory, ?string $ip = null)
+    protected function downloadRemoteURL($url, $temporaryDirectory, ?ValidatedRemoteUrl $validatedUrl = null)
     {
         /** @var Client $client */
         $client = $this->app->make(Client::class);
         $request = new Request('GET', $url);
 
-        $config = [
-            RequestOptions::ALLOW_REDIRECTS => false,
-        ];
-
-        if ($ip) {
-            $host = parse_url($url, PHP_URL_HOST);
-            $scheme = parse_url($url, PHP_URL_SCHEME);
-            $port = parse_url($url, PHP_URL_PORT) ?: ($scheme === 'http' ? 80 : 443);
-
-            // Specify IP if one is provided.
-            $config['curl'] = [CURLOPT_RESOLVE => ["{$host}:{$port}:{$ip}"]];
-        }
+        $config = $validatedUrl ? (new RemoteUrlRequestOptionsBuilder())->build($validatedUrl) : [];
 
         $response = $client->send($request, $config);
 
