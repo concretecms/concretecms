@@ -1273,6 +1273,9 @@ class Version implements ObjectInterface
         $em->remove($this);
         $em->flush();
 
+        $fve = new FileVersionEvent($this);
+        $app->make(EventDispatcher::class)->dispatch('on_file_version_delete', $fve);
+
         try {
             $logger->notice(t('Version %1$s of file %2$s successfully deleted.', $this->getFileVersionID(), $this->getFileName()));
         } catch (Exception $err) {
