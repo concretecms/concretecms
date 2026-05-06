@@ -494,6 +494,9 @@ class UserInfo extends ConcreteObject implements AttributeObjectInterface, Permi
      */
     public function update($data)
     {
+        $data = is_array($data) ? $data : [];
+        $allowPasswordUpdate = !empty($data['_allowPasswordUpdate']);
+        $allowIgnoredIPMismatchesUpdate = !empty($data['_allowIgnoredIPMismatchesUpdate']);
         $uID = (int)$this->getUserID();
         if ($uID === 0) {
             $result = false;
@@ -533,7 +536,7 @@ class UserInfo extends ConcreteObject implements AttributeObjectInterface, Permi
                     $values[] = $data['uHomeFileManagerFolderID'];
                 }
             }
-            if (isset($data['uPassword']) && (string)$data['uPassword'] !== '') {
+            if ($allowPasswordUpdate && isset($data['uPassword']) && (string)$data['uPassword'] !== '') {
                 if (isset($data['uPasswordConfirm']) && $data['uPassword'] === $data['uPasswordConfirm']) {
                     $passwordChangedOn = $this->application->make('date')->getOverridableNow();
                     $fields[] = 'uPassword = ?';
@@ -548,7 +551,7 @@ class UserInfo extends ConcreteObject implements AttributeObjectInterface, Permi
                     $result = null;
                 }
             }
-            if (is_array($data['ignoredIPMismatches'] ?? null)) {
+            if ($allowIgnoredIPMismatchesUpdate && is_array($data['ignoredIPMismatches'] ?? null)) {
                 $fields[] = 'ignoredIPMismatches = ?';
                 $values[] = (new SimpleArrayType())->convertToDatabaseValue($data['ignoredIPMismatches'], $this->connection->getDatabasePlatform());
             }
@@ -712,6 +715,7 @@ class UserInfo extends ConcreteObject implements AttributeObjectInterface, Permi
     public function changePassword($newPassword)
     {
         return $this->update([
+            '_allowPasswordUpdate' => true,
             'uPassword' => $newPassword,
             'uPasswordConfirm' => $newPassword,
             'uIsPasswordReset' => false,
