@@ -3,6 +3,7 @@
 namespace Concrete\Block\Image;
 
 use Concrete\Core\Block\BlockController;
+use Concrete\Core\Block\Controller\SaveMode;
 use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Error\Error;
 use Concrete\Core\Feature\Features;
@@ -547,7 +548,7 @@ class Controller extends BlockController implements FileTrackableInterface, Uses
      */
     public function save($args)
     {
-        $fromCIF = ($args['__fromCIF'] ?? null) === true;
+        $fromCIF = $this->saveMode === SaveMode::SAVE_MODE_IMPORT;
         /** @var Connection $db */
         $db = $this->app->make(Connection::class);
 
@@ -611,8 +612,8 @@ class Controller extends BlockController implements FileTrackableInterface, Uses
      */
     protected function getImportData($blockNode, $page)
     {
+        $this->saveMode = SaveMode::SAVE_MODE_IMPORT;
         $args = parent::getImportData($blockNode, $page);
-        $args['__fromCIF'] = true;
         foreach (['internalLinkCID', 'fileLinkID'] as $field) {
             $args[$field] = empty($args[$field]) ? 0 : (int) $args[$field];
         }

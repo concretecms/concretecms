@@ -4,6 +4,7 @@ namespace Concrete\Block\Calendar;
 
 use Concrete\Core\Attribute\Key\EventKey;
 use Concrete\Core\Block\BlockController;
+use Concrete\Core\Block\Controller\SaveMode;
 use Concrete\Core\Calendar\Calendar;
 use Concrete\Core\Calendar\CalendarServiceProvider;
 use Concrete\Core\Calendar\Event\EventOccurrenceList;
@@ -433,7 +434,7 @@ class Controller extends BlockController implements UsesFeatureInterface
      */
     public function save($args)
     {
-        if (($args['_fromCIF'] ?? null) === true) {
+        if ($this->saveMode === SaveMode::SAVE_MODE_IMPORT) {
             parent::save($args);
             return;
         }
@@ -557,7 +558,7 @@ class Controller extends BlockController implements UsesFeatureInterface
     protected function getImportData($blockNode, $page)
     {
         $data = parent::getImportData($blockNode, $page);
-        $data['_fromCIF'] = true;
+        $this->saveMode = SaveMode::SAVE_MODE_IMPORT;
         $data['caID'] = 0;
         if (is_string($caName = $data['caName'] ?? null) && ($caName = trim($caName)) !== '') {
             $calendar = Calendar::getByName($caName);
