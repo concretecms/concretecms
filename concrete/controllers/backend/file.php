@@ -117,6 +117,10 @@ class File extends Controller
 
     public function approveVersion()
     {
+        $token = $this->app->make('token');
+        if (!$token->validate('approve_file_version')) {
+            throw new UserMessageException($token->getErrorMessage(), 401);
+        }
         $files = $this->getRequestFiles('edit_file_contents');
         $fvID = $this->request->request->get('fvID', $this->request->query->get('fvID'));
         $fvID = $this->app->make('helper/security')->sanitizeInt($fvID);
@@ -133,9 +137,7 @@ class File extends Controller
     public function deleteVersion()
     {
         $token = $this->app->make('token');
-        if (!$token->validate('delete-version')) {
-            $files = $this->getRequestFiles('edit_file_contents');
-        }
+        $files = $this->getRequestFiles('edit_file_contents');
         $fvID = $this->request->request->get('fvID', $this->request->query->get('fvID'));
         $fvID = $this->app->make('helper/security')->sanitizeInt($fvID);
         $fv = $files[0]->getVersion($fvID);
