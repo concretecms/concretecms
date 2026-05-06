@@ -30,6 +30,9 @@ class SummaryTemplate extends Controller
          */
         $template = $category->getMemberSummaryTemplate($templateID);
         $object = $category->getCategoryMemberFromIdentifier($memberIdentifier);
+        if (!$category->canViewRenderedSummaryTemplates($object)) {
+            throw new \Exception(t('Access Denied.'));
+        }
         $renderer = $this->app->make(Renderer::class);
 
         $this->set('template', $template);
