@@ -45,13 +45,6 @@ class DefaultDispatcher implements DispatcherInterface
      */
     public function dispatch(SymfonyRequest $request)
     {
-        $path = rawurldecode($request->getPathInfo());
-
-        if (substr($path, 0, 3) == '../' || substr($path, -3) == '/..' || strpos($path, '/../') ||
-            substr($path, 0, 3) == '..\\' || substr($path, -3) == '\\..' || strpos($path, '\\..\\')) {
-            throw new UserMessageException(t('Invalid path traversal. Please make this request with a valid HTTP client.'));
-        }
-
         $response = null;
         if ($this->app->isInstalled()) {
             $response = $this->getEarlyDispatchResponse();
