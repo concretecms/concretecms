@@ -14,6 +14,11 @@ use Concrete\Core\Logging\Channels;
 use Concrete\Core\Logging\LoggerAwareInterface;
 use Concrete\Core\Logging\LoggerAwareTrait;
 use Concrete\Core\Support\Facade\Application;
+use Concrete\Core\User\Exception\FailedLoginThresholdExceededException;
+use Concrete\Core\User\Exception\InvalidCredentialsException;
+use Concrete\Core\User\Exception\UserDeactivatedException;
+use Concrete\Core\User\Exception\UserException;
+use Concrete\Core\User\Login\LoginService;
 use Concrete\Core\User\User as UserObject;
 use Concrete\Core\Validation\CSRF\Token;
 use Concrete\Core\View\View;
@@ -193,6 +198,8 @@ final class Controller implements LoggerAwareInterface
     {
         $error = new ErrorList();
         $emailLogin = $this->config->get('concrete.user.registration.email_registration');
+        $app = Application::getFacadeApplication();
+        $loginService = $app->make(LoginService::class);
 
         while ($this->request->getMethod() === 'POST') {
 
@@ -204,43 +211,47 @@ final class Controller implements LoggerAwareInterface
             $query = $this->request->getParsedBody();
             $user = array_get($query, 'uName');
             $password = array_get($query, 'uPassword');
+            $user = is_string($user) ? trim($user) : '';
+            $password = is_string($password) ? $password : '';
 
-            $userRepository = $this->entityManager->getRepository(User::class);
-
-            /** @var User $user */
-            $user = $userRepository->findOneBy([$emailLogin ? 'uEmail' : 'uName' => $user]);
-
-            $app = Application::getFacadeApplication();
-            $hasher = $app->make(\Concrete\Core\Encryption\PasswordHasher::class);
-
-            // User successfully logged in
-            if ($user && $user->getUserID() && $hasher->checkPassword($password, $user->getUserPassword())) {
-                if ($hasher->needsRehash($user->getUserPassword())) {
-                    $em = $app->make(EntityManagerInterface::class);
-
-                    try {
-                        $em->transactional(function () use ($user, $hasher, $password) {
-                            $user->setUserPassword($hasher->hashPassword($password));
-                        });
-                    } catch (\Throwable $e) {
-                        $this->logger->emergency('Unable to rehash password for user {user} ({id}): {message}', [
-                            'user' => $user->getUserName(),
-                            'id' => $user->getUserID(),
-                            'message' => $e->getMessage(),
-                        ]);
-                    }
+            if ($user === '' || $password === '') {
+                if ($emailLogin) {
+                    $error->add(t('Please provide both email address and password.'));
+                } else {
+                    $error->add(t('Please provide both username and password.'));
                 }
+                break;
+            }
 
-                $userInfo = $this->entityManager->find(User::class, $user->getUserID());
+            $failedLogins = $app->make('failed_login');
+            if ($failedLogins->isDenylisted()) {
+                $error->add($failedLogins->getErrorMessage());
+                break;
+            }
+
+            try {
+                $loggedInUser = $loginService->login($user, $password);
+                $loginService->logLoginAttempt($user);
+
+                $userInfo = $this->entityManager->find(User::class, $loggedInUser->getUserID());
                 $request->setUser($userInfo);
                 $this->storeRequest($request);
 
                 return new \RedirectResponse($this->request->getUri());
-            } else {
-                if ($this->config->get('concrete.user.registration.email_registration')) {
-                    $message = t('Invalid email address or password.');
+            } catch (UserException $e) {
+                try {
+                    $this->handleFailedLogin($loginService, $user, $password, $e);
+                } catch (UserException $x) {
+                    $e = $x;
+                }
+                if ($e instanceof InvalidCredentialsException) {
+                    if ($emailLogin) {
+                        $message = t('Invalid email address or password.');
+                    } else {
+                        $message = t('Invalid username or password.');
+                    }
                 } else {
-                    $message = t('Invalid username or password.');
+                    $message = $e->getMessage();
                 }
                 $error->add($message);
             }
@@ -258,6 +269,23 @@ final class Controller implements LoggerAwareInterface
         ]);
 
         return new \Concrete\Core\Http\Response($contents->render());
+    }
+
+    protected function handleFailedLogin(LoginService $loginService, $uName, $uPassword, UserException $e)
+    {
+        if ($e instanceof InvalidCredentialsException) {
+            try {
+                $loginService->failLogin($uName, $uPassword);
+            } catch (FailedLoginThresholdExceededException $e) {
+                $loginService->logLoginAttempt($uName, ['Failed Login Threshold Exceeded', $e->getMessage()]);
+                throw $e;
+            } catch (UserDeactivatedException $e) {
+                $loginService->logLoginAttempt($uName, ['User Deactivated', $e->getMessage()]);
+                throw $e;
+            }
+        }
+
+        $loginService->logLoginAttempt($uName, ['Invalid Credentials', $e->getMessage()]);
     }
 
     /**
