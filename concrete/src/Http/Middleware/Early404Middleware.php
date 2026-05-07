@@ -40,22 +40,19 @@ class Early404Middleware implements MiddlewareInterface, ApplicationAwareInterfa
     public function process(Request $request, DelegateInterface $frame)
     {
         $pathInfo = rawurldecode($request->getPathInfo());
-        if ($this->containsPathTraversal($pathInfo)) {
-            return $frame->next($request);
-        }
+        if (!$this->containsPathTraversal($pathInfo)) {
+            $firstSegment = $this->getFirstSegment($pathInfo);
+            if ($firstSegment === null) {
+                return $frame->next($request);
+            }
 
-        $firstSegment = $this->getFirstSegment($pathInfo);
-        if ($firstSegment === null) {
-            return $frame->next($request);
-        }
+            if ($this->hasPotentialRouteForFirstSegment($firstSegment)) {
+                return $frame->next($request);
+            }
 
-        if ($this->hasPotentialRouteForFirstSegment($firstSegment)) {
-            return $frame->next($request);
-        }
-
-        if ($this->hasPotentialPagePathForFirstSegment($firstSegment)) {
-            return $frame->next($request);
-
+            if ($this->hasPotentialPagePathForFirstSegment($firstSegment)) {
+                return $frame->next($request);
+            }
         }
 
         // Note: I would love to typehint the ResponseFactoryInterface into this class,

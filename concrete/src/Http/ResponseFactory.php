@@ -21,6 +21,7 @@ use Concrete\Core\Permission\Key\Key;
 use Concrete\Core\Routing\RedirectResponse;
 use Concrete\Core\Session\SessionValidator;
 use Concrete\Core\Site\Menu\Item\SiteListItem;
+use Concrete\Core\User\Login\LoginCookieService;
 use Concrete\Core\User\PostLoginLocation;
 use Concrete\Core\User\User;
 use Concrete\Core\View\View;
@@ -55,9 +56,10 @@ class ResponseFactory implements ResponseFactoryInterface, ApplicationAwareInter
      */
     private $cache;
 
-    public function __construct(ExpensiveCache $cache, EventDispatcher $eventDispatcher, Request $request, Localization $localization, Repository $config)
+    public function __construct(LoginCookieService $loginCookieService, ExpensiveCache $cache, EventDispatcher $eventDispatcher, Request $request, Localization $localization, Repository $config)
     {
         $this->cache = $cache;
+        $this->loginCookieService = $loginCookieService;
         $this->eventDispatcher = $eventDispatcher;
         $this->request = $request;
         $this->localization = $localization;
@@ -85,10 +87,13 @@ class ResponseFactory implements ResponseFactoryInterface, ApplicationAwareInter
     {
         $this->eventDispatcher->dispatch('on_page_not_found');
         $record = $this->cache->getItem('page_not_found');
-        if ($record->isHit()) {
-            /** @var Response */
-            return $record->get();
+        if (!$this->loginCookieService->hasLoginCookie()) {
+            if ($record->isHit()) {
+                /** @var Response */
+                return $record->get();
+            }
         }
+
         $item = '/page_not_found';
         $c = Page::getByPath($item);
         if (is_object($c) && !$c->isError()) {
@@ -98,7 +103,11 @@ class ResponseFactory implements ResponseFactoryInterface, ApplicationAwareInter
             $cnt = $this->app->make(PageForbidden::class);
             $response = $this->controller($cnt, $code, $headers);
         }
-        $record->set($response)->expiresAfter(1800)->save();
+
+        if (!$this->loginCookieService->hasLoginCookie()) {
+            $record->set($response)->expiresAfter(1800)->save();
+        }
+
         return $response;
     }
 
