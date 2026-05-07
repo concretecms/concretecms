@@ -1193,6 +1193,8 @@ class Page extends Collection implements CategoryMemberInterface,
             } else {
                 $newWindow = 0;
             }
+            $cLink = app('helper/security')->sanitizeURL($cLink);
+            $cName = app('helper/text')->sanitize($cName);
             $db->executeQuery('update CollectionVersions set cvName = ? where cID = ?', [$cName, $this->cID]);
             $db->executeQuery('update Pages set cPointerExternalLink = ?, cPointerExternalLinkNewWindow = ? where cID = ?', [$cLink, $newWindow, $this->cID]);
         }
