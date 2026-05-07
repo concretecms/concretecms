@@ -11,6 +11,7 @@ use Concrete\Core\Block\Block;
 use Concrete\Core\Area\CustomStyle as AreaCustomStyle;
 use Concrete\Core\Area\GlobalArea;
 use Concrete\Core\Attribute\Key\CollectionKey;
+use Concrete\Core\Block\Controller\SaveMode;
 use Concrete\Core\Block\CustomStyle as BlockCustomStyle;
 use Concrete\Core\Block\CustomStyleRepository as BlockCustomStyleRepository;
 use Concrete\Core\Database\Connection\Connection;
@@ -1010,14 +1011,14 @@ class Collection extends ConcreteObject implements TrackableInterface
      *
      * @return \Concrete\Core\Block\Block
      */
-    public function addBlock($bt, $a, $data)
+    public function addBlock($bt, $a, $data, ?string $saveMode = SaveMode::SAVE_MODE_REQUEST)
     {
         $app = Application::getFacadeApplication();
         /** @var Connection $db */
         $db = $app->make(Connection::class);
 
         // first we add the block to the system
-        $nb = $bt->add($data, $this, $a);
+        $nb = $bt->add($data, $this, $a, $saveMode);
 
         // now that we have a block, we add it to the collectionversions table
 

@@ -5,6 +5,7 @@ namespace Concrete\Core\Page;
 use Concrete\Core\Area\Area;
 use Block;
 use CacheLocal;
+use Concrete\Core\Block\Controller\SaveMode;
 use Concrete\Core\Entity\Page\Summary\CustomPageTemplateCollection;
 use Concrete\Core\Localization\Service\Date;
 use Concrete\Core\Page\Collection\Collection;
@@ -2851,12 +2852,12 @@ EOT
      *
      * @return \Concrete\Core\Block\Block
      */
-    public function addBlock($bt, $a, $data)
+    public function addBlock($bt, $a, $data, ?string $saveMode = SaveMode::SAVE_MODE_REQUEST)
     {
         if (is_string($a) && $a !== '') {
             $a = Area::getOrCreate($this, $a);
         }
-        $b = parent::addBlock($bt, $a, $data);
+        $b = parent::addBlock($bt, $a, $data, $saveMode);
         $btHandle = $bt->getBlockTypeHandle();
         if ($b->getBlockTypeHandle() == BLOCK_HANDLE_PAGE_TYPE_OUTPUT_PROXY) {
             $bi = $b->getInstance();
