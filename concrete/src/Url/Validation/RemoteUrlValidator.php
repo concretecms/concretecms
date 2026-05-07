@@ -39,8 +39,14 @@ class RemoteUrlValidator
             }
         }
 
-        $ipFlags = IPParseStringFlag::IPV4_MAYBE_NON_DECIMAL | IPParseStringFlag::IPV4ADDRESS_MAYBE_NON_QUAD_DOTTED | IPParseStringFlag::MAY_INCLUDE_PORT | IPParseStringFlag::MAY_INCLUDE_ZONEID;
-        $ip = IPFactory::parseAddressString($host, $ipFlags);
+        $ip = null;
+        if (filter_var($host, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4 | FILTER_FLAG_IPV6) !== false) {
+            $ip = IPFactory::parseAddressString($host);
+        } elseif (preg_match('/^[0-9.]+$/', $host) !== 0) {
+            // Reject non-standard numeric host notations like dotted octal.
+            throw new InvalidRemoteUrlException('Invalid URL host.');
+        }
+
         if ($ip === null) {
             $dnsList = @dns_get_record($host, DNS_A | DNS_AAAA);
             while ($ip === null && $dnsList !== false && count($dnsList) > 0) {
@@ -56,8 +62,9 @@ class RemoteUrlValidator
             throw new InvalidRemoteUrlException('Invalid URL host.');
         }
 
-        $port = $parsedUrl->getPort() ?: ($scheme === 'http' ? 80 : 443);
+        $parsedPort = $parsedUrl->getPort();
+        $port = $parsedPort ? (int) $parsedPort->get() : ($scheme === 'http' ? 80 : 443);
 
-        return new ValidatedRemoteUrl($url, $scheme, $host, (int) $port, $ip->toString());
+        return new ValidatedRemoteUrl($url, $scheme, $host, $port, $ip->toString());
     }
 }
