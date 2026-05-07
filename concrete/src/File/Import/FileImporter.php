@@ -290,8 +290,12 @@ class FileImporter implements LoggerAwareInterface
         $file = $options->getAddNewVersionTo();
         if ($file !== null) {
             // We get a new version to modify
-            $fileVersion = $file->getVersionToModify($importingFile->getConcreteFilenameSanitized(), $prefix);
-
+            $fileVersion = $file->getVersionToModify(true);
+            $fileVersion->updateFile(
+                $importingFile->getConcreteFilenameSanitized(),
+                $prefix
+            );
+            $fileVersion->approve();
             $this->logger->notice(t("Added new version %s to existing file %s (%s).", $fileVersion->getFileVersionID(), $file->getFileName(), $file->getFileID()));
         } else {
             // We create a new File instance

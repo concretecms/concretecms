@@ -560,8 +560,9 @@ class Version implements ObjectInterface
     {
         $app = Application::getFacadeApplication();
         foreach ($this->file->getFileVersions() as $fv) {
-            $fv->fvIsApproved = false;
-            $fv->save(false);
+            if ($fv->isApproved()) {
+                $fv->deny();
+            }
         }
 
         $this->fvIsApproved = true;
@@ -1179,8 +1180,6 @@ class Version implements ObjectInterface
         }
 
         $em->persist($fv);
-
-        $this->deny();
 
         foreach ($this->getAttributes() as $value) {
             $value = clone $value;

@@ -77,11 +77,15 @@ class Properties extends BackendInterfaceFileController
     public function submit()
     {
         if ($this->validateAction()) {
+            $shouldApprove = ($this->file->getRecentVersion()->getFileVersionID() == $this->file->getApprovedVersion()->getFileVersionID());
             $fv = $this->file->getVersionToModify();
             $fv->updateTitle($this->request->request->get('title'));
             $fv->updateDescription($this->request->request->get('description'));
             $fv->updateTags($this->request->request->get('tags'));
             $attributesResponse = $this->saveAttributes();
+            if (!$fv->isApproved() && $shouldApprove) {
+                $fv->approve();
+            }
             $sr = new EditResponse();
             $sr->setFile($this->file);
             if ($attributesResponse instanceof ErrorList) {
