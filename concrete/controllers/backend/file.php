@@ -67,6 +67,10 @@ class File extends Controller
 
     public function star()
     {
+        $token = $this->app->make('token');
+        if (!$token->validate()) {
+            throw new UserMessageException($token->getErrorMessage(), 401);
+        }
         $fs = FileSet::createAndGetSet('Starred Files', FileSet::TYPE_STARRED);
         $files = $this->getRequestFiles();
         $r = new FileEditResponse();
@@ -85,6 +89,10 @@ class File extends Controller
 
     public function rescan()
     {
+        $token = $this->app->make('token');
+        if (!$token->validate()) {
+            throw new UserMessageException($token->getErrorMessage(), 401);
+        }
         $files = $this->getRequestFiles('edit_file_contents');
         $r = new FileEditResponse();
         $r->setFiles($files);
@@ -104,6 +112,10 @@ class File extends Controller
 
     public function rescanMultiple()
     {
+        $token = $this->app->make('token');
+        if (!$token->validate()) {
+            throw new UserMessageException($token->getErrorMessage(), 401);
+        }
         $files = $this->getRequestFiles('edit_file_contents');
         $batch = BatchBuilder::create(t('Rescan Files'), function() use ($files) {
             foreach ($files as $file) {
@@ -254,6 +266,10 @@ class File extends Controller
 
     public function addFavoriteFolder($folderId)
     {
+        $token = $this->app->make('token');
+        if (!$token->validate()) {
+            throw new UserMessageException($token->getErrorMessage(), 401);
+        }
         $editResponse = new EditResponse();
         $errors = new ErrorList();
         $user = new \Concrete\Core\User\User();
@@ -301,6 +317,10 @@ class File extends Controller
     /** @noinspection DuplicatedCode */
     public function removeFavoriteFolder($folderId)
     {
+        $token = $this->app->make('token');
+        if (!$token->validate()) {
+            throw new UserMessageException($token->getErrorMessage(), 401);
+        }
         $editResponse = new EditResponse();
         $errors = new ErrorList();
         $user = new \Concrete\Core\User\User();
