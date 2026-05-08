@@ -4,7 +4,6 @@ namespace Concrete\Core\Url\Validation;
 
 use Concrete\Core\Url\Url;
 use IPLib\Factory as IPFactory;
-use IPLib\ParseStringFlag as IPParseStringFlag;
 use IPLib\Range\Type as IPRangeType;
 use RuntimeException;
 
