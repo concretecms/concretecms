@@ -105,9 +105,6 @@ class UpdateMessage extends FrontendController
     }
 
     /**
-     * @return int[]
-     */
-    /**
      * @return string[]
      */
     protected function getAttachmentIDs(): array
