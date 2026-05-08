@@ -21,7 +21,7 @@ class Duplicate extends BackendInterfaceController
 
     public function submit()
     {
-        if ($this->canAccess()) {
+        if ($this->validateAction()) {
 
             $e = $this->app->make('error');
             $calendar = $this->app->make(CalendarService::class)->getByID($_REQUEST['caID']);
