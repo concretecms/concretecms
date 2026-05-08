@@ -495,8 +495,8 @@ class UserInfo extends ConcreteObject implements AttributeObjectInterface, Permi
     public function update($data)
     {
         $data = is_array($data) ? $data : [];
-        $allowPasswordUpdate = !empty($data['_allowPasswordUpdate']);
-        $allowIgnoredIPMismatchesUpdate = !empty($data['_allowIgnoredIPMismatchesUpdate']);
+        $allowPasswordUpdate = ($data['_allowPasswordUpdate'] ?? null) === true;
+        $allowIgnoredIPMismatchesUpdate = ($data['_allowIgnoredIPMismatchesUpdate'] ?? null) === true;
         $uID = (int)$this->getUserID();
         if ($uID === 0) {
             $result = false;
