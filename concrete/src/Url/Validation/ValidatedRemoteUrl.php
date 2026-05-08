@@ -2,64 +2,56 @@
 
 namespace Concrete\Core\Url\Validation;
 
+use Concrete\Core\Url\Url;
+
 class ValidatedRemoteUrl
 {
     /**
-     * @var string
+     * @var \Concrete\Core\Url\Url
      */
     protected $url;
 
     /**
      * @var string
      */
-    protected $scheme;
-
-    /**
-     * @var string
-     */
-    protected $host;
-
-    /**
-     * @var int
-     */
-    protected $port;
-
-    /**
-     * @var string
-     */
     protected $ip;
 
-    public function __construct(string $url, string $scheme, string $host, int $port, string $ip)
+    public function __construct(Url $url, string $ip)
     {
         $this->url = $url;
-        $this->scheme = $scheme;
-        $this->host = $host;
-        $this->port = $port;
         $this->ip = $ip;
     }
 
-    public function getUrl(): string
+    public function getUrl(): Url
     {
         return $this->url;
     }
 
     public function getScheme(): string
     {
-        return $this->scheme;
+        return strtolower((string) $this->url->getScheme());
     }
 
     public function getHost(): string
     {
-        return $this->host;
+        return trim((string) $this->url->getHost());
     }
 
     public function getPort(): int
     {
-        return $this->port;
+        $port = $this->url->getPort();
+        $port = $port ? $port->get() : null;
+
+        return $port ? (int) $port : ($this->getScheme() === 'http' ? 80 : 443);
     }
 
     public function getIp(): string
     {
         return $this->ip;
+    }
+
+    public function __toString(): string
+    {
+        return (string) $this->url;
     }
 }

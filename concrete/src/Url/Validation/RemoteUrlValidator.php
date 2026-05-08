@@ -61,9 +61,6 @@ class RemoteUrlValidator
             throw new InvalidRemoteUrlException('Invalid URL host.');
         }
 
-        $parsedPort = $parsedUrl->getPort();
-        $port = $parsedPort ? (int) $parsedPort->get() : ($scheme === 'http' ? 80 : 443);
-
-        return new ValidatedRemoteUrl($url, $scheme, $host, $port, $ip->toString());
+        return new ValidatedRemoteUrl($parsedUrl, $ip->toString());
     }
 }
