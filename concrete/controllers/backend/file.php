@@ -797,7 +797,7 @@ class File extends Controller
     /**
      * Check that a list of strings are valid "incoming" file names.
      *
-     * @param string $urls
+     * @param string[] $urls
      * @return array<string, \Concrete\Core\Url\Validation\ValidatedRemoteUrl> An array of domains and their validated URLs
      *
      * @throws \Concrete\Core\Error\UserMessageException in case one or more of the specified URLs are not valid
