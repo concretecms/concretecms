@@ -2,9 +2,7 @@
 defined('C5_EXECUTE') or die("Access Denied.");
 ?>
 <form action="<?= $view->action('submit') ?>" method="post" data-form="production-mode">
-    <?php
-    $token->output('submit');
-    ?>
+    <?= $token->output('submit') ?>
     <fieldset>
         <div class="mb-3">
             <?= $form->label('', t('What kind of site is this copy of Concrete running?')); ?>
@@ -50,7 +48,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
     </fieldset>
     <div class="ccm-dashboard-form-actions-wrapper">
         <div class="ccm-dashboard-form-actions">
-            <button class="float-end btn btn-primary">
+            <button class="float-end btn btn-primary" type="submit">
                 <?=t('Save')?>
             </button>
         </div>
