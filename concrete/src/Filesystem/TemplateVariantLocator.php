@@ -16,9 +16,10 @@ use Concrete\Core\Filesystem\FileLocator\Record;
  * resolution.
  *
  * The expected contract is:
- * - callers pass a full logical template path ending in `.php` or `.html.twig`
+ * - callers should pass a full logical template path ending in `.php` or `.html.twig`
  * - `.html.twig` requests only probe `.html.twig`
  * - `.php` requests probe `.html.twig` first and then `.php`
+ * - extensionless requests are treated as legacy `.php` requests for backwards compatibility
  * - location precedence is preserved from {@see FileLocator}; once a location
  *   yields a candidate record, lower-priority locations are not considered
  */
@@ -43,6 +44,8 @@ class TemplateVariantLocator
      * higher-priority location.
      *
      * @param string $file a logical file path ending in `.php` or `.html.twig`
+     *                     or a legacy extensionless path that should be treated
+     *                     like a `.php` request
      *
      * @return Record|null
      */
@@ -86,6 +89,7 @@ class TemplateVariantLocator
      */
     protected function getCandidateFiles(string $file): array
     {
+        $file = $this->normalizeLegacyPath($file);
         if (str_ends_with($file, '.html.twig')) {
             return [$file];
         }
@@ -93,7 +97,7 @@ class TemplateVariantLocator
             return [substr($file, 0, -4) . '.html.twig', $file];
         }
 
-        throw new \InvalidArgumentException(t('TemplateVariantLocator requires an explicit .php or .html.twig filename.'));
+        throw new \InvalidArgumentException(t('TemplateVariantLocator requires a .php or .html.twig filename.'));
     }
 
     /**
@@ -109,6 +113,7 @@ class TemplateVariantLocator
      */
     protected function getFallbackCandidateFiles(string $file): array
     {
+        $file = $this->normalizeLegacyPath($file);
         if (str_ends_with($file, '.html.twig')) {
             return [$file];
         }
@@ -116,6 +121,22 @@ class TemplateVariantLocator
             return [$file, substr($file, 0, -4) . '.html.twig'];
         }
 
-        throw new \InvalidArgumentException(t('TemplateVariantLocator requires an explicit .php or .html.twig filename.'));
+        throw new \InvalidArgumentException(t('TemplateVariantLocator requires a .php or .html.twig filename.'));
+    }
+
+    /**
+     * Normalize a legacy extensionless path into an equivalent `.php` request.
+     *
+     * This preserves backwards compatibility for older call sites that
+     * implicitly requested PHP templates, while still allowing Twig sibling
+     * templates to transparently win when they exist.
+     */
+    protected function normalizeLegacyPath(string $file): string
+    {
+        if (!str_ends_with($file, '.php') && !str_ends_with($file, '.html.twig')) {
+            return $file . '.php';
+        }
+
+        return $file;
     }
 }

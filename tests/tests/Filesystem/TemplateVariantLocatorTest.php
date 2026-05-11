@@ -23,13 +23,24 @@ class TemplateVariantLocatorTest extends TestCase
         $this->app = Facade::getFacadeApplication();
     }
 
-    public function testRejectsPathsWithoutExtension()
+    public function testExtensionlessPathsAreTreatedAsLegacyPhpRequests()
     {
         $fileLocator = $this->createMock(FileLocator::class);
+        $fileLocator->expects($this->once())
+            ->method('getFilesystem')
+            ->willReturn(new Filesystem());
+        $location = new TemplateVariantTestLocation('custom', [
+            DIRNAME_ELEMENTS . '/foo.php' => true,
+        ]);
+        $fileLocator->expects($this->once())
+            ->method('getSearchLocations')
+            ->willReturn([$location]);
         $locator = new TemplateVariantLocator($fileLocator);
 
-        $this->expectException(\InvalidArgumentException::class);
-        $locator->getRecord(DIRNAME_ELEMENTS . '/foo');
+        $record = $locator->getRecord(DIRNAME_ELEMENTS . '/foo');
+
+        $this->assertEquals('/custom/' . DIRNAME_ELEMENTS . '/foo.php', $record->getFile());
+        $this->assertSame([DIRNAME_ELEMENTS . '/foo.html.twig', DIRNAME_ELEMENTS . '/foo.php'], $location->getLookups());
     }
 
     public function testExplicitTwigRequestOnlyChecksTwig()
