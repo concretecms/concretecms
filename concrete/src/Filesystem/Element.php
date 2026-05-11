@@ -148,7 +148,7 @@ class Element implements LocatableFileInterface
      */
     public function getFileLocatorRecord()
     {
-        return $this->locator->getRecord($this->getElementPath(), true);
+        return (new TemplateVariantLocator($this->locator))->getRecord($this->getElementPath());
     }
 
     /**

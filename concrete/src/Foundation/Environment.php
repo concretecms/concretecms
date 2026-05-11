@@ -2,6 +2,7 @@
 namespace Concrete\Core\Foundation;
 
 use Concrete\Core\Filesystem\FileLocator;
+use Concrete\Core\Filesystem\TemplateVariantLocator;
 use Concrete\Core\Support\Facade\Facade;
 use Config;
 
@@ -49,7 +50,11 @@ class Environment
         if ($pkgHandle) {
             $locator->addLocation(new FileLocator\PackageLocation($pkgHandle));
         }
-        return $locator->getRecord($segment, $template);
+        if ($template) {
+            return (new TemplateVariantLocator($locator))->getRecord($segment);
+        }
+
+        return $locator->getRecord($segment);
     }
 
     public function getUncachedRecord($segment, $pkgHandle = false, bool $template = false)
