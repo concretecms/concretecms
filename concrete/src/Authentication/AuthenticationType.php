@@ -6,6 +6,7 @@ use Concrete\Core\Backup\ContentImporter;
 use Concrete\Core\Database\Schema\Schema;
 use Concrete\Core\Filesystem\FileLocator;
 use Concrete\Core\Filesystem\TemplateService;
+use Concrete\Core\Filesystem\TemplateVariantLocator;
 use Concrete\Core\Foundation\ConcreteObject;
 use Concrete\Core\Package\PackageList;
 use Concrete\Core\Support\Facade\Application;
@@ -512,8 +513,8 @@ class AuthenticationType extends ConcreteObject
     protected function hasTemplate(string $handle): bool
     {
         $atHandle = $this->getAuthenticationTypeHandle();
-        $path = implode('/', [DIRNAME_AUTHENTICATION, $atHandle, $handle]);
-        $r = $this->getLocator()->getRecord($path, true);
+        $path = implode('/', [DIRNAME_AUTHENTICATION, $atHandle, $handle . '.php']);
+        $r = $this->getTemplateVariantLocator()->getRecord($path);
 
         return $r->exists();
     }
@@ -533,8 +534,8 @@ class AuthenticationType extends ConcreteObject
         }
 
         $atHandle = $this->getAuthenticationTypeHandle();
-        $path = implode('/', [DIRNAME_AUTHENTICATION, $atHandle, $handle]);
-        $r = $this->getLocator()->getRecord($path, true);
+        $path = implode('/', [DIRNAME_AUTHENTICATION, $atHandle, $handle . '.php']);
+        $r = $this->getTemplateVariantLocator()->getRecord($path);
         if (!$r->exists()) {
             return null;
         }
@@ -551,6 +552,11 @@ class AuthenticationType extends ConcreteObject
         }
 
         return $this->templateService->renderTemplate($r->getFile(), $data, $this);
+    }
+
+    protected function getTemplateVariantLocator(): TemplateVariantLocator
+    {
+        return new TemplateVariantLocator($this->getLocator());
     }
 
     protected function getLocator(): FileLocator
