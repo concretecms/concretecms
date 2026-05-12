@@ -26,7 +26,7 @@ class Block extends BackendInterfaceBlockController
         $dl = app('multilingual/detector');
         $dl->setupSiteInterfaceLocalization($this->page);
         // If this has a temporary filename then validate it
-        if ($this->request->query->has('tempFilename') && preg_match('/^[A-Za-z0-9_-]+(?:\.php)?$/i', $this->request->query->get('tempFilename')))
+        if ($this->request->query->has('tempFilename') && preg_match('/^[A-Za-z0-9_-]+(?:\.php|\.html\.twig)?$/i', $this->request->query->get('tempFilename')))
         {
             // With a valid filename clear the block cache and set our new filename
             $this->block->setTempFilename($this->request->query->get('tempFilename'));

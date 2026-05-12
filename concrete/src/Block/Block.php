@@ -1661,6 +1661,9 @@ EOT
                 if (substr($bFilename, -4) === '.php') {
                     // Let's run our regular expression check on everything BEFORE ".php"
                     $bFilenameToCheck = substr($bFilename, 0, -4);
+                } elseif (substr($bFilename, -10) === '.html.twig') {
+                    // Let's run our regular expression check on everything BEFORE ".html.twig"
+                    $bFilenameToCheck = substr($bFilename, 0, -10);
                 } else {
                     $bFilenameToCheck = $bFilename; // We just check the entirety of what's passed in.
                 }
