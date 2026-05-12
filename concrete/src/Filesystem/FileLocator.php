@@ -58,6 +58,17 @@ class FileLocator
         $this->locations[] = new PackageLocation($pkgHandle);
     }
 
+    /**
+     * @deprecated
+     * Adds locations to the searchable locations for a file locator. Instead, just call `getSearchLocations`
+     * @return void
+     */
+    public function addDefaultLocations()
+    {
+        array_unshift($this->locations, new ApplicationLocation($this->filesystem));
+        $this->locations[] = new CoreLocation($this->filesystem);
+    }
+
     public function getAllRecords($file)
     {
         $records = [];
