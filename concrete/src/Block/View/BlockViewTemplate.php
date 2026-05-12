@@ -116,7 +116,13 @@ class BlockViewTemplate
                 DIRNAME_BLOCKS . '/' . $obj->getBlockTypeHandle() . '/' . DIRNAME_BLOCK_TEMPLATES . '/' . $bFilename,
             );
             if ($record->exists() && is_dir($record->getFile())) {
-                $this->template = $record->getFile() . '/' . $this->render;
+                $templateRecord = $templateLocator->getRecord(
+                    DIRNAME_BLOCKS . '/' .
+                    $obj->getBlockTypeHandle() . '/' .
+                    DIRNAME_BLOCK_TEMPLATES . '/' .
+                    $bFilename . '/' .
+                    $this->render);
+                $this->template = $templateRecord->getFile();
                 $this->baseURL = $record->getUrl();
                 $this->basePath = $record->getFile();
                 return;
