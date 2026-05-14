@@ -541,7 +541,8 @@ class AuthenticationType extends ConcreteObject
         }
 
         if (method_exists($this->controller, $handle)) {
-            $this->controller->{$handle}();
+            $params = array_values($data) === $data ? array_values($data) : [];
+            call_user_func_array([$this->controller, $handle], $params);
         } elseif ($viewFallback && method_exists($this->controller, 'view')) {
             $this->controller->view();
         }
