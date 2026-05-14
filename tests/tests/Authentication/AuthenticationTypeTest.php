@@ -72,6 +72,37 @@ final class AuthenticationTypeTest extends TestCase
         $this->assertEquals($actual, 'foo');
     }
 
+    public function testRendersFormEndpointWithParameters(): void
+    {
+        $this->authenticationType->controller = new class() {
+            /** @var array<string, string> */
+            private $sets = [];
+
+            public function change_password(string $hash = ''): void
+            {
+                $this->sets['hash'] = $hash;
+            }
+
+            public function getSets(): array
+            {
+                return $this->sets;
+            }
+        };
+
+        $this->templateVariantLocator->expects('getRecord')
+            ->once()
+            ->with('authentication/test_auth_type/change_password.php')
+            ->andReturn($this->record);
+        $this->templateService->expects('renderTemplate')
+            ->with($this->file, [0 => 'abc123', 'hash' => 'abc123'], $this->authenticationType)
+            ->andReturn('foo');
+
+        ob_start();
+        $this->authenticationType->renderForm('change_password', ['abc123']);
+        $actual = ob_get_clean();
+        $this->assertEquals($actual, 'foo');
+    }
+
     public function testRendersTypeForm(): void
     {
         $this->setFullyDefinedController();
