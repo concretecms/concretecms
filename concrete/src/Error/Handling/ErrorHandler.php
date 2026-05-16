@@ -182,7 +182,7 @@ class ErrorHandler extends SymfonyErrorHandler
 
     protected function outputFlattenException(FlattenException $exception): void
     {
-        if (!headers_sent()) {
+        if ($this->shouldOutputHttpHeaders()) {
             http_response_code($exception->getStatusCode());
 
             foreach ($exception->getHeaders() as $name => $value) {
@@ -197,7 +197,7 @@ class ErrorHandler extends SymfonyErrorHandler
     {
         $charset = $this->getEmergencyCharset();
         if ($this->shouldRenderEmergencyJson()) {
-            if (!headers_sent()) {
+            if ($this->shouldOutputHttpHeaders()) {
                 http_response_code(500);
                 header('Content-Type: application/json; charset=' . $charset, false);
             }
@@ -206,7 +206,7 @@ class ErrorHandler extends SymfonyErrorHandler
             return;
         }
 
-        if (!headers_sent()) {
+        if ($this->shouldOutputHttpHeaders()) {
             http_response_code(500);
             header('Content-Type: text/html; charset=' . $charset, false);
         }
@@ -248,6 +248,11 @@ class ErrorHandler extends SymfonyErrorHandler
     protected function getEmergencyCharset(): string
     {
         return defined('APP_CHARSET') ? APP_CHARSET : 'UTF-8';
+    }
+
+    protected function shouldOutputHttpHeaders(): bool
+    {
+        return !headers_sent() && !\in_array(\PHP_SAPI, ['cli', 'phpdbg'], true);
     }
 
     protected function escapeForHtml(string $value): string
