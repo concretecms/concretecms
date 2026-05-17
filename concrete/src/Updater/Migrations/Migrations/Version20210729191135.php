@@ -19,6 +19,7 @@ final class Version20210729191135 extends AbstractMigration implements Repeatabl
         $marketplaceExists = $db->fetchOne("select count(*) from PermissionKeyCategories where pkCategoryHandle = 'marketplace'");
         $marketplaceNewsflowExists = $db->fetchOne("select count(*) from PermissionKeyCategories where pkCategoryHandle = 'marketplace_newsflow'");
         if ($marketplaceExists && $marketplaceNewsflowExists) {
+            $db->executeStatement("update PermissionKeys set pkCategoryID = (select pkCategoryID from PermissionKeyCategories where pkCategoryHandle = 'marketplace') where pkCategoryID = (select pkCategoryID from PermissionKeyCategories where pkCategoryHandle = 'marketplace_newsflow')");
             $db->executeStatement("delete from PermissionKeyCategories where pkCategoryHandle = 'marketplace_newsflow'");
         } elseif ($marketplaceNewsflowExists) {
             $db->executeStatement("update PermissionKeyCategories set pkCategoryHandle = 'marketplace' where pkCategoryHandle = 'marketplace_newsflow'");
