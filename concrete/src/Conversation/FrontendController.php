@@ -260,6 +260,10 @@ abstract class FrontendController extends Controller
             if (!($blockConversation instanceof Conversation)) {
                 throw new UserMessageException(t('Invalid Conversation.'));
             }
+            $cp = new Checker($blockConversation);
+            if (!$cp->canViewConversation()) {
+                throw new UserMessageException(t('Access Denied.'));
+            }
             $this->blockConversation = $blockConversation;
         }
 

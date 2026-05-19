@@ -399,6 +399,7 @@ class Search extends DashboardPageController
                         $error->add(t('The two passwords provided do not match.'));
                     }
                 }
+                $data['_allowPasswordUpdate'] = true;
                 $data['uPasswordConfirm'] = $passwordNew;
                 $data['uPassword'] = $passwordNew;
             }
@@ -415,6 +416,7 @@ class Search extends DashboardPageController
                         }
                     }
                 }
+                $data['_allowIgnoredIPMismatchesUpdate'] = true;
                 $data['ignoredIPMismatches'] = $ignoredIPMismatches;
             }
 

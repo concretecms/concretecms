@@ -28,15 +28,16 @@ class Url
             // sanitizeString() removes tags like <script>… and similar markup.
             $url = Loader::helper('security')->sanitizeString($_SERVER['REQUEST_URI']);
             $url = $encodeQuotesAndStripCRLF($url);
-        } elseif (strpos($url, '?') === false) {
-            // Base URL provided without a query: protect it too (in case it contains quotes).
+        } else {
+            // Base URL provided by the caller: protect it too (in case it contains quotes).
             $url = $encodeQuotesAndStripCRLF($url);
-
-            // Append the current query string, after sanitizing and applying the same light encoding.
-            $qs = isset($_SERVER['QUERY_STRING']) ? $_SERVER['QUERY_STRING'] : '';
-            $qs = Loader::helper('security')->sanitizeString($qs);
-            if ($qs !== false && $qs !== '') {
-                $url .= '?' . $encodeQuotesAndStripCRLF($qs);
+            if (strpos($url, '?') === false) {
+                // Append the current query string, after sanitizing and applying the same light encoding.
+                $qs = isset($_SERVER['QUERY_STRING']) ? $_SERVER['QUERY_STRING'] : '';
+                $qs = Loader::helper('security')->sanitizeString($qs);
+                if ($qs !== false && $qs !== '') {
+                    $url .= '?' . $encodeQuotesAndStripCRLF($qs);
+                }
             }
         }
 

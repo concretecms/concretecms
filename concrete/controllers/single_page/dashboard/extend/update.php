@@ -13,6 +13,30 @@ use Concrete\Core\Permission\Checker;
 
 class Update extends DashboardPageController
 {
+    protected function updatePackage(string $pkgHandle): void
+    {
+        $packageService = $this->app->make(PackageService::class);
+        $packageController = $packageService->getClass($pkgHandle);
+        $testResult = $packageController->testForUpgrade();
+        if ($testResult !== true) {
+            $this->error->add($testResult);
+
+            return;
+        }
+        $previousVersion = $packageController->getPackageEntity()->getPackageVersion();
+        Localization::getInstance()->withContext(Localization::CONTEXT_SYSTEM, static function () use ($packageController) {
+            $packageController->upgradeCoreData();
+            $packageController->upgrade();
+        });
+        $this->set('message',
+            t('Package "%1$s" has been updated successfully from version %2$s to version %3$s.',
+                t($packageController->getPackageName()) ?: $packageController->getPackageHandle(),
+                $previousVersion,
+                $packageController->getPackageVersion()
+            )
+        );
+    }
+
     public function view()
     {
         $packageRepository = $this->app->make(PackageRepositoryInterface::class);
@@ -42,31 +66,20 @@ class Update extends DashboardPageController
         if (!$pkgHandle) {
             return $this->view();
         }
+        if (!$this->request->isMethod('POST')) {
+            $this->error->add(t('Invalid request method.'));
+
+            return $this->view();
+        }
         try {
+            if (!$this->token->validate('update_addon')) {
+                throw new UserMessageException($this->token->getErrorMessage());
+            }
             $tp = new Checker();
             if (!$tp->canInstallPackages()) {
                 throw new UserMessageException(t('Access Denied.'));
             }
-            $packageService = $this->app->make(PackageService::class);
-            $packageController = $packageService->getClass($pkgHandle);
-            $testResult = $packageController->testForUpgrade();
-            if ($testResult !== true) {
-                $this->error->add($testResult);
-
-                return $this->view();
-            }
-            $previousVersion = $packageController->getPackageEntity()->getPackageVersion();
-            Localization::getInstance()->withContext(Localization::CONTEXT_SYSTEM, static function () use ($packageController) {
-                $packageController->upgradeCoreData();
-                $packageController->upgrade();
-            });
-            $this->set('message',
-                t('Package "%1$s" has been updated successfully from version %2$s to version %3$s.',
-                    t($packageController->getPackageName()) ?: $packageController->getPackageHandle(),
-                    $previousVersion,
-                    $packageController->getPackageVersion()
-                )
-            );
+            $this->updatePackage($pkgHandle);
         } catch (UserMessageException $x) {
             $this->error->add($x);
         }
@@ -77,8 +90,16 @@ class Update extends DashboardPageController
     {
         $packageRepository = $this->app->make(PackageRepositoryInterface::class);
         $packageService = $this->app->make(PackageService::class);
+        if (!$this->request->isMethod('POST')) {
+            $this->error->add(t('Invalid request method.'));
+
+            return $this->view();
+        }
 
         try {
+            if (!$this->token->validate('prepare_remote_upgrade')) {
+                throw new UserMessageException($this->token->getErrorMessage());
+            }
             $tp = new Checker();
             if (!$tp->canInstallPackages()) {
                 throw new UserMessageException(t('Access Denied.'));
@@ -99,7 +120,7 @@ class Update extends DashboardPageController
             }
 
             $packageRepository->download($connection, $mri, true);
-            return $this->buildRedirect(['/dashboard/extend/update', 'do_update', $mri->handle]);
+            $this->updatePackage($mri->handle);
         } catch (UserMessageException $x) {
             $this->error->add($x);
         }

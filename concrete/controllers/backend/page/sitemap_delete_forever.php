@@ -19,6 +19,10 @@ class SitemapDeleteForever extends AbstractController
 
     public function fillQueue()
     {
+        $token = $this->app->make('token');
+        if (!$token->validate()) {
+            throw new UserMessageException($token->getErrorMessage(), 401);
+        }
         if ($this->canAccess()) {
             $c = Page::getByID($_REQUEST['cID']);
             if (is_object($c) && !$c->isError()) {

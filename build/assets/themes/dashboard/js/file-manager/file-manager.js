@@ -39,6 +39,9 @@
                 new ConcreteAjaxRequest({
                     loader: false,
                     url: CCM_DISPATCHER_FILENAME + "/ccm/system/file/add_favorite_folder/" + favoriteFolderId,
+                    data: {
+                        ccm_token: CCM_SECURITY_TOKEN
+                    },
                     success: function() {
                         ConcreteEvent.publish('FileManagerRefreshFavoriteFolderList')
                     }
@@ -48,6 +51,9 @@
                 new ConcreteAjaxRequest({
                     loader: false,
                     url: CCM_DISPATCHER_FILENAME + "/ccm/system/file/remove_favorite_folder/" + favoriteFolderId,
+                    data: {
+                        ccm_token: CCM_SECURITY_TOKEN
+                    },
                     success: function() {
                         ConcreteEvent.publish('FileManagerRefreshFavoriteFolderList')
                     }

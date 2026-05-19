@@ -7,6 +7,7 @@ use Concrete\Core\Form\Service\Validation;
 use Concrete\Core\Logging\Channels;
 use Concrete\Core\Logging\LoggerFactory;
 use Concrete\Core\Page\Controller\DashboardPageController;
+use Concrete\Core\Permission\Checker;
 use Concrete\Core\User\Group\Group;
 use Concrete\Core\User\Group\GroupRepository;
 use Concrete\Core\User\UserInfo;
@@ -43,6 +44,15 @@ class BulkUserAssignment extends DashboardPageController
                 $removeUnlistedUsers = $this->request->request->has('removeUnlistedUsers');
 
                 if ($targetGroup instanceof Group) {
+                    $gp = new Checker($targetGroup);
+                    if (!$gp->canAssignGroup()) {
+                        $this->error->add(t('Access Denied.'));
+                    }
+                } else {
+                    $this->error->add(t('You need to select valid target group.'));
+                }
+
+                if (!$this->error->has()) {
                     /** @var UploadedFile $csvFile */
                     $csvFile = $this->request->files->get('csvFile');
 
@@ -74,8 +84,6 @@ class BulkUserAssignment extends DashboardPageController
                     } else {
                         $this->error->add(t('You need to upload a CSV file.'));
                     }
-                } else {
-                    $this->error->add(t('You need to select valid target group.'));
                 }
 
                 if (!$this->error->has()) {

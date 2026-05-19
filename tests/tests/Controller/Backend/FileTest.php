@@ -67,14 +67,13 @@ class FileTest extends TestCase
         $octal3 = '01002004010';
         $integer = '134744072';
 
-        // Test hexadecimal IPs get caught as local
+        // Standard public IPv4 hosts remain valid, but non-standard numeric notations are rejected.
         yield ['http://' . $simpleIp]; // This is allowed because it's an external IP
         yield ['http://' . $hex, UserMessageException::class, '/The URL &quot;.+?&quot; is not valid./'];
-        yield ['http://' . $octal]; // This form is allowed because it at least converts properly in ip-lib
-        yield ['http://' . $octal2]; // Same as the first octal
+        yield ['http://' . $octal, UserMessageException::class, '/The URL &quot;.+?&quot; is not valid./'];
+        yield ['http://' . $octal2, UserMessageException::class, '/The URL &quot;.+?&quot; is not valid./'];
         yield ['http://' . $octal3, UserMessageException::class, '/The URL &quot;.+?&quot; is not valid./'];
         yield ['http://' . $integer, UserMessageException::class, '/The URL &quot;.+?&quot; is not valid./'];
     }
 
 }
-

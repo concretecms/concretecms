@@ -218,15 +218,21 @@ class DownloadFile extends PageController
 
             $rcID = $this->post('rcID');
 
-            if ($f->getPassword() == $this->post('password')) {
-                if ($this->post('force')) {
-                    return $this->force_download($f);
+            if ($f->getPassword() === $this->post('password')) {
+                $checker = new Checker($f);
+                if ($checker->canViewFile()) {
+                    if ($this->post('force')) {
+                        return $this->force_download($f);
+                    } else {
+                        return $this->download($f);
+                    }
                 } else {
-                    return $this->download($f);
+                    $this->set('error', t("You do not have permission to access this file."));
                 }
+            } else {
+                $this->set('error', t("Password incorrect. Please try again."));
             }
 
-            $this->set('error', t("Password incorrect. Please try again."));
             $this->set('force', ($this->post('force') ? 1 : 0));
 
             if ($fUUID !== null) {

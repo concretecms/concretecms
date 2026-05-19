@@ -2,6 +2,7 @@
 namespace Concrete\Block\Feature;
 
 use Concrete\Core\Block\BlockController;
+use Concrete\Core\Block\Controller\SaveMode;
 use Concrete\Core\Editor\LinkAbstractor;
 use Concrete\Core\Error\UserMessageException;
 use Concrete\Core\Feature\Features;
@@ -228,7 +229,7 @@ class Controller extends BlockController implements FileTrackableInterface, Uses
         $args['title'] = isset($args['title']) ? $security->sanitizeString($args['title']) : '';
         $args['titleFormat'] = isset($args['titleFormat']) ? $security->sanitizeString($args['titleFormat']) : '';
         $args['paragraph'] = isset($args['paragraph']) ? LinkAbstractor::translateTo($args['paragraph']) : '';
-        if (($args['_fromCIF'] ?? null) === true) {
+        if ($this->saveMode === SaveMode::SAVE_MODE_IMPORT) {
             $args['internalLinkCID'] = empty($args['internalLinkCID']) ? 0 : (int) $args['internalLinkCID'];
         } else {
             [$linkHandle, $linkValue] = $this->app->make(DestinationPicker::class)->decode('link', $this->getLinkDestinationPickers(), $errors, t('Link'), $args);
@@ -248,7 +249,8 @@ class Controller extends BlockController implements FileTrackableInterface, Uses
      */
     protected function getImportData($blockNode, $page)
     {
-        return parent::getImportData($blockNode, $page) + ['_fromCIF' => true];
+        $this->saveMode = SaveMode::SAVE_MODE_IMPORT;
+        return parent::getImportData($blockNode, $page);
     }
 
     /**

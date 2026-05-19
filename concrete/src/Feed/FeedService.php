@@ -3,7 +3,12 @@ namespace Concrete\Core\Feed;
 
 use Concrete\Core\Cache\Adapter\LaminasCacheDriver;
 use Concrete\Core\Config\Repository\Repository;
+use Concrete\Core\Error\UserMessageException;
 use Concrete\Core\Http\Client\Factory as HttpClientFactory;
+use Concrete\Core\Url\Validation\InvalidRemoteUrlException;
+use Concrete\Core\Url\Validation\RemoteUrlRequestOptionsBuilder;
+use Concrete\Core\Url\Validation\RemoteUrlValidator;
+use Concrete\Core\Url\Validation\ValidatedRemoteUrl;
 use Laminas\Feed\Reader\Feed\FeedInterface;
 use Laminas\Feed\Reader\Reader;
 
@@ -19,10 +24,22 @@ class FeedService
      */
     protected $httpClientFactory;
 
+    /**
+     * @var \Concrete\Core\Url\Validation\RemoteUrlValidator
+     */
+    protected $remoteUrlValidator;
+
+    /**
+     * @var \Concrete\Core\Url\Validation\RemoteUrlRequestOptionsBuilder
+     */
+    protected $remoteUrlRequestOptionsBuilder;
+
     public function __construct(Repository $config, HttpClientFactory $httpClientFactory)
     {
         $this->config = $config;
         $this->httpClientFactory = $httpClientFactory;
+        $this->remoteUrlValidator = new RemoteUrlValidator();
+        $this->remoteUrlRequestOptionsBuilder = new RemoteUrlRequestOptionsBuilder();
     }
 
     /**
@@ -38,7 +55,8 @@ class FeedService
             Reader::setCache(new LaminasCacheDriver('cache/expensive', $cache));
         }
 
-        Reader::setHttpClient(new GuzzleClient($this->buildHttpClient()));
+        $validatedUrl = $this->getValidatedFeedUrl($url);
+        Reader::setHttpClient(new GuzzleClient($this->buildHttpClient($validatedUrl)));
 
         // Load the RSS feed, either from remote URL or from cache
         // (if specified above and still fresh)
@@ -59,12 +77,22 @@ class FeedService
     /**
      * @return \Concrete\Core\Http\Client\Client
      */
-    protected function buildHttpClient()
+    protected function buildHttpClient(ValidatedRemoteUrl $validatedUrl)
     {
         $options = [
             'timeout' => 5,
         ] + $this->httpClientFactory->getDefaultOptions($this->config);
+        $options = array_replace($options, $this->remoteUrlRequestOptionsBuilder->build($validatedUrl));
 
         return $this->httpClientFactory->createFromOptions($options);
+    }
+
+    protected function getValidatedFeedUrl($url)
+    {
+        try {
+            return $this->remoteUrlValidator->validate((string) $url);
+        } catch (InvalidRemoteUrlException $x) {
+            throw new UserMessageException(t('The RSS feed URL is not valid.'));
+        }
     }
 }

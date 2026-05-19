@@ -159,6 +159,12 @@ class Controller extends BlockController implements UsesFeatureInterface
         if (!$this->hasVoted()) {
             $antispam = Core::make('helper/validation/antispam');
             if ($antispam->check('', 'survey_block')) { // we do a blank check which will still check IP and UserAgent's
+                $optionID = (int) $this->request->get('optionID');
+                $q = 'SELECT optionID FROM btSurveyOptions WHERE optionID = ? AND bID = ?';
+                $optionID = $db->getOne($q, [$optionID, $this->bID]);
+                if (!$optionID) {
+                    return false;
+                }
                 $duID = 0;
                 if ($u->getUserID() > 0) {
                     $duID = $u->getUserID();
@@ -169,7 +175,7 @@ class Controller extends BlockController implements UsesFeatureInterface
                 $ip = $iph->getRequestIP();
                 $ip = ($ip === false) ? ('') : ($ip->getIp($ip::FORMAT_IP_STRING));
                 $v = [
-                    $this->request->get('optionID'),
+                    $optionID,
                     $this->bID,
                     $duID,
                     $ip,
@@ -219,8 +225,23 @@ class Controller extends BlockController implements UsesFeatureInterface
             if ($result > 0) {
                 return true;
             }
-        } else if ($cookieHasVoted) {
-            return true;
+        } else {
+            /** @var \Concrete\Core\Permission\IPService $iph */
+            $iph = Core::make('helper/validation/ip');
+            $ip = $iph->getRequestIP();
+            $ip = ($ip === false) ? ('') : ($ip->getIp($ip::FORMAT_IP_STRING));
+            if ($ip !== '') {
+                $db = Database::connection();
+                $v = [$ip, $this->bID, $this->cID];
+                $q = 'SELECT count(resultID) AS total FROM btSurveyResults WHERE ipAddress = ? AND bID = ? AND cID = ?';
+                $result = $db->getOne($q, $v);
+                if ($result > 0) {
+                    return true;
+                }
+            }
+            if ($cookieHasVoted) {
+                return true;
+            }
         }
 
         return false;

@@ -5,6 +5,7 @@ use Concrete\Core\Block\Block;
 use BlockTypeSet;
 use Concrete\Block\CoreStackDisplay\Controller;
 use Concrete\Core\Block\BlockType\BlockTypeList;
+use Concrete\Core\Block\Controller\SaveMode;
 use Concrete\Core\Block\View\BlockView;
 use Concrete\Core\Database\Schema\Schema;
 use Concrete\Core\Filesystem\TemplateFile;
@@ -630,10 +631,10 @@ EOT
      * @param mixed            $data
      * @param bool|\Collection $c
      * @param bool|\Area       $a
-     *
+     * @param string $saveMode
      * @return bool|\Concrete\Core\Block\Block
      */
-    public function add($data, $c = false, $a = false)
+    public function add($data, $c = false, $a = false, ?string $saveMode = SaveMode::SAVE_MODE_REQUEST)
     {
         $app = Facade::getFacadeApplication();
         $db = $app->make('database')->connection();
@@ -672,6 +673,7 @@ EOT
             }
             $class = $this->getBlockTypeClass();
             $bc = $app->make($class, ['obj' => $nb]);
+            $bc->saveMode = $saveMode;
             $bc->save($data);
 
             return Block::getByID($bIDnew);

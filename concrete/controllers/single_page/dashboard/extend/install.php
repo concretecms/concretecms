@@ -166,6 +166,10 @@ class Install extends DashboardPageController implements LoggerAwareInterface
     public function install_package($package)
     {
         $this->view();
+        if (!$this->request->isMethod('POST')) {
+            $this->error->add(t('Invalid request method.'));
+            return;
+        }
         $tp = new TaskPermission();
         if ($tp->canInstallPackages()) {
             $packageService = $this->app->make(PackageService::class);
@@ -173,6 +177,20 @@ class Install extends DashboardPageController implements LoggerAwareInterface
             if ($p instanceof BrokenPackage) {
                 $this->error->add($p->getInstallErrorMessage());
             } elseif (is_object($p)) {
+                $showInstallOptionsScreen = $p->showInstallOptionsScreen();
+                $isInitialInstallRequest = $this->token->validate('install_package');
+                $isInstallOptionsSubmission = $showInstallOptionsScreen && $this->token->validate('install_options_selected');
+                if ($showInstallOptionsScreen && $isInitialInstallRequest && !$isInstallOptionsSubmission) {
+                    $this->set('showInstallOptionsScreen', true);
+                    $this->set('pkg', $p);
+
+                    return;
+                }
+                if ((!$showInstallOptionsScreen && !$isInitialInstallRequest) || ($showInstallOptionsScreen && !$isInstallOptionsSubmission)) {
+                    $this->error->add(t('Invalid token.'));
+
+                    return;
+                }
                 $config = $this->app->make('config');
                 if ($config->get('concrete.i18n.auto_install_package_languages')) {
                     $connection = $this->getConnection();
@@ -195,10 +213,7 @@ class Install extends DashboardPageController implements LoggerAwareInterface
                         }
                     }
                 }
-                if (
-                    (!$p->showInstallOptionsScreen()) ||
-                    $this->token->validate('install_options_selected')
-                ) {
+                if (!$showInstallOptionsScreen || $isInstallOptionsSubmission) {
                     $tests = $p->testForInstall();
                     if (is_object($tests)) {
                         $this->error->add($tests);
@@ -214,9 +229,6 @@ class Install extends DashboardPageController implements LoggerAwareInterface
                             $this->redirect('/dashboard/extend/install', 'package_installed', $r->getPackageID());
                         }
                     }
-                } else {
-                    $this->set('showInstallOptionsScreen', true);
-                    $this->set('pkg', $p);
                 }
             } else {
                 $this->error->add(t('Package controller file not found.'));
@@ -237,6 +249,14 @@ class Install extends DashboardPageController implements LoggerAwareInterface
     public function download($remoteId = null)
     {
         $this->view();
+        if (!$this->request->isMethod('POST')) {
+            $this->error->add(t('Invalid request method.'));
+            return;
+        }
+        if (!$this->token->validate('download_package')) {
+            $this->error->add($this->token->getErrorMessage());
+            return;
+        }
         $tp = new TaskPermission();
         if (!$tp->canInstallPackages()) {
             $this->error->add(t('You do not have permission to download add-ons.'));

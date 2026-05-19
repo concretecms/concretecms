@@ -5,6 +5,7 @@ namespace Concrete\Core\Page;
 use Concrete\Core\Area\Area;
 use Block;
 use CacheLocal;
+use Concrete\Core\Block\Controller\SaveMode;
 use Concrete\Core\Entity\Page\Summary\CustomPageTemplateCollection;
 use Concrete\Core\Localization\Service\Date;
 use Concrete\Core\Page\Collection\Collection;
@@ -1192,6 +1193,8 @@ class Page extends Collection implements CategoryMemberInterface,
             } else {
                 $newWindow = 0;
             }
+            $cLink = app('helper/security')->sanitizeURL($cLink);
+            $cName = app('helper/text')->sanitize($cName);
             $db->executeQuery('update CollectionVersions set cvName = ? where cID = ?', [$cName, $this->cID]);
             $db->executeQuery('update Pages set cPointerExternalLink = ?, cPointerExternalLinkNewWindow = ? where cID = ?', [$cLink, $newWindow, $this->cID]);
         }
@@ -2851,12 +2854,12 @@ EOT
      *
      * @return \Concrete\Core\Block\Block
      */
-    public function addBlock($bt, $a, $data)
+    public function addBlock($bt, $a, $data, ?string $saveMode = SaveMode::SAVE_MODE_REQUEST)
     {
         if (is_string($a) && $a !== '') {
             $a = Area::getOrCreate($this, $a);
         }
-        $b = parent::addBlock($bt, $a, $data);
+        $b = parent::addBlock($bt, $a, $data, $saveMode);
         $btHandle = $bt->getBlockTypeHandle();
         if ($b->getBlockTypeHandle() == BLOCK_HANDLE_PAGE_TYPE_OUTPUT_PROXY) {
             $bi = $b->getInstance();

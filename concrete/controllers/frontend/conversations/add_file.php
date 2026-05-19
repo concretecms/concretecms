@@ -32,7 +32,7 @@ class AddFile extends FrontendController
             $fileVersion = $this->importFile($conversation, $file);
 
             return $responseFactory->json([
-                'id' => (int) $fileVersion->getFileID(),
+                'id' => $fileVersion->getFileUUID(),
                 'timestamp' => $post->get('timestamp'),
                 'tag' => $post->get('tag'),
             ]);

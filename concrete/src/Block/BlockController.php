@@ -4,6 +4,7 @@ namespace Concrete\Core\Block;
 use Concrete\Core\Area\Area;
 use Concrete\Core\Backup\ContentExporter;
 use Concrete\Core\Backup\ContentImporter;
+use Concrete\Core\Block\Controller\SaveMode;
 use Concrete\Core\Block\View\BlockViewTemplate;
 use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Editor\LinkAbstractor;
@@ -154,6 +155,8 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
      * Note: do not rely on these being here. These are going to be moved.
      */
     public static $btTitleFormats = ['h1' => 'H1', 'h2' => 'H2', 'h3' => 'H3', 'h4' => 'H4', 'h5' => 'H5', 'h6' => 'H6', 'p' => 'Normal'];
+
+    public $saveMode = SaveMode::SAVE_MODE_REQUEST;
 
     /**
      * Set this to true if the data sent to the save/performSave methods can contain NULL values that should be persisted.
@@ -540,7 +543,7 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
         $blockData = [];
 
         $bt = \Concrete\Core\Block\BlockType\BlockType::getByHandle($this->btHandle);
-        $b = $page->addBlock($bt, $arHandle, $args);
+        $b = $page->addBlock($bt, $arHandle, $args, SaveMode::SAVE_MODE_IMPORT);
         $bName = (string) $blockNode['name'];
         $bFilename = (string) $blockNode['custom-template'];
         if ($bName) {
