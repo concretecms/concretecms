@@ -83,7 +83,7 @@ class ConcreteErrorRenderer implements ErrorRendererInterface
             $data = $exception->jsonSerialize();
         } else {
             $setting = $this->getSetting();
-            if (in_array($setting, [self::DISPLAY_DEBUG, self::DISPLAY_MESSAGE, true], true)) {
+            if (in_array($setting, [self::DISPLAY_DEBUG, self::DISPLAY_MESSAGE], true)) {
                 $data = [
                     'error' => true,
                     'errors' => [$exception->getMessage()],
