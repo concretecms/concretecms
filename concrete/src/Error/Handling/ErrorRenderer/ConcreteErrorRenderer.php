@@ -14,6 +14,9 @@ use Symfony\Component\ErrorHandler\Exception\FlattenException;
 
 class ConcreteErrorRenderer implements ErrorRendererInterface
 {
+    private const DISPLAY_DEBUG = 'debug';
+    private const DISPLAY_MESSAGE = 'message';
+    private const DISPLAY_GENERIC = 'generic';
 
     /**
      * @var \Concrete\Core\Config\Repository\Repository
@@ -57,10 +60,21 @@ class ConcreteErrorRenderer implements ErrorRendererInterface
      */
     protected function getSetting(): string
     {
-        if ($this->checker->canViewDebugErrorInformation()) {
-            return (string) $this->config->get('concrete.error.display.privileged', '');
+        $guestSetting = $this->getNormalizedSetting((string) $this->config->get('concrete.error.display.guests', self::DISPLAY_GENERIC));
+        try {
+            if ($this->checker->canViewDebugErrorInformation()) {
+                return $this->getNormalizedSetting((string) $this->config->get('concrete.error.display.privileged', $guestSetting));
+            }
+        } catch (\Throwable $x) {
+            return $guestSetting;
         }
-        return (string) $this->config->get('concrete.error.display.guests', '');
+
+        return $guestSetting;
+    }
+
+    protected function getNormalizedSetting(string $setting): string
+    {
+        return in_array($setting, [self::DISPLAY_DEBUG, self::DISPLAY_MESSAGE, self::DISPLAY_GENERIC], true) ? $setting : self::DISPLAY_GENERIC;
     }
 
     protected function renderJson(\Throwable $exception): FlattenException
@@ -69,7 +83,7 @@ class ConcreteErrorRenderer implements ErrorRendererInterface
             $data = $exception->jsonSerialize();
         } else {
             $setting = $this->getSetting();
-            if (in_array($setting, ['debug', 'message', true])) {
+            if (in_array($setting, [self::DISPLAY_DEBUG, self::DISPLAY_MESSAGE], true)) {
                 $data = [
                     'error' => true,
                     'errors' => [$exception->getMessage()],
@@ -79,7 +93,7 @@ class ConcreteErrorRenderer implements ErrorRendererInterface
                         $data['htmlErrorIndexes'] = [0];
                     }
                 }
-                if ($setting === 'debug') {
+                if ($setting === self::DISPLAY_DEBUG) {
                     $data['trace'] = $exception->getTrace();
                 }
             } else {
@@ -98,11 +112,11 @@ class ConcreteErrorRenderer implements ErrorRendererInterface
     protected function renderHtml(\Throwable $exception): FlattenException
     {
         if ($exception instanceof UserMessageException) {
-            $setting = 'message';
+            $setting = self::DISPLAY_MESSAGE;
         } else {
             $setting = $this->getSetting();
         }
-        if ($setting === 'debug') {
+        if ($setting === self::DISPLAY_DEBUG) {
             // Let's load the symfony debug html renderer, but then use Dom/Xpath to remove symfony-specific
             // things that we can't control. Ideally we'd have a lot more control here but we don't so let's
             // hack away the things that we can.
@@ -128,7 +142,7 @@ class ConcreteErrorRenderer implements ErrorRendererInterface
         } else {
             $o = new \stdClass;
             $o->title = t('An unexpected error occurred.');
-            if ($setting === 'message') {
+            if ($setting === self::DISPLAY_MESSAGE) {
                 if ($exception instanceof HtmlAwareErrorInterface && $exception->messageContainsHtml()) {
                     $o->content = $exception->getMessage();
                 } else {

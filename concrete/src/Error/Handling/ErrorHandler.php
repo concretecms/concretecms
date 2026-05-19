@@ -4,14 +4,20 @@ namespace Concrete\Core\Error\Handling;
 
 use Concrete\Core\Config\Repository\Repository;
 use Concrete\Core\Error\Handling\ErrorRenderer\ConcreteErrorRenderer;
+use Concrete\Core\Error\UserMessageException;
 use Concrete\Core\Logging\Handler\ErrorEnhancer\UserMessageExceptionEnhancer;
 use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
 use Symfony\Component\ErrorHandler\ErrorHandler as SymfonyErrorHandler;
+use Symfony\Component\ErrorHandler\ErrorRenderer\ErrorRendererInterface;
 use Symfony\Component\ErrorHandler\ErrorRenderer\CliErrorRenderer;
+use Symfony\Component\ErrorHandler\Exception\FlattenException;
 
 class ErrorHandler extends SymfonyErrorHandler
 {
+    private const DISPLAY_MESSAGE = 'message';
+    private const DISPLAY_GENERIC = 'generic';
+
     /**
      * @var \Concrete\Core\Config\Repository\Repository
      */
@@ -21,6 +27,11 @@ class ErrorHandler extends SymfonyErrorHandler
      * @var callable[]
      */
     protected $exceptionListeners = [];
+
+    /**
+     * @var bool
+     */
+    protected $isRenderingException = false;
 
     public function __construct(LoggerInterface $logger, Repository $config)
     {
@@ -95,25 +106,158 @@ class ErrorHandler extends SymfonyErrorHandler
      */
     protected function renderConcreteException(\Throwable $exception): void
     {
-        foreach ($this->exceptionListeners as $exceptionListener) {
-            if ($exceptionListener($exception) === true) {
-                return;
-            }
+        if ($this->isRenderingException) {
+            $this->outputRawEmergencyException($exception);
+
+            return;
         }
 
-        $renderer = \in_array(\PHP_SAPI, ['cli', 'phpdbg'], true) ? new CliErrorRenderer() : app(ConcreteErrorRenderer::class, ['config' => $this->config]);
+        $this->isRenderingException = true;
+        try {
+            foreach ($this->exceptionListeners as $exceptionListener) {
+                if ($exceptionListener($exception) === true) {
+                    return;
+                }
+            }
 
-        $exception = $renderer->render($exception);
+            try {
+                $flattenException = $this->createRenderer()->render($exception);
+            } catch (\Throwable $renderingException) {
+                try {
+                    $flattenException = $this->createEmergencyFlattenException($exception);
+                } catch (\Throwable $emergencyRenderingException) {
+                    $this->outputRawEmergencyException($exception);
 
-        if (!headers_sent()) {
+                    return;
+                }
+            }
+
+            $this->outputFlattenException($flattenException);
+        } finally {
+            $this->isRenderingException = false;
+        }
+    }
+
+    protected function createRenderer(): ErrorRendererInterface
+    {
+        return \in_array(\PHP_SAPI, ['cli', 'phpdbg'], true) ? new CliErrorRenderer() : app(ConcreteErrorRenderer::class, ['config' => $this->config]);
+    }
+
+    protected function createEmergencyFlattenException(\Throwable $exception): FlattenException
+    {
+        if ($this->shouldRenderEmergencyJson()) {
+            $payload = $exception instanceof UserMessageException ? $exception->jsonSerialize() : [
+                'error' => true,
+                'errors' => [$this->getEmergencyErrorMessage($exception)],
+            ];
+
+            return $this->createFlattenExceptionFromString(
+                $exception,
+                (string) (json_encode($payload) ?: '{"error":true,"errors":["An error occurred while processing this request."]}'),
+                'application/json; charset=' . $this->getEmergencyCharset()
+            );
+        }
+
+        $html = sprintf(
+            '<!DOCTYPE html><html><head><meta charset="%1$s"><title>%2$s</title></head><body><h1>%2$s</h1><p>%3$s</p></body></html>',
+            $this->escapeForHtml($this->getEmergencyCharset()),
+            $this->escapeForHtml('An unexpected error occurred.'),
+            $this->escapeForHtml($this->getEmergencyErrorMessage($exception))
+        );
+
+        return $this->createFlattenExceptionFromString(
+            $exception,
+            $html,
+            'text/html; charset=' . $this->getEmergencyCharset()
+        );
+    }
+
+    protected function createFlattenExceptionFromString(\Throwable $exception, string $content, string $contentType): FlattenException
+    {
+        $flattenException = FlattenException::createFromThrowable($exception, null, ['Content-Type' => $contentType]);
+        $flattenException->setAsString($content);
+
+        return $flattenException;
+    }
+
+    protected function outputFlattenException(FlattenException $exception): void
+    {
+        if ($this->shouldOutputHttpHeaders()) {
             http_response_code($exception->getStatusCode());
 
             foreach ($exception->getHeaders() as $name => $value) {
-                header($name.': '.$value, false);
+                header($name . ': ' . $value, false);
             }
         }
 
         echo $exception->getAsString();
+    }
+
+    protected function outputRawEmergencyException(\Throwable $exception): void
+    {
+        $charset = $this->getEmergencyCharset();
+        if ($this->shouldRenderEmergencyJson()) {
+            if ($this->shouldOutputHttpHeaders()) {
+                http_response_code(500);
+                header('Content-Type: application/json; charset=' . $charset, false);
+            }
+            echo '{"error":true,"errors":["An error occurred while processing this request."]}';
+
+            return;
+        }
+
+        if ($this->shouldOutputHttpHeaders()) {
+            http_response_code(500);
+            header('Content-Type: text/html; charset=' . $charset, false);
+        }
+        echo sprintf(
+            '<!DOCTYPE html><html><head><meta charset="%1$s"><title>%2$s</title></head><body><h1>%2$s</h1><p>%3$s</p></body></html>',
+            $this->escapeForHtml($charset),
+            $this->escapeForHtml('An unexpected error occurred.'),
+            $this->escapeForHtml('An error occurred while processing this request.')
+        );
+    }
+
+    protected function shouldRenderEmergencyJson(): bool
+    {
+        $accept = isset($_SERVER['HTTP_ACCEPT']) ? (string) $_SERVER['HTTP_ACCEPT'] : '';
+
+        return stripos($accept, 'json') !== false;
+    }
+
+    protected function getEmergencyErrorMessage(\Throwable $exception): string
+    {
+        if ($exception instanceof UserMessageException) {
+            return $exception->getMessage();
+        }
+
+        return $this->getEmergencyDisplaySetting() === self::DISPLAY_MESSAGE ? $exception->getMessage() : 'An error occurred while processing this request.';
+    }
+
+    protected function getEmergencyDisplaySetting(): string
+    {
+        try {
+            $setting = (string) $this->config->get('concrete.error.display.guests', self::DISPLAY_GENERIC);
+        } catch (\Throwable $x) {
+            return self::DISPLAY_GENERIC;
+        }
+
+        return $setting === self::DISPLAY_MESSAGE ? self::DISPLAY_MESSAGE : self::DISPLAY_GENERIC;
+    }
+
+    protected function getEmergencyCharset(): string
+    {
+        return defined('APP_CHARSET') ? APP_CHARSET : 'UTF-8';
+    }
+
+    protected function shouldOutputHttpHeaders(): bool
+    {
+        return !headers_sent() && !\in_array(\PHP_SAPI, ['cli', 'phpdbg'], true);
+    }
+
+    protected function escapeForHtml(string $value): string
+    {
+        return htmlspecialchars($value, ENT_QUOTES | ENT_SUBSTITUTE, $this->getEmergencyCharset());
     }
 
     private function fillErrorLevelsFromConfig(array $errors, array $errorConfiguration, string $key): array
