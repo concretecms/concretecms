@@ -37,7 +37,13 @@ $noCanonicalWarning = '<div class="alert alert-warning">' . t(
     <a href="<?= h(\Concrete\Core\Support\Facade\Url::to('/dashboard/system/automation/tasks')) ?>" class="btn btn-secondary"><?= t('Scheduled Tasks') ?></a>
 </div>
 
-<p class="lead"><?= t('The <strong>Generate Sitemap</strong> scheduled task writes <code>sitemap.xml</code> and <code>robots.txt</code> for each site into <code>application/files/site-specific/{host}/</code>. All other files below are managed manually.') ?></p>
+<p class="lead"><?= sprintf(
+    t(/* i18n: %1$s is the task name in bold; %2$s, %3$s are filenames in monospace; %4$s is a directory path in monospace */'The %s scheduled task writes %s and %s for each site into %s. All other files below are managed manually.'),
+    '<strong>' . t('Generate Sitemap') . '</strong>',
+    '<code>sitemap.xml</code>',
+    '<code>robots.txt</code>',
+    '<code>application/files/site-specific/{host}/</code>'
+) ?></p>
 
 <div class="table-responsive">
 <table class="table table-striped table-sm">
@@ -87,26 +93,26 @@ $noCanonicalWarning = '<div class="alert alert-warning">' . t(
 <?php foreach ([
     ['key' => 'robots', 'file' => 'robots.txt', 'contentKey' => 'robotsContent', 'urlKey' => 'robotsUrl', 'partial' => 'robots_form.php',
      'heading' => t('Edit robots.txt'),
-     'note' => t('Changes take effect immediately. Running <strong>Generate Sitemap</strong> will regenerate this file from your web root <code>robots.txt</code>.')],
+     'note' => sprintf(t(/* i18n: %1$s is the task name in bold; %2$s is the filename in monospace */'Changes take effect immediately. Running %s will update the %s Sitemap directive but preserve your other custom rules.'), '<strong>' . t('Generate Sitemap') . '</strong>', '<code>robots.txt</code>')],
     ['key' => 'llms', 'file' => 'llms.txt', 'contentKey' => 'llmsContent', 'urlKey' => 'llmsUrl', 'partial' => 'llms_form.php',
      'heading' => t('Edit llms.txt'),
-     'note' => t('Tells AI crawlers about your site. See %s for the format specification.', '<a href="https://llmstxt.org" target="_blank" rel="noopener noreferrer">llmstxt.org</a>')],
+     'note' => t(/* i18n: %s is a link to llmstxt.org */'Tells AI crawlers about your site. See %s for the format specification.', '<a href="https://llmstxt.org" target="_blank" rel="noopener noreferrer">llmstxt.org</a>')],
     ['key' => 'security', 'file' => 'security.txt', 'contentKey' => 'securityContent', 'urlKey' => 'securityUrl', 'partial' => 'security_form.php',
      'heading' => t('Edit security.txt'),
-     'note' => t('Discloses how to report security vulnerabilities (RFC 9116). Served at <code>/.well-known/security.txt</code>. The <code>Expires</code> field is required — update it at least annually.')],
+     'note' => sprintf(t(/* i18n: %1$s is the file path in monospace; %2$s is the field name in monospace */'Discloses how to report security vulnerabilities (RFC 9116). Served at %s. The %s field is required — update it at least annually.'), '<code>/.well-known/security.txt</code>', '<code>Expires</code>')],
     ['key' => 'ads', 'file' => 'ads.txt', 'contentKey' => 'adsContent', 'urlKey' => 'adsUrl', 'partial' => 'ads_form.php',
      'heading' => t('Edit ads.txt'),
      'note' => t('Declares authorized programmatic ad sellers (IAB Authorized Digital Sellers standard). Only relevant for sites running display advertising.')],
     ['key' => 'humans', 'file' => 'humans.txt', 'contentKey' => 'humansContent', 'urlKey' => 'humansUrl', 'partial' => 'humans_form.php',
      'heading' => t('Edit humans.txt'),
-     'note' => t('Credits the people who built the site. See %s for the format.', '<a href="https://humanstxt.org" target="_blank" rel="noopener noreferrer">humanstxt.org</a>')],
+     'note' => t(/* i18n: %s is a link to humanstxt.org */'Credits the people who built the site. See %s for the format.', '<a href="https://humanstxt.org" target="_blank" rel="noopener noreferrer">humanstxt.org</a>')],
     // Future: /.well-known/dnt-policy.txt (EFF Do Not Track policy declaration).
     // Serving this file is a binding public claim that the site honours the DNT header for all visitors.
     // Add an editor entry here once Concrete suppresses tracking/analytics when DNT is set.
 ] as $editor): ?>
 
     <hr>
-    <h4><?= $editor['heading'] ?></h4>
+    <h4><?= h($editor['heading']) ?></h4>
     <p class="text-muted"><?= $editor['note'] ?></p>
 
     <?php if ($isMultisite): ?>
@@ -152,10 +158,17 @@ $noCanonicalWarning = '<div class="alert alert-warning">' . t(
 <?php if ($isMultisite): ?>
     <hr>
     <h4><?= t('Multisite Server Configuration') ?></h4>
-    <p><?= t('With multiple sites, your web server must route <code>/sitemap.xml</code>, <code>/robots.txt</code>, <code>/llms.txt</code>, <code>/.well-known/security.txt</code>, and other well-known files to the correct per-site file.') ?></p>
+    <p><?= sprintf(
+        t(/* i18n: %1$s–%4$s are file paths shown in monospace */'With multiple sites, your web server must route %1$s, %2$s, %3$s, %4$s, and other well-known files to the correct per-site file.'),
+        '<code>/sitemap.xml</code>',
+        '<code>/robots.txt</code>',
+        '<code>/llms.txt</code>',
+        '<code>/.well-known/security.txt</code>'
+    ) ?></p>
+    <p class="text-muted small"><?= t('These rules are required. Without them, files are written to the server but will not be publicly accessible. If you cannot modify your web server configuration, each site should be managed as a separate ConcreteCMS installation.') ?></p>
 
     <h5><?= t('nginx') ?></h5>
-    <p class="text-muted small"><?= t('Add inside your <code>server {}</code> block, before the main PHP location block.') ?></p>
+    <p class="text-muted small"><?= sprintf(t(/* i18n: %s is the nginx directive "server {}" shown in monospace */'Add inside your %s block, before the main PHP location block.'), '<code>server {}</code>') ?></p>
     <?= $form->textarea('', h($nginxConfig), [
         'rows' => substr_count($nginxConfig, "\n") + 1,
         'onclick' => 'this.select()',
@@ -164,7 +177,7 @@ $noCanonicalWarning = '<div class="alert alert-warning">' . t(
     ]) ?>
 
     <h5 class="mt-3"><?= t('Apache') ?></h5>
-    <p class="text-muted small"><?= t('Add to the root <code>.htaccess</code> before the existing Concrete CMS rules.') ?></p>
+    <p class="text-muted small"><?= sprintf(t(/* i18n: %s is the filename ".htaccess" shown in monospace */'Add to the root %s before the existing Concrete CMS rules.'), '<code>.htaccess</code>') ?></p>
     <?= $form->textarea('', h($apacheConfig), [
         'rows' => substr_count($apacheConfig, "\n") + 1,
         'onclick' => 'this.select()',
@@ -173,16 +186,3 @@ $noCanonicalWarning = '<div class="alert alert-warning">' . t(
     ]) ?>
 
 <?php endif ?>
-
-<script>
-document.addEventListener('DOMContentLoaded', function () {
-    document.querySelectorAll('form.ccm-well-known-editor').forEach(function (form) {
-        var textarea = form.querySelector('textarea.well-known-content-input');
-        var hidden   = form.querySelector('input.well-known-content-hidden');
-        form.addEventListener('submit', function () {
-            hidden.value = btoa(unescape(encodeURIComponent(textarea.value)));
-            textarea.disabled = true;
-        });
-    });
-});
-</script>

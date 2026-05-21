@@ -14,10 +14,11 @@ defined('C5_EXECUTE') or die('Access Denied.');
 /**
  * Writes a per-site robots.txt to application/files/site-specific/{host}/robots.txt.
  *
- * Content is derived from the base robots.txt at the web root (if present). Any existing
- * "Sitemap:" directives are stripped and replaced with a single directive pointing to the
- * site's sitemap.xml at its canonical URL. This ensures each site's robots.txt advertises
- * the correct sitemap without cross-site contamination.
+ * Base content is taken from the existing per-site robots.txt if one has already been
+ * saved (e.g. via the dashboard editor), falling back to the webroot robots.txt. Any
+ * existing "Sitemap:" directives are stripped and replaced with a single directive
+ * pointing to the site's sitemap.xml at its canonical URL. This preserves custom
+ * robots.txt rules while keeping the Sitemap reference up to date.
  *
  * Sites without a canonical URL are skipped — a valid absolute Sitemap: URL cannot be
  * constructed for them.
@@ -26,10 +27,14 @@ class GenerateRobotsTxtCommandHandler implements OutputAwareInterface
 {
     use OutputAwareTrait;
 
-    /** @var SiteService */
+    /**
+     * @var SiteService
+     */
     protected $siteService;
 
-    /** @var WellKnownFileManager */
+    /**
+     * @var WellKnownFileManager
+     */
     protected $wellKnownManager;
 
     public function __construct(SiteService $siteService, WellKnownFileManager $wellKnownManager)
@@ -56,7 +61,13 @@ class GenerateRobotsTxtCommandHandler implements OutputAwareInterface
             return;
         }
 
-        $baseFile = rtrim(DIR_BASE, '/') . '/robots.txt';
+        // Prefer the site's own robots.txt (saved via the dashboard editor) so that custom
+        // rules are preserved when the sitemap is regenerated. Fall back to the shared
+        // webroot robots.txt for sites that have not been individually configured yet.
+        $perSitePath = $this->wellKnownManager->getFilePath($site, 'robots.txt');
+        $baseFile = ($perSitePath !== '' && is_file($perSitePath))
+            ? $perSitePath
+            : rtrim(DIR_BASE, '/') . '/robots.txt';
         $baseContent = is_file($baseFile) ? (string) file_get_contents($baseFile) : '';
 
         $lines = $baseContent !== ''
@@ -67,7 +78,7 @@ class GenerateRobotsTxtCommandHandler implements OutputAwareInterface
         $lines = array_values(array_filter($lines, static function (string $line): bool { return stripos(trim($line), 'sitemap:') !== 0; }));
 
         // Append the canonical Sitemap: directive, with a blank separator only when there is base content above it.
-        $sitemapUrl = WellKnownFileManager::getUrlForSite($site, 'sitemap.xml');
+        $sitemapUrl = $this->wellKnownManager->getUrlForSite($site, 'sitemap.xml');
         if ($lines !== []) {
             $lines[] = '';
         }

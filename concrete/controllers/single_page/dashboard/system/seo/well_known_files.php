@@ -26,6 +26,9 @@ defined('C5_EXECUTE') or die('Access Denied.');
  */
 class WellKnownFiles extends DashboardPageController
 {
+    /**
+     * Render the well-known files dashboard page.
+     */
     public function view(): void
     {
         $siteService = $this->app->make(SiteService::class);
@@ -50,13 +53,12 @@ class WellKnownFiles extends DashboardPageController
                 'handle' => $site->getSiteHandle(),
                 'name' => $site->getSiteName(),
                 'canonicalUrl' => $canonicalUrl,
-                'sitemapUrl' => $canonicalUrl !== '' ? WellKnownFileManager::getUrlForSite($site, 'sitemap.xml') : '',
-                'robotsUrl' => $canonicalUrl !== '' ? WellKnownFileManager::getUrlForSite($site, 'robots.txt') : '',
-                'llmsUrl' => $canonicalUrl !== '' ? WellKnownFileManager::getUrlForSite($site, 'llms.txt') : '',
-                // security.txt is served at /.well-known/security.txt but stored flat as security.txt
-                'securityUrl' => $canonicalUrl !== '' ? WellKnownFileManager::getUrlForSite($site, '.well-known/security.txt') : '',
-                'adsUrl' => $canonicalUrl !== '' ? WellKnownFileManager::getUrlForSite($site, 'ads.txt') : '',
-                'humansUrl' => $canonicalUrl !== '' ? WellKnownFileManager::getUrlForSite($site, 'humans.txt') : '',
+                'sitemapUrl' => $canonicalUrl !== '' ? $wellKnown->getUrlForSite($site, 'sitemap.xml') : '',
+                'robotsUrl' => $canonicalUrl !== '' ? $wellKnown->getUrlForSite($site, 'robots.txt') : '',
+                'llmsUrl' => $canonicalUrl !== '' ? $wellKnown->getUrlForSite($site, 'llms.txt') : '',
+                'securityUrl' => $canonicalUrl !== '' ? $wellKnown->getUrlForSite($site, 'security.txt') : '',
+                'adsUrl' => $canonicalUrl !== '' ? $wellKnown->getUrlForSite($site, 'ads.txt') : '',
+                'humansUrl' => $canonicalUrl !== '' ? $wellKnown->getUrlForSite($site, 'humans.txt') : '',
                 'sitemap' => $this->fileStatus($wellKnown, $site, 'sitemap.xml'),
                 'robots' => $this->fileStatus($wellKnown, $site, 'robots.txt'),
                 'llms' => $this->fileStatus($wellKnown, $site, 'llms.txt'),
@@ -72,6 +74,12 @@ class WellKnownFiles extends DashboardPageController
         }
 
         $this->set('siteData', $siteData);
+        // $sitesWithCanonical counts only sites visible to this admin (canAdminSite filter).
+        // A restricted admin who manages only one of several sites won't see the nginx/Apache
+        // routing snippet — they don't need it and shouldn't be expected to apply it.
+        // WellKnownFileManager uses the same "> 1" threshold but counts all sites system-wide
+        // to decide where to write files, since file routing is an infrastructure concern that
+        // must reflect the actual system topology regardless of who is logged in.
         $this->set('isMultisite', $sitesWithCanonical > 1);
         $this->set('nginxConfig', $this->getNginxConfig());
         $this->set('apacheConfig', $this->getApacheConfig());
@@ -109,6 +117,8 @@ class WellKnownFiles extends DashboardPageController
     }
 
     /**
+     * @param string $filename One of the allowed well-known filenames
+     *
      * @return array{exists: bool, lastModified: int|null}
      */
     protected function fileStatus(WellKnownFileManager $wellKnown, Site $site, string $filename): array
@@ -122,6 +132,8 @@ class WellKnownFiles extends DashboardPageController
     /**
      * Prefers the managed well-known file; falls back to the webroot robots.txt
      * as a useful starting point when the file has not yet been generated via the dashboard.
+     *
+     * @return string File contents, or '' if neither file exists
      */
     protected function readRobotsContent(WellKnownFileManager $wellKnown, Site $site): string
     {
@@ -131,9 +143,17 @@ class WellKnownFiles extends DashboardPageController
         }
 
         $webroot = rtrim(DIR_BASE, '/') . '/robots.txt';
+
         return is_file($webroot) ? (string) file_get_contents($webroot) : '';
     }
 
+    /**
+     * Return the current content of a well-known file, or '' if it does not yet exist.
+     *
+     * @param string $filename One of the allowed well-known filenames
+     *
+     * @return string File contents, or ''
+     */
     protected function readWellKnownContent(WellKnownFileManager $wellKnown, Site $site, string $filename): string
     {
         $path = $wellKnown->getFilePath($site, $filename);
@@ -144,16 +164,24 @@ class WellKnownFiles extends DashboardPageController
         return '';
     }
 
+    /**
+     * Validate, write, and redirect for a well-known file save action.
+     *
+     * @param string $filename One of the allowed well-known filenames
+     * @param string $tokenName CSRF token action name
+     * @param string $successMessage Flash message shown on successful save
+     */
     protected function saveWellKnownFile(string $filename, string $tokenName, string $successMessage): void
     {
         if (!$this->token->validate($tokenName)) {
             $this->error->add($this->token->getErrorMessage());
             $this->view();
+
             return;
         }
 
         $siteID = (int) $this->request->request->get('siteID');
-        $content = (string) base64_decode((string) $this->request->request->get('content'), true);
+        $content = (string) $this->request->request->get('content');
 
         if (strlen($content) > 65536) {
             $this->error->add(t('The file content exceeds the maximum allowed size of 64 KB.'));
@@ -167,6 +195,7 @@ class WellKnownFiles extends DashboardPageController
 
         if ($this->error->has()) {
             $this->view();
+
             return;
         }
 
@@ -177,6 +206,7 @@ class WellKnownFiles extends DashboardPageController
         if ($path === '') {
             $this->error->add(t('Could not save %s.', $filename));
             $this->view();
+
             return;
         }
 
@@ -199,16 +229,22 @@ class WellKnownFiles extends DashboardPageController
         return (bool) (new PermissionChecker($homePage))->canAdminPage();
     }
 
+    /**
+     * @return string nginx location block for well-known files routing, or '' if not available
+     */
     protected function getNginxConfig(): string
     {
-        $rule = (new NginxGenerator())->getRule('well_known_files');
+        $rule = $this->app->make(NginxGenerator::class)->getRule('well_known_files');
 
         return $rule !== null ? $rule->getCode() : '';
     }
 
+    /**
+     * @return string Apache .htaccess rules for well-known files routing, or '' if not available
+     */
     protected function getApacheConfig(): string
     {
-        $rule = (new ApacheGenerator())->getRule('well_known_files');
+        $rule = $this->app->make(ApacheGenerator::class)->getRule('well_known_files');
 
         return $rule !== null ? $rule->getCode() : '';
     }

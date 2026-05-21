@@ -65,6 +65,7 @@ class GenerateSitemapCommandTest extends TestCase
 
         $wellKnown = Mockery::mock(WellKnownFileManager::class);
         $wellKnown->shouldReceive('getFilePath')->once()->with($site, 'sitemap.xml')->andReturn($expectedPath);
+        $wellKnown->shouldReceive('getUrlForSite')->with($site, 'sitemap.xml')->andReturn('https://example.com/sitemap.xml');
 
         $handler = new GenerateSitemapCommandHandler($writer, $siteService, $wellKnown);
         $handler->setOutput(new NullOutput());
@@ -93,6 +94,7 @@ class GenerateSitemapCommandTest extends TestCase
             ->once()
             ->with($site, 'sitemap.xml')
             ->andReturn($expectedPath);
+        $wellKnown->shouldReceive('getUrlForSite')->with($site, 'sitemap.xml')->andReturn('https://example.com/sitemap.xml');
 
         $handler = new GenerateSitemapCommandHandler($writer, $siteService, $wellKnown);
         $handler->setOutput(new NullOutput());
@@ -198,6 +200,8 @@ class GenerateSitemapCommandTest extends TestCase
         $siteService->shouldReceive('getByID')->with(1)->andReturn($site);
 
         $wellKnown = Mockery::mock(WellKnownFileManager::class);
+        $wellKnown->shouldReceive('getUrlForSite')->with($site, 'sitemap.xml')->andReturn('https://example.com/sitemap.xml');
+        $wellKnown->shouldReceive('getFilePath')->with($site, 'robots.txt')->andReturn('');
         $wellKnown->shouldReceive('writeFile')
             ->once()
             ->with($site, 'robots.txt', Mockery::on(function (string $content): bool {
@@ -207,6 +211,45 @@ class GenerateSitemapCommandTest extends TestCase
         $handler = new GenerateRobotsTxtCommandHandler($siteService, $wellKnown);
         $handler->setOutput(new NullOutput());
         $handler->__invoke(new GenerateRobotsTxtCommand(1));
+    }
+
+    public function testRobotsTxtHandlerPrefersPerSiteFileAsBase(): void
+    {
+        // When a per-site robots.txt already exists (e.g. saved via the dashboard editor),
+        // the handler should use it as the base content rather than the webroot file, so
+        // custom rules written by the admin are preserved on subsequent sitemap regenerations.
+        $perSiteFile = tempnam(sys_get_temp_dir(), 'robots_');
+        file_put_contents($perSiteFile, "User-agent: *\nDisallow: /admin\nSitemap: https://old.example.com/sitemap.xml\n");
+
+        $site = Mockery::mock(Site::class);
+        $site->shouldReceive('getSiteCanonicalURL')->andReturn('https://example.com');
+        $site->shouldReceive('getSiteHandle')->andReturn('default');
+
+        $siteService = Mockery::mock(SiteService::class);
+        $siteService->shouldReceive('getByID')->with(5)->andReturn($site);
+
+        $capturedContent = '';
+        $wellKnown = Mockery::mock(WellKnownFileManager::class);
+        $wellKnown->shouldReceive('getUrlForSite')->with($site, 'sitemap.xml')->andReturn('https://example.com/sitemap.xml');
+        $wellKnown->shouldReceive('getFilePath')->with($site, 'robots.txt')->andReturn($perSiteFile);
+        $wellKnown->shouldReceive('writeFile')
+            ->once()
+            ->with($site, 'robots.txt', Mockery::on(function (string $content) use (&$capturedContent): bool {
+                $capturedContent = $content;
+                return true;
+            }));
+
+        $handler = new GenerateRobotsTxtCommandHandler($siteService, $wellKnown);
+        $handler->setOutput(new NullOutput());
+        $handler->__invoke(new GenerateRobotsTxtCommand(5));
+
+        unlink($perSiteFile);
+
+        // Custom rules from the per-site file are preserved.
+        $this->assertStringContainsString('Disallow: /admin', $capturedContent);
+        // The old Sitemap directive is replaced with the new one.
+        $this->assertStringNotContainsString('https://old.example.com', $capturedContent);
+        $this->assertStringContainsString('Sitemap: https://example.com/sitemap.xml', $capturedContent);
     }
 
     public function testRobotsTxtHandlerStripsExistingSitemapDirectives(): void
@@ -225,6 +268,8 @@ class GenerateSitemapCommandTest extends TestCase
 
         $capturedContent = '';
         $wellKnown = Mockery::mock(WellKnownFileManager::class);
+        $wellKnown->shouldReceive('getUrlForSite')->with($site, 'sitemap.xml')->andReturn('https://new.example.com/sitemap.xml');
+        $wellKnown->shouldReceive('getFilePath')->with($site, 'robots.txt')->andReturn('');
         $wellKnown->shouldReceive('writeFile')
             ->once()
             ->with($site, 'robots.txt', Mockery::on(function (string $content) use (&$capturedContent): bool {
@@ -267,6 +312,8 @@ class GenerateSitemapCommandTest extends TestCase
         }
 
         $wellKnown = Mockery::mock(WellKnownFileManager::class);
+        $wellKnown->shouldReceive('getUrlForSite')->with($site, 'sitemap.xml')->andReturn('https://blank.example.com/sitemap.xml');
+        $wellKnown->shouldReceive('getFilePath')->with($site, 'robots.txt')->andReturn('');
         $wellKnown->shouldReceive('writeFile')
             ->once()
             ->with($site, 'robots.txt', Mockery::on(function (string $content): bool {

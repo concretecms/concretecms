@@ -25,13 +25,19 @@ class GenerateSitemapCommandHandler implements OutputAwareInterface
 {
     use OutputAwareTrait;
 
-    /** @var SitemapWriter */
+    /**
+     * @var SitemapWriter
+     */
     protected $writer;
 
-    /** @var SiteService */
+    /**
+     * @var SiteService
+     */
     protected $siteService;
 
-    /** @var WellKnownFileManager */
+    /**
+     * @var WellKnownFileManager
+     */
     protected $wellKnownManager;
 
     public function __construct(SitemapWriter $writer, SiteService $siteService, WellKnownFileManager $wellKnownManager)
@@ -83,7 +89,7 @@ class GenerateSitemapCommandHandler implements OutputAwareInterface
 
             $this->writer->generateForSite($site, '', $pulse);
 
-            $url = WellKnownFileManager::getUrlForSite($site, 'sitemap.xml');
+            $url = $this->wellKnownManager->getUrlForSite($site, 'sitemap.xml');
         } else {
             // Null siteID is deprecated — pass an explicit siteID to GenerateSitemapCommand.
             // Preserved for backward compatibility. Uses the legacy sitemap.xml filename.
@@ -98,7 +104,7 @@ class GenerateSitemapCommandHandler implements OutputAwareInterface
             $this->writer->generateForSite($site, '', $pulse);
             // generateForSite() restores generator state, so compute the URL directly.
             $canonicalUrl = $site->getSiteCanonicalURL();
-            $url = $canonicalUrl !== '' && strpos($legacyFilename, DIR_BASE . '/') === 0
+            $url = $canonicalUrl !== '' && str_starts_with($legacyFilename, DIR_BASE . '/')
                 ? rtrim($canonicalUrl, '/') . substr($legacyFilename, strlen(DIR_BASE))
                 : '';
         }

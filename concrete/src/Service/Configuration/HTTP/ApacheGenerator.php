@@ -37,7 +37,7 @@ class ApacheGenerator extends Generator implements GeneratorInterface
                 '',
                 '# Route root-level well-known files to per-site overrides when available.',
                 'RewriteCond %{HTTP_HOST} ^([a-zA-Z0-9][a-zA-Z0-9.\-]*[a-zA-Z0-9])(:[0-9]+)?$',
-                'RewriteCond %{DOCUMENT_ROOT}/application/files/site-specific/%1/%{REQUEST_URI} -f',
+                'RewriteCond %{DOCUMENT_ROOT}/application/files/site-specific/%1/$1 -f',
                 'RewriteRule ^(robots\.txt|sitemap\.xml|ads\.txt|humans\.txt|llms\.txt)$ /application/files/site-specific/%1/$1 [L]',
             ]),
             true,

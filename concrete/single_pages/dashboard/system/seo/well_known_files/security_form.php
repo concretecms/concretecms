@@ -18,9 +18,8 @@ Preferred-Languages: en
 <form method="post" action="<?= h($controller->action('save_security')) ?>" class="ccm-well-known-editor">
     <?php $token->output('save_security_txt') ?>
     <input type="hidden" name="siteID" value="<?= (int) $row['id'] ?>">
-    <input type="hidden" name="content" value="" class="well-known-content-hidden">
     <div class="form-group">
-        <textarea class="form-control font-monospace well-known-content-input" name="" rows="8" spellcheck="false"
+        <textarea class="form-control font-monospace" name="content" rows="8" spellcheck="false"
                   placeholder="<?= h($placeholder) ?>"><?= h($row['securityContent']) ?></textarea>
     </div>
     <div class="mt-3 text-end">

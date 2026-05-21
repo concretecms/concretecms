@@ -5,30 +5,62 @@ declare(strict_types=1);
 namespace Concrete\Core\Site\WellKnown;
 
 use Concrete\Core\Entity\Site\Site;
-use Concrete\Core\Site\InstallationService;
+use Concrete\Core\Site\Service as SiteService;
 
 defined('C5_EXECUTE') or die('Access Denied.');
 
 /**
- * Manages per-site "well-known" files (robots.txt, sitemap.xml, ads.txt, etc.)
+ * Manages per-site "well-known" files (robots.txt, sitemap.xml, ads.txt, etc.).
  *
- * Multisite installs store files under
- * {webroot}/application/files/site-specific/{canonical-host}/ so each site
- * can serve its own copies without conflict; nginx/Apache route requests by
- * the Host header to that directory.
+ * When two or more sites have canonical URLs configured, files are stored under
+ * {webroot}/application/files/site-specific/{canonical-host}/ and nginx/Apache
+ * route requests by Host header to the matching directory.
  *
- * Single-site installs write files directly to the webroot so no web-server
- * configuration changes are required. security.txt is always stored under
- * .well-known/ per RFC 9116.
+ * When only one site is configured (even if the multisite feature flag is on),
+ * files are written directly to the webroot so no web-server reconfiguration is
+ * required. security.txt is always served from /.well-known/security.txt per RFC 9116.
+ *
+ * Path resolution and file writing are intentionally kept in one class rather than
+ * split into a separate Writer. The write path is derived from the same isMultisite
+ * flag, host validation, and getWebrootFilename() mapping that the read/query methods
+ * use. A Writer would need to duplicate or depend on all of that anyway, producing
+ * two coupled classes with no reduction in complexity. If this class is replaced via
+ * the container, both concerns are replaced together, which is the right behaviour.
  */
 class WellKnownFileManager
 {
-    /** @var bool */
+    /**
+     * @var bool
+     */
     private $isMultisite;
 
-    public function __construct(InstallationService $installationService)
+    /**
+     * @var string[]
+     */
+    private const ALLOWED_FILENAMES = ['robots.txt', 'sitemap.xml', 'llms.txt', 'security.txt', 'ads.txt', 'humans.txt'];
+
+    /**
+     * @param SiteService $siteService Used to count how many sites have canonical URLs at construction time
+     */
+    public function __construct(SiteService $siteService)
     {
-        $this->isMultisite = $installationService->isMultisiteEnabled();
+        // Use per-host routing only when two or more sites have canonical URLs.
+        // "Multisite enabled" alone is not the right threshold: a system with the
+        // multisite feature on but only one site configured should behave exactly
+        // like a single-site install — files land in the webroot and no web-server
+        // reconfiguration is needed. The dashboard controller uses the same "> 1"
+        // threshold to decide whether to show the nginx/Apache routing snippet, so
+        // the two signals stay in sync. The controller counts only admin-visible sites
+        // (canAdminSite filter) whereas this counts all sites system-wide, which is
+        // intentional: file routing is an infrastructure decision that must reflect
+        // the actual system topology, not what a particular admin can see.
+        $count = 0;
+        foreach ($siteService->getList() as $site) {
+            if ($site->getSiteCanonicalURL() !== '') {
+                $count++;
+            }
+        }
+        $this->isMultisite = $count > 1;
     }
 
     /**
@@ -38,8 +70,12 @@ class WellKnownFileManager
      * contains characters that could escape the expected storage directory (e.g. '../').
      * Valid hosts contain only letters, digits, hyphens, and dots, and must begin and end
      * with an alphanumeric character — matching RFC 1123 and ruling out path traversal.
+     *
+     * @param Site $site The site whose canonical URL is examined
+     *
+     * @return string Lowercased hostname, or '' if not resolvable or contains unsafe characters
      */
-    public static function getHostForSite(Site $site): string
+    public function getHostForSite(Site $site): string
     {
         $canonical = $site->getSiteCanonicalURL();
         if ($canonical === '') {
@@ -60,10 +96,14 @@ class WellKnownFileManager
      * Return the absolute filesystem directory where well-known files for a site are stored.
      *
      * Returns '' if the site has no canonical URL.
+     *
+     * @param Site $site The site whose well-known directory is requested
+     *
+     * @return string Absolute directory path, or '' if the site has no canonical URL
      */
-    public static function getDirectoryForSite(Site $site): string
+    public function getDirectoryForSite(Site $site): string
     {
-        $host = static::getHostForSite($site);
+        $host = $this->getHostForSite($site);
         if ($host === '') {
             return '';
         }
@@ -77,30 +117,49 @@ class WellKnownFileManager
      * Returns '' if the site has no canonical URL. This static method always returns
      * the per-host path regardless of multisite mode; use getFilePath() for the
      * mode-aware version.
+     *
+     * @param Site $site The site whose per-host path is requested
+     * @param string $filename One of the allowed well-known filenames
+     *
+     * @return string Absolute file path, or '' if the site has no canonical URL or filename is disallowed
      */
-    public static function getFilePathForSite(Site $site, string $filename): string
+    public function getFilePathForSite(Site $site, string $filename): string
     {
-        $dir = static::getDirectoryForSite($site);
+        if (!in_array($filename, self::ALLOWED_FILENAMES, true)) {
+            return '';
+        }
+
+        $dir = $this->getDirectoryForSite($site);
         if ($dir === '') {
             return '';
         }
 
-        return $dir . '/' . ltrim($filename, '/');
+        return $dir . '/' . $filename;
     }
 
     /**
      * Return the public URL for a well-known file on a site (e.g. https://example.com/robots.txt).
      *
-     * Returns '' if the site has no canonical URL.
+     * Returns '' if the site has no canonical URL or the filename is not allowed.
+     * security.txt is mapped to /.well-known/security.txt per RFC 9116 automatically.
+     *
+     * @param Site $site The site whose canonical URL is used as the base
+     * @param string $filename One of the allowed well-known filenames
+     *
+     * @return string Full public URL, or '' if the site has no canonical URL or filename is disallowed
      */
-    public static function getUrlForSite(Site $site, string $filename): string
+    public function getUrlForSite(Site $site, string $filename): string
     {
+        if (!in_array($filename, self::ALLOWED_FILENAMES, true)) {
+            return '';
+        }
+
         $canonical = $site->getSiteCanonicalURL();
         if ($canonical === '') {
             return '';
         }
 
-        return rtrim($canonical, '/') . '/' . ltrim($filename, '/');
+        return rtrim($canonical, '/') . '/' . ltrim($this->getWebrootFilename($filename), '/');
     }
 
     /**
@@ -108,24 +167,37 @@ class WellKnownFileManager
      *
      * In multisite mode returns the per-host path ('' when the site has no canonical URL).
      * In single-site mode always returns the webroot path.
+     *
+     * @param Site $site The site whose file path is requested
+     * @param string $filename One of the allowed well-known filenames
+     *
+     * @return string Absolute filesystem path, or '' in multisite mode when the site has no canonical URL
      */
     public function getFilePath(Site $site, string $filename): string
     {
-        if ($this->isMultisite) {
-            return static::getFilePathForSite($site, $filename);
+        if (!in_array($filename, self::ALLOWED_FILENAMES, true)) {
+            return '';
         }
 
-        return rtrim(DIR_BASE, '/') . '/' . ltrim(static::getWebrootFilename($filename), '/');
+        if ($this->isMultisite) {
+            return $this->getFilePathForSite($site, $filename);
+        }
+
+        return rtrim(DIR_BASE, '/') . '/' . ltrim($this->getWebrootFilename($filename), '/');
     }
 
     /**
      * Ensure the well-known directory for a site exists, creating it if necessary.
      *
      * Returns the directory path, or '' if the site has no canonical URL.
+     *
+     * @param Site $site The site whose well-known directory should be created if absent
+     *
+     * @return string The directory path, or '' if the site has no canonical URL
      */
     public function ensureDirectoryForSite(Site $site): string
     {
-        $dir = static::getDirectoryForSite($site);
+        $dir = $this->getDirectoryForSite($site);
         if ($dir !== '' && !is_dir($dir)) {
             mkdir($dir, 0755, true);
         }
@@ -143,10 +215,18 @@ class WellKnownFileManager
      *
      * Uses a write-to-tempfile + rename() pattern so the live file is never partially written.
      *
-     * Returns the absolute path written, or '' on failure.
+     * @param Site $site The site the file belongs to
+     * @param string $filename One of the allowed well-known filenames
+     * @param string $content File content to write
+     *
+     * @return string The absolute path written, or '' on failure
      */
     public function writeFile(Site $site, string $filename, string $content): string
     {
+        if (!in_array($filename, self::ALLOWED_FILENAMES, true)) {
+            return '';
+        }
+
         if ($this->isMultisite) {
             $dir = $this->ensureDirectoryForSite($site);
             if ($dir === '') {
@@ -157,7 +237,7 @@ class WellKnownFileManager
         }
 
         // Single-site: always write to the webroot
-        $path = rtrim(DIR_BASE, '/') . '/' . ltrim(static::getWebrootFilename($filename), '/');
+        $path = rtrim(DIR_BASE, '/') . '/' . ltrim($this->getWebrootFilename($filename), '/');
 
         return $this->writeToPath($path, $content);
     }
@@ -169,7 +249,7 @@ class WellKnownFileManager
      * In per-host (multisite) storage the web server handles the URL mapping, so
      * only the webroot case needs the subdirectory.
      */
-    private static function getWebrootFilename(string $filename): string
+    private function getWebrootFilename(string $filename): string
     {
         return $filename === 'security.txt' ? '.well-known/security.txt' : $filename;
     }
@@ -185,20 +265,27 @@ class WellKnownFileManager
         if (!is_dir($dir)) {
             mkdir($dir, 0755, true);
         }
-        $tmp = tempnam($dir, '.tmp');
+        $resolvedDir = realpath($dir);
+        if ($resolvedDir === false) {
+            return '';
+        }
+        $path = $resolvedDir . DIRECTORY_SEPARATOR . basename($path);
+        $tmp = tempnam($resolvedDir, '.tmp');
         if ($tmp === false) {
             return '';
         }
         if (file_put_contents($tmp, $content, LOCK_EX) === false) {
-            @unlink($tmp);
+            unlink($tmp);
+
             return '';
         }
         if (!rename($tmp, $path)) {
-            @unlink($tmp);
+            unlink($tmp);
+
             return '';
         }
 
-        @chmod($path, 0644);
+        chmod($path, 0644);
 
         return $path;
     }
