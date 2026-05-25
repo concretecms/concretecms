@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Concrete\Core\Package;
 
 use Concrete\Core\Application\Application;
@@ -12,18 +15,21 @@ use Concrete\Core\Database\EntityManager\Driver\CoreDriver;
 use Concrete\Core\Database\EntityManager\Provider\PackageProviderFactory;
 use Concrete\Core\Database\Schema\Schema;
 use Concrete\Core\Entity\Package as PackageEntity;
+use Concrete\Core\Events\EventDispatcher;
 use Concrete\Core\Package\Dependency\DependencyChecker;
+use Concrete\Core\Package\Event\PackageEvent;
+use Concrete\Core\Package\Event\UninstallEvent;
 use Concrete\Core\Package\ItemCategory\Manager;
 use Concrete\Core\Page\Theme\Theme;
-use Doctrine\Persistence\Mapping\Driver\MappingDriverChain;
 use Doctrine\Common\Proxy\ProxyGenerator;
 use Doctrine\DBAL\Schema\Comparator as SchemaComparator;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Tools\Setup;
+use Doctrine\Persistence\Mapping\Driver\MappingDriverChain;
 use Gettext\Translations;
-use Localization;
-use stdClass;
+
+defined('C5_EXECUTE') or die('Access Denied.');
 
 abstract class Package implements LocalizablePackageInterface
 {
@@ -32,77 +38,77 @@ abstract class Package implements LocalizablePackageInterface
      *
      * @var int
      */
-    const E_PACKAGE_NOT_FOUND = 1;
+    public const E_PACKAGE_NOT_FOUND = 1;
 
     /**
      * Error code: You've already installed that package.
      *
      * @var int
      */
-    const E_PACKAGE_INSTALLED = 2;
+    public const E_PACKAGE_INSTALLED = 2;
 
     /**
      * Error code: This package requires Concrete version %s or greater.
      *
      * @var int
      */
-    const E_PACKAGE_VERSION = 3;
+    public const E_PACKAGE_VERSION = 3;
 
     /**
      * Error code: An error occurred while downloading the package.
      *
      * @var int
      */
-    const E_PACKAGE_DOWNLOAD = 4;
+    public const E_PACKAGE_DOWNLOAD = 4;
 
     /**
      * Error code: Concrete was not able to save the package after download.
      *
      * @var int
      */
-    const E_PACKAGE_SAVE = 5;
+    public const E_PACKAGE_SAVE = 5;
 
     /**
      * Error code: An error occurred while trying to unzip the package.
      *
      * @var int
      */
-    const E_PACKAGE_UNZIP = 6;
+    public const E_PACKAGE_UNZIP = 6;
 
     /**
      * Error code: An error occurred while trying to install the package.
      *
      * @var int
      */
-    const E_PACKAGE_INSTALL = 7;
+    public const E_PACKAGE_INSTALL = 7;
 
     /**
      * Error code: Unable to backup old package directory to %s.
      *
      * @var int
      */
-    const E_PACKAGE_MIGRATE_BACKUP = 8;
+    public const E_PACKAGE_MIGRATE_BACKUP = 8;
 
     /**
      * Error code: This package isn't currently available for this version of Concrete.
      *
      * @var int
      */
-    const E_PACKAGE_INVALID_APP_VERSION = 20;
+    public const E_PACKAGE_INVALID_APP_VERSION = 20;
 
     /**
      * Error code: This package contains the active site theme, please change the theme before uninstalling.
      *
      * @var int
      */
-    const E_PACKAGE_THEME_ACTIVE = 21;
+    public const E_PACKAGE_THEME_ACTIVE = 21;
 
     /**
      * Error code: This package requires PHP version %1$s or greater (the current PHP version is %2$s).
      *
      * @var int
      */
-    const E_PACKAGE_PHP_VERSION = 22;
+    public const E_PACKAGE_PHP_VERSION = 22;
 
     /**
      * Absolute path to the /concrete/packages directory.
@@ -212,7 +218,7 @@ abstract class Package implements LocalizablePackageInterface
      * @var array
      */
     protected $pkgContentSwapFiles = [
-        "content.xml" => "Default"
+        'content.xml' => 'Default',
     ];
 
     /**
@@ -286,9 +292,6 @@ abstract class Package implements LocalizablePackageInterface
         $this->entity = $entity;
     }
 
-    /**
-     * @return array
-     */
     public function getContentSwapFiles(): array
     {
         return $this->pkgContentSwapFiles;
@@ -297,9 +300,10 @@ abstract class Package implements LocalizablePackageInterface
     /**
      * @return $this
      */
-    public function setContentSwapFiles(array $pkgContentSwapFiles): Package
+    public function setContentSwapFiles(array $pkgContentSwapFiles): self
     {
         $this->pkgContentSwapFiles = $pkgContentSwapFiles;
+
         return $this;
     }
 
@@ -431,7 +435,7 @@ abstract class Package implements LocalizablePackageInterface
      */
     public function getPackageHandle()
     {
-        return isset($this->pkgHandle) ? $this->pkgHandle : '';
+        return $this->pkgHandle ?? '';
     }
 
     /**
@@ -461,7 +465,7 @@ abstract class Package implements LocalizablePackageInterface
      */
     public function getPackageVersion()
     {
-        return isset($this->pkgVersion) ? $this->pkgVersion : '';
+        return $this->pkgVersion ?? '';
     }
 
     /**
@@ -476,8 +480,6 @@ abstract class Package implements LocalizablePackageInterface
 
     /**
      * Get the minimum PHP version compatible with the package.
-     *
-     * @return string
      *
      * @example '' if the package is compatible with any PHP version that's already compatible with the core
      * @example '8' if the package requires PHP 8.0.0 and later
@@ -608,14 +610,9 @@ abstract class Package implements LocalizablePackageInterface
      * Install the package info row and the database (doctrine entities and db.xml).
      * Packages installing additional content should override this method, call the parent method (`parent::install()`).
      *
-     * @param array $data The data received from:
-     * - the dashboard/install element of the package when installing via web
-     * - the options passed to the CLI command when installing via CLI
-     * - <option name="..." value="..." /> elements defined under the <package> element when installing via CIF
-     *
      * @return \Concrete\Core\Entity\Package
      */
-    public function install(/** array $data */)
+    public function install(/* array $data */)
     {
         PackageList::refreshCache();
         $em = $this->app->make(EntityManagerInterface::class);
@@ -631,7 +628,7 @@ abstract class Package implements LocalizablePackageInterface
 
         $this->installDatabase();
 
-        Localization::clearCache();
+        \Localization::clearCache();
 
         $navigationCache = $this->app->make(NavigationCache::class);
         $navigationCache->clear();
@@ -641,12 +638,18 @@ abstract class Package implements LocalizablePackageInterface
 
     /**
      * Uninstall the package:
+     * - fires the on_package_uninstall event (informational; at this point the package entity is still intact)
      * - delete the installed items associated to the package
      * - destroy the package proxy classes of entities
-     * - remove the package info row.
+     * - remove the package info row from the database
+     * - fires the on_package_uninstalled event (informational; the package entity has been removed — getPackageEntity() returns a detached entity).
+     * Neither lifecycle event prevents uninstall. To prevent uninstall with an error message, use on_package_test_for_uninstall instead.
      */
     public function uninstall()
     {
+        $dispatcher = $this->getEventDispatcher();
+        $dispatcher->dispatch('on_package_uninstall', new PackageEvent($this));
+
         /** @var Manager $manager */
         $manager = $this->app->make(Manager::class, ['application' => $this->app]);
         $categories = $manager->getPackageItemCategories();
@@ -671,7 +674,7 @@ abstract class Package implements LocalizablePackageInterface
         $em->remove($package);
         $em->flush();
 
-        Localization::clearCache();
+        \Localization::clearCache();
 
         if ($dbm) {
             $dbm->generateProxyClasses();
@@ -680,6 +683,7 @@ abstract class Package implements LocalizablePackageInterface
         $navigationCache = $this->app->make(NavigationCache::class);
         $navigationCache->clear();
 
+        $dispatcher->dispatch('on_package_uninstalled', new PackageEvent($this));
     }
 
     /**
@@ -694,6 +698,7 @@ abstract class Package implements LocalizablePackageInterface
             $file = $prefix . $name;
             if (is_file($file)) {
                 $contents = $this->app->make('helper/file')->getContents($file);
+
                 return nl2br(h($contents));
             }
         }
@@ -849,13 +854,12 @@ abstract class Package implements LocalizablePackageInterface
      */
     public function testForUpgrade()
     {
-        $result = $this->testForInstall(false);
-
-        return $result;
+        return $this->testForInstall(false);
     }
 
     /**
      * Perform tests before this package is uninstalled.
+     * Fires the on_package_test_for_uninstall event; listeners may add errors to the event's ErrorList to veto the uninstall.
      *
      * @return \Concrete\Core\Error\ErrorList\ErrorList|true return true if the package can be uninstalled, an ErrorList instance otherwise
      */
@@ -881,6 +885,9 @@ abstract class Package implements LocalizablePackageInterface
         // Step 2, check for package dependencies
         $dependencyChecker = $this->app->build(DependencyChecker::class);
         $errors->add($dependencyChecker->testForUninstall($this));
+
+        // Step 3, allow event listeners to veto the uninstall with error messages
+        $this->getEventDispatcher()->dispatch('on_package_test_for_uninstall', new UninstallEvent($this, $errors));
 
         return $errors->has() ? $errors : true;
     }
@@ -958,6 +965,7 @@ abstract class Package implements LocalizablePackageInterface
         if (method_exists($this, 'getPackageEntityPath')) {
             return [$this->getPackageEntityPath()];
         }
+
         // If we're using a legacy package, we scan the entire src directory
         return [$this->getPackagePath() . '/' . DIRNAME_CLASSES];
     }
@@ -993,13 +1001,12 @@ abstract class Package implements LocalizablePackageInterface
      *
      * @param string $xmlFile Path to the database XML file
      * @param string $importMode - If set to ContentImporter::IMPORT_MODE_UPGRADE, the schema will be checked against
-     * the current schema, supporting upgrades at a performance penalty. If set to ContentImporter::IMPORT_MODE_INSTALL
-     * the schema will be compared against an empty schema, which is a much faster operation and should be used when
-     * you know the installation is taking place against an empty database. ContentImporter::IMPORT_MODE_UPGRADE
-     * preserves backward compatibility as this was the way things always used to be handled.
+     *                           the current schema, supporting upgrades at a performance penalty. If set to ContentImporter::IMPORT_MODE_INSTALL
+     *                           the schema will be compared against an empty schema, which is a much faster operation and should be used when
+     *                           you know the installation is taking place against an empty database. ContentImporter::IMPORT_MODE_UPGRADE
+     *                           preserves backward compatibility as this was the way things always used to be handled.
+     * @throws \Doctrine\DBAL\ConnectionException
      * @return bool|\stdClass Returns false if the XML file could not be found
-     *@throws \Doctrine\DBAL\ConnectionException
-     *
      */
     public static function installDB($xmlFile, string $importMode = ContentImporter::IMPORT_MODE_UPGRADE)
     {
@@ -1040,7 +1047,7 @@ abstract class Package implements LocalizablePackageInterface
             }
         }
 
-        $result = new stdClass();
+        $result = new \stdClass();
         $result->result = false;
 
         return $result;
@@ -1078,7 +1085,7 @@ abstract class Package implements LocalizablePackageInterface
             $item->refresh();
         }
 
-        Localization::clearCache();
+        \Localization::clearCache();
 
         $navigationCache = $this->app->make(NavigationCache::class);
         $navigationCache->clear();
@@ -1128,7 +1135,7 @@ abstract class Package implements LocalizablePackageInterface
         $provider = $providerFactory->getEntityManagerProvider();
         $drivers = $provider->getDrivers();
         if (empty($drivers)) {
-            return null;
+            return;
         }
         $config = Setup::createConfiguration(true, $this->app->make('config')->get('database.proxy_classes'));
         $driverImpl = new MappingDriverChain();
@@ -1136,12 +1143,12 @@ abstract class Package implements LocalizablePackageInterface
 
         // Add all the installed packages so that the new package could potentially extend packages that are already / installed
         $packages = $this->app->make(PackageService::class)->getInstalledList();
-        foreach($packages as $package) {
+        foreach ($packages as $package) {
             $existingProviderFactory = new PackageProviderFactory($this->app, $package->getController());
             $existingProvider = $existingProviderFactory->getEntityManagerProvider();
             $existingDrivers = $existingProvider->getDrivers();
             if (!empty($existingDrivers)) {
-                foreach($existingDrivers as $existingDriver) {
+                foreach ($existingDrivers as $existingDriver) {
                     $driverImpl->addDriver($existingDriver->getDriver(), $existingDriver->getNamespace());
                 }
             }
@@ -1186,8 +1193,6 @@ abstract class Package implements LocalizablePackageInterface
     /**
      * Override this method in your package controller to add strings to the translator, so that you can translate dynamically generated strings.
      *
-     * @param Translations $translations
-     *
      * @example
      * If you add to this method these two strings:
      *
@@ -1217,6 +1222,11 @@ abstract class Package implements LocalizablePackageInterface
     public function getPackageDependencies()
     {
         return $this->packageDependencies;
+    }
+
+    protected function getEventDispatcher(): EventDispatcher
+    {
+        return $this->app->make(EventDispatcher::class);
     }
 
     /**
@@ -1268,7 +1278,7 @@ abstract class Package implements LocalizablePackageInterface
         foreach ($classes as $class) {
             // We have to do this check because we include core entities in this list because without it packages that extend
             // the core will complain.
-            if (strpos($class->getName(), 'Concrete\Core\Entity') === 0) {
+            if (str_starts_with($class->getName(), 'Concrete\Core\Entity')) {
                 continue;
             }
             $proxyFileName = $proxyGenerator->getProxyFileName($class->getName(), $config->getProxyDir());
@@ -1280,8 +1290,6 @@ abstract class Package implements LocalizablePackageInterface
 
     /**
      * Get the minimum PHP version compatible with the package.
-     *
-     * @return int|null
      *
      * @example null if the package is compatible with any PHP version that's already compatible with the core
      * @example 80000 if the package requires PHP 8.0.0 and later
