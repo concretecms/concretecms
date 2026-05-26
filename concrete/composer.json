@@ -57,7 +57,7 @@
     "symfony/messenger": "^5.2",
     "symfony/serializer": "^5.2",
     "symfony/service-contracts": "^2.5",
-    "symfony/yaml":"^4",
+    "symfony/yaml":"^5",
     "scssphp/scssphp": "^1.4",
     "doctrine/annotations": "^1.13.2",
     "doctrine/dbal": "^2.13.2",
