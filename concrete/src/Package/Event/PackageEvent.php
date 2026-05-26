@@ -9,9 +9,9 @@ use Concrete\Core\Package\Package;
 defined('C5_EXECUTE') or die('Access Denied.');
 
 /**
- * Informational event fired before (on_package_uninstall) and after (on_package_uninstalled) a package is uninstalled.
- * When on_package_uninstall fires, the package entity is still intact.
- * When on_package_uninstalled fires, the package row has been deleted — getPackage()->getPackageEntity() returns a detached entity.
+ * Informational event fired before (on_before_package_uninstall) and after (on_after_package_uninstall) a package is uninstalled.
+ * When on_before_package_uninstall fires, the package entity is still intact.
+ * When on_after_package_uninstall fires, the package row has been deleted — getPackage()->getPackageEntity() returns a detached entity.
  * To prevent uninstall with an error message, use UninstallEvent with on_package_test_for_uninstall instead.
  */
 class PackageEvent

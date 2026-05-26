@@ -638,17 +638,17 @@ abstract class Package implements LocalizablePackageInterface
 
     /**
      * Uninstall the package:
-     * - fires the on_package_uninstall event (informational; at this point the package entity is still intact)
+     * - fires the on_before_package_uninstall event (informational; at this point the package entity is still intact)
      * - delete the installed items associated to the package
      * - destroy the package proxy classes of entities
      * - remove the package info row from the database
-     * - fires the on_package_uninstalled event (informational; the package entity has been removed — getPackageEntity() returns a detached entity).
+     * - fires the on_after_package_uninstall event (informational; the package entity has been removed — getPackageEntity() returns a detached entity).
      * Neither lifecycle event prevents uninstall. To prevent uninstall with an error message, use on_package_test_for_uninstall instead.
      */
     public function uninstall()
     {
         $dispatcher = $this->getEventDispatcher();
-        $dispatcher->dispatch('on_package_uninstall', new PackageEvent($this));
+        $dispatcher->dispatch('on_before_package_uninstall', new PackageEvent($this));
 
         /** @var Manager $manager */
         $manager = $this->app->make(Manager::class, ['application' => $this->app]);
@@ -683,7 +683,7 @@ abstract class Package implements LocalizablePackageInterface
         $navigationCache = $this->app->make(NavigationCache::class);
         $navigationCache->clear();
 
-        $dispatcher->dispatch('on_package_uninstalled', new PackageEvent($this));
+        $dispatcher->dispatch('on_after_package_uninstall', new PackageEvent($this));
     }
 
     /**
