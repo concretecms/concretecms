@@ -36,7 +36,7 @@ jobs:
           - "composer:v2"
 
         include:
-          - php-version: 8.0
+          - php-version: 8.1
             operating-system: "ubuntu-latest"
             dependencies: "highest"
           - php-version: 7.3
