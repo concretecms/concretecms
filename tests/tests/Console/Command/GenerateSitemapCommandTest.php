@@ -114,7 +114,7 @@ class GenerateSitemapCommandTest extends TestCase
         $siteService->shouldReceive('getByHandle')->with('default')->andReturn($site);
 
         $this->bind(SitemapWriter::class, $writer);
-        $this->bind('site', $siteService);
+        $this->bind(SiteService::class, $siteService);
 
         $tester = $this->executeCommand(['--site' => 'default']);
 
@@ -138,7 +138,7 @@ class GenerateSitemapCommandTest extends TestCase
         $siteService->shouldReceive('getByHandle')->with('nourl')->andReturn($site);
 
         $this->bind(SitemapWriter::class, $writer);
-        $this->bind('site', $siteService);
+        $this->bind(SiteService::class, $siteService);
 
         $tester = $this->executeCommand(['--site' => 'nourl', '--url' => 'https://override.example.com']);
 
@@ -161,7 +161,7 @@ class GenerateSitemapCommandTest extends TestCase
         $siteService->shouldReceive('getByHandle')->with('default')->andReturn($site);
 
         $this->bind(SitemapWriter::class, $writer);
-        $this->bind('site', $siteService);
+        $this->bind(SiteService::class, $siteService);
 
         $tester = $this->executeCommand(['--site' => 'default', '--output' => '/tmp/sitemap-custom.xml']);
 
@@ -181,7 +181,7 @@ class GenerateSitemapCommandTest extends TestCase
         $writer = $this->makeWriter();
 
         $this->bind(SitemapWriter::class, $writer);
-        $this->bind('site', $siteService);
+        $this->bind(SiteService::class, $siteService);
 
         $this->expectException(UserMessageException::class);
         $this->expectExceptionMessageMatches('/nonexistent/');
@@ -199,7 +199,7 @@ class GenerateSitemapCommandTest extends TestCase
         $writer = $this->makeWriter();
 
         $this->bind(SitemapWriter::class, $writer);
-        $this->bind('site', $siteService);
+        $this->bind(SiteService::class, $siteService);
 
         $this->expectException(UserMessageException::class);
         $this->expectExceptionMessageMatches('/canonical URL/i');
@@ -228,7 +228,7 @@ class GenerateSitemapCommandTest extends TestCase
         $siteService->shouldReceive('getSite')->once()->andReturn($site);
 
         $this->bind(SitemapWriter::class, $writer);
-        $this->bind('site', $siteService);
+        $this->bind(SiteService::class, $siteService);
 
         $tester = $this->executeCommand([]);
 
@@ -253,7 +253,7 @@ class GenerateSitemapCommandTest extends TestCase
         $siteService->shouldReceive('getSite')->andReturn($site);
 
         $this->bind(SitemapWriter::class, $writer);
-        $this->bind('site', $siteService);
+        $this->bind(SiteService::class, $siteService);
 
         $tester = $this->executeCommand(['--url' => 'https://override.example.com']);
 
@@ -273,7 +273,7 @@ class GenerateSitemapCommandTest extends TestCase
         $writer = $this->makeWriter();
 
         $this->bind(SitemapWriter::class, $writer);
-        $this->bind('site', $siteService);
+        $this->bind(SiteService::class, $siteService);
 
         $this->expectException(UserMessageException::class);
         $this->expectExceptionMessageMatches('/active site/i');
@@ -292,7 +292,7 @@ class GenerateSitemapCommandTest extends TestCase
         $writer->shouldReceive('getOutputFilename')->andReturn(DIR_BASE . '/sitemap.xml');
 
         $this->bind(SitemapWriter::class, $writer);
-        $this->bind('site', $siteService);
+        $this->bind(SiteService::class, $siteService);
 
         $this->expectException(UserMessageException::class);
         $this->expectExceptionMessageMatches('/canonical URL/i');

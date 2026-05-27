@@ -33,7 +33,10 @@ class GenerateSitemapControllerTest extends TestCase
 
         $this->assertInstanceOf(BatchProcessTaskRunner::class, $runner);
 
-        $messages = iterator_to_array($runner->getBatch()->getMessages(), false);
+        $messages = [];
+        foreach ($runner->getBatch()->getMessages() as $msg) {
+            $messages[] = $msg;
+        }
 
         $this->assertCount(2, $messages);
         $this->assertInstanceOf(GenerateSitemapCommand::class, $messages[0]);
@@ -53,7 +56,10 @@ class GenerateSitemapControllerTest extends TestCase
             Mockery::mock(InputInterface::class)
         );
 
-        $messages = iterator_to_array($runner->getBatch()->getMessages(), false);
+        $messages = [];
+        foreach ($runner->getBatch()->getMessages() as $msg) {
+            $messages[] = $msg;
+        }
         $this->assertCount(0, $messages);
     }
 
