@@ -36,7 +36,7 @@ jobs:
           - "composer:v2"
 
         include:
-          - php-version: 8.0
+          - php-version: 8.1
             operating-system: "ubuntu-latest"
             dependencies: "highest"
           - php-version: 7.3
@@ -86,6 +86,8 @@ jobs:
       - name: "Install highest dependencies"
         if: ${{ matrix.dependencies == 'highest' }}
         run: |
+          echo "CCM_TEST_SKIP_CHECKCOMPOSERPLATFORM=1" >>"$GITHUB_ENV"
+          composer config --unset platform.php
           composer update --no-interaction --no-progress
 
       - name: "Install locked dependencies"

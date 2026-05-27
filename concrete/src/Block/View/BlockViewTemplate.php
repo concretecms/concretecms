@@ -102,13 +102,18 @@ class BlockViewTemplate
                 $record = $templateLocator->getRecord(
                     DIRNAME_BLOCKS . '/' . $obj->getBlockTypeHandle() . '/' . DIRNAME_BLOCK_TEMPLATES . '/' . $bFilename
                 );
-                $this->template = $record->getFile();
-                $record = $templateLocator->getRecord(
-                    DIRNAME_BLOCKS . '/' . $obj->getBlockTypeHandle() . '/' . $this->render
-                );
-                $this->baseURL = dirname($record->getUrl());
-                $this->basePath = dirname($record->getFile());
-                return;
+                if ($record && $record->exists()) {
+                    $this->template = $record->getFile();
+                    $record = $templateLocator->getRecord(
+                        DIRNAME_BLOCKS . '/' . $obj->getBlockTypeHandle() . '/' . $this->render
+                    );
+                    if ($record) {
+                        $this->baseURL = dirname($record->getUrl());
+                        $this->basePath = dirname($record->getFile());
+                    }
+
+                    return;
+                }
             }
 
             // Use case b - bFilename that is a directory
