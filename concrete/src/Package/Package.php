@@ -999,12 +999,12 @@ abstract class Package implements LocalizablePackageInterface
     /**
      * Installs a package database from an XML file.
      *
+     * If set to ContentImporter::IMPORT_MODE_UPGRADE, the schema will be checked against the current schema, supporting upgrades at a
+     * performance penalty. If set to ContentImporter::IMPORT_MODE_INSTALL the schema will be compared against an empty schema, which is
+     * a much faster operation and should be used when you know the installation is taking place against an empty database.
+     * ContentImporter::IMPORT_MODE_UPGRADE preserves backward compatibility as this was the way things always used to be handled.
+     *
      * @param string $xmlFile Path to the database XML file
-     * @param string $importMode - If set to ContentImporter::IMPORT_MODE_UPGRADE, the schema will be checked against
-     *                           the current schema, supporting upgrades at a performance penalty. If set to ContentImporter::IMPORT_MODE_INSTALL
-     *                           the schema will be compared against an empty schema, which is a much faster operation and should be used when
-     *                           you know the installation is taking place against an empty database. ContentImporter::IMPORT_MODE_UPGRADE
-     *                           preserves backward compatibility as this was the way things always used to be handled.
      * @throws \Doctrine\DBAL\ConnectionException
      * @return bool|\stdClass Returns false if the XML file could not be found
      */
