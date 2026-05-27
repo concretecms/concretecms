@@ -30,8 +30,7 @@ jobs:
         name: Check syntax
         uses: mlocati/check-php-syntax@v1
         with:
-          directory: concrete
           include: |
-            bin/concrete
-            bin/concrete5
+            concrete/bin/concrete
+            concrete/bin/concrete5
           fail-on-warnings: true
