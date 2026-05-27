@@ -12,9 +12,10 @@ use Concrete\Core\Page\Sitemap\SitemapGenerator;
 use Concrete\Core\Page\Sitemap\SitemapWriter;
 use Concrete\Core\Site\Service as SiteService;
 use Concrete\Tests\TestCase;
-use Mockery;
 use Symfony\Component\Console\Application as ConsoleApplication;
 use Symfony\Component\Console\Tester\CommandTester;
+
+defined('C5_EXECUTE') or die('Access Denied.');
 
 /**
  * Tests for the c5:sitemap:generate CLI command.
@@ -25,8 +26,10 @@ use Symfony\Component\Console\Tester\CommandTester;
  */
 class GenerateSitemapCommandTest extends TestCase
 {
-    /** @var list<string> Abstracts bound during a test that must be unbound on teardown. */
-    private array $boundAbstracts = [];
+    /**
+     * @var string[] abstracts bound during a test that must be unbound on teardown
+     */
+    private $boundAbstracts = [];
 
     protected function tearDown(): void
     {
@@ -49,13 +52,13 @@ class GenerateSitemapCommandTest extends TestCase
 
     private function makeWriter(?SitemapGenerator $generator = null): SitemapWriter
     {
-        $plg = Mockery::mock(PageListGenerator::class);
+        $plg = \Mockery::mock(PageListGenerator::class);
         $plg->shouldReceive('getApproximatePageCount')->andReturn(0);
 
-        $gen = $generator ?? Mockery::mock(SitemapGenerator::class);
+        $gen = $generator ?? \Mockery::mock(SitemapGenerator::class);
         $gen->shouldReceive('getPageListGenerator')->andReturn($plg);
 
-        $writer = Mockery::mock(SitemapWriter::class);
+        $writer = \Mockery::mock(SitemapWriter::class);
         $writer->shouldReceive('getSitemapGenerator')->andReturn($gen);
 
         return $writer;
@@ -63,9 +66,10 @@ class GenerateSitemapCommandTest extends TestCase
 
     private function makeSite(string $canonicalUrl, string $handle = 'default'): Site
     {
-        $site = Mockery::mock(Site::class);
+        $site = \Mockery::mock(Site::class);
         $site->shouldReceive('getSiteCanonicalURL')->andReturn($canonicalUrl);
         $site->shouldReceive('getSiteHandle')->andReturn($handle);
+
         return $site;
     }
 
@@ -99,12 +103,14 @@ class GenerateSitemapCommandTest extends TestCase
         $writer->shouldReceive('setOutputFilename')->never();
         $writer->shouldReceive('generateForSite')
             ->once()
-            ->with($site, '', Mockery::type('callable'));
+            ->with($site, '', \Mockery::type('callable'))
+        ;
         $writer->shouldReceive('getSitemapUrlForSite')
             ->with($site)
-            ->andReturn('https://example.com/sitemap-default.xml');
+            ->andReturn('https://example.com/sitemap-default.xml')
+        ;
 
-        $siteService = Mockery::mock(SiteService::class);
+        $siteService = \Mockery::mock(SiteService::class);
         $siteService->shouldReceive('getByHandle')->with('default')->andReturn($site);
 
         $this->bind(SitemapWriter::class, $writer);
@@ -112,9 +118,9 @@ class GenerateSitemapCommandTest extends TestCase
 
         $tester = $this->executeCommand(['--site' => 'default']);
 
-        $this->assertSame(0, $tester->getStatusCode());
-        $this->assertStringContainsString('sitemap-default.xml', $tester->getDisplay());
-        $this->assertStringContainsString('https://example.com/sitemap-default.xml', $tester->getDisplay());
+        static::assertSame(0, $tester->getStatusCode());
+        static::assertStringContainsString('sitemap-default.xml', $tester->getDisplay());
+        static::assertStringContainsString('https://example.com/sitemap-default.xml', $tester->getDisplay());
     }
 
     public function testSiteHandleWithUrlOverridePassesOverrideToWriter(): void
@@ -124,10 +130,11 @@ class GenerateSitemapCommandTest extends TestCase
         $writer = $this->makeWriter();
         $writer->shouldReceive('generateForSite')
             ->once()
-            ->with($site, 'https://override.example.com', Mockery::type('callable'));
+            ->with($site, 'https://override.example.com', \Mockery::type('callable'))
+        ;
         $writer->shouldReceive('getSitemapUrlForSite')->andReturn('https://override.example.com/sitemap-nourl.xml');
 
-        $siteService = Mockery::mock(SiteService::class);
+        $siteService = \Mockery::mock(SiteService::class);
         $siteService->shouldReceive('getByHandle')->with('nourl')->andReturn($site);
 
         $this->bind(SitemapWriter::class, $writer);
@@ -135,7 +142,7 @@ class GenerateSitemapCommandTest extends TestCase
 
         $tester = $this->executeCommand(['--site' => 'nourl', '--url' => 'https://override.example.com']);
 
-        $this->assertSame(0, $tester->getStatusCode());
+        static::assertSame(0, $tester->getStatusCode());
     }
 
     public function testSiteHandleWithCustomOutputFilenameCallsSetOutputFilename(): void
@@ -146,10 +153,11 @@ class GenerateSitemapCommandTest extends TestCase
         $writer->shouldReceive('setOutputFilename')->once()->with('/tmp/sitemap-custom.xml');
         $writer->shouldReceive('generateForSite')
             ->once()
-            ->with($site, '', Mockery::type('callable'));
+            ->with($site, '', \Mockery::type('callable'))
+        ;
         $writer->shouldReceive('getSitemapUrlForSite')->andReturn('https://example.com/sitemap-default.xml');
 
-        $siteService = Mockery::mock(SiteService::class);
+        $siteService = \Mockery::mock(SiteService::class);
         $siteService->shouldReceive('getByHandle')->with('default')->andReturn($site);
 
         $this->bind(SitemapWriter::class, $writer);
@@ -157,8 +165,8 @@ class GenerateSitemapCommandTest extends TestCase
 
         $tester = $this->executeCommand(['--site' => 'default', '--output' => '/tmp/sitemap-custom.xml']);
 
-        $this->assertSame(0, $tester->getStatusCode());
-        $this->assertStringContainsString('sitemap-custom.xml', $tester->getDisplay());
+        static::assertSame(0, $tester->getStatusCode());
+        static::assertStringContainsString('sitemap-custom.xml', $tester->getDisplay());
     }
 
     // -------------------------------------------------------------------------
@@ -167,7 +175,7 @@ class GenerateSitemapCommandTest extends TestCase
 
     public function testSiteHandleUnknownThrowsUserMessageException(): void
     {
-        $siteService = Mockery::mock(SiteService::class);
+        $siteService = \Mockery::mock(SiteService::class);
         $siteService->shouldReceive('getByHandle')->with('nonexistent')->andReturn(null);
 
         $writer = $this->makeWriter();
@@ -185,7 +193,7 @@ class GenerateSitemapCommandTest extends TestCase
     {
         $site = $this->makeSite('', 'nourl');
 
-        $siteService = Mockery::mock(SiteService::class);
+        $siteService = \Mockery::mock(SiteService::class);
         $siteService->shouldReceive('getByHandle')->with('nourl')->andReturn($site);
 
         $writer = $this->makeWriter();
@@ -213,9 +221,10 @@ class GenerateSitemapCommandTest extends TestCase
         $writer->shouldReceive('setOutputFilename')->once()->with($legacyFilename);
         $writer->shouldReceive('generateForSite')
             ->once()
-            ->with($site, '', Mockery::type('callable'));
+            ->with($site, '', \Mockery::type('callable'))
+        ;
 
-        $siteService = Mockery::mock(SiteService::class);
+        $siteService = \Mockery::mock(SiteService::class);
         $siteService->shouldReceive('getSite')->once()->andReturn($site);
 
         $this->bind(SitemapWriter::class, $writer);
@@ -223,8 +232,8 @@ class GenerateSitemapCommandTest extends TestCase
 
         $tester = $this->executeCommand([]);
 
-        $this->assertSame(0, $tester->getStatusCode());
-        $this->assertStringContainsString('sitemap.xml', $tester->getDisplay());
+        static::assertSame(0, $tester->getStatusCode());
+        static::assertStringContainsString('sitemap.xml', $tester->getDisplay());
     }
 
     public function testNoSiteOptionWithUrlOverrideUsesOverrideInOutput(): void
@@ -237,9 +246,10 @@ class GenerateSitemapCommandTest extends TestCase
         $writer->shouldReceive('setOutputFilename')->once()->with($legacyFilename);
         $writer->shouldReceive('generateForSite')
             ->once()
-            ->with($site, 'https://override.example.com', Mockery::type('callable'));
+            ->with($site, 'https://override.example.com', \Mockery::type('callable'))
+        ;
 
-        $siteService = Mockery::mock(SiteService::class);
+        $siteService = \Mockery::mock(SiteService::class);
         $siteService->shouldReceive('getSite')->andReturn($site);
 
         $this->bind(SitemapWriter::class, $writer);
@@ -247,8 +257,8 @@ class GenerateSitemapCommandTest extends TestCase
 
         $tester = $this->executeCommand(['--url' => 'https://override.example.com']);
 
-        $this->assertSame(0, $tester->getStatusCode());
-        $this->assertStringContainsString('https://override.example.com/sitemap.xml', $tester->getDisplay());
+        static::assertSame(0, $tester->getStatusCode());
+        static::assertStringContainsString('https://override.example.com/sitemap.xml', $tester->getDisplay());
     }
 
     // -------------------------------------------------------------------------
@@ -257,7 +267,7 @@ class GenerateSitemapCommandTest extends TestCase
 
     public function testNoSiteOptionWithNullActiveSiteThrowsException(): void
     {
-        $siteService = Mockery::mock(SiteService::class);
+        $siteService = \Mockery::mock(SiteService::class);
         $siteService->shouldReceive('getSite')->andReturn(null);
 
         $writer = $this->makeWriter();
@@ -275,7 +285,7 @@ class GenerateSitemapCommandTest extends TestCase
     {
         $site = $this->makeSite('', 'default');
 
-        $siteService = Mockery::mock(SiteService::class);
+        $siteService = \Mockery::mock(SiteService::class);
         $siteService->shouldReceive('getSite')->andReturn($site);
 
         $writer = $this->makeWriter();

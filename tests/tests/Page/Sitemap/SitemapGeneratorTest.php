@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Concrete\Tests\Page\Sitemap;
 
 use Concrete\Core\Config\Repository\Repository as ConfigRepository;
@@ -10,7 +12,8 @@ use Concrete\Core\Page\Sitemap\PageListGenerator;
 use Concrete\Core\Page\Sitemap\SitemapGenerator;
 use Concrete\Tests\TestCase;
 use League\Url\Url;
-use Mockery;
+
+defined('C5_EXECUTE') or die('Access Denied.');
 
 /**
  * Covers SitemapGenerator::generateForSite(), urlHostMatchesCanonical(), and
@@ -23,7 +26,9 @@ class SitemapGeneratorTest extends TestCase
     // urlHostMatchesCanonical — unit tests, no app/DB needed
     // -------------------------------------------------------------------------
 
-    /** @dataProvider provideHostMatchCases */
+    /**
+     * @dataProvider provideHostMatchCases
+     */
     public function testUrlHostMatchesCanonical(string $url, string $canonicalHost, bool $expected): void
     {
         $gen = new ExposedSitemapGenerator(
@@ -31,18 +36,18 @@ class SitemapGeneratorTest extends TestCase
             \Core::getFacadeApplication()->make('config')
         );
 
-        $this->assertSame($expected, $gen->callUrlHostMatchesCanonical($url, $canonicalHost));
+        static::assertSame($expected, $gen->callUrlHostMatchesCanonical($url, $canonicalHost));
     }
 
     public function provideHostMatchCases(): array
     {
         return [
-            'same host'                    => ['https://example.com/page', 'example.com', true],
-            'same host, case-insensitive'  => ['https://EXAMPLE.COM/page', 'example.com', true],
-            'different host'               => ['https://other.com/page', 'example.com', false],
-            'relative URL (no host)'       => ['/some/path', 'example.com', true],
-            'path-only URL'                => ['some/path', 'example.com', true],
-            'empty URL'                    => ['', 'example.com', true],
+            'same host' => ['https://example.com/page', 'example.com', true],
+            'same host, case-insensitive' => ['https://EXAMPLE.COM/page', 'example.com', true],
+            'different host' => ['https://other.com/page', 'example.com', false],
+            'relative URL (no host)' => ['/some/path', 'example.com', true],
+            'path-only URL' => ['some/path', 'example.com', true],
+            'empty URL' => ['', 'example.com', true],
         ];
     }
 
@@ -71,7 +76,7 @@ class SitemapGeneratorTest extends TestCase
             $gen->generateForSite($site, 'https://override.example.com')
         );
 
-        $this->assertNotEmpty($elements);
+        static::assertNotEmpty($elements);
     }
 
     public function testGenerateForSitePrefersOverrideOverSiteCanonicalUrl(): void
@@ -87,8 +92,8 @@ class SitemapGeneratorTest extends TestCase
             $gen->generateForSite($site, 'https://override.example.com')
         );
 
-        $pages = array_filter($elements, fn($e) => $e instanceof SitemapPage);
-        $this->assertCount(1, $pages);
+        $pages = array_filter($elements, static function ($e) { return $e instanceof SitemapPage; });
+        static::assertCount(1, $pages);
     }
 
     // -------------------------------------------------------------------------
@@ -102,7 +107,7 @@ class SitemapGeneratorTest extends TestCase
         $site = $this->makeSite('https://canonical.example.com');
         $gen->setPageListGenerator($this->makePageListGenerator([$this->makePage()], $site));
 
-        $this->assertTrue($gen->isStrictCanonicalHost());
+        static::assertTrue($gen->isStrictCanonicalHost());
         $this->expectException(\RuntimeException::class);
 
         iterator_to_array($gen->generateForSite($site));
@@ -118,8 +123,8 @@ class SitemapGeneratorTest extends TestCase
 
         $elements = iterator_to_array($gen->generateForSite($site));
 
-        $pages = array_filter($elements, fn($e) => $e instanceof SitemapPage);
-        $this->assertCount(0, $pages, 'Cross-host page should be silently dropped in lenient mode');
+        $pages = array_filter($elements, static function ($e) { return $e instanceof SitemapPage; });
+        static::assertCount(0, $pages, 'Cross-host page should be silently dropped in lenient mode');
     }
 
     public function testCorrectHostPageIsIncluded(): void
@@ -131,8 +136,8 @@ class SitemapGeneratorTest extends TestCase
 
         $elements = iterator_to_array($gen->generateForSite($site));
 
-        $pages = array_filter($elements, fn($e) => $e instanceof SitemapPage);
-        $this->assertCount(1, $pages);
+        $pages = array_filter($elements, static function ($e) { return $e instanceof SitemapPage; });
+        static::assertCount(1, $pages);
     }
 
     // -------------------------------------------------------------------------
@@ -148,7 +153,7 @@ class SitemapGeneratorTest extends TestCase
 
         iterator_to_array($gen->generateForSite($site));
 
-        $this->assertSame('https://before.example.com', $gen->getCustomSiteCanonicalUrl());
+        static::assertSame('https://before.example.com', $gen->getCustomSiteCanonicalUrl());
     }
 
     public function testGenerateForSiteRestoresCanonicalUrlOnException(): void
@@ -165,7 +170,7 @@ class SitemapGeneratorTest extends TestCase
             // expected
         }
 
-        $this->assertSame(
+        static::assertSame(
             'https://before.example.com',
             $gen->getCustomSiteCanonicalUrl(),
             'Custom canonical URL must be restored even after an exception'
@@ -175,42 +180,46 @@ class SitemapGeneratorTest extends TestCase
     public function testGenerateForSiteRestoresSiteOnPageListGeneratorOnSuccess(): void
     {
         $prevSite = $this->makeSite('https://prev.example.com', 'prev');
-        $site     = $this->makeSite('https://site.example.com', 'site');
+        $site = $this->makeSite('https://site.example.com', 'site');
 
         $setSiteCalls = [];
-        $plg = Mockery::mock(PageListGenerator::class);
+        $plg = \Mockery::mock(PageListGenerator::class);
         $plg->shouldReceive('getSite')->andReturn($prevSite);
         $plg->shouldReceive('setSite')
-            ->andReturnUsing(function ($s) use (&$setSiteCalls, $plg) {
+            ->andReturnUsing(static function ($s) use (&$setSiteCalls, $plg) {
                 $setSiteCalls[] = $s;
+
                 return $plg;
-            });
+            })
+        ;
         $plg->shouldReceive('isMultilingualEnabled')->andReturn(false);
-        $plg->shouldReceive('generatePageList')->andReturn((function () { yield from []; })());
+        $plg->shouldReceive('generatePageList')->andReturn((static function () { yield from []; })());
 
         $gen = $this->makeGenerator();
         $gen->setPageListGenerator($plg);
 
         iterator_to_array($gen->generateForSite($site));
 
-        $this->assertCount(2, $setSiteCalls, 'setSite must be called twice: forward and restore');
-        $this->assertSame($site, $setSiteCalls[0], 'First call binds the requested site');
-        $this->assertSame($prevSite, $setSiteCalls[1], 'Second call restores the previous site');
+        static::assertCount(2, $setSiteCalls, 'setSite must be called twice: forward and restore');
+        static::assertSame($site, $setSiteCalls[0], 'First call binds the requested site');
+        static::assertSame($prevSite, $setSiteCalls[1], 'Second call restores the previous site');
     }
 
     public function testGenerateForSiteRestoresSiteOnPageListGeneratorOnException(): void
     {
-        $prevSite   = $this->makeSite('https://prev.example.com', 'prev');
-        $noUrlSite  = $this->makeSite('', 'nourl');
+        $prevSite = $this->makeSite('https://prev.example.com', 'prev');
+        $noUrlSite = $this->makeSite('', 'nourl');
 
         $setSiteCalls = [];
-        $plg = Mockery::mock(PageListGenerator::class);
+        $plg = \Mockery::mock(PageListGenerator::class);
         $plg->shouldReceive('getSite')->andReturn($prevSite);
         $plg->shouldReceive('setSite')
-            ->andReturnUsing(function ($s) use (&$setSiteCalls, $plg) {
+            ->andReturnUsing(static function ($s) use (&$setSiteCalls, $plg) {
                 $setSiteCalls[] = $s;
+
                 return $plg;
-            });
+            })
+        ;
 
         $gen = $this->makeGenerator();
         $gen->setPageListGenerator($plg);
@@ -221,9 +230,9 @@ class SitemapGeneratorTest extends TestCase
             // expected — no canonical URL
         }
 
-        $this->assertCount(2, $setSiteCalls, 'setSite must be called twice even when an exception is thrown');
-        $this->assertSame($noUrlSite, $setSiteCalls[0]);
-        $this->assertSame($prevSite, $setSiteCalls[1]);
+        static::assertCount(2, $setSiteCalls, 'setSite must be called twice even when an exception is thrown');
+        static::assertSame($noUrlSite, $setSiteCalls[0]);
+        static::assertSame($prevSite, $setSiteCalls[1]);
     }
 
     // -------------------------------------------------------------------------
@@ -233,6 +242,7 @@ class SitemapGeneratorTest extends TestCase
     private function makeGenerator(): ExposedSitemapGenerator
     {
         $app = \Core::getFacadeApplication();
+
         return new ExposedSitemapGenerator($app, $app->make('config'));
     }
 
@@ -240,35 +250,38 @@ class SitemapGeneratorTest extends TestCase
     {
         // generateContents() calls getSite()->getConfigRepository() to temporarily
         // swap seo.canonical_url, so the mock must support it.
-        $siteConfig = Mockery::mock(ConfigRepository::class);
+        $siteConfig = \Mockery::mock(ConfigRepository::class);
         $siteConfig->shouldReceive('get')->andReturn('');
         $siteConfig->shouldReceive('set');
 
-        $site = Mockery::mock(Site::class);
+        $site = \Mockery::mock(Site::class);
         $site->shouldReceive('getSiteCanonicalURL')->andReturn($canonicalUrl);
         $site->shouldReceive('getSiteHandle')->andReturn($handle);
         $site->shouldReceive('getSiteID')->andReturn($id);
         $site->shouldReceive('getConfigRepository')->andReturn($siteConfig);
+
         return $site;
     }
 
     private function makePageListGenerator(array $pages = [], ?Site $site = null): PageListGenerator
     {
-        $plg = Mockery::mock(PageListGenerator::class);
+        $plg = \Mockery::mock(PageListGenerator::class);
         $plg->shouldReceive('setSite')->andReturn($plg);
         $plg->shouldReceive('getSite')->andReturn($site);
         $plg->shouldReceive('isMultilingualEnabled')->andReturn(false);
-        $plg->shouldReceive('generatePageList')->andReturn((function () use ($pages) {
+        $plg->shouldReceive('generatePageList')->andReturn((static function () use ($pages) {
             yield from $pages;
         })());
+
         return $plg;
     }
 
     private function makePage(): Page
     {
-        $page = Mockery::mock(Page::class);
+        $page = \Mockery::mock(Page::class);
         $page->shouldReceive('getCollectionDateLastModified')->andReturn(null);
         $page->shouldReceive('getCollectionID')->andReturn(1);
+
         return $page;
     }
 }
@@ -278,7 +291,10 @@ class SitemapGeneratorTest extends TestCase
  */
 class ExposedSitemapGenerator extends SitemapGenerator
 {
-    private string $nextPageUrl = 'https://canonical.example.com/page';
+    /**
+     * @var string
+     */
+    private $nextPageUrl = 'https://canonical.example.com/page';
 
     public function setNextPageUrl(string $url): void
     {
@@ -298,11 +314,9 @@ class ExposedSitemapGenerator extends SitemapGenerator
     // Avoid DB calls for attribute keys — not what these tests are measuring.
     protected function getSitemapChangeFrequencyAttributeKey()
     {
-        return null;
     }
 
     protected function getSitemapPriorityAttributeKey()
     {
-        return null;
     }
 }
