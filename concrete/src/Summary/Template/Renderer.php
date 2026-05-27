@@ -120,11 +120,11 @@ class Renderer implements LoggerAwareInterface
         $template = $summaryObject->getTemplate();
         $file = $this->templateLocator->getFileToRender($template);
         if ($file) {
-            $summaryObjectInspector = $this->summaryObjectInspector; // This is included here for use in the template.
             $summaryObjectFields = $this->summaryObjectExtractor->getData($summaryObject);
             if ($this->summaryObjectSupportsTemplate($summaryObjectFields, $template)) {
                 // note: we used to include <span class="ccm-summary-template-header"></span> around this, but it's
                 // too prescriptive and annoying, it causes problems with more advanced flexbox styling.
+                $summaryObjectFields['summaryObjectInspector'] = $this->summaryObjectInspector;
                 $summaryObjectFields['summaryObject'] = $summaryObject;
                 echo $this->templateService->renderTemplate($file, $summaryObjectFields);
             }
