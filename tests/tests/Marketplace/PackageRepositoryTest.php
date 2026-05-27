@@ -328,7 +328,7 @@ class PackageRepositoryTest extends TestCase
         $this->connectRequestReturns('/get/packages', true, [new Response(200, [], '{"id":1}')]);
         $this->assertEmpty($repository->getPackages($connection));
 
-        $package = function(string $handle, string $id, string $version, array $compat = null) {
+        $package = function(string $handle, string $id, string $version, ?array $compat = null) {
             $compat = $compat ?? [1, 2, 3, 4, 5];
             return [
                 'handle' => $handle,
