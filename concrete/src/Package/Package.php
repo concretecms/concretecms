@@ -19,6 +19,7 @@ use Concrete\Core\Events\EventDispatcher;
 use Concrete\Core\Package\Dependency\DependencyChecker;
 use Concrete\Core\Package\Event\PackageEvent;
 use Concrete\Core\Package\Event\UninstallEvent;
+use Concrete\Core\Package\Event\UpgradeEvent;
 use Concrete\Core\Package\ItemCategory\Manager;
 use Concrete\Core\Page\Theme\Theme;
 use Doctrine\Common\Proxy\ProxyGenerator;
@@ -849,12 +850,28 @@ abstract class Package implements LocalizablePackageInterface
 
     /**
      * Perform tests before this package is upgraded.
+     * Fires the on_package_test_for_upgrade event; listeners may add errors to the event's ErrorList to veto the upgrade.
      *
-     * @return \Concrete\Core\Error\ErrorList\ErrorList|true return null if the package can be upgraded, an ErrorList instance otherwise
+     * Note: there is an optional bootstrap auto-upgrade path in Application::setupPackages().
+     * It is disabled by default and has no dashboard UI; it can only be enabled by setting
+     * concrete.updates.enable_auto_update_packages in application/config/concrete.php.
+     * When active, it calls upgrade() directly and bypasses this method, so
+     * on_package_test_for_upgrade is never dispatched on that path.
+     *
+     * @return \Concrete\Core\Error\ErrorList\ErrorList|true return true if the package can be upgraded, an ErrorList instance otherwise
      */
     public function testForUpgrade()
     {
-        return $this->testForInstall(false);
+        $errors = $this->app->make('error');
+
+        $result = $this->testForInstall(false);
+        if ($result !== true) {
+            $errors->add($result);
+        }
+
+        $this->getEventDispatcher()->dispatch('on_package_test_for_upgrade', new UpgradeEvent($this, $errors));
+
+        return $errors->has() ? $errors : true;
     }
 
     /**
@@ -1070,10 +1087,17 @@ abstract class Package implements LocalizablePackageInterface
     }
 
     /**
-     * Upgrades a package's database and refreshes all blocks.
+     * Upgrades a package's database and refreshes all blocks:
+     * - fires the on_before_package_upgrade event (informational; the schema has not yet been migrated at this point)
+     * - runs schema migration and refreshes block types
+     * - fires the on_after_package_upgrade event (informational; schema migration and block-type refresh are complete)
+     * Neither informational event prevents the upgrade. To veto with an error message, use on_package_test_for_upgrade instead.
      */
     public function upgrade()
     {
+        $dispatcher = $this->getEventDispatcher();
+        $dispatcher->dispatch('on_before_package_upgrade', new PackageEvent($this));
+
         $this->upgradeDatabase();
 
         // now we refresh all blocks
@@ -1092,6 +1116,8 @@ abstract class Package implements LocalizablePackageInterface
 
         $navigationCache = $this->app->make(FavoritesNavigationCache::class);
         $navigationCache->clear();
+
+        $dispatcher->dispatch('on_after_package_upgrade', new PackageEvent($this));
     }
 
     /**
