@@ -125,7 +125,7 @@ class Renderer implements LoggerAwareInterface
             if ($this->summaryObjectSupportsTemplate($summaryObjectFields, $template)) {
                 // note: we used to include <span class="ccm-summary-template-header"></span> around this, but it's
                 // too prescriptive and annoying, it causes problems with more advanced flexbox styling.
-
+                $summaryObjectFields['summaryObject'] = $summaryObject;
                 echo $this->templateService->renderTemplate($file, $summaryObjectFields);
             }
         } else {
