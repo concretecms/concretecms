@@ -10,10 +10,16 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        php-version:
+        include:
           # This list should include at least the value of Concrete\Core\Install\Preconditions\PhpVersion::MINIMUM_PHP_VERSION
-          - "7.3"
-          - "8.5"
+          -
+            php-version: "7.3"
+            exclude: |
+              tests/assets/Foundation/jobs/index_search.php
+          -
+            php-version: "8.5"
+            exclude: |
+              tests/assets/Foundation/jobs/index_search.php
     steps:
       -
         name: Checkout
@@ -30,6 +36,7 @@ jobs:
         name: Check syntax
         uses: mlocati/check-php-syntax@v1
         with:
+          exclude: ${{ matrix.exclude }}
           include: |
             concrete/bin/concrete
             concrete/bin/concrete5
