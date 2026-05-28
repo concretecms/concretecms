@@ -21,6 +21,7 @@ jobs:
             -
               php-version: "8.3"
               composer-version: 2
+              disable-composer-audit: 1
     steps:
       -
         name: Install PHP ${{ matrix.php-version }}
@@ -87,6 +88,11 @@ jobs:
           repository: mlocati/concretecms-skeleton
           ref: main
           path: composer-repo
+      -
+        name: Disable composer audit
+        if: ${{ matrix.disable-composer-audit }}
+        working-directory: composer-repo
+        run: composer config --ansi --no-interaction audit.block-insecure false
       -
         name: Install dependencies
         working-directory: composer-repo
