@@ -539,7 +539,7 @@ class Controller extends BlockController
                     $answerLong = '';
                     $answer = $txt->sanitize($_POST['Question' . $row['msqID']] ?? '');
                     if (!empty($row['options'])) {
-                        $settings = unserialize($row['options']);
+                        $settings = unserialize($row['options'], ['allowed_classes' => false]);
                         if (is_array($settings) && array_key_exists('send_notification_from', $settings) && $settings['send_notification_from'] == 1) {
                             $email = $txt->email($answer);
                             if (!empty($email)) {
