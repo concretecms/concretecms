@@ -363,7 +363,7 @@ class Controller extends BlockController implements UsesFeatureInterface
 
                     $string = $formatter->getOccurrenceDateString($occurrence);
 
-                    return sprintf('<div class="ccm-block-calendar-dialog-event-time">%s</a></div>', $string);
+                    return sprintf('<div class="ccm-block-calendar-dialog-event-time">%s</div>', $string);
                 case 'linkToPage':
                     $formatter = $this->app->make(CalendarServiceProvider::class)->getLinkFormatter();
                     $url = $formatter->getEventOccurrenceFrontendViewLink($occurrence);
