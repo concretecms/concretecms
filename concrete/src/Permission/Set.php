@@ -35,7 +35,9 @@ class Set
 
     public static function getSavedPermissionSetFromSession()
     {
-        $obj = unserialize(Session::get('savedPermissionSet'));
+        // Restrict to Set::class to prevent PHP Object Injection via the session
+        // backend (Redis, DB, file) which may be influenced by an attacker.
+        $obj = unserialize(Session::get('savedPermissionSet'), ['allowed_classes' => [self::class]]);
 
         return $obj;
     }

@@ -126,7 +126,8 @@ class Duration extends AbstractRepetition
         $db = Database::connection();
         $pdObject = $db->fetchColumn('SELECT pdObject FROM PermissionDurationObjects WHERE pdID = ?', [$pdID]);
         if ($pdObject) {
-            $pd = unserialize($pdObject);
+            // Restrict to Duration::class to prevent PHP Object Injection via the DB.
+            $pd = unserialize($pdObject, ['allowed_classes' => [self::class]]);
 
             return $pd;
         }
