@@ -146,7 +146,7 @@ class MiniSurvey
             if ($key == 'options') {
                 $key = 'optionVals';
                 if ($questionRow['inputType'] == 'email') {
-                    $options = unserialize($val);
+                    $options = unserialize($val, ['allowed_classes' => false]);
                     if (is_array($options)) {
                         foreach ($options as $o_key => $o_val) {
                             $val = $o_key . '::' . $o_val . ';';

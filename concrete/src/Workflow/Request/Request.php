@@ -74,7 +74,7 @@ abstract class Request extends ConcreteObject
         $db = Database::connection();
         $wrObject = $db->getOne('select wrObject from WorkflowRequestObjects where wrID = ?', array($wrID));
         if ($wrObject) {
-            $wr = unserialize($wrObject);
+            $wr = unserialize($wrObject, ['allowed_classes' => [\Concrete\Core\Workflow\Request\Request::class]]);
 
             return $wr;
         }
