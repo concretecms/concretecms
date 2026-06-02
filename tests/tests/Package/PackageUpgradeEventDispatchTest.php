@@ -79,9 +79,7 @@ class PackageUpgradeEventDispatchTest extends TestCase
         $app = M::mock(Application::class);
         $app->shouldReceive('make')->with(EventDispatcher::class)->once()->andReturn($dispatcher);
 
-        $result = (new \ReflectionMethod(PackageForTestingEvents::class, 'getEventDispatcher'))
-            ->invoke(new PackageForTestingEvents($app))
-        ;
+        $result = (new PackageForTestingEvents($app))->getEventDispatcherForTest();
 
         static::assertSame($dispatcher, $result);
     }
