@@ -301,7 +301,7 @@ abstract class Progress extends ConcreteObject implements SubjectInterface
         if (is_array($row) && ($row['wphID'])) {
             $obj = new $class();
             $obj->setPropertiesFromArray($row);
-            $obj->object = @unserialize($row['object'], ['allowed_classes' => [\Concrete\Core\Workflow\Progress\Response::class]]);
+            $obj->object = @unserialize($row['object']);
 
             return $obj;
         }
