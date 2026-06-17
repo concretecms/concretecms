@@ -37,7 +37,7 @@ class Search extends ElementController
     /**
      * @param Query $query
      */
-    public function setQuery(Query $query = null): void
+    public function setQuery(?Query $query = null): void
     {
         $this->query = $query;
     }

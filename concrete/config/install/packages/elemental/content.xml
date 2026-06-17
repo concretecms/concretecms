@@ -67,7 +67,7 @@
         </attributekey>
     </attributekeys>
     <attributesets>
-        <attributeset handle="navigation" name="Navigation" category="collection">
+        <attributeset handle="navigation" name="Navigation" package="" category="collection">
             <attributekey handle="thumbnail"/>
             <attributekey handle="exclude_subpages_from_nav"/>
         </attributeset>
@@ -624,6 +624,7 @@
                                                                 <displayThumbnail><![CDATA[0]]></displayThumbnail>
                                                                 <truncateChars><![CDATA[0]]></truncateChars>
                                                                 <enableExternalFiltering><![CDATA[1]]></enableExternalFiltering>
+                                                                <excludeCanonicalPaging>0</excludeCanonicalPaging>
                                                                 <noResultsMessage>
                                                                     <![CDATA[No posts to this blog.]]></noResultsMessage>
                                                                 <includeDate><![CDATA[1]]></includeDate>
@@ -751,6 +752,7 @@
                                                 <paginate><![CDATA[1]]></paginate>
                                                 <displayAliases><![CDATA[0]]></displayAliases>
                                                 <enableExternalFiltering><![CDATA[1]]></enableExternalFiltering>
+                                                <excludeCanonicalPaging>0</excludeCanonicalPaging>
                                                 <ptID>{ccm:export:pagetype:portfolio_project}</ptID>
                                                 <truncateSummaries><![CDATA[0]]></truncateSummaries>
                                                 <displayFeaturedOnly><![CDATA[0]]></displayFeaturedOnly>
@@ -1090,6 +1092,7 @@
                                 <paginate><![CDATA[0]]></paginate>
                                 <displayAliases><![CDATA[0]]></displayAliases>
                                 <enableExternalFiltering><![CDATA[0]]></enableExternalFiltering>
+                                <excludeCanonicalPaging>0</excludeCanonicalPaging>
                                 <ptID>{ccm:export:pagetype:portfolio_project}</ptID>
                                 <truncateSummaries><![CDATA[0]]></truncateSummaries>
                                 <displayFeaturedOnly><![CDATA[1]]></displayFeaturedOnly>
@@ -1147,6 +1150,7 @@
                                                 <paginate><![CDATA[0]]></paginate>
                                                 <displayAliases><![CDATA[0]]></displayAliases>
                                                 <enableExternalFiltering><![CDATA[0]]></enableExternalFiltering>
+                                                <excludeCanonicalPaging>0</excludeCanonicalPaging>
                                                 <ptID>{ccm:export:pagetype:blog_entry}</ptID>
                                                 <truncateSummaries><![CDATA[0]]></truncateSummaries>
                                                 <displayFeaturedOnly><![CDATA[0]]></displayFeaturedOnly>
@@ -1177,6 +1181,7 @@
                                                 <paginate><![CDATA[0]]></paginate>
                                                 <displayAliases><![CDATA[0]]></displayAliases>
                                                 <enableExternalFiltering><![CDATA[0]]></enableExternalFiltering>
+                                                <excludeCanonicalPaging>0</excludeCanonicalPaging>
                                                 <ptID>{ccm:export:pagetype:blog_entry}</ptID>
                                                 <truncateSummaries><![CDATA[0]]></truncateSummaries>
                                                 <displayFeaturedOnly><![CDATA[0]]></displayFeaturedOnly>
@@ -3077,7 +3082,7 @@
         <feed>
             <parent>{ccm:export:page:/blog}</parent>
             <title>Blog</title>
-            <description>concrete5 Blog</description>
+            <description>Concrete Blog</description>
             <handle>blog</handle>
             <pagetype>{ccm:export:pagetype:blog_entry}</pagetype>
             <contenttype type="description"/>
@@ -3087,7 +3092,7 @@
     <expressentities>
         <entity id="83ae65b1-79e8-4ded-bbca-e419bfd19bb6" handle="express_form_170" plural_handle="" name="Contact"
                 include_in_public_list="" description="" default_view_form="881b6bde-220f-4482-b8f9-ace40b5d169b"
-                default_edit_form="881b6bde-220f-4482-b8f9-ace40b5d169b" results-folder="/Forms">
+                default_edit_form="881b6bde-220f-4482-b8f9-ace40b5d169b" results-folder="/Forms" package="">
             <attributekeys>
                 <attributekey handle="contact_question_first_name" name="First Name" package="" searchable="1"
                               indexed="1" type="text" category="">
@@ -3156,7 +3161,7 @@
     </expressentities>
 
     <config>
-        <option name="concrete.calendar.topic_attribute">event_categories</option>
+        <option name="concrete.calendar.topic_attribute" package="">event_categories</option>
     </config>
 
 

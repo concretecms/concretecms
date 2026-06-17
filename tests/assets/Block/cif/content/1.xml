@@ -1,0 +1,7 @@
+<block type="content" name="">
+  <data table="btContentLocal">
+    <record>
+      <content><![CDATA[<p><a href="{ccm:export:page:/page-2}">Page</a></p>]]></content>
+    </record>
+  </data>
+</block>

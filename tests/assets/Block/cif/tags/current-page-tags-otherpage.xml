@@ -1,0 +1,11 @@
+<block type="tags" name="">
+  <data table="btTags">
+    <record>
+      <cloudCount>10</cloudCount>
+      <displayMode>page</displayMode>
+      <targetCID>{ccm:export:page:/page-2}</targetCID>
+      <title>Moonlight Shadow</title>
+      <titleFormat>h1</titleFormat>
+    </record>
+  </data>
+</block>

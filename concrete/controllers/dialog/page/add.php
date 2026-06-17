@@ -18,7 +18,10 @@ class Add extends BackendInterfacePageController
     public function view()
     {
         $tree = $this->page->getSiteTreeObject();
-        $type = $tree->getSiteType();
+        $type = null;
+        if ($tree) {
+            $type = $tree->getSiteType();
+        }
         $frequentlyUsed = PageType::getFrequentlyUsedList($type);
         foreach ($frequentlyUsed as $pt) {
             if ($this->permissions->canAddSubCollection($pt) && $pt->canPublishPageTypeBeneathPage($this->page)) {

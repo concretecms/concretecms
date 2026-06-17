@@ -43,7 +43,7 @@ class ProductionGrader implements ScoringGraderInterface
         return $score;
     }
 
-    public function getGrade(int $score = null): GradeInterface
+    public function getGrade(?int $score = null): GradeInterface
     {
         return new PassFailGrade($score);
     }

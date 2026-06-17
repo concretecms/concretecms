@@ -4,6 +4,7 @@ namespace Concrete\Core\Summary\Template;
 
 use Concrete\Core\Entity\Summary\Template;
 use Concrete\Core\Filesystem\FileLocator;
+use Concrete\Core\Filesystem\TemplateVariantLocator;
 use Concrete\Core\Page\Page;
 use Concrete\Core\Site\Service;
 
@@ -62,7 +63,7 @@ class TemplateLocator
                     if ($template->getPackageHandle()) {
                         $this->fileLocator->addPackageLocation($template->getPackageHandle());
                     }
-                    $record = $this->fileLocator->getRecord($filename);
+                    $record = (new TemplateVariantLocator($this->fileLocator))->getRecord($filename);
                     if ($record->exists()) {
                         return $record->getFile();
                     }

@@ -285,7 +285,7 @@ class Controller extends AttributeTypeController implements
     {
         $this->loadSettings();
         $selectedGroup = null;
-        if (isset($data['value'])) {
+        if (is_array($data) && isset($data['value'])) {
             $selectedGroup = Group::getByID((int) ($data['value']));
         }
         if ($selectedGroup) {

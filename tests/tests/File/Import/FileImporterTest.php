@@ -25,31 +25,44 @@ class FileImporterTest extends FileStorageTestCase
     public function __construct($name = null, array $data = [], $dataName = '')
     {
         parent::__construct($name, $data, $dataName);
+        Config::set('concrete.upload.extensions', '*.txt;*.jpg;*.jpeg;*.png');
+    }
 
-        $this->tables = array_merge($this->tables, [
-            'Users',
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\TestHelpers\Database\ConcreteDatabaseTestCase::getTables()
+     */
+    protected function getTables()
+    {
+        return array_merge(parent::getTables(), [
             'PermissionAccessEntityTypes',
-            'FileImageThumbnailTypes',
             'FileImageThumbnailPaths',
             'FilePermissionAssignments',
             'ConfigStore',
             'Logs',
             'FileVersionLog',
         ]);
-        $this->metadatas = array_merge($this->metadatas, [
-            'Concrete\Core\Entity\Attribute\Key\Settings\NumberSettings',
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\TestHelpers\Database\ConcreteDatabaseTestCase::getEntityClassNames()
+     */
+    protected function getEntityClassNames(): array
+    {
+        return array_merge(parent::getEntityClassNames(), [
             'Concrete\Core\Entity\Attribute\Key\Settings\Settings',
             'Concrete\Core\Entity\Attribute\Key\Settings\EmptySettings',
             'Concrete\Core\Entity\Attribute\Key\FileKey',
             'Concrete\Core\Entity\Attribute\Value\FileValue',
             'Concrete\Core\Entity\Attribute\Key\Key',
-            'Concrete\Core\Entity\Attribute\Value\Value',
             'Concrete\Core\Entity\Attribute\Value\Value\NumberValue',
             'Concrete\Core\Entity\Attribute\Value\Value\Value',
             'Concrete\Core\Entity\Attribute\Type',
             'Concrete\Core\Entity\Attribute\Category',
         ]);
-        Config::set('concrete.upload.extensions', '*.txt;*.jpg;*.jpeg;*.png');
     }
 
     public function setUp(): void
@@ -174,7 +187,7 @@ class FileImporterTest extends FileStorageTestCase
         $cf = static::$app->make('helper/concrete/file');
         $fh = static::$app->make('helper/file');
         $config = static::$app->make('config');
-        $file = DIR_BASE . '/concrete/config/install/packages/elemental_full/files/123412345678_plants.jpg';
+        $file = DIR_BASE . '/concrete/config/install/packages/oxford_shirt/files/corner_building.jpg';
         $humbnailTypes = ThumbnailType::getList();
         foreach ([
             'auto' => ['jpg', IMAGETYPE_JPEG],

@@ -57,7 +57,9 @@ use Concrete\Core\Events\EventDispatcher;
 
 class UserInfo extends ConcreteObject implements AttributeObjectInterface, PermissionObjectInterface, ExportableInterface
 {
-    use ObjectTrait;
+    use ObjectTrait {
+        setAttribute as protected setAttributeValue;
+    }
 
     /**
      * @var AvatarServiceInterface
@@ -358,6 +360,8 @@ class UserInfo extends ConcreteObject implements AttributeObjectInterface, Permi
      */
     public function markAsPasswordReset()
     {
+        $ue = new UserInfoEvent($this);
+        $this->getDirector()->dispatch('on_user_reset_password', $ue);
         $this->connection->executeQuery('UPDATE Users SET uIsPasswordReset = 1 WHERE uID = ? limit 1', [$this->getUserID()]);
     }
 
@@ -490,6 +494,9 @@ class UserInfo extends ConcreteObject implements AttributeObjectInterface, Permi
      */
     public function update($data)
     {
+        $data = is_array($data) ? $data : [];
+        $allowPasswordUpdate = ($data['_allowPasswordUpdate'] ?? null) === true;
+        $allowIgnoredIPMismatchesUpdate = ($data['_allowIgnoredIPMismatchesUpdate'] ?? null) === true;
         $uID = (int)$this->getUserID();
         if ($uID === 0) {
             $result = false;
@@ -529,7 +536,7 @@ class UserInfo extends ConcreteObject implements AttributeObjectInterface, Permi
                     $values[] = $data['uHomeFileManagerFolderID'];
                 }
             }
-            if (isset($data['uPassword']) && (string)$data['uPassword'] !== '') {
+            if ($allowPasswordUpdate && isset($data['uPassword']) && (string)$data['uPassword'] !== '') {
                 if (isset($data['uPasswordConfirm']) && $data['uPassword'] === $data['uPasswordConfirm']) {
                     $passwordChangedOn = $this->application->make('date')->getOverridableNow();
                     $fields[] = 'uPassword = ?';
@@ -544,7 +551,7 @@ class UserInfo extends ConcreteObject implements AttributeObjectInterface, Permi
                     $result = null;
                 }
             }
-            if (is_array($data['ignoredIPMismatches'] ?? null)) {
+            if ($allowIgnoredIPMismatchesUpdate && is_array($data['ignoredIPMismatches'] ?? null)) {
                 $fields[] = 'ignoredIPMismatches = ?';
                 $values[] = (new SimpleArrayType())->convertToDatabaseValue($data['ignoredIPMismatches'], $this->connection->getDatabasePlatform());
             }
@@ -656,7 +663,6 @@ class UserInfo extends ConcreteObject implements AttributeObjectInterface, Permi
                     [$this->getUserID()]
                 );
                 $userObject = $this->getUserObject();
-                $app = Facade::getFacadeApplication();
                 $logger = $this->application->make(LoggerFactory::class)->createLogger(Channels::CHANNEL_USERS);
                 foreach ($groupObjects as $group) {
                     $ue = new UserGroupEvent($userObject);
@@ -709,6 +715,7 @@ class UserInfo extends ConcreteObject implements AttributeObjectInterface, Permi
     public function changePassword($newPassword)
     {
         return $this->update([
+            '_allowPasswordUpdate' => true,
             'uPassword' => $newPassword,
             'uPasswordConfirm' => $newPassword,
             'uIsPasswordReset' => false,
@@ -799,7 +806,7 @@ class UserInfo extends ConcreteObject implements AttributeObjectInterface, Permi
 
     /**
      * @param int $length
-     *
+     * @TODO: Deprecate or remove this method - I don't believe it's being used anywhere.
      * @return string|null
      */
     public function resetUserPassword($length = 256)
@@ -809,10 +816,6 @@ class UserInfo extends ConcreteObject implements AttributeObjectInterface, Permi
             $id = $this->application->make(Identifier::class);
             $newPassword = $id->getString($length);
             $this->changePassword($newPassword);
-
-            $ue = new UserInfoEvent($this);
-            $this->getDirector()->dispatch('on_user_reset_password', $ue);
-
             return $newPassword;
         }
     }
@@ -1016,12 +1019,10 @@ class UserInfo extends ConcreteObject implements AttributeObjectInterface, Permi
             $controller = $uak->getController();
             $controller->setAttributeObject($this);
             $value = $controller->createAttributeValueFromRequest();
-            $this->setAttribute($uak, $value);
+            $this->setAttributeValue($uak, $value);
         }
 
-        $ue = new UserInfoWithAttributesEvent($this);
-        $ue->setAttributes($attributes);
-        $this->getDirector()->dispatch('on_user_attributes_saved', $ue);
+        $this->dispatchUserAttributesSavedEvent($attributes);
     }
 
     /**
@@ -1034,10 +1035,32 @@ class UserInfo extends ConcreteObject implements AttributeObjectInterface, Permi
             if (method_exists($controller, 'createDefaultAttributeValue')) {
                 $value = $controller->createDefaultAttributeValue();
                 if ($value !== null) {
-                    $this->setAttribute($uak, $value);
+                    $this->setAttributeValue($uak, $value);
                 }
             }
         }
+        $this->dispatchUserAttributesSavedEvent($attributes);
+    }
+
+    /**
+     * Sets one user attribute and dispatches the user attributes saved event for just that attribute.
+     *
+     * @param \Concrete\Core\Attribute\AttributeKeyInterface|string $ak
+     * @param mixed $value
+     * @param bool $doReindexImmediately
+     *
+     * @return \Concrete\Core\Attribute\AttributeValueInterface
+     */
+    public function setAttribute($ak, $value, $doReindexImmediately = true)
+    {
+        $attributeValue = $this->setAttributeValue($ak, $value, $doReindexImmediately);
+        $this->dispatchUserAttributesSavedEvent([$attributeValue->getAttributeKey()]);
+
+        return $attributeValue;
+    }
+
+    protected function dispatchUserAttributesSavedEvent(array $attributes)
+    {
         $ue = new UserInfoWithAttributesEvent($this);
         $ue->setAttributes($attributes);
         $this->getDirector()->dispatch('on_user_attributes_saved', $ue);
@@ -1111,58 +1134,59 @@ class UserInfo extends ConcreteObject implements AttributeObjectInterface, Permi
     }
 
     /**
-     * @deprecated Use \Core::make('user/registration')->create()
+     * @deprecated Use app('user/registration')->create()
      */
     public static function add($data)
     {
-        return Core::make('user/registration')->create($data);
+
+        return app('user/registration')->create($data);
     }
 
     /**
-     * @deprecated Use \Core::make('user/registration')->createSuperUser()
+     * @deprecated Use app('user/registration')->createSuperUser()
      */
     public static function addSuperUser($uPasswordEncrypted, $uEmail)
     {
-        return Core::make('user/registration')->createSuperUser($uPasswordEncrypted, $uEmail);
+        return app('user/registration')->createSuperUser($uPasswordEncrypted, $uEmail);
     }
 
     /**
-     * @deprecated Use \Core::make('user/registration')->createFromPublicRegistration()
+     * @deprecated Use app('user/registration')->createFromPublicRegistration()
      */
     public static function register($data)
     {
-        return Core::make('user/registration')->createFromPublicRegistration($data);
+        return app('user/registration')->createFromPublicRegistration($data);
     }
 
     /**
-     * @deprecated use \Core::make('Concrete\Core\User\UserInfoRepository')->getByID()
+     * @deprecated use app(\Concrete\Core\User\UserInfoRepository::class)->getByID()
      */
     public static function getByID($uID)
     {
-        return Core::make(UserInfoRepository::class)->getByID($uID);
+        return app(UserInfoRepository::class)->getByID($uID);
     }
 
     /**
-     * @deprecated use \Core::make('Concrete\Core\User\UserInfoRepository')->getByName()
+     * @deprecated use app(\Concrete\Core\User\UserInfoRepository::class)->getByName()
      */
     public static function getByUserName($uName)
     {
-        return Core::make(UserInfoRepository::class)->getByName($uName);
+        return app(UserInfoRepository::class)->getByName($uName);
     }
 
     /**
-     * @deprecated use \Core::make('Concrete\Core\User\UserInfoRepository')->getByEmail()
+     * @deprecated use app(\Concrete\Core\User\UserInfoRepository::class)->getByEmail()
      */
     public static function getByEmail($uEmail)
     {
-        return Core::make(UserInfoRepository::class)->getByEmail($uEmail);
+        return app(UserInfoRepository::class)->getByEmail($uEmail);
     }
 
     /**
-     * @deprecated use \Core::make('Concrete\Core\User\UserInfoRepository')->getByValidationHash()
+     * @deprecated use app(\Concrete\Core\User\UserInfoRepository::class)->getByValidationHash()
      */
     public static function getByValidationHash($uHash, $unredeemedHashesOnly = true)
     {
-        return Core::make(UserInfoRepository::class)->getByValidationHash($uHash, $unredeemedHashesOnly);
+        return app(UserInfoRepository::class)->getByValidationHash($uHash, $unredeemedHashesOnly);
     }
 }

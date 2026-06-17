@@ -1,0 +1,5 @@
+{
+  "$schema": "../options-schema.json",
+  "skipReason": "It doesn't make sense to test importing/exporting core_board_slot block types.",
+  "skipSilent": true
+}

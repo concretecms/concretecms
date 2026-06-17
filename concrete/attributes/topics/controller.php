@@ -63,6 +63,7 @@ class Controller extends AttributeTypeController implements
 
         $expressions = [];
         $qb = $list->getQueryObject();
+        $expr = $qb->expr();
         foreach ($topics as $value) {
             if ($value instanceof TreeNode) {
                 $topic = $value;
@@ -73,11 +74,12 @@ class Controller extends AttributeTypeController implements
                     $topic instanceof \Concrete\Core\Tree\Node\Type\Topic ||
                     $topic instanceof Category)) {
                 $column = 'ak_' . $this->attributeKey->getAttributeKeyHandle();
-                $expressions[] = $qb->expr()->like($column, $qb->createNamedParameter('%||' . $topic->getTreeNodeDisplayPath() . '||%'));
+                $topicPath = rtrim($topic->getTreeNodeDisplayPath(), '/');
+                $expressions[] = $expr->like($column, $qb->createNamedParameter('%||' . $topicPath . '||%'));
+                $expressions[] = $expr->like($column, $qb->createNamedParameter('%||' . $topicPath . '/%'));
             }
         }
 
-        $expr = $qb->expr();
         $qb->andWhere(call_user_func_array([$expr, 'orX'], $expressions));
     }
 
@@ -119,8 +121,10 @@ class Controller extends AttributeTypeController implements
         $xml = $this->app->make(Xml::class);
         $avn = $akn->addChild('topics');
         $nodes = $this->attributeValue->getValue();
-        foreach ($nodes as $topic) {
-            $xml->createChildElement($avn, 'topic', $topic->getTreeNodeDisplayPath());
+        if (!empty($nodes)) {
+            foreach ($nodes as $topic) {
+                $xml->createChildElement($avn, 'topic', $topic->getTreeNodeDisplayPath());
+            }
         }
     }
 
@@ -131,9 +135,9 @@ class Controller extends AttributeTypeController implements
             foreach ($akn->topics->topic as $topicPath) {
                 $selected[] = (string) $topicPath;
             }
-
-            return $this->createAttributeValue($selected);
         }
+
+        return $this->createAttributeValue($selected);
     }
 
     /**
@@ -159,7 +163,7 @@ class Controller extends AttributeTypeController implements
         $tree = Tree::getByID($this->akTopicTreeID);
         if ($nodes instanceof Topic) {
             $selected[] = $nodes->getTreeNodeID();
-        } else {
+        } elseif (is_iterable($nodes)) {
             foreach ($nodes as $topicPath) {
                 if ($topicPath instanceof Topic) {
                     $selected[] = $topicPath->getTreeNodeID();
@@ -343,7 +347,7 @@ class Controller extends AttributeTypeController implements
 
         $e = $this->app->make('error');
 
-        if (!$data['akTopicParentNodeID'] || !$data['akTopicTreeID']) {
+        if (empty($data['akTopicParentNodeID']) || empty($data['akTopicTreeID'])) {
             $e->add(t('You must specify a valid topic tree parent node ID and topic tree ID.'));
         }
 

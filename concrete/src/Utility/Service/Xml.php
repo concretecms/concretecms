@@ -60,13 +60,11 @@ class Xml
     /**
      * Append a new CDATA section to an existing element.
      * Please remark that \r\n and \r sequences will be converted to \n - see https://www.w3.org/TR/2008/REC-xml-20081126/#sec-line-ends
-     *
-     * @param scalar|\DateTimeInterface|\Stringable $value
      */
     public function appendCData(SimpleXMLElement $element, string $value): void
     {
         $domElement = dom_import_simplexml($element);
-        $domElement->appendChild($domElement->ownerDocument->createCDataSection($this->serialize($value)));
+        $domElement->appendChild($domElement->ownerDocument->createCDataSection($value));
     }
 
     /**

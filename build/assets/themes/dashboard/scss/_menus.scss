@@ -25,3 +25,12 @@ div#ccm-dashboard-content {
   }
 
 }
+
+@include color-mode(dark) {
+  div#ccm-dashboard-content {
+    h2 {
+      color: $gray-300;
+      border-bottom: 1px solid $gray-700;
+    }
+  }
+}

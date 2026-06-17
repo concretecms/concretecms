@@ -1,0 +1,7 @@
+{
+  "$schema": "../options-schema.json",
+  "fileUsageCount": 1,
+  "richTexts": {
+    "SELECT description FROM btImageSliderEntries WHERE bID = :bID LIMIT 0,1": {}
+  }
+}

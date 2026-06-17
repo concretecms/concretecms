@@ -26,7 +26,7 @@ class Delete extends BackendInterfaceBlockController
             }
         }
         if ($this->block->getBlockTypeHandle() == BLOCK_HANDLE_LAYOUT_PROXY) {
-            $this->set('message', t('Are you sure you wish to delete this layout? It will remove the blocks that are contained within it.'));
+            $this->set('message', t('Are you sure you wish to delete this layout? It will orphan the blocks that are contained within it.'));
         } else {
             $this->set('message', t('Are you sure you wish to delete this %s block?', $this->block->getBlockTypeObject()->getBlockTypeName()));
         }

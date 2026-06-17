@@ -15,6 +15,7 @@ class Version20210331213100 extends AbstractMigration implements RepeatableMigra
      */
     public function upgradeDatabase()
     {
+        $this->refreshDatabaseTables(['Logs']);
         Page::getByPath("/dashboard/users/points")->delete();
         Page::getByPath("/dashboard/users/points/actions")->delete();
         Page::getByPath("/dashboard/users/points/assign")->delete();

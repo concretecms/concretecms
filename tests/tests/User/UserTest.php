@@ -2,26 +2,40 @@
 
 namespace Concrete\Tests\User;
 
+use Concrete\Core\Attribute\Key\Category as AttributeKeyCategory;
+use Concrete\Core\Attribute\Type as AttributeType;
 use Concrete\Core\Conversation\Message\Author;
 use Concrete\Core\Conversation\Message\AuthorFormatter;
 use Concrete\Core\File\StorageLocation\StorageLocation;
 use Concrete\Core\File\StorageLocation\Type\Type;
+use Concrete\Core\User\Event\UserInfo as UserInfoEvent;
+use Concrete\Core\User\Event\UserInfoWithAttributes as UserInfoWithAttributesEvent;
 use Concrete\TestHelpers\User\UserTestCase;
 use Core;
 
 class UserTest extends UserTestCase
 {
-    public function __construct($name = null, array $data = [], $dataName = '')
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\TestHelpers\Database\ConcreteDatabaseTestCase::getEntityClassNames()
+     */
+    protected function getEntityClassNames(): array
     {
-        parent::__construct($name, $data, $dataName);
-
-        $this->metadatas[] = 'Concrete\Core\Entity\File\StorageLocation\StorageLocation';
-        $this->metadatas[] = 'Concrete\Core\Entity\File\StorageLocation\Type\Type';
-        $this->metadatas[] = 'Concrete\Core\Entity\Site\Site';
-        $this->metadatas[] = 'Concrete\Core\Entity\Site\Locale';
-        $this->metadatas[] = 'Concrete\Core\Entity\Site\Type';
-        $this->metadatas[] = 'Concrete\Core\Entity\Site\Tree';
-        $this->metadatas[] = 'Concrete\Core\Entity\Site\SiteTree';
+        return array_merge(parent::getEntityClassNames(), [
+            'Concrete\Core\Entity\File\StorageLocation\StorageLocation',
+            'Concrete\Core\Entity\File\StorageLocation\Type\Type',
+            'Concrete\Core\Entity\Site\Site',
+            'Concrete\Core\Entity\Site\Locale',
+            'Concrete\Core\Entity\Site\Type',
+            'Concrete\Core\Entity\Site\Tree',
+            'Concrete\Core\Entity\Site\SiteTree',
+            'Concrete\Core\Entity\Attribute\Type',
+            'Concrete\Core\Entity\Attribute\Key\Settings\TextSettings',
+            'Concrete\Core\Entity\Attribute\Value\Value\Value',
+            'Concrete\Core\Entity\Attribute\Value\Value\TextValue',
+            'Concrete\Core\Entity\Attribute\Value\UserValue',
+        ]);
     }
 
     public function tearDown(): void
@@ -124,11 +138,52 @@ class UserTest extends UserTestCase
             $avatar->output());
 
         $service = Core::make('user/avatar');
-        $service->removeAvatar($ui);
+        $events = [];
+        $listener = function (UserInfoEvent $event) use (&$events) {
+            $events[] = $event;
+        };
+        $director = Core::make('director');
+        $director->addListener('on_user_update', $listener);
+        try {
+            $service->removeAvatar($ui);
+        } finally {
+            $director->removeListener('on_user_update', $listener);
+        }
+        $this->assertCount(1, $events);
+        $this->assertEquals($ui->getUserID(), $events[0]->getUserInfoObject()->getUserID());
 
         // I KNOW I KNOW This is lame
         $ui = Core::make('Concrete\Core\User\UserInfoRepository')->getByID(1);
         $this->assertFalse($ui->hasAvatar());
+    }
+
+    public function testSetAttributeFiresUserAttributesSavedEvent()
+    {
+        $categoryService = Core::make('Concrete\Core\Attribute\Category\CategoryService');
+        $category = $categoryService->getByHandle('user');
+        $category = $category ? $category->getController() : AttributeKeyCategory::add('user');
+        $type = AttributeType::getByHandle('text') ?: AttributeType::add('text', 'Text');
+        $key = $category->add($type, ['akHandle' => 'favorite_color', 'akName' => 'Favorite Color']);
+
+        $service = Core::make('user/registration');
+        $ui = $service->create(['uName' => 'andrew', 'uEmail' => 'andrew@concrete5.org']);
+
+        $events = [];
+        $listener = function (UserInfoWithAttributesEvent $event) use (&$events) {
+            $events[] = $event;
+        };
+        $director = Core::make('director');
+        $director->addListener('on_user_attributes_saved', $listener);
+        try {
+            $ui->setAttribute($key, 'blue');
+        } finally {
+            $director->removeListener('on_user_attributes_saved', $listener);
+        }
+
+        $this->assertCount(1, $events);
+        $this->assertEquals($ui->getUserID(), $events[0]->getUserInfoObject()->getUserID());
+        $this->assertCount(1, $events[0]->getAttributes());
+        $this->assertEquals($key->getAttributeKeyID(), $events[0]->getAttributes()[0]->getAttributeKeyID());
     }
 
     public function testEmptyAvatar()

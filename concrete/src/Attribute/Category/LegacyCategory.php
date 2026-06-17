@@ -141,7 +141,7 @@ class LegacyCategory implements CategoryInterface, StandardSearchIndexerInterfac
         return $key;
     }
 
-    public function import(Type $type, \SimpleXMLElement $element, Package $package = null)
+    public function import(Type $type, \SimpleXMLElement $element, ?Package $package = null)
     {
         $loader = new StandardImportLoader();
         $key = new LegacyKey();

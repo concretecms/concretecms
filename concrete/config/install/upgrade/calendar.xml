@@ -193,25 +193,25 @@
     </permissionkeys>
 
     <permissionaccessentitytypes>
-        <permissionaccessentitytype handle="group" package="">
+        <permissionaccessentitytype handle="group" name="Group" package="">
             <categories>
                 <category handle="calendar_admin" />
                 <category handle="calendar" />
             </categories>
         </permissionaccessentitytype>
-        <permissionaccessentitytype handle="user" package="">
+        <permissionaccessentitytype handle="user" name="User" package="">
             <categories>
                 <category handle="calendar_admin" />
                 <category handle="calendar" />
             </categories>
         </permissionaccessentitytype>
-        <permissionaccessentitytype handle="group_set" package="">
+        <permissionaccessentitytype handle="group_set" name="Group Set" package="">
             <categories>
                 <category handle="calendar_admin" />
                 <category handle="calendar" />
             </categories>
         </permissionaccessentitytype>
-        <permissionaccessentitytype handle="group_combination" package="">
+        <permissionaccessentitytype handle="group_combination" name="Group Combination" package="">
             <categories>
                 <category handle="calendar_admin" />
                 <category handle="calendar" />

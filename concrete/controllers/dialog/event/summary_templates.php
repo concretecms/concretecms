@@ -52,7 +52,7 @@ class SummaryTemplates extends BackendInterfaceController
     public function action()
     {
         $occurrence = $this->getOccurrenceFromRequest();
-        $url = call_user_func_array('parent::action', func_get_args());
+        $url = call_user_func_array([parent::class, 'action'], func_get_args());
         $url .= '&versionOccurrenceID=' . $occurrence->getID();
         return $url;
     }

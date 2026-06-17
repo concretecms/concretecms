@@ -196,6 +196,7 @@ abstract class DashboardAttributesPageController extends DashboardPageController
         $request = $this->request;
         $entity = $this->getCategoryObject();
         $category = $entity->getAttributeKeyCategory();
+        $set = null;
         if ($category->getSetManager()->allowAttributeSets()) {
             if ($request->request->has('asID')) {
                 $set = Set::getByID($request->request->get('asID'));

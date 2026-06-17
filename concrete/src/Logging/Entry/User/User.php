@@ -18,7 +18,7 @@ abstract class User extends ApplierEntry
      */
     protected $user;
 
-    public function __construct(CoreUser $user, CoreUser $applier = null)
+    public function __construct(CoreUser $user, ?CoreUser $applier = null)
     {
         $this->user = $user;
         parent::__construct($applier);

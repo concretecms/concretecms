@@ -1,0 +1,19 @@
+<block type="top_navigation_bar" name="">
+  <data table="btTopNavigationBar">
+    <record>
+      <brandingLogo>{ccm:export:file:123456789012:file-1.jpg}</brandingLogo>
+      <brandingText>Best Site Ever</brandingText>
+      <brandingTransparentLogo>{ccm:export:file:123456543210:file-3.png}</brandingTransparentLogo>
+      <ignorePermissions>1</ignorePermissions>
+      <includeBrandLogo>1</includeBrandLogo>
+      <includeBrandText>1</includeBrandText>
+      <includeNavigation>1</includeNavigation>
+      <includeNavigationDropdowns>1</includeNavigationDropdowns>
+      <includeSearchInput>1</includeSearchInput>
+      <includeStickyNav>1</includeStickyNav>
+      <includeSwitchLanguage>0</includeSwitchLanguage>
+      <includeTransparency>1</includeTransparency>
+      <searchInputFormActionPageID>{ccm:export:page:/page-2}</searchInputFormActionPageID>
+    </record>
+  </data>
+</block>

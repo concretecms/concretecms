@@ -25,7 +25,7 @@ class Factory
      * needs to function (e.g. a config repository)
      * @param Site|null $site
      */
-    public function createEntity(Site $site = null)
+    public function createEntity(?Site $site = null)
     {
         if (!$site) {
             $site = new Site($this->config);

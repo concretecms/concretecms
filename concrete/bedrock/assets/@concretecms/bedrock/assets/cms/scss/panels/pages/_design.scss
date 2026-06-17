@@ -18,6 +18,16 @@
   }
 }
 
+@include color-mode(dark) {
+  #ccm-panel-page-design {
+    .ccm-panel-content-inner {
+      .ccm-panel-page-design-title {
+        color: $gray-400;
+      }
+    }
+  }
+}
+
 .ccm-panel-page-design-page-group {
   padding: 25px 10px 10px 34px;
 

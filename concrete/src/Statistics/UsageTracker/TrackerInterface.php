@@ -4,20 +4,21 @@ namespace Concrete\Core\Statistics\UsageTracker;
 
 interface TrackerInterface
 {
-
     /**
-     * Track a trackable object
-     * Any object could be passed to this method so long as it implements TrackableInterface
+     * Track a trackable object.
+     *
      * @param \Concrete\Core\Statistics\UsageTracker\TrackableInterface $trackable
-     * @return static|TrackerInterface
+     *
+     * @return $this
      */
     public function track(TrackableInterface $trackable);
 
     /**
-     * Forget a trackable object
-     * Any object could be passed to this method so long as it implements TrackableInterface
+     * Forget a trackable object.
+     *
      * @param \Concrete\Core\Statistics\UsageTracker\TrackableInterface $trackable
-     * @return static|TrackerInterface
+     *
+     * @return $this
      */
     public function forget(TrackableInterface $trackable);
 

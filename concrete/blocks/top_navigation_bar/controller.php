@@ -85,6 +85,11 @@ class Controller extends BlockController implements UsesFeatureInterface, FileTr
      */
     public $includeSwitchLanguage;
 
+    /**
+     * @var bool|int|string|null
+     */
+    public $ignorePermissions;
+
     public $helpers = ['form'];
 
     protected $btInterfaceWidth = 640;
@@ -94,8 +99,11 @@ class Controller extends BlockController implements UsesFeatureInterface, FileTr
     protected $btCacheBlockOutput = true;
     protected $btCacheBlockOutputOnPost = true;
     protected $btCacheBlockOutputForRegisteredUsers = true;
+    protected $btCacheBlockOutputOnEditMode = false;
     protected $btCacheBlockOutputLifetime = 300;
     protected $btExportFileColumns = ['brandingLogo', 'brandingTransparentLogo'];
+    protected $btExportPageColumns = ['searchInputFormActionPageID'];
+    protected $home;
 
     /**
      * {@inheritdoc}
@@ -142,6 +150,7 @@ class Controller extends BlockController implements UsesFeatureInterface, FileTr
         $this->set('searchInputFormActionPageID', null);
         $this->set('brandingText', $brandingText);
         $this->set('includeSwitchLanguage', $detector->isEnabled());
+        $this->set('ignorePermissions', false);
         $this->edit();
     }
 
@@ -157,7 +166,7 @@ class Controller extends BlockController implements UsesFeatureInterface, FileTr
     protected function includePageInNavigation(Page $page)
     {
         $checker = new Checker($page);
-        if ($checker->canViewPage() && !$page->getAttribute('exclude_nav')) {
+        if (($checker->canViewPage() || $this->ignorePermissions) && !$page->getAttribute('exclude_nav')) {
             return true;
         }
         return false;
@@ -191,22 +200,29 @@ class Controller extends BlockController implements UsesFeatureInterface, FileTr
 
     protected function getHomePage(): Page
     {
-        $section = Section::getByLocale(\Localization::getInstance()->getLocale());
-        if ($section instanceof Section) {
-            $home = \Page::getByID($section->getSiteHomePageID());
-        } else {
-            $site = $this->app->make('site')->getSite();
-            $home = $site->getSiteHomePageObject();
+        if ($this->home === null) {
+            $section = Section::getByLocale(\Localization::getInstance()->getLocale());
+            if ($section instanceof Section) {
+                $home = \Page::getByID($section->getSiteHomePageID());
+            } else {
+                $site = $this->app->make('site')->getSite();
+                $home = $site->getSiteHomePageObject();
+            }
+            $this->home = $home;
         }
-        return $home;
+
+        return $this->home;
     }
 
     protected function getNavigation(): Navigation
     {
-        $home = $this->getHomePage();
-        $children = $home->getCollectionChildren();
         $navigation = $this->app->make(Navigation::class);
+        if (!$this->includeNavigation) {
+            return $navigation;
+        }
 
+        $home = $this->getHomePage();
+        $children = $home->getCollectionChildren('ACTIVE');
         $current = Page::getCurrentPage();
         $parentIDs = $this->getParentIDsToCurrent();
 
@@ -218,7 +234,7 @@ class Controller extends BlockController implements UsesFeatureInterface, FileTr
                 }
                 $item->setIsActive($current->getCollectionID() === $child->getCollectionID());
                 if ($this->includeSubPagesInNavigation($child)) {
-                    $dropdownChildren = $child->getCollectionChildren();
+                    $dropdownChildren = $child->getCollectionChildren('ACTIVE');
                     foreach ($dropdownChildren as $dropdownChild) {
                         if ($this->includePageInNavigation($dropdownChild)) {
                             $dropdownChildItem = $this->app->make(PageItem::class, ['page' => $dropdownChild]);
@@ -290,6 +306,7 @@ class Controller extends BlockController implements UsesFeatureInterface, FileTr
 
     public function save($args)
     {
+        $isCLI = $this->app->isRunThroughCommandLineInterface();
         $data = [];
         $data['includeNavigation'] = !empty($args['includeNavigation']) ? 1 : 0;
         $data['includeNavigationDropdowns'] = !empty($args['includeNavigationDropdowns']) ? 1 : 0;
@@ -297,6 +314,7 @@ class Controller extends BlockController implements UsesFeatureInterface, FileTr
         $data['includeSearchInput'] = !empty($args['includeSearchInput']) ? 1 : 0;
         $data['includeStickyNav'] = !empty($args['includeStickyNav']) ? 1 : 0;
         $data['includeSwitchLanguage'] = !empty($args['includeSwitchLanguage']) ? 1 : 0;
+        $data['ignorePermissions'] = !empty($args['ignorePermissions']) ? 1 : 0;
 
         $data['includeBrandLogo'] = 0;
         $data['includeBrandText'] = 0;
@@ -325,7 +343,7 @@ class Controller extends BlockController implements UsesFeatureInterface, FileTr
             $file = File::getByID($args['brandingLogo']);
             if ($file) {
                 $checker = new Checker($file);
-                if ($checker->canViewFileInFileManager()) {
+                if ($isCLI || $checker->canViewFileInFileManager()) {
                     $brandingLogo = $file->getFileID();
                 }
             }
@@ -335,7 +353,7 @@ class Controller extends BlockController implements UsesFeatureInterface, FileTr
             $file = File::getByID($args['brandingTransparentLogo']);
             if ($file) {
                 $checker = new Checker($file);
-                if ($checker->canViewFileInFileManager()) {
+                if ($isCLI || $checker->canViewFileInFileManager()) {
                     $brandingTransparentLogo = $file->getFileID();
                 }
             }
@@ -345,7 +363,7 @@ class Controller extends BlockController implements UsesFeatureInterface, FileTr
             $searchPage = Page::getByID($args['searchInputFormActionPageID']);
             if ($searchPage && !$searchPage->isError()) {
                 $checker = new Checker($searchPage);
-                if ($checker->canViewPage()) {
+                if ($isCLI || $checker->canViewPage()) {
                     $searchInputFormActionPageID = $searchPage->getCollectionID();
                 }
             }

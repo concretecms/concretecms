@@ -35,13 +35,14 @@ if (isset($client) && $client->hasCustomScopes()) {
             <div class="mb-3">
                 <label class="form-label" for="redirect"><?php echo t('Redirect'); ?></label>
                 <div class="input-group">
-                    <input type="url" class="form-control" autocomplete="off"  v-model="redirect">
+                    <input type="text" pattern="https?:\/\/.+" class="form-control" autocomplete="off" v-model="redirect" required="required">
                     <span class="input-group-text"><i class="fas fa-asterisk"></i></span>
                 </div>
+                <div class="small text-muted"><?= t('You can specify multiple URLs separating them with %s', '<code>|</code>') ?></div>
             </div>
 
             <div class="mb-3">
-                <label class="form-label" for="redirect"><?php echo t('Documentation'); ?></label>
+                <label class="form-label"><?php echo t('Documentation'); ?></label>
                 <div class="form-check">
                     <input type="checkbox" id="enableDocumentation" class="form-check-input"  v-model="enableDocumentation">
                     <label class="form-check-label" for="enableDocumentation"><?=t('Enable interactive documentation.')?></label>

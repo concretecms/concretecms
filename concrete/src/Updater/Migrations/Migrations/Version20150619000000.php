@@ -14,7 +14,9 @@ class Version20150619000000 extends AbstractMigration implements RepeatableMigra
      */
     public function upgradeDatabase()
     {
-        $this->deleteInvalidForeignKey('AreaLayoutsUsingPresets', 'arLayoutID', 'AreaLayouts', 'arLayoutID');
+        if ($this->connection->getSchemaManager()->tablesExist(['AreaLayoutsUsingPresets'])) {
+            $this->deleteInvalidForeignKey('AreaLayoutsUsingPresets', 'arLayoutID', 'AreaLayouts', 'arLayoutID');
+        }
         $this->refreshDatabaseTables([
             'AreaLayouts',
             'AreaLayoutsUsingPresets',

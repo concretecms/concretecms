@@ -65,6 +65,10 @@ class Controller extends BlockController implements UsesFeatureInterface
 
     protected $btCacheBlockOutputOnPost = true;
 
+    protected $btCacheBlockOutputForRegisteredUsers = true;
+
+    protected $btCacheBlockOutputOnEditMode = false;
+
     public function getBlockTypeDescription()
     {
         return t('Enter an address and a Google Map of that location will be placed in your page.');
@@ -97,6 +101,14 @@ class Controller extends BlockController implements UsesFeatureInterface
 
     public function validate($args)
     {
+        $args += [
+            'apiKey' => null,
+            'location' => null,
+            'latitude' => '',
+            'longitude' => '',
+            'zoom' => null
+        ];
+
         $error = $this->app->make('helper/validation/error');
 
         if (!trim($args['apiKey'])) {

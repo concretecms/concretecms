@@ -2,6 +2,7 @@
 
 namespace Concrete\Core\Csv;
 
+use http\Exception\BadMethodCallException;
 use League\Csv\Writer;
 use SplFileObject;
 
@@ -43,7 +44,9 @@ class WriterFactory
     {
         $class = $this->writerClass;
 
-        return $this->prepare($class::createFromString($string));
+        return $this->prepare(
+            method_exists($class, 'fromString') ? $class::fromString($string) : $class::createFromString($string)
+        );
     }
 
     /**

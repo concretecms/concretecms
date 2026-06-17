@@ -10,11 +10,7 @@ if (is_object($selectedTheme)) {
     $customizer = $selectedTheme->getThemeCustomizer();
 }
 
-$selectedSkinIdentifier = '';
-$skin = $c->getPageSkin();
-if ($skin) {
-    $selectedSkinIdentifier = $skin->getIdentifier();
-}
+$selectedSkinIdentifier = $c->getPageSkinIdentifier() ?? '';
 ?>
 <section id="ccm-panel-page-design">
     <form method="post" action="<?= $controller->action('submit') ?>" data-panel-detail-form="design">

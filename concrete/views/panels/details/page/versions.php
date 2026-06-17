@@ -9,8 +9,8 @@ defined('C5_EXECUTE') or die('Access Denied.');
 /** @var int[] $versions */
 
 if (count($versions) > 1) {
-    $newVersionID = $versions[array_key_first($versions)];
-    $compareVersionID = $versions[array_key_last($versions)];
+    $newVersionID = $versions[array_key_last($versions)];
+    $compareVersionID = $versions[array_key_first($versions)];
 }
 ?>
     <div class="h-100 pt-4">
@@ -18,7 +18,7 @@ if (count($versions) > 1) {
     $tabs = [];
     $checked = true;
     if (isset($newVersionID) && isset($compareVersionID)) {
-        $tabs[] = ['ccm-tab-content-compare-versions', t('Changes between version %d and %d', $newVersionID, $compareVersionID), true];
+        $tabs[] = ['ccm-tab-content-compare-versions', t('Changes between version %d and %d', $compareVersionID, $newVersionID), true];
         $checked = false;
     }
     foreach ($versions as $cvID) {

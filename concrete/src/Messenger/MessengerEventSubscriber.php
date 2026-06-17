@@ -2,6 +2,7 @@
 namespace Concrete\Core\Messenger;
 
 use Concrete\Core\Cache\Cache;
+use Concrete\Core\Command\Task\Stamp\OutputStamp;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Messenger\Event\WorkerMessageFailedEvent;
@@ -36,6 +37,8 @@ class MessengerEventSubscriber implements EventSubscriberInterface
     public function handleWorkerMessageFailedEvent(WorkerMessageFailedEvent $event)
     {
         $exception = $event->getThrowable();
+
+        // Log the exception
         $this->logger->alert(
             sprintf(
                 "Messenger Worker Message Failed: %s:%d %s\n",
@@ -45,6 +48,14 @@ class MessengerEventSubscriber implements EventSubscriberInterface
             ),
             [$exception]
         );
+
+        // Is this a task? If so, let's try and output the error in a helpful way
+        $envelope = $event->getEnvelope();
+        $taskOutputStamp = $envelope->last(OutputStamp::class);
+        if ($taskOutputStamp instanceof OutputStamp) {
+            $output = $taskOutputStamp->getOutput();
+            $output->writeError($exception->getMessage());
+        }
     }
 
 }

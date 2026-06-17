@@ -37,8 +37,8 @@ class MovePageRequest extends PageRequest
     public function getWorkflowRequestDescriptionObject()
     {
         $d = new WorkflowDescription();
-        $c = Page::getByID($this->cID, 'ACTIVE');
-        $target = Page::getByID($this->targetCID, 'ACTIVE');
+        $c = Page::getByID($this->cID, 'RECENT');
+        $target = Page::getByID($this->targetCID, 'RECENT');
         $link = Loader::helper('navigation')->getLinkToCollection($c, true);
         $targetLink = Loader::helper('navigation')->getLinkToCollection($target, true);
         $d->setEmailDescription(t("\"%s\" is pending a move to beneath \"%s\". Source Page: %s. Target Page: %s.", $c->getCollectionName(), $target->getCollectionName(), $link, $targetLink));

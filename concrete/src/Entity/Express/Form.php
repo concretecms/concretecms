@@ -138,7 +138,8 @@ class Form implements \JsonSerializable, ExportableInterface, FormInterface
     {
         return [
             'exFormName' => $this->getName(),
-            'exFormID' => $this->getId()
+            'exFormID' => $this->getId(),
+            'exFormEntityName' => $this->getEntity()->getName(),
         ];
     }
 

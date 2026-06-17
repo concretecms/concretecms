@@ -26,13 +26,18 @@ class MemoryOutput implements OutputInterface
      *
      * @see \Concrete\Core\Command\Task\Output\OutputInterface::write()
      */
-    public function write($message)
+    public function write($message): void
     {
         $message = (string) $message;
         $this->messages[] = $message;
         if ($this->listener !== null) {
             ($this->listener)($message, $this);
         }
+    }
+
+    public function writeError($message): void
+    {
+        $this->write($message);
     }
 
     /**

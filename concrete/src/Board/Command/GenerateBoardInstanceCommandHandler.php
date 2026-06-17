@@ -70,7 +70,8 @@ class GenerateBoardInstanceCommandHandler
             $slot->setInstance($instance);
             $slot->setTemplate($plannedSlotTemplate->getSlotTemplate());
 
-            $json = $this->serializer->serialize($plannedSlotTemplate->getObjectCollection(), 'json');
+            $updatedObjectCollection = $plannedSlotTemplate->getObjectCollection()->refresh();
+            $json = $this->serializer->serialize($updatedObjectCollection, 'json');
 
             $data = [
                 'contentObjectCollection' => $json,
@@ -86,6 +87,8 @@ class GenerateBoardInstanceCommandHandler
             $this->entityManager->persist($slot);
         }
 
+        $instance->setDateLastGenerated(time());
+        $instance->setIsGenerating(false);
         $this->entityManager->persist($instance);
         $this->entityManager->flush();
     }

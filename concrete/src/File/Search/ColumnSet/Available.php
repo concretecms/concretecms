@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\File\Search\ColumnSet;
 
+use Concrete\Core\File\Search\ColumnSet\Column\DownloadsColumn;
 use Concrete\Core\File\Search\ColumnSet\Column\FileIDColumn;
 use Concrete\Core\File\Search\ColumnSet\Column\FileVersionDateAddedColumn;
 use Concrete\Core\File\Search\ColumnSet\Column\FileVersionFilenameColumn;
@@ -69,6 +70,18 @@ class Available extends DefaultSet
         return $app->make('date')->formatDateTime($f->getDateAdded()->getTimestamp());
     }
 
+    public static function getDownloads($node)
+    {
+        if ($node->getTreeNodeTypeHandle() == 'file') {
+            $file = $node->getTreeNodeFileObject();
+            if (is_object($file)) {
+                return $file->getTotalDownloads();
+            }
+        }
+
+        return '';
+    }
+
     public function __construct()
     {
         parent::__construct();
@@ -77,5 +90,6 @@ class Available extends DefaultSet
         $this->addColumn(new FileIDColumn());
         $this->addColumn(new FileVersionFilenameColumn());
         $this->addColumn(new FileVersionDateAddedColumn());
+        $this->addColumn(new DownloadsColumn());
     }
 }

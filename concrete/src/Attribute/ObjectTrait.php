@@ -73,16 +73,6 @@ trait ObjectTrait
      */
     public function setAttribute($ak, $value, $doReindexImmediately = true)
     {
-        $app = Application::getFacadeApplication();
-        /** @var RequestCache $cache */
-        $cache = $app->make('cache/request');
-        if (is_object($ak)) {
-            $akHandle = $ak->getAttributeKeyHandle();
-        } else {
-            $akHandle = $ak;
-        }
-        $cache->delete('attribute/value/' . $akHandle);
-
         $orm = \Database::connection()->getEntityManager();
 
         $this->clearAttribute($ak, $doReindexImmediately);
@@ -135,6 +125,16 @@ trait ObjectTrait
                 $indexer->indexEntry($category, $attributeValue, $this);
             }
         }
+
+        $app = Application::getFacadeApplication();
+        /** @var RequestCache $cache */
+        $cache = $app->make('cache/request');
+        if (is_object($ak)) {
+            $akHandle = $ak->getAttributeKeyHandle();
+        } else {
+            $akHandle = $ak;
+        }
+        $cache->delete('attribute/value/' . $akHandle);
 
         return $attributeValue;
     }

@@ -128,10 +128,12 @@ class Design extends BackendUIPageController
         if ($pt) {
             $previewRequest->setTheme($pt);
             if ($this->request->query->has('skinIdentifier')) {
-                $skin = $pt->getSkinByIdentifier(h($this->request->query->get('skinIdentifier')));
+                $skinIdentifier = h($this->request->query->get('skinIdentifier'));
             } else {
-                $skin = $this->page->getPageSkin();
+                $skinIdentifier = h($this->page->getPageSkinIdentifier());
             }
+
+            $skin = $pt->getSkinByIdentifier($skinIdentifier);
             if ($skin) {
                 $previewRequest->setSkin($skin);
             }

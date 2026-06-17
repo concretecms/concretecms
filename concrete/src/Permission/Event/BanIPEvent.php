@@ -31,7 +31,7 @@ class BanIPEvent
      * @param IPAddress $ipAddress the IP address that is going to be banned
      * @param DateTime $banExpiration the ban expiration date/time (or null if not expiration)
      */
-    public function __construct(IPAddress $ipAddress, DateTime $banExpiration = null)
+    public function __construct(IPAddress $ipAddress, ?DateTime $banExpiration = null)
     {
         $this->ipAddress = $ipAddress;
         $this->banExpiration = $banExpiration;
@@ -64,7 +64,7 @@ class BanIPEvent
      *
      * @return static
      */
-    public function setBanExpiration(DateTime $banExpiration = null)
+    public function setBanExpiration(?DateTime $banExpiration = null)
     {
         $this->banExpiration = $banExpiration;
 

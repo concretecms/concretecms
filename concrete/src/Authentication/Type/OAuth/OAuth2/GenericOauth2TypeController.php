@@ -44,7 +44,7 @@ abstract class GenericOauth2TypeController extends GenericOauthTypeController
                 // We should NOT allow you to complete the authentication flow and potentially rebind the
                 // logged-in user here. Instead we halt the authentication flow.
                 $this->showError(t('You are already logged in.'));
-                return false;
+                exit();
             }
 
             $token = $service->requestAccessToken($code, $state);

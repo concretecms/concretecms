@@ -31,5 +31,5 @@ interface ValidatorManagerInterface extends ValidatorInterface
      * @param string $handle
      * @param \Concrete\Core\Validator\ValidatorInterface $validator
      */
-    public function setValidator($handle, ValidatorInterface $validator = null);
+    public function setValidator($handle, ?ValidatorInterface $validator = null);
 }

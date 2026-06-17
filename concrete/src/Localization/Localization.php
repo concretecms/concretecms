@@ -481,7 +481,7 @@ class Localization
      *
      * @param LaminasTranslator $translate
      */
-    public static function setupSiteLocalization(LaminasTranslator $translate = null)
+    public static function setupSiteLocalization(?LaminasTranslator $translate = null)
     {
         $loc = static::getInstance();
         if ($translate === null) {

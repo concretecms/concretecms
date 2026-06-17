@@ -9,6 +9,7 @@ import '@concretecms/bedrock/assets/bedrock/js/frontend';
 // We need the avatar component because we use it in the Dashboard user view.
 import AvatarCropper from '@concretecms/bedrock/assets/account/js/frontend/components/AvatarCropper.vue'
 import FileManagerFavoriteFolderSelector from './file-manager/FileManagerFavoriteFolderSelector.vue'
+
 const backendComponents = {
     AvatarCropper,
     FileManagerFavoriteFolderSelector
@@ -39,11 +40,10 @@ import './groups/group-manager';
 import './translator';
 
 // Marketplace support
-import './remote-marketplace';
 import 'magnific-popup'
 import '@concretecms/bedrock/assets/imagery/js/frontend/responsive-slides';
 
-var setupResultMessages = function() {
+var setupResultMessages = function () {
     if ($('#ccm-dashboard-result-message').length > 0) {
         if ($('.ccm-pane').length > 0) {
             var pclass = $('.ccm-pane').parent().attr('class');
@@ -56,11 +56,11 @@ var setupResultMessages = function() {
     }
 };
 
-var setupAdvancedSearchLinks = function() {
+var setupAdvancedSearchLinks = function () {
     $('a[data-launch-dialog=advanced-search]').concreteAdvancedSearchLauncher();
 }
 
-var setupFavorites = function() {
+var setupFavorites = function () {
     var $addFavorite = $('a[data-bookmark-action=add-favorite]'),
         $removeFavorite = $('a[data-bookmark-action=remove-favorite]'),
         url = false,
@@ -75,14 +75,14 @@ var setupFavorites = function() {
     }
 
     if (url) {
-        $link.on('click', function(e) {
+        $link.on('click', function (e) {
             e.preventDefault();
             $.concreteAjax({
                 dataType: 'json',
                 type: 'GET',
                 data: {'cID': $(this).attr('data-page-id'), 'ccm_token': $(this).attr('data-token')},
                 url: url,
-                success: function(r) {
+                success: function (r) {
                     if (r.action == 'remove') {
                         $link.attr('data-bookmark-action', 'add-favorite');
                         $link.find('.icon-bookmark').removeClass('bookmarked');
@@ -98,37 +98,48 @@ var setupFavorites = function() {
     }
 };
 
-var setupDetailsURLs = function() {
-    $('tr[data-details-url]').each(function() {
+var setupDetailsURLs = function () {
+    $('tr[data-details-url]').each(function () {
         $(this).hover(
-            function() {
+            function () {
                 $(this).addClass('ccm-search-select-hover');
             },
-            function() {
+            function () {
                 $(this).removeClass('ccm-search-select-hover');
             }
         )
-            .on('click', function(e) {
+            .on('click', function (e) {
                 if ($(e.target).is('td')) {
                     if ($(e.target).hasClass('ccm-search-results-checkbox')) {
                         $(e.target).find('input[type=checkbox]').trigger('click')
                     } else {
-                        window.location.href = $(this).data('details-url');
+                        // Check if the platform-specific key is pressed (Ctrl on Windows/Linux or Cmd on macOS)
+                        const isMac = navigator.userAgent.toUpperCase().includes("MAC"); // Determine if the user is on macOS
+                        const isNewWindowKey = isMac ? e.metaKey : e.ctrlKey; // macOS uses 'metaKey', Windows/Linux uses 'ctrlKey'
+                        // Check for middle-click (mouse button 2)
+                        if (e.button === 1 || isNewWindowKey) {
+                            window.open($(this).data('details-url'))
+                        } else {
+                            window.location.href = $(this).data('details-url')
+                        }
                     }
                 }
             });
+        if ($(this).is(':hover')) {
+            $(this).addClass('ccm-search-select-hover');
+        }
     });
-    $('div.ccm-details-panel[data-details-url]').each(function() {
+    $('div.ccm-details-panel[data-details-url]').each(function () {
         $(this)
-            .on('click', function() {
+            .on('click', function () {
                 window.location.href = $(this).data('details-url');
             });
     });
 };
 
-var setupTooltips = function() {
+var setupTooltips = function () {
     if ($("#ccm-tooltip-holder").length == 0) {
-        $('<div />').attr('id','ccm-tooltip-holder').attr('class', 'ccm-ui').prependTo(document.body);
+        $('<div />').attr('id', 'ccm-tooltip-holder').attr('class', 'ccm-ui').prependTo(document.body);
     }
     const tooltipTriggerList = [].slice.call(document.querySelectorAll('.launch-tooltip'))
     const tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
@@ -139,10 +150,10 @@ var setupTooltips = function() {
 };
 
 // Legacy - use BS modals instead (but really try not using modals at all.)
-var setupDialogs = function() {
+var setupDialogs = function () {
     $('.dialog-launch').dialog();
 
-    $('div#ccm-dashboard-page').on('click', '[data-dialog]', function() {
+    $('div#ccm-dashboard-page').on('click', '[data-dialog]', function () {
         if ($(this).attr('disabled')) {
             return false;
         }
@@ -173,10 +184,10 @@ var setupDialogs = function() {
 
 };
 
-var setupModals = function() {
+var setupModals = function () {
 
     // sets up launchable modals (e.g. modals that open an external URL with options
-    $('div#ccm-dashboard-page').on('click', '[data-launch-modal]', function() {
+    $('div#ccm-dashboard-page').on('click', '[data-launch-modal]', function () {
         if ($(this).attr('disabled')) {
             return false;
         }
@@ -199,15 +210,15 @@ var setupModals = function() {
 
 }
 
-var setupVueAutomounters = function() {
-    $(function() {
+var setupVueAutomounters = function () {
+    $(function () {
         $('[data-vue]').concreteVue({'context': 'backend'})
     })
 }
 
-var setupPrivacyPolicy = function() {
+var setupPrivacyPolicy = function () {
 
-    $('div#ccm-dashboard-page').on('click', 'button[data-action=agree-privacy-policy]', function() {
+    $('div#ccm-dashboard-page').on('click', 'button[data-action=agree-privacy-policy]', function () {
         $('div.ccm-dashboard-privacy-policy').hide();
         var url = CCM_DISPATCHER_FILENAME + '/ccm/system/accept_privacy_policy';
         $.concreteAjax({
@@ -215,14 +226,14 @@ var setupPrivacyPolicy = function() {
             data: {'ccm_token': $(this).attr('data-token')},
             type: 'POST',
             url: url,
-            success: function(r) {
+            success: function (r) {
 
             }
         });
     });
 };
 
-var setupHeaderMenu = function() {
+var setupHeaderMenu = function () {
     var $buttons = $('.ccm-dashboard-header-buttons'),
         $menu = $('header div.ccm-dashboard-header-menu');
     if ($buttons.length) {
@@ -234,8 +245,8 @@ var setupHeaderMenu = function() {
     }
 };
 
-var setupAsynchronousThumbnails = function() {
-    if (typeof(CCM_SERVER_EVENTS_URL) !== 'undefined') {
+var setupAsynchronousThumbnails = function () {
+    if (typeof (CCM_SERVER_EVENTS_URL) !== 'undefined') {
         const eventSourceUrl = new URL(CCM_SERVER_EVENTS_URL)
         eventSourceUrl.searchParams.append('topic', '{+siteUrl}/concrete/events/thumbnail_generated')
         const eventSource = new EventSource(eventSourceUrl, {

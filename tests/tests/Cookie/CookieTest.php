@@ -11,16 +11,19 @@ class CookieTest extends TestCase
 {
     public function testCookiesFromRequest()
     {
-        $jar = new CookieJar($this->getSampleRequest([]), new ResponseCookieJar());
+        $request = $this->getSampleRequest([]);
+        $jar = new CookieJar($request, new ResponseCookieJar($request));
         $this->assertFalse($jar->has('test'));
-        $jar = new CookieJar($this->getSampleRequest(['test' => 'RequestCookieValue']), new ResponseCookieJar());
+        $request = $this->getSampleRequest(['test' => 'RequestCookieValue']);
+        $jar = new CookieJar($request, new ResponseCookieJar($request));
         $this->assertTrue($jar->has('test'));
         $this->assertSame('RequestCookieValue', $jar->get('test'));
     }
 
     public function testOverridingCookies()
     {
-        $jar = new CookieJar($this->getSampleRequest(['test1' => 'RequestCookieValue1', 'test2' => 'RequestCookieValue2']), new ResponseCookieJar());
+        $request = $this->getSampleRequest(['test1' => 'RequestCookieValue1', 'test2' => 'RequestCookieValue2']);
+        $jar = new CookieJar($request, new ResponseCookieJar($request));
 
         $this->assertTrue($jar->has('test1'));
         $this->assertTrue($jar->has('test2'));

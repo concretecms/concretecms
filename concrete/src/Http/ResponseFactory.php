@@ -71,7 +71,7 @@ class ResponseFactory implements ResponseFactoryInterface, ApplicationAwareInter
      */
     public function notFound($content, $code = Response::HTTP_NOT_FOUND, $headers = [])
     {
-        if ($this->request->isXmlHttpRequest()) {
+        if ($this->request->isXmlHttpRequest() || in_array($this->request->getPreferredFormat(), ['json', 'jsonld'], true)) {
             $this->localization->pushActiveContext(Localization::CONTEXT_SITE);
             $responseData = [
                 'error' => t('Page not found'),
@@ -381,7 +381,7 @@ class ResponseFactory implements ResponseFactoryInterface, ApplicationAwareInter
 
         // let's test to see if this is, in fact, the home page,
         // and we're routing arguments onto it (which is screwing up the path.)
-        $home = Page::getByID(Page::getHomePageID());
+        $home = Page::getByID($this->app['site']->getSite()->getSiteHomePageID());
         $request->setCurrentPage($home);
         $homeController = $home->getPageController();
         $homeController->setupRequestActionAndParameters($request);

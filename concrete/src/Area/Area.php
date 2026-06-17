@@ -878,18 +878,23 @@ class Area extends ConcreteObject implements \Concrete\Core\Permission\ObjectInt
      */
     public function export($p, $page)
     {
-        $area = $p->addChild('area');
-        $area->addAttribute('name', $this->getAreaHandle());
         $blocks = $page->getBlocks($this->getAreaHandle());
         $c = $this->getAreaCollectionObject();
         $style = $c->getAreaCustomStyle($this);
-        if (is_object($style)) {
+        if ($style === null && $blocks === []) {
+            return;
+        }
+        $area = $p->addChild('area');
+        $area->addAttribute('name', $this->getAreaHandle());
+        if ($style !== null) {
             $set = $style->getStyleSet();
             $set->export($area);
         }
-        $wrapper = $area->addChild('blocks');
-        foreach ($blocks as $bl) {
-            $bl->export($wrapper);
+        if ($blocks !== []) {
+            $wrapper = $area->addChild('blocks');
+            foreach ($blocks as $bl) {
+                $bl->export($wrapper);
+            }
         }
     }
 

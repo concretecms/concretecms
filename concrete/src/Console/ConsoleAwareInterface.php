@@ -22,7 +22,7 @@ interface ConsoleAwareInterface
      * @param \Symfony\Component\Console\Input\InputInterface|null $input
      * @return static Returns itself
      */
-    public function setConsole(SymfonyApplication $console, OutputInterface $output = null, InputInterface $input = null);
+    public function setConsole(SymfonyApplication $console, ?OutputInterface $output = null, ?InputInterface $input = null);
 
     /**
      * Set the output object to use

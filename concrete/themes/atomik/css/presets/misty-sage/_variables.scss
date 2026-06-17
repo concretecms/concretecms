@@ -1,0 +1,33 @@
+@import url(//fonts.googleapis.com/css?family=Hind:400,600);
+@import url(//fonts.googleapis.com/css?family=Josefin+Sans:500);
+@import url(//fonts.googleapis.com/css?family=Work+Sans:800);
+
+// Colors - Base Bootstrap
+$success: #81C784; // Soft green
+$danger: #D32F2F; // Rustic red
+$warning: #FBC02D; // Sunlit gold
+$info: #0288D1; // Clear blue sky
+$dark: #3E4A3A; // Deep sage
+$gray-500: #9E9D89; // Muted stone gray
+
+// Display Headings
+$display-font-family: "Josefin Sans" !default;
+$display-font-weight: 500 !default;
+$display-line-height: 1em;
+$display-font-sizes: (
+        1: 4rem,
+        2: 3.5rem,
+        3: 3rem,
+        4: 2rem
+);
+
+// Regular Headings
+$headings-font-family: "Work Sans" !default;
+$headings-font-weight: 800 !default;
+
+// Links
+$link-color: $primary;
+$link-decoration: none;
+
+// Doc Library
+$theme-document-library-icon-filter: none;

@@ -19,26 +19,21 @@ class TwigCache implements CacheInterface
         $this->cache = $cache;
     }
 
-    public function generateKey($name, $className): string
+    public function generateKey(string $name, string $className): string
     {
         return $className . '/' . $name;
     }
 
-    public function write($key, $content): void
+    public function write(string $key, $content): void
     {
         $cacheItem = $this->cache->getItem($key);
         $cacheItem->set($content)->setTTL(self::CACHE_TTL);
         $this->cache->save($cacheItem);
     }
 
-    /**
-     * @param $key
-     *
-     * @return mixed
-     */
-    public function load($key)
+    public function load(string $key): void
     {
-        return $this->cache->getItem($key)->get();
+        $this->cache->getItem($key)->get();
     }
 
     public function getTimestamp($key): int

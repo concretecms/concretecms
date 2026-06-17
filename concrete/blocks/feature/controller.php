@@ -1,17 +1,20 @@
 <?php
 namespace Concrete\Block\Feature;
 
+use Concrete\Core\Block\BlockController;
+use Concrete\Core\Block\Controller\SaveMode;
 use Concrete\Core\Editor\LinkAbstractor;
+use Concrete\Core\Error\UserMessageException;
 use Concrete\Core\Feature\Features;
 use Concrete\Core\Feature\UsesFeatureInterface;
-use Concrete\Core\Html\Service\FontAwesomeIcon;
-use Concrete\Core\Validation\SanitizeService;
-use Page;
-use Concrete\Core\Block\BlockController;
-use Core;
 use Concrete\Core\File\File;
+use Concrete\Core\File\Tracker\FileTrackableInterface;
+use Concrete\Core\File\Tracker\RichTextExtractor;
+use Concrete\Core\Form\Service\DestinationPicker\DestinationPicker;
+use Concrete\Core\Html\Service\FontAwesomeIcon;
+use Concrete\Core\Page\Page;
 
-class Controller extends BlockController implements UsesFeatureInterface
+class Controller extends BlockController implements FileTrackableInterface, UsesFeatureInterface
 {
     /**
      * @var string|null
@@ -54,8 +57,10 @@ class Controller extends BlockController implements UsesFeatureInterface
     protected $btCacheBlockOutput = true;
     protected $btCacheBlockOutputOnPost = true;
     protected $btCacheBlockOutputForRegisteredUsers = true;
-    protected $btExportPageColumns = array('internalLinkCID');
-    protected $btExportFileColumns = array('fID');
+    protected $btCacheBlockOutputOnEditMode = true;
+    protected $btExportPageColumns = ['internalLinkCID'];
+    protected $btExportFileColumns = ['fID'];
+    protected $btExportContentColumns = ['paragraph'];
     protected $btInterfaceHeight = 520;
     protected $btTable = 'btFeature';
 
@@ -84,7 +89,7 @@ class Controller extends BlockController implements UsesFeatureInterface
             if (!empty($this->internalLinkCID)) {
                 $linkToC = Page::getByID($this->internalLinkCID);
 
-                return (empty($linkToC) || $linkToC->error) ? '' : Core::make('helper/navigation')->getLinkToCollection(
+                return (empty($linkToC) || $linkToC->error) ? '' : $this->app->make('helper/navigation')->getLinkToCollection(
                     $linkToC
                 );
             } else {
@@ -119,6 +124,10 @@ class Controller extends BlockController implements UsesFeatureInterface
         $this->set('titleFormat', 'h4');
         $this->edit();
         $this->set('bf', null);
+        $this->set('destinationPicker', $this->app->make(DestinationPicker::class));
+        $this->set('linkDestinationPickers', $this->getLinkDestinationPickers());
+        $this->set('linkDestinationHandle', 'none');
+        $this->set('linkDestinationValue', null);
     }
 
     public function view()
@@ -140,9 +149,19 @@ class Controller extends BlockController implements UsesFeatureInterface
             $bf = $this->getFileObject();
         }
         $this->set('bf', $bf);
-
-
         $this->requireAsset('css', 'font-awesome');
+        $this->set('destinationPicker', $this->app->make(DestinationPicker::class));
+        $this->set('linkDestinationPickers', $this->getLinkDestinationPickers());
+        if ($this->internalLinkCID) {
+            $this->set('linkDestinationHandle', 'page');
+            $this->set('linkDestinationValue', $this->internalLinkCID);
+        } elseif ((string) $this->externalLink !== '') {
+            $this->set('linkDestinationHandle', 'external_url');
+            $this->set('linkDestinationValue', $this->externalLink);
+        } else {
+            $this->set('linkDestinationHandle', 'none');
+            $this->set('linkDestinationValue', null);
+        }
     }
 
     /**
@@ -202,38 +221,59 @@ class Controller extends BlockController implements UsesFeatureInterface
 
     public function save($args)
     {
-        switch (isset($args['linkType']) ? intval($args['linkType']) : 0) {
-            case 1:
-                $args['externalLink'] = '';
-                break;
-            case 2:
-                $args['internalLinkCID'] = 0;
-                break;
-            default:
-                $args['externalLink'] = '';
-                $args['internalLinkCID'] = 0;
-                break;
-        }
-        $args['paragraph'] = LinkAbstractor::translateTo($args['paragraph']);
-        /** @var SanitizeService $security */
+        $errors = $this->app->make('error');
         $security = $this->app->make('helper/security');
-        $args['icon'] = isset($args['icon']) ? $security->sanitizeString($args['icon']) : '';
-        $args['title'] = $security->sanitizeString($args['title']);
-        $args['titleFormat'] = $security->sanitizeString($args['titleFormat']);
-        $args['internalLinkCID'] = $security->sanitizeInt($args['internalLinkCID']);
-        $args['externalLink'] = $security->sanitizeURL($args['externalLink']);
-        unset($args['linkType']);
 
-        $args = $args + [
-            'fID' => 0,
-        ];
-        $args['fID'] = $args['fID'] != '' ? $args['fID'] : 0;
+        $args['icon'] = isset($args['icon']) ? $security->sanitizeString($args['icon']) : '';
+        $args['fID'] = empty($args['fID']) ? 0 : (int) $args['fID'];
+        $args['title'] = isset($args['title']) ? $security->sanitizeString($args['title']) : '';
+        $args['titleFormat'] = isset($args['titleFormat']) ? $security->sanitizeString($args['titleFormat']) : '';
+        $args['paragraph'] = isset($args['paragraph']) ? LinkAbstractor::translateTo($args['paragraph']) : '';
+        if ($this->saveMode === SaveMode::SAVE_MODE_IMPORT) {
+            $args['internalLinkCID'] = empty($args['internalLinkCID']) ? 0 : (int) $args['internalLinkCID'];
+        } else {
+            [$linkHandle, $linkValue] = $this->app->make(DestinationPicker::class)->decode('link', $this->getLinkDestinationPickers(), $errors, t('Link'), $args);
+            $args['externalLink'] = $linkHandle === 'external_url' ? $security->sanitizeURL($linkValue) : '';
+            $args['internalLinkCID'] = $linkHandle === 'page' ? $linkValue : 0;
+        }
+        if ($errors->has()) {
+            throw new UserMessageException($errors->toText());
+        }
         parent::save($args);
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Block\BlockController::getImportData()
+     */
+    protected function getImportData($blockNode, $page)
+    {
+        $this->saveMode = SaveMode::SAVE_MODE_IMPORT;
+        return parent::getImportData($blockNode, $page);
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\File\Tracker\FileTrackableInterface::getUsedFiles()
+     */
     public function getUsedFiles()
     {
-        return [$this->getFileID()];
+        $result = $this->app->make(RichTextExtractor::class)->extractFiles($this->paragraph);
+        if ($this->fID) {
+            $result[] = (int) $this->fID;
+        }
+
+        return $result;
     }
-    
+
+    protected function getLinkDestinationPickers(): array
+    {
+        return [
+            'none',
+            'page',
+            'external_url' => ['maxlength' => 255],
+        ];
+    }
 }

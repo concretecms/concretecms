@@ -76,7 +76,7 @@ class LoginServiceTest extends TestCase
         }
     }
 
-    public function loginErrors()
+    public static function loginErrors()
     {
         return [
             [USER_INACTIVE, NotActiveException::class],

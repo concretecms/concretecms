@@ -35,6 +35,11 @@ class GroupType extends ConcreteObject implements JsonSerializable
         return $this->gtName;
     }
 
+    public function getDisplayName()
+    {
+        return h($this->getName());
+    }
+
     /**
      * @param string $gtName
      * @return bool
@@ -127,7 +132,7 @@ class GroupType extends ConcreteObject implements JsonSerializable
         $list = [];
 
         foreach (self::getList() as $groupType) {
-            $list[$groupType->getId()] = $groupType->getName();
+            $list[$groupType->getId()] = $groupType->getDisplayName();
         }
 
         return $list;

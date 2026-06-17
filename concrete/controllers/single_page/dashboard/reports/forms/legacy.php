@@ -85,7 +85,14 @@ class Legacy extends DashboardPageController
             foreach ($questions as $questionId => $question) {
                 if ($question['inputType'] == 'checkboxlist') {
                     $options = explode('%%', $question['options']);
-                    $subanswers = explode(',', $answerSet['answers'][$questionId]['answer']);
+
+                    $subanswers = [];
+                    if (isset($answerSet['answers']) &&
+                        isset($answerSet['answers'][$questionId]) &&
+                        isset($answerSet['answers'][$questionId]['answer'])) {
+                        $subanswers = explode(',', $answerSet['answers'][$questionId]['answer']);
+                    }
+
                     for ($i = 1; $i <= count($options); ++$i) {
                         if (in_array(trim($options[$i - 1]), $subanswers)) {
                             $row[] = 'x';
@@ -104,7 +111,12 @@ class Legacy extends DashboardPageController
                             $row[] = t('File not found');
                         }
                     } else {
-                        $answer = $answerSet['answers'][$questionId]['answer'] . $answerSet['answers'][$questionId]['answerLong'];
+                        if (isset($answerSet['answers']) &&
+                            isset($answerSet['answers'][$questionId]) &&
+                            isset($answerSet['answers'][$questionId]['answer']) &&
+                            isset($answerSet['answers'][$questionId]['answerLong'])) {
+                            $answer = $answerSet['answers'][$questionId]['answer'] . $answerSet['answers'][$questionId]['answerLong'];
+                        }
 
                         if (in_array(substr($answer, 0, 1), $charactersToEscape)) {
                             $row[] = $escapeCharacter . $answer;

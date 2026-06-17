@@ -182,6 +182,9 @@ echo $userInterface->tabs([
                 ConcreteFileManager.launchDialog(function (data) {
                     ConcreteFileManager.getFileDetails(data.fID, function (r) {
                         jQuery.fn.dialog.hideLoader();
+                        if (!r) {
+                            return;
+                        }
                         let file = r.files[0];
                         oldLauncher.html(file.resultsThumbnailImg);
                         oldLauncher.next('.image-fID').val(file.fID);
@@ -240,7 +243,7 @@ echo $userInterface->tabs([
             link_url: '<?php echo $row['linkURL']; ?>',
             link_type: '<?php echo $linkType; ?>',
             title: '<?php echo addslashes(h($row['title'])); ?>',
-            description: '<?php echo str_replace(["\t", "\r", "\n"], "", addslashes(h($row['description']))); ?>',
+            description: <?= json_encode((string) $row['description']) ?>,
             sort_order: '<?php echo $row['sortOrder']; ?>'
         }));
         sliderEntriesContainer.find('.ccm-image-slider-entry-<?php echo $bID; ?>:last-child div[data-field=entry-link-page-selector]').concretePageSelector({
@@ -460,7 +463,7 @@ echo $userInterface->tabs([
             <!--suppress HtmlFormInputWithoutLabel -->
             <textarea id="ccm-slide-editor-<%= _.uniqueId() %>" style="display: none"
                       class="editor-content editor-content-<?php echo $bID; ?>"
-                      name="<?php echo $view->field('description'); ?>[]"><%=description%></textarea>
+                      name="<?php echo $view->field('description'); ?>[]"><%- description %></textarea>
         </div>
         <div class="form-group">
             <label class="control-label form-label"><?php echo t('Link'); ?></label>

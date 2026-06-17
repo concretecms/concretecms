@@ -80,7 +80,7 @@ class Batch
      * @param iterable|callable $messages
      * @return Batch
      */
-    public static function create(string $name = null, $messages = null)
+    public static function create(?string $name = null, $messages = null)
     {
         $batch = new self();
         if ($name) {

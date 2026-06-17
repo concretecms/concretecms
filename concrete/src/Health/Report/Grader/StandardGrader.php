@@ -39,7 +39,7 @@ class StandardGrader implements ScoringGraderInterface
         return $score;
     }
 
-    public function getGrade(int $score = null): GradeInterface
+    public function getGrade(?int $score = null): GradeInterface
     {
         return new ScoreGrade($score);
     }

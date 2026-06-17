@@ -7,6 +7,7 @@ use Concrete\Core\Block\View\BlockView;
 use Concrete\Core\Board\Instance\Slot\Menu\Manager;
 use Concrete\Core\Filesystem\FileLocator;
 use Concrete\Core\Application\Application;
+use Concrete\Core\Filesystem\TemplateService;
 
 class SlotRenderer
 {
@@ -64,26 +65,36 @@ class SlotRenderer
     {
         $slot = $this->renderedSlotCollection->getRenderedSlot($slot);
         if ($slot) {
+            $templateService = $this->enableEditing ? app(TemplateService::class) : null;
             $block = Block::getByID($slot->getBlockID());
             if ($this->enableEditing) {
                 $menuManager = $this->app->make(Manager::class);
                 $menu = $menuManager->getMenu($slot);
-                include $this->fileLocator->getRecord(DIRNAME_ELEMENTS . '/' . DIRNAME_BOARDS . '/slot_header.php')
-                    ->getFile();
 
+                $header = $this->fileLocator->getRecord(DIRNAME_ELEMENTS . '/' . DIRNAME_BOARDS . '/slot_header.php')
+                    ->getFile();
+                echo $templateService->renderTemplate($header, get_defined_vars(), $this);
             }
+
             if ($block) {
                 $view = new BlockView($block);
                 $view->render();
             }
+
             if ($this->enableEditing) {
-                include $this->fileLocator->getRecord(DIRNAME_ELEMENTS . '/' . DIRNAME_BOARDS . '/slot_footer.php')
+                $footer = $this->fileLocator->getRecord(DIRNAME_ELEMENTS . '/' . DIRNAME_BOARDS . '/slot_footer.php')
                     ->getFile();
+                echo $templateService->renderTemplate($footer, get_defined_vars(), $this);
             }
         }
 
     }
 
-
+    public function render(int $slot): string
+    {
+        ob_start();
+        $this->display($slot);
+        return ob_get_clean();
+    }
 }
 

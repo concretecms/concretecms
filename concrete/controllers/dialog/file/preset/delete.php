@@ -46,7 +46,7 @@ class Delete extends PresetDelete
                     }
                     if (!$this->error->has()) {
                         $response = new EditResponse();
-                        $response->setMessage(t('%s deleted successfully.', $searchPreset->getPresetName()));
+                        $response->setMessage(t('%s deleted successfully.', h($searchPreset->getPresetName())));
                         $response->setAdditionalDataAttribute('presetID', $presetID);
                         $node = TreeNodeSearchPreset::getNodeBySavedSearchID($presetID);
                         if (is_object($node)) {

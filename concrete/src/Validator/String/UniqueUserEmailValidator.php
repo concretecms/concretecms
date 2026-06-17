@@ -76,7 +76,7 @@ class UniqueUserEmailValidator extends EmailValidator implements ValidatorForSub
      *
      * @see \Concrete\Core\Validator\ValidatorInterface::isValid()
      */
-    public function isValid($mixed, ArrayAccess $error = null)
+    public function isValid($mixed, ?ArrayAccess $error = null)
     {
         return $this->isValidFor($mixed, null, $error);
     }
@@ -86,7 +86,7 @@ class UniqueUserEmailValidator extends EmailValidator implements ValidatorForSub
      *
      * @see \Concrete\Core\Validator\ValidatorForSubjectInterface::isValidFor()
      */
-    public function isValidFor($mixed, $subject = null, ArrayAccess $error = null)
+    public function isValidFor($mixed, $subject = null, ?ArrayAccess $error = null)
     {
         $result = parent::isValid($mixed, $error);
         if ($result === true) {

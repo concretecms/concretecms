@@ -6,6 +6,7 @@ use Concrete\Core\Cache\OpCache;
 use Concrete\Core\Config\Renderer;
 use Concrete\Core\Foundation\Environment;
 use Concrete\Core\Marketplace\Marketplace;
+use Concrete\Core\Marketplace\PackageRepositoryInterface;
 use Concrete\Core\Package\Package;
 use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\Updater\ApplicationUpdate\DiagnosticFactory;
@@ -108,8 +109,8 @@ class ApplicationUpdate
     {
         $version_file = DIR_CORE_UPDATES . "/{$dir}/" . DIRNAME_CORE . '/config/concrete.php';
 
-        $concrete = @include $version_file;
-        if ($concrete['version'] != false) {
+        $concrete = is_file($version_file) ? @include $version_file : null;
+        if (is_array($concrete) && !empty($concrete['version'])) {
             $obj = new self();
             $obj->version = $concrete['version'];
             $obj->identifier = $dir;
@@ -143,8 +144,10 @@ class ApplicationUpdate
             'site_url' => (string) \Core::getApplicationURL()
         ];
 
-        $mi = Marketplace::getInstance();
-        if ($mi->isConnected() && !$mi->hasConnectionError()) {
+        $packageRepository = $app->make(PackageRepositoryInterface::class);
+        $connection = $packageRepository->getConnection();
+
+        if ($connection && $packageRepository->validate($connection)) {
             $config = \Core::make('config/database');
             $formData['marketplace_token'] = $config->get('concrete.marketplace.token');
             $list = Package::getInstalledList();
@@ -167,8 +170,6 @@ class ApplicationUpdate
         ]);
 
         $body = $response->getBody()->getContents();
-        $diagnostic = DiagnosticFactory::getFromJSON($body);
-
-        return $diagnostic;
+        return DiagnosticFactory::getFromJSON($body);
     }
 }

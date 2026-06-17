@@ -99,6 +99,7 @@ class Service
         $locale = $this->updatePluralSettings($locale);
         $this->entityManager->persist($tree);
         $this->entityManager->persist($locale);
+        $site->getLocales()->add($locale);
         $this->entityManager->flush();
         
         $event = new \Symfony\Component\EventDispatcher\GenericEvent();

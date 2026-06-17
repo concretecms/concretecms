@@ -93,7 +93,7 @@ class DefaultController extends AttributeTypeController implements SimpleTextExp
 
     public function validateForm($data)
     {
-        return isset($data['value']) && $data['value'] != '';
+        return is_array($data) && isset($data['value']) && $data['value'] != '';
     }
 
     /**

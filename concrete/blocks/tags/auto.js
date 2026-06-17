@@ -9,7 +9,7 @@ var tags ={
     },
 
     showHideDisplayType:function() {
-        if($('#displayMode1').prop('checked')) {
+        if($('#displayModePage').prop('checked')) {
             $('#ccm-tags-display-cloud').hide();
             $('#ccm-tags-display-page').show();
         } else {

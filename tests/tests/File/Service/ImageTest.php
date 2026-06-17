@@ -39,20 +39,20 @@ class ImageTest extends TestCase
         }
     }
 
-    public function legacyImageCreateDataProvider()
+    public static function legacyImageCreateDataProvider()
     {
         return [
             [
-                400, 150, DIR_BASE . '/concrete/themes/elemental/images/background-slider-night-road.png', 400, 300, false,
+                305, 201, DIR_BASE . '/concrete/config/install/packages/oxford_shirt/files/Rectangle_84.jpg', 400, 300, false,
             ],
             [
-                133, 50, DIR_BASE . '/concrete/themes/elemental/images/background-slider-night-road.png', 310, 50, false,
+                76, 50, DIR_BASE . '/concrete/config/install/packages/oxford_shirt/files/Rectangle_84.jpg', 310, 50, false,
             ],
             [
-                90, 90, DIR_BASE . '/concrete/themes/elemental/images/background-slider-night-road.png', 90, 90, true,
+                90, 90, DIR_BASE . '/concrete/config/install/packages/oxford_shirt/files/Rectangle_84.jpg', 90, 90, true,
             ],
             [
-                70, 70, DIR_BASE . '/concrete/config/install/packages/elemental_full/files/balloon.jpg', 70, 70, true,
+                70, 70, DIR_BASE . '/concrete/config/install/packages/oxford_shirt/files/Rectangle_84.jpg', 70, 70, true,
             ],
         ];
     }

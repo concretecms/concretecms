@@ -7,7 +7,7 @@ use Concrete\TestHelpers\Database\ConcreteDatabaseTestCase;
 
 class AttributeKeyHandleGeneratorTest extends ConcreteDatabaseTestCase
 {
-    protected $metadatas = [
+    protected $entityClassNames = [
         'Concrete\Core\Entity\Express\Entity',
         'Concrete\Core\Entity\Express\Entry',
         'Concrete\Core\Entity\Attribute\Category',
@@ -18,6 +18,7 @@ class AttributeKeyHandleGeneratorTest extends ConcreteDatabaseTestCase
     protected $tables = [
         'Trees',
         'TreeTypes',
+        'Logs',
     ];
 
     public static function setupBeforeClass():void

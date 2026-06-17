@@ -24,22 +24,19 @@ class Text
     /**
      * URL-encodes collection path.
      *
-     * @param string $path
+     * @param string|null $path
      *
      * @return string $path
      */
     public static function encodePath($path)
     {
+        $path = (string) $path;
         if (mb_strpos($path, '/') !== false) {
             $path = explode('/', $path);
             $path = array_map('rawurlencode', $path);
             $newPath = implode('/', $path);
         } else {
-            if (is_null($path)) {
-                $newPath = null;
-            } else {
-                $newPath = rawurlencode($path);
-            }
+            $newPath = rawurlencode($path);
         }
         $path = str_replace('%21', '!', $newPath);
 
@@ -328,6 +325,7 @@ class Text
 
     /**
      * Takes a CamelCase string and turns it into camel_case.
+     * See also laravel function snake_case which does similar but without bugs.
      *
      * @param string $string
      *

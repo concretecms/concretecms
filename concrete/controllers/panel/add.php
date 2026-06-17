@@ -5,6 +5,7 @@ namespace Concrete\Controller\Panel;
 use Concrete\Controller\Backend\UserInterface\Page as BackendInterfacePageController;
 use Concrete\Core\Application\EditResponse;
 use Concrete\Core\Application\Service\Urls;
+use Concrete\Core\Area\Area;
 use Concrete\Core\Block\Block;
 use Concrete\Core\Block\BlockType\BlockType;
 use Concrete\Core\Block\BlockType\BlockTypeList;
@@ -209,7 +210,7 @@ class Add extends BackendInterfacePageController
          * Therefore all results will be fetched from the database and splitted with PHP.
          */
 
-        $curPage = (int)$this->request->request->get("curPage", 0);
+        $curPage = (int)$this->request->get("curPage", 0);
         $maxItems = 10;
 
         return $responseFactory->json(
@@ -270,8 +271,9 @@ class Add extends BackendInterfacePageController
                             if (!$orphanedBlockFound) {
                                 $errorList->add(t("The given block is not orphaned."));
                             } else {
-                                $block = Block::getByID($blockId);
-
+                                $arID = $request->request->get('arId');
+                                $areaHandle = Area::getAreaHandleFromID($arID);
+                                $block = Block::getByID($blockId, $this->page, $areaHandle);
                                 if (!$block instanceof Block) {
                                     //$errorList->add(t("Error while removing orphaned block."));
                                 } else {
@@ -313,9 +315,10 @@ class Add extends BackendInterfacePageController
         if (count($arrOrphanedBlocks) === 0) {
             $errorList->add(t("There are no blocks to remove."));
         } else {
-            foreach ($this->getOrphanedBlockIds($usedAreas) as $arrOrphanedBlock) {
+            foreach ($arrOrphanedBlocks as $arrOrphanedBlock) {
                 $bID = (int)$arrOrphanedBlock["bID"];
-                $block = Block::getByID($bID);
+                $arHandle = $arrOrphanedBlock["arHandle"];
+                $block = Block::getByID($bID, $this->page, $arHandle);
 
                 if (!$block instanceof Block) {
                     $errorList->add(t("Error while removing orphaned block."));

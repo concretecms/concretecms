@@ -82,6 +82,10 @@
       <default value="0"/>
       <notnull/>
     </field>
+    <field name="excludeCanonicalPaging" type="boolean">
+      <default value="0"/>
+      <notnull/>
+    </field>
     <field name="displayAliases" type="boolean">
       <default value="1"/>
       <notnull/>

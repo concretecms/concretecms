@@ -21,6 +21,16 @@ if ($controller->getAction() == 'inspect') {
     <dl>
         <dt><?= t('Description') ?></dt>
         <dd><?= t($bt->getBlockTypeDescription()) ?></dd>
+        <dt><?= t('Block Type Handle') ?></dt>
+        <dd><?= $bt->getBlockTypeHandle() ?></dd>
+         <?php
+        if($bt->getPackageHandle()){
+            ?>
+            <dt><?= t('Package') ?></dt>
+            <dd><?= $bt->getPackageHandle() ?></dd>
+            <?php
+        }
+        ?>
         <dt><?= t('Usage Count') ?></dt>
         <dd><?= $num ?></dd>
         <dt><?= t('Usage Count on Active Pages') ?></dt>

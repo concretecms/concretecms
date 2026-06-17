@@ -46,10 +46,6 @@ foreach ($optionResults as &$value) {
         $value = round($value / $totalVotes * 100, 0);
     }
 }
-$show_graph = true;
-if (count($optionNamesAbbrev) === 0 || $totalVotes < 0 || (isset($_GET['dontGraphPoll']) && $_GET['dontGraphPoll'])) {
-    $show_graph = false;
-}
 ?>
 
 <div class="poll">
@@ -65,7 +61,7 @@ if (count($optionNamesAbbrev) === 0 || $totalVotes < 0 || (isset($_GET['dontGrap
             <h3><?= t("You've voted on this survey.") ?></h3>
 
             <div class="row">
-                <div<?= $show_graph ? ' class="col-sm-9"' : '' ?>>
+                <div>
                     <div id="surveyQuestion">
                         <strong><?= t('Question') ?>:</strong> <span><?= h($controller->getQuestion()) ?></span>
                     </div>
@@ -102,27 +98,6 @@ if (count($optionNamesAbbrev) === 0 || $totalVotes < 0 || (isset($_GET['dontGrap
                         </div>
                     </div>
                 </div>
-                <?php
-                if ($show_graph) {
-                    ?>
-                    <div class="col-sm-3">
-                        <img
-                                border=""
-                                src="//chart.apis.google.com/chart?chf=bg,s,FFFFFF00&cht=p&chd=t:<?= implode(
-                        ',',
-                        $optionResults
-                    ) ?>&chs=180x180&chco=<?= implode(
-                                        ',',
-                                        $graphColors
-                                    ) ?>"
-                                alt="<?php echo t('survey results');
-                                ?>"/>
-                    </div>
-                    <?php
-
-                }
-
-                ?>
             </div>
             <div class="spacer">&nbsp;</div>
 

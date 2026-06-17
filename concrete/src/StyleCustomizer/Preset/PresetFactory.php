@@ -5,6 +5,7 @@ namespace Concrete\Core\StyleCustomizer\Preset;
 use Concrete\Core\Filesystem\FileLocator;
 use Concrete\Core\Page\Theme\Theme;
 use Concrete\Core\StyleCustomizer\Preset\Type\TypeInterface;
+use Concrete\Core\StyleCustomizer\Skin\SkinInterface;
 use Illuminate\Filesystem\Filesystem;
 
 class PresetFactory
@@ -57,6 +58,15 @@ class PresetFactory
                 $presets[] = $preset;
             }
         }
+        usort($presets, function (PresetInterface $a, PresetInterface $b) {
+            if ($a->getIdentifier() === 'default') {
+                return -1;
+            }
+            if ($b->getIdentifier() === 'default') {
+                return 1;
+            }
+            return strcmp($a->getName(), $b->getName()); // Sort by name
+        });
         return $presets;
     }
 

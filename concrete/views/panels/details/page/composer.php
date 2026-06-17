@@ -173,6 +173,7 @@ var ConcretePageComposerDetail = {
             }
         });
 
+        ConcreteEvent.unsubscribe('PanelComposerPublish');
         ConcreteEvent.subscribe('PanelComposerPublish',function(e, data) {
             // Disable the autosaver completely so that it is not posting a
             // request after the publish event has been called. This could

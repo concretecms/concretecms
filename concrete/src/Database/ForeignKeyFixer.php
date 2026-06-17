@@ -42,7 +42,7 @@ class ForeignKeyFixer
      *
      * @return $this
      */
-    public function setTick(Closure $value = null)
+    public function setTick(?Closure $value = null)
     {
         $this->tick = $value;
 
@@ -55,7 +55,7 @@ class ForeignKeyFixer
      * @param string[]|null $tableNames the names of the database tables to be fixed (NULL means all tables)
      * @param \ArrayAccess|null $errors errors occurred during the execution will be added here
      */
-    public function fixForeignKeys(array $tableNames = null, ArrayAccess $errors = null)
+    public function fixForeignKeys(?array $tableNames = null, ?ArrayAccess $errors = null)
     {
         if ($errors === null) {
             $errors = new ArrayObject();

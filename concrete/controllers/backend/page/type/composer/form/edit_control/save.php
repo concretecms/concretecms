@@ -63,8 +63,18 @@ class Save extends EditControl
     protected function getPostedTemplate(): string
     {
         $template = $this->request->request->get('ptComposerFormLayoutSetControlCustomTemplate');
+        if (!is_string($template)) {
+            return '';
+        }
 
-        return is_string($template) ? $this->app->make(SanitizeService::class)->sanitizeString($template) : '';
+        $setControl = $this->getSetControl();
+        $control = $this->getControl($setControl);
+        $templates = $this->getTemplates($control);
+        if (!array_key_exists($template, $templates)) {
+            return '';
+        }
+
+        return $this->app->make(SanitizeService::class)->sanitizeString($template);
     }
 
     protected function getPostedDescription(): string

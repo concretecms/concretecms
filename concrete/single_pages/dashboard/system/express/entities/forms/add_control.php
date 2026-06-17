@@ -77,14 +77,7 @@ $token = $app->make(Token::class);
                 data: formData,
                 url: '<?php echo $view->action('add_control', $set->getId())?>',
                 success: function (html) {
-                    jQuery.fn.dialog.hideLoader();
-                    jQuery.fn.dialog.closeTop();
-                    $('div[data-field-set=<?php echo $set->getID()?>] tbody').append(html);
-                    $('a.dialog-launch').dialog();
-
-                    // pop open the latest control so we can edit its options immediately
-                    $('div[data-field-set=<?php echo $set->getID()?>] tr[data-field-set-control]:last-child a[data-command=edit-control]').trigger('click');
-
+                    window.location.reload()
                 }
             });
         });

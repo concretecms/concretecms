@@ -15,7 +15,7 @@ class LinkDataFieldData implements DataFieldDataInterface
      */
     protected $link;
     
-    public function __construct(string $link = null)
+    public function __construct(?string $link = null)
     {
         $this->setData($link);
     }

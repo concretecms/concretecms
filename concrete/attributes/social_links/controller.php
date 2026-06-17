@@ -8,7 +8,6 @@ use Concrete\Core\Api\Attribute\SupportsAttributeValueFromJsonInterface;
 use Concrete\Core\Api\Fractal\Transformer\SocialLinkTransformer;
 use Concrete\Core\Api\OpenApi\SpecProperty;
 use Concrete\Core\Api\OpenApi\SpecPropertyRef;
-use Concrete\Core\Api\OpenApi\SpecPropertyRefItems;
 use Concrete\Core\Api\Resources;
 use Concrete\Core\Attribute\Controller as AttributeTypeController;
 use Concrete\Core\Attribute\FontAwesomeIconFormatter;
@@ -16,8 +15,6 @@ use Concrete\Core\Attribute\Form\Control\View\GroupedView;
 use Concrete\Core\Attribute\SimpleTextExportableAttributeInterface;
 use Concrete\Core\Entity\Attribute\Key\Key;
 use Concrete\Core\Entity\Attribute\Value\Value\SelectedSocialLink;
-use Concrete\Core\Entity\Attribute\Value\Value\SelectValue;
-use Concrete\Core\Entity\Attribute\Value\Value\SelectValueOption;
 use Concrete\Core\Entity\Attribute\Value\Value\SocialLinksValue;
 use Concrete\Core\Error\ErrorList\ErrorList;
 use Concrete\Core\Sharing\SocialNetwork\Service as Service;
@@ -26,6 +23,7 @@ use Environment;
 use League\Fractal\Resource\Collection;
 use League\Fractal\Resource\ResourceInterface;
 use Loader;
+use SimpleXMLElement;
 
 class Controller extends AttributeTypeController implements
     SimpleTextExportableAttributeInterface,
@@ -68,12 +66,15 @@ class Controller extends AttributeTypeController implements
     public function createAttributeValue($values)
     {
         $av = new SocialLinksValue();
-
-        foreach ($values as $service => $serviceInfo) {
-            if ($serviceInfo) {
+        if (is_iterable($values)) {
+            $textHelper = $this->app->make('helper/text');
+            foreach ($values as $service => $serviceInfo) {
+                if (!$serviceInfo) {
+                    continue;
+                }
                 $serviceInfo = filter_var($serviceInfo, FILTER_SANITIZE_URL);
-                $service = $this->app->make('helper/text')->entities($service);
-                $serviceInfo = $this->app->make('helper/text')->entities($serviceInfo);
+                $service = $textHelper->entities($service);
+                $serviceInfo = $textHelper->entities($serviceInfo);
                 $link = new SelectedSocialLink();
                 $link->setService($service);
                 $link->setServiceInfo($serviceInfo);
@@ -85,7 +86,7 @@ class Controller extends AttributeTypeController implements
         return $av;
     }
 
-    public function exportValue(\SimpleXMLElement $akn)
+    public function exportValue(SimpleXMLElement $akn)
     {
         $services = $this->attributeValue->getValue()->getSelectedLinks();
         foreach ($services as $link) {
@@ -93,6 +94,27 @@ class Controller extends AttributeTypeController implements
             $av->addAttribute('service', $link->getService());
             $av->addAttribute('detail', $link->getServiceInfo());
         }
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Attribute\Controller::importValue()
+     */
+    public function importValue(SimpleXMLElement $akn)
+    {
+        $result = [];
+        if (isset($akn->link)) {
+            foreach ($akn->link as $xLink) {
+                $service = trim((string) $xLink['service']);
+                if ($service === '') {
+                    continue;
+                }
+                $result[$service] = (string) $xLink['detail'];
+            }
+        }
+
+        return $result;
     }
 
     public function getDisplayValue()

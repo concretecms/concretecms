@@ -17,7 +17,7 @@ class Location implements LocationInterface
      */
     protected $url;
 
-    public function __construct(string $url = null, string $name = null)
+    public function __construct(?string $url = null, ?string $name = null)
     {
         $this->name = $name;
         $this->url = $url;
@@ -70,7 +70,7 @@ class Location implements LocationInterface
         ];
     }
 
-    public function denormalize(DenormalizerInterface $denormalizer, $data, string $format = null, array $context = [])
+    public function denormalize(DenormalizerInterface $denormalizer, $data, ?string $format = null, array $context = [])
     {
         $this->name = $data['name'];
         $this->url = $data['url'];

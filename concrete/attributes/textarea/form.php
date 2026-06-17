@@ -1,12 +1,21 @@
 <?php
+/**
+ * @var Concrete\Attribute\Textarea\Controller $controller
+ * @var Concrete\Core\Attribute\View $view
+ * @var Concrete\Core\Form\Service\Form $form
+ * @var string $akTextareaDisplayMode
+ * @var string|null $value
+ */
+
+$value = $value ?? '';
 
 // switch display type here
-if ($akTextareaDisplayMode == 'text' || $akTextareaDisplayMode == '') { ?>
+if ($akTextareaDisplayMode == $controller::MODE_TEXT || $akTextareaDisplayMode == '') { ?>
 
     <?php
     echo $form->textarea(
         $view->controller->field('value'),
-        h($value),
+        htmlspecialchars($value, ENT_QUOTES, APP_CHARSET),
         array('rows' => 5)
     );
     ?>
@@ -27,11 +36,11 @@ if ($akTextareaDisplayMode == 'text' || $akTextareaDisplayMode == '') { ?>
     /*
     echo Core::make('editor')->outputSimpleEditor(
         $view->controller->field('value'),
-        h($value)
+        htmlspecialchars($value, ENT_QUOTES, APP_CHARSET)
     );*/
     echo Core::make('editor')->outputStandardEditor(
         $view->controller->field('value'),
-        h($value)
+        htmlspecialchars($value, ENT_QUOTES, APP_CHARSET)
     );
 
 }

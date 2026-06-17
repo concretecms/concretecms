@@ -25,6 +25,7 @@ class Versions extends BackendInterfacePageController
         if ($this->request->query->has('cvID')) {
             $cvIDs = $this->request->query->get('cvID');
             if (is_array($cvIDs)) {
+                asort($cvIDs);
                 foreach ($cvIDs as $index => $cvID) {
                     if ($val->integer($cvID)) {
                         $versions[] = $cvID;

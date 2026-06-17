@@ -2,8 +2,11 @@
 namespace Concrete\Core\Entity\StyleCustomizer\Inline;
 
 use Concrete\Core\Backup\ContentExporter;
+use Concrete\Core\File\File;
 use Concrete\Core\Page\Theme\GridFramework\GridFramework;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Mapping as ORM;
+use SimpleXMLElement;
 
 /**
  * @ORM\Entity
@@ -14,16 +17,266 @@ class StyleSet
     /**
      * @ORM\Id @ORM\Column(type="integer")
      * @ORM\GeneratedValue
+     *
+     * @var int|null NULL if and only if not yet saved
      */
     protected $issID;
 
     /**
      * @ORM\Column(type="string", nullable=true)
+     *
+     * @var string|null
      */
     protected $customClass;
 
     /**
-     * @param mixed $customClass
+     * @ORM\Column(type="string", nullable=true)
+     *
+     * @var string|null
+     */
+    protected $customID;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     *
+     * @var string|null
+     */
+    protected $customElementAttribute;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     *
+     * @var string|null
+     */
+    protected $backgroundColor;
+
+    /**
+     * @ORM\Column(type="integer")
+     *
+     * @var int
+     */
+    protected $backgroundImageFileID = 0;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     *
+     * @var string|null
+     */
+    protected $backgroundRepeat = 'no-repeat';
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     *
+     * @var string|null
+     */
+    protected $backgroundSize = 'auto';
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     *
+     * @var string|null
+     */
+    protected $backgroundPosition = '0% 0%';
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     *
+     * @var string|null
+     */
+    protected $borderColor;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     *
+     * @var string|null
+     */
+    protected $borderStyle;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     *
+     * @var string|null
+     */
+    protected $borderWidth;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     *
+     * @var string|null
+     */
+    protected $borderRadius;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     *
+     * @var string|null
+     */
+    protected $baseFontSize;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     *
+     * @var string|null
+     */
+    protected $alignment;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     *
+     * @var string|null
+     */
+    protected $textColor;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     *
+     * @var string|null
+     */
+    protected $linkColor;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     *
+     * @var string|null
+     */
+    protected $marginTop;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     *
+     * @var string|null
+     */
+    protected $marginBottom;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     *
+     * @var string|null
+     */
+    protected $marginLeft;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     *
+     * @var string|null
+     */
+    protected $marginRight;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     *
+     * @var string|null
+     */
+    protected $paddingTop;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     *
+     * @var string|null
+     */
+    protected $paddingBottom;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     *
+     * @var string|null
+     */
+    protected $paddingLeft;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     *
+     * @var string|null
+     */
+    protected $paddingRight;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     *
+     * @var string|null
+     */
+    protected $rotate;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     *
+     * @var string|null
+     */
+    protected $boxShadowHorizontal;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     *
+     * @var string|null
+     */
+    protected $boxShadowVertical;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     *
+     * @var string|null
+     */
+    protected $boxShadowBlur;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     *
+     * @var string|null
+     */
+    protected $boxShadowSpread;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     *
+     * @var string|null
+     */
+    protected $boxShadowColor;
+
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     *
+     * @var bool|null
+     */
+    protected $boxShadowInset = false;
+
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     *
+     * @var bool|null
+     */
+    protected $hideOnExtraSmallDevice = false;
+
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     *
+     * @var bool|null
+     */
+    protected $hideOnSmallDevice = false;
+
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     *
+     * @var bool|null
+     */
+    protected $hideOnMediumDevice = false;
+
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     *
+     * @var bool|null
+     */
+    protected $hideOnLargeDevice = false;
+
+    /**
+     * @return int|null NULL if and only if not yet saved
+     */
+    public function getID()
+    {
+        return $this->issID;
+    }
+
+    /**
+     * @param string|null $customClass
      */
     public function setCustomClass($customClass)
     {
@@ -31,7 +284,7 @@ class StyleSet
     }
 
     /**
-     * @return mixed
+     * @return string|null
      */
     public function getCustomClass()
     {
@@ -39,12 +292,7 @@ class StyleSet
     }
 
     /**
-     * @ORM\Column(type="string", nullable=true)
-     */
-    protected $customID;
-
-    /**
-     * @param mixed $customID
+     * @param string|null $customID
      */
     public function setCustomID($customID)
     {
@@ -52,7 +300,7 @@ class StyleSet
     }
 
     /**
-     * @return mixed
+     * @return string|null
      */
     public function getCustomID()
     {
@@ -60,12 +308,7 @@ class StyleSet
     }
 
     /**
-     * @ORM\Column(type="string", nullable=true)
-     */
-    protected $customElementAttribute;
-
-    /**
-     * @param mixed $customElementAttribute
+     * @param string|null $customElementAttribute
      */
     public function setCustomElementAttribute($customElementAttribute)
     {
@@ -73,7 +316,7 @@ class StyleSet
     }
 
     /**
-     * @return mixed
+     * @return string|null
      */
     public function getCustomElementAttribute()
     {
@@ -81,199 +324,49 @@ class StyleSet
     }
 
     /**
-     * @ORM\Column(type="string", nullable=true)
+     * @param string|null $backgroundColor
      */
-    protected $backgroundColor;
-
-    /**
-     * @ORM\Column(type="integer")
-     */
-    protected $backgroundImageFileID = 0;
-
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
-    protected $backgroundRepeat = 'no-repeat';
-
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
-    protected $backgroundSize = 'auto';
-
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
-    protected $backgroundPosition = '0% 0%';
-
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
-    protected $borderColor;
-
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
-    protected $borderStyle;
-
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
-    protected $borderWidth;
-
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
-    protected $borderRadius;
-
-    /**
-     * @param mixed $borderWidth
-     */
-    public function setBorderWidth($borderWidth)
+    public function setBackgroundColor($backgroundColor)
     {
-        $this->borderWidth = $borderWidth;
+        $this->backgroundColor = $backgroundColor;
     }
 
     /**
-     * @return mixed
+     * @return string|null
      */
-    public function getBorderWidth()
+    public function getBackgroundColor()
     {
-        return $this->borderWidth;
+        return $this->backgroundColor;
     }
 
     /**
-     * @ORM\Column(type="string", nullable=true)
+     * @param int $backgroundImageFileID
      */
-    protected $baseFontSize;
-
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
-    protected $alignment;
-
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
-    protected $textColor;
-
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
-    protected $linkColor;
-
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
-    protected $marginTop;
-
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
-    protected $marginBottom;
-
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
-    protected $marginLeft;
-
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
-    protected $marginRight;
-
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
-    protected $paddingTop;
-
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
-    protected $paddingBottom;
-
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
-    protected $paddingLeft;
-
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
-    protected $paddingRight;
-
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
-    protected $rotate;
-
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
-    protected $boxShadowHorizontal;
-
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
-    protected $boxShadowVertical;
-
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
-    protected $boxShadowBlur;
-
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
-    protected $boxShadowSpread;
-
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
-    protected $boxShadowColor;
-
-    /**
-     * @ORM\Column(type="boolean", nullable=true)
-     */
-    protected $boxShadowInset = false;
-
-    /**
-     * @ORM\Column(type="boolean", nullable=true)
-     */
-    protected $hideOnExtraSmallDevice = false;
-
-    /**
-     * @ORM\Column(type="boolean", nullable=true)
-     */
-    protected $hideOnSmallDevice = false;
-
-    /**
-     * @ORM\Column(type="boolean", nullable=true)
-     */
-    protected $hideOnMediumDevice = false;
-
-    /**
-     * @ORM\Column(type="boolean", nullable=true)
-     */
-    protected $hideOnLargeDevice = false;
-
-    /**
-     * @param mixed $alignment
-     */
-    public function setAlignment($alignment)
+    public function setBackgroundImageFileID($backgroundImageFileID)
     {
-        $this->alignment = $alignment;
+        $this->backgroundImageFileID = (int) $backgroundImageFileID;
     }
 
     /**
-     * @return mixed
+     * @return int
      */
-    public function getAlignment()
+    public function getBackgroundImageFileID()
     {
-        return $this->alignment;
+        return $this->backgroundImageFileID;
     }
 
     /**
-     * @param mixed $backgroundRepeat
+     * @return \Concrete\Core\Entity\File\File|null
+     */
+    public function getBackgroundImageFileObject()
+    {
+        $fID = $this->getBackgroundImageFileID();
+
+        return $fID ? File::getByID($fID) : null;
+    }
+
+    /**
+     * @param string|null $backgroundRepeat
      */
     public function setBackgroundRepeat($backgroundRepeat)
     {
@@ -281,7 +374,7 @@ class StyleSet
     }
 
     /**
-     * @return mixed
+     * @return string|null
      */
     public function getBackgroundRepeat()
     {
@@ -289,7 +382,7 @@ class StyleSet
     }
 
     /**
-     * @param mixed $backgroundSize
+     * @param string|null $backgroundSize
      */
     public function setBackgroundSize($backgroundSize)
     {
@@ -297,7 +390,7 @@ class StyleSet
     }
 
     /**
-     * @return mixed
+     * @return string|null
      */
     public function getBackgroundSize()
     {
@@ -305,7 +398,7 @@ class StyleSet
     }
 
     /**
-     * @param mixed $backgroundPosition
+     * @param string|null $backgroundPosition
      */
     public function setBackgroundPosition($backgroundPosition)
     {
@@ -313,7 +406,7 @@ class StyleSet
     }
 
     /**
-     * @return mixed
+     * @return string|null
      */
     public function getBackgroundPosition()
     {
@@ -321,23 +414,7 @@ class StyleSet
     }
 
     /**
-     * @param mixed $baseFontSize
-     */
-    public function setBaseFontSize($baseFontSize)
-    {
-        $this->baseFontSize = $baseFontSize;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getBaseFontSize()
-    {
-        return $this->baseFontSize;
-    }
-
-    /**
-     * @param mixed $borderColor
+     * @param string|null $borderColor
      */
     public function setBorderColor($borderColor)
     {
@@ -345,7 +422,7 @@ class StyleSet
     }
 
     /**
-     * @return mixed
+     * @return string|null
      */
     public function getBorderColor()
     {
@@ -353,7 +430,7 @@ class StyleSet
     }
 
     /**
-     * @param mixed $borderStyle
+     * @param string|null $borderStyle
      */
     public function setBorderStyle($borderStyle)
     {
@@ -361,7 +438,7 @@ class StyleSet
     }
 
     /**
-     * @return mixed
+     * @return string|null
      */
     public function getBorderStyle()
     {
@@ -369,7 +446,23 @@ class StyleSet
     }
 
     /**
-     * @param mixed $borderStyle
+     * @param string|null $borderWidth
+     */
+    public function setBorderWidth($borderWidth)
+    {
+        $this->borderWidth = $borderWidth;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getBorderWidth()
+    {
+        return $this->borderWidth;
+    }
+
+    /**
+     * @param string|null $borderStyle
      */
     public function setBorderRadius($borderRadius)
     {
@@ -377,7 +470,7 @@ class StyleSet
     }
 
     /**
-     * @return mixed
+     * @return string|null
      */
     public function getBorderRadius()
     {
@@ -385,121 +478,39 @@ class StyleSet
     }
 
     /**
-     * @param mixed $boxShadowBlur
+     * @param string|null $baseFontSize
      */
-    public function setBoxShadowBlur($boxShadowBlur)
+    public function setBaseFontSize($baseFontSize)
     {
-        $this->boxShadowBlur = $boxShadowBlur;
+        $this->baseFontSize = $baseFontSize;
     }
 
     /**
-     * @return mixed
+     * @return string|null
      */
-    public function getBoxShadowBlur()
+    public function getBaseFontSize()
     {
-        return $this->boxShadowBlur;
+        return $this->baseFontSize;
     }
 
     /**
-     * @param mixed $boxShadowColor
+     * @param string|null $alignment
      */
-    public function setBoxShadowColor($boxShadowColor)
+    public function setAlignment($alignment)
     {
-        $this->boxShadowColor = $boxShadowColor;
+        $this->alignment = $alignment;
     }
 
     /**
-     * @return mixed
+     * @return string|null
      */
-    public function getBoxShadowColor()
+    public function getAlignment()
     {
-        return $this->boxShadowColor;
+        return $this->alignment;
     }
 
     /**
-     * @param mixed $boxShadowHorizontal
-     */
-    public function setBoxShadowHorizontal($boxShadowHorizontal)
-    {
-        $this->boxShadowHorizontal = $boxShadowHorizontal;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getBoxShadowHorizontal()
-    {
-        return $this->boxShadowHorizontal;
-    }
-
-    /**
-     * @param mixed $boxShadowSpread
-     */
-    public function setBoxShadowSpread($boxShadowSpread)
-    {
-        $this->boxShadowSpread = $boxShadowSpread;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getBoxShadowSpread()
-    {
-        return $this->boxShadowSpread;
-    }
-
-    /**
-     * @param mixed $boxShadowVertical
-     */
-    public function setBoxShadowVertical($boxShadowVertical)
-    {
-        $this->boxShadowVertical = $boxShadowVertical;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getBoxShadowVertical()
-    {
-        return $this->boxShadowVertical;
-    }
-
-    /**
-     * @return bool
-     */
-    public function getBoxShadowInset(): ?bool
-    {
-        return $this->boxShadowInset;
-    }
-
-    /**
-     * @param bool $boxShadowInset
-     */
-    public function setBoxShadowInset(bool $boxShadowInset)
-    {
-        $this->boxShadowInset = $boxShadowInset;
-    }
-
-
-
-    /**
-     * @param mixed $linkColor
-     */
-    public function setLinkColor($linkColor)
-    {
-        $this->linkColor = $linkColor;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getLinkColor()
-    {
-        return $this->linkColor;
-    }
-
-    /**
-     * @param mixed $textColor
+     * @param string|null $textColor
      */
     public function setTextColor($textColor)
     {
@@ -507,7 +518,7 @@ class StyleSet
     }
 
     /**
-     * @return mixed
+     * @return string|null
      */
     public function getTextColor()
     {
@@ -515,76 +526,23 @@ class StyleSet
     }
 
     /**
-     * @param mixed $rotate
+     * @param string|null $linkColor
      */
-    public function setRotate($rotate)
+    public function setLinkColor($linkColor)
     {
-        $this->rotate = $rotate;
+        $this->linkColor = $linkColor;
     }
 
     /**
-     * @return mixed
+     * @return string|null
      */
-    public function getRotate()
+    public function getLinkColor()
     {
-        return $this->rotate;
-    }
-
-    public function getID()
-    {
-        return $this->issID;
+        return $this->linkColor;
     }
 
     /**
-     * @param mixed $marginBottom
-     */
-    public function setMarginBottom($marginBottom)
-    {
-        $this->marginBottom = $marginBottom;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getMarginBottom()
-    {
-        return $this->marginBottom;
-    }
-
-    /**
-     * @param mixed $marginLeft
-     */
-    public function setMarginLeft($marginLeft)
-    {
-        $this->marginLeft = $marginLeft;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getMarginLeft()
-    {
-        return $this->marginLeft;
-    }
-
-    /**
-     * @param mixed $marginRight
-     */
-    public function setMarginRight($marginRight)
-    {
-        $this->marginRight = $marginRight;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getMarginRight()
-    {
-        return $this->marginRight;
-    }
-
-    /**
-     * @param mixed $marginTop
+     * @param string|null $marginTop
      */
     public function setMarginTop($marginTop)
     {
@@ -592,7 +550,7 @@ class StyleSet
     }
 
     /**
-     * @return mixed
+     * @return string|null
      */
     public function getMarginTop()
     {
@@ -600,55 +558,55 @@ class StyleSet
     }
 
     /**
-     * @param mixed $paddingBottom
+     * @param string|null $marginBottom
      */
-    public function setPaddingBottom($paddingBottom)
+    public function setMarginBottom($marginBottom)
     {
-        $this->paddingBottom = $paddingBottom;
+        $this->marginBottom = $marginBottom;
     }
 
     /**
-     * @return mixed
+     * @return string|null
      */
-    public function getPaddingBottom()
+    public function getMarginBottom()
     {
-        return $this->paddingBottom;
+        return $this->marginBottom;
     }
 
     /**
-     * @param mixed $paddingLeft
+     * @param string|null $marginLeft
      */
-    public function setPaddingLeft($paddingLeft)
+    public function setMarginLeft($marginLeft)
     {
-        $this->paddingLeft = $paddingLeft;
+        $this->marginLeft = $marginLeft;
     }
 
     /**
-     * @return mixed
+     * @return string|null
      */
-    public function getPaddingLeft()
+    public function getMarginLeft()
     {
-        return $this->paddingLeft;
+        return $this->marginLeft;
     }
 
     /**
-     * @param mixed $paddingRight
+     * @param string|null $marginRight
      */
-    public function setPaddingRight($paddingRight)
+    public function setMarginRight($marginRight)
     {
-        $this->paddingRight = $paddingRight;
+        $this->marginRight = $marginRight;
     }
 
     /**
-     * @return mixed
+     * @return string|null
      */
-    public function getPaddingRight()
+    public function getMarginRight()
     {
-        return $this->paddingRight;
+        return $this->marginRight;
     }
 
     /**
-     * @param mixed $paddingTop
+     * @param string|null $paddingTop
      */
     public function setPaddingTop($paddingTop)
     {
@@ -656,52 +614,169 @@ class StyleSet
     }
 
     /**
-     * @return mixed
+     * @return string|null
      */
     public function getPaddingTop()
     {
         return $this->paddingTop;
     }
 
-    public function setBackgroundColor($backgroundColor)
-    {
-        $this->backgroundColor = $backgroundColor;
-    }
-
-    public function setBackgroundImageFileID($backgroundImageFileID)
-    {
-        $this->backgroundImageFileID = $backgroundImageFileID;
-    }
-
-    public function getBackgroundColor()
-    {
-        return $this->backgroundColor;
-    }
-
-    public function getBackgroundImageFileID()
-    {
-        return $this->backgroundImageFileID;
-    }
-
-    public function getBackgroundImageFileObject()
-    {
-        if ($this->backgroundImageFileID) {
-            $f = \File::getByID($this->backgroundImageFileID);
-
-            return $f;
-        }
-    }
-
     /**
-     * @return mixed
+     * @param string|null $paddingBottom
      */
-    public function getHideOnExtraSmallDevice()
+    public function setPaddingBottom($paddingBottom)
     {
-        return $this->hideOnExtraSmallDevice;
+        $this->paddingBottom = $paddingBottom;
     }
 
     /**
-     * @param mixed $hideOnExtraSmallDevice
+     * @return string|null
+     */
+    public function getPaddingBottom()
+    {
+        return $this->paddingBottom;
+    }
+
+    /**
+     * @param string|null $paddingLeft
+     */
+    public function setPaddingLeft($paddingLeft)
+    {
+        $this->paddingLeft = $paddingLeft;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getPaddingLeft()
+    {
+        return $this->paddingLeft;
+    }
+
+    /**
+     * @param string|null $paddingRight
+     */
+    public function setPaddingRight($paddingRight)
+    {
+        $this->paddingRight = $paddingRight;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getPaddingRight()
+    {
+        return $this->paddingRight;
+    }
+
+    /**
+     * @param string|null $rotate
+     */
+    public function setRotate($rotate)
+    {
+        $this->rotate = $rotate;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getRotate()
+    {
+        return $this->rotate;
+    }
+
+    /**
+     * @param string|null $boxShadowHorizontal
+     */
+    public function setBoxShadowHorizontal($boxShadowHorizontal)
+    {
+        $this->boxShadowHorizontal = $boxShadowHorizontal;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getBoxShadowHorizontal()
+    {
+        return $this->boxShadowHorizontal;
+    }
+
+    /**
+     * @param string|null $boxShadowVertical
+     */
+    public function setBoxShadowVertical($boxShadowVertical)
+    {
+        $this->boxShadowVertical = $boxShadowVertical;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getBoxShadowVertical()
+    {
+        return $this->boxShadowVertical;
+    }
+
+    /**
+     * @param string|null $boxShadowBlur
+     */
+    public function setBoxShadowBlur($boxShadowBlur)
+    {
+        $this->boxShadowBlur = $boxShadowBlur;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getBoxShadowBlur()
+    {
+        return $this->boxShadowBlur;
+    }
+
+    /**
+     * @param string|null $boxShadowSpread
+     */
+    public function setBoxShadowSpread($boxShadowSpread)
+    {
+        $this->boxShadowSpread = $boxShadowSpread;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getBoxShadowSpread()
+    {
+        return $this->boxShadowSpread;
+    }
+
+    /**
+     * @param string|null $boxShadowColor
+     */
+    public function setBoxShadowColor($boxShadowColor)
+    {
+        $this->boxShadowColor = $boxShadowColor;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getBoxShadowColor()
+    {
+        return $this->boxShadowColor;
+    }
+
+    public function setBoxShadowInset(bool $boxShadowInset)
+    {
+        $this->boxShadowInset = $boxShadowInset;
+    }
+
+    public function getBoxShadowInset(): ?bool
+    {
+        return $this->boxShadowInset;
+    }
+
+    /**
+     * @param bool|null $hideOnExtraSmallDevice
      */
     public function setHideOnExtraSmallDevice($hideOnExtraSmallDevice)
     {
@@ -709,15 +784,15 @@ class StyleSet
     }
 
     /**
-     * @return mixed
+     * @return bool|null
      */
-    public function getHideOnSmallDevice()
+    public function getHideOnExtraSmallDevice()
     {
-        return $this->hideOnSmallDevice;
+        return $this->hideOnExtraSmallDevice;
     }
 
     /**
-     * @param mixed $hideOnSmallDevice
+     * @param bool|null $hideOnSmallDevice
      */
     public function setHideOnSmallDevice($hideOnSmallDevice)
     {
@@ -725,15 +800,15 @@ class StyleSet
     }
 
     /**
-     * @return mixed
+     * @return bool|null
      */
-    public function getHideOnMediumDevice()
+    public function getHideOnSmallDevice()
     {
-        return $this->hideOnMediumDevice;
+        return $this->hideOnSmallDevice;
     }
 
     /**
-     * @param mixed $hideOnMediumDevice
+     * @param bool|null $hideOnMediumDevice
      */
     public function setHideOnMediumDevice($hideOnMediumDevice)
     {
@@ -741,71 +816,156 @@ class StyleSet
     }
 
     /**
-     * @return mixed
+     * @return bool|null
      */
-    public function getHideOnLargeDevice()
+    public function getHideOnMediumDevice()
     {
-        return $this->hideOnLargeDevice;
+        return $this->hideOnMediumDevice;
     }
 
     /**
-     * @param mixed $hideOnLargeDevice
+     * @param bool|null $hideOnLargeDevice
      */
     public function setHideOnLargeDevice($hideOnLargeDevice)
     {
         $this->hideOnLargeDevice = $hideOnLargeDevice;
     }
 
+    /**
+     * @return bool|null
+     */
+    public function getHideOnLargeDevice()
+    {
+        return $this->hideOnLargeDevice;
+    }
+
     public function save()
     {
-        $em = \ORM::entityManager();
+        $em = app(EntityManagerInterface::class);
         $em->persist($this);
         $em->flush();
     }
 
-    public function export(\SimpleXMLElement $node)
+    public function export(SimpleXMLElement $node)
     {
-        $node = $node->addChild('style');
-        $node->addChild('backgroundColor', $this->getBackgroundColor());
-        $fID = $this->backgroundImageFileID;
-        if ($fID) {
-            $node->addChild('backgroundImage', ContentExporter::replaceFileWithPlaceHolder($fID));
+        $style = $node->addChild('style');
+        if (($value = (string) $this->getCustomClass()) !== '') {
+            $style->addChild('customClass', $value);
         }
-        $node->addChild('backgroundRepeat', $this->getBackgroundRepeat());
-        $node->addChild('backgroundSize', $this->getBackgroundSize());
-        $node->addChild('backgroundPosition', $this->getBackgroundPosition());
-        $node->addChild('borderWidth', $this->getBorderWidth());
-        $node->addChild('borderColor', $this->getBorderColor());
-        $node->addChild('borderStyle', $this->getBorderStyle());
-        $node->addChild('borderRadius', $this->getBorderRadius());
-        $node->addChild('baseFontSize', $this->getBaseFontSize());
-        $node->addChild('alignment', $this->getAlignment());
-        $node->addChild('textColor', $this->getTextColor());
-        $node->addChild('linkColor', $this->getLinkColor());
-        $node->addChild('paddingTop', $this->getPaddingTop());
-        $node->addChild('paddingBottom', $this->getPaddingBottom());
-        $node->addChild('paddingLeft', $this->getPaddingLeft());
-        $node->addChild('paddingRight', $this->getPaddingRight());
-        $node->addChild('marginTop', $this->getMarginTop());
-        $node->addChild('marginBottom', $this->getMarginBottom());
-        $node->addChild('marginLeft', $this->getMarginLeft());
-        $node->addChild('marginRight', $this->getMarginRight());
-        $node->addChild('rotate', $this->getRotate());
-        $node->addChild('boxShadowHorizontal', $this->getBoxShadowHorizontal());
-        $node->addChild('boxShadowVertical', $this->getBoxShadowVertical());
-        $node->addChild('boxShadowBlur', $this->getBoxShadowBlur());
-        $node->addChild('boxShadowSpread', $this->getBoxShadowSpread());
-        $node->addChild('boxShadowColor', $this->getBoxShadowColor());
-        $node->addChild('boxShadowInset', $this->getBoxShadowInset());
-        $node->addChild('customClass', $this->getCustomClass());
-        $node->addChild('customID', $this->getCustomID());
-        $node->addChild('customElementAttribute', $this->getCustomElementAttribute());
-        $node->addChild('hideOnExtraSmallDevice', $this->getHideOnExtraSmallDevice());
-        $node->addChild('hideOnSmallDevice', $this->getHideOnSmallDevice());
-        $node->addChild('hideOnMediumDevice', $this->getHideOnMediumDevice());
-        $node->addChild('hideOnLargeDevice', $this->getHideOnLargeDevice());
+        if (($value = (string) $this->getCustomID()) !== '') {
+            $style->addChild('customID', $value);
+        }
+        if (($value = (string) $this->getCustomElementAttribute()) !== '') {
+            $style->addChild('customElementAttribute', $value);
+        }
+        if (($value = (string) $this->getBackgroundColor()) !== '') {
+            $style->addChild('backgroundColor', $value);
+        }
+        if (($value = (int) $this->getBackgroundImageFileID()) !== 0) {
+            $style->addChild('backgroundImage', ContentExporter::replaceFileWithPlaceHolder($value));
+        }
+        if (($value = (string) $this->getBackgroundRepeat()) !== '') {
+            $style->addChild('backgroundRepeat', $value);
+        }
+        if (($value = (string) $this->getBackgroundSize()) !== '') {
+            $style->addChild('backgroundSize', $value);
+        }
+        if (($value = (string) $this->getBackgroundPosition()) !== '') {
+            $style->addChild('backgroundPosition', $value);
+        }
+        if (($value = (string) $this->getBorderColor()) !== '') {
+            $style->addChild('borderColor', $value);
+        }
+        if (($value = (string) $this->getBorderStyle()) !== '') {
+            $style->addChild('borderStyle', $value);
+        }
+        if (($value = (string) $this->getBorderWidth()) !== '') {
+            $style->addChild('borderWidth', $value);
+        }
+        if (($value = (string) $this->getBorderRadius()) !== '') {
+            $style->addChild('borderRadius', $value);
+        }
+        if (($value = (string) $this->getBaseFontSize()) !== '') {
+            $style->addChild('baseFontSize', $value);
+        }
+        if (($value = (string) $this->getAlignment()) !== '') {
+            $style->addChild('alignment', $value);
+        }
+        if (($value = (string) $this->getTextColor()) !== '') {
+            $style->addChild('textColor', $value);
+        }
+        if (($value = (string) $this->getLinkColor()) !== '') {
+            $style->addChild('linkColor', $value);
+        }
+        if (($value = (string) $this->getMarginTop()) !== '') {
+            $style->addChild('marginTop', $value);
+        }
+        if (($value = (string) $this->getMarginBottom()) !== '') {
+            $style->addChild('marginBottom', $value);
+        }
+        if (($value = (string) $this->getMarginLeft()) !== '') {
+            $style->addChild('marginLeft', $value);
+        }
+        if (($value = (string) $this->getMarginRight()) !== '') {
+            $style->addChild('marginRight', $value);
+        }
+        if (($value = (string) $this->getPaddingTop()) !== '') {
+            $style->addChild('paddingTop', $value);
+        }
+        if (($value = (string) $this->getPaddingBottom()) !== '') {
+            $style->addChild('paddingBottom', $value);
+        }
+        if (($value = (string) $this->getPaddingLeft()) !== '') {
+            $style->addChild('paddingLeft', $value);
+        }
+        if (($value = (string) $this->getPaddingRight()) !== '') {
+            $style->addChild('paddingRight', $value);
+        }
+        if (($value = (string) $this->getRotate()) !== '') {
+            $style->addChild('rotate', $value);
+        }
+        if (($value = (string) $this->getBoxShadowHorizontal()) !== '') {
+            $style->addChild('boxShadowHorizontal', $value);
+        }
+        if (($value = (string) $this->getBoxShadowVertical()) !== '') {
+            $style->addChild('boxShadowVertical', $value);
+        }
+        if (($value = (string) $this->getBoxShadowBlur()) !== '') {
+            $style->addChild('boxShadowBlur', $value);
+        }
+        if (($value = (string) $this->getBoxShadowSpread()) !== '') {
+            $style->addChild('boxShadowSpread', $value);
+        }
+        if (($value = (string) $this->getBoxShadowColor()) !== '') {
+            $style->addChild('boxShadowColor', $value);
+        }
+        if (($value = (bool) $this->getBoxShadowInset()) !== false) {
+            $style->addChild('boxShadowInset', $value ? '1' : '0');
+        }
+        if (($value = (bool) $this->getHideOnExtraSmallDevice()) !== false) {
+            $style->addChild('hideOnExtraSmallDevice', $value ? '1' : '0');
+        }
+        if (($value = (bool) $this->getHideOnSmallDevice()) !== false) {
+            $style->addChild('hideOnSmallDevice', $value ? '1' : '0');
+        }
+        if (($value = (bool) $this->getHideOnMediumDevice()) !== false) {
+            $style->addChild('hideOnMediumDevice', $value ? '1' : '0');
+        }
+        if (($value = (bool) $this->getHideOnLargeDevice()) !== false) {
+            $style->addChild('hideOnLargeDevice', $value ? '1' : '0');
+        }
+        if ($style->count() === 0) {
+            unset($node->style);
+        }
     }
 
+    /**
+     * @param int $class the value of one of the GridFramework::DEVICE_CLASSES_HIDE_ON_... constants
+     *
+     * @return bool|null
+     *
+     * @see \Concrete\Core\Page\Theme\GridFramework\GridFramework
+     */
     public function isHiddenOnDevice($class)
     {
         switch ($class) {

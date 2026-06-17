@@ -8,7 +8,7 @@
     // spacing. If we add an element between the container and the outer page class it breaks this. ?>
     <div class="row">
         <div class="col-md-12">
-            <h1><?=$c->getCollectionName()?></h1>
+            <h1><?=h($c->getCollectionName())?></h1>
 
             <?php
             View::element(

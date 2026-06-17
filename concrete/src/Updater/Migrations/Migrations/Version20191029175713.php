@@ -41,6 +41,7 @@ final class Version20191029175713 extends AbstractMigration implements Repeatabl
 {
     public function upgradeDatabase()
     {
+        $this->refreshDatabaseTables(['Groups']);
         $this->refreshEntities([ExpressKey::class]);
         $this->refreshEntities([
             Board::class,

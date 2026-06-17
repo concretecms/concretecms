@@ -26,15 +26,15 @@ $buttonText = t("Add");
             </label>
 
             <div class="form-check">
-                <?= $form->radio('sortBy', 'relevant_date_desc', true) ?>
-                <label class="form-check-label" for="sortBy2">
+                <?= $form->radio('sortBy', 'relevant_date_desc', true, ['id' => 'sort-by-date-desc']) ?>
+                <label class="form-check-label" for="sort-by-date-desc">
                     <?= t('Descending Date.') . ' ' . t('(Only items from the past)') ?>
                 </label>
             </div>
 
             <div class="form-check">
-                <?= $form->radio('sortBy', 'relevant_date_asc') ?>
-                <label class="form-check-label" for="sortBy1">
+                <?= $form->radio('sortBy', 'relevant_date_asc', ['id' => 'sort-by-date-asc']) ?>
+                <label class="form-check-label" for="sort-by-date-asc">
                     <?= t('Ascending Date.') . ' ' . t('(Only items from the future)') ?>
                 </label>
             </div>

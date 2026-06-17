@@ -96,7 +96,7 @@ class StandardValidator implements ValidatorInterface
         $this->application = $application;
     }
 
-    protected function validate(CategoryInterface $category, Controller $controller, Request $request, Key $key = null)
+    protected function validate(CategoryInterface $category, Controller $controller, Request $request, ?Key $key = null)
     {
         /** @var \Concrete\Core\Form\Service\Validation $val */
         $val = $this->application->make('helper/validation/form');

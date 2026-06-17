@@ -2,7 +2,9 @@
 
 namespace Concrete\Core\Permission\Response;
 
+use Concrete\Core\Area\Area;
 use Concrete\Core\Block\Block;
+use Concrete\Core\Permission\Key\Key;
 use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\User\User;
 
@@ -44,6 +46,20 @@ class AreaResponse extends Response
         return $this->validate('add_layout_to_area');
     }
 
+    public function validate($permissionHandle, $args = array())
+    {
+        /**
+         * @var $area Area
+         */
+        $page = $this->object->getAreaCollectionObject();
+        if ($page->isMasterCollection()) {
+            $key = Key::getByHandle('access_page_defaults');
+            return $key->validate();
+        } else {
+            return parent::validate($permissionHandle, $args);
+        }
+    }
+
     /**
      * Check if a new block can be added to the area, or if an existing block can be moved to it.
      *
@@ -81,10 +97,7 @@ class AreaResponse extends Response
 
         if (
         $this->canEditAreaContents() ||
-        $this->canEditAreaPermissions() ||
-        $this->canAddBlockToArea() ||
-        $this->canAddStackToArea() ||
-        $this->canAddLayoutToArea()) {
+        $this->canEditAreaPermissions()) {
             return true;
         }
 

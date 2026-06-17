@@ -8,6 +8,7 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Core;
 use Exception;
+use Concrete\Core\Cache\Command\ClearCacheCommand as ClearCacheCommandCommand;
 
 class ClearCacheCommand extends Command
 {
@@ -28,7 +29,7 @@ Returns codes:
   $okExitCode operation completed successfully
   $errExitCode errors occurred
 
-More info at http://documentation.concrete5.org/developers/appendix/cli-commands#c5-clear-cache
+More info at https://documentation.concretecms.org/9-x/developers/security/cli-jobs#c5-clear-cache
 EOT
             )
         ;
@@ -53,7 +54,11 @@ EOT
             $config->set('concrete.cache.clear.thumbnails', $clearThumbnails);
         }
         $output->write('Clearing the cache... ');
-        $cms->clearCaches();
+
+        $clearCacheCommand = new ClearCacheCommandCommand();
+        $clearCacheCommand->setLogCacheClear(true);
+        $cms->executeCommand($clearCacheCommand);
+
         $config->set('concrete.cache.last_cleared', time());
         $output->writeln('<info>done.</info>');
 

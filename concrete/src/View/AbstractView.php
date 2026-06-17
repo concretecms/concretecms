@@ -1,10 +1,10 @@
 <?php
 namespace Concrete\Core\View;
 
+use Concrete\Core\Filesystem\TemplateService;
 use Concrete\Core\Http\ResponseAssetGroup;
-use Request;
-use URL;
 use Core;
+use Request;
 
 /**
  * Abstract view class
@@ -174,15 +174,15 @@ abstract class AbstractView
     public function renderViewContents($scopeItems)
     {
         if (file_exists($this->template)) {
-            extract($scopeItems);
             ob_start();
             $this->onBeforeGetContents();
-            include $this->template;
-            $this->onAfterGetContents();
-            $contents = ob_get_contents();
-            ob_end_clean();
+            $pre = ob_get_clean();
 
-            return $contents;
+            $contents = app(TemplateService::class)->renderTemplate($this->template, $scopeItems, $this);
+
+            ob_start();
+            $this->onAfterGetContents();
+            return $pre . $contents . ob_get_clean();
         }
     }
 

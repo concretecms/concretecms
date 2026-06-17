@@ -17,6 +17,7 @@ class FileLocator
 
     protected $app;
 
+    /** @var LocationInterface[] */
     protected $locations = [];
 
     /**
@@ -47,12 +48,6 @@ class FileLocator
         $this->filesystem = $filesystem;
     }
 
-    public function addDefaultLocations()
-    {
-        array_unshift($this->locations, new ApplicationLocation($this->filesystem));
-        $this->locations[] = new CoreLocation($this->filesystem);
-    }
-
     public function addLocation(LocationInterface $location)
     {
         $this->locations[] = $location;
@@ -63,11 +58,21 @@ class FileLocator
         $this->locations[] = new PackageLocation($pkgHandle);
     }
 
+    /**
+     * @deprecated
+     * Adds locations to the searchable locations for a file locator. Instead, just call `getSearchLocations`
+     * @return void
+     */
+    public function addDefaultLocations()
+    {
+        array_unshift($this->locations, new ApplicationLocation($this->filesystem));
+        $this->locations[] = new CoreLocation($this->filesystem);
+    }
+
     public function getAllRecords($file)
     {
-        $this->addDefaultLocations();
         $records = [];
-        foreach ($this->locations as $location) {
+        foreach ($this->getSearchLocations() as $location) {
             $location->setFilesystem($this->filesystem);
             if ($record = $location->contains($file)) {
                 $records[] = $record;
@@ -79,23 +84,23 @@ class FileLocator
 
     /**
      * @param $file
-     *
-     * @return Record
+     * @return Record|null
      */
     public function getRecord($file)
     {
-        $this->addDefaultLocations();
         $key = $this->getCacheKey($file);
         $item = $this->cache->getItem($key);
         $record = null;
+
         if ($item->isMiss()) {
             $item->lock();
-            foreach ($this->locations as $location) {
+            foreach ($this->getSearchLocations() as $location) {
                 $location->setFilesystem($this->filesystem);
                 if ($record = $location->contains($file)) {
                     break;
                 }
             }
+
             if (isset($record)) {
                 $this->cache->save($item->set($record));
             }
@@ -107,18 +112,35 @@ class FileLocator
     }
 
     /**
-     * @return array
+     * @return LocationInterface[]
      */
     public function getLocations()
     {
         return $this->locations;
     }
 
+    /**
+     * Return the effective ordered list of locations used during file lookup.
+     *
+     * This includes the default application and core locations around any
+     * explicitly configured custom locations without mutating the locator state.
+     *
+     * @return LocationInterface[]
+     */
+    public function getSearchLocations()
+    {
+        return array_merge(
+            [new ApplicationLocation($this->filesystem)],
+            $this->locations,
+            [new CoreLocation($this->filesystem)]
+        );
+    }
+
     protected function getCacheKey($file)
     {
         $keys = [];
         $file = trim(str_replace('/', DIRECTORY_SEPARATOR, $file), DIRECTORY_SEPARATOR);
-        foreach ($this->locations as $location) {
+        foreach ($this->getSearchLocations() as $location) {
             $cacheKey = $location->getCacheKey();
             if (is_array($cacheKey)) {
                 $keys = array_merge($keys, $cacheKey);

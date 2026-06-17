@@ -3,6 +3,8 @@
 namespace Concrete\Block\DesktopFeaturedTheme;
 
 use Concrete\Core\Block\BlockController;
+use Concrete\Core\Marketplace\Connection;
+use Concrete\Core\Marketplace\PackageRepositoryInterface;
 use Concrete\Core\Marketplace\RemoteItemList as MarketplaceRemoteItemList;
 
     /**
@@ -31,6 +33,7 @@ use Concrete\Core\Marketplace\RemoteItemList as MarketplaceRemoteItemList;
          * @var bool
          */
         protected $btCacheBlockOutputForRegisteredUsers = true;
+        protected $btCacheBlockOutputOnEditMode = true;
 
         /**
          * @var int
@@ -68,15 +71,6 @@ use Concrete\Core\Marketplace\RemoteItemList as MarketplaceRemoteItemList;
          */
         public function view()
         {
-            $mri = new MarketplaceRemoteItemList();
-            $mri->sortBy('recommended');
-            $mri->filterByCompatibility(1);
-            $mri->setItemsPerPage(1);
-            $mri->setType('themes');
-            $mri->execute();
-            $items = $mri->getPage();
-            if (isset($items[0]) && is_object($items[0])) {
-                $this->set('remoteItem', $items[0]);
-            }
+            $this->set('connection', $this->app->make(PackageRepositoryInterface::class)->getConnection());
         }
     }

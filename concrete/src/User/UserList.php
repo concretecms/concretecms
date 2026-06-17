@@ -375,7 +375,11 @@ class UserList extends DatabaseItemList implements PagerProviderInterface, Pagin
     public function filterByGroup($group = '', $inGroup = true)
     {
         if (!($group instanceof \Concrete\Core\User\Group\Group)) {
-            $group = \Concrete\Core\User\Group\Group::getByName($group);
+            $groupName = $group;
+            $group = \Concrete\Core\User\Group\Group::getByName($groupName);
+            if (!$group) {
+                throw new \RuntimeException(t('Group "%s" does not exist.', $groupName));
+            }
         }
         $this->checkGroupJoin();
         $app = Application::getFacadeApplication();
@@ -388,7 +392,7 @@ class UserList extends DatabaseItemList implements PagerProviderInterface, Pagin
             ->leftJoin('ug', $query->getConnection()->getDatabasePlatform()->quoteSingleIdentifier('Groups'), 'g', 'ug.gID=g.gID')
         ;
         $orX->add($this->getQueryObject()->expr()->like('g.gPath', ':groupPath_' . $group->getGroupID()));
-        $this->getQueryObject()->setParameter('groupPath_' . $group->getGroupID(), $likeBuilder->escapeForLike($group->getGroupPath()) . '/%');
+        $this->getQueryObject()->setParameter('groupPath_' . $group->getGroupID(), $likeBuilder->escapeForLike($group->getGroupPath(), false, false) . '/%');
         $orX->add($this->getQueryObject()->expr()->eq('g.gID', $group->getGroupID()));
         $query->where($orX);
         if ($inGroup) {

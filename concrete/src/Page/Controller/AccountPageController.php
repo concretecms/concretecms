@@ -9,6 +9,7 @@ use Concrete\Core\Feature\Features;
 use Concrete\Core\Feature\UsesFeatureInterface;
 use Concrete\Core\Page\Desktop\DesktopList;
 use Concrete\Core\Page\Theme\ThemeRouteCollection;
+use Concrete\Core\User\PostLoginLocation;
 use Concrete\Core\User\User;
 use Loader;
 use Concrete\Core\Page\Controller\PageController as CorePageController;
@@ -28,6 +29,8 @@ class AccountPageController extends CorePageController implements UsesFeatureInt
     {
         $u = $this->app->make(User::class);
         if (!$u->isRegistered()) {
+            $postLoginLocation = $this->app->make(PostLoginLocation::class);
+            $postLoginLocation->setSessionPostLoginUrl($this->getPageObject());
             return $this->replace('/login');
         }
         $profile = \UserInfo::getByID($u->getUserID());

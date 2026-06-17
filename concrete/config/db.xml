@@ -3139,6 +3139,9 @@
       <notnull/>
     </field>
     <field name="message" type="text"/>
+    <field name="cID" type="integer" size="10">
+      <unsigned/>
+    </field>
     <field name="uID" type="integer" size="10">
       <unsigned/>
     </field>
@@ -3150,6 +3153,9 @@
     </index>
     <index name="uID">
       <col>uID</col>
+    </index>
+    <index name="cID">
+      <col>cID</col>
     </index>
   </table>
 

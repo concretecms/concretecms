@@ -26,8 +26,6 @@ abstract class AbstractPopulator implements PopulatorInterface
 
     abstract public function getObjectRelevantThumbnail($mixed): ?File;
 
-    abstract public function getObjectUniqueItemId($mixed) : ?string;
-
     abstract public function getObjectName($mixed) : ?string;
 
     abstract public function getObjectData($mixed) : DataInterface;

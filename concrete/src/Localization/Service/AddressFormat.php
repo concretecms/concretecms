@@ -318,6 +318,7 @@ class AddressFormat
         }
 
         if ($format === 'html') {
+            $lines = array_map('h', $lines);
             return implode('<br>', $lines);
         }
 

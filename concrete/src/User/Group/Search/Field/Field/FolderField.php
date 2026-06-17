@@ -17,7 +17,7 @@ class FolderField extends AbstractField
      * @param GroupFolder|Node $folder
      * @param bool $searchSubFolders
      */
-    public function __construct(Node $folder = null, $searchSubFolders = false)
+    public function __construct(?Node $folder = null, $searchSubFolders = false)
     {
         if ($folder) {
             $this->data['folderID'] = $folder->getTreeNodeID();

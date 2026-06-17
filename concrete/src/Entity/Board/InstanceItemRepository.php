@@ -29,7 +29,7 @@ class InstanceItemRepository extends EntityRepository
     public function findByDataSource(
         ConfiguredDataSource $configuredDataSource,
         Instance $instance,
-        string $keywords = null
+        ?string $keywords = null
     )
     {
         $qb = $this->getDataSourceQueryBuilder($configuredDataSource, $instance)

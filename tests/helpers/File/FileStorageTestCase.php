@@ -16,8 +16,6 @@ abstract class FileStorageTestCase extends ConcreteDatabaseTestCase
     protected $fixtures = [];
     protected $tables = [
         'Groups',
-        'FileStorageLocationTypes',
-        'FileImageThumbnailTypes',
         'TreeTypes',
         'TreeNodeTypes',
         'TreeNodes',
@@ -29,7 +27,7 @@ abstract class FileStorageTestCase extends ConcreteDatabaseTestCase
         'Trees',
     ];
 
-    protected $metadatas = [
+    protected $entityClassNames = [
         'Concrete\Core\Entity\File\File',
         'Concrete\Core\Entity\File\Version',
         'Concrete\Core\Entity\File\StorageLocation\Type\Type',

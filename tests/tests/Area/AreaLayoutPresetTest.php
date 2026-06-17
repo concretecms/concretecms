@@ -13,11 +13,14 @@ use Request;
 
 class AreaLayoutPresetTest extends PageTestCase
 {
-    public function __construct($name = null, array $data = [], $dataName = '')
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\TestHelpers\Database\ConcreteDatabaseTestCase::getTables()
+     */
+    protected function getTables()
     {
-        parent::__construct($name, $data, $dataName);
-
-        $this->tables = array_merge($this->tables, [
+        return array_merge(parent::getTables(), [
             'AreaLayoutPresets',
             'AreaLayoutsUsingPresets',
             'AreaLayouts',
@@ -29,16 +32,6 @@ class AreaLayoutPresetTest extends PageTestCase
 
     public function setUp(): void
     {
-
-        $this->tables = array_merge($this->tables, [
-            'AreaLayoutPresets',
-            'AreaLayoutsUsingPresets',
-            'AreaLayouts',
-            'AreaLayoutColumns',
-            'AreaLayoutCustomColumns',
-            'AreaLayoutThemeGridColumns',
-        ]);
-
         $service = Core::make('site/type');
         if (!$service->getDefault()) {
             $service->installDefault();

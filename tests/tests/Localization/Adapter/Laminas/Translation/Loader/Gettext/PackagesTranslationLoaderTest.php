@@ -18,7 +18,7 @@ use Illuminate\Filesystem\Filesystem;
  */
 class PackagesTranslationLoaderTest extends ConcreteDatabaseTestCase
 {
-    protected $metadatas = [
+    protected $entityClassNames = [
         \Concrete\Core\Entity\Package::class,
     ];
 
@@ -52,7 +52,7 @@ class PackagesTranslationLoaderTest extends ConcreteDatabaseTestCase
         // First make sure that none of the packages already exist
         foreach ($packages as $pkg => $dir) {
             if ($filesystem->exists(DIR_PACKAGES . '/' . $pkg)) {
-                throw new Exception("A package directory for a package named ${pkg} already exists. It cannot exist prior to running these tests.");
+                throw new Exception("A package directory for a package named {$pkg} already exists. It cannot exist prior to running these tests.");
             }
         }
         // Then, move the package folders to the package folder

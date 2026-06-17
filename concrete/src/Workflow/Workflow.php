@@ -240,7 +240,7 @@ abstract class Workflow extends ConcreteObject implements ObjectInterface
      *
      * @return \Concrete\Core\Workflow\Workflow
      */
-    public static function add(Type $wt, $name, Package $pkg = null)
+    public static function add(Type $wt, $name, ?Package $pkg = null)
     {
         $wf = static::getByName($name);
         if ($wf !== null) {

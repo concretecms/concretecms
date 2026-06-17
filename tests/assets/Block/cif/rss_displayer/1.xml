@@ -1,0 +1,13 @@
+<block type="rss_displayer" name="">
+  <data table="btRssDisplay">
+    <record>
+      <dateFormat>:shortDate:shortTime:</dateFormat>
+      <itemsToDisplay>1</itemsToDisplay>
+      <launchInNewWindow>0</launchInNewWindow>
+      <showSummary>0</showSummary>
+      <title></title>
+      <titleFormat>p</titleFormat>
+      <url>https://www.concretecms.com/rss/blog</url>
+    </record>
+  </data>
+</block>

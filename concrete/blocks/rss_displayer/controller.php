@@ -52,6 +52,7 @@ class Controller extends BlockController implements UsesFeatureInterface
     protected $btCacheBlockOutputOnPost = true;
     protected $btWrapperClass = 'ccm-ui';
     protected $btCacheBlockOutputForRegisteredUsers = true;
+    protected $btCacheBlockOutputOnEditMode = true;
 
     /**
      * Default number of seconds that the output of this block should be cached
@@ -190,18 +191,9 @@ class Controller extends BlockController implements UsesFeatureInterface
 
         try {
             $channel = $fp->load($this->url, $this->rssFeedCacheLifetime);
-            $posts = $fp->getPosts($channel);
-
-            $i = 0;
-            foreach ($posts as $post) {
-                $posts[] = $post;
-                if (($i + 1) == intval($this->itemsToDisplay)) {
-                    break;
-                }
-                ++$i;
-            }
+            $posts = array_slice($fp->getPosts($channel), 0, intval($this->itemsToDisplay));
         } catch (\Exception $e) {
-            $this->set('errorMsg', $e->getMessage());
+            $this->set('errorMsg', t('Unable to load RSS posts.'));
         }
 
         if (empty($this->titleFormat)) {
@@ -251,14 +243,7 @@ class Controller extends BlockController implements UsesFeatureInterface
             // We manually set cache time to 2hrs here as getSearchableContent()
             // can probably cope with slightly older data
             $channel = $fp->load($this->url, 7200);
-            $i = 0;
-            foreach ($channel as $post) {
-                $posts[] = $post;
-                if (($i + 1) == intval($this->itemsToDisplay)) {
-                    break;
-                }
-                ++$i;
-            }
+            $posts = array_slice($fp->getPosts($channel), 0, intval($this->itemsToDisplay));
         } catch (\Exception $e) {
         }
 
@@ -279,14 +264,12 @@ class Controller extends BlockController implements UsesFeatureInterface
     {
         $data = parent::getImportData($blockNode, $page);
         $dateFormat = $data['dateFormat'] ?? '';
-        if ($dateFormat !== '') {
-            if (array_key_exists($dateFormat, $this->getDefaultDateTimeFormats())) {
-                $data['standardDateFormat'] = $dateFormat;
-            } else {
-                $data['customDateFormat'] = $dateFormat;
-            }
+        if (array_key_exists($dateFormat, $this->getDefaultDateTimeFormats())) {
+            $data['standardDateFormat'] = $dateFormat;
+        } else {
+            $data['standardDateFormat'] = ':custom:';
+            $data['customDateFormat'] = $dateFormat;
         }
-        unset($data['dateFormat']);
 
         return $data;
     }

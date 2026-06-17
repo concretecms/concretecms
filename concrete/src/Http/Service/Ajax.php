@@ -13,11 +13,11 @@ class Ajax
      *
      * @return bool
      *
-     * @deprecated use the isXmlHttpRequest() method of the request object
+     * @deprecated use the isXmlHttpRequest() and/or the getPreferredFormat() methods of the request object
      */
     public function isAjaxRequest(Request $request)
     {
-        return $request->isXmlHttpRequest();
+        return $request->isXmlHttpRequest() || in_array($request->getPreferredFormat(), ['json', 'jsonld'], true);
     }
 
     /**
@@ -25,8 +25,10 @@ class Ajax
      *
      * @param mixed $result
      *
+     * @return never
+     *
      * @deprecated You should switch to something like:
-     * return \Core::make(\Concrete\Core\Http\ResponseFactoryInterface::class)->json(...)
+     * return app(\Concrete\Core\Http\ResponseFactoryInterface::class)->json(...)
      */
     public function sendResult($result)
     {
@@ -45,11 +47,12 @@ class Ajax
     /**
      * Sends an error to the client and ends the execution.
      *
-     * @param string|Exception|\Concrete\Core\Error\Error $result the error to send to the client
-     * @param mixed $error
+     * @param string|Exception|\Concrete\Core\Error\Error $error the error to send to the client
+     *
+     * @return never
      *
      * @deprecated You should switch to something like:
-     * return \Core::make(\Concrete\Core\Http\ResponseFactoryInterface::class)->json(...)
+     * return app(\Concrete\Core\Http\ResponseFactoryInterface::class)->json(...)
      */
     public function sendError($error)
     {

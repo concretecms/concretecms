@@ -27,5 +27,12 @@ interface PopulatorInterface
      * @return Item|null
      */
     public function createItemFromObject(DataSource $dataSource, $mixed):? Item;
+
+    /**
+     * @param $mixed
+     * @return string|null
+     */
+    public function getObjectUniqueItemId($mixed) : ?string;
+
 }
 

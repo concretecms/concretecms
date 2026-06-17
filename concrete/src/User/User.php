@@ -236,7 +236,7 @@ class User extends ConcreteObject
                         }
                     }
 
-                    if ($row['uID'] && $row['uIsValidated'] === '0' && $config->get(
+                    if ($row['uID'] && (int)$row['uIsValidated'] === 0 && $config->get(
                             'concrete.user.registration.validate_email'
                         )) {
                         $this->loadError(USER_NON_VALIDATED);
@@ -1044,7 +1044,7 @@ class User extends ConcreteObject
             $datetime = $dh->getOverridableNow();
 
             $q = 'update Pages set cCheckedOutDatetimeLastEdit = ? where cID = ?';
-            $r = $db->executeQuery($q, [$datetime, $cID]);
+            $db->executeQuery($q, [$datetime, $cID]);
 
             $c->cCheckedOutDatetimeLastEdit = $datetime;
         }
@@ -1106,7 +1106,9 @@ class User extends ConcreteObject
             // $secure
             $config->get('concrete.session.cookie.cookie_secure'),
             // $httpOnly
-            $config->get('concrete.session.cookie.cookie_httponly')
+            $config->get('concrete.session.cookie.cookie_httponly'),
+            // $sameSite
+            $config->get('concrete.session.cookie.samesite')
         );
 
         if ($cache_interface) {

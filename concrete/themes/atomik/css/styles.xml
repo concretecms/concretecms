@@ -10,6 +10,31 @@
             <font type="google" name="Prata" />
             <font type="google" name="Lato" />
         </preset>
+        <preset identifier="coastal-breeze">
+            <font type="google" name="Source Sans Pro" />
+            <font type="google" name="Playfair Display" />
+            <font type="google" name="Open Sans" />
+        </preset>
+        <preset identifier="amber-twilight">
+            <font type="google" name="Nunito" />
+            <font type="google" name="Merriweather" />
+            <font type="google" name="Barlow" />
+        </preset>
+        <preset identifier="golden-meadow">
+            <font type="google" name="Lora" />
+            <font type="google" name="Oswald" />
+            <font type="google" name="Roboto" />
+        </preset>
+        <preset identifier="misty-sage">
+            <font type="google" name="Hind" />
+            <font type="google" name="Josefin Sans" />
+            <font type="google" name="Work Sans" />
+        </preset>
+        <preset identifier="midnight-velvet">
+            <font type="google" name="Poppins" />
+            <font type="google" name="Inter" />
+            <font type="google" name="Oswald" />
+        </preset>
     </webfonts>
     <set name="Base Colors">
         <style name="Primary" variable="primary" type="color"/>

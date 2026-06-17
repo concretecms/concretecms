@@ -13,7 +13,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
  */
 
 $router
-    ->get('/switch_language/{currentPageID}/{targetSectionID}', 'SwitchLanguage::switchLanguage')
+    ->all('/switch_language/{currentPageID}/{targetSectionID}', 'SwitchLanguage::switchLanguage')
     ->setName('switch_language')
     ->setRequirements(['currentPageID' => '[0-9]+', 'targetSectionID' => '[0-9]+'])
 ;

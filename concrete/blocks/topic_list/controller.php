@@ -52,6 +52,12 @@ class Controller extends BlockController implements UsesFeatureInterface
 
     protected $btTable = 'btTopicList';
 
+    protected $btCacheBlockOutput = true;
+    protected $btCacheBlockOutputOnPost = true;
+    protected $btCacheBlockOutputForRegisteredUsers = false;
+    protected $btCacheBlockOutputOnEditMode = false;
+    protected $btCacheBlockOutputLifetime = 0;
+
     /**
      * @var string[]
      */
@@ -246,7 +252,7 @@ class Controller extends BlockController implements UsesFeatureInterface
         $treeName = (string) $blockNode->data->tree;
         $page = (string) $blockNode->data->cParentID;
         $tree = TopicTree::getByName($treeName);
-        $args['topicTreeID'] = $tree->getTreeID();
+        $args['topicTreeID'] = empty($tree) ? null : $tree->getTreeID();
         $args['cParentID'] = 0;
         $args['title'] = (string) $blockNode->data->title;
         $args['mode'] = (string) $blockNode->data->mode;

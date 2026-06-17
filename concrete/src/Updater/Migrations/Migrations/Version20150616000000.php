@@ -19,7 +19,7 @@ class Version20150616000000 extends AbstractMigration implements RepeatableMigra
             'Stacks',
         ]);
 
-        if (\Core::make('multilingual/detector')->isEnabled()) {
+        if (\Core::make('multilingual/detector')->isEnabled() && method_exists(StackList::class, 'rescanMultilingualStacks')) {
             StackList::rescanMultilingualStacks();
         }
     }

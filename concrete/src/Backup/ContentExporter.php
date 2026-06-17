@@ -1,24 +1,17 @@
 <?php
 namespace Concrete\Core\Backup;
 
-use Block;
+use Concrete\Core\File\File;
 use Concrete\Core\Page\Feed;
+use Concrete\Core\Page\Page;
 use Concrete\Core\Page\Type\Composer\FormLayoutSetControl;
+use Concrete\Core\Page\Type\Type as PageType;
 use Concrete\Core\Tree\Node\Type\FileFolder;
-use File;
-use FileList;
-use Job;
-use Loader;
-use Package;
-use Page;
-use PageTemplate;
-use PageTheme;
-use PageType;
 
 class ContentExporter
 {
-    protected static $mcBlockIDs = array();
-    protected static $ptComposerOutputControlIDs = array();
+    protected static $mcBlockIDs = [];
+    protected static $ptComposerOutputControlIDs = [];
 
     /**
      * @deprecated
@@ -60,69 +53,131 @@ class ContentExporter
         }
     }
 
+    /**
+     * @param int|string|mixed $cID the ID of the page
+     *
+     * @return string|null
+     *
+     * @example {ccm:export:page:/path/to/page}
+     */
     public static function replacePageWithPlaceHolder($cID)
     {
-        if ($cID > 0) {
-            $c = Page::getByID($cID);
-
-            return '{ccm:export:page:' . $c->getCollectionPath() . '}';
+        if (!is_numeric($cID) || ($cID = (int) $cID) <= 0) {
+            return null;
         }
+        $c = Page::getByID($cID);
+        if (!$c || $c->isError()) {
+            return null;
+        }
+
+        return '{ccm:export:page:' . $c->getCollectionPath() . '}';
     }
 
+    /**
+     * @param int|string|mixed $fID the ID or the UUID of the file
+     *
+     * @return string|null
+     *
+     * @example {ccm:export:file:123456789012:atomik-logo.png}
+     */
     public static function replaceFileWithPlaceHolder($fID)
     {
-        if ($fID > 0) {
+        if (uuid_is_valid((string) $fID)) {
+            $f = File::getByUUID($fID);
+        } elseif (is_numeric($fID) && ($fID = (int) $fID) > 0) {
             $f = File::getByID($fID);
-            if (is_object($f)) {
-                return '{ccm:export:file:' . $f->getPrefix() . ':' . $f->getFileName() . '}';
-            }
+        } else {
+            return null;
         }
+        $fv = $f ? $f->getApprovedVersion() : null;
+        if (!$fv) {
+            return null;
+        }
+
+        return '{ccm:export:file:' . $fv->getPrefix() . ':' . $fv->getFileName() . '}';
     }
 
+    /**
+     * @param array|int[]|string[] $cID
+     *
+     * @return string|null
+     *
+     * @example {ccm:export:page:/path/to/page}
+     */
     public static function replacePageWithPlaceHolderInMatch($cID)
     {
-        if ($cID[1] > 0) {
-            $cID = $cID[1];
-
-            return self::replacePageWithPlaceHolder($cID);
-        }
+        return empty($cID[1]) ? null : self::replacePageWithPlaceHolder($cID[1]);
     }
 
+    /**
+     * @param array|int[]|string[] $fID
+     *
+     * @return string|null
+     *
+     * @example {ccm:export:file:123456789012:atomik-logo.png}
+     */
     public static function replaceFileWithPlaceHolderInMatch($fID)
     {
-        if ($fID[1] > 0) {
-            $fID = $fID[1];
-
-            return self::replaceFileWithPlaceHolder($fID);
-        }
+        return empty($fID[1]) ? null : self::replaceFileWithPlaceHolder($fID[1]);
     }
 
+    /**
+     * @param int|string|mixed $ptID the ID of the page type
+     *
+     * @return string|null
+     *
+     * @example {ccm:export:pagetype:blog_entry}
+     */
     public static function replacePageTypeWithPlaceHolder($ptID)
     {
-        if ($ptID > 0) {
-            $ct = PageType::getByID($ptID);
-
-            return '{ccm:export:pagetype:' . $ct->getPageTypeHandle() . '}';
+        if (!is_numeric($ptID) || ($ptID = (int) $ptID) <= 0) {
+            return null;
         }
+        $ct = PageType::getByID($ptID);
+        if (!$ct) {
+            return null;
+        }
+
+        return '{ccm:export:pagetype:' . $ct->getPageTypeHandle() . '}';
     }
 
+    /**
+     * @param int|string|mixed $treeNodeID the ID of the file folder
+     *
+     * @return string|null
+     *
+     * @example {ccm:export:filefolder:/Documents}
+     */
     public static function replaceFileFolderWithPlaceHolder($treeNodeID)
     {
-        if ($treeNodeID > 0) {
-            $folder = FileFolder::getByID($treeNodeID);
-
-            return '{ccm:export:filefolder:' . $folder->getTreeNodeDisplayPath() . '}';
+        if (!is_numeric($treeNodeID) || ($treeNodeID = (int) $treeNodeID) <= 0) {
+            return null;
         }
+        $folder = FileFolder::getByID($treeNodeID);
+        if (!$folder) {
+            return null;
+        }
+
+        return '{ccm:export:filefolder:' . $folder->getTreeNodeDisplayPath() . '}';
     }
 
-
+    /**
+     * @param int|string|mixed $pfID the ID of the page feed
+     *
+     * @return string|null
+     *
+     * @example {ccm:export:pagefeed:blog}
+     */
     public static function replacePageFeedWithPlaceholder($pfID)
     {
-        if ($pfID > 0) {
-            $pf = Feed::getByID($pfID);
-
-            return '{ccm:export:pagefeed:' . $pf->getHandle() . '}';
+        if (!is_numeric($pfID) || ($pfID = (int) $pfID) <= 0) {
+            return null;
         }
+        $pf = Feed::getByID($pfID);
+        if (!$pf) {
+            return null;
+        }
+
+        return '{ccm:export:pagefeed:' . $pf->getHandle() . '}';
     }
-    
 }

@@ -2,30 +2,26 @@
 
 namespace Concrete\Core\Board\Command;
 
+use Concrete\Core\Board\Instance\Logger\LoggerFactory;
 use Concrete\Core\Entity\Board\InstanceItem;
 use Concrete\Core\Entity\Board\InstanceItemBatch;
-use Concrete\Core\Logging\Channels;
-use Concrete\Core\Logging\LoggerAwareInterface;
-use Concrete\Core\Logging\LoggerAwareTrait;
 use Doctrine\ORM\EntityManager;
 
-class PopulateBoardInstanceDataPoolCommandHandler implements LoggerAwareInterface
+class PopulateBoardInstanceDataPoolCommandHandler
 {
-
-    use LoggerAwareTrait;
-
-    public function getLoggerChannel()
-    {
-        return Channels::CHANNEL_CONTENT;
-    }
-
     /**
      * @var EntityManager
      */
     protected $entityManager;
 
-    public function __construct(EntityManager $entityManager)
+    /**
+     * @var LoggerFactory
+     */
+    protected $loggerFactory;
+
+    public function __construct(LoggerFactory $loggerFactory, EntityManager $entityManager)
     {
+        $this->loggerFactory = $loggerFactory;
         $this->entityManager = $entityManager;
     }
 
@@ -34,6 +30,8 @@ class PopulateBoardInstanceDataPoolCommandHandler implements LoggerAwareInterfac
         $instance = $command->getInstance();
         $board = $instance->getBoard();
         $configuredDataSources = $board->getDataSources();
+
+        $logger = $this->loggerFactory->createFromInstance($instance);
 
         $batch = new InstanceItemBatch();
         $batch->setInstance($instance);
@@ -46,7 +44,7 @@ class PopulateBoardInstanceDataPoolCommandHandler implements LoggerAwareInterfac
 
             $items = $populator->createItemsFromDataSource($instance, $configuredDataSource);
 
-            $this->logger->debug(
+            $logger->write(
                 t(/*i18n: %1$s is a number, %2$s is the name of a data source*/'Retrieved %1$s objects from %2$s data source',
             count($items), $dataSource->getName()
                 )

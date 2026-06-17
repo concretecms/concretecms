@@ -33,6 +33,7 @@ class Pages extends ApiController
      * @OA\Get(
      *     path="/ccm/api/1.0/pages/{pageID}",
      *     tags={"pages"},
+     *     operationId="getPageById",
      *     summary="Find a page by its ID",
      *     security={
      *         {"authorization": {"pages:read"}}
@@ -109,6 +110,7 @@ class Pages extends ApiController
      * @OA\Get(
      *     path="/ccm/api/1.0/pages",
      *     tags={"pages"},
+     *     operationId="getPages",
      *     summary="Returns a list of page objects, sorted by last updated descending. The most recent Page objects appear first.",
      *     security={
      *         {"authorization": {"pages:read"}}
@@ -158,9 +160,9 @@ class Pages extends ApiController
         $list->getQueryObject()->andWhere('cPointerExternalLink is null');
 
         $list->setPermissionsChecker(
-            function ($file) {
-                $fp = new Checker($file);
-                return $fp->canViewPageInSitemap();
+            function ($page) {
+                $permissions = new Checker($page);
+                return $permissions->canViewPage();
             }
         );
 
@@ -192,6 +194,7 @@ class Pages extends ApiController
      * @OA\Get(
      *     path="/ccm/api/1.0/pages/{pageID}/children",
      *     tags={"pages"},
+     *     operationId="getChildPages",
      *     summary="Allows the traversal of the sitemap by showing child pages of a particular page.",
      *     security={
      *         {"authorization": {"pages:read"}}
@@ -225,8 +228,8 @@ class Pages extends ApiController
 
         $list->setPermissionsChecker(
             function ($page) {
-                $fp = new Checker($page);
-                return $fp->canViewPageInSitemap();
+                $permissions = new Checker($page);
+                return $permissions->canViewPage();
             }
         );
 
@@ -260,6 +263,7 @@ class Pages extends ApiController
      * @OA\Post(
      *     path="/ccm/api/1.0/pages",
      *     tags={"pages"},
+     *     operationId="addPage",
      *     summary="Adds a page object.",
      *     security={
      *         {"authorization": {"pages:add"}}
@@ -339,6 +343,7 @@ class Pages extends ApiController
      * @OA\Put(
      *     path="/ccm/api/1.0/pages/{pageID}",
      *     tags={"pages"},
+     *     operationId="updatePageById",
      *     summary="Update a page by its ID",
      *     security={
      *         {"authorization": {"pages:update"}}
@@ -383,7 +388,7 @@ class Pages extends ApiController
         }
 
         $checker = new Checker($page);
-        if (!$checker->canEditPage()) {
+        if (!$checker->canEditPageContents()) {
             return $this->error(t('You do not have access to edit this page.', 401));
         }
 
@@ -440,6 +445,7 @@ class Pages extends ApiController
      * @OA\Delete(
      *     path="/ccm/api/1.0/pages/{pageID}",
      *     tags={"pages"},
+     *     operationId="deletePageById",
      *     summary="Delete a page by its ID",
      *     security={
      *         {"authorization": {"pages:delete"}}

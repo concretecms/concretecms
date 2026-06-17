@@ -42,9 +42,10 @@ class Controller extends BlockController implements UsesFeatureInterface
     protected $btExportPageColumns = array('targetCID');
 
     protected $btCacheBlockRecord = true;
-    protected $btCacheBlockOutput = true;
+    protected $btCacheBlockOutput = false;
     protected $btCacheBlockOutputOnPost = false;
     protected $btCacheBlockOutputForRegisteredUsers = false;
+    protected $btCacheBlockOutputOnEditMode = false;
     protected $btWrapperClass = 'ccm-ui';
 
     public $attributeHandle = 'tags';
@@ -55,7 +56,7 @@ class Controller extends BlockController implements UsesFeatureInterface
      */
     public function getBlockTypeDescription()
     {
-        return t("List pages based on type, area.");
+        return t("List tags for a page.");
     }
 
     public function getBlockTypeName()
@@ -106,6 +107,7 @@ class Controller extends BlockController implements UsesFeatureInterface
 
     public function view()
     {
+        $options = array();
         $ak = $this->loadAttribute();
         $options = array();
         if ($this->displayMode == "cloud") {
@@ -155,6 +157,11 @@ class Controller extends BlockController implements UsesFeatureInterface
 
     public function save($args)
     {
+        $args += [
+            'cloudCount' => 0,
+            'targetCID' => 0
+        ];
+
         $ak = $this->loadAttribute();
         $cID = $this->request->request->get('cID');
         if (!$cID) {
@@ -178,7 +185,7 @@ class Controller extends BlockController implements UsesFeatureInterface
         parent::save($args);
     }
 
-    public function getTagLink(SelectValueOption $option = null)
+    public function getTagLink(?SelectValueOption $option = null)
     {
         $target = $this->get('target');
         if (!is_object($target)) {

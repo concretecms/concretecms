@@ -3,10 +3,15 @@ namespace Concrete\Core\Calendar\Event;
 
 use Concrete\Core\Application\ApplicationAwareInterface;
 use Concrete\Core\Application\ApplicationAwareTrait;
+use Concrete\Core\Board\Command\RegenerateRelevantBoardInstancesCommand;
 use Concrete\Core\Calendar\Event\Summary\Template\Populator;
 use Concrete\Core\Config\Repository\Repository;
+use Concrete\Core\Entity\Calendar\CalendarEventVersionOccurrence;
 use Concrete\Core\Foundation\Repetition\Comparator;
 use Concrete\Core\Calendar\Event\Event\DuplicateEventEvent;
+use Concrete\Core\Logging\Channels;
+use Concrete\Core\Logging\LoggerAwareInterface;
+use Concrete\Core\Logging\LoggerAwareTrait;
 use Concrete\Core\Page\Page;
 use Concrete\Core\Page\Type\Type;
 use Concrete\Core\User\User;
@@ -18,8 +23,10 @@ use Concrete\Core\Entity\Calendar\CalendarEventVersion;
 use Concrete\Core\Entity\Calendar\CalendarRelatedEvent;
 use Concrete\Core\Events\EventDispatcher;
 
-class EventService implements ApplicationAwareInterface
+class EventService implements ApplicationAwareInterface, LoggerAwareInterface
 {
+    use LoggerAwareTrait;
+
     protected $entityManager;
     protected $config;
     protected $occurrenceFactory;
@@ -31,7 +38,7 @@ class EventService implements ApplicationAwareInterface
     const INTERVAL_VERSION = 1200; // 20 minutes
 
     use ApplicationAwareTrait;
-    
+
     public function __construct(EntityManagerInterface $entityManagerInterface, Repository $config, EventOccurrenceFactory $occurrenceFactory, EventCategory $eventCategory, EventDispatcher $dispatcher)
     {
         $this->entityManager = $entityManagerInterface;
@@ -41,8 +48,16 @@ class EventService implements ApplicationAwareInterface
         $this->dispatcher = $dispatcher;
     }
 
+    public function getLoggerChannel()
+    {
+        return Channels::CHANNEL_CALENDAR;
+    }
+
     public function getByID($id, $retrieveVersion = self::EVENT_VERSION_APPROVED)
     {
+        if (!$id) {
+            return null;
+        }
         $r = $this->entityManager->getRepository(CalendarEvent::class);
         $event = $r->findOneById($id);
         if ($event) {
@@ -64,6 +79,9 @@ class EventService implements ApplicationAwareInterface
 
     public function getVersionByID($id)
     {
+        if (!$id) {
+            return null;
+        }
         $r = $this->entityManager->getRepository(CalendarEventVersion::class);
         return $r->findOneByEventVersionID($id);
     }
@@ -83,7 +101,8 @@ class EventService implements ApplicationAwareInterface
 
         $now = new \DateTime('now', new \DateTimeZone($event->getCalendar()->getTimezone()));
         $recentVersionDate = $recent->getDateAdded();
-        if ($recent->getAuthor()->getUserID() == $u->getUserID() && !$recent->isApproved() && (
+        $author = $recent->getAuthor();
+        if ($author && $recent && $author->getUserID() == $u->getUserID() && !$recent->isApproved() && (
             ($now->getTimestamp() - $recentVersionDate->getTimestamp()) < self::INTERVAL_VERSION
             )) {
             // We can use the same version.
@@ -125,6 +144,12 @@ class EventService implements ApplicationAwareInterface
             $version->setRepetitions($repetitions);
         }
 
+        if (!$event->getID()) {
+            $this->logger->info(t('Creating new event %s', $version->getName()));
+        }
+
+        $this->logger->info(t('Adding new version %s to event %s', $version->getID(), $version->getName()));
+
         $this->entityManager->persist($version);
         $event->getVersions()->add($version);
         $event->setCalendar($calendar);
@@ -141,6 +166,13 @@ class EventService implements ApplicationAwareInterface
 
     public function approve(CalendarEventVersion $version)
     {
+        // Note: without this, summary templates are not fully populated on first
+        // request because the attributes have just been set against the object
+        // and then their retrieval doesn't actually work until the next request.
+        // Ideally this wouldn't be necessary but this is the easiest fix with the lowest
+        // potential for side effects.
+        $this->app->make('cache/request')->disable();
+
         $currentlyApproved = $version->getEvent()->getApprovedVersion();
         if ($currentlyApproved) {
             $currentlyApproved->setIsApproved(false);
@@ -174,6 +206,10 @@ class EventService implements ApplicationAwareInterface
 
         $populator = $this->app->make(Populator::class);
         $populator->updateAvailableSummaryTemplates($event);
+
+        $this->app->executeCommand(new RegenerateRelevantBoardInstancesCommand('calendar_event', $event));
+
+        $this->logger->info(t('Approved version %s of event %s', $version->getID(), $version->getName()));
     }
 
     public function unapprove(CalendarEvent $event)
@@ -183,7 +219,7 @@ class EventService implements ApplicationAwareInterface
         $this->entityManager->flush();
     }
 
-    public function duplicate(CalendarEvent $event, User $u, Calendar $calendar = null)
+    public function duplicate(CalendarEvent $event, User $u, ?Calendar $calendar = null)
     {
         $values = $this->eventCategory->getAttributeValues($event->getRecentVersion());
 
@@ -209,7 +245,7 @@ class EventService implements ApplicationAwareInterface
             $this->entityManager->persist($value);
         }
         $this->entityManager->flush();
-        
+
         $this->generateDefaultOccurrences($version);
 
         $duplicateEvent = new DuplicateEventEvent($this);
@@ -217,11 +253,14 @@ class EventService implements ApplicationAwareInterface
         $duplicateEvent->setNewEventObject($new);
         $this->dispatcher->dispatch('on_calendar_event_duplicate', $duplicateEvent);
 
+        $this->logger->info(t('Duplicated event %s (%s) to new event ID %s', $event->getName(), $event->getID(), $new->getID()));
         return $new;
     }
 
     public function delete(CalendarEvent $event)
     {
+        $this->app->executeCommand(new RegenerateRelevantBoardInstancesCommand('calendar_event', $event));
+
         $version = $event->getSelectedVersion() ?: $event->getApprovedVersion();
         if ($version && $version->getRelatedPageRelationType() === 'C') {
             $calendarPage = $version->getPageObject();
@@ -234,14 +273,20 @@ class EventService implements ApplicationAwareInterface
             }
         }
 
+        $eventID = $event->getID();
+
         $this->entityManager->remove($event);
         $this->entityManager->flush();
+
+        $this->logger->info(t('Calendar event %s (%s) deleted successfully.', $event->getName(), $eventID));
     }
 
     public function deleteVersion(CalendarEventVersion $version)
     {
         $this->entityManager->remove($version);
         $this->entityManager->flush();
+
+        $this->logger->info(t('Calendar event version %s deleted successfully.', $version->getID()));
     }
 
     public function isRelatedTo(CalendarEvent $event1, CalendarEvent $event2)
@@ -261,7 +306,7 @@ class EventService implements ApplicationAwareInterface
     public function generateDefaultOccurrences(CalendarEventVersion $version)
     {
         $repetitions = $version->getRepetitionEntityCollection();
-        $query = $this->entityManager->createQuery('delete from calendar:CalendarEventVersionOccurrence o where o.version = :version');
+        $query = $this->entityManager->createQuery('delete from ' . CalendarEventVersionOccurrence::class . ' o where o.version = :version');
         $query->setParameter('version', $version);
         $query->execute();
 

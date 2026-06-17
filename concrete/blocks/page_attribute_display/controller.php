@@ -9,6 +9,8 @@ use Concrete\Core\Feature\Features;
 use Concrete\Core\Feature\UsesFeatureInterface;
 use Concrete\Core\Page\Page;
 use Concrete\Core\Localization\Service\Date;
+use Concrete\Core\User\User;
+use Concrete\Core\User\UserInfo;
 
 defined('C5_EXECUTE') or die('Access Denied.');
 
@@ -65,6 +67,8 @@ class Controller extends BlockController implements UsesFeatureInterface
     protected $btCacheBlockOutputOnPost = true;
     /** @var bool */
     protected $btCacheBlockOutputForRegisteredUsers = false;
+    /** @var bool */
+    protected $btCacheBlockOutputOnEditMode = false;
 
     public function getBlockTypeDescription()
     {
@@ -101,6 +105,11 @@ class Controller extends BlockController implements UsesFeatureInterface
      */
     public function validate($args)
     {
+        $args += [
+            'thumbnailHeight' => null,
+            'thumbnailWidth' => null
+        ];
+
         $error = $this->app->make('helper/validation/error');
 
         if (!is_numeric($args['thumbnailHeight'])) {
@@ -125,7 +134,6 @@ class Controller extends BlockController implements UsesFeatureInterface
         ];
     }
 
-
     /**
      * @return mixed AttributeValue
      */
@@ -149,6 +157,20 @@ class Controller extends BlockController implements UsesFeatureInterface
             case "rpv_pageDatePublic":
                 $content = $c->getCollectionDatePublic();
                 break;
+            case 'rpv_pageUserName':
+                $cu_id = $c->getCollectionUserID();
+                $cu = User::getByUserID($cu_id);
+                if(is_object($cu)) {
+                    $content = $cu->getUserName();
+                }
+                break;
+            case 'rpv_pageUserEmail':
+                $cu_id = $c->getCollectionUserID();
+                $cu = User::getByUserID($cu_id);
+                if(is_object($cu)){
+                    $content = $cu->getUserInfoObject()->getUserEmail();
+                }
+                break;
             default:
                 $content = $c->getAttribute($this->attributeHandle);
                 if ($content instanceof \DateTime) {
@@ -169,7 +191,7 @@ class Controller extends BlockController implements UsesFeatureInterface
                             $content = (string) $image->getTag();
                         }
                     } elseif (is_object($content_alt)) {
-                        if (is_array($content) && $content[0] instanceof \Concrete\Core\Tree\Node\Type\Topic) {
+                        if (is_array($content) && isset($content[0]) && $content[0] instanceof \Concrete\Core\Tree\Node\Type\Topic) {
                             $content = str_replace(', ', "\n", $content_alt->getDisplayValue());
                         } elseif ($content instanceof SelectValue) {
                             $content = h((string) $content);
@@ -266,6 +288,8 @@ class Controller extends BlockController implements UsesFeatureInterface
             'rpv_pageDateCreated' => t('Page Date Created'),
             'rpv_pageDatePublic' => t('Page Date Published'),
             'rpv_pageDateLastModified' => t('Page Date Modified'),
+            'rpv_pageUserName' => t('Created by User Name'),
+            'rpv_pageUserEmail' => t('Created by User Email'),
         ];
     }
 
@@ -354,7 +378,7 @@ class Controller extends BlockController implements UsesFeatureInterface
             $template->setBlockCustomTemplate("templates/" . $this->attributeHandle . '.php');
             $info = pathinfo($template->getTemplate());
 
-            if ($info['basename'] != 'view.php') {
+            if ($info['basename'] != 'view.php' && file_exists($template->getTemplate())) {
                 $this->render('templates/' . $info['filename'] );
             }
         }

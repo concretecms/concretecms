@@ -10,7 +10,7 @@ abstract class AbstractTopic implements TopicInterface
      */
     protected $path;
 
-    public function __construct(string $path = null)
+    public function __construct(?string $path = null)
     {
         $this->path = $path;
     }

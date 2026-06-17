@@ -5,6 +5,17 @@
  */
 @import '~tom-select/src/scss/tom-select.bootstrap5';
 
+/*
+ * Reset color to better support dark mode
+ */
+.ccm-ui {
+  .ts-dropdown,
+  .ts-control,
+  .ts-control input {
+    color: inherit;
+  }
+}
+
 /**
  * Customize TomSelect drop shadow. Wish we could do this with some variables but the box shadow is not
  * exposed as a variable

@@ -15,8 +15,10 @@ use Concrete\Core\Area\Layout\PresetLayout;
 use Concrete\Core\Area\Layout\ThemeGridLayout as ThemeGridAreaLayout;
 use Concrete\Core\Area\SubArea;
 use Concrete\Core\Asset\CssAsset;
+use Concrete\Core\Block\Block;
 use Concrete\Core\Block\BlockController;
 use Concrete\Core\Block\BlockType\BlockType;
+use Concrete\Core\Block\Traits\HasSubBlocksTrait;
 use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Feature\UsesFeatureInterface;
 use Concrete\Core\Page\Page;
@@ -25,6 +27,8 @@ use Concrete\Core\Support\Facade\Url;
 
 class Controller extends BlockController implements UsesFeatureInterface
 {
+    use HasSubBlocksTrait;
+
     /**
      * @var int|string|null
      */
@@ -478,17 +482,10 @@ class Controller extends BlockController implements UsesFeatureInterface
      */
     protected function setupCacheSettings()
     {
-        if ($this->btCacheSettingsInitialized || Page::getCurrentPage()->isEditMode()) {
+        $page = $this->getCollectionObject();
+        if ($this->isCacheSettingsInitialized() || $page->isEditMode()) {
             return;
         }
-
-        $this->btCacheSettingsInitialized = true;
-
-        $btCacheBlockOutput = true;
-        $btCacheBlockOutputOnPost = true;
-        $btCacheBlockOutputLifetime = 0;
-
-        $c = $this->getCollectionObject();
 
         $blocks = [];
         if ($this->getAreaObject() instanceof Area) {
@@ -498,7 +495,7 @@ class Controller extends BlockController implements UsesFeatureInterface
                 foreach ($layout->getAreaLayoutColumns() as $column) {
                     $area = $column->getSubAreaObject();
                     if ($area) {
-                        foreach ($area->getAreaBlocksArray($c) as $block) {
+                        foreach ($area->getAreaBlocksArray($page) as $block) {
                             $blocks[] = $block;
                         }
                     }
@@ -506,54 +503,7 @@ class Controller extends BlockController implements UsesFeatureInterface
             }
         }
 
-        $arrAssetBlocks = [];
-
-        /** @var \Concrete\Core\Block\Block $b */
-        foreach ($blocks as $b) {
-            if ($b->overrideAreaPermissions()) {
-                $btCacheBlockOutput = false;
-                $btCacheBlockOutputOnPost = false;
-                $btCacheBlockOutputLifetime = 0;
-                break;
-            }
-
-            $btCacheBlockOutputOnPost = $btCacheBlockOutputOnPost && $b->cacheBlockOutputOnPost();
-
-            //As soon as we find something which cannot be cached, entire block cannot be cached, so stop checking.
-            if (!$b->cacheBlockOutput()) {
-                $this->btCacheBlockOutput = false;
-                $this->btCacheBlockOutputOnPost = false;
-                $this->btCacheBlockOutputLifetime = 0;
-
-                return;
-            }
-            $expires = $b->getBlockOutputCacheLifetime();
-            if ($expires && $btCacheBlockOutputLifetime < $expires) {
-                $btCacheBlockOutputLifetime = $expires;
-            }
-
-            $objController = $b->getController();
-            if (is_callable([$objController, 'registerViewAssets'])) {
-                $arrAssetBlocks[] = $objController;
-            }
-        }
-
-        $this->btCacheBlockOutput = $btCacheBlockOutput;
-        $this->btCacheBlockOutputOnPost = $btCacheBlockOutputOnPost;
-        $this->btCacheBlockOutputLifetime = $btCacheBlockOutputLifetime;
-
-        foreach ($arrAssetBlocks as $objController) {
-            $objController->on_start();
-            $objController->outputAutoHeaderItems();
-            $objController->registerViewAssets();
-            if ($objController instanceof UsesFeatureInterface) {
-                foreach ($objController->getRequiredFeatures() as $feature) {
-                    if (!in_array($feature, $this->requiredFeatures)) {
-                        $this->requiredFeatures[] = $feature;
-                    }
-                }
-            }
-        }
+        $this->initializeSubBlockCacheSettings($page, $blocks);
     }
 
     /**

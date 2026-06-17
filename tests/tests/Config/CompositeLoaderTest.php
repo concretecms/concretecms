@@ -40,7 +40,7 @@ class CompositeLoaderTest extends TestCase
     /**
      * @dataProvider simpleFlowMethods
      */
-    public function testFlowsThrough($method, $args, $return, callable $expect = null)
+    public function testFlowsThrough($method, $args, $return, ?callable $expect = null)
     {
         $this->loader1->shouldReceive($method)->once()->withArgs($args)->andReturn($return[0]);
         $this->loader2->shouldReceive($method)->once()->withArgs($args)->andReturn($return[1]);
@@ -55,11 +55,11 @@ class CompositeLoaderTest extends TestCase
         parent::assertPostConditions();
     }
 
-    public function simpleFlowMethods()
+    public static function simpleFlowMethods()
     {
         $matches = function($match) {
             return function($results) use ($match) {
-                $this->assertEquals($match, $results);
+                self::assertEquals($match, $results);
             };
         };
 

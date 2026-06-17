@@ -48,7 +48,7 @@ class ExpressEntrySiteResults extends ExpressEntryResults
         return $this->siteID;
     }
 
-    public static function add($treeNodeCategoryName = '', $parent = false, Site $site = null)
+    public static function add($treeNodeCategoryName = '', $parent = false, ?Site $site = null)
     {
         $node = parent::add($treeNodeCategoryName, $parent);
         if ($site) {

@@ -22,7 +22,7 @@ class CaptchaRoutine implements RoutineInterface
     /**
      * {@inheritDoc}
      */
-    public function validate(ErrorList $error, Form $form, Entry $entry = null)
+    public function validate(ErrorList $error, Form $form, ?Entry $entry = null)
     {
         if (!$this->captchaValidator->check()) {
             $error->add(t('Incorrect captcha code.'));

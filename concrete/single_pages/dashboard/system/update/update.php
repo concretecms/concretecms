@@ -13,9 +13,19 @@ defined('C5_EXECUTE') or die('Access Denied.');
  * @var string $currentVersion
  * @var Concrete\Core\Updater\ApplicationUpdate[] $updates
  * @var Concrete\Core\Updater\RemoteApplicationUpdate|null $remoteUpdate
+ * @var string $skipCoreUpdates
  */
 ?>
 
+<?php
+if ($skipCoreUpdates !== '') {
+    ?>
+    <div class="alert alert-danger">
+        <?= nl2br(h($skipCoreUpdates)) ?>
+    </div>
+    <?php
+}
+?>
 <fieldset class="mb-3">
     <legend><?= t('Current Version') ?></legend>
     <?= t('You are currently running Concrete version %s', '<strong>' . h($currentVersion) . '</strong>') ?>
@@ -24,7 +34,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
 <?php
 if ($remoteUpdate !== null) {
     ?>
-    <form method="POST" action="<?= $controller->action('download_update') ?>" class="mb-3">
+    <form method="POST" action="<?= $controller->action('download_update') ?>" class="mb-3" <?= $skipCoreUpdates !== '' ? ' onsubmit="return false"' : '' ?>>
         <?php $token->output('download_update') ?>
         <input type="submit" id="ccm-update-download-submit" class="d-none" />
         <fieldset>
@@ -63,17 +73,21 @@ if ($remoteUpdate !== null) {
             </div>
         </fieldset>
     </form>
-    <script>
-        $('#ccm-update-download-submit').closest('form').on('submit', function(e) {
-            var $form = $(this);
-            ConcreteAlert.confirm(<?= json_encode(t('Note: Downloading an update will NOT automatically install it.')) ?>, function() {
-                $form.off('submit').submit().on('submit', function(e) { e.preventDefault(); return false; });
-            });
-            e.preventDefault();
-            return false;
-        });
-    </script>
     <?php
+    if ($skipCoreUpdates === '') {
+        ?>
+        <script>
+            $('#ccm-update-download-submit').closest('form').on('submit', function(e) {
+                var $form = $(this);
+                ConcreteAlert.confirm(<?= json_encode(t('Note: Downloading an update will NOT automatically install it.')) ?>, function() {
+                    $form.off('submit').submit().on('submit', function(e) { e.preventDefault(); return false; });
+                });
+                e.preventDefault();
+                return false;
+            });
+        </script>
+        <?php
+    }
 }
 ?>
 
@@ -123,7 +137,7 @@ if ($remoteUpdate !== null) {
             <?php
             if ($remoteUpdate !== null) {
                 ?>
-                <label for="ccm-update-download-submit" class="btn btn-success mb-0"><?= t('Download v.%s', h($remoteUpdate->getVersion())) ?></label>
+                <label <?= $skipCoreUpdates !== '' ? '' : ' for="ccm-update-download-submit"' ?> class="btn btn-success mb-0<?= $skipCoreUpdates !== '' ? ' disabled' : '' ?>"><?= t('Download v.%s', h($remoteUpdate->getVersion())) ?></label>
                 <?php
             }
             if ($updates !== []) {

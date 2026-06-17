@@ -49,7 +49,7 @@ abstract class Edit extends UserInterface
                     }
                     if (!$this->error->has()) {
                         $response = new EditResponse();
-                        $response->setMessage(t('%s edited successfully.', $newPresetName));
+                        $response->setMessage(t('%s edited successfully.', h($newPresetName)));
                         $response->setAdditionalDataAttribute('presetID', $presetID);
                         $response->setAdditionalDataAttribute('actionURL', (string) $this->getSavedSearchBaseURL($searchPreset));
                         $searchPreset->setPresetName($newPresetName);

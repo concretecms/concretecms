@@ -9,7 +9,7 @@ div.ccm-page {
         transition: all 0.2s;
 
         &:hover {
-          color: $primary;
+            color: lighten($primary, 20%);
         }
       }
 
@@ -29,9 +29,10 @@ div.ccm-page {
       font-size: 32px;
       text-transform: uppercase;
       margin-right: 1rem;
+      transition: $transition-base;
 
       &:hover {
-        color: $primary;
+        color: lighten($primary, 20%);
       }
 
       .logo {
@@ -70,7 +71,7 @@ div.ccm-page {
           transition: all 0.2s;
 
           &:hover {
-            color: $gray-500;
+            color: lighten($primary, 20%);
           }
 
           .logo {
@@ -87,7 +88,7 @@ div.ccm-page {
             color: $white;
 
             &:hover {
-              color: $gray-500;
+              color: lighten($primary, 20%);
             }
           }
         }

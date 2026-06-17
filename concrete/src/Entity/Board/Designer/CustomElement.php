@@ -33,7 +33,7 @@ abstract class CustomElement implements \JsonSerializable
 
     /**
      * @ORM\ManyToOne(targetEntity="\Concrete\Core\Entity\User\User")
-     * @ORM\JoinColumn(name="uID", referencedColumnName="uID")
+     * @ORM\JoinColumn(name="uID", referencedColumnName="uID", onDelete="SET NULL")
      */
     protected $author;
 

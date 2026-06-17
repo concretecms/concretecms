@@ -33,7 +33,7 @@ class Delete extends BackendInterfaceController
 
     public function submit()
     {
-        if ($this->canAccess()) {
+        if ($this->validateAction()) {
             /** @var Request $request */
             $request = $this->app->make(Request::class);
             /** @var Connection $db */

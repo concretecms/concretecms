@@ -8,7 +8,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 class DashboardContext extends AbstractContext
 {
 
-    public function dispatchCommand($command, array $stamps = null): void
+    public function dispatchCommand($command, ?array $stamps = null): void
     {
         $newStamps = [new OutputStamp($this->getOutput())];
         if (!is_null($stamps)) {

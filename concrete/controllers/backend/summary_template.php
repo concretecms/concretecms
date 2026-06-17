@@ -2,6 +2,7 @@
 namespace Concrete\Controller\Backend;
 
 use Concrete\Core\Controller\Controller;
+use Concrete\Core\Error\UserMessageException;
 use Concrete\Core\Page\Theme\Theme;
 use Concrete\Core\Summary\Category\Driver\DriverInterface;
 use Concrete\Core\Summary\Category\Driver\Manager;
@@ -30,6 +31,12 @@ class SummaryTemplate extends Controller
          */
         $template = $category->getMemberSummaryTemplate($templateID);
         $object = $category->getCategoryMemberFromIdentifier($memberIdentifier);
+        if (!$object) {
+            throw new UserMessageException(t('Unable to locate object.'));
+        }
+        if (!$category->canViewRenderedSummaryTemplates($object)) {
+            throw new UserMessageException(t('Access Denied.'));
+        }
         $renderer = $this->app->make(Renderer::class);
 
         $this->set('template', $template);

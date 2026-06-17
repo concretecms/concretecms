@@ -142,7 +142,7 @@
 
     <permissioncategories>
         <category handle="board" package=""/>
-        <category handle="board_admin" />
+        <category handle="board_admin" package=""/>
     </permissioncategories>
 
     <permissionkeys>
@@ -191,25 +191,25 @@
     </permissionkeys>
 
     <permissionaccessentitytypes>
-        <permissionaccessentitytype handle="group" package="">
+        <permissionaccessentitytype handle="group" name="Group" package="">
             <categories>
                 <category handle="board_admin" />
                 <category handle="board" />
             </categories>
         </permissionaccessentitytype>
-        <permissionaccessentitytype handle="user" package="">
+        <permissionaccessentitytype handle="user" name="User" package="">
             <categories>
                 <category handle="board_admin" />
                 <category handle="board" />
             </categories>
         </permissionaccessentitytype>
-        <permissionaccessentitytype handle="group_set" package="">
+        <permissionaccessentitytype handle="group_set" name="Group Set" package="">
             <categories>
                 <category handle="board_admin" />
                 <category handle="board" />
             </categories>
         </permissionaccessentitytype>
-        <permissionaccessentitytype handle="group_combination" package="">
+        <permissionaccessentitytype handle="group_combination" name="Group Combination" package="">
             <categories>
                 <category handle="board_admin" />
                 <category handle="board" />

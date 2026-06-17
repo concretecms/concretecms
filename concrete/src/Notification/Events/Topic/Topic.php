@@ -10,7 +10,7 @@ final class Topic extends AbstractTopic
      */
     protected $topic;
 
-    public function __construct(string $topic = null)
+    public function __construct(?string $topic = null)
     {
         $this->topic = $topic;
     }

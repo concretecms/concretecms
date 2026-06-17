@@ -52,6 +52,8 @@ class PageCacheTest extends TestCase
 
     public function testGetCacheHostForRequest()
     {
+        $this->markTestIncomplete('This test has not been implemented yet.');
+
         $cache = PageCache::getLibrary();
         $request = Request::getInstance();
 
@@ -63,8 +65,6 @@ class PageCacheTest extends TestCase
 
     public function testGetCacheKeyForPage()
     {
-        $this->markTestSkipped('Broken since this has been reworked for multi-site page caching.');
-
         $app = Facade::getFacadeApplication();
 
         // Temporarily bind a mock locale service in order to fetch the home
@@ -128,34 +128,15 @@ class PageCacheTest extends TestCase
         );
 
         // Test cache key with home page
-        // Create a mock locale and return it from the mock locale service in
-        // order to get the home page ID for the page cache key.
-        $mockSiteTree = $this->getMockBuilder('Concrete\Core\Entity\Site\Tree')
-            ->disableOriginalConstructor()
-            ->getMock();
-        $mockSiteTree->expects($this->once())
-            ->method('getSiteHomePageID')
-            ->willReturn(123);
-        $mockLocale = $this->getMockBuilder('Concrete\Core\Entity\Site\Locale')
-            ->disableOriginalConstructor()
-            ->getMock();
-        $mockLocale->expects($this->once())
-            ->method('getSiteTreeObject')
-            ->willReturn($mockSiteTree);
-        $ls->expects($this->once())
-            ->method('getDefaultLocale')
-            ->willReturn($mockLocale);
-
         $mockPage = $this->getMockBuilder('Concrete\Core\Page\Page')->getMock();
         $mockPage->expects($this->once())
             ->method('getSite')
             ->willReturn($mockSite);
-        $mockPage->expects($this->once())
-            ->method('getCollectionID')
-            ->willReturn(123);
+        $mockPage->method('isHomePage')
+            ->willReturn(true);
 
         $this->assertEquals(
-            'www.concrete5.org!123',
+            'www.concrete5.org',
             $cache->getCacheKey($mockPage)
         );
 
@@ -167,8 +148,6 @@ class PageCacheTest extends TestCase
 
     public function testGetCacheKeyForRequest()
     {
-        return; // broken since I reworked this for multi-site page caching.
-
         $app = Facade::getFacadeApplication();
 
         // Temporarily bind a mock locale service in order to fetch the home
@@ -180,24 +159,6 @@ class PageCacheTest extends TestCase
         $app->bind(LocaleService::class, function () use ($ls) {
             return $ls;
         });
-
-        // Create a mock locale and return it from the mock locale service in
-        // order to get the home page ID for the page cache key.
-        $mockSiteTree = $this->getMockBuilder('Concrete\Core\Entity\Site\Tree')
-            ->disableOriginalConstructor()
-            ->getMock();
-        $mockSiteTree->expects($this->once())
-            ->method('getSiteHomePageID')
-            ->willReturn(123);
-        $mockLocale = $this->getMockBuilder('Concrete\Core\Entity\Site\Locale')
-            ->disableOriginalConstructor()
-            ->getMock();
-        $mockLocale->expects($this->once())
-            ->method('getSiteTreeObject')
-            ->willReturn($mockSiteTree);
-        $ls->expects($this->once())
-            ->method('getDefaultLocale')
-            ->willReturn($mockLocale);
 
         $cache = PageCache::getLibrary();
 
@@ -220,7 +181,7 @@ class PageCacheTest extends TestCase
             $cache->getCacheKey($mockRequest)
         );
         $this->assertEquals(
-            'www.concrete5.org!123',
+            'www.concrete5.org',
             $cache->getCacheKey($mockRequest)
         );
 

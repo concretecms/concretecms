@@ -6,15 +6,19 @@ use Concrete\Core\Cache\Cache;
 use Concrete\Core\Cache\Command\ClearCacheCommand;
 use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Database\DatabaseStructureManager;
+use Concrete\Core\Entity\Site\Site;
+use Concrete\Core\Foundation\Composer;
 use Concrete\Core\Foundation\Environment\FunctionInspector;
-use Concrete\Core\SiteInformation\SiteInformationSurvey;
+use Concrete\Core\Marketplace\PackageRepositoryInterface;
+use Concrete\Core\Marketplace\Update\Command\UpdateRemoteDataCommand;
+use Concrete\Core\Marketplace\Update\Inspector;
+use Concrete\Core\Package\PackageService;
 use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\Updater\Migrations\Configuration;
 use Concrete\Core\Utility\Service\Validation\Numbers;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\Tools\SchemaTool;
 use Exception;
-use Localization;
-use Marketplace;
 
 class Update
 {
@@ -60,10 +64,17 @@ class Update
         }
 
         if ($queryWS) {
-            $mi = Marketplace::getInstance();
-            if ($mi->isConnected()) {
-                Marketplace::checkPackageUpdates();
+            $packageRepository = $app->make(PackageRepositoryInterface::class);
+            $skip = $config->get('concrete.updates.skip_packages');
+            if ($skip !== true) {
+                $skipHandles = array_merge(
+                    is_array($skip) ? $skip : [],
+                    $app->make(Composer::class)->getPackagesInstalledViaComposer()
+                );
+                $packageService = $app->make(PackageService::class);
+                $packageService->checkPackageUpdates($packageRepository, $skipHandles);
             }
+
             $update = static::getLatestAvailableUpdate();
             $versionNum = null;
             if (is_object($update)) {
@@ -156,7 +167,7 @@ class Update
      *
      * @throws \Concrete\Core\Updater\Migrations\MigrationIncompleteException throws a MigrationIncompleteException exception if there's still some migration pending
      */
-    public static function updateToCurrentVersion(Configuration $configuration = null)
+    public static function updateToCurrentVersion(?Configuration $configuration = null)
     {
         $app = Application::getFacadeApplication();
         $functionInspector = $app->make(FunctionInspector::class);
@@ -187,6 +198,15 @@ class Update
         $dbm->destroyProxyClasses('ConcreteCore');
         $dbm->generateProxyClasses();
 
+        // Refresh those entities and database tables that are so potentially wide-reaching and problematic
+        // That they _have_ to be checked prior to upgrade
+        $tool = new SchemaTool($em);
+        $entityClasses = [];
+        foreach ([Site::class] as $entity) {
+            $entityClasses[] = $em->getClassMetadata($entity);
+        }
+        $tool->updateSchema($entityClasses, true);
+        
         if (!$configuration) {
             $configuration = new Configuration();
         }
@@ -255,19 +275,24 @@ class Update
     {
         $app = Application::getFacadeApplication();
         $config = $app->make('config');
+        /**
+         * @var $inspector Inspector
+         */
+        $inspector = $app->make(Inspector::class);
         try {
-            $formParams = [
-                'LOCALE' =>  Localization::activeLocale(),
-                'BASE_URL_FULL' => (string) Application::getApplicationURL(),
-                'APP_VERSION' => APP_VERSION
+            $fields = [
+                $inspector->getUsersField(),
+                $inspector->getPrivilegedUsersField(),
+                $inspector->getSitesField(),
+                $inspector->getPackagesField(),
+                $inspector->getLocaleField(),
             ];
-            $survey = $app->make(SiteInformationSurvey::class);
-            $results = $survey->getSaver()->getResults();
-            if ($results && is_array($results)) {
-                foreach ($results as $key => $value) {
-                    $formParams['INFO'][$key] = $value;
-                }
-            }
+            $command = new UpdateRemoteDataCommand($fields);
+            $app->executeCommand($command);
+            $appVersion = $config->get('concrete.version_installed');
+            $formParams = [
+                'APP_VERSION' => $appVersion,
+            ];
             $response = $app->make('http/client')->post($config->get('concrete.updates.services.get_available_updates'),
                 ['form_params' => $formParams]
             );

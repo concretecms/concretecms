@@ -51,7 +51,7 @@ class SessionValidator implements SessionValidatorInterface, LoggerAwareInterfac
     /** @var \Concrete\Core\Http\Request */
     private $request;
 
-    public function __construct(Application $app, Repository $config, Request $request, LoggerInterface $logger = null)
+    public function __construct(Application $app, Repository $config, Request $request, ?LoggerInterface $logger = null)
     {
         $this->app = $app;
         $this->config = $config;

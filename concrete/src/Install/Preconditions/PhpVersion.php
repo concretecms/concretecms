@@ -13,7 +13,7 @@ class PhpVersion extends AbstractListablePrecondition
      *
      * @var string
      */
-    const MINIMUM_PHP_VERSION = '7.3';
+    const MINIMUM_PHP_VERSION = '8.4';
 
     /**
      * {@inheritdoc}

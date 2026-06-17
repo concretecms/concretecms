@@ -163,6 +163,9 @@ class Forms extends DashboardPageController
             $control = $saver->saveFromRequest($control, $this->request);
             $this->entityManager->persist($control);
             $this->entityManager->flush();
+
+            $this->flash('success', t('Field set control updated successfully.'));
+
             $element = new \Concrete\Controller\Element\Dashboard\Express\Control($control);
             echo $element->render();
             exit;
@@ -189,6 +192,8 @@ class Forms extends DashboardPageController
 
                 $this->entityManager->persist($control);
                 $this->entityManager->flush();
+
+                $this->flash('success', t('Field set control added successfully.'));
 
                 $element = new \Concrete\Controller\Element\Dashboard\Express\Control($control);
                 echo $element->render();

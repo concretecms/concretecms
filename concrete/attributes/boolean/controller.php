@@ -194,7 +194,7 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
     // if this gets run we assume we need it to be validated/checked
     public function validateForm($data)
     {
-        return isset($data['value']) && $data['value'] == 1;
+        return is_array($data) && isset($data['value']) && $data['value'] == 1;
     }
 
     public function getAttributeKeySettingsClass()

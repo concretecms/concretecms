@@ -7,7 +7,7 @@
 <?php if (strlen($title) > 0) {
     ?>
     <div class="ccm-block-rss-displayer-header">
-        <<?php echo $titleFormat; ?>><?=$title?></<?php echo $titleFormat; ?>>
+        <<?php echo $titleFormat; ?>><?=h($title)?></<?php echo $titleFormat; ?>>
     </div>
 <?php 
 } ?>
@@ -20,14 +20,11 @@ if (isset($errorMsg) && strlen($errorMsg) > 0) {
     echo $errorMsg;
 } else {
     foreach ($posts as $itemNumber => $item) {
-        if (intval($itemNumber) >= intval($rssObj->itemsToDisplay)) {
-            break;
-        }
         ?>
 		
 		<div class="ccm-block-rss-displayer-item">
 			<div class="ccm-block-rss-displayer-item-title">
-				<a href="<?= $item->getLink();
+				<a href="<?= h($item->getLink());
         ?>" <?php if ($rssObj->launchInNewWindow) {
     echo 'target="_blank"';
 }

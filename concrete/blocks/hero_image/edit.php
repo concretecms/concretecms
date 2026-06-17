@@ -22,7 +22,7 @@ $icon = $icon ?? '';
     </div>
     <div class="mb-3">
         <label class="form-label" for="image"><?=t('Height')?></label>
-        <input class="form-range" type="range" name="height" id="heroImageHeight" min="20" max="100" onchange="updateHeroImageHeight(this.value)" value="<?=$height?>">
+        <input class="form-range" type="range" name="height" id="heroImageHeight" min="20" max="100" oninput="updateHeroImageHeight(this.value)" value="<?=$height?>">
         <div class="alert alert-info">
             <?=t('Current Value:')?> <code><span data-value="height"></span></code>
         </div>
@@ -41,7 +41,7 @@ $icon = $icon ?? '';
     <div class="mb-3">
         <label class="form-label" for="body"><?=t('Body')?></label>
         <?php
-        echo $editor->outputBlockEditModeEditor('body', isset($body) ? LinkAbstractor::translateFromEditMode($body) : null);
+        echo $editor->outputBlockEditModeEditor('body', isset($body) ? htmlspecialchars(LinkAbstractor::translateFromEditMode($body), ENT_QUOTES, APP_CHARSET) : null);
         ?>
     </div>
 </fieldset>

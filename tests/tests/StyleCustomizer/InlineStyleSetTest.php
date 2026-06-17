@@ -168,4 +168,29 @@ class InlineStyleSetTest extends ConcreteDatabaseTestCase
         $this->assertEquals('testid', $set->getCustomID());
         $this->assertEquals('data-test="test"', $set->getCustomElementAttribute());
     }
+
+    public function testAllowedCssClasses()
+    {
+        $arguments = [
+            'customClass' => ['testclass', 'md:text-left sm:text-right', 'something-special mt-5 pb-5'],
+        ];
+        $r = Request::create('http://www.foo.com', 'POST', $arguments);
+        $set = StyleSet::populateFromRequest($r);
+        $this->assertInstanceOf('\Concrete\Core\Entity\StyleCustomizer\Inline\StyleSet', $set);
+
+        $this->assertEquals('testclass md:text-left sm:text-right something-special mt-5 pb-5', $set->getCustomClass());
+    }
+
+    public function testDisallowedCssClasses()
+    {
+        $arguments = [
+            'customClass' => ['allowed-one', 'md:two', '"><script>alert(\'uhoh\')</script>', 'ok-one', 'md-5', '<nothere>', 'nothing'],
+        ];
+        $r = Request::create('http://www.foo.com', 'POST', $arguments);
+        $set = StyleSet::populateFromRequest($r);
+        $this->assertInstanceOf('\Concrete\Core\Entity\StyleCustomizer\Inline\StyleSet', $set);
+
+        $this->assertEquals('allowed-one md:two ok-one md-5 nothing', $set->getCustomClass());
+    }
+
 }

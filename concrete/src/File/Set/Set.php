@@ -209,8 +209,8 @@ class Set
                 $row2 = $db->GetRow(
                     'SELECT fsSearchRequest, fsResultColumns FROM FileSetSavedSearches WHERE fsID = ?',
                     array($fsID));
-                $fs->fsSearchRequest = @unserialize($row2['fsSearchRequest']);
-                $fs->fsResultColumns = @unserialize($row2['fsResultColumns']);
+                $fs->fsSearchRequest = @unserialize($row2['fsSearchRequest'], ['allowed_classes' => false]);
+                $fs->fsResultColumns = @unserialize($row2['fsResultColumns'], ['allowed_classes' => false]);
             }
 
             return $fs;

@@ -18,7 +18,7 @@ class LikeBuilderTest extends TestCase
         self::$defaultInstance = new LikeBuilder();
     }
 
-    public function escapeForLikeProvider()
+    public static function escapeForLikeProvider()
     {
         return [
             ['', false, false, ''],
@@ -49,7 +49,7 @@ class LikeBuilderTest extends TestCase
         $this->assertSame($expectedOutput, $calculatedOutput);
     }
 
-    public function splitKeywordsForLikeProvider()
+    public static function splitKeywordsForLikeProvider()
     {
         return [
             [null, '\s', true, null],

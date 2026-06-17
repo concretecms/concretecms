@@ -1,0 +1,8 @@
+<block type="core_area_layout" name="">
+  <arealayout type="theme-grid" columns="12">
+    <columns>
+      <column span="6" offset="0"></column>
+      <column span="5" offset="1"></column>
+    </columns>
+  </arealayout>
+</block>

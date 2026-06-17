@@ -5,17 +5,19 @@ use Concrete\Core\Application\UserInterface\Icon\BasicIconFormatter;
 use Concrete\Core\Application\UserInterface\Icon\IconFormatterInterface;
 use Concrete\Core\Board\DataSource\Saver\PageSaver;
 use Concrete\Core\Board\DataSource\Saver\SaverInterface;
-use Concrete\Core\Board\Instance\Item\Populator\PagePopulator as PageItemPopulator;
 use Concrete\Core\Board\Instance\Item\Filterer\FiltererInterface as ItemFiltererInterface;
-use Concrete\Core\Board\Instance\Slot\Content\Populator\PagePopulator as PageContentPopulator;
+use Concrete\Core\Board\Instance\Item\Populator\PagePopulator as PageItemPopulator;
 use Concrete\Core\Board\Instance\Item\Populator\PopulatorInterface as ItemPopulatorInterface;
+use Concrete\Core\Board\Instance\Notifier\NotifierInterface;
+use Concrete\Core\Board\Instance\Notifier\PageNotifier;
+use Concrete\Core\Board\Instance\Slot\Content\Populator\PagePopulator as PageContentPopulator;
 use Concrete\Core\Board\Instance\Slot\Content\Populator\PopulatorInterface as ContentPopulatorInterface;
-
 use Concrete\Core\Filesystem\Element;
+use Concrete\Core\Summary\Category\CategoryMemberInterface;
 
 defined('C5_EXECUTE') or die("Access Denied.");
 
-class PageDriver extends AbstractDriver
+class PageDriver extends AbstractDriver implements NotifierAwareDriverInterface
 {
 
     public function getIconFormatter(): IconFormatterInterface
@@ -46,6 +48,11 @@ class PageDriver extends AbstractDriver
     public function getItemFilterer(): ?ItemFiltererInterface
     {
         return null;
+    }
+
+    public function getBoardInstanceNotifier(): NotifierInterface
+    {
+        return $this->app->make(PageNotifier::class);
     }
 
 

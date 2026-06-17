@@ -2,14 +2,11 @@
 
 namespace Concrete\Core\File\Tracker;
 
-use Concrete\Core\Attribute\AttributeKeyInterface;
 use Concrete\Core\Attribute\AttributeValueInterface;
 use Concrete\Core\Block\Block;
 use Concrete\Core\Block\BlockController;
-use Concrete\Core\Entity\Attribute\Key\Key;
 use Concrete\Core\Entity\File\File;
 use Concrete\Core\Entity\Statistics\UsageTracker\FileUsageRecord;
-use Concrete\Core\Entity\Statistics\UsageTracker\FileUsageRepository;
 use Concrete\Core\Page\Collection\Collection;
 use Concrete\Core\Page\Controller\PageController;
 use Concrete\Core\Statistics\UsageTracker\TrackableInterface;
@@ -18,63 +15,55 @@ use Doctrine\ORM\EntityManagerInterface;
 
 class UsageTracker implements TrackerInterface
 {
-
     /**
      * @var \Doctrine\ORM\EntityManager
      */
     private $manager;
 
     /**
-     * @var FileUsageRepository
+     * @var \Concrete\Core\Entity\Statistics\UsageTracker\FileUsageRepository
      */
     private $repository;
 
     public function __construct(EntityManagerInterface $manager)
     {
-
         $this->manager = $manager;
         $this->repository = $manager->getRepository(FileUsageRecord::class);
     }
 
     /**
-     * Track a trackable object
-     * Any object could be passed to this method so long as it implements TrackableInterface
-     * @param \Concrete\Core\Statistics\UsageTracker\TrackableInterface $trackable
-     * @return void
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Statistics\UsageTracker\TrackerInterface::track()
      */
     public function track(TrackableInterface $trackable)
     {
         if ($trackable instanceof Collection) {
             $this->trackCollection($trackable);
         }
-
         if ($trackable instanceof PageController) {
             $this->trackCollection($trackable->getPageObject());
         }
-
         if ($trackable instanceof BlockController) {
             if ($collection = $trackable->getCollectionObject()) {
-                $this->trackBlocks($trackable->getCollectionObject(), [$trackable]);
+                $this->trackBlocks($collection, [$trackable]);
             }
         }
     }
 
     /**
-     * Forget a trackable object
-     * Any object could be passed to this method so long as it implements TrackableInterface
-     * @param \Concrete\Core\Statistics\UsageTracker\TrackableInterface $trackable
-     * @return static|TrackerInterface
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Statistics\UsageTracker\TrackerInterface::forget()
      */
     public function forget(TrackableInterface $trackable)
     {
         if ($trackable instanceof Collection) {
             $this->forgetCollection($trackable);
         }
-
         if ($trackable instanceof PageController) {
             $this->forgetCollection($trackable->getPageObject());
         }
-
         if ($trackable instanceof BlockController) {
             // Delete all blocks with this id
             $this->manager->createQueryBuilder()
@@ -86,8 +75,7 @@ class UsageTracker implements TrackerInterface
     }
 
     /**
-     * Track a collection object
-     * @param \Concrete\Core\Page\Collection\Collection $collection
+     * Track a collection object.
      */
     private function trackCollection(Collection $collection)
     {
@@ -101,8 +89,7 @@ class UsageTracker implements TrackerInterface
     }
 
     /**
-     * Forget about a collection object
-     * @param \Concrete\Core\Page\Collection\Collection $collection
+     * Forget about a collection object.
      */
     private function forgetCollection(Collection $collection)
     {
@@ -115,14 +102,13 @@ class UsageTracker implements TrackerInterface
     }
 
     /**
-     * @param \Concrete\Core\Page\Collection\Collection $collection
-     * @param AttributeValueInterface[] $attributes
+     * @param \Concrete\Core\Attribute\AttributeValueInterface[] $attributes
      */
     private function trackAttributes(Collection $collection, array $attributes)
     {
         $this->trackTrackables(
             $collection,
-            $this->getTrackables($attributes, function (AttributeValueInterface $value) {
+            $this->getTrackables($attributes, static function (AttributeValueInterface $value) {
                 return $value->getController();
             }),
             function (Collection $collection, \Concrete\Core\Attribute\Controller $attribute, $fileId) {
@@ -130,21 +116,24 @@ class UsageTracker implements TrackerInterface
                     $fileId,
                     $collection->getCollectionID(),
                     $collection->getVersionID(),
-                    0);
+                    0
+                );
+
                 return true;
-            });
+            }
+        );
     }
 
     /**
      * Track a list of blocks for a collection
-     * @param \Concrete\Core\Page\Collection\Collection $collection
-     * @param Block[]|BlockController[] $blocks
+     *
+     * @param \Concrete\Core\Block\Block[]|\Concrete\Core\Block\BlockController[] $blocks
      */
     private function trackBlocks(Collection $collection, array $blocks)
     {
         $this->trackTrackables(
             $collection,
-            $this->getTrackables($blocks, function ($block) {
+            $this->getTrackables($blocks, static function ($block) {
                 if ($block instanceof Block) {
                     return $block->getController();
                 }
@@ -156,18 +145,18 @@ class UsageTracker implements TrackerInterface
                     $fileId,
                     $collection->getCollectionID(),
                     $collection->getVersionID(),
-                    $controller->getBlockObject()->getBlockID());
+                    $controller->getBlockObject()->getBlockID()
+                );
+
                 return true;
-            });
+            }
+        );
     }
 
     /**
-     * @param array $list
-     * @param callable $transformer
-     * @return \Generator
-     * @internal param bool $getController
+     * @return \Generator|\Concrete\Core\File\Tracker\FileTrackableInterface[]
      */
-    private function getTrackables(array $list, callable $transformer = null)
+    private function getTrackables(array $list, ?callable $transformer = null)
     {
         foreach ($list as $item) {
             if ($transformer) {
@@ -181,45 +170,46 @@ class UsageTracker implements TrackerInterface
     }
 
     /**
-     * @param \Concrete\Core\Page\Collection\Collection $collection
-     * @param \Iterator|FileTrackableInterface[] $trackables
+     * @param \Iterator|\Concrete\Core\File\Tracker\FileTrackableInterface[] $trackables
      * @param callable $persist A callable that manages persisting the trackable
      */
     private function trackTrackables(Collection $collection, $trackables, callable $persist)
     {
         $buffer = 0;
-
         foreach ($trackables as $trackable) {
             foreach ($trackable->getUsedFiles() as $file) {
+                $fileID = 0;
                 if ($file instanceof File) {
-                    $file = $file->getFileID();
-                } elseif (uuid_is_valid($file)) {
+                    $fileID = (int) $file->getFileID();
+                } elseif (is_string($file) && uuid_is_valid($file)) {
                     $fo = \Concrete\Core\File\File::getByUUID($file);
-                    $file = $fo->getFileID();
+                    if ($fo) {
+                        $fileID = (int) $fo->getFileID();
+                    }
+                } elseif (is_numeric($file)) {
+                    $fileID = (int) $file;
                 }
-
-                if ($file && $persist($collection, $trackable, (int) $file)) {
+                if ($fileID !== 0 && $persist($collection, $trackable, $fileID)) {
                     $buffer++;
-                }
-
-                if ($buffer > 2) {
-                    $this->manager->flush();
-                    $buffer = 0;
+                    if ($buffer > 2) {
+                        $this->manager->flush();
+                        $buffer = 0;
+                    }
                 }
             }
         }
-
-        if ($buffer) {
+        if ($buffer !== 0) {
             $this->manager->flush();
         }
     }
 
     /**
-     * @param $file_id
-     * @param $collection_id
-     * @param $collection_version_id
-     * @param $block_id
-     * @return bool
+     * @param int $file_id
+     * @param int $collection_id
+     * @param int $collection_version_id
+     * @param int $block_id
+     *
+     * @return bool returns true if we created a new entity, false if it already existed
      */
     private function persist($file_id, $collection_id, $collection_version_id, $block_id)
     {
@@ -229,19 +219,16 @@ class UsageTracker implements TrackerInterface
             'block_id' => $block_id,
             'file_id' => $file_id
         ];
-
         if ($this->repository->findOneBy($search)) {
             return false;
         }
-
         $record = new FileUsageRecord();
-
         $record->setCollectionId($collection_id);
         $record->setCollectionVersionId($collection_version_id);
         $record->setBlockId($block_id);
         $record->setFileId($file_id);
-
         $this->manager->merge($record);
-    }
 
+        return true;
+    }
 }

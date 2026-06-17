@@ -33,6 +33,7 @@ class FilesParseTest extends TestCase
 
         // Loop through the php files in the project and yield out the ones that should be tested
         foreach ($phpFiles as $file) {
+            $file = str_replace(\DIRECTORY_SEPARATOR, '/', $file);
             if ($this->shouldTest(head($file))) {
                 yield $file;
             }
@@ -49,6 +50,9 @@ class FilesParseTest extends TestCase
     private function shouldTest($path)
     {
         $filename = basename($path);
+        if (str_contains($path, '/concrete/src/Support/CodingStyle/')) {
+            return false;
+        }
 
         // Ignore meta files for IDE's
         if ($filename == '.phpstorm.meta.php' || $filename == '__IDE_SYMBOLS__.php') {

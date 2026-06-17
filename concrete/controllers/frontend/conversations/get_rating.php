@@ -43,6 +43,9 @@ class GetRating extends FrontendController
         if ($message === null) {
             throw new UserMessageException(t('Invalid message object.'));
         }
+        if ($this->getBlockConversation()->getConversationID() != $message->getConversationObject()->getConversationID()) {
+            throw new UserMessageException(t('Invalid Conversation.'));
+        }
 
         return $message;
     }

@@ -101,10 +101,15 @@ class Controller extends AttributeTypeController implements
     public function exportValue(\SimpleXMLElement $akn)
     {
         $list = $this->getSelectedOptions();
+
+        /** @var Xml $xmlService */
+        $xmlService = $this->app->make(Xml::class);
+
         if ($list->count() > 0) {
             $av = $akn->addChild('value');
+
             foreach ($list as $l) {
-                $av->addChild('option', (string) $l);
+                $xmlService->createChildElement($av, 'value', $l);
             }
         }
     }
@@ -409,6 +414,8 @@ class Controller extends AttributeTypeController implements
         $this->load();
 
         $options = [];
+        $keyType = $this->attributeKey->getAttributeKeySettings();
+        $optionList = $keyType->getOptionList();
 
         if ($value != null) {
             if (is_array($value) && $this->akSelectAllowMultipleValues) {
@@ -424,6 +431,7 @@ class Controller extends AttributeTypeController implements
                         $option = new SelectValueOption();
                         $option->setIsEndUserAdded(true);
                         $option->setSelectAttributeOptionValue($v);
+                        $option->setOptionList($optionList);
                     }
 
                     if (is_object($option)) {
@@ -440,8 +448,8 @@ class Controller extends AttributeTypeController implements
                 } else {
                     $option = $this->getOptionByValue($value, $this->attributeKey);
                 }
-
                 if (is_object($option)) {
+                    $option->setOptionList($optionList);
                     $options[] = $option;
                 }
             }
@@ -755,9 +763,9 @@ EOT
         }
 
         if (isset($data['akSelectOptionDisplayOrder']) && in_array(
-            $data['akSelectOptionDisplayOrder'],
-            ['display_asc', 'alpha_asc', 'popularity_desc']
-        )
+                $data['akSelectOptionDisplayOrder'],
+                ['display_asc', 'alpha_asc', 'popularity_desc']
+            )
         ) {
             $akSelectOptionDisplayOrder = $data['akSelectOptionDisplayOrder'];
         } else {
@@ -1042,7 +1050,7 @@ EOT
             $key->getAttributeKeyHandle(),
             $key->getAttributeKeyDisplayName(),
             'array',
-             null,
+            null,
             ['type' => 'integer'],
         );
     }

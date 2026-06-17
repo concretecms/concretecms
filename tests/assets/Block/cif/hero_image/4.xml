@@ -1,0 +1,19 @@
+<block type="hero_image" name="">
+  <data table="btHeroImage">
+    <record>
+      <body><![CDATA[Image within link <a href="{ccm:export:page:/page-2}"><concrete-picture file="210987654321:file-2.png" /></a>]]></body>
+      <buttonColor>primary</buttonColor>
+      <buttonExternalLink>/ext/url</buttonExternalLink>
+      <buttonFileLinkID>0</buttonFileLinkID>
+      <buttonInternalLinkCID>0</buttonInternalLinkCID>
+      <buttonSize>lg</buttonSize>
+      <buttonStyle>outline</buttonStyle>
+      <buttonText>This is the Large Button Text</buttonText>
+      <height>60</height>
+      <icon>fas fa-air-freshener</icon>
+      <image>{ccm:export:file:123456789012:file-1.jpg}</image>
+      <title>This is the title</title>
+      <titleFormat>h2</titleFormat>
+    </record>
+  </data>
+</block>

@@ -129,7 +129,7 @@ abstract class Block extends Page
 
     public function action()
     {
-        $url = call_user_func_array('parent::action', func_get_args());
+        $url = call_user_func_array([parent::class, 'action'], func_get_args());
         $url .= '&arHandle=' . urlencode($this->area->getAreaHandle());
         $url .= '&bID=' . $this->block->getBlockID();
 

@@ -19,7 +19,7 @@ class InputFactory
         return $vars;
     }
 
-    public function createFromRequest(Request $request, Definition $definition = null): InputInterface
+    public function createFromRequest(Request $request, ?Definition $definition = null): InputInterface
     {
         $input = new Input();
         if (!$definition) {
@@ -39,7 +39,7 @@ class InputFactory
         return $input;
     }
 
-    public function createFromConsoleInput(ConsoleInputInterface $consoleInput, Definition $definition = null): InputInterface
+    public function createFromConsoleInput(ConsoleInputInterface $consoleInput, ?Definition $definition = null): InputInterface
     {
         $input = new Input();
         if (!$definition) {

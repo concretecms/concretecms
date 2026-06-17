@@ -2,6 +2,7 @@
 
 namespace Concrete\Controller\SinglePage\Dashboard\System\Optimization;
 
+use Concrete\Core\Cache\Command\ClearCacheCommand;
 use Concrete\Core\Page\Controller\DashboardPageController;
 
 class Clearcache extends DashboardPageController
@@ -25,7 +26,11 @@ class Clearcache extends DashboardPageController
         $config = $this->app->make('config');
         $config->set('concrete.cache.clear.thumbnails', $clearThumbnails);
         $config->save('concrete.cache.clear.thumbnails', $clearThumbnails);
-        $this->app->clearCaches();
+
+        $command = new ClearCacheCommand();
+        $command->setLogCacheClear(true);
+        $this->app->executeCommand($command);
+
         $timestamp = time();
         $config->set('concrete.cache.last_cleared', $timestamp);
         $config->save('concrete.cache.last_cleared', $timestamp);

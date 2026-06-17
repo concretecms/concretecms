@@ -44,6 +44,7 @@ class FolderItemList extends AttributedItemList implements PagerProviderInterfac
         'f.fID',
         'fv.fvFilename',
         'fv.fvTitle',
+        'totalDownloads',
     ];
 
     public function __construct()
@@ -100,6 +101,13 @@ class FolderItemList extends AttributedItemList implements PagerProviderInterfac
 
     public function createQuery()
     {
+        $subQueryBuilder = $this->query->getConnection()->createQueryBuilder();
+        $subQuery = $subQueryBuilder
+            ->select('COUNT(ds.dsID)')
+            ->from('DownloadStatistics', 'ds')
+            ->where('ds.fID = f.fID')
+            ->getSQL();
+
         $this->query->select('distinct n.treeNodeID');
         $config = Application::getFacadeApplication()->make('config');
         if ($config->get('concrete.file_manager.keep_folders_on_top')) {
@@ -110,6 +118,7 @@ class FolderItemList extends AttributedItemList implements PagerProviderInterfac
         $this->query->addSelect('if(nt.treeNodeTypeHandle=\'file\', fv.fvDateAdded, n.dateModified) as dateModified')
             ->addSelect('case when nt.treeNodeTypeHandle=\'file_folder\' then 1 else (10 + fvType) end as type')
             ->addSelect('fv.fvSize as size')
+            ->addSelect('(' . $subQuery . ') AS totalDownloads')
             ->from('TreeNodes', 'n')
             ->innerJoin('n', 'TreeNodeTypes', 'nt', 'nt.treeNodeTypeID = n.treeNodeTypeID')
             ->leftJoin('n', 'TreeFileNodes', 'tf', 'tf.treeNodeID = n.treeNodeID')

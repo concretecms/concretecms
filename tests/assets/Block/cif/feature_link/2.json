@@ -1,0 +1,10 @@
+{
+  "$schema": "../options-schema.json",
+  "fileUsageCount": 2,
+  "richTexts": {
+    "SELECT body FROM btFeatureLink WHERE bID = :bID": {
+      "numFiles": 1,
+      "numPages": 1
+    }
+  }
+}

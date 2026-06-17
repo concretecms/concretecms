@@ -53,7 +53,7 @@ class ObjectManager
         return $object;
     }
 
-    public function buildObject($handle, $plural_handle, $name, Package $pkg = null)
+    public function buildObject($handle, $plural_handle, $name, ?Package $pkg = null)
     {
         $builder = $this->app->make(ObjectBuilder::class);
         $builder->createObject($name);

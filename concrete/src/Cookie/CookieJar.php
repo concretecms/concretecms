@@ -128,14 +128,15 @@ class CookieJar
      * @param int $expire
      * @param string $path
      * @param null|string $domain
-     * @param bool $secure
+     * @param bool|null $secure
      * @param bool $httpOnly
+     * @param string|null $sameSite
      *
      * @return \Symfony\Component\HttpFoundation\Cookie
      */
-    public function set($name, $value = null, $expire = 0, $path = '/', $domain = null, $secure = false, $httpOnly = true)
+    public function set($name, $value = null, $expire = 0, $path = '/', $domain = null, $secure = null, $httpOnly = true, $sameSite = null)
     {
-        return $this->responseCookies->addCookie($name, $value, $expire, $path, $domain, $secure, $httpOnly);
+        return $this->responseCookies->addCookie($name, $value, $expire, $path, $domain, $secure, $httpOnly, false, $sameSite);
     }
 
     /**

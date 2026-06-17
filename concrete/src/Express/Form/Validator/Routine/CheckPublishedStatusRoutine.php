@@ -9,7 +9,7 @@ use Concrete\Core\Error\ErrorList\ErrorList;
 class CheckPublishedStatusRoutine implements RoutineInterface
 {
 
-    public function validate(ErrorList $error, Form $form, Entry $entry = null)
+    public function validate(ErrorList $error, Form $form, ?Entry $entry = null)
     {
         $entity = $form->getEntity();
         if (!$entity->isPublished()) {

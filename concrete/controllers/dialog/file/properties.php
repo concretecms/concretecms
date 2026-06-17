@@ -6,6 +6,7 @@ use Concrete\Core\Attribute\Category\CategoryInterface;
 use Concrete\Core\Attribute\Category\CategoryService;
 use Concrete\Core\Attribute\Category\FileCategory;
 use Concrete\Core\Attribute\Key\Component\KeySelector\ControllerTrait;
+use Concrete\Core\Attribute\ObjectInterface;
 use Concrete\Core\Entity\Attribute\Key\Key;
 use Concrete\Core\Error\ErrorList\ErrorList;
 use Concrete\Core\File\EditResponse;
@@ -54,7 +55,7 @@ class Properties extends BackendInterfaceFileController
         return $this->category;
     }
 
-    public function canEditAttributeKey(int $akID): bool
+    public function canEditAttributeKey(int $akID, ObjectInterface $object): bool
     {
         return true;
     }

@@ -478,7 +478,7 @@ class Version
      *
      * @return bool
      */
-    public function shouldExistFor($imageWidth, $imageHeight, File $file = null)
+    public function shouldExistFor($imageWidth, $imageHeight, ?File $file = null)
     {
         $result = false;
         $imageWidth = (int) $imageWidth;

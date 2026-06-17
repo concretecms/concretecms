@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 class Link
 {
-    public static function getList(Site $site = null)
+    public static function getList(?Site $site = null)
     {
         $em = \ORM::entityManager();
         $site = is_object($site) ? $site : \Core::make('site')->getSite();
@@ -33,7 +33,7 @@ class Link
         return $r;
     }
 
-    public static function getByServiceHandle($ssHandle, Site $site = null)
+    public static function getByServiceHandle($ssHandle, ?Site $site = null)
     {
         $em = \ORM::entityManager();
         $site = is_object($site) ? $site : \Core::make('site')->getSite();

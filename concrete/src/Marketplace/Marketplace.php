@@ -6,6 +6,7 @@ use Concrete\Core\Application\ApplicationAwareInterface;
 use Concrete\Core\Application\ApplicationAwareTrait;
 use Concrete\Core\Config\Repository\Repository;
 use Concrete\Core\File\Service\File;
+use Concrete\Core\Foundation\Composer;
 use Concrete\Core\Http\Request;
 use Concrete\Core\Package\Package;
 use Concrete\Core\Package\PackageService;
@@ -16,6 +17,10 @@ use Concrete\Core\Url\Resolver\PathUrlResolver;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 
+/**
+ * @deprecated This will be removed in version 10
+ * @see PackageRepositoryInterface
+ */
 class Marketplace implements ApplicationAwareInterface
 {
     use ApplicationAwareTrait;
@@ -202,13 +207,13 @@ class Marketplace implements ApplicationAwareInterface
         if ($skipPackages === true) {
             return;
         }
-        if (!$skipPackages) {
-            // In case someone uses false or NULL or an empty string
+        if (!is_array($skipPackages)) {
             $skipPackages = [];
-        } else {
-            // In case someone uses a single package handle
-            $skipPackages = (array) $skipPackages;
         }
+        $skipPackages = array_merge(
+            $skipPackages,
+            app(Composer::class)->getPackagesInstalledViaComposer()
+        );
         /** @var EntityManagerInterface $em */
         $em = $marketplace->app->make(EntityManagerInterface::class);
         /** @var PackageService $packageService */

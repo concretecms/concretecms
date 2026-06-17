@@ -7,11 +7,14 @@ use Page;
 
 class PageValueTest extends AttributeValueTestCase
 {
-    public function __construct($name = null, array $data = [], $dataName = '')
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\TestHelpers\Database\ConcreteDatabaseTestCase::getTables()
+     */
+    protected function getTables()
     {
-        parent::__construct($name, $data, $dataName);
-
-        $this->tables = array_merge($this->tables, [
+        return array_merge(parent::getTables(), [
             'PageTypes',
             'PageThemes',
             'PermissionAccessEntityTypes',
@@ -20,8 +23,16 @@ class PageValueTest extends AttributeValueTestCase
             'PageTypePublishTargetTypes',
             'PageThemes',
         ]);
+    }
 
-        $this->metadatas = array_merge($this->metadatas, [
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\TestHelpers\Database\ConcreteDatabaseTestCase::getEntityClassNames()
+     */
+    protected function getEntityClassNames(): array
+    {
+        return array_merge(parent::getEntityClassNames(), [
             'Concrete\Core\Entity\Attribute\Key\Settings\EmptySettings',
             'Concrete\Core\Entity\Attribute\Value\Value\NumberValue',
             'Concrete\Core\Entity\Page\Template',
@@ -89,7 +100,7 @@ class PageValueTest extends AttributeValueTestCase
         return 'Concrete\Core\Entity\Attribute\Value\Value\NumberValue';
     }
 
-    public function baseAttributeValues()
+    public static function baseAttributeValues()
     {
         return [
             [
@@ -103,19 +114,7 @@ class PageValueTest extends AttributeValueTestCase
         ];
     }
 
-    public function displayAttributeValues()
-    {
-        return [
-            [
-                function () {
-                    return \Page::getByID(1);
-                },
-                'Home',
-            ],
-        ];
-    }
-
-    public function plaintextAttributeValues()
+    public static function displayAttributeValues()
     {
         return [
             [
@@ -127,7 +126,19 @@ class PageValueTest extends AttributeValueTestCase
         ];
     }
 
-    public function searchIndexAttributeValues()
+    public static function plaintextAttributeValues()
+    {
+        return [
+            [
+                function () {
+                    return \Page::getByID(1);
+                },
+                'Home',
+            ],
+        ];
+    }
+
+    public static function searchIndexAttributeValues()
     {
         return [
             [

@@ -7,6 +7,7 @@ $composer = Core::make("helper/concrete/composer");
     <form data-dialog-form="add-page-compose" action="<?=$controller->action('submit')?>">
         <?php $pagetype->renderComposerOutputForm(null, $parent); ?>
         <input type="hidden" name="addPageComposeAction" value="preview" />
+        <input type="hidden" name="redirectAfterPublish" value="<?php echo $parent ? 0 : 1 ?>" />
         <div class="dialog-buttons">
             <button type="button" data-dialog-action="cancel" class="btn btn-secondary float-start"><?=t('Cancel')?></button>
             <div class="btn-group float-end">

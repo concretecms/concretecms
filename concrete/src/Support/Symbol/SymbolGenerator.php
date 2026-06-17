@@ -9,6 +9,7 @@ namespace Concrete\Core\Support\Symbol;
 
 use Concrete\Core\Foundation\ClassAliasList;
 use Concrete\Core\Support\Symbol\ClassSymbol\ClassSymbol;
+use Throwable;
 
 class SymbolGenerator
 {
@@ -26,8 +27,19 @@ class SymbolGenerator
      */
     protected $aliasNamespaces = [''];
 
-    public function __construct()
+    /**
+     * @var \Concrete\Core\Support\Symbol\CheckerGenerator
+     */
+    protected $checkerGenerator;
+
+    /**
+     * @var bool
+     */
+    protected $isInstalled;
+
+    public function __construct(?bool $isInstalled = null)
     {
+        $this->isInstalled = $isInstalled ?? app()->isInstalled();
         $list = ClassAliasList::getInstance();
         foreach ($list->getRegisteredAliases() as $alias => $class) {
             if (!class_exists($class)) {
@@ -36,6 +48,7 @@ class SymbolGenerator
             }
             $this->registerClass($alias, $class);
         }
+        $this->checkerGenerator = app(CheckerGenerator::class, ['isInstalled' => $this->isInstalled]);
     }
 
     /**
@@ -46,7 +59,15 @@ class SymbolGenerator
      */
     public function registerClass($alias, $class)
     {
-        $classSymbol = new ClassSymbol($alias, $class);
+        if ($this->isInstalled) {
+            $classSymbol = new ClassSymbol($alias, $class);
+        } else {
+            try {
+                $classSymbol = new ClassSymbol($alias, $class);
+            } catch (Throwable $_) {
+                return;
+            }
+        }
         $this->classes[$alias] = $classSymbol;
         $aliasNamespace = $classSymbol->getAliasNamespace();
         if (!in_array($aliasNamespace, $this->aliasNamespaces, true)) {
@@ -65,11 +86,16 @@ class SymbolGenerator
      */
     public function render($eol = "\n", $padding = '    ', $methodFilter = null)
     {
+        $checkerWritten = false;
         $lines = [];
         $lines[] = '<?php';
         $lines[] = '';
         $lines[] = '// Generated on ' . date('c');
-        foreach ($this->aliasNamespaces as $namespace) {
+        $namespaces = $this->aliasNamespaces;
+        if (!in_array($this->checkerGenerator->getNamespace(), $namespaces, true)) {
+            $namespaces[] = $this->checkerGenerator->getNamespace();
+        }
+        foreach ($namespaces as $namespace) {
             $lines[] = '';
             $lines[] = rtrim("namespace {$namespace}");
             $lines[] = '{';
@@ -90,6 +116,12 @@ class SymbolGenerator
                         $lines[] = $padding . str_replace($eol, $eol . $padding, rtrim($rendered_class));
                     }
                 }
+            }
+            if ($checkerWritten === false && $this->checkerGenerator->getNamespace() === $namespace) {
+                foreach ($this->checkerGenerator->renderLines($padding) as $line) {
+                    $lines[] = "{$padding}{$line}";
+                }
+                $checkerWritten = true;
             }
             $lines[] = '}';
         }

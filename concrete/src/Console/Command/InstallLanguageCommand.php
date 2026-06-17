@@ -80,7 +80,7 @@ Returns codes:
   $okExitCode operation completed successfully
   $errExitCode errors occurred
             
-More info at http://documentation.concrete5.org/developers/appendix/cli-commands#c5-language-install
+More info at https://documentation.concretecms.org/9-x/developers/security/cli-jobs#c5-language-install
 EOT
             );
     }
@@ -223,7 +223,7 @@ EOT
      *
      * @return int
      */
-    private function updateLanguagesFor(array $installedOutdated, Package $package = null)
+    private function updateLanguagesFor(array $installedOutdated, ?Package $package = null)
     {
         $result = 0;
         if (empty($installedOutdated)) {
@@ -300,7 +300,7 @@ EOT
      *
      * @return bool
      */
-    private function addLanguageFor(array $availableRemoteStats, $localeID, Package $package = null)
+    private function addLanguageFor(array $availableRemoteStats, $localeID, ?Package $package = null)
     {
         if (isset($availableRemoteStats[$localeID])) {
             if ($this->output->getVerbosity() > OutputInterface::VERBOSITY_NORMAL) {

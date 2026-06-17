@@ -6,13 +6,14 @@ use Concrete\TestHelpers\Attribute\AttributeValueTestCase;
 
 class NumberValueTest extends AttributeValueTestCase
 {
-    public function __construct($name = null, array $data = [], $dataName = '')
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\TestHelpers\Database\ConcreteDatabaseTestCase::getEntityClassNames()
+     */
+    protected function getEntityClassNames(): array
     {
-        parent::__construct($name, $data, $dataName);
-
-        $this->tables = array_merge($this->tables, []);
-
-        $this->metadatas = array_merge($this->metadatas, [
+        return array_merge(parent::getEntityClassNames(), [
             'Concrete\Core\Entity\Attribute\Key\Settings\EmptySettings',
             'Concrete\Core\Entity\Attribute\Value\Value\NumberValue',
         ]);
@@ -48,7 +49,7 @@ class NumberValueTest extends AttributeValueTestCase
         return 'Concrete\Core\Entity\Attribute\Value\Value\NumberValue';
     }
 
-    public function baseAttributeValues()
+    public static function baseAttributeValues()
     {
         return [
             [
@@ -66,7 +67,7 @@ class NumberValueTest extends AttributeValueTestCase
         ];
     }
 
-    public function displayAttributeValues()
+    public static function displayAttributeValues()
     {
         return [
             [
@@ -76,7 +77,7 @@ class NumberValueTest extends AttributeValueTestCase
         ];
     }
 
-    public function plaintextAttributeValues()
+    public static function plaintextAttributeValues()
     {
         return [
             [
@@ -86,7 +87,7 @@ class NumberValueTest extends AttributeValueTestCase
         ];
     }
 
-    public function searchIndexAttributeValues()
+    public static function searchIndexAttributeValues()
     {
         return [
             [

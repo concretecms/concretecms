@@ -31,7 +31,7 @@ class Token
     {
         $app = Application::getFacadeApplication();
         $request = $app->make(Request::class);
-        if ($request->isXmlHttpRequest()) {
+        if ($request->isXmlHttpRequest() || in_array($request->getPreferredFormat(), ['json', 'jsonld'], true)) {
             return t("Invalid token. Please reload the page and retry.");
         } else {
             return t("Invalid form token. Please reload this form and submit again.");

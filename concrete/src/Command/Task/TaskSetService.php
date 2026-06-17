@@ -55,7 +55,7 @@ class TaskSetService
         return $r->findOneByHandle($taskSetHandle);
     }
 
-    public function add(string $handle, string $name, Package $pkg = null)
+    public function add(string $handle, string $name, ?Package $pkg = null)
     {
         $displayOrder = 0;
         $sets = $this->getList();

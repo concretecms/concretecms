@@ -6,7 +6,13 @@ use Concrete\Core\Page\Page;
 use Concrete\Core\Url\Url;
 
 class PageCacheRecord
-{
+{ 
+    protected $expires;
+    protected $url;
+    protected $content;
+    protected $headers;
+    protected $cacheRecordKey;    
+    
     public function __construct(Page $c, $content, $lifetime, $url = null)
     {
         $cache = PageCache::getLibrary();

@@ -41,13 +41,13 @@ abstract class PageTestCase extends ConcreteDatabaseTestCase
         'ConfigStore',
         'Logs',
         'PageTypePublishTargetTypes',
-        'AttributeKeyCategories',
         'PageTypeComposerOutputBlocks',
         'PageTypeComposerFormLayoutSets',
         'BlockPermissionAssignments',
     ]; // so brutal
 
-    protected $metadatas = [
+    protected $entityClassNames = [
+        'Concrete\Core\Entity\Board\Instance',
         'Concrete\Core\Entity\Site\Type',
         'Concrete\Core\Entity\Site\Site',
         'Concrete\Core\Entity\Site\Locale',
@@ -64,7 +64,6 @@ abstract class PageTestCase extends ConcreteDatabaseTestCase
         'Concrete\Core\Entity\User\UserSignup',
         'Concrete\Core\Entity\Attribute\Key\PageKey',
         'Concrete\Core\Entity\Attribute\Value\PageValue',
-        'Concrete\Core\Entity\Attribute\Value\Value',
         'Concrete\Core\Entity\Attribute\Key\Key',
     ];
 

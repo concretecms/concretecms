@@ -150,7 +150,7 @@ $form = $app->make(Form::class);
                     <?php echo t('Results') ?>
                 </legend>
 
-                <?php echo $form->hidden("entity_results_parent_node_id", $resultsParentFolder->getTreeNodeID()); ?>
+                <?php echo $form->hidden("entity_results_parent_node_id", is_object($resultsParentFolder)?$resultsParentFolder->getTreeNodeID():null); ?>
 
                 <?php if ($isMultisiteEnabled) { ?>
                     <div class="form-group">

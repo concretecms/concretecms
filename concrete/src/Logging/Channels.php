@@ -57,12 +57,20 @@ class Channels
      */
     const CHANNEL_SPAM = 'spam';
 
+
     /**
-     * Channel identifier: site organization.
-     *
+     * Channel identifier: site organization. Refers to pages in a site. Use CHANNEL_PAGES instead.
+     * @deprecated
      * @var string
      */
     const CHANNEL_SITE_ORGANIZATION = 'site_organization';
+
+    /**
+     * Channel identifier: pages.
+     *
+     * @var string
+     */
+    const CHANNEL_PAGES = 'pages';
 
     /**
      * Channel identifier: users.
@@ -77,6 +85,20 @@ class Channels
      * @var string
      */
     const CHANNEL_EXPRESS = 'express';
+
+    /**
+     * Channel identifier: site organization.
+     *
+     * @var string
+     */
+    const CHANNEL_CALENDAR = 'calendar';
+
+    /**
+     * Channel identifier: marketplace.
+     *
+     * @var string
+     */
+    const CHANNEL_MARKETPLACE = 'marketplace';
 
     /**
      * Channel identifier: content.
@@ -157,7 +179,7 @@ class Channels
             self::CHANNEL_AUTHENTICATION,
             self::CHANNEL_PERMISSIONS,
             self::CHANNEL_SPAM,
-            self::CHANNEL_SITE_ORGANIZATION,
+            self::CHANNEL_PAGES,
             self::CHANNEL_NETWORK,
             self::CHANNEL_USERS,
             self::CHANNEL_OPERATIONS,
@@ -166,6 +188,7 @@ class Channels
             self::CHANNEL_CONTENT,
             self::CHANNEL_MESSENGER,
             self::CHANNEL_BOARD,
+            self::CHANNEL_SITE_ORGANIZATION,
         ];
     }
 
@@ -211,8 +234,9 @@ class Channels
                 return tc('Log channel', 'Packages');
             case self::CHANNEL_SPAM:
                 return tc('Log channel', 'Spam');
+            case self::CHANNEL_PAGES:
             case self::CHANNEL_SITE_ORGANIZATION:
-                return tc('Log channel', 'Site Organization');
+                return tc('Log channel', 'Pages');
             case self::CHANNEL_USERS:
                 return tc('Log channel', 'Users');
             case self::CHANNEL_API:

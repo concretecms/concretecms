@@ -14,7 +14,7 @@ ul.item-select-list > li > a,
 ul.item-select-list > li > span {
   background-repeat: no-repeat;
   border: 1px solid transparent;
-  color: $body-color;
+  color: var(--bs-body-color);
   display: block;
   padding: 8px;
   text-decoration: none;

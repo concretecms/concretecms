@@ -1,13 +1,18 @@
 <?php
 namespace Concrete\Core\Page\Collection\Version;
 
+use Concrete\Core\Area\CustomStyleRepository as AreaCustomStyleRepository;
 use Concrete\Core\Attribute\Key\CollectionKey;
 use Concrete\Core\Attribute\ObjectTrait;
+use Concrete\Core\Board\Command\RefreshRelevantBoardInstancesCommand;
+use Concrete\Core\Board\Command\RegenerateRelevantBoardInstancesCommand;
 use Concrete\Core\Cache\Level\RequestCache;
 use Concrete\Core\Entity\Attribute\Value\PageValue;
 use Concrete\Core\Foundation\ConcreteObject;
 use Block;
 use Concrete\Core\Localization\Service\Date;
+use Concrete\Core\Logging\Channels;
+use Concrete\Core\Logging\LoggerFactory;
 use Concrete\Core\Page\Page;
 use Doctrine\DBAL\Query\QueryBuilder;
 use PageType;
@@ -551,15 +556,9 @@ class Version extends ConcreteObject implements PermissionObjectInterface, Attri
     {
         if (!isset($this->customAreaStyles)) {
             $app = Facade::getFacadeApplication();
-            $db = $app->make('database')->connection();
-            $r = $db->fetchAll('select issID, arHandle from CollectionVersionAreaStyles where cID = ? and cvID = ?', array(
-                $this->getCollectionID(),
-                $this->cvID,
-            ));
-            $this->customAreaStyles = array();
-            foreach ($r as $styles) {
-                $this->customAreaStyles[$styles['arHandle']] = $styles['issID'];
-            }
+            /** @var AreaCustomStyleRepository $customAreaStyleRepository */
+            $customAreaStyleRepository = $app->make(AreaCustomStyleRepository::class);
+            $this->customAreaStyles = $customAreaStyleRepository->getCollectionVersionAreaStyleIDs($this);
         }
 
         return $this->customAreaStyles;
@@ -809,12 +808,25 @@ class Version extends ConcreteObject implements PermissionObjectInterface, Attri
                 [(int) $masterC->getCollectionID(), $c->getCollectionID()]
             );
         }
+
+        if ($pageWithActiveVersion && $pageWithActiveVersion->getVersionObject() && !$pageWithActiveVersion->getVersionObject()->isError()) {
+            $c->reindex($doReindexImmediately);
+            $app->executeCommand(new RefreshRelevantBoardInstancesCommand('page', $c));
+        } else {
+            // This is a new page
+            $c->reindex(true); // We must reindex immediately so that summary templates are available for boards.
+            $app->executeCommand(new RegenerateRelevantBoardInstancesCommand('page', $c));
+        }
+
+        $loggerFactory = app(LoggerFactory::class);
+        $logger = $loggerFactory->createLogger(Channels::CHANNEL_PAGES);
+        $logger->info(t('Page version %s for page %s approved by %s', $cvID, $c->getCollectionID(), $u->getUserName()));
+
         $ev = new Event($c);
         $ev->setUser($u);
         $ev->setCollectionVersionObject($this);
         $app->make('director')->dispatch('on_page_version_approve', $ev);
 
-        $c->reindex($doReindexImmediately);
         $this->refreshCache();
     }
 
@@ -984,6 +996,11 @@ class Version extends ConcreteObject implements PermissionObjectInterface, Attri
         ));
 
         $db->executeQuery('delete from PageTypeComposerOutputBlocks where cID = ? and cvID = ?', array(
+            $cID,
+            $cvID,
+        ));
+
+        $db->executeQuery('delete from CollectionVersionBlocks where cID = ? and cvID = ?', array(
             $cID,
             $cvID,
         ));

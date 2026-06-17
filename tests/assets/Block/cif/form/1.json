@@ -1,0 +1,5 @@
+{
+  "$schema": "../options-schema.json",
+  "skipReason": "Legacy Form is really old stuff: it's not worth working on it.",
+  "skipSilent": true
+}

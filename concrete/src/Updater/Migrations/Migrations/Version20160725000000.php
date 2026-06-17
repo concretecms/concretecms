@@ -1160,7 +1160,9 @@ class Version20160725000000 extends AbstractMigration implements LongRunningMigr
         // Delete members page if profiles not enabled
         if (!\Config::get('concrete.user.profiles_enabled')) {
             $c = \Page::getByPath('/members');
-            $c->moveToTrash();
+            if ($c && !$c->isError()) {
+                $c->moveToTrash();
+            }
         }
     }
 

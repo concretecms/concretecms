@@ -1,14 +1,17 @@
 <?php
 namespace Concrete\Core\Backup\ContentImporter\Importer\Routine;
 
-use Concrete\Core\Block\Block;
-use Concrete\Core\Block\BlockType\BlockType;
-use Concrete\Core\Page\Page;
-use Concrete\Core\StyleCustomizer\Inline\StyleSet;
+use Closure;
+use Concrete\Core\User\UserInfoRepository;
+use SimpleXMLElement;
 
 abstract class AbstractPageStructureRoutine extends AbstractRoutine
 {
+    private $resolvedUserNames = [];
 
+    /**
+     * @deprecated use sortElementsByPath()
+     */
     public static function setupPageNodeOrder($pageNodeA, $pageNodeB)
     {
         $pathA = (string) $pageNodeA['path'];
@@ -30,6 +33,51 @@ abstract class AbstractPageStructureRoutine extends AbstractRoutine
         }
     }
 
+    /**
+     * @param \SimpleXMLElement[] $elements
+     */
+    protected function sortElementsByPath(array $elements, ?Closure $customComparer = null)
+    {
+        $sortedElements = $elements;
+        usort($sortedElements, static function (SimpleXMLElement $a, SimpleXMLElement $b) use (&$elements, $customComparer) {
+            if ($customComparer !== null) {
+                $cmp = $customComparer($a, $b);
+                if ($cmp) {
+                    return $cmp;
+                }
+            }
+            $pathA = trim((string) $a['path'], '/');
+            $pathB = trim((string) $b['path'], '/');
+            $numA = $pathA === '' ? -1 : substr_count($pathA, '/');
+            $numB = $pathB === '' ? -1 : substr_count($pathB, '/');
+            if ($numA !== $numB) {
+                return $numA - $numB;
+            }
+            $indexA = array_search($a, $elements, true);
+            $indexB = array_search($b, $elements, true);
 
+            return $indexA - $indexB;
+        });
 
+        return array_values($sortedElements);
+    }
+
+    /**
+     * @param string|\SimpleXMLElement|null $userName
+     */
+    protected function resolveUserName($userName)
+    {
+        $userName = (string) $userName;
+        if ($userName === '') {
+            return USER_SUPER_ID;
+        }
+        if (isset($this->resolvedUserNames[$userName])) {
+            return $this->resolvedUserNames[$userName];
+        }
+        $userInfo = app(UserInfoRepository::class)->getByName($userName);
+        $userID = $userInfo === null ? USER_SUPER_ID : (int) $userInfo->getUserID();
+        $this->resolvedUserNames[$userName] = $userID;
+
+        return $userID;
+    }
 }

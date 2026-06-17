@@ -12,12 +12,12 @@ class NumberValue2Test extends ConcreteDatabaseTestCase
 {
     protected static $lastID = 1;
 
-    protected $metadatas = [
+    protected $entityClassNames = [
         NumberValue::class,
         Value::class,
     ];
 
-    public function renderProvider()
+    public static function renderProvider()
     {
         return [
             [null, null, ''],

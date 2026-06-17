@@ -51,7 +51,7 @@ abstract class GenericOauthTypeController extends AuthenticationTypeController
     /** @var BindingService|null The service used to manage oauth user bindings */
     protected $bindingService;
 
-    public function __construct(AuthenticationType $type = null)
+    public function __construct(?AuthenticationType $type = null)
     {
         parent::__construct($type);
         $manager = $this->app->make(Connection::class)->getSchemaManager();

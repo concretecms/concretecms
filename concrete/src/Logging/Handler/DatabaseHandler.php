@@ -1,54 +1,30 @@
 <?php
 namespace Concrete\Core\Logging\Handler;
 
+use Concrete\Core\Database\Connection\Connection;
 use Monolog\Handler\AbstractProcessingHandler;
-use Database;
-use Concrete\Core\Support\Facade\Application;
-use Concrete\Core\User\User;
 
 class DatabaseHandler extends AbstractProcessingHandler
 {
-    protected $initialized;
+    use HandlerTrait;
+
+    /**
+     * @var bool
+     */
+    protected $initialized = false;
+
+    /**
+     * @var \Doctrine\DBAL\Driver\Statement
+     */
     private $statement;
-
-    protected function write(array $record)
-    {
-        if (!$this->initialized) {
-            $this->initialize();
-        }
-
-        $uID = $record['extra']['user'][0] ?? 0;
-
-        $this->statement->execute(
-            array(
-                'channel' => $record['channel'],
-                'level' => $record['level'],
-                'message' => $record['formatted'],
-                'time' => $record['datetime']->format('U'),
-                'uID' => $uID,
-            )
-        );
-    }
-
-    private function initialize()
-    {
-        $db = Database::get();
-
-        $this->statement = $db->prepare(
-            'INSERT INTO Logs (channel, level, message, time, uID) VALUES (:channel, :level, :message, :time, :uID)'
-        );
-
-        $this->initialized = true;
-    }
-
 
     /**
      * Clears all log entries. Requires the database handler.
      */
     public static function clearAll()
     {
-        $db = Database::get();
-        $db->Execute('delete from Logs');
+        $db = app(Connection::class);
+        $db->executeStatement('delete from Logs');
     }
 
     /**
@@ -58,9 +34,42 @@ class DatabaseHandler extends AbstractProcessingHandler
      */
     public static function clearByChannel($channel)
     {
-        $db = Database::get();
-        $db->delete('Logs', array('channel' => $channel));
+        $db = app(Connection::class);
+        $db->delete('Logs', ['channel' => $channel]);
     }
 
+    protected function write(array $record)
+    {
+        if (!$this->shouldWrite($record)) {
+            return;
+        }
+        if (!$this->initialized) {
+            $this->initialize();
+        }
+        $params = [
+            'channel' => $record['channel'],
+            'level' => $record['level'],
+            'message' => $record['formatted'],
+            'time' => $record['datetime']->format('U'),
+            'uID' => $record['extra']['user'][0] ?? 0,
+            'cID' => $record['extra']['page'][0] ?? 0,
+        ];
+        try {
+            $this->statement->execute($params);
+        } catch (\Doctrine\DBAL\Exception\InvalidFieldNameException $x) {
+            \Concrete\Core\Database\Schema\Schema::refreshCoreXMLSchema(['Logs']);
+            $this->statement->execute($params);
+        }
+    }
 
+    private function initialize()
+    {
+        $db = app(Connection::class);
+
+        $this->statement = $db->prepare(
+            'INSERT INTO Logs (channel, level, message, time, uID, cID) VALUES (:channel, :level, :message, :time, :uID, :cID)'
+        );
+
+        $this->initialized = true;
+    }
 }

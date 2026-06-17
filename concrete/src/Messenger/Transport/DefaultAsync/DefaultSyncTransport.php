@@ -20,14 +20,14 @@ class DefaultSyncTransport implements TransportInterface
 
     public function getSenders(): iterable
     {
-        return ['sync' => function() {
+        return [TransportInterface::DEFAULT_SYNC => function() {
             return $this->app->make(SyncTransport::class);
         }];
     }
 
     public function getReceivers(): iterable
     {
-        return ['sync' => function() {
+        return [TransportInterface::DEFAULT_SYNC => function() {
             return $this->app->make(SyncTransport::class);
         }];
     }

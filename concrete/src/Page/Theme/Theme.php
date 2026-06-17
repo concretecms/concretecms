@@ -1221,7 +1221,7 @@ class Theme extends ConcreteObject implements \JsonSerializable
      *
      * @param \Concrete\Core\Entity\Site\Site|null $site if null, we'll use the current site.
      */
-    public function applyToSite(Site $site = null)
+    public function applyToSite(?Site $site = null)
     {
         if (!is_object($site)) {
             $site = \Core::make('site')->getSite();

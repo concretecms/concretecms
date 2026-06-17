@@ -121,22 +121,28 @@ foreach ($locales as $locale) {
     <div class="form-group">
         <div class="form-check">
             <?= $form->checkbox('redirectHomeToDefaultLocale', 1, $redirectHomeToDefaultLocale) ?>
-            <label>
-                <span><?= t('Redirect home page to default locale.') ?></span>
+            <label class="form-check-label" for="redirectHomeToDefaultLocale">
+                <?= t('Redirect home page to default locale.') ?>
             </label>
         </div>
-        <div style="margin-left: 20px">
+        <div class="ms-4">
             <div class="form-check <?= $redirectHomeToDefaultLocale ? '' : ' disabled' ?>">
                 <?= $form->checkbox('useBrowserDetectedLocale', 1, $useBrowserDetectedLocale, $redirectHomeToDefaultLocale ? [] : ['disabled' => 'disabled']) ?>
-                <label>
-                    <span><?= t('Attempt to use visitor\'s locale based on their browser information.') ?></span>
+                <label class="form-check-label" for="useBrowserDetectedLocale">
+                    <?= t('Attempt to use visitor\'s locale based on their browser information.') ?>
                 </label>
             </div>
         </div>
         <div class="form-check">
             <?= $form->checkbox('alwaysTrackUserLocale', 1, $alwaysTrackUserLocale) ?>
-            <label>
-                <span><?= t('Always track user locale.') ?> <i class="launch-tooltip control-label fas fa-question-circle" title="<?= h(t('Tracking user locales requires the creation of session cookies. Disable this option to avoid tracking user locale in case the session cookie is not yet set.')) ?>"></i></span>
+            <label class="form-check-label" for="alwaysTrackUserLocale">
+                <?= t('Always track user locale.') ?> <i class="launch-tooltip control-label fas fa-question-circle" title="<?= h(t('Tracking user locales requires the creation of session cookies. Disable this option to avoid tracking user locale in case the session cookie is not yet set.')) ?>"></i>
+            </label>
+        </div>
+        <div class="form-check">
+            <?= $form->checkbox('setAlternateHreflang', 1, $setAlternateHreflang) ?>
+            <label class="form-check-label" for="setAlternateHreflang">
+                <?= t('Help search engines show the correct language version with Hreflang tags') ?>
             </label>
         </div>
     </div>

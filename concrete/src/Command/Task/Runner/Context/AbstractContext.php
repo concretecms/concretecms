@@ -35,8 +35,6 @@ abstract class AbstractContext implements ContextInterface
         return $this->output;
     }
 
-
-
     /**
      * AbstractContext constructor.
      * @param MessageBusInterface $messageBus

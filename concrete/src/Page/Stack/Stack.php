@@ -3,8 +3,13 @@ namespace Concrete\Core\Page\Stack;
 
 use Concrete\Core\Area\Area;
 use Concrete\Core\Multilingual\Page\Section\Section;
+use Concrete\Core\Page\Cloner;
+use Concrete\Core\Page\ClonerOptions;
+use Concrete\Core\Page\Collection\Collection;
 use Concrete\Core\Page\Stack\Folder\Folder;
+use Concrete\Core\Permission\Checker;
 use Concrete\Core\Site\Tree\TreeInterface;
+use Concrete\Core\Support\Facade\Application;
 use Doctrine\DBAL\Connection;
 use GlobalArea;
 use Config;
@@ -45,13 +50,59 @@ class Stack extends Page
     }
 
     /**
+     * Given an original collection that we're currently rendering, return a stack corresponding to a global
+     * area on that collection. (Note: the original collection is required because we check its permissions to
+     * determine what version of the stack to load.)
+     *
+     * @param Collection $collection
+     * @param string $arHandle
+     * @return Stack|null
+     * @throws \Exception
+     */
+    public static function getGlobalAreaStackFromName(Collection $collection, string $arHandle): ?Stack
+    {
+        $app = Application::getFacadeApplication();
+        $db = $app->make(Connection::class);
+        $checker = new Checker($collection);
+
+        /** @var \Concrete\Core\Cache\Level\RequestCache $requestCache */
+        $requestCache = $app->make('cache/request');
+        $identifier = sprintf('/stack/global_area/%s/cID', $arHandle);
+        $item = $requestCache->getItem($identifier);
+        if ($item->isHit()) {
+            $stackID = $item->get();
+        } else {
+            $stackID = $db->executeQuery('select cID from Stacks where stName = ? and stType = ?', [
+                $arHandle, self::ST_TYPE_GLOBAL_AREA
+            ])->fetchOne();
+            $requestCache->save($item->set($stackID));
+        }
+
+        if (!$stackID) {
+            return null;
+        }
+        $cvID = $checker->canViewPageVersions() ? 'RECENT': 'ACTIVE';
+        $s = Stack::getByID($stackID, $cvID);
+        if (!$s) {
+            return null;
+        }
+        if ($app->make('multilingual/detector')->isEnabled() && $collection instanceof Page) {
+            $section = Section::getBySectionOfSite($collection);
+            if ($section) {
+                $s = $s->getLocalizedStack($section, $cvID) ?: $s;
+            }
+        }
+        return $s;
+    }
+
+    /**
      * @param string $path
      * @param string $version
      * \Concrete\Core\Site\Tree\TreeInterface|null $siteTree
      *
      * @return bool|\Concrete\Core\Page\Page
      */
-    public static function getByPath($path, $version = 'RECENT', TreeInterface $siteTree = null)
+    public static function getByPath($path, $version = 'RECENT', ?TreeInterface $siteTree = null)
     {
         $c = parent::getByPath(STACKS_PAGE_PATH . '/' . trim($path, '/'), $version, $siteTree);
         if (static::isValidStack($c)) {
@@ -84,11 +135,11 @@ class Stack extends Page
      *
      * @return self|false|null
      */
-    public static function getByName($stackName, $cvID = 'RECENT', TreeInterface $site = null, $multilingualContentSource = self::MULTILINGUAL_CONTENT_SOURCE_CURRENT)
+    public static function getByName($stackName, $cvID = 'RECENT', ?TreeInterface $site = null, $multilingualContentSource = self::MULTILINGUAL_CONTENT_SOURCE_CURRENT)
     {
         $c = Page::getCurrentPage();
         if (is_object($c) && (!$c->isError())) {
-            $identifier = sprintf('/stack/name/%s/%s/%s/%s', $stackName, $c->getCollectionID(), $cvID, $multilingualContentSource);
+            $identifier = sprintf('/stack/name/%s/%s/%s', $stackName, $c->getCollectionID(), $multilingualContentSource);
             $cache = Core::make('cache/request');
             $item = $cache->getItem($identifier);
             if (!$item->isMiss()) {
@@ -235,7 +286,7 @@ class Stack extends Page
      *
      * @return self|false
      */
-    public static function addStack($stack, Folder $folder = null)
+    public static function addStack($stack, ?Folder $folder = null)
     {
         $parent = \Page::getByPath(STACKS_PAGE_PATH);
         if ($folder) {
@@ -475,10 +526,11 @@ class Stack extends Page
 
     /**
      * @param \Concrete\Core\Multilingual\Page\Section\Section $section
+     * @param array{copyContents: bool = true} $options 
      *
      * @return self
      */
-    public function addLocalizedStack(Section $section)
+    public function addLocalizedStack(Section $section, array $options = [])
     {
         $neutralStack = $this->getNeutralStack();
         if ($neutralStack === null) {
@@ -486,7 +538,12 @@ class Stack extends Page
         }
         $name = $neutralStack->getCollectionName();
         $neutralStackPage = Page::getByID($neutralStack->getCollectionID());
-        $localizedStackPage = $neutralStackPage->duplicate($neutralStackPage);
+        $cloner = app(Cloner::class);
+        $clonerOptions = app(ClonerOptions::class);
+        $clonerOptions
+            ->setCopyContents($options['copyContents'] ?? true)
+        ;
+        $localizedStackPage = $cloner->clonePage($neutralStackPage, $clonerOptions, $neutralStackPage);
         $localizedStackPage->update([
             'cName' => $name,
         ]);

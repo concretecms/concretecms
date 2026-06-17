@@ -17,7 +17,7 @@ class CustomStyle extends AbstractCustomStyle
      */
     public $block;
 
-    public function __construct(StyleSet $set = null, Block $b, $theme = null)
+    public function __construct(?StyleSet $set, Block $b, $theme = null)
     {
         $this->block = $b;
         $this->set = $set;

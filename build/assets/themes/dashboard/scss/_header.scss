@@ -97,7 +97,7 @@ div#ccm-dashboard-content {
       ul.ccm-dashboard-header-icons {
 
         @include list-unstyled();
-        margin-bottom: 0px;
+        margin-bottom: 0;
 
         a {
           color: $body-color;
@@ -131,4 +131,22 @@ div#ccm-dashboard-content {
     display: none;
   }
 
+}
+
+@include color-mode(dark) {
+  div#ccm-dashboard-content {
+    header {
+      div.ccm-dashboard-header-title {
+        .header-icon {
+          .icon-bookmark {
+            --icon-color: #{$gray-200};
+          }
+        }
+
+        h1 {
+          color: $gray-200;
+        }
+      }
+    }
+  }
 }

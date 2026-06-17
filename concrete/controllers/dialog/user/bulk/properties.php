@@ -6,6 +6,7 @@ use Concrete\Controller\Backend\UserInterface as BackendInterfaceController;
 use Concrete\Core\Attribute\Category\CategoryInterface;
 use Concrete\Core\Attribute\Category\CategoryService;
 use Concrete\Core\Attribute\Key\Component\KeySelector\ControllerTrait as KeySelectorControllerTrait;
+use Concrete\Core\Attribute\ObjectInterface;
 use Concrete\Core\Error\ErrorList\ErrorList;
 use Concrete\Core\Filesystem\ElementManager;
 use Concrete\Core\User\EditResponse as UserEditResponse;
@@ -132,7 +133,7 @@ class Properties extends BackendInterfaceController
      *
      * @see \Concrete\Core\Attribute\Key\Component\KeySelector\ControllerTrait::canEditAttributeKey()
      */
-    public function canEditAttributeKey(int $akID): bool
+    public function canEditAttributeKey(int $akID, ObjectInterface $object): bool
     {
         return in_array($akID, $this->allowedEditAttributes);
     }

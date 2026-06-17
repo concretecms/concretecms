@@ -13,7 +13,7 @@ class DatetimeDataFieldData implements DataFieldDataInterface
      */
     protected $dateTime;
     
-    public function __construct(DateTime $dateTime = null)
+    public function __construct(?DateTime $dateTime = null)
     {
         if ($dateTime) {
             $this->dateTime = $dateTime;
@@ -54,7 +54,7 @@ class DatetimeDataFieldData implements DataFieldDataInterface
     
     public function denormalize(DenormalizerInterface $denormalizer, $data, $format = null, array $context = [])
     {
-        if (isset($data['timestamp'])) {
+        if (!empty($data['timestamp'])) {
             $dateTime = new DateTime();
             $dateTime->setTimestamp($data['timestamp']);
             $dateTime->setTimezone(new DateTimeZone($data['timezone']));

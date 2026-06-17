@@ -6,11 +6,14 @@ use Concrete\Core\Area\Area;
 
 use CacheLocal;
 use CollectionVersion;
+use Concrete\Core\Area\CustomStyleRepository as AreaCustomStyleRepository;
 use Concrete\Core\Block\Block;
 use Concrete\Core\Area\CustomStyle as AreaCustomStyle;
 use Concrete\Core\Area\GlobalArea;
 use Concrete\Core\Attribute\Key\CollectionKey;
+use Concrete\Core\Block\Controller\SaveMode;
 use Concrete\Core\Block\CustomStyle as BlockCustomStyle;
+use Concrete\Core\Block\CustomStyleRepository as BlockCustomStyleRepository;
 use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Database\Driver\PDOStatement;
 use Concrete\Core\Entity\Attribute\Value\PageValue;
@@ -82,6 +85,13 @@ class Collection extends ConcreteObject implements TrackableInterface
      * @var array
      */
     protected $attributes = [];
+
+    /**
+     * @var array|Stack[]|null
+     *
+     * @since 9.4.0
+     */
+    protected $globalStacks;
 
     /**
      * Destruct the class instance.
@@ -630,11 +640,28 @@ class Collection extends ConcreteObject implements TrackableInterface
             return null;
         }
         $result = null;
-        $styles = $this->vObj->getCustomAreaStyles();
+        $styleSet = null;
         $areaHandle = $area->getAreaHandle();
-        if ($force || isset($styles[$areaHandle])) {
-            $pss = isset($styles[$areaHandle]) ? StyleSet::getByID($styles[$areaHandle]) : null;
-            $result = new AreaCustomStyle($pss, $area, $this->getCollectionThemeObject());
+        if ($area->isGlobalArea()) {
+            /**
+             * @var $area GlobalArea
+             */
+            $stack = Stack::getGlobalAreaStackFromName($this, $area->getAreaHandle());
+            if ($stack) {
+                $styles = $stack->getVersionObject()->getCustomAreaStyles();
+                if (isset($styles[STACKS_AREA_NAME])) {
+                    $styleSet = StyleSet::getByID($styles[STACKS_AREA_NAME]);
+                }
+            }
+        } else {
+            $styles = $this->vObj->getCustomAreaStyles();
+            if (isset($styles[$areaHandle])) {
+                $styleSet = StyleSet::getByID($styles[$areaHandle]);
+            }
+        }
+
+        if ($styleSet || $force) {
+            $result = new AreaCustomStyle($styleSet, $area, $this->getCollectionThemeObject());
         }
 
         return $result;
@@ -700,7 +727,7 @@ class Collection extends ConcreteObject implements TrackableInterface
             ->andWhere('arHandle = :arHandle')
             ->setParameter('cID', $this->getCollectionID())
             ->setParameter('cvID', $this->getVersionID())
-            ->setParameter('arHandle', $area->getAreaHandle())
+            ->setParameter('arHandle', $area->isGlobalArea() ? STACKS_AREA_NAME : $area->getAreaHandle())
             ->execute();
     }
 
@@ -713,115 +740,32 @@ class Collection extends ConcreteObject implements TrackableInterface
      */
     public function outputCustomStyleHeaderItems($return = false)
     {
-        if (!Config::get('concrete.design.enable_custom')) {
-            return '';
+        $app = Application::getFacadeApplication();
+        if (!$app['config']->get('concrete.design.enable_custom')) {
+            return $return ? '' : null;
         }
 
         $psss = [];
-        $txt = Loader::helper('text');
-        CacheLocal::set('pssCheck', $this->getCollectionID() . ':' . $this->getVersionID(), true);
+        /** @var BlockCustomStyleRepository $blockCustomStyleRepository */
+        $blockCustomStyleRepository = $app->make(BlockCustomStyleRepository::class);
+        /** @var AreaCustomStyleRepository $areaCustomStyleRepository */
+        $areaCustomStyleRepository = $app->make(AreaCustomStyleRepository::class);
 
-        $app = Application::getFacadeApplication();
-        /** @var Connection $db */
-        $db = $app->make(Connection::class);
-        $qb1 = $db->createQueryBuilder();
-        $r1 = $qb1->select('bID', 'arHandle', 'issID')
-            ->from('CollectionVersionBlockStyles')
-            ->where('cID = :cID')
-            ->andWhere('cvID = :cvID')
-            ->andWhere('issID > 0')
-            ->setParameter(':cID', $this->getCollectionID())
-            ->setParameter(':cvID', $this->getVersionID())
-            ->execute()->fetchAll();
-        $qb2 = $db->createQueryBuilder();
-        $r2 = $qb2->select('arHandle', 'issID')
-            ->from('CollectionVersionAreaStyles')
-            ->where('cID = :cID')
-            ->andWhere('cvID = :cvID')
-            ->andWhere('issID > 0')
-            ->setParameter(':cID', $this->getCollectionID())
-            ->setParameter(':cvID', $this->getVersionID())
-            ->execute()->fetchAll();
-        foreach ($r1 as $r) {
-            $issID = $r['issID'];
-            $arHandle = $txt->filterNonAlphaNum($r['arHandle']);
-            $bID = $r['bID'];
-            $obj = StyleSet::getByID($issID);
-            if (is_object($obj)) {
-                $b = new Block();
-                $b->bID = $bID;
-                $a = new Area($arHandle);
-                $b->setBlockAreaObject($a);
-                $obj = new BlockCustomStyle($obj, $b, $this->getCollectionThemeObject());
-                $psss[] = $obj;
-                CacheLocal::set(
-                          'pssObject',
-                          $this->getCollectionID() . ':' . $this->getVersionID() . ':' . $r['arHandle'] . ':' . $r['bID'],
-                          $obj
-                );
-            }
+        foreach ($blockCustomStyleRepository->getCollectionVersionBlockStyles($this) as $blockStyle) {
+            $psss[] = $blockStyle;
         }
-
-        foreach ($r2 as $r) {
-            $issID = $r['issID'];
-            $obj = StyleSet::getByID($issID);
-            if (is_object($obj)) {
-                $a = new Area($r['arHandle']);
-                $obj = new AreaCustomStyle($obj, $a, $this->getCollectionThemeObject());
-                $psss[] = $obj;
-                CacheLocal::set(
-                          'pssObject',
-                          $this->getCollectionID() . ':' . $this->getVersionID() . ':' . $r['arHandle'],
-                          $obj
-                );
-            }
+        foreach ($areaCustomStyleRepository->getCollectionVersionAreaStyles($this) as $areaStyle) {
+            $psss[] = $areaStyle;
         }
 
         // grab all the header block style rules for items in global areas on this page
-        $qb3 = $db->createQueryBuilder();
-        $rs = $qb3->select('arHandle')
-            ->from('Areas')
-            ->where('arIsGlobal = 1')
-            ->andWhere('cID = :cID')
-            ->setParameter('cID', $this->getCollectionID())
-            ->execute()->fetchAll(FetchMode::COLUMN);
-        if (count($rs) > 0) {
-            $pcp = new Permissions($this);
-            foreach ($rs as $garHandle) {
-                if ($pcp->canViewPageVersions()) {
-                    $s = Stack::getByName($garHandle, 'RECENT');
-                } else {
-                    $s = Stack::getByName($garHandle, 'ACTIVE');
-                }
-                if (is_object($s)) {
-                    CacheLocal::set('pssCheck', $s->getCollectionID() . ':' . $s->getVersionID(), true);
-                    $qb4 = $db->createQueryBuilder();
-                    $rs1 = $qb4->select('bID', 'issID', 'arHandle')
-                        ->from('CollectionVersionBlockStyles')
-                        ->where('cID = :cID')
-                        ->andWhere('cvID = :cvID')
-                        ->andWhere('issID > 0')
-                        ->setParameter('cID', $s->getCollectionID())
-                        ->setParameter('cvID', $s->getVersionID())
-                        ->execute()->fetchAll();
-                    foreach ($rs1 as $r) {
-                        $issID = $r['issID'];
-                        $obj = StyleSet::getByID($issID);
-                        if (is_object($obj)) {
-                            $b = new Block();
-                            $b->bID = $r['bID'];
-                            $a = new GlobalArea($garHandle);
-                            $b->setBlockAreaObject($a);
-                            $obj = new BlockCustomStyle($obj, $b, $this->getCollectionThemeObject());
-                            $psss[] = $obj;
-                            CacheLocal::set(
-                                      'pssObject',
-                                      $s->getCollectionID() . ':' . $s->getVersionID() . ':' . $r['arHandle'] . ':' . $r['bID'],
-                                      $obj
-                            );
-                        }
-                    }
-                }
+        $applicableStacks = $this->getGlobalStacksForCollection();
+        foreach ($applicableStacks as $s) {
+            foreach ($blockCustomStyleRepository->getStackBlockStyles($s, $this->getCollectionThemeObject()) as $blockStyle) {
+                $psss[] = $blockStyle;
+            }
+            foreach ($areaCustomStyleRepository->getStackAreaStyles($s, $this->getCollectionThemeObject()) as $areaStyle) {
+                $psss[] = $areaStyle;
             }
         }
 
@@ -943,37 +887,36 @@ class Collection extends ConcreteObject implements TrackableInterface
      */
     protected function getGlobalStacksForCollection()
     {
-        $app = Application::getFacadeApplication();
-        /** @var Connection $db */
-        $db = $app->make(Connection::class);
-        $qb = $db->createQueryBuilder();
-        $rs = $qb->select('stName')
-            ->from('Stacks', 's')
-            ->innerJoin('s', 'Areas', 'a', 'a.arHandle = s.stName')
-            ->andWhere('a.arIsGlobal = 1')
-            ->andWhere('a.cID = :cID')
-            ->andWhere('s.stType = :stType')
-            ->setParameter('cID', $this->getCollectionID())
-            ->setParameter('stType', Stack::ST_TYPE_GLOBAL_AREA)
-            ->execute()->fetchAll(FetchMode::COLUMN);
+        if ($this->globalStacks === null) {
+            $app = Application::getFacadeApplication();
+            /** @var Connection $db */
+            $db = $app->make(Connection::class);
+            $qb = $db->createQueryBuilder();
+            $rs = $qb->select('stName')
+                ->from('Stacks', 's')
+                ->innerJoin('s', 'Areas', 'a', 'a.arHandle = s.stName')
+                ->andWhere('a.arIsGlobal = 1')
+                ->andWhere('a.cID = :cID')
+                ->andWhere('s.stType = :stType')
+                ->setParameter('cID', $this->getCollectionID())
+                ->setParameter('stType', Stack::ST_TYPE_GLOBAL_AREA)
+                ->execute()->fetchAll(FetchMode::COLUMN);
 
-        $stacks = [];
+            $stacks = [];
 
-        if (count($rs) > 0) {
-            $pcp = new Permissions($this);
-            foreach ($rs as $garHandle) {
-                if ($pcp->canViewPageVersions()) {
-                    $s = Stack::getByName($garHandle, 'RECENT');
-                } else {
-                    $s = Stack::getByName($garHandle, 'ACTIVE');
-                }
-                if (is_object($s)) {
-                    $stacks[] = $s;
+            if (count($rs) > 0) {
+                foreach ($rs as $garHandle) {
+                    $s = Stack::getGlobalAreaStackFromName($this, $garHandle);
+                    if (is_object($s)) {
+                        $stacks[] = $s;
+                    }
                 }
             }
+
+            $this->globalStacks = $stacks;
         }
 
-        return $stacks;
+        return $this->globalStacks;
     }
 
     /**
@@ -1068,14 +1011,14 @@ class Collection extends ConcreteObject implements TrackableInterface
      *
      * @return \Concrete\Core\Block\Block
      */
-    public function addBlock($bt, $a, $data)
+    public function addBlock($bt, $a, $data, ?string $saveMode = SaveMode::SAVE_MODE_REQUEST)
     {
         $app = Application::getFacadeApplication();
         /** @var Connection $db */
         $db = $app->make(Connection::class);
 
         // first we add the block to the system
-        $nb = $bt->add($data, $this, $a);
+        $nb = $bt->add($data, $this, $a, $saveMode);
 
         // now that we have a block, we add it to the collectionversions table
 
@@ -1238,7 +1181,7 @@ class Collection extends ConcreteObject implements TrackableInterface
      * @throws \Doctrine\DBAL\Driver\Exception|\Doctrine\DBAL\Exception
      * @throws \Illuminate\Contracts\Container\BindingResolutionException
      */
-    public function rescanDisplayOrderFromBlock(Block $block, string $arHandle, int $fromDisplay = null)
+    public function rescanDisplayOrderFromBlock(Block $block, string $arHandle, ?int $fromDisplay = null)
     {
         /** This block doesnt have a display order */
         if ($block->getBlockDisplayOrder() === null) {
@@ -1291,7 +1234,7 @@ class Collection extends ConcreteObject implements TrackableInterface
             }
         }
     }
-    
+
     /**
      * Update the last edit date/time.
      */

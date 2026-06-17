@@ -71,7 +71,7 @@ class UserDeactivatedListView extends StandardListView implements ApplicationAwa
      *
      * @return string
      */
-    protected function getUserLink(User $user = null)
+    protected function getUserLink(?User $user = null)
     {
         if (!$user) {
             return '<strong>' . t('Deleted User') . '</strong>';

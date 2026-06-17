@@ -1,18 +1,29 @@
 <?php
+
 namespace Concrete\Core\Backup\ContentImporter\ValueInspector\Item;
 
-use Concrete\Core\File\File;
+use Concrete\Core\Entity\File\File;
+use Doctrine\ORM\EntityManagerInterface;
 
 class FileItem implements ItemInterface
 {
-
+    /**
+     * The file name (without the potential prefix).
+     *
+     * @var string
+     */
     protected $filename;
+
+    /**
+     * The found prefix (if any).
+     *
+     * @var string|null
+     */
     protected $prefix;
 
     /**
-     * FileItem constructor.
-     * @param $filename
-     * @param $prefix
+     * @param string $filename the file name (without the potential prefix)
+     * @param string|null $prefix the found prefix (if any)
      */
     public function __construct($filename, $prefix = null)
     {
@@ -20,18 +31,32 @@ class FileItem implements ItemInterface
         $this->prefix = $prefix;
     }
 
-    public function getReference()
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Backup\ContentImporter\ValueInspector\Item\ItemInterface::getDisplayName()
+     */
+    public function getDisplayName()
     {
-        $reference = '';
-        if ($this->prefix) {
-            $reference = $this->prefix . ':';
-        }
-        $reference .= $this->filename;
-        return $reference;
+        return t('File');
     }
 
     /**
-     * @return mixed
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Backup\ContentImporter\ValueInspector\Item\ItemInterface::getReference()
+     */
+    public function getReference()
+    {
+        $prefix = $this->getPrefix();
+
+        return (string) $prefix === '' ? $this->getFilename() : "{$prefix}:{$this->getFilename()}";
+    }
+
+    /**
+     * Get the file name (without the potential prefix).
+     *
+     * @return string
      */
     public function getFilename()
     {
@@ -39,52 +64,74 @@ class FileItem implements ItemInterface
     }
 
     /**
-     * @return null
+     * Get the found prefix (if any).
+     *
+     * @return string|null
      */
     public function getPrefix()
     {
         return $this->prefix;
     }
 
-
-    public function getDisplayName()
-    {
-        return t('File');
-    }
-
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Backup\ContentImporter\ValueInspector\Item\ItemInterface::getContentObject()
+     *
+     * @return \Concrete\Core\Entity\File\File|null
+     */
     public function getContentObject()
     {
-        $db = \Database::connection();
-        $fID = null;
-        if ($this->prefix) {
-            $fID = $db->GetOne('select fID from FileVersions where fvPrefix = ? and fvFilename = ?', [$this->prefix, $this->filename]);
+        $em = app(EntityManagerInterface::class);
+        $db = $em->getConnection();
+        $prefix = (string) $this->getPrefix();
+        if ($prefix === '') {
+            $fID = $db->fetchOne(
+                'SELECT fID FROM FileVersions WHERE fvFilename = ? LIMIT 1',
+                [$this->getFilename()]
+            );
         } else {
-            $fID = $db->GetOne('select fID from FileVersions where fvFilename = ?', [$this->filename]);
+            $fID = $db->fetchOne(
+                'SELECT fID FROM FileVersions WHERE fvPrefix = ? AND fvFilename = ? LIMIT 1',
+                [$prefix, $this->getFilename()]
+            );
+        }
+        if (!$fID) {
+            return null;
         }
 
-        if ($fID) {
-            $f = File::getByID($fID);
-
-            return $f;
-        }
+        return $fID ? $em->find(File::class, $fID) : null;
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Backup\ContentImporter\ValueInspector\Item\ItemInterface::getContentValue()
+     *
+     * @return string|null
+     */
     public function getContentValue()
     {
-        if ($o = $this->getContentObject()) {
-            if ($o->getFileUUID()) {
-                $identifier = $o->getFileUUID();
-            } else {
-                $identifier = $o->getFileID();
-            }
-            return sprintf("{CCM:FID_DL_%s}", $identifier);
+        $file = $this->getContentObject();
+        if ($file === null) {
+            return null;
         }
+        $uuid = $file->getFileUUID();
+
+        return sprintf('{CCM:FID_DL_%s}', $uuid ?: $file->getFileID());
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Backup\ContentImporter\ValueInspector\Item\ItemInterface::getFieldValue()
+     *
+     * @return int|null
+     */
     public function getFieldValue()
     {
-        if ($o = $this->getContentObject()) {
-            return $o->getFileID();
-        }
+        $file = $this->getContentObject();
+
+        return $file ? $file->getFileID() : null;
     }
 }

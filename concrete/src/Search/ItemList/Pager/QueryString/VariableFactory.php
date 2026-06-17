@@ -27,7 +27,7 @@ class VariableFactory
      * VariableFactory constructor.
      * @param $itemList
      */
-    public function __construct(PagerProviderInterface $itemList, StickyRequest $request = null)
+    public function __construct(PagerProviderInterface $itemList, ?StickyRequest $request = null)
     {
         $this->itemList = $itemList;
         if ($request) {

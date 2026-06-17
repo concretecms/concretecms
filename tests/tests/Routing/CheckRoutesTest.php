@@ -13,7 +13,7 @@ use Throwable;
 
 class CheckRoutesTest extends TestCase
 {
-    public function routeDestinationProvider()
+    public static function routeDestinationProvider()
     {
         $app = ApplicationFacade::getFacadeApplication();
         /** @var \Concrete\Core\Routing\Router $router */
@@ -69,7 +69,7 @@ class CheckRoutesTest extends TestCase
         }
     }
 
-    public function provideRouteWithDefaultParameters(): array
+    public static function provideRouteWithDefaultParameters(): array
     {
         $app = ApplicationFacade::getFacadeApplication();
         $result = [];
