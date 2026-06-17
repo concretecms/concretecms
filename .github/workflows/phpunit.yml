@@ -35,16 +35,13 @@ jobs:
           - "composer:v2"
 
         include:
-          - php-version: 8.1
+          - php-version: 8.4
             operating-system: "ubuntu-latest"
             dependencies: "highest"
-          - php-version: 7.3
+          - php-version: 8.4
             operating-system: "ubuntu-latest"
             dependencies: "locked"
-          - php-version: 8.1
-            operating-system: "ubuntu-latest"
-            dependencies: "locked"
-          - php-version: 8.2
+          - php-version: 8.5
             operating-system: "ubuntu-latest"
             dependencies: "locked"
           - php-version: 8.5
