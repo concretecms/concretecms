@@ -1,8 +1,8 @@
 <?php
 namespace Concrete\Controller\SinglePage\Dashboard\Boards\Instances;
 
-use Concrete\Core\Board\Command\AddContentToBoardInstanceCommand;
 use Concrete\Core\Board\Command\ClearBoardInstanceDataPoolCommand;
+use Concrete\Core\Board\Command\ClearBoardInstanceLogCommand;
 use Concrete\Core\Board\Command\DeleteBoardInstanceCommand;
 use Concrete\Core\Board\Command\PopulateBoardInstanceDataPoolCommand;
 use Concrete\Core\Board\Command\RefreshBoardInstanceCommand;
@@ -11,8 +11,10 @@ use Concrete\Core\Board\Instance\Renderer;
 use Concrete\Core\Entity\Board\DataSource\ConfiguredDataSource;
 use Concrete\Core\Entity\Board\Instance;
 use Concrete\Core\Entity\Board\InstanceItem;
+use Concrete\Core\Entity\Board\InstanceLog;
 use Concrete\Core\Page\Controller\DashboardPageController;
 use Concrete\Core\Permission\Checker;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 class Details extends DashboardPageController
 {
@@ -100,27 +102,6 @@ class Details extends DashboardPageController
         }
     }
 
-    public function add_content($id = null)
-    {
-        $instance = $this->entityManager->find(Instance::class, $id);
-        if (is_object($instance)) {
-            if (!$this->token->validate('add_content')) {
-                $this->error->add(t($this->token->getErrorMessage()));
-            }
-            if (!$this->error->has()) {
-                $command = new AddContentToBoardInstanceCommand();
-                $command->setInstance($instance);
-                $this->executeCommand($command);
-                $this->flash('success', t('Content added to instance.'));
-                return $this->redirect('/dashboard/boards/instances/details', 'view', $instance->getBoardInstanceID());
-            }
-            $this->view($id);
-        } else {
-            return $this->redirect('/dashboard/boards/boards');
-        }
-    }
-
-
     public function view_instance($id = null)
     {
         $instance = $this->entityManager->find(Instance::class, $id);
@@ -162,10 +143,22 @@ class Details extends DashboardPageController
                 $this->flash('success', t('Board instance removed successfully.'));
                 return $this->redirect('/dashboard/boards/instances', 'view', $board->getBoardID());
             }
-            $this->view($board->getId());
+            $this->view($board->getBoardID());
         } else {
             return $this->redirect('/dashboard/boards/boards');
         }
+    }
+
+    public function get_instance_log($boardInstanceID = null)
+    {
+        $instance = $this->entityManager->find(Instance::class, $boardInstanceID);
+        if ($instance) {
+            $log = $instance->getLog();
+            if ($log instanceof InstanceLog) {
+                return new JsonResponse($log);
+            }
+        }
+        return new JsonResponse([]);
     }
 
     public function view($id = null)
@@ -177,6 +170,7 @@ class Details extends DashboardPageController
             $this->set('itemRepository', $this->entityManager->getRepository(InstanceItem::class));
             $this->set('configuredSources', $configuredSources);
             $this->set('instance', $instance);
+            $this->set('instanceLoggingEnabled', $this->app->make('config')->get('concrete.log.boards.instances'));
         } else {
             return $this->redirect('/dashboard/boards/boards');
         }

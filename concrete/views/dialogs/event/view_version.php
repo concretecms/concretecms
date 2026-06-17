@@ -12,7 +12,7 @@ $attributes = \Concrete\Core\Attribute\Key\EventKey::getList();
     <?php if (!$version->isApproved()) { ?>
         <div class="alert alert-info"><?=t('This occurrence belongs to an event version that is not yet approved.')?></div>
     <?php } ?>
-    <h3><?=$version->getName()?></h3>
+    <h3><?=h($version->getName())?></h3>
 
     <?php
     $repetitions = $version->getRepetitions();

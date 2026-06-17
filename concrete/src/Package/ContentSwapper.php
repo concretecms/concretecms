@@ -52,6 +52,10 @@ class ContentSwapper implements ContentSwapperInterface
             \Core::make('cache/request')->disable();
 
             $pl = new PageList();
+            $pl->ignorePermissions();
+            $pl->includeAliases();
+            $pl->includeInactivePages();
+            $pl->setPageVersionToRetrieve(PageList::PAGE_VERSION_RECENT);
             $pages = $pl->getResults();
             foreach ($pages as $c) {
                 $c->delete();

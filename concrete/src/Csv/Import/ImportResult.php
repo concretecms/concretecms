@@ -202,7 +202,7 @@ class ImportResult implements JsonSerializable
      *
      * @return $this
      */
-    public function setDataCollected(array $value = null)
+    public function setDataCollected(?array $value = null)
     {
         $this->dataCollected = $value;
 

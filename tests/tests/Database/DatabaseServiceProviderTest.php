@@ -35,7 +35,7 @@ class DatabaseServiceProviderTest extends TestCase
         $this->assertInstanceOf($expected, $doctrineConfig, $message);
     }
 
-    public function dataProviderForTestDoctrineORMSetup()
+    public static function dataProviderForTestDoctrineORMSetup()
     {
         return [
             ['Doctrine\ORM\Configuration', 'Doctrine\ORM\Configuration', 'This is not an instance of Doctrine\ORM\Configuration.'],
@@ -79,7 +79,7 @@ class DatabaseServiceProviderTest extends TestCase
 //        $this->assertInstanceOf($compare, $doctrineConfig);
 //    }
 
-    public function dataProviderForTestORMCache()
+    public static function dataProviderForTestORMCache()
     {
         return [
             'ORM development cache settings' => ['orm/cache', 'Doctrine\Common\Cache\ArrayCache', true],
@@ -90,7 +90,7 @@ class DatabaseServiceProviderTest extends TestCase
     /**
      * Test if the interface and the concrete EntityManagerConfigFactory are mapped correctly.
      *
-     * @dataProvider dataProviderForTestEntityManagerConfigFactory     *
+     * @dataProvider dataProviderForTestEntityManagerConfigFactory
      *
      * @param string $ioCAlias
      * @param string $expected1
@@ -103,7 +103,7 @@ class DatabaseServiceProviderTest extends TestCase
         $this->assertInstanceOf($expected2, $entityManagerConfigFactory);
     }
 
-    public function dataProviderForTestEntityManagerConfigFactory()
+    public static function dataProviderForTestEntityManagerConfigFactory()
     {
         return [
             'Map EntityManagerConfigFactoryInterface' => ['Concrete\Core\Database\EntityManagerConfigFactoryInterface', 'Concrete\Core\Database\EntityManagerConfigFactoryInterface', 'Concrete\Core\Database\EntityManagerConfigFactory'],
@@ -127,7 +127,7 @@ class DatabaseServiceProviderTest extends TestCase
         $this->assertInstanceOf($expected2, $entityManagerFactory);
     }
 
-    public function dataProviderForTestEntityManagerFactory()
+    public static function dataProviderForTestEntityManagerFactory()
     {
         return [
             'Map EntityManagerFactoryInterface' => ['Concrete\Core\Database\EntityManagerFactoryInterface', 'Concrete\Core\Database\EntityManagerFactoryInterface', 'Concrete\Core\Database\EntityManagerFactory'],
@@ -150,7 +150,7 @@ class DatabaseServiceProviderTest extends TestCase
         $this->assertInstanceOf($expected1, $instance);
     }
 
-    public function dataProviderForTestDatabaseAndDBALSetup()
+    public static function dataProviderForTestDatabaseAndDBALSetup()
     {
         return [
             ['Concrete\Core\Database\DatabaseManager', 'Concrete\Core\Database\DatabaseManager'],

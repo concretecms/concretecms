@@ -52,4 +52,21 @@ div#ccm-dashboard-content {
   }
 }
 
+@include color-mode(dark) {
+  div#ccm-dashboard-content {
+    p {
+      color: $gray-200;
+    }
+
+    div#ccm-dashboard-content-regular {
+      border-top: 1px solid $gray-700;
+    }
+
+    div#ccm-dashboard-content-full {
+      border-top: 1px solid $gray-700;
+    }
+  }
+}
+
+
 

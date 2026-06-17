@@ -123,7 +123,12 @@ class Controller extends BlockController implements UsesFeatureInterface
     /**
      * @var bool
      */
-    protected $btCacheBlockOutputForRegisteredUsers = false;
+    protected $btCacheBlockOutputForRegisteredUsers = true;
+
+    /**
+     * @var bool
+     */
+    protected $btCacheBlockOutputOnEditMode = false;
 
     /**
      * {@inheritdoc}
@@ -288,7 +293,7 @@ class Controller extends BlockController implements UsesFeatureInterface
             'color' => $data['color'],
 
             'rel' => $data['rel'] ? 1 : 0,
-            'iv_load_policy' => $data['iv_load_policy'] ? 3 : 1,
+            'iv_load_policy' => ((int) $data['iv_load_policy']) ?: 1,
             'autoplay' => $data['autoplay'] ? 1 : 0,
             'loopEnd' => $data['loopEnd'] ? 1 : 0,
 

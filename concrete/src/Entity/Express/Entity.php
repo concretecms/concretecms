@@ -524,7 +524,7 @@ class Entity implements CategoryObjectInterface, ObjectInterface, ExportableInte
         return $this->entity_results_node_id;
     }
 
-    public function getEntityResultsNodeObject(Site $site = null)
+    public function getEntityResultsNodeObject(?Site $site = null)
     {
         $node = Node::getByID($this->getEntityResultsNodeId());
         if ($node) {

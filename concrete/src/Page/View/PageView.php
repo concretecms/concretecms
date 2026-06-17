@@ -9,6 +9,9 @@ use Concrete\Core\Page\View\Preview\SkinPreviewRequest;
 use Concrete\Core\Page\View\Preview\ThemeCustomizerRequest;
 use Concrete\Core\StyleCustomizer\Normalizer\NormalizedVariableCollectionFactory;
 use Concrete\Core\StyleCustomizer\Skin\SkinInterface;
+use Concrete\Core\StyleCustomizer\Skin\Stylesheet\SiteStylesheet;
+use Concrete\Core\StyleCustomizer\Skin\Stylesheet\Stylesheet;
+use Concrete\Core\StyleCustomizer\Skin\Stylesheet\StylesheetInterface;
 use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\User\User;
 use Concrete\Core\View\View;
@@ -28,6 +31,7 @@ class PageView extends View
     protected $cp;
     protected $pTemplateID;
     protected $customPreviewRequest;
+    protected $pTemplatePkgHandle;
 
     public function getScopeItems()
     {
@@ -62,31 +66,51 @@ class PageView extends View
         $cFilename = trim($cFilename, '/');
 
         // if we have this exact template in the theme, we use that as the outer wrapper and we don't do an inner content file
-        $exactThemeTemplate = $env->getRecord(DIRNAME_THEMES . '/' . $this->themeHandle . '/' . $cFilename, $this->themePkgHandle);
+        $exactThemeTemplate = $env->getRecord(
+            DIRNAME_THEMES . '/' . $this->themeHandle . '/' . $cFilename,
+            $this->themePkgHandle,
+            true,
+        );
         if ($exactThemeTemplate->exists()) {
             $this->setViewTemplate($exactThemeTemplate->file);
         } else {
             // use a content wrapper from themes/core if specified
             // e.g. $this->render('your/page', 'none') would use themes/core/none.php to print the $innerContent without a wrapper
-            $coreThemeTemplate = $env->getRecord(DIRNAME_THEMES . '/' . DIRNAME_THEMES_CORE . '/' . $this->themePkgHandle . '.php');
+            $coreThemeTemplate = $env->getRecord(
+                DIRNAME_THEMES . '/' . DIRNAME_THEMES_CORE . '/' . $this->themePkgHandle,
+                false,
+                true
+            );
             if ($coreThemeTemplate->exists()) {
                 $this->setViewTemplate($coreThemeTemplate->file);
             } else {
                 // check for other themes or in a package if one was specified
-                $themeTemplate = $env->getRecord(DIRNAME_THEMES . '/' . $this->themeHandle . '/' . $this->controller->getThemeViewTemplate(), $this->themePkgHandle);
+                $themeTemplate = $env->getRecord(
+                    DIRNAME_THEMES . '/' . $this->themeHandle . '/' . $this->controller->getThemeViewTemplate(),
+                    $this->themePkgHandle,
+                    true,
+                );
                 if ($themeTemplate->exists()) {
                     $this->setViewTemplate($themeTemplate->file);
                 } else {
                     // fall back to the active theme wrapper if nothing else was found
                     $fallbackTheme = PageTheme::getByHandle($this->themeHandle);
                     $fallbackPkgHandle = ($fallbackTheme instanceof PageTheme) ? $fallbackTheme->getPackageHandle() : $this->themePkgHandle;
-                    $fallbackTemplate = $env->getRecord(DIRNAME_THEMES . '/' . $this->themeHandle . '/' . $this->controller->getThemeViewTemplate(), $fallbackPkgHandle);
+                    $fallbackTemplate = $env->getRecord(
+                        DIRNAME_THEMES . '/' . $this->themeHandle . '/' . $this->controller->getThemeViewTemplate(),
+                        $fallbackPkgHandle,
+                        true,
+                    );
                     $path = $fallbackTemplate->file;
                     if (basename($path) != FILENAME_THEMES_VIEW) {
                         // We're going to check to see if this file actually exists in the theme. Otherwise we're going to use the default wrapper.
                         // Ideally this would happen in getThemeViewTemplate but it's hard to add the logic there.
                         if (!$fallbackTemplate->exists()) {
-                            $path = $env->getPath(DIRNAME_THEMES . '/' . $this->themeHandle . '/' . FILENAME_THEMES_VIEW, $fallbackPkgHandle);
+                            $path = $env->getPath(
+                                DIRNAME_THEMES . '/' . $this->themeHandle . '/' . FILENAME_THEMES_VIEW,
+                                $fallbackPkgHandle,
+                                true,
+                            );
                         }
                     }
                     $this->setViewTemplate($path);
@@ -101,7 +125,8 @@ class PageView extends View
             $this->setInnerContentFile(
                 $env->getPath(
                     DIRNAME_PAGES . '/' . $cFilename,
-                    $pkgHandle
+                    $pkgHandle,
+                    true,
                 )
             );
         }
@@ -125,33 +150,48 @@ class PageView extends View
             $rec = null;
             if ($pt) {
                 $rec = $env->getRecord(
-                    DIRNAME_THEMES . '/' . $this->themeHandle . '/' . $pt->getPageTemplateHandle() . '.php',
-                    $this->themePkgHandle);
+                    DIRNAME_THEMES . '/' . $this->themeHandle . '/' . $pt->getPageTemplateHandle(),
+                    $this->themePkgHandle,
+                    true,
+                );
             }
             if ($rec && $rec->exists()) {
                 $this->setViewTemplate(
                     $env->getPath(
-                        DIRNAME_THEMES . '/' . $this->themeHandle . '/' . $pt->getPageTemplateHandle() . '.php',
-                        $this->themePkgHandle));
+                        DIRNAME_THEMES . '/' . $this->themeHandle . '/' . $pt->getPageTemplateHandle(),
+                        $this->themePkgHandle,
+                        true,
+                    ));
             } else {
                 $pTemplatePkgHandle = isset($this->pTemplatePkgHandle) ? $this->pTemplatePkgHandle : null;
                 $rec = $env->getRecord(
-                    DIRNAME_PAGE_TEMPLATES . '/' . $this->c->getPageTemplateHandle() . '.php',
-                    $pTemplatePkgHandle);
+                    DIRNAME_PAGE_TEMPLATES . '/' . $this->c->getPageTemplateHandle(),
+                    $pTemplatePkgHandle,
+                    true,
+                );
                 if ($rec->exists()) {
                     $this->setInnerContentFile(
                         $env->getPath(
-                            DIRNAME_PAGE_TEMPLATES . '/' . $this->c->getPageTemplateHandle() . '.php',
-                            $pTemplatePkgHandle));
+                            DIRNAME_PAGE_TEMPLATES . '/' . $this->c->getPageTemplateHandle(),
+                            $pTemplatePkgHandle,
+                            true,
+                        )
+                    );
                     $this->setViewTemplate(
                         $env->getPath(
                             DIRNAME_THEMES . '/' . $this->themeHandle . '/' . $this->controller->getThemeViewTemplate(),
-                            $this->themePkgHandle));
+                            $this->themePkgHandle,
+                            true,
+                        )
+                    );
                 } else {
                     $this->setViewTemplate(
                         $env->getPath(
                             DIRNAME_THEMES . '/' . $this->themeHandle . '/' . FILENAME_THEMES_DEFAULT,
-                            $this->themePkgHandle));
+                            $this->themePkgHandle,
+                            true
+                        )
+                    );
                 }
             }
         }
@@ -267,6 +307,7 @@ class PageView extends View
     public function getThemeStyles()
     {
         $customStyles = null;
+        $stylesheet = null;
         if (isset($this->customPreviewRequest)) {
             if ($this->customPreviewRequest instanceof SkinPreviewRequest) {
                 $skinIdentifier = $this->customPreviewRequest->getSkin()->getIdentifier();
@@ -277,22 +318,27 @@ class PageView extends View
                 $customStyles = $this->customPreviewRequest->getCustomCss();
             }
         } else {
-            $skin = $this->c->getPageSkin();
-            if (!$skin) {
-                // This shouldn't happen during normal run, but in some cases like we're previewing a board
-                // in the dashboard we might have a page that has no skin (because it's a dashboard page)
-                // but rendering in a theme that does, so we should default to the theme's default skin in that case
-                $skin = $this->themeObject->getSkinByIdentifier(SkinInterface::SKIN_DEFAULT);
+            $skinIdentifier = $this->c->getPageSkinIdentifier(false);
+            if ($skinIdentifier) {
+                // The page has a custom skin identifier
+                $skin = $this->themeObject->getSkinByIdentifier($skinIdentifier);
+                $stylesheet = $skin->getStylesheet();
+            } else {
+                $site = $this->c->getSite();
+                if (!$site) {
+                    $site = app('site')->getSite();
+                }
+                $stylesheet = new SiteStylesheet($site);
             }
-            $stylesheet = $skin->getStylesheet();
         }
         if ($customStyles) {
             $styles = new Element('style', $customStyles);
             $styles->type('text/css');
             return $styles;
-        } else {
-            return $stylesheet;
+        } else if ($stylesheet instanceof StylesheetInterface) {
+            return $stylesheet->getElement();
         }
+        return '';
     }
 
     /**
@@ -326,7 +372,8 @@ class PageView extends View
         $relative = REL_DIR_FILES_CACHE . '/pages/' . $this->c->getCollectionID() . '/' . DIRNAME_CSS . '/' . $this->getThemeHandle();
         $r = $env->getRecord(
             DIRNAME_THEMES . '/' . $this->themeObject->getThemeHandle() . '/' . DIRNAME_CSS . '/' . $stylesheet,
-            $this->themeObject->getPackageHandle());
+            $this->themeObject->getPackageHandle()
+        );
         if ($r->exists()) {
             $sheetObject = new \Concrete\Core\StyleCustomizer\Stylesheet(
                 $stylesheet,

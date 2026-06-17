@@ -159,6 +159,7 @@ class MessengerServiceProvider extends ServiceProvider
             }
             $manager->setDefaultFailedReceiverName($config->get('concrete.messenger.failure.default_receiver'));
             $manager->routeFailedReceiverToSender(TransportInterface::DEFAULT_ASYNC, TransportInterface::DEFAULT_FAILED);
+            $manager->routeFailedReceiverToSender(TransportInterface::DEFAULT_SYNC, TransportInterface::DEFAULT_FAILED);
             return $manager;
         });
 

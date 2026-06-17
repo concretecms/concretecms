@@ -17,12 +17,13 @@ class DriverManagerTest extends TestCase
 
     public function testConfigLoad()
     {
+        $testMock = \Mockery::namedMock('ConfigExtensionNewable');
         $this->driverManager->configExtensions(
             [
-                'test' => __CLASS__,
+                'test' => $testMock->mockery_getName(),
             ]
         );
 
-        $this->assertInstanceOf(__CLASS__, $this->driverManager->driver('test'));
+        $this->assertInstanceOf($testMock->mockery_getName(), $this->driverManager->driver('test'));
     }
 }

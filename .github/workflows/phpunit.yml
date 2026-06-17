@@ -36,7 +36,7 @@ jobs:
           - "composer:v2"
 
         include:
-          - php-version: 8.0
+          - php-version: 8.1
             operating-system: "ubuntu-latest"
             dependencies: "highest"
           - php-version: 7.3
@@ -48,6 +48,9 @@ jobs:
           - php-version: 8.2
             operating-system: "ubuntu-latest"
             dependencies: "locked"
+          - php-version: 8.5
+            operating-system: "ubuntu-latest"
+            dependencies: "highest-unlocked"
 
     steps:
       - name: Enable code coverage
@@ -60,7 +63,7 @@ jobs:
           fetch-depth: 2
 
       - name: "Install PHP"
-        uses: shivammathur/setup-php@2.11.0
+        uses: shivammathur/setup-php@v2
         with:
           php-version: "${{ matrix.php-version }}"
           extensions: mbstring, xml, ctype, iconv, intl, pdo_mysql, mysql
@@ -76,19 +79,28 @@ jobs:
       - name: "Install lowest dependencies"
         if: ${{ matrix.dependencies == 'lowest' }}
         run: |
-          composer update --prefer-lowest --no-interaction --no-progress --no-suggest
+          composer update --prefer-lowest --no-interaction --no-progress
           # Run twice for mediawiki merge
-          composer update --prefer-lowest --no-interaction --no-progress --no-suggest
+          composer update --prefer-lowest --no-interaction --no-progress
 
       - name: "Install highest dependencies"
         if: ${{ matrix.dependencies == 'highest' }}
         run: |
-          composer update --no-interaction --no-progress --no-suggest
+          echo "CCM_TEST_SKIP_CHECKCOMPOSERPLATFORM=1" >>"$GITHUB_ENV"
+          composer config --unset platform.php
+          composer update --no-interaction --no-progress
 
       - name: "Install locked dependencies"
         if: ${{ matrix.dependencies == 'locked' }}
         run: |
-          composer install --no-interaction --no-progress --no-suggest
+          composer install --no-interaction --no-progress
+
+      - name: "Install highest unlocked dependencies"
+        if: ${{ matrix.dependencies == 'highest-unlocked' }}
+        run: |
+          echo "CCM_TEST_SKIP_CHECKCOMPOSERPLATFORM=1" >>"$GITHUB_ENV"
+          composer config --unset platform.php
+          composer update --no-interaction --no-progress
 
       - name: "Tests"
         if: env.CODE_COVERAGE == 'none'

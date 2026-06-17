@@ -8,7 +8,7 @@ use Gettext\Languages\Language;
 
 class GettextTest extends TestCase
 {
-    public function provideActualNumPlurals()
+    public static function provideActualNumPlurals()
     {
         return [
             [1],

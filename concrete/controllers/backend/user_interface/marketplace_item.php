@@ -6,6 +6,9 @@ use Concrete\Core\Legacy\TaskPermission;
 use Concrete\Core\Marketplace\Marketplace;
 use Concrete\Core\Marketplace\RemoteItem;
 
+/**
+ * @deprecated This will be removed in version 10
+ */
 abstract class MarketplaceItem extends UserInterface
 {
     protected $marketplace;
@@ -21,7 +24,6 @@ abstract class MarketplaceItem extends UserInterface
     protected function canAccess()
     {
         $tp = new TaskPermission();
-
         return $this->marketplace->isConnected() && $tp->canInstallPackages() && is_object($this->item);
     }
 }

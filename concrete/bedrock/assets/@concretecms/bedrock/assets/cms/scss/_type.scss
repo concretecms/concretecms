@@ -1,7 +1,7 @@
 // Note - ideally these font families should be handled by Bootstrap but when using with
 // A bootstrap theme the font family from the theme can sometimes take precedence. So let's
 // redeclare it here as well.
-body div.ccm-ui {
+body .ccm-ui {
   h1,
   .h1 {
     font-family: $headings-font-family;

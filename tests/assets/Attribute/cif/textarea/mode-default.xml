@@ -1,0 +1,11 @@
+<attributekey>
+  <value><![CDATA[
+    <a href="{ccm:export:page:/test-page-2}">Link Page</a>
+    and
+    <a href="{ccm:export:file:123456789012:file-1.jpg}">Link File</a>
+    and
+    <concrete-picture file="210987654321:file-2.jpg" />
+    and link to
+    <a href="{ccm:export:page:/does-not-exist}">Non Existing Page</a>
+  ]]></value>
+</attributekey>

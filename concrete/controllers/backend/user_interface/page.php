@@ -55,7 +55,7 @@ abstract class Page extends \Concrete\Controller\Backend\UserInterface
         } else {
             $cID = $this->page->getCollectionID();
         }
-        $url = call_user_func_array('parent::action', func_get_args());
+        $url = call_user_func_array([parent::class, 'action'], func_get_args());
         $url .= '&cID=' . $cID;
 
         return $url;

@@ -119,14 +119,16 @@ return [
         'core_announcement' => '\Concrete\Core\Announcement\AnnouncementServiceProvider',
         'core_form' => '\Concrete\Core\Form\FormServiceProvider',
         'core_session' => '\Concrete\Core\Session\SessionServiceProvider',
+        'core_sharing' => '\Concrete\Core\Sharing\SharingServiceProvider',
         'core_cookie' => '\Concrete\Core\Cookie\CookieServiceProvider',
         'core_http' => '\Concrete\Core\Http\HttpServiceProvider',
-        'core_whoops' => '\Concrete\Core\Error\Provider\WhoopsServiceProvider',
         'core_element' => '\Concrete\Core\Filesystem\FilesystemServiceProvider',
         'core_notification' => '\Concrete\Core\Notification\NotificationServiceProvider',
         'core_mercure' => '\Concrete\Core\Notification\Events\MercureServiceProvider',
         'core_package' => '\Concrete\Core\Package\PackageServiceProvider',
         'core_url' => '\Concrete\Core\Url\UrlServiceProvider',
+        'core_templates' => \Concrete\Core\Filesystem\TemplateServiceProvider::class,
+        'core_error' => '\Concrete\Core\Error\Provider\ErrorHandlingServiceProvider',
         'core_devices' => '\Concrete\Core\Device\DeviceServiceProvider',
         'core_user' => '\Concrete\Core\User\UserServiceProvider',
         'core_service_manager' => '\Concrete\Core\Service\Manager\ServiceManagerServiceProvider',
@@ -137,6 +139,8 @@ return [
         'core_summary' => '\Concrete\Core\Summary\ServiceProvider',
         'core_boards' => '\Concrete\Core\Board\ServiceProvider',
         'core_page' => \Concrete\Core\Page\PageServiceProvider::class,
+        'core_block' => \Concrete\Core\Block\BlockServiceProvider::class,
+        'core_area' => \Concrete\Core\Area\AreaServiceProvider::class,
 
         // Authentication
         'core_oauth' => '\Concrete\Core\Authentication\Type\OAuth\ServiceProvider',
@@ -161,11 +165,12 @@ return [
         // Api - has to come after Express (and possibly other items)
         'core_api' => 'Concrete\Core\Api\ApiServiceProvider',
 
+        'core_marketplace' => \Concrete\Core\Marketplace\MarketplaceServiceProvider::class,
+
         // Symfony Components
         'core_twig' => 'Concrete\Core\Twig\TwigServiceProvider',
         'core_symfony_form' => 'Concrete\Core\Providers\SymfonyFormServiceProvider',
         'core_serializer' => 'Concrete\Core\Providers\SerializerServiceProvider'
-
     ],
 
     /*
@@ -189,9 +194,7 @@ return [
         'URL' => '\Concrete\Core\Support\Facade\Url',
     ],
 
-    'entity_namespaces' => [
-        'calendar' => 'Concrete\Core\Entity\Calendar',
-    ],
+    'entity_namespaces' => [],
 
     'package_items' => [
         'antispam_library',
@@ -574,6 +577,10 @@ return [
             ['css', 'css/features/maps/frontend.css', ['minify' => false]],
         ],
 
+        'feature/polls/frontend' => [
+            ['css', 'css/features/polls/frontend.css', ['minify' => false]],
+        ],
+
         'feature/multilingual/frontend' => [
             ['javascript', 'js/features/multilingual/frontend.js', ['minify' => false]],
             ['css', 'css/features/multilingual/frontend.css', ['minify' => false]],
@@ -598,6 +605,13 @@ return [
             ['javascript', 'js/translator.js', ['minify' => false]],
             ['javascript-localized', '/ccm/assets/localization/translator/js'],
             ['css', 'css/translator.css', ['minify' => false]],
+        ],
+
+        // Todo: remove this when jQuery UI is fully removed from concrete/js/cms.js. This is a separate
+        // asset because we need the dynamic endpoint to load translations for jQuery UI
+        // See (https://github.com/concretecms/concretecms/issues/11901)
+        'jquery/ui' => [
+            ['javascript-localized', '/ccm/assets/localization/jquery/ui/js'],
         ],
 
         'htmldiff' => [
@@ -641,6 +655,7 @@ return [
                 ['javascript', 'ckeditor'],
                 ['javascript', 'ckeditor/concrete'],
                 ['css', 'ckeditor/concrete'],
+                ['javascript-localized', 'core/cms'],
             ],
         ],
         'ace' => [
@@ -658,6 +673,7 @@ return [
                 ['javascript', 'core/cms'],
                 ['javascript-localized', 'core/cms'],
                 ['css', 'core/cms'],
+                ['javascript-localized', 'jquery/ui'],
             ],
         ],
         'fullcalendar' => [
@@ -785,6 +801,12 @@ return [
             ],
         ],
 
+        'feature/polls/frontend' => [
+            [
+                ['css', 'feature/polls/frontend'],
+            ],
+        ],
+
         'feature/multilingual/frontend' => [
             [
                 ['javascript', 'feature/multilingual/frontend'],
@@ -834,47 +856,40 @@ return [
     ],
     // HTTP Client options
     'http_client' => [
-        // FALSE to stop from verifying the peer's certificate.
-        'sslverifypeer' => true,
-        // FALSE to stop from verifying the peer's name (used only with Socket connections, not with cURL ones).
-        'sslverifypeername' => false,
-        // The name of a file holding one or more certificates to verify the peer with (used only if sslverifypeer is not falsy).
-        'sslcafile' => null,
-        // A directory that holds multiple CA certificates to verify the peer with (used only if sslverifypeer is not falsy).
-        'sslcapath' => null,
-        // The number of seconds to wait while trying to connect.
-        'connecttimeout' => 5,
-        // The maximum number of seconds to allow response from remote server.
+        // SSL certificate verification. Set to false to allow self-signed certs (insecure!).
+        // You may also set this to a path to a CA bundle file.
+        // @see https://docs.guzzlephp.org/en/latest/request-options.html#verify
+        'verify' => true,
+
+        // Client certificate (PEM). Optionally provide [path, password].
+        // @see https://docs.guzzlephp.org/en/latest/request-options.html#cert
+        // 'cert' => ['/path/to/client.pem', 'password'],
+
+        // Connection timeout (seconds) and total request timeout (seconds).
+        // @see https://docs.guzzlephp.org/en/latest/request-options.html#connect-timeout
+        // @see https://docs.guzzlephp.org/en/latest/request-options.html#timeout
+        'connect_timeout' => 5,
         'timeout' => 60,
-        // Whether to enable keep-alive connections with the server. Useful and might improve performance if several consecutive requests to the same server are performed.
-        'keepalive' => false,
-        // Maximum number of redirections to follow (0 = none).
-        'maxredirects' => 5,
-        // Whether to strictly adhere to RFC 3986 (in practice, this means replacing "+" with "%20").
-        'rfc3986strict' => false,
-        // Path to a PEM encoded SSL certificate.
-        'sslcert' => null,
-        // Passphrase for the SSL certificate file.
-        'sslpassphrase' => null,
-        // Whether to store last response for later retrieval with getLastResponse(). If set to FALSE, getLastResponse() will return NULL.
-        'storeresponse' => true,
-        // Directory where to store temporary streams by default (if empty, we'll use the default concrete temporry directory).
-        'streamtmpdir' => null,
-        // Whether to strictly follow the RFC when redirecting (see https://framework.zend.com/manual/2.4/en/modules/zend.http.client.advanced.html#http-redirections )
-        'strictredirects' => false,
-        // User agent identifier string.
-        'useragent' => 'Concrete CMS',
-        // Whether to pass the cookie value through urlencode/urldecode. Enabling this breaks support with some web servers. Disabling this limits the range of values the cookies can contain.
-        'encodecookies' => true,
-        // HTTP protocol version (usually '1.1' or '1.0').
-        'httpversion' => '1.1',
-        // SSL transport layer ['ssl', 'sslv2', 'sslv3', 'tls'] (applicable only to Socket adapters).
-        'ssltransport' => 'tls',
-        // Whether to allow self-signed certificates (applicable only to Socket adapters).
-        'sslallowselfsigned' => false,
-        // Whether to use persistent TCP connections (applicable only to Socket adapters).
-        'persistent' => false,
-        // The name of a class that implements Psr\Log\LoggerInterface
+
+        // Redirect handling: max redirects and strict RFC behavior.
+        // @see https://docs.guzzlephp.org/en/latest/request-options.html#allow-redirects
+        'allow_redirects' => [
+            'max' => 5,
+            'strict' => false,
+            'referer' => true,
+        ],
+
+        // Default headers.
+        'headers' => [
+            'User-Agent' => 'Concrete CMS',
+        ],
+
+        // HTTP protocol version ('1.1' or '2' when supported by handler).
+        // @see https://docs.guzzlephp.org/en/latest/request-options.html#version
+        'version' => '1.1',
+
+        // The name of a class that implements Psr\Log\LoggerInterface.
+        // This is consumed by Concrete's HTTP client factory to attach a logger.
         'logger' => null,
     ],
 
@@ -897,4 +912,14 @@ return [
     'twig_additional_theme_paths' => [
 
     ],
+    'twig' => [
+        // bool|'auto' Set to `'auto'` to enable based on production mode
+        'debug' => 'auto',
+
+        // array<string, \Twig\Extension\ExtensionInterface> The twig extensions to enable
+        'extensions' => [
+            'debug' => \Twig\Extension\DebugExtension::class,
+            'core' => \Concrete\Core\Filesystem\Twig\CoreExtension::class,
+        ]
+    ]
 ];

@@ -63,12 +63,11 @@ $form-select-border-color: rgb(235, 235, 235);
 $form-select-box-shadow: 0 0;
 $input-border-radius: 4px;
 //$input-border-width: 1px;
-$input-color: $dark-blue;
+//$input-color: $dark-blue;
 $input-padding-y: 0.5rem;
 $label-margin-bottom: 0.4rem;
 $input-box-shadow: inset 0 0;
 $custom-select-box-shadow: inset 0 0;
-$form-label-color: $gray-700;
 $form-label-font-weight: 600;
 
 /* cards */
@@ -157,7 +156,7 @@ $link-decoration: none;
 /* panels */
 $panel-background-color: #fafbfc;
 $panel-background-color-accent: #e7e8eb;
-$panel-menu-item-color: $gray-600;
+$panel-menu-item-color: $gray-700;
 $panel-menu-item-hover-bg-color: #d2eafa;
 $panel-menu-item-hover-color: #222;
 $panel-menu-item-parent-item-active-font-weight: 600;
@@ -166,6 +165,11 @@ $panel-menu-item-active-bg-color: $blue;
 $panel-menu-item-active-color: white;
 $panel-menu-item-active-font-weight: 600;
 $panel-menu-item-transition: all 0.1s ease-in;
+$panel-background-color-dark: #040300;
+$panel-menu-item-color-dark: $gray-400;
+$panel-menu-item-hover-bg-color-dark: #424f5b;
+$panel-menu-item-hover-color-dark: #bbb;
+$panel-background-color-accent-dark: #1c1c1c;
 
 /* colors */
 $table-row-highlight-bg: #d2eafa;
@@ -344,6 +348,7 @@ $sitemap-container-background-color: transparent;
 $sitemap-normal-item-border-color: transparent;
 $sitemap-normal-item-background-color: transparent;
 $sitemap-normal-item-text-color: $dark;
+$sitemap-normal-item-text-color-dark: $gray-200;
 $sitemap-active-item-border-color: transparent;
 $sitemap-active-item-background-color: $blue;
 $sitemap-active-item-text-color: #fff;

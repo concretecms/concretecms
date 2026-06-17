@@ -29,5 +29,5 @@ interface ValidatorInterface
      *
      * @return bool
      */
-    public function isValid($mixed, ArrayAccess $error = null);
+    public function isValid($mixed, ?ArrayAccess $error = null);
 }

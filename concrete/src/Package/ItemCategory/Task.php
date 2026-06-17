@@ -2,6 +2,7 @@
 
 namespace Concrete\Core\Package\ItemCategory;
 
+use Concrete\Core\Command\Task\TaskService;
 use Concrete\Core\Entity\Automation\Task as TaskEntity;
 use Concrete\Core\Entity\Package;
 use Concrete\Core\Support\Facade\Application;
@@ -33,9 +34,8 @@ class Task extends AbstractCategory
     {
         if ($item instanceof TaskEntity) {
             $app = Application::getFacadeApplication();
-            $em = $app->make(EntityManager::class);
-            $em->remove($item);
-            $em->flush();
+            $service = $app->make(TaskService::class);
+            $service->delete($item);
         }
     }
 

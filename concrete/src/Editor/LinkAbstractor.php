@@ -154,12 +154,29 @@ class LinkAbstractor extends ConcreteObject
                         $style = preg_replace($heightPattern, '', $style);
                         $picture->height = $matches[1];
                     }
+                    $usePictureTag = null;
+                    if ($usePictureTag === null) {
+                        $widthFromHtml = (string) $picture->width;
+                        if ($widthFromHtml === (string) (int) $widthFromHtml && is_numeric($widthFromAttributes = (string) $fo->getAttribute('width'))) {
+                            if ($widthFromHtml !== $widthFromAttributes) {
+                                $usePictureTag = false;
+                            }
+                        }
+                    }
+                    if ($usePictureTag === null) {
+                        $heightFromHtml = (string) $picture->height;
+                        if ($heightFromHtml === (string) (int) $heightFromHtml && is_numeric($heightFromAttributes = (string) $fo->getAttribute('height'))) {
+                            if ($heightFromHtml !== $heightFromAttributes) {
+                                $usePictureTag = false;
+                            }
+                        }
+                    }
                     if ($style === '') {
                         unset($picture->style);
                     } else {
                         $picture->style = $style;
                     }
-                    $image = new Image($fo);
+                    $image = new Image($fo, ['usePictureTag' => $usePictureTag]);
                     $tag = $image->getTag();
 
                     foreach ($picture->attr as $attr => $val) {
@@ -408,13 +425,17 @@ class LinkAbstractor extends ConcreteObject
         $dom = new HtmlDomParser();
         $r = $dom->str_get_html($text, true, true, DEFAULT_TARGET_CHARSET, false);
         if (is_object($r)) {
-            $entityManager = $app->make(EntityManagerInterface::class);
             foreach ($r->find('concrete-picture') as $picture) {
                 $fID = $picture->fid;
-                $f = $entityManager->find(File::class, $fID);
-                if (is_object($f)) {
+                if (is_string($fID) && uuid_is_valid($fID)) {
+                    $f = \Concrete\Core\File\File::getByUUID($fID);
+                } else {
+                    $f = \Concrete\Core\File\File::getByID($fID);
+                }
+                $fv = $f ? $f->getApprovedVersion() : null;
+                if ($fv) {
                     $picture->fid = false;
-                    $picture->file = $f->getPrefix() . ':' . $f->getFilename();
+                    $picture->file = $fv->getPrefix() . ':' . $fv->getFilename();
                 }
             }
             $text = (string) $r->restore_noise($r);

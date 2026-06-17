@@ -54,7 +54,8 @@ class DownloadFile extends PageController
             $file = File::getByID($fID);
 
             if ($file instanceof FileEntity && $file->getFileID() > 0) {
-                $rcID = $this->app->make('helper/security')->sanitizeInt($rcID);
+                $rcID = (int) $rcID;
+                $rc = null;
 
                 if ($rcID > 0) {
                     $rc = Page::getByID($rcID, 'ACTIVE');
@@ -72,6 +73,8 @@ class DownloadFile extends PageController
                         }
                     }
                 }
+
+                $rcID = is_object($rc) ? $rc->getCollectionID() : null;
 
                 $permissionChecker = new Checker($file);
                 $responseObject = $permissionChecker->getResponseObject();
@@ -147,6 +150,8 @@ class DownloadFile extends PageController
             }
         }
 
+        $this->set('fID', $fID); // ensure $fID is set to something for invalid requests
+
         if ($this->app->make('helper/validation/numbers')->integer($fID, 1)) {
             $file = File::getByID($fID);
 
@@ -183,8 +188,6 @@ class DownloadFile extends PageController
                     header("Content-type: $mimeType");
                     echo $approvedVersion->getFileContents();
                     $this->app->shutdown();
-                } else {
-                    $this->force_download($file);
                 }
             }
         }
@@ -208,21 +211,28 @@ class DownloadFile extends PageController
             }
         }
 
+        $this->set('fID', $fID); // ensure $fID is set to something for invalid requests
+
         if ($this->app->make('helper/validation/numbers')->integer($fID, 1)) {
             $f = File::getByID($fID);
 
             $rcID = $this->post('rcID');
-            $rcID = $this->app->make('helper/security')->sanitizeInt($rcID);
 
-            if ($f->getPassword() == $this->post('password')) {
-                if ($this->post('force')) {
-                    return $this->force_download($f);
+            if ($f->getPassword() === $this->post('password')) {
+                $checker = new Checker($f);
+                if ($checker->canViewFile()) {
+                    if ($this->post('force')) {
+                        return $this->force_download($f);
+                    } else {
+                        return $this->download($f);
+                    }
                 } else {
-                    return $this->download($f);
+                    $this->set('error', t("You do not have permission to access this file."));
                 }
+            } else {
+                $this->set('error', t("Password incorrect. Please try again."));
             }
 
-            $this->set('error', t("Password incorrect. Please try again."));
             $this->set('force', ($this->post('force') ? 1 : 0));
 
             if ($fUUID !== null) {

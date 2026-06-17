@@ -11,7 +11,7 @@ use Concrete\TestHelpers\Database\ConcreteDatabaseTestCase;
 class ConfigurationTest extends ConcreteDatabaseTestCase
 {
     protected $fixtures = [];
-    protected $metadatas = [
+    protected $entityClassNames = [
         StorageLocationType::class,
     ];
 

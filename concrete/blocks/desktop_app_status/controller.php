@@ -23,6 +23,7 @@ class Controller extends BlockController
      * @var bool
      */
     protected $btCacheBlockOutputForRegisteredUsers = true;
+    protected $btCacheBlockOutputOnEditMode = true;
 
     /**
      * @var int

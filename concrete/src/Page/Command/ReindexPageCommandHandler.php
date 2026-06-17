@@ -7,7 +7,6 @@ use Concrete\Core\Cache\Page\PageCache;
 use Concrete\Core\Page\Page;
 use Concrete\Core\Page\Summary\Template\Populator;
 use Concrete\Core\Search\Index\IndexManagerInterface;
-
 class ReindexPageCommandHandler
 {
 

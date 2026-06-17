@@ -12,7 +12,7 @@ class TopicsDataFieldData implements DataFieldDataInterface
 
     protected $topicTreeNodeIDs = [];
     
-    public function __construct(array $topicTreeNodes = null)
+    public function __construct(?array $topicTreeNodes = null)
     {
         if (!empty($topicTreeNodes)) {
             foreach($topicTreeNodes as $topicTreeNode) {

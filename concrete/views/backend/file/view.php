@@ -10,6 +10,12 @@ defined('C5_EXECUTE') or die('Access Denied.');
  * @var Concrete\Core\Form\Service\Form $form
  */
 
+if ($fileVersion->hasFileUUID()) {
+    $fID = $fileVersion->getFileUUID();
+} else {
+    $fID = $fileVersion->getFileID();
+}
+
 ?>
 <div class="text-center">
     <?php
@@ -18,7 +24,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
 ?>
 </div>
 <div class="dialog-buttons">
-    <form method="post" action="<?= h($resolverManager->resolve(['ccm/system/file/download']) . '?fID=' . $fileVersion->getFileID() . '&fvID=' . $fileVersion->getFileVersionID()) ?>">
+    <form method="post" action="<?= h($resolverManager->resolve(['ccm/system/file/download']) . '?fID=' . $fID . '&fvID=' . $fileVersion->getFileVersionID()) ?>">
         <?= $form->submit('submit', t('Download'), ['class' => 'btn btn-primary float-end']) ?>
     </form>
 </div>

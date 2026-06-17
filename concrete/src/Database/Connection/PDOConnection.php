@@ -17,7 +17,7 @@ class PDOConnection extends \Doctrine\DBAL\Driver\PDOConnection
      * @param string|null $password
      * @param array|null  $options
      */
-    public function __construct($dsn, $user = null, $password = null, array $options = null)
+    public function __construct($dsn, $user = null, $password = null, ?array $options = null)
     {
         parent::__construct($dsn, $user, $password, $options);
         $this->setAttribute(PDO::ATTR_STATEMENT_CLASS, array('Concrete\Core\Database\Driver\PDOStatement', array()));

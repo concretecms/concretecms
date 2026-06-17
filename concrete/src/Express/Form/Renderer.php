@@ -47,7 +47,7 @@ class Renderer
      *
      * @throws \Exception
      */
-    public function render(Entry $entry = null)
+    public function render(?Entry $entry = null)
     {
         if ($entry) {
             $this->context->setEntry($entry);

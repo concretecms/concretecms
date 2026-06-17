@@ -79,7 +79,7 @@
                 </div>
                 <div class="form-group">
                     <label class="control-label form-label"><?php echo t('Description'); ?></label>
-                    <textarea class='editor-content' name="description[]"><?php echo $row['description']; ?></textarea>
+                    <textarea class='editor-content' name="description[]"><?php echo htmlspecialchars((string) $row['description'], ENT_QUOTES, APP_CHARSET); ?></textarea>
                 </div>
                 <button type="button" class="btn btn-sm btn-secondary ccm-edit-entry" data-entry-close-text="<?php echo t('Collapse Entry'); ?>" data-entry-edit-text="<?php echo t('Edit Entry'); ?>"><?php echo t('Edit Entry'); ?></button>
                 <button type="button" class="btn btn-sm btn-danger ccm-delete-faq-entry"><?php echo t('Remove'); ?></button>

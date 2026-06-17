@@ -127,6 +127,9 @@ class Service
                 $logText .= t('Type: %s', Loader::helper('text')->unhandle($type));
                 $logText .= "\n";
                 foreach ($args as $key => $value) {
+                     if(!is_scalar($value)){
+                        $value = json_encode($value);
+                    }
                     $logText .= Loader::helper('text')->unhandle($key) . ': ' . $value . "\n";
                 }
 

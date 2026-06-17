@@ -33,7 +33,7 @@ class FolderService
         }
     }
 
-    public function add($name, Folder $folder = null)
+    public function add($name, ?Folder $folder = null)
     {
 //        $site = \Core::make('site')->getActiveSiteForEditing();
         $type = Type::getByHandle(STACK_CATEGORY_PAGE_TYPE);

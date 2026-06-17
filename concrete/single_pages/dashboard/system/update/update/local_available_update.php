@@ -13,6 +13,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
  * @var Concrete\Core\Updater\ApplicationUpdate $update
  * @var Concrete\Core\Url\UrlImmutable $updatePackagesUrl
  * @var Concrete\Core\Entity\Package[] $installedPackages
+ * @var string $skipCoreUpdates
  */
 
 ?>
@@ -21,10 +22,21 @@ defined('C5_EXECUTE') or die('Access Denied.');
     <?php $token->output('do_update') ?>
     <input type="hidden" name="version" value="<?= h($update->getVersion()) ?>" />
 
-    <div class="alert alert-warning">
-        <?= t('Before updating, it is highly recommended to make a full site backup. A full site backup consists of site files and site database export. Please consult your hosting provider for guidance on backup processes.') ?>
-    </div>
-
+    <?php
+    if ($skipCoreUpdates !== '') {
+        ?>
+        <div class="alert alert-danger">
+            <?= nl2br(h($skipCoreUpdates)) ?>
+        </div>
+        <?php
+    } else {
+        ?>
+        <div class="alert alert-warning">
+            <?= t('Before updating, it is highly recommended to make a full site backup. A full site backup consists of site files and site database export. Please consult your hosting provider for guidance on backup processes.') ?>
+        </div>
+        <?php
+    }
+    ?>
     <div class="ccm-dashboard-update-details">
         <div class="ccm-dashboard-update-thumbnail"><img src="<?= ASSETS_URL_IMAGES ?>/logo.svg" /></div>
         <h2><?= t('Version %s', $update->getVersion()) ?></h2>
@@ -236,10 +248,19 @@ $(document).ready(function() {
                     return result;
                 },
                 handleSubmit: function(e) {
-                    if (this.state === my.STATE.LOADING) {
+                    if (this.state === this.STATE.LOADING) {
                         e.preventDefault();
                         return false;
                     }
+                    <?php
+                    if ($skipCoreUpdates !== '') {
+                        ?>
+                        ConcreteAlert.error({message: <?= json_encode($skipCoreUpdates) ?>});
+                        e.preventDefault();
+                        return false;
+                        <?php
+                    }
+                    ?>
                 }
             },
             mounted: function() {

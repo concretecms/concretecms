@@ -22,7 +22,17 @@ class NewMigrationsTest extends TestCase
                 return $pullRequestMigrationID < $baseMigrationID;
             });
         }
-        $this->assertSame([], $invalidMigrationIDs, "There shouldn't be any migration with an ID lower than {$baseMigrationID}");
+        $this->assertSame(
+            [],
+            $invalidMigrationIDs,
+            <<<EOT
+There shouldn't be any migration with an ID lower than {$baseMigrationID}
+for commits between
+{$state->getBaseSha1()}
+and
+{$state->getMergeSha1()} 
+EOT
+        );
     }
 
     /**

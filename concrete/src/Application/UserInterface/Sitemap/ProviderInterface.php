@@ -14,7 +14,7 @@ interface ProviderInterface
      *
      * @return \Concrete\Core\Application\UserInterface\Sitemap\TreeCollection\TreeCollectionInterface
      */
-    public function getTreeCollection(Tree $selectedTree = null);
+    public function getTreeCollection(?Tree $selectedTree = null);
 
     /**
      * @return \stdClass[]

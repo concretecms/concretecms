@@ -2,6 +2,8 @@
 
 namespace Concrete\Tests\Package;
 
+use Concrete\Core\Backup\ContentImporter;
+use Concrete\Core\Database\Schema\Schema;
 use Database;
 use Package;
 use Concrete\Tests\TestCase;
@@ -27,7 +29,7 @@ class DbXmlTest extends TestCase
         $this->assertFalse($schema->hasTable('TestPackageTable'));
 
         // Create the table initially.
-        Package::installDB(DIR_TESTS . '/assets/Package/db-1.xml');
+        Package::installDB(DIR_TESTS . '/assets/Package/db-1.xml', ContentImporter::IMPORT_MODE_INSTALL);
 
         // Make sure the table was properly created and it contains the column
         // we are about to remove does NOT contain the column we are about to

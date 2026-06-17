@@ -2,6 +2,7 @@
 
 namespace Concrete\Core\Logging;
 
+use Concrete\Core\Page\Page;
 use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\User\User;
 use Concrete\Core\User\UserInfo;
@@ -23,6 +24,8 @@ class LogEntry
     public $level;
     /** @var UserInfo|null */
     public $user;
+    /** @var Page|null */
+    public $page;
 
     public function __construct($row = null)
     {
@@ -57,6 +60,14 @@ class LogEntry
                 $user = $userInfoRepository->getByID($row["uID"]);
                 $this->setUser($user);
             }
+
+            if (isset($row["cID"])) {
+                $page = Page::getByID($row['cID'], 'ACTIVE');
+                if ($page && !$page->isError()) {
+                    $this->page = $page;
+                }
+            }
+
         }
     }
 
@@ -158,6 +169,11 @@ class LogEntry
         return $this->user;
     }
 
+    public function getPage(): ?Page
+    {
+        return $this->page;
+    }
+
     /**
      * @param UserInfo|null $user
      * @return LogEntry
@@ -232,7 +248,7 @@ class LogEntry
      */
     public function getUserID()
     {
-        return $this->uID;
+        return $this->getUser() instanceof UserInfo ? $this->getUser()->getUserID() : 0;
     }
 
     /**
@@ -242,12 +258,10 @@ class LogEntry
      */
     public function getUserObject()
     {
-        if ($this->getUserID()) {
-            $u = User::getByUserID($this->getUserID());
-            if (is_object($u)) {
-                return $u;
-            }
+        if ($this->getUser() instanceof UserInfo) {
+            return $this->getUser()->getUserObject();
         }
+        return null;
     }
 
     /**

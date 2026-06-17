@@ -10,12 +10,12 @@ use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 abstract class AbstractRebuildIndexCommand implements RebuildIndexCommandInterface, HandlerAwareCommandInterface
 {
 
-    public function normalize(NormalizerInterface $normalizer, string $format = null, array $context = [])
+    public function normalize(NormalizerInterface $normalizer, ?string $format = null, array $context = [])
     {
         return [];
     }
 
-    public function denormalize(DenormalizerInterface $denormalizer, $data, string $format = null, array $context = [])
+    public function denormalize(DenormalizerInterface $denormalizer, $data, ?string $format = null, array $context = [])
     {
     }
 

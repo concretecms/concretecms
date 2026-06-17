@@ -79,7 +79,7 @@ class ClosureValidator implements ValidatorInterface
      *
      * @see \Concrete\Core\Validator\ValidatorInterface::isValid()
      */
-    public function isValid($mixed, ArrayAccess $error = null)
+    public function isValid($mixed, ?ArrayAccess $error = null)
     {
         $closure = $this->validator_closure;
 

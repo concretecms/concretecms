@@ -29,7 +29,7 @@ class TestController implements ControllerInterface
         return null;
     }
 
-    public function getNotifier(NotificationProviderInterface $provider = null)
+    public function getNotifier(?NotificationProviderInterface $provider = null)
     {
         return null;
     }

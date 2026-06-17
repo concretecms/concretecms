@@ -13,6 +13,17 @@ class SiteInformationSurvey extends AbstractSurvey
         return 'general';
     }
 
+    public function getSaver(): SaverInterface
+    {
+        $fieldKeys = [];
+        foreach ($this->getQuestions() as $question) {
+            $fieldKeys[] = $question->getKey();
+        }
+        return app(SiteInformationSaver::class, [
+            'fieldKeys' => $fieldKeys,
+        ]);
+    }
+
     public function getQuestions(): array
     {
         return [

@@ -11,6 +11,7 @@ use Concrete\TestHelpers\Database\EntityManager\Provider\Fixtures\PackageControl
 use Concrete\TestHelpers\Database\Traits\DirectoryHelpers;
 use Illuminate\Filesystem\Filesystem;
 use Concrete\Tests\TestCase;
+use Mockery\MockInterface;
 
 /**
  * PackageProviderFactoryTest.
@@ -23,7 +24,7 @@ class DefaultPackageProviderTest extends TestCase
     use DirectoryHelpers;
 
     /**
-     * @var \Concrete\Core\Application\Application
+     * @var \Concrete\Core\Application\Application&MockInterface
      */
     protected $app;
 
@@ -38,7 +39,13 @@ class DefaultPackageProviderTest extends TestCase
     public function setUp():void
     {
         parent::setUp();
-        $this->app = Application::getFacadeApplication();
+
+        $annotationReader = \Mockery::mock(\Doctrine\Common\Annotations\SimpleAnnotationReader::class);
+        $this->app = \Mockery::mock(\Concrete\Core\Application\Application::class);
+        $this->app->shouldReceive('make')->with('orm/cachedSimpleAnnotationReader')->andReturns($annotationReader);
+
+        $cachedReader = \Mockery::mock(\Doctrine\Common\Annotations\AnnotationReader::class);
+        $this->app->shouldReceive('make')->with('orm/cachedAnnotationReader')->andReturns($cachedReader);
         $this->filesystem = new Filesystem();
     }
 
@@ -50,13 +57,26 @@ class DefaultPackageProviderTest extends TestCase
     public function testGetDriversWithGetPackageEntityPath()
     {
         $package = new PackageControllerWithgetPackageEntityPath($this->app);
-        $dpp = new DefaultPackageProvider($this->app, $package);
-        $drivers = $dpp->getDrivers();
-        self::assertIsArray($drivers);
-        $c5Driver = $drivers[0];
-        self::assertInstanceOf('Concrete\Core\Database\EntityManager\Driver\Driver', $c5Driver);
-        self::assertInstanceOf('Doctrine\ORM\Mapping\Driver\AnnotationDriver', $c5Driver->getDriver());
-        self::assertEquals($package->getNamespace() . '\Src', $c5Driver->getNamespace());
+        $fs = new Filesystem();
+        $deleteAfter = false;
+        try {
+            if (!is_dir(DIR_PACKAGES . '/' . $package->getPackageHandle())) {
+                $deleteAfter = true;
+                $fs->makeDirectory(DIR_PACKAGES . '/' . $package->getPackageHandle() . '/src', 0755, true);
+            }
+
+            $dpp = new DefaultPackageProvider($this->app, $package);
+            $drivers = $dpp->getDrivers();
+            self::assertIsArray($drivers);
+            $c5Driver = $drivers[0] ?? null;
+            self::assertInstanceOf('Concrete\Core\Database\EntityManager\Driver\Driver', $c5Driver);
+            self::assertInstanceOf('Doctrine\ORM\Mapping\Driver\AnnotationDriver', $c5Driver->getDriver());
+            self::assertEquals($package->getNamespace() . '\Src', $c5Driver->getNamespace());
+        } finally {
+            if ($deleteAfter) {
+                $fs->deleteDirectory(DIR_PACKAGES . '/' . $package->getPackageHandle());
+            }
+        }
     }
 
     /**
@@ -110,8 +130,6 @@ class DefaultPackageProviderTest extends TestCase
         self::assertInstanceOf('Concrete\Core\Database\EntityManager\Driver\Driver', $c5Driver);
         self::assertInstanceOf('Doctrine\ORM\Mapping\Driver\AnnotationDriver', $c5Driver->getDriver());
         self::assertEquals($package->getNamespace() . '\Entity', $c5Driver->getNamespace());
-
-        $this->removePackageFolderOfTestMetadataDriverDefault();
     }
 
     /**
@@ -136,18 +154,10 @@ class DefaultPackageProviderTest extends TestCase
 
         $pathsOfDriver1 = $driver1->getPaths();
         self::assertEquals('src/PortlandLabs/Concrete5/MigrationTool', $this->folderPathCleaner($pathsOfDriver1[0], 4));
-
-        $this->removePackageFolderOfTestMetadataDriverAdditionalNamespace();
     }
 
-    /**
-     * Clean up if a Exception is thrown.
-     *
-     * @param \Exception $e
-     */
-    protected function onNotSuccessfulTest(\Throwable $e):void
+    public function tearDown(): void
     {
-        $this->removePackageFolderOfTestMetadataDriverDefault();
         $this->removePackageFolderOfTestMetadataDriverDefault();
         $this->removePackageFolderOfTestMetadataDriverAdditionalNamespace();
     }

@@ -13,10 +13,16 @@ use Site;
 
 class PageControllerTest extends PageTestCase
 {
-    public function __construct($name = null, array $data = [], $dataName = '')
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\TestHelpers\Database\ConcreteDatabaseTestCase::getEntityClassNames()
+     */
+    protected function getEntityClassNames(): array
     {
-        parent::__construct($name, $data, $dataName);
-        $this->metadatas[] = Package::class;
+        return array_merge(parent::getEntityClassNames(), [
+            Package::class,
+        ]);
     }
 
     public function tearDown(): void

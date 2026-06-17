@@ -1,0 +1,7 @@
+<block type="switch_language" name="">
+  <data table="btSwitchLanguage">
+    <record>
+      <label></label>
+    </record>
+  </data>
+</block>

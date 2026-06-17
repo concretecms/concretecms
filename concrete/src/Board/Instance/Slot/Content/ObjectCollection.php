@@ -36,6 +36,22 @@ class ObjectCollection implements \JsonSerializable, DenormalizableInterface
         ];
     }
 
+    /**
+     * Takes an object collection and refreshes all objects within it, returning a new object collection
+     * @return self
+     */
+    public function refresh(): self
+    {
+        $app = app();
+        $updatedObjectCollection = new ObjectCollection();
+        $objects = $this->getContentObjects();
+        foreach ($objects as $contentSlot => $object) {
+            $object->refresh($app);
+            $updatedObjectCollection->addContentObject($contentSlot, $object);
+        }
+        return $updatedObjectCollection;
+    }
+
     public function denormalize(DenormalizerInterface $denormalizer, $data, $format = null, array $context = [])
     {
         if (isset($data['objects'])) {

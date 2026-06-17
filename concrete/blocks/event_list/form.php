@@ -9,25 +9,24 @@ use Concrete\Core\Form\Service\Widget\PageSelector;
 use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\View\View;
 
-/** @var array $attributeKeys */
-/** @var PageKey[] $pageAttributeKeys */
-/** @var Calendar[] $calendars */
-/** @var object|null $featuredAttribute */
-/** @var string $filterByTopic */
-/** @var array $caID */
-
-/** @var string $calendarAttributeKeyHandle */
-/** @var int $totalToRetrieve */
-/** @var int $totalPerPage */
-/** @var int $filterByTopicAttributeKeyID */
-/** @var int $filterByTopicID */
-/** @var string $filterByPageTopicAttributeKeyHandle */
-/** @var bool $filterByFeatured */
-/** @var string $eventListTitle */
-/** @var int $linkToPage */
-
-//There might be a better way to do this but i get an error when adding the block to the page when I have topics setup. @TMDesigns 
-$filterByTopicAttributeKeyID ="";
+/**
+ * @var array $attributeKeys
+ * @var PageKey[] $pageAttributeKeys
+ * @var Calendar[] $calendars
+ * @var string $featuredAttributeUnusableReason
+ * @var string $filterByTopic
+ * @var array $caID
+ *
+ * @var string $calendarAttributeKeyHandle
+ * @var int $totalToRetrieve
+ * @var int $totalPerPage
+ * @var int $filterByTopicAttributeKeyID
+ * @var int $filterByTopicID
+ * @var string $filterByPageTopicAttributeKeyHandle
+ * @var bool $filterByFeatured
+ * @var string $eventListTitle
+ * @var int $linkToPage
+ */
 
 $app = Application::getFacadeApplication();
 /** @var PageSelector $pageSelector */
@@ -120,7 +119,7 @@ if (count($pageAttributeKeys)) {
             <?php
 
             $checkboxAttributes = [];
-            if (!is_object($featuredAttribute)) {
+            if (!empty($featuredAttributeUnusableReason)) {
                 $checkboxAttributes["disabled"] = "disabled";
             }
 
@@ -129,11 +128,16 @@ if (count($pageAttributeKeys)) {
             ?>
         </div>
 
-        <?php if (!is_object($featuredAttribute)) { ?>
+        <?php
+        if (!empty($featuredAttributeUnusableReason)) {
+            ?>
             <div class="alert alert-info">
-                <?php echo t('(%s: You must create the "is_featured" event attribute first.)', '<strong>' . t('Note') . '</strong>'); ?>
+                <strong><?= t('Note') ?></strong>
+                <?= $featuredAttributeUnusableReason ?>
             </div>
-        <?php } ?>
+            <?php
+        }
+        ?>
     </div>
 </fieldset>
 

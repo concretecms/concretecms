@@ -11,9 +11,10 @@ use Concrete\Core\Logging\LoggerAwareInterface;
 use Concrete\Core\Logging\LoggerAwareTrait;
 use Concrete\Core\Routing\RedirectResponse;
 use Concrete\Core\User\PostLoginLocation;
+use Concrete\Core\User\PostLoginLocationUrl;
+use Concrete\Core\User\User;
 use Exception;
 use PageController;
-use Concrete\Core\User\User;
 use UserAttributeKey;
 use UserInfo;
 
@@ -151,9 +152,6 @@ class Login extends PageController implements LoggerAwareInterface
         AuthenticationType $type,
         User $u
     ) {
-        if (!$type || !($type instanceof AuthenticationType)) {
-            return $this->view();
-        }
         $config = $this->app->make('config');
         if ($config->get('concrete.i18n.choose_language_login')) {
             $userLocale = $this->post('USER_LOCALE');
@@ -199,7 +197,9 @@ class Login extends PageController implements LoggerAwareInterface
 
             $this->view();
 
-            return $this->getViewObject()->render();
+            $responseContent = $this->getViewObject()->render();
+
+            return $this->app->make(ResponseFactoryInterface::class)->create($responseContent);
         }
 
         $u->setLastAuthType($type);
@@ -400,6 +400,31 @@ class Login extends PageController implements LoggerAwareInterface
         }
     }
 
+    private function logoutAndRedirect(): RedirectResponse
+    {
+        $u = $this->app->make(User::class);
+        $response = null;
+        if ($u->isRegistered()) {
+            $response = $u->logout();
+        }
+        if ($response instanceof RedirectResponse) {
+            return $response;
+        } else {
+            $displayLogoutMessage = $this->app->make('config')->get('concrete.user.logout.display_logout_message');
+            if ($displayLogoutMessage) {
+                return $this->buildRedirect(['/login', 'logout_complete']);
+            } else {
+                return $this->buildRedirect('/');
+            }
+        }
+    }
+
+    public function logout_complete()
+    {
+        $this->set('logoutComplete', true);
+        $this->set('logoutMessage', (string) $this->app->make('config')->get('concrete.user.logout.logout_message'));
+    }
+
     /**
      * @deprecated Use do_logout instead
      *
@@ -411,7 +436,7 @@ class Login extends PageController implements LoggerAwareInterface
     {
         $valt = $this->app->make('token');
         if ($valt->validate('logout', $token)) {
-            $response = $this->app->make(User::class)->logout() ?? $this->buildRedirect('/');
+            $response = $this->logoutAndRedirect();
             $response->send();
             exit();
         }
@@ -429,13 +454,24 @@ class Login extends PageController implements LoggerAwareInterface
             return $this->app->make(ResponseFactoryInterface::class)->error($valt->getErrorMessage());
         }
 
-        return $this->app->make(User::class)->logout() ?? $this->buildRedirect('/');
+        return $this->logoutAndRedirect();
     }
 
     public function forward($cID = 0)
     {
         $nh = $this->app->make('helper/validation/numbers');
-        if ($nh->integer($cID, 1)) {
+        $rcURL = '';
+        if ($this->request->query->has('rcURL')) {
+            $requestRcURL = $this->request->query->get('rcURL');
+            if (is_string($requestRcURL)) {
+                $pll = $this->app->make(PostLoginLocation::class);
+                $urlHelper = $this->app->make(PostLoginLocationUrl::class);
+                $rcURL = $urlHelper->getAllowedRedirectUrl($requestRcURL);
+            }
+        }
+        if ($rcURL !== '') {
+            $pll->setSessionPostLoginUrl($rcURL);
+        } elseif ($nh->integer($cID, 1)) {
             $rcID = (int) $cID;
             $this->set('rcID', $rcID);
             $pll = $this->app->make(PostLoginLocation::class);

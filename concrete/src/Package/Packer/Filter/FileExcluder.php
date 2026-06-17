@@ -67,6 +67,20 @@ class FileExcluder implements FilterInterface
     const EXCLUDE_COMPOSER_LOCK = 0b110000; // includes EXCLUDE_COMPOSER_JSON
 
     /**
+     * Files to exclude: tests directory.
+     *
+     * @var int
+     */
+    const EXCLUDE_TESTS = 0b1000000;
+
+    /**
+     * Files to exclude: phpunit.xml files.
+     *
+     * @var int
+     */
+    const EXCLUDE_PHPUNIT_XML = 0b10000000;
+
+    /**
      * The EXCLUDE_... bit flags.
      *
      * @var int
@@ -124,6 +138,12 @@ class FileExcluder implements FilterInterface
             }
         }
         if ($file->isDirectory()) {
+            if ($this->excludeFiles & static::EXCLUDE_TESTS) {
+                if (strtolower($file->getBasename()) === 'tests') {
+                    return t('The directory is a tests directory.');
+                }
+            }
+
             return null;
         }
         switch ($file->getType()) {
@@ -144,6 +164,11 @@ class FileExcluder implements FilterInterface
                     return t('The file is a source .svg icon file.');
                 }
                 break;
+        }
+        if ($this->excludeFiles & static::EXCLUDE_PHPUNIT_XML) {
+            if ($file->getBasename() === 'phpunit.xml') {
+                return t('The file is a phpunit.xml file.');
+            }
         }
         switch (strtolower($file->getBasename())) {
             case 'composer.json':

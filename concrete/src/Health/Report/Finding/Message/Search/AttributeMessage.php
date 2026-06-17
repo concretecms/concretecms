@@ -18,7 +18,7 @@ class AttributeMessage implements MessageInterface
      */
     protected $value;
 
-    public function __construct(Value $value = null)
+    public function __construct(?Value $value = null)
     {
         $this->value = $value;
     }
@@ -75,7 +75,7 @@ class AttributeMessage implements MessageInterface
         return new AttributeFormatter();
     }
 
-    public function denormalize(DenormalizerInterface $denormalizer, $data, string $format = null, array $context = [])
+    public function denormalize(DenormalizerInterface $denormalizer, $data, ?string $format = null, array $context = [])
     {
         $em = app(EntityManager::class);
         $this->value = $em->find(Value::class, $data['value']);

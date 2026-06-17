@@ -16,7 +16,7 @@ if (is_object($ms)) {
 }
 
 $editor = \Concrete\Core\Conversation\Editor\Editor::getActive();
-$editor->setConversationObject($args['conversation']);
+$editor->setConversationObject($conversation);
 
 $val = $app->make('token');
 $form = $app->make('helper/form');

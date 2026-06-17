@@ -113,13 +113,17 @@ class Search extends DashboardPageController
         $headerSearch = $this->getHeaderSearch();
         $headerMenu->getElementController()->setQuery($result->getQuery());
         $headerSearch->getElementController()->setQuery($result->getQuery());
+        $query = Url::createFromServer($_SERVER)->getQuery();
 
         $exportArgs = [$this->getPageObject()->getCollectionPath(), 'csv_export'];
         if ($this->getAction() == 'advanced_search') {
             $exportArgs[] = 'advanced_search';
         }
+        if ($this->getAction() == 'preset') {
+            $exportArgs[] = 'preset';
+            $query->set(['presetID' => array_first($this->getParameters())]);
+        }
         $exportURL = $this->app->make('url/resolver/path')->resolve($exportArgs);
-        $query = Url::createFromServer($_SERVER)->getQuery();
         $exportURL = $exportURL->setQuery($query);
         $headerMenu->getElementController()->setExportURL($exportURL);
 
@@ -395,6 +399,7 @@ class Search extends DashboardPageController
                         $error->add(t('The two passwords provided do not match.'));
                     }
                 }
+                $data['_allowPasswordUpdate'] = true;
                 $data['uPasswordConfirm'] = $passwordNew;
                 $data['uPassword'] = $passwordNew;
             }
@@ -411,6 +416,7 @@ class Search extends DashboardPageController
                         }
                     }
                 }
+                $data['_allowIgnoredIPMismatchesUpdate'] = true;
                 $data['ignoredIPMismatches'] = $ignoredIPMismatches;
             }
 
@@ -622,7 +628,16 @@ class Search extends DashboardPageController
                     $this->request,
                     Request::METHOD_GET
                 );
-            } else {
+            } elseif ($searchMethod === 'preset') {
+                $presetID = $this->request->query->get('presetID');
+                $preset = $this->entityManager->find(SavedUserSearch::class, $presetID);
+                if ($preset) {
+                    $query = $this->getQueryFactory()->createFromSavedSearch($preset);
+                } else {
+                    throw new UserMessageException(t('Invalid search preset.'));
+                }
+            }
+            else {
                 $query = $this->getQueryFactory()->createQuery(
                     $this->getSearchProvider(),
                     [
@@ -665,7 +680,7 @@ class Search extends DashboardPageController
         $rows = $db->fetchAll("SELECT tn.treeNodeId, tn.treeNodeName FROM TreeNodes AS tn LEFT JOIN TreeNodeTypes AS tnt ON (tn.treeNodeTypeID = tnt.treeNodeTypeID) WHERE tnt.treeNodeTypeHandle = 'file_folder' AND tn.treeNodeName != ''");
 
         foreach ($rows as $row) {
-            $folderList[$row["treeNodeId"]] = $row["treeNodeName"];
+            $folderList[$row["treeNodeId"]] = h($row["treeNodeName"]);
         }
 
         return $folderList;

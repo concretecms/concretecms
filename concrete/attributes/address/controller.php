@@ -37,7 +37,7 @@ class Controller extends AttributeTypeController implements
     public $akDefaultCountry;
     public $akCustomCountries;
     public $akGeolocateCountry;
-    
+
     protected $searchIndexFieldDefinition = [
         'address1' => [
             'type' => 'string',
@@ -144,6 +144,10 @@ class Controller extends AttributeTypeController implements
 
     public function validateForm($data)
     {
+        if (!is_array($data)) {
+            return false;
+        }
+
         if (empty($data['country'])) {
             return false;
         }
@@ -280,12 +284,12 @@ class Controller extends AttributeTypeController implements
         $avn = $akn->addChild('value');
         $address = $this->getAttributeValue()->getValue();
         if ($address) {
-            $avn->addAttribute('address1', $address->getAddress1());
-            $avn->addAttribute('address2', $address->getAddress2());
-            $avn->addAttribute('city', $address->getCity());
-            $avn->addAttribute('state-province', $address->getStateProvince());
-            $avn->addAttribute('country', $address->getCountry());
-            $avn->addAttribute('postal-code', $address->getPostalCode());
+            $avn->addAttribute('address1', (string) $address->getAddress1());
+            $avn->addAttribute('address2', (string) $address->getAddress2());
+            $avn->addAttribute('city', (string) $address->getCity());
+            $avn->addAttribute('state-province', (string) $address->getStateProvince());
+            $avn->addAttribute('country', (string) $address->getCountry());
+            $avn->addAttribute('postal-code', (string) $address->getPostalCode());
         }
     }
 
@@ -294,7 +298,7 @@ class Controller extends AttributeTypeController implements
         if ($data instanceof AddressValue) {
             return clone $data;
         }
-        extract($data);
+        extract($data ?? []);
         $av = new AddressValue();
         if (isset($address1)) {
             $av->setAddress1($address1);

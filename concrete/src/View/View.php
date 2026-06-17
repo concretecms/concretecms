@@ -5,19 +5,21 @@ use Concrete\Core\Asset\Asset;
 use Concrete\Core\Asset\Output\StandardFormatter;
 use Concrete\Core\Feature\Traits\HandleRequiredFeaturesTrait;
 use Concrete\Core\Filesystem\FileLocator;
+use Concrete\Core\Filesystem\TemplateService;
+use Concrete\Core\Filesystem\TemplateVariantLocator;
 use Concrete\Core\Http\ResponseAssetGroup;
 use Concrete\Core\Page\Theme\ThemeRouteCollection;
 use Concrete\Core\Page\View\Preview\SkinCustomizerPreviewRequest;
 use Concrete\Core\Site\Service;
 use Concrete\Core\StyleCustomizer\Skin\SkinInterface;
+use Concrete\Core\StyleCustomizer\Skin\Stylesheet\Stylesheet;
+use Concrete\Core\Support\Facade\Facade;
+use Config;
 use Environment;
 use Events;
-use Concrete\Core\Support\Facade\Facade;
-use HtmlObject\Element;
-use PageTheme;
-use Page;
-use Config;
 use Illuminate\Filesystem\Filesystem;
+use Page;
+use PageTheme;
 
 class View extends AbstractView
 {
@@ -297,7 +299,7 @@ class View extends AbstractView
         }
 
         // Render the template around it
-        if (file_exists($this->template)) {
+        if ($this->template != '' && file_exists($this->template)) {
             $contents = $this->renderTemplate($scopeItems, $contents);
         }
 
@@ -311,15 +313,7 @@ class View extends AbstractView
      */
     protected function renderInnerContents($scopeItems)
     {
-        // Extract the items into the current scope
-        extract($scopeItems);
-
-        ob_start();
-        include $this->innerContentFile;
-        $innerContent = ob_get_contents();
-        ob_end_clean();
-
-        return $innerContent;
+        return app(TemplateService::class)->renderTemplate($this->innerContentFile, $scopeItems, $this);
     }
 
     /**
@@ -329,21 +323,20 @@ class View extends AbstractView
      */
     protected function renderTemplate($scopeItems, $innerContent)
     {
-        // Extract the items into the current scope
-        extract($scopeItems);
-
         ob_start();
 
         // Fire a `before` event
         $this->onBeforeGetContents();
-        include $this->template;
+        $pre = ob_get_clean();
 
+        $scopeItems['innerContent'] = $scopeItems['innerContent'] ?? $innerContent;
+        $contents = app(TemplateService::class)->renderTemplate($this->template, $scopeItems, $this);
+
+        ob_start();
         // Fire an `after` event
         $this->onAfterGetContents();
-        $contents = ob_get_contents();
-        ob_end_clean();
 
-        return $contents;
+        return $pre . $contents . ob_get_clean();
     }
 
     public function finishRender($contents)
@@ -497,7 +490,7 @@ class View extends AbstractView
         }
         $skin = $this->themeObject->getSkinByIdentifier($skinIdentifier);
         $stylesheet = $skin->getStylesheet();
-        return $stylesheet;
+        return $stylesheet->getElement();
     }
 
 
@@ -530,15 +523,10 @@ class View extends AbstractView
             $_locator->addPackageLocation($_pkgHandle);
         }
 
-        $_record = $_locator->getRecord(DIRNAME_ELEMENTS . '/' . $_file . '.php');
+        $_record = (new TemplateVariantLocator($_locator))->getRecord(DIRNAME_ELEMENTS . '/' . $_file . '.php');
         $_file = $_record->getFile();
 
-        unset($_record);
-        unset($_app);
-        unset($_fs);
-        unset($_locator);
-        unset($_theme);
-
-        include $_file;
+        $args['view'] = $view;
+        echo app(TemplateService::class)->renderTemplate($_file, $args);
     }
 }

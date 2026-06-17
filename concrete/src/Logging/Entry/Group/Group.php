@@ -18,7 +18,7 @@ abstract class Group extends ApplierEntry
      */
     protected $group;
 
-    public function __construct(\Concrete\Core\User\Group\Group $group, User $applier = null)
+    public function __construct(\Concrete\Core\User\Group\Group $group, ?User $applier = null)
     {
         $this->group = $group;
         parent::__construct($applier);

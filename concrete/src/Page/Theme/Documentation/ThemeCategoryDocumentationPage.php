@@ -18,7 +18,7 @@ class ThemeCategoryDocumentationPage extends ThemeDocumentationPage
      * @param string $name
      * @param string $contentFile
      */
-    public function __construct(Theme $theme, string $name, array $childPages, string $contentFile = null)
+    public function __construct(Theme $theme, string $name, array $childPages, ?string $contentFile = null)
     {
         $this->name = $name;
         $this->theme = $theme;

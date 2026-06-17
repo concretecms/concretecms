@@ -15,39 +15,40 @@
     "wikimedia/composer-merge-plugin": "~1.3|~2.0.1"
   },
   "require-dev": {
-    "friendsofphp/php-cs-fixer": "2.19.2",
-    "phpunit/phpunit": "^8.5.20",
-    "mockery/mockery": "^1.3.4",
+    "phpunit/phpunit": "^9.6.34|^10.5.63|^11",
+    "mockery/mockery": "^1.6",
     "mlocati/ci-info": "^1"
   },
   "config": {
     "process-timeout": 0,
     "vendor-dir": "./concrete/vendor",
     "platform": {
-      "php": "7.3"
+      "php": "8.4"
     },
     "allow-plugins": {
       "composer/package-versions-deprecated": true,
       "mlocati/composer-patcher": true,
       "wikimedia/composer-merge-plugin": true
+    },
+    "audit": {
+      "ignore": {
+        "PKSA-sjvz-tbbr-vwth": "Testing vulnerable Twig behavior on PHP 7.3 line",
+        "PKSA-h8hf-ytnd-5t9q": "Testing vulnerable Twig behavior on PHP 7.3 line",
+        "PKSA-wwb1-81rc-pd65": "Testing vulnerable Twig behavior on PHP 7.3 line",
+        "PKSA-kvv6-36cr-fkzb": "Testing vulnerable Twig behavior on PHP 7.3 line",
+        "PKSA-n14z-jjjg-g8vd": "Testing vulnerable Twig behavior on PHP 7.3 line",
+        "PKSA-3mcc-k66d-pydb": "Testing vulnerable Twig behavior on PHP 7.3 line",
+        "PKSA-gw7n-z4yx-7xjt": "Testing vulnerable Twig behavior on PHP 7.3 line",
+        "PKSA-dpx1-78wg-1kqs": "Testing vulnerable Twig behavior on PHP 7.3 line",
+        "PKSA-21g2-dzjv-sky5": "Testing vulnerable Twig behavior on PHP 7.3 line"
+      }
     }
   },
   "replace": {
-    "concrete5/core": "self.version",
-    "laminas/laminas-cache-storage-adapter-apc": "*",
-    "laminas/laminas-cache-storage-adapter-apcu": "*",
-    "laminas/laminas-cache-storage-adapter-blackhole": "*",
-    "laminas/laminas-cache-storage-adapter-dba": "*",
-    "laminas/laminas-cache-storage-adapter-ext-mongodb": "*",
-    "laminas/laminas-cache-storage-adapter-filesystem": "*",
-    "laminas/laminas-cache-storage-adapter-memcache": "*",
-    "laminas/laminas-cache-storage-adapter-memcached": "*",
-    "laminas/laminas-cache-storage-adapter-mongodb": "*",
-    "laminas/laminas-cache-storage-adapter-redis": "*",
-    "laminas/laminas-cache-storage-adapter-session": "*",
-    "laminas/laminas-cache-storage-adapter-wincache": "*",
-    "laminas/laminas-cache-storage-adapter-xcache": "*",
-    "laminas/laminas-cache-storage-adapter-zend-server": "*"
+    "concrete5/core": "self.version"
+  },
+  "provide": {
+    "laminas/laminas-cache-storage-implementation": "1.0"
   },
   "extra": {
     "r1": "This is using the wikimedia plugin to merge our core/composer.json file.",

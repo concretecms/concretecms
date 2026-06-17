@@ -64,9 +64,19 @@ class Instance implements \JsonSerializable, ObjectInterface
     protected $dateCreated;
 
     /**
+     * @ORM\Column(type="boolean")
+     */
+    protected $isGenerating = false;
+
+    /**
      * @ORM\Column(type="integer", options={"unsigned": true}, nullable=true)
      */
     protected $dateDataPoolLastUpdated;
+
+    /**
+     * @ORM\Column(type="integer", options={"unsigned": true}, nullable=true)
+     */
+    protected $dateLastGenerated;
 
     /**
      * Not to be confused with the site that is set at the board level, a shared board (e.g. a board with a site
@@ -77,12 +87,17 @@ class Instance implements \JsonSerializable, ObjectInterface
      */
     protected $site;
 
-
     /**
-     * @ORM\OneToMany(targetEntity="InstanceSlot", cascade={"persist", "remove"}, mappedBy="instance")
+     * @ORM\OneToMany(targetEntity="InstanceSlot", cascade={"persist", "remove"}, mappedBy="instance", fetch="EXTRA_LAZY")
      * @ORM\OrderBy({"slot" = "ASC"})
      */
     protected $slots;
+
+    /**
+     * @ORM\OneToOne(targetEntity="InstanceLog", cascade={"persist", "remove"}, mappedBy="instance")
+     * @ORM\OrderBy({"dateCreated" = "DESC"})
+     */
+    protected $log;
 
     public function __construct()
     {
@@ -159,7 +174,7 @@ class Instance implements \JsonSerializable, ObjectInterface
     /**
      * @param mixed $site
      */
-    public function setSite(Site $site = null): void
+    public function setSite(?Site $site = null): void
     {
         $this->site = $site;
     }
@@ -214,6 +229,22 @@ class Instance implements \JsonSerializable, ObjectInterface
         $this->dateCreated = $dateCreated;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getLog(): ?InstanceLog
+    {
+        return $this->log;
+    }
+
+    /**
+     * @param mixed $log
+     */
+    public function setLog(?InstanceLog $log = null): void
+    {
+        $this->log = $log;
+    }
+
     public function getDateCreatedObject() : \DateTime
     {
         $dateTime = new \DateTime();
@@ -241,6 +272,43 @@ class Instance implements \JsonSerializable, ObjectInterface
         $this->dateDataPoolLastUpdated = $dateDataPoolLastUpdated;
     }
 
+    public function isGenerating(): bool
+    {
+        return $this->isGenerating;
+    }
+
+    public function setIsGenerating(bool $isGenerating): void
+    {
+        $this->isGenerating = $isGenerating;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDateLastGenerated()
+    {
+        return $this->dateLastGenerated;
+    }
+
+    /**
+     * @param mixed $dateLastGenerated
+     */
+    public function setDateLastGenerated($dateLastGenerated): void
+    {
+        $this->dateLastGenerated = $dateLastGenerated;
+    }
+
+    public function getDateLastGeneratedObject() : \DateTime
+    {
+        $dateTime = new \DateTime();
+        $dateTime->setTimestamp($this->getDateLastGenerated());
+        $site = $this->getBoard()->getSite();
+        if ($site) {
+            $dateTime->setTimezone(new \DateTimeZone($site->getTimezone()));
+        }
+        return $dateTime;
+    }
+
     #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
@@ -249,6 +317,7 @@ class Instance implements \JsonSerializable, ObjectInterface
             'boardInstanceID' => $this->getBoardInstanceID(),
             'name' => $this->getBoardInstanceName(),
             'dateCreated' => $this->getDateCreated(),
+            'dateLastGenerated' => $this->getDateLastGenerated(),
             'site' => $site,
             'board' => $this->getBoard(),
         ];

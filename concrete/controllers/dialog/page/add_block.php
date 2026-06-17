@@ -23,14 +23,48 @@ class AddBlock extends BackendInterfacePageController
     /**
      * @deprecated What's deprecated is the "public" part.
      *
+     * @var \Concrete\Core\Entity\Block\BlockType\BlockType|null
+     */
+    public $blockType;
+    
+    /**
+     * @deprecated What's deprecated is the "public" part.
+     *
      * @var \Concrete\Core\Area\Area
      */
     public $area;
 
+    /**
+     * @deprecated What's deprecated is the "public" part.
+     *
+     * @var \Concrete\Core\Page\Page
+     */
+    public $pageToModify;
+
+    /**
+     * @deprecated What's deprecated is the "public" part.
+     *
+     * @var \Concrete\Core\Area\Area
+     */
+    public $areaToModify;
+
+    /**
+     * @deprecated What's deprecated is the "public" part.
+     *
+     * @var \Concrete\Core\Permission\Checker
+     */
+    public $areaPermissions;
+
+    /**
+     * @deprecated What's deprecated is the "public" part.
+     *
+     * @var \Concrete\Core\Block\BlockController
+     */
+    public $blockTypeController;
+
     public function on_start()
     {
         parent::on_start();
-        $request = $this->request;
 
         if (!Loader::helper('validation/numbers')->integer($_REQUEST['btID'])) {
             throw new Exception(t('Access Denied'));
@@ -47,8 +81,7 @@ class AddBlock extends BackendInterfacePageController
         $this->areaPermissions = new Permissions($this->areaToModify);
         $cnt = $this->blockType->getController();
         if (!is_a($cnt, '\Concrete\Core\Block\BlockController')) {
-            throw new Exception(t(
-                                    'Unable to load the controller for this block type. Perhaps it has been moved or removed.'));
+            throw new Exception(t('Unable to load the controller for this block type. Perhaps it has been moved or removed.'));
         }
         $this->blockTypeController = $cnt;
         if (isset($_REQUEST['arCustomTemplates']) && is_array($_REQUEST['arCustomTemplates'])) {
@@ -74,7 +107,7 @@ class AddBlock extends BackendInterfacePageController
                 $this->area->setCustomTemplate($btHandle, $template);
             }
         }
-        $bv->addScopeItems(array('a' => isset($this->a) ? $this->a : null, 'cp' => $this->permissions, 'ap' => $this->areaPermissions));
+        $bv->addScopeItems(array('a' => isset($this->areaToModify) ? $this->areaToModify : null, 'cp' => $this->permissions, 'ap' => $this->areaPermissions));
         $this->set('blockView', $bv);
         $this->set('blockType', $this->blockType);
         $this->set('btHandle', $this->blockType->getBlockTypeHandle());

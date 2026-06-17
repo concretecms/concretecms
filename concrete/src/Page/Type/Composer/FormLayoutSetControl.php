@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\Page\Type\Composer;
 
+use Concrete\Core\Block\Block;
 use Concrete\Core\Entity\Page\Template;
 use Concrete\Core\Backup\ContentExporter;
 use Concrete\Core\Foundation\ConcreteObject;
@@ -137,12 +138,12 @@ class FormLayoutSetControl extends ConcreteObject
     public function export($fxml)
     {
         $node = $fxml->addChild('control');
-        $node->addAttribute('custom-template', $this->getPageTypeComposerFormLayoutSetControlCustomTemplate());
+        $node->addAttribute('custom-template', (string) $this->getPageTypeComposerFormLayoutSetControlCustomTemplate());
         if ($this->isPageTypeComposerFormLayoutSetControlRequired()) {
             $node->addAttribute('required', true);
         }
         $node->addAttribute('custom-label', $this->getPageTypeComposerFormLayoutSetControlCustomLabel());
-        $node->addAttribute('description', $this->getPageTypeComposerFormLayoutSetControlDescription());
+        $node->addAttribute('description', (string) $this->getPageTypeComposerFormLayoutSetControlDescription());
         $app = Application::getFacadeApplication();
         $db = $app->make('database')->connection();
         $cnt = $db->fetchColumn('select count(*) from PageTypeComposerOutputControls where ptComposerFormLayoutSetControlID = ?', [$this->ptComposerFormLayoutSetControlID]);
@@ -271,6 +272,22 @@ class FormLayoutSetControl extends ConcreteObject
     {
         $app = Application::getFacadeApplication();
         $db = $app->make('database')->connection();
+        $r = $db->executeQuery(
+            'select ptComposerOutputControlID from PageTypeComposerOutputControls where ptComposerFormLayoutSetControlID = ?',
+            [$this->ptComposerFormLayoutSetControlID]
+        );
+        while ($row = $r->fetch()) {
+            $bID = $db->fetchColumn(
+                'select bID from btCorePageTypeComposerControlOutput where ptComposerOutputControlID = ?',
+                [$row['ptComposerOutputControlID']]
+            );
+            if ($bID) {
+                $block = Block::getByID($bID);
+                if ($block) {
+                    $block->deleteBlock(true);
+                }
+            }
+        }
         $db->executeQuery('delete from PageTypeComposerFormLayoutSetControls where ptComposerFormLayoutSetControlID = ?', [$this->ptComposerFormLayoutSetControlID]);
         $db->executeQuery('delete from PageTypeComposerOutputControls where ptComposerFormLayoutSetControlID = ?', [$this->ptComposerFormLayoutSetControlID]);
         $set = $this->getPageTypeComposerFormLayoutSetObject();

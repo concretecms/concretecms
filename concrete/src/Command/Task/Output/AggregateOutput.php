@@ -29,14 +29,21 @@ class AggregateOutput implements OutputInterface, NormalizableInterface, Denorma
         $this->outputs[] = $output;
     }
 
-    public function write($message)
+    public function write($message): void
     {
         foreach($this->outputs as $output) {
             $output->write($message);
         }
     }
 
-    public function normalize(NormalizerInterface $normalizer, string $format = null, array $context = [])
+    public function writeError($message): void
+    {
+        foreach($this->outputs as $output) {
+            $output->writeError($message);
+        }
+    }
+
+    public function normalize(NormalizerInterface $normalizer, ?string $format = null, array $context = [])
     {
         $outputs = [];
         foreach($this->outputs as $output) {
@@ -45,7 +52,7 @@ class AggregateOutput implements OutputInterface, NormalizableInterface, Denorma
         return ['outputs' => $outputs];
     }
 
-    public function denormalize(DenormalizerInterface $denormalizer, $data, string $format = null, array $context = [])
+    public function denormalize(DenormalizerInterface $denormalizer, $data, ?string $format = null, array $context = [])
     {
         $outputs = [];
         foreach($data['outputs'] as $dataOutput) {

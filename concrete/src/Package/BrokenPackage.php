@@ -10,8 +10,31 @@ class BrokenPackage extends Package
     /**
      * @var string
      */
+    protected $pkgHandle;
+
+    /**
+     * @var string
+     */
+    protected $pkgVersion;
+
+    /**
+     * @var string
+     */
+    protected $pkgName;
+
+    /**
+     * @var string
+     */
+    protected $pkgDescription;
+
+    /**
+     * @var string
+     */
     private $errorDetails;
 
+    /**
+     * @param string $pkgHandle
+     */
     public function __construct($pkgHandle, Application $application, string $errorDetails = '')
     {
         $this->pkgHandle = $pkgHandle;

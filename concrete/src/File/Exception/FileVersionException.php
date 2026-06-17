@@ -17,7 +17,7 @@ class FileVersionException extends FileException
         $fileVersion,
         $message = "",
         $code = 0,
-        \Exception $previous = null
+        ?\Exception $previous = null
     ) {
         $this->fileVersionObject = $fileVersion;
         parent::__construct($file, $message, $code, $previous);

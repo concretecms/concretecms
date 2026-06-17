@@ -18,9 +18,6 @@ if ($this->controller->getTask() == 'viewDetail') { ?>
         </h2>
     </div>
     <div>
-        <div class="text-center">
-            <?= $pie_chart; ?>
-        </div>
         <?= $chart_options; ?>
     </div>
     <div class="table-responsive">

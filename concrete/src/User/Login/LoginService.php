@@ -76,8 +76,8 @@ class LoginService implements LoggerAwareInterface, ApplicationAwareInterface
         Repository $config,
         LoginAttemptService $loginAttemptService,
         IPService $IPService,
-        EntityManagerInterface $entityManager = null,
-        Request $request = null)
+        ?EntityManagerInterface $entityManager = null,
+        ?Request $request = null)
     {
         $this->config = $config;
         $this->loginAttemptService = $loginAttemptService;

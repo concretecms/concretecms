@@ -7,6 +7,9 @@ use Concrete\Core\Board\DataSource\Saver\CalendarEventSaver;
 use Concrete\Core\Board\DataSource\Saver\SaverInterface;
 use Concrete\Core\Board\Instance\Item\Filterer\CalendarEventFilterer;
 use Concrete\Core\Board\Instance\Item\Filterer\FiltererInterface as ItemFiltererInterface;
+use Concrete\Core\Board\Instance\Notifier\CalendarEventNotifier;
+use Concrete\Core\Board\Instance\Notifier\NotifierInterface;
+use Concrete\Core\Board\Instance\Notifier\PageNotifier;
 use Concrete\Core\Board\Instance\Slot\Content\Populator\CalendarEventPopulator as CalendarEventContentPopulator;
 use Concrete\Core\Board\Instance\Slot\Content\Populator\PopulatorInterface as ContentPopulatorInterface;
 use Concrete\Core\Board\Instance\Item\Populator\CalendarEventPopulator as CalendarEventItemPopulator;
@@ -15,7 +18,7 @@ use Concrete\Core\Filesystem\Element;
 
 defined('C5_EXECUTE') or die("Access Denied.");
 
-class CalendarEventDriver extends AbstractDriver
+class CalendarEventDriver extends AbstractDriver implements NotifierAwareDriverInterface
 {
 
     public function getIconFormatter(): IconFormatterInterface
@@ -47,4 +50,10 @@ class CalendarEventDriver extends AbstractDriver
     {
         return $this->app->make(CalendarEventFilterer::class);
     }
+
+    public function getBoardInstanceNotifier(): NotifierInterface
+    {
+        return $this->app->make(CalendarEventNotifier::class);
+    }
+
 }

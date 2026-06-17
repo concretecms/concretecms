@@ -36,7 +36,7 @@ class Available extends DefaultSet
                         $groupType = $group->getGroupType();
 
                         if (is_object($groupType)) {
-                            return $groupType->getName();
+                            return $groupType->getDisplayName();
                         }
                     }
                 }

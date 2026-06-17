@@ -11,7 +11,7 @@ class Header extends ElementController
     protected $query;
 
 
-    public function __construct(Query $query = null)
+    public function __construct(?Query $query = null)
     {
         $this->query = $query;
         parent::__construct();

@@ -406,7 +406,7 @@ EOT
         return $this->bFilename;
     }
 
-    public function setTempFilename(string $bFilename = null): void
+    public function setTempFilename(?string $bFilename = null): void
     {
         $this->bFilename = $bFilename;
 
@@ -900,7 +900,9 @@ EOT
      */
     public function isAliasOfMasterCollection()
     {
-        return $this->getBlockCollectionObject()->isBlockAliasedFromMasterCollection($this);
+        $blockCollection = $this->getBlockCollectionObject();
+
+        return $blockCollection ? $blockCollection->isBlockAliasedFromMasterCollection($this) : false;
     }
 
     /**
@@ -943,33 +945,11 @@ EOT
      */
     public function getCustomStyleSetID()
     {
-        /** @var Connection $db */
-        $db = app(Connection::class);
         if (!isset($this->issID)) {
-            $co = $this->getBlockCollectionObject();
-
-            $arHandle = $this->getAreaHandle();
-            if ($arHandle) {
-                $a = $this->getBlockAreaObject();
-                if ($a->isGlobalArea()) {
-                    // then we need to check against the global area name. We currently have the wrong area handle passed in
-                    $arHandle = STACKS_AREA_NAME;
-                }
-
-                $v = [
-                    $co->getCollectionID(),
-                    $co->getVersionID(),
-                    $arHandle,
-                    $this->getBlockID(),
-                ];
-
-                $this->issID = (int) $db->fetchOne(
-                    'select issID from CollectionVersionBlockStyles where cID = ? and cvID = ? and arHandle = ? and bID = ?',
-                    $v
-                );
-            } else {
-                $this->issID = 0;
-            }
+            /** @var \Concrete\Core\Block\CustomStyleRepository $customStyleRepository */
+            $customStyleRepository = app(CustomStyleRepository::class);
+            $issID = $customStyleRepository->getBlockStyleID($this);
+            $this->issID = $issID ?: 0;
         }
 
         return $this->issID;
@@ -1208,6 +1188,18 @@ EOT
         $settings = $this->getBlockCacheSettingsObject();
 
         return $settings->cacheBlockOutputForRegisteredUsers();
+    }
+
+    /**
+     * Should the block output be cached on the edit mode?
+     *
+     * @return bool
+     */
+    public function cacheBlockOutputOnEditMode()
+    {
+        $settings = $this->getBlockCacheSettingsObject();
+
+        return $settings->cacheBlockOutputOnEditMode();
     }
 
     /**
@@ -1662,13 +1654,16 @@ EOT
             $bName = $data['bName'];
         }
         if (isset($data['bFilename'])) {
-            // Check bFilename for valid Block filename. Must contain only alpha numeric and slashes/dashes, but it MAY
-            // end in ".php"
+            // Check bFilename for a valid block filename. It may contain only letters, numbers, dashes, and
+            // underscores, and it MAY end in ".php"
             $bFilename = $data['bFilename'];
             if (!empty($bFilename)) {
                 if (substr($bFilename, -4) === '.php') {
                     // Let's run our regular expression check on everything BEFORE ".php"
                     $bFilenameToCheck = substr($bFilename, 0, -4);
+                } elseif (substr($bFilename, -10) === '.html.twig') {
+                    // Let's run our regular expression check on everything BEFORE ".html.twig"
+                    $bFilenameToCheck = substr($bFilename, 0, -10);
                 } else {
                     $bFilenameToCheck = $bFilename; // We just check the entirety of what's passed in.
                 }
@@ -1765,72 +1760,75 @@ EOT
         $newBID = (int) $connection->lastInsertId(); // this is the latest inserted block ID
 
         // now, we duplicate the block-specific permissions
-        $oc = $this->getBlockCollectionObject();
-        $ocID = $oc->getCollectionID();
-        $ovID = $oc->getVersionID();
-
+        
         $ncID = $nc->getCollectionID();
         $nvID = $nc->getVersionID();
-
-        // Composer specific
-        $row = $connection->createQueryBuilder()
-            ->select('cID', 'cvID', 'arHandle', 'cbDisplayOrder', 'ptComposerFormLayoutSetControlID')
-            ->from('PageTypeComposerOutputBlocks')
-            ->where('cID = :cID')
-            ->andWhere('cvID = :cvID')
-            ->andWhere('bID = :bID')
-            ->andWhere('arHandle = :arHandle')
-            ->setParameter('cID', $ocID)
-            ->setParameter('cvID', $ovID)
-            ->setParameter('bID', $this->getBlockID())
-            ->setParameter('arHandle', $this->getAreaHandle())
-            ->execute()->fetchAssociative();
-        if ($row && is_array($row) && $row['cID']) {
-            $connection->insert('PageTypeComposerOutputBlocks', [
-                'cID' => $ncID,
-                'cvID' => $nvID,
-                'arHandle' => $this->getAreaHandle(),
-                'cbDisplayOrder' => $row['cbDisplayOrder'],
-                'ptComposerFormLayoutSetControlID' => $row['ptComposerFormLayoutSetControlID'],
-                'bID' => $newBID,
-            ]);
-        }
-
-        $r = $connection->createQueryBuilder()
-            ->select('paID', 'pkID')
-            ->from('BlockPermissionAssignments')
-            ->where('cID = :cID')
-            ->andWhere('bID = :bID')
-            ->andWhere('cvID = :cvID')
-            ->setParameter('cID', $ocID)
-            ->setParameter('bID', $this->getBlockID())
-            ->setParameter('cvID', $ovID)
-            ->execute()
-        ;
-
-        while ($row = $r->fetchAssociative()) {
-            $assignment = $connection->createQueryBuilder()
-                ->select('cID', 'cvID', 'bID', 'pkID', 'paID')
-                ->from('BlockPermissionAssignments')
+        
+        $oc = $this->getBlockCollectionObject();
+        if(is_object($oc)) {
+            $ocID = $oc->getCollectionID();
+            $ovID = $oc->getVersionID();
+    
+            // Composer specific
+            $row = $connection->createQueryBuilder()
+                ->select('cID', 'cvID', 'arHandle', 'cbDisplayOrder', 'ptComposerFormLayoutSetControlID')
+                ->from('PageTypeComposerOutputBlocks')
                 ->where('cID = :cID')
                 ->andWhere('cvID = :cvID')
                 ->andWhere('bID = :bID')
-                ->andWhere('pkID = :pkID')
-                ->andWhere('paID = :paID')
-                ->setParameter('cID', $ncID)
-                ->setParameter('cvID', $nvID)
-                ->setParameter('bID', $newBID)
-                ->setParameter('pkID', $row['pkID'])
-                ->setParameter('paID', $row['paID'])
-                ->execute()->fetchOne();
-            if ($assignment === false) {
-                $connection->insert('BlockPermissionAssignments', [
+                ->andWhere('arHandle = :arHandle')
+                ->setParameter('cID', $ocID)
+                ->setParameter('cvID', $ovID)
+                ->setParameter('bID', $this->getBlockID())
+                ->setParameter('arHandle', $this->getAreaHandle())
+                ->execute()->fetchAssociative();
+            if ($row && is_array($row) && $row['cID']) {
+                $connection->insert('PageTypeComposerOutputBlocks', [
                     'cID' => $ncID,
                     'cvID' => $nvID,
+                    'arHandle' => $this->getAreaHandle(),
+                    'cbDisplayOrder' => $row['cbDisplayOrder'],
+                    'ptComposerFormLayoutSetControlID' => $row['ptComposerFormLayoutSetControlID'],
                     'bID' => $newBID,
-                    'pkID' => $row['pkID'],
-                    'paID' => $row['paID'],
                 ]);
+            }
+    
+            $r = $connection->createQueryBuilder()
+                ->select('paID', 'pkID')
+                ->from('BlockPermissionAssignments')
+                ->where('cID = :cID')
+                ->andWhere('bID = :bID')
+                ->andWhere('cvID = :cvID')
+                ->setParameter('cID', $ocID)
+                ->setParameter('bID', $this->getBlockID())
+                ->setParameter('cvID', $ovID)
+                ->execute()
+            ;
+    
+            while ($row = $r->fetchAssociative()) {
+                $assignment = $connection->createQueryBuilder()
+                    ->select('cID', 'cvID', 'bID', 'pkID', 'paID')
+                    ->from('BlockPermissionAssignments')
+                    ->where('cID = :cID')
+                    ->andWhere('cvID = :cvID')
+                    ->andWhere('bID = :bID')
+                    ->andWhere('pkID = :pkID')
+                    ->andWhere('paID = :paID')
+                    ->setParameter('cID', $ncID)
+                    ->setParameter('cvID', $nvID)
+                    ->setParameter('bID', $newBID)
+                    ->setParameter('pkID', $row['pkID'])
+                    ->setParameter('paID', $row['paID'])
+                    ->execute()->fetchOne();
+                if ($assignment === false) {
+                    $connection->insert('BlockPermissionAssignments', [
+                        'cID' => $ncID,
+                        'cvID' => $nvID,
+                        'bID' => $newBID,
+                        'pkID' => $row['pkID'],
+                        'paID' => $row['paID'],
+                    ]);
+                }
             }
         }
 
@@ -1918,7 +1916,7 @@ EOT
      * @param \Concrete\Core\Page\Collection\Collection $c The collection to add the block alias to
      * @param int|null $displayOrder The number to display this block at. (optional)
      */
-    public function alias($c, int $displayOrder = null)
+    public function alias($c, ?int $displayOrder = null)
     {
         $app = Application::getFacadeApplication();
         /** @var Cloner $cloner */
@@ -1948,7 +1946,11 @@ EOT
 
         $cID = $this->getBlockCollectionID();
         $c = $this->getBlockCollectionObject();
-        $cvID = $c->getVersionID();
+        if(is_object($c)) {
+            $cvID = $c->getVersionID();
+        } else {
+            $cvID = null;
+        }
         $arHandle = $this->getAreaHandle();
 
         // if this block is located in a master collection, we're going to delete all the instances of the block,
@@ -2034,7 +2036,9 @@ EOT
                 $style = $this->getCustomStyle();
                 if (is_object($style)) {
                     $set = $style->getStyleSet();
-                    $set->export($blockNode);
+                    if ($set) {
+                        $set->export($blockNode);
+                    }
                 }
                 if ($this->overrideBlockTypeCacheSettings()) {
                     $settings = $this->getBlockCacheSettingsObject();

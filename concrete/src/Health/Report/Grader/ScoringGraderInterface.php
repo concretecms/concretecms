@@ -16,6 +16,6 @@ interface ScoringGraderInterface extends GraderInterface
      * @param int|null $score
      * @return GradeInterface
      */
-    public function getGrade(int $score = null): GradeInterface;
+    public function getGrade(?int $score = null): GradeInterface;
 
 }

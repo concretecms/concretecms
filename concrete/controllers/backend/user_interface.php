@@ -71,7 +71,7 @@ abstract class UserInterface extends Controller
     public function action()
     {
         $token = isset($this->validationToken) ? $this->validationToken : get_class($this);
-        $url = (string) call_user_func_array('parent::action', func_get_args());
+        $url = (string) call_user_func_array([parent::class, 'action'], func_get_args());
         $url .= (strpos($url, '?') === false ? '?' : '&') . $this->app->make('token')->getParameter($token);
 
         return $url;

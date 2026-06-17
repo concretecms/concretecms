@@ -108,7 +108,7 @@ final class Version20211023155414 extends AbstractMigration implements Repeatabl
         }
         if (is_array($legacyValueValueData['fontSize'])) {
             $sizeStyle = new SizeStyle();
-            $sizeStyle->setVariable($variable . '-type');
+            $sizeStyle->setVariable($variable . '-type-font');
             $sizeValue = $this->upgradeSizeValue($legacyValueValueData['fontSize']);
             $value->addSubStyleValue(new StyleValue($sizeStyle, $sizeValue));
         }

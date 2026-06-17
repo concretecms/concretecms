@@ -406,6 +406,12 @@
             </access>
         </permissionkey>
 
+        <permissionkey handle="view_debug_error_information" name="View Debug Error Information" package="" category="admin">
+            <access>
+                <group name="Administrators" description=""/>
+            </access>
+        </permissionkey>
+
         <permissionkey handle="manage_layout_presets" name="Manage Layout Presets" package="" category="admin">
             <access>
                 <group name="Administrators" description=""/>

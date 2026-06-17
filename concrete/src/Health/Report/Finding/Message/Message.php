@@ -13,7 +13,7 @@ class Message implements MessageInterface
      */
     protected $message;
 
-    public function __construct(string $message = null)
+    public function __construct(?string $message = null)
     {
         $this->message = $message;
     }
@@ -46,7 +46,7 @@ class Message implements MessageInterface
         return new MessageFormatter();
     }
 
-    public function denormalize(DenormalizerInterface $denormalizer, $data, string $format = null, array $context = [])
+    public function denormalize(DenormalizerInterface $denormalizer, $data, ?string $format = null, array $context = [])
     {
         $this->message = $data['message'];
     }

@@ -120,7 +120,7 @@ if (isset($type)) {
         <div class="form-group">
             <?= $form->label('ftSaveAreaBackgroundColor', t('Image Editor Background Color')); ?>
             <div>
-                <?= $form_color->output('ftSaveAreaBackgroundColor', $type->getSaveAreaBackgroundColor(), ['preferredFormat' => 'hex']); ?>
+                <?= $form_color->output('ftSaveAreaBackgroundColor', h($type->getSaveAreaBackgroundColor()), ['preferredFormat' => 'hex']); ?>
             </div>
             <p class="help-block"><?= t('Leave this empty to use a transparent background.'); ?></p>
         </div>

@@ -3,6 +3,7 @@ namespace Concrete\Controller\Dialog\Page\Add;
 
 use Concrete\Core\Controller\Controller;
 use Concrete\Core\Form\Service\Widget\DateTime;
+use Concrete\Core\Page\DraftService;
 use Concrete\Core\Page\EditResponse;
 use Concrete\Core\Page\Template;
 use Concrete\Core\Page\Type\Type;
@@ -29,9 +30,14 @@ class Compose extends Controller
             $e->add(t('Invalid page type.'));
         }
 
-        $parent = Page::getByID($cParentID);
-        if (!is_object($parent) || $parent->isError()) {
-            $e->add(t('Invalid parent page.'));
+        if ($cParentID == 0) {
+            $parent = null;
+        } else {
+            $cParentID = intval($cParentID);
+            $parent = Page::getByID($cParentID);
+            if (!is_object($parent) || $parent->isError()) {
+                $e->add(t('Invalid parent page.'));
+            }
         }
 
         if (!$e->has()) {
@@ -82,7 +88,9 @@ class Compose extends Controller
         $pr->setError($e);
 
         if (!$e->has()) {
-            $d = $pagetype->createDraft($template);
+            /** @var DraftService $draftService */
+            $draftService = $this->app->make(DraftService::class);
+            $d = $draftService->createDraft($pagetype, $template, $parent->getSite());
             $d->setPageDraftTargetParentPageID($cParentID);
             $saver = $pagetype->getPageTypeSaverObject();
             $saver->saveForm($d);
@@ -107,6 +115,9 @@ class Compose extends Controller
 
                 $pagetype->publish($d, $publishDateTime, $publishEndDateTime, $keepOtherScheduling);
 
+                if ((int) $this->request->request->get('redirectAfterPublish')) {
+                    $pr->setRedirectURL($d->getCollectionLink(true));
+                }
                 $pr->setAdditionalDataAttribute('cParentID', $cParentID);
                 $pr->setMessage(t('Page Added Successfully.'));
             } else {

@@ -2,10 +2,12 @@
 namespace Concrete\Core\Cache;
 
 use Concrete\Core\Support\Facade\Application;
+use Doctrine\ORM\EntityManagerInterface;
 use Psr\Cache\CacheItemInterface;
 use Stash\Driver\BlackHole;
 use Stash\Driver\Composite;
 use Stash\Pool;
+use Symfony\Component\Cache\Adapter\DoctrineAdapter;
 
 /**
  * Base class for the three caching layers present in Concrete5:
@@ -226,6 +228,16 @@ abstract class Cache implements FlushableInterface
         $app->make('cache/request')->disable();
         $app->make('cache/expensive')->disable();
         $app->make('cache')->disable();
+
+        // See: https://github.com/concretecms/concretecms/issues/12422
+        $db = $app->make('database');
+        if ($db->getDefaultConnection() !== null) {
+            // These would fail in case there is not a configured database
+            // connection, which is the case during installation.
+            $em = $app->make(EntityManagerInterface::class);
+            $ormMdCache = $app->make('Doctrine\Common\Cache\ArrayCache');
+            $em->getMetadataFactory()->setCache(new DoctrineAdapter($ormMdCache));
+        }
     }
 
     /**
@@ -237,5 +249,15 @@ abstract class Cache implements FlushableInterface
         $app->make('cache/request')->enable();
         $app->make('cache/expensive')->enable();
         $app->make('cache')->enable();
+
+        // See: https://github.com/concretecms/concretecms/issues/12422
+        $db = $app->make('database');
+        if ($db->getDefaultConnection() !== null) {
+            // These would fail in case there is not a configured database
+            // connection, which is the case during installation.
+            $em = $app->make(EntityManagerInterface::class);
+            $ormMdCache = $app->make('orm/cache');
+            $em->getMetadataFactory()->setCache(new DoctrineAdapter($ormMdCache));
+        }
     }
 }

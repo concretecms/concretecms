@@ -36,9 +36,9 @@ class StrictTransportSecurityMiddleware implements MiddlewareInterface
         $response = $frame->next($request);
 
         if ($response->headers->has('Strict-Transport-Security') === false) {
-            $x_frame_options = $this->config->get('concrete.security.misc.strict_transport_security');
-            if ($this->stringValidator->notempty($x_frame_options)) {
-                $response->headers->set('Strict-Transport-Security', $x_frame_options);
+            $strict_transport_security = $this->config->get('concrete.security.misc.strict_transport_security');
+            if ($this->stringValidator->notempty($strict_transport_security)) {
+                $response->headers->set('Strict-Transport-Security', $strict_transport_security);
             }
         }
 

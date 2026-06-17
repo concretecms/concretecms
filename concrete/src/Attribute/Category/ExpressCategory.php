@@ -34,9 +34,17 @@ class ExpressCategory extends AbstractStandardCategory
     {
         $this->expressEntity = $entity;
         parent::__construct($application, $entityManager);
-        $this->setCategoryEntity(
-            $entityManager->getRepository(Category::class)->findOneBy(['akCategoryHandle' => 'express'])
-        );
+        $cache = $application->make('cache/request');
+        $identifier = '/attribute/category/express';
+        $item = $cache->getItem($identifier);
+        if ($item->isHit()) {
+            $this->setCategoryEntity($item->get());
+        } else {
+            $expressCategory = $entityManager->getRepository(Category::class)->findOneBy(['akCategoryHandle' => 'express']);
+            $this->setCategoryEntity($expressCategory);
+            $item->set($expressCategory);
+            $cache->save($item);
+        }
     }
 
     /**

@@ -2,6 +2,7 @@
 namespace Concrete\Core\Marketplace;
 
 use Concrete\Core\Error\ErrorList\ErrorList;
+use Concrete\Core\Marketplace\Model\RemotePackage;
 use Concrete\Core\Package\Package;
 use Concrete\Core\Package\PackageArchive;
 use Loader;
@@ -9,6 +10,10 @@ use Config;
 use Concrete\Core\Foundation\ConcreteObject;
 use Exception;
 
+/**
+ * @deprecated This will be removed in version 10
+ * @see RemotePackage
+ */
 class RemoteItem extends ConcreteObject
 {
     protected $price = 0.00;

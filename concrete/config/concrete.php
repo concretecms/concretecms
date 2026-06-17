@@ -8,7 +8,7 @@ return [
      */
     'version' => '10.0.0a1',
     'version_installed' => '10.0.0a1',
-    'version_db' => '20231002142400', // the key of the latest database migration
+    'version_db' => '20260203004500', // the key of the latest database migration
 
     /*
      * Installation status
@@ -44,65 +44,11 @@ return [
      */
     'debug' => [
         /*
-         * Display errors
-         *
-         * @var bool
-         */
-        'display_errors' => true,
-
-        /*
-         * Site debug level
-         *
-         * @var string (message|debug)
-         */
-        'detail' => 'debug',
-
-        /*
          * Error reporting level
          *
          * @var int|null
          */
         'error_reporting' => null,
-
-        /**
-         * Hide specified superglobal keys and config items from whoops error output
-         *
-         * By default, all _SERVER, _ENV, and _COOKIE values are hidden
-         *
-         * @var array<string, string[]>
-         */
-        'hide_keys' => [
-            /** @var string[] */
-            '_GET' => [],
-
-            /** @var string[] */
-            '_POST' => [],
-
-            /** @var string[] */
-            '_FILES' => [],
-
-            /** @var string[] */
-            '_SESSION' => [],
-
-            /**
-             * Hide specified config keys from whoops error output
-             * `concrete.debug.display_errors` will hide that specific config item while `concrete.debug` will hide
-             * all items in the `concrete.debug` array.
-             *
-             * @var string[]
-             */
-            'config' => [
-                'concrete.proxy.password',
-                'concrete.mail.methods.smtp.password',
-                'concrete.email.default.address',
-                'concrete.email.form_block.address',
-                'concrete.email.forgot_password.address',
-                'concrete.email.validate_registration.address',
-                'concrete.email.workflow_notification.address',
-                'concrete.debug.hide_keys',
-                'app.api_keys',
-            ],
-        ],
     ],
 
     /*
@@ -489,6 +435,23 @@ return [
 
     /*
      * ------------------------------------------------------------------------
+     * Boards settings
+     * ------------------------------------------------------------------------
+     */
+    'boards' => [
+        /*
+         * If true, we will attempt to automatically update boards
+         * when their content items (pages, events, etc...) change
+         * Set this to false via the web UI if you're using the console command
+         * or other means to keep the boards up to date.
+         *
+         * @var bool
+         */
+        'automatically_refresh_instances' => true,
+    ],
+
+    /*
+     * ------------------------------------------------------------------------
      * Events settings
      * ------------------------------------------------------------------------
      */
@@ -505,6 +468,42 @@ return [
 
     /*
      * ------------------------------------------------------------------------
+     * Error handling settings
+     * ------------------------------------------------------------------------
+     */
+    'error' => [
+        'handling' => [
+            'error' => [
+                'halt' => true, // HAS to be true - no way to recover and not halt.
+                'logLevel' => 'EMERGENCY',
+            ],
+            'warning' => [
+                'halt' => false,
+                'logLevel' => 'WARNING',
+            ],
+            'notice' => [
+                'halt' => false,
+                'logLevel' => 'NOTICE',
+            ],
+            'deprecated' => [
+                'halt' => false, // HAS to be false - Symfony will not let us throw exceptions on deprecated errors.
+                'logLevel' => '', // by default let's not log these.
+            ],
+        ],
+        'display' => [
+            /*
+             * @var string (generic|message|debug)
+             */
+            'guests' => 'message',
+            /*
+             * @var string (generic|message|debug)
+             */
+            'privileged' => 'debug',
+        ]
+    ],
+
+    /*
+     * ------------------------------------------------------------------------
      * Logging settings
      * ------------------------------------------------------------------------
      */
@@ -515,13 +514,6 @@ return [
          * @var bool
          */
         'emails' => true,
-
-        /*
-         * Whether to log Errors
-         *
-         * @var bool
-         */
-        'errors' => true,
 
         /*
          * Whether to log Spam
@@ -537,7 +529,22 @@ return [
          */
         'api' => false,
 
+        /*
+         * Whether to log stack traces of uncaught exceptions
+         */
+        'stack_trace' => false,
+
         'enable_dashboard_report' => true,
+
+        'boards' => [
+
+            /*
+             * Whether to log Board instance generation (note, this is handled by a custom, separate log mechanism)
+             *
+             * @var bool
+             */
+            'instances' => true,
+        ],
 
         'configuration' => [
             /*
@@ -587,6 +594,9 @@ return [
         'permissions' => [
             'file' => FILE_PERMISSIONS_MODE_COMPUTED,
             'directory' => DIRECTORY_PERMISSIONS_MODE_COMPUTED,
+        ],
+        'download' => [
+            'filename_pattern' => '',
         ],
     ],
 
@@ -789,8 +799,8 @@ return [
         'enable_permissions_protection' => true,
         'check_threshold' => 172800,
         'services' => [
-            'get_available_updates' => 'https://marketplace.concretecms.com/tools/update_core',
-            'inspect_update' => 'https://marketplace.concretecms.com/tools/inspect_update',
+            'get_available_updates' => 'https://www.concretecms.com/api/remote_update/update_core',
+            'inspect_update' => 'https://www.concretecms.com/api/remote_update/inspect_update',
         ],
         // Set to true to skip checking if there's a newer core version available (useful for example if the core is upgraded via composer)
         'skip_core' => false,
@@ -889,6 +899,8 @@ return [
          * Determines whether the list should keep folders on top when sorting by name.
          */
         'keep_folders_on_top' => false,
+        'sort_column' => '',
+        'sort_direction' => '',
     ],
 
     'search_users' => [
@@ -931,6 +943,20 @@ return [
 
     /*
      * ------------------------------------------------------------------------
+     * Appearance
+     * ------------------------------------------------------------------------
+     */
+    'appearance' => [
+        /*
+         * Show titles in the toolbars
+         *
+        * @var string (auto | light | dark)
+         */
+        'color_scheme' => 'auto',
+    ],
+
+    /*
+     * ------------------------------------------------------------------------
      * Internationalization
      * ------------------------------------------------------------------------
      */
@@ -958,13 +984,12 @@ return [
         ],
     ],
     'urls' => [
-        'concrete' => 'http://marketplace.concretecms.com',
-        'concrete_secure' => 'https://marketplace.concretecms.com',
         'concrete_community' => 'https://community.concretecms.com',
+        'package_repository' => 'https://dl.market.concretecms.com',
+        'marketplace' => 'https://market.concretecms.com',
         'background_feed' => 'https://backgroundimages.concretecms.com/wallpaper',
         'privacy_policy' => '//www.concretecms.com/about/legal/privacy-policy',
-        'background_feed_secure' => 'https://backgroundimages.concrete5.org/wallpaper',
-        'background_info' => 'http://backgroundimages.concretecms.com/get_image_data.php',
+        'background_info' => 'https://backgroundimages.concretecms.com/get_image_data.php',
         'videos' => 'https://www.youtube.com/user/concrete5cms/videos',
         'activity_slots' => 'https://marketing.concretecms.com/ccm/marketing/activity_slots',
         'help' => [
@@ -975,18 +1000,17 @@ return [
             'remote_search' => 'https://documentation.concretecms.org/ccm/documentation/remote_search',
         ],
         'paths' => [
-            'site_page' => '/private/sites',
+            'package_repository' => [
+                'connect' => '/concrete/connect',
+                'connect_validate' => '/concrete/connect/validate',
+                'update' => '/concrete/update',
+                'register_url' => '/concrete/connect/register_url',
+                'list' => '/concrete/public/list',
+                'get' => '/concrete/public/package/%s',
+            ],
             'marketplace' => [
-                'projects' => '/profile/projects/',
-                'connect' => '/marketplace/connect',
-                'connect_success' => '/marketplace/connect/-/connected',
-                'connect_validate' => '/marketplace/connect/-/validate',
-                'connect_new_token' => '/marketplace/connect/-/generate_token',
-                'checkout' => '/cart/-/add',
-                'purchases' => '/marketplace/connect/-/get_available_licenses',
-                'item_information' => '/marketplace/connect/-/get_item_information',
-                'item_free_license' => '/marketplace/connect/-/enable_free_license',
-                'remote_item_list' => '/marketplace/',
+                'connect' => '/depot/connect',
+                'projects' => '/account/sites/details',
             ],
         ],
     ],
@@ -1045,7 +1069,8 @@ return [
             'cookie_path' => false, // set a specific path here if you know it, otherwise it'll default to relative
             'cookie_lifetime' => 0,
             'cookie_domain' => false,
-            'cookie_secure' => false,
+            // true: enable the 'secure' flag; false: disable the secure flag; null: enable the 'secure' flag for https requests only
+            'cookie_secure' => null,
             'cookie_httponly' => true,
             'cookie_raw' => false,
             'cookie_samesite' => null,
@@ -1145,6 +1170,18 @@ return [
              * Determines whether the username field is displayed when editing profile
              */
             'display_username_field' => true,
+        ],
+
+        'logout' => [
+            /**
+             * Determines whether to show a logout message on successful logout.
+             */
+            'display_logout_message' => false,
+
+            /**
+             * Message to display
+             */
+            'logout_message' => 'You have been successfully logged out.',
         ],
 
         /*
@@ -1292,6 +1329,13 @@ return [
                 'show_notification_to_unregistered_users' => false,
             ],
         ],
+        /*
+         * Absolute post-login redirect URLs are only allowed when they match one of these base URLs.
+         * If empty, Concrete will default to the current canonical base URL.
+         *
+         * @var string[]
+         */
+        'post_login_redirect_url_allowlist' => [],
         'misc' => [
             /**
              * Content Security Policy (CSP) HTTP response header
@@ -1485,4 +1529,8 @@ return [
             // Where 'icon' is the handle of a FontAwesome 4 icon (see https://fontawesome.com/v4.7.0/icons/ )
         ],
     ],
+
+    'file_chooser' => [
+        'results' => 20,
+    ]
 ];

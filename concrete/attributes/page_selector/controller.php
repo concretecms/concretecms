@@ -109,7 +109,12 @@ class Controller extends AttributeTypeController implements
     public function importValue(\SimpleXMLElement $akv)
     {
         if (isset($akv->value)) {
-            $c = Page::getByPath((string) $akv->value);
+            $path = trim((string) $akv->value, '/');
+            if ($path === '') {
+                $c = Page::getByID(Page::getHomePageID());
+            } else {
+                $c = Page::getByPath('/' . $path);
+            }
             if (is_object($c) && !$c->isError()) {
                 return $c->getCollectionID();
             }
@@ -118,16 +123,17 @@ class Controller extends AttributeTypeController implements
 
     public function exportValue(\SimpleXMLElement $akn)
     {
-        if (is_object($this->attributeValue)) {
-            $cID = $this->getAttributeValue()->getValue();
-            $page = Page::getByID($cID, 'ACTIVE');
-            $avn = $akn->addChild('value', $page->getCollectionPath());
+        $attributeValue = $this->getAttributeValue();
+        $cID = is_object($attributeValue) ? (int) $attributeValue->getValue() : 0;
+        $page = $cID === 0 ? null : Page::getByID($cID, 'ACTIVE');
+        if ($page && !$page->isError()) {
+            $akn->addChild('value', '/' . ltrim((string) $page->getCollectionPath(), '/'));
         }
     }
 
     public function validateForm($p)
     {
-        return $p['value'] != false;
+        return is_array($p) && isset($p['value']) && $p['value'] != false;
     }
 
     public function validateValue()

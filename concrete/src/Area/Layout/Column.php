@@ -108,7 +108,9 @@ abstract class Column extends ConcreteObject implements ColumnInterface
         $column = $node->addChild('column');
         $this->exportDetails($column);
         $area = $this->getAreaObject();
-        $area->export($column, $area->getAreaCollectionObject());
+        if ($area) {
+            $area->export($column, $area->getAreaCollectionObject());
+        }
     }
 
     /**

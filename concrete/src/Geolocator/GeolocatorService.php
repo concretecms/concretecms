@@ -79,7 +79,7 @@ class GeolocatorService
      *
      * @return Geolocator|null
      */
-    public function setCurrent(Geolocator $geolocator = null)
+    public function setCurrent(?Geolocator $geolocator = null)
     {
         $currentGeolocator = $this->getCurrent();
         if ($currentGeolocator !== $geolocator) {

@@ -11,7 +11,7 @@ use PHPUnit\Framework\TestCase;
 class AttributeViewTest extends TestCase
 {
 
-    public function actionProvider()
+    public static function actionProvider()
     {
         return [
             [
@@ -51,6 +51,6 @@ class AttributeViewTest extends TestCase
         ;
         $view = new View($attributeKey);
         $actualResult = call_user_func_array([$view, 'action'], $arguments);
-        $this->assertSame($expectedResult, $actualResult);
+        self::assertSame($expectedResult, $actualResult);
     }
 }

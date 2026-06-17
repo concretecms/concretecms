@@ -7,12 +7,12 @@ class FeedServiceProvider extends ServiceProvider
 {
     public function register()
     {
-        $singletons = array(
-            'helper/feed' => '\Concrete\Core\Feed\FeedService',
-        );
-
-        foreach ($singletons as $key => $value) {
-            $this->app->singleton($key, $value);
+        $singletons = [
+            'helper/feed' => FeedService::class,
+        ];
+        foreach ($singletons as $alias => $className) {
+            $this->app->singleton($className);
+            $this->app->alias($className, $alias);
         }
     }
 }

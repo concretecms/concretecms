@@ -149,9 +149,9 @@ $token = $app->make(Token::class);
         </div>
 
 
-        <div class="ccm-item-set panel panel-default" data-field-set="<?php echo $set->getID() ?>">
-            <div class="panel-heading">
-                <ul class="ccm-item-set-controls">
+        <div class="ccm-item-set card" data-field-set="<?php echo $set->getID() ?>">
+            <div class="card-header">
+                <ul class="ccm-item-set-controls float-end">
                     <li>
                         <!--suppress HtmlUnknownAttribute -->
                         <a href="<?php echo $view->action('add_control', $set->getID()) ?>"

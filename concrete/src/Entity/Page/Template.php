@@ -128,7 +128,7 @@ class Template implements \JsonSerializable
             'pTemplateID' => $this->getPageTemplateID(),
             'pTemplateHandle' => $this->getPageTemplateHandle(),
             'pTemplateName' => $this->getPageTemplateName(),
-            'pTemplateDisplayName' => $this->getPageTemplateDisplayName(),
+            'pTemplateDisplayName' => $this->getPageTemplateDisplayName('text'),
             'pTemplateIconImage' => $this->getPageTemplateIconImage(),
         ];
     }

@@ -52,7 +52,7 @@ class SanitizerTest extends TestCase
     /**
      * @return array
      */
-    public function provideSanitizeWithDefaultSettings()
+    public static function provideSanitizeWithDefaultSettings()
     {
         return [
             ['<svg/>', '<svg></svg>'],
@@ -75,7 +75,7 @@ class SanitizerTest extends TestCase
     {
         $sanitized = self::$sanitizer->sanitizeData($input, self::$sanitizerOptions);
         $lines = explode("\n", $sanitized);
-        static::assertRegExp('/^<\?xml\b[^>]*\?>$/', array_shift($lines));
+        $this->assertMatchesRegularExpression('/^<\?xml\b[^>]*\?>$/', array_shift($lines));
         $xml = trim(implode('', $lines));
 
         static::assertSame($expectedOutput, $xml);
@@ -90,7 +90,7 @@ class SanitizerTest extends TestCase
     /**
      * @return array
      */
-    public function provideInvalidData()
+    public static function provideInvalidData()
     {
         return [
             ['<svg'],

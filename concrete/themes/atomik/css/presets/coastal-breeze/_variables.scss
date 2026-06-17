@@ -1,0 +1,33 @@
+@import url(//fonts.googleapis.com/css?family=Source+Sans+Pro:400,600);
+@import url(//fonts.googleapis.com/css?family=Playfair+Display:500);
+@import url(//fonts.googleapis.com/css?family=Open+Sans:800);
+
+// Colors - Base Bootstrap
+$success: #43A047; // Forest green
+$danger: #D84315; // Rust red
+$warning: #F9A825; // Golden yellow
+$info: #039BE5; // Ocean blue
+$dark: #37474F; // Stormy gray
+$gray-500: #78909C; // Muted blue-gray
+
+// Display Headings
+$display-font-family: "Playfair Display" !default;
+$display-font-weight: 500 !default;
+$display-line-height: 1em;
+$display-font-sizes: (
+        1: 4rem,
+        2: 3.5rem,
+        3: 3rem,
+        4: 2rem
+);
+
+// Regular Headings
+$headings-font-family: "Open Sans" !default;
+$headings-font-weight: 800 !default;
+
+// Links
+$link-color: $primary;
+$link-decoration: none;
+
+// Doc Library
+$theme-document-library-icon-filter: none;

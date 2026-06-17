@@ -88,7 +88,7 @@ class TranslationsChecker
      *
      * @return PackageLocaleStatus|LocaleStatus
      */
-    private function computeUpdates(array $localStats, array $remoteStats, Package $package = null)
+    private function computeUpdates(array $localStats, array $remoteStats, ?Package $package = null)
     {
         if ($package === null) {
             $result = new LocaleStatus();

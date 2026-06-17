@@ -32,7 +32,7 @@ class FileLogger implements LoggerInterface, NormalizableInterface, Denormalizab
      * @param string $directory
      * @param Process $process
      */
-    public function __construct(string $directory = null, Process $process = null)
+    public function __construct(?string $directory = null, ?Process $process = null)
     {
         $this->filesystem = new Filesystem();
         $this->directory = $directory;
@@ -53,19 +53,24 @@ class FileLogger implements LoggerInterface, NormalizableInterface, Denormalizab
         return $this->filePath;
     }
 
-    public function write($message)
+    public function write($message): void
     {
         $this->filesystem->append($this->getFilePath(), $message . "\n");
     }
 
-    public function normalize(NormalizerInterface $normalizer, string $format = null, array $context = [])
+    public function writeError($message): void
+    {
+        $this->filesystem->append($this->getFilePath(), '!! ' . $message . "\n");
+    }
+
+    public function normalize(NormalizerInterface $normalizer, ?string $format = null, array $context = [])
     {
         return [
             'filePath' => $this->getFilePath(),
         ];
     }
 
-    public function denormalize(DenormalizerInterface $denormalizer, $data, string $format = null, array $context = [])
+    public function denormalize(DenormalizerInterface $denormalizer, $data, ?string $format = null, array $context = [])
     {
         $this->filePath = $data['filePath'];
     }

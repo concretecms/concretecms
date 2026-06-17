@@ -7,7 +7,7 @@ use Concrete\Tests\TestCase;
 
 class NumberTest extends TestCase
 {
-    public function flexRoundDataProvider()
+    public static function flexRoundDataProvider()
     {
         return [
             ['00010.0000', 10],
@@ -31,7 +31,7 @@ class NumberTest extends TestCase
         $this->assertEquals($value, $numberService->flexround($test));
     }
 
-    public function trimDataProvider()
+    public static function trimDataProvider()
     {
         return [
             ['00010.0000', '10'],
@@ -67,5 +67,29 @@ class NumberTest extends TestCase
     {
         $numberService = new Number();
         $this->assertSame($expected, $numberService->trim($test));
+    }
+
+    public static function formatSizeDataProvider()
+    {
+        return [
+            ['0 bytes', 0],
+            ['1 byte', 1],
+            ['1.00 KB', 1 * 1024],
+            ['1.00 MB', 1 * 1024 * 1024],
+            ['1.00 GB', 1 * 1024 * 1024 * 1024],
+            ['1.00 TB', 1 * 1024 * 1024 * 1024 * 1024],
+        ];
+    }
+
+    /**
+     * @dataProvider formatSizeDataProvider
+     *
+     * @param string $test
+     * @param int|float|string $expected
+     */
+    public function testFormatSize($expected, $size, string $forceUnit = '')
+    {
+        $numberService = new Number();
+        $this->assertSame($expected, $numberService->formatSize($size, $forceUnit));
     }
 }

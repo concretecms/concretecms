@@ -8,6 +8,8 @@ use Concrete\Core\Attribute\Key\UserKey as UserAttributeKey;
 use Concrete\Core\Config\Repository\Repository;
 use Concrete\Core\Page\Controller\PageController;
 use Concrete\Core\Support\Facade\UserInfo;
+use Concrete\Core\User\PostLoginLocation;
+use Concrete\Core\User\PostLoginLocationUrl;
 use Concrete\Core\User\User;
 
 class Register extends PageController
@@ -65,6 +67,18 @@ class Register extends PageController
 
     public function forward($cID = 0)
     {
+        $rcURL = '';
+        if ($this->request->query->has('rcURL')) {
+            $pll = $this->app->make(PostLoginLocation::class);
+            $urlHelper = $this->app->make(PostLoginLocationUrl::class);
+            $requestRcURL = $this->request->query->get('rcURL');
+            if (is_string($requestRcURL)) {
+                $rcURL = $urlHelper->getAllowedRedirectUrl($requestRcURL);
+            }
+        }
+        if ($rcURL !== '') {
+            $pll->setSessionPostLoginUrl($rcURL);
+        }
         $this->set('rcID', $this->app->make('helper/security')->sanitizeInt($cID));
     }
 
@@ -237,6 +251,11 @@ class Register extends PageController
 
                 $requestFormat = $_REQUEST['format'] ?? null;
                 if ($requestFormat != 'JSON') {
+                    $postLogin = $this->app->make(PostLoginLocation::class);
+                    $postLoginUrl = $postLogin->getPostLoginUrl();
+                    if ($postLoginUrl !== '') {
+                        return $postLogin->getPostLoginRedirectResponse(true);
+                    }
                     $this->redirect('/register', $redirectMethod, $rcID);
                 }
             }

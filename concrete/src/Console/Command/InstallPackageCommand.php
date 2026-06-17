@@ -6,10 +6,11 @@ use Concrete\Core\Console\Command;
 use Concrete\Core\Console\ConsoleAwareInterface;
 use Concrete\Core\Error\ErrorList\ErrorList;
 use Concrete\Core\Localization\Service\TranslationsInstaller;
-use Concrete\Core\Marketplace\Marketplace;
+use Concrete\Core\Marketplace\PackageRepositoryInterface;
 use Concrete\Core\Package\PackageService;
 use Concrete\Core\Support\Facade\Application;
 use Exception;
+use Illuminate\Support\Arr;
 use Symfony\Component\Console\Exception\InvalidOptionException;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -42,7 +43,7 @@ Returns codes:
   $okExitCode operation completed successfully
   $errExitCode errors occurred
 
-More info at http://documentation.concrete5.org/developers/appendix/cli-commands#c5-package-install
+More info at https://documentation.concretecms.org/9-x/developers/security/cli-jobs#c5-package-install
 EOT
             )
         ;
@@ -53,6 +54,9 @@ EOT
         $app = Application::getFacadeApplication();
         $config = $app->make('config');
         $packageService = $app->make(PackageService::class);
+        $packageRepository = $app->make(PackageRepositoryInterface::class);
+        $connection = $packageRepository->getConnection();
+
         $pkgHandle = $input->getArgument('package');
         switch (strtolower($input->getOption('languages'))) {
             case 'yes':
@@ -64,15 +68,17 @@ EOT
                 $getLanguages = false;
                 break;
             case 'auto':
-                $associatedPackages = Marketplace::getAvailableMarketplaceItems(false);
-                $getLanguages = isset($associatedPackages[$pkgHandle]);
+                $associatedPackages = $connection ? $packageRepository->getPackages($connection) : [];
+                $getLanguages = (bool) Arr::first($associatedPackages, function ($pkg) use ($pkgHandle) {
+                    return $pkg->handle = $pkgHandle;
+                });
                 break;
             default:
                 throw new InvalidOptionException('Invalid value for the --languages option. Valid values are "yes", "no", "auto"');
         }
         $packageOptions = [];
         foreach ($input->getArgument('package-options') as $keyValuePair) {
-            list($key, $value) = explode('=', $keyValuePair, 2);
+            [$key, $value] = explode('=', $keyValuePair, 2);
             $key = trim($key);
             if (substr($key, -2) === '[]') {
                 $isArray = true;
@@ -125,7 +131,7 @@ EOT
         $output->writeln('<info>passed.</info>');
 
         $output->write('Installing... ');
-        $r = $packageService->install($pkg, []);
+        $r = $packageService->install($pkg, $packageOptions);
         if ($r instanceof ErrorList) {
             throw new Exception(implode("\n", $r->getList()));
         }

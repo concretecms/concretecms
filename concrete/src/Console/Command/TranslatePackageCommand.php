@@ -52,7 +52,7 @@ Returns codes:
   $okExitCode operation completed successfully
   $errExitCode errors occurred
             
-More info at http://documentation.concrete5.org/developers/appendix/cli-commands#c5-package-translate
+More info at https://documentation.concretecms.org/9-x/developers/security/cli-jobs#c5-package-translate
 EOT
         )
         ;
@@ -148,7 +148,8 @@ EOT
         
         // Parse the package directory
         $output->writeln('Parsing package contents');
-        foreach (\C5TL\Parser::getAllParsers() as $parser) {
+        $parserFactory = $this->app->make(\C5TL\ParserFactory::class);
+        foreach ($parserFactory->getParsers() as $parser) {
             if ($parser->canParseDirectory()) {
                 $output->write('- running parser "' . $parser->getParserName() . '"... ');
                 $parser->parseDirectory(

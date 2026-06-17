@@ -19,9 +19,9 @@ abstract class AttributeTestCase extends ConcreteDatabaseTestCase
     /**
      * {@inheritdoc}
      *
-     * @see ConcreteDatabaseTestCase::$metadatas
+     * @see ConcreteDatabaseTestCase::$entityClassNames
      */
-    protected $metadatas = [
+    protected $entityClassNames = [
         'Concrete\Core\Entity\Site\Type',
         'Concrete\Core\Entity\Site\Site',
         'Concrete\Core\Entity\Site\Locale',
@@ -37,15 +37,12 @@ abstract class AttributeTestCase extends ConcreteDatabaseTestCase
         'Concrete\Core\Entity\Attribute\Key\Key',
         'Concrete\Core\Entity\Attribute\Key\PageKey',
         'Concrete\Core\Entity\Attribute\Type',
-        'Concrete\Core\Entity\Attribute\Value\Value\TextareaValue',
         'Concrete\Core\Entity\Attribute\Value\Value\TextValue',
         'Concrete\Core\Entity\Attribute\Value\Value\BooleanValue',
         'Concrete\Core\Entity\Attribute\Value\Value\Value',
         'Concrete\Core\Entity\User\User',
         'Concrete\Core\Entity\User\UserSignup',
-        'Concrete\Core\Entity\Attribute\Value\Value',
         'Concrete\Core\Entity\Attribute\Value\PageValue',
-        'Concrete\Core\Entity\Attribute\Key\UserValue',
         'Concrete\Core\Entity\Attribute\Key\UserKey',
     ];
 
@@ -58,6 +55,11 @@ abstract class AttributeTestCase extends ConcreteDatabaseTestCase
      * @var array
      */
     protected $keys = [];
+
+    public static function attributeIndexTableValues()
+    {
+        return [];
+    }
 
     /**
      * {@inheritdoc}
@@ -91,15 +93,15 @@ abstract class AttributeTestCase extends ConcreteDatabaseTestCase
      *
      * @return array
      */
-    abstract public function attributeValues();
+    abstract public static function attributeValues();
 
     /**
      * Get the test data for the testUnsetAttributes method.
      */
-    abstract public function attributeHandles();
+    abstract public static function attributeHandles();
 
     /**
-     *  @dataProvider attributeValues
+     * @dataProvider attributeValues
      *
      * @param \Concrete\Core\Attribute\AttributeKeyInterface|string $handle
      * @param mixed $first
@@ -109,6 +111,7 @@ abstract class AttributeTestCase extends ConcreteDatabaseTestCase
      */
     public function testSetAttribute($handle, $first, $second, $firstStatic = null, $secondStatic = null)
     {
+        app('cache/request')->enable();
         $this->getAttributeObjectForSet()->setAttribute($handle, $first);
         $attribute = $this->getAttributeObjectForGet()->getAttribute($handle);
         if ($firstStatic != null) {

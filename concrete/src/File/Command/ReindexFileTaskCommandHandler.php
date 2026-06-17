@@ -39,7 +39,7 @@ class ReindexFileTaskCommandHandler implements OutputAwareInterface
                 $indexer->indexEntry($this->attributeCategory, $value, $file);
             }
         } else {
-            $this->output->write(t('File object for ID %s not found. Skipping...', $command->getFileID()));
+            $this->output->writeError(t('File object for ID %s not found. Skipping...', $command->getFileID()));
         }
     }
 

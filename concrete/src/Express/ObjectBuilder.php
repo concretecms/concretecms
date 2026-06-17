@@ -112,7 +112,7 @@ class ObjectBuilder
      *                                    If not specified, do not included (default).
      * @return $this
      */
-    public function addAttribute($type_handle, $name, $handle = null, Settings $settings = null, $akIsSearchable = true, $akIsSearchableIndexed = false)
+    public function addAttribute($type_handle, $name, $handle = null, ?Settings $settings = null, $akIsSearchable = true, $akIsSearchableIndexed = false)
     {
         if ($handle) {
             $existing = $this->entity->getAttributeKeyCategory()->getAttributeKeyByHandle($handle);

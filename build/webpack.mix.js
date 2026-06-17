@@ -59,6 +59,23 @@ if (mix.inProduction()) {
 } else {
     mix.copy('node_modules/vue/dist/vue.js', '../concrete/js/vue.js');
 }
+mix.copy('node_modules/jquery/dist/jquery.min.js', '../concrete/js/jquery.js');
+mix.copy('node_modules/@fortawesome/fontawesome-free/webfonts', '../concrete/css/webfonts');
+mix.copy('node_modules/@fortawesome/fontawesome-free/css/all.css', '../concrete/css/fontawesome/all.css');
+mix.copy('node_modules/bootstrap/dist/js/bootstrap.bundle.min.js', '../concrete/js/bootstrap.js');
+mix.copy('node_modules/bootstrap/dist/js/bootstrap.bundle.min.js.map', '../concrete/js/bootstrap.bundle.min.js.map');
+mix.copy('node_modules/ckeditor4/adapters', '../concrete/js/ckeditor/adapters');
+mix.copy('node_modules/ckeditor4/ckeditor.js', '../concrete/js/ckeditor/ckeditor.js');
+mix.copy('node_modules/ckeditor4/config.js', '../concrete/js/ckeditor/config.js');
+mix.copy('node_modules/ckeditor4/contents.css', '../concrete/js/ckeditor/contents.css');
+mix.copy('node_modules/ckeditor4/lang', '../concrete/js/ckeditor/lang');
+mix.copy('node_modules/ckeditor4/plugins', '../concrete/js/ckeditor/plugins');
+mix.copy('node_modules/ckeditor4/skins', '../concrete/js/ckeditor/skins');
+mix.copy('node_modules/ckeditor4/styles.js', '../concrete/js/ckeditor/styles.js');
+mix.copy('node_modules/ckeditor4/vendor', '../concrete/js/ckeditor/vendor');
+
+
+mix.copy('node_modules/ace-builds/src-min', '../concrete/js/ace');
 
 // Copy Bedrock assets so that themes can include them for style customization, etc...
 if (mix.inProduction()) {
@@ -375,6 +392,7 @@ mix
     })
 
 
+
 // Installer
 mix
     .sass('assets/installer/scss/installer.scss', 'css/installer.css', {
@@ -416,6 +434,41 @@ mix
             ]
         }
     })
+    .sass('../concrete/themes/atomik/css/presets/coastal-breeze/main.scss', 'themes/atomik/css/skins/coastal-breeze.css', {
+        sassOptions: {
+            includePaths: [
+                path.resolve(__dirname, './node_modules/')
+            ]
+        }
+    })
+    .sass('../concrete/themes/atomik/css/presets/golden-meadow/main.scss', 'themes/atomik/css/skins/golden-meadow.css', {
+        sassOptions: {
+            includePaths: [
+                path.resolve(__dirname, './node_modules/')
+            ]
+        }
+    })
+    .sass('../concrete/themes/atomik/css/presets/misty-sage/main.scss', 'themes/atomik/css/skins/misty-sage.css', {
+        sassOptions: {
+            includePaths: [
+                path.resolve(__dirname, './node_modules/')
+            ]
+        }
+    })
+    .sass('../concrete/themes/atomik/css/presets/amber-twilight/main.scss', 'themes/atomik/css/skins/amber-twilight.css', {
+        sassOptions: {
+            includePaths: [
+                path.resolve(__dirname, './node_modules/')
+            ]
+        }
+    })
+    .sass('../concrete/themes/atomik/css/presets/midnight-velvet/main.scss', 'themes/atomik/css/skins/midnight-velvet.css', {
+        sassOptions: {
+            includePaths: [
+                path.resolve(__dirname, './node_modules/')
+            ]
+        }
+    })
     .js('assets/themes/atomik/js/main.js', 'themes/atomik').vue()
 
 // Oxford Shirt Theme
@@ -449,7 +502,6 @@ mix
 
 // Core Themes
 // Concrete Theme
-
 mix
     .sass('assets/themes/concrete/scss/main.scss', 'themes/concrete', {
         sassOptions: {

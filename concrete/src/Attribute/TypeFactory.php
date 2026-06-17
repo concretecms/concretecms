@@ -3,7 +3,9 @@
 namespace Concrete\Core\Attribute;
 
 use Concrete\Core\Attribute\Category\CategoryService;
+use Concrete\Core\Backup\ContentImporter;
 use Concrete\Core\Database\DatabaseStructureManager;
+use Concrete\Core\Database\Schema\Schema;
 use Concrete\Core\Entity\Attribute\Type as AttributeType;
 use Concrete\Core\Entity\Package;
 use Concrete\Core\Foundation\Environment;
@@ -165,14 +167,16 @@ class TypeFactory
     }
 
     /**
-     * @param \Concrete\Core\Entity\Attribute\Type $type
+     * @param AttributeType $type
+     * @return void
+     * @throws \Doctrine\DBAL\ConnectionException
      */
     protected function installDatabase(AttributeType $type)
     {
         $r = $this->environment->getRecord(DIRNAME_ATTRIBUTES . '/' . $type->getAttributeTypeHandle() . '/' . FILENAME_ATTRIBUTE_DB, $type->getPackageHandle());
         if ($r->exists()) {
             // db.xml legacy approach
-            \Concrete\Core\Package\Package::installDB($r->file);
+            \Concrete\Core\Package\Package::installDB($r->file, ContentImporter::IMPORT_MODE_INSTALL);
         }
 
         if (is_dir(DIR_APPLICATION . '/' . DIRNAME_CLASSES . '/' .

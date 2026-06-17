@@ -1,16 +1,21 @@
 <?php
 namespace Concrete\Block\EventList;
 
+use Concrete\Core\Attribute\Category\EventCategory;
 use Concrete\Core\Attribute\Key\CollectionKey;
+use Concrete\Core\Attribute\Key\EventKey;
+use Concrete\Core\Block\BlockController;
+use Concrete\Core\Calendar\Calendar;
+use Concrete\Core\Calendar\Calendar\CalendarService;
+use Concrete\Core\Calendar\CalendarServiceProvider;
+use Concrete\Core\Calendar\Event\EventOccurrenceList;
 use Concrete\Core\Feature\Features;
 use Concrete\Core\Feature\UsesFeatureInterface;
 use Concrete\Core\Tree\Node\Node;
 use Concrete\Core\Utility\Service\Validation\Numbers;
-use Concrete\Core\Attribute\Key\EventKey;
-use Concrete\Core\Block\BlockController;
-use Concrete\Core\Calendar\Calendar;
-use Concrete\Core\Calendar\CalendarServiceProvider;
-use Concrete\Core\Calendar\Event\EventOccurrenceList;
+use Concrete\Core\Utility\Service\Xml;
+use Concrete\Attribute\Topics\Controller as TopicsController;
+use Concrete\Core\Tree\Tree;
 use Core;
 
 defined('C5_EXECUTE') or die("Access Denied.");
@@ -87,6 +92,9 @@ class Controller extends BlockController implements UsesFeatureInterface
     protected $btInterfaceWidth = 500;
     protected $btInterfaceHeight = 340;
     protected $btTable = 'btEventList';
+    protected $btExportPageColumns = ['linkToPage'];
+    protected $btCacheBlockOutput = true;
+    protected $btCacheBlockOutputLifetime = 300;
 
     public function getRequiredFeatures(): array
     {
@@ -180,7 +188,9 @@ class Controller extends BlockController implements UsesFeatureInterface
             //$list->filterByEndTimeAfter($time);
             $list->filterByCalendar($calendar);
             if ($this->filterByFeatured) {
-                $list->filterByAttribute('is_featured', true);
+                if ($this->checkSearchableEventAttributeKey('is_featured') === '') {
+                    $list->filterByAttribute('is_featured', true);
+                }
             }
             if ($this->filterByTopicAttributeKeyID) {
                 $ak = EventKey::getByID($this->filterByTopicAttributeKeyID);
@@ -226,8 +236,31 @@ class Controller extends BlockController implements UsesFeatureInterface
     public function export(\SimpleXMLElement $blockNode)
     {
         parent::export($blockNode);
-        $data = $blockNode->data->record;
-
+        $data = $blockNode->data[0]->record[0];
+        $caID = (string) $data->caID;
+        if ($caID) {
+            $idList = null;
+            if (is_numeric($caID)) {
+                $caID = (int) $caID;
+                if ($caID) {
+                    $idList = [$caID];
+                }
+            } else {
+                $idList = json_decode($caID);
+            }
+            if (is_array($idList)) {
+                $caNames = [];
+                $service = $this->app->make(CalendarService::class);
+                foreach ($idList as $id) {
+                    $calendar = $service->getByID($id);
+                    if ($calendar) {
+                        $caNames[] = $calendar->getName();
+                    }
+                }
+                unset($data->caID);
+                $this->app->make(Xml::class)->createChildElement($data, 'caNames', json_encode($caNames));
+            }
+        }
         if ($this->filterByTopicAttributeKeyID) {
             $ak = EventKey::getByID($this->filterByTopicAttributeKeyID);
             if (is_object($ak)) {
@@ -239,9 +272,75 @@ class Controller extends BlockController implements UsesFeatureInterface
             $node = Node::getByID($this->filterByTopicID);
             if (is_object($node)) {
                 unset($data->filterByTopicID);
-                $data->addChild('filterByTopic', $node->getTreeNodeDisplayPath());
+                $data->addChild('filterByTopicPath', $node->getTreeNodeDisplayPath());
             }
         }
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Block\BlockController::getImportData()
+     */
+    protected function getImportData($blockNode, $page)
+    {
+        $data = parent::getImportData($blockNode, $page);
+        if (empty($data['chooseCalendar'])) {
+            $data['chooseCalendar'] = 'site';
+        }
+        if (!isset($data['caID'])) {
+            $data['caID'] = 0;
+            if (!empty($data['caNames'])) {
+                $caNames = json_decode($data['caNames']);
+                if (is_array($caNames)) {
+                    $caIDs = [];
+                    $service = $this->app->make(CalendarService::class);
+                    foreach ($caNames as $caName) {
+                        $calendar = $service->getByName($caName);
+                        if ($calendar) {
+                            $caIDs[] = $calendar->getID();
+                        }
+                    }
+                    if ($caIDs !== []) {
+                        $data['caID'] = $caIDs;
+                        $data['chooseCalendar'] = 'specific';
+                    }
+                }
+            }
+        }
+        if (!isset($data['filterByTopicAttributeKeyID'])) {
+            $data['filterByTopicAttributeKeyID'] = 0;
+        }
+        if (!isset($data['filterByTopicID'])) {
+            $data['filterByTopicID'] = 0;
+        }
+        $filterByTopicAttributeKey = (string) ($data['filterByTopicAttributeKey'] ?? '');
+        $filterByTopicPath = (string) ($data['filterByTopicPath'] ?? '');
+        if ($filterByTopicAttributeKey !== '' && $filterByTopicPath !== '') {
+            $topicAttributeKey = $this->app->make(EventCategory::class)->getAttributeKeyByHandle($filterByTopicAttributeKey);
+            $topicController = $topicAttributeKey ? $topicAttributeKey->getController() : null;
+            if ($topicController instanceof TopicsController) {
+                $tree = Tree::getByID($topicController->getTopicTreeID());
+                if ($tree instanceof Tree) {
+                    $node = $tree->getNodeByDisplayPath($filterByTopicPath);
+                    if ($node) {
+                        $data['filterByTopicAttributeKeyID'] = $topicAttributeKey->getAttributeKeyID();
+                        $data['filterByTopicID'] = $node->getTreeNodeID();
+                    };
+                }
+            }
+        }
+        if ((string) ($data['filterByTopic'] ?? '') === '') {
+            if (!empty($data['filterByTopicID'])) {
+                $data['filterByTopic'] = 'specific';
+            } elseif (((string) $data['filterByPageTopicAttributeKeyHandle']) ?? '' !== '') {
+                $data['filterByTopic'] = 'page_attribute';
+            } else {
+                $data['filterByTopic'] = 'none';
+            }
+        }
+
+        return $data;
     }
 
     public function edit()
@@ -264,7 +363,7 @@ class Controller extends BlockController implements UsesFeatureInterface
         }
         $this->set('pageAttributeKeys', $pageAttributeKeys);
         $this->set('calendars', $calendarSelect);
-        $this->set('featuredAttribute', EventKey::getByHandle('is_featured'));
+        $this->set('featuredAttributeUnusableReason', $this->checkSearchableEventAttributeKey('is_featured'));
         $this->set('pageSelector', Core::make("helper/form/page_selector"));
 
         $number = new Numbers();
@@ -346,5 +445,22 @@ class Controller extends BlockController implements UsesFeatureInterface
         $args['linkToPage'] = intval($args['linkToPage']);
         $args['filterByFeatured'] = intval($args['filterByFeatured'] ?? null);
         parent::save($args);
+    }
+
+    /**
+     * @return string the reason why the attribute key is not usable (or an empty string if it's usable)
+     */
+    protected function checkSearchableEventAttributeKey(string $handle): string
+    {
+        $category = $this->app->make(EventCategory::class);
+        $key = $category->getAttributeKeyByHandle($handle);
+        if ($key === null) {
+            return t('You must create the %s event attribute first.', "<code>{$handle}</code>");
+        }
+        if (!$key->isAttributeKeyContentIndexed()) {
+            return t('The %s event attribute must be indexed.', "<code>{$handle}</code>");
+        }
+
+        return '';
     }
 }

@@ -1,0 +1,10 @@
+{
+  "$schema": "../options-schema.json",
+  "richTexts": {
+    "SELECT value FROM atDefault WHERE avID = :avID": {
+      "numFiles": 0,
+      "numImages": 0,
+      "numPages": 0
+    }
+  }
+}

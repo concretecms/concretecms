@@ -59,7 +59,7 @@ abstract class AttributedItemList extends ItemList
     /**
      * @param StickyRequest $request
      */
-    public function setupAutomaticSorting(StickyRequest $request = null)
+    public function setupAutomaticSorting(?StickyRequest $request = null)
     {
         // First, we check to see if there are any sortable attributes we can add to the
         // auto sort columns.

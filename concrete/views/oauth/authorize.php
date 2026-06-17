@@ -50,7 +50,7 @@ $image = (date('Ymd') - 7) . '.jpg';
             <?php
             if (!$authorize) {
                 ?>
-                <h3 class="text-center"><?= t('Sign in to %s', "<strong>{$client->getName()}</strong>") ?></h3>
+                <h3 class="text-center"><?= t('Sign in to %s', "<strong>{h($client->getName())}</strong>") ?></h3>
                 <?php
             }
             ?>

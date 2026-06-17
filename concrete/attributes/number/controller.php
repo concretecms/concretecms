@@ -83,7 +83,7 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
 
     public function validateForm($p)
     {
-        return !empty($p['value']);
+        return is_array($p) && !empty($p['value']);
     }
 
     public function validateValue()
@@ -97,7 +97,9 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
     public function createAttributeValue($value)
     {
         $av = new NumberValue();
-        $av->setValue($value);
+        if (filter_var($value, FILTER_VALIDATE_FLOAT) !== false) {
+            $av->setValue($value);
+        }
 
         return $av;
     }

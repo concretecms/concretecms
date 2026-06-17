@@ -78,6 +78,7 @@ class CalendarEventVersion implements ObjectInterface, \JsonSerializable
         $this->evDateAdded = new \DateTime('now', new \DateTimeZone($event->getCalendar()->getTimezone()));
         $this->evActivateDateTime = null;
         $this->repetitions = new ArrayCollection();
+        $this->occurrences = new ArrayCollection();
     }
 
     /**
@@ -295,7 +296,7 @@ class CalendarEventVersion implements ObjectInterface, \JsonSerializable
 
         return $o;
     }
-
+    
     /**
      * @return mixed
      */

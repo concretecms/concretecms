@@ -56,7 +56,7 @@ class CookieService
      *
      * @param \Concrete\Core\User\PersistentAuthentication\CookieValue|null $value
      */
-    public function setCookie(CookieValue $value = null)
+    public function setCookie(?CookieValue $value = null)
     {
         if ($value === null) {
             $this->deleteCookie();

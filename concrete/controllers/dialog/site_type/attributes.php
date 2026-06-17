@@ -7,6 +7,7 @@ use Concrete\Core\Application\EditResponse;
 use Concrete\Core\Attribute\Category\CategoryInterface;
 use Concrete\Core\Attribute\Category\CategoryService;
 use Concrete\Core\Attribute\Key\Component\KeySelector\ControllerTrait as KeySelectorControllerTrait;
+use Concrete\Core\Attribute\ObjectInterface;
 use Concrete\Core\Entity\Site\Skeleton;
 use Concrete\Core\Entity\Site\Type as SiteType;
 use Concrete\Core\Error\ErrorList\ErrorList;
@@ -85,7 +86,7 @@ class Attributes extends BackendInterfaceController
         return $this->category;
     }
 
-    public function canEditAttributeKey(int $akID): bool
+    public function canEditAttributeKey(int $akID, ObjectInterface $object): bool
     {
         return true;
     }

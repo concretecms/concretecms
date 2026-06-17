@@ -6,6 +6,7 @@ use Concrete\Controller\Backend\Group as GroupController;
 use Concrete\Core\Error\UserMessageException;
 use Concrete\Core\Http\ResponseFactoryInterface;
 use Concrete\Core\Tree\Type\Group;
+use Concrete\Core\Tree\Node\Type\Group as GroupNode;
 use Concrete\Core\User\Group\GroupList;
 
 class Chooser extends GroupController
@@ -20,7 +21,14 @@ class Chooser extends GroupController
         $this->checkAccess(true);
         $tree = Group::get();
 
-        return $this->app->make(ResponseFactoryInterface::class)->json($tree);
+        $guestGroupNode = GroupNode::getTreeNodeByGroupID(GUEST_GROUP_ID);
+        $registeredGroupNode = GroupNode::getTreeNodeByGroupID(REGISTERED_GROUP_ID);
+
+        return $this->app->make(ResponseFactoryInterface::class)->json([
+            'tree' => $tree,
+            'guestGroupTreeNodeID' => $guestGroupNode->getTreeNodeID(),
+            'registeredGroupTreeNodeID' => $registeredGroupNode->getTreeNodeID(),
+        ]);
     }
 
     /**

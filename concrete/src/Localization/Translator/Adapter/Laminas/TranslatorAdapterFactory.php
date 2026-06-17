@@ -26,7 +26,7 @@ class TranslatorAdapterFactory implements TranslatorAdapterFactoryInterface
     /**
      * {@inheritdoc}
      */
-    public function __construct(TranslationLoaderRepositoryInterface $translationLoaderRepository = null, LoaderPluginManager $loaderPluginManager = null)
+    public function __construct(?TranslationLoaderRepositoryInterface $translationLoaderRepository = null, ?LoaderPluginManager $loaderPluginManager = null)
     {
         $this->translationLoaderRepository = $translationLoaderRepository;
         $this->loaderPluginManager = $loaderPluginManager;

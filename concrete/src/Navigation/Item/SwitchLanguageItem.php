@@ -9,7 +9,7 @@ class SwitchLanguageItem extends Item
 {
     protected $sectionID;
 
-    public function __construct(Section $section = null, string $url, bool $isActive = false)
+    public function __construct(?Section $section, string $url, bool $isActive = false)
     {
         if ($section) {
             $this->sectionID = $section->getCollectionID();

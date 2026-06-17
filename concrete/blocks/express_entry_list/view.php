@@ -3,6 +3,10 @@
 $c = Page::getCurrentPage();
 $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
 
+/** @var \Concrete\Core\Express\Entry\Search\Result\Result|null $result */
+$result = $result ?? null;
+$items = $result ? $result->getItems() : [];
+
 if ($tableName) { ?>
     <<?php echo $titleFormat; ?>><?=$tableName?></<?php echo $titleFormat; ?>>
 <?php } ?>
@@ -52,12 +56,7 @@ if (isset($entity)) { ?>
         </form>
     <?php }
 
-    try {
-        $results = $result->getItemListObject()->getResults();
-    } catch (\Exception $e) {
-        $results = [];
-    }
-    if (count($results)) { ?>
+    if ($result && $items) { ?>
 
         <?php if (isset($enableItemsPerPageSelection) && $enableItemsPerPageSelection) { ?>
             <div class="mt-3 mb-3">
@@ -96,11 +95,11 @@ if (isset($entity)) { ?>
             <tbody>
             <?php
             $rowClass = 'ccm-block-express-entry-list-row-a';
-            foreach ($result->getItems() as $item) { ?>
+            foreach ($items as $item) { ?>
                 <tr class="<?=$rowClass?>">
                 <?php foreach ($item->getColumns() as $column) {
                     if ($controller->linkThisColumn($column)) { ?>
-                        <td><a href="<?=URL::to($detailPage, 'view_express_entity', $item->getEntry()->getId())?>"><?=$column->getColumnValue($item);?></a></td>
+                        <td><a href="<?=URL::to($detailPage, 'view_express_entity', $item->getEntry()->getPublicIdentifier())?>"><?=$column->getColumnValue($item);?></a></td>
                     <?php
                     } else { ?>
                         <td><?=$column->getColumnValue($item);?></td>

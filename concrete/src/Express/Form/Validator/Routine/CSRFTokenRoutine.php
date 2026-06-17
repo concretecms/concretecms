@@ -20,7 +20,7 @@ class CSRFTokenRoutine implements RoutineInterface
         $this->csrfValidator = $validator;
     }
 
-    public function validate(ErrorList $error, Form $form, Entry $entry = null)
+    public function validate(ErrorList $error, Form $form, ?Entry $entry = null)
     {
         if (!$this->csrfValidator->validate('express_form', $this->request->request->get('ccm_token'))) {
             $error->add($this->csrfValidator->getErrorMessage());

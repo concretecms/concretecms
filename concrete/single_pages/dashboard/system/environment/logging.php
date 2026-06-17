@@ -15,6 +15,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
  * @var string $handler
  * @var string $logFile
  * @var string $loggingMode
+ * @var bool $logStackTrace
  */
 
 ?>
@@ -80,7 +81,10 @@ defined('C5_EXECUTE') or die('Access Denied.');
 
             <div class="form-check">
                 <?= $form->checkbox('ENABLE_LOG_EMAILS', 1, $intLogEmails); ?>
-                <?= $form->label('ENABLE_LOG_EMAILS', t('Log Emails Sent'), ['class' => 'form-check-label']); ?>
+                <?= $form->label('ENABLE_LOG_EMAILS', t('Log Emails Sent') .
+                    ' <i class="fas fa-question-circle logging-launch-tooltip" title="' .
+                    t('The logging level needs to be set to the value: Notice') . '"></i>',
+                    ['class' => 'form-check-label']); ?>
             </div>
 
             <div class="form-check">
@@ -88,7 +92,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
                 <?= $form->label(
                     'ENABLE_LOG_API',
                     t('Log API request headers') .
-                    ' <i class="fas fa-question-circle launch-tooltip" title="' .
+                    ' <i class="fas fa-question-circle logging-launch-tooltip" title="' .
                     t('The logging level needs to be set to the value: Debug') . '"></i>',
                     ['class' => 'form-check-label']
                 ); ?>
@@ -98,6 +102,10 @@ defined('C5_EXECUTE') or die('Access Denied.');
 
     <fieldset>
         <legend><?=t('Reporting'); ?></legend>
+        <div class="form-check">
+            <?= $form->checkbox('log_stack_trace', 1, $logStackTrace); ?>
+            <?= $form->label('log_stack_trace', t('Log Stack Traces of Uncaught Exceptions'), ['class' => 'form-check-label']) ?>
+        </div>
         <div class="form-group">
             <div class="form-check">
                 <?= $form->checkbox('enable_dashboard_report', 1, $enableDashboardReport); ?>
@@ -126,6 +134,12 @@ $(function () {
                 loggingMode: document.querySelector('input[name="logging_mode"]:checked').value,
                 handler: document.getElementById('handler').value,
             },
+            mounted() {
+                const tooltips = this.$el.querySelectorAll('.logging-launch-tooltip')
+                tooltips.forEach((tooltip) => {
+                    new bootstrap.Tooltip(tooltip, { container: '#ccm-tooltip-holder' })
+                })
+            }
         });
     });
 });

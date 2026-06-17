@@ -4,8 +4,8 @@ namespace Concrete\Core\Console\Command;
 use Concrete\Core\Console\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Concrete\Core\Support\Facade\Facade;
 use Concrete\Core\System\Info;
+use Concrete\Core\System\SystemUser;
 
 class InfoCommand extends Command
 {
@@ -22,7 +22,7 @@ Returns codes:
   $okExitCode operation completed successfully
   $errExitCode errors occurred
 
-More info at http://documentation.concrete5.org/developers/appendix/cli-commands#c5-info
+More info at https://documentation.concretecms.org/9-x/developers/security/cli-jobs#c5-info
 EOT
             )
         ;
@@ -30,11 +30,15 @@ EOT
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $info = Facade::getFacadeApplication()->make(Info::class);
-        /* @var Info $info */
+        $app = app();
+        $info = $app->make(Info::class);
 
         $output->writeln('<info># Hostname</info>');
         $output->writeln($info->getHostname());
+        $output->writeln('');
+        $output->writeln('<info># System User</info>');
+        $systemUser = $app->make(SystemUser::class)->getCurrentUserName();
+        $output->writeln($systemUser === '' ? '*unknown*' : $systemUser);
         $output->writeln('');
         $output->writeln('<info># Environment</info>');
         $output->writeln($info->getEnvironment());
@@ -48,6 +52,9 @@ EOT
             $output->writeln('<info># Database Information</info>');
             $output->writeln('Version - ' . $info->getDBMSVersion());
             $output->writeln('SQL Mode - ' . $info->getDBMSSqlMode());
+            $output->writeln('Character Set - ' . $info->getDbCharset());
+            $output->writeln('Collation - ' . $info->getDbCollation());
+            $output->writeln('Max Connections - ' . $info->getDBMSMaxConnections());
         }
 
         $output->writeln('');
@@ -66,6 +73,10 @@ EOT
         $output->writeln('');
         $output->writeln('<info># Cache Settings</info>');
         $output->writeln($info->getCache());
+
+        $output->writeln('');
+        $output->writeln('<info># Database Entities Settings</info>');
+        $output->writeln($info->getEntities());
 
         $output->writeln('');
         $output->writeln('<info># Server API</info>');

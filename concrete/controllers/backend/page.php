@@ -6,6 +6,7 @@ use Concrete\Core\Controller\Controller;
 use Concrete\Core\Cookie\ResponseCookieJar;
 use Concrete\Core\Error\UserMessageException;
 use Concrete\Core\Http\ResponseFactoryInterface;
+use Concrete\Core\Page\DraftService;
 use Concrete\Core\Page\EditResponse;
 use Concrete\Core\Page\Page as ConcretePage;
 use Concrete\Core\Page\Type\Type as PageType;
@@ -34,7 +35,9 @@ class Page extends Controller
             }
             if ($proceed) {
                 $pt = $pagetype->getPageTypeDefaultPageTemplateObject();
-                $d = $pagetype->createDraft($pt);
+                /** @var DraftService $service */
+                $service = $this->app->make(DraftService::class);
+                $d = $service->createDraft($pagetype, $pt);
                 if ($parent !== null) {
                     $d->setPageDraftTargetParentPageID($parent->getCollectionID());
                 }
@@ -82,7 +85,7 @@ class Page extends Controller
                 break;
         }
 
-        if ($this->request->query->has('redirect')) {
+        if ($this->request->query->has('redirect') && $this->request->query->get('redirect') && !$this->request->query->has('cID')) {
             $redirectUrl = $this->app->make(ResolverManagerInterface::class)->resolve([$this->request->query->get('redirect')]);
         }
         return $this->buildRedirect($redirectUrl);

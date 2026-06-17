@@ -15,7 +15,7 @@ use Page;
 abstract class AttributeValueTestCase extends ConcreteDatabaseTestCase
 {
     protected $fixtures = [];
-    protected $metadatas = [
+    protected $entityClassNames = [
         'Concrete\Core\Entity\Site\Site',
         'Concrete\Core\Entity\Site\Type',
         'Concrete\Core\Entity\Site\Locale',
@@ -25,7 +25,6 @@ abstract class AttributeValueTestCase extends ConcreteDatabaseTestCase
         'Concrete\Core\Entity\Attribute\Type',
         'Concrete\Core\Entity\Attribute\Key\Key',
         'Concrete\Core\Entity\Attribute\Key\PageKey',
-        'Concrete\Core\Entity\Attribute\Value\Value',
         'Concrete\Core\Entity\Attribute\Value\Value\Value',
         'Concrete\Core\Entity\Attribute\Value\PageValue',
         'Concrete\Core\Entity\Page\PagePath',
@@ -94,8 +93,10 @@ abstract class AttributeValueTestCase extends ConcreteDatabaseTestCase
 
     abstract public function getAttributeValueClassName();
 
+    abstract public static function baseAttributeValues();
+
     /**
-     *  @dataProvider baseAttributeValues
+     * @dataProvider baseAttributeValues
      *
      * @param mixed $input
      * @param mixed $expectedBaseValue
@@ -121,8 +122,10 @@ abstract class AttributeValueTestCase extends ConcreteDatabaseTestCase
         $this->assertInstanceOf($this->getAttributeValueClassName(), $value->getValueObject());
     }
 
+    abstract public static function displayAttributeValues();
+
     /**
-     *  @dataProvider displayAttributeValues
+     * @dataProvider displayAttributeValues
      *
      * @param mixed $input
      * @param mixed $expectedDisplayValue
@@ -155,8 +158,10 @@ abstract class AttributeValueTestCase extends ConcreteDatabaseTestCase
         $this->assertEquals($expectedDisplayValue, $displayValue1);
     }
 
+    abstract public static function plaintextAttributeValues();
+
     /**
-     *  @dataProvider plaintextAttributeValues
+     * @dataProvider plaintextAttributeValues
      *
      * @param mixed $input
      * @param mixed $expectedPlainTextOutput
@@ -177,6 +182,8 @@ abstract class AttributeValueTestCase extends ConcreteDatabaseTestCase
 
         $this->assertEquals($expectedPlainTextOutput, $plainTextValue);
     }
+
+    abstract public static function searchIndexAttributeValues();
 
     /**
      *  @dataProvider searchIndexAttributeValues

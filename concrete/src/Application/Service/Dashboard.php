@@ -85,7 +85,7 @@ class Dashboard
             }
         }
 
-        return $path === '/dashboard' || strpos($path, '/dashboard/') === 0;
+        return $path === '/dashboard' || strpos((string) $path, '/dashboard/') === 0;
     }
 
     /**
@@ -206,7 +206,9 @@ class DashboardMenu
     {
         $app = Application::getFacadeApplication();
         $u = $app->make(ConcreteUser::class);
-        $qn = unserialize($u->config('QUICK_NAV_BOOKMARKS'));
+        // Restrict to DashboardMenu::class to prevent PHP Object Injection
+        // via the user configuration store.
+        $qn = unserialize($u->config('QUICK_NAV_BOOKMARKS'), ['allowed_classes' => [self::class]]);
         if (is_object($qn)) {
             return $qn;
         }

@@ -34,6 +34,7 @@ class Files extends ApiController
      * @OA\Get(
      *     path="/ccm/api/1.0/files/{fileID}",
      *     tags={"files"},
+     *     operationId="getFileById",
      *     summary="Find a file by its ID",
      *     security={
      *         {"authorization": {"files:read"}}
@@ -87,6 +88,7 @@ class Files extends ApiController
      * @OA\Get(
      *     path="/ccm/api/1.0/files",
      *     tags={"files"},
+     *     operationId="getFiles",
      *     summary="Returns a list of file objects, sorted by last updated descending. The most recent file objects appear first.",
      *     security={
      *         {"authorization": {"files:read"}}
@@ -166,6 +168,7 @@ class Files extends ApiController
      * @OA\Post(
      *     path="/ccm/api/1.0/files",
      *     tags={"files"},
+     *     operationId="addFile",
      *     summary="Adds a file object.",
      *     security={
      *         {"authorization": {"files:add"}}
@@ -183,7 +186,8 @@ class Files extends ApiController
         $cf = $this->app->make('helper/file');
         $uploadedFile = $this->request->files->get('file');
         if ($post_max_size = $this->app->make('helper/number')->getBytes(ini_get('post_max_size'))) {
-            if ($post_max_size < $_SERVER['CONTENT_LENGTH']) {
+            $contentLength = (int) $this->request->server->get('CONTENT_LENGTH', 0);
+            if ($contentLength > 0 && $post_max_size < $contentLength) {
                 return $this->error(Importer::getErrorMessage(Importer::E_FILE_EXCEEDS_POST_MAX_FILE_SIZE), 400);
             }
         }
@@ -207,6 +211,9 @@ class Files extends ApiController
         }
 
         $fp = new Checker($folder);
+        if (!$fp->canAddFiles()) {
+            return $this->error(t("You don't have the permission to upload to %s", $folder->getTreeNodeDisplayName()), 403);
+        }
         if (!$fp->canAddFileType($cf->getExtension($uploadedFile->getClientOriginalName()))) {
             return $this->error(Importer::getErrorMessage(Importer::E_FILE_INVALID_EXTENSION), 403);
         }
@@ -228,6 +235,7 @@ class Files extends ApiController
      * @OA\Delete(
      *     path="/ccm/api/1.0/files/{fileID}",
      *     tags={"files"},
+     *     operationId="deleteFileById",
      *     summary="Delete a file by its ID",
      *     security={
      *         {"authorization": {"files:delete"}}
@@ -274,6 +282,7 @@ class Files extends ApiController
      * @OA\Put(
      *     path="/ccm/api/1.0/files/{fileID}",
      *     tags={"files"},
+     *     operationId="updateFileById",
      *     summary="Update a file by its ID",
      *     security={
      *         {"authorization": {"files:update"}}
@@ -308,7 +317,7 @@ class Files extends ApiController
         }
 
         $checker = new Checker($file);
-        if (!$checker->canEditFile()) {
+        if (!$checker->canEditFileProperties()) {
             return $this->error(t('You do not have access to edit this file.', 401));
         }
 
@@ -340,6 +349,7 @@ class Files extends ApiController
      * @OA\Post(
      *     path="/ccm/api/1.0/files/{fileID}/move",
      *     tags={"files"},
+     *     operationId="moveFileToLocation",
      *     summary="Move a file to a new location",
      *     security={
      *         {"authorization": {"files:update"}}
@@ -373,12 +383,25 @@ class Files extends ApiController
             return $this->error(t('File not found'), 404);
         }
 
-        $checker = new Checker($file);
-        if (!$checker->canEditFile()) {
-            return $this->error(t('You do not have access to edit this file.', 401));
+        $fileNode = $file->getFileNodeObject();
+        if ($fileNode) {
+            $checker = new Checker($fileNode);
+            if (!$checker->canEditTreeNode()) {
+                return $this->error(t('You are not allowed to move this file.'), 401);
+            }
+        } else {
+            return $this->error(t('Invalid source file object.'), 404);
         }
 
         $folderID = $this->request->request->get('folder');
+        $destNode = Node::getByID($folderID);
+        if ($destNode) {
+            $checker = new Checker($destNode);
+            if (!$checker->canAddTreeSubNode()) {
+                return $this->error(t('You are not allowed to move files to this location.'), 403);
+            }
+        }
+
         $folder = null;
         if ($folderID) {
             $folder = FileFolder::getByID($folderID);
@@ -386,13 +409,12 @@ class Files extends ApiController
         if (!$folder instanceof FileFolder) {
             return $this->error(t('Unable to find specified folder'), 400);
         }
-
         $fp = new Checker($folder);
         if (!$fp->canAddFileType($file->getExtension())) {
             return $this->error(t('You do not have access to move this file to the specified location.'), 403);
         }
 
-        $file->getFileNodeObject()->move($folder);
+        $fileNode->move($folder);
 
         return $this->transform($file, new FileTransformer(), Resources::RESOURCE_FILES);
     }

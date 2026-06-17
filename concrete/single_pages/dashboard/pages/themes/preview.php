@@ -17,7 +17,7 @@ $previewContentsURL = URL::to('/ccm/system/panels/page/design/preview_contents')
         <ul class="ccm-toolbar-item-list">
             <li class="ccm-logo float-start"><span><?= $ui->getToolbarLogoSRC() ?></span></li>
             <li class="float-start">
-                <a href="<?= URL::to('/dashboard/pages/themes', 'view') ?>">
+                <a href="<?= URL::to('/dashboard/pages/themes', 'configure') ?>">
                     <svg>
                         <use xlink:href="#icon-arrow-left"/>
                     </svg>

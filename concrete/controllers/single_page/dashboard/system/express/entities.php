@@ -6,6 +6,7 @@ use Concrete\Core\Api\Command\SynchronizeScopesCommand;
 use Concrete\Core\Attribute\Category\SearchIndexer\ExpressSearchIndexer;
 use Concrete\Core\Entity\Express\Entity;
 use Concrete\Core\Entity\Express\Form;
+use Concrete\Core\Express\Command\PublishEntityCommand;
 use Concrete\Core\Express\Command\RescanEntityCommand;
 use Concrete\Core\Express\Entry\Manager;
 use Concrete\Core\Page\Controller\DashboardPageController;
@@ -257,11 +258,12 @@ class Entities extends DashboardPageController
             $this->error->add($this->token->getErrorMessage());
         }
 
-        $entity->setIsPublished(true);
-        $this->entityManager->flush();
-
-        $this->flash('success', t('Entity published successfully.'));
-        return Redirect::to('/dashboard/system/express/entities', 'view_entity', $entity->getId());
+        if (!$this->error->has()) {
+            $command = new PublishEntityCommand($entity);
+            $this->app->executeCommand($command);
+            $this->flash('success', t('Entity published successfully.'));
+            return Redirect::to('/dashboard/system/express/entities', 'view_entity', $entity->getId());
+        }
     }
 
     public function clear_entries($id = null)
@@ -423,6 +425,7 @@ class Entities extends DashboardPageController
             $indexer->updateRepository($previousEntity, $entity);
 
             $resultsNode = Node::getByID($entity->getEntityResultsNodeId());
+            $resultsNode->setTreeNodeName($name);
             $folder = Node::getByID($this->request->request('entity_results_parent_node_id'));
             if (is_object($folder)) {
                 $resultsNode->move($folder);

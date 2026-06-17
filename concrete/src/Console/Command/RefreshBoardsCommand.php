@@ -3,12 +3,6 @@
 namespace Concrete\Core\Console\Command;
 
 use Concrete\Core\Application\Application;
-use Concrete\Core\Board\Command\AddContentToBoardInstanceCommand;
-use Concrete\Core\Board\Command\ClearBoardInstanceCommand;
-use Concrete\Core\Board\Command\ClearBoardInstanceDataPoolCommand;
-use Concrete\Core\Board\Command\GenerateBoardInstanceCommand;
-use Concrete\Core\Board\Command\PopulateBoardInstanceDataPoolCommand;
-use Concrete\Core\Board\Command\RefreshBoardInstanceCommand;
 use Concrete\Core\Board\Command\RegenerateBoardInstanceCommand;
 use Concrete\Core\Console\Command;
 use Concrete\Core\Entity\Board\Board;
@@ -28,9 +22,7 @@ class RefreshBoardsCommand extends Command
             ->setName('c5:boards:refresh')
             ->setDescription('Add content to boards and board instances.')
             ->addOption('--all',  'a',InputOption::VALUE_NONE,
-    'Add content to all instances of all boards.')
-            ->addOption('--regenerate',  'r',InputOption::VALUE_NONE,
-                        'Regenerates boards entirely instead of just adding content. Does NOT clear pinned slots.')
+    'Refreshes and regenerates boards.')
             ->addArgument('boardID', InputArgument::OPTIONAL)
             ->setHelp(<<<EOT
 This command will add content to specified boards or board instances.
@@ -55,21 +47,10 @@ EOT
 
     protected function refreshInstance(Application $app, Instance $instance)
     {
-        if ($this->input->getOption('regenerate')) {
-            $this->output->writeln(t('** Regenerating board instance: %s', $instance->getBoardInstanceName()));
-            $command = new RegenerateBoardInstanceCommand();
-            $command->setInstance($instance);
-            $app->executeCommand($command);
-        } else {
-            $this->output->writeln(t('** Refreshing board instance: %s', $instance->getBoardInstanceName()));
-            $command = new RefreshBoardInstanceCommand();
-            $command->setInstance($instance);
-            $app->executeCommand($command);
-
-            $command = new AddContentToBoardInstanceCommand();
-            $command->setInstance($instance);
-            $app->executeCommand($command);
-        }
+        $this->output->writeln(t('** Regenerating board instance: %s', $instance->getBoardInstanceName()));
+        $command = new RegenerateBoardInstanceCommand();
+        $command->setInstance($instance);
+        $app->executeCommand($command);
     }
 
     public function handle(Application $app, EntityManager $em)

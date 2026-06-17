@@ -166,6 +166,10 @@ trait DashboardExpressEntryListTrait
         if ($this->getAction() == 'advanced_search') {
             $exportArgs[] = 'advanced_search';
         }
+        if ($this->getAction() == 'preset' && count($this->getParameters()) === 1) {
+            $exportArgs[] = 'preset';
+            $exportArgs[] = $this->getParameters()[0];
+        }
 
         $this->headerSearch->getElementController()->setHeaderSearchAction($this->getHeaderSearchAction($entity));
 
@@ -231,7 +235,7 @@ trait DashboardExpressEntryListTrait
      * @param Entity $entity
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    protected function exportCsv(Entity $entity, $searchMethod = null)
+    protected function exportCsv(Entity $entity, $searchMethod = null, $savedSearchPresetId = null)
     {
         set_time_limit(0);
         $permissions = new \Permissions($entity);
@@ -254,7 +258,12 @@ trait DashboardExpressEntryListTrait
         } else {
             $datetime_format = DATE_ATOM;
         }
-        if ($searchMethod == 'advanced_search') {
+        if ($searchMethod === 'preset' && !empty($savedSearchPresetId)) {
+            $preset = $this->entityManager->find(SavedExpressSearch::class, $savedSearchPresetId);
+            if ($preset && $preset->getEntity() && $preset->getEntity()->getId() === $entity->getId()) {
+                $query = $this->getQueryFactory()->createFromSavedSearch($preset);
+            }
+        } else if ($searchMethod == 'advanced_search') {
             $query = $this->getQueryFactory()->createFromAdvancedSearchRequest(
                 $this->getSearchProvider($entity),
                 $this->request,

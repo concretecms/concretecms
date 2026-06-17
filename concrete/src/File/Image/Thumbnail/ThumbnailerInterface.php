@@ -10,6 +10,11 @@ use Imagine\Image\ImagineInterface;
  */
 interface ThumbnailerInterface
 {
+
+    public const THUMBNAIL_EXISTS = 1;
+    public const THUMBNAIL_NOT_EXISTS = 0;
+    public const THUMBNAIL_GENERATING = -1;
+
     /**
      * Get the storage location to use.
      *

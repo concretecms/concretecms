@@ -17,7 +17,7 @@ class ValidateAttributesRoutine implements RoutineInterface
         $this->request = $request;
     }
 
-    public function validate(ErrorList $error, Form $form, Entry $entry = null)
+    public function validate(ErrorList $error, Form $form, ?Entry $entry = null)
     {
         $valid = true;
         foreach ($form->getControls() as $control) {

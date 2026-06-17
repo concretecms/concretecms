@@ -2,7 +2,6 @@
 
 namespace Concrete\Controller\Frontend;
 
-use Concrete\Core\File\Image\BitmapFormat;
 use Concrete\Core\File\Type\Type as FileType;
 use Concrete\Core\File\Upload\Dropzone;
 use Concrete\Core\Filesystem\FileLocator;
@@ -108,6 +107,7 @@ var ccmi18n = ' . json_encode([
     'permissionsOverrideWarning' => t('Changing this setting will affect this page immediately. Are you sure?'),
     'permissionsUpdatedMessage' => t('The permissions has been successfully updated.'),
     'permissionsUpdatedTitle' => t('Permissions Updated'),
+    'confirmBulkPagePermissionsChange' => t('This change will affect permissions for all selected pages immediately. Are you sure?'),
     'previous' => t('Previous'),
     'progressiveOperationLoading' => t('Determining items remaining...'),
     'properties' => t('Page Saved'),
@@ -148,7 +148,8 @@ var ccmi18n_editor = ' . json_encode([
     'insertLinkToFile' => t('Insert Link to File'),
     'insertLinkToPage' => t('Link to Page'),
     'lightboxFeatures' => t('Lightbox Features'),
-    'sitemap' => t('Sitemap'),
+    'selectFile' => t('Select file'),
+    'sitemap' => t('Select page'),
     'snippets' => t('Snippets'),
     'cancelPrompt' => t('Are you sure you want to revert changes made to this block?'),
     'cancelPromptButton' => t('Yes, revert changes'),
@@ -222,6 +223,7 @@ var ccmi18n_sitemap = ' . json_encode([
     'viewing' => t('Viewing'),
     'visitExternalLink' => t('Visit'),
     'visitPage' => t('Visit'),
+    'editInComposer' => t('Edit in composer'),
 ]) . ';
 
 var ccmi18n_spellchecker = ' . json_encode([
@@ -734,6 +736,18 @@ jQuery.ui.fancytree.prototype.options.strings.loadError = ' . json_encode(t('Loa
             $content = @file_get_contents($found);
             if ($content === false) {
                 $content = "/* jQueryUI: failed to read translations for {$alternative} */";
+            } else {
+                $content = <<<EOT
+                (function() {
+                    function ready() {
+                        {$content}
+                    }
+                    if (window.jQuery?.datepicker || document.readyState !== 'loading') {
+                        return ready();
+                    }
+                    document.addEventListener('DOMContentLoaded', ready);
+                })();
+                EOT;
             }
         } else {
             $content = '/* jQueryUI: no translations for ' . implode(', ', $alternatives) . ' */';

@@ -69,7 +69,7 @@ class DeprecatedPageReadyEvent extends GenericEvent
      *
      * @param \SimpleXMLElement|null $newNode
      */
-    public function setNode(SimpleXMLElement $newNode = null)
+    public function setNode(?SimpleXMLElement $newNode = null)
     {
         $this->node = $newNode;
     }

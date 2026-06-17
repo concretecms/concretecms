@@ -10,9 +10,11 @@ use Concrete\Core\Page\View\PageView;
 use Concrete\Core\Permission\Checker;
 use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\User\User;
+use Concrete\Core\Config\Repository\Repository;
 
 abstract class PageCache implements FlushableInterface
 {
+
     /**
      * @deprecated what's deprecated is the "public" part: use the getLibrary() method to retrieve the library
      *
@@ -122,6 +124,23 @@ abstract class PageCache implements FlushableInterface
             'Expires' => $expires,
         ];
 
+        $config = app(Repository::class);
+
+        $csp = $config->get('concrete.security.misc.content_security_policy');
+        if ((is_array($csp) && count($csp) > 0) || (is_string($csp) && trim($csp) !== '')) {
+            $headers['Content-Security-Policy'] = $csp;
+        }
+
+        $strict_transport_security = $config->get('concrete.security.misc.strict_transport_security');
+        if (is_string($strict_transport_security) && trim($strict_transport_security) !== '') {
+            $headers['Strict-Transport-Security'] = $strict_transport_security;
+        }
+
+        $x_frame_options = $config->get('concrete.security.misc.x_frame_options');
+        if (is_string($x_frame_options) && trim($x_frame_options) !== '') {
+            $headers['X-Frame-Options'] = $x_frame_options;
+        }
+
         return $headers;
     }
 
@@ -216,7 +235,8 @@ abstract class PageCache implements FlushableInterface
             // Add the "extra" parts to the path that can be added to the URL
             // because the page/page type controller can have request actions.
             $ctrl = $mixed->getPageController();
-            if (is_object($ctrl) &&
+            if (
+                is_object($ctrl) &&
                 !empty($action = $ctrl->getRequestAction())
             ) {
                 $extra = [];

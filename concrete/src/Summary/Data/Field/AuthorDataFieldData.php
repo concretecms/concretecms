@@ -38,7 +38,7 @@ class AuthorDataFieldData implements DataFieldDataInterface
         return $this->data['avatar'];
     }
 
-    public function __construct(UserInfo $ui = null)
+    public function __construct(?UserInfo $ui = null)
     {
         if ($ui) {
             $data = [

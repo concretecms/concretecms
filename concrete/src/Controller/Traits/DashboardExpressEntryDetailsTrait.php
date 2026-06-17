@@ -25,7 +25,7 @@ trait DashboardExpressEntryDetailsTrait
                             ->getCollectionPath(), 'results', $entity->getId());
     }
 
-    protected function getCreateURL(Entity $entity, Entry $ownedBy = null)
+    protected function getCreateURL(Entity $entity, ?Entry $ownedBy = null)
     {
         $ownedByID = null;
         if (is_object($ownedBy)) {
@@ -270,7 +270,15 @@ trait DashboardExpressEntryDetailsTrait
                 }
             }
         } else {
-            throw new \Exception(t('Invalid form.'));
+            $this->flash('error', t('No details about the form provided.'));
+
+            if (is_object($entry)) {
+                return $this->buildRedirect(\URL::to(\Page::getCurrentPage(), 'edit_entry', $entry->getID()));
+            } else if (is_object($entity)) {
+                return $this->buildRedirect(\URL::to(\Page::getCurrentPage(), 'results', $entity->getID()));
+            } else {
+                return $this->buildRedirect(\URL::to(\Page::getCurrentPage()));
+            }
         }
     }
 

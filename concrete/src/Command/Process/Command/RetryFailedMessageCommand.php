@@ -12,7 +12,7 @@ class RetryFailedMessageCommand extends Command
 
     protected $receiverName;
 
-    public function __construct($messageId, string $receiverName = null)
+    public function __construct($messageId, ?string $receiverName = null)
     {
         $this->messageId = $messageId;
         $this->receiverName = $receiverName;

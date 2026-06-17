@@ -16,7 +16,7 @@ interface ControllerInterface extends ContextProviderInterface
     /**
      * @return NotifierInterface
      */
-    function getNotifier(NotificationProviderInterface $provider = null);
+    function getNotifier(?NotificationProviderInterface $provider = null);
 
 
 }

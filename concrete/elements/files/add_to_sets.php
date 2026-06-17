@@ -72,21 +72,26 @@ $form = $app->make(Form::class);
 
 <script type="text/javascript">
     (function($) {
-        $(function () {
-            let _checkbox = _.template($('script.ccm-template-file-set-checkbox').html());
+        let _checkbox = _.template($('script.ccm-template-file-set-checkbox').html());
 
-            $('button[data-action=add-file-set]').on('click', function () {
-                $('#ccm-file-set-list').append(_checkbox)
-            });
-
-            $('#ccm-file-set-list').on('click', 'a', function (e) {
-                e.preventDefault();
-                let $row = $(this).parents('.input-group');
-                $row.remove();
-            });
-
-            $('input[data-field=file-set-search]').liveUpdate('ccm-file-set-list', 'fileset').closest('form').unbind('submit.liveupdate');
+        $('button[data-action=add-file-set]').on('click', function () {
+            $('#ccm-file-set-list').append(_checkbox)
         });
+
+        $('#ccm-file-set-list').on('click', 'a', function (e) {
+            e.preventDefault();
+            let $row = $(this).parents('.input-group');
+            $row.remove();
+        });
+
+        $('input[data-field=file-set-search]').liveUpdate('ccm-file-set-list', 'fileset').closest('form').unbind('submit.liveupdate');
+
+        $('input[data-field=file-set-search]').on('keydown', function (e) {
+            if (e.key === 'Enter' || e.keyCode === 13) {
+                e.preventDefault();
+            }
+        });
+
     })(jQuery);
 </script>
 

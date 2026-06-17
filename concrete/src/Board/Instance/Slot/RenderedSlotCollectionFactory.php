@@ -21,7 +21,7 @@ class RenderedSlotCollectionFactory
         $this->entityManager = $entityManager;
     }
 
-    public function getCurrentRules(Instance $instance, array $ruleTypes = null)
+    public function getCurrentRules(Instance $instance, ?array $ruleTypes = null)
     {
         $now = new \DateTime();
         $now->setTimezone(new \DateTimeZone($instance->getSite()->getTimezone()));

@@ -263,7 +263,7 @@ class SitemapWriter
      *
      * @param callable|null $pulse a callback function to be called every time a new sitemap element will be processed
      */
-    public function generate(callable $pulse = null)
+    public function generate(?callable $pulse = null)
     {
         $indenter = $this->getIndenter();
         $lineTerminator = $this->getLineTerminator();

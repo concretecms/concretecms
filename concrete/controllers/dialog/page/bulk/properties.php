@@ -6,6 +6,8 @@ use Concrete\Controller\Backend\UserInterface as BackendInterfaceController;
 use Concrete\Core\Attribute\Category\CategoryInterface;
 use Concrete\Core\Attribute\Category\CategoryService;
 use Concrete\Core\Attribute\Key\Component\KeySelector\ControllerTrait as KeySelectorControllerTrait;
+use Concrete\Core\Attribute\ObjectInterface;
+use Concrete\Core\Controller\Traits\DashboardBulkUpdaterTrait;
 use Concrete\Core\Error\ErrorList\ErrorList;
 use Concrete\Core\Filesystem\ElementManager;
 use Concrete\Core\Page\EditResponse as PageEditResponse;
@@ -17,6 +19,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 class Properties extends BackendInterfaceController
 {
     use KeySelectorControllerTrait;
+    use DashboardBulkUpdaterTrait;
 
     /**
      * {@inheritdoc}
@@ -30,24 +33,20 @@ class Properties extends BackendInterfaceController
      */
     protected $category;
 
-    /**
-     * List of pages to edit.
-     *
-     * @var array
-     */
-    protected $pages = [];
+    protected function getObjectFromRequestId(string $id)
+    {
+        $page = Page::getByID($id, 'RECENT');
+        if ($page && !$page->isError()) {
+            return $page;
+        }
+        return null;
+    }
 
-    /**
-     * Define whether the user can edit page properties.
-     *
-     * @var bool
-     */
-    protected $canEdit = false;
-
-    /**
-     * @var int[]
-     */
-    protected $allowedEditAttributes = [];
+    public function canPerformOperationOnObject($object): bool
+    {
+        $checker = new Checker($object);
+        return $checker->canEditPageProperties();
+    }
 
     public function __construct(CategoryService $attributeCategoryService)
     {
@@ -66,8 +65,7 @@ class Properties extends BackendInterfaceController
     {
         parent::on_start();
 
-        $this->populatePages();
-        $this->setupAllowedEditAttributes();
+        $this->populateItemsFromRequest();
     }
 
     public function view()
@@ -80,7 +78,7 @@ class Properties extends BackendInterfaceController
         $controller->setSelectAttributeUrl($this->action('get_attribute'));
         $controller->setObjects($this->getObjects());
 
-        $this->set('pages', $this->pages);
+        $this->set('pages', $this->items);
         $this->set('keySelector', $keySelector);
         $this->set('form', $this->app->make('helper/form'));
     }
@@ -90,7 +88,7 @@ class Properties extends BackendInterfaceController
         if ($this->validateAction()) {
             $attributesResponse = $this->saveAttributes();
             $r = new PageEditResponse();
-            $r->setPages($this->pages);
+            $r->setPages($this->items);
             if ($attributesResponse instanceof ErrorList) {
                 $r->setError($attributesResponse);
             } else {
@@ -108,7 +106,7 @@ class Properties extends BackendInterfaceController
      */
     public function getObjects(): array
     {
-        return $this->pages;
+        return $this->items;
     }
 
     /**
@@ -126,9 +124,13 @@ class Properties extends BackendInterfaceController
      *
      * @see \Concrete\Core\Attribute\Key\Component\KeySelector\ControllerTrait::canEditAttributeKey()
      */
-    public function canEditAttributeKey(int $akID): bool
+    public function canEditAttributeKey(int $akID, ObjectInterface $object): bool
     {
-        return in_array($akID, $this->allowedEditAttributes);
+        $attributeKey = $this->category->getAttributeKeyByID($akID);
+        $key = Key::getByHandle('edit_page_properties');
+        $key->setPermissionObject($object);
+        $assignment = $key->getMyAssignment();
+        return $assignment->canEditAttributeKey($attributeKey);
     }
 
     /**
@@ -138,42 +140,10 @@ class Properties extends BackendInterfaceController
      */
     protected function canAccess()
     {
-        return ($this->getAction() === 'getAttribute' || $this->canEdit) && count($this->allowedEditAttributes) > 0;
-    }
-
-    protected function populatePages(): void
-    {
-        $items = $this->request->get('item');
-        if (is_array($items)) {
-            foreach ($items as $cID) {
-                $c = Page::getByID($cID);
-                if (is_object($c) && !$c->isError()) {
-                    $this->pages[] = $c;
-                }
-            }
+        $checker = new Checker(Page::getByPath('/dashboard/sitemap/search'));
+        if ($checker->canViewPage()) {
+            return $this->getAction() === 'getAttribute' || $this->canEdit;
         }
-
-        if (count($this->pages) > 0) {
-            $this->canEdit = true;
-            foreach ($this->pages as $c) {
-                $cp = new Checker($c);
-                if (!$cp->canEditPageProperties()) {
-                    $this->canEdit = false;
-
-                    break;
-                }
-            }
-        } else {
-            $this->canEdit = false;
-        }
-    }
-
-    protected function setupAllowedEditAttributes(): void
-    {
-        $pk = Key::getByHandle('edit_page_properties');
-        $assignment = $pk->getMyAssignment();
-        if ($assignment) {
-            $this->allowedEditAttributes = $assignment->getAttributesAllowedArray();
-        }
+        return false;
     }
 }

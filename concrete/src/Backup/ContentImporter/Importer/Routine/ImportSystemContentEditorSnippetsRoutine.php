@@ -21,7 +21,10 @@ class ImportSystemContentEditorSnippetsRoutine extends AbstractRoutine
             $xml = app(Xml::class);
             foreach ($sx->systemcontenteditorsnippets->snippet as $th) {
                 $pkg = static::getPackageObject($th['package']);
-                $scs = Snippet::add($th['handle'], $th['name'], $pkg);
+                $scs = Snippet::getByHandle((string) $th['handle']);
+                if (!$scs) {
+                    $scs = Snippet::add($th['handle'], $th['name'], $pkg);
+                }
                 if ($xml->getBool($th['activated'])) {
                     $scs->activate();
                 }

@@ -3,7 +3,11 @@ defined('C5_EXECUTE') or die("Access Denied.");
 ?>
 
 <div v-cloak id="ccm-process-list" class="h-100">
-
+    <?php if ($showManageActivityButton) { ?>
+        <a class="float-end btn btn-secondary btn-sm" id="button-manage-activity" title="<?=t('View historical processes, process logs (if enabled) and remove stuck processes.')?>"
+           href="<?=URL::to('/dashboard/system/automation/activity')?>"><?=t('Manage Processes')?> <i class="fa fa-share"></i>
+        </a>
+    <?php } ?>
     <div v-if="processListProcesses.length">
         <p class="lead"><?=t('Active Processes')?></p>
         <div v-if="processListProcesses.length">
@@ -35,6 +39,10 @@ defined('C5_EXECUTE') or die("Access Denied.");
                 },
                 data: {
                     'processListProcesses': <?=json_encode($processes)?>,
+                },
+                mounted() {
+                    const tooltip = this.$el.querySelector('#button-manage-activity')
+                    new bootstrap.Tooltip(tooltip, { container: '#ccm-tooltip-holder' })
                 }
             })
         })

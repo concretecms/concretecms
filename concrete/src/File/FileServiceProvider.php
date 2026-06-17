@@ -63,12 +63,13 @@ class FileServiceProvider extends ServiceProvider
             return StorageLocation::getDefault();
         });
 
-        $this->app->bindIf(Service\VolatileDirectory::class, function (Application $app) {
-            return new VolatileDirectory(
-                $app->make(\Illuminate\Filesystem\Filesystem::class),
-                $app->make('helper/file')->getTemporaryDirectory()
-            );
-        });
+        $this->app
+            ->when(Service\VolatileDirectory::class)
+            ->needs('$parentDirectory')
+            ->give(static function (Application $app) {
+                return $app->make('helper/file')->getTemporaryDirectory();
+            })
+        ;
 
         $this->app->bind(ProcessorManager::class, function (Application $app) {
             $config = $app->make('config');

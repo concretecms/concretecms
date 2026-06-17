@@ -56,7 +56,7 @@ abstract class Type extends ConcreteObject
     {
         $db = Loader::db();
         $r = $db->GetRow('select ptComposerControlTypeID, ptComposerControlTypeHandle, ptComposerControlTypeName, pkgID from PageTypeComposerControlTypes where ptComposerControlTypeHandle = ?', array($ptComposerControlTypeHandle));
-        if (is_array($r) && $r['ptComposerControlTypeHandle']) {
+        if (is_array($r) && !empty($r['ptComposerControlTypeHandle'])) {
             $txt = Loader::helper('text');
             $class = '\\Concrete\\Core\\Page\\Type\\Composer\\Control\\Type\\' . $txt->camelcase($r['ptComposerControlTypeHandle']) . 'Type';
             $sc = Core::make($class);

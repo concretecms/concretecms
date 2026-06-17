@@ -71,6 +71,8 @@ class Application extends Container
      * @param array $options Array of options for disabling certain things during shutdown
      *      Add `'jobs' => true` to disable scheduled jobs
      *      Add `'log_queries' => true` to disable query logging
+     *
+     * @return never
      */
     public function shutdown($options = [])
     {
@@ -318,7 +320,7 @@ class Application extends Container
     {
         $path = $request->getPathInfo();
         // If this isn't the homepage
-        if ($path && $path != '/') {
+        if ($path && $path != '/' && $request->isMethod('GET')) {
             $config = $this->make('config');
             $trailing_slashes = $config->get('concrete.seo.trailing_slash');
             // If the trailing slash doesn't match the config, return a redirect response
@@ -415,13 +417,19 @@ class Application extends Container
     public function detectEnvironment($environments)
     {
         $r = Request::getInstance();
-        $pos = stripos($r->server->get('SCRIPT_NAME'), DISPATCHER_FILENAME);
-        if ($pos > 0) {
-            //we do this because in CLI circumstances (and some random ones) we would end up with index.ph instead of index.php
-            $pos = $pos - 1;
+        $relativePath = '';
+        $scriptName = $r->server->get('SCRIPT_NAME');
+        // First normalize the directory separator
+        $scriptName = str_replace(DIRECTORY_SEPARATOR, '/', $scriptName);
+        if ($scriptName === DISPATCHER_FILENAME) {
+            $relativePath = '';
+        } else {
+            // Remove duplicate slashes
+            $scriptName = preg_replace('~/{2,}~', '/', $scriptName);
+            $indexPhpLocation = strpos($scriptName, '/' . DISPATCHER_FILENAME);
+            $relativePath = '/' . trim(substr($scriptName, 0, $indexPhpLocation), '/');
         }
-        $home = substr($r->server->get('SCRIPT_NAME'), 0, $pos);
-        $this['app_relative_path'] = rtrim(str_replace(DIRECTORY_SEPARATOR, '/', $home), '/');
+        $this['app_relative_path'] = $relativePath === '/' ? '' : $relativePath;
 
         $args = $this->isRunThroughCommandLineInterface() && isset($_SERVER['argv']) ? $_SERVER['argv'] : null;
 

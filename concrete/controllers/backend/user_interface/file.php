@@ -46,7 +46,7 @@ abstract class File extends \Concrete\Controller\Backend\UserInterface
 
     public function action()
     {
-        $url = call_user_func_array('parent::action', func_get_args());
+        $url = call_user_func_array([parent::class, 'action'], func_get_args());
         $url .= '&fID=' . $this->file->getFileID();
 
         return $url;

@@ -4,8 +4,9 @@ namespace Concrete\Controller\SinglePage\Dashboard\System\Update;
 
 use Concrete\Controller\Upgrade;
 use Concrete\Core\Error\UserMessageException;
+use Concrete\Core\File\Service\File;
+use Concrete\Core\Foundation\Composer;
 use Concrete\Core\Http\ResponseFactoryInterface;
-use Concrete\Core\Marketplace\Marketplace;
 use Concrete\Core\Package\PackageService;
 use Concrete\Core\Page\Controller\DashboardPageController;
 use Concrete\Core\Permission\Checker;
@@ -13,7 +14,11 @@ use Concrete\Core\Updater\ApplicationUpdate;
 use Concrete\Core\Updater\RemoteApplicationUpdate;
 use Concrete\Core\Updater\Update as UpdateService;
 use Concrete\Core\Updater\UpdateArchive;
+use Concrete\Core\Url\Resolver\CanonicalUrlResolver;
 use Concrete\Core\Url\Resolver\Manager\ResolverManagerInterface;
+use GuzzleHttp\Client;
+use GuzzleHttp\Exception\GuzzleException;
+use GuzzleHttp\RequestOptions;
 use Throwable;
 
 class Update extends DashboardPageController
@@ -31,6 +36,14 @@ class Update extends DashboardPageController
 
             return null;
         }
+        $config = $this->app->make('config');
+        if ($this->app->make(Composer::class)->isCoreInstalledViaComposer() === true) {
+            $this->set('skipCoreUpdates', t('ConcreteCMS has been installed via Composer: you should use it to upgrade the currently installed version.'));
+        } elseif ($config->get('concrete.updates.skip_core')) {
+            $this->set('skipCoreUpdates', t('Updates are currently disabled via your site configuration.'));
+        } else {
+            $this->set('skipCoreUpdates', '');
+        }
         $upd = $this->app->make(UpdateService::class);
         $updates = $upd->getLocalAvailableUpdates();
         if (count($updates) === 1) {
@@ -39,7 +52,7 @@ class Update extends DashboardPageController
             return;
         }
         $this->set('dh', $this->app->make('date'));
-        $this->set('currentVersion', $this->app->make('config')->get('concrete.version'));
+        $this->set('currentVersion', $config->get('concrete.version'));
         $this->set('updates', $updates);
         $remote = $upd->getApplicationUpdateInformation();
         if ($remote instanceof RemoteApplicationUpdate && version_compare($remote->getVersion(), APP_VERSION, '>')) {
@@ -91,34 +104,48 @@ class Update extends DashboardPageController
         if (!$this->userHasUpgradePermission()) {
             return $this->buildRedirect($this->action());
         }
-
         if (!$this->token->validate('download_update')) {
             $this->error->add($this->token->getErrorMessage());
-        }
-        if (!is_dir(DIR_CORE_UPDATES)) {
+        } elseif ($this->app->make(Composer::class)->isCoreInstalledViaComposer() === true) {
+            $this->error->add(t('ConcreteCMS has been installed via Composer: you should use it to upgrade the currently installed version.'));
+        } elseif ($this->app->make('config')->get('concrete.updates.skip_core')) {
+            $this->error->add(t('Updates are currently disabled via your site configuration.'));
+        } elseif (!is_dir(DIR_CORE_UPDATES)) {
             $this->error->add(t('The directory %s does not exist.', DIR_CORE_UPDATES));
-        } else {
-            if (!is_writable(DIR_CORE_UPDATES)) {
-                $this->error->add(t('The directory %s must be writable by the web server.', DIR_CORE_UPDATES));
-            }
+        } elseif (!is_writable(DIR_CORE_UPDATES)) {
+            $this->error->add(t('The directory %s must be writable by the web server.', DIR_CORE_UPDATES));
         }
 
         if (!$this->error->has()) {
             $remote = $this->app->make(UpdateService::class)->getApplicationUpdateInformation();
+
             if ($remote instanceof RemoteApplicationUpdate) {
                 $this->setCanExecuteForever();
+
                 // try to download
-                $r = $this->app->make(Marketplace::class)->downloadRemoteFile($remote->getDirectDownloadURL());
-                if (is_object($r)) {
-                    // error object
-                    $this->error->add($r);
+                $fileHelper = $this->app->make(File::class);
+                $client = $this->app->make(Client::class);
+
+                $location = $fileHelper->getTemporaryDirectory();
+                $file = uniqid(time(), true);
+
+                try {
+                    $client->get($remote->getDirectDownloadURL(), [
+                        RequestOptions::SINK => $location . '/' . $file . '.zip',
+                        RequestOptions::QUERY => [
+                            'csiURL' => (string)$this->app->make(CanonicalUrlResolver::class)->resolve([]),
+                            'csiVersion' => APP_VERSION,
+                        ]
+                    ]);
+                } catch (GuzzleException $e) {
+                    $this->error->add($e->getMessage());
                 }
 
                 if (!$this->error->has()) {
                     // the file exists in the right spot
                     $ar = new UpdateArchive();
                     try {
-                        $ar->install($r);
+                        $ar->install($file);
                     } catch (Throwable $e) {
                         $this->error->add($e->getMessage());
                     }
@@ -141,18 +168,28 @@ class Update extends DashboardPageController
         if (!$this->userHasUpgradePermission()) {
             return $this->buildRedirect($this->action());
         }
-        $updateVersion = (string) $this->request->request->get('version', '');
-        if ($updateVersion === '') {
-            $this->error->add(t('Invalid version'));
+        if (!$this->request->isMethod('POST')) {
+            $this->error->add(t('Invalid request method.'));
+        } elseif (!$this->token->validate('do_update')) {
+            $this->error->add($this->token->getErrorMessage());
+        } elseif ($this->app->make(Composer::class)->isCoreInstalledViaComposer() === true) {
+            $this->error->add(t('ConcreteCMS has been installed via Composer: you should use it to upgrade the currently installed version.'));
+        } elseif ($this->app->make('config')->get('concrete.updates.skip_core')) {
+            $this->error->add(t('Updates are currently disabled via your site configuration.'));
         } else {
-            $upd = ApplicationUpdate::getByVersionNumber($updateVersion);
-            if ($upd == null) {
+            $updateVersion = (string) $this->request->request->get('version', '');
+            if ($updateVersion === '') {
                 $this->error->add(t('Invalid version'));
             } else {
-                if (version_compare($upd->getUpdateVersion(), APP_VERSION, '<=')) {
-                    $this->error->add(
-                        t('You may only apply updates with a greater version number than the version you are currently running.')
-                    );
+                $upd = ApplicationUpdate::getByVersionNumber($updateVersion);
+                if ($upd == null) {
+                    $this->error->add(t('Invalid version'));
+                } else {
+                    if (version_compare($upd->getUpdateVersion(), APP_VERSION, '<=')) {
+                        $this->error->add(
+                            t('You may only apply updates with a greater version number than the version you are currently running.')
+                        );
+                    }
                 }
             }
         }

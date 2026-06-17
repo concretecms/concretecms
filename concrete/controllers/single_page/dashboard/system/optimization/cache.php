@@ -2,6 +2,7 @@
 
 namespace Concrete\Controller\SinglePage\Dashboard\System\Optimization;
 
+use Concrete\Core\Cache\Command\ClearCacheCommand;
 use Concrete\Core\Page\Controller\DashboardPageController;
 
 class Cache extends DashboardPageController
@@ -51,7 +52,11 @@ class Cache extends DashboardPageController
         if (isset($customFullPageLifetimeValue)) {
             $config->save('concrete.cache.full_page_lifetime_value', $customFullPageLifetimeValue);
         }
-        $this->app->clearCaches();
+
+        $command = new ClearCacheCommand();
+        $command->setLogCacheClear(true);
+        $this->app->executeCommand($command);
+
         $this->flash('success', t('Cache settings saved.'));
 
         return $this->buildRedirect($this->action(''));

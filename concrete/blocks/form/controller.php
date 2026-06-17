@@ -539,7 +539,7 @@ class Controller extends BlockController
                     $answerLong = '';
                     $answer = $txt->sanitize($_POST['Question' . $row['msqID']] ?? '');
                     if (!empty($row['options'])) {
-                        $settings = unserialize($row['options']);
+                        $settings = unserialize($row['options'], ['allowed_classes' => false]);
                         if (is_array($settings) && array_key_exists('send_notification_from', $settings) && $settings['send_notification_from'] == 1) {
                             $email = $txt->email($answer);
                             if (!empty($email)) {
@@ -696,11 +696,11 @@ class Controller extends BlockController
         $info = $miniSurvey->getMiniSurveyBlockInfo($this->bID);
 
         //get all answer sets
-        $q = "SELECT asID FROM {$this->btAnswerSetTablename} WHERE questionSetId = " . (int) ($info['questionSetId']);
+        $q = "SELECT asID FROM {$this->btAnswerSetTablename} WHERE questionSetId = " . (int) ($info['questionSetId'] ?? 0);
         $answerSetsRS = $db->query($q);
 
         //delete the questions
-        $deleteData['questionsIDs'] = $db->fetchAll("SELECT qID FROM {$this->btQuestionsTablename} WHERE questionSetId = " . (int) ($info['questionSetId']) . ' AND bID=' . (int) ($this->bID));
+        $deleteData['questionsIDs'] = $db->fetchAll("SELECT qID FROM {$this->btQuestionsTablename} WHERE questionSetId = " . (int) ($info['questionSetId'] ?? 0) . ' AND bID=' . (int) ($this->bID));
         foreach ($deleteData['questionsIDs'] as $questionData) {
             $db->query("DELETE FROM {$this->btQuestionsTablename} WHERE qID=" . (int) ($questionData['qID']));
         }

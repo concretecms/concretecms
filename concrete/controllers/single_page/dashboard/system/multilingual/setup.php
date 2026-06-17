@@ -47,6 +47,7 @@ class Setup extends DashboardSitePageController
         $this->set('redirectHomeToDefaultLocale', $siteConfig->get('multilingual.redirect_home_to_default_locale'));
         $this->set('useBrowserDetectedLocale', $siteConfig->get('multilingual.use_browser_detected_locale'));
         $this->set('alwaysTrackUserLocale', $siteConfig->get('multilingual.always_track_user_locale'));
+        $this->set('setAlternateHreflang', $siteConfig->get('multilingual.set_alternate_hreflang'));
         $mlPage = Page::getByPath('/dashboard/system/basics/multilingual');
         if ($mlPage && !$mlPage->isError()) {
             $cp = new Checker($mlPage);
@@ -157,6 +158,8 @@ class Setup extends DashboardSitePageController
                 }
                 $siteConfig->save('multilingual.default_source_locale', $defaultSourceLocale);
                 $siteConfig->save('multilingual.always_track_user_locale', $this->post('alwaysTrackUserLocale') ? true : false);
+                $setAlternateHreflang = $this->post('setAlternateHreflang') ? true : false;
+                $siteConfig->save('multilingual.set_alternate_hreflang', $setAlternateHreflang);
                 $this->flash('success', t('Default Section settings updated.'));
                 $this->redirect('/dashboard/system/multilingual/setup', 'view');
             } else {

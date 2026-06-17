@@ -164,13 +164,6 @@ class Surveys extends DashboardPageController
         // Strip off trailing comma
         $percentage_value_string = substr_replace($percentage_value_string, '', -1);
 
-        // Get Google Charts API image
-        $img_src = '<img class="surveyChart" style="margin-bottom:10px;" border="" src="//chart.apis.google.com/chart?cht=p&chd=t:' . $percentage_value_string . '&chs=180x180&chco=' . implode(
-            ',',
-            $graphColors
-        ) . '" />';
-        $this->set('pie_chart', $img_src);
-
         // Build human-readable option list
         $i = 1;
         $chart_options = '<table class="table"><tbody>';

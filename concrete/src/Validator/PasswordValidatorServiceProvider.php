@@ -211,7 +211,7 @@ class PasswordValidatorServiceProvider extends Provider
         $regexValidator = $this->regexValidator($regex, $requirementString);
         $validator = $this->app->make(ClosureValidator::class, [
             'validator_closure' =>
-                function (ClosureValidator $validator, $string, ArrayAccess $error = null) use ($regexValidator) {
+                function (ClosureValidator $validator, $string, ?ArrayAccess $error = null) use ($regexValidator) {
                     try {
                         $regexValidator->isValid($string, $error);
                     } catch (\RuntimeException $e) {

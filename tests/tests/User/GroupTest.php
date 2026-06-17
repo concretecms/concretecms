@@ -174,6 +174,38 @@ class GroupTest extends UserTestCase
         $this->assertFalse($userB->inGroup($group4));
     }
 
+    public function testNotInGroup()
+    {
+        $groupX = Group::add('Group X', 'This is a test group X');
+        $groupY = Group::add('Group Y', 'This is a test group Y');
+        $users = [
+            ['testX', 'testuserX@concrete5.org'],
+            ['testXY', 'testuserXY@concrete5.org'],
+            ['testY', 'testuserY@concrete5.org'],
+        ];
+        $i = 0;
+        foreach ($users as $user) {
+            $ui = $this->createUser($user[0], $user[1]);
+            $user = $ui->getUserObject();
+            if ($i === 0) {
+                $user->enterGroup($groupX);
+            }
+            if ($i === 1) {
+                $user->enterGroup($groupX);
+                $user->enterGroup($groupY);
+            }
+            if ($i === 2) {
+                $user->enterGroup($groupY);
+            }
+            $i++;
+        }
+        $list = new UserList();
+        $list->filterByGroup($groupX, false);
+        $results = $list->getResults();
+        $this->assertCount(1, $results);
+        $this->assertEquals('testY', $results[0]->getUserName());
+    }
+
     public function testInMultipleGroups()
     {
         $groupA = Group::add('Group A', 'This is a test group A');
@@ -559,17 +591,15 @@ class GroupTest extends UserTestCase
     /**
      * {@inheritdoc}
      *
-     * @see \Concrete\TestHelpers\Database\ConcreteDatabaseTestCase::getMetadatas()
+     * @see \Concrete\TestHelpers\Database\ConcreteDatabaseTestCase::getEntityClassNames()
      */
-    protected function getMetadatas()
+    protected function getEntityClassNames(): array
     {
-        $this->metadatas = array_values(array_unique(array_merge($this->metadatas, [
+        return array_merge(parent::getEntityClassNames(), [
             Entity\User\GroupCreate::class,
             Entity\User\GroupSignup::class,
             Entity\User\GroupSignupRequest::class,
-        ])));
-
-        return parent::getMetadatas();
+        ]);
     }
 
     /**
@@ -579,12 +609,10 @@ class GroupTest extends UserTestCase
      */
     protected function getTables()
     {
-        $this->tables = array_values(array_unique(array_merge($this->tables, [
+        return array_merge(parent::getTables(), [
             'GroupSelectedRoles',
             'TreeGroupFolderNodes',
             'TreeGroupFolderNodeSelectedGroupTypes',
-        ])));
-
-        return parent::getTables();
+        ]);
     }
 }

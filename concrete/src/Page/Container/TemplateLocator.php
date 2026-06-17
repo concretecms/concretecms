@@ -5,6 +5,7 @@ namespace Concrete\Core\Page\Container;
 use Concrete\Core\Entity\Page\Container;
 use Concrete\Core\Filesystem\FileLocator;
 use Concrete\Core\Filesystem\FileLocator\Record;
+use Concrete\Core\Filesystem\TemplateVariantLocator;
 use Concrete\Core\Page\Page;
 
 /**
@@ -34,7 +35,7 @@ class TemplateLocator
      * @param Container $container
      * @return string file
      */
-    public function getFileToRender(Page $page, Container $container)
+    public function getFileToRender(Page $page, Container $container, bool $template = false)
     {
         $theme = $page->getCollectionThemeObject();
         if ($theme) {
@@ -43,7 +44,10 @@ class TemplateLocator
                 $filename = DIRNAME_ELEMENTS . '/' . DIRNAME_CONTAINERS . '/' . $handle . '.php';
                 $this->themeLocation->setTheme($theme);
                 $this->fileLocator->addLocation($this->themeLocation);
-                $record = $this->fileLocator->getRecord($filename);
+
+                $record = $template
+                    ? (new TemplateVariantLocator($this->fileLocator))->getRecord($filename)
+                    : $this->fileLocator->getRecord($filename);
                 if ($record->exists()) {
                     return $record->getFile();
                 }

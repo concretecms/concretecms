@@ -22,13 +22,13 @@
 
             <?php if ($position && $company && $companyURL) { ?>
                 <div class="ccm-block-testimonial-position">
-                    <?=sprintf('%s, <a href="%s">%s</a>', h($position), $companyURL, h($company))?>
+                    <?=sprintf('%s, <a href="%s">%s</a>', h($position), h($companyURL), h($company))?>
                 </div>
             <?php } ?>
 
             <?php if ($position && !$company && $companyURL) { ?>
                 <div class="ccm-block-testimonial-position">
-                    <?=sprintf('<a href="%s">%s</a>', $companyURL, h($position))?>
+                    <?=sprintf('<a href="%s">%s</a>', h($companyURL), h($position))?>
                 </div>
             <?php } ?>
 

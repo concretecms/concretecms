@@ -87,7 +87,7 @@ class Locale implements LocaleInterface, LocaleEntityInterface, TreeInterface, \
      *
      * @param Site|null $site
      */
-    public function setSite(Site $site = null)
+    public function setSite(?Site $site = null)
     {
         $this->site = $site;
     }

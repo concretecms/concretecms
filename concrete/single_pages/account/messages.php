@@ -45,7 +45,13 @@ $token = $app->make(Token::class);
     ], false); ?>
 
     <div class="mt-4" id="ccm-private-message-detail">
-        <?php $profileURL = $msg->getMessageRelevantUserObject()->getUserPublicProfileURL(); ?>
+        <?php
+            $userObject = $msg->getMessageRelevantUserObject();
+            $profileURL = '';
+            if ($userObject) {
+                $profileURL = $userObject->getUserPublicProfileURL();
+            }
+        ?>
 
         <?php if ($profileURL) { ?>
             <a href="javascript:void(0);">
@@ -56,7 +62,7 @@ $token = $app->make(Token::class);
                 <?php echo $msg->getMessageRelevantUserName(); ?>
             </a>
         <?php } else { ?>
-            <?php echo $msg->getMessageRelevantUserObject()->getUserAvatar()->output(); ?>
+            <?= $userObject ? $userObject->getUserAvatar()->output() : '' ?>
             <?php echo $msg->getMessageRelevantUserName(); ?>
         <?php } ?>
 
@@ -155,16 +161,22 @@ $token = $app->make(Token::class);
         <tbody>
         <?php if (is_array($messages)) { ?>
             <?php foreach ($messages as $msg) { ?>
-                <?php $profileURL = $msg->getMessageRelevantUserObject()->getUserPublicProfileURL(); ?>
+                <?php
+                    $userObject = $msg->getMessageRelevantUserObject();
+                    $profileURL = '';
+                    if ($userObject) {
+                        $profileURL = $userObject->getUserPublicProfileURL();
+                    }
+                ?>
                 <tr>
                     <td class="ccm-profile-message-from">
                         <?php if ($profileURL) { ?>
                             <a href="<?php echo $profileURL; ?>">
-                                <?php echo $msg->getMessageRelevantUserObject()->getUserAvatar()->output(); ?>
+                                <?= $userObject->getUserAvatar()->output() ?>
                             </a>
                         <?php } else { ?>
                             <div>
-                                <?php echo $msg->getMessageRelevantUserObject()->getUserAvatar()->output(); ?>
+                                <?= $userObject ? $userObject->getUserAvatar()->output() : '' ?>
                             </div>
                         <?php } ?>
                     </td>

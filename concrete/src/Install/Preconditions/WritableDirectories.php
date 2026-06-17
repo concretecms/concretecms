@@ -5,6 +5,7 @@ namespace Concrete\Core\Install\Preconditions;
 use Concrete\Core\Install\AbstractListablePrecondition;
 use Concrete\Core\Install\PreconditionInterface;
 use Concrete\Core\Install\PreconditionResult;
+use Concrete\Core\System\SystemUser;
 use Illuminate\Filesystem\Filesystem;
 
 class WritableDirectories extends AbstractListablePrecondition
@@ -17,13 +18,19 @@ class WritableDirectories extends AbstractListablePrecondition
     protected $fs;
 
     /**
+     * @var \Concrete\Core\System\SystemUser
+     */
+    protected $systemUser;
+
+    /**
      * Initializes the instance.
      *
      * @param Filesystem $fs the Filesystem to be used to check directories
      */
-    public function __construct(Filesystem $fs)
+    public function __construct(Filesystem $fs, SystemUser $systemUser)
     {
         $this->fs = $fs;
+        $this->systemUser = $systemUser;
     }
 
     /**
@@ -76,7 +83,12 @@ class WritableDirectories extends AbstractListablePrecondition
         $result = new PreconditionResult();
         $numNotWritableDirectories = count($notWritableDirectories);
         if ($numNotWritableDirectories > 0) {
-            $message = t2('This directory must exist and it must be writable by your web server:', 'These directories must exist and they must be writable by your web server:', $numNotWritableDirectories);
+            $username = $this->systemUser->getCurrentUserName();
+            if ($username === '') {
+                $message = t2('This directory must exist and it must be writable by your web server:', 'These directories must exist and they must be writable by your web server:', $numNotWritableDirectories);
+            } else {
+                $message = t2('This directory must exist and it must be writable by your web server (which is running with the system user %2$s):', 'These directories must exist and they must be writable by your web server (which is running with the system user %2$s):', $numNotWritableDirectories, $username);
+            }
             $message .= ' ' . \Punic\Misc::join($notWritableDirectories);
             $result
                 ->setState(PreconditionResult::STATE_FAILED)

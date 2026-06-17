@@ -84,13 +84,15 @@ class InstallCommand extends Command
             ->addOption('attach', null, InputOption::VALUE_NONE, 'Attach if database contains an existing instance')
             ->addOption('force-attach', null, InputOption::VALUE_NONE, 'Always attach')
             ->addOption('interactive', 'i', InputOption::VALUE_NONE, 'Install using interactive (wizard) mode')
+            ->addOption('disable-marketplace-connect', null, InputOption::VALUE_NONE, 'Do not automatically connect site to marketplace')
+            ->addOption('defer-installation', null, InputOption::VALUE_NONE, 'Defer installation to a later point; do not write the final configuration files necessary to complete installation')
             ->addOption('ignore-warnings', null, InputOption::VALUE_NONE, 'Ignore warnings')
             ->setHelp(<<<EOT
 Returns codes:
   $okExitCode operation completed successfully
   $errExitCode errors occurred
 
-More info at http://documentation.concrete5.org/developers/appendix/cli-commands#c5-install
+More info at https://documentation.concretecms.org/9-x/developers/security/cli-jobs#c5-install
 EOT
             );
     }
@@ -155,6 +157,9 @@ EOT
                     $attach_mode = true;
                 }
             }
+            $db = app('database');
+            $db->executeQuery('set foreign_key_checks = 0');
+
             $routines = $spl->getInstallRoutines();
             foreach ($routines as $r) {
                 if ($attach_mode && !$r instanceof AttachModeCompatibleRoutineInterface) {
@@ -747,6 +752,8 @@ EOT
             ->setUserEmail($options['admin-email'])
             ->setUserPasswordHash($hasher->hashPassword($options['admin-password']))
             ->setServerTimeZoneId($options['timezone'])
+            ->setIsConnectToMarketplaceEnabled($options['disable-marketplace-connect'] ? false : true)
+            ->setDeferInstallation($options['defer-installation'] ? true : false);
         ;
 
         return $installer;

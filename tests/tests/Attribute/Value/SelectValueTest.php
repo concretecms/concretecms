@@ -7,11 +7,14 @@ use Concrete\TestHelpers\Attribute\AttributeValueTestCase;
 
 class SelectValueTest extends AttributeValueTestCase
 {
-    public function __construct($name = null, array $data = [], $dataName = '')
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\TestHelpers\Database\ConcreteDatabaseTestCase::getEntityClassNames()
+     */
+    protected function getEntityClassNames(): array
     {
-        parent::__construct($name, $data, $dataName);
-
-        $this->metadatas = array_merge($this->metadatas, [
+        return array_merge(parent::getEntityClassNames(), [
             'Concrete\Core\Entity\Attribute\Key\Settings\SelectSettings',
             'Concrete\Core\Entity\Attribute\Value\Value\SelectValue',
             'Concrete\Core\Entity\Attribute\Value\Value\SelectValueOptionList',
@@ -68,7 +71,7 @@ class SelectValueTest extends AttributeValueTestCase
         return SelectValue::class;
     }
 
-    public function baseAttributeValues()
+    public static function baseAttributeValues()
     {
         return [
             [
@@ -86,7 +89,7 @@ class SelectValueTest extends AttributeValueTestCase
         ];
     }
 
-    public function displayAttributeValues()
+    public static function displayAttributeValues()
     {
         return [
             [
@@ -104,7 +107,7 @@ class SelectValueTest extends AttributeValueTestCase
         ];
     }
 
-    public function plaintextAttributeValues()
+    public static function plaintextAttributeValues()
     {
         return [
             [
@@ -122,7 +125,7 @@ class SelectValueTest extends AttributeValueTestCase
         ];
     }
 
-    public function searchIndexAttributeValues()
+    public static function searchIndexAttributeValues()
     {
         return [
             [

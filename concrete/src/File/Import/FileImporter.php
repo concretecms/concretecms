@@ -9,6 +9,8 @@ use Concrete\Core\File\Incoming;
 use Concrete\Core\File\Service\Application as ApplicationFileService;
 use Concrete\Core\File\Service\VolatileDirectory;
 use Concrete\Core\Logging\Channels;
+use Concrete\Core\Logging\LoggerAwareInterface;
+use Concrete\Core\Logging\LoggerAwareTrait;
 use Concrete\Core\Logging\LoggerFactory;
 use Exception;
 use League\Flysystem\Adapter\AbstractAdapter;
@@ -19,8 +21,10 @@ use Throwable;
 /**
  * A class to be used to import files into the application file manager.
  */
-class FileImporter
+class FileImporter implements LoggerAwareInterface
 {
+    use LoggerAwareTrait;
+
     /**
      * The container instance to be used to build dependencies.
      *
@@ -59,6 +63,11 @@ class FileImporter
         $this->incoming = $incoming;
     }
 
+    public function getLoggerChannel()
+    {
+        return Channels::CHANNEL_FILES;
+    }
+
     /**
      * Get the processor list manager.
      *
@@ -80,8 +89,9 @@ class FileImporter
      *
      * @return \Concrete\Core\Entity\File\Version
      */
-    public function importLocalFile($localFilename, $concreteFilename = '', ImportOptions $options = null)
+    public function importLocalFile($localFilename, $concreteFilename = '', ?ImportOptions $options = null)
     {
+        $this->logger->notice(t("Starting import of local file %s.", $localFilename));
         if ($options === null) {
             $options = $this->app->make(ImportOptions::class);
         }
@@ -93,9 +103,10 @@ class FileImporter
                 $concreteFilename = $localFilename;
             }
             $localFilename = $tempFilename;
+            $this->logger->info(t('Copying local file %s to temporary location %s.', $localFilename, $tempFilename));
+
         }
         $importingFile = $this->app->make(ImportingFile::class, ['localFilename' => $localFilename, 'concreteFilename' => $concreteFilename]);
-
         return $this->import($importingFile, $options);
     }
 
@@ -110,7 +121,7 @@ class FileImporter
      *
      * @return \Concrete\Core\Entity\File\Version
      */
-    public function importFromIncoming($incomingFilename, $concreteFilename = '', ImportOptions $options = null)
+    public function importFromIncoming($incomingFilename, $concreteFilename = '', ?ImportOptions $options = null)
     {
         $localFilename = $this->resolveIncomingFilename($incomingFilename, $copiedLocally, $volatileDirectory);
         if ($copiedLocally) {
@@ -144,7 +155,7 @@ class FileImporter
      * }
      * </code></pre>
      */
-    public function importUploadedFile(UploadedFile $uploadedFile = null, $concreteFilename = '', ImportOptions $options = null)
+    public function importUploadedFile(?UploadedFile $uploadedFile = null, $concreteFilename = '', ?ImportOptions $options = null)
     {
         if ($uploadedFile === null) {
             throw ImportException::fromErrorCode(ImportException::E_PHP_NO_FILE);
@@ -189,12 +200,8 @@ class FileImporter
         $this->applyPostProcessors($importingFile, $options, $fileVersion);
         $fileVersion->releaseImagineImage();
 
-        /** @var LoggerFactory $loggerFactory */
-        $loggerFactory = $this->app->make(LoggerFactory::class);
-        $logger = $loggerFactory->createLogger(Channels::CHANNEL_FILES);
-
         try {
-            $logger->notice(t("File %s successfully imported.", $fileVersion->getFileName()));
+            $this->logger->notice(t("File %s successfully imported.", $fileVersion->getFileName()));
         } catch (Exception $err) {
             // Skip any errors while logging to pass the automated tests
         }
@@ -288,6 +295,7 @@ class FileImporter
                 $importingFile->getConcreteFilenameSanitized(),
                 $prefix
             );
+            $this->logger->notice(t("Added new version %s to existing file %s (%s).", $fileVersion->getFileVersionID(), $file->getFileName(), $file->getFileID()));
         } else {
             // We create a new File instance
             $fileVersion = File::add(
@@ -297,6 +305,7 @@ class FileImporter
                 $storageLocation,
                 $options->getImportToFolder()
             );
+            $this->logger->info(t("Created new file version %s (%s) to file %s.", $fileVersion->getFileName(), $fileVersion->getFileVersionID(), $fileVersion->getFileID()));
         }
         $fileVersion->refreshAttributes(false);
 
@@ -332,7 +341,7 @@ class FileImporter
      *
      * @return string
      */
-    protected function resolveIncomingFilename($incomingFilename, &$copiedLocally, VolatileDirectory &$volatileDirectory = null)
+    protected function resolveIncomingFilename($incomingFilename, &$copiedLocally, ?VolatileDirectory &$volatileDirectory = null)
     {
         $copiedLocally = false;
         $incoming = $this->app->make(Incoming::class);

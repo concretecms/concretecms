@@ -23,7 +23,7 @@ abstract class GenericOauth1aTypeController extends GenericOauthTypeController
             // We should NOT allow you to complete the authentication flow and potentially rebind the
             // logged-in user here. Instead we halt the authentication flow.
             $this->showError(t('You are already logged in.'));
-            return false;
+            exit();
         }
         $token = \Request::getInstance()->get('oauth_token');
         $verifier = \Request::getInstance()->get('oauth_verifier');

@@ -7,8 +7,7 @@ use Concrete\Core\Editor\LinkAbstractor;
 use Concrete\Core\Feature\Features;
 use Concrete\Core\Feature\UsesFeatureInterface;
 use Concrete\Core\File\Tracker\FileTrackableInterface;
-use Concrete\Core\Page\Page;
-use Concrete\Core\Utility\Service\Xml;
+use Concrete\Core\File\Tracker\RichTextExtractor;
 
 /**
  * The controller for the content block.
@@ -70,12 +69,24 @@ class Controller extends BlockController implements FileTrackableInterface, Uses
     /**
      * @var bool
      */
-    protected $btCacheBlockOutputForRegisteredUsers = false;
+    protected $btCacheBlockOutputForRegisteredUsers = null;
+
+    /**
+     * @var bool
+     */
+    protected $btCacheBlockOutputOnEditMode = false;
 
     /**
      * @var int
      */
     protected $btCacheBlockOutputLifetime = 0; //until manually updated or cleared
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Block\BlockController::$btExportContentColumns
+     */
+    protected $btExportContentColumns = ['content'];
 
     /**
      * {@inhertdoc}.
@@ -101,6 +112,15 @@ class Controller extends BlockController implements FileTrackableInterface, Uses
     public function getBlockTypeName()
     {
         return t('Content');
+    }
+
+    public function cacheBlockOutputForRegisteredUsers()
+    {
+        if ($this->btCacheBlockOutputForRegisteredUsers === null) {
+            $this->btCacheBlockOutputForRegisteredUsers = strrpos($this->content, 'data-scs') === false;
+        }
+
+        return $this->btCacheBlockOutputForRegisteredUsers;
     }
 
     /**
@@ -146,34 +166,6 @@ class Controller extends BlockController implements FileTrackableInterface, Uses
     }
 
     /**
-     * @param \SimpleXMLElement $blockNode
-     * @param Page $page
-     *
-     * @return array<string, string>
-     */
-    public function getImportData($blockNode, $page)
-    {
-        $content = $blockNode->data->record->content;
-        $content = LinkAbstractor::import($content);
-
-        return ['content' => $content];
-    }
-
-    /**
-     * @param \SimpleXMLElement $blockNode
-     *
-     * @return void
-     */
-    public function export(\SimpleXMLElement $blockNode)
-    {
-        $data = $blockNode->addChild('data');
-        $data->addAttribute('table', $this->btTable);
-        $record = $data->addChild('record');
-        $content = LinkAbstractor::export($this->content);
-        $this->app->make(Xml::class)->createChildElement($record, 'content', $content);
-    }
-
-    /**
      * @param array<string,string> $args
      */
     public function save($args)
@@ -185,18 +177,17 @@ class Controller extends BlockController implements FileTrackableInterface, Uses
     }
 
     /**
-     * @return int[]|string[]
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\File\Tracker\FileTrackableInterface::getUsedFiles()
      */
     public function getUsedFiles()
     {
-        return array_merge(
-            $this->getUsedFilesImages(),
-            $this->getUsedFilesDownload()
-        );
+        return $this->app->make(RichTextExtractor::class)->extractFiles($this->content);
     }
 
     /**
-     * @return int[]|string[]
+     * @deprecated use \Concrete\Core\File\Tracker\RichTextExtractor
      */
     protected function getUsedFilesImages()
     {
@@ -213,7 +204,7 @@ class Controller extends BlockController implements FileTrackableInterface, Uses
     }
 
     /**
-     * @return int[]|string[]
+     * @deprecated use \Concrete\Core\File\Tracker\RichTextExtractor
      */
     protected function getUsedFilesDownload()
     {

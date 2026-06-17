@@ -13,6 +13,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
  */
 
 $router->all('/add', 'Add::view');
+$router->all('/add_mobile', 'AddMobile::view');
 $router->all('/versions', 'Versions::view');
 $router->all('/versions/duplicate', 'Versions::duplicate');
 $router->all('/versions/new_page', 'Versions::new_page');
@@ -35,6 +36,10 @@ $router->all('/bulk/delete/submit', 'Bulk\Delete::submit');
 $router->all('/bulk/permissions/get_all_access_entities', 'Bulk\Permissions::getAllAccessEntities');
 $router->all('/bulk/permissions', 'Bulk\Permissions::view');
 $router->all('/bulk/permissions/{task}', 'Bulk\Permissions::view');
+$router->all('/bulk/cache', 'Bulk\Cache::view');
+$router->all('/bulk/cache/submit', 'Bulk\Cache::submit');
+$router->all('/bulk/design', 'Bulk\Design::view');
+$router->all('/bulk/design/submit', 'Bulk\Design::submit');
 $router->all('/clipboard', 'Clipboard::view');
 $router->all('/delete', 'Delete::view');
 $router->all('/delete/submit', 'Delete::submit');

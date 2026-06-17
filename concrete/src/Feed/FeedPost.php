@@ -1,13 +1,11 @@
 <?php
 namespace Concrete\Core\Feed;
 
-use Concrete\Core\Cache\Adapter\LaminasCacheDriver;
 use Concrete\Core\Logging\Channels;
-use GuzzleHttp\Client;
-use Laminas\Feed\Reader\Reader;
+use Laminas\Feed\Reader\Entry\EntryInterface;
 use Laminas\Feed\Reader\Entry\Rss;
+use Laminas\Feed\Reader\Feed\FeedInterface;
 use League\Url\Url;
-use Laminas\Feed\Reader\Feed\Rss as RssFeed;
 use Monolog\Logger;
 
 /**
@@ -17,12 +15,12 @@ class FeedPost
 {
 
     /**
-     * @var Rss
+     * @var EntryInterface
      */
     protected $post;
 
     /**
-     * @var RssFeed
+     * @var FeedInterface
      */
     protected $feed;
 
@@ -30,7 +28,7 @@ class FeedPost
      * FeedPost constructor.
      * @param Rss $post
      */
-    public function __construct(RssFeed $feed, Rss $post)
+    public function __construct(FeedInterface $feed, EntryInterface $post)
     {
         $this->feed = $feed;
         $this->post = $post;

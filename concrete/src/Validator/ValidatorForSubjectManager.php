@@ -11,7 +11,7 @@ class ValidatorForSubjectManager extends ValidatorManager implements ValidatorMa
      *
      * @see \Concrete\Core\Validator\ValidatorInterface::isValid()
      */
-    public function isValid($mixed, ArrayAccess $error = null)
+    public function isValid($mixed, ?ArrayAccess $error = null)
     {
         return $this->isValidFor($mixed, null, $error);
     }
@@ -21,7 +21,7 @@ class ValidatorForSubjectManager extends ValidatorManager implements ValidatorMa
      *
      * @see \Concrete\Core\Validator\ValidatorForSubjectInterface::isValidFor()
      */
-    public function isValidFor($mixed, $subject = null, ArrayAccess $error = null)
+    public function isValidFor($mixed, $subject = null, ?ArrayAccess $error = null)
     {
         $valid = true;
         foreach ($this->getValidators() as $validator) {

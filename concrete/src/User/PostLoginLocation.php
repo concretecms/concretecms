@@ -143,7 +143,6 @@ class PostLoginLocation
 
         return $result;
     }
-
     /**
      * Get the default post-login URL.
      *

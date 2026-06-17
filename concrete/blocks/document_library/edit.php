@@ -67,16 +67,16 @@ foreach ($fileSetService->get() as $fileSet) {
 $folders = [0 => '* Any folder'] + (array) $folders;
 
 echo $userInterface->tabs([
-    ['sources', t('Sources'), true],
-    ['header', t('Header')],
-    ['results', t('Results')]
+    ['document-library-sources', t('Sources'), true],
+    ['document-library-header', t('Header')],
+    ['document-library-results', t('Results')]
 ]);
 
 $hideFolders = isset($hideFolders) ? $hideFolders : false;
 ?>
 
 <div class="tab-content">
-    <div class="tab-pane active" id="sources" role="tabpanel">
+    <div class="tab-pane active" id="document-library-sources" role="tabpanel">
         <div class="form-group">
             <?php echo $form->label('folderID', t('File Folder')) ?>
             <?php echo $form->select('folderID', $folders, empty($folderID) ? 0 : $folderID); ?>
@@ -162,7 +162,7 @@ $hideFolders = isset($hideFolders) ? $hideFolders : false;
         </div>
     </div>
 
-    <div class="tab-pane" id="header" role="tabpanel">
+    <div class="tab-pane" id="document-library-header" role="tabpanel">
         <div class="form-check">
             <?php echo $form->checkbox('enableSearch', 1, !empty($enableSearch), ['data-options-toggle' => 'search']) ?>
             <?php echo $form->label("enableSearch", t('Enable Search'), ["class" => "form-check-label"]); ?>
@@ -228,7 +228,7 @@ $hideFolders = isset($hideFolders) ? $hideFolders : false;
         </fieldset>
     </div>
 
-    <div class="tab-pane" id="results" role="tabpanel">
+    <div class="tab-pane" id="document-library-results" role="tabpanel">
         <div class="form-group">
             <?php echo $form->label('tableName', t('Table Name')) ?>
             <?php echo $form->text('tableName', isset($tableName) ? $tableName : '', array('maxlength' => '128')) ?>

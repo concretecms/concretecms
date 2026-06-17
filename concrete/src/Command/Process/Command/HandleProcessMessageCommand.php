@@ -21,7 +21,7 @@ class HandleProcessMessageCommand extends Command implements NormalizableInterfa
      */
     protected $message;
 
-    public function __construct(string $processId = null, $message = null)
+    public function __construct(?string $processId = null, $message = null)
     {
         $this->processId = $processId;
         $this->message = $message;
@@ -51,7 +51,7 @@ class HandleProcessMessageCommand extends Command implements NormalizableInterfa
         return $this->processId;
     }
 
-    public function normalize(NormalizerInterface $normalizer, string $format = null, array $context = [])
+    public function normalize(NormalizerInterface $normalizer, ?string $format = null, array $context = [])
     {
         return [
             'type' => get_class($this->message),
@@ -60,7 +60,7 @@ class HandleProcessMessageCommand extends Command implements NormalizableInterfa
         ];
     }
 
-    public function denormalize(DenormalizerInterface $denormalizer, $data, string $format = null, array $context = [])
+    public function denormalize(DenormalizerInterface $denormalizer, $data, ?string $format = null, array $context = [])
     {
         $message = $denormalizer->denormalize($data['message'], $data['type']);
         $this->processId = $data['process'];
