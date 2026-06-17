@@ -13,7 +13,7 @@ jobs:
         include:
           # This list should include at least the value of Concrete\Core\Install\Preconditions\PhpVersion::MINIMUM_PHP_VERSION
           -
-            php-version: "7.3"
+            php-version: "8.4"
             exclude: |
               tests/assets/Foundation/jobs/index_search.php
           -

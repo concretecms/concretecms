@@ -19,10 +19,11 @@ class ExecutableFilesTest extends TestCase
         }
         $output = array_map(function ($file) { return substr($file, strlen(DIR_BASE) + 1); }, $output);
         $actual = array_filter($output, function ($file) {
-            return strpos($file, '.git/') !== 0
-                && strpos($file, 'concrete/vendor/') !== 0
-                && strpos($file, 'packages/') !== 0
-                && strpos($file, 'updates/') !== 0
+            return !str_starts_with($file, '.git/')
+                && !str_starts_with($file, 'concrete/vendor/')
+                && !str_starts_with($file, 'packages/')
+                && !str_starts_with($file, 'updates/')
+                && !str_starts_with($file, 'build/node_modules')
             ;
         });
         sort($actual);

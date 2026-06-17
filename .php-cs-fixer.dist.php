@@ -14,7 +14,7 @@ $minimumPHPVersion = $_ENV['C5_PHPCS_MIN_PHP_VERSION'] ?? '';
 if (!is_string($minimumPHPVersion) || ($minimumPHPVersion = trim($minimumPHPVersion)) === '') {
     $minimumPHPVersion = getenv('C5_PHPCS_MIN_PHP_VERSION');
     if (!is_string($minimumPHPVersion) || ($minimumPHPVersion = trim($minimumPHPVersion)) === '') {
-        $minimumPHPVersion = '7.3';
+        $minimumPHPVersion = '8.4';
     }
 }
 $minimumPHPVersion = PHPCSFixerConfigurator::parseMinimumPHPVersionFormat($minimumPHPVersion);

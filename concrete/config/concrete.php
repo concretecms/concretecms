@@ -237,6 +237,10 @@ return [
         'full_contents_assets_hash' => false,
 
         'directory' => DIR_FILES_UPLOADED_STANDARD . '/cache',
+        'templates' => [
+            'directory' => DIR_FILES_UPLOADED_STANDARD . '/cache/templates',
+        ],
+
         /*
          * Relative path to the cache directory. If empty it'll be calculated from concrete.cache.directory
          * @var string|null

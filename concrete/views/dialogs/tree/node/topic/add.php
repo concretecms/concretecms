@@ -4,7 +4,7 @@ $form = Core::make("helper/form");
 ?>
 
 	<div class="ccm-ui">
-		<form method="post" data-dialog-form="add-topic-node" class="form-horizontal" action="<?=$controller->action('add_topic_node')?>">
+		<form method="post" data-dialog-form="add-topic-node" class="form-horizontal" action="<?=$controller->action('add_dashboard_page')?>">
 			<input type="hidden" name="treeNodeID" value="<?=$node->getTreeNodeID()?>">
 				<?=Loader::helper('validation/token')->output('add_topic_node')?>
 			<div class="form-group">

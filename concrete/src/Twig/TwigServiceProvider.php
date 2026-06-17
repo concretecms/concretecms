@@ -17,6 +17,7 @@ use Symfony\Component\Form\FormRenderer;
 use Symfony\Component\Translation\Loader\MoFileLoader;
 use Symfony\Component\Translation\Translator;
 use Symfony\Contracts\Translation\TranslatorInterface;
+use Twig\Cache\FilesystemCache;
 use Twig\Environment;
 use Twig\Loader\FilesystemLoader;
 use Twig\RuntimeLoader\FactoryRuntimeLoader;
@@ -43,14 +44,14 @@ class TwigServiceProvider extends Provider
              * @var Repository $config
              */
             $config = $this->app->make('config');
-            /** @var ExpensiveCache $expensiveCache */
-            $expensiveCache = $this->app->make('cache/expensive');
+            $directory = $config->get('concrete.cache.templates.directory');
+            $hasCacheDirectory = is_string($directory) && $directory !== '';
 
             $twig = new Environment(
                 $loader,
                 [
                     'debug' => $config->get('concrete.debug.display_errors'),
-                    'cache' => $expensiveCache->isEnabled() ? new TwigCache($expensiveCache) : false,
+                    'cache' => $hasCacheDirectory ? new FilesystemCache($directory) : false,
                 ]
             );
             $additionalThemePaths = $config->get('app.twig_additional_theme_paths', []);
