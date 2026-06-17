@@ -65,7 +65,7 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: "${{ matrix.php-version }}"
-          extensions: mbstring, xml, ctype, iconv, intl, pdo_mysql, mysql
+          extensions: mbstring, xml, ctype, iconv, intl, pdo_mysql, mysql, amqp
           coverage: ${{ env.CODE_COVERAGE }}
           ini-values: memory_limit=-1, pcov.directory=concrete, pcov.exclude="~(vendor|tests|js|css|config)~"
           tools: ${{matrix.composer}}
