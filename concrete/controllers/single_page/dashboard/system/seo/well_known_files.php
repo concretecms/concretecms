@@ -216,8 +216,8 @@ class WellKnownFiles extends DashboardPageController
     }
 
     /**
-     * Uses canAdminPage() on the site's home page — the standard ConcreteCMS signal
-     * that a user has full administrative rights over a site tree.
+     * Uses canAdminPage() on the site's home page to determine if a user has 
+     * full administrative rights over a site tree.
      */
     protected function canAdminSite(Site $site): bool
     {
