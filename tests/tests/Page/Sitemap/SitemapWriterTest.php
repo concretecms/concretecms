@@ -38,7 +38,7 @@ class SitemapWriterTest extends TestCase
         static::assertStringStartsWith(DIR_BASE, $path);
     }
 
-    public function provideHandleAndExpectedPath(): array
+    public static function provideHandleAndExpectedPath(): array
     {
         return [
             'default site' => ['default', '/sitemap-default.xml'],
