@@ -39,7 +39,7 @@ class SitemapGeneratorTest extends TestCase
         static::assertSame($expected, $gen->callUrlHostMatchesCanonical($url, $canonicalHost));
     }
 
-    public function provideHostMatchCases(): array
+    public static function provideHostMatchCases(): array
     {
         return [
             'same host' => ['https://example.com/page', 'example.com', true],
