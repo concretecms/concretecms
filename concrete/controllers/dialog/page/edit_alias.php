@@ -23,7 +23,7 @@ class EditAlias extends BackendInterfacePageController
             $data = [];
             $customAliasName = $this->request->request->get('customAliasName');
             if (is_string($customAliasName)) {
-                $data['customAliasName'] = trim($customAliasName);
+                $data['customAliasName'] = trim((string) $this->app->make('helper/security')->sanitizeString($customAliasName));
             }
             $aliasHandle = $this->request->request->get('aliasHandle');
             if (is_string($aliasHandle) && ($aliasHandle = trim($aliasHandle)) !== '') {
