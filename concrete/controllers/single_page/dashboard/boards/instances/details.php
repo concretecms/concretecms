@@ -129,7 +129,7 @@ class Details extends DashboardPageController
 
     public function delete_instance($boardInstanceID = null)
     {
-        $instance = $this->entityManager->find(Instance::class, $boardInstanceID);
+        $instance = $this->getInstance($boardInstanceID);
         if ($instance) {
             $board = $instance->getBoard();
             if (!$this->token->validate('delete_instance')) {
@@ -143,7 +143,7 @@ class Details extends DashboardPageController
                 $this->flash('success', t('Board instance removed successfully.'));
                 return $this->redirect('/dashboard/boards/instances', 'view', $board->getBoardID());
             }
-            $this->view($board->getBoardID());
+            $this->view($boardInstanceID);
         } else {
             return $this->redirect('/dashboard/boards/boards');
         }
