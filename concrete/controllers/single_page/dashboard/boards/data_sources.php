@@ -96,11 +96,15 @@ class DataSources extends DashboardSitePageController
     {
         $configuredDataSource = $this->entityManager->find(ConfiguredDataSource::class, $configuredDataSourceID);
         if ($configuredDataSource) {
+            $board = $configuredDataSource->getBoard();
+            $checker = new Checker($board);
+            if (!$checker->canEditBoardSettings()) {
+                return $this->redirect('/dashboard/boards/boards');
+            }
             if (!$this->token->validate('delete_data_source')) {
                 $this->error->add($this->token->getErrorMessage());
             }
             if (!$this->error->has()) {
-                $board = $configuredDataSource->getBoard();
                 $this->entityManager->remove($configuredDataSource);
                 $this->entityManager->flush();
                 $resetCommand = new ResetBoardCustomWeightingCommand();
