@@ -31,7 +31,7 @@
                 <label
                     for="checkbox-<?=$entry->getId()?>"
                     class="form-check-label">
-                <?=$formatter->getEntryDisplayName($control, $entry)?>
+                <?=h($formatter->getEntryDisplayName($control, $entry))?>
                 </label>
             </div>
             <?php
