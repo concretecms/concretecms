@@ -4,6 +4,7 @@ namespace Concrete\Controller\Dialog\Express\Preset;
 use Concrete\Controller\Dialog\Search\Preset\Delete as PresetDelete;
 use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\Application\EditResponse;
+use Concrete\Core\Entity\Search\SavedExpressSearch;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Permissions;
@@ -12,17 +13,20 @@ class Delete extends PresetDelete
 {
     protected function getEntity()
     {
-        $entity = null;
-        $em = $this->app->make(EntityManager::class);
-        if (is_object($em)) {
-            $entityID = $this->request->query->get('exEntityID');
-            if (empty($entityID) && !empty($this->request->request->get('exEntityID'))) {
-                $entityID = $this->request->request->get('exEntityID');
+        $searchPreset = $this->getSearchPreset();
+        if ($searchPreset instanceof SavedExpressSearch) {
+            $entity = $searchPreset->getEntity();
+            $entityID = $entity ? (int) $entity->getID() : 0;
+            $requestedEntityID = $this->request->query->get('exEntityID', $this->request->request->get('exEntityID'));
+            $requestedEntityID = is_scalar($requestedEntityID) ? (int) $requestedEntityID : 0;
+            if ($requestedEntityID !== 0 && $requestedEntityID !== $entityID) {
+                return null;
             }
-            $entity = $em->getRepository('Concrete\Core\Entity\Express\Entity')->findOneById($entityID);
+
+            return $entity;
         }
 
-        return $entity;
+        return null;
     }
 
     protected function canAccess()
@@ -39,10 +43,10 @@ class Delete extends PresetDelete
 
     public function getDeleteSearchPresetAction()
     {
-        $entityID = $this->request->query->get('exEntityID');
         $action = parent::getDeleteSearchPresetAction();
         $url = \League\Url\Url::createFromUrl($action);
-        $url->getQuery()->modify(['exEntityID' => $entityID]);
+        $entity = $this->getEntity();
+        $url->getQuery()->modify(['exEntityID' => $entity ? $entity->getID() : null]);
         return (string) $url;
     }
 
@@ -85,5 +89,21 @@ class Delete extends PresetDelete
         $this->error->add(t('You can\'t delete this search preset.'));
 
         return new JsonResponse($this->error);
+    }
+
+    protected function getSearchPreset()
+    {
+        $em = $this->app->make(EntityManager::class);
+        if (!is_object($em)) {
+            return null;
+        }
+
+        $presetID = $this->request->query->get('presetID', $this->request->request->get('presetID'));
+        $presetID = is_scalar($presetID) ? (int) $presetID : 0;
+        if ($presetID === 0) {
+            return null;
+        }
+
+        return $em->find(SavedExpressSearch::class, $presetID);
     }
 }
