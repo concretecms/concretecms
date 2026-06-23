@@ -48,12 +48,20 @@ class Multilingual extends Page
     public function assign()
     {
         $pr = new PageEditResponse();
+        $destID = (int) $this->request->request->get('destID');
 
-        if ($this->request->request->get('destID') == $this->page->getCollectionID()) {
+        if ($destID === $this->page->getCollectionID()) {
             throw new UserMessageException(t("You cannot assign this page to itself."));
         }
 
-        $destPage = \Page::getByID($_POST['destID']);
+        $destPage = \Page::getByID($destID);
+        if (!$destPage || $destPage->isError()) {
+            throw new UserMessageException(t("The destination page couldn't be found."));
+        }
+        $destPermissions = new \Permissions($destPage);
+        if (!$destPermissions->canEditPageMultilingualSettings()) {
+            throw new UserMessageException(t("You do not have permission to assign this page to the destination page."));
+        }
         if (Section::isMultilingualSection($destPage)) {
             $ms = Section::getByID($destPage->getCollectionID());
         } else {
