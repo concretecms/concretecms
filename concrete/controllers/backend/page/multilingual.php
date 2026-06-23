@@ -47,6 +47,10 @@ class Multilingual extends Page
 
     public function assign()
     {
+        if (!Core::make('token')->validate('assign_multilingual_page', $this->request->request->get('ccm_token'))) {
+            throw new UserMessageException(t('Invalid token.'));
+        }
+
         $pr = new PageEditResponse();
         $destID = (int) $this->request->request->get('destID');
 
