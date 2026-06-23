@@ -29,7 +29,7 @@ if (isset($errorMsg) && strlen($errorMsg) > 0) {
     echo 'target="_blank"';
 }
         ?> >
-					<?= $item->getTitle();
+					<?= h($item->getTitle());
         ?>
 				</a>
 			</div>
