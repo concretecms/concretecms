@@ -2,6 +2,7 @@
 namespace Concrete\Core\Legacy;
 
 use Page as ConcretePage;
+use Concrete\Core\Database\Query\LikeBuilder;
 use Concrete\Core\User\User;
 use Concrete\Core\Permission\Access\Entity\PageOwnerEntity as PageOwnerPermissionAccessEntity;
 use PermissionKey;
@@ -95,15 +96,17 @@ class PageList extends DatabaseItemList
      */
     public function filterByKeywords($keywords, $simple = false)
     {
+        $likeBuilder = Application::getFacadeApplication()->make(LikeBuilder::class);
         $db = Loader::db();
         $kw = $db->quote($keywords);
-        $qk = $db->quote('%' . $keywords . '%');
+        $escapedKeywords = $likeBuilder->escapeForLike($keywords);
+        $qk = $db->quote($escapedKeywords);
 
         $keys = CollectionAttributeKey::getSearchableIndexedList();
         $attribsStr = '';
         foreach ($keys as $ak) {
             $cnt = $ak->getController();
-            $attribsStr .= ' OR ' . $cnt->searchKeywords($keywords);
+            $attribsStr .= ' OR ' . $cnt->searchKeywords($escapedKeywords);
         }
 
         if ($simple || $this->indexModeSimple) {
