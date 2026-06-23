@@ -39,12 +39,13 @@ class Autocomplete extends AbstractController
     public function view(): Response
     {
         $requestInstance = $this->checkAccess();
+        $entity = $this->getAccessibleEntity($requestInstance);
         /**
          * @var $objectManager ObjectManager
          */
         $objectManager = $this->app->make(ObjectManager::class);
         $query = $this->request->request->get('query', $this->request->query->get('query'));
-        $entryList = $objectManager->getList($requestInstance->getEntityHandle(), true);
+        $entryList = $objectManager->getList($entity->getHandle(), true);
         $entryList->filterByKeywords($query);
         $factory = new PaginationFactory($this->request);
         $pagination = $factory->createPaginationObject($entryList);
@@ -59,6 +60,7 @@ class Autocomplete extends AbstractController
     public function getSelectedEntries(): JsonResponse
     {
         $requestInstance = $this->checkAccess();
+        $entity = $this->getAccessibleEntity($requestInstance);
         $results = [];
         /**
          * @var $objectManager ObjectManager
@@ -67,20 +69,33 @@ class Autocomplete extends AbstractController
         foreach ((array) $this->request->request->get('entryId') as $id) {
             $entry = $objectManager->getEntry($id);
             if ($entry) {
-                $entity = $entry->getEntity();
-                if ($entity instanceof Entity) {
-                    $permissions = new Checker($entity);
-                    if (!$permissions->canViewExpressEntries()) {
-                        throw new \Exception(t('Access Denied.'));
-                    } else {
-                        $results[] = $requestInstance->createResultFromEntry($entry);
-                    }
-                } else {
+                $entryEntity = $entry->getEntity();
+                if (!$entryEntity instanceof Entity) {
                     throw new \Exception(t('Unable to retrieve entity from Express entry: %s', $entry->getID()));
                 }
+                if ((int) $entryEntity->getID() !== (int) $entity->getID()) {
+                    throw new \Exception(t('Access Denied.'));
+                }
+                $results[] = $requestInstance->createResultFromEntry($entry);
             }
         }
         return new JsonResponse($results);
+    }
+
+    protected function getAccessibleEntity(ExpressEntrySelectInstance $requestInstance): Entity
+    {
+        $objectManager = $this->app->make(ObjectManager::class);
+        $entity = $objectManager->getObjectByHandle($requestInstance->getEntityHandle());
+        if (!$entity instanceof Entity) {
+            throw new \Exception(t('Access Denied.'));
+        }
+
+        $permissions = new Checker($entity);
+        if (!$permissions->canViewExpressEntries()) {
+            throw new \Exception(t('Access Denied.'));
+        }
+
+        return $entity;
     }
 
 }
