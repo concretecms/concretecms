@@ -20,6 +20,10 @@ class SitemapUpdate extends AbstractController
     public function view(): Response
     {
         $this->checkUser();
+        $token = $this->app->make('token');
+        if (!$token->validate()) {
+            throw new UserMessageException($token->getErrorMessage());
+        }
         $this->updateDisplayOrder($this->getPageIDs());
 
         return $this->buildResponse();
