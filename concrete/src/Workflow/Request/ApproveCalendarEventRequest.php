@@ -61,22 +61,22 @@ class ApproveCalendarEventRequest extends CalendarEventRequest
 
             if (!$this->isNewEventRequest()) {
                 // new version of existing page
-                $d->setEmailDescription(t("\"%s\" has pending changes and needs to be approved.", $v->getName()));
+                $d->setEmailDescription(t("\"%s\" has pending changes and needs to be approved.", h($v->getName())));
                 $d->setDescription(t(
                     'Version %1$s of Event %2$s submitted for Approval.',
                     '<a href="' . $url . '" dialog-title="' . t('View Requested Version') . '" dialog-width="640" dialog-height="500" class="dialog-launch">' . $this->eventVersionID . '</a>',
-                    '<strong>' . $v->getName() . '</strong>'
+                    '<strong>' . h($v->getName()) . '</strong>'
                 ));
-                $d->setInContextDescription(t("Event Version %s Submitted for Approval.", $v->getName()));
+                $d->setInContextDescription(t("Event Version %s Submitted for Approval.", h($v->getName())));
                 $d->setShortStatus(t("Pending Approval"));
             } else {
                 // Completely new page.
-                $d->setEmailDescription(t("New event created: \"%s\". This event requires approval.", $v->getName()));
+                $d->setEmailDescription(t("New event created: \"%s\". This event requires approval.", h($v->getName())));
                 $d->setDescription(t(
                     'New Event: %s',
-                    '<a href="' . $url . '" dialog-title="' . t('View Requested Version') . '" dialog-width="640" dialog-height="500" class="dialog-launch">' . $v->getName() . '</a>'
+                    '<a href="' . $url . '" dialog-title="' . t('View Requested Version') . '" dialog-width="640" dialog-height="500" class="dialog-launch">' . h($v->getName()) . '</a>'
                 ));
-                $d->setInContextDescription(t("New Event %s submitted for approval.", $v->getName()));
+                $d->setInContextDescription(t("New Event %s submitted for approval.", h($v->getName())));
                 $d->setShortStatus(t("New Event"));
             }
         }
