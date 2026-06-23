@@ -8,6 +8,7 @@ use Concrete\Core\Error\UserMessageException;
 use Concrete\Core\Http\ResponseFactoryInterface;
 use Concrete\Core\Page\EditResponse;
 use Concrete\Core\Page\Page;
+use Concrete\Core\Permission\Checker;
 use Symfony\Component\HttpFoundation\Response;
 
 defined('C5_EXECUTE') or die('Access Denied.');
@@ -65,11 +66,19 @@ class SitemapUpdate extends AbstractController
      */
     protected function updateDisplayOrder(array $pageIDs): void
     {
+        $pagesToUpdate = [];
         foreach ($pageIDs as $displayOrder => $pageID) {
             $c = Page::getByID($pageID);
             if ($c && !$c->isError()) {
-                $c->updateDisplayOrder($displayOrder, $pageID);
+                $checker = new Checker($c);
+                if (!$checker->canMoveOrCopyPage()) {
+                    throw new UserMessageException(t('You don\'t have permission to reorder the page "%s".', $c->getCollectionName()));
+                }
+                $pagesToUpdate[] = [$displayOrder, $pageID, $c];
             }
+        }
+        foreach ($pagesToUpdate as [$displayOrder, $pageID, $page]) {
+            $page->updateDisplayOrder($displayOrder, $pageID);
         }
     }
 
