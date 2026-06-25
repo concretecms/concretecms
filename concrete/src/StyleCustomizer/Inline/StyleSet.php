@@ -233,61 +233,61 @@ class StyleSet
         }
 
         $v = self::sanitizeCssLength($post->get('baseFontSize', ''), false);
-        if (!in_array($v, ['', '0px'], true)) {
+        if ($v !== null && $v !== '0px') {
             $set->setBaseFontSize($v);
             $return = true;
         }
 
         $v = self::sanitizeCssLength($post->get('marginTop', ''));
-        if (!in_array($v, ['', '0px'], true)) {
+        if ($v !== null && $v !== '0px') {
             $set->setMarginTop($v);
             $return = true;
         }
 
         $v = self::sanitizeCssLength($post->get('marginRight', ''));
-        if (!in_array($v, ['', '0px'], true)) {
+        if ($v !== null && $v !== '0px') {
             $set->setMarginRight($v);
             $return = true;
         }
 
         $v = self::sanitizeCssLength($post->get('marginBottom', ''));
-        if (!in_array($v, ['', '0px'], true)) {
+        if ($v !== null && $v !== '0px') {
             $set->setMarginBottom($v);
             $return = true;
         }
 
         $v = self::sanitizeCssLength($post->get('marginLeft', ''));
-        if (!in_array($v, ['', '0px'], true)) {
+        if ($v !== null && $v !== '0px') {
             $set->setMarginLeft($v);
             $return = true;
         }
 
         $v = self::sanitizeCssLength($post->get('paddingTop', ''), false);
-        if (!in_array($v, ['', '0px'], true)) {
+        if ($v !== null && $v !== '0px') {
             $set->setPaddingTop($v);
             $return = true;
         }
 
         $v = self::sanitizeCssLength($post->get('paddingRight', ''), false);
-        if (!in_array($v, ['', '0px'], true)) {
+        if ($v !== null && $v !== '0px') {
             $set->setPaddingRight($v);
             $return = true;
         }
 
         $v = self::sanitizeCssLength($post->get('paddingBottom', ''), false);
-        if (!in_array($v, ['', '0px'], true)) {
+        if ($v !== null && $v !== '0px') {
             $set->setPaddingBottom($v);
             $return = true;
         }
 
         $v = self::sanitizeCssLength($post->get('paddingLeft', ''), false);
-        if (!in_array($v, ['', '0px'], true)) {
+        if ($v !== null && $v !== '0px') {
             $set->setPaddingLeft($v);
             $return = true;
         }
 
         $v = self::sanitizeCssLength($post->get('borderWidth', ''), false);
-        if (!in_array($v, ['', '0px'], true)) {
+        if ($v !== null && $v !== '0px') {
             $set->setBorderWidth($v);
             $set->setBorderStyle(self::sanitizeCssEnum($post->get('borderStyle'), ['', 'solid', 'dotted', 'dashed', 'double', 'groove', 'ridge', 'inset', 'outset']));
             $set->setBorderColor(self::sanitizeCssColor($post->get('borderColor')));
@@ -295,7 +295,7 @@ class StyleSet
         }
 
         $v = self::sanitizeCssLength($post->get('borderRadius', ''), false);
-        if (!in_array($v, ['', '0px'], true)) {
+        if ($v !== null && $v !== '0px') {
             $set->setBorderRadius($v);
             $return = true;
         }
