@@ -120,6 +120,14 @@ class Login extends PageController implements LoggerAwareInterface
     {
         $valt = $this->app->make('token');
         if (!$valt->validate('login_' . $type)) {
+            // The token is bound to the user id, so a duplicate submission of the login
+            // form fails validation once the first submission has logged the user in. They
+            // are already authenticated at this point, so send them to their post-login
+            // destination instead of showing a token error.
+            $u = $this->app->make(User::class);
+            if ($u->isRegistered()) {
+                return $this->app->make(PostLoginLocation::class)->getPostLoginRedirectResponse(true);
+            }
             $this->error->add($valt->getErrorMessage());
         } else {
             try {
