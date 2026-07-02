@@ -23,6 +23,29 @@ class FileVersionDateAddedColumn extends Column implements PagerColumnInterface
 
     public function getColumnCallback()
     {
+        return [self::class, 'getDateAdded'];
+    }
+
+    public function getDateAdded($node)
+    {
+        $file = null;
+        if ($node instanceof \Concrete\Core\Entity\File\File) {
+            $file = $node;
+        } else if ($node->getTreeNodeTypeHandle() == 'file_folder') {
+            return '';
+        } else if ($node->getTreeNodeTypeHandle() == 'file') {
+            $file = $node->getTreeNodeFileObject();
+        }
+
+        if (is_object($file)) {
+            $version = $file->getVersion();
+            if (is_object($version)) {
+                $dateAdded = $version->getDateAdded();
+                if ($dateAdded instanceof \DateTimeInterface) {
+                    return app('date')->formatDateTime($dateAdded->getTimestamp());
+                }
+            }
+        }
     }
 
     public function filterListAtOffset(PagerProviderInterface $itemList, $mixed)
