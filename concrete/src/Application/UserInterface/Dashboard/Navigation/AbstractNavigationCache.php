@@ -52,6 +52,8 @@ abstract class AbstractNavigationCache
 
     protected function getSessionIdentifier(): string
     {
-        return $this->getIdentifier() . '@' . $this->localization->getLocale();
+        $userID = (int) $this->session->get('uID');
+
+        return $this->getIdentifier() . '@' . $this->localization->getLocale() . '@' . $userID;
     }
 }
