@@ -530,9 +530,6 @@ class Controller extends BlockController implements UsesFeatureInterface
             $pages = $list->getResults();
         }
 
-        if ($showPagination) {
-            $this->requireAsset('css', 'core/frontend/pagination');
-        }
         $this->set('pages', $pages);
         $this->set('list', $list);
         $this->set('showPagination', $showPagination);
