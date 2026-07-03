@@ -26,7 +26,7 @@ class FileVersionDateAddedColumn extends Column implements PagerColumnInterface
         return [self::class, 'getDateAdded'];
     }
 
-    public function getDateAdded($node)
+    public function getDateAdded($node): string
     {
         $file = null;
         if ($node instanceof \Concrete\Core\Entity\File\File) {
@@ -46,6 +46,8 @@ class FileVersionDateAddedColumn extends Column implements PagerColumnInterface
                 }
             }
         }
+
+        return '';
     }
 
     public function filterListAtOffset(PagerProviderInterface $itemList, $mixed)
