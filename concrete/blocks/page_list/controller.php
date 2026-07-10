@@ -403,8 +403,12 @@ class Controller extends BlockController implements UsesFeatureInterface
                 break;
 
             case 'between':
-                $start = "{$this->filterDateStart} 00:00:00";
-                $end = "{$this->filterDateEnd} 23:59:59";
+                if (!empty($this->filterDateStart)) {
+                    $start = "{$this->filterDateStart} 00:00:00";
+                }
+                if (!empty($this->filterDateEnd)) {
+                    $end = "{$this->filterDateEnd} 23:59:59";
+                }
                 break;
 
             case 'all':
