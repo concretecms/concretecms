@@ -8,6 +8,7 @@ use Concrete\Core\File\Service\File;
 use Concrete\Core\Marketplace\Connection;
 use Concrete\Core\Marketplace\ConnectionInterface;
 use Concrete\Core\Marketplace\Exception\InvalidConnectResponseException;
+use Concrete\Core\Marketplace\Exception\InvalidDownloadResponseException;
 use Concrete\Core\Marketplace\Exception\InvalidPackageException;
 use Concrete\Core\Marketplace\Exception\PackageAlreadyExistsException;
 use Concrete\Core\Marketplace\Exception\UnableToConnectException;
@@ -18,6 +19,7 @@ use Concrete\Tests\TestCase;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\BadResponseException;
 use GuzzleHttp\Exception\ClientException;
+use GuzzleHttp\Exception\ConnectException;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Response;
 use GuzzleHttp\Psr7\Uri;
@@ -395,6 +397,18 @@ class PackageRepositoryTest extends TestCase
 
         $this->assertTrue(file_exists(DIR_PACKAGES . '/foo/controller.php'));
         $this->assertEquals("worked\n", file_get_contents(DIR_PACKAGES . '/foo/controller.php'));
+    }
+
+    public function testDownloadConnectionError(): void
+    {
+        $connection = new Connection('pub', 'priv');
+        $this->client->expects('send')->andThrow(new ConnectException('Connection timed out', new Request('GET', 'http://download/path')));
+
+        $this->expectException(InvalidDownloadResponseException::class);
+        $this->expectExceptionMessage('Unable to download the package from the marketplace.');
+
+        $repository = $this->repository();
+        $repository->download($connection, $this->fakePackage);
     }
 
     /**
