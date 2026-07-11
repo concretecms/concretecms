@@ -283,13 +283,22 @@ class Install extends DashboardPageController implements LoggerAwareInterface
                 'version' => $remotePackage->version
             ]);
             $repository->download($connection, $remotePackage, true);
-        } catch (PackageAlreadyExistsException|UnableToPlacePackageException $e) {
+        } catch (PackageAlreadyExistsException $e) {
             $this->getLogger()->error('Unable to move {handle}:{version} into package directory.', [
                 'name' => $remotePackage->name,
                 'handle' => $remotePackage->handle,
                 'version' => $remotePackage->version
             ]);
             $this->error->add(t('Unable to move package directory.'));
+            return;
+        } catch (UnableToPlacePackageException $e) {
+            $this->getLogger()->error('Unable to move {handle}:{version} into package directory. {message}', [
+                'name' => $remotePackage->name,
+                'handle' => $remotePackage->handle,
+                'version' => $remotePackage->version,
+                'message' => $e->getMessage(),
+            ]);
+            $this->error->add($e->getMessage());
             return;
         } catch (InvalidPackageException $e) {
             $this->getLogger()->error(
