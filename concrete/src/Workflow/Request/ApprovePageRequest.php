@@ -54,11 +54,11 @@ class ApprovePageRequest extends PageRequest
     public function getWorkflowRequestDescriptionObject()
     {
         $d = new WorkflowDescription();
-        $c = Page::getByID($this->cID, 'RECENT');
+        $c = Page::getByID($this->cID, $this->cvID);
         $link = Loader::helper('navigation')->getLinkToCollection($c, true);
         $v = $c->getVersionObject();
         if (is_object($v)) {
-            $comments = $c->getVersionObject()->getVersionComments();
+            $comments = $v->getVersionComments();
 
             if (!$this->isNewPageRequest()) {
                 // new version of existing page
