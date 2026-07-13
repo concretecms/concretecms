@@ -108,7 +108,7 @@ class Value extends ConcreteObject implements AttributeValueInterface
     {
         $this->getController()->deleteValue();
         $db = Loader::db();
-        $db->executeStatement('delete from AttributeValues where avID = ?', $this->getAttributeValueID());
+        $db->executeStatement('delete from AttributeValues where avID = ?', [$this->getAttributeValueID()]);
     }
 
     public function getAttributeKey()

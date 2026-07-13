@@ -73,7 +73,7 @@ class UserProgress extends Progress
 
 
         $r = $db->executeQuery('SELECT wp.wpID FROM UserWorkflowProgress uwp INNER JOIN WorkflowProgress wp ON wp.wpID = uwp.wpID WHERE uwp.uID = ? ' . $filter,
-            $requestedUID);
+            [$requestedUID]);
         $list = array();
         while ($row = $r->fetch()) {
             $wp = UserProgress::getByID($row['wpID']);

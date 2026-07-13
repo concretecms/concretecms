@@ -171,7 +171,7 @@ class Category extends ConcreteObject
     public function clearAccessEntityTypeCategories()
     {
         $db = Database::get();
-        $db->executeStatement('delete from PermissionAccessEntityTypeCategories where pkCategoryID = ?', $this->pkCategoryID);
+        $db->executeStatement('delete from PermissionAccessEntityTypeCategories where pkCategoryID = ?', [$this->pkCategoryID]);
     }
 
     public static function getList()

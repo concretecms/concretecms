@@ -127,7 +127,7 @@ class GroupSet extends ConcreteObject
     public function getGroups()
     {
         $db = Loader::db();
-        $r = $db->executeQuery('select gID from GroupSetGroups where gsID = ? order by gID asc', $this->getGroupSetId());
+        $r = $db->executeQuery('select gID from GroupSetGroups where gsID = ? order by gID asc', [$this->getGroupSetId()]);
         $groups = array();
         while ($row = $r->fetch()) {
             $g = Group::getByID($row['gID']);
