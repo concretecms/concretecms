@@ -760,7 +760,7 @@ class Controller extends BlockController implements UsesFeatureInterface
             case 'filename':
                 return $file->getFileName();
             case 'description':
-                return $file->getDescription();
+                return h($file->getDescription());
             case 'tags':
                 return $file->getTags();
             case 'date':
