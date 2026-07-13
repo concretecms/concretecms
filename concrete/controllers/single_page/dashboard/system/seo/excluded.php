@@ -34,6 +34,15 @@ class Excluded extends DashboardPageController
 
     public function reset()
     {
+        if (!$this->request->isMethod('POST')) {
+            $this->error->add(t('Invalid request method.'));
+        } elseif (!$this->token->validate('reset')) {
+            $this->error->add($this->token->getErrorMessage());
+        }
+        if ($this->error->has()) {
+            return $this->view();
+        }
+
         $config = $this->app->make('config');
 
         $seoConfig = $config->get('concrete.seo');
