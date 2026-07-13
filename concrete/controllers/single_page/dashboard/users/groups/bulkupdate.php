@@ -13,6 +13,10 @@ class Bulkupdate extends DashboardPageController
 {
     public function confirm()
     {
+        if (!$this->token->validate('bulk_update_groups_confirm')) {
+            $this->error->add($this->token->getErrorMessage());
+        }
+
         $this->move();
 
         $gParentNode = $this->get('gParentNode');
@@ -55,6 +59,10 @@ class Bulkupdate extends DashboardPageController
                 if ($group !== null) {
                     $groupNode = GroupTreeNode::getTreeNodeByGroupID($group->getGroupID());
                     if ($groupNode !== null) {
+                        $sourceChecker = new Checker($groupNode);
+                        if (!$sourceChecker->canEditTreeNode()) {
+                            $this->error->add(t('You do not have permission to move the group "%s".', $group->getGroupDisplayName()));
+                        }
                         if ($gParentNode !== null) {
                             $error = $groupNode->checkMove($gParentNode);
                             if ($error !== null) {
