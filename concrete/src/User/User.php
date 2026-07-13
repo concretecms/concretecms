@@ -835,7 +835,7 @@ class User extends ConcreteObject
             $app['director']->dispatch('on_user_exit_group', $ue);
 
             $q = 'delete from UserGroups where uID = ? and gID = ?';
-            $r = $db->executeStatement($q, [$this->uID, $gID]);
+            $db->executeStatement($q, [$this->uID, $gID]);
         }
     }
 

@@ -1252,7 +1252,7 @@ class Theme extends ConcreteObject implements \JsonSerializable
         $treeIDs = implode(',', $treeIDs);
 
         $db = Loader::db();
-        $r = $db->executeStatement(
+        $db->executeStatement(
             "update CollectionVersions inner join Pages on CollectionVersions.cID = Pages.cID left join Packages on Pages.pkgID = Packages.pkgID set CollectionVersions.pThemeID = ? where cIsTemplate = 0 and siteTreeID in ({$treeIDs}) and (Pages.ptID > 0 or CollectionVersions.pTemplateID > 0)",
             array($this->pThemeID)
         );

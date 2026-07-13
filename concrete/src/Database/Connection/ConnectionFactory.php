@@ -70,7 +70,14 @@ class ConnectionFactory
      */
     private function normalizeConnectionParams($config)
     {
-        $params = is_array($config) ? $config : iterator_to_array($config);
+        if ($config instanceof \Traversable) {
+            $params = iterator_to_array($config);
+        } elseif (is_object($config) && method_exists($config, 'all')) {
+            $params = $config->all();
+        } else {
+            $params = (array) $config;
+        }
+
         $primaryOverrides = array_get($params, 'primary', []);
         $replicaOverrides = array_get($params, 'replica', []);
 
@@ -107,12 +114,14 @@ class ConnectionFactory
     }
 
     /**
-     * @param array $params
+     * @param array|\ArrayAccess $params
      *
      * @return array
      */
     private function normalizeEndpointParams(array $params)
     {
+        $result['host'] = $params['host'] ?? $params['server'] ?? null;
+
         if (!isset($params['host']) && isset($params['server'])) {
             $params['host'] = $params['server'];
         }

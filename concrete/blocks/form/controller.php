@@ -719,7 +719,7 @@ class Controller extends BlockController
 
         //delete the form block
         $q = "delete from {$this->btTable} where bID = '{$this->bID}'";
-        $r = $db->executeStatement($q);
+        $db->executeStatement($q);
 
         parent::delete();
 

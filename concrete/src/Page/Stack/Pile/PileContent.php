@@ -35,9 +35,7 @@ class PileContent extends ConcreteObject implements \JsonSerializable
 
     public function delete()
     {
-
         // it's assumed that we've already checked whether this user has access to this pile content object
-
         $db = Loader::db();
         $v = array($this->pcID);
         $q = "delete from PileContents where pcID = ?";

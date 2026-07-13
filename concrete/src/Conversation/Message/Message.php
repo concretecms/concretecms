@@ -569,7 +569,7 @@ class Message extends ConcreteObject implements ObjectInterface, SubjectInterfac
         /** @var \Concrete\Core\Permission\IPService $iph */
         $iph = Core::make('helper/validation/ip');
         $ip = $iph->getRequestIP();
-        $r = $db->executeStatement('insert into ConversationMessages (cnvMessageSubject, cnvMessageBody, cnvMessageDateCreated, cnvMessageParentID, cnvEditorID, cnvMessageLevel, cnvID, uID, cnvMessageAuthorName, cnvMessageAuthorEmail, cnvMessageAuthorWebsite, cnvMessageSubmitIP, cnvMessageSubmitUserAgent) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+        $db->executeStatement('insert into ConversationMessages (cnvMessageSubject, cnvMessageBody, cnvMessageDateCreated, cnvMessageParentID, cnvEditorID, cnvMessageLevel, cnvID, uID, cnvMessageAuthorName, cnvMessageAuthorEmail, cnvMessageAuthorWebsite, cnvMessageSubmitIP, cnvMessageSubmitUserAgent) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
             array(
                 $cnvMessageSubject,
                 $cnvMessageBody,

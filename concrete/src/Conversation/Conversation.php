@@ -217,7 +217,7 @@ class Conversation extends ConcreteObject implements \Concrete\Core\Permission\O
     {
         $db = Loader::db();
         $date = Loader::helper('date')->getOverridableNow();
-        $r = $db->executeStatement('insert into Conversations (cnvDateCreated, cnvDateLastMessage) values (?, ?)',
+        $db->executeStatement('insert into Conversations (cnvDateCreated, cnvDateLastMessage) values (?, ?)',
             array($date, $date));
 
         return static::getByID($db->Insert_ID());

@@ -39,7 +39,7 @@ class NodeType extends ConcreteObject
             $pkgID = $pkg->getPackageID();
         }
 
-        $r = $db->executeStatement("insert into TreeNodeTypes (treeNodeTypeHandle, pkgID) values (?, ?)", array(
+        $db->executeStatement("insert into TreeNodeTypes (treeNodeTypeHandle, pkgID) values (?, ?)", array(
             $treeNodeTypeHandle, $pkgID,
         ));
 
