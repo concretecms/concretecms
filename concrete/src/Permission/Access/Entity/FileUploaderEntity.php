@@ -68,7 +68,7 @@ class FileUploaderEntity extends Entity
         $peID = $db->GetOne('select peID from PermissionAccessEntities where petID = ?',
             array($petID));
         if (!$peID) {
-            $db->Execute("insert into PermissionAccessEntities (petID) values(?)", array($petID));
+            $db->executeStatement("insert into PermissionAccessEntities (petID) values(?)", array($petID));
             $peID = $db->Insert_ID();
             Config::save('concrete.misc.access_entity_updated', time());
         }

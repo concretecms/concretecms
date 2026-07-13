@@ -83,7 +83,7 @@ abstract class Request extends ConcreteObject
     public function delete()
     {
         $db = Database::connection();
-        $db->Execute('delete from WorkflowRequestObjects where wrID = ?', array($this->wrID));
+        $db->executeStatement('delete from WorkflowRequestObjects where wrID = ?', array($this->wrID));
     }
 
     public function save()
@@ -91,11 +91,11 @@ abstract class Request extends ConcreteObject
         $db = Database::connection();
         if (!$this->wrID) {
             $wrObject = '';
-            $db->Execute('insert into WorkflowRequestObjects (wrObject) values (?)', array($wrObject));
+            $db->executeStatement('insert into WorkflowRequestObjects (wrObject) values (?)', array($wrObject));
             $this->wrID = $db->Insert_ID();
         }
         $wrObject = serialize($this);
-        $db->Execute('update WorkflowRequestObjects set wrObject = ? where wrID = ?', array($wrObject, $this->wrID));
+        $db->executeStatement('update WorkflowRequestObjects set wrObject = ? where wrID = ?', array($wrObject, $this->wrID));
     }
 
     /**

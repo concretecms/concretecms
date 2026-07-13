@@ -15,6 +15,6 @@ final class Version20201028143317 extends AbstractMigration implements Repeatabl
             User::class
         ]);
 
-        $this->connection->executeQuery("ALTER Table UserPermissionEditPropertyAccessList ADD COLUMN uHomeFileManagerFolderID tinyint(1) DEFAULT '0'");
+        $this->connection->executeStatement("ALTER Table UserPermissionEditPropertyAccessList ADD COLUMN uHomeFileManagerFolderID tinyint(1) DEFAULT '0'");
     }
 }

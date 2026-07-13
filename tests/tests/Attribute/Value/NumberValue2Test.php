@@ -53,9 +53,9 @@ class NumberValue2Test extends ConcreteDatabaseTestCase
         static::$lastID = $avID;
 
         $db = Database::connection();
-        $db->executeQuery('insert into AttributeValues (avID) values (?)', [$avID]);
+        $db->executeStatement('insert into AttributeValues (avID) values (?)', [$avID]);
         $avID = $db->lastInsertId();
-        $db->executeQuery('insert into atNumber (avID, value) values (?, ?)', [$avID, $value]);
+        $db->executeStatement('insert into atNumber (avID, value) values (?, ?)', [$avID, $value]);
         $em = ORM::entityManager();
         $repo = $em->getRepository(NumberValue::class);
         $entity = $repo->find($avID);

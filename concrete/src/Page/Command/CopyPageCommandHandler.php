@@ -52,7 +52,7 @@ class CopyPageCommandHandler
             if ($nc->getCollectionPointerOriginalID() > 0) {
                 $ncID = $nc->getCollectionPointerOriginalID();
             }
-            $db->Execute('insert into QueuePageDuplicationRelations (cID, originalCID, queue_name) values (?, ?, ?)', array(
+            $db->executeStatement('insert into QueuePageDuplicationRelations (cID, originalCID, queue_name) values (?, ?, ?)', array(
                 $ncID, $ocID, $command->getCopyBatchID(),
             ));
         }

@@ -39,10 +39,10 @@ class UserEntity extends Entity
             'SELECT pae.peID FROM PermissionAccessEntities pae INNER JOIN PermissionAccessEntityUsers paeg ON pae.peID = paeg.peID WHERE petID = ? AND paeg.uID = ?',
             [$petID, $ui->getUserID()]);
         if (!$peID) {
-            $db->Execute('INSERT INTO PermissionAccessEntities (petID) VALUES(?)', [$petID]);
+            $db->executeStatement('INSERT INTO PermissionAccessEntities (petID) VALUES(?)', [$petID]);
             $peID = $db->Insert_ID();
             Config::save('concrete.misc.access_entity_updated', time());
-            $db->Execute(
+            $db->executeStatement(
                 'INSERT INTO PermissionAccessEntityUsers (peID, uID) VALUES (?, ?)',
                 [$peID, $ui->getUserID()]);
         }

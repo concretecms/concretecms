@@ -195,21 +195,21 @@ abstract class ConcreteDatabaseTestCase extends TestCase
         $connection = $this->connection();
 
         // Get all existing tables
-        $tables = $connection->query('show tables')->fetchAllAssociative();
+        $tables = $connection->executeQuery('show tables')->fetchAllAssociative();
         $tables = array_map(function($tableSet) {
             return array_shift($tableSet);
         }, $tables);
 
         // Turn off foreign key checks
-        $connection->query('SET FOREIGN_KEY_CHECKS = 0');
+        $connection->executeStatement('SET FOREIGN_KEY_CHECKS = 0');
 
         foreach ($tables as $table) {
             // Drop tables
-            $connection->query("DROP TABLE `{$table}`");
+            $connection->executeStatement("DROP TABLE `{$table}`");
         }
 
         // Reset foreign key checks on
-        $connection->query('SET FOREIGN_KEY_CHECKS = 1');
+        $connection->executeStatement('SET FOREIGN_KEY_CHECKS = 1');
 
         // Clear exists cache
         static::$existingTables = [];
@@ -262,7 +262,7 @@ abstract class ConcreteDatabaseTestCase extends TestCase
 
         // Run queries
         foreach ($queries as $query) {
-            $connection->query($query);
+            $connection->executeStatement($query);
         }
     }
 
@@ -293,7 +293,7 @@ abstract class ConcreteDatabaseTestCase extends TestCase
         if ($xml->database && $xml->database->table_data) {
             foreach ($xml->database->table_data as $tableData) {
                 $name = $tableData['name']->__toString();
-                $connection->executeQuery("DELETE FROM " .$connection->quoteIdentifier($name));
+                $connection->executeStatement("DELETE FROM " .$connection->quoteIdentifier($name));
                 foreach ($tableData->row as $rowData) {
                     $queryBuilder = $connection->createQueryBuilder();
                     $queryBuilder->insert($name);
@@ -407,7 +407,7 @@ abstract class ConcreteDatabaseTestCase extends TestCase
 
         if ($tables === null) {
             // Get all existing tables
-            $tables = $connection->query('show tables')->fetchAllAssociative();
+            $tables = $connection->executeQuery('show tables')->fetchAllAssociative();
             $tables = array_map(function ($table) {
                 return array_shift($table);
             }, $tables);

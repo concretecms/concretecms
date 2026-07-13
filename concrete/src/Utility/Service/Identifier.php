@@ -104,6 +104,6 @@ class Identifier
     public function deleteKey($table, $keyCol, $uHash)
     {
         $db = Application::make(Connection::class);
-        $db->Execute("DELETE FROM " . $table . " WHERE " . $keyCol . "=?", array($uHash));
+        $db->executeStatement("DELETE FROM " . $table . " WHERE " . $keyCol . "=?", array($uHash));
     }
 }

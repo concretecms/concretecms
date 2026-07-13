@@ -70,7 +70,7 @@ class CustomLayout extends Layout
     {
         $db = Loader::db();
         $v = array($this->arLayoutSpacing, $this->arLayoutIsCustom);
-        $db->Execute('insert into AreaLayouts (arLayoutSpacing, arLayoutIsCustom) values (?, ?)', $v);
+        $db->executeStatement('insert into AreaLayouts (arLayoutSpacing, arLayoutIsCustom) values (?, ?)', $v);
         $newAreaLayoutID = $db->Insert_ID();
         if ($newAreaLayoutID) {
             $newAreaLayout = Layout::getByID($newAreaLayoutID);
@@ -92,7 +92,7 @@ class CustomLayout extends Layout
             $spacing = 0;
         }
         $db = Loader::db();
-        $db->Execute('update AreaLayouts set arLayoutSpacing = ? where arLayoutID = ?', array($spacing, $this->arLayoutID));
+        $db->executeStatement('update AreaLayouts set arLayoutSpacing = ? where arLayoutID = ?', array($spacing, $this->arLayoutID));
         $this->arLayoutSpacing = $spacing;
     }
 
@@ -102,7 +102,7 @@ class CustomLayout extends Layout
     public function enableAreaLayoutCustomColumnWidths()
     {
         $db = Loader::db();
-        $db->Execute('update AreaLayouts set arLayoutIsCustom = ? where arLayoutID = ?', array(1, $this->arLayoutID));
+        $db->executeStatement('update AreaLayouts set arLayoutIsCustom = ? where arLayoutID = ?', array(1, $this->arLayoutID));
         $this->arLayoutIsCustom = true;
     }
 
@@ -112,7 +112,7 @@ class CustomLayout extends Layout
     public function disableAreaLayoutCustomColumnWidths()
     {
         $db = Loader::db();
-        $db->Execute('update AreaLayouts set arLayoutIsCustom = ? where arLayoutID = ?', array(0, $this->arLayoutID));
+        $db->executeStatement('update AreaLayouts set arLayoutIsCustom = ? where arLayoutID = ?', array(0, $this->arLayoutID));
         $this->arLayoutIsCustom = false;
     }
 
@@ -134,7 +134,7 @@ class CustomLayout extends Layout
         }
 
         $db = Loader::db();
-        $db->Execute('insert into AreaLayouts (arLayoutSpacing, arLayoutIsCustom, arLayoutUsesThemeGridFramework) values (?, ?, ?)', array($spacing, $iscustom, 0));
+        $db->executeStatement('insert into AreaLayouts (arLayoutSpacing, arLayoutIsCustom, arLayoutUsesThemeGridFramework) values (?, ?, ?)', array($spacing, $iscustom, 0));
         $arLayoutID = $db->Insert_ID();
         if ($arLayoutID) {
             $ar = static::getByID($arLayoutID);
@@ -150,7 +150,7 @@ class CustomLayout extends Layout
     {
         $columnID = parent::addLayoutColumn();
         $db = Loader::db();
-        $db->Execute('insert into AreaLayoutCustomColumns (arLayoutColumnID, arLayoutColumnWidth) values (?, 0)', array($columnID));
+        $db->executeStatement('insert into AreaLayoutCustomColumns (arLayoutColumnID, arLayoutColumnWidth) values (?, 0)', array($columnID));
 
         return CustomColumn::getByID($columnID);
     }

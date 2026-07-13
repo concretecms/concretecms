@@ -32,9 +32,7 @@ class ConnectionFactory
             $driver = $this->driver_manager->driver();
         }
 
-        $params = $config;
-        $params['host'] = array_get($params, 'host', array_get($config, 'server'));
-        $params['user'] = array_get($params, 'user', array_get($config, 'username'));
+        $params = $this->normalizeConnectionParams($config);
         if (!isset($params['driverOptions'])) {
             $params['driverOptions'] = [];
         }
@@ -56,6 +54,85 @@ class ConnectionFactory
         $connection =  new $wrapperClass($params, $driver);
         $connection->getDatabasePlatform()->registerDoctrineTypeMapping('json', 'json_array');
         return $connection;
+    }
+
+    /**
+     * Normalize both the legacy Concrete configuration keys and Doctrine's
+     * primary/replica configuration structure.
+     *
+     * The top-level connection settings are the defaults for the primary. An
+     * explicit primary configuration overrides those defaults, and every
+     * replica inherits the resulting primary configuration.
+     *
+     * @param \ArrayAccess|array $config
+     *
+     * @return array
+     */
+    private function normalizeConnectionParams($config)
+    {
+        $params = is_array($config) ? $config : iterator_to_array($config);
+        $primaryOverrides = array_get($params, 'primary', []);
+        $replicaOverrides = array_get($params, 'replica', []);
+
+        unset($params['primary'], $params['replica']);
+        $params = $this->normalizeEndpointParams($params);
+
+        $endpointDefaults = $params;
+        unset($endpointDefaults['wrapperClass'], $endpointDefaults['keepReplica']);
+
+        $primary = array_replace(
+            $endpointDefaults,
+            $this->normalizeEndpointParams(is_array($primaryOverrides) ? $primaryOverrides : [])
+        );
+
+        $replicas = [];
+        if (is_array($replicaOverrides)) {
+            foreach ($replicaOverrides as $replica) {
+                if (is_array($replica)) {
+                    $replicas[] = array_replace($primary, $this->normalizeEndpointParams($replica));
+                }
+            }
+        }
+        if ($replicas === []) {
+            $replicas[] = $primary;
+        }
+
+        // Keep the finalized primary values at the top level for compatibility
+        // with DBAL and Concrete code that reads Connection::getParams().
+        $params = array_replace($params, $primary);
+        $params['primary'] = $primary;
+        $params['replica'] = $replicas;
+
+        return $params;
+    }
+
+    /**
+     * @param array $params
+     *
+     * @return array
+     */
+    private function normalizeEndpointParams(array $params)
+    {
+        if (!isset($params['host']) && isset($params['server'])) {
+            $params['host'] = $params['server'];
+        }
+        if (!isset($params['server']) && isset($params['host'])) {
+            $params['server'] = $params['host'];
+        }
+        if (!isset($params['user']) && isset($params['username'])) {
+            $params['user'] = $params['username'];
+        }
+        if (!isset($params['username']) && isset($params['user'])) {
+            $params['username'] = $params['user'];
+        }
+        if (!isset($params['database']) && isset($params['dbname'])) {
+            $params['database'] = $params['dbname'];
+        }
+        if (!isset($params['dbname']) && isset($params['database'])) {
+            $params['dbname'] = $params['database'];
+        }
+
+        return $params;
     }
 
     /**

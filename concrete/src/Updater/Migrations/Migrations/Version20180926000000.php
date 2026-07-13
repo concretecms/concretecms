@@ -59,7 +59,7 @@ class Version20180926000000 extends AbstractMigration implements RepeatableMigra
         if ($db->tableExists('atUserSelector')) {
             // This is the name of the user selector attribute table in some implementations of the user selector attribute
             // We need to take this data and place it into atNumber.
-            $db->query(<<<EOT
+            $db->executeStatement(<<<EOT
 insert into atNumber (avID, value)
     select
         atUserSelector.avID, atUserSelector.value

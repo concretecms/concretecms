@@ -15,7 +15,7 @@ class Version20170412000000 extends AbstractMigration implements RepeatableMigra
      */
     public function upgradeDatabase()
     {
-        $this->connection->Execute('set foreign_key_checks = 0');
+        $this->connection->executeStatement('set foreign_key_checks = 0');
         $this->refreshEntities([
             'Concrete\Core\Entity\Attribute\Value\Value\AbstractValue',
             'Concrete\Core\Entity\Attribute\Value\Value\AddressValue',
@@ -32,6 +32,6 @@ class Version20170412000000 extends AbstractMigration implements RepeatableMigra
             'Concrete\Core\Entity\File\File',
             'Concrete\Core\Entity\Attribute\Key\Key',
         ]);
-        $this->connection->Execute('set foreign_key_checks = 1');
+        $this->connection->executeStatement('set foreign_key_checks = 1');
     }
 }

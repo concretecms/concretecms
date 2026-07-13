@@ -20,7 +20,7 @@ class Version20171025000000 extends AbstractMigration implements RepeatableMigra
         if ($pkg) {
             // First, we update the block type record that we have from the document library
             // add-on so that it's using the core code base.
-            $this->connection->executeQuery('update BlockTypes set pkgID = 0 where pkgID = ?', [$pkg->getPackageID()]);
+            $this->connection->executeStatement('update BlockTypes set pkgID = 0 where pkgID = ?', [$pkg->getPackageID()]);
 
             // Now we uninstall the package.
             $pkg->uninstall();

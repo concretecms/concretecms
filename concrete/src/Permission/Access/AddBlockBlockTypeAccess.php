@@ -14,12 +14,12 @@ class AddBlockBlockTypeAccess extends BlockTypeAccess
         $r = $db->executeQuery('select * from BlockTypePermissionBlockTypeAccessList where paID = ?', array($this->getPermissionAccessID()));
         while ($row = $r->fetch()) {
             $v = array($row['peID'], $newPA->getPermissionAccessID(), $row['permission']);
-            $db->executeQuery('insert into BlockTypePermissionBlockTypeAccessList (peID, paID, permission) values (?, ?, ?)', $v);
+            $db->executeStatement('insert into BlockTypePermissionBlockTypeAccessList (peID, paID, permission) values (?, ?, ?)', $v);
         }
         $r = $db->executeQuery('select * from BlockTypePermissionBlockTypeAccessListCustom where paID = ?', array($this->getPermissionAccessID()));
         while ($row = $r->fetch()) {
             $v = array($row['peID'], $newPA->getPermissionAccessID(), $row['btID']);
-            $db->executeQuery('insert into BlockTypePermissionBlockTypeAccessListCustom  (peID, paID, btID) values (?, ?, ?)', $v);
+            $db->executeStatement('insert into BlockTypePermissionBlockTypeAccessListCustom  (peID, paID, btID) values (?, ?, ?)', $v);
         }
 
         return $newPA;
@@ -29,19 +29,19 @@ class AddBlockBlockTypeAccess extends BlockTypeAccess
     {
         parent::save();
         $db = Database::connection();
-        $db->executeQuery('delete from BlockTypePermissionBlockTypeAccessList where paID = ?', array($this->getPermissionAccessID()));
-        $db->executeQuery('delete from BlockTypePermissionBlockTypeAccessListCustom where paID = ?', array($this->getPermissionAccessID()));
+        $db->executeStatement('delete from BlockTypePermissionBlockTypeAccessList where paID = ?', array($this->getPermissionAccessID()));
+        $db->executeStatement('delete from BlockTypePermissionBlockTypeAccessListCustom where paID = ?', array($this->getPermissionAccessID()));
         if (!empty($args['blockTypesIncluded']) && is_array($args['blockTypesIncluded'])) {
             foreach ($args['blockTypesIncluded'] as $peID => $permission) {
                 $v = array($this->getPermissionAccessID(), $peID, $permission);
-                $db->executeQuery('insert into BlockTypePermissionBlockTypeAccessList (paID, peID, permission) values (?, ?, ?)', $v);
+                $db->executeStatement('insert into BlockTypePermissionBlockTypeAccessList (paID, peID, permission) values (?, ?, ?)', $v);
             }
         }
 
         if (!empty($args['blockTypesExcluded']) && is_array($args['blockTypesExcluded'])) {
             foreach ($args['blockTypesExcluded'] as $peID => $permission) {
                 $v = array($this->getPermissionAccessID(), $peID, $permission);
-                $db->executeQuery('insert into BlockTypePermissionBlockTypeAccessList (paID, peID, permission) values (?, ?, ?)', $v);
+                $db->executeStatement('insert into BlockTypePermissionBlockTypeAccessList (paID, peID, permission) values (?, ?, ?)', $v);
             }
         }
 
@@ -49,7 +49,7 @@ class AddBlockBlockTypeAccess extends BlockTypeAccess
             foreach ($args['btIDInclude'] as $peID => $btIDs) {
                 foreach ($btIDs as $btID) {
                     $v = array($this->getPermissionAccessID(), $peID, $btID);
-                    $db->executeQuery('insert into BlockTypePermissionBlockTypeAccessListCustom (paID, peID, btID) values (?, ?, ?)', $v);
+                    $db->executeStatement('insert into BlockTypePermissionBlockTypeAccessListCustom (paID, peID, btID) values (?, ?, ?)', $v);
                 }
             }
         }
@@ -58,7 +58,7 @@ class AddBlockBlockTypeAccess extends BlockTypeAccess
             foreach ($args['btIDExclude'] as $peID => $btIDs) {
                 foreach ($btIDs as $btID) {
                     $v = array($this->getPermissionAccessID(), $peID, $btID);
-                    $db->executeQuery('insert into BlockTypePermissionBlockTypeAccessListCustom (paID, peID, btID) values (?, ?, ?)', $v);
+                    $db->executeStatement('insert into BlockTypePermissionBlockTypeAccessListCustom (paID, peID, btID) values (?, ?, ?)', $v);
                 }
             }
         }

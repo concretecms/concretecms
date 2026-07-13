@@ -98,7 +98,7 @@ class BlockAssignment extends Assignment
     {
         $db = Database::connection();
         $co = $this->permissionObject->getBlockCollectionObject();
-        $db->Execute('update BlockPermissionAssignments set paID = 0 where pkID = ? and bID = ? and cvID = ? and cID = ?', array($this->pk->getPermissionKeyID(), $this->permissionObject->getBlockID(), $co->getVersionID(), $co->getCollectionID()));
+        $db->executeStatement('update BlockPermissionAssignments set paID = 0 where pkID = ? and bID = ? and cvID = ? and cID = ?', array($this->pk->getPermissionKeyID(), $this->permissionObject->getBlockID(), $co->getVersionID(), $co->getCollectionID()));
     }
 
     public function assignPermissionAccess(Access $pa)

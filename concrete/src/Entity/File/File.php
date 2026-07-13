@@ -302,7 +302,7 @@ class File implements \Concrete\Core\Permission\ObjectInterface, AttributeObject
     public function resetPermissions($fOverrideSetPermissions = 0)
     {
         $db = Loader::db();
-        $db->Execute('delete from FilePermissionAssignments where fID = ?', [$this->fID]);
+        $db->executeStatement('delete from FilePermissionAssignments where fID = ?', [$this->fID]);
         if ($fOverrideSetPermissions) {
             $permissions = PermissionKey::getList('file');
             foreach ($permissions as $pk) {
@@ -656,11 +656,11 @@ class File implements \Concrete\Core\Permission\ObjectInterface, AttributeObject
 
         $v = [$this->fID];
         $q = 'select fID, paID, pkID from FilePermissionAssignments where fID = ?';
-        $r = $db->query($q, $v);
+        $r = $db->executeQuery($q, $v);
         while ($row = $r->fetch()) {
             $v = [$nf->getFileID(), $row['paID'], $row['pkID']];
             $q = 'insert into FilePermissionAssignments (fID, paID, pkID) values (?, ?, ?)';
-            $db->query($q, $v);
+            $db->executeStatement($q, $v);
         }
 
         $fe = new \Concrete\Core\File\Event\DuplicateFile($this);
@@ -775,11 +775,11 @@ class File implements \Concrete\Core\Permission\ObjectInterface, AttributeObject
             }
             $em->flush();
 
-            $db->executeQuery('DELETE FROM FileSetFiles WHERE fID = ?', [$this->fID]);
-            $db->executeQuery('DELETE FROM FileSearchIndexAttributes WHERE fID = ?', [$this->fID]);
-            $db->executeQuery('DELETE FROM FilePermissionAssignments WHERE fID = ?', [$this->fID]);
-            $db->executeQuery('DELETE FROM FileImageThumbnailPaths WHERE fileID = ?', [$this->fID]);
-            $db->executeQuery('DELETE FROM Files WHERE fID = ?', [$this->fID]);
+            $db->executeStatement('DELETE FROM FileSetFiles WHERE fID = ?', [$this->fID]);
+            $db->executeStatement('DELETE FROM FileSearchIndexAttributes WHERE fID = ?', [$this->fID]);
+            $db->executeStatement('DELETE FROM FilePermissionAssignments WHERE fID = ?', [$this->fID]);
+            $db->executeStatement('DELETE FROM FileImageThumbnailPaths WHERE fileID = ?', [$this->fID]);
+            $db->executeStatement('DELETE FROM Files WHERE fID = ?', [$this->fID]);
 
             $em->commit();
 

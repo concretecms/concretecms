@@ -32,7 +32,7 @@ class FolderManager
         /** @var Connection $db */
         $db = $app->make(Connection::class);
 
-        $db->executeQuery("UPDATE TreeNodes n SET n.treeNodeTypeID = ? WHERE n.treeNodeID = ?", [
+        $db->executeStatement("UPDATE TreeNodes n SET n.treeNodeTypeID = ? WHERE n.treeNodeID = ?", [
             $type->getTreeNodeTypeID(),
             $groupTree->getRootTreeNodeID()
         ]);

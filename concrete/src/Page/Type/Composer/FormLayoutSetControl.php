@@ -202,7 +202,7 @@ class FormLayoutSetControl extends ConcreteObject
     {
         $app = Application::getFacadeApplication();
         $db = $app->make('database')->connection();
-        $db->executeQuery(
+        $db->executeStatement(
             'update PageTypeComposerFormLayoutSetControls set ptComposerFormLayoutSetControlDisplayOrder = ? where ptComposerFormLayoutSetControlID = ?',
             [$displayOrder, $this->ptComposerFormLayoutSetControlID]
         );
@@ -213,7 +213,7 @@ class FormLayoutSetControl extends ConcreteObject
     {
         $app = Application::getFacadeApplication();
         $db = $app->make('database')->connection();
-        $db->executeQuery(
+        $db->executeStatement(
             'update PageTypeComposerFormLayoutSetControls set ptComposerFormLayoutSetControlCustomLabel = ? where ptComposerFormLayoutSetControlID = ?',
             [$label, $this->ptComposerFormLayoutSetControlID]
         );
@@ -224,7 +224,7 @@ class FormLayoutSetControl extends ConcreteObject
     {
         $app = Application::getFacadeApplication();
         $db = $app->make('database')->connection();
-        $db->executeQuery(
+        $db->executeStatement(
             'update PageTypeComposerFormLayoutSetControls set ptComposerFormLayoutSetControlRequired = ? where ptComposerFormLayoutSetControlID = ?',
             [intval($required), $this->ptComposerFormLayoutSetControlID]
         );
@@ -235,7 +235,7 @@ class FormLayoutSetControl extends ConcreteObject
     {
         $app = Application::getFacadeApplication();
         $db = $app->make('database')->connection();
-        $db->executeQuery(
+        $db->executeStatement(
             'update PageTypeComposerFormLayoutSetControls set ptComposerFormLayoutSetControlCustomTemplate = ? where ptComposerFormLayoutSetControlID = ?',
             [$template, $this->ptComposerFormLayoutSetControlID]
         );
@@ -246,7 +246,7 @@ class FormLayoutSetControl extends ConcreteObject
     {
         $app = Application::getFacadeApplication();
         $db = $app->make('database')->connection();
-        $db->executeQuery('update PageTypeComposerFormLayoutSetControls set ptComposerFormLayoutSetControlDescription = ? where ptComposerFormLayoutSetControlID = ?',
+        $db->executeStatement('update PageTypeComposerFormLayoutSetControls set ptComposerFormLayoutSetControlDescription = ? where ptComposerFormLayoutSetControlID = ?',
             [$description, $this->ptComposerFormLayoutSetControlID]
         );
         $this->ptComposerFormLayoutSetControlDescription = $description;
@@ -288,8 +288,8 @@ class FormLayoutSetControl extends ConcreteObject
                 }
             }
         }
-        $db->executeQuery('delete from PageTypeComposerFormLayoutSetControls where ptComposerFormLayoutSetControlID = ?', [$this->ptComposerFormLayoutSetControlID]);
-        $db->executeQuery('delete from PageTypeComposerOutputControls where ptComposerFormLayoutSetControlID = ?', [$this->ptComposerFormLayoutSetControlID]);
+        $db->executeStatement('delete from PageTypeComposerFormLayoutSetControls where ptComposerFormLayoutSetControlID = ?', [$this->ptComposerFormLayoutSetControlID]);
+        $db->executeStatement('delete from PageTypeComposerOutputControls where ptComposerFormLayoutSetControlID = ?', [$this->ptComposerFormLayoutSetControlID]);
         $set = $this->getPageTypeComposerFormLayoutSetObject();
         $set->rescanFormLayoutSetControlDisplayOrder();
     }

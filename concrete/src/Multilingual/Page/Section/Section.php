@@ -339,7 +339,7 @@ class Section extends Page
 
                 // adding in a check to see if old page was part of a language section or neutral.
                 if (is_object($msx)) {
-                    $db->Execute(
+                    $db->executeStatement(
                         'insert into MultilingualPageRelations (mpRelationID, cID, mpLanguage, mpLocale) values (?, ?, ?, ?)',
                         [
                             $mpRelationID,
@@ -355,7 +355,7 @@ class Section extends Page
                 $cID = self::getCollectionIDForLocale($mpRelationID, $ms->getLocale());
 
                 if ($cID > 0) {
-                    $db->Execute(
+                    $db->executeStatement(
                         'delete from MultilingualPageRelations where mpRelationID = ? and mpLocale = ?',
                         [$mpRelationID, $ms->getLocale()]
                     );
@@ -369,7 +369,7 @@ class Section extends Page
                 $ms->getLanguage()
             ];
 
-            $db->Execute('insert into MultilingualPageRelations (mpRelationID, cID, mpLocale, mpLanguage) values (?, ?, ?, ?)', $v);
+            $db->executeStatement('insert into MultilingualPageRelations (mpRelationID, cID, mpLocale, mpLanguage) values (?, ?, ?, ?)', $v);
 
             $pde = new Event($newPage);
             $pde->setLocale($ms->getLocale());
@@ -498,7 +498,7 @@ class Section extends Page
             return;
         }
         $db = Database::get();
-        $db->Execute('delete from MultilingualPageRelations where cID = ?', [$page->getCollectionID()]);
+        $db->executeStatement('delete from MultilingualPageRelations where cID = ?', [$page->getCollectionID()]);
     }
 
     public static function registerPage($page)
@@ -526,7 +526,7 @@ class Section extends Page
                     ++$mpRelationID;
                 }
                 $v = [$mpRelationID, $page->getCollectionID(), $ms->getLanguage(), $ms->getLocale()];
-                $db->Execute(
+                $db->executeStatement(
                     'insert into MultilingualPageRelations (mpRelationID, cID, mpLanguage, mpLocale) values (?, ?, ?, ?)',
                     $v
                 );
@@ -569,12 +569,12 @@ class Section extends Page
                     ++$mpRelationID;
                 }
                 $v = [$mpRelationID, $page->getCollectionID(), $ms->getLanguage(), $ms->getLocale()];
-                $db->Execute(
+                $db->executeStatement(
                     'insert into MultilingualPageRelations (mpRelationID, cID, mpLanguage, mpLocale) values (?, ?, ?, ?)',
                     $v
                 );
             } else {
-                $db->Execute(
+                $db->executeStatement(
                     'update MultilingualPageRelations set mpLanguage = ? where cID = ?',
                     [$ms->getLanguage(), $page->getCollectionID()]
                 );
@@ -593,12 +593,12 @@ class Section extends Page
 
         if ($mpRelationID && $section) {
             $v = [$mpRelationID, $newPage->getCollectionID(), $section->getLocale(), $section->getLanguage()];
-            $db->Execute(
+            $db->executeStatement(
                 'delete from MultilingualPageRelations where mpRelationID = ? and mpLocale = ?',
                 [$mpRelationID, $section->getLocale()]
             );
-            $db->Execute('delete from MultilingualPageRelations where cID = ?', [$newPage->getCollectionID()]);
-            $db->Execute('insert into MultilingualPageRelations (mpRelationID, cID, mpLocale, mpLanguage) values (?, ?, ?, ?)', $v);
+            $db->executeStatement('delete from MultilingualPageRelations where cID = ?', [$newPage->getCollectionID()]);
+            $db->executeStatement('insert into MultilingualPageRelations (mpRelationID, cID, mpLocale, mpLanguage) values (?, ?, ?, ?)', $v);
             $pde = new Event($newPage);
             $pde->setLocale($locale);
             \Events::dispatch('on_multilingual_page_relate', $pde);
@@ -623,7 +623,7 @@ class Section extends Page
         $mpRelationID = static::registerPage($page);
 
         $v = [$mpRelationID, 0, $locale];
-        $db->Execute('insert into MultilingualPageRelations (mpRelationID, cID, mpLocale) values (?, ?, ?)', $v);
+        $db->executeStatement('insert into MultilingualPageRelations (mpRelationID, cID, mpLocale) values (?, ?, ?)', $v);
         $pde = new Event($page);
         $pde->setLocale($locale);
         \Events::dispatch('on_multilingual_page_ignore', $pde);
@@ -664,7 +664,7 @@ class Section extends Page
         $translations->setLanguage($this->getLocale());
         $translations->setPluralForms($this->getNumberOfPluralForms(), $this->getPluralsRule());
         $db = \Database::get();
-        $r = $db->query(
+        $r = $db->executeQuery(
             "select *
             from MultilingualTranslations
             where mtSectionID = ?

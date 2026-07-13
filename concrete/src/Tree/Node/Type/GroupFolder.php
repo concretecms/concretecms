@@ -71,7 +71,7 @@ class GroupFolder extends TreeNode
         /** @var Connection $db */
         $db = $app->make(Connection::class);
 
-        $db->executeQuery('DELETE FROM TreeGroupFolderNodeSelectedGroupTypes WHERE treeNodeID = ?', [
+        $db->executeStatement('DELETE FROM TreeGroupFolderNodeSelectedGroupTypes WHERE treeNodeID = ?', [
             $this->treeNodeID,
         ]);
 
@@ -151,10 +151,10 @@ class GroupFolder extends TreeNode
     {
         $app = Application::getFacadeApplication();
         $db = $app->make(Connection::class);
-        $db->executeQuery('DELETE FROM TreeGroupFolderNodes WHERE treeNodeID = ?', [
+        $db->executeStatement('DELETE FROM TreeGroupFolderNodes WHERE treeNodeID = ?', [
             $this->treeNodeID,
         ]);
-        $db->executeQuery('DELETE FROM TreeGroupFolderNodeSelectedGroupTypes WHERE treeNodeID = ?', [
+        $db->executeStatement('DELETE FROM TreeGroupFolderNodeSelectedGroupTypes WHERE treeNodeID = ?', [
             $this->treeNodeID,
         ]);
     }

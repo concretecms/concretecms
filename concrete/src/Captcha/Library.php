@@ -155,7 +155,7 @@ class Library extends ConcreteObject
         }
         $app = Facade::getFacadeApplication();
         $db = $app->make('database')->connection();
-        $db->executeQuery('insert into SystemCaptchaLibraries (sclHandle, sclName, pkgID) values (?, ?, ?)', [$sclHandle, $sclName, $pkgID]);
+        $db->executeStatement('insert into SystemCaptchaLibraries (sclHandle, sclName, pkgID) values (?, ?, ?)', [$sclHandle, $sclName, $pkgID]);
 
         return static::getByHandle($sclHandle);
     }
@@ -173,7 +173,7 @@ class Library extends ConcreteObject
         }
         $app = Facade::getFacadeApplication();
         $db = $app->make('database')->connection();
-        $db->executeQuery('delete from SystemCaptchaLibraries where sclHandle = ?', [$this->sclHandle]);
+        $db->executeStatement('delete from SystemCaptchaLibraries where sclHandle = ?', [$this->sclHandle]);
     }
 
     /**
@@ -183,8 +183,8 @@ class Library extends ConcreteObject
     {
         $app = Facade::getFacadeApplication();
         $db = $app->make('database')->connection();
-        $db->executeQuery('update SystemCaptchaLibraries set sclIsActive = 0');
-        $db->executeQuery('update SystemCaptchaLibraries set sclIsActive = 1 where sclHandle = ?', [$this->sclHandle]);
+        $db->executeStatement('update SystemCaptchaLibraries set sclIsActive = 0');
+        $db->executeStatement('update SystemCaptchaLibraries set sclIsActive = 1 where sclHandle = ?', [$this->sclHandle]);
         $this->sclIsActive = 1;
     }
 

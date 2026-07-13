@@ -41,7 +41,7 @@ class Version20190309000000 extends AbstractMigration implements RepeatableMigra
             $folderTreeNodeTypeID
         ]);
         foreach ($folders as $folder) {
-            $db->executeQuery('INSERT INTO TreeFileFolderNodes (treeNodeID, fslID) VALUES (?, ?)', [
+            $db->executeStatement('INSERT INTO TreeFileFolderNodes (treeNodeID, fslID) VALUES (?, ?)', [
                 $folder['treeNodeID'],
                 $defaultStorageLocationID
             ]);

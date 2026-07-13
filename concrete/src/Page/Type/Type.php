@@ -204,7 +204,7 @@ class Type extends ConcreteObject implements \Concrete\Core\Permission\ObjectInt
             Section::registerPage($c);
             $c->move($parent);
             $db = \Database::connection();
-            $db->executeQuery('update Pages set cIsDraft = 0 where cID = ?', [$c->getCollectionID()]);
+            $db->executeStatement('update Pages set cIsDraft = 0 where cID = ?', [$c->getCollectionID()]);
             if (!$parent->overrideTemplatePermissions() && $c->getCollectionInheritance() === 'PARENT') {
                 // When the parent page's subpage permissions setting is "inherit page type default permissions",
                 // the permissions of this page should inherit from the default.
@@ -258,7 +258,7 @@ class Type extends ConcreteObject implements \Concrete\Core\Permission\ObjectInt
     {
         $templates = array();
         $db = Loader::db();
-        $r = $db->Execute(
+        $r = $db->executeQuery(
             'select pTemplateID from PageTypePageTemplates where ptID = ? order by pTemplateID asc',
             array($this->ptID)
         );
@@ -321,7 +321,7 @@ class Type extends ConcreteObject implements \Concrete\Core\Permission\ObjectInt
             $r2 = $db->prepare($q2);
             $res2 = $db->execute($r2, $v2);
 
-            $db->Execute(
+            $db->executeStatement(
                 'insert into PageTypePageTemplateDefaultPages (ptID, pTemplateID, cID) values (?, ?, ?)',
                 array(
                     $this->ptID,
@@ -655,7 +655,7 @@ class Type extends ConcreteObject implements \Concrete\Core\Permission\ObjectInt
 
         // now copy the master pages for defaults and attributes
         $db = \Database::get();
-        $r = $db->Execute('select cID from Pages where cIsTemplate = 1 and ptID = ?', array($this->getPageTypeID()));
+        $r = $db->executeQuery('select cID from Pages where cIsTemplate = 1 and ptID = ?', array($this->getPageTypeID()));
         $home = Page::getByID(Page::getHomePageID());
         while ($row = $r->fetch()) {
             $c = Page::getByID($row['cID']);
@@ -803,7 +803,7 @@ class Type extends ConcreteObject implements \Concrete\Core\Permission\ObjectInt
             $ptDisplayOrder = $count;
         }
 
-        $db->Execute(
+        $db->executeStatement(
             'insert into PageTypes (ptName, ptHandle, ptDefaultPageTemplateID, ptDefaultThemeID, ptAllowedPageTemplates, ptIsInternal, ptLaunchInComposer, ptDisplayOrder, ptIsFrequentlyAdded, siteTypeID, pkgID) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
             array(
                 $ptName,
@@ -825,7 +825,7 @@ class Type extends ConcreteObject implements \Concrete\Core\Permission\ObjectInt
                 if (!is_object($pt)){
                     $pt = PageTemplate::getByHandle($pt);
                 }
-                $db->Execute(
+                $db->executeStatement(
                     'insert into PageTypePageTemplates (ptID, pTemplateID) values (?, ?)',
                     array(
                         $ptID,
@@ -918,7 +918,7 @@ class Type extends ConcreteObject implements \Concrete\Core\Permission\ObjectInt
             $ptIsInternal = 1;
         }
         $db = Loader::db();
-        $db->Execute(
+        $db->executeStatement(
             'update PageTypes set ptName = ?, ptHandle = ?, ptDefaultPageTemplateID = ?, ptDefaultThemeID = ?, ptAllowedPageTemplates = ?, ptIsInternal = ?, ptLaunchInComposer = ?, ptIsFrequentlyAdded = ?, ptDisplayOrder = ? where ptID = ?',
             array(
                 $ptName,
@@ -933,13 +933,13 @@ class Type extends ConcreteObject implements \Concrete\Core\Permission\ObjectInt
                 $this->ptID,
             )
         );
-        $db->Execute('delete from PageTypePageTemplates where ptID = ?', array($this->ptID));
+        $db->executeStatement('delete from PageTypePageTemplates where ptID = ?', array($this->ptID));
         if ($ptAllowedPageTemplates != 'A') {
             foreach ($templates as $pt) {
                 if (!is_object($pt)) {
                     $pt = PageTemplate::getByHandle($pt);
                 }
-                $db->Execute(
+                $db->executeStatement(
                     'insert into PageTypePageTemplates (ptID, pTemplateID) values (?, ?)',
                     array(
                         $this->ptID,
@@ -970,7 +970,7 @@ class Type extends ConcreteObject implements \Concrete\Core\Permission\ObjectInt
                         $c->delete();
                     }
                 }
-                $db->Execute('delete from PageTypePageTemplateDefaultPages where pTemplateID = ? and ptID = ?', array($existingPageTemplateID, $this->getPageTypeID()));
+                $db->executeStatement('delete from PageTypePageTemplateDefaultPages where pTemplateID = ? and ptID = ?', array($existingPageTemplateID, $this->getPageTypeID()));
             }
         }
     }
@@ -1109,10 +1109,10 @@ class Type extends ConcreteObject implements \Concrete\Core\Permission\ObjectInt
             $set->delete();
         }
         $db = Loader::db();
-        $db->Execute('delete from PageTypes where ptID = ?', array($this->ptID));
-        $db->Execute('delete from PageTypePageTemplates where ptID = ?', array($this->ptID));
-        $db->Execute('delete from PageTypePageTemplateDefaultPages where ptID = ?', array($this->ptID));
-        $db->Execute('delete from PageTypeComposerOutputControls where ptID = ?', array($this->ptID));
+        $db->executeStatement('delete from PageTypes where ptID = ?', array($this->ptID));
+        $db->executeStatement('delete from PageTypePageTemplates where ptID = ?', array($this->ptID));
+        $db->executeStatement('delete from PageTypePageTemplateDefaultPages where ptID = ?', array($this->ptID));
+        $db->executeStatement('delete from PageTypeComposerOutputControls where ptID = ?', array($this->ptID));
 
         foreach ($this->getPageTypePageTemplateObjects() as $pt) {
             $c = $this->getPageTypePageTemplateDefaultPageObject($pt);
@@ -1124,7 +1124,7 @@ class Type extends ConcreteObject implements \Concrete\Core\Permission\ObjectInt
     {
         $db = Loader::db();
         if (is_object($configuredTarget)) {
-            $db->Execute(
+            $db->executeStatement(
                 'update PageTypes set ptPublishTargetTypeID = ?, ptPublishTargetObject = ? where ptID = ?',
                 array(
                     $configuredTarget->getPageTypePublishTargetTypeID(),
@@ -1155,7 +1155,7 @@ class Type extends ConcreteObject implements \Concrete\Core\Permission\ObjectInt
         if (!$displayOrder) {
             $displayOrder = 0;
         }
-        $db->Execute(
+        $db->executeStatement(
             'insert into PageTypeComposerFormLayoutSets (ptComposerFormLayoutSetName, ptComposerFormLayoutSetDescription, ptComposerFormLayoutSetCollapseType, ptID, ptComposerFormLayoutSetDisplayOrder) values (?, ?, ?, ?, ?)',
             array(
                 $ptComposerFormLayoutSetName,

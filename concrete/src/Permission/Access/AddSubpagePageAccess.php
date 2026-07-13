@@ -15,12 +15,12 @@ class AddSubpagePageAccess extends PageAccess
         $r = $db->executeQuery('select * from PagePermissionPageTypeAccessList where paID = ?', [$this->getPermissionAccessID()]);
         while ($row = $r->fetch()) {
             $v = [$row['peID'], $newPA->getPermissionAccessID(), $row['permission'], $row['externalLink']];
-            $db->executeQuery('insert into PagePermissionPageTypeAccessList (peID, paID, permission, externalLink) values (?, ?, ?, ?)', $v);
+            $db->executeStatement('insert into PagePermissionPageTypeAccessList (peID, paID, permission, externalLink) values (?, ?, ?, ?)', $v);
         }
         $r = $db->executeQuery('select * from PagePermissionPageTypeAccessListCustom where paID = ?', [$this->getPermissionAccessID()]);
         while ($row = $r->fetch()) {
             $v = [$row['peID'], $newPA->getPermissionAccessID(), $row['ptID']];
-            $db->executeQuery('insert into PagePermissionPageTypeAccessListCustom  (peID, paID, ptID) values (?, ?, ?)', $v);
+            $db->executeStatement('insert into PagePermissionPageTypeAccessListCustom  (peID, paID, ptID) values (?, ?, ?)', $v);
         }
 
         return $newPA;
@@ -30,16 +30,16 @@ class AddSubpagePageAccess extends PageAccess
     {
         parent::removeListItem($pe);
         $db = Database::connection();
-        $db->executeQuery('delete from PagePermissionPageTypeAccessList where peID = ? and paID = ?', [$pe->getAccessEntityID(), $this->getPermissionAccessID()]);
-        $db->executeQuery('delete from PagePermissionPageTypeAccessListCustom where peID = ? and paID = ?', [$pe->getAccessEntityID(), $this->getPermissionAccessID()]);
+        $db->executeStatement('delete from PagePermissionPageTypeAccessList where peID = ? and paID = ?', [$pe->getAccessEntityID(), $this->getPermissionAccessID()]);
+        $db->executeStatement('delete from PagePermissionPageTypeAccessListCustom where peID = ? and paID = ?', [$pe->getAccessEntityID(), $this->getPermissionAccessID()]);
     }
 
     public function save($args = [])
     {
         parent::save();
         $db = Database::connection();
-        $db->executeQuery('delete from PagePermissionPageTypeAccessList where paID = ?', [$this->getPermissionAccessID()]);
-        $db->executeQuery('delete from PagePermissionPageTypeAccessListCustom where paID = ?', [$this->getPermissionAccessID()]);
+        $db->executeStatement('delete from PagePermissionPageTypeAccessList where paID = ?', [$this->getPermissionAccessID()]);
+        $db->executeStatement('delete from PagePermissionPageTypeAccessListCustom where paID = ?', [$this->getPermissionAccessID()]);
         if (isset($args['pageTypesIncluded']) && is_array($args['pageTypesIncluded'])) {
             foreach ($args['pageTypesIncluded'] as $peID => $permission) {
                 $ext = 0;
@@ -47,7 +47,7 @@ class AddSubpagePageAccess extends PageAccess
                     $ext = $args['allowExternalLinksIncluded'][$peID];
                 }
                 $v = [$this->getPermissionAccessID(), $peID, $permission, $ext];
-                $db->executeQuery('insert into PagePermissionPageTypeAccessList (paID, peID, permission, externalLink) values (?, ?, ?, ?)', $v);
+                $db->executeStatement('insert into PagePermissionPageTypeAccessList (paID, peID, permission, externalLink) values (?, ?, ?, ?)', $v);
             }
         }
 
@@ -58,7 +58,7 @@ class AddSubpagePageAccess extends PageAccess
                     $ext = $args['allowExternalLinksExcluded'][$peID];
                 }
                 $v = [$this->getPermissionAccessID(), $peID, $permission, $ext];
-                $db->executeQuery('insert into PagePermissionPageTypeAccessList (paID, peID, permission, externalLink) values (?, ?, ?, ?)', $v);
+                $db->executeStatement('insert into PagePermissionPageTypeAccessList (paID, peID, permission, externalLink) values (?, ?, ?, ?)', $v);
             }
         }
 
@@ -66,7 +66,7 @@ class AddSubpagePageAccess extends PageAccess
             foreach ($args['ptIDInclude'] as $peID => $ptIDs) {
                 foreach ($ptIDs as $ptID) {
                     $v = [$this->getPermissionAccessID(), $peID, $ptID];
-                    $db->executeQuery('insert into PagePermissionPageTypeAccessListCustom (paID, peID, ptID) values (?, ?, ?)', $v);
+                    $db->executeStatement('insert into PagePermissionPageTypeAccessListCustom (paID, peID, ptID) values (?, ?, ?)', $v);
                 }
             }
         }
@@ -75,7 +75,7 @@ class AddSubpagePageAccess extends PageAccess
             foreach ($args['ptIDExclude'] as $peID => $ptIDs) {
                 foreach ($ptIDs as $ptID) {
                     $v = [$this->getPermissionAccessID(), $peID, $ptID];
-                    $db->executeQuery('insert into PagePermissionPageTypeAccessListCustom (paID, peID, ptID) values (?, ?, ?)', $v);
+                    $db->executeStatement('insert into PagePermissionPageTypeAccessListCustom (paID, peID, ptID) values (?, ?, ?)', $v);
                 }
             }
         }

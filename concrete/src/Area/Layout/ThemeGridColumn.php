@@ -64,7 +64,7 @@ class ThemeGridColumn extends Column
         $areaLayoutColumnID = parent::duplicate($newAreaLayout);
         $db = Loader::db();
         $v = array($areaLayoutColumnID, $this->arLayoutColumnSpan, $this->arLayoutColumnOffset);
-        $db->Execute('insert into AreaLayoutThemeGridColumns (arLayoutColumnID, arLayoutColumnSpan, arLayoutColumnOffset) values (?, ?, ?)', $v);
+        $db->executeStatement('insert into AreaLayoutThemeGridColumns (arLayoutColumnID, arLayoutColumnSpan, arLayoutColumnOffset) values (?, ?, ?)', $v);
         $newAreaLayoutColumn = self::getByID($areaLayoutColumnID);
 
         return $newAreaLayoutColumn;
@@ -210,7 +210,7 @@ class ThemeGridColumn extends Column
     public function delete()
     {
         $db = Loader::db();
-        $db->Execute("delete from AreaLayoutThemeGridColumns where arLayoutColumnID = ?", array($this->arLayoutColumnID));
+        $db->executeStatement("delete from AreaLayoutThemeGridColumns where arLayoutColumnID = ?", array($this->arLayoutColumnID));
         parent::delete();
     }
 
@@ -223,7 +223,7 @@ class ThemeGridColumn extends Column
             $span = 0;
         }
         $db = Loader::db();
-        $db->Execute('update AreaLayoutThemeGridColumns set arLayoutColumnSpan = ? where arLayoutColumnID = ?', array($span, $this->arLayoutColumnID));
+        $db->executeStatement('update AreaLayoutThemeGridColumns set arLayoutColumnSpan = ? where arLayoutColumnID = ?', array($span, $this->arLayoutColumnID));
         $this->arLayoutColumnSpan = $span;
     }
 
@@ -236,7 +236,7 @@ class ThemeGridColumn extends Column
             $offset = 0;
         }
         $db = Loader::db();
-        $db->Execute(
+        $db->executeStatement(
             'update AreaLayoutThemeGridColumns set arLayoutColumnOffset = ? where arLayoutColumnID = ?',
             array($offset, $this->arLayoutColumnID)
         );

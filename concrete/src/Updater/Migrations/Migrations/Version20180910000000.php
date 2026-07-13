@@ -29,13 +29,13 @@ class Version20180910000000 extends AbstractMigration implements RepeatableMigra
         // Migrate data from old entries table to new
         if ($this->connection->tableExists('ExpressEntityAssociationSelectedEntries')) {
             $this->connection->transactional(function ($db) {
-                $r = $db->query('select * from ExpressEntityAssociationSelectedEntries');
+                $r = $db->executeQuery('select * from ExpressEntityAssociationSelectedEntries');
                 while ($row = $r->fetch()) {
                     $db->insert('ExpressEntityAssociationEntries', [
                         'association_id' => $row['id'], 'exEntryID' => $row['exSelectedEntryID']
                     ]);
                 }
-                $this->connection->Execute('alter table ExpressEntityAssociationSelectedEntries rename _ExpressEntityAssociationSelectedEntries');
+                $this->connection->executeStatement('alter table ExpressEntityAssociationSelectedEntries rename _ExpressEntityAssociationSelectedEntries');
             });
         }
 

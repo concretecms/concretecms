@@ -226,10 +226,10 @@ class Legacy extends DashboardPageController
         $db = Loader::db();
         $v = [intval($asID)];
         $q = 'DELETE FROM btFormAnswers WHERE asID = ?';
-        $r = $db->query($q, $v);
+        $r = $db->executeQuery($q, $v);
 
         $q = 'DELETE FROM btFormAnswerSet WHERE asID = ?';
-        $r = $db->query($q, $v);
+        $r = $db->executeQuery($q, $v);
     }
 
     //DELETE A FORM ANSWERS
@@ -239,7 +239,7 @@ class Legacy extends DashboardPageController
         $v = [intval($qsID)];
         $q = 'SELECT asID FROM btFormAnswerSet WHERE questionSetId = ?';
 
-        $r = $db->query($q, $v);
+        $r = $db->executeQuery($q, $v);
         while ($row = $r->fetch()) {
             $asID = $row['asID'];
             $this->deleteAnswers($asID);
@@ -254,12 +254,12 @@ class Legacy extends DashboardPageController
 
         $v = [intval($bID)];
         $q = 'DELETE FROM btFormQuestions WHERE bID = ?';
-        $r = $db->query($q, $v);
+        $r = $db->executeQuery($q, $v);
 
         $q = 'DELETE FROM btForm WHERE bID = ?';
-        $r = $db->query($q, $v);
+        $r = $db->executeQuery($q, $v);
 
         $q = 'DELETE FROM Blocks WHERE bID = ?';
-        $r = $db->query($q, $v);
+        $r = $db->executeQuery($q, $v);
     }
 }

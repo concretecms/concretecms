@@ -41,10 +41,10 @@ class Version20150731000000 extends AbstractMigration implements RepeatableMigra
     public function upgradeDatabase()
     {
         $db = \Database::connection();
-        $db->executeQuery('DELETE FROM FileSetFiles WHERE fID NOT IN (SELECT fID FROM Files)');
-        $db->executeQuery('DELETE FROM FileSearchIndexAttributes WHERE fID NOT IN (SELECT fID FROM Files)');
-        $db->executeQuery('DELETE FROM DownloadStatistics WHERE fID NOT IN (SELECT fID FROM Files)');
-        $db->executeQuery('DELETE FROM FilePermissionAssignments WHERE fID NOT IN (SELECT fID FROM Files)');
+        $db->executeStatement('DELETE FROM FileSetFiles WHERE fID NOT IN (SELECT fID FROM Files)');
+        $db->executeStatement('DELETE FROM FileSearchIndexAttributes WHERE fID NOT IN (SELECT fID FROM Files)');
+        $db->executeStatement('DELETE FROM DownloadStatistics WHERE fID NOT IN (SELECT fID FROM Files)');
+        $db->executeStatement('DELETE FROM FilePermissionAssignments WHERE fID NOT IN (SELECT fID FROM Files)');
 
         $this->refreshBlockType('page_list');
     }

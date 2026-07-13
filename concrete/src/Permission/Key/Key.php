@@ -530,7 +530,7 @@ EOT
     {
         $app = Application::getFacadeApplication();
         $db = $app->make(Connection::class);
-        $db->executeQuery('update PermissionKeys set pkHasCustomClass = ? where pkID = ?', [$pkHasCustomClass ? 1 : 0, $this->getPermissionKeyID()]);
+        $db->executeStatement('update PermissionKeys set pkHasCustomClass = ? where pkID = ?', [$pkHasCustomClass ? 1 : 0, $this->getPermissionKeyID()]);
         self::loadAll();
     }
 
@@ -584,7 +584,7 @@ EOT
     {
         $app = Application::getFacadeApplication();
         $db = $app->make(Connection::class);
-        $db->executeQuery('delete from PermissionKeys where pkID = ?', [$this->getPermissionKeyID()]);
+        $db->executeStatement('delete from PermissionKeys where pkID = ?', [$this->getPermissionKeyID()]);
         self::loadAll();
     }
 

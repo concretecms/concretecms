@@ -80,7 +80,7 @@ class PageAssignment extends Assignment
     {
         $app = Application::getFacadeApplication();
         $db = $app->make(Connection::class);
-        $db->executeQuery('update PagePermissionAssignments set paID = 0 where pkID = ? and cID = ?', [$this->pk->getPermissionKeyID(), $this->getPermissionObject()->getPermissionsCollectionID()]);
+        $db->executeStatement('update PagePermissionAssignments set paID = 0 where pkID = ? and cID = ?', [$this->pk->getPermissionKeyID(), $this->getPermissionObject()->getPermissionsCollectionID()]);
 
         $cache = $app->make('cache/request');
         $identifier = sprintf(

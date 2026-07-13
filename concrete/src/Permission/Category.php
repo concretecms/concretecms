@@ -25,7 +25,7 @@ class Category extends ConcreteObject
     {
         $db = Database::get();
         self::$categories = array();
-        $r = $db->Execute('select pkCategoryID, pkCategoryHandle, pkgID from PermissionKeyCategories');
+        $r = $db->executeQuery('select pkCategoryID, pkCategoryHandle, pkgID from PermissionKeyCategories');
         while ($row = $r->fetch()) {
             $pkc = new static();
             $pkc->setPropertiesFromArray($row);
@@ -66,7 +66,7 @@ class Category extends ConcreteObject
     {
         $db = Database::get();
         $list = array();
-        $r = $db->Execute('select pkCategoryID from PermissionKeyCategories where pkgID = ? order by pkCategoryID asc', array($pkg->getPackageID()));
+        $r = $db->executeQuery('select pkCategoryID from PermissionKeyCategories where pkgID = ? order by pkCategoryID asc', array($pkg->getPackageID()));
         while ($row = $r->fetch()) {
             $list[] = static::getByID($row['pkCategoryID']);
         }
@@ -146,7 +146,7 @@ class Category extends ConcreteObject
     public function delete()
     {
         $db = Database::get();
-        $db->Execute('delete from PermissionKeyCategories where pkCategoryID = ?', array($this->pkCategoryID));
+        $db->executeStatement('delete from PermissionKeyCategories where pkCategoryID = ?', array($this->pkCategoryID));
     }
 
     public function associateAccessEntityType(\Concrete\Core\Permission\Access\Entity\Type $pt)
@@ -156,7 +156,7 @@ class Category extends ConcreteObject
             $pt->getAccessEntityTypeID(), $this->pkCategoryID,
         ));
         if (!$r) {
-            $db->Execute('insert into PermissionAccessEntityTypeCategories (petID, pkCategoryID) values (?, ?)', array(
+            $db->executeStatement('insert into PermissionAccessEntityTypeCategories (petID, pkCategoryID) values (?, ?)', array(
                 $pt->getAccessEntityTypeID(), $this->pkCategoryID,
             ));
         }
@@ -171,14 +171,14 @@ class Category extends ConcreteObject
     public function clearAccessEntityTypeCategories()
     {
         $db = Database::get();
-        $db->Execute('delete from PermissionAccessEntityTypeCategories where pkCategoryID = ?', $this->pkCategoryID);
+        $db->executeStatement('delete from PermissionAccessEntityTypeCategories where pkCategoryID = ?', $this->pkCategoryID);
     }
 
     public static function getList()
     {
         $db = Database::get();
         $cats = array();
-        $r = $db->Execute('select pkCategoryID from PermissionKeyCategories order by pkCategoryID asc');
+        $r = $db->executeQuery('select pkCategoryID from PermissionKeyCategories order by pkCategoryID asc');
         while ($row = $r->fetch()) {
             $cats[] = static::getByID($row['pkCategoryID']);
         }
@@ -194,7 +194,7 @@ class Category extends ConcreteObject
         } else {
             $pkgID = null;
         }
-        $db->Execute('insert into PermissionKeyCategories (pkCategoryHandle, pkgID) values (?, ?)', array($pkCategoryHandle, $pkgID));
+        $db->executeStatement('insert into PermissionKeyCategories (pkCategoryHandle, pkgID) values (?, ?)', array($pkCategoryHandle, $pkgID));
         $id = $db->Insert_ID();
 
         self::$categories = array();

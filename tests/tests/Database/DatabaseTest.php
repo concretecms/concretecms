@@ -3,6 +3,8 @@
 namespace Concrete\Tests\Database;
 
 use Concrete\Core\Database\Connection\Connection;
+use Concrete\Core\Database\EntityManagerFactory;
+use Doctrine\DBAL\Connections\PrimaryReadReplicaConnection;
 use Concrete\TestHelpers\Database\ConcreteDatabaseTestCase;
 use Database;
 use PDOException;
@@ -73,7 +75,7 @@ class DatabaseTest extends ConcreteDatabaseTestCase
     public function testFetchRowsDoctrineAPI()
     {
         $db = Database::connection();
-        $r = $db->query('SELECT * FROM Users');
+        $r = $db->executeQuery('SELECT * FROM Users');
         $results = [];
         while ($row = $r->fetch()) {
             $results[] = $row;
@@ -177,4 +179,139 @@ class DatabaseTest extends ConcreteDatabaseTestCase
         $uName = $db->GetOne('SELECT uName FROM Users WHERE uEmail = ?', ["testuser5'@concrete5.org"]);
         $this->assertTrue($uName == "test'der");
     }
+    private function createPrimaryReplicaConnection(bool $keepReplica = false): Connection
+    {
+        $database = \Config::get('database');
+        $config = $database['connections'][$database['default-connection']];
+        $config['replica'] = [
+            ['server' => $config['server'], 'replicaName' => 'test-reader'],
+        ];
+        $config['keepReplica'] = $keepReplica;
+
+        /** @var Connection $connection */
+        $connection = Database::getFactory()->createConnection($config);
+        $connection->close();
+
+        return $connection;
+    }
+
+    public function testFlatConfigurationUsesConcretePrimaryReplicaConnection()
+    {
+        $database = \Config::get('database');
+        $config = $database['connections'][$database['default-connection']];
+
+        $connection = Database::getFactory()->createConnection($config);
+        $params = $connection->getParams();
+
+        $this->assertInstanceOf(PrimaryReadReplicaConnection::class, $connection);
+        $this->assertSame($params['primary'], $params['replica'][0]);
+
+        $connection->close();
+        $connection->executeQuery('SELECT 1')->fetchOne();
+        $this->assertTrue($connection->isConnectedToPrimary());
+        $connection->close();
+    }
+
+    public function testPrimaryAndReplicaConfigurationIsNormalized()
+    {
+        $database = \Config::get('database');
+        $flatConfig = $database['connections'][$database['default-connection']];
+        $config = [
+            'driver' => $flatConfig['driver'],
+            'primary' => [
+                'host' => $flatConfig['server'],
+                'user' => $flatConfig['username'],
+                'password' => $flatConfig['password'],
+                'dbname' => $flatConfig['database'],
+            ],
+            'replica' => [
+                ['server' => $flatConfig['server']],
+                ['host' => $flatConfig['server']],
+            ],
+        ];
+
+        $connection = Database::getFactory()->createConnection($config);
+        $params = $connection->getParams();
+
+        $this->assertSame($flatConfig['server'], $params['primary']['host']);
+        $this->assertSame($flatConfig['username'], $params['primary']['user']);
+        $this->assertSame($flatConfig['database'], $params['primary']['database']);
+        $this->assertSame($flatConfig['database'], $params['primary']['dbname']);
+        $this->assertCount(2, $params['replica']);
+        $this->assertSame($params['primary']['password'], $params['replica'][0]['password']);
+        $this->assertSame($flatConfig['server'], $params['replica'][0]['host']);
+        $connection->close();
+    }
+
+    public function testDbalReadWriteRoutingAndStickyPrimary()
+    {
+        $connection = $this->createPrimaryReplicaConnection();
+
+        $connection->executeQuery('SELECT 1')->fetchOne();
+        $this->assertFalse($connection->isConnectedToPrimary());
+
+        $connection->executeStatement('SET @concrete_primary_replica_test = 1');
+        $this->assertTrue($connection->isConnectedToPrimary());
+
+        $connection->executeQuery('SELECT 1')->fetchOne();
+        $this->assertTrue($connection->isConnectedToPrimary());
+        $connection->close();
+    }
+
+    public function testLegacyApisAlwaysUsePrimary()
+    {
+        $connection = $this->createPrimaryReplicaConnection();
+        $connection->query('SELECT 1');
+        $this->assertTrue($connection->isConnectedToPrimary());
+        $connection->close();
+
+        $connection = $this->createPrimaryReplicaConnection();
+        $connection->Execute('SELECT 1');
+        $this->assertTrue($connection->isConnectedToPrimary());
+        $connection->close();
+    }
+
+    public function testKeepReplicaAllowsExplicitSwitchBack()
+    {
+        $connection = $this->createPrimaryReplicaConnection(true);
+
+        $connection->executeQuery('SELECT 1')->fetchOne();
+        $this->assertFalse($connection->isConnectedToPrimary());
+
+        $connection->executeStatement('SET @concrete_primary_replica_test = 1');
+        $this->assertTrue($connection->isConnectedToPrimary());
+
+        $connection->ensureConnectedToReplica();
+        $this->assertFalse($connection->isConnectedToPrimary());
+        $connection->close();
+    }
+
+    public function testDoctrineOrmUsesTheSameReadWriteRouting()
+    {
+        $connection = $this->createPrimaryReplicaConnection();
+        $entityManager = app(EntityManagerFactory::class)->create($connection);
+
+        $entityManager
+            ->createQuery('SELECT u.uID FROM Concrete\\Core\\Entity\\User\\User u')
+            ->setMaxResults(1)
+            ->getScalarResult()
+        ;
+        $this->assertFalse($connection->isConnectedToPrimary());
+
+        $entityManager
+            ->createQuery('UPDATE Concrete\\Core\\Entity\\User\\User u SET u.uName = u.uName WHERE u.uID = -1')
+            ->execute()
+        ;
+        $this->assertTrue($connection->isConnectedToPrimary());
+
+        $entityManager
+            ->createQuery('SELECT u.uID FROM Concrete\\Core\\Entity\\User\\User u')
+            ->setMaxResults(1)
+            ->getScalarResult()
+        ;
+        $this->assertTrue($connection->isConnectedToPrimary());
+
+        $entityManager->close();
+    }
+
 }

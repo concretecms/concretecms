@@ -47,7 +47,7 @@ abstract class Type extends ConcreteObject
             $pkgID = $pkg ?: 0;
         }
         $db = Database::connection();
-        $db->Execute('insert into ConversationRatingTypes (cnvRatingTypeHandle, cnvRatingTypeName, cnvRatingTypeCommunityPoints, pkgID) values (?, ?, ?, ?)', array($cnvRatingTypeHandle, $cnvRatingTypeName, $cnvRatingTypeCommunityPoints, $pkgID));
+        $db->executeStatement('insert into ConversationRatingTypes (cnvRatingTypeHandle, cnvRatingTypeName, cnvRatingTypeCommunityPoints, pkgID) values (?, ?, ?, ?)', array($cnvRatingTypeHandle, $cnvRatingTypeName, $cnvRatingTypeCommunityPoints, $pkgID));
 
         return static::getByHandle($cnvRatingTypeHandle);
     }
@@ -116,7 +116,7 @@ abstract class Type extends ConcreteObject
     public function delete()
     {
         $db = Database::connection();
-        $db->Execute('delete from ConversationRatingTypes where cnvRatingTypeHandle = ?', array($this->cnvRatingTypeHandle));
+        $db->executeStatement('delete from ConversationRatingTypes where cnvRatingTypeHandle = ?', array($this->cnvRatingTypeHandle));
     }
 
     public function getConversationRatingTypeHandle()

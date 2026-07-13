@@ -55,7 +55,7 @@ class User extends ConcreteObject
 
         $v = [$uID];
         $q = 'SELECT uID, uName, uIsActive, uLastOnline, uTimezone, uDefaultLanguage, uLastPasswordChange FROM Users WHERE uID = ? LIMIT 1';
-        $r = $db->query($q, $v);
+        $r = $db->executeQuery($q, $v);
         $row = $r ? $r->fetch() : null;
         $nu = null;
         if ($row) {
@@ -205,7 +205,7 @@ class User extends ConcreteObject
 
             $hasher = $app->make(PasswordHasher::class);
             $db = $app->make('Concrete\Core\Database\Connection\Connection');
-            $r = $db->query($q, $v);
+            $r = $db->executeQuery($q, $v);
             if ($r) {
                 $row = $r->fetch();
                 if ($row) {
@@ -339,7 +339,7 @@ class User extends ConcreteObject
         /** @var \Concrete\Core\Permission\IPService $iph */
         $iph = $app->make('helper/validation/ip');
         $ip = $iph->getRequestIP();
-        $db->query('update Users set uLastIP = ?, uLastLogin = ?, uPreviousLogin = ?, uNumLogins = uNumLogins + 1 where uID = ?', [($ip === false) ? ('') : ($ip->getIp()), time(), $uLastLogin, $this->uID]);
+        $db->executeStatement('update Users set uLastIP = ?, uLastLogin = ?, uPreviousLogin = ?, uNumLogins = uNumLogins + 1 where uID = ?', [($ip === false) ? ('') : ($ip->getIp()), time(), $uLastLogin, $this->uID]);
     }
 
     /**
@@ -457,7 +457,7 @@ class User extends ConcreteObject
     {
         $app = Application::getFacadeApplication();
         $db = $app['database']->connection();
-        $db->Execute('UPDATE Users SET uLastAuthTypeID=? WHERE uID=?', [$at->getAuthenticationTypeID(), $this->getUserID()]);
+        $db->executeStatement('UPDATE Users SET uLastAuthTypeID=? WHERE uID=?', [$at->getAuthenticationTypeID(), $this->getUserID()]);
     }
 
     /**
@@ -597,7 +597,7 @@ class User extends ConcreteObject
 
         $this->uDefaultLanguage = $lang;
         $session->set('uDefaultLanguage', $lang);
-        $db->Execute('update Users set uDefaultLanguage = ? where uID = ?', [$lang, $this->getUserID()]);
+        $db->executeStatement('update Users set uDefaultLanguage = ? where uID = ?', [$lang, $this->getUserID()]);
     }
 
     /**
@@ -723,7 +723,7 @@ class User extends ConcreteObject
 
                 $uID = $this->uID;
                 $q = 'select gID from UserGroups where uID = ?';
-                $r = $db->query($q, [$uID]);
+                $r = $db->executeQuery($q, [$uID]);
                 while ($row = $r->fetch()) {
                     $g = Group::getByID($row['gID']);
                     if ($g->isUserExpired($this)) {
@@ -835,7 +835,7 @@ class User extends ConcreteObject
             $app['director']->dispatch('on_user_exit_group', $ue);
 
             $q = 'delete from UserGroups where uID = ? and gID = ?';
-            $r = $db->executeQuery($q, [$this->uID, $gID]);
+            $r = $db->executeStatement($q, [$this->uID, $gID]);
         }
     }
 
@@ -948,7 +948,7 @@ class User extends ConcreteObject
                 $dh = $app->make('helper/date');
                 $datetime = $dh->getOverridableNow();
                 $q2 = 'update Pages set cIsCheckedOut = ?, cCheckedOutUID = ?, cCheckedOutDatetime = ?, cCheckedOutDatetimeLastEdit = ? where cID = ?';
-                $r2 = $db->executeQuery($q2, [1, $uID, $datetime, $datetime, $cID]);
+                $r2 = $db->executeStatement($q2, [1, $uID, $datetime, $datetime, $cID]);
 
                 $c->cIsCheckedOut = 1;
                 $c->cCheckedOutUID = $uID;
@@ -978,7 +978,7 @@ class User extends ConcreteObject
             }
 
             $q = 'update Pages set cIsCheckedOut = 0, cCheckedOutUID = null, cCheckedOutDatetime = null, cCheckedOutDatetimeLastEdit = null where cCheckedOutUID = ?';
-            $db->query($q, [$this->getUserID()]);
+            $db->executeStatement($q, [$this->getUserID()]);
         }
     }
 
@@ -1044,14 +1044,14 @@ class User extends ConcreteObject
             $datetime = $dh->getOverridableNow();
 
             $q = 'update Pages set cCheckedOutDatetimeLastEdit = ? where cID = ?';
-            $db->executeQuery($q, [$datetime, $cID]);
+            $db->executeStatement($q, [$datetime, $cID]);
 
             $c->cCheckedOutDatetimeLastEdit = $datetime;
         }
     }
 
     /**
-     * @return \Doctrine\DBAL\Driver\Statement
+     * @return int
      */
     public function forceCollectionCheckInAll()
     {
@@ -1060,7 +1060,7 @@ class User extends ConcreteObject
         $db = $app['database']->connection();
 
         $q = 'update Pages set cIsCheckedOut = 0, cCheckedOutUID = null, cCheckedOutDatetime = null, cCheckedOutDatetimeLastEdit = null';
-        $r = $db->query($q);
+        $r = $db->executeStatement($q);
 
         return $r;
     }

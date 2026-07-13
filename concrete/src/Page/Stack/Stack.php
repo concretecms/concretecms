@@ -240,7 +240,7 @@ class Stack extends Page
         //$siteTreeID = $parent->getSiteTreeObject()->getSiteTreeID();
         //$v = array($name, $stackCID, $type, $siteTreeID);
         $v = [$name, $stackCID, $type];
-        $db->Execute('insert into Stacks (stName, cID, stType) values (?, ?, ?)', $v);
+        $db->executeStatement('insert into Stacks (stName, cID, stType) values (?, ?, ?)', $v);
 
         $stack = static::getByID($stackCID);
 
@@ -326,7 +326,7 @@ class Stack extends Page
 
             $db = Database::connection();
             $stackName = $data['stackName'];
-            $db->Execute('update Stacks set stName = ? WHERE cID = ?', [$stackName, $this->getCollectionID()]);
+            $db->executeStatement('update Stacks set stName = ? WHERE cID = ?', [$stackName, $this->getCollectionID()]);
         }
 
         return $worked;
@@ -352,7 +352,7 @@ class Stack extends Page
         parent::delete();
         $db = Database::connection();
 
-        return $db->Execute('delete from Stacks where cID = ?', [$this->getCollectionID()]);
+        return $db->executeStatement('delete from Stacks where cID = ?', [$this->getCollectionID()]);
     }
 
     /**
@@ -441,7 +441,7 @@ class Stack extends Page
         public function updateMultilingualSection(Section $section)
         {
             $db = Database::connection();
-            $db->Execute('update Stacks set stMultilingualSection = ? where cID = ?', array($section->getCollectionID(), $this->getCollectionID()));
+            $db->executeStatement('update Stacks set stMultilingualSection = ? where cID = ?', array($section->getCollectionID(), $this->getCollectionID()));
         }
     */
 

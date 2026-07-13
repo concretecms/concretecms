@@ -10,19 +10,19 @@ class ViewUserAttributesUserAccess extends UserAccess
     {
         parent::save();
         $db = Database::connection();
-        $db->executeQuery('delete from UserPermissionViewAttributeAccessList where paID = ?', array($this->getPermissionAccessID()));
-        $db->executeQuery('delete from UserPermissionViewAttributeAccessListCustom where paID = ?', array($this->getPermissionAccessID()));
+        $db->executeStatement('delete from UserPermissionViewAttributeAccessList where paID = ?', array($this->getPermissionAccessID()));
+        $db->executeStatement('delete from UserPermissionViewAttributeAccessListCustom where paID = ?', array($this->getPermissionAccessID()));
         if (isset($args['viewAttributesIncluded']) && is_array($args['viewAttributesIncluded'])) {
             foreach ($args['viewAttributesIncluded'] as $peID => $permission) {
                 $v = array($this->getPermissionAccessID(), $peID, $permission);
-                $db->executeQuery('insert into UserPermissionViewAttributeAccessList (paID, peID, permission) values (?, ?, ?)', $v);
+                $db->executeStatement('insert into UserPermissionViewAttributeAccessList (paID, peID, permission) values (?, ?, ?)', $v);
             }
         }
 
         if (isset($args['viewAttributesExcluded']) && is_array($args['viewAttributesExcluded'])) {
             foreach ($args['viewAttributesExcluded'] as $peID => $permission) {
                 $v = array($this->getPermissionAccessID(), $peID, $permission);
-                $db->executeQuery('insert into UserPermissionViewAttributeAccessList (paID, peID, permission) values (?, ?, ?)', $v);
+                $db->executeStatement('insert into UserPermissionViewAttributeAccessList (paID, peID, permission) values (?, ?, ?)', $v);
             }
         }
 
@@ -30,7 +30,7 @@ class ViewUserAttributesUserAccess extends UserAccess
             foreach ($args['akIDInclude'] as $peID => $akIDs) {
                 foreach ($akIDs as $akID) {
                     $v = array($this->getPermissionAccessID(), $peID, $akID);
-                    $db->executeQuery('insert into UserPermissionViewAttributeAccessListCustom (paID, peID, akID) values (?, ?, ?)', $v);
+                    $db->executeStatement('insert into UserPermissionViewAttributeAccessListCustom (paID, peID, akID) values (?, ?, ?)', $v);
                 }
             }
         }
@@ -39,7 +39,7 @@ class ViewUserAttributesUserAccess extends UserAccess
             foreach ($args['akIDExclude'] as $peID => $akIDs) {
                 foreach ($akIDs as $akID) {
                     $v = array($this->getPermissionAccessID(), $peID, $akID);
-                    $db->executeQuery('insert into UserPermissionViewAttributeAccessListCustom (paID, peID, akID) values (?, ?, ?)', $v);
+                    $db->executeStatement('insert into UserPermissionViewAttributeAccessListCustom (paID, peID, akID) values (?, ?, ?)', $v);
                 }
             }
         }
@@ -52,12 +52,12 @@ class ViewUserAttributesUserAccess extends UserAccess
         $r = $db->executeQuery('select * from UserPermissionViewAttributeAccessList where paID = ?', array($this->getPermissionAccessID()));
         while ($row = $r->fetch()) {
             $v = array($row['peID'], $newPA->getPermissionAccessID(), $row['permission']);
-            $db->executeQuery('insert into UserPermissionViewAttributeAccessList (peID, paID, permission) values (?, ?, ?)', $v);
+            $db->executeStatement('insert into UserPermissionViewAttributeAccessList (peID, paID, permission) values (?, ?, ?)', $v);
         }
         $r = $db->executeQuery('select * from UserPermissionViewAttributeAccessListCustom where paID = ?', array($this->getPermissionAccessID()));
         while ($row = $r->fetch()) {
             $v = array($row['peID'], $newPA->getPermissionAccessID(), $row['akID']);
-            $db->executeQuery('insert into UserPermissionViewAttributeAccessListCustom  (peID, paID, akID) values (?, ?, ?)', $v);
+            $db->executeStatement('insert into UserPermissionViewAttributeAccessListCustom  (peID, paID, akID) values (?, ?, ?)', $v);
         }
 
         return $newPA;

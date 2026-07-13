@@ -1057,7 +1057,7 @@ abstract class Package implements LocalizablePackageInterface
         if ($saveQueries !== []) {
             $db->beginTransaction();
             foreach ($saveQueries as $query) {
-                $db->query($query);
+                $db->executeStatement($query);
             }
             if ($db->isTransactionActive() && !$db->isAutoCommit()) {
                 $db->commit();

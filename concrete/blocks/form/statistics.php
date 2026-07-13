@@ -73,7 +73,7 @@ class Statistics
         $dh = $app->make('date');
         $now = $dh->getOverridableNow();
 
-        return $db->query('SELECT s.* FROM ' . $MiniSurvey->btTable . ' AS s, Blocks AS b, BlockTypes AS bt
+        return $db->executeQuery('SELECT s.* FROM ' . $MiniSurvey->btTable . ' AS s, Blocks AS b, BlockTypes AS bt
             WHERE s.bID=b.bID AND b.btID=bt.btID AND bt.btHandle="form" AND EXISTS (
             SELECT 1 FROM CollectionVersionBlocks cvb
             INNER JOIN CollectionVersions cv ON cvb.cID=cv.cID AND cvb.cvID=cv.cvID AND 1=cv.cvIsApproved AND (cv.cvPublishDate IS NULL OR cv.cvPublishDate <= ?) AND (cv.cvPublishEndDate IS NULL OR cv.cvPublishEndDate >= ?)
@@ -99,7 +99,7 @@ class Statistics
         //get answers sets
         $sql = 'SELECT * FROM btFormAnswerSet AS aSet ' .
             'WHERE aSet.questionSetId=' . $questionSet . ' ORDER BY ' . $orderBySQL . ' ' . $limit;
-        $answerSetsRS = $db->query($sql);
+        $answerSetsRS = $db->executeQuery($sql);
         //load answers into a nicer multi-dimensional array
         $answerSets = [];
         $answerSetIds = [0];
@@ -111,7 +111,7 @@ class Statistics
 
         //get answers
         $sql = 'SELECT * FROM btFormAnswers AS a WHERE a.asID IN (' . implode(',', $answerSetIds) . ')';
-        $answersRS = $db->query($sql);
+        $answersRS = $db->executeQuery($sql);
 
         //load answers into a nicer multi-dimensional array
         while ($answer = $answersRS->fetch()) {

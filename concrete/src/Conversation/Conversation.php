@@ -162,7 +162,7 @@ class Conversation extends ConcreteObject implements \Concrete\Core\Permission\O
     public function setConversationPageObject($c)
     {
         $db = Loader::db();
-        $db->Execute('update Conversations set cID = ? where cnvID = ?',
+        $db->executeStatement('update Conversations set cID = ? where cnvID = ?',
             array($c->getCollectionID(), $this->getConversationID()));
         $this->cID = $c->getCollectionID();
     }
@@ -180,7 +180,7 @@ class Conversation extends ConcreteObject implements \Concrete\Core\Permission\O
 
         $total = $db->GetOne('select count(cnvMessageID) from ConversationMessages where cnvID = ? and cnvIsMessageDeleted = 0 and cnvIsMessageApproved = 1',
             array($this->cnvID));
-        $db->Execute('update Conversations set cnvDateLastMessage = ?, cnvMessagesTotal = ? where cnvID = ?', array(
+        $db->executeStatement('update Conversations set cnvDateLastMessage = ?, cnvMessagesTotal = ? where cnvID = ?', array(
             $date,
             $total,
             $this->getConversationID(),
@@ -208,7 +208,7 @@ class Conversation extends ConcreteObject implements \Concrete\Core\Permission\O
     public function setConversationParentMessageID($cnvParentMessageID)
     {
         $db = Loader::db();
-        $db->Execute('update Conversations set cnvParentMessageID = ? where cnvID = ?',
+        $db->executeStatement('update Conversations set cnvParentMessageID = ? where cnvID = ?',
             array($cnvParentMessageID, $this->getConversationID()));
         $this->cnvMessageParentID = $cnvParentMessageID;
     }
@@ -217,7 +217,7 @@ class Conversation extends ConcreteObject implements \Concrete\Core\Permission\O
     {
         $db = Loader::db();
         $date = Loader::helper('date')->getOverridableNow();
-        $r = $db->Execute('insert into Conversations (cnvDateCreated, cnvDateLastMessage) values (?, ?)',
+        $r = $db->executeStatement('insert into Conversations (cnvDateCreated, cnvDateLastMessage) values (?, ?)',
             array($date, $date));
 
         return static::getByID($db->Insert_ID());
@@ -226,56 +226,56 @@ class Conversation extends ConcreteObject implements \Concrete\Core\Permission\O
     public function setConversationAttachmentOverridesEnabled($cnvAttachmentOverridesEnabled)
     {
         $db = Loader::db();
-        $db->Execute('update Conversations set cnvAttachmentOverridesEnabled = ? where cnvID = ?',
+        $db->executeStatement('update Conversations set cnvAttachmentOverridesEnabled = ? where cnvID = ?',
             array(intval($cnvAttachmentOverridesEnabled), $this->getConversationID()));
     }
 
     public function setConversationNotificationOverridesEnabled($cnvNotificationOverridesEnabled)
     {
         $db = Loader::db();
-        $db->Execute('update Conversations set cnvNotificationOverridesEnabled = ? where cnvID = ?',
+        $db->executeStatement('update Conversations set cnvNotificationOverridesEnabled = ? where cnvID = ?',
             array(intval($cnvNotificationOverridesEnabled), $this->getConversationID()));
     }
 
     public function setConversationAttachmentsEnabled($cnvAttachmentsEnabled)
     {
         $db = Loader::db();
-        $db->Execute('update Conversations set cnvAttachmentsEnabled = ? where cnvID = ?',
+        $db->executeStatement('update Conversations set cnvAttachmentsEnabled = ? where cnvID = ?',
             array(intval($cnvAttachmentsEnabled), $this->getConversationID()));
     }
 
     public function setConversationMaxFileSizeGuest($cnvMaxFileSizeGuest)
     {
         $db = Loader::db();
-        $db->Execute('update Conversations set cnvMaxFileSizeGuest = ? where cnvID = ?',
+        $db->executeStatement('update Conversations set cnvMaxFileSizeGuest = ? where cnvID = ?',
             array(intval($cnvMaxFileSizeGuest), $this->getConversationID()));
     }
 
     public function setConversationMaxFileSizeRegistered($cnvMaxFileSizeRegistered)
     {
         $db = Loader::db();
-        $db->Execute('update Conversations set cnvMaxFileSizeRegistered = ? where cnvID = ?',
+        $db->executeStatement('update Conversations set cnvMaxFileSizeRegistered = ? where cnvID = ?',
             array(intval($cnvMaxFileSizeRegistered), $this->getConversationID()));
     }
 
     public function setConversationMaxFilesGuest($cnvMaxFilesGuest)
     {
         $db = Loader::db();
-        $db->Execute('update Conversations set cnvMaxFilesGuest = ? where cnvID = ?',
+        $db->executeStatement('update Conversations set cnvMaxFilesGuest = ? where cnvID = ?',
             array(intval($cnvMaxFilesGuest), $this->getConversationID()));
     }
 
     public function setConversationMaxFilesRegistered($cnvMaxFilesRegistered)
     {
         $db = Loader::db();
-        $db->Execute('update Conversations set cnvMaxFilesRegistered = ? where cnvID = ?',
+        $db->executeStatement('update Conversations set cnvMaxFilesRegistered = ? where cnvID = ?',
             array(intval($cnvMaxFilesRegistered), $this->getConversationID()));
     }
 
     public function setConversationFileExtensions($cnvFileExtensions)
     {
         $db = Loader::db();
-        $db->Execute('update Conversations set cnvFileExtensions = ? where cnvID = ?',
+        $db->executeStatement('update Conversations set cnvFileExtensions = ? where cnvID = ?',
             array($cnvFileExtensions, $this->getConversationID()));
     }
 
@@ -291,7 +291,7 @@ class Conversation extends ConcreteObject implements \Concrete\Core\Permission\O
     public function setConversationSubscriptionEnabled($cnvEnableSubscription)
     {
         $db = Loader::db();
-        $db->Execute('update Conversations set cnvEnableSubscription = ? where cnvID = ?',
+        $db->executeStatement('update Conversations set cnvEnableSubscription = ? where cnvID = ?',
             array(intval($cnvEnableSubscription), $this->getConversationID()));
     }
 
@@ -308,7 +308,7 @@ class Conversation extends ConcreteObject implements \Concrete\Core\Permission\O
             $ids = $db->GetCol('select uID from ConversationSubscriptions where cnvID = 0');
         }
 
-        $r = $db->Execute('select uID, type from ConversationSubscriptions where cnvID = ?',
+        $r = $db->executeQuery('select uID, type from ConversationSubscriptions where cnvID = ?',
             array($this->getConversationID()));
         while ($row = $r->fetch()) {
             if ($row['type'] == 'U' && in_array($row['uID'], $ids)) {

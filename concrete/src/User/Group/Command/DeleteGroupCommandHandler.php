@@ -240,9 +240,9 @@ class DeleteGroupCommandHandler
         }
         $this->entityManager->flush();
         $table = $this->connection->getDatabasePlatform()->quoteSingleIdentifier('Groups');
-        $this->connection->query('DELETE FROM UserGroups WHERE gID = ?', [$groupID]);
-        $this->connection->query('DELETE FROM ' . $table . ' WHERE gID = ?', [$groupID]);
-        $this->connection->query('delete from GroupSelectedRoles where gID = ?', [$groupID]);
+        $this->connection->executeStatement('DELETE FROM UserGroups WHERE gID = ?', [$groupID]);
+        $this->connection->executeStatement('DELETE FROM ' . $table . ' WHERE gID = ?', [$groupID]);
+        $this->connection->executeStatement('delete from GroupSelectedRoles where gID = ?', [$groupID]);
         $this->requestCache->delete('tree/node');
     }
 }

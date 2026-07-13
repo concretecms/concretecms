@@ -107,14 +107,14 @@ class Controller extends BlockController implements FileTrackableInterface, Uses
     public function delete()
     {
         $db = $this->app->make('database')->connection();
-        $db->executeQuery('DELETE FROM btFaqEntries WHERE bID = ?', [$this->bID]);
+        $db->executeStatement('DELETE FROM btFaqEntries WHERE bID = ?', [$this->bID]);
         parent::delete();
     }
 
     public function save($args)
     {
         $db = $this->app->make('database')->connection();
-        $db->executeQuery('DELETE FROM btFaqEntries WHERE bID = ?', [$this->bID]);
+        $db->executeStatement('DELETE FROM btFaqEntries WHERE bID = ?', [$this->bID]);
         parent::save($args);
         $count = isset($args['sortOrder']) ? count($args['sortOrder']) : 0;
 
@@ -124,7 +124,7 @@ class Controller extends BlockController implements FileTrackableInterface, Uses
                 $args['description'][$i] = LinkAbstractor::translateTo($args['description'][$i]);
             }
 
-            $db->executeQuery(
+            $db->executeStatement(
                 'INSERT INTO btFaqEntries (bID, title, linkTitle, description, sortOrder) VALUES(?,?,?,?,?)',
                 [
                     $this->bID,

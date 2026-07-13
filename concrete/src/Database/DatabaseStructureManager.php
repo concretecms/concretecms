@@ -229,7 +229,7 @@ class DatabaseStructureManager
                 $migrateSql = $schemaDiff->toSql($platform);
                 foreach ($migrateSql as $sql) {
                     if ($queryFilter === null || $queryFilter($sql) !== false) {
-                        $conn->executeQuery($sql);
+                        $conn->executeStatement($sql);
                     }
                 }
 
@@ -289,7 +289,7 @@ class DatabaseStructureManager
 
             if (count($sqls) > 0) {
                 foreach ($sqls as $sql) {
-                    $conn->executeQuery($sql);
+                    $conn->executeStatement($sql);
                 }
 
                 return true;
@@ -335,7 +335,7 @@ class DatabaseStructureManager
         }
         $sqls = $fromSchema->getMigrateToSql($toSchema, $conn->getDatabasePlatform());
         foreach ($sqls as $sql) {
-            $conn->executeQuery($sql);
+            $conn->executeStatement($sql);
         }
     }
 

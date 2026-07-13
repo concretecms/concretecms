@@ -175,59 +175,59 @@ class Version20160725000000 extends AbstractMigration implements LongRunningMigr
     {
         $this->output(t('Renaming problematic tables...'));
         if (!$this->connection->tableExists('_AttributeKeys')) {
-            $this->connection->Execute('alter table AttributeKeys rename _AttributeKeys');
+            $this->connection->executeStatement('alter table AttributeKeys rename _AttributeKeys');
         }
         if (!$this->connection->tableExists('_AttributeValues')) {
-            $this->connection->Execute('alter table AttributeValues rename _AttributeValues');
+            $this->connection->executeStatement('alter table AttributeValues rename _AttributeValues');
         }
         if (!$this->connection->tableExists('_atAddressSettings')) {
-            $this->connection->Execute('alter table atAddressSettings rename _atAddressSettings');
-            $this->connection->Execute('alter table _atAddressSettings drop primary key, add primary key (akID)');
+            $this->connection->executeStatement('alter table atAddressSettings rename _atAddressSettings');
+            $this->connection->executeStatement('alter table _atAddressSettings drop primary key, add primary key (akID)');
         }
         if (!$this->connection->tableExists('_atAddressCustomCountries')) {
-            $this->connection->Execute('alter table atAddressCustomCountries rename _atAddressCustomCountries');
+            $this->connection->executeStatement('alter table atAddressCustomCountries rename _atAddressCustomCountries');
         }
         if (!$this->connection->tableExists('_atSelectSettings')) {
-            $this->connection->Execute('alter table atSelectSettings rename _atSelectSettings');
-            $this->connection->Execute('alter table _atSelectSettings drop primary key, add primary key (akID)');
+            $this->connection->executeStatement('alter table atSelectSettings rename _atSelectSettings');
+            $this->connection->executeStatement('alter table _atSelectSettings drop primary key, add primary key (akID)');
         }
         if (!$this->connection->tableExists('_atSelectOptions')) {
-            $this->connection->Execute('alter table atSelectOptions rename _atSelectOptions');
+            $this->connection->executeStatement('alter table atSelectOptions rename _atSelectOptions');
         }
         if (!$this->connection->tableExists('_atSocialLinks')) {
-            $this->connection->Execute('alter table atSocialLinks rename _atSocialLinks');
+            $this->connection->executeStatement('alter table atSocialLinks rename _atSocialLinks');
         }
         if (!$this->connection->tableExists('_atSelectOptionsSelected')) {
-            $this->connection->Execute('alter table atSelectOptionsSelected rename _atSelectOptionsSelected');
+            $this->connection->executeStatement('alter table atSelectOptionsSelected rename _atSelectOptionsSelected');
         }
         if (!$this->connection->tableExists('_atSelectedTopics')) {
-            $this->connection->Execute('alter table atSelectedTopics rename _atSelectedTopics');
+            $this->connection->executeStatement('alter table atSelectedTopics rename _atSelectedTopics');
         }
         if (!$this->connection->tableExists('_TreeTopicNodes')) {
-            $this->connection->Execute('alter table TreeTopicNodes rename _TreeTopicNodes');
+            $this->connection->executeStatement('alter table TreeTopicNodes rename _TreeTopicNodes');
         }
     }
 
     protected function migrateOldPermissions()
     {
         $this->output(t('Migrating old permissions...'));
-        $this->connection->Execute('update PermissionKeys set pkHandle = ? where pkHandle = ?', [
+        $this->connection->executeStatement('update PermissionKeys set pkHandle = ? where pkHandle = ?', [
             'view_category_tree_node', 'view_topic_category_tree_node',
         ]);
-        $this->connection->Execute('update PermissionKeyCategories set pkCategoryHandle = ? where pkCategoryHandle = ?', [
+        $this->connection->executeStatement('update PermissionKeyCategories set pkCategoryHandle = ? where pkCategoryHandle = ?', [
             'category_tree_node', 'topic_category_tree_node',
         ]);
         $folderCategoryID = $this->connection->fetchColumn('select pkCategoryID from PermissionKeyCategories where pkCategoryHandle = ?', ['file_folder']);
         if (!$folderCategoryID) {
-            $this->connection->Execute('update PermissionKeys set pkHandle = ? where pkHandle = ?', [
+            $this->connection->executeStatement('update PermissionKeys set pkHandle = ? where pkHandle = ?', [
                 '_add_file', 'add_file',
             ]);
         }
         if (!$this->connection->tableExists('FilePermissionFileTypeAccessList') && $this->connection->tableExists('FileSetPermissionFileTypeAccessList')) {
-            $this->connection->Execute('alter table FileSetPermissionFileTypeAccessList rename FilePermissionFileTypeAccessList ');
+            $this->connection->executeStatement('alter table FileSetPermissionFileTypeAccessList rename FilePermissionFileTypeAccessList ');
         }
         if (!$this->connection->tableExists('FilePermissionFileTypeAccessListCustom') && $this->connection->tableExists('FileSetPermissionFileTypeAccessListCustom')) {
-            $this->connection->Execute('alter table FileSetPermissionFileTypeAccessListCustom  rename FilePermissionFileTypeAccessListCustom');
+            $this->connection->executeStatement('alter table FileSetPermissionFileTypeAccessListCustom  rename FilePermissionFileTypeAccessListCustom');
         }
     }
 
@@ -281,7 +281,7 @@ class Version20160725000000 extends AbstractMigration implements LongRunningMigr
         ]);
         if (!$count) {
             $folder->setTreeNodePermissionsToOverride();
-            $this->connection->executeQuery('delete from TreeNodePermissionAssignments where treeNodeID = ?', [
+            $this->connection->executeStatement('delete from TreeNodePermissionAssignments where treeNodeID = ?', [
                 $folder->getTreeNodeID(),
             ]);
 
@@ -289,7 +289,7 @@ class Version20160725000000 extends AbstractMigration implements LongRunningMigr
                 $mapped = isset($permissionsMap[$row['pkHandle']]) ? $permissionsMap[$row['pkHandle']] : $row['pkHandle'];
                 $newPKID = $this->connection->fetchColumn('select pkID from PermissionKeys where pkHandle = ?', [$mapped]);
                 $v = [$folder->getTreeNodeID(), $newPKID, $row['paID']];
-                $this->connection->executeQuery(
+                $this->connection->executeStatement(
                     'insert into TreeNodePermissionAssignments (treeNodeID, pkID, paID) values (?, ?, ?)', $v
                 );
             }
@@ -332,7 +332,7 @@ class Version20160725000000 extends AbstractMigration implements LongRunningMigr
     {
         $this->output(t('Preparing problematic entity database tables...'));
         // Remove the weird primary keys from the Files table
-        $this->connection->executeQuery('alter table Files drop primary key, add primary key (fID)');
+        $this->connection->executeStatement('alter table Files drop primary key, add primary key (fID)');
     }
 
     protected function installOtherEntities()
@@ -817,13 +817,13 @@ class Version20160725000000 extends AbstractMigration implements LongRunningMigr
     protected function addTreeNodeTypes()
     {
         $this->output(t('Adding tree node types...'));
-        $this->connection->Execute('update TreeNodeTypes set treeNodeTypeHandle = ? where treeNodeTypeHandle = ?', [
+        $this->connection->executeStatement('update TreeNodeTypes set treeNodeTypeHandle = ? where treeNodeTypeHandle = ?', [
             'category', 'topic_category',
         ]);
-        $this->connection->Execute('update PermissionKeys set pkHandle = ? where pkHandle = ?', [
+        $this->connection->executeStatement('update PermissionKeys set pkHandle = ? where pkHandle = ?', [
             'view_category_tree_node', 'view_topic_category_tree_node',
         ]);
-        $this->connection->Execute('update PermissionKeyCategories set pkCategoryHandle = ? where pkCategoryHandle = ?', [
+        $this->connection->executeStatement('update PermissionKeyCategories set pkCategoryHandle = ? where pkCategoryHandle = ?', [
             'category_tree_node', 'topic_category_tree_node',
         ]);
         $results = NodeType::getByHandle('express_entry_results');
@@ -966,8 +966,8 @@ class Version20160725000000 extends AbstractMigration implements LongRunningMigr
         }
 
         $site = $service->getDefault();
-        $this->connection->executeQuery('update Pages set siteTreeID = ? where cIsSystemPage = 0', [$site->getSiteTreeID()]);
-        $this->connection->executeQuery('update PageTypes set siteTypeID = ? where ptIsInternal = 0', [$type->getSiteTypeID()]);
+        $this->connection->executeStatement('update Pages set siteTreeID = ? where cIsSystemPage = 0', [$site->getSiteTreeID()]);
+        $this->connection->executeStatement('update PageTypes set siteTypeID = ? where ptIsInternal = 0', [$type->getSiteTypeID()]);
         // migrate social links
         $links = $em->getRepository('Concrete\Core\Entity\Sharing\SocialNetwork\Link')
             ->findAll();
@@ -1089,7 +1089,7 @@ class Version20160725000000 extends AbstractMigration implements LongRunningMigr
     protected function cleanupOldPermissions()
     {
         $this->output(t('Cleaning old permissions...'));
-        $this->connection->Execute('delete from PermissionKeys where pkHandle = ?', ['_add_file']);
+        $this->connection->executeStatement('delete from PermissionKeys where pkHandle = ?', ['_add_file']);
     }
 
     protected function updateTopics()
@@ -1097,7 +1097,7 @@ class Version20160725000000 extends AbstractMigration implements LongRunningMigr
         $this->output(t('Updating topics...'));
         $r = $this->connection->executeQuery('select * from _TreeTopicNodes');
         while ($row = $r->fetch()) {
-            $this->connection->executeQuery(
+            $this->connection->executeStatement(
                 'update TreeNodes set treeNodeName = ? where treeNodeID = ? and treeNodeName = \'\'', [
                     $row['treeNodeTopicName'], $row['treeNodeID'], ]
             );
@@ -1154,7 +1154,7 @@ class Version20160725000000 extends AbstractMigration implements LongRunningMigr
             ['/page_not_found.php', $siteTreeID, 0],
         ];
         foreach ($pages as $record) {
-            $this->connection->executeQuery('update Pages set siteTreeID = ?, cParentID = ? where cFilename = ?', [$record[1], $record[2], $record[0]]);
+            $this->connection->executeStatement('update Pages set siteTreeID = ?, cParentID = ? where cFilename = ?', [$record[1], $record[2], $record[0]]);
         }
 
         // Delete members page if profiles not enabled
@@ -1208,7 +1208,7 @@ class Version20160725000000 extends AbstractMigration implements LongRunningMigr
         if (!$sectionsIncludeHome && $redirectToDefaultLocale) {
             // Move the home page outside site trees.
             $this->output(t('Moving home page to outside of site trees...'));
-            $this->connection->executeQuery('update Pages set siteTreeID = 0 where cID = ' . $homeCID);
+            $this->connection->executeStatement('update Pages set siteTreeID = 0 where cID = ' . $homeCID);
         }
 
         foreach ($sections as $section) {
@@ -1240,13 +1240,13 @@ class Version20160725000000 extends AbstractMigration implements LongRunningMigr
                     $tree->setSiteHomePageID($section['cID']);
                     $em->persist($tree);
                     $em->flush();
-                    $this->connection->executeQuery('update Pages set cParentID = 0, siteTreeID = ? where cID = ?', [
+                    $this->connection->executeStatement('update Pages set cParentID = 0, siteTreeID = ? where cID = ?', [
                         $tree->getSiteTreeID(), $section['cID'],
                     ]);
                     // Now we set all pages in this site tree to the new site tree ID.
                     $children = $sectionPage->getCollectionChildrenArray();
                     foreach ($children as $cID) {
-                        $this->connection->executeQuery('update Pages set siteTreeID = ? where cID = ?', [
+                        $this->connection->executeStatement('update Pages set siteTreeID = ? where cID = ?', [
                             $tree->getSiteTreeID(), $cID,
                         ]);
                     }
@@ -1261,7 +1261,7 @@ class Version20160725000000 extends AbstractMigration implements LongRunningMigr
     protected function fixStacks()
     {
         $this->output(t('Updating Stacks and Global Areas...'));
-        $this->connection->executeQuery('update Pages inner join Stacks on Pages.cID = Stacks.cID set Pages.siteTreeID = 0');
+        $this->connection->executeStatement('update Pages inner join Stacks on Pages.cID = Stacks.cID set Pages.siteTreeID = 0');
         $app = Application::getFacadeApplication();
         $site = \Site::getSite();
         if ((int) $this->connection->fetchColumn('select count(*) from SiteLocales where siteID = ?', [$site->getSiteID()]) > 1) {
@@ -1298,14 +1298,14 @@ class Version20160725000000 extends AbstractMigration implements LongRunningMigr
             }
         } else {
             // Consider all the stacks and global areas as "neutral version"
-            $this->connection->executeQuery('update Stacks set stMultilingualSection = 0');
+            $this->connection->executeStatement('update Stacks set stMultilingualSection = 0');
         }
     }
 
     protected function fixMultilingualPageRelations()
     {
         // Delete records in MultilingualPageRelations with invalid locales
-        $this->connection->query(<<<'EOT'
+        $this->connection->executeStatement(<<<'EOT'
 DELETE MultilingualPageRelations
 FROM MultilingualPageRelations
 LEFT JOIN MultilingualSections ON (
@@ -1317,13 +1317,13 @@ WHERE MultilingualSections.cID IS NULL
 EOT
         );
         // Set the mpLanguage field where it's missing
-        $this->connection->query(<<<'EOT'
+        $this->connection->executeStatement(<<<'EOT'
 UPDATE MultilingualPageRelations
 SET mpLanguage = mpLocale
 WHERE mpLanguage = '' AND LOCATE('_', mpLocale) = 0
 EOT
         );
-        $this->connection->query(<<<'EOT'
+        $this->connection->executeStatement(<<<'EOT'
 UPDATE MultilingualPageRelations
 SET mpLanguage = LEFT(mpLocale, LOCATE('_', mpLocale) - 1)
 WHERE mpLanguage = '' AND LOCATE('_', mpLocale) > 1
@@ -1331,7 +1331,7 @@ EOT
         );
         // Determine the map between locale and cID
         $locales = [];
-        $rs = $this->connection->query('SELECT cID, msLanguage, msCountry FROM MultilingualSections');
+        $rs = $this->connection->executeQuery('SELECT cID, msLanguage, msCountry FROM MultilingualSections');
         while (false !== ($row = $rs->fetch())) {
             $locales[$row['msLanguage'] . '_' . $row['msCountry']] = (int) $row['cID'];
             if ((string) $row['msLanguage'] === '') {
@@ -1339,7 +1339,7 @@ EOT
             }
         }
         // Delete duplicated relations p
-        $rs = $this->connection->query(<<<'EOT'
+        $rs = $this->connection->executeQuery(<<<'EOT'
 SELECT
     mpRelationID, cID, GROUP_CONCAT(mpLocale SEPARATOR '|') as mpLocales
 FROM
@@ -1367,7 +1367,7 @@ EOT
                     $delete = !in_array($locales[$locale], $trail, true);
                 }
                 if ($delete) {
-                    $this->connection->executeQuery('DELETE FROM MultilingualPageRelations WHERE mpRelationID = ? AND cID = ? AND mpLocale = ?', [$row['mpRelationID'], $cID, $locale]);
+                    $this->connection->executeStatement('DELETE FROM MultilingualPageRelations WHERE mpRelationID = ? AND cID = ? AND mpLocale = ?', [$row['mpRelationID'], $cID, $locale]);
                 }
             }
         }

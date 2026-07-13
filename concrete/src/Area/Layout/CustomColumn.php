@@ -58,7 +58,7 @@ class CustomColumn extends Column
         $areaLayoutColumnID = parent::duplicate($newAreaLayout);
         $db = Loader::db();
         $v = array($areaLayoutColumnID, $this->arLayoutColumnWidth);
-        $db->Execute('insert into AreaLayoutCustomColumns (arLayoutColumnID, arLayoutColumnWidth) values (?, ?)', $v);
+        $db->executeStatement('insert into AreaLayoutCustomColumns (arLayoutColumnID, arLayoutColumnWidth) values (?, ?)', $v);
         $newAreaLayoutColumn = self::getByID($areaLayoutColumnID);
 
         return $newAreaLayoutColumn;
@@ -118,13 +118,13 @@ class CustomColumn extends Column
     {
         $this->arLayoutColumnWidth = $width;
         $db = Loader::db();
-        $db->Execute('update AreaLayoutCustomColumns set arLayoutColumnWidth = ? where arLayoutColumnID = ?', array($width, $this->arLayoutColumnID));
+        $db->executeStatement('update AreaLayoutCustomColumns set arLayoutColumnWidth = ? where arLayoutColumnID = ?', array($width, $this->arLayoutColumnID));
     }
 
     public function delete()
     {
         $db = Loader::db();
-        $db->Execute("delete from AreaLayoutCustomColumns where arLayoutColumnID = ?", array($this->arLayoutColumnID));
+        $db->executeStatement("delete from AreaLayoutCustomColumns where arLayoutColumnID = ?", array($this->arLayoutColumnID));
         parent::delete();
     }
 }

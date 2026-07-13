@@ -15,7 +15,7 @@ class Version20170313000000 extends AbstractMigration implements RepeatableMigra
     public function upgradeDatabase()
     {
         // Move all stacks to the root. Putting them in a site was a mistake.
-        $this->connection->executeQuery('
+        $this->connection->executeStatement('
             update Pages
             left join PageTypes on Pages.ptID = PageTypes.ptID
             set Pages.siteTreeID = 0

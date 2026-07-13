@@ -678,7 +678,7 @@ EOT
             );
             $q = 'update CollectionVersionBlocks set cbDisplayOrder = cbDisplayOrder + 1 where cID = ? and (cvID = ? or cbIncludeAll=1) and arHandle = ? and cbDisplayOrder > ?';
             $v = [$c->getCollectionID(), $c->getVersionID(), $this->getAreaHandle(), $block->getBlockDisplayOrder()];
-            $db->Execute($q, $v);
+            $db->executeStatement($q, $v);
 
             // now we set this block's display order to 1 + the current block
             $q = 'update CollectionVersionBlocks set cbDisplayOrder = ? where bID = ? and cID = ? and (cvID = ? or cbIncludeAll=1) and arHandle = ?';
@@ -689,15 +689,15 @@ EOT
                 $c->getVersionID(),
                 $this->getAreaHandle(),
             ];
-            $db->Execute($q, $v);
+            $db->executeStatement($q, $v);
         } else {
             $q = 'update CollectionVersionBlocks set cbDisplayOrder = cbDisplayOrder + 1 where cID = ? and (cvID = ? or cbIncludeAll=1) and arHandle = ?';
             $v = [$c->getCollectionID(), $c->getVersionID(), $this->getAreaHandle()];
-            $db->Execute($q, $v);
+            $db->executeStatement($q, $v);
 
             $q = 'update CollectionVersionBlocks set cbDisplayOrder = ? where bID = ? and cID = ? and (cvID = ? or cbIncludeAll=1) and arHandle = ?';
             $v = [0, $this->getBlockID(), $c->getCollectionID(), $c->getVersionID(), $this->getAreaHandle()];
-            $db->Execute($q, $v);
+            $db->executeStatement($q, $v);
         }
     }
 

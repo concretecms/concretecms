@@ -54,8 +54,8 @@ $cn->connect();
 if (!$cn->isConnected()) {
     throw new Exception('Unable to connect to test database, please create a user "ccm_test" with no password with full privileges to a database "ccm_tests"');
 }
-$cn->query('DROP DATABASE IF EXISTS ccm_tests');
-$cn->query('CREATE DATABASE ccm_tests');
+$cn->executeStatement('DROP DATABASE IF EXISTS ccm_tests');
+$cn->executeStatement('CREATE DATABASE ccm_tests');
 $cn->close();
 
 // Unset variables, so that PHPUnit won't consider them as global variables.

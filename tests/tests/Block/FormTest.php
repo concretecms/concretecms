@@ -27,6 +27,6 @@ class FormTest extends BlockTypeTestCase
     {
         parent::tearDown();
         $db = Database::get();
-        $db->Execute('drop table if exists btForm');
+        $db->executeStatement('drop table if exists btForm');
     }
 }

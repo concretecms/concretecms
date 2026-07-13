@@ -19,7 +19,7 @@ class Version20170613000000 extends AbstractMigration implements RepeatableMigra
         $filesystem = new Filesystem();
         $folder = $filesystem->getRootFolder();
         if ($folder) {
-            $this->connection->executeQuery(
+            $this->connection->executeStatement(
                 'update btExpressForm set addFilesToFolder = ? where addFilesToFolder IS NULL or addFilesToFolder = 0', [$folder->getTreeNodeID()]
             );
         }

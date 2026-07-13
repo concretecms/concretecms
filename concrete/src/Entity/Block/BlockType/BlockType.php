@@ -339,7 +339,7 @@ class BlockType
     {
         $db = Loader::db();
         $list = array();
-        $r = $db->Execute(
+        $r = $db->executeQuery(
                 'select btsID from BlockTypeSetBlockTypes where btID = ? order by displayOrder asc',
                 array($this->getBlockTypeID()));
         while ($row = $r->fetch()) {
@@ -507,15 +507,15 @@ EOT
 
         $sql = "UPDATE BlockTypes SET btDisplayOrder = btDisplayOrder - 1 WHERE btDisplayOrder > ?";
         $vals = array($this->btDisplayOrder);
-        $db->Execute($sql, $vals);
+        $db->executeStatement($sql, $vals);
 
         $sql = "UPDATE BlockTypes SET btDisplayOrder = btDisplayOrder + 1 WHERE btDisplayOrder >= ?";
         $vals = array($displayOrder);
-        $db->Execute($sql, $vals);
+        $db->executeStatement($sql, $vals);
 
         $sql = "UPDATE BlockTypes SET btDisplayOrder = ? WHERE btID = ?";
         $vals = array($displayOrder, $this->btID);
-        $db->Execute($sql, $vals);
+        $db->executeStatement($sql, $vals);
 
         // now we remove the block type from cache
         /** @var \Concrete\Core\Cache\Cache $cache */
@@ -568,7 +568,7 @@ EOT
             $schemaDiff = $comparator->compare($fromSchema, $toSchema);
             $saveQueries = $schemaDiff->toSaveSql($db->getDatabasePlatform());
             foreach ($saveQueries as $query) {
-                $db->query($query);
+                $db->executeStatement($query);
             }
         }
     }
@@ -593,7 +593,7 @@ EOT
     public function delete()
     {
         $db = Loader::db();
-        $r = $db->Execute(
+        $r = $db->executeQuery(
                 'select cID, cvID, b.bID, arHandle
                 from CollectionVersionBlocks cvb
                     inner join Blocks b on b.bID  = cvb.bID
@@ -658,7 +658,7 @@ EOT
         $v = array($bName, $bDate, $bDate, $bIsActive, $btID, $uID);
         $q = "insert into Blocks (bName, bDateAdded, bDateModified, bIsActive, btID, uID) values (?, ?, ?, ?, ?, ?)";
 
-        $res = $db->executeQuery($q, $v);
+        $res = $db->executeStatement($q, $v);
 
         // we get the block object for the block we just added
         if ($res) {

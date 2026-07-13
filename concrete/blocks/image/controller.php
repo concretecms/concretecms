@@ -594,7 +594,7 @@ class Controller extends BlockController implements FileTrackableInterface, Uses
                 /** @noinspection PhpUnhandledExceptionInspection */
                 /** @noinspection SqlDialectInspection */
                 /** @noinspection SqlNoDataSourceInspection */
-                $db->executeQuery('INSERT INTO btContentImageBreakpoints (bID, breakpointHandle, ftTypeID) values(?, ?, ?)',
+                $db->executeStatement('INSERT INTO btContentImageBreakpoints (bID, breakpointHandle, ftTypeID) values(?, ?, ?)',
                     [
                         $this->bID,
                         $breakpointHandle,

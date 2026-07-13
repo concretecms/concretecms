@@ -72,7 +72,7 @@ class EntityIndex extends AbstractIndex implements ApplicationAwareInterface
 
         // Truncate the existing search index
         if ($table) {
-            $this->connection->Execute(sprintf('truncate table %s', $table));
+            $this->connection->executeStatement(sprintf('truncate table %s', $table));
         }
     }
 

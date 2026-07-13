@@ -57,7 +57,7 @@ class GroupJoinRequest extends ConcreteObject implements SubjectInterface
 
             $this->user->enterGroup($this->group);
 
-            $db->executeQuery("DELETE FROM GroupJoinRequests WHERE uID = ? AND gID = ?", [$this->user->getUserID(), $this->group->getGroupID()]);
+            $db->executeStatement("DELETE FROM GroupJoinRequests WHERE uID = ? AND gID = ?", [$this->user->getUserID(), $this->group->getGroupID()]);
 
             /** @noinspection PhpUnhandledExceptionInspection */
             $subject = new GroupSignupRequestAccept($this->group, $this->user, $activeUser);
@@ -86,7 +86,7 @@ class GroupJoinRequest extends ConcreteObject implements SubjectInterface
             $app = Application::getFacadeApplication();
             /** @var Connection $db */
             $db = $app->make(Connection::class);
-            $db->executeQuery("DELETE FROM GroupJoinRequests WHERE uID = ? AND gID = ?", [$this->user->getUserID(), $this->group->getGroupID()]);
+            $db->executeStatement("DELETE FROM GroupJoinRequests WHERE uID = ? AND gID = ?", [$this->user->getUserID(), $this->group->getGroupID()]);
 
             /** @noinspection PhpUnhandledExceptionInspection */
             $subject = new GroupSignupRequestDecline($this->group, $this->user, $activeUser);

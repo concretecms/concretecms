@@ -19,7 +19,7 @@ class BasicWorkflowAssignment extends Assignment
     public function clearPermissionAssignment()
     {
         $db = Loader::db();
-        $db->Execute('update BasicWorkflowPermissionAssignments set paID = 0 where pkID = ? and wfID = ?', array($this->pk->getPermissionKeyID(), $this->getPermissionObject()->getWorkflowID()));
+        $db->executeStatement('update BasicWorkflowPermissionAssignments set paID = 0 where pkID = ? and wfID = ?', array($this->pk->getPermissionKeyID(), $this->getPermissionObject()->getWorkflowID()));
     }
 
     public function assignPermissionAccess(Access $pa)

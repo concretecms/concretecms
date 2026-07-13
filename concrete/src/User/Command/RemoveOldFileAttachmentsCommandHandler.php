@@ -59,7 +59,7 @@ SQL;
                 $file->delete();
             }
 
-            $this->connection->executeQuery("DELETE FROM UserPrivateMessagesAttachments WHERE msgID = ? AND fID = ?", [$row["msgID"], $row["fID"]]);
+            $this->connection->executeStatement("DELETE FROM UserPrivateMessagesAttachments WHERE msgID = ? AND fID = ?", [$row["msgID"], $row["fID"]]);
 
             $removedItemsCounter++;
         }

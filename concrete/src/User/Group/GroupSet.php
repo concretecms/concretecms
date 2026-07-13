@@ -10,7 +10,7 @@ class GroupSet extends ConcreteObject
     public static function getList()
     {
         $db = Loader::db();
-        $r = $db->Execute('select gsID from GroupSets order by gsName asc');
+        $r = $db->executeQuery('select gsID from GroupSets order by gsName asc');
         $list = array();
         while ($row = $r->fetch()) {
             $list[] = static::getByID($row['gsID']);
@@ -47,7 +47,7 @@ class GroupSet extends ConcreteObject
     {
         $db = Loader::db();
         $list = array();
-        $r = $db->Execute('select gsID from GroupSets where pkgID = ? order by gsID asc', array($pkg->getPackageID()));
+        $r = $db->executeQuery('select gsID from GroupSets where pkgID = ? order by gsID asc', array($pkg->getPackageID()));
         while ($row = $r->fetch()) {
             $list[] = static::getByID($row['gsID']);
         }
@@ -92,7 +92,7 @@ class GroupSet extends ConcreteObject
     {
         $this->gsName = $gsName;
         $db = Loader::db();
-        $db->Execute("update GroupSets set gsName = ? where gsID = ?", array($gsName, $this->gsID));
+        $db->executeStatement("update GroupSets set gsName = ? where gsID = ?", array($gsName, $this->gsID));
     }
 
     public function addGroup(Group $g)
@@ -100,7 +100,7 @@ class GroupSet extends ConcreteObject
         $db = Loader::db();
         $no = $db->GetOne("select count(gID) from GroupSetGroups where gID = ? and gsID = ?", array($g->getGroupID(), $this->getGroupSetID()));
         if ($no < 1) {
-            $db->Execute('insert into GroupSetGroups (gsID, gID) values (?, ?)', array($this->getGroupSetID(), $g->getGroupID()));
+            $db->executeStatement('insert into GroupSetGroups (gsID, gID) values (?, ?)', array($this->getGroupSetID(), $g->getGroupID()));
         }
     }
 
@@ -111,7 +111,7 @@ class GroupSet extends ConcreteObject
         if (is_object($pkg)) {
             $pkgID = $pkg->getPackageID();
         }
-        $db->Execute('insert into GroupSets (gsName, pkgID) values (?,?)', array($gsName, $pkgID));
+        $db->executeStatement('insert into GroupSets (gsName, pkgID) values (?,?)', array($gsName, $pkgID));
         $id = $db->Insert_ID();
         $gs = self::getByID($id);
 
@@ -121,13 +121,13 @@ class GroupSet extends ConcreteObject
     public function clearGroups()
     {
         $db = Loader::db();
-        $db->Execute('delete from GroupSetGroups where gsID = ?', array($this->gsID));
+        $db->executeStatement('delete from GroupSetGroups where gsID = ?', array($this->gsID));
     }
 
     public function getGroups()
     {
         $db = Loader::db();
-        $r = $db->Execute('select gID from GroupSetGroups where gsID = ? order by gID asc', $this->getGroupSetId());
+        $r = $db->executeQuery('select gID from GroupSetGroups where gsID = ? order by gID asc', $this->getGroupSetId());
         $groups = array();
         while ($row = $r->fetch()) {
             $g = Group::getByID($row['gID']);
@@ -150,14 +150,14 @@ class GroupSet extends ConcreteObject
     public function delete()
     {
         $db = Loader::db();
-        $db->Execute('delete from GroupSets where gsID = ?', array($this->getGroupSetID()));
-        $db->Execute('delete from GroupSetGroups where gsID = ?', array($this->getGroupSetID()));
+        $db->executeStatement('delete from GroupSets where gsID = ?', array($this->getGroupSetID()));
+        $db->executeStatement('delete from GroupSetGroups where gsID = ?', array($this->getGroupSetID()));
     }
 
     public function removeGroup(Group $g)
     {
         $db = Loader::db();
-        $db->Execute('delete from GroupSetGroups where gsID = ? and gID = ?', array($this->getGroupSetID(), $g->getGroupID()));
+        $db->executeStatement('delete from GroupSetGroups where gsID = ? and gID = ?', array($this->getGroupSetID(), $g->getGroupID()));
     }
 
     public static function exportTranslations()

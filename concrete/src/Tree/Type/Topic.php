@@ -48,7 +48,7 @@ class Topic extends Tree
     protected function deleteDetails()
     {
         $db = Database::connection();
-        $db->Execute('delete from TopicTrees where treeID = ?', array($this->treeID));
+        $db->executeStatement('delete from TopicTrees where treeID = ?', array($this->treeID));
     }
 
     public static function getByName($name)
