@@ -46,7 +46,8 @@ class SocialLinks extends DashboardSitePageController
         }
         $sec = Core::make('helper/security');
         $url = $sec->sanitizeURL($this->request->request->get('url'));
-        if (!$url) {
+        $scheme = is_string($url) ? strtolower((string) parse_url($url, PHP_URL_SCHEME)) : '';
+        if (!$url || filter_var($url, FILTER_VALIDATE_URL) === false || !in_array($scheme, ['http', 'https'], true)) {
             $this->error->add(t('You must specify a valid URL.'));
         }
         if (!is_object($service)) {

@@ -63,7 +63,7 @@ class Details extends DashboardPageController
 
     public function refresh_instance($id = null)
     {
-        $instance = $this->entityManager->find(Instance::class, $id);
+        $instance = $this->getInstance($id);
         if (is_object($instance)) {
             if (!$this->token->validate('refresh_instance')) {
                 $this->error->add(t($this->token->getErrorMessage()));
@@ -83,7 +83,7 @@ class Details extends DashboardPageController
 
     public function regenerate_instance($id = null)
     {
-        $instance = $this->entityManager->find(Instance::class, $id);
+        $instance = $this->getInstance($id);
         if (is_object($instance)) {
             if (!$this->token->validate('regenerate_instance')) {
                 $this->error->add(t($this->token->getErrorMessage()));
@@ -104,7 +104,7 @@ class Details extends DashboardPageController
 
     public function view_instance($id = null)
     {
-        $instance = $this->entityManager->find(Instance::class, $id);
+        $instance = $this->getInstance($id);
         if ($instance) {
             /**
              * @var $instance Instance
@@ -129,7 +129,7 @@ class Details extends DashboardPageController
 
     public function delete_instance($boardInstanceID = null)
     {
-        $instance = $this->entityManager->find(Instance::class, $boardInstanceID);
+        $instance = $this->getInstance($boardInstanceID);
         if ($instance) {
             $board = $instance->getBoard();
             if (!$this->token->validate('delete_instance')) {
@@ -143,7 +143,7 @@ class Details extends DashboardPageController
                 $this->flash('success', t('Board instance removed successfully.'));
                 return $this->redirect('/dashboard/boards/instances', 'view', $board->getBoardID());
             }
-            $this->view($board->getBoardID());
+            $this->view($boardInstanceID);
         } else {
             return $this->redirect('/dashboard/boards/boards');
         }
@@ -151,7 +151,7 @@ class Details extends DashboardPageController
 
     public function get_instance_log($boardInstanceID = null)
     {
-        $instance = $this->entityManager->find(Instance::class, $boardInstanceID);
+        $instance = $this->getInstance($boardInstanceID);
         if ($instance) {
             $log = $instance->getLog();
             if ($log instanceof InstanceLog) {

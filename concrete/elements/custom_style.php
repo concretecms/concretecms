@@ -898,7 +898,15 @@ if ($style instanceof CustomStyle) {
                             $('head').find('style[data-style-set=' + resp.oldIssID + ']').remove()
                         }
                         if (resp.issID && resp.css) {
-                            $('head').append(resp.css)
+                            const style = document.createElement('style');
+                            style.type = 'text/css';
+                            style.setAttribute('data-area-style-area-handle', resp.arHandle);
+                            style.setAttribute('data-style-set', resp.issID);
+                            if (resp.bID) {
+                                style.setAttribute('data-block-style-block-id', resp.bID);
+                            }
+                            style.textContent = resp.css;
+                            document.head.appendChild(style);
                         }
                     },
                     refreshTemplate()

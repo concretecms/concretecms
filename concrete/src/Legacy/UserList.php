@@ -1,6 +1,8 @@
 <?php
 namespace Concrete\Core\Legacy;
 
+use Concrete\Core\Database\Query\LikeBuilder;
+use Concrete\Core\Support\Facade\Application;
 use UserAttributeKey;
 use UserInfo;
 use Core;
@@ -38,14 +40,16 @@ class UserList extends DatabaseItemList
 
     public function filterByKeywords($keywords)
     {
+        $likeBuilder = Application::getFacadeApplication()->make(LikeBuilder::class);
         $db = Database::connection();
-        $qkeywords = $db->quote('%' . $keywords . '%');
+        $escapedKeywords = $likeBuilder->escapeForLike($keywords);
+        $qkeywords = $db->quote($escapedKeywords);
         $keys = UserAttributeKey::getSearchableIndexedList();
         $emailSearchStr = ' OR u.uEmail like '.$qkeywords.' ';
         $attribsStr = '';
         foreach ($keys as $ak) {
             $cnt = $ak->getController();
-            $attribsStr .= ' OR ' . $cnt->searchKeywords($keywords);
+            $attribsStr .= ' OR ' . $cnt->searchKeywords($escapedKeywords);
         }
         $this->filter(false, '( u.uName like ' . $qkeywords . $emailSearchStr . $attribsStr . ')');
     }

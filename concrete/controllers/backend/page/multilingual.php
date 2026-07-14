@@ -21,6 +21,10 @@ class Multilingual extends Page
 
     public function ignore()
     {
+        if (!Core::make('token')->validate('ignore_multilingual_page', $this->request->request->get('ccm_token'))) {
+            throw new UserMessageException(t('Invalid token.'));
+        }
+
         $section = Section::getByID($_POST['section']);
         Section::ignorePageRelation($this->page, $section->getLocale());
         $r = new PageEditResponse();
@@ -31,6 +35,10 @@ class Multilingual extends Page
 
     public function unmap()
     {
+        if (!Core::make('token')->validate('unmap_multilingual_page', $this->request->request->get('ccm_token'))) {
+            throw new UserMessageException(t('Invalid token.'));
+        }
+
         $section = Section::getByID((int) $this->request->request('section'));
         if (is_object($section)) {
             $relatedID = $section->getTranslatedPageID($this->page);
@@ -47,13 +55,25 @@ class Multilingual extends Page
 
     public function assign()
     {
-        $pr = new PageEditResponse();
+        if (!Core::make('token')->validate('assign_multilingual_page', $this->request->request->get('ccm_token'))) {
+            throw new UserMessageException(t('Invalid token.'));
+        }
 
-        if ($this->request->request->get('destID') == $this->page->getCollectionID()) {
+        $pr = new PageEditResponse();
+        $destID = (int) $this->request->request->get('destID');
+
+        if ($destID === $this->page->getCollectionID()) {
             throw new UserMessageException(t("You cannot assign this page to itself."));
         }
 
-        $destPage = \Page::getByID($_POST['destID']);
+        $destPage = \Page::getByID($destID);
+        if (!$destPage || $destPage->isError()) {
+            throw new UserMessageException(t("The destination page couldn't be found."));
+        }
+        $destPermissions = new \Permissions($destPage);
+        if (!$destPermissions->canEditPageMultilingualSettings()) {
+            throw new UserMessageException(t("You do not have permission to assign this page to the destination page."));
+        }
         if (Section::isMultilingualSection($destPage)) {
             $ms = Section::getByID($destPage->getCollectionID());
         } else {
@@ -80,6 +100,10 @@ class Multilingual extends Page
 
     public function create_new()
     {
+        if (!Core::make('token')->validate('create_multilingual_page', $this->request->request->get('ccm_token'))) {
+            throw new UserMessageException(t('Invalid token.'));
+        }
+
         $pr = new PageEditResponse();
         $ms = Section::getByID($this->request->request->get('section'));
         // we get the related parent id

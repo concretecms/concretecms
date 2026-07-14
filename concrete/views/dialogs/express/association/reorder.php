@@ -17,7 +17,7 @@
                 <?php foreach($selectedEntries as $selectedEntry) { ?>
                     <li>
                         <input type="hidden" name="express_association_<?=$control->getID()?>[]" value="<?=$selectedEntry->getID()?>">
-                        <?=$formatter->getEntryDisplayName($control, $selectedEntry)?>
+                        <?=h($formatter->getEntryDisplayName($control, $selectedEntry))?>
                         <i class="ccm-item-select-list-sort"></i>
 
                     </li>

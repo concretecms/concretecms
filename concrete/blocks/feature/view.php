@@ -14,7 +14,8 @@ $app = Application::getFacadeApplication();
 <?php
 $title = h($title);
 if ($linkURL) {
-    $title = '<a href="' . $linkURL . '">' . $title . '</a>';
+    $escapedLinkURL = h($linkURL);
+    $title = '<a href="' . $escapedLinkURL . '">' . $title . '</a>';
 }
 $iconTag = $iconTag ?? '';
 

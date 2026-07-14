@@ -7,7 +7,7 @@
         ?>
         <?php foreach ($entities as $entity) {
     ?>
-            <div><?=$formatter->getEntryDisplayName($control, $entity)?></div>
+            <div><?=h($formatter->getEntryDisplayName($control, $entity))?></div>
         <?php 
 }
         ?>
