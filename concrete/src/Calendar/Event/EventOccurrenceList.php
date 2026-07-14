@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\Calendar\Event;
 
+use Concrete\Core\Database\Query\LikeBuilder;
 use Concrete\Core\Search\ItemList\Database\AttributedItemList;
 use Concrete\Core\Search\Pagination\Pagination;
 use Concrete\Core\Attribute\Key\EventKey;
@@ -64,6 +65,7 @@ class EventOccurrenceList extends AttributedItemList
 
     public function filterByKeywords($keywords)
     {
+        $likeBuilder = app(LikeBuilder::class);
         $expressions = array(
             $this->query->expr()->like('ve.evName', ':keywords'),
             $this->query->expr()->like('ve.evDescription', ':keywords'),
@@ -77,7 +79,7 @@ class EventOccurrenceList extends AttributedItemList
 
         $expr = $this->query->expr();
         $this->query->andWhere(call_user_func_array([$expr, 'orX'], $expressions));
-        $this->query->setParameter('keywords', '%' . $keywords . '%');
+        $this->query->setParameter('keywords', $likeBuilder->escapeForLike($keywords));
     }
 
     /**

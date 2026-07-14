@@ -2,6 +2,7 @@
 
 namespace Concrete\Core\Api;
 
+use Concrete\Core\Database\Query\LikeBuilder;
 use Concrete\Core\Entity\OAuth\Client;
 use Concrete\Core\Search\ItemList\EntityItemList;
 use Concrete\Core\Search\Pagination\Pagination;
@@ -27,7 +28,7 @@ class IntegrationList extends EntityItemList
         $this->query->andWhere(
             $this->query->expr()->like('c.name', ':name')
         );
-        $this->query->setParameter('name', '%' . $keywords . '%');
+        $this->query->setParameter('name', app(LikeBuilder::class)->escapeForLike($keywords));
     }
 
     public function getEntityManager()
