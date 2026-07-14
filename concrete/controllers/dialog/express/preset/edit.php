@@ -74,8 +74,16 @@ class Edit extends PresetEdit
             return null;
         }
 
-        $presetID = $this->request->query->get('presetID', $this->request->request->get('presetID'));
-        $presetID = is_scalar($presetID) ? (int) $presetID : 0;
+        $queryPresetID = $this->request->query->get('presetID');
+        $queryPresetID = is_scalar($queryPresetID) ? (int) $queryPresetID : 0;
+        $requestPresetID = $this->request->request->get('presetID');
+        $requestPresetID = is_scalar($requestPresetID) ? (int) $requestPresetID : 0;
+
+        if ($queryPresetID !== 0 && $requestPresetID !== 0 && $queryPresetID !== $requestPresetID) {
+            return null;
+        }
+
+        $presetID = $requestPresetID ?: $queryPresetID;
         if ($presetID === 0) {
             return null;
         }
