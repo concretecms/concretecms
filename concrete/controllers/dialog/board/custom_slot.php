@@ -24,8 +24,9 @@ class CustomSlot extends \Concrete\Core\Controller\Controller
 
     protected function validateCustomSlotToken()
     {
-        if (!$this->token->validate('board_custom_slot')) {
-            throw new UserMessageException($this->token->getErrorMessage());
+        $token = app('token');
+        if (!$token->validate('board_custom_slot')) {
+            throw new UserMessageException($token->getErrorMessage());
         }
     }
 
