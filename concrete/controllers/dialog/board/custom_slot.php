@@ -22,13 +22,13 @@ class CustomSlot extends \Concrete\Core\Controller\Controller
 
     protected $viewPath = '/dialogs/boards/custom_slot';
 
-    protected function validateCustomSlotToken()
-    {
-        $token = app('token');
-        if (!$token->validate('board_custom_slot')) {
-            throw new UserMessageException($token->getErrorMessage());
-        }
+protected function validateCustomSlotToken()
+{
+    $token = $this->app->make('token');
+    if (!$token->validate('board_custom_slot')) {
+        throw new UserMessageException($token->getErrorMessage());
     }
+}
 
 
     protected function getInstanceFromRequest()
