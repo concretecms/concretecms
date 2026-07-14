@@ -73,7 +73,7 @@ class Autocomplete extends AbstractController
                 if (!$entryEntity instanceof Entity) {
                     throw new \Exception(t('Unable to retrieve entity from Express entry: %s', $entry->getID()));
                 }
-                if ((int) $entryEntity->getID() !== (int) $entity->getID()) {
+                if ($entryEntity->getID() !== $entity->getID()) {
                     throw new \Exception(t('Access Denied.'));
                 }
                 $results[] = $requestInstance->createResultFromEntry($entry);
