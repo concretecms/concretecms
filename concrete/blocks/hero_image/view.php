@@ -40,7 +40,7 @@ $height = (int) $height;
 $buttonColor = $buttonColor ?? null; // Don't know why I need this but #11025
 
 if (isset($button)) {
-    $button->setAttribute('href', app('helper/security')->sanitizeURL($button->getAttribute('href')));
+    $button->setAttribute('href', h($button->getAttribute('href')));
 
     if ($buttonStyle == 'outline') {
         $button->addClass('btn btn-outline-' . $buttonColor) ;

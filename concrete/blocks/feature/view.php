@@ -14,8 +14,8 @@ $app = Application::getFacadeApplication();
 <?php
 $title = h($title);
 if ($linkURL) {
-    $safeLinkURL = app('helper/security')->sanitizeURL($linkURL);
-    $title = '<a href="' . h($safeLinkURL) . '">' . $title . '</a>';
+    $escapedLinkURL = h($linkURL);
+    $title = '<a href="' . $escapedLinkURL . '">' . $title . '</a>';
 }
 $iconTag = $iconTag ?? '';
 

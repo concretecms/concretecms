@@ -165,7 +165,7 @@ if (is_object($f) && $f->getFileID()) {
     }
 
     if ($linkURL) {
-        $safeLinkURL = app('helper/security')->sanitizeURL($linkURL);
+        $safeLinkURL = h($linkURL);
         $linkTag = new Element("a");
         $linkTag->setAttribute("href", $safeLinkURL);
         $linkTag->setChild($imageTag);

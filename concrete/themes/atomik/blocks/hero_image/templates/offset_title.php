@@ -6,7 +6,7 @@ if (isset($height)) {
     $heightRatio = $height / 100;
 }
 if (isset($button)) {
-    $button->setAttribute('href', app('helper/security')->sanitizeURL($button->getAttribute('href')));
+    $button->setAttribute('href', h($button->getAttribute('href')));
 }
 ?>
 <?php if ($image) { ?>
