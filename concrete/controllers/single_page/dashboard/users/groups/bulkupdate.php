@@ -61,7 +61,7 @@ class Bulkupdate extends DashboardPageController
                     if ($groupNode !== null) {
                         $sourceChecker = new Checker($groupNode);
                         if (!$sourceChecker->canEditTreeNode()) {
-                            $this->error->add(t('You do not have permission to move the group "%s".', $group->getGroupDisplayName()));
+                            $this->error->add(t('You do not have permission to move the group "%s".', $group->getGroupDisplayName(false)));
                         }
                         if ($gParentNode !== null) {
                             $error = $groupNode->checkMove($gParentNode);
