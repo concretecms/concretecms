@@ -21,6 +21,10 @@ class Multilingual extends Page
 
     public function ignore()
     {
+        if (!Core::make('token')->validate('ignore_multilingual_page', $this->request->request->get('ccm_token'))) {
+            throw new UserMessageException(t('Invalid token.'));
+        }
+
         $section = Section::getByID($_POST['section']);
         Section::ignorePageRelation($this->page, $section->getLocale());
         $r = new PageEditResponse();
@@ -31,6 +35,10 @@ class Multilingual extends Page
 
     public function unmap()
     {
+        if (!Core::make('token')->validate('unmap_multilingual_page', $this->request->request->get('ccm_token'))) {
+            throw new UserMessageException(t('Invalid token.'));
+        }
+
         $section = Section::getByID((int) $this->request->request('section'));
         if (is_object($section)) {
             $relatedID = $section->getTranslatedPageID($this->page);
@@ -92,6 +100,10 @@ class Multilingual extends Page
 
     public function create_new()
     {
+        if (!Core::make('token')->validate('create_multilingual_page', $this->request->request->get('ccm_token'))) {
+            throw new UserMessageException(t('Invalid token.'));
+        }
+
         $pr = new PageEditResponse();
         $ms = Section::getByID($this->request->request->get('section'));
         // we get the related parent id
