@@ -113,7 +113,8 @@ class ViewAjax extends FrontendController
         // Strip anything other than PHP date() format characters and basic separators. In particular,
         // this removes the backslash escape character used by PHP's date() format to output arbitrary
         // literal text, which could otherwise be used to inject unescaped HTML/JS into the rendered output.
-        return preg_replace('/[^a-zA-Z ,.\/:_-]/', '', $customDateFormat);
+$result = preg_replace('/[^a-zA-Z ,.\/:_-]/', '', $customDateFormat);
+return is_string($result) ? $result : '';
     }
 
     protected function getOrderBy(): string
