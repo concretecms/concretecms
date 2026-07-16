@@ -33,6 +33,7 @@ class ApplicationServiceProvider extends ServiceProvider
             'help/dashboard' => 'Concrete\Core\Application\Service\UserInterface\Help\DashboardManager',
             'help/block_type' => 'Concrete\Core\Application\Service\UserInterface\Help\BlockTypeManager',
             'help/panel' => 'Concrete\Core\Application\Service\UserInterface\Help\PanelManager',
+            'environment' => Environment::class,
             // deprecated
             'helper/concrete/avatar' => 'Concrete\Core\Legacy\Avatar',
         ];
@@ -45,10 +46,6 @@ class ApplicationServiceProvider extends ServiceProvider
         $this->app->singleton('Concrete\Core\Block\Menu\Manager');
 
         $this->app->bind('error', 'Concrete\Core\Error\ErrorList\ErrorList');
-
-        $this->app->singleton('environment', static function ($app) {
-            return Environment::get();
-        });
 
         $this->app->bind(ContainerInterface::class, function() {
             return $this->app;
