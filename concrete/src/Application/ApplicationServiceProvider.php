@@ -46,7 +46,7 @@ class ApplicationServiceProvider extends ServiceProvider
 
         $this->app->bind('error', 'Concrete\Core\Error\ErrorList\ErrorList');
 
-        $this->app->bindShared('environment', static function ($app) {
+        $this->app->singleton('environment', static function ($app) {
             return Environment::get();
         });
 
