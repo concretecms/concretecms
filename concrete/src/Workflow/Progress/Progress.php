@@ -3,6 +3,7 @@ namespace Concrete\Core\Workflow\Progress;
 
 use Concrete\Core\Entity\Notification\WorkflowProgressNotification;
 use Concrete\Core\Foundation\ConcreteObject;
+use Concrete\Core\Foundation\Serializer\SafeClassUnserializerTrait;
 use Concrete\Core\Notification\Subject\SubjectInterface;
 use Concrete\Core\Workflow\Workflow;
 use Concrete\Core\Workflow\HistoryEntry\HistoryEntry as WorkflowHistoryEntry;
@@ -22,6 +23,8 @@ use Symfony\Component\EventDispatcher\GenericEvent;
  */
 abstract class Progress extends ConcreteObject implements SubjectInterface
 {
+    use SafeClassUnserializerTrait;
+
     protected $wrID = null;
     protected $wpID;
     protected $wpDateAdded;
@@ -302,32 +305,10 @@ abstract class Progress extends ConcreteObject implements SubjectInterface
         if (is_array($row) && ($row['wphID'])) {
             $obj = new $class();
             $obj->setPropertiesFromArray($row);
-            $obj->object = static::unserializeWorkflowProgressHistoryObject($row['object']);
+            $obj->object = static::safeUnserializeObject($row['object'], [WorkflowRequest::class, WorkflowHistoryEntry::class]);
 
             return $obj;
         }
-    }
-
-    /**
-     * Safely unserializes a WorkflowProgressHistory.object value, only allowing
-     * instantiation of WorkflowRequest or WorkflowHistoryEntry subclasses, to prevent
-     * PHP object injection via tampered/poisoned database data.
-     *
-     * @param string $data
-     *
-     * @return object|false
-     */
-    private static function unserializeWorkflowProgressHistoryObject($data)
-    {
-        if (!is_string($data) || !preg_match('/^O:\d+:"(.+?)"/', $data, $matches)) {
-            return false;
-        }
-        $class = $matches[1];
-        if (!is_a($class, WorkflowRequest::class, true) && !is_a($class, WorkflowHistoryEntry::class, true)) {
-            return false;
-        }
-
-        return unserialize($data, ['allowed_classes' => [$class]]);
     }
 
     public function addWorkflowProgressHistoryObject($obj)

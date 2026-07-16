@@ -2,6 +2,7 @@
 namespace Concrete\Core\Workflow\Request;
 
 use Concrete\Core\Foundation\ConcreteObject;
+use Concrete\Core\Foundation\Serializer\SafeClassUnserializerTrait;
 use Concrete\Core\User\UserInfo;
 use Concrete\Core\Workflow\Progress\SkippedResponse;
 use Symfony\Component\EventDispatcher\GenericEvent;
@@ -14,6 +15,8 @@ use Events;
 
 abstract class Request extends ConcreteObject
 {
+    use SafeClassUnserializerTrait;
+
     protected $currentWP;
     protected $uID;
     protected $wrStatusNum = 0;
@@ -74,28 +77,10 @@ abstract class Request extends ConcreteObject
         $db = Database::connection();
         $wrObject = $db->getOne('select wrObject from WorkflowRequestObjects where wrID = ?', array($wrID));
         if ($wrObject) {
-            $wr = static::unserializeWorkflowRequestObject($wrObject);
+            $wr = static::safeUnserializeObject($wrObject, self::class);
 
             return $wr;
         }
-    }
-
-    /**
-     * Safely unserializes a WorkflowRequestObjects.wrObject value, only allowing
-     * instantiation of classes that extend this base class, to prevent PHP object
-     * injection via tampered/poisoned database data.
-     *
-     * @param string $data
-     *
-     * @return static|false
-     */
-    private static function unserializeWorkflowRequestObject($data)
-    {
-        if (!is_string($data) || !preg_match('/^O:\d+:"(.+?)"/', $data, $matches) || !is_a($matches[1], self::class, true)) {
-            return false;
-        }
-
-        return unserialize($data, ['allowed_classes' => [$matches[1]]]);
     }
 
     public function delete()
