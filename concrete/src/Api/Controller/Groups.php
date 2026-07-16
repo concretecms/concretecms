@@ -116,7 +116,8 @@ class Groups extends ApiController
     {
         $list = new GroupList();
         $list->setPermissionsChecker(function($group) {
-            return true;
+            $permissions = new Checker($group);
+            return $permissions->canViewTreeNode();
         });
         $groupIdColumn = new GroupIdColumn();
         $this->setupSortAndCursor($this->request, $list, $groupIdColumn, function($currentCursor) {

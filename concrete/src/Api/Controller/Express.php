@@ -44,7 +44,8 @@ class Express extends ApiController implements ApplicationAwareInterface
 
         $list->setPermissionsChecker(
             function ($entry) {
-                return true;
+                $permissions = new Checker($entry);
+                return $permissions->canViewExpressEntry();
             }
         );
 
