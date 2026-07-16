@@ -36,13 +36,13 @@ class ApplicationServiceProvider extends ServiceProvider
             // deprecated
             'helper/concrete/avatar' => 'Concrete\Core\Legacy\Avatar',
         ];
+        foreach ($singletons as $alias => $class) {
+            $this->app->singleton($class);
+            $this->app->alias($class, $alias);
+        }
 
         $this->app->singleton('Concrete\Core\ConcreteCms\ActivityService');
         $this->app->singleton('Concrete\Core\Block\Menu\Manager');
-
-        foreach ($singletons as $key => $value) {
-            $this->app->singleton($key, $value);
-        }
 
         $this->app->bind('error', 'Concrete\Core\Error\ErrorList\ErrorList');
 
