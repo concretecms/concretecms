@@ -72,7 +72,7 @@ class SafeClassUnserializerTraitTest extends TestCase
         $this->assertFalse($result);
     }
 
-    public function provideNonMatchingInput()
+    public static function provideNonMatchingInput()
     {
         return [
             'null' => [null],
