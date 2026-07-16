@@ -92,7 +92,7 @@ class Design extends BackendInterfaceBlockController
                 $style = new CustomStyle($set, $b, $this->page->getCollectionThemeObject());
                 $css = $style->getCSS();
                 if ($css !== '') {
-                    $pr->setAdditionalDataAttribute('css', $style->getStyleWrapper($css));
+                    $pr->setAdditionalDataAttribute('css', $css);
                 }
             }
 

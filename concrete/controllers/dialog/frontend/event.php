@@ -31,6 +31,9 @@ class Event extends BackendInterfaceController
                 throw new UserMessageException(t('Access Denied.'));
             }
             $occurrence = EventOccurrence::getByID($occurrence_id);
+            if (!$occurrence || $occurrence->getEvent()->getCalendar()->getID() !== $calendar->getID()) {
+                throw new UserMessageException(t('Invalid occurrence.'));
+            }
             $this->set('occurrence', $occurrence);
             $this->set('blockController', $controller);
         }

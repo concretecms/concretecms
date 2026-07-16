@@ -14,7 +14,15 @@ if ($btHandle === BLOCK_HANDLE_SCRAPBOOK_PROXY) {
 if (is_object($set) && isset($styleHeader)) { ?>
     
     <script type="text/javascript">
-        $('head').append('<style type="text/css"><?=addslashes($styleHeader)?></style>');
+        (function () {
+            var style = document.createElement('style');
+            style.type = 'text/css';
+            style.setAttribute('data-area-style-area-handle', <?= json_encode($b->getAreaHandle()) ?>);
+            style.setAttribute('data-block-style-block-id', <?= json_encode((string) $b->getBlockID()) ?>);
+            style.setAttribute('data-style-set', <?= json_encode((string) $set->getStyleSet()->getID()) ?>);
+            style.textContent = <?= json_encode($set->getCSS()) ?>;
+            document.head.appendChild(style);
+        }());
     </script>
 <?php
 

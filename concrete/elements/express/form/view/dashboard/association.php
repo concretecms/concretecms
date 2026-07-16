@@ -20,7 +20,7 @@
         ?>
         <?php foreach ($entities as $entity) {
     ?>
-            <div><a href="<?=URL::to('/dashboard/express/entries', 'view_entry', $entity->getID())?>"><?=$formatter->getEntryDisplayName($control, $entity)?></a></div>
+            <div><a href="<?=URL::to('/dashboard/express/entries', 'view_entry', $entity->getID())?>"><?=h($formatter->getEntryDisplayName($control, $entity))?></a></div>
         <?php 
 }
         ?>

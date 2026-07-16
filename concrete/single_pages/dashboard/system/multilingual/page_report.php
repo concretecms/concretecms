@@ -225,6 +225,7 @@ if (count($sections) > 0) {
                 url: $(this).attr('data-btn-url'),
                 method: 'post',
                 data: {
+                    'ccm_token': <?= json_encode(Core::make('token')->generate('create_multilingual_page')) ?>,
                     'section': sectionID,
                     'cID': cID
                 },
@@ -249,6 +250,7 @@ if (count($sections) > 0) {
                     url: url,
                     method: 'post',
                     data: {
+                        'ccm_token': <?= json_encode(Core::make('token')->generate('assign_multilingual_page')) ?>,
                         'destID': data.cID,
                         'cID': cID
                     },
@@ -266,6 +268,7 @@ if (count($sections) > 0) {
                 url: $(this).attr('data-btn-url'),
                 method: 'post',
                 data: {
+                    'ccm_token': <?= json_encode(Core::make('token')->generate('ignore_multilingual_page')) ?>,
                     'section': sectionID,
                     'cID': cID
                 },
@@ -284,6 +287,7 @@ if (count($sections) > 0) {
                 url: $(this).attr('data-btn-url'),
                 method: 'post',
                 data: {
+                    'ccm_token': <?= json_encode(Core::make('token')->generate('unmap_multilingual_page')) ?>,
                     'section': sectionID,
                     'cID': cID
                 },
