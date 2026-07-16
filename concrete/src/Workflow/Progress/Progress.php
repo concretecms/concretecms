@@ -5,6 +5,7 @@ use Concrete\Core\Entity\Notification\WorkflowProgressNotification;
 use Concrete\Core\Foundation\ConcreteObject;
 use Concrete\Core\Notification\Subject\SubjectInterface;
 use Concrete\Core\Workflow\Workflow;
+use Concrete\Core\Workflow\HistoryEntry\HistoryEntry as WorkflowHistoryEntry;
 use Concrete\Core\Workflow\Request\Request as WorkflowRequest;
 use Concrete\Core\Workflow\EmptyWorkflow;
 use Concrete\Core\Workflow\Progress\Category as WorkflowProgressCategory;
@@ -301,10 +302,32 @@ abstract class Progress extends ConcreteObject implements SubjectInterface
         if (is_array($row) && ($row['wphID'])) {
             $obj = new $class();
             $obj->setPropertiesFromArray($row);
-            $obj->object = @unserialize($row['object']);
+            $obj->object = static::unserializeWorkflowProgressHistoryObject($row['object']);
 
             return $obj;
         }
+    }
+
+    /**
+     * Safely unserializes a WorkflowProgressHistory.object value, only allowing
+     * instantiation of WorkflowRequest or WorkflowHistoryEntry subclasses, to prevent
+     * PHP object injection via tampered/poisoned database data.
+     *
+     * @param string $data
+     *
+     * @return object|false
+     */
+    private static function unserializeWorkflowProgressHistoryObject($data)
+    {
+        if (!is_string($data) || !preg_match('/^O:\d+:"(.+?)"/', $data, $matches)) {
+            return false;
+        }
+        $class = $matches[1];
+        if (!is_a($class, WorkflowRequest::class, true) && !is_a($class, WorkflowHistoryEntry::class, true)) {
+            return false;
+        }
+
+        return unserialize($data, ['allowed_classes' => [$class]]);
     }
 
     public function addWorkflowProgressHistoryObject($obj)
