@@ -13,7 +13,7 @@ class ApplicationServiceProvider extends ServiceProvider
 {
     public function register()
     {
-        $singletons = array(
+        $singletons = [
             'helper/concrete/asset_library' => '\Concrete\Core\Application\Service\FileManager',
             'helper/concrete/file_manager' => '\Concrete\Core\Application\Service\FileManager',
             'helper/concrete/composer' => '\Concrete\Core\Application\Service\Composer',
@@ -34,7 +34,7 @@ class ApplicationServiceProvider extends ServiceProvider
             'help/dashboard' => '\Concrete\Core\Application\Service\UserInterface\Help\DashboardManager',
             'help/block_type' => '\Concrete\Core\Application\Service\UserInterface\Help\BlockTypeManager',
             'help/panel' => '\Concrete\Core\Application\Service\UserInterface\Help\PanelManager',
-        );
+        ];
 
         $this->app->singleton('Concrete\Core\ConcreteCms\ActivityService');
         $this->app->singleton('Concrete\Core\Block\Menu\Manager');
@@ -45,10 +45,8 @@ class ApplicationServiceProvider extends ServiceProvider
 
         $this->app->bind('error', 'Concrete\Core\Error\ErrorList\ErrorList');
 
-        $this->app->bindShared('environment', function ($app) {
-            $env = Environment::get();
-
-            return $env;
+        $this->app->bindShared('environment', static function ($app) {
+            return Environment::get();
         });
 
         $this->app->bind(ContainerInterface::class, function() {
