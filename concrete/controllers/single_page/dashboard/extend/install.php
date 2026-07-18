@@ -93,6 +93,7 @@ class Install extends DashboardPageController implements LoggerAwareInterface
         $manager = $this->app->make(Manager::class, ['application' => $this->app]);
         $this->set('text', Loader::helper('text'));
         $this->set('pkg', $pkg);
+        $this->set('packageBackupErrors', $pkg->getController()->getBackupErrors());
         $this->set('categories', $manager->getPackageItemCategories());
     }
 
@@ -123,15 +124,25 @@ class Install extends DashboardPageController implements LoggerAwareInterface
             $test = $p->testForUninstall();
 
             if (!is_object($test)) {
-                $r = Package::uninstall($p);
+                Package::uninstall($p);
+                $packageDirectoryRemoved = false;
                 if ($this->post('pkgMoveToTrash')) {
-                    $r = $pkg->backup();
+                    $r = $p->backup();
                     if ($r instanceof ErrorList) {
+                        $this->error->add(t('The package has been uninstalled, but its directory could not be removed from the installation directory.'));
                         $this->error->add($r);
+                        $this->view();
+
+                        return;
                     }
+                    $packageDirectoryRemoved = true;
                 }
                 if (!$this->error->has()) {
-                    $this->redirect('/dashboard/extend/install', 'package_uninstalled');
+                    if ($packageDirectoryRemoved) {
+                        $this->redirect('/dashboard/extend/install', 'package_uninstalled', 'directory_removed');
+                    } else {
+                        $this->redirect('/dashboard/extend/install', 'package_uninstalled');
+                    }
                 }
             } else {
                 $this->error->add($test);
@@ -157,10 +168,25 @@ class Install extends DashboardPageController implements LoggerAwareInterface
         }
     }
 
-    public function package_uninstalled()
+    public function package_uninstalled($status = null)
     {
         $this->view();
-        $this->set('message', t('The package has been uninstalled.'));
+        $packageRemovedMessage = t('The package has been uninstalled.');
+        if ($status === 'directory_removed') {
+            $packageRemovedMessage = t(
+                'The package has been uninstalled and its directory has been moved to the package backup directory on the server: %s.',
+                $this->getPackageBackupDirectoryDisplayPath()
+            );
+        }
+        $this->set(
+            'message',
+            $packageRemovedMessage
+        );
+    }
+
+    private function getPackageBackupDirectoryDisplayPath(): string
+    {
+        return str_replace('\\', '/', $this->app->make('config')->get('concrete.misc.package_backup_directory'));
     }
 
     public function install_package($package)
