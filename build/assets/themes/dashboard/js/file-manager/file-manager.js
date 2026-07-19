@@ -75,6 +75,10 @@
         ConcreteEvent.subscribe('ConcreteTreeDeleteTreeNode', function() {
             window.location.reload()
         })
+        // File or folder moved
+        ConcreteEvent.subscribe('FolderUpdateRequestComplete', function() {
+            window.location.reload()
+        })
     }
 
     ConcreteFileManagerTable.prototype.disableSelectAllOnInvalidNodeTypeSelection = function() {
