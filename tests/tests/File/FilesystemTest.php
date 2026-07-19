@@ -46,6 +46,31 @@ class FilesystemTest extends ConcreteDatabaseTestCase
         $this->assertEquals('Test Sub Folder', $folder->getTreeNodeDisplayName());
     }
 
+    public function testPopulateDirectChildrenOnlyCanSortByName()
+    {
+        $rootFolder = $this->filesystem->getRootFolder();
+        $this->filesystem->addFolder($rootFolder, 'Zulu');
+        $this->filesystem->addFolder($rootFolder, 'Alpha');
+        $this->filesystem->addFolder($rootFolder, 'Bravo');
+
+        $rootFolder->populateDirectChildrenOnly();
+        $this->assertSame(['Zulu', 'Alpha', 'Bravo'], array_map(function ($folder) {
+            return $folder->getTreeNodeName();
+        }, $rootFolder->getChildNodes()));
+
+        $rootFolder->getTreeObject()->setRequest(['orderBy' => 'name_asc']);
+        $rootFolder->clearLoadedChildren()->populateDirectChildrenOnly();
+        $this->assertSame(['Alpha', 'Bravo', 'Zulu'], array_map(function ($folder) {
+            return $folder->getTreeNodeName();
+        }, $rootFolder->getChildNodes()));
+
+        $rootFolder->getTreeObject()->setRequest(['orderBy' => 'name_desc']);
+        $rootFolder->clearLoadedChildren()->populateDirectChildrenOnly();
+        $this->assertSame(['Zulu', 'Bravo', 'Alpha'], array_map(function ($folder) {
+            return $folder->getTreeNodeName();
+        }, $rootFolder->getChildNodes()));
+    }
+
     public function testGetFolderByName()
     {
         $rootFolder = $this->filesystem->getRootFolder();
