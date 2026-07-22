@@ -89,7 +89,9 @@ class DashboardPageController extends PageController
         $this->elementManager = $this->app->make(ElementManager::class);
         $this->set('interface', $this->app->make('helper/concrete/ui'));
         $this->set('dashboard', $this->app->make('helper/concrete/dashboard'));
-        $this->set('hideDashboardPanel', $cookieJar->get('dashboardPanelStatus') === 'closed');
+        // The dashboard navigation is closed by default and stays open only when
+        // the user explicitly opened it during the current authenticated session.
+        $this->set('hideDashboardPanel', $cookieJar->get('dashboardPanelStatus') !== 'open');
 
         $favorites = $this->app->make(FavoritesNavigationFactory::class)->createNavigation();
         if ($favorites->has(new PageItem($this->getPageObject()))) {
