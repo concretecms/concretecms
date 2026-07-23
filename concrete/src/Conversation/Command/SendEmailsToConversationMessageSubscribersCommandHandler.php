@@ -43,7 +43,9 @@ class SendEmailsToConversationMessageSubscribersCommandHandler
                     $this->mailService->to($ui->getUserEmail());
                     $this->mailService->addParameter('title', $c->getCollectionName());
                     $this->mailService->addParameter('link', $c->getCollectionLink(true));
-                    $this->mailService->addParameter('poster', $formatter->getDisplayName());
+                    $posterHTML = $formatter->getDisplayName();
+                    $this->mailService->addParameter('poster', strip_tags($posterHTML));
+                    $this->mailService->addParameter('posterHTML', $posterHTML);
                     $this->mailService->addParameter('body', $this->textService->prettyStripTags($cnvMessageBody));
                     $this->mailService->load('new_conversation_message');
                     $this->mailService->sendMail();
