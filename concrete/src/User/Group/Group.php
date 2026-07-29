@@ -116,12 +116,16 @@ class Group extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
         if (is_object($node)) {
             $parents = $node->getTreeNodeParentArray();
             $parents = array_reverse($parents);
+            // Remove the top level node because it's always "All Groups"
+            array_shift($parents);
             foreach ($parents as $node) {
                 if ($node instanceof \Concrete\Core\Tree\Node\Type\Group) {
                     $g = $node->getTreeNodeGroupObject();
                     if (is_object($g)) {
                         $path .= '/' . $g->getGroupName();
                     }
+                } elseif ($node instanceof GroupFolder) {
+                    $path .= '/' . $node->getTreeNodeName();
                 }
             }
         }
