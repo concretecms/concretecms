@@ -12,15 +12,10 @@ use Psr\Http\Message\ServerRequestInterface;
 
 class RefreshTokenGrant extends BaseRefreshTokenGrant
 {
-    /**
-     * @var UserRepositoryInterface
-     */
-    private $userRepository;
-
     public function __construct(RefreshTokenRepositoryInterface $refreshTokenRepository, UserRepositoryInterface $userRepository)
     {
         parent::__construct($refreshTokenRepository);
-        $this->userRepository = $userRepository;
+        $this->setUserRepository($userRepository);
     }
 
     /**
