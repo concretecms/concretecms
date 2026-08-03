@@ -16,8 +16,8 @@ $videoID = $videoID ?? '';
 $bID = $bID ?? 0; // This should always be set but just incase
 $c = Page::getCurrentPage();
 if (!empty($vWidth) && !empty($vHeight)) {
-    $vWidth = $vWidth === '' ? '' : (int) $vWidth;
-    $vHeight = $vHeight === '' ? '' : (int) $vHeight;
+    $vWidth = (int) $vWidth;
+    $vHeight = (int) $vHeight;
     $sizeargs = 'width="' . $vWidth . '" height="' . $vHeight . '"';
     $sizeDisabled = 'style="width:' . $vWidth . 'px; height:' . $vHeight . 'px"';
     $responsiveClass = '';
