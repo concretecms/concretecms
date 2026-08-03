@@ -762,7 +762,7 @@ class Controller extends BlockController implements UsesFeatureInterface
             case 'description':
                 return h($file->getDescription());
             case 'tags':
-                return $file->getTags();
+                return h($file->getTags());
             case 'date':
                 return $this->app->make('date')->formatDate($file->getDateAdded(), false);
             case 'extension':
