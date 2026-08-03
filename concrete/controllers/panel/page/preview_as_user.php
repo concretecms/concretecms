@@ -1,8 +1,8 @@
 <?php
 namespace Concrete\Controller\Panel\Page;
 
+use Concrete\Controller\Backend\UserInterface\Page as BackendUIPageController;
 use Concrete\Core\Form\Service\Widget\UserSelector;
-use Controller;
 use Page;
 use Permissions;
 use Request;
@@ -11,8 +11,13 @@ use View;
 use Core;
 use Config;
 
-class PreviewAsUser extends Controller
+class PreviewAsUser extends BackendUIPageController
 {
+    public function canAccess()
+    {
+        return $this->permissions->canPreviewPageAsUser() && $this->permissions->canRead() && Config::get('concrete.permissions.model') == 'advanced';
+    }
+
     public function view()
     {
         $this->set('userSelector', $this->app->make(UserSelector::class));
