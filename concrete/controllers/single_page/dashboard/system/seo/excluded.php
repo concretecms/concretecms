@@ -36,7 +36,7 @@ class Excluded extends DashboardPageController
     {
         if (!$this->request->isMethod('POST')) {
             $this->error->add(t('Invalid request method.'));
-        } elseif (!$this->token->validate('reset')) {
+        } elseif (!$this->token->validate('excluded_words_reset')) {
             $this->error->add($this->token->getErrorMessage());
         }
         if ($this->error->has()) {
