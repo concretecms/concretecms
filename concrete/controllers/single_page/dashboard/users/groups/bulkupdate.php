@@ -17,19 +17,12 @@ class Bulkupdate extends DashboardPageController
             $this->error->add($this->token->getErrorMessage());
         }
 
-        $this->move();
-
-        $gParentNode = $this->get('gParentNode');
-        if ($gParentNode) {
-            $checker = new Checker($gParentNode);
-            if (!$checker->canAddTreeSubNode()) {
-                $this->error->add(t('You do not have permission to move groups beneath this target location.'));
-            }
-        }
+        $this->search();
+        $this->prepareMoveRequest();
 
         if (!$this->error->has()) {
             $selectedGroups = $this->get('selectedGroups');
-
+            $gParentNode = $this->get('gParentNode');
 
             foreach ($selectedGroups as $g) {
                 $node = GroupTreeNode::getTreeNodeByGroupID($g->getGroupID());
@@ -46,12 +39,50 @@ class Bulkupdate extends DashboardPageController
     public function move()
     {
         $this->search();
+        $this->prepareMoveRequest();
+    }
+
+    private function prepareMoveRequest(): void
+    {
+        $gParentNode = $this->getRequestedParentNode();
+        if (!$gParentNode instanceof GroupTreeNode) {
+            return;
+        }
+
+        $this->validateTargetParentNode($gParentNode);
+        $selectedGroups = $this->getSelectedGroupsForMove($gParentNode);
+
+        if (!$this->error->has()) {
+            $gParent = $gParentNode->getTreeNodeGroupObject();
+            $this->set('selectedGroups', $selectedGroups);
+            $this->set('gParent', $gParent);
+            $this->set('gParentNode', $gParentNode);
+        }
+    }
+
+    private function getRequestedParentNode(): ?GroupTreeNode
+    {
         $gParentNodeID = $this->app->make('helper/security')->sanitizeInt($this->request('gParentNodeID'));
         $gParentNode = $gParentNodeID ? TreeNode::getByID($gParentNodeID) : null;
         if (!($gParentNode instanceof GroupTreeNode)) {
-            $gParentNode = null;
-            $this->error->add(t("Invalid target parent group."));
+            $this->error->add(t('Invalid target parent group.'));
+
+            return null;
         }
+
+        return $gParentNode;
+    }
+
+    private function validateTargetParentNode(GroupTreeNode $gParentNode): void
+    {
+        $checker = new Checker($gParentNode);
+        if (!$checker->canAddTreeSubNode()) {
+            $this->error->add(t('You do not have permission to move groups beneath this target location.'));
+        }
+    }
+
+    private function getSelectedGroupsForMove(GroupTreeNode $gParentNode): array
+    {
         $selectedGroups = [];
         if (is_array($this->post('gID'))) {
             foreach ($this->post('gID') as $gID) {
@@ -59,16 +90,7 @@ class Bulkupdate extends DashboardPageController
                 if ($group !== null) {
                     $groupNode = GroupTreeNode::getTreeNodeByGroupID($group->getGroupID());
                     if ($groupNode !== null) {
-                        $sourceChecker = new Checker($groupNode);
-                        if (!$sourceChecker->canEditTreeNode()) {
-                            $this->error->add(t('You do not have permission to move the group "%s".', $group->getGroupDisplayName(false)));
-                        }
-                        if ($gParentNode !== null) {
-                            $error = $groupNode->checkMove($gParentNode);
-                            if ($error !== null) {
-                                $this->error->add($error);
-                            }
-                        }
+                        $this->validateSelectedGroupMove($group, $groupNode, $gParentNode);
                         $selectedGroups[] = $group;
                     }
                 }
@@ -76,13 +98,22 @@ class Bulkupdate extends DashboardPageController
         }
 
         if (empty($selectedGroups)) {
-            $this->error->add(t("You must select at least one group to move"));
+            $this->error->add(t('You must select at least one group to move'));
         }
-        if (!$this->error->has()) {
-            $gParent = $gParentNode->getTreeNodeGroupObject();
-            $this->set('selectedGroups', $selectedGroups);
-            $this->set('gParent', $gParent);
-            $this->set('gParentNode', $gParentNode);
+
+        return $selectedGroups;
+    }
+
+    private function validateSelectedGroupMove($group, GroupTreeNode $groupNode, GroupTreeNode $gParentNode): void
+    {
+        $sourceChecker = new Checker($groupNode);
+        if (!$sourceChecker->canEditTreeNode()) {
+            $this->error->add(t('You do not have permission to move the group "%s".', $group->getGroupDisplayName(false)));
+        }
+
+        $error = $groupNode->checkMove($gParentNode);
+        if ($error !== null) {
+            $this->error->add($error);
         }
     }
 
