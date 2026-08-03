@@ -82,7 +82,7 @@ class Available extends DefaultSet
     public static function getGroupName($node)
     {
         if ($node->getTreeNodeTypeHandle() == 'group_folder') {
-            return $node->getTreeNodeName();
+            return h($node->getTreeNodeName());
         } else if ($node->getTreeNodeTypeHandle() == 'group') {
             $group = $node->getTreeNodeGroupObject();
             if (is_object($group)) {
