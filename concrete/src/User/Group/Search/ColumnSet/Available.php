@@ -63,7 +63,7 @@ class Available extends DefaultSet
      * @param Node $node
      * @return mixed
      */
-    public function getGroupID($node)
+    public static function getGroupID($node)
     {
         if ($node->getTreeNodeTypeHandle() == 'group_folder') {
             return '';
