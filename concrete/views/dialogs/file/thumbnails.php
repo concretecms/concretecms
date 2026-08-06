@@ -32,44 +32,44 @@ $i = 1;
 <div class="ccm-ui">
     <?php foreach ($types as $type): ?>
         <?php if ($i % 3 === 1): ?>
-            <div class="row">
+            <div class="row g-5">
         <?php endif; ?>
-                <div class="col-md-4">
+                <div class="col-md-4 ccm-image-thumbnail-column">
                     <div class="ccm-image-thumbnail-card">
-                        <div class="ccm-image-thumbnail-display-name">
-                            <h4>
-                                <?php echo $type->getDisplayName(); ?>
-                            </h4>
+                        <div class="ccm-image-thumbnail-info">
+                            <div class="ccm-image-thumbnail-display-name">
+                                <h4>
+                                    <?php echo $type->getDisplayName(); ?>
+                                </h4>
+                            </div>
+
+                            <small class="ccm-image-thumbnail-dimensions">
+                                <?php
+                                    echo t(
+                                        '%s x %s dimensions (%s)',
+                                        (int)$type->getWidth() ? : t('Automatic'),
+                                        (int)$type->getHeight() ? : t('Automatic'),
+                                        $type->getSizingModeDisplayName()
+                                    );
+                                ?>
+                            </small>
+
+                            <?php if ($fp->canEditFileContents() && $filesystem->has($type->getFilePath($version))): ?>
+                                <!--suppress HtmlUnknownAttribute -->
+                                <a
+                                    href="<?php echo (string)Url::to('/ccm/system/dialogs/file/thumbnails/edit')->setQuery([
+                                        'fID' => $version->getFileID(),
+                                        'thumbnail' => $type->getHandle(),
+                                    ]) ?>"
+                                dialog-width="90%"
+                                dialog-height="70%"
+                                class="btn btn-sm btn-secondary dialog-launch"
+                                dialog-title="<?php echo h(t('Edit Thumbnail Images')); ?>">
+
+                                    <?php echo t('Edit Thumbnail') ?>
+                                </a>
+                            <?php endif; ?>
                         </div>
-
-                        <small class="ccm-image-thumbnail-dimensions">
-                            <?php
-                                echo t(
-                                    '%s x %s dimensions (%s)',
-                                    (int)$type->getWidth() ? : t('Automatic'),
-                                    (int)$type->getHeight() ? : t('Automatic'),
-                                    $type->getSizingModeDisplayName()
-                                );
-                            ?>
-                        </small>
-
-                        <?php if ($fp->canEditFileContents() && $filesystem->has($type->getFilePath($version))): ?>
-                            <!--suppress HtmlUnknownAttribute -->
-                            <a
-                                href="<?php echo (string)Url::to('/ccm/system/dialogs/file/thumbnails/edit')->setQuery([
-                                    'fID' => $version->getFileID(),
-                                    'thumbnail' => $type->getHandle(),
-                                ]) ?>"
-                               dialog-width="90%"
-                               dialog-height="70%"
-                               class="btn btn-sm btn-secondary dialog-launch"
-                               dialog-title="<?php echo h(t('Edit Thumbnail Images')); ?>">
-
-                                <?php echo t('Edit Thumbnail') ?>
-                            </a>
-                        <?php endif; ?>
-
-                        <hr class="ccm-image-thumbnail-divider"/>
 
                         <div class="ccm-file-manager-image-thumbnail">
                             <?php if ($filesystem->has($type->getFilePath($version))): ?>
@@ -102,12 +102,6 @@ $i = 1;
         <?php ++$i; ?>
     <?php endforeach; ?>
 
-    <style type="text/css">
-        .ccm-file-manager-image-thumbnail-image {
-            max-width: 100%;
-        }
-    </style>
-
     <!--suppress JSUnresolvedVariable -->
     <script>
         (function($) {
@@ -127,3 +121,4 @@ $i = 1;
         })(jQuery);
     </script>
 </div>
+
