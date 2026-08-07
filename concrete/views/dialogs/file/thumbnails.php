@@ -106,14 +106,25 @@ $i = 1;
     <script>
         (function($) {
             (function () {
-                Concrete.event.unbind('ImageEditorDidSave.thumbnails');
+                // Don't unbind all listeners - just rebind this specific one
+                Concrete.event.unbind('ImageEditorDidSave.thumbnails.thumbnailsDialog');
 
-                let $thumbnails = $('img.ccm-file-manager-image-thumbnail-image');
-
-                Concrete.event.bind('ImageEditorDidSave.thumbnails', function (event, data) {
+                Concrete.event.bind('ImageEditorDidSave.thumbnails.thumbnailsDialog', function (event, data) {
                     if (data.isThumbnail) {
-                        let $thumbnail = $thumbnails.filter('[data-handle=' + data.handle + '][data-fid=' + data.fID + '][data-fvid=' + data.fvID + ']');
-                        $thumbnail.attr("src", data.imgData);
+                        // Re-query thumbnails to ensure we get the current state
+                        let $thumbnails = $('img.ccm-file-manager-image-thumbnail-image');
+                        
+                        // Match by handle and fID only (fvID may change when thumbnail is edited)
+                        let selector = '[data-handle="' + data.handle + '"][data-fid="' + data.fID + '"]';
+                        let $thumbnail = $thumbnails.filter(selector);
+                        
+                        if ($thumbnail.length > 0) {
+                            // Update the src with the new data URL
+                            $thumbnail.attr("src", data.imgData);
+                            // Update the data-fvid attribute to the new version
+                            $thumbnail.attr("data-fvid", data.fvID);
+                        }
+                        
                         $.fn.dialog.closeTop();
                     }
                 });
