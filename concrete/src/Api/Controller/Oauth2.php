@@ -41,6 +41,7 @@ namespace Concrete\Core\Api\Controller;
  *             "pages:areas:delete_block": "Delete blocks from a page area",
  *             "pages:areas:update_block": "Updates a block in a page area",
  *             "pages:versions:read": "View page versions",
+ *             "pages:versions:add": "Create editable page version drafts",
  *             "pages:versions:update": "Update page versions",
  *             "pages:versions:delete": "Delete page versions",
  *             "blocks:read": "View site blocks",

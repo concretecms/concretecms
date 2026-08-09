@@ -12,6 +12,8 @@ class CollectionVersionTransformer extends TransformerAbstract
         $data = [];
         $data['id'] = $version->getVersionID();
         $data['is_approved'] = $version->isApproved();
+        $data['is_new'] = $version->isNew();
+        $data['comments'] = $version->getVersionComments(false);
         $data['date_created'] = $version->getVersionDateCreated();
         $data['date_approved'] = $version->getVersionDateApproved();
         $data['publish_end_date'] = $version->getPublishEndDate();

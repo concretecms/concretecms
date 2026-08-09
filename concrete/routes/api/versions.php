@@ -19,6 +19,11 @@ $router->get('/page_versions/{pageID}', '\Concrete\Core\Api\Controller\Versions:
     ->setScopes('pages:versions:read')
 ;
 
+$router->post('/page_versions/{pageID}', '\Concrete\Core\Api\Controller\Versions::add')
+    ->setRequirement('pageID', '[0-9]+')
+    ->setScopes('pages:versions:add')
+;
+
 $router->delete('/page_versions/{pageID}/{versionID}', '\Concrete\Core\Api\Controller\Versions::delete')
     ->setRequirement('pageID', '[0-9]+')
     ->setRequirement('versionID', '[0-9]+')
