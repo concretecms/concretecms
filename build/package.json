@@ -13,7 +13,7 @@
     "production": "mix --production"
   },
   "devDependencies": {
-    "@concretecms/bedrock": "github:katalysis/bedrock#thumbnail-editor-improvements",
+    "@concretecms/bedrock": "github:katalysis/bedrock#thumbnail-editor-enhancements",
     "cross-env": "^5.1.1",
     "download": "~8.0.0",
     "grunt": "^1.5.3",
