@@ -5,6 +5,7 @@ use Concrete\Core\Cache\Cache;
 use Concrete\Core\Page\Page;
 use Concrete\Core\Search\Index\IndexManagerInterface;
 use Concrete\Core\Support\Facade\Application;
+use Concrete\Core\Utility\SearchIndexContentSanitizer;
 use Loader;
 use Config;
 use PageList;
@@ -21,6 +22,7 @@ class IndexedSearch
 
     private $cPathSections = [];
     private $searchableAreaNames;
+    private $contentSanitizer;
 
     public function __construct()
     {
@@ -112,26 +114,12 @@ class IndexedSearch
     public function getBodyContentFromPage($c)
     {
         $text = '';
-
-        $tagsToSpaces = [
-            '<br>',
-            '<br/>',
-            '<br />',
-            '<p>',
-            '</p>',
-            '</ p>',
-            '<div>',
-            '</div>',
-            '</ div>',
-            '&nbsp;',
-        ];
         $blarray = [];
         $db = Loader::db();
         $r = $db->Execute(
             'SELECT `bID`, `arHandle` FROM `CollectionVersionBlocks` WHERE `cID` = ? AND `cvID` = ? ORDER BY `arHandle` ASC, `cbDisplayOrder` ASC',
             [$c->getCollectionID(), $c->getVersionID()]
         );
-        $th = Loader::helper('text');
         while ($row = $r->fetch()) {
             if ($this->matchesArea($row['arHandle'])) {
                 $b = Block::getByID($row['bID'], $c, $row['arHandle']);
@@ -140,13 +128,9 @@ class IndexedSearch
                 }
                 $bi = $b->getInstance();
                 if (method_exists($bi, 'getSearchableContent')) {
-                    $searchableContent = $bi->getSearchableContent();
-                    if (strlen(trim($searchableContent))) {
-                        $text .= $th->decodeEntities(
-                                strip_tags(str_ireplace($tagsToSpaces, ' ', $searchableContent)),
-                                ENT_QUOTES,
-                                APP_CHARSET
-                            ) . ' ';
+                    $searchableContent = $this->sanitizeSearchableContent((string) $bi->getSearchableContent());
+                    if ($searchableContent !== '') {
+                        $text .= $searchableContent . ' ';
                     }
                 }
                 unset($b);
@@ -156,18 +140,28 @@ class IndexedSearch
 
         // add content defined by a page type controller
         if ($pageController = $c->getPageController()) {
-            $searchableContent = $pageController->getSearchableContent();
+            $searchableContent = $this->sanitizeSearchableContent((string) $pageController->getSearchableContent());
 
-            if (trim((string) $searchableContent) !== '') {
-                $text .= $th->decodeEntities(
-                        strip_tags(str_ireplace($tagsToSpaces, ' ', $searchableContent)),
-                        ENT_QUOTES,
-                        APP_CHARSET
-                    ) . ' ';
+            if ($searchableContent !== '') {
+                $text .= $searchableContent . ' ';
             }
         }
 
         return $text;
+    }
+
+    protected function sanitizeSearchableContent(string $content): string
+    {
+        return $this->getContentSanitizer()->sanitize($content);
+    }
+
+    protected function getContentSanitizer(): SearchIndexContentSanitizer
+    {
+        if ($this->contentSanitizer === null) {
+            $this->contentSanitizer = Application::getFacadeApplication()->make(SearchIndexContentSanitizer::class);
+        }
+
+        return $this->contentSanitizer;
     }
 
 }
