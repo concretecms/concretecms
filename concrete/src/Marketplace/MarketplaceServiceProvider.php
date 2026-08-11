@@ -9,6 +9,7 @@ use Concrete\Core\Http\Client\Client;
 use Concrete\Core\Logging\Channels;
 use Concrete\Core\Logging\LoggerFactory;
 use Concrete\Core\Site\Service;
+use Concrete\Core\System\SystemUser;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Component\Serializer\Serializer;
@@ -28,6 +29,7 @@ class MarketplaceServiceProvider extends Provider
                 $this->app->make('config/database'),
                 $this->app->make(Service::class),
                 $this->app->make(File::class),
+                $this->app->make(SystemUser::class),
                 $config->get('concrete.urls.package_repository'),
                 $config->get('concrete.urls.paths.package_repository')
             );

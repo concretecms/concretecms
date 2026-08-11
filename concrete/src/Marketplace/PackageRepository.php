@@ -20,6 +20,7 @@ use Concrete\Core\Marketplace\Model\RemotePackage;
 use Concrete\Core\Marketplace\Model\ValidateResult;
 use Concrete\Core\Marketplace\Update\UpdatedFieldInterface;
 use Concrete\Core\Site\Service;
+use Concrete\Core\System\SystemUser;
 use Concrete\Core\Url\Url;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\BadResponseException;
@@ -50,6 +51,8 @@ final class PackageRepository implements PackageRepositoryInterface
     private $paths;
     /** @var File */
     private $fileHelper;
+    /** @var SystemUser */
+    private $systemUser;
 
     public function __construct(
         Client $client,
@@ -58,6 +61,7 @@ final class PackageRepository implements PackageRepositoryInterface
         Repository $databaseConfig,
         Service $siteService,
         File $fileHelper,
+        SystemUser $systemUser,
         string $baseUri,
         array $paths
     ) {
@@ -67,6 +71,7 @@ final class PackageRepository implements PackageRepositoryInterface
         $this->databaseConfig = $databaseConfig;
         $this->siteService = $siteService;
         $this->fileHelper = $fileHelper;
+        $this->systemUser = $systemUser;
         $this->baseUri = $baseUri;
         $this->paths = $paths;
     }
@@ -130,6 +135,7 @@ final class PackageRepository implements PackageRepositoryInterface
         if (!$overwrite && file_exists(DIR_PACKAGES . '/' . $package->handle)) {
             throw new PackageAlreadyExistsException();
         }
+        $this->assertPackageDirectoryWritable();
 
         // Try to start the download
         try {
@@ -161,7 +167,15 @@ final class PackageRepository implements PackageRepositoryInterface
         $packageDir = DIR_PACKAGES . '/' . $package->handle;
         if ($overwrite && file_exists($packageDir)) {
             if (!$this->rename($packageDir, $packageDir . '.old')) {
-                throw new UnableToPlacePackageException();
+                throw $this->createUnableToPlacePackageException(
+                    t(
+                        'Unable to back up the existing package directory from "%1$s" to "%2$s".',
+                        $packageDir,
+                        $packageDir . '.old'
+                    ),
+                    $packageDir,
+                    $packageDir . '.old'
+                );
             }
         }
 
@@ -169,7 +183,15 @@ final class PackageRepository implements PackageRepositoryInterface
             if ($overwrite) {
                 $this->rename($packageDir . '.old', $packageDir);
             }
-            throw new UnableToPlacePackageException();
+            throw $this->createUnableToPlacePackageException(
+                t(
+                    'Unable to move the downloaded package directory from "%1$s" to "%2$s".',
+                    $unzipPath . '/' . $package->handle,
+                    $packageDir
+                ),
+                $unzipPath . '/' . $package->handle,
+                $packageDir
+            );
         }
 
         $this->rimraf($package->handle . '.old');
@@ -193,6 +215,45 @@ final class PackageRepository implements PackageRepositoryInterface
         // Remove the old directory
         $this->fileHelper->removeAll($old, true);
         return true;
+    }
+
+    private function assertPackageDirectoryWritable(): void
+    {
+        if (!is_dir(DIR_PACKAGES)) {
+            throw $this->createUnableToPlacePackageException(
+                t('The package directory "%s" does not exist.', DIR_PACKAGES),
+                DIR_PACKAGES
+            );
+        }
+        if (!is_writable(DIR_PACKAGES)) {
+            throw $this->createUnableToPlacePackageException(
+                t('Unable to write to the package directory "%s".', DIR_PACKAGES),
+                DIR_PACKAGES
+            );
+        }
+    }
+
+    private function createUnableToPlacePackageException(
+        string $message,
+        string $sourcePath,
+        ?string $destinationPath = null
+    ): UnableToPlacePackageException {
+        $paths = $destinationPath === null
+            ? t('Path: %s', $sourcePath)
+            : t('Source: %1$s Destination: %2$s', $sourcePath, $destinationPath);
+
+        $username = $this->systemUser->getCurrentUserName();
+        if ($username === '') {
+            $username = t('unknown');
+        }
+
+        return new UnableToPlacePackageException(t(
+            '%1$s %2$s Current PHP process user: %3$s. ' .
+            'Update filesystem permissions from your shell or hosting control panel, then try again.',
+            $message,
+            $paths,
+            $username
+        ));
     }
 
     protected function rimraf(string $handle)
