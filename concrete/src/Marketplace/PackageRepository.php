@@ -24,8 +24,8 @@ use Concrete\Core\System\SystemUser;
 use Concrete\Core\Url\Url;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\BadResponseException;
-use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Exception\ConnectException;
+use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Uri;
 use GuzzleHttp\RequestOptions;
@@ -145,8 +145,8 @@ final class PackageRepository implements PackageRepositoryInterface
                 RequestOptions::ALLOW_REDIRECTS => true,
                 RequestOptions::SINK => $output,
             ]);
-        } catch (ClientException $e) {
-            throw new InvalidDownloadResponseException($e->getMessage());
+        } catch (GuzzleException $e) {
+            throw new InvalidDownloadResponseException(t('Unable to download the package from the marketplace.'), 0, $e);
         }
 
         // Unzip the archive

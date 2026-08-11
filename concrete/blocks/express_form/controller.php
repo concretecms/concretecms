@@ -583,9 +583,7 @@ class Controller extends BlockController implements NotificationProviderInterfac
                 }
                 if ($this->displayCaptcha) {
                     $this->set('captcha', $this->app->make('helper/validation/captcha'));
-                    $this->requireAsset('css', 'core/frontend/captcha');
                 }
-                $this->requireAsset('css', 'core/frontend/errors');
                 $this->set('renderer', $renderer);
             }
         }

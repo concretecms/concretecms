@@ -440,7 +440,6 @@ class Controller extends BlockController implements UsesFeatureInterface
             if ($pagination->haveToPaginate()) {
                 $pagination = $pagination->renderDefaultView();
                 $this->set('pagination', $pagination);
-                $this->requireAsset('css', 'core/frontend/pagination');
             } else {
                 $this->set('pagination', null);
             }

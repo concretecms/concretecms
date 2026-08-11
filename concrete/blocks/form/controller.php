@@ -116,16 +116,6 @@ class Controller extends BlockController
         return t('Legacy Form');
     }
 
-    // we are not using registerViewAssets because this block doesn't support caching
-    // and we have some block record things we need to check.
-    public function view()
-    {
-        $this->requireAsset('css', 'core/frontend/errors');
-        if ($this->displayCaptcha) {
-            $this->requireAsset('css', 'core/frontend/captcha');
-        }
-    }
-
     public function getDefaultThankYouMsg()
     {
         return t('Thanks!');

@@ -142,7 +142,7 @@ class EditPagePropertiesPageKey extends PageKey
             $asl->allowEditDateTime() ||
             $asl->allowEditUserID() ||
             $asl->allowEditPaths() ||
-            ($asl->getAttributesAllowedPermission() == 'A' || ($asl->getAttributesAllowedPermission() == 'C' && count($asl->getAttributesAllowedArray() > 0)))
+            ($asl->getAttributesAllowedPermission() == 'A' || ($asl->getAttributesAllowedPermission() == 'C' && count($asl->getAttributesAllowedArray()) > 0))
         ) {
             return true;
         } else {

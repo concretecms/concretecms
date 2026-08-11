@@ -5,18 +5,11 @@ defined('C5_EXECUTE') or die("Access Denied.");
 $pt = $c->getCollectionThemeObject();
 
 $areaClasses = $pt->getThemeAreaClasses();
-$customClasses = array();
+$areaHandle = $a->getTopLevelAreaHandle();
+$customClasses = $areaClasses[$areaHandle] ?? [];
 
-// Use the area handle as the key to map against area classes
-$areaHandle = $a->getAreaHandle();
-
-// If its a SubArea, find the parent handle and use that
-if ($a instanceof \Concrete\Core\Area\SubArea) {
-    $areaHandle = \Concrete\Core\Area\Area::getAreaHandleFromID($a->getAreaParentID());
-}
-
-if (isset($areaClasses[$areaHandle])) {
-    $customClasses = $areaClasses[$areaHandle];
+if (isset($areaClasses['*'])) {
+    $customClasses = array_unique(array_merge($customClasses, $areaClasses['*']));
 }
 
 $gf = $pt->getThemeGridFrameworkObject();
