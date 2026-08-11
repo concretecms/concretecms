@@ -6,6 +6,7 @@ use Concrete\Core\Config\Repository\Repository;
 use Concrete\Core\Error\UserMessageException;
 use Concrete\Core\Foundation\Composer;
 use Concrete\Core\Localization\Localization;
+use Concrete\Core\Marketplace\Exception\InvalidDownloadResponseException;
 use Concrete\Core\Marketplace\PackageRepositoryInterface;
 use Concrete\Core\Package\PackageService;
 use Concrete\Core\Page\Controller\DashboardPageController;
@@ -147,6 +148,8 @@ class Update extends DashboardPageController
             $this->set('autoUpgradePackageVersion', $mri->version);
         } catch (UserMessageException $x) {
             $this->error->add($x);
+        } catch (InvalidDownloadResponseException $x) {
+            $this->error->add($x->getMessage());
         }
         $this->view();
     }
