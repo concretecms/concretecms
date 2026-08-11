@@ -5,6 +5,7 @@ namespace Concrete\Core\Filesystem;
 use Concrete\Core\Application\ApplicationAwareInterface;
 use Concrete\Core\Application\ApplicationAwareTrait;
 use Concrete\Core\Page\Page;
+use Concrete\Core\Page\Theme\Theme as PageTheme;
 use Concrete\Core\Page\View\PageView;
 use Twig\Cache\CacheInterface;
 use Twig\Environment;
@@ -41,11 +42,12 @@ class TwigFactory implements ApplicationAwareInterface
         // a better place to do this. I'd like to encapsulate this functionality in
         // the core exstension but I don't think it has access to the Loader object.
         $c = Page::getCurrentPage();
-        if ($c) {
-            $theme = $c->getCollectionThemeObject();
-            if ($theme) {
-                $loader->addPath((string) $theme->getThemeDirectory(), 'theme');
-            }
+        $theme = $c ? $c->getCollectionThemeObject() : null;
+        if (!$theme) {
+            $theme = PageTheme::getSiteTheme();
+        }
+        if ($theme) {
+            $loader->addPath((string) $theme->getThemeDirectory(), 'theme');
         }
     }
 
