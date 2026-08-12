@@ -566,7 +566,7 @@ class DragRequestData
     {
         $destinationPageID = $this->getDestinationPage()->getCollectionID();
         foreach ($this->getOriginalPages() as $originalPage) {
-            if ($originalPage->isSystemPage() && $originalPage->getCollectionParentID() != $destinationPageID) {
+            if ($originalPage->isSystemPage() && !$originalPage->isInTrash() && $originalPage->getCollectionParentID() != $destinationPageID) {
                 return t("System pages can be reordered, but they can't be dragged beneath another page.");
             }
         }
