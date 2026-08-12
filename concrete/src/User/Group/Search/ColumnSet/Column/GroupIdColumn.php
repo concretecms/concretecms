@@ -23,6 +23,7 @@ class GroupIdColumn extends Column implements PagerColumnInterface
 
     public function getColumnCallback()
     {
+        return ['\Concrete\Core\User\Group\Search\ColumnSet\Available', 'getGroupID'];
     }
 
     public function filterListAtOffset(PagerProviderInterface $itemList, $mixed)
