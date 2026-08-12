@@ -30,6 +30,7 @@ class Add extends DashboardPageController
         $this->set('ih', $this->app->make('helper/concrete/ui'));
         $this->set('av', $this->app->make('helper/concrete/avatar'));
         $this->set('dtt', $this->app->make('helper/form/date_time'));
+        $this->set('dh', $this->app->make('helper/date'));
         $this->set('gArray', $gArray);
         $this->set('assignment', $assignment);
         $this->set('locales', $locales);
@@ -77,6 +78,9 @@ class Add extends DashboardPageController
         if (!$this->error->has()) {
             // do the registration
             $data = ['uName' => $username, 'uPassword' => $password, 'uEmail' => $postRequest->get('uEmail'), 'uDefaultLanguage' => $postRequest->get('uDefaultLanguage',''), 'uHomeFileManagerFolderID' => ($postRequest->get('uHomeFileManagerFolderID', 0) == 0 ? '' : $postRequest->get('uHomeFileManagerFolderID'))];
+            if ($this->app->make('config')->get('concrete.misc.user_timezones') && $assignment->allowEditTimezone()) {
+                $data['uTimezone'] = $postRequest->get('uTimezone');
+            }
             $uo = $this->app['user/registration']->create($data);
             if (is_object($uo)) {
                 if ($assignment->allowEditAvatar()) {

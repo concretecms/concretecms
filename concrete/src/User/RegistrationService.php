@@ -103,6 +103,11 @@ class RegistrationService implements RegistrationServiceInterface
             $uHomeFileManagerFolderID = $data['uHomeFileManagerFolderID'];
         }
 
+        $uTimezone = null;
+        if (isset($data['uTimezone']) && $data['uTimezone'] != '') {
+            $uTimezone = $data['uTimezone'];
+        }
+
         $entity = new UserEntity();
         $entity->setUserName($data['uName']);
         $entity->setUserEmail($data['uEmail']);
@@ -111,6 +116,7 @@ class RegistrationService implements RegistrationServiceInterface
         $entity->setUserIsFullRecord($uIsFullRecord);
         $entity->setUserDefaultLanguage($uDefaultLanguage);
         $entity->setHomeFileManagerFolderID($uHomeFileManagerFolderID);
+        $entity->setUserTimezone($uTimezone);
         $entity->setUserIsActive(true);
 
         $this->entityManager->persist($entity);
