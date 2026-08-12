@@ -255,29 +255,7 @@ class Search extends DashboardPageController
             case 'activate':
                 $this->setupUser($uID);
                 if ($this->canActivateUser && $this->app->make('helper/validation/token')->validate()) {
-                    if ($this->user->triggerActivate()) {
-                        $mh = $this->app->make('helper/mail');
-                        $mh->to($this->user->getUserEmail());
-                        $config = $this->app->make('config');
-                        if ($config->get('concrete.email.register_notification.address')) {
-                            if ($config->get('concrete.email.register_notification.name')) {
-                                $fromName = $config->get('concrete.email.register_notification.name');
-                            } else {
-                                $fromName = t('Website Registration Notification');
-                            }
-                            $mh->from($config->get('concrete.email.register_notification.address'), $fromName);
-                        } else {
-                            $mh->from($config->get('concrete.email.default.address'), t('Website Registration Notification'));
-                        }
-                        $mh->addParameter('uID', $this->user->getUserID());
-                        $mh->addParameter('user', $this->user);
-                        $mh->addParameter('uName', $this->user->getUserName());
-                        $mh->addParameter('uEmail', $this->user->getUserEmail());
-                        $mh->addParameter('siteName', $this->app->make('site')->getSite()->getSiteName());
-                        $mh->load('user_registered_approval_complete');
-                        $mh->sendMail();
-                    }
-
+                    $this->user->triggerActivate();
                     $this->redirect('/dashboard/users/search', 'edit', $this->user->getUserID(), 'activated');
                 }
                 break;
