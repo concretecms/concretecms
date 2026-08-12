@@ -69,10 +69,13 @@ $token = $app->make(Token::class);
     <?php /** @var GroupType $groupType */ ?>
 
     <div class="ccm-dashboard-header-buttons">
-        <a href="<?php echo (string)Url::to("/dashboard/users/group_types/remove", $groupType->getId()); ?>"
-           class="btn btn-danger">
-            <?php echo t("Remove"); ?>
-        </a>
+        <form method="post"
+              action="<?php echo (string)Url::to("/dashboard/users/group_types/remove", $groupType->getId()); ?>">
+            <?php echo $token->output('save_group_type'); ?>
+            <button type="submit" class="btn btn-danger">
+                <?php echo t("Remove"); ?>
+            </button>
+        </form>
     </div>
 
     <form method="post"

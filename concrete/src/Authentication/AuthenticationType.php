@@ -448,6 +448,26 @@ class AuthenticationType extends ConcreteObject
             echo $this->renderTemplate('form', $params, true) ?? '';
             return;
         }
+        // Preserve legacy callback routing: login/callback/<type>/<method>/... used to
+        // invoke the auth controller method even when no matching template existed, then
+        // render form.php as a fallback.
+        if (!$this->hasTemplate($element) && method_exists($this->controller, $element)) {
+            $params = array_values($params) === $params ? array_values($params) : [];
+            call_user_func_array([$this->controller, $element], $params);
+
+            $atHandle = $this->getAuthenticationTypeHandle();
+            $path = implode('/', [DIRNAME_AUTHENTICATION, $atHandle, 'form.php']);
+            $r = $this->getTemplateVariantLocator()->getRecord($path);
+            if ($r && $r->exists()) {
+                $sets = $this->controller->getSets();
+                if (is_array($sets)) {
+                    $params = array_merge($params, $sets);
+                }
+
+                echo $this->templateService->renderTemplate($r->getFile(), $params, $this);
+                return;
+            }
+        }
         echo $this->renderTemplate($element, $params, true) ?? $this->renderTemplate('form', $params, true) ?? '';
     }
 

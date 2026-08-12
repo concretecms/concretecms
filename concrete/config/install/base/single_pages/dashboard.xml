@@ -605,20 +605,6 @@
         <page name="Block &amp; Stack Permissions" path="/dashboard/blocks/permissions"
               filename="/dashboard/blocks/permissions.php" pagetype=""
               description="Control who can add blocks and stacks on your site." package=""/>
-        <page name="Stack List" path="/dashboard/blocks/stacks/list" filename="/dashboard/blocks/stacks/list/view.php"
-              pagetype="" description="" package="">
-            <attributes>
-                <attributekey handle="exclude_nav">
-                    <value><![CDATA[1]]></value>
-                </attributekey>
-                <attributekey handle="exclude_search_index">
-                    <value><![CDATA[1]]></value>
-                </attributekey>
-                <attributekey handle="meta_keywords">
-                    <value>edit stacks, view stacks, all stacks</value>
-                </attributekey>
-            </attributes>
-        </page>
         <page name="Block Types" path="/dashboard/blocks/types" filename="/dashboard/blocks/types/view.php" pagetype=""
               description="Manage the installed block types in your site." package="">
             <attributes>

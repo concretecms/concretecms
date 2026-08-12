@@ -23,6 +23,13 @@ class FilesystemTest extends ConcreteDatabaseTestCase
         'TreeNodePermissionAssignments',
     ];
 
+    protected function getEntityClassNames(): array
+    {
+        return [
+            'Concrete\Core\Entity\File\Folder\FavoriteFolder',
+        ];
+    }
+
     public function setUp(): void
     {
         parent::setUp();
@@ -44,6 +51,7 @@ class FilesystemTest extends ConcreteDatabaseTestCase
         $this->assertInstanceOf('Concrete\Core\Tree\Node\Type\FileFolder', $folder);
         $this->assertEquals(1, $folder->getTreeNodeParentID());
         $this->assertEquals('Test Sub Folder', $folder->getTreeNodeDisplayName());
+        $folder->delete();
     }
 
     public function testPopulateDirectChildrenOnlyCanSortByName()
