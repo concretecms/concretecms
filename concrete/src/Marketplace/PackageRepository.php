@@ -238,22 +238,21 @@ final class PackageRepository implements PackageRepositoryInterface
         string $sourcePath,
         ?string $destinationPath = null
     ): UnableToPlacePackageException {
-        $paths = $destinationPath === null
-            ? t('Path: %s', $sourcePath)
-            : t('Source: %1$s Destination: %2$s', $sourcePath, $destinationPath);
-
+        $lines = [$message];
+        if ($destinationPath === null) {
+            $lines[] = t('Path: %s', $sourcePath);
+        } else {
+            $lines[] = t('Source: %s', $sourcePath);
+            $lines[] = t('Destination: %s', $destinationPath);
+        }
         $username = $this->systemUser->getCurrentUserName();
         if ($username === '') {
-            $username = t('unknown');
+            $username = tc('UserName', 'unknown');
         }
+        $lines[] = t('Current PHP process user: %s', $username);
+        $lines[] = t('Update filesystem permissions from your shell or hosting control panel, then try again.');
 
-        return new UnableToPlacePackageException(t(
-            '%1$s %2$s Current PHP process user: %3$s. ' .
-            'Update filesystem permissions from your shell or hosting control panel, then try again.',
-            $message,
-            $paths,
-            $username
-        ));
+        return new UnableToPlacePackageException(implode("\n", $lines));
     }
 
     protected function rimraf(string $handle)
