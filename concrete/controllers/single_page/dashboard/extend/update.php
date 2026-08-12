@@ -2,6 +2,7 @@
 
 namespace Concrete\Controller\SinglePage\Dashboard\Extend;
 
+use Concrete\Core\Cache\OpCache;
 use Concrete\Core\Config\Repository\Repository;
 use Concrete\Core\Error\UserMessageException;
 use Concrete\Core\Foundation\Composer;
@@ -28,8 +29,9 @@ class Update extends DashboardPageController
         $previousVersion = $packageController->getPackageEntity()->getPackageVersion();
         $newVersion = $packageController->getPackageVersion();
         if (version_compare($newVersion, $previousVersion, '<=')) {
+            OpCache::clear();
             $this->error->add(t(
-                'Package "%1$s" was not updated because the loaded package controller still reports version %2$s. Clear the PHP opcode cache and try again.',
+                'Package "%1$s" was not updated because the loaded package controller still reports version %2$s. Try again.',
                 t($packageController->getPackageName()) ?: $packageController->getPackageHandle(),
                 $newVersion
             ));
