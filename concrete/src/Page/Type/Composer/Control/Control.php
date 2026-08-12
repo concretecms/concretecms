@@ -2,6 +2,7 @@
 
 namespace Concrete\Core\Page\Type\Composer\Control;
 
+use Concrete\Core\Error\UserMessageException;
 use Concrete\Core\Page\Type\Type;
 use Loader;
 use Concrete\Core\Foundation\ConcreteObject;
@@ -198,6 +199,19 @@ abstract class Control extends ConcreteObject
      */
     public function addToPageTypeComposerFormLayoutSet(PageTypeComposerFormLayoutSet $set)
     {
+        $pageType = $set->getPageTypeObject();
+        if ($pageType !== null) {
+            foreach (static::getList($pageType) as $existing) {
+                if ($existing->getPageTypeComposerControlTypeHandle() === $this->getPageTypeComposerControlTypeHandle()
+                    && (string) $existing->getPageTypeComposerControlIdentifier() === (string) $this->getPageTypeComposerControlIdentifier()
+                ) {
+                    throw new UserMessageException(
+                        t('This control has already been added to this page type.')
+                    );
+                }
+            }
+        }
+
         $db = Loader::db();
         $displayOrder = $db->GetOne('select count(ptComposerFormLayoutSetControlID) from PageTypeComposerFormLayoutSetControls where ptComposerFormLayoutSetID = ?', array($set->getPageTypeComposerFormLayoutSetID()));
         if (!$displayOrder) {
@@ -231,10 +245,16 @@ abstract class Control extends ConcreteObject
     {
         $sets = PageTypeComposerFormLayoutSet::getList($pagetype);
         $controls = array();
+        $seen = array();
         foreach ($sets as $s) {
             $setControls = PageTypeComposerFormLayoutSetControl::getList($s);
             foreach ($setControls as $sc) {
                 $cnt = $sc->getPageTypeComposerControlObject();
+                $key = $cnt->getPageTypeComposerControlTypeHandle() . ':' . $cnt->getPageTypeComposerControlIdentifier();
+                if (isset($seen[$key])) {
+                    continue;
+                }
+                $seen[$key] = true;
                 $cnt->setPageTypeComposerFormLayoutSetControlObject($sc);
                 $cnt->setPageTypeComposerFormControlRequired($sc->isPageTypeComposerFormLayoutSetControlRequired());
                 $controls[] = $cnt;

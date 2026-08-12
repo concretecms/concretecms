@@ -187,7 +187,7 @@ if (isset($cp) && $cp->canViewToolbar() && (!$dh->inDashboard()) && !$view->isEd
                 if ($dh->canRead()) {
                     ?>
                     <li data-guide-toolbar-action="dashboard" class="float-end d-none d-md-block ">
-                        <a <?php if ($show_tooltips) { ?>class="launch-tooltip"<?php } ?> data-bs-toggle="tooltip" data-bs-placement="bottom" href="<?= URL::to('/dashboard') ?>" data-launch-panel="dashboard" title="<?= t('Dashboard – Change Site-wide Settings') ?>">
+                        <a <?php if ($show_tooltips) { ?>class="launch-tooltip"<?php } ?> data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-placement="bottom" href="<?= URL::to('/dashboard') ?>" data-launch-panel="dashboard" title="<?= t('Dashboard – Change Site-wide Settings') ?>">
                             <svg><use xlink:href="#icon-dashboard" /></svg><span class="ccm-toolbar-accessibility-title ccm-toolbar-accessibility-title-site-settings"><?= tc('toolbar', 'Dashboard') ?></span>
                         </a>
                     </li>
@@ -205,7 +205,7 @@ if (isset($cp) && $cp->canViewToolbar() && (!$dh->inDashboard()) && !$view->isEd
                 if ($sh->canViewSitemapPanel()) {
                     ?>
                     <li data-guide-toolbar-action="sitemap" class="float-end d-none d-md-block">
-                        <a <?php if ($show_tooltips) { ?>class="launch-tooltip"<?php } ?> data-bs-toggle="tooltip"
+                        <a <?php if ($show_tooltips) { ?>class="launch-tooltip"<?php } ?> data-bs-toggle="tooltip" data-bs-trigger="hover"
                            data-bs-placement="bottom" href="#"
                            data-panel-url="<?= URL::to('/ccm/system/panels/sitemap') ?>"
                            title="<?= t('Add Pages and Navigate Your Site') ?>" data-launch-panel="sitemap">
@@ -228,7 +228,7 @@ if (isset($cp) && $cp->canViewToolbar() && (!$dh->inDashboard()) && !$view->isEd
                 }
                 ?>
                 <li data-guide-toolbar-action="help" class="float-end d-none d-md-block">
-                    <a <?php if ($show_tooltips) { ?>class="launch-tooltip"<?php } ?> data-bs-toggle="tooltip"
+                    <a <?php if ($show_tooltips) { ?>class="launch-tooltip"<?php } ?> data-bs-toggle="tooltip" data-bs-trigger="hover"
                        data-launch="help-modal"
                        data-bs-placement="bottom"
                        href="<?= URL::to('/ccm/system/dialogs/help/help') ?>?ccm_token=<?=$valt->generate('view_help')?>"

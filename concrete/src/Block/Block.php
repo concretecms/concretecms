@@ -1953,6 +1953,27 @@ EOT
         }
         $arHandle = $this->getAreaHandle();
 
+        // Caller may have loaded this block by bID alone (no specific placement). Recover
+        // cID/cvID/arHandle from CollectionVersionBlocks so the targeted deletes below have
+        // values that can match -- otherwise they filter on NULL and remove nothing.
+        if (!$cID || !$arHandle) {
+            $row = $db->fetchAssociative(
+                'select cID, cvID, arHandle from CollectionVersionBlocks where bID = ? order by isOriginal desc limit 1',
+                [$bID]
+            );
+            if ($row) {
+                if (!$cID) {
+                    $cID = (int) $row['cID'];
+                }
+                if (!$cvID) {
+                    $cvID = (int) $row['cvID'];
+                }
+                if (!$arHandle) {
+                    $arHandle = $row['arHandle'];
+                }
+            }
+        }
+
         // if this block is located in a master collection, we're going to delete all the instances of the block,
         // regardless
         if (($c instanceof Page && $c->isMasterCollection() && !$this->isAlias()) || $forceDelete) {

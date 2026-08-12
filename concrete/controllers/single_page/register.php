@@ -40,7 +40,6 @@ class Register extends PageController
 
         $this->displayUserName = $displayUserName;
         $this->set('displayUserName', $displayUserName);
-        $this->requireAsset('css', 'core/frontend/captcha');
         $this->set('renderer', new Renderer(new FrontendFormContext()));
 
         $service = $this->app->make(CategoryService::class);

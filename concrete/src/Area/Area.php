@@ -301,6 +301,18 @@ class Area extends ConcreteObject implements \Concrete\Core\Permission\ObjectInt
     }
 
     /**
+     * Returns the handle of the top-level area this area belongs to. A
+     * top-level or global area is its own root; sub-areas resolve to the
+     * page-template area they ultimately descend from.
+     *
+     * @return string
+     */
+    public function getTopLevelAreaHandle()
+    {
+        return $this->getAreaHandle();
+    }
+
+    /**
      * Returns the total number of blocks in an area.
      *
      * @param Page $c must be passed if the display() method has not been run on the area object yet.
