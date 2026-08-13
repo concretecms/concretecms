@@ -159,6 +159,12 @@ class Forms extends DashboardPageController
     {
         $control = $this->controlRepository->findOneById($controlID);
         if ($control) {
+            if (!$this->token->validate('save_control')) {
+                $this->error->add($this->token->getErrorMessage());
+            }
+            if ($this->error->has()) {
+                return;
+            }
             $saver = $control->getControlSaveHandler();
             $control = $saver->saveFromRequest($control, $this->request);
             $this->entityManager->persist($control);
