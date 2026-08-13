@@ -449,7 +449,7 @@ class Controller extends BlockController implements UsesFeatureInterface
                     // Show files in ANY of the sets
                     $expr = $query->expr()->orX($this->hideFolders ? '1=0' : 'nt.treeNodeTypeHandle = "file_folder"');
                     foreach ($sets as $set) {
-                        $expr->add($query->expr()->eq('fsf.fsID', $set));
+                        $expr->add($query->expr()->eq('fsf.fsID', (int) $set));
                     }
 
                     $query->andWhere($expr);
@@ -1006,7 +1006,7 @@ class Controller extends BlockController implements UsesFeatureInterface
             'viewProperties' => json_encode(is_array($args['viewProperties']) ? $args['viewProperties'] : []),
             'searchProperties' => json_encode(is_array($args['searchProperties']) ? $args['searchProperties'] : []),
             'expandableProperties' => json_encode(is_array($args['expandableProperties']) ? $args['expandableProperties'] : []),
-            'setIds' => json_encode(is_array($args['fsID']) ? $args['fsID'] : []),
+            'setIds' => json_encode(is_array($args['fsID']) ? array_map('intval', $args['fsID']) : []),
             'setMode' => $args['setMode'] == 'all' ? 'all' : 'any',
             'onlyCurrentUser' => empty($args['onlyCurrentUser']) ? 0 : 1,
             'allowInPageFileManagement' => empty($args['allowInPageFileManagement']) ? 0 : 1,
