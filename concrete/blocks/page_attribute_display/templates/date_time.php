@@ -18,11 +18,11 @@ echo $this->controller->getOpenTag();
 echo $this->controller->getTitle();
 try {
     if ($this->controller->dateFormat) {
-        echo $dh->formatCustom($dateFormat, $this->controller->getContent());
+        echo h($dh->formatCustom($dateFormat, $this->controller->getContent()));
     } else {
-        echo $dh->formatDateTime($this->controller->getContent());
+        echo h($dh->formatDateTime($this->controller->getContent()));
     }
 } catch (Exception $e) {
-    echo $this->controller->getContent();
+    echo h($this->controller->getContent());
 }
 echo $this->controller->getCloseTag();
