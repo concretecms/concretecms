@@ -2,6 +2,7 @@
 namespace Concrete\Core\Express;
 
 use Concrete\Core\Attribute\Category\ExpressCategory;
+use Concrete\Core\Database\Query\LikeBuilder;
 use Concrete\Core\Entity\Express\Association;
 use Concrete\Core\Entity\Express\Entity;
 use Concrete\Core\Entity\Express\Entry;
@@ -107,6 +108,7 @@ class EntryList extends DatabaseItemList implements PagerProviderInterface, Pagi
 
     public function filterByKeywords($keywords)
     {
+        $likeBuilder = Application::getFacadeApplication()->make(LikeBuilder::class);
         $keys = $this->category->getSearchableIndexedList();
         if (count($keys)) {
             foreach ($keys as $ak) {
@@ -115,7 +117,7 @@ class EntryList extends DatabaseItemList implements PagerProviderInterface, Pagi
             }
             $expr = $this->query->expr();
             $this->query->andWhere(call_user_func_array(array($expr, 'orX'), $expressions));
-            $this->query->setParameter('keywords', '%' . $keywords . '%');
+            $this->query->setParameter('keywords', $likeBuilder->escapeForLike($keywords));
         } else {
             $this->query->andWhere('1 = 0');
         }

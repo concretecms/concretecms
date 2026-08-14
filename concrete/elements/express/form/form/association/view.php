@@ -9,7 +9,7 @@
         ?>
         <?php foreach ($selectedEntries as $entry) {
     ?>
-            <div><a href="<?=URL::to('/dashboard/express/entries', 'view_entry', $entry->getID())?>"><?=$formatter->getEntryDisplayName($control, $entry)?></a></div>
+            <div><a href="<?=URL::to('/dashboard/express/entries', 'view_entry', $entry->getID())?>"><?=h($formatter->getEntryDisplayName($control, $entry))?></a></div>
         <?php 
 }
         ?>

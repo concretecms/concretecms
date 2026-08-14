@@ -86,7 +86,7 @@ $c = Page::getCurrentPage();
                                     </a>
                                     <ul class="dropdown-menu">
                                         <?php foreach ($item->getChildren() as $dropdownChild) { ?>
-                                            <li><a class="dropdown-item<?= $dropdownChild->isActive() ? " active" : ""; ?><?= $dropdownChild->isActiveParent() ? " nav-path-selected" : ""; ?>" target="<?=$controller->getPageItemNavTarget($dropdownChild)?>" href="<?=$dropdownChild->getUrl()?>"><?=$dropdownChild->getName()?></a></li>
+                                            <li><a class="dropdown-item<?= $dropdownChild->isActive() ? " active" : ""; ?><?= $dropdownChild->isActiveParent() ? " nav-path-selected" : ""; ?>" target="<?=$controller->getPageItemNavTarget($dropdownChild)?>" href="<?=$dropdownChild->getUrl()?>"><?=h($dropdownChild->getName())?></a></li>
                                         <?php } ?>
                                     </ul>
                                 </li>

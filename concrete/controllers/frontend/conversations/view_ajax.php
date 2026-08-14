@@ -98,6 +98,25 @@ class ViewAjax extends FrontendController
         return $task === 'get_messages' ? false : true;
     }
 
+    protected function getDateFormat(): string
+    {
+        $dateFormats = ['default', 'elapsed', 'custom', 'mdy', 'mdy_full', 'mdy_t', 'mdy_full_t', 'mdy_ts', 'mdy_full_ts'];
+        $dateFormat = $this->request->request->get('dateFormat');
+
+        return in_array($dateFormat, $dateFormats, true) ? $dateFormat : 'default';
+    }
+
+    protected function getCustomDateFormat(): string
+    {
+        $customDateFormat = (string) $this->request->request->get('customDateFormat');
+
+        // Strip anything other than PHP date() format characters and basic separators. In particular,
+        // this removes the backslash escape character used by PHP's date() format to output arbitrary
+        // literal text, which could otherwise be used to inject unescaped HTML/JS into the rendered output.
+$result = preg_replace('/[^a-zA-Z ,.\/:_-]/', '', $customDateFormat);
+return is_string($result) ? $result : '';
+    }
+
     protected function getOrderBy(): string
     {
         $orderBys = ['date_desc', 'date_asc', 'rating'];
@@ -178,8 +197,8 @@ class ViewAjax extends FrontendController
         $this->set('displaySocialLinks', (bool) $this->request->request->get('displaySocialLinks'));
         $this->set('displayPostingForm', (string) $this->request->request->get('displayPostingForm'));
         $this->set('enableCommentRating', (bool) $this->request->request->get('enableCommentRating'));
-        $this->set('dateFormat', (string) $this->request->request->get('dateFormat'));
-        $this->set('customDateFormat', (string) $this->request->request->get('customDateFormat'));
+        $this->set('dateFormat', $this->getDateFormat());
+        $this->set('customDateFormat', $this->getCustomDateFormat());
         $this->set('blockAreaHandle', $this->getAreaHandle());
         $this->set('attachmentsEnabled', (bool) $this->request->request->get('attachmentsEnabled'));
         $this->set('attachmentOverridesEnabled', (bool) $this->request->request->get('attachmentOverridesEnabled'));

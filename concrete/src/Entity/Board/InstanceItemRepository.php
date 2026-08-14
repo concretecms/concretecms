@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\Entity\Board;
 
+use Concrete\Core\Database\Query\LikeBuilder;
 use Concrete\Core\Entity\Board\DataSource\ConfiguredDataSource;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\EntityRepository;
@@ -36,7 +37,7 @@ class InstanceItemRepository extends EntityRepository
             ->select('instanceItem');
         if ($keywords) {
             $qb->andWhere($qb->expr()->like('instanceItemItem.name', ':keywords'));
-            $qb->setParameter('keywords', '%' . $keywords . '%');
+            $qb->setParameter('keywords', app(LikeBuilder::class)->escapeForLike($keywords));
         }
         return $qb
             ->getQuery()

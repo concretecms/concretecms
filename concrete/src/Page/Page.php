@@ -1147,6 +1147,7 @@ class Page extends Collection implements CategoryMemberInterface,
             $cvSet['cvHandle'] = $data['aliasHandle'];
         }
         if ($data['customAliasName'] !== null) {
+            $data['customAliasName'] = trim((string) $app->make('helper/security')->sanitizeString($data['customAliasName']));
             $cvSet['cvName'] = $data['customAliasName'];
         }
         $db = $app->make(Connection::class);
@@ -1899,7 +1900,11 @@ class Page extends Collection implements CategoryMemberInterface,
      */
     public function getCustomAliasName(): ?string
     {
-        return $this->customAliasName;
+        if ($this->customAliasName === null) {
+            return null;
+        }
+
+        return trim((string) app('helper/security')->sanitizeString($this->customAliasName));
     }
 
     /**

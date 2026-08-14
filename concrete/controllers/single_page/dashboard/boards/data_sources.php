@@ -28,6 +28,25 @@ class DataSources extends DashboardSitePageController
             }
         }
     }
+
+    /**
+     * @param $id
+     *
+     * @return ConfiguredDataSource|null
+     */
+    protected function getConfiguredDataSource($id)
+    {
+        $configuredDataSource = $this->entityManager->find(ConfiguredDataSource::class, $id);
+        if ($configuredDataSource) {
+            $board = $configuredDataSource->getBoard();
+            if ($board) {
+                $checker = new Checker($board);
+                if ($checker->canEditBoardSettings()) {
+                    return $configuredDataSource;
+                }
+            }
+        }
+    }
     
     public function add($boardID = null, $dataSourceID = null)
     {
@@ -44,7 +63,7 @@ class DataSources extends DashboardSitePageController
 
     public function update($configuredDataSourceID = null)
     {
-        $configuredDataSource = $this->entityManager->find(ConfiguredDataSource::class, $configuredDataSourceID);
+        $configuredDataSource = $this->getConfiguredDataSource($configuredDataSourceID);
         if ($configuredDataSource) {
             $board = $configuredDataSource->getBoard();
             $dataSource = $configuredDataSource->getDataSource();
@@ -59,7 +78,7 @@ class DataSources extends DashboardSitePageController
 
     public function update_data_source($configuredDataSourceID = null)
     {
-        $configuredDataSource = $this->entityManager->find(ConfiguredDataSource::class, $configuredDataSourceID);
+        $configuredDataSource = $this->getConfiguredDataSource($configuredDataSourceID);
         if ($configuredDataSource) {
             $board = $configuredDataSource->getBoard();
             $dataSource = $configuredDataSource->getDataSource();
@@ -94,13 +113,13 @@ class DataSources extends DashboardSitePageController
 
     public function delete_data_source($configuredDataSourceID = null)
     {
-        $configuredDataSource = $this->entityManager->find(ConfiguredDataSource::class, $configuredDataSourceID);
+        $configuredDataSource = $this->getConfiguredDataSource($configuredDataSourceID);
         if ($configuredDataSource) {
+            $board = $configuredDataSource->getBoard();
             if (!$this->token->validate('delete_data_source')) {
                 $this->error->add($this->token->getErrorMessage());
             }
             if (!$this->error->has()) {
-                $board = $configuredDataSource->getBoard();
                 $this->entityManager->remove($configuredDataSource);
                 $this->entityManager->flush();
                 $resetCommand = new ResetBoardCustomWeightingCommand();

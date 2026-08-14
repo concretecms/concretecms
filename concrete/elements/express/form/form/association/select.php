@@ -52,7 +52,7 @@
                         value="<?=$entry->getId()?>"
                         <?php if (is_object($selectedEntry) && $selectedEntry->getID() == $entry->getID()) { ?>selected<?php } ?>
                 >
-                    <?=$formatter->getEntryDisplayName($control, $entry)?>
+                    <?=h($formatter->getEntryDisplayName($control, $entry))?>
                 </option>
                 <?php
             }

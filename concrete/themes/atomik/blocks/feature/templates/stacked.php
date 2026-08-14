@@ -6,7 +6,8 @@ $iconTag = $iconTag ?? '';
 $opener = '<div class="ccm-block-feature-stacked">';
 $closer = '</div>';
 if ($linkURL) {
-    $opener = '<a href="' . $linkURL . '" class="ccm-block-feature-stacked">';
+    $safeLinkURL = h($linkURL);
+    $opener = '<a href="' . $safeLinkURL . '" class="ccm-block-feature-stacked">';
     $closer = '</a>';
 }
 

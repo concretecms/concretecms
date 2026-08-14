@@ -4,6 +4,7 @@ namespace Concrete\Core\File;
 
 use Closure;
 use Concrete\Core\Attribute\Key\FileKey;
+use Concrete\Core\Database\Query\LikeBuilder;
 use Concrete\Core\Permission\Access\Entity\FileUploaderEntity;
 use Concrete\Core\Permission\Checker as Permissions;
 use Concrete\Core\Permission\Key\FileFolderKey;
@@ -287,6 +288,7 @@ class FolderItemList extends AttributedItemList implements PagerProviderInterfac
      */
     public function filterByKeywords($keywords)
     {
+        $likeBuilder = Application::getFacadeApplication()->make(LikeBuilder::class);
         $expressions = [
             $this->query->expr()->like('fv.fvFilename', ':keywords'),
             $this->query->expr()->like('fv.fvTitle', ':keywords'),
@@ -303,7 +305,7 @@ class FolderItemList extends AttributedItemList implements PagerProviderInterfac
 
         $expr = $this->query->expr();
         $this->query->andWhere(call_user_func_array([$expr, 'orX'], $expressions));
-        $this->query->setParameter('keywords', '%' . $keywords . '%');
+        $this->query->setParameter('keywords', $likeBuilder->escapeForLike($keywords));
     }
 
     public function deliverQueryObject()

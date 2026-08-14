@@ -30,8 +30,8 @@ class DeleteCalendarEventRequest extends ApproveCalendarEventRequest
         $v = $this->getRequestedEventVersionObject();
         if (is_object($v)) {
             $d->setEmailDescription(t("\"%s\" has been marked for deletion.", $v->getName()));
-            $d->setDescription(t("%s submitted for Deletion.", $v->getName()));
-            $d->setInContextDescription(t("Event %s Submitted for Deletion.", $v->getName()));
+            $d->setDescription(t("%s submitted for Deletion.", h($v->getName())));
+            $d->setInContextDescription(t("Event %s Submitted for Deletion.", h($v->getName())));
             $d->setShortStatus(t("Pending Delete"));
         }
 
