@@ -133,6 +133,11 @@ class Types extends DashboardPageController
         $pagetype = PageType::getByID($ptID);
         if (!is_object($pagetype)) {
             $this->error->add(t('Invalid page type object.'));
+        } else {
+            $cmp = new \Permissions($pagetype);
+            if (!$cmp->canEditPageType()) {
+                $this->error->add(t('You do not have access to edit this page type.'));
+            }
         }
         if (!$this->token->validate('update_page_type')) {
             $this->error->add(t($this->token->getErrorMessage()));

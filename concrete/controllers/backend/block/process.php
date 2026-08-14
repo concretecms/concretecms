@@ -77,6 +77,13 @@ class Process extends AbstractController
             throw new UserMessageException(t('Unable to find the specified block'));
         }
 
+        if ($isOrphanedBlock) {
+            $bp = new Checker($b);
+            if (!$bp->canDeleteBlock()) {
+                throw new UserMessageException(t('Access Denied'));
+            }
+        }
+
         $bID = $b->getBlockID();
 
         $b->setBlockAreaObject($ax);

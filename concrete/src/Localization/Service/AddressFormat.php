@@ -317,11 +317,11 @@ class AddressFormat
             $lines[] = trim($postalAreaLine);
         }
 
+        $lines = array_map('h', $lines);
         if ($format === 'html') {
-            $lines = array_map('h', $lines);
             return implode('<br>', $lines);
+        } else {
+            return implode("\n", $lines);
         }
-
-        return implode("\n", $lines);
     }
 }
