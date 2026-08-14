@@ -27,7 +27,7 @@ class ContainerCommandValidator implements ValidatorInterface
 
     public function __construct(ErrorList $errorList, Strings $stringValidator, IconRepository $iconRepository)
     {
-        $this->errorList = new ErrorList();
+        $this->errorList = $errorList;
         $this->stringValidator = $stringValidator;
         $this->iconRepository = $iconRepository;
     }
