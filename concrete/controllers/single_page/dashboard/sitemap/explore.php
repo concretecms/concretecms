@@ -2,8 +2,10 @@
 
 namespace Concrete\Controller\SinglePage\Dashboard\Sitemap;
 
+use Concrete\Core\Error\UserMessageException;
 use Concrete\Core\Page\Controller\DashboardPageController;
 use Concrete\Core\Page\Page;
+use Concrete\Core\Permission\Checker;
 
 defined('C5_EXECUTE') or die('Access Denied.');
 
@@ -24,8 +26,15 @@ class Explore extends DashboardPageController
         if ($cNodeID === null) {
             $cNodeID = $this->request->query->get('cNodeID');
         }
-        if ($task !== null && $cNodeID !== null) {
-            $nc = Page::getByID($cNodeID);
+        if ($task !== null && $cNodeID !== null && in_array($task, ['send_to_top', 'send_to_bottom'], true)) {
+            $nc = Page::getByID((int) $cNodeID);
+            if (!$nc || $nc->isError()) {
+                throw new UserMessageException(t('Unable to find the specified page.'));
+            }
+            $checker = new Checker($nc);
+            if (!$checker->canMoveOrCopyPage()) {
+                throw new UserMessageException(t('Access Denied.'));
+            }
             switch ($task) {
                 case 'send_to_top':
                     $nc->movePageDisplayOrderToTop();
