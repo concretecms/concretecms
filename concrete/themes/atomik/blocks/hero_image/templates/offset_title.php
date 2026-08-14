@@ -5,6 +5,9 @@ $heightRatio = '1.0';
 if (isset($height)) {
     $heightRatio = $height / 100;
 }
+if (isset($button)) {
+    $button->setAttribute('href', h($button->getAttribute('href')));
+}
 ?>
 <?php if ($image) { ?>
 

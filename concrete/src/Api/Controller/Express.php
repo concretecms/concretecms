@@ -34,6 +34,10 @@ class Express extends ApiController implements ApplicationAwareInterface
         if (!$object) {
             return $this->error(t('Object not found.', 404));
         }
+        $permissions = new Checker($object);
+        if (!$permissions->canViewExpressEntries()) {
+            return $this->error(t('You do not have access to view %s entries.', $object->getName()), 401);
+        }
         $list = $express->getList($objectHandle, true);
         $dateModifiedColumn = new DateLastModifiedColumn();
         $dateModifiedColumn->setColumnSortDirection('desc');
@@ -44,7 +48,9 @@ class Express extends ApiController implements ApplicationAwareInterface
 
         $list->setPermissionsChecker(
             function ($entry) {
-                return true;
+                $permissions = new Checker($entry);
+
+                return $permissions->canViewExpressEntry();
             }
         );
 

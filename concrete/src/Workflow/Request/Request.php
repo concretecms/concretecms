@@ -2,6 +2,7 @@
 namespace Concrete\Core\Workflow\Request;
 
 use Concrete\Core\Foundation\ConcreteObject;
+use Concrete\Core\Foundation\Serializer\SafeClassUnserializerTrait;
 use Concrete\Core\User\UserInfo;
 use Concrete\Core\Workflow\Progress\SkippedResponse;
 use Symfony\Component\EventDispatcher\GenericEvent;
@@ -14,6 +15,8 @@ use Events;
 
 abstract class Request extends ConcreteObject
 {
+    use SafeClassUnserializerTrait;
+
     protected $currentWP;
     protected $uID;
     protected $wrStatusNum = 0;
@@ -74,7 +77,7 @@ abstract class Request extends ConcreteObject
         $db = Database::connection();
         $wrObject = $db->getOne('select wrObject from WorkflowRequestObjects where wrID = ?', array($wrID));
         if ($wrObject) {
-            $wr = unserialize($wrObject);
+            $wr = static::safeUnserializeObject($wrObject, self::class);
 
             return $wr;
         }

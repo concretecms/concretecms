@@ -67,7 +67,13 @@ class Edit extends BackendInterfaceController
                 throw new \Exception(t('Invalid occurrence.'));
             }
 
-            $this->set('calendar', $occurrence->getEvent()->getCalendar());
+            $calendar = $occurrence->getEvent()->getCalendar();
+            $cp = new Checker($calendar);
+            if (!$cp->canEditCalendarEvents()) {
+                throw new \Exception(t('Access Denied.'));
+            }
+
+            $this->set('calendar', $calendar);
             $this->set('occurrence', $occurrence);
         } else {
             die('Access Denied.');
@@ -76,17 +82,6 @@ class Edit extends BackendInterfaceController
 
     protected function canAccess()
     {
-        $caID = $this->request->request->get('caID');
-        if ($caID === null) {
-            $caID = $this->request->query->get('caID');
-        }
-        $calendar = $caID ? Calendar::getByID($caID) : null;
-        if (is_object($calendar)) {
-            $cp = new Checker($calendar);
-
-            return $cp->canAddCalendarEvent();
-        }
-
         $versionOccurrenceID = $this->request->request->get('versionOccurrenceID');
         if ($versionOccurrenceID === null) {
             $versionOccurrenceID = $this->request->query->get('versionOccurrenceID');
@@ -99,6 +94,17 @@ class Edit extends BackendInterfaceController
 
                 return $cp->canEditCalendarEvents();
             }
+        }
+
+        $caID = $this->request->request->get('caID');
+        if ($caID === null) {
+            $caID = $this->request->query->get('caID');
+        }
+        $calendar = $caID ? Calendar::getByID($caID) : null;
+        if (is_object($calendar)) {
+            $cp = new Checker($calendar);
+
+            return $cp->canAddCalendarEvent();
         }
 
         return false;

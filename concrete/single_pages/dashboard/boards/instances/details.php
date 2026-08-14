@@ -103,7 +103,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
                                             <tr v-show="expandedLogEntries.includes(entry.id)">
                                                 <td colspan="2">
                                                     <div style="width: 100%; overflow: hidden">
-                                                        <pre><span v-html="entry.displayData"></span></pre>
+                                                        <pre><span v-text="entry.displayData"></span></pre>
                                                     </div>
                                                 </td>
                                             </tr>

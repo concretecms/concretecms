@@ -167,8 +167,21 @@ class Sanitizer
         $xml = $this->dataToXml($data);
         $removedNodes = [];
         $this->sanitizeXml($xml, $removedNodes, $options);
+        $preEnshrinedData = $this->xmlToData($xml);
+        $enshrinedData = $this->enshrinedSvgSanitizer->sanitize($preEnshrinedData);
+        if (is_string($enshrinedData) && $enshrinedData !== $preEnshrinedData) {
+            // The enshrined/svg-sanitize library detected and removed additional unsafe
+            // content that our own allowlist/blocklist checks above didn't catch (eg
+            // javascript: URIs). Record it so that reject-mode callers (checkData())
+            // don't silently accept a file that sanitize-mode would have cleaned up.
+            if (isset($removedNodes['enshrined'])) {
+                ++$removedNodes['enshrined'];
+            } else {
+                $removedNodes['enshrined'] = 1;
+            }
+        }
 
-        return $this->enshrinedSvgSanitizer->sanitize($this->xmlToData($xml));
+        return $enshrinedData;
     }
 
     /**

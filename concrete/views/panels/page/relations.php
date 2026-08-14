@@ -88,6 +88,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
                 url: '<?=$multilingualController->action('create_new')?>',
                 method: 'post',
                 data: {
+                    'ccm_token': '<?= Core::make('token')->generate('create_multilingual_page') ?>',
                     'section': cID,
                     'cID': '<?=$c->getCollectionID()?>'
                 },
@@ -112,6 +113,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
                     url: '<?=$multilingualController->action('assign')?>',
                     method: 'post',
                     data: {
+                        'ccm_token': '<?= Core::make('token')->generate('assign_multilingual_page') ?>',
                         'destID': data.cID,
                         'cID': cID
                     },
@@ -132,4 +134,3 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
     });
 </script>
-

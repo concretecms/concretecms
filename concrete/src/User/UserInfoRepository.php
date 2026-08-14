@@ -103,17 +103,23 @@ class UserInfoRepository
     /**
      * @param string $uHash
      * @param bool $unredeemedHashesOnly
+     * @param int|null $type One of the UVTYPE_* constants; when provided, restricts the lookup to hashes of that type
      *
      * @return \Concrete\Core\User\UserInfo|null
      */
-    public function getByValidationHash($uHash, $unredeemedHashesOnly = true)
+    public function getByValidationHash($uHash, $unredeemedHashesOnly = true, $type = null)
     {
         $db = $this->entityManager->getConnection();
+        $query = "select uID from UserValidationHashes where uHash = ?";
+        $params = array($uHash);
         if ($unredeemedHashesOnly) {
-            $uID = $db->fetchColumn("select uID from UserValidationHashes where uHash = ? and uDateRedeemed = 0", array($uHash));
-        } else {
-            $uID = $db->fetchColumn("select uID from UserValidationHashes where uHash = ?", array($uHash));
+            $query .= " and uDateRedeemed = 0";
         }
+        if ($type !== null) {
+            $query .= " and type = ?";
+            $params[] = $type;
+        }
+        $uID = $db->fetchColumn($query, $params);
         if ($uID) {
             $ui = $this->getByID($uID);
             return $ui;

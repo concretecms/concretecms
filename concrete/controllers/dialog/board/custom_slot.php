@@ -1,9 +1,7 @@
 <?php
 namespace Concrete\Controller\Dialog\Board;
 
-use Concrete\Core\Block\Block;
 use Concrete\Core\Block\BlockType\BlockType;
-use Concrete\Core\Block\View\BlockView;
 use Concrete\Core\Board\Command\AddCustomSlotToBoardCommand;
 use Concrete\Core\Board\Helper\Traits\SlotTemplateJsonHelperTrait;
 use Concrete\Core\Board\Instance\Slot\Content\ContentPopulator;
@@ -16,7 +14,6 @@ use Concrete\Core\Foundation\Serializer\JsonSerializer;
 use Concrete\Core\Permission\Checker;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Response;
 
 class CustomSlot extends \Concrete\Core\Controller\Controller
 {
@@ -24,6 +21,14 @@ class CustomSlot extends \Concrete\Core\Controller\Controller
     use SlotTemplateJsonHelperTrait;
 
     protected $viewPath = '/dialogs/boards/custom_slot';
+
+protected function validateCustomSlotToken()
+{
+    $token = $this->app->make('token');
+    if (!$token->validate('board_custom_slot')) {
+        throw new UserMessageException($token->getErrorMessage());
+    }
+}
 
 
     protected function getInstanceFromRequest()
@@ -51,6 +56,7 @@ class CustomSlot extends \Concrete\Core\Controller\Controller
 
     public function getTemplates()
     {
+        $this->validateCustomSlotToken();
         $entityManager = $this->app->make(EntityManager::class);
         $contentPopulator = $this->app->make(ContentPopulator::class);
         $availableTemplateCollectionFactory = $this->app->make(AvailableTemplateCollectionFactory::class);
@@ -80,6 +86,7 @@ class CustomSlot extends \Concrete\Core\Controller\Controller
 
     public function searchItems()
     {
+        $this->validateCustomSlotToken();
         $instance = $this->getInstanceFromRequest();
         return new JsonResponse($this->getDataSourcesJson(
             $instance, $this->request->request->get('keywords')
@@ -104,6 +111,7 @@ class CustomSlot extends \Concrete\Core\Controller\Controller
 
     public function saveTemplate()
     {
+        $this->validateCustomSlotToken();
         $instance = $this->getInstanceFromRequest();
         $slot = $this->request->request->get('slot');
         $entityManager = $this->app->make(EntityManager::class);
@@ -134,15 +142,6 @@ class CustomSlot extends \Concrete\Core\Controller\Controller
 
 
 
-        \Cache::disableAll(); // This is required to make block output rendering work. This is not ideal.
-        $block = Block::getByID($block->getBlockID()); // need to make sure everything is refreshed.
-        $view = new BlockView($block);
-        ob_start();
-        $view->render('view');
-        $content = ob_get_contents();
-        ob_end_clean();
-        
-        return new Response($content);
     }
 
 }

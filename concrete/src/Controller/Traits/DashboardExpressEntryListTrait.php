@@ -204,6 +204,11 @@ trait DashboardExpressEntryListTrait
 
     protected function renderExpressEntryAdvancedSearchResults(Entity $entity)
     {
+        $permissions = new \Permissions($entity);
+        if (!$permissions->canViewExpressEntries()) {
+            throw new UserMessageException(t('Access Denied'));
+        }
+
         $query = $this->getQueryFactory()->createFromAdvancedSearchRequest(
             $this->getSearchProvider($entity), $this->request, Request::METHOD_GET
         );
@@ -216,8 +221,14 @@ trait DashboardExpressEntryListTrait
         if ($presetID) {
             $preset = $this->entityManager->find(SavedExpressSearch::class, $presetID);
             if ($preset) {
+                $entity = $preset->getEntity();
+                $permissions = new \Permissions($entity);
+                if (!$permissions->canViewExpressEntries()) {
+                    throw new UserMessageException(t('Access Denied'));
+                }
+
                 $query = $this->getQueryFactory()->createFromSavedSearch($preset);
-                $result = $this->createSearchResult($preset->getEntity(), $query);
+                $result = $this->createSearchResult($entity, $query);
                 $this->renderSearchResult($result);
 
                 $factory = $this->createBreadcrumbFactory();
