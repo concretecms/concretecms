@@ -4,7 +4,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
 <div class="mb-3">
     <?php if ($view->supportsLabel()) { ?>
-        <label class="form-label" for="<?=$view->getControlID()?>"><?=$view->getLabel()?></label>
+        <label class="form-label" for="<?=$view->getControlID()?>"><?=h($view->getLabel())?></label>
     <?php } ?>
 
     <?php if ($view->isRequired()) { ?>
