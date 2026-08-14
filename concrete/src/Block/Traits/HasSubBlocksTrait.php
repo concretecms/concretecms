@@ -6,6 +6,7 @@ use Concrete\Core\Block\Block;
 use Concrete\Core\Block\BlockController;
 use Concrete\Core\Feature\UsesFeatureInterface;
 use Concrete\Core\Page\Page;
+use Permissions;
 
 trait HasSubBlocksTrait
 {
@@ -103,6 +104,11 @@ trait HasSubBlocksTrait
         $this->btCacheBlockOutputLifetime = $btCacheBlockOutputLifetime;
 
         foreach ($blocks as $b) {
+            $p = new Permissions($b);
+            if (!$p->canViewBlock()) {
+                continue;
+            }
+
             // Check if the sub block has any assets to register.
             $objController = $b->getController();
             if (is_callable([$objController, 'registerViewAssets'])) {
