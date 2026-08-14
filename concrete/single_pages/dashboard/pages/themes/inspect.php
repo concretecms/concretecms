@@ -18,6 +18,8 @@ $txt = $app->make('helper/text');
 
 <form method="post" id="ccm-inspect-form" action="<?=$view->action('activate_files', $pThemeID); ?>">
 
+    <?=$token->output('activate_files'); ?>
+
     <p class="lead"><?=t('%s Theme', $pageTheme->getThemeDisplayName()); ?></p>
 
     <div class="row">

@@ -63,6 +63,10 @@ class Inspect extends DashboardPageController
     public function activate_files($pThemeID)
     {
         try {
+            if (!$this->token->validate('activate_files')) {
+                throw new Exception($this->token->getErrorMessage());
+            }
+
             $pt = PageTheme::getByID($pThemeID);
             if (!is_array($this->request->request->get('pageTemplates'))) {
                 throw new Exception(t('You must specify at least one template to create.'));
