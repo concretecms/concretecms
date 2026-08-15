@@ -147,5 +147,98 @@ namespace Concrete\Tests\Package {
             $this->assertFalse($sourceExists);
             $this->assertSame('ok', $backupContent);
         }
+
+        public function testBackupPreflightCreatesNestedTrashDirectory(): void
+        {
+            $handle = 'package_backup_nested_trash_' . uniqid();
+            $packagePath = DIR_PACKAGES . '/' . $handle;
+            $testRoot = DIR_FILES_UPLOADED_STANDARD . '/' . $handle;
+            $trash = $testRoot . '/first/second/trash';
+            $config = app('config');
+            $originalTrash = $config->get('concrete.misc.package_backup_directory');
+            $fileService = app(File::class);
+            $preflight = null;
+            $result = null;
+            $trashCreatedByPreflight = false;
+
+            try {
+                if (!@mkdir($testRoot, 0777, true) || !@mkdir($packagePath, 0777, true)) {
+                    $this->markTestSkipped('Unable to create the test directories.');
+                }
+                file_put_contents($packagePath . '/probe.txt', 'nested');
+                $config->set('concrete.misc.package_backup_directory', $trash);
+                $package = $this->createPackage($handle);
+
+                $preflight = $package->getBackupErrors();
+                $trashCreatedByPreflight = is_dir($trash);
+                $result = $package->backup();
+            } finally {
+                $config->set('concrete.misc.package_backup_directory', $originalTrash);
+                if (is_dir($packagePath)) {
+                    $fileService->removeAll($packagePath, true);
+                }
+                if (is_dir($testRoot)) {
+                    $fileService->removeAll($testRoot, true);
+                }
+            }
+
+            $this->assertInstanceOf(ErrorList::class, $preflight);
+            $this->assertFalse($preflight->has(), (string) $preflight);
+            $this->assertTrue($trashCreatedByPreflight);
+            $this->assertInstanceOf(Package::class, $result);
+        }
+
+        public function testBackupRejectsTrashPathThatIsAFile(): void
+        {
+            $handle = 'package_backup_file_trash_' . uniqid();
+            $packagePath = DIR_PACKAGES . '/' . $handle;
+            $testRoot = DIR_FILES_UPLOADED_STANDARD . '/' . $handle;
+            $trash = $testRoot . '/trash';
+            $config = app('config');
+            $originalTrash = $config->get('concrete.misc.package_backup_directory');
+            $fileService = app(File::class);
+            $result = null;
+            $sourceStillExists = false;
+            $trashContent = null;
+
+            try {
+                if (!@mkdir($testRoot, 0777, true) || !@mkdir($packagePath, 0777, true)) {
+                    $this->markTestSkipped('Unable to create the test directories.');
+                }
+                file_put_contents($trash, 'sentinel');
+                file_put_contents($packagePath . '/probe.txt', 'source');
+                $config->set('concrete.misc.package_backup_directory', $trash);
+
+                $result = $this->createPackage($handle)->backup();
+                $sourceStillExists = is_file($packagePath . '/probe.txt');
+                $trashContent = file_get_contents($trash);
+            } finally {
+                $config->set('concrete.misc.package_backup_directory', $originalTrash);
+                if (is_dir($packagePath)) {
+                    $fileService->removeAll($packagePath, true);
+                }
+                if (is_dir($testRoot)) {
+                    $fileService->removeAll($testRoot, true);
+                }
+            }
+
+            $this->assertInstanceOf(ErrorList::class, $result);
+            $this->assertStringContainsString('exists but is not a directory', (string) $result);
+            $this->assertTrue($sourceStillExists);
+            $this->assertSame('sentinel', $trashContent);
+        }
+
+        private function createPackage(string $handle): Package
+        {
+            return new class(app(), $handle) extends Package {
+                protected $pkgHandle;
+
+                public function __construct(Application $app, string $handle)
+                {
+                    parent::__construct($app);
+                    $this->pkgHandle = $handle;
+                }
+            };
+        }
     }
 }

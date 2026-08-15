@@ -919,17 +919,12 @@ abstract class Package implements LocalizablePackageInterface
      */
     public function backup()
     {
-        $config = $this->app->make('config');
-        $trash = $config->get('concrete.misc.package_backup_directory');
-        if (!is_dir($trash)) {
-            @mkdir($trash, $config->get('concrete.filesystem.permissions.directory'));
-        }
-
         $errors = $this->getBackupErrors();
         if ($errors->has()) {
             return $errors;
         }
 
+        $trash = $this->app->make('config')->get('concrete.misc.package_backup_directory');
         $packageHandle = $this->getPackageHandle();
         $packagePath = DIR_PACKAGES . '/' . $packageHandle;
         $trashName = $trash . '/' . $packageHandle . '_' . date('YmdHis');
@@ -1003,7 +998,7 @@ abstract class Package implements LocalizablePackageInterface
     }
 
     /**
-     * Check whether the current package directory can be moved to the trash directory.
+     * Create the trash directory if needed and check whether the current package directory can be moved there.
      */
     public function getBackupErrors(): ErrorList
     {
@@ -1015,19 +1010,31 @@ abstract class Package implements LocalizablePackageInterface
         } else {
             $config = $this->app->make('config');
             $trash = $config->get('concrete.misc.package_backup_directory');
-            if (!is_dir($trash)) {
-                $trashParent = dirname($trash);
-                if (!is_dir($trashParent) || !is_writable($trashParent)) {
+            if (!is_string($trash) || trim($trash) === '') {
+                $this->addPackageFilesystemError(
+                    $errors,
+                    t('The package trash directory is not configured.')
+                );
+            } elseif ((file_exists($trash) || is_link($trash)) && !is_dir($trash)) {
+                $this->addPackageFilesystemError(
+                    $errors,
+                    t('The configured package trash path "%s" exists but is not a directory.', $trash)
+                );
+            } else {
+                if (!is_dir($trash)) {
+                    @mkdir($trash, $config->get('concrete.filesystem.permissions.directory'), true);
+                }
+                if (!is_dir($trash)) {
                     $this->addPackageFilesystemError(
                         $errors,
                         t('Unable to create the package trash directory "%s". Check write permissions for the parent directory.', $trash)
                     );
+                } elseif (!is_writable($trash)) {
+                    $this->addPackageFilesystemError(
+                        $errors,
+                        t('Unable to write to the package trash directory "%s".', $trash)
+                    );
                 }
-            } elseif (!is_writable($trash)) {
-                $this->addPackageFilesystemError(
-                    $errors,
-                    t('Unable to write to the package trash directory "%s".', $trash)
-                );
             }
             if (!is_writable(DIR_PACKAGES)) {
                 $this->addPackageFilesystemError(
