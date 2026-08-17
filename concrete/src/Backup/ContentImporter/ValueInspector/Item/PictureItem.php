@@ -5,6 +5,17 @@ namespace Concrete\Core\Backup\ContentImporter\ValueInspector\Item;
 class PictureItem extends FileItem
 {
     /**
+     * @var string
+     */
+    protected $additionalAttributes;
+
+    public function __construct($filename, $prefix = null, ?int $fileID = null, string $additionalAttributes = '')
+    {
+        parent::__construct($filename, $prefix, $fileID);
+        $this->additionalAttributes = $additionalAttributes;
+    }
+
+    /**
      * {@inheritdoc}
      *
      * @see \Concrete\Core\Backup\ContentImporter\ValueInspector\Item\ItemInterface::getDisplayName()
@@ -13,6 +24,11 @@ class PictureItem extends FileItem
     public function getDisplayName()
     {
         return t('Picture');
+    }
+
+    public function getAdditionalAttributes(): string
+    {
+        return $this->additionalAttributes;
     }
 
     /**
@@ -26,7 +42,15 @@ class PictureItem extends FileItem
     public function getContentValue()
     {
         $file = $this->getContentObject();
+        if ($file === null) {
+            return null;
+        }
+        $result = "<concrete-picture fID=\"{$file->getFileID()}\"";
+        if (($additionalAttributes = $this->getAdditionalAttributes()) !== '') {
+            $result .= " {$additionalAttributes}";
+        }
+        $result .= ' />';
 
-        return $file ? "<concrete-picture fID=\"{$file->getFileID()}\" />" : null;
+        return $result;
     }
 }
