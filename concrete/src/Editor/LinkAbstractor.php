@@ -435,7 +435,12 @@ class LinkAbstractor extends ConcreteObject
                 $fv = $f ? $f->getApprovedVersion() : null;
                 if ($fv) {
                     $picture->fid = false;
-                    $picture->file = $fv->getPrefix() . ':' . $fv->getFilename();
+                    if (ContentExporter::useIDs()) {
+                        $picture->{'file-id'} = $f->getFileID();
+                        $picture->file = false;
+                    } else {
+                        $picture->file = $fv->getPrefix() . ':' . $fv->getFilename();
+                    }
                 }
             }
             $text = (string) $r->restore_noise($r);
