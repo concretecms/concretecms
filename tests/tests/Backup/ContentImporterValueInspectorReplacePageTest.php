@@ -39,6 +39,26 @@ EOL;
         $this->assertEquals('<p>This is a content block. Here is a feed. <a href="http://www.dummyco.com/path/to/server/index.php/rss/blog">Feed</a>. It is amazing. <a href="{CCM:CID_' . $link1 . '}">Link 1</a>. <a href="{CCM:CID_' . $link3 . '}">Home</a>. Here\'s another. <a href="{CCM:CID_' . $link1 . '}">Link 2</a>. Don\'t forget a second <a href="{CCM:CID_' . $link2 . '}">link.</a>. It\'s a pretty good one. <a href="thumbs_up.html">Thumbs up!</a> Excellent! <a href="{CCM:CID_' . $link3 . '}">See you later!</a>', $content);
     }
 
+    public function testReplaceContentWithIDs()
+    {
+        $this->createData();
+
+        $pageID = Page::getByPath('/page-2/subpage-b')->getCollectionID();
+        $homeID = Page::getHomePageID();
+
+        $content = <<<EOL
+        <a href="{ccm:export:page::id={$pageID}}">Link</a>. <a href="{ccm:export:page::id={$homeID}}">Home</a>. <a href="{ccm:export:pagefeed::id=1}">Feed</a>.
+EOL;
+
+        $inspector = Core::make('import/value_inspector');
+        $result = $inspector->inspect($content);
+
+        $this->assertEquals(
+            '<a href="{CCM:CID_' . $pageID . '}">Link</a>. <a href="{CCM:CID_' . $homeID . '}">Home</a>. <a href="http://www.dummyco.com/path/to/server/index.php/rss/blog">Feed</a>.',
+            trim($result->getReplacedContent())
+        );
+    }
+
     public function testCustomReplaceContent()
     {
         $this->createData();

@@ -135,13 +135,104 @@ EOL;
 EOL;
 
         $expected = <<<EOL
-        <p><concrete-picture fID="1" />Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-        <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip <concrete-picture fID="1" /></p>
+        <p><concrete-picture fID="1" alt="Lorem ipsum" />Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+        <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip <concrete-picture fID="1" alt="ex ea commodo consequat." width="200" height="100" style="border: 1px solid black;" /></p>
 EOL;
 
         $inspector = app('import/value_inspector');
         $result = $inspector->inspect($content);
 
         $this->assertEquals($expected, $result->getReplacedContent());
+    }
+
+    /**
+     * Files imported from a CIF package may get a brand new prefix, so references without a prefix
+     * must be resolved too.
+     *
+     * @see \Concrete\Core\Backup\ContentExporterOptions::setExportFilesWithoutPrefix()
+     */
+    public function testReplacedContentWithoutPrefix()
+    {
+        $file = $this->createFile('without-prefix.jpg');
+
+        $content = <<<EOL
+        <a href="{ccm:export:file:without-prefix.jpg}">download</a> <concrete-picture file="without-prefix.jpg" alt="Lorem ipsum" />
+EOL;
+
+        $expected = <<<EOL
+        <a href="{CCM:FID_DL_{$this->getFileReference($file)}}">download</a> <concrete-picture fID="{$file->getFileID()}" alt="Lorem ipsum" />
+EOL;
+
+        $inspector = app('import/value_inspector');
+        $result = $inspector->inspect($content);
+
+        $this->assertEquals($expected, $result->getReplacedContent());
+    }
+
+    public function testReplacedContentWithIDs()
+    {
+        $file = $this->createFile('with-ids.jpg');
+        $fID = $file->getFileID();
+
+        $content = <<<EOL
+        <a href="{ccm:export:file::id={$fID}}">download</a> <concrete-picture file-id="{$fID}" alt="Lorem ipsum" />
+EOL;
+
+        $expected = <<<EOL
+        <a href="{CCM:FID_DL_{$this->getFileReference($file)}}">download</a> <concrete-picture fID="{$fID}" alt="Lorem ipsum" />
+EOL;
+
+        $inspector = app('import/value_inspector');
+        $result = $inspector->inspect($content);
+
+        $this->assertEquals($expected, $result->getReplacedContent());
+    }
+
+    /**
+     * References that can't be resolved are dropped from the content (this has always been the case:
+     * the routines replace them with the empty string when the item has no content value).
+     */
+    public function testUnresolvedReferencesAreDropped()
+    {
+        $this->createFile('unresolved.jpg');
+
+        $content = 'A<concrete-picture file="not-there.jpg" alt="Lorem ipsum" />B{ccm:export:file::id=12345}C';
+
+        $inspector = app('import/value_inspector');
+        $result = $inspector->inspect($content);
+
+        $this->assertEquals('ABC', $result->getReplacedContent());
+    }
+
+    /**
+     * Create the default storage location and add a file to it.
+     *
+     * @param string $filename
+     *
+     * @return \Concrete\Core\Entity\File\File
+     */
+    private function createFile($filename)
+    {
+        if (!is_dir($this->getStorageDirectory())) {
+            mkdir($this->getStorageDirectory());
+        }
+        $this->getStorageLocation();
+
+        $importer = app(FileImporter::class);
+        $version = \Concrete\Core\File\File::add($filename, $importer->generatePrefix());
+
+        return $version->getFile();
+    }
+
+    /**
+     * Get the value used by FileItem to reference a file.
+     *
+     * @param \Concrete\Core\Entity\File\File $file
+     *
+     * @return string
+     */
+    private function getFileReference($file)
+    {
+        return (string) ($file->getFileUUID() ?: $file->getFileID());
     }
 }
