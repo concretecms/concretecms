@@ -113,7 +113,6 @@ class ContentImporter
 
         if (!$computeThumbnails) {
             $fh->setRescanThumbnailsOnImport(false);
-            $helper = Core::make('helper/file');
         }
         $contents = Core::make('helper/file')->getDirectoryContents($fromPath);
         foreach ($contents as $filename) {
