@@ -200,9 +200,7 @@ class Controller extends BlockController implements UsesFeatureInterface
     }
 
     /**
-     * @param int $treeID
-     *
-     * @return string|null
+     * @deprecated
      */
     public static function replaceTreeWithPlaceHolder($treeID)
     {
