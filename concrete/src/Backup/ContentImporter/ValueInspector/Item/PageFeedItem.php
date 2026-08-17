@@ -26,8 +26,24 @@ class PageFeedItem extends AbstractItem
     public function getContentObject()
     {
         $reference = (string) $this->getReference();
+        if ($reference === '') {
+            return null;
+        }
+        if (preg_match('/^(?<handle>[^:]*):id=(?<id>[1-9]\d*)$/', $reference, $m)) {
+            $handle = $m['handle'];
+            $id = (int) $m['id'];
+        } else {
+            $handle = $reference;
+            $id = null;
+        }
+        if ($handle !== '') {
+            return Feed::getByHandle($handle);
+        }
+        if ($id !== null) {
+            return Feed::getByID($id);
+        }
 
-        return $reference === '' ? null : Feed::getByHandle($reference);
+        return null;
     }
 
     /**
