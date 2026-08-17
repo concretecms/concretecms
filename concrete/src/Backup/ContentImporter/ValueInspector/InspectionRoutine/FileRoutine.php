@@ -33,13 +33,18 @@ class FileRoutine extends AbstractRegularExpressionRoutine
      */
     public function getItem($identifier)
     {
-        if (str_contains($identifier, ':')) {
-            [$prefix, $filename] = explode(':', $identifier);
-        } else {
-            $filename = $identifier;
-            $prefix = null;
+        $filename = '';
+        $prefix = null;
+        $id = null;
+        if (preg_match('/^(.*):id=([1-9]\d*)$/D', $identifier, $m)) {
+            $identifier = $m[1];
+            $id = (int) $m[2];
+        }
+        if ($identifier !== '') {
+            [$prefix, $filename] = str_contains($identifier, ':') ? explode(':', $identifier, 2) : [null, $identifier];
+            $id = null;
         }
 
-        return new FileItem($filename, $prefix);
+        return new FileItem($filename, $prefix, $id);
     }
 }
