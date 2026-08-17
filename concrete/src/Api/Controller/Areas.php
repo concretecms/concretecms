@@ -83,11 +83,13 @@ class Areas extends ApiController implements ApplicationAwareInterface
             return $this->error(t('You do not have permission to add this block type to this area on this page.', 403));
         }
 
+        $data = $blockType->getController()->getImportDataFromApiValue($page, (array) $content['value']);
+
         $command = new AddBlockToPageCommand();
         $command->setPage($page);
         $command->setArea($area);
         $command->setBlockType($blockType);
-        $command->setData($content['value']);
+        $command->setData($data);
 
         $block = $this->app->executeCommand($command);
 
@@ -251,7 +253,7 @@ class Areas extends ApiController implements ApplicationAwareInterface
             return $this->error(t('You do not have permission to edit this block on this page.', 403));
         }
 
-        $body = (array) $content['value'];
+        $body = $b->getController()->getImportDataFromApiValue($page, (array) $content['value']);
         $r = $this->validateBlock($b, $body);
         if ($r instanceof JsonResponse) {
             return $r;
@@ -261,7 +263,7 @@ class Areas extends ApiController implements ApplicationAwareInterface
 
         $command = new UpdatePageBlockCommand();
         $command->setPage($page);
-        $command->setData($content['value']);
+        $command->setData($body);
         $command->setBlock($blockToEdit);
 
         $block = $this->app->executeCommand($command);

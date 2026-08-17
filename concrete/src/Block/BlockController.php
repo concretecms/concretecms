@@ -638,6 +638,45 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
     }
 
     /**
+     * Extract the data to be passed to the save() method from a block value received via the API.
+     *
+     * The API exposes block values in the CIF format (see the API block transformers), so they may contain
+     * placeholders like {ccm:export:page:...}: this method resolves them exactly as an import from a CIF
+     * file would do, by rebuilding the XML representation of the value and handing it to getImportData().
+     *
+     * Values whose key can't be an XML element name, as well as values that aren't strings, numbers or NULL,
+     * are left untouched (they can't be columns handled by getImportData()).
+     *
+     * @param \Concrete\Core\Page\Page $page
+     * @param array<string,mixed> $value
+     *
+     * @return array<string,mixed>
+     */
+    public function getImportDataFromApiValue($page, array $value)
+    {
+        $xml = $this->app->make(Xml::class);
+        $blockNode = new \SimpleXMLElement('<block></block>');
+        $dataNode = $blockNode->addChild('data');
+        $dataNode->addAttribute('table', (string) $this->getBlockTypeDatabaseTable());
+        $recordNode = $dataNode->addChild('record');
+        $untouched = [];
+        foreach ($value as $key => $keyValue) {
+            if (!preg_match('/^[A-Za-z_][A-Za-z0-9_.\-]*$/', (string) $key)) {
+                $untouched[$key] = $keyValue;
+            } elseif ($keyValue === null) {
+                // that's how the export() method marks NULL values
+                $recordNode->addChild((string) $key)->addAttribute('null', 'true');
+            } elseif (is_string($keyValue) || is_int($keyValue) || is_float($keyValue)) {
+                $xml->createChildElement($recordNode, (string) $key, (string) $keyValue);
+            } else {
+                $untouched[$key] = $keyValue;
+            }
+        }
+
+        return array_merge($this->getImportData($blockNode, $page), $untouched);
+    }
+
+    /**
      * Save into the secondary database tables the data extracted from the <data> child elements of a an XML <block> element into the database.
      *
      * @param \Concrete\Core\Block\Block $b
