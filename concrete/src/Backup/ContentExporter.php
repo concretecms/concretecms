@@ -2,7 +2,6 @@
 namespace Concrete\Core\Backup;
 
 use Concrete\Core\File\File;
-use Concrete\Core\Http\Request;
 use Concrete\Core\Page\Feed;
 use Concrete\Core\Page\Page;
 use Concrete\Core\Page\Type\Composer\FormLayoutSetControl;
@@ -15,33 +14,29 @@ class ContentExporter
     protected static $ptComposerOutputControlIDs = [];
 
     /**
-     * @var bool|null
+     * @var \Concrete\Core\Backup\ContentExporterOptions|null
      */
-    private static $useIDs = null;
+    private static $options = null;
 
     /**
-     * Should we export items by using IDs instead of installation-independent identifiers?
+     * Get the options driving the export.
+     * If they haven't been set with setOptions(), they are automatically detected from the current request.
      */
-    public static function useIDs(): bool
+    public static function getOptions(): ContentExporterOptions
     {
-        if (self::$useIDs === null) {
-            $request = app(Request::class);
-            if (preg_match('{^/ccm/api/\d+(\.\d+)*/.}i', $request->getPath())) {
-                self::$useIDs = (string) $request->query->get('export_ids', '') === '' || $request->query->getBoolean('export_ids');
-            } else {
-                self::$useIDs = false;
-            }
+        if (self::$options === null) {
+            self::$options = app(ContentExporterOptions::class);
         }
-        return self::$useIDs;
+
+        return self::$options;
     }
 
     /**
-     * Should we export items by using IDs instead of installation-independent identifiers?
-     * Set to null to autodetect it
+     * Set the options driving the export, overriding the ones automatically detected from the current request.
      */
-    public static function setUseIDs(?bool $value): void
+    public static function setOptions(ContentExporterOptions $value): void
     {
-        self::$useIDs = $value;
+        self::$options = $value;
     }
 
     /**
@@ -101,7 +96,7 @@ class ContentExporter
             return null;
         }
 
-        return static::useIDs() ? "{ccm:export:page::id={$c->getCollectionID()}}" : "{ccm:export:page:{$c->getCollectionPath()}}";
+        return static::getOptions()->isExportIDs() ? "{ccm:export:page::id={$c->getCollectionID()}}" : "{ccm:export:page:{$c->getCollectionPath()}}";
     }
 
     /**
@@ -125,7 +120,11 @@ class ContentExporter
             return null;
         }
 
-        return static::useIDs() ? "{ccm:export:file::id={$fv->getFileID()}}" : "{ccm:export:file:{$fv->getPrefix()}:{$fv->getFileName()}}";
+        $options = static::getOptions();
+        if ($options->isExportIDs()) {
+            return "{ccm:export:file::id={$fv->getFileID()}}";
+        }
+        return $options->isExportFilesWithoutPrefix() ? "{ccm:export:file:{$fv->getFileName()}}" : "{ccm:export:file:{$fv->getPrefix()}:{$fv->getFileName()}}";
     }
 
     /**
@@ -169,7 +168,7 @@ class ContentExporter
             return null;
         }
 
-        return static::useIDs() ? "{ccm:export:pagetype::id={$ct->getPageTypeID()}}" : "{ccm:export:pagetype:{$ct->getPageTypeHandle()}}";
+        return static::getOptions()->isExportIDs() ? "{ccm:export:pagetype::id={$ct->getPageTypeID()}}" : "{ccm:export:pagetype:{$ct->getPageTypeHandle()}}";
     }
 
     /**
@@ -189,7 +188,7 @@ class ContentExporter
             return null;
         }
 
-        return static::useIDs() ? "{ccm:export:filefolder::id={$folder->getTreeNodeID()}}" : "{ccm:export:filefolder:{$folder->getTreeNodeDisplayPath()}}";
+        return static::getOptions()->isExportIDs() ? "{ccm:export:filefolder::id={$folder->getTreeNodeID()}}" : "{ccm:export:filefolder:{$folder->getTreeNodeDisplayPath()}}";
     }
 
     /**
@@ -209,6 +208,6 @@ class ContentExporter
             return null;
         }
 
-        return static::useIDs() ? "{ccm:export:pagefeed::id={$pf->getID()}}" : "{ccm:export:pagefeed:{$pf->getHandle()}}";
+        return static::getOptions()->isExportIDs() ? "{ccm:export:pagefeed::id={$pf->getID()}}" : "{ccm:export:pagefeed:{$pf->getHandle()}}";
     }
 }

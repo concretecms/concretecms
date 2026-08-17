@@ -422,6 +422,7 @@ class LinkAbstractor extends ConcreteObject
             }
         );
 
+        $exportOptions = ContentExporter::getOptions();
         $dom = new HtmlDomParser();
         $r = $dom->str_get_html($text, true, true, DEFAULT_TARGET_CHARSET, false);
         if (is_object($r)) {
@@ -435,9 +436,11 @@ class LinkAbstractor extends ConcreteObject
                 $fv = $f ? $f->getApprovedVersion() : null;
                 if ($fv) {
                     $picture->fid = false;
-                    if (ContentExporter::useIDs()) {
+                    if ($exportOptions->isExportIDs()) {
                         $picture->{'file-id'} = $f->getFileID();
                         $picture->file = false;
+                    } elseif ($exportOptions->isExportFilesWithoutPrefix()) {
+                        $picture->file = $fv->getFilename();
                     } else {
                         $picture->file = $fv->getPrefix() . ':' . $fv->getFilename();
                     }

@@ -1,0 +1,80 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Concrete\Core\Backup;
+
+use Concrete\Core\Http\Request;
+
+final class ContentExporterOptions
+{
+    /**
+     * Should we export items by using IDs instead of installation-independent identifiers?
+     *
+     * @var bool
+     */
+    private $exportIDs;
+
+    /**
+     * Should we export file references as <filename> instead of <prefix>:<filename>?
+     *
+     * @var bool
+     */
+    private $exportFilesWithoutPrefix = false;
+
+    public function __construct(Request $request)
+    {
+        if (preg_match('{^/ccm/api/\d+(\.\d+)*/.}i', $request->getPath())) {
+            $this->exportIDs = (string) $request->query->get('export_ids', '') === '' || $request->query->getBoolean('export_ids');
+        } else {
+            $this->exportIDs = false;
+        }
+    }
+
+    /**
+     * Should we export items by using IDs instead of installation-independent identifiers?
+     */
+    public function isExportIDs(): bool
+    {
+        return $this->exportIDs;
+    }
+
+    /**
+     * Should we export items by using IDs instead of installation-independent identifiers?
+     *
+     * @return $this
+     */
+    public function setExportIDs(bool $value): self
+    {
+        $this->exportIDs = $value;
+
+        return $this;
+    }
+
+    /**
+     * Should we export file references as <filename> instead of <prefix>:<filename>?
+     */
+    public function isExportFilesWithoutPrefix(): bool
+    {
+        return $this->exportFilesWithoutPrefix;
+    }
+
+    /**
+     * Should we export file references as <filename> instead of <prefix>:<filename>?
+     *
+     * Files imported from a CIF package don't necessarily keep the prefix they had in the source
+     * installation: when the file name in the "files" directory isn't in the <prefix>_<filename> form,
+     * the importer generates a brand new prefix (see \Concrete\Core\File\Import\FileImporter::generatePrefix()).
+     * In that case the prefix of the source installation can't identify the files, and the references
+     * should be exported with the file name only.
+     * Beware: file names alone may not be unique, so the imported references may resolve to another file.
+     *
+     * @return $this
+     */
+    public function setExportFilesWithoutPrefix(bool $value): self
+    {
+        $this->exportFilesWithoutPrefix = $value;
+
+        return $this;
+    }
+}
