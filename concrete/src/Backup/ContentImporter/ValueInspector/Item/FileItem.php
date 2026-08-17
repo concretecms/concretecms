@@ -22,13 +22,19 @@ class FileItem implements ItemInterface
     protected $prefix;
 
     /**
+     * @var int|null
+     */
+    protected $fileID;
+
+    /**
      * @param string $filename the file name (without the potential prefix)
      * @param string|null $prefix the found prefix (if any)
      */
-    public function __construct($filename, $prefix = null)
+    public function __construct($filename, $prefix = null, ?int $fileID = null)
     {
         $this->filename = $filename;
         $this->prefix = $prefix;
+        $this->fileID = $fileID;
     }
 
     /**
@@ -48,9 +54,17 @@ class FileItem implements ItemInterface
      */
     public function getReference()
     {
-        $prefix = $this->getPrefix();
+        $filename = $this->getFilename();
+        $prefix = (string) $this->getPrefix();
+        if ($filename !== '' || $prefix !== '') {
+            return $prefix === '' ? $filename : "{$prefix}:{$filename}";
+        }
+        $id = $this->getFileID();
+        if ($id !== null) {
+            return "id={$id}";
+        }
 
-        return (string) $prefix === '' ? $this->getFilename() : "{$prefix}:{$this->getFilename()}";
+        return '';
     }
 
     /**
@@ -74,6 +88,14 @@ class FileItem implements ItemInterface
     }
 
     /**
+     * Get the found file ID (meaningful only if the file name and the prefix are empty)
+     */
+    public function getFileID(): ?int
+    {
+        return $this->fileID;
+    }
+
+    /**
      * {@inheritdoc}
      *
      * @see \Concrete\Core\Backup\ContentImporter\ValueInspector\Item\ItemInterface::getContentObject()
@@ -84,17 +106,22 @@ class FileItem implements ItemInterface
     {
         $em = app(EntityManagerInterface::class);
         $db = $em->getConnection();
-        $prefix = (string) $this->getPrefix();
-        if ($prefix === '') {
-            $fID = $db->fetchOne(
-                'SELECT fID FROM FileVersions WHERE fvFilename = ? LIMIT 1',
-                [$this->getFilename()]
-            );
+        $filename = $this->getFilename();
+        if ($filename !== '') {
+            $prefix = (string) $this->getPrefix();
+            if ($prefix === '') {
+                $fID = $db->fetchOne(
+                    'SELECT fID FROM FileVersions WHERE fvFilename = ? LIMIT 1',
+                    [$filename]
+                );
+            } else {
+                $fID = $db->fetchOne(
+                    'SELECT fID FROM FileVersions WHERE fvPrefix = ? AND fvFilename = ? LIMIT 1',
+                    [$prefix, $filename]
+                );
+            }
         } else {
-            $fID = $db->fetchOne(
-                'SELECT fID FROM FileVersions WHERE fvPrefix = ? AND fvFilename = ? LIMIT 1',
-                [$prefix, $this->getFilename()]
-            );
+            $fID = $this->getFileID();
         }
         if (!$fID) {
             return null;
