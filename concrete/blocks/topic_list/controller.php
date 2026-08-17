@@ -3,6 +3,7 @@
 namespace Concrete\Block\TopicList;
 
 use Concrete\Core\Backup\ContentExporter;
+use Concrete\Core\Backup\ContentImporter\ValueInspector\InspectionRoutine\PageRoutine;
 use Concrete\Core\Block\BlockController;
 use Concrete\Core\Feature\Features;
 use Concrete\Core\Feature\UsesFeatureInterface;
@@ -263,10 +264,14 @@ class Controller extends BlockController implements UsesFeatureInterface
         }
         $args['topicAttributeKeyHandle'] = (string) $blockNode->data->topicAttributeKeyHandle;
         if ($page) {
-            if (preg_match('/\{ccm:export:page:(.*?)\}/i', $page, $matches)) {
-                $c = Page::getByPath($matches[1]);
-                $args['externalTarget'] = 1;
-                $args['cParentID'] = $c->getCollectionID();
+            $pageImporterRoutine = new PageRoutine();
+            $matchedItems = $pageImporterRoutine->match($page);
+            if (count($matchedItems) === 1) {
+                $c = $matchedItems[0]->getContentObject();
+                if ($c !== null) {
+                    $args['externalTarget'] = 1;
+                    $args['cParentID'] = $c->getCollectionID();
+                }
             }
         }
 
