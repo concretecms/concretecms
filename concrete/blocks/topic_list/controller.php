@@ -2,6 +2,7 @@
 
 namespace Concrete\Block\TopicList;
 
+use Concrete\Core\Backup\ContentExporter;
 use Concrete\Core\Block\BlockController;
 use Concrete\Core\Feature\Features;
 use Concrete\Core\Feature\UsesFeatureInterface;
@@ -231,8 +232,7 @@ class Controller extends BlockController implements UsesFeatureInterface
         }
         $path = null;
         if ($this->cParentID) {
-            $parent = Page::getByID($this->cParentID);
-            $path = '{ccm:export:page:' . $parent->getCollectionPath() . '}';
+            $path = ContentExporter::replacePageWithPlaceHolder($this->cParentID);
         }
         $data->addChild('cParentID', $path);
         $data->addChild('titleFormat', $this->titleFormat);
