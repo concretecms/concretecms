@@ -28,12 +28,7 @@ class BaseBlockTransformer extends TransformerAbstract
             // Hacky but a reasonable way to get a default API export
             $exportNode = new \SimpleXMLElement('<temporary-element></temporary-element>');
             $controller->export($exportNode);
-            $blockValue = [];
-            if (isset($exportNode->data->record)) {
-                foreach ($exportNode->data->record->children() as $child) {
-                    $blockValue[$child->getName()] = (string) $child;
-                }
-            }
+            $blockValue = $this->extractBlockValue($exportNode);
         }
 
         return [
@@ -41,6 +36,28 @@ class BaseBlockTransformer extends TransformerAbstract
             'type' => $block->getBlockTypeHandle(),
             'value' => $blockValue,
         ];
+    }
+
+    /**
+     * Extract the value of a block from the XML element built by the block controller export() method.
+     *
+     * @return array<string,string|null>
+     */
+    protected function extractBlockValue(\SimpleXMLElement $exportNode): array
+    {
+        $blockValue = [];
+        if (isset($exportNode->data->record)) {
+            foreach ($exportNode->data->record->children() as $child) {
+                $childValue = (string) $child;
+                if ($childValue === '' && isset($child['null']) && filter_var((string) $child['null'], FILTER_VALIDATE_BOOLEAN)) {
+                    // the block controller export() method marks NULL values with a "null" attribute
+                    $childValue = null;
+                }
+                $blockValue[$child->getName()] = $childValue;
+            }
+        }
+
+        return $blockValue;
     }
 
     public function includePage(Block $block)
