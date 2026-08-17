@@ -2,6 +2,7 @@
 namespace Concrete\Core\Backup;
 
 use Concrete\Core\File\File;
+use Concrete\Core\Http\Request;
 use Concrete\Core\Page\Feed;
 use Concrete\Core\Page\Page;
 use Concrete\Core\Page\Type\Composer\FormLayoutSetControl;
@@ -12,6 +13,36 @@ class ContentExporter
 {
     protected static $mcBlockIDs = [];
     protected static $ptComposerOutputControlIDs = [];
+
+    /**
+     * @var bool|null
+     */
+    private static $useIDs = null;
+
+    /**
+     * Should we export items by using IDs instead of installation-independent identifiers?
+     */
+    public static function useIDs(): bool
+    {
+        if (self::$useIDs === null) {
+            $request = app(Request::class);
+            if (preg_match('{^/ccm/api/\d+(\.\d+)*/.}i', $request->getPath())) {
+                self::$useIDs = (string) $request->query->get('export_ids', '') === '' || $request->query->getBoolean('export_ids');
+            } else {
+                self::$useIDs = false;
+            }
+        }
+        return self::$useIDs;
+    }
+
+    /**
+     * Should we export items by using IDs instead of installation-independent identifiers?
+     * Set to null to autodetect it
+     */
+    public static function setUseIDs(?bool $value): void
+    {
+        self::$useIDs = $value;
+    }
 
     /**
      * @deprecated
@@ -70,7 +101,7 @@ class ContentExporter
             return null;
         }
 
-        return '{ccm:export:page:' . $c->getCollectionPath() . '}';
+        return static::useIDs() ? "{ccm:export:page::id={$c->getCollectionID()}}" : "{ccm:export:page:{$c->getCollectionPath()}}";
     }
 
     /**
@@ -94,7 +125,7 @@ class ContentExporter
             return null;
         }
 
-        return '{ccm:export:file:' . $fv->getPrefix() . ':' . $fv->getFileName() . '}';
+        return static::useIDs() ? "{ccm:export:file::id={$fv->getFileID()}}" : "{ccm:export:file:{$fv->getPrefix()}:{$fv->getFileName()}}";
     }
 
     /**
@@ -138,7 +169,7 @@ class ContentExporter
             return null;
         }
 
-        return '{ccm:export:pagetype:' . $ct->getPageTypeHandle() . '}';
+        return static::useIDs() ? "{ccm:export:pagetype::id={$ct->getPageTypeID()}}" : "{ccm:export:pagetype:{$ct->getPageTypeHandle()}}";
     }
 
     /**
@@ -158,7 +189,7 @@ class ContentExporter
             return null;
         }
 
-        return '{ccm:export:filefolder:' . $folder->getTreeNodeDisplayPath() . '}';
+        return static::useIDs() ? "{ccm:export:filefolder::id={$folder->getTreeNodeID()}}" : "{ccm:export:filefolder:{$folder->getTreeNodeDisplayPath()}}";
     }
 
     /**
@@ -178,6 +209,6 @@ class ContentExporter
             return null;
         }
 
-        return '{ccm:export:pagefeed:' . $pf->getHandle() . '}';
+        return static::useIDs() ? "{ccm:export:pagefeed::id={$pf->getID()}}" : "{ccm:export:pagefeed:{$pf->getHandle()}}";
     }
 }
