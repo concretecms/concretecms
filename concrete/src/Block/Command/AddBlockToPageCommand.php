@@ -3,6 +3,7 @@
 namespace Concrete\Core\Block\Command;
 
 use Concrete\Core\Area\Area;
+use Concrete\Core\Block\Controller\SaveMode;
 use Concrete\Core\Entity\Block\BlockType\BlockType;
 use Concrete\Core\Foundation\Command\Command;
 use Concrete\Core\Page\Page;
@@ -29,6 +30,11 @@ class AddBlockToPageCommand extends Command
      * @var array
      */
     protected $data;
+
+    /**
+     * @var string
+     */
+    protected $saveMode = SaveMode::SAVE_MODE_REQUEST;
 
     /**
      * @return BlockType
@@ -93,6 +99,27 @@ class AddBlockToPageCommand extends Command
     {
         $this->data = $data;
     }
+
+    /**
+     * How should the block controller save() method interpret the data?
+     *
+     * @see \Concrete\Core\Block\Controller\SaveMode
+     */
+    public function getSaveMode(): string
+    {
+        return $this->saveMode;
+    }
+
+    /**
+     * How should the block controller save() method interpret the data?
+     *
+     * @see \Concrete\Core\Block\Controller\SaveMode
+     */
+    public function setSaveMode(string $saveMode): void
+    {
+        $this->saveMode = $saveMode;
+    }
+
 
     
 }

@@ -2,6 +2,7 @@
 
 namespace Concrete\Core\Block;
 
+use Concrete\Core\Block\Controller\SaveMode;
 use Concrete\Core\Area\Area;
 use Concrete\Core\Backup\ContentExporter;
 use Concrete\Core\Block\BlockType\BlockType;
@@ -1602,10 +1603,11 @@ EOT
      * Updates fields common to every block.
      *
      * @param array $data the block type-specific data to be saved
+     * @param string|null $saveMode how should the block controller interpret $data (see \Concrete\Core\Block\Controller\SaveMode)
      *
      * @throws \Doctrine\DBAL\Exception
      */
-    public function update($data)
+    public function update($data, ?string $saveMode = SaveMode::SAVE_MODE_REQUEST)
     {
         $app = Facade::getFacadeApplication();
         /** @var Connection $db */
@@ -1627,6 +1629,7 @@ EOT
         $class = $bt->getBlockTypeClass();
         $app = Facade::getFacadeApplication();
         $bc = $app->make($class, ['obj' => $this]);
+        $bc->saveMode = $saveMode;
         $bc->save($data);
     }
 

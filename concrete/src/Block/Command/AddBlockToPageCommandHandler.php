@@ -27,6 +27,7 @@ class AddBlockToPageCommandHandler
         $area = $command->getArea();
         $blockType = $command->getBlockType();
         $data = $command->getData();
+        $saveMode = $command->getSaveMode();
 
         $pageToModify = $page;
         $areaToModify = $area;
@@ -37,10 +38,10 @@ class AddBlockToPageCommandHandler
 
         if (!$blockType->includeAll()) {
             $nvc = $pageToModify->getVersionToModify();
-            $nb = $nvc->addBlock($blockType, $areaToModify, $data);
+            $nb = $nvc->addBlock($blockType, $areaToModify, $data, $saveMode);
         } else {
             // if we apply to all, then we don't worry about a new version of the page
-            $nb = $pageToModify->addBlock($blockType, $areaToModify, $data);
+            $nb = $pageToModify->addBlock($blockType, $areaToModify, $data, $saveMode);
         }
 
         $event = new BlockAdd($nb, $pageToModify);
