@@ -22,13 +22,22 @@ final class ContentExporterOptions
      */
     private $exportFilesWithoutPrefix = false;
 
+    /**
+     * Should we export file references by using their UUID instead of their ID?
+     *
+     * @var bool
+     */
+    private $exportFilesAsUUID;
+
     public function __construct(Request $request)
     {
-        if (preg_match('{^/ccm/api/\d+(\.\d+)*/.}i', $request->getPath())) {
+        $isApiRequest = (bool) preg_match('{^/ccm/api/\d+(\.\d+)*/.}i', $request->getPath());
+        if ($isApiRequest) {
             $this->exportIDs = (string) $request->query->get('export_ids', '') === '' || $request->query->getBoolean('export_ids');
         } else {
             $this->exportIDs = false;
         }
+        $this->exportFilesAsUUID = $isApiRequest;
     }
 
     /**
@@ -57,6 +66,32 @@ final class ContentExporterOptions
     public function isExportFilesWithoutPrefix(): bool
     {
         return $this->exportFilesWithoutPrefix;
+    }
+
+    /**
+     * Should we export file references by using their UUID instead of their ID?
+     *
+     * Files don't necessarily have a UUID: the ID is used for the ones that don't have it.
+     */
+    public function isExportFilesAsUUID(): bool
+    {
+        return $this->exportFilesAsUUID;
+    }
+
+    /**
+     * Should we export file references by using their UUID instead of their ID?
+     *
+     * UUIDs are stable across installations, whereas IDs are not: that's why this option is turned on
+     * by default when serving an API request.
+     * Beware: files don't necessarily have a UUID, and the ID is used for the ones that don't have it.
+     *
+     * @return $this
+     */
+    public function setExportFilesAsUUID(bool $value): self
+    {
+        $this->exportFilesAsUUID = $value;
+
+        return $this;
     }
 
     /**

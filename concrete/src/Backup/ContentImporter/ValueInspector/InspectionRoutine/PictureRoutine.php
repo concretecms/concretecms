@@ -65,7 +65,7 @@ class PictureRoutine extends AbstractRegularExpressionRoutine
     {
         $filename = '';
         $prefix = null;
-        $fileID = null;
+        $fileID = '';
         // strip the element name and the final ">" (or "/>")
         $attributes = preg_replace(['~^<concrete-picture~i', '~/?>$~'], '', $identifier);
         // extract (and remove) the "file" and "file-id" attributes
@@ -76,7 +76,7 @@ class PictureRoutine extends AbstractRegularExpressionRoutine
                     case 'file':
                         $filename = $m['value'];
                         if ($filename !== '') {
-                            $fileID = null;
+                            $fileID = '';
                             if (str_contains($m['value'], ':')) {
                                 [$prefix, $filename] = explode(':', $m['value'], 2);
                             }
@@ -84,7 +84,7 @@ class PictureRoutine extends AbstractRegularExpressionRoutine
                         break;
                     case 'file-id':
                         if ($filename === '') {
-                            $fileID = ((int) $m['value']) ?: null;
+                            $fileID = PictureItem::parseFileIdentifier($m['value']);
                         }
                         break;
                 }

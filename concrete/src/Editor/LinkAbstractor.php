@@ -437,7 +437,7 @@ class LinkAbstractor extends ConcreteObject
                 if ($fv) {
                     $picture->fid = false;
                     if ($exportOptions->isExportIDs()) {
-                        $picture->{'file-id'} = $f->getFileID();
+                        $picture->{'file-id'} = ContentExporter::getFileIdentifier($f);
                         $picture->file = false;
                     } elseif ($exportOptions->isExportFilesWithoutPrefix()) {
                         $picture->file = $fv->getFilename();

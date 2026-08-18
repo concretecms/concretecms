@@ -2,6 +2,7 @@
 
 namespace Concrete\Core\Backup\ContentImporter\ValueInspector\InspectionRoutine;
 
+use Concrete\Core\Backup\ContentImporter\ValueInspector\Item\FileItem;
 use Concrete\Core\Backup\ContentImporter\ValueInspector\Item\ImageItem;
 
 class ImageRoutine extends AbstractRegularExpressionRoutine
@@ -35,14 +36,14 @@ class ImageRoutine extends AbstractRegularExpressionRoutine
     {
         $filename = '';
         $prefix = null;
-        $id = null;
-        if (preg_match('/^(.*):id=([1-9]\d*)$/D', $identifier, $m)) {
+        $id = '';
+        if (preg_match('/^(.*):id=(' . FileItem::IDENTIFIER_REGEX . ')$/Di', $identifier, $m)) {
             $identifier = $m[1];
-            $id = (int) $m[2];
+            $id = FileItem::parseFileIdentifier($m[2]);
         }
         if ($identifier !== '') {
             [$prefix, $filename] = str_contains($identifier, ':') ? explode(':', $identifier, 2) : [null, $identifier];
-            $id = null;
+            $id = '';
         }
 
         return new ImageItem($filename, $prefix, $id);

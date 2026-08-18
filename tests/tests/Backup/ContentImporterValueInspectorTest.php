@@ -2,7 +2,10 @@
 
 namespace Concrete\Tests\Backup;
 
+use Concrete\Core\Backup\ContentExporter;
+use Concrete\Core\Backup\ContentExporterOptions;
 use Concrete\Core\Backup\ContentImporter\ValueInspector\ValueInspectorInterface;
+use Concrete\Core\Http\Request;
 use Concrete\Core\File\Import\FileImporter;
 use Concrete\TestHelpers\File\FileStorageTestCase;
 
@@ -186,6 +189,48 @@ EOL;
         $result = $inspector->inspect($content);
 
         $this->assertEquals($expected, $result->getReplacedContent());
+    }
+
+    public function testReplacedContentWithUUIDs()
+    {
+        $file = $this->createFile('with-uuid.jpg');
+        $uuid = $file->getFileUUID();
+        $this->assertNotEmpty($uuid, 'newly added files should have a UUID');
+
+        $content = <<<EOL
+        <a href="{ccm:export:file::id={$uuid}}">download</a> <concrete-picture file-id="{$uuid}" alt="Lorem ipsum" />
+EOL;
+
+        $expected = <<<EOL
+        <a href="{CCM:FID_DL_{$uuid}}">download</a> <concrete-picture fID="{$file->getFileID()}" alt="Lorem ipsum" />
+EOL;
+
+        $inspector = app('import/value_inspector');
+        $result = $inspector->inspect($content);
+
+        $this->assertEquals($expected, $result->getReplacedContent());
+    }
+
+    public function testFileReferencesAreExportedAsUUID()
+    {
+        $file = $this->createFile('exported.jpg');
+        $originalOptions = ContentExporter::getOptions();
+        try {
+            // an API request: IDs are exported, and file references use UUIDs
+            ContentExporter::setOptions(new ContentExporterOptions(Request::create('/ccm/api/1.0/pages/1')));
+            $this->assertSame(
+                "{ccm:export:file::id={$file->getFileUUID()}}",
+                ContentExporter::replaceFileWithPlaceHolder($file->getFileID())
+            );
+            // the very same file, exported by ID
+            ContentExporter::getOptions()->setExportFilesAsUUID(false);
+            $this->assertSame(
+                "{ccm:export:file::id={$file->getFileID()}}",
+                ContentExporter::replaceFileWithPlaceHolder($file->getFileID())
+            );
+        } finally {
+            ContentExporter::setOptions($originalOptions);
+        }
     }
 
     /**

@@ -33,6 +33,26 @@ class ContentExporterOptionsTest extends TestCase
         $this->assertSame($expected, $options->isExportIDs());
     }
 
+    public static function providerExportFilesAsUUID(): array
+    {
+        return [
+            'regular request' => ['/dashboard/files/search', false],
+            'API request' => ['/ccm/api/1.0/pages/1', true],
+            // it doesn't depend on the export_ids parameter
+            'API request with IDs turned off' => ['/ccm/api/1.0/pages/1?export_ids=0', true],
+        ];
+    }
+
+    /**
+     * @dataProvider providerExportFilesAsUUID
+     */
+    public function testExportFilesAsUUIDIsDetectedFromTheRequest(string $url, bool $expected): void
+    {
+        $options = new ContentExporterOptions(Request::create($url));
+
+        $this->assertSame($expected, $options->isExportFilesAsUUID());
+    }
+
     public function testExportFilesWithoutPrefixIsTurnedOffByDefault(): void
     {
         $options = new ContentExporterOptions(Request::create('/ccm/api/1.0/pages/1'));
@@ -48,5 +68,7 @@ class ContentExporterOptionsTest extends TestCase
         $this->assertTrue($options->isExportIDs());
         $this->assertSame($options, $options->setExportFilesWithoutPrefix(true));
         $this->assertTrue($options->isExportFilesWithoutPrefix());
+        $this->assertSame($options, $options->setExportFilesAsUUID(true));
+        $this->assertTrue($options->isExportFilesAsUUID());
     }
 }

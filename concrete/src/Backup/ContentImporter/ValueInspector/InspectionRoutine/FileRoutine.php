@@ -35,14 +35,14 @@ class FileRoutine extends AbstractRegularExpressionRoutine
     {
         $filename = '';
         $prefix = null;
-        $id = null;
-        if (preg_match('/^(.*):id=([1-9]\d*)$/D', $identifier, $m)) {
+        $id = '';
+        if (preg_match('/^(.*):id=(' . FileItem::IDENTIFIER_REGEX . ')$/Di', $identifier, $m)) {
             $identifier = $m[1];
-            $id = (int) $m[2];
+            $id = FileItem::parseFileIdentifier($m[2]);
         }
         if ($identifier !== '') {
             [$prefix, $filename] = str_contains($identifier, ':') ? explode(':', $identifier, 2) : [null, $identifier];
-            $id = null;
+            $id = '';
         }
 
         return new FileItem($filename, $prefix, $id);

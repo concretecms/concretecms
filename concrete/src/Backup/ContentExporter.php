@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\Backup;
 
+use Concrete\Core\Entity\File\File as FileEntity;
 use Concrete\Core\File\File;
 use Concrete\Core\Page\Feed;
 use Concrete\Core\Page\Page;
@@ -122,9 +123,26 @@ class ContentExporter
 
         $options = static::getOptions();
         if ($options->isExportIDs()) {
-            return "{ccm:export:file::id={$fv->getFileID()}}";
+            $identifier = static::getFileIdentifier($f);
+
+            return "{ccm:export:file::id={$identifier}}";
         }
         return $options->isExportFilesWithoutPrefix() ? "{ccm:export:file:{$fv->getFileName()}}" : "{ccm:export:file:{$fv->getPrefix()}:{$fv->getFileName()}}";
+    }
+
+    /**
+     * Get the identifier to be used when exporting a reference to a file: its UUID if the
+     * isExportFilesAsUUID() option is turned on and the file has one, its ID otherwise.
+     *
+     * @return int|string
+     */
+    public static function getFileIdentifier(FileEntity $file)
+    {
+        if (static::getOptions()->isExportFilesAsUUID() && $file->hasFileUUID()) {
+            return $file->getFileUUID();
+        }
+
+        return $file->getFileID();
     }
 
     /**

@@ -9,7 +9,13 @@ class PictureItem extends FileItem
      */
     protected $additionalAttributes;
 
-    public function __construct($filename, $prefix = null, ?int $fileID = null, string $additionalAttributes = '')
+    /**
+     * @param string $filename the file name (without the potential prefix)
+     * @param string|null $prefix the found prefix (if any)
+     * @param int|string $fileID the found file ID (int) or file UUID (string) - an empty string if not found
+     * @param string $additionalAttributes the other attributes of the <concrete-picture> element
+     */
+    public function __construct($filename, $prefix = null, $fileID = '', string $additionalAttributes = '')
     {
         parent::__construct($filename, $prefix, $fileID);
         $this->additionalAttributes = $additionalAttributes;
