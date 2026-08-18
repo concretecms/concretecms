@@ -7,6 +7,7 @@ use Concrete\Core\Application\ApplicationAwareTrait;
 use Concrete\Core\Area\Area;
 use Concrete\Core\Block\Block;
 use Concrete\Core\Block\BlockType\BlockType;
+use Concrete\Core\Block\Controller\SaveMode;
 use Concrete\Core\Page\Page;
 use Concrete\Core\Permission\Checker;
 use Concrete\Core\Api\ApiController;
@@ -90,6 +91,8 @@ class Areas extends ApiController implements ApplicationAwareInterface
         $command->setArea($area);
         $command->setBlockType($blockType);
         $command->setData($data);
+        // the received data is in the CIF format (that's how we export blocks)
+        $command->setSaveMode(SaveMode::SAVE_MODE_IMPORT);
 
         $block = $this->app->executeCommand($command);
 
@@ -265,6 +268,8 @@ class Areas extends ApiController implements ApplicationAwareInterface
         $command->setPage($page);
         $command->setData($body);
         $command->setBlock($blockToEdit);
+        // the received data is in the CIF format (that's how we export blocks)
+        $command->setSaveMode(SaveMode::SAVE_MODE_IMPORT);
 
         $block = $this->app->executeCommand($command);
 
