@@ -42,7 +42,28 @@ class OpenApiSpecTest extends TestCase
         $this->assertContains('/ccm/api/1.0/block_types/{blockTypeHandle}', $paths);
     }
 
-    public function testTheBlockTypesScopeIsInTheSpec(): void
+    public function testTheOpenApiPathIsInTheSpec(): void
+    {
+        $paths = [];
+        foreach ($this->getSpec()->paths as $path) {
+            $paths[] = $path->path;
+        }
+
+        $this->assertContains('/ccm/api/1.0/system/openapi', $paths);
+    }
+
+    public static function providerNewScopes(): array
+    {
+        return [
+            ['block_types:read'],
+            ['system:openapi:read'],
+        ];
+    }
+
+    /**
+     * @dataProvider providerNewScopes
+     */
+    public function testTheScopeIsInTheSpec(string $expectedScope): void
     {
         $scopes = [];
         foreach ($this->getSpec()->components->securitySchemes as $scheme) {
@@ -51,7 +72,42 @@ class OpenApiSpecTest extends TestCase
             }
         }
 
-        $this->assertContains('block_types:read', $scopes);
+        $this->assertContains($expectedScope, $scopes);
+    }
+
+    /**
+     * Every scope used by an operation must be declared in the security scheme it refers to, otherwise
+     * it will never make it into the OAuth2Scope table (see SynchronizeScopesCommandHandler).
+     */
+    public function testEveryUsedScopeIsDeclared(): void
+    {
+        $declared = [];
+        foreach ($this->getSpec()->components->securitySchemes as $scheme) {
+            foreach ($scheme->flows[0]->scopes as $scope => $description) {
+                $declared[$scheme->securityScheme][] = $scope;
+            }
+        }
+        $undeclared = [];
+        foreach ($this->getSpec()->paths as $path) {
+            foreach (['get', 'post', 'put', 'delete'] as $method) {
+                // swagger-php fills the unused properties with a placeholder string
+                $operation = $path->{$method};
+                if (!is_object($operation) || !is_array($operation->security)) {
+                    continue;
+                }
+                foreach ($operation->security as $security) {
+                    foreach ($security as $schemeName => $scopes) {
+                        foreach ((array) $scopes as $scope) {
+                            if (!in_array($scope, $declared[$schemeName] ?? [], true)) {
+                                $undeclared[] = "{$path->path}: {$schemeName}/{$scope}";
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        $this->assertSame([], $undeclared);
     }
 
     public function testEveryReferencedSchemaExists(): void
