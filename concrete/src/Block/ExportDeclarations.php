@@ -89,7 +89,7 @@ final class ExportDeclarations
     /**
      * @param string $mainTable the name of the main database table of the block type (an empty string if the block type has no table)
      * @param string[] $tables the names of all the database tables of the block type (it may be empty, and it may contain the main table)
-     * @param array<string,string[]> $referenceColumns the declared columns, grouped by the kind of reference they contain
+     * @param array<string,string[]> $referenceColumns the declared columns, grouped by the kind of reference they contain (if a column is declared more than once, the first kind of reference wins)
      */
     public function __construct(string $mainTable, array $tables, array $referenceColumns)
     {
@@ -106,7 +106,11 @@ final class ExportDeclarations
             }
             $this->referenceColumns[$reference] = $columns;
             foreach ($columns as $column) {
-                $this->columnReferences[strtolower($column)] = (string) $reference;
+                $key = strtolower($column);
+                if (!isset($this->columnReferences[$key])) {
+                    // a column declared more than once keeps the kind of reference declared first
+                    $this->columnReferences[$key] = (string) $reference;
+                }
             }
         }
     }

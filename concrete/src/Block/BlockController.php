@@ -180,7 +180,11 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
     /**
      * Get the names of the fields in the database table defined by $btTable and $btExportTables that contain the ID of a Concrete page.
      *
+     * @deprecated use getExportDeclarations() to get all the declarations of the block type at once
+     *
      * @return string[]
+     *
+     * @see \Concrete\Core\Block\BlockController::getExportDeclarations()
      */
     public function getBlockTypeExportPageColumns()
     {
@@ -197,6 +201,7 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
             (string) $this->getBlockTypeDatabaseTable(),
             $this->btExportTables === null ? [] : $this->btExportTables,
             [
+                // the deprecated getter may be overridden, so we can't simply read the property here
                 ExportDeclarations::REFERENCE_PAGE => $this->getBlockTypeExportPageColumns(),
                 ExportDeclarations::REFERENCE_FILE => $this->btExportFileColumns,
                 ExportDeclarations::REFERENCE_PAGE_TYPE => $this->btExportPageTypeColumns,
@@ -333,9 +338,10 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
         }
 
         if ($this instanceof FileTrackableInterface) {
+            $declarations = $this->getExportDeclarations();
             $fields = array_merge(
-                $this->btExportFileColumns ?: [],
-                $this->btExportContentColumns ?: []
+                $declarations->getColumns(ExportDeclarations::REFERENCE_FILE),
+                $declarations->getColumns(ExportDeclarations::REFERENCE_CONTENT)
             );
             foreach ($fields as $field) {
                 if (property_exists($this, $field)) {
@@ -496,11 +502,11 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
      */
     public function export(\SimpleXMLElement $blockNode)
     {
-        $tables = $this->btExportTables ?? [$this->getBlockTypeDatabaseTable()];
+        $declarations = $this->getExportDeclarations();
         $db = $this->app->make(Connection::class);
 
         $xml = $this->app->make(Xml::class);
-        foreach ($tables as $tbl) {
+        foreach ($declarations->getTables() as $tbl) {
             if (!$tbl) {
                 continue;
             }
@@ -510,7 +516,6 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
             // remove columns we don't want
             unset($columns['bid']);
             $r = $db->executeQuery('select * from ' . $tbl . ' where bID = ?', [$this->bID]);
-            $btExportPageColumns = $this->getBlockTypeExportPageColumns();
             while (($record = $r->fetchAssociative()) !== false) {
                 $tableRecord = $data->addChild('record');
                 foreach ($record as $key => $value) {
@@ -519,24 +524,40 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
                             $tableRecord->addChild($key)->addAttribute('null', 'true');
                         } elseif ($value === 0 || $value === '0') {
                             $tableRecord->addChild($key, '0');
-                        } elseif (in_array($key, $btExportPageColumns)) {
-                            $xml->createChildElement($tableRecord, $key, ContentExporter::replacePageWithPlaceHolder($value));
-                        } elseif (in_array($key, $this->btExportFileColumns)) {
-                            $xml->createChildElement($tableRecord, $key, ContentExporter::replaceFileWithPlaceHolder($value));
-                        } elseif (in_array($key, $this->btExportPageTypeColumns)) {
-                            $xml->createChildElement($tableRecord, $key, ContentExporter::replacePageTypeWithPlaceHolder($value));
-                        } elseif (in_array($key, $this->btExportPageFeedColumns)) {
-                            $xml->createChildElement($tableRecord, $key, ContentExporter::replacePageFeedWithPlaceHolder($value));
-                        } elseif (in_array($key, $this->btExportFileFolderColumns)) {
-                            $xml->createChildElement($tableRecord, $key, ContentExporter::replaceFileFolderWithPlaceHolder($value));
-                        } elseif (in_array($key, $this->btExportContentColumns)) {
-                            $xml->createChildElement($tableRecord, $key, LinkAbstractor::export((string) $value));
                         } else {
-                            $xml->createChildElement($tableRecord, $key, $value);
+                            $xml->createChildElement($tableRecord, $key, $this->exportRecordValue($value, $declarations->getColumnReference($key)));
                         }
                     }
                 }
             }
+        }
+    }
+
+    /**
+     * Get the exported representation of the value of a record column.
+     *
+     * @param mixed $value
+     * @param string|null $reference the kind of reference contained in the column (one of the ExportDeclarations::REFERENCE_... constants)
+     *
+     * @return mixed
+     */
+    protected function exportRecordValue($value, ?string $reference)
+    {
+        switch ($reference) {
+            case ExportDeclarations::REFERENCE_PAGE:
+                return ContentExporter::replacePageWithPlaceHolder($value);
+            case ExportDeclarations::REFERENCE_FILE:
+                return ContentExporter::replaceFileWithPlaceHolder($value);
+            case ExportDeclarations::REFERENCE_PAGE_TYPE:
+                return ContentExporter::replacePageTypeWithPlaceHolder($value);
+            case ExportDeclarations::REFERENCE_PAGE_FEED:
+                return ContentExporter::replacePageFeedWithPlaceHolder($value);
+            case ExportDeclarations::REFERENCE_FILE_FOLDER:
+                return ContentExporter::replaceFileFolderWithPlaceHolder($value);
+            case ExportDeclarations::REFERENCE_CONTENT:
+                return LinkAbstractor::export((string) $value);
+            default:
+                return $value;
         }
     }
 
@@ -625,29 +646,13 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
     protected function getImportData($blockNode, $page)
     {
         $args = [];
-        $inspector = \Core::make('import/value_inspector');
         if (isset($blockNode->data)) {
-            $btExportPageColumns = $this->getBlockTypeExportPageColumns();
+            $declarations = $this->getExportDeclarations();
             foreach ($blockNode->data as $data) {
                 if ($data['table'] == $this->getBlockTypeDatabaseTable()) {
                     if (isset($data->record)) {
                         foreach ($data->record->children() as $key => $node) {
-                            $nodeValue = (string) $node;
-                            if ($nodeValue === '' && isset($node['null']) && filter_var((string) $node['null'], FILTER_VALIDATE_BOOLEAN)) {
-                                $args[$node->getName()] = null;
-                            } elseif (in_array($key, $btExportPageColumns)
-                                || in_array($key, $this->btExportFileColumns)
-                                || in_array($key, $this->btExportPageTypeColumns)
-                                || in_array($key, $this->btExportPageFeedColumns)
-                                || in_array($key, $this->btExportFileFolderColumns)) {
-                                    $result = $inspector->inspect($nodeValue);
-                                    $args[$node->getName()] = $result->getReplacedValue();
-                            } else if (in_array($key, $this->btExportContentColumns)) {
-                                $result = $inspector->inspect($nodeValue);
-                                $args[$node->getName()] = $result->getReplacedContent();
-                            } else {
-                                $args[$node->getName()] = $nodeValue;
-                            }
+                            $args[$node->getName()] = $this->importRecordValue($node, $declarations->getColumnReference($key));
                         }
                     }
                 }
@@ -697,6 +702,27 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
     }
 
     /**
+     * Get the imported representation of the value of a record column.
+     *
+     * @param string|null $reference the kind of reference contained in the column (one of the ExportDeclarations::REFERENCE_... constants)
+     *
+     * @return string|null
+     */
+    protected function importRecordValue(\SimpleXMLElement $node, ?string $reference)
+    {
+        $value = (string) $node;
+        if ($value === '' && isset($node['null']) && filter_var((string) $node['null'], FILTER_VALIDATE_BOOLEAN)) {
+            return null;
+        }
+        if ($reference === null) {
+            return $value;
+        }
+        $result = \Core::make('import/value_inspector')->inspect($value);
+
+        return $reference === ExportDeclarations::REFERENCE_CONTENT ? $result->getReplacedContent() : $result->getReplacedValue();
+    }
+
+    /**
      * Save into the secondary database tables the data extracted from the <data> child elements of a an XML <block> element into the database.
      *
      * @param \Concrete\Core\Block\Block $b
@@ -704,9 +730,8 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
      */
     protected function importAdditionalData($b, $blockNode)
     {
-        $inspector = \Core::make('import/value_inspector');
         if (isset($blockNode->data)) {
-            $btExportPageColumns = $this->getBlockTypeExportPageColumns();
+            $declarations = $this->getExportDeclarations();
             foreach ($blockNode->data as $data) {
                 if (strtoupper((string) $data['table']) != strtoupper((string) $this->getBlockTypeDatabaseTable())) {
                     $table = (string) $data['table'];
@@ -715,23 +740,7 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
                             $aar = new \Concrete\Core\Legacy\BlockRecord($table);
                             $aar->bID = $b->getBlockID();
                             foreach ($record->children() as $key => $node) {
-                                $nodeName = $node->getName();
-                                $nodeValue = (string) $node;
-                                if ($nodeValue === '' && isset($node['null']) && filter_var((string) $node['null'], FILTER_VALIDATE_BOOLEAN)) {
-                                    $aar->{$nodeName} = null;
-                                } elseif (in_array($key, $btExportPageColumns)
-                                    || in_array($key, $this->btExportFileColumns)
-                                    || in_array($key, $this->btExportPageTypeColumns)
-                                    || in_array($key, $this->btExportPageFeedColumns)
-                                    || in_array($key, $this->btExportFileFolderColumns)) {
-                                        $result = $inspector->inspect($nodeValue);
-                                        $aar->{$nodeName} = $result->getReplacedValue();
-                                } else if (in_array($key, $this->btExportContentColumns)) {
-                                    $result = $inspector->inspect($nodeValue);
-                                    $aar->{$nodeName} = $result->getReplacedContent();
-                                } else {
-                                    $aar->{$nodeName} = $nodeValue;
-                                }
+                                $aar->{$node->getName()} = $this->importRecordValue($node, $declarations->getColumnReference($key));
                             }
                             $aar->Save();
                         }

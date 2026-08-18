@@ -2,6 +2,7 @@
 
 namespace Concrete\Core\Page\Command;
 
+use Concrete\Core\Block\ExportDeclarations;
 use Concrete\Core\Multilingual\Page\Section\Processor\ReplaceBlockPageRelationsTask;
 use Concrete\Core\Multilingual\Page\Section\Processor\ReplaceContentLinksTask;
 use Concrete\Core\Multilingual\Page\Section\Section;
@@ -18,7 +19,7 @@ class RescanMultilingualPageCommandHandler
         $isApproved = $c->getVersionObject()->isApproved();
         foreach ($blocks as $b) {
             $controller = $b->getController();
-            $pageColumns = $controller->getBlockTypeExportPageColumns();
+            $pageColumns = $controller->getExportDeclarations()->getColumns(ExportDeclarations::REFERENCE_PAGE);
             if (count($pageColumns)) {
                 $columns = $db->MetaColumnNames($controller->getBlockTypeDatabaseTable());
                 $data = array();
