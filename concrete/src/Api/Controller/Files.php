@@ -8,6 +8,7 @@ use Concrete\Core\File\FileList;
 use Concrete\Core\File\Filesystem;
 use Concrete\Core\File\Import\FileImporter;
 use Concrete\Core\File\Service\VolatileDirectory;
+use Concrete\Core\File\ValidationService;
 use Concrete\Core\File\Import\RemoteFileDownloader;
 use Concrete\Core\Error\UserMessageException;
 use Concrete\Core\File\Import\ImportOptions;
@@ -195,6 +196,7 @@ class Files extends ApiController
             return $this->error(t("You don't have the permission to upload to %s", $folder->getTreeNodeDisplayName()), 403);
         }
         $uploadedFile = $this->request->files->get('file');
+        $contents = $this->getPostedValue('contents');
         $url = trim((string) $this->getPostedValue('url'));
         if ($uploadedFile instanceof UploadedFile) {
             if ($post_max_size = $this->app->make('helper/number')->getBytes(ini_get('post_max_size'))) {
@@ -208,6 +210,21 @@ class Files extends ApiController
             }
             $localFilename = $uploadedFile->getPathname();
             $concreteFilename = $uploadedFile->getClientOriginalName();
+        } elseif (is_string($contents) && $contents !== '') {
+            $concreteFilename = trim((string) $this->getPostedValue('filename'));
+            if ($concreteFilename === '') {
+                return $this->error(t('You must specify the name of the file.'), 400);
+            }
+            $decoded = base64_decode($contents, true);
+            if ($decoded === false) {
+                return $this->error(t('The contents of the file must be base64-encoded.'), 400);
+            }
+            // the volatile directory must be kept alive until the file has been imported
+            $volatileDirectory = $this->app->make(VolatileDirectory::class);
+            $localFilename = $volatileDirectory->getPath() . '/upload';
+            if (@file_put_contents($localFilename, $decoded) === false) {
+                return $this->error(t('Failed to save the contents of the file.'), 500);
+            }
         } elseif ($url !== '') {
             // the volatile directory must be kept alive until the file has been imported
             $volatileDirectory = $this->app->make(VolatileDirectory::class);
@@ -219,6 +236,9 @@ class Files extends ApiController
             $concreteFilename = basename($localFilename);
         } else {
             return $this->error(Importer::getErrorMessage(Importer::E_FILE_INVALID), 400);
+        }
+        if (!$this->app->make(ValidationService::class)->extension($concreteFilename)) {
+            return $this->error(Importer::getErrorMessage(Importer::E_FILE_INVALID_EXTENSION), 400);
         }
         $cf = $this->app->make('helper/file');
         if (!$fp->canAddFileType($cf->getExtension($concreteFilename))) {

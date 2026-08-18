@@ -76,6 +76,30 @@ class OpenApiSpecTest extends TestCase
     }
 
     /**
+     * The clients generated out of the specification (the MCP server is one) turn a request body into
+     * the input schema of an operation, and that has to be a plain object: a body described with oneOf
+     * or anyOf makes them generate something they then refuse.
+     */
+    public function testTheRequestBodiesArePlainObjects(): void
+    {
+        $spec = json_decode(json_encode($this->getSpec()), true);
+        $offending = [];
+        foreach ($spec['components']['requestBodies'] ?? [] as $name => $requestBody) {
+            foreach ($requestBody['content'] ?? [] as $mediaType => $content) {
+                $schema = $content['schema'] ?? [];
+                if (isset($schema['$ref'])) {
+                    $schema = $spec['components']['schemas'][substr($schema['$ref'], strlen('#/components/schemas/'))] ?? [];
+                }
+                if (isset($schema['oneOf']) || isset($schema['anyOf'])) {
+                    $offending[] = "{$name} ({$mediaType})";
+                }
+            }
+        }
+
+        $this->assertSame([], $offending);
+    }
+
+    /**
      * Every scope used by an operation must be declared in the security scheme it refers to, otherwise
      * it will never make it into the OAuth2Scope table (see SynchronizeScopesCommandHandler).
      */
