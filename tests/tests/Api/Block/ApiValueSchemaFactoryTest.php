@@ -77,11 +77,9 @@ class ApiValueSchemaFactoryTest extends ConcreteDatabaseTestCase
         foreach (['fID', 'maxWidth', 'altText', 'openLinkInNewWindow'] as $name) {
             $this->assertSame('string', $properties[$name]['type'], "wrong type for {$name}");
         }
-        // the type of the underlying column is still reported, since numbers are accepted when writing
-        $this->assertSame('integer', $properties['maxWidth']['x-concrete-column-type']);
-        $this->assertSame('boolean', $properties['openLinkInNewWindow']['x-concrete-column-type']);
-        $this->assertArrayNotHasKey('x-concrete-column-type', $properties['altText']);
+        // the length is a constraint on what can be sent, unlike the type of the underlying column
         $this->assertSame(255, $properties['altText']['maxLength']);
+        $this->assertArrayNotHasKey('maxLength', $properties['maxWidth']);
         $this->assertSame('0', $properties['maxWidth']['default']);
     }
 

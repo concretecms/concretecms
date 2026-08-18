@@ -108,11 +108,8 @@ class ApiValueSchemaFactory
         // of the block (see BaseBlockTransformer), and the columns holding a reference to another entity
         // are exported as a placeholder
         $result = ['type' => 'string'];
-        $columnType = $this->getJsonType($column);
-        if ($columnType !== 'string') {
-            // the type of the underlying database column: numbers are accepted when writing
-            $result['x-concrete-column-type'] = $columnType;
-        } elseif ($length = $column->getLength()) {
+        $length = $column->getLength();
+        if ($length && $this->isTextColumn($column)) {
             $result['maxLength'] = $length;
         }
         if (!$column->getNotnull()) {
@@ -161,22 +158,20 @@ class ApiValueSchemaFactory
     }
 
     /**
-     * Get the JSON type corresponding to the type of a database column.
+     * Does a database column contain text (and not, say, numbers)?
      */
-    protected function getJsonType(Column $column): string
+    protected function isTextColumn(Column $column): bool
     {
         switch ($column->getType()->getName()) {
-            case Types::BOOLEAN:
-                return 'boolean';
             case Types::BIGINT:
-            case Types::INTEGER:
-            case Types::SMALLINT:
-                return 'integer';
+            case Types::BOOLEAN:
             case Types::DECIMAL:
             case Types::FLOAT:
-                return 'number';
+            case Types::INTEGER:
+            case Types::SMALLINT:
+                return false;
             default:
-                return 'string';
+                return true;
         }
     }
 }
