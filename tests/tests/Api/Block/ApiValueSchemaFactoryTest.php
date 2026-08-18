@@ -58,13 +58,31 @@ class ApiValueSchemaFactoryTest extends ConcreteDatabaseTestCase
         $schema = $this->getFactory()->getSchema($this->getBlockTypeController('image'));
         $properties = $schema['properties'];
 
-        // an integer column, but what a client needs to know is that it holds a file reference
-        $this->assertSame('integer', $properties['fID']['type']);
         $this->assertSame('file', $properties['fID']['x-concrete-reference']);
         $this->assertSame('page', $properties['internalLinkCID']['x-concrete-reference']);
         $this->assertSame('file', $properties['fileLinkID']['x-concrete-reference']);
+        $this->assertStringContainsString('{ccm:export:file::id=', $properties['fID']['description']);
         $this->assertArrayNotHasKey('x-concrete-reference', $properties['maxWidth']);
-        $this->assertSame('string', $properties['altText']['type']);
+        $this->assertArrayNotHasKey('description', $properties['maxWidth']);
+    }
+
+    /**
+     * The API exchanges every value of the record as a string, and the columns holding a reference are
+     * exchanged as a placeholder: the schema must describe that, not the database column.
+     */
+    public function testValuesAreDescribedAsStrings(): void
+    {
+        $properties = $this->getFactory()->getSchema($this->getBlockTypeController('image'))['properties'];
+
+        foreach (['fID', 'maxWidth', 'altText', 'openLinkInNewWindow'] as $name) {
+            $this->assertSame('string', $properties[$name]['type'], "wrong type for {$name}");
+        }
+        // the type of the underlying column is still reported, since numbers are accepted when writing
+        $this->assertSame('integer', $properties['maxWidth']['x-concrete-column-type']);
+        $this->assertSame('boolean', $properties['openLinkInNewWindow']['x-concrete-column-type']);
+        $this->assertArrayNotHasKey('x-concrete-column-type', $properties['altText']);
+        $this->assertSame(255, $properties['altText']['maxLength']);
+        $this->assertSame('0', $properties['maxWidth']['default']);
     }
 
     public function testSecondaryTablesAreReported(): void

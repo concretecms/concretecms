@@ -4,6 +4,7 @@ namespace Concrete\Core\Api\Block;
 
 use Concrete\Core\Api\ApiValueSchemaInterface;
 use Concrete\Core\Block\BlockController;
+use Concrete\Core\Block\ExportDeclarations;
 use Concrete\Core\Database\Connection\Connection;
 use Doctrine\DBAL\Schema\Column;
 use Doctrine\DBAL\Types\Types;
@@ -103,9 +104,15 @@ class ApiValueSchemaFactory
      */
     protected function describeColumn(Column $column, ?string $reference): array
     {
-        $result = ['type' => $this->getJsonType($column)];
-        $length = $column->getLength();
-        if ($result['type'] === 'string' && $length) {
+        // the values are always exchanged as strings: the API exports them out of the XML representation
+        // of the block (see BaseBlockTransformer), and the columns holding a reference to another entity
+        // are exported as a placeholder
+        $result = ['type' => 'string'];
+        $columnType = $this->getJsonType($column);
+        if ($columnType !== 'string') {
+            // the type of the underlying database column: numbers are accepted when writing
+            $result['x-concrete-column-type'] = $columnType;
+        } elseif ($length = $column->getLength()) {
             $result['maxLength'] = $length;
         }
         if (!$column->getNotnull()) {
@@ -113,14 +120,44 @@ class ApiValueSchemaFactory
         }
         $default = $column->getDefault();
         if ($default !== null) {
-            $result['default'] = $default;
+            $result['default'] = (string) $default;
         }
         if ($reference !== null) {
-            // the value may also be a {ccm:export:...} placeholder (a <concrete-picture> element for "content")
             $result['x-concrete-reference'] = $reference;
+            $result['description'] = $this->getReferenceDescription($reference);
         }
 
         return $result;
+    }
+
+    /**
+     * Describe how a column holding a reference to another entity is exchanged.
+     */
+    protected function getReferenceDescription(string $reference): string
+    {
+        switch ($reference) {
+            case ExportDeclarations::REFERENCE_CONTENT:
+                return 'Rich content: the references it contains are exported as placeholders (for example <concrete-picture file-id="..." /> for the images), and resolved back when writing.';
+            case ExportDeclarations::REFERENCE_FILE:
+                $placeholder = '{ccm:export:file::id=<file ID or file UUID>}';
+                break;
+            case ExportDeclarations::REFERENCE_PAGE:
+                $placeholder = '{ccm:export:page::id=<page ID>}';
+                break;
+            case ExportDeclarations::REFERENCE_PAGE_TYPE:
+                $placeholder = '{ccm:export:pagetype::id=<page type ID>}';
+                break;
+            case ExportDeclarations::REFERENCE_PAGE_FEED:
+                $placeholder = '{ccm:export:pagefeed::id=<page feed ID>}';
+                break;
+            case ExportDeclarations::REFERENCE_FILE_FOLDER:
+                $placeholder = '{ccm:export:filefolder::id=<file folder ID>}';
+                break;
+            default:
+                return '';
+        }
+
+        return "Exported as a {$placeholder} placeholder (an empty reference is exported as 0); when writing, the placeholder is resolved, and the local ID is accepted too.";
     }
 
     /**
