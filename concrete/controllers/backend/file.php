@@ -17,6 +17,7 @@ use Concrete\Core\File\Filesystem;
 use Concrete\Core\File\Importer;
 use Concrete\Core\File\Incoming;
 use Concrete\Core\File\Rescanner;
+use Concrete\Core\File\Import\RemoteFileDownloader;
 use Concrete\Core\File\Service\VolatileDirectory;
 use Concrete\Core\File\Type\TypeList as FileTypeList;
 use Concrete\Core\File\ValidationService;
@@ -26,7 +27,6 @@ use Concrete\Core\Permission\Checker;
 use Concrete\Core\Tree\Node\Node;
 use Concrete\Core\Tree\Node\Type\FileFolder;
 use Concrete\Core\Url\Validation\InvalidRemoteUrlException;
-use Concrete\Core\Url\Validation\RemoteUrlRequestOptionsBuilder;
 use Concrete\Core\Url\Validation\RemoteUrlValidator;
 use Concrete\Core\Url\Validation\ValidatedRemoteUrl;
 use Concrete\Core\Utility\Service\Number;
@@ -36,8 +36,6 @@ use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use FileSet;
-use GuzzleHttp\Client;
-use GuzzleHttp\Psr7\Request;
 use Permissions as ConcretePermissions;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use ZipArchive;
@@ -842,55 +840,7 @@ class File extends Controller
      */
     protected function downloadRemoteURL($url, $temporaryDirectory, ?ValidatedRemoteUrl $validatedUrl = null)
     {
-        /** @var Client $client */
-        $client = $this->app->make(Client::class);
-        $request = new Request('GET', $url);
-
-        $config = $validatedUrl ? (new RemoteUrlRequestOptionsBuilder())->build($validatedUrl) : [];
-
-        $response = $client->send($request, $config);
-
-        if ($response->getStatusCode() !== 200) {
-            throw new UserMessageException(t(/*i18n: %1$s is an URL, %2$s is an error message*/ 'There was an error downloading "%1$s": %2$s', $url, $response->getReasonPhrase() . ' (' . $response->getStatusCode() . ')'));
-        }
-
-        // figure out a filename based on filename, mimetype, ???
-        $matches = null;
-        if (preg_match('/^[^#\?]+[\\/]([-\w%]+\.[-\w%]+)($|\?|#)/', $request->getUri(), $matches)) {
-            // got a filename (with extension)... use it
-            $filename = $matches[1];
-        } else {
-            foreach ($response->getHeader('Content-Type') as $contentType) {
-                if (!empty($contentType)) {
-                    [$mimeType] = explode(';', $contentType, 2);
-                    $mimeType = trim($mimeType);
-                    // use mimetype from http response
-                    $extension = $this->app->make('helper/mime')->mimeToExtension($mimeType);
-
-                    if ($extension === false) {
-                        throw new UserMessageException(t('Unknown mime-type: %s', h($mimeType)));
-                    }
-                    $filename = date('Y-m-d_H-i_') . mt_rand(100, 999) . '.' . $extension;
-                } else {
-                    throw new UserMessageException(t(/*i18n: %s is an URL*/ 'Could not determine the name of the file at %s', $url));
-                }
-            }
-        }
-
-        $fileValidationService = $this->app->make('helper/validation/file');
-
-        if (!$fileValidationService->extension($filename)) {
-            $fileHelper = $this->app->make('helper/file');
-            throw new UserMessageException(t('The file extension "%s" is not valid.', $fileHelper->getExtension($filename)));
-        }
-
-        $fullFilename = $temporaryDirectory . '/' . $filename;
-        // write the downloaded file to a temporary location on disk
-        $handle = fopen($fullFilename, 'wb');
-        fwrite($handle, $response->getBody());
-        fclose($handle);
-
-        return $fullFilename;
+        return $this->app->make(RemoteFileDownloader::class)->download((string) $url, (string) $temporaryDirectory, $validatedUrl);
     }
 
     /**
