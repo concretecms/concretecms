@@ -46,6 +46,7 @@ class ApiValueSchemaFactoryTest extends ConcreteDatabaseTestCase
         $schema = $this->getFactory()->getSchema($this->getBlockTypeController('content'));
 
         $this->assertSame('object', $schema['type']);
+        $this->assertSame(['string', 'null'], $schema['properties']['content']['type']);
         $this->assertTrue($schema['x-concrete-derived']);
         $this->assertArrayNotHasKey('bID', $schema['properties'], 'the block ID is not part of the value');
         $this->assertArrayHasKey('content', $schema['properties']);
@@ -74,16 +75,21 @@ class ApiValueSchemaFactoryTest extends ConcreteDatabaseTestCase
      * The API exchanges every value of the record as a string, and the columns holding a reference are
      * exchanged as a placeholder: the schema must describe that, not the database column.
      */
-    public function testValuesAreDescribedAsStrings(): void
+    public function testTheAcceptedTypesAreDescribed(): void
     {
         $properties = $this->getFactory()->getSchema($this->getBlockTypeController('image'))['properties'];
 
-        foreach (['fID', 'maxWidth', 'altText', 'openLinkInNewWindow'] as $name) {
-            $this->assertSame('string', $properties[$name]['type'], "wrong type for {$name}");
-        }
+        // reading gives strings, writing accepts numbers too; the column can be emptied
+        $this->assertSame(['string', 'integer', 'null'], $properties['maxWidth']['type']);
+        // a reference is a placeholder (a string) or the local ID
+        $this->assertSame(['string', 'integer', 'null'], $properties['fID']['type']);
+        // the boolean columns of the blocks contain 0 and 1
+        $this->assertSame(['string', 'integer'], $properties['openLinkInNewWindow']['type']);
+        $this->assertSame(['string', 'null'], $properties['altText']['type']);
         // the length is a constraint on what can be sent, unlike the type of the underlying column
         $this->assertSame(255, $properties['altText']['maxLength']);
         $this->assertArrayNotHasKey('maxLength', $properties['maxWidth']);
+        $this->assertArrayNotHasKey('nullable', $properties['maxWidth']);
         $this->assertSame('0', $properties['maxWidth']['default']);
     }
 

@@ -104,16 +104,22 @@ class ApiValueSchemaFactory
      */
     protected function describeColumn(Column $column, ?string $reference): array
     {
-        // the values are always exchanged as strings: the API exports them out of the XML representation
-        // of the block (see BaseBlockTransformer), and the columns holding a reference to another entity
-        // are exported as a placeholder
-        $result = ['type' => 'string'];
-        $length = $column->getLength();
-        if ($length && $this->isTextColumn($column)) {
-            $result['maxLength'] = $length;
+        // reading always gives strings, since the API exports the values out of the XML representation of
+        // the block (see BaseBlockTransformer), and the columns holding a reference to another entity are
+        // exported as a placeholder; writing accepts numbers as well, where the column holds numbers
+        $types = ['string'];
+        $numberType = $this->getNumberType($column);
+        if ($numberType !== '') {
+            $types[] = $numberType;
+        } elseif ($length = $column->getLength()) {
+            $maxLength = $length;
         }
         if (!$column->getNotnull()) {
-            $result['nullable'] = true;
+            $types[] = 'null';
+        }
+        $result = ['type' => count($types) === 1 ? 'string' : $types];
+        if (isset($maxLength)) {
+            $result['maxLength'] = $maxLength;
         }
         $default = $column->getDefault();
         if ($default !== null) {
@@ -161,20 +167,24 @@ class ApiValueSchemaFactory
     }
 
     /**
-     * Does a database column contain text (and not, say, numbers)?
+     * Get the JSON type of the numbers accepted by a database column.
+     *
+     * @return string an empty string if the column doesn't contain numbers
      */
-    protected function isTextColumn(Column $column): bool
+    protected function getNumberType(Column $column): string
     {
         switch ($column->getType()->getName()) {
-            case Types::BIGINT:
+            // the boolean columns contain 0 and 1
             case Types::BOOLEAN:
-            case Types::DECIMAL:
-            case Types::FLOAT:
+            case Types::BIGINT:
             case Types::INTEGER:
             case Types::SMALLINT:
-                return false;
+                return 'integer';
+            case Types::DECIMAL:
+            case Types::FLOAT:
+                return 'number';
             default:
-                return true;
+                return '';
         }
     }
 }
