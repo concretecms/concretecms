@@ -23,7 +23,10 @@ class BlockTypes extends ApiController
      *     @OA\Response(
      *         response=200,
      *         description="Successful operation",
-     *         @OA\JsonContent(ref="#/components/schemas/BlockTypeList"),
+     *         @OA\JsonContent(
+     *             type="array",
+     *             @OA\Items(ref="#/components/schemas/BlockType")
+     *         ),
      *     ),
      * )
      *
