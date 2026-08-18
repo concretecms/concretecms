@@ -138,6 +138,13 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
      */
     protected $btExportFileFolderColumns = [];
 
+    /**
+     * The value built by createExportDeclarations(), once getExportDeclarations() has been called.
+     *
+     * @var \Concrete\Core\Block\ExportDeclarations|null
+     */
+    private $exportDeclarations;
+
     protected $btWrapperClass = '';
     protected $btDefaultSet;
     protected $identifier;
@@ -194,8 +201,25 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
     /**
      * Get what this block type declares about the data it owns, so that it can be exported to (and
      * imported from) the installation-independent CIF format.
+     *
+     * The declarations are built just once: override createExportDeclarations() to customize them.
      */
-    public function getExportDeclarations(): ExportDeclarations
+    final public function getExportDeclarations(): ExportDeclarations
+    {
+        if ($this->exportDeclarations === null) {
+            $this->exportDeclarations = $this->createExportDeclarations();
+        }
+
+        return $this->exportDeclarations;
+    }
+
+    /**
+     * Build what this block type declares about the data it owns.
+     *
+     * Block types that don't simply list their columns in the $btExport... properties should override
+     * this method: its result is cached by getExportDeclarations(), so it's called just once.
+     */
+    protected function createExportDeclarations(): ExportDeclarations
     {
         return new ExportDeclarations(
             (string) $this->getBlockTypeDatabaseTable(),

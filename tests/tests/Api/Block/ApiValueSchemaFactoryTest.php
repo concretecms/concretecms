@@ -6,6 +6,7 @@ use Concrete\Core\Api\ApiValueSchemaInterface;
 use Concrete\Core\Api\Block\ApiValueSchemaFactory;
 use Concrete\Core\Block\BlockController;
 use Concrete\Core\Block\BlockType\BlockType;
+use Concrete\Core\Block\ExportDeclarations;
 use Concrete\Core\Entity\Block\BlockType\BlockType as BlockTypeEntity;
 use Concrete\TestHelpers\Database\ConcreteDatabaseTestCase;
 
@@ -90,6 +91,31 @@ class ApiValueSchemaFactoryTest extends ConcreteDatabaseTestCase
 
         $this->assertSame(['whatever' => ['type' => 'string']], $schema['properties']);
         $this->assertArrayNotHasKey('x-concrete-derived', $schema);
+    }
+
+    public function testTheDeclarationsAreBuiltOnce(): void
+    {
+        $controller = $this->getBlockTypeController('content');
+
+        $this->assertSame($controller->getExportDeclarations(), $controller->getExportDeclarations());
+    }
+
+    public function testDeclarationsCanBeCustomized(): void
+    {
+        $controller = new class() extends BlockController {
+            protected $btTable = 'btContentLocal';
+
+            protected function createExportDeclarations(): ExportDeclarations
+            {
+                return new ExportDeclarations('btContentLocal', [], [
+                    ExportDeclarations::REFERENCE_FILE => ['content'],
+                ]);
+            }
+        };
+
+        $schema = $this->getFactory()->getSchema($controller);
+
+        $this->assertSame('file', $schema['properties']['content']['x-concrete-reference']);
     }
 
     public function testBlockTypesWithoutATable(): void
