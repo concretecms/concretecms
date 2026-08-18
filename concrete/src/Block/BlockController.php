@@ -187,6 +187,26 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
         return $this->btExportPageColumns;
     }
 
+    /**
+     * Get what this block type declares about the data it owns, so that it can be exported to (and
+     * imported from) the installation-independent CIF format.
+     */
+    public function getExportDeclarations(): ExportDeclarations
+    {
+        return new ExportDeclarations(
+            (string) $this->getBlockTypeDatabaseTable(),
+            $this->btExportTables === null ? [] : $this->btExportTables,
+            [
+                ExportDeclarations::REFERENCE_PAGE => $this->getBlockTypeExportPageColumns(),
+                ExportDeclarations::REFERENCE_FILE => $this->btExportFileColumns,
+                ExportDeclarations::REFERENCE_PAGE_TYPE => $this->btExportPageTypeColumns,
+                ExportDeclarations::REFERENCE_PAGE_FEED => $this->btExportPageFeedColumns,
+                ExportDeclarations::REFERENCE_FILE_FOLDER => $this->btExportFileFolderColumns,
+                ExportDeclarations::REFERENCE_CONTENT => $this->btExportContentColumns,
+            ]
+        );
+    }
+
     public function getIdentifier()
     {
         return $this->identifier;
@@ -652,7 +672,7 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
      *
      * @return array<string,mixed>
      */
-    public function getImportDataFromApiValue($page, array $value)
+    public function getImportDataFromApiValue($page, array $value): array
     {
         $xml = $this->app->make(Xml::class);
         $blockNode = new \SimpleXMLElement('<block></block>');
