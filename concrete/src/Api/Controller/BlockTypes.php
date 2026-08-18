@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Concrete\Core\Api\Controller;
 
 use Concrete\Core\Api\ApiController;
@@ -8,6 +10,8 @@ use Concrete\Core\Api\Resources;
 use Concrete\Core\Block\BlockType\BlockType;
 use Concrete\Core\Block\BlockType\BlockTypeList;
 use League\Fractal\Resource\Collection;
+
+defined('C5_EXECUTE') or die('Access Denied.');
 
 class BlockTypes extends ApiController
 {

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Concrete\Tests\Backup;
 
 use Concrete\Core\Backup\ContentImporter\ValueInspector\InspectionRoutine\FileFolderRoutine;
@@ -13,6 +15,8 @@ use Concrete\Core\Backup\ContentImporter\ValueInspector\Item\FileItem;
 use Concrete\Core\Backup\ContentImporter\ValueInspector\Item\ImageItem;
 use Concrete\Core\Backup\ContentImporter\ValueInspector\Item\PictureItem;
 use Concrete\Tests\TestCase;
+
+defined('C5_EXECUTE') or die('Access Denied.');
 
 /**
  * Tests the parsing performed by the inspection routines (no database access involved).
@@ -44,12 +48,12 @@ class ContentImporterInspectionRoutineTest extends TestCase
     {
         $items = (new FileRoutine())->match("{ccm:export:file:{$reference}}");
 
-        $this->assertCount(1, $items);
+        static::assertCount(1, $items);
         $item = $items[0];
-        $this->assertInstanceOf(FileItem::class, $item);
-        $this->assertSame($prefix, $item->getPrefix());
-        $this->assertSame($filename, $item->getFilename());
-        $this->assertSame($fileID, $item->getFileID());
+        static::assertInstanceOf(FileItem::class, $item);
+        static::assertSame($prefix, $item->getPrefix());
+        static::assertSame($filename, $item->getFilename());
+        static::assertSame($fileID, $item->getFileID());
     }
 
     /**
@@ -59,12 +63,12 @@ class ContentImporterInspectionRoutineTest extends TestCase
     {
         $items = (new ImageRoutine())->match("{ccm:export:image:{$reference}}");
 
-        $this->assertCount(1, $items);
+        static::assertCount(1, $items);
         $item = $items[0];
-        $this->assertInstanceOf(ImageItem::class, $item);
-        $this->assertSame($prefix, $item->getPrefix());
-        $this->assertSame($filename, $item->getFilename());
-        $this->assertSame($fileID, $item->getFileID());
+        static::assertInstanceOf(ImageItem::class, $item);
+        static::assertSame($prefix, $item->getPrefix());
+        static::assertSame($filename, $item->getFilename());
+        static::assertSame($fileID, $item->getFileID());
     }
 
     public static function providerSimpleReferences(): array
@@ -89,8 +93,8 @@ class ContentImporterInspectionRoutineTest extends TestCase
     {
         $items = (new $routineClass())->match($content);
 
-        $this->assertCount(1, $items);
-        $this->assertSame($expectedReference, $items[0]->getReference());
+        static::assertCount(1, $items);
+        static::assertSame($expectedReference, $items[0]->getReference());
     }
 
     public static function providerPictureElements(): array
@@ -174,13 +178,13 @@ class ContentImporterInspectionRoutineTest extends TestCase
     {
         $items = (new PictureRoutine())->match($element);
 
-        $this->assertCount(1, $items);
+        static::assertCount(1, $items);
         $item = $items[0];
-        $this->assertInstanceOf(PictureItem::class, $item);
-        $this->assertSame($prefix, $item->getPrefix());
-        $this->assertSame($filename, $item->getFilename());
-        $this->assertSame($fileID, $item->getFileID());
-        $this->assertSame($additionalAttributes, $item->getAdditionalAttributes());
+        static::assertInstanceOf(PictureItem::class, $item);
+        static::assertSame($prefix, $item->getPrefix());
+        static::assertSame($filename, $item->getFilename());
+        static::assertSame($fileID, $item->getFileID());
+        static::assertSame($additionalAttributes, $item->getAdditionalAttributes());
     }
 
     public static function providerNotPictureElements(): array
@@ -199,25 +203,25 @@ class ContentImporterInspectionRoutineTest extends TestCase
      */
     public function testPictureRoutineNotMatching(string $content): void
     {
-        $this->assertSame([], (new PictureRoutine())->match($content));
+        static::assertSame([], (new PictureRoutine())->match($content));
     }
 
     public function testPictureRoutineMatchesEveryElement(): void
     {
         $content = <<<'EOT'
-        <p><concrete-picture file="a.png"></p>
-        <p><concrete-picture file="1234:b.png" alt="k > j"></p>
-        <p><concrete-picture file-id="3" /></p>
-EOT;
+                <p><concrete-picture file="a.png"></p>
+                <p><concrete-picture file="1234:b.png" alt="k > j"></p>
+                <p><concrete-picture file-id="3" /></p>
+        EOT;
 
         $items = (new PictureRoutine())->match($content);
 
-        $this->assertCount(3, $items);
-        $this->assertSame('a.png', $items[0]->getFilename());
-        $this->assertSame('', $items[0]->getAdditionalAttributes());
-        $this->assertSame('1234', $items[1]->getPrefix());
-        $this->assertSame('b.png', $items[1]->getFilename());
-        $this->assertSame('alt="k > j"', $items[1]->getAdditionalAttributes());
-        $this->assertSame(3, $items[2]->getFileID());
+        static::assertCount(3, $items);
+        static::assertSame('a.png', $items[0]->getFilename());
+        static::assertSame('', $items[0]->getAdditionalAttributes());
+        static::assertSame('1234', $items[1]->getPrefix());
+        static::assertSame('b.png', $items[1]->getFilename());
+        static::assertSame('alt="k > j"', $items[1]->getAdditionalAttributes());
+        static::assertSame(3, $items[2]->getFileID());
     }
 }

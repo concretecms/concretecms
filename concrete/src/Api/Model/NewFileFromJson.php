@@ -1,6 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Concrete\Core\Api\Model;
+
+defined('C5_EXECUTE') or die('Access Denied.');
 
 /**
  * @OA\Schema(
@@ -10,7 +14,6 @@ namespace Concrete\Core\Api\Model;
  */
 class NewFileFromJson
 {
-
     /**
      * @OA\Property(type="int", title="Folder ID")
      *
@@ -38,5 +41,4 @@ class NewFileFromJson
      * @var string
      */
     private $contents;
-
 }

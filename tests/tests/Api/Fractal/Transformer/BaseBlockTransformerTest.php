@@ -1,10 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Concrete\Tests\Api\Fractal\Transformer;
 
 use Concrete\Core\Api\Fractal\Transformer\BaseBlockTransformer;
 use Concrete\Tests\TestCase;
-use SimpleXMLElement;
+
+defined('C5_EXECUTE') or die('Access Denied.');
 
 class BaseBlockTransformerTest extends TestCase
 {
@@ -13,8 +16,8 @@ class BaseBlockTransformerTest extends TestCase
      */
     private function createTransformer()
     {
-        return new class() extends BaseBlockTransformer {
-            public function extract(SimpleXMLElement $exportNode): array
+        return new class extends BaseBlockTransformer {
+            public function extract(\SimpleXMLElement $exportNode): array
             {
                 return $this->extractBlockValue($exportNode);
             }
@@ -23,19 +26,20 @@ class BaseBlockTransformerTest extends TestCase
 
     public function testValuesAreExtractedFromTheFirstRecord(): void
     {
-        $exportNode = new SimpleXMLElement(<<<'EOT'
-<temporary-element>
-    <data table="btContentLocal">
-        <record>
-            <content>Hello</content>
-            <displayOrder>0</displayOrder>
-        </record>
-    </data>
-</temporary-element>
-EOT
+        $exportNode = new \SimpleXMLElement(
+            <<<'EOT'
+            <temporary-element>
+                <data table="btContentLocal">
+                    <record>
+                        <content>Hello</content>
+                        <displayOrder>0</displayOrder>
+                    </record>
+                </data>
+            </temporary-element>
+            EOT
         );
 
-        $this->assertSame(
+        static::assertSame(
             ['content' => 'Hello', 'displayOrder' => '0'],
             $this->createTransformer()->extract($exportNode)
         );
@@ -51,21 +55,22 @@ EOT
      */
     public function testNullValuesAreKeptDistinctFromEmptyStrings(): void
     {
-        $exportNode = new SimpleXMLElement(<<<'EOT'
-<temporary-element>
-    <data table="btSomeTable">
-        <record>
-            <nullValue null="true"></nullValue>
-            <emptyValue></emptyValue>
-            <notNullValue null="false"></notNullValue>
-            <filledValue>0</filledValue>
-        </record>
-    </data>
-</temporary-element>
-EOT
+        $exportNode = new \SimpleXMLElement(
+            <<<'EOT'
+            <temporary-element>
+                <data table="btSomeTable">
+                    <record>
+                        <nullValue null="true"></nullValue>
+                        <emptyValue></emptyValue>
+                        <notNullValue null="false"></notNullValue>
+                        <filledValue>0</filledValue>
+                    </record>
+                </data>
+            </temporary-element>
+            EOT
         );
 
-        $this->assertSame(
+        static::assertSame(
             [
                 'nullValue' => null,
                 'emptyValue' => '',
@@ -78,8 +83,8 @@ EOT
 
     public function testNoRecord(): void
     {
-        $exportNode = new SimpleXMLElement('<temporary-element><data table="btSomeTable"></data></temporary-element>');
+        $exportNode = new \SimpleXMLElement('<temporary-element><data table="btSomeTable"></data></temporary-element>');
 
-        $this->assertSame([], $this->createTransformer()->extract($exportNode));
+        static::assertSame([], $this->createTransformer()->extract($exportNode));
     }
 }

@@ -1,9 +1,14 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Concrete\Core\Api\Fractal\Transformer;
 
 use Concrete\Core\Api\Block\ApiValueSchemaFactory;
 use Concrete\Core\Entity\Block\BlockType\BlockType;
 use League\Fractal\TransformerAbstract;
+
+defined('C5_EXECUTE') or die('Access Denied.');
 
 class BlockTypeTransformer extends TransformerAbstract
 {

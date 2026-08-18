@@ -1,6 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Concrete\Core\Block;
+
+defined('C5_EXECUTE') or die('Access Denied.');
 
 /**
  * What a block type controller declares about the data it owns, so that it can be exported to (and

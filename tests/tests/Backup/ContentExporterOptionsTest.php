@@ -1,10 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Concrete\Tests\Backup;
 
 use Concrete\Core\Backup\ContentExporterOptions;
 use Concrete\Core\Http\Request;
 use Concrete\Tests\TestCase;
+
+defined('C5_EXECUTE') or die('Access Denied.');
 
 class ContentExporterOptionsTest extends TestCase
 {
@@ -30,7 +34,7 @@ class ContentExporterOptionsTest extends TestCase
     {
         $options = new ContentExporterOptions(Request::create($url));
 
-        $this->assertSame($expected, $options->isExportIDs());
+        static::assertSame($expected, $options->isExportIDs());
     }
 
     public static function providerExportFilesAsUUID(): array
@@ -50,25 +54,25 @@ class ContentExporterOptionsTest extends TestCase
     {
         $options = new ContentExporterOptions(Request::create($url));
 
-        $this->assertSame($expected, $options->isExportFilesAsUUID());
+        static::assertSame($expected, $options->isExportFilesAsUUID());
     }
 
     public function testExportFilesWithoutPrefixIsTurnedOffByDefault(): void
     {
         $options = new ContentExporterOptions(Request::create('/ccm/api/1.0/pages/1'));
 
-        $this->assertFalse($options->isExportFilesWithoutPrefix());
+        static::assertFalse($options->isExportFilesWithoutPrefix());
     }
 
     public function testOptionsCanBeOverridden(): void
     {
         $options = new ContentExporterOptions(Request::create('/dashboard/files/search'));
 
-        $this->assertSame($options, $options->setExportIDs(true));
-        $this->assertTrue($options->isExportIDs());
-        $this->assertSame($options, $options->setExportFilesWithoutPrefix(true));
-        $this->assertTrue($options->isExportFilesWithoutPrefix());
-        $this->assertSame($options, $options->setExportFilesAsUUID(true));
-        $this->assertTrue($options->isExportFilesAsUUID());
+        static::assertSame($options, $options->setExportIDs(true));
+        static::assertTrue($options->isExportIDs());
+        static::assertSame($options, $options->setExportFilesWithoutPrefix(true));
+        static::assertTrue($options->isExportFilesWithoutPrefix());
+        static::assertSame($options, $options->setExportFilesAsUUID(true));
+        static::assertTrue($options->isExportFilesAsUUID());
     }
 }

@@ -1,9 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Concrete\Tests\Block;
 
 use Concrete\Core\Block\ExportDeclarations;
 use Concrete\Tests\TestCase;
+
+defined('C5_EXECUTE') or die('Access Denied.');
 
 class ExportDeclarationsTest extends TestCase
 {
@@ -27,9 +31,9 @@ class ExportDeclarationsTest extends TestCase
     {
         $declarations = $this->createDeclarations();
 
-        $this->assertSame('btFaq', $declarations->getMainTable());
-        $this->assertSame(['btFaq', 'btFaqEntries'], $declarations->getTables());
-        $this->assertSame(['btFaqEntries'], $declarations->getAdditionalTables());
+        static::assertSame('btFaq', $declarations->getMainTable());
+        static::assertSame(['btFaq', 'btFaqEntries'], $declarations->getTables());
+        static::assertSame(['btFaqEntries'], $declarations->getAdditionalTables());
     }
 
     public function testTheMainTableIsAlwaysTheFirstOne(): void
@@ -37,27 +41,27 @@ class ExportDeclarationsTest extends TestCase
         // block types may or may not list the main table in $btExportTables
         $declarations = new ExportDeclarations('btMain', ['btOther'], []);
 
-        $this->assertSame(['btMain', 'btOther'], $declarations->getTables());
-        $this->assertSame(['btOther'], $declarations->getAdditionalTables());
+        static::assertSame(['btMain', 'btOther'], $declarations->getTables());
+        static::assertSame(['btOther'], $declarations->getAdditionalTables());
     }
 
     public function testBlockTypesWithoutTables(): void
     {
         $declarations = new ExportDeclarations('', [], []);
 
-        $this->assertSame('', $declarations->getMainTable());
-        $this->assertSame([], $declarations->getTables());
-        $this->assertSame([], $declarations->getAdditionalTables());
+        static::assertSame('', $declarations->getMainTable());
+        static::assertSame([], $declarations->getTables());
+        static::assertSame([], $declarations->getAdditionalTables());
     }
 
     public function testColumns(): void
     {
         $declarations = $this->createDeclarations();
 
-        $this->assertSame(['fID', 'fOnstateID'], $declarations->getColumns(ExportDeclarations::REFERENCE_FILE));
-        $this->assertSame([], $declarations->getColumns(ExportDeclarations::REFERENCE_PAGE_FEED));
+        static::assertSame(['fID', 'fOnstateID'], $declarations->getColumns(ExportDeclarations::REFERENCE_FILE));
+        static::assertSame([], $declarations->getColumns(ExportDeclarations::REFERENCE_PAGE_FEED));
         // reference types without columns aren't listed
-        $this->assertSame(
+        static::assertSame(
             [ExportDeclarations::REFERENCE_FILE, ExportDeclarations::REFERENCE_PAGE],
             $declarations->getReferenceTypes()
         );
@@ -67,9 +71,9 @@ class ExportDeclarationsTest extends TestCase
     {
         $declarations = $this->createDeclarations();
 
-        $this->assertSame(ExportDeclarations::REFERENCE_FILE, $declarations->getColumnReference('fID'));
-        $this->assertSame(ExportDeclarations::REFERENCE_FILE, $declarations->getColumnReference('fid'));
-        $this->assertSame(ExportDeclarations::REFERENCE_PAGE, $declarations->getColumnReference('internalLinkCID'));
-        $this->assertNull($declarations->getColumnReference('maxWidth'));
+        static::assertSame(ExportDeclarations::REFERENCE_FILE, $declarations->getColumnReference('fID'));
+        static::assertSame(ExportDeclarations::REFERENCE_FILE, $declarations->getColumnReference('fid'));
+        static::assertSame(ExportDeclarations::REFERENCE_PAGE, $declarations->getColumnReference('internalLinkCID'));
+        static::assertNull($declarations->getColumnReference('maxWidth'));
     }
 }

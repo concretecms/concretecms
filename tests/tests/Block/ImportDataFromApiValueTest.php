@@ -1,10 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Concrete\Tests\Block;
 
 use Concrete\Core\Block\BlockType\BlockType;
 use Concrete\Core\Entity\Block\BlockType\BlockType as BlockTypeEntity;
 use Concrete\TestHelpers\Page\PageTestCase;
+
+defined('C5_EXECUTE') or die('Access Denied.');
 
 class ImportDataFromApiValueTest extends PageTestCase
 {
@@ -57,7 +61,7 @@ class ImportDataFromApiValueTest extends PageTestCase
             'content' => '<a href="{ccm:export:page::id=' . $cID . '}">by ID</a> <a href="{ccm:export:page:/target-page}">by path</a>',
         ]);
 
-        $this->assertSame(
+        static::assertSame(
             '<a href="{CCM:CID_' . $cID . '}">by ID</a> <a href="{CCM:CID_' . $cID . '}">by path</a>',
             $args['content']
         );
@@ -72,7 +76,7 @@ class ImportDataFromApiValueTest extends PageTestCase
             'content' => '<p>Some content with an & and a <em>tag</em></p>',
         ]);
 
-        $this->assertSame('<p>Some content with an & and a <em>tag</em></p>', $args['content']);
+        static::assertSame('<p>Some content with an & and a <em>tag</em></p>', $args['content']);
     }
 
     public function testNullValuesAreKeptDistinctFromEmptyStrings(): void
@@ -85,9 +89,9 @@ class ImportDataFromApiValueTest extends PageTestCase
             'displayOrder' => '',
         ]);
 
-        $this->assertArrayHasKey('content', $args);
-        $this->assertNull($args['content']);
-        $this->assertSame('', $args['displayOrder']);
+        static::assertArrayHasKey('content', $args);
+        static::assertNull($args['content']);
+        static::assertSame('', $args['displayOrder']);
     }
 
     public function testValuesThatCantBeExpressedInXmlAreLeftUntouched(): void
@@ -102,9 +106,9 @@ class ImportDataFromApiValueTest extends PageTestCase
             'flag' => true,
         ]);
 
-        $this->assertSame('Hello', $args['content']);
-        $this->assertSame('kept', $args['not a valid element name']);
-        $this->assertSame(['a' => 'b'], $args['nested']);
-        $this->assertTrue($args['flag']);
+        static::assertSame('Hello', $args['content']);
+        static::assertSame('kept', $args['not a valid element name']);
+        static::assertSame(['a' => 'b'], $args['nested']);
+        static::assertTrue($args['flag']);
     }
 }

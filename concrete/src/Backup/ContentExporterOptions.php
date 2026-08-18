@@ -6,6 +6,8 @@ namespace Concrete\Core\Backup;
 
 use Concrete\Core\Http\Request;
 
+defined('C5_EXECUTE') or die('Access Denied.');
+
 final class ContentExporterOptions
 {
     /**

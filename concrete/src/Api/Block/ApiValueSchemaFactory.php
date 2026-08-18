@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Concrete\Core\Api\Block;
 
 use Concrete\Core\Api\ApiValueSchemaInterface;
@@ -8,6 +10,8 @@ use Concrete\Core\Block\ExportDeclarations;
 use Concrete\Core\Database\Connection\Connection;
 use Doctrine\DBAL\Schema\Column;
 use Doctrine\DBAL\Types\Types;
+
+defined('C5_EXECUTE') or die('Access Denied.');
 
 /**
  * Build the JSON Schema describing the value accepted by a block type.
@@ -31,8 +35,6 @@ class ApiValueSchemaFactory
 
     /**
      * Get the JSON Schema (as an array) describing the value accepted by a block type controller.
-     *
-     * @return array
      */
     public function getSchema(BlockController $controller): array
     {
@@ -45,8 +47,6 @@ class ApiValueSchemaFactory
 
     /**
      * Derive the schema of a block type from its database table and its CIF export declarations.
-     *
-     * @return array
      */
     protected function deriveSchema(BlockController $controller): array
     {
@@ -99,8 +99,6 @@ class ApiValueSchemaFactory
      * Describe a single database column.
      *
      * @param string|null $reference the kind of reference held by the column (if any)
-     *
-     * @return array
      */
     protected function describeColumn(Column $column, ?string $reference): array
     {
@@ -142,8 +140,7 @@ class ApiValueSchemaFactory
             case ExportDeclarations::REFERENCE_CONTENT:
                 return 'Rich content: the references it contains are exported as placeholders, and resolved back when writing.'
                     . ' The images are <concrete-picture file-id="<file ID or file UUID>" /> elements (their other attributes are kept as they are),'
-                    . ' whereas the links to files and to pages are {ccm:export:file::id=<file ID or file UUID>} and {ccm:export:page::id=<page ID>} placeholders.'
-                ;
+                    . ' whereas the links to files and to pages are {ccm:export:file::id=<file ID or file UUID>} and {ccm:export:page::id=<page ID>} placeholders.';
             case ExportDeclarations::REFERENCE_FILE:
                 $placeholder = '{ccm:export:file::id=<file ID or file UUID>}';
                 break;

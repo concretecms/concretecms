@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Concrete\Core\File\Import;
 
 use Concrete\Core\Error\UserMessageException;
@@ -12,6 +14,8 @@ use Concrete\Core\Url\Validation\RemoteUrlValidator;
 use Concrete\Core\Url\Validation\ValidatedRemoteUrl;
 use GuzzleHttp\Psr7\Request;
 use Psr\Http\Message\ResponseInterface;
+
+defined('C5_EXECUTE') or die('Access Denied.');
 
 /**
  * Download a remote file, so that it can be imported into the file manager.
@@ -92,7 +96,7 @@ class RemoteFileDownloader
         $request = new Request('GET', $url);
         $response = $this->client->send($request, $this->requestOptionsBuilder->build($validatedUrl));
         if ($response->getStatusCode() !== 200) {
-            throw new UserMessageException(t(/*i18n: %1$s is an URL, %2$s is an error message*/ 'There was an error downloading "%1$s": %2$s', $url, $response->getReasonPhrase() . ' (' . $response->getStatusCode() . ')'));
+            throw new UserMessageException(t(/* i18n: %1$s is an URL, %2$s is an error message */ 'There was an error downloading "%1$s": %2$s', $url, $response->getReasonPhrase() . ' (' . $response->getStatusCode() . ')'));
         }
         $filename = $this->getFilename($url, $response);
         if (!$this->fileValidator->extension($filename)) {
@@ -132,6 +136,6 @@ class RemoteFileDownloader
             return date('Y-m-d_H-i_') . mt_rand(100, 999) . '.' . $extension;
         }
 
-        throw new UserMessageException(t(/*i18n: %s is an URL*/ 'Could not determine the name of the file at %s', $url));
+        throw new UserMessageException(t(/* i18n: %s is an URL */ 'Could not determine the name of the file at %s', $url));
     }
 }

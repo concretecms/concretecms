@@ -1,10 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Concrete\Tests\Api;
 
 use Concrete\Core\Api\OpenApi\SourceRegistry;
 use Concrete\Tests\TestCase;
 use OpenApi\Generator;
+
+defined('C5_EXECUTE') or die('Access Denied.');
 
 /**
  * The API clients (and the OAuth scopes of the installation) are built out of the generated OpenAPI
@@ -38,8 +42,8 @@ class OpenApiSpecTest extends TestCase
             $paths[] = $path->path;
         }
 
-        $this->assertContains('/ccm/api/1.0/block_types', $paths);
-        $this->assertContains('/ccm/api/1.0/block_types/{blockTypeHandle}', $paths);
+        static::assertContains('/ccm/api/1.0/block_types', $paths);
+        static::assertContains('/ccm/api/1.0/block_types/{blockTypeHandle}', $paths);
     }
 
     public function testTheOpenApiPathIsInTheSpec(): void
@@ -49,7 +53,7 @@ class OpenApiSpecTest extends TestCase
             $paths[] = $path->path;
         }
 
-        $this->assertContains('/ccm/api/1.0/system/openapi', $paths);
+        static::assertContains('/ccm/api/1.0/system/openapi', $paths);
     }
 
     public static function providerNewScopes(): array
@@ -72,7 +76,7 @@ class OpenApiSpecTest extends TestCase
             }
         }
 
-        $this->assertContains($expectedScope, $scopes);
+        static::assertContains($expectedScope, $scopes);
     }
 
     /**
@@ -96,7 +100,7 @@ class OpenApiSpecTest extends TestCase
             }
         }
 
-        $this->assertSame([], $offending);
+        static::assertSame([], $offending);
     }
 
     /**
@@ -131,7 +135,7 @@ class OpenApiSpecTest extends TestCase
             }
         }
 
-        $this->assertSame([], $undeclared);
+        static::assertSame([], $undeclared);
     }
 
     public function testEveryReferencedSchemaExists(): void
@@ -147,7 +151,7 @@ class OpenApiSpecTest extends TestCase
             }
         }
 
-        $this->assertSame([], array_values(array_unique(array_diff($referenced, $defined))));
+        static::assertSame([], array_values(array_unique(array_diff($referenced, $defined))));
     }
 
     /**

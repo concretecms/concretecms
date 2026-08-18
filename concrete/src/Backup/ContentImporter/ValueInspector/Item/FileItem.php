@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Concrete\Core\Backup\ContentImporter\ValueInspector\Item;
 
 use Concrete\Core\Entity\File\File;
@@ -13,7 +15,7 @@ class FileItem implements ItemInterface
      *
      * @var string
      */
-    const IDENTIFIER_REGEX = '[1-9][0-9]*|[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}';
+    public const IDENTIFIER_REGEX = '[1-9][0-9]*|[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}';
 
     /**
      * The file name (without the potential prefix).

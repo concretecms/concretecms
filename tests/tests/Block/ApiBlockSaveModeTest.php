@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Concrete\Tests\Block;
 
 use Concrete\Core\Area\Area;
@@ -8,6 +10,8 @@ use Concrete\Core\Block\Command\AddBlockToPageCommand;
 use Concrete\Core\Block\Controller\SaveMode;
 use Concrete\Core\Entity\Block\BlockType\BlockType as BlockTypeEntity;
 use Concrete\TestHelpers\Page\PageTestCase;
+
+defined('C5_EXECUTE') or die('Access Denied.');
 
 /**
  * The values received by the API are in the CIF format, so they must be saved the very same way an
@@ -50,6 +54,7 @@ class ApiBlockSaveModeTest extends PageTestCase
         if (BlockType::getByHandle('image') === null) {
             BlockType::installBlockType('image');
         }
+
         // fetch it again: installBlockType() doesn't load the controller
         return BlockType::getByHandle('image');
     }
@@ -83,8 +88,8 @@ class ApiBlockSaveModeTest extends PageTestCase
         $block = $this->addImageBlock($page, $value, SaveMode::SAVE_MODE_IMPORT);
         $controller = $block->getController();
 
-        $this->assertSame((int) $target->getCollectionID(), (int) $controller->internalLinkCID);
-        $this->assertSame('Lorem ipsum', $controller->altText);
+        static::assertSame((int) $target->getCollectionID(), (int) $controller->internalLinkCID);
+        static::assertSame('Lorem ipsum', $controller->altText);
     }
 
     /**
@@ -103,6 +108,6 @@ class ApiBlockSaveModeTest extends PageTestCase
 
         $block = $this->addImageBlock($page, $value, SaveMode::SAVE_MODE_REQUEST);
 
-        $this->assertSame(0, (int) $block->getController()->internalLinkCID);
+        static::assertSame(0, (int) $block->getController()->internalLinkCID);
     }
 }

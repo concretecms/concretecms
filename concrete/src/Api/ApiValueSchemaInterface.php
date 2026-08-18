@@ -1,6 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Concrete\Core\Api;
+
+defined('C5_EXECUTE') or die('Access Denied.');
 
 /**
  * Implemented by the controllers (for example the block type controllers) that want to describe to the
@@ -14,8 +18,6 @@ interface ApiValueSchemaInterface
 {
     /**
      * Get the JSON Schema (as an array) describing the value accepted by this controller.
-     *
-     * @return array
      */
     public function getApiValueSchema(): array;
 }

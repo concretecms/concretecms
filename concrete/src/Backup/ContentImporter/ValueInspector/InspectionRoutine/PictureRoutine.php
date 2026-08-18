@@ -88,6 +88,7 @@ class PictureRoutine extends AbstractRegularExpressionRoutine
                         }
                         break;
                 }
+
                 return '';
             },
             $attributes

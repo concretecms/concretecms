@@ -1,11 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Concrete\Tests\File\Import;
 
 use Concrete\Core\Error\UserMessageException;
 use Concrete\Core\File\Import\RemoteFileDownloader;
 use Concrete\Tests\TestCase;
 use GuzzleHttp\Psr7\Response;
+
+defined('C5_EXECUTE') or die('Access Denied.');
 
 class RemoteFileDownloaderTest extends TestCase
 {
@@ -28,7 +32,7 @@ class RemoteFileDownloaderTest extends TestCase
      */
     public function testTheFilenameIsTakenFromTheUrl(string $url, string $expected): void
     {
-        $this->assertSame($expected, $this->getDownloader()->getFilename($url, new Response(200)));
+        static::assertSame($expected, $this->getDownloader()->getFilename($url, new Response(200)));
     }
 
     public function testTheFilenameFallsBackToTheMimeType(): void
@@ -37,7 +41,7 @@ class RemoteFileDownloaderTest extends TestCase
 
         $filename = $this->getDownloader()->getFilename('https://www.example.com/download', $response);
 
-        $this->assertMatchesRegularExpression('/^[\d\-_]+\d{3}\.png$/', $filename);
+        static::assertMatchesRegularExpression('/^[\d\-_]+\d{3}\.png$/', $filename);
     }
 
     public function testUnknownMimeTypesAreRejected(): void
