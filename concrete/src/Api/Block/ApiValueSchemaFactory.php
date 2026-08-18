@@ -134,7 +134,10 @@ class ApiValueSchemaFactory
     {
         switch ($reference) {
             case ExportDeclarations::REFERENCE_CONTENT:
-                return 'Rich content: the references it contains are exported as placeholders (for example <concrete-picture file-id="..." /> for the images), and resolved back when writing.';
+                return 'Rich content: the references it contains are exported as placeholders, and resolved back when writing.'
+                    . ' The images are <concrete-picture file-id="<file ID or file UUID>" /> elements (their other attributes are kept as they are),'
+                    . ' whereas the links to files and to pages are {ccm:export:file::id=<file ID or file UUID>} and {ccm:export:page::id=<page ID>} placeholders.'
+                ;
             case ExportDeclarations::REFERENCE_FILE:
                 $placeholder = '{ccm:export:file::id=<file ID or file UUID>}';
                 break;

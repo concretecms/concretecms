@@ -51,6 +51,10 @@ class ApiValueSchemaFactoryTest extends ConcreteDatabaseTestCase
         $this->assertArrayHasKey('content', $schema['properties']);
         // the content block declares "content" in $btExportContentColumns
         $this->assertSame('content', $schema['properties']['content']['x-concrete-reference']);
+        $description = $schema['properties']['content']['description'];
+        $this->assertStringContainsString('<concrete-picture file-id="<file ID or file UUID>" />', $description);
+        $this->assertStringContainsString('{ccm:export:file::id=<file ID or file UUID>}', $description);
+        $this->assertStringContainsString('{ccm:export:page::id=<page ID>}', $description);
     }
 
     public function testReferenceColumnsAreFlagged(): void
