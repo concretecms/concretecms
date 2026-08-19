@@ -35,6 +35,11 @@ class Files extends ApiController
     use SupportsCursorTrait;
 
     /**
+     * @var array|null
+     */
+    private $postedValues = null;
+
+    /**
      * @OA\Get(
      *     path="/ccm/api/1.0/files/{fileID}",
      *     tags={"files"},
@@ -196,8 +201,6 @@ class Files extends ApiController
             return $this->error(t("You don't have the permission to upload to %s", $folder->getTreeNodeDisplayName()), 403);
         }
         $uploadedFile = $this->request->files->get('file');
-        $contents = $this->getPostedValue('contents');
-        $url = trim((string) $this->getPostedValue('url'));
         if ($uploadedFile instanceof UploadedFile) {
             if ($post_max_size = $this->app->make('helper/number')->getBytes(ini_get('post_max_size'))) {
                 $contentLength = (int) $this->request->server->get('CONTENT_LENGTH', 0);
@@ -210,10 +213,17 @@ class Files extends ApiController
             }
             $localFilename = $uploadedFile->getPathname();
             $concreteFilename = $uploadedFile->getClientOriginalName();
-        } elseif (is_string($contents) && $contents !== '') {
+            if (!$this->app->make(ValidationService::class)->extension($concreteFilename)) {
+                return $this->error(Importer::getErrorMessage(Importer::E_FILE_INVALID_EXTENSION), 400);
+            }
+        } elseif (is_string($contents = $this->getPostedValue('contents')) && $contents !== '') {
             $concreteFilename = trim((string) $this->getPostedValue('filename'));
             if ($concreteFilename === '') {
                 return $this->error(t('You must specify the name of the file.'), 400);
+            }
+            $concreteFilename = basename($concreteFilename);
+            if (!$this->app->make(ValidationService::class)->extension($concreteFilename)) {
+                return $this->error(Importer::getErrorMessage(Importer::E_FILE_INVALID_EXTENSION), 400);
             }
             $decoded = base64_decode($contents, true);
             if ($decoded === false) {
@@ -225,20 +235,18 @@ class Files extends ApiController
             if (@file_put_contents($localFilename, $decoded) === false) {
                 return $this->error(t('Failed to save the contents of the file.'), 500);
             }
-        } elseif ($url !== '') {
+        } elseif (($url = trim((string) $this->getPostedValue('url'))) !== '') {
             // the volatile directory must be kept alive until the file has been imported
             $volatileDirectory = $this->app->make(VolatileDirectory::class);
             try {
-                $localFilename = $this->app->make(RemoteFileDownloader::class)->download($url, $volatileDirectory->getPath());
+                $localFilename = $this->app->make(RemoteFileDownloader::class)->download($url, $volatileDirectory->getPath(), null, trim((string) $this->getPostedValue('filename')));
             } catch (UserMessageException $x) {
                 return $this->error($x->getMessage(), 400);
             }
+            // the downloader named the file after the received filename parameter, or after the URL when it's empty
             $concreteFilename = basename($localFilename);
         } else {
             return $this->error(Importer::getErrorMessage(Importer::E_FILE_INVALID), 400);
-        }
-        if (!$this->app->make(ValidationService::class)->extension($concreteFilename)) {
-            return $this->error(Importer::getErrorMessage(Importer::E_FILE_INVALID_EXTENSION), 400);
         }
         $cf = $this->app->make('helper/file');
         if (!$fp->canAddFileType($cf->getExtension($concreteFilename))) {
@@ -281,14 +289,17 @@ class Files extends ApiController
         if ($value !== null) {
             return $value;
         }
-        if (stripos((string) $this->request->headers->get('Content-Type'), 'json') !== false) {
-            $data = json_decode((string) $this->request->getContent(), true);
-            if (is_array($data) && array_key_exists($key, $data)) {
-                return $data[$key];
+        if ($this->postedValues === null) {
+            $this->postedValues = [];
+            if (stripos((string) $this->request->headers->get('Content-Type'), 'json') !== false) {
+                $postedValues = json_decode((string) $this->request->getContent(), true);
+                if (is_array($postedValues)) {
+                    $this->postedValues = $postedValues;
+                }
             }
         }
 
-        return null;
+        return $this->postedValues[$key] ?? null;
     }
 
     /**

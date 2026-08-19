@@ -35,6 +35,51 @@ class RemoteFileDownloaderTest extends TestCase
         static::assertSame($expected, $this->getDownloader()->getFilename($url, new Response(200)));
     }
 
+    public static function providerExplicitFilenames(): array
+    {
+        return [
+            'plain name' => ['photo.jpg', 'photo.jpg'],
+            'name with a path' => ['some/dir/photo.jpg', 'photo.jpg'],
+            'name with a Windows path' => ['some\dir\photo.jpg', 'photo.jpg'],
+            'name trying to escape' => ['../../photo.jpg', 'photo.jpg'],
+        ];
+    }
+
+    /**
+     * @dataProvider providerExplicitFilenames
+     */
+    public function testTheExplicitFilenameWinsOverTheUrl(string $filename, string $expected): void
+    {
+        $downloader = $this->getDownloader();
+
+        $this->assertSame($expected, $downloader->getFilename('https://www.example.com/from-the-url.png', new Response(200), $filename));
+    }
+
+    public static function providerUnusableFilenames(): array
+    {
+        return [
+            'extension not accepted' => ['evil.php'],
+            'no extension' => ['photo'],
+            'only a path' => ['some/dir/'],
+            'only dots' => ['..'],
+        ];
+    }
+
+    /**
+     * @dataProvider providerUnusableFilenames
+     */
+    public function testTheExplicitFilenameIsChecked(string $filename): void
+    {
+        $this->expectException(UserMessageException::class);
+        $this->getDownloader()->getFilename('https://www.example.com/fine.png', new Response(200), $filename);
+    }
+
+    public function testTheFilenameTakenFromTheUrlIsCheckedToo(): void
+    {
+        $this->expectException(UserMessageException::class);
+        $this->getDownloader()->getFilename('https://www.example.com/evil.php', new Response(200));
+    }
+
     public function testTheFilenameFallsBackToTheMimeType(): void
     {
         $response = new Response(200, ['Content-Type' => 'image/png; charset=binary']);

@@ -22,14 +22,14 @@ class NewFileFromJson
     private $folder;
 
     /**
-     * @OA\Property(type="string", format="uri", title="URL of the file to be downloaded", description="Let Concrete download the file itself. The name of the file is taken from the URL (or from the mime type declared by the remote server), and its extension must be one that this installation accepts.")
+     * @OA\Property(type="string", format="uri", title="URL of the file to be downloaded", description="Let Concrete download the file itself. Unless filename is specified, the name of the file is taken from the URL (or from the mime type declared by the remote server); in both the cases the extension must be one that this installation accepts.")
      *
      * @var string
      */
     private $url;
 
     /**
-     * @OA\Property(type="string", title="Name of the file", description="Required when sending the contents: the name the file will have, for example image.png. Its extension must be one that this installation accepts.")
+     * @OA\Property(type="string", title="Name of the file", description="The name the file will have, for example image.png: its extension must be one that this installation accepts. It's required when sending the contents, and optional when downloading from an url (where it overrides the name taken from the URL).")
      *
      * @var string
      */
