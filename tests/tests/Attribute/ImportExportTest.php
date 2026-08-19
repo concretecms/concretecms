@@ -117,6 +117,7 @@ class ImportExportTest extends PageTestCase
                 Entity\File\StorageLocation\StorageLocation::class,
                 Entity\File\StorageLocation\Type\Type::class,
                 Entity\File\Version::class,
+                Entity\Statistics\UsageTracker\StackUsageRecord::class,
             ],
             self::listAttributeEntities()
         );

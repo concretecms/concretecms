@@ -26,9 +26,23 @@ use ReflectionProperty;
  * performs real schema introspection). Since that branch isn't what's under test here and this
  * lightweight test doesn't set up the block's database table, $btTable is temporarily cleared
  * via reflection so performSave() skips it and only the tracking-order behaviour is exercised.
+ *
+ * The fake tracker is bound into the shared application container via `$app->instance()`. Since
+ * that container instance is shared across the whole PHPUnit process, the binding MUST be
+ * reverted in tearDown() - otherwise every subsequent test that saves any TrackableInterface
+ * block (which includes every FileTrackableInterface block, e.g. Image, File) resolves this
+ * fake tracker instead of the real AggregateTracker, and this test's onTrack callback (which
+ * assumes the trackable is always a stack display Controller) gets invoked with unrelated block
+ * controllers, throwing "Call to undefined method ...Controller::getStackID()".
  */
 class CoreStackDisplayControllerSaveTest extends TestCase
 {
+    protected function tearDown(): void
+    {
+        Application::getFacadeApplication()->forgetInstance(AggregateTracker::class);
+        parent::tearDown();
+    }
+
     public function testStackIdIsAssignedBeforeTrackingRuns(): void
     {
         $app = Application::getFacadeApplication();

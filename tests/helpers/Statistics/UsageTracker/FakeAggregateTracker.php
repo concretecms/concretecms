@@ -14,6 +14,14 @@ use Concrete\Core\Statistics\UsageTracker\TrackerManagerInterface;
  * container via `$app->make(AggregateTracker::class)` and immediately called - substituting an
  * object that implements the same interface (TrackerManagerInterface) and is bound into the
  * container under that class name works exactly the same way at runtime.
+ *
+ * This double is bound as a shared container instance (`$app->instance(AggregateTracker::class,
+ * ...)`), and the application container is shared across the whole PHPUnit process. Any test
+ * that binds this double MUST unbind it in tearDown() (e.g. via
+ * `$app->forgetInstance(AggregateTracker::class)`), otherwise it leaks into every later test that
+ * saves or deletes a TrackableInterface block controller - which includes every
+ * FileTrackableInterface block (Image, File, etc.), since FileTrackableInterface extends
+ * TrackableInterface.
  */
 class FakeAggregateTracker implements TrackerManagerInterface
 {
