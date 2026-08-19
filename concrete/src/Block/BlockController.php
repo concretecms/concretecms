@@ -738,6 +738,19 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
         if ($value === '' && isset($node['null']) && filter_var((string) $node['null'], FILTER_VALIDATE_BOOLEAN)) {
             return null;
         }
+
+        return $this->importReferenceValue($value, $reference);
+    }
+
+    /**
+     * Resolve the placeholders contained in a value read from a CIF file (or received via the API).
+     *
+     * @param string $reference the kind of reference contained in the value (one of the ExportDeclarations::REFERENCE_... constants) (empty string if none)
+     *
+     * @return string
+     */
+    protected function importReferenceValue(string $value, string $reference)
+    {
         if ($reference === '') {
             return $value;
         }
