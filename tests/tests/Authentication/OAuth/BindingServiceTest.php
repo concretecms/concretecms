@@ -8,6 +8,7 @@ use Concrete\Core\Database\Driver\PDOStatement;
 use Concrete\Core\Entity\User\User as UserEntity;
 use Concrete\Core\User\User;
 use Concrete\Core\User\UserInfo;
+use Doctrine\DBAL\DBALException;
 use Doctrine\DBAL\Query\Expression\ExpressionBuilder;
 use Doctrine\DBAL\Query\QueryBuilder;
 use Doctrine\DBAL\Statement;
@@ -23,6 +24,8 @@ class BindingServiceTest extends TestCase
         $fakeDatabaseManager = M::mock(DatabaseManager::class);
         $fakeConnection = $this->createFakeConnection();
         $fakeDatabaseManager->shouldReceive('connection')->andReturn($fakeConnection);
+
+        $fakeConnection->shouldReceive('executeStatement')->andThrow(new DBALException('Bad connection.'));
 
         /** @var BindingService|M\Mock $service */
         $service = new BindingService($fakeDatabaseManager);
@@ -67,6 +70,9 @@ class BindingServiceTest extends TestCase
         $fakeConnection->shouldReceive('executeQuery')
             ->with('SELECT binding FROM OauthUserMap WHERE (namespace = :namespace) AND (user_id = :id)', ['id' => 44, 'namespace' => 'test'], [])
             ->andReturn($fakeResult);
+
+        // The deletion is expected to fail: this test only checks what gets logged before it
+        $fakeConnection->shouldReceive('executeStatement')->andThrow(new DBALException('Unable to delete.'));
 
         /** @var BindingService|M\Mock $service */
         $service = new BindingService($fakeDatabaseManager);
@@ -154,8 +160,7 @@ class BindingServiceTest extends TestCase
         $fakeConnection = M::mock(Connection::class);
         $fakeDatabaseManager->shouldReceive('connection')->andReturn($fakeConnection);
 
-        $service = M::mock(BindingService::class)->makePartial();
-        $service->__construct($fakeDatabaseManager);
+        $service = M::mock(BindingService::class, [$fakeDatabaseManager])->makePartial();
 
         // Make sure we attempt to clear bindings
         $service->shouldReceive('clearBinding')->once()->with(43, 'testing', 'test');
@@ -244,11 +249,7 @@ class BindingServiceTest extends TestCase
     {
         $connection = M::mock(Connection::class);
         $connection->shouldReceive('createQueryBuilder')->andReturnUsing(function() use ($connection) {
-            /** @var QueryBuilder $qb */
-            $qb = M::mock(QueryBuilder::class)->makePartial();
-            $qb->__construct($connection);
-
-            return $qb;
+            return new QueryBuilder($connection);
         });
         $connection->shouldReceive('getExpressionBuilder')->andReturn(M::mock(ExpressionBuilder::class)->makePartial());
         $connection->shouldReceive('transactional')->andReturnUsing(function($fn) use ($connection) {
