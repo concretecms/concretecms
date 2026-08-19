@@ -2,6 +2,7 @@
 
 namespace Concrete\Core\File;
 
+use Concrete\Core\Database\Query\LikeBuilder;
 use Concrete\Core\File\StorageLocation\StorageLocationFactory;
 use Concrete\Core\Search\ItemList\Database\AttributedItemList as DatabaseItemList;
 use Concrete\Core\Search\ItemList\Pager\Manager\FileListPagerManager;
@@ -37,6 +38,15 @@ class FileList extends DatabaseItemList implements PagerProviderInterface, Pagin
         'fv.fvSize',
         'totalDownloads',
     ];
+
+    /**
+     * The number of keywords used so far by the filterByKeywords method.
+     *
+     * @var int
+     *
+     * @see \Concrete\Core\File\FileList::filterByKeywords()
+     */
+    private $keywordsCounter = 0;
 
     public function __construct(?StickyRequest $req = null)
     {
@@ -199,22 +209,36 @@ class FileList extends DatabaseItemList implements PagerProviderInterface, Pagin
      */
     public function filterByKeywords($keywords)
     {
-        $expressions = [
-            $this->query->expr()->like('fv.fvFilename', ':keywords'),
-            $this->query->expr()->like('fv.fvDescription', ':keywords'),
-            $this->query->expr()->like('fv.fvTitle', ':keywords'),
-            $this->query->expr()->like('fv.fvTags', ':keywords'),
-            $this->query->expr()->eq('uName', ':keywords'),
-        ];
-
-        $keys = FileAttributeKey::getSearchableIndexedList();
-        foreach ($keys as $ak) {
-            $cnt = $ak->getController();
-            $expressions[] = $cnt->searchKeywords($keywords, $this->query);
+        $words = preg_split('/\s+/', (string) $keywords, -1, PREG_SPLIT_NO_EMPTY);
+        if ($words === []) {
+            return;
         }
+        $words = array_values(array_unique(array_map('mb_strtolower', $words)));
+        /** @var LikeBuilder $likeBuilder */
+        $likeBuilder = Application::getFacadeApplication()->make(LikeBuilder::class);
         $expr = $this->query->expr();
-        $this->query->andWhere(call_user_func_array([$expr, 'orX'], $expressions));
-        $this->query->setParameter('keywords', '%' . $keywords . '%');
+        $attributeKeys = FileAttributeKey::getSearchableIndexedList();
+        foreach ($words as $word) {
+            // filterByKeywords may be called more than once: every word must have its own parameter
+            $parameter = 'keywords_' . $this->keywordsCounter++;
+            $expressions = [
+                $expr->like('fv.fvFilename', ":{$parameter}"),
+                $expr->like('fv.fvDescription', ":{$parameter}"),
+                $expr->like('fv.fvTitle', ":{$parameter}"),
+                $expr->like('fv.fvTags', ":{$parameter}"),
+                $expr->like('u.uName', ":{$parameter}"),
+            ];
+            foreach ($attributeKeys as $attributeKey) {
+                $attributeExpression = (string) $attributeKey->getController()->searchKeywords($word, $this->query);
+                if ($attributeExpression !== '') {
+                    // the attribute controllers build their expressions around the :keywords placeholder
+                    $expressions[] = preg_replace('/:keywords\b/', ":{$parameter}", $attributeExpression);
+                }
+            }
+            // every word must be found, but not necessarily in the same field as the other ones
+            $this->query->andWhere(call_user_func_array([$expr, 'orX'], $expressions));
+            $this->query->setParameter($parameter, $likeBuilder->escapeForLike($word));
+        }
     }
 
     public function filterBySet($fs)
