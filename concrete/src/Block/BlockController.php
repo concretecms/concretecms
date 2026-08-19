@@ -561,11 +561,11 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
      * Get the exported representation of the value of a record column.
      *
      * @param mixed $value
-     * @param string|null $reference the kind of reference contained in the column (one of the ExportDeclarations::REFERENCE_... constants)
+     * @param string $reference the kind of reference contained in the column (one of the ExportDeclarations::REFERENCE_... constants) (empty string if none)
      *
      * @return mixed
      */
-    protected function exportRecordValue($value, ?string $reference)
+    protected function exportRecordValue($value, string $reference)
     {
         switch ($reference) {
             case ExportDeclarations::REFERENCE_PAGE:
@@ -728,17 +728,17 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
     /**
      * Get the imported representation of the value of a record column.
      *
-     * @param string|null $reference the kind of reference contained in the column (one of the ExportDeclarations::REFERENCE_... constants)
+     * @param string $reference the kind of reference contained in the column (one of the ExportDeclarations::REFERENCE_... constants) (empty string if none)
      *
      * @return string|null
      */
-    protected function importRecordValue(\SimpleXMLElement $node, ?string $reference)
+    protected function importRecordValue(\SimpleXMLElement $node, string $reference)
     {
         $value = (string) $node;
         if ($value === '' && isset($node['null']) && filter_var((string) $node['null'], FILTER_VALIDATE_BOOLEAN)) {
             return null;
         }
-        if ($reference === null) {
+        if ($reference === '') {
             return $value;
         }
         $result = \Core::make('import/value_inspector')->inspect($value);

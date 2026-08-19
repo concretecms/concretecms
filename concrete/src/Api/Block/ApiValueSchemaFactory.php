@@ -98,9 +98,9 @@ class ApiValueSchemaFactory
     /**
      * Describe a single database column.
      *
-     * @param string|null $reference the kind of reference held by the column (if any)
+     * @param string $reference the kind of reference held by the column (an empty string if it holds no reference)
      */
-    protected function describeColumn(Column $column, ?string $reference): array
+    protected function describeColumn(Column $column, string $reference): array
     {
         // reading always gives strings, since the API exports the values out of the XML representation of
         // the block (see BaseBlockTransformer), and the columns holding a reference to another entity are
@@ -123,16 +123,32 @@ class ApiValueSchemaFactory
         if ($default !== null) {
             $result['default'] = (string) $default;
         }
-        if ($reference !== null) {
-            $result['x-concrete-reference'] = $reference;
-            $result['description'] = $this->getReferenceDescription($reference);
-        }
 
-        return $result;
+        return $this->describeReference($reference, $result);
     }
 
     /**
-     * Describe how a column holding a reference to another entity is exchanged.
+     * Describe a value holding a reference to another entity.
+     *
+     * @param string $reference the kind of reference held by the value (one of the ExportDeclarations::REFERENCE_... constants, or an empty string if it holds no reference)
+     * @param array<string,mixed> $schema the already known schema of the value
+     *
+     * @return array<string,mixed>
+     */
+    public function describeReference(string $reference, array $schema = ['type' => 'string']): array
+    {
+        if ($reference !== '') {
+            $schema += [
+                'x-concrete-reference' => $reference,
+                'description' => $this->getReferenceDescription($reference),
+            ];
+        }
+
+        return $schema;
+    }
+
+    /**
+     * Describe how a value holding a reference to another entity is exchanged.
      */
     protected function getReferenceDescription(string $reference): string
     {

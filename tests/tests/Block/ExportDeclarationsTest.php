@@ -74,6 +74,6 @@ class ExportDeclarationsTest extends TestCase
         static::assertSame(ExportDeclarations::REFERENCE_FILE, $declarations->getColumnReference('fID'));
         static::assertSame(ExportDeclarations::REFERENCE_FILE, $declarations->getColumnReference('fid'));
         static::assertSame(ExportDeclarations::REFERENCE_PAGE, $declarations->getColumnReference('internalLinkCID'));
-        static::assertNull($declarations->getColumnReference('maxWidth'));
+        static::assertSame('', $declarations->getColumnReference('maxWidth'));
     }
 }

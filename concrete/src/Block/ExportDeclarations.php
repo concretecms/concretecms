@@ -172,11 +172,11 @@ final class ExportDeclarations
     /**
      * Get the kind of reference contained in a column.
      *
-     * @return string|null one of the ExportDeclarations::REFERENCE_... constants, NULL if the column contains no reference
+     * @return string one of the ExportDeclarations::REFERENCE_... constants, empty string if the column contains no reference
      */
-    public function getColumnReference(string $columnName): ?string
+    public function getColumnReference(string $columnName): string
     {
-        return $this->columnReferences[strtolower($columnName)] ?? null;
+        return $this->columnReferences[strtolower($columnName)] ?? '';
     }
 
     /**
