@@ -157,6 +157,51 @@ class FilesListTest extends FileStorageTestCase
         $this->listFiles(['limit' => $limit]);
     }
 
+    public static function providerSearches(): array
+    {
+        return [
+            'a part of the name shared by two files' => ['fi', ['fifth.txt', 'first.txt']],
+            'the whole name of one file' => ['third.txt', ['third.txt']],
+            'a part of the name of one file' => ['seco', ['second.txt']],
+            'the extension shared by every file' => ['.txt', ['fifth.txt', 'fourth.txt', 'third.txt', 'second.txt', 'first.txt']],
+            'a name no file has' => ['nothing like this', []],
+            // the search is not case sensitive
+            'the name of one file, in capitals' => ['FIRST', ['first.txt']],
+            // an empty search is not a search
+            'nothing' => ['', ['fifth.txt', 'fourth.txt', 'third.txt', 'second.txt', 'first.txt']],
+            'blanks' => ['   ', ['fifth.txt', 'fourth.txt', 'third.txt', 'second.txt', 'first.txt']],
+        ];
+    }
+
+    /**
+     * @dataProvider providerSearches
+     *
+     * @param string[] $expectedFilenames
+     */
+    public function testTheFilesCanBeSearched(string $search, array $expectedFilenames): void
+    {
+        $data = $this->listFiles(['search' => $search]);
+
+        static::assertSame($expectedFilenames, $this->getTitles($data));
+        static::assertSame(count($expectedFilenames), $data['meta']['cursor']['count']);
+    }
+
+    public function testTheSearchIsLimitedToo(): void
+    {
+        $data = $this->listFiles(['search' => '.txt', 'limit' => 2]);
+
+        static::assertSame(['fifth.txt', 'fourth.txt'], $this->getTitles($data));
+    }
+
+    public function testTheCursorWalksThroughTheSearchResults(): void
+    {
+        $firstPage = $this->listFiles(['search' => '.txt', 'limit' => 2]);
+
+        $secondPage = $this->listFiles(['search' => '.txt', 'limit' => 2, 'after' => $firstPage['meta']['cursor']['next']]);
+
+        static::assertSame(['third.txt', 'second.txt'], $this->getTitles($secondPage));
+    }
+
     public function testTheCursorWalksThroughTheFiles(): void
     {
         $firstPage = $this->listFiles(['limit' => 2]);
