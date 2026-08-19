@@ -17,6 +17,7 @@ class BaseBlockTransformer extends TransformerAbstract
     public function transform(Block $block)
     {
         $controller = $block->getController();
+        $blockValue = [];
         if ($controller instanceof ApiResourceValueInterface) {
             $blockValueResource = $controller->getApiValueResource();
             if ($blockValueResource) {
