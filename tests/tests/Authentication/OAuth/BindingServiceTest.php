@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Concrete\Tests\Authentication\OAuth;
 
 use Concrete\Core\Authentication\Type\OAuth\BindingService;
@@ -8,17 +11,17 @@ use Concrete\Core\Database\Driver\PDOStatement;
 use Concrete\Core\Entity\User\User as UserEntity;
 use Concrete\Core\User\User;
 use Concrete\Core\User\UserInfo;
+use Concrete\Tests\TestCase;
 use Doctrine\DBAL\DBALException;
 use Doctrine\DBAL\Query\Expression\ExpressionBuilder;
 use Doctrine\DBAL\Query\QueryBuilder;
-use Doctrine\DBAL\Statement;
 use Mockery as M;
-use Concrete\Tests\TestCase;
 use Psr\Log\LoggerInterface;
+
+defined('C5_EXECUTE') or die('Access Denied.');
 
 class BindingServiceTest extends TestCase
 {
-
     public function testClearBindingWithBadConnection()
     {
         $fakeDatabaseManager = M::mock(DatabaseManager::class);
@@ -50,26 +53,30 @@ class BindingServiceTest extends TestCase
         $fakeResult->shouldReceive('fetchColumn')->andReturn('35');
         $fakeConnection->shouldReceive('executeQuery')
             ->with('SELECT user_id FROM OauthUserMap WHERE (namespace = :namespace) AND (binding = :binding)', ['binding' => 'testing', 'namespace' => 'test'], [])
-            ->andReturn($fakeResult);
+            ->andReturn($fakeResult)
+        ;
 
         // Second it checks for bindings associated with the user, we want to return a fake binding here
         $fakeResult = M::mock(PDOStatement::class);
         $fakeResult->shouldReceive('fetchColumn')->andReturn('foo');
         $fakeConnection->shouldReceive('executeQuery')
             ->with('SELECT binding FROM OauthUserMap WHERE (namespace = :namespace) AND (user_id = :id)', ['id' => 1, 'namespace' => 'test'], [])
-            ->andReturn($fakeResult);
+            ->andReturn($fakeResult)
+        ;
 
         // Next we have to support the secondary call with both matching
         $fakeResult = M::mock(PDOStatement::class);
         $fakeResult->shouldReceive('fetchColumn')->andReturn('44');
         $fakeConnection->shouldReceive('executeQuery')
             ->with('SELECT user_id FROM OauthUserMap WHERE (namespace = :namespace) AND (binding = :binding)', ['binding' => 'testing2', 'namespace' => 'test'], [])
-            ->andReturn($fakeResult);
+            ->andReturn($fakeResult)
+        ;
         $fakeResult = M::mock(PDOStatement::class);
         $fakeResult->shouldReceive('fetchColumn')->andReturn('testing2');
         $fakeConnection->shouldReceive('executeQuery')
             ->with('SELECT binding FROM OauthUserMap WHERE (namespace = :namespace) AND (user_id = :id)', ['id' => 44, 'namespace' => 'test'], [])
-            ->andReturn($fakeResult);
+            ->andReturn($fakeResult)
+        ;
 
         // The deletion is expected to fail: this test only checks what gets logged before it
         $fakeConnection->shouldReceive('executeStatement')->andThrow(new DBALException('Unable to delete.'));
@@ -82,17 +89,20 @@ class BindingServiceTest extends TestCase
         // We told the binding service user 1 was bound to 'foo'
         $fakeLogger->shouldReceive('warning')->once()->with(
             'Deleting user binding: User #{user} was bound to "{binding}" in "{namespace}".',
-            ['user' => 1, 'binding' => 'foo', 'namespace' => 'test', 'matchBoth' => false]);
+            ['user' => 1, 'binding' => 'foo', 'namespace' => 'test', 'matchBoth' => false]
+        );
 
         // We told the binding service 'testing' was bound to user 35.
         $fakeLogger->shouldReceive('warning')->once()->with(
             'Deleting user binding: User #{user} was bound to "{binding}" in "{namespace}".',
-            ['user' => 35, 'binding' => 'testing', 'namespace' => 'test', 'matchBoth' => false]);
+            ['user' => 35, 'binding' => 'testing', 'namespace' => 'test', 'matchBoth' => false]
+        );
 
         // And finally in the last test we tell the binding service 44 is bound to testing2
         $fakeLogger->shouldReceive('warning')->once()->with(
             'Deleting user binding: User #{user} was bound to "{binding}" in "{namespace}".',
-            ['user' => 44, 'binding' => 'testing2', 'namespace' => 'test', 'matchBoth' => true]);
+            ['user' => 44, 'binding' => 'testing2', 'namespace' => 'test', 'matchBoth' => true]
+        );
 
         try {
             $service->clearBinding(1, 'testing', 'test');
@@ -127,8 +137,9 @@ class BindingServiceTest extends TestCase
                 'id' => 1,
                 'binding' => 'foo',
             ], [])
-            ->andReturn($fakeResult);
-        $this->assertEquals(1, $service->clearBinding(1, 'foo', 'test'));
+            ->andReturn($fakeResult)
+        ;
+        static::assertEquals(1, $service->clearBinding(1, 'foo', 'test'));
 
         // Make sure we attempt to delete with "OR"
         $fakeConnection->shouldReceive('executeStatement')->once()
@@ -137,8 +148,9 @@ class BindingServiceTest extends TestCase
                 'id' => 1,
                 'binding' => 'foo',
             ], [])
-            ->andReturn(1);
-        $this->assertEquals(1, $service->clearBinding(1, 'foo', 'test', true));
+            ->andReturn(1)
+        ;
+        static::assertEquals(1, $service->clearBinding(1, 'foo', 'test', true));
     }
 
     public function testBindInvalidUser()
@@ -200,9 +212,10 @@ class BindingServiceTest extends TestCase
                 'namespace' => 'test',
                 'binding' => 'foo',
             ], [])
-            ->andReturn($result);
+            ->andReturn($result)
+        ;
 
-        $this->assertEquals(1414, $service->getBoundUserId('foo', 'test'));
+        static::assertEquals(1414, $service->getBoundUserId('foo', 'test'));
     }
 
     public function testGetUserBinding()
@@ -220,9 +233,10 @@ class BindingServiceTest extends TestCase
                 'namespace' => 'test',
                 'id' => 1414,
             ], [])
-            ->andReturn($result);
+            ->andReturn($result)
+        ;
 
-        $this->assertEquals('foo', $service->getUserBinding(1414, 'test'));
+        static::assertEquals('foo', $service->getUserBinding(1414, 'test'));
     }
 
     public function testBindUser()
@@ -240,19 +254,19 @@ class BindingServiceTest extends TestCase
         $service = M::mock(BindingService::class)->makePartial();
 
         $service->shouldReceive('bindUserId')->times(3)->with(1337, 'foo', 'test');
-        $service->bindUserEntity( M::mock(UserEntity::class, ['getUserID' => 1337]), 'foo', 'test');
-        $service->bindUserInfo( M::mock(UserInfo::class, ['getUserID' => 1337]), 'foo', 'test');
-        $service->bindUser( M::mock(User::class, ['getUserID' => 1337]), 'foo', 'test');
+        $service->bindUserEntity(M::mock(UserEntity::class, ['getUserID' => 1337]), 'foo', 'test');
+        $service->bindUserInfo(M::mock(UserInfo::class, ['getUserID' => 1337]), 'foo', 'test');
+        $service->bindUser(M::mock(User::class, ['getUserID' => 1337]), 'foo', 'test');
     }
 
     private function createFakeConnection()
     {
         $connection = M::mock(Connection::class);
-        $connection->shouldReceive('createQueryBuilder')->andReturnUsing(function() use ($connection) {
+        $connection->shouldReceive('createQueryBuilder')->andReturnUsing(static function () use ($connection) {
             return new QueryBuilder($connection);
         });
         $connection->shouldReceive('getExpressionBuilder')->andReturn(M::mock(ExpressionBuilder::class)->makePartial());
-        $connection->shouldReceive('transactional')->andReturnUsing(function($fn) use ($connection) {
+        $connection->shouldReceive('transactional')->andReturnUsing(static function ($fn) use ($connection) {
             $fn($connection);
         });
 
