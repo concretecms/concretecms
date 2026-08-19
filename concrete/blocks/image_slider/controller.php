@@ -9,7 +9,7 @@ use Concrete\Core\Feature\Features;
 use Concrete\Core\File\Tracker\FileTrackableInterface;
 use Concrete\Core\File\Tracker\RichTextExtractor;
 use Concrete\Core\Feature\UsesFeatureInterface;
-use Concrete\Core\Statistics\UsageTracker\AggregateTracker;
+use Concrete\Core\Statistics\UsageTracker\TrackerManagerInterface;
 use Core;
 use Database;
 use Page;
@@ -61,7 +61,7 @@ class Controller extends BlockController implements FileTrackableInterface, Uses
     protected $btIgnorePageThemeGridFrameworkContainer = true;
 
     /**
-     * @var \Concrete\Core\Statistics\UsageTracker\AggregateTracker|null
+     * @var \Concrete\Core\Statistics\UsageTracker\TrackerManagerInterface|null
      */
     protected $tracker;
 
@@ -69,9 +69,9 @@ class Controller extends BlockController implements FileTrackableInterface, Uses
      * Instantiates the block controller.
      *
      * @param \Concrete\Core\Block\BlockType\BlockType|null $obj
-     * @param \Concrete\Core\Statistics\UsageTracker\AggregateTracker|null $tracker
+     * @param \Concrete\Core\Statistics\UsageTracker\TrackerManagerInterface|null $tracker
      */
-    public function __construct($obj = null, ?AggregateTracker $tracker = null)
+    public function __construct($obj = null, ?TrackerManagerInterface $tracker = null)
     {
         parent::__construct($obj);
         $this->tracker = $tracker;

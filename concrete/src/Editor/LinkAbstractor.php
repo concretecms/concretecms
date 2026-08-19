@@ -136,7 +136,7 @@ class LinkAbstractor extends ConcreteObject
         if (is_object($r)) {
             foreach ($r->find('concrete-picture') as $picture) {
                 $fID = $picture->fid;
-                if (uuid_is_valid($fID)) {
+                if (is_string($fID) && uuid_is_valid($fID)) {
                     $fo = \Concrete\Core\File\File::getByUUID($fID);
                 } else {
                     $fo = \Concrete\Core\File\File::getByID($fID);
@@ -222,7 +222,7 @@ class LinkAbstractor extends ConcreteObject
             '{CCM:FID_([a-f0-9-]{36}|[0-9]+)}',
             function ($fID) {
                 if ($fID) {
-                    if (uuid_is_valid($fID)) {
+                    if (is_string($fID) && uuid_is_valid($fID)) {
                         $f = \Concrete\Core\File\File::getByUUID($fID);
                     } else {
                         $f = \Concrete\Core\File\File::getByID($fID);
@@ -316,7 +316,7 @@ class LinkAbstractor extends ConcreteObject
                     }
                 }
 
-                if (uuid_is_valid($fID)) {
+                if (is_string($fID) && uuid_is_valid($fID)) {
                     $file = \Concrete\Core\File\File::getByUUID($fID);
                 } else {
                     $file = \Concrete\Core\File\File::getByID($fID);
@@ -347,7 +347,7 @@ class LinkAbstractor extends ConcreteObject
             '{CCM:FID_([a-f0-9-]{36}|[0-9]+)}',
             function ($fID) use ($resolver) {
                 if ($fID) {
-                    if (uuid_is_valid($fID)) {
+                    if (is_string($fID) && uuid_is_valid($fID)) {
                         $file = \Concrete\Core\File\File::getByUUID($fID);
                     } else {
                         $file = \Concrete\Core\File\File::getByID($fID);
