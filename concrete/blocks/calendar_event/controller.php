@@ -4,7 +4,10 @@ namespace Concrete\Block\CalendarEvent;
 
 use Concrete\Core\Attribute\Key\CollectionKey;
 use Concrete\Core\Attribute\Key\EventKey;
+use Concrete\Core\Api\ApiResourceValueInterface;
+use Concrete\Core\Api\ApiValueSchemaInterface;
 use Concrete\Core\Block\BlockController;
+use Concrete\Core\Block\Traits\CustomApiValueTrait;
 use Concrete\Core\Calendar\Calendar;
 use Concrete\Core\Calendar\Calendar\CalendarService;
 use Concrete\Core\Calendar\CalendarServiceProvider;
@@ -22,8 +25,10 @@ use SimpleXMLElement;
 
 defined('C5_EXECUTE') or die('Access Denied.');
 
-class Controller extends BlockController implements UsesFeatureInterface
+class Controller extends BlockController implements ApiResourceValueInterface, ApiValueSchemaInterface, UsesFeatureInterface
 {
+    use CustomApiValueTrait;
+
     /**
      * @var string|null
      */
@@ -297,6 +302,130 @@ class Controller extends BlockController implements UsesFeatureInterface
         }
         $formatter = $provider->getDateFormatter();
         $this->set('formatter', $formatter);
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Api\ApiValueSchemaInterface::getApiValueSchema()
+     */
+    public function getApiValueSchema(): array
+    {
+        return [
+            'type' => 'object',
+            'properties' => [
+                'mode' => [
+                    'type' => 'string',
+                    'enum' => ['S', 'P', 'R'],
+                    'default' => 'S',
+                    'description' => 'Which event is displayed: "S" for the one referred to by eventID, "P" for the one held by the calendarEventAttributeKeyHandle attribute of the page, "R" for the occurrence passed through the URL.',
+                ],
+                'calendarEventAttributeKeyHandle' => [
+                    'type' => 'string',
+                    'description' => 'The handle of the page attribute holding the event to be displayed (it\'s used only when the mode is "P").',
+                ],
+                'calendarID' => [
+                    'type' => ['string', 'integer'],
+                    'description' => 'The ID of the calendar the event belongs to.',
+                ],
+                'eventID' => [
+                    'type' => ['string', 'integer'],
+                    'description' => 'The ID of the event to be displayed (it\'s used only when the mode is "S").',
+                ],
+                'displayEventName' => [
+                    'type' => ['string', 'integer'],
+                    'description' => 'Set it to 1 to display the name of the event.',
+                ],
+                'displayEventDate' => [
+                    'type' => ['string', 'integer'],
+                    'description' => 'Set it to 1 to display the date of the event.',
+                ],
+                'displayEventDescription' => [
+                    'type' => ['string', 'integer'],
+                    'description' => 'Set it to 1 to display the description of the event.',
+                ],
+                'displayEventAttributes' => [
+                    'type' => 'array',
+                    'description' => 'The attributes of the event to be displayed.',
+                    'items' => [
+                        'type' => ['string', 'integer'],
+                        'description' => 'The ID of an event attribute.',
+                    ],
+                ],
+                'enableLinkToPage' => [
+                    'type' => ['string', 'integer'],
+                    'description' => 'Set it to 1 to link the event to its page.',
+                ],
+                'allowExport' => [
+                    'type' => ['string', 'integer'],
+                    'description' => 'Set it to 1 to let the visitors add the event to their calendar.',
+                ],
+            ],
+        ];
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Block\BlockController::getImportDataFromApiValue()
+     */
+    public function getImportDataFromApiValue($page, array $value): array
+    {
+        if ($this->bID) {
+            // the save() method resets the settings that it doesn't receive: let's keep the current ones
+            $value += $this->serializeValueForApi();
+        }
+        // the getImportData() method below expects the name of the calendar and the description of the
+        // event that a CIF file carries: the API refers to them by their ID
+        $args = [];
+        foreach ([
+            'mode',
+            'calendarEventAttributeKeyHandle',
+            'calendarID',
+            'eventID',
+            'displayEventName',
+            'displayEventDate',
+            'displayEventDescription',
+            'enableLinkToPage',
+            'allowExport',
+        ] as $key) {
+            if (isset($value[$key]) && (is_string($value[$key]) || is_int($value[$key]) || is_float($value[$key]))) {
+                $args[$key] = (string) $value[$key];
+            }
+        }
+        if (isset($value['displayEventAttributes']) && is_array($value['displayEventAttributes'])) {
+            // the save() method encodes them as a JSON document
+            $args['displayEventAttributes'] = array_values($value['displayEventAttributes']);
+        }
+
+        return $args;
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Block\Traits\CustomApiValueTrait::serializeValueForApi()
+     */
+    protected function serializeValueForApi(): array
+    {
+        // the export() method below replaces the IDs with the name of the calendar, the description of the
+        // event and the handles of the attributes that a CIF file needs, since it can't refer to them by
+        // their ID: the API can
+        $blockNode = new SimpleXMLElement('<block></block>');
+        parent::export($blockNode);
+        $mainTable = (string) $this->getBlockTypeDatabaseTable();
+        $result = [];
+        foreach ($blockNode->data as $data) {
+            if (strcasecmp((string) $data['table'], $mainTable) === 0 && isset($data->record)) {
+                $result = $this->serializeRecordForApi($mainTable, $data->record);
+                break;
+            }
+        }
+        // that column holds a JSON document: let's exchange it as the list it is
+        $decoded = isset($result['displayEventAttributes']) ? json_decode((string) $result['displayEventAttributes'], true) : null;
+        $result['displayEventAttributes'] = is_array($decoded) ? array_values($decoded) : [];
+
+        return $result;
     }
 
     /**
