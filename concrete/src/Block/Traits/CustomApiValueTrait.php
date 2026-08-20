@@ -141,6 +141,8 @@ trait CustomApiValueTrait
             foreach ($record as $column => $columnValue) {
                 if (is_string($columnValue) || is_int($columnValue) || is_float($columnValue)) {
                     $importedRecord[$column] = $this->importReferenceValue((string) $columnValue, $declarations->getColumnReference((string) $column));
+                } else {
+                    $importedRecord[$column] = $columnValue;
                 }
             }
             $result[] = $importedRecord;

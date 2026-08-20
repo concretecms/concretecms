@@ -2,8 +2,13 @@
 
 namespace Concrete\Block\Gallery;
 
+use Concrete\Core\Api\ApiResourceValueInterface;
+use Concrete\Core\Api\ApiValueSchemaInterface;
+use Concrete\Core\Api\Block\ApiValueSchemaFactory;
 use Concrete\Core\Backup\ContentExporter;
 use Concrete\Core\Block\BlockController;
+use Concrete\Core\Block\ExportDeclarations;
+use Concrete\Core\Block\Traits\CustomApiValueTrait;
 use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Entity\File\File;
 use Concrete\Core\Error\ErrorList\ErrorList;
@@ -19,8 +24,10 @@ use Generator;
 use Illuminate\Support\Str;
 use InvalidArgumentException;
 
-class Controller extends BlockController implements FileTrackableInterface, UsesFeatureInterface
+class Controller extends BlockController implements ApiResourceValueInterface, ApiValueSchemaInterface, FileTrackableInterface, UsesFeatureInterface
 {
+    use CustomApiValueTrait;
+
     protected $btTable = 'btGallery';
     protected $btInterfaceWidth = '750';
     protected $btInterfaceHeight = '820';
@@ -109,6 +116,127 @@ class Controller extends BlockController implements FileTrackableInterface, Uses
                 }
             }
         }
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Api\ApiValueSchemaInterface::getApiValueSchema()
+     */
+    public function getApiValueSchema(): array
+    {
+        $schemaFactory = $this->app->make(ApiValueSchemaFactory::class);
+
+        return [
+            'type' => 'object',
+            'properties' => [
+                'includeDownloadLink' => [
+                    'type' => ['string', 'integer'],
+                    'default' => '0',
+                    'description' => 'Set it to 1 to display a link to download the images.',
+                ],
+                'entries' => [
+                    'type' => 'array',
+                    'description' => 'The images of the gallery, in the order they are displayed. When writing, if this key is omitted the current images are kept as they are.',
+                    'items' => [
+                        'type' => 'object',
+                        'properties' => [
+                            'fID' => $schemaFactory->describeReference(ExportDeclarations::REFERENCE_FILE),
+                            'displayChoices' => [
+                                'type' => 'object',
+                                'description' => 'How the image is displayed.',
+                                'properties' => $this->getApiDisplayChoicesSchema(),
+                                'additionalProperties' => false,
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ];
+    }
+
+    /**
+     * Get the schema of the display choices of an image, built from the ones this block type offers.
+     *
+     * @return array<string,array>
+     */
+    protected function getApiDisplayChoicesSchema(): array
+    {
+        $result = [];
+        foreach ($this->getDisplayChoices() as $key => $choice) {
+            $schema = ['type' => 'string'];
+            if (isset($choice['options'])) {
+                // an empty value is accepted too (see validateSelectDisplayChoice)
+                $schema['enum'] = array_merge([''], array_keys($choice['options']));
+            }
+            if (isset($choice['value']) && $choice['value'] !== '') {
+                $schema['default'] = $choice['value'];
+            }
+            if (isset($choice['title'])) {
+                $schema['description'] = $choice['title'];
+            }
+            $result[$key] = $schema;
+        }
+
+        return $result;
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Block\Traits\CustomApiValueTrait::serializeValueForApi()
+     */
+    protected function serializeValueForApi(): array
+    {
+        // this block type has its own CIF representation, so we can't rely on serializeTablesForApi()
+        $blockNode = new \SimpleXMLElement('<block></block>');
+        $this->export($blockNode);
+        $entries = [];
+        if (isset($blockNode->entries->entry)) {
+            foreach ($blockNode->entries->entry as $entryNode) {
+                $displayChoices = [];
+                if (isset($entryNode->displaychoices->choice)) {
+                    foreach ($entryNode->displaychoices->choice as $choiceNode) {
+                        $displayChoices[(string) $choiceNode->dckey] = (string) $choiceNode->value;
+                    }
+                }
+                $entries[] = [
+                    'fID' => (string) $entryNode->fID,
+                    'displayChoices' => $displayChoices,
+                ];
+            }
+        }
+
+        return [
+            'includeDownloadLink' => (string) $blockNode->includeDownloadLink,
+            'entries' => $entries,
+        ];
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Block\BlockController::getImportDataFromApiValue()
+     */
+    public function getImportDataFromApiValue($page, array $value): array
+    {
+        $entries = $this->deserializeRecordsFromApi($value, 'entries');
+        $args = parent::getImportDataFromApiValue($page, $value);
+        // the save() method wants the images as a JSON document
+        $fieldJson = [];
+        foreach ($entries as $entry) {
+            $displayChoices = [];
+            foreach ((array) ($entry['displayChoices'] ?? []) as $key => $choiceValue) {
+                $displayChoices[$key] = ['value' => is_scalar($choiceValue) ? (string) $choiceValue : ''];
+            }
+            $fieldJson[] = [
+                'id' => $entry['fID'] ?? '',
+                'displayChoices' => $displayChoices,
+            ];
+        }
+        $args['field_json'] = json_encode($fieldJson);
+
+        return $args;
     }
 
     public function getBlockTypeName()
@@ -284,7 +412,7 @@ class Controller extends BlockController implements FileTrackableInterface, Uses
      */
     public function save($args)
     {
-        $args["includeDownloadLink"] = isset($args["includeDownloadLink"]) ? 1 : 0;
+        $args["includeDownloadLink"] = empty($args["includeDownloadLink"]) ? 0 : 1;
 
         parent::save($args);
 
