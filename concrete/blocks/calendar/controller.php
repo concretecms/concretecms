@@ -2,9 +2,12 @@
 
 namespace Concrete\Block\Calendar;
 
+use Concrete\Core\Api\ApiResourceValueInterface;
+use Concrete\Core\Api\ApiValueSchemaInterface;
 use Concrete\Core\Attribute\Key\EventKey;
 use Concrete\Core\Block\BlockController;
 use Concrete\Core\Block\Controller\SaveMode;
+use Concrete\Core\Block\Traits\CustomApiValueTrait;
 use Concrete\Core\Calendar\Calendar;
 use Concrete\Core\Calendar\CalendarServiceProvider;
 use Concrete\Core\Calendar\Event\EventOccurrenceList;
@@ -19,8 +22,17 @@ use Concrete\Core\Utility\Service\Xml;
 use SimpleXMLElement;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
-class Controller extends BlockController implements UsesFeatureInterface
+class Controller extends BlockController implements ApiResourceValueInterface, ApiValueSchemaInterface, UsesFeatureInterface
 {
+    use CustomApiValueTrait;
+
+    /**
+     * The columns of the database table that hold a JSON document.
+     *
+     * @var string[]
+     */
+    private const JSON_COLUMNS = ['viewTypes', 'viewTypesOrder', 'lightboxProperties'];
+
     /**
      * @var int|null
      */
@@ -148,11 +160,159 @@ class Controller extends BlockController implements UsesFeatureInterface
     }
 
     /**
-     * @return void
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Api\ApiValueSchemaInterface::getApiValueSchema()
      */
-    public function loadData()
+    public function getApiValueSchema(): array
     {
-        $viewTypes = [
+        $viewTypes = array_keys($this->getAvailableViewTypes());
+
+        return [
+            'type' => 'object',
+            'properties' => [
+                'caID' => [
+                    'type' => ['string', 'integer'],
+                    'description' => 'The ID of the calendar to be displayed (when it\'s 0, the calendar is the one referred to by the calendarAttributeKeyHandle attribute of the page).',
+                ],
+                'calendarAttributeKeyHandle' => [
+                    'type' => 'string',
+                    'description' => 'The handle of the page attribute holding the calendar to be displayed (it\'s used only when caID is 0).',
+                ],
+                'viewTypes' => [
+                    'type' => 'array',
+                    'description' => 'The views that the visitors can switch to.',
+                    'items' => [
+                        'type' => 'string',
+                        'enum' => $viewTypes,
+                    ],
+                ],
+                'viewTypesOrder' => [
+                    'type' => 'array',
+                    'description' => 'The views in the order they are offered, every item being the name of a view, an underscore, and the text of its button.',
+                    'items' => [
+                        'type' => 'string',
+                        'pattern' => '^(' . implode('|', array_map('preg_quote', $viewTypes)) . ')_',
+                    ],
+                ],
+                'defaultView' => [
+                    'type' => 'string',
+                    'enum' => array_merge([''], $viewTypes),
+                    'description' => 'The view displayed when the calendar is opened (it should be one of the values listed in viewTypes; when it\'s empty the calendar decides).',
+                ],
+                'navLinks' => [
+                    'type' => ['string', 'integer'],
+                    'description' => 'Set it to 1 to let the visitors move to the day (or to the week) they click on.',
+                ],
+                'eventLimit' => [
+                    'type' => ['string', 'integer'],
+                    'description' => 'Set it to 1 to limit the number of events displayed in a day, adding a link to the other ones.',
+                ],
+                'lightboxProperties' => [
+                    'type' => 'array',
+                    'description' => 'What\'s displayed when an event is clicked (it\'s used only when the theme supports the lightbox).',
+                    'items' => [
+                        'type' => 'string',
+                        'pattern' => '^(title|date|description|linkToPage|ak_[1-9][0-9]*)$',
+                        'description' => 'One of "title", "date", "description", "linkToPage", or "ak_" followed by the ID of an event attribute.',
+                    ],
+                ],
+                'filterByTopicAttributeKeyID' => [
+                    'type' => ['string', 'integer'],
+                    'description' => 'The ID of the topics attribute of the events used to filter them (0 for no filtering).',
+                ],
+                'filterByTopicID' => [
+                    'type' => ['string', 'integer'],
+                    'description' => 'The ID of the topic the events are filtered by (it\'s used only when filterByTopicAttributeKeyID is not 0).',
+                ],
+            ],
+        ];
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Block\BlockController::getImportDataFromApiValue()
+     */
+    public function getImportDataFromApiValue($page, array $value): array
+    {
+        if ($this->bID) {
+            // the save() method resets the settings that it doesn't receive: let's keep the current ones
+            $value += $this->serializeValueForApi();
+        }
+        // the getImportData() method below expects the names, the handles and the paths that a CIF file
+        // carries: the API refers to the very same records, so its values are the ones of the columns
+        return $this->serializeApiValueForSave($value);
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Block\Traits\CustomApiValueTrait::serializeValueForApi()
+     */
+    protected function serializeValueForApi(): array
+    {
+        // the export() method below replaces the IDs with the names, the handles and the paths that a CIF
+        // file needs, since it can't refer to them by their ID: the API can
+        $blockNode = new SimpleXMLElement('<block></block>');
+        parent::export($blockNode);
+        $mainTable = (string) $this->getBlockTypeDatabaseTable();
+        $result = [];
+        foreach ($blockNode->data as $data) {
+            if (strcasecmp((string) $data['table'], $mainTable) === 0 && isset($data->record)) {
+                $result = $this->serializeRecordForApi($mainTable, $data->record);
+                break;
+            }
+        }
+        // those columns hold JSON documents: let's exchange them as the lists they are
+        foreach (self::JSON_COLUMNS as $key) {
+            $decoded = isset($result[$key]) ? json_decode((string) $result[$key], true) : null;
+            $result[$key] = is_array($decoded) ? array_values($decoded) : [];
+        }
+
+        return $result;
+    }
+
+    /**
+     * Get the data to be passed to the save() method, out of a value received via the API.
+     *
+     * @param array<string,mixed> $value
+     *
+     * @return array<string,mixed>
+     */
+    private function serializeApiValueForSave(array $value): array
+    {
+        $args = [];
+        foreach ([
+            'caID',
+            'calendarAttributeKeyHandle',
+            'filterByTopicAttributeKeyID',
+            'filterByTopicID',
+            'defaultView',
+            'navLinks',
+            'eventLimit',
+        ] as $key) {
+            if (isset($value[$key]) && (is_string($value[$key]) || is_int($value[$key]) || is_float($value[$key]))) {
+                $args[$key] = (string) $value[$key];
+            }
+        }
+        foreach (self::JSON_COLUMNS as $key) {
+            if (isset($value[$key]) && is_array($value[$key])) {
+                $args[$key] = json_encode(array_values($value[$key]));
+            }
+        }
+
+        return $args;
+    }
+
+    /**
+     * Get the view types offered by this block type.
+     *
+     * @return array<string,string> the keys are the names of the views, the values are their display name
+     */
+    protected function getAvailableViewTypes(): array
+    {
+        return [
             'month' => t('Month'),
             'basicWeek' => t('Week'),
             'basicDay' => t('Day'),
@@ -161,7 +321,14 @@ class Controller extends BlockController implements UsesFeatureInterface
             'listWeek' => t('List Week'),
             'listDay' => t('List Day'),
         ];
-        $this->set('viewTypes', $viewTypes);
+    }
+
+    /**
+     * @return void
+     */
+    public function loadData()
+    {
+        $this->set('viewTypes', $this->getAvailableViewTypes());
 
         $lightboxProperties = [
             'title' => t('Title'),
