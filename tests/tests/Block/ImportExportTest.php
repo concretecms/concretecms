@@ -277,17 +277,17 @@ class ImportExportTest extends PageTestCase
         $this->assertSameXML($inputCif->asXML(), $outputCif, $options['keepXmlElementsOrder'] ?? false);
         if ($options['apiRoundTrip'] ?? true) {
             $this->assertInstanceOf(Block::class, $createdBlock, "The '{$importerExporterMethod}' method didn't create a block: it can't be checked against the API");
-            $this->checkApiRoundTrip($createdBlock, $inputCif, $options);
+            $this->checkApiRoundTrip($createdBlock, $outputCif, $options);
         }
     }
 
     /**
      * Check that the value that the API exposes for a block can be sent back, resulting in the very same block.
      *
-     * @param \SimpleXMLElement $expectedCif the CIF representation the block should still have afterwards
+     * @param string $expectedCif the CIF representation the block should still have afterwards
      * @param array<string,mixed> $options the options of the test case
      */
-    private function checkApiRoundTrip(Block $block, SimpleXMLElement $expectedCif, array $options): void
+    private function checkApiRoundTrip(Block $block, string $expectedCif, array $options): void
     {
         // the API exports the references as IDs: let's do the same, since we aren't serving an API request
         ContentExporter::setOptions(new ContentExporterOptions(Request::create('/ccm/api/1.0/pages')));
@@ -304,7 +304,7 @@ class ImportExportTest extends PageTestCase
         $outputCif = simplexml_load_string('<root />');
         $updatedBlock->export($outputCif);
         $this->assertTrue(isset($outputCif->block));
-        $this->assertSameXML($expectedCif->asXML(), $outputCif->block->asXML(), $options['keepXmlElementsOrder'] ?? false);
+        $this->assertSameXML($expectedCif, $outputCif->block->asXML(), $options['keepXmlElementsOrder'] ?? false);
     }
 
     /**
@@ -407,12 +407,12 @@ class ImportExportTest extends PageTestCase
         return $xml;
     }
 
-    private function exportCoreScrapbookDisplay1(BlockTypeEntity $blockType, SimpleXMLElement $inputCif, array $options): string
+    private function exportCoreScrapbookDisplay1(BlockTypeEntity $blockType, SimpleXMLElement $inputCif, array $options, &$createdBlock = null): string
     {
         $contentBlockType = BlockType::getByHandle('content');
         $contentBlock = null;
         $this->importExportBlockType($contentBlockType, $inputCif, $options, $contentBlock);
-        $aliasBlock = self::$blockPage->addBlock($blockType, 'Main', ['bOriginalID' => $contentBlock->getBlockID()]);
+        $createdBlock = $aliasBlock = self::$blockPage->addBlock($blockType, 'Main', ['bOriginalID' => $contentBlock->getBlockID()]);
         $outputCif = simplexml_load_string('<root />');
         $aliasBlock->export($outputCif);
         $this->assertTrue(isset($outputCif->block));
