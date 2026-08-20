@@ -1,6 +1,5 @@
 {
   "$schema": "../options-schema.json",
-  "apiRoundTrip": false,
   "fileUsageCount": 2,
   "richTexts": {
     "SELECT content FROM btContentLocal WHERE bID = :bID": {
