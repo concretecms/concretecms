@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Concrete\TestHelpers\Block;
 
 use Concrete\Core\Api\Block\ApiValueSchemaFactory;
+use Concrete\Core\Area\Area;
 use Concrete\Core\Api\Fractal\Transformer\BaseBlockTransformer;
 use Concrete\Core\Backup\ContentExporter;
 use Concrete\Core\Backup\ContentExporterOptions;
@@ -98,7 +99,10 @@ abstract class BlockApiValueTestCase extends PageTestCase
 
     public function testTheValueIsTheExpectedOne(): void
     {
-        static::assertSame($this->getExpectedApiValue(), $this->getApiValue($this->addBlock()));
+        // the block is created first: the expected value may depend on it
+        $block = $this->addBlock();
+
+        static::assertSame($this->getExpectedApiValue(), $this->getApiValue($block));
     }
 
     public function testTheValueSurvivesARoundTrip(): void
@@ -225,7 +229,8 @@ abstract class BlockApiValueTestCase extends PageTestCase
         }
         $page->addBlock(
             BlockType::getByHandle($this->getBlockTypeHandle()),
-            'Main',
+            // that's what the API does: it gives the block the area object, not its handle
+            Area::getOrCreate($page, 'Main'),
             $saveData === null ? $this->getSaveData() : $saveData
         );
 
