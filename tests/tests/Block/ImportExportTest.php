@@ -277,18 +277,18 @@ class ImportExportTest extends PageTestCase
         $this->assertSameXML($inputCif->asXML(), $outputCif, $options['keepXmlElementsOrder'] ?? false);
         if ($options['apiRoundTrip'] ?? true) {
             $this->assertInstanceOf(Block::class, $createdBlock, "The '{$importerExporterMethod}' method didn't create a block: it can't be checked against the API");
-            $this->checkApiRoundTrip($createdBlock, $outputCif, $options);
+            $this->checkApiRoundTrip($createdBlock, $options);
         }
     }
 
     /**
      * Check that the value that the API exposes for a block can be sent back, resulting in the very same block.
      *
-     * @param string $expectedCif the CIF representation the block should still have afterwards
      * @param array<string,mixed> $options the options of the test case
      */
-    private function checkApiRoundTrip(Block $block, string $expectedCif, array $options): void
+    private function checkApiRoundTrip(Block $block, array $options): void
     {
+        $expectedCif = $this->exportBlockToCif($block);
         // the API exports the references as IDs: let's do the same, since we aren't serving an API request
         ContentExporter::setOptions(new ContentExporterOptions(Request::create('/ccm/api/1.0/pages')));
         try {
@@ -301,10 +301,19 @@ class ImportExportTest extends PageTestCase
         $block->update($args);
         $updatedBlock = Block::getByID($block->getBlockID(), $page, 'Main');
         $this->assertInstanceOf(Block::class, $updatedBlock);
-        $outputCif = simplexml_load_string('<root />');
-        $updatedBlock->export($outputCif);
-        $this->assertTrue(isset($outputCif->block));
-        $this->assertSameXML($expectedCif, $outputCif->block->asXML(), $options['keepXmlElementsOrder'] ?? false);
+        $this->assertSameXML($expectedCif, $this->exportBlockToCif($updatedBlock), $options['keepXmlElementsOrder'] ?? false);
+    }
+
+    /**
+     * Get the CIF representation of a block.
+     */
+    private function exportBlockToCif(Block $block): string
+    {
+        $cif = simplexml_load_string('<root />');
+        $block->export($cif);
+        $this->assertTrue(isset($cif->block));
+
+        return $cif->block->asXML();
     }
 
     /**
@@ -497,14 +506,14 @@ class ImportExportTest extends PageTestCase
         return $result;
     }
 
-    private function importExportSurvey(BlockTypeEntity $blockType, SimpleXMLElement $inputCif, array $options): string
+    private function importExportSurvey(BlockTypeEntity $blockType, SimpleXMLElement $inputCif, array $options, &$createdBlock = null): string
     {
         $inputBaseIndex = 1000;
         $cn = $this->app->make(Connection::class);
         $outputBaseIndex = (int) $cn->fetchOne(
             "SELECT AUTO_INCREMENT FROM information_schema.TABLES WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'btSurveyOptions'"
         );
-        $outputXml = $this->importExportBlockType($blockType, $inputCif, $options);
+        $outputXml = $this->importExportBlockType($blockType, $inputCif, $options, $createdBlock);
         $outputXmlForCompare = preg_replace_callback(
             '#<optionID>\s*(?:<!\[CDATA\[\s*)?(?<id>\d+)\s*(?:\]\]>\s*)?</optionID>#',
             static function (array $matches) use ($outputBaseIndex): string {
