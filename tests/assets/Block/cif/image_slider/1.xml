@@ -23,7 +23,7 @@
       <cID>0</cID>
       <description><![CDATA[<a href="{ccm:export:page:/page-2}"><concrete-picture file="210987654321:file-2.png" /></a>]]></description>
       <fID>{ccm:export:file:123456543210:file-3.png}</fID>
-      <internalLinkCID>239</internalLinkCID>
+      <internalLinkCID>{ccm:export:page:/page-3}</internalLinkCID>
       <linkURL></linkURL>
       <sortOrder>1</sortOrder>
       <title>Slide Two</title>

@@ -2,7 +2,12 @@
 
 namespace Concrete\Block\ImageSlider;
 
+use Concrete\Core\Api\ApiResourceValueInterface;
+use Concrete\Core\Api\ApiValueSchemaInterface;
+use Concrete\Core\Api\Block\ApiValueSchemaFactory;
 use Concrete\Core\Block\BlockController;
+use Concrete\Core\Block\ExportDeclarations;
+use Concrete\Core\Block\Traits\CustomApiValueTrait;
 use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Editor\LinkAbstractor;
 use Concrete\Core\Feature\Features;
@@ -14,8 +19,10 @@ use Core;
 use Database;
 use Page;
 
-class Controller extends BlockController implements FileTrackableInterface, UsesFeatureInterface
+class Controller extends BlockController implements ApiResourceValueInterface, ApiValueSchemaInterface, FileTrackableInterface, UsesFeatureInterface
 {
+    use CustomApiValueTrait;
+
     /**
      * @var int|string|null
      */
@@ -53,6 +60,7 @@ class Controller extends BlockController implements FileTrackableInterface, Uses
     protected $btWrapperClass = 'ccm-ui';
     protected $btCacheBlockRecord = true;
     protected $btExportFileColumns = ['fID'];
+    protected $btExportPageColumns = ['internalLinkCID'];
     protected $btExportContentColumns = ['title', 'description'];
     protected $btCacheBlockOutput = true;
     protected $btCacheBlockOutputOnPost = true;
@@ -251,6 +259,120 @@ class Controller extends BlockController implements FileTrackableInterface, Uses
                 ++$i;
             }
         }
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Api\ApiValueSchemaInterface::getApiValueSchema()
+     */
+    public function getApiValueSchema(): array
+    {
+        $schemaFactory = $this->app->make(ApiValueSchemaFactory::class);
+
+        return [
+            'type' => 'object',
+            'properties' => [
+                'navigationType' => [
+                    'type' => ['string', 'integer'],
+                    'enum' => ['0', '1', '2', '3', 0, 1, 2, 3],
+                    'default' => '0',
+                    'description' => 'How the slides can be navigated: 0 for arrows, 1 for bullets, 2 for both of them, 3 for none.',
+                ],
+                'timeout' => [
+                    'type' => ['string', 'integer'],
+                    'default' => '4000',
+                    'description' => 'The number of milliseconds a slide is displayed (it must be at least 100 more than the speed).',
+                ],
+                'speed' => [
+                    'type' => ['string', 'integer'],
+                    'default' => '500',
+                    'description' => 'The number of milliseconds the transition between two slides lasts.',
+                ],
+                'noAnimate' => [
+                    'type' => ['string', 'integer'],
+                    'description' => 'Set it to 1 to switch the slides without animating them.',
+                ],
+                'pause' => [
+                    'type' => ['string', 'integer'],
+                    'description' => 'Set it to 1 to stop the slideshow while the pointer is over it.',
+                ],
+                'maxWidth' => [
+                    'type' => ['string', 'integer'],
+                    'description' => 'The maximum width (in pixels) of the slideshow, or 0 for no limit.',
+                ],
+                'entries' => [
+                    'type' => 'array',
+                    'description' => 'The slides, in the order they are displayed. When writing, if this key is omitted the current slides are kept as they are.',
+                    'items' => [
+                        'type' => 'object',
+                        'properties' => [
+                            'fID' => $schemaFactory->describeReference(ExportDeclarations::REFERENCE_FILE),
+                            'title' => $schemaFactory->describeReference(ExportDeclarations::REFERENCE_CONTENT),
+                            'description' => $schemaFactory->describeReference(ExportDeclarations::REFERENCE_CONTENT),
+                            'internalLinkCID' => $schemaFactory->describeReference(ExportDeclarations::REFERENCE_PAGE),
+                            'linkURL' => [
+                                'type' => 'string',
+                                'description' => 'The URL the slide links to (it\'s ignored when the slide links to a page).',
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ];
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Block\BlockController::getImportDataFromApiValue()
+     */
+    public function getImportDataFromApiValue($page, array $value): array
+    {
+        $entries = $this->deserializeRecordsFromApi($value, 'entries');
+        if ($this->bID) {
+            // the save() method resets the settings that it doesn't receive: let's keep the current ones
+            $currentValue = $this->serializeValueForApi();
+            unset($currentValue['entries']);
+            $value += $currentValue;
+        }
+        $args = parent::getImportDataFromApiValue($page, $value);
+        // the save() method wants the values of the slides in parallel arrays
+        foreach (['fID', 'title', 'description', 'linkURL', 'internalLinkCID', 'linkType', 'sortOrder'] as $key) {
+            $args[$key] = [];
+        }
+        foreach (array_values($entries) as $index => $entry) {
+            $internalLinkCID = (int) ($entry['internalLinkCID'] ?? 0);
+            $linkURL = (string) ($entry['linkURL'] ?? '');
+            $args['fID'][] = (int) ($entry['fID'] ?? 0);
+            $args['title'][] = (string) ($entry['title'] ?? '');
+            $args['description'][] = (string) ($entry['description'] ?? '');
+            $args['linkURL'][] = $linkURL;
+            $args['internalLinkCID'][] = $internalLinkCID;
+            // that's how the save() method knows which one of the two link columns must be kept
+            $args['linkType'][] = $internalLinkCID > 0 ? 1 : ($linkURL === '' ? 0 : 2);
+            $args['sortOrder'][] = $index;
+        }
+
+        return $args;
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Block\Traits\CustomApiValueTrait::serializeValueForApi()
+     */
+    protected function serializeValueForApi(): array
+    {
+        $records = $this->serializeTablesForApi();
+        $entries = [];
+        foreach ($records['btImageSliderEntries'] ?? [] as $entry) {
+            // the slides are listed in their display order, and the cID column is never written
+            unset($entry['sortOrder'], $entry['cID']);
+            $entries[] = $entry;
+        }
+
+        return array_merge($records['btImageSlider'][0] ?? [], ['entries' => $entries]);
     }
 
     /**

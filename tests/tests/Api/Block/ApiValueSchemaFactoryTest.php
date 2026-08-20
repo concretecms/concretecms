@@ -102,9 +102,9 @@ class ApiValueSchemaFactoryTest extends ConcreteDatabaseTestCase
     {
         // the API value only carries the first record of the main table, so clients must know that
         // the block has data elsewhere
-        $schema = $this->getFactory()->getSchema($this->getBlockTypeController('image_slider'));
+        $schema = $this->getFactory()->getSchema($this->getBlockTypeController('survey'));
 
-        static::assertSame(['btImageSliderEntries'], $schema['x-concrete-unrepresented-tables']);
+        static::assertSame(['btSurveyOptions', 'btSurveyResults'], $schema['x-concrete-unrepresented-tables']);
     }
 
     public function testControllersCanDescribeThemselves(): void

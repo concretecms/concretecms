@@ -1,6 +1,5 @@
 {
   "$schema": "../options-schema.json",
-  "apiRoundTrip": false,
   "fileUsageCount": 1,
   "richTexts": {
     "SELECT description FROM btImageSliderEntries WHERE bID = :bID LIMIT 0,1": {}
