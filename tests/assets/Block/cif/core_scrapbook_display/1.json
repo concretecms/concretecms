@@ -1,5 +1,6 @@
 {
   "$schema": "../options-schema.json",
+  "apiRoundTrip": false,
   "requiredBlockTypes": ["content"],
   "importerExporterMethod": "exportCoreScrapbookDisplay1"
 }

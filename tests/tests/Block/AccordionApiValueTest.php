@@ -53,41 +53,6 @@ class AccordionApiValueTest extends BlockApiValueTestCase
         );
     }
 
-    public function testTheItemsAreExportedAsPlaceholders(): void
-    {
-        $page = self::createPage('Page with a link');
-        $cID = $page->getCollectionID();
-        $entry = $this->getApiEntry('Links', '<a href="{CCM:CID_' . $cID . '}">a link</a>');
-        $block = $this->addBlock($page, $this->getSaveDataForEntries([$entry]));
-
-        static::assertSame(
-            [$this->getApiEntry('Links', '<a href="{ccm:export:page::id=' . $cID . '}">a link</a>')],
-            $this->getApiValue($block)['entries']
-        );
-    }
-
-    public function testTheFileReferencesOfTheItemsAreExchanged(): void
-    {
-        $file = $this->getFile();
-        $uuid = $file->getFileUUID();
-        $description = '<concrete-picture alt="A sample" file-id="' . $uuid . '" /> and <a href="{ccm:export:file::id=' . $uuid . '}">download</a>';
-        $block = $this->addBlock();
-
-        $this->updateBlock($block, ['entries' => [$this->getApiEntry('Files', $description)]]);
-
-        // the references are resolved to the local file
-        $db = $this->app->make(Connection::class);
-        static::assertSame(
-            '<concrete-picture fid="' . $file->getFileID() . '" alt="A sample" /> and <a href="{CCM:FID_DL_' . $uuid . '}">download</a>',
-            $db->fetchOne('select description from btAccordionEntries where bID = ?', [$block->getBlockID()])
-        );
-        // ... and they are exported back as they were received
-        static::assertSame(
-            $description,
-            $this->getApiValue($this->getBlock($block->getBlockCollectionObject()))['entries'][0]['description']
-        );
-    }
-
     /**
      * {@inheritdoc}
      *

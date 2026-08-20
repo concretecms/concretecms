@@ -1,5 +1,6 @@
 {
   "$schema": "../options-schema.json",
+  "apiRoundTrip": false,
   "fileUsageCount": 2,
   "richTexts": {
     "SELECT body FROM btFeatureLink WHERE bID = :bID": {

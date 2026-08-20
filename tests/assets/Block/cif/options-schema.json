@@ -5,6 +5,10 @@
     "$schema": {
       "type": "string"
     },
+    "apiRoundTrip": {
+      "$comment": "Set to true to check that the value that the API exposes for this block can be sent back, resulting in the very same block. It's true by default: set it to false for the block types that don't handle their value in the API yet.",
+      "type": "boolean"
+    },
     "skipReason": {
       "$comment": "Use this option to document why testing this attribute is skipped during import/export tests.",
       "type": "string",

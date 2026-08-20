@@ -30,8 +30,7 @@ class ContentApiValueTest extends BlockApiValueTestCase
      */
     protected function getSaveData(): array
     {
-        // that's how the content block stores a reference to a file
-        return ['content' => '<p>Some content</p><concrete-picture fID="' . $this->getFile()->getFileID() . '" alt="A sample" />'];
+        return ['content' => '<p>Some content</p>'];
     }
 
     /**
@@ -41,7 +40,6 @@ class ContentApiValueTest extends BlockApiValueTestCase
      */
     protected function getExpectedApiValue(): array
     {
-        // the reference to the file is exchanged as a placeholder
-        return ['content' => '<p>Some content</p><concrete-picture alt="A sample" file-id="' . $this->getFile()->getFileUUID() . '" />'];
+        return ['content' => '<p>Some content</p>'];
     }
 }

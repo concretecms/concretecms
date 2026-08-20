@@ -4,8 +4,11 @@ declare(strict_types=1);
 
 namespace Concrete\Tests\Block;
 
+use Concrete\Core\Api\Fractal\Transformer\BaseBlockTransformer;
 use Concrete\Core\Attribute\Category\CategoryService as AttributeCategoryService;
 use Concrete\Core\Attribute\TypeFactory as AttributeTypeFactory;
+use Concrete\Core\Backup\ContentExporter;
+use Concrete\Core\Backup\ContentExporterOptions;
 use Concrete\Core\Block\Block;
 use Concrete\Core\Block\BlockController;
 use Concrete\Core\Block\BlockType\BlockType;
@@ -22,6 +25,7 @@ use Concrete\Core\File\Set\Set as FileSet;
 use Concrete\Core\File\StorageLocation\StorageLocationFactory;
 use Concrete\Core\File\StorageLocation\Type\Type as StorageLocationType;
 use Concrete\Core\File\Tracker\FileTrackableInterface;
+use Concrete\Core\Http\Request;
 use Concrete\Core\Page\Single as SinglePage;
 use Concrete\Core\Page\Stack\Folder\FolderService as StackFolderService;
 use Concrete\Core\Page\Stack\Stack;
@@ -86,6 +90,7 @@ class ImportExportTest extends PageTestCase
             'AreaPermissionAssignments',
             'Blocks',
             'BlockTypeSets',
+            'CollectionVersionBlocksOutputCache',
             'Conversations',
             'ConversationSubscriptions',
             'FileSets',
@@ -267,8 +272,39 @@ class ImportExportTest extends PageTestCase
         $this->assertInstanceOf(BlockTypeEntity::class, $blockType);
         $importerExporterMethod = $options['importerExporterMethod'] ?? 'importExportBlockType';
         $this->assertTrue(method_exists($this, $importerExporterMethod), "The method '{$importerExporterMethod}' specified in the options does not exist");
-        $outputCif = $this->{$importerExporterMethod}($blockType, $inputCif, $options);
+        $createdBlock = null;
+        $outputCif = $this->{$importerExporterMethod}($blockType, $inputCif, $options, $createdBlock);
         $this->assertSameXML($inputCif->asXML(), $outputCif, $options['keepXmlElementsOrder'] ?? false);
+        if ($options['apiRoundTrip'] ?? true) {
+            $this->assertInstanceOf(Block::class, $createdBlock, "The '{$importerExporterMethod}' method didn't create a block: it can't be checked against the API");
+            $this->checkApiRoundTrip($createdBlock, $inputCif, $options);
+        }
+    }
+
+    /**
+     * Check that the value that the API exposes for a block can be sent back, resulting in the very same block.
+     *
+     * @param \SimpleXMLElement $expectedCif the CIF representation the block should still have afterwards
+     * @param array<string,mixed> $options the options of the test case
+     */
+    private function checkApiRoundTrip(Block $block, SimpleXMLElement $expectedCif, array $options): void
+    {
+        // the API exports the references as IDs: let's do the same, since we aren't serving an API request
+        ContentExporter::setOptions(new ContentExporterOptions(Request::create('/ccm/api/1.0/pages')));
+        try {
+            $transformed = (new BaseBlockTransformer())->transform($block);
+        } finally {
+            ContentExporter::setOptions(new ContentExporterOptions(Request::create('/')));
+        }
+        $page = $block->getBlockCollectionObject();
+        $args = $block->getController()->getImportDataFromApiValue($page, (array) $transformed['value']);
+        $block->update($args);
+        $updatedBlock = Block::getByID($block->getBlockID(), $page, 'Main');
+        $this->assertInstanceOf(Block::class, $updatedBlock);
+        $outputCif = simplexml_load_string('<root />');
+        $updatedBlock->export($outputCif);
+        $this->assertTrue(isset($outputCif->block));
+        $this->assertSameXML($expectedCif->asXML(), $outputCif->block->asXML(), $options['keepXmlElementsOrder'] ?? false);
     }
 
     /**
