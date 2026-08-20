@@ -75,6 +75,7 @@ abstract class BlockApiValueTestCase extends PageTestCase
             'Concrete\Core\Entity\Attribute\Value\FileValue',
             'Concrete\Core\Entity\Attribute\Key\FileKey',
             'Concrete\Core\Entity\Statistics\UsageTracker\FileUsageRecord',
+            'Concrete\Core\Entity\StyleCustomizer\Inline\StyleSet',
         ]);
     }
 
