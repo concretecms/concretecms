@@ -3075,7 +3075,6 @@
       <default value="0"/>
     </field>
     <field name="ugEntered" type="datetime">
-      <default value="1000-01-01 00:00:00"/>
       <notnull/>
     </field>
     <index name="uID">

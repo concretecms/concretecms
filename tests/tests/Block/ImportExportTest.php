@@ -144,6 +144,7 @@ class ImportExportTest extends PageTestCase
             Entity\Page\Feed::class,
             Entity\Sharing\SocialNetwork\Link::class,
             Entity\Statistics\UsageTracker\FileUsageRecord::class,
+            Entity\Statistics\UsageTracker\StackUsageRecord::class,
             Entity\StyleCustomizer\Inline\StyleSet::class,
         ]);
     }

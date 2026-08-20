@@ -16,6 +16,7 @@ use Concrete\Core\Page\Controller\PageController;
 use Concrete\Core\Page\Type\Type;
 use Concrete\Core\Permission\Checker;
 use Concrete\Core\Statistics\UsageTracker\AggregateTracker;
+use Concrete\Core\Statistics\UsageTracker\TrackableInterface;
 use Concrete\Core\StyleCustomizer\Inline\StyleSet;
 use Concrete\Core\Utility\Service\Xml;
 use Config;
@@ -372,6 +373,9 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
                     $this->{$field} = $args[$field] ?? null;
                 }
             }
+        }
+
+        if ($this instanceof TrackableInterface) {
             $this->app->make(AggregateTracker::class)->track($this);
         }
     }
@@ -651,7 +655,7 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
             );
         }
 
-        if ($this instanceof FileTrackableInterface) {
+        if ($this instanceof TrackableInterface) {
             $blockController = $b->getController(); // We have to do this because we need it loaded with the right block object, data.
             $this->app->make(AggregateTracker::class)->track($blockController);
         }
@@ -1025,7 +1029,7 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
                 $ni->delete();
             }
         }
-        if ($this instanceof FileTrackableInterface) {
+        if ($this instanceof TrackableInterface) {
             $this->app->make(AggregateTracker::class)->forget($this);
         }
     }

@@ -45,6 +45,14 @@ class TemplateLocator
                 $this->themeLocation->setTheme($theme);
                 $this->fileLocator->addLocation($this->themeLocation);
 
+                // A container may also be (or exclusively be) provided by a package, e.g.
+                // {package}/elements/containers/{handle}.php. Add the package location in
+                // addition to the theme location so both are searched.
+                $pkgHandle = $container->getPackageHandle();
+                if ($pkgHandle) {
+                    $this->fileLocator->addPackageLocation($pkgHandle);
+                }
+
                 $record = $template
                     ? (new TemplateVariantLocator($this->fileLocator))->getRecord($filename)
                     : $this->fileLocator->getRecord($filename);
