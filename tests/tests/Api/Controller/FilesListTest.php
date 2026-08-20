@@ -99,10 +99,10 @@ class FilesListTest extends FileStorageTestCase
         PermissionKey::add('file', 'view_file_in_file_manager', 'View File in File Manager', '', 0, 0);
 
         AuthenticationType::add('concrete', 'Concrete');
-        self::$userID = (int) UserInfo::add(['uName' => 'tester', 'uEmail' => 'tester\example.com'])->getUserID();
+        self::$userID = (int) UserInfo::add(['uName' => 'tester', 'uEmail' => 'tester@example.com'])->getUserID();
         app(LoginService::class)->loginByUserID(self::$userID);
 
-        $self = new static();
+        $self = new static('');
         if (!is_dir($self->getStorageDirectory())) {
             mkdir($self->getStorageDirectory());
         }
