@@ -10,6 +10,7 @@ use Concrete\Core\Backup\ContentExporter;
 use Concrete\Core\Backup\ContentExporterOptions;
 use Concrete\Core\Block\Block;
 use Concrete\Core\Block\BlockType\BlockType;
+use Concrete\Core\Block\Controller\SaveMode;
 use Concrete\Core\Entity\Block\BlockType\BlockType as BlockTypeEntity;
 use Concrete\Core\File\File;
 use Concrete\Core\File\Filesystem;
@@ -239,7 +240,9 @@ abstract class BlockApiValueTestCase extends PageTestCase
     protected function updateBlock(Block $block, array $value): void
     {
         $page = $block->getBlockCollectionObject();
-        $block->update($block->getController()->getImportDataFromApiValue($page, $value));
+        $args = $block->getController()->getImportDataFromApiValue($page, $value);
+        // that's the save mode the API uses (see the areas API controller)
+        $block->update($args, SaveMode::SAVE_MODE_IMPORT);
     }
 
     /**

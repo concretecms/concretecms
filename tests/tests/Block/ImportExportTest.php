@@ -12,6 +12,7 @@ use Concrete\Core\Backup\ContentExporterOptions;
 use Concrete\Core\Block\Block;
 use Concrete\Core\Block\BlockController;
 use Concrete\Core\Block\BlockType\BlockType;
+use Concrete\Core\Block\Controller\SaveMode;
 use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Entity;
 use Concrete\Core\Entity\Block\BlockType\BlockType as BlockTypeEntity;
@@ -298,7 +299,8 @@ class ImportExportTest extends PageTestCase
         }
         $page = $block->getBlockCollectionObject();
         $args = $block->getController()->getImportDataFromApiValue($page, (array) $transformed['value']);
-        $block->update($args);
+        // that's the save mode the API uses (see the areas API controller)
+        $block->update($args, SaveMode::SAVE_MODE_IMPORT);
         $updatedBlock = Block::getByID($block->getBlockID(), $page, 'Main');
         $this->assertInstanceOf(Block::class, $updatedBlock);
         $this->assertSameXML($expectedCif, $this->exportBlockToCif($updatedBlock), $options['keepXmlElementsOrder'] ?? false);
