@@ -438,6 +438,7 @@ class Controller extends BlockController implements UsesFeatureInterface
         $xml = $this->app->make(Xml::class);
         parent::export($blockNode);
         $recordNode = $blockNode->data[0]->record[0];
+        unset($recordNode->cnvID);
         $conversation = $this->getConversationObject();
         if ($conversation) {
             $recordNode->addChild('attachmentOverridesEnabled', $conversation->getConversationAttachmentOverridesEnabled() ? '1' : '0');
