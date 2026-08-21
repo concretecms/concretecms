@@ -71,6 +71,18 @@ jobs:
           ini-values: memory_limit=-1, pcov.directory=concrete, pcov.exclude="~(vendor|tests|js|css|config)~"
           tools: ${{matrix.composer}}
 
+      - name: "Get Composer cache directory"
+        id: composer-cache-dir
+        shell: bash
+        run: echo "dir=$(composer config --global --no-interaction cache-files-dir)" >>"$GITHUB_OUTPUT"
+
+      - name: "Cache Composer downloads"
+        uses: actions/cache@v6
+        with:
+          path: ${{ steps.composer-cache-dir.outputs.dir }}
+          key: composer-${{ runner.os }}-php${{ matrix.php-version }}-${{ matrix.dependencies }}-${{ hashFiles('composer.json', 'composer.lock') }}
+          restore-keys: composer-${{ runner.os }}-php${{ matrix.php-version }}-${{ matrix.dependencies }}-
+
       - name: "Prepare mysql user"
         run: |
           mysql -h127.0.0.1 -uroot -proot -e "CREATE USER 'ccm_test'@'%' IDENTIFIED BY '';"
