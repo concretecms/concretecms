@@ -294,6 +294,30 @@ class Controller extends BlockController implements ApiResourceValueInterface, A
 
         $values = ['arLayoutID' => $arLayout->getAreaLayoutID()];
         parent::save($values);
+        $this->createColumnAreas($arLayout);
+    }
+
+    /**
+     * Create the areas held by the columns of a layout, so that they are ready to receive blocks.
+     *
+     * Displaying a column creates its area on the fly, but the blocks can be added to it without ever
+     * displaying the page: that's what happens when the API is used.
+     */
+    private function createColumnAreas(AreaLayout $arLayout): void
+    {
+        $block = $this->getBlockObject();
+        $layoutArea = $block === null ? null : $block->getBlockAreaObject();
+        $page = $block === null ? null : $block->getBlockCollectionObject();
+        if ($layoutArea === null || $page === null || !$layoutArea->getAreaID()) {
+            return;
+        }
+        foreach ($arLayout->getAreaLayoutColumns() as $column) {
+            $subArea = new SubArea((string) $column->getAreaLayoutColumnDisplayID(), $layoutArea->getAreaHandle(), $layoutArea->getAreaID());
+            $subArea->load($page);
+            if (!$column->getAreaID()) {
+                $column->setAreaID($subArea->getAreaID());
+            }
+        }
     }
 
     /**
