@@ -4,6 +4,7 @@ namespace Concrete\Core\Board\Instance\Slot\Content;
 
 use Concrete\Core\Entity\Board\SlotTemplate;
 use Concrete\Core\Filesystem\FileLocator;
+use Concrete\Core\Filesystem\TemplateVariantLocator;
 use Concrete\Core\Page\Page;
 use Concrete\Core\Site\Service;
 
@@ -48,7 +49,7 @@ class TemplateLocator
                     $filename = DIRNAME_ELEMENTS . '/' . DIRNAME_BOARDS . '/' . DIRNAME_BOARD_SLOTS . '/' . $handle . '.php';
                     $this->themeLocation->setTheme($theme);
                     $this->fileLocator->addLocation($this->themeLocation);
-                    $record = $this->fileLocator->getRecord($filename, true);
+                    $record = (new TemplateVariantLocator($this->fileLocator))->getRecord($filename);
                     if ($record->exists()) {
                         return $record->getFile();
                     }

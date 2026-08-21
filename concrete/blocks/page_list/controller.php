@@ -7,6 +7,7 @@ use Concrete\Attribute\Topics\Controller as TopicsController;
 use Concrete\Core\Attribute\Category\PageCategory;
 use Concrete\Core\Attribute\Key\CollectionKey;
 use Concrete\Core\Block\BlockController;
+use Concrete\Core\Block\Controller\SaveMode;
 use Concrete\Core\Block\View\BlockView;
 use Concrete\Core\Feature\Features;
 use Concrete\Core\Feature\UsesFeatureInterface;
@@ -402,8 +403,12 @@ class Controller extends BlockController implements UsesFeatureInterface
                 break;
 
             case 'between':
-                $start = "{$this->filterDateStart} 00:00:00";
-                $end = "{$this->filterDateEnd} 23:59:59";
+                if (!empty($this->filterDateStart)) {
+                    $start = "{$this->filterDateStart} 00:00:00";
+                }
+                if (!empty($this->filterDateEnd)) {
+                    $end = "{$this->filterDateEnd} 23:59:59";
+                }
                 break;
 
             case 'all':
@@ -529,9 +534,6 @@ class Controller extends BlockController implements UsesFeatureInterface
             $pages = $list->getResults();
         }
 
-        if ($showPagination) {
-            $this->requireAsset('css', 'core/frontend/pagination');
-        }
         $this->set('pages', $pages);
         $this->set('list', $list);
         $this->set('showPagination', $showPagination);
@@ -776,7 +778,7 @@ class Controller extends BlockController implements UsesFeatureInterface
 
     public function save($args)
     {
-        $fromCIF = ($args['__fromCIF'] ?? null) === true;
+        $fromCIF = $this->saveMode === SaveMode::SAVE_MODE_IMPORT;
 
         // If we've gotten to the process() function for this class, we assume that we're in
         // the clear, as far as permissions are concerned (since we check permissions at several
@@ -1003,11 +1005,11 @@ class Controller extends BlockController implements UsesFeatureInterface
      */
     protected function getImportData($blockNode, $page)
     {
+        $this->saveMode = SaveMode::SAVE_MODE_IMPORT;
         if (!$this->cID && $page) {
             $this->cID = $page->getCollectionID();
         }
         $args = parent::getImportData($blockNode, $page);
-        $args['__fromCIF'] = true;
         $args['customTopicTreeNodeID'] = 0;
         $customTopicAttributeKeyHandle = (string) ($args['customTopicAttributeKeyHandle'] ?? '');
         $customTopicTreeNodePath = (string) ($args['customTopicTreeNodePath'] ?? '');

@@ -321,8 +321,14 @@ class Controller extends BlockController implements TrackableInterface, UsesFeat
      */
     public function save($args)
     {
-        parent::save($args);
+        // stID must be assigned before calling parent::save(), because performSave() (invoked by
+        // parent::save()) tracks this controller via AggregateTracker/UsageTracker when it
+        // implements TrackableInterface. UsageTracker::trackBlocks() calls getStackID() to build
+        // a StackUsageRecord, and stack_id is part of that entity's composite primary key. If
+        // stID is still unset when tracking runs, Doctrine's EntityManager::merge() throws
+        // Doctrine\ORM\Exception\MissingIdentifierField. See #12531.
         $this->stID = $args['stID'];
+        parent::save($args);
     }
 
     /**

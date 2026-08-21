@@ -6,6 +6,7 @@ use Concrete\Core\Backup\ContentImporter;
 use Concrete\Core\Database\Schema\Schema;
 use Concrete\Core\Filesystem\FileLocator;
 use Concrete\Core\Filesystem\TemplateService;
+use Concrete\Core\Filesystem\TemplateVariantLocator;
 use Concrete\Core\Foundation\ConcreteObject;
 use Concrete\Core\Package\PackageList;
 use Concrete\Core\Support\Facade\Application;
@@ -447,6 +448,26 @@ class AuthenticationType extends ConcreteObject
             echo $this->renderTemplate('form', $params, true) ?? '';
             return;
         }
+        // Preserve legacy callback routing: login/callback/<type>/<method>/... used to
+        // invoke the auth controller method even when no matching template existed, then
+        // render form.php as a fallback.
+        if (!$this->hasTemplate($element) && method_exists($this->controller, $element)) {
+            $params = array_values($params) === $params ? array_values($params) : [];
+            call_user_func_array([$this->controller, $element], $params);
+
+            $atHandle = $this->getAuthenticationTypeHandle();
+            $path = implode('/', [DIRNAME_AUTHENTICATION, $atHandle, 'form.php']);
+            $r = $this->getTemplateVariantLocator()->getRecord($path);
+            if ($r && $r->exists()) {
+                $sets = $this->controller->getSets();
+                if (is_array($sets)) {
+                    $params = array_merge($params, $sets);
+                }
+
+                echo $this->templateService->renderTemplate($r->getFile(), $params, $this);
+                return;
+            }
+        }
         echo $this->renderTemplate($element, $params, true) ?? $this->renderTemplate('form', $params, true) ?? '';
     }
 
@@ -512,8 +533,8 @@ class AuthenticationType extends ConcreteObject
     protected function hasTemplate(string $handle): bool
     {
         $atHandle = $this->getAuthenticationTypeHandle();
-        $path = implode('/', [DIRNAME_AUTHENTICATION, $atHandle, $handle]);
-        $r = $this->getLocator()->getRecord($path, true);
+        $path = implode('/', [DIRNAME_AUTHENTICATION, $atHandle, $handle . '.php']);
+        $r = $this->getTemplateVariantLocator()->getRecord($path);
 
         return $r->exists();
     }
@@ -533,14 +554,15 @@ class AuthenticationType extends ConcreteObject
         }
 
         $atHandle = $this->getAuthenticationTypeHandle();
-        $path = implode('/', [DIRNAME_AUTHENTICATION, $atHandle, $handle]);
-        $r = $this->getLocator()->getRecord($path, true);
+        $path = implode('/', [DIRNAME_AUTHENTICATION, $atHandle, $handle . '.php']);
+        $r = $this->getTemplateVariantLocator()->getRecord($path);
         if (!$r->exists()) {
             return null;
         }
 
         if (method_exists($this->controller, $handle)) {
-            $this->controller->{$handle}();
+            $params = array_values($data) === $data ? array_values($data) : [];
+            call_user_func_array([$this->controller, $handle], $params);
         } elseif ($viewFallback && method_exists($this->controller, 'view')) {
             $this->controller->view();
         }
@@ -551,6 +573,11 @@ class AuthenticationType extends ConcreteObject
         }
 
         return $this->templateService->renderTemplate($r->getFile(), $data, $this);
+    }
+
+    protected function getTemplateVariantLocator(): TemplateVariantLocator
+    {
+        return new TemplateVariantLocator($this->getLocator());
     }
 
     protected function getLocator(): FileLocator

@@ -38,7 +38,7 @@ class Delete extends BackendInterfaceController
 
     public function submit()
     {
-        if ($this->canAccess()) {
+        if ($this->validateAction()) {
             $u = new \User();
             $uID = $u->getUserID();
             $pages = $this->items;

@@ -116,16 +116,6 @@ class Controller extends BlockController
         return t('Legacy Form');
     }
 
-    // we are not using registerViewAssets because this block doesn't support caching
-    // and we have some block record things we need to check.
-    public function view()
-    {
-        $this->requireAsset('css', 'core/frontend/errors');
-        if ($this->displayCaptcha) {
-            $this->requireAsset('css', 'core/frontend/captcha');
-        }
-    }
-
     public function getDefaultThankYouMsg()
     {
         return t('Thanks!');
@@ -539,7 +529,7 @@ class Controller extends BlockController
                     $answerLong = '';
                     $answer = $txt->sanitize($_POST['Question' . $row['msqID']] ?? '');
                     if (!empty($row['options'])) {
-                        $settings = unserialize($row['options']);
+                        $settings = unserialize($row['options'], ['allowed_classes' => false]);
                         if (is_array($settings) && array_key_exists('send_notification_from', $settings) && $settings['send_notification_from'] == 1) {
                             $email = $txt->email($answer);
                             if (!empty($email)) {

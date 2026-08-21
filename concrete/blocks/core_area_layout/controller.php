@@ -140,7 +140,6 @@ class Controller extends BlockController implements UsesFeatureInterface
     {
         if (is_object($this->block) && $this->block->getBlockFilename() == 'parallax') {
             $this->requireAsset('javascript', 'jquery');
-            $this->requireAsset('javascript', 'core/frontend/parallax-image');
         }
 
         $arLayout = $this->getAreaLayoutObject();

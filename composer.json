@@ -29,6 +29,19 @@
       "composer/package-versions-deprecated": true,
       "mlocati/composer-patcher": true,
       "wikimedia/composer-merge-plugin": true
+    },
+    "audit": {
+      "ignore": {
+        "PKSA-sjvz-tbbr-vwth": "Testing vulnerable Twig behavior on PHP 7.3 line",
+        "PKSA-h8hf-ytnd-5t9q": "Testing vulnerable Twig behavior on PHP 7.3 line",
+        "PKSA-wwb1-81rc-pd65": "Testing vulnerable Twig behavior on PHP 7.3 line",
+        "PKSA-kvv6-36cr-fkzb": "Testing vulnerable Twig behavior on PHP 7.3 line",
+        "PKSA-n14z-jjjg-g8vd": "Testing vulnerable Twig behavior on PHP 7.3 line",
+        "PKSA-3mcc-k66d-pydb": "Testing vulnerable Twig behavior on PHP 7.3 line",
+        "PKSA-gw7n-z4yx-7xjt": "Testing vulnerable Twig behavior on PHP 7.3 line",
+        "PKSA-dpx1-78wg-1kqs": "Testing vulnerable Twig behavior on PHP 7.3 line",
+        "PKSA-21g2-dzjv-sky5": "Testing vulnerable Twig behavior on PHP 7.3 line"
+      }
     }
   },
   "replace": {

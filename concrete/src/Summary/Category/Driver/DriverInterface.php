@@ -14,4 +14,5 @@ interface DriverInterface
 
     public function getMemberSummaryTemplate($templateID): ?RenderableTemplateInterface;
 
+    public function canViewRenderedSummaryTemplates(CategoryMemberInterface $object): bool;
 }

@@ -638,8 +638,11 @@ class Service implements LoggerAwareInterface
                     $email->html($this->email->getHtmlBody(), $this->email->getHtmlCharset());
                 }
 
-                // append the attached file names to the mail log
                 $mailDetails = $email->toString();
+                if (stripos($mailDetails, 'Content-Transfer-Encoding: quoted-printable') !== false) {
+                    $mailDetails = quoted_printable_decode($mailDetails);
+                }
+                // append the attached file names to the mail log
                 foreach ($this->email->getAttachments() as $attachedFile) {
                     $mailDetails .= "\n" . t("[Attached File: %s]", $attachedFile->asDebugString());
                 }

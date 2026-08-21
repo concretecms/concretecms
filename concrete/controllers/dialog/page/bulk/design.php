@@ -110,7 +110,7 @@ class Design extends BackendInterfaceController
 
     public function submit()
     {
-        if ($this->canAccess()) {
+        if ($this->validateAction()) {
             $containsSinglePages = false;
             foreach ($this->items as $page) {
                 if ($page->isGeneratedCollection()) {

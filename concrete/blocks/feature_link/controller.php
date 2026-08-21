@@ -3,6 +3,7 @@
 namespace Concrete\Block\FeatureLink;
 
 use Concrete\Core\Block\BlockController;
+use Concrete\Core\Block\Controller\SaveMode;
 use Concrete\Core\Feature\Features;
 use Concrete\Core\Feature\UsesFeatureInterface;
 use Concrete\Core\File\File;
@@ -272,7 +273,7 @@ class Controller extends BlockController implements FileTrackableInterface, Uses
 
     public function save($args)
     {
-        $fromCIF = ($args['__fromCIF'] ?? null) === true;
+        $fromCIF = $this->saveMode === SaveMode::SAVE_MODE_IMPORT;
         if (!$fromCIF) {
             list($imageLinkType, $imageLinkValue) = $this->app->make(DestinationPicker::class)->decode('imageLink', $this->getImageLinkPickers(), null, null, $args);
             $args['buttonInternalLinkCID'] = $imageLinkType === 'page' ? $imageLinkValue : 0;
@@ -295,8 +296,8 @@ class Controller extends BlockController implements FileTrackableInterface, Uses
      */
     public function getImportData($blockNode, $page)
     {
+        $this->saveMode = SaveMode::SAVE_MODE_IMPORT;
         $args = parent::getImportData($blockNode, $page);
-        $args += ['__fromCIF' => true];
         foreach (['buttonInternalLinkCID', 'buttonFileLinkID', 'fID'] as $field) {
             $args[$field] = empty($args[$field]) ? 0 : (int) $args[$field];
         }

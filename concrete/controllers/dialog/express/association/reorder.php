@@ -14,7 +14,7 @@ class Reorder extends BackendInterfaceController
         $entry = $this->getEntry();
         if ($entry) {
             $ep = new \Permissions($entry);
-            return $ep->canViewExpressEntry();
+            return $ep->canEditExpressEntry();
         }
         return false;
     }
@@ -63,39 +63,45 @@ class Reorder extends BackendInterfaceController
 
     public function submit()
     {
-        $em = \Database::connection()->getEntityManager();
-        $selectedEntry = $this->getEntry();
-        $control = $this->getControl();
-        if ($association = $control->getAssociation()) {
-            $i = 0;
-            $handler = $association->getSaveHandler();
-            /**
-             * @var $handler ManySaveHandlerInterface
-             */
-            $supportsCustomDisplayOrder = false;
-            if ($association->getTargetEntity()->supportsCustomDisplayOrder()) {
-                $supportsCustomDisplayOrder = true;
-            }
-
-            $associatedEntries = $handler->getAssociatedEntriesFromRequest($control, $this->request);
-            foreach($associatedEntries as $entry) {
-                if ($supportsCustomDisplayOrder) {
-                    $entry->setEntryDisplayOrder($i);
-                    $em->persist($entry);
-                } else {
-                    $entryAssociation = $selectedEntry->getAssociation($association);
-                    $associationEntry = $entryAssociation->getAssociationEntry($entry);
-                    $associationEntry->setDisplayOrder($i);
-                    $em->persist($associationEntry);
+        if ($this->validateAction()) {
+            $em = \Database::connection()->getEntityManager();
+            $selectedEntry = $this->getEntry();
+            $control = $this->getControl();
+            if ($association = $control->getAssociation()) {
+                $i = 0;
+                $handler = $association->getSaveHandler();
+                /**
+                 * @var $handler ManySaveHandlerInterface
+                 */
+                $supportsCustomDisplayOrder = false;
+                if ($association->getTargetEntity()->supportsCustomDisplayOrder()) {
+                    $supportsCustomDisplayOrder = true;
                 }
-                $i++;
-            }
 
-            $em->flush();
-            $this->flash('success', t('Display order saved successfully.'));
-            $response = new EditResponse();
-            $response->setRedirectURL(\URL::to('/dashboard/express/entries/', 'view_entry', $selectedEntry->getId()));
-            $response->outputJSON();
+                $associatedEntries = $handler->getAssociatedEntriesFromRequest($control, $this->request);
+                $entryAssociation = $selectedEntry->getAssociation($association);
+                foreach($associatedEntries as $entry) {
+                    $associationEntry = $entryAssociation ? $entryAssociation->getAssociationEntry($entry) : null;
+                    if (!$associationEntry) {
+                        continue;
+                    }
+
+                    if ($supportsCustomDisplayOrder) {
+                        $entry->setEntryDisplayOrder($i);
+                        $em->persist($entry);
+                    } else {
+                        $associationEntry->setDisplayOrder($i);
+                        $em->persist($associationEntry);
+                    }
+                    $i++;
+                }
+
+                $em->flush();
+                $this->flash('success', t('Display order saved successfully.'));
+                $response = new EditResponse();
+                $response->setRedirectURL(\URL::to('/dashboard/express/entries/', 'view_entry', $selectedEntry->getId()));
+                $response->outputJSON();
+            }
         }
     }
 

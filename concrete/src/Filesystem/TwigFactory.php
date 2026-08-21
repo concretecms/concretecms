@@ -5,7 +5,7 @@ namespace Concrete\Core\Filesystem;
 use Concrete\Core\Application\ApplicationAwareInterface;
 use Concrete\Core\Application\ApplicationAwareTrait;
 use Concrete\Core\Page\Page;
-use Concrete\Core\Page\View\PageView;
+use Concrete\Core\Page\Theme\Theme as PageTheme;
 use Twig\Cache\CacheInterface;
 use Twig\Environment;
 use Twig\Extension\ExtensionInterface;
@@ -29,22 +29,43 @@ class TwigFactory implements ApplicationAwareInterface
     /** @var ExtensionInterface[] */
     protected $extensions = [];
 
+    /** @var array<string, array<string, string>> */
+    protected $namespaces = [];
+
     public function __construct(CacheInterface $cache, bool $debug)
     {
         $this->cache = $cache;
         $this->debug = $debug;
     }
 
-    private function addNamespaces(FilesystemLoader $loader): void
+    public function addNamespace(string $path, string $namespace): void
+    {
+        if (!isset($this->namespaces[$namespace])) {
+            $this->namespaces[$namespace] = [];
+        }
+        $this->namespaces[$namespace][$path] = $path;
+    }
+
+    private function addReservedNamespaces(): void
     {
         // Adds @theme as a twig namespace for the current theme. Not sure if there's
         // a better place to do this. I'd like to encapsulate this functionality in
         // the core exstension but I don't think it has access to the Loader object.
         $c = Page::getCurrentPage();
-        if ($c) {
-            $theme = $c->getCollectionThemeObject();
-            if ($theme) {
-                $loader->addPath((string) $theme->getThemeDirectory(), 'theme');
+        $theme = $c ? $c->getCollectionThemeObject() : null;
+        if (!$theme) {
+            $theme = PageTheme::getSiteTheme();
+        }
+        if ($theme) {
+            $this->addNamespace((string) $theme->getThemeDirectory(), 'theme');
+        }
+    }
+
+    private function registerNamespaces(FilesystemLoader $loader): void
+    {
+        foreach ($this->namespaces as $namespace => $paths) {
+            foreach ($paths as $path) {
+                $loader->addPath($path, $namespace);
             }
         }
     }
@@ -56,7 +77,10 @@ class TwigFactory implements ApplicationAwareInterface
         $twig->addGlobal('app', $this->app);
 
         if ($loader instanceof FilesystemLoader) {
-            $this->addNamespaces($loader);
+            $customNamespaces = $this->namespaces;
+            $this->addReservedNamespaces();
+            $this->registerNamespaces($loader);
+            $this->namespaces = $customNamespaces;
         }
 
         foreach ($this->globals as $name => $value) {

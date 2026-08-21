@@ -29,7 +29,7 @@ class DeleteFile extends FrontendController
 
         /** @var Token $token */
         $token = $this->app->make(Token::class);
-        if ($token->validate("delete_conversation_message",$this->request->request->get('token'))) {
+        if (!$token->validate("delete_conversation_message",$this->request->request->get('token'))) {
             throw new UserMessageException($token->getErrorMessage());
         }
 

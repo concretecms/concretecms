@@ -1,5 +1,13 @@
 Community contributions are one of the key points that make open source software so great. We've tried to categorize our issues in ways that will make it clear how best we can use your help. In general, if something is labeled as "Available" it is ready for development! If you find an issue that is labeled in this way, without a dedicated person assigned to it, post that you'd like to work on it, and go for it. When you're done submit a pull request and we'll review it right away for inclusion.
 
+## AI Policy
+
+Before submitting pull requests, new issues or bug reports, please be sure that anything submitted conforms to our AI policy:
+
+[https://documentation.concretecms.org/9-x/developers/introduction/ai-policy](https://documentation.concretecms.org/9-x/developers/introduction/ai-policy)
+
+Concrete CMS welcomes the responsible use of AI-assisted tools to help contributors write code, document issues, and accelerate development. We ask that contributors ensure that AI-assisted submissions remain thoughtful, concise, and carefully reviewed so they are easy for maintainers and the community to evaluate.
+
 ## Pull Requests
 
 Before submitting pull requests, please be sure to read our extensive guidelines about submitting code to Concrete CMS:

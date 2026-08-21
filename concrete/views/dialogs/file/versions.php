@@ -102,6 +102,7 @@ new Vue({
             'fileVersions' => $versions,
             'canPreviewFileVersion' => $canPreviewFileVersion,
             'canDeleteFileVersion' => $canDeleteFileVersion,
+            'approveToken' => $token->generate('approve_file_version'),
         ]) ?>;
     },
     watch: {
@@ -115,6 +116,7 @@ new Vue({
                 data: {
                     fID: this.fileID,
                     fvID: this.activeFileVersionID,
+                    <?= json_encode($token::DEFAULT_TOKEN_NAME) ?>: this.approveToken,
                 },
                 success: () => {
                     this.busy = false;

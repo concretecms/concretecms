@@ -4,7 +4,9 @@ namespace Concrete\Core\Summary\Category\Driver;
 
 use Concrete\Core\Calendar\Event\EventOccurrenceService;
 use Concrete\Core\Calendar\Event\EventService;
+use Concrete\Core\Entity\Calendar\CalendarEventVersionOccurrence;
 use Concrete\Core\Entity\Calendar\Summary\CalendarEventTemplate;
+use Concrete\Core\Permission\Checker;
 use Concrete\Core\Summary\Category\CategoryMemberInterface;
 use Concrete\Core\Summary\Template\RenderableTemplateInterface;
 
@@ -23,5 +25,14 @@ class CalendarEventDriver extends AbstractDriver
         return $this->entityManager->find(CalendarEventTemplate::class, $templateID);
     }
 
+    /**
+     * @param CalendarEventVersionOccurrence $object
+     */
+    public function canViewRenderedSummaryTemplates(CategoryMemberInterface $object): bool
+    {
+        $calendar = $object->getEvent()->getCalendar();
+        $checker = new Checker($calendar);
+        return $checker->canEditCalendar();
+    }
 
 }

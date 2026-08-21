@@ -4,6 +4,7 @@ namespace Concrete\Block\ExpressEntryList;
 use Concrete\Controller\Element\Search\Express\CustomizeResults;
 use Concrete\Controller\Element\Search\SearchFieldSelector;
 use Concrete\Core\Block\BlockController;
+use Concrete\Core\Block\Controller\SaveMode;
 use Concrete\Core\Entity\Express\Association;
 use Concrete\Core\Entity\Express\Entity;
 use Concrete\Core\Entity\Search\Query;
@@ -439,7 +440,6 @@ class Controller extends BlockController implements UsesFeatureInterface
             if ($pagination->haveToPaginate()) {
                 $pagination = $pagination->renderDefaultView();
                 $this->set('pagination', $pagination);
-                $this->requireAsset('css', 'core/frontend/pagination');
             } else {
                 $this->set('pagination', null);
             }
@@ -477,7 +477,7 @@ class Controller extends BlockController implements UsesFeatureInterface
     public function save($data)
     {
         $this->on_start();
-        $fromCIF = ($data['_fromCIF'] ?? null) === true;
+        $fromCIF = $this->saveMode === SaveMode::SAVE_MODE_IMPORT;
         if (!$fromCIF) {
             $data['columns'] = '';
             $data['filterFields'] = '';
@@ -564,7 +564,7 @@ class Controller extends BlockController implements UsesFeatureInterface
     private function doGetImportData(SimpleXMLElement $blockNode, $page): array
     {
         $args = parent::getImportData($blockNode, $page);
-        $args['_fromCIF'] = true;
+        $this->saveMode = SaveMode::SAVE_MODE_IMPORT;
         $xRecord = $blockNode->data[0]->record[0];
 
         $entityID = (string) ($args['exEntityID'] ?? '');

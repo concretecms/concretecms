@@ -121,12 +121,13 @@ return [
         'core_sharing' => '\Concrete\Core\Sharing\SharingServiceProvider',
         'core_cookie' => '\Concrete\Core\Cookie\CookieServiceProvider',
         'core_http' => '\Concrete\Core\Http\HttpServiceProvider',
-        'core_error' => '\Concrete\Core\Error\Provider\ErrorHandlingServiceProvider',
         'core_element' => '\Concrete\Core\Filesystem\FilesystemServiceProvider',
         'core_notification' => '\Concrete\Core\Notification\NotificationServiceProvider',
         'core_mercure' => '\Concrete\Core\Notification\Events\MercureServiceProvider',
         'core_package' => '\Concrete\Core\Package\PackageServiceProvider',
         'core_url' => '\Concrete\Core\Url\UrlServiceProvider',
+        'core_templates' => \Concrete\Core\Filesystem\TemplateServiceProvider::class,
+        'core_error' => '\Concrete\Core\Error\Provider\ErrorHandlingServiceProvider',
         'core_devices' => '\Concrete\Core\Device\DeviceServiceProvider',
         'core_user' => '\Concrete\Core\User\UserServiceProvider',
         'core_service_manager' => '\Concrete\Core\Service\Manager\ServiceManagerServiceProvider',
@@ -164,7 +165,6 @@ return [
         'core_api' => 'Concrete\Core\Api\ApiServiceProvider',
 
         'core_marketplace' => \Concrete\Core\Marketplace\MarketplaceServiceProvider::class,
-        'core_templates' => \Concrete\Core\Filesystem\TemplateServiceProvider::class,
     ],
 
     /*

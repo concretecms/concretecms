@@ -640,10 +640,21 @@ where treeNodeDisplayOrder > ? and treeNodeParentID = ?',
             $db = app(Connection::class);
             $tree = $this->getTreeObject();
             $data = $tree ? $tree->getRequestData() : [];
+            switch ($data['orderBy'] ?? null) {
+                case 'name_asc':
+                    $orderBy = 'treeNodeName asc, treeNodeDisplayOrder asc';
+                    break;
+                case 'name_desc':
+                    $orderBy = 'treeNodeName desc, treeNodeDisplayOrder asc';
+                    break;
+                default:
+                    $orderBy = 'treeNodeDisplayOrder asc';
+                    break;
+            }
             if (isset($data['displayOnly']) && $data['displayOnly']) {
-                $rows = $db->fetchAll('select treeNodeID from TreeNodes tn inner join TreeNodeTypes tnt on tn.treeNodeTypeID = tnt.treeNodeTypeID where treeNodeParentID = ? and treeNodeTypeHandle = ? order by treeNodeDisplayOrder asc', [$this->treeNodeID, $data['displayOnly']]);
+                $rows = $db->fetchAll("select treeNodeID from TreeNodes tn inner join TreeNodeTypes tnt on tn.treeNodeTypeID = tnt.treeNodeTypeID where treeNodeParentID = ? and treeNodeTypeHandle = ? order by {$orderBy}", [$this->treeNodeID, $data['displayOnly']]);
             } else {
-                $rows = $db->fetchAll('select treeNodeID from TreeNodes where treeNodeParentID = ? order by treeNodeDisplayOrder asc', [$this->treeNodeID]);
+                $rows = $db->fetchAll("select treeNodeID from TreeNodes where treeNodeParentID = ? order by {$orderBy}", [$this->treeNodeID]);
             }
 
             foreach ($rows as $row) {

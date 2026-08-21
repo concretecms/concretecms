@@ -63,6 +63,27 @@ class FileLocatorTest extends TestCase
         $this->assertEquals('/path/to/server/packages/awesome/elements/awesome/thing.php', $record->getUrl());
     }
 
+    public function testGetLocationsReturnsOnlyExplicitLocations()
+    {
+        $this->locator->addPackageLocation('awesome');
+        $locations = $this->locator->getLocations();
+        $this->assertCount(1, $locations);
+        $this->assertInstanceOf(FileLocator\PackageLocation::class, $locations[0]);
+    }
+
+    public function testGetSearchLocationsIncludesDefaultsWithoutMutatingCustomLocations()
+    {
+        $this->locator->addPackageLocation('awesome');
+        $searchLocations = $this->locator->getSearchLocations();
+        $this->assertCount(3, $searchLocations);
+        $this->assertInstanceOf(FileLocator\ApplicationLocation::class, $searchLocations[0]);
+        $this->assertInstanceOf(FileLocator\PackageLocation::class, $searchLocations[1]);
+        $this->assertInstanceOf(FileLocator\CoreLocation::class, $searchLocations[2]);
+
+        $this->assertCount(1, $this->locator->getLocations());
+        $this->assertCount(3, $this->locator->getSearchLocations());
+    }
+
     public function testOverride()
     {
         $filesystem = $this->getMockBuilder(Filesystem::class)

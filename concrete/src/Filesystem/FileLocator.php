@@ -48,12 +48,6 @@ class FileLocator
         $this->filesystem = $filesystem;
     }
 
-    public function addDefaultLocations()
-    {
-        array_unshift($this->locations, new ApplicationLocation($this->filesystem));
-        $this->locations[] = new CoreLocation($this->filesystem);
-    }
-
     public function addLocation(LocationInterface $location)
     {
         $this->locations[] = $location;
@@ -64,11 +58,21 @@ class FileLocator
         $this->locations[] = new PackageLocation($pkgHandle);
     }
 
+    /**
+     * @deprecated
+     * Adds locations to the searchable locations for a file locator. Instead, just call `getSearchLocations`
+     * @return void
+     */
+    public function addDefaultLocations()
+    {
+        array_unshift($this->locations, new ApplicationLocation($this->filesystem));
+        $this->locations[] = new CoreLocation($this->filesystem);
+    }
+
     public function getAllRecords($file)
     {
-        $this->addDefaultLocations();
         $records = [];
-        foreach ($this->locations as $location) {
+        foreach ($this->getSearchLocations() as $location) {
             $location->setFilesystem($this->filesystem);
             if ($record = $location->contains($file)) {
                 $records[] = $record;
@@ -80,51 +84,21 @@ class FileLocator
 
     /**
      * @param $file
-     * @param bool $template
-     *
      * @return Record|null
      */
-    public function getRecord($file, bool $template = false)
+    public function getRecord($file)
     {
-        $this->addDefaultLocations();
         $key = $this->getCacheKey($file);
         $item = $this->cache->getItem($key);
         $record = null;
 
         if ($item->isMiss()) {
             $item->lock();
-
-            $extensions = ['.php', '.html.twig'];
-            if ($template) {
-                foreach ($extensions as $extension) {
-                    $file = str_ends_with($file, $extension) ? substr($file, 0, -strlen($extension)) : $file;
-                }
-            }
-
-            foreach ($this->locations as $location) {
+            foreach ($this->getSearchLocations() as $location) {
                 $location->setFilesystem($this->filesystem);
-                if ($template) {
-                    $last = [];
-                    foreach ($extensions as $extension) {
-                        $fileWithExtension = $file . $extension;
-                        $found = $location->contains($fileWithExtension);
-                        if ($found) {
-                            $last[$extension] = $found;
-                            if ($found->exists()) {
-                                $record = $found;
-                                break 2;
-                            }
-                        }
-
-                    }
-                } elseif ($record = $location->contains($file)) {
+                if ($record = $location->contains($file)) {
                     break;
                 }
-            }
-
-            if ($template && !$record && isset($last)) {
-                // Use last non-existent .php file for backwards compatibility
-                $record = $last['.php'];
             }
 
             if (isset($record)) {
@@ -145,11 +119,28 @@ class FileLocator
         return $this->locations;
     }
 
+    /**
+     * Return the effective ordered list of locations used during file lookup.
+     *
+     * This includes the default application and core locations around any
+     * explicitly configured custom locations without mutating the locator state.
+     *
+     * @return LocationInterface[]
+     */
+    public function getSearchLocations()
+    {
+        return array_merge(
+            [new ApplicationLocation($this->filesystem)],
+            $this->locations,
+            [new CoreLocation($this->filesystem)]
+        );
+    }
+
     protected function getCacheKey($file)
     {
         $keys = [];
         $file = trim(str_replace('/', DIRECTORY_SEPARATOR, $file), DIRECTORY_SEPARATOR);
-        foreach ($this->locations as $location) {
+        foreach ($this->getSearchLocations() as $location) {
             $cacheKey = $location->getCacheKey();
             if (is_array($cacheKey)) {
                 $keys = array_merge($keys, $cacheKey);

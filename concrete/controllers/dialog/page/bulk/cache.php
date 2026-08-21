@@ -103,7 +103,7 @@ class Cache extends BackendInterfaceController
 
     public function submit()
     {
-        if ($this->canAccess()) {
+        if ($this->validateAction()) {
             foreach ($this->items as $page) {
                 $data = array();
                 if (($cCacheFullPageContent = $this->request->request->getInt('cCacheFullPageContent')) > -2) {

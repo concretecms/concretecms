@@ -31,6 +31,8 @@ if ($image === null) {
     return;
 }
 
+$height = (int) $height;
+
 /**
  * Building the button
  */

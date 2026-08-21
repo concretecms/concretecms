@@ -1661,6 +1661,9 @@ EOT
                 if (substr($bFilename, -4) === '.php') {
                     // Let's run our regular expression check on everything BEFORE ".php"
                     $bFilenameToCheck = substr($bFilename, 0, -4);
+                } elseif (substr($bFilename, -10) === '.html.twig') {
+                    // Let's run our regular expression check on everything BEFORE ".html.twig"
+                    $bFilenameToCheck = substr($bFilename, 0, -10);
                 } else {
                     $bFilenameToCheck = $bFilename; // We just check the entirety of what's passed in.
                 }
@@ -1949,6 +1952,27 @@ EOT
             $cvID = null;
         }
         $arHandle = $this->getAreaHandle();
+
+        // Caller may have loaded this block by bID alone (no specific placement). Recover
+        // cID/cvID/arHandle from CollectionVersionBlocks so the targeted deletes below have
+        // values that can match -- otherwise they filter on NULL and remove nothing.
+        if (!$cID || !$arHandle) {
+            $row = $db->fetchAssociative(
+                'select cID, cvID, arHandle from CollectionVersionBlocks where bID = ? order by isOriginal desc limit 1',
+                [$bID]
+            );
+            if ($row) {
+                if (!$cID) {
+                    $cID = (int) $row['cID'];
+                }
+                if (!$cvID) {
+                    $cvID = (int) $row['cvID'];
+                }
+                if (!$arHandle) {
+                    $arHandle = $row['arHandle'];
+                }
+            }
+        }
 
         // if this block is located in a master collection, we're going to delete all the instances of the block,
         // regardless

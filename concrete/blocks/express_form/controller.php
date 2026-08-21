@@ -137,8 +137,17 @@ class Controller extends BlockController implements NotificationProviderInterfac
         ];
     }
 
+    protected function assertCanMutateFormDefinition(): void
+    {
+        $block = $this->getBlockObject();
+        if (is_object($block) && !$this->validateEditBlockPassThruAction($block)) {
+            throw new UserMessageException(t('Access Denied'));
+        }
+    }
+
     public function action_add_new_form()
     {
+        $this->assertCanMutateFormDefinition();
         $token = app('token');
         if ($token->validate('add_new_form')) {
             $session = $this->app->make('session');
@@ -193,6 +202,7 @@ class Controller extends BlockController implements NotificationProviderInterfac
 
     public function action_update_control_order()
     {
+        $this->assertCanMutateFormDefinition();
         $token = app('token');
         if ($token->validate('update_control_order')) {
             $fieldSet = $this->getFormFieldSet();
@@ -218,6 +228,7 @@ class Controller extends BlockController implements NotificationProviderInterfac
 
     public function action_delete_control()
     {
+        $this->assertCanMutateFormDefinition();
         $token = app('token');
         if ($token->validate('delete_control')) {
             $fieldSet = $this->getFormFieldSet();
@@ -268,6 +279,7 @@ class Controller extends BlockController implements NotificationProviderInterfac
 
     public function action_add_control()
     {
+        $this->assertCanMutateFormDefinition();
         $token = app('token');
         if ($token->validate('add_control')) {
             $entityManager = $this->app->make(EntityManagerInterface::class);
@@ -362,6 +374,7 @@ class Controller extends BlockController implements NotificationProviderInterfac
 
     public function action_update_control()
     {
+        $this->assertCanMutateFormDefinition();
         $token = app('token');
         if ($token->validate('update_control')) {
             $fieldSet = $this->getFormFieldSet();
@@ -583,9 +596,7 @@ class Controller extends BlockController implements NotificationProviderInterfac
                 }
                 if ($this->displayCaptcha) {
                     $this->set('captcha', $this->app->make('helper/validation/captcha'));
-                    $this->requireAsset('css', 'core/frontend/captcha');
                 }
-                $this->requireAsset('css', 'core/frontend/errors');
                 $this->set('renderer', $renderer);
             }
         }
@@ -823,7 +834,7 @@ class Controller extends BlockController implements NotificationProviderInterfac
     protected function getStoredSubmittedAttributeValuesInFormOrder(Form $form, Entry $entry): array
     {
         $attributeValuesByKeyID = [];
-        foreach ($entry->getEntryAttributeValues() as $attributeValue) {
+        foreach ($entry->getAttributes() as $attributeValue) {
             $attributeKey = $attributeValue->getAttributeKey();
             if ($attributeKey) {
                 $attributeValuesByKeyID[$attributeKey->getAttributeKeyID()] = $attributeValue;

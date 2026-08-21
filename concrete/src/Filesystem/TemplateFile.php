@@ -27,7 +27,9 @@ class TemplateFile
         $this->filename = $filename;
         $baseName = $filename;
         if (strpos($baseName, '.') !== false) {
-            $baseName = substr($baseName, 0, strrpos($baseName, '.'));
+            // This used to be strrpos - which makes sense to get rid of the extension, but we can't do that
+            // because now our templates could be either ".php" (one period) or ".html.twig" (two periods)
+            $baseName = substr($baseName, 0, strpos($baseName, '.'));
         }
         $this->name = Loader::helper('text')->unhandle($baseName);
     }

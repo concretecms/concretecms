@@ -13,7 +13,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
  * @var Concrete\Core\Updater\ApplicationUpdate $update
  * @var Concrete\Core\Url\UrlImmutable $updatePackagesUrl
  * @var Concrete\Core\Entity\Package[] $installedPackages
- * @var bool $skipCoreUpdates
+ * @var string $skipCoreUpdates
  */
 
 ?>
@@ -23,10 +23,10 @@ defined('C5_EXECUTE') or die('Access Denied.');
     <input type="hidden" name="version" value="<?= h($update->getVersion()) ?>" />
 
     <?php
-    if ($skipCoreUpdates) {
+    if ($skipCoreUpdates !== '') {
         ?>
         <div class="alert alert-danger">
-            <?= t('Updates are currently disabled via your site configuration.') ?>
+            <?= nl2br(h($skipCoreUpdates)) ?>
         </div>
         <?php
     } else {
@@ -253,9 +253,9 @@ $(document).ready(function() {
                         return false;
                     }
                     <?php
-                    if ($skipCoreUpdates) {
+                    if ($skipCoreUpdates !== '') {
                         ?>
-                        ConcreteAlert.error({message: <?= json_encode(t('Updates are currently disabled via your site configuration.')) ?>});
+                        ConcreteAlert.error({message: <?= json_encode($skipCoreUpdates) ?>});
                         e.preventDefault();
                         return false;
                         <?php

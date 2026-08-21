@@ -5,6 +5,7 @@ use Config;
 use Concrete\Core\Config\Repository\Repository;
 use Concrete\Core\Page\Page as ConcretePage;
 use Loader;
+use Concrete\Core\Cache\Page\PageCacheRecord;
 
 class FilePageCache extends PageCache
 {
@@ -13,7 +14,7 @@ class FilePageCache extends PageCache
         $file = $this->getCacheFile($mixed);
         if (file_exists($file)) {
             $contents = file_get_contents($file);
-            $record = @unserialize($contents);
+            $record = @unserialize($contents, ['allowed_classes' => [PageCacheRecord::class]]);
             if ($record instanceof PageCacheRecord) {
                 return $record;
             }

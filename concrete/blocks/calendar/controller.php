@@ -4,9 +4,11 @@ namespace Concrete\Block\Calendar;
 
 use Concrete\Core\Attribute\Key\EventKey;
 use Concrete\Core\Block\BlockController;
+use Concrete\Core\Block\Controller\SaveMode;
 use Concrete\Core\Calendar\Calendar;
 use Concrete\Core\Calendar\CalendarServiceProvider;
 use Concrete\Core\Calendar\Event\EventOccurrenceList;
+use Concrete\Core\Error\UserMessageException;
 use Concrete\Core\Feature\Features;
 use Concrete\Core\Feature\UsesFeatureInterface;
 use Concrete\Core\Html\Object\HeadLink;
@@ -193,10 +195,18 @@ class Controller extends BlockController implements UsesFeatureInterface
         $service = $this->app->make('date');
 
         if ($bID == $this->bID) {
+            $calendar = $this->getCalendar();
+            if (!$calendar) {
+                throw new UserMessageException(t('Invalid calendar.'));
+            }
+            $checker = new Checker($calendar);
+            if (!$checker->canViewCalendar()) {
+                throw new UserMessageException(t('Access Denied.'));
+            }
             $start = $this->request->query->get('start');
             $end = $this->request->query->get('end');
             $list = new EventOccurrenceList();
-            $list->filterByCalendar($this->getCalendar());
+            $list->filterByCalendar($calendar);
             if ($this->filterByTopicAttributeKeyID) {
                 $ak = EventKey::getByID($this->filterByTopicAttributeKeyID);
                 if (is_object($ak)) {
@@ -353,7 +363,7 @@ class Controller extends BlockController implements UsesFeatureInterface
 
                     $string = $formatter->getOccurrenceDateString($occurrence);
 
-                    return sprintf('<div class="ccm-block-calendar-dialog-event-time">%s</a></div>', $string);
+                    return sprintf('<div class="ccm-block-calendar-dialog-event-time">%s</div>', $string);
                 case 'linkToPage':
                     $formatter = $this->app->make(CalendarServiceProvider::class)->getLinkFormatter();
                     $url = $formatter->getEventOccurrenceFrontendViewLink($occurrence);
@@ -424,7 +434,7 @@ class Controller extends BlockController implements UsesFeatureInterface
      */
     public function save($args)
     {
-        if (($args['_fromCIF'] ?? null) === true) {
+        if ($this->saveMode === SaveMode::SAVE_MODE_IMPORT) {
             parent::save($args);
             return;
         }
@@ -548,7 +558,7 @@ class Controller extends BlockController implements UsesFeatureInterface
     protected function getImportData($blockNode, $page)
     {
         $data = parent::getImportData($blockNode, $page);
-        $data['_fromCIF'] = true;
+        $this->saveMode = SaveMode::SAVE_MODE_IMPORT;
         $data['caID'] = 0;
         if (is_string($caName = $data['caName'] ?? null) && ($caName = trim($caName)) !== '') {
             $calendar = Calendar::getByName($caName);

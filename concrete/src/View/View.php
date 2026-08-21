@@ -6,6 +6,7 @@ use Concrete\Core\Asset\Output\StandardFormatter;
 use Concrete\Core\Feature\Traits\HandleRequiredFeaturesTrait;
 use Concrete\Core\Filesystem\FileLocator;
 use Concrete\Core\Filesystem\TemplateService;
+use Concrete\Core\Filesystem\TemplateVariantLocator;
 use Concrete\Core\Http\ResponseAssetGroup;
 use Concrete\Core\Page\Theme\ThemeRouteCollection;
 use Concrete\Core\Page\View\Preview\SkinCustomizerPreviewRequest;
@@ -522,7 +523,7 @@ class View extends AbstractView
             $_locator->addPackageLocation($_pkgHandle);
         }
 
-        $_record = $_locator->getRecord(DIRNAME_ELEMENTS . '/' . $_file, true);
+        $_record = (new TemplateVariantLocator($_locator))->getRecord(DIRNAME_ELEMENTS . '/' . $_file . '.php');
         $_file = $_record->getFile();
 
         $args['view'] = $view;

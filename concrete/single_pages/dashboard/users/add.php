@@ -9,6 +9,7 @@ use Concrete\Core\Support\Facade\Application;
  * @var Concrete\Core\Permission\Access\ListItem\EditUserPropertiesUserListItem $assignment
  * @var Concrete\Controller\SinglePage\Dashboard\Users\Add $controller
  * @var Concrete\Core\Form\Service\Form $form
+ * @var Concrete\Core\Localization\Service\Date $dh
  * @var Concrete\Core\Validation\CSRF\Token $token
  */
 $app = Application::getFacadeApplication();
@@ -72,6 +73,17 @@ $fileFolderSelector = $app->make(FileFolderSelector::class);
                 </div>
             </div>
 		<?php } ?>
+
+        <?php
+        if ($assignment->allowEditTimezone() && $app->make('config')->get('concrete.misc.user_timezones')) {
+            ?>
+            <div class="form-group">
+                <?= $form->label('uTimezone', t('Time Zone')) ?>
+                <?= $form->select('uTimezone', $dh->getTimezones(), date_default_timezone_get()) ?>
+            </div>
+            <?php
+        }
+        ?>
 
         <div class="form-group">
             <?php echo $form->label('uHomeFileManagerFolderID', t('Home Folder')); ?>

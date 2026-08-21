@@ -9,6 +9,7 @@ use Concrete\Core\Package\PackageList;
 use Concrete\Core\Asset\JavascriptAsset;
 use Concrete\Core\Asset\CssAsset;
 use Concrete\Core\Filesystem\FileLocator;
+use Concrete\Core\Filesystem\TemplateVariantLocator;
 
 class BlockViewTemplate
 {
@@ -88,6 +89,7 @@ class BlockViewTemplate
             $locator->addLocation(new FileLocator\PackageLocation($obj->getPackageHandle(), true));
         }
         $locator->addLocation(new FileLocator\AllPackagesLocation($this->getPackageList()));
+        $templateLocator = new TemplateVariantLocator($locator);
 
         // if we've passed in "templates/" as the first part, we strip that off.
         if (strpos($bFilename, 'templates/') === 0) {
@@ -97,18 +99,21 @@ class BlockViewTemplate
         if ($bFilename) {
             // Use case a - bFilename that is a template file
             if (str_ends_with($bFilename, '.php') || str_ends_with($bFilename, '.html.twig')) {
-                $record = $locator->getRecord(
-                    DIRNAME_BLOCKS . '/' . $obj->getBlockTypeHandle() . '/' . DIRNAME_BLOCK_TEMPLATES . '/' . $bFilename,
-                    true,
+                $record = $templateLocator->getRecord(
+                    DIRNAME_BLOCKS . '/' . $obj->getBlockTypeHandle() . '/' . DIRNAME_BLOCK_TEMPLATES . '/' . $bFilename
                 );
-                $this->template = $record->getFile();
-                $record = $locator->getRecord(
-                    DIRNAME_BLOCKS . '/' . $obj->getBlockTypeHandle() . '/' . $this->render,
-                    true,
-                );
-                $this->baseURL = dirname($record->getUrl());
-                $this->basePath = dirname($record->getFile());
-                return;
+                if ($record && $record->exists()) {
+                    $this->template = $record->getFile();
+                    $record = $templateLocator->getRecord(
+                        DIRNAME_BLOCKS . '/' . $obj->getBlockTypeHandle() . '/' . $this->render
+                    );
+                    if ($record) {
+                        $this->baseURL = dirname($record->getUrl());
+                        $this->basePath = dirname($record->getFile());
+                    }
+
+                    return;
+                }
             }
 
             // Use case b - bFilename that is a directory
@@ -116,7 +121,13 @@ class BlockViewTemplate
                 DIRNAME_BLOCKS . '/' . $obj->getBlockTypeHandle() . '/' . DIRNAME_BLOCK_TEMPLATES . '/' . $bFilename,
             );
             if ($record->exists() && is_dir($record->getFile())) {
-                $this->template = $record->getFile() . '/' . $this->render;
+                $templateRecord = $templateLocator->getRecord(
+                    DIRNAME_BLOCKS . '/' .
+                    $obj->getBlockTypeHandle() . '/' .
+                    DIRNAME_BLOCK_TEMPLATES . '/' .
+                    $bFilename . '/' .
+                    $this->render);
+                $this->template = $templateRecord->getFile();
                 $this->baseURL = $record->getUrl();
                 $this->basePath = $record->getFile();
                 return;
@@ -124,9 +135,8 @@ class BlockViewTemplate
         }
 
         // Use case c - no bFilename
-        $record = $locator->getRecord(
-            DIRNAME_BLOCKS . '/' . $obj->getBlockTypeHandle() . '/' . $this->render,
-            true,
+        $record = $templateLocator->getRecord(
+            DIRNAME_BLOCKS . '/' . $obj->getBlockTypeHandle() . '/' . $this->render
         );
         if ($record->exists()) {
             $this->baseURL = dirname($record->getUrl());

@@ -54,9 +54,8 @@ class MessagePage extends FrontendController
      */
     protected function getConversation(): Conversation
     {
-        $conversationID = $this->getConversationID();
-        $conversation = $conversationID === null ? null : Conversation::getByID($conversationID);
-        if ($conversation === null) {
+        $conversation = $this->getBlockConversation();
+        if ((int) $conversation->getConversationID() !== $this->getConversationID()) {
             throw new UserMessageException(t('Invalid Conversation.'));
         }
 

@@ -5,8 +5,11 @@ namespace Concrete\Tests\Authentication;
 use Concrete\Core\Authentication\AuthenticationType;
 use Concrete\Core\Authentication\AuthenticationTypeController;
 use Concrete\Core\Filesystem\FileLocator;
+use Concrete\Core\Filesystem\FileLocator\LocationInterface;
 use Concrete\Core\Filesystem\TemplateService;
+use Concrete\Core\Filesystem\TemplateVariantLocator;
 use Concrete\Tests\TestCase;
+use Illuminate\Filesystem\Filesystem;
 use Mockery;
 
 final class AuthenticationTypeTest extends TestCase
@@ -19,6 +22,8 @@ final class AuthenticationTypeTest extends TestCase
     private $record;
     /** @var FileLocator&Mockery\MockInterface */
     private $fileLocator;
+    /** @var TemplateVariantLocator&Mockery\MockInterface */
+    private $templateVariantLocator;
     /** @var TemplateService&Mockery\MockInterface */
     private $templateService;
     /** @var AuthenticationType */
@@ -31,8 +36,8 @@ final class AuthenticationTypeTest extends TestCase
     {
         $this->setFullyDefinedController();
 
-        $this->fileLocator->expects('getRecord')
-            ->with('authentication/test_auth_type/' . $method, true)
+        $this->templateVariantLocator->expects('getRecord')
+            ->with('authentication/test_auth_type/' . $method . '.php')
             ->andReturn($this->record);
         $this->templateService->expects('renderTemplate')
             ->with($this->file, ['foo', $method], $this->authenticationType)
@@ -53,9 +58,9 @@ final class AuthenticationTypeTest extends TestCase
     {
         $this->setFullyDefinedController();
 
-        $this->fileLocator->expects('getRecord')
-            ->times(2)
-            ->with('authentication/test_auth_type/form', true)
+        $this->templateVariantLocator->expects('getRecord')
+            ->times(3)
+            ->with('authentication/test_auth_type/form.php')
             ->andReturn($this->record);
         $this->templateService->expects('renderTemplate')
             ->with($this->file, ['foo', 'form'], $this->authenticationType)
@@ -67,13 +72,44 @@ final class AuthenticationTypeTest extends TestCase
         $this->assertEquals($actual, 'foo');
     }
 
+    public function testRendersFormEndpointWithParameters(): void
+    {
+        $this->authenticationType->controller = new class() {
+            /** @var array<string, string> */
+            private $sets = [];
+
+            public function change_password(string $hash = ''): void
+            {
+                $this->sets['hash'] = $hash;
+            }
+
+            public function getSets(): array
+            {
+                return $this->sets;
+            }
+        };
+
+        $this->templateVariantLocator->expects('getRecord')
+            ->times(2)
+            ->with('authentication/test_auth_type/change_password.php')
+            ->andReturn($this->record);
+        $this->templateService->expects('renderTemplate')
+            ->with($this->file, [0 => 'abc123', 'hash' => 'abc123'], $this->authenticationType)
+            ->andReturn('foo');
+
+        ob_start();
+        $this->authenticationType->renderForm('change_password', ['abc123']);
+        $actual = ob_get_clean();
+        $this->assertEquals($actual, 'foo');
+    }
+
     public function testRendersTypeForm(): void
     {
         $this->setFullyDefinedController();
 
-        $this->fileLocator->expects('getRecord')
+        $this->templateVariantLocator->expects('getRecord')
             ->times(2)
-            ->with('authentication/test_auth_type/type_form', true)
+            ->with('authentication/test_auth_type/type_form.php')
             ->andReturn($this->record);
         $this->templateService->expects('renderTemplate')
             ->with($this->file, ['foo', 'edit', 'type_form'], $this->authenticationType)
@@ -89,9 +125,9 @@ final class AuthenticationTypeTest extends TestCase
     {
         $this->setEditController();
 
-        $this->fileLocator->expects('getRecord')
+        $this->templateVariantLocator->expects('getRecord')
             ->times(2)
-            ->with('authentication/test_auth_type/type_form', true)
+            ->with('authentication/test_auth_type/type_form.php')
             ->andReturn($this->record);
         $this->templateService->expects('renderTemplate')
             ->with($this->file, ['foo', 'edit'], $this->authenticationType)
@@ -107,9 +143,9 @@ final class AuthenticationTypeTest extends TestCase
     {
         $this->setViewController();
 
-        $this->fileLocator->expects('getRecord')
-            ->times(2)
-            ->with('authentication/test_auth_type/form', true)
+        $this->templateVariantLocator->expects('getRecord')
+            ->times(3)
+            ->with('authentication/test_auth_type/form.php')
             ->andReturn($this->record);
         $this->templateService->expects('renderTemplate')
             ->with($this->file, ['foo', 'view'], $this->authenticationType)
@@ -125,8 +161,25 @@ final class AuthenticationTypeTest extends TestCase
     {
         $this->setViewController();
         $this->authenticationType->pkgHandle = 'fake_package';
+        $this->authenticationType->templateVariantLocator = null;
 
-        $this->fileLocator->shouldReceive('getRecord')->andReturn($this->record);
+        $location = Mockery::mock(LocationInterface::class);
+        $location->shouldReceive('setFilesystem')->times(3);
+        $location->shouldReceive('contains')
+            ->with('authentication/test_auth_type/form.html.twig')
+            ->times(3)
+            ->andReturn(false);
+        $location->shouldReceive('contains')
+            ->with('authentication/test_auth_type/form.php')
+            ->times(3)
+            ->andReturn($this->record);
+
+        $this->fileLocator->shouldReceive('getFilesystem')
+            ->times(3)
+            ->andReturn(new Filesystem());
+        $this->fileLocator->shouldReceive('getSearchLocations')
+            ->times(3)
+            ->andReturn([$location]);
         $this->templateService->shouldReceive('renderTemplate')->andReturn('foo');
 
         $this->fileLocator->expects('addPackageLocation')->with('fake_package');
@@ -149,18 +202,27 @@ final class AuthenticationTypeTest extends TestCase
             return $this->exists;
         });
         $this->fileLocator = Mockery::mock(FileLocator::class);
+        $this->templateVariantLocator = Mockery::mock(TemplateVariantLocator::class);
         $this->templateService = Mockery::mock(TemplateService::class);
 
         $this->authenticationType = new class($this->fileLocator, $this->templateService) extends AuthenticationType {
             protected $authTypeHandle = 'test_auth_type';
             /** @var string|false */
             public $pkgHandle = false;
+            /** @var TemplateVariantLocator|null */
+            public $templateVariantLocator;
             /** @return string|false */
             public function getPackageHandle()
             {
                 return $this->pkgHandle;
             }
+
+            protected function getTemplateVariantLocator(): TemplateVariantLocator
+            {
+                return $this->templateVariantLocator ?: parent::getTemplateVariantLocator();
+            }
         };
+        $this->authenticationType->templateVariantLocator = $this->templateVariantLocator;
     }
 
     protected function setFullyDefinedController(): void

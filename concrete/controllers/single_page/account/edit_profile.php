@@ -110,28 +110,31 @@ class EditProfile extends AccountPageController
 
         $valt = $app->make('token');
 
-        $data = $this->post();
+        $data = [];
 
         if (!$valt->validate('profile_edit')) {
             $this->error->add($valt->getErrorMessage());
         }
 
         // validate the user's email
-        $email = $this->post('uEmail');
+        $email = (string) $this->post('uEmail');
         $app->make('validator/user/email')->isValidFor($email, $ui, $this->error);
 
         // Username validation
-        $username = $this->post('uName');
-        if (array_key_exists('uName', $data)) {
-            $data['uName'] = (string) $data['uName'];
+        $username = (string) $this->post('uName');
+        $displayUserName = !$this->displayUserName
+            ? false
+            : $app->make(Repository::class)->get('concrete.user.edit_profile.display_username_field');
+        if ($displayUserName && $this->request->request->has('uName')) {
+            $data['uName'] = $username;
             $app->make('validator/user/name')->isValidFor($username, $ui, $this->error);
         }
 
         // password
-        if (strlen($data['uPasswordNew'])) {
-            $passwordCurrent = (string) $data['uPasswordCurrent'];
-            $passwordNew = $data['uPasswordNew'];
-            $passwordNewConfirm = $data['uPasswordNewConfirm'];
+        $passwordNew = (string) $this->post('uPasswordNew');
+        if ($passwordNew !== '') {
+            $passwordCurrent = (string) $this->post('uPasswordCurrent');
+            $passwordNewConfirm = (string) $this->post('uPasswordNewConfirm');
 
             $app->make('validator/password')->isValidFor($passwordNew, $ui, $this->error);
 
@@ -144,6 +147,7 @@ class EditProfile extends AccountPageController
                     $this->error->add(t('The two passwords provided do not match.'));
                 }
             }
+            $data['_allowPasswordUpdate'] = true;
             $data['uPasswordConfirm'] = $passwordNew;
             $data['uPassword'] = $passwordNew;
         }
@@ -164,7 +168,11 @@ class EditProfile extends AccountPageController
             $data['uEmail'] = $email;
             $config = $this->app->make('config');
             if ($config->get('concrete.misc.user_timezones')) {
-                $data['uTimezone'] = $this->post('uTimezone');
+                $data['uTimezone'] = (string) $this->post('uTimezone');
+            }
+            $languages = Localization::getAvailableInterfaceLanguages();
+            if (count($languages) > 0) {
+                $data['uDefaultLanguage'] = (string) $this->post('uDefaultLanguage');
             }
 
             $ui->saveUserAttributesForm($aks);

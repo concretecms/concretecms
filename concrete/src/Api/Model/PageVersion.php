@@ -26,6 +26,24 @@ class PageVersion
     private $is_approved;
 
     /**
+     * @OA\Property(
+     *     format="boolean",
+     *     title="Is New Draft",
+     *     description="Whether this version is an unapproved draft (cvIsNew).",
+     * )
+     *
+     * @var bool
+     */
+    private $is_new;
+
+    /**
+     * @OA\Property(type="string", title="Version Comments")
+     *
+     * @var string
+     */
+    private $comments;
+
+    /**
      * @OA\Property(type="date", title="Date page created")
      *
      * @var string

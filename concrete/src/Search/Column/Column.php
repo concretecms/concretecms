@@ -24,6 +24,11 @@ class Column implements ColumnInterface
     public function getColumnValue($obj)
     {
         $callback = $this->getColumnCallback();
+        if (empty($callback)) {
+            // No callback configured for this column: degrade to an empty
+            // value rather than fataling the entire search results page.
+            return '';
+        }
         if (is_array($callback)) {
             // PHP 8.0 only allows static functions with call_user_func
             // So institate the callback if its not callable

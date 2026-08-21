@@ -5,6 +5,7 @@ namespace Concrete\Core\Page\Container;
 use Concrete\Core\Entity\Page\Container;
 use Concrete\Core\Filesystem\FileLocator;
 use Concrete\Core\Filesystem\FileLocator\Record;
+use Concrete\Core\Filesystem\TemplateVariantLocator;
 use Concrete\Core\Page\Page;
 
 /**
@@ -44,7 +45,17 @@ class TemplateLocator
                 $this->themeLocation->setTheme($theme);
                 $this->fileLocator->addLocation($this->themeLocation);
 
-                $record = $this->fileLocator->getRecord($filename, $template);
+                // A container may also be (or exclusively be) provided by a package, e.g.
+                // {package}/elements/containers/{handle}.php. Add the package location in
+                // addition to the theme location so both are searched.
+                $pkgHandle = $container->getPackageHandle();
+                if ($pkgHandle) {
+                    $this->fileLocator->addPackageLocation($pkgHandle);
+                }
+
+                $record = $template
+                    ? (new TemplateVariantLocator($this->fileLocator))->getRecord($filename)
+                    : $this->fileLocator->getRecord($filename);
                 if ($record->exists()) {
                     return $record->getFile();
                 }

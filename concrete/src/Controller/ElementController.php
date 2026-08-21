@@ -3,6 +3,7 @@
 namespace Concrete\Core\Controller;
 
 use Concrete\Core\Filesystem\FileLocator;
+use Concrete\Core\Filesystem\TemplateVariantLocator;
 use Concrete\Core\Support\Facade\Facade;
 use Concrete\Core\View\BasicFileView;
 use Illuminate\Filesystem\Filesystem;
@@ -45,7 +46,7 @@ abstract class ElementController extends AbstractController
             if ($this->pkgHandle) {
                 $locator->addPackageLocation($this->pkgHandle);
             }
-            $r = $locator->getRecord(DIRNAME_ELEMENTS . '/' . $this->getElement(), true);
+            $r = (new TemplateVariantLocator($locator))->getRecord(DIRNAME_ELEMENTS . '/' . $this->getElement() . '.php');
             $this->view = new BasicFileView($r->getFile());
             $this->view->setController($this);
         }

@@ -13,15 +13,15 @@ defined('C5_EXECUTE') or die('Access Denied.');
  * @var string $currentVersion
  * @var Concrete\Core\Updater\ApplicationUpdate[] $updates
  * @var Concrete\Core\Updater\RemoteApplicationUpdate|null $remoteUpdate
- * @var bool $skipCoreUpdates
+ * @var string $skipCoreUpdates
  */
 ?>
 
 <?php
-if ($skipCoreUpdates) {
+if ($skipCoreUpdates !== '') {
     ?>
     <div class="alert alert-danger">
-        <?= t('Updates are currently disabled via your site configuration.') ?>
+        <?= nl2br(h($skipCoreUpdates)) ?>
     </div>
     <?php
 }
@@ -34,7 +34,7 @@ if ($skipCoreUpdates) {
 <?php
 if ($remoteUpdate !== null) {
     ?>
-    <form method="POST" action="<?= $controller->action('download_update') ?>" class="mb-3" <?= $skipCoreUpdates ? ' onsubmit="return false"' : '' ?>>
+    <form method="POST" action="<?= $controller->action('download_update') ?>" class="mb-3" <?= $skipCoreUpdates !== '' ? ' onsubmit="return false"' : '' ?>>
         <?php $token->output('download_update') ?>
         <input type="submit" id="ccm-update-download-submit" class="d-none" />
         <fieldset>
@@ -74,7 +74,7 @@ if ($remoteUpdate !== null) {
         </fieldset>
     </form>
     <?php
-    if (!$skipCoreUpdates) {
+    if ($skipCoreUpdates === '') {
         ?>
         <script>
             $('#ccm-update-download-submit').closest('form').on('submit', function(e) {
@@ -137,7 +137,7 @@ if ($remoteUpdate !== null) {
             <?php
             if ($remoteUpdate !== null) {
                 ?>
-                <label <?= $skipCoreUpdates ? '' : ' for="ccm-update-download-submit"' ?> class="btn btn-success mb-0<?= $skipCoreUpdates ? ' disabled' : '' ?>"><?= t('Download v.%s', h($remoteUpdate->getVersion())) ?></label>
+                <label <?= $skipCoreUpdates !== '' ? '' : ' for="ccm-update-download-submit"' ?> class="btn btn-success mb-0<?= $skipCoreUpdates !== '' ? ' disabled' : '' ?>"><?= t('Download v.%s', h($remoteUpdate->getVersion())) ?></label>
                 <?php
             }
             if ($updates !== []) {

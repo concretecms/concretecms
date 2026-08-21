@@ -95,6 +95,30 @@ class SubArea extends Area
         return $this->arParentID;
     }
 
+    /**
+     * Walk up the parent chain so the top-level (page-template) area handle
+     * is returned, not the dynamic composite handle of an intermediate
+     * sub-area. A broken parent chain falls back to the last handle reached.
+     *
+     * @return string
+     */
+    public function getTopLevelAreaHandle()
+    {
+        $db = Loader::db();
+        $arHandle = $this->getAreaHandle();
+        $arParentID = $this->arParentID;
+        while ($arParentID > 0) {
+            $row = $db->GetRow('select arHandle, arParentID from Areas where arID = ?', array($arParentID));
+            if (!$row) {
+                break;
+            }
+            $arHandle = $row['arHandle'];
+            $arParentID = $row['arParentID'];
+        }
+
+        return $arHandle;
+    }
+
     public function getAreaCustomTemplates($include_parent_templates = true)
     {
         $these_templates = parent::getAreaCustomTemplates();

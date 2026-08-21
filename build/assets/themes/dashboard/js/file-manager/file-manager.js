@@ -39,6 +39,9 @@
                 new ConcreteAjaxRequest({
                     loader: false,
                     url: CCM_DISPATCHER_FILENAME + "/ccm/system/file/add_favorite_folder/" + favoriteFolderId,
+                    data: {
+                        ccm_token: CCM_SECURITY_TOKEN
+                    },
                     success: function() {
                         ConcreteEvent.publish('FileManagerRefreshFavoriteFolderList')
                     }
@@ -48,6 +51,9 @@
                 new ConcreteAjaxRequest({
                     loader: false,
                     url: CCM_DISPATCHER_FILENAME + "/ccm/system/file/remove_favorite_folder/" + favoriteFolderId,
+                    data: {
+                        ccm_token: CCM_SECURITY_TOKEN
+                    },
                     success: function() {
                         ConcreteEvent.publish('FileManagerRefreshFavoriteFolderList')
                     }
@@ -67,6 +73,10 @@
         })
         // File Folder
         ConcreteEvent.subscribe('ConcreteTreeDeleteTreeNode', function() {
+            window.location.reload()
+        })
+        // File or folder moved
+        ConcreteEvent.subscribe('FolderUpdateRequestComplete', function() {
             window.location.reload()
         })
     }
@@ -93,6 +103,7 @@
 
     ConcreteFileManagerTable.prototype.setupFileUploads = function() {
         var my = this
+        var $uploadTarget = my.$element.parent()
         my.fileUploaderOptions = {
             folderID: function() {
                 return my.options.folderID
@@ -100,7 +111,11 @@
             dropzone: my.options.dropzone
         }
 
-        my.$element.parent().concreteFileUploader(my.fileUploaderOptions);
+        if (!my.$element.find('tbody tr').length) {
+            $uploadTarget.addClass('ccm-file-manager-empty-folder')
+        }
+
+        $uploadTarget.concreteFileUploader(my.fileUploaderOptions);
     };
 
     ConcreteFileManagerTable.prototype.setupFolderActions = function() {
