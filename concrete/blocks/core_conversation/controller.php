@@ -3,7 +3,10 @@
 namespace Concrete\Block\CoreConversation;
 
 use Concrete\Core\Attribute\Category\PageCategory;
+use Concrete\Core\Api\ApiResourceValueInterface;
+use Concrete\Core\Api\ApiValueSchemaInterface;
 use Concrete\Core\Block\BlockController;
+use Concrete\Core\Block\Traits\CustomApiValueTrait;
 use Concrete\Core\Conversation\Conversation;
 use Concrete\Core\Conversation\Message\MessageList;
 use Concrete\Core\Entity\Attribute\Key\PageKey;
@@ -18,8 +21,10 @@ use SimpleXMLElement;
 /**
  * The controller for the conversation block. This block is used to display conversations in a page.
  */
-class Controller extends BlockController implements UsesFeatureInterface
+class Controller extends BlockController implements ApiResourceValueInterface, ApiValueSchemaInterface, UsesFeatureInterface
 {
+    use CustomApiValueTrait;
+
     /**
      * @var int|string|null
      */
@@ -426,6 +431,190 @@ class Controller extends BlockController implements UsesFeatureInterface
 
         $values['cnvID'] = $conversation->getConversationID();
         parent::save($values);
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Api\ApiValueSchemaInterface::getApiValueSchema()
+     */
+    public function getApiValueSchema(): array
+    {
+        return [
+            'type' => 'object',
+            'description' => 'The settings of the block, and the ones of the conversation it owns (the messages of the conversation are not part of this value).',
+            'properties' => [
+                'enablePosting' => [
+                    'type' => ['string', 'integer'],
+                    'description' => 'Set it to 1 to let the visitors add messages.',
+                ],
+                'displayMode' => [
+                    'type' => 'string',
+                    'enum' => ['threaded', 'flat'],
+                    'default' => 'threaded',
+                    'description' => 'Whether the replies are nested under the message they answer to.',
+                ],
+                'displayPostingForm' => [
+                    'type' => 'string',
+                    'enum' => ['top', 'bottom'],
+                    'default' => 'top',
+                    'description' => 'Where the form to add a message is displayed.',
+                ],
+                'addMessageLabel' => [
+                    'type' => 'string',
+                    'maxLength' => 255,
+                    'description' => 'The text of the button that adds a message (empty for the default one).',
+                ],
+                'paginate' => [
+                    'type' => ['string', 'integer'],
+                    'description' => 'Set it to 1 to split the messages in pages of itemsPerPage messages.',
+                ],
+                'itemsPerPage' => [
+                    'type' => ['string', 'integer'],
+                    'description' => 'The number of messages displayed in a page.',
+                ],
+                'orderBy' => [
+                    'type' => 'string',
+                    'enum' => ['date_asc', 'date_desc', 'rating'],
+                    'default' => 'date_desc',
+                    'description' => 'The order the messages are displayed in: oldest first, most recent first, or highest rated.',
+                ],
+                'enableOrdering' => [
+                    'type' => ['string', 'integer'],
+                    'description' => 'Set it to 1 to let the visitors change the order of the messages.',
+                ],
+                'enableCommentRating' => [
+                    'type' => ['string', 'integer'],
+                    'description' => 'Set it to 1 to let the visitors rate the messages.',
+                ],
+                'enableTopCommentReviews' => [
+                    'type' => ['string', 'integer'],
+                    'description' => 'Set it to 1 to display the highest and the lowest rated messages before the other ones.',
+                ],
+                'reviewAggregateAttributeKey' => [
+                    'type' => ['string', 'integer', 'null'],
+                    'description' => 'The ID of the rating attribute of the page the ratings are aggregated into.',
+                ],
+                'displaySocialLinks' => [
+                    'type' => ['string', 'integer'],
+                    'description' => 'Set it to 1 to display the links that share the messages on social networks.',
+                ],
+                'dateFormat' => [
+                    'type' => 'string',
+                    'enum' => ['default', 'elapsed', 'custom'],
+                    'default' => 'default',
+                    'description' => 'How the date of a message is displayed: the format of the site, the time elapsed since it was posted, or customDateFormat.',
+                ],
+                'customDateFormat' => [
+                    'type' => ['string', 'null'],
+                    'maxLength' => 255,
+                    'description' => 'A format accepted by the date() PHP function (it\'s used only when dateFormat is "custom").',
+                ],
+                'attachmentOverridesEnabled' => [
+                    'type' => ['string', 'integer'],
+                    'description' => 'Set it to 1 to let this conversation have its own attachment settings, instead of the ones of the site.',
+                ],
+                'attachmentsEnabled' => [
+                    'type' => ['string', 'integer'],
+                    'description' => 'Set it to 1 to let the messages have attachments (it\'s used only when attachmentOverridesEnabled is 1).',
+                ],
+                'maxFilesGuest' => [
+                    'type' => ['string', 'integer'],
+                    'description' => 'The number of attachments a message of a guest can have.',
+                ],
+                'maxFilesRegistered' => [
+                    'type' => ['string', 'integer'],
+                    'description' => 'The number of attachments a message of a registered user can have.',
+                ],
+                'maxFileSizeGuest' => [
+                    'type' => ['string', 'integer'],
+                    'description' => 'The maximum size (in megabytes) of an attachment of a guest.',
+                ],
+                'maxFileSizeRegistered' => [
+                    'type' => ['string', 'integer'],
+                    'description' => 'The maximum size (in megabytes) of an attachment of a registered user.',
+                ],
+                'fileExtensions' => [
+                    'type' => 'string',
+                    'description' => 'The extensions the attachments can have, separated by commas (it\'s used only when attachmentOverridesEnabled is 1).',
+                ],
+                'notificationOverridesEnabled' => [
+                    'type' => ['string', 'integer'],
+                    'description' => 'Set it to 1 to let this conversation have its own notification settings, instead of the ones of the site.',
+                ],
+                'notificationUsers' => [
+                    'type' => 'array',
+                    'description' => 'The users notified when a message is added (they are used only when notificationOverridesEnabled is 1).',
+                    'items' => [
+                        'type' => ['string', 'integer'],
+                        'description' => 'The ID of a user.',
+                    ],
+                ],
+                'subscriptionEnabled' => [
+                    'type' => ['string', 'integer'],
+                    'description' => 'Set it to 1 to let the registered users subscribe to the conversation (it\'s used only when notificationOverridesEnabled is 1).',
+                ],
+            ],
+        ];
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Block\BlockController::getImportDataFromApiValue()
+     */
+    public function getImportDataFromApiValue($page, array $value): array
+    {
+        if ($this->bID) {
+            // the save() method resets the settings that it doesn't receive: let's keep the current ones
+            $value += $this->serializeValueForApi();
+        }
+        $args = [];
+        foreach ($value as $key => $keyValue) {
+            if ($key !== 'notificationUsers' && (is_string($keyValue) || is_int($keyValue) || is_float($keyValue) || $keyValue === null)) {
+                $args[$key] = $keyValue;
+            }
+        }
+        // the save() method wants the users to be notified as a list of their IDs
+        $args['notificationUsers'] = [];
+        foreach ((array) ($value['notificationUsers'] ?? []) as $userID) {
+            if (is_string($userID) || is_int($userID)) {
+                $args['notificationUsers'][] = (int) $userID;
+            }
+        }
+
+        return $args;
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Block\Traits\CustomApiValueTrait::serializeValueForApi()
+     */
+    protected function serializeValueForApi(): array
+    {
+        // the export() method below writes the settings of the block and the ones of its conversation
+        $blockNode = new SimpleXMLElement('<block></block>');
+        $this->export($blockNode);
+        $mainTable = (string) $this->getBlockTypeDatabaseTable();
+        $result = [];
+        foreach ($blockNode->data as $data) {
+            if (strcasecmp((string) $data['table'], $mainTable) === 0 && isset($data->record)) {
+                $result = $this->serializeRecordForApi($mainTable, $data->record);
+                break;
+            }
+        }
+        // a CIF file refers to the users to be notified by their name, the API by their ID
+        unset($result['notificationUser']);
+        $result['notificationUsers'] = [];
+        $conversation = $this->getConversationObject();
+        if ($conversation && $conversation->getConversationNotificationOverridesEnabled()) {
+            foreach ($conversation->getConversationSubscribedUsers() as $userInfo) {
+                $result['notificationUsers'][] = (int) $userInfo->getUserID();
+            }
+        }
+
+        return $result;
     }
 
     /**
