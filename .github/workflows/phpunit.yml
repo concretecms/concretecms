@@ -52,13 +52,14 @@ jobs:
           - php-version: 8.2
             operating-system: "ubuntu-latest"
             dependencies: "locked"
+            code-coverage: "1"
           - php-version: 8.5
             operating-system: "ubuntu-latest"
             dependencies: "highest"
 
     steps:
       - name: Enable code coverage
-        if: matrix.php-version == '7.4' && startsWith(matrix.operating-system, 'ubuntu') && matrix.dependencies == 'locked' && github.repository_owner == 'concrete5'
+        if: matrix.code-coverage && github.repository_owner == 'concretecms'
         run: printf 'CODE_COVERAGE=pcov\n' >> "$GITHUB_ENV"
 
       - name: "Checkout"
