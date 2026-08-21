@@ -3,6 +3,10 @@ name: "PHPUnit"
 on:
   pull_request:
   push:
+    branches:
+      - "**"
+    tags-ignore:
+      - "**"
 
 jobs:
   phpunit:
