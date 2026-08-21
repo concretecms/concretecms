@@ -210,6 +210,20 @@ class WellKnownFileManagerTest extends TestCase
     }
 
     // -------------------------------------------------------------------------
+    // Storage mode
+    // -------------------------------------------------------------------------
+
+    public function testIsMultisiteIsFalseWhenFewerThanTwoSitesHaveCanonicalUrls(): void
+    {
+        $this->assertFalse($this->makeManager(false)->isMultisite());
+    }
+
+    public function testIsMultisiteIsTrueWhenTwoOrMoreSitesHaveCanonicalUrls(): void
+    {
+        $this->assertTrue($this->makeManager(true)->isMultisite());
+    }
+
+    // -------------------------------------------------------------------------
     // Helpers
     // -------------------------------------------------------------------------
 

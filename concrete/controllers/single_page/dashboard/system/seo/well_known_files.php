@@ -6,11 +6,10 @@ namespace Concrete\Controller\SinglePage\Dashboard\System\Seo;
 
 use Concrete\Core\Entity\Site\Site;
 use Concrete\Core\Form\Service\Form;
-use Concrete\Core\Page\Controller\DashboardPageController;
-use Concrete\Core\Permission\Checker as PermissionChecker;
+use Concrete\Core\Page\Controller\DashboardSitePageController;
+use Concrete\Core\Permission\Key\Key as PermissionKey;
 use Concrete\Core\Service\Configuration\HTTP\ApacheGenerator;
 use Concrete\Core\Service\Configuration\HTTP\NginxGenerator;
-use Concrete\Core\Site\Service as SiteService;
 use Concrete\Core\Site\WellKnown\WellKnownFileManager;
 
 defined('C5_EXECUTE') or die('Access Denied.');
@@ -18,72 +17,46 @@ defined('C5_EXECUTE') or die('Access Denied.');
 /**
  * Dashboard page: System > SEO & Statistics > Well-Known Files.
  *
- * Shows the status of per-site sitemap.xml, robots.txt, llms.txt, security.txt,
- * ads.txt, and humans.txt files and allows direct editing of all except sitemap.xml.
- * For multisite installs the page also shows the nginx/Apache server configuration
- * blocks needed to route well-known files (including /.well-known/security.txt)
- * per-domain.
+ * Operates on the site currently chosen in the dashboard site switcher, which
+ * DashboardSitePageController exposes through getSite(). Shows the status of that
+ * site's sitemap.xml, robots.txt, llms.txt, security.txt, ads.txt, and humans.txt
+ * and allows direct editing of all except sitemap.xml, which the Generate Sitemap
+ * task writes. When more than one site has a canonical URL the page also shows the
+ * nginx/Apache server configuration blocks needed to route well-known files
+ * (including /.well-known/security.txt) per-domain.
  */
-class WellKnownFiles extends DashboardPageController
+class WellKnownFiles extends DashboardSitePageController
 {
     /**
-     * Render the well-known files dashboard page.
+     * The files listed in the status table, in display order.
+     *
+     * @var string[]
+     */
+    protected const FILENAMES = ['sitemap.xml', 'robots.txt', 'llms.txt', 'security.txt', 'ads.txt', 'humans.txt'];
+
+    /**
+     * Render the well-known files dashboard page for the active site.
      */
     public function view(): void
     {
-        $siteService = $this->app->make(SiteService::class);
         /** @var WellKnownFileManager $wellKnown */
         $wellKnown = $this->app->make(WellKnownFileManager::class);
+        $site = $this->getSite();
 
-        $siteData = [];
-        $sitesWithCanonical = 0;
-        foreach ($siteService->getList() as $site) {
-            if (!$this->canAdminSite($site)) {
-                continue;
-            }
-
-            $canonicalUrl = $site->getSiteCanonicalURL();
-
-            if ($canonicalUrl !== '') {
-                $sitesWithCanonical++;
-            }
-
-            $siteData[] = [
-                'id' => $site->getSiteID(),
-                'handle' => $site->getSiteHandle(),
-                'name' => $site->getSiteName(),
-                'canonicalUrl' => $canonicalUrl,
-                'sitemapUrl' => $canonicalUrl !== '' ? $wellKnown->getUrlForSite($site, 'sitemap.xml') : '',
-                'robotsUrl' => $canonicalUrl !== '' ? $wellKnown->getUrlForSite($site, 'robots.txt') : '',
-                'llmsUrl' => $canonicalUrl !== '' ? $wellKnown->getUrlForSite($site, 'llms.txt') : '',
-                'securityUrl' => $canonicalUrl !== '' ? $wellKnown->getUrlForSite($site, 'security.txt') : '',
-                'adsUrl' => $canonicalUrl !== '' ? $wellKnown->getUrlForSite($site, 'ads.txt') : '',
-                'humansUrl' => $canonicalUrl !== '' ? $wellKnown->getUrlForSite($site, 'humans.txt') : '',
-                'sitemap' => $this->fileStatus($wellKnown, $site, 'sitemap.xml'),
-                'robots' => $this->fileStatus($wellKnown, $site, 'robots.txt'),
-                'llms' => $this->fileStatus($wellKnown, $site, 'llms.txt'),
-                'security' => $this->fileStatus($wellKnown, $site, 'security.txt'),
-                'ads' => $this->fileStatus($wellKnown, $site, 'ads.txt'),
-                'humans' => $this->fileStatus($wellKnown, $site, 'humans.txt'),
-                'robotsContent' => $this->readRobotsContent($wellKnown, $site),
-                'llmsContent' => $this->readWellKnownContent($wellKnown, $site, 'llms.txt'),
-                'securityContent' => $this->readWellKnownContent($wellKnown, $site, 'security.txt'),
-                'adsContent' => $this->readWellKnownContent($wellKnown, $site, 'ads.txt'),
-                'humansContent' => $this->readWellKnownContent($wellKnown, $site, 'humans.txt'),
-            ];
-        }
-
-        $this->set('siteData', $siteData);
-        // $sitesWithCanonical counts only sites visible to this admin (canAdminSite filter).
-        // A restricted admin who manages only one of several sites won't see the nginx/Apache
-        // routing snippet — they don't need it and shouldn't be expected to apply it.
-        // WellKnownFileManager uses the same "> 1" threshold but counts all sites system-wide
-        // to decide where to write files, since file routing is an infrastructure concern that
-        // must reflect the actual system topology regardless of who is logged in.
-        $this->set('isMultisite', $sitesWithCanonical > 1);
+        $this->set('form', $this->app->make(Form::class));
+        // The manager decides where files are written using the same "more than one
+        // site has a canonical URL" test, so the routing snippet is shown exactly when
+        // files are stored per-host and the web server therefore needs to route them.
+        $this->set('isMultisite', $wellKnown->isMultisite());
         $this->set('nginxConfig', $this->getNginxConfig());
         $this->set('apacheConfig', $this->getApacheConfig());
-        $this->set('form', $this->app->make(Form::class));
+
+        $canEdit = $site !== null && $this->canManageWellKnownFiles();
+        $this->set('canEdit', $canEdit);
+        $this->set('siteName', $canEdit ? $site->getSiteName() : '');
+        $this->set('canonicalUrl', $canEdit ? $site->getSiteCanonicalURL() : '');
+        $this->set('files', $canEdit ? $this->getFileData($wellKnown, $site) : []);
+        $this->set('content', $canEdit ? $this->getEditableContent($wellKnown, $site) : []);
     }
 
     public function save_robots(): void
@@ -117,16 +90,41 @@ class WellKnownFiles extends DashboardPageController
     }
 
     /**
-     * @param string $filename One of the allowed well-known filenames
+     * Build the status table data for a site: generation state and public URL per file.
      *
-     * @return array{exists: bool, lastModified: int|null}
+     * @return array<string, array{exists: bool, lastModified: int|null, url: string}> Keyed by filename
      */
-    protected function fileStatus(WellKnownFileManager $wellKnown, Site $site, string $filename): array
+    protected function getFileData(WellKnownFileManager $wellKnown, Site $site): array
     {
-        $path = $wellKnown->getFilePath($site, $filename);
-        $exists = $path !== '' && is_file($path);
+        $hasCanonicalUrl = $site->getSiteCanonicalURL() !== '';
+        $files = [];
+        foreach (self::FILENAMES as $filename) {
+            $path = $wellKnown->getFilePath($site, $filename);
+            $exists = $path !== '' && is_file($path);
+            $files[$filename] = [
+                'exists' => $exists,
+                'lastModified' => $exists ? (int) filemtime($path) : null,
+                'url' => $hasCanonicalUrl ? $wellKnown->getUrlForSite($site, $filename) : '',
+            ];
+        }
 
-        return ['exists' => $exists, 'lastModified' => $exists ? (int) filemtime($path) : null];
+        return $files;
+    }
+
+    /**
+     * Read the current content of every editable well-known file for a site.
+     *
+     * @return array<string, string> Keyed by filename; '' when the file does not exist yet
+     */
+    protected function getEditableContent(WellKnownFileManager $wellKnown, Site $site): array
+    {
+        return [
+            'robots.txt' => $this->readRobotsContent($wellKnown, $site),
+            'llms.txt' => $this->readWellKnownContent($wellKnown, $site, 'llms.txt'),
+            'security.txt' => $this->readWellKnownContent($wellKnown, $site, 'security.txt'),
+            'ads.txt' => $this->readWellKnownContent($wellKnown, $site, 'ads.txt'),
+            'humans.txt' => $this->readWellKnownContent($wellKnown, $site, 'humans.txt'),
+        ];
     }
 
     /**
@@ -167,6 +165,9 @@ class WellKnownFiles extends DashboardPageController
     /**
      * Validate, write, and redirect for a well-known file save action.
      *
+     * The file is always written for the active site, so a posted form cannot target
+     * a site other than the one the dashboard is currently editing.
+     *
      * @param string $filename One of the allowed well-known filenames
      * @param string $tokenName CSRF token action name
      * @param string $successMessage Flash message shown on successful save
@@ -180,17 +181,14 @@ class WellKnownFiles extends DashboardPageController
             return;
         }
 
-        $siteID = (int) $this->request->request->get('siteID');
-        $content = (string) $this->request->request->get('content');
-
-        if (strlen($content) > 65536) {
-            $this->error->add(t('The file content exceeds the maximum allowed size of 64 KB.'));
+        $site = $this->getSite();
+        if ($site === null || !$this->canManageWellKnownFiles()) {
+            $this->error->add(t('You do not have permission to manage well-known files.'));
         }
 
-        $siteService = $this->app->make(SiteService::class);
-        $site = $siteID > 0 ? $siteService->getByID($siteID) : null;
-        if ($site === null || !$this->canAdminSite($site)) {
-            $this->error->add(t('Site not found or you do not have permission to edit its files.'));
+        $content = (string) $this->request->request->get('content');
+        if (strlen($content) > 65536) {
+            $this->error->add(t('The file content exceeds the maximum allowed size of 64 KB.'));
         }
 
         if ($this->error->has()) {
@@ -216,17 +214,21 @@ class WellKnownFiles extends DashboardPageController
     }
 
     /**
-     * Uses canAdminPage() on the site's home page to determine if a user has 
-     * full administrative rights over a site tree.
+     * Whether the current user holds the Manage Well-Known Files task permission.
+     *
+     * Which site those files belong to is a separate question, answered by the dashboard
+     * site switcher: it only offers sites the user can see (Permissions::canViewSiteInSelector(),
+     * which resolves to sitemap-view rights on the site's home page). So this permission
+     * governs the capability and the switcher governs its scope.
+     *
+     * Returns false when the permission key is missing, which happens only on an install
+     * whose migrations have not been run — denying is the safe answer there.
      */
-    protected function canAdminSite(Site $site): bool
+    protected function canManageWellKnownFiles(): bool
     {
-        $homePage = $site->getSiteHomePageObject();
-        if ($homePage === null) {
-            return false;
-        }
+        $pk = PermissionKey::getByHandle('manage_well_known_files');
 
-        return (bool) (new PermissionChecker($homePage))->canAdminPage();
+        return $pk instanceof PermissionKey ? (bool) $pk->validate() : false;
     }
 
     /**

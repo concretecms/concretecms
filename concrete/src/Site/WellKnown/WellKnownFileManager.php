@@ -48,12 +48,9 @@ class WellKnownFileManager
         // "Multisite enabled" alone is not the right threshold: a system with the
         // multisite feature on but only one site configured should behave exactly
         // like a single-site install — files land in the webroot and no web-server
-        // reconfiguration is needed. The dashboard controller uses the same "> 1"
-        // threshold to decide whether to show the nginx/Apache routing snippet, so
-        // the two signals stay in sync. The controller counts only admin-visible sites
-        // (canAdminSite filter) whereas this counts all sites system-wide, which is
-        // intentional: file routing is an infrastructure decision that must reflect
-        // the actual system topology, not what a particular admin can see.
+        // reconfiguration is needed. Every site is counted, not just those visible to
+        // the current user: file routing is an infrastructure decision that must
+        // reflect the actual system topology, not what a particular admin can see.
         $count = 0;
         foreach ($siteService->getList() as $site) {
             if ($site->getSiteCanonicalURL() !== '') {
@@ -61,6 +58,19 @@ class WellKnownFileManager
             }
         }
         $this->isMultisite = $count > 1;
+    }
+
+    /**
+     * Whether well-known files are stored per-host rather than in the webroot.
+     *
+     * True when two or more sites have canonical URLs, in which case the web server
+     * must route requests to the per-host directory. The dashboard uses this to decide
+     * whether to show the nginx/Apache routing snippet, so what is displayed always
+     * matches where files are actually written.
+     */
+    public function isMultisite(): bool
+    {
+        return $this->isMultisite;
     }
 
     /**
