@@ -2,11 +2,15 @@
 
 namespace Concrete\Block\CoreContainer;
 
+use Concrete\Core\Api\ApiResourceValueInterface;
+use Concrete\Core\Api\ApiValueSchemaInterface;
+use Concrete\Core\Area\Area;
 use Concrete\Core\Area\ContainerArea;
 use Concrete\Core\Block\Block;
 use Concrete\Core\Block\BlockController;
 use Concrete\Core\Block\BlockType\BlockType;
 use Concrete\Core\Block\Traits\HasSubBlocksTrait;
+use Concrete\Core\Block\Traits\CustomApiValueTrait;
 use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Entity\Page\Container;
 use Concrete\Core\Feature\UsesFeatureInterface;
@@ -18,8 +22,9 @@ use Concrete\Core\StyleCustomizer\Inline\StyleSet;
 use Doctrine\ORM\EntityManager;
 use Illuminate\Contracts\Container\BindingResolutionException;
 
-class Controller extends BlockController implements UsesFeatureInterface
+class Controller extends BlockController implements ApiResourceValueInterface, ApiValueSchemaInterface, UsesFeatureInterface
 {
+    use CustomApiValueTrait;
     use HasSubBlocksTrait;
 
     /**
@@ -110,7 +115,7 @@ class Controller extends BlockController implements UsesFeatureInterface
     public function save($data)
     {
         $entityManager = $this->app->make(EntityManager::class);
-        $container = $entityManager->find(Container::class, $data['containerID']);
+        $container = empty($data['containerID']) ? null : $entityManager->find(Container::class, $data['containerID']);
         if ($container) {
             $instance = new Container\Instance();
             $instance->setContainer($container);
@@ -120,6 +125,93 @@ class Controller extends BlockController implements UsesFeatureInterface
             $this->containerInstanceID = $data['containerInstanceID'];
         }
         parent::save($data);
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Api\ApiValueSchemaInterface::getApiValueSchema()
+     */
+    public function getApiValueSchema(): array
+    {
+        return [
+            'type' => 'object',
+            'description' => 'The container of the theme displayed by this block. The blocks placed in its areas are not part of this value.',
+            'properties' => [
+                'container' => [
+                    'type' => 'string',
+                    'description' => 'The handle of the container of the theme. Changing it empties the block, since the areas of a container belong to the container itself.',
+                ],
+                'areas' => [
+                    'type' => 'array',
+                    'readOnly' => true,
+                    'description' => 'The areas of the container, which are the ones its template creates: they are listed only once the page has been displayed at least once.',
+                    'items' => [
+                        'type' => 'object',
+                        'properties' => [
+                            'name' => [
+                                'type' => 'string',
+                                'description' => 'The name the template of the container gives to the area.',
+                            ],
+                            'area' => [
+                                'type' => 'string',
+                                'description' => 'The handle of the area: the blocks displayed in it live there, and can be worked with through the areas endpoints.',
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ];
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Block\BlockController::getImportDataFromApiValue()
+     */
+    public function getImportDataFromApiValue($page, array $value): array
+    {
+        $currentValue = $this->bID ? $this->serializeValueForApi() : [];
+        $handle = isset($value['container']) ? (string) $value['container'] : ($currentValue['container'] ?? '');
+        if ($handle !== '' && $handle === ($currentValue['container'] ?? null)) {
+            // the very same container: let's keep the instance, and so the blocks placed in its areas
+            return [];
+        }
+        // the getImportData() method below reads the handle of the container out of the XML of a CIF file
+        $blockNode = new \SimpleXMLElement('<block></block>');
+        $blockNode->addChild('container')->addAttribute('handle', $handle);
+
+        return $this->getImportData($blockNode, $page);
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Block\Traits\CustomApiValueTrait::serializeValueForApi()
+     */
+    protected function serializeValueForApi(): array
+    {
+        $instance = $this->getContainerInstanceObject();
+        $container = $instance === null ? null : $instance->getContainer();
+        if ($container === null) {
+            return [];
+        }
+        $result = [
+            'container' => (string) $container->getContainerHandle(),
+            'areas' => [],
+        ];
+        // the areas of a container are created by its template: they are there only once it's been rendered
+        foreach ($instance->getInstanceAreas() as $instanceArea) {
+            $areaHandle = Area::getAreaHandleFromID($instanceArea->getAreaID());
+            if ($areaHandle) {
+                $result['areas'][] = [
+                    'name' => (string) $instanceArea->getContainerAreaName(),
+                    'area' => (string) $areaHandle,
+                ];
+            }
+        }
+
+        return $result;
     }
 
     /**
