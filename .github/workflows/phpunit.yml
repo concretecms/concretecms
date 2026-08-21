@@ -52,7 +52,7 @@ jobs:
           - php-version: 8.2
             operating-system: "ubuntu-latest"
             dependencies: "locked"
-            code-coverage: "1"
+            # code-coverage: "1"
           - php-version: 8.5
             operating-system: "ubuntu-latest"
             dependencies: "highest"
