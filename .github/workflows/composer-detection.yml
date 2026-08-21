@@ -39,13 +39,13 @@ jobs:
         run: echo "dir=$(composer config --global --no-interaction cache-files-dir)" >>$GITHUB_OUTPUT
       -
         name: Cache dependencies
-        uses: actions/cache@v5
+        uses: actions/cache@v6
         with:
           path: ${{ steps.composer-cache-dir.outputs.dir }}
           key: composer${{ matrix.composer-version }}-php${{ matrix.php-version }}
       -
         name: Checkout repo
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           path: repo
       -
@@ -83,7 +83,7 @@ jobs:
           ./repo/concrete/bin/concrete c5:exec --ansi --no-interaction test.php
       -
         name: Create composer-based installation
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           repository: mlocati/concretecms-skeleton
           ref: main

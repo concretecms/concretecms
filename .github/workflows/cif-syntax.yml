@@ -13,7 +13,7 @@ jobs:
     steps:
       -
         name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
       -
         name: Download concrete-cif
         run: curl -Lf -o /tmp/concrete-cif.jar https://github.com/concretecms/concrete-cif/releases/latest/download/concrete-cif.jar

@@ -58,7 +58,7 @@ jobs:
         run: printf 'CODE_COVERAGE=pcov\n' >> "$GITHUB_ENV"
 
       - name: "Checkout"
-        uses: "actions/checkout@v2"
+        uses: actions/checkout@v7
         with:
           fetch-depth: 2
 
