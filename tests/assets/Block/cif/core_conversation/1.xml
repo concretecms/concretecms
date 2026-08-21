@@ -16,7 +16,7 @@
       <fileExtensions>jpg,gif,jpeg,png,doc,docx,zip</fileExtensions>
       <itemsPerPage>50</itemsPerPage>
       <maxFileSizeGuest>1</maxFileSizeGuest>
-      <maxFileSizeRegistered>10</maxFileSizeRegistered>
+      <maxFileSizeRegistered>20</maxFileSizeRegistered>
       <maxFilesGuest>3</maxFilesGuest>
       <maxFilesRegistered>10</maxFilesRegistered>
       <notificationOverridesEnabled>1</notificationOverridesEnabled>

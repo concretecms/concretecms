@@ -383,7 +383,7 @@ class Controller extends BlockController implements UsesFeatureInterface
             $conversation->setConversationMaxFileSizeGuest((int) ($values['maxFileSizeGuest']));
         }
         if ($values['maxFileSizeRegistered']) {
-            $conversation->setConversationMaxFilesRegistered((int) ($values['maxFileSizeRegistered']));
+            $conversation->setConversationMaxFileSizeRegistered((int) ($values['maxFileSizeRegistered']));
         }
         if (!$values['enableOrdering']) {
             $values['enableOrdering'] = 0;
@@ -446,7 +446,7 @@ class Controller extends BlockController implements UsesFeatureInterface
             $recordNode->addChild('maxFilesGuest', (string) $conversation->getConversationMaxFilesGuest());
             $recordNode->addChild('maxFilesRegistered', (string) $conversation->getConversationMaxFilesRegistered());
             $recordNode->addChild('maxFileSizeGuest', (string) $conversation->getConversationMaxFileSizeGuest());
-            $recordNode->addChild('maxFileSizeRegistered', (string) $conversation->getConversationMaxFilesRegistered());
+            $recordNode->addChild('maxFileSizeRegistered', (string) $conversation->getConversationMaxFileSizeRegistered());
             $recordNode->addChild('notificationOverridesEnabled', $conversation->getConversationNotificationOverridesEnabled() ? '1' : '0');
             if ($conversation->getConversationNotificationOverridesEnabled()) {
                 foreach ($conversation->getConversationSubscribedUsers() as $ui) {
