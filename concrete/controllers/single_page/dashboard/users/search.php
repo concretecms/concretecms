@@ -632,6 +632,7 @@ class Search extends DashboardPageController
                         UserExporter::class,
                         [
                             'writer' => $this->app->make(WriterFactory::class)->createFromPath('php://output', 'w'),
+                            'columns' => $result->getListColumns(),
                         ]
                     );
                     echo $bom;
