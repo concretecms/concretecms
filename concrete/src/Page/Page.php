@@ -620,8 +620,12 @@ class Page extends Collection implements CategoryMemberInterface,
     public function forceCheckIn()
     {
         $db = Database::connection();
-        $q = 'update Pages set cIsCheckedOut = 0, cCheckedOutUID = null, cCheckedOutDatetime = null, cCheckedOutDatetimeLastEdit = null where cID = ?';
-        $db->executeQuery($q, [$this->cID]);
+        $db->update('Pages', [
+            'cIsCheckedOut' => 0,
+            'cCheckedOutUID' => null,
+            'cCheckedOutDatetime' => null,
+            'cCheckedOutDatetimeLastEdit' => null,
+        ], ['cID' => $this->cID]);
     }
 
     /**
@@ -632,8 +636,7 @@ class Page extends Collection implements CategoryMemberInterface,
     public static function forceCheckInForAllPages()
     {
         $db = Database::connection();
-        $q = 'update Pages set cIsCheckedOut = 0, cCheckedOutUID = null, cCheckedOutDatetime = null, cCheckedOutDatetimeLastEdit = null';
-        $db->executeQuery($q);
+        $db->executeStatement('update Pages set cIsCheckedOut = 0, cCheckedOutUID = null, cCheckedOutDatetime = null, cCheckedOutDatetimeLastEdit = null');
     }
 
     /**
@@ -734,10 +737,16 @@ class Page extends Collection implements CategoryMemberInterface,
         $db = Database::connection();
 
         // Remove the moved block from its old area, and all blocks from the destination area.
-        $db->executeQuery('UPDATE CollectionVersionBlockStyles SET arHandle = ?  WHERE cID = ? and cvID = ? and bID = ?',
-                     [$area_handle, $this->getCollectionID(), $this->getVersionID(), $moved_block_id]);
-        $db->executeQuery('UPDATE CollectionVersionBlocks SET arHandle = ?  WHERE cID = ? and cvID = ? and bID = ?',
-                     [$area_handle, $this->getCollectionID(), $this->getVersionID(), $moved_block_id]);
+        $db->update('CollectionVersionBlockStyles', ['arHandle' => $area_handle], [
+            'cID' => $this->getCollectionID(),
+            'cvID' => $this->getVersionID(),
+            'bID' => $moved_block_id,
+        ]);
+        $db->update('CollectionVersionBlocks', ['arHandle' => $area_handle], [
+            'cID' => $this->getCollectionID(),
+            'cvID' => $this->getVersionID(),
+            'bID' => $moved_block_id,
+        ]);
 
         $update_query = 'UPDATE CollectionVersionBlocks SET cbDisplayOrder = CASE bID';
         $when_statements = [];
@@ -753,7 +762,7 @@ class Page extends Collection implements CategoryMemberInterface,
         $values = array_merge($update_values, $block_order);
         $values = array_merge($values, [$this->getCollectionID(), $this->getVersionID()]);
 
-        $db->executeQuery($update_query, $values);
+        $db->executeStatement($update_query, $values);
     }
 
     /**
@@ -1195,8 +1204,11 @@ class Page extends Collection implements CategoryMemberInterface,
             }
             $cLink = app('helper/security')->sanitizeURL($cLink);
             $cName = app('helper/text')->sanitize($cName);
-            $db->executeQuery('update CollectionVersions set cvName = ? where cID = ?', [$cName, $this->cID]);
-            $db->executeQuery('update Pages set cPointerExternalLink = ?, cPointerExternalLinkNewWindow = ? where cID = ?', [$cLink, $newWindow, $this->cID]);
+            $db->update('CollectionVersions', ['cvName' => $cName], ['cID' => $this->cID]);
+            $db->update('Pages', [
+                'cPointerExternalLink' => $cLink,
+                'cPointerExternalLinkNewWindow' => $newWindow,
+            ], ['cID' => $this->cID]);
         }
     }
 
@@ -1337,18 +1349,11 @@ class Page extends Collection implements CategoryMemberInterface,
 
             PageStatistics::decrementParents($this->getCollectionPointerOriginalID());
 
-            $args = [$this->getCollectionPointerOriginalID()];
-            $q = 'delete from Pages where cID = ?';
-            $db->executeQuery($q, $args);
-
-            $q = 'delete from Collections where cID = ?';
-            $db->executeQuery($q, $args);
-
-            $q = 'delete from CollectionVersions where cID = ?';
-            $db->executeQuery($q, $args);
-
-            $q = 'delete from PagePaths where cID = ?';
-            $db->executeQuery($q, $args);
+            $args = ['cID' => $this->getCollectionPointerOriginalID()];
+            $db->delete('Pages', $args);
+            $db->delete('Collections', $args);
+            $db->delete('CollectionVersions', $args);
+            $db->delete('PagePaths', $args);
 
             return $cIDRedir;
         }
@@ -2125,7 +2130,10 @@ class Page extends Collection implements CategoryMemberInterface,
     public function setTheme($pl)
     {
         $db = Database::connection();
-        $db->executeQuery('update CollectionVersions set pThemeID = ? where cID = ? and cvID = ?', [$pl ? $pl->getThemeID() : 0, $this->cID, $this->vObj->getVersionID()]);
+        $db->update('CollectionVersions', ['pThemeID' => $pl ? $pl->getThemeID() : 0], [
+            'cID' => $this->cID,
+            'cvID' => $this->vObj->getVersionID(),
+        ]);
         $this->themeObject = $pl;
     }
 
@@ -2137,7 +2145,10 @@ class Page extends Collection implements CategoryMemberInterface,
     public function setThemeSkin(SkinInterface $skin)
     {
         $db = Database::connection();
-        $db->executeQuery('update CollectionVersions set pThemeSkinIdentifier = ? where cID = ? and cvID = ?', [$skin->getIdentifier(), $this->cID, $this->vObj->getVersionID()]);
+        $db->update('CollectionVersions', ['pThemeSkinIdentifier' => $skin->getIdentifier()], [
+            'cID' => $this->cID,
+            'cvID' => $this->vObj->getVersionID(),
+        ]);
     }
 
     /**
@@ -2152,7 +2163,7 @@ class Page extends Collection implements CategoryMemberInterface,
             $ptID = $type->getPageTypeID();
         }
         $db = Database::connection();
-        $db->executeQuery('update Pages set ptID = ? where cID = ?', [$ptID, $this->cID]);
+        $db->update('Pages', ['ptID' => $ptID], ['cID' => $this->cID]);
         $this->ptID = $ptID;
     }
 
@@ -2163,7 +2174,7 @@ class Page extends Collection implements CategoryMemberInterface,
     {
         $db = Database::connection();
         if ($this->cID) {
-            $db->executeQuery('update Pages set cOverrideTemplatePermissions = 0 where cID = ?', [$this->cID]);
+            $db->update('Pages', ['cOverrideTemplatePermissions' => 0], ['cID' => $this->cID]);
         }
     }
 
@@ -2174,7 +2185,7 @@ class Page extends Collection implements CategoryMemberInterface,
     {
         $db = Database::connection();
         if ($this->cID) {
-            $db->executeQuery('update Pages set cOverrideTemplatePermissions = 1 where cID = ?', [$this->cID]);
+            $db->update('Pages', ['cOverrideTemplatePermissions' => 1], ['cID' => $this->cID]);
         }
     }
 
@@ -2407,7 +2418,13 @@ EOT
             $app = Application::getFacadeApplication();
             $cHandle = $app->make(HandleGenerator::class)->generate($this, ['cName' => $name]);
 
-            $db->executeQuery('update CollectionVersions set cvName = ?, cvHandle = ? where cID = ? and cvID = ?', [$name, $cHandle, $this->getCollectionID(), $cvID]);
+            $db->update('CollectionVersions', [
+                'cvName' => $name,
+                'cvHandle' => $cHandle,
+            ], [
+                'cID' => $this->getCollectionID(),
+                'cvID' => $cvID,
+            ]);
 
             $cache = PageCache::getLibrary();
             $cache->purge($this);
@@ -2558,10 +2575,15 @@ EOT
                 $cFilename = $data['cFilename'];
             }
             // we only update a subset
-            $v = [$cName, $cHandle, $cDescription, $cDatePublic, $cvID, $this->cID];
-            $q = 'update CollectionVersions set cvName = ?, cvHandle = ?, cvDescription = ?, cvDatePublic = ? where cvID = ? and cID = ?';
-            $r = $db->prepare($q);
-            $r->execute($v);
+            $db->update('CollectionVersions', [
+                'cvName' => $cName,
+                'cvHandle' => $cHandle,
+                'cvDescription' => $cDescription,
+                'cvDatePublic' => $cDatePublic,
+            ], [
+                'cvID' => $cvID,
+                'cID' => $this->cID,
+            ]);
         } else {
             if ($existingPageTemplateID && $pTemplateID && ($existingPageTemplateID != $pTemplateID) && $this->getPageTypeID() > 0 && $this->isPageDraft()) {
                 // we are changing a page template in this operation.
@@ -2584,7 +2606,10 @@ EOT
                     }
 
                     // now, we default all blocks on the current version of the page.
-                    $db->executeQuery('delete from CollectionVersionBlocks where cID = ? and cvID = ?', [$this->getCollectionID(), $cvID]);
+                    $db->delete('CollectionVersionBlocks', [
+                        'cID' => $this->getCollectionID(),
+                        'cvID' => $cvID,
+                    ]);
 
                     // now, we go back and we alias blocks from the new master collection onto the page.
                     foreach ($newMCBlocks as $b) {
@@ -2604,8 +2629,16 @@ EOT
                     foreach ($currentPageBlocks as $b) {
                         if (!in_array($b->getBlockID(), $oldMCBlockIDs)) {
                             $newBlockDisplayOrder = $this->getCollectionAreaDisplayOrder($b->getAreaHandle());
-                            $db->executeQuery('insert into CollectionVersionBlocks (cID, cvID, bID, arHandle, cbRelationID, cbDisplayOrder, isOriginal, cbOverrideAreaPermissions, cbIncludeAll) values (?, ?, ?, ?, ?, ?, ?, ?, ?)', [
-                                $this->getCollectionID(), $cvID, $b->getBlockID(), $b->getAreaHandle(), $b->getBlockRelationID(), $newBlockDisplayOrder, (int) ($b->isOriginal()), $b->overrideAreaPermissions(), $b->disableBlockVersioning(),
+                            $db->insert('CollectionVersionBlocks', [
+                                'cID' => $this->getCollectionID(),
+                                'cvID' => $cvID,
+                                'bID' => $b->getBlockID(),
+                                'arHandle' => $b->getAreaHandle(),
+                                'cbRelationID' => $b->getBlockRelationID(),
+                                'cbDisplayOrder' => $newBlockDisplayOrder,
+                                'isOriginal' => (int) ($b->isOriginal()),
+                                'cbOverrideAreaPermissions' => $b->overrideAreaPermissions(),
+                                'cbIncludeAll' => $b->disableBlockVersioning(),
                             ]);
                         }
                     }
@@ -2618,13 +2651,27 @@ EOT
                 }
             }
 
-            $v = [$cName, $cHandle, $pTemplateID, $cDescription, $cDatePublic, $cvID, $this->cID];
-            $q = 'update CollectionVersions set cvName = ?, cvHandle = ?, pTemplateID = ?, cvDescription = ?, cvDatePublic = ? where cvID = ? and cID = ?';
-            $r = $db->prepare($q);
-            $r->execute($v);
+            $db->update('CollectionVersions', [
+                'cvName' => $cName,
+                'cvHandle' => $cHandle,
+                'pTemplateID' => $pTemplateID,
+                'cvDescription' => $cDescription,
+                'cvDatePublic' => $cDatePublic,
+            ], [
+                'cvID' => $cvID,
+                'cID' => $this->cID,
+            ]);
         }
 
-        $db->executeQuery('update Pages set ptID = ?, uID = ?, pkgID = ?, cFilename = ?, cCacheFullPageContent = ?, cCacheFullPageContentLifetimeCustom = ?, cCacheFullPageContentOverrideLifetime = ? where cID = ?', [$ptID, $uID, $pkgID, $cFilename, $cCacheFullPageContent, $cCacheFullPageContentLifetimeCustom, $cCacheFullPageContentOverrideLifetime, $this->cID]);
+        $db->update('Pages', [
+            'ptID' => $ptID,
+            'uID' => $uID,
+            'pkgID' => $pkgID,
+            'cFilename' => $cFilename,
+            'cCacheFullPageContent' => $cCacheFullPageContent,
+            'cCacheFullPageContentLifetimeCustom' => $cCacheFullPageContentLifetimeCustom,
+            'cCacheFullPageContentOverrideLifetime' => $cCacheFullPageContentOverrideLifetime,
+        ], ['cID' => $this->cID]);
 
         $cache = PageCache::getLibrary();
         $cache->purge($this);
@@ -2647,7 +2694,7 @@ EOT
     public function clearPagePermissions()
     {
         $db = Database::connection();
-        $db->executeQuery('delete from PagePermissionAssignments where cID = ?', [$this->cID]);
+        $db->delete('PagePermissionAssignments', ['cID' => $this->cID]);
         $this->permissionAssignments = [];
     }
 
@@ -2659,9 +2706,10 @@ EOT
         $db = Database::connection();
         $cpID = $this->getParentPermissionsCollectionID();
         $this->updatePermissionsCollectionID($this->cID, $cpID);
-        $v = ['PARENT', (int) $cpID, $this->cID];
-        $q = 'update Pages set cInheritPermissionsFrom = ?, cInheritPermissionsFromCID = ? where cID = ?';
-        $db->executeQuery($q, $v);
+        $db->update('Pages', [
+            'cInheritPermissionsFrom' => 'PARENT',
+            'cInheritPermissionsFromCID' => (int) $cpID,
+        ], ['cID' => $this->cID]);
         $this->cInheritPermissionsFrom = 'PARENT';
         $this->cInheritPermissionsFromCID = $cpID;
         $this->clearPagePermissions();
@@ -2680,9 +2728,10 @@ EOT
             if (is_object($master)) {
                 $cpID = $master->getCollectionID();
                 $this->updatePermissionsCollectionID($this->cID, $cpID);
-                $v = ['TEMPLATE', (int) $cpID, $this->cID];
-                $q = 'update Pages set cInheritPermissionsFrom = ?, cInheritPermissionsFromCID = ? where cID = ?';
-                $db->executeQuery($q, $v);
+                $db->update('Pages', [
+                    'cInheritPermissionsFrom' => 'TEMPLATE',
+                    'cInheritPermissionsFromCID' => (int) $cpID,
+                ], ['cID' => $this->cID]);
                 $this->cInheritPermissionsFrom = 'TEMPLATE';
                 $this->cInheritPermissionsFromCID = $cpID;
                 $this->clearPagePermissions();
@@ -2703,9 +2752,10 @@ EOT
 
             $cpID = $this->cID;
             $this->updatePermissionsCollectionID($this->cID, $cpID);
-            $v = ['OVERRIDE', (int) $cpID, $this->cID];
-            $q = 'update Pages set cInheritPermissionsFrom = ?, cInheritPermissionsFromCID = ? where cID = ?';
-            $db->executeQuery($q, $v);
+            $db->update('Pages', [
+                'cInheritPermissionsFrom' => 'OVERRIDE',
+                'cInheritPermissionsFromCID' => (int) $cpID,
+            ], ['cID' => $this->cID]);
             $this->cInheritPermissionsFrom = 'OVERRIDE';
             $this->cInheritPermissionsFromCID = $cpID;
             $this->rescanAreaPermissions();
@@ -2733,9 +2783,7 @@ EOT
     public function setOverrideTemplatePermissions($cOverrideTemplatePermissions)
     {
         $db = Database::connection();
-        $v = [$cOverrideTemplatePermissions, $this->cID];
-        $q = 'update Pages set cOverrideTemplatePermissions = ? where cID = ?';
-        $db->executeQuery($q, $v);
+        $db->update('Pages', ['cOverrideTemplatePermissions' => $cOverrideTemplatePermissions], ['cID' => $this->cID]);
         $this->cOverrideTemplatePermissions = $cOverrideTemplatePermissions;
     }
 
@@ -2760,7 +2808,7 @@ EOT
         if (count($cList) > 0) {
             $cParentIDString = implode(',', $cList);
             $q2 = "update Pages set cInheritPermissionsFromCID = {$npID} where cID in ({$cParentIDString})";
-            $db->query($q2);
+            $db->executeStatement($q2);
             $this->updatePermissionsCollectionID($cParentIDString, $npID);
         }
     }
@@ -2772,19 +2820,20 @@ EOT
      */
     public function acquireAreaPermissions($permissionsCollectionID)
     {
-        $v = [$this->cID];
         $db = Database::connection();
-        $q = 'delete from AreaPermissionAssignments where cID = ?';
-        $db->executeQuery($q, $v);
+        $db->delete('AreaPermissionAssignments', ['cID' => $this->cID]);
 
         // ack - we need to copy area permissions from that page as well
         $v = [$permissionsCollectionID];
         $q = 'select cID, arHandle, paID, pkID from AreaPermissionAssignments where cID = ?';
         $r = $db->executeQuery($q, $v);
         while ($row = $r->fetch()) {
-            $v = [$this->cID, $row['arHandle'], $row['paID'], $row['pkID']];
-            $q = 'insert into AreaPermissionAssignments (cID, arHandle, paID, pkID) values (?, ?, ?, ?)';
-            $db->executeQuery($q, $v);
+            $db->insert('AreaPermissionAssignments', [
+                'cID' => $this->cID,
+                'arHandle' => $row['arHandle'],
+                'paID' => $row['paID'],
+                'pkID' => $row['pkID'],
+            ]);
         }
 
         // any areas that were overriding permissions on the current page need to be overriding permissions
@@ -2793,9 +2842,13 @@ EOT
         $q = 'select * from Areas where cID = ? and arOverrideCollectionPermissions';
         $r = $db->executeQuery($q, $v);
         while ($row = $r->fetch()) {
-            $v = [$this->cID, $row['arHandle'], $row['arOverrideCollectionPermissions'], $row['arInheritPermissionsFromAreaOnCID'], $row['arIsGlobal']];
-            $q = 'insert into Areas (cID, arHandle, arOverrideCollectionPermissions, arInheritPermissionsFromAreaOnCID, arIsGlobal) values (?, ?, ?, ?, ?)';
-            $db->executeQuery($q, $v);
+            $db->insert('Areas', [
+                'cID' => $this->cID,
+                'arHandle' => $row['arHandle'],
+                'arOverrideCollectionPermissions' => $row['arOverrideCollectionPermissions'],
+                'arInheritPermissionsFromAreaOnCID' => $row['arInheritPermissionsFromAreaOnCID'],
+                'arIsGlobal' => $row['arIsGlobal'],
+            ]);
         }
     }
 
@@ -2806,18 +2859,18 @@ EOT
      */
     public function acquirePagePermissions($permissionsCollectionID)
     {
-        $v = [$this->cID];
         $db = Database::connection();
-        $q = 'delete from PagePermissionAssignments where cID = ?';
-        $db->executeQuery($q, $v);
+        $db->delete('PagePermissionAssignments', ['cID' => $this->cID]);
 
         $v = [$permissionsCollectionID];
         $q = 'select cID, paID, pkID from PagePermissionAssignments where cID = ?';
         $r = $db->executeQuery($q, $v);
         while ($row = $r->fetch()) {
-            $v = [$this->cID, $row['paID'], $row['pkID']];
-            $q = 'insert into PagePermissionAssignments (cID, paID, pkID) values (?, ?, ?)';
-            $db->executeQuery($q, $v);
+            $db->insert('PagePermissionAssignments', [
+                'cID' => $this->cID,
+                'paID' => $row['paID'],
+                'pkID' => $row['pkID'],
+            ]);
         }
     }
 
@@ -2840,7 +2893,7 @@ EOT
         if (count($cList) > 0) {
             $cParentIDString = implode(',', $cList);
             $q2 = "update Pages set cInheritPermissionsFromCID = {$this->cID} where cID in ({$cParentIDString})";
-            $db->query($q2);
+            $db->executeStatement($q2);
             $this->updateGroupsSubCollection($cParentIDString);
         }
     }
@@ -2946,19 +2999,15 @@ EOT
                 //we have to update the existing collection with the info for the new
                 //as well as all collections beneath it that are set to inherit from this parent
                 // first we do this one
-                $q = 'update Pages set cInheritPermissionsFromCID = ? where cID = ?';
-                $r = $db->executeQuery($q, [(int) $npID, $cID]);
+                $db->update('Pages', ['cInheritPermissionsFromCID' => (int) $npID], ['cID' => $cID]);
                 $this->updatePermissionsCollectionID($cID, $npID);
             }
         }
 
         $oldParent = self::getByID($this->getCollectionParentID(), 'RECENT');
 
-        $db->executeQuery('update Collections set cDateModified = ? where cID = ?', [$cDateModified, $cID]);
-        $v = [$newCParentID, $cID];
-        $q = 'update Pages set cParentID = ? where cID = ?';
-        $r = $db->prepare($q);
-        $r->execute($v);
+        $db->update('Collections', ['cDateModified' => $cDateModified], ['cID' => $cID]);
+        $db->update('Pages', ['cParentID' => $newCParentID], ['cID' => $cID]);
 
         PageStatistics::incrementParents($cID);
         if (!$this->isActive()) {
@@ -2967,18 +3016,18 @@ EOT
             if ($this->isInTrash()) {
                 $childPages = $this->populateRecursivePages([], ['cID' => $cID], $this->getCollectionParentID(), 0, false);
                 foreach ($childPages as $page) {
-                    $db->executeQuery('update Pages set cIsActive = 1 where cID = ?', [$page['cID']]);
+                    $db->update('Pages', ['cIsActive' => 1], ['cID' => $page['cID']]);
                 }
             }
         }
 
         if ($nc->getSiteTreeID() != $this->getSiteTreeID()) {
-            $db->executeQuery('update Pages set siteTreeID = ? where cID = ?', [$nc->getSiteTreeID(), $cID]);
+            $db->update('Pages', ['siteTreeID' => $nc->getSiteTreeID()], ['cID' => $cID]);
             if (!isset($childPages)) {
                 $childPages = $this->populateRecursivePages([], ['cID' => $cID], $this->getCollectionParentID(), 0, false);
             }
             foreach ($childPages as $page) {
-                $db->executeQuery('update Pages set siteTreeID = ? where cID = ?', [$nc->getSiteTreeID(), $page['cID']]);
+                $db->update('Pages', ['siteTreeID' => $nc->getSiteTreeID()], ['cID' => $page['cID']]);
             }
         }
 
@@ -3087,32 +3136,31 @@ EOT
         $cID = $this->getCollectionID();
 
         // Now that all versions are gone, we can delete the collection information
-        $q = "delete from PagePaths where cID = '{$cID}'";
-        $r = $db->query($q);
+        $db->delete('PagePaths', ['cID' => $cID]);
 
         // remove all pages where the pointer is this cID
         $r = $db->executeQuery('select cID from Pages where cPointerID = ?', [$cID]);
         while ($row = $r->fetch()) {
             PageStatistics::decrementParents($row['cID']);
-            $db->executeQuery('DELETE FROM PagePaths WHERE cID=?', [$row['cID']]);
+            $db->delete('PagePaths', ['cID' => $row['cID']]);
         }
 
         // Update cChildren for cParentID
         PageStatistics::decrementParents($cID);
 
-        $db->executeQuery('delete from PagePermissionAssignments where cID = ?', [$cID]);
+        $db->delete('PagePermissionAssignments', ['cID' => $cID]);
 
-        $db->executeQuery('delete from Pages where cID = ?', [$cID]);
+        $db->delete('Pages', ['cID' => $cID]);
 
-        $db->executeQuery('delete from MultilingualPageRelations where cID = ?', [$cID]);
+        $db->delete('MultilingualPageRelations', ['cID' => $cID]);
 
-        $db->executeQuery('delete from SiblingPageRelations where cID = ?', [$cID]);
+        $db->delete('SiblingPageRelations', ['cID' => $cID]);
 
-        $db->executeQuery('delete from Pages where cPointerID = ?', [$cID]);
+        $db->delete('Pages', ['cPointerID' => $cID]);
 
-        $db->executeQuery('delete from Areas WHERE cID = ?', [$cID]);
+        $db->delete('Areas', ['cID' => $cID]);
 
-        $db->executeQuery('delete from PageSearchIndex where cID = ?', [$cID]);
+        $db->delete('PageSearchIndex', ['cID' => $cID]);
 
         $r = $db->executeQuery('select cID from Pages where cParentID = ?', [$cID]);
         if ($r) {
@@ -3171,7 +3219,7 @@ EOT
         $pages = $this->populateRecursivePages($pages, ['cID' => $cID], $this->getCollectionParentID(), 0, false);
         $db = Database::connection();
         foreach ($pages as $page) {
-            $db->executeQuery('update Pages set cIsActive = 0 where cID = ?', [$page['cID']]);
+            $db->update('Pages', ['cIsActive' => 0], ['cID' => $page['cID']]);
             $indexer->forget(Page::class, $page['cID']);
         }
     }
@@ -3189,8 +3237,7 @@ EOT
         $children_array = $db->getCol($q, [$this->getCollectionID()]);
         $current_count = 0;
         foreach ($children_array as $newcID) {
-            $q = 'update Pages set cDisplayOrder = ? where cID = ?';
-            $db->executeQuery($q, [$current_count, $newcID]);
+            $db->update('Pages', ['cDisplayOrder' => $current_count], ['cID' => $newcID]);
             ++$current_count;
         }
     }
@@ -3401,7 +3448,7 @@ EOT
         }
 
         // Store the new display order.
-        $db->executeQuery('update Pages set cDisplayOrder = ? where cID = ?', [$displayOrder, $cID]);
+        $db->update('Pages', ['cDisplayOrder' => $displayOrder], ['cID' => $cID]);
 
         // Because the display order of another page can be changed,
         // the page object is retrieved first in order to pass it to the event.
@@ -3517,10 +3564,10 @@ EOT
         }
 
         if ($systemPage) {
-            $db->executeQuery('update Pages set cIsSystemPage = 1 where cID = ?', [$cID]);
+            $db->update('Pages', ['cIsSystemPage' => 1], ['cID' => $cID]);
             $this->cIsSystemPage = true;
         } else {
-            $db->executeQuery('update Pages set cIsSystemPage = 0 where cID = ?', [$cID]);
+            $db->update('Pages', ['cIsSystemPage' => 0], ['cID' => $cID]);
             $this->cIsSystemPage = false;
         }
     }
@@ -3541,7 +3588,7 @@ EOT
     public function moveToRoot()
     {
         $db = Database::connection();
-        $db->executeQuery('update Pages set cParentID = 0 where cID = ?', [$this->getCollectionID()]);
+        $db->update('Pages', ['cParentID' => 0], ['cID' => $this->getCollectionID()]);
         $this->cParentID = 0;
         $this->rescanSystemPageStatus();
     }
@@ -3552,7 +3599,7 @@ EOT
     public function deactivate()
     {
         $db = Database::connection();
-        $db->executeQuery('update Pages set cIsActive = 0 where cID = ?', [$this->getCollectionID()]);
+        $db->update('Pages', ['cIsActive' => 0], ['cID' => $this->getCollectionID()]);
     }
 
     /**
@@ -3561,7 +3608,7 @@ EOT
     public function setPageToDraft()
     {
         $db = Database::connection();
-        $db->executeQuery('update Pages set cIsDraft = 1 where cID = ?', [$this->getCollectionID()]);
+        $db->update('Pages', ['cIsDraft' => 1], ['cID' => $this->getCollectionID()]);
         $this->cIsDraft = true;
     }
 
@@ -3571,7 +3618,7 @@ EOT
     public function activate()
     {
         $db = Database::connection();
-        $db->executeQuery('update Pages set cIsActive = 1 where cID = ?', [$this->getCollectionID()]);
+        $db->update('Pages', ['cIsActive' => 1], ['cID' => $this->getCollectionID()]);
     }
 
     /**
@@ -3648,10 +3695,16 @@ EOT
         }
         $siteTreeID = $siteTree->getSiteTreeID();
 
-        $v = [$cID, $siteTreeID, $cParentID, $uID, 'OVERRIDE', 1, (int) $cID, 0];
-        $q = 'insert into Pages (cID, siteTreeID, cParentID, uID, cInheritPermissionsFrom, cOverrideTemplatePermissions, cInheritPermissionsFromCID, cDisplayOrder) values (?, ?, ?, ?, ?, ?, ?, ?)';
-        $r = $db->prepare($q);
-        $r->execute($v);
+        $db->insert('Pages', [
+            'cID' => $cID,
+            'siteTreeID' => $siteTreeID,
+            'cParentID' => $cParentID,
+            'uID' => $uID,
+            'cInheritPermissionsFrom' => 'OVERRIDE',
+            'cOverrideTemplatePermissions' => 1,
+            'cInheritPermissionsFromCID' => (int) $cID,
+            'cDisplayOrder' => 0,
+        ]);
         if (!$siteTree->getSiteHomePageID()) {
             $siteTree->setSiteHomePageID($cID);
             $em = $app->make(EntityManagerInterface::class);
@@ -3793,10 +3846,20 @@ EOT
 
         $cInheritPermissionsFromCID = ($this->overrideTemplatePermissions()) ? $this->getPermissionsCollectionID() : $masterCID;
         $cInheritPermissionsFrom = ($this->overrideTemplatePermissions()) ? 'PARENT' : 'TEMPLATE';
-        $v = [$cID, $siteTreeID, $ptID, $cParentID, $uID, $cInheritPermissionsFrom, $this->overrideTemplatePermissions(), (int) $cInheritPermissionsFromCID, $cDisplayOrder, $pkgID, $cIsActive, $cIsDraft];
-        $q = 'insert into Pages (cID, siteTreeID, ptID, cParentID, uID, cInheritPermissionsFrom, cOverrideTemplatePermissions, cInheritPermissionsFromCID, cDisplayOrder, pkgID, cIsActive, cIsDraft) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
-        $r = $db->prepare($q);
-        $res = $r->execute($v);
+        $res = $db->insert('Pages', [
+            'cID' => $cID,
+            'siteTreeID' => $siteTreeID,
+            'ptID' => $ptID,
+            'cParentID' => $cParentID,
+            'uID' => $uID,
+            'cInheritPermissionsFrom' => $cInheritPermissionsFrom,
+            'cOverrideTemplatePermissions' => $this->overrideTemplatePermissions(),
+            'cInheritPermissionsFromCID' => (int) $cInheritPermissionsFromCID,
+            'cDisplayOrder' => $cDisplayOrder,
+            'pkgID' => $pkgID,
+            'cIsActive' => $cIsActive,
+            'cIsDraft' => $cIsDraft,
+        ]);
 
         $newCID = $cID;
 
@@ -3804,18 +3867,16 @@ EOT
             // Collection added with no problem -- update cChildren on parrent
             PageStatistics::incrementParents($newCID);
 
-            if ($r) {
-                $cAcquireComposerOutputControls = false;
-                if (isset($data['cAcquireComposerOutputControls']) && $data['cAcquireComposerOutputControls']) {
-                    $cAcquireComposerOutputControls = true;
-                }
-                // now that we know the insert operation was a success, we need to see if the collection type we're adding has a master collection associated with it
-                if ($masterCIDBlocks) {
-                    $this->_associateMasterCollectionBlocks($newCID, $masterCIDBlocks, $cAcquireComposerOutputControls);
-                }
-                if ($masterCID) {
-                    $this->_associateMasterCollectionAttributes($newCID, $masterCID);
-                }
+            $cAcquireComposerOutputControls = false;
+            if (isset($data['cAcquireComposerOutputControls']) && $data['cAcquireComposerOutputControls']) {
+                $cAcquireComposerOutputControls = true;
+            }
+            // now that we know the insert operation was a success, we need to see if the collection type we're adding has a master collection associated with it
+            if ($masterCIDBlocks) {
+                $this->_associateMasterCollectionBlocks($newCID, $masterCIDBlocks, $cAcquireComposerOutputControls);
+            }
+            if ($masterCID) {
+                $this->_associateMasterCollectionAttributes($newCID, $masterCID);
             }
 
             $pc = self::getByID($newCID, 'RECENT');
@@ -4055,10 +4116,18 @@ EOT
             $siteTreeID = $parent->getSiteTreeID();
         }
 
-        $v = [$cID, $siteTreeID, $cFilename, $cParentID, $cInheritPermissionsFrom, $cOverrideTemplatePermissions, (int) $cInheritPermissionsFromCID, $cDisplayOrder, $uID, $pkgID];
-        $q = 'insert into Pages (cID, siteTreeID, cFilename, cParentID, cInheritPermissionsFrom, cOverrideTemplatePermissions, cInheritPermissionsFromCID, cDisplayOrder, uID, pkgID) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
-        $r = $db->prepare($q);
-        $res = $r->execute($v);
+        $res = $db->insert('Pages', [
+            'cID' => $cID,
+            'siteTreeID' => $siteTreeID,
+            'cFilename' => $cFilename,
+            'cParentID' => $cParentID,
+            'cInheritPermissionsFrom' => $cInheritPermissionsFrom,
+            'cOverrideTemplatePermissions' => $cOverrideTemplatePermissions,
+            'cInheritPermissionsFromCID' => (int) $cInheritPermissionsFromCID,
+            'cDisplayOrder' => $cDisplayOrder,
+            'uID' => $uID,
+            'pkgID' => $pkgID,
+        ]);
 
         if ($res) {
             // Collection added with no problem -- update cChildren on parrent
@@ -4108,7 +4177,7 @@ EOT
         }
         $db = Database::connection();
         $cParentID = (int) $cParentID;
-        $db->executeQuery('update Pages set cDraftTargetParentPageID = ? where cID = ?', [$cParentID, $this->cID]);
+        $db->update('Pages', ['cDraftTargetParentPageID' => $cParentID], ['cID' => $this->cID]);
         $this->cDraftTargetParentPageID = $cParentID;
 
         Section::registerPage($this);
@@ -4377,15 +4446,12 @@ EOT
             $q = 'select issID, arHandle from CollectionVersionAreaStyles where cID = ?';
             $r = $db->executeQuery($q, [$mc->getCollectionID()]);
             while ($row = $r->fetch()) {
-                $db->executeQuery(
-                    'insert into CollectionVersionAreaStyles (cID, cvID, arHandle, issID) values (?, ?, ?, ?)',
-                    [
-                        $this->getCollectionID(),
-                        $this->getVersionID(),
-                        $row['arHandle'],
-                        $row['issID'],
-                    ]
-                );
+                $db->insert('CollectionVersionAreaStyles', [
+                    'cID' => $this->getCollectionID(),
+                    'cvID' => $this->getVersionID(),
+                    'arHandle' => $row['arHandle'],
+                    'issID' => $row['issID'],
+                ]);
             }
         }
     }
