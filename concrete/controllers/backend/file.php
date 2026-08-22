@@ -5,6 +5,7 @@ namespace Concrete\Controller\Backend;
 use Concrete\Core\Application\EditResponse;
 use Concrete\Core\Command\Batch\Batch as BatchBuilder;
 use Concrete\Core\Controller\Controller;
+use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Entity\File\File as FileEntity;
 use Concrete\Core\Entity\File\Folder\FavoriteFolder;
 use Concrete\Core\Entity\File\Version as FileVersionEntity;
@@ -24,6 +25,7 @@ use Concrete\Core\Http\ResponseFactoryInterface;
 use Concrete\Core\Page\Page as CorePage;
 use Concrete\Core\Permission\Checker;
 use Concrete\Core\Tree\Node\Node;
+use Concrete\Core\Tree\Node\NodeType;
 use Concrete\Core\Tree\Node\Type\FileFolder;
 use Concrete\Core\Url\Validation\InvalidRemoteUrlException;
 use Concrete\Core\Url\Validation\RemoteUrlRequestOptionsBuilder;
@@ -44,6 +46,8 @@ use ZipArchive;
 
 class File extends Controller
 {
+    private const MAX_DIRECTORY_NAME_LENGTH = 255;
+
     /**
      * The file to be replaced (if any).
      *
@@ -997,6 +1001,7 @@ class File extends Controller
     public function fetchDirectories()
     {
         $directories = [];
+        $hasMoreDirectories = false;
 
         $editResponse = new EditResponse();
         /** @var Token $token */
@@ -1012,24 +1017,44 @@ class File extends Controller
                 $folder = $filesystem->getRootFolder();
 
                 if ($folder instanceof FileFolder) {
-                    $nodes = $folder->getHierarchicalNodesOfType(
-                        "file_folder",
-                        1,
-                        true,
-                        true,
-                        20
-                    );
+                    $editResponse->setAdditionalDataAttribute('rootDirectory', $this->getDirectoryData($folder));
+                    $mode = (string) $this->request->get('mode');
+                    if ($mode === 'search') {
+                        $query = trim((string) $this->request->get('query'));
+                        if ($query !== '') {
+                            $searchResult = $this->searchDirectories($folder, $query);
+                            $directories = $searchResult['directories'];
+                            $hasMoreDirectories = $searchResult['hasMore'];
+                        }
+                    } elseif ($mode === 'directory') {
+                        $directoryID = (int) $this->request->get('directoryId');
+                        $directory = Node::getByID($directoryID);
+                        if ($directory instanceof FileFolder && $directory->getTreeID() === $folder->getTreeID()) {
+                            $directoryPermissions = new Checker($directory);
+                            if ($directoryPermissions->canAddFiles()) {
+                                $directories[] = $this->getDirectoryData($directory);
+                            }
+                        }
+                    } else {
+                        $nodes = $folder->getHierarchicalNodesOfType(
+                            'file_folder',
+                            1,
+                            true,
+                            true,
+                            20
+                        );
 
-                    foreach ($nodes as $node) {
-                        /** @var FileFolder $treeNodeObject */
-                        $treeNodeObject = $node["treeNodeObject"];
-                        $nodePermissions = new Checker($treeNodeObject);
-                        if ($nodePermissions->canAddFiles()) {
-                            $directories[] = [
-                                "directoryId" => $treeNodeObject->getTreeNodeID(),
-                                "directoryName" => $treeNodeObject->getTreeNodeName(),
-                                "directoryLevel" => $node["level"]
-                            ];
+                        foreach ($nodes as $node) {
+                            /** @var FileFolder $treeNodeObject */
+                            $treeNodeObject = $node['treeNodeObject'];
+                            $nodePermissions = new Checker($treeNodeObject);
+                            if ($nodePermissions->canAddFiles()) {
+                                $directories[] = [
+                                    'directoryId' => $treeNodeObject->getTreeNodeID(),
+                                    'directoryName' => $treeNodeObject->getTreeNodeName(),
+                                    'directoryLevel' => $node['level'],
+                                ];
+                            }
                         }
                     }
                 }
@@ -1043,8 +1068,90 @@ class File extends Controller
 
         $editResponse->setError($errors);
         $editResponse->setAdditionalDataAttribute("directories", $directories);
+        $editResponse->setAdditionalDataAttribute('hasMoreDirectories', $hasMoreDirectories);
 
         return $responseFactory->json($editResponse);
+    }
+
+    /**
+     * @return array<string, bool|int|string>
+     */
+    private function getDirectoryData(FileFolder $directory): array
+    {
+        $permissions = new Checker($directory);
+
+        return [
+            'directoryId' => $directory->getTreeNodeID(),
+            'directoryName' => $directory->getTreeNodeName(),
+            'directoryPath' => $directory->getTreeNodeDisplayPath(),
+            'canAddFiles' => $permissions->canAddFiles(),
+        ];
+    }
+
+    /**
+     * @return array{
+     *     directories: array<int, array<string, bool|int|string>>,
+     *     hasMore: bool
+     * }
+     */
+    private function searchDirectories(FileFolder $rootFolder, string $query): array
+    {
+        $folderNodeType = NodeType::getByHandle('file_folder');
+        if (!$folderNodeType) {
+            return [
+                'directories' => [],
+                'hasMore' => false,
+            ];
+        }
+
+        /** @var Connection $connection */
+        $connection = $this->app->make(Connection::class);
+        $queryBuilder = $connection->createQueryBuilder();
+        $queryBuilder
+            ->select('n.treeNodeID')
+            ->from('TreeNodes', 'n')
+            ->where('n.treeID = :treeID')
+            ->andWhere('n.treeNodeTypeID = :treeNodeTypeID')
+            ->andWhere('n.treeNodeParentID > 0')
+            ->andWhere($queryBuilder->expr()->like('n.treeNodeName', ':folderName'))
+            ->orderBy('n.treeNodeName', 'ASC')
+            ->addOrderBy('n.treeNodeID', 'ASC')
+            ->setParameter('treeID', $rootFolder->getTreeID())
+            ->setParameter('treeNodeTypeID', $folderNodeType->getTreeNodeTypeID())
+            ->setParameter('folderName', '%' . $query . '%')
+        ;
+
+        $directories = [];
+        $hasMore = false;
+        $batchSize = 100;
+        $offset = 0;
+        do {
+            $rows = $queryBuilder
+                ->setFirstResult($offset)
+                ->setMaxResults($batchSize)
+                ->execute()
+                ->fetchAll()
+            ;
+            foreach ($rows as $row) {
+                $directory = Node::getByID((int) $row['treeNodeID']);
+                if ($directory instanceof FileFolder) {
+                    $directoryData = $this->getDirectoryData($directory);
+                    if ($directoryData['canAddFiles']) {
+                        if (count($directories) === 50) {
+                            $hasMore = true;
+                            break 2;
+                        }
+                        $directories[] = $directoryData;
+                    }
+                }
+            }
+            $offset += count($rows);
+        } while (count($rows) === $batchSize);
+
+        return [
+            'directories' => $directories,
+            'hasMore' => $hasMore,
+        ];
     }
 
     public function uploadComplete()
@@ -1108,8 +1215,14 @@ class File extends Controller
             if ($token->validate()) {
                 $directoryName = $this->request->request->get("directoryName", "");
 
-                if (!$stringValidator->notempty($directoryName)) {
+                if (!is_string($directoryName) || !$stringValidator->notempty($directoryName)) {
                     throw new UserMessageException(t('Folder Name cannot be empty.'), 401);
+                }
+                if (mb_strlen($directoryName) > self::MAX_DIRECTORY_NAME_LENGTH) {
+                    throw new UserMessageException(
+                        t('Folder Name cannot be longer than %s characters.', self::MAX_DIRECTORY_NAME_LENGTH),
+                        401
+                    );
                 }
 
                 $filesystem = new Filesystem();
