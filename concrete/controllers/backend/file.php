@@ -1030,9 +1030,9 @@ class File extends Controller
                         $directoryID = (int) $this->request->get('directoryId');
                         $directory = Node::getByID($directoryID);
                         if ($directory instanceof FileFolder && $directory->getTreeID() === $folder->getTreeID()) {
-                            $directoryPermissions = new Checker($directory);
-                            if ($directoryPermissions->canAddFiles()) {
-                                $directories[] = $this->getDirectoryData($directory);
+                            $directoryData = $this->getDirectoryData($directory, true);
+                            if ($directoryData['canAddFiles']) {
+                                $directories[] = $directoryData;
                             }
                         }
                     } else {
@@ -1074,18 +1074,31 @@ class File extends Controller
     }
 
     /**
-     * @return array<string, bool|int|string>
+     * @return array<string, bool|int|string|array<int, int>>
      */
-    private function getDirectoryData(FileFolder $directory): array
+    private function getDirectoryData(FileFolder $directory, bool $includePathIDs = false): array
     {
         $permissions = new Checker($directory);
 
-        return [
+        $data = [
             'directoryId' => $directory->getTreeNodeID(),
             'directoryName' => $directory->getTreeNodeName(),
             'directoryPath' => $directory->getTreeNodeDisplayPath(),
             'canAddFiles' => $permissions->canAddFiles(),
         ];
+
+        if ($includePathIDs) {
+            $pathIDs = [];
+            foreach (array_reverse($directory->getTreeNodeParentArray()) as $parentDirectory) {
+                if ($parentDirectory instanceof FileFolder) {
+                    $pathIDs[] = (int) $parentDirectory->getTreeNodeID();
+                }
+            }
+            $pathIDs[] = (int) $directory->getTreeNodeID();
+            $data['directoryPathIds'] = $pathIDs;
+        }
+
+        return $data;
     }
 
     /**
