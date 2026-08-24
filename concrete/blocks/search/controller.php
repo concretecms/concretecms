@@ -3,8 +3,13 @@
 namespace Concrete\Block\Search;
 
 use CollectionAttributeKey;
+use Concrete\Core\Api\ApiResourceValueInterface;
+use Concrete\Core\Api\ApiValueSchemaInterface;
+use Concrete\Core\Api\Block\ApiValueSchemaFactory;
 use Concrete\Core\Attribute\Key\CollectionKey;
 use Concrete\Core\Block\BlockController;
+use Concrete\Core\Block\ExportDeclarations;
+use Concrete\Core\Block\Traits\CustomApiValueTrait;
 use Concrete\Core\Feature\Features;
 use Concrete\Core\Feature\UsesFeatureInterface;
 use Concrete\Core\Page\PageList;
@@ -15,8 +20,10 @@ use Request;
 use Concrete\Core\Support\Facade\Config;
 use Concrete\Core\Url\SeoCanonical;
 
-class Controller extends BlockController implements UsesFeatureInterface
+class Controller extends BlockController implements ApiResourceValueInterface, ApiValueSchemaInterface, UsesFeatureInterface
 {
+    use CustomApiValueTrait;
+
     /**
      * Search title.
      *
@@ -433,6 +440,69 @@ class Controller extends BlockController implements UsesFeatureInterface
         }
 
         parent::save($args);
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Api\ApiValueSchemaInterface::getApiValueSchema()
+     */
+    public function getApiValueSchema(): array
+    {
+        $schemaFactory = $this->app->make(ApiValueSchemaFactory::class);
+
+        return [
+            'type' => 'object',
+            'properties' => [
+                'title' => [
+                    'type' => ['string', 'null'],
+                    'maxLength' => 255,
+                    'description' => 'The text displayed above the search box.',
+                ],
+                'buttonText' => [
+                    'type' => ['string', 'null'],
+                    'maxLength' => 128,
+                    'description' => 'The text of the button that starts the search.',
+                ],
+                'baseSearchPath' => [
+                    'type' => ['string', 'null'],
+                    'maxLength' => 255,
+                    'description' => 'The path of the page whose descendants are searched (empty to search the whole site).',
+                ],
+                'search_all' => [
+                    'type' => ['string', 'integer', 'null'],
+                    'description' => 'Set it to 1 to search every site of the installation (baseSearchPath is then ignored).',
+                ],
+                'allow_user_options' => [
+                    'type' => ['string', 'integer', 'null'],
+                    'description' => 'Set it to 1 to let the visitors choose whether to search every site of the installation.',
+                ],
+                'postTo_cID' => $schemaFactory->describeReference(ExportDeclarations::REFERENCE_PAGE, [
+                    'type' => ['string', 'integer', 'null'],
+                    'description' => 'The page displaying the results (NULL to display them in the page holding the block, or at resultsURL).',
+                ]),
+                'resultsURL' => [
+                    'type' => ['string', 'null'],
+                    'maxLength' => 255,
+                    'description' => 'The address the search is sent to (it\'s used only when postTo_cID is NULL).',
+                ],
+            ],
+        ];
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Block\BlockController::getImportDataFromApiValue()
+     */
+    public function getImportDataFromApiValue($page, array $value): array
+    {
+        if ($this->bID) {
+            // the save() method resets the settings that it doesn't receive: let's keep the current ones
+            $value += $this->serializeValueForApi();
+        }
+
+        return parent::getImportDataFromApiValue($page, $value);
     }
 
     /**
