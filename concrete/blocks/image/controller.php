@@ -2,8 +2,13 @@
 
 namespace Concrete\Block\Image;
 
+use Concrete\Core\Api\ApiResourceValueInterface;
+use Concrete\Core\Api\ApiValueSchemaInterface;
+use Concrete\Core\Api\Block\ApiValueSchemaFactory;
 use Concrete\Core\Block\BlockController;
 use Concrete\Core\Block\Controller\SaveMode;
+use Concrete\Core\Block\ExportDeclarations;
+use Concrete\Core\Block\Traits\CustomApiValueTrait;
 use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Error\Error;
 use Concrete\Core\Feature\Features;
@@ -15,8 +20,10 @@ use Concrete\Core\Form\Service\DestinationPicker\DestinationPicker;
 use Concrete\Core\Page\Page;
 use Concrete\Core\Page\Theme\Theme;
 
-class Controller extends BlockController implements FileTrackableInterface, UsesFeatureInterface
+class Controller extends BlockController implements ApiResourceValueInterface, ApiValueSchemaInterface, FileTrackableInterface, UsesFeatureInterface
 {
+    use CustomApiValueTrait;
+
     /**
      * @var int|string|null
      */
@@ -175,6 +182,128 @@ class Controller extends BlockController implements FileTrackableInterface, Uses
                 }
             }
         }
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Api\ApiValueSchemaInterface::getApiValueSchema()
+     */
+    public function getApiValueSchema(): array
+    {
+        $schemaFactory = $this->app->make(ApiValueSchemaFactory::class);
+
+        return [
+            'type' => 'object',
+            'properties' => [
+                'fID' => $schemaFactory->describeReference(ExportDeclarations::REFERENCE_FILE, [
+                    'type' => ['string', 'integer', 'null'],
+                    'description' => 'The image to be displayed.',
+                ]),
+                'fOnstateID' => $schemaFactory->describeReference(ExportDeclarations::REFERENCE_FILE, [
+                    'type' => ['string', 'integer', 'null'],
+                    'description' => 'The image displayed when the pointer is over the block (0 for none).',
+                ]),
+                'altText' => [
+                    'type' => ['string', 'null'],
+                    'maxLength' => 255,
+                    'description' => 'The text describing the image, for the visitors that can\'t see it.',
+                ],
+                'title' => [
+                    'type' => ['string', 'null'],
+                    'maxLength' => 255,
+                    'description' => 'The text displayed when the pointer stays over the image.',
+                ],
+                'lazyLoad' => [
+                    'type' => ['string', 'integer', 'null'],
+                    'description' => 'Set it to 1 to let the browser load the image only when it\'s about to be displayed.',
+                ],
+                'sizingOption' => [
+                    'type' => 'string',
+                    'enum' => ['thumbnails_default', 'thumbnails_configurable', 'full_size', 'constrain_size'],
+                    'default' => 'thumbnails_default',
+                    'description' => 'How the image is sized: the thumbnails of the theme, the thumbnails listed in the thumbnails key, the size of the image itself, or the maxWidth and maxHeight box.',
+                ],
+                'thumbnails' => [
+                    'type' => 'object',
+                    'description' => 'The thumbnails to be displayed at every breakpoint of the theme (they are used only when sizingOption is "thumbnails_configurable"). The keys are the handles of the breakpoints.',
+                    'additionalProperties' => [
+                        'type' => ['string', 'integer'],
+                        'description' => 'The ID of the thumbnail type to be displayed at the breakpoint.',
+                    ],
+                ],
+                'maxWidth' => [
+                    'type' => ['string', 'integer', 'null'],
+                    'description' => 'The maximum width (in pixels) of the image (it\'s used only when sizingOption is "constrain_size").',
+                ],
+                'maxHeight' => [
+                    'type' => ['string', 'integer', 'null'],
+                    'description' => 'The maximum height (in pixels) of the image (it\'s used only when sizingOption is "constrain_size").',
+                ],
+                'cropImage' => [
+                    'type' => ['string', 'integer', 'null'],
+                    'description' => 'Set it to 1 to crop the image to the maxWidth and maxHeight box, instead of fitting it in (it\'s used only when sizingOption is "constrain_size", and SVG images can\'t be cropped).',
+                ],
+                'internalLinkCID' => $schemaFactory->describeReference(ExportDeclarations::REFERENCE_PAGE, [
+                    'type' => ['string', 'integer', 'null'],
+                    'description' => 'The page the image links to (0 for none).',
+                ]),
+                'fileLinkID' => $schemaFactory->describeReference(ExportDeclarations::REFERENCE_FILE, [
+                    'type' => ['string', 'integer', 'null'],
+                    'description' => 'The file the image links to (0 for none): it\'s used only when the image links to no page.',
+                ]),
+                'externalLink' => [
+                    'type' => ['string', 'null'],
+                    'maxLength' => 255,
+                    'description' => 'The URL the image links to: it\'s used only when the image links to no page and to no file.',
+                ],
+                'openLinkInNewWindow' => [
+                    'type' => ['string', 'integer'],
+                    'description' => 'Set it to 1 to open the link in another window.',
+                ],
+            ],
+        ];
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Block\BlockController::getImportDataFromApiValue()
+     */
+    public function getImportDataFromApiValue($page, array $value): array
+    {
+        if ($this->bID) {
+            // the save() method resets the settings that it doesn't receive: let's keep the current ones
+            $value += $this->serializeValueForApi();
+        }
+        $thumbnails = $value['thumbnails'] ?? [];
+        unset($value['thumbnails']);
+        $args = parent::getImportDataFromApiValue($page, $value);
+        // the save() method wants the thumbnails in this key, since a block adding one sends its whole list
+        $args['selectedThumbnailTypes'] = [];
+        foreach ((array) $thumbnails as $breakpointHandle => $thumbnailTypeID) {
+            if (is_numeric($thumbnailTypeID)) {
+                $args['selectedThumbnailTypes'][(string) $breakpointHandle] = (int) $thumbnailTypeID;
+            }
+        }
+
+        return $args;
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Block\Traits\CustomApiValueTrait::serializeValueForApi()
+     */
+    protected function serializeValueForApi(): array
+    {
+        $records = $this->serializeTablesForApi();
+        $mainTable = (string) $this->getBlockTypeDatabaseTable();
+        $result = $records[$mainTable][0] ?? [];
+        // the thumbnails live in another table, which the export() method writes outside the <data> element
+        $result['thumbnails'] = array_map('intval', $this->getSelectedThumbnailTypes());
+
+        return $result;
     }
 
     public function export(\SimpleXMLElement $blockNode)
