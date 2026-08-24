@@ -2,6 +2,7 @@
 
 namespace Concrete\Block\ExpressEntryDetail;
 
+use Concrete\Core\Api\ApiValueSchemaInterface;
 use Concrete\Core\Attribute\Key\CollectionKey;
 use Concrete\Core\Block\BlockController;
 use Concrete\Core\Entity\Express\Entity;
@@ -24,8 +25,30 @@ use Exception;
 use SimpleXMLElement;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
-class Controller extends BlockController implements UsesFeatureInterface
+class Controller extends BlockController implements ApiValueSchemaInterface, UsesFeatureInterface
 {
+    /**
+     * Value of the entryMode column: the entry is the one picked by the list block of another page.
+     *
+     * @var string
+     */
+    protected const ENTRY_MODE_FROM_LIST_BLOCK = 'E';
+
+    /**
+     * Value of the entryMode column: the entry is the one held by the exSpecificEntryID column.
+     *
+     * @var string
+     */
+    protected const ENTRY_MODE_SPECIFIC_ENTRY = 'S';
+
+    /**
+     * Value of the entryMode column: the entry is the one held by the Express attribute (whose handle is in
+     * the exEntryAttributeKeyHandle column) of the page holding the block.
+     *
+     * @var string
+     */
+    protected const ENTRY_MODE_PAGE_ATTRIBUTE = 'A';
+
     protected $btInterfaceWidth = '640';
 
     protected $btInterfaceHeight = '400';
@@ -83,7 +106,8 @@ class Controller extends BlockController implements UsesFeatureInterface
     public function add()
     {
         $this->loadData();
-        $this->set('entryMode', 'L');
+        $this->set('entryMode', '');
+        $this->set('entryModes', $this->getAvailableEntryModes());
         $this->set('exEntityID', null);
         $this->set('entity', null);
         $this->set('exEntryAttributeKeyHandle', null);
@@ -103,13 +127,14 @@ class Controller extends BlockController implements UsesFeatureInterface
             }
         }
         $this->set('exEntryAttributeKeyHandle', $this->exEntryAttributeKeyHandle ?? null);
+        $this->set('entryModes', $this->getAvailableEntryModes());
     }
 
     public function view()
     {
         $c = $this->getCollectionObject();
         $entity = null;
-        if ($this->entryMode == 'A') {
+        if ($this->entryMode == self::ENTRY_MODE_PAGE_ATTRIBUTE) {
             $ak = CollectionKey::getByHandle($this->exEntryAttributeKeyHandle);
             if (is_object($ak) && is_object($c)) {
                 $settings = $ak->getAttributeKeySettings();
@@ -127,7 +152,7 @@ class Controller extends BlockController implements UsesFeatureInterface
             if (is_object($entity)) {
                 $this->set('entity', $entity);
 
-                if ($this->entryMode == 'S' && $this->exSpecificEntryID) {
+                if ($this->entryMode == self::ENTRY_MODE_SPECIFIC_ENTRY && $this->exSpecificEntryID) {
                     $this->set('entry', Express::getEntry($this->exSpecificEntryID));
                 }
             }
@@ -237,6 +262,20 @@ class Controller extends BlockController implements UsesFeatureInterface
         \Core::make('app')->shutdown();
     }
 
+    /**
+     * Get the places the entry to be displayed can come from.
+     *
+     * @return array<string,string> the keys are the values of the entryMode column, the values are their names
+     */
+    protected function getAvailableEntryModes(): array
+    {
+        return [
+            self::ENTRY_MODE_FROM_LIST_BLOCK => t('Get entry from list block on another page'),
+            self::ENTRY_MODE_SPECIFIC_ENTRY => t('Display specific entry'),
+            self::ENTRY_MODE_PAGE_ATTRIBUTE => t('Get entry from custom attribute on this page'),
+        ];
+    }
+
     public function loadData()
     {
         $r = $this->entityManager->getRepository('Concrete\Core\Entity\Express\Entity');
@@ -254,6 +293,43 @@ class Controller extends BlockController implements UsesFeatureInterface
             }
         }
         $this->set('expressAttributes', $attributeKeys);
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Api\ApiValueSchemaInterface::getApiValueSchema()
+     */
+    public function getApiValueSchema(): array
+    {
+        return [
+            'type' => 'object',
+            'description' => 'The Express entry displayed by this block, and the form that renders it.',
+            'properties' => [
+                'entryMode' => [
+                    'type' => 'string',
+                    'enum' => array_keys($this->getAvailableEntryModes()),
+                    'default' => self::ENTRY_MODE_SPECIFIC_ENTRY,
+                    'description' => 'Where the entry to be displayed comes from: "' . self::ENTRY_MODE_FROM_LIST_BLOCK . '" the list block of another page, "' . self::ENTRY_MODE_SPECIFIC_ENTRY . '" the exSpecificEntryID entry, "' . self::ENTRY_MODE_PAGE_ATTRIBUTE . '" the exEntryAttributeKeyHandle attribute of the page holding this block.',
+                ],
+                'exEntityID' => [
+                    'type' => ['string', 'null'],
+                    'description' => 'The ID of the Express entity the entry belongs to (it\'s not used when entryMode is "' . self::ENTRY_MODE_PAGE_ATTRIBUTE . '", since the attribute knows the entity).',
+                ],
+                'exSpecificEntryID' => [
+                    'type' => ['string', 'integer', 'null'],
+                    'description' => 'The ID of the entry to be displayed (it\'s used only when entryMode is "' . self::ENTRY_MODE_SPECIFIC_ENTRY . '").',
+                ],
+                'exEntryAttributeKeyHandle' => [
+                    'type' => ['string', 'null'],
+                    'description' => 'The handle of the Express attribute of the page holding the entry to be displayed (it\'s used only when entryMode is "' . self::ENTRY_MODE_PAGE_ATTRIBUTE . '").',
+                ],
+                'exFormID' => [
+                    'type' => ['string', 'null'],
+                    'description' => 'The ID of the form of the Express entity that renders the entry.',
+                ],
+            ],
+        ];
     }
 
     /**
@@ -334,7 +410,7 @@ class Controller extends BlockController implements UsesFeatureInterface
     public function cacheBlockOutput()
     {
         if ($this->btCacheBlockOutput === null) {
-            if ($this->entryMode !== 'E') {
+            if ($this->entryMode !== self::ENTRY_MODE_FROM_LIST_BLOCK) {
                 $this->btCacheBlockOutput = true;
             } else {
                 $this->btCacheBlockOutput = false;

@@ -459,9 +459,9 @@ class ImportExportTest extends PageTestCase
         return $outputCif->block->asXML();
     }
 
-    private function importExportExpress(BlockTypeEntity $blockType, SimpleXMLElement $inputCif, array $options): string
+    private function importExportExpress(BlockTypeEntity $blockType, SimpleXMLElement $inputCif, array $options, &$createdBlock = null): string
     {
-        $generatedXml = $this->importExportBlockType($blockType, $inputCif, $options);
+        $generatedXml = $this->importExportBlockType($blockType, $inputCif, $options, $createdBlock);
 
         return strtr($generatedXml, [
             self::$expressSamples['entity1']->getId() => '1cafebab-babe-cafe-babe-1cafebabe1ca',

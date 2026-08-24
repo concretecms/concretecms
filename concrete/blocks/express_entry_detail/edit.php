@@ -6,18 +6,19 @@ use Concrete\Core\Entity\Attribute\Key\Key;
 use Concrete\Core\Form\Service\Form;
 use Concrete\Core\Form\Service\Widget\ExpressEntrySelector;
 use Concrete\Core\Support\Facade\Application;
-use Concrete\Core\Entity\Express\Entity;
-use Concrete\Core\Entity\Express\Entry;
 
-/** @var array $entities */
-/** @var Key[] $expressAttributes */
-/** @var Entry|null $entry */
-/** @var Entity|null $entity */
-/** @var string $exEntityID */
-/** @var int $exSpecificEntryID */
-/** @var string $exEntryAttributeKeyHandle */
-/** @var string $exFormID */
-/** @var string $entryMode */
+/**
+ * @var array $entities
+ * @var Key[] $expressAttributes
+ * @var Concrete\Core\Entity\Express\Entry|null $entry
+ * @var Concrete\Core\Entity\Express\Entity|null $entity
+ * @var string $exEntityID
+ * @var int $exSpecificEntryID
+ * @var string $exEntryAttributeKeyHandle
+ * @var string $exFormID
+ * @var string $entryMode
+ * @var array<string,string> $entryModes
+ */
 
 $app = Application::getFacadeApplication();
 /** @var Form $form */
@@ -37,12 +38,7 @@ if (isset($entity) && is_object($entity)) {
 <div id="ccm-block-express-entry-detail-edit">
     <div class="form-group">
         <?php echo $form->label('entryMode', t('Entry')) ?>
-        <?php echo $form->select('entryMode', [
-            'E' => t('Get entry from list block on another page'),
-            'S' => t('Display specific entry'),
-            'A' => t('Get entry from custom attribute on this page'),
-        ], $entryMode);
-        ?>
+        <?= $form->select('entryMode', $entryModes, $entryMode) ?>
     </div>
 
     <div class="form-group" data-container="express-entity">
