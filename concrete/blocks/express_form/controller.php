@@ -3,10 +3,13 @@
 namespace Concrete\Block\ExpressForm;
 
 use Concrete\Controller\Element\Dashboard\Express\Control\TextOptions;
+use Concrete\Core\Api\ApiValueSchemaInterface;
+use Concrete\Core\Api\Block\ApiValueSchemaFactory;
 use Concrete\Core\Attribute\Category\ExpressCategory;
 use Concrete\Core\Attribute\Context\AttributeTypeSettingsContext;
 use Concrete\Core\Attribute\Type;
 use Concrete\Core\Block\BlockController;
+use Concrete\Core\Block\ExportDeclarations;
 use Concrete\Core\Entity\Attribute\Key\ExpressKey;
 use Concrete\Core\Entity\Express\Control\AttributeKeyControl;
 use Concrete\Core\Entity\Express\Control\Control;
@@ -49,7 +52,7 @@ use SimpleXMLElement;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Concrete\Core\Permission\Checker;
 
-class Controller extends BlockController implements NotificationProviderInterface, UsesFeatureInterface
+class Controller extends BlockController implements ApiValueSchemaInterface, NotificationProviderInterface, UsesFeatureInterface
 {
     /**
      * @var string|null
@@ -505,6 +508,74 @@ class Controller extends BlockController implements NotificationProviderInterfac
         $data['redirectCID'] = ($data['redirectCID'] === '') ? 0 : $data['redirectCID'];
 
         return parent::save($data);
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Api\ApiValueSchemaInterface::getApiValueSchema()
+     */
+    public function getApiValueSchema(): array
+    {
+        $schemaFactory = $this->app->make(ApiValueSchemaFactory::class);
+
+        return [
+            'type' => 'object',
+            'description' => 'The Express form rendered by this block, and what happens when it\'s submitted. The controls of the form belong to the form itself.',
+            'properties' => [
+                'exFormID' => [
+                    'type' => ['string', 'null'],
+                    'description' => 'The ID of the Express form to be rendered.',
+                ],
+                'exEntityID' => [
+                    'type' => ['string', 'null'],
+                    'readOnly' => true,
+                    'description' => 'The ID of the Express entity the form belongs to (it\'s not stored by the block: the form knows it).',
+                ],
+                'submitLabel' => [
+                    'type' => ['string', 'null'],
+                    'maxLength' => 255,
+                    'description' => 'The text of the button that submits the form.',
+                ],
+                'thankyouMsg' => [
+                    'type' => ['string', 'null'],
+                    'description' => 'The text displayed once the form has been submitted.',
+                ],
+                'displayCaptcha' => [
+                    'type' => ['string', 'integer', 'null'],
+                    'description' => 'Set it to 1 to ask the visitors to solve a captcha before submitting the form.',
+                ],
+                'storeFormSubmission' => [
+                    'type' => ['string', 'integer'],
+                    'description' => 'Set it to 1 to save the submitted forms as entries of the Express entity.',
+                ],
+                'notifyMeOnSubmission' => [
+                    'type' => ['string', 'integer'],
+                    'description' => 'Set it to 1 to send an email to the recipientEmail addresses when the form is submitted.',
+                ],
+                'recipientEmail' => [
+                    'type' => ['string', 'null'],
+                    'maxLength' => 255,
+                    'description' => 'The email addresses to be notified, separated by commas (they are used only when notifyMeOnSubmission is 1).',
+                ],
+                'replyToEmailControlID' => [
+                    'type' => ['string', 'null'],
+                    'description' => 'The ID of the control of the form holding the address the notification replies to.',
+                ],
+                'redirectCID' => $schemaFactory->describeReference(ExportDeclarations::REFERENCE_PAGE, [
+                    'type' => ['string', 'integer', 'null'],
+                    'description' => 'The page the visitors are sent to once the form has been submitted (0 to display thankyouMsg instead).',
+                ]),
+                'addFilesToSet' => [
+                    'type' => ['string', 'integer', 'null'],
+                    'description' => 'The ID of the file set the files uploaded with the form are added to (0 for none).',
+                ],
+                'addFilesToFolder' => $schemaFactory->describeReference(ExportDeclarations::REFERENCE_FILE_FOLDER, [
+                    'type' => ['string', 'integer', 'null'],
+                    'description' => 'The folder the files uploaded with the form are stored in (0 for the root folder).',
+                ]),
+            ],
+        ];
     }
 
     /**
