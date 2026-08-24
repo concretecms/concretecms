@@ -9,6 +9,15 @@
       "$comment": "Set to true to check that the value that the API exposes for this block can be sent back, resulting in the very same block. It's true by default: set it to false for the block types that don't handle their value in the API yet.",
       "type": "boolean"
     },
+    "apiRoundTripIgnoredAttributes": {
+      "$comment": "The attributes of the <block> element that the API round trip check should ignore, because they don't belong to the value of the block (for instance the temporary ID identifying a block of a master collection, which changes when the block is updated).",
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "uniqueItems": true
+    },
     "skipReason": {
       "$comment": "Use this option to document why testing this attribute is skipped during import/export tests.",
       "type": "string",

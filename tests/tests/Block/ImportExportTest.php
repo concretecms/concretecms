@@ -302,7 +302,30 @@ class ImportExportTest extends PageTestCase
         $block->update($args, SaveMode::SAVE_MODE_IMPORT);
         $updatedBlock = Block::getByID($block->getBlockID(), $page, 'Main');
         $this->assertInstanceOf(Block::class, $updatedBlock);
-        $this->assertSameXML($expectedCif, $this->exportBlockToCif($updatedBlock), $options['keepXmlElementsOrder'] ?? false);
+        $ignoredAttributes = $options['apiRoundTripIgnoredAttributes'] ?? [];
+        $this->assertSameXML(
+            $this->forgetBlockAttributes($expectedCif, $ignoredAttributes),
+            $this->forgetBlockAttributes($this->exportBlockToCif($updatedBlock), $ignoredAttributes),
+            $options['keepXmlElementsOrder'] ?? false
+        );
+    }
+
+    /**
+     * Remove some attributes from the CIF representation of a block.
+     *
+     * @param string[] $attributes the names of the attributes of the <block> element to be removed
+     */
+    private function forgetBlockAttributes(string $cif, array $attributes): string
+    {
+        if ($attributes === []) {
+            return $cif;
+        }
+        $blockNode = simplexml_load_string($cif);
+        foreach ($attributes as $attribute) {
+            unset($blockNode[$attribute]);
+        }
+
+        return $blockNode->asXML();
     }
 
     /**
