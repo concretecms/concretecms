@@ -1,8 +1,13 @@
 <?php
 namespace Concrete\Block\Feature;
 
+use Concrete\Core\Api\ApiResourceValueInterface;
+use Concrete\Core\Api\ApiValueSchemaInterface;
+use Concrete\Core\Api\Block\ApiValueSchemaFactory;
 use Concrete\Core\Block\BlockController;
 use Concrete\Core\Block\Controller\SaveMode;
+use Concrete\Core\Block\ExportDeclarations;
+use Concrete\Core\Block\Traits\CustomApiValueTrait;
 use Concrete\Core\Editor\LinkAbstractor;
 use Concrete\Core\Error\UserMessageException;
 use Concrete\Core\Feature\Features;
@@ -14,8 +19,10 @@ use Concrete\Core\Form\Service\DestinationPicker\DestinationPicker;
 use Concrete\Core\Html\Service\FontAwesomeIcon;
 use Concrete\Core\Page\Page;
 
-class Controller extends BlockController implements FileTrackableInterface, UsesFeatureInterface
+class Controller extends BlockController implements ApiResourceValueInterface, ApiValueSchemaInterface, FileTrackableInterface, UsesFeatureInterface
 {
+    use CustomApiValueTrait;
+
     /**
      * @var string|null
      */
@@ -240,6 +247,70 @@ class Controller extends BlockController implements FileTrackableInterface, Uses
             throw new UserMessageException($errors->toText());
         }
         parent::save($args);
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Api\ApiValueSchemaInterface::getApiValueSchema()
+     */
+    public function getApiValueSchema(): array
+    {
+        $schemaFactory = $this->app->make(ApiValueSchemaFactory::class);
+
+        return [
+            'type' => 'object',
+            'properties' => [
+                'icon' => [
+                    'type' => ['string', 'null'],
+                    'maxLength' => 255,
+                    'description' => 'The class names of the Font Awesome icon displayed above the title (for instance "fas fa-address-book").',
+                ],
+                'fID' => $schemaFactory->describeReference(ExportDeclarations::REFERENCE_FILE, [
+                    'type' => ['string', 'integer', 'null'],
+                    'description' => 'The image displayed above the title, which replaces the icon (0 for none).',
+                ]),
+                'title' => [
+                    'type' => ['string', 'null'],
+                    'maxLength' => 255,
+                    'description' => 'The title of the feature.',
+                ],
+                'titleFormat' => [
+                    'type' => 'string',
+                    'enum' => array_keys(BlockController::$btTitleFormats),
+                    'default' => 'h4',
+                    'description' => 'The HTML element wrapping the title.',
+                ],
+                'paragraph' => $schemaFactory->describeReference(ExportDeclarations::REFERENCE_CONTENT, [
+                    'type' => ['string', 'null'],
+                    'description' => 'The rich text displayed below the title.',
+                ]),
+                'internalLinkCID' => $schemaFactory->describeReference(ExportDeclarations::REFERENCE_PAGE, [
+                    'type' => ['string', 'integer', 'null'],
+                    'description' => 'The page the feature links to (0 for none).',
+                ]),
+                'externalLink' => [
+                    'type' => ['string', 'null'],
+                    'maxLength' => 255,
+                    'description' => 'The URL the feature links to (it\'s ignored when the feature links to a page).',
+                ],
+            ],
+        ];
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Block\BlockController::getImportDataFromApiValue()
+     */
+    public function getImportDataFromApiValue($page, array $value): array
+    {
+        if ($this->bID) {
+            // the save() method resets the settings that it doesn't receive: let's keep the current ones
+            $value += $this->serializeValueForApi();
+        }
+
+        return parent::getImportDataFromApiValue($page, $value);
     }
 
     /**
