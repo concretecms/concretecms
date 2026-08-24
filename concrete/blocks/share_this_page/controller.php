@@ -1,18 +1,25 @@
 <?php
 namespace Concrete\Block\ShareThisPage;
 
+use Concrete\Core\Api\ApiResourceValueInterface;
+use Concrete\Core\Api\ApiValueSchemaInterface;
 use Concrete\Core\Block\BlockController;
+use Concrete\Core\Block\Traits\CustomApiValueTrait;
 use Concrete\Core\Feature\Features;
 use Concrete\Core\Feature\UsesFeatureInterface;
 use Concrete\Core\Sharing\ShareThisPage\ServiceList;
 use Concrete\Core\Sharing\ShareThisPage\Service;
+use Concrete\Core\Utility\Service\Xml;
+use SimpleXMLElement;
 use Database;
 use Core;
 
 defined('C5_EXECUTE') or die("Access Denied.");
 
-class Controller extends BlockController implements UsesFeatureInterface
+class Controller extends BlockController implements ApiResourceValueInterface, ApiValueSchemaInterface, UsesFeatureInterface
 {
+    use CustomApiValueTrait;
+
     /**
      * @var int|string|null
      */
@@ -28,7 +35,7 @@ class Controller extends BlockController implements UsesFeatureInterface
      */
     public $displayOrder;
 
-    public $helpers = array('form');
+    public $helpers = ['form'];
 
     protected $btInterfaceWidth = 400;
     protected $btCacheBlockOutput = true;
@@ -38,7 +45,7 @@ class Controller extends BlockController implements UsesFeatureInterface
     protected $btInterfaceHeight = 400;
     protected $btTable = 'btShareThisPage';
 
-    protected $services = array();
+    protected $services = [];
 
     public function getBlockTypeDescription()
     {
@@ -78,10 +85,10 @@ class Controller extends BlockController implements UsesFeatureInterface
 
     protected function getSelectedServices()
     {
-        $this->services = array();
+        $this->services = [];
         $db = Database::get();
         $services = $db->GetCol('select service from btShareThisPage where bID = ? order by displayOrder asc',
-            array($this->bID)
+            [$this->bID]
         );
         foreach ($services as $service) {
             $this->addService($service);
@@ -95,7 +102,7 @@ class Controller extends BlockController implements UsesFeatureInterface
         $db = Database::get();
         $displayOrder = 0;
         foreach ($this->getSelectedServices() as $service) {
-            $db->insert('btShareThisPage', array('bID' => $newBlockID, 'service' => $service->getHandle(), 'displayOrder' => $displayOrder));
+            $db->insert('btShareThisPage', ['bID' => $newBlockID, 'service' => $service->getHandle(), 'displayOrder' => $displayOrder]);
             $displayOrder++;
         }
     }
@@ -110,6 +117,75 @@ class Controller extends BlockController implements UsesFeatureInterface
         return $e;
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Api\ApiValueSchemaInterface::getApiValueSchema()
+     */
+    public function getApiValueSchema(): array
+    {
+        $handles = [];
+        foreach (ServiceList::get() as $service) {
+            $handles[] = (string) $service->getHandle();
+        }
+
+        return [
+            'type' => 'object',
+            'properties' => [
+                'services' => [
+                    'type' => 'array',
+                    'description' => 'The services the visitors can share the page with, in the order they are displayed (the ones that don\'t exist are left out).',
+                    'items' => [
+                        'type' => 'string',
+                        'enum' => $handles,
+                    ],
+                ],
+            ],
+        ];
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Block\BlockController::getImportDataFromApiValue()
+     */
+    public function getImportDataFromApiValue($page, array $value): array
+    {
+        if (!array_key_exists('services', $value)) {
+            $value = $this->bID ? $this->serializeValueForApi() : ['services' => []];
+        }
+        // the getImportData() method below reads the handles out of the XML of a CIF file
+        $blockNode = new SimpleXMLElement('<block></block>');
+        $dataNode = $blockNode->addChild('data');
+        $xml = $this->app->make(Xml::class);
+        foreach ((array) $value['services'] as $service) {
+            if (is_string($service)) {
+                $xml->createChildElement($dataNode, 'service', $service);
+            }
+        }
+
+        return $this->getImportData($blockNode, $page);
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Block\Traits\CustomApiValueTrait::serializeValueForApi()
+     */
+    protected function serializeValueForApi(): array
+    {
+        // the export() method below writes the handles as the children of the <data> element, which is not
+        // the list of records of a database table that the API knows how to read
+        $blockNode = new SimpleXMLElement('<block></block>');
+        $this->export($blockNode);
+        $services = [];
+        foreach ($blockNode->data->service as $service) {
+            $services[] = (string) $service;
+        }
+
+        return ['services' => $services];
+    }
+
     public function export(\SimpleXMLElement $blockNode)
     {
         $data = $blockNode->addChild('data');
@@ -120,10 +196,13 @@ class Controller extends BlockController implements UsesFeatureInterface
 
     public function getImportData($blockNode, $page)
     {
-        $args = array();
+        $args = ['service' => []];
         foreach ($blockNode->data->service as $service) {
             $link = Service::getByHandle((string) $service);
-            $args['service'][] = $link->getHandle();
+            // the service may be provided by a package that this site doesn't have
+            if (is_object($link)) {
+                $args['service'][] = $link->getHandle();
+            }
         }
 
         return $args;
@@ -132,8 +211,8 @@ class Controller extends BlockController implements UsesFeatureInterface
     public function save($args)
     {
         $db = Database::get();
-        $db->delete('btShareThisPage', array('bID' => $this->bID));
-        $services = $args['service'];
+        $db->delete('btShareThisPage', ['bID' => $this->bID]);
+        $services = is_array($args['service'] ?? null) ? $args['service'] : [];
 
         $statement = $db->prepare('insert into btShareThisPage (bID, service, displayOrder) values (?, ?, ?)');
         $displayOrder = 0;
@@ -149,7 +228,7 @@ class Controller extends BlockController implements UsesFeatureInterface
     public function delete()
     {
         $db = Database::get();
-        $db->delete('btShareThisPage', array('bID' => $this->bID));
+        $db->delete('btShareThisPage', ['bID' => $this->bID]);
     }
 
     public function registerViewAssets($outputContent = '')
