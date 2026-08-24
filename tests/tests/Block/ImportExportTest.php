@@ -146,6 +146,7 @@ class ImportExportTest extends PageTestCase
             Entity\Page\Container::class,
             Entity\Attribute\Value\Value\TopicsValue::class,
             Entity\Attribute\Key\Settings\TopicsSettings::class,
+            Entity\Attribute\Key\Settings\TextSettings::class,
             Entity\Page\Container\Instance::class,
             Entity\Page\Container\InstanceArea::class,
             Entity\Page\Feed::class,
@@ -840,6 +841,20 @@ class ImportExportTest extends PageTestCase
         /** @var \Concrete\Core\Entity\Attribute\Key\Settings\TopicsSettings $settings */
         $settings->setTopicTreeID(self::$topicsTree->getTreeID());
         $pageCategory->add($topicsType, ['akHandle' => 'test_topic', 'akName' => 'Test Topic'], $settings);
+        if (($fileCategoryEntity = $categoryService->getByHandle('file')) === null) {
+            $fileCategory = $categoryService->add('file');
+        } else {
+            $fileCategory = $fileCategoryEntity->getController();
+        }
+        /** @var \Concrete\Core\Attribute\Category\FileCategory $fileCategory */
+        if (($textType = $typeFactory->getByHandle('text')) === null) {
+            $textType = $typeFactory->add('text', 'Text');
+        }
+        $fileCategoryTypes = $fileCategory->getAttributeTypes();
+        if (!$fileCategoryTypes->contains($textType)) {
+            $fileCategoryTypes->add($textType);
+        }
+        $fileCategory->add($textType, ['akHandle' => 'test_file_attribute', 'akName' => 'Test File Attribute']);
         if (($categoryService->getByHandle('express')) === null) {
             $categoryService->add('express');
         }

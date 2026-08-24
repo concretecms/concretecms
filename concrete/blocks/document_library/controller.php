@@ -1275,6 +1275,7 @@ class Controller extends BlockController implements ApiResourceValueInterface, A
         $this->fixExportAttributeKeyArray($record, 'viewProperties', true);
         $this->fixExportAttributeKeyArray($record, 'expandableProperties', false);
         $this->fixExportAttributeKeyArray($record, 'searchProperties', false);
+        $this->fixExportAttributeKey($record, 'orderBy');
         $addFilesToSet = null;
         if (isset($record->addFilesToSetID)) {
             $setID = (int) (string) $record->addFilesToSetID[0];
@@ -1308,6 +1309,7 @@ class Controller extends BlockController implements ApiResourceValueInterface, A
         $this->fixImportAttributeKeyArray($data, 'viewProperties', true);
         $this->fixImportAttributeKeyArray($data, 'expandableProperties', false);
         $this->fixImportAttributeKeyArray($data, 'searchProperties', false);
+        $this->fixImportAttributeKey($data, 'orderBy');
         if (is_string($addFilesToSetName = $data['addFilesToSetName'] ?? null) && $addFilesToSetName !== '') {
             $addFilesToSet = Set::getByName($addFilesToSetName);
             if ($addFilesToSet) {
@@ -1455,6 +1457,41 @@ class Controller extends BlockController implements ApiResourceValueInterface, A
             }
         }
         $xml->createChildElement($recordNode, 'setNames', json_encode($setNames));
+    }
+
+    /**
+     * Replace the ID of the file attribute held by a column with its handle, since a CIF file can't refer
+     * to it by its ID.
+     */
+    private function fixExportAttributeKey(SimpleXMLElement $recordNode, string $fieldName): void
+    {
+        $value = isset($recordNode->{$fieldName}) ? (string) $recordNode->{$fieldName} : '';
+        $m = null;
+        if (!preg_match('/^ak_(?<id>[1-9]\d*)$/', $value, $m)) {
+            return;
+        }
+        $ak = $this->app->make(FileCategory::class)->getAttributeKeyByID((int) $m['id']);
+        if (!$ak) {
+            return;
+        }
+        unset($recordNode->{$fieldName}[0]);
+        $this->app->make(Xml::class)->createChildElement($recordNode, $fieldName, "ak_{$ak->getAttributeKeyHandle()}");
+    }
+
+    /**
+     * Replace the handle of the file attribute held by a column with its ID.
+     */
+    private function fixImportAttributeKey(array &$data, string $fieldName): void
+    {
+        $value = (string) ($data[$fieldName] ?? '');
+        $m = null;
+        if (!preg_match('/^ak_(?<handle>\S+)$/', $value, $m)) {
+            return;
+        }
+        $ak = $this->app->make(FileCategory::class)->getAttributeKeyByHandle($m['handle']);
+        if ($ak) {
+            $data[$fieldName] = "ak_{$ak->getAttributeKeyID()}";
+        }
     }
 
     private function fixExportAttributeKeyArray(SimpleXMLElement $recordNode, string $fieldName, bool $replaceKeys): void
