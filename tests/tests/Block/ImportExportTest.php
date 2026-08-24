@@ -27,6 +27,7 @@ use Concrete\Core\File\StorageLocation\StorageLocationFactory;
 use Concrete\Core\File\StorageLocation\Type\Type as StorageLocationType;
 use Concrete\Core\File\Tracker\FileTrackableInterface;
 use Concrete\Core\Http\Request;
+use Concrete\Core\Page\Page;
 use Concrete\Core\Page\Single as SinglePage;
 use Concrete\Core\Page\Stack\Folder\FolderService as StackFolderService;
 use Concrete\Core\Page\Stack\Stack;
@@ -411,7 +412,7 @@ class ImportExportTest extends PageTestCase
         return $outputCif->block->asXML();
     }
 
-    private function importExportPageType1(BlockTypeEntity $blockType, SimpleXMLElement $inputCif, array $options): string
+    private function importExportPageType1(BlockTypeEntity $blockType, SimpleXMLElement $inputCif, array $options, &$createdBlock = null): string
     {
         if (!ComposerControlType::getByHandle('block')) {
             ComposerControlType::add('block', 'Block');
@@ -425,6 +426,10 @@ class ImportExportTest extends PageTestCase
         $this->assertTrue(isset($outputCif->pagetype));
         $pageNode = $outputCif->pagetype[0]->composer[0]->output[0]->pagetemplate[0]->page[0];
         $blockNode = $pageNode->area[0]->blocks[0]->block[0];
+        // the block lives in the page that holds the output of the page type
+        $masterPage = $importedPageType->getPageTypePageTemplateDefaultPageObject();
+        $this->assertInstanceOf(Page::class, $masterPage);
+        $createdBlock = $masterPage->getBlocks('Main')[0] ?? null;
         $tempID = (string) $outputCif->pagetype[0]->composer[0]->formlayout[0]->set[0]->control[0]['output-control-id'];
         $this->assertMatchesRegularExpression('/\w{5,}/', $tempID);
         $this->assertNotSame("CCMTest1", $tempID);
