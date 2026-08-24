@@ -39,6 +39,26 @@ class ApiValueSchemaFactoryTest extends ConcreteDatabaseTestCase
     }
 
     /**
+     * Get a controller whose schema the factory has to derive from the columns of the table of the image
+     * block type, whatever the controller of that block type does with the API.
+     *
+     * @return \Concrete\Core\Block\BlockController
+     */
+    private function getDerivedImageController()
+    {
+        // the block type is installed for its table, which holds the columns the tests are about
+        $this->getBlockTypeController('image');
+
+        return new class extends BlockController {
+            protected $btTable = 'btContentImage';
+
+            protected $btExportFileColumns = ['fID', 'fOnstateID', 'fileLinkID'];
+
+            protected $btExportPageColumns = ['internalLinkCID'];
+        };
+    }
+
+    /**
      * @return \Concrete\Core\Api\Block\ApiValueSchemaFactory
      */
     private function getFactory()
@@ -65,7 +85,7 @@ class ApiValueSchemaFactoryTest extends ConcreteDatabaseTestCase
 
     public function testReferenceColumnsAreFlagged(): void
     {
-        $schema = $this->getFactory()->getSchema($this->getBlockTypeController('image'));
+        $schema = $this->getFactory()->getSchema($this->getDerivedImageController());
         $properties = $schema['properties'];
 
         static::assertSame('file', $properties['fID']['x-concrete-reference']);
@@ -82,7 +102,7 @@ class ApiValueSchemaFactoryTest extends ConcreteDatabaseTestCase
      */
     public function testTheAcceptedTypesAreDescribed(): void
     {
-        $properties = $this->getFactory()->getSchema($this->getBlockTypeController('image'))['properties'];
+        $properties = $this->getFactory()->getSchema($this->getDerivedImageController())['properties'];
 
         // reading gives strings, writing accepts numbers too; the column can be emptied
         static::assertSame(['string', 'integer', 'null'], $properties['maxWidth']['type']);
