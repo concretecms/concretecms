@@ -471,7 +471,7 @@ class ImportExportTest extends PageTestCase
         ]);
     }
 
-    private function importExportPageListFeedExisting(BlockTypeEntity $blockType, SimpleXMLElement $inputCif, array $options): string
+    private function importExportPageListFeedExisting(BlockTypeEntity $blockType, SimpleXMLElement $inputCif, array $options, &$createdBlock = null): string
     {
         $em = app(EntityManagerInterface::class);
         $repo = $em->getRepository(FeedEntity::class);
@@ -486,29 +486,19 @@ class ImportExportTest extends PageTestCase
         $feed->setParentID(0x7FFFFFFF);
         $em->persist($feed);
         $em->flush();
-        try {
-            $result = $this->importExportBlockType($blockType, $inputCif, $options);
-            $feed2 = $repo->findOneBy(['pfHandle' => 'pagelist-feed-existing']);
-            $this->assertSame($feed, $feed2);
-            $this->assertSame('Title of the Existing Feed', $feed2->getTitle());
-            $this->assertSame('Description of the Existing Feed', $feed2->getDescription());
-            $this->assertNotSame(0x7FFFFFFF, (int) $feed->getParentID());
-        } finally {
-            try {
-                if (isset($feed)) {
-                    $em->remove($feed);
-                }
-                if (isset($feed2)) {
-                    $em->remove($feed2);
-                }
-                $em->flush();
-            } catch (\Throwable $_) {
-            }
-        }
+        // the feed is left behind on purpose: the block refers to it, and the API round trip exports it
+        // again (the tables of the test case are dropped once all its tests are over)
+        $result = $this->importExportBlockType($blockType, $inputCif, $options, $createdBlock);
+        $feed2 = $repo->findOneBy(['pfHandle' => 'pagelist-feed-existing']);
+        $this->assertSame($feed, $feed2);
+        $this->assertSame('Title of the Existing Feed', $feed2->getTitle());
+        $this->assertSame('Description of the Existing Feed', $feed2->getDescription());
+        $this->assertNotSame(0x7FFFFFFF, (int) $feed->getParentID());
+
         return $result;
     }
 
-    private function importExportPageListFeedNew(BlockTypeEntity $blockType, SimpleXMLElement $inputCif, array $options): string
+    private function importExportPageListFeedNew(BlockTypeEntity $blockType, SimpleXMLElement $inputCif, array $options, &$createdBlock = null): string
     {
         $em = app(EntityManagerInterface::class);
         $repo = $em->getRepository(FeedEntity::class);
@@ -517,21 +507,13 @@ class ImportExportTest extends PageTestCase
             $em->remove($feed);
             $em->flush();
         }
-        try {
-            $result = $this->importExportBlockType($blockType, $inputCif, $options);
-            $feed = $repo->findOneBy(['pfHandle' => 'pagelist-feed-new']);
-            $this->assertNotNull($feed, 'The Page List block type should create an RSS feed');
-            $this->assertSame('Title of the New Feed', $feed->getTitle());
-            $this->assertSame('Description of the New Feed', $feed->getDescription());
-        } finally {
-            if (isset($feed)) {
-                try {
-                    $em->remove($feed);
-                    $em->flush();
-                } catch (\Throwable $_) {
-                }
-            }
-        }
+        // the feed is left behind on purpose: the block refers to it, and the API round trip exports it
+        // again (the tables of the test case are dropped once all its tests are over)
+        $result = $this->importExportBlockType($blockType, $inputCif, $options, $createdBlock);
+        $feed = $repo->findOneBy(['pfHandle' => 'pagelist-feed-new']);
+        $this->assertNotNull($feed, 'The Page List block type should create an RSS feed');
+        $this->assertSame('Title of the New Feed', $feed->getTitle());
+        $this->assertSame('Description of the New Feed', $feed->getDescription());
 
         return $result;
     }
