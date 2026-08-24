@@ -1,6 +1,5 @@
 {
   "$schema": "../options-schema.json",
-  "apiRoundTrip": false,
   "fileUsageCount": 1,
   "richTexts": {
     "SELECT body FROM btHeroImage WHERE bID = :bID": {}
