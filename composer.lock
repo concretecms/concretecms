@@ -274,16 +274,16 @@
         },
         {
             "name": "concretecms/dependency-patches",
-            "version": "1.8.0",
+            "version": "1.8.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/concretecms/dependency-patches.git",
-                "reference": "8b20a0389e5d88f4cb84332c85d2e82df67f428f"
+                "reference": "dc000eab49f6b15b950ecb96fca2b9328a3f0f27"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/concretecms/dependency-patches/zipball/8b20a0389e5d88f4cb84332c85d2e82df67f428f",
-                "reference": "8b20a0389e5d88f4cb84332c85d2e82df67f428f",
+                "url": "https://api.github.com/repos/concretecms/dependency-patches/zipball/dc000eab49f6b15b950ecb96fca2b9328a3f0f27",
+                "reference": "dc000eab49f6b15b950ecb96fca2b9328a3f0f27",
                 "shasum": ""
             },
             "require": {
@@ -323,6 +323,9 @@
                     "gettext/gettext:3.5.9": {
                         "Fix PHP 8 compatibility": "gettext/gettext/php8-compatibility.patch",
                         "Fix wrong conversion in PhpCode": "gettext/gettext/fix-wrong-conversion.patch"
+                    },
+                    "league/fractal:0.19.2": {
+                        "Add PHP 8.1 compatibility": "league/fractal/php8.1-compatibility.patch"
                     },
                     "phpunit/phpunit:4.8.36": {
                         "Avoid each() in Getopt": "phpunit/phpunit/Getopt-each.patch"
@@ -383,9 +386,9 @@
             "homepage": "https://github.com/concretecms/dependency-patches",
             "support": {
                 "issues": "https://github.com/concretecms/dependency-patches/issues",
-                "source": "https://github.com/concretecms/dependency-patches/tree/1.8.0"
+                "source": "https://github.com/concretecms/dependency-patches/tree/1.8.1"
             },
-            "time": "2026-05-26T23:40:56+00:00"
+            "time": "2026-08-21T07:53:10+00:00"
         },
         {
             "name": "concretecms/doctrine-xml",
