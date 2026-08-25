@@ -323,7 +323,7 @@ class BlockType
     /**
      * returns the handle of the BlockType's package if it's in a package.
      *
-     * @return string
+     * @return string|false
      */
     public function getPackageHandle()
     {

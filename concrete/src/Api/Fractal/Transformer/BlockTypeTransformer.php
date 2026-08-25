@@ -24,10 +24,15 @@ class BlockTypeTransformer extends TransformerAbstract
 
     public function transform(BlockType $blockType): array
     {
+        // the method returns FALSE when the block type belongs to no package
+        $packageHandle = (string) $blockType->getPackageHandle();
+
         return [
             'handle' => $blockType->getBlockTypeHandle(),
             'name' => $blockType->getBlockTypeName(),
             'description' => $blockType->getBlockTypeDescription(),
+            // the block types of the core belong to no package
+            'package' => $packageHandle === '' ? null : $packageHandle,
             'value_schema' => $this->schemaFactory->getSchema($blockType->getController()),
         ];
     }

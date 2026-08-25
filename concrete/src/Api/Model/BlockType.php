@@ -36,6 +36,13 @@ class BlockType
     private $description;
 
     /**
+     * @OA\Property(type="string", nullable=true, title="Package Handle", description="The handle of the package providing the block type (NULL for the block types of the core).")
+     *
+     * @var string|null
+     */
+    private $package;
+
+    /**
      * @OA\Property(type="object", title="Block value schema", description="The JSON Schema of the value accepted when adding or updating a block of this type.")
      *
      * @var array
