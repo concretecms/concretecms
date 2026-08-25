@@ -90,11 +90,10 @@ class FileListKeywordsTest extends FileStorageTestCase
         $attributeKey->setIsAttributeKeyContentIndexed(true);
         $category->add(AttributeType::add('text', 'Text'), $attributeKey);
 
-        $self = new static();
-        if (!is_dir($self->getStorageDirectory())) {
-            mkdir($self->getStorageDirectory());
+        if (!is_dir(static::getStorageDirectory())) {
+            mkdir(static::getStorageDirectory());
         }
-        $self->getStorageLocation();
+        static::getStorageLocation();
 
         $sample = DIR_TESTS . '/assets/File/StorageLocation/sample.txt';
         $importer = app(FileImporter::class);
