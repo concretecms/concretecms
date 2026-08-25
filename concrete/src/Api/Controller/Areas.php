@@ -84,6 +84,21 @@ class Areas extends ApiController implements ApplicationAwareInterface
             return $this->error(t('You do not have permission to add this block type to this area on this page.', 403));
         }
 
+        $beforeBlock = null;
+        if (isset($content['before_block']) && $content['before_block'] !== null && $content['before_block'] !== '') {
+            $beforeBlockID = filter_var($content['before_block'], FILTER_VALIDATE_INT, ['options' => ['min_range' => 1]]);
+            if ($beforeBlockID === false) {
+                return $this->error(t('Invalid block ID.'), 400);
+            }
+            try {
+                list(, $beforeBlock) = $this->getBlockToWorkWith($page, $areaHandle, $beforeBlockID);
+            } catch (AreaNotFoundException $e) {
+                return $this->error(t('Area not found.'), 404);
+            } catch (BlockNotFoundException $e) {
+                return $this->error(t('The block to place the new block before could not be found in this area.'), 404);
+            }
+        }
+
         $data = $blockType->getController()->getImportDataFromApiValue($page, (array) $content['value']);
 
         $command = new AddBlockToPageCommand();
@@ -91,6 +106,7 @@ class Areas extends ApiController implements ApplicationAwareInterface
         $command->setArea($area);
         $command->setBlockType($blockType);
         $command->setData($data);
+        $command->setBeforeBlock($beforeBlock);
         // the received data is in the CIF format (that's how we export blocks)
         $command->setSaveMode(SaveMode::SAVE_MODE_IMPORT);
 
