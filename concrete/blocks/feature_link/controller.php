@@ -2,13 +2,11 @@
 
 namespace Concrete\Block\FeatureLink;
 
-use Concrete\Core\Api\ApiResourceValueInterface;
 use Concrete\Core\Api\ApiValueSchemaInterface;
 use Concrete\Core\Api\Block\ApiValueSchemaFactory;
 use Concrete\Core\Block\BlockController;
 use Concrete\Core\Block\Controller\SaveMode;
 use Concrete\Core\Block\ExportDeclarations;
-use Concrete\Core\Block\Traits\CustomApiValueTrait;
 use Concrete\Core\Feature\Features;
 use Concrete\Core\Feature\UsesFeatureInterface;
 use Concrete\Core\File\File;
@@ -22,10 +20,8 @@ use Concrete\Core\File\Tracker\RichTextExtractor;
 
 defined('C5_EXECUTE') or die('Access Denied.');
 
-class Controller extends BlockController implements ApiResourceValueInterface, ApiValueSchemaInterface, FileTrackableInterface, UsesFeatureInterface
+class Controller extends BlockController implements ApiValueSchemaInterface, FileTrackableInterface, UsesFeatureInterface
 {
-    use CustomApiValueTrait;
-
     /**
      * @var string|null
      */
@@ -363,21 +359,6 @@ class Controller extends BlockController implements ApiResourceValueInterface, A
                 ],
             ],
         ];
-    }
-
-    /**
-     * {@inheritdoc}
-     *
-     * @see \Concrete\Core\Block\BlockController::getImportDataFromApiValue()
-     */
-    public function getImportDataFromApiValue($page, array $value): array
-    {
-        if ($this->bID) {
-            // the save() method resets the settings that it doesn't receive: let's keep the current ones
-            $value += $this->serializeValueForApi();
-        }
-
-        return parent::getImportDataFromApiValue($page, $value);
     }
 
     /**

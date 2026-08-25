@@ -1,19 +1,15 @@
 <?php
 namespace Concrete\Block\RssDisplayer;
 
-use Concrete\Core\Api\ApiResourceValueInterface;
 use Concrete\Core\Api\ApiValueSchemaInterface;
 use Concrete\Core\Block\BlockController;
-use Concrete\Core\Block\Traits\CustomApiValueTrait;
 use Concrete\Core\Feature\Features;
 use Concrete\Core\Feature\UsesFeatureInterface;
 use Loader;
 use Core;
 
-class Controller extends BlockController implements ApiResourceValueInterface, ApiValueSchemaInterface, UsesFeatureInterface
+class Controller extends BlockController implements ApiValueSchemaInterface, UsesFeatureInterface
 {
-    use CustomApiValueTrait;
-
     /**
      * @var string|null
      */
@@ -306,21 +302,6 @@ class Controller extends BlockController implements ApiResourceValueInterface, A
                 ],
             ],
         ];
-    }
-
-    /**
-     * {@inheritdoc}
-     *
-     * @see \Concrete\Core\Block\BlockController::getImportDataFromApiValue()
-     */
-    public function getImportDataFromApiValue($page, array $value): array
-    {
-        if ($this->bID) {
-            // the save() method resets the settings that it doesn't receive: let's keep the current ones
-            $value += $this->serializeValueForApi();
-        }
-
-        return parent::getImportDataFromApiValue($page, $value);
     }
 
     /**

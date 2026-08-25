@@ -3,13 +3,11 @@
 namespace Concrete\Block\Search;
 
 use CollectionAttributeKey;
-use Concrete\Core\Api\ApiResourceValueInterface;
 use Concrete\Core\Api\ApiValueSchemaInterface;
 use Concrete\Core\Api\Block\ApiValueSchemaFactory;
 use Concrete\Core\Attribute\Key\CollectionKey;
 use Concrete\Core\Block\BlockController;
 use Concrete\Core\Block\ExportDeclarations;
-use Concrete\Core\Block\Traits\CustomApiValueTrait;
 use Concrete\Core\Feature\Features;
 use Concrete\Core\Feature\UsesFeatureInterface;
 use Concrete\Core\Page\PageList;
@@ -20,10 +18,8 @@ use Request;
 use Concrete\Core\Support\Facade\Config;
 use Concrete\Core\Url\SeoCanonical;
 
-class Controller extends BlockController implements ApiResourceValueInterface, ApiValueSchemaInterface, UsesFeatureInterface
+class Controller extends BlockController implements ApiValueSchemaInterface, UsesFeatureInterface
 {
-    use CustomApiValueTrait;
-
     /**
      * Search title.
      *
@@ -488,21 +484,6 @@ class Controller extends BlockController implements ApiResourceValueInterface, A
                 ],
             ],
         ];
-    }
-
-    /**
-     * {@inheritdoc}
-     *
-     * @see \Concrete\Core\Block\BlockController::getImportDataFromApiValue()
-     */
-    public function getImportDataFromApiValue($page, array $value): array
-    {
-        if ($this->bID) {
-            // the save() method resets the settings that it doesn't receive: let's keep the current ones
-            $value += $this->serializeValueForApi();
-        }
-
-        return parent::getImportDataFromApiValue($page, $value);
     }
 
     /**

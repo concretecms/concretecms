@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\Block;
 
+use Concrete\Core\Api\ApiResourceValueInterface;
 use Concrete\Core\Area\Area;
 use Concrete\Core\Backup\ContentExporter;
 use Concrete\Core\Backup\ContentImporter;
@@ -691,6 +692,40 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
     }
 
     /**
+     * Get the value that the API exposes for this block.
+     *
+     * Controllers implementing ApiResourceValueInterface build it themselves; for the other ones it's the
+     * first record of the main table of their CIF representation, whose placeholders (like
+     * {ccm:export:page:...}) are left as they are.
+     *
+     * @return array<string,mixed>
+     */
+    public function getApiValue(): array
+    {
+        if ($this instanceof ApiResourceValueInterface) {
+            $resource = $this->getApiValueResource();
+            $value = $resource === null ? [] : $resource->getTransformer()->transform($resource->getData());
+
+            return is_array($value) ? $value : [];
+        }
+        $blockNode = new \SimpleXMLElement('<block></block>');
+        $this->export($blockNode);
+        $result = [];
+        if (isset($blockNode->data->record)) {
+            foreach ($blockNode->data->record->children() as $child) {
+                $childValue = (string) $child;
+                if ($childValue === '' && isset($child['null']) && filter_var((string) $child['null'], FILTER_VALIDATE_BOOLEAN)) {
+                    // that's how the export() method marks NULL values
+                    $childValue = null;
+                }
+                $result[$child->getName()] = $childValue;
+            }
+        }
+
+        return $result;
+    }
+
+    /**
      * Extract the data to be passed to the save() method from a block value received via the API.
      *
      * The API exposes block values in the CIF format (see the API block transformers), so they may contain
@@ -700,6 +735,9 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
      * Values whose key can't be an XML element name, as well as values that aren't strings, numbers or NULL,
      * are left untouched (they can't be columns handled by getImportData()).
      *
+     * The received value is completed with the one the block already has, so that a value mentioning just a
+     * few settings doesn't reset the other ones (the save() method of a block type is given every setting).
+     *
      * @param \Concrete\Core\Page\Page $page
      * @param array<string,mixed> $value
      *
@@ -707,6 +745,9 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
      */
     public function getImportDataFromApiValue($page, array $value): array
     {
+        if ($this->bID) {
+            $value += $this->getApiValue();
+        }
         $xml = $this->app->make(Xml::class);
         $blockNode = new \SimpleXMLElement('<block></block>');
         $dataNode = $blockNode->addChild('data');

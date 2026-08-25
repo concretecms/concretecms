@@ -1,7 +1,6 @@
 <?php
 namespace Concrete\Core\Api\Fractal\Transformer;
 
-use Concrete\Core\Api\ApiResourceValueInterface;
 use Concrete\Core\Block\Block;
 use Concrete\Core\Api\Resources;
 use League\Fractal\Resource\Item;
@@ -16,49 +15,11 @@ class BaseBlockTransformer extends TransformerAbstract
 
     public function transform(Block $block)
     {
-        $controller = $block->getController();
-        $blockValue = [];
-        if ($controller instanceof ApiResourceValueInterface) {
-            $blockValueResource = $controller->getApiValueResource();
-            if ($blockValueResource) {
-                $blockValue = $blockValueResource->getTransformer()->transform(
-                    $blockValueResource->getData()
-                );
-            }
-        } else {
-            // Hacky but a reasonable way to get a default API export
-            $exportNode = new \SimpleXMLElement('<temporary-element></temporary-element>');
-            $controller->export($exportNode);
-            $blockValue = $this->extractBlockValue($exportNode);
-        }
-
         return [
             'id' => $block->getBlockID(),
             'type' => $block->getBlockTypeHandle(),
-            'value' => $blockValue,
+            'value' => $block->getController()->getApiValue(),
         ];
-    }
-
-    /**
-     * Extract the value of a block from the XML element built by the block controller export() method.
-     *
-     * @return array<string,string|null>
-     */
-    protected function extractBlockValue(\SimpleXMLElement $exportNode): array
-    {
-        $blockValue = [];
-        if (isset($exportNode->data->record)) {
-            foreach ($exportNode->data->record->children() as $child) {
-                $childValue = (string) $child;
-                if ($childValue === '' && isset($child['null']) && filter_var((string) $child['null'], FILTER_VALIDATE_BOOLEAN)) {
-                    // the block controller export() method marks NULL values with a "null" attribute
-                    $childValue = null;
-                }
-                $blockValue[$child->getName()] = $childValue;
-            }
-        }
-
-        return $blockValue;
     }
 
     public function includePage(Block $block)

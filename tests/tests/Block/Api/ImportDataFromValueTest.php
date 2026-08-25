@@ -94,6 +94,31 @@ class ImportDataFromValueTest extends PageTestCase
         static::assertSame('', $args['displayOrder']);
     }
 
+    public function testAValueMentioningOneSettingKeepsTheOtherOnes(): void
+    {
+        $page = self::createPage('Page with a block');
+        if (BlockType::getByHandle('next_previous') === null) {
+            BlockType::installBlockType('next_previous');
+        }
+        $page->addBlock(BlockType::getByHandle('next_previous'), 'Main', [
+            'nextLabel' => 'Next one',
+            'previousLabel' => 'Previous one',
+            'parentLabel' => 'Up',
+            'orderBy' => 'display_asc',
+        ]);
+        $blocks = $page->getBlocks('Main');
+        $controller = $blocks[0]->getController();
+
+        $args = $controller->getImportDataFromApiValue($page, ['nextLabel' => 'The one after this']);
+
+        static::assertSame('The one after this', $args['nextLabel']);
+        // the save() method of a block type is given every setting: the ones that the value doesn't
+        // mention would be emptied
+        static::assertSame('Previous one', $args['previousLabel']);
+        static::assertSame('Up', $args['parentLabel']);
+        static::assertSame('display_asc', $args['orderBy']);
+    }
+
     public function testValuesThatCantBeExpressedInXmlAreLeftUntouched(): void
     {
         $page = self::createPage('Some page');
