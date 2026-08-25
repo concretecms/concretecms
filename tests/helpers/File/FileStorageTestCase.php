@@ -66,16 +66,16 @@ abstract class FileStorageTestCase extends ConcreteDatabaseTestCase
         $this->cleanup();
     }
 
-    protected function getStorageDirectory()
+    protected static function getStorageDirectory()
     {
         return str_replace(DIRECTORY_SEPARATOR, '/', __DIR__) . '/files';
     }
 
     protected function cleanup()
     {
-        if (is_dir($this->getStorageDirectory())) {
+        if (is_dir(static::getStorageDirectory())) {
             $files = new RecursiveIteratorIterator(
-                new RecursiveDirectoryIterator($this->getStorageDirectory(), RecursiveDirectoryIterator::SKIP_DOTS),
+                new RecursiveDirectoryIterator(static::getStorageDirectory(), RecursiveDirectoryIterator::SKIP_DOTS),
                 RecursiveIteratorIterator::CHILD_FIRST
             );
 
@@ -84,18 +84,18 @@ abstract class FileStorageTestCase extends ConcreteDatabaseTestCase
                 $todo($fileinfo->getRealPath());
             }
 
-            rmdir($this->getStorageDirectory());
+            rmdir(static::getStorageDirectory());
         }
     }
 
     /**
      * @return \Concrete\Core\Entity\File\StorageLocation\StorageLocation
      */
-    protected function getStorageLocation()
+    protected static function getStorageLocation()
     {
         $type = Type::add('local', t('Local Storage'));
         $configuration = $type->getConfigurationObject();
-        $configuration->setRootPath($this->getStorageDirectory());
+        $configuration->setRootPath(static::getStorageDirectory());
         $configuration->setWebRootRelativePath('/application/files');
 
         return StorageLocation::add($configuration, 'Default', true);
