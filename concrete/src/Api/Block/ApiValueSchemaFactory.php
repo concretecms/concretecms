@@ -131,11 +131,16 @@ class ApiValueSchemaFactory
      */
     public function describeReference(string $reference, array $schema = ['type' => 'string']): array
     {
-        if ($reference !== '') {
-            $schema += [
-                'x-concrete-reference' => $reference,
-                'description' => $this->getReferenceDescription($reference),
-            ];
+        if ($reference === '') {
+            return $schema;
+        }
+        $schema += ['x-concrete-reference' => $reference];
+        $referenceDescription = $this->getReferenceDescription($reference);
+        if ($referenceDescription !== '') {
+            // whoever describes the column says what it holds: let's add the format of its value
+            $description = rtrim((string) ($schema['description'] ?? ''));
+            // the descriptions are CommonMark: a blank line makes them two paragraphs
+            $schema['description'] = $description === '' ? $referenceDescription : "{$description}\n\n{$referenceDescription}";
         }
 
         return $schema;

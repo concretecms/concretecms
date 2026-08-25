@@ -96,6 +96,20 @@ class ApiValueSchemaFactoryTest extends ConcreteDatabaseTestCase
         static::assertArrayNotHasKey('description', $properties['maxWidth']);
     }
 
+    public function testTheFormatOfAReferenceIsAddedToItsDescription(): void
+    {
+        $schema = $this->getFactory()->describeReference(ExportDeclarations::REFERENCE_PAGE, [
+            'type' => ['string', 'integer'],
+            'description' => 'The page the block links to.',
+        ]);
+
+        // a block type describing itself says what the column holds, the factory how it's exchanged
+        static::assertStringStartsWith("The page the block links to.\n\n", $schema['description']);
+        static::assertStringContainsString('{ccm:export:page::id=<page ID>}', $schema['description']);
+        static::assertSame('page', $schema['x-concrete-reference']);
+        static::assertSame(['string', 'integer'], $schema['type']);
+    }
+
     /**
      * The API exchanges every value of the record as a string, and the columns holding a reference are
      * exchanged as a placeholder: the schema must describe that, not the database column.
