@@ -245,12 +245,23 @@ abstract class BlockApiValueTestCase extends PageTestCase
      */
     protected function updateBlock(Block $block, array $value): void
     {
-        $page = $block->getBlockCollectionObject();
+        // that's the save mode the API uses (see the areas API controller)
+        $block->update($this->getImportData($block, $value), SaveMode::SAVE_MODE_IMPORT);
+    }
+
+    /**
+     * Get the data that a value received via the API gives to the save() method of a block.
+     *
+     * @param array<string,mixed> $value
+     *
+     * @return array<string,mixed>
+     */
+    protected function getImportData(Block $block, array $value): array
+    {
         // that's what the API does with the values it receives (see the areas API controller)
         $value = $this->app->make(ApiValueNormalizer::class)->normalize($value);
-        $args = $block->getController()->getImportDataFromApiValue($page, $value);
-        // that's the save mode the API uses (see the areas API controller)
-        $block->update($args, SaveMode::SAVE_MODE_IMPORT);
+
+        return $block->getController()->getImportDataFromApiValue($block->getBlockCollectionObject(), $value);
     }
 
     /**

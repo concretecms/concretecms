@@ -100,6 +100,56 @@ class ImageValueTest extends BlockApiValueTestCase
     }
 
     /**
+     * The save() method of a block type is given the checkboxes of its form, which are sent only when they
+     * are checked: a flag whose value is turned off must not be read as a checked one.
+     */
+    public function testAFlagTurnedOffIsNotReadAsATurnedOnOne(): void
+    {
+        $block = $this->addBlock();
+
+        $this->updateBlock($block, [
+            'sizingOption' => 'constrain_size',
+            'maxWidth' => 400,
+            'maxHeight' => 300,
+            'cropImage' => false,
+        ]);
+
+        static::assertSame('0', $this->getApiValue($this->getBlock($block->getBlockCollectionObject()))['cropImage']);
+    }
+
+    /**
+     * The validation of a block type reads the checkboxes of its form too: a flag whose value is turned off
+     * must not be complained about.
+     */
+    public function testAFlagTurnedOffIsNotValidatedAsATurnedOnOne(): void
+    {
+        $block = $this->addBlock();
+
+        $args = $this->getImportData($block, [
+            'sizingOption' => 'constrain_size',
+            'maxWidth' => 0,
+            'maxHeight' => 0,
+            'cropImage' => false,
+        ]);
+
+        // cropping an image requires a maximum width and a maximum height, but nothing is being cropped
+        static::assertSame([], $block->getController()->validate($args)->getList());
+    }
+
+    /**
+     * The destination picker of the form of a block asks for the link in its own way: a value received via
+     * the API carries the columns it fills, so there's nothing to be picked.
+     */
+    public function testTheValidationDoesntAskForTheFieldsOfTheForm(): void
+    {
+        $block = $this->addBlock();
+
+        $args = $this->getImportData($block, ['internalLinkCID' => 0, 'fileLinkID' => 0, 'externalLink' => '']);
+
+        static::assertSame([], $block->getController()->validate($args)->getList());
+    }
+
+    /**
      * {@inheritdoc}
      *
      * @see \Concrete\TestHelpers\Block\BlockApiValueTestCase::getBlockTypeHandle()

@@ -75,6 +75,21 @@ class CalendarValueTest extends BlockApiValueTestCase
         );
     }
 
+    /**
+     * The save() method of a block type is given the checkboxes of its form, which are sent only when they
+     * are checked: a flag whose value is turned off must not be read as a checked one.
+     */
+    public function testAFlagTurnedOffIsNotReadAsATurnedOnOne(): void
+    {
+        $block = $this->addBlock();
+
+        $this->updateBlock($block, ['navLinks' => false, 'eventLimit' => true]);
+
+        $value = $this->getApiValue($this->getBlock($block->getBlockCollectionObject()));
+        static::assertSame('0', $value['navLinks']);
+        static::assertSame('1', $value['eventLimit']);
+    }
+
     public function testTheSchemaListsTheAvailableViews(): void
     {
         $block = $this->addBlock();

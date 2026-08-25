@@ -626,8 +626,8 @@ class Controller extends BlockController implements ApiResourceValueInterface, A
         }
         $args['viewTypesOrder'] = json_encode($viewTypesOrder);
 
-        $args['navLinks'] = isset($args['navLinks']) ? 1 : 0;
-        $args['eventLimit'] = isset($args['eventLimit']) ? 1 : 0;
+        $args['navLinks'] = empty($args['navLinks']) ? 0 : 1;
+        $args['eventLimit'] = empty($args['eventLimit']) ? 0 : 1;
 
         if (!$args['filterByTopicAttributeKeyID']) {
             $args['filterByTopicID'] = 0;
