@@ -800,8 +800,8 @@ class Controller extends BlockController implements ApiResourceValueInterface, A
                     'description' => 'The text displayed below the title of the table.',
                 ],
                 'tableStriped' => [
-                    'type' => ['string', 'integer'],
-                    'description' => 'Set it to 1 to give the rows of the table two alternating colors.',
+                    'type' => ['boolean', 'string', 'integer'],
+                    'description' => 'Set it to true to give the rows of the table two alternating colors.',
                 ],
                 'rowBackgroundColorAlternate' => [
                     'type' => ['string', 'null'],
@@ -824,20 +824,20 @@ class Controller extends BlockController implements ApiResourceValueInterface, A
                     'description' => 'The number of entries displayed in a page.',
                 ],
                 'enablePagination' => [
-                    'type' => ['string', 'integer', 'null'],
-                    'description' => 'Set it to 1 to let the visitors move to the other pages of the list.',
+                    'type' => ['boolean', 'string', 'integer', 'null'],
+                    'description' => 'Set it to true to let the visitors move to the other pages of the list.',
                 ],
                 'enableItemsPerPageSelection' => [
-                    'type' => ['string', 'integer', 'null'],
-                    'description' => 'Set it to 1 to let the visitors choose how many entries a page holds.',
+                    'type' => ['boolean', 'string', 'integer', 'null'],
+                    'description' => 'Set it to true to let the visitors choose how many entries a page holds.',
                 ],
                 'enableSearch' => [
-                    'type' => ['string', 'integer', 'null'],
-                    'description' => 'Set it to 1 to let the visitors search the entries (it\'s ignored when there is nothing to search by).',
+                    'type' => ['boolean', 'string', 'integer', 'null'],
+                    'description' => 'Set it to true to let the visitors search the entries (it\'s ignored when there is nothing to search by).',
                 ],
                 'enableKeywordSearch' => [
-                    'type' => ['string', 'integer', 'null'],
-                    'description' => 'Set it to 1 to let the visitors search the entries by keywords (it\'s used only when enableSearch is 1).',
+                    'type' => ['boolean', 'string', 'integer', 'null'],
+                    'description' => 'Set it to true to let the visitors search the entries by keywords (it\'s used only when enableSearch is 1).',
                 ],
                 'searchProperties' => [
                     'type' => 'array',

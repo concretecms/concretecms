@@ -201,12 +201,12 @@ class Controller extends BlockController implements ApiResourceValueInterface, A
                     'description' => 'The view displayed when the calendar is opened (it should be one of the values listed in viewTypes; when it\'s empty the calendar decides).',
                 ],
                 'navLinks' => [
-                    'type' => ['string', 'integer'],
-                    'description' => 'Set it to 1 to let the visitors move to the day (or to the week) they click on.',
+                    'type' => ['boolean', 'string', 'integer'],
+                    'description' => 'Set it to true to let the visitors move to the day (or to the week) they click on.',
                 ],
                 'eventLimit' => [
-                    'type' => ['string', 'integer'],
-                    'description' => 'Set it to 1 to limit the number of events displayed in a day, adding a link to the other ones.',
+                    'type' => ['boolean', 'string', 'integer'],
+                    'description' => 'Set it to true to limit the number of events displayed in a day, adding a link to the other ones.',
                 ],
                 'lightboxProperties' => [
                     'type' => 'array',

@@ -98,8 +98,9 @@ class ApiValueSchemaFactory
     {
         // reading always gives strings, since the API exports the values out of the XML representation of
         // the block (see BaseBlockTransformer), and the columns holding a reference to another entity are
-        // exported as a placeholder; writing accepts numbers as well, where the column holds numbers
-        $types = ['string'];
+        // exported as the identifier of what they refer to; writing accepts numbers as well, where the
+        // column holds numbers, and booleans, where it holds a flag
+        $types = $column->getType()->getName() === Types::BOOLEAN ? ['boolean', 'string'] : ['string'];
         $numberType = $this->getNumberType($column);
         if ($numberType !== '') {
             $types[] = $numberType;
@@ -109,7 +110,7 @@ class ApiValueSchemaFactory
         if (!$column->getNotnull()) {
             $types[] = 'null';
         }
-        $result = ['type' => count($types) === 1 ? 'string' : $types];
+        $result = ['type' => count($types) === 1 ? $types[0] : $types];
         if (isset($maxLength)) {
             $result['maxLength'] = $maxLength;
         }

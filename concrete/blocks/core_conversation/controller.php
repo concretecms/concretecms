@@ -445,8 +445,8 @@ class Controller extends BlockController implements ApiResourceValueInterface, A
             'description' => 'The settings of the block, and the ones of the conversation it owns (the messages of the conversation are not part of this value).',
             'properties' => [
                 'enablePosting' => [
-                    'type' => ['string', 'integer'],
-                    'description' => 'Set it to 1 to let the visitors add messages.',
+                    'type' => ['boolean', 'string', 'integer'],
+                    'description' => 'Set it to true to let the visitors add messages.',
                 ],
                 'displayMode' => [
                     'type' => 'string',
@@ -466,8 +466,8 @@ class Controller extends BlockController implements ApiResourceValueInterface, A
                     'description' => 'The text of the button that adds a message (empty for the default one).',
                 ],
                 'paginate' => [
-                    'type' => ['string', 'integer'],
-                    'description' => 'Set it to 1 to split the messages in pages of itemsPerPage messages.',
+                    'type' => ['boolean', 'string', 'integer'],
+                    'description' => 'Set it to true to split the messages in pages of itemsPerPage messages.',
                 ],
                 'itemsPerPage' => [
                     'type' => ['string', 'integer'],
@@ -480,24 +480,24 @@ class Controller extends BlockController implements ApiResourceValueInterface, A
                     'description' => 'The order the messages are displayed in: oldest first, most recent first, or highest rated.',
                 ],
                 'enableOrdering' => [
-                    'type' => ['string', 'integer'],
-                    'description' => 'Set it to 1 to let the visitors change the order of the messages.',
+                    'type' => ['boolean', 'string', 'integer'],
+                    'description' => 'Set it to true to let the visitors change the order of the messages.',
                 ],
                 'enableCommentRating' => [
-                    'type' => ['string', 'integer'],
-                    'description' => 'Set it to 1 to let the visitors rate the messages.',
+                    'type' => ['boolean', 'string', 'integer'],
+                    'description' => 'Set it to true to let the visitors rate the messages.',
                 ],
                 'enableTopCommentReviews' => [
-                    'type' => ['string', 'integer'],
-                    'description' => 'Set it to 1 to display the highest and the lowest rated messages before the other ones.',
+                    'type' => ['boolean', 'string', 'integer'],
+                    'description' => 'Set it to true to display the highest and the lowest rated messages before the other ones.',
                 ],
                 'reviewAggregateAttributeKey' => [
                     'type' => ['string', 'integer', 'null'],
                     'description' => 'The ID of the rating attribute of the page the ratings are aggregated into.',
                 ],
                 'displaySocialLinks' => [
-                    'type' => ['string', 'integer'],
-                    'description' => 'Set it to 1 to display the links that share the messages on social networks.',
+                    'type' => ['boolean', 'string', 'integer'],
+                    'description' => 'Set it to true to display the links that share the messages on social networks.',
                 ],
                 'dateFormat' => [
                     'type' => 'string',
@@ -511,12 +511,12 @@ class Controller extends BlockController implements ApiResourceValueInterface, A
                     'description' => 'A format accepted by the date() PHP function (it\'s used only when dateFormat is "custom").',
                 ],
                 'attachmentOverridesEnabled' => [
-                    'type' => ['string', 'integer'],
-                    'description' => 'Set it to 1 to let this conversation have its own attachment settings, instead of the ones of the site.',
+                    'type' => ['boolean', 'string', 'integer'],
+                    'description' => 'Set it to true to let this conversation have its own attachment settings, instead of the ones of the site.',
                 ],
                 'attachmentsEnabled' => [
-                    'type' => ['string', 'integer'],
-                    'description' => 'Set it to 1 to let the messages have attachments (it\'s used only when attachmentOverridesEnabled is 1).',
+                    'type' => ['boolean', 'string', 'integer'],
+                    'description' => 'Set it to true to let the messages have attachments (it\'s used only when attachmentOverridesEnabled is 1).',
                 ],
                 'maxFilesGuest' => [
                     'type' => ['string', 'integer'],
@@ -539,8 +539,8 @@ class Controller extends BlockController implements ApiResourceValueInterface, A
                     'description' => 'The extensions the attachments can have, separated by commas (it\'s used only when attachmentOverridesEnabled is 1).',
                 ],
                 'notificationOverridesEnabled' => [
-                    'type' => ['string', 'integer'],
-                    'description' => 'Set it to 1 to let this conversation have its own notification settings, instead of the ones of the site.',
+                    'type' => ['boolean', 'string', 'integer'],
+                    'description' => 'Set it to true to let this conversation have its own notification settings, instead of the ones of the site.',
                 ],
                 'notificationUsers' => [
                     'type' => 'array',
@@ -551,8 +551,8 @@ class Controller extends BlockController implements ApiResourceValueInterface, A
                     ],
                 ],
                 'subscriptionEnabled' => [
-                    'type' => ['string', 'integer'],
-                    'description' => 'Set it to 1 to let the registered users subscribe to the conversation (it\'s used only when notificationOverridesEnabled is 1).',
+                    'type' => ['boolean', 'string', 'integer'],
+                    'description' => 'Set it to true to let the registered users subscribe to the conversation (it\'s used only when notificationOverridesEnabled is 1).',
                 ],
             ],
         ];

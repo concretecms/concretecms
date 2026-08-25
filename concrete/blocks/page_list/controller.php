@@ -1000,44 +1000,44 @@ class Controller extends BlockController implements ApiResourceValueInterface, A
                     'description' => 'The page whose children are listed (0 for the whole site): it\'s used only when both cThis and cThisParent are 0.',
                 ]),
                 'cThis' => [
-                    'type' => ['string', 'integer'],
-                    'description' => 'Set it to 1 to list the children of the page holding the block.',
+                    'type' => ['boolean', 'string', 'integer'],
+                    'description' => 'Set it to true to list the children of the page holding the block.',
                 ],
                 'cThisParent' => [
-                    'type' => ['string', 'integer'],
-                    'description' => 'Set it to 1 to list the children of the parent of the page holding the block.',
+                    'type' => ['boolean', 'string', 'integer'],
+                    'description' => 'Set it to true to list the children of the parent of the page holding the block.',
                 ],
                 'includeAllDescendents' => [
-                    'type' => ['string', 'integer'],
-                    'description' => 'Set it to 1 to list the pages at any depth below the chosen page, instead of its children only.',
+                    'type' => ['boolean', 'string', 'integer'],
+                    'description' => 'Set it to true to list the pages at any depth below the chosen page, instead of its children only.',
                 ],
                 'excludeCurrentPage' => [
-                    'type' => ['string', 'integer'],
-                    'description' => 'Set it to 1 to leave out the page holding the block.',
+                    'type' => ['boolean', 'string', 'integer'],
+                    'description' => 'Set it to true to leave out the page holding the block.',
                 ],
                 'displayAliases' => [
-                    'type' => ['string', 'integer'],
-                    'description' => 'Set it to 1 to list the aliases of the pages too.',
+                    'type' => ['boolean', 'string', 'integer'],
+                    'description' => 'Set it to true to list the aliases of the pages too.',
                 ],
                 'displaySystemPages' => [
-                    'type' => ['string', 'integer'],
-                    'description' => 'Set it to 1 to list the pages of the system too.',
+                    'type' => ['boolean', 'string', 'integer'],
+                    'description' => 'Set it to true to list the pages of the system too.',
                 ],
                 'displayFeaturedOnly' => [
-                    'type' => ['string', 'integer'],
-                    'description' => 'Set it to 1 to list only the pages whose is_featured attribute is set.',
+                    'type' => ['boolean', 'string', 'integer'],
+                    'description' => 'Set it to true to list only the pages whose is_featured attribute is set.',
                 ],
                 'ignorePermissions' => [
-                    'type' => ['string', 'integer'],
-                    'description' => 'Set it to 1 to list the pages the visitors can\'t see too.',
+                    'type' => ['boolean', 'string', 'integer'],
+                    'description' => 'Set it to true to list the pages the visitors can\'t see too.',
                 ],
                 'ptID' => $schemaFactory->describeReference(ExportDeclarations::REFERENCE_PAGE_TYPE, [
                     'type' => ['string', 'integer', 'null'],
                     'description' => 'The type the listed pages must have (0 for any type).',
                 ]),
                 'filterByRelated' => [
-                    'type' => ['string', 'integer'],
-                    'description' => 'Set it to 1 to list only the pages sharing a topic with the page holding the block.',
+                    'type' => ['boolean', 'string', 'integer'],
+                    'description' => 'Set it to true to list only the pages sharing a topic with the page holding the block.',
                 ],
                 'relatedTopicAttributeKeyHandle' => [
                     'type' => ['string', 'null'],
@@ -1045,8 +1045,8 @@ class Controller extends BlockController implements ApiResourceValueInterface, A
                     'description' => 'The handle of the topics attribute holding the topics to be shared (it\'s used only when filterByRelated is 1).',
                 ],
                 'filterByCustomTopic' => [
-                    'type' => ['string', 'integer'],
-                    'description' => 'Set it to 1 to list only the pages assigned to the customTopicTreeNodeID topic.',
+                    'type' => ['boolean', 'string', 'integer'],
+                    'description' => 'Set it to true to list only the pages assigned to the customTopicTreeNodeID topic.',
                 ],
                 'customTopicAttributeKeyHandle' => [
                     'type' => ['string', 'null'],
@@ -1076,8 +1076,8 @@ class Controller extends BlockController implements ApiResourceValueInterface, A
                     'description' => 'The last day the pages can be published in, as YYYY-MM-DD (it\'s used only when filterDateOption is "between").',
                 ],
                 'enableExternalFiltering' => [
-                    'type' => ['string', 'integer'],
-                    'description' => 'Set it to 1 to let the query string of the page filter the listed pages too.',
+                    'type' => ['boolean', 'string', 'integer'],
+                    'description' => 'Set it to true to let the query string of the page filter the listed pages too.',
                 ],
                 'orderBy' => [
                     'type' => ['string', 'null'],
@@ -1089,12 +1089,12 @@ class Controller extends BlockController implements ApiResourceValueInterface, A
                     'description' => 'The number of pages to be listed (0 for all of them).',
                 ],
                 'paginate' => [
-                    'type' => ['string', 'integer'],
-                    'description' => 'Set it to 1 to split the pages in pages of num items.',
+                    'type' => ['boolean', 'string', 'integer'],
+                    'description' => 'Set it to true to split the pages in pages of num items.',
                 ],
                 'excludeCanonicalPaging' => [
-                    'type' => ['string', 'integer'],
-                    'description' => 'Set it to 1 to leave the paging out of the canonical URL of the page.',
+                    'type' => ['boolean', 'string', 'integer'],
+                    'description' => 'Set it to true to leave the paging out of the canonical URL of the page.',
                 ],
                 'pageListTitle' => [
                     'type' => ['string', 'null'],
@@ -1108,32 +1108,32 @@ class Controller extends BlockController implements ApiResourceValueInterface, A
                     'description' => 'The HTML element wrapping the text displayed above the list.',
                 ],
                 'includeName' => [
-                    'type' => ['string', 'integer'],
-                    'description' => 'Set it to 1 to display the name of every listed page.',
+                    'type' => ['boolean', 'string', 'integer'],
+                    'description' => 'Set it to true to display the name of every listed page.',
                 ],
                 'includeDescription' => [
-                    'type' => ['string', 'integer'],
-                    'description' => 'Set it to 1 to display the description of every listed page.',
+                    'type' => ['boolean', 'string', 'integer'],
+                    'description' => 'Set it to true to display the description of every listed page.',
                 ],
                 'truncateSummaries' => [
-                    'type' => ['string', 'integer'],
-                    'description' => 'Set it to 1 to cut the descriptions to truncateChars characters.',
+                    'type' => ['boolean', 'string', 'integer'],
+                    'description' => 'Set it to true to cut the descriptions to truncateChars characters.',
                 ],
                 'truncateChars' => [
                     'type' => ['string', 'integer'],
                     'description' => 'The number of characters the descriptions are cut to (it\'s used only when truncateSummaries is 1).',
                 ],
                 'includeDate' => [
-                    'type' => ['string', 'integer'],
-                    'description' => 'Set it to 1 to display the date every listed page was published in.',
+                    'type' => ['boolean', 'string', 'integer'],
+                    'description' => 'Set it to true to display the date every listed page was published in.',
                 ],
                 'displayThumbnail' => [
-                    'type' => ['string', 'integer'],
-                    'description' => 'Set it to 1 to display the thumbnail of every listed page.',
+                    'type' => ['boolean', 'string', 'integer'],
+                    'description' => 'Set it to true to display the thumbnail of every listed page.',
                 ],
                 'useButtonForLink' => [
-                    'type' => ['string', 'integer'],
-                    'description' => 'Set it to 1 to link every listed page with a button, instead of its name.',
+                    'type' => ['boolean', 'string', 'integer'],
+                    'description' => 'Set it to true to link every listed page with a button, instead of its name.',
                 ],
                 'buttonLinkText' => [
                     'type' => ['string', 'null'],

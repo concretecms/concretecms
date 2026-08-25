@@ -290,12 +290,12 @@ class Controller extends BlockController implements ApiResourceValueInterface, A
                     'description' => 'The number of milliseconds the transition between two slides lasts.',
                 ],
                 'noAnimate' => [
-                    'type' => ['string', 'integer'],
-                    'description' => 'Set it to 1 to switch the slides without animating them.',
+                    'type' => ['boolean', 'string', 'integer'],
+                    'description' => 'Set it to true to switch the slides without animating them.',
                 ],
                 'pause' => [
-                    'type' => ['string', 'integer'],
-                    'description' => 'Set it to 1 to stop the slideshow while the pointer is over it.',
+                    'type' => ['boolean', 'string', 'integer'],
+                    'description' => 'Set it to true to stop the slideshow while the pointer is over it.',
                 ],
                 'maxWidth' => [
                     'type' => ['string', 'integer'],

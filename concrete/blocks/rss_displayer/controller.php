@@ -288,12 +288,12 @@ class Controller extends BlockController implements ApiValueSchemaInterface, Use
                     'description' => 'The number of posts to be displayed.',
                 ],
                 'showSummary' => [
-                    'type' => ['string', 'integer'],
-                    'description' => 'Set it to 1 to display the summary of every post, and not just its title.',
+                    'type' => ['boolean', 'string', 'integer'],
+                    'description' => 'Set it to true to display the summary of every post, and not just its title.',
                 ],
                 'launchInNewWindow' => [
-                    'type' => ['string', 'integer'],
-                    'description' => 'Set it to 1 to open the posts in another window.',
+                    'type' => ['boolean', 'string', 'integer'],
+                    'description' => 'Set it to true to open the posts in another window.',
                 ],
                 'dateFormat' => [
                     'type' => ['string', 'null'],

@@ -542,16 +542,16 @@ class Controller extends BlockController implements ApiValueSchemaInterface, Not
                     'description' => 'The text displayed once the form has been submitted.',
                 ],
                 'displayCaptcha' => [
-                    'type' => ['string', 'integer', 'null'],
-                    'description' => 'Set it to 1 to ask the visitors to solve a captcha before submitting the form.',
+                    'type' => ['boolean', 'string', 'integer', 'null'],
+                    'description' => 'Set it to true to ask the visitors to solve a captcha before submitting the form.',
                 ],
                 'storeFormSubmission' => [
-                    'type' => ['string', 'integer'],
-                    'description' => 'Set it to 1 to save the submitted forms as entries of the Express entity.',
+                    'type' => ['boolean', 'string', 'integer'],
+                    'description' => 'Set it to true to save the submitted forms as entries of the Express entity.',
                 ],
                 'notifyMeOnSubmission' => [
-                    'type' => ['string', 'integer'],
-                    'description' => 'Set it to 1 to send an email to the recipientEmail addresses when the form is submitted.',
+                    'type' => ['boolean', 'string', 'integer'],
+                    'description' => 'Set it to true to send an email to the recipientEmail addresses when the form is submitted.',
                 ],
                 'recipientEmail' => [
                     'type' => ['string', 'null'],

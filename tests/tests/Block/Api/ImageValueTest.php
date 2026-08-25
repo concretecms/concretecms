@@ -82,6 +82,24 @@ class ImageValueTest extends BlockApiValueTestCase
     }
 
     /**
+     * The flags of a block are stored as 0 and 1, and read back as strings: whoever writes them can use the
+     * booleans that JSON has.
+     */
+    public function testTheFlagsCanBeWrittenAsBooleans(): void
+    {
+        $block = $this->addBlock();
+
+        $this->updateBlock($block, [
+            'lazyLoad' => false,
+            'openLinkInNewWindow' => true,
+        ]);
+
+        $value = $this->getApiValue($this->getBlock($block->getBlockCollectionObject()));
+        static::assertSame('0', $value['lazyLoad']);
+        static::assertSame('1', $value['openLinkInNewWindow']);
+    }
+
+    /**
      * {@inheritdoc}
      *
      * @see \Concrete\TestHelpers\Block\BlockApiValueTestCase::getBlockTypeHandle()

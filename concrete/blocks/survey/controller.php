@@ -385,14 +385,14 @@ class Controller extends BlockController implements ApiResourceValueInterface, A
                     ],
                 ],
                 'requiresRegistration' => [
-                    'type' => ['string', 'integer'],
+                    'type' => ['boolean', 'string', 'integer'],
                     'default' => '0',
-                    'description' => 'Set it to 1 to let only the registered users vote.',
+                    'description' => 'Set it to true to let only the registered users vote.',
                 ],
                 'showResults' => [
-                    'type' => ['string', 'integer'],
+                    'type' => ['boolean', 'string', 'integer'],
                     'default' => '0',
-                    'description' => 'Set it to 1 to show the results of the survey to whom has voted.',
+                    'description' => 'Set it to true to show the results of the survey to whom has voted.',
                 ],
                 'customMessage' => [
                     'type' => 'string',

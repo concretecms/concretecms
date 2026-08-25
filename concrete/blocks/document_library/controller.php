@@ -1074,8 +1074,8 @@ class Controller extends BlockController implements ApiResourceValueInterface, A
                     'description' => 'The folder holding the files to be listed (0 for the root folder).',
                 ]),
                 'hideFolders' => [
-                    'type' => ['string', 'integer'],
-                    'description' => 'Set it to 1 to list only the files, hiding the folders contained in the folder.',
+                    'type' => ['boolean', 'string', 'integer'],
+                    'description' => 'Set it to true to list only the files, hiding the folders contained in the folder.',
                 ],
                 'setIds' => [
                     'type' => 'array',
@@ -1093,16 +1093,16 @@ class Controller extends BlockController implements ApiResourceValueInterface, A
                     'description' => 'The tags the files must have, separated by commas.',
                 ],
                 'onlyCurrentUser' => [
-                    'type' => ['string', 'integer', 'null'],
-                    'description' => 'Set it to 1 to list only the files added by the user viewing the page.',
+                    'type' => ['boolean', 'string', 'integer', 'null'],
+                    'description' => 'Set it to true to list only the files added by the user viewing the page.',
                 ],
                 'orderBy' => [
                     'type' => ['string', 'null'],
                     'description' => 'The property the files are sorted by: title, set, date, filename, or "ak_" followed by the ID of a file attribute.',
                 ],
                 'displayOrderDesc' => [
-                    'type' => ['string', 'integer'],
-                    'description' => 'Set it to 1 to sort the files in descending order.',
+                    'type' => ['boolean', 'string', 'integer'],
+                    'description' => 'Set it to true to sort the files in descending order.',
                 ],
                 'displayLimit' => [
                     'type' => ['string', 'integer', 'null'],
@@ -1123,8 +1123,8 @@ class Controller extends BlockController implements ApiResourceValueInterface, A
                     'items' => ['type' => 'string'],
                 ],
                 'enableSearch' => [
-                    'type' => ['string', 'integer', 'null'],
-                    'description' => 'Set it to 1 to let the visitors search the files.',
+                    'type' => ['boolean', 'string', 'integer', 'null'],
+                    'description' => 'Set it to true to let the visitors search the files.',
                 ],
                 'searchProperties' => [
                     'type' => 'array',
@@ -1166,8 +1166,8 @@ class Controller extends BlockController implements ApiResourceValueInterface, A
                     'description' => 'The text displayed below the title of the table.',
                 ],
                 'tableStriped' => [
-                    'type' => ['string', 'integer'],
-                    'description' => 'Set it to 1 to give the rows of the table two alternating colors.',
+                    'type' => ['boolean', 'string', 'integer'],
+                    'description' => 'Set it to true to give the rows of the table two alternating colors.',
                 ],
                 'rowBackgroundColorAlternate' => [
                     'type' => ['string', 'null'],
@@ -1186,16 +1186,16 @@ class Controller extends BlockController implements ApiResourceValueInterface, A
                     'description' => 'The color of the text of the header of the table.',
                 ],
                 'allowFileUploading' => [
-                    'type' => ['string', 'integer', 'null'],
-                    'description' => 'Set it to 1 to let the visitors that can add files upload them from this block.',
+                    'type' => ['boolean', 'string', 'integer', 'null'],
+                    'description' => 'Set it to true to let the visitors that can add files upload them from this block.',
                 ],
                 'addFilesToSetID' => [
                     'type' => ['string', 'integer'],
                     'description' => 'The ID of the file set the uploaded files are added to (0 for none).',
                 ],
                 'allowInPageFileManagement' => [
-                    'type' => ['string', 'integer', 'null'],
-                    'description' => 'Set it to 1 to let the visitors that can edit the files manage them from this block.',
+                    'type' => ['boolean', 'string', 'integer', 'null'],
+                    'description' => 'Set it to true to let the visitors that can edit the files manage them from this block.',
                 ],
             ],
         ];

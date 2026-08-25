@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Concrete\TestHelpers\Block;
 
+use Concrete\Core\Api\Block\ApiValueNormalizer;
 use Concrete\Core\Api\Block\ApiValueSchemaFactory;
 use Concrete\Core\Area\Area;
 use Concrete\Core\Api\Fractal\Transformer\BaseBlockTransformer;
@@ -245,6 +246,8 @@ abstract class BlockApiValueTestCase extends PageTestCase
     protected function updateBlock(Block $block, array $value): void
     {
         $page = $block->getBlockCollectionObject();
+        // that's what the API does with the values it receives (see the areas API controller)
+        $value = $this->app->make(ApiValueNormalizer::class)->normalize($value);
         $args = $block->getController()->getImportDataFromApiValue($page, $value);
         // that's the save mode the API uses (see the areas API controller)
         $block->update($args, SaveMode::SAVE_MODE_IMPORT);

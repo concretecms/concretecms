@@ -274,8 +274,8 @@ class Controller extends BlockController implements ApiResourceValueInterface, A
                     'description' => 'The order the events are listed in.',
                 ],
                 'filterByFeatured' => [
-                    'type' => ['string', 'integer'],
-                    'description' => 'Set it to 1 to list only the events whose is_featured attribute is set (that attribute must exist and must be indexed).',
+                    'type' => ['boolean', 'string', 'integer'],
+                    'description' => 'Set it to true to list only the events whose is_featured attribute is set (that attribute must exist and must be indexed).',
                 ],
                 'filterByTopicAttributeKeyID' => [
                     'type' => ['string', 'integer'],

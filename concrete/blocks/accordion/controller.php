@@ -435,12 +435,12 @@ class Controller extends BlockController implements ApiResourceValueInterface, A
                     'default' => 'h2',
                 ],
                 'alwaysOpen' => [
-                    'type' => ['string', 'integer', 'null'],
-                    'description' => 'Set it to 1 to let the items stay open when another item is opened.',
+                    'type' => ['boolean', 'string', 'integer', 'null'],
+                    'description' => 'Set it to true to let the items stay open when another item is opened.',
                 ],
                 'flush' => [
-                    'type' => ['string', 'integer', 'null'],
-                    'description' => 'Set it to 1 to render the accordion edge-to-edge.',
+                    'type' => ['boolean', 'string', 'integer', 'null'],
+                    'description' => 'Set it to true to render the accordion edge-to-edge.',
                 ],
                 'entries' => [
                     'type' => 'array',

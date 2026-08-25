@@ -345,8 +345,8 @@ class Controller extends BlockController implements ApiResourceValueInterface, A
                     'description' => 'The number of pixels between two columns (it\'s used only when the type is "custom").',
                 ],
                 'customWidths' => [
-                    'type' => ['string', 'integer'],
-                    'description' => 'Set it to 1 to give every column the width it specifies, instead of splitting the available space evenly (it\'s used only when the type is "custom").',
+                    'type' => ['boolean', 'string', 'integer'],
+                    'description' => 'Set it to true to give every column the width it specifies, instead of splitting the available space evenly (it\'s used only when the type is "custom").',
                 ],
                 'preset' => [
                     'type' => 'string',

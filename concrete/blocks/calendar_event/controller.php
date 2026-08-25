@@ -333,16 +333,16 @@ class Controller extends BlockController implements ApiResourceValueInterface, A
                     'description' => 'The ID of the event to be displayed (it\'s used only when the mode is "S").',
                 ],
                 'displayEventName' => [
-                    'type' => ['string', 'integer'],
-                    'description' => 'Set it to 1 to display the name of the event.',
+                    'type' => ['boolean', 'string', 'integer'],
+                    'description' => 'Set it to true to display the name of the event.',
                 ],
                 'displayEventDate' => [
-                    'type' => ['string', 'integer'],
-                    'description' => 'Set it to 1 to display the date of the event.',
+                    'type' => ['boolean', 'string', 'integer'],
+                    'description' => 'Set it to true to display the date of the event.',
                 ],
                 'displayEventDescription' => [
-                    'type' => ['string', 'integer'],
-                    'description' => 'Set it to 1 to display the description of the event.',
+                    'type' => ['boolean', 'string', 'integer'],
+                    'description' => 'Set it to true to display the description of the event.',
                 ],
                 'displayEventAttributes' => [
                     'type' => 'array',
@@ -353,12 +353,12 @@ class Controller extends BlockController implements ApiResourceValueInterface, A
                     ],
                 ],
                 'enableLinkToPage' => [
-                    'type' => ['string', 'integer'],
-                    'description' => 'Set it to 1 to link the event to its page.',
+                    'type' => ['boolean', 'string', 'integer'],
+                    'description' => 'Set it to true to link the event to its page.',
                 ],
                 'allowExport' => [
-                    'type' => ['string', 'integer'],
-                    'description' => 'Set it to 1 to let the visitors add the event to their calendar.',
+                    'type' => ['boolean', 'string', 'integer'],
+                    'description' => 'Set it to true to let the visitors add the event to their calendar.',
                 ],
             ],
         ];

@@ -215,8 +215,8 @@ class Controller extends BlockController implements ApiResourceValueInterface, A
                     'description' => 'The text displayed when the pointer stays over the image.',
                 ],
                 'lazyLoad' => [
-                    'type' => ['string', 'integer', 'null'],
-                    'description' => 'Set it to 1 to let the browser load the image only when it\'s about to be displayed.',
+                    'type' => ['boolean', 'string', 'integer', 'null'],
+                    'description' => 'Set it to true to let the browser load the image only when it\'s about to be displayed.',
                 ],
                 'sizingOption' => [
                     'type' => 'string',
@@ -241,8 +241,8 @@ class Controller extends BlockController implements ApiResourceValueInterface, A
                     'description' => 'The maximum height (in pixels) of the image (it\'s used only when sizingOption is "constrain_size").',
                 ],
                 'cropImage' => [
-                    'type' => ['string', 'integer', 'null'],
-                    'description' => 'Set it to 1 to crop the image to the maxWidth and maxHeight box, instead of fitting it in (it\'s used only when sizingOption is "constrain_size", and SVG images can\'t be cropped).',
+                    'type' => ['boolean', 'string', 'integer', 'null'],
+                    'description' => 'Set it to true to crop the image to the maxWidth and maxHeight box, instead of fitting it in (it\'s used only when sizingOption is "constrain_size", and SVG images can\'t be cropped).',
                 ],
                 'internalLinkCID' => $schemaFactory->describeReference(ExportDeclarations::REFERENCE_PAGE, [
                     'type' => ['string', 'integer', 'null'],
@@ -258,8 +258,8 @@ class Controller extends BlockController implements ApiResourceValueInterface, A
                     'description' => 'The URL the image links to: it\'s used only when the image links to no page and to no file.',
                 ],
                 'openLinkInNewWindow' => [
-                    'type' => ['string', 'integer'],
-                    'description' => 'Set it to 1 to open the link in another window.',
+                    'type' => ['boolean', 'string', 'integer'],
+                    'description' => 'Set it to true to open the link in another window.',
                 ],
             ],
         ];

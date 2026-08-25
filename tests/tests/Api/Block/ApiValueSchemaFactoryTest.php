@@ -122,8 +122,8 @@ class ApiValueSchemaFactoryTest extends ConcreteDatabaseTestCase
         static::assertSame(['string', 'integer', 'null'], $properties['maxWidth']['type']);
         // a reference is a placeholder (a string) or the local ID
         static::assertSame(['string', 'integer', 'null'], $properties['fID']['type']);
-        // the boolean columns of the blocks contain 0 and 1
-        static::assertSame(['string', 'integer'], $properties['openLinkInNewWindow']['type']);
+        // the boolean columns of the blocks contain 0 and 1, and JSON has booleans
+        static::assertSame(['boolean', 'string', 'integer'], $properties['openLinkInNewWindow']['type']);
         static::assertSame(['string', 'null'], $properties['altText']['type']);
         // the length is a constraint on what can be sent, unlike the type of the underlying column
         static::assertSame(255, $properties['altText']['maxLength']);

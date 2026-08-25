@@ -131,9 +131,9 @@ class Controller extends BlockController implements ApiResourceValueInterface, A
             'type' => 'object',
             'properties' => [
                 'includeDownloadLink' => [
-                    'type' => ['string', 'integer'],
+                    'type' => ['boolean', 'string', 'integer'],
                     'default' => '0',
-                    'description' => 'Set it to 1 to display a link to download the images.',
+                    'description' => 'Set it to true to display a link to download the images.',
                 ],
                 'entries' => [
                     'type' => 'array',

@@ -466,12 +466,12 @@ class Controller extends BlockController implements ApiValueSchemaInterface, Use
                     'description' => 'The path of the page whose descendants are searched (empty to search the whole site).',
                 ],
                 'search_all' => [
-                    'type' => ['string', 'integer', 'null'],
-                    'description' => 'Set it to 1 to search every site of the installation (baseSearchPath is then ignored).',
+                    'type' => ['boolean', 'string', 'integer', 'null'],
+                    'description' => 'Set it to true to search every site of the installation (baseSearchPath is then ignored).',
                 ],
                 'allow_user_options' => [
-                    'type' => ['string', 'integer', 'null'],
-                    'description' => 'Set it to 1 to let the visitors choose whether to search every site of the installation.',
+                    'type' => ['boolean', 'string', 'integer', 'null'],
+                    'description' => 'Set it to true to let the visitors choose whether to search every site of the installation.',
                 ],
                 'postTo_cID' => $schemaFactory->describeReference(ExportDeclarations::REFERENCE_PAGE, [
                     'type' => ['string', 'integer', 'null'],
