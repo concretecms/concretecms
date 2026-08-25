@@ -118,21 +118,6 @@ class ApiValueSchemaFactoryTest extends ConcreteDatabaseTestCase
         static::assertSame('0', $properties['maxWidth']['default']);
     }
 
-    public function testSecondaryTablesAreReported(): void
-    {
-        // the API value only carries the first record of the main table, so clients must know that
-        // the block has data elsewhere
-        $controller = new class() extends BlockController {
-            protected $btTable = 'btContentLocal';
-
-            protected $btExportTables = ['btContentLocal', 'btSomeOtherTable', 'btYetAnotherTable'];
-        };
-
-        $schema = $this->getFactory()->getSchema($controller);
-
-        static::assertSame(['btSomeOtherTable', 'btYetAnotherTable'], $schema['x-concrete-unrepresented-tables']);
-    }
-
     public function testControllersCanDescribeThemselves(): void
     {
         $controller = new class extends BlockController implements ApiValueSchemaInterface {

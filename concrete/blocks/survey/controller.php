@@ -371,6 +371,7 @@ class Controller extends BlockController implements ApiResourceValueInterface, A
     {
         return [
             'type' => 'object',
+            'description' => 'The question of the survey and the options it offers. The votes are not part of this value: they belong to the visitors that cast them.',
             'properties' => [
                 'question' => [
                     'type' => 'string',
@@ -399,8 +400,6 @@ class Controller extends BlockController implements ApiResourceValueInterface, A
                     'description' => 'The message displayed to whom has voted (it\'s cleared when the results are shown).',
                 ],
             ],
-            // the votes belong to the users that cast them: they aren't exchanged via the API
-            'x-concrete-unrepresented-tables' => ['btSurveyResults'],
         ];
     }
 

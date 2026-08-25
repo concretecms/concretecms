@@ -68,12 +68,6 @@ class ApiValueSchemaFactory
         if ($properties !== []) {
             $schema['properties'] = $properties;
         }
-        $additionalTables = $declarations->getAdditionalTables();
-        if ($additionalTables !== []) {
-            // the API value only carries the first record of the main table (see BaseBlockTransformer)
-            $schema['x-concrete-unrepresented-tables'] = $additionalTables;
-        }
-
         return $schema;
     }
 
