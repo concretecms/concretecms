@@ -178,7 +178,7 @@ EOL;
         $fID = $file->getFileID();
 
         $content = <<<EOL
-        <a href="{ccm:export:file::id={$fID}}">download</a> <concrete-picture file-id="{$fID}" alt="Lorem ipsum" />
+        <a href="{ccm:export:file:id={$fID}}">download</a> <concrete-picture file-id="{$fID}" alt="Lorem ipsum" />
 EOL;
 
         $expected = <<<EOL
@@ -198,7 +198,7 @@ EOL;
         $this->assertNotEmpty($uuid, 'newly added files should have a UUID');
 
         $content = <<<EOL
-        <a href="{ccm:export:file::id={$uuid}}">download</a> <concrete-picture file-id="{$uuid}" alt="Lorem ipsum" />
+        <a href="{ccm:export:file:id={$uuid}}">download</a> <concrete-picture file-id="{$uuid}" alt="Lorem ipsum" />
 EOL;
 
         $expected = <<<EOL
@@ -219,13 +219,13 @@ EOL;
             // an API request: IDs are exported, and file references use UUIDs
             ContentExporter::setOptions(new ContentExporterOptions(Request::create('/ccm/api/1.0/pages/1')));
             $this->assertSame(
-                "{ccm:export:file::id={$file->getFileUUID()}}",
+                "{ccm:export:file:id={$file->getFileUUID()}}",
                 ContentExporter::replaceFileWithPlaceHolder($file->getFileID())
             );
             // the very same file, exported by ID
             ContentExporter::getOptions()->setExportFilesAsUUID(false);
             $this->assertSame(
-                "{ccm:export:file::id={$file->getFileID()}}",
+                "{ccm:export:file:id={$file->getFileID()}}",
                 ContentExporter::replaceFileWithPlaceHolder($file->getFileID())
             );
         } finally {
@@ -241,7 +241,7 @@ EOL;
     {
         $this->createFile('unresolved.jpg');
 
-        $content = 'A<concrete-picture file="not-there.jpg" alt="Lorem ipsum" />B{ccm:export:file::id=12345}C';
+        $content = 'A<concrete-picture file="not-there.jpg" alt="Lorem ipsum" />B{ccm:export:file:id=12345}C';
 
         $inspector = app('import/value_inspector');
         $result = $inspector->inspect($content);

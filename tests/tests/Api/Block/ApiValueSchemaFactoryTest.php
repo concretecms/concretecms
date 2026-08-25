@@ -79,8 +79,8 @@ class ApiValueSchemaFactoryTest extends ConcreteDatabaseTestCase
         static::assertSame('content', $schema['properties']['content']['x-concrete-reference']);
         $description = $schema['properties']['content']['description'];
         static::assertStringContainsString('<concrete-picture file-id="<file ID or file UUID>" />', $description);
-        static::assertStringContainsString('{ccm:export:file::id=<file ID or file UUID>}', $description);
-        static::assertStringContainsString('{ccm:export:page::id=<page ID>}', $description);
+        static::assertStringContainsString('{ccm:export:file:id=<file ID or file UUID>}', $description);
+        static::assertStringContainsString('{ccm:export:page:id=<page ID>}', $description);
     }
 
     public function testReferenceColumnsAreFlagged(): void
@@ -91,7 +91,7 @@ class ApiValueSchemaFactoryTest extends ConcreteDatabaseTestCase
         static::assertSame('file', $properties['fID']['x-concrete-reference']);
         static::assertSame('page', $properties['internalLinkCID']['x-concrete-reference']);
         static::assertSame('file', $properties['fileLinkID']['x-concrete-reference']);
-        static::assertStringContainsString('{ccm:export:file::id=', $properties['fID']['description']);
+        static::assertStringContainsString('{ccm:export:file:id=', $properties['fID']['description']);
         static::assertArrayNotHasKey('x-concrete-reference', $properties['maxWidth']);
         static::assertArrayNotHasKey('description', $properties['maxWidth']);
     }
@@ -105,7 +105,7 @@ class ApiValueSchemaFactoryTest extends ConcreteDatabaseTestCase
 
         // a block type describing itself says what the column holds, the factory how it's exchanged
         static::assertStringStartsWith("The page the block links to.\n\n", $schema['description']);
-        static::assertStringContainsString('{ccm:export:page::id=<page ID>}', $schema['description']);
+        static::assertStringContainsString('{ccm:export:page:id=<page ID>}', $schema['description']);
         static::assertSame('page', $schema['x-concrete-reference']);
         static::assertSame(['string', 'integer'], $schema['type']);
     }

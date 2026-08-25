@@ -5,12 +5,14 @@ use Concrete\Core\Api\ApiResourceValueInterface;
 use Concrete\Core\Area\Area;
 use Concrete\Core\Backup\ContentExporter;
 use Concrete\Core\Backup\ContentImporter;
+use Concrete\Core\Backup\ContentImporter\ValueInspector\Item\FileItem;
 use Concrete\Core\Block\Controller\SaveMode;
 use Concrete\Core\Block\View\BlockViewTemplate;
 use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Editor\LinkAbstractor;
 use Concrete\Core\Entity\Block\BlockType\BlockType;
 use Concrete\Core\Error\ErrorList\ErrorList;
+use Concrete\Core\File\File;
 use Concrete\Core\File\Tracker\FileTrackableInterface;
 use Concrete\Core\Legacy\BlockRecord;
 use Concrete\Core\Page\Controller\PageController;
@@ -710,15 +712,19 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
         }
         $blockNode = new \SimpleXMLElement('<block></block>');
         $this->export($blockNode);
+        $declarations = $this->getExportDeclarations();
         $result = [];
         if (isset($blockNode->data->record)) {
             foreach ($blockNode->data->record->children() as $child) {
+                $name = $child->getName();
                 $childValue = (string) $child;
                 if ($childValue === '' && isset($child['null']) && filter_var((string) $child['null'], FILTER_VALIDATE_BOOLEAN)) {
                     // that's how the export() method marks NULL values
                     $childValue = null;
+                } else {
+                    $childValue = $this->serializeReferenceValueForApi($childValue, $declarations->getColumnReference($name));
                 }
-                $result[$child->getName()] = $childValue;
+                $result[$name] = $childValue;
             }
         }
 
@@ -771,6 +777,37 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
     }
 
     /**
+     * Get the API representation of the value of a record column.
+     *
+     * A CIF file has to refer to the other records with a placeholder, since it may be imported anywhere,
+     * whereas the API talks about this very site: the columns holding a reference are exchanged as the
+     * identifier of the record they refer to (the ID, or the UUID for the files that have one).
+     *
+     * The rich text is the exception: its references are within the text, so they keep their placeholders.
+     *
+     * @param string $reference the kind of reference contained in the column (one of the ExportDeclarations::REFERENCE_... constants) (empty string if none)
+     *
+     * @return string|int|null
+     */
+    protected function serializeReferenceValueForApi(string $value, string $reference)
+    {
+        if ($reference === '' || $reference === ExportDeclarations::REFERENCE_CONTENT) {
+            return $value;
+        }
+        $identifier = $this->app->make('import/value_inspector')->inspect($value)->getReplacedValue();
+        if ($reference === ExportDeclarations::REFERENCE_FILE && is_numeric($identifier)) {
+            // the API refers to the files the way its files endpoints do
+            $file = File::getByID($identifier);
+            if ($file !== null) {
+                $identifier = ContentExporter::getFileIdentifier($file);
+            }
+        }
+
+        // the values of a record are exchanged as strings, whatever their column holds
+        return $identifier === null ? null : (string) $identifier;
+    }
+
+    /**
      * Get the imported representation of the value of a record column.
      *
      * @param string $reference the kind of reference contained in the column (one of the ExportDeclarations::REFERENCE_... constants) (empty string if none)
@@ -798,6 +835,10 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
     {
         if ($reference === '') {
             return $value;
+        }
+        if ($reference === ExportDeclarations::REFERENCE_FILE && preg_match('/^' . FileItem::UUID_REGEX . '$/Di', $value)) {
+            // the API refers to the files by their UUID, while the blocks store their ID
+            $value = "{ccm:export:file:id={$value}}";
         }
         $result = \Core::make('import/value_inspector')->inspect($value);
 

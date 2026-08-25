@@ -26,11 +26,11 @@ class TopicListValueTest extends BlockApiValueTestCase
         $page = $block->getBlockCollectionObject();
 
         $this->updateBlock($block, [
-            'cParentID' => '{ccm:export:page::id=' . $page->getCollectionID() . '}',
+            'cParentID' => (string) $page->getCollectionID(),
         ]);
 
         static::assertSame(
-            '{ccm:export:page::id=' . $page->getCollectionID() . '}',
+            (string) $page->getCollectionID(),
             $this->getApiValue($this->getBlock($page))['cParentID']
         );
     }

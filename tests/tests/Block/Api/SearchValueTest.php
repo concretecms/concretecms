@@ -25,12 +25,12 @@ class SearchValueTest extends BlockApiValueTestCase
         $page = $block->getBlockCollectionObject();
 
         $this->updateBlock($block, [
-            'postTo_cID' => '{ccm:export:page::id=' . $page->getCollectionID() . '}',
+            'postTo_cID' => (string) $page->getCollectionID(),
             'resultsURL' => '',
         ]);
 
         static::assertSame(
-            '{ccm:export:page::id=' . $page->getCollectionID() . '}',
+            (string) $page->getCollectionID(),
             $this->getApiValue($this->getBlock($page))['postTo_cID']
         );
     }

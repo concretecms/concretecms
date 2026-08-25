@@ -85,11 +85,11 @@ class EventListValueTest extends BlockApiValueTestCase
         $page = $block->getBlockCollectionObject();
 
         $this->updateBlock($block, [
-            'linkToPage' => '{ccm:export:page::id=' . $page->getCollectionID() . '}',
+            'linkToPage' => (string) $page->getCollectionID(),
         ]);
 
         static::assertSame(
-            '{ccm:export:page::id=' . $page->getCollectionID() . '}',
+            (string) $page->getCollectionID(),
             $this->getApiValue($this->getBlock($page))['linkToPage']
         );
     }

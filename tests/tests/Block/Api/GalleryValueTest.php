@@ -61,9 +61,10 @@ class GalleryValueTest extends BlockApiValueTestCase
     public static function providerFileReferences(): array
     {
         return [
-            'a placeholder with the UUID' => ['{ccm:export:file::id=%2$s}'],
-            'a placeholder with the ID' => ['{ccm:export:file::id=%1$s}'],
+            'a placeholder with the UUID' => ['{ccm:export:file:id=%2$s}'],
+            'a placeholder with the ID' => ['{ccm:export:file:id=%1$s}'],
             'the local ID' => ['%1$s'],
+            'the UUID' => ['%2$s'],
         ];
     }
 
@@ -156,7 +157,7 @@ class GalleryValueTest extends BlockApiValueTestCase
     private function getApiEntry(string $caption, string $size): array
     {
         return [
-            'fID' => '{ccm:export:file::id=' . $this->getFile()->getFileUUID() . '}',
+            'fID' => $this->getFile()->getFileUUID(),
             'displayChoices' => [
                 'caption' => $caption,
                 'hover_caption' => '',

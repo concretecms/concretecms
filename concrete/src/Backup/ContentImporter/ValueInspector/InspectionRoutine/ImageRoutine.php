@@ -37,8 +37,8 @@ class ImageRoutine extends AbstractRegularExpressionRoutine
         $filename = '';
         $prefix = null;
         $id = '';
-        if (preg_match('/^(.*):id=(' . FileItem::IDENTIFIER_REGEX . ')$/Di', $identifier, $m)) {
-            $identifier = $m[1];
+        if (preg_match('/^(?:(.*):)?id=(' . FileItem::IDENTIFIER_REGEX . ')$/Di', $identifier, $m)) {
+            $identifier = $m[1] ?? '';
             $id = FileItem::parseFileIdentifier($m[2]);
         }
         if ($identifier !== '') {

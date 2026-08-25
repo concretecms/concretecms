@@ -29,8 +29,8 @@ class PageFeedItem extends AbstractItem
         if ($reference === '') {
             return null;
         }
-        if (preg_match('/^(?<handle>[^:]*):id=(?<id>[1-9]\d*)$/', $reference, $m)) {
-            $handle = $m['handle'];
+        if (preg_match('/^(?:(?<handle>[^:]*):)?id=(?<id>[1-9]\d*)$/', $reference, $m)) {
+            $handle = $m['handle'] ?? '';
             $id = (int) $m['id'];
         } else {
             $handle = $reference;

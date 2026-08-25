@@ -42,7 +42,7 @@ class AccordionValueTest extends BlockApiValueTestCase
         $block = $this->addBlock();
         $page = $block->getBlockCollectionObject();
         $cID = $page->getCollectionID();
-        $description = '<a href="{ccm:export:page::id=' . $cID . '}">by ID</a> <a href="{ccm:export:page:' . $page->getCollectionPath() . '}">by path</a>';
+        $description = '<a href="{ccm:export:page:id=' . $cID . '}">by ID</a> <a href="{ccm:export:page:' . $page->getCollectionPath() . '}">by path</a>';
 
         $this->updateBlock($block, ['entries' => [$this->getApiEntry('Links', $description)]]);
 

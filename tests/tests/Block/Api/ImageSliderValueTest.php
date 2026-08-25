@@ -165,9 +165,9 @@ class ImageSliderValueTest extends BlockApiValueTestCase
     {
         // the keys are in the order of the columns of the btImageSliderEntries table
         return [
-            'fID' => '{ccm:export:file::id=' . $this->getFile()->getFileUUID() . '}',
+            'fID' => $this->getFile()->getFileUUID(),
             'linkURL' => '',
-            'internalLinkCID' => '{ccm:export:page::id=' . $this->getLinkedPage()->getCollectionID() . '}',
+            'internalLinkCID' => (string) $this->getLinkedPage()->getCollectionID(),
             'title' => $title,
             'description' => '<p>The description of ' . $title . '</p>',
         ];

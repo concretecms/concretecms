@@ -36,7 +36,7 @@ class ContentImporterInspectionRoutineTest extends TestCase
             'truncated UUID' => [':id=e3f7ce45-cf48-43ea-b7e0', '', 'id=e3f7ce45-cf48-43ea-b7e0', ''],
             'file name containing an equal sign' => ['1234:a=b.png', '1234', 'a=b.png', ''],
             'file name containing a colon' => ['1234:a:b.png', '1234', 'a:b.png', ''],
-            'file name looking like an ID' => ['id=123', null, 'id=123', ''],
+            'ID without the leading colon' => ['id=123', null, '', 123],
             'empty reference' => ['', null, '', ''],
         ];
     }
@@ -75,14 +75,14 @@ class ContentImporterInspectionRoutineTest extends TestCase
     {
         return [
             'page by path' => [PageRoutine::class, '{ccm:export:page:/ok/here/we-go}', '/ok/here/we-go'],
-            'page by ID' => [PageRoutine::class, '{ccm:export:page::id=123}', ':id=123'],
+            'page by ID' => [PageRoutine::class, '{ccm:export:page:id=123}', 'id=123'],
             'home page' => [PageRoutine::class, '{ccm:export:page:}', ''],
             'page type by handle' => [PageTypeRoutine::class, '{ccm:export:pagetype:blog}', 'blog'],
-            'page type by ID' => [PageTypeRoutine::class, '{ccm:export:pagetype::id=5}', ':id=5'],
+            'page type by ID' => [PageTypeRoutine::class, '{ccm:export:pagetype:id=5}', 'id=5'],
             'page feed by handle' => [PageFeedRoutine::class, '{ccm:export:pagefeed:rss}', 'rss'],
-            'page feed by ID' => [PageFeedRoutine::class, '{ccm:export:pagefeed::id=5}', ':id=5'],
+            'page feed by ID' => [PageFeedRoutine::class, '{ccm:export:pagefeed:id=5}', 'id=5'],
             'file folder by path' => [FileFolderRoutine::class, '{ccm:export:filefolder:/My Folder}', '/My Folder'],
-            'file folder by ID' => [FileFolderRoutine::class, '{ccm:export:filefolder::id=5}', ':id=5'],
+            'file folder by ID' => [FileFolderRoutine::class, '{ccm:export:filefolder:id=5}', 'id=5'],
         ];
     }
 

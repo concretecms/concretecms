@@ -15,7 +15,9 @@ class FileItem implements ItemInterface
      *
      * @var string
      */
-    public const IDENTIFIER_REGEX = '[1-9][0-9]*|[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}';
+    public const UUID_REGEX = '[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}';
+
+    public const IDENTIFIER_REGEX = '[1-9][0-9]*|' . self::UUID_REGEX;
 
     /**
      * The file name (without the potential prefix).

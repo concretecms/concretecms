@@ -62,7 +62,7 @@ class HeroImageValueTest extends BlockApiValueTestCase
     {
         // the keys are in the order of the columns of the btHeroImage table
         return [
-            'image' => '{ccm:export:file::id=' . $this->getFile()->getFileUUID() . '}',
+            'image' => $this->getFile()->getFileUUID(),
             'title' => 'This is the title',
             'body' => '<p>What you are looking at</p>',
             'buttonText' => 'This is the Large Button Text',

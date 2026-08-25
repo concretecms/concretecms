@@ -26,8 +26,8 @@ class PageItem extends AbstractItem
     public function getContentObject()
     {
         $reference = (string) $this->getReference();
-        if (preg_match('/^(?<path>[^:]*):id=(?<id>[1-9]\d*)$/', $reference, $m)) {
-            $path = $m['path'];
+        if (preg_match('/^(?:(?<path>[^:]*):)?id=(?<id>[1-9]\d*)$/', $reference, $m)) {
+            $path = $m['path'] ?? '';
             $id = (int) $m['id'];
         } else {
             $path = $reference;

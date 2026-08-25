@@ -47,7 +47,7 @@ EOL;
         $homeID = Page::getHomePageID();
 
         $content = <<<EOL
-        <a href="{ccm:export:page::id={$pageID}}">Link</a>. <a href="{ccm:export:page::id={$homeID}}">Home</a>. <a href="{ccm:export:pagefeed::id=1}">Feed</a>.
+        <a href="{ccm:export:page:id={$pageID}}">Link</a>. <a href="{ccm:export:page:id={$homeID}}">Home</a>. <a href="{ccm:export:pagefeed:id=1}">Feed</a>.
 EOL;
 
         $inspector = Core::make('import/value_inspector');

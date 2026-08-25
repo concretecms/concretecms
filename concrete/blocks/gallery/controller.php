@@ -201,7 +201,7 @@ class Controller extends BlockController implements ApiResourceValueInterface, A
                     }
                 }
                 $entries[] = [
-                    'fID' => (string) $entryNode->fID,
+                    'fID' => $this->serializeReferenceValueForApi((string) $entryNode->fID, ExportDeclarations::REFERENCE_FILE),
                     'displayChoices' => $displayChoices,
                 ];
             }

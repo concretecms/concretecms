@@ -95,14 +95,18 @@ trait CustomApiValueTrait
      */
     protected function serializeRecordForApi(string $table, \SimpleXMLElement $record): array
     {
+        $declarations = $this->getExportDeclarations();
         $result = [];
         foreach ($record->children() as $child) {
+            $name = $child->getName();
             $value = (string) $child;
             if ($value === '' && isset($child['null']) && filter_var((string) $child['null'], FILTER_VALIDATE_BOOLEAN)) {
                 // that's how the export() method marks NULL values
                 $value = null;
+            } else {
+                $value = $this->serializeReferenceValueForApi($value, $declarations->getColumnReference($name));
             }
-            $result[$child->getName()] = $value;
+            $result[$name] = $value;
         }
 
         return $result;

@@ -58,7 +58,7 @@ class ImportDataFromValueTest extends PageTestCase
         $controller = $this->getContentBlockController();
 
         $args = $controller->getImportDataFromApiValue($page, [
-            'content' => '<a href="{ccm:export:page::id=' . $cID . '}">by ID</a> <a href="{ccm:export:page:/target-page}">by path</a>',
+            'content' => '<a href="{ccm:export:page:id=' . $cID . '}">by ID</a> <a href="{ccm:export:page:/target-page}">by path</a>',
         ]);
 
         static::assertSame(

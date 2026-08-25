@@ -322,7 +322,7 @@ class Controller extends BlockController implements ApiResourceValueInterface, A
             'mode' => (string) $this->mode,
             'topicTreeID' => (int) $this->topicTreeID,
             'topicAttributeKeyHandle' => (string) $this->topicAttributeKeyHandle,
-            'cParentID' => (string) ($this->cParentID ? ContentExporter::replacePageWithPlaceHolder($this->cParentID) : '0'),
+            'cParentID' => (string) (int) $this->cParentID,
             'title' => (string) $this->title,
             'titleFormat' => (string) $this->titleFormat,
         ];

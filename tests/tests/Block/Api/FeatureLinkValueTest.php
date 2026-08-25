@@ -59,7 +59,7 @@ class FeatureLinkValueTest extends BlockApiValueTestCase
      */
     protected function getExpectedApiValue(): array
     {
-        $fileReference = '{ccm:export:file::id=' . $this->getFile()->getFileUUID() . '}';
+        $fileReference = $this->getFile()->getFileUUID();
 
         // the keys are in the order of the columns of the btFeatureLink table
         return [

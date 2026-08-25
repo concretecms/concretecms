@@ -153,29 +153,30 @@ class ApiValueSchemaFactory
     {
         switch ($reference) {
             case ExportDeclarations::REFERENCE_CONTENT:
-                return 'Rich content: the references it contains are exported as placeholders, and resolved back when writing.'
+                return 'Rich content: the references it contains are exchanged as placeholders, and resolved back when writing.'
                     . ' The images are <concrete-picture file-id="<file ID or file UUID>" /> elements (their other attributes are kept as they are),'
-                    . ' whereas the links to files and to pages are {ccm:export:file::id=<file ID or file UUID>} and {ccm:export:page::id=<page ID>} placeholders.';
+                    . ' whereas the links to files and to pages are {ccm:export:file:id=<file ID or file UUID>} and {ccm:export:page:id=<page ID>} placeholders.';
             case ExportDeclarations::REFERENCE_FILE:
-                $placeholder = '{ccm:export:file::id=<file ID or file UUID>}';
-                break;
+                return 'Exchanged as the UUID of the file, or as its ID when it has no UUID (0 when it refers to no file);'
+                    . ' when writing, both of them are accepted, as well as a {ccm:export:file:id=<file ID or file UUID>} placeholder.';
             case ExportDeclarations::REFERENCE_PAGE:
-                $placeholder = '{ccm:export:page::id=<page ID>}';
+                $subject = 'page';
                 break;
             case ExportDeclarations::REFERENCE_PAGE_TYPE:
-                $placeholder = '{ccm:export:pagetype::id=<page type ID>}';
+                $subject = 'page type';
                 break;
             case ExportDeclarations::REFERENCE_PAGE_FEED:
-                $placeholder = '{ccm:export:pagefeed::id=<page feed ID>}';
+                $subject = 'page feed';
                 break;
             case ExportDeclarations::REFERENCE_FILE_FOLDER:
-                $placeholder = '{ccm:export:filefolder::id=<file folder ID>}';
+                $subject = 'file folder';
                 break;
             default:
                 return '';
         }
+        $placeholder = '{ccm:export:' . str_replace(' ', '', $subject) . ':id=<' . $subject . ' ID>}';
 
-        return "Exported as a {$placeholder} placeholder (an empty reference is exported as 0); when writing, the placeholder is resolved, and the local ID is accepted too.";
+        return "Exchanged as the ID of the {$subject} (0 when it refers to no {$subject}); when writing, a {$placeholder} placeholder is accepted too.";
     }
 
     /**

@@ -50,7 +50,7 @@ class PageListValueTest extends BlockApiValueTestCase
         static::assertSame('The listed pages', $feed->getTitle());
         // ... and the block refers to it
         $value = $this->getApiValue($this->getBlock($block->getBlockCollectionObject()));
-        static::assertSame('{ccm:export:pagefeed::id=' . $feed->getID() . '}', $value['pfID']);
+        static::assertSame((string) $feed->getID(), $value['pfID']);
         static::assertSame('the-listed-pages', $value['rssHandle']);
     }
 

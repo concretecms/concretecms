@@ -97,7 +97,7 @@ class ContentExporter
             return null;
         }
 
-        return static::getOptions()->isExportIDs() ? "{ccm:export:page::id={$c->getCollectionID()}}" : "{ccm:export:page:{$c->getCollectionPath()}}";
+        return static::getOptions()->isExportIDs() ? "{ccm:export:page:id={$c->getCollectionID()}}" : "{ccm:export:page:{$c->getCollectionPath()}}";
     }
 
     /**
@@ -125,7 +125,7 @@ class ContentExporter
         if ($options->isExportIDs()) {
             $identifier = static::getFileIdentifier($f);
 
-            return "{ccm:export:file::id={$identifier}}";
+            return "{ccm:export:file:id={$identifier}}";
         }
         return $options->isExportFilesWithoutPrefix() ? "{ccm:export:file:{$fv->getFileName()}}" : "{ccm:export:file:{$fv->getPrefix()}:{$fv->getFileName()}}";
     }
@@ -186,7 +186,7 @@ class ContentExporter
             return null;
         }
 
-        return static::getOptions()->isExportIDs() ? "{ccm:export:pagetype::id={$ct->getPageTypeID()}}" : "{ccm:export:pagetype:{$ct->getPageTypeHandle()}}";
+        return static::getOptions()->isExportIDs() ? "{ccm:export:pagetype:id={$ct->getPageTypeID()}}" : "{ccm:export:pagetype:{$ct->getPageTypeHandle()}}";
     }
 
     /**
@@ -206,7 +206,7 @@ class ContentExporter
             return null;
         }
 
-        return static::getOptions()->isExportIDs() ? "{ccm:export:filefolder::id={$folder->getTreeNodeID()}}" : "{ccm:export:filefolder:{$folder->getTreeNodeDisplayPath()}}";
+        return static::getOptions()->isExportIDs() ? "{ccm:export:filefolder:id={$folder->getTreeNodeID()}}" : "{ccm:export:filefolder:{$folder->getTreeNodeDisplayPath()}}";
     }
 
     /**
@@ -226,6 +226,6 @@ class ContentExporter
             return null;
         }
 
-        return static::getOptions()->isExportIDs() ? "{ccm:export:pagefeed::id={$pf->getID()}}" : "{ccm:export:pagefeed:{$pf->getHandle()}}";
+        return static::getOptions()->isExportIDs() ? "{ccm:export:pagefeed:id={$pf->getID()}}" : "{ccm:export:pagefeed:{$pf->getHandle()}}";
     }
 }

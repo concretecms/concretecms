@@ -125,7 +125,7 @@ class ImageValueTest extends BlockApiValueTestCase
     {
         // the keys are in the order of the columns of the btContentImage table, with the thumbnails at the end
         return [
-            'fID' => '{ccm:export:file::id=' . $this->getFile()->getFileUUID() . '}',
+            'fID' => $this->getFile()->getFileUUID(),
             'fOnstateID' => '0',
             'cropImage' => '0',
             'maxWidth' => '0',

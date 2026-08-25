@@ -62,7 +62,7 @@ class FeatureValueTest extends BlockApiValueTestCase
             'externalLink' => 'https://www.example.com',
             'internalLinkCID' => '0',
             'titleFormat' => 'h3',
-            'fID' => '{ccm:export:file::id=' . $this->getFile()->getFileUUID() . '}',
+            'fID' => $this->getFile()->getFileUUID(),
         ];
     }
 
