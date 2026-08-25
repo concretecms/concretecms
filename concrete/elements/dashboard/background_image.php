@@ -27,7 +27,7 @@ if (Config::get('concrete.white_label.background_image') !== 'none' && !Config::
 <script type="text/javascript">
     $(function() {
 
-        <?php if (isset($imagePath)) { ?>
+        <?php if (isset($imagePath) && Config::get('concrete.white_label.background_image') !== 'custom') { ?>
             $.getJSON(CCM_DISPATCHER_FILENAME + '/ccm/system/backend/dashboard/get_image_data', { image: '<?= $image ?>' }, function (data) {
                 if (data.photo.provider === 'unsplash') {
                     var authorBar = $('div[data-photo-provider=unsplash]')
@@ -49,8 +49,7 @@ if (Config::get('concrete.white_label.background_image') !== 'none' && !Config::
         
     });
 
-    $('body').css('background-image', 'url(<?= Config::get('concrete.urls.background_feed') . '/' . $image ?>)')
+    <?php if (isset($imagePath)) { ?>
+        $('body').css('background-image', 'url(<?= $imagePath ?>)')
+    <?php } ?>
 </script>
-
-
-
