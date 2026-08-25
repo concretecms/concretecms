@@ -61,6 +61,7 @@ class OpenApiSpecTest extends TestCase
         return [
             ['block_types:read'],
             ['system:openapi:read'],
+            ['pages:areas:sort_blocks'],
         ];
     }
 

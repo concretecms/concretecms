@@ -24,4 +24,19 @@ class ApiRouteListTest extends TestCase
         static::assertContains('/ccm/api/1.0/block_types', $paths);
         static::assertContains('/ccm/api/1.0/block_types/{blockTypeHandle}', $paths);
     }
+
+    public function testTheAreaBlockSortingRouteIsRegistered(): void
+    {
+        $router = app(Router::class);
+        $router->loadRouteList(new ApiRouteList());
+        foreach ($router->getRoutes() as $route) {
+            if ($route->getPath() === '/ccm/api/1.0/pages/{pageID}/{areaHandle}/sort') {
+                static::assertSame(['PUT'], $route->getMethods());
+                static::assertSame('pages:areas:sort_blocks', $route->getOption('oauth_scopes'));
+
+                return;
+            }
+        }
+        static::fail('The route that sorts the blocks of a page area is not registered');
+    }
 }
