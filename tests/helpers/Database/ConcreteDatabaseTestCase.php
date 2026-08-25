@@ -101,6 +101,9 @@ abstract class ConcreteDatabaseTestCase extends TestCase
         }
         // The currently logged in user may belong to groups that no longer exist
         $app->forgetInstance(\Concrete\Core\User\User::class);
+        // The custom styles are kept in memory by collection ID, and the next test case reuses those IDs
+        $app->forgetInstance(\Concrete\Core\Area\CustomStyleRepository::class);
+        $app->forgetInstance(\Concrete\Core\Block\CustomStyleRepository::class);
         // The permission categories are kept in a static property of their class
         \Closure::bind(static function (): void {
             \Concrete\Core\Permission\Category::$categories = null;
