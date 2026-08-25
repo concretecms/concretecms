@@ -2,9 +2,14 @@
 
 namespace Concrete\Block\TopicList;
 
+use Concrete\Core\Api\ApiResourceValueInterface;
+use Concrete\Core\Api\ApiValueSchemaInterface;
+use Concrete\Core\Api\Block\ApiValueSchemaFactory;
 use Concrete\Core\Backup\ContentExporter;
 use Concrete\Core\Backup\ContentImporter\ValueInspector\InspectionRoutine\PageRoutine;
 use Concrete\Core\Block\BlockController;
+use Concrete\Core\Block\ExportDeclarations;
+use Concrete\Core\Block\Traits\CustomApiValueTrait;
 use Concrete\Core\Feature\Features;
 use Concrete\Core\Feature\UsesFeatureInterface;
 use Concrete\Core\Page\Page;
@@ -14,8 +19,24 @@ use Concrete\Core\Tree\Type\Topic as TopicTree;
 
 defined('C5_EXECUTE') or die('Access Denied.');
 
-class Controller extends BlockController implements UsesFeatureInterface
+class Controller extends BlockController implements ApiResourceValueInterface, ApiValueSchemaInterface, UsesFeatureInterface
 {
+    use CustomApiValueTrait;
+
+    /**
+     * Value of the mode column: the topics are the ones of a topic tree.
+     *
+     * @var string
+     */
+    protected const MODE_SEARCH = 'S';
+
+    /**
+     * Value of the mode column: the topics are the ones assigned to the page holding the block.
+     *
+     * @var string
+     */
+    protected const MODE_PAGE = 'P';
+
     /**
      * @var string|null
      */
@@ -140,6 +161,7 @@ class Controller extends BlockController implements UsesFeatureInterface
         $this->set('attributeKeys', $attributeKeys);
         $this->set('tree', $tree);
         $this->set('trees', $trees);
+        $this->set('modes', $this->getAvailableModes());
     }
 
     /**
@@ -149,7 +171,7 @@ class Controller extends BlockController implements UsesFeatureInterface
      */
     public function view()
     {
-        if ($this->mode == 'P') {
+        if ($this->mode == self::MODE_PAGE) {
             $page = Page::getCurrentPage();
             $topics = $page->getAttribute($this->topicAttributeKeyHandle);
             if (is_array($topics)) {
@@ -217,6 +239,109 @@ class Controller extends BlockController implements UsesFeatureInterface
     }
 
     /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Api\ApiValueSchemaInterface::getApiValueSchema()
+     */
+    public function getApiValueSchema(): array
+    {
+        $schemaFactory = $this->app->make(ApiValueSchemaFactory::class);
+
+        return [
+            'type' => 'object',
+            'properties' => [
+                'mode' => [
+                    'type' => 'string',
+                    'enum' => array_keys($this->getAvailableModes()),
+                    'default' => self::MODE_SEARCH,
+                    'description' => 'Which topics are listed: "' . self::MODE_SEARCH . '" the ones of the topicTreeID tree, "' . self::MODE_PAGE . '" the ones assigned to the page holding the block.',
+                ],
+                'topicTreeID' => [
+                    'type' => ['string', 'integer'],
+                    'description' => 'The ID of the topic tree holding the topics to be listed (0 for none): it\'s used only when mode is "' . self::MODE_SEARCH . '".',
+                ],
+                'topicAttributeKeyHandle' => [
+                    'type' => ['string', 'null'],
+                    'maxLength' => 255,
+                    'description' => 'The handle of the topics attribute of the page holding the topics to be listed (it\'s used only when mode is "' . self::MODE_PAGE . '").',
+                ],
+                'cParentID' => $schemaFactory->describeReference(ExportDeclarations::REFERENCE_PAGE, [
+                    'type' => ['string', 'integer'],
+                    'description' => 'The page the topics link to (0 for the page holding the block).',
+                ]),
+                'title' => [
+                    'type' => ['string', 'null'],
+                    'maxLength' => 255,
+                    'description' => 'The text displayed above the topics.',
+                ],
+                'titleFormat' => [
+                    'type' => 'string',
+                    'enum' => array_keys(BlockController::$btTitleFormats),
+                    'default' => 'h5',
+                    'description' => 'The HTML element wrapping the text displayed above the topics.',
+                ],
+            ],
+        ];
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Block\BlockController::getImportDataFromApiValue()
+     */
+    public function getImportDataFromApiValue($page, array $value): array
+    {
+        if ($this->bID) {
+            // the save() method resets the settings that it doesn't receive: let's keep the current ones
+            $value += $this->serializeValueForApi();
+        }
+        $args = [];
+        foreach (['mode', 'title', 'titleFormat', 'topicAttributeKeyHandle'] as $key) {
+            $args[$key] = isset($value[$key]) ? (string) $value[$key] : '';
+        }
+        $tree = empty($value['topicTreeID']) ? null : TopicTree::getByID((int) $value['topicTreeID']);
+        $args['topicTreeID'] = $tree === null ? 0 : $tree->getTreeID();
+        $cParentID = (int) $this->importReferenceValue((string) ($value['cParentID'] ?? ''), ExportDeclarations::REFERENCE_PAGE);
+        // the save() method below keeps the page only when the checkbox of the form is checked
+        $args['cParentID'] = $cParentID;
+        $args['externalTarget'] = $cParentID === 0 ? 0 : 1;
+
+        return $args;
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Block\Traits\CustomApiValueTrait::serializeValueForApi()
+     */
+    protected function serializeValueForApi(): array
+    {
+        // the export() method below writes the settings as the children of the <data> element, which is not
+        // the list of records of a database table that the API knows how to read
+        return [
+            'mode' => (string) $this->mode,
+            'topicTreeID' => (int) $this->topicTreeID,
+            'topicAttributeKeyHandle' => (string) $this->topicAttributeKeyHandle,
+            'cParentID' => (string) ($this->cParentID ? ContentExporter::replacePageWithPlaceHolder($this->cParentID) : '0'),
+            'title' => (string) $this->title,
+            'titleFormat' => (string) $this->titleFormat,
+        ];
+    }
+
+    /**
+     * Get the ways the topics to be listed are chosen.
+     *
+     * @return array<string,string> the keys are the values of the mode column, the values are their names
+     */
+    protected function getAvailableModes(): array
+    {
+        return [
+            self::MODE_SEARCH => t('Search – Display a list of all topics for use on a search sidebar.'),
+            self::MODE_PAGE => t('Page – Display a list of topics for the current page.'),
+        ];
+    }
+
+    /**
      * @param \SimpleXMLElement $blockNode
      *
      * @return void
@@ -257,7 +382,7 @@ class Controller extends BlockController implements UsesFeatureInterface
         $args['mode'] = (string) $blockNode->data->mode;
         $args['titleFormat'] = (string) $blockNode->data->titleFormat;
         if (!$args['mode']) {
-            $args['mode'] = 'S';
+            $args['mode'] = self::MODE_SEARCH;
         }
         if (!$args['titleFormat']) {
             $args['titleFormat'] = 'h5';

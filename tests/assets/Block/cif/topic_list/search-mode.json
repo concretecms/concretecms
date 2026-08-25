@@ -1,4 +1,3 @@
 {
-  "$schema": "../options-schema.json",
-  "apiRoundTrip": false
+  "$schema": "../options-schema.json"
 }

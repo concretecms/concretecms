@@ -1,4 +1,15 @@
-<?php defined('C5_EXECUTE') or die('Access Denied.');
+<?php
+defined('C5_EXECUTE') or die('Access Denied.');
+
+/**
+ * @var \Concrete\Core\Tree\Type\Topic[] $trees
+ * @var \Concrete\Core\Form\Service\Form $form
+ * @var \Concrete\Core\Form\Service\Widget\PageSelector $form_page_selector
+ * @var \Concrete\Block\TopicList\Controller $controller
+ * @var \Concrete\Core\Entity\Attribute\Key\PageKey[] $attributeKeys
+ * @var array<string,string> $modes
+ */
+
 $topics = $topics ?? [];
 $title = $title ?? t('Topics');
 $titleFormat = $titleFormat ?? 'h5';
@@ -6,23 +17,11 @@ $mode = $mode ?? 'S';
 $tree = $tree ?? null;
 $cParentID = $cParentID ?? null;
 $topicAttributeKeyHandle = $topicAttributeKeyHandle ?? null;
-/** @var \Concrete\Core\Tree\Type\Topic[] $trees */
-/** @var \Concrete\Core\Form\Service\Form $form */
-/** @var \Concrete\Core\Form\Service\Widget\PageSelector $form_page_selector */
-/** @var \Concrete\Block\TopicList\Controller $controller */
-/** @var \Concrete\Core\Entity\Attribute\Key\PageKey[] $attributeKeys */
 ?>
 <fieldset>
     <div class="form-group">
         <label class="control-label form-label" for="modeSelect"><?=t('Mode')?></label>
-        <select class="form-select" name="mode" id="modeSelect">
-            <option value="S" <?php if ($mode == 'S') {
-    ?>selected<?php
-} ?>><?=t('Search – Display a list of all topics for use on a search sidebar.')?></option>
-            <option value="P" <?php if ($mode == 'P') {
-    ?>selected<?php
-} ?>><?=t('Page – Display a list of topics for the current page.')?></option>
-        </select>
+        <?= $form->select('mode', $modes, $mode, ['id' => 'modeSelect', 'class' => 'form-select']) ?>
     </div>
     <div class="form-group" data-row="mode-search">
         <label class="control-label form-label" for="topicTreeIDSelect"><?=t('Topic Tree')?></label>
