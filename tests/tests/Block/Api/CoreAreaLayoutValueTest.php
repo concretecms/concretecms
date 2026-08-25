@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Concrete\Tests\Block;
+namespace Concrete\Tests\Block\Api;
 
 use Concrete\Block\CoreAreaLayout\Controller as CoreAreaLayoutController;
 use Concrete\Core\Area\Area;
@@ -22,7 +22,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
  * @see \Concrete\Block\CoreAreaLayout\Controller::serializeValueForApi()
  * @see \Concrete\Block\CoreAreaLayout\Controller::getImportDataFromApiValue()
  */
-class CoreAreaLayoutApiValueTest extends BlockApiValueTestCase
+class CoreAreaLayoutValueTest extends BlockApiValueTestCase
 {
     /**
      * The block created by the tests.

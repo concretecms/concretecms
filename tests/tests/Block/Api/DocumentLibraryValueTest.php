@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Concrete\Tests\Block;
+namespace Concrete\Tests\Block\Api;
 
 use Concrete\Core\File\Set\Set as FileSet;
 use Concrete\TestHelpers\Block\BlockApiValueTestCase;
@@ -16,7 +16,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
  * @see \Concrete\Block\DocumentLibrary\Controller::serializeValueForApi()
  * @see \Concrete\Block\DocumentLibrary\Controller::getImportDataFromApiValue()
  */
-class DocumentLibraryApiValueTest extends BlockApiValueTestCase
+class DocumentLibraryValueTest extends BlockApiValueTestCase
 {
     /**
      * The file sets created by the tests, by their name.

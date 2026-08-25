@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Concrete\Tests\Block;
+namespace Concrete\Tests\Block\Api;
 
 use Concrete\Core\Attribute\Category\CategoryService as AttributeCategoryService;
 use Concrete\Core\Entity\Attribute\Category as AttributeCategory;
@@ -24,7 +24,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
  *
  * @see \Concrete\Block\ExpressForm\Controller::getApiValueSchema()
  */
-class ExpressFormApiValueTest extends BlockApiValueTestCase
+class ExpressFormValueTest extends BlockApiValueTestCase
 {
     /**
      * The Express form rendered by the block.

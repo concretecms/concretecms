@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Concrete\Tests\Block;
+namespace Concrete\Tests\Block\Api;
 
 use Concrete\Core\Entity\Board\Board;
 use Concrete\Core\Entity\Board\Instance;
@@ -18,7 +18,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
  * @see \Concrete\Block\Board\Controller::serializeValueForApi()
  * @see \Concrete\Block\Board\Controller::getImportDataFromApiValue()
  */
-class BoardApiValueTest extends BlockApiValueTestCase
+class BoardValueTest extends BlockApiValueTestCase
 {
     /**
      * The board instances created by the tests, by the name of their board.

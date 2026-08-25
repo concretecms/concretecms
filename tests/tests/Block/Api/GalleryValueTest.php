@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Concrete\Tests\Block;
+namespace Concrete\Tests\Block\Api;
 
 use Concrete\Core\Api\Block\ApiValueSchemaFactory;
 use Concrete\Core\Database\Connection\Connection;
@@ -17,7 +17,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
  * @see \Concrete\Block\Gallery\Controller::serializeValueForApi()
  * @see \Concrete\Block\Gallery\Controller::getImportDataFromApiValue()
  */
-class GalleryApiValueTest extends BlockApiValueTestCase
+class GalleryValueTest extends BlockApiValueTestCase
 {
     public function testTheImagesAreReplacedWhenTheyAreSpecified(): void
     {

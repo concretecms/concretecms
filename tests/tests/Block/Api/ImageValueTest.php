@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Concrete\Tests\Block;
+namespace Concrete\Tests\Block\Api;
 
 use Concrete\Core\Entity\File\Image\Thumbnail\Type\Type as ThumbnailType;
 use Concrete\Core\Entity\File\Image\Thumbnail\Type\TypeFileSet as ThumbnailTypeFileSet;
@@ -18,7 +18,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
  * @see \Concrete\Block\Image\Controller::serializeValueForApi()
  * @see \Concrete\Block\Image\Controller::getImportDataFromApiValue()
  */
-class ImageApiValueTest extends BlockApiValueTestCase
+class ImageValueTest extends BlockApiValueTestCase
 {
     /**
      * The thumbnail type displayed at the breakpoints of the theme.

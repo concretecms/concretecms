@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Concrete\Tests\Block;
+namespace Concrete\Tests\Block\Api;
 
 use Concrete\Block\CoreConversation\Controller as CoreConversationController;
 use Concrete\Core\Block\Block;
@@ -19,7 +19,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
  * @see \Concrete\Block\CoreConversation\Controller::serializeValueForApi()
  * @see \Concrete\Block\CoreConversation\Controller::getImportDataFromApiValue()
  */
-class CoreConversationApiValueTest extends BlockApiValueTestCase
+class CoreConversationValueTest extends BlockApiValueTestCase
 {
     /**
      * The user to be notified when a message is added.

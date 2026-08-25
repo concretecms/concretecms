@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Concrete\Tests\Block;
+namespace Concrete\Tests\Block\Api;
 
 use Concrete\Core\Api\Block\ApiValueSchemaFactory;
 use Concrete\Core\Database\Connection\Connection;
@@ -17,7 +17,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
  * @see \Concrete\Block\ShareThisPage\Controller::serializeValueForApi()
  * @see \Concrete\Block\ShareThisPage\Controller::getImportDataFromApiValue()
  */
-class ShareThisPageApiValueTest extends BlockApiValueTestCase
+class ShareThisPageValueTest extends BlockApiValueTestCase
 {
     public function testTheServicesKeepTheirOrder(): void
     {

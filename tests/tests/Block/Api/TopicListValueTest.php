@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Concrete\Tests\Block;
+namespace Concrete\Tests\Block\Api;
 
 use Concrete\TestHelpers\Block\BlockApiValueTestCase;
 
@@ -18,7 +18,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
  * @see \Concrete\Block\TopicList\Controller::serializeValueForApi()
  * @see \Concrete\Block\TopicList\Controller::getImportDataFromApiValue()
  */
-class TopicListApiValueTest extends BlockApiValueTestCase
+class TopicListValueTest extends BlockApiValueTestCase
 {
     public function testThePageTheTopicsLinkToIsExchangedAsAReference(): void
     {

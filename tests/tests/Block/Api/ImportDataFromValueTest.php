@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Concrete\Tests\Block;
+namespace Concrete\Tests\Block\Api;
 
 use Concrete\Core\Block\BlockType\BlockType;
 use Concrete\Core\Entity\Block\BlockType\BlockType as BlockTypeEntity;
@@ -10,7 +10,7 @@ use Concrete\TestHelpers\Page\PageTestCase;
 
 defined('C5_EXECUTE') or die('Access Denied.');
 
-class ImportDataFromApiValueTest extends PageTestCase
+class ImportDataFromValueTest extends PageTestCase
 {
     /**
      * {@inheritdoc}

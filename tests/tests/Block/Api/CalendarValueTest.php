@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Concrete\Tests\Block;
+namespace Concrete\Tests\Block\Api;
 
 use Concrete\Core\Api\Block\ApiValueSchemaFactory;
 use Concrete\Core\Database\Connection\Connection;
@@ -18,7 +18,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
  * @see \Concrete\Block\Calendar\Controller::getApiValueSchema()
  * @see \Concrete\Block\Calendar\Controller::getImportDataFromApiValue()
  */
-class CalendarApiValueTest extends BlockApiValueTestCase
+class CalendarValueTest extends BlockApiValueTestCase
 {
     /**
      * The calendar displayed by the block.

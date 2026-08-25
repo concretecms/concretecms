@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Concrete\Tests\Block;
+namespace Concrete\Tests\Block\Api;
 
 use Concrete\Core\Page\Page;
 use Concrete\TestHelpers\Block\BlockApiValueTestCase;
@@ -16,7 +16,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
  * @see \Concrete\Block\ImageSlider\Controller::serializeValueForApi()
  * @see \Concrete\Block\ImageSlider\Controller::getImportDataFromApiValue()
  */
-class ImageSliderApiValueTest extends BlockApiValueTestCase
+class ImageSliderValueTest extends BlockApiValueTestCase
 {
     /**
      * The page that the slides can link to.

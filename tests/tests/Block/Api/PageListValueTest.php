@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Concrete\Tests\Block;
+namespace Concrete\Tests\Block\Api;
 
 use Concrete\Core\Entity\Page\Feed as FeedEntity;
 use Concrete\TestHelpers\Block\BlockApiValueTestCase;
@@ -17,7 +17,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
  * @see \Concrete\Block\PageList\Controller::serializeValueForApi()
  * @see \Concrete\Block\PageList\Controller::getImportDataFromApiValue()
  */
-class PageListApiValueTest extends BlockApiValueTestCase
+class PageListValueTest extends BlockApiValueTestCase
 {
     /**
      * {@inheritdoc}

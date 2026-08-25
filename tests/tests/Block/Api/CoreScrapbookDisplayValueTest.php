@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Concrete\Tests\Block;
+namespace Concrete\Tests\Block\Api;
 
 use Concrete\Core\Block\Block;
 use Concrete\Core\Block\BlockType\BlockType;
@@ -16,7 +16,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
  * @see \Concrete\Block\CoreScrapbookDisplay\Controller::getApiValueSchema()
  * @see \Concrete\Block\CoreScrapbookDisplay\Controller::serializeValueForApi()
  */
-class CoreScrapbookDisplayApiValueTest extends BlockApiValueTestCase
+class CoreScrapbookDisplayValueTest extends BlockApiValueTestCase
 {
     /**
      * The block that the tested block is an alias of.

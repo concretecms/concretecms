@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Concrete\Tests\Block;
+namespace Concrete\Tests\Block\Api;
 
 use Concrete\TestHelpers\Block\BlockApiValueTestCase;
 
@@ -15,7 +15,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
  * @see \Concrete\Block\DesktopSiteActivity\Controller::serializeValueForApi()
  * @see \Concrete\Block\DesktopSiteActivity\Controller::getImportDataFromApiValue()
  */
-class DesktopSiteActivityApiValueTest extends BlockApiValueTestCase
+class DesktopSiteActivityValueTest extends BlockApiValueTestCase
 {
     public function testTheKindsAreReplacedWhenTheyAreSpecified(): void
     {

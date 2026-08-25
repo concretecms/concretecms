@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Concrete\Tests\Block;
+namespace Concrete\Tests\Block\Api;
 
 use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Entity\Calendar\Calendar;
@@ -18,7 +18,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
  * @see \Concrete\Block\EventList\Controller::serializeValueForApi()
  * @see \Concrete\Block\EventList\Controller::getImportDataFromApiValue()
  */
-class EventListApiValueTest extends BlockApiValueTestCase
+class EventListValueTest extends BlockApiValueTestCase
 {
     /**
      * The calendars created by the tests, by their name.

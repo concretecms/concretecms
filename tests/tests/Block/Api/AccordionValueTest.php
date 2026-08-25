@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Concrete\Tests\Block;
+namespace Concrete\Tests\Block\Api;
 
 use Concrete\Core\Database\Connection\Connection;
 use Concrete\TestHelpers\Block\BlockApiValueTestCase;
@@ -16,7 +16,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
  * @see \Concrete\Block\Accordion\Controller::serializeValueForApi()
  * @see \Concrete\Block\Accordion\Controller::getImportDataFromApiValue()
  */
-class AccordionApiValueTest extends BlockApiValueTestCase
+class AccordionValueTest extends BlockApiValueTestCase
 {
     public function testTheItemsAreReplacedWhenTheyAreSpecified(): void
     {

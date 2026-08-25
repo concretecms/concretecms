@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Concrete\Tests\Block;
+namespace Concrete\Tests\Block\Api;
 
 use Concrete\TestHelpers\Block\BlockApiValueTestCase;
 
@@ -17,7 +17,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
  * @see \Concrete\Block\RssDisplayer\Controller::getApiValueSchema()
  * @see \Concrete\Block\RssDisplayer\Controller::getImportDataFromApiValue()
  */
-class RssDisplayerApiValueTest extends BlockApiValueTestCase
+class RssDisplayerValueTest extends BlockApiValueTestCase
 {
     public function testACustomDateFormatIsKeptAsItIs(): void
     {

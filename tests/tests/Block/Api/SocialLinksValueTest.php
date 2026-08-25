@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Concrete\Tests\Block;
+namespace Concrete\Tests\Block\Api;
 
 use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Entity\Sharing\SocialNetwork\Link as SocialLink;
@@ -18,7 +18,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
  * @see \Concrete\Block\SocialLinks\Controller::serializeValueForApi()
  * @see \Concrete\Block\SocialLinks\Controller::getImportDataFromApiValue()
  */
-class SocialLinksApiValueTest extends BlockApiValueTestCase
+class SocialLinksValueTest extends BlockApiValueTestCase
 {
     /**
      * The social links of the site, by the handle of their service.

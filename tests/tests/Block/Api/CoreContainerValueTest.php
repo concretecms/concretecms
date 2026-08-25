@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Concrete\Tests\Block;
+namespace Concrete\Tests\Block\Api;
 
 use Concrete\Block\CoreContainer\Controller as CoreContainerController;
 use Concrete\Core\Area\ContainerArea;
@@ -21,7 +21,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
  * @see \Concrete\Block\CoreContainer\Controller::serializeValueForApi()
  * @see \Concrete\Block\CoreContainer\Controller::getImportDataFromApiValue()
  */
-class CoreContainerApiValueTest extends BlockApiValueTestCase
+class CoreContainerValueTest extends BlockApiValueTestCase
 {
     /**
      * The containers of the theme created by the tests, by their handle.

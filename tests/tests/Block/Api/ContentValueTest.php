@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Concrete\Tests\Block;
+namespace Concrete\Tests\Block\Api;
 
 use Concrete\TestHelpers\Block\BlockApiValueTestCase;
 
@@ -11,7 +11,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
 /**
  * Tests the API representation of a block type whose value is derived by the API itself.
  */
-class ContentApiValueTest extends BlockApiValueTestCase
+class ContentValueTest extends BlockApiValueTestCase
 {
     /**
      * {@inheritdoc}

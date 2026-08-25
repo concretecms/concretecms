@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Concrete\Tests\Block;
+namespace Concrete\Tests\Block\Api;
 
 use Concrete\Core\Api\Block\ApiValueSchemaFactory;
 use Concrete\Core\Entity\Express\Entity;
@@ -19,7 +19,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
  *
  * @see \Concrete\Block\ExpressEntryDetail\Controller::getApiValueSchema()
  */
-class ExpressEntryDetailApiValueTest extends BlockApiValueTestCase
+class ExpressEntryDetailValueTest extends BlockApiValueTestCase
 {
     /**
      * The ID of an Express entity (it doesn't have to exist: the block just refers to it).

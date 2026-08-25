@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Concrete\Tests\Block;
+namespace Concrete\Tests\Block\Api;
 
 use Concrete\TestHelpers\Block\BlockApiValueTestCase;
 
@@ -17,7 +17,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
  * @see \Concrete\Block\Search\Controller::getApiValueSchema()
  * @see \Concrete\Block\Search\Controller::getImportDataFromApiValue()
  */
-class SearchApiValueTest extends BlockApiValueTestCase
+class SearchValueTest extends BlockApiValueTestCase
 {
     public function testTheResultsCanBeDisplayedByAnotherPage(): void
     {

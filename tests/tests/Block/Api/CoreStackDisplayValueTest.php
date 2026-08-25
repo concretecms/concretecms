@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Concrete\Tests\Block;
+namespace Concrete\Tests\Block\Api;
 
 use Concrete\Core\Entity\Statistics\UsageTracker\StackUsageRecord;
 use Concrete\Core\Page\Single as SinglePage;
@@ -19,7 +19,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
  * @see \Concrete\Block\CoreStackDisplay\Controller::serializeValueForApi()
  * @see \Concrete\Block\CoreStackDisplay\Controller::getImportDataFromApiValue()
  */
-class CoreStackDisplayApiValueTest extends BlockApiValueTestCase
+class CoreStackDisplayValueTest extends BlockApiValueTestCase
 {
     /**
      * The stacks created by the tests, by their name.

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Concrete\Tests\Block;
+namespace Concrete\Tests\Block\Api;
 
 use Concrete\Core\Block\Block;
 use Concrete\Core\Database\Connection\Connection;
@@ -17,7 +17,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
  * @see \Concrete\Block\Survey\Controller::serializeValueForApi()
  * @see \Concrete\Block\Survey\Controller::getImportDataFromApiValue()
  */
-class SurveyApiValueTest extends BlockApiValueTestCase
+class SurveyValueTest extends BlockApiValueTestCase
 {
     public function testTheAnswersAreAddedAndRemoved(): void
     {

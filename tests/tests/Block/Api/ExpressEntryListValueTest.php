@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Concrete\Tests\Block;
+namespace Concrete\Tests\Block\Api;
 
 use Concrete\Core\Attribute\Category\CategoryService as AttributeCategoryService;
 use Concrete\Core\Entity\Attribute\Category as AttributeCategory;
@@ -25,7 +25,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
  * @see \Concrete\Block\ExpressEntryList\Controller::serializeValueForApi()
  * @see \Concrete\Block\ExpressEntryList\Controller::getImportDataFromApiValue()
  */
-class ExpressEntryListApiValueTest extends BlockApiValueTestCase
+class ExpressEntryListValueTest extends BlockApiValueTestCase
 {
     /**
      * The Express entity whose entries are listed (and the one it's associated to).
