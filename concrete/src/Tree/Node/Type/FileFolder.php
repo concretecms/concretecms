@@ -7,6 +7,7 @@ use Concrete\Core\File\FolderItemList;
 use Concrete\Core\File\Search\ColumnSet\Available;
 use Concrete\Core\File\Search\ColumnSet\FolderSet;
 use Concrete\Core\File\StorageLocation\StorageLocationFactory;
+use Concrete\Core\Permission\Checker;
 use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\Tree\Node\Node as TreeNode;
 use Concrete\Core\Tree\Node\Type\Formatter\CategoryListFormatter;
@@ -163,8 +164,15 @@ class FileFolder extends TreeNode
     {
         $node = TreeNode::getTreeNodeJSON();
         if ($node) {
+            $node->folder = true;
             $node->isFolder = true;
             $node->resultsThumbnailImg = $this->getListFormatter()->getIconElement();
+            $tree = $this->getTreeObject();
+            $requestData = $tree ? $tree->getRequestData() : [];
+            if (!empty($requestData['requireFileUploadPermission'])) {
+                $permissions = new Checker($this);
+                $node->unselectable = !$permissions->canAddFiles();
+            }
         }
 
         return $node;
