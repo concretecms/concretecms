@@ -1,7 +1,10 @@
 <?php
 namespace Concrete\Block\SocialLinks;
 
+use Concrete\Core\Api\ApiResourceValueInterface;
+use Concrete\Core\Api\ApiValueSchemaInterface;
 use Concrete\Core\Block\BlockController;
+use Concrete\Core\Block\Traits\CustomApiValueTrait;
 use Concrete\Core\Feature\Features;
 use Concrete\Core\Feature\UsesFeatureInterface;
 use Concrete\Core\Sharing\SocialNetwork\Link;
@@ -10,8 +13,10 @@ use Core;
 
 defined('C5_EXECUTE') or die("Access Denied.");
 
-class Controller extends BlockController implements UsesFeatureInterface
+class Controller extends BlockController implements ApiResourceValueInterface, ApiValueSchemaInterface, UsesFeatureInterface
 {
+    use CustomApiValueTrait;
+
     /**
      * @var int|string|null
      */
@@ -91,6 +96,67 @@ class Controller extends BlockController implements UsesFeatureInterface
         }
 
         return $links;
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Api\ApiValueSchemaInterface::getApiValueSchema()
+     */
+    public function getApiValueSchema(): array
+    {
+        return [
+            'type' => 'object',
+            'properties' => [
+                'links' => [
+                    'type' => 'array',
+                    'description' => 'The social links of the site to be displayed, in the order they are displayed (the ones that the site doesn\'t have are left out).',
+                    'items' => [
+                        'type' => 'string',
+                        'description' => 'The handle of the service of one of the social links of the site (for instance "bluesky").',
+                    ],
+                ],
+            ],
+        ];
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Block\BlockController::getImportDataFromApiValue()
+     */
+    public function getImportDataFromApiValue($page, array $value): array
+    {
+        if (!array_key_exists('links', $value)) {
+            $value = $this->bID ? $this->serializeValueForApi() : ['links' => []];
+        }
+        // the block stores the ID of every link, which is meaningful only within this site
+        $args = ['slID' => []];
+        foreach ((array) $value['links'] as $serviceHandle) {
+            $link = is_string($serviceHandle) ? Link::getByServiceHandle($serviceHandle) : null;
+            if ($link !== null) {
+                $args['slID'][] = $link->getID();
+            }
+        }
+
+        return $args;
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Block\Traits\CustomApiValueTrait::serializeValueForApi()
+     */
+    protected function serializeValueForApi(): array
+    {
+        // the export() method below writes an element for every link, which is not the list of records of a
+        // database table that the API knows how to read
+        $links = [];
+        foreach ($this->getSelectedLinks() as $link) {
+            $links[] = (string) $link->getServiceObject()->getHandle();
+        }
+
+        return ['links' => $links];
     }
 
     public function export(\SimpleXMLElement $blockNode)
