@@ -1,19 +1,25 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Concrete\Tests\Http;
 
+use Concrete\Core\Config\Repository\Repository;
 use Concrete\Core\Http\Client\Client as HttpClient;
 use Concrete\Core\Http\Client\Factory as HttpClientFactory;
-use Concrete\Core\Support\Facade\Application;
-use Exception;
+use Concrete\Tests\TestCase;
 use GuzzleHttp\Handler\CurlHandler;
 use GuzzleHttp\Handler\StreamHandler;
-use Concrete\Tests\TestCase;
+use GuzzleHttp\Promise\Create as PromiseCreate;
+use GuzzleHttp\Psr7\Response;
+use Mockery as M;
+use Psr\Http\Message\RequestInterface;
+use Psr\Log\NullLogger;
+
+defined('C5_EXECUTE') or die('Access Denied.');
 
 class HttpClientTest extends TestCase
 {
-    const SKIP_VALID_CERTS = '**skip**';
-
     /**
      * @var \Concrete\Core\Application\Application
      */
@@ -24,13 +30,21 @@ class HttpClientTest extends TestCase
      */
     private static $testRemoteURI;
 
-    public static function setUpBeforeClass():void
+    /**
+     * The options that the last request passed to the handler.
+     *
+     * @var array|null
+     */
+    private $handledOptions;
+
+    public static function setUpBeforeClass(): void
     {
-        self::$app = Application::getFacadeApplication();
-        self::$testRemoteURI = getenv('CONCRETE5TESTS_TEST_REMOTE_URI') ?: 'https://www.concrete5.org/';
+        parent::setUpBeforeClass();
+        self::$app = app();
+        self::$testRemoteURI = getenv('CONCRETE5TESTS_TEST_REMOTE_URI') ?: 'https://www.concretecms.org/';
     }
 
-    public static function adapterListProvider()
+    public static function handlerListProvider(): array
     {
         return [
             [CurlHandler::class],
@@ -38,206 +52,241 @@ class HttpClientTest extends TestCase
         ];
     }
 
-    public static function sslOptionsProvider()
+    public function testCreateFromOptionsAppliesTheOptionsToTheRequests(): void
     {
-        $result = [];
-        foreach (self::adapterListProvider() as $al) {
-            $adapterClass = $al[0];
-            $result[] = [
-                $adapterClass,
-                '/this/file/does/not/exist',
-                '/this/directory/does/not/exist',
-                false,
-            ];
-            $result[] = [
-                $adapterClass,
-                str_replace(DIRECTORY_SEPARATOR, '/', __FILE__),
-                str_replace(DIRECTORY_SEPARATOR, '/', __DIR__),
-                false,
-            ];
-            $certsFolder = self::SKIP_VALID_CERTS;
-            $checkFolders = [
-                '/etc/ssl/certs',
-                '/etc/pki/tls/certs',
-                '/etc/pki/CA/certs',
-                '/system/etc/security/cacerts',
-            ];
-            foreach ($checkFolders as $checkFolder) {
-                if (@is_dir($checkFolder)) {
-                    $files = glob("$checkFolder/*.pem");
-                    if (empty($files)) {
-                        $files = glob("$checkFolder/*.crt");
-                    }
-                    if (!empty($files)) {
-                        $certsFolder = $checkFolder;
-                        break;
-                    }
-                }
-            }
-            $result[] = [
-                $adapterClass,
-                'invalid',
-                $certsFolder,
-                true,
-            ];
-        }
+        $client = $this->createClientWithCapturingHandler([
+            'timeout' => 12,
+            'connect_timeout' => 3,
+            'verify' => false,
+        ]);
 
-        return $result;
+        $client->request('GET', 'http://www.example.com/');
+
+        static::assertSame(12, $this->handledOptions['timeout']);
+        static::assertSame(3, $this->handledOptions['connect_timeout']);
+        static::assertFalse($this->handledOptions['verify']);
+    }
+
+    public function testCreateFromOptionsWithAHandlerClassName(): void
+    {
+        $factory = self::$app->make(HttpClientFactory::class);
+
+        $client = $factory->createFromOptions([], CurlHandler::class);
+
+        static::assertInstanceOf(HttpClient::class, $client);
+        static::assertInstanceOf(CurlHandler::class, $client->getConfig('handler'));
+    }
+
+    public function testCreateFromOptionsWithAHandlerInstance(): void
+    {
+        $factory = self::$app->make(HttpClientFactory::class);
+        $handler = new CurlHandler();
+
+        $client = $factory->createFromOptions([], $handler);
+
+        static::assertSame($handler, $client->getConfig('handler'));
+    }
+
+    public function testCreateFromOptionsWithoutALogger(): void
+    {
+        $factory = self::$app->make(HttpClientFactory::class);
+
+        $client = $factory->createFromOptions([]);
+
+        static::assertNull($client->getLogger());
+    }
+
+    public function testCreateFromOptionsWithALoggerInstance(): void
+    {
+        $factory = self::$app->make(HttpClientFactory::class);
+        $logger = new NullLogger();
+
+        $client = $factory->createFromOptions(['logger' => $logger]);
+
+        static::assertSame($logger, $client->getLogger());
+    }
+
+    public function testCreateFromOptionsWithALoggerClassName(): void
+    {
+        $factory = self::$app->make(HttpClientFactory::class);
+
+        $client = $factory->createFromOptions(['logger' => NullLogger::class]);
+
+        static::assertInstanceOf(NullLogger::class, $client->getLogger());
+    }
+
+    public function testCreateFromConfigReadsTheHttpClientOptions(): void
+    {
+        $factory = self::$app->make(HttpClientFactory::class);
+        $config = $this->buildConfig(['timeout' => 42, 'verify' => false]);
+
+        $client = $factory->createFromConfig($config);
+
+        static::assertSame(42, $client->getConfig('timeout'));
+        static::assertFalse($client->getConfig('verify'));
+    }
+
+    public function testCreateFromConfigWithInvalidHttpClientOptions(): void
+    {
+        $factory = self::$app->make(HttpClientFactory::class);
+        // The app.http_client configuration key is not an array: it must be ignored.
+        $config = $this->buildConfig(null);
+
+        $client = $factory->createFromConfig($config);
+
+        static::assertInstanceOf(HttpClient::class, $client);
+        static::assertNull($client->getConfig('proxy'));
+    }
+
+    public function testCreateFromConfigWithoutAProxy(): void
+    {
+        $factory = self::$app->make(HttpClientFactory::class);
+        // A proxy port/user/password without a proxy host must not build any proxy.
+        $config = $this->buildConfig([], ['port' => 8080, 'user' => 'me', 'password' => 'secret']);
+
+        $options = $factory->getDefaultOptions($config);
+
+        static::assertArrayNotHasKey('proxy', $options);
     }
 
     /**
-     * @dataProvider sslOptionsProvider
-     *
-     * @param mixed $adapterClass
-     * @param mixed $caFile
-     * @param mixed $caPath
-     * @param mixed $shouldBeOK
+     * @dataProvider proxyProvider
+     */
+    public function testCreateFromConfigBuildsTheProxyUrl(array $proxy, string $expectedProxyUrl): void
+    {
+        $factory = self::$app->make(HttpClientFactory::class);
+        $config = $this->buildConfig([], $proxy);
+
+        $options = $factory->getDefaultOptions($config);
+
+        static::assertSame($expectedProxyUrl, $options['proxy']);
+    }
+
+    public static function proxyProvider(): array
+    {
+        return [
+            [
+                ['host' => 'http://proxy.example.com'],
+                'http://proxy.example.com/',
+            ],
+            [
+                ['host' => 'http://proxy.example.com', 'port' => 8080],
+                'http://proxy.example.com:8080/',
+            ],
+            [
+                ['host' => 'http://proxy.example.com', 'port' => 8080, 'user' => 'me', 'password' => 'secret'],
+                'http://me:secret@proxy.example.com:8080/',
+            ],
+        ];
+    }
+
+    public function testTheProxyIsUsedByTheRequests(): void
+    {
+        $factory = self::$app->make(HttpClientFactory::class);
+        $config = $this->buildConfig([], ['host' => 'http://proxy.example.com', 'port' => 8080]);
+        $options = $factory->getDefaultOptions($config);
+        $client = $factory->createFromOptions($options, $this->buildCapturingHandler());
+
+        $client->request('GET', 'http://www.example.com/');
+
+        static::assertSame('http://proxy.example.com:8080/', $this->handledOptions['proxy']);
+    }
+
+    /**
+     * @dataProvider handlerListProvider
      *
      * @group online
      */
-    public function testSSLOptions($adapterClass, $caFile, $caPath, $shouldBeOK)
+    public function testSSLOptions(string $handlerClass): void
     {
-        $this->markTestSkipped('HTTP Client Tests broken – needs rewriting for Guzzle.');
-        if (self::$testRemoteURI === null) {
-            $this->markTestSkipped('Skipping calls to remote URIs');
-        }
-        $this->checkValidAdapter($adapterClass, true);
-
+        $this->checkValidHandler($handlerClass);
         $factory = self::$app->make(HttpClientFactory::class);
 
-        $client = $factory->createFromOptions([
-            'sslverifypeer' => false,
-            'sslcafile' => $caFile,
-            'sslcapath' => $caPath,
-        ], $adapterClass);
-        $error = null;
-        print $client->getConfig('sslcapath');
-        try {
-            $client->head(self::$testRemoteURI);
-        } catch (Exception $x) {
-            $error = $x;
-        }
-        $this->assertTrue($error === null, 'sslverifypeer turned off should always succeed (error: ' . ($error ? $error->getMessage() : '') . ')');
+        // Peer verification turned off: it should always succeed.
+        $error = $this->headRequestError($factory->createFromOptions(['verify' => false], $handlerClass));
+        static::assertNull($error, 'verify turned off should always succeed (error: ' . ($error ? $error->getMessage() : '') . ')');
 
-        if ($shouldBeOK && $caPath === self::SKIP_VALID_CERTS) {
-            $this->markTestSkipped('Unable to find a local folder containing CA certificates');
-        }
-        $client = $factory->createFromOptions([
-            'sslverifypeer' => true,
-            'sslcafile' => $shouldBeOK ? null : $caFile,
-            'sslcapath' => $caPath,
-        ], $adapterClass);
-        $error = null;
+        // Peer verification against the default CA bundle: it should succeed.
+        $error = $this->headRequestError($factory->createFromOptions(['verify' => true], $handlerClass));
+        static::assertNull($error, 'verify turned on with the default CA bundle should succeed (error: ' . ($error ? $error->getMessage() : '') . ')');
+
+        // Peer verification against a file that's not a CA bundle: it should fail.
+        $notACaBundle = str_replace(DIRECTORY_SEPARATOR, '/', __FILE__);
+        $error = $this->headRequestError($factory->createFromOptions(['verify' => $notACaBundle], $handlerClass));
+        static::assertNotNull($error, 'verify turned on with an invalid CA bundle should fail');
+    }
+
+    /**
+     * Perform a HEAD request against the remote test URI, returning the raised error (if any).
+     */
+    private function headRequestError(HttpClient $client): ?\Throwable
+    {
         try {
             $client->head(self::$testRemoteURI);
-        } catch (Exception $x) {
-            $error = $x;
+        } catch (\Throwable $x) {
+            return $x;
         }
-        if ($shouldBeOK) {
-            $this->assertTrue($error === null, 'sslverifypeer turned on with correct SSL parameters should succeed (error: ' . ($error ? $error->getMessage() : '') . ')');
-        } else {
-            $this->assertTrue($error !== null, 'sslverifypeer turned on with incorrect SSL parameters should fail');
+
+        return null;
+    }
+
+    /**
+     * Skip the test if the given handler can't be used in the current environment.
+     */
+    private function checkValidHandler(string $handlerClass): void
+    {
+        if ($handlerClass === CurlHandler::class && !function_exists('curl_init')) {
+            static::markTestSkipped('Skipped tests on the cURL handler since the PHP cURL extension is not enabled');
+        }
+        if ($handlerClass === StreamHandler::class && !filter_var(ini_get('allow_url_fopen'), FILTER_VALIDATE_BOOLEAN)) {
+            static::markTestSkipped('Skipped tests on the stream handler since allow_url_fopen is disabled');
         }
     }
 
     /**
-     * @dataProvider adapterListProvider
+     * Build a configuration repository providing the given app.http_client and concrete.proxy values.
      *
-     * @param mixed $adapterClass
+     * @param mixed $httpClientOptions the value of the app.http_client configuration key
+     * @param array $proxy the host/port/user/password values of the concrete.proxy configuration keys
      */
-    public function testNormalizingOptions($adapterClass)
+    private function buildConfig($httpClientOptions, array $proxy = []): Repository
     {
-        $this->markTestSkipped('HTTP Client Tests broken – needs rewriting for Guzzle.');
-        $this->checkValidAdapter($adapterClass, true);
-
-        $factory = self::$app->make(HttpClientFactory::class);
-
-        $client = $factory->createFromOptions([
-            'SSL-VERIFYPEER' => true,
-            'proxyHost' => 'host',
-            'proxy-port' => '12345',
-            'PROXY USER' => 'me',
-            'PROXY.PASS' => null,
-            '   S S L C A F I L E ' => null,
-            'sslcapath' => null,
-            'connect Timeout' => 5,
-            'keepalive' => false,
-            'maxredirects' => 5,
-            'rfc3986strict' => '1',
-            'sslcert' => null,
-            'sslpassphrase' => 'unused',
-            'storeresponse' => 0,
-            'strictredirects' => 'yes',
-            'user agent' => 'Test User Agent',
-            'encodecookies' => '',
-            'httpversion' => '1.1',
-            'ssltransport' => 'tls',
-            'sslallowselfsigned' => 1,
-            'persistent' => '',
-            'unknownKey' => 'Unknown value',
-        ], $adapterClass);
-        $adapterOptions = $client->getAdapter()->getConfig();
-        $expectedOptions = [
-            'sslverifypeer' => true,
-            'proxyhost' => 'host',
-            'proxyport' => 12345,
-            'proxyuser' => 'me',
-            'proxypass' => '',
-            'sslcafile' => null,
-            'sslcapath' => null,
-            'connecttimeout' => 5,
-            'timeout' => 60,
-            'keepalive' => false,
-            'maxredirects' => 5,
-            'rfc3986strict' => true,
-            'sslcert' => null,
-            'storeresponse' => false,
-            'streamtmpdir' => self::$app->make('helper/file')->getTemporaryDirectory(),
-            'strictredirects' => true,
-            'useragent' => 'Test User Agent',
-            'encodecookies' => true,
-            'httpversion' => '1.1',
-            'ssltransport' => 'tls',
-            'sslallowselfsigned' => true,
-            'persistent' => false,
+        $values = [
+            'app.http_client' => $httpClientOptions,
+            'concrete.proxy.host' => $proxy['host'] ?? null,
+            'concrete.proxy.port' => $proxy['port'] ?? null,
+            'concrete.proxy.user' => $proxy['user'] ?? null,
+            'concrete.proxy.password' => $proxy['password'] ?? null,
         ];
-        if ($adapterClass === CurlHttpAdapter::class) {
-            $expectedOptions['curloptions'] = [
-                CURLOPT_SSL_VERIFYPEER => $expectedOptions['sslverifypeer'],
-                CURLOPT_PROXY => $expectedOptions['proxyhost'],
-                CURLOPT_PROXYPORT => $expectedOptions['proxyport'],
-                CURLOPT_PROXYUSERPWD => $expectedOptions['proxyuser'] . ':' . $expectedOptions['proxypass'],
-            ];
-            unset($expectedOptions['sslverifypeer']);
-            unset($expectedOptions['proxyhost']);
-            unset($expectedOptions['proxyport']);
-            unset($expectedOptions['proxyuser']);
-            unset($expectedOptions['proxypass']);
-            ksort($expectedOptions['curloptions']);
-        } elseif ($adapterClass === SocketHttpAdapter::class) {
-            foreach (array_keys($expectedOptions) as $key) {
-                if (preg_match('/^(proxy)(.+)$/', $key, $matches)) {
-                    $expectedOptions[$matches[1] . '_' . $matches[2]] = $expectedOptions[$key];
-                    unset($expectedOptions[$key]);
-                }
-            }
+        $config = M::mock(Repository::class);
+        foreach ($values as $key => $value) {
+            $config->shouldReceive('get')->with($key)->andReturn($value);
         }
-        if (isset($adapterOptions['curloptions'])) {
-            ksort($adapterOptions['curloptions']);
-        }
-        foreach ($expectedOptions as $key => $value) {
-            $this->assertArrayHasKey($key, $adapterOptions);
-            $this->assertSame($value, $adapterOptions[$key], 'Checking key ' . $key);
-        }
+
+        return $config;
     }
 
-    private function checkValidAdapter($adapterClass, $forSSL)
+    /**
+     * Build a handler that stores the options it receives in $this->handledOptions.
+     */
+    private function buildCapturingHandler(): \Closure
     {
-        if ($adapterClass === CurlHttpAdapter::class && !function_exists('curl_init')) {
-            $this->markTestSkipped('Skipped tests on cURL HTTP Client Adapter since the PHP cURL extension is not enabled');
-        }
-        if ($adapterClass === SocketHttpAdapter::class && $forSSL && !function_exists('stream_socket_enable_crypto')) {
-            $this->markTestSkipped('stream_socket_enable_crypto is not implemented (is this HHVM?)');
-        }
+        $this->handledOptions = null;
+
+        return function (RequestInterface $request, array $options) {
+            $this->handledOptions = $options;
+
+            return PromiseCreate::promiseFor(new Response(200));
+        };
+    }
+
+    /**
+     * Create a client whose requests are handled by the capturing handler.
+     */
+    private function createClientWithCapturingHandler(array $options): HttpClient
+    {
+        $factory = self::$app->make(HttpClientFactory::class);
+
+        return $factory->createFromOptions($options, $this->buildCapturingHandler());
     }
 }
