@@ -11,7 +11,6 @@ use Concrete\Core\Localization\Service\Date;
 use Concrete\Core\Search\Column\AttributeKeyColumn;
 use Concrete\Core\Search\Column\ColumnExportableInterface;
 use Concrete\Core\Search\Column\ColumnInterface;
-use Concrete\Core\Search\Column\Set;
 use Concrete\Core\Search\ItemList\Database\ItemList;
 use Concrete\Core\User\UserInfo;
 use Concrete\Tests\TestCase;
@@ -47,11 +46,7 @@ class UserExporterTest extends TestCase
         ;
         $groups->shouldReceive('getColumnValue')->with($secondUser)->once()->andReturn('Editors');
 
-        $columns = new Set();
-        $columns->addColumn($email);
-        $columns->addColumn($groups);
-
-        $exporter = $this->createExporter($columns);
+        $exporter = $this->createExporter([$email, $groups]);
         $list = new TestUserList([$firstUser, $secondUser]);
         $list->setItemsPerPage(1);
 
@@ -76,10 +71,7 @@ class UserExporterTest extends TestCase
         ]);
         $column->shouldNotReceive('getColumnValue');
 
-        $columns = new Set();
-        $columns->addColumn($column);
-
-        $exporter = $this->createExporter($columns);
+        $exporter = $this->createExporter([$column]);
         $exporter->insertHeaders();
         $exporter->insertObject($user);
 
@@ -102,10 +94,7 @@ class UserExporterTest extends TestCase
         $user = M::mock(UserInfo::class);
         $user->shouldReceive('getAttributeValueObject')->with($attributeKey)->once()->andReturn($attributeValue);
 
-        $columns = new Set();
-        $columns->addColumn(new AttributeKeyColumn($attributeKey));
-
-        $exporter = $this->createExporter($columns);
+        $exporter = $this->createExporter([new AttributeKeyColumn($attributeKey)]);
         $exporter->insertHeaders();
         $exporter->insertObject($user);
 
@@ -113,7 +102,7 @@ class UserExporterTest extends TestCase
         static::assertSame([['Developer & Editor']], $this->rows);
     }
 
-    public function testLegacyFormatRemainsAvailableWithoutAColumnSet(): void
+    public function testLegacyFormatRemainsAvailableWithoutColumns(): void
     {
         $user = M::mock(UserInfo::class);
         $user->shouldReceive('getUserID')->once()->andReturn(12);
@@ -134,7 +123,7 @@ class UserExporterTest extends TestCase
         ], $this->rows);
     }
 
-    private function createExporter(?Set $columns = null): UserExporter
+    private function createExporter(?array $columns = null): UserExporter
     {
         $writer = M::mock(Writer::class);
         $writer->shouldReceive('insertOne')->andReturnUsing(function (iterable $values): int {

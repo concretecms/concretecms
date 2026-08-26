@@ -18,7 +18,6 @@ use Concrete\Core\Navigation\Breadcrumb\Dashboard\DashboardUserBreadcrumbFactory
 use Concrete\Core\Page\Controller\DashboardPageController;
 use Concrete\Core\Page\Page;
 use Concrete\Core\Permission\Checker;
-use Concrete\Core\Url\Url;
 use Concrete\Core\User\Command\UpdateUserAvatarCommand;
 use Concrete\Core\User\Component\AvatarCropperInstanceFactory;
 use Concrete\Core\User\EditResponse as UserEditResponse;
@@ -105,6 +104,21 @@ class Search extends DashboardPageController
     }
 
     /**
+     * Get the query parameters to forward to the CSV export action.
+     *
+     * @return array
+     */
+    protected function getExportQueryParameters()
+    {
+        $query = $this->request->query->all();
+        if ($this->getAction() === 'preset') {
+            $query['presetID'] = array_first($this->getParameters());
+        }
+
+        return $query;
+    }
+
+    /**
      * @param Result $result
      */
     protected function renderSearchResult(Result $result)
@@ -113,7 +127,7 @@ class Search extends DashboardPageController
         $headerSearch = $this->getHeaderSearch();
         $headerMenu->getElementController()->setQuery($result->getQuery());
         $headerSearch->getElementController()->setQuery($result->getQuery());
-        $query = Url::createFromServer($_SERVER)->getQuery();
+        $query = $this->getExportQueryParameters();
 
         $exportArgs = [$this->getPageObject()->getCollectionPath(), 'csv_export'];
         if ($this->getAction() == 'advanced_search') {
@@ -121,7 +135,6 @@ class Search extends DashboardPageController
         }
         if ($this->getAction() == 'preset') {
             $exportArgs[] = 'preset';
-            $query->set(['presetID' => array_first($this->getParameters())]);
         }
         $exportURL = $this->app->make('url/resolver/path')->resolve($exportArgs);
         $exportURL = $exportURL->setQuery($query);
@@ -632,7 +645,7 @@ class Search extends DashboardPageController
                         UserExporter::class,
                         [
                             'writer' => $this->app->make(WriterFactory::class)->createFromPath('php://output', 'w'),
-                            'columns' => $result->getListColumns(),
+                            'columns' => $result->getListColumns()->getColumns(),
                         ]
                     );
                     echo $bom;

@@ -9,7 +9,6 @@ use Concrete\Core\Attribute\ObjectInterface;
 use Concrete\Core\Config\Repository\Repository;
 use Concrete\Core\Localization\Service\Date;
 use Concrete\Core\Search\Column\ColumnExportableInterface;
-use Concrete\Core\Search\Column\Set;
 use League\Csv\Writer;
 
 defined('C5_EXECUTE') or die('Access Denied.');
@@ -39,18 +38,18 @@ class UserExporter extends AbstractExporter
     /**
      * Initialize the instance.
      *
-     * @param Set|null $columns the search result columns to export, or null to use the legacy full-data format
+     * @param \Concrete\Core\Search\Column\ColumnInterface[]|null $columns the search result columns to export, or null to use the legacy full-data format
      */
     public function __construct(
         Writer $writer,
         UserCategory $userCategory,
         Date $dateService,
         Repository $config,
-        ?Set $columns = null
+        ?array $columns = null
     ) {
         parent::__construct($writer, $columns === null ? $userCategory : null);
         $this->appTimezone = $dateService->getTimezone('app');
-        $this->columns = $columns === null ? null : $columns->getColumns();
+        $this->columns = $columns;
         $this->dateService = $dateService;
         $this->format = $this->getFormat($config->get('concrete.export.csv.datetime_format', 'ATOM'));
     }
