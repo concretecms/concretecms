@@ -96,7 +96,7 @@ abstract class ConcreteDatabaseTestCase extends TestCase
         $testCase = new static('');
         $testCase->removeTables();
         // Clear the session, if it has been started
-        if ($app->make(\Concrete\Core\Http\Request::class)->hasSession(true)) {
+        if ($app->resolved('session')) {
             $app->make('session')->clear();
         }
         // The currently logged in user may belong to groups that no longer exist
