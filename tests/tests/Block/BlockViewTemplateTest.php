@@ -8,9 +8,27 @@ use Concrete\Core\Entity\Block\BlockType\BlockType;
 use Concrete\Core\Package\Package;
 use Concrete\Core\Package\PackageList;
 use Concrete\Tests\TestCase;
+use Illuminate\Filesystem\Filesystem;
 
 class BlockViewTemplateTest extends TestCase
 {
+    /**
+     * The absolute paths of the block directories created in the application directory.
+     *
+     * @var string[]
+     */
+    protected $createdApplicationBlockDirectories = [];
+
+    protected function tearDown(): void
+    {
+        $filesystem = new Filesystem();
+        foreach ($this->createdApplicationBlockDirectories as $directory) {
+            $filesystem->deleteDirectory($directory);
+        }
+        $this->createdApplicationBlockDirectories = [];
+        parent::tearDown();
+    }
+
     // Core block, view.php, no custom template.
     public function testCoreBlockView()
     {
@@ -49,10 +67,81 @@ class BlockViewTemplateTest extends TestCase
         $this->assertEquals(DIR_BASE_CORE . '/blocks/autonav', $bv->getBasePath());
         $this->assertEquals(DIR_BASE_CORE . '/blocks/autonav/view.php', $bv->getTemplate());
     }
-    
-    public function testApplicationBlockView()
+
+    public function testApplicationBlockView(): void
     {
-        $this->markTestIncomplete('Not implemented');
+        $handle = 'test_application_block_view';
+        $blockDirectory = $this->createApplicationBlock($handle, [FILENAME_BLOCK_VIEW]);
+
+        $block = $this->getMockBlock($handle);
+        $packageList = $this->getMockPackageList();
+        $bv = new BlockViewTemplate($block, $packageList);
+
+        $this->assertEquals('/path/to/server/application/blocks/' . $handle, $bv->getBaseURL());
+        $this->assertEquals($blockDirectory, $bv->getBasePath());
+        $this->assertEquals($blockDirectory . '/' . FILENAME_BLOCK_VIEW, $bv->getTemplate());
+    }
+
+    public function testApplicationBlockWithCustomTemplate(): void
+    {
+        $handle = 'test_application_block_template';
+        $blockDirectory = $this->createApplicationBlock($handle, [
+            FILENAME_BLOCK_VIEW,
+            DIRNAME_BLOCK_TEMPLATES . '/custom.php',
+        ]);
+
+        $block = $this->getMockBlock($handle, 'custom.php');
+        $packageList = $this->getMockPackageList();
+        $bv = new BlockViewTemplate($block, $packageList);
+
+        $this->assertEquals('/path/to/server/application/blocks/' . $handle, $bv->getBaseURL());
+        $this->assertEquals($blockDirectory, $bv->getBasePath());
+        $this->assertEquals($blockDirectory . '/' . DIRNAME_BLOCK_TEMPLATES . '/custom.php', $bv->getTemplate());
+    }
+
+    public function testApplicationBlockOverridesCoreBlock(): void
+    {
+        $handle = 'autonav';
+        $blockDirectory = $this->createApplicationBlock($handle, [FILENAME_BLOCK_VIEW]);
+
+        $block = $this->getMockBlock($handle);
+        $packageList = $this->getMockPackageList();
+        $bv = new BlockViewTemplate($block, $packageList);
+
+        $this->assertEquals('/path/to/server/application/blocks/' . $handle, $bv->getBaseURL());
+        $this->assertEquals($blockDirectory, $bv->getBasePath());
+        $this->assertEquals($blockDirectory . '/' . FILENAME_BLOCK_VIEW, $bv->getTemplate());
+    }
+
+    /**
+     * Create a block directory (and the given files in it) inside the application directory.
+     *
+     * The created files are automatically deleted when the test ends.
+     *
+     * @param string $handle the handle of the block type
+     * @param string[] $files the paths (relative to the block directory) of the files to be created
+     *
+     * @return string the absolute path of the created block directory
+     */
+    protected function createApplicationBlock(string $handle, array $files): string
+    {
+        $blockDirectory = DIR_APPLICATION . '/' . DIRNAME_BLOCKS . '/' . $handle;
+        if (is_dir($blockDirectory)) {
+            $this->fail("The {$blockDirectory} directory already exists: please remove it in order to run this test.");
+        }
+        $this->createdApplicationBlockDirectories[] = $blockDirectory;
+        foreach ($files as $file) {
+            $path = $blockDirectory . '/' . $file;
+            $directory = dirname($path);
+            if (!is_dir($directory) && !mkdir($directory, 0777, true)) {
+                $this->fail("Failed to create the {$directory} directory.");
+            }
+            if (file_put_contents($path, '<?php') === false) {
+                $this->fail("Failed to create the {$path} file.");
+            }
+        }
+
+        return $blockDirectory;
     }
 
     protected function getMockBlock($handle, $bFilename = null)
