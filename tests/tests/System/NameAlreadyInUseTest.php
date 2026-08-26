@@ -5,6 +5,13 @@ namespace Concrete\Tests\System;
 use Concrete\Tests\TestCase;
 use RuntimeException;
 
+/**
+ * Loading all the PHP files pollutes the process (for instance, it makes class_exists() return true
+ * for classes that other tests expect not to be loaded): let's run this class in its own process.
+ *
+ * @runTestsInSeparateProcesses
+ * @preserveGlobalState disabled
+ */
 class NameAlreadyInUseTest extends TestCase
 {
     /**
@@ -27,7 +34,6 @@ class NameAlreadyInUseTest extends TestCase
      */
     public function testNoNameInUseErrorException()
     {
-        $this->markTestSkipped('This test is not currently working in my local environment for some reason.');
         $this->loadFiles('');
     }
 
@@ -90,6 +96,10 @@ class NameAlreadyInUseTest extends TestCase
             'concrete/single_pages',
             'concrete/vendor',
             'concrete/views',
+            // These files extend PHP CS Fixer classes: they can only be loaded by PHP CS Fixer,
+            // which provides its own copies of the required composer packages.
+            // @see concrete/src/Support/CodingStyle/autoload.php
+            'concrete/src/Support/CodingStyle',
         ], true)) {
             return false;
         }
