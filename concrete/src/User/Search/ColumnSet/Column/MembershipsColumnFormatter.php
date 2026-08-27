@@ -19,6 +19,36 @@ final class MembershipsColumnFormatter
 
     public static function getUserGroupList(UserInfo $userInfo): string
     {
+        $paths = self::getSortedGroupMembershipPaths($userInfo);
+
+        return self::formatBadges(array_map(static function (array $path): string {
+            return implode(' &gt; ', array_map('h', $path));
+        }, $paths), 'ccm-user-group-list');
+    }
+
+    /**
+     * Get the plain-text membership paths for this user, to be used when exporting
+     * the user group list column (see UserGroupListColumn::getColumnExportValue()).
+     *
+     * @return string[]
+     */
+    public static function getUserGroupListExport(UserInfo $userInfo): array
+    {
+        $paths = self::getSortedGroupMembershipPaths($userInfo);
+
+        return array_map(static function (array $path): string {
+            return implode(' > ', $path);
+        }, $paths);
+    }
+
+    /**
+     * Get the membership paths for this user, translated and sorted the same way
+     * regardless of whether they're going to be rendered as HTML or as plain text.
+     *
+     * @return string[][]
+     */
+    private static function getSortedGroupMembershipPaths(UserInfo $userInfo): array
+    {
         $paths = array_map(static function (array $path): array {
             return array_map(static function (string $name): string {
                 return tc('GroupName', $name);
@@ -33,9 +63,7 @@ final class MembershipsColumnFormatter
             return strnatcasecmp(implode("\0", $a), implode("\0", $b));
         });
 
-        return self::formatBadges(array_map(static function (array $path): string {
-            return implode(' &gt; ', array_map('h', $path));
-        }, $paths), 'ccm-user-group-list');
+        return $paths;
     }
 
     private static function formatBadges(array $labels, string $class): string

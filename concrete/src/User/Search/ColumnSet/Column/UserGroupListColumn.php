@@ -5,10 +5,11 @@ declare(strict_types=1);
 namespace Concrete\Core\User\Search\ColumnSet\Column;
 
 use Concrete\Core\Search\Column\Column;
+use Concrete\Core\Search\Column\ColumnExportableInterface;
 
 defined('C5_EXECUTE') or die('Access Denied.');
 
-class UserGroupListColumn extends Column
+class UserGroupListColumn extends Column implements ColumnExportableInterface
 {
     public function getColumnKey()
     {
@@ -28,5 +29,10 @@ class UserGroupListColumn extends Column
     public function isColumnSortable()
     {
         return false;
+    }
+
+    public function getColumnExportValue($userInfo)
+    {
+        return MembershipsColumnFormatter::getUserGroupListExport($userInfo);
     }
 }
