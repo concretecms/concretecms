@@ -49,9 +49,10 @@
                                 <?php } ?>
                             </tbody>
                         </table>
-                    <?php } else { ?>
-                        <p class="mb-0"><small class="text-muted"><?=t('No search presets found.')?></small></p>
                     <?php } ?>
+                    <p class="mb-0 ccm-search-presets-empty<?= !empty($searchPresets) ? ' d-none' : '' ?>">
+                        <small class="text-muted"><?=t('No search presets found.')?></small>
+                    </p>
                 </div>
 
             <?php } ?>
