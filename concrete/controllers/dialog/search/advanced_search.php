@@ -6,6 +6,7 @@ use Concrete\Controller\Element\Search\SearchFieldSelector;
 use Concrete\Core\Foundation\Serializer\JsonSerializer;
 use Concrete\Core\Search\Query\QueryFactory;
 use Concrete\Core\Search\Result\ResultFactory;
+use Concrete\Core\Search\SavedSearchPresetNameValidator;
 use Concrete\Core\Support\Facade\Application;
 use Concrete\Controller\Element\Search\CustomizeResults;
 use Concrete\Core\Entity\Search\Query;
@@ -118,6 +119,11 @@ abstract class AdvancedSearch extends BackendInterfaceController
     public function savePreset()
     {
         if ($this->validateAction() && $this->supportsSavedSearch) {
+            $securityHelper = $this->app->make('helper/security');
+            $presetName = trim((string) $securityHelper->sanitizeString($this->request->request->get('presetName')));
+            if ($presetName === '') {
+                throw new Exception(t('Please specify a name for the search preset.'));
+            }
             $provider = $this->getSearchProvider();
             $query = $this->app->make(QueryFactory::class)
                 ->createFromAdvancedSearchRequest($provider, $this->request, Request::METHOD_POST);
@@ -125,8 +131,12 @@ abstract class AdvancedSearch extends BackendInterfaceController
                 $em = $this->app->make(EntityManager::class);
                 $search = $provider->getSavedSearch();
                 if (is_object($search)) {
+                    $nameValidator = $this->app->make(SavedSearchPresetNameValidator::class);
+                    if (!$nameValidator->isUnique($search, $presetName)) {
+                        throw new Exception(t('A search preset with that name already exists.'));
+                    }
                     $search->setQuery($query);
-                    $search->setPresetName($this->request->request->get('presetName'));
+                    $search->setPresetName($presetName);
                     $em->persist($search);
                     $em->flush();
 

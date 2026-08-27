@@ -4,6 +4,7 @@ namespace Concrete\Controller\Dialog\Search\Preset;
 use Concrete\Controller\Backend\UserInterface;
 use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\Application\EditResponse;
+use Concrete\Core\Search\SavedSearchPresetNameValidator;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Doctrine\ORM\EntityManager;
 
@@ -39,7 +40,7 @@ abstract class Edit extends UserInterface
             $app = Application::getFacadeApplication();
             $securityHelper = $app->make('helper/security');
             $presetID = $securityHelper->sanitizeInt($this->request->request->get('presetID'));
-            $newPresetName = $securityHelper->sanitizeString($this->request->request->get('presetName'));
+            $newPresetName = trim((string) $securityHelper->sanitizeString($this->request->request->get('presetName')));
             if (!empty($presetID) && !empty($newPresetName)) {
                 $searchEntity = $this->getSavedSearchEntity();
                 if (is_object($searchEntity)) {
@@ -48,6 +49,12 @@ abstract class Edit extends UserInterface
                         $this->error->add(t('Invalid search preset.'));
                     }
                     if (!$this->error->has()) {
+                        $nameValidator = $this->app->make(SavedSearchPresetNameValidator::class);
+                        if (!$nameValidator->isUnique($searchPreset, $newPresetName)) {
+                            $this->error->add(t('A search preset with that name already exists.'));
+
+                            return new JsonResponse($this->error);
+                        }
                         $response = new EditResponse();
                         $response->setMessage(t('%s edited successfully.', h($newPresetName)));
                         $response->setAdditionalDataAttribute('presetID', $presetID);
