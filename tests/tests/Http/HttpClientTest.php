@@ -7,6 +7,7 @@ namespace Concrete\Tests\Http;
 use Concrete\Core\Config\Repository\Repository;
 use Concrete\Core\Http\Client\Client as HttpClient;
 use Concrete\Core\Http\Client\Factory as HttpClientFactory;
+use Concrete\TestHelpers\Http\FakeHttpsServer;
 use Concrete\Tests\TestCase;
 use GuzzleHttp\Handler\CurlHandler;
 use GuzzleHttp\Handler\StreamHandler;
@@ -21,14 +22,16 @@ defined('C5_EXECUTE') or die('Access Denied.');
 class HttpClientTest extends TestCase
 {
     /**
+     * The timeouts of the requests sent to the fake HTTPS server.
+     *
+     * @var array
+     */
+    private const TIMEOUT_OPTIONS = ['connect_timeout' => 5, 'timeout' => 10];
+
+    /**
      * @var \Concrete\Core\Application\Application
      */
     private static $app;
-
-    /**
-     * @var string
-     */
-    private static $testRemoteURI;
 
     /**
      * The options that the last request passed to the handler.
@@ -41,7 +44,6 @@ class HttpClientTest extends TestCase
     {
         parent::setUpBeforeClass();
         self::$app = app();
-        self::$testRemoteURI = getenv('CONCRETE5TESTS_TEST_REMOTE_URI') ?: 'https://www.concretecms.org/';
     }
 
     public static function handlerListProvider(): array
@@ -193,36 +195,141 @@ class HttpClientTest extends TestCase
     }
 
     /**
-     * @dataProvider handlerListProvider
+     * When the "verify" option is not specified, the peer verification must be turned on: requests to the fake HTTPS
+     * server (which uses a self-signed certificate) must fail.
      *
-     * @group online
+     * @dataProvider handlerListProvider
      */
-    public function testSSLOptions(string $handlerClass): void
+    public function testSSLVerificationIsEnabledByDefault(string $handlerClass): void
     {
-        $this->checkValidHandler($handlerClass);
+        $client = $this->createClientForTheFakeServer([], $handlerClass);
+
+        $error = $this->headRequestError($client);
+
+        static::assertNotNull($error, 'requests without an explicit "verify" option should verify the peer, and fail');
+    }
+
+    /**
+     * The "verify" option shipped with the core configuration must turn on the peer verification.
+     */
+    public function testSSLVerificationIsEnabledByTheCoreConfiguration(): void
+    {
+        $config = self::$app->make(Repository::class);
+
+        static::assertTrue($config->get('app.http_client.verify'));
+    }
+
+    /**
+     * @dataProvider handlerListProvider
+     */
+    public function testSSLVerificationFromTheConfiguration(string $handlerClass): void
+    {
         $factory = self::$app->make(HttpClientFactory::class);
+        $server = self::getFakeServer();
+        $this->checkValidHandler($handlerClass);
 
-        // Peer verification turned off: it should always succeed.
-        $error = $this->headRequestError($factory->createFromOptions(['verify' => false], $handlerClass));
-        static::assertNull($error, 'verify turned off should always succeed (error: ' . ($error ? $error->getMessage() : '') . ')');
+        // The configuration doesn't trust the certification authority of the fake server: the request must fail.
+        $client = $factory->createFromConfig($this->buildConfig(self::TIMEOUT_OPTIONS + ['verify' => true]), $handlerClass);
+        static::assertNotNull($this->headRequestError($client), 'a configuration with verify turned on should fail');
 
-        // Peer verification against the default CA bundle: it should succeed.
-        $error = $this->headRequestError($factory->createFromOptions(['verify' => true], $handlerClass));
-        static::assertNull($error, 'verify turned on with the default CA bundle should succeed (error: ' . ($error ? $error->getMessage() : '') . ')');
+        // The configuration trusts the certification authority of the fake server: the request must succeed.
+        $client = $factory->createFromConfig($this->buildConfig(self::TIMEOUT_OPTIONS + ['verify' => FakeHttpsServer::getCACertificateFile()]), $handlerClass);
+        static::assertSame(200, $client->get($server->getUri('/'))->getStatusCode());
+    }
 
-        // Peer verification against a file that's not a CA bundle: it should fail.
+    /**
+     * The fake HTTPS server uses a self-signed certificate: since it's not signed by a well known certification
+     * authority, the requests must fail when the peer verification is explicitly turned on.
+     *
+     * @dataProvider handlerListProvider
+     */
+    public function testSSLVerificationAgainstTheDefaultCABundle(string $handlerClass): void
+    {
+        $client = $this->createClientForTheFakeServer(['verify' => true], $handlerClass);
+
+        $error = $this->headRequestError($client);
+
+        static::assertNotNull($error, 'verify turned on with the default CA bundle should fail');
+    }
+
+    /**
+     * Clients explicitly accepting unsafe servers must be able to talk with the fake HTTPS server.
+     *
+     * @dataProvider handlerListProvider
+     */
+    public function testSSLVerificationTurnedOff(string $handlerClass): void
+    {
+        $client = $this->createClientForTheFakeServer(['verify' => false], $handlerClass);
+
+        $error = $this->headRequestError($client);
+
+        static::assertNull($error, 'verify turned off should always succeed (error: ' . ($error === null ? '' : $error->getMessage()) . ')');
+    }
+
+    /**
+     * Clients trusting the certification authority that signed the certificate of the fake HTTPS server must be able
+     * to talk with it, without turning off the peer verification.
+     *
+     * @dataProvider handlerListProvider
+     */
+    public function testSSLVerificationAgainstTheFakeCABundle(string $handlerClass): void
+    {
+        $client = $this->createClientForTheFakeServer(['verify' => FakeHttpsServer::getCACertificateFile()], $handlerClass);
+
+        $response = $client->get(self::getFakeServer()->getUri('/'));
+
+        static::assertSame(200, $response->getStatusCode());
+        static::assertStringContainsString('fake HTTPS server', (string) $response->getBody());
+    }
+
+    /**
+     * @dataProvider handlerListProvider
+     */
+    public function testSSLVerificationAgainstAnInvalidCABundle(string $handlerClass): void
+    {
         $notACaBundle = str_replace(DIRECTORY_SEPARATOR, '/', __FILE__);
-        $error = $this->headRequestError($factory->createFromOptions(['verify' => $notACaBundle], $handlerClass));
+        $client = $this->createClientForTheFakeServer(['verify' => $notACaBundle], $handlerClass);
+
+        $error = $this->headRequestError($client);
+
         static::assertNotNull($error, 'verify turned on with an invalid CA bundle should fail');
     }
 
     /**
-     * Perform a HEAD request against the remote test URI, returning the raised error (if any).
+     * Get the fake HTTPS server started by the PHPUnit bootstrap, skipping the test if it's not available.
+     */
+    private static function getFakeServer(): FakeHttpsServer
+    {
+        $server = FakeHttpsServer::getInstance();
+        if ($server === null) {
+            static::markTestSkipped('The fake HTTPS server is not available: ' . FakeHttpsServer::getStartupError());
+        }
+        if (!$server->isRunning()) {
+            static::fail('The fake HTTPS server is no longer running');
+        }
+
+        return $server;
+    }
+
+    /**
+     * Create a client to be used to perform requests to the fake HTTPS server.
+     */
+    private function createClientForTheFakeServer(array $options, string $handlerClass): HttpClient
+    {
+        $this->checkValidHandler($handlerClass);
+        self::getFakeServer();
+        $factory = self::$app->make(HttpClientFactory::class);
+
+        return $factory->createFromOptions($options + self::TIMEOUT_OPTIONS, $handlerClass);
+    }
+
+    /**
+     * Perform a HEAD request against the fake HTTPS server, returning the raised error (if any).
      */
     private function headRequestError(HttpClient $client): ?\Throwable
     {
         try {
-            $client->head(self::$testRemoteURI);
+            $client->head(self::getFakeServer()->getUri('/'));
         } catch (\Throwable $x) {
             return $x;
         }
