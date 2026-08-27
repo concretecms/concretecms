@@ -12,6 +12,26 @@
         my.$element = $element
         my.options = options
 
+        ConcreteEvent.unsubscribe('SavedSearchDeleted.AdvancedSearchPresetSelector')
+        ConcreteEvent.subscribe('SavedSearchDeleted.AdvancedSearchPresetSelector', function(e, data) {
+            if (!data.preset || !data.preset.presetID) {
+                return
+            }
+
+            var $preset = my.$element.find('[data-search-preset-id="' + data.preset.presetID + '"]')
+            if (!$preset.length) {
+                return
+            }
+
+            var $table = $preset.closest('.ccm-search-presets-table')
+            $preset.remove()
+
+            if (!$table.find('[data-search-preset-id]').length) {
+                $table.remove()
+                my.$element.find('.ccm-search-presets-empty').removeClass('d-none')
+            }
+        })
+
         $('[data-search-preset-id]').on('click', function(e) {
             e.preventDefault()
             if (!$(e.target).is('button') && $(this).data('action')) {

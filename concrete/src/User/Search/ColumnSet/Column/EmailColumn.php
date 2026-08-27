@@ -3,11 +3,12 @@ namespace Concrete\Core\User\Search\ColumnSet\Column;
 
 use Concrete\Core\Database\Query\AndWhereNotExistsTrait;
 use Concrete\Core\Search\Column\Column;
+use Concrete\Core\Search\Column\ColumnExportableInterface;
 use Concrete\Core\Search\Column\ColumnInterface;
 use Concrete\Core\Search\Column\PagerColumnInterface;
 use Concrete\Core\Search\ItemList\Pager\PagerProviderInterface;
 
-class EmailColumn extends Column implements PagerColumnInterface
+class EmailColumn extends Column implements PagerColumnInterface, ColumnExportableInterface
 {
 
     use AndWhereNotExistsTrait;
@@ -35,6 +36,11 @@ class EmailColumn extends Column implements PagerColumnInterface
         $query->setParameter('sortName', $mixed->getUserEmail());
         $query->setParameter('sortID', $mixed->getUserID());
         $this->andWhereNotExists($query, $where);
+    }
+
+    public function getColumnExportValue($ui)
+    {
+        return $ui->getUserEmail();
     }
 
 }
