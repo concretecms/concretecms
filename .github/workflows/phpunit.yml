@@ -3,6 +3,10 @@ name: "PHPUnit"
 on:
   pull_request:
   push:
+    branches:
+      - "**"
+    tags-ignore:
+      - "**"
 
 jobs:
   phpunit:
@@ -48,17 +52,18 @@ jobs:
           - php-version: 8.2
             operating-system: "ubuntu-latest"
             dependencies: "locked"
+            # code-coverage: "1"
           - php-version: 8.5
             operating-system: "ubuntu-latest"
-            dependencies: "highest-unlocked"
+            dependencies: "highest"
 
     steps:
       - name: Enable code coverage
-        if: matrix.php-version == '7.4' && startsWith(matrix.operating-system, 'ubuntu') && matrix.dependencies == 'locked' && github.repository_owner == 'concrete5'
+        if: matrix.code-coverage && github.repository_owner == 'concretecms'
         run: printf 'CODE_COVERAGE=pcov\n' >> "$GITHUB_ENV"
 
       - name: "Checkout"
-        uses: "actions/checkout@v2"
+        uses: actions/checkout@v7
         with:
           fetch-depth: 2
 
@@ -70,6 +75,18 @@ jobs:
           coverage: ${{ env.CODE_COVERAGE }}
           ini-values: memory_limit=-1, pcov.directory=concrete, pcov.exclude="~(vendor|tests|js|css|config)~"
           tools: ${{matrix.composer}}
+
+      - name: "Get Composer cache directory"
+        id: composer-cache-dir
+        shell: bash
+        run: echo "dir=$(composer config --global --no-interaction cache-files-dir)" >>"$GITHUB_OUTPUT"
+
+      - name: "Cache Composer downloads"
+        uses: actions/cache@v6
+        with:
+          path: ${{ steps.composer-cache-dir.outputs.dir }}
+          key: composer-${{ runner.os }}-php${{ matrix.php-version }}-${{ matrix.dependencies }}-${{ hashFiles('composer.json', 'composer.lock') }}
+          restore-keys: composer-${{ runner.os }}-php${{ matrix.php-version }}-${{ matrix.dependencies }}-
 
       - name: "Prepare mysql user"
         run: |
@@ -94,13 +111,6 @@ jobs:
         if: ${{ matrix.dependencies == 'locked' }}
         run: |
           composer install --no-interaction --no-progress
-
-      - name: "Install highest unlocked dependencies"
-        if: ${{ matrix.dependencies == 'highest-unlocked' }}
-        run: |
-          echo "CCM_TEST_SKIP_CHECKCOMPOSERPLATFORM=1" >>"$GITHUB_ENV"
-          composer config --unset platform.php
-          composer update --no-interaction --no-progress
 
       - name: "Tests"
         if: env.CODE_COVERAGE == 'none'
