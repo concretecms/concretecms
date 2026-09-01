@@ -420,8 +420,6 @@ class Localization2Test extends LocalizationTestsBase
      */
     public function testStaticSetupSiteLocalization()
     {
-        $this->markTestSkipped('Skipped');
-
         // Move translation files
         $langDir = DIR_TESTS . '/assets/Localization/Adapter/Laminas/Translation/Loader/Gettext/languages/site';
         $appLangDir = static::getTranslationsFolder() . '/site';
@@ -431,38 +429,40 @@ class Localization2Test extends LocalizationTestsBase
             static::markTestSkipped('The site languages directory already exists in the application folder. It should not exist for the testing purposes.');
         }
         $filesystem->copyDirectory($langDir, $appLangDir);
+        try {
+            // Custom Localization instance for these tests
+            $loc = new Localization();
 
-        // Custom Localization instance for these tests
-        $loc = new Localization();
+            $translatorAdapterFactory = new LaminasTranslatorAdapterFactory();
+            $repository = new TranslatorAdapterRepository($translatorAdapterFactory);
+            $loc->setTranslatorAdapterRepository($repository);
 
-        $translatorAdapterFactory = new LaminasTranslatorAdapterFactory();
-        $repository = new TranslatorAdapterRepository($translatorAdapterFactory);
-        $loc->setTranslatorAdapterRepository($repository);
+            $app = Facade::getFacadeApplication();
+            $app->bind('Concrete\Core\Localization\Localization', function () use ($loc) {
+                return $loc;
+            });
+            $app->bind('multilingual/detector', function () {
+                return new MultilingualDetector();
+            });
 
-        $app = Facade::getFacadeApplication();
-        $app->bind('Concrete\Core\Localization\Localization', function () use ($loc) {
-            return $loc;
-        });
-        $app->bind('multilingual/detector', function () {
-            return new MultilingualDetector();
-        });
+            $loc->setContextLocale(Localization::CONTEXT_SITE, 'fi_FI');
+            $loc->setActiveContext(Localization::CONTEXT_SITE);
 
-        $loc->setContextLocale(Localization::CONTEXT_SITE, 'fi_FI');
-        $loc->setActiveContext(Localization::CONTEXT_SITE);
+            // Test setting setup site localization for the active translator
+            Localization::setupSiteLocalization();
+            $translator = $loc->getActiveTranslatorAdapter();
+            $this->assertEquals('Tervehdys sivustolta!', $translator->translate('Hello from site!'));
 
-        // Test setting setup site localization for the active translator
-        Localization::setupSiteLocalization();
-        $translator = $loc->getActiveTranslatorAdapter();
-        $this->assertEquals('Tervehdys sivustolta!', $translator->translate('Hello from site!'));
-
-        // Test setting setup site localization for custom translator
-        $translator = new LaminasTranslator();
-        $translator->setLocale('fi_FI');
-        Localization::setupSiteLocalization($translator);
-        $this->assertEquals('Tervehdys sivustolta!', $translator->translate('Hello from site!'));
-
-        // Remove the added languages directory
-        $filesystem->deleteDirectory($appLangDir);
+            // Test setting setup site localization for custom translator
+            $translator = new LaminasTranslator();
+            $translator->setLocale('fi_FI');
+            Localization::setupSiteLocalization($translator);
+            $this->assertEquals('Tervehdys sivustolta!', $translator->translate('Hello from site!'));
+        } finally {
+            // Remove the added languages directory, so that a failure doesn't make the next runs
+            // of this test be skipped because the directory already exists.
+            $filesystem->deleteDirectory($appLangDir);
+        }
     }
 
     private function setupStaticTest()

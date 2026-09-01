@@ -50,17 +50,32 @@ class PageCacheTest extends TestCase
         );
     }
 
-    public function testGetCacheHostForRequest()
+    public function testGetCacheHostForRequest(): void
     {
-        $this->markTestIncomplete('This test has not been implemented yet.');
-
         $cache = PageCache::getLibrary();
-        $request = Request::getInstance();
 
-        $this->assertEquals(
-            'www.requestdomain.com',
-            $request->getHttpHost()
-        );
+        // The current request is the one defined in the tests bootstrap file.
+        $request = Request::getInstance();
+        static::assertEquals('www.requestdomain.com', $request->getHttpHost());
+        static::assertEquals('www.requestdomain.com', $cache->getCacheHost($request));
+
+        $mockRequest = $this->getMockBuilder(Request::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $mockRequest->expects($this->once())
+            ->method('getHttpHost')
+            ->willReturn('www.concrete5.org');
+
+        static::assertEquals('www.concrete5.org', $cache->getCacheHost($mockRequest));
+    }
+
+    public function testGetCacheHostForUnrecognizedValue(): void
+    {
+        $cache = PageCache::getLibrary();
+
+        static::assertNull($cache->getCacheHost(null));
+        static::assertNull($cache->getCacheHost('www.concrete5.org'));
+        static::assertNull($cache->getCacheHost(new \stdClass()));
     }
 
     public function testGetCacheKeyForPage()
