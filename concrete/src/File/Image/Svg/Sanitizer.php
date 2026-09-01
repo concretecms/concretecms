@@ -167,18 +167,22 @@ class Sanitizer
         $xml = $this->dataToXml($data);
         $removedNodes = [];
         $this->sanitizeXml($xml, $removedNodes, $options);
-        $preEnshrinedData = $this->xmlToData($xml);
-        $enshrinedData = $this->enshrinedSvgSanitizer->sanitize($preEnshrinedData);
-        if (is_string($enshrinedData) && $enshrinedData !== $preEnshrinedData) {
-            // The enshrined/svg-sanitize library detected and removed additional unsafe
-            // content that our own allowlist/blocklist checks above didn't catch (eg
-            // javascript: URIs). Record it so that reject-mode callers (checkData())
-            // don't silently accept a file that sanitize-mode would have cleaned up.
-            if (isset($removedNodes['enshrined'])) {
-                ++$removedNodes['enshrined'];
-            } else {
-                $removedNodes['enshrined'] = 1;
-            }
+        $enshrinedData = $this->enshrinedSvgSanitizer->sanitize($this->xmlToData($xml));
+        $enshrinedIssues = $this->enshrinedSvgSanitizer->getXmlIssues();
+        if ($enshrinedIssues !== []) {
+            // The enshrined/svg-sanitize library detected and removed additional unsafe content that
+            // our own allowlist/blocklist checks above didn't catch (eg javascript: URIs). Record it
+            // so that reject-mode callers (checkData()) don't silently accept a file that
+            // sanitize-mode would have cleaned up.
+            //
+            // Ask the library what it removed rather than diffing its output against our own. It
+            // re-serializes through its own DOMDocument - preserveWhiteSpace = false, formatOutput
+            // = true, and saveXML() with LIBXML_NOEMPTYTAG - where xmlToData() uses a plain
+            // saveXML() at defaults. So its output differs from ours for every input: <circle/>
+            // comes back as <circle></circle>, the tree is re-indented, and an XML declaration is
+            // added when the source had none. Comparing the strings flagged every SVG, which under
+            // ACTION_REJECT rejected every upload as "potentially harmful".
+            $removedNodes['enshrined'] = count($enshrinedIssues);
         }
 
         return $enshrinedData;
