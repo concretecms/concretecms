@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\Backup;
 
+use Concrete\Core\Entity\File\File as FileEntity;
 use Concrete\Core\File\File;
 use Concrete\Core\Page\Feed;
 use Concrete\Core\Page\Page;
@@ -12,6 +13,32 @@ class ContentExporter
 {
     protected static $mcBlockIDs = [];
     protected static $ptComposerOutputControlIDs = [];
+
+    /**
+     * @var \Concrete\Core\Backup\ContentExporterOptions|null
+     */
+    private static $options = null;
+
+    /**
+     * Get the options driving the export.
+     * If they haven't been set with setOptions(), they are automatically detected from the current request.
+     */
+    public static function getOptions(): ContentExporterOptions
+    {
+        if (self::$options === null) {
+            self::$options = app(ContentExporterOptions::class);
+        }
+
+        return self::$options;
+    }
+
+    /**
+     * Set the options driving the export, overriding the ones automatically detected from the current request.
+     */
+    public static function setOptions(ContentExporterOptions $value): void
+    {
+        self::$options = $value;
+    }
 
     /**
      * @deprecated
@@ -70,7 +97,7 @@ class ContentExporter
             return null;
         }
 
-        return '{ccm:export:page:' . $c->getCollectionPath() . '}';
+        return static::getOptions()->isExportIDs() ? "{ccm:export:page:id={$c->getCollectionID()}}" : "{ccm:export:page:{$c->getCollectionPath()}}";
     }
 
     /**
@@ -94,7 +121,28 @@ class ContentExporter
             return null;
         }
 
-        return '{ccm:export:file:' . $fv->getPrefix() . ':' . $fv->getFileName() . '}';
+        $options = static::getOptions();
+        if ($options->isExportIDs()) {
+            $identifier = static::getFileIdentifier($f);
+
+            return "{ccm:export:file:id={$identifier}}";
+        }
+        return $options->isExportFilesWithoutPrefix() ? "{ccm:export:file:{$fv->getFileName()}}" : "{ccm:export:file:{$fv->getPrefix()}:{$fv->getFileName()}}";
+    }
+
+    /**
+     * Get the identifier to be used when exporting a reference to a file: its UUID if the
+     * isExportFilesAsUUID() option is turned on and the file has one, its ID otherwise.
+     *
+     * @return int|string
+     */
+    public static function getFileIdentifier(FileEntity $file)
+    {
+        if (static::getOptions()->isExportFilesAsUUID() && $file->hasFileUUID()) {
+            return $file->getFileUUID();
+        }
+
+        return $file->getFileID();
     }
 
     /**
@@ -138,7 +186,7 @@ class ContentExporter
             return null;
         }
 
-        return '{ccm:export:pagetype:' . $ct->getPageTypeHandle() . '}';
+        return static::getOptions()->isExportIDs() ? "{ccm:export:pagetype:id={$ct->getPageTypeID()}}" : "{ccm:export:pagetype:{$ct->getPageTypeHandle()}}";
     }
 
     /**
@@ -158,7 +206,7 @@ class ContentExporter
             return null;
         }
 
-        return '{ccm:export:filefolder:' . $folder->getTreeNodeDisplayPath() . '}';
+        return static::getOptions()->isExportIDs() ? "{ccm:export:filefolder:id={$folder->getTreeNodeID()}}" : "{ccm:export:filefolder:{$folder->getTreeNodeDisplayPath()}}";
     }
 
     /**
@@ -178,6 +226,6 @@ class ContentExporter
             return null;
         }
 
-        return '{ccm:export:pagefeed:' . $pf->getHandle() . '}';
+        return static::getOptions()->isExportIDs() ? "{ccm:export:pagefeed:id={$pf->getID()}}" : "{ccm:export:pagefeed:{$pf->getHandle()}}";
     }
 }

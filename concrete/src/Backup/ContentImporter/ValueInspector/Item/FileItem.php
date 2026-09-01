@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Concrete\Core\Backup\ContentImporter\ValueInspector\Item;
 
 use Concrete\Core\Entity\File\File;
@@ -7,6 +9,16 @@ use Doctrine\ORM\EntityManagerInterface;
 
 class FileItem implements ItemInterface
 {
+    /**
+     * The regular expression (without delimiters) matching a file identifier, that is a file ID or a file UUID.
+     * It's meant to be used with the case-insensitive and the dollar-endonly modifiers.
+     *
+     * @var string
+     */
+    public const UUID_REGEX = '[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}';
+
+    public const IDENTIFIER_REGEX = '[1-9][0-9]*|' . self::UUID_REGEX;
+
     /**
      * The file name (without the potential prefix).
      *
@@ -22,13 +34,22 @@ class FileItem implements ItemInterface
     protected $prefix;
 
     /**
+     * The found file ID (int) or file UUID (string) - an empty string if not found.
+     *
+     * @var int|string
+     */
+    protected $fileID;
+
+    /**
      * @param string $filename the file name (without the potential prefix)
      * @param string|null $prefix the found prefix (if any)
+     * @param int|string $fileID the found file ID (int) or file UUID (string) - an empty string if not found
      */
-    public function __construct($filename, $prefix = null)
+    public function __construct($filename, $prefix = null, $fileID = '')
     {
         $this->filename = $filename;
         $this->prefix = $prefix;
+        $this->fileID = $fileID;
     }
 
     /**
@@ -48,9 +69,17 @@ class FileItem implements ItemInterface
      */
     public function getReference()
     {
-        $prefix = $this->getPrefix();
+        $filename = $this->getFilename();
+        $prefix = (string) $this->getPrefix();
+        if ($filename !== '' || $prefix !== '') {
+            return $prefix === '' ? $filename : "{$prefix}:{$filename}";
+        }
+        $id = $this->getFileID();
+        if ($id !== '') {
+            return "id={$id}";
+        }
 
-        return (string) $prefix === '' ? $this->getFilename() : "{$prefix}:{$this->getFilename()}";
+        return '';
     }
 
     /**
@@ -74,6 +103,34 @@ class FileItem implements ItemInterface
     }
 
     /**
+     * Get the found file ID (int) or file UUID (string) - an empty string if not found.
+     * It's meaningful only if the file name and the prefix are empty.
+     *
+     * @return int|string
+     */
+    public function getFileID()
+    {
+        return $this->fileID;
+    }
+
+    /**
+     * Parse a file identifier found in the content: it can be a file ID or a file UUID.
+     *
+     * @param string|int|mixed $value
+     *
+     * @return int|string the file ID (int) or the file UUID (string) - an empty string if the value is neither of them
+     */
+    public static function parseFileIdentifier($value)
+    {
+        $value = is_string($value) || is_int($value) ? trim((string) $value) : '';
+        if (!preg_match('/^(?:' . self::IDENTIFIER_REGEX . ')$/Di', $value)) {
+            return '';
+        }
+
+        return preg_match('/^[0-9]+$/D', $value) ? (int) $value : $value;
+    }
+
+    /**
      * {@inheritdoc}
      *
      * @see \Concrete\Core\Backup\ContentImporter\ValueInspector\Item\ItemInterface::getContentObject()
@@ -83,21 +140,30 @@ class FileItem implements ItemInterface
     public function getContentObject()
     {
         $em = app(EntityManagerInterface::class);
+        $filename = $this->getFilename();
+        if ($filename === '') {
+            $fileID = $this->getFileID();
+            if ($fileID === '') {
+                return null;
+            }
+            if (!is_int($fileID)) {
+                return $em->getRepository(File::class)->findOneBy(['fUUID' => $fileID]);
+            }
+
+            return $em->find(File::class, $fileID);
+        }
         $db = $em->getConnection();
         $prefix = (string) $this->getPrefix();
         if ($prefix === '') {
             $fID = $db->fetchOne(
                 'SELECT fID FROM FileVersions WHERE fvFilename = ? LIMIT 1',
-                [$this->getFilename()]
+                [$filename]
             );
         } else {
             $fID = $db->fetchOne(
                 'SELECT fID FROM FileVersions WHERE fvPrefix = ? AND fvFilename = ? LIMIT 1',
-                [$prefix, $this->getFilename()]
+                [$prefix, $filename]
             );
-        }
-        if (!$fID) {
-            return null;
         }
 
         return $fID ? $em->find(File::class, $fID) : null;

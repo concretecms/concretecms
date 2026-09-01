@@ -2,10 +2,14 @@
 
 namespace Concrete\Block\CoreScrapbookDisplay;
 
+use Concrete\Core\Api\ApiResourceValueInterface;
+use Concrete\Core\Api\ApiValueSchemaInterface;
 use Concrete\Core\Block\Block;
 use Concrete\Core\Block\BlockController;
+use Concrete\Core\Block\Traits\CustomApiValueTrait;
 use Concrete\Core\Block\View\BlockViewTemplate;
 use Concrete\Core\Utility\Service\Xml;
+use SimpleXMLElement;
 
 /**
  * The controller for the core scrapbook display block. This block is automatically used when a block is copied into a
@@ -18,8 +22,10 @@ use Concrete\Core\Utility\Service\Xml;
  * @copyright  Copyright (c) 2003-2022 concreteCMS. (http://www.concretecms.org)
  * @license    http://www.concretecms.org/license/     MIT License
  */
-class Controller extends BlockController
+class Controller extends BlockController implements ApiResourceValueInterface, ApiValueSchemaInterface
 {
+    use CustomApiValueTrait;
+
     /**
      * @var string
      */
@@ -121,6 +127,45 @@ class Controller extends BlockController
             }
             $this->exportChildren($otherBlockNode, $blockNode);
         }
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Api\ApiValueSchemaInterface::getApiValueSchema()
+     */
+    public function getApiValueSchema(): array
+    {
+        return [
+            'type' => 'object',
+            'properties' => [
+                'bOriginalID' => [
+                    'type' => ['string', 'integer'],
+                    'description' => 'The ID of the block this block is an alias of.',
+                ],
+            ],
+        ];
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Block\Traits\CustomApiValueTrait::serializeValueForApi()
+     */
+    protected function serializeValueForApi(): array
+    {
+        // the export() method above disguises this block as the block it's an alias of, since a CIF file
+        // can't refer to a block ID: the API can, so let's expose the reference to the original block
+        $blockNode = new SimpleXMLElement('<block></block>');
+        parent::export($blockNode);
+        $mainTable = (string) $this->getBlockTypeDatabaseTable();
+        foreach ($blockNode->data as $data) {
+            if (strcasecmp((string) $data['table'], $mainTable) === 0 && isset($data->record)) {
+                return $this->serializeRecordForApi($mainTable, $data->record);
+            }
+        }
+
+        return [];
     }
 
     private function exportChildren(\SimpleXMLElement $from, \SimpleXMLElement $to)

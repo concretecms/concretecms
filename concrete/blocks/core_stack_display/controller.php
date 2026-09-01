@@ -2,8 +2,11 @@
 
 namespace Concrete\Block\CoreStackDisplay;
 
+use Concrete\Core\Api\ApiResourceValueInterface;
+use Concrete\Core\Api\ApiValueSchemaInterface;
 use Concrete\Core\Block\Block;
 use Concrete\Core\Block\BlockController;
+use Concrete\Core\Block\Traits\CustomApiValueTrait;
 use Concrete\Core\Block\Traits\HasSubBlocksTrait;
 use Concrete\Core\Feature\UsesFeatureInterface;
 use Concrete\Core\Multilingual\Page\Section\Section;
@@ -24,8 +27,9 @@ use Symfony\Component\HttpFoundation\Response;
  * @copyright  Copyright (c) 2003-2022 concretecms. (http://www.concretecms.org)
  * @license    http://www.concretecms.org/license/     MIT License
  */
-class Controller extends BlockController implements TrackableInterface, UsesFeatureInterface
+class Controller extends BlockController implements ApiResourceValueInterface, ApiValueSchemaInterface, TrackableInterface, UsesFeatureInterface
 {
+    use CustomApiValueTrait;
     use HasSubBlocksTrait;
 
     /**
@@ -221,6 +225,69 @@ class Controller extends BlockController implements TrackableInterface, UsesFeat
         }
 
         return null;
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Api\ApiValueSchemaInterface::getApiValueSchema()
+     */
+    public function getApiValueSchema(): array
+    {
+        return [
+            'type' => 'object',
+            'description' => 'The stack displayed by this block. The blocks it contains are not part of this value, since they belong to the stack itself.',
+            'properties' => [
+                'stID' => [
+                    'type' => ['string', 'integer'],
+                    'description' => 'The ID of the stack (0 when the block displays no stack: that\'s also the value of the stacks that don\'t exist).',
+                ],
+            ],
+        ];
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Block\BlockController::getImportDataFromApiValue()
+     */
+    public function getImportDataFromApiValue($page, array $value): array
+    {
+        $stID = array_key_exists('stID', $value) ? $value['stID'] : $this->getStackIDForApi();
+        $stack = is_numeric($stID) ? Stack::getByID((int) $stID) : null;
+
+        // the getImportData() method below discards the stacks that don't exist: let's do the same
+        return [
+            'stID' => $stack === null ? 0 : (int) $stack->getCollectionID(),
+        ];
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Block\Traits\CustomApiValueTrait::serializeValueForApi()
+     */
+    protected function serializeValueForApi(): array
+    {
+        // the export() method below refers to the stack by its name and by its path, since a CIF file can't
+        // use its ID: the API can
+        return [
+            'stID' => $this->getStackIDForApi(),
+        ];
+    }
+
+    /**
+     * Get the ID of the stack this block displays, as it's exchanged via the API.
+     *
+     * @return int 0 if the stack doesn't exist
+     */
+    private function getStackIDForApi(): int
+    {
+        // that's the stack the export() method refers to: not the localized one, which depends on the
+        // section the block is being displayed in
+        $stack = $this->getStack(false);
+
+        return $stack === null ? 0 : (int) $stack->getCollectionID();
     }
 
     /**

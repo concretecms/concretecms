@@ -1,9 +1,14 @@
 <?php
 namespace Concrete\Block\DocumentLibrary;
 
+use Concrete\Core\Api\ApiResourceValueInterface;
+use Concrete\Core\Api\ApiValueSchemaInterface;
+use Concrete\Core\Api\Block\ApiValueSchemaFactory;
 use Concrete\Core\Attribute\Category\FileCategory;
 use Concrete\Core\Attribute\Key\FileKey;
 use Concrete\Core\Block\BlockController;
+use Concrete\Core\Block\ExportDeclarations;
+use Concrete\Core\Block\Traits\CustomApiValueTrait;
 use Concrete\Core\Block\View\BlockView;
 use Concrete\Core\Error\UserMessageException;
 use Concrete\Core\Feature\Features;
@@ -31,8 +36,17 @@ use League\Url\Url;
 use SimpleXMLElement;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
-class Controller extends BlockController implements UsesFeatureInterface
+class Controller extends BlockController implements ApiResourceValueInterface, ApiValueSchemaInterface, UsesFeatureInterface
 {
+    use CustomApiValueTrait;
+
+    /**
+     * The columns holding a JSON document, which the API exchanges as the lists (and the maps) they are.
+     *
+     * @var string[]
+     */
+    private const JSON_COLUMNS = ['setIds', 'viewProperties', 'expandableProperties', 'searchProperties'];
+
     /**
      * @var string|null
      */
@@ -1046,6 +1060,211 @@ class Controller extends BlockController implements UsesFeatureInterface
     /**
      * {@inheritdoc}
      *
+     * @see \Concrete\Core\Api\ApiValueSchemaInterface::getApiValueSchema()
+     */
+    public function getApiValueSchema(): array
+    {
+        $schemaFactory = $this->app->make(ApiValueSchemaFactory::class);
+
+        return [
+            'type' => 'object',
+            'properties' => [
+                'folderID' => $schemaFactory->describeReference(ExportDeclarations::REFERENCE_FILE_FOLDER, [
+                    'type' => ['string', 'integer'],
+                    'description' => 'The folder holding the files to be listed (0 for the root folder).',
+                ]),
+                'hideFolders' => [
+                    'type' => ['boolean', 'string', 'integer'],
+                    'description' => 'Set it to true to list only the files, hiding the folders contained in the folder.',
+                ],
+                'setIds' => [
+                    'type' => 'array',
+                    'description' => 'The IDs of the file sets the files must belong to.',
+                    'items' => ['type' => ['string', 'integer']],
+                ],
+                'setMode' => [
+                    'type' => 'string',
+                    'enum' => ['any', 'all'],
+                    'default' => 'any',
+                    'description' => 'Whether the files must belong to any of the file sets, or to all of them.',
+                ],
+                'tags' => [
+                    'type' => ['string', 'null'],
+                    'description' => 'The tags the files must have, separated by commas.',
+                ],
+                'onlyCurrentUser' => [
+                    'type' => ['boolean', 'string', 'integer', 'null'],
+                    'description' => 'Set it to true to list only the files added by the user viewing the page.',
+                ],
+                'orderBy' => [
+                    'type' => ['string', 'null'],
+                    'description' => 'The property the files are sorted by: title, set, date, filename, or "ak_" followed by the ID of a file attribute.',
+                ],
+                'displayOrderDesc' => [
+                    'type' => ['boolean', 'string', 'integer'],
+                    'description' => 'Set it to true to sort the files in descending order.',
+                ],
+                'displayLimit' => [
+                    'type' => ['string', 'integer', 'null'],
+                    'description' => 'The number of files displayed in a page (0 for all of them).',
+                ],
+                'viewProperties' => [
+                    'type' => 'object',
+                    'description' => 'The columns of the table, that is the properties of the files that are displayed. The keys are the names of the properties (thumbnail, filename, tags, date, extension, size, description, or "ak_" followed by the ID of a file attribute).',
+                    'additionalProperties' => [
+                        'type' => ['string', 'integer'],
+                        'enum' => ['-1', '1', '5', -1, 1, 5],
+                        'description' => 'How the property is displayed: -1 to hide it, 1 to display it, 5 to display it and let the visitors sort the files by it.',
+                    ],
+                ],
+                'expandableProperties' => [
+                    'type' => 'array',
+                    'description' => 'The properties of the files displayed when a file is expanded (image, description, tags, filename, date, extension, size, or "ak_" followed by the ID of a file attribute).',
+                    'items' => ['type' => 'string'],
+                ],
+                'enableSearch' => [
+                    'type' => ['boolean', 'string', 'integer', 'null'],
+                    'description' => 'Set it to true to let the visitors search the files.',
+                ],
+                'searchProperties' => [
+                    'type' => 'array',
+                    'description' => 'The properties the visitors can search the files by (keywords, type, extension, or "ak_" followed by the ID of a file attribute).',
+                    'items' => ['type' => 'string'],
+                ],
+                'maxThumbWidth' => [
+                    'type' => ['string', 'integer', 'null'],
+                    'description' => 'The maximum width (in pixels) of the thumbnails of the files.',
+                ],
+                'maxThumbHeight' => [
+                    'type' => ['string', 'integer', 'null'],
+                    'description' => 'The maximum height (in pixels) of the thumbnails of the files.',
+                ],
+                'heightMode' => [
+                    'type' => 'string',
+                    'enum' => ['auto', 'fixed'],
+                    'default' => 'auto',
+                    'description' => 'Whether the table is as tall as its contents, or as tall as fixedHeightSize.',
+                ],
+                'fixedHeightSize' => [
+                    'type' => ['string', 'integer', 'null'],
+                    'description' => 'The height (in pixels) of the table (it\'s used only when heightMode is "fixed").',
+                ],
+                'downloadFileMethod' => [
+                    'type' => 'string',
+                    'enum' => ['force', 'browser'],
+                    'default' => 'force',
+                    'description' => 'Whether the files are downloaded, or opened in the browser.',
+                ],
+                'tableName' => [
+                    'type' => ['string', 'null'],
+                    'maxLength' => 255,
+                    'description' => 'The title displayed above the table.',
+                ],
+                'tableDescription' => [
+                    'type' => ['string', 'null'],
+                    'maxLength' => 255,
+                    'description' => 'The text displayed below the title of the table.',
+                ],
+                'tableStriped' => [
+                    'type' => ['boolean', 'string', 'integer'],
+                    'description' => 'Set it to true to give the rows of the table two alternating colors.',
+                ],
+                'rowBackgroundColorAlternate' => [
+                    'type' => ['string', 'null'],
+                    'description' => 'The color of the even rows of the table (it\'s used only when tableStriped is 1).',
+                ],
+                'headerBackgroundColor' => [
+                    'type' => ['string', 'null'],
+                    'description' => 'The background color of the header of the table.',
+                ],
+                'headerBackgroundColorActiveSort' => [
+                    'type' => ['string', 'null'],
+                    'description' => 'The background color of the column of the header the files are sorted by.',
+                ],
+                'headerTextColor' => [
+                    'type' => ['string', 'null'],
+                    'description' => 'The color of the text of the header of the table.',
+                ],
+                'allowFileUploading' => [
+                    'type' => ['boolean', 'string', 'integer', 'null'],
+                    'description' => 'Set it to true to let the visitors that can add files upload them from this block.',
+                ],
+                'addFilesToSetID' => [
+                    'type' => ['string', 'integer'],
+                    'description' => 'The ID of the file set the uploaded files are added to (0 for none).',
+                ],
+                'allowInPageFileManagement' => [
+                    'type' => ['boolean', 'string', 'integer', 'null'],
+                    'description' => 'Set it to true to let the visitors that can edit the files manage them from this block.',
+                ],
+            ],
+        ];
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Block\BlockController::getImportDataFromApiValue()
+     */
+    public function getImportDataFromApiValue($page, array $value): array
+    {
+        if ($this->bID) {
+            // the save() method resets the settings that it doesn't receive: let's keep the current ones
+            $value += $this->serializeValueForApi();
+        }
+        // the value is the record of the table of the block: let's resolve the references it contains
+        $records = ['record' => [$value]];
+        $args = $this->deserializeRecordsFromApi($records, 'record')[0] ?? [];
+        // the save() method wants the file sets in another key, and the properties as arrays
+        $args['fsID'] = [];
+        foreach ((array) ($args['setIds'] ?? []) as $setID) {
+            if (is_numeric($setID)) {
+                $args['fsID'][] = (int) $setID;
+            }
+        }
+        foreach (self::JSON_COLUMNS as $key) {
+            if ($key !== 'setIds') {
+                $args[$key] = isset($args[$key]) && is_array($args[$key]) ? $args[$key] : [];
+            }
+        }
+        // the save() method stores the opposite of what it receives
+        $args['showFolders'] = empty($args['hideFolders']) ? 1 : 0;
+
+        return $args;
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Block\Traits\CustomApiValueTrait::serializeValueForApi()
+     */
+    protected function serializeValueForApi(): array
+    {
+        // the export() method below replaces the IDs of the file sets and of the file attributes with their
+        // names and handles, since a CIF file can't refer to them by their ID: the API can
+        $blockNode = new SimpleXMLElement('<block></block>');
+        parent::export($blockNode);
+        $mainTable = (string) $this->getBlockTypeDatabaseTable();
+        $result = [];
+        foreach ($blockNode->data as $data) {
+            if (strcasecmp((string) $data['table'], $mainTable) === 0 && isset($data->record)) {
+                $result = $this->serializeRecordForApi($mainTable, $data->record);
+                break;
+            }
+        }
+        // those columns hold JSON documents: let's exchange them as the lists (and the maps) they are
+        foreach (self::JSON_COLUMNS as $key) {
+            $decoded = isset($result[$key]) ? json_decode((string) $result[$key], true) : null;
+            $result[$key] = is_array($decoded) ? $decoded : [];
+        }
+        $result['setIds'] = array_map('intval', array_values(array_filter($result['setIds'], 'is_numeric')));
+
+        return $result;
+    }
+
+    /**
+     * {@inheritdoc}
+     *
      * @see \Concrete\Core\Block\BlockController::export()
      */
     public function export(SimpleXMLElement $blockNode)
@@ -1056,6 +1275,7 @@ class Controller extends BlockController implements UsesFeatureInterface
         $this->fixExportAttributeKeyArray($record, 'viewProperties', true);
         $this->fixExportAttributeKeyArray($record, 'expandableProperties', false);
         $this->fixExportAttributeKeyArray($record, 'searchProperties', false);
+        $this->fixExportAttributeKey($record, 'orderBy');
         $addFilesToSet = null;
         if (isset($record->addFilesToSetID)) {
             $setID = (int) (string) $record->addFilesToSetID[0];
@@ -1089,6 +1309,7 @@ class Controller extends BlockController implements UsesFeatureInterface
         $this->fixImportAttributeKeyArray($data, 'viewProperties', true);
         $this->fixImportAttributeKeyArray($data, 'expandableProperties', false);
         $this->fixImportAttributeKeyArray($data, 'searchProperties', false);
+        $this->fixImportAttributeKey($data, 'orderBy');
         if (is_string($addFilesToSetName = $data['addFilesToSetName'] ?? null) && $addFilesToSetName !== '') {
             $addFilesToSet = Set::getByName($addFilesToSetName);
             if ($addFilesToSet) {
@@ -1236,6 +1457,41 @@ class Controller extends BlockController implements UsesFeatureInterface
             }
         }
         $xml->createChildElement($recordNode, 'setNames', json_encode($setNames));
+    }
+
+    /**
+     * Replace the ID of the file attribute held by a column with its handle, since a CIF file can't refer
+     * to it by its ID.
+     */
+    private function fixExportAttributeKey(SimpleXMLElement $recordNode, string $fieldName): void
+    {
+        $value = isset($recordNode->{$fieldName}) ? (string) $recordNode->{$fieldName} : '';
+        $m = null;
+        if (!preg_match('/^ak_(?<id>[1-9]\d*)$/', $value, $m)) {
+            return;
+        }
+        $ak = $this->app->make(FileCategory::class)->getAttributeKeyByID((int) $m['id']);
+        if (!$ak) {
+            return;
+        }
+        unset($recordNode->{$fieldName}[0]);
+        $this->app->make(Xml::class)->createChildElement($recordNode, $fieldName, "ak_{$ak->getAttributeKeyHandle()}");
+    }
+
+    /**
+     * Replace the handle of the file attribute held by a column with its ID.
+     */
+    private function fixImportAttributeKey(array &$data, string $fieldName): void
+    {
+        $value = (string) ($data[$fieldName] ?? '');
+        $m = null;
+        if (!preg_match('/^ak_(?<handle>\S+)$/', $value, $m)) {
+            return;
+        }
+        $ak = $this->app->make(FileCategory::class)->getAttributeKeyByHandle($m['handle']);
+        if ($ak) {
+            $data[$fieldName] = "ak_{$ak->getAttributeKeyID()}";
+        }
     }
 
     private function fixExportAttributeKeyArray(SimpleXMLElement $recordNode, string $fieldName, bool $replaceKeys): void

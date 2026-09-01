@@ -1,7 +1,12 @@
 <?php
 namespace Concrete\Block\Faq;
 
+use Concrete\Core\Api\ApiResourceValueInterface;
+use Concrete\Core\Api\ApiValueSchemaInterface;
+use Concrete\Core\Api\Block\ApiValueSchemaFactory;
 use Concrete\Core\Block\BlockController;
+use Concrete\Core\Block\ExportDeclarations;
+use Concrete\Core\Block\Traits\CustomApiValueTrait;
 use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Editor\LinkAbstractor;
 use Concrete\Core\Feature\Features;
@@ -9,8 +14,10 @@ use Concrete\Core\Feature\UsesFeatureInterface;
 use Concrete\Core\File\Tracker\FileTrackableInterface;
 use Concrete\Core\File\Tracker\RichTextExtractor;
 
-class Controller extends BlockController implements FileTrackableInterface, UsesFeatureInterface
+class Controller extends BlockController implements ApiResourceValueInterface, ApiValueSchemaInterface, FileTrackableInterface, UsesFeatureInterface
 {
+    use CustomApiValueTrait;
+
     /**
      * @var string|null
      */
@@ -152,6 +159,80 @@ class Controller extends BlockController implements FileTrackableInterface, Uses
                 unset($nodeToRemove[0]);
             }
         }
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Api\ApiValueSchemaInterface::getApiValueSchema()
+     */
+    public function getApiValueSchema(): array
+    {
+        $schemaFactory = $this->app->make(ApiValueSchemaFactory::class);
+
+        return [
+            'type' => 'object',
+            'properties' => [
+                'blockTitle' => [
+                    'type' => ['string', 'null'],
+                    'maxLength' => 255,
+                ],
+                'entries' => [
+                    'type' => 'array',
+                    'description' => 'The questions and their answers, in the order they are displayed. When writing, if this key is omitted the current ones are kept as they are.',
+                    'items' => [
+                        'type' => 'object',
+                        'properties' => [
+                            'linkTitle' => ['type' => 'string'],
+                            'title' => ['type' => 'string'],
+                            'description' => $schemaFactory->describeReference(ExportDeclarations::REFERENCE_CONTENT),
+                        ],
+                    ],
+                ],
+            ],
+        ];
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Block\Traits\CustomApiValueTrait::serializeValueForApi()
+     */
+    protected function serializeValueForApi(): array
+    {
+        $records = $this->serializeTablesForApi();
+        $entries = [];
+        foreach ($records['btFaqEntries'] ?? [] as $entry) {
+            // the entries are listed in their display order, so their sort order is implicit
+            unset($entry['sortOrder']);
+            $entries[] = $entry;
+        }
+
+        return array_merge($records['btFaq'][0] ?? [], ['entries' => $entries]);
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Block\BlockController::getImportDataFromApiValue()
+     */
+    public function getImportDataFromApiValue($page, array $value): array
+    {
+        $entries = $this->deserializeRecordsFromApi($value, 'entries');
+        $args = parent::getImportDataFromApiValue($page, $value);
+        // the save() method wants the values of the entries in parallel arrays
+        $args['linkTitle'] = [];
+        $args['title'] = [];
+        $args['description'] = [];
+        $args['sortOrder'] = [];
+        foreach (array_values($entries) as $index => $entry) {
+            $args['linkTitle'][] = $entry['linkTitle'] ?? '';
+            $args['title'][] = $entry['title'] ?? '';
+            $args['description'][] = $entry['description'] ?? '';
+            $args['sortOrder'][] = $index;
+        }
+
+        return $args;
     }
 
     /**

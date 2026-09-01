@@ -25,7 +25,25 @@ class PageTypeItem extends AbstractItem
      */
     public function getContentObject()
     {
-        return Type::getByHandle($this->getReference());
+        $reference = (string) $this->getReference();
+        if ($reference === '') {
+            return null;
+        }
+        if (preg_match('/^(?:(?<handle>[^:]*):)?id=(?<id>[1-9]\d*)$/', $reference, $m)) {
+            $handle = $m['handle'] ?? '';
+            $id = (int) $m['id'];
+        } else {
+            $handle = $reference;
+            $id = null;
+        }
+        if ($handle !== '') {
+            return Type::getByHandle($handle);
+        }
+        if ($id !== null) {
+            return Type::getByID($id);
+        }
+
+        return null;
     }
 
     /**

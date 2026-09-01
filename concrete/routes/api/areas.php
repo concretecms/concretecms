@@ -13,6 +13,11 @@ $router->post('/pages/{pageID}/{areaHandle}', '\Concrete\Core\Api\Controller\Are
     ->setScopes('pages:areas:add_block')
 ;
 
+$router->put('/pages/{pageID}/{areaHandle}/sort', '\Concrete\Core\Api\Controller\Areas::sortBlocks')
+    ->setRequirement('pageID', '[0-9]+')
+    ->setScopes('pages:areas:sort_blocks')
+;
+
 $router->delete('/pages/{pageID}/{areaHandle}/{blockID}', '\Concrete\Core\Api\Controller\Areas::deleteBlock')
     ->setRequirement('pageID', '[0-9]+')
     ->setRequirement('blockID', '[0-9]+')

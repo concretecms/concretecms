@@ -1,5 +1,6 @@
 {
   "$schema": "../options-schema.json",
+  "apiRoundTripIgnoredAttributes": ["mc-block-id"],
   "requiredBlockTypes": ["content"],
   "importerExporterMethod": "importExportPageType1"
 }

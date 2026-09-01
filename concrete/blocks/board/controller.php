@@ -2,7 +2,10 @@
 
 namespace Concrete\Block\Board;
 
+use Concrete\Core\Api\ApiResourceValueInterface;
+use Concrete\Core\Api\ApiValueSchemaInterface;
 use Concrete\Core\Block\BlockController;
+use Concrete\Core\Block\Traits\CustomApiValueTrait;
 use Concrete\Core\Board\Command\CreateBoardInstanceCommand;
 use Concrete\Core\Board\Command\RegenerateBoardInstanceCommand;
 use Concrete\Core\Board\Instance\Renderer;
@@ -16,8 +19,10 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 
 defined('C5_EXECUTE') or die('Access Denied.');
 
-class Controller extends BlockController
+class Controller extends BlockController implements ApiResourceValueInterface, ApiValueSchemaInterface
 {
+    use CustomApiValueTrait;
+
     /**
      * @var string[]
      */
@@ -146,6 +151,61 @@ class Controller extends BlockController
         }
 
         return $args;
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Api\ApiValueSchemaInterface::getApiValueSchema()
+     */
+    public function getApiValueSchema(): array
+    {
+        return [
+            'type' => 'object',
+            'properties' => [
+                'boardInstanceID' => [
+                    'type' => ['string', 'integer'],
+                    'description' => 'The ID of the board instance displayed by this block.',
+                ],
+            ],
+        ];
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Block\BlockController::getImportDataFromApiValue()
+     */
+    public function getImportDataFromApiValue($page, array $value): array
+    {
+        // the getImportData() method above reads the name of a board out of a CIF file, since a CIF file
+        // can't refer to a board instance by its ID: the API can, so let's simply accept it
+        $args = [];
+        if (isset($value['boardInstanceID'])) {
+            $args['boardInstanceID'] = (int) $value['boardInstanceID'];
+        }
+
+        return $args;
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Block\Traits\CustomApiValueTrait::serializeValueForApi()
+     */
+    protected function serializeValueForApi(): array
+    {
+        // the export() method above writes the name of the board, which is what a CIF file needs
+        $blockNode = new \SimpleXMLElement('<block></block>');
+        parent::export($blockNode);
+        $mainTable = (string) $this->getBlockTypeDatabaseTable();
+        foreach ($blockNode->data as $data) {
+            if (strcasecmp((string) $data['table'], $mainTable) === 0 && isset($data->record)) {
+                return $this->serializeRecordForApi($mainTable, $data->record);
+            }
+        }
+
+        return [];
     }
 
     /**

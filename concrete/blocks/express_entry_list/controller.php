@@ -3,8 +3,13 @@ namespace Concrete\Block\ExpressEntryList;
 
 use Concrete\Controller\Element\Search\Express\CustomizeResults;
 use Concrete\Controller\Element\Search\SearchFieldSelector;
+use Concrete\Core\Api\ApiResourceValueInterface;
+use Concrete\Core\Api\ApiValueSchemaInterface;
+use Concrete\Core\Api\Block\ApiValueSchemaFactory;
 use Concrete\Core\Block\BlockController;
 use Concrete\Core\Block\Controller\SaveMode;
+use Concrete\Core\Block\ExportDeclarations;
+use Concrete\Core\Block\Traits\CustomApiValueTrait;
 use Concrete\Core\Entity\Express\Association;
 use Concrete\Core\Entity\Express\Entity;
 use Concrete\Core\Entity\Search\Query;
@@ -40,8 +45,28 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Serializer\Encoder\JsonDecode;
 
-class Controller extends BlockController implements UsesFeatureInterface
+class Controller extends BlockController implements ApiResourceValueInterface, ApiValueSchemaInterface, UsesFeatureInterface
 {
+    use CustomApiValueTrait;
+
+    /**
+     * The keys of the API value that aren't the plain value of a column of the table of the block, plus the
+     * elements that only the CIF representation of the block has.
+     *
+     * @var string[]
+     */
+    private const API_STRUCTURED_KEYS = [
+        'columns',
+        'defaultSortColumn',
+        'filterFields',
+        'linkedProperties',
+        'linkedProperty',
+        'searchProperties',
+        'searchProperty',
+        'searchAssociations',
+        'searchAssociation',
+    ];
+
     /**
      * @var string|null
      */
@@ -698,6 +723,299 @@ class Controller extends BlockController implements UsesFeatureInterface
         $args['columns'] = serialize($set);
 
         return $args;
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Api\ApiValueSchemaInterface::getApiValueSchema()
+     */
+    public function getApiValueSchema(): array
+    {
+        $schemaFactory = $this->app->make(ApiValueSchemaFactory::class);
+
+        return [
+            'type' => 'object',
+            'properties' => [
+                'exEntityID' => [
+                    'type' => 'string',
+                    'description' => 'The ID of the Express entity whose entries are listed.',
+                ],
+                'detailPage' => $schemaFactory->describeReference(ExportDeclarations::REFERENCE_PAGE, [
+                    'type' => ['string', 'integer'],
+                    'description' => 'The page displaying the details of an entry, linked by the linkedProperties columns (0 for none).',
+                ]),
+                'columns' => [
+                    'type' => 'array',
+                    'description' => 'The columns of the table, in the order they are displayed.',
+                    'items' => [
+                        'type' => 'object',
+                        'properties' => [
+                            'key' => [
+                                'type' => 'string',
+                                'description' => 'The key identifying the property of the entries displayed in the column.',
+                            ],
+                            'sortDirection' => [
+                                'type' => 'string',
+                                'enum' => ['asc', 'desc'],
+                                'description' => 'The direction the entries are sorted in when the visitors sort them by this column.',
+                            ],
+                        ],
+                    ],
+                ],
+                'defaultSortColumn' => [
+                    'type' => ['object', 'null'],
+                    'description' => 'The column the entries are sorted by (NULL if the entries aren\'t sorted).',
+                    'properties' => [
+                        'key' => [
+                            'type' => 'string',
+                            'description' => 'The key of one of the columns.',
+                        ],
+                        'direction' => [
+                            'type' => 'string',
+                            'enum' => ['asc', 'desc'],
+                            'description' => 'The direction the entries are sorted in.',
+                        ],
+                    ],
+                ],
+                'linkedProperties' => [
+                    'type' => 'array',
+                    'description' => 'The IDs of the attributes of the entity whose columns link to the detailPage page.',
+                    'items' => ['type' => ['string', 'integer']],
+                ],
+                'titleFormat' => [
+                    'type' => 'string',
+                    'enum' => array_keys(BlockController::$btTitleFormats),
+                    'default' => 'h2',
+                    'description' => 'The HTML element wrapping the title of the table.',
+                ],
+                'tableName' => [
+                    'type' => ['string', 'null'],
+                    'maxLength' => 255,
+                    'description' => 'The title displayed above the table.',
+                ],
+                'tableDescription' => [
+                    'type' => ['string', 'null'],
+                    'maxLength' => 255,
+                    'description' => 'The text displayed below the title of the table.',
+                ],
+                'tableStriped' => [
+                    'type' => ['boolean', 'string', 'integer'],
+                    'description' => 'Set it to true to give the rows of the table two alternating colors.',
+                ],
+                'rowBackgroundColorAlternate' => [
+                    'type' => ['string', 'null'],
+                    'description' => 'The color of the even rows of the table (it\'s used only when tableStriped is 1).',
+                ],
+                'headerBackgroundColor' => [
+                    'type' => ['string', 'null'],
+                    'description' => 'The background color of the header of the table.',
+                ],
+                'headerBackgroundColorActiveSort' => [
+                    'type' => ['string', 'null'],
+                    'description' => 'The background color of the column of the header the entries are sorted by.',
+                ],
+                'headerTextColor' => [
+                    'type' => ['string', 'null'],
+                    'description' => 'The color of the text of the header of the table.',
+                ],
+                'displayLimit' => [
+                    'type' => ['string', 'integer', 'null'],
+                    'description' => 'The number of entries displayed in a page.',
+                ],
+                'enablePagination' => [
+                    'type' => ['boolean', 'string', 'integer', 'null'],
+                    'description' => 'Set it to true to let the visitors move to the other pages of the list.',
+                ],
+                'enableItemsPerPageSelection' => [
+                    'type' => ['boolean', 'string', 'integer', 'null'],
+                    'description' => 'Set it to true to let the visitors choose how many entries a page holds.',
+                ],
+                'enableSearch' => [
+                    'type' => ['boolean', 'string', 'integer', 'null'],
+                    'description' => 'Set it to true to let the visitors search the entries (it\'s ignored when there is nothing to search by).',
+                ],
+                'enableKeywordSearch' => [
+                    'type' => ['boolean', 'string', 'integer', 'null'],
+                    'description' => 'Set it to true to let the visitors search the entries by keywords (it\'s used only when enableSearch is 1).',
+                ],
+                'searchProperties' => [
+                    'type' => 'array',
+                    'description' => 'The IDs of the attributes of the entity the visitors can search the entries by (they are used only when enableSearch is 1).',
+                    'items' => ['type' => ['string', 'integer']],
+                ],
+                'searchAssociations' => [
+                    'type' => 'array',
+                    'description' => 'The IDs of the associations of the entity the visitors can search the entries by (they are used only when enableSearch is 1).',
+                    'items' => ['type' => 'string'],
+                ],
+                'filterFields' => [
+                    'type' => 'array',
+                    'description' => 'The filters the listed entries always satisfy, whatever the visitors search.',
+                    'items' => [
+                        'type' => 'object',
+                        'properties' => [
+                            'key' => [
+                                'type' => 'string',
+                                'description' => 'The key identifying what the filter works on.',
+                            ],
+                            'data' => [
+                                'type' => 'object',
+                                'description' => 'The configuration of the filter, whose keys depend on what it works on.',
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ];
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Block\BlockController::getImportDataFromApiValue()
+     */
+    public function getImportDataFromApiValue($page, array $value): array
+    {
+        if ($this->bID) {
+            // the save() method resets the settings that it doesn't receive: let's keep the current ones
+            $value += $this->serializeValueForApi();
+        }
+        // the getImportData() method below reads the columns and the filters out of the XML of a CIF file
+        $blockNode = new SimpleXMLElement('<block></block>');
+        $dataNode = $blockNode->addChild('data');
+        $dataNode->addAttribute('table', (string) $this->getBlockTypeDatabaseTable());
+        $recordNode = $dataNode->addChild('record');
+        $xml = $this->app->make(Xml::class);
+        foreach ($value as $key => $keyValue) {
+            if (!in_array($key, self::API_STRUCTURED_KEYS, true) && (is_string($keyValue) || is_int($keyValue) || is_float($keyValue))) {
+                $xml->createChildElement($recordNode, (string) $key, (string) $keyValue);
+            }
+        }
+        foreach ((array) ($value['searchAssociations'] ?? []) as $searchAssociation) {
+            if (is_string($searchAssociation)) {
+                $xml->createChildElement($recordNode, 'searchAssociation', $searchAssociation);
+            }
+        }
+        $this->serializeApiColumnsForImport($recordNode, $value);
+        $this->serializeApiFilterFieldsForImport($recordNode, $xml, $value);
+        $args = $this->getImportData($blockNode, $page);
+        // a CIF file refers to the attributes of the entity by their handle, the API by their ID
+        foreach (['linkedProperties', 'searchProperties'] as $key) {
+            $args[$key] = [];
+            foreach ((array) ($value[$key] ?? []) as $attributeKeyID) {
+                if (is_numeric($attributeKeyID)) {
+                    $args[$key][] = (int) $attributeKeyID;
+                }
+            }
+        }
+
+        return $args;
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Block\Traits\CustomApiValueTrait::serializeValueForApi()
+     */
+    protected function serializeValueForApi(): array
+    {
+        // the export() method below writes the columns and the filters as XML elements, since a CIF file
+        // can't hold the serialized PHP objects that this block stores
+        $blockNode = new SimpleXMLElement('<block></block>');
+        $this->export($blockNode);
+        $mainTable = (string) $this->getBlockTypeDatabaseTable();
+        $result = [];
+        $recordNode = null;
+        foreach ($blockNode->data as $data) {
+            if (strcasecmp((string) $data['table'], $mainTable) === 0 && isset($data->record)) {
+                $recordNode = $data->record[0];
+                $result = $this->serializeRecordForApi($mainTable, $recordNode);
+                break;
+            }
+        }
+        foreach (self::API_STRUCTURED_KEYS as $key) {
+            unset($result[$key]);
+        }
+        // a CIF file refers to the attributes of the entity by their handle, the API by their ID
+        foreach (['linkedProperties', 'searchProperties'] as $key) {
+            $result[$key] = array_values(array_map('intval', array_filter((array) json_decode((string) $this->{$key}), 'is_numeric')));
+        }
+        $result['searchAssociations'] = [];
+        foreach ((array) json_decode((string) $this->searchAssociations) as $searchAssociation) {
+            if (is_string($searchAssociation)) {
+                $result['searchAssociations'][] = $searchAssociation;
+            }
+        }
+        $result['columns'] = [];
+        $result['defaultSortColumn'] = null;
+        $result['filterFields'] = [];
+        if ($recordNode !== null) {
+            foreach ($recordNode->columns[0]->column ?? [] as $columnNode) {
+                $result['columns'][] = [
+                    'key' => (string) $columnNode['key'],
+                    'sortDirection' => (string) $columnNode['sort-direction'],
+                ];
+            }
+            $defaultSortColumnKey = (string) ($recordNode->columns[0]['default-sort-column-key'] ?? '');
+            if ($defaultSortColumnKey !== '') {
+                $result['defaultSortColumn'] = [
+                    'key' => $defaultSortColumnKey,
+                    'direction' => (string) ($recordNode->columns[0]['default-sort-column-direction'] ?? ''),
+                ];
+            }
+            foreach ($recordNode->filterFields[0]->field ?? [] as $fieldNode) {
+                $data = json_decode((string) $fieldNode->data, true);
+                $result['filterFields'][] = [
+                    'key' => (string) $fieldNode['key'],
+                    'data' => is_array($data) ? $data : [],
+                ];
+            }
+        }
+
+        return $result;
+    }
+
+    /**
+     * Write in the XML of a CIF file the columns held by a value received via the API.
+     *
+     * @param array<string,mixed> $value
+     */
+    private function serializeApiColumnsForImport(SimpleXMLElement $recordNode, array $value): void
+    {
+        $columnsNode = $recordNode->addChild('columns');
+        $defaultSortColumn = $value['defaultSortColumn'] ?? null;
+        if (is_array($defaultSortColumn) && isset($defaultSortColumn['key'])) {
+            $columnsNode['default-sort-column-key'] = (string) $defaultSortColumn['key'];
+            $columnsNode['default-sort-column-direction'] = (string) ($defaultSortColumn['direction'] ?? '');
+        }
+        foreach ((array) ($value['columns'] ?? []) as $column) {
+            if (!is_array($column) || !isset($column['key'])) {
+                continue;
+            }
+            $columnNode = $columnsNode->addChild('column');
+            $columnNode->addAttribute('key', (string) $column['key']);
+            $columnNode->addAttribute('sort-direction', (string) ($column['sortDirection'] ?? ''));
+        }
+    }
+
+    /**
+     * Write in the XML of a CIF file the filters held by a value received via the API.
+     *
+     * @param array<string,mixed> $value
+     */
+    private function serializeApiFilterFieldsForImport(SimpleXMLElement $recordNode, Xml $xml, array $value): void
+    {
+        $filterFieldsNode = $recordNode->addChild('filterFields');
+        foreach ((array) ($value['filterFields'] ?? []) as $filterField) {
+            if (!is_array($filterField) || !isset($filterField['key'])) {
+                continue;
+            }
+            $fieldNode = $filterFieldsNode->addChild('field');
+            $fieldNode->addAttribute('key', (string) $filterField['key']);
+            $data = $filterField['data'] ?? [];
+            $xml->createChildElement($fieldNode, 'data', json_encode(is_array($data) ? $data : []));
+        }
     }
 
     /**

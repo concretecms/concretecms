@@ -24,7 +24,7 @@ class UpdatePageBlockCommandHandler
         $block = $command->getBlock();
         $data = $command->getData();
 
-        $block->update($data);
+        $block->update($data, $command->getSaveMode());
         $event = new BlockEdit($block, $page);
         $this->dispatcher->dispatch('on_block_edit', $event);
 

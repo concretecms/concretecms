@@ -1,13 +1,14 @@
 <?php
 namespace Concrete\Block\RssDisplayer;
 
+use Concrete\Core\Api\ApiValueSchemaInterface;
 use Concrete\Core\Block\BlockController;
 use Concrete\Core\Feature\Features;
 use Concrete\Core\Feature\UsesFeatureInterface;
 use Loader;
 use Core;
 
-class Controller extends BlockController implements UsesFeatureInterface
+class Controller extends BlockController implements ApiValueSchemaInterface, UsesFeatureInterface
 {
     /**
      * @var string|null
@@ -253,6 +254,54 @@ class Controller extends BlockController implements UsesFeatureInterface
         }
 
         return $searchContent;
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Api\ApiValueSchemaInterface::getApiValueSchema()
+     */
+    public function getApiValueSchema(): array
+    {
+        return [
+            'type' => 'object',
+            'properties' => [
+                'url' => [
+                    'type' => ['string', 'null'],
+                    'maxLength' => 255,
+                    'description' => 'The address of the RSS or Atom feed to be displayed.',
+                ],
+                'title' => [
+                    'type' => ['string', 'null'],
+                    'maxLength' => 255,
+                    'description' => 'The text displayed above the posts.',
+                ],
+                'titleFormat' => [
+                    'type' => 'string',
+                    'enum' => array_keys(BlockController::$btTitleFormats),
+                    'default' => 'h5',
+                    'description' => 'The HTML element wrapping the text displayed above the posts.',
+                ],
+                'itemsToDisplay' => [
+                    'type' => ['string', 'integer', 'null'],
+                    'default' => '5',
+                    'description' => 'The number of posts to be displayed.',
+                ],
+                'showSummary' => [
+                    'type' => ['boolean', 'string', 'integer'],
+                    'description' => 'Set it to true to display the summary of every post, and not just its title.',
+                ],
+                'launchInNewWindow' => [
+                    'type' => ['boolean', 'string', 'integer'],
+                    'description' => 'Set it to true to open the posts in another window.',
+                ],
+                'dateFormat' => [
+                    'type' => ['string', 'null'],
+                    'maxLength' => 100,
+                    'description' => 'How the date of a post is displayed: one of the formats of the site (' . implode(', ', array_keys($this->getDefaultDateTimeFormats())) . '), or a format accepted by the date() PHP function.',
+                ],
+            ],
+        ];
     }
 
     /**

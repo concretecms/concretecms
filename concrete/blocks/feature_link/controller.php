@@ -2,8 +2,11 @@
 
 namespace Concrete\Block\FeatureLink;
 
+use Concrete\Core\Api\ApiValueSchemaInterface;
+use Concrete\Core\Api\Block\ApiValueSchemaFactory;
 use Concrete\Core\Block\BlockController;
 use Concrete\Core\Block\Controller\SaveMode;
+use Concrete\Core\Block\ExportDeclarations;
 use Concrete\Core\Feature\Features;
 use Concrete\Core\Feature\UsesFeatureInterface;
 use Concrete\Core\File\File;
@@ -17,7 +20,7 @@ use Concrete\Core\File\Tracker\RichTextExtractor;
 
 defined('C5_EXECUTE') or die('Access Denied.');
 
-class Controller extends BlockController implements FileTrackableInterface, UsesFeatureInterface
+class Controller extends BlockController implements ApiValueSchemaInterface, FileTrackableInterface, UsesFeatureInterface
 {
     /**
      * @var string|null
@@ -287,6 +290,75 @@ class Controller extends BlockController implements FileTrackableInterface, Uses
         ];
         $args['fID'] = $args['fID'] != '' ? $args['fID'] : 0;
         parent::save($args);
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Api\ApiValueSchemaInterface::getApiValueSchema()
+     */
+    public function getApiValueSchema(): array
+    {
+        $schemaFactory = $this->app->make(ApiValueSchemaFactory::class);
+
+        return [
+            'type' => 'object',
+            'properties' => [
+                'icon' => [
+                    'type' => ['string', 'null'],
+                    'description' => 'The class names of the Font Awesome icon displayed in the button (for instance "fas fa-address-card").',
+                ],
+                'fID' => $schemaFactory->describeReference(ExportDeclarations::REFERENCE_FILE, [
+                    'type' => ['string', 'integer', 'null'],
+                    'description' => 'The image displayed above the title (0 for none).',
+                ]),
+                'title' => [
+                    'type' => ['string', 'null'],
+                    'description' => 'The title of the block.',
+                ],
+                'titleFormat' => [
+                    'type' => 'string',
+                    'enum' => array_keys(BlockController::$btTitleFormats),
+                    'default' => 'h2',
+                    'description' => 'The HTML element wrapping the title.',
+                ],
+                'body' => $schemaFactory->describeReference(ExportDeclarations::REFERENCE_CONTENT, [
+                    'type' => ['string', 'null'],
+                    'description' => 'The rich text displayed below the title.',
+                ]),
+                'buttonText' => [
+                    'type' => ['string', 'null'],
+                    'description' => 'The text of the button (when it\'s empty, and the button links to nothing, no button is displayed).',
+                ],
+                'buttonInternalLinkCID' => $schemaFactory->describeReference(ExportDeclarations::REFERENCE_PAGE, [
+                    'type' => ['string', 'integer', 'null'],
+                    'description' => 'The page the button links to (0 for none).',
+                ]),
+                'buttonFileLinkID' => $schemaFactory->describeReference(ExportDeclarations::REFERENCE_FILE, [
+                    'type' => ['string', 'integer', 'null'],
+                    'description' => 'The file the button links to (0 for none): it\'s used only when the button links to no page.',
+                ]),
+                'buttonExternalLink' => [
+                    'type' => ['string', 'null'],
+                    'maxLength' => 255,
+                    'description' => 'The URL the button links to: it\'s used only when the button links to no page and to no file.',
+                ],
+                'buttonSize' => [
+                    'type' => ['string', 'null'],
+                    'enum' => ['', 'lg', 'sm'],
+                    'description' => 'The size of the button: regular, large or small.',
+                ],
+                'buttonStyle' => [
+                    'type' => ['string', 'null'],
+                    'enum' => ['', 'outline', 'link'],
+                    'description' => 'How the button is drawn: regular, outlined, or as a plain link.',
+                ],
+                'buttonColor' => [
+                    'type' => ['string', 'null'],
+                    'description' => 'The color of the button, which is one of the colors of the theme of the site.',
+                ],
+            ],
+        ];
     }
 
     /**

@@ -26,10 +26,21 @@ class PageItem extends AbstractItem
     public function getContentObject()
     {
         $reference = (string) $this->getReference();
-        if ($reference === '' || $reference === '/') {
-            $page = Page::getByID(Page::getHomePageID(), 'ACTIVE');
+        if (preg_match('/^(?:(?<path>[^:]*):)?id=(?<id>[1-9]\d*)$/', $reference, $m)) {
+            $path = $m['path'] ?? '';
+            $id = (int) $m['id'];
         } else {
-            $page = Page::getByPath($reference, 'ACTIVE');
+            $path = $reference;
+            $id = null;
+        }
+        if ($path === '/' || ($path === '' && $id === null)) {
+            $page = Page::getByID(Page::getHomePageID(), 'ACTIVE');
+        } elseif ($path !== '') {
+            $page = Page::getByPath($path, 'ACTIVE');
+        } elseif ($id !== null) {
+            $page = Page::getByID($id, 'ACTIVE');
+        } else {
+            $page = null;
         }
 
         return $page && !$page->isError() ? $page : null;

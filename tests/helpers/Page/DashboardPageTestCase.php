@@ -10,10 +10,8 @@ use Concrete\Core\Permission\Category as PermissionCategory;
 use Concrete\Core\Permission\Key\Key as PermissionKey;
 use Concrete\Core\Support\Facade\Application as ApplicationFacade;
 use Concrete\Core\User\UserInfo;
-use Concrete\Core\User\User;
 use Concrete\Core\Http\Request;
 use Concrete\Core\Http\ServerInterface;
-use Concrete\TestHelpers\Page\PageTestCase;
 use Symfony\Component\HttpFoundation\Response;
 
 class DashboardPageTestCase extends PageTestCase
@@ -51,17 +49,6 @@ class DashboardPageTestCase extends PageTestCase
         }
 
         $login = SinglePage::add(static::$pageUrl);
-    }
-
-    public static function tearDownAfterClass(): void
-    {
-        parent::tearDownAfterClass();
-
-        $app = ApplicationFacade::getFacadeApplication();
-        $app->forgetInstance(User::class);
-
-        $session = $app->make('session');
-        $session->clear();
     }
 
     /**

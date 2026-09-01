@@ -12,6 +12,7 @@ namespace Concrete\Core\Api\Controller;
  *         tokenUrl="/oauth/2.0/token",
  *         scopes={
  *             "system:info:read": "Read system information",
+ *             "system:openapi:read": "Read the OpenAPI specification of the site",
  *             "sites:read": "Read sites",
  *         }
  *     )
@@ -26,6 +27,7 @@ namespace Concrete\Core\Api\Controller;
  *         flow="authorizationCode",
  *         scopes={
  *             "openid": "Remotely authenticate into Concrete",
+ *             "system:openapi:read": "Read the OpenAPI specification of the site",
  *             "account:read": "Read your user object",
  *             "calendars:read": "Read calendars",
  *             "calendar_events:read": "Read calendar events",
@@ -40,10 +42,12 @@ namespace Concrete\Core\Api\Controller;
  *             "pages:areas:add_block": "Add blocks to a page area",
  *             "pages:areas:delete_block": "Delete blocks from a page area",
  *             "pages:areas:update_block": "Updates a block in a page area",
+ *             "pages:areas:sort_blocks": "Sort the blocks of a page area",
  *             "pages:versions:read": "View page versions",
  *             "pages:versions:add": "Create editable page version drafts",
  *             "pages:versions:update": "Update page versions",
  *             "pages:versions:delete": "Delete page versions",
+ *             "block_types:read": "View the available block types",
  *             "blocks:read": "View site blocks",
  *             "blocks:update": "Update blocks",
  *             "blocks:delete": "Delete blocks",

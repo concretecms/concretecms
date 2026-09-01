@@ -3,6 +3,7 @@
 namespace Concrete\Core\Block\Command;
 
 use Concrete\Core\Block\Block;
+use Concrete\Core\Block\Controller\SaveMode;
 use Concrete\Core\Foundation\Command\Command;
 use Concrete\Core\Page\Page;
 
@@ -23,6 +24,11 @@ class UpdatePageBlockCommand extends Command
      * @var array
      */
     protected $data;
+
+    /**
+     * @var string
+     */
+    protected $saveMode = SaveMode::SAVE_MODE_REQUEST;
 
     /**
      * @return Block
@@ -55,6 +61,27 @@ class UpdatePageBlockCommand extends Command
     {
         $this->data = $data;
     }
+
+    /**
+     * How should the block controller save() method interpret the data?
+     *
+     * @see \Concrete\Core\Block\Controller\SaveMode
+     */
+    public function getSaveMode(): string
+    {
+        return $this->saveMode;
+    }
+
+    /**
+     * How should the block controller save() method interpret the data?
+     *
+     * @see \Concrete\Core\Block\Controller\SaveMode
+     */
+    public function setSaveMode(string $saveMode): void
+    {
+        $this->saveMode = $saveMode;
+    }
+
 
     /**
      * @return Page

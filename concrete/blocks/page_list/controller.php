@@ -4,10 +4,15 @@ namespace Concrete\Block\PageList;
 use BlockType;
 use CollectionAttributeKey;
 use Concrete\Attribute\Topics\Controller as TopicsController;
+use Concrete\Core\Api\ApiResourceValueInterface;
+use Concrete\Core\Api\ApiValueSchemaInterface;
+use Concrete\Core\Api\Block\ApiValueSchemaFactory;
 use Concrete\Core\Attribute\Category\PageCategory;
 use Concrete\Core\Attribute\Key\CollectionKey;
 use Concrete\Core\Block\BlockController;
 use Concrete\Core\Block\Controller\SaveMode;
+use Concrete\Core\Block\ExportDeclarations;
+use Concrete\Core\Block\Traits\CustomApiValueTrait;
 use Concrete\Core\Block\View\BlockView;
 use Concrete\Core\Feature\Features;
 use Concrete\Core\Feature\UsesFeatureInterface;
@@ -31,8 +36,10 @@ use Database;
 use Page;
 use SimpleXMLElement;
 
-class Controller extends BlockController implements UsesFeatureInterface
+class Controller extends BlockController implements ApiResourceValueInterface, ApiValueSchemaInterface, UsesFeatureInterface
 {
+    use CustomApiValueTrait;
+
     /**
      * @var int|string|null
      */
@@ -976,6 +983,242 @@ class Controller extends BlockController implements UsesFeatureInterface
      *
      * @see \Concrete\Core\Block\BlockController::export()
      */
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Api\ApiValueSchemaInterface::getApiValueSchema()
+     */
+    public function getApiValueSchema(): array
+    {
+        $schemaFactory = $this->app->make(ApiValueSchemaFactory::class);
+
+        return [
+            'type' => 'object',
+            'properties' => [
+                'cParentID' => $schemaFactory->describeReference(ExportDeclarations::REFERENCE_PAGE, [
+                    'type' => ['string', 'integer'],
+                    'description' => 'The page whose children are listed (0 for the whole site): it\'s used only when both cThis and cThisParent are 0.',
+                ]),
+                'cThis' => [
+                    'type' => ['boolean', 'string', 'integer'],
+                    'description' => 'Set it to true to list the children of the page holding the block.',
+                ],
+                'cThisParent' => [
+                    'type' => ['boolean', 'string', 'integer'],
+                    'description' => 'Set it to true to list the children of the parent of the page holding the block.',
+                ],
+                'includeAllDescendents' => [
+                    'type' => ['boolean', 'string', 'integer'],
+                    'description' => 'Set it to true to list the pages at any depth below the chosen page, instead of its children only.',
+                ],
+                'excludeCurrentPage' => [
+                    'type' => ['boolean', 'string', 'integer'],
+                    'description' => 'Set it to true to leave out the page holding the block.',
+                ],
+                'displayAliases' => [
+                    'type' => ['boolean', 'string', 'integer'],
+                    'description' => 'Set it to true to list the aliases of the pages too.',
+                ],
+                'displaySystemPages' => [
+                    'type' => ['boolean', 'string', 'integer'],
+                    'description' => 'Set it to true to list the pages of the system too.',
+                ],
+                'displayFeaturedOnly' => [
+                    'type' => ['boolean', 'string', 'integer'],
+                    'description' => 'Set it to true to list only the pages whose is_featured attribute is set.',
+                ],
+                'ignorePermissions' => [
+                    'type' => ['boolean', 'string', 'integer'],
+                    'description' => 'Set it to true to list the pages the visitors can\'t see too.',
+                ],
+                'ptID' => $schemaFactory->describeReference(ExportDeclarations::REFERENCE_PAGE_TYPE, [
+                    'type' => ['string', 'integer', 'null'],
+                    'description' => 'The type the listed pages must have (0 for any type).',
+                ]),
+                'filterByRelated' => [
+                    'type' => ['boolean', 'string', 'integer'],
+                    'description' => 'Set it to true to list only the pages sharing a topic with the page holding the block.',
+                ],
+                'relatedTopicAttributeKeyHandle' => [
+                    'type' => ['string', 'null'],
+                    'maxLength' => 255,
+                    'description' => 'The handle of the topics attribute holding the topics to be shared (it\'s used only when filterByRelated is 1).',
+                ],
+                'filterByCustomTopic' => [
+                    'type' => ['boolean', 'string', 'integer'],
+                    'description' => 'Set it to true to list only the pages assigned to the customTopicTreeNodeID topic.',
+                ],
+                'customTopicAttributeKeyHandle' => [
+                    'type' => ['string', 'null'],
+                    'maxLength' => 255,
+                    'description' => 'The handle of the topics attribute of the pages holding the topic (it\'s used only when filterByCustomTopic is 1).',
+                ],
+                'customTopicTreeNodeID' => [
+                    'type' => ['string', 'integer'],
+                    'description' => 'The ID of the topic the listed pages must be assigned to (0 for none): when it\'s not a topic of the customTopicAttributeKeyHandle attribute, the filter is turned off.',
+                ],
+                'filterDateOption' => [
+                    'type' => ['string', 'null'],
+                    'enum' => ['all', 'now', 'past', 'future', 'between'],
+                    'default' => 'all',
+                    'description' => 'Which pages are listed, by the date they were published: all of them, the ones of today, the ones published in the last filterDateDays days, the ones to be published in the next filterDateDays days, or the ones published between filterDateStart and filterDateEnd.',
+                ],
+                'filterDateDays' => [
+                    'type' => ['string', 'integer'],
+                    'description' => 'The number of days (it\'s used only when filterDateOption is "past" or "future"; 0 for no limit).',
+                ],
+                'filterDateStart' => [
+                    'type' => ['string', 'null'],
+                    'description' => 'The first day the pages can be published in, as YYYY-MM-DD (it\'s used only when filterDateOption is "between").',
+                ],
+                'filterDateEnd' => [
+                    'type' => ['string', 'null'],
+                    'description' => 'The last day the pages can be published in, as YYYY-MM-DD (it\'s used only when filterDateOption is "between").',
+                ],
+                'enableExternalFiltering' => [
+                    'type' => ['boolean', 'string', 'integer'],
+                    'description' => 'Set it to true to let the query string of the page filter the listed pages too.',
+                ],
+                'orderBy' => [
+                    'type' => ['string', 'null'],
+                    'enum' => ['display_asc', 'display_desc', 'chrono_desc', 'chrono_asc', 'alpha_asc', 'alpha_desc', 'modified_desc', 'random'],
+                    'description' => 'The order the pages are listed in.',
+                ],
+                'num' => [
+                    'type' => ['string', 'integer'],
+                    'description' => 'The number of pages to be listed (0 for all of them).',
+                ],
+                'paginate' => [
+                    'type' => ['boolean', 'string', 'integer'],
+                    'description' => 'Set it to true to split the pages in pages of num items.',
+                ],
+                'excludeCanonicalPaging' => [
+                    'type' => ['boolean', 'string', 'integer'],
+                    'description' => 'Set it to true to leave the paging out of the canonical URL of the page.',
+                ],
+                'pageListTitle' => [
+                    'type' => ['string', 'null'],
+                    'maxLength' => 255,
+                    'description' => 'The text displayed above the list.',
+                ],
+                'titleFormat' => [
+                    'type' => 'string',
+                    'enum' => array_keys(BlockController::$btTitleFormats),
+                    'default' => 'h5',
+                    'description' => 'The HTML element wrapping the text displayed above the list.',
+                ],
+                'includeName' => [
+                    'type' => ['boolean', 'string', 'integer'],
+                    'description' => 'Set it to true to display the name of every listed page.',
+                ],
+                'includeDescription' => [
+                    'type' => ['boolean', 'string', 'integer'],
+                    'description' => 'Set it to true to display the description of every listed page.',
+                ],
+                'truncateSummaries' => [
+                    'type' => ['boolean', 'string', 'integer'],
+                    'description' => 'Set it to true to cut the descriptions to truncateChars characters.',
+                ],
+                'truncateChars' => [
+                    'type' => ['string', 'integer'],
+                    'description' => 'The number of characters the descriptions are cut to (it\'s used only when truncateSummaries is 1).',
+                ],
+                'includeDate' => [
+                    'type' => ['boolean', 'string', 'integer'],
+                    'description' => 'Set it to true to display the date every listed page was published in.',
+                ],
+                'displayThumbnail' => [
+                    'type' => ['boolean', 'string', 'integer'],
+                    'description' => 'Set it to true to display the thumbnail of every listed page.',
+                ],
+                'useButtonForLink' => [
+                    'type' => ['boolean', 'string', 'integer'],
+                    'description' => 'Set it to true to link every listed page with a button, instead of its name.',
+                ],
+                'buttonLinkText' => [
+                    'type' => ['string', 'null'],
+                    'maxLength' => 255,
+                    'description' => 'The text of the button (it\'s used only when useButtonForLink is 1).',
+                ],
+                'noResultsMessage' => [
+                    'type' => ['string', 'null'],
+                    'maxLength' => 255,
+                    'description' => 'The text displayed when no page is listed.',
+                ],
+                'pfID' => $schemaFactory->describeReference(ExportDeclarations::REFERENCE_PAGE_FEED, [
+                    'type' => ['string', 'integer', 'null'],
+                    'description' => 'The RSS feed publishing the listed pages (0 for none). Setting the rssHandle key creates it, or updates the one this key refers to.',
+                ]),
+                'rssHandle' => [
+                    'type' => 'string',
+                    'description' => 'The handle of the RSS feed, which is part of its address: when this key is missing, the block publishes no feed.',
+                ],
+                'rssTitle' => [
+                    'type' => 'string',
+                    'description' => 'The title of the RSS feed.',
+                ],
+                'rssDescription' => [
+                    'type' => 'string',
+                    'description' => 'The description of the RSS feed.',
+                ],
+            ],
+        ];
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Block\BlockController::getImportDataFromApiValue()
+     */
+    public function getImportDataFromApiValue($page, array $value): array
+    {
+        if ($this->bID) {
+            // the save() method resets the settings that it doesn't receive: let's keep the current ones
+            $value += $this->serializeValueForApi();
+        }
+        $args = parent::getImportDataFromApiValue($page, $value);
+        // the getImportData() method above resolves the path of the topic that a CIF file carries: the API
+        // refers to the very same node by its ID
+        $topicAttributeKeyHandle = (string) ($value['customTopicAttributeKeyHandle'] ?? '');
+        $topicTreeNodeID = isset($value['customTopicTreeNodeID']) && is_numeric($value['customTopicTreeNodeID']) ? (int) $value['customTopicTreeNodeID'] : 0;
+        if ($topicAttributeKeyHandle === '' || $topicTreeNodeID <= 0 || Node::getByID($topicTreeNodeID) === null) {
+            $args['customTopicAttributeKeyHandle'] = '';
+            $args['customTopicTreeNodeID'] = 0;
+            $args['filterByCustomTopic'] = 0;
+        } else {
+            $args['customTopicAttributeKeyHandle'] = $topicAttributeKeyHandle;
+            $args['customTopicTreeNodeID'] = $topicTreeNodeID;
+            $args['filterByCustomTopic'] = empty($value['filterByCustomTopic']) ? 0 : 1;
+        }
+
+        return $args;
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Block\Traits\CustomApiValueTrait::serializeValueForApi()
+     */
+    protected function serializeValueForApi(): array
+    {
+        // the export() method below replaces the ID of the topic with its path, since a CIF file can't refer
+        // to it by its ID: the API can
+        $blockNode = new SimpleXMLElement('<block></block>');
+        $this->export($blockNode);
+        $mainTable = (string) $this->getBlockTypeDatabaseTable();
+        $result = [];
+        foreach ($blockNode->data as $data) {
+            if (strcasecmp((string) $data['table'], $mainTable) === 0 && isset($data->record)) {
+                $result = $this->serializeRecordForApi($mainTable, $data->record);
+                break;
+            }
+        }
+        unset($result['customTopicTreeNodePath']);
+        $result['customTopicTreeNodeID'] = (int) $this->customTopicTreeNodeID;
+
+        return $result;
+    }
+
     public function export(SimpleXMLElement $blockNode)
     {
         parent::export($blockNode);

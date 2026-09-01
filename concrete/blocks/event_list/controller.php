@@ -1,10 +1,15 @@
 <?php
 namespace Concrete\Block\EventList;
 
+use Concrete\Core\Api\ApiResourceValueInterface;
+use Concrete\Core\Api\ApiValueSchemaInterface;
+use Concrete\Core\Api\Block\ApiValueSchemaFactory;
 use Concrete\Core\Attribute\Category\EventCategory;
 use Concrete\Core\Attribute\Key\CollectionKey;
 use Concrete\Core\Attribute\Key\EventKey;
 use Concrete\Core\Block\BlockController;
+use Concrete\Core\Block\ExportDeclarations;
+use Concrete\Core\Block\Traits\CustomApiValueTrait;
 use Concrete\Core\Calendar\Calendar;
 use Concrete\Core\Calendar\Calendar\CalendarService;
 use Concrete\Core\Calendar\CalendarServiceProvider;
@@ -20,8 +25,10 @@ use Core;
 
 defined('C5_EXECUTE') or die("Access Denied.");
 
-class Controller extends BlockController implements UsesFeatureInterface
+class Controller extends BlockController implements ApiResourceValueInterface, ApiValueSchemaInterface, UsesFeatureInterface
 {
+    use CustomApiValueTrait;
+
     /**
      * @var string|null
      */
@@ -231,6 +238,149 @@ class Controller extends BlockController implements UsesFeatureInterface
         $linkFormatter = $this->app->make(CalendarServiceProvider::class)->getLinkFormatter();
         $this->set('formatter', $formatter);
         $this->set('linkFormatter', $linkFormatter);
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Api\ApiValueSchemaInterface::getApiValueSchema()
+     */
+    public function getApiValueSchema(): array
+    {
+        $schemaFactory = $this->app->make(ApiValueSchemaFactory::class);
+
+        return [
+            'type' => 'object',
+            'properties' => [
+                'caID' => [
+                    'type' => 'array',
+                    'description' => 'The IDs of the calendars whose events are listed (when it\'s empty, the calendar is the one referred to by the calendarAttributeKeyHandle attribute of the site).',
+                    'items' => ['type' => ['string', 'integer']],
+                ],
+                'calendarAttributeKeyHandle' => [
+                    'type' => ['string', 'null'],
+                    'description' => 'The handle of the site attribute holding the calendar whose events are listed (it\'s used only when caID is empty).',
+                ],
+                'eventPeriod' => [
+                    'type' => 'string',
+                    'enum' => ['future_events', 'past_events', 'all_events'],
+                    'default' => 'future_events',
+                    'description' => 'The events to be listed: the ones that have yet to end, the ones that are over, or all of them.',
+                ],
+                'eventOrder' => [
+                    'type' => 'string',
+                    'enum' => ['most_recent_first', 'oldest_first'],
+                    'default' => 'most_recent_first',
+                    'description' => 'The order the events are listed in.',
+                ],
+                'filterByFeatured' => [
+                    'type' => ['boolean', 'string', 'integer'],
+                    'description' => 'Set it to true to list only the events whose is_featured attribute is set (that attribute must exist and must be indexed).',
+                ],
+                'filterByTopicAttributeKeyID' => [
+                    'type' => ['string', 'integer'],
+                    'description' => 'The ID of the topics attribute of the events to be filtered by filterByTopicID (0 for none).',
+                ],
+                'filterByTopicID' => [
+                    'type' => ['string', 'integer'],
+                    'description' => 'The ID of the topic the events must be assigned to (0 for none): it\'s used only when filterByTopicAttributeKeyID is set.',
+                ],
+                'filterByPageTopicAttributeKeyHandle' => [
+                    'type' => ['string', 'null'],
+                    'description' => 'The handle of the topics attribute of the page holding the block: the events must be assigned to the topic it holds (it\'s used only when filterByTopicAttributeKeyID is 0).',
+                ],
+                'totalToRetrieve' => [
+                    'type' => ['string', 'integer'],
+                    'description' => 'The number of events to be listed.',
+                ],
+                'totalPerPage' => [
+                    'type' => ['string', 'integer'],
+                    'description' => 'The number of events displayed in a page.',
+                ],
+                'eventListTitle' => [
+                    'type' => ['string', 'null'],
+                    'maxLength' => 255,
+                    'description' => 'The text displayed above the list.',
+                ],
+                'titleFormat' => [
+                    'type' => 'string',
+                    'enum' => array_keys(BlockController::$btTitleFormats),
+                    'default' => 'h5',
+                    'description' => 'The HTML element wrapping the text displayed above the list.',
+                ],
+                'linkToPage' => $schemaFactory->describeReference(ExportDeclarations::REFERENCE_PAGE, [
+                    'type' => ['string', 'integer'],
+                    'description' => 'The page holding the whole calendar, linked below the list (0 for none).',
+                ]),
+            ],
+        ];
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Block\BlockController::getImportDataFromApiValue()
+     */
+    public function getImportDataFromApiValue($page, array $value): array
+    {
+        if ($this->bID) {
+            // the save() method resets the settings that it doesn't receive: let's keep the current ones
+            $value += $this->serializeValueForApi();
+        }
+        // the value is the record of the table of the block: let's resolve the references it contains
+        $records = ['record' => [$value]];
+        $args = $this->deserializeRecordsFromApi($records, 'record')[0] ?? [];
+        $args['caID'] = [];
+        foreach ((array) ($value['caID'] ?? []) as $caID) {
+            if (is_numeric($caID)) {
+                $args['caID'][] = (int) $caID;
+            }
+        }
+        // the save() method wants to be told what the block is bound to, the way its form does
+        $args['chooseCalendar'] = $args['caID'] === [] ? 'site' : 'specific';
+        if (!empty($args['filterByTopicAttributeKeyID']) && !empty($args['filterByTopicID'])) {
+            $args['filterByTopic'] = 'specific';
+        } elseif ((string) ($args['filterByPageTopicAttributeKeyHandle'] ?? '') !== '') {
+            $args['filterByTopic'] = 'page_attribute';
+        } else {
+            $args['filterByTopic'] = 'none';
+        }
+
+        return $args;
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Block\Traits\CustomApiValueTrait::serializeValueForApi()
+     */
+    protected function serializeValueForApi(): array
+    {
+        // the export() method below replaces the IDs of the calendars, of the topics attribute and of the
+        // topic with their names, handles and paths, since a CIF file can't refer to them by their ID
+        $blockNode = new \SimpleXMLElement('<block></block>');
+        parent::export($blockNode);
+        $mainTable = (string) $this->getBlockTypeDatabaseTable();
+        $result = [];
+        foreach ($blockNode->data as $data) {
+            if (strcasecmp((string) $data['table'], $mainTable) === 0 && isset($data->record)) {
+                $result = $this->serializeRecordForApi($mainTable, $data->record);
+                break;
+            }
+        }
+        // the column holds the ID of a calendar, or a JSON list of them: let's exchange it as the list it is
+        $caIDs = json_decode((string) ($result['caID'] ?? ''), true);
+        if (!is_array($caIDs)) {
+            $caIDs = [$caIDs];
+        }
+        $result['caID'] = [];
+        foreach ($caIDs as $caID) {
+            if (is_numeric($caID) && (int) $caID > 0) {
+                $result['caID'][] = (int) $caID;
+            }
+        }
+
+        return $result;
     }
 
     public function export(\SimpleXMLElement $blockNode)

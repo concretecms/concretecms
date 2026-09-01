@@ -2,7 +2,10 @@
 
 namespace Concrete\Block\Survey;
 
+use Concrete\Core\Api\ApiResourceValueInterface;
+use Concrete\Core\Api\ApiValueSchemaInterface;
 use Concrete\Core\Block\BlockController;
+use Concrete\Core\Block\Traits\CustomApiValueTrait;
 use Concrete\Core\Cookie\CookieJar;
 use Concrete\Core\Cookie\ResponseCookieJar;
 use Concrete\Core\Database\Connection\Connection;
@@ -17,8 +20,10 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\EntityManagerInterface;
 use Page;
 
-class Controller extends BlockController implements UsesFeatureInterface
+class Controller extends BlockController implements ApiResourceValueInterface, ApiValueSchemaInterface, UsesFeatureInterface
 {
+    use CustomApiValueTrait;
+
     public $options = [];
 
     protected $btTable = 'btSurvey';
@@ -355,6 +360,109 @@ class Controller extends BlockController implements UsesFeatureInterface
             'optionID',
             'SELECT optionID from btSurveyOptions WHERE bID = :bID'
         ))->andWhere($queryBuilder->expr()->eq('bID', ':bID'))->setParameter('bID', (int) $this->bID, Types::INTEGER)->execute();
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Api\ApiValueSchemaInterface::getApiValueSchema()
+     */
+    public function getApiValueSchema(): array
+    {
+        return [
+            'type' => 'object',
+            'description' => 'The question of the survey and the options it offers. The votes are not part of this value: they belong to the visitors that cast them.',
+            'properties' => [
+                'question' => [
+                    'type' => 'string',
+                    'maxLength' => 255,
+                ],
+                'options' => [
+                    'type' => 'array',
+                    'description' => 'The answers, in the order they are displayed. The ones that are already there keep their votes (and their position); when writing, if this key is omitted the current answers are kept as they are.',
+                    'items' => [
+                        'type' => 'string',
+                    ],
+                ],
+                'requiresRegistration' => [
+                    'type' => ['boolean', 'string', 'integer'],
+                    'default' => '0',
+                    'description' => 'Set it to true to let only the registered users vote.',
+                ],
+                'showResults' => [
+                    'type' => ['boolean', 'string', 'integer'],
+                    'default' => '0',
+                    'description' => 'Set it to true to show the results of the survey to whom has voted.',
+                ],
+                'customMessage' => [
+                    'type' => 'string',
+                    'maxLength' => 255,
+                    'description' => 'The message displayed to whom has voted (it\'s cleared when the results are shown).',
+                ],
+            ],
+        ];
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Block\BlockController::getImportDataFromApiValue()
+     */
+    public function getImportDataFromApiValue($page, array $value): array
+    {
+        $options = null;
+        if (array_key_exists('options', $value)) {
+            $options = is_array($value['options']) ? $value['options'] : [];
+            unset($value['options']);
+        }
+        if ($this->bID) {
+            // the save() method resets the settings that it doesn't receive: let's keep the current ones
+            $currentValue = $this->serializeValueForApi();
+            $currentOptions = $currentValue['options'];
+            unset($currentValue['options']);
+            $value += $currentValue;
+            if ($options === null) {
+                $options = $currentOptions;
+            }
+        } else {
+            $currentOptions = [];
+            $options = (array) $options;
+        }
+        $args = parent::getImportDataFromApiValue($page, $value);
+        // the save() method keeps the answers whose name it receives (with their votes), and adds the other ones
+        $args['survivingOptionNames'] = [];
+        $args['pollOption'] = [];
+        foreach ($options as $option) {
+            if (!is_string($option) && !is_int($option) && !is_float($option)) {
+                continue;
+            }
+            $option = (string) $option;
+            if (in_array($option, $currentOptions, true)) {
+                $args['survivingOptionNames'][] = $option;
+            } else {
+                $args['pollOption'][] = $option;
+            }
+        }
+
+        return $args;
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Block\Traits\CustomApiValueTrait::serializeValueForApi()
+     */
+    protected function serializeValueForApi(): array
+    {
+        $records = $this->serializeTablesForApi();
+        $options = $records['btSurveyOptions'] ?? [];
+        usort($options, static function (array $a, array $b): int {
+            return ((int) ($a['displayOrder'] ?? 0)) <=> ((int) ($b['displayOrder'] ?? 0));
+        });
+
+        return array_merge($records['btSurvey'][0] ?? [], [
+            'options' => array_column($options, 'optionName'),
+        ]);
     }
 
     /**

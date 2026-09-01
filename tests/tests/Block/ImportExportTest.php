@@ -4,11 +4,15 @@ declare(strict_types=1);
 
 namespace Concrete\Tests\Block;
 
+use Concrete\Core\Api\Fractal\Transformer\BaseBlockTransformer;
 use Concrete\Core\Attribute\Category\CategoryService as AttributeCategoryService;
 use Concrete\Core\Attribute\TypeFactory as AttributeTypeFactory;
+use Concrete\Core\Backup\ContentExporter;
+use Concrete\Core\Backup\ContentExporterOptions;
 use Concrete\Core\Block\Block;
 use Concrete\Core\Block\BlockController;
 use Concrete\Core\Block\BlockType\BlockType;
+use Concrete\Core\Block\Controller\SaveMode;
 use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Entity;
 use Concrete\Core\Entity\Block\BlockType\BlockType as BlockTypeEntity;
@@ -22,6 +26,8 @@ use Concrete\Core\File\Set\Set as FileSet;
 use Concrete\Core\File\StorageLocation\StorageLocationFactory;
 use Concrete\Core\File\StorageLocation\Type\Type as StorageLocationType;
 use Concrete\Core\File\Tracker\FileTrackableInterface;
+use Concrete\Core\Http\Request;
+use Concrete\Core\Page\Page;
 use Concrete\Core\Page\Single as SinglePage;
 use Concrete\Core\Page\Stack\Folder\FolderService as StackFolderService;
 use Concrete\Core\Page\Stack\Stack;
@@ -86,6 +92,7 @@ class ImportExportTest extends PageTestCase
             'AreaPermissionAssignments',
             'Blocks',
             'BlockTypeSets',
+            'CollectionVersionBlocksOutputCache',
             'Conversations',
             'ConversationSubscriptions',
             'FileSets',
@@ -139,6 +146,7 @@ class ImportExportTest extends PageTestCase
             Entity\Page\Container::class,
             Entity\Attribute\Value\Value\TopicsValue::class,
             Entity\Attribute\Key\Settings\TopicsSettings::class,
+            Entity\Attribute\Key\Settings\TextSettings::class,
             Entity\Page\Container\Instance::class,
             Entity\Page\Container\InstanceArea::class,
             Entity\Page\Feed::class,
@@ -200,7 +208,7 @@ class ImportExportTest extends PageTestCase
                     } else {
                         continue;
                     }
-                    $key = "{$basename}@{$blockTypeHandle}";
+                    $key = "{$blockTypeHandle}_{$basename}";
                     if (isset($cases[$key])) {
                         continue;
                     }
@@ -213,7 +221,6 @@ class ImportExportTest extends PageTestCase
                     $cases[$key] = [$blockTypeHandle, $basename, $options];
                 }
             }
-            $cases = array_values($cases);
         }
 
         return $cases;
@@ -229,7 +236,7 @@ class ImportExportTest extends PageTestCase
             if (($options['richTexts'] ?? []) === []) {
                 continue;
             }
-            $result[] = [$blockTypeHandle];
+            $result[$blockTypeHandle] = [$blockTypeHandle];
         }
 
         return $result;
@@ -267,8 +274,72 @@ class ImportExportTest extends PageTestCase
         $this->assertInstanceOf(BlockTypeEntity::class, $blockType);
         $importerExporterMethod = $options['importerExporterMethod'] ?? 'importExportBlockType';
         $this->assertTrue(method_exists($this, $importerExporterMethod), "The method '{$importerExporterMethod}' specified in the options does not exist");
-        $outputCif = $this->{$importerExporterMethod}($blockType, $inputCif, $options);
+        $createdBlock = null;
+        $outputCif = $this->{$importerExporterMethod}($blockType, $inputCif, $options, $createdBlock);
         $this->assertSameXML($inputCif->asXML(), $outputCif, $options['keepXmlElementsOrder'] ?? false);
+        if ($options['apiRoundTrip'] ?? true) {
+            $this->assertInstanceOf(Block::class, $createdBlock, "The '{$importerExporterMethod}' method didn't create a block: it can't be checked against the API");
+            $this->checkApiRoundTrip($createdBlock, $options);
+        }
+    }
+
+    /**
+     * Check that the value that the API exposes for a block can be sent back, resulting in the very same block.
+     *
+     * @param array<string,mixed> $options the options of the test case
+     */
+    private function checkApiRoundTrip(Block $block, array $options): void
+    {
+        $expectedCif = $this->exportBlockToCif($block);
+        // the API exports the references as IDs: let's do the same, since we aren't serving an API request
+        ContentExporter::setOptions(new ContentExporterOptions(Request::create('/ccm/api/1.0/pages')));
+        try {
+            $transformed = (new BaseBlockTransformer())->transform($block);
+        } finally {
+            ContentExporter::setOptions(new ContentExporterOptions(Request::create('/')));
+        }
+        $page = $block->getBlockCollectionObject();
+        $args = $block->getController()->getImportDataFromApiValue($page, (array) $transformed['value']);
+        // that's the save mode the API uses (see the areas API controller)
+        $block->update($args, SaveMode::SAVE_MODE_IMPORT);
+        $updatedBlock = Block::getByID($block->getBlockID(), $page, 'Main');
+        $this->assertInstanceOf(Block::class, $updatedBlock);
+        $ignoredAttributes = $options['apiRoundTripIgnoredAttributes'] ?? [];
+        $this->assertSameXML(
+            $this->forgetBlockAttributes($expectedCif, $ignoredAttributes),
+            $this->forgetBlockAttributes($this->exportBlockToCif($updatedBlock), $ignoredAttributes),
+            $options['keepXmlElementsOrder'] ?? false
+        );
+    }
+
+    /**
+     * Remove some attributes from the CIF representation of a block.
+     *
+     * @param string[] $attributes the names of the attributes of the <block> element to be removed
+     */
+    private function forgetBlockAttributes(string $cif, array $attributes): string
+    {
+        if ($attributes === []) {
+            return $cif;
+        }
+        $blockNode = simplexml_load_string($cif);
+        foreach ($attributes as $attribute) {
+            unset($blockNode[$attribute]);
+        }
+
+        return $blockNode->asXML();
+    }
+
+    /**
+     * Get the CIF representation of a block.
+     */
+    private function exportBlockToCif(Block $block): string
+    {
+        $cif = simplexml_load_string('<root />');
+        $block->export($cif);
+        $this->assertTrue(isset($cif->block));
+
+        return $cif->block->asXML();
     }
 
     /**
@@ -342,7 +413,7 @@ class ImportExportTest extends PageTestCase
         return $outputCif->block->asXML();
     }
 
-    private function importExportPageType1(BlockTypeEntity $blockType, SimpleXMLElement $inputCif, array $options): string
+    private function importExportPageType1(BlockTypeEntity $blockType, SimpleXMLElement $inputCif, array $options, &$createdBlock = null): string
     {
         if (!ComposerControlType::getByHandle('block')) {
             ComposerControlType::add('block', 'Block');
@@ -356,6 +427,10 @@ class ImportExportTest extends PageTestCase
         $this->assertTrue(isset($outputCif->pagetype));
         $pageNode = $outputCif->pagetype[0]->composer[0]->output[0]->pagetemplate[0]->page[0];
         $blockNode = $pageNode->area[0]->blocks[0]->block[0];
+        // the block lives in the page that holds the output of the page type
+        $masterPage = $importedPageType->getPageTypePageTemplateDefaultPageObject();
+        $this->assertInstanceOf(Page::class, $masterPage);
+        $createdBlock = $masterPage->getBlocks('Main')[0] ?? null;
         $tempID = (string) $outputCif->pagetype[0]->composer[0]->formlayout[0]->set[0]->control[0]['output-control-id'];
         $this->assertMatchesRegularExpression('/\w{5,}/', $tempID);
         $this->assertNotSame("CCMTest1", $tempID);
@@ -371,12 +446,12 @@ class ImportExportTest extends PageTestCase
         return $xml;
     }
 
-    private function exportCoreScrapbookDisplay1(BlockTypeEntity $blockType, SimpleXMLElement $inputCif, array $options): string
+    private function exportCoreScrapbookDisplay1(BlockTypeEntity $blockType, SimpleXMLElement $inputCif, array $options, &$createdBlock = null): string
     {
         $contentBlockType = BlockType::getByHandle('content');
         $contentBlock = null;
         $this->importExportBlockType($contentBlockType, $inputCif, $options, $contentBlock);
-        $aliasBlock = self::$blockPage->addBlock($blockType, 'Main', ['bOriginalID' => $contentBlock->getBlockID()]);
+        $createdBlock = $aliasBlock = self::$blockPage->addBlock($blockType, 'Main', ['bOriginalID' => $contentBlock->getBlockID()]);
         $outputCif = simplexml_load_string('<root />');
         $aliasBlock->export($outputCif);
         $this->assertTrue(isset($outputCif->block));
@@ -384,9 +459,9 @@ class ImportExportTest extends PageTestCase
         return $outputCif->block->asXML();
     }
 
-    private function importExportExpress(BlockTypeEntity $blockType, SimpleXMLElement $inputCif, array $options): string
+    private function importExportExpress(BlockTypeEntity $blockType, SimpleXMLElement $inputCif, array $options, &$createdBlock = null): string
     {
-        $generatedXml = $this->importExportBlockType($blockType, $inputCif, $options);
+        $generatedXml = $this->importExportBlockType($blockType, $inputCif, $options, $createdBlock);
 
         return strtr($generatedXml, [
             self::$expressSamples['entity1']->getId() => '1cafebab-babe-cafe-babe-1cafebabe1ca',
@@ -396,7 +471,7 @@ class ImportExportTest extends PageTestCase
         ]);
     }
 
-    private function importExportPageListFeedExisting(BlockTypeEntity $blockType, SimpleXMLElement $inputCif, array $options): string
+    private function importExportPageListFeedExisting(BlockTypeEntity $blockType, SimpleXMLElement $inputCif, array $options, &$createdBlock = null): string
     {
         $em = app(EntityManagerInterface::class);
         $repo = $em->getRepository(FeedEntity::class);
@@ -411,29 +486,19 @@ class ImportExportTest extends PageTestCase
         $feed->setParentID(0x7FFFFFFF);
         $em->persist($feed);
         $em->flush();
-        try {
-            $result = $this->importExportBlockType($blockType, $inputCif, $options);
-            $feed2 = $repo->findOneBy(['pfHandle' => 'pagelist-feed-existing']);
-            $this->assertSame($feed, $feed2);
-            $this->assertSame('Title of the Existing Feed', $feed2->getTitle());
-            $this->assertSame('Description of the Existing Feed', $feed2->getDescription());
-            $this->assertNotSame(0x7FFFFFFF, (int) $feed->getParentID());
-        } finally {
-            try {
-                if (isset($feed)) {
-                    $em->remove($feed);
-                }
-                if (isset($feed2)) {
-                    $em->remove($feed2);
-                }
-                $em->flush();
-            } catch (\Throwable $_) {
-            }
-        }
+        // the feed is left behind on purpose: the block refers to it, and the API round trip exports it
+        // again (the tables of the test case are dropped once all its tests are over)
+        $result = $this->importExportBlockType($blockType, $inputCif, $options, $createdBlock);
+        $feed2 = $repo->findOneBy(['pfHandle' => 'pagelist-feed-existing']);
+        $this->assertSame($feed, $feed2);
+        $this->assertSame('Title of the Existing Feed', $feed2->getTitle());
+        $this->assertSame('Description of the Existing Feed', $feed2->getDescription());
+        $this->assertNotSame(0x7FFFFFFF, (int) $feed->getParentID());
+
         return $result;
     }
 
-    private function importExportPageListFeedNew(BlockTypeEntity $blockType, SimpleXMLElement $inputCif, array $options): string
+    private function importExportPageListFeedNew(BlockTypeEntity $blockType, SimpleXMLElement $inputCif, array $options, &$createdBlock = null): string
     {
         $em = app(EntityManagerInterface::class);
         $repo = $em->getRepository(FeedEntity::class);
@@ -442,33 +507,25 @@ class ImportExportTest extends PageTestCase
             $em->remove($feed);
             $em->flush();
         }
-        try {
-            $result = $this->importExportBlockType($blockType, $inputCif, $options);
-            $feed = $repo->findOneBy(['pfHandle' => 'pagelist-feed-new']);
-            $this->assertNotNull($feed, 'The Page List block type should create an RSS feed');
-            $this->assertSame('Title of the New Feed', $feed->getTitle());
-            $this->assertSame('Description of the New Feed', $feed->getDescription());
-        } finally {
-            if (isset($feed)) {
-                try {
-                    $em->remove($feed);
-                    $em->flush();
-                } catch (\Throwable $_) {
-                }
-            }
-        }
+        // the feed is left behind on purpose: the block refers to it, and the API round trip exports it
+        // again (the tables of the test case are dropped once all its tests are over)
+        $result = $this->importExportBlockType($blockType, $inputCif, $options, $createdBlock);
+        $feed = $repo->findOneBy(['pfHandle' => 'pagelist-feed-new']);
+        $this->assertNotNull($feed, 'The Page List block type should create an RSS feed');
+        $this->assertSame('Title of the New Feed', $feed->getTitle());
+        $this->assertSame('Description of the New Feed', $feed->getDescription());
 
         return $result;
     }
 
-    private function importExportSurvey(BlockTypeEntity $blockType, SimpleXMLElement $inputCif, array $options): string
+    private function importExportSurvey(BlockTypeEntity $blockType, SimpleXMLElement $inputCif, array $options, &$createdBlock = null): string
     {
         $inputBaseIndex = 1000;
         $cn = $this->app->make(Connection::class);
         $outputBaseIndex = (int) $cn->fetchOne(
             "SELECT AUTO_INCREMENT FROM information_schema.TABLES WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'btSurveyOptions'"
         );
-        $outputXml = $this->importExportBlockType($blockType, $inputCif, $options);
+        $outputXml = $this->importExportBlockType($blockType, $inputCif, $options, $createdBlock);
         $outputXmlForCompare = preg_replace_callback(
             '#<optionID>\s*(?:<!\[CDATA\[\s*)?(?<id>\d+)\s*(?:\]\]>\s*)?</optionID>#',
             static function (array $matches) use ($outputBaseIndex): string {
@@ -766,6 +823,20 @@ class ImportExportTest extends PageTestCase
         /** @var \Concrete\Core\Entity\Attribute\Key\Settings\TopicsSettings $settings */
         $settings->setTopicTreeID(self::$topicsTree->getTreeID());
         $pageCategory->add($topicsType, ['akHandle' => 'test_topic', 'akName' => 'Test Topic'], $settings);
+        if (($fileCategoryEntity = $categoryService->getByHandle('file')) === null) {
+            $fileCategory = $categoryService->add('file');
+        } else {
+            $fileCategory = $fileCategoryEntity->getController();
+        }
+        /** @var \Concrete\Core\Attribute\Category\FileCategory $fileCategory */
+        if (($textType = $typeFactory->getByHandle('text')) === null) {
+            $textType = $typeFactory->add('text', 'Text');
+        }
+        $fileCategoryTypes = $fileCategory->getAttributeTypes();
+        if (!$fileCategoryTypes->contains($textType)) {
+            $fileCategoryTypes->add($textType);
+        }
+        $fileCategory->add($textType, ['akHandle' => 'test_file_attribute', 'akName' => 'Test File Attribute']);
         if (($categoryService->getByHandle('express')) === null) {
             $categoryService->add('express');
         }

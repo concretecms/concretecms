@@ -3,6 +3,7 @@
 namespace Concrete\Block\CoreAreaLayout;
 
 use Concrete\Core\Area\Area;
+use Concrete\Core\Area\Layout\Column;
 use Concrete\Core\Area\Layout\CustomLayout as CustomAreaLayout;
 use Concrete\Core\Area\Layout\Layout as AreaLayout;
 use Concrete\Core\Area\Layout\Preset\Preset as AreaLayoutPreset;
@@ -16,7 +17,10 @@ use Concrete\Core\Area\Layout\ThemeGridLayout as ThemeGridAreaLayout;
 use Concrete\Core\Area\SubArea;
 use Concrete\Core\Asset\CssAsset;
 use Concrete\Core\Block\Block;
+use Concrete\Core\Api\ApiResourceValueInterface;
+use Concrete\Core\Api\ApiValueSchemaInterface;
 use Concrete\Core\Block\BlockController;
+use Concrete\Core\Block\Traits\CustomApiValueTrait;
 use Concrete\Core\Block\BlockType\BlockType;
 use Concrete\Core\Block\Traits\HasSubBlocksTrait;
 use Concrete\Core\Database\Connection\Connection;
@@ -25,8 +29,17 @@ use Concrete\Core\Page\Page;
 use Concrete\Core\StyleCustomizer\Inline\StyleSet;
 use Concrete\Core\Support\Facade\Url;
 
-class Controller extends BlockController implements UsesFeatureInterface
+class Controller extends BlockController implements ApiResourceValueInterface, ApiValueSchemaInterface, UsesFeatureInterface
 {
+    use CustomApiValueTrait;
+
+    /**
+     * The attributes that the columns of a layout can have.
+     *
+     * @var string[]
+     */
+    private const API_COLUMN_ATTRIBUTES = ['span', 'offset', 'width'];
+
     use HasSubBlocksTrait;
 
     /**
@@ -281,13 +294,227 @@ class Controller extends BlockController implements UsesFeatureInterface
 
         $values = ['arLayoutID' => $arLayout->getAreaLayoutID()];
         parent::save($values);
+        $this->createColumnAreas($arLayout);
     }
 
     /**
-     * @param \SimpleXMLElement $blockNode
-     * @param \Concrete\Core\Page\Page $page
+     * Create the areas held by the columns of a layout, so that they are ready to receive blocks.
+     *
+     * Displaying a column creates its area on the fly, but the blocks can be added to it without ever
+     * displaying the page: that's what happens when the API is used.
+     */
+    private function createColumnAreas(AreaLayout $arLayout): void
+    {
+        $block = $this->getBlockObject();
+        $layoutArea = $block === null ? null : $block->getBlockAreaObject();
+        $page = $block === null ? null : $block->getBlockCollectionObject();
+        if ($layoutArea === null || $page === null || !$layoutArea->getAreaID()) {
+            return;
+        }
+        foreach ($arLayout->getAreaLayoutColumns() as $column) {
+            $subArea = new SubArea((string) $column->getAreaLayoutColumnDisplayID(), $layoutArea->getAreaHandle(), $layoutArea->getAreaID());
+            $subArea->load($page);
+            if (!$column->getAreaID()) {
+                $column->setAreaID($subArea->getAreaID());
+            }
+        }
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Api\ApiValueSchemaInterface::getApiValueSchema()
+     */
+    public function getApiValueSchema(): array
+    {
+        return [
+            'type' => 'object',
+            'description' => 'The layout of the areas created by this block. The blocks placed in those areas are not part of this value.',
+            'properties' => [
+                'type' => [
+                    'type' => 'string',
+                    'enum' => ['theme-grid', 'custom', 'preset'],
+                    'description' => 'Where the width of the columns comes from: the grid framework of the theme, this very block, or a preset of the theme. It can\'t be changed once the block has been created.',
+                ],
+                'maxColumns' => [
+                    'type' => ['string', 'integer'],
+                    'description' => 'The number of columns of the grid framework of the theme (it\'s used only when the type is "theme-grid").',
+                ],
+                'spacing' => [
+                    'type' => ['string', 'integer'],
+                    'description' => 'The number of pixels between two columns (it\'s used only when the type is "custom").',
+                ],
+                'customWidths' => [
+                    'type' => ['boolean', 'string', 'integer'],
+                    'description' => 'Set it to true to give every column the width it specifies, instead of splitting the available space evenly (it\'s used only when the type is "custom").',
+                ],
+                'preset' => [
+                    'type' => 'string',
+                    'description' => 'The identifier of the layout preset of the theme (it\'s used only when the type is "preset").',
+                ],
+                'columns' => [
+                    'type' => 'array',
+                    'description' => 'The columns, in the order they are displayed. A block that has already been created can\'t gain or lose columns: the ones that aren\'t specified are kept as they are.',
+                    'items' => [
+                        'type' => 'object',
+                        'properties' => [
+                            'span' => [
+                                'type' => ['string', 'integer'],
+                                'description' => 'The number of columns of the grid framework taken by this column (it\'s used only when the type is "theme-grid").',
+                            ],
+                            'offset' => [
+                                'type' => ['string', 'integer'],
+                                'description' => 'The number of columns of the grid framework to be left empty before this column (it\'s used only when the type is "theme-grid").',
+                            ],
+                            'width' => [
+                                'type' => ['string', 'integer'],
+                                'description' => 'The width of this column (it\'s used only when the type is "custom" and customWidths is 1).',
+                            ],
+                            'area' => [
+                                'type' => 'string',
+                                'readOnly' => true,
+                                'description' => 'The handle of the area created by this column: the blocks displayed in it live there, and can be worked with through the areas endpoints.',
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ];
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Block\BlockController::getImportDataFromApiValue()
+     */
+    public function getImportDataFromApiValue($page, array $value): array
+    {
+        if ($this->bID) {
+            $value = $this->mergeApiValueWithTheCurrentOne($value);
+        }
+        // the getImportData() method below reads the layout out of the XML of a CIF file: let's build it
+        $blockNode = new \SimpleXMLElement('<block></block>');
+        $layoutNode = $blockNode->addChild('arealayout');
+        $type = isset($value['type']) ? (string) $value['type'] : '';
+        $layoutNode->addAttribute('type', $type);
+        switch ($type) {
+            case 'theme-grid':
+                $layoutNode->addAttribute('columns', (string) ($value['maxColumns'] ?? ''));
+                break;
+            case 'preset':
+                $layoutNode->addAttribute('preset-id', (string) ($value['preset'] ?? ''));
+                break;
+            default:
+                $layoutNode->addAttribute('spacing', (string) ($value['spacing'] ?? ''));
+                $layoutNode->addAttribute('custom-widths', (string) ($value['customWidths'] ?? ''));
+                break;
+        }
+        $columnsNode = $layoutNode->addChild('columns');
+        foreach ((array) ($value['columns'] ?? []) as $column) {
+            $columnNode = $columnsNode->addChild('column');
+            foreach (self::API_COLUMN_ATTRIBUTES as $attribute) {
+                if (isset($column[$attribute])) {
+                    $columnNode->addAttribute($attribute, (string) $column[$attribute]);
+                }
+            }
+        }
+
+        return $this->getImportData($blockNode, $page);
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Block\Traits\CustomApiValueTrait::serializeValueForApi()
+     */
+    protected function serializeValueForApi(): array
+    {
+        $layout = $this->bID ? $this->getAreaLayoutObject() : null;
+        if ($layout === null) {
+            return [];
+        }
+        // the export() method of the layout writes the very same XML a CIF file holds, with the blocks
+        // placed in the areas of every column: those blocks are not part of the value of this block
+        $blockNode = new \SimpleXMLElement('<block></block>');
+        $layout->export($blockNode);
+        $layoutNode = $blockNode->arealayout;
+        $type = (string) $layoutNode['type'];
+        $result = ['type' => $type];
+        switch ($type) {
+            case 'theme-grid':
+                $result['maxColumns'] = (string) $layoutNode['columns'];
+                break;
+            case 'preset':
+                $result['preset'] = (string) $layoutNode['preset-id'];
+                break;
+            default:
+                $result['spacing'] = (string) $layoutNode['spacing'];
+                $result['customWidths'] = (string) $layoutNode['custom-widths'];
+                break;
+        }
+        $result['columns'] = [];
+        $columns = $layout->getAreaLayoutColumns();
+        $index = 0;
+        foreach ($layoutNode->columns->column as $columnNode) {
+            $column = [];
+            foreach (self::API_COLUMN_ATTRIBUTES as $attribute) {
+                if (isset($columnNode[$attribute])) {
+                    $column[$attribute] = (string) $columnNode[$attribute];
+                }
+            }
+            if (isset($columns[$index])) {
+                $column['area'] = $this->getApiColumnAreaHandle($columns[$index]);
+            }
+            $result['columns'][] = $column;
+            $index++;
+        }
+
+        return $result;
+    }
+
+    /**
+     * Get the handle of the area held by one of the columns of the layout of this block.
+     */
+    private function getApiColumnAreaHandle(Column $column): string
+    {
+        $block = $this->getBlockObject();
+        $area = $block === null ? null : $block->getBlockAreaObject();
+        if ($area === null) {
+            return '';
+        }
+
+        return $area->getAreaHandle() . SubArea::AREA_SUB_DELIMITER . $column->getAreaLayoutColumnDisplayID();
+    }
+
+    /**
+     * Complete a value received via the API with the one of this block, since its layout can only be
+     * reshaped: it can't be replaced by another one.
+     *
+     * @param array<string,mixed> $value
      *
      * @return array<string,mixed>
+     */
+    private function mergeApiValueWithTheCurrentOne(array $value): array
+    {
+        $currentValue = $this->serializeValueForApi();
+        if ($currentValue === []) {
+            return $value;
+        }
+        $columns = [];
+        $receivedColumns = is_array($value['columns'] ?? null) ? array_values($value['columns']) : [];
+        foreach ($currentValue['columns'] as $index => $currentColumn) {
+            $receivedColumn = is_array($receivedColumns[$index] ?? null) ? $receivedColumns[$index] : [];
+            $columns[] = $receivedColumn + $currentColumn;
+        }
+        unset($currentValue['columns'], $value['columns']);
+
+        return ['columns' => $columns] + $value + $currentValue;
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Block\BlockController::getImportData()
      */
     public function getImportData($blockNode, $page)
     {

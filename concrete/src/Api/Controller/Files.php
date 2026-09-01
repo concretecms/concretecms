@@ -7,6 +7,10 @@ use Concrete\Core\File\File;
 use Concrete\Core\File\FileList;
 use Concrete\Core\File\Filesystem;
 use Concrete\Core\File\Import\FileImporter;
+use Concrete\Core\File\Service\VolatileDirectory;
+use Concrete\Core\File\ValidationService;
+use Concrete\Core\File\Import\RemoteFileDownloader;
+use Concrete\Core\Error\UserMessageException;
 use Concrete\Core\File\Import\ImportOptions;
 use Concrete\Core\File\Importer;
 use Concrete\Core\Permission\Checker;
@@ -29,6 +33,11 @@ class Files extends ApiController
 
     use SetListLimitFromQueryTrait;
     use SupportsCursorTrait;
+
+    /**
+     * @var array|null
+     */
+    private $postedValues = null;
 
     /**
      * @OA\Get(
@@ -103,6 +112,14 @@ class Files extends ApiController
      *         )
      *     ),
      *     @OA\Parameter(
+     *         name="search",
+     *         in="query",
+     *         description="Search files by keyword",
+     *         @OA\Schema(
+     *             type="string"
+     *         )
+     *     ),
+     *     @OA\Parameter(
      *         name="after",
      *         in="query",
      *         description="The ID of the current object to start at."
@@ -135,16 +152,17 @@ class Files extends ApiController
                 return $fp->canViewFileInFileManager();
             }
         );
-
+        if (($search = trim((string) $this->request->get('search'))) !== '') {
+            $list->filterByKeywords($search);
+        }
         $fileVersionColumn = new FileVersionDateAddedColumn();
         $fileVersionColumn->setColumnSortDirection('desc');
         $this->setupSortAndCursor(
             $this->request,
             $list,
             $fileVersionColumn,
-            function ($currentCursor) {
-                $file = File::getByUUIDOrID($currentCursor);
-                return $file;
+            static function ($currentCursor) {
+                return File::getByUUIDOrID($currentCursor);
             }
         );
 
@@ -183,38 +201,64 @@ class Files extends ApiController
      */
     public function add()
     {
-        $cf = $this->app->make('helper/file');
-        $uploadedFile = $this->request->files->get('file');
-        if ($post_max_size = $this->app->make('helper/number')->getBytes(ini_get('post_max_size'))) {
-            $contentLength = (int) $this->request->server->get('CONTENT_LENGTH', 0);
-            if ($contentLength > 0 && $post_max_size < $contentLength) {
-                return $this->error(Importer::getErrorMessage(Importer::E_FILE_EXCEEDS_POST_MAX_FILE_SIZE), 400);
-            }
-        }
-        if (!$uploadedFile instanceof UploadedFile) {
-            return $this->error(Importer::getErrorMessage(Importer::E_FILE_INVALID), 400);
-        }
-        if (!$uploadedFile->isValid()) {
-            return $this->error(Importer::getErrorMessage($uploadedFile->getError()), 400);
-        }
-
-        $treeNodeID = $this->request->request->get('folder');
-        if ($treeNodeID) {
-            $treeNodeID = is_scalar($treeNodeID) ? (int) $treeNodeID : 0;
-            $folder = $treeNodeID === 0 ? null : Node::getByID($treeNodeID);
-        } else {
-            $filesystem = new Filesystem();
-            $folder = $filesystem->getRootFolder();
-        }
+        $folder = $this->getDestinationFolder();
         if (!$folder instanceof FileFolder) {
             return $this->error(t('Unable to find specified folder'), 400);
         }
-
         $fp = new Checker($folder);
         if (!$fp->canAddFiles()) {
             return $this->error(t("You don't have the permission to upload to %s", $folder->getTreeNodeDisplayName()), 403);
         }
-        if (!$fp->canAddFileType($cf->getExtension($uploadedFile->getClientOriginalName()))) {
+        $uploadedFile = $this->request->files->get('file');
+        if ($uploadedFile instanceof UploadedFile) {
+            if ($post_max_size = $this->app->make('helper/number')->getBytes(ini_get('post_max_size'))) {
+                $contentLength = (int) $this->request->server->get('CONTENT_LENGTH', 0);
+                if ($contentLength > 0 && $post_max_size < $contentLength) {
+                    return $this->error(Importer::getErrorMessage(Importer::E_FILE_EXCEEDS_POST_MAX_FILE_SIZE), 400);
+                }
+            }
+            if (!$uploadedFile->isValid()) {
+                return $this->error(Importer::getErrorMessage($uploadedFile->getError()), 400);
+            }
+            $localFilename = $uploadedFile->getPathname();
+            $concreteFilename = $uploadedFile->getClientOriginalName();
+            if (!$this->app->make(ValidationService::class)->extension($concreteFilename)) {
+                return $this->error(Importer::getErrorMessage(Importer::E_FILE_INVALID_EXTENSION), 400);
+            }
+        } elseif (is_string($contents = $this->getPostedValue('contents')) && $contents !== '') {
+            $concreteFilename = trim((string) $this->getPostedValue('filename'));
+            if ($concreteFilename === '') {
+                return $this->error(t('You must specify the name of the file.'), 400);
+            }
+            $concreteFilename = basename($concreteFilename);
+            if (!$this->app->make(ValidationService::class)->extension($concreteFilename)) {
+                return $this->error(Importer::getErrorMessage(Importer::E_FILE_INVALID_EXTENSION), 400);
+            }
+            $decoded = base64_decode($contents, true);
+            if ($decoded === false) {
+                return $this->error(t('The contents of the file must be base64-encoded.'), 400);
+            }
+            // the volatile directory must be kept alive until the file has been imported
+            $volatileDirectory = $this->app->make(VolatileDirectory::class);
+            $localFilename = $volatileDirectory->getPath() . '/upload';
+            if (@file_put_contents($localFilename, $decoded) === false) {
+                return $this->error(t('Failed to save the contents of the file.'), 500);
+            }
+        } elseif (($url = trim((string) $this->getPostedValue('url'))) !== '') {
+            // the volatile directory must be kept alive until the file has been imported
+            $volatileDirectory = $this->app->make(VolatileDirectory::class);
+            try {
+                $localFilename = $this->app->make(RemoteFileDownloader::class)->download($url, $volatileDirectory->getPath(), null, trim((string) $this->getPostedValue('filename')));
+            } catch (UserMessageException $x) {
+                return $this->error($x->getMessage(), 400);
+            }
+            // the downloader named the file after the received filename parameter, or after the URL when it's empty
+            $concreteFilename = basename($localFilename);
+        } else {
+            return $this->error(Importer::getErrorMessage(Importer::E_FILE_INVALID), 400);
+        }
+        $cf = $this->app->make('helper/file');
+        if (!$fp->canAddFileType($cf->getExtension($concreteFilename))) {
             return $this->error(Importer::getErrorMessage(Importer::E_FILE_INVALID_EXTENSION), 403);
         }
 
@@ -224,11 +268,47 @@ class Files extends ApiController
          */
         $importer = $this->app->make(FileImporter::class);
         $importOptions = $this->app->make(ImportOptions::class);
-        if ($folder) {
-            $importOptions->setImportToFolder($folder);
-        }
-        $file = $importer->importLocalFile($uploadedFile->getPathname(), $uploadedFile->getClientOriginalName(), $importOptions);
+        $importOptions->setImportToFolder($folder);
+        $file = $importer->importLocalFile($localFilename, $concreteFilename, $importOptions);
+
         return $this->transform($file->getFile(), new FileTransformer(), Resources::RESOURCE_FILES);
+    }
+
+    /**
+     * Get the folder where the new files should be placed.
+     */
+    private function getDestinationFolder(): ?Node
+    {
+        $treeNodeID = $this->getPostedValue('folder');
+        if (!$treeNodeID) {
+            return (new Filesystem())->getRootFolder();
+        }
+
+        return is_scalar($treeNodeID) ? Node::getByID((int) $treeNodeID) : null;
+    }
+
+    /**
+     * Get a value sent in the request body, be it a form or a JSON document.
+     *
+     * @return mixed NULL if the value hasn't been sent
+     */
+    private function getPostedValue(string $key)
+    {
+        $value = $this->request->request->get($key);
+        if ($value !== null) {
+            return $value;
+        }
+        if ($this->postedValues === null) {
+            $this->postedValues = [];
+            if (stripos((string) $this->request->headers->get('Content-Type'), 'json') !== false) {
+                $postedValues = json_decode((string) $this->request->getContent(), true);
+                if (is_array($postedValues)) {
+                    $this->postedValues = $postedValues;
+                }
+            }
+        }
+
+        return $this->postedValues[$key] ?? null;
     }
 
     /**

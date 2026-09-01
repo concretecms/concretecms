@@ -8,6 +8,7 @@ class Resources
 
     const RESOURCE_PAGES = 'pages';
     const RESOURCE_BLOCKS = 'blocks';
+    const RESOURCE_BLOCK_TYPES = 'block_types';
     const RESOURCE_USERS = 'users';
     const RESOURCE_FILES = 'files';
     const RESOURCE_GROUPS = 'groups';

@@ -12,3 +12,4 @@ defined('C5_EXECUTE') or die('Access Denied.');
  */
 
 $router->get('/system/info', '\Concrete\Core\Api\Controller\System::info')->setScopes('system:info:read');
+$router->get('/system/openapi', '\Concrete\Core\Api\Controller\System::openapi')->setScopes('system:openapi:read');
