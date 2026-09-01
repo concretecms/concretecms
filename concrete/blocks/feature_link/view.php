@@ -6,6 +6,7 @@
 $buttonColor = $buttonColor ?? null;
 
 if (isset($button)) {
+    $button->setAttribute('href', h($button->getAttribute('href')));
 
     if ($buttonStyle == 'outline') {
         $button->addClass('btn btn-outline-' . $buttonColor) ;

@@ -130,7 +130,7 @@ $(function() {
                 let response = JSON.parse(xhr);
 
                 if (response.paths && response.paths.length) {
-                    let pathsList = response.paths.map(path => `<li>${path}</li>`).join('');
+                    let pathsList = response.paths.map(path => `<li>${_.escape(path)}</li>`).join('');
                     let errorMessage = `<?= t('The following page paths already exist:') ?> <ul>${pathsList}</ul> <?= t('Do you want to continue?')?>`;
 
                     ConcreteAlert.confirm(errorMessage, function () {

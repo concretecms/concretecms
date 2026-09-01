@@ -232,14 +232,16 @@ class Entities extends DashboardPageController
             $this->error->add($this->token->getErrorMessage());
         }
 
-        foreach ($entity->getEntries() as $entry){
-            $this->entityManager->remove($entry);
+        if (!$this->error->has()) {
+            foreach ($entity->getEntries() as $entry){
+                $this->entityManager->remove($entry);
+            }
+
+            $this->entityManager->flush();
+
+            $this->flash('success', t('All Entries were successfully cleared.'));
+            return Redirect::to('/dashboard/system/express/entities', 'view_entity', $entity->getId());
         }
-
-        $this->entityManager->flush();
-
-        $this->flash('success', t('All Entries were successfully cleared.'));
-        return Redirect::to('/dashboard/system/express/entities', 'view_entity', $entity->getId());
     }
 
     /**

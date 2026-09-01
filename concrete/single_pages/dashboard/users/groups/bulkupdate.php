@@ -20,6 +20,7 @@ $request = $controller->getRequest();
 </ul>
 
 <form method="post" action="<?=$view->action('confirm')?>" role="form">
+    <?php $token->output('bulk_update_groups_confirm') ?>
     <input type="hidden" name="gParentNodeID" value="<?=h($request->get('gParentNodeID'))?>" />
 
 	<?php foreach ($request->get('gID', []) as $gID) { ?>

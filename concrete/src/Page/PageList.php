@@ -3,6 +3,7 @@
 namespace Concrete\Core\Page;
 
 use Concrete\Core\Entity\Block\BlockType\BlockType;
+use Concrete\Core\Database\Query\LikeBuilder;
 use Concrete\Core\Entity\Package;
 use Concrete\Core\Entity\Page\Container;
 use Concrete\Core\Entity\Page\Template as TemplateEntity;
@@ -592,6 +593,7 @@ class PageList extends DatabaseItemList implements PagerProviderInterface, Pagin
      */
     public function filterByKeywords($keywords)
     {
+        $likeBuilder = Application::getFacadeApplication()->make(LikeBuilder::class);
         $expressions = [
             $this->query->expr()->like('psi.cName', ':keywords'),
             $this->query->expr()->like('psi.cDescription', ':keywords'),
@@ -605,7 +607,7 @@ class PageList extends DatabaseItemList implements PagerProviderInterface, Pagin
         }
         $expr = $this->query->expr();
         $this->query->andWhere(call_user_func_array([$expr, 'orX'], $expressions));
-        $this->query->setParameter('keywords', '%' . $keywords . '%');
+        $this->query->setParameter('keywords', $likeBuilder->escapeForLike($keywords));
     }
 
     public function filterByFulltextKeywords($keywords)

@@ -396,16 +396,25 @@ class Pages extends ApiController
         $e = $this->app->make('error');
 
         if (isset($body['type'])) {
+            if (!$checker->canEditPageType()) {
+                return $this->error(t('You do not have access to edit the type of this page.'), 401);
+            }
             $type = Type::getByHandle($body['type']);
             if (!$type) {
                 $e->add(t('Invalid page type'));
             }
         }
         if (isset($body['template'])) {
+            if (!$checker->canEditPageTemplate()) {
+                return $this->error(t('You do not have access to edit the template of this page.'), 401);
+            }
             $template = Template::getByHandle($body['template']);
             if (!$template) {
                 $e->add(t('Invalid page template'));
             }
+        }
+        if ((isset($body['name']) || isset($body['description']) || isset($body['attributes'])) && !$checker->canEditPageProperties()) {
+            return $this->error(t('You do not have access to edit the properties of this page.'), 401);
         }
 
         if ($e->has()) {

@@ -321,7 +321,7 @@ class Controller extends AuthenticationTypeController
         $this->set('authType', $this->getAuthenticationType());
         $e = $this->app->make('helper/validation/error');
         if (is_string($uHash)) {
-            $ui = $this->app->make(UserInfoRepository::class)->getByValidationHash($uHash);
+            $ui = $this->app->make(UserInfoRepository::class)->getByValidationHash($uHash, true, UVTYPE_CHANGE_PASSWORD);
         } else {
             $ui = null;
         }
@@ -457,7 +457,7 @@ class Controller extends AuthenticationTypeController
 
     public function v($hash = '')
     {
-        $ui = $this->app->make(UserInfoRepository::class)->getByValidationHash($hash);
+        $ui = $this->app->make(UserInfoRepository::class)->getByValidationHash($hash, true, UVTYPE_REGISTER);
         if (is_object($ui)) {
             $ui->markValidated();
             $this->set('uEmail', $ui->getUserEmail());

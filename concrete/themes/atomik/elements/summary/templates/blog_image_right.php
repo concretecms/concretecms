@@ -13,7 +13,7 @@ $view->setViewTheme('atomik');
             }
             ?>
             <?php if (isset($description)) { ?>
-                <p><?=$description?></p>
+                <p><?=h($description)?></p>
             <?php } ?>
         </div>
         <div class="col-md-6 order-1 order-md-2">

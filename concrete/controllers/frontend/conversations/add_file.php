@@ -10,6 +10,7 @@ use Concrete\Core\File\Import\FileImporter;
 use Concrete\Core\File\Import\ImportException;
 use Concrete\Core\File\Set\Set as FileSet;
 use Concrete\Core\Http\ResponseFactoryInterface;
+use Concrete\Core\Permission\Checker;
 use Concrete\Core\User\User;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Response;
@@ -26,6 +27,7 @@ class AddFile extends FrontendController
             $this->checkToken();
             $conversation = $this->getBlockConversation();
             $this->checkConversation($conversation);
+            $this->checkAttachmentPermissions($conversation);
             $file = $this->getPostedFile();
             $this->checkPostedFileLimits($conversation, $file);
             $this->checkPostedFileExtension($conversation, $file);
@@ -71,6 +73,17 @@ class AddFile extends FrontendController
             if (!$config->get('conversations.attachments_enabled')) {
                 throw new UserMessageException(t('This conversation does not allow file attachments.'));
             }
+        }
+    }
+
+    /**
+     * @throws \Concrete\Core\Error\UserMessageException
+     */
+    protected function checkAttachmentPermissions(Conversation $conversation): void
+    {
+        $permissions = new Checker($conversation);
+        if (!$permissions->canAddConversationMessageAttachments()) {
+            throw new UserMessageException(t('You do not have permission to add attachments.'));
         }
     }
 

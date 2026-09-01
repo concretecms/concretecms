@@ -41,7 +41,7 @@ class AssociationColumn extends Column
             if ($entryAssociation) {
                 $entries = [];
                 foreach($entryAssociation->getSelectedEntries() as $entry) {
-                    $entries[] = $entry->getLabel();
+                    $entries[] = h($entry->getLabel());
                 }
                 return implode('<br/>', $entries);
             }

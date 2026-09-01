@@ -4,6 +4,7 @@ namespace Concrete\Core\Conversation\Message;
 use Loader;
 use Concrete\Core\Conversation\Conversation;
 use Concrete\Core\Conversation\FlagType\FlagType;
+use Concrete\Core\Database\Query\LikeBuilder;
 use Concrete\Core\Legacy\DatabaseItemList;
 use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\Database\Connection\Connection;
@@ -85,7 +86,7 @@ left join CollectionVersions cv
 EOT
         );
 
-        $qk = $db->quote('%' . $keywords . '%');
+        $qk = $db->quote($app->make(LikeBuilder::class)->escapeForLike($keywords));
         $this->filter(false, "(cnvMessageSubject like $qk or cnvMessageBody like $qk or cvName like $qk)");
     }
 

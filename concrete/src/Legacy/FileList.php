@@ -1,6 +1,8 @@
 <?php
 namespace Concrete\Core\Legacy;
 
+use Concrete\Core\Database\Query\LikeBuilder;
+use Concrete\Core\Support\Facade\Application;
 use File as ConcreteFile;
 use FileAttributeKey;
 
@@ -57,14 +59,16 @@ class FileList extends DatabaseItemList
      */
     public function filterByKeywords($keywords)
     {
+        $likeBuilder = Application::getFacadeApplication()->make(LikeBuilder::class);
         $db = Loader::db();
         $keywordsExact = $db->quote($keywords);
-        $qkeywords = $db->quote('%' . $keywords . '%');
+        $escapedKeywords = $likeBuilder->escapeForLike($keywords);
+        $qkeywords = $db->quote($escapedKeywords);
         $keys = FileAttributeKey::getSearchableIndexedList();
         $attribsStr = '';
         foreach ($keys as $ak) {
             $cnt = $ak->getController();
-            $attribsStr .= ' OR ' . $cnt->searchKeywords($keywords);
+            $attribsStr .= ' OR ' . $cnt->searchKeywords($escapedKeywords);
         }
         $this->filter(false, '(fvFilename like ' . $qkeywords . ' or fvDescription like ' . $qkeywords . ' or fvTitle like ' . $qkeywords . ' or fvTags like ' . $qkeywords . ' or u.uName = ' . $keywordsExact . $attribsStr . ')');
     }

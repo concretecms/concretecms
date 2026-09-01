@@ -4,6 +4,7 @@ namespace Concrete\Core\Api\Controller;
 
 use Concrete\Core\Attribute\Category\UserCategory;
 use Concrete\Core\Permission\Checker;
+use Concrete\Core\Permission\Key\Key;
 use Concrete\Core\Search\Pagination\PagerPagination;
 use Concrete\Core\User\RegistrationService;
 use Concrete\Core\User\Search\ColumnSet\Column\DateAddedColumn;
@@ -22,6 +23,11 @@ class Users extends ApiController
 
     use SetListLimitFromQueryTrait;
     use SupportsCursorTrait;
+
+    protected function getEditUserPropertiesAssignment()
+    {
+        return Key::getByHandle('edit_user_properties')->getMyAssignment();
+    }
 
     /**
      * @OA\Get(
@@ -301,23 +307,46 @@ class Users extends ApiController
 
         $checker = new Checker($user);
         if (!$checker->canEditUser()) {
-            return $this->error(t('You do not have access to delete this user.', 401));
+            return $this->error(t('You do not have access to update this user.'), 401);
         }
 
+        $assignment = $this->getEditUserPropertiesAssignment();
         $content = json_decode($this->request->getContent(), true);
         $data = [];
         $e = $this->app->make('error');
         if (isset($content['username'])) {
+            if (!$assignment->allowEditUserName()) {
+                return $this->error(t('You do not have access to edit the username for this user.'), 401);
+            }
             $this->app->make('validator/user/name')->isValid($content['username'], $e);
             $data['uName'] = $content['username'];
         }
         if (isset($content['email'])) {
+            if (!$assignment->allowEditEmail()) {
+                return $this->error(t('You do not have access to edit the email address for this user.'), 401);
+            }
             $this->app->make('validator/user/email')->isValid($content['email'], $e);
             $data['uEmail'] = $content['email'];
         }
 
         if (isset($content['language']) && $content['language'] !== '') {
+            if (!$assignment->allowEditDefaultLanguage()) {
+                return $this->error(t('You do not have access to edit the default language for this user.'), 401);
+            }
             $data['uDefaultLanguage'] = $content['language'];
+        }
+
+        $attributeMap = null;
+        if (isset($content['attributes'])) {
+            $category = $this->app->make(UserCategory::class);
+            $attributeValueMapFactory = $this->app->make(AttributeValueMapFactory::class);
+            $attributeMap = $attributeValueMapFactory->createFromRequestData($category, $content['attributes']);
+            foreach ($attributeMap->getEntries() as $entry) {
+                $attributeKey = $entry->getAttributeKey();
+                if (!in_array($attributeKey->getAttributeKeyID(), $assignment->getAttributesAllowedArray())) {
+                    return $this->error(t('You do not have access to edit the attribute %s for this user.', $attributeKey->getAttributeKeyDisplayName()), 401);
+                }
+            }
         }
 
         if ($e->has()) {
@@ -328,10 +357,7 @@ class Users extends ApiController
             $user->update($data);
         }
 
-        if (isset($content['attributes'])) {
-            $category = $this->app->make(UserCategory::class);
-            $attributeValueMapFactory = $this->app->make(AttributeValueMapFactory::class);
-            $attributeMap = $attributeValueMapFactory->createFromRequestData($category, $content['attributes']);
+        if ($attributeMap !== null) {
             foreach ($attributeMap->getEntries() as $entry) {
                 $user->setAttribute($entry->getAttributeKey(), $entry->getAttributeValue());
             }
@@ -389,6 +415,11 @@ class Users extends ApiController
         $checker = new Checker($user);
         if (!$checker->canEditUser()) {
             return $this->error(t('You do not have access to change the password for this user.', 401));
+        }
+
+        $assignment = $this->getEditUserPropertiesAssignment();
+        if (!$assignment->allowEditPassword()) {
+            return $this->error(t('You do not have access to change the password for this user.'), 401);
         }
 
         $e = $this->app->make('error');

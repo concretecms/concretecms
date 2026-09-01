@@ -12,7 +12,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
  * Namespace: Concrete\Controller\Backend
  */
 
-$router->all('/arrange_blocks/', 'Page\ArrangeBlocks::arrange');
+$router->post('/arrange_blocks/', 'Page\ArrangeBlocks::arrange');
 $router->all('/add_stack/', 'Page\AddStack::addStack');
 $router->all('/add_container/', 'Page\AddContainer::addContainer');
 $router->all('/checkout/{cID}/{flag}/{token}', 'Page::checkout');

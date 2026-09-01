@@ -304,24 +304,36 @@ class Add extends BackendInterfacePageController
         $errorList = $this->app->make(ErrorList::class);
         /** @var Request $request */
         $request = $this->app->make(Request::class);
+        /** @var Token $token */
+        $token = $this->app->make(Token::class);
 
-        $usedAreas = $request->request->get("usedAreas", []);
-
-        $arrOrphanedBlocks = $this->getOrphanedBlockIds($usedAreas);
-
-        if (count($arrOrphanedBlocks) === 0) {
-            $errorList->add(t("There are no blocks to remove."));
+        if (!$request->request->has("ccm_token")) {
+            $errorList->add(t("You need to enter a valid token"));
         } else {
-            foreach ($arrOrphanedBlocks as $arrOrphanedBlock) {
-                $bID = (int)$arrOrphanedBlock["bID"];
-                $arHandle = $arrOrphanedBlock["arHandle"];
-                $block = Block::getByID($bID, $this->page, $arHandle);
+            $removeToken = $request->request->get("ccm_token");
 
-                if (!$block instanceof Block) {
-                    $errorList->add(t("Error while removing orphaned block."));
+            if (!$token->validate('remove_orphaned_blocks', $removeToken)) {
+                $errorList->add($token->getErrorMessage());
+            } else {
+                $usedAreas = $request->request->get("usedAreas", []);
+
+                $arrOrphanedBlocks = $this->getOrphanedBlockIds($usedAreas);
+
+                if (count($arrOrphanedBlocks) === 0) {
+                    $errorList->add(t("There are no blocks to remove."));
                 } else {
-                    // returns false because the area no longer exists in the theme.
-                    $block->deleteBlock();
+                    foreach ($arrOrphanedBlocks as $arrOrphanedBlock) {
+                        $bID = (int)$arrOrphanedBlock["bID"];
+                        $arHandle = $arrOrphanedBlock["arHandle"];
+                        $block = Block::getByID($bID, $this->page, $arHandle);
+
+                        if (!$block instanceof Block) {
+                            $errorList->add(t("Error while removing orphaned block."));
+                        } else {
+                            // returns false because the area no longer exists in the theme.
+                            $block->deleteBlock();
+                        }
+                    }
                 }
             }
         }

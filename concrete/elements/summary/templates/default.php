@@ -3,6 +3,6 @@
 <div>
     <a href="<?=$link ?? '#'?>"><?=h($title ?? t('No Title'))?></a>
     <?php if (isset($description) && $description) { ?>
-        <div><?=$description?></div>
+        <div><?=h($description)?></div>
     <?php } ?>
 </div>
