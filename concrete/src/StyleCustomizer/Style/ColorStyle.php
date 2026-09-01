@@ -68,13 +68,43 @@ class ColorStyle extends Style
     {
         $variableValue = sprintf(
             'rgba(%s, %s, %s, %s)',
-            $value->getRed(),
-            $value->getGreen(),
-            $value->getBlue(),
-            $value->getAlpha()
+            $this->clampChannel($value->getRed()),
+            $this->clampChannel($value->getGreen()),
+            $this->clampChannel($value->getBlue()),
+            $this->clampAlpha($value->getAlpha())
         );
         $variable = new Variable($this->getVariableToInspect(), $variableValue);
         return $variable;
+    }
+
+    /**
+     * Clamp a color channel value to an integer between 0 and 255.
+     *
+     * @param mixed $channel
+     *
+     * @return int
+     */
+    private function clampChannel($channel): int
+    {
+        if (!is_numeric($channel)) {
+            $channel = 0;
+        }
+        return (int) max(0, min(255, $channel));
+    }
+
+    /**
+     * Clamp an alpha value to a float between 0 and 1.
+     *
+     * @param mixed $alpha
+     *
+     * @return float
+     */
+    private function clampAlpha($alpha): float
+    {
+        if (!is_numeric($alpha)) {
+            $alpha = 1;
+        }
+        return max(0, min(1, (float) $alpha));
     }
 
 }

@@ -21,6 +21,12 @@ class ArrangeBlocks extends Page
     {
         $pc = new PageEditResponse();
         $pc->setPage($this->page);
+        $token = $this->app->make('token');
+        if (!$token->validate()) {
+            $pc->getError()->add($token->getErrorMessage());
+
+            return $this->app->make(ResponseFactoryInterface::class)->json($pc);
+        }
         $this->performArrangement($pc);
 
         return $this->app->make(ResponseFactoryInterface::class)->json($pc);

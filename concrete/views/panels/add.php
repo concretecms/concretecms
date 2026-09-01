@@ -349,6 +349,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
             /** @var Token $token */
             $token = $app->make(Token::class);
             $removeToken = $token->generate('remove_orphaned_block');
+            $removeAllToken = $token->generate('remove_orphaned_blocks');
             ?>
 
             <div id="ccm-orphaned-block-container">
@@ -513,6 +514,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
                                         url: '<?php echo \Concrete\Core\Support\Facade\Url::to('/ccm/system/panels/add/remove_orphaned_blocks')->setQuery(["cID" => $c->getCollectionID()]) ?>',
                                         data: {
                                             usedAreas: areaHandles,
+                                            ccm_token: '<?php echo $removeAllToken ?>'
                                         },
                                         success: function (r) {
                                             if (typeof r.error === "undefined") {

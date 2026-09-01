@@ -135,6 +135,7 @@ $date = Core::make('date')
 <script type="text/javascript">
 
     Concrete.Vue.activateContext('cms', function (Vue, config) {
+        const boardCustomSlotToken = '<?=Core::make('token')->generate('board_custom_slot')?>'
         new Vue({
             el: 'div[data-view=populate-custom-slot]',
             components: config.components,
@@ -149,6 +150,7 @@ $date = Core::make('date')
                             my.boardInstanceID,
                         method: 'POST',
                         data: {
+                            ccm_token: boardCustomSlotToken,
                             // Comment this out because with it we're not turning this into a draft post.
                             // Uncomment this when we figure out a way to determine whether we're using the schedule functionality
                             // or the create in place functionality
@@ -192,6 +194,7 @@ $date = Core::make('date')
                             my.boardInstanceID,
                         method: 'POST',
                         data: {
+                            ccm_token: boardCustomSlotToken,
                             slot: my.slot,
                             selectedItemIds: my.selectedItemIds
                         },
@@ -227,6 +230,7 @@ $date = Core::make('date')
                             my.boardInstanceID,
                         method: 'POST',
                         data: {
+                            ccm_token: boardCustomSlotToken,
                             keywords: my.searchKeywords
                         },
                         success: function (r) {

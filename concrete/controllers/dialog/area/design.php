@@ -99,7 +99,7 @@ class Design extends BackendPageController
                 $style = new CustomStyle($set, $this->area, $nvc->getCollectionThemeObject());
                 $css = $style->getCSS();
                 if ($css !== '') {
-                    $pr->setAdditionalDataAttribute('css', $style->getStyleWrapper($style->getCSS()));
+                    $pr->setAdditionalDataAttribute('css', $css);
                 }
                 $pr->setAdditionalDataAttribute('containerClass', $style->getContainerClass());
             }

@@ -10,6 +10,7 @@ use Concrete\Core\Multilingual\Page\Section\Section;
 use Concrete\Core\Page\Controller\DashboardPageController;
 use Concrete\Core\Page\Page;
 use Concrete\Core\Page\PageList;
+use Concrete\Core\Permission\Checker;
 use Concrete\Core\Url\Resolver\PageUrlResolver;
 
 class Bulk extends DashboardPageController
@@ -55,6 +56,10 @@ class Bulk extends DashboardPageController
         $c = Page::getByID($cID);
         if (!$c || $c->isError()) {
             throw new UserMessageException(t('Unable to find the specified page'));
+        }
+        $cp = new Checker($c);
+        if (!$cp->canEditPageProperties()) {
+            throw new UserMessageException(t('You do not have permission to edit this page'));
         }
         $metaTitle = trim($post->get('metaTitle'));
         if ($metaTitle !== '') {

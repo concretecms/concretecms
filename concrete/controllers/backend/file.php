@@ -452,8 +452,8 @@ class File extends Controller
             $volatileDirectory = $this->app->make(VolatileDirectory::class);
             foreach ($urls as $url) {
                 try {
-                    $host = (string) \League\Url\Url::createFromUrl($url)->getHost();
-                    $downloadedFile = $this->downloadRemoteURL($url, $volatileDirectory->getPath(), $validatedUrls[$host] ?? null);
+                    $validatedUrlKey = $this->getValidatedRemoteUrlKeyFromUrl($url);
+                    $downloadedFile = $this->downloadRemoteURL($url, $volatileDirectory->getPath(), $validatedUrls[$validatedUrlKey] ?? null);
                     $fileVersion = $fi->import($downloadedFile, false, $replacingFile ?: $this->getDestinationFolder());
                     if (!$fileVersion instanceof FileVersionEntity) {
                         $errors->add($url . ': ' . $fi->getErrorMessage($fileVersion));
@@ -802,7 +802,7 @@ class File extends Controller
      * Check that a list of strings are valid "incoming" file names.
      *
      * @param string[] $urls
-     * @return array<string, \Concrete\Core\Url\Validation\ValidatedRemoteUrl> An array of domains and their validated URLs
+     * @return array<string, \Concrete\Core\Url\Validation\ValidatedRemoteUrl> An array of remote URL origins and their validated URLs
      *
      * @throws \Concrete\Core\Error\UserMessageException in case one or more of the specified URLs are not valid
      *
@@ -821,17 +821,34 @@ class File extends Controller
                 }
                 throw new UserMessageException(h(t('The URL "%s" is not valid.', $u)));
             }
-            $host = $validatedUrl->getHost();
+            $validatedUrlKey = $this->getValidatedRemoteUrlKey($validatedUrl);
 
-            // If we've already validated this hostname just skip it.
-            if (array_key_exists($host, $validatedUrls)) {
+            // If we've already validated this URL origin just skip it.
+            if (array_key_exists($validatedUrlKey, $validatedUrls)) {
                 continue;
             }
 
-            $validatedUrls[$host] = $validatedUrl;
+            $validatedUrls[$validatedUrlKey] = $validatedUrl;
         }
 
         return $validatedUrls;
+    }
+
+    protected function getValidatedRemoteUrlKey(ValidatedRemoteUrl $validatedUrl): string
+    {
+        return sprintf('%s://%s:%d', $validatedUrl->getScheme(), strtolower($validatedUrl->getHost()), $validatedUrl->getPort());
+    }
+
+    protected function getValidatedRemoteUrlKeyFromUrl(string $url): string
+    {
+        $parsedUrl = \Concrete\Core\Url\Url::createFromUrl($url);
+        $scheme = strtolower((string) $parsedUrl->getScheme());
+        $host = strtolower(trim((string) $parsedUrl->getHost()));
+        $port = $parsedUrl->getPort();
+        $port = $port ? $port->get() : null;
+        $port = $port ? (int) $port : ($scheme === 'http' ? 80 : 443);
+
+        return sprintf('%s://%s:%d', $scheme, $host, $port);
     }
 
     /**

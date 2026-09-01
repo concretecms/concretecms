@@ -105,6 +105,54 @@ class StyleSet
         return null;
     }
 
+    protected static function sanitizeCssColor($value): ?string
+    {
+        $value = trim((string) $value);
+        if ($value === '') {
+            return null;
+        }
+
+        if (preg_match('/^#(?:[0-9a-f]{3}|[0-9a-f]{4}|[0-9a-f]{6}|[0-9a-f]{8})$/i', $value)) {
+            return $value;
+        }
+        if (preg_match('/^(?:rgb|hsl)a?\(\s*[-\d.%\s,\/]+\)$/i', $value)) {
+            return preg_replace('/\s+/', ' ', $value);
+        }
+
+        return in_array(strtolower($value), ['transparent', 'currentcolor'], true) ? $value : null;
+    }
+
+    protected static function sanitizeCssLength($value, bool $allowNegative = true): ?string
+    {
+        $value = trim((string) $value);
+        if ($value === '') {
+            return null;
+        }
+
+        $pattern = $allowNegative
+            ? '/^-?(?:\d+|\d*\.\d+)(?:px|%|em|rem|vh|vw|vmin|vmax)?$/i'
+            : '/^(?:\d+|\d*\.\d+)(?:px|%|em|rem|vh|vw|vmin|vmax)?$/i';
+
+        return preg_match($pattern, $value) ? $value : null;
+    }
+
+    protected static function sanitizeCssRotation($value): ?string
+    {
+        $value = trim((string) $value);
+        if ($value === '') {
+            return null;
+        }
+
+        return preg_match('/^-?(?:\d+|\d*\.\d+)$/', $value) ? $value : null;
+    }
+
+    protected static function sanitizeCssEnum($value, array $allowed): ?string
+    {
+        $value = trim((string) $value);
+
+        return in_array($value, $allowed, true) ? $value : null;
+    }
+
     /**
      * If the request contains any fields that are valid to save as a style set, we return the style set object
      * pre-save. If it's not (e.g. there's a background repeat but no actual background image, empty strings, etc...)
@@ -120,20 +168,35 @@ class StyleSet
         $set = new StyleSetEntity();
         $return = false;
 
-        if ($post->has('backgroundColor') && trim($post->get('backgroundColor')) !== '') {
-            $set->setBackgroundColor($post->get('backgroundColor'));
-            $set->setBackgroundRepeat($post->get('backgroundRepeat'));
-            $set->setBackgroundSize($post->get('backgroundSize'));
-            $set->setBackgroundPosition($post->get('backgroundPosition'));
+        $backgroundRepeat = self::sanitizeCssEnum($post->get('backgroundRepeat'), ['no-repeat', 'repeat-x', 'repeat-y', 'repeat']) ?? 'no-repeat';
+        $backgroundSize = self::sanitizeCssEnum($post->get('backgroundSize'), ['auto', 'contain', 'cover', '10%', '25%', '50%', '75%', '100%']) ?? 'auto';
+        $backgroundPosition = self::sanitizeCssEnum($post->get('backgroundPosition'), [
+            'left top',
+            'left center',
+            'left bottom',
+            'center top',
+            'center center',
+            'center bottom',
+            'right top',
+            'right center',
+            'right bottom',
+        ]) ?? 'left top';
+
+        $v = self::sanitizeCssColor($post->get('backgroundColor'));
+        if ($v !== null) {
+            $set->setBackgroundColor($v);
+            $set->setBackgroundRepeat($backgroundRepeat);
+            $set->setBackgroundSize($backgroundSize);
+            $set->setBackgroundPosition($backgroundPosition);
             $return = true;
         }
 
         $fID = (int) $post->get('backgroundImageFileID');
         if ($fID > 0) {
             $set->setBackgroundImageFileID($fID);
-            $set->setBackgroundRepeat($post->get('backgroundRepeat'));
-            $set->setBackgroundSize($post->get('backgroundSize'));
-            $set->setBackgroundPosition($post->get('backgroundPosition'));
+            $set->setBackgroundRepeat($backgroundRepeat);
+            $set->setBackgroundSize($backgroundSize);
+            $set->setBackgroundPosition($backgroundPosition);
             $return = true;
         }
 
@@ -157,106 +220,106 @@ class StyleSet
             }
         }
 
-        $v = trim($post->get('linkColor', ''));
-        if ($v !== '') {
+        $v = self::sanitizeCssColor($post->get('linkColor', ''));
+        if ($v !== null) {
             $set->setLinkColor($v);
             $return = true;
         }
 
-        $v = trim($post->get('textColor', ''));
-        if ($v !== '') {
+        $v = self::sanitizeCssColor($post->get('textColor', ''));
+        if ($v !== null) {
             $set->setTextColor($v);
             $return = true;
         }
 
-        $v = trim($post->get('baseFontSize', ''));
-        if (!in_array($v, ['', '0px'], true)) {
+        $v = self::sanitizeCssLength($post->get('baseFontSize', ''), false);
+        if ($v !== null && $v !== '0px') {
             $set->setBaseFontSize($v);
             $return = true;
         }
 
-        $v = trim($post->get('marginTop', ''));
-        if (!in_array($v, ['', '0px'], true)) {
+        $v = self::sanitizeCssLength($post->get('marginTop', ''));
+        if ($v !== null && $v !== '0px') {
             $set->setMarginTop($v);
             $return = true;
         }
 
-        $v = trim($post->get('marginRight', ''));
-        if (!in_array($v, ['', '0px'], true)) {
+        $v = self::sanitizeCssLength($post->get('marginRight', ''));
+        if ($v !== null && $v !== '0px') {
             $set->setMarginRight($v);
             $return = true;
         }
 
-        $v = trim($post->get('marginBottom', ''));
-        if (!in_array($v, ['', '0px'], true)) {
+        $v = self::sanitizeCssLength($post->get('marginBottom', ''));
+        if ($v !== null && $v !== '0px') {
             $set->setMarginBottom($v);
             $return = true;
         }
 
-        $v = trim($post->get('marginLeft', ''));
-        if (!in_array($v, ['', '0px'], true)) {
+        $v = self::sanitizeCssLength($post->get('marginLeft', ''));
+        if ($v !== null && $v !== '0px') {
             $set->setMarginLeft($v);
             $return = true;
         }
 
-        $v = trim($post->get('paddingTop', ''));
-        if (!in_array($v, ['', '0px'], true)) {
+        $v = self::sanitizeCssLength($post->get('paddingTop', ''), false);
+        if ($v !== null && $v !== '0px') {
             $set->setPaddingTop($v);
             $return = true;
         }
 
-        $v = trim($post->get('paddingRight', ''));
-        if (!in_array($v, ['', '0px'], true)) {
+        $v = self::sanitizeCssLength($post->get('paddingRight', ''), false);
+        if ($v !== null && $v !== '0px') {
             $set->setPaddingRight($v);
             $return = true;
         }
 
-        $v = trim($post->get('paddingBottom', ''));
-        if (!in_array($v, ['', '0px'], true)) {
+        $v = self::sanitizeCssLength($post->get('paddingBottom', ''), false);
+        if ($v !== null && $v !== '0px') {
             $set->setPaddingBottom($v);
             $return = true;
         }
 
-        $v = trim($post->get('paddingLeft', ''));
-        if (!in_array($v, ['', '0px'], true)) {
+        $v = self::sanitizeCssLength($post->get('paddingLeft', ''), false);
+        if ($v !== null && $v !== '0px') {
             $set->setPaddingLeft($v);
             $return = true;
         }
 
-        $v = trim($post->get('borderWidth', ''));
-        if (!in_array($v, ['', '0px'], true)) {
+        $v = self::sanitizeCssLength($post->get('borderWidth', ''), false);
+        if ($v !== null && $v !== '0px') {
             $set->setBorderWidth($v);
-            $set->setBorderStyle($post->get('borderStyle'));
-            $set->setBorderColor($post->get('borderColor'));
+            $set->setBorderStyle(self::sanitizeCssEnum($post->get('borderStyle'), ['', 'solid', 'dotted', 'dashed', 'double', 'groove', 'ridge', 'inset', 'outset']));
+            $set->setBorderColor(self::sanitizeCssColor($post->get('borderColor')));
             $return = true;
         }
 
-        $v = trim($post->get('borderRadius', ''));
-        if (!in_array($v, ['', '0px'], true)) {
+        $v = self::sanitizeCssLength($post->get('borderRadius', ''), false);
+        if ($v !== null && $v !== '0px') {
             $set->setBorderRadius($v);
             $return = true;
         }
 
-        $v = trim($post->get('alignment', ''));
-        if ($v !== '') {
+        $v = self::sanitizeCssEnum($post->get('alignment', ''), ['', 'left', 'center', 'right']);
+        if ($v !== null && $v !== '') {
             $set->setAlignment($v);
             $return = true;
         }
 
-        $v = $post->get('rotate');
-        if ($v) {
+        $v = self::sanitizeCssRotation($post->get('rotate'));
+        if ($v !== null && $v !== '0') {
             $set->setRotate($v);
             $return = true;
         }
 
         if ($post->has('boxShadowColor')) {
-            $boxShadowHorizontal = trim($post->get('boxShadowHorizontal', '')) ?: '0px';
-            $boxShadowVertical = trim($post->get('boxShadowVertical', '')) ?: '0px';
-            $boxShadowBlur = trim($post->get('boxShadowBlur', '')) ?: '0px';
-            $boxShadowSpread = trim($post->get('boxShadowSpread', '')) ?: '0px';
+            $boxShadowHorizontal = self::sanitizeCssLength($post->get('boxShadowHorizontal', '')) ?: '0px';
+            $boxShadowVertical = self::sanitizeCssLength($post->get('boxShadowVertical', '')) ?: '0px';
+            $boxShadowBlur = self::sanitizeCssLength($post->get('boxShadowBlur', ''), false) ?: '0px';
+            $boxShadowSpread = self::sanitizeCssLength($post->get('boxShadowSpread', '')) ?: '0px';
             $boxShadowInset = (bool) $post->get('boxShadowInset');
             if ($boxShadowHorizontal !== '0px' || $boxShadowVertical !== '0px' || $boxShadowBlur !== '0px' || $boxShadowSpread !== '0px') {
-                $set->setBoxShadowColor($post->get('boxShadowColor'));
+                $set->setBoxShadowColor(self::sanitizeCssColor($post->get('boxShadowColor')));
                 $set->setBoxShadowBlur($boxShadowBlur);
                 $set->setBoxShadowHorizontal($boxShadowHorizontal);
                 $set->setBoxShadowVertical($boxShadowVertical);

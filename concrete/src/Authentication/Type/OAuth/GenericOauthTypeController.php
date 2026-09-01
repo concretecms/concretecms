@@ -195,6 +195,16 @@ abstract class GenericOauthTypeController extends AuthenticationTypeController
         $user_id = $this->getBoundUserID($extractor->getUniqueId());
 
         if ($user_id && $user_id > 0) {
+            $userInfo = \UserInfo::getByID($user_id);
+            if (!$userInfo || !$userInfo->isActive()) {
+                throw new Exception(t($this->app->make('config')->get('concrete.user.deactivation.message')));
+            }
+            if ($this->app->make('config')->get('concrete.user.registration.validate_email') && !$userInfo->isValidated()) {
+                throw new Exception(t(
+                    'This account has not yet been validated. Please check the email associated with this account and follow the link it contains.'
+                ));
+            }
+
             $user = User::loginByUserID($user_id);
             if ($user && !$user->isError()) {
                 $this->app->make('session')->migrate();
