@@ -219,7 +219,7 @@ trait DashboardExpressEntryDetailsTrait
                 ->findOneById($this->request->request->get('entry_id'));
         }
 
-        if (null !== $form) {
+        if (null !== $form && null !== $entity && $form->getEntity()->getID() === $entity->getID()) {
             $express = $this->app->make('express');
             $controller = $express->getEntityController($entity);
             $processor = $controller->getFormProcessor();

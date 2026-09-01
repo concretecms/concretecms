@@ -199,7 +199,7 @@ EOT
                             </th>
                             <th><?php echo t('User') ?></th>
                             <?php foreach ($questions as $question): { ?>
-                                <th><?php echo $question['question'] ?></th>
+                                <th><?php echo $text->entities($question['question']) ?></th>
                             <?php }endforeach ?>
                             <th></th>
                 </tr>

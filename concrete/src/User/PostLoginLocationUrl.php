@@ -38,6 +38,13 @@ class PostLoginLocationUrl
         if ($url === '') {
             return '';
         }
+        if (strpos($url, '\\') !== false) {
+            // Browsers (WHATWG URL spec) treat backslashes as forward slashes when
+            // resolving a URL, but PHP's parser (RFC 3986) treats them as regular
+            // characters. That mismatch can be used to smuggle a host past the
+            // allowlist check below while a browser is redirected elsewhere.
+            return '';
+        }
 
         $redirectUrl = $this->createAbsoluteUrl($url);
         if ($redirectUrl === null) {

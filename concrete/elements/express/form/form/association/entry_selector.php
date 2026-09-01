@@ -3,7 +3,7 @@
 <div class="mb-3">
     <?php if ($view->supportsLabel()) {
     ?>
-        <label class="form-label" for="<?=$view->getControlID(); ?>"><?=$label; ?></label>
+        <label class="form-label" for="<?=$view->getControlID(); ?>"><?=h($label); ?></label>
     <?php
 } ?>
     <?php if ($view->isRequired()) { ?>
