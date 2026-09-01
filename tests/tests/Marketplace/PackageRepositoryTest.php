@@ -8,16 +8,20 @@ use Concrete\Core\File\Service\File;
 use Concrete\Core\Marketplace\Connection;
 use Concrete\Core\Marketplace\ConnectionInterface;
 use Concrete\Core\Marketplace\Exception\InvalidConnectResponseException;
+use Concrete\Core\Marketplace\Exception\InvalidDownloadResponseException;
 use Concrete\Core\Marketplace\Exception\InvalidPackageException;
 use Concrete\Core\Marketplace\Exception\PackageAlreadyExistsException;
 use Concrete\Core\Marketplace\Exception\UnableToConnectException;
+use Concrete\Core\Marketplace\Exception\UnableToPlacePackageException;
 use Concrete\Core\Marketplace\Model\RemotePackage;
 use Concrete\Core\Marketplace\PackageRepository;
 use Concrete\Core\Site\Service;
+use Concrete\Core\System\SystemUser;
 use Concrete\Tests\TestCase;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\BadResponseException;
 use GuzzleHttp\Exception\ClientException;
+use GuzzleHttp\Exception\ConnectException;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Response;
 use GuzzleHttp\Psr7\Uri;
@@ -54,6 +58,9 @@ class PackageRepositoryTest extends TestCase
     /** @var File&MockInterface */
     private $fileService;
 
+    /** @var SystemUser&MockInterface */
+    private $systemUser;
+
     /** @var Site&MockInterface */
     private $fakeSite;
 
@@ -67,9 +74,11 @@ class PackageRepositoryTest extends TestCase
         $this->config = \Mockery::spy(Repository::class);
         $this->siteService = \Mockery::spy(Service::class);
         $this->fileService = \Mockery::mock(File::class);
+        $this->systemUser = \Mockery::mock(SystemUser::class);
         $this->fakeSite = Mockery::spy(Site::class);
         $this->siteService->shouldReceive('getDefault')->andReturn($this->fakeSite);
         $this->fileService->shouldReceive('getTemporaryDirectory')->andReturn('/tmp');
+        $this->systemUser->shouldReceive('getCurrentUserName')->andReturn('www-data');
         $this->fakePackage = new RemotePackage(
             'foo',
             '',
@@ -93,6 +102,7 @@ class PackageRepositoryTest extends TestCase
             $this->config,
             $this->siteService,
             $this->fileService,
+            $this->systemUser,
             $baseUri,
             $paths
         );
@@ -138,18 +148,46 @@ class PackageRepositoryTest extends TestCase
 
         $connection = new Connection('public', 'private');
 
+        $before = new \DateTimeImmutable('', new \DateTimeZone('UTC'));
         /** @var Request $sha256 */
         $sha256 = $method->invoke($repository, new Request('GET', new Uri()), $connection);
         /** @var Request $sha512 */
         $sha512 = $method->invoke($repository, new Request('GET', new Uri()), $connection, 'sha512');
+        $after = new \DateTimeImmutable('', new \DateTimeZone('UTC'));
 
-        $now = new \DateTimeImmutable();
-        $time = $now->setTime((int) $now->format('h'), (int) $now->format('i'));
-        $sha256Nonce = 'sha256,' . hash_hmac('sha256', (string) $time->getTimestamp(), $connection->getPrivate());
-        $sha512Nonce = 'sha512,' . hash_hmac('sha512', (string) $time->getTimestamp(), $connection->getPrivate());
+        $this->assertContains(
+            $sha256->getUri()->getUserInfo(),
+            $this->expectedUserInfos('sha256', $connection, $before, $after)
+        );
+        $this->assertContains(
+            $sha512->getUri()->getUserInfo(),
+            $this->expectedUserInfos('sha512', $connection, $before, $after)
+        );
+    }
 
-        $this->assertEquals('public:' . $sha256Nonce, $sha256->getUri()->getUserInfo());
-        $this->assertEquals('public:' . $sha512Nonce, $sha512->getUri()->getUserInfo());
+    /**
+     * Build the user info values that authenticate() may have generated between two instants.
+     *
+     * The nonce is built from the current time truncated to the minute: if the minute changed while
+     * the nonce was being generated, both the previous and the next values are acceptable.
+     *
+     * @return string[]
+     */
+    private function expectedUserInfos(
+        string $algo,
+        ConnectionInterface $connection,
+        \DateTimeImmutable $before,
+        \DateTimeImmutable $after
+    ): array {
+        $result = [];
+        foreach ([$before, $after] as $moment) {
+            // Same truncation performed by PackageRepository::authenticate()
+            $time = $moment->setTime((int) $moment->format('h'), (int) $moment->format('i'));
+            $nonce = $algo . ',' . hash_hmac($algo, (string) $time->getTimestamp(), $connection->getPrivate());
+            $result[] = $connection->getPublic() . ':' . $nonce;
+        }
+
+        return array_values(array_unique($result));
     }
 
     public function testValidate(): void
@@ -395,6 +433,54 @@ class PackageRepositoryTest extends TestCase
 
         $this->assertTrue(file_exists(DIR_PACKAGES . '/foo/controller.php'));
         $this->assertEquals("worked\n", file_get_contents(DIR_PACKAGES . '/foo/controller.php'));
+    }
+
+    public function testDownloadPackageDirectoryNotWritable(): void
+    {
+        if (DIRECTORY_SEPARATOR === '\\') {
+            $this->markTestSkipped('Changing directory writability is not reliable on Windows.');
+        }
+
+        $originalPermissions = fileperms(DIR_PACKAGES) & 0777;
+        if (!@chmod(DIR_PACKAGES, 0555)) {
+            $this->markTestSkipped('Unable to change package directory permissions.');
+        }
+
+        clearstatcache(true, DIR_PACKAGES);
+        if (is_writable(DIR_PACKAGES)) {
+            @chmod(DIR_PACKAGES, $originalPermissions);
+            $this->markTestSkipped('The current process can still write to the package directory.');
+        }
+
+        $connection = new Connection('pub', 'priv');
+        $repository = $this->repository();
+        $e = null;
+
+        try {
+            $repository->download($connection, $this->fakePackage);
+        } catch (\Throwable $e) {
+        } finally {
+            @chmod(DIR_PACKAGES, $originalPermissions);
+        }
+
+        $this->assertInstanceOf(UnableToPlacePackageException::class, $e);
+        $this->assertStringContainsString('Unable to write to the package directory', $e->getMessage());
+        $this->assertStringContainsString(DIR_PACKAGES, $e->getMessage());
+        $this->assertStringContainsString('Current PHP process user:', $e->getMessage());
+        $this->assertStringContainsString('www-data', $e->getMessage());
+        $this->assertStringContainsString('shell or hosting control panel', $e->getMessage());
+    }
+  
+    public function testDownloadConnectionError(): void
+    {
+        $connection = new Connection('pub', 'priv');
+        $this->client->expects('send')->andThrow(new ConnectException('Connection timed out', new Request('GET', 'http://download/path')));
+
+        $this->expectException(InvalidDownloadResponseException::class);
+        $this->expectExceptionMessage('Unable to download the package from the marketplace.');
+
+        $repository = $this->repository();
+        $repository->download($connection, $this->fakePackage);
     }
 
     /**

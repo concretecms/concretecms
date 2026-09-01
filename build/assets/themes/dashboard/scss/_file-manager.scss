@@ -1,3 +1,7 @@
 @import 'file-manager/details';
 @import 'file-manager/download';
 @import 'file-manager/thumbnails';
+
+.ccm-file-manager-empty-folder {
+  min-height: 50vh;
+}

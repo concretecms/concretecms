@@ -2,10 +2,13 @@
 
 namespace Concrete\Controller\SinglePage\Dashboard\Extend;
 
+use Concrete\Core\Cache\OpCache;
 use Concrete\Core\Config\Repository\Repository;
 use Concrete\Core\Error\UserMessageException;
 use Concrete\Core\Foundation\Composer;
 use Concrete\Core\Localization\Localization;
+use Concrete\Core\Marketplace\Exception\UnableToPlacePackageException;
+use Concrete\Core\Marketplace\Exception\InvalidDownloadResponseException;
 use Concrete\Core\Marketplace\PackageRepositoryInterface;
 use Concrete\Core\Package\PackageService;
 use Concrete\Core\Page\Controller\DashboardPageController;
@@ -24,6 +27,18 @@ class Update extends DashboardPageController
             return;
         }
         $previousVersion = $packageController->getPackageEntity()->getPackageVersion();
+        $newVersion = $packageController->getPackageVersion();
+        if (version_compare($newVersion, $previousVersion, '<=')) {
+            OpCache::clear();
+            $this->error->add(t(
+                'Package "%1$s" was not updated because the loaded package controller still reports version %2$s. Try again.',
+                t($packageController->getPackageName()) ?: $packageController->getPackageHandle(),
+                $newVersion
+            ));
+
+            return;
+        }
+
         Localization::getInstance()->withContext(Localization::CONTEXT_SYSTEM, static function () use ($packageController) {
             $packageController->upgradeCoreData();
             $packageController->upgrade();
@@ -32,7 +47,7 @@ class Update extends DashboardPageController
             t('Package "%1$s" has been updated successfully from version %2$s to version %3$s.',
                 t($packageController->getPackageName()) ?: $packageController->getPackageHandle(),
                 $previousVersion,
-                $packageController->getPackageVersion()
+                $newVersion
             )
         );
     }
@@ -55,10 +70,21 @@ class Update extends DashboardPageController
         }
 
         $connection = $packageRepository->getConnection();
+        $localUpdates = $packageService->getLocalUpgradeablePackages();
+        $localUpdateHandles = array_map(static function ($package) {
+            return $package->getPackageHandle();
+        }, $localUpdates);
+        $remoteUpdates = array_values(array_filter(
+            $packageService->getRemotelyUpgradeablePackages(),
+            static function ($package) use ($localUpdateHandles) {
+                return !in_array($package->getPackageHandle(), $localUpdateHandles, true);
+            }
+        ));
+
         $this->set('connection', $connection);
         $this->set('remotePackages', $connection ? $packageRepository->getPackages($connection, true) : []);
-        $this->set('localUpdates', $packageService->getLocalUpgradeablePackages());
-        $this->set('remoteUpdates', $packageService->getRemotelyUpgradeablePackages());
+        $this->set('localUpdates', $localUpdates);
+        $this->set('remoteUpdates', $remoteUpdates);
     }
 
     public function do_update($pkgHandle = false)
@@ -120,8 +146,10 @@ class Update extends DashboardPageController
             }
 
             $packageRepository->download($connection, $mri, true);
-            $this->updatePackage($mri->handle);
-        } catch (UserMessageException $x) {
+            $this->set('autoUpgradePackageHandle', $mri->handle);
+            $this->set('autoUpgradePackageName', t($local->getPackageName()) ?: $local->getPackageHandle());
+            $this->set('autoUpgradePackageVersion', $mri->version);
+        } catch (UserMessageException|UnableToPlacePackageException|InvalidDownloadResponseException $x) {
             $this->error->add($x);
         }
         $this->view();

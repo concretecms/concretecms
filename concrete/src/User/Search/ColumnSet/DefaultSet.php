@@ -45,11 +45,20 @@ class DefaultSet extends ColumnSet
 
     public static function getFolderName($ui)
     {
+        return h(self::getFolderNamePlainText($ui));
+    }
+
+    /**
+     * Get the plain-text (unescaped) name of the user's home folder, to be used
+     * when exporting the home folder column (see HomeFolderColumn::getColumnExportValue()).
+     */
+    public static function getFolderNamePlainText($ui): string
+    {
         $app = Application::getFacadeApplication();
         /** @var Connection $db */
         $db = $app->make(Connection::class);
-        $folderName = (string)$db->fetchColumn("SELECT treeNodeName FROM TreeNodes WHERE treeNodeId = ? LIMIT 1", [$ui->getUserHomeFolderId()]);
-        return h($folderName);
+
+        return (string) $db->fetchColumn("SELECT treeNodeName FROM TreeNodes WHERE treeNodeId = ? LIMIT 1", [$ui->getUserHomeFolderId()]);
     }
 
     public function __construct()

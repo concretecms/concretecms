@@ -79,6 +79,10 @@ final class Composer
             // In ConcreteCMS zip distributions, the core is loaded by wikimedia/composer-merge-plugin
             return true;
         }
+        if (!is_file(DIR_BASE_CORE . '/' . DIRNAME_VENDOR . '/autoload.php')) {
+            // In ConcreteCMS zip distributions, the composer dependencies are installed in the concrete/vendor directory
+            return true;
+        }
         $rootComposerJson = \DIR_BASE . '/composer.json';
         if (is_file($rootComposerJson)) {
             // In ConcreteCMS zip distributions, composer.json is in the webroot (if not deleted by users)

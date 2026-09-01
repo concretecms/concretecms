@@ -12,6 +12,7 @@ use Concrete\Core\Page\Stack\Stack;
 use Concrete\Core\Permission\Checker;
 use Concrete\Core\Statistics\UsageTracker\TrackableInterface;
 use Concrete\Core\Utility\Service\Xml;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * The controller for the stack display block. This is an internal proxy block that is inserted when a stack's contents are displayed in a page.
@@ -160,8 +161,20 @@ class Controller extends BlockController implements TrackableInterface, UsesFeat
         }
 
         $controller = $b->getController();
+        $response = $controller->runAction($action, $parameters);
+        if ($response instanceof Response) {
+            return $response;
+        }
 
-        return $controller->runAction($action, $parameters);
+        $c = Page::getCurrentPage();
+        if (is_object($c) && !$c->isError()) {
+            $pageController = $c->getPageController();
+            if ($pageController) {
+                $controller->setPassThruBlockController($pageController);
+            }
+        }
+
+        return $response;
     }
 
     /**
@@ -321,8 +334,14 @@ class Controller extends BlockController implements TrackableInterface, UsesFeat
      */
     public function save($args)
     {
-        parent::save($args);
+        // stID must be assigned before calling parent::save(), because performSave() (invoked by
+        // parent::save()) tracks this controller via AggregateTracker/UsageTracker when it
+        // implements TrackableInterface. UsageTracker::trackBlocks() calls getStackID() to build
+        // a StackUsageRecord, and stack_id is part of that entity's composite primary key. If
+        // stID is still unset when tracking runs, Doctrine's EntityManager::merge() throws
+        // Doctrine\ORM\Exception\MissingIdentifierField. See #12531.
         $this->stID = $args['stID'];
+        parent::save($args);
     }
 
     /**

@@ -251,8 +251,8 @@ class Register extends PageController
                 $requestFormat = $_REQUEST['format'] ?? null;
                 if ($requestFormat != 'JSON') {
                     $postLogin = $this->app->make(PostLoginLocation::class);
-                    $postLoginUrl = $postLogin->getPostLoginUrl();
-                    if ($postLoginUrl !== '') {
+                    $sessionPostLoginUrl = $postLogin->getSessionPostLoginUrl();
+                    if ($sessionPostLoginUrl !== '') {
                         return $postLogin->getPostLoginRedirectResponse(true);
                     }
                     $this->redirect('/register', $redirectMethod, $rcID);

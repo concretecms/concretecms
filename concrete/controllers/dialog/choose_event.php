@@ -81,7 +81,7 @@ class ChooseEvent extends BackendInterfaceController
      */
     public function view()
     {
-        $this->requireAsset('fullcalendar');
+        $this->requireAsset('feature/calendar/frontend');
         $this->set('calendar', Calendar::getByID($this->request->query->get('caID', 0)));
     }
 }

@@ -119,13 +119,19 @@ class UsageTracker implements TrackerInterface
             if ($block instanceof Controller) {
                 $controller = $block;
                 $block = $controller->getBlockObject();
+            } else {
+                $controller = $block->getController();
             }
 
-            if ($block->getBlockTypeHandle() == BLOCK_HANDLE_STACK_PROXY) {
-                if (!$controller) {
-                    $controller = $block->getController();
-                }
-
+            // Whether a block is a stack-display proxy must be determined from the actual class of
+            // its resolved controller, not from Block::getBlockTypeHandle(). The handle is metadata
+            // carried on the Block object itself and can be stale relative to what getController()
+            // currently resolves (for example, when a Block instance is reused across several block
+            // types on a shared/cached collection). Trusting the handle alone previously led to
+            // calling the stack-only getStackID() method on unrelated controllers, e.g.:
+            //   Call to undefined method Concrete\Block\File\Controller::getStackID()
+            //   Call to undefined method Concrete\Block\HeroImage\Controller::getStackID()
+            if ($controller instanceof Controller) {
                 $this->persist(
                     $controller->getStackID(),
                     $collection->getCollectionID(),

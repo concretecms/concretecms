@@ -1,19 +1,21 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Concrete\Core\File;
 
-use Concrete\Core\File\StorageLocation\StorageLocationFactory;
+use Concrete\Core\Database\Query\LikeBuilder;
 use Concrete\Core\Search\ItemList\Database\AttributedItemList as DatabaseItemList;
 use Concrete\Core\Search\ItemList\Pager\Manager\FileListPagerManager;
 use Concrete\Core\Search\ItemList\Pager\PagerProviderInterface;
 use Concrete\Core\Search\ItemList\Pager\QueryString\VariableFactory;
 use Concrete\Core\Search\Pagination\PaginationProviderInterface;
 use Concrete\Core\Search\StickyRequest;
-use Concrete\Core\User\User;
 use Concrete\Core\Support\Facade\Application;
-use FileAttributeKey;
+use Concrete\Core\User\User;
 use Pagerfanta\Adapter\DoctrineDbalAdapter;
-use Exception;
+
+defined('C5_EXECUTE') or die('Access Denied.');
 
 class FileList extends DatabaseItemList implements PagerProviderInterface, PaginationProviderInterface
 {
@@ -37,6 +39,15 @@ class FileList extends DatabaseItemList implements PagerProviderInterface, Pagin
         'fv.fvSize',
         'totalDownloads',
     ];
+
+    /**
+     * The number of keywords used so far by the filterByKeywords method.
+     *
+     * @var int
+     *
+     * @see \Concrete\Core\File\FileList::filterByKeywords()
+     */
+    private $keywordsCounter = 0;
 
     public function __construct(?StickyRequest $req = null)
     {
@@ -83,7 +94,8 @@ class FileList extends DatabaseItemList implements PagerProviderInterface, Pagin
             ->from('Files', 'f')
             ->innerJoin('f', 'FileVersions', 'fv', 'f.fID = fv.fID and fv.fvIsApproved = 1')
             ->leftJoin('f', 'FileSearchIndexAttributes', 'fsi', 'f.fID = fsi.fID')
-            ->leftJoin('f', 'Users', 'u', 'f.uID = u.uID');
+            ->leftJoin('f', 'Users', 'u', 'f.uID = u.uID')
+        ;
     }
 
     public function getTotalResults()
@@ -95,23 +107,19 @@ class FileList extends DatabaseItemList implements PagerProviderInterface, Pagin
                 'groupBy',
                 'orderBy',
             ])->select('count(distinct f.fID)')->setMaxResults(1)->execute()->fetchColumn();
-        } else {
-            return -1; // unknown
         }
+
+        return -1; // unknown
     }
 
     public function getPaginationAdapter()
     {
-        $adapter = new DoctrineDbalAdapter($this->deliverQueryObject(), function ($query) {
+        return new DoctrineDbalAdapter($this->deliverQueryObject(), static function ($query) {
             $query->resetQueryParts(['groupBy', 'orderBy'])->select('count(distinct f.fID)')->setMaxResults(1);
         });
-
-        return $adapter;
     }
 
     /**
-     * @param $queryRow
-     *
      * @return \Concrete\Core\Entity\File\File
      */
     public function getResult($queryRow)
@@ -127,9 +135,9 @@ class FileList extends DatabaseItemList implements PagerProviderInterface, Pagin
         if (isset($this->permissionsChecker)) {
             if ($this->permissionsChecker === -1) {
                 return true;
-            } else {
-                return call_user_func_array($this->permissionsChecker, [$mixed]);
             }
+
+            return call_user_func_array($this->permissionsChecker, [$mixed]);
         }
 
         $fp = new \Permissions($mixed);
@@ -169,13 +177,14 @@ class FileList extends DatabaseItemList implements PagerProviderInterface, Pagin
      *
      * @param \Concrete\Core\Entity\File\StorageLocation\StorageLocation|int $storageLocation storage location object
      */
-    public function filterByStorageLocation($storageLocation) {
+    public function filterByStorageLocation($storageLocation)
+    {
         if ($storageLocation instanceof \Concrete\Core\Entity\File\StorageLocation\StorageLocation) {
             $this->filterByStorageLocationID($storageLocation->getID());
         } elseif (!is_object($storageLocation)) {
             $this->filterByStorageLocationID($storageLocation);
         } else {
-            throw new Exception(t('Invalid file storage location.'));
+            throw new \Exception(t('Invalid file storage location.'));
         }
     }
 
@@ -199,22 +208,36 @@ class FileList extends DatabaseItemList implements PagerProviderInterface, Pagin
      */
     public function filterByKeywords($keywords)
     {
-        $expressions = [
-            $this->query->expr()->like('fv.fvFilename', ':keywords'),
-            $this->query->expr()->like('fv.fvDescription', ':keywords'),
-            $this->query->expr()->like('fv.fvTitle', ':keywords'),
-            $this->query->expr()->like('fv.fvTags', ':keywords'),
-            $this->query->expr()->eq('uName', ':keywords'),
-        ];
-
-        $keys = FileAttributeKey::getSearchableIndexedList();
-        foreach ($keys as $ak) {
-            $cnt = $ak->getController();
-            $expressions[] = $cnt->searchKeywords($keywords, $this->query);
+        $words = preg_split('/\s+/', (string) $keywords, -1, PREG_SPLIT_NO_EMPTY);
+        if ($words === []) {
+            return;
         }
+        $words = array_values(array_unique(array_map('mb_strtolower', $words)));
+        /** @var LikeBuilder $likeBuilder */
+        $likeBuilder = Application::getFacadeApplication()->make(LikeBuilder::class);
         $expr = $this->query->expr();
-        $this->query->andWhere(call_user_func_array([$expr, 'orX'], $expressions));
-        $this->query->setParameter('keywords', '%' . $keywords . '%');
+        $attributeKeys = \FileAttributeKey::getSearchableIndexedList();
+        foreach ($words as $word) {
+            // filterByKeywords may be called more than once: every word must have its own parameter
+            $parameter = 'keywords_' . $this->keywordsCounter++;
+            $expressions = [
+                $expr->like('fv.fvFilename', ":{$parameter}"),
+                $expr->like('fv.fvDescription', ":{$parameter}"),
+                $expr->like('fv.fvTitle', ":{$parameter}"),
+                $expr->like('fv.fvTags', ":{$parameter}"),
+                $expr->like('u.uName', ":{$parameter}"),
+            ];
+            foreach ($attributeKeys as $attributeKey) {
+                $attributeExpression = (string) $attributeKey->getController()->searchKeywords($word, $this->query);
+                if ($attributeExpression !== '') {
+                    // the attribute controllers build their expressions around the :keywords placeholder
+                    $expressions[] = preg_replace('/:keywords\b/', ":{$parameter}", $attributeExpression);
+                }
+            }
+            // every word must be found, but not necessarily in the same field as the other ones
+            $this->query->andWhere(call_user_func_array([$expr, 'orX'], $expressions));
+            $this->query->setParameter($parameter, $likeBuilder->escapeForLike($word));
+        }
     }
 
     public function filterBySet($fs)
@@ -262,8 +285,11 @@ class FileList extends DatabaseItemList implements PagerProviderInterface, Pagin
      */
     public function filterByDateAdded($date, $comparison = '=')
     {
-        $this->query->andWhere($this->query->expr()->comparison('f.fDateAdded', $comparison,
-            $this->query->createNamedParameter($date)));
+        $this->query->andWhere($this->query->expr()->comparison(
+            'f.fDateAdded',
+            $comparison,
+            $this->query->createNamedParameter($date)
+        ));
     }
 
     /**

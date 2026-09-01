@@ -27,7 +27,7 @@ jobs:
           ccm-service start db
       -
         name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v7
       -
         name: Set owner
         run: chown -R www-data:www-data "$GITHUB_WORKSPACE"

@@ -403,8 +403,12 @@ class Controller extends BlockController implements UsesFeatureInterface
                 break;
 
             case 'between':
-                $start = "{$this->filterDateStart} 00:00:00";
-                $end = "{$this->filterDateEnd} 23:59:59";
+                if (!empty($this->filterDateStart)) {
+                    $start = "{$this->filterDateStart} 00:00:00";
+                }
+                if (!empty($this->filterDateEnd)) {
+                    $end = "{$this->filterDateEnd} 23:59:59";
+                }
                 break;
 
             case 'all':
@@ -474,7 +478,7 @@ class Controller extends BlockController implements UsesFeatureInterface
 
         $this->list->filterByExcludePageList(false);
 
-        if ((int) ($this->cParentID) != 0) {
+        if ((int) ($this->cParentID) !== 0 || (int) ($this->cThis) !== 0 || (int) ($this->cThisParent) !== 0) {
             $cParentID = ($this->cThis) ? $this->cID : (($this->cThisParent) ? $this->cPID : $this->cParentID);
             if ($this->includeAllDescendents) {
                 $this->list->filterByPath(Page::getByID($cParentID)->getCollectionPath());

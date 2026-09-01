@@ -20,11 +20,12 @@ use Concrete\Core\Marketplace\Model\RemotePackage;
 use Concrete\Core\Marketplace\Model\ValidateResult;
 use Concrete\Core\Marketplace\Update\UpdatedFieldInterface;
 use Concrete\Core\Site\Service;
+use Concrete\Core\System\SystemUser;
 use Concrete\Core\Url\Url;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\BadResponseException;
-use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Exception\ConnectException;
+use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Uri;
 use GuzzleHttp\RequestOptions;
@@ -50,6 +51,8 @@ final class PackageRepository implements PackageRepositoryInterface
     private $paths;
     /** @var File */
     private $fileHelper;
+    /** @var SystemUser */
+    private $systemUser;
 
     public function __construct(
         Client $client,
@@ -58,6 +61,7 @@ final class PackageRepository implements PackageRepositoryInterface
         Repository $databaseConfig,
         Service $siteService,
         File $fileHelper,
+        SystemUser $systemUser,
         string $baseUri,
         array $paths
     ) {
@@ -67,6 +71,7 @@ final class PackageRepository implements PackageRepositoryInterface
         $this->databaseConfig = $databaseConfig;
         $this->siteService = $siteService;
         $this->fileHelper = $fileHelper;
+        $this->systemUser = $systemUser;
         $this->baseUri = $baseUri;
         $this->paths = $paths;
     }
@@ -130,6 +135,7 @@ final class PackageRepository implements PackageRepositoryInterface
         if (!$overwrite && file_exists(DIR_PACKAGES . '/' . $package->handle)) {
             throw new PackageAlreadyExistsException();
         }
+        $this->assertPackageDirectoryWritable();
 
         // Try to start the download
         try {
@@ -139,8 +145,8 @@ final class PackageRepository implements PackageRepositoryInterface
                 RequestOptions::ALLOW_REDIRECTS => true,
                 RequestOptions::SINK => $output,
             ]);
-        } catch (ClientException $e) {
-            throw new InvalidDownloadResponseException($e->getMessage());
+        } catch (GuzzleException $e) {
+            throw new InvalidDownloadResponseException(t('Unable to download the package from the marketplace.'), 0, $e);
         }
 
         // Unzip the archive
@@ -161,7 +167,15 @@ final class PackageRepository implements PackageRepositoryInterface
         $packageDir = DIR_PACKAGES . '/' . $package->handle;
         if ($overwrite && file_exists($packageDir)) {
             if (!$this->rename($packageDir, $packageDir . '.old')) {
-                throw new UnableToPlacePackageException();
+                throw $this->createUnableToPlacePackageException(
+                    t(
+                        'Unable to back up the existing package directory from "%1$s" to "%2$s".',
+                        $packageDir,
+                        $packageDir . '.old'
+                    ),
+                    $packageDir,
+                    $packageDir . '.old'
+                );
             }
         }
 
@@ -169,7 +183,15 @@ final class PackageRepository implements PackageRepositoryInterface
             if ($overwrite) {
                 $this->rename($packageDir . '.old', $packageDir);
             }
-            throw new UnableToPlacePackageException();
+            throw $this->createUnableToPlacePackageException(
+                t(
+                    'Unable to move the downloaded package directory from "%1$s" to "%2$s".',
+                    $unzipPath . '/' . $package->handle,
+                    $packageDir
+                ),
+                $unzipPath . '/' . $package->handle,
+                $packageDir
+            );
         }
 
         $this->rimraf($package->handle . '.old');
@@ -193,6 +215,44 @@ final class PackageRepository implements PackageRepositoryInterface
         // Remove the old directory
         $this->fileHelper->removeAll($old, true);
         return true;
+    }
+
+    private function assertPackageDirectoryWritable(): void
+    {
+        if (!is_dir(DIR_PACKAGES)) {
+            throw $this->createUnableToPlacePackageException(
+                t('The package directory "%s" does not exist.', DIR_PACKAGES),
+                DIR_PACKAGES
+            );
+        }
+        if (!is_writable(DIR_PACKAGES)) {
+            throw $this->createUnableToPlacePackageException(
+                t('Unable to write to the package directory "%s".', DIR_PACKAGES),
+                DIR_PACKAGES
+            );
+        }
+    }
+
+    private function createUnableToPlacePackageException(
+        string $message,
+        string $sourcePath,
+        ?string $destinationPath = null
+    ): UnableToPlacePackageException {
+        $lines = [$message];
+        if ($destinationPath === null) {
+            $lines[] = t('Path: %s', $sourcePath);
+        } else {
+            $lines[] = t('Source: %s', $sourcePath);
+            $lines[] = t('Destination: %s', $destinationPath);
+        }
+        $username = $this->systemUser->getCurrentUserName();
+        if ($username === '') {
+            $username = tc('UserName', 'unknown');
+        }
+        $lines[] = t('Current PHP process user: %s', $username);
+        $lines[] = t('Update filesystem permissions from your shell or hosting control panel, then try again.');
+
+        return new UnableToPlacePackageException(implode("\n", $lines));
     }
 
     protected function rimraf(string $handle)
@@ -336,6 +396,10 @@ final class PackageRepository implements PackageRepositoryInterface
         string $algo = 'sha256'
     ): RequestInterface {
         $now = new \DateTimeImmutable('', new \DateTimeZone('UTC'));
+        // Beware: 'h' is the 12-hour format (not 'H', the 24-hour one), so $time is not simply the
+        // current time truncated to the minute: from 13:00 to 00:59 UTC it's shifted by 12 hours, and
+        // the same nonce is generated twice a day (for instance at 03:30 and at 15:30 UTC).
+        // This must be kept in sync with the way the marketplace server recomputes the nonce.
         $time = $now->setTime((int) $now->format('h'), (int) $now->format('i'));
         $nonce = $algo . ',' . hash_hmac($algo, (string) $time->getTimestamp(), $connection->getPrivate());
 

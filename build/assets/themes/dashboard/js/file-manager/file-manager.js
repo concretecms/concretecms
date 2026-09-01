@@ -75,6 +75,10 @@
         ConcreteEvent.subscribe('ConcreteTreeDeleteTreeNode', function() {
             window.location.reload()
         })
+        // File or folder moved
+        ConcreteEvent.subscribe('FolderUpdateRequestComplete', function() {
+            window.location.reload()
+        })
     }
 
     ConcreteFileManagerTable.prototype.disableSelectAllOnInvalidNodeTypeSelection = function() {
@@ -99,6 +103,7 @@
 
     ConcreteFileManagerTable.prototype.setupFileUploads = function() {
         var my = this
+        var $uploadTarget = my.$element.parent()
         my.fileUploaderOptions = {
             folderID: function() {
                 return my.options.folderID
@@ -106,7 +111,11 @@
             dropzone: my.options.dropzone
         }
 
-        my.$element.parent().concreteFileUploader(my.fileUploaderOptions);
+        if (!my.$element.find('tbody tr').length) {
+            $uploadTarget.addClass('ccm-file-manager-empty-folder')
+        }
+
+        $uploadTarget.concreteFileUploader(my.fileUploaderOptions);
     };
 
     ConcreteFileManagerTable.prototype.setupFolderActions = function() {

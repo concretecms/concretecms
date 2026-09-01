@@ -385,8 +385,6 @@ final class FixerRegistry
             'short_scalar_cast' => true,
             // Converts explicit variables in double-quoted strings and heredoc syntax from simple to complex format (`${` to `{$`).
             'simple_to_complex_string_variable' => true,
-            // A return statement wishing to return `void` should not return `null`.
-            'simplified_null_return' => true,
             // A PHP file without end tag must always end with a single empty line feed.
             'single_blank_line_at_eof' => true,
             // There MUST NOT be more than one property or constant declared per statement.
@@ -495,10 +493,13 @@ final class FixerRegistry
             // Force strict types declaration in all files.
             ->registerFixer(
                 'declare_strict_types',
-                ['preserve_existing_declaration' => true],
+                ['strategy' => 'add_when_missing'],
                 static function (int $fileFlags, string $minimumPHPVersion) {
                     if ($fileFlags & FileFlag::ENTRYPOINT || version_compare($minimumPHPVersion, '7.0') < 0) {
-                        return false;
+                        return self::createConfigurableFixer(
+                            Fixer\Strict\DeclareStrictTypesFixer::class,
+                            ['strategy' => 'remove'],
+                        );
                     }
 
                     return true;
@@ -644,8 +645,8 @@ final class FixerRegistry
                 'modernize_strpos',
                 true,
                 static function (int $fileFlags, string $minimumPHPVersion) {
-                    // str_contains, str_starts_with, ... require PHP 8.0, but they are available in ConcreteCMS v8+ via polyfills
-                    if ($fileFlags & FileFlag::ENTRYPOINT || version_compare($minimumPHPVersion, '5.5') < 0) {
+                    // str_contains, str_starts_with, ... require PHP 8.0
+                    if ($fileFlags & FileFlag::ENTRYPOINT || version_compare($minimumPHPVersion, '8.0') < 0) {
                         return false;
                     }
 
@@ -799,6 +800,21 @@ final class FixerRegistry
                         return false;
                     }
 
+                    return true;
+                },
+            )
+            // A return statement wishing to return `void` should not return `null`.
+            ->registerFixer(
+                'simplified_null_return',
+                true,
+                static function (int $fileFlags, string $minimumPHPVersion) {
+                    // Before PHP 7.0 it's not possible to declare the function return type,
+                    // but developers may want to explicitly return null so that future versions
+                    // will work when adding support for newer PHP versions
+                    if (version_compare($minimumPHPVersion, '7.0') < 0) {
+                        return false;
+                    }
+                    
                     return true;
                 },
             )

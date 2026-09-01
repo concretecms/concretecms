@@ -3,11 +3,13 @@ namespace Concrete\Core\User\Search\ColumnSet\Column;
 
 use Concrete\Core\Database\Query\AndWhereNotExistsTrait;
 use Concrete\Core\Search\Column\Column;
+use Concrete\Core\Search\Column\ColumnExportableInterface;
 use Concrete\Core\Search\Column\ColumnInterface;
 use Concrete\Core\Search\Column\PagerColumnInterface;
 use Concrete\Core\Search\ItemList\Pager\PagerProviderInterface;
+use Concrete\Core\User\Search\ColumnSet\DefaultSet;
 
-class HomeFolderColumn extends Column implements PagerColumnInterface
+class HomeFolderColumn extends Column implements PagerColumnInterface, ColumnExportableInterface
 {
 
     use AndWhereNotExistsTrait;
@@ -35,6 +37,11 @@ class HomeFolderColumn extends Column implements PagerColumnInterface
         $query->setParameter('sortName', $mixed->getUserHomeFolderId());
         $query->setParameter('sortID', $mixed->getUserID());
         $this->andWhereNotExists($query, $where);
+    }
+
+    public function getColumnExportValue($ui)
+    {
+        return DefaultSet::getFolderNamePlainText($ui);
     }
 
 }

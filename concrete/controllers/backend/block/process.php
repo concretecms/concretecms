@@ -158,7 +158,7 @@ class Process extends AbstractController
         }
         if ($a->isGlobalArea()) {
             $ax = STACKS_AREA_NAME;
-            $cx = Stack::getByName($arHandle);
+            $cx = Stack::getGlobalAreaStackFromName($c, $arHandle);
             if (!$cx || $cx->isError()) {
                 throw new UserMessageException(t('Unable to find the stack specified.'));
             }

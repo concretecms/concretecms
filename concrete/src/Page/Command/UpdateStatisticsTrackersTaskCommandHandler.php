@@ -30,6 +30,8 @@ class UpdateStatisticsTrackersTaskCommandHandler implements OutputAwareInterface
         $page = Page::getByID($command->getPageID());
 
         $tracker = $this->app->make('statistics/tracker');
+
+        $tracker->forget($page);
         $tracker->track($page);
 
         $this->output->write(t('Updating tracker for page ID: %s', $command->getPageID()));

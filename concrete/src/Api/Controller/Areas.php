@@ -36,7 +36,7 @@ class Areas extends ApiController implements ApplicationAwareInterface
      *     operationId="addBlockToPageArea",
      *     summary="Adds a block to a page area.",
      *     security={
-     *         {"authorization": {"pages:areas:add_blocks"}}
+     *         {"authorization": {"pages:areas:add_block"}}
      *     },
      *     @OA\Parameter(
      *         name="pageID",
@@ -103,7 +103,7 @@ class Areas extends ApiController implements ApplicationAwareInterface
      *     operationId="deleteBlockFromPageArea",
      *     summary="Deletes a block from a page area.",
      *     security={
-     *         {"authorization": {"pages:areas:delete_blocks"}}
+     *         {"authorization": {"pages:areas:delete_block"}}
      *     },
      *     @OA\Parameter(
      *         name="pageID",
@@ -190,7 +190,7 @@ class Areas extends ApiController implements ApplicationAwareInterface
      *     operationId="updateBlockInPageArea",
      *     summary="Updates a block within a page area.",
      *     security={
-     *         {"authorization": {"pages:areas:update_blocks"}}
+     *         {"authorization": {"pages:areas:update_block"}}
      *     },
      *     @OA\Parameter(
      *         name="pageID",

@@ -18,7 +18,6 @@ use Concrete\Core\Navigation\Breadcrumb\Dashboard\DashboardUserBreadcrumbFactory
 use Concrete\Core\Page\Controller\DashboardPageController;
 use Concrete\Core\Page\Page;
 use Concrete\Core\Permission\Checker;
-use Concrete\Core\Url\Url;
 use Concrete\Core\User\Command\UpdateUserAvatarCommand;
 use Concrete\Core\User\Component\AvatarCropperInstanceFactory;
 use Concrete\Core\User\EditResponse as UserEditResponse;
@@ -105,6 +104,21 @@ class Search extends DashboardPageController
     }
 
     /**
+     * Get the query parameters to forward to the CSV export action.
+     *
+     * @return array
+     */
+    protected function getExportQueryParameters()
+    {
+        $query = $this->request->query->all();
+        if ($this->getAction() === 'preset') {
+            $query['presetID'] = array_first($this->getParameters());
+        }
+
+        return $query;
+    }
+
+    /**
      * @param Result $result
      */
     protected function renderSearchResult(Result $result)
@@ -113,7 +127,7 @@ class Search extends DashboardPageController
         $headerSearch = $this->getHeaderSearch();
         $headerMenu->getElementController()->setQuery($result->getQuery());
         $headerSearch->getElementController()->setQuery($result->getQuery());
-        $query = Url::createFromServer($_SERVER)->getQuery();
+        $query = $this->getExportQueryParameters();
 
         $exportArgs = [$this->getPageObject()->getCollectionPath(), 'csv_export'];
         if ($this->getAction() == 'advanced_search') {
@@ -121,7 +135,6 @@ class Search extends DashboardPageController
         }
         if ($this->getAction() == 'preset') {
             $exportArgs[] = 'preset';
-            $query->set(['presetID' => array_first($this->getParameters())]);
         }
         $exportURL = $this->app->make('url/resolver/path')->resolve($exportArgs);
         $exportURL = $exportURL->setQuery($query);
@@ -255,29 +268,7 @@ class Search extends DashboardPageController
             case 'activate':
                 $this->setupUser($uID);
                 if ($this->canActivateUser && $this->app->make('helper/validation/token')->validate()) {
-                    if ($this->user->triggerActivate()) {
-                        $mh = $this->app->make('helper/mail');
-                        $mh->to($this->user->getUserEmail());
-                        $config = $this->app->make('config');
-                        if ($config->get('concrete.email.register_notification.address')) {
-                            if ($config->get('concrete.email.register_notification.name')) {
-                                $fromName = $config->get('concrete.email.register_notification.name');
-                            } else {
-                                $fromName = t('Website Registration Notification');
-                            }
-                            $mh->from($config->get('concrete.email.register_notification.address'), $fromName);
-                        } else {
-                            $mh->from($config->get('concrete.email.default.address'), t('Website Registration Notification'));
-                        }
-                        $mh->addParameter('uID', $this->user->getUserID());
-                        $mh->addParameter('user', $this->user);
-                        $mh->addParameter('uName', $this->user->getUserName());
-                        $mh->addParameter('uEmail', $this->user->getUserEmail());
-                        $mh->addParameter('siteName', $this->app->make('site')->getSite()->getSiteName());
-                        $mh->load('user_registered_approval_complete');
-                        $mh->sendMail();
-                    }
-
+                    $this->user->triggerActivate();
                     $this->redirect('/dashboard/users/search', 'edit', $this->user->getUserID(), 'activated');
                 }
                 break;
@@ -654,6 +645,7 @@ class Search extends DashboardPageController
                         UserExporter::class,
                         [
                             'writer' => $this->app->make(WriterFactory::class)->createFromPath('php://output', 'w'),
+                            'columns' => $result->getListColumns()->getColumns(),
                         ]
                     );
                     echo $bom;

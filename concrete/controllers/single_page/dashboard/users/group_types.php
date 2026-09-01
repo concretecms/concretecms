@@ -44,16 +44,26 @@ class GroupTypes extends DashboardPageController
 
     public function remove($groupTypeId = null)
     {
+        if (!$this->request->isMethod('POST')) {
+            return $this->responseFactory->notFound();
+        }
+
+        if (!$this->token->validate('save_group_type')) {
+            $this->error->add($this->token->getErrorMessage());
+        }
+
         $groupType = GroupType::getByID($groupTypeId);
 
         if ($groupType === false) {
             return $this->responseFactory->notFound(t("Invalid Group Type."));
         }
 
-        try {
-            $groupType->delete();
-        } catch (\Exception $e) {
-            $this->error->add($e->getMessage());
+        if (!$this->error->has()) {
+            try {
+                $groupType->delete();
+            } catch (\Exception $e) {
+                $this->error->add($e->getMessage());
+            }
         }
 
         $this->set('groupType', $groupType);

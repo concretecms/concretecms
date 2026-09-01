@@ -59,7 +59,7 @@ final class AuthenticationTypeTest extends TestCase
         $this->setFullyDefinedController();
 
         $this->templateVariantLocator->expects('getRecord')
-            ->times(2)
+            ->times(3)
             ->with('authentication/test_auth_type/form.php')
             ->andReturn($this->record);
         $this->templateService->expects('renderTemplate')
@@ -90,7 +90,7 @@ final class AuthenticationTypeTest extends TestCase
         };
 
         $this->templateVariantLocator->expects('getRecord')
-            ->once()
+            ->times(2)
             ->with('authentication/test_auth_type/change_password.php')
             ->andReturn($this->record);
         $this->templateService->expects('renderTemplate')
@@ -144,7 +144,7 @@ final class AuthenticationTypeTest extends TestCase
         $this->setViewController();
 
         $this->templateVariantLocator->expects('getRecord')
-            ->times(2)
+            ->times(3)
             ->with('authentication/test_auth_type/form.php')
             ->andReturn($this->record);
         $this->templateService->expects('renderTemplate')
@@ -164,21 +164,21 @@ final class AuthenticationTypeTest extends TestCase
         $this->authenticationType->templateVariantLocator = null;
 
         $location = Mockery::mock(LocationInterface::class);
-        $location->shouldReceive('setFilesystem')->twice();
+        $location->shouldReceive('setFilesystem')->times(3);
         $location->shouldReceive('contains')
             ->with('authentication/test_auth_type/form.html.twig')
-            ->twice()
+            ->times(3)
             ->andReturn(false);
         $location->shouldReceive('contains')
             ->with('authentication/test_auth_type/form.php')
-            ->twice()
+            ->times(3)
             ->andReturn($this->record);
 
         $this->fileLocator->shouldReceive('getFilesystem')
-            ->twice()
+            ->times(3)
             ->andReturn(new Filesystem());
         $this->fileLocator->shouldReceive('getSearchLocations')
-            ->twice()
+            ->times(3)
             ->andReturn([$location]);
         $this->templateService->shouldReceive('renderTemplate')->andReturn('foo');
 

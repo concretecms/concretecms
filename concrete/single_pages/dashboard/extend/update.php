@@ -9,6 +9,12 @@ $localUpdates = $localUpdates ?? [];
 $remoteUpdates = $remoteUpdates ?? [];
 /** @var \Concrete\Core\Marketplace\Model\RemotePackage[] $remotePackages */
 $remotePackages = $remotePackages ?? [];
+/** @var string|null $autoUpgradePackageHandle */
+$autoUpgradePackageHandle = $autoUpgradePackageHandle ?? null;
+/** @var string|null $autoUpgradePackageName */
+$autoUpgradePackageName = $autoUpgradePackageName ?? null;
+/** @var string|null $autoUpgradePackageVersion */
+$autoUpgradePackageVersion = $autoUpgradePackageVersion ?? null;
 
 defined('C5_EXECUTE') or die('Access Denied.');
 $valt = Loader::helper('validation/token');
@@ -28,7 +34,22 @@ if (!$tp->canInstallPackages()) {
     </p>
     <?php
 } else {
-    if (count($localUpdates) == 0 && count($remoteUpdates) == 0) {
+    if ($autoUpgradePackageHandle !== null) {
+        ?>
+        <div class="alert alert-info">
+            <?= h(t('Completing update for package "%1$s" to version %2$s. Please wait...', $autoUpgradePackageName, $autoUpgradePackageVersion)) ?>
+        </div>
+        <form method="post" action="<?= View::url('/dashboard/extend/update', 'do_update', $autoUpgradePackageHandle) ?>" id="ccm-update-addons-auto-upgrade">
+            <?= $valt->output('update_addon') ?>
+            <noscript>
+                <button type="submit" class="btn btn-primary"><?= t('Complete Update') ?></button>
+            </noscript>
+        </form>
+        <script>
+        document.getElementById('ccm-update-addons-auto-upgrade').submit();
+        </script>
+        <?php
+    } elseif (count($localUpdates) == 0 && count($remoteUpdates) == 0) {
         ?>
 			<p><?=t('No updates for your add-ons are available.')?></p>
         <?php

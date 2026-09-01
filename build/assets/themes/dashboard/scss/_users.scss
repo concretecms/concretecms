@@ -2,6 +2,24 @@
   margin: 0 auto 0 auto;
 }
 
+.ccm-user-membership-chain {
+  line-height: $line-height-base;
+
+  .badge {
+    -webkit-box-decoration-break: clone;
+    box-decoration-break: clone;
+    display: inline;
+    padding-bottom: .2em;
+    padding-top: .2em;
+  }
+}
+
+@media (max-width: map-get($grid-breakpoints, "md") - 1px) {
+  .ccm-user-memberships-indirect {
+    min-width: 20rem;
+  }
+}
+
 div.ccm-user-detail-basics {
   display: flex;
 
