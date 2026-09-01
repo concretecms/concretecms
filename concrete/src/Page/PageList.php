@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Concrete\Core\Page;
 
 use Concrete\Core\Entity\Block\BlockType\BlockType;
@@ -19,23 +21,33 @@ use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\User\User;
 use Pagerfanta\Adapter\DoctrineDbalAdapter;
 
+defined('C5_EXECUTE') or die('Access Denied.');
+
 /**
  * An object that allows a filtered list of pages to be returned.
  */
 class PageList extends DatabaseItemList implements PagerProviderInterface, PaginationProviderInterface
 {
-    const PAGE_VERSION_ACTIVE = 1;
-    const PAGE_VERSION_RECENT = 2;
-    const PAGE_VERSION_RECENT_UNAPPROVED = 3;
-    const PAGE_VERSION_SCHEDULED = 4;
+    public const PAGE_VERSION_ACTIVE = 1;
 
-    const SITE_TREE_CURRENT = -1;
-    const SITE_TREE_ALL = 0;
+    public const PAGE_VERSION_RECENT = 2;
 
-    /** @var \Closure | integer | null */
+    public const PAGE_VERSION_RECENT_UNAPPROVED = 3;
+
+    public const PAGE_VERSION_SCHEDULED = 4;
+
+    public const SITE_TREE_CURRENT = -1;
+
+    public const SITE_TREE_ALL = 0;
+
+    /**
+     * @var \Closure|int|null
+     */
     protected $permissionsChecker;
 
-    /** @var Tree */
+    /**
+     * @var Tree
+     */
     protected $siteTree = self::SITE_TREE_CURRENT;
 
     /**
@@ -130,9 +142,6 @@ class PageList extends DatabaseItemList implements PagerProviderInterface, Pagin
         $this->siteTree = self::SITE_TREE_CURRENT;
     }
 
-    /**
-     * @param bool $includeSystemPages
-     */
     public function includeSystemPages()
     {
         $this->includeSystemPages = true;
@@ -197,7 +206,8 @@ class PageList extends DatabaseItemList implements PagerProviderInterface, Pagin
                 ->leftJoin('p', 'CollectionSearchIndexAttributes', 'csi', 'csi.cID = if(pa.cID is null, p.cID, pa.cID)')
                 ->innerJoin('p', 'CollectionVersions', 'cv', 'cv.cID = if(pa.cID is null, p.cID, pa.cID)')
                 ->innerJoin('p', 'Collections', 'c', 'p.cID = c.cID')
-                ->andWhere('p.cIsTemplate = 0 or pa.cIsTemplate = 0');
+                ->andWhere('p.cIsTemplate = 0 or pa.cIsTemplate = 0')
+            ;
         } else {
             $query->from('Pages', 'p')
                 ->leftJoin('p', 'PageSearchIndex', 'psi', 'p.cID = psi.cID')
@@ -206,7 +216,8 @@ class PageList extends DatabaseItemList implements PagerProviderInterface, Pagin
                 ->innerJoin('p', 'Collections', 'c', 'p.cID = c.cID')
                 ->innerJoin('p', 'CollectionVersions', 'cv', 'p.cID = cv.cID')
                 ->andWhere('p.cPointerID < 1')
-                ->andWhere('p.cIsTemplate = 0');
+                ->andWhere('p.cIsTemplate = 0')
+            ;
         }
 
         switch ($this->pageVersionToRetrieve) {
@@ -216,7 +227,8 @@ class PageList extends DatabaseItemList implements PagerProviderInterface, Pagin
             case self::PAGE_VERSION_RECENT_UNAPPROVED:
                 $query
                     ->andWhere('cv.cvID = (select max(cvID) from CollectionVersions where cID = cv.cID)')
-                    ->andWhere('cvIsApproved = 0');
+                    ->andWhere('cvIsApproved = 0')
+                ;
                 break;
             case self::PAGE_VERSION_SCHEDULED:
                 $now = new \DateTime();
@@ -302,6 +314,7 @@ class PageList extends DatabaseItemList implements PagerProviderInterface, Pagin
     {
         if (isset($this->permissionsChecker) && $this->permissionsChecker === -1) {
             $query = $this->deliverQueryObject();
+
             // We need to reset the potential custom order by here because otherwise, if we've added
             // items to the select parts, and we're ordering by them, we get a SQL error
             // when we get total results, because we're resetting the select
@@ -313,19 +326,15 @@ class PageList extends DatabaseItemList implements PagerProviderInterface, Pagin
 
     public function getPaginationAdapter()
     {
-        $adapter = new DoctrineDbalAdapter($this->deliverQueryObject(), function ($query) {
+        return new DoctrineDbalAdapter($this->deliverQueryObject(), static function ($query) {
             // We need to reset the potential custom order by here because otherwise, if we've added
             // items to the select parts, and we're ordering by them, we get a SQL error
             // when we get total results, because we're resetting the select
             $query->resetQueryParts(['groupBy', 'orderBy'])->select('count(distinct p.cID)')->setMaxResults(1);
         });
-
-        return $adapter;
     }
 
     /**
-     * @param $queryRow
-     *
      * @return \Concrete\Core\Page\Page
      */
     public function getResult($queryRow)
@@ -380,8 +389,6 @@ class PageList extends DatabaseItemList implements PagerProviderInterface, Pagin
 
     /**
      * Filters by type of collection (using the handle field).
-     *
-     * @param mixed $ptHandle
      */
     public function filterByPageTypeHandle($ptHandle)
     {
@@ -398,9 +405,6 @@ class PageList extends DatabaseItemList implements PagerProviderInterface, Pagin
 
     /**
      * Filters by page template.
-     *
-     * @param mixed $ptHandle
-     * @param TemplateEntity $template
      */
     public function filterByPageTemplate(TemplateEntity $template)
     {
@@ -412,7 +416,6 @@ class PageList extends DatabaseItemList implements PagerProviderInterface, Pagin
      * Filters by date added.
      *
      * @param string $date
-     * @param mixed $comparison
      */
     public function filterByDateAdded($date, $comparison = '=')
     {
@@ -422,7 +425,6 @@ class PageList extends DatabaseItemList implements PagerProviderInterface, Pagin
     /**
      * Filter by number of children.
      *
-     * @param $number
      * @param string $comparison
      */
     public function filterByNumberOfChildren($number, $comparison = '>')
@@ -444,7 +446,6 @@ class PageList extends DatabaseItemList implements PagerProviderInterface, Pagin
     /**
      * Filter by last modified date.
      *
-     * @param $date
      * @param string $comparison
      */
     public function filterByDateLastModified($date, $comparison = '=')
@@ -456,7 +457,6 @@ class PageList extends DatabaseItemList implements PagerProviderInterface, Pagin
      * Filters by public date.
      *
      * @param string $date
-     * @param mixed $comparison
      */
     public function filterByPublicDate($date, $comparison = '=')
     {
@@ -465,8 +465,6 @@ class PageList extends DatabaseItemList implements PagerProviderInterface, Pagin
 
     /**
      * Filters by package.
-     *
-     * @param Package $package
      */
     public function filterByPackage(Package $package)
     {
@@ -493,8 +491,6 @@ class PageList extends DatabaseItemList implements PagerProviderInterface, Pagin
 
     /**
      * Filters by user ID).
-     *
-     * @param mixed $uID
      */
     public function filterByUserID($uID)
     {
@@ -503,9 +499,22 @@ class PageList extends DatabaseItemList implements PagerProviderInterface, Pagin
     }
 
     /**
+     * Filters pages by the author of the version selected by the current page version mode.
+     * By default (PAGE_VERSION_ACTIVE) this matches pages whose live approved version was authored by the given user.
+     * Note: this only checks the single version fetched per page (determined by setPageVersionToRetrieve()).
+     * It does not match pages where the user edited any historical version. A subquery across all versions
+     * would be required for that behaviour.
+     */
+    public function filterByVersionAuthorUserID(int $uID)
+    {
+        $this->query->andWhere('cv.cvAuthorUID = :cvAuthorUID');
+        $this->query->setParameter('cvAuthorUID', $uID);
+    }
+
+    /**
      * Filters by page type ID.
      *
-     * @param array | integer $ptID
+     * @param array|int $ptID
      */
     public function filterByPageTypeID($ptID)
     {
@@ -523,7 +532,7 @@ class PageList extends DatabaseItemList implements PagerProviderInterface, Pagin
     /**
      * Filters by parent ID.
      *
-     * @param array | integer $cParentID
+     * @param array|int $cParentID
      */
     public function filterByParentID($cParentID)
     {
@@ -541,7 +550,6 @@ class PageList extends DatabaseItemList implements PagerProviderInterface, Pagin
     /**
      * Filters a list by page name.
      *
-     * @param $name
      * @param bool $exact
      */
     public function filterByName($name, $exact = false)
@@ -560,7 +568,6 @@ class PageList extends DatabaseItemList implements PagerProviderInterface, Pagin
     /**
      * Filter a list by page path.
      *
-     * @param $path
      * @param bool $includeAllChildren
      */
     public function filterByPath($path, $includeAllChildren = true)
@@ -587,8 +594,6 @@ class PageList extends DatabaseItemList implements PagerProviderInterface, Pagin
 
     /**
      * Filters keyword fields by keywords (including name, description, content, and attributes.
-     *
-     * @param $keywords
      */
     public function filterByKeywords($keywords)
     {
@@ -620,8 +625,6 @@ class PageList extends DatabaseItemList implements PagerProviderInterface, Pagin
 
     /**
      * Filters by topic. Doesn't look at specific attributes –instead, actually joins to the topics table.
-     *
-     * @param mixed $topic
      */
     public function filterByTopic($topic)
     {
@@ -648,8 +651,6 @@ class PageList extends DatabaseItemList implements PagerProviderInterface, Pagin
 
     /**
      * Filters a page list by a particular block type occurring in the version of a page.
-     *
-     * @param BlockType $bt
      */
     public function filterByBlockType(BlockType $bt)
     {
@@ -666,7 +667,8 @@ class PageList extends DatabaseItemList implements PagerProviderInterface, Pagin
                 'cv2.cID = cvb2.cID and cv2.cvID = cvb2.cvID'
             )
             ->innerJoin('cvb2', 'Blocks', 'b', 'cvb2.bID = b.bID')
-            ->andWhere('b.btID = :btID');
+            ->andWhere('b.btID = :btID')
+        ;
 
         $this->query->andWhere(
             $this->query->expr()->in('p.cID', $query->getSQL())
@@ -675,9 +677,7 @@ class PageList extends DatabaseItemList implements PagerProviderInterface, Pagin
     }
 
     /**
-     * Filters a page list by a particular container occurring in a page
-     *
-     * @param Container $container
+     * Filters a page list by a particular container occurring in a page.
      */
     public function filterByContainer(Container $container)
     {
@@ -695,7 +695,8 @@ class PageList extends DatabaseItemList implements PagerProviderInterface, Pagin
             )
             ->innerJoin('cvb2', 'btCoreContainer', 'bcc', 'cvb2.bID = bcc.bID')
             ->innerJoin('bcc', 'PageContainerInstances', 'pci', 'bcc.containerInstanceID = pci.containerInstanceID')
-            ->andWhere('pci.containerID = :containerID');
+            ->andWhere('pci.containerID = :containerID')
+        ;
 
         $this->query->andWhere(
             $this->query->expr()->in('p.cID', $query->getSQL())
@@ -708,7 +709,6 @@ class PageList extends DatabaseItemList implements PagerProviderInterface, Pagin
         $this->query->andWhere('p.cCacheFullPageContent = :cacheSettings');
         $this->query->setParameter('cacheSettings', $value);
     }
-
 
     /**
      * Sorts this list by display order.
@@ -794,8 +794,6 @@ class PageList extends DatabaseItemList implements PagerProviderInterface, Pagin
 
     /**
      * @deprecated
-     *
-     * @param mixed $ctHandle
      */
     public function filterByCollectionTypeHandle($ctHandle)
     {
@@ -804,8 +802,6 @@ class PageList extends DatabaseItemList implements PagerProviderInterface, Pagin
 
     /**
      * @deprecated
-     *
-     * @param mixed $ctID
      */
     public function filterByCollectionTypeID($ctID)
     {
@@ -871,6 +867,7 @@ class PageList extends DatabaseItemList implements PagerProviderInterface, Pagin
                 }
             }
         }
+
         return false;
     }
 }
