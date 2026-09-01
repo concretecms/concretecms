@@ -484,6 +484,12 @@
             </access>
         </permissionkey>
 
+        <permissionkey handle="manage_well_known_files" name="Manage Well-Known Files" description="Controls whether a user can view and edit a site's well-known files, such as robots.txt, llms.txt, and security.txt." package="" category="admin">
+            <access>
+                <group name="Administrators" description=""/>
+            </access>
+        </permissionkey>
+
     </permissionkeys>
 
     <systemcaptcha>

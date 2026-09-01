@@ -972,6 +972,15 @@
                 </attributekey>
             </attributes>
         </page>
+        <page name="Well-Known Files" path="/dashboard/system/seo/well_known_files"
+              filename="/dashboard/system/seo/well_known_files.php" pagetype=""
+              description="View per-site sitemap status and server configuration for multisite installs." package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>sitemap, xml, robots, well-known, multisite, nginx, apache</value>
+                </attributekey>
+            </attributes>
+        </page>
         <page name="Files" path="/dashboard/system/files" filename="/dashboard/system/files/view.php" pagetype=""
               description="" package=""/>
         <page name="Allowed File Types" path="/dashboard/system/files/filetypes"
