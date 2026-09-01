@@ -86,7 +86,7 @@ class Available extends DefaultSet
         } else if ($node->getTreeNodeTypeHandle() == 'group') {
             $group = $node->getTreeNodeGroupObject();
             if (is_object($group)) {
-                return $group->getGroupName();
+                return h($group->getGroupName());
             }
         }
     }
