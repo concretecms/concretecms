@@ -148,18 +148,46 @@ class PackageRepositoryTest extends TestCase
 
         $connection = new Connection('public', 'private');
 
+        $before = new \DateTimeImmutable('', new \DateTimeZone('UTC'));
         /** @var Request $sha256 */
         $sha256 = $method->invoke($repository, new Request('GET', new Uri()), $connection);
         /** @var Request $sha512 */
         $sha512 = $method->invoke($repository, new Request('GET', new Uri()), $connection, 'sha512');
+        $after = new \DateTimeImmutable('', new \DateTimeZone('UTC'));
 
-        $now = new \DateTimeImmutable();
-        $time = $now->setTime((int) $now->format('h'), (int) $now->format('i'));
-        $sha256Nonce = 'sha256,' . hash_hmac('sha256', (string) $time->getTimestamp(), $connection->getPrivate());
-        $sha512Nonce = 'sha512,' . hash_hmac('sha512', (string) $time->getTimestamp(), $connection->getPrivate());
+        $this->assertContains(
+            $sha256->getUri()->getUserInfo(),
+            $this->expectedUserInfos('sha256', $connection, $before, $after)
+        );
+        $this->assertContains(
+            $sha512->getUri()->getUserInfo(),
+            $this->expectedUserInfos('sha512', $connection, $before, $after)
+        );
+    }
 
-        $this->assertEquals('public:' . $sha256Nonce, $sha256->getUri()->getUserInfo());
-        $this->assertEquals('public:' . $sha512Nonce, $sha512->getUri()->getUserInfo());
+    /**
+     * Build the user info values that authenticate() may have generated between two instants.
+     *
+     * The nonce is built from the current time truncated to the minute: if the minute changed while
+     * the nonce was being generated, both the previous and the next values are acceptable.
+     *
+     * @return string[]
+     */
+    private function expectedUserInfos(
+        string $algo,
+        ConnectionInterface $connection,
+        \DateTimeImmutable $before,
+        \DateTimeImmutable $after
+    ): array {
+        $result = [];
+        foreach ([$before, $after] as $moment) {
+            // Same truncation performed by PackageRepository::authenticate()
+            $time = $moment->setTime((int) $moment->format('h'), (int) $moment->format('i'));
+            $nonce = $algo . ',' . hash_hmac($algo, (string) $time->getTimestamp(), $connection->getPrivate());
+            $result[] = $connection->getPublic() . ':' . $nonce;
+        }
+
+        return array_values(array_unique($result));
     }
 
     public function testValidate(): void

@@ -396,6 +396,10 @@ final class PackageRepository implements PackageRepositoryInterface
         string $algo = 'sha256'
     ): RequestInterface {
         $now = new \DateTimeImmutable('', new \DateTimeZone('UTC'));
+        // Beware: 'h' is the 12-hour format (not 'H', the 24-hour one), so $time is not simply the
+        // current time truncated to the minute: from 13:00 to 00:59 UTC it's shifted by 12 hours, and
+        // the same nonce is generated twice a day (for instance at 03:30 and at 15:30 UTC).
+        // This must be kept in sync with the way the marketplace server recomputes the nonce.
         $time = $now->setTime((int) $now->format('h'), (int) $now->format('i'));
         $nonce = $algo . ',' . hash_hmac($algo, (string) $time->getTimestamp(), $connection->getPrivate());
 
