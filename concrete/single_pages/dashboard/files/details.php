@@ -430,5 +430,22 @@ if ($view->controller->getAction() == 'preview_version') { ?>
         ConcreteEvent.subscribe('FileManagerReplaceFileComplete FileManagerBulkFileStorageComplete', function (e, data) {
             location.reload();
         });
+        
+        // Update detail thumbnail preview when a thumbnail is edited
+        // Use namespaced event to avoid being unbound by other dialogs
+        Concrete.event.bind('ImageEditorDidSave.thumbnails.detailsPage', function (event, data) {
+            if (data.isThumbnail) {
+                const $detailThumbnail = $('.ccm-file-manager-detail-thumbnail');
+                
+                if ($detailThumbnail.length > 0) {
+                    // Update the appropriate attribute based on which thumbnail was edited
+                    if (data.handle === 'file_manager_detail') {
+                        $detailThumbnail.attr('src', data.imgData);
+                    } else if (data.handle === 'file_manager_detail_2x') {
+                        $detailThumbnail.attr('srcset', data.imgData + ' 2x');
+                    }
+                }
+            }
+        });
     });
 </script>
