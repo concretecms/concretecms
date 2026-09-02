@@ -1,0 +1,64 @@
+name: PHPStan
+
+on:
+  pull_request:
+  push:
+    branches:
+      - "**"
+    tags-ignore:
+      - "**"
+
+jobs:
+  phpstan:
+    name: PHPStan
+    runs-on: ubuntu-latest
+    env:
+      PHPSTAN_TMPDIR: ${{ github.workspace }}/.phpstan-cache
+    steps:
+      -
+        name: Checkout
+        uses: actions/checkout@v7
+      -
+        name: Install PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          # PHPStan 2 requires PHP 7.4+ to run, but it analyzes the code as PHP 7.3 (see phpVersion in phpstan.neon.dist)
+          php-version: "8.4"
+          extensions: mbstring, xml, ctype, iconv, intl, pdo_mysql, gd
+          coverage: none
+          ini-values: memory_limit=-1
+          tools: composer:v2, phpstan
+      -
+        name: Get Composer cache directory
+        id: composer-cache-dir
+        run: echo "dir=$(composer config --global --no-interaction cache-files-dir)" >>"$GITHUB_OUTPUT"
+      -
+        name: Cache Composer downloads
+        uses: actions/cache@v6
+        with:
+          path: ${{ steps.composer-cache-dir.outputs.dir }}
+          key: composer-${{ runner.os }}-phpstan-${{ hashFiles('composer.json', 'composer.lock') }}
+          restore-keys: composer-${{ runner.os }}-phpstan-
+      -
+        name: Install Composer dependencies
+        run: composer install --no-interaction --no-progress
+      -
+        name: Cache PHPStan result cache
+        uses: actions/cache@v6
+        with:
+          path: ${{ env.PHPSTAN_TMPDIR }}
+          key: phpstan-${{ runner.os }}-${{ github.sha }}
+          restore-keys: phpstan-${{ runner.os }}-
+      -
+        name: Configure PHPStan cache directory
+        run: |
+          mkdir -p "$PHPSTAN_TMPDIR"
+          cat > phpstan.neon <<EOF
+          includes:
+              - phpstan.neon.dist
+          parameters:
+              tmpDir: $PHPSTAN_TMPDIR
+          EOF
+      -
+        name: Run PHPStan
+        run: phpstan analyse --no-progress --no-interaction --memory-limit=-1 --error-format=github

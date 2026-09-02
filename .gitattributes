@@ -18,6 +18,8 @@
 *.html normalizetext diff=html
 *.js normalizetext
 *.md normalizetext
+*.neon text eol=lf
+*.neon.dist text eol=lf
 *.php normalizetext diff=php
 *.sql normalizetext
 *.tpl normalizetext
@@ -54,6 +56,9 @@
 /CHANGELOG.md export-ignore
 /CONTRIBUTING.md export-ignore
 /INSTALL.md export-ignore
+/phpstan-baseline.neon export-ignore
+/phpstan-bootstrap.php export-ignore
+/phpstan.neon.dist export-ignore
 /phpunit.xml export-ignore
 /README.md export-ignore
 .gitignore export-ignore

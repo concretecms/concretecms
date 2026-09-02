@@ -78,6 +78,7 @@ final class FileFlag
         '{/concrete/dispatcher\.php$}',
         '{/index.php$}',
         '{/\.php-cs-fixer(\.dist)?\.php$}',
+        '{/phpstan-bootstrap\.php$}',
     ];
 
     public static function resolveFileFlags(\SplFileInfo $file): int
