@@ -110,7 +110,7 @@ class Form
      * @param string $action
      * @param string $task
      *
-     * @return \League\URL\URLInterface
+     * @return \League\Url\UrlInterface
      */
     public function action($action, $task = null)
     {

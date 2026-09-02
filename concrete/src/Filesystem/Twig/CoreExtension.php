@@ -173,7 +173,7 @@ class CoreExtension extends AbstractExtension implements ApplicationAwareInterfa
             }),
 
             /** Create a url */
-            new TwigFunction('url', function (...$args): ?\League\URL\URLInterface {
+            new TwigFunction('url', function (...$args): ?\League\Url\UrlInterface {
                 return $this->urls->resolve($args);
             }),
 

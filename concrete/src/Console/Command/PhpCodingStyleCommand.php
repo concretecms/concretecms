@@ -57,7 +57,7 @@ final class PhpCodingStyleCommand extends Command
         parent::__construct($name);
     }
 
-    public function handle(FileService $fileService, FileSystem $fileSystem): int
+    public function handle(FileService $fileService, Filesystem $fileSystem): int
     {
         $configFile = null;
         try {

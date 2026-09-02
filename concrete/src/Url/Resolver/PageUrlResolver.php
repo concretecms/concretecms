@@ -68,7 +68,7 @@ class PageUrlResolver implements UrlResolverInterface
      * @param string $path
      * @param array $arguments
      *
-     * @return \League\URL\URLInterface
+     * @return \League\Url\UrlInterface
      */
     protected function resolveWithResolver($path, $arguments)
     {

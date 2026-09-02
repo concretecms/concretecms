@@ -15,7 +15,7 @@ class TreeCallColor extends \Less_Tree_Call
         return $this->name;
     }
 
-    public static function fromTreeCall(\Less_Tree_call $call)
+    public static function fromTreeCall(\Less_Tree_Call $call)
     {
         return new static($call->name, $call->args, $call->index, $call->currentFileInfo);
     }

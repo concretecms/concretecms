@@ -278,6 +278,8 @@ class InstanceSlotRule implements \JsonSerializable, ObjectInterface
         if ($this->getRuleType() === self::RULE_TYPE_DESIGNER_CUSTOM_CONTENT) {
             return new BoardDesignerSharedSlotFormatter();
         }
+
+        throw new \RuntimeException(t('Unrecognized rule type: %s', $this->getRuleType()));
     }
 
     /**

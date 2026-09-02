@@ -201,6 +201,8 @@ class Urls extends DashboardSitePageController
 
                 return h($message) . '<br>' . $this->getServerCodeHtml($rule->getCode());
         }
+
+        return '';
     }
 
     protected function getServerCodeHtml(string $ruleCode): string

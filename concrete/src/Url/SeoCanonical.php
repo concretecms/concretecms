@@ -61,7 +61,7 @@ class SeoCanonical
      * @param Page|int $page The Page instance (or its collection ID)
      * @param Request|ParameterBag|Query|array|string|null $querystring Optional query string parameters
      *
-     * @return \League\URL\URLInterface|null
+     * @return \League\Url\UrlInterface|null
      */
     public function getPageCanonicalURL($page, $querystring = null)
     {
