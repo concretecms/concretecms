@@ -336,7 +336,7 @@ class Message extends ConcreteObject implements ObjectInterface, SubjectInterfac
                         return t2('%d second ago', '%d seconds ago', 0);
                     }
                     if ($elp >= 1) {
-                        $rounded = round($elp);
+                        $rounded = (int) round($elp);
                         switch ($unit) {
                             case 'Y':
                                 return t2('%d year ago', '%d years ago', $rounded);

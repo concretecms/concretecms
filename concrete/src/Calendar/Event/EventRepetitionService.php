@@ -65,7 +65,7 @@ class EventRepetitionService
                     $dateStart = date('Y-m-d 00:00:00', strtotime($dateStart));
                     $dateEnd = date('Y-m-d 23:59:59', strtotime($dateEnd));
                 } else {
-                    $pd->setStartDateAllDay(0);
+                    $pd->setStartDateAllDay(false);
                     // Grab the times.
                     $dateStart = date('Y-m-d H:i:s', strtotime($dateStart . ' ' . $r->get($namespace . '_pdStartDateSelectTime_' . $repetitionSetID)));
                     $dateEnd = date('Y-m-d H:i:s', strtotime($dateEnd . ' ' . $r->get($namespace . '_pdEndDateSelectTime_' . $repetitionSetID)));

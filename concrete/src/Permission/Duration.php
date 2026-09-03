@@ -50,7 +50,7 @@ class Duration extends AbstractRepetition
             // create a Duration object
             $pd = new self();
 
-            $pd->setStartDateAllDay(0);
+            $pd->setStartDateAllDay(false);
             if ($dateStartDT === null) {
                 $dateStart = '';
             } else {
@@ -58,7 +58,7 @@ class Duration extends AbstractRepetition
                 if ($request->get('pdStartDateAllDayActivate')) {
                     // We need to work in the user timezone, otherwise we risk to change the day
                     $dateStart = $service->toDateTime($dateStart, 'user', 'system')->format('Y-m-d').' 00:00:00';
-                    $pd->setStartDateAllDay(1);
+                    $pd->setStartDateAllDay(true);
                 }
             }
             $pd->setEndDateAllDay(0);

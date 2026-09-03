@@ -837,20 +837,8 @@ parameters:
 			path: concrete/controllers/dialog/page/bulk/cache.php
 
 		-
-			message: '#^Parameter \#1 \$cID of static method Concrete\\Core\\Page\\Page\:\:getByID\(\) expects int, string given\.$#'
-			identifier: argument.type
-			count: 1
-			path: concrete/controllers/dialog/page/bulk/cache.php
-
-		-
 			message: '#^Left side of && is always true\.$#'
 			identifier: booleanAnd.leftAlwaysTrue
-			count: 1
-			path: concrete/controllers/dialog/page/bulk/delete.php
-
-		-
-			message: '#^Parameter \#1 \$cID of static method Concrete\\Core\\Page\\Page\:\:getByID\(\) expects int, string given\.$#'
-			identifier: argument.type
 			count: 1
 			path: concrete/controllers/dialog/page/bulk/delete.php
 
@@ -863,12 +851,6 @@ parameters:
 		-
 			message: '#^Left side of && is always true\.$#'
 			identifier: booleanAnd.leftAlwaysTrue
-			count: 1
-			path: concrete/controllers/dialog/page/bulk/design.php
-
-		-
-			message: '#^Parameter \#1 \$cID of static method Concrete\\Core\\Page\\Page\:\:getByID\(\) expects int, string given\.$#'
-			identifier: argument.type
 			count: 1
 			path: concrete/controllers/dialog/page/bulk/design.php
 
@@ -923,12 +905,6 @@ parameters:
 		-
 			message: '#^Left side of && is always true\.$#'
 			identifier: booleanAnd.leftAlwaysTrue
-			count: 1
-			path: concrete/controllers/dialog/page/bulk/properties.php
-
-		-
-			message: '#^Parameter \#1 \$cID of static method Concrete\\Core\\Page\\Page\:\:getByID\(\) expects int, string given\.$#'
-			identifier: argument.type
 			count: 1
 			path: concrete/controllers/dialog/page/bulk/properties.php
 
@@ -1679,12 +1655,6 @@ parameters:
 		-
 			message: '#^Call to function is_object\(\) with Concrete\\Core\\User\\UserInfo will always evaluate to true\.$#'
 			identifier: function.alreadyNarrowedType
-			count: 1
-			path: concrete/controllers/panel/page/preview_as_user.php
-
-		-
-			message: '#^Parameter \#1 \$ui of method Concrete\\Core\\Http\\RequestBase\:\:setCustomRequestUser\(\) expects Concrete\\Core\\User\\UserInfo\|null, false given\.$#'
-			identifier: argument.type
 			count: 1
 			path: concrete/controllers/panel/page/preview_as_user.php
 
@@ -2625,12 +2595,6 @@ parameters:
 			path: concrete/controllers/single_page/dashboard/system/conversations/editor.php
 
 		-
-			message: '#^Parameter \#1 \$object of method Concrete\\Core\\Permission\\Key\\Key\:\:setPermissionObject\(\) expects Concrete\\Core\\Permission\\ObjectInterface\|null, false given\.$#'
-			identifier: argument.type
-			count: 1
-			path: concrete/controllers/single_page/dashboard/system/conversations/permissions.php
-
-		-
 			message: '#^Parameter \#1 \$stack of function array_pop is passed by reference, so it expects variables only\.$#'
 			identifier: argument.byRef
 			count: 1
@@ -3213,12 +3177,6 @@ parameters:
 			path: concrete/controllers/single_page/dashboard/users/add_group.php
 
 		-
-			message: '#^Parameter \#2 \$haystack of function in_array expects array, null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: concrete/controllers/single_page/dashboard/users/add_group.php
-
-		-
 			message: '#^Parameter \#3 \$parentFolder of static method Concrete\\Core\\User\\Group\\Group\:\:addBeneathFolder\(\) expects Concrete\\Core\\Tree\\Node\\Type\\GroupFolder, Concrete\\Core\\Tree\\Node\\Node\|null given\.$#'
 			identifier: argument.type
 			count: 1
@@ -3257,12 +3215,6 @@ parameters:
 		-
 			message: '#^Offset string does not exist on bool\|float\|int\|string\.$#'
 			identifier: offsetAccess.notFound
-			count: 1
-			path: concrete/controllers/single_page/dashboard/users/group_types.php
-
-		-
-			message: '#^Parameter \#2 \$haystack of function in_array expects array, null given\.$#'
-			identifier: argument.type
 			count: 1
 			path: concrete/controllers/single_page/dashboard/users/group_types.php
 
@@ -4657,12 +4609,6 @@ parameters:
 			identifier: property.unused
 			count: 1
 			path: concrete/src/Api/Model/UserSocialLink.php
-
-		-
-			message: '#^Parameter \#1 \$length of function random_bytes expects int\<1, max\>, float given\.$#'
-			identifier: argument.type
-			count: 1
-			path: concrete/src/Api/OAuth/Client/ClientFactory.php
 
 		-
 			message: '#^Parameter \#1 \$codeId of method Concrete\\Core\\Entity\\OAuth\\AuthCodeRepository\:\:revokeAuthCode\(\) expects string, object given\.$#'
@@ -7185,12 +7131,6 @@ parameters:
 			path: concrete/src/Calendar/Event/EventRepetitionService.php
 
 		-
-			message: '#^Parameter \#1 \$start_date_all_day of method Concrete\\Core\\Foundation\\Repetition\\AbstractRepetition\:\:setStartDateAllDay\(\) expects bool, int given\.$#'
-			identifier: argument.type
-			count: 1
-			path: concrete/src/Calendar/Event/EventRepetitionService.php
-
-		-
 			message: '#^Call to an undefined method Concrete\\Core\\Entity\\Calendar\\CalendarEvent\:\:getName\(\)\.$#'
 			identifier: method.notFound
 			count: 2
@@ -7914,12 +7854,6 @@ parameters:
 			message: '#^Instanceof between Concrete\\Core\\Conversation\\Conversation and Concrete\\Core\\Conversation\\Conversation will always evaluate to true\.$#'
 			identifier: instanceof.alwaysTrue
 			count: 1
-			path: concrete/src/Conversation/Message/Message.php
-
-		-
-			message: '#^Parameter \#3 \$number of function t2 expects int, float given\.$#'
-			identifier: argument.type
-			count: 6
 			path: concrete/src/Conversation/Message/Message.php
 
 		-
@@ -11793,12 +11727,6 @@ parameters:
 			path: concrete/src/Localization/Service/Date.php
 
 		-
-			message: '#^Parameter \#3 \$number of function t2 expects int, float given\.$#'
-			identifier: argument.type
-			count: 7
-			path: concrete/src/Localization/Service/Date.php
-
-		-
 			message: '#^Strict comparison using \=\=\= between string and false will always evaluate to false\.$#'
 			identifier: identical.alwaysFalse
 			count: 1
@@ -13539,12 +13467,6 @@ parameters:
 			path: concrete/src/Page/Page.php
 
 		-
-			message: '#^Parameter \#1 \$uID of static method Concrete\\Core\\Support\\Facade\\UserInfo\:\:getByID\(\) expects int, SimpleXMLElement\|null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: concrete/src/Page/Page.php
-
-		-
 			message: '#^Right side of && is always true\.$#'
 			identifier: booleanAnd.rightAlwaysTrue
 			count: 1
@@ -14895,12 +14817,6 @@ parameters:
 			path: concrete/src/Permission/Duration.php
 
 		-
-			message: '#^Parameter \#1 \$start_date_all_day of method Concrete\\Core\\Foundation\\Repetition\\AbstractRepetition\:\:setStartDateAllDay\(\) expects bool, int given\.$#'
-			identifier: argument.type
-			count: 2
-			path: concrete/src/Permission/Duration.php
-
-		-
 			message: '#^Unsafe usage of new static\(\)\.$#'
 			identifier: new.static
 			count: 2
@@ -16047,18 +15963,6 @@ parameters:
 			path: concrete/src/StyleCustomizer/Preview/LegacyStylesheetPreviewHandler.php
 
 		-
-			message: '#^Parameter \#1 \$ui of method Concrete\\Core\\Http\\RequestBase\:\:setCustomRequestUser\(\) expects Concrete\\Core\\User\\UserInfo\|null, int given\.$#'
-			identifier: argument.type
-			count: 1
-			path: concrete/src/StyleCustomizer/Preview/LegacyStylesheetPreviewHandler.php
-
-		-
-			message: '#^Parameter \#1 \$ui of method Concrete\\Core\\Http\\RequestBase\:\:setCustomRequestUser\(\) expects Concrete\\Core\\User\\UserInfo\|null, int given\.$#'
-			identifier: argument.type
-			count: 1
-			path: concrete/src/StyleCustomizer/Preview/StandardPreviewHandler.php
-
-		-
 			message: '#^Call to an undefined method HtmlObject\\Element\:\:rel\(\)\.$#'
 			identifier: method.notFound
 			count: 1
@@ -17187,24 +17091,6 @@ parameters:
 			path: concrete/src/Url/Resolver/RouterUrlResolver.php
 
 		-
-			message: '#^Method Concrete\\Core\\Url\\SeoCanonical\:\:getIncludedQuerystringParameters\(\) should return array but returns iterable\<string\>&Traversable\.$#'
-			identifier: return.type
-			count: 1
-			path: concrete/src/Url/SeoCanonical.php
-
-		-
-			message: '#^Parameter \#2 \$haystack of function in_array expects array, iterable\<string\>&Traversable given\.$#'
-			identifier: argument.type
-			count: 1
-			path: concrete/src/Url/SeoCanonical.php
-
-		-
-			message: '#^Ternary operator condition is always true\.$#'
-			identifier: ternary.alwaysTrue
-			count: 1
-			path: concrete/src/Url/SeoCanonical.php
-
-		-
 			message: '#^Method Concrete\\Core\\Url\\Url\:\:setPortIfNecessary\(\) should return Concrete\\Core\\Url\\UrlInterface but returns League\\Url\\UrlInterface\.$#'
 			identifier: return.type
 			count: 1
@@ -17845,12 +17731,6 @@ parameters:
 			identifier: function.notFound
 			count: 1
 			path: concrete/src/Utility/Service/Arrays.php
-
-		-
-			message: '#^Parameter \#1 \$length of function random_bytes expects int\<1, max\>, float given\.$#'
-			identifier: argument.type
-			count: 1
-			path: concrete/src/Utility/Service/Identifier.php
 
 		-
 			message: '#^Binary operation "\*\=" between string and 1024 results in an error\.$#'

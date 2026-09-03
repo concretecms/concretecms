@@ -365,12 +365,12 @@ class Date
         $secondsPerMinute = 60;
         $secondsPerHour = 60 * $secondsPerMinute;
         $secondsPerDay = 24 * $secondsPerHour;
-        $days = floor($diff / $secondsPerDay);
+        $days = (int) floor($diff / $secondsPerDay);
         $diff = $diff - $days * $secondsPerDay;
-        $hours = floor($diff / $secondsPerHour);
+        $hours = (int) floor($diff / $secondsPerHour);
         $diff = $diff - $hours * $secondsPerHour;
-        $minutes = floor($diff / $secondsPerMinute);
-        $seconds = $diff - $minutes * $secondsPerMinute;
+        $minutes = (int) floor($diff / $secondsPerMinute);
+        $seconds = (int) ($diff - $minutes * $secondsPerMinute);
         $chunks = [];
         if ($days > 0) {
             $chunks[] = t2('%d day', '%d days', $days, $days);

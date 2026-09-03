@@ -1006,7 +1006,7 @@ class Page extends Collection implements CategoryMemberInterface,
         if (isset($px->user)) {
             foreach ($px->user as $u) {
                 $pkHandles = self::translatePermissionsXMLToKeys($px->administrators);
-                $this->assignPermissions(UserInfo::getByID($u['uID']), $pkHandles);
+                $this->assignPermissions(UserInfo::getByID((int) $u['uID']), $pkHandles);
             }
         }
     }

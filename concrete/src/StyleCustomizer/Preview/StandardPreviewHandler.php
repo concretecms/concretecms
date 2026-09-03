@@ -43,7 +43,7 @@ class StandardPreviewHandler implements PreviewHandlerInterface
     protected function deliverResponse(Page $page, string $css): Response
     {
         $request = Request::getInstance();
-        $request->setCustomRequestUser(-1);
+        $request->setCustomRequestUser(null);
         $request->setCurrentPage($page);
 
         $previewRequest = new ThemeCustomizerRequest();

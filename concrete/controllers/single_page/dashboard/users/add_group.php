@@ -42,7 +42,7 @@ class AddGroup extends DashboardPageController
                     //$errorList->add(t("You need to have at least one manager role."));
                 }
 
-                if (!in_array($this->request->request->get("defaultRole"), array_keys($this->request->request->get("roles")))) {
+                if (!in_array($this->request->request->get("defaultRole"), array_keys($this->request->request->all('roles')))) {
                     $errorList->add(t("You need to set a default role."));
                 }
             } else {
