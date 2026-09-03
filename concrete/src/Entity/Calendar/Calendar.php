@@ -200,7 +200,7 @@ class Calendar implements ObjectInterface, AssignableObjectInterface
     }
 
     /**
-     * @return boolean
+     * @return string|null
      */
     public function enableMoreDetails()
     {
@@ -208,7 +208,7 @@ class Calendar implements ObjectInterface, AssignableObjectInterface
     }
 
     /**
-     * @param boolean $enableMoreDetails
+     * @param string|null $enableMoreDetails
      */
     public function setEnableMoreDetails($enableMoreDetails)
     {

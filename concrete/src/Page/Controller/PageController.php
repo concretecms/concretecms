@@ -158,7 +158,7 @@ class PageController extends Controller
      * similar method).
      *
      * @param string $path
-     * @param string|null $pkgHandle
+     * @param string|false|null $pkgHandle
      */
     public function render($path, $pkgHandle = null)
     {

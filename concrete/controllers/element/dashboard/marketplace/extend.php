@@ -4,7 +4,6 @@ namespace Concrete\Controller\Element\Dashboard\Marketplace;
 
 use Concrete\Core\Controller\ElementController;
 use Concrete\Core\Error\UserMessageException;
-use Concrete\Core\Marketplace\Connection;
 use Concrete\Core\Marketplace\PackageRepositoryInterface;
 use Concrete\Core\Marketplace\PurchaseConnectionCoordinator;
 use Concrete\Core\Url\Resolver\PathUrlResolver;
@@ -51,7 +50,7 @@ class Extend extends ElementController
         return 'dashboard/marketplace/extend';
     }
 
-    private function getPurchaseConnectionUrl(Connection $connection, string $url): string
+    private function getPurchaseConnectionUrl(ConnectionInterface $connection, string $url): string
     {
         return $this->purchaseConnectionCoordinator->createPurchaseConnectionUrl(
             $connection,

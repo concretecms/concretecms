@@ -1060,7 +1060,7 @@ class Group extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
 
     /**
      * Takes the numeric id of a group and returns a group object.
-     * @param string $gID
+     * @param int|string $gID
      *
      * @return Group
      * @deprecated

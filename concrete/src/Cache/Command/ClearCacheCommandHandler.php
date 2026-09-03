@@ -21,7 +21,7 @@ use Concrete\Core\Cache\OpCache;
 class ClearCacheCommandHandler
 {
 
-    /** @var \Symfony\Component\EventDispatcher\EventDispatcher */
+    /** @var \Concrete\Core\Events\EventDispatcher */
     private $dispatcher;
 
     /** @var \Concrete\Core\Application\Application */

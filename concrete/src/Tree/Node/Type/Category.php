@@ -99,6 +99,10 @@ class Category extends TreeNode
         return new CategoryListFormatter();
     }
 
+    /**
+     * @param string $treeNodeCategoryName
+     * @param \Concrete\Core\Tree\Node\Node|false|null $parent
+     */
     public static function add($treeNodeCategoryName = '', $parent = false)
     {
         $node = parent::add($parent);

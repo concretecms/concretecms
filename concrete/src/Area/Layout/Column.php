@@ -114,7 +114,7 @@ abstract class Column extends ConcreteObject implements ColumnInterface
     }
 
     /**
-     * @param Column $newAreaLayout
+     * @param \Concrete\Core\Area\Layout\Layout $newAreaLayout
      *
      * @return int
      */

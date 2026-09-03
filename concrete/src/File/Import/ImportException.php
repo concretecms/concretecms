@@ -114,7 +114,7 @@ class ImportException extends UserMessageException
     /**
      * Create a new instance given the error code.
      *
-     * @param string $code
+     * @param int $code
      * @param \Exception|\Throwable|null $innerException
      *
      * @return static

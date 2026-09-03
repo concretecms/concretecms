@@ -97,7 +97,7 @@ class RequestBase extends SymfonyRequest
     }
 
     /**
-     * @return \Concrete\Core\User\UserInfo
+     * @return \Concrete\Core\User\UserInfo|null
      */
     public function getCustomRequestUser()
     {
@@ -105,7 +105,7 @@ class RequestBase extends SymfonyRequest
     }
 
     /**
-     * @param \Concrete\Core\User\UserInfo $ui
+     * @param \Concrete\Core\User\UserInfo|null $ui
      */
     public function setCustomRequestUser($ui)
     {

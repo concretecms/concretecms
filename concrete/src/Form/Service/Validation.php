@@ -66,7 +66,7 @@ class Validation
      *
      * @param string $field
      * @param string $errorMsg
-     * @param string $validate test to validate against
+     * @param int $validate test to validate against
      */
     public function addRequired($field, $errorMsg = null, $validate = self::VALID_NOT_EMPTY)
     {

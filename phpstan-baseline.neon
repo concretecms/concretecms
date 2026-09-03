@@ -321,18 +321,6 @@ parameters:
 			path: concrete/controllers/backend/page/preview_version.php
 
 		-
-			message: '#^Parameter \#2 \$version of static method Concrete\\Core\\Page\\Page\:\:getByID\(\) expects string, int given\.$#'
-			identifier: argument.type
-			count: 1
-			path: concrete/controllers/backend/page/preview_version.php
-
-		-
-			message: '#^Parameter \#2 \$version of static method Concrete\\Core\\Page\\Page\:\:getByID\(\) expects string, int\|null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: concrete/controllers/backend/page/preview_version.php
-
-		-
 			message: '#^Call to function is_object\(\) with Concrete\\Core\\Page\\Page will always evaluate to true\.$#'
 			identifier: function.alreadyNarrowedType
 			count: 1
@@ -1251,12 +1239,6 @@ parameters:
 			path: concrete/controllers/element/dashboard/express/control/options.php
 
 		-
-			message: '#^Parameter \#1 \$connection of method Concrete\\Controller\\Element\\Dashboard\\Marketplace\\Extend\:\:getPurchaseConnectionUrl\(\) expects Concrete\\Core\\Marketplace\\Connection, Concrete\\Core\\Marketplace\\ConnectionInterface given\.$#'
-			identifier: argument.type
-			count: 3
-			path: concrete/controllers/element/dashboard/marketplace/extend.php
-
-		-
 			message: '#^Property Concrete\\Controller\\Element\\Dashboard\\Navigation\\Panel\\Favorites\:\:\$factory \(Concrete\\Core\\Application\\UserInterface\\Dashboard\\Navigation\\FullNavigationFactory\) does not accept Concrete\\Core\\Application\\UserInterface\\Dashboard\\Navigation\\FavoritesNavigationFactory\.$#'
 			identifier: assign.propertyType
 			count: 1
@@ -1701,7 +1683,7 @@ parameters:
 			path: concrete/controllers/panel/page/preview_as_user.php
 
 		-
-			message: '#^Parameter \#1 \$ui of method Concrete\\Core\\Http\\RequestBase\:\:setCustomRequestUser\(\) expects Concrete\\Core\\User\\UserInfo, false given\.$#'
+			message: '#^Parameter \#1 \$ui of method Concrete\\Core\\Http\\RequestBase\:\:setCustomRequestUser\(\) expects Concrete\\Core\\User\\UserInfo\|null, false given\.$#'
 			identifier: argument.type
 			count: 1
 			path: concrete/controllers/panel/page/preview_as_user.php
@@ -2235,18 +2217,6 @@ parameters:
 			path: concrete/controllers/single_page/dashboard/calendar/add.php
 
 		-
-			message: '#^Parameter \#1 \$enableMoreDetails of method Concrete\\Core\\Entity\\Calendar\\Calendar\:\:setEnableMoreDetails\(\) expects bool, null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: concrete/controllers/single_page/dashboard/calendar/add.php
-
-		-
-			message: '#^Parameter \#1 \$enableMoreDetails of method Concrete\\Core\\Entity\\Calendar\\Calendar\:\:setEnableMoreDetails\(\) expects bool, string given\.$#'
-			identifier: argument.type
-			count: 2
-			path: concrete/controllers/single_page/dashboard/calendar/add.php
-
-		-
 			message: '#^Variable \$parent might not be defined\.$#'
 			identifier: variable.undefined
 			count: 1
@@ -2304,12 +2274,6 @@ parameters:
 			message: '#^Call to an undefined method Doctrine\\ORM\\EntityRepository\<Concrete\\Core\\Entity\\Express\\Form\>\:\:findOneById\(\)\.$#'
 			identifier: method.notFound
 			count: 1
-			path: concrete/controllers/single_page/dashboard/express/entries.php
-
-		-
-			message: '#^Parameter \#2 \$pkgHandle of method Concrete\\Core\\Page\\Controller\\PageController\:\:render\(\) expects string\|null, false given\.$#'
-			identifier: argument.type
-			count: 4
 			path: concrete/controllers/single_page/dashboard/express/entries.php
 
 		-
@@ -2496,12 +2460,6 @@ parameters:
 			message: '#^Instanceof between Concrete\\Core\\Tree\\Node\\Node\|null and Concrete\\Core\\Tree\\Type\\ExpressEntryResults will always evaluate to false\.$#'
 			identifier: instanceof.alwaysFalse
 			count: 1
-			path: concrete/controllers/single_page/dashboard/reports/forms.php
-
-		-
-			message: '#^Parameter \#2 \$pkgHandle of method Concrete\\Core\\Page\\Controller\\PageController\:\:render\(\) expects string\|null, false given\.$#'
-			identifier: argument.type
-			count: 5
 			path: concrete/controllers/single_page/dashboard/reports/forms.php
 
 		-
@@ -3045,12 +3003,6 @@ parameters:
 			path: concrete/controllers/single_page/dashboard/system/permissions/site.php
 
 		-
-			message: '#^Parameter \#1 \$gID of static method Concrete\\Core\\User\\Group\\Group\:\:getByID\(\) expects string, int given\.$#'
-			identifier: argument.type
-			count: 3
-			path: concrete/controllers/single_page/dashboard/system/permissions/site.php
-
-		-
 			message: '#^Variable \$viewObj might not be defined\.$#'
 			identifier: variable.undefined
 			count: 1
@@ -3345,12 +3297,6 @@ parameters:
 			path: concrete/controllers/single_page/dashboard/users/groups.php
 
 		-
-			message: '#^Parameter \#1 \$gID of static method Concrete\\Core\\User\\Group\\Group\:\:getByID\(\) expects string, int given\.$#'
-			identifier: argument.type
-			count: 1
-			path: concrete/controllers/single_page/dashboard/users/groups.php
-
-		-
 			message: '#^Property Concrete\\Controller\\SinglePage\\Dashboard\\Users\\Groups\:\:\$headerMenu \(Concrete\\Core\\Filesystem\\Element\) in isset\(\) is not nullable\.$#'
 			identifier: isset.property
 			count: 1
@@ -3383,12 +3329,6 @@ parameters:
 		-
 			message: '#^Negated boolean expression is always false\.$#'
 			identifier: booleanNot.alwaysFalse
-			count: 1
-			path: concrete/controllers/single_page/dashboard/users/groups/message.php
-
-		-
-			message: '#^Parameter \#1 \$gID of static method Concrete\\Core\\User\\Group\\Group\:\:getByID\(\) expects string, int\<min, \-3\>\|int\<\-1, max\> given\.$#'
-			identifier: argument.type
 			count: 1
 			path: concrete/controllers/single_page/dashboard/users/groups/message.php
 
@@ -3777,18 +3717,6 @@ parameters:
 			path: concrete/src/Api/Controller/Express.php
 
 		-
-			message: '#^Parameter \#1 \$column of method Concrete\\Core\\Search\\ItemList\\ItemList\:\:sortBySearchColumn\(\) expects Concrete\\Core\\Search\\Column\\Column, Concrete\\Core\\Search\\Column\\PagerColumnInterface given\.$#'
-			identifier: argument.type
-			count: 1
-			path: concrete/src/Api/Controller/Express.php
-
-		-
-			message: '#^Parameter \#1 \$itemList of method Concrete\\Core\\Search\\Column\\PagerColumnInterface\:\:filterListAtOffset\(\) expects Concrete\\Core\\Search\\ItemList\\Pager\\PagerProviderInterface, Concrete\\Core\\Search\\ItemList\\ItemList given\.$#'
-			identifier: argument.type
-			count: 1
-			path: concrete/src/Api/Controller/Express.php
-
-		-
 			message: '#^Call to an undefined method Concrete\\Core\\Entity\\File\\File\:\:getExtension\(\)\.$#'
 			identifier: method.notFound
 			count: 1
@@ -3819,18 +3747,6 @@ parameters:
 			path: concrete/src/Api/Controller/Files.php
 
 		-
-			message: '#^Parameter \#1 \$column of method Concrete\\Core\\Search\\ItemList\\ItemList\:\:sortBySearchColumn\(\) expects Concrete\\Core\\Search\\Column\\Column, Concrete\\Core\\Search\\Column\\PagerColumnInterface given\.$#'
-			identifier: argument.type
-			count: 1
-			path: concrete/src/Api/Controller/Files.php
-
-		-
-			message: '#^Parameter \#1 \$itemList of method Concrete\\Core\\Search\\Column\\PagerColumnInterface\:\:filterListAtOffset\(\) expects Concrete\\Core\\Search\\ItemList\\Pager\\PagerProviderInterface, Concrete\\Core\\Search\\ItemList\\ItemList given\.$#'
-			identifier: argument.type
-			count: 1
-			path: concrete/src/Api/Controller/Files.php
-
-		-
 			message: '#^Parameter \#1 \$object of class Concrete\\Core\\Permission\\Checker constructor expects Concrete\\Core\\Permission\\ObjectInterface\|false\|null, Concrete\\Core\\Tree\\Node\\NodeType given\.$#'
 			identifier: argument.type
 			count: 1
@@ -3855,24 +3771,6 @@ parameters:
 			path: concrete/src/Api/Controller/Groups.php
 
 		-
-			message: '#^Parameter \#1 \$column of method Concrete\\Core\\Search\\ItemList\\ItemList\:\:sortBySearchColumn\(\) expects Concrete\\Core\\Search\\Column\\Column, Concrete\\Core\\Search\\Column\\PagerColumnInterface given\.$#'
-			identifier: argument.type
-			count: 1
-			path: concrete/src/Api/Controller/Groups.php
-
-		-
-			message: '#^Parameter \#1 \$gID of static method Concrete\\Core\\User\\Group\\Group\:\:getByID\(\) expects string, int given\.$#'
-			identifier: argument.type
-			count: 1
-			path: concrete/src/Api/Controller/Groups.php
-
-		-
-			message: '#^Parameter \#1 \$itemList of method Concrete\\Core\\Search\\Column\\PagerColumnInterface\:\:filterListAtOffset\(\) expects Concrete\\Core\\Search\\ItemList\\Pager\\PagerProviderInterface, Concrete\\Core\\Search\\ItemList\\ItemList given\.$#'
-			identifier: argument.type
-			count: 1
-			path: concrete/src/Api/Controller/Groups.php
-
-		-
 			message: '#^Call to an undefined method League\\Fractal\\Resource\\ResourceAbstract\:\:setCursor\(\)\.$#'
 			identifier: method.notFound
 			count: 1
@@ -3891,18 +3789,6 @@ parameters:
 			path: concrete/src/Api/Controller/Pages.php
 
 		-
-			message: '#^Parameter \#1 \$column of method Concrete\\Core\\Search\\ItemList\\ItemList\:\:sortBySearchColumn\(\) expects Concrete\\Core\\Search\\Column\\Column, Concrete\\Core\\Search\\Column\\PagerColumnInterface given\.$#'
-			identifier: argument.type
-			count: 1
-			path: concrete/src/Api/Controller/Pages.php
-
-		-
-			message: '#^Parameter \#1 \$itemList of method Concrete\\Core\\Search\\Column\\PagerColumnInterface\:\:filterListAtOffset\(\) expects Concrete\\Core\\Search\\ItemList\\Pager\\PagerProviderInterface, Concrete\\Core\\Search\\ItemList\\ItemList given\.$#'
-			identifier: argument.type
-			count: 1
-			path: concrete/src/Api/Controller/Pages.php
-
-		-
 			message: '#^Parameter \#2 \$id of method Concrete\\Core\\Api\\ApiController\:\:deleted\(\) expects string, int given\.$#'
 			identifier: argument.type
 			count: 1
@@ -3917,18 +3803,6 @@ parameters:
 		-
 			message: '#^Call to an undefined method League\\Fractal\\Resource\\ResourceAbstract\:\:setCursor\(\)\.$#'
 			identifier: method.notFound
-			count: 1
-			path: concrete/src/Api/Controller/Users.php
-
-		-
-			message: '#^Parameter \#1 \$column of method Concrete\\Core\\Search\\ItemList\\ItemList\:\:sortBySearchColumn\(\) expects Concrete\\Core\\Search\\Column\\Column, Concrete\\Core\\Search\\Column\\PagerColumnInterface given\.$#'
-			identifier: argument.type
-			count: 1
-			path: concrete/src/Api/Controller/Users.php
-
-		-
-			message: '#^Parameter \#1 \$itemList of method Concrete\\Core\\Search\\Column\\PagerColumnInterface\:\:filterListAtOffset\(\) expects Concrete\\Core\\Search\\ItemList\\Pager\\PagerProviderInterface, Concrete\\Core\\Search\\ItemList\\ItemList given\.$#'
-			identifier: argument.type
 			count: 1
 			path: concrete/src/Api/Controller/Users.php
 
@@ -3955,12 +3829,6 @@ parameters:
 			identifier: constructor.unusedParameter
 			count: 1
 			path: concrete/src/Api/Exception/InvalidLimitQueryParameterValueException.php
-
-		-
-			message: '#^Parameter \#1 \$ui of method Concrete\\Core\\Http\\RequestBase\:\:setCustomRequestUser\(\) expects Concrete\\Core\\User\\UserInfo, null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: concrete/src/Api/Fractal/Transformer/AreaContentTransformer.php
 
 		-
 			message: '#^Left side of && is always true\.$#'
@@ -4019,12 +3887,6 @@ parameters:
 		-
 			message: '#^Call to method find\(\) on an unknown class simplehtmldom_1_5\\simple_html_dom\.$#'
 			identifier: class.notFound
-			count: 1
-			path: concrete/src/Api/Fractal/Transformer/PageContentTransformer.php
-
-		-
-			message: '#^Parameter \#1 \$ui of method Concrete\\Core\\Http\\RequestBase\:\:setCustomRequestUser\(\) expects Concrete\\Core\\User\\UserInfo, null given\.$#'
-			identifier: argument.type
 			count: 1
 			path: concrete/src/Api/Fractal/Transformer/PageContentTransformer.php
 
@@ -5145,26 +5007,8 @@ parameters:
 			path: concrete/src/Application/Service/Dashboard/Sitemap.php
 
 		-
-			message: '#^PHPDoc tag @param references unknown parameter\: \$autoOpen$#'
-			identifier: parameter.notFound
-			count: 1
-			path: concrete/src/Application/Service/Dashboard/Sitemap.php
-
-		-
 			message: '#^PHPDoc tag @param references unknown parameter\: \$cID$#'
 			identifier: parameter.notFound
-			count: 1
-			path: concrete/src/Application/Service/Dashboard/Sitemap.php
-
-		-
-			message: '#^Parameter \#2 \$haystack of function in_array expects array, bool given\.$#'
-			identifier: argument.type
-			count: 1
-			path: concrete/src/Application/Service/Dashboard/Sitemap.php
-
-		-
-			message: '#^Property Concrete\\Core\\Application\\Service\\Dashboard\\Sitemap\:\:\$expandedNodes \(bool\) does not accept default value of type array\.$#'
-			identifier: property.defaultValue
 			count: 1
 			path: concrete/src/Application/Service/Dashboard/Sitemap.php
 
@@ -5190,12 +5034,6 @@ parameters:
 			message: '#^Left side of && is always true\.$#'
 			identifier: booleanAnd.leftAlwaysTrue
 			count: 1
-			path: concrete/src/Application/Service/Urls.php
-
-		-
-			message: '#^Parameter \#1 \$bt of method Concrete\\Core\\Application\\Service\\Urls\:\:getBlockTypeAssetsURL\(\) expects Concrete\\Core\\Entity\\Block\\BlockType\\BlockType, Concrete\\Core\\Block\\BlockType\\BlockType given\.$#'
-			identifier: argument.type
-			count: 2
 			path: concrete/src/Application/Service/Urls.php
 
 		-
@@ -5535,12 +5373,6 @@ parameters:
 			path: concrete/src/Area/Layout/CustomLayout.php
 
 		-
-			message: '#^Parameter \#1 \$newAreaLayout of method Concrete\\Core\\Area\\Layout\\Column\:\:duplicate\(\) expects Concrete\\Core\\Area\\Layout\\Column, Concrete\\Core\\Area\\Layout\\CustomLayout\|Concrete\\Core\\Area\\Layout\\PresetLayout\|Concrete\\Core\\Area\\Layout\\ThemeGridLayout\|null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: concrete/src/Area/Layout/CustomLayout.php
-
-		-
 			message: '#^Parameter \#2 \$value of method SimpleXMLElement\:\:addAttribute\(\) expects string, bool given\.$#'
 			identifier: argument.type
 			count: 1
@@ -5661,12 +5493,6 @@ parameters:
 			path: concrete/src/Area/Layout/PresetColumn.php
 
 		-
-			message: '#^Parameter \#1 \$newAreaLayout of method Concrete\\Core\\Area\\Layout\\Column\:\:duplicate\(\) expects Concrete\\Core\\Area\\Layout\\Column, Concrete\\Core\\Area\\Layout\\CustomLayout\|Concrete\\Core\\Area\\Layout\\PresetLayout\|Concrete\\Core\\Area\\Layout\\ThemeGridLayout\|null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: concrete/src/Area/Layout/PresetLayout.php
-
-		-
 			message: '#^Call to an undefined method Concrete\\Core\\Area\\Layout\\Layout\:\:getThemeGridFrameworkObject\(\)\.$#'
 			identifier: method.notFound
 			count: 5
@@ -5705,12 +5531,6 @@ parameters:
 		-
 			message: '#^Method Concrete\\Core\\Area\\Layout\\ThemeGridLayout\:\:addLayoutColumn\(\) should return static\(Concrete\\Core\\Area\\Layout\\ThemeGridLayout\) but returns Concrete\\Core\\Area\\Layout\\ThemeGridColumn\.$#'
 			identifier: return.type
-			count: 1
-			path: concrete/src/Area/Layout/ThemeGridLayout.php
-
-		-
-			message: '#^Parameter \#1 \$newAreaLayout of method Concrete\\Core\\Area\\Layout\\Column\:\:duplicate\(\) expects Concrete\\Core\\Area\\Layout\\Column, Concrete\\Core\\Area\\Layout\\CustomLayout\|Concrete\\Core\\Area\\Layout\\PresetLayout\|Concrete\\Core\\Area\\Layout\\ThemeGridLayout\|null given\.$#'
-			identifier: argument.type
 			count: 1
 			path: concrete/src/Area/Layout/ThemeGridLayout.php
 
@@ -6303,12 +6123,6 @@ parameters:
 			path: concrete/src/Authentication/Type/OAuth/GenericOauthTypeController.php
 
 		-
-			message: '#^Parameter \#1 \$gID of static method Concrete\\Core\\User\\Group\\Group\:\:getByID\(\) expects string, int given\.$#'
-			identifier: argument.type
-			count: 1
-			path: concrete/src/Authentication/Type/OAuth/GenericOauthTypeController.php
-
-		-
 			message: '#^Parameter \#1 \$stack of function array_shift is passed by reference, so it expects variables only\.$#'
 			identifier: argument.byRef
 			count: 5
@@ -6469,12 +6283,6 @@ parameters:
 			identifier: method.notFound
 			count: 1
 			path: concrete/src/Backup/ContentImporter/Importer/Routine/ImportDesignTagsRoutine.php
-
-		-
-			message: '#^Parameter \#1 \$treeNodeCategoryName of static method Concrete\\Core\\Tree\\Node\\Type\\Category\:\:add\(\) expects Concrete\\Core\\Tree\\Node\\Node\|false\|null, string given\.$#'
-			identifier: argument.type
-			count: 1
-			path: concrete/src/Backup/ContentImporter/Importer/Routine/ImportExpressEntitiesRoutine.php
 
 		-
 			message: '#^Call to function is_object\(\) with Concrete\\Core\\Entity\\Express\\Association will always evaluate to true\.$#'
@@ -6891,12 +6699,6 @@ parameters:
 			path: concrete/src/Block/Command/AddAliasDefaultsBlockCommandHandler.php
 
 		-
-			message: '#^Parameter \#2 \$version of static method Concrete\\Core\\Page\\Page\:\:getByID\(\) expects string, int given\.$#'
-			identifier: argument.type
-			count: 2
-			path: concrete/src/Block/Command/AddAliasDefaultsBlockCommandHandler.php
-
-		-
 			message: '#^Instanceof between Concrete\\Core\\Page\\Page and Concrete\\Core\\Page\\Collection\\Collection will always evaluate to true\.$#'
 			identifier: instanceof.alwaysTrue
 			count: 1
@@ -6915,32 +6717,14 @@ parameters:
 			path: concrete/src/Block/Command/DeleteBlockCommandHandler.php
 
 		-
-			message: '#^Parameter \#2 \$version of static method Concrete\\Core\\Page\\Page\:\:getByID\(\) expects string, int given\.$#'
-			identifier: argument.type
-			count: 1
-			path: concrete/src/Block/Command/DeleteBlockCommandHandler.php
-
-		-
 			message: '#^Left side of && is always true\.$#'
 			identifier: booleanAnd.leftAlwaysTrue
 			count: 2
 			path: concrete/src/Block/Command/ForceDefaultDisplayOrderBlockCommandHandler.php
 
 		-
-			message: '#^Parameter \#2 \$version of static method Concrete\\Core\\Page\\Page\:\:getByID\(\) expects string, int given\.$#'
-			identifier: argument.type
-			count: 2
-			path: concrete/src/Block/Command/ForceDefaultDisplayOrderBlockCommandHandler.php
-
-		-
 			message: '#^Left side of && is always true\.$#'
 			identifier: booleanAnd.leftAlwaysTrue
-			count: 2
-			path: concrete/src/Block/Command/UpdateForkedAliasDefaultsBlockCommandHandler.php
-
-		-
-			message: '#^Parameter \#2 \$version of static method Concrete\\Core\\Page\\Page\:\:getByID\(\) expects string, int given\.$#'
-			identifier: argument.type
 			count: 2
 			path: concrete/src/Block/Command/UpdateForkedAliasDefaultsBlockCommandHandler.php
 
@@ -6995,18 +6779,6 @@ parameters:
 		-
 			message: '#^Call to an undefined method Concrete\\Core\\Page\\Collection\\Collection\:\:getCollectionThemeObject\(\)\.$#'
 			identifier: method.notFound
-			count: 1
-			path: concrete/src/Block/View/BlockViewTemplate.php
-
-		-
-			message: '#^Parameter \#1 \$packageList of method Concrete\\Core\\Block\\View\\BlockViewTemplate\:\:setPackageList\(\) expects static\(Concrete\\Core\\Block\\View\\BlockViewTemplate\), Concrete\\Core\\Package\\PackageList given\.$#'
-			identifier: argument.type
-			count: 2
-			path: concrete/src/Block/View/BlockViewTemplate.php
-
-		-
-			message: '#^Property Concrete\\Core\\Block\\View\\BlockViewTemplate\:\:\$packageList \(Concrete\\Core\\Package\\PackageList\) does not accept static\(Concrete\\Core\\Block\\View\\BlockViewTemplate\)\.$#'
-			identifier: assign.propertyType
 			count: 1
 			path: concrete/src/Block/View/BlockViewTemplate.php
 
@@ -7251,12 +7023,6 @@ parameters:
 			path: concrete/src/Cache/Command/ClearCacheCommandHandler.php
 
 		-
-			message: '#^Parameter \#1 \$event of method Symfony\\Component\\EventDispatcher\\EventDispatcher\:\:dispatch\(\) expects object, string given\.$#'
-			identifier: argument.type
-			count: 2
-			path: concrete/src/Cache/Command/ClearCacheCommandHandler.php
-
-		-
 			message: '#^Property Concrete\\Core\\Cache\\Command\\ClearCacheCommandHandler\:\:\$caches \(Concrete\\Core\\Cache\\Level\\ObjectCache\) does not accept default value of type array\<string, string\>\.$#'
 			identifier: property.defaultValue
 			count: 1
@@ -7265,12 +7031,6 @@ parameters:
 		-
 			message: '#^Property Concrete\\Core\\Cache\\Command\\ClearCacheCommandHandler\:\:\$clearGlobalAreas is never read, only written\.$#'
 			identifier: property.onlyWritten
-			count: 1
-			path: concrete/src/Cache/Command/ClearCacheCommandHandler.php
-
-		-
-			message: '#^Property Concrete\\Core\\Cache\\Command\\ClearCacheCommandHandler\:\:\$dispatcher \(Symfony\\Component\\EventDispatcher\\EventDispatcher\) does not accept Concrete\\Core\\Events\\EventDispatcher\.$#'
-			identifier: assign.propertyType
 			count: 1
 			path: concrete/src/Cache/Command/ClearCacheCommandHandler.php
 
@@ -7901,12 +7661,6 @@ parameters:
 		-
 			message: '#^Negated boolean expression is always true\.$#'
 			identifier: booleanNot.alwaysTrue
-			count: 1
-			path: concrete/src/Console/Command/InstallCommand.php
-
-		-
-			message: '#^Parameter \#1 \$gID of static method Concrete\\Core\\User\\Group\\Group\:\:getByID\(\) expects string, int given\.$#'
-			identifier: argument.type
 			count: 1
 			path: concrete/src/Console/Command/InstallCommand.php
 
@@ -8943,12 +8697,6 @@ parameters:
 			path: concrete/src/Entity/File/DownloadStatistics.php
 
 		-
-			message: '#^Parameter \#2 \$prefix of function core_class expects bool, string\|null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: concrete/src/Entity/File/ExternalFileProvider/Type/Type.php
-
-		-
 			message: '#^Call to an undefined method Concrete\\Core\\Permission\\Key\\Key\:\:copyFromFileSetToFile\(\)\.$#'
 			identifier: method.notFound
 			count: 1
@@ -9003,12 +8751,6 @@ parameters:
 			path: concrete/src/Entity/File/File.php
 
 		-
-			message: '#^Parameter \#1 \$file of static method Concrete\\Core\\Tree\\Node\\Type\\File\:\:add\(\) expects Concrete\\Core\\Tree\\Node\\Node\|false\|null, static\(Concrete\\Core\\Entity\\File\\File\) given\.$#'
-			identifier: argument.type
-			count: 1
-			path: concrete/src/Entity/File/File.php
-
-		-
 			message: '#^Static method Concrete\\Core\\Support\\Facade\\DatabaseORM\:\:entityManager\(\) invoked with 1 parameter, 0 required\.$#'
 			identifier: arguments.count
 			count: 1
@@ -9053,12 +8795,6 @@ parameters:
 		-
 			message: '#^Call to an undefined method Concrete\\Core\\File\\StorageLocation\\StorageLocation\:\:getTypeObject\(\)\.$#'
 			identifier: method.notFound
-			count: 1
-			path: concrete/src/Entity/File/StorageLocation/Type/Type.php
-
-		-
-			message: '#^Parameter \#2 \$prefix of function core_class expects bool, string\|null given\.$#'
-			identifier: argument.type
 			count: 1
 			path: concrete/src/Entity/File/StorageLocation/Type/Type.php
 
@@ -9273,12 +9009,6 @@ parameters:
 			path: concrete/src/Entity/Page/Feed.php
 
 		-
-			message: '#^Parameter \#1 \$gID of static method Concrete\\Core\\User\\Group\\Group\:\:getByID\(\) expects string, int given\.$#'
-			identifier: argument.type
-			count: 1
-			path: concrete/src/Entity/Page/Feed.php
-
-		-
 			message: '#^PHPDoc tag @param for parameter \$template with type mixed is not subtype of native type Concrete\\Core\\Entity\\Summary\\Template\.$#'
 			identifier: parameter.phpDocType
 			count: 1
@@ -9381,20 +9111,8 @@ parameters:
 			path: concrete/src/Entity/User/GroupCreate.php
 
 		-
-			message: '#^Parameter \#1 \$gID of static method Concrete\\Core\\User\\Group\\Group\:\:getByID\(\) expects string, int given\.$#'
-			identifier: argument.type
-			count: 1
-			path: concrete/src/Entity/User/GroupCreate.php
-
-		-
 			message: '#^PHPDoc tag @return with type array\<Concrete\\Core\\Entity\\Notification\\GroupRoleChangeNotification\> is incompatible with native type Doctrine\\Common\\Collections\\Collection\.$#'
 			identifier: return.phpDocType
-			count: 1
-			path: concrete/src/Entity/User/GroupRoleChange.php
-
-		-
-			message: '#^Parameter \#1 \$gID of static method Concrete\\Core\\User\\Group\\Group\:\:getByID\(\) expects string, int given\.$#'
-			identifier: argument.type
 			count: 1
 			path: concrete/src/Entity/User/GroupRoleChange.php
 
@@ -9411,20 +9129,8 @@ parameters:
 			path: concrete/src/Entity/User/GroupSignup.php
 
 		-
-			message: '#^Parameter \#1 \$gID of static method Concrete\\Core\\User\\Group\\Group\:\:getByID\(\) expects string, int given\.$#'
-			identifier: argument.type
-			count: 1
-			path: concrete/src/Entity/User/GroupSignup.php
-
-		-
 			message: '#^PHPDoc tag @return with type array\<Concrete\\Core\\Entity\\Notification\\GroupSignupRequestNotification\> is incompatible with native type Doctrine\\Common\\Collections\\Collection\.$#'
 			identifier: return.phpDocType
-			count: 1
-			path: concrete/src/Entity/User/GroupSignupRequest.php
-
-		-
-			message: '#^Parameter \#1 \$gID of static method Concrete\\Core\\User\\Group\\Group\:\:getByID\(\) expects string, int given\.$#'
-			identifier: argument.type
 			count: 1
 			path: concrete/src/Entity/User/GroupSignupRequest.php
 
@@ -9435,20 +9141,8 @@ parameters:
 			path: concrete/src/Entity/User/GroupSignupRequestAccept.php
 
 		-
-			message: '#^Parameter \#1 \$gID of static method Concrete\\Core\\User\\Group\\Group\:\:getByID\(\) expects string, int given\.$#'
-			identifier: argument.type
-			count: 1
-			path: concrete/src/Entity/User/GroupSignupRequestAccept.php
-
-		-
 			message: '#^PHPDoc tag @return with type array\<Concrete\\Core\\Entity\\Notification\\GroupSignupRequestDeclineNotification\> is incompatible with native type Doctrine\\Common\\Collections\\Collection\.$#'
 			identifier: return.phpDocType
-			count: 1
-			path: concrete/src/Entity/User/GroupSignupRequestDecline.php
-
-		-
-			message: '#^Parameter \#1 \$gID of static method Concrete\\Core\\User\\Group\\Group\:\:getByID\(\) expects string, int given\.$#'
-			identifier: argument.type
 			count: 1
 			path: concrete/src/Entity/User/GroupSignupRequestDecline.php
 
@@ -10065,12 +9759,6 @@ parameters:
 			path: concrete/src/File/File.php
 
 		-
-			message: '#^Parameter \#1 \$file of static method Concrete\\Core\\Tree\\Node\\Type\\File\:\:add\(\) expects Concrete\\Core\\Tree\\Node\\Node\|false\|null, Concrete\\Core\\Entity\\File\\File given\.$#'
-			identifier: argument.type
-			count: 1
-			path: concrete/src/File/File.php
-
-		-
 			message: '#^Call to function is_object\(\) with int will always evaluate to false\.$#'
 			identifier: function.impossibleType
 			count: 1
@@ -10085,12 +9773,6 @@ parameters:
 		-
 			message: '#^Method Concrete\\Core\\File\\Filesystem\:\:getRootFolder\(\) should return Concrete\\Core\\Tree\\Node\\Type\\FileFolder\|null but returns Concrete\\Core\\Tree\\Node\\Node\|null\.$#'
 			identifier: return.type
-			count: 1
-			path: concrete/src/File/Filesystem.php
-
-		-
-			message: '#^Parameter \#1 \$gID of static method Concrete\\Core\\User\\Group\\Group\:\:getByID\(\) expects string, int given\.$#'
-			identifier: argument.type
 			count: 1
 			path: concrete/src/File/Filesystem.php
 
@@ -10215,28 +9897,10 @@ parameters:
 			path: concrete/src/File/Import/FileImporter.php
 
 		-
-			message: '#^Parameter \#1 \$code of static method Concrete\\Core\\File\\Import\\ImportException\:\:fromErrorCode\(\) expects string, int given\.$#'
-			identifier: argument.type
-			count: 8
-			path: concrete/src/File/Import/FileImporter.php
-
-		-
 			message: '#^Property Concrete\\Core\\File\\Import\\FileImporter\:\:\$incoming is never read, only written\.$#'
 			identifier: property.onlyWritten
 			count: 1
 			path: concrete/src/File/Import/FileImporter.php
-
-		-
-			message: '#^Parameter \#1 \$code of static method Concrete\\Core\\File\\Import\\ImportException\:\:describeErrorCode\(\) expects int, string given\.$#'
-			identifier: argument.type
-			count: 1
-			path: concrete/src/File/Import/ImportException.php
-
-		-
-			message: '#^Parameter \#2 \$code of class Concrete\\Core\\File\\Import\\ImportException constructor expects int, string given\.$#'
-			identifier: argument.type
-			count: 1
-			path: concrete/src/File/Import/ImportException.php
 
 		-
 			message: '#^Unsafe usage of new static\(\)\.$#'
@@ -10245,28 +9909,10 @@ parameters:
 			path: concrete/src/File/Import/ImportException.php
 
 		-
-			message: '#^Parameter \#1 \$code of static method Concrete\\Core\\File\\Import\\ImportException\:\:fromErrorCode\(\) expects string, int given\.$#'
-			identifier: argument.type
-			count: 3
-			path: concrete/src/File/Import/ImportOptions.php
-
-		-
 			message: '#^Strict comparison using \=\=\= between Concrete\\Core\\Entity\\File\\StorageLocation\\StorageLocation and null will always evaluate to false\.$#'
 			identifier: identical.alwaysFalse
 			count: 3
 			path: concrete/src/File/Import/ImportOptions.php
-
-		-
-			message: '#^Parameter \#1 \$code of static method Concrete\\Core\\File\\Import\\ImportException\:\:fromErrorCode\(\) expects string, int given\.$#'
-			identifier: argument.type
-			count: 1
-			path: concrete/src/File/Import/ImportingFile.php
-
-		-
-			message: '#^Parameter \#1 \$code of static method Concrete\\Core\\File\\Import\\ImportException\:\:fromErrorCode\(\) expects string, int given\.$#'
-			identifier: argument.type
-			count: 1
-			path: concrete/src/File/Import/Processor/FileExistingValidator.php
 
 		-
 			message: '#^Default value of the parameter \#3 \$mode \(int\) of method Concrete\\Core\\File\\Import\\Processor\\ImageSizeConstrain\:\:resizeInPlace\(\) is incompatible with type string\.$#'
@@ -10957,18 +10603,6 @@ parameters:
 			identifier: notIdentical.alwaysTrue
 			count: 1
 			path: concrete/src/Form/Service/Form.php
-
-		-
-			message: '#^Default value of the parameter \#3 \$validate \(int\) of method Concrete\\Core\\Form\\Service\\Validation\:\:addRequired\(\) is incompatible with type string\.$#'
-			identifier: parameter.defaultValue
-			count: 1
-			path: concrete/src/Form/Service/Validation.php
-
-		-
-			message: '#^Parameter \#3 \$validate of method Concrete\\Core\\Form\\Service\\Validation\:\:addRequired\(\) expects string, int given\.$#'
-			identifier: argument.type
-			count: 4
-			path: concrete/src/Form/Service/Validation.php
 
 		-
 			message: '#^PHPDoc tag @param for parameter \$values with type int is incompatible with native type array\.$#'
@@ -13341,18 +12975,6 @@ parameters:
 			path: concrete/src/Package/Packer/Writer/Zipper.php
 
 		-
-			message: '#^Parameter \#1 \$gID of static method Concrete\\Core\\User\\Group\\Group\:\:getByID\(\) expects string, int given\.$#'
-			identifier: argument.type
-			count: 5
-			path: concrete/src/Package/StartingPointPackage.php
-
-		-
-			message: '#^Parameter \#1 \$treeNodeCategoryName of static method Concrete\\Core\\Tree\\Node\\Type\\Category\:\:add\(\) expects Concrete\\Core\\Tree\\Node\\Node\|false\|null, ''Forms'' given\.$#'
-			identifier: argument.type
-			count: 1
-			path: concrete/src/Package/StartingPointPackage.php
-
-		-
 			message: '#^Call to an undefined method Doctrine\\DBAL\\Connection\:\:GetOne\(\)\.$#'
 			identifier: method.notFound
 			count: 1
@@ -13659,12 +13281,6 @@ parameters:
 			path: concrete/src/Page/Controller/DashboardExpressEntityPageController.php
 
 		-
-			message: '#^Parameter \#2 \$pkgHandle of method Concrete\\Core\\Page\\Controller\\PageController\:\:render\(\) expects string\|null, false given\.$#'
-			identifier: argument.type
-			count: 4
-			path: concrete/src/Page/Controller/DashboardExpressEntityPageController.php
-
-		-
 			message: '#^Property Concrete\\Core\\Page\\Controller\\DashboardExpressEntityPageController\:\:\$headerMenu \(Concrete\\Core\\Filesystem\\Element\) in isset\(\) is not nullable\.$#'
 			identifier: isset.property
 			count: 1
@@ -13919,12 +13535,6 @@ parameters:
 		-
 			message: '#^PHPDoc tag @var above a method has no effect\.$#'
 			identifier: varTag.misplaced
-			count: 3
-			path: concrete/src/Page/Page.php
-
-		-
-			message: '#^Parameter \#1 \$gID of static method Concrete\\Core\\User\\Group\\Group\:\:getByID\(\) expects string, int given\.$#'
-			identifier: argument.type
 			count: 3
 			path: concrete/src/Page/Page.php
 
@@ -14243,12 +13853,6 @@ parameters:
 		-
 			message: '#^Method Concrete\\Core\\Page\\Sitemap\\PageListGenerator\:\:getViewPagePermissionKey\(\) should return Concrete\\Core\\Permission\\Key\\PageKey\|null but returns Concrete\\Core\\Permission\\Key\\Key\|null\.$#'
 			identifier: return.type
-			count: 1
-			path: concrete/src/Page/Sitemap/PageListGenerator.php
-
-		-
-			message: '#^Parameter \#1 \$gID of static method Concrete\\Core\\User\\Group\\Group\:\:getByID\(\) expects string, int given\.$#'
-			identifier: argument.type
 			count: 1
 			path: concrete/src/Page/Sitemap/PageListGenerator.php
 
@@ -14577,12 +14181,6 @@ parameters:
 			path: concrete/src/Page/Type/Command/UpdatePageTypeDefaultsCommandHandler.php
 
 		-
-			message: '#^Parameter \#2 \$version of static method Concrete\\Core\\Page\\Page\:\:getByID\(\) expects string, int given\.$#'
-			identifier: argument.type
-			count: 1
-			path: concrete/src/Page/Type/Command/UpdatePageTypeDefaultsCommandHandler.php
-
-		-
 			message: '#^Method Concrete\\Core\\Page\\Type\\Composer\\Control\\Control\:\:addToPageTypeComposerFormLayoutSet\(\) invoked with 2 parameters, 1 required\.$#'
 			identifier: arguments.count
 			count: 1
@@ -14767,12 +14365,6 @@ parameters:
 			identifier: parameter.phpDocType
 			count: 1
 			path: concrete/src/Page/View/PageView.php
-
-		-
-			message: '#^Parameter \#2 \$prefix of function core_class expects bool, string\|null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: concrete/src/Permission/Access/Access.php
 
 		-
 			message: '#^Call to Concrete\\Core\\Permission\\Access\\Access\:\:save\(\) on a separate line has no effect\.$#'
@@ -15741,12 +15333,6 @@ parameters:
 			path: concrete/src/Permission/Response/BlockResponse.php
 
 		-
-			message: '#^Parameter \#1 \$gID of static method Concrete\\Core\\User\\Group\\Group\:\:getByID\(\) expects string, int given\.$#'
-			identifier: argument.type
-			count: 1
-			path: concrete/src/Permission/Response/BlockResponse.php
-
-		-
 			message: '#^Call to an undefined method Concrete\\Core\\Permission\\Response\\CalendarResponse\:\:canAddCalendarEvent\(\)\.$#'
 			identifier: method.notFound
 			count: 1
@@ -16461,13 +16047,13 @@ parameters:
 			path: concrete/src/StyleCustomizer/Preview/LegacyStylesheetPreviewHandler.php
 
 		-
-			message: '#^Parameter \#1 \$ui of method Concrete\\Core\\Http\\RequestBase\:\:setCustomRequestUser\(\) expects Concrete\\Core\\User\\UserInfo, int given\.$#'
+			message: '#^Parameter \#1 \$ui of method Concrete\\Core\\Http\\RequestBase\:\:setCustomRequestUser\(\) expects Concrete\\Core\\User\\UserInfo\|null, int given\.$#'
 			identifier: argument.type
 			count: 1
 			path: concrete/src/StyleCustomizer/Preview/LegacyStylesheetPreviewHandler.php
 
 		-
-			message: '#^Parameter \#1 \$ui of method Concrete\\Core\\Http\\RequestBase\:\:setCustomRequestUser\(\) expects Concrete\\Core\\User\\UserInfo, int given\.$#'
+			message: '#^Parameter \#1 \$ui of method Concrete\\Core\\Http\\RequestBase\:\:setCustomRequestUser\(\) expects Concrete\\Core\\User\\UserInfo\|null, int given\.$#'
 			identifier: argument.type
 			count: 1
 			path: concrete/src/StyleCustomizer/Preview/StandardPreviewHandler.php
@@ -16893,20 +16479,8 @@ parameters:
 			path: concrete/src/Tree/Node/Node.php
 
 		-
-			message: '#^Default value of the parameter \#1 \$treeNodeCategoryName \(''''\) of method Concrete\\Core\\Tree\\Node\\Type\\Category\:\:add\(\) is incompatible with type Concrete\\Core\\Tree\\Node\\Node\|false\|null\.$#'
-			identifier: parameter.defaultValue
-			count: 1
-			path: concrete/src/Tree/Node/Type/Category.php
-
-		-
 			message: '#^Method Concrete\\Core\\Tree\\Node\\Type\\Category\:\:getTreeNodeDisplayName\(\) should return string but return statement is missing\.$#'
 			identifier: return.missing
-			count: 1
-			path: concrete/src/Tree/Node/Type/Category.php
-
-		-
-			message: '#^Parameter \#1 \$treeNodeCategoryName of static method Concrete\\Core\\Tree\\Node\\Type\\Category\:\:add\(\) expects Concrete\\Core\\Tree\\Node\\Node\|false\|null, string given\.$#'
-			identifier: argument.type
 			count: 1
 			path: concrete/src/Tree/Node/Type/Category.php
 
@@ -16919,12 +16493,6 @@ parameters:
 		-
 			message: '#^Call to an undefined method Concrete\\Core\\Tree\\Node\\Node\:\:setTreeNodeSite\(\)\.$#'
 			identifier: method.notFound
-			count: 1
-			path: concrete/src/Tree/Node/Type/ExpressEntrySiteResults.php
-
-		-
-			message: '#^Default value of the parameter \#1 \$treeNodeCategoryName \(''''\) of method Concrete\\Core\\Tree\\Node\\Type\\ExpressEntrySiteResults\:\:add\(\) is incompatible with type Concrete\\Core\\Tree\\Node\\Node\|false\|null\.$#'
-			identifier: parameter.defaultValue
 			count: 1
 			path: concrete/src/Tree/Node/Type/ExpressEntrySiteResults.php
 
@@ -17067,12 +16635,6 @@ parameters:
 			path: concrete/src/Tree/Type/ExpressEntryResults.php
 
 		-
-			message: '#^Parameter \#1 \$gID of static method Concrete\\Core\\User\\Group\\Group\:\:getByID\(\) expects string, int given\.$#'
-			identifier: argument.type
-			count: 1
-			path: concrete/src/Tree/Type/ExpressEntryResults.php
-
-		-
 			message: '#^Method Concrete\\Core\\Tree\\Type\\FileManager\:\:add\(\) should return Concrete\\Core\\Tree\\Type\\FileManager but returns Concrete\\Core\\Tree\\Tree\|null\.$#'
 			identifier: return.type
 			count: 1
@@ -17099,12 +16661,6 @@ parameters:
 		-
 			message: '#^Call to an undefined method Concrete\\Core\\Tree\\Tree\:\:setTopicTreeName\(\)\.$#'
 			identifier: method.notFound
-			count: 1
-			path: concrete/src/Tree/Type/Topic.php
-
-		-
-			message: '#^Parameter \#1 \$gID of static method Concrete\\Core\\User\\Group\\Group\:\:getByID\(\) expects string, int given\.$#'
-			identifier: argument.type
 			count: 1
 			path: concrete/src/Tree/Type/Topic.php
 
@@ -17187,12 +16743,6 @@ parameters:
 			path: concrete/src/Updater/Migrations/Migrations/Version20141219000000.php
 
 		-
-			message: '#^Parameter \#1 \$gID of static method Concrete\\Core\\User\\Group\\Group\:\:getByID\(\) expects string, int given\.$#'
-			identifier: argument.type
-			count: 1
-			path: concrete/src/Updater/Migrations/Migrations/Version20141219000000.php
-
-		-
 			message: '#^Access to an undefined property Concrete\\Core\\Permission\\Duration\:\:\$pdEndDate\.$#'
 			identifier: property.notFound
 			count: 1
@@ -17259,12 +16809,6 @@ parameters:
 			path: concrete/src/Updater/Migrations/Migrations/Version20150504000000.php
 
 		-
-			message: '#^Parameter \#1 \$gID of static method Concrete\\Core\\User\\Group\\Group\:\:getByID\(\) expects string, int given\.$#'
-			identifier: argument.type
-			count: 1
-			path: concrete/src/Updater/Migrations/Migrations/Version20150504000000.php
-
-		-
 			message: '#^Call to function is_object\(\) with Concrete\\Core\\Page\\Page will always evaluate to true\.$#'
 			identifier: function.alreadyNarrowedType
 			count: 1
@@ -17313,30 +16857,6 @@ parameters:
 			path: concrete/src/Updater/Migrations/Migrations/Version20160725000000.php
 
 		-
-			message: '#^Parameter \#1 \$file of static method Concrete\\Core\\Tree\\Node\\Type\\File\:\:add\(\) expects Concrete\\Core\\Tree\\Node\\Node\|false\|null, Concrete\\Core\\Entity\\File\\File given\.$#'
-			identifier: argument.type
-			count: 1
-			path: concrete/src/Updater/Migrations/Migrations/Version20160725000000.php
-
-		-
-			message: '#^Parameter \#1 \$gID of static method Concrete\\Core\\User\\Group\\Group\:\:getByID\(\) expects string, int given\.$#'
-			identifier: argument.type
-			count: 1
-			path: concrete/src/Updater/Migrations/Migrations/Version20160725000000.php
-
-		-
-			message: '#^Parameter \#1 \$treeNodeCategoryName of static method Concrete\\Core\\Tree\\Node\\Type\\Category\:\:add\(\) expects Concrete\\Core\\Tree\\Node\\Node\|false\|null, ''Forms'' given\.$#'
-			identifier: argument.type
-			count: 1
-			path: concrete/src/Updater/Migrations/Migrations/Version20160725000000.php
-
-		-
-			message: '#^Parameter \#1 \$gID of static method Concrete\\Core\\User\\Group\\Group\:\:getByID\(\) expects string, int given\.$#'
-			identifier: argument.type
-			count: 1
-			path: concrete/src/Updater/Migrations/Migrations/Version20161216000000.php
-
-		-
 			message: '#^Call to an undefined method Concrete\\Core\\Entity\\Package\:\:uninstall\(\)\.$#'
 			identifier: method.notFound
 			count: 1
@@ -17363,12 +16883,6 @@ parameters:
 		-
 			message: '#^If condition is always true\.$#'
 			identifier: if.alwaysTrue
-			count: 1
-			path: concrete/src/Updater/Migrations/Migrations/Version20180403143200.php
-
-		-
-			message: '#^Parameter \#1 \$gID of static method Concrete\\Core\\User\\Group\\Group\:\:getByID\(\) expects string, int given\.$#'
-			identifier: argument.type
 			count: 1
 			path: concrete/src/Updater/Migrations/Migrations/Version20180403143200.php
 
@@ -17455,12 +16969,6 @@ parameters:
 			identifier: method.notFound
 			count: 2
 			path: concrete/src/Updater/Migrations/Migrations/Version20190422235040.php
-
-		-
-			message: '#^Parameter \#4 \$pkDescription of static method Concrete\\Core\\Permission\\Key\\Key\:\:add\(\) expects string, null given\.$#'
-			identifier: argument.type
-			count: 3
-			path: concrete/src/Updater/Migrations/Migrations/Version20190522202749.php
 
 		-
 			message: '#^Left side of && is always true\.$#'
@@ -17901,12 +17409,6 @@ parameters:
 			path: concrete/src/User/Group/Group.php
 
 		-
-			message: '#^Parameter \#1 \$gID of static method Concrete\\Core\\User\\Group\\Group\:\:getByID\(\) expects string, int\<min, \-1\>\|int\<1, max\> given\.$#'
-			identifier: argument.type
-			count: 1
-			path: concrete/src/User/Group/Group.php
-
-		-
 			message: '#^Variable \$bf might not be defined\.$#'
 			identifier: variable.undefined
 			count: 2
@@ -18159,12 +17661,6 @@ parameters:
 			path: concrete/src/User/Search/SearchProvider.php
 
 		-
-			message: '#^Parameter \#1 \$gID of static method Concrete\\Core\\User\\Group\\Group\:\:getByID\(\) expects string, int given\.$#'
-			identifier: argument.type
-			count: 1
-			path: concrete/src/User/Search/SearchProvider.php
-
-		-
 			message: '#^Call to function is_object\(\) with Concrete\\Core\\User\\Group\\Group will always evaluate to true\.$#'
 			identifier: function.alreadyNarrowedType
 			count: 3
@@ -18179,12 +17675,6 @@ parameters:
 		-
 			message: '#^Call to function is_object\(\) with Concrete\\Core\\User\\UserInfo will always evaluate to true\.$#'
 			identifier: function.alreadyNarrowedType
-			count: 1
-			path: concrete/src/User/User.php
-
-		-
-			message: '#^Left side of && is always true\.$#'
-			identifier: booleanAnd.leftAlwaysTrue
 			count: 1
 			path: concrete/src/User/User.php
 
@@ -18213,13 +17703,13 @@ parameters:
 			path: concrete/src/User/User.php
 
 		-
-			message: '#^Strict comparison using \=\=\= between \*NEVER\* and \-1 will always evaluate to false\.$#'
+			message: '#^Strict comparison using \=\=\= between Concrete\\Core\\Utility\\IPAddress and false will always evaluate to false\.$#'
 			identifier: identical.alwaysFalse
 			count: 1
 			path: concrete/src/User/User.php
 
 		-
-			message: '#^Strict comparison using \=\=\= between Concrete\\Core\\Utility\\IPAddress and false will always evaluate to false\.$#'
+			message: '#^Strict comparison using \=\=\= between null and \-1 will always evaluate to false\.$#'
 			identifier: identical.alwaysFalse
 			count: 1
 			path: concrete/src/User/User.php
@@ -18263,12 +17753,6 @@ parameters:
 		-
 			message: '#^Method Concrete\\Core\\User\\UserInfo\:\:getUserPublicProfileUrl\(\) should return League\\Url\\UrlInterface\|null but empty return statement found\.$#'
 			identifier: return.empty
-			count: 1
-			path: concrete/src/User/UserInfo.php
-
-		-
-			message: '#^Parameter \#1 \$gID of static method Concrete\\Core\\User\\Group\\Group\:\:getByID\(\) expects string, int given\.$#'
-			identifier: argument.type
 			count: 1
 			path: concrete/src/User/UserInfo.php
 

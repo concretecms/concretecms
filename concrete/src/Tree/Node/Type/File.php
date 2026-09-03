@@ -142,6 +142,10 @@ class File extends TreeNode
         }
     }
 
+    /**
+     * @param \Concrete\Core\Entity\File\File|false $file
+     * @param \Concrete\Core\Tree\Node\Node|false|null $parent
+     */
     public static function add($file = false, $parent = false)
     {
         $node = parent::add($parent);

@@ -19,7 +19,7 @@ class Sitemap
     protected $app;
 
     /**
-     * @var bool
+     * @var array
      */
     protected $expandedNodes = [];
 
@@ -59,7 +59,7 @@ class Sitemap
     }
 
     /**
-     * @param bool $autoOpen
+     * @param array $nodes
      */
     public function setExpandedNodes($nodes)
     {

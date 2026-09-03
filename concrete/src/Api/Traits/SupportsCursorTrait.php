@@ -43,6 +43,10 @@ trait SupportsCursorTrait
         return $resource;
     }
 
+    /**
+     * @param \Concrete\Core\Search\ItemList\ItemList&\Concrete\Core\Search\ItemList\Pager\PagerProviderInterface $list
+     * @param \Concrete\Core\Search\Column\Column&\Concrete\Core\Search\Column\PagerColumnInterface $column
+     */
     public function setupSortAndCursor(
         Request $request,
         ItemList $list,

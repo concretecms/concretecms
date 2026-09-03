@@ -495,7 +495,7 @@ EOT
      * @param string $pkCategoryHandle
      * @param string $pkHandle
      * @param string $pkName
-     * @param string $pkDescription
+     * @param string|null $pkDescription
      * @param bool $pkCanTriggerWorkflow
      * @param bool $pkHasCustomClass
      * @param \Concrete\Core\Entity\Package|\Concrete\Core\Package\Package|null $pkg

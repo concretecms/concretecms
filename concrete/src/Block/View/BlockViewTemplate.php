@@ -65,7 +65,7 @@ class BlockViewTemplate
     }
 
     /**
-     * @param static $packageList
+     * @param \Concrete\Core\Package\PackageList $packageList
      */
     public function setPackageList($packageList)
     {

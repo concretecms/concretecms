@@ -49,7 +49,7 @@ class CustomColumn extends Column
     }
 
     /**
-     * @param Column $newAreaLayout
+     * @param \Concrete\Core\Area\Layout\Layout $newAreaLayout
      *
      * @return CustomColumn
      */
