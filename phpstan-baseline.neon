@@ -8967,12 +8967,6 @@ parameters:
 			path: concrete/src/Error/ErrorList/ErrorList.php
 
 		-
-			message: '#^Method Concrete\\Core\\Error\\ErrorList\\ErrorList\:\:offsetExists\(\) should return bool but returns Concrete\\Core\\Error\\ErrorList\\Error\\ErrorInterface\.$#'
-			identifier: return.type
-			count: 1
-			path: concrete/src/Error/ErrorList/ErrorList.php
-
-		-
 			message: '#^Cannot cast Concrete\\Core\\Error\\ErrorList\\Error\\ErrorInterface to string\.$#'
 			identifier: cast.string
 			count: 1

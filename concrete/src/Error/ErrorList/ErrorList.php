@@ -45,7 +45,7 @@ class ErrorList implements ArrayAccess, JsonSerializable
     #[\ReturnTypeWillChange]
     public function offsetExists($offset)
     {
-        return $this->errors[$offset];
+        return isset($this->errors[$offset]);
     }
 
     /**
