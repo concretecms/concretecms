@@ -54,7 +54,7 @@ class XmlProcessor implements ValidatorInterface, PreProcessorInterface
      *
      * @var string
      */
-    const ACTION_DEFAULT = self::ACTION_REJECT;
+    const ACTION_DEFAULT = self::ACTION_SANITIZE;
 
     /**
      * The extensions handled by this processor.
