@@ -12,8 +12,6 @@ jobs:
   phpstan:
     name: PHPStan
     runs-on: ubuntu-latest
-    env:
-      PHPSTAN_TMPDIR: ${{ github.workspace }}/.phpstan-cache
     steps:
       -
         name: Checkout
@@ -22,12 +20,12 @@ jobs:
         name: Install PHP
         uses: shivammathur/setup-php@v2
         with:
-          # PHPStan 2 requires PHP 7.4+ to run, but it analyzes the code as PHP 7.3 (see phpVersion in phpstan.neon.dist)
+          # PHPStan 2 requires PHP 7.4+ to run, but it analyzes the code as PHP 7.3 (see phpVersion in .phpstan/phpstan.neon.dist)
           php-version: "8.4"
           extensions: mbstring, xml, ctype, iconv, intl, pdo_mysql, gd
           coverage: none
           ini-values: memory_limit=-1
-          tools: composer:v2, phpstan
+          tools: composer:v2
       -
         name: Get Composer cache directory
         id: composer-cache-dir
@@ -37,31 +35,24 @@ jobs:
         uses: actions/cache@v6
         with:
           path: ${{ steps.composer-cache-dir.outputs.dir }}
-          key: composer-${{ runner.os }}-phpstan-${{ hashFiles('composer.json', 'composer.lock') }}
+          key: composer-${{ runner.os }}-phpstan-${{ hashFiles('composer.json', 'composer.lock', '.phpstan/composer.json', '.phpstan/composer.lock') }}
           restore-keys: composer-${{ runner.os }}-phpstan-
       -
         name: Install Composer dependencies
         run: composer install --no-interaction --no-progress
       -
+        name: Install PHPStan
+        run: composer install --no-interaction --no-progress --working-dir=.phpstan
+      -
         name: Cache PHPStan result cache
         uses: actions/cache@v6
         with:
-          path: ${{ env.PHPSTAN_TMPDIR }}
+          path: .phpstan/tmp
           key: phpstan-${{ runner.os }}-${{ github.sha }}
           restore-keys: phpstan-${{ runner.os }}-
-      -
-        name: Configure PHPStan cache directory
-        run: |
-          mkdir -p "$PHPSTAN_TMPDIR"
-          cat > phpstan.neon <<EOF
-          includes:
-              - phpstan.neon.dist
-          parameters:
-              tmpDir: $PHPSTAN_TMPDIR
-          EOF
       -
         name: Generate PHPStan stubs
         run: php concrete/bin/concrete c5:ide-symbols phpstan
       -
         name: Run PHPStan
-        run: phpstan analyse --no-progress --no-interaction --memory-limit=-1 --error-format=github
+        run: .phpstan/vendor/bin/phpstan analyse --configuration=.phpstan/phpstan.neon.dist --no-progress --no-interaction --memory-limit=-1 --error-format=github

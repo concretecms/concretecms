@@ -1,0 +1,9 @@
+{
+    "description": "Dependencies for running PHPStan on the Concrete CMS code base (see phpstan.neon.dist)",
+    "require": {
+        "phpstan/phpstan": "^2.1"
+    },
+    "config": {
+        "sort-packages": true
+    }
+}

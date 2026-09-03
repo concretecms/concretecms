@@ -56,9 +56,6 @@
 /CHANGELOG.md export-ignore
 /CONTRIBUTING.md export-ignore
 /INSTALL.md export-ignore
-/phpstan-baseline.neon export-ignore
-/phpstan-bootstrap.php export-ignore
-/phpstan.neon.dist export-ignore
 /phpunit.xml export-ignore
 /README.md export-ignore
 .gitignore export-ignore

@@ -77,7 +77,7 @@ final class MinPHPVersionTest extends TestCase
         }
         $versionChunks = array_map('intval', explode('.', $expectedVersion));
         $expectedVersionID = $versionChunks[0] * 10000 + ($versionChunks[1] ?? 0) * 100 + ($versionChunks[2] ?? 0);
-        $configFile = DIR_BASE . '/phpstan.neon.dist';
+        $configFile = DIR_BASE . '/.phpstan/phpstan.neon.dist';
         $neon = file_get_contents($configFile);
         self::assertNotFalse($neon, "Failed to read the file {$configFile}");
         $matches = null;

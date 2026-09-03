@@ -14,9 +14,7 @@
       "/.gitattributes",
       "/CONTRIBUTING.md",
       "/phpunit.xml",
-      "/phpstan.neon.dist",
-      "/phpstan-baseline.neon",
-      "/phpstan-bootstrap.php"
+      "/.phpstan"
     ]
   },
   "require": {

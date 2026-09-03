@@ -7,7 +7,7 @@
  */
 
 const C5_ENVIRONMENT_ONLY = true;
-define('DIR_BASE', str_replace(DIRECTORY_SEPARATOR, '/', __DIR__));
+define('DIR_BASE', str_replace(DIRECTORY_SEPARATOR, '/', dirname(__DIR__)));
 
 require DIR_BASE . '/concrete/dispatcher.php';
 

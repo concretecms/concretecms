@@ -11,9 +11,6 @@ __MACOSX
 # ignore composer files
 composer.phar
 
-# ignore local PHPStan configuration
-/phpstan.neon
-
 # ignore the config
 /application/config/*
 
