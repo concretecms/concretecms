@@ -39,7 +39,7 @@ class CalendarEventVersionOccurrence implements ObjectInterface, CategoryMemberI
 
     public function setAttribute($ak, $value)
     {
-        $this->version->setAttribute($ak, $value);
+        return $this->version->setAttribute($ak, $value);
     }
 
     /**
