@@ -526,7 +526,7 @@ class Stack extends Page
 
     /**
      * @param \Concrete\Core\Multilingual\Page\Section\Section $section
-     * @param array{copyContents: bool = true} $options 
+     * @param array{copyContents?: bool} $options 
      *
      * @return self
      */

@@ -1671,6 +1671,12 @@ parameters:
 			path: concrete/controllers/panel/detail/page/attributes.php
 
 		-
+			message: '#^Call to function is_object\(\) with Concrete\\Core\\Asset\\Asset will always evaluate to true\.$#'
+			identifier: function.alreadyNarrowedType
+			count: 1
+			path: concrete/controllers/panel/detail/page/attributes.php
+
+		-
 			message: '#^Call to function is_object\(\) with Concrete\\Core\\Entity\\Attribute\\Key\\PageKey will always evaluate to true\.$#'
 			identifier: function.alreadyNarrowedType
 			count: 1
@@ -6891,6 +6897,12 @@ parameters:
 			path: concrete/src/Attribute/Key/Component/KeySelector/ControllerTrait.php
 
 		-
+			message: '#^Call to function is_object\(\) with Concrete\\Core\\Asset\\Asset will always evaluate to true\.$#'
+			identifier: function.alreadyNarrowedType
+			count: 1
+			path: concrete/src/Attribute/Key/Component/KeySelector/KeySerializer.php
+
+		-
 			message: '#^Access to an undefined property Concrete\\Core\\Attribute\\Key\\Key\:\:\$searchIndexFieldDefinition\.$#'
 			identifier: property.notFound
 			count: 1
@@ -10425,15 +10437,6 @@ parameters:
 			path: concrete/src/Entity/Express/Entry.php
 
 		-
-			message: '''
-				#^PHPDoc tag @ORM\\Table has invalid value \(\(name\="ExpressEntityEntries",
-				 \*     indexes\=\{\)\: Unexpected token "\*", expected type at offset 131 on line 4$#
-			'''
-			identifier: phpDoc.parseError
-			count: 1
-			path: concrete/src/Entity/Express/Entry.php
-
-		-
 			message: '#^PHPDoc tag @return with type mixed is not subtype of native type string\.$#'
 			identifier: return.phpDocType
 			count: 1
@@ -13838,17 +13841,6 @@ parameters:
 		-
 			message: '#^Instanceof between Concrete\\Core\\Asset\\Asset and Concrete\\Core\\Asset\\Asset will always evaluate to true\.$#'
 			identifier: instanceof.alwaysTrue
-			count: 1
-			path: concrete/src/Http/ResponseAssetGroup.php
-
-		-
-			message: '''
-				#^PHPDoc tag @return has invalid value \(array\[
-				 'H' \=\> \\Concrete\\Core\\Asset\\Asset\[\]
-				 'F' \=\> \\Concrete\\Core\\Asset\\Asset\[\]
-				\]\)\: Unexpected token "\[", expected TOKEN_HORIZONTAL_WS at offset 494 on line 9$#
-			'''
-			identifier: phpDoc.parseError
 			count: 1
 			path: concrete/src/Http/ResponseAssetGroup.php
 
@@ -17333,12 +17325,6 @@ parameters:
 			path: concrete/src/Page/Stack/Stack.php
 
 		-
-			message: '#^PHPDoc tag @param has invalid value \(array\{copyContents\: bool \= true\} \$options\)\: Unexpected token "\=", expected ''\}'' at offset 115 on line 3$#'
-			identifier: phpDoc.parseError
-			count: 1
-			path: concrete/src/Page/Stack/Stack.php
-
-		-
 			message: '#^Parameter \#1 \$object of class Concrete\\Core\\Permission\\Checker constructor expects Concrete\\Core\\Permission\\ObjectInterface\|false\|null, Concrete\\Core\\Page\\Collection\\Collection given\.$#'
 			identifier: argument.type
 			count: 1
@@ -19341,6 +19327,12 @@ parameters:
 			identifier: method.notFound
 			count: 1
 			path: concrete/src/Search/Column/UserAttributeKeyColumn.php
+
+		-
+			message: '#^Call to function is_object\(\) with Concrete\\Core\\Asset\\Asset will always evaluate to true\.$#'
+			identifier: function.alreadyNarrowedType
+			count: 1
+			path: concrete/src/Search/Field/AbstractField.php
 
 		-
 			message: '#^Method Concrete\\Core\\Search\\Field\\AttributeKeyField\:\:getDisplayName\(\) should return string but return statement is missing\.$#'
