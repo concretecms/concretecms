@@ -53,6 +53,8 @@ class FolderManager
         if ($node instanceof GroupFolder) {
             return $node;
         }
+
+        return null;
     }
 
     /**
@@ -66,6 +68,8 @@ class FolderManager
         if ($tree !== null) {
             return $tree->getRootTreeNodeObject();
         }
+
+        return null;
     }
 
     /**

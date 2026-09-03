@@ -77,6 +77,8 @@ class ModifiedPsr4ClassLoader implements ClassLoaderInterface
                 }
             }
         }
+
+        return null;
     }
 
     /**

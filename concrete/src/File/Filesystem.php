@@ -71,6 +71,8 @@ class Filesystem
         if ($node instanceof FileFolder) {
             return $node;
         }
+
+        return null;
     }
 
     /**
@@ -84,6 +86,8 @@ class Filesystem
         if ($tree !== null) {
             return $tree->getRootTreeNodeObject();
         }
+
+        return null;
     }
 
     /**

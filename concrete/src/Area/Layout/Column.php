@@ -141,6 +141,8 @@ abstract class Column extends ConcreteObject implements ColumnInterface
 
             return $area;
         }
+
+        return null;
     }
 
     /**

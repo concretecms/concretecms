@@ -133,6 +133,8 @@ abstract class GenericOauthTypeController extends AuthenticationTypeController
      */
     public function authenticate()
     {
+
+        return null;
     }
 
     /**

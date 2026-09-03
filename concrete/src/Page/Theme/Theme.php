@@ -229,6 +229,8 @@ class Theme extends ConcreteObject implements \JsonSerializable
 
             return $th;
         }
+
+        return null;
     }
 
     /**
@@ -507,6 +509,8 @@ class Theme extends ConcreteObject implements \JsonSerializable
 
             return $o;
         }
+
+        return null;
     }
 
     /**
@@ -1325,6 +1329,8 @@ class Theme extends ConcreteObject implements \JsonSerializable
             $framework = Core::make('manager/grid_framework')->driver($handle);
             return $framework;
         }
+
+        return null;
     }
 
     /**

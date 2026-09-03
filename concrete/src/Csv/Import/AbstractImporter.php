@@ -267,6 +267,8 @@ abstract class AbstractImporter
         if ($dataCollected !== null) {
             $importResult->setDataCollected($dataCollected);
         }
+
+        return null;
     }
 
     /**

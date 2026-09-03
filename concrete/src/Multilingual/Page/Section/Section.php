@@ -649,6 +649,8 @@ class Section extends Page
 
             return $cID;
         }
+
+        return null;
     }
 
     /**

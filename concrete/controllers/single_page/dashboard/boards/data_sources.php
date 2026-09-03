@@ -46,6 +46,8 @@ class DataSources extends DashboardSitePageController
                 }
             }
         }
+
+        return null;
     }
     
     public function add($boardID = null, $dataSourceID = null)

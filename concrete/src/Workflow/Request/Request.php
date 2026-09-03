@@ -150,6 +150,8 @@ abstract class Request extends ConcreteObject
 
             return $wp->getWorkflowProgressResponseObject();
         }
+
+        return null;
     }
 
     abstract public function addWorkflowProgress(\Concrete\Core\Workflow\Workflow $wf);

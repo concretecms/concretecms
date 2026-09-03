@@ -1353,6 +1353,8 @@ class Page extends Collection implements CategoryMemberInterface,
 
             return $cIDRedir;
         }
+
+        return null;
     }
 
     /**
@@ -1693,6 +1695,8 @@ class Page extends Collection implements CategoryMemberInterface,
         if (is_object($this->pageType)) {
             return $this->pageType->getPageTypeDisplayName();
         }
+
+        return null;
     }
 
     /**
@@ -3137,6 +3141,8 @@ EOT
 
         $cache = PageCache::getLibrary();
         $cache->purge($this);
+
+        return null;
     }
 
     /**
@@ -3876,6 +3882,8 @@ EOT
 
             return $o;
         }
+
+        return null;
     }
 
     /**

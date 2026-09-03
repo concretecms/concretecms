@@ -124,6 +124,8 @@ class UserInfoRepository
             $ui = $this->getByID($uID);
             return $ui;
         }
+
+        return null;
     }
 
     /**

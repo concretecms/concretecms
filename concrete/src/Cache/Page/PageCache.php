@@ -271,6 +271,8 @@ abstract class PageCache implements FlushableInterface
         } elseif ($mixed instanceof PageCacheRecord) {
             return $mixed->getCacheRecordKey();
         }
+
+        return null;
     }
 
     /**

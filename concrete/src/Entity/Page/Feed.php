@@ -539,6 +539,8 @@ class Feed
 
             return $writer->export('rss');
         }
+
+        return null;
     }
 
     public function getHeadLinkElement()

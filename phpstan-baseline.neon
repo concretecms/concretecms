@@ -699,12 +699,6 @@ parameters:
 			path: concrete/controllers/dialog/express/search.php
 
 		-
-			message: '#^Method Concrete\\Controller\\Dialog\\Express\\Search\:\:getEntity\(\) should return Concrete\\Core\\Entity\\Express\\Entity\|null but return statement is missing\.$#'
-			identifier: return.missing
-			count: 1
-			path: concrete/controllers/dialog/express/search.php
-
-		-
 			message: '#^Call to Concrete\\Core\\Controller\\AbstractController\:\:on_start\(\) on a separate line has no effect\.$#'
 			identifier: staticMethod.resultUnused
 			count: 1
@@ -2290,12 +2284,6 @@ parameters:
 
 		-
 			message: '#^Method Concrete\\Controller\\SinglePage\\Dashboard\\Boards\\DataSources\:\:getBoard\(\) should return Concrete\\Core\\Entity\\Board\\Board but return statement is missing\.$#'
-			identifier: return.missing
-			count: 2
-			path: concrete/controllers/single_page/dashboard/boards/data_sources.php
-
-		-
-			message: '#^Method Concrete\\Controller\\SinglePage\\Dashboard\\Boards\\DataSources\:\:getConfiguredDataSource\(\) should return Concrete\\Core\\Entity\\Board\\DataSource\\ConfiguredDataSource\|null but return statement is missing\.$#'
 			identifier: return.missing
 			count: 2
 			path: concrete/controllers/single_page/dashboard/boards/data_sources.php
@@ -5607,12 +5595,6 @@ parameters:
 			path: concrete/src/Application/Application.php
 
 		-
-			message: '#^Method Concrete\\Core\\Application\\Application\:\:handleCanonicalURLRedirection\(\) should return Concrete\\Core\\Routing\\RedirectResponse\|null but return statement is missing\.$#'
-			identifier: return.missing
-			count: 1
-			path: concrete/src/Application/Application.php
-
-		-
 			message: '#^Method Concrete\\Core\\Application\\Application\:\:handleURLSlashes\(\) should return Concrete\\Core\\Routing\\RedirectResponse but return statement is missing\.$#'
 			identifier: return.missing
 			count: 2
@@ -5859,12 +5841,6 @@ parameters:
 			path: concrete/src/Application/UserInterface/Sitemap/StandardSitemapProvider.php
 
 		-
-			message: '#^Method Concrete\\Core\\Application\\UserInterface\\Sitemap\\StandardSitemapProvider\:\:getRequestedSiteTree\(\) should return Concrete\\Core\\Entity\\Site\\Tree\|null but return statement is missing\.$#'
-			identifier: return.missing
-			count: 1
-			path: concrete/src/Application/UserInterface/Sitemap/StandardSitemapProvider.php
-
-		-
 			message: '#^Property Concrete\\Core\\Application\\UserInterface\\Sitemap\\StandardSitemapProvider\:\:\$permissionsIgnored \(string\) does not accept default value of type false\.$#'
 			identifier: property.defaultValue
 			count: 1
@@ -6051,12 +6027,6 @@ parameters:
 			path: concrete/src/Area/Layout/Column.php
 
 		-
-			message: '#^Method Concrete\\Core\\Area\\Layout\\Column\:\:getAreaObject\(\) should return Concrete\\Core\\Area\\Area\|null but return statement is missing\.$#'
-			identifier: return.missing
-			count: 1
-			path: concrete/src/Area/Layout/Column.php
-
-		-
 			message: '#^Parameter \#1 \$arHandle of class Concrete\\Core\\Area\\SubArea constructor expects string, int given\.$#'
 			identifier: argument.type
 			count: 1
@@ -6085,12 +6055,6 @@ parameters:
 			identifier: new.static
 			count: 1
 			path: concrete/src/Area/Layout/CustomColumn.php
-
-		-
-			message: '#^Method Concrete\\Core\\Area\\Layout\\CustomLayout\:\:add\(\) should return Concrete\\Core\\Area\\Layout\\CustomLayout\|Concrete\\Core\\Area\\Layout\\ThemeGridLayout\|null but return statement is missing\.$#'
-			identifier: return.missing
-			count: 1
-			path: concrete/src/Area/Layout/CustomLayout.php
 
 		-
 			message: '#^Method Concrete\\Core\\Area\\Layout\\CustomLayout\:\:addLayoutColumn\(\) should return static\(Concrete\\Core\\Area\\Layout\\CustomLayout\) but returns Concrete\\Core\\Area\\Layout\\CustomColumn\.$#'
@@ -6327,20 +6291,8 @@ parameters:
 			path: concrete/src/Area/Layout/ThemeGridLayout.php
 
 		-
-			message: '#^Method Concrete\\Core\\Area\\Layout\\ThemeGridLayout\:\:add\(\) should return Concrete\\Core\\Area\\Layout\\CustomLayout\|Concrete\\Core\\Area\\Layout\\ThemeGridLayout\|null but return statement is missing\.$#'
-			identifier: return.missing
-			count: 1
-			path: concrete/src/Area/Layout/ThemeGridLayout.php
-
-		-
 			message: '#^Method Concrete\\Core\\Area\\Layout\\ThemeGridLayout\:\:addLayoutColumn\(\) should return static\(Concrete\\Core\\Area\\Layout\\ThemeGridLayout\) but returns Concrete\\Core\\Area\\Layout\\ThemeGridColumn\.$#'
 			identifier: return.type
-			count: 1
-			path: concrete/src/Area/Layout/ThemeGridLayout.php
-
-		-
-			message: '#^Method Concrete\\Core\\Area\\Layout\\ThemeGridLayout\:\:duplicate\(\) should return Concrete\\Core\\Area\\Layout\\CustomLayout\|Concrete\\Core\\Area\\Layout\\ThemeGridLayout\|null but return statement is missing\.$#'
-			identifier: return.missing
 			count: 1
 			path: concrete/src/Area/Layout/ThemeGridLayout.php
 
@@ -6681,12 +6633,6 @@ parameters:
 			path: concrete/src/Attribute/Controller.php
 
 		-
-			message: '#^Method Concrete\\Core\\Attribute\\Controller\:\:getAttributeTypeFileURL\(\) should return string\|null but return statement is missing\.$#'
-			identifier: return.missing
-			count: 1
-			path: concrete/src/Attribute/Controller.php
-
-		-
 			message: '#^Method Concrete\\Core\\Controller\\AbstractController\:\:on_before_render\(\) invoked with 1 parameter, 0 required\.$#'
 			identifier: arguments.count
 			count: 1
@@ -7008,12 +6954,6 @@ parameters:
 			message: '#^Left side of && is always true\.$#'
 			identifier: booleanAnd.leftAlwaysTrue
 			count: 3
-			path: concrete/src/Authentication/Type/OAuth/GenericOauthTypeController.php
-
-		-
-			message: '#^Method Concrete\\Core\\Authentication\\Type\\OAuth\\GenericOauthTypeController\:\:authenticate\(\) should return Concrete\\Core\\User\\User\|null but return statement is missing\.$#'
-			identifier: return.missing
-			count: 1
 			path: concrete/src/Authentication/Type/OAuth/GenericOauthTypeController.php
 
 		-
@@ -7540,12 +7480,6 @@ parameters:
 
 		-
 			message: '#^Method Concrete\\Core\\Block\\BlockController\:\:duplicate\(\) should return Concrete\\Core\\Legacy\\BlockRecord\|null but return statement is missing\.$#'
-			identifier: return.missing
-			count: 1
-			path: concrete/src/Block/BlockController.php
-
-		-
-			message: '#^Method Concrete\\Core\\Block\\BlockController\:\:getActionURL\(\) should return Concrete\\Core\\Url\\UrlImmutable\|null but return statement is missing\.$#'
 			identifier: return.missing
 			count: 1
 			path: concrete/src/Block/BlockController.php
@@ -8157,12 +8091,6 @@ parameters:
 			path: concrete/src/Cache/Page/PageCache.php
 
 		-
-			message: '#^Method Concrete\\Core\\Cache\\Page\\PageCache\:\:getCacheKey\(\) should return string\|null but return statement is missing\.$#'
-			identifier: return.missing
-			count: 2
-			path: concrete/src/Cache/Page/PageCache.php
-
-		-
 			message: '#^PHPDoc tag @param references unknown parameter\: \$rec$#'
 			identifier: parameter.notFound
 			count: 1
@@ -8323,12 +8251,6 @@ parameters:
 			identifier: method.notFound
 			count: 2
 			path: concrete/src/Calendar/Event/Menu/EventOccurrenceMenu.php
-
-		-
-			message: '#^Method Concrete\\Core\\Captcha\\Library\:\:getByHandle\(\) should return static\(Concrete\\Core\\Captcha\\Library\)\|null but return statement is missing\.$#'
-			identifier: return.missing
-			count: 1
-			path: concrete/src/Captcha/Library.php
 
 		-
 			message: '#^Method Concrete\\Core\\Captcha\\Library\:\:hasOptionsForm\(\) should return bool but return statement is missing\.$#'
@@ -9309,12 +9231,6 @@ parameters:
 			path: concrete/src/Csv/Import/AbstractImporter.php
 
 		-
-			message: '#^Method Concrete\\Core\\Csv\\Import\\AbstractImporter\:\:processData\(\) should return array\|null but return statement is missing\.$#'
-			identifier: return.missing
-			count: 2
-			path: concrete/src/Csv/Import/AbstractImporter.php
-
-		-
 			message: '#^PHPDoc tag @param references unknown parameter\: \$controller$#'
 			identifier: parameter.notFound
 			count: 1
@@ -9891,24 +9807,6 @@ parameters:
 			path: concrete/src/Entity/Board/InstanceSlot.php
 
 		-
-			message: '#^Method Concrete\\Core\\Entity\\Board\\SlotTemplate\:\:getTemplateIconImage\(\) should return HtmlObject\\Image\|string\|null but return statement is missing\.$#'
-			identifier: return.missing
-			count: 1
-			path: concrete/src/Entity/Board/SlotTemplate.php
-
-		-
-			message: '#^Method Concrete\\Core\\Entity\\Board\\Template\:\:getTemplateIconImage\(\) should return HtmlObject\\Image\|string\|null but return statement is missing\.$#'
-			identifier: return.missing
-			count: 1
-			path: concrete/src/Entity/Board/Template.php
-
-		-
-			message: '#^Method Concrete\\Core\\Entity\\Calendar\\CalendarEvent\:\:getAttributeValue\(\) should return Concrete\\Core\\Attribute\\AttributeValueInterface\|null but return statement is missing\.$#'
-			identifier: return.missing
-			count: 1
-			path: concrete/src/Entity/Calendar/CalendarEvent.php
-
-		-
 			message: '#^Method Concrete\\Core\\Entity\\Calendar\\CalendarEvent\:\:getAttributeValueObject\(\) should return Concrete\\Core\\Entity\\Attribute\\Value\\EventValue\|null but returns Concrete\\Core\\Attribute\\AttributeValueInterface\|null\.$#'
 			identifier: return.type
 			count: 1
@@ -9935,12 +9833,6 @@ parameters:
 		-
 			message: '#^Call to function is_object\(\) with Concrete\\Core\\Page\\Page will always evaluate to true\.$#'
 			identifier: function.alreadyNarrowedType
-			count: 1
-			path: concrete/src/Entity/Calendar/CalendarEventVersion.php
-
-		-
-			message: '#^Method Concrete\\Core\\Entity\\Calendar\\CalendarEventVersion\:\:getAttributeValue\(\) should return Concrete\\Core\\Attribute\\AttributeValueInterface\|null but return statement is missing\.$#'
-			identifier: return.missing
 			count: 1
 			path: concrete/src/Entity/Calendar/CalendarEventVersion.php
 
@@ -10031,24 +9923,6 @@ parameters:
 		-
 			message: '#^Call to an undefined method Concrete\\Core\\Attribute\\AttributeValueInterface\:\:setGenericValue\(\)\.$#'
 			identifier: method.notFound
-			count: 1
-			path: concrete/src/Entity/Express/Entry.php
-
-		-
-			message: '#^Method Concrete\\Core\\Entity\\Express\\Entry\:\:getAssociation\(\) should return Concrete\\Core\\Entity\\Express\\Entry\\Association\|null but return statement is missing\.$#'
-			identifier: return.missing
-			count: 1
-			path: concrete/src/Entity/Express/Entry.php
-
-		-
-			message: '#^Method Concrete\\Core\\Entity\\Express\\Entry\:\:getAttributeValue\(\) should return Concrete\\Core\\Attribute\\AttributeValueInterface\|null but return statement is missing\.$#'
-			identifier: return.missing
-			count: 1
-			path: concrete/src/Entity/Express/Entry.php
-
-		-
-			message: '#^Method Concrete\\Core\\Entity\\Express\\Entry\:\:getAttributeValueObject\(\) should return Concrete\\Core\\Attribute\\AttributeValueInterface\|null but return statement is missing\.$#'
-			identifier: return.missing
 			count: 1
 			path: concrete/src/Entity/Express/Entry.php
 
@@ -10239,20 +10113,8 @@ parameters:
 			path: concrete/src/Entity/File/Version.php
 
 		-
-			message: '#^Method Concrete\\Core\\Entity\\File\\Version\:\:getAttributeValue\(\) should return Concrete\\Core\\Attribute\\AttributeValueInterface\|null but return statement is missing\.$#'
-			identifier: return.missing
-			count: 1
-			path: concrete/src/Entity/File/Version.php
-
-		-
 			message: '#^Method Concrete\\Core\\Entity\\File\\Version\:\:getFileResource\(\) should return League\\Flysystem\\File but returns League\\Flysystem\\Handler\.$#'
 			identifier: return.type
-			count: 1
-			path: concrete/src/Entity/File/Version.php
-
-		-
-			message: '#^Method Concrete\\Core\\Entity\\File\\Version\:\:refreshAttributes\(\) should return int\|null but return statement is missing\.$#'
-			identifier: return.missing
 			count: 1
 			path: concrete/src/Entity/File/Version.php
 
@@ -10437,12 +10299,6 @@ parameters:
 			path: concrete/src/Entity/OAuth/UserRepository.php
 
 		-
-			message: '#^Method Concrete\\Core\\Entity\\Page\\Container\:\:getContainerIconImage\(\) should return HtmlObject\\Image\|string\|null but return statement is missing\.$#'
-			identifier: return.missing
-			count: 1
-			path: concrete/src/Entity/Page/Container.php
-
-		-
 			message: '#^Call to an undefined method Concrete\\Core\\Entity\\File\\File\:\:getTitle\(\)\.$#'
 			identifier: method.notFound
 			count: 1
@@ -10451,12 +10307,6 @@ parameters:
 		-
 			message: '#^Call to an undefined method Concrete\\Core\\Entity\\File\\File\:\:getURL\(\)\.$#'
 			identifier: method.notFound
-			count: 1
-			path: concrete/src/Entity/Page/Feed.php
-
-		-
-			message: '#^Method Concrete\\Core\\Entity\\Page\\Feed\:\:getOutput\(\) should return string\|null but return statement is missing\.$#'
-			identifier: return.missing
 			count: 1
 			path: concrete/src/Entity/Page/Feed.php
 
@@ -10515,18 +10365,6 @@ parameters:
 			path: concrete/src/Entity/Site/Site.php
 
 		-
-			message: '#^Method Concrete\\Core\\Entity\\Site\\Site\:\:getAttributeValue\(\) should return Concrete\\Core\\Attribute\\AttributeValueInterface\|null but return statement is missing\.$#'
-			identifier: return.missing
-			count: 1
-			path: concrete/src/Entity/Site/Site.php
-
-		-
-			message: '#^Method Concrete\\Core\\Entity\\Site\\Site\:\:getDefaultLocale\(\) should return Concrete\\Core\\Entity\\Site\\Locale\|null but return statement is missing\.$#'
-			identifier: return.missing
-			count: 1
-			path: concrete/src/Entity/Site/Site.php
-
-		-
 			message: '#^Method Concrete\\Core\\Entity\\Site\\Site\:\:getSiteTreeObjects\(\) should return array\<Concrete\\Core\\Entity\\Site\\SiteTree\> but returns list\<Concrete\\Core\\Entity\\Site\\Tree\>\.$#'
 			identifier: return.type
 			count: 1
@@ -10557,12 +10395,6 @@ parameters:
 			path: concrete/src/Entity/Site/Skeleton.php
 
 		-
-			message: '#^Method Concrete\\Core\\Entity\\Site\\Skeleton\:\:getAttributeValue\(\) should return Concrete\\Core\\Attribute\\AttributeValueInterface\|null but return statement is missing\.$#'
-			identifier: return.missing
-			count: 1
-			path: concrete/src/Entity/Site/Skeleton.php
-
-		-
 			message: '#^Method Concrete\\Core\\Entity\\Site\\Skeleton\:\:getAttributeValueObject\(\) should return Concrete\\Core\\Attribute\\AttributeValueInterface\|null but return statement is missing\.$#'
 			identifier: return.missing
 			count: 1
@@ -10581,12 +10413,6 @@ parameters:
 			path: concrete/src/Entity/Site/Tree.php
 
 		-
-			message: '#^Method Concrete\\Core\\Entity\\StyleCustomizer\\Inline\\StyleSet\:\:isHiddenOnDevice\(\) should return bool\|null but return statement is missing\.$#'
-			identifier: return.missing
-			count: 1
-			path: concrete/src/Entity/StyleCustomizer/Inline/StyleSet.php
-
-		-
 			message: '#^PHPDoc tag @param references unknown parameter\: \$borderStyle$#'
 			identifier: parameter.notFound
 			count: 1
@@ -10597,12 +10423,6 @@ parameters:
 			identifier: ternary.alwaysTrue
 			count: 5
 			path: concrete/src/Entity/StyleCustomizer/Inline/StyleSet.php
-
-		-
-			message: '#^Method Concrete\\Core\\Entity\\Summary\\Template\:\:getTemplateIconImage\(\) should return HtmlObject\\Image\|string\|null but return statement is missing\.$#'
-			identifier: return.missing
-			count: 1
-			path: concrete/src/Entity/Summary/Template.php
 
 		-
 			message: '#^PHPDoc tag @return with type array\<Concrete\\Core\\Entity\\Notification\\GroupCreateNotification\> is incompatible with native type Doctrine\\Common\\Collections\\Collection\.$#'
@@ -10709,12 +10529,6 @@ parameters:
 		-
 			message: '#^Cannot cast Concrete\\Core\\Error\\ErrorList\\Error\\ErrorInterface to string\.$#'
 			identifier: cast.string
-			count: 1
-			path: concrete/src/Error/ErrorList/Formatter/JsonFormatter.php
-
-		-
-			message: '#^Method Concrete\\Core\\Error\\ErrorList\\Formatter\\JsonFormatter\:\:asArray\(\) should return array\|null but return statement is missing\.$#'
-			identifier: return.missing
 			count: 1
 			path: concrete/src/Error/ErrorList/Formatter/JsonFormatter.php
 
@@ -11337,18 +11151,6 @@ parameters:
 			path: concrete/src/File/Filesystem.php
 
 		-
-			message: '#^Method Concrete\\Core\\File\\Filesystem\:\:getFolder\(\) should return Concrete\\Core\\Tree\\Node\\Type\\FileFolder\|null but return statement is missing\.$#'
-			identifier: return.missing
-			count: 1
-			path: concrete/src/File/Filesystem.php
-
-		-
-			message: '#^Method Concrete\\Core\\File\\Filesystem\:\:getRootFolder\(\) should return Concrete\\Core\\Tree\\Node\\Type\\FileFolder\|null but return statement is missing\.$#'
-			identifier: return.missing
-			count: 1
-			path: concrete/src/File/Filesystem.php
-
-		-
 			message: '#^Method Concrete\\Core\\File\\Filesystem\:\:getRootFolder\(\) should return Concrete\\Core\\Tree\\Node\\Type\\FileFolder\|null but returns Concrete\\Core\\Tree\\Node\\Node\|null\.$#'
 			identifier: return.type
 			count: 1
@@ -11445,12 +11247,6 @@ parameters:
 			path: concrete/src/File/Image/Svg/SanitizerOptions.php
 
 		-
-			message: '#^Method Concrete\\Core\\File\\Image\\Thumbnail\\Path\\Resolver\:\:determineThumbnailPath\(\) should return string\|null but return statement is missing\.$#'
-			identifier: return.missing
-			count: 1
-			path: concrete/src/File/Image/Thumbnail/Path/Resolver.php
-
-		-
 			message: '#^Method Concrete\\Core\\File\\Image\\Thumbnail\\Type\\Version\:\:getFilePath\(\) invoked with 2 parameters, 1 required\.$#'
 			identifier: arguments.count
 			count: 1
@@ -11471,12 +11267,6 @@ parameters:
 		-
 			message: '#^Comparison operation "\>" between int\<1, max\> and 0 is always true\.$#'
 			identifier: greater.alwaysTrue
-			count: 1
-			path: concrete/src/File/Image/Thumbnail/Type/Version.php
-
-		-
-			message: '#^Method Concrete\\Core\\File\\Image\\Thumbnail\\Type\\Version\:\:getByHandle\(\) should return Concrete\\Core\\File\\Image\\Thumbnail\\Type\\Version\|null but return statement is missing\.$#'
-			identifier: return.missing
 			count: 1
 			path: concrete/src/File/Image/Thumbnail/Type/Version.php
 
@@ -12057,24 +11847,6 @@ parameters:
 			path: concrete/src/File/Type/Inspector/FlvInspector.php
 
 		-
-			message: '#^Method Concrete\\Core\\File\\Type\\Type\:\:getGenericTypeText\(\) should return string\|null but return statement is missing\.$#'
-			identifier: return.missing
-			count: 1
-			path: concrete/src/File/Type/Type.php
-
-		-
-			message: '#^Method Concrete\\Core\\File\\Type\\Type\:\:isSVG\(\) should return bool\|null but return statement is missing\.$#'
-			identifier: return.missing
-			count: 1
-			path: concrete/src/File/Type/Type.php
-
-		-
-			message: '#^Method Concrete\\Core\\File\\Type\\Type\:\:supportsThumbnails\(\) should return bool\|null but return statement is missing\.$#'
-			identifier: return.missing
-			count: 1
-			path: concrete/src/File/Type/Type.php
-
-		-
 			message: '#^Unreachable statement \- code above always terminates\.$#'
 			identifier: deadCode.unreachable
 			count: 7
@@ -12441,28 +12213,10 @@ parameters:
 			path: concrete/src/Foundation/Environment/User.php
 
 		-
-			message: '#^Method Concrete\\Core\\Foundation\\EnvironmentDetector\:\:detectClosureEnvironment\(\) should return string\|null but return statement is missing\.$#'
-			identifier: return.missing
-			count: 1
-			path: concrete/src/Foundation/EnvironmentDetector.php
-
-		-
 			message: '#^Method Concrete\\Core\\Foundation\\EnvironmentDetector\:\:detectConsoleEnvironment\(\) should return string but return statement is missing\.$#'
 			identifier: return.missing
 			count: 1
 			path: concrete/src/Foundation/EnvironmentDetector.php
-
-		-
-			message: '#^Method Concrete\\Core\\Foundation\\EnvironmentDetector\:\:detectVariableEnvironment\(\) should return string\|null but return statement is missing\.$#'
-			identifier: return.missing
-			count: 1
-			path: concrete/src/Foundation/EnvironmentDetector.php
-
-		-
-			message: '#^Method Concrete\\Core\\Foundation\\ModifiedPsr4ClassLoader\:\:findFile\(\) should return string\|null but return statement is missing\.$#'
-			identifier: return.missing
-			count: 1
-			path: concrete/src/Foundation/ModifiedPsr4ClassLoader.php
 
 		-
 			message: '#^Parameter \#1 \$autoload_function of function spl_autoload_register expects callable\(string\)\: void, array\{\$this\(Concrete\\Core\\Foundation\\ModifiedPsr4ClassLoader\), ''loadClass''\} given\.$#'
@@ -12504,30 +12258,6 @@ parameters:
 			message: '#^Call to an undefined static method Concrete\\Core\\Http\\Request\:\:setTrustedHeaderName\(\)\.$#'
 			identifier: staticMethod.notFound
 			count: 1
-			path: concrete/src/Foundation/Runtime/Boot/DefaultBooter.php
-
-		-
-			message: '#^Method Concrete\\Core\\Foundation\\Runtime\\Boot\\DefaultBooter\:\:boot\(\) should return Symfony\\Component\\HttpFoundation\\Response\|null but return statement is missing\.$#'
-			identifier: return.missing
-			count: 1
-			path: concrete/src/Foundation/Runtime/Boot/DefaultBooter.php
-
-		-
-			message: '#^Method Concrete\\Core\\Foundation\\Runtime\\Boot\\DefaultBooter\:\:bootHttpSapi\(\) should return Symfony\\Component\\HttpFoundation\\Response\|null but return statement is missing\.$#'
-			identifier: return.missing
-			count: 2
-			path: concrete/src/Foundation/Runtime/Boot/DefaultBooter.php
-
-		-
-			message: '#^Method Concrete\\Core\\Foundation\\Runtime\\Boot\\DefaultBooter\:\:checkCache\(\) should return Symfony\\Component\\HttpFoundation\\Response\|null but return statement is missing\.$#'
-			identifier: return.missing
-			count: 1
-			path: concrete/src/Foundation/Runtime/Boot/DefaultBooter.php
-
-		-
-			message: '#^Method Concrete\\Core\\Foundation\\Runtime\\Boot\\DefaultBooter\:\:checkInstall\(\) should return Symfony\\Component\\HttpFoundation\\Response\|null but return statement is missing\.$#'
-			identifier: return.missing
-			count: 2
 			path: concrete/src/Foundation/Runtime/Boot/DefaultBooter.php
 
 		-
@@ -13827,12 +13557,6 @@ parameters:
 			path: concrete/src/Logging/LogEntry.php
 
 		-
-			message: '#^Method Concrete\\Core\\Logging\\LogEntry\:\:getByID\(\) should return Concrete\\Core\\Logging\\LogEntry\|null but return statement is missing\.$#'
-			identifier: return.missing
-			count: 1
-			path: concrete/src/Logging/LogEntry.php
-
-		-
 			message: '#^Method Concrete\\Core\\Logging\\LogEntry\:\:getLevelIcon\(\) should return string but return statement is missing\.$#'
 			identifier: return.missing
 			count: 1
@@ -14457,12 +14181,6 @@ parameters:
 			path: concrete/src/Multilingual/Page/Section/Section.php
 
 		-
-			message: '#^Method Concrete\\Core\\Multilingual\\Page\\Section\\Section\:\:getTranslatedPageID\(\) should return int\|null but return statement is missing\.$#'
-			identifier: return.missing
-			count: 1
-			path: concrete/src/Multilingual/Page/Section/Section.php
-
-		-
 			message: '#^PHPDoc tag @param references unknown parameter\: \$language$#'
 			identifier: parameter.notFound
 			count: 1
@@ -14605,12 +14323,6 @@ parameters:
 			identifier: argument.type
 			count: 1
 			path: concrete/src/Navigation/NavigationFactory.php
-
-		-
-			message: '#^Method Concrete\\Core\\Notification\\Alert\\Filter\\FilterList\:\:getFilterByKey\(\) should return Concrete\\Core\\Notification\\Alert\\Filter\\FilterInterface\|null but return statement is missing\.$#'
-			identifier: return.missing
-			count: 1
-			path: concrete/src/Notification/Alert/Filter/FilterList.php
 
 		-
 			message: '#^Variable \$driver in PHPDoc tag @var does not match any variable in the foreach loop\: \$filter$#'
@@ -15255,26 +14967,8 @@ parameters:
 			path: concrete/src/Page/Collection/Collection.php
 
 		-
-			message: '#^Method Concrete\\Core\\Page\\Collection\\Collection\:\:getAttributeValueObject\(\) should return Concrete\\Core\\Entity\\Attribute\\Value\\PageValue\|null but return statement is missing\.$#'
-			identifier: return.missing
-			count: 1
-			path: concrete/src/Page/Collection/Collection.php
-
-		-
 			message: '#^Method Concrete\\Core\\Page\\Collection\\Collection\:\:getSetCollectionAttributes\(\) should return array\<Concrete\\Core\\Entity\\Attribute\\Key\\PageKey\> but returns list\<Concrete\\Core\\Entity\\Attribute\\Key\\Key\>\.$#'
 			identifier: return.type
-			count: 1
-			path: concrete/src/Page/Collection/Collection.php
-
-		-
-			message: '#^Method Concrete\\Core\\Page\\Collection\\Collection\:\:outputCustomStyleHeaderItems\(\) should return string\|null but return statement is missing\.$#'
-			identifier: return.missing
-			count: 2
-			path: concrete/src/Page/Collection/Collection.php
-
-		-
-			message: '#^Method Concrete\\Core\\Page\\Collection\\Collection\:\:relateVersionEdits\(\) should return false\|null but return statement is missing\.$#'
-			identifier: return.missing
 			count: 1
 			path: concrete/src/Page/Collection/Collection.php
 
@@ -15341,30 +15035,6 @@ parameters:
 		-
 			message: '#^Method Concrete\\Core\\Page\\Collection\\Version\\Version\:\:avoidApprovalOverlapping\(\) is unused\.$#'
 			identifier: method.unused
-			count: 1
-			path: concrete/src/Page/Collection/Version/Version.php
-
-		-
-			message: '#^Method Concrete\\Core\\Page\\Collection\\Version\\Version\:\:getAttributeValue\(\) should return Concrete\\Core\\Attribute\\AttributeValueInterface\|null but return statement is missing\.$#'
-			identifier: return.missing
-			count: 1
-			path: concrete/src/Page/Collection/Version/Version.php
-
-		-
-			message: '#^Method Concrete\\Core\\Page\\Collection\\Version\\Version\:\:getAttributeValueObject\(\) should return Concrete\\Core\\Entity\\Attribute\\Value\\PageValue\|null but return statement is missing\.$#'
-			identifier: return.missing
-			count: 1
-			path: concrete/src/Page/Collection/Version/Version.php
-
-		-
-			message: '#^Method Concrete\\Core\\Page\\Collection\\Version\\Version\:\:getVersionApproverUserName\(\) should return string\|false\|null but return statement is missing\.$#'
-			identifier: return.missing
-			count: 1
-			path: concrete/src/Page/Collection/Version/Version.php
-
-		-
-			message: '#^Method Concrete\\Core\\Page\\Collection\\Version\\Version\:\:getVersionAuthorUserName\(\) should return string\|false\|null but return statement is missing\.$#'
-			identifier: return.missing
 			count: 1
 			path: concrete/src/Page/Collection/Version/Version.php
 
@@ -15765,12 +15435,6 @@ parameters:
 			path: concrete/src/Page/Page.php
 
 		-
-			message: '#^Method Concrete\\Core\\Page\\Page\:\:delete\(\) should return false\|null but return statement is missing\.$#'
-			identifier: return.missing
-			count: 1
-			path: concrete/src/Page/Page.php
-
-		-
 			message: '#^Method Concrete\\Core\\Page\\Page\:\:getCollectionDatePublic\(\) should return string but returns null\.$#'
 			identifier: return.type
 			count: 1
@@ -15789,12 +15453,6 @@ parameters:
 			path: concrete/src/Page/Page.php
 
 		-
-			message: '#^Method Concrete\\Core\\Page\\Page\:\:getCustomStyleObject\(\) should return Concrete\\Core\\Page\\CustomStyle\|null but return statement is missing\.$#'
-			identifier: return.missing
-			count: 1
-			path: concrete/src/Page/Page.php
-
-		-
 			message: '#^Method Concrete\\Core\\Page\\Page\:\:getPageController\(\) should return Concrete\\Core\\Page\\Controller\\PageController but empty return statement found\.$#'
 			identifier: return.empty
 			count: 1
@@ -15803,12 +15461,6 @@ parameters:
 		-
 			message: '#^Method Concrete\\Core\\Page\\Page\:\:getPageTemplateID\(\) should return int but returns null\.$#'
 			identifier: return.type
-			count: 1
-			path: concrete/src/Page/Page.php
-
-		-
-			message: '#^Method Concrete\\Core\\Page\\Page\:\:getPageTypeName\(\) should return string\|null but return statement is missing\.$#'
-			identifier: return.missing
 			count: 1
 			path: concrete/src/Page/Page.php
 
@@ -15822,12 +15474,6 @@ parameters:
 			message: '#^Method Concrete\\Core\\Page\\Page\:\:isArrangeMode\(\) should return false but returns bool\.$#'
 			identifier: return.type
 			count: 1
-			path: concrete/src/Page/Page.php
-
-		-
-			message: '#^Method Concrete\\Core\\Page\\Page\:\:removeThisAlias\(\) should return int\|null but return statement is missing\.$#'
-			identifier: return.missing
-			count: 2
 			path: concrete/src/Page/Page.php
 
 		-
@@ -16209,12 +15855,6 @@ parameters:
 			path: concrete/src/Page/Sitemap/DragRequestData.php
 
 		-
-			message: '#^Method Concrete\\Core\\Page\\Sitemap\\Element\\SitemapFooter\:\:toXmlElement\(\) should return SimpleXMLElement\|null but return statement is missing\.$#'
-			identifier: return.missing
-			count: 1
-			path: concrete/src/Page/Sitemap/Element/SitemapFooter.php
-
-		-
 			message: '#^Left side of && is always true\.$#'
 			identifier: booleanAnd.leftAlwaysTrue
 			count: 1
@@ -16536,24 +16176,6 @@ parameters:
 			message: '#^Left side of && is always true\.$#'
 			identifier: booleanAnd.leftAlwaysTrue
 			count: 2
-			path: concrete/src/Page/Theme/Theme.php
-
-		-
-			message: '#^Method Concrete\\Core\\Page\\Theme\\Theme\:\:getByFileHandle\(\) should return Concrete\\Core\\Page\\Theme\\Theme\|null but return statement is missing\.$#'
-			identifier: return.missing
-			count: 1
-			path: concrete/src/Page/Theme/Theme.php
-
-		-
-			message: '#^Method Concrete\\Core\\Page\\Theme\\Theme\:\:getThemeCustomStyleObject\(\) should return Concrete\\Core\\Page\\CustomStyle\|null but return statement is missing\.$#'
-			identifier: return.missing
-			count: 1
-			path: concrete/src/Page/Theme/Theme.php
-
-		-
-			message: '#^Method Concrete\\Core\\Page\\Theme\\Theme\:\:getThemeGridFrameworkObject\(\) should return Concrete\\Core\\Page\\Theme\\GridFramework\\GridFramework\|null but return statement is missing\.$#'
-			identifier: return.missing
-			count: 1
 			path: concrete/src/Page/Theme/Theme.php
 
 		-
@@ -16997,18 +16619,6 @@ parameters:
 		-
 			message: '#^If condition is always true\.$#'
 			identifier: if.alwaysTrue
-			count: 1
-			path: concrete/src/Page/Type/Type.php
-
-		-
-			message: '#^Method Concrete\\Core\\Page\\Type\\Type\:\:getPageTypeSaverObject\(\) should return Concrete\\Core\\Page\\Type\\Saver\\SaverInterface\|null but return statement is missing\.$#'
-			identifier: return.missing
-			count: 1
-			path: concrete/src/Page/Type/Type.php
-
-		-
-			message: '#^Method Concrete\\Core\\Page\\Type\\Type\:\:getPageTypeValidatorObject\(\) should return Concrete\\Core\\Page\\Type\\Validator\\ValidatorInterface\|null but return statement is missing\.$#'
-			identifier: return.missing
 			count: 1
 			path: concrete/src/Page/Type/Type.php
 
@@ -18729,12 +18339,6 @@ parameters:
 			path: concrete/src/Site/Service.php
 
 		-
-			message: '#^Method Concrete\\Core\\Site\\Service\:\:getByID\(\) should return Concrete\\Core\\Entity\\Site\\Site\|null but return statement is missing\.$#'
-			identifier: return.missing
-			count: 1
-			path: concrete/src/Site/Service.php
-
-		-
 			message: '#^Variable \$manager in PHPDoc tag @var does not match assigned variable \$request\.$#'
 			identifier: varTag.differentVariable
 			count: 1
@@ -19713,18 +19317,6 @@ parameters:
 			path: concrete/src/Tree/Type/Topic.php
 
 		-
-			message: '#^Method Concrete\\Core\\Updater\\ApplicationUpdate\:\:get\(\) should return Concrete\\Core\\Updater\\ApplicationUpdate\|null but return statement is missing\.$#'
-			identifier: return.missing
-			count: 1
-			path: concrete/src/Updater/ApplicationUpdate.php
-
-		-
-			message: '#^Method Concrete\\Core\\Updater\\ApplicationUpdate\:\:getByVersionNumber\(\) should return Concrete\\Core\\Updater\\ApplicationUpdate\|null but return statement is missing\.$#'
-			identifier: return.missing
-			count: 1
-			path: concrete/src/Updater/ApplicationUpdate.php
-
-		-
 			message: '#^PHPDoc tag @param for parameter \$requestedVersion with type mixed is not subtype of native type Concrete\\Core\\Updater\\ApplicationUpdate\\Version\.$#'
 			identifier: parameter.phpDocType
 			count: 1
@@ -20301,12 +19893,6 @@ parameters:
 			path: concrete/src/Url/Resolver/RouterUrlResolver.php
 
 		-
-			message: '#^Method Concrete\\Core\\Url\\Resolver\\RouterUrlResolver\:\:resolveRoute\(\) should return League\\Url\\UrlInterface\|null but return statement is missing\.$#'
-			identifier: return.missing
-			count: 2
-			path: concrete/src/Url/Resolver/RouterUrlResolver.php
-
-		-
 			message: '#^Method Concrete\\Core\\Url\\SeoCanonical\:\:getIncludedQuerystringParameters\(\) should return array but returns iterable\<string\>&Traversable\.$#'
 			identifier: return.type
 			count: 1
@@ -20475,20 +20061,8 @@ parameters:
 			path: concrete/src/User/Group/FolderManager.php
 
 		-
-			message: '#^Method Concrete\\Core\\User\\Group\\FolderManager\:\:getFolder\(\) should return Concrete\\Core\\Tree\\Node\\Type\\FileFolder\|null but return statement is missing\.$#'
-			identifier: return.missing
-			count: 1
-			path: concrete/src/User/Group/FolderManager.php
-
-		-
 			message: '#^Method Concrete\\Core\\User\\Group\\FolderManager\:\:getFolder\(\) should return Concrete\\Core\\Tree\\Node\\Type\\FileFolder\|null but returns Concrete\\Core\\Tree\\Node\\Type\\GroupFolder\.$#'
 			identifier: return.type
-			count: 1
-			path: concrete/src/User/Group/FolderManager.php
-
-		-
-			message: '#^Method Concrete\\Core\\User\\Group\\FolderManager\:\:getRootFolder\(\) should return Concrete\\Core\\Tree\\Node\\Type\\GroupFolder\|null but return statement is missing\.$#'
-			identifier: return.missing
 			count: 1
 			path: concrete/src/User/Group/FolderManager.php
 
@@ -20701,24 +20275,6 @@ parameters:
 			identifier: isset.variable
 			count: 1
 			path: concrete/src/User/Group/GroupJoinRequest.php
-
-		-
-			message: '#^Method Concrete\\Core\\User\\Group\\GroupRepository\:\:getGroupById\(\) should return Concrete\\Core\\User\\Group\\Group\|null but return statement is missing\.$#'
-			identifier: return.missing
-			count: 1
-			path: concrete/src/User/Group/GroupRepository.php
-
-		-
-			message: '#^Method Concrete\\Core\\User\\Group\\GroupRepository\:\:getGroupByName\(\) should return Concrete\\Core\\User\\Group\\Group\|null but return statement is missing\.$#'
-			identifier: return.missing
-			count: 1
-			path: concrete/src/User/Group/GroupRepository.php
-
-		-
-			message: '#^Method Concrete\\Core\\User\\Group\\GroupRepository\:\:getGroupByPath\(\) should return Concrete\\Core\\User\\Group\\Group\|null but return statement is missing\.$#'
-			identifier: return.missing
-			count: 1
-			path: concrete/src/User/Group/GroupRepository.php
 
 		-
 			message: '#^Method Concrete\\Core\\User\\Group\\GroupRole\:\:getId\(\) should return string but returns int\.$#'
@@ -21159,26 +20715,8 @@ parameters:
 			path: concrete/src/User/UserInfo.php
 
 		-
-			message: '#^Method Concrete\\Core\\User\\UserInfo\:\:getAttributeValue\(\) should return Concrete\\Core\\Attribute\\AttributeValueInterface\|null but return statement is missing\.$#'
-			identifier: return.missing
-			count: 1
-			path: concrete/src/User/UserInfo.php
-
-		-
 			message: '#^Method Concrete\\Core\\User\\UserInfo\:\:getUserPublicProfileUrl\(\) should return League\\Url\\UrlInterface\|null but empty return statement found\.$#'
 			identifier: return.empty
-			count: 1
-			path: concrete/src/User/UserInfo.php
-
-		-
-			message: '#^Method Concrete\\Core\\User\\UserInfo\:\:resetUserPassword\(\) should return string\|null but return statement is missing\.$#'
-			identifier: return.missing
-			count: 1
-			path: concrete/src/User/UserInfo.php
-
-		-
-			message: '#^Method Concrete\\Core\\User\\UserInfo\:\:sendPrivateMessage\(\) should return Concrete\\Core\\Error\\ErrorList\\ErrorList\|false\|null but return statement is missing\.$#'
-			identifier: return.missing
 			count: 1
 			path: concrete/src/User/UserInfo.php
 
@@ -21199,12 +20737,6 @@ parameters:
 			identifier: empty.variable
 			count: 1
 			path: concrete/src/User/UserInfo.php
-
-		-
-			message: '#^Method Concrete\\Core\\User\\UserInfoRepository\:\:getByValidationHash\(\) should return Concrete\\Core\\User\\UserInfo\|null but return statement is missing\.$#'
-			identifier: return.missing
-			count: 1
-			path: concrete/src/User/UserInfoRepository.php
 
 		-
 			message: '#^Negated boolean expression is always false\.$#'
@@ -21726,12 +21258,6 @@ parameters:
 			message: '#^Access to an undefined property Concrete\\Core\\Workflow\\Request\\Request\:\:\$pkID\.$#'
 			identifier: property.notFound
 			count: 3
-			path: concrete/src/Workflow/Request/Request.php
-
-		-
-			message: '#^Method Concrete\\Core\\Workflow\\Request\\Request\:\:triggerRequest\(\) should return Concrete\\Core\\Workflow\\Progress\\Response\|null but return statement is missing\.$#'
-			identifier: return.missing
-			count: 1
 			path: concrete/src/Workflow/Request/Request.php
 
 		-

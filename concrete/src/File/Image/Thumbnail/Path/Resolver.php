@@ -201,6 +201,8 @@ class Resolver
     
             return $configuration->getRelativePathToFile($path);
         }
+
+        return null;
     }
 
     /**

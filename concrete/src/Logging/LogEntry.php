@@ -302,6 +302,8 @@ class LogEntry
         if ($row) {
             return new static($row);
         }
+
+        return null;
     }
 
     /**

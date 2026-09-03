@@ -387,6 +387,8 @@ class Application extends Container
 
             return $response;
         }
+
+        return null;
     }
 
     /**

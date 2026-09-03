@@ -289,6 +289,8 @@ class Service
         if (is_object($site)) {
             return $factory->createEntity($site);
         }
+
+        return null;
     }
 
     /**

@@ -135,6 +135,8 @@ class Library extends ConcreteObject
 
             return $sc;
         }
+
+        return null;
     }
 
     /**

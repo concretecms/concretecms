@@ -472,6 +472,8 @@ class UserInfo extends ConcreteObject implements AttributeObjectInterface, Permi
         $notified = $notifier->getUsersToNotify($subscription, $msg);
         $notification = $type->createNotification($msg);
         $notifier->notify($notified, $notification);
+
+        return null;
     }
 
     /**
@@ -818,6 +820,8 @@ class UserInfo extends ConcreteObject implements AttributeObjectInterface, Permi
             $this->changePassword($newPassword);
             return $newPassword;
         }
+
+        return null;
     }
 
     /**

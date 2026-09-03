@@ -1425,6 +1425,8 @@ class Version implements ObjectInterface
 
         $f = $this->getFile();
         $f->reindex();
+
+        return null;
     }
 
     /**

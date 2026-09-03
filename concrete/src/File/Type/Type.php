@@ -431,6 +431,8 @@ class Type
         if ($typeName == 'PNG' || $typeName == 'JPEG'|| $typeName == 'GIF' || $typeName == 'WEBP') {
             return true;
         }
+
+        return null;
     }
 
     /**
@@ -444,6 +446,8 @@ class Type
         if ($typeName == 'SVG') {
             return true;
         }
+
+        return null;
     }
 
     /**
@@ -479,5 +483,7 @@ class Type
                 break;
 
         }
+
+        return null;
     }
 }

@@ -180,6 +180,8 @@ class StandardSitemapProvider implements ProviderInterface
                 return $this->siteService->getSiteTreeByID($siteTreeID);
             }
         }
+
+        return null;
     }
 
     /**

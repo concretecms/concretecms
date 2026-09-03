@@ -42,6 +42,8 @@ trait ObjectTrait
         if (is_object($value)) {
             return $value;
         }
+
+        return null;
     }
 
     /**

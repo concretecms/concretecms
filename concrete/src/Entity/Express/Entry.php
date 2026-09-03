@@ -168,6 +168,8 @@ class Entry implements \JsonSerializable, PermissionObjectInterface, AttributeOb
 
             return $attributeValue;
         }
+
+        return null;
     }
 
     /**
@@ -340,6 +342,8 @@ class Entry implements \JsonSerializable, PermissionObjectInterface, AttributeOb
                 return $entryAssociation;
             }
         }
+
+        return null;
     }
 
     /**

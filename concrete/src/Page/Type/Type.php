@@ -1193,6 +1193,8 @@ class Type extends ConcreteObject implements \Concrete\Core\Permission\ObjectInt
 
             return $validator;
         }
+
+        return null;
     }
 
     /**
@@ -1205,6 +1207,8 @@ class Type extends ConcreteObject implements \Concrete\Core\Permission\ObjectInt
             $saver->setPageTypeObject($this);
             return $saver;
         }
+
+        return null;
     }
 
 

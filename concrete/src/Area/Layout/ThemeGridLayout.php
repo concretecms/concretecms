@@ -124,6 +124,8 @@ class ThemeGridLayout extends Layout
 
             return $newAreaLayout;
         }
+
+        return null;
     }
 
     /**
@@ -172,5 +174,7 @@ class ThemeGridLayout extends Layout
 
             return $ar;
         }
+
+        return null;
     }
 }

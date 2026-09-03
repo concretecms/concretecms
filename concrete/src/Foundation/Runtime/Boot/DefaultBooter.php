@@ -133,6 +133,8 @@ class DefaultBooter implements BootInterface, ApplicationAwareInterface
         if (!$this->app->isRunThroughCommandLineInterface()) {
             return $this->bootHttpSapi($config, $app);
         }
+
+        return null;
     }
 
     /**
@@ -178,6 +180,8 @@ class DefaultBooter implements BootInterface, ApplicationAwareInterface
              */
             $this->initializePackages($app);
         }
+
+        return null;
     }
 
     /**
@@ -477,6 +481,8 @@ class DefaultBooter implements BootInterface, ApplicationAwareInterface
                 return $response;
             }
         }
+
+        return null;
     }
 
     /**
@@ -491,6 +497,8 @@ class DefaultBooter implements BootInterface, ApplicationAwareInterface
         if ($response) {
             return $response;
         }
+
+        return null;
     }
 
     /**

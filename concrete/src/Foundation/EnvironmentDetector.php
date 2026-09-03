@@ -87,6 +87,8 @@ class EnvironmentDetector
         if (($env = $this->getEnvironmentFromVariable()) !== false) {
             return $env;
         }
+
+        return null;
     }
 
     /**
@@ -105,6 +107,8 @@ class EnvironmentDetector
         if ($environments instanceof Closure) {
             return call_user_func($environments);
         }
+
+        return null;
     }
 
     /**

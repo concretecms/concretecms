@@ -105,5 +105,7 @@ class RouterUrlResolver implements UrlResolverInterface
                 return $this->pathUrlResolver->resolve([$path]);
             }
         }
+
+        return null;
     }
 }

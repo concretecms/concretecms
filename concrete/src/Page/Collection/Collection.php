@@ -505,6 +505,8 @@ class Collection extends ConcreteObject implements TrackableInterface
         if (is_object($this->vObj)) {
             return $this->vObj->getAttributeValueObject($akHandle, $createIfNotExists);
         }
+
+        return null;
     }
 
     /**
@@ -785,6 +787,8 @@ class Collection extends ConcreteObject implements TrackableInterface
                 $v->addHeaderItem($styleHeader);
             }
         }
+
+        return null;
     }
 
     /**
@@ -824,6 +828,8 @@ class Collection extends ConcreteObject implements TrackableInterface
                 ->setValue('cvRelationID', $oc->getVersionID())
                 ->execute();
         }
+
+        return null;
     }
 
     /**

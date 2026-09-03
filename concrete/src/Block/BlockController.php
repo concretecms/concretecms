@@ -785,6 +785,7 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
         } catch (\Exception $e) {
         }
 
+        return null;
     }
 
     public function isValidControllerTask($method, $parameters = [])

@@ -317,6 +317,8 @@ class Site implements TreeInterface, ObjectInterface, PermissionObjectInterface,
                 return $locale;
             }
         }
+
+        return null;
     }
 
     /**

@@ -190,6 +190,8 @@ class Template implements \JsonSerializable
             }
             return $image;
         }
+
+        return null;
     }
 
     public function export(\SimpleXMLElement $node): void

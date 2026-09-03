@@ -141,6 +141,8 @@ class CustomLayout extends Layout
 
             return $ar;
         }
+
+        return null;
     }
 
     /**

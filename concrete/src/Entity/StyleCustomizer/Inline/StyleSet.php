@@ -978,5 +978,7 @@ class StyleSet
             case GridFramework::DEVICE_CLASSES_HIDE_ON_LARGE:
                 return $this->getHideOnLargeDevice();
         }
+
+        return null;
     }
 }
