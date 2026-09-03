@@ -109,6 +109,57 @@ class SanitizerTest extends TestCase
         self::$sanitizer->sanitizeData($invalidSvgData, self::$sanitizerOptions);
     }
 
+    /**
+     * @return array
+     */
+    public static function provideCheckDataWithSafeSvg()
+    {
+        return [
+            'minimal' => ['<svg xmlns="http://www.w3.org/2000/svg" width="10" height="10"><rect width="10" height="10" fill="red"/></svg>'],
+            'with XML declaration' => ["<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><path d=\"M0 0h24v24H0z\"/></svg>"],
+            'with comments' => ["<?xml version=\"1.0\"?>\n<!-- Generator: Adobe Illustrator -->\n<svg xmlns=\"http://www.w3.org/2000/svg\" version=\"1.1\" x=\"0px\" y=\"0px\" viewBox=\"0 0 100 100\" xml:space=\"preserve\"><!-- inner --><circle cx=\"50\" cy=\"50\" r=\"40\"/></svg>"],
+            'nested elements' => ['<svg xmlns="http://www.w3.org/2000/svg"><g><title>T</title><desc>D</desc><path d="M0 0"/></g></svg>'],
+        ];
+    }
+
+    /**
+     * Safe SVG files must not be reported as containing nodes to be removed: that's what
+     * makes the "reject" import action refuse them.
+     *
+     * @param string $svgData
+     * @dataProvider provideCheckDataWithSafeSvg
+     */
+    public function testCheckDataAcceptsSafeSvg($svgData)
+    {
+        $this->assertSame([], self::$sanitizer->checkData($svgData));
+    }
+
+    /**
+     * @return array
+     */
+    public static function provideCheckDataWithUnsafeSvg()
+    {
+        return [
+            'script element' => ['<svg xmlns="http://www.w3.org/2000/svg"><script>alert(1)</script></svg>', 'elements'],
+            'event attribute' => ['<svg xmlns="http://www.w3.org/2000/svg"><rect onclick="alert(1)" width="1" height="1"/></svg>', 'attributes'],
+            // Detected by the enshrined/svg-sanitize library only
+            'javascript: link' => ['<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><a xlink:href="javascript:alert(1)"><rect width="1" height="1"/></a></svg>', 'enshrined'],
+            'foreignObject' => ['<svg xmlns="http://www.w3.org/2000/svg"><foreignObject><b xmlns="http://www.w3.org/1999/xhtml">hi</b></foreignObject></svg>', 'enshrined'],
+        ];
+    }
+
+    /**
+     * @param string $svgData
+     * @param string $expectedKey
+     * @dataProvider provideCheckDataWithUnsafeSvg
+     */
+    public function testCheckDataRejectsUnsafeSvg($svgData, $expectedKey)
+    {
+        $removedNodes = self::$sanitizer->checkData($svgData);
+        $this->assertNotSame([], $removedNodes);
+        $this->assertArrayHasKey($expectedKey, $removedNodes);
+    }
+
     public function testShouldThrowIfFileDoesNotExist()
     {
         $this->expectException(\Concrete\Core\File\Image\Svg\SanitizerException::class);

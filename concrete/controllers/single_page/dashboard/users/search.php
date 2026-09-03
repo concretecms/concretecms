@@ -353,11 +353,12 @@ class Search extends DashboardPageController
             }
             if ($this->app->make('config')->get('concrete.misc.user_timezones') && $this->canEditTimezone) {
                 $timezone = $this->request->request->get('uTimezone');
-                $data['uTimezone'] = $timezone;
-            }
-            if ($this->app->make('config')->get('concrete.misc.user_timezones') && $this->canEditTimezone) {
-                $timezone = $this->request->request->get('uTimezone');
-                $data['uTimezone'] = $timezone;
+                $validTimezones = $this->app->make('helper/date')->getTimezones();
+                if (is_string($timezone) && $timezone !== '' && array_key_exists($timezone, $validTimezones)) {
+                    $data['uTimezone'] = $timezone;
+                } else {
+                    $error->add(t('Invalid timezone.'));
+                }
             }
             $languages = Localization::getAvailableInterfaceLanguages();
             if (count($languages) > 0 && $this->canEditLanguage) {

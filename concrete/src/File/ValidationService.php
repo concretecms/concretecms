@@ -68,6 +68,15 @@ class ValidationService
      * Parses the file extension for a given file name, checks it to see if it's in the the extension array if provided
      * if not, it checks to see if it's in the concrete.upload.extensions configuration option.
      *
+     * Note: extension/MIME-type allowlisting only determines whether a file may be
+     * uploaded at all. It intentionally does not perform any content sanitization:
+     * that is the job of the import processors registered under app.import_processors
+     * (see Concrete\Core\File\Import\Processor\SvgProcessor and
+     * Concrete\Core\File\Import\Processor\XmlProcessor), which run later in the
+     * import pipeline and can inspect/sanitize/reject the actual file contents
+     * (e.g. stripping the `<?xml-stylesheet?>` processing instruction from
+     * uploaded XML/XSLT documents).
+     *
      * @param string $filename
      * @param array $extensions
      *

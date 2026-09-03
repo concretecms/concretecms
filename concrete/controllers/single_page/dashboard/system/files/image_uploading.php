@@ -4,6 +4,7 @@ namespace Concrete\Controller\SinglePage\Dashboard\System\Files;
 
 use Concrete\Core\File\Image\BitmapFormat;
 use Concrete\Core\File\Import\Processor\SvgProcessor;
+use Concrete\Core\File\Import\Processor\XmlProcessor;
 use Concrete\Core\Http\ResponseFactoryInterface;
 use Concrete\Core\Page\Controller\DashboardPageController;
 use Concrete\Core\Page\Page;
@@ -38,6 +39,14 @@ class ImageUploading extends DashboardPageController
             SvgProcessor::ACTION_CHECKVALIDITY => t('Check only the XML validity.'),
             SvgProcessor::ACTION_SANITIZE => t('Remove potentially harmful elements.'),
             SvgProcessor::ACTION_REJECT => t('Reject files containing potentially harmful elements.'),
+        ]);
+
+        $this->set('xml_processor_action', (string) $config->get('concrete.file_manager.documents.xml_sanitization.action'));
+        $this->set('xml_processor_actions', [
+            XmlProcessor::ACTION_DISABLED => t('Do not perform any check.'),
+            XmlProcessor::ACTION_CHECKVALIDITY => t('Check only the XML validity.'),
+            XmlProcessor::ACTION_SANITIZE => t('Remove potentially harmful elements (like the xml-stylesheet processing instruction).'),
+            XmlProcessor::ACTION_REJECT => t('Reject files containing potentially harmful elements.'),
         ]);
 
         $this->set('use_exif_data_to_rotate_images', (bool) $config->get('concrete.file_manager.images.use_exif_data_to_rotate_images'));
@@ -151,6 +160,7 @@ class ImageUploading extends DashboardPageController
                 $config->save('concrete.file_manager.restrict_max_width', $restrict_max_width);
                 $config->save('concrete.file_manager.restrict_max_height', $restrict_max_height);
                 $config->save('concrete.file_manager.images.svg_sanitization.action', (string) $post->get('svg_processor_action'));
+                $config->save('concrete.file_manager.documents.xml_sanitization.action', (string) $post->get('xml_processor_action'));
                 $this->flash('success', t('Image options saved.'));
 
                 return $this->app->make(ResponseFactoryInterface::class)->redirect($this->action(''), 302);
