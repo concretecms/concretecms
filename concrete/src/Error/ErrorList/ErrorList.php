@@ -182,8 +182,6 @@ class ErrorList implements ArrayAccess, JsonSerializable
     /**
      * @deprecated Use the StandardFormatter class
      *
-     * @return string
-     *
      * @see \Concrete\Core\Error\ErrorList\Formatter\StandardFormatter
      */
     public function output()
@@ -194,8 +192,6 @@ class ErrorList implements ArrayAccess, JsonSerializable
 
     /**
      * @deprecated Use the JsonFormatter class
-     *
-     * @return string
      *
      * @see \Concrete\Core\Error\ErrorList\Formatter\JsonFormatter
      */

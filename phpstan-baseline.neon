@@ -1587,12 +1587,6 @@ parameters:
 			path: concrete/controllers/install.php
 
 		-
-			message: '#^Method Concrete\\Controller\\Install\:\:configure\(\) should return Concrete\\Core\\Error\\Error but return statement is missing\.$#'
-			identifier: return.missing
-			count: 1
-			path: concrete/controllers/install.php
-
-		-
 			message: '#^Negated boolean expression is always true\.$#'
 			identifier: booleanNot.alwaysTrue
 			count: 1
@@ -5925,12 +5919,6 @@ parameters:
 			path: concrete/src/Area/Area.php
 
 		-
-			message: '#^Method Concrete\\Core\\Area\\Area\:\:display\(\) should return bool but return statement is missing\.$#'
-			identifier: return.missing
-			count: 1
-			path: concrete/src/Area/Area.php
-
-		-
 			message: '#^Method Concrete\\Core\\Area\\Area\:\:get\(\) should return Concrete\\Core\\Area\\Area but returns false\.$#'
 			identifier: return.type
 			count: 1
@@ -5940,12 +5928,6 @@ parameters:
 			message: '#^Method Concrete\\Core\\Area\\Area\:\:rescanAreaPermissionsChain\(\) should return bool but return statement is missing\.$#'
 			identifier: return.missing
 			count: 2
-			path: concrete/src/Area/Area.php
-
-		-
-			message: '#^Method Concrete\\Core\\Area\\Area\:\:rescanSubAreaPermissionsMasterCollection\(\) should return bool but return statement is missing\.$#'
-			identifier: return.missing
-			count: 1
 			path: concrete/src/Area/Area.php
 
 		-
@@ -6041,12 +6023,6 @@ parameters:
 		-
 			message: '#^Default value of the parameter \#1 \$c \(false\) of method Concrete\\Core\\Area\\GlobalArea\:\:getTotalBlocksInArea\(\) is incompatible with type Concrete\\Core\\Page\\Page\.$#'
 			identifier: parameter.defaultValue
-			count: 1
-			path: concrete/src/Area/GlobalArea.php
-
-		-
-			message: '#^Method Concrete\\Core\\Area\\GlobalArea\:\:display\(\) should return bool but return statement is missing\.$#'
-			identifier: return.missing
 			count: 1
 			path: concrete/src/Area/GlobalArea.php
 
@@ -9441,12 +9417,6 @@ parameters:
 			path: concrete/src/Database/DatabaseStructureManager.php
 
 		-
-			message: '#^Method Concrete\\Core\\Database\\DatabaseStructureManager\:\:dropObsoleteDatabaseTables\(\) should return int but return statement is missing\.$#'
-			identifier: return.missing
-			count: 1
-			path: concrete/src/Database/DatabaseStructureManager.php
-
-		-
 			message: '#^Negated boolean expression is always false\.$#'
 			identifier: booleanNot.alwaysFalse
 			count: 1
@@ -10185,12 +10155,6 @@ parameters:
 			path: concrete/src/Entity/File/File.php
 
 		-
-			message: '#^Method Concrete\\Core\\Entity\\File\\File\:\:setFileStorageLocation\(\) should return bool but return statement is missing\.$#'
-			identifier: return.missing
-			count: 1
-			path: concrete/src/Entity/File/File.php
-
-		-
 			message: '#^Parameter \#1 \$file of static method Concrete\\Core\\Tree\\Node\\Type\\File\:\:add\(\) expects Concrete\\Core\\Tree\\Node\\Node\|false\|null, static\(Concrete\\Core\\Entity\\File\\File\) given\.$#'
 			identifier: argument.type
 			count: 1
@@ -10739,18 +10703,6 @@ parameters:
 		-
 			message: '#^Method Concrete\\Core\\Error\\ErrorList\\ErrorList\:\:offsetExists\(\) should return bool but returns Concrete\\Core\\Error\\ErrorList\\Error\\ErrorInterface\.$#'
 			identifier: return.type
-			count: 1
-			path: concrete/src/Error/ErrorList/ErrorList.php
-
-		-
-			message: '#^Method Concrete\\Core\\Error\\ErrorList\\ErrorList\:\:output\(\) should return string but return statement is missing\.$#'
-			identifier: return.missing
-			count: 1
-			path: concrete/src/Error/ErrorList/ErrorList.php
-
-		-
-			message: '#^Method Concrete\\Core\\Error\\ErrorList\\ErrorList\:\:outputJSON\(\) should return string but return statement is missing\.$#'
-			identifier: return.missing
 			count: 1
 			path: concrete/src/Error/ErrorList/ErrorList.php
 

@@ -313,8 +313,6 @@ class DatabaseStructureManager
      * 
      * @param  string $prefix
      * @param  array $excludeTables
-     *
-     * @return int
      */
     public function dropObsoleteDatabaseTables($prefix, array $excludeTables = array())
     {

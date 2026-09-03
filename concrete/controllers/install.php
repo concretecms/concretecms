@@ -255,9 +255,6 @@ class Install extends Controller
         return $rf->json($result);
     }
 
-    /**
-     * @return \Concrete\Core\Error\Error
-     */
     public function configure()
     {
         $post = $this->request->request;

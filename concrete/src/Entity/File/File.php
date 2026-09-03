@@ -218,9 +218,9 @@ class File implements \Concrete\Core\Permission\ObjectInterface, AttributeObject
      *
      * @param StorageLocation\StorageLocation $newLocation
      *
-     * @return bool false if the storage location is the same
      * @throws \Exception
      *
+     * @return bool false if the storage location is the same
      */
     public function setFileStorageLocation(\Concrete\Core\Entity\File\StorageLocation\StorageLocation $newLocation)
     {
@@ -255,6 +255,8 @@ class File implements \Concrete\Core\Permission\ObjectInterface, AttributeObject
 
         $this->setStorageLocation($newLocation);
         $this->save();
+
+        return true;
     }
 
     /**
