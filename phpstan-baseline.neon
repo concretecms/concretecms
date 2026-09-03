@@ -3213,6 +3213,12 @@ parameters:
 			path: concrete/controllers/single_page/dashboard/system/files/uploads.php
 
 		-
+			message: '#^Negated boolean expression is always false\.$#'
+			identifier: booleanNot.alwaysFalse
+			count: 1
+			path: concrete/controllers/single_page/dashboard/system/mail/method/test.php
+
+		-
 			message: '#^Variable \$sectionID in isset\(\) always exists and is not nullable\.$#'
 			identifier: isset.variable
 			count: 1
@@ -6447,12 +6453,6 @@ parameters:
 			path: concrete/src/Attribute/Category/AbstractCategory.php
 
 		-
-			message: '#^Parameter \#1 \$attributeValue of method Concrete\\Core\\Attribute\\Controller\:\:setAttributeValue\(\) expects Concrete\\Core\\Entity\\Attribute\\Value\\AbstractValue\|null, Concrete\\Core\\Attribute\\AttributeValueInterface given\.$#'
-			identifier: argument.type
-			count: 1
-			path: concrete/src/Attribute/Category/AbstractCategory.php
-
-		-
 			message: '#^Result of \|\| is always false\.$#'
 			identifier: booleanOr.alwaysFalse
 			count: 1
@@ -6521,12 +6521,6 @@ parameters:
 		-
 			message: '#^Call to an undefined method Concrete\\Core\\Attribute\\SetManagerInterface\:\:addSet\(\)\.$#'
 			identifier: method.notFound
-			count: 1
-			path: concrete/src/Attribute/Category/LegacyCategory.php
-
-		-
-			message: '#^Call to function is_object\(\) with Concrete\\Core\\Entity\\Attribute\\Value\\Value\\Value will always evaluate to true\.$#'
-			identifier: function.alreadyNarrowedType
 			count: 1
 			path: concrete/src/Attribute/Category/LegacyCategory.php
 
@@ -6669,8 +6663,14 @@ parameters:
 			path: concrete/src/Attribute/Controller.php
 
 		-
-			message: '#^Call to function is_object\(\) with Concrete\\Core\\Entity\\Attribute\\Value\\AbstractValue will always evaluate to true\.$#'
-			identifier: function.alreadyNarrowedType
+			message: '#^Call to an undefined method Concrete\\Core\\Attribute\\AttributeValueInterface\:\:getAttributeValueID\(\)\.$#'
+			identifier: method.notFound
+			count: 2
+			path: concrete/src/Attribute/Controller.php
+
+		-
+			message: '#^Call to an undefined method Concrete\\Core\\Attribute\\AttributeValueInterface\:\:getGenericValue\(\)\.$#'
+			identifier: method.notFound
 			count: 1
 			path: concrete/src/Attribute/Controller.php
 
@@ -6699,12 +6699,6 @@ parameters:
 			path: concrete/src/Attribute/Controller.php
 
 		-
-			message: '#^If condition is always true\.$#'
-			identifier: if.alwaysTrue
-			count: 2
-			path: concrete/src/Attribute/Controller.php
-
-		-
 			message: '#^Method Concrete\\Core\\Attribute\\Controller\:\:createAttributeValueFromRequest\(\) should return Concrete\\Core\\Attribute\\AttributeValueInterface but returns Concrete\\Core\\Attribute\\Value\\EmptyRequestAttributeValue\.$#'
 			identifier: return.type
 			count: 1
@@ -6713,12 +6707,6 @@ parameters:
 		-
 			message: '#^Method Concrete\\Core\\Attribute\\Controller\:\:getAttributeTypeFileURL\(\) should return string\|null but return statement is missing\.$#'
 			identifier: return.missing
-			count: 1
-			path: concrete/src/Attribute/Controller.php
-
-		-
-			message: '#^Method Concrete\\Core\\Attribute\\Controller\:\:getAttributeValueClass\(\) should return string but returns null\.$#'
-			identifier: return.type
 			count: 1
 			path: concrete/src/Attribute/Controller.php
 
@@ -6747,19 +6735,7 @@ parameters:
 			path: concrete/src/Attribute/Controller.php
 
 		-
-			message: '#^Right side of && is always true\.$#'
-			identifier: booleanAnd.rightAlwaysTrue
-			count: 2
-			path: concrete/src/Attribute/Controller.php
-
-		-
-			message: '#^Ternary operator condition is always true\.$#'
-			identifier: ternary.alwaysTrue
-			count: 2
-			path: concrete/src/Attribute/Controller.php
-
-		-
-			message: '#^Call to an undefined method Concrete\\Core\\Entity\\Attribute\\Value\\AbstractValue\:\:setValue\(\)\.$#'
+			message: '#^Call to an undefined method Concrete\\Core\\Attribute\\AttributeValueInterface\|Concrete\\Core\\Entity\\Attribute\\Value\\Value\\AbstractValue\:\:setValue\(\)\.$#'
 			identifier: method.notFound
 			count: 1
 			path: concrete/src/Attribute/DefaultController.php
@@ -6771,19 +6747,7 @@ parameters:
 			path: concrete/src/Attribute/DefaultController.php
 
 		-
-			message: '#^Call to function is_object\(\) with Concrete\\Core\\Entity\\Attribute\\Value\\AbstractValue will always evaluate to true\.$#'
-			identifier: function.alreadyNarrowedType
-			count: 1
-			path: concrete/src/Attribute/DefaultController.php
-
-		-
 			message: '#^Method Concrete\\Core\\Attribute\\DefaultController\:\:createAttributeValue\(\) should return Concrete\\Core\\Attribute\\AttributeValueInterface but returns Concrete\\Core\\Entity\\Attribute\\Value\\Value\\TextValue\.$#'
-			identifier: return.type
-			count: 1
-			path: concrete/src/Attribute/DefaultController.php
-
-		-
-			message: '#^Method Concrete\\Core\\Attribute\\DefaultController\:\:updateAttributeValueFromTextRepresentation\(\) should return Concrete\\Core\\Entity\\Attribute\\Value\\Value\\AbstractValue\|null but returns Concrete\\Core\\Attribute\\AttributeValueInterface\|null\.$#'
 			identifier: return.type
 			count: 1
 			path: concrete/src/Attribute/DefaultController.php
@@ -6839,12 +6803,6 @@ parameters:
 		-
 			message: '#^Access to an undefined property Concrete\\Core\\Attribute\\Key\\Key\:\:\$searchIndexFieldDefinition\.$#'
 			identifier: property.notFound
-			count: 1
-			path: concrete/src/Attribute/Key/Key.php
-
-		-
-			message: '#^Call to function is_object\(\) with Concrete\\Core\\Entity\\Attribute\\Value\\Value\\Value will always evaluate to true\.$#'
-			identifier: function.alreadyNarrowedType
 			count: 1
 			path: concrete/src/Attribute/Key/Key.php
 
@@ -6930,12 +6888,6 @@ parameters:
 			message: '#^Left side of && is always true\.$#'
 			identifier: booleanAnd.leftAlwaysTrue
 			count: 2
-			path: concrete/src/Attribute/StandardValidator.php
-
-		-
-			message: '#^Parameter \#1 \$attributeValue of method Concrete\\Core\\Attribute\\Controller\:\:setAttributeValue\(\) expects Concrete\\Core\\Entity\\Attribute\\Value\\AbstractValue\|null, Concrete\\Core\\Attribute\\AttributeValueInterface given\.$#'
-			identifier: argument.type
-			count: 1
 			path: concrete/src/Attribute/StandardValidator.php
 
 		-
@@ -9789,26 +9741,14 @@ parameters:
 			path: concrete/src/Entity/Attribute/Key/Settings/Settings.php
 
 		-
-			message: '#^Call to an undefined method Concrete\\Core\\Entity\\Attribute\\Value\\Value\\Value\:\:getValue\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: concrete/src/Entity/Attribute/Value/AbstractValue.php
-
-		-
-			message: '#^Call to function is_object\(\) with Concrete\\Core\\Entity\\Attribute\\Value\\Value\\Value will always evaluate to true\.$#'
-			identifier: function.alreadyNarrowedType
-			count: 1
-			path: concrete/src/Entity/Attribute/Value/AbstractValue.php
-
-		-
-			message: '#^If condition is always true\.$#'
-			identifier: if.alwaysTrue
+			message: '#^Cannot cast Concrete\\Core\\Attribute\\AttributeValueInterface\|Concrete\\Core\\Entity\\Attribute\\Value\\Value\\AbstractValue to string\.$#'
+			identifier: cast.string
 			count: 2
 			path: concrete/src/Entity/Attribute/Value/AbstractValue.php
 
 		-
-			message: '#^Method Concrete\\Core\\Entity\\Attribute\\Value\\AbstractValue\:\:getValueObject\(\) should return Concrete\\Core\\Entity\\Attribute\\Value\\Value\\Value but returns Concrete\\Core\\Entity\\Attribute\\Value\\Value\\AbstractValue\.$#'
-			identifier: return.type
+			message: '#^Method Concrete\\Core\\Entity\\Attribute\\Value\\AbstractValue\:\:getValueObject\(\) never returns null so it can be removed from the return type\.$#'
+			identifier: return.unusedType
 			count: 1
 			path: concrete/src/Entity/Attribute/Value/AbstractValue.php
 
@@ -9827,7 +9767,7 @@ parameters:
 		-
 			message: '#^Unreachable statement \- code above always terminates\.$#'
 			identifier: deadCode.unreachable
-			count: 3
+			count: 1
 			path: concrete/src/Entity/Attribute/Value/AbstractValue.php
 
 		-
@@ -10005,7 +9945,7 @@ parameters:
 			path: concrete/src/Entity/Board/Template.php
 
 		-
-			message: '#^Method Concrete\\Core\\Entity\\Calendar\\CalendarEvent\:\:getAttributeValue\(\) should return Concrete\\Core\\Entity\\Attribute\\Value\\AbstractValue but return statement is missing\.$#'
+			message: '#^Method Concrete\\Core\\Entity\\Calendar\\CalendarEvent\:\:getAttributeValue\(\) should return Concrete\\Core\\Attribute\\AttributeValueInterface\|null but return statement is missing\.$#'
 			identifier: return.missing
 			count: 1
 			path: concrete/src/Entity/Calendar/CalendarEvent.php
@@ -10041,7 +9981,7 @@ parameters:
 			path: concrete/src/Entity/Calendar/CalendarEventVersion.php
 
 		-
-			message: '#^Method Concrete\\Core\\Entity\\Calendar\\CalendarEventVersion\:\:getAttributeValue\(\) should return Concrete\\Core\\Entity\\Attribute\\Value\\AbstractValue but return statement is missing\.$#'
+			message: '#^Method Concrete\\Core\\Entity\\Calendar\\CalendarEventVersion\:\:getAttributeValue\(\) should return Concrete\\Core\\Attribute\\AttributeValueInterface\|null but return statement is missing\.$#'
 			identifier: return.missing
 			count: 1
 			path: concrete/src/Entity/Calendar/CalendarEventVersion.php
@@ -10063,12 +10003,6 @@ parameters:
 			identifier: parameter.notFound
 			count: 1
 			path: concrete/src/Entity/Calendar/CalendarEventVersion.php
-
-		-
-			message: '#^Method Concrete\\Core\\Entity\\Calendar\\CalendarEventVersionOccurrence\:\:setAttribute\(\) should return Concrete\\Core\\Attribute\\AttributeValueInterface but return statement is missing\.$#'
-			identifier: return.missing
-			count: 1
-			path: concrete/src/Entity/Calendar/CalendarEventVersionOccurrence.php
 
 		-
 			message: '#^PHPDoc tag @param for parameter \$template with type mixed is not subtype of native type Concrete\\Core\\Entity\\Summary\\Template\.$#'
@@ -10149,14 +10083,8 @@ parameters:
 			path: concrete/src/Entity/Express/Entry.php
 
 		-
-			message: '#^Method Concrete\\Core\\Entity\\Express\\Entry\:\:getAttributeValue\(\) should return Concrete\\Core\\Entity\\Attribute\\Value\\AbstractValue but return statement is missing\.$#'
+			message: '#^Method Concrete\\Core\\Entity\\Express\\Entry\:\:getAttributeValue\(\) should return Concrete\\Core\\Attribute\\AttributeValueInterface\|null but return statement is missing\.$#'
 			identifier: return.missing
-			count: 1
-			path: concrete/src/Entity/Express/Entry.php
-
-		-
-			message: '#^Method Concrete\\Core\\Entity\\Express\\Entry\:\:getAttributeValue\(\) should return Concrete\\Core\\Entity\\Attribute\\Value\\AbstractValue but returns Concrete\\Core\\Attribute\\AttributeValueInterface\.$#'
-			identifier: return.type
 			count: 1
 			path: concrete/src/Entity/Express/Entry.php
 
@@ -10179,20 +10107,8 @@ parameters:
 			path: concrete/src/Entity/Express/Entry.php
 
 		-
-			message: '#^Method Concrete\\Core\\Entity\\Express\\Entry\:\:setAttribute\(\) should return Concrete\\Core\\Entity\\Attribute\\Value\\AbstractValue but returns Concrete\\Core\\Attribute\\AttributeValueInterface\|null\.$#'
-			identifier: return.type
-			count: 1
-			path: concrete/src/Entity/Express/Entry.php
-
-		-
 			message: '#^PHPDoc tag @return with type mixed is not subtype of native type string\.$#'
 			identifier: return.phpDocType
-			count: 1
-			path: concrete/src/Entity/Express/Entry.php
-
-		-
-			message: '#^Parameter \#1 \$attributeValue of method Concrete\\Core\\Attribute\\Controller\:\:setAttributeValue\(\) expects Concrete\\Core\\Entity\\Attribute\\Value\\AbstractValue\|null, Concrete\\Core\\Attribute\\AttributeValueInterface\|null given\.$#'
-			identifier: argument.type
 			count: 1
 			path: concrete/src/Entity/Express/Entry.php
 
@@ -10371,7 +10287,7 @@ parameters:
 			path: concrete/src/Entity/File/Version.php
 
 		-
-			message: '#^Method Concrete\\Core\\Entity\\File\\Version\:\:getAttributeValue\(\) should return Concrete\\Core\\Entity\\Attribute\\Value\\AbstractValue but return statement is missing\.$#'
+			message: '#^Method Concrete\\Core\\Entity\\File\\Version\:\:getAttributeValue\(\) should return Concrete\\Core\\Attribute\\AttributeValueInterface\|null but return statement is missing\.$#'
 			identifier: return.missing
 			count: 1
 			path: concrete/src/Entity/File/Version.php
@@ -10647,7 +10563,7 @@ parameters:
 			path: concrete/src/Entity/Site/Site.php
 
 		-
-			message: '#^Method Concrete\\Core\\Entity\\Site\\Site\:\:getAttributeValue\(\) should return Concrete\\Core\\Entity\\Attribute\\Value\\AbstractValue but return statement is missing\.$#'
+			message: '#^Method Concrete\\Core\\Entity\\Site\\Site\:\:getAttributeValue\(\) should return Concrete\\Core\\Attribute\\AttributeValueInterface\|null but return statement is missing\.$#'
 			identifier: return.missing
 			count: 1
 			path: concrete/src/Entity/Site/Site.php
@@ -10689,32 +10605,14 @@ parameters:
 			path: concrete/src/Entity/Site/Skeleton.php
 
 		-
-			message: '#^Method Concrete\\Core\\Entity\\Site\\Skeleton\:\:getAttributeValue\(\) should return Concrete\\Core\\Entity\\Attribute\\Value\\AbstractValue but return statement is missing\.$#'
+			message: '#^Method Concrete\\Core\\Entity\\Site\\Skeleton\:\:getAttributeValue\(\) should return Concrete\\Core\\Attribute\\AttributeValueInterface\|null but return statement is missing\.$#'
 			identifier: return.missing
-			count: 1
-			path: concrete/src/Entity/Site/Skeleton.php
-
-		-
-			message: '#^Method Concrete\\Core\\Entity\\Site\\Skeleton\:\:getAttributeValue\(\) should return Concrete\\Core\\Entity\\Attribute\\Value\\AbstractValue but returns Concrete\\Core\\Attribute\\AttributeValueInterface\.$#'
-			identifier: return.type
 			count: 1
 			path: concrete/src/Entity/Site/Skeleton.php
 
 		-
 			message: '#^Method Concrete\\Core\\Entity\\Site\\Skeleton\:\:getAttributeValueObject\(\) should return Concrete\\Core\\Attribute\\AttributeValueInterface\|null but return statement is missing\.$#'
 			identifier: return.missing
-			count: 1
-			path: concrete/src/Entity/Site/Skeleton.php
-
-		-
-			message: '#^Method Concrete\\Core\\Entity\\Site\\Skeleton\:\:setAttribute\(\) should return Concrete\\Core\\Entity\\Attribute\\Value\\AbstractValue but returns Concrete\\Core\\Attribute\\AttributeValueInterface\|null\.$#'
-			identifier: return.type
-			count: 1
-			path: concrete/src/Entity/Site/Skeleton.php
-
-		-
-			message: '#^Parameter \#1 \$attributeValue of method Concrete\\Core\\Attribute\\Controller\:\:setAttributeValue\(\) expects Concrete\\Core\\Entity\\Attribute\\Value\\AbstractValue\|null, Concrete\\Core\\Attribute\\AttributeValueInterface\|null given\.$#'
-			identifier: argument.type
 			count: 1
 			path: concrete/src/Entity/Site/Skeleton.php
 
@@ -10945,12 +10843,6 @@ parameters:
 			identifier: return.missing
 			count: 1
 			path: concrete/src/Export/Item/StackFolder.php
-
-		-
-			message: '#^Parameter \#1 \$attributeValue of method Concrete\\Core\\Attribute\\Controller\:\:setAttributeValue\(\) expects Concrete\\Core\\Entity\\Attribute\\Value\\AbstractValue\|null, Concrete\\Core\\Attribute\\AttributeValueInterface given\.$#'
-			identifier: argument.type
-			count: 1
-			path: concrete/src/Export/Item/User.php
 
 		-
 			message: '#^Parameter \#2 \$value of method SimpleXMLElement\:\:addAttribute\(\) expects string, int given\.$#'
@@ -15609,7 +15501,7 @@ parameters:
 			path: concrete/src/Page/Collection/Collection.php
 
 		-
-			message: '#^Method Concrete\\Core\\Page\\Collection\\Collection\:\:setAttribute\(\) should return Concrete\\Core\\Entity\\Attribute\\Value\\PageValue but returns Concrete\\Core\\Entity\\Attribute\\Value\\AbstractValue\.$#'
+			message: '#^Method Concrete\\Core\\Page\\Collection\\Collection\:\:setAttribute\(\) should return Concrete\\Core\\Entity\\Attribute\\Value\\PageValue but returns Concrete\\Core\\Attribute\\AttributeValueInterface\.$#'
 			identifier: return.type
 			count: 1
 			path: concrete/src/Page/Collection/Collection.php
@@ -15669,7 +15561,7 @@ parameters:
 			path: concrete/src/Page/Collection/Version/Version.php
 
 		-
-			message: '#^Method Concrete\\Core\\Page\\Collection\\Version\\Version\:\:getAttributeValue\(\) should return Concrete\\Core\\Entity\\Attribute\\Value\\AbstractValue but return statement is missing\.$#'
+			message: '#^Method Concrete\\Core\\Page\\Collection\\Version\\Version\:\:getAttributeValue\(\) should return Concrete\\Core\\Attribute\\AttributeValueInterface\|null but return statement is missing\.$#'
 			identifier: return.missing
 			count: 1
 			path: concrete/src/Page/Collection/Version/Version.php
@@ -15747,32 +15639,20 @@ parameters:
 			path: concrete/src/Page/Command/RescanMultilingualPageCommandHandler.php
 
 		-
-			message: '#^Call to an undefined method Concrete\\Core\\Page\\Page\:\:getTranslatedPageID\(\)\.$#'
+			message: '#^Call to an undefined method Concrete\\Core\\Page\\Page\:\:getMultilingualSection\(\)\.$#'
 			identifier: method.notFound
 			count: 1
 			path: concrete/src/Page/Command/RescanMultilingualPageCommandHandler.php
 
 		-
-			message: '#^Call to function is_object\(\) with Concrete\\Core\\Page\\Page will always evaluate to true\.$#'
-			identifier: function.alreadyNarrowedType
+			message: '#^Negated boolean expression is always false\.$#'
+			identifier: booleanNot.alwaysFalse
 			count: 1
 			path: concrete/src/Page/Command/RescanMultilingualPageCommandHandler.php
 
 		-
-			message: '#^Left side of && is always true\.$#'
-			identifier: booleanAnd.leftAlwaysTrue
-			count: 1
-			path: concrete/src/Page/Command/RescanMultilingualPageCommandHandler.php
-
-		-
-			message: '#^Parameter \#1 \$cID of static method Concrete\\Core\\Page\\Page\:\:getByID\(\) expects int, string given\.$#'
-			identifier: argument.type
-			count: 1
-			path: concrete/src/Page/Command/RescanMultilingualPageCommandHandler.php
-
-		-
-			message: '#^Undefined variable\: \$section$#'
-			identifier: variable.undefined
+			message: '#^Ternary operator condition is always true\.$#'
+			identifier: ternary.alwaysTrue
 			count: 1
 			path: concrete/src/Page/Command/RescanMultilingualPageCommandHandler.php
 
@@ -16079,7 +15959,7 @@ parameters:
 		-
 			message: '#^If condition is always true\.$#'
 			identifier: if.alwaysTrue
-			count: 9
+			count: 8
 			path: concrete/src/Page/Page.php
 
 		-
@@ -21525,7 +21405,7 @@ parameters:
 			path: concrete/src/User/UserInfo.php
 
 		-
-			message: '#^Method Concrete\\Core\\User\\UserInfo\:\:getAttributeValue\(\) should return Concrete\\Core\\Entity\\Attribute\\Value\\AbstractValue but return statement is missing\.$#'
+			message: '#^Method Concrete\\Core\\User\\UserInfo\:\:getAttributeValue\(\) should return Concrete\\Core\\Attribute\\AttributeValueInterface\|null but return statement is missing\.$#'
 			identifier: return.missing
 			count: 1
 			path: concrete/src/User/UserInfo.php
