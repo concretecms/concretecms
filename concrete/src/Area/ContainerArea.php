@@ -130,7 +130,7 @@ class ContainerArea
             $em->flush();
         } catch (UniqueConstraintViolationException $e) {
             // Another request inserted it; safe to ignore.
-            $em->clear($instanceArea); // optional: detach the transient entity
+            $em->detach($instanceArea);
         }
     }
 

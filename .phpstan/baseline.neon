@@ -4977,12 +4977,6 @@ parameters:
 			path: ../concrete/src/Area/Area.php
 
 		-
-			message: '#^Parameter \#1 \$entityName of method Doctrine\\ORM\\EntityManager\:\:clear\(\) expects string\|null, Concrete\\Core\\Entity\\Page\\Container\\InstanceArea given\.$#'
-			identifier: argument.type
-			count: 1
-			path: ../concrete/src/Area/ContainerArea.php
-
-		-
 			message: '#^Call to an undefined method Concrete\\Core\\Entity\\File\\File\:\:getRelativePath\(\)\.$#'
 			identifier: method.notFound
 			count: 1
