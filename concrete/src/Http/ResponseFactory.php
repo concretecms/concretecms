@@ -4,9 +4,11 @@ namespace Concrete\Core\Http;
 use Concrete\Controller\Frontend\PageForbidden;
 use Concrete\Core\Application\ApplicationAwareInterface;
 use Concrete\Core\Application\ApplicationAwareTrait;
+use Concrete\Core\Cache\Level\ExpensiveCache;
 use Concrete\Core\Command\Process\Menu\Item\RunningProcessesItem;
 use Concrete\Core\Config\Repository\Repository;
 use Concrete\Core\Controller\Controller;
+use Concrete\Core\Events\EventDispatcher;
 use Concrete\Core\Localization\Localization;
 use Concrete\Core\Page\Collection\Collection;
 use Concrete\Core\Page\Controller\PageController;
@@ -19,6 +21,7 @@ use Concrete\Core\Permission\Key\Key;
 use Concrete\Core\Routing\RedirectResponse;
 use Concrete\Core\Session\SessionValidator;
 use Concrete\Core\Site\Menu\Item\SiteListItem;
+use Concrete\Core\User\Login\LoginCookieService;
 use Concrete\Core\User\PostLoginLocation;
 use Concrete\Core\User\User;
 use Concrete\Core\View\View;
@@ -43,8 +46,21 @@ class ResponseFactory implements ResponseFactoryInterface, ApplicationAwareInter
      */
     private $config;
 
-    public function __construct(Request $request, Localization $localization, Repository $config)
+    /**
+     * @var EventDispatcher
+     */
+    private $eventDispatcher;
+
+    /**
+     * @var ExpensiveCache
+     */
+    private $cache;
+
+    public function __construct(LoginCookieService $loginCookieService, ExpensiveCache $cache, EventDispatcher $eventDispatcher, Request $request, Localization $localization, Repository $config)
     {
+        $this->cache = $cache;
+        $this->loginCookieService = $loginCookieService;
+        $this->eventDispatcher = $eventDispatcher;
         $this->request = $request;
         $this->localization = $localization;
         $this->config = $config;
@@ -66,11 +82,41 @@ class ResponseFactory implements ResponseFactoryInterface, ApplicationAwareInter
         return new JsonResponse($data, $code, $headers);
     }
 
+
+    public function cachedNotFound($code = Response::HTTP_NOT_FOUND, $headers = [])
+    {
+        $this->eventDispatcher->dispatch('on_page_not_found');
+        $record = $this->cache->getItem('page_not_found');
+        if (!$this->loginCookieService->hasLoginCookie()) {
+            if ($record->isHit()) {
+                /** @var Response */
+                return $record->get();
+            }
+        }
+
+        $item = '/page_not_found';
+        $c = Page::getByPath($item);
+        if (is_object($c) && !$c->isError()) {
+            $this->request->setCurrentPage($c);
+            $response = $this->controller($c->getPageController(), $code, $headers);
+        } else {
+            $cnt = $this->app->make(PageForbidden::class);
+            $response = $this->controller($cnt, $code, $headers);
+        }
+
+        if (!$this->loginCookieService->hasLoginCookie()) {
+            $record->set($response)->expiresAfter(1800)->save();
+        }
+
+        return $response;
+    }
+
     /**
      * {@inheritdoc}
      */
     public function notFound($content, $code = Response::HTTP_NOT_FOUND, $headers = [])
     {
+        $this->eventDispatcher->dispatch('on_page_not_found');
         if ($this->request->isXmlHttpRequest() || in_array($this->request->getPreferredFormat(), ['json', 'jsonld'], true)) {
             $this->localization->pushActiveContext(Localization::CONTEXT_SITE);
             $responseData = [
