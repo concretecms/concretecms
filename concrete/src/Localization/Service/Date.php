@@ -424,19 +424,21 @@ class Date
             case 'user':
                 $tz = null;
                 if ($config->get('concrete.misc.user_timezones')) {
-                    $u = null;
                     $request = null;
                     if (!$app->isRunThroughCommandLineInterface()) {
                         $request = Request::getInstance();
                     }
                     if ($request && $request->hasCustomRequestUser()) {
-                        $u = $request->getCustomRequestUser();
+                        $ui = $request->getCustomRequestUser();
+                        if ($ui !== null) {
+                            $tz = $ui->getUserTimezone();
+                        }
                     } else {
                         $app = Application::getFacadeApplication();
                         $u = $app->make(User::class);
-                    }
-                    if (is_object($u) && $u->isRegistered()) {
-                        $tz = $u->getUserTimezone();
+                        if ($u->isRegistered()) {
+                            $tz = $u->getUserTimezone();
+                        }
                     }
                 }
                 if ($tz) {
