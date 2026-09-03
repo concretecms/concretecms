@@ -49,6 +49,8 @@ class UsageTracker implements TrackerInterface
                 $this->trackBlocks($collection, [$trackable]);
             }
         }
+
+        return $this;
     }
 
     /**
@@ -72,6 +74,8 @@ class UsageTracker implements TrackerInterface
                 ->setParameter('block_id', $trackable->getBlockObject()->getBlockID())
                 ->getQuery()->execute();
         }
+
+        return $this;
     }
 
     /**

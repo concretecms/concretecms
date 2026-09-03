@@ -15,6 +15,7 @@ class ValidateUniqueAttributesRoutine implements RoutineInterface
 
     public function validate(ErrorList $error, Form $form, ?Entry $entry = null)
     {
+        $valid = true;
         $entity = $form->getEntity();
         $attributes = $entity->getAttributes();
         foreach ($attributes as $key) {
@@ -40,12 +41,15 @@ class ValidateUniqueAttributesRoutine implements RoutineInterface
                             $results = $list->getResults();
                             if (count($results) > 0) {
                                 $error->add(t('The current value for "%s" must be unique and is currently assigned to another entry.', $key->getAttributeKeyDisplayName('text')));
+                                $valid = false;
                             }
                         }
                     }
                 }
             }
         }
+
+        return $valid;
     }
 
 

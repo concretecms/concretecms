@@ -235,6 +235,8 @@ class Picture extends Element
                 $child->addClass($classes);
             }
         }
+
+        return $this;
     }
 
     /**
@@ -250,5 +252,7 @@ class Picture extends Element
                 $child->setAttribute($attribute, $value);
             }
         }
+
+        return $this;
     }
 }

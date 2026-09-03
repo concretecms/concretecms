@@ -29,6 +29,7 @@ abstract class AbstractValidator implements ValidatorInterface
             }
         }
 
+        return $valid;
     }
 
     public function getErrorList()

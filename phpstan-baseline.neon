@@ -9249,12 +9249,6 @@ parameters:
 			path: concrete/src/Conversation/Rating/Type.php
 
 		-
-			message: '#^Method Concrete\\Core\\Cookie\\ResponseCookieJar\:\:clear\(\) should return \$this\(Concrete\\Core\\Cookie\\ResponseCookieJar\) but return statement is missing\.$#'
-			identifier: return.missing
-			count: 2
-			path: concrete/src/Cookie/ResponseCookieJar.php
-
-		-
 			message: '#^PHPDoc tag @return with type array\<Concrete\\Core\\Entity\\File\\DownloadStatistics\> is incompatible with native type Generator\.$#'
 			identifier: return.phpDocType
 			count: 2
@@ -9353,12 +9347,6 @@ parameters:
 		-
 			message: '#^Array has 2 duplicate keys with value ''warnings'' \(''warnings'', ''warnings''\)\.$#'
 			identifier: array.duplicateKey
-			count: 1
-			path: concrete/src/Csv/Import/ImportResult.php
-
-		-
-			message: '#^Method Concrete\\Core\\Csv\\Import\\ImportResult\:\:countRowProcessed\(\) should return \$this\(Concrete\\Core\\Csv\\Import\\ImportResult\) but return statement is missing\.$#'
-			identifier: return.missing
 			count: 1
 			path: concrete/src/Csv/Import/ImportResult.php
 
@@ -11115,12 +11103,6 @@ parameters:
 			path: concrete/src/Express/Form/Validator/AbstractValidator.php
 
 		-
-			message: '#^Method Concrete\\Core\\Express\\Form\\Validator\\AbstractValidator\:\:validate\(\) should return bool but return statement is missing\.$#'
-			identifier: return.missing
-			count: 1
-			path: concrete/src/Express/Form/Validator/AbstractValidator.php
-
-		-
 			message: '#^Property Concrete\\Core\\Express\\Form\\Validator\\AbstractValidator\:\:\$routines \(Concrete\\Core\\Express\\Form\\Validator\\Routine\\RoutineInterface\) does not accept default value of type array\.$#'
 			identifier: property.defaultValue
 			count: 1
@@ -11141,12 +11123,6 @@ parameters:
 		-
 			message: '#^If condition is always true\.$#'
 			identifier: if.alwaysTrue
-			count: 1
-			path: concrete/src/Express/Form/Validator/Routine/ValidateUniqueAttributesRoutine.php
-
-		-
-			message: '#^Method Concrete\\Core\\Express\\Form\\Validator\\Routine\\ValidateUniqueAttributesRoutine\:\:validate\(\) should return bool but return statement is missing\.$#'
-			identifier: return.missing
 			count: 1
 			path: concrete/src/Express/Form/Validator/Routine/ValidateUniqueAttributesRoutine.php
 
@@ -12063,18 +12039,6 @@ parameters:
 			path: concrete/src/File/StorageLocation/Type/Type.php
 
 		-
-			message: '#^Method Concrete\\Core\\File\\Tracker\\UsageTracker\:\:forget\(\) should return \$this\(Concrete\\Core\\File\\Tracker\\UsageTracker\) but return statement is missing\.$#'
-			identifier: return.missing
-			count: 2
-			path: concrete/src/File/Tracker/UsageTracker.php
-
-		-
-			message: '#^Method Concrete\\Core\\File\\Tracker\\UsageTracker\:\:track\(\) should return \$this\(Concrete\\Core\\File\\Tracker\\UsageTracker\) but return statement is missing\.$#'
-			identifier: return.missing
-			count: 2
-			path: concrete/src/File/Tracker/UsageTracker.php
-
-		-
 			message: '#^Property Concrete\\Core\\File\\Tracker\\UsageTracker\:\:\$manager \(Doctrine\\ORM\\EntityManager\) does not accept Doctrine\\ORM\\EntityManagerInterface\.$#'
 			identifier: assign.propertyType
 			count: 1
@@ -12645,12 +12609,6 @@ parameters:
 			path: concrete/src/Foundation/Serializer/SafeClassUnserializerTrait.php
 
 		-
-			message: '#^Method Concrete\\Core\\Foundation\\Service\\ProviderList\:\:__sleep\(\) should return array\<int, string\> but return statement is missing\.$#'
-			identifier: return.missing
-			count: 1
-			path: concrete/src/Foundation/Service/ProviderList.php
-
-		-
 			message: '#^Call to function is_int\(\) with null will always evaluate to false\.$#'
 			identifier: function.impossibleType
 			count: 2
@@ -12987,12 +12945,6 @@ parameters:
 			path: concrete/src/Html/Object/JavaScriptLazyImage.php
 
 		-
-			message: '#^Method Concrete\\Core\\Html\\Object\\JavaScriptLazyImage\:\:addClass\(\) should return \$this\(Concrete\\Core\\Html\\Object\\JavaScriptLazyImage\) but return statement is missing\.$#'
-			identifier: return.missing
-			count: 1
-			path: concrete/src/Html/Object/JavaScriptLazyImage.php
-
-		-
 			message: '#^Unsafe usage of new static\(\)\.$#'
 			identifier: new.static
 			count: 1
@@ -13083,18 +13035,6 @@ parameters:
 			path: concrete/src/Html/Object/Picture.php
 
 		-
-			message: '#^Method Concrete\\Core\\Html\\Object\\Picture\:\:addClass\(\) should return \$this\(Concrete\\Core\\Html\\Object\\Picture\) but return statement is missing\.$#'
-			identifier: return.missing
-			count: 1
-			path: concrete/src/Html/Object/Picture.php
-
-		-
-			message: '#^Method Concrete\\Core\\Html\\Object\\Picture\:\:setAttribute\(\) should return \$this\(Concrete\\Core\\Html\\Object\\Picture\) but return statement is missing\.$#'
-			identifier: return.missing
-			count: 1
-			path: concrete/src/Html/Object/Picture.php
-
-		-
 			message: '#^Unsafe usage of new static\(\)\.$#'
 			identifier: new.static
 			count: 1
@@ -13157,12 +13097,6 @@ parameters:
 		-
 			message: '#^Instanceof between SplFileInfo\|string and League\\Flysystem\\File will always evaluate to false\.$#'
 			identifier: instanceof.alwaysFalse
-			count: 1
-			path: concrete/src/Http/FlysystemFileResponse.php
-
-		-
-			message: '#^Method Concrete\\Core\\Http\\FlysystemFileResponse\:\:setContent\(\) should return \$this\(Concrete\\Core\\Http\\FlysystemFileResponse\) but return statement is missing\.$#'
-			identifier: return.missing
 			count: 1
 			path: concrete/src/Http/FlysystemFileResponse.php
 
@@ -13353,12 +13287,6 @@ parameters:
 			path: concrete/src/Http/ResponseFactory.php
 
 		-
-			message: '#^Method Concrete\\Core\\Http\\ResponseFactory\:\:forbidden\(\) should return Symfony\\Component\\HttpFoundation\\Response but return statement is missing\.$#'
-			identifier: return.missing
-			count: 1
-			path: concrete/src/Http/ResponseFactory.php
-
-		-
 			message: '#^Negated boolean expression is always false\.$#'
 			identifier: booleanNot.alwaysFalse
 			count: 1
@@ -13449,64 +13377,10 @@ parameters:
 			path: concrete/src/Install/Installer.php
 
 		-
-			message: '#^Method Concrete\\Core\\Install\\Preconditions\\CanonicalUrls\:\:setInstallerOptions\(\) should return \$this\(Concrete\\Core\\Install\\Preconditions\\CanonicalUrls\) but return statement is missing\.$#'
-			identifier: return.missing
-			count: 1
-			path: concrete/src/Install/Preconditions/CanonicalUrls.php
-
-		-
 			message: '#^Dead catch \- Exception is never thrown in the try block\.$#'
 			identifier: catch.neverThrown
 			count: 1
 			path: concrete/src/Install/Preconditions/DatabaseCharsetCollation.php
-
-		-
-			message: '#^Method Concrete\\Core\\Install\\Preconditions\\DatabaseCharsetCollation\:\:setConnection\(\) should return \$this\(Concrete\\Core\\Install\\Preconditions\\DatabaseCharsetCollation\) but return statement is missing\.$#'
-			identifier: return.missing
-			count: 1
-			path: concrete/src/Install/Preconditions/DatabaseCharsetCollation.php
-
-		-
-			message: '#^Method Concrete\\Core\\Install\\Preconditions\\DatabaseCharsetCollation\:\:setInstallerOptions\(\) should return \$this\(Concrete\\Core\\Install\\Preconditions\\DatabaseCharsetCollation\) but return statement is missing\.$#'
-			identifier: return.missing
-			count: 1
-			path: concrete/src/Install/Preconditions/DatabaseCharsetCollation.php
-
-		-
-			message: '#^Method Concrete\\Core\\Install\\Preconditions\\DatabaseTimeZone\:\:setConnection\(\) should return \$this\(Concrete\\Core\\Install\\Preconditions\\DatabaseTimeZone\) but return statement is missing\.$#'
-			identifier: return.missing
-			count: 1
-			path: concrete/src/Install/Preconditions/DatabaseTimeZone.php
-
-		-
-			message: '#^Method Concrete\\Core\\Install\\Preconditions\\DatabaseTimeZone\:\:setInstallerOptions\(\) should return \$this\(Concrete\\Core\\Install\\Preconditions\\DatabaseTimeZone\) but return statement is missing\.$#'
-			identifier: return.missing
-			count: 1
-			path: concrete/src/Install/Preconditions/DatabaseTimeZone.php
-
-		-
-			message: '#^Method Concrete\\Core\\Install\\Preconditions\\EmptyDatabase\:\:setConnection\(\) should return \$this\(Concrete\\Core\\Install\\Preconditions\\EmptyDatabase\) but return statement is missing\.$#'
-			identifier: return.missing
-			count: 1
-			path: concrete/src/Install/Preconditions/EmptyDatabase.php
-
-		-
-			message: '#^Method Concrete\\Core\\Install\\Preconditions\\EmptyDatabase\:\:setInstallerOptions\(\) should return \$this\(Concrete\\Core\\Install\\Preconditions\\EmptyDatabase\) but return statement is missing\.$#'
-			identifier: return.missing
-			count: 1
-			path: concrete/src/Install/Preconditions/EmptyDatabase.php
-
-		-
-			message: '#^Method Concrete\\Core\\Install\\Preconditions\\InnoDB\:\:setConnection\(\) should return \$this\(Concrete\\Core\\Install\\Preconditions\\InnoDB\) but return statement is missing\.$#'
-			identifier: return.missing
-			count: 1
-			path: concrete/src/Install/Preconditions/InnoDB.php
-
-		-
-			message: '#^Method Concrete\\Core\\Install\\Preconditions\\InnoDB\:\:setInstallerOptions\(\) should return \$this\(Concrete\\Core\\Install\\Preconditions\\InnoDB\) but return statement is missing\.$#'
-			identifier: return.missing
-			count: 1
-			path: concrete/src/Install/Preconditions/InnoDB.php
 
 		-
 			message: '#^Call to function is_int\(\) with string will always evaluate to false\.$#'
@@ -13519,24 +13393,6 @@ parameters:
 			identifier: function.alreadyNarrowedType
 			count: 1
 			path: concrete/src/Install/Preconditions/RequestUrls.php
-
-		-
-			message: '#^Method Concrete\\Core\\Install\\Preconditions\\StartingPoint\:\:setInstallerOptions\(\) should return \$this\(Concrete\\Core\\Install\\Preconditions\\StartingPoint\) but return statement is missing\.$#'
-			identifier: return.missing
-			count: 1
-			path: concrete/src/Install/Preconditions/StartingPoint.php
-
-		-
-			message: '#^Method Concrete\\Core\\Install\\Preconditions\\TableCase\:\:setConnection\(\) should return \$this\(Concrete\\Core\\Install\\Preconditions\\TableCase\) but return statement is missing\.$#'
-			identifier: return.missing
-			count: 1
-			path: concrete/src/Install/Preconditions/TableCase.php
-
-		-
-			message: '#^Method Concrete\\Core\\Install\\Preconditions\\TableCase\:\:setInstallerOptions\(\) should return \$this\(Concrete\\Core\\Install\\Preconditions\\TableCase\) but return statement is missing\.$#'
-			identifier: return.missing
-			count: 1
-			path: concrete/src/Install/Preconditions/TableCase.php
 
 		-
 			message: '#^Access to an undefined property Concrete\\Core\\Job\\Job\:\:\$jLastStatusCode\.$#'
@@ -15273,12 +15129,6 @@ parameters:
 			path: concrete/src/Package/Package.php
 
 		-
-			message: '#^Method Concrete\\Core\\Package\\PackageArchive\:\:install\(\) should return string but return statement is missing\.$#'
-			identifier: return.missing
-			count: 1
-			path: concrete/src/Package/PackageArchive.php
-
-		-
 			message: '#^Unsafe usage of new static\(\)\.$#'
 			identifier: new.static
 			count: 1
@@ -15351,33 +15201,15 @@ parameters:
 			path: concrete/src/Package/Packer/PackerFile.php
 
 		-
-			message: '#^Method Concrete\\Core\\Package\\Packer\\Writer\\Cloner\:\:add\(\) should return \$this\(Concrete\\Core\\Package\\Packer\\Writer\\Cloner\) but return statement is missing\.$#'
-			identifier: return.missing
-			count: 2
-			path: concrete/src/Package/Packer/Writer/Cloner.php
-
-		-
 			message: '#^Call to function is_string\(\) with string will always evaluate to true\.$#'
 			identifier: function.alreadyNarrowedType
 			count: 1
 			path: concrete/src/Package/Packer/Writer/SourceUpdater.php
 
 		-
-			message: '#^Method Concrete\\Core\\Package\\Packer\\Writer\\SourceUpdater\:\:add\(\) should return \$this\(Concrete\\Core\\Package\\Packer\\Writer\\SourceUpdater\) but return statement is missing\.$#'
-			identifier: return.missing
-			count: 2
-			path: concrete/src/Package/Packer/Writer/SourceUpdater.php
-
-		-
 			message: '#^If condition is always true\.$#'
 			identifier: if.alwaysTrue
 			count: 1
-			path: concrete/src/Package/Packer/Writer/Zipper.php
-
-		-
-			message: '#^Method Concrete\\Core\\Package\\Packer\\Writer\\Zipper\:\:add\(\) should return \$this\(Concrete\\Core\\Package\\Packer\\Writer\\Zipper\) but return statement is missing\.$#'
-			identifier: return.missing
-			count: 2
 			path: concrete/src/Package/Packer/Writer/Zipper.php
 
 		-
@@ -16329,12 +16161,6 @@ parameters:
 			path: concrete/src/Page/Search/Field/Field/SiteLocaleField.php
 
 		-
-			message: '#^Method Concrete\\Core\\Page\\Search\\Field\\Field\\SiteLocaleField\:\:renderSearchField\(\) should return string but return statement is missing\.$#'
-			identifier: return.missing
-			count: 1
-			path: concrete/src/Page/Search/Field/Field/SiteLocaleField.php
-
-		-
 			message: '#^Call to an undefined method Concrete\\Core\\Search\\ItemList\\ItemList\:\:setPageVersionToRetrieve\(\)\.$#'
 			identifier: method.notFound
 			count: 1
@@ -16645,18 +16471,6 @@ parameters:
 			identifier: arguments.count
 			count: 1
 			path: concrete/src/Page/Stack/StackList.php
-
-		-
-			message: '#^Method Concrete\\Core\\Page\\Stack\\UsageTracker\:\:forget\(\) should return Concrete\\Core\\Statistics\\UsageTracker\\TrackerInterface but return statement is missing\.$#'
-			identifier: return.missing
-			count: 2
-			path: concrete/src/Page/Stack/UsageTracker.php
-
-		-
-			message: '#^Method Concrete\\Core\\Page\\Stack\\UsageTracker\:\:track\(\) should return Concrete\\Core\\Statistics\\UsageTracker\\TrackerInterface but return statement is missing\.$#'
-			identifier: return.missing
-			count: 2
-			path: concrete/src/Page/Stack/UsageTracker.php
 
 		-
 			message: '#^Call to an undefined method Doctrine\\ORM\\EntityRepository\<Concrete\\Core\\Entity\\Page\\Summary\\CustomPageTemplateCollection\>\:\:findOneByCID\(\)\.$#'
@@ -18457,12 +18271,6 @@ parameters:
 			identifier: function.alreadyNarrowedType
 			count: 1
 			path: concrete/src/Permission/Response/UserInfoResponse.php
-
-		-
-			message: '#^Method Concrete\\Core\\Routing\\ClosureRouteAction\:\:__sleep\(\) should return array\<int, string\> but return statement is missing\.$#'
-			identifier: return.missing
-			count: 1
-			path: concrete/src/Routing/ClosureRouteAction.php
 
 		-
 			message: '#^PHPDoc tag @param references unknown parameter\: \$action$#'
@@ -20467,12 +20275,6 @@ parameters:
 			identifier: booleanAnd.leftAlwaysTrue
 			count: 1
 			path: concrete/src/Updater/Migrations/Migrations/Version20260811120000.php
-
-		-
-			message: '#^Method Concrete\\Core\\Updater\\UpdateArchive\:\:install\(\) should return string but return statement is missing\.$#'
-			identifier: return.missing
-			count: 1
-			path: concrete/src/Updater/UpdateArchive.php
 
 		-
 			message: '#^Loose comparison using \=\= between null and ''index\.php'' will always evaluate to false\.$#'

@@ -96,6 +96,8 @@ class ImportResult implements JsonSerializable
     {
         $this->lastDataRowIndex = (int) $rowIndex;
         ++$this->totalDataRowsProcessed;
+
+        return $this;
     }
 
     /**

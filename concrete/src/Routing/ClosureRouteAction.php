@@ -23,6 +23,8 @@ class ClosureRouteAction implements RouteActionInterface
     public function __sleep()
     {
         unset($this->callback);
+
+        return array_keys(get_object_vars($this));
     }
 
     public function execute(Request $request, Route $route, $parameters)

@@ -75,6 +75,8 @@ class DatabaseCharsetCollation implements ConnectionOptionsPreconditionInterface
     public function setInstallerOptions(InstallerOptions $installerOptions)
     {
         $this->installerOptions = $installerOptions;
+
+        return $this;
     }
 
     /**
@@ -85,6 +87,8 @@ class DatabaseCharsetCollation implements ConnectionOptionsPreconditionInterface
     public function setConnection(Connection $connection)
     {
         $this->connection = $connection;
+
+        return $this;
     }
 
     /**

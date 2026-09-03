@@ -136,5 +136,7 @@ class JavaScriptLazyImage extends Element
                 $child->addClass($classes);
             }
         }
+
+        return $this;
     }
 }

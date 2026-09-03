@@ -268,6 +268,8 @@ class FlysystemFileResponse extends Response
         if (null !== $content) {
             throw new \LogicException('The content cannot be set on a FlysystemFileResponse instance.');
         }
+
+        return $this;
     }
 
     /**
