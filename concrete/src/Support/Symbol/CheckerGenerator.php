@@ -5,14 +5,14 @@ declare(strict_types=1);
 namespace Concrete\Core\Support\Symbol;
 
 use Concrete\Core\File\Service\File as FileService;
-use Concrete\Core\Permission\Category;
 use Concrete\Core\Permission\Checker;
-use Concrete\Core\Permission\Key\Key;
 use Concrete\Core\Permission\ObjectInterface;
+use Concrete\Core\Support\Symbol\CheckerGenerator\CIFPermissionKeysProvider;
+use Concrete\Core\Support\Symbol\CheckerGenerator\DatabasePermissionKeysProvider;
 use Concrete\Core\Support\Symbol\CheckerGenerator\Method;
-use ReflectionClass;
-use ReflectionMethod;
-use Throwable;
+use Concrete\Core\Support\Symbol\CheckerGenerator\PermissionKeysProviderInterface;
+
+defined('C5_EXECUTE') or die('Access Denied.');
 
 class CheckerGenerator
 {
@@ -20,6 +20,11 @@ class CheckerGenerator
      * @var \Concrete\Core\File\Service\File
      */
     private $fileService;
+
+    /**
+     * @var \Concrete\Core\Support\Symbol\CheckerGenerator\PermissionKeysProviderInterface
+     */
+    private $permissionKeysProvider;
 
     /**
      * @var \Concrete\Core\Support\Symbol\CheckerGenerator\Method[]|null
@@ -32,14 +37,16 @@ class CheckerGenerator
     private $namespace;
 
     /**
-     * @var bool
+     * @param bool $isInstalled is Concrete installed? If so, the permission keys are read from the database, otherwise from the CIF files of the core
+     * @param \Concrete\Core\Support\Symbol\CheckerGenerator\PermissionKeysProviderInterface|null $permissionKeysProvider a custom provider of the permission keys (if NULL, we'll use the default one depending on $isInstalled)
      */
-    private $isInstalled;
-
-    public function __construct(FileService $fileService, bool $isInstalled)
+    public function __construct(FileService $fileService, bool $isInstalled, ?PermissionKeysProviderInterface $permissionKeysProvider = null)
     {
         $this->fileService = $fileService;
-        $this->isInstalled = $isInstalled;
+        if ($permissionKeysProvider === null) {
+            $permissionKeysProvider = $isInstalled ? new DatabasePermissionKeysProvider() : new CIFPermissionKeysProvider($fileService, DIR_BASE_CORE . '/config/install');
+        }
+        $this->permissionKeysProvider = $permissionKeysProvider;
     }
 
     public function getNamespace(): string
@@ -137,10 +144,8 @@ class CheckerGenerator
     private function listMethods(): array
     {
         $all = $this->listMethodsIn('Concrete\Core', DIR_BASE_CORE . '/' . DIRNAME_CLASSES);
-        if ($this->isInstalled) {
-            foreach (Category::getList() as $category) {
-                $all = array_merge($all, $this->generateMethodsFromCategory($category->getPermissionKeyCategoryHandle()));
-            }
+        foreach ($this->permissionKeysProvider->getCategoryHandles() as $categoryHandle) {
+            $all = array_merge($all, $this->generateMethodsFromCategory($categoryHandle));
         }
         $merged = [];
         foreach ($all as $item) {
@@ -208,7 +213,7 @@ class CheckerGenerator
     private function analyzeObjectInterfaceClass(string $objectInterfaceClassName): array
     {
         $result = [];
-        $objectInterfaceClass = new ReflectionClass($objectInterfaceClassName);
+        $objectInterfaceClass = new \ReflectionClass($objectInterfaceClassName);
         if ($objectInterfaceClass->isAbstract()) {
             return $result;
         }
@@ -218,11 +223,8 @@ class CheckerGenerator
         if (!is_string($categoryHandle = $objectInterfaceInstance->getPermissionObjectKeyCategoryHandle())) {
             $categoryHandle = '';
         }
-        if ($categoryHandle !== '' && $this->isInstalled) {
-            $category = Category::getByHandle($categoryHandle);
-            if ($category) {
-                $result = array_merge($result, $this->generateMethodsFromCategory($categoryHandle, $objectInterfaceClassName));
-            }
+        if ($categoryHandle !== '') {
+            $result = array_merge($result, $this->generateMethodsFromCategory($categoryHandle, $objectInterfaceClassName));
         }
         $responseClassName = $objectInterfaceInstance->getPermissionResponseClassName();
         $canonicalResponseClassName = null;
@@ -235,7 +237,7 @@ class CheckerGenerator
             }
         }
         if ($canonicalResponseClassName === null) {
-            $responseClass = new ReflectionClass($responseClassName);
+            $responseClass = new \ReflectionClass($responseClassName);
             $canonicalResponseClassName = $responseClass->getName();
         }
         if ($canonicalResponseClassName !== '') {
@@ -251,17 +253,15 @@ class CheckerGenerator
     private function generateMethodsFromCategory(string $categoryHandle, string $objectInterfaceClassName = ''): array
     {
         $result = [];
-        if ($this->isInstalled) {
-            foreach (Key::getList($categoryHandle) as $key) {
-                $name = 'can' . camelcase($key->getPermissionKeyHandle());
-                $method = new Method($name);
-                $method
-                    ->addDescription($key->getPermissionKeyDescription() ?: $key->getPermissionKeyName() ?: '')
-                    ->addForObjectOfClass($objectInterfaceClassName)
-                    ->addCategoryKeyHandle($categoryHandle)
-                ;
-                $result[] = $method;
-            }
+        foreach ($this->permissionKeysProvider->getKeys($categoryHandle) as $key) {
+            $name = 'can' . camelcase($key->getHandle());
+            $method = new Method($name);
+            $method
+                ->addDescription($key->getDescription() ?: $key->getName())
+                ->addForObjectOfClass($objectInterfaceClassName)
+                ->addCategoryKeyHandle($categoryHandle)
+            ;
+            $result[] = $method;
         }
 
         return $result;
@@ -269,9 +269,9 @@ class CheckerGenerator
 
     private function generateMethodsFromResponseClass(string $responseClassName, string $objectInterfaceClassName = '', string $categoryHandle = ''): array
     {
-        $responseClass = new ReflectionClass($responseClassName);
+        $responseClass = new \ReflectionClass($responseClassName);
         $result = [];
-        foreach ($responseClass->getMethods(ReflectionMethod::IS_PUBLIC) as $methodInfo) {
+        foreach ($responseClass->getMethods(\ReflectionMethod::IS_PUBLIC) as $methodInfo) {
             if (!preg_match('/^can[A-Z]/', $methodInfo->getName())) {
                 continue;
             }
@@ -285,11 +285,11 @@ class CheckerGenerator
                         if (is_object($parameter->getClass())) {
                             $param .= $parameter->getClass()->getName() . ' ';
                         }
-                    } catch (Throwable $_) {
+                    } catch (\Throwable $_) {
                     }
                 }
                 if ($parameter->isPassedByReference()) {
-                    $param .= "&";
+                    $param .= '&';
                 }
                 $param .= '$' . $parameter->getName();
 

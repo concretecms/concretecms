@@ -45,7 +45,7 @@ EOT
             if (app()->isInstalled()) {
                 $output->write('Generating fake PHP classes to help IDE... ');
             } else {
-                $output->write('Generating fake PHP classes to help IDE <fg=yellow>(PARTIAL since Concrete is not installed)</>... ');
+                $output->write('Generating fake PHP classes to help IDE <fg=yellow>(reading the permission keys from the core CIF files since Concrete is not installed)</>... ');
             }
             $this->generateIDEClasses();
             $output->writeln('<info>done.</info>');
