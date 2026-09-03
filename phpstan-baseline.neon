@@ -9681,12 +9681,6 @@ parameters:
 			path: concrete/src/Express/Entry/Search/Result/Item.php
 
 		-
-			message: '#^Access to an undefined property Concrete\\Core\\Express\\EntryBuilder\:\:\$entityManager\.$#'
-			identifier: property.notFound
-			count: 1
-			path: concrete/src/Express/EntryBuilder.php
-
-		-
 			message: '#^Variable \$expressions might not be defined\.$#'
 			identifier: variable.undefined
 			count: 1

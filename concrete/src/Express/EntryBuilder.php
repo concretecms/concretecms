@@ -94,7 +94,7 @@ class EntryBuilder
      */
     public function getEntityManager()
     {
-        return $this->entityManager;
+        return $this->entryManager->getEntityManager();
     }
 
     /**
