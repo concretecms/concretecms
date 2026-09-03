@@ -6819,18 +6819,6 @@ parameters:
 			path: concrete/src/Cache/Adapter/DoctrineCacheDriver.php
 
 		-
-			message: '#^If condition is always true\.$#'
-			identifier: if.alwaysTrue
-			count: 1
-			path: concrete/src/Cache/Adapter/LaminasCacheDriver.php
-
-		-
-			message: '#^Method Concrete\\Core\\Cache\\Adapter\\LaminasCacheDriver\:\:internalSetItem\(\) should return bool but returns Stash\\Interfaces\\ItemInterface\.$#'
-			identifier: return.type
-			count: 1
-			path: concrete/src/Cache/Adapter/LaminasCacheDriver.php
-
-		-
 			message: '#^Call to function array_filter\(\) on a separate line has no effect\.$#'
 			identifier: function.resultUnused
 			count: 1
