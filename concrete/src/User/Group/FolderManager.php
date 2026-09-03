@@ -45,7 +45,7 @@ class FolderManager
      *
      * @param mixed $folderID
      *
-     * @return \Concrete\Core\Tree\Node\Type\FileFolder|null
+     * @return \Concrete\Core\Tree\Node\Type\GroupFolder|null
      */
     public function getFolder($folderID)
     {

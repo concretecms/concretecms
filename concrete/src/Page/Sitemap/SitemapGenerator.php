@@ -199,7 +199,7 @@ class SitemapGenerator
      *
      * @param array $args
      *
-     * @return \League\Url\UrlInterface
+     * @return string
      */
     public function resolveUrl(string $sitemapFile)
     {

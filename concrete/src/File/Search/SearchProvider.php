@@ -94,7 +94,7 @@ class SearchProvider extends AbstractSearchProvider
     }
 
     /**
-     * @return \Concrete\Core\File\FileList
+     * @return \Concrete\Core\File\FolderItemList
      */
     public function getItemList()
     {

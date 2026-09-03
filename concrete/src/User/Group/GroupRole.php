@@ -20,7 +20,7 @@ class GroupRole extends ConcreteObject implements JsonSerializable
     protected $grIsManager;
 
     /**
-     * @return string
+     * @return int
      */
     public function getId()
     {

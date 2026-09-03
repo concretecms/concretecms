@@ -150,7 +150,7 @@ class ThemeGridLayout extends Layout
     }
 
     /**
-     * @return static
+     * @return \Concrete\Core\Area\Layout\ThemeGridColumn
      */
     public function addLayoutColumn()
     {

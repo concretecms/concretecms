@@ -128,7 +128,7 @@ class Cloner implements ApplicationAwareInterface
      * @param Entity $sourceEntity
      * @param Entity $destinationEntity
      *
-     * @return array<string, Association> Return association mapping [sourceAssociationId => newAssociation]
+     * @return array<string, \Concrete\Core\Entity\Express\Entry\Association> Association> Return association mapping [sourceAssociationId => newAssociation]
      */
     protected function cloneEntityAssociations(Entity $sourceEntity, Entity $destinationEntity): array
     {

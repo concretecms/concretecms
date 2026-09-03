@@ -47,7 +47,7 @@ class FeedService
      *
      * @param string $feedurl
      * @param int    $cache - number of seconds to cache the RSS feed data for
-     * @return Reader
+     * @return \Laminas\Feed\Reader\Feed\FeedInterface
      */
     public function load($url, $cache = 3600)
     {

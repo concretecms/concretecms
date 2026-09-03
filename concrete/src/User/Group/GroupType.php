@@ -20,7 +20,7 @@ class GroupType extends ConcreteObject implements JsonSerializable
     protected $gtPetitionForPublicEntry;
 
     /**
-     * @return string
+     * @return int
      */
     public function getId()
     {

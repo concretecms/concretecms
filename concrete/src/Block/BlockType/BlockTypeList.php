@@ -73,7 +73,7 @@ class BlockTypeList extends DatabaseItemList
      * Gets a list of block types that are not installed, used to get blocks that can be installed
      * This function only surveys the web/blocks directory - it's not looking at the package level.
      *
-     * @return BlockType[]
+     * @return \Concrete\Core\Entity\Block\BlockType\BlockType[]
      */
     public static function getAvailableList()
     {
@@ -120,7 +120,7 @@ class BlockTypeList extends DatabaseItemList
     /**
      * gets a list of installed BlockTypes.
      *
-     * @return BlockType[]
+     * @return \Concrete\Core\Entity\Block\BlockType\BlockType[]
      */
     public static function getInstalledList()
     {

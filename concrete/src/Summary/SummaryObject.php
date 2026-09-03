@@ -20,7 +20,7 @@ class SummaryObject implements SummaryObjectInterface
     protected $identifier;
 
     /**
-     * @var array
+     * @var Collection
      */
     protected $data;
 

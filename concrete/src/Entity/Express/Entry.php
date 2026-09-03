@@ -117,7 +117,7 @@ class Entry implements \JsonSerializable, PermissionObjectInterface, AttributeOb
     }
 
     /**
-     * @return bool
+     * @return string
      */
     public function getPermissionAssignmentClassName()
     {
@@ -125,7 +125,7 @@ class Entry implements \JsonSerializable, PermissionObjectInterface, AttributeOb
     }
 
     /**
-     * @return bool
+     * @return string
      */
     public function getPermissionObjectKeyCategoryHandle()
     {

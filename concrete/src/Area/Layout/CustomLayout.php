@@ -148,7 +148,7 @@ class CustomLayout extends Layout
     }
 
     /**
-     * @return static
+     * @return \Concrete\Core\Area\Layout\CustomColumn
      */
     public function addLayoutColumn()
     {

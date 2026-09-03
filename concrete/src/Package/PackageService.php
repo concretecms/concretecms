@@ -172,7 +172,7 @@ class PackageService
     /**
      * Get the controllers of the packages that have an upgraded version available in the marketplace.
      *
-     * @return \Concrete\Core\Package\Package[]
+     * @return \Concrete\Core\Entity\Package[]
      */
     public function getRemotelyUpgradeablePackages()
     {

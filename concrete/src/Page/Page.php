@@ -607,7 +607,7 @@ class Page extends Collection implements CategoryMemberInterface,
     /**
      * @deprecated There's no more an "Arrange Mode"
      *
-     * @return false
+     * @return bool
      */
     public function isArrangeMode()
     {

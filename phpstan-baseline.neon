@@ -405,18 +405,6 @@ parameters:
 			path: concrete/controllers/dialog/area/edit.php
 
 		-
-			message: '#^Call to an undefined method Concrete\\Core\\Area\\Layout\\Preset\\Preset\:\:getAreaLayoutPresetID\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: concrete/controllers/dialog/area/layout/presets.php
-
-		-
-			message: '#^Call to an undefined method Concrete\\Core\\Area\\Layout\\Preset\\Preset\:\:getAreaLayoutPresetName\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: concrete/controllers/dialog/area/layout/presets.php
-
-		-
 			message: '#^Variable \$bt might not be defined\.$#'
 			identifier: variable.undefined
 			count: 1
@@ -3129,7 +3117,13 @@ parameters:
 			path: concrete/controllers/single_page/dashboard/users/add_group.php
 
 		-
-			message: '#^Offset string does not exist on bool\|float\|int\|string\.$#'
+			message: '#^Offset ''manager'' on non\-empty\-string in isset\(\) does not exist\.$#'
+			identifier: isset.offset
+			count: 1
+			path: concrete/controllers/single_page/dashboard/users/add_group.php
+
+		-
+			message: '#^Offset ''name'' does not exist on non\-empty\-string\.$#'
 			identifier: offsetAccess.notFound
 			count: 1
 			path: concrete/controllers/single_page/dashboard/users/add_group.php
@@ -3171,7 +3165,13 @@ parameters:
 			path: concrete/controllers/single_page/dashboard/users/group_types.php
 
 		-
-			message: '#^Offset string does not exist on bool\|float\|int\|string\.$#'
+			message: '#^Offset ''manager'' on non\-empty\-string in isset\(\) does not exist\.$#'
+			identifier: isset.offset
+			count: 1
+			path: concrete/controllers/single_page/dashboard/users/group_types.php
+
+		-
+			message: '#^Offset ''name'' does not exist on non\-empty\-string\.$#'
 			identifier: offsetAccess.notFound
 			count: 1
 			path: concrete/controllers/single_page/dashboard/users/group_types.php
@@ -3421,18 +3421,6 @@ parameters:
 			identifier: method.notFound
 			count: 1
 			path: concrete/controllers/workflow/dialogs/approve_page_preview.php
-
-		-
-			message: '#^Method Concrete\\Core\\Announcement\\Announcement\\Announcement\:\:getSlides\(\) should return array\<Concrete\\Core\\Announcement\\Slide\\SlideInterface\> but returns Concrete\\Core\\Announcement\\Slide\\SlideInterface\.$#'
-			identifier: return.type
-			count: 1
-			path: concrete/src/Announcement/Announcement/Announcement.php
-
-		-
-			message: '#^Property Concrete\\Core\\Announcement\\Announcement\\Announcement\:\:\$slides \(Concrete\\Core\\Announcement\\Slide\\SlideInterface\) does not accept default value of type array\.$#'
-			identifier: property.defaultValue
-			count: 1
-			path: concrete/src/Announcement/Announcement/Announcement.php
 
 		-
 			message: '#^Call to an undefined method Doctrine\\ORM\\EntityRepository\<Concrete\\Core\\Entity\\Announcement\\Announcement\>\:\:findOneByHandle\(\)\.$#'
@@ -4665,12 +4653,6 @@ parameters:
 			path: concrete/src/Api/OAuth/Server/IdTokenResponse.php
 
 		-
-			message: '#^Method Concrete\\Core\\Api\\OAuth\\Server\\IdTokenResponse\:\:createIdToken\(\) should return Lcobucci\\JWT\\Token but returns string\.$#'
-			identifier: return.type
-			count: 1
-			path: concrete/src/Api/OAuth/Server/IdTokenResponse.php
-
-		-
 			message: '#^Unreachable statement \- code above always terminates\.$#'
 			identifier: deadCode.unreachable
 			count: 1
@@ -5223,12 +5205,6 @@ parameters:
 			path: concrete/src/Area/Layout/CustomColumn.php
 
 		-
-			message: '#^Method Concrete\\Core\\Area\\Layout\\CustomLayout\:\:addLayoutColumn\(\) should return static\(Concrete\\Core\\Area\\Layout\\CustomLayout\) but returns Concrete\\Core\\Area\\Layout\\CustomColumn\.$#'
-			identifier: return.type
-			count: 1
-			path: concrete/src/Area/Layout/CustomLayout.php
-
-		-
 			message: '#^Parameter \#2 \$value of method SimpleXMLElement\:\:addAttribute\(\) expects string, bool given\.$#'
 			identifier: argument.type
 			count: 1
@@ -5241,7 +5217,7 @@ parameters:
 			path: concrete/src/Area/Layout/CustomLayout.php
 
 		-
-			message: '#^Return type \(static\(Concrete\\Core\\Area\\Layout\\CustomLayout\)\) of method Concrete\\Core\\Area\\Layout\\CustomLayout\:\:addLayoutColumn\(\) should be compatible with return type \(int\) of method Concrete\\Core\\Area\\Layout\\Layout\:\:addLayoutColumn\(\)$#'
+			message: '#^Return type \(Concrete\\Core\\Area\\Layout\\CustomColumn\) of method Concrete\\Core\\Area\\Layout\\CustomLayout\:\:addLayoutColumn\(\) should be compatible with return type \(int\) of method Concrete\\Core\\Area\\Layout\\Layout\:\:addLayoutColumn\(\)$#'
 			identifier: method.childReturnType
 			count: 1
 			path: concrete/src/Area/Layout/CustomLayout.php
@@ -5313,19 +5289,7 @@ parameters:
 			path: concrete/src/Area/Layout/Preset/Provider/ManagerServiceProvider.php
 
 		-
-			message: '#^Call to an undefined method Concrete\\Core\\Area\\Layout\\Preset\\Preset\:\:getPresetObject\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: concrete/src/Area/Layout/Preset/Provider/UserProvider.php
-
-		-
 			message: '#^Method Concrete\\Core\\Area\\Layout\\Preset\\UserPreset\:\:add\(\) should return Concrete\\Core\\Area\\Layout\\Preset\\Preset but returns static\(Concrete\\Core\\Area\\Layout\\Preset\\UserPreset\)\|null\.$#'
-			identifier: return.type
-			count: 1
-			path: concrete/src/Area/Layout/Preset/UserPreset.php
-
-		-
-			message: '#^Method Concrete\\Core\\Area\\Layout\\Preset\\UserPreset\:\:getList\(\) should return array\<Concrete\\Core\\Area\\Layout\\Preset\\Preset\> but returns list\<static\(Concrete\\Core\\Area\\Layout\\Preset\\UserPreset\)\>\.$#'
 			identifier: return.type
 			count: 1
 			path: concrete/src/Area/Layout/Preset/UserPreset.php
@@ -5385,19 +5349,13 @@ parameters:
 			path: concrete/src/Area/Layout/ThemeGridLayout.php
 
 		-
-			message: '#^Method Concrete\\Core\\Area\\Layout\\ThemeGridLayout\:\:addLayoutColumn\(\) should return static\(Concrete\\Core\\Area\\Layout\\ThemeGridLayout\) but returns Concrete\\Core\\Area\\Layout\\ThemeGridColumn\.$#'
-			identifier: return.type
-			count: 1
-			path: concrete/src/Area/Layout/ThemeGridLayout.php
-
-		-
 			message: '#^Parameter \#2 \$value of method SimpleXMLElement\:\:addAttribute\(\) expects string, int given\.$#'
 			identifier: argument.type
 			count: 1
 			path: concrete/src/Area/Layout/ThemeGridLayout.php
 
 		-
-			message: '#^Return type \(static\(Concrete\\Core\\Area\\Layout\\ThemeGridLayout\)\) of method Concrete\\Core\\Area\\Layout\\ThemeGridLayout\:\:addLayoutColumn\(\) should be compatible with return type \(int\) of method Concrete\\Core\\Area\\Layout\\Layout\:\:addLayoutColumn\(\)$#'
+			message: '#^Return type \(Concrete\\Core\\Area\\Layout\\ThemeGridColumn\) of method Concrete\\Core\\Area\\Layout\\ThemeGridLayout\:\:addLayoutColumn\(\) should be compatible with return type \(int\) of method Concrete\\Core\\Area\\Layout\\Layout\:\:addLayoutColumn\(\)$#'
 			identifier: method.childReturnType
 			count: 1
 			path: concrete/src/Area/Layout/ThemeGridLayout.php
@@ -5482,18 +5440,6 @@ parameters:
 
 		-
 			message: '#^Method Concrete\\Core\\Attribute\\Category\\ExpressCategory\:\:getAttributeTypes\(\) should return Doctrine\\Common\\Collections\\ArrayCollection&iterable\<Concrete\\Core\\Entity\\Attribute\\Type\> but returns array\<Concrete\\Core\\Entity\\Attribute\\Type\>\.$#'
-			identifier: return.type
-			count: 1
-			path: concrete/src/Attribute/Category/ExpressCategory.php
-
-		-
-			message: '#^Method Concrete\\Core\\Attribute\\Category\\ExpressCategory\:\:getSetManager\(\) should return Concrete\\Core\\Attribute\\ExpressSetManager but returns Concrete\\Core\\Attribute\\SetManagerInterface\.$#'
-			identifier: return.type
-			count: 1
-			path: concrete/src/Attribute/Category/ExpressCategory.php
-
-		-
-			message: '#^Method Concrete\\Core\\Attribute\\Category\\ExpressCategory\:\:updateFromRequest\(\) should return Concrete\\Core\\Entity\\Attribute\\Key\\UserKey but returns Concrete\\Core\\Entity\\Attribute\\Key\\ExpressKey\.$#'
 			identifier: return.type
 			count: 1
 			path: concrete/src/Attribute/Category/ExpressCategory.php
@@ -6491,18 +6437,6 @@ parameters:
 		-
 			message: '#^Cannot call method addChild\(\) on string\.$#'
 			identifier: method.nonObject
-			count: 1
-			path: concrete/src/Block/BlockType/BlockTypeList.php
-
-		-
-			message: '#^Method Concrete\\Core\\Block\\BlockType\\BlockTypeList\:\:getAvailableList\(\) should return array\<Concrete\\Core\\Block\\BlockType\\BlockType\> but returns list\<Concrete\\Core\\Entity\\Block\\BlockType\\BlockType\>\.$#'
-			identifier: return.type
-			count: 1
-			path: concrete/src/Block/BlockType/BlockTypeList.php
-
-		-
-			message: '#^Method Concrete\\Core\\Block\\BlockType\\BlockTypeList\:\:getInstalledList\(\) should return array\<Concrete\\Core\\Block\\BlockType\\BlockType\> but returns array\<Concrete\\Core\\Entity\\Block\\BlockType\\BlockType\>\.$#'
-			identifier: return.type
 			count: 1
 			path: concrete/src/Block/BlockType/BlockTypeList.php
 
@@ -7935,18 +7869,6 @@ parameters:
 			path: concrete/src/Database/DatabaseStructureManager.php
 
 		-
-			message: '#^Method Concrete\\Core\\Database\\Driver\\DriverManager\:\:getDrivers\(\) should return Doctrine\\DBAL\\Driver but returns array\.$#'
-			identifier: return.type
-			count: 1
-			path: concrete/src/Database/Driver/DriverManager.php
-
-		-
-			message: '#^Return type \(Doctrine\\DBAL\\Driver\) of method Concrete\\Core\\Database\\Driver\\DriverManager\:\:getDrivers\(\) should be compatible with return type \(array\) of method Illuminate\\Support\\Manager\:\:getDrivers\(\)$#'
-			identifier: method.childReturnType
-			count: 1
-			path: concrete/src/Database/Driver/DriverManager.php
-
-		-
 			message: '#^Method Concrete\\Core\\Database\\EntityManager\\Provider\\PackageProviderFactory\:\:getEntityManagerProvider\(\) should return Concrete\\Core\\Database\\EntityManager\\Provider\\DefaultPackageProvider\|Concrete\\Core\\Package\\Package but returns Concrete\\Core\\Database\\EntityManager\\Provider\\ProviderInterface\.$#'
 			identifier: return.type
 			count: 1
@@ -8457,18 +8379,6 @@ parameters:
 			path: concrete/src/Entity/Express/Entry.php
 
 		-
-			message: '#^Method Concrete\\Core\\Entity\\Express\\Entry\:\:getPermissionAssignmentClassName\(\) should return bool but returns string\.$#'
-			identifier: return.type
-			count: 1
-			path: concrete/src/Entity/Express/Entry.php
-
-		-
-			message: '#^Method Concrete\\Core\\Entity\\Express\\Entry\:\:getPermissionObjectKeyCategoryHandle\(\) should return bool but returns string\.$#'
-			identifier: return.type
-			count: 1
-			path: concrete/src/Entity/Express/Entry.php
-
-		-
 			message: '#^PHPDoc tag @return with type mixed is not subtype of native type string\.$#'
 			identifier: return.phpDocType
 			count: 1
@@ -8673,20 +8583,8 @@ parameters:
 			path: concrete/src/Entity/Notification/WorkflowProgressNotification.php
 
 		-
-			message: '#^Method Concrete\\Core\\Entity\\OAuth\\AccessToken\:\:getClient\(\) should return League\\OAuth2\\Server\\Entities\\ClientEntityInterface but returns array\<League\\OAuth2\\Server\\Entities\\ScopeEntityInterface\>\.$#'
-			identifier: return.type
-			count: 1
-			path: concrete/src/Entity/OAuth/AccessToken.php
-
-		-
 			message: '#^Method Concrete\\Core\\Entity\\OAuth\\AccessToken\:\:getExpiryDateTime\(\) should return DateTimeImmutable but returns DateTime\.$#'
 			identifier: return.type
-			count: 1
-			path: concrete/src/Entity/OAuth/AccessToken.php
-
-		-
-			message: '#^Property Concrete\\Core\\Entity\\OAuth\\AccessToken\:\:\$client \(array\<League\\OAuth2\\Server\\Entities\\ScopeEntityInterface\>\) does not accept League\\OAuth2\\Server\\Entities\\ClientEntityInterface\.$#'
-			identifier: assign.propertyType
 			count: 1
 			path: concrete/src/Entity/OAuth/AccessToken.php
 
@@ -8709,20 +8607,8 @@ parameters:
 			path: concrete/src/Entity/OAuth/AccessTokenRepository.php
 
 		-
-			message: '#^Method Concrete\\Core\\Entity\\OAuth\\AuthCode\:\:getClient\(\) should return League\\OAuth2\\Server\\Entities\\ClientEntityInterface but returns array\<League\\OAuth2\\Server\\Entities\\ScopeEntityInterface\>\.$#'
-			identifier: return.type
-			count: 1
-			path: concrete/src/Entity/OAuth/AuthCode.php
-
-		-
 			message: '#^Method Concrete\\Core\\Entity\\OAuth\\AuthCode\:\:getExpiryDateTime\(\) should return DateTimeImmutable but returns DateTime\.$#'
 			identifier: return.type
-			count: 1
-			path: concrete/src/Entity/OAuth/AuthCode.php
-
-		-
-			message: '#^Property Concrete\\Core\\Entity\\OAuth\\AuthCode\:\:\$client \(array\<League\\OAuth2\\Server\\Entities\\ScopeEntityInterface\>\) does not accept League\\OAuth2\\Server\\Entities\\ClientEntityInterface\.$#'
-			identifier: assign.propertyType
 			count: 1
 			path: concrete/src/Entity/OAuth/AuthCode.php
 
@@ -8755,12 +8641,6 @@ parameters:
 			identifier: booleanNot.alwaysFalse
 			count: 1
 			path: concrete/src/Entity/OAuth/ClientRepository.php
-
-		-
-			message: '#^Method Concrete\\Core\\Entity\\OAuth\\RefreshToken\:\:getAccessToken\(\) should return Concrete\\Core\\Entity\\OAuth\\AccessToken but returns League\\OAuth2\\Server\\Entities\\AccessTokenEntityInterface\.$#'
-			identifier: return.type
-			count: 1
-			path: concrete/src/Entity/OAuth/RefreshToken.php
 
 		-
 			message: '#^Method Concrete\\Core\\Entity\\OAuth\\RefreshToken\:\:getExpiryDateTime\(\) should return DateTimeImmutable but returns DateTime\.$#'
@@ -8841,12 +8721,6 @@ parameters:
 			path: concrete/src/Entity/Site/Site.php
 
 		-
-			message: '#^Method Concrete\\Core\\Entity\\Site\\Site\:\:getSiteTreeObjects\(\) should return array\<Concrete\\Core\\Entity\\Site\\SiteTree\> but returns list\<Concrete\\Core\\Entity\\Site\\Tree\>\.$#'
-			identifier: return.type
-			count: 1
-			path: concrete/src/Entity/Site/Site.php
-
-		-
 			message: '#^Method Concrete\\Core\\Entity\\Site\\Site\:\:updateSiteConfigRepository\(\) invoked with 2 parameters, 1 required\.$#'
 			identifier: arguments.count
 			count: 1
@@ -8903,12 +8777,6 @@ parameters:
 		-
 			message: '#^PHPDoc tag @return with type array\<Concrete\\Core\\Entity\\Notification\\GroupRoleChangeNotification\> is incompatible with native type Doctrine\\Common\\Collections\\Collection\.$#'
 			identifier: return.phpDocType
-			count: 1
-			path: concrete/src/Entity/User/GroupRoleChange.php
-
-		-
-			message: '#^Property Concrete\\Core\\Entity\\User\\GroupRoleChange\:\:\$grID \(int\) does not accept string\.$#'
-			identifier: assign.propertyType
 			count: 1
 			path: concrete/src/Entity/User/GroupRoleChange.php
 
@@ -9447,12 +9315,6 @@ parameters:
 			path: concrete/src/Feed/FeedPost.php
 
 		-
-			message: '#^Method Concrete\\Core\\Feed\\FeedService\:\:load\(\) should return Laminas\\Feed\\Reader\\Reader but returns Laminas\\Feed\\Reader\\Feed\\FeedInterface\.$#'
-			identifier: return.type
-			count: 1
-			path: concrete/src/Feed/FeedService.php
-
-		-
 			message: '#^PHPDoc tag @param references unknown parameter\: \$feedurl$#'
 			identifier: parameter.notFound
 			count: 1
@@ -9897,12 +9759,6 @@ parameters:
 			path: concrete/src/File/Search/SearchProvider.php
 
 		-
-			message: '#^Method Concrete\\Core\\File\\Search\\SearchProvider\:\:getItemList\(\) should return Concrete\\Core\\File\\FileList but returns Concrete\\Core\\File\\FolderItemList\.$#'
-			identifier: return.type
-			count: 1
-			path: concrete/src/File/Search/SearchProvider.php
-
-		-
 			message: '#^Return type \(Concrete\\Core\\File\\Search\\ColumnSet\\DefaultSet\) of method Concrete\\Core\\File\\Search\\SearchProvider\:\:getDefaultColumnSet\(\) should be compatible with return type \(Concrete\\Core\\Page\\Search\\ColumnSet\\ColumnSet\) of method Concrete\\Core\\Search\\ProviderInterface\:\:getDefaultColumnSet\(\)$#'
 			identifier: method.childReturnType
 			count: 2
@@ -10001,12 +9857,6 @@ parameters:
 		-
 			message: '#^Call to function is_array\(\) with array will always evaluate to true\.$#'
 			identifier: function.alreadyNarrowedType
-			count: 1
-			path: concrete/src/File/Set/Set.php
-
-		-
-			message: '#^Method Concrete\\Core\\File\\Set\\Set\:\:getFiles\(\) should return array\<Concrete\\Core\\File\\File\> but returns list\<Concrete\\Core\\Entity\\File\\File\|null\>\.$#'
-			identifier: return.type
 			count: 1
 			path: concrete/src/File/Set/Set.php
 
@@ -11403,12 +11253,6 @@ parameters:
 			path: concrete/src/Legacy/UserList.php
 
 		-
-			message: '#^Method Concrete\\Core\\Legacy\\UserList\:\:get\(\) should return array\<Concrete\\Core\\Support\\Facade\\UserInfo\> but returns list\<Concrete\\Core\\User\\UserInfo\|null\>\.$#'
-			identifier: return.type
-			count: 1
-			path: concrete/src/Legacy/UserList.php
-
-		-
 			message: '#^PHPDoc tag @param references unknown parameter\: \$msNumPlurals$#'
 			identifier: parameter.notFound
 			count: 1
@@ -12633,12 +12477,6 @@ parameters:
 			path: concrete/src/Package/PackageService.php
 
 		-
-			message: '#^Method Concrete\\Core\\Package\\PackageService\:\:getRemotelyUpgradeablePackages\(\) should return array\<Concrete\\Core\\Package\\Package\> but returns list\<Concrete\\Core\\Entity\\Package\>\.$#'
-			identifier: return.type
-			count: 1
-			path: concrete/src/Package/PackageService.php
-
-		-
 			message: '#^Parameter \#1 \$entityManager of class Concrete\\Core\\Database\\EntityManagerConfigUpdater constructor expects Doctrine\\ORM\\EntityManager, Doctrine\\ORM\\EntityManagerInterface given\.$#'
 			identifier: argument.type
 			count: 1
@@ -12779,12 +12617,6 @@ parameters:
 		-
 			message: '#^Method Concrete\\Core\\Page\\Collection\\Collection\:\:rescanDisplayOrderFromBlock\(\) with return type void returns mixed but should not return anything\.$#'
 			identifier: return.void
-			count: 1
-			path: concrete/src/Page/Collection/Collection.php
-
-		-
-			message: '#^Method Concrete\\Core\\Page\\Collection\\Collection\:\:setAttribute\(\) should return Concrete\\Core\\Entity\\Attribute\\Value\\PageValue but returns Concrete\\Core\\Attribute\\AttributeValueInterface\.$#'
-			identifier: return.type
 			count: 1
 			path: concrete/src/Page/Collection/Collection.php
 
@@ -13157,12 +12989,6 @@ parameters:
 		-
 			message: '#^Method Concrete\\Core\\Page\\Page\:\:getSite\(\) should return Concrete\\Core\\Entity\\Site\\Site but return statement is missing\.$#'
 			identifier: return.missing
-			count: 1
-			path: concrete/src/Page/Page.php
-
-		-
-			message: '#^Method Concrete\\Core\\Page\\Page\:\:isArrangeMode\(\) should return false but returns bool\.$#'
-			identifier: return.type
 			count: 1
 			path: concrete/src/Page/Page.php
 
@@ -13554,12 +13380,6 @@ parameters:
 			message: '#^Left side of && is always true\.$#'
 			identifier: booleanAnd.leftAlwaysTrue
 			count: 1
-			path: concrete/src/Page/Sitemap/SitemapGenerator.php
-
-		-
-			message: '#^Method Concrete\\Core\\Page\\Sitemap\\SitemapGenerator\:\:resolveUrl\(\) should return League\\Url\\UrlInterface but returns string\.$#'
-			identifier: return.type
-			count: 2
 			path: concrete/src/Page/Sitemap/SitemapGenerator.php
 
 		-
@@ -15861,20 +15681,8 @@ parameters:
 			path: concrete/src/Summary/Data/Field/LinkDataFieldData.php
 
 		-
-			message: '#^Method Concrete\\Core\\Summary\\SummaryObject\:\:getData\(\) should return Concrete\\Core\\Summary\\Data\\Collection but returns array\.$#'
-			identifier: return.type
-			count: 1
-			path: concrete/src/Summary/SummaryObject.php
-
-		-
 			message: '#^PHPDoc tag @return with type mixed is not subtype of native type string\.$#'
 			identifier: return.phpDocType
-			count: 1
-			path: concrete/src/Summary/SummaryObject.php
-
-		-
-			message: '#^Property Concrete\\Core\\Summary\\SummaryObject\:\:\$data \(array\) does not accept Concrete\\Core\\Summary\\Data\\Collection\.$#'
-			identifier: assign.propertyType
 			count: 1
 			path: concrete/src/Summary/SummaryObject.php
 
@@ -15985,24 +15793,6 @@ parameters:
 			identifier: function.alreadyNarrowedType
 			count: 1
 			path: concrete/src/Support/Symbol/ClassSymbol/MethodSymbol/MethodSymbol.php
-
-		-
-			message: '#^Method Concrete\\Core\\Support\\Symbol\\PhpDocGenerator\:\:isSingleDocBlock\(\) should return bool but returns string\.$#'
-			identifier: return.type
-			count: 1
-			path: concrete/src/Support/Symbol/PhpDocGenerator.php
-
-		-
-			message: '#^Property Concrete\\Core\\Support\\Symbol\\PhpDocGenerator\:\:\$singleDocBlock \(string\) does not accept bool\.$#'
-			identifier: assign.propertyType
-			count: 1
-			path: concrete/src/Support/Symbol/PhpDocGenerator.php
-
-		-
-			message: '#^Property Concrete\\Core\\Support\\Symbol\\PhpDocGenerator\:\:\$singleDocBlock \(string\) does not accept default value of type false\.$#'
-			identifier: property.defaultValue
-			count: 1
-			path: concrete/src/Support/Symbol/PhpDocGenerator.php
 
 		-
 			message: '#^Variable \$commonObjectDescriptors in empty\(\) always exists and is not falsy\.$#'
@@ -16309,12 +16099,6 @@ parameters:
 			identifier: parameter.notFound
 			count: 1
 			path: concrete/src/Updater/ApplicationUpdate/Version.php
-
-		-
-			message: '#^Method Concrete\\Core\\Updater\\Archive\:\:uploadZipToTemp\(\) should return string but returns int\<1, max\>\.$#'
-			identifier: return.type
-			count: 1
-			path: concrete/src/Updater/Archive.php
 
 		-
 			message: '#^PHPDoc tag @param references unknown parameter\: \$zipfile$#'
@@ -16965,12 +16749,6 @@ parameters:
 			path: concrete/src/User/Group/FolderManager.php
 
 		-
-			message: '#^Method Concrete\\Core\\User\\Group\\FolderManager\:\:getFolder\(\) should return Concrete\\Core\\Tree\\Node\\Type\\FileFolder\|null but returns Concrete\\Core\\Tree\\Node\\Type\\GroupFolder\.$#'
-			identifier: return.type
-			count: 1
-			path: concrete/src/User/Group/FolderManager.php
-
-		-
 			message: '#^Method Concrete\\Core\\User\\Group\\FolderManager\:\:getRootFolder\(\) should return Concrete\\Core\\Tree\\Node\\Type\\GroupFolder\|null but returns Concrete\\Core\\Tree\\Node\\Node\|null\.$#'
 			identifier: return.type
 			count: 1
@@ -17025,12 +16803,6 @@ parameters:
 			path: concrete/src/User/Group/GroupJoinRequest.php
 
 		-
-			message: '#^Method Concrete\\Core\\User\\Group\\GroupRole\:\:getId\(\) should return string but returns int\.$#'
-			identifier: return.type
-			count: 1
-			path: concrete/src/User/Group/GroupRole.php
-
-		-
 			message: '#^Unsafe usage of new static\(\)\.$#'
 			identifier: new.static
 			count: 1
@@ -17047,12 +16819,6 @@ parameters:
 			identifier: new.static
 			count: 2
 			path: concrete/src/User/Group/GroupSet.php
-
-		-
-			message: '#^Method Concrete\\Core\\User\\Group\\GroupType\:\:getId\(\) should return string but returns int\.$#'
-			identifier: return.type
-			count: 1
-			path: concrete/src/User/Group/GroupType.php
 
 		-
 			message: '#^Unsafe usage of new static\(\)\.$#'
@@ -17421,7 +17187,7 @@ parameters:
 			path: concrete/src/User/UserServiceProvider.php
 
 		-
-			message: '#^Method Concrete\\Core\\User\\Workflow\\Progress\\ProgressList\:\:get\(\) should return array\<Concrete\\Core\\Support\\Facade\\UserInfo\> but returns list\<Concrete\\Core\\User\\Workflow\\Progress\\User\>\.$#'
+			message: '#^Method Concrete\\Core\\User\\Workflow\\Progress\\ProgressList\:\:get\(\) should return array\<Concrete\\Core\\User\\UserInfo\> but returns list\<Concrete\\Core\\User\\Workflow\\Progress\\User\>\.$#'
 			identifier: return.type
 			count: 1
 			path: concrete/src/User/Workflow/Progress/ProgressList.php

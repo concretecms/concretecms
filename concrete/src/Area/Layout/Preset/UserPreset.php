@@ -44,7 +44,7 @@ class UserPreset extends ConcreteObject
     }
 
     /**
-     * @return Preset[]
+     * @return static[]
      */
     public static function getList()
     {

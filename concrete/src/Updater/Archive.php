@@ -37,7 +37,7 @@ class Archive
         if (!file_exists($file)) {
             throw new Exception(t('Could not transfer to temp directory - file not found.'));
         } else {
-            $dir = time();
+            $dir = (string) time();
             copy($file, $this->f->getTemporaryDirectory() . '/'. $dir . '.zip');
 
             return $dir;

@@ -327,6 +327,8 @@ class Site implements TreeInterface, ObjectInterface, PermissionObjectInterface,
      * {@inheritdoc}
      *
      * @see \Concrete\Core\Site\Tree\TreeInterface::getSiteTreeObject()
+     *
+     * @return SiteTree|null
      */
     public function getSiteTreeObject()
     {
