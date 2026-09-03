@@ -3843,12 +3843,6 @@ parameters:
 			path: concrete/controllers/workflow/categories/page.php
 
 		-
-			message: '#^Access to an undefined property Concrete\\Core\\Workflow\\Progress\\Response\:\:\$message\.$#'
-			identifier: property.notFound
-			count: 1
-			path: concrete/controllers/workflow/categories/user.php
-
-		-
 			message: '#^Instanceof between Concrete\\Core\\Workflow\\Progress\\Response and Concrete\\Core\\Workflow\\Progress\\Response will always evaluate to true\.$#'
 			identifier: instanceof.alwaysTrue
 			count: 1
@@ -5871,12 +5865,6 @@ parameters:
 			path: concrete/src/Area/Layout/Formatter/ThemeGridFormatter.php
 
 		-
-			message: '#^Access to an undefined property Concrete\\Core\\Area\\Layout\\Layout\:\:\$arLayoutType\.$#'
-			identifier: property.notFound
-			count: 2
-			path: concrete/src/Area/Layout/Layout.php
-
-		-
 			message: '#^Call to method childNodes\(\) on an unknown class simplehtmldom_1_5\\simple_html_dom\.$#'
 			identifier: class.notFound
 			count: 1
@@ -5935,12 +5923,6 @@ parameters:
 			identifier: new.static
 			count: 1
 			path: concrete/src/Area/Layout/Preset/UserPreset.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Area\\Layout\\PresetColumn\:\:\$preset\.$#'
-			identifier: property.notFound
-			count: 1
-			path: concrete/src/Area/Layout/PresetColumn.php
 
 		-
 			message: '#^Call to an undefined method Concrete\\Core\\Area\\Layout\\Layout\:\:getPresetObject\(\)\.$#'
@@ -6019,12 +6001,6 @@ parameters:
 			identifier: method.childReturnType
 			count: 1
 			path: concrete/src/Area/Layout/ThemeGridLayout.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Area\\SubArea\:\:\$arParentID\.$#'
-			identifier: property.notFound
-			count: 5
-			path: concrete/src/Area/SubArea.php
 
 		-
 			message: '#^Right side of && is always true\.$#'
@@ -6525,30 +6501,6 @@ parameters:
 			path: concrete/src/Attribute/ValidatorInterface.php
 
 		-
-			message: '#^Access to an undefined property Concrete\\Core\\Attribute\\Value\\Value\:\:\$atID\.$#'
-			identifier: property.notFound
-			count: 1
-			path: concrete/src/Attribute/Value/Value.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Attribute\\Value\\Value\:\:\$avDateAdded\.$#'
-			identifier: property.notFound
-			count: 1
-			path: concrete/src/Attribute/Value/Value.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Attribute\\Value\\Value\:\:\$avID\.$#'
-			identifier: property.notFound
-			count: 1
-			path: concrete/src/Attribute/Value/Value.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Attribute\\Value\\Value\:\:\$uID\.$#'
-			identifier: property.notFound
-			count: 1
-			path: concrete/src/Attribute/Value/Value.php
-
-		-
 			message: '#^Unsafe usage of new static\(\)\.$#'
 			identifier: new.static
 			count: 1
@@ -7041,18 +6993,6 @@ parameters:
 			path: concrete/src/Backup/ContentImporter/ValueInspector/Result.php
 
 		-
-			message: '#^Access to an undefined property Concrete\\Core\\Block\\Block\:\:\$btCacheBlockOutputForRegisteredUsers\.$#'
-			identifier: property.notFound
-			count: 1
-			path: concrete/src/Block/Block.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Block\\Block\:\:\$cbDisplayOrder\.$#'
-			identifier: property.notFound
-			count: 1
-			path: concrete/src/Block/Block.php
-
-		-
 			message: '#^Call to an undefined method Concrete\\Core\\Page\\Collection\\Collection\:\:getCollectionThemeObject\(\)\.$#'
 			identifier: method.notFound
 			count: 1
@@ -7233,30 +7173,6 @@ parameters:
 			path: concrete/src/Block/BlockType/BlockTypeList.php
 
 		-
-			message: '#^Access to an undefined property Concrete\\Core\\Block\\BlockType\\Set\:\:\$btsHandle\.$#'
-			identifier: property.notFound
-			count: 2
-			path: concrete/src/Block/BlockType/Set.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Block\\BlockType\\Set\:\:\$btsID\.$#'
-			identifier: property.notFound
-			count: 1
-			path: concrete/src/Block/BlockType/Set.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Block\\BlockType\\Set\:\:\$btsName\.$#'
-			identifier: property.notFound
-			count: 2
-			path: concrete/src/Block/BlockType/Set.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Block\\BlockType\\Set\:\:\$pkgID\.$#'
-			identifier: property.notFound
-			count: 1
-			path: concrete/src/Block/BlockType/Set.php
-
-		-
 			message: '#^Unsafe usage of new static\(\)\.$#'
 			identifier: new.static
 			count: 2
@@ -7333,12 +7249,6 @@ parameters:
 			identifier: argument.type
 			count: 2
 			path: concrete/src/Block/Command/UpdateForkedAliasDefaultsBlockCommandHandler.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Block\\Block\:\:\$bID\.$#'
-			identifier: property.notFound
-			count: 2
-			path: concrete/src/Block/CustomStyleRepository.php
 
 		-
 			message: '#^Call to an undefined method Concrete\\Core\\Page\\Collection\\Collection\:\:getCollectionThemeObject\(\)\.$#'
@@ -8451,108 +8361,6 @@ parameters:
 			path: concrete/src/Conversation/Command/HandleNewConversationMessageCommandHandler.php
 
 		-
-			message: '#^Access to an undefined property Concrete\\Core\\Conversation\\Conversation\:\:\$cID\.$#'
-			identifier: property.notFound
-			count: 2
-			path: concrete/src/Conversation/Conversation.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Conversation\\Conversation\:\:\$cnvAttachmentOverridesEnabled\.$#'
-			identifier: property.notFound
-			count: 1
-			path: concrete/src/Conversation/Conversation.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Conversation\\Conversation\:\:\$cnvAttachmentsEnabled\.$#'
-			identifier: property.notFound
-			count: 1
-			path: concrete/src/Conversation/Conversation.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Conversation\\Conversation\:\:\$cnvDateCreated\.$#'
-			identifier: property.notFound
-			count: 1
-			path: concrete/src/Conversation/Conversation.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Conversation\\Conversation\:\:\$cnvDateLastMessage\.$#'
-			identifier: property.notFound
-			count: 1
-			path: concrete/src/Conversation/Conversation.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Conversation\\Conversation\:\:\$cnvEnableSubscription\.$#'
-			identifier: property.notFound
-			count: 1
-			path: concrete/src/Conversation/Conversation.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Conversation\\Conversation\:\:\$cnvFileExtensions\.$#'
-			identifier: property.notFound
-			count: 1
-			path: concrete/src/Conversation/Conversation.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Conversation\\Conversation\:\:\$cnvID\.$#'
-			identifier: property.notFound
-			count: 2
-			path: concrete/src/Conversation/Conversation.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Conversation\\Conversation\:\:\$cnvMaxFileSizeGuest\.$#'
-			identifier: property.notFound
-			count: 1
-			path: concrete/src/Conversation/Conversation.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Conversation\\Conversation\:\:\$cnvMaxFileSizeRegistered\.$#'
-			identifier: property.notFound
-			count: 1
-			path: concrete/src/Conversation/Conversation.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Conversation\\Conversation\:\:\$cnvMaxFilesGuest\.$#'
-			identifier: property.notFound
-			count: 1
-			path: concrete/src/Conversation/Conversation.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Conversation\\Conversation\:\:\$cnvMaxFilesRegistered\.$#'
-			identifier: property.notFound
-			count: 1
-			path: concrete/src/Conversation/Conversation.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Conversation\\Conversation\:\:\$cnvMessageParentID\.$#'
-			identifier: property.notFound
-			count: 1
-			path: concrete/src/Conversation/Conversation.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Conversation\\Conversation\:\:\$cnvMessagesTotal\.$#'
-			identifier: property.notFound
-			count: 1
-			path: concrete/src/Conversation/Conversation.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Conversation\\Conversation\:\:\$cnvNotificationOverridesEnabled\.$#'
-			identifier: property.notFound
-			count: 1
-			path: concrete/src/Conversation/Conversation.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Conversation\\Conversation\:\:\$cnvOverrideGlobalPermissions\.$#'
-			identifier: property.notFound
-			count: 1
-			path: concrete/src/Conversation/Conversation.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Conversation\\Conversation\:\:\$cnvParentMessageID\.$#'
-			identifier: property.notFound
-			count: 1
-			path: concrete/src/Conversation/Conversation.php
-
-		-
 			message: '#^Call to function is_object\(\) with Concrete\\Core\\Page\\Page will always evaluate to true\.$#'
 			identifier: function.alreadyNarrowedType
 			count: 1
@@ -8631,90 +8439,6 @@ parameters:
 			path: concrete/src/Conversation/FrontendController.php
 
 		-
-			message: '#^Access to an undefined property Concrete\\Core\\Conversation\\Message\\Message\:\:\$cnvEditorID\.$#'
-			identifier: property.notFound
-			count: 1
-			path: concrete/src/Conversation/Message/Message.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Conversation\\Message\\Message\:\:\$cnvID\.$#'
-			identifier: property.notFound
-			count: 2
-			path: concrete/src/Conversation/Message/Message.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Conversation\\Message\\Message\:\:\$cnvIsMessageApproved\.$#'
-			identifier: property.notFound
-			count: 4
-			path: concrete/src/Conversation/Message/Message.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Conversation\\Message\\Message\:\:\$cnvIsMessageDeleted\.$#'
-			identifier: property.notFound
-			count: 4
-			path: concrete/src/Conversation/Message/Message.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Conversation\\Message\\Message\:\:\$cnvMessageAuthor\.$#'
-			identifier: property.notFound
-			count: 2
-			path: concrete/src/Conversation/Message/Message.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Conversation\\Message\\Message\:\:\$cnvMessageBody\.$#'
-			identifier: property.notFound
-			count: 4
-			path: concrete/src/Conversation/Message/Message.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Conversation\\Message\\Message\:\:\$cnvMessageLevel\.$#'
-			identifier: property.notFound
-			count: 1
-			path: concrete/src/Conversation/Message/Message.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Conversation\\Message\\Message\:\:\$cnvMessageParentID\.$#'
-			identifier: property.notFound
-			count: 1
-			path: concrete/src/Conversation/Message/Message.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Conversation\\Message\\Message\:\:\$cnvMessageSubject\.$#'
-			identifier: property.notFound
-			count: 1
-			path: concrete/src/Conversation/Message/Message.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Conversation\\Message\\Message\:\:\$cnvMessageSubmitIP\.$#'
-			identifier: property.notFound
-			count: 1
-			path: concrete/src/Conversation/Message/Message.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Conversation\\Message\\Message\:\:\$cnvMessageSubmitUserAgent\.$#'
-			identifier: property.notFound
-			count: 1
-			path: concrete/src/Conversation/Message/Message.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Conversation\\Message\\Message\:\:\$cnvMessageTotalRatingScore\.$#'
-			identifier: property.notFound
-			count: 1
-			path: concrete/src/Conversation/Message/Message.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Conversation\\Message\\Message\:\:\$uID\.$#'
-			identifier: property.notFound
-			count: 2
-			path: concrete/src/Conversation/Message/Message.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Conversation\\Rating\\Type\:\:\$cnvRatingTypeHandle\.$#'
-			identifier: property.notFound
-			count: 1
-			path: concrete/src/Conversation/Message/Message.php
-
-		-
 			message: '#^Call to function is_object\(\) with Concrete\\Core\\Entity\\File\\File will always evaluate to true\.$#'
 			identifier: function.alreadyNarrowedType
 			count: 1
@@ -8761,36 +8485,6 @@ parameters:
 			identifier: property.notFound
 			count: 2
 			path: concrete/src/Conversation/Message/ThreadedList.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Conversation\\Rating\\Type\:\:\$cnvRatingTypeCommunityPoints\.$#'
-			identifier: property.notFound
-			count: 1
-			path: concrete/src/Conversation/Rating/Type.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Conversation\\Rating\\Type\:\:\$cnvRatingTypeHandle\.$#'
-			identifier: property.notFound
-			count: 3
-			path: concrete/src/Conversation/Rating/Type.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Conversation\\Rating\\Type\:\:\$cnvRatingTypeID\.$#'
-			identifier: property.notFound
-			count: 2
-			path: concrete/src/Conversation/Rating/Type.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Conversation\\Rating\\Type\:\:\$cnvRatingTypeName\.$#'
-			identifier: property.notFound
-			count: 2
-			path: concrete/src/Conversation/Rating/Type.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Conversation\\Rating\\Type\:\:\$pkgID\.$#'
-			identifier: property.notFound
-			count: 3
-			path: concrete/src/Conversation/Rating/Type.php
 
 		-
 			message: '#^PHPDoc tag @return contains unresolvable type\.$#'
@@ -9151,30 +8845,6 @@ parameters:
 			identifier: argument.type
 			count: 1
 			path: concrete/src/Editor/Plugin.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Editor\\Snippet\:\:\$pkgID\.$#'
-			identifier: property.notFound
-			count: 3
-			path: concrete/src/Editor/Snippet.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Editor\\Snippet\:\:\$scsHandle\.$#'
-			identifier: property.notFound
-			count: 5
-			path: concrete/src/Editor/Snippet.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Editor\\Snippet\:\:\$scsIsActive\.$#'
-			identifier: property.notFound
-			count: 1
-			path: concrete/src/Editor/Snippet.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Editor\\Snippet\:\:\$scsName\.$#'
-			identifier: property.notFound
-			count: 1
-			path: concrete/src/Editor/Snippet.php
 
 		-
 			message: '#^Parameter \#2 \$algo of function password_needs_rehash expects int, string given\.$#'
@@ -12585,42 +12255,6 @@ parameters:
 			path: concrete/src/Install/Preconditions/RequestUrls.php
 
 		-
-			message: '#^Access to an undefined property Concrete\\Core\\Job\\Job\:\:\$jLastStatusCode\.$#'
-			identifier: property.notFound
-			count: 3
-			path: concrete/src/Job/Job.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Job\\Job\:\:\$jLastStatusText\.$#'
-			identifier: property.notFound
-			count: 2
-			path: concrete/src/Job/Job.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Job\\Job\:\:\$pkgID\.$#'
-			identifier: property.notFound
-			count: 1
-			path: concrete/src/Job/Job.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Job\\Set\:\:\$jsID\.$#'
-			identifier: property.notFound
-			count: 4
-			path: concrete/src/Job/Set.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Job\\Set\:\:\$jsName\.$#'
-			identifier: property.notFound
-			count: 2
-			path: concrete/src/Job/Set.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Job\\Set\:\:\$pkgID\.$#'
-			identifier: property.notFound
-			count: 1
-			path: concrete/src/Job/Set.php
-
-		-
 			message: '#^Call to an undefined method Concrete\\Core\\Support\\Facade\\UserInfo\:\:getUserAvatar\(\)\.$#'
 			identifier: method.notFound
 			count: 2
@@ -13161,78 +12795,6 @@ parameters:
 			path: concrete/src/Mail/Importer/MailImportedMessage.php
 
 		-
-			message: '#^Access to an undefined property Concrete\\Core\\Mail\\Importer\\MailImporter\:\:\$miConnectionMethod\.$#'
-			identifier: property.notFound
-			count: 2
-			path: concrete/src/Mail/Importer/MailImporter.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Mail\\Importer\\MailImporter\:\:\$miEmail\.$#'
-			identifier: property.notFound
-			count: 1
-			path: concrete/src/Mail/Importer/MailImporter.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Mail\\Importer\\MailImporter\:\:\$miEncryption\.$#'
-			identifier: property.notFound
-			count: 2
-			path: concrete/src/Mail/Importer/MailImporter.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Mail\\Importer\\MailImporter\:\:\$miHandle\.$#'
-			identifier: property.notFound
-			count: 2
-			path: concrete/src/Mail/Importer/MailImporter.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Mail\\Importer\\MailImporter\:\:\$miID\.$#'
-			identifier: property.notFound
-			count: 4
-			path: concrete/src/Mail/Importer/MailImporter.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Mail\\Importer\\MailImporter\:\:\$miIsEnabled\.$#'
-			identifier: property.notFound
-			count: 1
-			path: concrete/src/Mail/Importer/MailImporter.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Mail\\Importer\\MailImporter\:\:\$miPassword\.$#'
-			identifier: property.notFound
-			count: 2
-			path: concrete/src/Mail/Importer/MailImporter.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Mail\\Importer\\MailImporter\:\:\$miPort\.$#'
-			identifier: property.notFound
-			count: 2
-			path: concrete/src/Mail/Importer/MailImporter.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Mail\\Importer\\MailImporter\:\:\$miServer\.$#'
-			identifier: property.notFound
-			count: 2
-			path: concrete/src/Mail/Importer/MailImporter.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Mail\\Importer\\MailImporter\:\:\$miUsername\.$#'
-			identifier: property.notFound
-			count: 2
-			path: concrete/src/Mail/Importer/MailImporter.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Mail\\Importer\\MailImporter\:\:\$pkgID\.$#'
-			identifier: property.notFound
-			count: 2
-			path: concrete/src/Mail/Importer/MailImporter.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Mail\\Importer\\MailImporter\:\:\$validationHash\.$#'
-			identifier: property.notFound
-			count: 3
-			path: concrete/src/Mail/Importer/MailImporter.php
-
-		-
 			message: '#^Call to method getUniqueId\(\) on an unknown class Laminas\\Mail\\Storage\\Imap\.$#'
 			identifier: class.notFound
 			count: 1
@@ -13395,168 +12957,6 @@ parameters:
 			path: concrete/src/Marketplace/PackageRepository.php
 
 		-
-			message: '#^Access to an undefined property Concrete\\Core\\Marketplace\\RemoteItem\:\:\$bodyContent\.$#'
-			identifier: property.notFound
-			count: 1
-			path: concrete/src/Marketplace/RemoteItem.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Marketplace\\RemoteItem\:\:\$cID\.$#'
-			identifier: property.notFound
-			count: 1
-			path: concrete/src/Marketplace/RemoteItem.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Marketplace\\RemoteItem\:\:\$description\.$#'
-			identifier: property.notFound
-			count: 1
-			path: concrete/src/Marketplace/RemoteItem.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Marketplace\\RemoteItem\:\:\$exampleURL\.$#'
-			identifier: property.notFound
-			count: 1
-			path: concrete/src/Marketplace/RemoteItem.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Marketplace\\RemoteItem\:\:\$file\.$#'
-			identifier: property.notFound
-			count: 1
-			path: concrete/src/Marketplace/RemoteItem.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Marketplace\\RemoteItem\:\:\$fivePackProductBlockID\.$#'
-			identifier: property.notFound
-			count: 1
-			path: concrete/src/Marketplace/RemoteItem.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Marketplace\\RemoteItem\:\:\$handle\.$#'
-			identifier: property.notFound
-			count: 1
-			path: concrete/src/Marketplace/RemoteItem.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Marketplace\\RemoteItem\:\:\$helpURL\.$#'
-			identifier: property.notFound
-			count: 1
-			path: concrete/src/Marketplace/RemoteItem.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Marketplace\\RemoteItem\:\:\$icon\.$#'
-			identifier: property.notFound
-			count: 1
-			path: concrete/src/Marketplace/RemoteItem.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Marketplace\\RemoteItem\:\:\$islicensed\.$#'
-			identifier: property.notFound
-			count: 1
-			path: concrete/src/Marketplace/RemoteItem.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Marketplace\\RemoteItem\:\:\$largethumbnail\.$#'
-			identifier: property.notFound
-			count: 1
-			path: concrete/src/Marketplace/RemoteItem.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Marketplace\\RemoteItem\:\:\$listicon\.$#'
-			identifier: property.notFound
-			count: 1
-			path: concrete/src/Marketplace/RemoteItem.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Marketplace\\RemoteItem\:\:\$mpID\.$#'
-			identifier: property.notFound
-			count: 2
-			path: concrete/src/Marketplace/RemoteItem.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Marketplace\\RemoteItem\:\:\$mpType\.$#'
-			identifier: property.notFound
-			count: 1
-			path: concrete/src/Marketplace/RemoteItem.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Marketplace\\RemoteItem\:\:\$name\.$#'
-			identifier: property.notFound
-			count: 1
-			path: concrete/src/Marketplace/RemoteItem.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Marketplace\\RemoteItem\:\:\$pkgVersion\.$#'
-			identifier: property.notFound
-			count: 1
-			path: concrete/src/Marketplace/RemoteItem.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Marketplace\\RemoteItem\:\:\$productBlockID\.$#'
-			identifier: property.notFound
-			count: 1
-			path: concrete/src/Marketplace/RemoteItem.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Marketplace\\RemoteItem\:\:\$rating\.$#'
-			identifier: property.notFound
-			count: 1
-			path: concrete/src/Marketplace/RemoteItem.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Marketplace\\RemoteItem\:\:\$reviewBody\.$#'
-			identifier: property.notFound
-			count: 1
-			path: concrete/src/Marketplace/RemoteItem.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Marketplace\\RemoteItem\:\:\$reviewsURL\.$#'
-			identifier: property.notFound
-			count: 1
-			path: concrete/src/Marketplace/RemoteItem.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Marketplace\\RemoteItem\:\:\$screenshots\.$#'
-			identifier: property.notFound
-			count: 1
-			path: concrete/src/Marketplace/RemoteItem.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Marketplace\\RemoteItem\:\:\$siteLatestAvailableVersion\.$#'
-			identifier: property.notFound
-			count: 1
-			path: concrete/src/Marketplace/RemoteItem.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Marketplace\\RemoteItem\:\:\$skillLevel\.$#'
-			identifier: property.notFound
-			count: 1
-			path: concrete/src/Marketplace/RemoteItem.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Marketplace\\RemoteItem\:\:\$slideshowImages\.$#'
-			identifier: property.notFound
-			count: 1
-			path: concrete/src/Marketplace/RemoteItem.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Marketplace\\RemoteItem\:\:\$totalRatings\.$#'
-			identifier: property.notFound
-			count: 1
-			path: concrete/src/Marketplace/RemoteItem.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Marketplace\\RemoteItem\:\:\$url\.$#'
-			identifier: property.notFound
-			count: 1
-			path: concrete/src/Marketplace/RemoteItem.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Marketplace\\RemoteItem\:\:\$versionHistory\.$#'
-			identifier: property.notFound
-			count: 1
-			path: concrete/src/Marketplace/RemoteItem.php
-
-		-
 			message: '#^Call to an undefined method Concrete\\Core\\Entity\\Package\:\:backup\(\)\.$#'
 			identifier: method.notFound
 			count: 1
@@ -13567,30 +12967,6 @@ parameters:
 			identifier: arguments.count
 			count: 2
 			path: concrete/src/Marketplace/RemoteItem.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Marketplace\\RemoteItemSet\:\:\$id\.$#'
-			identifier: property.notFound
-			count: 1
-			path: concrete/src/Marketplace/RemoteItemList.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Marketplace\\RemoteItemSet\:\:\$name\.$#'
-			identifier: property.notFound
-			count: 1
-			path: concrete/src/Marketplace/RemoteItemList.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Marketplace\\RemoteItemSet\:\:\$id\.$#'
-			identifier: property.notFound
-			count: 1
-			path: concrete/src/Marketplace/RemoteItemSet.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Marketplace\\RemoteItemSet\:\:\$name\.$#'
-			identifier: property.notFound
-			count: 1
-			path: concrete/src/Marketplace/RemoteItemSet.php
 
 		-
 			message: '#^Call to an undefined method Symfony\\Component\\Messenger\\Stamp\\StampInterface\:\:getOutput\(\)\.$#'
@@ -14787,54 +14163,6 @@ parameters:
 			path: concrete/src/Page/FeedEvent.php
 
 		-
-			message: '#^Access to an undefined property Concrete\\Core\\Page\\Page\:\:\$cDraftTargetParentPageID\.$#'
-			identifier: property.notFound
-			count: 1
-			path: concrete/src/Page/Page.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Page\\Page\:\:\$cIndexScore\.$#'
-			identifier: property.notFound
-			count: 1
-			path: concrete/src/Page/Page.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Page\\Page\:\:\$childrenCIDArray\.$#'
-			identifier: property.notFound
-			count: 2
-			path: concrete/src/Page/Page.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Page\\Page\:\:\$isCheckedOutCache\.$#'
-			identifier: property.notFound
-			count: 2
-			path: concrete/src/Page/Page.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Page\\Page\:\:\$pageType\.$#'
-			identifier: property.notFound
-			count: 1
-			path: concrete/src/Page/Page.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Page\\Page\:\:\$permissionAssignments\.$#'
-			identifier: property.notFound
-			count: 1
-			path: concrete/src/Page/Page.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Page\\Page\:\:\$ptHandle\.$#'
-			identifier: property.notFound
-			count: 1
-			path: concrete/src/Page/Page.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Page\\Page\:\:\$themeObject\.$#'
-			identifier: property.notFound
-			count: 6
-			path: concrete/src/Page/Page.php
-
-		-
 			message: '#^Call to an undefined method Concrete\\Core\\Block\\BlockController\:\:getComposerOutputControlObject\(\)\.$#'
 			identifier: method.notFound
 			count: 1
@@ -15591,12 +14919,6 @@ parameters:
 			path: concrete/src/Page/Theme/Documentation/Installer.php
 
 		-
-			message: '#^Access to an undefined property Concrete\\Core\\Page\\Theme\\Theme\:\:\$pThemeHasCustomClass\.$#'
-			identifier: property.notFound
-			count: 3
-			path: concrete/src/Page/Theme/Theme.php
-
-		-
 			message: '#^Call to an undefined method HtmlObject\\Image\:\:src\(\)\.$#'
 			identifier: method.notFound
 			count: 1
@@ -15717,24 +15039,6 @@ parameters:
 			path: concrete/src/Page/Type/Composer/Control/CollectionAttributeControl.php
 
 		-
-			message: '#^Access to an undefined property Concrete\\Core\\Page\\Type\\Composer\\Control\\Control\:\:\$ptComposerControlTypeHandle\.$#'
-			identifier: property.notFound
-			count: 2
-			path: concrete/src/Page/Type/Composer/Control/Control.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Page\\Type\\Composer\\Control\\Control\:\:\$ptComposerFormLayoutSetControlObject\.$#'
-			identifier: property.notFound
-			count: 4
-			path: concrete/src/Page/Type/Composer/Control/Control.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Page\\Type\\Composer\\Control\\Control\:\:\$ptTargetParentPageID\.$#'
-			identifier: property.notFound
-			count: 2
-			path: concrete/src/Page/Type/Composer/Control/Control.php
-
-		-
 			message: '#^Call to an undefined method HtmlObject\\Element\:\:src\(\)\.$#'
 			identifier: method.notFound
 			count: 1
@@ -15759,154 +15063,16 @@ parameters:
 			path: concrete/src/Page/Type/Composer/Control/Type/CollectionAttributeType.php
 
 		-
-			message: '#^Access to an undefined property Concrete\\Core\\Page\\Type\\Composer\\Control\\Type\\Type\:\:\$pkgID\.$#'
-			identifier: property.notFound
-			count: 3
-			path: concrete/src/Page/Type/Composer/Control/Type/Type.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Page\\Type\\Composer\\Control\\Type\\Type\:\:\$ptComposerControlTypeHandle\.$#'
-			identifier: property.notFound
-			count: 1
-			path: concrete/src/Page/Type/Composer/Control/Type/Type.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Page\\Type\\Composer\\Control\\Type\\Type\:\:\$ptComposerControlTypeID\.$#'
-			identifier: property.notFound
-			count: 2
-			path: concrete/src/Page/Type/Composer/Control/Type/Type.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Page\\Type\\Composer\\Control\\Type\\Type\:\:\$ptComposerControlTypeName\.$#'
-			identifier: property.notFound
-			count: 1
-			path: concrete/src/Page/Type/Composer/Control/Type/Type.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Page\\Type\\Composer\\FormLayoutSet\:\:\$ptComposerFormLayoutSetCollapseType\.$#'
-			identifier: property.notFound
-			count: 2
-			path: concrete/src/Page/Type/Composer/FormLayoutSet.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Page\\Type\\Composer\\FormLayoutSet\:\:\$ptComposerFormLayoutSetDescription\.$#'
-			identifier: property.notFound
-			count: 3
-			path: concrete/src/Page/Type/Composer/FormLayoutSet.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Page\\Type\\Composer\\FormLayoutSet\:\:\$ptComposerFormLayoutSetDisplayOrder\.$#'
-			identifier: property.notFound
-			count: 2
-			path: concrete/src/Page/Type/Composer/FormLayoutSet.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Page\\Type\\Composer\\FormLayoutSet\:\:\$ptComposerFormLayoutSetID\.$#'
-			identifier: property.notFound
-			count: 6
-			path: concrete/src/Page/Type/Composer/FormLayoutSet.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Page\\Type\\Composer\\FormLayoutSet\:\:\$ptComposerFormLayoutSetName\.$#'
-			identifier: property.notFound
-			count: 3
-			path: concrete/src/Page/Type/Composer/FormLayoutSet.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Page\\Type\\Composer\\FormLayoutSet\:\:\$ptID\.$#'
-			identifier: property.notFound
-			count: 2
-			path: concrete/src/Page/Type/Composer/FormLayoutSet.php
-
-		-
 			message: '#^Unsafe usage of new static\(\)\.$#'
 			identifier: new.static
 			count: 1
 			path: concrete/src/Page/Type/Composer/FormLayoutSet.php
 
 		-
-			message: '#^Access to an undefined property Concrete\\Core\\Page\\Type\\Composer\\FormLayoutSetControl\:\:\$page\.$#'
-			identifier: property.notFound
-			count: 1
-			path: concrete/src/Page/Type/Composer/FormLayoutSetControl.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Page\\Type\\Composer\\FormLayoutSetControl\:\:\$ptComposerControlObject\.$#'
-			identifier: property.notFound
-			count: 2
-			path: concrete/src/Page/Type/Composer/FormLayoutSetControl.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Page\\Type\\Composer\\FormLayoutSetControl\:\:\$ptComposerControlTypeID\.$#'
-			identifier: property.notFound
-			count: 2
-			path: concrete/src/Page/Type/Composer/FormLayoutSetControl.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Page\\Type\\Composer\\FormLayoutSetControl\:\:\$ptComposerFormLayoutSetControlCustomLabel\.$#'
-			identifier: property.notFound
-			count: 2
-			path: concrete/src/Page/Type/Composer/FormLayoutSetControl.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Page\\Type\\Composer\\FormLayoutSetControl\:\:\$ptComposerFormLayoutSetControlCustomTemplate\.$#'
-			identifier: property.notFound
-			count: 2
-			path: concrete/src/Page/Type/Composer/FormLayoutSetControl.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Page\\Type\\Composer\\FormLayoutSetControl\:\:\$ptComposerFormLayoutSetControlDescription\.$#'
-			identifier: property.notFound
-			count: 2
-			path: concrete/src/Page/Type/Composer/FormLayoutSetControl.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Page\\Type\\Composer\\FormLayoutSetControl\:\:\$ptComposerFormLayoutSetControlDisplayOrder\.$#'
-			identifier: property.notFound
-			count: 2
-			path: concrete/src/Page/Type/Composer/FormLayoutSetControl.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Page\\Type\\Composer\\FormLayoutSetControl\:\:\$ptComposerFormLayoutSetControlID\.$#'
-			identifier: property.notFound
-			count: 11
-			path: concrete/src/Page/Type/Composer/FormLayoutSetControl.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Page\\Type\\Composer\\FormLayoutSetControl\:\:\$ptComposerFormLayoutSetControlRequired\.$#'
-			identifier: property.notFound
-			count: 2
-			path: concrete/src/Page/Type/Composer/FormLayoutSetControl.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Page\\Type\\Composer\\FormLayoutSetControl\:\:\$ptComposerFormLayoutSetID\.$#'
-			identifier: property.notFound
-			count: 2
-			path: concrete/src/Page/Type/Composer/FormLayoutSetControl.php
-
-		-
 			message: '#^Unsafe usage of new static\(\)\.$#'
 			identifier: new.static
 			count: 1
 			path: concrete/src/Page/Type/Composer/FormLayoutSetControl.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Page\\Type\\Composer\\OutputControl\:\:\$ptComposerFormLayoutSetControlID\.$#'
-			identifier: property.notFound
-			count: 2
-			path: concrete/src/Page/Type/Composer/OutputControl.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Page\\Type\\Composer\\OutputControl\:\:\$ptComposerFormLayoutSetID\.$#'
-			identifier: property.notFound
-			count: 1
-			path: concrete/src/Page/Type/Composer/OutputControl.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Page\\Type\\Composer\\OutputControl\:\:\$ptComposerOutputControlID\.$#'
-			identifier: property.notFound
-			count: 2
-			path: concrete/src/Page/Type/Composer/OutputControl.php
 
 		-
 			message: '#^Unsafe usage of new static\(\)\.$#'
@@ -15919,24 +15085,6 @@ parameters:
 			identifier: function.alreadyNarrowedType
 			count: 1
 			path: concrete/src/Page/Type/PublishTarget/Configuration/AllConfiguration.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Page\\Type\\PublishTarget\\Configuration\\Configuration\:\:\$pkgHandle\.$#'
-			identifier: property.notFound
-			count: 3
-			path: concrete/src/Page/Type/PublishTarget/Configuration/Configuration.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Page\\Type\\PublishTarget\\Configuration\\Configuration\:\:\$ptPublishTargetTypeHandle\.$#'
-			identifier: property.notFound
-			count: 2
-			path: concrete/src/Page/Type/PublishTarget/Configuration/Configuration.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Page\\Type\\PublishTarget\\Configuration\\Configuration\:\:\$ptPublishTargetTypeID\.$#'
-			identifier: property.notFound
-			count: 3
-			path: concrete/src/Page/Type/PublishTarget/Configuration/Configuration.php
 
 		-
 			message: '#^Call to function is_object\(\) with Concrete\\Core\\Page\\Page will always evaluate to true\.$#'
@@ -15961,78 +15109,6 @@ parameters:
 			identifier: staticMethod.notFound
 			count: 1
 			path: concrete/src/Page/Type/PublishTarget/Type/Type.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Page\\Type\\Type\:\:\$pkgID\.$#'
-			identifier: property.notFound
-			count: 2
-			path: concrete/src/Page/Type/Type.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Page\\Type\\Type\:\:\$ptAllowedPageTemplates\.$#'
-			identifier: property.notFound
-			count: 3
-			path: concrete/src/Page/Type/Type.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Page\\Type\\Type\:\:\$ptDisplayOrder\.$#'
-			identifier: property.notFound
-			count: 1
-			path: concrete/src/Page/Type/Type.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Page\\Type\\Type\:\:\$ptHandle\.$#'
-			identifier: property.notFound
-			count: 3
-			path: concrete/src/Page/Type/Type.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Page\\Type\\Type\:\:\$ptID\.$#'
-			identifier: property.notFound
-			count: 15
-			path: concrete/src/Page/Type/Type.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Page\\Type\\Type\:\:\$ptIsFrequentlyAdded\.$#'
-			identifier: property.notFound
-			count: 1
-			path: concrete/src/Page/Type/Type.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Page\\Type\\Type\:\:\$ptIsInternal\.$#'
-			identifier: property.notFound
-			count: 1
-			path: concrete/src/Page/Type/Type.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Page\\Type\\Type\:\:\$ptLaunchInComposer\.$#'
-			identifier: property.notFound
-			count: 1
-			path: concrete/src/Page/Type/Type.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Page\\Type\\Type\:\:\$ptName\.$#'
-			identifier: property.notFound
-			count: 1
-			path: concrete/src/Page/Type/Type.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Page\\Type\\Type\:\:\$ptPublishTargetObject\.$#'
-			identifier: property.notFound
-			count: 2
-			path: concrete/src/Page/Type/Type.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Page\\Type\\Type\:\:\$ptPublishTargetTypeID\.$#'
-			identifier: property.notFound
-			count: 1
-			path: concrete/src/Page/Type/Type.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Page\\Type\\Type\:\:\$siteTypeID\.$#'
-			identifier: property.notFound
-			count: 1
-			path: concrete/src/Page/Type/Type.php
 
 		-
 			message: '#^Call to an undefined method Concrete\\Core\\Permission\\Key\\Key\:\:copyFromDefaultsToPageType\(\)\.$#'
@@ -16389,46 +15465,10 @@ parameters:
 			path: concrete/src/Permission/Access/Entity/SiteGroupEntity.php
 
 		-
-			message: '#^Access to an undefined property Concrete\\Core\\Permission\\Access\\Entity\\Type\:\:\$petHandle\.$#'
-			identifier: property.notFound
-			count: 2
-			path: concrete/src/Permission/Access/Entity/Type.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Permission\\Access\\Entity\\Type\:\:\$petID\.$#'
-			identifier: property.notFound
-			count: 2
-			path: concrete/src/Permission/Access/Entity/Type.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Permission\\Access\\Entity\\Type\:\:\$petName\.$#'
-			identifier: property.notFound
-			count: 1
-			path: concrete/src/Permission/Access/Entity/Type.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Permission\\Access\\Entity\\Type\:\:\$pkgID\.$#'
-			identifier: property.notFound
-			count: 2
-			path: concrete/src/Permission/Access/Entity/Type.php
-
-		-
 			message: '#^Unsafe usage of new static\(\)\.$#'
 			identifier: new.static
 			count: 1
 			path: concrete/src/Permission/Access/Entity/Type.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Permission\\Access\\ListItem\\EditUserPropertiesUserListItem\:\:\$allowEditUDefaultLanguage\.$#'
-			identifier: property.notFound
-			count: 1
-			path: concrete/src/Permission/Access/ListItem/EditUserPropertiesUserListItem.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Permission\\Access\\ListItem\\EditUserPropertiesUserListItem\:\:\$allowEditUTimezone\.$#'
-			identifier: property.notFound
-			count: 1
-			path: concrete/src/Permission/Access/ListItem/EditUserPropertiesUserListItem.php
 
 		-
 			message: '#^Call to Concrete\\Core\\Permission\\Access\\Access\:\:save\(\) on a separate line has no effect\.$#'
@@ -16657,24 +15697,6 @@ parameters:
 			identifier: method.notFound
 			count: 1
 			path: concrete/src/Permission/Assignment/TreeNodeAssignment.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Permission\\Category\:\:\$pkCategoryHandle\.$#'
-			identifier: property.notFound
-			count: 2
-			path: concrete/src/Permission/Category.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Permission\\Category\:\:\$pkCategoryID\.$#'
-			identifier: property.notFound
-			count: 5
-			path: concrete/src/Permission/Category.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Permission\\Category\:\:\$pkgID\.$#'
-			identifier: property.notFound
-			count: 2
-			path: concrete/src/Permission/Category.php
 
 		-
 			message: '#^Unsafe usage of new static\(\)\.$#'
@@ -18285,72 +17307,6 @@ parameters:
 			path: concrete/src/Tree/Menu/Item/Topic/TopicItem.php
 
 		-
-			message: '#^Access to an undefined property Concrete\\Core\\Tree\\Node\\Node\:\:\$dateCreated\.$#'
-			identifier: property.notFound
-			count: 1
-			path: concrete/src/Tree/Node/Node.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Tree\\Node\\Node\:\:\$dateModified\.$#'
-			identifier: property.notFound
-			count: 1
-			path: concrete/src/Tree/Node/Node.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Tree\\Node\\Node\:\:\$inheritPermissionsFromTreeNodeID\.$#'
-			identifier: property.notFound
-			count: 3
-			path: concrete/src/Tree/Node/Node.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Tree\\Node\\Node\:\:\$treeID\.$#'
-			identifier: property.notFound
-			count: 2
-			path: concrete/src/Tree/Node/Node.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Tree\\Node\\Node\:\:\$treeNodeDisplayOrder\.$#'
-			identifier: property.notFound
-			count: 2
-			path: concrete/src/Tree/Node/Node.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Tree\\Node\\Node\:\:\$treeNodeID\.$#'
-			identifier: property.notFound
-			count: 21
-			path: concrete/src/Tree/Node/Node.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Tree\\Node\\Node\:\:\$treeNodeName\.$#'
-			identifier: property.notFound
-			count: 2
-			path: concrete/src/Tree/Node/Node.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Tree\\Node\\Node\:\:\$treeNodeOverridePermissions\.$#'
-			identifier: property.notFound
-			count: 3
-			path: concrete/src/Tree/Node/Node.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Tree\\Node\\Node\:\:\$treeNodeParentID\.$#'
-			identifier: property.notFound
-			count: 4
-			path: concrete/src/Tree/Node/Node.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Tree\\Node\\Node\:\:\$treeNodeType\.$#'
-			identifier: property.notFound
-			count: 1
-			path: concrete/src/Tree/Node/Node.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Tree\\Node\\Node\:\:\$treeNodeTypeID\.$#'
-			identifier: property.notFound
-			count: 2
-			path: concrete/src/Tree/Node/Node.php
-
-		-
 			message: '#^Call to an undefined method Concrete\\Core\\Permission\\Key\\Key\:\:copyFromParentNodeToCurrentNode\(\)\.$#'
 			identifier: method.notFound
 			count: 1
@@ -18375,36 +17331,6 @@ parameters:
 			path: concrete/src/Tree/Node/Node.php
 
 		-
-			message: '#^Access to an undefined property Concrete\\Core\\Tree\\Node\\NodeType\:\:\$pkgID\.$#'
-			identifier: property.notFound
-			count: 2
-			path: concrete/src/Tree/Node/NodeType.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Tree\\Node\\NodeType\:\:\$treeNodeTypeHandle\.$#'
-			identifier: property.notFound
-			count: 2
-			path: concrete/src/Tree/Node/NodeType.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Tree\\Node\\NodeType\:\:\$treeNodeTypeID\.$#'
-			identifier: property.notFound
-			count: 2
-			path: concrete/src/Tree/Node/NodeType.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Tree\\Node\\Type\\Category\:\:\$treeNodeName\.$#'
-			identifier: property.notFound
-			count: 1
-			path: concrete/src/Tree/Node/Type/Category.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Tree\\Node\\Type\\Category\:\:\$treeNodeParentID\.$#'
-			identifier: property.notFound
-			count: 1
-			path: concrete/src/Tree/Node/Type/Category.php
-
-		-
 			message: '#^Default value of the parameter \#1 \$treeNodeCategoryName \(''''\) of method Concrete\\Core\\Tree\\Node\\Type\\Category\:\:add\(\) is incompatible with type Concrete\\Core\\Tree\\Node\\Node\|false\|null\.$#'
 			identifier: parameter.defaultValue
 			count: 1
@@ -18423,22 +17349,10 @@ parameters:
 			path: concrete/src/Tree/Node/Type/Category.php
 
 		-
-			message: '#^Access to an undefined property Concrete\\Core\\Tree\\Node\\Type\\ExpressEntryCategory\:\:\$treeNodeParentID\.$#'
-			identifier: property.notFound
-			count: 1
-			path: concrete/src/Tree/Node/Type/ExpressEntryCategory.php
-
-		-
 			message: '#^Method Concrete\\Core\\Tree\\Node\\Type\\ExpressEntryCategory\:\:getTreeNodeDisplayName\(\) should return string but return statement is missing\.$#'
 			identifier: return.missing
 			count: 1
 			path: concrete/src/Tree/Node/Type/ExpressEntryCategory.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Tree\\Node\\Type\\ExpressEntrySiteResults\:\:\$treeNodeID\.$#'
-			identifier: property.notFound
-			count: 1
-			path: concrete/src/Tree/Node/Type/ExpressEntrySiteResults.php
 
 		-
 			message: '#^Call to an undefined method Concrete\\Core\\Tree\\Node\\Node\:\:setTreeNodeSite\(\)\.$#'
@@ -18451,12 +17365,6 @@ parameters:
 			identifier: parameter.defaultValue
 			count: 1
 			path: concrete/src/Tree/Node/Type/ExpressEntrySiteResults.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Tree\\Node\\Type\\File\:\:\$treeNodeID\.$#'
-			identifier: property.notFound
-			count: 2
-			path: concrete/src/Tree/Node/Type/File.php
 
 		-
 			message: '#^Call to an undefined method Concrete\\Core\\Entity\\File\\File\:\:getTitle\(\)\.$#'
@@ -18475,12 +17383,6 @@ parameters:
 			identifier: method.notFound
 			count: 1
 			path: concrete/src/Tree/Node/Type/File.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Tree\\Node\\Type\\FileFolder\:\:\$treeNodeID\.$#'
-			identifier: property.notFound
-			count: 3
-			path: concrete/src/Tree/Node/Type/FileFolder.php
 
 		-
 			message: '#^Call to an undefined method Concrete\\Core\\Tree\\Node\\Node\:\:setTreeNodeStorageLocationID\(\)\.$#'
@@ -18513,18 +17415,6 @@ parameters:
 			path: concrete/src/Tree/Node/Type/FileFolder.php
 
 		-
-			message: '#^Access to an undefined property Concrete\\Core\\Tree\\Node\\Type\\Group\:\:\$treeNodeID\.$#'
-			identifier: property.notFound
-			count: 2
-			path: concrete/src/Tree/Node/Type/Group.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Tree\\Node\\Type\\Group\:\:\$treeNodeParentID\.$#'
-			identifier: property.notFound
-			count: 2
-			path: concrete/src/Tree/Node/Type/Group.php
-
-		-
 			message: '#^Call to an undefined method Concrete\\Core\\Tree\\Node\\Node\:\:setTreeNodeGroup\(\)\.$#'
 			identifier: method.notFound
 			count: 1
@@ -18547,12 +17437,6 @@ parameters:
 			identifier: return.type
 			count: 1
 			path: concrete/src/Tree/Node/Type/Group.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Tree\\Node\\Type\\GroupFolder\:\:\$treeNodeID\.$#'
-			identifier: property.notFound
-			count: 5
-			path: concrete/src/Tree/Node/Type/GroupFolder.php
 
 		-
 			message: '#^Call to an undefined method Concrete\\Core\\Tree\\Node\\Node\:\:setContains\(\)\.$#'
@@ -18579,12 +17463,6 @@ parameters:
 			path: concrete/src/Tree/Node/Type/GroupFolder.php
 
 		-
-			message: '#^Access to an undefined property Concrete\\Core\\Tree\\Node\\Type\\SearchPreset\:\:\$treeNodeID\.$#'
-			identifier: property.notFound
-			count: 2
-			path: concrete/src/Tree/Node/Type/SearchPreset.php
-
-		-
 			message: '#^Call to an undefined method Concrete\\Core\\Tree\\Node\\Node\:\:setTreeNodeSavedSearch\(\)\.$#'
 			identifier: method.notFound
 			count: 1
@@ -18595,12 +17473,6 @@ parameters:
 			identifier: function.alreadyNarrowedType
 			count: 1
 			path: concrete/src/Tree/Node/Type/SearchPreset.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Tree\\Node\\Type\\Topic\:\:\$treeNodeName\.$#'
-			identifier: property.notFound
-			count: 1
-			path: concrete/src/Tree/Node/Type/Topic.php
 
 		-
 			message: '#^Default value of the parameter \#1 \$treeNodeTopicName \(''''\) of method Concrete\\Core\\Tree\\Node\\Type\\Topic\:\:add\(\) is incompatible with type Concrete\\Core\\Tree\\Node\\Node\|false\|null\.$#'
@@ -18615,52 +17487,10 @@ parameters:
 			path: concrete/src/Tree/Node/Type/Topic.php
 
 		-
-			message: '#^Access to an undefined property Concrete\\Core\\Tree\\Tree\:\:\$requestData\.$#'
-			identifier: property.notFound
-			count: 1
-			path: concrete/src/Tree/Tree.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Tree\\Tree\:\:\$rootTreeNodeID\.$#'
-			identifier: property.notFound
-			count: 2
-			path: concrete/src/Tree/Tree.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Tree\\Tree\:\:\$treeID\.$#'
-			identifier: property.notFound
-			count: 2
-			path: concrete/src/Tree/Tree.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Tree\\Tree\:\:\$treeTypeID\.$#'
-			identifier: property.notFound
-			count: 2
-			path: concrete/src/Tree/Tree.php
-
-		-
 			message: '#^Call to function is_string\(\) with string will always evaluate to true\.$#'
 			identifier: function.alreadyNarrowedType
 			count: 1
 			path: concrete/src/Tree/Tree.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Tree\\TreeType\:\:\$pkgID\.$#'
-			identifier: property.notFound
-			count: 2
-			path: concrete/src/Tree/TreeType.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Tree\\TreeType\:\:\$treeTypeHandle\.$#'
-			identifier: property.notFound
-			count: 2
-			path: concrete/src/Tree/TreeType.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Tree\\TreeType\:\:\$treeTypeID\.$#'
-			identifier: property.notFound
-			count: 2
-			path: concrete/src/Tree/TreeType.php
 
 		-
 			message: '#^Unsafe usage of new static\(\)\.$#'
@@ -18703,18 +17533,6 @@ parameters:
 			identifier: argument.type
 			count: 1
 			path: concrete/src/Tree/Type/Group.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Tree\\Type\\Topic\:\:\$topicTreeName\.$#'
-			identifier: property.notFound
-			count: 3
-			path: concrete/src/Tree/Type/Topic.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Tree\\Type\\Topic\:\:\$treeID\.$#'
-			identifier: property.notFound
-			count: 2
-			path: concrete/src/Tree/Type/Topic.php
 
 		-
 			message: '#^Call to an undefined method Concrete\\Core\\Tree\\Tree\:\:setTopicTreeName\(\)\.$#'
@@ -19485,150 +18303,6 @@ parameters:
 			path: concrete/src/User/Group/FolderManager.php
 
 		-
-			message: '#^Access to an undefined property Concrete\\Core\\User\\Group\\Group\:\:\$cgEndDate\.$#'
-			identifier: property.notFound
-			count: 1
-			path: concrete/src/User/Group/Group.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\User\\Group\\Group\:\:\$cgStartDate\.$#'
-			identifier: property.notFound
-			count: 1
-			path: concrete/src/User/Group/Group.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\User\\Group\\Group\:\:\$gAuthorID\.$#'
-			identifier: property.notFound
-			count: 1
-			path: concrete/src/User/Group/Group.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\User\\Group\\Group\:\:\$gBadgeCommunityPointValue\.$#'
-			identifier: property.notFound
-			count: 1
-			path: concrete/src/User/Group/Group.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\User\\Group\\Group\:\:\$gBadgeDescription\.$#'
-			identifier: property.notFound
-			count: 1
-			path: concrete/src/User/Group/Group.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\User\\Group\\Group\:\:\$gBadgeFID\.$#'
-			identifier: property.notFound
-			count: 2
-			path: concrete/src/User/Group/Group.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\User\\Group\\Group\:\:\$gCheckAutomationOnJobRun\.$#'
-			identifier: property.notFound
-			count: 1
-			path: concrete/src/User/Group/Group.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\User\\Group\\Group\:\:\$gCheckAutomationOnLogin\.$#'
-			identifier: property.notFound
-			count: 1
-			path: concrete/src/User/Group/Group.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\User\\Group\\Group\:\:\$gCheckAutomationOnRegister\.$#'
-			identifier: property.notFound
-			count: 1
-			path: concrete/src/User/Group/Group.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\User\\Group\\Group\:\:\$gDefaultRoleID\.$#'
-			identifier: property.notFound
-			count: 3
-			path: concrete/src/User/Group/Group.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\User\\Group\\Group\:\:\$gDescription\.$#'
-			identifier: property.notFound
-			count: 1
-			path: concrete/src/User/Group/Group.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\User\\Group\\Group\:\:\$gIsAutomated\.$#'
-			identifier: property.notFound
-			count: 1
-			path: concrete/src/User/Group/Group.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\User\\Group\\Group\:\:\$gOverrideGroupTypeSettings\.$#'
-			identifier: property.notFound
-			count: 2
-			path: concrete/src/User/Group/Group.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\User\\Group\\Group\:\:\$gPath\.$#'
-			identifier: property.notFound
-			count: 2
-			path: concrete/src/User/Group/Group.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\User\\Group\\Group\:\:\$gPetitionForPublicEntry\.$#'
-			identifier: property.notFound
-			count: 2
-			path: concrete/src/User/Group/Group.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\User\\Group\\Group\:\:\$gThumbnailFID\.$#'
-			identifier: property.notFound
-			count: 2
-			path: concrete/src/User/Group/Group.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\User\\Group\\Group\:\:\$gUserExpirationAction\.$#'
-			identifier: property.notFound
-			count: 1
-			path: concrete/src/User/Group/Group.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\User\\Group\\Group\:\:\$gUserExpirationInterval\.$#'
-			identifier: property.notFound
-			count: 4
-			path: concrete/src/User/Group/Group.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\User\\Group\\Group\:\:\$gUserExpirationIsEnabled\.$#'
-			identifier: property.notFound
-			count: 1
-			path: concrete/src/User/Group/Group.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\User\\Group\\Group\:\:\$gUserExpirationMethod\.$#'
-			identifier: property.notFound
-			count: 1
-			path: concrete/src/User/Group/Group.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\User\\Group\\Group\:\:\$gUserExpirationSetDateTime\.$#'
-			identifier: property.notFound
-			count: 1
-			path: concrete/src/User/Group/Group.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\User\\Group\\Group\:\:\$gtID\.$#'
-			identifier: property.notFound
-			count: 4
-			path: concrete/src/User/Group/Group.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\User\\Group\\Group\:\:\$inGroup\.$#'
-			identifier: property.notFound
-			count: 1
-			path: concrete/src/User/Group/Group.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\User\\Group\\Group\:\:\$pkgID\.$#'
-			identifier: property.notFound
-			count: 2
-			path: concrete/src/User/Group/Group.php
-
-		-
 			message: '#^Call to function is_array\(\) with list\<int\|string\> will always evaluate to true\.$#'
 			identifier: function.alreadyNarrowedType
 			count: 1
@@ -19701,24 +18375,6 @@ parameters:
 			path: concrete/src/User/Group/GroupRole.php
 
 		-
-			message: '#^Access to an undefined property Concrete\\Core\\User\\Group\\GroupSet\:\:\$gsID\.$#'
-			identifier: property.notFound
-			count: 3
-			path: concrete/src/User/Group/GroupSet.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\User\\Group\\GroupSet\:\:\$gsName\.$#'
-			identifier: property.notFound
-			count: 2
-			path: concrete/src/User/Group/GroupSet.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\User\\Group\\GroupSet\:\:\$pkgID\.$#'
-			identifier: property.notFound
-			count: 1
-			path: concrete/src/User/Group/GroupSet.php
-
-		-
 			message: '#^Call to function is_object\(\) with Concrete\\Core\\User\\Group\\Group will always evaluate to true\.$#'
 			identifier: function.alreadyNarrowedType
 			count: 1
@@ -19729,12 +18385,6 @@ parameters:
 			identifier: new.static
 			count: 2
 			path: concrete/src/User/Group/GroupSet.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\User\\Group\\GroupType\:\:\$gtDefaultRoleID\.$#'
-			identifier: property.notFound
-			count: 2
-			path: concrete/src/User/Group/GroupType.php
 
 		-
 			message: '#^Method Concrete\\Core\\User\\Group\\GroupType\:\:getId\(\) should return string but returns int\.$#'
@@ -19825,36 +18475,6 @@ parameters:
 			identifier: argument.type
 			count: 1
 			path: concrete/src/User/PostLoginLocationUrl.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\User\\PrivateMessage\\Mailbox\:\:\$lastMessageID\.$#'
-			identifier: property.notFound
-			count: 3
-			path: concrete/src/User/PrivateMessage/Mailbox.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\User\\PrivateMessage\\Mailbox\:\:\$msgMailboxID\.$#'
-			identifier: property.notFound
-			count: 4
-			path: concrete/src/User/PrivateMessage/Mailbox.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\User\\PrivateMessage\\Mailbox\:\:\$totalMessages\.$#'
-			identifier: property.notFound
-			count: 2
-			path: concrete/src/User/PrivateMessage/Mailbox.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\User\\PrivateMessage\\Mailbox\:\:\$uID\.$#'
-			identifier: property.notFound
-			count: 4
-			path: concrete/src/User/PrivateMessage/Mailbox.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\User\\PrivateMessage\\PrivateMessage\:\:\$msgMailboxID\.$#'
-			identifier: property.notFound
-			count: 1
-			path: concrete/src/User/PrivateMessage/PrivateMessage.php
 
 		-
 			message: '#^Unsafe usage of new static\(\)\.$#'
@@ -19983,30 +18603,6 @@ parameters:
 			path: concrete/src/User/Search/SearchProvider.php
 
 		-
-			message: '#^Access to an undefined property Concrete\\Core\\Page\\Page\:\:\$cCheckedOutDatetime\.$#'
-			identifier: property.notFound
-			count: 1
-			path: concrete/src/User/User.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Page\\Page\:\:\$cCheckedOutDatetimeLastEdit\.$#'
-			identifier: property.notFound
-			count: 2
-			path: concrete/src/User/User.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Page\\Page\:\:\$cIsCheckedOut\.$#'
-			identifier: property.notFound
-			count: 1
-			path: concrete/src/User/User.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\User\\User\:\:\$uIsActive\.$#'
-			identifier: property.notFound
-			count: 1
-			path: concrete/src/User/User.php
-
-		-
 			message: '#^Call to function is_object\(\) with Concrete\\Core\\User\\Group\\Group will always evaluate to true\.$#'
 			identifier: function.alreadyNarrowedType
 			count: 3
@@ -20095,12 +18691,6 @@ parameters:
 			identifier: constructor.unusedParameter
 			count: 1
 			path: concrete/src/User/UserBannedIp.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\User\\UserInfo\:\:\$uIsValidated\.$#'
-			identifier: property.notFound
-			count: 1
-			path: concrete/src/User/UserInfo.php
 
 		-
 			message: '#^Call to function is_array\(\) with array will always evaluate to true\.$#'
@@ -20403,12 +18993,6 @@ parameters:
 			path: concrete/src/Workflow/HistoryEntry/HistoryEntry.php
 
 		-
-			message: '#^Access to an undefined property Concrete\\Core\\Workflow\\Progress\\Action\\Action\:\:\$wrActionLabel\.$#'
-			identifier: property.notFound
-			count: 2
-			path: concrete/src/Workflow/Progress/Action/Action.php
-
-		-
 			message: '#^Access to an undefined property Concrete\\Core\\Workflow\\Progress\\BasicData\:\:\$uIDCompleted\.$#'
 			identifier: property.notFound
 			count: 3
@@ -20433,82 +19017,16 @@ parameters:
 			path: concrete/src/Workflow/Progress/BasicData.php
 
 		-
-			message: '#^Access to an undefined property Concrete\\Core\\Workflow\\Progress\\Progress\:\:\$eventID\.$#'
-			identifier: property.notFound
-			count: 1
-			path: concrete/src/Workflow/Progress/CalendarEventProgress.php
-
-		-
 			message: '#^Method Concrete\\Core\\Workflow\\Progress\\CalendarEventProgress\:\:getSite\(\) should return Concrete\\Core\\Entity\\Site\\Site but return statement is missing\.$#'
 			identifier: return.missing
 			count: 2
 			path: concrete/src/Workflow/Progress/CalendarEventProgress.php
 
 		-
-			message: '#^Access to an undefined property Concrete\\Core\\Workflow\\Progress\\Category\:\:\$pkgID\.$#'
-			identifier: property.notFound
-			count: 2
-			path: concrete/src/Workflow/Progress/Category.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Workflow\\Progress\\Category\:\:\$wpCategoryHandle\.$#'
-			identifier: property.notFound
-			count: 2
-			path: concrete/src/Workflow/Progress/Category.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Workflow\\Progress\\Category\:\:\$wpCategoryID\.$#'
-			identifier: property.notFound
-			count: 2
-			path: concrete/src/Workflow/Progress/Category.php
-
-		-
 			message: '#^Unsafe usage of new static\(\)\.$#'
 			identifier: new.static
 			count: 2
 			path: concrete/src/Workflow/Progress/Category.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Workflow\\Progress\\History\:\:\$object\.$#'
-			identifier: property.notFound
-			count: 2
-			path: concrete/src/Workflow/Progress/History.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Workflow\\Progress\\History\:\:\$timestamp\.$#'
-			identifier: property.notFound
-			count: 1
-			path: concrete/src/Workflow/Progress/History.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Workflow\\Progress\\History\:\:\$wpID\.$#'
-			identifier: property.notFound
-			count: 1
-			path: concrete/src/Workflow/Progress/History.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Workflow\\Progress\\History\:\:\$wphID\.$#'
-			identifier: property.notFound
-			count: 1
-			path: concrete/src/Workflow/Progress/History.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Workflow\\Progress\\Progress\:\:\$cID\.$#'
-			identifier: property.notFound
-			count: 1
-			path: concrete/src/Workflow/Progress/PageProgress.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Workflow\\Progress\\Progress\:\:\$wpCategoryHandle\.$#'
-			identifier: property.notFound
-			count: 1
-			path: concrete/src/Workflow/Progress/Progress.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Workflow\\Progress\\Progress\:\:\$wpCategoryID\.$#'
-			identifier: property.notFound
-			count: 2
-			path: concrete/src/Workflow/Progress/Progress.php
 
 		-
 			message: '#^Call to function is_object\(\) with Concrete\\Core\\Workflow\\Workflow will always evaluate to true\.$#'
@@ -20523,34 +19041,10 @@ parameters:
 			path: concrete/src/Workflow/Progress/Progress.php
 
 		-
-			message: '#^Access to an undefined property Concrete\\Core\\Workflow\\Progress\\Progress\:\:\$uID\.$#'
-			identifier: property.notFound
-			count: 1
-			path: concrete/src/Workflow/Progress/UserProgress.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Workflow\\Request\\ApprovePageRequest\:\:\$cID\.$#'
-			identifier: property.notFound
-			count: 4
-			path: concrete/src/Workflow/Request/ApprovePageRequest.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Workflow\\Request\\ApprovePageRequest\:\:\$cvID\.$#'
-			identifier: property.notFound
-			count: 10
-			path: concrete/src/Workflow/Request/ApprovePageRequest.php
-
-		-
 			message: '#^Call to function is_object\(\) with Concrete\\Core\\Page\\Page will always evaluate to true\.$#'
 			identifier: function.alreadyNarrowedType
 			count: 1
 			path: concrete/src/Workflow/Request/ApprovePageRequest.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Workflow\\Request\\ApproveStackRequest\:\:\$cvID\.$#'
-			identifier: property.notFound
-			count: 1
-			path: concrete/src/Workflow/Request/ApproveStackRequest.php
 
 		-
 			message: '#^Cannot call method getStackName\(\) on Concrete\\Core\\Page\\Page\|false\.$#'
@@ -20565,100 +19059,10 @@ parameters:
 			path: concrete/src/Workflow/Request/CalendarEventRequest.php
 
 		-
-			message: '#^Access to an undefined property Concrete\\Core\\Workflow\\Request\\ChangePagePermissionsInheritanceRequest\:\:\$cID\.$#'
-			identifier: property.notFound
-			count: 1
-			path: concrete/src/Workflow/Request/ChangePagePermissionsInheritanceRequest.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Workflow\\Request\\ChangePagePermissionsInheritanceRequest\:\:\$inheritance\.$#'
-			identifier: property.notFound
-			count: 5
-			path: concrete/src/Workflow/Request/ChangePagePermissionsInheritanceRequest.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Workflow\\Request\\ChangePagePermissionsRequest\:\:\$cID\.$#'
-			identifier: property.notFound
-			count: 2
-			path: concrete/src/Workflow/Request/ChangePagePermissionsRequest.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Workflow\\Request\\ChangePagePermissionsRequest\:\:\$permissionSet\.$#'
-			identifier: property.notFound
-			count: 2
-			path: concrete/src/Workflow/Request/ChangePagePermissionsRequest.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Workflow\\Request\\ChangeSubpageDefaultsInheritanceRequest\:\:\$cID\.$#'
-			identifier: property.notFound
-			count: 1
-			path: concrete/src/Workflow/Request/ChangeSubpageDefaultsInheritanceRequest.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Workflow\\Request\\ChangeSubpageDefaultsInheritanceRequest\:\:\$inheritance\.$#'
-			identifier: property.notFound
-			count: 4
-			path: concrete/src/Workflow/Request/ChangeSubpageDefaultsInheritanceRequest.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Workflow\\Request\\DeletePageRequest\:\:\$cID\.$#'
-			identifier: property.notFound
-			count: 1
-			path: concrete/src/Workflow/Request/DeletePageRequest.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Workflow\\Request\\MovePageRequest\:\:\$cID\.$#'
-			identifier: property.notFound
-			count: 1
-			path: concrete/src/Workflow/Request/MovePageRequest.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Workflow\\Request\\MovePageRequest\:\:\$saveOldPagePath\.$#'
-			identifier: property.notFound
-			count: 2
-			path: concrete/src/Workflow/Request/MovePageRequest.php
-
-		-
 			message: '#^Call to function is_object\(\) with Concrete\\Core\\Page\\Page will always evaluate to true\.$#'
 			identifier: function.alreadyNarrowedType
 			count: 2
 			path: concrete/src/Workflow/Request/MovePageRequest.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Workflow\\Request\\PageRequest\:\:\$cID\.$#'
-			identifier: property.notFound
-			count: 4
-			path: concrete/src/Workflow/Request/PageRequest.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Workflow\\Request\\PageRequest\:\:\$cvID\.$#'
-			identifier: property.notFound
-			count: 1
-			path: concrete/src/Workflow/Request/PageRequest.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Workflow\\Request\\PageRequest\:\:\$pkID\.$#'
-			identifier: property.notFound
-			count: 1
-			path: concrete/src/Workflow/Request/PageRequest.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Workflow\\Request\\Request\:\:\$pkID\.$#'
-			identifier: property.notFound
-			count: 3
-			path: concrete/src/Workflow/Request/Request.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Workflow\\Request\\UnapprovePageRequest\:\:\$cID\.$#'
-			identifier: property.notFound
-			count: 2
-			path: concrete/src/Workflow/Request/UnapprovePageRequest.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Workflow\\Request\\UnapprovePageRequest\:\:\$cvID\.$#'
-			identifier: property.notFound
-			count: 5
-			path: concrete/src/Workflow/Request/UnapprovePageRequest.php
 
 		-
 			message: '#^If condition is always true\.$#'
@@ -20667,64 +19071,16 @@ parameters:
 			path: concrete/src/Workflow/Request/UnapprovePageRequest.php
 
 		-
-			message: '#^Access to an undefined property Concrete\\Core\\Workflow\\Request\\UserRequest\:\:\$pkID\.$#'
-			identifier: property.notFound
-			count: 1
-			path: concrete/src/Workflow/Request/UserRequest.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Workflow\\Request\\UserRequest\:\:\$requestAction\.$#'
-			identifier: property.notFound
-			count: 1
-			path: concrete/src/Workflow/Request/UserRequest.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Workflow\\Request\\UserRequest\:\:\$requestedUID\.$#'
-			identifier: property.notFound
-			count: 3
-			path: concrete/src/Workflow/Request/UserRequest.php
-
-		-
 			message: '#^Call to Concrete\\Core\\Legacy\\Loader\:\:model\(\) on a separate line has no effect\.$#'
 			identifier: staticMethod.resultUnused
 			count: 1
 			path: concrete/src/Workflow/Request/UserRequest.php
 
 		-
-			message: '#^Access to an undefined property Concrete\\Core\\Workflow\\Type\:\:\$pkgID\.$#'
-			identifier: property.notFound
-			count: 1
-			path: concrete/src/Workflow/Type.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Workflow\\Type\:\:\$wftHandle\.$#'
-			identifier: property.notFound
-			count: 1
-			path: concrete/src/Workflow/Type.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Workflow\\Type\:\:\$wftID\.$#'
-			identifier: property.notFound
-			count: 1
-			path: concrete/src/Workflow/Type.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Workflow\\Type\:\:\$wftName\.$#'
-			identifier: property.notFound
-			count: 1
-			path: concrete/src/Workflow/Type.php
-
-		-
 			message: '#^Unsafe usage of new static\(\)\.$#'
 			identifier: new.static
 			count: 1
 			path: concrete/src/Workflow/Type.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Workflow\\Workflow\:\:\$wfName\.$#'
-			identifier: property.notFound
-			count: 2
-			path: concrete/src/Workflow/Workflow.php
 
 		-
 			message: '#^PHPDoc tag @var above a method has no effect\.$#'
