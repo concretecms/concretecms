@@ -16,10 +16,10 @@ trait ObjectTrait
     abstract public function getObjectAttributeCategory();
 
     /**
-     * @param $ak
+     * @param \Concrete\Core\Attribute\AttributeKeyInterface|string $ak An attribute key instance (or its handle)
      * @param bool $createIfNotExists
      *
-     * @return AttributeValue
+     * @return \Concrete\Core\Attribute\AttributeValueInterface|null
      */
     abstract public function getAttributeValueObject($ak, $createIfNotExists = false);
 
@@ -32,8 +32,9 @@ trait ObjectTrait
     }
 
     /**
-     * @param $ak
-     * @return \Concrete\Core\Entity\Attribute\Value\Value
+     * @param \Concrete\Core\Attribute\AttributeKeyInterface|string $ak An attribute key instance (or its handle)
+     *
+     * @return \Concrete\Core\Attribute\AttributeValueInterface|null
      */
     public function getAttributeValue($ak)
     {
@@ -69,7 +70,8 @@ trait ObjectTrait
      * @param AttributeKeyInterface | string $ak
      * @param mixed $value
      * @param bool $doReindexImmediately
-     * @return \Concrete\Core\Entity\Attribute\Value\Value
+     *
+     * @return \Concrete\Core\Attribute\AttributeValueInterface
      */
     public function setAttribute($ak, $value, $doReindexImmediately = true)
     {

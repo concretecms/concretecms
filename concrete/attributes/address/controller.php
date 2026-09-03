@@ -91,6 +91,13 @@ class Controller extends AttributeTypeController implements
         return AddressValue::class;
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Attribute\Controller::getAttributeValueObject()
+     *
+     * @return \Concrete\Core\Entity\Attribute\Value\Value\AddressValue|null
+     */
     public function getAttributeValueObject()
     {
         return $this->attributeValue ? $this->entityManager->find(AddressValue::class, $this->attributeValue->getGenericValue()) : null;
