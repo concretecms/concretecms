@@ -105,7 +105,14 @@ class RegistrationService implements RegistrationServiceInterface
 
         $uTimezone = null;
         if (isset($data['uTimezone']) && $data['uTimezone'] != '') {
-            $uTimezone = $data['uTimezone'];
+            $candidateTimezone = $data['uTimezone'];
+            if (is_string($candidateTimezone)) {
+                $dh = $this->application->make('date');
+                $validTimezones = $dh->getTimezones();
+                if (array_key_exists($candidateTimezone, $validTimezones)) {
+                    $uTimezone = $candidateTimezone;
+                }
+            }
         }
 
         $entity = new UserEntity();

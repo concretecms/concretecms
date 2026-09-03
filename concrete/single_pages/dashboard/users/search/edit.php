@@ -146,7 +146,7 @@ $userEntity = $user->getEntityObject();
             ?>
             <dt><?= t('Timezone') ?></dt>
             <dd>
-                <div><?= $dh->getTimezoneDisplayName($uTimezone) ?></div>
+                <div><?= h($dh->getTimezoneDisplayName($uTimezone)) ?></div>
             </dd>
             <?php
         }
