@@ -63,7 +63,7 @@ class Pagination extends Pagerfanta
      * item list query string parameter for paging. If you need more custom functionality you should consider
      * using the Pagerfanta\View\ViewInterface objects directly.
      *
-     * @param array
+     * @param array $arguments
      *
      * @return string
      */

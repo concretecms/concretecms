@@ -26,7 +26,7 @@ class FileValue extends AbstractValue
     protected $fvID;
 
     /**
-     * @return
+     * @return \Concrete\Core\Entity\File\File|null
      */
     public function getVersion()
     {

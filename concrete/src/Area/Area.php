@@ -205,7 +205,7 @@ class Area extends ConcreteObject implements \Concrete\Core\Permission\ObjectInt
      * We actually use Collection::getArea() when we want to interact with a fully
      * qualified Area object when dealing with a Page/Collection object.
      *
-     * @param string
+     * @param string $arHandle
      */
     public function __construct($arHandle)
     {

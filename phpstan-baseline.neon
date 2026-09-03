@@ -351,12 +351,6 @@ parameters:
 			path: concrete/controllers/backend/page/url_slug.php
 
 		-
-			message: '#^PHPDoc tag @var has invalid value \(\)\: Unexpected token "\\n     ", expected type at offset 15 on line 2$#'
-			identifier: phpDoc.parseError
-			count: 1
-			path: concrete/controllers/backend/processes.php
-
-		-
 			message: '#^Variable \$contextFactory in PHPDoc tag @var does not exist\.$#'
 			identifier: varTag.variableNotFound
 			count: 1
@@ -521,18 +515,6 @@ parameters:
 		-
 			message: '#^Offset ''template'' does not exist on bool\|float\|int\|string\.$#'
 			identifier: offsetAccess.notFound
-			count: 1
-			path: concrete/controllers/dialog/board/custom_slot.php
-
-		-
-			message: '#^PHPDoc tag @param has invalid value \(ItemObjectGroup\[\]\)\: Unexpected token "\\n     \* ", expected variable at offset 64 on line 3$#'
-			identifier: phpDoc.parseError
-			count: 1
-			path: concrete/controllers/dialog/board/custom_slot.php
-
-		-
-			message: '#^PHPDoc tag @param has invalid value \(SlotTemplate\[\]\)\: Unexpected token "\\n     \* ", expected variable at offset 32 on line 2$#'
-			identifier: phpDoc.parseError
 			count: 1
 			path: concrete/controllers/dialog/board/custom_slot.php
 
@@ -2394,18 +2376,6 @@ parameters:
 			message: '#^Call to function is_object\(\) with Concrete\\Core\\Entity\\Board\\Designer\\CustomElement will always evaluate to true\.$#'
 			identifier: function.alreadyNarrowedType
 			count: 2
-			path: concrete/controllers/single_page/dashboard/boards/designer/customize_slot.php
-
-		-
-			message: '#^PHPDoc tag @param has invalid value \(ItemObjectGroup\[\]\)\: Unexpected token "\\n     \* ", expected variable at offset 64 on line 3$#'
-			identifier: phpDoc.parseError
-			count: 1
-			path: concrete/controllers/single_page/dashboard/boards/designer/customize_slot.php
-
-		-
-			message: '#^PHPDoc tag @param has invalid value \(SlotTemplate\[\]\)\: Unexpected token "\\n     \* ", expected variable at offset 32 on line 2$#'
-			identifier: phpDoc.parseError
-			count: 1
 			path: concrete/controllers/single_page/dashboard/boards/designer/customize_slot.php
 
 		-
@@ -5661,12 +5631,6 @@ parameters:
 			path: concrete/src/Application/Application.php
 
 		-
-			message: '#^PHPDoc tag @param has invalid value \(mixed\)\: Unexpected token "\\n     \*", expected variable at offset 88 on line 4$#'
-			identifier: phpDoc.parseError
-			count: 1
-			path: concrete/src/Application/Application.php
-
-		-
 			message: '#^PHPDoc tag @param references unknown parameter\: \$parameters$#'
 			identifier: parameter.notFound
 			count: 1
@@ -5993,12 +5957,6 @@ parameters:
 		-
 			message: '#^Negated boolean expression is always false\.$#'
 			identifier: booleanNot.alwaysFalse
-			count: 1
-			path: concrete/src/Area/Area.php
-
-		-
-			message: '#^PHPDoc tag @param has invalid value \(string\)\: Unexpected token "\\n     ", expected variable at offset 357 on line 7$#'
-			identifier: phpDoc.parseError
 			count: 1
 			path: concrete/src/Area/Area.php
 
@@ -9015,12 +8973,6 @@ parameters:
 			path: concrete/src/Console/Command/InstallThemeCommand.php
 
 		-
-			message: '#^PHPDoc tag @param has invalid value \(\\Concrete\\Core\\Package\\Offline\\PackageInfo the package info for which the options should be related to\)\: Unexpected token "the", expected variable at offset 190 on line 5$#'
-			identifier: phpDoc.parseError
-			count: 2
-			path: concrete/src/Console/Command/PackPackageCommand.php
-
-		-
 			message: '#^Parameter \#2 \$pieces of function implode expects array, string given\.$#'
 			identifier: argument.type
 			count: 1
@@ -10059,12 +10011,6 @@ parameters:
 			path: concrete/src/Entity/Attribute/Value/FileValue.php
 
 		-
-			message: '#^PHPDoc tag @return has invalid value \(\)\: Unexpected token "\\n     ", expected type at offset 18 on line 2$#'
-			identifier: phpDoc.parseError
-			count: 1
-			path: concrete/src/Entity/Attribute/Value/FileValue.php
-
-		-
 			message: '#^Static method Concrete\\Core\\File\\File\:\:getByID\(\) invoked with 2 parameters, 1 required\.$#'
 			identifier: arguments.count
 			count: 1
@@ -10109,18 +10055,6 @@ parameters:
 		-
 			message: '#^Method Concrete\\Core\\Entity\\Block\\BlockType\\BlockType\:\:add\(\) should return bool\|Concrete\\Core\\Block\\Block but return statement is missing\.$#'
 			identifier: return.missing
-			count: 1
-			path: concrete/src/Entity/Block/BlockType/BlockType.php
-
-		-
-			message: '#^PHPDoc tag @param has invalid value \(bool specify true if you only want to see the number of blocks in active pages\)\: Unexpected token "specify", expected variable at offset 214 on line 5$#'
-			identifier: phpDoc.parseError
-			count: 1
-			path: concrete/src/Entity/Block/BlockType/BlockType.php
-
-		-
-			message: '#^PHPDoc tag @param has invalid value \(string template ''view'' for the default\)\: Unexpected token "template", expected variable at offset 152 on line 4$#'
-			identifier: phpDoc.parseError
 			count: 1
 			path: concrete/src/Entity/Block/BlockType/BlockType.php
 
@@ -10986,8 +10920,8 @@ parameters:
 			path: concrete/src/Entity/Permission/IpAccessControlRange.php
 
 		-
-			message: '#^PHPDoc tag @param has invalid value \(int\)\: Unexpected token "\\n     ", expected variable at offset 21 on line 2$#'
-			identifier: phpDoc.parseError
+			message: '#^Call to function is_numeric\(\) with int will always evaluate to true\.$#'
+			identifier: function.alreadyNarrowedType
 			count: 1
 			path: concrete/src/Entity/Search/Query.php
 
@@ -12696,12 +12630,6 @@ parameters:
 			path: concrete/src/File/Type/Type.php
 
 		-
-			message: '#^PHPDoc tag @param has invalid value \(string\)\: Unexpected token "\\n     \*", expected variable at offset 83 on line 4$#'
-			identifier: phpDoc.parseError
-			count: 1
-			path: concrete/src/File/Type/Type.php
-
-		-
 			message: '#^Unreachable statement \- code above always terminates\.$#'
 			identifier: deadCode.unreachable
 			count: 7
@@ -13300,6 +13228,12 @@ parameters:
 			identifier: parameter.notFound
 			count: 1
 			path: concrete/src/Health/Report/Finding/Control/Formatter/FindingDetailFormatter.php
+
+		-
+			message: '#^Call to an undefined method Concrete\\Core\\Entity\\File\\File\:\:getFilename\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: concrete/src/Health/Report/Finding/Message/Formatter/Search/AttributeFormatter.php
 
 		-
 			message: '#^Call to an undefined method Concrete\\Core\\Health\\Report\\Finding\\Message\\MessageInterface\:\:getCategoryValue\(\)\.$#'
@@ -14551,12 +14485,6 @@ parameters:
 		-
 			message: '#^Comparison operation "\>" between int\<1, max\> and 0 is always true\.$#'
 			identifier: greater.alwaysTrue
-			count: 1
-			path: concrete/src/Localization/Service/Date.php
-
-		-
-			message: '#^PHPDoc tag @param has invalid value \(string Returns the date/time representation \(an empty string if \$value is empty\)\)\: Unexpected token "Returns", expected variable at offset 975 on line 17$#'
-			identifier: phpDoc.parseError
 			count: 1
 			path: concrete/src/Localization/Service/Date.php
 
@@ -19553,12 +19481,6 @@ parameters:
 			path: concrete/src/Search/Pagination/PagerPagination.php
 
 		-
-			message: '#^PHPDoc tag @param has invalid value \(array\)\: Unexpected token "\\n     \*", expected variable at offset 437 on line 7$#'
-			identifier: phpDoc.parseError
-			count: 1
-			path: concrete/src/Search/Pagination/Pagination.php
-
-		-
 			message: '#^Call to an undefined method Concrete\\Core\\Search\\ItemList\\ItemList\:\:getQueryObject\(\)\.$#'
 			identifier: method.notFound
 			count: 1
@@ -19569,24 +19491,6 @@ parameters:
 			identifier: identical.alwaysFalse
 			count: 1
 			path: concrete/src/Search/Query/Modifier/AbstractRequestModifier.php
-
-		-
-			message: '#^PHPDoc tag @param has invalid value \(FieldInterface\[\]\)\: Unexpected token "\\n     \* ", expected variable at offset 260 on line 7$#'
-			identifier: phpDoc.parseError
-			count: 1
-			path: concrete/src/Search/Query/QueryFactory.php
-
-		-
-			message: '#^PHPDoc tag @param references unknown parameter\: \$method$#'
-			identifier: parameter.notFound
-			count: 1
-			path: concrete/src/Search/Query/QueryFactory.php
-
-		-
-			message: '#^PHPDoc tag @param references unknown parameter\: \$request$#'
-			identifier: parameter.notFound
-			count: 1
-			path: concrete/src/Search/Query/QueryFactory.php
 
 		-
 			message: '#^Constructor of class Concrete\\Core\\Search\\Result\\Item has an unused parameter \$result\.$#'
@@ -20159,14 +20063,8 @@ parameters:
 			path: concrete/src/Summary/Data/Field/ImageDataFieldData.php
 
 		-
-			message: '#^PHPDoc tag @param has invalid value \(int\)\: Unexpected token "\\n     ", expected variable at offset 21 on line 2$#'
-			identifier: phpDoc.parseError
-			count: 1
-			path: concrete/src/Summary/Data/Field/ImageDataFieldData.php
-
-		-
-			message: '#^PHPDoc tag @param has invalid value \(string\|Url\)\: Unexpected token "\\n     ", expected variable at offset 28 on line 2$#'
-			identifier: phpDoc.parseError
+			message: '#^Property Concrete\\Core\\Summary\\Data\\Field\\LinkDataFieldData\:\:\$link \(int\) does not accept League\\Url\\Url\|string\.$#'
+			identifier: assign.propertyType
 			count: 1
 			path: concrete/src/Summary/Data/Field/LinkDataFieldData.php
 

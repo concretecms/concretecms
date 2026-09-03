@@ -362,7 +362,7 @@ class BlockType
      * Returns the number of unique instances of this block throughout the entire site
      * note - this count could include blocks in areas that are no longer rendered by the theme.
      *
-     * @param bool specify true if you only want to see the number of blocks in active pages
+     * @param bool $ignoreUnapprovedVersions specify true if you only want to see the number of blocks in active pages
      *
      * @return int
      */
@@ -417,7 +417,7 @@ EOT
     /**
      * Renders a particular view of a block type, using the public $controller variable as the block type's controller.
      *
-     * @param string template 'view' for the default
+     * @param string $view template 'view' for the default
      */
     public function render($view = 'view')
     {

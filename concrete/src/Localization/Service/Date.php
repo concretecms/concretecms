@@ -40,9 +40,7 @@ class Date
      *    <li>'app' for the app's timezone</li>
      *    <li>Other values: one of the PHP supported time zones (see http://us1.php.net/manual/en/timezones.php )</li>
      * </ul>
-     * @param string Returns the date/time representation (an empty string if $value is empty)
-     *
-     * @return string
+     * @return string Returns the date/time representation (an empty string if $value is empty)
      *
      * @throws \Punic\Exception\BadArgumentType
      */

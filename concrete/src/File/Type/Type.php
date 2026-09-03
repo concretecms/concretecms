@@ -195,7 +195,7 @@ class Type
     /**
      * Set the name (empty string if generic type).
      *
-     * @param string
+     * @param string $value
      *
      * @return static Returns the class instance itself for method chaining
      */

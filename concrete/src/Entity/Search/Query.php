@@ -83,7 +83,7 @@ class Query implements \JsonSerializable, DenormalizableInterface
     }
 
     /**
-     * @param int
+     * @param int $itemsPerPage
      */
     public function setItemsPerPage($itemsPerPage)
     {

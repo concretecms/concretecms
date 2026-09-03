@@ -34,9 +34,8 @@ class QueryFactory
      * filter the query.
      *
      * @param ProviderInterface $searchProvider
-     * @param Request $request
-     * @param FieldInterface[]
-     * @param string $method
+     * @param FieldInterface[] $fields
+     *
      * @return Query
      */
     public function createQuery(
