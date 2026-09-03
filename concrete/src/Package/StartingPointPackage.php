@@ -647,7 +647,10 @@ class StartingPointPackage extends Package
 
         $siteConfig = \Site::getDefault()->getConfigRepository();
         $siteConfig->save('name', $this->installerOptions->getSiteName());
-
+        if (isset($installConfiguration['pretty-urls'])) {
+            $config->save('concrete.seo.url_rewriting', $installConfiguration['pretty-urls'] ? true : false);
+        }
+        unset($installConfiguration['pretty-urls']);
         if (isset($installConfiguration['canonical-url']) && $installConfiguration['canonical-url']) {
             $siteConfig->save('seo.canonical_url', $installConfiguration['canonical-url']);
         }

@@ -7,26 +7,47 @@ use Concrete\Core\Localization\Localization;
 
 defined('C5_EXECUTE') or die('Access Denied.');
 
-/* @var Concrete\Controller\Install $controller */
-/* @var Concrete\Core\Form\Service\Form $form */
-/* @var Concrete\Core\Html\Service\Html $html */
-/* @var Concrete\Core\View\View $this */
-/* @var Concrete\Core\View\View $view */
-/* @var Concrete\Core\Url\Resolver\UrlResolverInterface $urlResolver */
-/* @var Concrete\Core\Url\Resolver\Manager\ResolverManagerInterface $urlResolver */
-
-/* @var int $backgroundFade */
-/* @var string $pageTitle */
-/* @var string $image */
-/* @var string $imagePath */
-/* @var string $concreteVersion */
-
-/* @var int $installStep */
+/**
+ * @var Concrete\Controller\Install $controller
+ * @var Concrete\Core\Form\Service\Form $form
+ * @var Concrete\Core\Html\Service\Html $html
+ * @var Concrete\Core\View\View $this
+ * @var Concrete\Core\View\View $view
+ * @var Concrete\Core\Url\Resolver\Manager\ResolverManagerInterface $urlResolver
+ * @var string $pageTitle
+ * @var string $concreteVersion
+ * @var string|null $locale (may be unset)
+ * @var int $installStep
+ *
+ * // When $installStep === $controller::STEP_CHOOSELOCALE
+ * @var array $locales
+ * @var array $onlineLocales
+ * 
+ * // When $installStep === $controller::STEP_CONFIGURATION
+ * @var array $passwordAttributes
+ * @var array $languages
+ * @var array $countries
+ * @var string $computedSiteLocaleLanguage
+ * @var string $computedSiteLocaleCountry
+ * @var bool $setInitialState
+ * @var string $canonicalUrl
+ * @var bool $canonicalUrlChecked
+ * @var string $canonicalUrlAlternative
+ * @var bool $canonicalUrlAlternativeChecked
+ * @var string $SERVER_TIMEZONE
+ * @var array $availableTimezones
+ * @var bool $prettyURLsSupported
+ * @var Concrete\Core\Error\ErrorList\ErrorList $warnings
+ * 
+ * // When $installStep === $controller::STEP_INSTALL
+ * @var string $installPackage
+ * @var Concrete\Core\Package\StartingPointInstallRoutine[] $installRoutines
+ * @var string $successMessage
+ */
 
 $locale = $locale ?? Localization::BASE_LOCALE;
 
 $install_config = Config::get('install_overrides');
-$uh = Core::make('helper/concrete/urls');
 if ($install_config) {
     $_POST = $install_config;
 }
@@ -66,23 +87,21 @@ if ($install_config) {
 
         <form method="post" id="ccm-install-language-form"
               action="<?= $urlResolver->resolve(['install', 'select_language']) ?>" class="w-100">
-            <div class="form-group">
-                <p class="lead"><?=t('Choose the language you want to run your website in.')?></p>
+            <p class="lead"><?=t('Choose the language you want to run your website in.')?></p>
 
-                <div class="input-group-lg input-group">
-                    <?php
-                    $selectOptions = $locales;
-                    if (!empty($onlineLocales)) {
-                        $selectOptions[t('Online Languages')] = $onlineLocales;
-                    }
-                    ?>
-                    <?= $form->select('wantedLocale', $selectOptions, Localization::BASE_LOCALE, [
-                        'class' => 'form-select'
-                    ]); ?>
-                    <button type="submit" class="btn btn-primary">
-                        <i class="fas fa-arrow-right"></i>
-                    </button>
-                </div>
+            <div class="input-group-lg input-group">
+                <?php
+                $selectOptions = $locales;
+                if (!empty($onlineLocales)) {
+                    $selectOptions[t('Online Languages')] = $onlineLocales;
+                }
+                ?>
+                <?= $form->select('wantedLocale', $selectOptions, Localization::BASE_LOCALE, [
+                    'class' => 'form-select'
+                ]); ?>
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-arrow-right"></i>
+                </button>
             </div>
         </form>
 
@@ -314,9 +333,16 @@ if ($install_config) {
                 $('#canonicalUrlChecked,#canonicalUrlAlternativeChecked').change(updateCanonicalURLState);
                 <?php
                 if ($setInitialState) {
-                ?>
-                $('#canonicalUrlChecked').prop('checked', <?=$canonicalUrlChecked ? 'true' : 'false'?>);
-                $('#canonicalUrlAlternativeChecked').prop('checked', <?=$canonicalUrlAlternativeChecked ? 'true' : 'false'?>);
+                    ?>
+                    <?php
+                    if ($prettyURLsSupported) {
+                        ?>
+                        $('#enablePrettyURLs').prop('checked', true);
+                        <?php
+                    }
+                    ?>
+                    $('#canonicalUrlChecked').prop('checked', <?=$canonicalUrlChecked ? 'true' : 'false'?>);
+                    $('#canonicalUrlAlternativeChecked').prop('checked', <?=$canonicalUrlAlternativeChecked ? 'true' : 'false'?>);
                 <?php
                 }
                 ?>
@@ -379,7 +405,7 @@ if ($install_config) {
                                 </div>
                             </div>
                             <div class="col-md-6">
-                                <div class="form-group">
+                                <div class="form-group mb-0">
                                     <div class="d-none">
                                         <input type="text" name="username" value="<?= h(USER_SUPER) ?>" autocomplete="username" readonly="readonly" />
                                     </div>
@@ -389,7 +415,7 @@ if ($install_config) {
                                 </div>
                             </div>
                             <div class="col-md-6">
-                                <div class="form-group">
+                                <div class="form-group mb-0">
                                     <label for="uPassword"
                                            class="control-label form-label"><?= t('Confirm Password') ?></label>
                                     <?= $form->password('uPasswordConfirm', $passwordAttributes) ?>
@@ -446,20 +472,68 @@ if ($install_config) {
                                 </div>
                             </div>
                             <div class="col-md-6">
-                                <div class="form-group">
+                                <div class="form-group mb-0">
                                     <label class="control-label form-label"
                                            for="DB_PASSWORD"><?= t('MySQL Password') ?></label>
                                     <?= $form->password('DB_PASSWORD', ['autocomplete' => 'off']) ?>
                                 </div>
                             </div>
                             <div class="col-md-6">
-                                <div class="form-group">
+                                <div class="form-group mb-0">
                                     <label class="control-label form-label"
                                            for="DB_DATABASE"><?= t('Database Name') ?></label>
                                     <?= $form->text('DB_DATABASE', ['required' => 'required']) ?>
                                 </div>
                             </div>
                         </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card card-default mb-4">
+                <div class="card-header">
+                    <?= t('URLs') ?>
+                </div>
+                <div class="card-body">
+                    <div class="form-group">
+                        <div class="control-label form-label form-check">
+                            <?= $form->checkbox('enablePrettyURLs', 1, false, $prettyURLsSupported ? [] : ['disabled' => 'disabled']) ?>
+                            <label class="form-check-label" for="enablePrettyURLs">
+                                <?= t(/* i18n: %s is index.php */ 'Remove %s from URLs', '<code>' . DISPATCHER_FILENAME . '</code>') ?>
+                            </label>
+                            <?php
+                            if (!$prettyURLsSupported) {
+                                ?>
+                                <div class="small text-muted">
+                                    <?= t('It seems seems your web server does not support pretty URLs.') ?>
+                                </div>
+                                <?php
+                            }
+                            ?>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="control-label form-label form-check">
+                            <?= $form->checkbox('canonicalUrlChecked', '1') ?>
+                            <label class="form-check-label" for="canonicalUrlChecked">
+                                <?= t('Set main canonical URL') ?>:
+                            </label>
+                        </div>
+                        <?= $form->url('canonicalUrl', h($canonicalUrl), [
+                            'pattern' => 'https?:.+',
+                            'placeholder' => t('%s or %s', 'http://...', 'https://...')
+                        ]) ?>
+                    </div>
+                    <div class="form-group mb-0">
+                        <div class="control-label form-label form-check">
+                            <?= $form->checkbox('canonicalUrlAlternativeChecked', '1') ?>
+                            <label class="form-check-label" for="canonicalUrlAlternativeChecked">
+                                <?= t('Set alternative canonical URL') ?>:
+                            </label>
+                        </div>
+                        <?= $form->url('canonicalUrlAlternative', h($canonicalUrlAlternative), [
+                            'pattern' => 'https?:.+',
+                            'placeholder' => t('%s or %s', 'http://...', 'https://...')
+                        ]) ?>
                     </div>
                 </div>
             </div>
@@ -487,49 +561,6 @@ if ($install_config) {
                     <div class="card-body container">
 
                         <div class="row">
-
-                            <div class="col-sm-6">
-                                <h4><?= t('URLs & Session') ?></h4>
-
-                                <div class="form-group">
-                                    <label class="control-label form-label">
-                                        <div class="form-check">
-                                            <?= $form->checkbox('canonicalUrlChecked', '1') ?>
-                                            <label class="form-check-label" for="canonicalUrlChecked">
-                                                <?= t('Set main canonical URL') ?>:
-                                            </label>
-                                        </div>
-                                    </label>
-                                    <?= $form->url('canonicalUrl', h($canonicalUrl), [
-                                        'pattern' => 'https?:.+',
-                                        'placeholder' => t('%s or %s', 'http://...', 'https://...')
-                                    ]) ?>
-                                </div>
-
-                                <div class="form-group">
-                                    <label class="control-label form-label">
-                                        <div class="form-check">
-                                            <?= $form->checkbox('canonicalUrlAlternativeChecked', '1') ?>
-                                            <label class="form-check-label" for="canonicalUrlAlternativeChecked">
-                                                <?= t('Set alternative canonical URL') ?>:
-                                            </label>
-                                        </div>
-                                    </label>
-                                    <?= $form->url('canonicalUrlAlternative', h($canonicalUrlAlternative), [
-                                        'pattern' => 'https?:.+',
-                                        'placeholder' => t('%s or %s', 'http://...', 'https://...')
-                                    ]) ?>
-                                </div>
-                                <div class="form-group">
-                                    <label class="control-label form-label"
-                                           for="sessionHandler"><?= t('Session Handler') ?></label>
-                                    <?= $form->select('sessionHandler', [
-                                        '' => t('Default Handler (Recommended)'),
-                                        'database' => t('Database')
-                                    ]) ?>
-                                </div>
-
-                            </div>
                             <div class="col-sm-6">
                                 <h4><?= t('Locale') ?></h4>
 
@@ -547,7 +578,7 @@ if ($install_config) {
                                         $computedSiteLocaleCountry) ?>
                                 </div>
 
-                                <div class="form-group">
+                                <div class="form-group mb-0">
                                     <label class="control-label form-label"
                                            for="SERVER_TIMEZONE"><?= t('System Time Zone') ?></label>
                                     <?= $form->select('SERVER_TIMEZONE', $availableTimezones,
@@ -571,6 +602,16 @@ if ($install_config) {
                                             });
                                     });
                                 </script>
+                            </div>
+                            <div class="col-sm-6">
+                                <h4><?= t('Session') ?></h4>
+                                <div class="form-group mb-0">
+                                    <label class="control-label form-label" for="sessionHandler"><?= t('Session Handler') ?></label>
+                                    <?= $form->select('sessionHandler', [
+                                        '' => t('Default Handler (Recommended)'),
+                                        'database' => t('Database')
+                                    ]) ?>
+                                </div>
                             </div>
                         </div>
                     </div>
