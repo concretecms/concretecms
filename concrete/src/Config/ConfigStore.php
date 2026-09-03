@@ -43,7 +43,7 @@ class ConfigStore
      * @param string $cfKey
      * @param int $pkgID optional
      *
-     * @return ConfigValue|void
+     * @return mixed
      */
     public function get($cfKey, $pkgID = null)
     {

@@ -3921,7 +3921,7 @@ parameters:
 			path: concrete/controllers/single_page/dashboard/users/search.php
 
 		-
-			message: '#^Parameter \#1 \$attributes of method Concrete\\Core\\User\\UserInfo\:\:saveUserAttributesForm\(\) expects array\<Concrete\\Core\\User\\UserAttributeKey\>, array\<int, Concrete\\Core\\Entity\\Attribute\\Key\\Key\> given\.$#'
+			message: '#^Parameter \#1 \$attributes of method Concrete\\Core\\User\\UserInfo\:\:saveUserAttributesForm\(\) expects array\<Concrete\\Core\\Entity\\Attribute\\Key\\UserKey\>, array\<int, Concrete\\Core\\Entity\\Attribute\\Key\\Key\> given\.$#'
 			identifier: argument.type
 			count: 1
 			path: concrete/controllers/single_page/dashboard/users/search.php
@@ -4011,12 +4011,6 @@ parameters:
 			path: concrete/controllers/single_page/login.php
 
 		-
-			message: '#^Parameter \#1 \$attributes of method Concrete\\Core\\User\\UserInfo\:\:saveUserAttributesForm\(\) expects array\<Concrete\\Core\\User\\UserAttributeKey\>, list\<Concrete\\Core\\Entity\\Attribute\\Key\\UserKey\> given\.$#'
-			identifier: argument.type
-			count: 1
-			path: concrete/controllers/single_page/login.php
-
-		-
 			message: '#^Parameter \#1 \$uID of static method Concrete\\Core\\Support\\Facade\\UserInfo\:\:getByID\(\) expects int, string given\.$#'
 			identifier: argument.type
 			count: 1
@@ -4071,26 +4065,26 @@ parameters:
 			path: concrete/controllers/upgrade.php
 
 		-
-			message: '#^Call to method getWorkflowProgressResponseURL\(\) on an unknown class Concrete\\Core\\Workflow\\Progress\\WorkflowProgressResponse\.$#'
-			identifier: class.notFound
+			message: '#^Instanceof between Concrete\\Core\\Workflow\\Progress\\Response and Concrete\\Core\\Workflow\\Progress\\Response will always evaluate to true\.$#'
+			identifier: instanceof.alwaysTrue
 			count: 1
 			path: concrete/controllers/workflow/categories/calendar_event.php
 
 		-
-			message: '#^Call to method getWorkflowProgressResponseURL\(\) on an unknown class Concrete\\Core\\Workflow\\Progress\\WorkflowProgressResponse\.$#'
-			identifier: class.notFound
+			message: '#^Instanceof between Concrete\\Core\\Workflow\\Progress\\Response and Concrete\\Core\\Workflow\\Progress\\Response will always evaluate to true\.$#'
+			identifier: instanceof.alwaysTrue
 			count: 1
 			path: concrete/controllers/workflow/categories/page.php
 
 		-
-			message: '#^Access to property \$message on an unknown class Concrete\\Core\\Workflow\\Progress\\WorkflowProgressResponse\.$#'
-			identifier: class.notFound
+			message: '#^Access to an undefined property Concrete\\Core\\Workflow\\Progress\\Response\:\:\$message\.$#'
+			identifier: property.notFound
 			count: 1
 			path: concrete/controllers/workflow/categories/user.php
 
 		-
-			message: '#^Call to method getWorkflowProgressResponseURL\(\) on an unknown class Concrete\\Core\\Workflow\\Progress\\WorkflowProgressResponse\.$#'
-			identifier: class.notFound
+			message: '#^Instanceof between Concrete\\Core\\Workflow\\Progress\\Response and Concrete\\Core\\Workflow\\Progress\\Response will always evaluate to true\.$#'
+			identifier: instanceof.alwaysTrue
 			count: 1
 			path: concrete/controllers/workflow/categories/user.php
 
@@ -6255,37 +6249,7 @@ parameters:
 			path: concrete/src/Area/Layout/Preset/UserPreset.php
 
 		-
-			message: '#^Call to method getAreaLayoutColumns\(\) on an unknown class Concrete\\Core\\Area\\Layout\\Preset\\CustomLayout\.$#'
-			identifier: class.notFound
-			count: 1
-			path: concrete/src/Area/Layout/Preset/UserPreset.php
-
-		-
-			message: '#^Call to method getAreaLayoutColumns\(\) on an unknown class Concrete\\Core\\Area\\Layout\\Preset\\ThemeGridLayout\.$#'
-			identifier: class.notFound
-			count: 1
-			path: concrete/src/Area/Layout/Preset/UserPreset.php
-
-		-
 			message: '#^Method Concrete\\Core\\Area\\Layout\\Preset\\UserPreset\:\:add\(\) should return Concrete\\Core\\Area\\Layout\\Preset\\Preset but returns static\(Concrete\\Core\\Area\\Layout\\Preset\\UserPreset\)\.$#'
-			identifier: return.type
-			count: 1
-			path: concrete/src/Area/Layout/Preset/UserPreset.php
-
-		-
-			message: '#^Method Concrete\\Core\\Area\\Layout\\Preset\\UserPreset\:\:getAreaLayoutObject\(\) has invalid return type Concrete\\Core\\Area\\Layout\\Preset\\CustomLayout\.$#'
-			identifier: class.notFound
-			count: 1
-			path: concrete/src/Area/Layout/Preset/UserPreset.php
-
-		-
-			message: '#^Method Concrete\\Core\\Area\\Layout\\Preset\\UserPreset\:\:getAreaLayoutObject\(\) has invalid return type Concrete\\Core\\Area\\Layout\\Preset\\ThemeGridLayout\.$#'
-			identifier: class.notFound
-			count: 1
-			path: concrete/src/Area/Layout/Preset/UserPreset.php
-
-		-
-			message: '#^Method Concrete\\Core\\Area\\Layout\\Preset\\UserPreset\:\:getAreaLayoutObject\(\) should return Concrete\\Core\\Area\\Layout\\Preset\\CustomLayout\|Concrete\\Core\\Area\\Layout\\Preset\\ThemeGridLayout\|null but returns Concrete\\Core\\Area\\Layout\\CustomLayout\|Concrete\\Core\\Area\\Layout\\PresetLayout\|Concrete\\Core\\Area\\Layout\\ThemeGridLayout\|null\.$#'
 			identifier: return.type
 			count: 1
 			path: concrete/src/Area/Layout/Preset/UserPreset.php
@@ -6299,12 +6263,6 @@ parameters:
 		-
 			message: '#^Method Concrete\\Core\\Area\\Layout\\Preset\\UserPreset\:\:getList\(\) should return array\<Concrete\\Core\\Area\\Layout\\Preset\\Preset\> but returns list\<static\(Concrete\\Core\\Area\\Layout\\Preset\\UserPreset\)\>\.$#'
 			identifier: return.type
-			count: 1
-			path: concrete/src/Area/Layout/Preset/UserPreset.php
-
-		-
-			message: '#^Parameter \#1 \$layout of class Concrete\\Core\\Area\\Layout\\Preset\\Formatter\\UserFormatter constructor expects Concrete\\Core\\Area\\Layout\\Layout, Concrete\\Core\\Area\\Layout\\Preset\\CustomLayout\|Concrete\\Core\\Area\\Layout\\Preset\\ThemeGridLayout\|null given\.$#'
-			identifier: argument.type
 			count: 1
 			path: concrete/src/Area/Layout/Preset/UserPreset.php
 
@@ -6915,26 +6873,8 @@ parameters:
 			path: concrete/src/Attribute/Key/Key.php
 
 		-
-			message: '#^Call to method getSchemaManager\(\) on an unknown class Concrete\\Core\\Database\\Connection\.$#'
-			identifier: class.notFound
-			count: 1
-			path: concrete/src/Attribute/Key/Key.php
-
-		-
-			message: '#^Call to method insert\(\) on an unknown class Concrete\\Core\\Database\\Connection\.$#'
-			identifier: class.notFound
-			count: 1
-			path: concrete/src/Attribute/Key/Key.php
-
-		-
 			message: '#^Instanceof between Concrete\\Core\\Entity\\Attribute\\Value\\Value\\AbstractValue and Concrete\\Core\\Attribute\\Value\\EmptyRequestAttributeValue will always evaluate to false\.$#'
 			identifier: instanceof.alwaysFalse
-			count: 1
-			path: concrete/src/Attribute/Key/Key.php
-
-		-
-			message: '#^PHPDoc tag @var for variable \$db contains unknown class Concrete\\Core\\Database\\Connection\.$#'
-			identifier: class.notFound
 			count: 1
 			path: concrete/src/Attribute/Key/Key.php
 
@@ -7941,24 +7881,6 @@ parameters:
 			path: concrete/src/Board/Command/BoardSlotCommandHandler.php
 
 		-
-			message: '#^Method Concrete\\Core\\Board\\Command\\CreateBoardCommand\:\:getTemplate\(\) has invalid return type Concrete\\Core\\Entity\\Board\\Template\\null\.$#'
-			identifier: class.notFound
-			count: 1
-			path: concrete/src/Board/Command/CreateBoardCommand.php
-
-		-
-			message: '#^PHPDoc tag @return with type Concrete\\Core\\Entity\\Board\\Template\\null is not subtype of native type Concrete\\Core\\Entity\\Board\\Template\|null\.$#'
-			identifier: return.phpDocType
-			count: 1
-			path: concrete/src/Board/Command/CreateBoardCommand.php
-
-		-
-			message: '#^Property Concrete\\Core\\Board\\Command\\DeleteBoardInstanceCommandHandler\:\:\$now has unknown class Concrete\\Core\\Board\\Command\\DateTime as its type\.$#'
-			identifier: class.notFound
-			count: 1
-			path: concrete/src/Board/Command/DeleteBoardInstanceCommandHandler.php
-
-		-
 			message: '#^Access to an undefined property Concrete\\Core\\Block\\BlockController\:\:\$contentObjectCollection\.$#'
 			identifier: property.notFound
 			count: 1
@@ -7993,18 +7915,6 @@ parameters:
 			identifier: constructor.unusedParameter
 			count: 1
 			path: concrete/src/Board/Command/SetBoardCustomWeightingCommandValidator.php
-
-		-
-			message: '#^Method Concrete\\Core\\Board\\Command\\UpdateBoardCommand\:\:getTemplate\(\) has invalid return type Concrete\\Core\\Entity\\Board\\Template\\null\.$#'
-			identifier: class.notFound
-			count: 1
-			path: concrete/src/Board/Command/UpdateBoardCommand.php
-
-		-
-			message: '#^PHPDoc tag @return with type Concrete\\Core\\Entity\\Board\\Template\\null is not subtype of native type Concrete\\Core\\Entity\\Board\\Template\|null\.$#'
-			identifier: return.phpDocType
-			count: 1
-			path: concrete/src/Board/Command/UpdateBoardCommand.php
 
 		-
 			message: '#^Call to an undefined method Doctrine\\ORM\\EntityRepository\<Concrete\\Core\\Entity\\Calendar\\Calendar\>\:\:findOneByName\(\)\.$#'
@@ -8089,18 +7999,6 @@ parameters:
 			identifier: isset.property
 			count: 1
 			path: concrete/src/Board/Instance/Slot/Content/ContentRenderer.php
-
-		-
-			message: '#^Method Concrete\\Core\\Board\\Instance\\Slot\\Content\\ItemObjectGroup\:\:getItem\(\) has invalid return type Concrete\\Core\\Board\\Instance\\Slot\\Content\\Item\.$#'
-			identifier: class.notFound
-			count: 1
-			path: concrete/src/Board/Instance/Slot/Content/ItemObjectGroup.php
-
-		-
-			message: '#^PHPDoc tag @return with type Concrete\\Core\\Board\\Instance\\Slot\\Content\\Item is not subtype of native type Concrete\\Core\\Board\\Item\\ItemProviderInterface\.$#'
-			identifier: return.phpDocType
-			count: 1
-			path: concrete/src/Board/Instance/Slot/Content/ItemObjectGroup.php
 
 		-
 			message: '#^PHPDoc tag @return with type mixed is not subtype of native type void\.$#'
@@ -8739,12 +8637,6 @@ parameters:
 			path: concrete/src/Config/ConfigStore.php
 
 		-
-			message: '#^Method Concrete\\Core\\Config\\ConfigStore\:\:get\(\) has invalid return type Concrete\\Core\\Config\\ConfigValue\.$#'
-			identifier: class.notFound
-			count: 1
-			path: concrete/src/Config/ConfigStore.php
-
-		-
 			message: '#^Negated boolean expression is always false\.$#'
 			identifier: booleanNot.alwaysFalse
 			count: 2
@@ -9055,12 +8947,6 @@ parameters:
 			identifier: argument.type
 			count: 1
 			path: concrete/src/Console/Command/UninstallPackageCommand.php
-
-		-
-			message: '#^Call to method getVersion\(\) on an unknown class Doctrine\\DBAL\\Migrations\\Version\.$#'
-			identifier: class.notFound
-			count: 1
-			path: concrete/src/Console/Command/UpdateCommand.php
 
 		-
 			message: '#^Call to an undefined method Concrete\\Core\\Entity\\Package\:\:testForUpgrade\(\)\.$#'
@@ -9735,18 +9621,6 @@ parameters:
 			path: concrete/src/Database/EntityManager/Provider/YamlProvider.php
 
 		-
-			message: '#^PHPDoc tag @param for parameter \$pkg with type Concrete\\Core\\Database\\EntityManager\\Provider\\Package is not subtype of native type Concrete\\Core\\Database\\EntityManager\\Provider\\ProviderInterface\.$#'
-			identifier: parameter.phpDocType
-			count: 1
-			path: concrete/src/Database/EntityManager/Provider/YamlProvider.php
-
-		-
-			message: '#^Parameter \$pkg of method Concrete\\Core\\Database\\EntityManager\\Provider\\YamlProvider\:\:__construct\(\) has invalid type Concrete\\Core\\Database\\EntityManager\\Provider\\Package\.$#'
-			identifier: class.notFound
-			count: 1
-			path: concrete/src/Database/EntityManager/Provider/YamlProvider.php
-
-		-
 			message: '#^Call to function is_object\(\) with Doctrine\\ORM\\Mapping\\Driver\\AnnotationDriver\|Doctrine\\ORM\\Mapping\\Driver\\XmlDriver\|Doctrine\\ORM\\Mapping\\Driver\\YamlDriver will always evaluate to true\.$#'
 			identifier: function.alreadyNarrowedType
 			count: 1
@@ -10185,37 +10059,13 @@ parameters:
 			path: concrete/src/Entity/Board/Template.php
 
 		-
-			message: '#^Method Concrete\\Core\\Entity\\Calendar\\CalendarEvent\:\:getAttributeValue\(\) has invalid return type Concrete\\Core\\Entity\\Attribute\\Value\\Value\.$#'
-			identifier: class.notFound
-			count: 1
-			path: concrete/src/Entity/Calendar/CalendarEvent.php
-
-		-
-			message: '#^Method Concrete\\Core\\Entity\\Calendar\\CalendarEvent\:\:getAttributeValue\(\) should return Concrete\\Core\\Entity\\Attribute\\Value\\Value but return statement is missing\.$#'
+			message: '#^Method Concrete\\Core\\Entity\\Calendar\\CalendarEvent\:\:getAttributeValue\(\) should return Concrete\\Core\\Entity\\Attribute\\Value\\AbstractValue but return statement is missing\.$#'
 			identifier: return.missing
 			count: 1
 			path: concrete/src/Entity/Calendar/CalendarEvent.php
 
 		-
-			message: '#^Method Concrete\\Core\\Entity\\Calendar\\CalendarEvent\:\:getAttributeValue\(\) should return Concrete\\Core\\Entity\\Attribute\\Value\\Value but returns Concrete\\Core\\Entity\\Attribute\\Value\\EventValue\.$#'
-			identifier: return.type
-			count: 1
-			path: concrete/src/Entity/Calendar/CalendarEvent.php
-
-		-
 			message: '#^Method Concrete\\Core\\Entity\\Calendar\\CalendarEvent\:\:getAttributeValueObject\(\) should return Concrete\\Core\\Entity\\Attribute\\Value\\EventValue\|null but returns Concrete\\Core\\Attribute\\AttributeValueInterface\|null\.$#'
-			identifier: return.type
-			count: 1
-			path: concrete/src/Entity/Calendar/CalendarEvent.php
-
-		-
-			message: '#^Method Concrete\\Core\\Entity\\Calendar\\CalendarEvent\:\:setAttribute\(\) has invalid return type Concrete\\Core\\Entity\\Attribute\\Value\\Value\.$#'
-			identifier: class.notFound
-			count: 1
-			path: concrete/src/Entity/Calendar/CalendarEvent.php
-
-		-
-			message: '#^Method Concrete\\Core\\Entity\\Calendar\\CalendarEvent\:\:setAttribute\(\) should return Concrete\\Core\\Entity\\Attribute\\Value\\Value but returns Concrete\\Core\\Entity\\Attribute\\Value\\EventValue\|null\.$#'
 			identifier: return.type
 			count: 1
 			path: concrete/src/Entity/Calendar/CalendarEvent.php
@@ -10245,20 +10095,8 @@ parameters:
 			path: concrete/src/Entity/Calendar/CalendarEventVersion.php
 
 		-
-			message: '#^Method Concrete\\Core\\Entity\\Calendar\\CalendarEventVersion\:\:getAttributeValue\(\) has invalid return type Concrete\\Core\\Entity\\Attribute\\Value\\Value\.$#'
-			identifier: class.notFound
-			count: 1
-			path: concrete/src/Entity/Calendar/CalendarEventVersion.php
-
-		-
-			message: '#^Method Concrete\\Core\\Entity\\Calendar\\CalendarEventVersion\:\:getAttributeValue\(\) should return Concrete\\Core\\Entity\\Attribute\\Value\\Value but return statement is missing\.$#'
+			message: '#^Method Concrete\\Core\\Entity\\Calendar\\CalendarEventVersion\:\:getAttributeValue\(\) should return Concrete\\Core\\Entity\\Attribute\\Value\\AbstractValue but return statement is missing\.$#'
 			identifier: return.missing
-			count: 1
-			path: concrete/src/Entity/Calendar/CalendarEventVersion.php
-
-		-
-			message: '#^Method Concrete\\Core\\Entity\\Calendar\\CalendarEventVersion\:\:getAttributeValue\(\) should return Concrete\\Core\\Entity\\Attribute\\Value\\Value but returns Concrete\\Core\\Entity\\Attribute\\Value\\EventValue\.$#'
-			identifier: return.type
 			count: 1
 			path: concrete/src/Entity/Calendar/CalendarEventVersion.php
 
@@ -10270,18 +10108,6 @@ parameters:
 
 		-
 			message: '#^Method Concrete\\Core\\Entity\\Calendar\\CalendarEventVersion\:\:getPageObject\(\) should return Concrete\\Core\\Page\\Page but returns false\.$#'
-			identifier: return.type
-			count: 1
-			path: concrete/src/Entity/Calendar/CalendarEventVersion.php
-
-		-
-			message: '#^Method Concrete\\Core\\Entity\\Calendar\\CalendarEventVersion\:\:setAttribute\(\) has invalid return type Concrete\\Core\\Entity\\Attribute\\Value\\Value\.$#'
-			identifier: class.notFound
-			count: 1
-			path: concrete/src/Entity/Calendar/CalendarEventVersion.php
-
-		-
-			message: '#^Method Concrete\\Core\\Entity\\Calendar\\CalendarEventVersion\:\:setAttribute\(\) should return Concrete\\Core\\Entity\\Attribute\\Value\\Value but returns Concrete\\Core\\Entity\\Attribute\\Value\\EventValue\|null\.$#'
 			identifier: return.type
 			count: 1
 			path: concrete/src/Entity/Calendar/CalendarEventVersion.php
@@ -10315,18 +10141,6 @@ parameters:
 			identifier: return.phpDocType
 			count: 2
 			path: concrete/src/Entity/Command/Batch.php
-
-		-
-			message: '#^Call to method denormalize\(\) on an unknown class Concrete\\Core\\Entity\\Command\\Serializer\.$#'
-			identifier: class.notFound
-			count: 1
-			path: concrete/src/Entity/Command/ScheduledTask.php
-
-		-
-			message: '#^PHPDoc tag @var for variable \$serializer contains unknown class Concrete\\Core\\Entity\\Command\\Serializer\.$#'
-			identifier: class.notFound
-			count: 1
-			path: concrete/src/Entity/Command/ScheduledTask.php
 
 		-
 			message: '#^Access to an undefined property Concrete\\Core\\Entity\\Design\\DesignTag\:\:\$designTagID\.$#'
@@ -10389,19 +10203,13 @@ parameters:
 			path: concrete/src/Entity/Express/Entry.php
 
 		-
-			message: '#^Method Concrete\\Core\\Entity\\Express\\Entry\:\:getAttributeValue\(\) has invalid return type Concrete\\Core\\Entity\\Attribute\\Value\\Value\.$#'
-			identifier: class.notFound
-			count: 1
-			path: concrete/src/Entity/Express/Entry.php
-
-		-
-			message: '#^Method Concrete\\Core\\Entity\\Express\\Entry\:\:getAttributeValue\(\) should return Concrete\\Core\\Entity\\Attribute\\Value\\Value but return statement is missing\.$#'
+			message: '#^Method Concrete\\Core\\Entity\\Express\\Entry\:\:getAttributeValue\(\) should return Concrete\\Core\\Entity\\Attribute\\Value\\AbstractValue but return statement is missing\.$#'
 			identifier: return.missing
 			count: 1
 			path: concrete/src/Entity/Express/Entry.php
 
 		-
-			message: '#^Method Concrete\\Core\\Entity\\Express\\Entry\:\:getAttributeValue\(\) should return Concrete\\Core\\Entity\\Attribute\\Value\\Value but returns Concrete\\Core\\Attribute\\AttributeValueInterface\.$#'
+			message: '#^Method Concrete\\Core\\Entity\\Express\\Entry\:\:getAttributeValue\(\) should return Concrete\\Core\\Entity\\Attribute\\Value\\AbstractValue but returns Concrete\\Core\\Attribute\\AttributeValueInterface\.$#'
 			identifier: return.type
 			count: 1
 			path: concrete/src/Entity/Express/Entry.php
@@ -10425,13 +10233,7 @@ parameters:
 			path: concrete/src/Entity/Express/Entry.php
 
 		-
-			message: '#^Method Concrete\\Core\\Entity\\Express\\Entry\:\:setAttribute\(\) has invalid return type Concrete\\Core\\Entity\\Attribute\\Value\\Value\.$#'
-			identifier: class.notFound
-			count: 1
-			path: concrete/src/Entity/Express/Entry.php
-
-		-
-			message: '#^Method Concrete\\Core\\Entity\\Express\\Entry\:\:setAttribute\(\) should return Concrete\\Core\\Entity\\Attribute\\Value\\Value but returns Concrete\\Core\\Attribute\\AttributeValueInterface\|null\.$#'
+			message: '#^Method Concrete\\Core\\Entity\\Express\\Entry\:\:setAttribute\(\) should return Concrete\\Core\\Entity\\Attribute\\Value\\AbstractValue but returns Concrete\\Core\\Attribute\\AttributeValueInterface\|null\.$#'
 			identifier: return.type
 			count: 1
 			path: concrete/src/Entity/Express/Entry.php
@@ -10503,12 +10305,6 @@ parameters:
 			path: concrete/src/Entity/File/File.php
 
 		-
-			message: '#^Method Concrete\\Core\\Entity\\File\\File\:\:getAttributeValue\(\) should return Concrete\\Core\\Attribute\\AttributeValueInterface\|null but returns Concrete\\Core\\Entity\\Attribute\\Value\\Value\.$#'
-			identifier: return.type
-			count: 1
-			path: concrete/src/Entity/File/File.php
-
-		-
 			message: '#^Method Concrete\\Core\\Entity\\File\\File\:\:getAttributeValueObject\(\) should return Concrete\\Core\\Attribute\\AttributeValueInterface\|null but return statement is missing\.$#'
 			identifier: return.missing
 			count: 1
@@ -10535,12 +10331,6 @@ parameters:
 		-
 			message: '#^Method Concrete\\Core\\Entity\\File\\File\:\:setAttribute\(\) should return Concrete\\Core\\Attribute\\AttributeValueInterface but return statement is missing\.$#'
 			identifier: return.missing
-			count: 1
-			path: concrete/src/Entity/File/File.php
-
-		-
-			message: '#^Method Concrete\\Core\\Entity\\File\\File\:\:setAttribute\(\) should return Concrete\\Core\\Attribute\\AttributeValueInterface but returns Concrete\\Core\\Entity\\Attribute\\Value\\Value\.$#'
-			identifier: return.type
 			count: 1
 			path: concrete/src/Entity/File/File.php
 
@@ -10635,20 +10425,8 @@ parameters:
 			path: concrete/src/Entity/File/Version.php
 
 		-
-			message: '#^Method Concrete\\Core\\Entity\\File\\Version\:\:getAttributeValue\(\) has invalid return type Concrete\\Core\\Entity\\Attribute\\Value\\Value\.$#'
-			identifier: class.notFound
-			count: 1
-			path: concrete/src/Entity/File/Version.php
-
-		-
-			message: '#^Method Concrete\\Core\\Entity\\File\\Version\:\:getAttributeValue\(\) should return Concrete\\Core\\Entity\\Attribute\\Value\\Value but return statement is missing\.$#'
+			message: '#^Method Concrete\\Core\\Entity\\File\\Version\:\:getAttributeValue\(\) should return Concrete\\Core\\Entity\\Attribute\\Value\\AbstractValue but return statement is missing\.$#'
 			identifier: return.missing
-			count: 1
-			path: concrete/src/Entity/File/Version.php
-
-		-
-			message: '#^Method Concrete\\Core\\Entity\\File\\Version\:\:getAttributeValue\(\) should return Concrete\\Core\\Entity\\Attribute\\Value\\Value but returns Concrete\\Core\\Entity\\Attribute\\Value\\FileValue\.$#'
-			identifier: return.type
 			count: 1
 			path: concrete/src/Entity/File/Version.php
 
@@ -10661,18 +10439,6 @@ parameters:
 		-
 			message: '#^Method Concrete\\Core\\Entity\\File\\Version\:\:refreshAttributes\(\) should return int\|null but return statement is missing\.$#'
 			identifier: return.missing
-			count: 1
-			path: concrete/src/Entity/File/Version.php
-
-		-
-			message: '#^Method Concrete\\Core\\Entity\\File\\Version\:\:setAttribute\(\) has invalid return type Concrete\\Core\\Entity\\Attribute\\Value\\Value\.$#'
-			identifier: class.notFound
-			count: 1
-			path: concrete/src/Entity/File/Version.php
-
-		-
-			message: '#^Method Concrete\\Core\\Entity\\File\\Version\:\:setAttribute\(\) should return Concrete\\Core\\Entity\\Attribute\\Value\\Value but returns Concrete\\Core\\Entity\\Attribute\\Value\\FileValue\|null\.$#'
-			identifier: return.type
 			count: 1
 			path: concrete/src/Entity/File/Version.php
 
@@ -10696,12 +10462,6 @@ parameters:
 
 		-
 			message: '#^Parameter \#1 \$key of method Concrete\\Core\\Attribute\\Category\\FileCategory\:\:getAttributeValue\(\) expects Concrete\\Core\\Entity\\Attribute\\Key\\FileKey, Concrete\\Core\\Attribute\\AttributeKeyInterface given\.$#'
-			identifier: argument.type
-			count: 1
-			path: concrete/src/Entity/File/Version.php
-
-		-
-			message: '#^Parameter \#2 \$fileVersion of class Concrete\\Core\\File\\Exception\\InvalidDimensionException constructor expects FileVersion, \$this\(Concrete\\Core\\Entity\\File\\Version\) given\.$#'
 			identifier: argument.type
 			count: 1
 			path: concrete/src/Entity/File/Version.php
@@ -10941,20 +10701,8 @@ parameters:
 			path: concrete/src/Entity/Site/Site.php
 
 		-
-			message: '#^Method Concrete\\Core\\Entity\\Site\\Site\:\:getAttributeValue\(\) has invalid return type Concrete\\Core\\Entity\\Attribute\\Value\\Value\.$#'
-			identifier: class.notFound
-			count: 1
-			path: concrete/src/Entity/Site/Site.php
-
-		-
-			message: '#^Method Concrete\\Core\\Entity\\Site\\Site\:\:getAttributeValue\(\) should return Concrete\\Core\\Entity\\Attribute\\Value\\Value but return statement is missing\.$#'
+			message: '#^Method Concrete\\Core\\Entity\\Site\\Site\:\:getAttributeValue\(\) should return Concrete\\Core\\Entity\\Attribute\\Value\\AbstractValue but return statement is missing\.$#'
 			identifier: return.missing
-			count: 1
-			path: concrete/src/Entity/Site/Site.php
-
-		-
-			message: '#^Method Concrete\\Core\\Entity\\Site\\Site\:\:getAttributeValue\(\) should return Concrete\\Core\\Entity\\Attribute\\Value\\Value but returns Concrete\\Core\\Entity\\Attribute\\Value\\SiteValue\.$#'
-			identifier: return.type
 			count: 1
 			path: concrete/src/Entity/Site/Site.php
 
@@ -10966,18 +10714,6 @@ parameters:
 
 		-
 			message: '#^Method Concrete\\Core\\Entity\\Site\\Site\:\:getSiteTreeObjects\(\) should return array\<Concrete\\Core\\Entity\\Site\\SiteTree\> but returns list\<Concrete\\Core\\Entity\\Site\\Tree\>\.$#'
-			identifier: return.type
-			count: 1
-			path: concrete/src/Entity/Site/Site.php
-
-		-
-			message: '#^Method Concrete\\Core\\Entity\\Site\\Site\:\:setAttribute\(\) has invalid return type Concrete\\Core\\Entity\\Attribute\\Value\\Value\.$#'
-			identifier: class.notFound
-			count: 1
-			path: concrete/src/Entity/Site/Site.php
-
-		-
-			message: '#^Method Concrete\\Core\\Entity\\Site\\Site\:\:setAttribute\(\) should return Concrete\\Core\\Entity\\Attribute\\Value\\Value but returns Concrete\\Core\\Entity\\Attribute\\Value\\SiteValue\|null\.$#'
 			identifier: return.type
 			count: 1
 			path: concrete/src/Entity/Site/Site.php
@@ -11007,19 +10743,13 @@ parameters:
 			path: concrete/src/Entity/Site/Skeleton.php
 
 		-
-			message: '#^Method Concrete\\Core\\Entity\\Site\\Skeleton\:\:getAttributeValue\(\) has invalid return type Concrete\\Core\\Entity\\Attribute\\Value\\Value\.$#'
-			identifier: class.notFound
-			count: 1
-			path: concrete/src/Entity/Site/Skeleton.php
-
-		-
-			message: '#^Method Concrete\\Core\\Entity\\Site\\Skeleton\:\:getAttributeValue\(\) should return Concrete\\Core\\Entity\\Attribute\\Value\\Value but return statement is missing\.$#'
+			message: '#^Method Concrete\\Core\\Entity\\Site\\Skeleton\:\:getAttributeValue\(\) should return Concrete\\Core\\Entity\\Attribute\\Value\\AbstractValue but return statement is missing\.$#'
 			identifier: return.missing
 			count: 1
 			path: concrete/src/Entity/Site/Skeleton.php
 
 		-
-			message: '#^Method Concrete\\Core\\Entity\\Site\\Skeleton\:\:getAttributeValue\(\) should return Concrete\\Core\\Entity\\Attribute\\Value\\Value but returns Concrete\\Core\\Attribute\\AttributeValueInterface\.$#'
+			message: '#^Method Concrete\\Core\\Entity\\Site\\Skeleton\:\:getAttributeValue\(\) should return Concrete\\Core\\Entity\\Attribute\\Value\\AbstractValue but returns Concrete\\Core\\Attribute\\AttributeValueInterface\.$#'
 			identifier: return.type
 			count: 1
 			path: concrete/src/Entity/Site/Skeleton.php
@@ -11031,13 +10761,7 @@ parameters:
 			path: concrete/src/Entity/Site/Skeleton.php
 
 		-
-			message: '#^Method Concrete\\Core\\Entity\\Site\\Skeleton\:\:setAttribute\(\) has invalid return type Concrete\\Core\\Entity\\Attribute\\Value\\Value\.$#'
-			identifier: class.notFound
-			count: 1
-			path: concrete/src/Entity/Site/Skeleton.php
-
-		-
-			message: '#^Method Concrete\\Core\\Entity\\Site\\Skeleton\:\:setAttribute\(\) should return Concrete\\Core\\Entity\\Attribute\\Value\\Value but returns Concrete\\Core\\Attribute\\AttributeValueInterface\|null\.$#'
+			message: '#^Method Concrete\\Core\\Entity\\Site\\Skeleton\:\:setAttribute\(\) should return Concrete\\Core\\Entity\\Attribute\\Value\\AbstractValue but returns Concrete\\Core\\Attribute\\AttributeValueInterface\|null\.$#'
 			identifier: return.type
 			count: 1
 			path: concrete/src/Entity/Site/Skeleton.php
@@ -11487,30 +11211,6 @@ parameters:
 			path: concrete/src/Express/Form/Control/Type/AssociationType.php
 
 		-
-			message: '#^Method Concrete\\Core\\Express\\Form\\Control\\Type\\AssociationType\:\:getImporter\(\) has invalid return type Concrete\\Core\\Import\\Item\\ItemInterface\.$#'
-			identifier: class.notFound
-			count: 1
-			path: concrete/src/Express/Form/Control/Type/AssociationType.php
-
-		-
-			message: '#^Method Concrete\\Core\\Express\\Form\\Control\\Type\\AttributeKeyType\:\:getImporter\(\) has invalid return type Concrete\\Core\\Import\\Item\\ItemInterface\.$#'
-			identifier: class.notFound
-			count: 1
-			path: concrete/src/Express/Form/Control/Type/AttributeKeyType.php
-
-		-
-			message: '#^Method Concrete\\Core\\Express\\Form\\Control\\Type\\EntityPropertyType\:\:getImporter\(\) has invalid return type Concrete\\Core\\Import\\Item\\ItemInterface\.$#'
-			identifier: class.notFound
-			count: 1
-			path: concrete/src/Express/Form/Control/Type/EntityPropertyType.php
-
-		-
-			message: '#^Method Concrete\\Core\\Express\\Form\\Control\\Type\\EntityPropertyType\:\:getImporter\(\) should return Concrete\\Core\\Import\\Item\\ItemInterface but returns Concrete\\Core\\Import\\Item\\Express\\Control\\EntityPropertyControl\.$#'
-			identifier: return.type
-			count: 1
-			path: concrete/src/Express/Form/Control/Type/EntityPropertyType.php
-
-		-
 			message: '#^Call to an undefined method Symfony\\Component\\HttpFoundation\\Request\:\:request\(\)\.$#'
 			identifier: method.notFound
 			count: 2
@@ -11821,18 +11521,6 @@ parameters:
 			identifier: assign.propertyType
 			count: 1
 			path: concrete/src/File/Component/Chooser/Option/FolderBookmarkOption.php
-
-		-
-			message: '#^Method Concrete\\Core\\File\\Exception\\FileVersionException\:\:getFileVersionObject\(\) has invalid return type FileVersion\.$#'
-			identifier: class.notFound
-			count: 1
-			path: concrete/src/File/Exception/FileVersionException.php
-
-		-
-			message: '#^Parameter \$fileVersion of method Concrete\\Core\\File\\Exception\\FileVersionException\:\:__construct\(\) has invalid type FileVersion\.$#'
-			identifier: class.notFound
-			count: 1
-			path: concrete/src/File/Exception/FileVersionException.php
 
 		-
 			message: '#^PHPDoc tag @param references unknown parameter\: \$file$#'
@@ -12495,20 +12183,20 @@ parameters:
 			path: concrete/src/File/StorageLocation/Configuration/DefaultConfiguration.php
 
 		-
-			message: '#^Method Concrete\\Core\\File\\StorageLocation\\Configuration\\DefaultConfiguration\:\:validateRequest\(\) has invalid return type Concrete\\Core\\File\\StorageLocation\\Configuration\\Error\.$#'
-			identifier: class.notFound
-			count: 1
-			path: concrete/src/File/StorageLocation/Configuration/DefaultConfiguration.php
-
-		-
-			message: '#^Method Concrete\\Core\\File\\StorageLocation\\Configuration\\DefaultConfiguration\:\:validateRequest\(\) should return Concrete\\Core\\File\\StorageLocation\\Configuration\\Error but returns false\.$#'
+			message: '#^Method Concrete\\Core\\File\\StorageLocation\\Configuration\\DefaultConfiguration\:\:validateRequest\(\) should return Concrete\\Core\\Error\\ErrorList\\ErrorList but returns false\.$#'
 			identifier: return.type
 			count: 1
 			path: concrete/src/File/StorageLocation/Configuration/DefaultConfiguration.php
 
 		-
-			message: '#^Method Concrete\\Core\\File\\StorageLocation\\Configuration\\LocalConfiguration\:\:validateRequest\(\) has invalid return type Concrete\\Core\\File\\StorageLocation\\Configuration\\Error\.$#'
-			identifier: class.notFound
+			message: '#^Return type \(Concrete\\Core\\Error\\ErrorList\\ErrorList\) of method Concrete\\Core\\File\\StorageLocation\\Configuration\\DefaultConfiguration\:\:validateRequest\(\) should be compatible with return type \(Concrete\\Core\\Error\\ErrorList\\Error\\Error\) of method Concrete\\Core\\File\\StorageLocation\\Configuration\\ConfigurationInterface\:\:validateRequest\(\)$#'
+			identifier: method.childReturnType
+			count: 1
+			path: concrete/src/File/StorageLocation/Configuration/DefaultConfiguration.php
+
+		-
+			message: '#^Return type \(Concrete\\Core\\Error\\ErrorList\\ErrorList\) of method Concrete\\Core\\File\\StorageLocation\\Configuration\\LocalConfiguration\:\:validateRequest\(\) should be compatible with return type \(Concrete\\Core\\Error\\ErrorList\\Error\\Error\) of method Concrete\\Core\\File\\StorageLocation\\Configuration\\ConfigurationInterface\:\:validateRequest\(\)$#'
+			identifier: method.childReturnType
 			count: 1
 			path: concrete/src/File/StorageLocation/Configuration/LocalConfiguration.php
 
@@ -13167,18 +12855,6 @@ parameters:
 			path: concrete/src/Geolocator/GeolocatorController.php
 
 		-
-			message: '#^Call to method findAll\(\) on an unknown class Doctrine\\Common\\Persistence\\ObjectRepository\.$#'
-			identifier: class.notFound
-			count: 1
-			path: concrete/src/Geolocator/GeolocatorService.php
-
-		-
-			message: '#^Call to method findOneBy\(\) on an unknown class Doctrine\\Common\\Persistence\\ObjectRepository\.$#'
-			identifier: class.notFound
-			count: 2
-			path: concrete/src/Geolocator/GeolocatorService.php
-
-		-
 			message: '#^Method Concrete\\Core\\Geolocator\\GeolocatorService\:\:setCurrent\(\) should return Concrete\\Core\\Entity\\Geolocator\|null but return statement is missing\.$#'
 			identifier: return.missing
 			count: 2
@@ -13188,18 +12864,6 @@ parameters:
 			message: '#^Method Doctrine\\Persistence\\ObjectManager\:\:flush\(\) invoked with 1 parameter, 0 required\.$#'
 			identifier: arguments.count
 			count: 2
-			path: concrete/src/Geolocator/GeolocatorService.php
-
-		-
-			message: '#^Property Concrete\\Core\\Geolocator\\GeolocatorService\:\:\$repo \(Doctrine\\Common\\Persistence\\ObjectRepository\) does not accept Doctrine\\ORM\\EntityRepository\<Concrete\\Core\\Entity\\Geolocator\>\.$#'
-			identifier: assign.propertyType
-			count: 1
-			path: concrete/src/Geolocator/GeolocatorService.php
-
-		-
-			message: '#^Property Concrete\\Core\\Geolocator\\GeolocatorService\:\:\$repo has unknown class Doctrine\\Common\\Persistence\\ObjectRepository as its type\.$#'
-			identifier: class.notFound
-			count: 1
 			path: concrete/src/Geolocator/GeolocatorService.php
 
 		-
@@ -13749,36 +13413,6 @@ parameters:
 			path: concrete/src/Http/Middleware/MiddlewareStack.php
 
 		-
-			message: '#^Property Concrete\\Core\\Http\\Middleware\\MiddlewareStack\:\:\$dispatcher \(Concrete\\Core\\Http\\Middleware\\DispatcherFrame\|Concrete\\Core\\Http\\Middleware\\Mock_BlockController_7fcd43c1\|Concrete\\Core\\Http\\Middleware\\Mock_TrackableBlockController_a75af608\) does not accept Concrete\\Core\\Http\\Middleware\\DelegateInterface\.$#'
-			identifier: assign.propertyType
-			count: 1
-			path: concrete/src/Http/Middleware/MiddlewareStack.php
-
-		-
-			message: '#^Property Concrete\\Core\\Http\\Middleware\\MiddlewareStack\:\:\$dispatcher \(Concrete\\Core\\Http\\Middleware\\DispatcherFrame\|Concrete\\Core\\Http\\Middleware\\Mock_BlockController_7fcd43c1\|Concrete\\Core\\Http\\Middleware\\Mock_TrackableBlockController_a75af608\) does not accept Concrete\\Core\\Http\\Middleware\\DelegateInterface\|null\.$#'
-			identifier: assign.propertyType
-			count: 1
-			path: concrete/src/Http/Middleware/MiddlewareStack.php
-
-		-
-			message: '#^Property Concrete\\Core\\Http\\Middleware\\MiddlewareStack\:\:\$dispatcher has unknown class Concrete\\Core\\Http\\Middleware\\DispatcherFrame as its type\.$#'
-			identifier: class.notFound
-			count: 1
-			path: concrete/src/Http/Middleware/MiddlewareStack.php
-
-		-
-			message: '#^Property Concrete\\Core\\Http\\Middleware\\MiddlewareStack\:\:\$dispatcher has unknown class Concrete\\Core\\Http\\Middleware\\Mock_BlockController_7fcd43c1 as its type\.$#'
-			identifier: class.notFound
-			count: 1
-			path: concrete/src/Http/Middleware/MiddlewareStack.php
-
-		-
-			message: '#^Property Concrete\\Core\\Http\\Middleware\\MiddlewareStack\:\:\$dispatcher has unknown class Concrete\\Core\\Http\\Middleware\\Mock_TrackableBlockController_a75af608 as its type\.$#'
-			identifier: class.notFound
-			count: 1
-			path: concrete/src/Http/Middleware/MiddlewareStack.php
-
-		-
 			message: '#^Access to an undefined property Concrete\\Core\\Http\\Middleware\\OAuthAuthenticationMiddleware\:\:\$userRepository\.$#'
 			identifier: property.notFound
 			count: 2
@@ -13787,12 +13421,6 @@ parameters:
 		-
 			message: '#^Call to an undefined method Symfony\\Component\\HttpFoundation\\Request\:\:setCustomRequestUser\(\)\.$#'
 			identifier: method.notFound
-			count: 1
-			path: concrete/src/Http/Middleware/OAuthAuthenticationMiddleware.php
-
-		-
-			message: '#^Property Concrete\\Core\\Http\\Middleware\\OAuthAuthenticationMiddleware\:\:\$app has unknown class Concrete\\Core\\Http\\Middleware\\Application as its type\.$#'
-			identifier: class.notFound
 			count: 1
 			path: concrete/src/Http/Middleware/OAuthAuthenticationMiddleware.php
 
@@ -13893,18 +13521,6 @@ parameters:
 			path: concrete/src/Http/ResponseFactory.php
 
 		-
-			message: '#^Call to method getQuery\(\) on an unknown class Concrete\\Core\\Http\\Url\.$#'
-			identifier: class.notFound
-			count: 1
-			path: concrete/src/Http/ResponseFactory.php
-
-		-
-			message: '#^Call to method setQuery\(\) on an unknown class Concrete\\Core\\Http\\Url\.$#'
-			identifier: class.notFound
-			count: 1
-			path: concrete/src/Http/ResponseFactory.php
-
-		-
 			message: '#^If condition is always false\.$#'
 			identifier: if.alwaysFalse
 			count: 1
@@ -13919,12 +13535,6 @@ parameters:
 		-
 			message: '#^Negated boolean expression is always false\.$#'
 			identifier: booleanNot.alwaysFalse
-			count: 1
-			path: concrete/src/Http/ResponseFactory.php
-
-		-
-			message: '#^PHPDoc tag @var for variable \$url contains unknown class Concrete\\Core\\Http\\Url\.$#'
-			identifier: class.notFound
 			count: 1
 			path: concrete/src/Http/ResponseFactory.php
 
@@ -13999,12 +13609,6 @@ parameters:
 			identifier: return.missing
 			count: 1
 			path: concrete/src/ImageEditor/ImageEditorService.php
-
-		-
-			message: '#^Method Concrete\\Core\\Import\\ImportableInterface\:\:getImporter\(\) has invalid return type Concrete\\Core\\Import\\Item\\ItemInterface\.$#'
-			identifier: class.notFound
-			count: 1
-			path: concrete/src/Import/ImportableInterface.php
 
 		-
 			message: '#^Left side of && is always true\.$#'
@@ -16161,7 +15765,7 @@ parameters:
 			path: concrete/src/Page/Collection/Collection.php
 
 		-
-			message: '#^Method Concrete\\Core\\Page\\Collection\\Collection\:\:setAttribute\(\) should return Concrete\\Core\\Entity\\Attribute\\Value\\PageValue but returns Concrete\\Core\\Entity\\Attribute\\Value\\Value\.$#'
+			message: '#^Method Concrete\\Core\\Page\\Collection\\Collection\:\:setAttribute\(\) should return Concrete\\Core\\Entity\\Attribute\\Value\\PageValue but returns Concrete\\Core\\Entity\\Attribute\\Value\\AbstractValue\.$#'
 			identifier: return.type
 			count: 1
 			path: concrete/src/Page/Collection/Collection.php
@@ -16221,20 +15825,8 @@ parameters:
 			path: concrete/src/Page/Collection/Version/Version.php
 
 		-
-			message: '#^Method Concrete\\Core\\Page\\Collection\\Version\\Version\:\:getAttributeValue\(\) has invalid return type Concrete\\Core\\Entity\\Attribute\\Value\\Value\.$#'
-			identifier: class.notFound
-			count: 1
-			path: concrete/src/Page/Collection/Version/Version.php
-
-		-
-			message: '#^Method Concrete\\Core\\Page\\Collection\\Version\\Version\:\:getAttributeValue\(\) should return Concrete\\Core\\Entity\\Attribute\\Value\\Value but return statement is missing\.$#'
+			message: '#^Method Concrete\\Core\\Page\\Collection\\Version\\Version\:\:getAttributeValue\(\) should return Concrete\\Core\\Entity\\Attribute\\Value\\AbstractValue but return statement is missing\.$#'
 			identifier: return.missing
-			count: 1
-			path: concrete/src/Page/Collection/Version/Version.php
-
-		-
-			message: '#^Method Concrete\\Core\\Page\\Collection\\Version\\Version\:\:getAttributeValue\(\) should return Concrete\\Core\\Entity\\Attribute\\Value\\Value but returns Concrete\\Core\\Entity\\Attribute\\Value\\PageValue\.$#'
-			identifier: return.type
 			count: 1
 			path: concrete/src/Page/Collection/Version/Version.php
 
@@ -16253,18 +15845,6 @@ parameters:
 		-
 			message: '#^Method Concrete\\Core\\Page\\Collection\\Version\\Version\:\:getVersionAuthorUserName\(\) should return string\|false\|null but return statement is missing\.$#'
 			identifier: return.missing
-			count: 1
-			path: concrete/src/Page/Collection/Version/Version.php
-
-		-
-			message: '#^Method Concrete\\Core\\Page\\Collection\\Version\\Version\:\:setAttribute\(\) has invalid return type Concrete\\Core\\Entity\\Attribute\\Value\\Value\.$#'
-			identifier: class.notFound
-			count: 1
-			path: concrete/src/Page/Collection/Version/Version.php
-
-		-
-			message: '#^Method Concrete\\Core\\Page\\Collection\\Version\\Version\:\:setAttribute\(\) should return Concrete\\Core\\Entity\\Attribute\\Value\\Value but returns Concrete\\Core\\Entity\\Attribute\\Value\\PageValue\|null\.$#'
-			identifier: return.type
 			count: 1
 			path: concrete/src/Page/Collection/Version/Version.php
 
@@ -17035,12 +16615,6 @@ parameters:
 			identifier: method.notFound
 			count: 1
 			path: concrete/src/Page/Search/Field/Field/VersionStatusField.php
-
-		-
-			message: '#^Method Concrete\\Core\\Page\\Search\\Index\\PageIndex\:\:getIndexer\(\) has invalid return type Concrete\\Core\\Page\\Search\\Index\\DefaultPageDriver\.$#'
-			identifier: class.notFound
-			count: 1
-			path: concrete/src/Page/Search/Index/PageIndex.php
 
 		-
 			message: '#^Negated boolean expression is always false\.$#'
@@ -19023,18 +18597,6 @@ parameters:
 			path: concrete/src/Permission/Registry/Entry/Object/Object/PageType.php
 
 		-
-			message: '#^Call to method getAccessEntityObject\(\) on an unknown class Concrete\\Core\\Permission\\Registry\\Entry\\Object\\ListItem\.$#'
-			identifier: class.notFound
-			count: 1
-			path: concrete/src/Permission/Registry/Entry/Object/TaskPermissionsEntry.php
-
-		-
-			message: '#^PHPDoc tag @var for variable \$item contains unknown class Concrete\\Core\\Permission\\Registry\\Entry\\Object\\ListItem\.$#'
-			identifier: class.notFound
-			count: 1
-			path: concrete/src/Permission/Registry/Entry/Object/TaskPermissionsEntry.php
-
-		-
 			message: '#^Call to function is_object\(\) with Concrete\\Core\\Permission\\Access\\Entity\\SiteGroupEntity will always evaluate to true\.$#'
 			identifier: function.alreadyNarrowedType
 			count: 1
@@ -19377,18 +18939,6 @@ parameters:
 			path: concrete/src/Search/Field/Manager.php
 
 		-
-			message: '#^Method Concrete\\Core\\Search\\Index\\DefaultManager\:\:getIndexes\(\) has invalid return type Concrete\\Core\\Search\\Index\\Iterator\.$#'
-			identifier: class.notFound
-			count: 1
-			path: concrete/src/Search/Index/DefaultManager.php
-
-		-
-			message: '#^Method Concrete\\Core\\Search\\Index\\IndexManagerInterface\:\:getIndexes\(\) has invalid return type Concrete\\Core\\Search\\Index\\Iterator\.$#'
-			identifier: class.notFound
-			count: 1
-			path: concrete/src/Search/Index/IndexManagerInterface.php
-
-		-
 			message: '#^Method Concrete\\Core\\Search\\ItemList\\ItemList\:\:getPagination\(\) should return Concrete\\Core\\Search\\Pagination\\Pagination but returns Pagerfanta\\Pagerfanta\.$#'
 			identifier: return.type
 			count: 1
@@ -19543,18 +19093,6 @@ parameters:
 			identifier: identical.alwaysTrue
 			count: 1
 			path: concrete/src/Service/Detector/HTTP/NginxDetector.php
-
-		-
-			message: '#^PHPDoc tag @var for variable \$factory contains unknown class Concrete\\Core\\Session\\FactoryInterface\.$#'
-			identifier: class.notFound
-			count: 1
-			path: concrete/src/Session/Session.php
-
-		-
-			message: '#^Variable \$factory in PHPDoc tag @var does not exist\.$#'
-			identifier: varTag.variableNotFound
-			count: 1
-			path: concrete/src/Session/Session.php
 
 		-
 			message: '#^Generator expects value type string, array\<string, int\|string\> given\.$#'
@@ -20805,60 +20343,6 @@ parameters:
 			path: concrete/src/Updater/Migrations/AbstractMigration.php
 
 		-
-			message: '#^Call to method getVersion\(\) on an unknown class Doctrine\\DBAL\\Migrations\\Version\.$#'
-			identifier: class.notFound
-			count: 2
-			path: concrete/src/Updater/Migrations/Configuration.php
-
-		-
-			message: '#^Method Concrete\\Core\\Updater\\Migrations\\Configuration\:\:findInitialMigration\(\) has invalid return type Doctrine\\DBAL\\Migrations\\Version\.$#'
-			identifier: class.notFound
-			count: 1
-			path: concrete/src/Updater/Migrations/Configuration.php
-
-		-
-			message: '#^Method Concrete\\Core\\Updater\\Migrations\\Configuration\:\:findInitialMigrationByCoreVersion\(\) has invalid return type Doctrine\\DBAL\\Migrations\\Version\.$#'
-			identifier: class.notFound
-			count: 1
-			path: concrete/src/Updater/Migrations/Configuration.php
-
-		-
-			message: '#^Method Concrete\\Core\\Updater\\Migrations\\Configuration\:\:findInitialMigrationByCoreVersion\(\) should return Doctrine\\DBAL\\Migrations\\Version\|null but returns Doctrine\\Migrations\\Version\\Version\|null\.$#'
-			identifier: return.type
-			count: 1
-			path: concrete/src/Updater/Migrations/Configuration.php
-
-		-
-			message: '#^Method Concrete\\Core\\Updater\\Migrations\\Configuration\:\:findInitialMigrationByIdentifier\(\) has invalid return type Doctrine\\DBAL\\Migrations\\Version\.$#'
-			identifier: class.notFound
-			count: 1
-			path: concrete/src/Updater/Migrations/Configuration.php
-
-		-
-			message: '#^Method Concrete\\Core\\Updater\\Migrations\\Configuration\:\:findInitialMigrationByIdentifier\(\) should return Doctrine\\DBAL\\Migrations\\Version\|null but returns Doctrine\\Migrations\\Version\\Version\|null\.$#'
-			identifier: return.type
-			count: 1
-			path: concrete/src/Updater/Migrations/Configuration.php
-
-		-
-			message: '#^Method Concrete\\Core\\Updater\\Migrations\\Configuration\:\:getForcedInitialMigration\(\) has invalid return type Doctrine\\DBAL\\Migrations\\Version\.$#'
-			identifier: class.notFound
-			count: 1
-			path: concrete/src/Updater/Migrations/Configuration.php
-
-		-
-			message: '#^Property Concrete\\Core\\Updater\\Migrations\\Configuration\:\:\$forcedInitialMigration \(Doctrine\\DBAL\\Migrations\\Version\|null\) does not accept Doctrine\\Migrations\\Version\\Version\|null\.$#'
-			identifier: assign.propertyType
-			count: 1
-			path: concrete/src/Updater/Migrations/Configuration.php
-
-		-
-			message: '#^Property Concrete\\Core\\Updater\\Migrations\\Configuration\:\:\$forcedInitialMigration has unknown class Doctrine\\DBAL\\Migrations\\Version as its type\.$#'
-			identifier: class.notFound
-			count: 1
-			path: concrete/src/Updater/Migrations/Configuration.php
-
-		-
 			message: '#^Call to an undefined static method Concrete\\Core\\Support\\Facade\\Database\:\:query\(\)\.$#'
 			identifier: staticMethod.notFound
 			count: 1
@@ -21939,26 +21423,8 @@ parameters:
 			path: concrete/src/User/Login/LoginAttemptService.php
 
 		-
-			message: '#^Call to method get\(\) on an unknown class Concrete\\Core\\User\\Login\\Repository\.$#'
-			identifier: class.notFound
-			count: 4
-			path: concrete/src/User/Login/LoginAttemptService.php
-
-		-
 			message: '#^Method Concrete\\Core\\User\\Login\\LoginAttemptService\:\:trackAttempt\(\) should return \$this\(Concrete\\Core\\User\\Login\\LoginAttemptService\) but empty return statement found\.$#'
 			identifier: return.empty
-			count: 1
-			path: concrete/src/User/Login/LoginAttemptService.php
-
-		-
-			message: '#^Property Concrete\\Core\\User\\Login\\LoginAttemptService\:\:\$config \(Concrete\\Core\\User\\Login\\Repository\) does not accept Concrete\\Core\\Config\\Repository\\Repository\.$#'
-			identifier: assign.propertyType
-			count: 1
-			path: concrete/src/User/Login/LoginAttemptService.php
-
-		-
-			message: '#^Property Concrete\\Core\\User\\Login\\LoginAttemptService\:\:\$config has unknown class Concrete\\Core\\User\\Login\\Repository as its type\.$#'
-			identifier: class.notFound
 			count: 1
 			path: concrete/src/User/Login/LoginAttemptService.php
 
@@ -22287,38 +21753,14 @@ parameters:
 			path: concrete/src/User/UserInfo.php
 
 		-
-			message: '#^Call to method getAttributeKey\(\) on an unknown class Concrete\\Core\\Entity\\Attribute\\Value\\Value\.$#'
-			identifier: class.notFound
-			count: 1
-			path: concrete/src/User/UserInfo.php
-
-		-
-			message: '#^Call to method getController\(\) on an unknown class Concrete\\Core\\User\\UserAttributeKey\.$#'
-			identifier: class.notFound
-			count: 1
-			path: concrete/src/User/UserInfo.php
-
-		-
 			message: '#^If condition is always true\.$#'
 			identifier: if.alwaysTrue
 			count: 1
 			path: concrete/src/User/UserInfo.php
 
 		-
-			message: '#^Method Concrete\\Core\\User\\UserInfo\:\:getAttributeValue\(\) has invalid return type Concrete\\Core\\Entity\\Attribute\\Value\\Value\.$#'
-			identifier: class.notFound
-			count: 1
-			path: concrete/src/User/UserInfo.php
-
-		-
-			message: '#^Method Concrete\\Core\\User\\UserInfo\:\:getAttributeValue\(\) should return Concrete\\Core\\Entity\\Attribute\\Value\\Value but return statement is missing\.$#'
+			message: '#^Method Concrete\\Core\\User\\UserInfo\:\:getAttributeValue\(\) should return Concrete\\Core\\Entity\\Attribute\\Value\\AbstractValue but return statement is missing\.$#'
 			identifier: return.missing
-			count: 1
-			path: concrete/src/User/UserInfo.php
-
-		-
-			message: '#^Method Concrete\\Core\\User\\UserInfo\:\:getAttributeValue\(\) should return Concrete\\Core\\Entity\\Attribute\\Value\\Value but returns Concrete\\Core\\Entity\\Attribute\\Value\\UserValue\.$#'
-			identifier: return.type
 			count: 1
 			path: concrete/src/User/UserInfo.php
 
@@ -22341,38 +21783,8 @@ parameters:
 			path: concrete/src/User/UserInfo.php
 
 		-
-			message: '#^Method Concrete\\Core\\User\\UserInfo\:\:setAttribute\(\) should return Concrete\\Core\\Attribute\\AttributeValueInterface but returns Concrete\\Core\\Entity\\Attribute\\Value\\Value\.$#'
-			identifier: return.type
-			count: 1
-			path: concrete/src/User/UserInfo.php
-
-		-
-			message: '#^Method Concrete\\Core\\User\\UserInfo\:\:setAttributeValue\(\) has invalid return type Concrete\\Core\\Entity\\Attribute\\Value\\Value\.$#'
-			identifier: class.notFound
-			count: 1
-			path: concrete/src/User/UserInfo.php
-
-		-
-			message: '#^Method Concrete\\Core\\User\\UserInfo\:\:setAttributeValue\(\) should return Concrete\\Core\\Entity\\Attribute\\Value\\Value but returns Concrete\\Core\\Entity\\Attribute\\Value\\UserValue\|null\.$#'
-			identifier: return.type
-			count: 1
-			path: concrete/src/User/UserInfo.php
-
-		-
-			message: '#^Parameter \#1 \$ak of method Concrete\\Core\\User\\UserInfo\:\:setAttributeValue\(\) expects Concrete\\Core\\Attribute\\AttributeKeyInterface\|string, Concrete\\Core\\User\\UserAttributeKey given\.$#'
-			identifier: argument.type
-			count: 1
-			path: concrete/src/User/UserInfo.php
-
-		-
 			message: '#^Parameter \#1 \$gID of static method Concrete\\Core\\User\\Group\\Group\:\:getByID\(\) expects string, int given\.$#'
 			identifier: argument.type
-			count: 1
-			path: concrete/src/User/UserInfo.php
-
-		-
-			message: '#^Parameter \$attributes of method Concrete\\Core\\User\\UserInfo\:\:saveUserAttributesForm\(\) has invalid type Concrete\\Core\\User\\UserAttributeKey\.$#'
-			identifier: class.notFound
 			count: 1
 			path: concrete/src/User/UserInfo.php
 
@@ -22389,44 +21801,14 @@ parameters:
 			path: concrete/src/User/UserInfo.php
 
 		-
-			message: '#^Call to method findAll\(\) on an unknown class Doctrine\\Common\\Persistence\\ObjectRepository\.$#'
-			identifier: class.notFound
-			count: 1
-			path: concrete/src/User/UserInfoRepository.php
-
-		-
-			message: '#^Call to method findBy\(\) on an unknown class Doctrine\\Common\\Persistence\\ObjectRepository\.$#'
-			identifier: class.notFound
-			count: 1
-			path: concrete/src/User/UserInfoRepository.php
-
-		-
-			message: '#^Call to method findOneBy\(\) on an unknown class Doctrine\\Common\\Persistence\\ObjectRepository\.$#'
-			identifier: class.notFound
-			count: 1
-			path: concrete/src/User/UserInfoRepository.php
-
-		-
 			message: '#^Method Concrete\\Core\\User\\UserInfoRepository\:\:getByValidationHash\(\) should return Concrete\\Core\\User\\UserInfo\|null but return statement is missing\.$#'
 			identifier: return.missing
 			count: 1
 			path: concrete/src/User/UserInfoRepository.php
 
 		-
-			message: '#^Method Concrete\\Core\\User\\UserInfoRepository\:\:getRepository\(\) has invalid return type Doctrine\\Common\\Persistence\\ObjectRepository\.$#'
-			identifier: class.notFound
-			count: 1
-			path: concrete/src/User/UserInfoRepository.php
-
-		-
 			message: '#^Negated boolean expression is always false\.$#'
 			identifier: booleanNot.alwaysFalse
-			count: 1
-			path: concrete/src/User/UserInfoRepository.php
-
-		-
-			message: '#^Property Concrete\\Core\\User\\UserInfoRepository\:\:\$repository has unknown class Doctrine\\Common\\Persistence\\ObjectRepository as its type\.$#'
-			identifier: class.notFound
 			count: 1
 			path: concrete/src/User/UserInfoRepository.php
 
@@ -22517,36 +21899,6 @@ parameters:
 		-
 			message: '#^Function array_flat not found\.$#'
 			identifier: function.notFound
-			count: 1
-			path: concrete/src/Utility/Service/Arrays.php
-
-		-
-			message: '#^Parameter \#1 \$keys of method Concrete\\Core\\Utility\\Service\\Arrays\:\:parseKeys\(\) expects array\|string, Concrete\\Core\\Utility\\Service\\unknown_type given\.$#'
-			identifier: argument.type
-			count: 1
-			path: concrete/src/Utility/Service/Arrays.php
-
-		-
-			message: '#^Parameter \#2 \$keys of method Concrete\\Core\\Utility\\Service\\Arrays\:\:set\(\) expects Concrete\\Core\\Utility\\Service\\unknown_type, array given\.$#'
-			identifier: argument.type
-			count: 1
-			path: concrete/src/Utility/Service/Arrays.php
-
-		-
-			message: '#^Parameter \$default of method Concrete\\Core\\Utility\\Service\\Arrays\:\:get\(\) has invalid type Concrete\\Core\\Utility\\Service\\mixedvar\.$#'
-			identifier: class.notFound
-			count: 1
-			path: concrete/src/Utility/Service/Arrays.php
-
-		-
-			message: '#^Parameter \$keys of method Concrete\\Core\\Utility\\Service\\Arrays\:\:set\(\) has invalid type Concrete\\Core\\Utility\\Service\\unknown_type\.$#'
-			identifier: class.notFound
-			count: 1
-			path: concrete/src/Utility/Service/Arrays.php
-
-		-
-			message: '#^Parameter \$value of method Concrete\\Core\\Utility\\Service\\Arrays\:\:set\(\) has invalid type Concrete\\Core\\Utility\\Service\\unknown_type\.$#'
-			identifier: class.notFound
 			count: 1
 			path: concrete/src/Utility/Service/Arrays.php
 
@@ -22839,27 +22191,9 @@ parameters:
 			path: concrete/src/Workflow/Progress/Progress.php
 
 		-
-			message: '#^Method Concrete\\Core\\Workflow\\Progress\\Progress\:\:getWorkflowProgressDateAdded\(\) has invalid return type Concrete\\Core\\Workflow\\Progress\\datetime\.$#'
-			identifier: class.notFound
-			count: 1
-			path: concrete/src/Workflow/Progress/Progress.php
-
-		-
 			message: '#^Method Concrete\\Core\\Workflow\\Progress\\Progress\:\:getWorkflowRequestObject\(\) should return Concrete\\Core\\Workflow\\Request\\Request but return statement is missing\.$#'
 			identifier: return.missing
 			count: 2
-			path: concrete/src/Workflow/Progress/Progress.php
-
-		-
-			message: '#^Method Concrete\\Core\\Workflow\\Progress\\Progress\:\:runTask\(\) has invalid return type Concrete\\Core\\Workflow\\Progress\\WorkflowProgressResponse\.$#'
-			identifier: class.notFound
-			count: 1
-			path: concrete/src/Workflow/Progress/Progress.php
-
-		-
-			message: '#^Method Concrete\\Core\\Workflow\\Progress\\Progress\:\:runTask\(\) should return Concrete\\Core\\Workflow\\Progress\\WorkflowProgressResponse but returns Concrete\\Core\\Workflow\\Progress\\Response\.$#'
-			identifier: return.type
-			count: 1
 			path: concrete/src/Workflow/Progress/Progress.php
 
 		-
@@ -22995,13 +22329,7 @@ parameters:
 			path: concrete/src/Workflow/Request/Request.php
 
 		-
-			message: '#^Method Concrete\\Core\\Workflow\\Request\\Request\:\:triggerRequest\(\) has invalid return type Concrete\\Core\\Workflow\\Request\\optional\.$#'
-			identifier: class.notFound
-			count: 1
-			path: concrete/src/Workflow/Request/Request.php
-
-		-
-			message: '#^Method Concrete\\Core\\Workflow\\Request\\Request\:\:triggerRequest\(\) should return Concrete\\Core\\Workflow\\Request\\optional but return statement is missing\.$#'
+			message: '#^Method Concrete\\Core\\Workflow\\Request\\Request\:\:triggerRequest\(\) should return Concrete\\Core\\Workflow\\Progress\\Response\|null but return statement is missing\.$#'
 			identifier: return.missing
 			count: 1
 			path: concrete/src/Workflow/Request/Request.php

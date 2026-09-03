@@ -30,7 +30,7 @@ class OAuthAuthenticationMiddleware implements MiddlewareInterface
     private $foundationFactory;
 
     /**
-     * @var \Concrete\Core\Http\Middleware\Application
+     * @var \Concrete\Core\Application\Application
      */
     private $app;
 

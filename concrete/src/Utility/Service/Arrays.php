@@ -8,7 +8,7 @@ class Arrays
      *
      * @param array $array
      * @param string|int|array $keys Either one key or multiple keys
-     * @param mixedvar $default the value that is returned if key is not found
+     * @param mixed $default the value that is returned if key is not found
      */
     public function get(array $array, $keys, $default = null)
     {
@@ -35,8 +35,8 @@ class Arrays
      * Sets a value in an (multidimensional) array, creating the arrays recursivly.
      *
      * @param array $array
-     * @param unknown_type $keys
-     * @param unknown_type $value
+     * @param mixed $keys
+     * @param mixed $value
      */
     public function set(array $array, $keys, $value)
     {

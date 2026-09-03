@@ -1011,7 +1011,7 @@ class UserInfo extends ConcreteObject implements AttributeObjectInterface, Permi
     }
 
     /**
-     * @param UserAttributeKey[] $attributes
+     * @param \Concrete\Core\Entity\Attribute\Key\UserKey[] $attributes
      */
     public function saveUserAttributesForm($attributes)
     {

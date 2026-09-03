@@ -20,7 +20,7 @@ class GeolocatorService
     protected $em;
 
     /**
-     * @var \Doctrine\Common\Persistence\ObjectRepository
+     * @var \Doctrine\Persistence\ObjectRepository
      */
     protected $repo;
 

@@ -107,7 +107,7 @@ abstract class Request extends ConcreteObject
      *
      * @param \PermissionKey $pk
      *
-     * @return optional WorkflowProgress
+     * @return \Concrete\Core\Workflow\Progress\Response|null
      */
     protected function triggerRequest(\PermissionKey $pk)
     {

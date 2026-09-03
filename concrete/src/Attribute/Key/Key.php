@@ -257,7 +257,7 @@ class Key extends Facade implements AttributeKeyInterface
      */
     public function reindex($table, $columnHeaders, $attribs, $rs = null)
     {
-        /** @var \Concrete\Core\Database\Connection $db */
+        /** @var \Concrete\Core\Database\Connection\Connection $db */
         $db = \Database::connection();
         $sm = $db->getSchemaManager();
 

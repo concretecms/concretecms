@@ -11,7 +11,7 @@ class UserInfoRepository
     protected $application;
 
     /**
-     * @var \Doctrine\Common\Persistence\ObjectRepository
+     * @var \Doctrine\Persistence\ObjectRepository
      */
     protected $repository;
 
@@ -148,7 +148,7 @@ class UserInfoRepository
     /**
      * Resolve the repository instance
      *
-     * @return \Doctrine\Common\Persistence\ObjectRepository
+     * @return \Doctrine\Persistence\ObjectRepository
      */
     protected function getRepository()
     {

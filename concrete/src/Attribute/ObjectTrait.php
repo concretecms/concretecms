@@ -19,7 +19,7 @@ trait ObjectTrait
      * @param $ak
      * @param bool $createIfNotExists
      *
-     * @return AttributeValue
+     * @return \Concrete\Core\Entity\Attribute\Value\AbstractValue
      */
     abstract public function getAttributeValueObject($ak, $createIfNotExists = false);
 
@@ -33,7 +33,7 @@ trait ObjectTrait
 
     /**
      * @param $ak
-     * @return \Concrete\Core\Entity\Attribute\Value\Value
+     * @return \Concrete\Core\Entity\Attribute\Value\AbstractValue
      */
     public function getAttributeValue($ak)
     {
@@ -69,7 +69,7 @@ trait ObjectTrait
      * @param AttributeKeyInterface | string $ak
      * @param mixed $value
      * @param bool $doReindexImmediately
-     * @return \Concrete\Core\Entity\Attribute\Value\Value
+     * @return \Concrete\Core\Entity\Attribute\Value\AbstractValue
      */
     public function setAttribute($ak, $value, $doReindexImmediately = true)
     {
