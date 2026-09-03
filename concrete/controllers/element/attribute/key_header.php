@@ -18,7 +18,7 @@ class KeyHeader extends ElementController
 
     public function setDashboardPageDeleteAction($action)
     {
-        $this->delete_action = $action;
+        $this->dashboard_page_delete_action = $action;
     }
 
     /**

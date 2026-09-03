@@ -1239,12 +1239,6 @@ parameters:
 			path: concrete/controllers/dialog/workflow/change_page_permissions.php
 
 		-
-			message: '#^Access to an undefined property Concrete\\Controller\\Element\\Attribute\\KeyHeader\:\:\$delete_action\.$#'
-			identifier: property.notFound
-			count: 1
-			path: concrete/controllers/element/attribute/key_header.php
-
-		-
 			message: '#^PHPDoc tag @param for parameter \$category with type mixed is not subtype of native type Concrete\\Core\\Attribute\\Category\\CategoryInterface\.$#'
 			identifier: parameter.phpDocType
 			count: 1
