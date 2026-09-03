@@ -1662,7 +1662,7 @@ class Page extends Collection implements CategoryMemberInterface,
     /**
      * Get the page handle.
      *
-     * @return string
+     * @return string|null
      */
     public function getCollectionHandle()
     {
@@ -1730,7 +1730,7 @@ class Page extends Collection implements CategoryMemberInterface,
     /**
      * Get the Page Template ID.
      *
-     * @return int
+     * @return int|null
      */
     public function getPageTemplateID()
     {
@@ -2017,7 +2017,7 @@ class Page extends Collection implements CategoryMemberInterface,
     /**
      * Get the date/time when the current version was made public (or a falsy value if the current version doesn't have public date).
      *
-     * @return string
+     * @return string|null
      *
      * @example 2009-01-01 00:00:00
      */
@@ -2042,7 +2042,7 @@ class Page extends Collection implements CategoryMemberInterface,
     /**
      * Get the description of a page.
      *
-     * @return string
+     * @return string|null
      */
     public function getCollectionDescription()
     {

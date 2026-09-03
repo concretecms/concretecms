@@ -191,7 +191,7 @@ class Stack extends Page
      * @param int    $cID
      * @param string $cvID
      *
-     * @return \Concrete\Core\Page\Page|self|false
+     * @return \Concrete\Core\Page\Page|self|false|null
      */
     public static function getByID($cID, $cvID = 'RECENT')
     {

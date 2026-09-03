@@ -74,7 +74,7 @@ class Item extends SearchResultItem
 
     /**
      * Returns an integer for a file ID if the result is a file, otherwise returns null.
-     * @return int
+     * @return int|null
      */
     public function getResultFileUUID()
     {
@@ -86,7 +86,7 @@ class Item extends SearchResultItem
 
     /**
      * Returns an integer for a file ID if the result is a file, otherwise returns null.
-     * @return int
+     * @return int|null
      */
     public function getResultFileID()
     {

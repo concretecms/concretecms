@@ -119,7 +119,7 @@ class Duration extends AbstractRepetition
     /**
      * @param $pdID
      *
-     * @return \Concrete\Core\Permission\Duration
+     * @return \Concrete\Core\Permission\Duration|null
      */
     public static function getByID($pdID)
     {

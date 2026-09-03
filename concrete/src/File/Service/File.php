@@ -135,7 +135,7 @@ class File
      *
      * @param string $path (optional)
      *
-     * @return \stdClass
+     * @return \stdClass|false
      */
     public function getCreateFilePermissions($path = null)
     {

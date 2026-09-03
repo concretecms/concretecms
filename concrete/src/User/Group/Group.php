@@ -367,7 +367,7 @@ class Group extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
     }
 
     /**
-     * @return GroupRole
+     * @return GroupRole|null
      */
     public function getDefaultRole()
     {

@@ -183,7 +183,7 @@ class Sitemap
      * @param \Concrete\Core\Page\Page|int $cItem
      * @param bool $includeChildren
      *
-     * @return stdClass
+     * @return stdClass|false
      */
     public function getNode($cItem, $includeChildren = true, $onGetNode = null)
     {

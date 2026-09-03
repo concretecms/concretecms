@@ -282,7 +282,7 @@ class LogEntry
     /**
      * Gets the timestamp of the log.
      *
-     * @return string
+     * @return string|null
      */
     public function getTimestamp()
     {

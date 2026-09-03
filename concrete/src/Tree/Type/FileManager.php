@@ -55,7 +55,7 @@ class FileManager extends Tree
     }
 
     /**
-     * @return FileManager
+     * @return FileManager|null
      */
     public static function add()
     {

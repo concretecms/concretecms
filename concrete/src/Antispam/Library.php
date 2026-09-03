@@ -68,7 +68,7 @@ class Library extends ConcreteObject
     }
 
     /**
-     * @return Package
+     * @return Package|null
      */
     public function getPackageObject()
     {

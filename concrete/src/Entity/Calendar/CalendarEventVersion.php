@@ -188,7 +188,7 @@ class CalendarEventVersion implements ObjectInterface, \JsonSerializable
     }
 
     /**
-     * @return \Concrete\Core\Page\Page
+     * @return \Concrete\Core\Page\Page|false
      */
     public function getPageObject()
     {

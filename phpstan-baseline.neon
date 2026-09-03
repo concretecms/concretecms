@@ -95,7 +95,7 @@ parameters:
 		-
 			message: '#^Negated boolean expression is always false\.$#'
 			identifier: booleanNot.alwaysFalse
-			count: 2
+			count: 1
 			path: concrete/controllers/backend/block/process.php
 
 		-
@@ -249,18 +249,6 @@ parameters:
 			path: concrete/controllers/backend/page.php
 
 		-
-			message: '#^Negated boolean expression is always false\.$#'
-			identifier: booleanNot.alwaysFalse
-			count: 1
-			path: concrete/controllers/backend/page/add_container.php
-
-		-
-			message: '#^Negated boolean expression is always false\.$#'
-			identifier: booleanNot.alwaysFalse
-			count: 1
-			path: concrete/controllers/backend/page/add_stack.php
-
-		-
 			message: '#^Call to an undefined method Concrete\\Core\\Block\\BlockController\:\:getOriginalBlockID\(\)\.$#'
 			identifier: method.notFound
 			count: 1
@@ -369,12 +357,6 @@ parameters:
 			path: concrete/controllers/backend/user_interface/block.php
 
 		-
-			message: '#^Call to function is_object\(\) with Concrete\\Core\\Area\\Area will always evaluate to true\.$#'
-			identifier: function.alreadyNarrowedType
-			count: 1
-			path: concrete/controllers/backend/user_interface/block.php
-
-		-
 			message: '#^Call to Concrete\\Core\\Controller\\AbstractController\:\:on_start\(\) on a separate line has no effect\.$#'
 			identifier: staticMethod.resultUnused
 			count: 1
@@ -433,12 +415,6 @@ parameters:
 			identifier: method.notFound
 			count: 1
 			path: concrete/controllers/dialog/area/layout/presets.php
-
-		-
-			message: '#^Call to function is_object\(\) with Concrete\\Core\\Area\\Area will always evaluate to true\.$#'
-			identifier: function.alreadyNarrowedType
-			count: 1
-			path: concrete/controllers/dialog/block/aliasing.php
 
 		-
 			message: '#^Variable \$bt might not be defined\.$#'
@@ -1725,12 +1701,6 @@ parameters:
 			path: concrete/controllers/panel/theme/customize_preset.php
 
 		-
-			message: '#^Negated boolean expression is always false\.$#'
-			identifier: booleanNot.alwaysFalse
-			count: 1
-			path: concrete/controllers/permissions/access/entity.php
-
-		-
 			message: '#^PHPDoc type Symfony\\Component\\HttpFoundation\\Request of property Concrete\\Controller\\Permissions\\Access\\Entity\\AccessEntity\:\:\$request is not covariant with PHPDoc type Concrete\\Core\\Http\\Request\|null of overridden property Concrete\\Core\\Controller\\AbstractController\:\:\$request\.$#'
 			identifier: property.phpDocType
 			count: 1
@@ -1749,22 +1719,10 @@ parameters:
 			path: concrete/controllers/permissions/access/entity/group_combination.php
 
 		-
-			message: '#^Negated boolean expression is always false\.$#'
-			identifier: booleanNot.alwaysFalse
-			count: 2
-			path: concrete/controllers/permissions/categories/task_handlers/area.php
-
-		-
 			message: '#^Left side of && is always true\.$#'
 			identifier: booleanAnd.leftAlwaysTrue
 			count: 1
 			path: concrete/controllers/permissions/categories/task_handlers/basic_workflow.php
-
-		-
-			message: '#^Negated boolean expression is always false\.$#'
-			identifier: booleanNot.alwaysFalse
-			count: 1
-			path: concrete/controllers/permissions/categories/task_handlers/block.php
 
 		-
 			message: '#^Call to an undefined method Concrete\\Core\\Permission\\Key\\Key\:\:assignPermissionAccess\(\)\.$#'
@@ -3273,20 +3231,8 @@ parameters:
 			path: concrete/controllers/single_page/dashboard/users/groups/bulkupdate.php
 
 		-
-			message: '#^Method Concrete\\Controller\\SinglePage\\Dashboard\\Users\\Groups\\Message\:\:getRecipients\(\) should return array\<Concrete\\Core\\User\\UserInfo\> but returns null\.$#'
-			identifier: return.type
-			count: 1
-			path: concrete/controllers/single_page/dashboard/users/groups/message.php
-
-		-
 			message: '#^Negated boolean expression is always false\.$#'
 			identifier: booleanNot.alwaysFalse
-			count: 1
-			path: concrete/controllers/single_page/dashboard/users/groups/message.php
-
-		-
-			message: '#^Strict comparison using \!\=\= between array\<Concrete\\Core\\User\\UserInfo\> and null will always evaluate to true\.$#'
-			identifier: notIdentical.alwaysTrue
 			count: 1
 			path: concrete/controllers/single_page/dashboard/users/groups/message.php
 
@@ -3519,7 +3465,7 @@ parameters:
 			path: concrete/src/Announcement/Item/Factory/WelcomeItemFactory.php
 
 		-
-			message: '#^Method Concrete\\Core\\Antispam\\Library\:\:getPackageObject\(\) should return Concrete\\Core\\Package\\Package but returns Concrete\\Core\\Entity\\Package\|null\.$#'
+			message: '#^Method Concrete\\Core\\Antispam\\Library\:\:getPackageObject\(\) should return Concrete\\Core\\Package\\Package\|null but returns Concrete\\Core\\Entity\\Package\|null\.$#'
 			identifier: return.type
 			count: 1
 			path: concrete/src/Antispam/Library.php
@@ -3695,7 +3641,7 @@ parameters:
 		-
 			message: '#^If condition is always true\.$#'
 			identifier: if.alwaysTrue
-			count: 2
+			count: 1
 			path: concrete/src/Api/Controller/Files.php
 
 		-
@@ -4941,18 +4887,6 @@ parameters:
 			path: concrete/src/Application/Service/Dashboard.php
 
 		-
-			message: '#^Loose comparison using \!\= between stdClass and false will always evaluate to true\.$#'
-			identifier: notEqual.alwaysTrue
-			count: 1
-			path: concrete/src/Application/Service/Dashboard/Sitemap.php
-
-		-
-			message: '#^Method Concrete\\Core\\Application\\Service\\Dashboard\\Sitemap\:\:getNode\(\) should return stdClass but returns false\.$#'
-			identifier: return.type
-			count: 1
-			path: concrete/src/Application/Service/Dashboard/Sitemap.php
-
-		-
 			message: '#^PHPDoc tag @param references unknown parameter\: \$cID$#'
 			identifier: parameter.notFound
 			count: 1
@@ -5133,12 +5067,6 @@ parameters:
 			path: concrete/src/Area/Area.php
 
 		-
-			message: '#^Call to function is_object\(\) with Concrete\\Core\\Area\\Area will always evaluate to true\.$#'
-			identifier: function.alreadyNarrowedType
-			count: 3
-			path: concrete/src/Area/Area.php
-
-		-
 			message: '#^Call to function is_object\(\) with Concrete\\Core\\Page\\Page will always evaluate to true\.$#'
 			identifier: function.alreadyNarrowedType
 			count: 3
@@ -5153,12 +5081,6 @@ parameters:
 		-
 			message: '#^Default value of the parameter \#1 \$c \(false\) of method Concrete\\Core\\Area\\Area\:\:getTotalBlocksInArea\(\) is incompatible with type Concrete\\Core\\Page\\Page\.$#'
 			identifier: parameter.defaultValue
-			count: 1
-			path: concrete/src/Area/Area.php
-
-		-
-			message: '#^Method Concrete\\Core\\Area\\Area\:\:get\(\) should return Concrete\\Core\\Area\\Area but returns false\.$#'
-			identifier: return.type
 			count: 1
 			path: concrete/src/Area/Area.php
 
@@ -5241,12 +5163,6 @@ parameters:
 			path: concrete/src/Area/CustomStyleRepository.php
 
 		-
-			message: '#^Call to function is_object\(\) with Concrete\\Core\\Area\\Area will always evaluate to true\.$#'
-			identifier: function.alreadyNarrowedType
-			count: 1
-			path: concrete/src/Area/GlobalArea.php
-
-		-
 			message: '#^Default value of the parameter \#1 \$c \(false\) of method Concrete\\Core\\Area\\GlobalArea\:\:getGlobalAreaStackObject\(\) is incompatible with type Concrete\\Core\\Page\\Page\.$#'
 			identifier: parameter.defaultValue
 			count: 1
@@ -5261,12 +5177,6 @@ parameters:
 		-
 			message: '#^Negated boolean expression is always false\.$#'
 			identifier: booleanNot.alwaysFalse
-			count: 1
-			path: concrete/src/Area/GlobalArea.php
-
-		-
-			message: '#^Unreachable statement \- code above always terminates\.$#'
-			identifier: deadCode.unreachable
 			count: 1
 			path: concrete/src/Area/GlobalArea.php
 
@@ -5572,12 +5482,6 @@ parameters:
 
 		-
 			message: '#^Method Concrete\\Core\\Attribute\\Category\\ExpressCategory\:\:getAttributeTypes\(\) should return Doctrine\\Common\\Collections\\ArrayCollection&iterable\<Concrete\\Core\\Entity\\Attribute\\Type\> but returns array\<Concrete\\Core\\Entity\\Attribute\\Type\>\.$#'
-			identifier: return.type
-			count: 1
-			path: concrete/src/Attribute/Category/ExpressCategory.php
-
-		-
-			message: '#^Method Concrete\\Core\\Attribute\\Category\\ExpressCategory\:\:getCacheNamespace\(\) should return string but returns null\.$#'
 			identifier: return.type
 			count: 1
 			path: concrete/src/Attribute/Category/ExpressCategory.php
@@ -6051,12 +5955,6 @@ parameters:
 			path: concrete/src/Authentication/Type/ExternalConcrete/Extractor.php
 
 		-
-			message: '#^Method Concrete\\Core\\Authentication\\Type\\ExternalConcrete\\Extractor\:\:claim\(\) should return string but returns null\.$#'
-			identifier: return.type
-			count: 1
-			path: concrete/src/Authentication/Type/ExternalConcrete/Extractor.php
-
-		-
 			message: '#^Call to function is_object\(\) with Concrete\\Core\\User\\Group\\Group will always evaluate to true\.$#'
 			identifier: function.alreadyNarrowedType
 			count: 1
@@ -6131,12 +6029,6 @@ parameters:
 		-
 			message: '#^Call to an undefined method Concrete\\Core\\Tree\\Node\\NodeType\:\:move\(\)\.$#'
 			identifier: method.notFound
-			count: 1
-			path: concrete/src/Backup/ContentImporter.php
-
-		-
-			message: '#^If condition is always true\.$#'
-			identifier: if.alwaysTrue
 			count: 1
 			path: concrete/src/Backup/ContentImporter.php
 
@@ -6333,7 +6225,7 @@ parameters:
 			path: concrete/src/Backup/ContentImporter/Importer/Routine/ImportSiteTypeSkeletonsRoutine.php
 
 		-
-			message: '#^Method Concrete\\Core\\Backup\\ContentImporter\\Importer\\Routine\\ImportStacksContentRoutine\:\:getStack\(\) should return Concrete\\Core\\Page\\Stack\\Stack but returns Concrete\\Core\\Page\\Page\|false\.$#'
+			message: '#^Method Concrete\\Core\\Backup\\ContentImporter\\Importer\\Routine\\ImportStacksContentRoutine\:\:getStack\(\) should return Concrete\\Core\\Page\\Stack\\Stack but returns Concrete\\Core\\Page\\Page\|false\|null\.$#'
 			identifier: return.type
 			count: 1
 			path: concrete/src/Backup/ContentImporter/Importer/Routine/ImportStacksContentRoutine.php
@@ -6711,12 +6603,6 @@ parameters:
 			path: concrete/src/Block/Menu/Menu.php
 
 		-
-			message: '#^Call to function is_object\(\) with Concrete\\Core\\Area\\Area will always evaluate to true\.$#'
-			identifier: function.alreadyNarrowedType
-			count: 1
-			path: concrete/src/Block/Traits/GetBlockToEditTrait.php
-
-		-
 			message: '#^Trait Concrete\\Core\\Block\\Traits\\HasSubBlocksTrait is used zero times and is not analysed\.$#'
 			identifier: trait.unused
 			count: 1
@@ -6909,12 +6795,6 @@ parameters:
 			path: concrete/src/Board/Instance/Slot/Content/TemplateLocator.php
 
 		-
-			message: '#^Method Concrete\\Core\\Board\\Instance\\Slot\\Content\\TemplateLocator\:\:getFileToRender\(\) should return string but returns null\.$#'
-			identifier: return.type
-			count: 1
-			path: concrete/src/Board/Instance/Slot/Content/TemplateLocator.php
-
-		-
 			message: '#^PHPDoc tag @param references unknown parameter\: \$page$#'
 			identifier: parameter.notFound
 			count: 1
@@ -6931,12 +6811,6 @@ parameters:
 			identifier: parameter.phpDocType
 			count: 1
 			path: concrete/src/Board/Instance/Slot/RenderedSlot.php
-
-		-
-			message: '#^Method Concrete\\Core\\Board\\Template\\TemplateLocator\:\:getFileToRender\(\) should return string but returns null\.$#'
-			identifier: return.type
-			count: 1
-			path: concrete/src/Board/Template/TemplateLocator.php
 
 		-
 			message: '#^Method Stash\\Interfaces\\ItemInterface\:\:set\(\) invoked with 2 parameters, 1 required\.$#'
@@ -7157,7 +7031,7 @@ parameters:
 		-
 			message: '#^If condition is always true\.$#'
 			identifier: if.alwaysTrue
-			count: 2
+			count: 1
 			path: concrete/src/Calendar/Event/EventService.php
 
 		-
@@ -7797,7 +7671,7 @@ parameters:
 			path: concrete/src/Conversation/Editor/Editor.php
 
 		-
-			message: '#^Method Concrete\\Core\\Conversation\\Editor\\Editor\:\:getPackageObject\(\) should return Concrete\\Core\\Package\\Package but returns Concrete\\Core\\Entity\\Package\|null\.$#'
+			message: '#^Method Concrete\\Core\\Conversation\\Editor\\Editor\:\:getPackageObject\(\) should return Concrete\\Core\\Package\\Package\|null but returns Concrete\\Core\\Entity\\Package\|null\.$#'
 			identifier: return.type
 			count: 1
 			path: concrete/src/Conversation/Editor/Editor.php
@@ -8523,12 +8397,6 @@ parameters:
 			path: concrete/src/Entity/Calendar/CalendarEventVersion.php
 
 		-
-			message: '#^Method Concrete\\Core\\Entity\\Calendar\\CalendarEventVersion\:\:getPageObject\(\) should return Concrete\\Core\\Page\\Page but returns false\.$#'
-			identifier: return.type
-			count: 1
-			path: concrete/src/Entity/Calendar/CalendarEventVersion.php
-
-		-
 			message: '#^PHPDoc tag @param references unknown parameter\: \$name$#'
 			identifier: parameter.notFound
 			count: 1
@@ -8673,7 +8541,7 @@ parameters:
 			path: concrete/src/Entity/File/File.php
 
 		-
-			message: '#^Method Concrete\\Core\\Entity\\File\\File\:\:getFileNodeObject\(\) should return Concrete\\Core\\Tree\\Node\\NodeType but returns Concrete\\Core\\Tree\\Node\\Node\|null\.$#'
+			message: '#^Method Concrete\\Core\\Entity\\File\\File\:\:getFileNodeObject\(\) should return Concrete\\Core\\Tree\\Node\\NodeType\|null but returns Concrete\\Core\\Tree\\Node\\Node\|null\.$#'
 			identifier: return.type
 			count: 1
 			path: concrete/src/Entity/File/File.php
@@ -9163,12 +9031,6 @@ parameters:
 			identifier: function.alreadyNarrowedType
 			count: 1
 			path: concrete/src/Export/Item/SiteType.php
-
-		-
-			message: '#^If condition is always true\.$#'
-			identifier: if.alwaysTrue
-			count: 1
-			path: concrete/src/Export/Item/Stack.php
 
 		-
 			message: '#^Method Concrete\\Core\\Export\\Item\\StackFolder\:\:export\(\) should return SimpleXMLElement but return statement is missing\.$#'
@@ -10035,18 +9897,6 @@ parameters:
 			path: concrete/src/File/Search/Result/Item.php
 
 		-
-			message: '#^Method Concrete\\Core\\File\\Search\\Result\\Item\:\:getResultFileID\(\) should return int but returns null\.$#'
-			identifier: return.type
-			count: 1
-			path: concrete/src/File/Search/Result/Item.php
-
-		-
-			message: '#^Method Concrete\\Core\\File\\Search\\Result\\Item\:\:getResultFileUUID\(\) should return int but returns null\.$#'
-			identifier: return.type
-			count: 1
-			path: concrete/src/File/Search/Result/Item.php
-
-		-
 			message: '#^Variable \$icon might not be defined\.$#'
 			identifier: variable.undefined
 			count: 1
@@ -10097,12 +9947,6 @@ parameters:
 		-
 			message: '#^Method Concrete\\Core\\File\\Service\\File\:\:forceDownload\(\) should never return but return statement found\.$#'
 			identifier: return.never
-			count: 1
-			path: concrete/src/File/Service/File.php
-
-		-
-			message: '#^Method Concrete\\Core\\File\\Service\\File\:\:getCreateFilePermissions\(\) should return stdClass but returns false\.$#'
-			identifier: return.type
 			count: 1
 			path: concrete/src/File/Service/File.php
 
@@ -10180,12 +10024,6 @@ parameters:
 
 		-
 			message: '#^Method Concrete\\Core\\File\\Set\\Set\:\:getFiles\(\) should return array\<Concrete\\Core\\File\\File\> but returns list\<Concrete\\Core\\Entity\\File\\File\|null\>\.$#'
-			identifier: return.type
-			count: 1
-			path: concrete/src/File/Set/Set.php
-
-		-
-			message: '#^Method Concrete\\Core\\File\\Set\\Set\:\:overrideGlobalPermissions\(\) should return int but returns false\.$#'
 			identifier: return.type
 			count: 1
 			path: concrete/src/File/Set/Set.php
@@ -11655,20 +11493,8 @@ parameters:
 			path: concrete/src/Localization/Localization.php
 
 		-
-			message: '#^Call to function is_object\(\) with CommerceGuys\\Addressing\\AddressFormat\\AddressFormat will always evaluate to true\.$#'
-			identifier: function.alreadyNarrowedType
-			count: 2
-			path: concrete/src/Localization/Service/AddressFormat.php
-
-		-
 			message: '#^Call to function is_string\(\) with string will always evaluate to true\.$#'
 			identifier: function.alreadyNarrowedType
-			count: 1
-			path: concrete/src/Localization/Service/AddressFormat.php
-
-		-
-			message: '#^Method Concrete\\Core\\Localization\\Service\\AddressFormat\:\:getCountryAddressFormat\(\) should return CommerceGuys\\Addressing\\AddressFormat\\AddressFormat but returns null\.$#'
-			identifier: return.type
 			count: 1
 			path: concrete/src/Localization/Service/AddressFormat.php
 
@@ -11883,7 +11709,7 @@ parameters:
 			path: concrete/src/Logging/LogEntry.php
 
 		-
-			message: '#^Method Concrete\\Core\\Logging\\LogEntry\:\:getTimestamp\(\) should return string but returns DateTime\|null\.$#'
+			message: '#^Method Concrete\\Core\\Logging\\LogEntry\:\:getTimestamp\(\) should return string\|null but returns DateTime\|null\.$#'
 			identifier: return.type
 			count: 1
 			path: concrete/src/Logging/LogEntry.php
@@ -12543,7 +12369,7 @@ parameters:
 			path: concrete/src/Notification/Type/WorkflowProgressType.php
 
 		-
-			message: '#^Method Concrete\\Core\\Notification\\View\\NewConversationMessageListView\:\:getInitiatorUserObject\(\) should return Concrete\\Core\\User\\UserInfo but return statement is missing\.$#'
+			message: '#^Method Concrete\\Core\\Notification\\View\\NewConversationMessageListView\:\:getInitiatorUserObject\(\) should return Concrete\\Core\\User\\UserInfo\|null but return statement is missing\.$#'
 			identifier: return.missing
 			count: 2
 			path: concrete/src/Notification/View/NewConversationMessageListView.php
@@ -12561,28 +12387,10 @@ parameters:
 			path: concrete/src/Notification/View/NewPrivateMessageListView.php
 
 		-
-			message: '#^Method Concrete\\Core\\Notification\\View\\NewPrivateMessageListView\:\:getInitiatorUserObject\(\) should return Concrete\\Core\\User\\UserInfo but return statement is missing\.$#'
+			message: '#^Method Concrete\\Core\\Notification\\View\\NewPrivateMessageListView\:\:getInitiatorUserObject\(\) should return Concrete\\Core\\User\\UserInfo\|null but return statement is missing\.$#'
 			identifier: return.missing
 			count: 1
 			path: concrete/src/Notification/View/NewPrivateMessageListView.php
-
-		-
-			message: '#^Call to function is_object\(\) with Concrete\\Core\\User\\UserInfo will always evaluate to true\.$#'
-			identifier: function.alreadyNarrowedType
-			count: 1
-			path: concrete/src/Notification/View/StandardListView.php
-
-		-
-			message: '#^If condition is always true\.$#'
-			identifier: if.alwaysTrue
-			count: 1
-			path: concrete/src/Notification/View/StandardListView.php
-
-		-
-			message: '#^Method Concrete\\Core\\Notification\\View\\StandardListView\:\:getInitiatorUserObject\(\) should return Concrete\\Core\\User\\UserInfo but returns null\.$#'
-			identifier: return.type
-			count: 1
-			path: concrete/src/Notification/View/StandardListView.php
 
 		-
 			message: '#^Parameter \#1 \$child of method HtmlObject\\Traits\\TreeObject\:\:appendChild\(\) expects HtmlObject\\Element, HtmlObject\\Link given\.$#'
@@ -12597,7 +12405,7 @@ parameters:
 			path: concrete/src/Notification/View/UserDeactivatedListView.php
 
 		-
-			message: '#^Method Concrete\\Core\\Notification\\View\\UserSignupListView\:\:getInitiatorUserObject\(\) should return Concrete\\Core\\User\\UserInfo but return statement is missing\.$#'
+			message: '#^Method Concrete\\Core\\Notification\\View\\UserSignupListView\:\:getInitiatorUserObject\(\) should return Concrete\\Core\\User\\UserInfo\|null but return statement is missing\.$#'
 			identifier: return.missing
 			count: 1
 			path: concrete/src/Notification/View/UserSignupListView.php
@@ -13121,18 +12929,12 @@ parameters:
 		-
 			message: '#^If condition is always true\.$#'
 			identifier: if.alwaysTrue
-			count: 2
+			count: 1
 			path: concrete/src/Page/Container/ContainerExporter.php
 
 		-
 			message: '#^If condition is always true\.$#'
 			identifier: if.alwaysTrue
-			count: 1
-			path: concrete/src/Page/Container/TemplateLocator.php
-
-		-
-			message: '#^Method Concrete\\Core\\Page\\Container\\TemplateLocator\:\:getFileToRender\(\) should return string but returns null\.$#'
-			identifier: return.type
 			count: 1
 			path: concrete/src/Page/Container/TemplateLocator.php
 
@@ -13277,7 +13079,7 @@ parameters:
 		-
 			message: '#^Expression on left side of \?\? is not nullable\.$#'
 			identifier: nullCoalesce.expr
-			count: 4
+			count: 3
 			path: concrete/src/Page/Exporter.php
 
 		-
@@ -13365,32 +13167,8 @@ parameters:
 			path: concrete/src/Page/Page.php
 
 		-
-			message: '#^Method Concrete\\Core\\Page\\Page\:\:getCollectionDatePublic\(\) should return string but returns null\.$#'
-			identifier: return.type
-			count: 1
-			path: concrete/src/Page/Page.php
-
-		-
-			message: '#^Method Concrete\\Core\\Page\\Page\:\:getCollectionDescription\(\) should return string but returns null\.$#'
-			identifier: return.type
-			count: 1
-			path: concrete/src/Page/Page.php
-
-		-
-			message: '#^Method Concrete\\Core\\Page\\Page\:\:getCollectionHandle\(\) should return string but returns null\.$#'
-			identifier: return.type
-			count: 1
-			path: concrete/src/Page/Page.php
-
-		-
 			message: '#^Method Concrete\\Core\\Page\\Page\:\:getPageController\(\) should return Concrete\\Core\\Page\\Controller\\PageController but empty return statement found\.$#'
 			identifier: return.empty
-			count: 1
-			path: concrete/src/Page/Page.php
-
-		-
-			message: '#^Method Concrete\\Core\\Page\\Page\:\:getPageTemplateID\(\) should return int but returns null\.$#'
-			identifier: return.type
 			count: 1
 			path: concrete/src/Page/Page.php
 
@@ -13791,12 +13569,6 @@ parameters:
 			path: concrete/src/Page/Sitemap/PageListGenerator.php
 
 		-
-			message: '#^Strict comparison using \!\=\= between string and null will always evaluate to true\.$#'
-			identifier: notIdentical.alwaysTrue
-			count: 1
-			path: concrete/src/Page/Sitemap/PageListGenerator.php
-
-		-
 			message: '#^Left side of && is always true\.$#'
 			identifier: booleanAnd.leftAlwaysTrue
 			count: 1
@@ -13899,13 +13671,7 @@ parameters:
 			path: concrete/src/Page/Stack/Stack.php
 
 		-
-			message: '#^Method Concrete\\Core\\Page\\Stack\\Stack\:\:addLocalizedStack\(\) should return Concrete\\Core\\Page\\Stack\\Stack but returns Concrete\\Core\\Page\\Page\|false\.$#'
-			identifier: return.type
-			count: 1
-			path: concrete/src/Page/Stack/Stack.php
-
-		-
-			message: '#^Method Concrete\\Core\\Page\\Stack\\Stack\:\:getByID\(\) should return Concrete\\Core\\Page\\Page\|false but returns null\.$#'
+			message: '#^Method Concrete\\Core\\Page\\Stack\\Stack\:\:addLocalizedStack\(\) should return Concrete\\Core\\Page\\Stack\\Stack but returns Concrete\\Core\\Page\\Page\|false\|null\.$#'
 			identifier: return.type
 			count: 1
 			path: concrete/src/Page/Stack/Stack.php
@@ -14637,12 +14403,6 @@ parameters:
 			path: concrete/src/Permission/Assignment/AreaAssignment.php
 
 		-
-			message: '#^Left side of && is always true\.$#'
-			identifier: booleanAnd.leftAlwaysTrue
-			count: 1
-			path: concrete/src/Permission/Assignment/AreaAssignment.php
-
-		-
 			message: '#^Call to an undefined method Concrete\\Core\\Permission\\ObjectInterface\:\:getWorkflowID\(\)\.$#'
 			identifier: method.notFound
 			count: 4
@@ -14795,12 +14555,6 @@ parameters:
 		-
 			message: '#^Call to function is_object\(\) with Concrete\\Core\\Permission\\Duration will always evaluate to true\.$#'
 			identifier: function.alreadyNarrowedType
-			count: 1
-			path: concrete/src/Permission/Duration.php
-
-		-
-			message: '#^Method Concrete\\Core\\Permission\\Duration\:\:getByID\(\) should return Concrete\\Core\\Permission\\Duration but returns null\.$#'
-			identifier: return.type
 			count: 1
 			path: concrete/src/Permission/Duration.php
 
@@ -16197,12 +15951,6 @@ parameters:
 			path: concrete/src/Summary/Template/TemplateLocator.php
 
 		-
-			message: '#^Method Concrete\\Core\\Summary\\Template\\TemplateLocator\:\:getFileToRender\(\) should return string but returns null\.$#'
-			identifier: return.type
-			count: 1
-			path: concrete/src/Summary/Template/TemplateLocator.php
-
-		-
 			message: '#^PHPDoc tag @param references unknown parameter\: \$page$#'
 			identifier: parameter.notFound
 			count: 1
@@ -16219,12 +15967,6 @@ parameters:
 			identifier: new.static
 			count: 1
 			path: concrete/src/Support/Less/TreeCallColor.php
-
-		-
-			message: '#^Method Concrete\\Core\\Support\\Manager\:\:getDefaultDriver\(\) should return string but returns null\.$#'
-			identifier: return.type
-			count: 1
-			path: concrete/src/Support/Manager.php
 
 		-
 			message: '#^Call to function is_string\(\) with string will always evaluate to true\.$#'
@@ -16539,7 +16281,7 @@ parameters:
 			path: concrete/src/Tree/Type/ExpressEntryResults.php
 
 		-
-			message: '#^Method Concrete\\Core\\Tree\\Type\\FileManager\:\:add\(\) should return Concrete\\Core\\Tree\\Type\\FileManager but returns Concrete\\Core\\Tree\\Tree\|null\.$#'
+			message: '#^Method Concrete\\Core\\Tree\\Type\\FileManager\:\:add\(\) should return Concrete\\Core\\Tree\\Type\\FileManager\|null but returns Concrete\\Core\\Tree\\Tree\|null\.$#'
 			identifier: return.type
 			count: 1
 			path: concrete/src/Tree/Type/FileManager.php
@@ -16746,12 +16488,6 @@ parameters:
 			message: '#^Call to function is_object\(\) with Concrete\\Core\\Page\\Page will always evaluate to true\.$#'
 			identifier: function.alreadyNarrowedType
 			count: 5
-			path: concrete/src/Updater/Migrations/Migrations/Version20160725000000.php
-
-		-
-			message: '#^Call to function is_object\(\) with Concrete\\Core\\Tree\\Node\\NodeType will always evaluate to true\.$#'
-			identifier: function.alreadyNarrowedType
-			count: 1
 			path: concrete/src/Updater/Migrations/Migrations/Version20160725000000.php
 
 		-
@@ -17289,12 +17025,6 @@ parameters:
 			path: concrete/src/User/Group/Group.php
 
 		-
-			message: '#^Method Concrete\\Core\\User\\Group\\Group\:\:getDefaultRole\(\) should return Concrete\\Core\\User\\Group\\GroupRole but returns null\.$#'
-			identifier: return.type
-			count: 1
-			path: concrete/src/User/Group/Group.php
-
-		-
 			message: '#^Variable \$bf might not be defined\.$#'
 			identifier: variable.undefined
 			count: 2
@@ -17550,12 +17280,6 @@ parameters:
 			message: '#^Call to function is_object\(\) with Concrete\\Core\\User\\Group\\Group will always evaluate to true\.$#'
 			identifier: function.alreadyNarrowedType
 			count: 3
-			path: concrete/src/User/User.php
-
-		-
-			message: '#^Call to function is_object\(\) with Concrete\\Core\\User\\Group\\GroupRole will always evaluate to true\.$#'
-			identifier: function.alreadyNarrowedType
-			count: 1
 			path: concrete/src/User/User.php
 
 		-

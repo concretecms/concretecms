@@ -92,7 +92,7 @@ class ExpressCategory extends AbstractStandardCategory
     }
 
     /**
-     * @return string
+     * @return string|null
      */
     public function getCacheNamespace()
     {

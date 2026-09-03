@@ -139,7 +139,7 @@ class Message extends DashboardPageController
     /**
      * Get the recipients.
      *
-     * @return UserInfo[]
+     * @return UserInfo[]|null
      */
     protected function getRecipients()
     {
