@@ -70,7 +70,7 @@ class SearchPreset extends Node
     public function deleteDetails()
     {
         $db = Loader::db();
-        $db->Execute('delete from TreeSearchQueryNodes where treeNodeID = ?', array($this->treeNodeID));
+        $db->executeStatement('delete from TreeSearchQueryNodes where treeNodeID = ?', array($this->treeNodeID));
         $search = $this->getSavedSearchObject();
         if (is_object($search)) {
             $em = \Database::connection()->getEntityManager();

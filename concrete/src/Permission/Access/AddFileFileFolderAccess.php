@@ -41,7 +41,7 @@ class AddFileFileFolderAccess extends FileFolderAccess
             array($this->getPermissionAccessID()));
         while ($row = $r->fetch()) {
             $v = array($row['peID'], $newPA->getPermissionAccessID(), $row['permission']);
-            $db->executeQuery(
+            $db->executeStatement(
                 'INSERT INTO FilePermissionFileTypeAccessList (peID, paID, permission) VALUES (?, ?, ?)',
                 $v);
         }
@@ -50,7 +50,7 @@ class AddFileFileFolderAccess extends FileFolderAccess
             array($this->getPermissionAccessID()));
         while ($row = $r->fetch()) {
             $v = array($row['peID'], $newPA->getPermissionAccessID(), $row['extension']);
-            $db->executeQuery(
+            $db->executeStatement(
                 'INSERT INTO FilePermissionFileTypeAccessListCustom  (peID, paID, extension) VALUES (?, ?, ?)',
                 $v);
         }
@@ -62,16 +62,16 @@ class AddFileFileFolderAccess extends FileFolderAccess
     {
         parent::save();
         $db = Database::connection();
-        $db->executeQuery(
+        $db->executeStatement(
             'DELETE FROM FilePermissionFileTypeAccessList WHERE paID = ?',
             array($this->getPermissionAccessID()));
-        $db->executeQuery(
+        $db->executeStatement(
             'DELETE FROM FilePermissionFileTypeAccessListCustom WHERE paID = ?',
             array($this->getPermissionAccessID()));
         if (isset($args['fileTypesIncluded']) && is_array($args['fileTypesIncluded'])) {
             foreach ($args['fileTypesIncluded'] as $peID => $permission) {
                 $v = array($this->getPermissionAccessID(), $peID, $permission);
-                $db->executeQuery(
+                $db->executeStatement(
                     'INSERT INTO FilePermissionFileTypeAccessList (paID, peID, permission) VALUES (?, ?, ?)',
                     $v);
             }
@@ -80,7 +80,7 @@ class AddFileFileFolderAccess extends FileFolderAccess
         if (isset($args['fileTypesExcluded']) && is_array($args['fileTypesExcluded'])) {
             foreach ($args['fileTypesExcluded'] as $peID => $permission) {
                 $v = array($this->getPermissionAccessID(), $peID, $permission);
-                $db->executeQuery(
+                $db->executeStatement(
                     'INSERT INTO FilePermissionFileTypeAccessList (paID, peID, permission) VALUES (?, ?, ?)',
                     $v);
             }
@@ -90,7 +90,7 @@ class AddFileFileFolderAccess extends FileFolderAccess
             foreach ($args['extensionInclude'] as $peID => $extensions) {
                 foreach ($extensions as $extension) {
                     $v = array($this->getPermissionAccessID(), $peID, $extension);
-                    $db->executeQuery(
+                    $db->executeStatement(
                         'INSERT INTO FilePermissionFileTypeAccessListCustom (paID, peID, extension) VALUES (?, ?, ?)',
                         $v);
                 }
@@ -101,7 +101,7 @@ class AddFileFileFolderAccess extends FileFolderAccess
             foreach ($args['extensionExclude'] as $peID => $extensions) {
                 foreach ($extensions as $extension) {
                     $v = array($this->getPermissionAccessID(), $peID, $extension);
-                    $db->executeQuery(
+                    $db->executeStatement(
                         'INSERT INTO FilePermissionFileTypeAccessListCustom (paID, peID, extension) VALUES (?, ?, ?)',
                         $v);
                 }

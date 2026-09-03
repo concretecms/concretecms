@@ -25,6 +25,6 @@ class Version20150713000000 extends AbstractMigration implements RepeatableMigra
     public function upgradeDatabase()
     {
         $db = \Database::connection();
-        $db->Execute("update UserPointActions set upaHasCustomClass = 1 where upaHandle = 'won_badge'");
+        $db->executeStatement("update UserPointActions set upaHasCustomClass = 1 where upaHandle = 'won_badge'");
     }
 }

@@ -55,7 +55,7 @@ class IndexedSearch
     public static function clearSearchIndex()
     {
         $db = Loader::db();
-        $db->Execute('truncate table PageSearchIndex');
+        $db->executeStatement('truncate table PageSearchIndex');
     }
 
     public function matchesArea($arHandle)
@@ -107,7 +107,7 @@ class IndexedSearch
                 true
             );
         } else {
-            $db->Execute('delete from PageSearchIndex where cID = ?', [$page->getCollectionID()]);
+            $db->executeStatement('delete from PageSearchIndex where cID = ?', [$page->getCollectionID()]);
         }
     }
 
@@ -116,7 +116,7 @@ class IndexedSearch
         $text = '';
         $blarray = [];
         $db = Loader::db();
-        $r = $db->Execute(
+        $r = $db->executeQuery(
             'SELECT `bID`, `arHandle` FROM `CollectionVersionBlocks` WHERE `cID` = ? AND `cvID` = ? ORDER BY `arHandle` ASC, `cbDisplayOrder` ASC',
             [$c->getCollectionID(), $c->getVersionID()]
         );

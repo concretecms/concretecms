@@ -118,7 +118,7 @@ class Library extends ConcreteObject
             $pkgID = $pkg->getPackageID();
         }
         $db = Loader::db();
-        $db->Execute('insert into SystemAntispamLibraries (saslHandle, saslName, pkgID) values (?, ?, ?)', array($saslHandle, $saslName, $pkgID));
+        $db->executeStatement('insert into SystemAntispamLibraries (saslHandle, saslName, pkgID) values (?, ?, ?)', array($saslHandle, $saslName, $pkgID));
 
         return static::getByHandle($saslHandle);
     }
@@ -129,7 +129,7 @@ class Library extends ConcreteObject
     public function delete()
     {
         $db = Loader::db();
-        $db->Execute('delete from SystemAntispamLibraries where saslHandle = ?', array($this->saslHandle));
+        $db->executeStatement('delete from SystemAntispamLibraries where saslHandle = ?', array($this->saslHandle));
     }
 
     /**
@@ -139,7 +139,7 @@ class Library extends ConcreteObject
     {
         $db = Loader::db();
         self::deactivateAll();
-        $db->Execute('update SystemAntispamLibraries set saslIsActive = 1 where saslHandle = ?', array($this->saslHandle));
+        $db->executeStatement('update SystemAntispamLibraries set saslIsActive = 1 where saslHandle = ?', array($this->saslHandle));
     }
 
     /**
@@ -148,7 +148,7 @@ class Library extends ConcreteObject
     public static function deactivateAll()
     {
         $db = Loader::db();
-        $db->Execute('update SystemAntispamLibraries set saslIsActive = 0');
+        $db->executeStatement('update SystemAntispamLibraries set saslIsActive = 0');
     }
 
     /**

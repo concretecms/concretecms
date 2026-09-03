@@ -224,7 +224,7 @@ abstract class Control extends ConcreteObject
         $controlType = $this->getPageTypeComposerControlTypeObject();
         $customLabel = $this->getPageTypeComposerControlCustomLabel();
         $description = $this->getPageTypeComposerControlDescription();
-        $db->Execute('insert into PageTypeComposerFormLayoutSetControls (ptComposerFormLayoutSetID, ptComposerControlTypeID, ptComposerControlObject, ptComposerFormLayoutSetControlDisplayOrder, ptComposerFormLayoutSetControlCustomLabel, ptComposerFormLayoutSetControlDescription, ptComposerFormLayoutSetControlRequired) values (?, ?, ?, ?, ?, ?, ?)', array(
+        $db->executeStatement('insert into PageTypeComposerFormLayoutSetControls (ptComposerFormLayoutSetID, ptComposerControlTypeID, ptComposerControlObject, ptComposerFormLayoutSetControlDisplayOrder, ptComposerFormLayoutSetControlCustomLabel, ptComposerFormLayoutSetControlDescription, ptComposerFormLayoutSetControlRequired) values (?, ?, ?, ?, ?, ?, ?)', array(
             $set->getPageTypeComposerFormLayoutSetID(), $controlType->getPageTypeComposerControlTypeID(), serialize($this), $displayOrder, $customLabel, $description, $ptComposerFormLayoutSetControlRequired,
         ));
 

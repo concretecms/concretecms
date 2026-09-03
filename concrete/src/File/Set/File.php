@@ -35,7 +35,7 @@ class File
     public static function getFileSetFiles(Set $fs)
     {
         $db = Loader::db();
-        $r = $db->query('SELECT fsfID FROM FileSetFiles WHERE fsID = ? ORDER BY fsDisplayOrder ASC', array($fs->getFileSetID()));
+        $r = $db->executeQuery('SELECT fsfID FROM FileSetFiles WHERE fsID = ? ORDER BY fsDisplayOrder ASC', array($fs->getFileSetID()));
         $files = array();
         while ($row = $r->fetch()) {
             $fsf = static::getByID($row['fsfID']);

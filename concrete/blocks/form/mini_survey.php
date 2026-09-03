@@ -118,7 +118,7 @@ class MiniSurvey
                 ];
                 $sql = 'INSERT INTO btFormQuestions (msqID,questionSetId,question,inputType,options,position,width,height,required,defaultDate) VALUES (?,?,?,?,?,?,?,?,?,?)';
             }
-            $result = $this->db->executeQuery($sql, $dataValues);
+            $result = $this->db->executeStatement($sql, $dataValues);
             $this->lastSavedMsqID = (int) ($values['msqID']);
             $this->lastSavedqID = (int) ($this->db->fetchColumn('SELECT MAX(qID) FROM btFormQuestions WHERE bID=0 AND msqID=?', [$values['msqID']]));
             $jsonVals['qID'] = $this->lastSavedqID;
@@ -163,7 +163,7 @@ class MiniSurvey
     public function deleteQuestion($qsID, $msqID)
     {
         $sql = 'DELETE FROM btFormQuestions WHERE questionSetId=' . (int) $qsID . ' AND msqID=' . (int) $msqID . ' AND bID=0';
-        $this->db->executeQuery($sql);
+        $this->db->executeStatement($sql);
     }
 
     public static function loadQuestions($qsID, $bID = 0, $showPending = 0)
@@ -394,7 +394,7 @@ class MiniSurvey
         foreach ($qIDs as $qID) {
             $vals = [$positionNum, (int) $qID, (int) $qsID];
             $sql = 'UPDATE btFormQuestions SET position=? WHERE msqID=? AND questionSetId=?';
-            $rs = $this->db->executeQuery($sql, $vals);
+            $rs = $this->db->executeStatement($sql, $vals);
             $positionNum++;
         }
     }
@@ -418,13 +418,13 @@ class MiniSurvey
         //form block was just upgraded, so set the bID column
         if (!$questionsWithBIDs) {
             $vals = [(int) $bID, (int) $qsID];
-            $rs = $db->executeQuery('UPDATE btFormQuestions SET bID=? WHERE bID=0 AND questionSetId=?', $vals);
+            $rs = $db->executeStatement('UPDATE btFormQuestions SET bID=? WHERE bID=0 AND questionSetId=?', $vals);
 
             return;
         }
 
         //Then remove all temp/placeholder questions for this questionSetId that haven't been assigned to a block
         $vals = [(int) $qsID];
-        $rs = $db->executeQuery('DELETE FROM btFormQuestions WHERE bID=0 AND questionSetId=?', $vals);
+        $rs = $db->executeStatement('DELETE FROM btFormQuestions WHERE bID=0 AND questionSetId=?', $vals);
     }
 }

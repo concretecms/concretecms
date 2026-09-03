@@ -19,7 +19,7 @@ class PageTypeAssignment extends Assignment
     public function clearPermissionAssignment()
     {
         $db = Loader::db();
-        $db->Execute('update PageTypePermissionAssignments set paID = 0 where pkID = ? and ptID = ?', array($this->pk->getPermissionKeyID(), $this->permissionObject->getPageTypeID()));
+        $db->executeStatement('update PageTypePermissionAssignments set paID = 0 where pkID = ? and ptID = ?', array($this->pk->getPermissionKeyID(), $this->permissionObject->getPageTypeID()));
     }
 
     public function assignPermissionAccess(Access $pa)

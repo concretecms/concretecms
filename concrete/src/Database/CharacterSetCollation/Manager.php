@@ -114,7 +114,7 @@ class Manager
     {
         $schemaManager = $connection->getSchemaManager();
         $tableNames = $schemaManager->listTableNames();
-        $connection->executeQuery('SET foreign_key_checks = 0');
+        $connection->executeStatement('SET foreign_key_checks = 0');
         try {
             foreach ($tableNames as $tableName) {
                 $updated = false;
@@ -138,7 +138,7 @@ class Manager
                 }
             }
         } finally {
-            $connection->executeQuery('SET foreign_key_checks = 1');
+            $connection->executeStatement('SET foreign_key_checks = 1');
         }
     }
 
@@ -163,7 +163,7 @@ class Manager
         if (strcasecmp($collation, $row['Collation']) === 0) {
             return false;
         }
-        $connection->executeQuery('ALTER TABLE ' . $connection->quoteIdentifier($tableName) . ' CONVERT TO CHARACTER SET ' . $characterSet . ' COLLATE ' . $collation);
+        $connection->executeStatement('ALTER TABLE ' . $connection->quoteIdentifier($tableName) . ' CONVERT TO CHARACTER SET ' . $characterSet . ' COLLATE ' . $collation);
 
         return true;
     }

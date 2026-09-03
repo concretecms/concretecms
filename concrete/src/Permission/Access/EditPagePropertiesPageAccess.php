@@ -23,12 +23,12 @@ class EditPagePropertiesPageAccess extends PageAccess
                 $row['description'],
                 $row['paths'],
             );
-            $db->executeQuery('insert into PagePermissionPropertyAccessList (peID, paID, attributePermission, name, publicDateTime, uID, description, paths) values (?, ?, ?, ?, ?, ?, ?, ?)', $v);
+            $db->executeStatement('insert into PagePermissionPropertyAccessList (peID, paID, attributePermission, name, publicDateTime, uID, description, paths) values (?, ?, ?, ?, ?, ?, ?, ?)', $v);
         }
         $r = $db->executeQuery('select * from PagePermissionPropertyAttributeAccessListCustom where paID = ?', array($this->getPermissionAccessID()));
         while ($row = $r->fetch()) {
             $v = array($row['peID'], $newPA->getPermissionAccessID(), $row['akID']);
-            $db->executeQuery('insert into PagePermissionPropertyAttributeAccessListCustom  (peID, paID, akID) values (?, ?, ?)', $v);
+            $db->executeStatement('insert into PagePermissionPropertyAttributeAccessListCustom  (peID, paID, akID) values (?, ?, ?)', $v);
         }
 
         return $newPA;
@@ -38,8 +38,8 @@ class EditPagePropertiesPageAccess extends PageAccess
     {
         parent::save();
         $db = Database::connection();
-        $db->executeQuery('delete from PagePermissionPropertyAccessList where paID = ?', array($this->getPermissionAccessID()));
-        $db->executeQuery('delete from PagePermissionPropertyAttributeAccessListCustom where paID = ?', array($this->getPermissionAccessID()));
+        $db->executeStatement('delete from PagePermissionPropertyAccessList where paID = ?', array($this->getPermissionAccessID()));
+        $db->executeStatement('delete from PagePermissionPropertyAttributeAccessListCustom where paID = ?', array($this->getPermissionAccessID()));
         if (isset($args['propertiesIncluded']) && is_array($args['propertiesIncluded'])) {
             foreach ($args['propertiesIncluded'] as $peID => $attributePermission) {
                 $allowEditName = 0;
@@ -63,7 +63,7 @@ class EditPagePropertiesPageAccess extends PageAccess
                     $allowEditPaths = $args['allowEditPaths'][$peID];
                 }
                 $v = array($this->getPermissionAccessID(), $peID, $attributePermission, $allowEditName, $allowEditDateTime, $allowEditUID, $allowEditDescription, $allowEditPaths);
-                $db->executeQuery('insert into PagePermissionPropertyAccessList (paID, peID, attributePermission, name, publicDateTime, uID, description, paths) values (?, ?, ?, ?, ?, ?, ?, ?)', $v);
+                $db->executeStatement('insert into PagePermissionPropertyAccessList (paID, peID, attributePermission, name, publicDateTime, uID, description, paths) values (?, ?, ?, ?, ?, ?, ?, ?)', $v);
             }
         }
 
@@ -90,7 +90,7 @@ class EditPagePropertiesPageAccess extends PageAccess
                     $allowEditPathsExcluded = $args['allowEditPathsExcluded'][$peID];
                 }
                 $v = array($this->getPermissionAccessID(), $peID, $attributePermission, $allowEditNameExcluded, $allowEditDateTimeExcluded, $allowEditUIDExcluded, $allowEditDescriptionExcluded, $allowEditPathsExcluded);
-                $db->executeQuery('insert into PagePermissionPropertyAccessList (paID, peID, attributePermission, name, publicDateTime, uID, description, paths) values (?, ?, ?, ?, ?, ?, ?, ?)', $v);
+                $db->executeStatement('insert into PagePermissionPropertyAccessList (paID, peID, attributePermission, name, publicDateTime, uID, description, paths) values (?, ?, ?, ?, ?, ?, ?, ?)', $v);
             }
         }
 
@@ -98,7 +98,7 @@ class EditPagePropertiesPageAccess extends PageAccess
             foreach ($args['akIDInclude'] as $peID => $akIDs) {
                 foreach ($akIDs as $akID) {
                     $v = array($this->getPermissionAccessID(), $peID, $akID);
-                    $db->executeQuery('insert into PagePermissionPropertyAttributeAccessListCustom (paID, peID, akID) values (?, ?, ?)', $v);
+                    $db->executeStatement('insert into PagePermissionPropertyAttributeAccessListCustom (paID, peID, akID) values (?, ?, ?)', $v);
                 }
             }
         }
@@ -107,7 +107,7 @@ class EditPagePropertiesPageAccess extends PageAccess
             foreach ($args['akIDExclude'] as $peID => $akIDs) {
                 foreach ($akIDs as $akID) {
                     $v = array($this->getPermissionAccessID(), $peID, $akID);
-                    $db->executeQuery('insert into PagePermissionPropertyAttributeAccessListCustom (paID, peID, akID) values (?, ?, ?)', $v);
+                    $db->executeStatement('insert into PagePermissionPropertyAttributeAccessListCustom (paID, peID, akID) values (?, ?, ?)', $v);
                 }
             }
         }

@@ -24,12 +24,12 @@ class EditUserPropertiesUserAccess extends UserAccess
             $row['uDefaultLanguage'],
             $row['uHomeFileManagerFolderID'],
             ];
-            $db->executeQuery('insert into UserPermissionEditPropertyAccessList (paID, peID, attributePermission, uName, uEmail, uPassword, uAvatar, uTimezone, uDefaultLanguage, uHomeFileManagerFolderID) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', $v);
+            $db->executeStatement('insert into UserPermissionEditPropertyAccessList (paID, peID, attributePermission, uName, uEmail, uPassword, uAvatar, uTimezone, uDefaultLanguage, uHomeFileManagerFolderID) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', $v);
         }
         $r = $db->executeQuery('select * from UserPermissionEditPropertyAttributeAccessListCustom where paID = ?', [$this->getPermissionAccessID()]);
         while ($row = $r->fetch()) {
             $v = [$row['peID'], $newPA->getPermissionAccessID(), $row['akID']];
-            $db->executeQuery('insert into UserPermissionEditPropertyAttributeAccessListCustom (peID, paID, akID) values (?, ?, ?)', $v);
+            $db->executeStatement('insert into UserPermissionEditPropertyAttributeAccessListCustom (peID, paID, akID) values (?, ?, ?)', $v);
         }
 
         return $newPA;
@@ -39,8 +39,8 @@ class EditUserPropertiesUserAccess extends UserAccess
     {
         parent::save();
         $db = Database::connection();
-        $db->executeQuery('delete from UserPermissionEditPropertyAccessList where paID = ?', [$this->getPermissionAccessID()]);
-        $db->executeQuery('delete from UserPermissionEditPropertyAttributeAccessListCustom where paID = ?', [$this->getPermissionAccessID()]);
+        $db->executeStatement('delete from UserPermissionEditPropertyAccessList where paID = ?', [$this->getPermissionAccessID()]);
+        $db->executeStatement('delete from UserPermissionEditPropertyAttributeAccessListCustom where paID = ?', [$this->getPermissionAccessID()]);
         if (isset($args['propertiesIncluded']) && is_array($args['propertiesIncluded'])) {
             foreach ($args['propertiesIncluded'] as $peID => $attributePermission) {
                 $allowEditUName = 0;
@@ -72,7 +72,7 @@ class EditUserPropertiesUserAccess extends UserAccess
                     $allowEditUHomeFileManagerFolderID = $args['allowEditUHomeFileManagerFolderID'][$peID];
                 }
                 $v = [$this->getPermissionAccessID(), $peID, $attributePermission, $allowEditUName, $allowEditUEmail, $allowEditUPassword, $allowEditUAvatar, $allowEditUTimezone, $allowEditUDefaultLanguage, $allowEditUHomeFileManagerFolderID];
-                $db->executeQuery('insert into UserPermissionEditPropertyAccessList (paID, peID, attributePermission, uName, uEmail, uPassword, uAvatar, uTimezone, uDefaultLanguage, uHomeFileManagerFolderID) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', $v);
+                $db->executeStatement('insert into UserPermissionEditPropertyAccessList (paID, peID, attributePermission, uName, uEmail, uPassword, uAvatar, uTimezone, uDefaultLanguage, uHomeFileManagerFolderID) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', $v);
             }
         }
 
@@ -107,7 +107,7 @@ class EditUserPropertiesUserAccess extends UserAccess
                     $allowEditUHomeFileManagerFolderIDExcluded = $args['allowEditUHomeFileManagerFolderIDExcluded'][$peID];
                 }
                 $v = [$this->getPermissionAccessID(), $peID, $attributePermission, $allowEditUNameExcluded, $allowEditUEmailExcluded, $allowEditUPasswordExcluded, $allowEditUAvatarExcluded, $allowEditUTimezoneExcluded, $allowEditUDefaultLanguageExcluded, $allowEditUHomeFileManagerFolderIDExcluded];
-                $db->executeQuery('insert into UserPermissionEditPropertyAccessList (paID, peID, attributePermission, uName, uEmail, uPassword, uAvatar, uTimezone, uDefaultLanguage, uHomeFileManagerFolderID) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', $v);
+                $db->executeStatement('insert into UserPermissionEditPropertyAccessList (paID, peID, attributePermission, uName, uEmail, uPassword, uAvatar, uTimezone, uDefaultLanguage, uHomeFileManagerFolderID) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', $v);
             }
         }
 
@@ -115,7 +115,7 @@ class EditUserPropertiesUserAccess extends UserAccess
             foreach ($args['akIDInclude'] as $peID => $akIDs) {
                 foreach ($akIDs as $akID) {
                     $v = [$this->getPermissionAccessID(), $peID, $akID];
-                    $db->executeQuery('insert into UserPermissionEditPropertyAttributeAccessListCustom (paID, peID, akID) values (?, ?, ?)', $v);
+                    $db->executeStatement('insert into UserPermissionEditPropertyAttributeAccessListCustom (paID, peID, akID) values (?, ?, ?)', $v);
                 }
             }
         }
@@ -124,7 +124,7 @@ class EditUserPropertiesUserAccess extends UserAccess
             foreach ($args['akIDExclude'] as $peID => $akIDs) {
                 foreach ($akIDs as $akID) {
                     $v = [$this->getPermissionAccessID(), $peID, $akID];
-                    $db->executeQuery('insert into UserPermissionEditPropertyAttributeAccessListCustom (paID, peID, akID) values (?, ?, ?)', $v);
+                    $db->executeStatement('insert into UserPermissionEditPropertyAttributeAccessListCustom (paID, peID, akID) values (?, ?, ?)', $v);
                 }
             }
         }

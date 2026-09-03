@@ -241,23 +241,23 @@ class UserInfo extends ConcreteObject implements AttributeObjectInterface, Permi
             $this->attributeCategory->deleteValue($attribute);
         }
 
-        $this->connection->executeQuery('DELETE FROM OauthUserMap WHERE user_id = ?', [(int)$this->getUserID()]);
-        $this->connection->executeQuery('DELETE FROM Logs WHERE uID = ?', [(int)$this->getUserID()]);
-        $this->connection->executeQuery('DELETE FROM UserSearchIndexAttributes WHERE uID = ?', [(int)$this->getUserID()]);
-        $this->connection->executeQuery('DELETE FROM UserGroups WHERE uID = ?', [(int)$this->getUserID()]);
-        $this->connection->executeQuery('DELETE FROM UserValidationHashes WHERE uID = ?', [(int)$this->getUserID()]);
-        $this->connection->executeQuery('DELETE FROM Piles WHERE uID = ?', [(int)$this->getUserID()]);
-        $this->connection->executeQuery('DELETE FROM ConfigStore WHERE uID = ?', [(int)$this->getUserID()]);
-        $this->connection->executeQuery('DELETE FROM ConversationSubscriptions WHERE uID = ?', [(int)$this->getUserID()]);
-        $this->connection->executeQuery('DELETE FROM PermissionAccessEntityUsers WHERE uID = ?', [(int)$this->getUserID()]);
-        $this->connection->executeQuery('DELETE FROM authTypeConcreteCookieMap WHERE uID = ?', [(int)$this->getUserID()]);
+        $this->connection->executeStatement('DELETE FROM OauthUserMap WHERE user_id = ?', [(int)$this->getUserID()]);
+        $this->connection->executeStatement('DELETE FROM Logs WHERE uID = ?', [(int)$this->getUserID()]);
+        $this->connection->executeStatement('DELETE FROM UserSearchIndexAttributes WHERE uID = ?', [(int)$this->getUserID()]);
+        $this->connection->executeStatement('DELETE FROM UserGroups WHERE uID = ?', [(int)$this->getUserID()]);
+        $this->connection->executeStatement('DELETE FROM UserValidationHashes WHERE uID = ?', [(int)$this->getUserID()]);
+        $this->connection->executeStatement('DELETE FROM Piles WHERE uID = ?', [(int)$this->getUserID()]);
+        $this->connection->executeStatement('DELETE FROM ConfigStore WHERE uID = ?', [(int)$this->getUserID()]);
+        $this->connection->executeStatement('DELETE FROM ConversationSubscriptions WHERE uID = ?', [(int)$this->getUserID()]);
+        $this->connection->executeStatement('DELETE FROM PermissionAccessEntityUsers WHERE uID = ?', [(int)$this->getUserID()]);
+        $this->connection->executeStatement('DELETE FROM authTypeConcreteCookieMap WHERE uID = ?', [(int)$this->getUserID()]);
 
         // Conversation messages and ratings should be detached from the user
-        $this->connection->executeQuery('UPDATE ConversationMessages SET uID = 0, cnvMessageAuthorName = NULL, cnvMessageAuthorEmail = NULL, cnvMessageAuthorWebsite = NULL, cnvMessageSubmitIP = NULL, cnvMessageSubmitUserAgent = NULL WHERE uID = ?', [(int)$this->getUserID()]);
-        $this->connection->executeQuery('UPDATE ConversationMessageRatings SET cnvMessageRatingIP = NULL, uID = 0 WHERE uID = ?', [(int)$this->getUserID()]);
+        $this->connection->executeStatement('UPDATE ConversationMessages SET uID = 0, cnvMessageAuthorName = NULL, cnvMessageAuthorEmail = NULL, cnvMessageAuthorWebsite = NULL, cnvMessageSubmitIP = NULL, cnvMessageSubmitUserAgent = NULL WHERE uID = ?', [(int)$this->getUserID()]);
+        $this->connection->executeStatement('UPDATE ConversationMessageRatings SET cnvMessageRatingIP = NULL, uID = 0 WHERE uID = ?', [(int)$this->getUserID()]);
 
         // Public file sets should be detached from the user
-        $this->connection->executeQuery('UPDATE FileSets SET uID = 0 WHERE uID = ? AND fsType = ?', [
+        $this->connection->executeStatement('UPDATE FileSets SET uID = 0 WHERE uID = ? AND fsType = ?', [
             (int)$this->getUserID(),
             Set::TYPE_PUBLIC,
         ]);
@@ -267,8 +267,8 @@ class UserInfo extends ConcreteObject implements AttributeObjectInterface, Permi
             $set->delete();
         }
 
-        $this->connection->executeQuery('UPDATE Blocks set uID = ? WHERE uID = ?', [(int)USER_SUPER_ID, (int)$this->getUserID()]);
-        $this->connection->executeQuery('UPDATE Pages set uID = ? WHERE uID = ?', [(int)USER_SUPER_ID, (int)$this->getUserID()]);
+        $this->connection->executeStatement('UPDATE Blocks set uID = ? WHERE uID = ?', [(int)USER_SUPER_ID, (int)$this->getUserID()]);
+        $this->connection->executeStatement('UPDATE Pages set uID = ? WHERE uID = ?', [(int)USER_SUPER_ID, (int)$this->getUserID()]);
         $this->entityManager->createQueryBuilder()
             ->update(DownloadStatistics::class, 'ds')
             ->set('ds.downloaderID', ':null')
@@ -347,7 +347,7 @@ class UserInfo extends ConcreteObject implements AttributeObjectInterface, Permi
             ]
         );
 
-        $this->connection->executeQuery('update Users set uHasAvatar = 1, uDateLastUpdated = NOW() where uID = ? limit 1', [$this->getUserID()]);
+        $this->connection->executeStatement('update Users set uHasAvatar = 1, uDateLastUpdated = NOW() where uID = ? limit 1', [$this->getUserID()]);
 
         // run any internal event we have for user update
         $ui = $this->application->make(UserInfoRepository::class)->getByID($this->getUserID());
@@ -362,7 +362,7 @@ class UserInfo extends ConcreteObject implements AttributeObjectInterface, Permi
     {
         $ue = new UserInfoEvent($this);
         $this->getDirector()->dispatch('on_user_reset_password', $ue);
-        $this->connection->executeQuery('UPDATE Users SET uIsPasswordReset = 1 WHERE uID = ? limit 1', [$this->getUserID()]);
+        $this->connection->executeStatement('UPDATE Users SET uIsPasswordReset = 1 WHERE uID = ? limit 1', [$this->getUserID()]);
     }
 
     /**
@@ -401,29 +401,29 @@ class UserInfo extends ConcreteObject implements AttributeObjectInterface, Permi
         $dt = $this->application->make('date');
         $msgDateCreated = $dt->getOverridableNow();
         $v = [$this->getUserID(), $msgDateCreated, $subject, $text, $recipient->getUserID()];
-        $this->connection->executeQuery('insert into UserPrivateMessages (uAuthorID, msgDateCreated, msgSubject, msgBody, uToID) values (?, ?, ?, ?, ?)', $v);
+        $this->connection->executeStatement('insert into UserPrivateMessages (uAuthorID, msgDateCreated, msgSubject, msgBody, uToID) values (?, ?, ?, ?, ?)', $v);
 
         $msgID = $this->connection->lastInsertId();
 
         if ($msgID) {
             // we add the private message to the sent box of the sender, and the inbox of the recipient
-            $this->connection->executeQuery(
+            $this->connection->executeStatement(
                 'insert into UserPrivateMessagesTo (msgID, uID, uAuthorID, msgMailboxID, msgIsNew, msgIsUnread) values (?, ?, ?, ?, ?, ?)',
                 [$msgID, $this->getUserID(), $this->getUserID(), UserPrivateMessageMailbox::MBTYPE_SENT, 0, 1]
             );
-            $this->connection->executeQuery(
+            $this->connection->executeStatement(
                 'insert into UserPrivateMessagesTo (msgID, uID, uAuthorID, msgMailboxID, msgIsNew, msgIsUnread) values (?, ?, ?, ?, ?, ?)',
                 [$msgID, $recipient->getUserID(), $this->getUserID(), UserPrivateMessageMailbox::MBTYPE_INBOX, 1, 1]
             );
             // add file attachments
             foreach ($attachments as $attachment) {
-                $this->connection->executeQuery('insert into UserPrivateMessagesAttachments (msgID, fID) values (?, ?)', [$msgID, $attachment->getFileID()]);
+                $this->connection->executeStatement('insert into UserPrivateMessagesAttachments (msgID, fID) values (?, ?)', [$msgID, $attachment->getFileID()]);
             }
         }
 
         // If the message is in reply to another message, we make a note of that here
         if (is_object($inReplyTo)) {
-            $this->connection->executeQuery(
+            $this->connection->executeStatement(
                 'update UserPrivateMessagesTo set msgIsReplied = 1 where uID = ? and msgID = ?',
                 [$this->getUserID(), $inReplyTo->getMessageID()]
             );
@@ -556,7 +556,7 @@ class UserInfo extends ConcreteObject implements AttributeObjectInterface, Permi
                 $values[] = (new SimpleArrayType())->convertToDatabaseValue($data['ignoredIPMismatches'], $this->connection->getDatabasePlatform());
             }
             if ($result === true && !empty($fields)) {
-                $this->connection->executeQuery(
+                $this->connection->executeStatement(
                     'update Users set  ' . implode(', ', $fields) . ' where uID = ? limit 1',
                     array_merge($values, [$uID])
                 );
@@ -566,10 +566,10 @@ class UserInfo extends ConcreteObject implements AttributeObjectInterface, Permi
                         $nullFieldsStr .= (strlen($nullFieldsStr) > 0 ? ", " : "") . $nullField . " = NULL";
                     }
                     $nullQuery = sprintf('update Users set %s where uID = ? limit 1', $nullFieldsStr);
-                    $this->connection->executeQuery($nullQuery, [$uID]);
+                    $this->connection->executeStatement($nullQuery, [$uID]);
                 }
                 if ($emailChanged) {
-                    $this->connection->executeQuery('DELETE FROM UserValidationHashes WHERE uID = ?', [$uID]);
+                    $this->connection->executeStatement('DELETE FROM UserValidationHashes WHERE uID = ?', [$uID]);
                     $h = $this->application->make('helper/validation/identifier');
                     $h->deleteKey('UserValidationHashes', 'uID', $uID);
                 }
@@ -658,7 +658,7 @@ class UserInfo extends ConcreteObject implements AttributeObjectInterface, Permi
             }
             if (!empty($groupObjects)) {
                 $inStr = implode(',', array_keys($groupObjects));
-                $this->connection->executeQuery(
+                $this->connection->executeStatement(
                     "delete from UserGroups where uID = ? and gID in ($inStr)",
                     [$this->getUserID()]
                 );
@@ -682,7 +682,7 @@ class UserInfo extends ConcreteObject implements AttributeObjectInterface, Permi
         if (!$result) {
             $h = $this->application->make('helper/validation/identifier');
             $result = $h->generate('UserValidationHashes', 'uHash');
-            $this->connection->executeQuery(
+            $this->connection->executeStatement(
                 'insert into UserValidationHashes (uID, uHash, uDateGenerated) values (?, ?, ?)',
                 [$this->getUserID(), $result, time()]
             );
@@ -697,8 +697,8 @@ class UserInfo extends ConcreteObject implements AttributeObjectInterface, Permi
     public function markValidated()
     {
         $v = [$this->getUserID()];
-        $this->connection->executeQuery('update Users set uIsValidated = 1, uIsFullRecord = 1 where uID = ? limit 1', $v);
-        $this->connection->executeQuery('update UserValidationHashes set uDateRedeemed = ' . time() . ' where uID = ?', $v);
+        $this->connection->executeStatement('update Users set uIsValidated = 1, uIsFullRecord = 1 where uID = ? limit 1', $v);
+        $this->connection->executeStatement('update UserValidationHashes set uDateRedeemed = ' . time() . ' where uID = ?', $v);
 
         $this->uIsValidated = 1;
         $ue = new UserInfoEvent($this);
@@ -758,7 +758,7 @@ class UserInfo extends ConcreteObject implements AttributeObjectInterface, Permi
 
     public function activate()
     {
-        $this->connection->executeQuery(
+        $this->connection->executeStatement(
             'update Users set uIsActive = 1 where uID = ? limit 1',
             [$this->getUserID()]
         );
@@ -796,7 +796,7 @@ class UserInfo extends ConcreteObject implements AttributeObjectInterface, Permi
 
     public function deactivate()
     {
-        $this->connection->executeQuery(
+        $this->connection->executeStatement(
             'update Users set uIsActive = 0 where uID = ? limit 1',
             [$this->getUserID()]
         );

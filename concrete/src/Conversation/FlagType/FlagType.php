@@ -35,7 +35,7 @@ class FlagType extends ConcreteObject
     public function delete()
     {
         $db = Loader::db();
-        $db->Execute('DELETE FROM ConversationFlaggedMessageTypes WHERE cnvMessageFlagTypeID=?', array($this->id));
+        $db->executeStatement('DELETE FROM ConversationFlaggedMessageTypes WHERE cnvMessageFlagTypeID=?', array($this->id));
     }
 
     public static function getByID($id)
@@ -73,7 +73,7 @@ class FlagType extends ConcreteObject
         if ($ft = static::getByHandle($handle)) {
             return $ft;
         }
-        $db->execute('INSERT INTO ConversationFlaggedMessageTypes (cnvMessageFlagTypeHandle) VALUES (?)', array($handle));
+        $db->executeStatement('INSERT INTO ConversationFlaggedMessageTypes (cnvMessageFlagTypeHandle) VALUES (?)', array($handle));
         $id = $db->Insert_ID();
 
         return new static($id, $handle);

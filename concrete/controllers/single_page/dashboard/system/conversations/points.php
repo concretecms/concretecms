@@ -27,7 +27,7 @@ class Points extends DashboardPageController
                 $rtID = $crt->getConversationRatingTypeID();
                 $rtPoints = $this->post('rtPoints_' . $rtID);
                 if (is_string($rtPoints) && is_numeric($rtPoints)) {
-                    $db->Execute('UPDATE ConversationRatingTypes SET cnvRatingTypeCommunityPoints = ? WHERE cnvRatingTypeID = ? LIMIT 1',
+                    $db->executeStatement('UPDATE ConversationRatingTypes SET cnvRatingTypeCommunityPoints = ? WHERE cnvRatingTypeID = ? LIMIT 1',
                         array($rtPoints, $rtID));
                 }
             }

@@ -10,12 +10,12 @@ class AddConversationMessageConversationAccess extends ConversationAccess
     {
         parent::save();
         $db = Database::connection();
-        $db->executeQuery('delete from ConversationPermissionAddMessageAccessList where paID = ?',
+        $db->executeStatement('delete from ConversationPermissionAddMessageAccessList where paID = ?',
             array($this->getPermissionAccessID()));
         if (isset($args['addMessageApproval']) && is_array($args['addMessageApproval'])) {
             foreach ($args['addMessageApproval'] as $peID => $permission) {
                 $v = array($this->getPermissionAccessID(), $peID, $permission);
-                $db->executeQuery('insert into ConversationPermissionAddMessageAccessList (paID, peID, permission) values (?, ?, ?)',
+                $db->executeStatement('insert into ConversationPermissionAddMessageAccessList (paID, peID, permission) values (?, ?, ?)',
                     $v);
             }
         }
@@ -29,7 +29,7 @@ class AddConversationMessageConversationAccess extends ConversationAccess
             array($this->getPermissionAccessID()));
         while ($row = $r->fetch()) {
             $v = array($row['peID'], $newPA->getPermissionAccessID(), $row['permission']);
-            $db->executeQuery('insert into ConversationPermissionAddMessageAccessList (peID, paID, permission) values (?, ?, ?)',
+            $db->executeStatement('insert into ConversationPermissionAddMessageAccessList (peID, paID, permission) values (?, ?, ?)',
                 $v);
         }
 

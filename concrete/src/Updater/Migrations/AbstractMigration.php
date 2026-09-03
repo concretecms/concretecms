@@ -155,7 +155,7 @@ abstract class AbstractMigration extends DoctrineAbstractMigration
         $sqlField = $platform->quoteSingleIdentifier($field);
         $sqlLinkedTable = $platform->quoteSingleIdentifier($linkedTable);
         $sqlLinkedField = $platform->quoteSingleIdentifier($linkedField);
-        $this->connection->executeQuery("
+        $this->connection->executeStatement("
             update {$sqlTable}
             left join {$sqlLinkedTable} on {$sqlTable}.{$sqlField} = {$sqlLinkedTable}.{$sqlLinkedField}
             set {$sqlTable}.{$sqlField} = null
@@ -178,7 +178,7 @@ abstract class AbstractMigration extends DoctrineAbstractMigration
         $sqlField = $platform->quoteSingleIdentifier($field);
         $sqlLinkedTable = $platform->quoteSingleIdentifier($linkedTable);
         $sqlLinkedField = $platform->quoteSingleIdentifier($linkedField);
-        $this->connection->executeQuery("
+        $this->connection->executeStatement("
             delete {$sqlTable}
             from {$sqlTable}
             left join {$sqlLinkedTable} on {$sqlTable}.{$sqlField} = {$sqlLinkedTable}.{$sqlLinkedField}

@@ -82,7 +82,7 @@ class File extends TreeNode
     public function deleteDetails()
     {
         $db = Loader::db();
-        $db->Execute('delete from TreeFileNodes where treeNodeID = ?', array($this->treeNodeID));
+        $db->executeStatement('delete from TreeFileNodes where treeNodeID = ?', array($this->treeNodeID));
     }
 
     public function getDateLastModified()

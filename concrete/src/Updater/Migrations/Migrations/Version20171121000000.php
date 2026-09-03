@@ -48,7 +48,7 @@ class Version20171121000000 extends AbstractMigration implements RepeatableMigra
     public function upgradeDatabase()
     {
         $db = $this->connection;
-        $db->executeQuery("UPDATE FileImageThumbnailPaths SET thumbnailFormat = ? WHERE thumbnailFormat = '' AND (path LIKE '%.jpg' OR path LIKE '%.jpeg' OR path LIKE '%.pjpg' OR path LIKE '%.pjpeg')", [BitmapFormat::FORMAT_JPEG]);
-        $db->executeQuery("UPDATE FileImageThumbnailPaths SET thumbnailFormat = ? WHERE thumbnailFormat = ''", [BitmapFormat::FORMAT_PNG]);
+        $db->executeStatement("UPDATE FileImageThumbnailPaths SET thumbnailFormat = ? WHERE thumbnailFormat = '' AND (path LIKE '%.jpg' OR path LIKE '%.jpeg' OR path LIKE '%.pjpg' OR path LIKE '%.pjpeg')", [BitmapFormat::FORMAT_JPEG]);
+        $db->executeStatement("UPDATE FileImageThumbnailPaths SET thumbnailFormat = ? WHERE thumbnailFormat = ''", [BitmapFormat::FORMAT_PNG]);
     }
 }

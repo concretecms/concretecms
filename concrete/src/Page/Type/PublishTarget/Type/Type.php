@@ -147,7 +147,7 @@ abstract class Type extends ConcreteObject
             $pkgID = $pkg->getPackageID();
         }
         $db = Database::connection();
-        $db->executeQuery(
+        $db->executeStatement(
             'insert into PageTypePublishTargetTypes (ptPublishTargetTypeHandle, ptPublishTargetTypeName, pkgID)
             values (?, ?, ?)',
             array($ptPublishTargetTypeHandle, $ptPublishTargetTypeName, $pkgID)
@@ -159,7 +159,7 @@ abstract class Type extends ConcreteObject
     public function delete()
     {
         $db = Database::connection();
-        $db->executeQuery(
+        $db->executeStatement(
             'delete from PageTypePublishTargetTypes where ptPublishTargetTypeID = ?',
             array($this->ptPublishTargetTypeID)
         );

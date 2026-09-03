@@ -111,7 +111,7 @@ class Theme extends ConcreteObject implements \JsonSerializable
         }
 
         $db = Loader::db();
-        $r = $db->query('select pThemeID from PageThemes' . $where);
+        $r = $db->executeQuery('select pThemeID from PageThemes' . $where);
         $themes = [];
         while ($row = $r->fetch()) {
             $pl = static::getByID($row['pThemeID']);
@@ -860,7 +860,7 @@ class Theme extends ConcreteObject implements \JsonSerializable
             if (strlen($res->pError) === 0) {
                 $pThemeName = $res->pThemeName;
                 $pThemeDescription = $res->pThemeDescription;
-                $db->query(
+                $db->executeStatement(
                     'insert into PageThemes (pThemeHandle, pThemeName, pThemeDescription, pkgID) values (?, ?, ?, ?)',
                     [$pThemeHandle, $pThemeName, $pThemeDescription, $pkgID]
                 );
@@ -961,10 +961,10 @@ class Theme extends ConcreteObject implements \JsonSerializable
             $this->getPackageHandle()
         );
         if ($r->exists()) {
-            $db->Execute('update PageThemes set pThemeHasCustomClass = 1 where pThemeID = ?', [$this->pThemeID]);
+            $db->executeStatement('update PageThemes set pThemeHasCustomClass = 1 where pThemeID = ?', [$this->pThemeID]);
             $this->pThemeHasCustomClass = true;
         } else {
-            $db->Execute('update PageThemes set pThemeHasCustomClass = 0 where pThemeID = ?', [$this->pThemeID]);
+            $db->executeStatement('update PageThemes set pThemeHasCustomClass = 0 where pThemeID = ?', [$this->pThemeID]);
             $this->pThemeHasCustomClass = false;
         }
     }
@@ -1252,7 +1252,7 @@ class Theme extends ConcreteObject implements \JsonSerializable
         $treeIDs = implode(',', $treeIDs);
 
         $db = Loader::db();
-        $r = $db->query(
+        $db->executeStatement(
             "update CollectionVersions inner join Pages on CollectionVersions.cID = Pages.cID left join Packages on Pages.pkgID = Packages.pkgID set CollectionVersions.pThemeID = ? where cIsTemplate = 0 and siteTreeID in ({$treeIDs}) and (Pages.ptID > 0 or CollectionVersions.pTemplateID > 0)",
             array($this->pThemeID)
         );
@@ -1277,7 +1277,7 @@ class Theme extends ConcreteObject implements \JsonSerializable
     {
         $db = Loader::db();
 
-        $db->query('delete from PageThemes where pThemeID = ?', [$this->pThemeID]);
+        $db->executeStatement('delete from PageThemes where pThemeID = ?', [$this->pThemeID]);
         $env = Environment::get();
         $env->clearOverrideCache();
     }

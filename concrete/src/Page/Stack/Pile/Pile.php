@@ -86,7 +86,7 @@ class Pile extends ConcreteObject
         $u = $app->make(User::class);
         $v = array($u->getUserID(), 0, $name, 'READY');
         $q = "insert into Piles (uID, isDefault, name, state) values (?, ?, ?, ?)";
-        $r = $db->query($q, $v);
+        $r = $db->executeStatement($q, $v);
         if ($r) {
             $pID = $db->Insert_ID();
 
@@ -104,7 +104,7 @@ class Pile extends ConcreteObject
         $db = Loader::db();
         $v = array($pID);
         $q = "select pID, uID, isDefault, name, state from Piles where pID = ?";
-        $r = $db->query($q, $v);
+        $r = $db->executeQuery($q, $v);
         $row = $r->fetch();
 
         $p = new self();
@@ -137,7 +137,7 @@ class Pile extends ConcreteObject
 
         $v = array($u->getUserID(), 0, $name, 'READY');
         $q = "insert into Piles (uID, isDefault, name, state) values (?, ?, ?, ?)";
-        $r = $db->query($q, $v);
+        $r = $db->executeStatement($q, $v);
         if ($r) {
             $pID = $db->Insert_ID();
 
@@ -226,7 +226,7 @@ class Pile extends ConcreteObject
             // create a new one
             $v = array($u->getUserID(), 1, null, 'READY');
             $q = "insert into Piles (uID, isDefault, name, state) values (?, ?, ?, ?)";
-            $r = $db->query($q, $v);
+            $r = $db->executeStatement($q, $v);
             if ($r) {
                 $pID = $db->Insert_ID();
 
@@ -250,7 +250,7 @@ class Pile extends ConcreteObject
         }
 
         $piles = array();
-        $r = $db->query($q, $v);
+        $r = $db->executeQuery($q, $v);
         if ($r) {
             while ($row = $r->fetch()) {
                 $piles[] = self::get($row['pID']);
@@ -291,9 +291,9 @@ class Pile extends ConcreteObject
         $db = Loader::db();
         $v = array($this->pID);
         $q = "delete from Piles where pID = ?";
-        $db->query($q, $v);
+        $db->executeStatement($q, $v);
         $q2 = "delete from PileContents where pID = ?";
-        $db->query($q, $v);
+        $db->executeStatement($q, $v);
 
         return true;
     }
@@ -337,7 +337,7 @@ class Pile extends ConcreteObject
 
         $v = array($this->pID);
         $q = "select pcID from PileContents where pID = ? order by {$order}";
-        $r = $db->query($q, $v);
+        $r = $db->executeQuery($q, $v);
         while ($row = $r->fetch()) {
             $pc[] = PileContent::get($row['pcID']);
         }
@@ -362,7 +362,7 @@ class Pile extends ConcreteObject
         if (!$existingPCID) {
             $v = array($this->pID, $obj->getBlockID(), "BLOCK", $quantity, $displayOrder);
             $q = "insert into PileContents (pID, itemID, itemType, quantity, displayOrder) values (?, ?, ?, ?, ?)";
-            $r = $db->query($q, $v);
+            $r = $db->executeStatement($q, $v);
             if ($r) {
                 $pcID = $db->Insert_ID();
 
@@ -415,11 +415,11 @@ class Pile extends ConcreteObject
         $q = "select quantity from PileContents where pID = ? and itemID = ? and itemType = ?";
         $exQuantity = $db->getOne($q, $v);
         if ($exQuantity > $quantity) {
-            $db->query(
+            $db->executeStatement(
                "update PileContent set quantity = quantity - {$quantity} where pID = ? and itemID = ? and itemType = ?",
                $v);
         } else {
-            $db->query("delete from PileContents where pID = ? and itemID = ? and itemType = ?", $v);
+            $db->executeStatement("delete from PileContents where pID = ? and itemID = ? and itemType = ?", $v);
         }
     }
 
@@ -431,12 +431,12 @@ class Pile extends ConcreteObject
         $db = Loader::db();
         $v = array($this->pID);
         $q = "select pcID from PileContents where pID = ? order by displayOrder asc";
-        $r = $db->query($q, $v);
+        $r = $db->executeQuery($q, $v);
         $currentDisplayOrder = 0;
         while ($row = $r->fetch()) {
             $v1 = array($currentDisplayOrder, $row['pcID']);
             $q1 = "update PileContents set displayOrder = ? where pcID = ?";
-            $db->query($q1, $v1);
+            $db->executeStatement($q1, $v1);
             ++$currentDisplayOrder;
         }
 

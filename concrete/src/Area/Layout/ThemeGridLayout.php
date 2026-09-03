@@ -113,7 +113,7 @@ class ThemeGridLayout extends Layout
     {
         $db = Loader::db();
         $v = array($this->arLayoutMaxColumns, 1);
-        $db->Execute('insert into AreaLayouts (arLayoutMaxColumns, arLayoutUsesThemeGridFramework) values (?, ?)', $v);
+        $db->executeStatement('insert into AreaLayouts (arLayoutMaxColumns, arLayoutUsesThemeGridFramework) values (?, ?)', $v);
         $newAreaLayoutID = $db->Insert_ID();
         if ($newAreaLayoutID) {
             $newAreaLayout = Layout::getByID($newAreaLayoutID);
@@ -135,7 +135,7 @@ class ThemeGridLayout extends Layout
             $max = 0;
         }
         $db = Loader::db();
-        $db->Execute('update AreaLayouts set arLayoutMaxColumns = ? where arLayoutID = ?', array($max, $this->arLayoutID));
+        $db->executeStatement('update AreaLayouts set arLayoutMaxColumns = ? where arLayoutID = ?', array($max, $this->arLayoutID));
         $this->arLayoutMaxColumns = $max;
     }
 
@@ -154,7 +154,7 @@ class ThemeGridLayout extends Layout
     {
         $columnID = parent::addLayoutColumn();
         $db = Loader::db();
-        $db->Execute('insert into AreaLayoutThemeGridColumns (arLayoutColumnID) values (?)', array($columnID));
+        $db->executeStatement('insert into AreaLayoutThemeGridColumns (arLayoutColumnID) values (?)', array($columnID));
 
         return ThemeGridColumn::getByID($columnID);
     }
@@ -165,7 +165,7 @@ class ThemeGridLayout extends Layout
     public static function add()
     {
         $db = Loader::db();
-        $db->Execute('insert into AreaLayouts (arLayoutSpacing, arLayoutIsCustom, arLayoutUsesThemeGridFramework) values (?, ?, ?)', array(0, 0, 1));
+        $db->executeStatement('insert into AreaLayouts (arLayoutSpacing, arLayoutIsCustom, arLayoutUsesThemeGridFramework) values (?, ?, ?)', array(0, 0, 1));
         $arLayoutID = $db->Insert_ID();
         if ($arLayoutID) {
             $ar = static::getByID($arLayoutID);

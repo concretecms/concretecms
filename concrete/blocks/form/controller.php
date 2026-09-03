@@ -256,7 +256,7 @@ class Controller extends BlockController
             $q = "update {$this->btTable} set questionSetId = ?, surveyName=?, submitText=?, notifyMeOnSubmission=?, recipientEmail=?, thankyouMsg=?, displayCaptcha=?, redirectCID=?, addFilesToSet=? where bID = ? AND questionSetId= ?";
         }
 
-        $rs = $db->query($q, $v);
+        $rs = $db->executeStatement($q, $v);
 
         //Add Questions (for programmatically creating forms, such as during the site install)
         if (count($data['questions']) > 0) {
@@ -284,7 +284,7 @@ class Controller extends BlockController
         $db = $this->app->make('database/connection');
         $v = [$this->bID];
         $q = "select * from {$this->btTable} where bID = ? LIMIT 1";
-        $r = $db->query($q, $v);
+        $r = $db->executeQuery($q, $v);
         $row = $r->fetch();
 
         //if the same block exists in multiple collections with the same questionSetID
@@ -309,13 +309,13 @@ class Controller extends BlockController
             //with a new Block ID and a new Question
             $v = [$newQuestionSetId, $row['surveyName'], $row['submitText'], $newBID, $row['thankyouMsg'], (int) ($row['notifyMeOnSubmission']), $row['recipientEmail'], $row['displayCaptcha'], $row['addFilesToSet']];
             $q = "insert into {$this->btTable} ( questionSetId, surveyName, submitText, bID,thankyouMsg,notifyMeOnSubmission,recipientEmail,displayCaptcha,addFilesToSet) values (?, ?, ?, ?, ?, ?, ?, ?,?)";
-            $result = $db->executeQuery($q, $v);
+            $result = $db->executeStatement($q, $v);
 
-            $rs = $db->query("SELECT * FROM {$this->btQuestionsTablename} WHERE questionSetId={$oldQuestionSetId} AND bID=" . (int) ($this->bID));
+            $rs = $db->executeQuery("SELECT * FROM {$this->btQuestionsTablename} WHERE questionSetId={$oldQuestionSetId} AND bID=" . (int) ($this->bID));
             while ($row = $rs->fetch()) {
                 $v = [$newQuestionSetId, (int) ($row['msqID']), (int) $newBID, $row['question'], $row['inputType'], $row['options'], $row['position'], $row['width'], $row['height'], $row['required'], $row['defaultDate']];
                 $sql = "INSERT INTO {$this->btQuestionsTablename} (questionSetId,msqID,bID,question,inputType,options,position,width,height,required,defaultDate) VALUES (?,?,?,?,?,?,?,?,?,?,?)";
-                $db->executeQuery($sql, $v);
+                $db->executeStatement($sql, $v);
             }
 
             return $newQuestionSetId;
@@ -476,7 +476,7 @@ class Controller extends BlockController
                 $uID = $u->getUserID();
             }
             $q = "insert into {$this->btAnswerSetTablename} (questionSetId, uID) values (?,?)";
-            $db->query($q, [$qsID, $uID]);
+            $db->executeStatement($q, [$qsID, $uID]);
             $answerSetID = $db->lastInsertId();
             $this->lastAnswerSetId = $answerSetID;
 
@@ -555,7 +555,7 @@ class Controller extends BlockController
 
                 $v = [$row['msqID'], $answerSetID, $answer, $answerLong];
                 $q = "insert into {$this->btAnswersTablename} (msqID,asID,answer,answerLong) values (?,?,?,?)";
-                $db->query($q, $v);
+                $db->executeStatement($q, $v);
             }
             $foundSpam = false;
 
@@ -569,8 +569,8 @@ class Controller extends BlockController
                 $foundSpam = true;
                 $q = "delete from {$this->btAnswerSetTablename} where asID = ?";
                 $v = [$this->lastAnswerSetId];
-                $db->executeQuery($q, $v);
-                $db->executeQuery("delete from {$this->btAnswersTablename} where asID = ?", [$this->lastAnswerSetId]);
+                $db->executeStatement($q, $v);
+                $db->executeStatement("delete from {$this->btAnswersTablename} where asID = ?", [$this->lastAnswerSetId]);
             }
 
             if ((int) ($this->notifyMeOnSubmission) > 0 && !$foundSpam) {
@@ -687,29 +687,29 @@ class Controller extends BlockController
 
         //get all answer sets
         $q = "SELECT asID FROM {$this->btAnswerSetTablename} WHERE questionSetId = " . (int) ($info['questionSetId'] ?? 0);
-        $answerSetsRS = $db->query($q);
+        $answerSetsRS = $db->executeQuery($q);
 
         //delete the questions
         $deleteData['questionsIDs'] = $db->fetchAll("SELECT qID FROM {$this->btQuestionsTablename} WHERE questionSetId = " . (int) ($info['questionSetId'] ?? 0) . ' AND bID=' . (int) ($this->bID));
         foreach ($deleteData['questionsIDs'] as $questionData) {
-            $db->query("DELETE FROM {$this->btQuestionsTablename} WHERE qID=" . (int) ($questionData['qID']));
+            $db->executeStatement("DELETE FROM {$this->btQuestionsTablename} WHERE qID=" . (int) ($questionData['qID']));
         }
 
         //delete left over answers
         $strandedAnswerIDs = $db->fetchAll('SELECT fa.aID FROM `btFormAnswers` AS fa LEFT JOIN btFormQuestions as fq ON fq.msqID=fa.msqID WHERE fq.msqID IS NULL');
         foreach ($strandedAnswerIDs as $strandedAnswer) {
-            $db->query('DELETE FROM `btFormAnswers` WHERE aID=' . (int) ($strandedAnswer['aID']));
+            $db->executeStatement('DELETE FROM `btFormAnswers` WHERE aID=' . (int) ($strandedAnswer['aID']));
         }
 
         //delete the left over answer sets
         $deleteData['strandedAnswerSetIDs'] = $db->fetchAll('SELECT aset.asID FROM btFormAnswerSet AS aset LEFT JOIN btFormAnswers AS fa ON aset.asID=fa.asID WHERE fa.asID IS NULL');
         foreach ($deleteData['strandedAnswerSetIDs'] as $strandedAnswerSetIDs) {
-            $db->query('DELETE FROM btFormAnswerSet WHERE asID=' . (int) ($strandedAnswerSetIDs['asID']));
+            $db->executeStatement('DELETE FROM btFormAnswerSet WHERE asID=' . (int) ($strandedAnswerSetIDs['asID']));
         }
 
         //delete the form block
         $q = "delete from {$this->btTable} where bID = '{$this->bID}'";
-        $r = $db->query($q);
+        $db->executeStatement($q);
 
         parent::delete();
 
@@ -763,13 +763,13 @@ class Controller extends BlockController
         $pendingQuestions = $db->fetchAll('SELECT msqID FROM btFormQuestions WHERE bID=0 && questionSetId=?', $vals);
         foreach ($pendingQuestions as $pendingQuestion) {
             $vals = [(int) ($this->bID), (int) ($pendingQuestion['msqID'])];
-            $db->query('DELETE FROM btFormQuestions WHERE bID=? AND msqID=?', $vals);
+            $db->executeStatement('DELETE FROM btFormQuestions WHERE bID=? AND msqID=?', $vals);
         }
         //}
 
         //assign any new questions the new block id
         $vals = [(int) ($data['bID']), (int) ($data['qsID']), (int) ($data['oldQsID'])];
-        $rs = $db->query('UPDATE btFormQuestions SET bID=?, questionSetId=? WHERE bID=0 && questionSetId=?', $vals);
+        $rs = $db->executeStatement('UPDATE btFormQuestions SET bID=?, questionSetId=? WHERE bID=0 && questionSetId=?', $vals);
 
         //These are deleted or edited questions.  (edited questions have already been created with the new bID).
         $ignoreQuestionIDsDirty = explode(',', $data['ignoreQuestionIDs']);
@@ -787,7 +787,7 @@ class Controller extends BlockController
         }
         $vals = [$this->bID, (int) ($data['qsID'])];
         $pendingDeleteQIDs = implode(',', $pendingDeleteQIDs);
-        $unchangedQuestions = $db->query('DELETE FROM btFormQuestions WHERE bID=? AND questionSetId=? AND msqID IN (' . $pendingDeleteQIDs . ')', $vals);
+        $unchangedQuestions = $db->executeStatement('DELETE FROM btFormQuestions WHERE bID=? AND questionSetId=? AND msqID IN (' . $pendingDeleteQIDs . ')', $vals);
     }
 
     /**

@@ -72,7 +72,7 @@ class BoardAssignment extends Assignment
     {
         $db = \Database::connection();
         $board = $this->getPermissionObject();
-        $db->Execute('update BoardPermissionAssignments set paID = 0 where pkID = ? and boardID = ?', array($this->pk->getPermissionKeyID(), $board->getBoardID()));
+        $db->executeStatement('update BoardPermissionAssignments set paID = 0 where pkID = ? and boardID = ?', array($this->pk->getPermissionKeyID(), $board->getBoardID()));
     }
 
     public function assignPermissionAccess(Access $pa)

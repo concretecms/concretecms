@@ -18,7 +18,7 @@ class DownVoteType extends Type
     public function adjustConversationMessageRatingTotalScore(Message $message)
     {
         $db = Loader::db();
-        $db->Execute('update ConversationMessages set cnvMessageTotalRatingScore = cnvMessageTotalRatingScore - 1 where cnvMessageID = ?', array(
+        $db->executeStatement('update ConversationMessages set cnvMessageTotalRatingScore = cnvMessageTotalRatingScore - 1 where cnvMessageID = ?', array(
             $message->getConversationMessageID(),
         ));
     }

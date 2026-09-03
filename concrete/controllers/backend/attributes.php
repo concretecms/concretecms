@@ -40,7 +40,7 @@ class Attributes extends Controller
             $db = \Loader::db();
             for ($i = 0; $i < count($uats); $i++) {
                 $v = array($i, $as->getAttributeSetID(), $uats[$i]);
-                $db->query("update AttributeSetKeys set asDisplayOrder = ? where asID = ? and akID = ?", $v);
+                $db->executeStatement("update AttributeSetKeys set asDisplayOrder = ? where asID = ? and akID = ?", $v);
             }
         }
     }

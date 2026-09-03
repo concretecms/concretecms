@@ -13,7 +13,7 @@ class Version20180621222449 extends AbstractMigration implements RepeatableMigra
         if ($db->tableExists('atPageSelector')) {
             // This is the name of the page selector attribute table in some implementations of the page selector attribute
             // We need to take this data and place it into atNumber.
-            $db->query(<<<EOT
+            $db->executeStatement(<<<EOT
 insert into atNumber (avID, value)
     select
         atPageSelector.avID, atPageSelector.value

@@ -2,6 +2,7 @@
 
 namespace Concrete\Core\Database\Connection;
 
+use Doctrine\DBAL\Connections\PrimaryReadReplicaConnection;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Doctrine\DBAL\Schema\Column as DbalColumn;
 use Doctrine\DBAL\Schema\Table as DbalTable;
@@ -12,7 +13,7 @@ use ORM;
 use PDO;
 use Throwable;
 
-class Connection extends \Doctrine\DBAL\Connection
+class Connection extends PrimaryReadReplicaConnection
 {
     /** @var EntityManager */
     protected $entityManager;
@@ -37,6 +38,25 @@ class Connection extends \Doctrine\DBAL\Connection
      * @var array
      */
     private $overriddenParams = [];
+
+    /**
+     * Avoid opening two physical connections when no replica is configured.
+     *
+     * @param string|null $connectionName
+     *
+     * @return bool
+     */
+    protected function performConnect(?string $connectionName = null): bool
+    {
+        if (($connectionName ?? 'replica') === 'replica'
+            && count($this->getParams()['replica']) === 1
+            && $this->getParams()['primary'] === $this->getParams()['replica'][0]
+        ) {
+            return parent::performConnect('primary');
+        }
+
+        return parent::performConnect($connectionName);
+    }
 
     /**
      * @deprecated Please use the ORM facade instead of this method:
@@ -87,6 +107,7 @@ class Connection extends \Doctrine\DBAL\Connection
      */
     public function Execute($q, $arguments = [])
     {
+        $this->ensureConnectedToPrimary();
         if ($q instanceof \Doctrine\DBAL\Statement) {
             return $q->execute($arguments);
         } else {
@@ -100,6 +121,7 @@ class Connection extends \Doctrine\DBAL\Connection
 
     public function query()
     {
+        $this->ensureConnectedToPrimary();
         $args = func_get_args();
         if (isset($args) && isset($args[1]) && (is_string($args[1]) || is_array($args[1]))) {
             return $this->executeQuery($args[0], $args[1]);
@@ -143,7 +165,7 @@ class Connection extends \Doctrine\DBAL\Connection
                     }
                     if (!empty($chunks)) {
                         $sql = 'ALTER TABLE ' . $this->quoteIdentifier($tableName) . ' ADD INDEX ' . implode(', ADD INDEX ', $chunks);
-                        $this->executeQuery($sql);
+                        $this->executeStatement($sql);
                     }
                 }
             }
@@ -550,7 +572,7 @@ class Connection extends \Doctrine\DBAL\Connection
      */
     public function refreshCharactersetCollation($characterSet, $collation)
     {
-        $this->executeQuery('SET NAMES ' . $this->quote($characterSet) . ' COLLATE ' . $this->quote($collation));
+        $this->executeStatement('SET NAMES ' . $this->quote($characterSet) . ' COLLATE ' . $this->quote($collation));
         $this->overriddenParams['character_set'] = $characterSet;
         $this->overriddenParams['collation'] = $collation;
     }

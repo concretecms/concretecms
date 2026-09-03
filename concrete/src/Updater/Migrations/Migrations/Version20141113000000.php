@@ -45,18 +45,18 @@ class Version20141113000000 extends AbstractMigration implements RepeatableMigra
         $sm = $db->getSchemaManager();
         $schemaTables = $sm->listTableNames();
         if (in_array('signuprequests', $schemaTables)) {
-            $db->query('alter table signuprequests rename SignupRequestsTmp');
-            $db->query('alter table SignupRequestsTmp rename SignupRequests');
+            $db->executeStatement('alter table signuprequests rename SignupRequestsTmp');
+            $db->executeStatement('alter table SignupRequestsTmp rename SignupRequests');
         }
         if (in_array('userbannedips', $schemaTables)) {
-            $db->query('alter table userbannedips rename UserBannedIPsTmp');
-            $db->query('alter table UserBannedIPsTmp rename UserBannedIPs');
+            $db->executeStatement('alter table userbannedips rename UserBannedIPsTmp');
+            $db->executeStatement('alter table UserBannedIPsTmp rename UserBannedIPs');
         }
 
         // Clean up File stupidity
-        $r = $db->Execute('select Files.fID from Files left join FileVersions on (Files.fID = FileVersions.fID) where FileVersions.fID is null');
+        $r = $db->executeQuery('select Files.fID from Files left join FileVersions on (Files.fID = FileVersions.fID) where FileVersions.fID is null');
         while ($row = $r->fetch()) {
-            $db->Execute('delete from Files where fID = ?', [$row['fID']]);
+            $db->executeStatement('delete from Files where fID = ?', [$row['fID']]);
         }
     }
 }

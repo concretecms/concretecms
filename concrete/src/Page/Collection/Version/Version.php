@@ -605,7 +605,7 @@ class Version extends ConcreteObject implements PermissionObjectInterface, Attri
         $app = Facade::getFacadeApplication();
         $db = $app->make('database')->connection();
         $q = "update CollectionVersions set cvComments = ? where cvID = ? and cID = ?";
-        $db->executeQuery($q, $v);
+        $db->executeStatement($q, $v);
         $this->cvComments = $comment;
     }
 
@@ -803,7 +803,7 @@ class Version extends ConcreteObject implements PermissionObjectInterface, Attri
             // we make sure to update the cInheritPermissionsFromCID value
             $pType = PageType::getByID($c->getPageTypeID());
             $masterC = $pType->getPageTypePageTemplateDefaultPageObject();
-            $db->executeQuery(
+            $db->executeStatement(
                 'update Pages set cInheritPermissionsFromCID = ? where cID = ?',
                 [(int) $masterC->getCollectionID(), $c->getCollectionID()]
             );
@@ -849,7 +849,7 @@ class Version extends ConcreteObject implements PermissionObjectInterface, Attri
                 if ($cnp->canApprovePageVersions()) {
                     $v = $cn->getVersionObject();
                     $v->delete();
-                    $db->executeQuery('delete from CollectionVersionRelatedEdits where cID = ? and cvID = ? and cRelationID = ? and cvRelationID = ?', array(
+                    $db->executeStatement('delete from CollectionVersionRelatedEdits where cID = ? and cvID = ? and cRelationID = ? and cvRelationID = ?', array(
                         $this->cID,
                         $this->cvID,
                         $row['cRelationID'],
@@ -891,7 +891,7 @@ class Version extends ConcreteObject implements PermissionObjectInterface, Attri
     {
         $app = Facade::getFacadeApplication();
         $db = $app->make('database')->connection();
-        $db->executeQuery("update CollectionVersions set cvIsNew = 0 where cID = ? and cvID = ?", array(
+        $db->executeStatement("update CollectionVersions set cvIsNew = 0 where cID = ? and cvID = ?", array(
             $this->cID,
             $this->cvID,
         ));
@@ -978,35 +978,35 @@ class Version extends ConcreteObject implements PermissionObjectInterface, Attri
             $category->deleteValue($attribute);
         }
 
-        $db->executeQuery('delete from CollectionVersionBlockStyles where cID = ? and cvID = ?', array(
+        $db->executeStatement('delete from CollectionVersionBlockStyles where cID = ? and cvID = ?', array(
             $cID,
             $cvID,
         ));
-        $db->executeQuery('delete from CollectionVersionThemeCustomStyles where cID = ? and cvID = ?', array(
+        $db->executeStatement('delete from CollectionVersionThemeCustomStyles where cID = ? and cvID = ?', array(
             $cID,
             $cvID,
         ));
-        $db->executeQuery('delete from CollectionVersionRelatedEdits where cID = ? and cvID = ?', array(
+        $db->executeStatement('delete from CollectionVersionRelatedEdits where cID = ? and cvID = ?', array(
             $cID,
             $cvID,
         ));
-        $db->executeQuery('delete from CollectionVersionAreaStyles where cID = ? and cvID = ?', array(
-            $cID,
-            $cvID,
-        ));
-
-        $db->executeQuery('delete from PageTypeComposerOutputBlocks where cID = ? and cvID = ?', array(
+        $db->executeStatement('delete from CollectionVersionAreaStyles where cID = ? and cvID = ?', array(
             $cID,
             $cvID,
         ));
 
-        $db->executeQuery('delete from CollectionVersionBlocks where cID = ? and cvID = ?', array(
+        $db->executeStatement('delete from PageTypeComposerOutputBlocks where cID = ? and cvID = ?', array(
+            $cID,
+            $cvID,
+        ));
+
+        $db->executeStatement('delete from CollectionVersionBlocks where cID = ? and cvID = ?', array(
             $cID,
             $cvID,
         ));
 
         $q = "delete from CollectionVersions where cID = '{$cID}' and cvID='{$cvID}'";
-        $db->executeQuery($q);
+        $db->executeStatement($q);
         $this->refreshCache();
 
         $ev = new Event($c);

@@ -102,19 +102,19 @@ class AddBlockToAreaAreaAccess extends AreaAccess
         $app = Application::getFacadeApplication();
         $db = $app->make(Connection::class);
         parent::save($args);
-        $db->executeQuery('delete from AreaPermissionBlockTypeAccessList where paID = ?', [$this->getPermissionAccessID()]);
-        $db->executeQuery('delete from AreaPermissionBlockTypeAccessListCustom where paID = ?', [$this->getPermissionAccessID()]);
+        $db->executeStatement('delete from AreaPermissionBlockTypeAccessList where paID = ?', [$this->getPermissionAccessID()]);
+        $db->executeStatement('delete from AreaPermissionBlockTypeAccessListCustom where paID = ?', [$this->getPermissionAccessID()]);
         if (isset($args['blockTypesIncluded']) && is_array($args['blockTypesIncluded'])) {
             foreach ($args['blockTypesIncluded'] as $peID => $permission) {
                 $v = [$this->getPermissionAccessID(), $peID, $permission];
-                $db->executeQuery('insert into AreaPermissionBlockTypeAccessList (paID, peID, permission) values (?, ?, ?)', $v);
+                $db->executeStatement('insert into AreaPermissionBlockTypeAccessList (paID, peID, permission) values (?, ?, ?)', $v);
             }
         }
 
         if (isset($args['blockTypesExcluded']) && is_array($args['blockTypesExcluded'])) {
             foreach ($args['blockTypesExcluded'] as $peID => $permission) {
                 $v = [$this->getPermissionAccessID(), $peID, $permission];
-                $db->executeQuery('insert into AreaPermissionBlockTypeAccessList (paID, peID, permission) values (?, ?, ?)', $v);
+                $db->executeStatement('insert into AreaPermissionBlockTypeAccessList (paID, peID, permission) values (?, ?, ?)', $v);
             }
         }
 
@@ -122,7 +122,7 @@ class AddBlockToAreaAreaAccess extends AreaAccess
             foreach ($args['btIDInclude'] as $peID => $btIDs) {
                 foreach ($btIDs as $btID) {
                     $v = [$this->getPermissionAccessID(), $peID, $btID];
-                    $db->executeQuery('insert into AreaPermissionBlockTypeAccessListCustom (paID, peID, btID) values (?, ?, ?)', $v);
+                    $db->executeStatement('insert into AreaPermissionBlockTypeAccessListCustom (paID, peID, btID) values (?, ?, ?)', $v);
                 }
             }
         }
@@ -131,7 +131,7 @@ class AddBlockToAreaAreaAccess extends AreaAccess
             foreach ($args['btIDExclude'] as $peID => $btIDs) {
                 foreach ($btIDs as $btID) {
                     $v = [$this->getPermissionAccessID(), $peID, $btID];
-                    $db->executeQuery('insert into AreaPermissionBlockTypeAccessListCustom (paID, peID, btID) values (?, ?, ?)', $v);
+                    $db->executeStatement('insert into AreaPermissionBlockTypeAccessListCustom (paID, peID, btID) values (?, ?, ?)', $v);
                 }
             }
         }

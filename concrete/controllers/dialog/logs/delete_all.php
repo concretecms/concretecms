@@ -38,7 +38,7 @@ class DeleteAll extends BackendInterfaceController
             /** @noinspection PhpUnhandledExceptionInspection */
             /** @noinspection SqlDialectInspection */
             /** @noinspection SqlNoDataSourceInspection */
-            $db->executeQuery("TRUNCATE TABLE Logs");
+            $db->executeStatement("TRUNCATE TABLE Logs");
 
             $this->flash('success', t('Log cleared successfully.'));
             $editResponse->setRedirectURL((string) $this->app->make(ResolverManagerInterface::class)->resolve(['/dashboard/reports/logs']));

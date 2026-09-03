@@ -141,7 +141,7 @@ abstract class Layout extends ConcreteObject
     public function getAreaLayoutColumns()
     {
         $db = Database::connection();
-        $r = $db->Execute('select arLayoutColumnID from AreaLayoutColumns where arLayoutID = ? order by arLayoutColumnIndex asc', [$this->arLayoutID]);
+        $r = $db->executeQuery('select arLayoutColumnID from AreaLayoutColumns where arLayoutID = ? order by arLayoutColumnIndex asc', [$this->arLayoutID]);
         $columns = [];
         $class = '\\Concrete\\Core\\Area\\Layout\\' . Core::make('helper/text')->camelcase($this->arLayoutType) . 'Column';
         while ($row = $r->fetch()) {
@@ -168,7 +168,7 @@ abstract class Layout extends ConcreteObject
             $arLayoutColumnDisplayID = 1;
         }
         $index = $db->GetOne('select count(arLayoutColumnID) from AreaLayoutColumns where arLayoutID = ?', [$this->arLayoutID]);
-        $db->Execute('insert into AreaLayoutColumns (arLayoutID, arLayoutColumnIndex, arLayoutColumnDisplayID) values (?, ?, ?)', [$this->arLayoutID, $index, $arLayoutColumnDisplayID]);
+        $db->executeStatement('insert into AreaLayoutColumns (arLayoutID, arLayoutColumnIndex, arLayoutColumnDisplayID) values (?, ?, ?)', [$this->arLayoutID, $index, $arLayoutColumnDisplayID]);
 
         return $db->Insert_ID();
     }
@@ -199,8 +199,8 @@ abstract class Layout extends ConcreteObject
             $col->delete();
         }
         $db = Database::connection();
-        $db->Execute('delete from AreaLayouts where arLayoutID = ?', [$this->arLayoutID]);
-        $db->Execute('delete from AreaLayoutPresets where arLayoutID = ?', [$this->arLayoutID]);
+        $db->executeStatement('delete from AreaLayouts where arLayoutID = ?', [$this->arLayoutID]);
+        $db->executeStatement('delete from AreaLayoutPresets where arLayoutID = ?', [$this->arLayoutID]);
     }
 
     /**

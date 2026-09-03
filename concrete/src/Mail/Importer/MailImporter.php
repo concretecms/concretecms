@@ -91,7 +91,7 @@ class MailImporter extends ConcreteObject
     public function delete()
     {
         $db = Database::connection();
-        $db->Execute('delete from MailImporters where miID = ?', array($this->miID));
+        $db->executeStatement('delete from MailImporters where miID = ?', array($this->miID));
     }
 
     public static function getListByPackage($pkg)
@@ -193,7 +193,7 @@ class MailImporter extends ConcreteObject
 
         $pkgID = ($pkg == null) ? 0 : $pkg->getPackageID();
 
-        $db->Execute('insert into MailImporters (miHandle, miServer, miUsername, miPassword, miEncryption, miIsEnabled, miEmail, miPort, miConnectionMethod, pkgID) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+        $db->executeStatement('insert into MailImporters (miHandle, miServer, miUsername, miPassword, miEncryption, miIsEnabled, miEmail, miPort, miConnectionMethod, pkgID) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
             array(
                 $miHandle,
                 Core::make('helper/security')->sanitizeString($miServer),
@@ -229,7 +229,7 @@ class MailImporter extends ConcreteObject
             $miEncryption = null;
         }
 
-        $db->Execute('update MailImporters set miServer = ?, miUsername = ?, miPassword = ?, miEncryption = ?, miIsEnabled = ?, miEmail = ?, miPort = ?, miConnectionMethod = ? where miID = ?',
+        $db->executeStatement('update MailImporters set miServer = ?, miUsername = ?, miPassword = ?, miEncryption = ?, miIsEnabled = ?, miEmail = ?, miPort = ?, miConnectionMethod = ? where miID = ?',
             array(
                 Core::make('helper/security')->sanitizeString($miServer),
                 $miUsername,
@@ -259,7 +259,7 @@ class MailImporter extends ConcreteObject
         $h = Core::make('helper/validation/identifier');
         $hash = $h->generate('MailValidationHashes', 'mHash');
         $args = array($email, $this->miID, $hash, time(), serialize($dataObject));
-        $db->Execute("insert into MailValidationHashes (email, miID, mHash, mDateGenerated, data) values (?, ?, ?, ?, ?)", $args);
+        $db->executeStatement("insert into MailValidationHashes (email, miID, mHash, mDateGenerated, data) values (?, ?, ?, ?, ?)", $args);
         $this->validationHash = $hash;
 
         return $hash;
@@ -305,7 +305,7 @@ class MailImporter extends ConcreteObject
     public function cleanup(MailImportedMessage $me)
     {
         $db = Database::connection();
-        $db->query("update MailValidationHashes set mDateRedeemed = " . time() . " where mHash = ?", array($me->getValidationHash()));
+        $db->executeStatement("update MailValidationHashes set mDateRedeemed = " . time() . " where mHash = ?", array($me->getValidationHash()));
         $me->delete();
     }
 }

@@ -40,7 +40,7 @@ class Mailbox extends ConcreteObject
         $ue = new \Concrete\Core\User\Event\UserInfo($user);
         Events::dispatch('on_private_message_marked_not_new', $ue);
 
-        $db->Execute('update UserPrivateMessagesTo set msgIsNew = 0 where msgMailboxID = ? and uID = ?', array($this->msgMailboxID, $user->getUserID()));
+        $db->executeStatement('update UserPrivateMessagesTo set msgIsNew = 0 where msgMailboxID = ? and uID = ?', array($this->msgMailboxID, $user->getUserID()));
     }
 
     public function removeMessageNewStatus($messageId)
@@ -51,7 +51,7 @@ class Mailbox extends ConcreteObject
         $ue = new \Concrete\Core\User\Event\UserInfo($user);
         Events::dispatch('on_private_message_marked_not_new', $ue);
 
-        $db->Execute('update UserPrivateMessagesTo set msgIsNew = 0 where msgMailboxID = ? and uID = ? and msgID = ?', [$this->msgMailboxID, $user->getUserID(), $messageId ]);
+        $db->executeStatement('update UserPrivateMessagesTo set msgIsNew = 0 where msgMailboxID = ? and uID = ? and msgID = ?', [$this->msgMailboxID, $user->getUserID(), $messageId ]);
     }
 
     public function getTotalMessages()

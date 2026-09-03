@@ -348,7 +348,7 @@ class BlockControl extends Control
         $v = [$c->getVersionID(), $setControl->getPageTypeComposerFormLayoutSetControlID(), $c->getCollectionID(), $c->getVersionID()];
         $row = $db->fetchAssoc($q, $v);
         if ($row && $row['bID'] && $row['arHandle']) {
-            $db->executeQuery(
+            $db->executeStatement(
                 'delete from PageTypeComposerOutputBlocks where ptComposerFormLayoutSetControlID = ? and cID = ? and cvID = ?',
                 [$setControl->getPageTypeComposerFormLayoutSetControlID(), $c->getCollectionID(), $c->getVersionID()]
             );
@@ -384,7 +384,7 @@ class BlockControl extends Control
         $ocID = $oc->getCollectionID();
         $ovID = $oc->getVersionID();
 
-        $db->executeQuery(
+        $db->executeStatement(
             'insert into PageTypeComposerOutputBlocks (cID, cvID, arHandle, ptComposerFormLayoutSetControlID, cbDisplayOrder, bID) values (?, ?, ?, ?, ?, ?)',
             [
                 $ocID,

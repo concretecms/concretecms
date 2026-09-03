@@ -14,12 +14,12 @@ class EditPageThemePageAccess extends PageAccess
         $r = $db->executeQuery('select * from PagePermissionThemeAccessList where paID = ?', [$this->getPermissionAccessID()]);
         while ($row = $r->fetch()) {
             $v = [$row['peID'], $newPA->getPermissionAccessID(), $row['permission']];
-            $db->executeQuery('insert into PagePermissionThemeAccessList (peID, paID, permission) values (?, ?, ?)', $v);
+            $db->executeStatement('insert into PagePermissionThemeAccessList (peID, paID, permission) values (?, ?, ?)', $v);
         }
         $r = $db->executeQuery('select * from PagePermissionThemeAccessListCustom where paID = ?', [$this->getPermissionAccessID()]);
         while ($row = $r->fetch()) {
             $v = [$row['peID'], $newPA->getPermissionAccessID(), $row['pThemeID']];
-            $db->executeQuery('insert into PagePermissionThemeAccessListCustom  (peID, paID, pThemeID) values (?, ?, ?)', $v);
+            $db->executeStatement('insert into PagePermissionThemeAccessListCustom  (peID, paID, pThemeID) values (?, ?, ?)', $v);
         }
 
         return $newPA;
@@ -29,19 +29,19 @@ class EditPageThemePageAccess extends PageAccess
     {
         parent::save();
         $db = Database::connection();
-        $db->executeQuery('delete from PagePermissionThemeAccessList where paID = ?', [$this->getPermissionAccessID()]);
-        $db->executeQuery('delete from PagePermissionThemeAccessListCustom where paID = ?', [$this->getPermissionAccessID()]);
+        $db->executeStatement('delete from PagePermissionThemeAccessList where paID = ?', [$this->getPermissionAccessID()]);
+        $db->executeStatement('delete from PagePermissionThemeAccessListCustom where paID = ?', [$this->getPermissionAccessID()]);
         if (isset($args['themesIncluded']) && is_array($args['themesIncluded'])) {
             foreach ($args['themesIncluded'] as $peID => $permission) {
                 $v = [$this->getPermissionAccessID(), $peID, $permission];
-                $db->executeQuery('insert into PagePermissionThemeAccessList (paID, peID, permission) values (?, ?, ?)', $v);
+                $db->executeStatement('insert into PagePermissionThemeAccessList (paID, peID, permission) values (?, ?, ?)', $v);
             }
         }
 
         if (isset($args['themesExcluded']) && is_array($args['themesExcluded'])) {
             foreach ($args['themesExcluded'] as $peID => $permission) {
                 $v = [$this->getPermissionAccessID(), $peID, $permission];
-                $db->executeQuery('insert into PagePermissionThemeAccessList (paID, peID, permission) values (?, ?, ?)', $v);
+                $db->executeStatement('insert into PagePermissionThemeAccessList (paID, peID, permission) values (?, ?, ?)', $v);
             }
         }
 
@@ -49,7 +49,7 @@ class EditPageThemePageAccess extends PageAccess
             foreach ($args['pThemeIDInclude'] as $peID => $pThemeIDs) {
                 foreach ($pThemeIDs as $pThemeID) {
                     $v = [$this->getPermissionAccessID(), $peID, $pThemeID];
-                    $db->executeQuery('insert into PagePermissionThemeAccessListCustom (paID, peID, pThemeID) values (?, ?, ?)', $v);
+                    $db->executeStatement('insert into PagePermissionThemeAccessListCustom (paID, peID, pThemeID) values (?, ?, ?)', $v);
                 }
             }
         }
@@ -58,7 +58,7 @@ class EditPageThemePageAccess extends PageAccess
             foreach ($args['pThemeIDExclude'] as $peID => $pThemeIDs) {
                 foreach ($pThemeIDs as $pThemeID) {
                     $v = [$this->getPermissionAccessID(), $peID, $pThemeID];
-                    $db->executeQuery('insert into PagePermissionThemeAccessListCustom (paID, peID, pThemeID) values (?, ?, ?)', $v);
+                    $db->executeStatement('insert into PagePermissionThemeAccessListCustom (paID, peID, pThemeID) values (?, ?, ?)', $v);
                 }
             }
         }

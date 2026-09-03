@@ -17,6 +17,6 @@ final class Version20210712110100 extends AbstractMigration implements Repeatabl
         /** @var Connection $db */
         $db = $this->app->make(Connection::class);
         /** @noinspection PhpUnhandledExceptionInspection */
-        $db->executeQuery("UPDATE btContentImage SET sizingOption = 'constrain_size' WHERE maxWidth > 0 OR maxHeight > 0");
+        $db->executeStatement("UPDATE btContentImage SET sizingOption = 'constrain_size' WHERE maxWidth > 0 OR maxHeight > 0");
     }
 }

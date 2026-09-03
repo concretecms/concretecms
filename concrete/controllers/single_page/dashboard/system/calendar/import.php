@@ -16,9 +16,9 @@ class Import extends DashboardPageController
              * @var $db Connection
              */
             $db = $this->app->make(Connection::class);
-            $db->executeQuery('set foreign_key_checks = 0');
+            $db->executeStatement('set foreign_key_checks = 0');
             if ($db->tableExists('_CalendarEventOccurrences')) {
-                $db->executeQuery('delete o from _CalendarEventOccurrences o left join _CalendarEvents e on o.eventID = e.eventID where e.eventID is null');
+                $db->executeStatement('delete o from _CalendarEventOccurrences o left join _CalendarEvents e on o.eventID = e.eventID where e.eventID is null');
             }
 
             $r1 = $db->executeQuery('select * from _Calendars order by caID asc');
@@ -82,21 +82,21 @@ class Import extends DashboardPageController
                         ]);
                     }
                 }
-                $db->executeQuery('insert into Calendars (caID, caName, siteID) values (?, ?, ?)', [
+                $db->executeStatement('insert into Calendars (caID, caName, siteID) values (?, ?, ?)', [
                     $row1['caID'],
                     $row1['caName'],
                     $site->getSiteID()
                 ]);
             }
 
-            $db->executeQuery("update CalendarEventRepetitions set repetitionObject = replace(repetitionObject, 'O:43:\"PortlandLabs\\\Calendar\\\Event\\\EventRepetition', 'O:44:\"Concrete\\\Core\\\Calendar\\\Event\\\EventRepetition')");
+            $db->executeStatement("update CalendarEventRepetitions set repetitionObject = replace(repetitionObject, 'O:43:\"PortlandLabs\\\Calendar\\\Event\\\EventRepetition', 'O:44:\"Concrete\\\Core\\\Calendar\\\Event\\\EventRepetition')");
 
-            $db->executeQuery('drop table if exists _CalendarEventAttributeValues');
-            $db->executeQuery('drop table if exists _CalendarEventOccurrences');
-            $db->executeQuery('drop table if exists _CalendarEventRepetitions');
-            $db->executeQuery('drop table if exists _CalendarEventSearchIndexAttributes');
-            $db->executeQuery('drop table if exists _CalendarEvents');
-            $db->executeQuery('drop table if exists _Calendars');
+            $db->executeStatement('drop table if exists _CalendarEventAttributeValues');
+            $db->executeStatement('drop table if exists _CalendarEventOccurrences');
+            $db->executeStatement('drop table if exists _CalendarEventRepetitions');
+            $db->executeStatement('drop table if exists _CalendarEventSearchIndexAttributes');
+            $db->executeStatement('drop table if exists _CalendarEvents');
+            $db->executeStatement('drop table if exists _Calendars');
 
             $this->flash('success', t('Data imported successfully.'));
             return $this->redirect('/dashboard/system/calendar/import', 'view');

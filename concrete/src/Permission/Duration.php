@@ -141,11 +141,11 @@ class Duration extends AbstractRepetition
         if (!$this->pdID) {
             $pd = new self();
             $pdObject = serialize($pd);
-            $db->executeQuery('INSERT INTO PermissionDurationObjects (pdObject) VALUES (?)', [$pdObject]);
+            $db->executeStatement('INSERT INTO PermissionDurationObjects (pdObject) VALUES (?)', [$pdObject]);
             $this->pdID = $db->lastInsertId();
         }
         $pdObject = serialize($this);
-        $db->executeQuery(
+        $db->executeStatement(
             'UPDATE PermissionDurationObjects SET pdObject = ? WHERE pdID = ?',
             [$pdObject, $this->pdID]
         );

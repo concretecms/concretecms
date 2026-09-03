@@ -95,10 +95,10 @@ class GroupEntity extends Entity
         $peID = $db->GetOne('select pae.peID from PermissionAccessEntities pae inner join PermissionAccessEntityGroups paeg on pae.peID = paeg.peID where petID = ? and paeg.gID = ?',
             array($petID, $g->getGroupID()));
         if (!$peID) {
-            $db->Execute("insert into PermissionAccessEntities (petID) values(?)", array($petID));
+            $db->executeStatement("insert into PermissionAccessEntities (petID) values(?)", array($petID));
             $peID = $db->Insert_ID();
             Config::save('concrete.misc.access_entity_updated', time());
-            $db->Execute('insert into PermissionAccessEntityGroups (peID, gID) values (?, ?)',
+            $db->executeStatement('insert into PermissionAccessEntityGroups (peID, gID) values (?, ?)',
                 array($peID, $g->getGroupID()));
         }
 

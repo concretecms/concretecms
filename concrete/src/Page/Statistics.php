@@ -54,7 +54,7 @@ class Statistics
         $cpc = Page::getByID($cParentID);
         $cpc->refreshCache();
 
-        $r = $db->query($q, array($cParentID));
+        $db->executeStatement($q, array($cParentID));
     }
 
     /**
@@ -75,7 +75,7 @@ class Statistics
         $cpc = Page::getByID($cParentID);
         $cpc->refreshCache();
 
-        $r = $db->query($q, array($cChildren, $cParentID));
+        $db->executeStatement($q, array($cChildren, $cParentID));
     }
 
     /**

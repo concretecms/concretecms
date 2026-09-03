@@ -69,7 +69,7 @@ class Version20190708000000 extends AbstractMigration implements RepeatableMigra
             return;
         }
         $site = $this->app->make('site')->getSite();
-        $this->connection->executeQuery(
+        $this->connection->executeStatement(
             '
 INSERT INTO IpAccessControlRanges
     (
@@ -103,7 +103,7 @@ INSERT INTO IpAccessControlRanges
             return;
         }
         $site = $this->app->make('site')->getSite();
-        $this->connection->executeQuery(
+        $this->connection->executeStatement(
             '
 INSERT INTO IpAccessControlEvents
     (

@@ -49,7 +49,7 @@ EOT
             }
         }
         $cn = Database::get();
-        $cn->executeQuery('set foreign_key_checks = 0');
+        $cn->executeStatement('set foreign_key_checks = 0');
         if (Database::getDefaultConnection()) {
             $output->write("Listing tables... ");
             /* @var $cn \Concrete\Core\Database\Connection\Connection */

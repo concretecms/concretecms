@@ -90,7 +90,7 @@ class StandardSearchIndexer implements SearchIndexerInterface
 
                 $queries = $schema->toSql($this->connection->getDatabasePlatform());
                 foreach ($queries as $query) {
-                    $this->connection->query($query);
+                    $this->connection->executeStatement($query);
                 }
             }
         }

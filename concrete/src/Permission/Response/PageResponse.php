@@ -243,7 +243,7 @@ class PageResponse extends Response
     {
         $db = Loader::db();
         $assignments = [];
-        $r = $db->Execute(
+        $r = $db->executeQuery(
             'select peID, pkID, pdID from PagePermissionAssignments ppa inner join PermissionAccessList pal on ppa.paID = pal.paID where cID = ?',
             [$this->object->getCollectionID()]
         );
@@ -257,12 +257,12 @@ class PageResponse extends Response
             $ppc->setPermissionKeyObject($pk);
             $assignments[] = $ppc;
         }
-        $r = $db->Execute(
+        $r = $db->executeQuery(
             'select arHandle from Areas where cID = ? and arOverrideCollectionPermissions = 1',
             [$this->object->getCollectionID()]
         );
         while ($row = $r->fetch()) {
-            $r2 = $db->Execute(
+            $r2 = $db->executeQuery(
                 'select peID, pdID, pkID from AreaPermissionAssignments apa inner join PermissionAccessList pal on apa.paID = pal.paID where cID = ? and arHandle = ?',
                 [$this->object->getCollectionID(), $row['arHandle']]
             );
@@ -279,7 +279,7 @@ class PageResponse extends Response
                 $assignments[] = $ppc;
             }
         }
-        $r = $db->Execute(
+        $r = $db->executeQuery(
             'select peID, cvb.cvID, cvb.bID, pdID, pkID from BlockPermissionAssignments bpa
                     inner join PermissionAccessList pal on bpa.paID = pal.paID inner join CollectionVersionBlocks cvb on cvb.cID = bpa.cID and cvb.cvID = bpa.cvID and cvb.bID = bpa.bID
                     where cvb.cID = ? and cvb.cvID = ? and cvb.cbOverrideAreaPermissions = 1',

@@ -76,7 +76,7 @@ abstract class Snippet extends ConcreteObject
             $pkgID = $pkg->getPackageID();
         }
         $db = Loader::db();
-        $db->Execute('insert into SystemContentEditorSnippets (scsHandle, scsName, pkgID) values (?, ?, ?)', array($scsHandle, $scsName, $pkgID));
+        $db->executeStatement('insert into SystemContentEditorSnippets (scsHandle, scsName, pkgID) values (?, ?, ?)', array($scsHandle, $scsName, $pkgID));
 
         return static::getByHandle($scsHandle);
     }
@@ -84,19 +84,19 @@ abstract class Snippet extends ConcreteObject
     public function delete()
     {
         $db = Loader::db();
-        $db->Execute('delete from SystemContentEditorSnippets where scsHandle = ?', array($this->scsHandle));
+        $db->executeStatement('delete from SystemContentEditorSnippets where scsHandle = ?', array($this->scsHandle));
     }
 
     public function activate()
     {
         $db = Loader::db();
-        $db->Execute('update SystemContentEditorSnippets set scsIsActive = 1 where scsHandle = ?', array($this->scsHandle));
+        $db->executeStatement('update SystemContentEditorSnippets set scsIsActive = 1 where scsHandle = ?', array($this->scsHandle));
     }
 
     public function deactivate()
     {
         $db = Loader::db();
-        $db->Execute('update SystemContentEditorSnippets set scsIsActive = 0 where scsHandle = ?', array($this->scsHandle));
+        $db->executeStatement('update SystemContentEditorSnippets set scsIsActive = 0 where scsHandle = ?', array($this->scsHandle));
     }
 
     public static function getList()
