@@ -17,9 +17,9 @@ defined('C5_EXECUTE') or die('Access Denied.');
 class CheckerGenerator
 {
     /**
-     * @var \Concrete\Core\File\Service\File
+     * @var \Concrete\Core\Support\Symbol\ClassLister
      */
-    private $fileService;
+    private $classLister;
 
     /**
      * @var \Concrete\Core\Support\Symbol\CheckerGenerator\PermissionKeysProviderInterface
@@ -39,14 +39,15 @@ class CheckerGenerator
     /**
      * @param bool $isInstalled is Concrete installed? If so, the permission keys are read from the database, otherwise from the CIF files of the core
      * @param \Concrete\Core\Support\Symbol\CheckerGenerator\PermissionKeysProviderInterface|null $permissionKeysProvider a custom provider of the permission keys (if NULL, we'll use the default one depending on $isInstalled)
+     * @param \Concrete\Core\Support\Symbol\ClassLister|null $classLister the lister of the core classes (if NULL, we'll create a new one)
      */
-    public function __construct(FileService $fileService, bool $isInstalled, ?PermissionKeysProviderInterface $permissionKeysProvider = null)
+    public function __construct(FileService $fileService, bool $isInstalled, ?PermissionKeysProviderInterface $permissionKeysProvider = null, ?ClassLister $classLister = null)
     {
-        $this->fileService = $fileService;
         if ($permissionKeysProvider === null) {
             $permissionKeysProvider = $isInstalled ? new DatabasePermissionKeysProvider() : new CIFPermissionKeysProvider($fileService, DIR_BASE_CORE . '/config/install');
         }
         $this->permissionKeysProvider = $permissionKeysProvider;
+        $this->classLister = $classLister ?? new ClassLister($fileService, 'Concrete\Core', DIR_BASE_CORE . '/' . DIRNAME_CLASSES);
     }
 
     public function getNamespace(): string
@@ -143,7 +144,12 @@ class CheckerGenerator
      */
     private function listMethods(): array
     {
-        $all = $this->listMethodsIn('Concrete\Core', DIR_BASE_CORE . '/' . DIRNAME_CLASSES);
+        $all = [];
+        foreach ($this->classLister->getClassNames() as $className) {
+            if (in_array(ObjectInterface::class, class_implements($className), true)) {
+                $all = array_merge($all, $this->analyzeObjectInterfaceClass($className));
+            }
+        }
         foreach ($this->permissionKeysProvider->getCategoryHandles() as $categoryHandle) {
             $all = array_merge($all, $this->generateMethodsFromCategory($categoryHandle));
         }
@@ -167,44 +173,6 @@ class CheckerGenerator
         });
 
         return $merged;
-    }
-
-    /**
-     * @return \Concrete\Core\Support\Symbol\CheckerGenerator\Method[]
-     */
-    private function listMethodsIn(string $namespacePrefix, string $parentDirectory): array
-    {
-        $result = [];
-        $matches = null;
-        foreach ($this->fileService->getDirectoryContents($parentDirectory) as $name) {
-            if ($name === '__IDE_SYMBOLS__.php') {
-                continue;
-            }
-            if (preg_match('/^(\w.*)\.php/i', $name, $matches)) {
-                $className = $namespacePrefix . '\\' . $matches[1];
-                $classExists = null;
-                if (strpos($className, 'Concrete\\Core\\Support\\CodingStyle\\') === 0) {
-                    $classExists = false;
-                }
-                if ($classExists === null) {
-                    $classExists = class_exists($className);
-                }
-                if ($classExists) {
-                    $interfaces = class_implements($className);
-                    if (in_array(ObjectInterface::class, $interfaces)) {
-                        $result = array_merge($result, $this->analyzeObjectInterfaceClass($className));
-                    }
-                }
-            } else {
-                $fullPath = $parentDirectory . '/' . $name;
-                if (is_dir($fullPath)) {
-                    $namespace = ($namespacePrefix === '' ? '' : "{$namespacePrefix}\\") . $name;
-                    $result = array_merge($result, $this->listMethodsIn($namespace, $fullPath));
-                }
-            }
-        }
-
-        return $result;
     }
 
     /**
