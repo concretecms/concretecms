@@ -1311,12 +1311,6 @@ parameters:
 			path: concrete/controllers/dialog/user/attributes.php
 
 		-
-			message: '#^Call to static method getList\(\) on an unknown class Concrete\\Controller\\Dialog\\User\\Bulk\\UserWorkflowProgress\.$#'
-			identifier: class.notFound
-			count: 1
-			path: concrete/controllers/dialog/user/bulk/delete.php
-
-		-
 			message: '#^Call to Concrete\\Core\\Controller\\AbstractController\:\:on_start\(\) on a separate line has no effect\.$#'
 			identifier: staticMethod.resultUnused
 			count: 1
@@ -2201,12 +2195,6 @@ parameters:
 		-
 			message: '#^Call to function is_array\(\) with bool\|float\|int\|string\|null will always evaluate to false\.$#'
 			identifier: function.impossibleType
-			count: 1
-			path: concrete/controllers/single_page/dashboard/blocks/stacks.php
-
-		-
-			message: '#^Call to static method to\(\) on an unknown class Concrete\\Controller\\SinglePage\\Dashboard\\Blocks\\Redirect\.$#'
-			identifier: class.notFound
 			count: 1
 			path: concrete/controllers/single_page/dashboard/blocks/stacks.php
 
@@ -6003,14 +5991,8 @@ parameters:
 			path: concrete/src/Area/Area.php
 
 		-
-			message: '#^Caught class Concrete\\Core\\Area\\UniqueConstraintViolationException not found\.$#'
-			identifier: class.notFound
-			count: 1
-			path: concrete/src/Area/ContainerArea.php
-
-		-
-			message: '#^Parameter \#1 \$entityName of method Doctrine\\ORM\\EntityManager\:\:clear\(\) expects string\|null, Concrete\\Core\\Entity\\Page\\Container\\InstanceArea given\.$#'
-			identifier: argument.type
+			message: '#^Dead catch \- Doctrine\\DBAL\\Exception\\UniqueConstraintViolationException is never thrown in the try block\.$#'
+			identifier: catch.neverThrown
 			count: 1
 			path: concrete/src/Area/ContainerArea.php
 
@@ -6823,12 +6805,6 @@ parameters:
 			identifier: varTag.misplaced
 			count: 1
 			path: concrete/src/Attribute/FilterableByValueInterface.php
-
-		-
-			message: '#^Parameter \$calendar of method Concrete\\Core\\Attribute\\Form\\CalendarRenderer\:\:__construct\(\) has invalid type Concrete\\Core\\Entity\\Calendar\.$#'
-			identifier: class.notFound
-			count: 1
-			path: concrete/src/Attribute/Form/CalendarRenderer.php
 
 		-
 			message: '#^Property Concrete\\Core\\Attribute\\Form\\Control\\View\\View\:\:\$object \(Concrete\\Core\\Attribute\\ObjectInterface\) in isset\(\) is not nullable\.$#'
@@ -8085,18 +8061,6 @@ parameters:
 			path: concrete/src/Board/Instance/Slot/RenderedSlotCollection.php
 
 		-
-			message: '#^Class Concrete\\Core\\Board\\Instance\\Slot\\CollectionFactory not found\.$#'
-			identifier: class.notFound
-			count: 1
-			path: concrete/src/Board/ServiceProvider.php
-
-		-
-			message: '#^Class Concrete\\Core\\Board\\Template\\Slot\\Driver\\BlogCardDriver not found\.$#'
-			identifier: class.notFound
-			count: 1
-			path: concrete/src/Board/Template/Slot/Driver/Manager.php
-
-		-
 			message: '#^Method Concrete\\Core\\Board\\Template\\TemplateLocator\:\:getFileToRender\(\) should return string but returns null\.$#'
 			identifier: return.type
 			count: 1
@@ -8751,20 +8715,8 @@ parameters:
 			path: concrete/src/Console/Command.php
 
 		-
-			message: '#^Instantiated class Concrete\\Core\\Console\\NullOutput not found\.$#'
-			identifier: class.notFound
-			count: 1
-			path: concrete/src/Console/Command.php
-
-		-
 			message: '#^PHPDoc tag @param for parameter \$rows with type array\|Illuminate\\Contracts\\Support\\Arrayable is not subtype of native type array\.$#'
 			identifier: parameter.phpDocType
-			count: 1
-			path: concrete/src/Console/Command.php
-
-		-
-			message: '#^Parameter \#2 \$output of method Symfony\\Component\\Console\\Command\\Command\:\:run\(\) expects Symfony\\Component\\Console\\Output\\OutputInterface, Concrete\\Core\\Console\\NullOutput given\.$#'
-			identifier: argument.type
 			count: 1
 			path: concrete/src/Console/Command.php
 
@@ -9336,12 +9288,6 @@ parameters:
 			message: '#^Access to an undefined property Concrete\\Core\\Conversation\\Rating\\Type\:\:\$pkgID\.$#'
 			identifier: property.notFound
 			count: 3
-			path: concrete/src/Conversation/Rating/Type.php
-
-		-
-			message: '#^Call to static method getByID\(\) on an unknown class Concrete\\Core\\Conversation\\Rating\\Package\.$#'
-			identifier: class.notFound
-			count: 1
 			path: concrete/src/Conversation/Rating/Type.php
 
 		-
@@ -12423,18 +12369,6 @@ parameters:
 			path: concrete/src/Filesystem/Twig/CoreExtension.php
 
 		-
-			message: '#^Call to method getUserInfoObject\(\) on an unknown class Concrete\\Core\\Filesystem\\Twig\\UserEntity\.$#'
-			identifier: class.notFound
-			count: 1
-			path: concrete/src/Filesystem/Twig/CoreExtension.php
-
-		-
-			message: '#^Class Concrete\\Core\\Filesystem\\Twig\\UserEntity not found\.$#'
-			identifier: class.notFound
-			count: 1
-			path: concrete/src/Filesystem/Twig/CoreExtension.php
-
-		-
 			message: '#^Parameter \#1 \$uID of method Concrete\\Core\\User\\UserInfoRepository\:\:getByID\(\) expects int, string given\.$#'
 			identifier: argument.type
 			count: 1
@@ -13767,19 +13701,7 @@ parameters:
 			path: concrete/src/Legacy/DatabaseItemList.php
 
 		-
-			message: '#^Call to method getAttributeKeyHandle\(\) on an unknown class Concrete\\Core\\Legacy\\AttributeKey\.$#'
-			identifier: class.notFound
-			count: 3
-			path: concrete/src/Legacy/DatabaseItemList.php
-
-		-
-			message: '#^Class Concrete\\Core\\Legacy\\AttributeKey not found\.$#'
-			identifier: class.notFound
-			count: 4
-			path: concrete/src/Legacy/DatabaseItemList.php
-
-		-
-			message: '#^Instanceof between string and Concrete\\Core\\Legacy\\AttributeKey will always evaluate to false\.$#'
+			message: '#^Instanceof between string and Concrete\\Core\\Entity\\Attribute\\Key\\Key will always evaluate to false\.$#'
 			identifier: instanceof.alwaysFalse
 			count: 1
 			path: concrete/src/Legacy/DatabaseItemList.php
@@ -13791,62 +13713,8 @@ parameters:
 			path: concrete/src/Legacy/FileList.php
 
 		-
-			message: '#^Access to constant CREATE on an unknown class Concrete\\Core\\Legacy\\ZipArchive\.$#'
-			identifier: class.notFound
-			count: 1
-			path: concrete/src/Legacy/FileList.php
-
-		-
 			message: '#^Call to function is_array\(\) with array\<float\|int\|numeric\-string\> will always evaluate to true\.$#'
 			identifier: function.alreadyNarrowedType
-			count: 1
-			path: concrete/src/Legacy/FileList.php
-
-		-
-			message: '#^Call to method addFromString\(\) on an unknown class Concrete\\Core\\Legacy\\ZipArchive\.$#'
-			identifier: class.notFound
-			count: 1
-			path: concrete/src/Legacy/FileList.php
-
-		-
-			message: '#^Call to method close\(\) on an unknown class Concrete\\Core\\Legacy\\ZipArchive\.$#'
-			identifier: class.notFound
-			count: 1
-			path: concrete/src/Legacy/FileList.php
-
-		-
-			message: '#^Call to method getMessage\(\) on an unknown class Concrete\\Core\\Legacy\\Exception\.$#'
-			identifier: class.notFound
-			count: 1
-			path: concrete/src/Legacy/FileList.php
-
-		-
-			message: '#^Call to method open\(\) on an unknown class Concrete\\Core\\Legacy\\ZipArchive\.$#'
-			identifier: class.notFound
-			count: 1
-			path: concrete/src/Legacy/FileList.php
-
-		-
-			message: '#^Call to static method getMySets\(\) on an unknown class Concrete\\Core\\Legacy\\FileSet\.$#'
-			identifier: class.notFound
-			count: 1
-			path: concrete/src/Legacy/FileList.php
-
-		-
-			message: '#^Caught class Concrete\\Core\\Legacy\\Exception not found\.$#'
-			identifier: class.notFound
-			count: 1
-			path: concrete/src/Legacy/FileList.php
-
-		-
-			message: '#^Instantiated class Concrete\\Core\\Legacy\\Exception not found\.$#'
-			identifier: class.notFound
-			count: 2
-			path: concrete/src/Legacy/FileList.php
-
-		-
-			message: '#^Instantiated class Concrete\\Core\\Legacy\\ZipArchive not found\.$#'
-			identifier: class.notFound
 			count: 1
 			path: concrete/src/Legacy/FileList.php
 
@@ -13860,12 +13728,6 @@ parameters:
 			message: '#^PHPDoc tag @param references unknown parameter\: \$extension$#'
 			identifier: parameter.notFound
 			count: 1
-			path: concrete/src/Legacy/FileList.php
-
-		-
-			message: '#^Throwing object of an unknown class Concrete\\Core\\Legacy\\Exception\.$#'
-			identifier: class.notFound
-			count: 2
 			path: concrete/src/Legacy/FileList.php
 
 		-
@@ -14325,12 +14187,6 @@ parameters:
 			path: concrete/src/Mail/Command/ProcessEmailCommandHandler.php
 
 		-
-			message: '#^Call to static method helper\(\) on an unknown class Concrete\\Core\\Mail\\Command\\Loader\.$#'
-			identifier: class.notFound
-			count: 1
-			path: concrete/src/Mail/Command/ProcessEmailCommandHandler.php
-
-		-
 			message: '#^Access to an undefined property Concrete\\Core\\Mail\\Importer\\MailImportedMessage\:\:\$dataObject\.$#'
 			identifier: property.notFound
 			count: 2
@@ -14356,12 +14212,6 @@ parameters:
 
 		-
 			message: '#^Call to method getContent\(\) on an unknown class Laminas\\Mail\\Storage\\Message\.$#'
-			identifier: class.notFound
-			count: 1
-			path: concrete/src/Mail/Importer/MailImportedMessage.php
-
-		-
-			message: '#^Caught class Concrete\\Core\\Mail\\Importer\\Exception not found\.$#'
 			identifier: class.notFound
 			count: 1
 			path: concrete/src/Mail/Importer/MailImportedMessage.php
@@ -14789,12 +14639,6 @@ parameters:
 		-
 			message: '#^Call to an undefined method Concrete\\Core\\Entity\\Package\:\:backup\(\)\.$#'
 			identifier: method.notFound
-			count: 1
-			path: concrete/src/Marketplace/RemoteItem.php
-
-		-
-			message: '#^Class Concrete\\Core\\Marketplace\\Error not found\.$#'
-			identifier: class.notFound
 			count: 1
 			path: concrete/src/Marketplace/RemoteItem.php
 
@@ -16821,12 +16665,6 @@ parameters:
 			path: concrete/src/Page/Stack/Pile/PileContent.php
 
 		-
-			message: '#^Call to static method getByID\(\) on an unknown class Concrete\\Core\\Page\\Stack\\Pile\\Page\.$#'
-			identifier: class.notFound
-			count: 1
-			path: concrete/src/Page/Stack/Pile/PileContent.php
-
-		-
 			message: '#^Constant PILE_MODULES_INSTALLED not found\.$#'
 			identifier: constant.notFound
 			count: 1
@@ -17231,12 +17069,6 @@ parameters:
 		-
 			message: '#^Access to an undefined property Concrete\\Core\\Page\\Type\\Composer\\Control\\Type\\Type\:\:\$ptComposerControlTypeName\.$#'
 			identifier: property.notFound
-			count: 1
-			path: concrete/src/Page/Type/Composer/Control/Type/Type.php
-
-		-
-			message: '#^Call to static method getByID\(\) on an unknown class Concrete\\Core\\Page\\Type\\Composer\\Control\\Type\\Package\.$#'
-			identifier: class.notFound
 			count: 1
 			path: concrete/src/Page/Type/Composer/Control/Type/Type.php
 
@@ -17823,18 +17655,6 @@ parameters:
 			path: concrete/src/Permission/Access/Entity/FileUploaderEntity.php
 
 		-
-			message: '#^Call to method getUserID\(\) on an unknown class Concrete\\Core\\Permission\\Access\\Entity\\File\.$#'
-			identifier: class.notFound
-			count: 1
-			path: concrete/src/Permission/Access/Entity/FileUploaderEntity.php
-
-		-
-			message: '#^Class Concrete\\Core\\Permission\\Access\\Entity\\File not found\.$#'
-			identifier: class.notFound
-			count: 1
-			path: concrete/src/Permission/Access/Entity/FileUploaderEntity.php
-
-		-
 			message: '#^Call to function is_array\(\) with non\-empty\-array\<mixed\> will always evaluate to true\.$#'
 			identifier: function.alreadyNarrowedType
 			count: 1
@@ -17951,12 +17771,6 @@ parameters:
 		-
 			message: '#^Call to an undefined method Concrete\\Core\\Permission\\Access\\ListItem\\ListItem\:\:setAttributesAllowedPermission\(\)\.$#'
 			identifier: method.notFound
-			count: 1
-			path: concrete/src/Permission/Access/ViewUserAttributesUserAccess.php
-
-		-
-			message: '#^Class Concrete\\Core\\Permission\\Access\\Page not found\.$#'
-			identifier: class.notFound
 			count: 1
 			path: concrete/src/Permission/Access/ViewUserAttributesUserAccess.php
 
@@ -18381,18 +18195,6 @@ parameters:
 			path: concrete/src/Permission/Key/EditPagePropertiesPageKey.php
 
 		-
-			message: '#^Call to method getAttributeKeyID\(\) on an unknown class Concrete\\Core\\Permission\\Key\\CollectionAttributeKey\.$#'
-			identifier: class.notFound
-			count: 1
-			path: concrete/src/Permission/Key/EditPagePropertiesPageKey.php
-
-		-
-			message: '#^Class Concrete\\Core\\Permission\\Key\\CollectionAttributeKey not found\.$#'
-			identifier: class.notFound
-			count: 1
-			path: concrete/src/Permission/Key/EditPagePropertiesPageKey.php
-
-		-
 			message: '#^Call to an undefined method Concrete\\Core\\Permission\\Access\\ListItem\\ListItem\:\:getThemesAllowedArray\(\)\.$#'
 			identifier: method.notFound
 			count: 2
@@ -18461,18 +18263,6 @@ parameters:
 		-
 			message: '#^Call to method Concrete\\Core\\Permission\\Access\\ListItem\\EditUserPropertiesUserListItem\:\:allowEditTimezone\(\) on a separate line has no effect\.$#'
 			identifier: method.resultUnused
-			count: 1
-			path: concrete/src/Permission/Key/EditUserPropertiesUserKey.php
-
-		-
-			message: '#^Call to method getAttributeKeyID\(\) on an unknown class Concrete\\Core\\Permission\\Key\\UserAttributeKey\.$#'
-			identifier: class.notFound
-			count: 1
-			path: concrete/src/Permission/Key/EditUserPropertiesUserKey.php
-
-		-
-			message: '#^Class Concrete\\Core\\Permission\\Key\\UserAttributeKey not found\.$#'
-			identifier: class.notFound
 			count: 1
 			path: concrete/src/Permission/Key/EditUserPropertiesUserKey.php
 
@@ -20647,30 +20437,6 @@ parameters:
 			identifier: method.notFound
 			count: 2
 			path: concrete/src/Updater/Migrations/Migrations/Version20190422235040.php
-
-		-
-			message: '#^Call to method getMessage\(\) on an unknown class Concrete\\Core\\Updater\\Migrations\\Migrations\\Exception\.$#'
-			identifier: class.notFound
-			count: 1
-			path: concrete/src/Updater/Migrations/Migrations/Version20190509000000.php
-
-		-
-			message: '#^Call to method getMessage\(\) on an unknown class Concrete\\Core\\Updater\\Migrations\\Migrations\\Throwable\.$#'
-			identifier: class.notFound
-			count: 1
-			path: concrete/src/Updater/Migrations/Migrations/Version20190509000000.php
-
-		-
-			message: '#^Caught class Concrete\\Core\\Updater\\Migrations\\Migrations\\Exception not found\.$#'
-			identifier: class.notFound
-			count: 1
-			path: concrete/src/Updater/Migrations/Migrations/Version20190509000000.php
-
-		-
-			message: '#^Caught class Concrete\\Core\\Updater\\Migrations\\Migrations\\Throwable not found\.$#'
-			identifier: class.notFound
-			count: 1
-			path: concrete/src/Updater/Migrations/Migrations/Version20190509000000.php
 
 		-
 			message: '#^Parameter \#4 \$pkDescription of static method Concrete\\Core\\Permission\\Key\\Key\:\:add\(\) expects string, null given\.$#'

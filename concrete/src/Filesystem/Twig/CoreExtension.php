@@ -10,6 +10,7 @@ use Concrete\Core\Area\GlobalArea;
 use Concrete\Core\Authentication\AuthenticationType;
 use Concrete\Core\Block\View\BlockViewTemplate;
 use Concrete\Core\Config\Repository\Repository;
+use Concrete\Core\Entity\User\User as UserEntity;
 use Concrete\Core\File\File;
 use Concrete\Core\Filesystem\Twig\Extension\FormProxy;
 use Concrete\Core\Form\Service\Form;

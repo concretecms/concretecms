@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\Page\Type\Composer\Control\Type;
 
+use Concrete\Core\Package\Package;
 use Loader;
 use Core;
 use Concrete\Core\Foundation\ConcreteObject;

@@ -2,9 +2,12 @@
 namespace Concrete\Core\Legacy;
 
 use Concrete\Core\Database\Query\LikeBuilder;
+use Concrete\Core\File\Set\Set as FileSet;
 use Concrete\Core\Support\Facade\Application;
+use Exception;
 use File as ConcreteFile;
 use FileAttributeKey;
+use ZipArchive;
 
 /**
  * An object that allows a filtered list of files to be returned.

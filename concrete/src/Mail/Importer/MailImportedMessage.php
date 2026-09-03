@@ -4,6 +4,7 @@ namespace Concrete\Core\Mail\Importer;
 use Concrete\Core\Foundation\ConcreteObject;
 use Core;
 use Database;
+use Exception;
 use RecursiveIteratorIterator;
 use Concrete\Core\Package\PackageList;
 use Laminas\Mail\Storage\Pop3                             as MailStoragePop3;

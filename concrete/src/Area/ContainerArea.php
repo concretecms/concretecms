@@ -6,6 +6,7 @@ use Concrete\Core\Entity\Page\Container\InstanceArea;
 use Concrete\Core\Page\Container\ContainerBlockInstance;
 use Concrete\Core\Page\Page;
 use Concrete\Core\Support\Facade\Facade;
+use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Doctrine\ORM\EntityManager;
 
 class ContainerArea

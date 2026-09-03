@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\Permission\Key;
 
+use Concrete\Core\Entity\Attribute\Key\UserKey as UserAttributeKey;
 use Loader;
 use Concrete\Core\User\User;
 use Concrete\Core\Support\Facade\Application;

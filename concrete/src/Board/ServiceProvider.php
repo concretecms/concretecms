@@ -2,7 +2,6 @@
 namespace Concrete\Core\Board;
 
 use Concrete\Core\Board\DataSource\Driver\Manager;
-use Concrete\Core\Board\Instance\Slot\CollectionFactory;
 use Concrete\Core\Board\Instance\Slot\Content\ContentRenderer;
 use Concrete\Core\Foundation\Service\Provider;
 use Concrete\Core\Page\Page;
@@ -17,7 +16,6 @@ class ServiceProvider extends Provider
         $this->app->singleton(BoardTemplateManager::class);
         $this->app->singleton(BoardSlotTempateManager::class);
         $this->app->singleton(Manager::class);
-        $this->app->singleton(CollectionFactory::class);
         $this->app->singleton(SummaryCategoryManager::class);
 
         $this->app

@@ -1,6 +1,8 @@
 <?php
 namespace Concrete\Core\Legacy;
 
+use Concrete\Core\Entity\Attribute\Key\Key as AttributeKey;
+
 class DatabaseItemList extends ItemList
 {
     protected $query = '';

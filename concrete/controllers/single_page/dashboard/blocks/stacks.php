@@ -13,6 +13,7 @@ use Concrete\Core\Page\Page;
 use Concrete\Core\Page\Stack\Stack;
 use Concrete\Core\Page\Stack\StackList;
 use Concrete\Core\Permission\Checker;
+use Concrete\Core\Routing\Redirect;
 use Concrete\Core\Support\Facade\StackFolder;
 use Concrete\Core\User\User;
 use Concrete\Core\Workflow\Request\ApprovePageRequest;

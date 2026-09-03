@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\Permission\Access;
 
+use Concrete\Core\Page\Page;
 use Database;
 use Concrete\Core\Permission\Key\Key as PermissionKey;
 

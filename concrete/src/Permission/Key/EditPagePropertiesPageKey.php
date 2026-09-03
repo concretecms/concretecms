@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\Permission\Key;
 
+use Concrete\Core\Entity\Attribute\Key\PageKey as PageAttributeKey;
 use Loader;
 use Concrete\Core\Permission\Duration as PermissionDuration;
 use Concrete\Core\User\User;
@@ -122,7 +123,7 @@ class EditPagePropertiesPageKey extends PageKey
         }
         $asl = $this->getMyAssignment();
         if (is_object($obj)) {
-            if ($obj instanceof CollectionAttributeKey) {
+            if ($obj instanceof PageAttributeKey) {
                 if ($asl->getAttributesAllowedPermission() == 'A') {
                     return true;
                 }

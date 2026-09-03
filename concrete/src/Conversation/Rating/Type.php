@@ -3,6 +3,7 @@ namespace Concrete\Core\Conversation\Rating;
 
 use Concrete\Core\Conversation\Message\Message;
 use Concrete\Core\Foundation\ConcreteObject;
+use Concrete\Core\Package\Package;
 use Concrete\Core\Package\PackageList;
 use Core;
 use Database;
