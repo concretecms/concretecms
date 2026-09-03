@@ -96,6 +96,8 @@ class GeolocatorService
                 }
             }
         }
+
+        return null;
     }
 
     /**

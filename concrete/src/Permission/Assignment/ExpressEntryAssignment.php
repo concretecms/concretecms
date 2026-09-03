@@ -14,6 +14,11 @@ class ExpressEntryAssignment extends Assignment
         'delete_express_entry' => 'delete_express_entries',
     ];
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Permission\Assignment\Assignment::getPermissionAccessObject()
+     */
     public function getPermissionAccessObject()
     {
         $entry = $this->permissionObject;
@@ -35,5 +40,6 @@ class ExpressEntryAssignment extends Assignment
         }
         
 
+        return null;
     }
 }

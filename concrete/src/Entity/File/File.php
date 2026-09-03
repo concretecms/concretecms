@@ -946,6 +946,8 @@ class File implements \Concrete\Core\Permission\ObjectInterface, AttributeObject
         if ($fv !== null) {
             return $fv->getAttributeValueObject($ak, $createIfNotExists);
         }
+
+        return null;
     }
 
     /**
@@ -959,6 +961,8 @@ class File implements \Concrete\Core\Permission\ObjectInterface, AttributeObject
         if ($fv !== null) {
             return $fv->getAttributeValue($ak);
         }
+
+        return null;
     }
 
     /**

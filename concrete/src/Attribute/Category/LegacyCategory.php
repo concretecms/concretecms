@@ -41,6 +41,11 @@ class LegacyCategory implements CategoryInterface, StandardSearchIndexerInterfac
         return $class;
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Attribute\Category\CategoryInterface::getSearchIndexer()
+     */
     public function getSearchIndexer()
     {
         $table = $this->getIndexedSearchTable();
@@ -48,6 +53,8 @@ class LegacyCategory implements CategoryInterface, StandardSearchIndexerInterfac
             $indexer = $this->application->make('Concrete\Core\Attribute\Category\SearchIndexer\LegacySearchIndexer');
             return $indexer;
         }
+
+        return null;
     }
 
     public function getIndexedSearchTable()
@@ -178,9 +185,16 @@ class LegacyCategory implements CategoryInterface, StandardSearchIndexerInterfac
 
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Attribute\Category\CategoryInterface::getAttributeKeyByID()
+     */
     public function getAttributeKeyByID($akID)
     {
         // TODO: Implement getAttributeKeyByID() method.
+
+        return null;
     }
 
     public function deleteKey(Key $key)
@@ -214,9 +228,16 @@ class LegacyCategory implements CategoryInterface, StandardSearchIndexerInterfac
         // TODO: Implement deleteValue() method.
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Attribute\Category\CategoryInterface::getAttributeValue()
+     */
     public function getAttributeValue(Key $key, $mixed)
     {
         // TODO: Implement getAttributeValue() method.
+
+        return null;
     }
 
     protected function clearAttributeSet(Key $key)

@@ -9,6 +9,11 @@ use Concrete\Core\Cache\Page\PageCacheRecord;
 
 class FilePageCache extends PageCache
 {
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Cache\Page\PageCache::getRecord()
+     */
     public function getRecord($mixed)
     {
         $file = $this->getCacheFile($mixed);
@@ -19,6 +24,8 @@ class FilePageCache extends PageCache
                 return $record;
             }
         }
+
+        return null;
     }
 
     protected function getCacheFile($mixed)

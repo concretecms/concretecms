@@ -177,6 +177,8 @@ abstract class Workflow extends ConcreteObject implements ObjectInterface
         if (is_object($req)) {
             return $req->getWorkflowRequestStatusNum();
         }
+
+        return null;
     }
 
     /**
