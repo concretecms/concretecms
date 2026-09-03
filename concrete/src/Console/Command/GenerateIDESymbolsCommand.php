@@ -7,6 +7,7 @@ use Concrete\Core\Console\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputArgument;
+use Symfony\Component\Console\Input\InputOption;
 use Exception;
 use Core;
 
@@ -22,6 +23,7 @@ class GenerateIDESymbolsCommand extends Command
             ->addEnvOption()
             ->setCanRunAsRoot(false)
             ->addArgument('generate-what', InputArgument::IS_ARRAY, 'Elements to generate [all|ide-classes|phpstorm|phpstan]', ['all'])
+            ->addOption('phpstan-other-stubs', null, InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, "Other stub files (or directories containing them) loaded by PHPStan: the classes they declare won't be declared in the generated stub file")
             ->setHelp(<<<EOT
 Returns codes:
   $okExitCode operation completed successfully
@@ -65,7 +67,7 @@ EOT
                 unset($what[$p]);
             }
             $output->write('Generating stubs for PHPStan... ');
-            $this->generatePHPStanStubs();
+            $this->generatePHPStanStubs($input->getOption('phpstan-other-stubs'));
             $output->writeln('<info>done.</info>');
         }
         $p = array_search('all', $what);
@@ -89,12 +91,16 @@ EOT
         }
     }
 
-    protected function generatePHPStanStubs(): void
+    /**
+     * @param string[] $otherStubFiles
+     */
+    protected function generatePHPStanStubs(array $otherStubFiles = []): void
     {
         $generator = new \Concrete\Core\Support\Symbol\PHPStanStubGenerator(
             new \Concrete\Core\Support\Symbol\SymbolGenerator(),
             new \Concrete\Core\Support\Symbol\PhpDocTypeResolver()
         );
+        $generator->addOtherStubFiles(...$otherStubFiles);
         $stubs = $generator->render();
         $filename = DIR_BASE . '/concrete/src/Support/__PHPSTAN_STUBS__.php';
         if (file_put_contents($filename, $stubs) === false) {

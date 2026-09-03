@@ -27,10 +27,47 @@ final class PHPStanStubGenerator
      */
     private $typeResolver;
 
+    /**
+     * The classes declared in other stub files (array keys are the lower-case fully-qualified class names).
+     *
+     * @var array<string, true>
+     */
+    private $classesInOtherStubs = [];
+
     public function __construct(SymbolGenerator $symbolGenerator, PhpDocTypeResolver $typeResolver)
     {
         $this->symbolGenerator = $symbolGenerator;
         $this->typeResolver = $typeResolver;
+    }
+
+    /**
+     * Add other stub files (or directories containing them) that PHPStan will load: the classes they declare won't be declared in the generated file.
+     *
+     * @return $this
+     */
+    public function addOtherStubFiles(string ...$paths): self
+    {
+        foreach ($paths as $path) {
+            if (is_dir($path)) {
+                $files = [];
+                foreach (new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($path, \FilesystemIterator::SKIP_DOTS)) as $file) {
+                    if (preg_match('/\.(stub|php)$/i', $file->getFilename())) {
+                        $files[] = $file->getPathname();
+                    }
+                }
+            } elseif (is_file($path)) {
+                $files = [$path];
+            } else {
+                throw new \RuntimeException("Unable to find the stub file/directory {$path}");
+            }
+            foreach ($files as $file) {
+                foreach ($this->listDeclaredClasses($file) as $fqn) {
+                    $this->classesInOtherStubs[strtolower($fqn)] = true;
+                }
+            }
+        }
+
+        return $this;
     }
 
     public function render(string $eol = "\n", string $padding = '    '): string
@@ -177,7 +214,7 @@ final class PHPStanStubGenerator
                     } catch (\Throwable $_) {
                         continue;
                     }
-                    if ($class->isInternal() || isset($classes[$class->getName()]) || isset($result[$class->getName()])) {
+                    if ($class->isInternal() || isset($classes[$class->getName()]) || isset($result[$class->getName()]) || isset($this->classesInOtherStubs[strtolower($class->getName())])) {
                         continue;
                     }
                     $result[$class->getName()] = $this->renderClassLines(
@@ -187,6 +224,60 @@ final class PHPStanStubGenerator
                         $padding
                     );
                 }
+            }
+        }
+
+        return $result;
+    }
+
+    /**
+     * List the classes/interfaces/traits declared in a PHP file.
+     *
+     * @return string[] the fully-qualified class names
+     */
+    private function listDeclaredClasses(string $file): array
+    {
+        $result = [];
+        $namespace = '';
+        $tokens = token_get_all((string) file_get_contents($file));
+        $count = count($tokens);
+        $nameTokens = [T_STRING, T_NS_SEPARATOR];
+        if (defined('T_NAME_QUALIFIED')) {
+            $nameTokens[] = T_NAME_QUALIFIED;
+        }
+        for ($i = 0; $i < $count; $i++) {
+            $token = $tokens[$i];
+            if (!is_array($token)) {
+                continue;
+            }
+            switch ($token[0]) {
+                case T_NAMESPACE:
+                    $namespace = '';
+                    for ($j = $i + 1; $j < $count && is_array($tokens[$j]); $j++) {
+                        if (in_array($tokens[$j][0], $nameTokens, true)) {
+                            $namespace .= $tokens[$j][1];
+                        } elseif ($tokens[$j][0] !== T_WHITESPACE && $tokens[$j][0] !== T_COMMENT) {
+                            break;
+                        }
+                    }
+                    break;
+                case T_CLASS:
+                case T_INTERFACE:
+                case T_TRAIT:
+                    if ($i > 0 && is_array($tokens[$i - 1]) && $tokens[$i - 1][0] === T_DOUBLE_COLON) {
+                        // Foo::class
+                        break;
+                    }
+                    for ($j = $i + 1; $j < $count && is_array($tokens[$j]); $j++) {
+                        if ($tokens[$j][0] === T_STRING) {
+                            $result[] = ltrim($namespace . '\\' . $tokens[$j][1], '\\');
+                            break;
+                        }
+                        if ($tokens[$j][0] !== T_WHITESPACE && $tokens[$j][0] !== T_COMMENT) {
+                            break;
+                        }
+                    }
+                    break;
             }
         }
 

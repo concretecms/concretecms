@@ -52,7 +52,7 @@ jobs:
           restore-keys: phpstan-${{ runner.os }}-
       -
         name: Generate PHPStan stubs
-        run: php concrete/bin/concrete c5:ide-symbols phpstan
+        run: php concrete/bin/concrete c5:ide-symbols phpstan --phpstan-other-stubs=.phpstan/vendor/phpstan/phpstan-doctrine/stubs
       -
         name: Run PHPStan
         run: .phpstan/vendor/bin/phpstan analyse --configuration=.phpstan/phpstan.neon.dist --no-progress --no-interaction --memory-limit=-1 --error-format=github

@@ -561,18 +561,6 @@ parameters:
 			path: ../concrete/controllers/dialog/express/advanced_search.php
 
 		-
-			message: '#^Call to an undefined method Doctrine\\ORM\\EntityRepository\<Concrete\\Core\\Entity\\Express\\Control\\AssociationControl\>\:\:findOneById\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: ../concrete/controllers/dialog/express/association/reorder.php
-
-		-
-			message: '#^Call to an undefined method Doctrine\\ORM\\EntityRepository\<Concrete\\Core\\Entity\\Express\\Entry\>\:\:findOneById\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: ../concrete/controllers/dialog/express/association/reorder.php
-
-		-
 			message: '#^Call to an undefined method Concrete\\Core\\Entity\\Search\\SavedSearch\:\:getEntity\(\)\.$#'
 			identifier: method.notFound
 			count: 1
@@ -585,7 +573,7 @@ parameters:
 			path: ../concrete/controllers/dialog/express/search.php
 
 		-
-			message: '#^Call to an undefined method Doctrine\\ORM\\EntityRepository\<Concrete\\Core\\Entity\\Express\\Entity\>\:\:findOneById\(\)\.$#'
+			message: '#^Call to an undefined method Concrete\\Core\\Entity\\Express\\EntityRepository\<Concrete\\Core\\Entity\\Express\\Entity\>\:\:findOneById\(\)\.$#'
 			identifier: method.notFound
 			count: 1
 			path: ../concrete/controllers/dialog/express/search.php
@@ -1791,7 +1779,7 @@ parameters:
 			path: ../concrete/controllers/search/express.php
 
 		-
-			message: '#^Call to an undefined method Doctrine\\ORM\\EntityRepository\<Concrete\\Core\\Entity\\Express\\Entity\>\:\:findOneById\(\)\.$#'
+			message: '#^Call to an undefined method Concrete\\Core\\Entity\\Express\\EntityRepository\<Concrete\\Core\\Entity\\Express\\Entity\>\:\:findOneById\(\)\.$#'
 			identifier: method.notFound
 			count: 1
 			path: ../concrete/controllers/search/express/entries.php
@@ -1929,12 +1917,6 @@ parameters:
 			path: ../concrete/controllers/single_page/dashboard/blocks/types.php
 
 		-
-			message: '#^Call to an undefined method Doctrine\\ORM\\EntityRepository\<Concrete\\Core\\Entity\\Board\\Board\>\:\:findOneByBoardID\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: ../concrete/controllers/single_page/dashboard/boards/appearance.php
-
-		-
 			message: '#^Parameter \#1 \$templateIDs of method Concrete\\Core\\Board\\Command\\EnableCustomSlotTemplatesCommand\:\:setTemplateIDs\(\) expects array, float\|int\<min, \-1\>\|int\<1, max\>\|string\|true given\.$#'
 			identifier: argument.type
 			count: 1
@@ -1953,18 +1935,6 @@ parameters:
 			path: ../concrete/controllers/single_page/dashboard/boards/data_sources.php
 
 		-
-			message: '#^Call to an undefined method Doctrine\\ORM\\EntityRepository\<Concrete\\Core\\Entity\\Board\\Board\>\:\:findOneByBoardID\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: ../concrete/controllers/single_page/dashboard/boards/data_sources.php
-
-		-
-			message: '#^Call to an undefined method Doctrine\\ORM\\EntityRepository\<Concrete\\Core\\Entity\\Board\\DataSource\\ConfiguredDataSource\>\:\:findByBoard\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: ../concrete/controllers/single_page/dashboard/boards/data_sources.php
-
-		-
 			message: '#^Method Concrete\\Controller\\SinglePage\\Dashboard\\Boards\\DataSources\:\:update\(\) invoked with 2 parameters, 0\-1 required\.$#'
 			identifier: arguments.count
 			count: 1
@@ -1972,18 +1942,6 @@ parameters:
 
 		-
 			message: '#^Call to an undefined method Concrete\\Core\\Entity\\Board\\Designer\\CustomElement\:\:getItems\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: ../concrete/controllers/single_page/dashboard/boards/designer/choose_items.php
-
-		-
-			message: '#^Call to an undefined method Doctrine\\ORM\\EntityRepository\<Concrete\\Core\\Entity\\Board\\DataSource\\DataSource\>\:\:findOneByHandle\(\)\.$#'
-			identifier: method.notFound
-			count: 2
-			path: ../concrete/controllers/single_page/dashboard/boards/designer/choose_items.php
-
-		-
-			message: '#^Call to an undefined method Doctrine\\ORM\\EntityRepository\<Concrete\\Core\\Entity\\Board\\Designer\\CustomElement\>\:\:findOneById\(\)\.$#'
 			identifier: method.notFound
 			count: 1
 			path: ../concrete/controllers/single_page/dashboard/boards/designer/choose_items.php
@@ -2019,22 +1977,10 @@ parameters:
 			path: ../concrete/controllers/single_page/dashboard/boards/designer/customize_slot.php
 
 		-
-			message: '#^Call to an undefined method Doctrine\\ORM\\EntityRepository\<Concrete\\Core\\Entity\\Board\\Designer\\ItemSelectorCustomElement\>\:\:findOneById\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: ../concrete/controllers/single_page/dashboard/boards/designer/customize_slot.php
-
-		-
 			message: '#^Call to function is_object\(\) with Concrete\\Core\\Entity\\Board\\Designer\\CustomElement will always evaluate to true\.$#'
 			identifier: function.alreadyNarrowedType
 			count: 2
 			path: ../concrete/controllers/single_page/dashboard/boards/designer/customize_slot.php
-
-		-
-			message: '#^Call to an undefined method Doctrine\\ORM\\EntityRepository\<Concrete\\Core\\Entity\\Board\\Board\>\:\:findOneByBoardID\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: ../concrete/controllers/single_page/dashboard/boards/details.php
 
 		-
 			message: '#^Variable \$board might not be defined\.$#'
@@ -2043,76 +1989,28 @@ parameters:
 			path: ../concrete/controllers/single_page/dashboard/boards/details.php
 
 		-
-			message: '#^Call to an undefined method Doctrine\\ORM\\EntityRepository\<Concrete\\Core\\Entity\\Board\\Board\>\:\:findOneByBoardID\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: ../concrete/controllers/single_page/dashboard/boards/edit.php
-
-		-
-			message: '#^Call to an undefined method Doctrine\\ORM\\EntityRepository\<Concrete\\Core\\Entity\\Board\\Board\>\:\:findOneByBoardID\(\)\.$#'
+			message: '#^Call to an undefined method Concrete\\Core\\Entity\\Board\\InstanceRepository\<Concrete\\Core\\Entity\\Board\\Instance\>\:\:findByBoard\(\)\.$#'
 			identifier: method.notFound
 			count: 1
 			path: ../concrete/controllers/single_page/dashboard/boards/instances.php
 
 		-
-			message: '#^Call to an undefined method Doctrine\\ORM\\EntityRepository\<Concrete\\Core\\Entity\\Board\\Instance\>\:\:findByBoard\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: ../concrete/controllers/single_page/dashboard/boards/instances.php
-
-		-
-			message: '#^Call to an undefined method Doctrine\\ORM\\EntityRepository\<Concrete\\Core\\Entity\\Board\\DataSource\\ConfiguredDataSource\>\:\:findByBoard\(\)\.$#'
+			message: '#^Call to an undefined method Concrete\\Core\\Entity\\Board\\InstanceRepository\<Concrete\\Core\\Entity\\Board\\Instance\>\:\:findOneByBoardInstanceID\(\)\.$#'
 			identifier: method.notFound
 			count: 1
 			path: ../concrete/controllers/single_page/dashboard/boards/instances/details.php
 
 		-
-			message: '#^Call to an undefined method Doctrine\\ORM\\EntityRepository\<Concrete\\Core\\Entity\\Board\\Instance\>\:\:findOneByBoardInstanceID\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: ../concrete/controllers/single_page/dashboard/boards/instances/details.php
-
-		-
-			message: '#^Call to an undefined method Doctrine\\ORM\\EntityRepository\<Concrete\\Core\\Entity\\Board\\Instance\>\:\:findOneByBoardInstanceID\(\)\.$#'
+			message: '#^Call to an undefined method Concrete\\Core\\Entity\\Board\\InstanceRepository\<Concrete\\Core\\Entity\\Board\\Instance\>\:\:findOneByBoardInstanceID\(\)\.$#'
 			identifier: method.notFound
 			count: 1
 			path: ../concrete/controllers/single_page/dashboard/boards/instances/rules.php
-
-		-
-			message: '#^Call to an undefined method Doctrine\\ORM\\EntityRepository\<Concrete\\Core\\Entity\\Board\\Board\>\:\:findOneByBoardID\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: ../concrete/controllers/single_page/dashboard/boards/permissions.php
-
-		-
-			message: '#^Call to an undefined method Doctrine\\ORM\\EntityRepository\<Concrete\\Core\\Entity\\Board\\Designer\\CustomElement\>\:\:findOneById\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: ../concrete/controllers/single_page/dashboard/boards/scheduler.php
-
-		-
-			message: '#^Call to an undefined method Doctrine\\ORM\\EntityRepository\<Concrete\\Core\\Entity\\Board\\InstanceSlotRule\>\:\:findByMultipleInstances\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: ../concrete/controllers/single_page/dashboard/boards/scheduler.php
 
 		-
 			message: '#^Call to function is_object\(\) with Concrete\\Core\\Entity\\Board\\Designer\\CustomElement will always evaluate to true\.$#'
 			identifier: function.alreadyNarrowedType
 			count: 2
 			path: ../concrete/controllers/single_page/dashboard/boards/scheduler.php
-
-		-
-			message: '#^Call to an undefined method Doctrine\\ORM\\EntityRepository\<Concrete\\Core\\Entity\\Board\\Board\>\:\:findOneByBoardID\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: ../concrete/controllers/single_page/dashboard/boards/weighting.php
-
-		-
-			message: '#^Call to an undefined method Doctrine\\ORM\\EntityRepository\<Concrete\\Core\\Entity\\Board\\DataSource\\ConfiguredDataSource\>\:\:findByBoard\(\)\.$#'
-			identifier: method.notFound
-			count: 2
-			path: ../concrete/controllers/single_page/dashboard/boards/weighting.php
 
 		-
 			message: '#^Call to function is_array\(\) with bool\|float\|int\|string\|null will always evaluate to false\.$#'
@@ -2163,27 +2061,15 @@ parameters:
 			path: ../concrete/controllers/single_page/dashboard/express/entries.php
 
 		-
+			message: '#^Call to an undefined method Concrete\\Core\\Entity\\Express\\EntityRepository\<Concrete\\Core\\Entity\\Express\\Entity\>\:\:findOneById\(\)\.$#'
+			identifier: method.notFound
+			count: 5
+			path: ../concrete/controllers/single_page/dashboard/express/entries.php
+
+		-
 			message: '#^Call to an undefined method Concrete\\Core\\Search\\Result\\Result\:\:getEntity\(\)\.$#'
 			identifier: method.notFound
 			count: 1
-			path: ../concrete/controllers/single_page/dashboard/express/entries.php
-
-		-
-			message: '#^Call to an undefined method Doctrine\\ORM\\EntityRepository\<Concrete\\Core\\Entity\\Express\\Entity\>\:\:findOneById\(\)\.$#'
-			identifier: method.notFound
-			count: 5
-			path: ../concrete/controllers/single_page/dashboard/express/entries.php
-
-		-
-			message: '#^Call to an undefined method Doctrine\\ORM\\EntityRepository\<Concrete\\Core\\Entity\\Express\\Entity\>\:\:findPublicEntities\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: ../concrete/controllers/single_page/dashboard/express/entries.php
-
-		-
-			message: '#^Call to an undefined method Doctrine\\ORM\\EntityRepository\<Concrete\\Core\\Entity\\Express\\Entry\>\:\:findOneById\(\)\.$#'
-			identifier: method.notFound
-			count: 5
 			path: ../concrete/controllers/single_page/dashboard/express/entries.php
 
 		-
@@ -2349,21 +2235,15 @@ parameters:
 			path: ../concrete/controllers/single_page/dashboard/reports/forms.php
 
 		-
+			message: '#^Call to an undefined method Concrete\\Core\\Entity\\Express\\EntityRepository\<Concrete\\Core\\Entity\\Express\\Entity\>\:\:findOneById\(\)\.$#'
+			identifier: method.notFound
+			count: 5
+			path: ../concrete/controllers/single_page/dashboard/reports/forms.php
+
+		-
 			message: '#^Call to an undefined method Concrete\\Core\\Search\\Result\\Result\:\:getEntity\(\)\.$#'
 			identifier: method.notFound
 			count: 1
-			path: ../concrete/controllers/single_page/dashboard/reports/forms.php
-
-		-
-			message: '#^Call to an undefined method Doctrine\\ORM\\EntityRepository\<Concrete\\Core\\Entity\\Express\\Entity\>\:\:findOneById\(\)\.$#'
-			identifier: method.notFound
-			count: 5
-			path: ../concrete/controllers/single_page/dashboard/reports/forms.php
-
-		-
-			message: '#^Call to an undefined method Doctrine\\ORM\\EntityRepository\<Concrete\\Core\\Entity\\Express\\Entry\>\:\:findOneById\(\)\.$#'
-			identifier: method.notFound
-			count: 5
 			path: ../concrete/controllers/single_page/dashboard/reports/forms.php
 
 		-
@@ -2565,7 +2445,7 @@ parameters:
 			path: ../concrete/controllers/single_page/dashboard/system/environment/logging.php
 
 		-
-			message: '#^Call to an undefined method Doctrine\\ORM\\EntityRepository\<Concrete\\Core\\Entity\\Express\\Entity\>\:\:findOneById\(\)\.$#'
+			message: '#^Call to an undefined method Concrete\\Core\\Entity\\Express\\EntityRepository\<Concrete\\Core\\Entity\\Express\\Entity\>\:\:findOneById\(\)\.$#'
 			identifier: method.notFound
 			count: 7
 			path: ../concrete/controllers/single_page/dashboard/system/express/entities.php
@@ -2577,7 +2457,7 @@ parameters:
 			path: ../concrete/controllers/single_page/dashboard/system/express/entities.php
 
 		-
-			message: '#^Method Doctrine\\ORM\\EntityRepository\<Concrete\\Core\\Entity\\Express\\Entity\>\:\:findAll\(\) invoked with 2 parameters, 0 required\.$#'
+			message: '#^Method Doctrine\\ORM\\EntityRepository\<object\>\:\:findAll\(\) invoked with 2 parameters, 0 required\.$#'
 			identifier: arguments.count
 			count: 1
 			path: ../concrete/controllers/single_page/dashboard/system/express/entities.php
@@ -2589,7 +2469,7 @@ parameters:
 			path: ../concrete/controllers/single_page/dashboard/system/express/entities/associations.php
 
 		-
-			message: '#^Call to an undefined method Doctrine\\ORM\\EntityRepository\<Concrete\\Core\\Entity\\Express\\Entity\>\:\:findOneById\(\)\.$#'
+			message: '#^Call to an undefined method Concrete\\Core\\Entity\\Express\\EntityRepository\<Concrete\\Core\\Entity\\Express\\Entity\>\:\:findOneById\(\)\.$#'
 			identifier: method.notFound
 			count: 1
 			path: ../concrete/controllers/single_page/dashboard/system/express/entities/attributes.php
@@ -2745,12 +2625,6 @@ parameters:
 			path: ../concrete/controllers/single_page/dashboard/system/multilingual/setup.php
 
 		-
-			message: '#^Call to an undefined method Doctrine\\ORM\\EntityRepository\<Concrete\\Core\\Entity\\Site\\Domain\>\:\:findOneByID\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: ../concrete/controllers/single_page/dashboard/system/multisite/sites.php
-
-		-
 			message: '#^Parameter \#2 \$httpResponseCode of method Concrete\\Core\\Controller\\AbstractController\:\:buildRedirect\(\) expects int, string given\.$#'
 			identifier: argument.type
 			count: 1
@@ -2775,15 +2649,9 @@ parameters:
 			path: ../concrete/controllers/single_page/dashboard/system/multisite/sites.php
 
 		-
-			message: '#^Call to an undefined method Doctrine\\ORM\\EntityRepository\<Concrete\\Core\\Entity\\Site\\Group\\Group\>\:\:findByType\(\)\.$#'
+			message: '#^Call to an undefined method Concrete\\Core\\Entity\\Site\\Group\\GroupRepository\<Concrete\\Core\\Entity\\Site\\Group\\Group\>\:\:findByType\(\)\.$#'
 			identifier: method.notFound
 			count: 1
-			path: ../concrete/controllers/single_page/dashboard/system/multisite/types.php
-
-		-
-			message: '#^Call to an undefined method Doctrine\\ORM\\EntityRepository\<Concrete\\Core\\Entity\\Site\\Group\\Group\>\:\:findOneByID\(\)\.$#'
-			identifier: method.notFound
-			count: 3
 			path: ../concrete/controllers/single_page/dashboard/system/multisite/types.php
 
 		-
@@ -3421,12 +3289,6 @@ parameters:
 			identifier: method.notFound
 			count: 1
 			path: ../concrete/controllers/workflow/dialogs/approve_page_preview.php
-
-		-
-			message: '#^Call to an undefined method Doctrine\\ORM\\EntityRepository\<Concrete\\Core\\Entity\\Announcement\\Announcement\>\:\:findOneByHandle\(\)\.$#'
-			identifier: method.notFound
-			count: 2
-			path: ../concrete/src/Announcement/AnnouncementService.php
 
 		-
 			message: '#^Right side of && is always true\.$#'
@@ -4569,13 +4431,13 @@ parameters:
 			path: ../concrete/src/Api/OAuth/Command/UpdateOAuthClientCommandHandler.php
 
 		-
-			message: '#^Call to an undefined method Concrete\\Core\\User\\Exception\\UserException\:\:getMessage\(\)\.$#'
+			message: '#^Call to an undefined method Concrete\\Core\\Entity\\OAuth\\RefreshTokenRepository\<Concrete\\Core\\Entity\\OAuth\\RefreshToken\>\:\:findOneByAccessToken\(\)\.$#'
 			identifier: method.notFound
 			count: 1
 			path: ../concrete/src/Api/OAuth/Controller.php
 
 		-
-			message: '#^Call to an undefined method Doctrine\\ORM\\EntityRepository\<Concrete\\Core\\Entity\\OAuth\\RefreshToken\>\:\:findOneByAccessToken\(\)\.$#'
+			message: '#^Call to an undefined method Concrete\\Core\\User\\Exception\\UserException\:\:getMessage\(\)\.$#'
 			identifier: method.notFound
 			count: 1
 			path: ../concrete/src/Api/OAuth/Controller.php
@@ -5115,8 +4977,8 @@ parameters:
 			path: ../concrete/src/Area/Area.php
 
 		-
-			message: '#^Dead catch \- Doctrine\\DBAL\\Exception\\UniqueConstraintViolationException is never thrown in the try block\.$#'
-			identifier: catch.neverThrown
+			message: '#^Parameter \#1 \$entityName of method Doctrine\\ORM\\EntityManager\:\:clear\(\) expects string\|null, Concrete\\Core\\Entity\\Page\\Container\\InstanceArea given\.$#'
+			identifier: argument.type
 			count: 1
 			path: ../concrete/src/Area/ContainerArea.php
 
@@ -5529,12 +5391,6 @@ parameters:
 			path: ../concrete/src/Attribute/Category/UserCategory.php
 
 		-
-			message: '#^Method Concrete\\Core\\Attribute\\Category\\UserCategory\:\:getAttributeKeyRepository\(\) should return Concrete\\Core\\Entity\\User\\AttributeRepository but returns Doctrine\\ORM\\EntityRepository\<Concrete\\Core\\Entity\\Attribute\\Key\\UserKey\>\.$#'
-			identifier: return.type
-			count: 1
-			path: ../concrete/src/Attribute/Category/UserCategory.php
-
-		-
 			message: '#^Method Concrete\\Core\\Attribute\\Category\\UserCategory\:\:import\(\) should return Concrete\\Core\\Entity\\Attribute\\Key\\UserKey but returns Concrete\\Core\\Entity\\Attribute\\Key\\Key\.$#'
 			identifier: return.type
 			count: 1
@@ -5901,6 +5757,12 @@ parameters:
 			path: ../concrete/src/Authentication/Type/ExternalConcrete/Extractor.php
 
 		-
+			message: '#^Parameter \#1 \$func of method Doctrine\\DBAL\\Connection\:\:transactional\(\) expects Closure\(Doctrine\\DBAL\\Connection\)\: void, Closure\(Concrete\\Core\\Database\\Connection\\Connection\)\: void given\.$#'
+			identifier: argument.type
+			count: 1
+			path: ../concrete/src/Authentication/Type/OAuth/BindingService.php
+
+		-
 			message: '#^Call to function is_object\(\) with Concrete\\Core\\User\\Group\\Group will always evaluate to true\.$#'
 			identifier: function.alreadyNarrowedType
 			count: 1
@@ -6015,34 +5877,10 @@ parameters:
 			path: ../concrete/src/Backup/ContentImporter/Importer/Routine/ImportBlockTypesRoutine.php
 
 		-
-			message: '#^Call to an undefined method Doctrine\\ORM\\EntityRepository\<Concrete\\Core\\Entity\\Board\\DataSource\\DataSource\>\:\:findOneByHandle\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: ../concrete/src/Backup/ContentImporter/Importer/Routine/ImportBoardDataSourcesRoutine.php
-
-		-
-			message: '#^Call to an undefined method Doctrine\\ORM\\EntityRepository\<Concrete\\Core\\Entity\\Board\\SlotTemplate\>\:\:findOneByHandle\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: ../concrete/src/Backup/ContentImporter/Importer/Routine/ImportBoardSlotTemplatesRoutine.php
-
-		-
-			message: '#^Call to an undefined method Doctrine\\ORM\\EntityRepository\<Concrete\\Core\\Entity\\Design\\DesignTag\>\:\:findOneByValue\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: ../concrete/src/Backup/ContentImporter/Importer/Routine/ImportBoardSlotTemplatesRoutine.php
-
-		-
 			message: '#^Strict comparison using \!\=\= between string and null will always evaluate to true\.$#'
 			identifier: notIdentical.alwaysTrue
 			count: 1
 			path: ../concrete/src/Backup/ContentImporter/Importer/Routine/ImportBoardSlotTemplatesRoutine.php
-
-		-
-			message: '#^Call to an undefined method Doctrine\\ORM\\EntityRepository\<Concrete\\Core\\Entity\\Board\\Template\>\:\:findOneByHandle\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: ../concrete/src/Backup/ContentImporter/Importer/Routine/ImportBoardTemplatesRoutine.php
 
 		-
 			message: '#^Variable \$repository might not be defined\.$#'
@@ -6051,22 +5889,10 @@ parameters:
 			path: ../concrete/src/Backup/ContentImporter/Importer/Routine/ImportConfigValuesRoutine.php
 
 		-
-			message: '#^Call to an undefined method Doctrine\\ORM\\EntityRepository\<Concrete\\Core\\Entity\\Page\\Container\>\:\:findOneByContainerHandle\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: ../concrete/src/Backup/ContentImporter/Importer/Routine/ImportContainersRoutine.php
-
-		-
 			message: '#^Parameter \#3 \$pkg of static method Concrete\\Core\\Conversation\\Editor\\Editor\:\:add\(\) expects bool\|Concrete\\Core\\Package\\Package, Concrete\\Core\\Entity\\Package\|null given\.$#'
 			identifier: argument.type
 			count: 1
 			path: ../concrete/src/Backup/ContentImporter/Importer/Routine/ImportConversationEditorsRoutine.php
-
-		-
-			message: '#^Call to an undefined method Doctrine\\ORM\\EntityRepository\<Concrete\\Core\\Entity\\Design\\DesignTag\>\:\:findOneByValue\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: ../concrete/src/Backup/ContentImporter/Importer/Routine/ImportDesignTagsRoutine.php
 
 		-
 			message: '#^Call to function is_object\(\) with Concrete\\Core\\Entity\\Express\\Association will always evaluate to true\.$#'
@@ -6201,37 +6027,7 @@ parameters:
 			path: ../concrete/src/Backup/ContentImporter/Importer/Routine/ImportStacksStructureRoutine.php
 
 		-
-			message: '#^Call to an undefined method Doctrine\\ORM\\EntityRepository\<Concrete\\Core\\Entity\\Summary\\Category\>\:\:findOneByHandle\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: ../concrete/src/Backup/ContentImporter/Importer/Routine/ImportSummaryCategoriesRoutine.php
-
-		-
-			message: '#^Call to an undefined method Doctrine\\ORM\\EntityRepository\<Concrete\\Core\\Entity\\Summary\\Field\>\:\:findOneByHandle\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: ../concrete/src/Backup/ContentImporter/Importer/Routine/ImportSummaryFieldsRoutine.php
-
-		-
-			message: '#^Call to an undefined method Doctrine\\ORM\\EntityRepository\<Concrete\\Core\\Entity\\Design\\DesignTag\>\:\:findOneByValue\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: ../concrete/src/Backup/ContentImporter/Importer/Routine/ImportSummaryTemplatesRoutine.php
-
-		-
-			message: '#^Call to an undefined method Doctrine\\ORM\\EntityRepository\<Concrete\\Core\\Entity\\Summary\\Category\>\:\:findOneByHandle\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: ../concrete/src/Backup/ContentImporter/Importer/Routine/ImportSummaryTemplatesRoutine.php
-
-		-
-			message: '#^Call to an undefined method Doctrine\\ORM\\EntityRepository\<Concrete\\Core\\Entity\\Summary\\Field\>\:\:findOneByHandle\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: ../concrete/src/Backup/ContentImporter/Importer/Routine/ImportSummaryTemplatesRoutine.php
-
-		-
-			message: '#^Call to an undefined method Doctrine\\ORM\\EntityRepository\<Concrete\\Core\\Entity\\Summary\\Template\>\:\:findOneByHandle\(\)\.$#'
+			message: '#^Call to an undefined method Concrete\\Core\\Entity\\Summary\\TemplateRepository\<Concrete\\Core\\Entity\\Summary\\Template\>\:\:findOneByHandle\(\)\.$#'
 			identifier: method.notFound
 			count: 1
 			path: ../concrete/src/Backup/ContentImporter/Importer/Routine/ImportSummaryTemplatesRoutine.php
@@ -6306,6 +6102,12 @@ parameters:
 			message: '#^Call to an undefined method Concrete\\Core\\Permission\\Key\\Key\:\:copyFromPageOrAreaToBlock\(\)\.$#'
 			identifier: method.notFound
 			count: 1
+			path: ../concrete/src/Block/Block.php
+
+		-
+			message: '#^Call to an undefined method Doctrine\\DBAL\\Driver\\Statement\:\:executeStatement\(\)\.$#'
+			identifier: method.notFound
+			count: 2
 			path: ../concrete/src/Block/Block.php
 
 		-
@@ -6589,12 +6391,6 @@ parameters:
 			identifier: constructor.unusedParameter
 			count: 1
 			path: ../concrete/src/Board/Command/SetBoardCustomWeightingCommandValidator.php
-
-		-
-			message: '#^Call to an undefined method Doctrine\\ORM\\EntityRepository\<Concrete\\Core\\Entity\\Calendar\\Calendar\>\:\:findOneByName\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: ../concrete/src/Board/DataSource/Saver/CalendarEventSaver.php
 
 		-
 			message: '#^Variable \$author might not be defined\.$#'
@@ -7119,12 +6915,6 @@ parameters:
 			path: ../concrete/src/Command/Process/Logger/FileLogger.php
 
 		-
-			message: '#^Call to an undefined method Doctrine\\ORM\\EntityRepository\<Concrete\\Core\\Entity\\Command\\Process\>\:\:findRunning\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: ../concrete/src/Command/Process/Menu/Item/RunningProcessesController.php
-
-		-
 			message: '#^If condition is always true\.$#'
 			identifier: if.alwaysTrue
 			count: 1
@@ -7191,22 +6981,10 @@ parameters:
 			path: ../concrete/src/Command/Task/Runner/ProcessTaskRunnerHandler.php
 
 		-
-			message: '#^Call to an undefined method Doctrine\\ORM\\EntityRepository\<Concrete\\Core\\Entity\\Automation\\Task\>\:\:findOneByHandle\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: ../concrete/src/Command/Task/TaskService.php
-
-		-
 			message: '#^Parameter \#1 \$uID of method Concrete\\Core\\User\\UserInfoRepository\:\:getByID\(\) expects int, string given\.$#'
 			identifier: argument.type
 			count: 1
 			path: ../concrete/src/Command/Task/TaskService.php
-
-		-
-			message: '#^Call to an undefined method Doctrine\\ORM\\EntityRepository\<Concrete\\Core\\Entity\\Automation\\TaskSet\>\:\:findOneByHandle\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: ../concrete/src/Command/Task/TaskSetService.php
 
 		-
 			message: '#^Call to an undefined method Concrete\\Core\\Config\\ConfigStore\:\:rowToConfigValue\(\)\.$#'
@@ -7863,12 +7641,6 @@ parameters:
 			path: ../concrete/src/Database/DatabaseStructureManager.php
 
 		-
-			message: '#^Property Concrete\\Core\\Database\\DatabaseStructureManager\:\:\$metadatas \(array\<Doctrine\\ORM\\Mapping\\ClassMetadata\>\|null\) does not accept array\<Doctrine\\Persistence\\Mapping\\ClassMetadata\<object\>\>\.$#'
-			identifier: assign.propertyType
-			count: 1
-			path: ../concrete/src/Database/DatabaseStructureManager.php
-
-		-
 			message: '#^Method Concrete\\Core\\Database\\EntityManager\\Provider\\PackageProviderFactory\:\:getEntityManagerProvider\(\) should return Concrete\\Core\\Database\\EntityManager\\Provider\\DefaultPackageProvider\|Concrete\\Core\\Package\\Package but returns Concrete\\Core\\Database\\EntityManager\\Provider\\ProviderInterface\.$#'
 			identifier: return.type
 			count: 1
@@ -8397,19 +8169,13 @@ parameters:
 			path: ../concrete/src/Entity/File/DownloadStatistics.php
 
 		-
+			message: '#^Call to an undefined method Concrete\\Core\\Entity\\Board\\InstanceItemRepository\<Concrete\\Core\\Entity\\Board\\InstanceItem\>\:\:findByItem\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: ../concrete/src/Entity/File/File.php
+
+		-
 			message: '#^Call to an undefined method Concrete\\Core\\Permission\\Key\\Key\:\:copyFromFileSetToFile\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: ../concrete/src/Entity/File/File.php
-
-		-
-			message: '#^Call to an undefined method Doctrine\\ORM\\EntityRepository\<Concrete\\Core\\Entity\\Board\\InstanceItem\>\:\:findByItem\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: ../concrete/src/Entity/File/File.php
-
-		-
-			message: '#^Call to an undefined method Doctrine\\ORM\\EntityRepository\<Concrete\\Core\\Entity\\Board\\Item\>\:\:findByRelevantThumbnail\(\)\.$#'
 			identifier: method.notFound
 			count: 1
 			path: ../concrete/src/Entity/File/File.php
@@ -8955,15 +8721,15 @@ parameters:
 			path: ../concrete/src/Express/Entity/Listener.php
 
 		-
-			message: '#^Call to an undefined method Doctrine\\DBAL\\Connection\:\:Execute\(\)\.$#'
+			message: '#^Call to an undefined method Concrete\\Core\\Entity\\Express\\EntryRepository\<Concrete\\Core\\Entity\\Express\\Entry\>\:\:findByEntity\(\)\.$#'
 			identifier: method.notFound
-			count: 2
+			count: 1
 			path: ../concrete/src/Express/Entity/Listener.php
 
 		-
-			message: '#^Call to an undefined method Doctrine\\ORM\\EntityRepository\<Concrete\\Core\\Entity\\Express\\Entry\>\:\:findByEntity\(\)\.$#'
+			message: '#^Call to an undefined method Doctrine\\DBAL\\Connection\:\:Execute\(\)\.$#'
 			identifier: method.notFound
-			count: 1
+			count: 2
 			path: ../concrete/src/Express/Entity/Listener.php
 
 		-
@@ -9927,12 +9693,6 @@ parameters:
 			path: ../concrete/src/File/Tracker/UsageTracker.php
 
 		-
-			message: '#^Property Concrete\\Core\\File\\Tracker\\UsageTracker\:\:\$repository \(Concrete\\Core\\Entity\\Statistics\\UsageTracker\\FileUsageRepository\) does not accept Doctrine\\ORM\\EntityRepository\<Concrete\\Core\\Entity\\Statistics\\UsageTracker\\FileUsageRecord\>\.$#'
-			identifier: assign.propertyType
-			count: 1
-			path: ../concrete/src/File/Tracker/UsageTracker.php
-
-		-
 			message: '#^PHPDoc tag @param references unknown parameter\: \$version$#'
 			identifier: parameter.notFound
 			count: 1
@@ -10549,12 +10309,6 @@ parameters:
 			identifier: parameter.notFound
 			count: 1
 			path: ../concrete/src/Health/Report/Runner.php
-
-		-
-			message: '#^Call to an undefined method Doctrine\\ORM\\EntityRepository\<Concrete\\Core\\Entity\\Health\\Report\\Result\>\:\:findOneById\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: ../concrete/src/Health/Report/RunnerFactory.php
 
 		-
 			message: '#^Call to function is_string\(\) with Concrete\\Core\\Health\\Report\\Test\\TestInterface will always evaluate to false\.$#'
@@ -11835,18 +11589,6 @@ parameters:
 			path: ../concrete/src/Multilingual/Page/Section/Section.php
 
 		-
-			message: '#^Call to an undefined method Doctrine\\ORM\\EntityRepository\<Concrete\\Core\\Entity\\Site\\Locale\>\:\:findOneByTree\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: ../concrete/src/Multilingual/Page/Section/Section.php
-
-		-
-			message: '#^Call to an undefined method Doctrine\\ORM\\EntityRepository\<Concrete\\Core\\Entity\\Site\\SiteTree\>\:\:findOneBySiteHomePageID\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: ../concrete/src/Multilingual/Page/Section/Section.php
-
-		-
 			message: '#^Call to function is_object\(\) with Concrete\\Core\\Entity\\Site\\Locale will always evaluate to true\.$#'
 			identifier: function.alreadyNarrowedType
 			count: 1
@@ -12599,7 +12341,7 @@ parameters:
 		-
 			message: '#^If condition is always true\.$#'
 			identifier: if.alwaysTrue
-			count: 1
+			count: 4
 			path: ../concrete/src/Page/Collection/Collection.php
 
 		-
@@ -12789,27 +12531,21 @@ parameters:
 			path: ../concrete/src/Page/Controller/DashboardExpressEntityPageController.php
 
 		-
-			message: '#^Call to an undefined method Concrete\\Core\\Search\\Result\\Result\:\:getEntity\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: ../concrete/src/Page/Controller/DashboardExpressEntityPageController.php
-
-		-
-			message: '#^Call to an undefined method Doctrine\\ORM\\EntityRepository\<Concrete\\Core\\Entity\\Express\\Entity\>\:\:findOneById\(\)\.$#'
+			message: '#^Call to an undefined method Concrete\\Core\\Entity\\Express\\EntityRepository\<Concrete\\Core\\Entity\\Express\\Entity\>\:\:findOneById\(\)\.$#'
 			identifier: method.notFound
 			count: 2
 			path: ../concrete/src/Page/Controller/DashboardExpressEntityPageController.php
 
 		-
-			message: '#^Call to an undefined method Doctrine\\ORM\\EntityRepository\<Concrete\\Core\\Entity\\Express\\Entity\>\:\:findOneByName\(\)\.$#'
+			message: '#^Call to an undefined method Concrete\\Core\\Entity\\Express\\EntityRepository\<Concrete\\Core\\Entity\\Express\\Entity\>\:\:findOneByName\(\)\.$#'
 			identifier: method.notFound
 			count: 1
 			path: ../concrete/src/Page/Controller/DashboardExpressEntityPageController.php
 
 		-
-			message: '#^Call to an undefined method Doctrine\\ORM\\EntityRepository\<Concrete\\Core\\Entity\\Express\\Entry\>\:\:findOneById\(\)\.$#'
+			message: '#^Call to an undefined method Concrete\\Core\\Search\\Result\\Result\:\:getEntity\(\)\.$#'
 			identifier: method.notFound
-			count: 5
+			count: 1
 			path: ../concrete/src/Page/Controller/DashboardExpressEntityPageController.php
 
 		-
@@ -12953,7 +12689,7 @@ parameters:
 		-
 			message: '#^If condition is always true\.$#'
 			identifier: if.alwaysTrue
-			count: 8
+			count: 6
 			path: ../concrete/src/Page/Page.php
 
 		-
@@ -12982,6 +12718,12 @@ parameters:
 
 		-
 			message: '#^Method Concrete\\Core\\Page\\Page\:\:getSite\(\) should return Concrete\\Core\\Entity\\Site\\Site but return statement is missing\.$#'
+			identifier: return.missing
+			count: 1
+			path: ../concrete/src/Page/Page.php
+
+		-
+			message: '#^Method Concrete\\Core\\Page\\Page\:\:isCheckedOut\(\) should return bool\|null but return statement is missing\.$#'
 			identifier: return.missing
 			count: 1
 			path: ../concrete/src/Page/Page.php
@@ -13515,18 +13257,6 @@ parameters:
 			path: ../concrete/src/Page/Stack/StackList.php
 
 		-
-			message: '#^Call to an undefined method Doctrine\\ORM\\EntityRepository\<Concrete\\Core\\Entity\\Page\\Summary\\CustomPageTemplateCollection\>\:\:findOneByCID\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: ../concrete/src/Page/Summary/Template/Command/DisableCustomPageSummaryTemplatesCommandHandler.php
-
-		-
-			message: '#^Call to an undefined method Doctrine\\ORM\\EntityRepository\<Concrete\\Core\\Entity\\Page\\Summary\\CustomPageTemplateCollection\>\:\:findOneByCID\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: ../concrete/src/Page/Summary/Template/Command/EnableCustomPageSummaryTemplatesCommandHandler.php
-
-		-
 			message: '#^Trait Concrete\\Core\\Page\\Theme\\BedrockThemeTrait is used zero times and is not analysed\.$#'
 			identifier: trait.unused
 			count: 1
@@ -13549,12 +13279,6 @@ parameters:
 			identifier: constructor.unusedParameter
 			count: 1
 			path: ../concrete/src/Page/Theme/Command/ResetSiteThemeLegacyCustomizationsCommandHandler.php
-
-		-
-			message: '#^Call to an undefined method Doctrine\\ORM\\EntityRepository\<Concrete\\Core\\Entity\\Page\\Theme\\CustomSkin\>\:\:findOneBySkinIdentifier\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: ../concrete/src/Page/Theme/Command/SkinCommandValidator.php
 
 		-
 			message: '#^Right side of && is always true\.$#'
@@ -14101,18 +13825,6 @@ parameters:
 			identifier: function.alreadyNarrowedType
 			count: 1
 			path: ../concrete/src/Permission/Access/Entity/GroupEntity.php
-
-		-
-			message: '#^Call to an undefined method Doctrine\\ORM\\EntityRepository\<Concrete\\Core\\Entity\\Permission\\SiteGroup\>\:\:findOneByGroup\(\)\.$#'
-			identifier: method.notFound
-			count: 2
-			path: ../concrete/src/Permission/Access/Entity/SiteGroupEntity.php
-
-		-
-			message: '#^Call to an undefined method Doctrine\\ORM\\EntityRepository\<Concrete\\Core\\Entity\\Site\\Group\\Relation\>\:\:findByGroupID\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: ../concrete/src/Permission/Access/Entity/SiteGroupEntity.php
 
 		-
 			message: '#^Call to function is_object\(\) with Concrete\\Core\\Entity\\Site\\Group\\Group will always evaluate to true\.$#'
@@ -15357,31 +15069,25 @@ parameters:
 			path: ../concrete/src/Site/Resolver/MultisiteDriver.php
 
 		-
+			message: '#^Call to an undefined method Concrete\\Core\\Entity\\Site\\DomainRepository\<Concrete\\Core\\Entity\\Site\\Domain\>\:\:findBySite\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: ../concrete/src/Site/Service.php
+
+		-
+			message: '#^Call to an undefined method Concrete\\Core\\Entity\\Site\\DomainRepository\<Concrete\\Core\\Entity\\Site\\Domain\>\:\:findOneByDomain\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: ../concrete/src/Site/Service.php
+
+		-
+			message: '#^Call to an undefined method Concrete\\Core\\Entity\\Site\\Group\\RelationRepository\<Concrete\\Core\\Entity\\Site\\Group\\Relation\>\:\:findBySite\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: ../concrete/src/Site/Service.php
+
+		-
 			message: '#^Call to an undefined method Doctrine\\DBAL\\Connection\:\:tableExists\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: ../concrete/src/Site/Service.php
-
-		-
-			message: '#^Call to an undefined method Doctrine\\ORM\\EntityRepository\<Concrete\\Core\\Entity\\Site\\Domain\>\:\:findBySite\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: ../concrete/src/Site/Service.php
-
-		-
-			message: '#^Call to an undefined method Doctrine\\ORM\\EntityRepository\<Concrete\\Core\\Entity\\Site\\Domain\>\:\:findOneByDomain\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: ../concrete/src/Site/Service.php
-
-		-
-			message: '#^Call to an undefined method Doctrine\\ORM\\EntityRepository\<Concrete\\Core\\Entity\\Site\\Group\\Relation\>\:\:findBySite\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: ../concrete/src/Site/Service.php
-
-		-
-			message: '#^Call to an undefined method Doctrine\\ORM\\EntityRepository\<Concrete\\Core\\Entity\\Site\\Site\>\:\:findByType\(\)\.$#'
 			identifier: method.notFound
 			count: 1
 			path: ../concrete/src/Site/Service.php
@@ -15409,18 +15115,6 @@ parameters:
 			identifier: method.notFound
 			count: 1
 			path: ../concrete/src/Site/Type/OptionsFormController.php
-
-		-
-			message: '#^Call to an undefined method Doctrine\\ORM\\EntityRepository\<Concrete\\Core\\Entity\\Site\\Type\>\:\:findByPackage\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: ../concrete/src/Site/Type/Service.php
-
-		-
-			message: '#^Call to an undefined method Doctrine\\ORM\\EntityRepository\<Concrete\\Core\\Entity\\Site\\Skeleton\>\:\:findOneByType\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: ../concrete/src/Site/Type/Skeleton/Service.php
 
 		-
 			message: '#^Call to an undefined method HtmlObject\\Element\:\:selected\(\)\.$#'
@@ -15681,40 +15375,16 @@ parameters:
 			path: ../concrete/src/Summary/SummaryObject.php
 
 		-
-			message: '#^Call to an undefined method Doctrine\\ORM\\EntityRepository\<Concrete\\Core\\Entity\\Summary\\Category\>\:\:findOneByHandle\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: ../concrete/src/Summary/SummaryObjectExtractor.php
-
-		-
 			message: '#^Variable \$resolvedFields might not be defined\.$#'
 			identifier: variable.undefined
 			count: 1
 			path: ../concrete/src/Summary/SummaryObjectExtractor.php
 
 		-
-			message: '#^Call to an undefined method Doctrine\\ORM\\EntityRepository\<Concrete\\Core\\Entity\\Summary\\Category\>\:\:findOneByHandle\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: ../concrete/src/Summary/SummaryObjectInspector.php
-
-		-
 			message: '#^If condition is always true\.$#'
 			identifier: if.alwaysTrue
 			count: 1
 			path: ../concrete/src/Summary/Template/AbstractPopulator.php
-
-		-
-			message: '#^Call to an undefined method Doctrine\\ORM\\EntityRepository\<Concrete\\Core\\Entity\\Summary\\Category\>\:\:findOneByHandle\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: ../concrete/src/Summary/Template/Filterer.php
-
-		-
-			message: '#^Call to an undefined method Doctrine\\ORM\\EntityRepository\<Concrete\\Core\\Entity\\Summary\\Template\>\:\:findByCategory\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: ../concrete/src/Summary/Template/Filterer.php
 
 		-
 			message: '#^If condition is always true\.$#'
@@ -16353,7 +16023,19 @@ parameters:
 			path: ../concrete/src/Updater/Migrations/Migrations/Version20181222183445.php
 
 		-
-			message: '#^Call to an undefined method Doctrine\\ORM\\EntityRepository\<Concrete\\Core\\Entity\\OAuth\\Scope\>\:\:findOneByIdentifier\(\)\.$#'
+			message: '#^Call to an undefined method League\\OAuth2\\Server\\Entities\\AccessTokenEntityInterface\:\:getRefreshToken\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: ../concrete/src/Updater/Migrations/Migrations/Version20190111181236.php
+
+		-
+			message: '#^Call to an undefined method League\\OAuth2\\Server\\Entities\\AccessTokenEntityInterface\:\:setRefreshToken\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: ../concrete/src/Updater/Migrations/Migrations/Version20190111181236.php
+
+		-
+			message: '#^Call to an undefined method Concrete\\Core\\Entity\\OAuth\\ScopeRepository\<Concrete\\Core\\Entity\\OAuth\\Scope\>\:\:findOneByIdentifier\(\)\.$#'
 			identifier: method.notFound
 			count: 1
 			path: ../concrete/src/Updater/Migrations/Migrations/Version20190129000000.php
@@ -16437,22 +16119,10 @@ parameters:
 			path: ../concrete/src/Updater/Migrations/Migrations/Version20211023155414.php
 
 		-
-			message: '#^Call to an undefined method Doctrine\\ORM\\EntityRepository\<Concrete\\Core\\Entity\\Automation\\Task\>\:\:findOneByHandle\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: ../concrete/src/Updater/Migrations/Migrations/Version20211028000000.php
-
-		-
 			message: '#^Left side of && is always true\.$#'
 			identifier: booleanAnd.leftAlwaysTrue
 			count: 1
 			path: ../concrete/src/Updater/Migrations/Migrations/Version20211028000000.php
-
-		-
-			message: '#^Call to an undefined method Doctrine\\ORM\\EntityRepository\<Concrete\\Core\\Entity\\Page\\Container\>\:\:findOneByContainerHandle\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: ../concrete/src/Updater/Migrations/Migrations/Version20211208145933.php
 
 		-
 			message: '#^Call to an undefined method Concrete\\Core\\Attribute\\Category\\CategoryInterface\:\:add\(\)\.$#'
@@ -16852,12 +16522,6 @@ parameters:
 
 		-
 			message: '#^Call to an undefined method Doctrine\\ORM\\EntityManagerInterface\:\:merge\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: ../concrete/src/User/Login/LoginAttemptService.php
-
-		-
-			message: '#^Call to an undefined method Doctrine\\ORM\\EntityRepository\<Concrete\\Core\\Entity\\User\\LoginAttempt\>\:\:before\(\)\.$#'
 			identifier: method.notFound
 			count: 1
 			path: ../concrete/src/User/Login/LoginAttemptService.php
