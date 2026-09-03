@@ -64,7 +64,7 @@ class CustomLayout extends Layout
     }
 
     /**
-     * @return CustomLayout|ThemeGridLayout
+     * @return CustomLayout|ThemeGridLayout|null
      */
     public function duplicate()
     {
@@ -81,6 +81,8 @@ class CustomLayout extends Layout
 
             return $newAreaLayout;
         }
+
+        return null;
     }
 
     /**

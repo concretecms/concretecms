@@ -271,6 +271,8 @@ class Pile extends ConcreteObject
         if ($u->isRegistered()) {
             return $this->getUserID() == $u->getUserID();
         }
+
+        return false;
     }
 
     /**

@@ -217,7 +217,7 @@ class Entities extends DashboardPageController
     }
 
     /**
-     * @return \Concrete\Core\Routing\RedirectResponse
+     * @return \Concrete\Core\Routing\RedirectResponse|null
      */
     public function delete_entries()
     {
@@ -242,10 +242,12 @@ class Entities extends DashboardPageController
             $this->flash('success', t('All Entries were successfully cleared.'));
             return Redirect::to('/dashboard/system/express/entities', 'view_entity', $entity->getId());
         }
+
+        return null;
     }
 
     /**
-     * @return \Concrete\Core\Routing\RedirectResponse
+     * @return \Concrete\Core\Routing\RedirectResponse|null
      */
     public function publish()
     {
@@ -266,6 +268,8 @@ class Entities extends DashboardPageController
             $this->flash('success', t('Entity published successfully.'));
             return Redirect::to('/dashboard/system/express/entities', 'view_entity', $entity->getId());
         }
+
+        return null;
     }
 
     public function clear_entries($id = null)

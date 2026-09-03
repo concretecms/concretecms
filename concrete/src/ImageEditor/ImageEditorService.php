@@ -155,7 +155,7 @@ class ImageEditorService
 
     /**
      * @param string $handle
-     * @return Editor
+     * @return Editor|null
      */
     public function getEditorByHandle($handle)
     {
@@ -164,6 +164,8 @@ class ImageEditorService
             return $this->imageEditorRepository->findOneBy(["handle" => $handle]);
         } catch (Exception $e) {
         }
+
+        return null;
     }
 
     public function getActiveEditor()
@@ -194,7 +196,7 @@ class ImageEditorService
     }
 
     /**
-     * @return Editor
+     * @return Editor|null
      */
     public function getDefaultEditor()
     {
@@ -203,6 +205,8 @@ class ImageEditorService
             return $this->imageEditorRepository->findOneBy(["handle" => self::DEFAULT_EDITOR]);
         } catch (Exception $e) {
         }
+
+        return null;
     }
 
     /**

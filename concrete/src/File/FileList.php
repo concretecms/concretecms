@@ -120,7 +120,7 @@ class FileList extends DatabaseItemList implements PagerProviderInterface, Pagin
     }
 
     /**
-     * @return \Concrete\Core\Entity\File\File
+     * @return \Concrete\Core\Entity\File\File|null
      */
     public function getResult($queryRow)
     {
@@ -128,6 +128,8 @@ class FileList extends DatabaseItemList implements PagerProviderInterface, Pagin
         if (is_object($f) && $this->checkPermissions($f)) {
             return $f;
         }
+
+        return null;
     }
 
     public function checkPermissions($mixed)

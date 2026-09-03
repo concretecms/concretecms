@@ -133,7 +133,7 @@ class DownloadFile extends PageController
 
     /**
      * @param int $fID File ID
-     * @return bool
+     * @return bool|null
      * @noinspection PhpInconsistentReturnPointsInspection
      */
     public function view_inline($fID = 0)
@@ -191,6 +191,8 @@ class DownloadFile extends PageController
                 }
             }
         }
+
+        return null;
     }
 
     /**

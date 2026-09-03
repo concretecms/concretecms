@@ -15,7 +15,7 @@ class DataSources extends DashboardSitePageController
 
     /**
      * @param $id
-     * @return Board
+     * @return Board|null
      */
     protected function getBoard($id)
     {
@@ -27,6 +27,8 @@ class DataSources extends DashboardSitePageController
                 return $board;
             }
         }
+
+        return null;
     }
 
     /**

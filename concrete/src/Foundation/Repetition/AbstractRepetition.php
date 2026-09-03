@@ -457,7 +457,7 @@ abstract class AbstractRepetition implements RepetitionInterface
     }
 
     /**
-     * @return string Time string of the last possible time for an occurrence
+     * @return string|null Time string of the last possible time for an occurrence
      */
     public function getRepeatPeriodEnd()
     {
@@ -466,6 +466,8 @@ abstract class AbstractRepetition implements RepetitionInterface
             $datetime = new \DateTime($this->repeatPeriodEnd);
             return $datetime->format('Y-m-d');
         }
+
+        return null;
     }
 
     /**

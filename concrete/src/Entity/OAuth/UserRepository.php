@@ -19,7 +19,7 @@ class UserRepository extends EntityRepository implements UserRepositoryInterface
      * @param string $grantType The grant type used
      * @param ClientEntityInterface $clientEntity
      *
-     * @return UserEntityInterface
+     * @return UserEntityInterface|null
      */
     public function getUserEntityByUserCredentials(
         $username,
@@ -31,5 +31,7 @@ class UserRepository extends EntityRepository implements UserRepositoryInterface
         if ($user && !$user->isError() && $user->isActive()) {
             return $this->getEntityManager()->getRepository(User::class)->find($user->getUserID());
         }
+
+        return null;
     }
 }

@@ -64,7 +64,7 @@ class UserPreset extends ConcreteObject
     /**
      * @param int $arLayoutPresetID
      *
-     * @return static
+     * @return static|null
      */
     public static function getByID($arLayoutPresetID)
     {
@@ -81,6 +81,8 @@ class UserPreset extends ConcreteObject
 
             return $preset;
         }
+
+        return null;
     }
 
     public function delete()

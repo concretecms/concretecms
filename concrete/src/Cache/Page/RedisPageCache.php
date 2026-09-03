@@ -100,7 +100,7 @@ class RedisPageCache extends PageCache
 
     /**
      * @param $mixed
-     * @return \Stash\Interfaces\ItemInterface
+     * @return \Stash\Interfaces\ItemInterface|null
      */
     protected function getCacheItem($mixed)
     {
@@ -108,5 +108,7 @@ class RedisPageCache extends PageCache
         if ($key) {
             return self::$pool->getItem($key);
         }
+
+        return null;
     }
 }

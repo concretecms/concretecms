@@ -196,7 +196,7 @@ class Set
      *
      * @param int $fsID
      *
-     * @return Set
+     * @return Set|null
      */
     public static function getByID($fsID)
     {
@@ -215,6 +215,8 @@ class Set
 
             return $fs;
         }
+
+        return null;
     }
 
     public static function __callStatic($name, $arguments)
@@ -306,7 +308,7 @@ class Set
      * @param  string   $fsName
      * @param  int|bool $uID
      *
-     * @return Set
+     * @return Set|null
      */
     public static function getByName($fsName, $uID = false)
     {
@@ -322,6 +324,8 @@ class Set
 
             return $fs;
         }
+
+        return null;
     }
 
     /**

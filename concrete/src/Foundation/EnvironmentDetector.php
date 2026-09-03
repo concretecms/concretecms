@@ -63,7 +63,7 @@ class EnvironmentDetector
      * @param  mixed   $environments
      * @param  array  $args
      *
-     * @return string
+     * @return string|null
      */
     protected function detectConsoleEnvironment($environments, array $args)
     {
@@ -73,6 +73,8 @@ class EnvironmentDetector
         if (!is_null($value = $this->getEnvironmentArgument($args))) {
             return head(array_slice(explode('=', $value), 1));
         }
+
+        return null;
     }
 
     /**

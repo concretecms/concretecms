@@ -52,7 +52,7 @@ class Archive
      *
      * @param string $directory The base name of the file (without extension, assumed to be in the the temporary directory).
      *
-     * @return string Return the full path of the extracted directory.
+     * @return string|null Return the full path of the extracted directory.
      */
     protected function unzip($directory)
     {
@@ -64,6 +64,8 @@ class Archive
 
             return $this->f->getTemporaryDirectory() . '/' . $directory;
         }
+
+        return null;
     }
 
     /**

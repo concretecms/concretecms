@@ -625,7 +625,7 @@ class Area extends ConcreteObject implements \Concrete\Core\Permission\ObjectInt
     /**
      * Rescans the current Area's permissions ensuring that it's inheriting permissions properly up the chain.
      *
-     * @return bool
+     * @return bool|null
      */
     public function rescanAreaPermissionsChain()
     {
@@ -692,6 +692,8 @@ class Area extends ConcreteObject implements \Concrete\Core\Permission\ObjectInt
                 }
             }
         }
+
+        return null;
     }
 
     /**

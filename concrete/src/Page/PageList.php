@@ -327,7 +327,7 @@ class PageList extends DatabaseItemList implements PagerProviderInterface, Pagin
     /**
      * @param $queryRow
      *
-     * @return \Concrete\Core\Page\Page
+     * @return \Concrete\Core\Page\Page|null
      */
     public function getResult($queryRow)
     {
@@ -362,6 +362,8 @@ class PageList extends DatabaseItemList implements PagerProviderInterface, Pagin
                 return $c;
             }
         }
+
+        return null;
     }
 
     public function checkPermissions($mixed)

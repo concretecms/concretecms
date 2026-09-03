@@ -171,6 +171,8 @@ class DashboardMenu
                 return -1;
             }
         }
+
+        return 0;
     }
 
     /**

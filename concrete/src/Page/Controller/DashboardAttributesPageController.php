@@ -94,7 +94,7 @@ abstract class DashboardAttributesPageController extends DashboardPageController
     /**
      * Sort the attributes belinging to a set, reading the data from the request.
      *
-     * @return \Symfony\Component\HttpFoundation\JsonResponse
+     * @return \Symfony\Component\HttpFoundation\JsonResponse|null
      */
     public function sort_attribute_set()
     {
@@ -135,6 +135,8 @@ abstract class DashboardAttributesPageController extends DashboardPageController
 
             return new JsonResponse($set);
         }
+
+        return null;
     }
 
     /**

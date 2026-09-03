@@ -60,7 +60,7 @@ abstract class AbstractSearchProvider implements ProviderInterface, SessionQuery
     /**
      * Gets items per page from the current preset or from the session.
      *
-     * @return int
+     * @return int|null
      */
     public function getItemsPerPage()
     {
@@ -68,6 +68,8 @@ abstract class AbstractSearchProvider implements ProviderInterface, SessionQuery
         if ($sessionQuery instanceof Query) {
             return $sessionQuery->getItemsPerPage();
         }
+
+        return null;
     }
 
     /**

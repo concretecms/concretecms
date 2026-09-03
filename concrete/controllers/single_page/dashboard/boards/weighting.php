@@ -14,7 +14,7 @@ class Weighting extends DashboardSitePageController
 
     /**
      * @param $id
-     * @return Board
+     * @return Board|null
      */
     protected function getBoard($id)
     {
@@ -26,6 +26,8 @@ class Weighting extends DashboardSitePageController
                 return $board;
             }
         }
+
+        return null;
     }
     
     public function view($id = null)

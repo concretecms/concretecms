@@ -10,7 +10,7 @@ class Rules extends DashboardPageController
 
     /**
      * @param $id
-     * @return Instance
+     * @return Instance|null
      */
     protected function getInstance($id)
     {
@@ -25,6 +25,8 @@ class Rules extends DashboardPageController
                 }
             }
         }
+
+        return null;
     }
 
     public function view($id = null)

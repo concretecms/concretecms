@@ -104,7 +104,7 @@ class ThemeGridColumn extends Column
     }
 
     /**
-     * @return string
+     * @return string|null
      */
     public function getAreaLayoutColumnClass()
     {
@@ -123,12 +123,14 @@ class ThemeGridColumn extends Column
 
             return $class;
         }
+
+        return null;
     }
 
     /**
      * this returns offsets in the form of spans.
      *
-     * @return string
+     * @return string|null
      */
     public function getAreaLayoutColumnOffsetEditClass()
     {
@@ -146,6 +148,8 @@ class ThemeGridColumn extends Column
 
             return $class;
         }
+
+        return null;
     }
 
     public function getColumnHtmlObject()
@@ -186,7 +190,7 @@ class ThemeGridColumn extends Column
     }
 
     /**
-     * @return string
+     * @return string|null
      */
     public function getAreaLayoutColumnOffsetClass()
     {
@@ -205,6 +209,8 @@ class ThemeGridColumn extends Column
 
             return $class;
         }
+
+        return null;
     }
 
     public function delete()

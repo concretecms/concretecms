@@ -217,7 +217,7 @@ class LogEntry
     /**
      * Gets the HTML code for the icon of the logging level.
      *
-     * @return string
+     * @return string|null
      */
     public function getLevelIcon()
     {
@@ -239,6 +239,8 @@ class LogEntry
             case Monolog::DEBUG:
                 return '<i class="text-info fas fa-cog launch-tooltip" title="' . $this->getLevelDisplayName() . '"></i>';
         }
+
+        return null;
     }
 
     /**

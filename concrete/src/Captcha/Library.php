@@ -284,6 +284,8 @@ class Library extends ConcreteObject
         } else {
             return file_exists(DIR_FILES_ELEMENTS_CORE . '/' . $path);
         }
+
+        return false;
     }
 
     /**

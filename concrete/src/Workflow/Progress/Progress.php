@@ -116,7 +116,7 @@ abstract class Progress extends ConcreteObject implements SubjectInterface
     /**
      * Get the WorkflowRequest object for the current WorkflowProgress object.
      *
-     * @return WorkflowRequest
+     * @return WorkflowRequest|null
      */
     public function getWorkflowRequestObject()
     {
@@ -133,6 +133,8 @@ abstract class Progress extends ConcreteObject implements SubjectInterface
                 return $wr;
             }
         }
+
+        return null;
     }
 
     public static function __callStatic($name, $arguments)

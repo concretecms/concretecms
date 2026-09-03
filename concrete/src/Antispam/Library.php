@@ -76,7 +76,7 @@ class Library extends ConcreteObject
     }
 
     /**
-     * @return Library
+     * @return Library|null
      */
     public static function getActive()
     {
@@ -85,12 +85,14 @@ class Library extends ConcreteObject
         if ($saslHandle) {
             return static::getByHandle($saslHandle);
         }
+
+        return null;
     }
 
     /**
      * @param string $saslHandle
      *
-     * @return static
+     * @return static|null
      */
     public static function getByHandle($saslHandle)
     {
@@ -102,6 +104,8 @@ class Library extends ConcreteObject
 
             return $sc;
         }
+
+        return null;
     }
 
     /**

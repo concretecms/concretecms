@@ -263,7 +263,7 @@ class File
     /**
      * Returns the full path to the temporary directory.
      *
-     * @return string
+     * @return string|null
      */
     public function getTemporaryDirectory()
     {
@@ -298,6 +298,8 @@ class File
 
             return str_replace(DIRECTORY_SEPARATOR, '/', dirname($temp));
         }
+
+        return null;
     }
 
     /**

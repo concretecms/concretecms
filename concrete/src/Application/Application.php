@@ -312,7 +312,7 @@ class Application extends Container
      * @param SymfonyRequest $request
      * @param Site $site
      *
-     * @return \Concrete\Core\Routing\RedirectResponse
+     * @return \Concrete\Core\Routing\RedirectResponse|null
      */
     public function handleURLSlashes(SymfonyRequest $request, Site $site)
     {
@@ -333,6 +333,8 @@ class Application extends Container
                 return $response;
             }
         }
+
+        return null;
     }
 
     /**

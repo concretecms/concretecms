@@ -104,7 +104,7 @@ class Section extends Page
     /**
      * @param Page $page
      *
-     * @return Section
+     * @return Section|null
      */
     public static function getBySectionOfSite($page)
     {
@@ -144,6 +144,8 @@ class Section extends Page
         if ($returnID) {
             return static::getByID($returnID);
         }
+
+        return null;
     }
 
 
