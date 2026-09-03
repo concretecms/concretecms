@@ -106,7 +106,7 @@ interface AttributeInterface
      * You can reuse this throughout your controllers, but it's used by the getAttributeValueObject()
      * method in the base controller to retrieve the relevant attribute data value object.
      *
-     * @return string
+     * @return string|null NULL or empty string if the attribute type has no associated value entity
      */
     public function getAttributeValueClass();
 

@@ -87,7 +87,15 @@ abstract class AbstractValue implements AttributeValueInterface
     }
 
     /**
-     * @return \Concrete\Core\Entity\Attribute\Value\Value\Value
+     * Get the object that holds the value of this attribute.
+     *
+     * Two unrelated class families share the AbstractValue name: this one represents the attribute
+     * of an object, whereas Value\Value\AbstractValue represents the value itself.
+     * This method normally returns the latter, which is what every attribute controller builds.
+     * It returns an AttributeValueInterface only when the controller falls back to the attribute
+     * value it was handed, that is when the generic value has not been persisted yet.
+     *
+     * @return \Concrete\Core\Entity\Attribute\Value\Value\AbstractValue|\Concrete\Core\Attribute\AttributeValueInterface|null
      */
     final public function getValueObject()
     {

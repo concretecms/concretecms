@@ -568,6 +568,35 @@ class Service implements LoggerAwareInterface
     }
 
     /**
+     * Replace encoded mail header values with plain-text values for dashboard log display.
+     *
+     * @return string
+     */
+    private function decodeLoggedMailHeaderValues(string $mailDetails, Email $email)
+    {
+        $pattern = '/^%s:(?:[^\r\n]*(?:\R[ \t][^\r\n]*)*)/m';
+        $headers = [];
+
+        if ($email->getFrom() !== []) {
+            $from = [];
+            foreach ($email->getFrom() as $address) {
+                $from[] = $address->getName() !== '' ? $address->getName() . ' <' . $address->getAddress() . '>' : $address->getAddress();
+            }
+            $headers['From'] = implode(', ', $from);
+        }
+
+        if (null !== ($subject = $email->getSubject())) {
+            $headers['Subject'] = $subject;
+        }
+
+        foreach ($headers as $name => $value) {
+            $mailDetails = preg_replace(sprintf($pattern, $name), $name . ': ' . $value, $mailDetails, 1);
+        }
+
+        return $mailDetails;
+    }
+
+    /**
      * Sends the email.
      *
      * @param bool $resetData Whether or not to reset the service to its default when this method is done
@@ -642,6 +671,7 @@ class Service implements LoggerAwareInterface
                 if (stripos($mailDetails, 'Content-Transfer-Encoding: quoted-printable') !== false) {
                     $mailDetails = quoted_printable_decode($mailDetails);
                 }
+                $mailDetails = $this->decodeLoggedMailHeaderValues($mailDetails, $email);
                 // append the attached file names to the mail log
                 foreach ($this->email->getAttachments() as $attachedFile) {
                     $mailDetails .= "\n" . t("[Attached File: %s]", $attachedFile->asDebugString());

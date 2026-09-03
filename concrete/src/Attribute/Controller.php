@@ -33,7 +33,7 @@ class Controller extends AbstractController implements AttributeInterface
     protected $attributeKey;
 
     /**
-     * @var \Concrete\Core\Entity\Attribute\Value\AbstractValue
+     * @var \Concrete\Core\Attribute\AttributeValueInterface|null
      */
     protected $attributeValue;
 
@@ -228,7 +228,7 @@ class Controller extends AbstractController implements AttributeInterface
     }
 
     /**
-     * @param \Concrete\Core\Entity\Attribute\Value\AbstractValue|null $attributeValue
+     * @param \Concrete\Core\Attribute\AttributeValueInterface|null $attributeValue
      */
     public function setAttributeValue($attributeValue)
     {
@@ -246,7 +246,14 @@ class Controller extends AbstractController implements AttributeInterface
     }
 
     /**
-     * @return \Concrete\Core\Entity\Attribute\Value\AbstractValue|null
+     * Get the object holding the value of the attribute this controller was given.
+     *
+     * This normally is a value object, an instance of Value\Value\AbstractValue built by the
+     * attribute type, and that is what the entity manager is queried for.
+     * When the attribute value has no persisted generic value yet there is nothing to query,
+     * and the attribute value itself is handed back instead, hence the AttributeValueInterface.
+     *
+     * @return \Concrete\Core\Entity\Attribute\Value\Value\AbstractValue|\Concrete\Core\Attribute\AttributeValueInterface|null
      */
     public function getAttributeValueObject()
     {
@@ -272,7 +279,7 @@ class Controller extends AbstractController implements AttributeInterface
     /**
      * Create the default attribute value (if needed).
      *
-     * @return \Concrete\Core\Entity\Attribute\Value\AbstractValue|null
+     * @return \Concrete\Core\Entity\Attribute\Value\Value\AbstractValue|null
      */
     public function createDefaultAttributeValue()
     {
