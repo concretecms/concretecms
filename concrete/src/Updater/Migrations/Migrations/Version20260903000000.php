@@ -13,7 +13,6 @@ class Version20260903000000 extends AbstractMigration implements RepeatableMigra
         $config = $this->app->make('config');
         if (empty($config->get('concrete.file_manager.documents.xml_sanitization.action'))) {
             $action = XmlProcessor::ACTION_DEFAULT;
-            $config->set('concrete.file_manager.documents.xml_sanitization.action', $action);
             $config->save('concrete.file_manager.documents.xml_sanitization.action', $action);
         }
     }

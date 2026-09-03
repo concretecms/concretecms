@@ -208,6 +208,124 @@ class FileProcessorsTest extends FileStorageTestCase
     }
 
     /**
+     * @param string $contents the contents of the SVG file
+     *
+     * @return string the local path of a temporary SVG file
+     */
+    protected function createSvgFile($contents)
+    {
+        $file = DIR_FILES_UPLOADED_STANDARD . '/incoming/svg-test-' . uniqid() . '.svg';
+        @mkdir(dirname($file), 0777, true);
+        file_put_contents($file, $contents);
+
+        return $file;
+    }
+
+    /**
+     * @return array
+     */
+    public static function provideSafeSvg()
+    {
+        return [
+            'minimal' => ['<svg xmlns="http://www.w3.org/2000/svg" width="10" height="10"><rect width="10" height="10" fill="red"/></svg>'],
+            'with comments' => ["<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<!-- Generator: Adobe Illustrator -->\n<svg xmlns=\"http://www.w3.org/2000/svg\" version=\"1.1\" x=\"0px\" y=\"0px\" viewBox=\"0 0 100 100\" xml:space=\"preserve\"><circle cx=\"50\" cy=\"50\" r=\"40\"/></svg>"],
+        ];
+    }
+
+    /**
+     * @param string $contents
+     * @dataProvider provideSafeSvg
+     */
+    public function testSvgProcessorAcceptsSafeSvgWhenConfiguredToReject($contents)
+    {
+        $file = $this->createSvgFile($contents);
+        try {
+            $error = null;
+            try {
+                self::$config->withKey(
+                    'concrete.file_manager.images.svg_sanitization.action',
+                    SvgProcessor::ACTION_REJECT,
+                    function () use ($file) {
+                        return self::$app->make(FileImporter::class)->importLocalFile($file, 'test-svg-safe-' . uniqid() . '.svg');
+                    }
+                );
+            } catch (Exception $x) {
+                $error = $x;
+            }
+            $this->assertNull($error, $error === null ? '' : $error->getMessage());
+        } finally {
+            @unlink($file);
+        }
+    }
+
+    public function testSvgProcessorRejectsHarmfulSvgWhenConfiguredToReject()
+    {
+        $file = DIR_TESTS . '/assets/File/Import/harmful.svg';
+        $fileSHA1 = sha1_file($file);
+        $error = null;
+        try {
+            self::$config->withKey(
+                'concrete.file_manager.images.svg_sanitization.action',
+                SvgProcessor::ACTION_REJECT,
+                function () use ($file) {
+                    return self::$app->make(FileImporter::class)->importLocalFile($file);
+                }
+            );
+        } catch (Exception $x) {
+            $error = $x;
+        }
+        $this->assertSame($fileSHA1, sha1_file($file));
+        $this->assertInstanceOf(ImportException::class, $error);
+        $this->assertSame(ImportException::E_FILE_INVALID, $error->getCode());
+    }
+
+    /**
+     * The enshrined/svg-sanitize library catches unsafe contents that our own allowlists
+     * don't know about: those must be reported too, or "reject" would accept a file that
+     * "sanitize" would have cleaned up.
+     */
+    public function testSvgProcessorRejectsJavascriptLinksWhenConfiguredToReject()
+    {
+        $file = $this->createSvgFile('<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><a xlink:href="javascript:alert(1)"><rect width="1" height="1"/></a></svg>');
+        try {
+            $error = null;
+            try {
+                self::$config->withKey(
+                    'concrete.file_manager.images.svg_sanitization.action',
+                    SvgProcessor::ACTION_REJECT,
+                    function () use ($file) {
+                        return self::$app->make(FileImporter::class)->importLocalFile($file, 'test-svg-js-' . uniqid() . '.svg');
+                    }
+                );
+            } catch (Exception $x) {
+                $error = $x;
+            }
+            $this->assertInstanceOf(ImportException::class, $error);
+            $this->assertSame(ImportException::E_FILE_INVALID, $error->getCode());
+        } finally {
+            @unlink($file);
+        }
+    }
+
+    public function testSvgProcessorSanitizesHarmfulSvgByDefault()
+    {
+        $file = DIR_TESTS . '/assets/File/Import/harmful.svg';
+        $fileSHA1 = sha1_file($file);
+        $fv = self::$config->withKey(
+            'concrete.file_manager.images.svg_sanitization.action',
+            SvgProcessor::ACTION_SANITIZE,
+            function () use ($file) {
+                return self::$app->make(FileImporter::class)->importLocalFile($file, 'test-svg-sanitize-' . uniqid() . '.svg');
+            }
+        );
+        // Check that the source file hasn't been touched
+        $this->assertSame($fileSHA1, sha1_file($file));
+        $contents = $fv->getFileContents();
+        $this->assertStringNotContainsStringIgnoringCase('onclick', $contents);
+        $this->assertStringContainsString('Text', $contents);
+    }
+
+    /**
      * @return string the local path of a temporary file containing an XML document with an
      * <?xml-stylesheet?> processing instruction pointing to an attacker-controlled stylesheet
      */
