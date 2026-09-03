@@ -68,6 +68,15 @@ class CollectionAttributeControl extends Control
         return $this->akID;
     }
 
+    public function getPageTypeComposerControlIdentifier()
+    {
+        if ($this->ptComposerControlIdentifier === null && $this->akID !== null) {
+            $this->setPageTypeComposerControlIdentifier($this->akID);
+        }
+
+        return parent::getPageTypeComposerControlIdentifier();
+    }
+
     public function getPageTypeComposerControlCustomTemplates()
     {
         return array();
