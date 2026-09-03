@@ -9,7 +9,7 @@ use Loader;
 class CustomColumn extends Column
 {
     /**
-     * @var int;
+     * @var int
      */
     public $arLayoutColumnWidth;
 

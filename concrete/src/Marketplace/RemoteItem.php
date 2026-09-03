@@ -310,7 +310,7 @@ class RemoteItem extends ConcreteObject
     }
 
     /**
-     * @return \Concrete\Core\Marketplace\RemoteItem;
+     * @return \Concrete\Core\Marketplace\RemoteItem
      *
      * @param $mpID
      *
@@ -322,7 +322,7 @@ class RemoteItem extends ConcreteObject
     }
 
     /**
-     * @return \Concrete\Core\Marketplace\RemoteItem;
+     * @return \Concrete\Core\Marketplace\RemoteItem
      *
      * @param $mpID
      *

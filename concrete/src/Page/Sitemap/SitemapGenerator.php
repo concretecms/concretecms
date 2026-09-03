@@ -92,7 +92,7 @@ class SitemapGenerator
     /**
      * @param \Concrete\Core\Page\Sitemap\PageListGenerator $pageListGenerator
      *
-     * @return $this;
+     * @return $this
      */
     public function setPageListGenerator(PageListGenerator $pageListGenerator)
     {
@@ -116,7 +116,7 @@ class SitemapGenerator
     /**
      * @param \Concrete\Core\Url\Resolver\Manager\ResolverManagerInterface $resolverManager
      *
-     * @return $this;
+     * @return $this
      */
     public function setResolverManager(ResolverManagerInterface $resolverManager)
     {

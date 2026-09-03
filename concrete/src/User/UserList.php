@@ -189,7 +189,7 @@ class UserList extends DatabaseItemList implements PagerProviderInterface, Pagin
     /**
      * @param UserInfoRepository $value
      *
-     * @return $this;
+     * @return $this
      */
     public function setUserInfoRepository(UserInfoRepository $value)
     {

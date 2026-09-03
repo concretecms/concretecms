@@ -7,12 +7,12 @@ namespace Concrete\Core\Support\Symbol\CheckerGenerator;
 class Method
 {
     /**
-     * @var $string
+     * @var string
      */
     private $name;
 
     /**
-     * @var $string
+     * @var string
      */
     private $arguments;
 
@@ -22,22 +22,22 @@ class Method
     private $deprecated = false;
 
     /**
-     * @var $string[]
+     * @var string[]
      */
     private $descriptions = [];
 
     /**
-     * @var $string[]
+     * @var string[]
      */
     private $forObjectOfClasses = [];
 
     /**
-     * @var $string[]
+     * @var string[]
      */
     private $categoryKeyHandles = [];
 
     /**
-     * @var $string[]
+     * @var string[]
      */
     private $sees = [];
 

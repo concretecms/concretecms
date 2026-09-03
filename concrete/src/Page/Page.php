@@ -1635,10 +1635,9 @@ class Page extends Collection implements CategoryMemberInterface,
     /**
      * Returns the path for a page from its cID.
      *
-     * @param int cID
-     * @param mixed $cID
+     * @param int $cID
      *
-     * @return @return string|false
+     * @return string|false
      */
     public static function getCollectionPathFromID($cID)
     {

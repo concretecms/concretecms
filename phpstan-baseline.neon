@@ -2667,6 +2667,12 @@ parameters:
 			path: concrete/controllers/single_page/dashboard/express/entries.php
 
 		-
+			message: '#^Parameter \#2 \$pkgHandle of method Concrete\\Core\\Page\\Controller\\PageController\:\:render\(\) expects string\|null, false given\.$#'
+			identifier: argument.type
+			count: 4
+			path: concrete/controllers/single_page/dashboard/express/entries.php
+
+		-
 			message: '#^Property Concrete\\Controller\\SinglePage\\Dashboard\\Express\\Entries\:\:\$headerMenu \(Concrete\\Core\\Filesystem\\Element\) in isset\(\) is not nullable\.$#'
 			identifier: isset.property
 			count: 1
@@ -2868,6 +2874,12 @@ parameters:
 			message: '#^Instanceof between Concrete\\Core\\Tree\\Node\\Node\|null and Concrete\\Core\\Tree\\Type\\ExpressEntryResults will always evaluate to false\.$#'
 			identifier: instanceof.alwaysFalse
 			count: 1
+			path: concrete/controllers/single_page/dashboard/reports/forms.php
+
+		-
+			message: '#^Parameter \#2 \$pkgHandle of method Concrete\\Core\\Page\\Controller\\PageController\:\:render\(\) expects string\|null, false given\.$#'
+			identifier: argument.type
+			count: 5
 			path: concrete/controllers/single_page/dashboard/reports/forms.php
 
 		-
@@ -5799,12 +5811,6 @@ parameters:
 			path: concrete/src/Application/Service/UserInterface.php
 
 		-
-			message: '#^PHPDoc tag @return has invalid value \(Response;\)\: Unexpected token ";", expected TOKEN_HORIZONTAL_WS at offset 131 on line 6$#'
-			identifier: phpDoc.parseError
-			count: 1
-			path: concrete/src/Application/Service/UserInterface.php
-
-		-
 			message: '#^Call to an undefined method HtmlObject\\Link\:\:href\(\)\.$#'
 			identifier: method.notFound
 			count: 1
@@ -6141,8 +6147,8 @@ parameters:
 			path: concrete/src/Area/Layout/CustomColumn.php
 
 		-
-			message: '#^PHPDoc tag @var has invalid value \(int;\)\: Unexpected token ";", expected TOKEN_HORIZONTAL_WS at offset 19 on line 2$#'
-			identifier: phpDoc.parseError
+			message: '#^Parameter \#2 \$value of method SimpleXMLElement\:\:addAttribute\(\) expects string, int given\.$#'
+			identifier: argument.type
 			count: 1
 			path: concrete/src/Area/Layout/CustomColumn.php
 
@@ -9501,12 +9507,6 @@ parameters:
 			path: concrete/src/Cookie/ResponseCookieJar.php
 
 		-
-			message: '#^PHPDoc tag @return has invalid value \(string\[\]\[\]\\Generator\)\: Unexpected token "\\\\Generator", expected TOKEN_HORIZONTAL_WS at offset 137 on line 6$#'
-			identifier: phpDoc.parseError
-			count: 1
-			path: concrete/src/Csv/Export/AbstractExporter.php
-
-		-
 			message: '#^PHPDoc tag @return with type array\<Concrete\\Core\\Entity\\File\\DownloadStatistics\> is incompatible with native type Generator\.$#'
 			identifier: return.phpDocType
 			count: 2
@@ -10500,12 +10500,6 @@ parameters:
 			path: concrete/src/Entity/Express/Entry.php
 
 		-
-			message: '#^PHPDoc tag @return has invalid value \(\$mixed\)\: Unexpected token "\$mixed", expected type at offset 206 on line 8$#'
-			identifier: phpDoc.parseError
-			count: 1
-			path: concrete/src/Entity/Express/Entry.php
-
-		-
 			message: '#^PHPDoc tag @return with type mixed is not subtype of native type string\.$#'
 			identifier: return.phpDocType
 			count: 1
@@ -10988,12 +10982,6 @@ parameters:
 		-
 			message: '#^PHPDoc tag @param for parameter \$value with type IPLib\\Address\\AddressInterface is not subtype of native type IPLib\\Range\\RangeInterface\.$#'
 			identifier: parameter.phpDocType
-			count: 1
-			path: concrete/src/Entity/Permission/IpAccessControlRange.php
-
-		-
-			message: '#^PHPDoc tag @param has invalid value \(\\DateTime\| \$value\)\: Unexpected token "\$value", expected type at offset 113 on line 4$#'
-			identifier: phpDoc.parseError
 			count: 1
 			path: concrete/src/Entity/Permission/IpAccessControlRange.php
 
@@ -11908,12 +11896,6 @@ parameters:
 			identifier: class.notFound
 			count: 1
 			path: concrete/src/File/Exception/FileVersionException.php
-
-		-
-			message: '#^PHPDoc tag @var has invalid value \(@var int\)\: Unexpected token "@var", expected type at offset 9 on line 1$#'
-			identifier: phpDoc.parseError
-			count: 1
-			path: concrete/src/File/ExternalFileProvider/ExternalFileList.php
 
 		-
 			message: '#^PHPDoc tag @param references unknown parameter\: \$file$#'
@@ -12942,18 +12924,6 @@ parameters:
 			path: concrete/src/Form/Service/Form.php
 
 		-
-			message: '#^PHPDoc tag @return has invalid value \(\$html\)\: Unexpected token "\$html", expected type at offset 546 on line 9$#'
-			identifier: phpDoc.parseError
-			count: 1
-			path: concrete/src/Form/Service/Form.php
-
-		-
-			message: '#^PHPDoc tag @return has invalid value \(\$html\)\: Unexpected token "\$html", expected type at offset 801 on line 9$#'
-			identifier: phpDoc.parseError
-			count: 1
-			path: concrete/src/Form/Service/Form.php
-
-		-
 			message: '#^Result of && is always false\.$#'
 			identifier: booleanAnd.alwaysFalse
 			count: 1
@@ -13026,8 +12996,8 @@ parameters:
 			path: concrete/src/Form/Service/Widget/SiteSelector.php
 
 		-
-			message: '#^PHPDoc tag @param has invalid value \(\\Concrete\\Core\\Entity\\User\\User\[\]\|\\Concrete\\Core\\User\\UserInfo\[\]\|int\[\]\\Traversable \$users The users to be initially selected\)\: Unexpected token "\\\\Traversable", expected variable at offset 241 on line 5$#'
-			identifier: phpDoc.parseError
+			message: '#^Default value of the parameter \#2 \$users \(array\) of method Concrete\\Core\\Form\\Service\\Widget\\UserSelector\:\:selectMultipleUsers\(\) is incompatible with type iterable\<Concrete\\Core\\Entity\\User\\User\|Concrete\\Core\\User\\UserInfo\|int\>&Traversable\.$#'
+			identifier: parameter.defaultValue
 			count: 1
 			path: concrete/src/Form/Service/Widget/UserSelector.php
 
@@ -14121,12 +14091,6 @@ parameters:
 			identifier: booleanOr.leftAlwaysFalse
 			count: 1
 			path: concrete/src/Install/Installer.php
-
-		-
-			message: '#^PHPDoc tag @return has invalid value \(\$this;\)\: Unexpected token ";", expected TOKEN_HORIZONTAL_WS at offset 171 on line 6$#'
-			identifier: phpDoc.parseError
-			count: 1
-			path: concrete/src/Install/InstallerOptions.php
 
 		-
 			message: '#^Method Concrete\\Core\\Install\\Preconditions\\CanonicalUrls\:\:setInstallerOptions\(\) should return \$this\(Concrete\\Core\\Install\\Preconditions\\CanonicalUrls\) but return statement is missing\.$#'
@@ -15313,12 +15277,6 @@ parameters:
 		-
 			message: '#^Class Concrete\\Core\\Package\\PackageArchive constructor invoked with 1 parameter, 0 required\.$#'
 			identifier: arguments.count
-			count: 2
-			path: concrete/src/Marketplace/RemoteItem.php
-
-		-
-			message: '#^PHPDoc tag @return has invalid value \(\\Concrete\\Core\\Marketplace\\RemoteItem;\)\: Unexpected token ";", expected TOKEN_HORIZONTAL_WS at offset 56 on line 2$#'
-			identifier: phpDoc.parseError
 			count: 2
 			path: concrete/src/Marketplace/RemoteItem.php
 
@@ -16583,6 +16541,12 @@ parameters:
 			path: concrete/src/Page/Controller/DashboardExpressEntityPageController.php
 
 		-
+			message: '#^Parameter \#2 \$pkgHandle of method Concrete\\Core\\Page\\Controller\\PageController\:\:render\(\) expects string\|null, false given\.$#'
+			identifier: argument.type
+			count: 4
+			path: concrete/src/Page/Controller/DashboardExpressEntityPageController.php
+
+		-
 			message: '#^Property Concrete\\Core\\Page\\Controller\\DashboardExpressEntityPageController\:\:\$headerMenu \(Concrete\\Core\\Filesystem\\Element\) in isset\(\) is not nullable\.$#'
 			identifier: isset.property
 			count: 1
@@ -16633,18 +16597,6 @@ parameters:
 		-
 			message: '#^Offset 0 on non\-empty\-list\<string\> in isset\(\) always exists and is not nullable\.$#'
 			identifier: isset.offset
-			count: 1
-			path: concrete/src/Page/Controller/PageController.php
-
-		-
-			message: '#^PHPDoc tag @param has invalid value \(@string\)\: Unexpected token "@string", expected type at offset 325 on line 7$#'
-			identifier: phpDoc.parseError
-			count: 1
-			path: concrete/src/Page/Controller/PageController.php
-
-		-
-			message: '#^PHPDoc tag @param has invalid value \(@string\|\\Concrete\\Core\\Page\\Page \$var\)\: Unexpected token "@string", expected type at offset 313 on line 9$#'
-			identifier: phpDoc.parseError
 			count: 1
 			path: concrete/src/Page/Controller/PageController.php
 
@@ -16877,12 +16829,6 @@ parameters:
 			path: concrete/src/Page/Page.php
 
 		-
-			message: '#^PHPDoc tag @param has invalid value \(int cID\)\: Unexpected token "cID", expected variable at offset 78 on line 4$#'
-			identifier: phpDoc.parseError
-			count: 1
-			path: concrete/src/Page/Page.php
-
-		-
 			message: '#^PHPDoc tag @param references unknown parameter\: \$mcID$#'
 			identifier: parameter.notFound
 			count: 2
@@ -16928,12 +16874,6 @@ parameters:
 			message: '#^PHPDoc tag @param references unknown parameter\: \$toParentPage$#'
 			identifier: parameter.notFound
 			count: 2
-			path: concrete/src/Page/Page.php
-
-		-
-			message: '#^PHPDoc tag @return has invalid value \(@return string\|false\)\: Unexpected token "@return", expected type at offset 129 on line 7$#'
-			identifier: phpDoc.parseError
-			count: 1
 			path: concrete/src/Page/Page.php
 
 		-
@@ -17329,18 +17269,6 @@ parameters:
 		-
 			message: '#^PHPDoc tag @param references unknown parameter\: \$args$#'
 			identifier: parameter.notFound
-			count: 1
-			path: concrete/src/Page/Sitemap/SitemapGenerator.php
-
-		-
-			message: '#^PHPDoc tag @return has invalid value \(\$this;\)\: Unexpected token ";", expected TOKEN_HORIZONTAL_WS at offset 110 on line 4$#'
-			identifier: phpDoc.parseError
-			count: 1
-			path: concrete/src/Page/Sitemap/SitemapGenerator.php
-
-		-
-			message: '#^PHPDoc tag @return has invalid value \(\$this;\)\: Unexpected token ";", expected TOKEN_HORIZONTAL_WS at offset 123 on line 4$#'
-			identifier: phpDoc.parseError
 			count: 1
 			path: concrete/src/Page/Sitemap/SitemapGenerator.php
 
@@ -19943,8 +19871,8 @@ parameters:
 			path: concrete/src/Site/Service.php
 
 		-
-			message: '#^PHPDoc tag @var has invalid value \(Manager; \$manager\)\: Unexpected token ";", expected TOKEN_HORIZONTAL_WS at offset 27 on line 2$#'
-			identifier: phpDoc.parseError
+			message: '#^Variable \$manager in PHPDoc tag @var does not match assigned variable \$request\.$#'
+			identifier: varTag.differentVariable
 			count: 1
 			path: concrete/src/Site/Service.php
 
@@ -20361,18 +20289,6 @@ parameters:
 			identifier: notIdentical.alwaysFalse
 			count: 1
 			path: concrete/src/Support/Symbol/CheckerGenerator.php
-
-		-
-			message: '#^PHPDoc tag @var has invalid value \(\$string\)\: Unexpected token "\$string", expected type at offset 16 on line 2$#'
-			identifier: phpDoc.parseError
-			count: 2
-			path: concrete/src/Support/Symbol/CheckerGenerator/Method.php
-
-		-
-			message: '#^PHPDoc tag @var has invalid value \(\$string\[\]\)\: Unexpected token "\$string", expected type at offset 16 on line 2$#'
-			identifier: phpDoc.parseError
-			count: 4
-			path: concrete/src/Support/Symbol/CheckerGenerator/Method.php
 
 		-
 			message: '#^Call to function is_string\(\) with string will always evaluate to true\.$#'
@@ -22013,12 +21929,6 @@ parameters:
 			path: concrete/src/User/Group/GroupJoinRequest.php
 
 		-
-			message: '#^PHPDoc tag @return has invalid value \(\$this;\)\: Unexpected token ";", expected TOKEN_HORIZONTAL_WS at offset 68 on line 4$#'
-			identifier: phpDoc.parseError
-			count: 1
-			path: concrete/src/User/Group/GroupList.php
-
-		-
 			message: '#^Method Concrete\\Core\\User\\Group\\GroupRepository\:\:getGroupById\(\) should return Concrete\\Core\\User\\Group\\Group\|null but return statement is missing\.$#'
 			identifier: return.missing
 			count: 1
@@ -22663,12 +22573,6 @@ parameters:
 		-
 			message: '#^Negated boolean expression is always false\.$#'
 			identifier: booleanNot.alwaysFalse
-			count: 1
-			path: concrete/src/User/UserList.php
-
-		-
-			message: '#^PHPDoc tag @return has invalid value \(\$this;\)\: Unexpected token ";", expected TOKEN_HORIZONTAL_WS at offset 71 on line 4$#'
-			identifier: phpDoc.parseError
 			count: 1
 			path: concrete/src/User/UserList.php
 

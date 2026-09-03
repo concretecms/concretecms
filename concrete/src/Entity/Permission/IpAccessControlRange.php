@@ -227,7 +227,7 @@ class IpAccessControlRange
     /**
      * Set the date/time when this range expires (NULL means no expiration).
      *
-     * @param \DateTime| $value
+     * @param \DateTime|null $value
      *
      * @return $this
      */

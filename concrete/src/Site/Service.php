@@ -251,7 +251,7 @@ class Service
         */
 
         /**
-         * @var Manager; $manager
+         * @var Manager $manager
          */
         $request = Request::createFromGlobals();
         $controller = $this->getController($site);

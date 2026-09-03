@@ -67,7 +67,7 @@ class PageController extends Controller
      * 4. Exit – so we immediately stop all other output in the controller that
      * called render().
      *
-     * @param @string|\Concrete\Core\Page\Page $var
+     * @param string|\Concrete\Core\Page\Page $var
      */
     public function replace($var)
     {
@@ -157,7 +157,8 @@ class PageController extends Controller
      * replaced, and has already fired (since it is meant to be called from within a view() or
      * similar method).
      *
-     * @param @string
+     * @param string $path
+     * @param string|null $pkgHandle
      */
     public function render($path, $pkgHandle = null)
     {

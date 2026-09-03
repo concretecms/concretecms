@@ -46,7 +46,7 @@ class Entry implements \JsonSerializable, PermissionObjectInterface, AttributeOb
      * @param $nm
      * @param $a
      *
-     * @return $mixed
+     * @return mixed
      */
     public function __call($nm, $a)
     {
