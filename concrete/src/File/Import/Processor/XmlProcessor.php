@@ -220,6 +220,11 @@ class XmlProcessor implements ValidatorInterface, PreProcessorInterface
      */
     protected function isXmlDocument(ImportingFile $file)
     {
+        // Let the dedicated SVG processor handle SVG files, even if their MIME type is detected as text/xml.
+        if ($file->getFileType()->isSVG() || $file->getMimeType() === 'image/svg+xml') {
+            return false;
+        }
+
         if (in_array($file->getFileExtension(), static::HANDLED_EXTENSIONS, true)) {
             return true;
         }
