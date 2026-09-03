@@ -27,7 +27,7 @@ class DesignTag implements TagInterface
      */
     public function getDesignTagID()
     {
-        return $this->designTagID;
+        return $this->id;
     }
 
     /**

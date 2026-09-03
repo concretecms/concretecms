@@ -8817,12 +8817,6 @@ parameters:
 			path: concrete/src/Entity/Board/InstanceItem.php
 
 		-
-			message: '#^Access to an undefined property Concrete\\Core\\Entity\\Board\\InstanceItemBatch\:\:\$boardItemBatchID\.$#'
-			identifier: property.notFound
-			count: 2
-			path: concrete/src/Entity/Board/InstanceItemBatch.php
-
-		-
 			message: '#^Cannot call method count\(\) on array\<Concrete\\Core\\Entity\\Board\\InstanceLogEntry\>\.$#'
 			identifier: method.nonObject
 			count: 1
@@ -8905,12 +8899,6 @@ parameters:
 			identifier: return.phpDocType
 			count: 2
 			path: concrete/src/Entity/Command/Batch.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Entity\\Design\\DesignTag\:\:\$designTagID\.$#'
-			identifier: property.notFound
-			count: 1
-			path: concrete/src/Entity/Design/DesignTag.php
 
 		-
 			message: '#^PHPDoc tag @return with type mixed is not subtype of native type string\.$#'

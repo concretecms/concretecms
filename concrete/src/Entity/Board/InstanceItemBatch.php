@@ -43,7 +43,7 @@ class InstanceItemBatch
      */
     public function getBoardItemBatchID()
     {
-        return $this->boardItemBatchID;
+        return $this->boardInstanceItemBatchID;
     }
 
     /**
@@ -51,7 +51,7 @@ class InstanceItemBatch
      */
     public function setBoardItemBatchID($boardItemBatchID): void
     {
-        $this->boardItemBatchID = $boardItemBatchID;
+        $this->boardInstanceItemBatchID = $boardItemBatchID;
     }
 
     /**
