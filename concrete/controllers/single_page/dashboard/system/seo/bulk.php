@@ -220,9 +220,6 @@ class Bulk extends DashboardPageController
     protected function serializePage(Page $page): array
     {
         $isHomePage = $page->isHomePage();
-        if (!$isHomePage) {
-            $page->rescanCollectionPath();
-        }
         $data = [
             'isHomePage' => $isHomePage,
             'cID' => $page->getCollectionID(),
