@@ -12537,12 +12537,6 @@ parameters:
 			path: concrete/src/Page/Cloner.php
 
 		-
-			message: '#^Parameter \#2 \$cvID of static method Concrete\\Core\\Page\\Stack\\Stack\:\:getByID\(\) expects string, int given\.$#'
-			identifier: argument.type
-			count: 1
-			path: concrete/src/Page/Cloner.php
-
-		-
 			message: '#^Property Concrete\\Core\\Page\\Cloner\:\:\$connection \(Concrete\\Core\\Database\\Connection\\Connection\) does not accept Doctrine\\DBAL\\Connection\.$#'
 			identifier: assign.propertyType
 			count: 1
