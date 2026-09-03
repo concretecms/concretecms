@@ -174,6 +174,9 @@ class Entities extends DashboardPageController
             return Redirect::to('/dashboard/system/express/entities');
         }
 
+        // Without this the action falls through to the default view, which renders without the
+        // variables view() sets and fatals - so the error above would never reach the user.
+        $this->view();
     }
 
     public function rescan_entries()
@@ -242,6 +245,10 @@ class Entities extends DashboardPageController
             $this->flash('success', t('All Entries were successfully cleared.'));
             return Redirect::to('/dashboard/system/express/entities', 'view_entity', $entity->getId());
         }
+
+        // Without this the action falls through to the default view, which renders without the
+        // variables view() sets and fatals - so the error above would never reach the user.
+        $this->view_entity($this->request->request->get('entity_id'));
     }
 
     /**
@@ -266,6 +273,10 @@ class Entities extends DashboardPageController
             $this->flash('success', t('Entity published successfully.'));
             return Redirect::to('/dashboard/system/express/entities', 'view_entity', $entity->getId());
         }
+
+        // Without this the action falls through to the default view, which renders without the
+        // variables view() sets and fatals - so the error above would never reach the user.
+        $this->view_entity($this->request->request->get('entity_id'));
     }
 
     public function clear_entries($id = null)
