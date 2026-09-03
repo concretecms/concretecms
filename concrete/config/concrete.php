@@ -1217,15 +1217,14 @@ return [
             'custom_regex' => [],
 
             /**
-             * Using PASSWORD_DEFAULT means that we will automatically switch to better algorithms when they are available.
              * Keep in mind hash_options are different depending on the algorithm specified
              * @see https://www.php.net/manual/en/password.constants.php
              */
-            'hash_algorithm' => PASSWORD_DEFAULT,
+            'hash_algorithm' => PASSWORD_ARGON2ID,
             'hash_options' => [
                 // 'cost' => '12', // Bcrypt cost
-                // 'memory_cost' => '1024', // Argon2 memory cost in bytes
-                // 'time_cost' => '10', // Argon2 time cost in milliseconds
+                // 'memory_cost' => '1024', // Argon2 memory cost in bytes, defaults to PASSWORD_ARGON2_DEFAULT_MEMORY_COST
+                // 'time_cost' => '10', // Argon2 time cost in milliseconds, defaults to PASSWORD_ARGON2_DEFAULT_TIME_COST
             ],
 
             /**
