@@ -10,7 +10,6 @@ use Permissions;
 
 class Edit extends PresetEdit
 {
-
     public function getEditSearchPresetAction()
     {
         $action = parent::getEditSearchPresetAction();

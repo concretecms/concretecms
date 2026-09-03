@@ -23,6 +23,21 @@ class UpdateFromType extends BackendInterfaceController
 {
     protected $viewPath = '/dialogs/type/update_from_type';
 
+    /**
+     * @var \Concrete\Core\Page\Type\Type|null
+     */
+    protected $pagetype;
+
+    /**
+     * @var \Concrete\Core\Permission\Checker
+     */
+    protected $permissions;
+
+    /**
+     * @var \Concrete\Core\Page\Template|null
+     */
+    protected $template;
+
     public function on_start()
     {
 

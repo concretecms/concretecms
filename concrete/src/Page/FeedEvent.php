@@ -12,6 +12,11 @@ class FeedEvent extends GenericEvent implements RequestEventInterface
     protected $request;
 
     /**
+     * @var \Concrete\Core\Page\Page
+     */
+    protected $page;
+
+    /**
      * @param Request $request
      */
     public function setRequest(Request $request)

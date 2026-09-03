@@ -7,6 +7,11 @@ use Concrete\Core\Utility\Service\Xml;
 
 class ImportSinglePageStructureRoutine extends AbstractRoutine implements SpecifiableHomePageRoutineInterface
 {
+    /**
+     * @var \Concrete\Core\Page\Page|null
+     */
+    protected $home;
+
     public function getHandle()
     {
         return 'single_pages';

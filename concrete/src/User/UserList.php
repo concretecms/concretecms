@@ -79,6 +79,11 @@ class UserList extends DatabaseItemList implements PagerProviderInterface, Pagin
      */
     private $userInfoRepository;
 
+    /**
+     * @var int
+     */
+    protected $sortUserStatus;
+
     public function __construct(?StickyRequest $req = null)
     {
         $u = Application::getFacadeApplication()->make(User::class);

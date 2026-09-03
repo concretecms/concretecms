@@ -7,6 +7,11 @@ use Core;
 
 class Settings extends DashboardPageController
 {
+    /**
+     * @var array
+     */
+    protected $editors;
+
     public function view()
     {
         $config = Core::make('config');

@@ -21,6 +21,11 @@ use Concrete\Core\Routing\Redirect;
 
 class Entities extends DashboardPageController
 {
+    /**
+     * @var \Concrete\Core\Entity\Express\Entity|null
+     */
+    protected $entity;
+
     public function add()
     {
         $this->set('pageTitle', t('Add Data Object'));
@@ -197,7 +202,6 @@ class Entities extends DashboardPageController
         $this->view_entity($this->request->request->get('entity_id'));
     }
 
-
     public function view_entity($id = null)
     {
         $r = $this->entityManager->getRepository('\Concrete\Core\Entity\Express\Entity');
@@ -329,7 +333,6 @@ class Entities extends DashboardPageController
             $this->view();
         }
     }
-
 
     public function update($id = null)
     {

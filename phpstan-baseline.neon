@@ -351,12 +351,6 @@ parameters:
 			path: concrete/controllers/backend/tasks.php
 
 		-
-			message: '#^Access to an undefined property Concrete\\Controller\\Backend\\Tree\\Node\\DragRequest\:\:\$nodes\.$#'
-			identifier: property.notFound
-			count: 2
-			path: concrete/controllers/backend/tree/node/drag_request.php
-
-		-
 			message: '#^Call to function is_array\(\) with list\<Concrete\\Core\\Tree\\Node\\Node\> will always evaluate to true\.$#'
 			identifier: function.alreadyNarrowedType
 			count: 1
@@ -391,12 +385,6 @@ parameters:
 			identifier: function.alreadyNarrowedType
 			count: 1
 			path: concrete/controllers/backend/user_interface/block.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Controller\\Backend\\UserInterface\\File\:\:\$permissions\.$#'
-			identifier: property.notFound
-			count: 2
-			path: concrete/controllers/backend/user_interface/file.php
 
 		-
 			message: '#^Call to Concrete\\Core\\Controller\\AbstractController\:\:on_start\(\) on a separate line has no effect\.$#'
@@ -501,18 +489,6 @@ parameters:
 			path: concrete/controllers/dialog/board/custom_slot.php
 
 		-
-			message: '#^Access to an undefined property Concrete\\Controller\\Dialog\\Conversation\\Subscribe\:\:\$conversation\.$#'
-			identifier: property.notFound
-			count: 3
-			path: concrete/controllers/dialog/conversation/subscribe.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Controller\\Dialog\\Conversation\\Subscribe\:\:\$user\.$#'
-			identifier: property.notFound
-			count: 3
-			path: concrete/controllers/dialog/conversation/subscribe.php
-
-		-
 			message: '#^Call to function is_array\(\) with bool\|float\|int\|string\|null will always evaluate to false\.$#'
 			identifier: function.impossibleType
 			count: 1
@@ -531,21 +507,21 @@ parameters:
 			path: concrete/controllers/dialog/event/advanced_search.php
 
 		-
-			message: '#^Access to an undefined property Concrete\\Controller\\Dialog\\Event\\Delete\:\:\$dateFormatter\.$#'
-			identifier: property.notFound
-			count: 2
-			path: concrete/controllers/dialog/event/delete.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Controller\\Dialog\\Event\\DeleteOccurrence\:\:\$dateFormatter\.$#'
-			identifier: property.notFound
+			message: '#^Call to an undefined method Concrete\\Core\\Entity\\Calendar\\CalendarEventVersionOccurrence\:\:getStart\(\)\.$#'
+			identifier: method.notFound
 			count: 2
 			path: concrete/controllers/dialog/event/delete_occurrence.php
 
 		-
-			message: '#^Access to an undefined property Concrete\\Controller\\Dialog\\Event\\DeleteOccurrence\:\:\$eventOccurrenceService\.$#'
-			identifier: property.notFound
-			count: 5
+			message: '#^Call to function is_object\(\) with Concrete\\Core\\Entity\\Calendar\\CalendarEventVersionOccurrence will always evaluate to true\.$#'
+			identifier: function.alreadyNarrowedType
+			count: 1
+			path: concrete/controllers/dialog/event/delete_occurrence.php
+
+		-
+			message: '#^Negated boolean expression is always false\.$#'
+			identifier: booleanNot.alwaysFalse
+			count: 2
 			path: concrete/controllers/dialog/event/delete_occurrence.php
 
 		-
@@ -573,14 +549,20 @@ parameters:
 			path: concrete/controllers/dialog/event/edit.php
 
 		-
-			message: '#^Access to an undefined property Concrete\\Controller\\Dialog\\Event\\SummaryTemplates\:\:\$eventOccurrenceService\.$#'
-			identifier: property.notFound
-			count: 3
+			message: '#^Call to function is_object\(\) with Concrete\\Core\\Entity\\Calendar\\CalendarEventVersionOccurrence will always evaluate to true\.$#'
+			identifier: function.alreadyNarrowedType
+			count: 1
 			path: concrete/controllers/dialog/event/summary_templates.php
 
 		-
 			message: '#^If condition is always true\.$#'
 			identifier: if.alwaysTrue
+			count: 1
+			path: concrete/controllers/dialog/event/summary_templates.php
+
+		-
+			message: '#^Negated boolean expression is always false\.$#'
+			identifier: booleanNot.alwaysFalse
 			count: 1
 			path: concrete/controllers/dialog/event/summary_templates.php
 
@@ -595,18 +577,6 @@ parameters:
 			identifier: variable.undefined
 			count: 1
 			path: concrete/controllers/dialog/event/summary_templates.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Controller\\Dialog\\Event\\Versions\:\:\$dateFormatter\.$#'
-			identifier: property.notFound
-			count: 2
-			path: concrete/controllers/dialog/event/versions.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Controller\\Dialog\\Event\\ViewVersion\:\:\$dateFormatter\.$#'
-			identifier: property.notFound
-			count: 2
-			path: concrete/controllers/dialog/event/view_version.php
 
 		-
 			message: '#^Call to function is_object\(\) with Concrete\\Core\\Entity\\Calendar\\CalendarEventVersionOccurrence will always evaluate to true\.$#'
@@ -735,12 +705,6 @@ parameters:
 			path: concrete/controllers/dialog/file/bulk/storage.php
 
 		-
-			message: '#^Access to an undefined property Concrete\\Controller\\Dialog\\File\\Folder\:\:\$permissions\.$#'
-			identifier: property.notFound
-			count: 1
-			path: concrete/controllers/dialog/file/folder.php
-
-		-
 			message: '#^Call to function is_scalar\(\) with float\|int\<min, \-1\>\|int\<1, max\>\|non\-falsy\-string\|true will always evaluate to true\.$#'
 			identifier: function.alreadyNarrowedType
 			count: 2
@@ -777,12 +741,6 @@ parameters:
 			path: concrete/controllers/dialog/file/replace.php
 
 		-
-			message: '#^Access to an undefined property Concrete\\Controller\\Dialog\\File\\Sets\:\:\$permissions\.$#'
-			identifier: property.notFound
-			count: 1
-			path: concrete/controllers/dialog/file/sets.php
-
-		-
 			message: '#^Call to function is_array\(\) with bool\|float\|int\|string\|null will always evaluate to false\.$#'
 			identifier: function.impossibleType
 			count: 2
@@ -799,18 +757,6 @@ parameters:
 			identifier: identical.alwaysFalse
 			count: 1
 			path: concrete/controllers/dialog/file/statistics.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Controller\\Dialog\\File\\Thumbnails\:\:\$permissions\.$#'
-			identifier: property.notFound
-			count: 1
-			path: concrete/controllers/dialog/file/thumbnails.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Controller\\Dialog\\File\\Thumbnails\\Edit\:\:\$permissions\.$#'
-			identifier: property.notFound
-			count: 1
-			path: concrete/controllers/dialog/file/thumbnails/edit.php
 
 		-
 			message: '#^Variable \$typeVersion might not be defined\.$#'
@@ -835,12 +781,6 @@ parameters:
 			identifier: arguments.count
 			count: 1
 			path: concrete/controllers/dialog/file/upload_complete.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Controller\\Dialog\\File\\Versions\:\:\$permissions\.$#'
-			identifier: property.notFound
-			count: 1
-			path: concrete/controllers/dialog/file/versions.php
 
 		-
 			message: '#^Negated boolean expression is always false\.$#'
@@ -1233,21 +1173,15 @@ parameters:
 			path: concrete/controllers/dialog/type/attributes.php
 
 		-
-			message: '#^Access to an undefined property Concrete\\Controller\\Dialog\\Type\\UpdateFromType\:\:\$pagetype\.$#'
-			identifier: property.notFound
-			count: 3
-			path: concrete/controllers/dialog/type/update_from_type.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Controller\\Dialog\\Type\\UpdateFromType\:\:\$permissions\.$#'
-			identifier: property.notFound
+			message: '#^Parameter \#1 \$template of method Concrete\\Core\\Page\\PageList\:\:filterByPageTemplate\(\) expects Concrete\\Core\\Entity\\Page\\Template, Concrete\\Core\\Page\\Template\|null given\.$#'
+			identifier: argument.type
 			count: 1
 			path: concrete/controllers/dialog/type/update_from_type.php
 
 		-
-			message: '#^Access to an undefined property Concrete\\Controller\\Dialog\\Type\\UpdateFromType\:\:\$template\.$#'
-			identifier: property.notFound
-			count: 3
+			message: '#^Parameter \#1 \$template of method Concrete\\Core\\Page\\Type\\Type\:\:getPageTypePageTemplateDefaultPageObject\(\) expects Concrete\\Core\\Entity\\Page\\Template\|null, Concrete\\Core\\Page\\Template\|null given\.$#'
+			identifier: argument.type
+			count: 1
 			path: concrete/controllers/dialog/type/update_from_type.php
 
 		-
@@ -1351,12 +1285,6 @@ parameters:
 			identifier: isset.property
 			count: 1
 			path: concrete/controllers/element/dashboard/reports/logs/search/search.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Controller\\Element\\Dashboard\\Users\\Header\:\:\$user\.$#'
-			identifier: property.notFound
-			count: 2
-			path: concrete/controllers/element/dashboard/users/header.php
 
 		-
 			message: '#^Property Concrete\\Controller\\Element\\Express\\Search\\Menu\:\:\$query \(Concrete\\Core\\Entity\\Search\\Query\) in isset\(\) is not nullable\.$#'
@@ -1599,12 +1527,6 @@ parameters:
 			path: concrete/controllers/panel/dashboard/load_menu.php
 
 		-
-			message: '#^Access to an undefined property Concrete\\Controller\\Panel\\Detail\\Page\\Attributes\:\:\$assignment\.$#'
-			identifier: property.notFound
-			count: 5
-			path: concrete/controllers/panel/detail/page/attributes.php
-
-		-
 			message: '#^Call to an undefined method Concrete\\Core\\Permission\\Key\\Key\:\:getMyAssignment\(\)\.$#'
 			identifier: method.notFound
 			count: 1
@@ -1641,12 +1563,6 @@ parameters:
 			path: concrete/controllers/panel/detail/page/composer.php
 
 		-
-			message: '#^Access to an undefined property Concrete\\Controller\\Panel\\Detail\\Page\\Location\:\:\$asl\.$#'
-			identifier: property.notFound
-			count: 2
-			path: concrete/controllers/panel/detail/page/location.php
-
-		-
 			message: '#^Call to an undefined method Concrete\\Core\\Permission\\Key\\Key\:\:getMyAssignment\(\)\.$#'
 			identifier: method.notFound
 			count: 1
@@ -1660,6 +1576,12 @@ parameters:
 
 		-
 			message: '#^Call to function is_object\(\) with Concrete\\Core\\Page\\Page will always evaluate to true\.$#'
+			identifier: function.alreadyNarrowedType
+			count: 1
+			path: concrete/controllers/panel/detail/page/location.php
+
+		-
+			message: '#^Call to function is_object\(\) with Concrete\\Core\\Permission\\Access\\ListItem\\EditPagePropertiesPageListItem will always evaluate to true\.$#'
 			identifier: function.alreadyNarrowedType
 			count: 1
 			path: concrete/controllers/panel/detail/page/location.php
@@ -1687,12 +1609,6 @@ parameters:
 			identifier: foreach.emptyArray
 			count: 1
 			path: concrete/controllers/panel/detail/page/permissions.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Controller\\Panel\\Detail\\Page\\Seo\:\:\$asl\.$#'
-			identifier: property.notFound
-			count: 6
-			path: concrete/controllers/panel/detail/page/seo.php
 
 		-
 			message: '#^Call to an undefined method Concrete\\Core\\Permission\\Key\\Key\:\:getMyAssignment\(\)\.$#'
@@ -1995,12 +1911,6 @@ parameters:
 			path: concrete/controllers/permissions/set/clipboard.php
 
 		-
-			message: '#^Access to an undefined property Concrete\\Controller\\Search\\Express\:\:\$entity\.$#'
-			identifier: property.notFound
-			count: 2
-			path: concrete/controllers/search/express.php
-
-		-
 			message: '#^Call to an undefined method Concrete\\Controller\\Dialog\\Search\\AdvancedSearch\:\:setEntityID\(\)\.$#'
 			identifier: method.notFound
 			count: 1
@@ -2037,18 +1947,6 @@ parameters:
 			path: concrete/controllers/search/standard.php
 
 		-
-			message: '#^Access to an undefined property Concrete\\Controller\\SinglePage\\Account\\Avatar\:\:\$error\.$#'
-			identifier: property.notFound
-			count: 2
-			path: concrete/controllers/single_page/account/avatar.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Controller\\SinglePage\\Account\\Avatar\:\:\$token\.$#'
-			identifier: property.notFound
-			count: 2
-			path: concrete/controllers/single_page/account/avatar.php
-
-		-
 			message: '#^If condition is always true\.$#'
 			identifier: if.alwaysTrue
 			count: 1
@@ -2059,18 +1957,6 @@ parameters:
 			identifier: ternary.alwaysTrue
 			count: 1
 			path: concrete/controllers/single_page/account/avatar.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Controller\\SinglePage\\Account\\EditProfile\:\:\$error\.$#'
-			identifier: property.notFound
-			count: 9
-			path: concrete/controllers/single_page/account/edit_profile.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Controller\\SinglePage\\Account\\Messages\:\:\$error\.$#'
-			identifier: property.notFound
-			count: 9
-			path: concrete/controllers/single_page/account/messages.php
 
 		-
 			message: '#^Variable \$msgID might not be defined\.$#'
@@ -2607,18 +2493,6 @@ parameters:
 			path: concrete/controllers/single_page/dashboard/pages/types/attributes.php
 
 		-
-			message: '#^Access to an undefined property Concrete\\Controller\\SinglePage\\Dashboard\\Pages\\Types\\Form\:\:\$pagetype\.$#'
-			identifier: property.notFound
-			count: 3
-			path: concrete/controllers/single_page/dashboard/pages/types/form.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Controller\\SinglePage\\Dashboard\\Pages\\Types\\Permissions\:\:\$pagetype\.$#'
-			identifier: property.notFound
-			count: 4
-			path: concrete/controllers/single_page/dashboard/pages/types/permissions.php
-
-		-
 			message: '#^Call to an undefined method Concrete\\Core\\Controller\\ElementController\:\:setHeaderSearchAction\(\)\.$#'
 			identifier: method.notFound
 			count: 1
@@ -2811,12 +2685,6 @@ parameters:
 			path: concrete/controllers/single_page/dashboard/system/calendar/permissions.php
 
 		-
-			message: '#^Access to an undefined property Concrete\\Controller\\SinglePage\\Dashboard\\System\\Conversations\\Editor\:\:\$editors\.$#'
-			identifier: property.notFound
-			count: 1
-			path: concrete/controllers/single_page/dashboard/system/conversations/editor.php
-
-		-
 			message: '#^Parameter \#1 \$stack of function array_pop is passed by reference, so it expects variables only\.$#'
 			identifier: argument.byRef
 			count: 1
@@ -2833,12 +2701,6 @@ parameters:
 			identifier: argument.type
 			count: 1
 			path: concrete/controllers/single_page/dashboard/system/conversations/permissions.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Controller\\SinglePage\\Dashboard\\System\\Conversations\\Settings\:\:\$editors\.$#'
-			identifier: property.notFound
-			count: 1
-			path: concrete/controllers/single_page/dashboard/system/conversations/settings.php
 
 		-
 			message: '#^Parameter \#1 \$stack of function array_pop is passed by reference, so it expects variables only\.$#'
@@ -2863,12 +2725,6 @@ parameters:
 			identifier: parameter.defaultValue
 			count: 1
 			path: concrete/controllers/single_page/dashboard/system/environment/logging.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Controller\\SinglePage\\Dashboard\\System\\Express\\Entities\:\:\$entity\.$#'
-			identifier: property.notFound
-			count: 4
-			path: concrete/controllers/single_page/dashboard/system/express/entities.php
 
 		-
 			message: '#^Call to an undefined method Doctrine\\ORM\\EntityRepository\<Concrete\\Core\\Entity\\Express\\Entity\>\:\:findOneById\(\)\.$#'
@@ -3159,12 +3015,6 @@ parameters:
 			path: concrete/controllers/single_page/dashboard/system/optimization/jobs.php
 
 		-
-			message: '#^Access to an undefined property Concrete\\Controller\\SinglePage\\Dashboard\\System\\Permissions\\Antispam\:\:\$groups\.$#'
-			identifier: property.notFound
-			count: 1
-			path: concrete/controllers/single_page/dashboard/system/permissions/antispam.php
-
-		-
 			message: '#^Call to an undefined method Concrete\\Core\\Captcha\\Controller\:\:saveOptions\(\)\.$#'
 			identifier: method.notFound
 			count: 1
@@ -3361,12 +3211,6 @@ parameters:
 			identifier: variable.undefined
 			count: 1
 			path: concrete/controllers/single_page/dashboard/system/seo/urls.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Controller\\SinglePage\\Dashboard\\System\\Social\\SocialLinks\:\:\$socialLink\.$#'
-			identifier: property.notFound
-			count: 2
-			path: concrete/controllers/single_page/dashboard/system/social/social_links.php
 
 		-
 			message: '#^Variable \$link might not be defined\.$#'
@@ -3585,90 +3429,6 @@ parameters:
 			path: concrete/controllers/single_page/dashboard/users/groups/message.php
 
 		-
-			message: '#^Access to an undefined property Concrete\\Controller\\SinglePage\\Dashboard\\Users\\Search\:\:\$allowedEditAttributes\.$#'
-			identifier: property.notFound
-			count: 3
-			path: concrete/controllers/single_page/dashboard/users/search.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Controller\\SinglePage\\Dashboard\\Users\\Search\:\:\$assignment\.$#'
-			identifier: property.notFound
-			count: 1
-			path: concrete/controllers/single_page/dashboard/users/search.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Controller\\SinglePage\\Dashboard\\Users\\Search\:\:\$canActivateUser\.$#'
-			identifier: property.notFound
-			count: 6
-			path: concrete/controllers/single_page/dashboard/users/search.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Controller\\SinglePage\\Dashboard\\Users\\Search\:\:\$canAddGroup\.$#'
-			identifier: property.notFound
-			count: 1
-			path: concrete/controllers/single_page/dashboard/users/search.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Controller\\SinglePage\\Dashboard\\Users\\Search\:\:\$canDeleteUser\.$#'
-			identifier: property.notFound
-			count: 3
-			path: concrete/controllers/single_page/dashboard/users/search.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Controller\\SinglePage\\Dashboard\\Users\\Search\:\:\$canEdit\.$#'
-			identifier: property.notFound
-			count: 2
-			path: concrete/controllers/single_page/dashboard/users/search.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Controller\\SinglePage\\Dashboard\\Users\\Search\:\:\$canEditAvatar\.$#'
-			identifier: property.notFound
-			count: 2
-			path: concrete/controllers/single_page/dashboard/users/search.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Controller\\SinglePage\\Dashboard\\Users\\Search\:\:\$canEditEmail\.$#'
-			identifier: property.notFound
-			count: 2
-			path: concrete/controllers/single_page/dashboard/users/search.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Controller\\SinglePage\\Dashboard\\Users\\Search\:\:\$canEditHomeFileManagerFolderID\.$#'
-			identifier: property.notFound
-			count: 2
-			path: concrete/controllers/single_page/dashboard/users/search.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Controller\\SinglePage\\Dashboard\\Users\\Search\:\:\$canEditLanguage\.$#'
-			identifier: property.notFound
-			count: 2
-			path: concrete/controllers/single_page/dashboard/users/search.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Controller\\SinglePage\\Dashboard\\Users\\Search\:\:\$canEditPassword\.$#'
-			identifier: property.notFound
-			count: 2
-			path: concrete/controllers/single_page/dashboard/users/search.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Controller\\SinglePage\\Dashboard\\Users\\Search\:\:\$canEditTimezone\.$#'
-			identifier: property.notFound
-			count: 3
-			path: concrete/controllers/single_page/dashboard/users/search.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Controller\\SinglePage\\Dashboard\\Users\\Search\:\:\$canEditUserName\.$#'
-			identifier: property.notFound
-			count: 2
-			path: concrete/controllers/single_page/dashboard/users/search.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Controller\\SinglePage\\Dashboard\\Users\\Search\:\:\$canSignInAsUser\.$#'
-			identifier: property.notFound
-			count: 3
-			path: concrete/controllers/single_page/dashboard/users/search.php
-
-		-
 			message: '#^Call to an undefined method Concrete\\Core\\Controller\\ElementController\:\:setQuery\(\)\.$#'
 			identifier: method.notFound
 			count: 1
@@ -3817,12 +3577,6 @@ parameters:
 			identifier: variable.undefined
 			count: 1
 			path: concrete/controllers/single_page/register.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Controller\\Upgrade\:\:\$siteVersion\.$#'
-			identifier: property.notFound
-			count: 2
-			path: concrete/controllers/upgrade.php
 
 		-
 			message: '#^Call to Concrete\\Core\\Controller\\AbstractController\:\:on_start\(\) on a separate line has no effect\.$#'
@@ -6111,24 +5865,6 @@ parameters:
 			path: concrete/src/Attribute/Category/ExpressCategory.php
 
 		-
-			message: '#^Access to an undefined property Concrete\\Core\\Attribute\\Category\\LegacyCategory\:\:\$application\.$#'
-			identifier: property.notFound
-			count: 2
-			path: concrete/src/Attribute/Category/LegacyCategory.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Attribute\\Category\\LegacyCategory\:\:\$entityManager\.$#'
-			identifier: property.notFound
-			count: 28
-			path: concrete/src/Attribute/Category/LegacyCategory.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Attribute\\Category\\LegacyCategory\:\:\$setManager\.$#'
-			identifier: property.notFound
-			count: 1
-			path: concrete/src/Attribute/Category/LegacyCategory.php
-
-		-
 			message: '#^Call to an undefined method Concrete\\Core\\Attribute\\SetManagerInterface\:\:addSet\(\)\.$#'
 			identifier: method.notFound
 			count: 1
@@ -6861,18 +6597,6 @@ parameters:
 			path: concrete/src/Backup/ContentImporter/Importer/Routine/ImportPermissionsRoutine.php
 
 		-
-			message: '#^Access to an undefined property Concrete\\Core\\Backup\\ContentImporter\\Importer\\Routine\\ImportSinglePageContentRoutine\:\:\$home\.$#'
-			identifier: property.notFound
-			count: 1
-			path: concrete/src/Backup/ContentImporter/Importer/Routine/ImportSinglePageContentRoutine.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Backup\\ContentImporter\\Importer\\Routine\\ImportSinglePageStructureRoutine\:\:\$home\.$#'
-			identifier: property.notFound
-			count: 1
-			path: concrete/src/Backup/ContentImporter/Importer/Routine/ImportSinglePageStructureRoutine.php
-
-		-
 			message: '#^Call to function is_object\(\) with Concrete\\Core\\Entity\\Site\\Skeleton will always evaluate to true\.$#'
 			identifier: function.alreadyNarrowedType
 			count: 1
@@ -7251,6 +6975,24 @@ parameters:
 			path: concrete/src/Block/Command/UpdateForkedAliasDefaultsBlockCommandHandler.php
 
 		-
+			message: '#^Call to an undefined method Concrete\\Core\\Entity\\File\\File\:\:getRelativePath\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: concrete/src/Block/CustomStyle.php
+
+		-
+			message: '#^Call to an undefined method Concrete\\Core\\Entity\\File\\File\:\:getURL\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: concrete/src/Block/CustomStyle.php
+
+		-
+			message: '#^Call to function is_object\(\) with Concrete\\Core\\Entity\\StyleCustomizer\\Inline\\StyleSet will always evaluate to true\.$#'
+			identifier: function.alreadyNarrowedType
+			count: 3
+			path: concrete/src/Block/CustomStyle.php
+
+		-
 			message: '#^Call to an undefined method Concrete\\Core\\Page\\Collection\\Collection\:\:getCollectionThemeObject\(\)\.$#'
 			identifier: method.notFound
 			count: 1
@@ -7501,12 +7243,6 @@ parameters:
 			identifier: parameter.phpDocType
 			count: 1
 			path: concrete/src/Board/Instance/Slot/RenderedSlot.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Board\\Instance\\Slot\\RenderedSlotCollection\:\:\$slots\.$#'
-			identifier: property.notFound
-			count: 2
-			path: concrete/src/Board/Instance/Slot/RenderedSlotCollection.php
 
 		-
 			message: '#^Method Concrete\\Core\\Board\\Template\\TemplateLocator\:\:getFileToRender\(\) should return string but returns null\.$#'
@@ -7863,8 +7599,8 @@ parameters:
 			path: concrete/src/Captcha/SecurimageController.php
 
 		-
-			message: '#^Access to an undefined property Concrete\\Core\\Captcha\\Service\:\:\$controller\.$#'
-			identifier: property.notFound
+			message: '#^Property Concrete\\Core\\Captcha\\Service\:\:\$controller \(Concrete\\Core\\Captcha\\Controller\) in isset\(\) is not nullable\.$#'
+			identifier: isset.property
 			count: 1
 			path: concrete/src/Captcha/Service.php
 
@@ -7911,9 +7647,9 @@ parameters:
 			path: concrete/src/Command/Process/Command/RetryFailedMessageCommandHandler.php
 
 		-
-			message: '#^Access to an undefined property Concrete\\Core\\Command\\Process\\Logger\\FileLogger\:\:\$filePath\.$#'
-			identifier: property.notFound
-			count: 2
+			message: '#^Property Concrete\\Core\\Command\\Process\\Logger\\FileLogger\:\:\$filePath \(string\) in isset\(\) is not nullable\.$#'
+			identifier: isset.property
+			count: 1
 			path: concrete/src/Command/Process/Logger/FileLogger.php
 
 		-
@@ -8479,12 +8215,6 @@ parameters:
 			identifier: new.static
 			count: 1
 			path: concrete/src/Conversation/Message/Message.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Conversation\\Message\\ThreadedList\:\:\$messages\.$#'
-			identifier: property.notFound
-			count: 2
-			path: concrete/src/Conversation/Message/ThreadedList.php
 
 		-
 			message: '#^PHPDoc tag @return contains unresolvable type\.$#'
@@ -10629,12 +10359,6 @@ parameters:
 			path: concrete/src/File/Import/Processor/ImageSizeConstrain.php
 
 		-
-			message: '#^Access to an undefined property Concrete\\Core\\File\\ImportProcessor\\ConstrainImageProcessor\:\:\$resizeInPlace\.$#'
-			identifier: property.notFound
-			count: 1
-			path: concrete/src/File/ImportProcessor/ConstrainImageProcessor.php
-
-		-
 			message: '#^Default value of the parameter \#3 \$mode \(int\) of method Concrete\\Core\\File\\ImportProcessor\\ConstrainImageProcessor\:\:resizeInPlace\(\) is incompatible with type string\.$#'
 			identifier: parameter.defaultValue
 			count: 1
@@ -12045,12 +11769,6 @@ parameters:
 			path: concrete/src/Http/Middleware/MiddlewareStack.php
 
 		-
-			message: '#^Access to an undefined property Concrete\\Core\\Http\\Middleware\\OAuthAuthenticationMiddleware\:\:\$userRepository\.$#'
-			identifier: property.notFound
-			count: 2
-			path: concrete/src/Http/Middleware/OAuthAuthenticationMiddleware.php
-
-		-
 			message: '#^Call to an undefined method Symfony\\Component\\HttpFoundation\\Request\:\:setCustomRequestUser\(\)\.$#'
 			identifier: method.notFound
 			count: 1
@@ -12267,22 +11985,10 @@ parameters:
 			path: concrete/src/Legacy/Avatar.php
 
 		-
-			message: '#^Access to an undefined property Concrete\\Core\\Legacy\\DatabaseItemList\:\:\$attributeFilters\.$#'
-			identifier: property.notFound
-			count: 2
-			path: concrete/src/Legacy/DatabaseItemList.php
-
-		-
 			message: '#^Instanceof between string and Concrete\\Core\\Entity\\Attribute\\Key\\Key will always evaluate to false\.$#'
 			identifier: instanceof.alwaysFalse
 			count: 1
 			path: concrete/src/Legacy/DatabaseItemList.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Legacy\\FileList\:\:\$queryCreated\.$#'
-			identifier: property.notFound
-			count: 1
-			path: concrete/src/Legacy/FileList.php
 
 		-
 			message: '#^Call to function is_array\(\) with array\<float\|int\|numeric\-string\> will always evaluate to true\.$#'
@@ -12309,28 +12015,10 @@ parameters:
 			path: concrete/src/Legacy/FileList.php
 
 		-
-			message: '#^Access to an undefined property Concrete\\Core\\Legacy\\ItemList\:\:\$sortByString\.$#'
-			identifier: property.notFound
-			count: 1
-			path: concrete/src/Legacy/ItemList.php
-
-		-
 			message: '#^Argument of an invalid type \$this\(Concrete\\Core\\Legacy\\Model\) supplied for foreach, only iterables are supported\.$#'
 			identifier: foreach.nonIterable
 			count: 2
 			path: concrete/src/Legacy/Model.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Legacy\\PageList\:\:\$indexModeSimple\.$#'
-			identifier: property.notFound
-			count: 1
-			path: concrete/src/Legacy/PageList.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Legacy\\PageList\:\:\$indexedKeywords\.$#'
-			identifier: property.notFound
-			count: 2
-			path: concrete/src/Legacy/PageList.php
 
 		-
 			message: '#^Call to an undefined method Concrete\\Core\\Database\\Connection\\Connection\:\:escape\(\)\.$#'
@@ -12373,12 +12061,6 @@ parameters:
 			identifier: deadCode.unreachable
 			count: 1
 			path: concrete/src/Legacy/PasswordHash.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Legacy\\UserList\:\:\$queryCreated\.$#'
-			identifier: property.notFound
-			count: 1
-			path: concrete/src/Legacy/UserList.php
 
 		-
 			message: '#^Method Concrete\\Core\\Attribute\\Controller\:\:searchKeywords\(\) invoked with 1 parameter, 2 required\.$#'
@@ -12741,12 +12423,6 @@ parameters:
 			path: concrete/src/Mail/Command/ProcessEmailCommandHandler.php
 
 		-
-			message: '#^Access to an undefined property Concrete\\Core\\Mail\\Importer\\MailImportedMessage\:\:\$dataObject\.$#'
-			identifier: property.notFound
-			count: 2
-			path: concrete/src/Mail/Importer/MailImportedMessage.php
-
-		-
 			message: '#^Access to property \$contentType on an unknown class Laminas\\Mail\\Storage\\Message\.$#'
 			identifier: class.notFound
 			count: 1
@@ -13051,18 +12727,6 @@ parameters:
 			identifier: deadCode.unreachable
 			count: 1
 			path: concrete/src/Multilingual/Page/Section/Section.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Multilingual\\Page\\Section\\Translation\:\:\$mtID\.$#'
-			identifier: property.notFound
-			count: 3
-			path: concrete/src/Multilingual/Page/Section/Translation.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Multilingual\\Page\\Section\\Translation\:\:\$mtSectionID\.$#'
-			identifier: property.notFound
-			count: 1
-			path: concrete/src/Multilingual/Page/Section/Translation.php
 
 		-
 			message: '#^Call to function is_callable\(\) with array\{Concrete\\Core\\Page\\Controller\\PageController, ''useUserLocale''\} will always evaluate to true\.$#'
@@ -13977,18 +13641,6 @@ parameters:
 			path: concrete/src/Page/Container/TemplateLocator.php
 
 		-
-			message: '#^Access to an undefined property Concrete\\Core\\Page\\Controller\\AccountPageController\:\:\$error\.$#'
-			identifier: property.notFound
-			count: 2
-			path: concrete/src/Page/Controller/AccountPageController.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Page\\Controller\\AccountPageController\:\:\$token\.$#'
-			identifier: property.notFound
-			count: 1
-			path: concrete/src/Page/Controller/AccountPageController.php
-
-		-
 			message: '#^Parameter \#1 \$key of method Concrete\\Core\\Attribute\\Category\\CategoryInterface\:\:updateFromRequest\(\) expects Concrete\\Core\\Entity\\Attribute\\Key\\Key, Concrete\\Core\\Attribute\\AttributeKeyInterface given\.$#'
 			identifier: argument.type
 			count: 1
@@ -14155,12 +13807,6 @@ parameters:
 			identifier: argument.type
 			count: 3
 			path: concrete/src/Page/Feed.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Page\\FeedEvent\:\:\$page\.$#'
-			identifier: property.notFound
-			count: 2
-			path: concrete/src/Page/FeedEvent.php
 
 		-
 			message: '#^Call to an undefined method Concrete\\Core\\Block\\BlockController\:\:getComposerOutputControlObject\(\)\.$#'
@@ -15177,18 +14823,6 @@ parameters:
 			path: concrete/src/Page/View/PageView.php
 
 		-
-			message: '#^Access to an undefined property Concrete\\Core\\Page\\Workflow\\Progress\\Page\:\:\$page\.$#'
-			identifier: property.notFound
-			count: 2
-			path: concrete/src/Page/Workflow/Progress/Page.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Page\\Workflow\\Progress\\Page\:\:\$wp\.$#'
-			identifier: property.notFound
-			count: 2
-			path: concrete/src/Page/Workflow/Progress/Page.php
-
-		-
 			message: '#^Parameter \#2 \$prefix of function core_class expects bool, string\|null given\.$#'
 			identifier: argument.type
 			count: 1
@@ -15673,12 +15307,6 @@ parameters:
 			identifier: assign.propertyType
 			count: 1
 			path: concrete/src/Permission/Assignment/StackAssignment.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Permission\\Assignment\\TopicTreeNodeAssignment\:\:\$permissionObjectToCheck\.$#'
-			identifier: property.notFound
-			count: 3
-			path: concrete/src/Permission/Assignment/TopicTreeNodeAssignment.php
 
 		-
 			message: '#^Method Concrete\\Core\\Permission\\Assignment\\TopicTreeNodeAssignment\:\:getPermissionAccessObject\(\) should return Concrete\\Core\\Permission\\Access\\Access\|null but returns false\.$#'
@@ -16371,12 +15999,6 @@ parameters:
 			path: concrete/src/Search/Column/FileAttributeKeyColumn.php
 
 		-
-			message: '#^Access to an undefined property Concrete\\Core\\Search\\Column\\Set\:\:\$attributeClass\.$#'
-			identifier: property.notFound
-			count: 1
-			path: concrete/src/Search/Column/Set.php
-
-		-
 			message: '#^Call to an undefined method Concrete\\Core\\Search\\ItemList\\Pager\\PagerProviderInterface\:\:getQueryObject\(\)\.$#'
 			identifier: method.notFound
 			count: 1
@@ -16825,12 +16447,6 @@ parameters:
 			identifier: variable.undefined
 			count: 1
 			path: concrete/src/StyleCustomizer/Customizer/CustomizerFactory.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\StyleCustomizer\\Inline\\CustomStyle\:\:\$set\.$#'
-			identifier: property.notFound
-			count: 1
-			path: concrete/src/StyleCustomizer/Inline/CustomStyle.php
 
 		-
 			message: '#^Call to function is_array\(\) with bool\|float\|int\|string\|null will always evaluate to false\.$#'
@@ -17559,12 +17175,6 @@ parameters:
 			path: concrete/src/Updater/ApplicationUpdate/Diagnostic.php
 
 		-
-			message: '#^Access to an undefined property Concrete\\Core\\Updater\\ApplicationUpdate\\Version\:\:\$releaseNotesURL\.$#'
-			identifier: property.notFound
-			count: 2
-			path: concrete/src/Updater/ApplicationUpdate/Version.php
-
-		-
 			message: '#^PHPDoc tag @param references unknown parameter\: \$releaseNotesUrl$#'
 			identifier: parameter.notFound
 			count: 1
@@ -18243,14 +17853,20 @@ parameters:
 			path: concrete/src/User/Component/UserSelectInstanceFactory.php
 
 		-
-			message: '#^Access to an undefined property Concrete\\Core\\User\\CsvWriter\:\:\$attributeKeys\.$#'
-			identifier: property.notFound
+			message: '#^Parameter \#1 \$iterator of function iterator_to_array expects Traversable, array given\.$#'
+			identifier: argument.type
 			count: 1
 			path: concrete/src/User/CsvWriter.php
 
 		-
-			message: '#^Parameter \#1 \$iterator of function iterator_to_array expects Traversable, array given\.$#'
-			identifier: argument.type
+			message: '#^Property Concrete\\Core\\User\\CsvWriter\:\:\$attributeKeys \(array\<Concrete\\Core\\Entity\\Attribute\\Key\\UserKey\>\) does not accept array\<Concrete\\Core\\Entity\\Attribute\\Key\\Key\>\.$#'
+			identifier: assign.propertyType
+			count: 1
+			path: concrete/src/User/CsvWriter.php
+
+		-
+			message: '#^Property Concrete\\Core\\User\\CsvWriter\:\:\$attributeKeys \(array\<Concrete\\Core\\Entity\\Attribute\\Key\\UserKey\>\) in isset\(\) is not nullable\.$#'
+			identifier: isset.property
 			count: 1
 			path: concrete/src/User/CsvWriter.php
 
@@ -18669,24 +18285,6 @@ parameters:
 			path: concrete/src/User/User.php
 
 		-
-			message: '#^Access to an undefined property Concrete\\Core\\User\\UserBannedIp\:\:\$banCode\.$#'
-			identifier: property.notFound
-			count: 1
-			path: concrete/src/User/UserBannedIp.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\User\\UserBannedIp\:\:\$ipFrom\.$#'
-			identifier: property.notFound
-			count: 2
-			path: concrete/src/User/UserBannedIp.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\User\\UserBannedIp\:\:\$ipTo\.$#'
-			identifier: property.notFound
-			count: 1
-			path: concrete/src/User/UserBannedIp.php
-
-		-
 			message: '#^Constructor of class Concrete\\Core\\User\\UserBannedIp has an unused parameter \$db_name\.$#'
 			identifier: constructor.unusedParameter
 			count: 1
@@ -18747,12 +18345,6 @@ parameters:
 			path: concrete/src/User/UserInfoRepository.php
 
 		-
-			message: '#^Access to an undefined property Concrete\\Core\\User\\UserList\:\:\$sortUserStatus\.$#'
-			identifier: property.notFound
-			count: 2
-			path: concrete/src/User/UserList.php
-
-		-
 			message: '#^Call to an undefined method Concrete\\Core\\User\\UserList\:\:setQuery\(\)\.$#'
 			identifier: method.notFound
 			count: 1
@@ -18811,18 +18403,6 @@ parameters:
 			identifier: return.type
 			count: 1
 			path: concrete/src/User/Workflow/Progress/ProgressList.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\User\\Workflow\\Progress\\User\:\:\$user\.$#'
-			identifier: property.notFound
-			count: 2
-			path: concrete/src/User/Workflow/Progress/User.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\User\\Workflow\\Progress\\User\:\:\$wp\.$#'
-			identifier: property.notFound
-			count: 2
-			path: concrete/src/User/Workflow/Progress/User.php
 
 		-
 			message: '#^Call to function is_array\(\) with array will always evaluate to true\.$#'
@@ -18979,42 +18559,6 @@ parameters:
 			identifier: variable.undefined
 			count: 1
 			path: concrete/src/Workflow/HistoryEntry/BasicHistoryEntry.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Workflow\\HistoryEntry\\HistoryEntry\:\:\$action\.$#'
-			identifier: property.notFound
-			count: 2
-			path: concrete/src/Workflow/HistoryEntry/HistoryEntry.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Workflow\\HistoryEntry\\HistoryEntry\:\:\$uID\.$#'
-			identifier: property.notFound
-			count: 2
-			path: concrete/src/Workflow/HistoryEntry/HistoryEntry.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Workflow\\Progress\\BasicData\:\:\$uIDCompleted\.$#'
-			identifier: property.notFound
-			count: 3
-			path: concrete/src/Workflow/Progress/BasicData.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Workflow\\Progress\\BasicData\:\:\$uIDStarted\.$#'
-			identifier: property.notFound
-			count: 2
-			path: concrete/src/Workflow/Progress/BasicData.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Workflow\\Progress\\BasicData\:\:\$wpDateCompleted\.$#'
-			identifier: property.notFound
-			count: 3
-			path: concrete/src/Workflow/Progress/BasicData.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Workflow\\Progress\\BasicData\:\:\$wpID\.$#'
-			identifier: property.notFound
-			count: 3
-			path: concrete/src/Workflow/Progress/BasicData.php
 
 		-
 			message: '#^Method Concrete\\Core\\Workflow\\Progress\\CalendarEventProgress\:\:getSite\(\) should return Concrete\\Core\\Entity\\Site\\Site but return statement is missing\.$#'

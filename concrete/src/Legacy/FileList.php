@@ -23,6 +23,11 @@ class FileList extends DatabaseItemList
     protected $permissionLevel = 'search_file_set';
     protected $filteredFileSetIDs = array();
 
+    /**
+     * @var int|null
+     */
+    protected $queryCreated;
+
     /* magic method for filtering by attributes. */
     public function __call($nm, $a)
     {
@@ -249,7 +254,6 @@ class FileList extends DatabaseItemList
         if ($this->permissionLevel == false || $u->isSuperUser()) {
             return false;
         }
-
 
         $accessEntities = $u->getUserAccessEntityObjects();
         foreach ($accessEntities as $pae) {

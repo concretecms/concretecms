@@ -16,6 +16,11 @@ class DatabaseItemList extends ItemList
     protected $userPostQuery = '';
     protected $attributeClass = '';
 
+    /**
+     * @var array
+     */
+    protected $attributeFilters;
+
     public function getTotal()
     {
         if ($this->total == -1) {

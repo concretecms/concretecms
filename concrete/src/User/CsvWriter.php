@@ -24,6 +24,11 @@ class CsvWriter
     /** @var string[] The memoized result of translating the status strings */
     protected $status;
 
+    /**
+     * @var \Concrete\Core\Entity\Attribute\Key\UserKey[]
+     */
+    protected $attributeKeys;
+
     public function __construct(Writer $writer, UserCategory $category, Date $date)
     {
         $this->writer = $writer;

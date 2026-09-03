@@ -9,6 +9,11 @@ use Permissions;
 
 class Express extends Standard
 {
+    /**
+     * @var \Concrete\Core\Entity\Express\Entity|null
+     */
+    protected $entity;
+
     protected function getAdvancedSearchDialogController()
     {
         return $this->app->make('\Concrete\Controller\Dialog\Express\AdvancedSearch');

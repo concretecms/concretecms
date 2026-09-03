@@ -9,6 +9,11 @@ use Core;
 
 class SocialLinks extends DashboardSitePageController
 {
+    /**
+     * @var \Concrete\Core\Entity\Sharing\SocialNetwork\Link|null
+     */
+    protected $socialLink;
+
     public function view()
     {
         $this->set('links', Link::getList($this->getSite()));

@@ -6,6 +6,10 @@ use Concrete\Core\User\UserInfo;
 
 class Header extends ElementController
 {
+    /**
+     * @var \Concrete\Core\User\UserInfo
+     */
+    protected $user;
 
     public function getElement()
     {

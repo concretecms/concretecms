@@ -18,6 +18,20 @@ use Symfony\Component\HttpFoundation\Request;
 
 class LegacyCategory implements CategoryInterface, StandardSearchIndexerInterface
 {
+    /**
+     * @var \Concrete\Core\Application\Application
+     */
+    protected $application;
+
+    /**
+     * @var \Doctrine\ORM\EntityManagerInterface
+     */
+    protected $entityManager;
+
+    /**
+     * @var \Concrete\Core\Attribute\SetManagerInterface|null
+     */
+    protected $setManager;
 
     use StandardCategoryTrait;
 
@@ -127,7 +141,6 @@ class LegacyCategory implements CategoryInterface, StandardSearchIndexerInterfac
         $this->entityManager->flush();
 
         $key->setAttributeKeySettings($settings);
-
 
         // Modify the category's search indexer.
         $indexer = $this->getSearchIndexer();
@@ -298,7 +311,5 @@ class LegacyCategory implements CategoryInterface, StandardSearchIndexerInterfac
 
         return $key;
     }
-
-
 
 }

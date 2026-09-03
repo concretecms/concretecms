@@ -34,6 +34,11 @@ class OAuthAuthenticationMiddleware implements MiddlewareInterface
      */
     private $app;
 
+    /**
+     * @var \Concrete\Core\User\UserInfoRepository
+     */
+    protected $userRepository;
+
     public function __construct(
         ResourceServer $oauth,
         GuzzleFactory $psrFactory,

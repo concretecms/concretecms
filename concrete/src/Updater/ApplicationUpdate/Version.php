@@ -8,6 +8,11 @@ class Version
     protected $releaseNotesUrl;
 
     /**
+     * @var string
+     */
+    protected $releaseNotesURL;
+
+    /**
      * @return mixed
      */
     public function getReleaseNotesURL()

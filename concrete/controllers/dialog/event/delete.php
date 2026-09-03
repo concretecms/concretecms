@@ -27,6 +27,11 @@ class Delete extends BackendInterfaceController
      */
     protected $eventService;
 
+    /**
+     * @var \Concrete\Core\Calendar\Event\Formatter\DateFormatter
+     */
+    protected $dateFormatter;
+
     public function __construct()
     {
         parent::__construct();
@@ -81,7 +86,6 @@ class Delete extends BackendInterfaceController
         }
     }
 
-
     public function view()
     {
         if ($this->canAccess()) {
@@ -109,8 +113,5 @@ class Delete extends BackendInterfaceController
 
         return false;
     }
-
-
-
 
 }

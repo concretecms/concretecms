@@ -16,18 +16,20 @@ class RenderedSlotCollection
      */
     protected $instance;
 
+    /**
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     */
+    protected $slots;
+
     public function __construct(Instance $instance, array $collection = [])
     {
         $this->instance = $instance;
         $this->slots = new ArrayCollection($collection);
     }
 
-
     public function getRenderedSlot(int $slot): ?RenderedSlot
     {
         return $this->slots->get($slot);
     }
 
-
 }
-

@@ -8,6 +8,21 @@ class UserBannedIp
 {
     protected $unique_keys;
 
+    /**
+     * @var int
+     */
+    protected $banCode;
+
+    /**
+     * @var int
+     */
+    protected $ipFrom;
+
+    /**
+     * @var int
+     */
+    protected $ipTo;
+
     public function __construct($db_name = false, $keys = false)
     {
         if (!$keys) {

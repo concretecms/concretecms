@@ -28,6 +28,11 @@ class FileLogger implements LoggerInterface, NormalizableInterface, Denormalizab
     protected $filesystem;
 
     /**
+     * @var string
+     */
+    protected $filePath;
+
+    /**
      * FileLogger constructor.
      * @param string $directory
      * @param Process $process

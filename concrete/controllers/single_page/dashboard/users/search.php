@@ -70,6 +70,76 @@ class Search extends DashboardPageController
     protected $canResetPassword;
 
     /**
+     * @var array
+     */
+    protected $allowedEditAttributes;
+
+    /**
+     * @var \Concrete\Core\Permission\Access\ListItem\EditUserPropertiesUserListItem
+     */
+    protected $assignment;
+
+    /**
+     * @var bool
+     */
+    protected $canActivateUser;
+
+    /**
+     * @var bool
+     */
+    protected $canAddGroup;
+
+    /**
+     * @var bool
+     */
+    protected $canDeleteUser;
+
+    /**
+     * @var bool
+     */
+    protected $canEdit;
+
+    /**
+     * @var bool
+     */
+    protected $canEditAvatar;
+
+    /**
+     * @var bool
+     */
+    protected $canEditEmail;
+
+    /**
+     * @var bool
+     */
+    protected $canEditHomeFileManagerFolderID;
+
+    /**
+     * @var bool
+     */
+    protected $canEditLanguage;
+
+    /**
+     * @var bool
+     */
+    protected $canEditPassword;
+
+    /**
+     * @var bool
+     */
+    protected $canEditTimezone;
+
+    /**
+     * @var bool
+     */
+    protected $canEditUserName;
+
+    /**
+     * @var bool
+     */
+    protected $canSignInAsUser;
+
+    /**
      * @return SearchProvider
      */
     protected function getSearchProvider()
@@ -577,7 +647,6 @@ class Search extends DashboardPageController
         } else {
             return $this->buildRedirect('/dashboard/users/search');
         }
-
 
     }
 

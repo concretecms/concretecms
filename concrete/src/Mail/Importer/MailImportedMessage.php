@@ -24,6 +24,11 @@ class MailImportedMessage
     protected $oMailCnt;
     protected $oMailID;
 
+    /**
+     * @var mixed
+     */
+    protected $dataObject;
+
     public function __construct($mail, MailMessage $msg, $count, $id)
     {
 
@@ -138,7 +143,6 @@ class MailImportedMessage
                     if (isset($params[1])) {
                         $fileName = trim($params[1]);
                     }
-
 
                     if ($part->getHeaders()->has('Content-Type')) {
                         $params   = explode(';', $part->getHeaders()->get('Content-Type')->getFieldValue());

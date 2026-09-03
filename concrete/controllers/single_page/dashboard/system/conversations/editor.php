@@ -7,6 +7,11 @@ use Concrete\Core\Routing\Redirect;
 
 class Editor extends DashboardPageController
 {
+    /**
+     * @var array
+     */
+    protected $editors;
+
     public function view()
     {
         $db = Loader::db();

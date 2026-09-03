@@ -15,6 +15,11 @@ class Seo extends BackendInterfacePageController
     protected $controllerActionPath = '/ccm/system/panels/details/page/seo';
     protected $validationToken = '/panels/details/page/seo';
 
+    /**
+     * @var \Concrete\Core\Permission\Access\ListItem\EditPagePropertiesPageListItem
+     */
+    protected $asl;
+
     protected function canAccess()
     {
         return $this->permissions->canEditPageContents() || $this->asl->allowEditPaths();

@@ -19,6 +19,11 @@ class SummaryTemplates extends BackendInterfaceController
      */
     protected $eventService;
 
+    /**
+     * @var \Concrete\Core\Calendar\Event\EventOccurrenceService
+     */
+    protected $eventOccurrenceService;
+
     public function __construct()
     {
         parent::__construct();
@@ -56,7 +61,6 @@ class SummaryTemplates extends BackendInterfaceController
         $url .= '&versionOccurrenceID=' . $occurrence->getID();
         return $url;
     }
-
 
     public function view()
     {

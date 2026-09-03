@@ -6,6 +6,15 @@ use Concrete\Core\Workflow\Progress\UserProgress;
 
 class User
 {
+    /**
+     * @var \Concrete\Core\User\UserInfo
+     */
+    protected $user;
+
+    /**
+     * @var \Concrete\Core\Workflow\Progress\UserProgress
+     */
+    protected $wp;
 
     public function __construct(UserInfo $u, UserProgress $wp)
     {

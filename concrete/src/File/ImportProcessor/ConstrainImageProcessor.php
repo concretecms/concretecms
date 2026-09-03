@@ -51,6 +51,11 @@ class ConstrainImageProcessor implements ProcessorInterface
     protected $rescanThumbnails = true;
 
     /**
+     * @var bool
+     */
+    protected $resizeInPlace;
+
+    /**
      * Initialize the instance.
      *
      * @param int|null $maxWidth the maximum image width (if set)
