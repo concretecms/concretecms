@@ -467,7 +467,6 @@ class File implements \Concrete\Core\Permission\ObjectInterface, AttributeObject
         $createNew = false;
 
         $fv = $this->getRecentVersion();
-        $fav = $this->getApprovedVersion();
 
         // first test. Does the user ID of the most recent version match ours? If not, then we create new
         if ($u->getUserID() != $fv->getAuthorUserID()) {
@@ -485,14 +484,7 @@ class File implements \Concrete\Core\Permission\ObjectInterface, AttributeObject
         }
 
         if ($createNew) {
-            $fv2 = $fv->duplicate();
-
-            // Are the recent and active versions the same? If so, we approve this new version we just made
-            if ($fv->getFileVersionID() == $fav->getFileVersionID()) {
-                $fv2->approve();
-            }
-
-            return $fv2;
+            return $fv->duplicate();
         }
 
         return $fv;

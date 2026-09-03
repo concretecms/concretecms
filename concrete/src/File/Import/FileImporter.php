@@ -295,6 +295,7 @@ class FileImporter implements LoggerAwareInterface
                 $importingFile->getConcreteFilenameSanitized(),
                 $prefix
             );
+            $fileVersion->approve();
             $this->logger->notice(t("Added new version %s to existing file %s (%s).", $fileVersion->getFileVersionID(), $file->getFileName(), $file->getFileID()));
         } else {
             // We create a new File instance

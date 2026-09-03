@@ -322,6 +322,7 @@ class Files extends ApiController
         }
 
         $body = json_decode($this->request->getContent(), true);
+        $shouldApprove = ($file->getRecentVersion()->getFileVersionID() == $file->getApprovedVersion()->getFileVersionID());
         $version = $file->getVersionToModify();
         if (isset($body['title'])) {
             $version->updateTitle($body['title']);
@@ -340,6 +341,9 @@ class Files extends ApiController
             foreach ($attributeMap->getEntries() as $entry) {
                 $version->setAttribute($entry->getAttributeKey(), $entry->getAttributeValue());
             }
+        }
+        if (!$version->isApproved() && $shouldApprove) {
+            $version->approve();
         }
 
         return $this->transform($version->getFile(), new FileTransformer(), Resources::RESOURCE_FILES);
