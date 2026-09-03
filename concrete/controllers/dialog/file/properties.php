@@ -12,7 +12,6 @@ use Concrete\Core\Error\ErrorList\ErrorList;
 use Concrete\Core\File\EditResponse;
 use Concrete\Core\File\File;
 use Concrete\Core\Filesystem\ElementManager;
-use Concrete\Core\Foundation\Serializer\JsonSerializer;
 use Concrete\Core\Permission\Checker;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
@@ -28,13 +27,9 @@ class Properties extends BackendInterfaceFileController
      */
     protected $category;
 
-    public function __construct(
-        CategoryService $attributeCategoryService,
-        JsonSerializer $serializer
-    )
+    public function __construct(CategoryService $attributeCategoryService)
     {
         parent::__construct();
-        $this->serializer = $serializer;
         $categoryEntity = $attributeCategoryService->getByHandle('file');
         $this->category = $categoryEntity->getController();
     }

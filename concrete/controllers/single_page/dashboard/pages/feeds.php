@@ -124,8 +124,6 @@ class Feeds extends DashboardPageController
         if (!is_object($feed)) {
             return $this->buildRedirect($this->action());
         }
-        $this->feed = $feed;
-
         $this->set('feed', $feed);
         $this->add();
     }

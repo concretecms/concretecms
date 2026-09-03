@@ -621,12 +621,6 @@ parameters:
 			path: concrete/controllers/dialog/express/association/reorder.php
 
 		-
-			message: '#^Access to an undefined property Concrete\\Controller\\Dialog\\Express\\Preset\\Edit\:\:\$exEntityID\.$#'
-			identifier: property.notFound
-			count: 1
-			path: concrete/controllers/dialog/express/preset/edit.php
-
-		-
 			message: '#^Call to an undefined method Concrete\\Core\\Entity\\Search\\SavedSearch\:\:getEntity\(\)\.$#'
 			identifier: method.notFound
 			count: 1
@@ -711,12 +705,6 @@ parameters:
 			path: concrete/controllers/dialog/file/import.php
 
 		-
-			message: '#^Access to an undefined property Concrete\\Controller\\Dialog\\File\\Properties\:\:\$serializer\.$#'
-			identifier: property.notFound
-			count: 1
-			path: concrete/controllers/dialog/file/properties.php
-
-		-
 			message: '#^Parameter \#1 \$version of method Concrete\\Core\\Attribute\\Category\\FileCategory\:\:getAttributeValues\(\) expects Concrete\\Core\\Entity\\File\\Version, Concrete\\Core\\Attribute\\ObjectInterface given\.$#'
 			identifier: argument.type
 			count: 1
@@ -777,7 +765,7 @@ parameters:
 			path: concrete/controllers/dialog/file/upload_complete.php
 
 		-
-			message: '#^Class Concrete\\Controller\\Dialog\\File\\Properties constructor invoked with 0 parameters, 2 required\.$#'
+			message: '#^Class Concrete\\Controller\\Dialog\\File\\Properties constructor invoked with 0 parameters, 1 required\.$#'
 			identifier: arguments.count
 			count: 1
 			path: concrete/controllers/dialog/file/upload_complete.php
@@ -2425,12 +2413,6 @@ parameters:
 			identifier: notIdentical.alwaysTrue
 			count: 1
 			path: concrete/controllers/single_page/dashboard/files/search.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Controller\\SinglePage\\Dashboard\\Pages\\Feeds\:\:\$feed\.$#'
-			identifier: property.notFound
-			count: 1
-			path: concrete/controllers/single_page/dashboard/pages/feeds.php
 
 		-
 			message: '#^Variable \$feed might not be defined\.$#'
@@ -8275,12 +8257,6 @@ parameters:
 			identifier: arrayFilter.same
 			count: 1
 			path: concrete/src/Csv/Export/UserExporter.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Csv\\Import\\AbstractImporter\:\:\$csvHeader\.$#'
-			identifier: property.notFound
-			count: 1
-			path: concrete/src/Csv/Import/AbstractImporter.php
 
 		-
 			message: '#^Call to an undefined method League\\Csv\\Reader\:\:each\(\)\.$#'

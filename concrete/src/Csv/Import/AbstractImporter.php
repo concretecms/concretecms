@@ -306,7 +306,6 @@ abstract class AbstractImporter
     {
         $this->category = $category;
         $this->attributeKeysAndControllers = null;
-        $this->csvHeader = null;
 
         return $this;
     }

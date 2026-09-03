@@ -29,10 +29,6 @@ class Edit extends PresetEdit
             if ($requestedEntityID !== 0 && $requestedEntityID !== $entityID) {
                 return null;
             }
-            if ($entityID !== 0) {
-                $this->exEntityID = $entityID;
-            }
-
             return $entity;
         }
 
