@@ -30,7 +30,7 @@ class UpdateMessage extends FrontendController
             $message = $this->getMessage();
             $body = $this->getMessageBody($errors);
             $attachments = $this->getAttachments($message, $errors);
-            $review = $this->getReview($errors);
+            $review = $this->getReview($message, $errors);
             if (!$errors->has()) {
                 $message->setMessageBody($body);
                 if ($review !== null) {
@@ -170,14 +170,14 @@ class UpdateMessage extends FrontendController
         return $this->getBlockController()->enableTopCommentReviews && !$message->getConversationMessageParentID();
     }
 
-    protected function getReview(ArrayAccess $errors): ?int
+    protected function getReview(Message $message, ArrayAccess $errors): ?int
     {
         $review = $this->request->request->get('review');
         $review = empty($review) ? 0 : (int) $review;
         if ($review === 0) {
             $review = null;
         } else {
-            if (!$this->canReview) {
+            if (!$this->canReview($message)) {
                 $errors[] = t('Reviews have not been enabled for this discussion.');
                 $review = null;
             } elseif ($review < 1 || $review > 5) {

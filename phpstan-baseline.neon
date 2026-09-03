@@ -1401,12 +1401,6 @@ parameters:
 			path: concrete/controllers/frontend/conversations/add_message.php
 
 		-
-			message: '#^Access to an undefined property Concrete\\Controller\\Frontend\\Conversations\\UpdateMessage\:\:\$canReview\.$#'
-			identifier: property.notFound
-			count: 1
-			path: concrete/controllers/frontend/conversations/update_message.php
-
-		-
 			message: '#^Call to function is_array\(\) with bool\|float\|int\|string\|null will always evaluate to false\.$#'
 			identifier: function.impossibleType
 			count: 1
