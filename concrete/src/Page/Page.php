@@ -772,27 +772,25 @@ class Page extends Collection implements CategoryMemberInterface,
         $q = "select cIsCheckedOut, cCheckedOutDatetimeLastEdit from Pages where cID = '{$this->cID}'";
         $r = $db->executeQuery($q);
 
-        if ($r) {
-            $row = $r->fetchAssociative();
-            // If cCheckedOutDatetimeLastEdit is present, get the time span in seconds since it's last edit.
-            if (!empty($row['cCheckedOutDatetimeLastEdit'])) {
-                $dh = Core::make('helper/date');
-                $timeSinceCheckout = ($dh->getOverridableNow(true) - strtotime($row['cCheckedOutDatetimeLastEdit']));
-            }
-
-            if (isset($row['cIsCheckedOut']) && $row['cIsCheckedOut'] == 0) {
-                return false;
-            }
-            if (isset($timeSinceCheckout) && $timeSinceCheckout > CHECKOUT_TIMEOUT) {
-                $this->forceCheckIn();
-                $this->isCheckedOutCache = false;
-
-                return false;
-            }
-            $this->isCheckedOutCache = true;
-
-            return true;
+        $row = $r->fetchAssociative();
+        // If cCheckedOutDatetimeLastEdit is present, get the time span in seconds since it's last edit.
+        if (!empty($row['cCheckedOutDatetimeLastEdit'])) {
+            $dh = Core::make('helper/date');
+            $timeSinceCheckout = ($dh->getOverridableNow(true) - strtotime($row['cCheckedOutDatetimeLastEdit']));
         }
+
+        if (isset($row['cIsCheckedOut']) && $row['cIsCheckedOut'] == 0) {
+            return false;
+        }
+        if (isset($timeSinceCheckout) && $timeSinceCheckout > CHECKOUT_TIMEOUT) {
+            $this->forceCheckIn();
+            $this->isCheckedOutCache = false;
+
+            return false;
+        }
+        $this->isCheckedOutCache = true;
+
+        return true;
     }
 
     /**
