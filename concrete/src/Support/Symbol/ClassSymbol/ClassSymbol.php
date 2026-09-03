@@ -90,16 +90,39 @@ class ClassSymbol
                 )
             )
         ) {
-            $obj = $fqn::getFacadeRoot();
-
             $this->facade = $this->reflectionClass;
-            $this->reflectionClass = new ReflectionClass($obj);
+            $this->reflectionClass = $this->getFacadeRootReflectionClass($fqn);
             $this->fqn = $this->reflectionClass->getName();
         } else {
             $this->facade = null;
         }
 
         $this->resolveMethods();
+    }
+
+    /**
+     * Get the reflection class of the object a facade forwards the calls to.
+     *
+     * @throws \Throwable if the facade root can't be resolved
+     */
+    protected function getFacadeRootReflectionClass(string $facadeClassName): ReflectionClass
+    {
+        try {
+            return new ReflectionClass($facadeClassName::getFacadeRoot());
+        } catch (\Throwable $x) {
+            // The facade root can't be instantiated (for example because it requires a database connection, and Concrete is not installed):
+            // let's fallback to the facade accessor, if it's a class/interface name
+            $getFacadeAccessor = new \ReflectionMethod($facadeClassName, 'getFacadeAccessor');
+            if (PHP_VERSION_ID < 80100) {
+                // Not needed (and deprecated since PHP 8.5) in newer PHP versions
+                $getFacadeAccessor->setAccessible(true);
+            }
+            $accessor = $getFacadeAccessor->invoke(null);
+            if (is_string($accessor) && (class_exists($accessor) || interface_exists($accessor))) {
+                return new ReflectionClass($accessor);
+            }
+            throw $x;
+        }
     }
 
     /**
