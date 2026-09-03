@@ -71,6 +71,7 @@ mix-manifest.json
 
 # ignore PHP symbol map
 __IDE_SYMBOLS__.php
+__PHPSTAN_STUBS__.php
 .phpstorm.meta.php
 
 # ignore custom php-cs-fixer configuration file

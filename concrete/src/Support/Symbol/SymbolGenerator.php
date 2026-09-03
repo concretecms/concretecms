@@ -67,12 +67,17 @@ class SymbolGenerator
         $this->checkerGenerator = app(CheckerGenerator::class, ['isInstalled' => $this->isInstalled, 'classLister' => $this->classLister]);
     }
 
+    public function getCheckerGenerator(): CheckerGenerator
+    {
+        return $this->checkerGenerator;
+    }
+
     /**
      * Get the ClassSymbol objects of all the facades: the ones with a registered class alias, plus the ones found in the core classes.
      *
      * @return ClassSymbol[] array keys are the fully-qualified names of the facade classes
      */
-    public function getFacades()
+    public function getFacades(): array
     {
         if ($this->facades === null) {
             $facades = [];

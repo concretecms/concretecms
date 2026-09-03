@@ -41,6 +41,13 @@ class Method
      */
     private $sees = [];
 
+    /**
+     * The return type (empty string if unknown).
+     *
+     * @var string
+     */
+    private $returnType = '';
+
     public function __construct(string $name, string $arguments = '')
     {
         $this->name = $name;
@@ -55,6 +62,26 @@ class Method
     public function getArguments(): string
     {
         return $this->arguments;
+    }
+
+    /**
+     * @param string $value the return type (empty string if unknown)
+     *
+     * @return $this
+     */
+    public function setReturnType(string $value): self
+    {
+        $this->returnType = $value;
+
+        return $this;
+    }
+
+    /**
+     * Get the return type (empty string if unknown).
+     */
+    public function getReturnType(): string
+    {
+        return $this->returnType;
     }
 
     /**
@@ -190,6 +217,9 @@ class Method
         }
         foreach ($other->getSees() as $value) {
             $this->addSee($value);
+        }
+        if ($this->getReturnType() === '') {
+            $this->setReturnType($other->getReturnType());
         }
 
         return $this;

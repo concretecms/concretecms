@@ -27,7 +27,8 @@
     },
     "exclude-from-classmap": [
         "src/Support/.phpstorm.meta.php",
-        "src/Support/__IDE_SYMBOLS__.php"
+        "src/Support/__IDE_SYMBOLS__.php",
+        "src/Support/__PHPSTAN_STUBS__.php"
     ]
   },
   "bin": [

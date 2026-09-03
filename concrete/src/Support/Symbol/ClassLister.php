@@ -86,7 +86,8 @@ final class ClassLister
     {
         switch ($className) {
             case 'Concrete\Core\Support\__IDE_SYMBOLS__':
-                // Generated file containing fake classes
+            case 'Concrete\Core\Support\__PHPSTAN_STUBS__':
+                // Generated files containing fake classes
                 return false;
         }
         if (strpos($className, 'Concrete\Core\Support\CodingStyle\\') === 0) {

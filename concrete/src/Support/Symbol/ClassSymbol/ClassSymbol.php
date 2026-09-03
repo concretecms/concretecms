@@ -118,8 +118,18 @@ class ClassSymbol
                 $getFacadeAccessor->setAccessible(true);
             }
             $accessor = $getFacadeAccessor->invoke(null);
-            if (is_string($accessor) && (class_exists($accessor) || interface_exists($accessor))) {
-                return new ReflectionClass($accessor);
+            if (is_string($accessor)) {
+                if (class_exists($accessor) || interface_exists($accessor)) {
+                    return new ReflectionClass($accessor);
+                }
+                // The accessor may be a container alias of a class name
+                $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
+                if ($app->isAlias($accessor)) {
+                    $aliased = $app->getAlias($accessor);
+                    if (is_string($aliased) && (class_exists($aliased) || interface_exists($aliased))) {
+                        return new ReflectionClass($aliased);
+                    }
+                }
             }
             throw $x;
         }
@@ -208,5 +218,21 @@ class ClassSymbol
     public function getAliasNamespace()
     {
         return $this->aliasNamespace;
+    }
+
+    /**
+     * Get the fully-qualified name of the actual class (for facades: the class the calls are forwarded to).
+     */
+    public function getFqn(): string
+    {
+        return $this->fqn;
+    }
+
+    /**
+     * Get the reflection of the actual class (for facades: the class the calls are forwarded to).
+     */
+    public function getReflectionClass(): ReflectionClass
+    {
+        return $this->reflectionClass;
     }
 }

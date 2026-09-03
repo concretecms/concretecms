@@ -27,6 +27,11 @@ class CheckerGenerator
     private $permissionKeysProvider;
 
     /**
+     * @var \Concrete\Core\Support\Symbol\PhpDocTypeResolver
+     */
+    private $typeResolver;
+
+    /**
      * @var \Concrete\Core\Support\Symbol\CheckerGenerator\Method[]|null
      */
     private $methods;
@@ -48,6 +53,7 @@ class CheckerGenerator
         }
         $this->permissionKeysProvider = $permissionKeysProvider;
         $this->classLister = $classLister ?? new ClassLister($fileService, 'Concrete\Core', DIR_BASE_CORE . '/' . DIRNAME_CLASSES);
+        $this->typeResolver = new PhpDocTypeResolver();
     }
 
     public function getNamespace(): string
@@ -130,7 +136,7 @@ class CheckerGenerator
     /**
      * @return \Concrete\Core\Support\Symbol\CheckerGenerator\Method[]
      */
-    private function getMethods(): array
+    public function getMethods(): array
     {
         if ($this->methods === null) {
             $this->methods = $this->listMethods();
@@ -225,6 +231,7 @@ class CheckerGenerator
             $name = 'can' . camelcase($key->getHandle());
             $method = new Method($name);
             $method
+                ->setReturnType('bool')
                 ->addDescription($key->getDescription() ?: $key->getName())
                 ->addForObjectOfClass($objectInterfaceClassName)
                 ->addCategoryKeyHandle($categoryHandle)
@@ -305,6 +312,7 @@ class CheckerGenerator
             $phpDoc = (string) $methodInfo->getDocComment();
             $method = new Method($methodInfo->getName(), implode(', ', $params));
             $method
+                ->setReturnType($this->typeResolver->resolveReturnType($methodInfo))
                 ->setDeprecated(str_contains($phpDoc, '@deprecated'))
                 ->addForObjectOfClass($objectInterfaceClassName)
                 ->addCategoryKeyHandle($categoryHandle)

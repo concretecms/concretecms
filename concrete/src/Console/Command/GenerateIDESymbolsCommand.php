@@ -21,7 +21,7 @@ class GenerateIDESymbolsCommand extends Command
             ->setDescription('Generate IDE symbols')
             ->addEnvOption()
             ->setCanRunAsRoot(false)
-            ->addArgument('generate-what', InputArgument::IS_ARRAY, 'Elements to generate [all|ide-classes|phpstorm]', ['all'])
+            ->addArgument('generate-what', InputArgument::IS_ARRAY, 'Elements to generate [all|ide-classes|phpstorm|phpstan]', ['all'])
             ->setHelp(<<<EOT
 Returns codes:
   $okExitCode operation completed successfully
@@ -59,6 +59,15 @@ EOT
             $this->generatePHPStorm();
             $output->writeln('<info>done.</info>');
         }
+        $p = array_search('phpstan', $what);
+        if ($p !== false || in_array('all', $what)) {
+            if ($p !== false) {
+                unset($what[$p]);
+            }
+            $output->write('Generating stubs for PHPStan... ');
+            $this->generatePHPStanStubs();
+            $output->writeln('<info>done.</info>');
+        }
         $p = array_search('all', $what);
         if ($p !== false) {
             unset($what[$p]);
@@ -76,6 +85,19 @@ EOT
         $metadata = $metadataGenerator->render();
         $filename = DIR_BASE . '/concrete/src/Support/.phpstorm.meta.php';
         if (file_put_contents($filename, $metadata) === false) {
+            throw new Exception('Error writing to file "' . $filename . '"');
+        }
+    }
+
+    protected function generatePHPStanStubs(): void
+    {
+        $generator = new \Concrete\Core\Support\Symbol\PHPStanStubGenerator(
+            new \Concrete\Core\Support\Symbol\SymbolGenerator(),
+            new \Concrete\Core\Support\Symbol\PhpDocTypeResolver()
+        );
+        $stubs = $generator->render();
+        $filename = DIR_BASE . '/concrete/src/Support/__PHPSTAN_STUBS__.php';
+        if (file_put_contents($filename, $stubs) === false) {
             throw new Exception('Error writing to file "' . $filename . '"');
         }
     }

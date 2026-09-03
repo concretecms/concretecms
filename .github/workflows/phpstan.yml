@@ -60,5 +60,8 @@ jobs:
               tmpDir: $PHPSTAN_TMPDIR
           EOF
       -
+        name: Generate PHPStan stubs
+        run: php concrete/bin/concrete c5:ide-symbols phpstan
+      -
         name: Run PHPStan
         run: phpstan analyse --no-progress --no-interaction --memory-limit=-1 --error-format=github
