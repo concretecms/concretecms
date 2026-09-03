@@ -9,7 +9,7 @@ class FileLocatorView extends AbstractView
 {
 
     /**
-     * @var $locator LocatableFileInterface
+     * @var LocatableFileInterface $locator
      */
     protected $locator;
 

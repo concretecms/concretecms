@@ -74,7 +74,7 @@ class ResultList extends EntityItemList
         $list->setItemsPerPage(1);
         $pagination = app(PaginationFactory::class)->createPaginationObject($list);
         /**
-         * @var $pagination Pagination
+         * @var Pagination $pagination
          */
         if ($pagination->getTotalResults() > 0) {
             return $pagination->getCurrentPageResults()[0];

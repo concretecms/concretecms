@@ -27,13 +27,13 @@ class GradeReportMessageHandler
         $this->entityManager->clear();
 
         /**
-         * @var $result Result
+         * @var Result $result
          */
         $result = $this->entityManager->find(Result::class, $message->getResultId());
         $task = $result->getTask();
 
         /**
-         * @var $controller ReportControllerInterface
+         * @var ReportControllerInterface $controller
          */
         $controller = $task->getController();
         $grader = $controller->getResultGrader();

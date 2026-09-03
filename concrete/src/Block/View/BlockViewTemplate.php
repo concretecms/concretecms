@@ -79,7 +79,7 @@ class BlockViewTemplate
         $obj = $this->obj;
 
         /**
-         * @var $locator FileLocator
+         * @var FileLocator $locator
          */
         $locator = \Core::make(FileLocator::class);
         if (is_object($this->theme)) {

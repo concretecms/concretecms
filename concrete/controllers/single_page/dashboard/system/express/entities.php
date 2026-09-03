@@ -421,7 +421,7 @@ class Entities extends DashboardPageController
             $this->entityManager->flush();
 
             /**
-             * @var $indexer ExpressSearchIndexer
+             * @var ExpressSearchIndexer $indexer
              */
             $indexer = $entity->getAttributeKeyCategory()->getSearchIndexer();
             $indexer->updateRepository($previousEntity, $entity);

@@ -3,14 +3,14 @@
 parameters:
 	ignoreErrors:
 		-
-			message: '#^PHPDoc tag @var has invalid value \(\$clientRepository ClientRepository\)\: Unexpected token "\$clientRepository", expected type at offset 20 on line 2$#'
-			identifier: phpDoc.parseError
+			message: '#^Call to an undefined method Concrete\\Core\\Entity\\OAuth\\ClientRepository\:\:findOneByIdentifier\(\)\.$#'
+			identifier: method.notFound
 			count: 1
 			path: concrete/controllers/api/documentation.php
 
 		-
-			message: '#^PHPDoc tag @var has invalid value \(\$clientRepository ClientRepository\)\: Unexpected token "\$clientRepository", expected type at offset 20 on line 2$#'
-			identifier: phpDoc.parseError
+			message: '#^Call to an undefined method Concrete\\Core\\Entity\\OAuth\\ClientRepository\:\:findOneByIdentifier\(\)\.$#'
+			identifier: method.notFound
 			count: 1
 			path: concrete/controllers/api/documentation/redirect.php
 
@@ -105,12 +105,6 @@ parameters:
 			path: concrete/controllers/backend/block/process.php
 
 		-
-			message: '#^PHPDoc tag @var has invalid value \(\$element ItemSelectorCustomElement\)\: Unexpected token "\$element", expected type at offset 24 on line 2$#'
-			identifier: phpDoc.parseError
-			count: 1
-			path: concrete/controllers/backend/board/element/preview.php
-
-		-
 			message: '#^Variable \$instance might not be defined\.$#'
 			identifier: variable.undefined
 			count: 2
@@ -165,9 +159,9 @@ parameters:
 			path: concrete/controllers/backend/express/entry.php
 
 		-
-			message: '#^PHPDoc tag @var has invalid value \(\$objectManager ObjectManager\)\: Unexpected token "\$objectManager", expected type at offset 20 on line 2$#'
-			identifier: phpDoc.parseError
-			count: 2
+			message: '#^If condition is always true\.$#'
+			identifier: if.alwaysTrue
+			count: 1
 			path: concrete/controllers/backend/express/entry/autocomplete.php
 
 		-
@@ -363,26 +357,8 @@ parameters:
 			path: concrete/controllers/backend/processes.php
 
 		-
-			message: '#^PHPDoc tag @var has invalid value \(\$category DriverInterface\)\: Unexpected token "\$category", expected type at offset 20 on line 2$#'
-			identifier: phpDoc.parseError
-			count: 1
-			path: concrete/controllers/backend/summary_template.php
-
-		-
-			message: '#^PHPDoc tag @var has invalid value \(\$contextFactory ContextFactory\)\: Unexpected token "\$contextFactory", expected type at offset 71 on line 3$#'
-			identifier: phpDoc.parseError
-			count: 1
-			path: concrete/controllers/backend/tasks.php
-
-		-
-			message: '#^PHPDoc tag @var has invalid value \(\$inputFactory InputFactory\)\: Unexpected token "\$inputFactory", expected type at offset 24 on line 2$#'
-			identifier: phpDoc.parseError
-			count: 1
-			path: concrete/controllers/backend/tasks.php
-
-		-
-			message: '#^PHPDoc tag @var has invalid value \(\$task Task\)\: Unexpected token "\$task", expected type at offset 24 on line 2$#'
-			identifier: phpDoc.parseError
+			message: '#^Variable \$contextFactory in PHPDoc tag @var does not exist\.$#'
+			identifier: varTag.variableNotFound
 			count: 1
 			path: concrete/controllers/backend/tasks.php
 
@@ -531,6 +507,12 @@ parameters:
 			path: concrete/controllers/dialog/board/custom_slot.php
 
 		-
+			message: '#^If condition is always true\.$#'
+			identifier: if.alwaysTrue
+			count: 1
+			path: concrete/controllers/dialog/board/custom_slot.php
+
+		-
 			message: '#^Offset ''collection'' does not exist on bool\|float\|int\|string\.$#'
 			identifier: offsetAccess.notFound
 			count: 1
@@ -550,12 +532,6 @@ parameters:
 
 		-
 			message: '#^PHPDoc tag @param has invalid value \(SlotTemplate\[\]\)\: Unexpected token "\\n     \* ", expected variable at offset 32 on line 2$#'
-			identifier: phpDoc.parseError
-			count: 1
-			path: concrete/controllers/dialog/board/custom_slot.php
-
-		-
-			message: '#^PHPDoc tag @var has invalid value \(\$instance Instance\)\: Unexpected token "\$instance", expected type at offset 24 on line 2$#'
 			identifier: phpDoc.parseError
 			count: 1
 			path: concrete/controllers/dialog/board/custom_slot.php
@@ -613,12 +589,6 @@ parameters:
 			identifier: property.notFound
 			count: 5
 			path: concrete/controllers/dialog/event/delete_occurrence.php
-
-		-
-			message: '#^PHPDoc tag @var has invalid value \(\$service CalendarService\)\: Unexpected token "\$service", expected type at offset 24 on line 2$#'
-			identifier: phpDoc.parseError
-			count: 1
-			path: concrete/controllers/dialog/event/duplicate.php
 
 		-
 			message: '#^Variable \$month might not be defined\.$#'
@@ -723,12 +693,6 @@ parameters:
 			path: concrete/controllers/dialog/express/association/reorder.php
 
 		-
-			message: '#^PHPDoc tag @var has invalid value \(\$handler ManySaveHandlerInterface\)\: Unexpected token "\$handler", expected type at offset 28 on line 2$#'
-			identifier: phpDoc.parseError
-			count: 1
-			path: concrete/controllers/dialog/express/association/reorder.php
-
-		-
 			message: '#^Access to an undefined property Concrete\\Controller\\Dialog\\Express\\Preset\\Edit\:\:\$exEntityID\.$#'
 			identifier: property.notFound
 			count: 1
@@ -773,12 +737,6 @@ parameters:
 		-
 			message: '#^Call to an undefined method Concrete\\Core\\Attribute\\Category\\CategoryInterface\:\:getByID\(\)\.$#'
 			identifier: method.notFound
-			count: 1
-			path: concrete/controllers/dialog/file/bulk/properties.php
-
-		-
-			message: '#^PHPDoc tag @var has invalid value \(\$response Response\)\: Unexpected token "\$response", expected type at offset 36 on line 2$#'
-			identifier: phpDoc.parseError
 			count: 1
 			path: concrete/controllers/dialog/file/bulk/properties.php
 
@@ -839,12 +797,6 @@ parameters:
 		-
 			message: '#^Access to an undefined property Concrete\\Controller\\Dialog\\File\\Properties\:\:\$serializer\.$#'
 			identifier: property.notFound
-			count: 1
-			path: concrete/controllers/dialog/file/properties.php
-
-		-
-			message: '#^PHPDoc tag @var has invalid value \(\$response Response\)\: Unexpected token "\$response", expected type at offset 36 on line 2$#'
-			identifier: phpDoc.parseError
 			count: 1
 			path: concrete/controllers/dialog/file/properties.php
 
@@ -939,20 +891,8 @@ parameters:
 			path: concrete/controllers/dialog/file/versions.php
 
 		-
-			message: '#^Call to an undefined method Concrete\\Core\\Block\\BlockController\:\:getCalendar\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: concrete/controllers/dialog/frontend/event.php
-
-		-
 			message: '#^Negated boolean expression is always false\.$#'
 			identifier: booleanNot.alwaysFalse
-			count: 1
-			path: concrete/controllers/dialog/frontend/event.php
-
-		-
-			message: '#^PHPDoc tag @var has invalid value \(\$controller Controller\)\: Unexpected token "\$controller", expected type at offset 24 on line 2$#'
-			identifier: phpDoc.parseError
 			count: 1
 			path: concrete/controllers/dialog/frontend/event.php
 
@@ -1119,12 +1059,6 @@ parameters:
 			path: concrete/controllers/dialog/page/bulk/properties.php
 
 		-
-			message: '#^PHPDoc tag @var has invalid value \(\$response Response\)\: Unexpected token "\$response", expected type at offset 36 on line 2$#'
-			identifier: phpDoc.parseError
-			count: 1
-			path: concrete/controllers/dialog/page/bulk/properties.php
-
-		-
 			message: '#^Parameter \#1 \$cID of static method Concrete\\Core\\Page\\Page\:\:getByID\(\) expects int, string given\.$#'
 			identifier: argument.type
 			count: 1
@@ -1153,12 +1087,6 @@ parameters:
 			identifier: booleanNot.alwaysFalse
 			count: 1
 			path: concrete/controllers/dialog/page/drag_request.php
-
-		-
-			message: '#^PHPDoc tag @var has invalid value \(\$sanitizer SanitizeService\)\: Unexpected token "\$sanitizer", expected type at offset 9 on line 1$#'
-			identifier: phpDoc.parseError
-			count: 1
-			path: concrete/controllers/dialog/page/sitemap_selector.php
 
 		-
 			message: '#^If condition is always true\.$#'
@@ -1241,12 +1169,6 @@ parameters:
 		-
 			message: '#^Negated boolean expression is always false\.$#'
 			identifier: booleanNot.alwaysFalse
-			count: 1
-			path: concrete/controllers/dialog/site_type/attributes.php
-
-		-
-			message: '#^PHPDoc tag @var has invalid value \(\$response Response\)\: Unexpected token "\$response", expected type at offset 36 on line 2$#'
-			identifier: phpDoc.parseError
 			count: 1
 			path: concrete/controllers/dialog/site_type/attributes.php
 
@@ -1359,12 +1281,6 @@ parameters:
 			path: concrete/controllers/dialog/type/attributes.php
 
 		-
-			message: '#^PHPDoc tag @var has invalid value \(\$response Response\)\: Unexpected token "\$response", expected type at offset 36 on line 2$#'
-			identifier: phpDoc.parseError
-			count: 1
-			path: concrete/controllers/dialog/type/attributes.php
-
-		-
 			message: '#^Parameter \#2 \$default of method Symfony\\Component\\HttpFoundation\\InputBag\:\:get\(\) expects bool\|float\|int\|string\|null, array given\.$#'
 			identifier: argument.type
 			count: 2
@@ -1407,12 +1323,6 @@ parameters:
 			path: concrete/controllers/dialog/user/attributes.php
 
 		-
-			message: '#^PHPDoc tag @var has invalid value \(\$response Response\)\: Unexpected token "\$response", expected type at offset 36 on line 2$#'
-			identifier: phpDoc.parseError
-			count: 1
-			path: concrete/controllers/dialog/user/attributes.php
-
-		-
 			message: '#^Parameter \#2 \$default of method Symfony\\Component\\HttpFoundation\\InputBag\:\:get\(\) expects bool\|float\|int\|string\|null, array given\.$#'
 			identifier: argument.type
 			count: 2
@@ -1443,12 +1353,6 @@ parameters:
 			path: concrete/controllers/dialog/user/bulk/properties.php
 
 		-
-			message: '#^PHPDoc tag @var has invalid value \(\$response Response\)\: Unexpected token "\$response", expected type at offset 36 on line 2$#'
-			identifier: phpDoc.parseError
-			count: 1
-			path: concrete/controllers/dialog/user/bulk/properties.php
-
-		-
 			message: '#^Parameter \#2 \$default of method Symfony\\Component\\HttpFoundation\\InputBag\:\:get\(\) expects bool\|float\|int\|string\|null, array given\.$#'
 			identifier: argument.type
 			count: 2
@@ -1473,14 +1377,14 @@ parameters:
 			path: concrete/controllers/element/attribute/key_list.php
 
 		-
-			message: '#^PHPDoc tag @var has invalid value \(\$configuration CalendarEventConfiguration\)\: Unexpected token "\$configuration", expected type at offset 28 on line 2$#'
-			identifier: phpDoc.parseError
+			message: '#^If condition is always true\.$#'
+			identifier: if.alwaysTrue
 			count: 1
 			path: concrete/controllers/element/dashboard/boards/configuration/calendar_event.php
 
 		-
-			message: '#^PHPDoc tag @var has invalid value \(\$configuration PageConfiguration\)\: Unexpected token "\$configuration", expected type at offset 28 on line 2$#'
-			identifier: phpDoc.parseError
+			message: '#^If condition is always true\.$#'
+			identifier: if.alwaysTrue
 			count: 1
 			path: concrete/controllers/element/dashboard/boards/configuration/page.php
 
@@ -1531,12 +1435,6 @@ parameters:
 			identifier: isset.property
 			count: 1
 			path: concrete/controllers/element/express/search/search.php
-
-		-
-			message: '#^PHPDoc tag @var has invalid value \(\$thumbnail Version\)\: Unexpected token "\$thumbnail", expected type at offset 16 on line 2$#'
-			identifier: phpDoc.parseError
-			count: 1
-			path: concrete/controllers/element/files/edit/thumbnail_editor/concrete_thumbnail_editor.php
 
 		-
 			message: '#^Property Concrete\\Controller\\Element\\Files\\Search\\Menu\:\:\$query \(Concrete\\Core\\Entity\\Search\\Query\) in isset\(\) is not nullable\.$#'
@@ -1721,12 +1619,6 @@ parameters:
 		-
 			message: '#^Negated boolean expression is always true\.$#'
 			identifier: booleanNot.alwaysTrue
-			count: 1
-			path: concrete/controllers/install.php
-
-		-
-			message: '#^PHPDoc tag @var has invalid value \(\$options InstallerOptions\)\: Unexpected token "\$options", expected type at offset 28 on line 2$#'
-			identifier: phpDoc.parseError
 			count: 1
 			path: concrete/controllers/install.php
 
@@ -2253,12 +2145,6 @@ parameters:
 			path: concrete/controllers/single_page/account/avatar.php
 
 		-
-			message: '#^PHPDoc tag @var has invalid value \(\$instanceFactory AvatarCropperInstanceFactory\)\: Unexpected token "\$instanceFactory", expected type at offset 20 on line 2$#'
-			identifier: phpDoc.parseError
-			count: 1
-			path: concrete/controllers/single_page/account/avatar.php
-
-		-
 			message: '#^Ternary operator condition is always true\.$#'
 			identifier: ternary.alwaysTrue
 			count: 1
@@ -2451,12 +2337,6 @@ parameters:
 			path: concrete/controllers/single_page/dashboard/boards/data_sources.php
 
 		-
-			message: '#^PHPDoc tag @var has invalid value \(\$dataSource DataSource\)\: Unexpected token "\$dataSource", expected type at offset 28 on line 2$#'
-			identifier: phpDoc.parseError
-			count: 2
-			path: concrete/controllers/single_page/dashboard/boards/data_sources.php
-
-		-
 			message: '#^Call to an undefined method Concrete\\Core\\Entity\\Board\\Designer\\CustomElement\:\:getItems\(\)\.$#'
 			identifier: method.notFound
 			count: 1
@@ -2619,12 +2499,6 @@ parameters:
 			path: concrete/controllers/single_page/dashboard/boards/instances/details.php
 
 		-
-			message: '#^PHPDoc tag @var has invalid value \(\$instance Instance\)\: Unexpected token "\$instance", expected type at offset 24 on line 2$#'
-			identifier: phpDoc.parseError
-			count: 1
-			path: concrete/controllers/single_page/dashboard/boards/instances/details.php
-
-		-
 			message: '#^Call to an undefined method Doctrine\\ORM\\EntityRepository\<Concrete\\Core\\Entity\\Board\\Instance\>\:\:findOneByBoardInstanceID\(\)\.$#'
 			identifier: method.notFound
 			count: 1
@@ -2739,20 +2613,8 @@ parameters:
 			path: concrete/controllers/single_page/dashboard/calendar/add.php
 
 		-
-			message: '#^PHPDoc tag @var has invalid value \(\$preferences Preferences\)\: Unexpected token "\$preferences", expected type at offset 20 on line 2$#'
-			identifier: phpDoc.parseError
-			count: 1
-			path: concrete/controllers/single_page/dashboard/calendar/event_list.php
-
-		-
 			message: '#^Loose comparison using \=\= between 0\|0\.0\|''0'' and ''0'' will always evaluate to true\.$#'
 			identifier: equal.alwaysTrue
-			count: 1
-			path: concrete/controllers/single_page/dashboard/calendar/events.php
-
-		-
-			message: '#^PHPDoc tag @var has invalid value \(\$preferences Preferences\)\: Unexpected token "\$preferences", expected type at offset 20 on line 2$#'
-			identifier: phpDoc.parseError
 			count: 1
 			path: concrete/controllers/single_page/dashboard/calendar/events.php
 
@@ -3141,21 +3003,9 @@ parameters:
 			path: concrete/controllers/single_page/dashboard/system/boards/summary_templates.php
 
 		-
-			message: '#^PHPDoc tag @var has invalid value \(\$preferences Preferences\)\: Unexpected token "\$preferences", expected type at offset 20 on line 2$#'
-			identifier: phpDoc.parseError
-			count: 1
-			path: concrete/controllers/single_page/dashboard/system/calendar/colors.php
-
-		-
-			message: '#^PHPDoc tag @var has invalid value \(\$db Connection\)\: Unexpected token "\$db", expected type at offset 20 on line 2$#'
-			identifier: phpDoc.parseError
-			count: 1
-			path: concrete/controllers/single_page/dashboard/system/calendar/import.php
-
-		-
-			message: '#^PHPDoc tag @var has invalid value \(\$db Connection\)\: Unexpected token "\$db", expected type at offset 24 on line 2$#'
-			identifier: phpDoc.parseError
-			count: 1
+			message: '#^Call to an undefined method Doctrine\\DBAL\\Connection\:\:tableExists\(\)\.$#'
+			identifier: method.notFound
+			count: 2
 			path: concrete/controllers/single_page/dashboard/system/calendar/import.php
 
 		-
@@ -3261,12 +3111,6 @@ parameters:
 			path: concrete/controllers/single_page/dashboard/system/express/entities.php
 
 		-
-			message: '#^PHPDoc tag @var has invalid value \(\$indexer ExpressSearchIndexer\)\: Unexpected token "\$indexer", expected type at offset 24 on line 2$#'
-			identifier: phpDoc.parseError
-			count: 1
-			path: concrete/controllers/single_page/dashboard/system/express/entities.php
-
-		-
 			message: '#^Variable \$entity might not be defined\.$#'
 			identifier: variable.undefined
 			count: 1
@@ -3291,32 +3135,14 @@ parameters:
 			path: concrete/controllers/single_page/dashboard/system/express/entities/attributes.php
 
 		-
-			message: '#^PHPDoc tag @var has invalid value \(\$entity Entity\)\: Unexpected token "\$entity", expected type at offset 20 on line 2$#'
-			identifier: phpDoc.parseError
-			count: 1
-			path: concrete/controllers/single_page/dashboard/system/express/entities/customize_search.php
-
-		-
-			message: '#^PHPDoc tag @var has invalid value \(\$provider SearchProvider\)\: Unexpected token "\$provider", expected type at offset 24 on line 2$#'
-			identifier: phpDoc.parseError
-			count: 1
-			path: concrete/controllers/single_page/dashboard/system/express/entities/customize_search.php
-
-		-
-			message: '#^PHPDoc tag @var has invalid value \(\$provider \\Concrete\\Core\\Express\\Search\\SearchProvider\)\: Unexpected token "\$provider", expected type at offset 28 on line 2$#'
-			identifier: phpDoc.parseError
+			message: '#^Call to function is_object\(\) with Concrete\\Core\\Entity\\Express\\Entity will always evaluate to true\.$#'
+			identifier: function.alreadyNarrowedType
 			count: 1
 			path: concrete/controllers/single_page/dashboard/system/express/entities/customize_search.php
 
 		-
 			message: '#^Method Doctrine\\Persistence\\ObjectManager\:\:flush\(\) invoked with 1 parameter, 0 required\.$#'
 			identifier: arguments.count
-			count: 1
-			path: concrete/controllers/single_page/dashboard/system/express/entities/forms.php
-
-		-
-			message: '#^PHPDoc tag @var has invalid value \(\$entity Entity\)\: Unexpected token "\$entity", expected type at offset 24 on line 2$#'
-			identifier: phpDoc.parseError
 			count: 1
 			path: concrete/controllers/single_page/dashboard/system/express/entities/forms.php
 
@@ -3519,14 +3345,14 @@ parameters:
 			path: concrete/controllers/single_page/dashboard/system/notification/alerts.php
 
 		-
-			message: '#^PHPDoc tag @var has invalid value \(\$subscriber Subscriber\)\: Unexpected token "\$subscriber", expected type at offset 20 on line 2$#'
-			identifier: phpDoc.parseError
+			message: '#^Variable \$publisherPrivateKey might not be defined\.$#'
+			identifier: variable.undefined
 			count: 1
 			path: concrete/controllers/single_page/dashboard/system/notification/events.php
 
 		-
-			message: '#^Variable \$publisherPrivateKey might not be defined\.$#'
-			identifier: variable.undefined
+			message: '#^Variable \$subscriber in PHPDoc tag @var does not match assigned variable \$event\.$#'
+			identifier: varTag.differentVariable
 			count: 1
 			path: concrete/controllers/single_page/dashboard/system/notification/events.php
 
@@ -4149,18 +3975,6 @@ parameters:
 			path: concrete/controllers/single_page/dashboard/users/search.php
 
 		-
-			message: '#^Call to an undefined method Concrete\\Core\\Health\\Grade\\GradeInterface\:\:hasPassed\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: concrete/controllers/single_page/dashboard/welcome/health.php
-
-		-
-			message: '#^PHPDoc tag @var has invalid value \(\$grade PassFailGrade\)\: Unexpected token "\$grade", expected type at offset 32 on line 2$#'
-			identifier: phpDoc.parseError
-			count: 1
-			path: concrete/controllers/single_page/dashboard/welcome/health.php
-
-		-
 			message: '#^Variable \$productionStatusClass might not be defined\.$#'
 			identifier: variable.undefined
 			count: 1
@@ -4509,14 +4323,8 @@ parameters:
 			path: concrete/src/Api/Controller/Express.php
 
 		-
-			message: '#^PHPDoc tag @var has invalid value \(\$express ObjectManager\)\: Unexpected token "\$express", expected type at offset 20 on line 2$#'
-			identifier: phpDoc.parseError
-			count: 2
-			path: concrete/src/Api/Controller/Express.php
-
-		-
-			message: '#^PHPDoc tag @var has invalid value \(\$getNewCursor string\)\: Unexpected token "\$getNewCursor", expected type at offset 28 on line 2$#'
-			identifier: phpDoc.parseError
+			message: '#^Negated boolean expression is always false\.$#'
+			identifier: booleanNot.alwaysFalse
 			count: 1
 			path: concrete/src/Api/Controller/Express.php
 
@@ -4563,24 +4371,6 @@ parameters:
 			path: concrete/src/Api/Controller/Files.php
 
 		-
-			message: '#^PHPDoc tag @var has invalid value \(\$getNewCursor string\)\: Unexpected token "\$getNewCursor", expected type at offset 28 on line 2$#'
-			identifier: phpDoc.parseError
-			count: 1
-			path: concrete/src/Api/Controller/Files.php
-
-		-
-			message: '#^PHPDoc tag @var has invalid value \(\$importOptions ImportOptions\)\: Unexpected token "\$importOptions", expected type at offset 59 on line 3$#'
-			identifier: phpDoc.parseError
-			count: 1
-			path: concrete/src/Api/Controller/Files.php
-
-		-
-			message: '#^PHPDoc tag @var has invalid value \(\$importer FileImporter\)\: Unexpected token "\$importer", expected type at offset 20 on line 2$#'
-			identifier: phpDoc.parseError
-			count: 1
-			path: concrete/src/Api/Controller/Files.php
-
-		-
 			message: '#^Parameter \#1 \$column of method Concrete\\Core\\Search\\ItemList\\ItemList\:\:sortBySearchColumn\(\) expects Concrete\\Core\\Search\\Column\\Column, Concrete\\Core\\Search\\Column\\PagerColumnInterface given\.$#'
 			identifier: argument.type
 			count: 1
@@ -4599,6 +4389,12 @@ parameters:
 			path: concrete/src/Api/Controller/Files.php
 
 		-
+			message: '#^Variable \$importOptions in PHPDoc tag @var does not exist\.$#'
+			identifier: varTag.variableNotFound
+			count: 1
+			path: concrete/src/Api/Controller/Files.php
+
+		-
 			message: '#^Call to an undefined method League\\Fractal\\Resource\\ResourceAbstract\:\:setCursor\(\)\.$#'
 			identifier: method.notFound
 			count: 1
@@ -4607,12 +4403,6 @@ parameters:
 		-
 			message: '#^Negated boolean expression is always false\.$#'
 			identifier: booleanNot.alwaysFalse
-			count: 1
-			path: concrete/src/Api/Controller/Groups.php
-
-		-
-			message: '#^PHPDoc tag @var has invalid value \(\$getNewCursor string\)\: Unexpected token "\$getNewCursor", expected type at offset 28 on line 2$#'
-			identifier: phpDoc.parseError
 			count: 1
 			path: concrete/src/Api/Controller/Groups.php
 
@@ -4653,12 +4443,6 @@ parameters:
 			path: concrete/src/Api/Controller/Pages.php
 
 		-
-			message: '#^PHPDoc tag @var has invalid value \(\$getNewCursor string\)\: Unexpected token "\$getNewCursor", expected type at offset 28 on line 2$#'
-			identifier: phpDoc.parseError
-			count: 1
-			path: concrete/src/Api/Controller/Pages.php
-
-		-
 			message: '#^Parameter \#1 \$column of method Concrete\\Core\\Search\\ItemList\\ItemList\:\:sortBySearchColumn\(\) expects Concrete\\Core\\Search\\Column\\Column, Concrete\\Core\\Search\\Column\\PagerColumnInterface given\.$#'
 			identifier: argument.type
 			count: 1
@@ -4686,18 +4470,6 @@ parameters:
 			message: '#^Call to an undefined method League\\Fractal\\Resource\\ResourceAbstract\:\:setCursor\(\)\.$#'
 			identifier: method.notFound
 			count: 1
-			path: concrete/src/Api/Controller/Users.php
-
-		-
-			message: '#^PHPDoc tag @var has invalid value \(\$getNewCursor string\)\: Unexpected token "\$getNewCursor", expected type at offset 28 on line 2$#'
-			identifier: phpDoc.parseError
-			count: 1
-			path: concrete/src/Api/Controller/Users.php
-
-		-
-			message: '#^PHPDoc tag @var has invalid value \(\$repository UserInfoRepository\)\: Unexpected token "\$repository", expected type at offset 20 on line 2$#'
-			identifier: phpDoc.parseError
-			count: 3
 			path: concrete/src/Api/Controller/Users.php
 
 		-
@@ -4743,12 +4515,6 @@ parameters:
 			path: concrete/src/Api/Fractal/Transformer/AreaContentTransformer.php
 
 		-
-			message: '#^PHPDoc tag @var has invalid value \(\$db Connection\)\: Unexpected token "\$db", expected type at offset 20 on line 2$#'
-			identifier: phpDoc.parseError
-			count: 1
-			path: concrete/src/Api/Fractal/Transformer/AreaTransformer.php
-
-		-
 			message: '#^Left side of && is always true\.$#'
 			identifier: booleanAnd.leftAlwaysTrue
 			count: 1
@@ -4791,14 +4557,14 @@ parameters:
 			path: concrete/src/Api/Fractal/Transformer/ExpressEntryTransformer.php
 
 		-
-			message: '#^PHPDoc tag @var has invalid value \(\$entry Entry\)\: Unexpected token "\$entry", expected type at offset 20 on line 2$#'
-			identifier: phpDoc.parseError
+			message: '#^Ternary operator condition is always true\.$#'
+			identifier: ternary.alwaysTrue
 			count: 1
 			path: concrete/src/Api/Fractal/Transformer/ExpressEntryTransformer.php
 
 		-
-			message: '#^Ternary operator condition is always true\.$#'
-			identifier: ternary.alwaysTrue
+			message: '#^Variable \$entry in PHPDoc tag @var does not match any variable in the foreach loop\: \$attribute$#'
+			identifier: varTag.differentVariable
 			count: 1
 			path: concrete/src/Api/Fractal/Transformer/ExpressEntryTransformer.php
 
@@ -4823,12 +4589,6 @@ parameters:
 		-
 			message: '#^If condition is always true\.$#'
 			identifier: if.alwaysTrue
-			count: 1
-			path: concrete/src/Api/Fractal/Transformer/PageTransformer.php
-
-		-
-			message: '#^PHPDoc tag @var has invalid value \(\$db Connection\)\: Unexpected token "\$db", expected type at offset 20 on line 2$#'
-			identifier: phpDoc.parseError
 			count: 1
 			path: concrete/src/Api/Fractal/Transformer/PageTransformer.php
 
@@ -5619,12 +5379,6 @@ parameters:
 			path: concrete/src/Api/OAuth/Command/UpdateOAuthClientCommandHandler.php
 
 		-
-			message: '#^PHPDoc tag @var has invalid value \(\$client Client\)\: Unexpected token "\$client", expected type at offset 20 on line 2$#'
-			identifier: phpDoc.parseError
-			count: 1
-			path: concrete/src/Api/OAuth/Command/UpdateOAuthClientCommandHandler.php
-
-		-
 			message: '#^Call to an undefined method Concrete\\Core\\User\\Exception\\UserException\:\:getMessage\(\)\.$#'
 			identifier: method.notFound
 			count: 1
@@ -6123,16 +5877,16 @@ parameters:
 			path: concrete/src/Application/UserInterface/Menu/Item/Item.php
 
 		-
-			message: '#^PHPDoc tag @var has invalid value \(\$elementController OptionsFormControllerInterface\)\: Unexpected token "\$elementController", expected type at offset 20 on line 2$#'
-			identifier: phpDoc.parseError
+			message: '#^Call to an undefined method Concrete\\Core\\Application\\UserInterface\\OptionsForm\\OptionsFormControllerInterface\:\:render\(\)\.$#'
+			identifier: method.notFound
 			count: 1
 			path: concrete/src/Application/UserInterface/OptionsForm/OptionsForm.php
 
 		-
-			message: '#^PHPDoc tag @var has invalid value \(\$skeleton Skeleton\)\: Unexpected token "\$skeleton", expected type at offset 20 on line 2$#'
-			identifier: phpDoc.parseError
+			message: '#^Call to an undefined method Concrete\\Core\\Application\\UserInterface\\OptionsForm\\OptionsFormControllerInterface\:\:setPackageHandle\(\)\.$#'
+			identifier: method.notFound
 			count: 1
-			path: concrete/src/Application/UserInterface/Sitemap/SkeletonSitemapProvider.php
+			path: concrete/src/Application/UserInterface/OptionsForm/OptionsForm.php
 
 		-
 			message: '#^Call to function is_array\(\) with non\-empty\-list\<string\> will always evaluate to true\.$#'
@@ -6903,26 +6657,14 @@ parameters:
 			path: concrete/src/Attribute/Category/SearchIndexer/StandardSearchIndexer.php
 
 		-
-			message: '#^Call to an undefined method Concrete\\Core\\Attribute\\Category\\CategoryInterface\:\:getIndexedSearchTable\(\)\.$#'
-			identifier: method.notFound
-			count: 2
-			path: concrete/src/Attribute/Category/SearchIndexer/StandardSearchIndexer.php
-
-		-
-			message: '#^Call to an undefined method Concrete\\Core\\Attribute\\Category\\CategoryInterface\:\:getSearchIndexFieldDefinition\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: concrete/src/Attribute/Category/SearchIndexer/StandardSearchIndexer.php
-
-		-
 			message: '#^Call to an undefined method Concrete\\Core\\Attribute\\Key\\SearchIndexer\\SearchIndexerInterface\:\:refreshSearchIndexKeyColumns\(\)\.$#'
 			identifier: method.notFound
 			count: 1
 			path: concrete/src/Attribute/Category/SearchIndexer/StandardSearchIndexer.php
 
 		-
-			message: '#^PHPDoc tag @var has invalid value \(\$category StandardSearchIndexerInterface\)\: Unexpected token "\$category", expected type at offset 24 on line 2$#'
-			identifier: phpDoc.parseError
+			message: '#^PHPDoc tag @var with type Concrete\\Core\\Attribute\\Category\\SearchIndexer\\StandardSearchIndexerInterface is not subtype of native type Concrete\\Core\\Attribute\\Category\\CategoryInterface\.$#'
+			identifier: varTag.nativeType
 			count: 1
 			path: concrete/src/Attribute/Category/SearchIndexer/StandardSearchIndexer.php
 
@@ -7185,20 +6927,8 @@ parameters:
 			path: concrete/src/Attribute/Key/Component/KeySelector/ControllerTrait.php
 
 		-
-			message: '#^PHPDoc tag @var has invalid value \(\$category CategoryInterface\)\: Unexpected token "\$category", expected type at offset 24 on line 2$#'
-			identifier: phpDoc.parseError
-			count: 1
-			path: concrete/src/Attribute/Key/Factory.php
-
-		-
 			message: '#^Access to an undefined property Concrete\\Core\\Attribute\\Key\\Key\:\:\$searchIndexFieldDefinition\.$#'
 			identifier: property.notFound
-			count: 1
-			path: concrete/src/Attribute/Key/Key.php
-
-		-
-			message: '#^Call to an undefined method Concrete\\Core\\Attribute\\AttributeValueInterface\:\:setGenericValue\(\)\.$#'
-			identifier: method.notFound
 			count: 1
 			path: concrete/src/Attribute/Key/Key.php
 
@@ -7221,14 +6951,14 @@ parameters:
 			path: concrete/src/Attribute/Key/Key.php
 
 		-
-			message: '#^PHPDoc tag @var for variable \$db contains unknown class Concrete\\Core\\Database\\Connection\.$#'
-			identifier: class.notFound
+			message: '#^Instanceof between Concrete\\Core\\Entity\\Attribute\\Value\\Value\\AbstractValue and Concrete\\Core\\Attribute\\Value\\EmptyRequestAttributeValue will always evaluate to false\.$#'
+			identifier: instanceof.alwaysFalse
 			count: 1
 			path: concrete/src/Attribute/Key/Key.php
 
 		-
-			message: '#^PHPDoc tag @var has invalid value \(\$value AbstractValue\)\: Unexpected token "\$value", expected type at offset 20 on line 2$#'
-			identifier: phpDoc.parseError
+			message: '#^PHPDoc tag @var for variable \$db contains unknown class Concrete\\Core\\Database\\Connection\.$#'
+			identifier: class.notFound
 			count: 1
 			path: concrete/src/Attribute/Key/Key.php
 
@@ -7563,18 +7293,6 @@ parameters:
 			path: concrete/src/Backup/ContentImporter/Importer/Routine/AbstractPageContentRoutine.php
 
 		-
-			message: '#^Call to an undefined method Concrete\\Core\\Block\\BlockController\:\:getContainerInstanceObject\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: concrete/src/Backup/ContentImporter/Importer/Routine/AbstractPageContentRoutine.php
-
-		-
-			message: '#^PHPDoc tag @var has invalid value \(\$btc ContainerBlockController\)\: Unexpected token "\$btc", expected type at offset 48 on line 2$#'
-			identifier: phpDoc.parseError
-			count: 1
-			path: concrete/src/Backup/ContentImporter/Importer/Routine/AbstractPageContentRoutine.php
-
-		-
 			message: '#^Parameter \#1 \$array \(list\<SimpleXMLElement\>\) of array_values is already a list, call has no effect\.$#'
 			identifier: arrayValues.list
 			count: 1
@@ -7623,12 +7341,6 @@ parameters:
 			path: concrete/src/Backup/ContentImporter/Importer/Routine/ImportBoardTemplatesRoutine.php
 
 		-
-			message: '#^PHPDoc tag @var has invalid value \(\$configuration Configuration\)\: Unexpected token "\$configuration", expected type at offset 44 on line 2$#'
-			identifier: phpDoc.parseError
-			count: 1
-			path: concrete/src/Backup/ContentImporter/Importer/Routine/ImportBoardsRoutine.php
-
-		-
 			message: '#^Variable \$repository might not be defined\.$#'
 			identifier: variable.undefined
 			count: 2
@@ -7659,14 +7371,14 @@ parameters:
 			path: concrete/src/Backup/ContentImporter/Importer/Routine/ImportExpressEntitiesRoutine.php
 
 		-
-			message: '#^PHPDoc tag @var has invalid value \(\$association \\Concrete\\Core\\Entity\\Express\\Association\)\: Unexpected token "\$association", expected type at offset 36 on line 2$#'
-			identifier: phpDoc.parseError
+			message: '#^Call to function is_object\(\) with Concrete\\Core\\Entity\\Express\\Association will always evaluate to true\.$#'
+			identifier: function.alreadyNarrowedType
 			count: 1
 			path: concrete/src/Backup/ContentImporter/Importer/Routine/ImportExpressRelationsRoutine.php
 
 		-
-			message: '#^PHPDoc tag @var has invalid value \(\$entity \\Concrete\\Core\\Entity\\Express\\Entity\)\: Unexpected token "\$entity", expected type at offset 28 on line 2$#'
-			identifier: phpDoc.parseError
+			message: '#^Call to function is_object\(\) with Concrete\\Core\\Entity\\Express\\Entity will always evaluate to true\.$#'
+			identifier: function.alreadyNarrowedType
 			count: 1
 			path: concrete/src/Backup/ContentImporter/Importer/Routine/ImportExpressRelationsRoutine.php
 
@@ -7767,14 +7479,8 @@ parameters:
 			path: concrete/src/Backup/ContentImporter/Importer/Routine/ImportSinglePageStructureRoutine.php
 
 		-
-			message: '#^PHPDoc tag @var has invalid value \(\$site_type Type\)\: Unexpected token "\$site_type", expected type at offset 32 on line 2$#'
-			identifier: phpDoc.parseError
-			count: 1
-			path: concrete/src/Backup/ContentImporter/Importer/Routine/ImportSiteTypeSkeletonsRoutine.php
-
-		-
-			message: '#^PHPDoc tag @var has invalid value \(\$skeleton Skeleton\)\: Unexpected token "\$skeleton", expected type at offset 36 on line 2$#'
-			identifier: phpDoc.parseError
+			message: '#^Call to function is_object\(\) with Concrete\\Core\\Entity\\Site\\Skeleton will always evaluate to true\.$#'
+			identifier: function.alreadyNarrowedType
 			count: 1
 			path: concrete/src/Backup/ContentImporter/Importer/Routine/ImportSiteTypeSkeletonsRoutine.php
 
@@ -8241,12 +7947,6 @@ parameters:
 			path: concrete/src/Block/View/BlockViewTemplate.php
 
 		-
-			message: '#^PHPDoc tag @var has invalid value \(\$locator FileLocator\)\: Unexpected token "\$locator", expected type at offset 20 on line 2$#'
-			identifier: phpDoc.parseError
-			count: 1
-			path: concrete/src/Block/View/BlockViewTemplate.php
-
-		-
 			message: '#^Parameter \#1 \$packageList of method Concrete\\Core\\Block\\View\\BlockViewTemplate\:\:setPackageList\(\) expects static\(Concrete\\Core\\Block\\View\\BlockViewTemplate\), Concrete\\Core\\Package\\PackageList given\.$#'
 			identifier: argument.type
 			count: 2
@@ -8409,18 +8109,6 @@ parameters:
 			path: concrete/src/Board/Instance/Slot/Content/AvailableObjectCollectionFactory.php
 
 		-
-			message: '#^PHPDoc tag @var has invalid value \(\$availableObject AvailableObject\)\: Unexpected token "\$availableObject", expected type at offset 28 on line 2$#'
-			identifier: phpDoc.parseError
-			count: 1
-			path: concrete/src/Board/Instance/Slot/Content/AvailableObjectCollectionFactory.php
-
-		-
-			message: '#^PHPDoc tag @var has invalid value \(\$itemObjectGroup ItemObjectGroup\)\: Unexpected token "\$itemObjectGroup", expected type at offset 28 on line 2$#'
-			identifier: phpDoc.parseError
-			count: 1
-			path: concrete/src/Board/Instance/Slot/Content/AvailableObjectCollectionFactory.php
-
-		-
 			message: '#^Property Concrete\\Core\\Board\\Instance\\Slot\\Content\\ContentRenderer\:\:\$currentPage \(Concrete\\Core\\Page\\Page\) in isset\(\) is not nullable\.$#'
 			identifier: isset.property
 			count: 1
@@ -8521,12 +8209,6 @@ parameters:
 			identifier: property.notFound
 			count: 2
 			path: concrete/src/Board/Instance/Slot/RenderedSlotCollection.php
-
-		-
-			message: '#^PHPDoc tag @var has invalid value \(\$rule InstanceSlotRule\)\: Unexpected token "\$rule", expected type at offset 20 on line 2$#'
-			identifier: phpDoc.parseError
-			count: 1
-			path: concrete/src/Board/Instance/Slot/RenderedSlotCollectionFactory.php
 
 		-
 			message: '#^Class Concrete\\Core\\Board\\Instance\\Slot\\CollectionFactory not found\.$#'
@@ -8733,12 +8415,6 @@ parameters:
 			path: concrete/src/Cache/Page/RedisPageCache.php
 
 		-
-			message: '#^PHPDoc tag @var has invalid value \(\$r CalendarRepository\)\: Unexpected token "\$r", expected type at offset 20 on line 2$#'
-			identifier: phpDoc.parseError
-			count: 2
-			path: concrete/src/Calendar/Calendar/CalendarService.php
-
-		-
 			message: '#^PHPDoc tag @param references unknown parameter\: \$includeInactiveEvents$#'
 			identifier: parameter.notFound
 			count: 1
@@ -8880,12 +8556,6 @@ parameters:
 			message: '#^Call to an undefined method Concrete\\Core\\Entity\\Calendar\\CalendarEventVersionOccurrence\:\:getStart\(\)\.$#'
 			identifier: method.notFound
 			count: 2
-			path: concrete/src/Calendar/Event/Menu/EventOccurrenceMenu.php
-
-		-
-			message: '#^PHPDoc tag @var has invalid value \(\$linkFormatter LinkFormatterInterface\)\: Unexpected token "\$linkFormatter", expected type at offset 20 on line 2$#'
-			identifier: phpDoc.parseError
-			count: 1
 			path: concrete/src/Calendar/Event/Menu/EventOccurrenceMenu.php
 
 		-
@@ -9355,12 +9025,6 @@ parameters:
 			identifier: deadCode.unreachable
 			count: 1
 			path: concrete/src/Console/Command/PhpCodingStyleCommand.php
-
-		-
-			message: '#^PHPDoc tag @var has invalid value \(\$db Connection\)\: Unexpected token "\$db", expected type at offset 20 on line 2$#'
-			identifier: phpDoc.parseError
-			count: 1
-			path: concrete/src/Console/Command/RescanFilesCommand.php
 
 		-
 			message: '#^Parameter \#1 \$name of method Doctrine\\DBAL\\Schema\\AbstractSchemaManager\:\:dropTable\(\) expects string, Doctrine\\DBAL\\Schema\\Table given\.$#'
@@ -10419,22 +10083,10 @@ parameters:
 			path: concrete/src/Entity/Attribute/Value/Value/AbstractValue.php
 
 		-
-			message: '#^PHPDoc tag @var has invalid value \(\$option Entry\)\: Unexpected token "\$option", expected type at offset 20 on line 2$#'
-			identifier: phpDoc.parseError
-			count: 1
-			path: concrete/src/Entity/Attribute/Value/Value/ExpressValue.php
-
-		-
 			message: '#^PHPDoc tag @param references unknown parameter\: \$value$#'
 			identifier: parameter.notFound
 			count: 1
 			path: concrete/src/Entity/Attribute/Value/Value/ImageFileValue.php
-
-		-
-			message: '#^PHPDoc tag @var has invalid value \(\$option SelectValueOption\)\: Unexpected token "\$option", expected type at offset 20 on line 2$#'
-			identifier: phpDoc.parseError
-			count: 1
-			path: concrete/src/Entity/Attribute/Value/Value/SelectValue.php
 
 		-
 			message: '#^Call to an undefined method Concrete\\Core\\Entity\\Automation\\TaskSet\:\:getAttributeSetID\(\)\.$#'
@@ -10587,18 +10239,6 @@ parameters:
 			path: concrete/src/Entity/Board/Template.php
 
 		-
-			message: '#^PHPDoc tag @var has invalid value \(\$manager PermissionsManager\)\: Unexpected token "\$manager", expected type at offset 20 on line 2$#'
-			identifier: phpDoc.parseError
-			count: 1
-			path: concrete/src/Entity/Calendar/Calendar.php
-
-		-
-			message: '#^PHPDoc tag @var has invalid value \(\$preferences Preferences\)\: Unexpected token "\$preferences", expected type at offset 20 on line 2$#'
-			identifier: phpDoc.parseError
-			count: 1
-			path: concrete/src/Entity/Calendar/Calendar.php
-
-		-
 			message: '#^Method Concrete\\Core\\Entity\\Calendar\\CalendarEvent\:\:getAttributeValue\(\) has invalid return type Concrete\\Core\\Entity\\Attribute\\Value\\Value\.$#'
 			identifier: class.notFound
 			count: 1
@@ -10638,12 +10278,6 @@ parameters:
 			message: '#^Negated boolean expression is always false\.$#'
 			identifier: booleanNot.alwaysFalse
 			count: 2
-			path: concrete/src/Entity/Calendar/CalendarEvent.php
-
-		-
-			message: '#^PHPDoc tag @var has invalid value \(\$value AttributeValue\\AbstractValue\)\: Unexpected token "\$value", expected type at offset 28 on line 2$#'
-			identifier: phpDoc.parseError
-			count: 1
 			path: concrete/src/Entity/Calendar/CalendarEvent.php
 
 		-
@@ -10713,24 +10347,6 @@ parameters:
 			path: concrete/src/Entity/Calendar/CalendarEventVersion.php
 
 		-
-			message: '#^PHPDoc tag @var has invalid value \(\$o CalendarEventVersionOccurrence\)\: Unexpected token "\$o", expected type at offset 24 on line 2$#'
-			identifier: phpDoc.parseError
-			count: 1
-			path: concrete/src/Entity/Calendar/CalendarEventVersion.php
-
-		-
-			message: '#^PHPDoc tag @var has invalid value \(\$r CalendarEventVersionRepetition\)\: Unexpected token "\$r", expected type at offset 24 on line 2$#'
-			identifier: phpDoc.parseError
-			count: 1
-			path: concrete/src/Entity/Calendar/CalendarEventVersion.php
-
-		-
-			message: '#^PHPDoc tag @var has invalid value \(\$value AttributeValue\\AbstractValue\)\: Unexpected token "\$value", expected type at offset 28 on line 2$#'
-			identifier: phpDoc.parseError
-			count: 1
-			path: concrete/src/Entity/Calendar/CalendarEventVersion.php
-
-		-
 			message: '#^Method Concrete\\Core\\Entity\\Calendar\\CalendarEventVersionOccurrence\:\:setAttribute\(\) should return Concrete\\Core\\Attribute\\AttributeValueInterface but return statement is missing\.$#'
 			identifier: return.missing
 			count: 1
@@ -10755,8 +10371,14 @@ parameters:
 			path: concrete/src/Entity/Command/Batch.php
 
 		-
-			message: '#^PHPDoc tag @var has invalid value \(\$serializer Serializer\)\: Unexpected token "\$serializer", expected type at offset 20 on line 2$#'
-			identifier: phpDoc.parseError
+			message: '#^Call to method denormalize\(\) on an unknown class Concrete\\Core\\Entity\\Command\\Serializer\.$#'
+			identifier: class.notFound
+			count: 1
+			path: concrete/src/Entity/Command/ScheduledTask.php
+
+		-
+			message: '#^PHPDoc tag @var for variable \$serializer contains unknown class Concrete\\Core\\Entity\\Command\\Serializer\.$#'
+			identifier: class.notFound
 			count: 1
 			path: concrete/src/Entity/Command/ScheduledTask.php
 
@@ -10801,18 +10423,6 @@ parameters:
 			identifier: argument.type
 			count: 1
 			path: concrete/src/Entity/Express/Control/TextControl.php
-
-		-
-			message: '#^Call to an undefined method Concrete\\Core\\Tree\\Node\\Node\:\:getSiteResultsNode\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: concrete/src/Entity/Express/Entity.php
-
-		-
-			message: '#^PHPDoc tag @var has invalid value \(\$node ExpressEntryResults\)\: Unexpected token "\$node", expected type at offset 24 on line 2$#'
-			identifier: phpDoc.parseError
-			count: 1
-			path: concrete/src/Entity/Express/Entity.php
 
 		-
 			message: '#^Parameter \#1 \$category of class Concrete\\Core\\Express\\Search\\ColumnSet\\DefaultSet constructor expects Concrete\\Core\\Attribute\\Category\\ExpressCategory, Concrete\\Core\\Attribute\\Category\\CategoryInterface given\.$#'
@@ -10898,12 +10508,6 @@ parameters:
 		-
 			message: '#^PHPDoc tag @return with type mixed is not subtype of native type string\.$#'
 			identifier: return.phpDocType
-			count: 1
-			path: concrete/src/Entity/Express/Entry.php
-
-		-
-			message: '#^PHPDoc tag @var has invalid value \(\$value AttributeValue\\AbstractValue\)\: Unexpected token "\$value", expected type at offset 28 on line 2$#'
-			identifier: phpDoc.parseError
 			count: 1
 			path: concrete/src/Entity/Express/Entry.php
 
@@ -11144,12 +10748,6 @@ parameters:
 		-
 			message: '#^PHPDoc tag @var above a method has no effect\.$#'
 			identifier: varTag.misplaced
-			count: 1
-			path: concrete/src/Entity/File/Version.php
-
-		-
-			message: '#^PHPDoc tag @var has invalid value \(\$value AttributeValue\\AbstractValue\)\: Unexpected token "\$value", expected type at offset 28 on line 2$#'
-			identifier: phpDoc.parseError
 			count: 1
 			path: concrete/src/Entity/File/Version.php
 
@@ -11406,12 +11004,6 @@ parameters:
 			path: concrete/src/Entity/Search/Query.php
 
 		-
-			message: '#^PHPDoc tag @var has invalid value \(\$searchProvider ProviderInterface\)\: Unexpected token "\$searchProvider", expected type at offset 20 on line 2$#'
-			identifier: phpDoc.parseError
-			count: 1
-			path: concrete/src/Entity/Search/Query.php
-
-		-
 			message: '#^Access to an undefined property Concrete\\Core\\Entity\\Search\\SavedSearch\:\:\$id\.$#'
 			identifier: property.notFound
 			count: 1
@@ -11478,12 +11070,6 @@ parameters:
 			path: concrete/src/Entity/Site/Site.php
 
 		-
-			message: '#^PHPDoc tag @var has invalid value \(\$value AttributeValue\\AbstractValue\)\: Unexpected token "\$value", expected type at offset 28 on line 2$#'
-			identifier: phpDoc.parseError
-			count: 1
-			path: concrete/src/Entity/Site/Site.php
-
-		-
 			message: '#^Parameter \#1 \$key of method Concrete\\Core\\Attribute\\Category\\SiteCategory\:\:getAttributeValue\(\) expects Concrete\\Core\\Entity\\Attribute\\Key\\SiteKey, Concrete\\Core\\Attribute\\AttributeKeyInterface given\.$#'
 			identifier: argument.type
 			count: 1
@@ -11528,12 +11114,6 @@ parameters:
 		-
 			message: '#^Method Concrete\\Core\\Entity\\Site\\Skeleton\:\:setAttribute\(\) should return Concrete\\Core\\Entity\\Attribute\\Value\\Value but returns Concrete\\Core\\Attribute\\AttributeValueInterface\|null\.$#'
 			identifier: return.type
-			count: 1
-			path: concrete/src/Entity/Site/Skeleton.php
-
-		-
-			message: '#^PHPDoc tag @var has invalid value \(\$value AttributeValue\\AbstractValue\)\: Unexpected token "\$value", expected type at offset 28 on line 2$#'
-			identifier: phpDoc.parseError
 			count: 1
 			path: concrete/src/Entity/Site/Skeleton.php
 
@@ -11742,32 +11322,20 @@ parameters:
 			path: concrete/src/Error/Provider/ErrorHandlingServiceProvider.php
 
 		-
-			message: '#^PHPDoc tag @var has invalid value \(\$key Key\)\: Unexpected token "\$key", expected type at offset 20 on line 2$#'
-			identifier: phpDoc.parseError
-			count: 1
-			path: concrete/src/Export/Item/AttributeKey.php
-
-		-
-			message: '#^PHPDoc tag @var has invalid value \(\$dataSource ConfiguredDataSource\)\: Unexpected token "\$dataSource", expected type at offset 24 on line 2$#'
-			identifier: phpDoc.parseError
-			count: 1
+			message: '#^Parameter \#2 \$value of method SimpleXMLElement\:\:addAttribute\(\) expects string, int given\.$#'
+			identifier: argument.type
+			count: 2
 			path: concrete/src/Export/Item/Board.php
 
 		-
-			message: '#^PHPDoc tag @var has invalid value \(\$set FieldSet\)\: Unexpected token "\$set", expected type at offset 20 on line 2$#'
-			identifier: phpDoc.parseError
+			message: '#^Variable \$set in PHPDoc tag @var does not exist\.$#'
+			identifier: varTag.variableNotFound
 			count: 1
 			path: concrete/src/Export/Item/Express/Form.php
 
 		-
-			message: '#^PHPDoc tag @var has invalid value \(\$locale SkeletonLocale\)\: Unexpected token "\$locale", expected type at offset 28 on line 2$#'
-			identifier: phpDoc.parseError
-			count: 1
-			path: concrete/src/Export/Item/SiteType.php
-
-		-
-			message: '#^PHPDoc tag @var has invalid value \(\$skeleton Skeleton\)\: Unexpected token "\$skeleton", expected type at offset 20 on line 2$#'
-			identifier: phpDoc.parseError
+			message: '#^Call to function is_object\(\) with Concrete\\Core\\Entity\\Site\\Skeleton will always evaluate to true\.$#'
+			identifier: function.alreadyNarrowedType
 			count: 1
 			path: concrete/src/Export/Item/SiteType.php
 
@@ -11838,12 +11406,6 @@ parameters:
 			path: concrete/src/Express/Controller/StandardController.php
 
 		-
-			message: '#^PHPDoc tag @var has invalid value \(\$notifier StandardNotifier\)\: Unexpected token "\$notifier", expected type at offset 20 on line 2$#'
-			identifier: phpDoc.parseError
-			count: 1
-			path: concrete/src/Express/Controller/StandardController.php
-
-		-
 			message: '#^Method Concrete\\Core\\Express\\Entity\\Cloner\:\:cloneEntityAssociations\(\) should return array\<string, Concrete\\Core\\Entity\\Express\\Entry\\Association\> but returns array\<Concrete\\Core\\Entity\\Express\\Association\>\.$#'
 			identifier: return.type
 			count: 1
@@ -11889,12 +11451,6 @@ parameters:
 			message: '#^Call to an undefined method Doctrine\\DBAL\\Connection\:\:Execute\(\)\.$#'
 			identifier: method.notFound
 			count: 2
-			path: concrete/src/Express/Entry/Listener.php
-
-		-
-			message: '#^PHPDoc tag @var has invalid value \(\$entryAssociation Entry\\Association\)\: Unexpected token "\$entryAssociation", expected type at offset 24 on line 2$#'
-			identifier: phpDoc.parseError
-			count: 1
 			path: concrete/src/Express/Entry/Listener.php
 
 		-
@@ -11982,12 +11538,6 @@ parameters:
 			path: concrete/src/Express/Form/Control/SaveHandler/ManyToOneAssociationSaveHandler.php
 
 		-
-			message: '#^PHPDoc tag @var has invalid value \(\$control AssociationControl\)\: Unexpected token "\$control", expected type at offset 20 on line 2$#'
-			identifier: phpDoc.parseError
-			count: 1
-			path: concrete/src/Express/Form/Control/SaveHandler/OneAssociationSaveHandler.php
-
-		-
 			message: '#^Call to an undefined method Concrete\\Core\\Entity\\Express\\Control\\Control\:\:getAssociation\(\)\.$#'
 			identifier: method.notFound
 			count: 3
@@ -12048,12 +11598,6 @@ parameters:
 			path: concrete/src/Express/Form/Control/Type/SaveHandler/TextControlSaveHandler.php
 
 		-
-			message: '#^PHPDoc tag @var has invalid value \(\$control TextControl\)\: Unexpected token "\$control", expected type at offset 20 on line 2$#'
-			identifier: phpDoc.parseError
-			count: 1
-			path: concrete/src/Express/Form/Control/Type/SaveHandler/TextControlSaveHandler.php
-
-		-
 			message: '#^Call to an undefined method Concrete\\Core\\Entity\\Express\\Control\\Control\:\:getAssociation\(\)\.$#'
 			identifier: method.notFound
 			count: 1
@@ -12086,12 +11630,6 @@ parameters:
 		-
 			message: '#^Call to an undefined method Concrete\\Core\\Entity\\Express\\Control\\Control\:\:getEntrySelectorMode\(\)\.$#'
 			identifier: method.notFound
-			count: 1
-			path: concrete/src/Express/Form/Control/View/AssociationView.php
-
-		-
-			message: '#^PHPDoc tag @var has invalid value \(\$entity Entity\)\: Unexpected token "\$entity", expected type at offset 20 on line 2$#'
-			identifier: phpDoc.parseError
 			count: 1
 			path: concrete/src/Express/Form/Control/View/AssociationView.php
 
@@ -12150,33 +11688,21 @@ parameters:
 			path: concrete/src/Express/Form/Validator/Routine/ValidateUniqueAttributesRoutine.php
 
 		-
-			message: '#^PHPDoc tag @var has invalid value \(\$key ExpressKeyEntity\)\: Unexpected token "\$key", expected type at offset 24 on line 2$#'
-			identifier: phpDoc.parseError
-			count: 1
-			path: concrete/src/Express/Form/Validator/Routine/ValidateUniqueAttributesRoutine.php
-
-		-
 			message: '#^Parameter \#1 \$em of method Doctrine\\ORM\\Id\\AbstractIdGenerator\:\:generate\(\) expects Doctrine\\ORM\\EntityManager, Doctrine\\ORM\\EntityManagerInterface given\.$#'
 			identifier: argument.type
 			count: 1
 			path: concrete/src/Express/ObjectBuilder/FieldsetBuilder.php
 
 		-
-			message: '#^PHPDoc tag @var has invalid value \(\$fieldset FieldsetBuilder\)\: Unexpected token "\$fieldset", expected type at offset 20 on line 2$#'
-			identifier: phpDoc.parseError
+			message: '#^Variable \$fieldset in PHPDoc tag @var does not match assigned variable \$position\.$#'
+			identifier: varTag.differentVariable
 			count: 1
 			path: concrete/src/Express/ObjectBuilder/FormBuilder.php
 
 		-
 			message: '#^If condition is always true\.$#'
 			identifier: if.alwaysTrue
-			count: 1
-			path: concrete/src/Express/ObjectManager.php
-
-		-
-			message: '#^PHPDoc tag @var has invalid value \(\$entry Entry\)\: Unexpected token "\$entry", expected type at offset 24 on line 2$#'
-			identifier: phpDoc.parseError
-			count: 1
+			count: 2
 			path: concrete/src/Express/ObjectManager.php
 
 		-
@@ -12240,8 +11766,8 @@ parameters:
 			path: concrete/src/Express/Search/Field/AssociationField.php
 
 		-
-			message: '#^PHPDoc tag @var has invalid value \(\$list EntryList\)\: Unexpected token "\$list", expected type at offset 85 on line 5$#'
-			identifier: phpDoc.parseError
+			message: '#^PHPDoc tag @var above a method has no effect\.$#'
+			identifier: varTag.misplaced
 			count: 1
 			path: concrete/src/Express/Search/Field/AssociationField.php
 
@@ -13026,15 +12552,9 @@ parameters:
 			path: concrete/src/File/Set/Set.php
 
 		-
-			message: '#^PHPDoc tag @var has invalid value \(\$database \\Concrete\\Core\\Database\\Connection\\Connection\)\: Unexpected token "\$database", expected type at offset 9 on line 1$#'
-			identifier: phpDoc.parseError
-			count: 1
-			path: concrete/src/File/Set/Set.php
-
-		-
 			message: '#^Parameter \#2 \$y of method Doctrine\\DBAL\\Query\\Expression\\ExpressionBuilder\:\:in\(\) expects array\<string\>\|string, array\<int, int\> given\.$#'
 			identifier: argument.type
-			count: 1
+			count: 2
 			path: concrete/src/File/Set/Set.php
 
 		-
@@ -13680,12 +13200,6 @@ parameters:
 			path: concrete/src/Foundation/Runtime/Boot/DefaultBooter.php
 
 		-
-			message: '#^PHPDoc tag @var has invalid value \(\$router Router\)\: Unexpected token "\$router", expected type at offset 20 on line 2$#'
-			identifier: phpDoc.parseError
-			count: 1
-			path: concrete/src/Foundation/Runtime/Boot/DefaultBooter.php
-
-		-
 			message: '#^Static method Symfony\\Component\\HttpFoundation\\Request\:\:setTrustedProxies\(\) invoked with 1 parameter, 2 required\.$#'
 			identifier: arguments.count
 			count: 1
@@ -13836,12 +13350,6 @@ parameters:
 			path: concrete/src/Health/Report/Finding/Message/Formatter/Search/AttributeFormatter.php
 
 		-
-			message: '#^PHPDoc tag @var has invalid value \(\$event CalendarEvent\)\: Unexpected token "\$event", expected type at offset 24 on line 2$#'
-			identifier: phpDoc.parseError
-			count: 1
-			path: concrete/src/Health/Report/Finding/Message/Formatter/Search/AttributeFormatter.php
-
-		-
 			message: '#^Call to an undefined method Concrete\\Core\\Health\\Report\\Finding\\Message\\MessageInterface\:\:getBlockID\(\)\.$#'
 			identifier: method.notFound
 			count: 1
@@ -13890,34 +13398,10 @@ parameters:
 			path: concrete/src/Health/Report/Message/EmailReportMessageHandler.php
 
 		-
-			message: '#^PHPDoc tag @var has invalid value \(\$result Result\)\: Unexpected token "\$result", expected type at offset 20 on line 2$#'
-			identifier: phpDoc.parseError
+			message: '#^Left side of && is always true\.$#'
+			identifier: booleanAnd.leftAlwaysTrue
 			count: 1
 			path: concrete/src/Health/Report/Message/EmailReportMessageHandler.php
-
-		-
-			message: '#^Call to an undefined method Concrete\\Core\\Command\\Task\\Controller\\ControllerInterface\:\:getResultGrader\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: concrete/src/Health/Report/Message/GradeReportMessageHandler.php
-
-		-
-			message: '#^PHPDoc tag @var has invalid value \(\$controller ReportControllerInterface\)\: Unexpected token "\$controller", expected type at offset 20 on line 2$#'
-			identifier: phpDoc.parseError
-			count: 1
-			path: concrete/src/Health/Report/Message/GradeReportMessageHandler.php
-
-		-
-			message: '#^PHPDoc tag @var has invalid value \(\$result Result\)\: Unexpected token "\$result", expected type at offset 20 on line 2$#'
-			identifier: phpDoc.parseError
-			count: 1
-			path: concrete/src/Health/Report/Message/GradeReportMessageHandler.php
-
-		-
-			message: '#^PHPDoc tag @var has invalid value \(\$pagination Pagination\)\: Unexpected token "\$pagination", expected type at offset 20 on line 2$#'
-			identifier: phpDoc.parseError
-			count: 1
-			path: concrete/src/Health/Report/Result/ResultList.php
 
 		-
 			message: '#^Parameter \#2 \$fetchJoinCollection of class Pagerfanta\\Adapter\\DoctrineORMAdapter constructor expects bool, Closure given\.$#'
@@ -13956,19 +13440,7 @@ parameters:
 			path: concrete/src/Health/Report/Test/Suite.php
 
 		-
-			message: '#^Access to undefined constant Concrete\\Core\\Entity\\Health\\Report\\Result\:\:TYPE_TAG\.$#'
-			identifier: classConstant.notFound
-			count: 1
-			path: concrete/src/Health/Report/Test/Test/Search/FaqBlockTest.php
-
-		-
-			message: '#^Call to an undefined method Concrete\\Core\\Entity\\Health\\Report\\Result\:\:getSearchString\(\)\.$#'
-			identifier: method.notFound
-			count: 2
-			path: concrete/src/Health/Report/Test/Test/Search/FaqBlockTest.php
-
-		-
-			message: '#^Call to an undefined method Concrete\\Core\\Entity\\Health\\Report\\Result\:\:getSearchType\(\)\.$#'
+			message: '#^Call to an undefined method Concrete\\Core\\Health\\Report\\Finding\\Message\\Formatter\\FormatterInterface\:\:getLocation\(\)\.$#'
 			identifier: method.notFound
 			count: 1
 			path: concrete/src/Health/Report/Test/Test/Search/FaqBlockTest.php
@@ -13977,58 +13449,10 @@ parameters:
 			message: '#^Call to an undefined method Concrete\\Core\\Health\\Report\\Finding\\Message\\Formatter\\FormatterInterface\:\:getLocation\(\)\.$#'
 			identifier: method.notFound
 			count: 1
-			path: concrete/src/Health/Report/Test/Test/Search/FaqBlockTest.php
-
-		-
-			message: '#^PHPDoc tag @var has invalid value \(\$result SearchResult\)\: Unexpected token "\$result", expected type at offset 20 on line 2$#'
-			identifier: phpDoc.parseError
-			count: 1
-			path: concrete/src/Health/Report/Test/Test/Search/FaqBlockTest.php
-
-		-
-			message: '#^Access to undefined constant Concrete\\Core\\Entity\\Health\\Report\\Result\:\:TYPE_TAG\.$#'
-			identifier: classConstant.notFound
-			count: 1
-			path: concrete/src/Health/Report/Test/Test/Search/GalleryBlockTest.php
-
-		-
-			message: '#^Call to an undefined method Concrete\\Core\\Entity\\Health\\Report\\Result\:\:getSearchString\(\)\.$#'
-			identifier: method.notFound
-			count: 2
-			path: concrete/src/Health/Report/Test/Test/Search/GalleryBlockTest.php
-
-		-
-			message: '#^Call to an undefined method Concrete\\Core\\Entity\\Health\\Report\\Result\:\:getSearchType\(\)\.$#'
-			identifier: method.notFound
-			count: 1
 			path: concrete/src/Health/Report/Test/Test/Search/GalleryBlockTest.php
 
 		-
 			message: '#^Call to an undefined method Concrete\\Core\\Health\\Report\\Finding\\Message\\Formatter\\FormatterInterface\:\:getLocation\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: concrete/src/Health/Report/Test/Test/Search/GalleryBlockTest.php
-
-		-
-			message: '#^PHPDoc tag @var has invalid value \(\$result SearchResult\)\: Unexpected token "\$result", expected type at offset 20 on line 2$#'
-			identifier: phpDoc.parseError
-			count: 1
-			path: concrete/src/Health/Report/Test/Test/Search/GalleryBlockTest.php
-
-		-
-			message: '#^Access to undefined constant Concrete\\Core\\Entity\\Health\\Report\\Result\:\:TYPE_TAG\.$#'
-			identifier: classConstant.notFound
-			count: 1
-			path: concrete/src/Health/Report/Test/Test/Search/ImageSliderBlockTest.php
-
-		-
-			message: '#^Call to an undefined method Concrete\\Core\\Entity\\Health\\Report\\Result\:\:getSearchString\(\)\.$#'
-			identifier: method.notFound
-			count: 2
-			path: concrete/src/Health/Report/Test/Test/Search/ImageSliderBlockTest.php
-
-		-
-			message: '#^Call to an undefined method Concrete\\Core\\Entity\\Health\\Report\\Result\:\:getSearchType\(\)\.$#'
 			identifier: method.notFound
 			count: 1
 			path: concrete/src/Health/Report/Test/Test/Search/ImageSliderBlockTest.php
@@ -14036,42 +13460,6 @@ parameters:
 		-
 			message: '#^Call to an undefined method Concrete\\Core\\Health\\Report\\Finding\\Message\\Formatter\\FormatterInterface\:\:getLocation\(\)\.$#'
 			identifier: method.notFound
-			count: 1
-			path: concrete/src/Health/Report/Test/Test/Search/ImageSliderBlockTest.php
-
-		-
-			message: '#^PHPDoc tag @var has invalid value \(\$result SearchResult\)\: Unexpected token "\$result", expected type at offset 20 on line 2$#'
-			identifier: phpDoc.parseError
-			count: 1
-			path: concrete/src/Health/Report/Test/Test/Search/ImageSliderBlockTest.php
-
-		-
-			message: '#^Access to undefined constant Concrete\\Core\\Entity\\Health\\Report\\Result\:\:TYPE_TAG\.$#'
-			identifier: classConstant.notFound
-			count: 1
-			path: concrete/src/Health/Report/Test/Test/Search/SimpleAttributeContentTest.php
-
-		-
-			message: '#^Call to an undefined method Concrete\\Core\\Entity\\Health\\Report\\Result\:\:getSearchString\(\)\.$#'
-			identifier: method.notFound
-			count: 2
-			path: concrete/src/Health/Report/Test/Test/Search/SimpleAttributeContentTest.php
-
-		-
-			message: '#^Call to an undefined method Concrete\\Core\\Entity\\Health\\Report\\Result\:\:getSearchType\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: concrete/src/Health/Report/Test/Test/Search/SimpleAttributeContentTest.php
-
-		-
-			message: '#^Call to an undefined method Concrete\\Core\\Health\\Report\\Finding\\Message\\Formatter\\FormatterInterface\:\:getLocation\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: concrete/src/Health/Report/Test/Test/Search/SimpleAttributeContentTest.php
-
-		-
-			message: '#^PHPDoc tag @var has invalid value \(\$result SearchResult\)\: Unexpected token "\$result", expected type at offset 20 on line 2$#'
-			identifier: phpDoc.parseError
 			count: 1
 			path: concrete/src/Health/Report/Test/Test/Search/SimpleAttributeContentTest.php
 
@@ -14082,19 +13470,7 @@ parameters:
 			path: concrete/src/Health/Report/Test/Test/Search/SimpleAttributeContentTest.php
 
 		-
-			message: '#^Access to undefined constant Concrete\\Core\\Entity\\Health\\Report\\Result\:\:TYPE_TAG\.$#'
-			identifier: classConstant.notFound
-			count: 1
-			path: concrete/src/Health/Report/Test/Test/Search/SimpleBlockContentTest.php
-
-		-
-			message: '#^Call to an undefined method Concrete\\Core\\Entity\\Health\\Report\\Result\:\:getSearchString\(\)\.$#'
-			identifier: method.notFound
-			count: 2
-			path: concrete/src/Health/Report/Test/Test/Search/SimpleBlockContentTest.php
-
-		-
-			message: '#^Call to an undefined method Concrete\\Core\\Entity\\Health\\Report\\Result\:\:getSearchType\(\)\.$#'
+			message: '#^Call to an undefined method Concrete\\Core\\Health\\Report\\Finding\\Message\\Formatter\\FormatterInterface\:\:getLocation\(\)\.$#'
 			identifier: method.notFound
 			count: 1
 			path: concrete/src/Health/Report/Test/Test/Search/SimpleBlockContentTest.php
@@ -14102,42 +13478,6 @@ parameters:
 		-
 			message: '#^Call to an undefined method Concrete\\Core\\Health\\Report\\Finding\\Message\\Formatter\\FormatterInterface\:\:getLocation\(\)\.$#'
 			identifier: method.notFound
-			count: 1
-			path: concrete/src/Health/Report/Test/Test/Search/SimpleBlockContentTest.php
-
-		-
-			message: '#^PHPDoc tag @var has invalid value \(\$result SearchResult\)\: Unexpected token "\$result", expected type at offset 20 on line 2$#'
-			identifier: phpDoc.parseError
-			count: 1
-			path: concrete/src/Health/Report/Test/Test/Search/SimpleBlockContentTest.php
-
-		-
-			message: '#^Access to undefined constant Concrete\\Core\\Entity\\Health\\Report\\Result\:\:TYPE_TAG\.$#'
-			identifier: classConstant.notFound
-			count: 1
-			path: concrete/src/Health/Report/Test/Test/Search/SurveyBlockTest.php
-
-		-
-			message: '#^Call to an undefined method Concrete\\Core\\Entity\\Health\\Report\\Result\:\:getSearchString\(\)\.$#'
-			identifier: method.notFound
-			count: 2
-			path: concrete/src/Health/Report/Test/Test/Search/SurveyBlockTest.php
-
-		-
-			message: '#^Call to an undefined method Concrete\\Core\\Entity\\Health\\Report\\Result\:\:getSearchType\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: concrete/src/Health/Report/Test/Test/Search/SurveyBlockTest.php
-
-		-
-			message: '#^Call to an undefined method Concrete\\Core\\Health\\Report\\Finding\\Message\\Formatter\\FormatterInterface\:\:getLocation\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: concrete/src/Health/Report/Test/Test/Search/SurveyBlockTest.php
-
-		-
-			message: '#^PHPDoc tag @var has invalid value \(\$result SearchResult\)\: Unexpected token "\$result", expected type at offset 20 on line 2$#'
-			identifier: phpDoc.parseError
 			count: 1
 			path: concrete/src/Health/Report/Test/Test/Search/SurveyBlockTest.php
 
@@ -15425,12 +14765,6 @@ parameters:
 			path: concrete/src/Logging/Configuration/SimpleConfiguration.php
 
 		-
-			message: '#^PHPDoc tag @var has invalid value \(\$object ObjectInterface\)\: Unexpected token "\$object", expected type at offset 24 on line 2$#'
-			identifier: phpDoc.parseError
-			count: 1
-			path: concrete/src/Logging/Entry/Permission/Assignment/Assignment.php
-
-		-
 			message: '#^Method Concrete\\Core\\Logging\\Levels\:\:getLevelDisplayName\(\) should return string but return statement is missing\.$#'
 			identifier: return.missing
 			count: 2
@@ -15483,12 +14817,6 @@ parameters:
 			identifier: argument.type
 			count: 1
 			path: concrete/src/Logging/LoggerFactory.php
-
-		-
-			message: '#^PHPDoc tag @var has invalid value \(\$provider SearchProvider\)\: Unexpected token "\$provider", expected type at offset 9 on line 1$#'
-			identifier: phpDoc.parseError
-			count: 1
-			path: concrete/src/Logging/Search/ColumnSet/ColumnSet.php
 
 		-
 			message: '#^Parameter \#1 \$level of static method Concrete\\Core\\Logging\\Levels\:\:getLevelDisplayName\(\) expects int, string\|null given\.$#'
@@ -16019,12 +15347,6 @@ parameters:
 			path: concrete/src/Marketplace/RemoteItemSet.php
 
 		-
-			message: '#^Call to an undefined method Symfony\\Component\\Messenger\\Stamp\\StampInterface\:\:getBatchId\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: concrete/src/Messenger/HandlersLocator.php
-
-		-
 			message: '#^Call to an undefined method Symfony\\Component\\Messenger\\Stamp\\StampInterface\:\:getOutput\(\)\.$#'
 			identifier: method.notFound
 			count: 1
@@ -16033,12 +15355,6 @@ parameters:
 		-
 			message: '#^Call to an undefined method Symfony\\Component\\Messenger\\Stamp\\StampInterface\:\:getTransportName\(\)\.$#'
 			identifier: method.notFound
-			count: 1
-			path: concrete/src/Messenger/HandlersLocator.php
-
-		-
-			message: '#^PHPDoc tag @var has invalid value \(\$batchStamp BatchStamp\)\: Unexpected token "\$batchStamp", expected type at offset 32 on line 2$#'
-			identifier: phpDoc.parseError
 			count: 1
 			path: concrete/src/Messenger/HandlersLocator.php
 
@@ -16055,24 +15371,6 @@ parameters:
 			path: concrete/src/Messenger/MessengerConsumeResponseFactory.php
 
 		-
-			message: '#^PHPDoc tag @var has invalid value \(\$dispatcher \\Symfony\\Component\\EventDispatcher\\EventDispatcher\)\: Unexpected token "\$dispatcher", expected type at offset 24 on line 2$#'
-			identifier: phpDoc.parseError
-			count: 1
-			path: concrete/src/Messenger/MessengerServiceProvider.php
-
-		-
-			message: '#^PHPDoc tag @var has invalid value \(\$transport TransportInterface\)\: Unexpected token "\$transport", expected type at offset 28 on line 2$#'
-			identifier: phpDoc.parseError
-			count: 1
-			path: concrete/src/Messenger/MessengerServiceProvider.php
-
-		-
-			message: '#^PHPDoc tag @var has invalid value \(\$transport TransportInterface\)\: Unexpected token "\$transport", expected type at offset 32 on line 2$#'
-			identifier: phpDoc.parseError
-			count: 1
-			path: concrete/src/Messenger/MessengerServiceProvider.php
-
-		-
 			message: '#^Call to an undefined method Concrete\\Core\\Page\\Page\:\:setLocale\(\)\.$#'
 			identifier: method.notFound
 			count: 3
@@ -16087,6 +15385,12 @@ parameters:
 		-
 			message: '#^Call to an undefined method Doctrine\\ORM\\EntityRepository\<Concrete\\Core\\Entity\\Site\\SiteTree\>\:\:findOneBySiteHomePageID\(\)\.$#'
 			identifier: method.notFound
+			count: 1
+			path: concrete/src/Multilingual/Page/Section/Section.php
+
+		-
+			message: '#^Call to function is_object\(\) with Concrete\\Core\\Entity\\Site\\Locale will always evaluate to true\.$#'
+			identifier: function.alreadyNarrowedType
 			count: 1
 			path: concrete/src/Multilingual/Page/Section/Section.php
 
@@ -16139,8 +15443,8 @@ parameters:
 			path: concrete/src/Multilingual/Page/Section/Section.php
 
 		-
-			message: '#^PHPDoc tag @var has invalid value \(\$section Locale\)\: Unexpected token "\$section", expected type at offset 20 on line 2$#'
-			identifier: phpDoc.parseError
+			message: '#^Unreachable statement \- code above always terminates\.$#'
+			identifier: deadCode.unreachable
 			count: 1
 			path: concrete/src/Multilingual/Page/Section/Section.php
 
@@ -16205,34 +15509,10 @@ parameters:
 			path: concrete/src/Multilingual/Service/Extractor.php
 
 		-
-			message: '#^PHPDoc tag @var has invalid value \(\$parser \\C5TL\\Parser\)\: Unexpected token "\$parser", expected type at offset 9 on line 1$#'
-			identifier: phpDoc.parseError
-			count: 1
-			path: concrete/src/Multilingual/Service/Extractor.php
-
-		-
 			message: '#^Variable \$icon in isset\(\) always exists and is not nullable\.$#'
 			identifier: isset.variable
 			count: 1
 			path: concrete/src/Multilingual/Service/UserInterface/Flag.php
-
-		-
-			message: '#^PHPDoc tag @var has invalid value \(\$nodes FileFolder\[\]\)\: Unexpected token "\$nodes", expected type at offset 24 on line 2$#'
-			identifier: phpDoc.parseError
-			count: 1
-			path: concrete/src/Navigation/Breadcrumb/Dashboard/DashboardExpressBreadcrumbFactory.php
-
-		-
-			message: '#^PHPDoc tag @var has invalid value \(\$nodes FileFolder\[\]\)\: Unexpected token "\$nodes", expected type at offset 28 on line 2$#'
-			identifier: phpDoc.parseError
-			count: 1
-			path: concrete/src/Navigation/Breadcrumb/Dashboard/DashboardFileManagerBreadcrumbFactory.php
-
-		-
-			message: '#^PHPDoc tag @var has invalid value \(\$nodes GroupFolder\[\]\)\: Unexpected token "\$nodes", expected type at offset 28 on line 2$#'
-			identifier: phpDoc.parseError
-			count: 1
-			path: concrete/src/Navigation/Breadcrumb/Dashboard/DashboardGroupBreadcrumbFactory.php
 
 		-
 			message: '#^Call to an undefined method Concrete\\Core\\Navigation\\Breadcrumb\\BreadcrumbInterface\:\:setSanitizeName\(\)\.$#'
@@ -16271,28 +15551,10 @@ parameters:
 			path: concrete/src/Navigation/Modifier/AppendHTMLModifier.php
 
 		-
-			message: '#^PHPDoc tag @var has invalid value \(\$item PageItem\)\: Unexpected token "\$item", expected type at offset 24 on line 2$#'
-			identifier: phpDoc.parseError
-			count: 2
-			path: concrete/src/Navigation/Modifier/AppendHTMLModifier.php
-
-		-
 			message: '#^Call to an undefined method Concrete\\Core\\Navigation\\Item\\ItemInterface\:\:setChildren\(\)\.$#'
 			identifier: method.notFound
 			count: 1
 			path: concrete/src/Navigation/Modifier/FlatChildrenModifier.php
-
-		-
-			message: '#^PHPDoc tag @var has invalid value \(\$item PageItem\)\: Unexpected token "\$item", expected type at offset 24 on line 2$#'
-			identifier: phpDoc.parseError
-			count: 1
-			path: concrete/src/Navigation/Modifier/NavigationStartingPointModifier.php
-
-		-
-			message: '#^PHPDoc tag @var has invalid value \(\$item PageItem\)\: Unexpected token "\$item", expected type at offset 24 on line 2$#'
-			identifier: phpDoc.parseError
-			count: 2
-			path: concrete/src/Navigation/Modifier/OpenToCurrentPageModifier.php
 
 		-
 			message: '#^Call to an undefined method Concrete\\Core\\Navigation\\Item\\ItemInterface\:\:setChildren\(\)\.$#'
@@ -16325,8 +15587,8 @@ parameters:
 			path: concrete/src/Notification/Alert/Filter/FilterList.php
 
 		-
-			message: '#^PHPDoc tag @var has invalid value \(\$driver TypeInterface\)\: Unexpected token "\$driver", expected type at offset 24 on line 2$#'
-			identifier: phpDoc.parseError
+			message: '#^Variable \$driver in PHPDoc tag @var does not match any variable in the foreach loop\: \$filter$#'
+			identifier: varTag.differentVariable
 			count: 1
 			path: concrete/src/Notification/Alert/Filter/FilterListFactory.php
 
@@ -16393,30 +15655,12 @@ parameters:
 		-
 			message: '#^Call to an undefined method Concrete\\Core\\Permission\\Access\\ListItem\\ListItem\:\:getSubscriptionsAllowedArray\(\)\.$#'
 			identifier: method.notFound
-			count: 2
+			count: 1
 			path: concrete/src/Notification/Notifier/StandardNotifier.php
 
 		-
 			message: '#^Call to an undefined method Concrete\\Core\\Permission\\Access\\ListItem\\ListItem\:\:getSubscriptionsAllowedPermission\(\)\.$#'
 			identifier: method.notFound
-			count: 4
-			path: concrete/src/Notification/Notifier/StandardNotifier.php
-
-		-
-			message: '#^PHPDoc tag @var has invalid value \(\$access Access\)\: Unexpected token "\$access", expected type at offset 28 on line 2$#'
-			identifier: phpDoc.parseError
-			count: 1
-			path: concrete/src/Notification/Notifier/StandardNotifier.php
-
-		-
-			message: '#^PHPDoc tag @var has invalid value \(\$entity Entity\)\: Unexpected token "\$entity", expected type at offset 36 on line 2$#'
-			identifier: phpDoc.parseError
-			count: 2
-			path: concrete/src/Notification/Notifier/StandardNotifier.php
-
-		-
-			message: '#^PHPDoc tag @var has invalid value \(\$item NotifyInNotificationCenterNotificationListItem\)\: Unexpected token "\$item", expected type at offset 28 on line 2$#'
-			identifier: phpDoc.parseError
 			count: 2
 			path: concrete/src/Notification/Notifier/StandardNotifier.php
 
@@ -16538,12 +15782,6 @@ parameters:
 			message: '#^Method Concrete\\Core\\Notification\\View\\NewConversationMessageListView\:\:getInitiatorUserObject\(\) should return Concrete\\Core\\User\\UserInfo but return statement is missing\.$#'
 			identifier: return.missing
 			count: 2
-			path: concrete/src/Notification/View/NewConversationMessageListView.php
-
-		-
-			message: '#^PHPDoc tag @var has invalid value \(\$author Author\)\: Unexpected token "\$author", expected type at offset 28 on line 2$#'
-			identifier: phpDoc.parseError
-			count: 1
 			path: concrete/src/Notification/View/NewConversationMessageListView.php
 
 		-
@@ -17057,12 +16295,6 @@ parameters:
 			path: concrete/src/Page/Collection/Collection.php
 
 		-
-			message: '#^PHPDoc tag @var has invalid value \(\$area GlobalArea\)\: Unexpected token "\$area", expected type at offset 24 on line 2$#'
-			identifier: phpDoc.parseError
-			count: 1
-			path: concrete/src/Page/Collection/Collection.php
-
-		-
 			message: '#^Parameter \#1 \$c of static method Concrete\\Core\\Area\\Area\:\:get\(\) expects Concrete\\Core\\Page\\Page, \$this\(Concrete\\Core\\Page\\Collection\\Collection\) given\.$#'
 			identifier: argument.type
 			count: 1
@@ -17161,12 +16393,6 @@ parameters:
 		-
 			message: '#^PHPDoc tag @var above a method has no effect\.$#'
 			identifier: varTag.misplaced
-			count: 1
-			path: concrete/src/Page/Collection/Version/Version.php
-
-		-
-			message: '#^PHPDoc tag @var has invalid value \(\$value AttributeValue\\AbstractValue\)\: Unexpected token "\$value", expected type at offset 28 on line 2$#'
-			identifier: phpDoc.parseError
 			count: 1
 			path: concrete/src/Page/Collection/Version/Version.php
 
@@ -17373,12 +16599,6 @@ parameters:
 			identifier: variable.undefined
 			count: 1
 			path: concrete/src/Page/Controller/DashboardExpressEntityPageController.php
-
-		-
-			message: '#^PHPDoc tag @var has invalid value \(\$site Site\)\: Unexpected token "\$site", expected type at offset 16 on line 2$#'
-			identifier: phpDoc.parseError
-			count: 1
-			path: concrete/src/Page/Controller/DashboardSitePageController.php
 
 		-
 			message: '#^Call to function is_array\(\) with array will always evaluate to true\.$#'
@@ -17885,12 +17105,6 @@ parameters:
 			path: concrete/src/Page/Search/ColumnSet/Column/SitemapDisplayOrderColumn.php
 
 		-
-			message: '#^PHPDoc tag @var has invalid value \(\$provider SearchProvider\)\: Unexpected token "\$provider", expected type at offset 20 on line 2$#'
-			identifier: phpDoc.parseError
-			count: 1
-			path: concrete/src/Page/Search/ColumnSet/ColumnSet.php
-
-		-
 			message: '#^Call to an undefined method Concrete\\Core\\Search\\ItemList\\ItemList\:\:filterByCacheSettings\(\)\.$#'
 			identifier: method.notFound
 			count: 1
@@ -18031,12 +17245,6 @@ parameters:
 		-
 			message: '#^Loose comparison using \!\= between null and null will always evaluate to false\.$#'
 			identifier: notEqual.alwaysFalse
-			count: 1
-			path: concrete/src/Page/Single.php
-
-		-
-			message: '#^PHPDoc tag @var has invalid value \(\$site Site\)\: Unexpected token "\$site", expected type at offset 20 on line 2$#'
-			identifier: phpDoc.parseError
 			count: 1
 			path: concrete/src/Page/Single.php
 
@@ -18536,12 +17744,6 @@ parameters:
 			message: '#^Call to function is_object\(\) with Concrete\\Core\\Attribute\\Key\\CollectionKey will always evaluate to true\.$#'
 			identifier: function.alreadyNarrowedType
 			count: 9
-			path: concrete/src/Page/Type/Composer/Control/CollectionAttributeControl.php
-
-		-
-			message: '#^PHPDoc tag @var has invalid value \(\$response ResponseInterface\)\: Unexpected token "\$response", expected type at offset 28 on line 2$#'
-			identifier: phpDoc.parseError
-			count: 1
 			path: concrete/src/Page/Type/Composer/Control/CollectionAttributeControl.php
 
 		-
@@ -19217,15 +18419,15 @@ parameters:
 			path: concrete/src/Permission/Access/Entity/FileUploaderEntity.php
 
 		-
-			message: '#^Call to function is_object\(\) with Concrete\\Core\\User\\Group\\Group will always evaluate to true\.$#'
+			message: '#^Call to function is_array\(\) with non\-empty\-array\<mixed\> will always evaluate to true\.$#'
 			identifier: function.alreadyNarrowedType
 			count: 1
 			path: concrete/src/Permission/Access/Entity/GroupCombinationEntity.php
 
 		-
-			message: '#^PHPDoc tag @var has invalid value \(\$database \\Concrete\\Core\\Database\\Connection\\Connection\)\: Unexpected token "\$database", expected type at offset 9 on line 1$#'
-			identifier: phpDoc.parseError
-			count: 3
+			message: '#^Call to function is_object\(\) with Concrete\\Core\\User\\Group\\Group will always evaluate to true\.$#'
+			identifier: function.alreadyNarrowedType
+			count: 1
 			path: concrete/src/Permission/Access/Entity/GroupCombinationEntity.php
 
 		-
@@ -19403,8 +18605,8 @@ parameters:
 			path: concrete/src/Permission/Assignment/BlockAssignment.php
 
 		-
-			message: '#^PHPDoc tag @var has invalid value \(\$registry RegistryInterface\)\: Unexpected token "\$registry", expected type at offset 20 on line 2$#'
-			identifier: phpDoc.parseError
+			message: '#^Right side of && is always true\.$#'
+			identifier: booleanAnd.rightAlwaysTrue
 			count: 1
 			path: concrete/src/Permission/Assignment/BlockAssignment.php
 
@@ -19949,22 +19151,10 @@ parameters:
 			path: concrete/src/Permission/Registry/Entry/Access/Entity/GroupEntity.php
 
 		-
-			message: '#^PHPDoc tag @var has invalid value \(\$item ListItem\)\: Unexpected token "\$item", expected type at offset 28 on line 2$#'
-			identifier: phpDoc.parseError
-			count: 1
-			path: concrete/src/Permission/Registry/Entry/Access/PermissionsEntry.php
-
-		-
 			message: '#^Method Concrete\\Core\\Permission\\Registry\\Entry\\Object\\Object\\BasicWorkflow\:\:getPermissionObject\(\) should return Concrete\\Core\\Permission\\AssignableObjectInterface but returns Concrete\\Core\\Workflow\\Workflow\|null\.$#'
 			identifier: return.type
 			count: 1
 			path: concrete/src/Permission/Registry/Entry/Object/Object/BasicWorkflow.php
-
-		-
-			message: '#^PHPDoc tag @var has invalid value \(\$entity Entity\)\: Unexpected token "\$entity", expected type at offset 20 on line 2$#'
-			identifier: phpDoc.parseError
-			count: 1
-			path: concrete/src/Permission/Registry/Entry/Object/Object/ExpressEntity.php
 
 		-
 			message: '#^Method Concrete\\Core\\Permission\\Registry\\Entry\\Object\\Object\\NullObject\:\:getPermissionObject\(\) should return Concrete\\Core\\Permission\\AssignableObjectInterface but returns null\.$#'
@@ -19991,32 +19181,20 @@ parameters:
 			path: concrete/src/Permission/Registry/Entry/Object/Object/PageType.php
 
 		-
-			message: '#^PHPDoc tag @var has invalid value \(\$item ListItem\)\: Unexpected token "\$item", expected type at offset 32 on line 2$#'
-			identifier: phpDoc.parseError
-			count: 1
-			path: concrete/src/Permission/Registry/Entry/Object/PermissionsEntry.php
-
-		-
-			message: '#^PHPDoc tag @var has invalid value \(\$item ListItem\)\: Unexpected token "\$item", expected type at offset 28 on line 2$#'
-			identifier: phpDoc.parseError
+			message: '#^Call to method getAccessEntityObject\(\) on an unknown class Concrete\\Core\\Permission\\Registry\\Entry\\Object\\ListItem\.$#'
+			identifier: class.notFound
 			count: 1
 			path: concrete/src/Permission/Registry/Entry/Object/TaskPermissionsEntry.php
 
 		-
-			message: '#^Call to an undefined method Concrete\\Core\\Permission\\Access\\Entity\\Entity\:\:getInstanceGroup\(\)\.$#'
-			identifier: method.notFound
+			message: '#^PHPDoc tag @var for variable \$item contains unknown class Concrete\\Core\\Permission\\Registry\\Entry\\Object\\ListItem\.$#'
+			identifier: class.notFound
 			count: 1
-			path: concrete/src/Permission/Registry/Multisite/Entry/Access/Entity/SiteGroupInstanceEntity.php
+			path: concrete/src/Permission/Registry/Entry/Object/TaskPermissionsEntry.php
 
 		-
-			message: '#^Call to function is_object\(\) with Concrete\\Core\\Permission\\Access\\Entity\\Entity will always evaluate to true\.$#'
+			message: '#^Call to function is_object\(\) with Concrete\\Core\\Permission\\Access\\Entity\\SiteGroupEntity will always evaluate to true\.$#'
 			identifier: function.alreadyNarrowedType
-			count: 1
-			path: concrete/src/Permission/Registry/Multisite/Entry/Access/Entity/SiteGroupInstanceEntity.php
-
-		-
-			message: '#^PHPDoc tag @var has invalid value \(\$entity SiteGroupAccessEntity\)\: Unexpected token "\$entity", expected type at offset 20 on line 2$#'
-			identifier: phpDoc.parseError
 			count: 1
 			path: concrete/src/Permission/Registry/Multisite/Entry/Access/Entity/SiteGroupInstanceEntity.php
 
@@ -20039,8 +19217,8 @@ parameters:
 			path: concrete/src/Permission/Response/AreaResponse.php
 
 		-
-			message: '#^PHPDoc tag @var has invalid value \(\$area Area\)\: Unexpected token "\$area", expected type at offset 20 on line 2$#'
-			identifier: phpDoc.parseError
+			message: '#^Variable \$area in PHPDoc tag @var does not match assigned variable \$page\.$#'
+			identifier: varTag.differentVariable
 			count: 1
 			path: concrete/src/Permission/Response/AreaResponse.php
 
@@ -20099,8 +19277,8 @@ parameters:
 			path: concrete/src/Permission/Response/CalendarResponse.php
 
 		-
-			message: '#^PHPDoc tag @var has invalid value \(\$entry Entry\)\: Unexpected token "\$entry", expected type at offset 20 on line 2$#'
-			identifier: phpDoc.parseError
+			message: '#^Variable \$entry in PHPDoc tag @var does not match assigned variable \$entity\.$#'
+			identifier: varTag.differentVariable
 			count: 1
 			path: concrete/src/Permission/Response/ExpressEntityResponse.php
 
@@ -20125,7 +19303,7 @@ parameters:
 		-
 			message: '#^Call to an undefined method Concrete\\Core\\Permission\\ObjectInterface\:\:isMasterCollection\(\)\.$#'
 			identifier: method.notFound
-			count: 2
+			count: 1
 			path: concrete/src/Permission/Response/PageResponse.php
 
 		-
@@ -20179,12 +19357,6 @@ parameters:
 		-
 			message: '#^Method Concrete\\Core\\Permission\\Key\\Key\:\:validate\(\) invoked with 1 parameter, 0 required\.$#'
 			identifier: arguments.count
-			count: 1
-			path: concrete/src/Permission/Response/PageResponse.php
-
-		-
-			message: '#^PHPDoc tag @var has invalid value \(\$page Page\)\: Unexpected token "\$page", expected type at offset 20 on line 2$#'
-			identifier: phpDoc.parseError
 			count: 1
 			path: concrete/src/Permission/Response/PageResponse.php
 
@@ -20243,32 +19415,8 @@ parameters:
 			path: concrete/src/Routing/Route.php
 
 		-
-			message: '#^PHPDoc tag @var has invalid value \(\$route Route\)\: Unexpected token "\$route", expected type at offset 16 on line 2$#'
-			identifier: phpDoc.parseError
-			count: 1
-			path: concrete/src/Routing/RouteBuilder.php
-
-		-
-			message: '#^PHPDoc tag @var has invalid value \(\$router Router\)\: Unexpected token "\$router", expected type at offset 16 on line 2$#'
-			identifier: phpDoc.parseError
-			count: 1
-			path: concrete/src/Routing/RouteBuilder.php
-
-		-
 			message: '#^If condition is always false\.$#'
 			identifier: if.alwaysFalse
-			count: 1
-			path: concrete/src/Routing/RouteGroupBuilder.php
-
-		-
-			message: '#^PHPDoc tag @var has invalid value \(\$locator FileLocator\)\: Unexpected token "\$locator", expected type at offset 24 on line 2$#'
-			identifier: phpDoc.parseError
-			count: 1
-			path: concrete/src/Routing/RouteGroupBuilder.php
-
-		-
-			message: '#^PHPDoc tag @var has invalid value \(\$router Router\)\: Unexpected token "\$router", expected type at offset 118 on line 3$#'
-			identifier: phpDoc.parseError
 			count: 1
 			path: concrete/src/Routing/RouteGroupBuilder.php
 
@@ -20401,12 +19549,6 @@ parameters:
 		-
 			message: '#^Call to an undefined method Concrete\\Core\\Search\\ItemList\\Pager\\PagerProviderInterface\:\:getSearchByColumn\(\)\.$#'
 			identifier: method.notFound
-			count: 1
-			path: concrete/src/Search/ItemList/Pager/Manager/AbstractPagerManager.php
-
-		-
-			message: '#^PHPDoc tag @var has invalid value \(\$adapter PagerAdapter\)\: Unexpected token "\$adapter", expected type at offset 20 on line 2$#'
-			identifier: phpDoc.parseError
 			count: 1
 			path: concrete/src/Search/ItemList/Pager/Manager/AbstractPagerManager.php
 
@@ -20801,13 +19943,7 @@ parameters:
 			path: concrete/src/Site/Service.php
 
 		-
-			message: '#^PHPDoc tag @var has invalid value \(\$group \\Concrete\\Core\\Entity\\Site\\Group\\Group\)\: Unexpected token "\$group", expected type at offset 28 on line 2$#'
-			identifier: phpDoc.parseError
-			count: 1
-			path: concrete/src/Site/Service.php
-
-		-
-			message: '#^PHPDoc tag @var has invalid value \(\$manager Manager;\)\: Unexpected token "\$manager", expected type at offset 20 on line 2$#'
+			message: '#^PHPDoc tag @var has invalid value \(Manager; \$manager\)\: Unexpected token ";", expected TOKEN_HORIZONTAL_WS at offset 27 on line 2$#'
 			identifier: phpDoc.parseError
 			count: 1
 			path: concrete/src/Site/Service.php
@@ -20815,12 +19951,6 @@ parameters:
 		-
 			message: '#^Call to an undefined method Concrete\\Core\\Application\\UserInterface\\OptionsForm\\OptionsFormProviderInterface\:\:getType\(\)\.$#'
 			identifier: method.notFound
-			count: 1
-			path: concrete/src/Site/Type/OptionsFormController.php
-
-		-
-			message: '#^PHPDoc tag @var has invalid value \(\$type Type\)\: Unexpected token "\$type", expected type at offset 16 on line 2$#'
-			identifier: phpDoc.parseError
 			count: 1
 			path: concrete/src/Site/Type/OptionsFormController.php
 
@@ -20835,18 +19965,6 @@ parameters:
 			identifier: method.notFound
 			count: 1
 			path: concrete/src/Site/Type/Skeleton/Service.php
-
-		-
-			message: '#^PHPDoc tag @var has invalid value \(\$skeleton Skeleton\)\: Unexpected token "\$skeleton", expected type at offset 20 on line 2$#'
-			identifier: phpDoc.parseError
-			count: 1
-			path: concrete/src/Site/Type/Skeleton/Service.php
-
-		-
-			message: '#^PHPDoc tag @var has invalid value \(\$question QuestionInterface\|string\)\: Unexpected token "\$question", expected type at offset 20 on line 2$#'
-			identifier: phpDoc.parseError
-			count: 1
-			path: concrete/src/SiteInformation/AbstractSurvey.php
 
 		-
 			message: '#^Call to an undefined method HtmlObject\\Element\:\:selected\(\)\.$#'
@@ -21017,24 +20135,6 @@ parameters:
 			path: concrete/src/StyleCustomizer/Style/Parser/TypeParser.php
 
 		-
-			message: '#^Call to an undefined method Concrete\\Core\\StyleCustomizer\\Normalizer\\VariableInterface\:\:getNumber\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: concrete/src/StyleCustomizer/Style/SizeStyle.php
-
-		-
-			message: '#^Call to an undefined method Concrete\\Core\\StyleCustomizer\\Normalizer\\VariableInterface\:\:getUnit\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: concrete/src/StyleCustomizer/Style/SizeStyle.php
-
-		-
-			message: '#^PHPDoc tag @var has invalid value \(\$variable NumberVariable\)\: Unexpected token "\$variable", expected type at offset 24 on line 2$#'
-			identifier: phpDoc.parseError
-			count: 1
-			path: concrete/src/StyleCustomizer/Style/SizeStyle.php
-
-		-
 			message: '#^Variable \$value might not be defined\.$#'
 			identifier: variable.undefined
 			count: 1
@@ -21181,12 +20281,6 @@ parameters:
 		-
 			message: '#^If condition is always true\.$#'
 			identifier: if.alwaysTrue
-			count: 1
-			path: concrete/src/Summary/Template/AbstractPopulator.php
-
-		-
-			message: '#^PHPDoc tag @var has invalid value \(\$driverCollection DriverCollection\)\: Unexpected token "\$driverCollection", expected type at offset 20 on line 2$#'
-			identifier: phpDoc.parseError
 			count: 1
 			path: concrete/src/Summary/Template/AbstractPopulator.php
 
@@ -21389,26 +20483,8 @@ parameters:
 			path: concrete/src/System/SystemUser.php
 
 		-
-			message: '#^PHPDoc tag @var has invalid value \(\$category Node\)\: Unexpected token "\$category", expected type at offset 16 on line 2$#'
-			identifier: phpDoc.parseError
-			count: 1
-			path: concrete/src/Tree/Menu/Item/AbstractNodeItem.php
-
-		-
-			message: '#^PHPDoc tag @var has invalid value \(\$category Category\)\: Unexpected token "\$category", expected type at offset 16 on line 2$#'
-			identifier: phpDoc.parseError
-			count: 1
-			path: concrete/src/Tree/Menu/Item/Category/CategoryItem.php
-
-		-
 			message: '#^PHPDoc tag @param references unknown parameter\: \$category$#'
 			identifier: parameter.notFound
-			count: 1
-			path: concrete/src/Tree/Menu/Item/Topic/TopicItem.php
-
-		-
-			message: '#^PHPDoc tag @var has invalid value \(\$topic Topic\)\: Unexpected token "\$topic", expected type at offset 16 on line 2$#'
-			identifier: phpDoc.parseError
 			count: 1
 			path: concrete/src/Tree/Menu/Item/Topic/TopicItem.php
 
@@ -21497,8 +20573,8 @@ parameters:
 			path: concrete/src/Tree/Node/Node.php
 
 		-
-			message: '#^PHPDoc tag @var has invalid value \(\$db Connection\)\: Unexpected token "\$db", expected type at offset 20 on line 2$#'
-			identifier: phpDoc.parseError
+			message: '#^Parameter \#2 \$value of method Doctrine\\DBAL\\Query\\QueryBuilder\:\:set\(\) expects string, int given\.$#'
+			identifier: argument.type
 			count: 1
 			path: concrete/src/Tree/Node/Node.php
 
@@ -22325,14 +21401,8 @@ parameters:
 			path: concrete/src/Updater/Migrations/Migrations/Version20200523051311.php
 
 		-
-			message: '#^PHPDoc tag @var has invalid value \(\$db Connection\)\: Unexpected token "\$db", expected type at offset 20 on line 2$#'
-			identifier: phpDoc.parseError
-			count: 1
-			path: concrete/src/Updater/Migrations/Migrations/Version20200523051311.php
-
-		-
-			message: '#^PHPDoc tag @var has invalid value \(\$objectManager ObjectManager\)\: Unexpected token "\$objectManager", expected type at offset 20 on line 2$#'
-			identifier: phpDoc.parseError
+			message: '#^Variable \$db in PHPDoc tag @var does not match any variable in the foreach loop\: \$entity$#'
+			identifier: varTag.differentVariable
 			count: 1
 			path: concrete/src/Updater/Migrations/Migrations/Version20200523051311.php
 
@@ -22461,12 +21531,6 @@ parameters:
 			identifier: booleanAnd.leftAlwaysTrue
 			count: 1
 			path: concrete/src/Updater/Migrations/Migrations/Version20260811120000.php
-
-		-
-			message: '#^PHPDoc tag @var has invalid value \(\$inspector Inspector\)\: Unexpected token "\$inspector", expected type at offset 20 on line 2$#'
-			identifier: phpDoc.parseError
-			count: 1
-			path: concrete/src/Updater/Update.php
 
 		-
 			message: '#^Method Concrete\\Core\\Updater\\UpdateArchive\:\:install\(\) should return string but return statement is missing\.$#'
@@ -23051,12 +22115,6 @@ parameters:
 			path: concrete/src/User/Group/Search/ColumnSet/Column/NameColumn.php
 
 		-
-			message: '#^PHPDoc tag @var has invalid value \(\$provider SearchProvider\)\: Unexpected token "\$provider", expected type at offset 20 on line 2$#'
-			identifier: phpDoc.parseError
-			count: 1
-			path: concrete/src/User/Group/Search/ColumnSet/ColumnSet.php
-
-		-
 			message: '#^Variable \$obj might not be defined\.$#'
 			identifier: variable.undefined
 			count: 1
@@ -23237,12 +22295,6 @@ parameters:
 			path: concrete/src/User/Search/ColumnSet/ColumnSet.php
 
 		-
-			message: '#^PHPDoc tag @var has invalid value \(\$provider SearchProvider\)\: Unexpected token "\$provider", expected type at offset 20 on line 2$#'
-			identifier: phpDoc.parseError
-			count: 1
-			path: concrete/src/User/Search/ColumnSet/ColumnSet.php
-
-		-
 			message: '#^Parameter \#1 \$groups of method Concrete\\Core\\User\\UserList\:\:filterByInAnyGroup\(\) expects Generator&iterable\<Concrete\\Core\\User\\Group\\Group\>, list given\.$#'
 			identifier: argument.type
 			count: 1
@@ -23347,12 +22399,6 @@ parameters:
 		-
 			message: '#^Negated boolean expression is always true\.$#'
 			identifier: booleanNot.alwaysTrue
-			count: 1
-			path: concrete/src/User/User.php
-
-		-
-			message: '#^PHPDoc tag @var has invalid value \(\$likeBuilder LikeBuilder\)\: Unexpected token "\$likeBuilder", expected type at offset 9 on line 1$#'
-			identifier: phpDoc.parseError
 			count: 1
 			path: concrete/src/User/User.php
 
@@ -23509,12 +22555,6 @@ parameters:
 		-
 			message: '#^Method Concrete\\Core\\User\\UserInfo\:\:setAttributeValue\(\) should return Concrete\\Core\\Entity\\Attribute\\Value\\Value but returns Concrete\\Core\\Entity\\Attribute\\Value\\UserValue\|null\.$#'
 			identifier: return.type
-			count: 1
-			path: concrete/src/User/UserInfo.php
-
-		-
-			message: '#^PHPDoc tag @var has invalid value \(\$value AttributeValue\\AbstractValue\)\: Unexpected token "\$value", expected type at offset 28 on line 2$#'
-			identifier: phpDoc.parseError
 			count: 1
 			path: concrete/src/User/UserInfo.php
 
@@ -23829,12 +22869,6 @@ parameters:
 			identifier: booleanAnd.rightAlwaysFalse
 			count: 2
 			path: concrete/src/Validator/UserNameValidatorServiceProvider.php
-
-		-
-			message: '#^PHPDoc tag @var has invalid value \(\$locator LocatableFileInterface\)\: Unexpected token "\$locator", expected type at offset 16 on line 2$#'
-			identifier: phpDoc.parseError
-			count: 1
-			path: concrete/src/View/FileLocatorView.php
 
 		-
 			message: '#^Call to function is_object\(\) with Concrete\\Core\\Page\\Theme\\Theme will always evaluate to true\.$#'

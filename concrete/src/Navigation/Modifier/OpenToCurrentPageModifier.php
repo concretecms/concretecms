@@ -32,7 +32,7 @@ class OpenToCurrentPageModifier implements ModifierInterface
     {
         foreach($items as $item) {
             /**
-             * @var $item PageItem
+             * @var PageItem $item
              */
             if ($item->getPageID() == $this->currentPage->getCollectionID()) {
                 $item->setIsActive(true);

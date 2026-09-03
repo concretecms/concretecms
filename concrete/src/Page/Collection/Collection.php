@@ -644,7 +644,7 @@ class Collection extends ConcreteObject implements TrackableInterface
         $areaHandle = $area->getAreaHandle();
         if ($area->isGlobalArea()) {
             /**
-             * @var $area GlobalArea
+             * @var GlobalArea $area
              */
             $stack = Stack::getGlobalAreaStackFromName($this, $area->getAreaHandle());
             if ($stack) {

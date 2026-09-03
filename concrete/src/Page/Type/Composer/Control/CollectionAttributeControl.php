@@ -196,7 +196,7 @@ class CollectionAttributeControl extends Control
                     $this->isPageTypeComposerFormControlRequiredOnThisRequest()
                 );
                 /**
-                 * @var $response ResponseInterface
+                 * @var ResponseInterface $response
                  */
             } else {
                 $value = $this->getPageTypeComposerControlDraftValue();

@@ -851,7 +851,7 @@ class User extends ConcreteObject
         $app = Application::getFacadeApplication();
         /** @var \Concrete\Core\Database\Connection\Connection $db */
         $db = $app['database']->connection();
-        /** @var $likeBuilder LikeBuilder */
+        /** @var LikeBuilder $likeBuilder */
         $likeBuilder = $app->make(LikeBuilder::class);
         $query = $db->createQueryBuilder();
         $query->select('ug.gID')->from('UserGroups', 'ug')

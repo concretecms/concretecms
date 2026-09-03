@@ -18,7 +18,7 @@ class EventList extends DashboardCalendarPageController
         // method.
 
         /**
-         * @var $preferences Preferences
+         * @var Preferences $preferences
          */
         $preferences = $this->app->make(Preferences::class);
         $preferences->setPreferredViewToList();

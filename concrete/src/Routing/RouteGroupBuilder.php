@@ -10,7 +10,7 @@ class RouteGroupBuilder
 
     /**
      * This is the original router, not the temporary router we created for the route group callable.
-     * @var $router Router
+     * @var Router $router
      */
     protected $router;
 
@@ -212,7 +212,7 @@ class RouteGroupBuilder
         } else if (is_string($routes)) {
             $app = Facade::getFacadeApplication();
             /**
-             * @var $locator FileLocator
+             * @var FileLocator $locator
              */
             $locator = $app->make(FileLocator::class);
             if ($pkgHandle) {

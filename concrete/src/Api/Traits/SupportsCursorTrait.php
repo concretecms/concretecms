@@ -28,7 +28,7 @@ trait SupportsCursorTrait
                 $newCursor = $getNewCursor(collect($results)->last());
             } else {
                 /**
-                 * @var $getNewCursor string
+                 * @var string $getNewCursor
                  */
                 $newCursor = collect($results)->last()->$getNewCursor();
             }

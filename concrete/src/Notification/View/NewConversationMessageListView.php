@@ -39,7 +39,7 @@ class NewConversationMessageListView extends StandardListView
             $author = $message->getConversationMessageAuthorObject();
             if ($author) {
                 /**
-                 * @var $author Author
+                 * @var Author $author
                  */
                 return $author->getUser();
             }

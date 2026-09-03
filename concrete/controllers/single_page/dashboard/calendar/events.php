@@ -15,7 +15,7 @@ class Events extends DashboardCalendarPageController
     public function view($caID = null, $year = null, $month = null)
     {
         /**
-         * @var $preferences Preferences
+         * @var Preferences $preferences
          */
         $preferences = $this->app->make(Preferences::class);
         $preferences->setPreferredViewToGrid();

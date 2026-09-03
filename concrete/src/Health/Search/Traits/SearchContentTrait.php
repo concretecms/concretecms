@@ -33,7 +33,7 @@ trait SearchContentTrait
     protected function applyQueryFilters(Runner $report, $query, bool $having = true, string $filterColumn = 'content')
     {
         /**
-         * @var $result SearchResult
+         * @var SearchResult $result
          */
         $result = $report->getResult();
         if (!$query instanceof OrmBuilder && !$query instanceof DbalBuilder) {

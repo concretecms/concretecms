@@ -94,7 +94,7 @@ class DataSources extends DashboardSitePageController
             }
             if (!$this->error->has()) {
                 /**
-                 * @var $dataSource DataSource
+                 * @var DataSource $dataSource
                  */
                 $driver = $dataSource->getDriver();
                 $saver = $driver->getSaver();
@@ -154,7 +154,7 @@ class DataSources extends DashboardSitePageController
 
             if (!$this->error->has()) {
                 /**
-                 * @var $dataSource DataSource
+                 * @var DataSource $dataSource
                  */
                 $driver = $dataSource->getDriver();
                 $saver = $driver->getSaver();

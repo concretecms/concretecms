@@ -29,7 +29,7 @@ class PageResponse extends Response
     public function validate($permissionHandle, $args = array())
     {
         /**
-         * @var $page Page
+         * @var Page $page
          */
         $page = $this->object;
         if ($page->isMasterCollection()) {

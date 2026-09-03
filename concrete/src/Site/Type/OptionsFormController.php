@@ -10,7 +10,7 @@ abstract class OptionsFormController extends ElementController implements Option
 {
 
     /**
-     * @var $type Type
+     * @var Type $type
      */
     protected $type;
 

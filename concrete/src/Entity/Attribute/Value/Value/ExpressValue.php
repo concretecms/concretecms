@@ -46,7 +46,7 @@ class ExpressValue extends AbstractValue
         $str = '';
         $i = 0;
         /**
-         * @var $option Entry
+         * @var Entry $option
          */
         foreach($this->selectedEntries as $option) {
             $str .= $option->getLabel();

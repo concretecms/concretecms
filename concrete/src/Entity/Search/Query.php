@@ -102,7 +102,7 @@ class Query implements \JsonSerializable, DenormalizableInterface
     {
         $searchProvider = $context['searchProvider'];
         /**
-         * @var $searchProvider ProviderInterface
+         * @var ProviderInterface $searchProvider
          */
         $fieldManager = $searchProvider->getFieldManager();
         foreach($data['fields'] as $fieldRecord) {

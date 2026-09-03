@@ -28,7 +28,7 @@ class Board implements ItemInterface
         $dataSourcesNode = $node->addChild('datasources');
         foreach ($dataSources as $dataSource) {
             /**
-             * @var $dataSource ConfiguredDataSource
+             * @var ConfiguredDataSource $dataSource
              */
             $dataSourceNode = $dataSourcesNode->addChild('datasource');
             $dataSourceNode->addAttribute('source', $dataSource->getDataSource()->getHandle());

@@ -11,7 +11,7 @@ abstract class CategoryItem extends AbstractItem
 {
 
     /**
-     * @var $category Category
+     * @var Category $category
      */
     protected $category;
 

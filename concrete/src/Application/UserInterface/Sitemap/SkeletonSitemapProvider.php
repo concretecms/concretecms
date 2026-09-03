@@ -39,7 +39,7 @@ class SkeletonSitemapProvider extends StandardSitemapProvider
         $skeleton = $this->skeletonService->getSkeleton($this->siteType);
 
         /**
-         * @var $skeleton Skeleton
+         * @var Skeleton $skeleton
          */
         if (count($skeleton->getLocales()) > 1) {
             foreach($skeleton->getLocales() as $locale) {

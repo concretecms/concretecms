@@ -11,7 +11,7 @@ trait GetPageApiAreasTrait
     public function getAreas(Page $page): array
     {
         /**
-         * @var $db Connection
+         * @var Connection $db
          */
         $db = app(Connection::class);
         $r = $db->createQueryBuilder()

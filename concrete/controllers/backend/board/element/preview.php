@@ -46,7 +46,7 @@ class Preview extends Controller
             // @TODO this needs to be updated to be modular; right now it
             // assumes this is an ItemSelectorCustomElement
             /**
-             * @var $element ItemSelectorCustomElement
+             * @var ItemSelectorCustomElement $element
              */
             $renderer = $this->app->make(ContentRenderer::class);
             $collection = $renderer->denormalizeIntoCollection($element->getContentObjectCollection());

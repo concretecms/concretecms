@@ -529,7 +529,7 @@ class Entity implements CategoryObjectInterface, ObjectInterface, ExportableInte
         $node = Node::getByID($this->getEntityResultsNodeId());
         if ($node) {
             /**
-             * @var $node ExpressEntryResults
+             * @var ExpressEntryResults $node
              */
             if ($site && $this->usesSeparateSiteResultsBuckets()) {
                 $siteNode = $node->getSiteResultsNode($site);

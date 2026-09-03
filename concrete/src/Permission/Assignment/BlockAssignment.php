@@ -63,7 +63,7 @@ class BlockAssignment extends Assignment
     public function getPermissionAccessObject()
     {
         /**
-         * @var $registry RegistryInterface
+         * @var RegistryInterface $registry
          */
         $registry = \Core::make('Concrete\Core\Permission\Inheritance\Registry\BlockRegistry');
         $db = Database::connection();

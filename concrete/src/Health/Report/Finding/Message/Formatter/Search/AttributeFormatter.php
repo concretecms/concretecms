@@ -126,7 +126,7 @@ class AttributeFormatter implements FormatterInterface, MessageHasDetailsInterfa
         } elseif ($value instanceof EventValue) {
             $event = $value->getVersion()->getEvent();
             /**
-             * @var $event CalendarEvent
+             * @var CalendarEvent $event
              */
             return new Location(app('url/manager')->resolve(['/dashboard/calendar/event_list', 'view', $event->getCalendar()->getID()]) . '?eventID=' . $event->getID(),
             t("View Event")

@@ -27,7 +27,7 @@ class Listener
         $associations = $entry->getAssociations();
         foreach ($associations as $entryAssociation) {
             /**
-             * @var $entryAssociation Entry\Association
+             * @var Entry\Association $entryAssociation
              */
             if ($entryAssociation->getAssociation()->isOwningAssociation()) {
                 $associatedEntries = $entryAssociation->getSelectedEntries();

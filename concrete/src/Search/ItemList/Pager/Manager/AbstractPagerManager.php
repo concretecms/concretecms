@@ -32,7 +32,7 @@ abstract class AbstractPagerManager implements PagerManagerInterface
     public function getNextCursorStart(PagerProviderInterface $itemList, PagerPagination $pagination)
     {
         /**
-         * @var $adapter PagerAdapter
+         * @var PagerAdapter $adapter
          */
         $adapter = $pagination->getAdapter();
         $result = $pagination->getLastResult();

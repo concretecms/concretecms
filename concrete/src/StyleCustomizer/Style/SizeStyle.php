@@ -16,7 +16,7 @@ class SizeStyle extends Style
         $variable = $collection->getVariable($this->getVariableToInspect());
         if ($variable) {
             /**
-             * @var $variable NumberVariable
+             * @var NumberVariable $variable
              */
             $value = new SizeValue($variable->getNumber(), $variable->getUnit());
             return $value;

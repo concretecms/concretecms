@@ -62,7 +62,7 @@ trait ControllerTrait
                         $controller = $ak->getController();
                         $validator = $controller->getValidator();
                         /**
-                         * @var $response Response
+                         * @var Response $response
                          */
                         $response = $validator->validateSaveValueRequest(
                             $controller,

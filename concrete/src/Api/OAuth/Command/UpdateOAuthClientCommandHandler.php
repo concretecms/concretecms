@@ -25,7 +25,7 @@ class UpdateOAuthClientCommandHandler extends CreateOAuthClientCommandHandler
     public function __invoke($command)
     {
         /**
-         * @var $client Client
+         * @var Client $client
          */
         $client = $this->entityManager->find(Client::class, $command->getClientIdentifier());
         $client->setName($command->getName());

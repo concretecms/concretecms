@@ -97,7 +97,7 @@ class Set
             return [];
         }
 
-        /** @var $database \Concrete\Core\Database\Connection\Connection */
+        /** @var \Concrete\Core\Database\Connection\Connection $database */
         $database = $app->make('database')->connection();
         $fileSets = array();
 

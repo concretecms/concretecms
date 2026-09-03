@@ -106,7 +106,7 @@ trait ObjectTrait
                 $value = false;
             } else {
                 /**
-                 * @var $value AttributeValue\AbstractValue
+                 * @var AttributeValue\AbstractValue $value
                  */
                 $value = $controller->createAttributeValue($value);
             }

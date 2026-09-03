@@ -360,7 +360,7 @@ class DefaultBooter implements BootInterface, ApplicationAwareInterface
     private function initializeRoutes(Repository $config)
     {
         /**
-         * @var $router Router
+         * @var Router $router
          */
         $router = Route::getFacadeRoot();
         // Legacy route registration.

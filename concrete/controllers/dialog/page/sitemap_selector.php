@@ -31,7 +31,7 @@ class SitemapSelector extends UserInterfaceController
 
     public function view()
     {
-        /** @var $sanitizer SanitizeService */
+        /** @var SanitizeService $sanitizer */
         $sanitizer = $this->app->make(SanitizeService::class);
         $cID = (int) $sanitizer->sanitizeInt($this->request->query->get('cID'));
         $this->set('cID', $cID ?: null);

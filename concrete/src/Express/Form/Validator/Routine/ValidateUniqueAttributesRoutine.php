@@ -19,7 +19,7 @@ class ValidateUniqueAttributesRoutine implements RoutineInterface
         $attributes = $entity->getAttributes();
         foreach ($attributes as $key) {
             /**
-             * @var $key ExpressKeyEntity
+             * @var ExpressKeyEntity $key
              */
             if ($key->isAttributeKeyUnique()) {
                 $controller = $key->getController();

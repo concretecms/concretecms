@@ -18,7 +18,7 @@ class SiteGroupInstanceEntity extends SiteGroupEntity
     public function getAccessEntity()
     {
         /**
-         * @var $entity SiteGroupAccessEntity
+         * @var SiteGroupAccessEntity $entity
          */
         $entity = parent::getAccessEntity();
         if (is_object($entity)) {

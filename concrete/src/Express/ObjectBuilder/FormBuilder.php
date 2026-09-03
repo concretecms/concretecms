@@ -34,7 +34,7 @@ class FormBuilder
         $form->setEntity($entity);
 
         /**
-         * @var $fieldset FieldsetBuilder
+         * @var FieldsetBuilder $fieldset
          */
         $position = 0;
         foreach($this->fieldsets as $fieldset) {

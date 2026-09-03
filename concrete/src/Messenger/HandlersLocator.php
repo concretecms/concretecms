@@ -67,7 +67,7 @@ class HandlersLocator implements HandlersLocatorInterface
                 $batchStamp = $envelope->last(BatchStamp::class);
                 if ($batchStamp) {
                     /**
-                     * @var $batchStamp BatchStamp
+                     * @var BatchStamp $batchStamp
                      */
                     $batch = $this->entityManager->find(Batch::class, $batchStamp->getBatchId());
                     if ($batch) {

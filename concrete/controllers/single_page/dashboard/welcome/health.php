@@ -53,7 +53,7 @@ class Health extends DashboardPageController
                 $latestTestResult = ResultList::getLatestResult($task);
                 if ($latestTestResult) {
                     /**
-                     * @var $grade PassFailGrade
+                     * @var PassFailGrade $grade
                      */
                     $grade = $latestTestResult->getGrade();
                     if ($grade->hasPassed()) {

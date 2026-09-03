@@ -54,7 +54,7 @@ abstract class AbstractPageContentRoutine extends AbstractRoutine
                                     // we have to go get the blocks on that page in this layout.
                                     $btc = $block->getController();
                                     /**
-                                     * @var $btc ContainerBlockController
+                                     * @var ContainerBlockController $btc
                                      */
                                     $instance = $btc->getContainerInstanceObject();
                                     $em = app(EntityManager::class);

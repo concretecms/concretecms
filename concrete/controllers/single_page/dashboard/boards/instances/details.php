@@ -107,7 +107,7 @@ class Details extends DashboardPageController
         $instance = $this->getInstance($id);
         if ($instance) {
             /**
-             * @var $instance Instance
+             * @var Instance $instance
              */
             $site = $instance->getsite();
             $home = $site->getSiteHomePageObject();

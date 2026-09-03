@@ -112,7 +112,7 @@ class ObjectManager
         }
         if ($entry) {
             /**
-             * @var $entry Entry
+             * @var Entry $entry
              */
             $entity = $entry->getEntity();
             if ($entity) {

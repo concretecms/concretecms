@@ -25,7 +25,7 @@ class FilterListFactory
         $list = new FilterList();
         foreach($this->typeManager->getDrivers() as $driver) {
             /**
-             * @var $driver TypeInterface
+             * @var TypeInterface $driver
              */
             foreach($driver->getAvailableFilters() as $filter) {
                 $list->addFilter($filter);

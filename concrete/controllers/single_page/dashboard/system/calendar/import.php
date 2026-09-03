@@ -13,7 +13,7 @@ class Import extends DashboardPageController
         $site = $this->app->make('site')->getSite();
         if ($this->token->validate('submit')) {
             /**
-             * @var $db Connection
+             * @var Connection $db
              */
             $db = $this->app->make(Connection::class);
             $db->executeQuery('set foreign_key_checks = 0');
@@ -106,7 +106,7 @@ class Import extends DashboardPageController
     public function view()
     {
         /**
-         * @var $db Connection
+         * @var Connection $db
          */
         $db = $this->app->make(Connection::class);
         if ($db->tableExists('_CalendarEvents')) {

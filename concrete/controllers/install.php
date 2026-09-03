@@ -289,7 +289,7 @@ class Install extends Controller
                 $error->add($val->getError());
             } elseif (!$error->has()) {
                 /**
-                 * @var $options InstallerOptions
+                 * @var InstallerOptions $options
                  */
                 $options = $this->app->make(InstallerOptions::class);
                 $config = $this->app->make('config');

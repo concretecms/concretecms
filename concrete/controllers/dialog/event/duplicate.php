@@ -75,7 +75,7 @@ class Duplicate extends BackendInterfaceController
             $event = $this->app->make(EventService::class)->getByID($_REQUEST['eventID'], EventService::EVENT_VERSION_RECENT);
             $calendars = [];
             /**
-             * @var $service CalendarService
+             * @var CalendarService $service
              */
             $service = $this->app->make(CalendarService::class);
             foreach($service->getList() as $calendar) {

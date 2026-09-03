@@ -10,7 +10,7 @@ abstract class TopicItem extends AbstractItem
 {
 
     /**
-     * @var $topic Topic
+     * @var Topic $topic
      */
     protected $topic;
 
