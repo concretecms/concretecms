@@ -867,6 +867,23 @@ return [
                 'allowed_attributes' => '',
             ],
         ],
+        'documents' => [
+            // XML/XSLT sanitization
+            //
+            // Plain XML documents can contain an xml-stylesheet processing
+            // instruction pointing at an externally hosted (and potentially
+            // attacker-controlled) XSLT stylesheet. If such a file is opened
+            // directly in a browser instead of being processed by the
+            // application, the browser will fetch and apply that stylesheet,
+            // which can emit arbitrary HTML/JavaScript in the origin serving
+            // the XML file. This setting controls how uploaded XML/XSLT
+            // documents are handled to prevent that.
+            'xml_sanitization' => [
+                // The operation that the XML sanitizer should perform.
+                // This must be a value of one of the Concrete\Core\File\Import\Processor\XmlProcessor::ACTION_... constants
+                'action' => 'sanitize',
+            ],
+        ],
         /*
          * Options for the results per page dropdown
          *

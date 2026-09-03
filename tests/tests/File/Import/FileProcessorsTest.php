@@ -7,6 +7,7 @@ use Concrete\Core\Attribute\TypeFactory as AttributeTypeFactory;
 use Concrete\Core\File\Import\FileImporter;
 use Concrete\Core\File\Import\ImportException;
 use Concrete\Core\File\Import\Processor\SvgProcessor;
+use Concrete\Core\File\Import\Processor\XmlProcessor;
 use Concrete\Core\Support\Facade\Application;
 use Concrete\TestHelpers\File\FileStorageTestCase;
 use Exception;
@@ -66,7 +67,7 @@ class FileProcessorsTest extends FileStorageTestCase
         parent::setUpBeforeClass();
         self::$app = Application::getFacadeApplication();
         self::$config = self::$app->make('config');
-        self::$config->set('concrete.upload.extensions', '*.txt;*.jpg;*.jpeg;*.png;*.svg');
+        self::$config->set('concrete.upload.extensions', '*.txt;*.jpg;*.jpeg;*.png;*.svg;*.xml;*.xslt');
         $attributeTypeFactory = self::$app->make(AttributeTypeFactory::class);
         $attributeCategoryService = self::$app->make(AttributeCategoryService::class);
         $fileAttributeCategory = $attributeCategoryService->getByHandle('file');
@@ -204,5 +205,145 @@ class FileProcessorsTest extends FileStorageTestCase
         $this->assertSame($fileSHA1, sha1_file($file));
         $this->assertInstanceOf(ImportException::class, $error);
         $this->assertSame(ImportException::E_FILE_INVALID, $error->getCode());
+    }
+
+    /**
+     * @return string the local path of a temporary file containing an XML document with an
+     * <?xml-stylesheet?> processing instruction pointing to an attacker-controlled stylesheet
+     */
+    protected function createXmlStylesheetFile()
+    {
+        $file = DIR_FILES_UPLOADED_STANDARD . '/incoming/xml-stylesheet-test-' . uniqid() . '.xml';
+        @mkdir(dirname($file), 0777, true);
+        file_put_contents(
+            $file,
+            "<?xml version=\"1.0\"?>\n<?xml-stylesheet type=\"text/xsl\" href=\"https://attacker.example/evil.xslt\"?>\n<root><child>hello</child></root>"
+        );
+
+        return $file;
+    }
+
+    public function testXmlProcessorSanitizesXmlStylesheetInstructionByDefault()
+    {
+        $file = $this->createXmlStylesheetFile();
+        try {
+            $fv = self::$config->withKey(
+                'concrete.file_manager.documents.xml_sanitization.action',
+                XmlProcessor::ACTION_SANITIZE,
+                function () use ($file) {
+                    return self::$app->make(FileImporter::class)->importLocalFile($file, 'test-xml-sanitize-' . uniqid() . '.xml');
+                }
+            );
+            $contents = $fv->getFileContents();
+        } finally {
+            @unlink($file);
+        }
+        $this->assertStringNotContainsString('xml-stylesheet', $contents);
+        $this->assertStringNotContainsString('attacker.example', $contents);
+        $this->assertStringContainsString('<child>hello</child>', $contents);
+    }
+
+    /**
+     * @return string the local path of a temporary file containing an XML document that libxml
+     * can't parse (it contains a bare ampersand), with an xml-stylesheet processing instruction
+     */
+    protected function createMalformedXmlFile()
+    {
+        $file = DIR_FILES_UPLOADED_STANDARD . '/incoming/xml-malformed-test-' . uniqid() . '.xml';
+        @mkdir(dirname($file), 0777, true);
+        file_put_contents(
+            $file,
+            "<?xml version=\"1.0\"?>\n<?xml-stylesheet type=\"text/xsl\" href=\"https://attacker.example/evil.xslt\"?>\n<root><child>Ben & Jerry</child></root>"
+        );
+
+        return $file;
+    }
+
+    public function testXmlProcessorRejectsMalformedFilesUnlessDisabled()
+    {
+        foreach ([XmlProcessor::ACTION_SANITIZE, XmlProcessor::ACTION_CHECKVALIDITY, XmlProcessor::ACTION_REJECT] as $action) {
+            $file = $this->createMalformedXmlFile();
+            try {
+                $error = null;
+                try {
+                    self::$config->withKey(
+                        'concrete.file_manager.documents.xml_sanitization.action',
+                        $action,
+                        function () use ($file) {
+                            return self::$app->make(FileImporter::class)->importLocalFile($file, 'test-xml-malformed-' . uniqid() . '.xml');
+                        }
+                    );
+                } catch (Exception $x) {
+                    $error = $x;
+                }
+                $this->assertInstanceOf(ImportException::class, $error, "Action: {$action}");
+                $this->assertSame(ImportException::E_FILE_MALFORMED_XML, $error->getCode(), "Action: {$action}");
+                // The reason must survive: a generic "Invalid file." tells nobody anything
+                $this->assertStringContainsString('well formed', $error->getMessage(), "Action: {$action}");
+            } finally {
+                @unlink($file);
+            }
+        }
+    }
+
+    public function testXmlProcessorImportsMalformedFilesWhenDisabled()
+    {
+        $file = $this->createMalformedXmlFile();
+        try {
+            $fv = self::$config->withKey(
+                'concrete.file_manager.documents.xml_sanitization.action',
+                XmlProcessor::ACTION_DISABLED,
+                function () use ($file) {
+                    return self::$app->make(FileImporter::class)->importLocalFile($file, 'test-xml-malformed-disabled-' . uniqid() . '.xml');
+                }
+            );
+            $contents = $fv->getFileContents();
+        } finally {
+            @unlink($file);
+        }
+        $this->assertStringContainsString('xml-stylesheet', $contents);
+    }
+
+    public function testXmlProcessorRejectsXmlStylesheetInstructionWhenConfiguredTo()
+    {
+        $file = $this->createXmlStylesheetFile();
+        try {
+            $error = null;
+            try {
+                self::$config->withKey(
+                    'concrete.file_manager.documents.xml_sanitization.action',
+                    XmlProcessor::ACTION_REJECT,
+                    function () use ($file) {
+                        return self::$app->make(FileImporter::class)->importLocalFile($file, 'test-xml-reject-' . uniqid() . '.xml');
+                    }
+                );
+            } catch (Exception $x) {
+                $error = $x;
+            }
+            $this->assertInstanceOf(ImportException::class, $error);
+            $this->assertSame(ImportException::E_FILE_HARMFUL_CONTENTS, $error->getCode());
+        } finally {
+            @unlink($file);
+        }
+    }
+
+    public function testXmlProcessorDoesNothingWhenDisabled()
+    {
+        $file = $this->createXmlStylesheetFile();
+        $fileSHA1 = sha1_file($file);
+        try {
+            self::$config->withKey(
+                'concrete.file_manager.documents.xml_sanitization.action',
+                XmlProcessor::ACTION_DISABLED,
+                function () use ($file) {
+                    return self::$app->make(FileImporter::class)->importLocalFile($file, 'test-xml-disabled-' . uniqid() . '.xml');
+                }
+            );
+            $error = null;
+        } catch (Exception $x) {
+            $error = $x;
+        }
+        $this->assertSame($fileSHA1, sha1_file($file));
+        $this->assertNull($error);
     }
 }
