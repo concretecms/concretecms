@@ -6,7 +6,7 @@ use Loader;
 class ConfigStore
 {
     /**
-     * @var \Database
+     * @var \Concrete\Core\Database\Connection\Connection
      */
     protected $db;
 

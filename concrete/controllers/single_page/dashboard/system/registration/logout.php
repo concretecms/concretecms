@@ -43,7 +43,7 @@ class Logout extends DashboardPageController
     /**
      * The response factory we use to generate responses.
      *
-     * @var \Concrete\Core\Config\Repository\Repository
+     * @var \Concrete\Core\Http\ResponseFactory
      */
     protected $factory;
 

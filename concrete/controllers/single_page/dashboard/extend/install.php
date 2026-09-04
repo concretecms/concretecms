@@ -8,7 +8,6 @@ use Concrete\Core\Localization\Service\TranslationsInstaller;
 use Concrete\Core\Logging\Channels;
 use Concrete\Core\Logging\LoggerAwareInterface;
 use Concrete\Core\Logging\LoggerAwareTrait;
-use Concrete\Core\Marketplace\Connection;
 use Concrete\Core\Marketplace\ConnectionInterface;
 use Concrete\Core\Marketplace\Exception\InvalidConnectResponseException;
 use Concrete\Core\Marketplace\Exception\InvalidDownloadResponseException;
@@ -37,7 +36,7 @@ class Install extends DashboardPageController implements LoggerAwareInterface
 
     /** @var PackageRepositoryInterface */
     protected $repository;
-    /** @var Connection|null */
+    /** @var ConnectionInterface|null */
     protected $connection;
 
     public function on_start()

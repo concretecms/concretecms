@@ -8,7 +8,6 @@ use Concrete\Core\Attribute\Category\UserCategory;
 use Concrete\Core\Attribute\Key\UserKey;
 use Concrete\Core\Attribute\ObjectInterface as AttributeObjectInterface;
 use Concrete\Core\Attribute\ObjectTrait;
-use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Encryption\PasswordHasher;
 use Concrete\Core\Entity\Attribute\Value\UserValue;
 use Concrete\Core\Entity\Express\Entry;
@@ -82,7 +81,7 @@ class UserInfo extends ConcreteObject implements AttributeObjectInterface, Permi
     protected $entityManager;
 
     /**
-     * @var Connection
+     * @var \Doctrine\DBAL\Connection
      */
     protected $connection;
 

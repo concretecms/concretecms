@@ -12,7 +12,7 @@ class BannedWord extends ConcreteObject
 {
     protected $id;
     protected $word;
-    /** @var \Concrete\Core\Entity\Validation\BannedWord */
+    /** @var \Concrete\Core\Entity\Validation\BannedWord|null */
     protected $entity;
 
     /**

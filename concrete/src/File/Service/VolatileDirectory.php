@@ -76,12 +76,12 @@ class VolatileDirectory
      */
     public function __destruct()
     {
-        if ($this->path !== null) {
+        if ($this->path !== '') {
             try {
                 $this->filesystem->deleteDirectory($this->path);
             } catch (Exception $foo) {
             }
-            $this->path = null;
+            $this->path = '';
         }
     }
 }

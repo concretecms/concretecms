@@ -85,7 +85,7 @@ class Area extends ConcreteObject implements \Concrete\Core\Permission\ObjectInt
     protected $arDisplayName;
 
     /**
-     * @var int
+     * @var int|null
      */
     protected $arGridMaximumColumns;
 

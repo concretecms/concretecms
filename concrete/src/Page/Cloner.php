@@ -28,7 +28,7 @@ use Concrete\Core\Events\EventDispatcher;
 class Cloner
 {
     /**
-     * @var \Concrete\Core\Database\Connection\Connection
+     * @var \Doctrine\DBAL\Connection
      */
     protected $connection;
 

@@ -679,12 +679,6 @@ parameters:
 			path: ../concrete/controllers/element/dashboard/express/control/options.php
 
 		-
-			message: '#^Property Concrete\\Controller\\Element\\Dashboard\\Navigation\\Panel\\Favorites\:\:\$factory \(Concrete\\Core\\Application\\UserInterface\\Dashboard\\Navigation\\FullNavigationFactory\) does not accept Concrete\\Core\\Application\\UserInterface\\Dashboard\\Navigation\\FavoritesNavigationFactory\.$#'
-			identifier: assign.propertyType
-			count: 1
-			path: ../concrete/controllers/element/dashboard/navigation/panel/favorites.php
-
-		-
 			message: '#^Property Concrete\\Controller\\Element\\Dashboard\\Reports\\Logs\\Search\\Search\:\:\$headerSearchAction \(string\) in isset\(\) is not nullable\.$#'
 			identifier: isset.property
 			count: 1
@@ -1327,12 +1321,6 @@ parameters:
 			path: ../concrete/controllers/single_page/dashboard/extend/install.php
 
 		-
-			message: '#^Property Concrete\\Controller\\SinglePage\\Dashboard\\Extend\\Install\:\:\$connection \(Concrete\\Core\\Marketplace\\Connection\|null\) does not accept Concrete\\Core\\Marketplace\\ConnectionInterface\|null\.$#'
-			identifier: assign.propertyType
-			count: 1
-			path: ../concrete/controllers/single_page/dashboard/extend/install.php
-
-		-
 			message: '#^Property Concrete\\Controller\\SinglePage\\Dashboard\\Extend\\Install\:\:\$repository \(Concrete\\Core\\Marketplace\\PackageRepositoryInterface\) in isset\(\) is not nullable\.$#'
 			identifier: isset.property
 			count: 1
@@ -1687,14 +1675,8 @@ parameters:
 			path: ../concrete/controllers/single_page/dashboard/system/registration/authentication.php
 
 		-
-			message: '#^Call to an undefined method Concrete\\Core\\Config\\Repository\\Repository\:\:redirect\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: ../concrete/controllers/single_page/dashboard/system/registration/logout.php
-
-		-
-			message: '#^Property Concrete\\Controller\\SinglePage\\Dashboard\\System\\Registration\\Logout\:\:\$factory \(Concrete\\Core\\Config\\Repository\\Repository\) does not accept Concrete\\Core\\Http\\ResponseFactory\.$#'
-			identifier: assign.propertyType
+			message: '#^Method Concrete\\Controller\\SinglePage\\Dashboard\\System\\Registration\\Logout\:\:invalidate_sessions\(\) should return Concrete\\Core\\Http\\Response\|void but returns Symfony\\Component\\HttpFoundation\\Response\.$#'
+			identifier: return.type
 			count: 1
 			path: ../concrete/controllers/single_page/dashboard/system/registration/logout.php
 
@@ -2347,12 +2329,6 @@ parameters:
 			path: ../concrete/src/Api/OpenApi/SpecParameter.php
 
 		-
-			message: '#^Property Concrete\\Core\\Api\\OpenApi\\SpecPath\:\:\$parameters \(array\<Concrete\\Core\\Api\\OpenApi\\SpecParameter\>\) does not accept array\<Concrete\\Core\\Api\\OpenApi\\Parameter\\ParameterInterface\>\.$#'
-			identifier: assign.propertyType
-			count: 1
-			path: ../concrete/src/Api/OpenApi/SpecPath.php
-
-		-
 			message: '#^Property Concrete\\Core\\Api\\OpenApi\\SpecPath\:\:\$requestBody \(Concrete\\Core\\Api\\OpenApi\\SpecRequestBody\) in isset\(\) is not nullable\.$#'
 			identifier: isset.property
 			count: 1
@@ -2521,18 +2497,6 @@ parameters:
 			path: ../concrete/src/Application/UserInterface/Sitemap/StandardSitemapProvider.php
 
 		-
-			message: '#^Property Concrete\\Core\\Application\\UserInterface\\Sitemap\\StandardSitemapProvider\:\:\$permissionsIgnored \(string\) does not accept default value of type false\.$#'
-			identifier: property.defaultValue
-			count: 1
-			path: ../concrete/src/Application/UserInterface/Sitemap/StandardSitemapProvider.php
-
-		-
-			message: '#^Property Concrete\\Core\\Application\\UserInterface\\Sitemap\\StandardSitemapProvider\:\:\$permissionsIgnored \(string\) does not accept true\.$#'
-			identifier: assign.propertyType
-			count: 1
-			path: ../concrete/src/Application/UserInterface/Sitemap/StandardSitemapProvider.php
-
-		-
 			message: '#^Anonymous function has an unused use \$area\.$#'
 			identifier: closure.unusedUse
 			count: 1
@@ -2570,18 +2534,6 @@ parameters:
 
 		-
 			message: '#^Property Concrete\\Core\\Area\\Area\:\:\$arDisplayName \(string\) in isset\(\) is not nullable\.$#'
-			identifier: isset.property
-			count: 1
-			path: ../concrete/src/Area/Area.php
-
-		-
-			message: '#^Property Concrete\\Core\\Area\\Area\:\:\$arGridMaximumColumns \(int\) does not accept null\.$#'
-			identifier: assign.propertyType
-			count: 1
-			path: ../concrete/src/Area/Area.php
-
-		-
-			message: '#^Property Concrete\\Core\\Area\\Area\:\:\$arGridMaximumColumns \(int\) in isset\(\) is not nullable\.$#'
 			identifier: isset.property
 			count: 1
 			path: ../concrete/src/Area/Area.php
@@ -3955,12 +3907,6 @@ parameters:
 			path: ../concrete/src/Config/ConfigStore.php
 
 		-
-			message: '#^Property Concrete\\Core\\Config\\ConfigStore\:\:\$db \(Concrete\\Core\\Support\\Facade\\Database\) does not accept Concrete\\Core\\Database\\Connection\\Connection\.$#'
-			identifier: assign.propertyType
-			count: 1
-			path: ../concrete/src/Config/ConfigStore.php
-
-		-
 			message: '#^Parameter \#3 \$namespace \(null\) of method Concrete\\Core\\Config\\CoreFileLoader\:\:load\(\) should be compatible with parameter \$namespace \(string\) of method Concrete\\Core\\Config\\LoaderInterface\:\:load\(\)$#'
 			identifier: method.childParameterType
 			count: 1
@@ -4268,12 +4214,6 @@ parameters:
 
 		-
 			message: '#^Property Concrete\\Core\\Conversation\\FrontendController\:\:\$blockController \(Concrete\\Block\\CoreConversation\\Controller\|null\) does not accept Concrete\\Core\\Block\\BlockController\.$#'
-			identifier: assign.propertyType
-			count: 1
-			path: ../concrete/src/Conversation/FrontendController.php
-
-		-
-			message: '#^Property Concrete\\Core\\Conversation\\FrontendController\:\:\$blockConversation \(Concrete\\Core\\Conversation\\Conversation\) does not accept null\.$#'
 			identifier: assign.propertyType
 			count: 1
 			path: ../concrete/src/Conversation/FrontendController.php
@@ -5659,12 +5599,6 @@ parameters:
 			path: ../concrete/src/File/Service/VolatileDirectory.php
 
 		-
-			message: '#^Property Concrete\\Core\\File\\Service\\VolatileDirectory\:\:\$path \(string\) does not accept null\.$#'
-			identifier: assign.propertyType
-			count: 1
-			path: ../concrete/src/File/Service/VolatileDirectory.php
-
-		-
 			message: '#^Call to function is_string\(\) with string will always evaluate to true\.$#'
 			identifier: function.alreadyNarrowedType
 			count: 1
@@ -6451,12 +6385,6 @@ parameters:
 			path: ../concrete/src/Http/Client/Factory.php
 
 		-
-			message: '#^Call to function is_string\(\) with Concrete\\Core\\Http\\Middleware\\MiddlewareInterface will always evaluate to false\.$#'
-			identifier: function.impossibleType
-			count: 1
-			path: ../concrete/src/Http/DefaultDispatcher.php
-
-		-
 			message: '#^Method Concrete\\Core\\Http\\DefaultDispatcher\:\:filterRouteCollectionForPath\(\) is unused\.$#'
 			identifier: method.unused
 			count: 1
@@ -6651,12 +6579,6 @@ parameters:
 		-
 			message: '#^Parameter \#1 \$request of method Concrete\\Core\\Routing\\RouteActionInterface\:\:execute\(\) expects Concrete\\Core\\Http\\Request, Symfony\\Component\\HttpFoundation\\Request given\.$#'
 			identifier: argument.type
-			count: 1
-			path: ../concrete/src/Http/RouteDispatcher.php
-
-		-
-			message: '#^Property Concrete\\Core\\Http\\RouteDispatcher\:\:\$router \(Concrete\\Core\\Routing\\Router\) does not accept Concrete\\Core\\Routing\\RouterInterface\.$#'
-			identifier: assign.propertyType
 			count: 1
 			path: ../concrete/src/Http/RouteDispatcher.php
 
@@ -7047,18 +6969,6 @@ parameters:
 		-
 			message: '#^Offset 0 on non\-empty\-list\<string\> on left side of \?\? always exists and is not nullable\.$#'
 			identifier: nullCoalesce.offset
-			count: 1
-			path: ../concrete/src/Mail/Service.php
-
-		-
-			message: '#^Property Concrete\\Core\\Mail\\Service\<T of Symfony\\Component\\Mime\\Email\>\:\:\$mailer \(Symfony\\Component\\Mailer\\MailerInterface\) does not accept null\.$#'
-			identifier: assign.propertyType
-			count: 1
-			path: ../concrete/src/Mail/Service.php
-
-		-
-			message: '#^Property Concrete\\Core\\Mail\\Service\<T of Symfony\\Component\\Mime\\Email\>\:\:\$throwOnFailure \(false\) does not accept bool\.$#'
-			identifier: assign.propertyType
 			count: 1
 			path: ../concrete/src/Mail/Service.php
 
@@ -7495,12 +7405,6 @@ parameters:
 			path: ../concrete/src/Package/Packer/Writer/Zipper.php
 
 		-
-			message: '#^Property Concrete\\Core\\Page\\Cloner\:\:\$connection \(Concrete\\Core\\Database\\Connection\\Connection\) does not accept Doctrine\\DBAL\\Connection\.$#'
-			identifier: assign.propertyType
-			count: 1
-			path: ../concrete/src/Page/Cloner.php
-
-		-
 			message: '#^PHPDoc tag @var above a method has no effect\.$#'
 			identifier: varTag.misplaced
 			count: 1
@@ -7787,66 +7691,6 @@ parameters:
 			identifier: varTag.misplaced
 			count: 3
 			path: ../concrete/src/Page/Page.php
-
-		-
-			message: '#^Call to function is_array\(\) with Concrete\\Core\\Entity\\Site\\Tree will always evaluate to false\.$#'
-			identifier: function.impossibleType
-			count: 1
-			path: ../concrete/src/Page/PageList.php
-
-		-
-			message: '#^Call to function is_object\(\) with Concrete\\Core\\Entity\\Site\\Tree will always evaluate to true\.$#'
-			identifier: function.alreadyNarrowedType
-			count: 1
-			path: ../concrete/src/Page/PageList.php
-
-		-
-			message: '#^Instanceof between Concrete\\Core\\Entity\\Site\\Tree and Concrete\\Core\\Entity\\Site\\Site will always evaluate to false\.$#'
-			identifier: instanceof.alwaysFalse
-			count: 1
-			path: ../concrete/src/Page/PageList.php
-
-		-
-			message: '#^Property Concrete\\Core\\Page\\PageList\:\:\$siteTree \(Concrete\\Core\\Entity\\Site\\Tree\) does not accept Concrete\\Core\\Site\\Tree\\TreeInterface\.$#'
-			identifier: assign.propertyType
-			count: 1
-			path: ../concrete/src/Page/PageList.php
-
-		-
-			message: '#^Property Concrete\\Core\\Page\\PageList\:\:\$siteTree \(Concrete\\Core\\Entity\\Site\\Tree\) does not accept array\.$#'
-			identifier: assign.propertyType
-			count: 1
-			path: ../concrete/src/Page/PageList.php
-
-		-
-			message: '#^Property Concrete\\Core\\Page\\PageList\:\:\$siteTree \(Concrete\\Core\\Entity\\Site\\Tree\) does not accept default value of type int\.$#'
-			identifier: property.defaultValue
-			count: 1
-			path: ../concrete/src/Page/PageList.php
-
-		-
-			message: '#^Property Concrete\\Core\\Page\\PageList\:\:\$siteTree \(Concrete\\Core\\Entity\\Site\\Tree\) does not accept int\.$#'
-			identifier: assign.propertyType
-			count: 2
-			path: ../concrete/src/Page/PageList.php
-
-		-
-			message: '#^Right side of \|\| is always true\.$#'
-			identifier: booleanOr.rightAlwaysTrue
-			count: 1
-			path: ../concrete/src/Page/PageList.php
-
-		-
-			message: '#^Strict comparison using \!\=\= between Concrete\\Core\\Entity\\Site\\Tree and null will always evaluate to true\.$#'
-			identifier: notIdentical.alwaysTrue
-			count: 1
-			path: ../concrete/src/Page/PageList.php
-
-		-
-			message: '#^Strict comparison using \=\=\= between 1 and 0 will always evaluate to false\.$#'
-			identifier: identical.alwaysFalse
-			count: 1
-			path: ../concrete/src/Page/PageList.php
 
 		-
 			message: '#^Call to an undefined method Concrete\\Core\\Search\\ItemList\\Pager\\PagerProviderInterface\:\:getQueryObject\(\)\.$#'
@@ -9295,12 +9139,6 @@ parameters:
 			path: ../concrete/src/Routing/RouteGroupBuilder.php
 
 		-
-			message: '#^Property Concrete\\Core\\Routing\\RouteMiddleware\:\:\$middleware \(Concrete\\Core\\Http\\Middleware\\MiddlewareInterface\) does not accept string\.$#'
-			identifier: assign.propertyType
-			count: 1
-			path: ../concrete/src/Routing/RouteMiddleware.php
-
-		-
 			message: '#^If condition is always false\.$#'
 			identifier: if.alwaysFalse
 			count: 1
@@ -9803,12 +9641,6 @@ parameters:
 			identifier: argument.type
 			count: 1
 			path: ../concrete/src/Summary/Data/Extractor/Driver/BasicPageDriver.php
-
-		-
-			message: '#^Property Concrete\\Core\\Summary\\Data\\Field\\LinkDataFieldData\:\:\$link \(int\) does not accept League\\Url\\Url\|string\.$#'
-			identifier: assign.propertyType
-			count: 1
-			path: ../concrete/src/Summary/Data/Field/LinkDataFieldData.php
 
 		-
 			message: '#^If condition is always true\.$#'
@@ -10315,18 +10147,6 @@ parameters:
 			path: ../concrete/src/Url/Resolver/CanonicalUrlResolver.php
 
 		-
-			message: '#^Property Concrete\\Core\\Url\\Resolver\\CanonicalUrlResolver\:\:\$cached \(Concrete\\Core\\Url\\Url\) does not accept Concrete\\Core\\Url\\UrlImmutable\.$#'
-			identifier: assign.propertyType
-			count: 1
-			path: ../concrete/src/Url/Resolver/CanonicalUrlResolver.php
-
-		-
-			message: '#^Property Concrete\\Core\\Url\\Resolver\\CanonicalUrlResolver\:\:\$cached \(Concrete\\Core\\Url\\Url\) does not accept null\.$#'
-			identifier: assign.propertyType
-			count: 1
-			path: ../concrete/src/Url/Resolver/CanonicalUrlResolver.php
-
-		-
 			message: '#^Method Concrete\\Core\\Url\\Resolver\\PathUrlResolver\:\:handlePath\(\) should return Concrete\\Core\\Url\\UrlInterface\|League\\Url\\Url but returns League\\Url\\UrlInterface\.$#'
 			identifier: return.type
 			count: 1
@@ -10705,12 +10525,6 @@ parameters:
 			path: ../concrete/src/User/UserInfo.php
 
 		-
-			message: '#^Property Concrete\\Core\\User\\UserInfo\:\:\$connection \(Concrete\\Core\\Database\\Connection\\Connection\) does not accept Doctrine\\DBAL\\Connection\.$#'
-			identifier: assign.propertyType
-			count: 1
-			path: ../concrete/src/User/UserInfo.php
-
-		-
 			message: '#^Negated boolean expression is always false\.$#'
 			identifier: booleanNot.alwaysFalse
 			count: 1
@@ -10803,13 +10617,7 @@ parameters:
 		-
 			message: '#^Call to function is_object\(\) with Concrete\\Core\\Entity\\Validation\\BannedWord will always evaluate to true\.$#'
 			identifier: function.alreadyNarrowedType
-			count: 4
-			path: ../concrete/src/Validation/BannedWord/BannedWord.php
-
-		-
-			message: '#^Property Concrete\\Core\\Validation\\BannedWord\\BannedWord\:\:\$entity \(Concrete\\Core\\Entity\\Validation\\BannedWord\) does not accept null\.$#'
-			identifier: assign.propertyType
-			count: 1
+			count: 2
 			path: ../concrete/src/Validation/BannedWord/BannedWord.php
 
 		-

@@ -22,7 +22,7 @@ class CanonicalUrlResolver implements UrlResolverInterface
     protected $app;
 
     /**
-     * @var \Concrete\Core\Url\Url
+     * @var UrlImmutable|null
      */
     protected $cached;
 
