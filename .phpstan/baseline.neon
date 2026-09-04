@@ -8425,12 +8425,6 @@ parameters:
 			path: ../concrete/src/Notification/Notifier/StandardNotifier.php
 
 		-
-			message: '#^Method Concrete\\Core\\Notification\\Notifier\\WorkflowProgressNotifier\:\:getUsersToNotify\(\) should return array\<Concrete\\Core\\Entity\\User\\User\> but returns array\<Concrete\\Core\\User\\UserInfo\>\.$#'
-			identifier: return.type
-			count: 1
-			path: ../concrete/src/Notification/Notifier/WorkflowProgressNotifier.php
-
-		-
 			message: '#^Method Concrete\\Core\\Notification\\Type\\CoreUpdateType\:\:createNotification\(\) should return Concrete\\Core\\Entity\\Notification\\Notification but return statement is missing\.$#'
 			identifier: return.missing
 			count: 1
