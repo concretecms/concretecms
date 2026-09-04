@@ -4441,12 +4441,6 @@ parameters:
 			path: ../concrete/src/Console/Command.php
 
 		-
-			message: '#^Parameter \#5 \$strict of method Concrete\\Core\\Console\\OutputStyle\:\:askWithCompletion\(\) expects bool, null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: ../concrete/src/Console/Command.php
-
-		-
 			message: '#^Property Concrete\\Core\\Console\\Command\:\:\$signature \(string\) in isset\(\) is not nullable\.$#'
 			identifier: isset.property
 			count: 1
@@ -4583,12 +4577,6 @@ parameters:
 			identifier: trait.unused
 			count: 1
 			path: ../concrete/src/Console/ConsoleAwareTrait.php
-
-		-
-			message: '#^Parameter \#1 \$multiselect of method Symfony\\Component\\Console\\Question\\ChoiceQuestion\:\:setMultiselect\(\) expects bool, null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: ../concrete/src/Console/OutputStyle.php
 
 		-
 			message: '#^Property Concrete\\Core\\Console\\OutputStyle\:\:\$output is never read, only written\.$#'
