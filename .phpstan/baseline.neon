@@ -571,12 +571,6 @@ parameters:
 			path: ../concrete/controllers/dialog/file/statistics.php
 
 		-
-			message: '#^Variable \$typeVersion might not be defined\.$#'
-			identifier: variable.undefined
-			count: 1
-			path: ../concrete/controllers/dialog/file/thumbnails/edit.php
-
-		-
 			message: '#^Call to an undefined method Concrete\\Controller\\Dialog\\File\\Bulk\\Properties\:\:setFiles\(\)\.$#'
 			identifier: method.notFound
 			count: 1
