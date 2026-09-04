@@ -2425,12 +2425,6 @@ parameters:
 			path: ../concrete/src/Api/Fractal/Transformer/ExpressEntryTransformer.php
 
 		-
-			message: '#^Parameter \#2 \$fetchJoinCollection of class Pagerfanta\\Adapter\\DoctrineORMAdapter constructor expects bool, Closure given\.$#'
-			identifier: argument.type
-			count: 1
-			path: ../concrete/src/Api/IntegrationList.php
-
-		-
 			message: '#^Call to an undefined method Concrete\\Core\\User\\Exception\\UserException\:\:getMessage\(\)\.$#'
 			identifier: method.notFound
 			count: 1
@@ -6977,12 +6971,6 @@ parameters:
 			identifier: if.alwaysTrue
 			count: 1
 			path: ../concrete/src/Health/Report/Message/EmailReportMessageHandler.php
-
-		-
-			message: '#^Parameter \#2 \$fetchJoinCollection of class Pagerfanta\\Adapter\\DoctrineORMAdapter constructor expects bool, Closure given\.$#'
-			identifier: argument.type
-			count: 1
-			path: ../concrete/src/Health/Report/Result/ResultList.php
 
 		-
 			message: '#^Call to function is_string\(\) with Concrete\\Core\\Health\\Report\\Test\\TestInterface will always evaluate to false\.$#'
