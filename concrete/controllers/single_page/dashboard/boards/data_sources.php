@@ -109,7 +109,7 @@ class DataSources extends DashboardSitePageController
                 $this->executeCommand($resetCommand);
                 return $this->redirect('/dashboard/boards/data_sources', 'view', $board->getBoardID());
             }
-            $this->update($board->getBoardID(), $dataSource->getId());
+            $this->update($configuredDataSourceID);
         } else {
             return $this->redirect('/dashboard/boards/boards');
         }
