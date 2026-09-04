@@ -124,11 +124,8 @@ class Timezone
     /**
      * Get a list of date/times checked against the database.
      *
-     * @return array {
-     *
-     *     @var int[] $timestamps the UNIX timestamps of the date/times checked
-     *     @var string[] $databaseDatetimes The corresponding date/time representations of the timestamps as formatted by the database.
-     * }
+     * @return array{timestamps: int[], databaseDatetimes: string[]} timestamps are the UNIX timestamps of the date/times checked,
+     *                                                                databaseDatetimes are the corresponding date/time representations of the timestamps as formatted by the database
      */
     protected function getDatabaseTimestamps()
     {

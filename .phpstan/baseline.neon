@@ -1783,12 +1783,6 @@ parameters:
 			path: ../concrete/controllers/single_page/dashboard/extend/install.php
 
 		-
-			message: '#^Variable \$validation_token might not be defined\.$#'
-			identifier: variable.undefined
-			count: 2
-			path: ../concrete/controllers/single_page/dashboard/files/add_set.php
-
-		-
 			message: '#^Call to an undefined method Concrete\\Core\\Attribute\\Category\\CategoryInterface\:\:getByID\(\)\.$#'
 			identifier: method.notFound
 			count: 3
@@ -6685,8 +6679,8 @@ parameters:
 			path: ../concrete/src/Database/Connection/ConnectionFactory.php
 
 		-
-			message: '#^PHPDoc tag @var above a method has no effect\.$#'
-			identifier: varTag.misplaced
+			message: '#^Parameter \#2 \$datetime of static method DateTime\:\:createFromFormat\(\) expects string, int given\.$#'
+			identifier: argument.type
 			count: 1
 			path: ../concrete/src/Database/Connection/Timezone.php
 
@@ -6694,18 +6688,6 @@ parameters:
 			message: '#^Parameter \#6 \$year of function mktime expects int, string given\.$#'
 			identifier: argument.type
 			count: 2
-			path: ../concrete/src/Database/Connection/Timezone.php
-
-		-
-			message: '#^Variable \$databaseDatetimes might not be defined\.$#'
-			identifier: variable.undefined
-			count: 1
-			path: ../concrete/src/Database/Connection/Timezone.php
-
-		-
-			message: '#^Variable \$timestamps might not be defined\.$#'
-			identifier: variable.undefined
-			count: 1
 			path: ../concrete/src/Database/Connection/Timezone.php
 
 		-
@@ -9109,12 +9091,6 @@ parameters:
 			path: ../concrete/src/Geolocator/GeolocatorController.php
 
 		-
-			message: '#^Variable \$_file might not be defined\.$#'
-			identifier: variable.undefined
-			count: 1
-			path: ../concrete/src/Geolocator/GeolocatorController.php
-
-		-
 			message: '#^Method Doctrine\\Persistence\\ObjectManager\:\:flush\(\) invoked with 1 parameter, 0 required\.$#'
 			identifier: arguments.count
 			count: 2
@@ -10312,60 +10288,6 @@ parameters:
 			message: '#^Iterating over an object of an unknown class Laminas\\Mail\\Storage\\Pop3\.$#'
 			identifier: class.notFound
 			count: 1
-			path: ../concrete/src/Mail/Importer/MailImporter.php
-
-		-
-			message: '#^Variable \$miConnectionMethod might not be defined\.$#'
-			identifier: variable.undefined
-			count: 2
-			path: ../concrete/src/Mail/Importer/MailImporter.php
-
-		-
-			message: '#^Variable \$miEmail might not be defined\.$#'
-			identifier: variable.undefined
-			count: 2
-			path: ../concrete/src/Mail/Importer/MailImporter.php
-
-		-
-			message: '#^Variable \$miEncryption might not be defined\.$#'
-			identifier: variable.undefined
-			count: 2
-			path: ../concrete/src/Mail/Importer/MailImporter.php
-
-		-
-			message: '#^Variable \$miHandle might not be defined\.$#'
-			identifier: variable.undefined
-			count: 1
-			path: ../concrete/src/Mail/Importer/MailImporter.php
-
-		-
-			message: '#^Variable \$miIsEnabled might not be defined\.$#'
-			identifier: variable.undefined
-			count: 2
-			path: ../concrete/src/Mail/Importer/MailImporter.php
-
-		-
-			message: '#^Variable \$miPassword might not be defined\.$#'
-			identifier: variable.undefined
-			count: 2
-			path: ../concrete/src/Mail/Importer/MailImporter.php
-
-		-
-			message: '#^Variable \$miPort might not be defined\.$#'
-			identifier: variable.undefined
-			count: 2
-			path: ../concrete/src/Mail/Importer/MailImporter.php
-
-		-
-			message: '#^Variable \$miServer might not be defined\.$#'
-			identifier: variable.undefined
-			count: 2
-			path: ../concrete/src/Mail/Importer/MailImporter.php
-
-		-
-			message: '#^Variable \$miUsername might not be defined\.$#'
-			identifier: variable.undefined
-			count: 2
 			path: ../concrete/src/Mail/Importer/MailImporter.php
 
 		-

@@ -11,6 +11,7 @@ class AddSet extends DashboardPageController
     public function do_add()
     {
         extract($this->getHelperObjects());
+        /** @var \Concrete\Core\Validation\CSRF\Token $validation_token */
 
         if (!$validation_token->validate("file_sets_add")) {
             $this->error->add($validation_token->getErrorMessage());
