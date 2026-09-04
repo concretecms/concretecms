@@ -1675,12 +1675,6 @@ parameters:
 			path: ../concrete/controllers/single_page/dashboard/system/registration/authentication.php
 
 		-
-			message: '#^Method Concrete\\Controller\\SinglePage\\Dashboard\\System\\Registration\\Logout\:\:invalidate_sessions\(\) should return Concrete\\Core\\Http\\Response\|void but returns Symfony\\Component\\HttpFoundation\\Response\.$#'
-			identifier: return.type
-			count: 1
-			path: ../concrete/controllers/single_page/dashboard/system/registration/logout.php
-
-		-
 			message: '#^Call to function is_array\(\) with bool\|float\|int\|string\|null will always evaluate to false\.$#'
 			identifier: function.impossibleType
 			count: 2

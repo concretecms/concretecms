@@ -152,7 +152,7 @@ class Logout extends DashboardPageController
      *
      * @param string $token The CSRF token used to validate this request
      *
-     * @return \Concrete\Core\Http\Response|void
+     * @return \Symfony\Component\HttpFoundation\Response|void
      */
     public function invalidate_sessions($token = '')
     {
