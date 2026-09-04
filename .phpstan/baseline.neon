@@ -9241,12 +9241,6 @@ parameters:
 			path: ../concrete/src/Health/Report/Test/Test/Search/SimpleAttributeContentTest.php
 
 		-
-			message: '#^Variable \$detailsControl might not be defined\.$#'
-			identifier: variable.undefined
-			count: 1
-			path: ../concrete/src/Health/Report/Test/Test/Search/SimpleAttributeContentTest.php
-
-		-
 			message: '#^Call to an undefined method Concrete\\Core\\Health\\Report\\Finding\\Message\\Formatter\\FormatterInterface\:\:getLocation\(\)\.$#'
 			identifier: method.notFound
 			count: 1
