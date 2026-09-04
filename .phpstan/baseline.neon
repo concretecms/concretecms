@@ -3403,12 +3403,6 @@ parameters:
 			path: ../concrete/src/Attribute/DefaultController.php
 
 		-
-			message: '#^Method Concrete\\Core\\Attribute\\ExpressSetManager\:\:allowAttributeSets\(\) should return int but returns false\.$#'
-			identifier: return.type
-			count: 1
-			path: ../concrete/src/Attribute/ExpressSetManager.php
-
-		-
 			message: '#^Call to an undefined method HtmlObject\\Element\:\:src\(\)\.$#'
 			identifier: method.notFound
 			count: 1
@@ -3521,12 +3515,6 @@ parameters:
 			identifier: new.static
 			count: 1
 			path: ../concrete/src/Attribute/PendingType.php
-
-		-
-			message: '#^Return type \(bool\) of method Concrete\\Core\\Attribute\\StandardSetManager\:\:allowAttributeSets\(\) should be compatible with return type \(int\) of method Concrete\\Core\\Attribute\\SetManagerInterface\:\:allowAttributeSets\(\)$#'
-			identifier: method.childReturnType
-			count: 1
-			path: ../concrete/src/Attribute/StandardSetManager.php
 
 		-
 			message: '#^Instanceof between Concrete\\Core\\Error\\ErrorList\\ErrorList and Concrete\\Core\\Error\\ErrorList\\ErrorList will always evaluate to true\.$#'
