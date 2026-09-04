@@ -353,14 +353,19 @@ class Text
     /**
      * Takes a string and turns it into a handle.
      *
-     * @param      $handle
-     * @param bool $leaveSlashes
+     * @param string $handle
+     * @param bool $leaveSlashes set to true to keep the slashes (every segment is sanitized separately)
      *
      * @return string
      */
     public function handle($handle, $leaveSlashes = false)
     {
-        $handle = $this->sanitizeFileSystem($handle);
+        if ($leaveSlashes) {
+            $handle = implode('/', array_map([$this, 'sanitizeFileSystem'], explode('/', $handle)));
+        } else {
+            $handle = $this->sanitizeFileSystem($handle);
+        }
+
         return str_replace('-', '_', $handle);
     }
 
