@@ -4525,12 +4525,6 @@ parameters:
 			path: ../concrete/src/Console/Command/InstallPackageCommand.php
 
 		-
-			message: '#^Parameter \#3 \$description of method Symfony\\Component\\Console\\Command\\Command\:\:addArgument\(\) expects string, int given\.$#'
-			identifier: argument.type
-			count: 1
-			path: ../concrete/src/Console/Command/InstallThemeCommand.php
-
-		-
 			message: '#^Unreachable statement \- code above always terminates\.$#'
 			identifier: deadCode.unreachable
 			count: 1
