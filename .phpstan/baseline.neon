@@ -187,12 +187,6 @@ parameters:
 			path: ../concrete/controllers/backend/page/arrange_blocks.php
 
 		-
-			message: '#^Parameter \#2 \$default of method Symfony\\Component\\HttpFoundation\\InputBag\:\:get\(\) expects bool\|float\|int\|string\|null, array given\.$#'
-			identifier: argument.type
-			count: 1
-			path: ../concrete/controllers/backend/page/arrange_blocks.php
-
-		-
 			message: '#^Call to function is_object\(\) with Concrete\\Core\\Page\\Collection\\Version\\Version will always evaluate to true\.$#'
 			identifier: function.alreadyNarrowedType
 			count: 1
@@ -367,12 +361,6 @@ parameters:
 			path: ../concrete/controllers/dialog/file/bulk/properties.php
 
 		-
-			message: '#^Parameter \#2 \$default of method Symfony\\Component\\HttpFoundation\\InputBag\:\:get\(\) expects bool\|float\|int\|string\|null, array given\.$#'
-			identifier: argument.type
-			count: 2
-			path: ../concrete/controllers/dialog/file/bulk/properties.php
-
-		-
 			message: '#^Call to Concrete\\Core\\Controller\\AbstractController\:\:on_start\(\) on a separate line has no effect\.$#'
 			identifier: staticMethod.resultUnused
 			count: 1
@@ -406,12 +394,6 @@ parameters:
 			message: '#^Parameter \#1 \$version of method Concrete\\Core\\Attribute\\Category\\FileCategory\:\:getAttributeValues\(\) expects Concrete\\Core\\Entity\\File\\Version, Concrete\\Core\\Attribute\\ObjectInterface given\.$#'
 			identifier: argument.type
 			count: 1
-			path: ../concrete/controllers/dialog/file/properties.php
-
-		-
-			message: '#^Parameter \#2 \$default of method Symfony\\Component\\HttpFoundation\\InputBag\:\:get\(\) expects bool\|float\|int\|string\|null, array given\.$#'
-			identifier: argument.type
-			count: 2
 			path: ../concrete/controllers/dialog/file/properties.php
 
 		-
@@ -461,12 +443,6 @@ parameters:
 			identifier: arguments.count
 			count: 1
 			path: ../concrete/controllers/dialog/file/upload_complete.php
-
-		-
-			message: '#^Parameter \#2 \$default of method Symfony\\Component\\HttpFoundation\\InputBag\:\:get\(\) expects bool\|float\|int\|string\|null, array given\.$#'
-			identifier: argument.type
-			count: 2
-			path: ../concrete/controllers/dialog/logs/bulk/delete.php
 
 		-
 			message: '#^Parameter \#2 \$array of function implode expects array\<string\>, array\<Concrete\\Core\\Error\\ErrorList\\Error\\ErrorInterface\> given\.$#'
@@ -559,12 +535,6 @@ parameters:
 			path: ../concrete/controllers/dialog/page/bulk/properties.php
 
 		-
-			message: '#^Parameter \#2 \$default of method Symfony\\Component\\HttpFoundation\\InputBag\:\:get\(\) expects bool\|float\|int\|string\|null, array given\.$#'
-			identifier: argument.type
-			count: 2
-			path: ../concrete/controllers/dialog/page/bulk/properties.php
-
-		-
 			message: '#^Method Concrete\\Core\\Page\\Page\:\:getCollectionLink\(\) invoked with 1 parameter, 0 required\.$#'
 			identifier: arguments.count
 			count: 1
@@ -625,12 +595,6 @@ parameters:
 			path: ../concrete/controllers/dialog/site_type/attributes.php
 
 		-
-			message: '#^Parameter \#2 \$default of method Symfony\\Component\\HttpFoundation\\InputBag\:\:get\(\) expects bool\|float\|int\|string\|null, array given\.$#'
-			identifier: argument.type
-			count: 2
-			path: ../concrete/controllers/dialog/site_type/attributes.php
-
-		-
 			message: '#^Strict comparison using \!\=\= between Concrete\\Core\\Entity\\Site\\Skeleton and null will always evaluate to true\.$#'
 			identifier: notIdentical.alwaysTrue
 			count: 1
@@ -679,12 +643,6 @@ parameters:
 			path: ../concrete/controllers/dialog/type/attributes.php
 
 		-
-			message: '#^Parameter \#2 \$default of method Symfony\\Component\\HttpFoundation\\InputBag\:\:get\(\) expects bool\|float\|int\|string\|null, array given\.$#'
-			identifier: argument.type
-			count: 2
-			path: ../concrete/controllers/dialog/type/attributes.php
-
-		-
 			message: '#^Parameter \#1 \$template of method Concrete\\Core\\Page\\PageList\:\:filterByPageTemplate\(\) expects Concrete\\Core\\Entity\\Page\\Template, Concrete\\Core\\Page\\Template\|null given\.$#'
 			identifier: argument.type
 			count: 1
@@ -715,12 +673,6 @@ parameters:
 			path: ../concrete/controllers/dialog/user/attributes.php
 
 		-
-			message: '#^Parameter \#2 \$default of method Symfony\\Component\\HttpFoundation\\InputBag\:\:get\(\) expects bool\|float\|int\|string\|null, array given\.$#'
-			identifier: argument.type
-			count: 2
-			path: ../concrete/controllers/dialog/user/attributes.php
-
-		-
 			message: '#^Call to Concrete\\Core\\Controller\\AbstractController\:\:on_start\(\) on a separate line has no effect\.$#'
 			identifier: staticMethod.resultUnused
 			count: 1
@@ -736,12 +688,6 @@ parameters:
 			message: '#^Call to an undefined method Concrete\\Core\\Permission\\Key\\Key\:\:getMyAssignment\(\)\.$#'
 			identifier: method.notFound
 			count: 1
-			path: ../concrete/controllers/dialog/user/bulk/properties.php
-
-		-
-			message: '#^Parameter \#2 \$default of method Symfony\\Component\\HttpFoundation\\InputBag\:\:get\(\) expects bool\|float\|int\|string\|null, array given\.$#'
-			identifier: argument.type
-			count: 2
 			path: ../concrete/controllers/dialog/user/bulk/properties.php
 
 		-
@@ -952,12 +898,6 @@ parameters:
 			message: '#^Instanceof between Concrete\\Core\\Page\\Page and Concrete\\Core\\Page\\Page will always evaluate to true\.$#'
 			identifier: instanceof.alwaysTrue
 			count: 1
-			path: ../concrete/controllers/panel/add.php
-
-		-
-			message: '#^Parameter \#2 \$default of method Symfony\\Component\\HttpFoundation\\InputBag\:\:get\(\) expects bool\|float\|int\|string\|null, array given\.$#'
-			identifier: argument.type
-			count: 4
 			path: ../concrete/controllers/panel/add.php
 
 		-
@@ -1735,12 +1675,6 @@ parameters:
 			path: ../concrete/controllers/single_page/dashboard/system/files/thumbnails.php
 
 		-
-			message: '#^Parameter \#2 \$default of method Symfony\\Component\\HttpFoundation\\InputBag\:\:get\(\) expects bool\|float\|int\|string\|null, array given\.$#'
-			identifier: argument.type
-			count: 1
-			path: ../concrete/controllers/single_page/dashboard/system/files/thumbnails.php
-
-		-
 			message: '#^Strict comparison using \=\=\= between null and false will always evaluate to false\.$#'
 			identifier: identical.alwaysFalse
 			count: 1
@@ -1781,18 +1715,6 @@ parameters:
 			identifier: method.void
 			count: 2
 			path: ../concrete/controllers/single_page/dashboard/system/multisite/types.php
-
-		-
-			message: '#^Call to function is_array\(\) with bool\|float\|int\|string\|null will always evaluate to false\.$#'
-			identifier: function.impossibleType
-			count: 1
-			path: ../concrete/controllers/single_page/dashboard/system/notification/alerts.php
-
-		-
-			message: '#^Parameter \#2 \$default of method Symfony\\Component\\HttpFoundation\\InputBag\:\:get\(\) expects bool\|float\|int\|string\|null, array given\.$#'
-			identifier: argument.type
-			count: 1
-			path: ../concrete/controllers/single_page/dashboard/system/notification/alerts.php
 
 		-
 			message: '#^Variable \$subscriber in PHPDoc tag @var does not match assigned variable \$event\.$#'
@@ -1879,12 +1801,6 @@ parameters:
 			path: ../concrete/controllers/single_page/dashboard/system/registration/logout.php
 
 		-
-			message: '#^Argument of an invalid type bool\|float\|int\|string supplied for foreach, only iterables are supported\.$#'
-			identifier: foreach.nonIterable
-			count: 1
-			path: ../concrete/controllers/single_page/dashboard/system/registration/password_requirements.php
-
-		-
 			message: '#^Call to function is_array\(\) with bool\|float\|int\|string\|null will always evaluate to false\.$#'
 			identifier: function.impossibleType
 			count: 2
@@ -1892,12 +1808,6 @@ parameters:
 
 		-
 			message: '#^Parameter \#1 \$callback of function set_error_handler expects \(callable\(int, string, string, int, array\)\: bool\)\|null, Closure\(\)\: void given\.$#'
-			identifier: argument.type
-			count: 1
-			path: ../concrete/controllers/single_page/dashboard/system/registration/password_requirements.php
-
-		-
-			message: '#^Parameter \#2 \$default of method Symfony\\Component\\HttpFoundation\\InputBag\:\:get\(\) expects bool\|float\|int\|string\|null, array given\.$#'
 			identifier: argument.type
 			count: 1
 			path: ../concrete/controllers/single_page/dashboard/system/registration/password_requirements.php

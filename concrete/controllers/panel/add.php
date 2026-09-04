@@ -121,7 +121,7 @@ class Add extends BackendInterfacePageController
     {
         /** @var Request $request */
         $request = $this->app->make(Request::class);
-        $usedAreas = $request->request->get("usedAreas", []);
+        $usedAreas = (array) $request->request->get("usedAreas");
         return count($this->getOrphanedBlockIds($usedAreas)) > 0;
     }
 
@@ -133,7 +133,7 @@ class Add extends BackendInterfacePageController
         /** @var Request $request */
         $request = $this->app->make(Request::class);
 
-        $usedAreas = $request->request->get("usedAreas", []);
+        $usedAreas = (array) $request->request->get("usedAreas");
 
         $contents = [];
 
@@ -253,7 +253,7 @@ class Add extends BackendInterfacePageController
                     if (!$token->validate('remove_orphaned_block', $removeToken)) {
                         $errorList->add($token->getErrorMessage());
                     } else {
-                        $usedAreas = $request->request->get("usedAreas", []);
+                        $usedAreas = (array) $request->request->get("usedAreas");
 
                         $arrOrphanedBlocks = $this->getOrphanedBlockIds($usedAreas);
 
@@ -315,7 +315,7 @@ class Add extends BackendInterfacePageController
             if (!$token->validate('remove_orphaned_blocks', $removeToken)) {
                 $errorList->add($token->getErrorMessage());
             } else {
-                $usedAreas = $request->request->get("usedAreas", []);
+                $usedAreas = (array) $request->request->get("usedAreas");
 
                 $arrOrphanedBlocks = $this->getOrphanedBlockIds($usedAreas);
 

@@ -66,7 +66,7 @@ class ArrangeBlocks extends Page
             $e->add(t('Unable to find the block to be moved.'));
         }
 
-        $sortedBlockIDs = $post->get('blocks', []);
+        $sortedBlockIDs = $post->get('blocks');
         if (is_array($sortedBlockIDs)) {
             $sortedBlockIDs = array_values(array_filter(array_map('intval', $sortedBlockIDs)));
         } else {

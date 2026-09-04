@@ -30,10 +30,10 @@ trait ControllerTrait
     public function saveAttributes(): ?ErrorList
     {
         // Let's retrieve a list of attribute keys that we're trying to set.
-        $selectedAttributes = (array)$this->request->request->get('selectedKeys', []);
+        $selectedAttributes = (array) $this->request->request->get('selectedKeys');
 
         // In case of non modified Multiple Valued attribute in bulk edit
-        $ignoredAttributes = (array)$this->request->request->get('ignoredKeys', []);
+        $ignoredAttributes = (array) $this->request->request->get('ignoredKeys');
 
         foreach ($this->getObjects() as $object) {
             // Now, let's divide attributes into piles of those we need to save, and those we need to clear
