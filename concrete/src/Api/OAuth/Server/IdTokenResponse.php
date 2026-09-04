@@ -2,6 +2,7 @@
 
 namespace Concrete\Core\Api\OAuth\Server;
 
+use Concrete\Core\Api\OAuth\UserStatusValidator;
 use Concrete\Core\Application\Application;
 use Concrete\Core\Application\ApplicationAwareInterface;
 use Concrete\Core\Site\Service;
@@ -48,11 +49,23 @@ class IdTokenResponse extends BearerTokenResponse
      */
     protected $userInfoRepository;
 
-    public function __construct(Service $site, ClaimsSetFactory $claimFactory, UserInfoRepository $userInfoRepository)
-    {
+    /**
+     * Decides whether the user is still permitted to authenticate
+     *
+     * @var \Concrete\Core\Api\OAuth\UserStatusValidator
+     */
+    protected $userStatusValidator;
+
+    public function __construct(
+        Service $site,
+        ClaimsSetFactory $claimFactory,
+        UserInfoRepository $userInfoRepository,
+        UserStatusValidator $userStatusValidator
+    ) {
         $this->site = $site;
         $this->claimFactory = $claimFactory;
         $this->userInfoRepository = $userInfoRepository;
+        $this->userStatusValidator = $userStatusValidator;
     }
 
     /**
@@ -69,9 +82,13 @@ class IdTokenResponse extends BearerTokenResponse
 
         // If this is an OIDC request, pack a new id token into it
         if ($this->isOidcRequest($accessToken->getScopes())) {
-            $user = $this->userInfoRepository->getByID($accessToken->getUserIdentifier());
+            $userIdentifier = $accessToken->getUserIdentifier();
+            $user = $this->userInfoRepository->getByID($userIdentifier);
 
-            if ($user) {
+            // An id token is an assertion to the relying party that this user authenticated, so it
+            // must not be minted for an account that can no longer log in. Auth codes stay redeemable
+            // for a day, which is ample time for the account to be deactivated in between.
+            if ($user && $this->userStatusValidator->isValid($userIdentifier)) {
                 $params['id_token'] = (string) $this->createIdToken($accessToken, $this->claimFactory->createFromUserInfo($user));
             }
         }

@@ -2,7 +2,7 @@
 
 namespace Concrete\Core\Api\OAuth\Grant;
 
-use Concrete\Core\Entity\User\User as UserEntity;
+use Concrete\Core\Api\OAuth\UserStatusValidator;
 use League\OAuth2\Server\Exception\OAuthServerException;
 use League\OAuth2\Server\Grant\RefreshTokenGrant as BaseRefreshTokenGrant;
 use League\OAuth2\Server\Repositories\RefreshTokenRepositoryInterface;
@@ -12,10 +12,20 @@ use Psr\Http\Message\ServerRequestInterface;
 
 class RefreshTokenGrant extends BaseRefreshTokenGrant
 {
-    public function __construct(RefreshTokenRepositoryInterface $refreshTokenRepository, UserRepositoryInterface $userRepository)
-    {
+
+    /**
+     * @var \Concrete\Core\Api\OAuth\UserStatusValidator
+     */
+    private $userStatusValidator;
+
+    public function __construct(
+        RefreshTokenRepositoryInterface $refreshTokenRepository,
+        UserRepositoryInterface $userRepository,
+        UserStatusValidator $userStatusValidator
+    ) {
         parent::__construct($refreshTokenRepository);
         $this->setUserRepository($userRepository);
+        $this->userStatusValidator = $userStatusValidator;
     }
 
     /**
@@ -29,9 +39,14 @@ class RefreshTokenGrant extends BaseRefreshTokenGrant
     {
         $refreshTokenData = parent::validateOldRefreshToken($request, $clientId);
 
-        $user = $this->userRepository->find($refreshTokenData['user_id']);
+        if (!$this->userStatusValidator->isValid($refreshTokenData['user_id'])) {
+            // Revoke before throwing. The parent only revokes the old tokens further along in
+            // respondToAccessTokenRequest(), so bailing out here would otherwise leave both the refresh
+            // token and the access token it was paired with live - retryable indefinitely, and usable
+            // again if the account is ever reactivated.
+            $this->refreshTokenRepository->revokeRefreshToken($refreshTokenData['refresh_token_id']);
+            $this->accessTokenRepository->revokeAccessToken($refreshTokenData['access_token_id']);
 
-        if (!$user instanceof UserEntity || !$user->isUserActive()) {
             $this->getEmitter()->emit(new RequestEvent(RequestEvent::USER_AUTHENTICATION_FAILED, $request));
             throw OAuthServerException::invalidRefreshToken('Token is not linked to an active user');
         }

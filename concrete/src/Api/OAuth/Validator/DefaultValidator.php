@@ -2,11 +2,13 @@
 
 namespace Concrete\Core\Api\OAuth\Validator;
 
+use Concrete\Core\Api\OAuth\UserStatusValidator;
 use Concrete\Core\Application\Application;
 use Concrete\Core\User\User;
 use League\OAuth2\Server\AuthorizationValidators\AuthorizationValidatorInterface;
 use League\OAuth2\Server\AuthorizationValidators\BearerTokenValidator;
 use League\OAuth2\Server\CryptKey;
+use League\OAuth2\Server\Exception\OAuthServerException;
 use Psr\Http\Message\ServerRequestInterface;
 
 class DefaultValidator implements AuthorizationValidatorInterface
@@ -18,10 +20,17 @@ class DefaultValidator implements AuthorizationValidatorInterface
     /** @var \Concrete\Core\Application\Application */
     private $app;
 
-    public function __construct(BearerTokenValidator $validator, Application $app)
-    {
+    /** @var \Concrete\Core\Api\OAuth\UserStatusValidator */
+    private $userStatusValidator;
+
+    public function __construct(
+        BearerTokenValidator $validator,
+        Application $app,
+        UserStatusValidator $userStatusValidator
+    ) {
         $this->validator = $validator;
         $this->app = $app;
+        $this->userStatusValidator = $userStatusValidator;
     }
 
     /**
@@ -54,7 +63,20 @@ class DefaultValidator implements AuthorizationValidatorInterface
         */
 
         // Delegate the rest to the passed in validator
-        return $this->validator->validateAuthorization($request);
+        $request = $this->validator->validateAuthorization($request);
+
+        // A valid bearer token only proves that a token was issued and has not expired or been
+        // revoked - it says nothing about the state of the account it was issued to. Re-check the user
+        // here so that deactivated, deleted and password-reset accounts lose API access immediately
+        // rather than for the remaining lifetime of the token. Tokens issued through the client
+        // credentials grant are not tied to a user and carry an empty subject.
+        $userIdentifier = $request->getAttribute('oauth_user_id');
+
+        if ($userIdentifier && !$this->userStatusValidator->isValid($userIdentifier)) {
+            throw OAuthServerException::accessDenied('Token is not linked to an active user');
+        }
+
+        return $request;
     }
 
     /**

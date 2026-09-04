@@ -168,7 +168,11 @@ class EditProfile extends AccountPageController
             $data['uEmail'] = $email;
             $config = $this->app->make('config');
             if ($config->get('concrete.misc.user_timezones')) {
-                $data['uTimezone'] = (string) $this->post('uTimezone');
+                $timezone = (string) $this->post('uTimezone');
+                $validTimezones = $app->make('helper/date')->getTimezones();
+                if ($timezone !== '' && array_key_exists($timezone, $validTimezones)) {
+                    $data['uTimezone'] = $timezone;
+                }
             }
             $languages = Localization::getAvailableInterfaceLanguages();
             if (count($languages) > 0) {

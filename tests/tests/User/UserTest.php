@@ -91,6 +91,36 @@ class UserTest extends UserTestCase
         $this->assertEquals('andrew@concrete5.org', $ui->getUserEmail());
     }
 
+    /**
+     * Regression test for H1-3937203: RegistrationService::create() must not
+     * persist arbitrary uTimezone values (e.g. HTML/JS payloads), since that
+     * value is later rendered on the dashboard user edit page.
+     */
+    public function testCreateRejectsInvalidTimezone()
+    {
+        $service = Core::make('user/registration');
+        $ui = $service->create([
+            'uName' => 'andrew',
+            'uEmail' => 'andrew@concrete5.org',
+            'uTimezone' => '<script>alert(\'pwned-admin\')</script>',
+        ]);
+        $this->assertNull($ui->getUserTimezone());
+    }
+
+    /**
+     * A legitimate, known timezone identifier must still be accepted and stored.
+     */
+    public function testCreateAcceptsValidTimezone()
+    {
+        $service = Core::make('user/registration');
+        $ui = $service->create([
+            'uName' => 'andrew',
+            'uEmail' => 'andrew@concrete5.org',
+            'uTimezone' => 'America/New_York',
+        ]);
+        $this->assertEquals('America/New_York', $ui->getUserTimezone());
+    }
+
     public function testGravatar()
     {
         $site = \Core::make('site')->installDefault();

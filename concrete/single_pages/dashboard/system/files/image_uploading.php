@@ -14,6 +14,8 @@ defined('C5_EXECUTE') or die('Access Denied.');
 /* @var int $restrict_max_height */
 /* @var string $svg_processor_action */
 /* @var array $svg_processor_actions */
+/* @var string $xml_processor_action */
+/* @var array $xml_processor_actions */
 /* @var bool $use_exif_data_to_rotate_images */
 /* @var bool $exif_reader_supported */
 /* @var string|null $thumbnailOptionsURL */
@@ -75,6 +77,11 @@ defined('C5_EXECUTE') or die('Access Denied.');
     <div class="form-group">
         <?= $form->label('svg_processor_action', t('SVG Processing'), ['class' => 'launch-tooltip form-label', 'title' => t("SVG images may contain interactive contents. Albeit this feature may be useful, it can be used by an attacker to store malicious code in the images. Disable the SVG checks only if you trust the users that will upload images to the site.")]) ?>
         <?= $form->select('svg_processor_action', $svg_processor_actions, $svg_processor_action, ['required' => 'required']) ?>
+    </div>
+
+    <div class="form-group">
+        <?= $form->label('xml_processor_action', t('XML/XSLT Processing'), ['class' => 'launch-tooltip form-label', 'title' => t("XML documents may contain a processing instruction referencing an external (or same-site) XSLT stylesheet. When such a file is opened directly by a browser, the browser applies the stylesheet client-side, which can be used by an attacker to emit HTML and JavaScript that runs in this site's origin. Disable this check only if you trust the users that will upload XML files to the site.")]) ?>
+        <?= $form->select('xml_processor_action', $xml_processor_actions, $xml_processor_action, ['required' => 'required']) ?>
     </div>
 
     <div class="form-group">

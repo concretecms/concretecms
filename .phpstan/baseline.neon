@@ -4465,12 +4465,6 @@ parameters:
 			path: ../concrete/src/Api/OAuth/Controller.php
 
 		-
-			message: '#^Call to an undefined method League\\OAuth2\\Server\\Repositories\\UserRepositoryInterface\:\:find\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: ../concrete/src/Api/OAuth/Grant/RefreshTokenGrant.php
-
-		-
 			message: '#^Access to an undefined property League\\OpenIdConnectClaims\\ClaimsSet\:\:\$setFirstName\.$#'
 			identifier: property.notFound
 			count: 1
@@ -9089,6 +9083,24 @@ parameters:
 			identifier: assign.propertyType
 			count: 1
 			path: ../concrete/src/File/Component/Chooser/Option/FolderBookmarkOption.php
+
+		-
+			message: '#^Call to function is_string\(\) with string will always evaluate to true\.$#'
+			identifier: function.alreadyNarrowedType
+			count: 2
+			path: ../concrete/src/File/Document/Xml/Sanitizer.php
+
+		-
+			message: '#^Variable \$loaded might not be defined\.$#'
+			identifier: variable.undefined
+			count: 1
+			path: ../concrete/src/File/Document/Xml/Sanitizer.php
+
+		-
+			message: '#^Unsafe usage of new static\(\)\.$#'
+			identifier: new.static
+			count: 1
+			path: ../concrete/src/File/Document/Xml/SanitizerException.php
 
 		-
 			message: '#^PHPDoc tag @param references unknown parameter\: \$file$#'

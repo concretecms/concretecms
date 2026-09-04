@@ -386,6 +386,7 @@ return [
     'import_processors' => [
         'ccm.file.exists' => Concrete\Core\File\Import\Processor\FileExistingValidator::class,
         'ccm.file.extension' => Concrete\Core\File\Import\Processor\FileExtensionValidator::class,
+        'ccm.file.xml' => Concrete\Core\File\Import\Processor\XmlProcessor::class,
         'ccm.image.autorotate' => Concrete\Core\File\Import\Processor\ImageAutorotator::class,
         'ccm.image.svg' => Concrete\Core\File\Import\Processor\SvgProcessor::class,
         'ccm.image.resize' => Concrete\Core\File\Import\Processor\ImageSizeConstrain::class,
