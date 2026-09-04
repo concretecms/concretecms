@@ -45,7 +45,7 @@ class GroupTypes extends DashboardPageController
     public function remove($groupTypeId = null)
     {
         if (!$this->request->isMethod('POST')) {
-            return $this->responseFactory->notFound();
+            return $this->responseFactory->notFound('');
         }
 
         if (!$this->token->validate('save_group_type')) {

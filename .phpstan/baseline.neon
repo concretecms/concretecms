@@ -1879,12 +1879,6 @@ parameters:
 			path: ../concrete/controllers/single_page/dashboard/users/group_types.php
 
 		-
-			message: '#^Method Concrete\\Core\\Http\\ResponseFactory\:\:notFound\(\) invoked with 0 parameters, 1\-3 required\.$#'
-			identifier: arguments.count
-			count: 1
-			path: ../concrete/controllers/single_page/dashboard/users/group_types.php
-
-		-
 			message: '#^Offset ''manager'' on \*NEVER\* in isset\(\) always exists and is not nullable\.$#'
 			identifier: isset.offset
 			count: 1
