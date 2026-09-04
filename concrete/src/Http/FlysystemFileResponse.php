@@ -29,7 +29,7 @@ class FlysystemFileResponse extends Response
     protected $maxlen;
 
     /**
-     * @param \SplFileInfo|string $file               The file to stream
+     * @param File|string         $file               The file to stream
      * @param FilesystemInterface $filesystem         The filesystem instance to get info with
      * @param int                 $status             The response status code
      * @param array               $headers            An array of response headers
@@ -50,7 +50,7 @@ class FlysystemFileResponse extends Response
     }
 
     /**
-     * @param \SplFileInfo|string $file               The file to stream
+     * @param File|string         $file               The file to stream
      * @param int                 $status             The response status code
      * @param array               $headers            An array of response headers
      * @param bool                $public             Files are public by default
@@ -67,7 +67,7 @@ class FlysystemFileResponse extends Response
     /**
      * Sets the file to stream.
      *
-     * @param \SplFileInfo|string $file               The file to stream
+     * @param File|string         $file               The file to stream
      * @param string              $contentDisposition
      * @param bool                $autoEtag
      *
