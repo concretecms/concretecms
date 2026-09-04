@@ -415,13 +415,25 @@ class Area extends ConcreteObject implements \Concrete\Core\Permission\ObjectInt
     }
 
     /**
-     * @param Page $c
+     * Clear the request cache of the areas of a page.
+     *
+     * @param \Concrete\Core\Page\Page $c
      */
-    public function refreshCache($c)
+    public static function refreshCacheForPage($c)
     {
         $identifier = sprintf('/page/area/%s', $c->getCollectionID());
         $cache = \Core::make('cache/request');
         $cache->delete($identifier);
+    }
+
+    /**
+     * @param Page $c
+     *
+     * @deprecated use the static refreshCacheForPage() method
+     */
+    public function refreshCache($c)
+    {
+        static::refreshCacheForPage($c);
     }
 
     /**
