@@ -116,7 +116,7 @@ class AssetList
 
     /**
      * @param string $assetGroupHandle
-     * @param array<string,mixed> $assetHandles
+     * @param array<array{0: string, 1: string}> $assetHandles list of [asset type, asset handle] pairs
      * @param bool $customClass
      *
      * @return void

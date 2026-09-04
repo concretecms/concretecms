@@ -25,7 +25,7 @@ class Liaison
      * Create a new configuration repository.
      *
      * @param \Concrete\Core\Config\Repository\Repository $repository
-     * @param string $default_namespace
+     * @param string|null $default_namespace
      */
     public function __construct(\Concrete\Core\Config\Repository\Repository $repository, $default_namespace)
     {

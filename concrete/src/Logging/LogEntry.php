@@ -20,7 +20,7 @@ class LogEntry
     public $time;
     /** @var string|null */
     public $message;
-    /** @var string|null */
+    /** @var int|null */
     public $level;
     /** @var UserInfo|null */
     public $user;
@@ -144,7 +144,7 @@ class LogEntry
     }
 
     /**
-     * @return string|null
+     * @return int|null
      */
     public function getLevel()
     {
@@ -152,7 +152,7 @@ class LogEntry
     }
 
     /**
-     * @param string|null $level
+     * @param int|null $level
      * @return LogEntry
      */
     public function setLevel($level)

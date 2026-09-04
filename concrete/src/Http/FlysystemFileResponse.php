@@ -29,7 +29,7 @@ class FlysystemFileResponse extends Response
     protected $maxlen;
 
     /**
-     * @param File                $file               The file to stream
+     * @param \SplFileInfo|string $file               The file to stream
      * @param FilesystemInterface $filesystem         The filesystem instance to get info with
      * @param int                 $status             The response status code
      * @param array               $headers            An array of response headers

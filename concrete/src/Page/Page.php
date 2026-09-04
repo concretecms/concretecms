@@ -2130,7 +2130,7 @@ class Page extends Collection implements CategoryMemberInterface,
     /**
      * Set the theme of this page.
      *
-     * @param \Concrete\Core\Page\Theme\Theme $pl
+     * @param \Concrete\Core\Page\Theme\Theme|null $pl
      */
     public function setTheme($pl)
     {

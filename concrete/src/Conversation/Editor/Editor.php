@@ -284,7 +284,7 @@ abstract class Editor extends ConcreteObject
      *
      * @param string $cnvEditorHandle
      * @param string $cnvEditorName
-     * @param bool|Package $pkg
+     * @param \Concrete\Core\Entity\Package|\Concrete\Core\Package\Package|false|null $pkg
      *
      * @return Editor|null
      */

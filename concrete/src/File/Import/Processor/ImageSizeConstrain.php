@@ -205,7 +205,7 @@ class ImageSizeConstrain implements PreProcessorInterface
      *
      * @param \Imagine\Image\ImageInterface $image The image to be resized
      * @param \Imagine\Image\Box $size The size of the image
-     * @param string $mode
+     * @param int $mode One of the ImageInterface::THUMBNAIL_... constants
      * @param string $filter
      *
      * @throws \InvalidArgumentException

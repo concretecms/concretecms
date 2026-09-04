@@ -137,7 +137,7 @@ class CalendarEvent implements ObjectInterface, CategoryMemberInterface
     }
 
     /**
-     * @return CalendarEventVersion
+     * @return \Doctrine\Common\Collections\Collection|CalendarEventVersion[]
      */
     public function getVersions()
     {

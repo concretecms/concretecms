@@ -1519,12 +1519,6 @@ parameters:
 			path: ../concrete/controllers/single_page/dashboard/reports/logs.php
 
 		-
-			message: '#^Parameter \#1 \$level of static method Monolog\\Logger\:\:getLevelName\(\) expects int, string\|null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: ../concrete/controllers/single_page/dashboard/reports/logs.php
-
-		-
 			message: '#^Property Concrete\\Controller\\SinglePage\\Dashboard\\Reports\\Logs\:\:\$headerMenu \(Concrete\\Core\\Filesystem\\Element\) in isset\(\) is not nullable\.$#'
 			identifier: isset.property
 			count: 1
@@ -2099,12 +2093,6 @@ parameters:
 			identifier: varTag.misplaced
 			count: 1
 			path: ../concrete/src/Announcement/Item/Factory/WelcomeItemFactory.php
-
-		-
-			message: '#^Parameter \#2 \$value of method SimpleXMLElement\:\:addAttribute\(\) expects string, bool given\.$#'
-			identifier: argument.type
-			count: 1
-			path: ../concrete/src/Antispam/Library.php
 
 		-
 			message: '#^Unsafe usage of new static\(\)\.$#'
@@ -3019,12 +3007,6 @@ parameters:
 			path: ../concrete/src/Attribute/Category/LegacyCategory.php
 
 		-
-			message: '#^Call to an undefined method Concrete\\Core\\Attribute\\Category\\CategoryInterface\:\:getIndexedSearchTable\(\)\.$#'
-			identifier: method.notFound
-			count: 2
-			path: ../concrete/src/Attribute/Category/SearchIndexer/ExpressSearchIndexer.php
-
-		-
 			message: '#^Call to an undefined method Concrete\\Core\\Attribute\\Category\\CategoryInterface\:\:getCategoryEntity\(\)\.$#'
 			identifier: method.notFound
 			count: 1
@@ -3523,22 +3505,10 @@ parameters:
 			path: ../concrete/src/Backup/ContentImporter/Importer/Routine/ImportAttributesRoutine.php
 
 		-
-			message: '#^Parameter \#2 \$pkg of static method Concrete\\Core\\Block\\BlockType\\BlockType\:\:installBlockType\(\) expects Concrete\\Core\\Entity\\Package\|Concrete\\Core\\Package\\Package\|string\|false, null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: ../concrete/src/Backup/ContentImporter/Importer/Routine/ImportBlockTypesRoutine.php
-
-		-
 			message: '#^Strict comparison using \!\=\= between string and null will always evaluate to true\.$#'
 			identifier: notIdentical.alwaysTrue
 			count: 1
 			path: ../concrete/src/Backup/ContentImporter/Importer/Routine/ImportBoardSlotTemplatesRoutine.php
-
-		-
-			message: '#^Parameter \#3 \$pkg of static method Concrete\\Core\\Conversation\\Editor\\Editor\:\:add\(\) expects bool\|Concrete\\Core\\Package\\Package, Concrete\\Core\\Entity\\Package\|null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: ../concrete/src/Backup/ContentImporter/Importer/Routine/ImportConversationEditorsRoutine.php
 
 		-
 			message: '#^Call to function is_object\(\) with Concrete\\Core\\Entity\\Express\\Association will always evaluate to true\.$#'
@@ -3901,12 +3871,6 @@ parameters:
 			path: ../concrete/src/Board/Instance/Slot/Content/Populator/PopulatorInterface.php
 
 		-
-			message: '#^Parameter \#1 \$slot of class Concrete\\Core\\Board\\Instance\\Slot\\Menu\\Menu constructor expects Concrete\\Core\\Board\\Instance\\Slot\\RenderedSlot, Concrete\\Core\\Entity\\Board\\InstanceSlot given\.$#'
-			identifier: argument.type
-			count: 1
-			path: ../concrete/src/Board/Instance/Slot/Menu/Manager.php
-
-		-
 			message: '#^PHPDoc tag @param for parameter \$slot with type Concrete\\Core\\Entity\\Board\\InstanceSlot is incompatible with native type int\.$#'
 			identifier: parameter.phpDocType
 			count: 1
@@ -4045,18 +4009,6 @@ parameters:
 			path: ../concrete/src/Calendar/Event/EventRepetitionService.php
 
 		-
-			message: '#^Call to an undefined method Concrete\\Core\\Entity\\Calendar\\CalendarEventVersion\:\:add\(\)\.$#'
-			identifier: method.notFound
-			count: 2
-			path: ../concrete/src/Calendar/Event/EventService.php
-
-		-
-			message: '#^Parameter \#1 \$var of function count expects array\|Countable, Concrete\\Core\\Entity\\Calendar\\CalendarEventVersion given\.$#'
-			identifier: argument.type
-			count: 1
-			path: ../concrete/src/Calendar/Event/EventService.php
-
-		-
 			message: '#^Property Concrete\\Core\\Captcha\\Library\:\:\$sclIsActive \(bool\) does not accept int\.$#'
 			identifier: assign.propertyType
 			count: 1
@@ -4067,12 +4019,6 @@ parameters:
 			identifier: new.static
 			count: 1
 			path: ../concrete/src/Captcha/Library.php
-
-		-
-			message: '#^Parameter \#2 \$assetHandles of method Concrete\\Core\\Asset\\AssetList\:\:registerGroup\(\) expects array\<string, mixed\>, array\<int, array\<int, string\>\> given\.$#'
-			identifier: argument.type
-			count: 1
-			path: ../concrete/src/Captcha/RecaptchaV3Controller.php
 
 		-
 			message: '#^Access to an undefined property Securimage\:\:\$multi_text_color\.$#'
@@ -4285,12 +4231,6 @@ parameters:
 			path: ../concrete/src/Config/FileLoader.php
 
 		-
-			message: '#^Parameter \#1 \$namespace of method Concrete\\Core\\Config\\FileLoader\:\:getPath\(\) expects string, null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: ../concrete/src/Config/FileLoader.php
-
-		-
 			message: '#^Parameter \#3 \$namespace \(null\) of method Concrete\\Core\\Config\\FileLoader\:\:load\(\) should be compatible with parameter \$namespace \(string\) of method Concrete\\Core\\Config\\LoaderInterface\:\:load\(\)$#'
 			identifier: method.childParameterType
 			count: 1
@@ -4311,7 +4251,7 @@ parameters:
 		-
 			message: '#^Strict comparison using \=\=\= between string and null will always evaluate to false\.$#'
 			identifier: identical.alwaysFalse
-			count: 4
+			count: 3
 			path: ../concrete/src/Config/FileLoader.php
 
 		-
@@ -4963,12 +4903,6 @@ parameters:
 			path: ../concrete/src/Entity/Block/BlockType/BlockType.php
 
 		-
-			message: '#^Parameter \#1 \$parentObject of class Concrete\\Core\\Filesystem\\TemplateFile constructor expects Concrete\\Core\\Block\\BlockType\\BlockType, \$this\(Concrete\\Core\\Entity\\Block\\BlockType\\BlockType\) given\.$#'
-			identifier: argument.type
-			count: 2
-			path: ../concrete/src/Entity/Block/BlockType/BlockType.php
-
-		-
 			message: '#^PHPDoc tag @return with type mixed is not subtype of native type Concrete\\Core\\Entity\\Board\\Template\.$#'
 			identifier: return.phpDocType
 			count: 1
@@ -5125,12 +5059,6 @@ parameters:
 			path: ../concrete/src/Entity/Express/Control/TextControl.php
 
 		-
-			message: '#^Parameter \#1 \$category of class Concrete\\Core\\Express\\Search\\ColumnSet\\DefaultSet constructor expects Concrete\\Core\\Attribute\\Category\\ExpressCategory, Concrete\\Core\\Attribute\\Category\\CategoryInterface given\.$#'
-			identifier: argument.type
-			count: 1
-			path: ../concrete/src/Entity/Express/Entity.php
-
-		-
 			message: '#^Call to an undefined method Concrete\\Core\\Attribute\\AttributeValueInterface\:\:setGenericValue\(\)\.$#'
 			identifier: method.notFound
 			count: 1
@@ -5247,18 +5175,6 @@ parameters:
 		-
 			message: '#^PHPDoc tag @var above a method has no effect\.$#'
 			identifier: varTag.misplaced
-			count: 1
-			path: ../concrete/src/Entity/File/Version.php
-
-		-
-			message: '#^Parameter \#1 \$file of class Concrete\\Core\\File\\Exception\\InvalidDimensionException constructor expects Concrete\\Core\\File\\File, Concrete\\Core\\Entity\\File\\File given\.$#'
-			identifier: argument.type
-			count: 1
-			path: ../concrete/src/Entity/File/Version.php
-
-		-
-			message: '#^Parameter \#1 \$file of class Concrete\\Core\\Http\\FlysystemFileResponse constructor expects League\\Flysystem\\File, string given\.$#'
-			identifier: argument.type
 			count: 1
 			path: ../concrete/src/Entity/File/Version.php
 
@@ -5599,8 +5515,8 @@ parameters:
 			path: ../concrete/src/Express/Entity/Cloner.php
 
 		-
-			message: '#^Call to an undefined method Concrete\\Core\\Attribute\\Category\\CategoryInterface\:\:getIndexedSearchTable\(\)\.$#'
-			identifier: method.notFound
+			message: '#^Call to function is_object\(\) with Concrete\\Core\\Attribute\\Category\\SearchIndexer\\ExpressSearchIndexer will always evaluate to true\.$#'
+			identifier: function.alreadyNarrowedType
 			count: 1
 			path: ../concrete/src/Express/Entity/Listener.php
 
@@ -5623,21 +5539,9 @@ parameters:
 			path: ../concrete/src/Express/Entry/Search/Result/Item.php
 
 		-
-			message: '#^Parameter \#1 \$iterator of function iterator_to_array expects Traversable, array given\.$#'
-			identifier: argument.type
-			count: 1
-			path: ../concrete/src/Express/Export/EntryList/CsvWriter.php
-
-		-
 			message: '#^Ternary operator condition is always true\.$#'
 			identifier: ternary.alwaysTrue
 			count: 2
-			path: ../concrete/src/Express/Export/EntryList/CsvWriter.php
-
-		-
-			message: '#^Yield can be used only with these return types\: Generator, Iterator, Traversable, iterable\.$#'
-			identifier: generator.returnType
-			count: 9
 			path: ../concrete/src/Express/Export/EntryList/CsvWriter.php
 
 		-
@@ -5867,12 +5771,6 @@ parameters:
 			identifier: varTag.misplaced
 			count: 1
 			path: ../concrete/src/Express/Search/Field/AssociationField.php
-
-		-
-			message: '#^Call to an undefined method Concrete\\Core\\Attribute\\Category\\CategoryInterface\:\:getIndexedSearchTable\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: ../concrete/src/Express/Search/Index/EntityIndex.php
 
 		-
 			message: '#^Method Concrete\\Core\\Attribute\\Key\\SearchIndexer\\SearchIndexerInterface\:\:updateSearchIndexKeyColumns\(\) invoked with 2 parameters, 3 required\.$#'
@@ -6121,42 +6019,6 @@ parameters:
 			path: ../concrete/src/File/Import/ImportOptions.php
 
 		-
-			message: '#^Default value of the parameter \#3 \$mode \(int\) of method Concrete\\Core\\File\\Import\\Processor\\ImageSizeConstrain\:\:resizeInPlace\(\) is incompatible with type string\.$#'
-			identifier: parameter.defaultValue
-			count: 1
-			path: ../concrete/src/File/Import/Processor/ImageSizeConstrain.php
-
-		-
-			message: '#^Parameter \#3 \$mode of method Concrete\\Core\\File\\Import\\Processor\\ImageSizeConstrain\:\:resizeInPlace\(\) expects string, int given\.$#'
-			identifier: argument.type
-			count: 1
-			path: ../concrete/src/File/Import/Processor/ImageSizeConstrain.php
-
-		-
-			message: '#^Result of && is always true\.$#'
-			identifier: booleanAnd.alwaysTrue
-			count: 1
-			path: ../concrete/src/File/Import/Processor/ImageSizeConstrain.php
-
-		-
-			message: '#^Strict comparison using \!\=\= between string and 1 will always evaluate to true\.$#'
-			identifier: notIdentical.alwaysTrue
-			count: 1
-			path: ../concrete/src/File/Import/Processor/ImageSizeConstrain.php
-
-		-
-			message: '#^Strict comparison using \!\=\= between string and 2 will always evaluate to true\.$#'
-			identifier: notIdentical.alwaysTrue
-			count: 1
-			path: ../concrete/src/File/Import/Processor/ImageSizeConstrain.php
-
-		-
-			message: '#^Unreachable statement \- code above always terminates\.$#'
-			identifier: deadCode.unreachable
-			count: 1
-			path: ../concrete/src/File/Import/Processor/ImageSizeConstrain.php
-
-		-
 			message: '#^Default value of the parameter \#3 \$mode \(int\) of method Concrete\\Core\\File\\ImportProcessor\\ConstrainImageProcessor\:\:resizeInPlace\(\) is incompatible with type string\.$#'
 			identifier: parameter.defaultValue
 			count: 1
@@ -6203,30 +6065,6 @@ parameters:
 			identifier: notIdentical.alwaysTrue
 			count: 1
 			path: ../concrete/src/File/ImportProcessor/ForceImageFormatProcessor.php
-
-		-
-			message: '#^Parameter \#1 \$arr1 of function array_diff expects array, null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: ../concrete/src/File/Importer.php
-
-		-
-			message: '#^Parameter \#1 \$input of function array_keys expects array, Concrete\\Core\\File\\Import\\ProcessorManager given\.$#'
-			identifier: argument.type
-			count: 2
-			path: ../concrete/src/File/Importer.php
-
-		-
-			message: '#^Parameter \#2 \$arr2 of function array_diff expects array, null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: ../concrete/src/File/Importer.php
-
-		-
-			message: '#^Property Concrete\\Core\\File\\Importer\:\:\$deprecatedProcessorUsed \(Concrete\\Core\\File\\Import\\ProcessorManager\) does not accept default value of type array\.$#'
-			identifier: property.defaultValue
-			count: 1
-			path: ../concrete/src/File/Importer.php
 
 		-
 			message: '#^Call to an undefined method Concrete\\Core\\Search\\ItemList\\Pager\\PagerProviderInterface\:\:getQueryObject\(\)\.$#'
@@ -6703,26 +6541,20 @@ parameters:
 			path: ../concrete/src/Foundation/Composer.php
 
 		-
-			message: '#^Call to function is_array\(\) with iterable\<string\>&Traversable will always evaluate to false\.$#'
-			identifier: function.impossibleType
-			count: 1
-			path: ../concrete/src/Foundation/Environment/FunctionInspector.php
-
-		-
 			message: '#^Call to function is_string\(\) with string will always evaluate to true\.$#'
 			identifier: function.alreadyNarrowedType
 			count: 2
 			path: ../concrete/src/Foundation/Environment/FunctionInspector.php
 
 		-
-			message: '#^Instanceof between iterable\<string\>&Traversable and Traversable will always evaluate to true\.$#'
+			message: '#^Instanceof between Traversable\<mixed, string\> and Traversable will always evaluate to true\.$#'
 			identifier: instanceof.alwaysTrue
 			count: 1
 			path: ../concrete/src/Foundation/Environment/FunctionInspector.php
 
 		-
-			message: '#^Parameter \#1 \$functionNames of method Concrete\\Core\\Foundation\\Environment\\FunctionInspector\:\:setDisabledFunctions\(\) expects iterable\<string\>&Traversable, list\<string\> given\.$#'
-			identifier: argument.type
+			message: '#^Result of \|\| is always true\.$#'
+			identifier: booleanOr.alwaysTrue
 			count: 1
 			path: ../concrete/src/Foundation/Environment/FunctionInspector.php
 
@@ -7189,12 +7021,6 @@ parameters:
 			path: ../concrete/src/Http/FlysystemFileResponse.php
 
 		-
-			message: '#^Parameter \#1 \$file of method Concrete\\Core\\Http\\FlysystemFileResponse\:\:setFile\(\) expects SplFileInfo\|string, League\\Flysystem\\File given\.$#'
-			identifier: argument.type
-			count: 1
-			path: ../concrete/src/Http/FlysystemFileResponse.php
-
-		-
 			message: '#^Property Concrete\\Core\\Http\\FlysystemFileResponse\:\:\$file \(League\\Flysystem\\File\) does not accept League\\Flysystem\\Handler\.$#'
 			identifier: assign.propertyType
 			count: 1
@@ -7519,12 +7345,6 @@ parameters:
 			path: ../concrete/src/Localization/Locale/Service.php
 
 		-
-			message: '#^Parameter \#1 \$tree of method Concrete\\Core\\Entity\\Site\\LocaleEntityInterface\:\:setSiteTree\(\) expects Concrete\\Core\\Site\\Tree\\TreeInterface, null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: ../concrete/src/Localization/Locale/Service.php
-
-		-
 			message: '#^Call to function is_object\(\) with Concrete\\Core\\Localization\\Translator\\TranslatorAdapterInterface will always evaluate to true\.$#'
 			identifier: function.alreadyNarrowedType
 			count: 1
@@ -7597,30 +7417,6 @@ parameters:
 			path: ../concrete/src/Localization/Service/Date.php
 
 		-
-			message: '#^Parameter \#2 \$format of method Concrete\\Core\\Localization\\Service\\Date\:\:formatDate\(\) expects string, bool given\.$#'
-			identifier: argument.type
-			count: 1
-			path: ../concrete/src/Localization/Service/Date.php
-
-		-
-			message: '#^Parameter \#2 \$format of method Concrete\\Core\\Localization\\Service\\Date\:\:formatDate\(\) expects string, false given\.$#'
-			identifier: argument.type
-			count: 1
-			path: ../concrete/src/Localization/Service/Date.php
-
-		-
-			message: '#^Strict comparison using \=\=\= between string and false will always evaluate to false\.$#'
-			identifier: identical.alwaysFalse
-			count: 1
-			path: ../concrete/src/Localization/Service/Date.php
-
-		-
-			message: '#^Strict comparison using \=\=\= between string and true will always evaluate to false\.$#'
-			identifier: identical.alwaysFalse
-			count: 1
-			path: ../concrete/src/Localization/Service/Date.php
-
-		-
 			message: '#^Call to an undefined static method Gettext\\Translations\:\:fromMoFile\(\)\.$#'
 			identifier: staticMethod.notFound
 			count: 1
@@ -7647,12 +7443,6 @@ parameters:
 		-
 			message: '#^Call to an undefined static method Gettext\\Translations\:\:fromPoString\(\)\.$#'
 			identifier: staticMethod.notFound
-			count: 1
-			path: ../concrete/src/Localization/Translation/Remote/CommunityStoreTranslationProvider.php
-
-		-
-			message: '#^Parameter \#1 \$response of method Concrete\\Core\\Localization\\Translation\\Remote\\CommunityStoreTranslationProvider\:\:getJsonFromResponse\(\) expects GuzzleHttp\\Psr7\\Response, Psr\\Http\\Message\\ResponseInterface given\.$#'
-			identifier: argument.type
 			count: 1
 			path: ../concrete/src/Localization/Translation/Remote/CommunityStoreTranslationProvider.php
 
@@ -7693,18 +7483,6 @@ parameters:
 			path: ../concrete/src/Logging/Configuration/SimpleConfiguration.php
 
 		-
-			message: '#^Parameter \#1 \$level of static method Concrete\\Core\\Logging\\Levels\:\:getLevelDisplayName\(\) expects int, string\|null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: ../concrete/src/Logging/LogEntry.php
-
-		-
-			message: '#^Parameter \#1 \$level of static method Monolog\\Logger\:\:getLevelName\(\) expects int, string\|null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: ../concrete/src/Logging/LogEntry.php
-
-		-
 			message: '#^Unsafe usage of new static\(\)\.$#'
 			identifier: new.static
 			count: 1
@@ -7715,12 +7493,6 @@ parameters:
 			identifier: argument.type
 			count: 1
 			path: ../concrete/src/Logging/LoggerFactory.php
-
-		-
-			message: '#^Parameter \#1 \$level of static method Concrete\\Core\\Logging\\Levels\:\:getLevelDisplayName\(\) expects int, string\|null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: ../concrete/src/Logging/Search/ColumnSet/DefaultSet.php
 
 		-
 			message: '#^Call to an undefined method Concrete\\Core\\Mail\\Importer\\MailImporter\:\:process\(\)\.$#'
@@ -7811,24 +7583,6 @@ parameters:
 			identifier: class.notFound
 			count: 1
 			path: ../concrete/src/Mail/Importer/MailImporter.php
-
-		-
-			message: '#^Cannot assign new offset to string\.$#'
-			identifier: offsetAssign.dimType
-			count: 1
-			path: ../concrete/src/Mail/SenderConfiguration.php
-
-		-
-			message: '#^Parameter \#2 \$haystack of function in_array expects array, string given\.$#'
-			identifier: argument.type
-			count: 1
-			path: ../concrete/src/Mail/SenderConfiguration.php
-
-		-
-			message: '#^Property Concrete\\Core\\Mail\\SenderConfiguration\:\:\$allConfigurationKeys \(string\) does not accept default value of type array\.$#'
-			identifier: property.defaultValue
-			count: 1
-			path: ../concrete/src/Mail/SenderConfiguration.php
 
 		-
 			message: '#^Access to an undefined property Concrete\\Core\\Mail\\Service\<T of Symfony\\Component\\Mime\\Email\>\:\:\$body\.$#'
@@ -7973,18 +7727,6 @@ parameters:
 			identifier: method.notFound
 			count: 1
 			path: ../concrete/src/Navigation/Breadcrumb/Dashboard/DashboardStacksBreadcrumbFactory.php
-
-		-
-			message: '#^PHPDoc tag @var above foreach loop does not specify variable name\.$#'
-			identifier: varTag.noVariable
-			count: 1
-			path: ../concrete/src/Navigation/Breadcrumb/FileManagerBreadcrumbFactory.php
-
-		-
-			message: '#^Parameter \#1 \$folder of class Concrete\\Core\\Navigation\\Item\\FileFolderItem constructor expects Concrete\\Core\\Tree\\Node\\Type\\FileFolder, array\<Concrete\\Core\\Tree\\Node\\Type\\FileFolder\> given\.$#'
-			identifier: argument.type
-			count: 1
-			path: ../concrete/src/Navigation/Breadcrumb/FileManagerBreadcrumbFactory.php
 
 		-
 			message: '#^Constructor of class Concrete\\Core\\Navigation\\Modifier\\AppendHTMLModifier has an unused parameter \$currentPage\.$#'
@@ -8215,28 +7957,10 @@ parameters:
 			path: ../concrete/src/Package/ItemCategory/AbstractCategory.php
 
 		-
-			message: '#^Parameter \#1 \$pkg of static method Concrete\\Core\\Antispam\\Library\:\:getListByPackage\(\) expects Concrete\\Core\\Package\\Package, Concrete\\Core\\Entity\\Package given\.$#'
-			identifier: argument.type
-			count: 1
-			path: ../concrete/src/Package/ItemCategory/AntispamLibrary.php
-
-		-
-			message: '#^Parameter \#1 \$pkg of static method Concrete\\Core\\Authentication\\AuthenticationType\:\:getListByPackage\(\) expects Concrete\\Core\\Package\\Package, Concrete\\Core\\Entity\\Package given\.$#'
-			identifier: argument.type
-			count: 1
-			path: ../concrete/src/Package/ItemCategory/AuthenticationType.php
-
-		-
 			message: '#^PHPDoc tag @var with type Concrete\\Core\\Package\\ItemCategory\\ItemInterface is not subtype of native type array\.$#'
 			identifier: varTag.nativeType
 			count: 1
 			path: ../concrete/src/Package/ItemCategory/Manager.php
-
-		-
-			message: '#^Parameter \#1 \$pkg of static method Concrete\\Core\\File\\StorageLocation\\Type\\Type\:\:getListByPackage\(\) expects Concrete\\Core\\Package\\Package, Concrete\\Core\\Entity\\Package given\.$#'
-			identifier: argument.type
-			count: 1
-			path: ../concrete/src/Package/ItemCategory/StorageLocationType.php
 
 		-
 			message: '#^Unsafe usage of new static\(\)\.$#'
@@ -8295,12 +8019,6 @@ parameters:
 		-
 			message: '#^Method Concrete\\Core\\Package\\Package\:\:install\(\) invoked with 1 parameter, 0 required\.$#'
 			identifier: arguments.count
-			count: 1
-			path: ../concrete/src/Package/PackageService.php
-
-		-
-			message: '#^Parameter \#1 \$entityManager of class Concrete\\Core\\Database\\EntityManagerConfigUpdater constructor expects Doctrine\\ORM\\EntityManager, Doctrine\\ORM\\EntityManagerInterface given\.$#'
-			identifier: argument.type
 			count: 1
 			path: ../concrete/src/Package/PackageService.php
 
@@ -8631,12 +8349,6 @@ parameters:
 		-
 			message: '#^Static method Concrete\\Core\\Area\\Area\:\:getOrCreate\(\) invoked with 3 parameters, 2 required\.$#'
 			identifier: arguments.count
-			count: 1
-			path: ../concrete/src/Page/Page.php
-
-		-
-			message: '#^Ternary operator condition is always true\.$#'
-			identifier: ternary.alwaysTrue
 			count: 1
 			path: ../concrete/src/Page/Page.php
 
@@ -9169,7 +8881,7 @@ parameters:
 			path: ../concrete/src/Page/Type/Type.php
 
 		-
-			message: '#^Parameter \#1 \$pl of method Concrete\\Core\\Page\\Page\:\:setTheme\(\) expects Concrete\\Core\\Page\\Theme\\Theme, false given\.$#'
+			message: '#^Parameter \#1 \$pl of method Concrete\\Core\\Page\\Page\:\:setTheme\(\) expects Concrete\\Core\\Page\\Theme\\Theme\|null, false given\.$#'
 			identifier: argument.type
 			count: 1
 			path: ../concrete/src/Page/Type/Type.php
@@ -10315,12 +10027,6 @@ parameters:
 			path: ../concrete/src/Search/ItemList/Pager/Manager/ExpressEntryListPagerManager.php
 
 		-
-			message: '#^Parameter \#1 \$category of class Concrete\\Core\\Express\\Search\\ColumnSet\\Available constructor expects Concrete\\Core\\Attribute\\Category\\ExpressCategory, Concrete\\Core\\Attribute\\Category\\CategoryInterface given\.$#'
-			identifier: argument.type
-			count: 1
-			path: ../concrete/src/Search/ItemList/Pager/Manager/ExpressEntryListPagerManager.php
-
-		-
 			message: '#^Call to an undefined method Concrete\\Core\\Search\\ItemList\\Pager\\PagerProviderInterface\:\:getQueryObject\(\)\.$#'
 			identifier: method.notFound
 			count: 1
@@ -10531,22 +10237,10 @@ parameters:
 			path: ../concrete/src/Sharing/SocialNetwork/ServiceList.php
 
 		-
-			message: '#^Parameter \#2 \$default_namespace of method Concrete\\Core\\Config\\Repository\\Liaison\:\:__construct\(\) expects string, null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: ../concrete/src/Site/Config/Liaison.php
-
-		-
 			message: '#^Call to an undefined method Illuminate\\Config\\Repository\:\:save\(\)\.$#'
 			identifier: method.notFound
 			count: 1
 			path: ../concrete/src/Site/InstallationService.php
-
-		-
-			message: '#^Parameter \#1 \$cn of method Concrete\\Core\\Site\\Locale\\Listener\:\:fixMultilingualPageRelations\(\) expects Concrete\\Core\\Database\\Connection\\Connection, Doctrine\\DBAL\\Connection given\.$#'
-			identifier: argument.type
-			count: 1
-			path: ../concrete/src/Site/Locale/Listener.php
 
 		-
 			message: '#^Method Concrete\\Core\\Site\\Menu\\Item\\SiteListController\:\:getMenuItemLinkElement\(\) should return HtmlObject\\Link but returns HtmlObject\\Element\.$#'
@@ -11215,12 +10909,6 @@ parameters:
 			path: ../concrete/src/Updater/Migrations/Migrations/Version20180926000000.php
 
 		-
-			message: '#^Call to an undefined method Concrete\\Core\\Attribute\\Category\\CategoryInterface\:\:getIndexedSearchTable\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: ../concrete/src/Updater/Migrations/Migrations/Version20180926070300.php
-
-		-
 			message: '#^Call to function is_object\(\) with Concrete\\Core\\Authentication\\AuthenticationType will always evaluate to true\.$#'
 			identifier: function.alreadyNarrowedType
 			count: 1
@@ -11437,12 +11125,6 @@ parameters:
 			path: ../concrete/src/User/Component/UserSelectInstanceFactory.php
 
 		-
-			message: '#^Parameter \#1 \$iterator of function iterator_to_array expects Traversable, array given\.$#'
-			identifier: argument.type
-			count: 1
-			path: ../concrete/src/User/CsvWriter.php
-
-		-
 			message: '#^Property Concrete\\Core\\User\\CsvWriter\:\:\$attributeKeys \(array\<Concrete\\Core\\Entity\\Attribute\\Key\\UserKey\>\) does not accept array\<Concrete\\Core\\Entity\\Attribute\\Key\\Key\>\.$#'
 			identifier: assign.propertyType
 			count: 1
@@ -11452,12 +11134,6 @@ parameters:
 			message: '#^Property Concrete\\Core\\User\\CsvWriter\:\:\$attributeKeys \(array\<Concrete\\Core\\Entity\\Attribute\\Key\\UserKey\>\) in isset\(\) is not nullable\.$#'
 			identifier: isset.property
 			count: 1
-			path: ../concrete/src/User/CsvWriter.php
-
-		-
-			message: '#^Yield can be used only with these return types\: Generator, Iterator, Traversable, iterable\.$#'
-			identifier: generator.returnType
-			count: 6
 			path: ../concrete/src/User/CsvWriter.php
 
 		-
@@ -11599,12 +11275,6 @@ parameters:
 			path: ../concrete/src/User/PrivateMessage/PrivateMessage.php
 
 		-
-			message: '#^Parameter \#1 \$uIsValidated of method Concrete\\Core\\Entity\\User\\User\:\:setUserIsValidated\(\) expects bool, int given\.$#'
-			identifier: argument.type
-			count: 1
-			path: ../concrete/src/User/RegistrationService.php
-
-		-
 			message: '#^Call to an undefined method Concrete\\Core\\Search\\ItemList\\Pager\\PagerProviderInterface\:\:getQueryObject\(\)\.$#'
 			identifier: method.notFound
 			count: 1
@@ -11657,18 +11327,6 @@ parameters:
 			identifier: arguments.count
 			count: 1
 			path: ../concrete/src/User/Search/ColumnSet/ColumnSet.php
-
-		-
-			message: '#^Parameter \#1 \$groups of method Concrete\\Core\\User\\UserList\:\:filterByInAnyGroup\(\) expects Generator&iterable\<Concrete\\Core\\User\\Group\\Group\>, list given\.$#'
-			identifier: argument.type
-			count: 1
-			path: ../concrete/src/User/Search/Field/Field/GroupSetField.php
-
-		-
-			message: '#^Parameter \#1 \$groups of method Concrete\\Core\\User\\UserList\:\:filterByInAnyGroup\(\) expects Generator&iterable\<Concrete\\Core\\User\\Group\\Group\>, list\<Concrete\\Core\\User\\Group\\Group\> given\.$#'
-			identifier: argument.type
-			count: 1
-			path: ../concrete/src/User/Search/Field/Field/UserGroupField.php
 
 		-
 			message: '#^Access to an undefined property Concrete\\Core\\User\\Search\\Result\\Item\:\:\$uEmail\.$#'
@@ -11781,18 +11439,6 @@ parameters:
 		-
 			message: '#^Call to an undefined method Concrete\\Core\\User\\UserList\:\:setQuery\(\)\.$#'
 			identifier: method.notFound
-			count: 1
-			path: ../concrete/src/User/UserList.php
-
-		-
-			message: '#^Call to function is_array\(\) with Generator&iterable\<Concrete\\Core\\User\\Group\\Group\> will always evaluate to false\.$#'
-			identifier: function.impossibleType
-			count: 1
-			path: ../concrete/src/User/UserList.php
-
-		-
-			message: '#^Comparison operation "\>" between \*NEVER\* and 0 results in an error\.$#'
-			identifier: greater.invalid
 			count: 1
 			path: ../concrete/src/User/UserList.php
 

@@ -372,7 +372,7 @@ class User implements UserEntityInterface, \JsonSerializable
     }
 
     /**
-     * @param bool $uIsValidated
+     * @param bool|int $uIsValidated
      */
     public function setUserIsValidated($uIsValidated)
     {

@@ -79,7 +79,7 @@ class BlockType
      * Install a BlockType that is passed via a btHandle string. The core or override directories are parsed.
      *
      * @param string $btHandle The handle of the block type
-     * @param \Concrete\Core\Entity\Package|\Concrete\Core\Package\Package|string|false $pkg The package owning the block type (or its handle)
+     * @param \Concrete\Core\Entity\Package|\Concrete\Core\Package\Package|string|false|null $pkg The package owning the block type (or its handle)
      *
      * @return \Concrete\Core\Entity\Block\BlockType\BlockType
      */

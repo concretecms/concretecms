@@ -60,7 +60,7 @@ class Library extends ConcreteObject
     }
 
     /**
-     * @return bool
+     * @return string|false
      */
     public function getPackageHandle()
     {
@@ -172,7 +172,7 @@ class Library extends ConcreteObject
     }
 
     /**
-     * @param \Package $pkg
+     * @param \Concrete\Core\Entity\Package|\Concrete\Core\Package\Package $pkg
      *
      * @return Library[]
      */

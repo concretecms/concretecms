@@ -12,7 +12,7 @@ interface LocaleEntityInterface
     public function getSiteTree();
 
     /**
-     * @param TreeInterface $tree
+     * @param TreeInterface|null $tree
      */
     public function setSiteTree($tree);
 

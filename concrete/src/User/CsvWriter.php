@@ -71,7 +71,7 @@ class CsvWriter
     /**
      * Turn a user into an array
      * @param \Concrete\Core\User\UserInfo $user
-     * @return array
+     * @return \Generator
      */
     private function projectUser(UserInfo $user)
     {

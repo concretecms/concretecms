@@ -11,7 +11,7 @@ use Gettext\Translations;
 use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Psr7\MultipartStream;
 use GuzzleHttp\Psr7\Request;
-use GuzzleHttp\Psr7\Response;
+use Psr\Http\Message\ResponseInterface;
 
 class CommunityStoreTranslationProvider implements ProviderInterface
 {
@@ -366,13 +366,13 @@ class CommunityStoreTranslationProvider implements ProviderInterface
     }
 
     /**
-     * @param Response $response
+     * @param \Psr\Http\Message\ResponseInterface $response
      *
      * @throws Exception
      *
      * @return array
      */
-    protected function getJsonFromResponse(Response $response)
+    protected function getJsonFromResponse(ResponseInterface $response)
     {
         $responseBody = $response->getBody()->getContents();
         if ($response->getStatusCode() >= 400) {
