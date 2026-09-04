@@ -382,7 +382,7 @@ class Page extends Collection implements CategoryMemberInterface,
      * @param int $cID the ID of the page
      * @param int|string $version the page version ('RECENT' for the most recent version, 'ACTIVE' for the currently published version, 'SCHEDULED' for the currently scheduled version, or an integer to retrieve a specific version ID)
      *
-     * @return \Concrete\Core\Page\Page
+     * @return static
      */
     public static function getByID($cID, $version = 'RECENT')
     {

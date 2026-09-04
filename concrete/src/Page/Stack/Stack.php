@@ -133,7 +133,7 @@ class Stack extends Page
      * \Concrete\Core\Site\Tree\TreeInterface|null $site
      * @param int $multilingualContentSource
      *
-     * @return self|false|null
+     * @return static|null
      */
     public static function getByName($stackName, $cvID = 'RECENT', ?TreeInterface $site = null, $multilingualContentSource = self::MULTILINGUAL_CONTENT_SOURCE_CURRENT)
     {
@@ -191,7 +191,7 @@ class Stack extends Page
      * @param int    $cID
      * @param int|string $cvID
      *
-     * @return \Concrete\Core\Page\Page|self|false|null
+     * @return static|null
      */
     public static function getByID($cID, $cvID = 'RECENT')
     {

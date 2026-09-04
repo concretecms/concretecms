@@ -1801,36 +1801,6 @@ parameters:
 			path: ../concrete/controllers/single_page/dashboard/blocks/stacks.php
 
 		-
-			message: '#^Call to an undefined method Concrete\\Core\\Page\\Page\:\:getLocalizedStack\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: ../concrete/controllers/single_page/dashboard/blocks/stacks.php
-
-		-
-			message: '#^Call to an undefined method Concrete\\Core\\Page\\Page\:\:getMultilingualSection\(\)\.$#'
-			identifier: method.notFound
-			count: 2
-			path: ../concrete/controllers/single_page/dashboard/blocks/stacks.php
-
-		-
-			message: '#^Call to an undefined method Concrete\\Core\\Page\\Page\:\:getNeutralStack\(\)\.$#'
-			identifier: method.notFound
-			count: 4
-			path: ../concrete/controllers/single_page/dashboard/blocks/stacks.php
-
-		-
-			message: '#^Call to an undefined method Concrete\\Core\\Page\\Page\:\:getStackType\(\)\.$#'
-			identifier: method.notFound
-			count: 6
-			path: ../concrete/controllers/single_page/dashboard/blocks/stacks.php
-
-		-
-			message: '#^Call to an undefined method Concrete\\Core\\Page\\Page\:\:isNeutralStack\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: ../concrete/controllers/single_page/dashboard/blocks/stacks.php
-
-		-
 			message: '#^Call to an undefined method Concrete\\Core\\Support\\Facade\\StackFolder\:\:getPage\(\)\.$#'
 			identifier: method.notFound
 			count: 1
@@ -1843,14 +1813,8 @@ parameters:
 			path: ../concrete/controllers/single_page/dashboard/blocks/stacks.php
 
 		-
-			message: '#^Cannot call method addLocalizedStack\(\) on Concrete\\Core\\Page\\Page\|false\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: ../concrete/controllers/single_page/dashboard/blocks/stacks.php
-
-		-
-			message: '#^Cannot call method getStackName\(\) on Concrete\\Core\\Page\\Page\|false\.$#'
-			identifier: method.nonObject
+			message: '#^Instanceof between Concrete\\Core\\Block\\BlockController and Concrete\\Core\\Block\\BlockController will always evaluate to true\.$#'
+			identifier: instanceof.alwaysTrue
 			count: 1
 			path: ../concrete/controllers/single_page/dashboard/blocks/stacks.php
 
@@ -5825,12 +5789,6 @@ parameters:
 			identifier: variable.undefined
 			count: 1
 			path: ../concrete/src/Backup/ContentImporter/Importer/Routine/ImportSiteTypeSkeletonsRoutine.php
-
-		-
-			message: '#^Method Concrete\\Core\\Backup\\ContentImporter\\Importer\\Routine\\ImportStacksContentRoutine\:\:getStack\(\) should return Concrete\\Core\\Page\\Stack\\Stack but returns Concrete\\Core\\Page\\Page\|false\|null\.$#'
-			identifier: return.type
-			count: 1
-			path: ../concrete/src/Backup/ContentImporter/Importer/Routine/ImportStacksContentRoutine.php
 
 		-
 			message: '#^Negated boolean expression is always false\.$#'
@@ -11215,12 +11173,6 @@ parameters:
 			path: ../concrete/src/Messenger/MessengerConsumeResponseFactory.php
 
 		-
-			message: '#^Call to an undefined method Concrete\\Core\\Page\\Page\:\:setLocale\(\)\.$#'
-			identifier: method.notFound
-			count: 3
-			path: ../concrete/src/Multilingual/Page/Section/Section.php
-
-		-
 			message: '#^Call to function is_object\(\) with Concrete\\Core\\Entity\\Site\\Locale will always evaluate to true\.$#'
 			identifier: function.alreadyNarrowedType
 			count: 1
@@ -11229,24 +11181,6 @@ parameters:
 		-
 			message: '#^If condition is always true\.$#'
 			identifier: if.alwaysTrue
-			count: 1
-			path: ../concrete/src/Multilingual/Page/Section/Section.php
-
-		-
-			message: '#^Method Concrete\\Core\\Multilingual\\Page\\Section\\Section\:\:getByID\(\) should return Concrete\\Core\\Multilingual\\Page\\Section\\Section\|false but returns Concrete\\Core\\Page\\Page\.$#'
-			identifier: return.type
-			count: 1
-			path: ../concrete/src/Multilingual/Page/Section/Section.php
-
-		-
-			message: '#^Method Concrete\\Core\\Multilingual\\Page\\Section\\Section\:\:getByLanguage\(\) should return Concrete\\Core\\Multilingual\\Page\\Section\\Section\|false but returns Concrete\\Core\\Page\\Page\.$#'
-			identifier: return.type
-			count: 1
-			path: ../concrete/src/Multilingual/Page/Section/Section.php
-
-		-
-			message: '#^Method Concrete\\Core\\Multilingual\\Page\\Section\\Section\:\:getByLocale\(\) should return Concrete\\Core\\Multilingual\\Page\\Section\\Section\|false but returns Concrete\\Core\\Page\\Page\.$#'
-			identifier: return.type
 			count: 1
 			path: ../concrete/src/Multilingual/Page/Section/Section.php
 
@@ -12091,12 +12025,6 @@ parameters:
 			path: ../concrete/src/Page/Command/RescanMultilingualPageCommandHandler.php
 
 		-
-			message: '#^Call to an undefined method Concrete\\Core\\Page\\Page\:\:getMultilingualSection\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: ../concrete/src/Page/Command/RescanMultilingualPageCommandHandler.php
-
-		-
 			message: '#^Negated boolean expression is always false\.$#'
 			identifier: booleanNot.alwaysFalse
 			count: 1
@@ -12273,11 +12201,17 @@ parameters:
 		-
 			message: '#^Call to function is_object\(\) with Concrete\\Core\\Page\\Page will always evaluate to true\.$#'
 			identifier: function.alreadyNarrowedType
-			count: 3
+			count: 2
 			path: ../concrete/src/Page/Page.php
 
 		-
 			message: '#^Call to function is_object\(\) with Concrete\\Core\\Page\\Theme\\Theme will always evaluate to true\.$#'
+			identifier: function.alreadyNarrowedType
+			count: 1
+			path: ../concrete/src/Page/Page.php
+
+		-
+			message: '#^Call to function is_object\(\) with static\(Concrete\\Core\\Page\\Page\) will always evaluate to true\.$#'
 			identifier: function.alreadyNarrowedType
 			count: 1
 			path: ../concrete/src/Page/Page.php
@@ -12799,38 +12733,14 @@ parameters:
 			path: ../concrete/src/Page/Stack/Pile/PileContent.php
 
 		-
-			message: '#^Call to an undefined method Concrete\\Core\\Page\\Page\:\:getLocalizedStack\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: ../concrete/src/Page/Stack/Stack.php
-
-		-
 			message: '#^Call to an undefined method Concrete\\Core\\Page\\Page\:\:setMultilingualSection\(\)\.$#'
 			identifier: method.notFound
 			count: 1
 			path: ../concrete/src/Page/Stack/Stack.php
 
 		-
-			message: '#^Cannot call method setMultilingualSection\(\) on Concrete\\Core\\Page\\Page\|false\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: ../concrete/src/Page/Stack/Stack.php
-
-		-
-			message: '#^Method Concrete\\Core\\Page\\Stack\\Stack\:\:addLocalizedStack\(\) should return Concrete\\Core\\Page\\Stack\\Stack but returns Concrete\\Core\\Page\\Page\|false\|null\.$#'
-			identifier: return.type
-			count: 1
-			path: ../concrete/src/Page/Stack/Stack.php
-
-		-
-			message: '#^Method Concrete\\Core\\Page\\Stack\\Stack\:\:getLocalizedStack\(\) should return Concrete\\Core\\Page\\Stack\\Stack\|null but returns Concrete\\Core\\Page\\Page\|null\.$#'
-			identifier: return.type
-			count: 1
-			path: ../concrete/src/Page/Stack/Stack.php
-
-		-
-			message: '#^Method Concrete\\Core\\Page\\Stack\\Stack\:\:getNeutralStack\(\) should return Concrete\\Core\\Page\\Stack\\Stack\|null but returns Concrete\\Core\\Page\\Page\|false\|null\.$#'
-			identifier: return.type
+			message: '#^Method Concrete\\Core\\Page\\Stack\\Stack\:\:addStackToCategory\(\) never returns false so it can be removed from the return type\.$#'
+			identifier: return.unusedType
 			count: 1
 			path: ../concrete/src/Page/Stack/Stack.php
 
@@ -12843,7 +12753,7 @@ parameters:
 		-
 			message: '#^Parameter \#1 \$stack of static method Concrete\\Core\\Page\\Stack\\Stack\:\:isValidStack\(\) expects Concrete\\Core\\Page\\Stack\\Stack, Concrete\\Core\\Page\\Page given\.$#'
 			identifier: argument.type
-			count: 2
+			count: 1
 			path: ../concrete/src/Page/Stack/Stack.php
 
 		-
@@ -16565,12 +16475,6 @@ parameters:
 			identifier: function.alreadyNarrowedType
 			count: 1
 			path: ../concrete/src/Workflow/Request/ApprovePageRequest.php
-
-		-
-			message: '#^Cannot call method getStackName\(\) on Concrete\\Core\\Page\\Page\|false\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: ../concrete/src/Workflow/Request/ApproveStackRequest.php
 
 		-
 			message: '#^Static method Concrete\\Core\\Calendar\\Event\\Event\:\:getVersionByID\(\) invoked with 2 parameters, 1 required\.$#'
