@@ -34,12 +34,12 @@ class SpecMerger
         $components = $object->getComponents();
         if ($components) {
             $componentsObject = $this->serializer->deserialize(json_encode($components), 'OpenApi\Annotations\Components');
-        }
-        foreach ($componentsObject->schemas as $schema) {
-            $openApi->components->schemas[] = $schema;
-        }
-        foreach ($componentsObject->requestBodies as $requestBody) {
-            $openApi->components->requestBodies[] = $requestBody;
+            foreach ($componentsObject->schemas as $schema) {
+                $openApi->components->schemas[] = $schema;
+            }
+            foreach ($componentsObject->requestBodies as $requestBody) {
+                $openApi->components->requestBodies[] = $requestBody;
+            }
         }
         // End custom Express merge.
 

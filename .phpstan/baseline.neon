@@ -4003,12 +4003,6 @@ parameters:
 			path: ../concrete/src/Api/OpenApi/SpecMerger.php
 
 		-
-			message: '#^Variable \$componentsObject might not be defined\.$#'
-			identifier: variable.undefined
-			count: 2
-			path: ../concrete/src/Api/OpenApi/SpecMerger.php
-
-		-
 			message: '#^Call to an undefined method Concrete\\Core\\Api\\OpenApi\\SpecParameter\:\:getDescription\(\)\.$#'
 			identifier: method.notFound
 			count: 1
