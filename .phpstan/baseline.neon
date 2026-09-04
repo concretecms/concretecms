@@ -8113,6 +8113,18 @@ parameters:
 			path: ../concrete/src/Page/Page.php
 
 		-
+			message: '#^Strict comparison using \!\=\= between Concrete\\Core\\Area\\Area\|false and null will always evaluate to true\.$#'
+			identifier: notIdentical.alwaysTrue
+			count: 1
+			path: ../concrete/src/Page/Page.php
+
+		-
+			message: '#^Strict comparison using \=\=\= between Concrete\\Core\\Area\\Area\|false and null will always evaluate to false\.$#'
+			identifier: identical.alwaysFalse
+			count: 1
+			path: ../concrete/src/Page/Page.php
+
+		-
 			message: '#^Call to function is_array\(\) with Concrete\\Core\\Entity\\Site\\Tree will always evaluate to false\.$#'
 			identifier: function.impossibleType
 			count: 1

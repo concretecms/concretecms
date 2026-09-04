@@ -2728,10 +2728,16 @@ EOT
     public function rescanAreaPermissions()
     {
         $db = Database::connection();
-        $r = $db->executeQuery('select arHandle, arIsGlobal from Areas where cID = ?', [$this->getCollectionID()]);
+        $r = $db->executeQuery('select arHandle from Areas where cID = ?', [$this->getCollectionID()]);
         while ($row = $r->fetch()) {
-            $a = Area::getOrCreate($this, $row['arHandle']);
-            $a->rescanAreaPermissionsChain();
+            $a = Area::get($this, $row['arHandle']);
+            if ($a === null) {
+                Area::refreshCacheForPage($this);
+                $a = Area::get($this, $row['arHandle']);
+            }
+            if ($a !== null) {
+                $a->rescanAreaPermissionsChain();
+            }
         }
     }
 
