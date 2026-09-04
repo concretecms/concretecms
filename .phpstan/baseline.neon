@@ -1615,12 +1615,6 @@ parameters:
 			path: ../concrete/controllers/permissions/access/entity/access_entity.php
 
 		-
-			message: '#^Method Concrete\\Controller\\Permissions\\Access\\Entity\\Group\:\:deliverEntity\(\) should return Concrete\\Core\\Permission\\Access\\Entity\\Entity\|null but return statement is missing\.$#'
-			identifier: return.missing
-			count: 1
-			path: ../concrete/controllers/permissions/access/entity/group.php
-
-		-
 			message: '#^Left side of && is always true\.$#'
 			identifier: booleanAnd.leftAlwaysTrue
 			count: 1
@@ -12049,18 +12043,6 @@ parameters:
 			path: ../concrete/src/Page/Page.php
 
 		-
-			message: '#^Method Concrete\\Core\\Page\\Page\:\:getCollectionThemeID\(\) should return int\|null but return statement is missing\.$#'
-			identifier: return.missing
-			count: 1
-			path: ../concrete/src/Page/Page.php
-
-		-
-			message: '#^Method Concrete\\Core\\Page\\Page\:\:getPageController\(\) should return Concrete\\Core\\Page\\Controller\\PageController\|null but empty return statement found\.$#'
-			identifier: return.empty
-			count: 1
-			path: ../concrete/src/Page/Page.php
-
-		-
 			message: '#^Method Concrete\\Core\\Page\\Page\:\:getSite\(\) should return Concrete\\Core\\Entity\\Site\\Site but return statement is missing\.$#'
 			identifier: return.missing
 			count: 1
@@ -13687,8 +13669,8 @@ parameters:
 			path: ../concrete/src/Permission/Key/WorkflowKey.php
 
 		-
-			message: '#^Method Concrete\\Core\\Permission\\Registry\\Entry\\Access\\Entity\\GroupEntity\:\:getAccessEntity\(\) should return Concrete\\Core\\Permission\\Access\\Entity\\Entity but return statement is missing\.$#'
-			identifier: return.missing
+			message: '#^Method Concrete\\Core\\Permission\\Registry\\Entry\\Access\\Entity\\GroupEntity\:\:getAccessEntity\(\) should return Concrete\\Core\\Permission\\Access\\Entity\\Entity but returns null\.$#'
+			identifier: return.type
 			count: 1
 			path: ../concrete/src/Permission/Registry/Entry/Access/Entity/GroupEntity.php
 

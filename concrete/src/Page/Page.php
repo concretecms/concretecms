@@ -505,7 +505,7 @@ class Page extends Collection implements CategoryMemberInterface,
             if ($this->getPageTypeID() > 0) {
                 $pt = $this->getPageTypeObject();
                 if (!$pt) {
-                    return;
+                    return null;
                 }
                 $ptHandle = $pt->getPageTypeHandle();
                 $r = $env->getRecord(DIRNAME_CONTROLLERS . '/' . DIRNAME_PAGE_TYPES . '/' . $ptHandle . '.php', $pt->getPackageHandle());
@@ -1804,6 +1804,8 @@ class Page extends Collection implements CategoryMemberInterface,
         if (is_object($theme)) {
             return $theme->getThemeID();
         }
+
+        return null;
     }
 
     /**
