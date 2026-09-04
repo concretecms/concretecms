@@ -455,6 +455,7 @@ class StartingPointPackage extends Package
             $config = Setup::createConfiguration(true, \Config::get('database.proxy_classes'));
             \Doctrine\Common\Annotations\AnnotationReader::addGlobalIgnoredName('subpackages');
             \Doctrine\Common\Annotations\AnnotationReader::addGlobalIgnoredName('package');
+            \Doctrine\Common\Annotations\AnnotationReader::addGlobalIgnoredName('mixin');
             // Use default AnnotationReader
             $driverImpl = $config->newDefaultAnnotationDriver(
                 DIR_BASE_CORE . '/' . DIRNAME_CLASSES . '/' . DIRNAME_ENTITIES,
