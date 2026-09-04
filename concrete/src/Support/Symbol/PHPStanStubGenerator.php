@@ -200,31 +200,71 @@ final class PHPStanStubGenerator
     {
         $result = [];
         $matches = null;
-        foreach ($classes as $classLines) {
-            foreach ($classLines as $line) {
-                if (strpos($line, '@method') === false || !preg_match_all('/\\\\([A-Za-z_][A-Za-z0-9_\\\\]*)/', $line, $matches)) {
-                    continue;
-                }
-                foreach ($matches[1] as $fqn) {
-                    if (isset($classes[$fqn]) || isset($result[$fqn])) {
+        $pending = $classes;
+        while ($pending !== []) {
+            $added = [];
+            foreach ($pending as $classLines) {
+                foreach ($classLines as $line) {
+                    if (!preg_match_all('/\\\\([A-Za-z_][A-Za-z0-9_\\\\]*)/', $line, $matches)) {
                         continue;
                     }
-                    try {
-                        $class = new \ReflectionClass($fqn);
-                    } catch (\Throwable $_) {
-                        continue;
+                    foreach ($matches[1] as $fqn) {
+                        if (isset($classes[$fqn]) || isset($result[$fqn])) {
+                            continue;
+                        }
+                        try {
+                            $class = new \ReflectionClass($fqn);
+                        } catch (\Throwable $_) {
+                            continue;
+                        }
+                        if ($class->isInternal() || isset($classes[$class->getName()]) || isset($result[$class->getName()]) || isset($this->classesInOtherStubs[strtolower($class->getName())])) {
+                            continue;
+                        }
+                        $result[$class->getName()] = $added[$class->getName()] = $this->renderClassLines(
+                            $class,
+                            'Empty declaration: it exists because PHPStan validates the stub files in isolation',
+                            $this->getClassAnnotations($class),
+                            $padding
+                        );
                     }
-                    if ($class->isInternal() || isset($classes[$class->getName()]) || isset($result[$class->getName()]) || isset($this->classesInOtherStubs[strtolower($class->getName())])) {
-                        continue;
-                    }
-                    $result[$class->getName()] = $this->renderClassLines(
-                        $class,
-                        'Empty declaration: it exists because PHPStan validates the stub files in isolation',
-                        [],
-                        $padding
-                    );
                 }
             }
+            $pending = $added;
+        }
+
+        return $result;
+    }
+
+    /**
+     * Get the class-level PHPDoc annotations that PHPStan should know (PHPStan ignores the actual PHPDoc block of the classes declared in stub files).
+     * Only the annotations that make sense in an empty class declaration are considered (for example, @extends/@implements/@template are not).
+     *
+     * @return string[] the annotations, with the class names resolved to fully-qualified ones
+     */
+    private function getClassAnnotations(\ReflectionClass $class): array
+    {
+        $docComment = $class->getDocComment();
+        if ($docComment === false) {
+            return [];
+        }
+        $result = [];
+        $matches = null;
+        foreach (preg_split('/\r\n|\n|\r/', $docComment) as $line) {
+            if (!preg_match('/^\s*\*?\s*(@(?:mixin|method|property|property-read|property-write)\s+)(.+?)\s*$/', $line, $matches)) {
+                continue;
+            }
+            $result[] = $matches[1] . preg_replace_callback(
+                '/\$?\\\\?[A-Za-z_][A-Za-z0-9_\\\\]*/',
+                function (array $match) use ($class): string {
+                    if ($match[0][0] === '$') {
+                        return $match[0];
+                    }
+                    $resolved = $this->typeResolver->resolvePhpDocType($match[0], $class);
+
+                    return $resolved === '' ? $match[0] : $resolved;
+                },
+                $matches[2]
+            );
         }
 
         return $result;
