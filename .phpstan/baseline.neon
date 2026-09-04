@@ -2299,12 +2299,6 @@ parameters:
 			path: ../concrete/controllers/single_page/dashboard/system/boards/summary_templates.php
 
 		-
-			message: '#^Call to an undefined method Doctrine\\DBAL\\Connection\:\:tableExists\(\)\.$#'
-			identifier: method.notFound
-			count: 2
-			path: ../concrete/controllers/single_page/dashboard/system/calendar/import.php
-
-		-
 			message: '#^Undefined variable\: \$row$#'
 			identifier: variable.undefined
 			count: 1
@@ -8654,18 +8648,6 @@ parameters:
 
 		-
 			message: '#^Call to an undefined method Concrete\\Core\\Attribute\\Category\\CategoryInterface\:\:getIndexedSearchTable\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: ../concrete/src/Express/Search/Index/EntityIndex.php
-
-		-
-			message: '#^Call to an undefined method Doctrine\\DBAL\\Connection\:\:Execute\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: ../concrete/src/Express/Search/Index/EntityIndex.php
-
-		-
-			message: '#^Call to an undefined method Doctrine\\DBAL\\Connection\:\:tableExists\(\)\.$#'
 			identifier: method.notFound
 			count: 1
 			path: ../concrete/src/Express/Search/Index/EntityIndex.php

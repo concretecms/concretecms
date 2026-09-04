@@ -3,7 +3,7 @@ namespace Concrete\Controller\SinglePage\Dashboard\System\Calendar;
 
 use Concrete\Core\Attribute\Key\Category;
 use Concrete\Core\Page\Controller\DashboardPageController;
-use Doctrine\DBAL\Connection;
+use Concrete\Core\Database\Connection\Connection;
 
 class Import extends DashboardPageController
 {

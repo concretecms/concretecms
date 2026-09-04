@@ -11,7 +11,7 @@ use Concrete\Core\Entity\Attribute\Key\PageKey;
 use Concrete\Core\Entity\Express\Entity;
 use Concrete\Core\Search\Index\AbstractIndex;
 use Concrete\Core\Search\Index\Driver\IndexingDriverInterface;
-use Doctrine\DBAL\Connection;
+use Concrete\Core\Database\Connection\Connection;
 
 class EntityIndex extends AbstractIndex implements ApplicationAwareInterface
 {
