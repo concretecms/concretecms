@@ -8215,12 +8215,6 @@ parameters:
 			path: ../concrete/src/Http/Middleware/OAuthAuthenticationMiddleware.php
 
 		-
-			message: '#^Property Concrete\\Core\\Http\\Middleware\\OAuthAuthenticationMiddleware\:\:\$app is unused\.$#'
-			identifier: property.unused
-			count: 1
-			path: ../concrete/src/Http/Middleware/OAuthAuthenticationMiddleware.php
-
-		-
 			message: '#^Method Concrete\\Core\\Http\\Middleware\\OAuthErrorMiddleware\:\:process\(\) should return Psr\\Http\\Message\\ResponseInterface but returns Symfony\\Component\\HttpFoundation\\Response\.$#'
 			identifier: return.type
 			count: 1
