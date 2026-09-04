@@ -8731,12 +8731,6 @@ parameters:
 			path: ../concrete/src/Page/Theme/Theme.php
 
 		-
-			message: '#^Parameter \#2 \$callback of function usort expects callable\(Concrete\\Core\\StyleCustomizer\\Skin\\SkinInterface, Concrete\\Core\\StyleCustomizer\\Skin\\SkinInterface\)\: int, Closure\(Concrete\\Core\\StyleCustomizer\\Skin\\SkinInterface, Concrete\\Core\\StyleCustomizer\\Skin\\SkinInterface\)\: void given\.$#'
-			identifier: argument.type
-			count: 1
-			path: ../concrete/src/Page/Theme/Theme.php
-
-		-
 			message: '#^Unsafe call to private method Concrete\\Core\\Page\\Theme\\Theme\:\:getThemeNameAndDescription\(\) through static\:\:\.$#'
 			identifier: staticClassAccess.privateMethod
 			count: 2

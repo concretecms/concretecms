@@ -300,7 +300,7 @@ class Theme extends ConcreteObject implements \JsonSerializable
         usort(
             $allSkins,
             function (SkinInterface $a, SkinInterface $b) use ($cmp) {
-                $cmp->compare($a->getName(), $b->getName());
+                return $cmp->compare($a->getName(), $b->getName());
             }
         );
         return $allSkins;
