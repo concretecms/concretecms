@@ -139,7 +139,7 @@ class DestinationPicker
         $pickerHandlesWithOptions = $this->getHandlesWithOptions($pickers);
         list($selectedPicker, $html) = $this->buildWhichSelector($key, $pickerHandlesWithOptions, $currentPickerHandle);
 
-        $uniqueID = 'ccm-destinationpicker-' . str_replace('.', '-', microtime(true)) . '-' . mt_rand();
+        $uniqueID = 'ccm-destinationpicker-' . str_replace('.', '-', (string) microtime(true)) . '-' . mt_rand();
         $pickersHtml = '';
         $pickersHeight = 0;
         foreach ($pickerHandlesWithOptions as $handle => $options) {

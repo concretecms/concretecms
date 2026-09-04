@@ -186,7 +186,7 @@ abstract class Column extends ConcreteObject implements ColumnInterface
         $layout = $this->getAreaLayoutObject();
         if ($layout) {
             $a = $layout->getAreaObject();
-            $as = new SubArea($this->getAreaLayoutColumnDisplayID(), $a->getAreaHandle(), $a->getAreaID());
+            $as = new SubArea((string) $this->getAreaLayoutColumnDisplayID(), $a->getAreaHandle(), $a->getAreaID());
             $as->setAreaGridMaximumColumns($this->getSubAreaMaximumColumns());
             $as->setAreaDisplayName(t('Column %s', $this->getAreaLayoutColumnIndex() + 1));
             return $as;

@@ -121,7 +121,7 @@ class Design extends BackendUIPageController
             }
         }
         if ($this->request->query->has('pThemeID')) {
-            $pt = Theme::getByID(h($this->request->query->get('pThemeID')));
+            $pt = Theme::getByID((int) $this->request->query->get('pThemeID'));
         } else {
             $pt = $this->page->getCollectionThemeObject();
         }

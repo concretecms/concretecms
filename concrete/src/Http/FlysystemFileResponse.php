@@ -178,7 +178,7 @@ class FlysystemFileResponse extends Response
         if (false === $fileSize = $this->file->getSize()) {
             return $this;
         }
-        $this->headers->set('Content-Length', $fileSize);
+        $this->headers->set('Content-Length', (string) $fileSize);
 
         if (!$this->headers->has('Accept-Ranges')) {
             // Only accept ranges on safe HTTP methods
@@ -211,7 +211,7 @@ class FlysystemFileResponse extends Response
 
                         $this->setStatusCode(206);
                         $this->headers->set('Content-Range', sprintf('bytes %s-%s/%s', $start, $end, $fileSize));
-                        $this->headers->set('Content-Length', $end - $start + 1);
+                        $this->headers->set('Content-Length', (string) ($end - $start + 1));
                     }
                 }
             }

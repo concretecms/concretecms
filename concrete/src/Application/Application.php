@@ -385,7 +385,7 @@ class Application extends Container
                 }
             }
 
-            $response = new RedirectResponse($mainCanonical, '301');
+            $response = new RedirectResponse($mainCanonical, 301);
 
             return $response;
         }

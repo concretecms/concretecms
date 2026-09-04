@@ -127,7 +127,7 @@ class Update extends DashboardPageController
                 $client = $this->app->make(Client::class);
 
                 $location = $fileHelper->getTemporaryDirectory();
-                $file = uniqid(time(), true);
+                $file = uniqid((string) time(), true);
 
                 try {
                     $client->get($remote->getDirectDownloadURL(), [
@@ -284,7 +284,7 @@ class Update extends DashboardPageController
             if (!@set_time_limit(0)) {
                 $result = false;
             }
-            if (@ini_set('max_execution_time', 0) === false) {
+            if (@ini_set('max_execution_time', '0') === false) {
                 $result = false;
             }
         } finally {

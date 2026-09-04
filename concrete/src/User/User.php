@@ -1096,7 +1096,7 @@ class User extends ConcreteObject
 
         $cookie->set(
             sprintf('%s_LOGIN', $app['config']->get('concrete.session.name')),
-            1,
+            '1',
             // $expire
             time() + (int)$config->get('concrete.session.remember_me.lifetime'),
             // $path

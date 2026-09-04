@@ -24,7 +24,7 @@ class Action extends AbstractController
                         break;
                     case 'type':
                         if (isset($arguments[1])) {
-                            $type = Type::getByID($arguments[1]);
+                            $type = Type::getByID((int) $arguments[1]);
                             if (is_object($type)) {
                                 $controller = $type->getController();
                             }

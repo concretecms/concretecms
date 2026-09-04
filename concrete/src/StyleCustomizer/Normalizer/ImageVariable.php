@@ -85,7 +85,7 @@ class ImageVariable implements VariableInterface
     {
         $url = null;
         if ($this->fID) {
-            $file = File::getByID($this->fID);
+            $file = File::getByID((int) $this->fID);
             if ($file) {
                 $url = $file->getURL();
             }

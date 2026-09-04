@@ -133,8 +133,8 @@ class Timezone
             // Let's check the timestamp at solstices,
             // to be sure we also check potential daylight saving time changes.
             $timestamps = [
-                mktime(12, 0, 0, 6, 21, date('Y')),
-                mktime(12, 0, 0, 12, 21, date('Y')),
+                mktime(12, 0, 0, 6, 21, (int) date('Y')),
+                mktime(12, 0, 0, 12, 21, (int) date('Y')),
             ];
             $sql = 'SELECT ';
             foreach ($timestamps as $index => $timestamp) {

@@ -65,7 +65,7 @@ class Sets extends BackendInterfaceController
                     $id = explode(':', $key);
                     $fsID = $id[1];
 
-                    $fs = Set::getByID($fsID);
+                    $fs = Set::getByID((int) $fsID);
                     foreach ($this->files as $file) {
                         if ($fsp->canAddFile($file)) {
                             switch ($value) {

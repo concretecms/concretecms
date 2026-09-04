@@ -100,7 +100,7 @@ class SummaryTemplates extends BackendInterfaceController
                 $templateIDs = [];
                 foreach($keys as $key) {
                     if (substr($key, 0, 8) === 'template') {
-                        $templateIDs[] = substr($key, 9);
+                        $templateIDs[] = (int) substr($key, 9);
                     }
                 }
                 if ($templateIDs) {

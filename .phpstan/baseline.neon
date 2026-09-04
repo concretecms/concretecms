@@ -13,12 +13,6 @@ parameters:
 			path: ../concrete/controllers/backend/attribute/action.php
 
 		-
-			message: '#^Parameter \#1 \$atID of static method Concrete\\Core\\Attribute\\Type\:\:getByID\(\) expects int, string given\.$#'
-			identifier: argument.type
-			count: 1
-			path: ../concrete/controllers/backend/attribute/action.php
-
-		-
 			message: '#^Call to function is_array\(\) with bool\|float\|int\|string\|null will always evaluate to false\.$#'
 			identifier: function.impossibleType
 			count: 1
@@ -331,12 +325,6 @@ parameters:
 			path: ../concrete/controllers/dialog/event/edit.php
 
 		-
-			message: '#^Parameter \#1 \$templateIDs of method Concrete\\Core\\Calendar\\Event\\Summary\\Template\\Command\\EnableCustomCalendarEventSummaryTemplatesCommand\:\:setTemplateIDs\(\) expects array\<int\>, list\<\(string\|false\)\> given\.$#'
-			identifier: argument.type
-			count: 1
-			path: ../concrete/controllers/dialog/event/summary_templates.php
-
-		-
 			message: '#^Method Concrete\\Controller\\Dialog\\EventOccurrence\:\:canAccess\(\) invoked with 1 parameter, 0 required\.$#'
 			identifier: arguments.count
 			count: 1
@@ -399,12 +387,6 @@ parameters:
 		-
 			message: '#^Offset \*NEVER\* does not exist on bool\|float\|int\|string\.$#'
 			identifier: offsetAccess.notFound
-			count: 1
-			path: ../concrete/controllers/dialog/file/bulk/sets.php
-
-		-
-			message: '#^Parameter \#1 \$fsID of static method Concrete\\Core\\File\\Set\\Set\:\:getByID\(\) expects int, string given\.$#'
-			identifier: argument.type
 			count: 1
 			path: ../concrete/controllers/dialog/file/bulk/sets.php
 
@@ -587,12 +569,6 @@ parameters:
 			identifier: arguments.count
 			count: 1
 			path: ../concrete/controllers/dialog/page/delete.php
-
-		-
-			message: '#^Parameter \#1 \$templateIDs of method Concrete\\Core\\Page\\Summary\\Template\\Command\\EnableCustomPageSummaryTemplatesCommand\:\:setTemplateIDs\(\) expects array\<int\>, list\<\(string\|false\)\> given\.$#'
-			identifier: argument.type
-			count: 1
-			path: ../concrete/controllers/dialog/page/summary_templates.php
 
 		-
 			message: '#^Call to an undefined method Concrete\\Core\\Permission\\Checker\:\:canEditFileSetPermissions\(\)\.$#'
@@ -1133,12 +1109,6 @@ parameters:
 			identifier: return.missing
 			count: 2
 			path: ../concrete/controllers/panel/page/check_in.php
-
-		-
-			message: '#^Parameter \#1 \$pThemeID of static method Concrete\\Core\\Page\\Theme\\Theme\:\:getByID\(\) expects int, string given\.$#'
-			identifier: argument.type
-			count: 1
-			path: ../concrete/controllers/panel/page/design.php
 
 		-
 			message: '#^Call to an undefined method Concrete\\Core\\Permission\\Checker\:\:canEditPageVersions\(\)\.$#'
@@ -1945,12 +1915,6 @@ parameters:
 			path: ../concrete/controllers/single_page/dashboard/system/registration/password_requirements.php
 
 		-
-			message: '#^Parameter \#2 \$subject of function preg_match expects string, null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: ../concrete/controllers/single_page/dashboard/system/registration/password_requirements.php
-
-		-
 			message: '#^Result of && is always false\.$#'
 			identifier: booleanAnd.alwaysFalse
 			count: 1
@@ -1976,18 +1940,6 @@ parameters:
 
 		-
 			message: '#^Parameter \#1 \$callback of function set_error_handler expects \(callable\(int, string, string, int, array\)\: bool\)\|null, Closure\(\)\: void given\.$#'
-			identifier: argument.type
-			count: 1
-			path: ../concrete/controllers/single_page/dashboard/system/update/update.php
-
-		-
-			message: '#^Parameter \#1 \$prefix of function uniqid expects string, int\<1, max\> given\.$#'
-			identifier: argument.type
-			count: 1
-			path: ../concrete/controllers/single_page/dashboard/system/update/update.php
-
-		-
-			message: '#^Parameter \#2 \$newvalue of function ini_set expects string, int given\.$#'
 			identifier: argument.type
 			count: 1
 			path: ../concrete/controllers/single_page/dashboard/system/update/update.php
@@ -2689,12 +2641,6 @@ parameters:
 			path: ../concrete/src/Application/Application.php
 
 		-
-			message: '#^Parameter \#2 \$status of class Concrete\\Core\\Routing\\RedirectResponse constructor expects int, string given\.$#'
-			identifier: argument.type
-			count: 1
-			path: ../concrete/src/Application/Application.php
-
-		-
 			message: '#^Result of method Illuminate\\Container\\Container\:\:singleton\(\) \(void\) is used\.$#'
 			identifier: method.void
 			count: 1
@@ -2967,12 +2913,6 @@ parameters:
 		-
 			message: '#^If condition is always true\.$#'
 			identifier: if.alwaysTrue
-			count: 1
-			path: ../concrete/src/Area/Layout/Column.php
-
-		-
-			message: '#^Parameter \#1 \$arHandle of class Concrete\\Core\\Area\\SubArea constructor expects string, int given\.$#'
-			identifier: argument.type
 			count: 1
 			path: ../concrete/src/Area/Layout/Column.php
 
@@ -3719,36 +3659,6 @@ parameters:
 			identifier: function.alreadyNarrowedType
 			count: 1
 			path: ../concrete/src/Backup/ContentImporter/Importer/Routine/ImportExpressRelationsRoutine.php
-
-		-
-			message: '#^Parameter \#1 \$ftTypeHeight of method Concrete\\Core\\Entity\\File\\Image\\Thumbnail\\Type\\Type\:\:setHeight\(\) expects int\|null, string given\.$#'
-			identifier: argument.type
-			count: 1
-			path: ../concrete/src/Backup/ContentImporter/Importer/Routine/ImportFileImportantThumbnailTypesRoutine.php
-
-		-
-			message: '#^Parameter \#1 \$ftTypeWidth of method Concrete\\Core\\Entity\\File\\Image\\Thumbnail\\Type\\Type\:\:setWidth\(\) expects int\|null, string given\.$#'
-			identifier: argument.type
-			count: 1
-			path: ../concrete/src/Backup/ContentImporter/Importer/Routine/ImportFileImportantThumbnailTypesRoutine.php
-
-		-
-			message: '#^Parameter \#1 \$value of method Concrete\\Core\\Entity\\Permission\\IpAccessControlCategory\:\:setBanDuration\(\) expects int\|null, SimpleXMLElement\|null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: ../concrete/src/Backup/ContentImporter/Importer/Routine/ImportIpAccessControlCategoriesRoutine.php
-
-		-
-			message: '#^Parameter \#1 \$value of method Concrete\\Core\\Entity\\Permission\\IpAccessControlCategory\:\:setMaxEvents\(\) expects int, SimpleXMLElement\|null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: ../concrete/src/Backup/ContentImporter/Importer/Routine/ImportIpAccessControlCategoriesRoutine.php
-
-		-
-			message: '#^Parameter \#1 \$value of method Concrete\\Core\\Entity\\Permission\\IpAccessControlCategory\:\:setTimeWindow\(\) expects int\|null, SimpleXMLElement\|null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: ../concrete/src/Backup/ContentImporter/Importer/Routine/ImportIpAccessControlCategoriesRoutine.php
 
 		-
 			message: '#^Negated boolean expression is always false\.$#'
@@ -4639,12 +4549,6 @@ parameters:
 			path: ../concrete/src/Console/Command/PhpCodingStyleCommand.php
 
 		-
-			message: '#^Parameter \#1 \$name of method Doctrine\\DBAL\\Schema\\AbstractSchemaManager\:\:dropTable\(\) expects string, Doctrine\\DBAL\\Schema\\Table given\.$#'
-			identifier: argument.type
-			count: 1
-			path: ../concrete/src/Console/Command/ResetCommand.php
-
-		-
 			message: '#^Unreachable statement \- code above always terminates\.$#'
 			identifier: deadCode.unreachable
 			count: 1
@@ -4955,12 +4859,6 @@ parameters:
 			identifier: instanceof.alwaysTrue
 			count: 1
 			path: ../concrete/src/Database/Connection/ConnectionFactory.php
-
-		-
-			message: '#^Parameter \#6 \$year of function mktime expects int, string given\.$#'
-			identifier: argument.type
-			count: 2
-			path: ../concrete/src/Database/Connection/Timezone.php
 
 		-
 			message: '#^Method Concrete\\Core\\Database\\DatabaseManager\:\:getConnectionNames\(\) should return array\<string, string\> but returns list\<\(int\|string\)\>\.$#'
@@ -6583,12 +6481,6 @@ parameters:
 			path: ../concrete/src/File/Service/Zip.php
 
 		-
-			message: '#^Parameter \#2 \$datetime of static method DateTime\:\:createFromFormat\(\) expects string, int\<min, \-1\>\|int\<1, max\> given\.$#'
-			identifier: argument.type
-			count: 1
-			path: ../concrete/src/File/Service/Zip.php
-
-		-
 			message: '#^Strict comparison using \!\=\= between ZipArchive and null will always evaluate to true\.$#'
 			identifier: notIdentical.alwaysTrue
 			count: 1
@@ -6819,12 +6711,6 @@ parameters:
 		-
 			message: '#^Offset bool\|float\|int\|string\|null on \*NEVER\* in isset\(\) always exists and is not nullable\.$#'
 			identifier: isset.offset
-			count: 1
-			path: ../concrete/src/Form/Service/DestinationPicker/DestinationPicker.php
-
-		-
-			message: '#^Parameter \#3 \$subject of function str_replace expects array\<string\>\|string, float given\.$#'
-			identifier: argument.type
 			count: 1
 			path: ../concrete/src/Form/Service/DestinationPicker/DestinationPicker.php
 
@@ -7441,12 +7327,6 @@ parameters:
 			path: ../concrete/src/Http/FlysystemFileResponse.php
 
 		-
-			message: '#^Parameter \#2 \$values of method Symfony\\Component\\HttpFoundation\\ResponseHeaderBag\:\:set\(\) expects array\<string\>\|string\|null, int given\.$#'
-			identifier: argument.type
-			count: 2
-			path: ../concrete/src/Http/FlysystemFileResponse.php
-
-		-
 			message: '#^Property Concrete\\Core\\Http\\FlysystemFileResponse\:\:\$file \(League\\Flysystem\\File\) does not accept League\\Flysystem\\Handler\.$#'
 			identifier: assign.propertyType
 			count: 1
@@ -7727,18 +7607,6 @@ parameters:
 			identifier: arguments.count
 			count: 1
 			path: ../concrete/src/Legacy/PageList.php
-
-		-
-			message: '#^Parameter \#2 \$replace of function str_replace expects array\<string\>\|string, \(float\|int\) given\.$#'
-			identifier: argument.type
-			count: 4
-			path: ../concrete/src/Legacy/Pagination.php
-
-		-
-			message: '#^Parameter \#2 \$replace of function str_replace expects array\<string\>\|string, int\<1, max\> given\.$#'
-			identifier: argument.type
-			count: 1
-			path: ../concrete/src/Legacy/Pagination.php
 
 		-
 			message: '#^Call to function is_callable\(\) with ''random_bytes'' will always evaluate to true\.$#'
@@ -10879,12 +10747,6 @@ parameters:
 			path: ../concrete/src/StyleCustomizer/Normalizer/ColorVariable.php
 
 		-
-			message: '#^Parameter \#1 \$fID of static method Concrete\\Core\\File\\File\:\:getByID\(\) expects int, string given\.$#'
-			identifier: argument.type
-			count: 1
-			path: ../concrete/src/StyleCustomizer/Normalizer/ImageVariable.php
-
-		-
 			message: '#^Access to protected property Less_Parser\|Less_Tree_Ruleset\:\:\$rules\.$#'
 			identifier: property.protected
 			count: 1
@@ -10949,12 +10811,6 @@ parameters:
 			identifier: if.alwaysTrue
 			count: 1
 			path: ../concrete/src/StyleCustomizer/Style/ColorStyle.php
-
-		-
-			message: '#^Parameter \#1 \$imageFileID of method Concrete\\Core\\StyleCustomizer\\Style\\Value\\ImageValue\:\:setImageFileID\(\) expects int, string\|null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: ../concrete/src/StyleCustomizer/Style/ImageStyle.php
 
 		-
 			message: '#^Call to an undefined method Concrete\\Core\\StyleCustomizer\\Style\\StyleInterface\:\:setName\(\)\.$#'
@@ -11983,12 +11839,6 @@ parameters:
 			path: ../concrete/src/User/User.php
 
 		-
-			message: '#^Parameter \#2 \$value of method Concrete\\Core\\Cookie\\CookieJar\:\:set\(\) expects string\|null, int given\.$#'
-			identifier: argument.type
-			count: 1
-			path: ../concrete/src/User/User.php
-
-		-
 			message: '#^Property Concrete\\Core\\Page\\Page\:\:\$cCheckedOutUID \(int\|null\) does not accept string\.$#'
 			identifier: assign.propertyType
 			count: 1
@@ -12179,18 +12029,6 @@ parameters:
 			identifier: new.static
 			count: 3
 			path: ../concrete/src/Validation/BannedWord/BannedWord.php
-
-		-
-			message: '#^Binary operation "\-" between int\<1, max\> and non\-falsy\-string results in an error\.$#'
-			identifier: binaryOp.invalid
-			count: 1
-			path: ../concrete/src/Validation/CSRF/Token.php
-
-		-
-			message: '#^Parameter \#2 \$time of method Concrete\\Core\\Validation\\CSRF\\Token\:\:generate\(\) expects int\|null, string given\.$#'
-			identifier: argument.type
-			count: 1
-			path: ../concrete/src/Validation/CSRF/Token.php
 
 		-
 			message: '#^Class Egulias\\EmailValidator\\Warning\\NoMXRecord not found\.$#'

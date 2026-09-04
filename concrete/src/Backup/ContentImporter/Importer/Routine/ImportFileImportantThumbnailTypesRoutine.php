@@ -38,10 +38,10 @@ class ImportFileImportantThumbnailTypesRoutine extends AbstractRoutine
                 $type->setIsUpscalingEnabled($xml->getBool($l['upscalingEnabled']));
                 $type->setKeepAnimations($xml->getBool($l['keepAnimations']));
                 if (isset($l['width'])) {
-                    $type->setWidth((string) $l['width']);
+                    $type->setWidth((int) $l['width']);
                 }
                 if (isset($l['height'])) {
-                    $type->setHeight((string) $l['height']);
+                    $type->setHeight((int) $l['height']);
                 }
                 if ($xml->getBool($l['required'])) {
                     $type->requireType();
