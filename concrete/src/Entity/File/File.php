@@ -44,6 +44,8 @@ use Concrete\Core\Events\EventDispatcher;
  *     @ORM\Index(name="fOverrideSetPermissions", columns={"fOverrideSetPermissions"}),
  *     }
  * )
+ *
+ * @mixin \Concrete\Core\Entity\File\Version
  */
 class File implements \Concrete\Core\Permission\ObjectInterface, AttributeObjectInterface
 {

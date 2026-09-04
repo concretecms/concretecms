@@ -19,6 +19,8 @@ use RuntimeException;
 /**
  * @ORM\Entity(repositoryClass="CalendarEventRepository")
  * @ORM\Table(name="CalendarEvents")
+ *
+ * @mixin \Concrete\Core\Entity\Calendar\CalendarEventVersion
  */
 class CalendarEvent implements ObjectInterface, CategoryMemberInterface
 {
