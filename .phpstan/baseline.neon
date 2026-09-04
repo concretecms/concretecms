@@ -8707,12 +8707,6 @@ parameters:
 			path: ../concrete/src/File/Type/Inspector/FlvInspector.php
 
 		-
-			message: '#^Undefined variable\: \$dataSize$#'
-			identifier: variable.undefined
-			count: 1
-			path: ../concrete/src/File/Type/Inspector/FlvInspector.php
-
-		-
 			message: '#^Unreachable statement \- code above always terminates\.$#'
 			identifier: deadCode.unreachable
 			count: 7
