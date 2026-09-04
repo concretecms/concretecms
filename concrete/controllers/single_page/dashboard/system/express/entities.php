@@ -116,7 +116,7 @@ class Entities extends DashboardPageController
         }
 
         $r = $this->entityManager->getRepository('\Concrete\Core\Entity\Express\Entity');
-        $entities = $r->findAll(array(), array('name' => 'asc'));
+        $entities = $r->findBy([], ['name' => 'asc']);
         $select = ['' => t('** Choose Entity')];
         foreach ($entities as $entity) {
             $select[$entity->getID()] = $entity->getEntityDisplayName();
