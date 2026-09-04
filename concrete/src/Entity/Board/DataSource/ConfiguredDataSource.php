@@ -78,9 +78,6 @@ class ConfiguredDataSource
         return $this->board;
     }
 
-    /**
-     * @return mixed
-     */
     public function getConfiguration() : ?Configuration
     {
         return $this->configuration;

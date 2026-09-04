@@ -2,7 +2,6 @@
 
 namespace Concrete\Core\Health\Report\Finding\Message\Search;
 
-use Concrete\Core\Entity\Attribute\Value\Value\Value;
 use Concrete\Core\Health\Report\Finding\Message\Formatter\FormatterInterface;
 use Concrete\Core\Health\Report\Finding\Message\Formatter\Search\BlockFormatter;
 use Concrete\Core\Health\Report\Finding\Message\MessageInterface;
@@ -51,9 +50,6 @@ class BlockMessage implements MessageInterface
         return $this->content;
     }
 
-    /**
-     * @return Value
-     */
     public function getBlockID(): ?int
     {
         return $this->bID;

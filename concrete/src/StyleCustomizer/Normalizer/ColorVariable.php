@@ -36,9 +36,6 @@ class ColorVariable implements VariableInterface
         }
     }
 
-    /**
-     * @return mixed
-     */
     public function getName(): string
     {
         return $this->name;

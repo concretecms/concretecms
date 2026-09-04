@@ -37,9 +37,6 @@ class SummaryObject implements SummaryObjectInterface
         $this->identifier = $identifier;
     }
 
-    /**
-     * @return mixed
-     */
     public function getDataSourceCategoryHandle() : string
     {
         return $this->dataSourceCategoryHandle;

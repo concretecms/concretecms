@@ -291,7 +291,7 @@ class SessionFactory implements SessionFactoryInterface
      *  Decides whether to return a Redis Instance or RedisArray Instance depending on the number of servers passed to it.
      *
      * @param array $servers The `concrete.session.servers` or `concrete.session.redis.servers` config item
-     * @param int | null $database The concrete.session.redis.database config item
+     * @param int $database The concrete.session.redis.database config item
      *
      * @return \Redis | \RedisArray | \Predis\Client
      */

@@ -30,9 +30,6 @@ class DesignTag implements TagInterface
         return $this->id;
     }
 
-    /**
-     * @return mixed
-     */
     public function getValue(): string
     {
         return $this->value;

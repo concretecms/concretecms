@@ -85,7 +85,7 @@ class DownloadStatisticsExporter
     }
 
     /**
-     * @return string[]
+     * @return \Generator<int, string>
      */
     protected function generateHeaders(): Generator
     {
@@ -99,7 +99,7 @@ class DownloadStatisticsExporter
     }
 
     /**
-     * @return \Concrete\Core\Entity\File\DownloadStatistics[]
+     * @return \Generator<int, \Concrete\Core\Entity\File\DownloadStatistics>
      */
     protected function generateRecordList(): Generator
     {
@@ -129,7 +129,7 @@ class DownloadStatisticsExporter
     }
 
     /**
-     * @return \Concrete\Core\Entity\File\DownloadStatistics[]
+     * @return \Generator<int, int|string|null>
      */
     protected function generateRecord(DownloadStatistics $record): Generator
     {

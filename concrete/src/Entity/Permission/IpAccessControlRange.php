@@ -177,7 +177,7 @@ class IpAccessControlRange
     /**
      * Set the RangeInterface instance associated to this range.
      *
-     * @param \IPLib\Address\AddressInterface $value
+     * @param \IPLib\Range\RangeInterface $value
      *
      * @return $this
      */

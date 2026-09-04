@@ -559,7 +559,7 @@ class User implements UserEntityInterface, \JsonSerializable
     }
 
     /**
-     * @return \Concrete\Core\Entity\Notification\NotificationAlert[]
+     * @return Collection|\Concrete\Core\Entity\Notification\NotificationAlert[]
      */
     public function getAlerts(): Collection
     {

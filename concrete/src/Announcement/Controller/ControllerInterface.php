@@ -21,8 +21,7 @@ interface ControllerInterface
 
     /**
      * @param Announcement $announcement
-     * @param SlideInterface $slides
-     * @return mixed
+     * @param SlideInterface[] $slides
      */
     public function createAnnouncementComponent(Announcement $announcement, array $slides);
 

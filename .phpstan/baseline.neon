@@ -661,12 +661,6 @@ parameters:
 			path: ../concrete/controllers/dialog/user/bulk/properties.php
 
 		-
-			message: '#^PHPDoc tag @param for parameter \$category with type mixed is not subtype of native type Concrete\\Core\\Attribute\\Category\\CategoryInterface\.$#'
-			identifier: parameter.phpDocType
-			count: 1
-			path: ../concrete/controllers/element/attribute/key_list.php
-
-		-
 			message: '#^If condition is always true\.$#'
 			identifier: if.alwaysTrue
 			count: 1
@@ -1987,12 +1981,6 @@ parameters:
 			path: ../concrete/src/Announcement/AnnouncementService.php
 
 		-
-			message: '#^PHPDoc tag @param for parameter \$slides with type Concrete\\Core\\Announcement\\Slide\\SlideInterface is incompatible with native type array\.$#'
-			identifier: parameter.phpDocType
-			count: 1
-			path: ../concrete/src/Announcement/Controller/ControllerInterface.php
-
-		-
 			message: '#^PHPDoc tag @var above a method has no effect\.$#'
 			identifier: varTag.misplaced
 			count: 1
@@ -2081,12 +2069,6 @@ parameters:
 			identifier: class.notFound
 			count: 1
 			path: ../concrete/src/Api/Api.php
-
-		-
-			message: '#^PHPDoc tag @return with type mixed is not subtype of native type League\\Fractal\\Resource\\ResourceInterface\|null\.$#'
-			identifier: return.phpDocType
-			count: 1
-			path: ../concrete/src/Api/ApiResourceValueInterface.php
 
 		-
 			message: '#^Call to function method_exists\(\) with League\\OAuth2\\Server\\AuthorizationValidators\\BearerTokenValidator and ''setPublicKey'' will always evaluate to true\.$#'
@@ -2317,18 +2299,6 @@ parameters:
 			path: ../concrete/src/Api/OAuth/Validator/DefaultValidator.php
 
 		-
-			message: '#^PHPDoc tag @return with type mixed is not subtype of native type string\|null\.$#'
-			identifier: return.phpDocType
-			count: 3
-			path: ../concrete/src/Api/OpenApi/Parameter/Parameter.php
-
-		-
-			message: '#^PHPDoc tag @return with type array\<Concrete\\Core\\Api\\OpenApi\\SpecModel\> is incompatible with native type Concrete\\Core\\Api\\OpenApi\\SpecComponents\|null\.$#'
-			identifier: return.phpDocType
-			count: 1
-			path: ../concrete/src/Api/OpenApi/SpecFragment.php
-
-		-
 			message: '#^Property Concrete\\Core\\Api\\OpenApi\\SpecFragment\:\:\$pathCollection \(Concrete\\Core\\Api\\OpenApi\\SpecPathCollection\) in isset\(\) is not nullable\.$#'
 			identifier: isset.property
 			count: 1
@@ -2483,12 +2453,6 @@ parameters:
 			identifier: method.notFound
 			count: 1
 			path: ../concrete/src/Application/Service/UserInterface/Help/Message.php
-
-		-
-			message: '#^PHPDoc tag @param for parameter \$menu with type Concrete\\Core\\Application\\UserInterface\\ContextMenu\\MenuInterface is not subtype of native type Concrete\\Core\\Application\\UserInterface\\ContextMenu\\ModifiableMenuInterface\.$#'
-			identifier: parameter.phpDocType
-			count: 1
-			path: ../concrete/src/Application/UserInterface/ContextMenu/AbstractManager.php
 
 		-
 			message: '#^Call to an undefined method Concrete\\Core\\Navigation\\Item\\ItemInterface\:\:getPageID\(\)\.$#'
@@ -3205,12 +3169,6 @@ parameters:
 			path: ../concrete/src/Attribute/TypeFactory.php
 
 		-
-			message: '#^PHPDoc tag @param for parameter \$type with type Concrete\\Core\\Attribute\\Type is incompatible with native type Concrete\\Core\\Entity\\Attribute\\Type\.$#'
-			identifier: parameter.phpDocType
-			count: 1
-			path: ../concrete/src/Attribute/ValidatorInterface.php
-
-		-
 			message: '#^Unsafe usage of new static\(\)\.$#'
 			identifier: new.static
 			count: 1
@@ -3425,12 +3383,6 @@ parameters:
 			identifier: notIdentical.alwaysTrue
 			count: 2
 			path: ../concrete/src/Backup/ContentImporter/Importer/Routine/ImportSummaryTemplatesRoutine.php
-
-		-
-			message: '#^PHPDoc tag @return with type mixed is not subtype of native type void\.$#'
-			identifier: return.phpDocType
-			count: 1
-			path: ../concrete/src/Backup/ContentImporter/Importer/Routine/SpecifiableImportModeRoutineInterface.php
 
 		-
 			message: '#^Ternary operator condition is always true\.$#'
@@ -3673,12 +3625,6 @@ parameters:
 			path: ../concrete/src/Board/Designer/Command/SetItemSelectorCustomElementItemsCommandHandler.php
 
 		-
-			message: '#^PHPDoc tag @return with type bool is incompatible with native type array\.$#'
-			identifier: return.phpDocType
-			count: 1
-			path: ../concrete/src/Board/Instance/Item/Filterer/CalendarEventFilterer.php
-
-		-
 			message: '#^Call to an undefined method Concrete\\Core\\Entity\\Board\\DataSource\\Configuration\\Configuration\:\:getCalendar\(\)\.$#'
 			identifier: method.notFound
 			count: 1
@@ -3715,40 +3661,10 @@ parameters:
 			path: ../concrete/src/Board/Instance/Slot/Content/ContentRenderer.php
 
 		-
-			message: '#^PHPDoc tag @return with type mixed is not subtype of native type void\.$#'
-			identifier: return.phpDocType
-			count: 1
-			path: ../concrete/src/Board/Instance/Slot/Content/ObjectInterface.php
-
-		-
 			message: '#^Call to an undefined method Concrete\\Core\\Board\\Instance\\Item\\Data\\DataInterface\:\:getOccurrenceID\(\)\.$#'
 			identifier: method.notFound
 			count: 1
 			path: ../concrete/src/Board/Instance/Slot/Content/Populator/CalendarEventPopulator.php
-
-		-
-			message: '#^PHPDoc tag @param for parameter \$logger with type Concrete\\Core\\Board\\Instance\\Logger\\Logger\|null is not subtype of native type Concrete\\Core\\Board\\Instance\\Logger\\LoggerInterface\.$#'
-			identifier: parameter.phpDocType
-			count: 1
-			path: ../concrete/src/Board/Instance/Slot/Content/Populator/CalendarEventPopulator.php
-
-		-
-			message: '#^PHPDoc tag @param for parameter \$logger with type Concrete\\Core\\Board\\Instance\\Logger\\Logger\|null is not subtype of native type Concrete\\Core\\Board\\Instance\\Logger\\LoggerInterface\.$#'
-			identifier: parameter.phpDocType
-			count: 1
-			path: ../concrete/src/Board/Instance/Slot/Content/Populator/PagePopulator.php
-
-		-
-			message: '#^PHPDoc tag @param for parameter \$logger with type Concrete\\Core\\Board\\Instance\\Logger\\Logger\|null is not subtype of native type Concrete\\Core\\Board\\Instance\\Logger\\LoggerInterface\.$#'
-			identifier: parameter.phpDocType
-			count: 1
-			path: ../concrete/src/Board/Instance/Slot/Content/Populator/PopulatorInterface.php
-
-		-
-			message: '#^PHPDoc tag @param for parameter \$slot with type Concrete\\Core\\Entity\\Board\\InstanceSlot is incompatible with native type int\.$#'
-			identifier: parameter.phpDocType
-			count: 1
-			path: ../concrete/src/Board/Instance/Slot/RenderedSlot.php
 
 		-
 			message: '#^Call to function array_filter\(\) on a separate line has no effect\.$#'
@@ -3825,12 +3741,6 @@ parameters:
 		-
 			message: '#^Offset ''ttl'' on string in isset\(\) does not exist\.$#'
 			identifier: isset.offset
-			count: 1
-			path: ../concrete/src/Cache/Driver/RedisStashDriver.php
-
-		-
-			message: '#^PHPDoc tag @param for parameter \$database with type int\|null is not subtype of native type int\.$#'
-			identifier: parameter.phpDocType
 			count: 1
 			path: ../concrete/src/Cache/Driver/RedisStashDriver.php
 
@@ -4147,12 +4057,6 @@ parameters:
 			path: ../concrete/src/Console/Command.php
 
 		-
-			message: '#^PHPDoc tag @param for parameter \$rows with type array\|Illuminate\\Contracts\\Support\\Arrayable is not subtype of native type array\.$#'
-			identifier: parameter.phpDocType
-			count: 1
-			path: ../concrete/src/Console/Command.php
-
-		-
 			message: '#^Property Concrete\\Core\\Console\\Command\:\:\$signature \(string\) in isset\(\) is not nullable\.$#'
 			identifier: isset.property
 			count: 1
@@ -4417,18 +4321,6 @@ parameters:
 			path: ../concrete/src/Conversation/Rating/Type.php
 
 		-
-			message: '#^PHPDoc tag @return with type array\<Concrete\\Core\\Entity\\File\\DownloadStatistics\> is incompatible with native type Generator\.$#'
-			identifier: return.phpDocType
-			count: 2
-			path: ../concrete/src/Csv/Export/DownloadStatisticsExporter.php
-
-		-
-			message: '#^PHPDoc tag @return with type array\<string\> is incompatible with native type Generator\.$#'
-			identifier: return.phpDocType
-			count: 1
-			path: ../concrete/src/Csv/Export/DownloadStatisticsExporter.php
-
-		-
 			message: '#^Property Concrete\\Core\\Csv\\Export\\DownloadStatisticsExporter\:\:\$entityManager \(Doctrine\\ORM\\EntityManager\) does not accept Doctrine\\ORM\\EntityManagerInterface\.$#'
 			identifier: assign.propertyType
 			count: 1
@@ -4505,12 +4397,6 @@ parameters:
 			identifier: constructor.unusedParameter
 			count: 1
 			path: ../concrete/src/Database/CharacterSetCollation/Exception/NoCharacterSetCollationDefinedException.php
-
-		-
-			message: '#^PHPDoc tag @param for parameter \$messageCallback with type \(callable\)\|null is not subtype of native type callable\.$#'
-			identifier: parameter.phpDocType
-			count: 1
-			path: ../concrete/src/Database/CharacterSetCollation/Manager.php
 
 		-
 			message: '#^Negated boolean expression is always false\.$#'
@@ -4735,12 +4621,6 @@ parameters:
 			path: ../concrete/src/Entity/Attribute/Value/ExpressValue.php
 
 		-
-			message: '#^PHPDoc tag @param for parameter \$version with type mixed is not subtype of native type Concrete\\Core\\Entity\\File\\Version\.$#'
-			identifier: parameter.phpDocType
-			count: 1
-			path: ../concrete/src/Entity/Attribute/Value/FileValue.php
-
-		-
 			message: '#^Call to an undefined method Concrete\\Core\\Entity\\Automation\\TaskSet\:\:getAttributeSetID\(\)\.$#'
 			identifier: method.notFound
 			count: 1
@@ -4759,66 +4639,6 @@ parameters:
 			path: ../concrete/src/Entity/Block/BlockType/BlockType.php
 
 		-
-			message: '#^PHPDoc tag @return with type mixed is not subtype of native type Concrete\\Core\\Entity\\Board\\Template\.$#'
-			identifier: return.phpDocType
-			count: 1
-			path: ../concrete/src/Entity/Board/Board.php
-
-		-
-			message: '#^PHPDoc tag @return with type mixed is not subtype of native type Concrete\\Core\\Entity\\Board\\DataSource\\Configuration\\Configuration\|null\.$#'
-			identifier: return.phpDocType
-			count: 1
-			path: ../concrete/src/Entity/Board/DataSource/ConfiguredDataSource.php
-
-		-
-			message: '#^PHPDoc tag @return with type mixed is not subtype of native type Concrete\\Core\\Entity\\Board\\Item\|null\.$#'
-			identifier: return.phpDocType
-			count: 1
-			path: ../concrete/src/Entity/Board/Designer/ItemSelectorCustomElementItem.php
-
-		-
-			message: '#^PHPDoc tag @param for parameter \$log with type mixed is not subtype of native type Concrete\\Core\\Entity\\Board\\InstanceLog\|null\.$#'
-			identifier: parameter.phpDocType
-			count: 1
-			path: ../concrete/src/Entity/Board/Instance.php
-
-		-
-			message: '#^PHPDoc tag @param for parameter \$site with type mixed is not subtype of native type Concrete\\Core\\Entity\\Site\\Site\|null\.$#'
-			identifier: parameter.phpDocType
-			count: 1
-			path: ../concrete/src/Entity/Board/Instance.php
-
-		-
-			message: '#^PHPDoc tag @return with type mixed is not subtype of native type Concrete\\Core\\Entity\\Board\\Board\.$#'
-			identifier: return.phpDocType
-			count: 1
-			path: ../concrete/src/Entity/Board/Instance.php
-
-		-
-			message: '#^PHPDoc tag @return with type mixed is not subtype of native type Concrete\\Core\\Entity\\Board\\InstanceLog\|null\.$#'
-			identifier: return.phpDocType
-			count: 1
-			path: ../concrete/src/Entity/Board/Instance.php
-
-		-
-			message: '#^PHPDoc tag @return with type mixed is not subtype of native type Concrete\\Core\\Entity\\Site\\Site\|null\.$#'
-			identifier: return.phpDocType
-			count: 1
-			path: ../concrete/src/Entity/Board/Instance.php
-
-		-
-			message: '#^PHPDoc tag @return with type mixed is not subtype of native type Concrete\\Core\\Entity\\Board\\DataSource\\ConfiguredDataSource\.$#'
-			identifier: return.phpDocType
-			count: 1
-			path: ../concrete/src/Entity/Board/InstanceItem.php
-
-		-
-			message: '#^PHPDoc tag @return with type mixed is not subtype of native type Concrete\\Core\\Entity\\Board\\Item\|null\.$#'
-			identifier: return.phpDocType
-			count: 1
-			path: ../concrete/src/Entity/Board/InstanceItem.php
-
-		-
 			message: '#^Cannot call method count\(\) on array\<Concrete\\Core\\Entity\\Board\\InstanceLogEntry\>\.$#'
 			identifier: method.nonObject
 			count: 1
@@ -4829,12 +4649,6 @@ parameters:
 			identifier: instanceof.alwaysTrue
 			count: 1
 			path: ../concrete/src/Entity/Board/InstanceLog.php
-
-		-
-			message: '#^PHPDoc tag @return with type mixed is not subtype of native type Concrete\\Core\\Entity\\Board\\SlotTemplate\.$#'
-			identifier: return.phpDocType
-			count: 1
-			path: ../concrete/src/Entity/Board/InstanceSlot.php
 
 		-
 			message: '#^Method Concrete\\Core\\Entity\\Calendar\\CalendarEvent\:\:getAttributeValueObject\(\) should return Concrete\\Core\\Entity\\Attribute\\Value\\EventValue\|null but returns Concrete\\Core\\Attribute\\AttributeValueInterface\|null\.$#'
@@ -4867,30 +4681,6 @@ parameters:
 			path: ../concrete/src/Entity/Calendar/CalendarEventVersion.php
 
 		-
-			message: '#^PHPDoc tag @param for parameter \$template with type mixed is not subtype of native type Concrete\\Core\\Entity\\Summary\\Template\.$#'
-			identifier: parameter.phpDocType
-			count: 1
-			path: ../concrete/src/Entity/Calendar/Summary/CalendarEventTemplate.php
-
-		-
-			message: '#^PHPDoc tag @return with type mixed is not subtype of native type Concrete\\Core\\Entity\\Summary\\Template\.$#'
-			identifier: return.phpDocType
-			count: 1
-			path: ../concrete/src/Entity/Calendar/Summary/CalendarEventTemplate.php
-
-		-
-			message: '#^PHPDoc tag @return with type mixed is not subtype of native type int\.$#'
-			identifier: return.phpDocType
-			count: 2
-			path: ../concrete/src/Entity/Command/Batch.php
-
-		-
-			message: '#^PHPDoc tag @return with type mixed is not subtype of native type string\.$#'
-			identifier: return.phpDocType
-			count: 1
-			path: ../concrete/src/Entity/Design/DesignTag.php
-
-		-
 			message: '#^If condition is always true\.$#'
 			identifier: if.alwaysTrue
 			count: 1
@@ -4917,12 +4707,6 @@ parameters:
 		-
 			message: '#^Call to an undefined method Concrete\\Core\\Attribute\\AttributeValueInterface\:\:setGenericValue\(\)\.$#'
 			identifier: method.notFound
-			count: 1
-			path: ../concrete/src/Entity/Express/Entry.php
-
-		-
-			message: '#^PHPDoc tag @return with type mixed is not subtype of native type string\.$#'
-			identifier: return.phpDocType
 			count: 1
 			path: ../concrete/src/Entity/Express/Entry.php
 
@@ -5053,12 +4837,6 @@ parameters:
 			path: ../concrete/src/Entity/Geolocator.php
 
 		-
-			message: '#^PHPDoc tag @param for parameter \$message with type mixed is not subtype of native type Concrete\\Core\\Health\\Report\\Finding\\Message\\MessageInterface\.$#'
-			identifier: parameter.phpDocType
-			count: 1
-			path: ../concrete/src/Entity/Health/Report/Finding.php
-
-		-
 			message: '#^Cannot call method toArray\(\) on array\<Concrete\\Core\\Entity\\Health\\Report\\Finding\>\.$#'
 			identifier: method.nonObject
 			count: 1
@@ -5137,24 +4915,6 @@ parameters:
 			path: ../concrete/src/Entity/OAuth/UserRepository.php
 
 		-
-			message: '#^PHPDoc tag @param for parameter \$template with type mixed is not subtype of native type Concrete\\Core\\Entity\\Summary\\Template\.$#'
-			identifier: parameter.phpDocType
-			count: 1
-			path: ../concrete/src/Entity/Page/Summary/PageTemplate.php
-
-		-
-			message: '#^PHPDoc tag @return with type mixed is not subtype of native type Concrete\\Core\\Entity\\Summary\\Template\.$#'
-			identifier: return.phpDocType
-			count: 1
-			path: ../concrete/src/Entity/Page/Summary/PageTemplate.php
-
-		-
-			message: '#^PHPDoc tag @param for parameter \$value with type IPLib\\Address\\AddressInterface is not subtype of native type IPLib\\Range\\RangeInterface\.$#'
-			identifier: parameter.phpDocType
-			count: 1
-			path: ../concrete/src/Entity/Permission/IpAccessControlRange.php
-
-		-
 			message: '#^Call to function is_numeric\(\) with int will always evaluate to true\.$#'
 			identifier: function.alreadyNarrowedType
 			count: 1
@@ -5201,54 +4961,6 @@ parameters:
 			identifier: ternary.alwaysTrue
 			count: 5
 			path: ../concrete/src/Entity/StyleCustomizer/Inline/StyleSet.php
-
-		-
-			message: '#^PHPDoc tag @return with type array\<Concrete\\Core\\Entity\\Notification\\GroupCreateNotification\> is incompatible with native type Doctrine\\Common\\Collections\\Collection\.$#'
-			identifier: return.phpDocType
-			count: 1
-			path: ../concrete/src/Entity/User/GroupCreate.php
-
-		-
-			message: '#^PHPDoc tag @return with type array\<Concrete\\Core\\Entity\\Notification\\GroupRoleChangeNotification\> is incompatible with native type Doctrine\\Common\\Collections\\Collection\.$#'
-			identifier: return.phpDocType
-			count: 1
-			path: ../concrete/src/Entity/User/GroupRoleChange.php
-
-		-
-			message: '#^PHPDoc tag @return with type array\<Concrete\\Core\\Entity\\Notification\\GroupSignupNotification\> is incompatible with native type Doctrine\\Common\\Collections\\Collection\.$#'
-			identifier: return.phpDocType
-			count: 1
-			path: ../concrete/src/Entity/User/GroupSignup.php
-
-		-
-			message: '#^PHPDoc tag @return with type array\<Concrete\\Core\\Entity\\Notification\\GroupSignupRequestNotification\> is incompatible with native type Doctrine\\Common\\Collections\\Collection\.$#'
-			identifier: return.phpDocType
-			count: 1
-			path: ../concrete/src/Entity/User/GroupSignupRequest.php
-
-		-
-			message: '#^PHPDoc tag @return with type array\<Concrete\\Core\\Entity\\Notification\\GroupSignupRequestAcceptNotification\> is incompatible with native type Doctrine\\Common\\Collections\\Collection\.$#'
-			identifier: return.phpDocType
-			count: 1
-			path: ../concrete/src/Entity/User/GroupSignupRequestAccept.php
-
-		-
-			message: '#^PHPDoc tag @return with type array\<Concrete\\Core\\Entity\\Notification\\GroupSignupRequestDeclineNotification\> is incompatible with native type Doctrine\\Common\\Collections\\Collection\.$#'
-			identifier: return.phpDocType
-			count: 1
-			path: ../concrete/src/Entity/User/GroupSignupRequestDecline.php
-
-		-
-			message: '#^PHPDoc tag @return with type array\<Concrete\\Core\\Entity\\Notification\\NotificationAlert\> is incompatible with native type Doctrine\\Common\\Collections\\Collection\.$#'
-			identifier: return.phpDocType
-			count: 1
-			path: ../concrete/src/Entity/User/User.php
-
-		-
-			message: '#^PHPDoc tag @return with type array\<Concrete\\Core\\Entity\\Notification\\UserSignupNotification\> is incompatible with native type Doctrine\\Common\\Collections\\Collection\.$#'
-			identifier: return.phpDocType
-			count: 1
-			path: ../concrete/src/Entity/User/UserSignup.php
 
 		-
 			message: '#^Call to an undefined method Concrete\\Core\\Error\\ErrorList\\Error\\ErrorInterface\:\:getField\(\)\.$#'
@@ -5375,18 +5087,6 @@ parameters:
 			identifier: ternary.alwaysTrue
 			count: 2
 			path: ../concrete/src/Express/Export/EntryList/CsvWriter.php
-
-		-
-			message: '#^PHPDoc tag @param for parameter \$entry with type mixed is not subtype of native type Concrete\\Core\\Entity\\Express\\Entry\.$#'
-			identifier: parameter.phpDocType
-			count: 1
-			path: ../concrete/src/Express/Form/Context/ViewContext.php
-
-		-
-			message: '#^PHPDoc tag @param for parameter \$form with type mixed is not subtype of native type Concrete\\Core\\Express\\Form\\FormInterface\.$#'
-			identifier: parameter.phpDocType
-			count: 1
-			path: ../concrete/src/Express/Form/Context/ViewContext.php
 
 		-
 			message: '#^Call to an undefined method Concrete\\Core\\Entity\\Express\\Control\\Control\:\:getAttributeKey\(\)\.$#'
@@ -5657,12 +5357,6 @@ parameters:
 			identifier: argument.type
 			count: 1
 			path: ../concrete/src/File/Command/ReindexFileTaskCommandHandler.php
-
-		-
-			message: '#^PHPDoc tag @param for parameter \$filters with type Concrete\\Core\\File\\Component\\Chooser\\FilterCollectionInterface\|null is not subtype of native type Concrete\\Core\\File\\Component\\Chooser\\FilterCollectionInterface\.$#'
-			identifier: parameter.phpDocType
-			count: 1
-			path: ../concrete/src/File/Component/Chooser/ChooserConfiguration.php
 
 		-
 			message: '#^Strict comparison using \!\=\= between int and null will always evaluate to true\.$#'
@@ -6163,12 +5857,6 @@ parameters:
 			path: ../concrete/src/Filesystem/ElementManager.php
 
 		-
-			message: '#^PHPDoc tag @param for parameter \$filesystem with type mixed is not subtype of native type Illuminate\\Filesystem\\Filesystem\.$#'
-			identifier: parameter.phpDocType
-			count: 1
-			path: ../concrete/src/Filesystem/FileLocator/CoreLocation.php
-
-		-
 			message: '#^Anonymous function never returns null so it can be removed from the return type\.$#'
 			identifier: return.unusedType
 			count: 1
@@ -6287,12 +5975,6 @@ parameters:
 			identifier: notIdentical.alwaysTrue
 			count: 1
 			path: ../concrete/src/Form/Service/Form.php
-
-		-
-			message: '#^PHPDoc tag @param for parameter \$values with type int is incompatible with native type array\.$#'
-			identifier: parameter.phpDocType
-			count: 1
-			path: ../concrete/src/Form/Service/Widget/DateTime.php
 
 		-
 			message: '#^Binary operation "\+" between '' \<span class\="text…'' and string results in an error\.$#'
@@ -6491,12 +6173,6 @@ parameters:
 			identifier: if.alwaysTrue
 			count: 1
 			path: ../concrete/src/Health/Report/Finding/Message/Search/AttributeMessage.php
-
-		-
-			message: '#^PHPDoc tag @return with type Concrete\\Core\\Entity\\Attribute\\Value\\Value\\Value is incompatible with native type int\|null\.$#'
-			identifier: return.phpDocType
-			count: 1
-			path: ../concrete/src/Health/Report/Finding/Message/Search/BlockMessage.php
 
 		-
 			message: '#^If condition is always true\.$#'
@@ -8431,18 +8107,6 @@ parameters:
 			path: ../concrete/src/Page/Theme/BedrockThemeTrait.php
 
 		-
-			message: '#^PHPDoc tag @return with type array is incompatible with native type string\.$#'
-			identifier: return.phpDocType
-			count: 1
-			path: ../concrete/src/Page/Theme/Command/ResetPageThemeLegacyCustomizationsCommandHandler.php
-
-		-
-			message: '#^PHPDoc tag @return with type array is incompatible with native type string\.$#'
-			identifier: return.phpDocType
-			count: 1
-			path: ../concrete/src/Page/Theme/Command/ResetPageThemeSkinsCommandHandler.php
-
-		-
 			message: '#^Constructor of class Concrete\\Core\\Page\\Theme\\Command\\ResetSiteThemeLegacyCustomizationsCommandHandler has an unused parameter \$siteService\.$#'
 			identifier: constructor.unusedParameter
 			count: 1
@@ -8631,12 +8295,6 @@ parameters:
 		-
 			message: '#^If condition is always true\.$#'
 			identifier: if.alwaysTrue
-			count: 1
-			path: ../concrete/src/Page/View/PageView.php
-
-		-
-			message: '#^PHPDoc tag @param for parameter \$customPreviewRequest with type mixed is not subtype of native type Concrete\\Core\\Page\\View\\Preview\\PreviewRequestInterface\.$#'
-			identifier: parameter.phpDocType
 			count: 1
 			path: ../concrete/src/Page/View/PageView.php
 
@@ -9889,12 +9547,6 @@ parameters:
 			path: ../concrete/src/Session/SessionFactory.php
 
 		-
-			message: '#^PHPDoc tag @param for parameter \$database with type int\|null is not subtype of native type int\.$#'
-			identifier: parameter.phpDocType
-			count: 1
-			path: ../concrete/src/Session/SessionFactory.php
-
-		-
 			message: '#^Parameter \#1 \$array of function array_get expects array\|ArrayAccess, string given\.$#'
 			identifier: argument.type
 			count: 3
@@ -9997,40 +9649,16 @@ parameters:
 			path: ../concrete/src/SiteInformation/Question/AbstractSelectQuestion.php
 
 		-
-			message: '#^PHPDoc tag @return with type array is incompatible with native type string\.$#'
-			identifier: return.phpDocType
-			count: 1
-			path: ../concrete/src/StyleCustomizer/Customizations/LegacyCustomizationsManager.php
-
-		-
-			message: '#^PHPDoc tag @return with type array is incompatible with native type string\.$#'
-			identifier: return.phpDocType
-			count: 1
-			path: ../concrete/src/StyleCustomizer/Customizations/SkinCustomizationsManager.php
-
-		-
 			message: '#^Call to function is_array\(\) with bool\|float\|int\|string\|null will always evaluate to false\.$#'
 			identifier: function.impossibleType
 			count: 2
 			path: ../concrete/src/StyleCustomizer/Inline/StyleSet.php
 
 		-
-			message: '#^PHPDoc tag @return with type mixed is not subtype of native type string\.$#'
-			identifier: return.phpDocType
-			count: 1
-			path: ../concrete/src/StyleCustomizer/Normalizer/ColorVariable.php
-
-		-
 			message: '#^Access to protected property Less_Parser\|Less_Tree_Ruleset\:\:\$rules\.$#'
 			identifier: property.protected
 			count: 1
 			path: ../concrete/src/StyleCustomizer/Normalizer/LessNormalizer.php
-
-		-
-			message: '#^PHPDoc tag @param for parameter \$unit with type string\|null is not subtype of native type string\.$#'
-			identifier: parameter.phpDocType
-			count: 1
-			path: ../concrete/src/StyleCustomizer/Normalizer/NumberVariable.php
 
 		-
 			message: '#^Class Concrete\\Core\\StyleCustomizer\\Normalizer\\ScssNormalizerCompiler extends @final class ScssPhp\\ScssPhp\\Compiler\.$#'
@@ -10177,22 +9805,10 @@ parameters:
 			path: ../concrete/src/Summary/Data/Extractor/Driver/BasicPageDriver.php
 
 		-
-			message: '#^PHPDoc tag @return with type mixed is not subtype of native type Concrete\\Core\\Summary\\Data\\Field\\DataFieldDataInterface\.$#'
-			identifier: return.phpDocType
-			count: 1
-			path: ../concrete/src/Summary/Data/Field/DataField.php
-
-		-
 			message: '#^Property Concrete\\Core\\Summary\\Data\\Field\\LinkDataFieldData\:\:\$link \(int\) does not accept League\\Url\\Url\|string\.$#'
 			identifier: assign.propertyType
 			count: 1
 			path: ../concrete/src/Summary/Data/Field/LinkDataFieldData.php
-
-		-
-			message: '#^PHPDoc tag @return with type mixed is not subtype of native type string\.$#'
-			identifier: return.phpDocType
-			count: 1
-			path: ../concrete/src/Summary/SummaryObject.php
 
 		-
 			message: '#^If condition is always true\.$#'
@@ -10501,12 +10117,6 @@ parameters:
 			path: ../concrete/src/Tree/Type/Topic.php
 
 		-
-			message: '#^PHPDoc tag @param for parameter \$requestedVersion with type mixed is not subtype of native type Concrete\\Core\\Updater\\ApplicationUpdate\\Version\.$#'
-			identifier: parameter.phpDocType
-			count: 1
-			path: ../concrete/src/Updater/ApplicationUpdate/Diagnostic.php
-
-		-
 			message: '#^Call to an undefined static method Concrete\\Core\\Support\\Facade\\Database\:\:query\(\)\.$#'
 			identifier: staticMethod.notFound
 			count: 1
@@ -10801,12 +10411,6 @@ parameters:
 			path: ../concrete/src/User/Command/CheckAutomatedGroupsCommandHandler.php
 
 		-
-			message: '#^PHPDoc tag @param for parameter \$command with type Concrete\\Core\\User\\Command\\ReindexUserTaskCommand is incompatible with native type Concrete\\Core\\User\\Command\\RemoveOldFileAttachmentsCommand\.$#'
-			identifier: parameter.phpDocType
-			count: 1
-			path: ../concrete/src/User/Command/RemoveOldFileAttachmentsCommandHandler.php
-
-		-
 			message: '#^Call to an undefined method Imagine\\Image\\ImageInterface\:\:create\(\)\.$#'
 			identifier: method.notFound
 			count: 1
@@ -10835,12 +10439,6 @@ parameters:
 			identifier: isset.property
 			count: 1
 			path: ../concrete/src/User/CsvWriter.php
-
-		-
-			message: '#^PHPDoc tag @return with type mixed is not subtype of native type int\.$#'
-			identifier: return.phpDocType
-			count: 1
-			path: ../concrete/src/User/Group/Command/DeleteGroupCommand.php
 
 		-
 			message: '#^Method Concrete\\Core\\User\\Group\\FolderManager\:\:addFolder\(\) should return Concrete\\Core\\Tree\\Node\\Type\\GroupFolder but returns Concrete\\Core\\Tree\\Node\\Node\.$#'

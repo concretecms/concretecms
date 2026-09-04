@@ -33,9 +33,6 @@ class Batch implements \JsonSerializable
      */
     protected $failedJobs = 0;
 
-    /**
-     * @return mixed
-     */
     public function getTotalJobs(): int
     {
         return $this->totalJobs;
@@ -49,9 +46,6 @@ class Batch implements \JsonSerializable
         $this->totalJobs = $totalJobs;
     }
 
-    /**
-     * @return mixed
-     */
     public function getPendingJobs(): int
     {
         return $this->pendingJobs;

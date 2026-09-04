@@ -94,7 +94,7 @@ class UserSignup implements SubjectInterface
     }
 
     /**
-     * @return \Concrete\Core\Entity\Notification\UserSignupNotification[]
+     * @return Collection|\Concrete\Core\Entity\Notification\UserSignupNotification[]
      */
     public function getNotifications(): Collection
     {

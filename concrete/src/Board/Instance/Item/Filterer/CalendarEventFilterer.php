@@ -36,7 +36,7 @@ class CalendarEventFilterer implements FiltererInterface
     /**
      * @param CalendarEventConfiguration $configuration
      * @param InstanceItem[] $items
-     * @return bool
+     * @return InstanceItem[]
      */
     public function filterItems(Configuration $configuration, array $items): array
     {

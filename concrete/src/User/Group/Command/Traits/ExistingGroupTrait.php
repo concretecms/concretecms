@@ -9,9 +9,6 @@ trait ExistingGroupTrait
      */
     protected $groupID;
 
-    /**
-     * @return mixed
-     */
     public function getGroupID(): int
     {
         return $this->groupID;

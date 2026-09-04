@@ -403,8 +403,6 @@ class Entry implements \JsonSerializable, PermissionObjectInterface, AttributeOb
 
     /**
      * Formats the label of this entry to the mask (e.g. %product-name%) or the standard format.
-     *
-     * @return mixed
      */
     public function getLabel(): string
     {

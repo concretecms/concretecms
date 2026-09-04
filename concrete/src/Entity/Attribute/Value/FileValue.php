@@ -35,9 +35,6 @@ class FileValue extends AbstractValue
         return $file === null ? null : $file->getVersion($this->fvID);
     }
 
-    /**
-     * @param mixed $version
-     */
     public function setVersion(Version $version)
     {
         $this->fID = $version->getFileID();

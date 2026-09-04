@@ -102,7 +102,7 @@ class Manager
      * Convert all the database tables a specific character set/collation combination.
      *
      * @param \Concrete\Core\Database\Connection\Connection $connection
-     * @param callable|null $messageCallback a callback function that will receive progress messages
+     * @param callable $messageCallback a callback function that will receive progress messages
      * @param string $characterSet
      * @param string $collation
      * @param \Concrete\Core\Error\ErrorList\ErrorList $warnings

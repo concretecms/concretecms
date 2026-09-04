@@ -160,9 +160,6 @@ class Board implements ObjectInterface, AssignableObjectInterface, \JsonSerializ
         $this->data_sources = $data_sources;
     }
 
-    /**
-     * @return mixed
-     */
     public function getTemplate() : Template
     {
         return $this->template;

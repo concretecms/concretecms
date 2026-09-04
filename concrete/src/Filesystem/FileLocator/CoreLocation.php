@@ -18,9 +18,6 @@ class CoreLocation implements LocationInterface
         return 'core';
     }
 
-    /**
-     * @param mixed $filesystem
-     */
     public function setFilesystem(Filesystem $filesystem)
     {
         $this->filesystem = $filesystem;

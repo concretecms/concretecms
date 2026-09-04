@@ -54,9 +54,6 @@ class ChooserConfiguration implements ChooserConfigurationInterface
         return $this->filters;
     }
 
-    /**
-     * @param FilterCollectionInterface|null $filters
-     */
     public function setFilters(FilterCollectionInterface $filters): void
     {
         $this->filters = $filters;

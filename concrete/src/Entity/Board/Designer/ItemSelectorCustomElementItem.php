@@ -38,9 +38,6 @@ class ItemSelectorCustomElementItem implements \JsonSerializable, ItemProviderIn
         return $this->itemId;
     }
 
-    /**
-     * @return mixed
-     */
     public function getItem() :? Item
     {
         return $this->item;

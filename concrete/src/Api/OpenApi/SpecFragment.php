@@ -38,9 +38,6 @@ class SpecFragment
         return $this->pathCollection;
     }
 
-    /**
-     * @return SpecModel[]
-     */
     public function getComponents(): ?SpecComponents
     {
         return $this->components;

@@ -192,7 +192,7 @@ class GroupSignupRequestDecline implements SubjectInterface
     }
 
     /**
-     * @return \Concrete\Core\Entity\Notification\GroupSignupRequestDeclineNotification[]
+     * @return Collection|\Concrete\Core\Entity\Notification\GroupSignupRequestDeclineNotification[]
      */
     public function getNotifications(): Collection
     {
