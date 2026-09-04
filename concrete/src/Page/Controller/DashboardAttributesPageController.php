@@ -294,7 +294,7 @@ abstract class DashboardAttributesPageController extends DashboardPageController
             $this->buildRedirect($successURL)->send();
             $this->app->shutdown();
         } catch (UserMessageException $e) {
-            $this->error = $e;
+            $this->error->add($e);
         }
     }
 }

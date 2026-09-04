@@ -7543,12 +7543,6 @@ parameters:
 			path: ../concrete/src/Page/Controller/DashboardAttributesPageController.php
 
 		-
-			message: '#^Property Concrete\\Core\\Page\\Controller\\DashboardPageController\:\:\$error \(Concrete\\Core\\Error\\ErrorList\\ErrorList\|null\) does not accept Concrete\\Core\\Error\\UserMessageException\.$#'
-			identifier: assign.propertyType
-			count: 1
-			path: ../concrete/src/Page/Controller/DashboardAttributesPageController.php
-
-		-
 			message: '#^Call to an undefined method Concrete\\Core\\Controller\\ElementController\:\:setHeaderSearchAction\(\)\.$#'
 			identifier: method.notFound
 			count: 1
