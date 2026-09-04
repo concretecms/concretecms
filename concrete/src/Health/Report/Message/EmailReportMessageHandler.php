@@ -46,7 +46,7 @@ class EmailReportMessageHandler
 
 
         /**
-         * @var Result $result
+         * @var Result|null $result
          */
         $result = $this->entityManager->find(Result::class, $message->getResultId());
         if ($result && $message->getEmail()) {

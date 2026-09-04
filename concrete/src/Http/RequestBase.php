@@ -51,7 +51,7 @@ class RequestBase extends SymfonyRequest
     protected static $instance;
 
     /**
-     * @var \Concrete\Core\Page\Page
+     * @var \Concrete\Core\Page\Page|null
      */
     protected $c;
 
@@ -76,7 +76,7 @@ class RequestBase extends SymfonyRequest
     }
 
     /**
-     * @return \Concrete\Core\Page\Page
+     * @return \Concrete\Core\Page\Page|null
      */
     public function getCurrentPage()
     {

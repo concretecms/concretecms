@@ -681,6 +681,7 @@ class Page extends Collection implements CategoryMemberInterface,
 
             $treeIDs = implode(',', $treeIDs);
 
+            $cPath = null;
             while ((!$cID) && $path) {
                 $row = $db->fetchAssoc('select pp.cID, ppIsCanonical from PagePaths pp inner join Pages p on pp.cID = p.cID where cPath = ? and siteTreeID in (' . $treeIDs . ')', [$path]);
                 if (!empty($row)) {

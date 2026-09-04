@@ -12,7 +12,7 @@ use Concrete\Core\Localization\Service\Date;
 abstract class AbstractRepetition implements RepetitionInterface
 {
     /**
-     * @var string Date string of the start date/time
+     * @var string|null Date string of the start date/time
      */
     protected $startDate;
 
@@ -412,7 +412,7 @@ abstract class AbstractRepetition implements RepetitionInterface
     }
 
     /**
-     * @return string
+     * @return string|null
      */
     public function getStartDate()
     {

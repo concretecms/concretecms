@@ -925,12 +925,6 @@ parameters:
 			path: ../concrete/controllers/event/export.php
 
 		-
-			message: '#^Instanceof between Concrete\\Core\\Entity\\Calendar\\CalendarEventVersion and Concrete\\Core\\Entity\\Calendar\\CalendarEventVersion will always evaluate to true\.$#'
-			identifier: instanceof.alwaysTrue
-			count: 1
-			path: ../concrete/controllers/event/export.php
-
-		-
 			message: '#^Call to an undefined method Concrete\\Core\\Page\\Feed\:\:getOutput\(\)\.$#'
 			identifier: method.notFound
 			count: 1
@@ -3181,12 +3175,6 @@ parameters:
 			path: ../concrete/src/Area/Layout/Preset/Formatter/ThemeFormatter.php
 
 		-
-			message: '#^Left side of && is always true\.$#'
-			identifier: booleanAnd.leftAlwaysTrue
-			count: 1
-			path: ../concrete/src/Area/Layout/Preset/Provider/ActiveThemeProvider.php
-
-		-
 			message: '#^Class Concrete\\Core\\Area\\Layout\\Preset\\Provider\\Manager does not have a constructor and must be instantiated without any parameters\.$#'
 			identifier: new.noConstructor
 			count: 1
@@ -3511,7 +3499,7 @@ parameters:
 			path: ../concrete/src/Attribute/Controller.php
 
 		-
-			message: '#^Parameter \#2 \$key of class Concrete\\Core\\Attribute\\Form\\Control\\View\\View constructor expects Concrete\\Core\\Entity\\Attribute\\Key\\Key, Concrete\\Core\\Attribute\\AttributeKeyInterface given\.$#'
+			message: '#^Parameter \#2 \$key of class Concrete\\Core\\Attribute\\Form\\Control\\View\\View constructor expects Concrete\\Core\\Entity\\Attribute\\Key\\Key, Concrete\\Core\\Attribute\\AttributeKeyInterface\|null given\.$#'
 			identifier: argument.type
 			count: 1
 			path: ../concrete/src/Attribute/Controller.php
@@ -3670,12 +3658,6 @@ parameters:
 			message: '#^Instanceof between Concrete\\Core\\Error\\ErrorList\\ErrorList and Concrete\\Core\\Error\\ErrorList\\ErrorList will always evaluate to true\.$#'
 			identifier: instanceof.alwaysTrue
 			count: 1
-			path: ../concrete/src/Attribute/StandardValidator.php
-
-		-
-			message: '#^Left side of && is always true\.$#'
-			identifier: booleanAnd.leftAlwaysTrue
-			count: 2
 			path: ../concrete/src/Attribute/StandardValidator.php
 
 		-
@@ -4477,32 +4459,8 @@ parameters:
 			path: ../concrete/src/Calendar/Event/EventService.php
 
 		-
-			message: '#^If condition is always true\.$#'
-			identifier: if.alwaysTrue
-			count: 1
-			path: ../concrete/src/Calendar/Event/EventService.php
-
-		-
-			message: '#^Left side of && is always true\.$#'
-			identifier: booleanAnd.leftAlwaysTrue
-			count: 1
-			path: ../concrete/src/Calendar/Event/EventService.php
-
-		-
 			message: '#^Parameter \#1 \$var of function count expects array\|Countable, Concrete\\Core\\Entity\\Calendar\\CalendarEventVersion given\.$#'
 			identifier: argument.type
-			count: 1
-			path: ../concrete/src/Calendar/Event/EventService.php
-
-		-
-			message: '#^Right side of && is always true\.$#'
-			identifier: booleanAnd.rightAlwaysTrue
-			count: 1
-			path: ../concrete/src/Calendar/Event/EventService.php
-
-		-
-			message: '#^Ternary operator condition is always true\.$#'
-			identifier: ternary.alwaysTrue
 			count: 1
 			path: ../concrete/src/Calendar/Event/EventService.php
 
@@ -5559,7 +5517,7 @@ parameters:
 		-
 			message: '#^Negated boolean expression is always false\.$#'
 			identifier: booleanNot.alwaysFalse
-			count: 2
+			count: 1
 			path: ../concrete/src/Entity/Calendar/CalendarEvent.php
 
 		-
@@ -5837,18 +5795,6 @@ parameters:
 			identifier: assign.propertyType
 			count: 1
 			path: ../concrete/src/Entity/OAuth/AccessToken.php
-
-		-
-			message: '#^Left side of && is always true\.$#'
-			identifier: booleanAnd.leftAlwaysTrue
-			count: 1
-			path: ../concrete/src/Entity/OAuth/AccessTokenRepository.php
-
-		-
-			message: '#^Negated boolean expression is always false\.$#'
-			identifier: booleanNot.alwaysFalse
-			count: 1
-			path: ../concrete/src/Entity/OAuth/AccessTokenRepository.php
 
 		-
 			message: '#^Method Concrete\\Core\\Entity\\OAuth\\AuthCode\:\:getExpiryDateTime\(\) should return DateTimeImmutable but returns DateTime\.$#'
@@ -7099,12 +7045,6 @@ parameters:
 			path: ../concrete/src/File/ValidationService.php
 
 		-
-			message: '#^Left side of && is always true\.$#'
-			identifier: booleanAnd.leftAlwaysTrue
-			count: 1
-			path: ../concrete/src/Filesystem/Element.php
-
-		-
 			message: '#^PHPDoc tag @param references unknown parameter\: \$elementArguments$#'
 			identifier: parameter.notFound
 			count: 1
@@ -7513,12 +7453,6 @@ parameters:
 			path: ../concrete/src/Health/Report/Message/EmailReportMessageHandler.php
 
 		-
-			message: '#^Left side of && is always true\.$#'
-			identifier: booleanAnd.leftAlwaysTrue
-			count: 1
-			path: ../concrete/src/Health/Report/Message/EmailReportMessageHandler.php
-
-		-
 			message: '#^Parameter \#2 \$fetchJoinCollection of class Pagerfanta\\Adapter\\DoctrineORMAdapter constructor expects bool, Closure given\.$#'
 			identifier: argument.type
 			count: 1
@@ -7911,12 +7845,6 @@ parameters:
 		-
 			message: '#^Method Concrete\\Core\\Http\\RequestBase\:\:getInstance\(\) should return static\(Concrete\\Core\\Http\\RequestBase\) but returns Symfony\\Component\\HttpFoundation\\Request\.$#'
 			identifier: return.type
-			count: 1
-			path: ../concrete/src/Http/RequestBase.php
-
-		-
-			message: '#^Property Concrete\\Core\\Http\\RequestBase\:\:\$c \(Concrete\\Core\\Page\\Page\) does not accept null\.$#'
-			identifier: assign.propertyType
 			count: 1
 			path: ../concrete/src/Http/RequestBase.php
 
@@ -9511,12 +9439,6 @@ parameters:
 			path: ../concrete/src/Page/Page.php
 
 		-
-			message: '#^Call to function is_object\(\) with Concrete\\Core\\Page\\Page will always evaluate to true\.$#'
-			identifier: function.alreadyNarrowedType
-			count: 1
-			path: ../concrete/src/Page/Page.php
-
-		-
 			message: '#^Default value of the parameter \#1 \$oneLevelOnly \(int\) of method Concrete\\Core\\Page\\Page\:\:getCollectionChildrenArray\(\) is incompatible with type bool\.$#'
 			identifier: parameter.defaultValue
 			count: 1
@@ -9559,6 +9481,12 @@ parameters:
 			path: ../concrete/src/Page/Page.php
 
 		-
+			message: '#^Negated boolean expression is always true\.$#'
+			identifier: booleanNot.alwaysTrue
+			count: 1
+			path: ../concrete/src/Page/Page.php
+
+		-
 			message: '#^PHPDoc tag @var above a method has no effect\.$#'
 			identifier: varTag.misplaced
 			count: 3
@@ -9579,7 +9507,7 @@ parameters:
 		-
 			message: '#^Unreachable statement \- code above always terminates\.$#'
 			identifier: deadCode.unreachable
-			count: 2
+			count: 1
 			path: ../concrete/src/Page/Page.php
 
 		-
@@ -9933,12 +9861,6 @@ parameters:
 		-
 			message: '#^Cannot call method setTheme\(\) on null\.$#'
 			identifier: method.nonObject
-			count: 1
-			path: ../concrete/src/Page/Theme/Documentation/Installer.php
-
-		-
-			message: '#^Left side of && is always true\.$#'
-			identifier: booleanAnd.leftAlwaysTrue
 			count: 1
 			path: ../concrete/src/Page/Theme/Documentation/Installer.php
 
@@ -11521,18 +11443,6 @@ parameters:
 			path: ../concrete/src/Sharing/OpenGraph/OpenGraph.php
 
 		-
-			message: '#^Call to function is_object\(\) with Concrete\\Core\\Page\\Page will always evaluate to true\.$#'
-			identifier: function.alreadyNarrowedType
-			count: 1
-			path: ../concrete/src/Sharing/ShareThisPage/Service.php
-
-		-
-			message: '#^If condition is always true\.$#'
-			identifier: if.alwaysTrue
-			count: 1
-			path: ../concrete/src/Sharing/ShareThisPage/Service.php
-
-		-
 			message: '#^If condition is always true\.$#'
 			identifier: if.alwaysTrue
 			count: 1
@@ -12299,12 +12209,6 @@ parameters:
 			identifier: booleanAnd.leftAlwaysTrue
 			count: 2
 			path: ../concrete/src/Updater/Migrations/Migrations/Version20211020151701.php
-
-		-
-			message: '#^Left side of && is always true\.$#'
-			identifier: booleanAnd.leftAlwaysTrue
-			count: 1
-			path: ../concrete/src/Updater/Migrations/Migrations/Version20211028000000.php
 
 		-
 			message: '#^Call to an undefined method Concrete\\Core\\Attribute\\Category\\CategoryInterface\:\:add\(\)\.$#'

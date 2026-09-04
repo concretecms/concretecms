@@ -28,7 +28,7 @@ final class Version20211028000000 extends AbstractMigration implements Repeatabl
             $entityManager->flush();
             /** @var TaskSetService $taskSetService */
             $taskSetService = $this->app->make(TaskSetService::class);
-            /** @var TaskSet $taskSet */
+            /** @var TaskSet|null $taskSet */
             $taskSet = $taskSetService->getByHandle('user_groups');
             if ($taskSet && !$taskSetService->taskSetContainsTask($taskSet, $task)) {
                 $taskSetService->addTaskToSet($task, $taskSet);

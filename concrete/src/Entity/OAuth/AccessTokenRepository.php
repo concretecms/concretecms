@@ -75,7 +75,7 @@ class AccessTokenRepository extends EntityRepository implements AccessTokenRepos
      */
     public function isAccessTokenRevoked($tokenId)
     {
-        /** @var \Concrete\Core\Entity\OAuth\AccessToken $token */
+        /** @var \Concrete\Core\Entity\OAuth\AccessToken|null $token */
         $token = $this->find($tokenId);
         if (!$token) {
             // The token was manually removed.
@@ -84,7 +84,7 @@ class AccessTokenRepository extends EntityRepository implements AccessTokenRepos
 
         $now = new \DateTime('now');
         // If we have a token and it has expired...
-        if ($token && $token->getExpiryDateTime() < $now) {
+        if ($token->getExpiryDateTime() < $now) {
             return true;
         }
 

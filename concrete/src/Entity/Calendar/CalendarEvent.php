@@ -147,7 +147,7 @@ class CalendarEvent implements ObjectInterface, CategoryMemberInterface
     }
 
     /**
-     * @return CalendarEventVersion
+     * @return CalendarEventVersion|null
      */
     public function getSelectedVersion()
     {
@@ -163,7 +163,7 @@ class CalendarEvent implements ObjectInterface, CategoryMemberInterface
     }
 
     /**
-     * @return CalendarEventVersion
+     * @return CalendarEventVersion|false|null
      */
     public function getApprovedVersion()
     {
@@ -174,7 +174,7 @@ class CalendarEvent implements ObjectInterface, CategoryMemberInterface
     }
 
     /**
-     * @return CalendarEventVersion
+     * @return CalendarEventVersion|false|null
      */
     public function getRecentVersion()
     {

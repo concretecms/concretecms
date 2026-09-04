@@ -32,7 +32,7 @@ class Installer
     {
         $provider->installSupportingElements();
         $parent = Page::getByPath(THEME_DOCUMENTATION_PAGE_PATH . '/' . $theme->getThemeHandle());
-        if (!$parent || ($parent && $parent->isError())) {
+        if (!$parent || $parent->isError()) {
             $type = Type::getByHandle(THEME_DOCUMENTATION_CATEGORY_PAGE_TYPE);
             $documentation = Page::getByPath(THEME_DOCUMENTATION_PAGE_PATH);
             $parent = $documentation->add($type, ['name' => $theme->getThemeName(), 'cHandle' => $theme->getThemeHandle()]);
