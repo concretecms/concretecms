@@ -14,7 +14,7 @@ class ExternalFileTransformer extends TransformerAbstract
      */
     public function transform(ExternalFileEntry $fileEntry)
     {
-        return (array) $file->jsonSerialize();
+        return (array) $fileEntry->jsonSerialize();
     }
 
 }

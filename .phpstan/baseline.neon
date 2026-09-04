@@ -8161,12 +8161,6 @@ parameters:
 			path: ../concrete/src/File/ExternalFileTransformer.php
 
 		-
-			message: '#^Undefined variable\: \$file$#'
-			identifier: variable.undefined
-			count: 1
-			path: ../concrete/src/File/ExternalFileTransformer.php
-
-		-
 			message: '#^PHPDoc tag @var above a method has no effect\.$#'
 			identifier: varTag.misplaced
 			count: 1
