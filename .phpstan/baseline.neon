@@ -469,12 +469,6 @@ parameters:
 			path: ../concrete/controllers/dialog/page/add_block.php
 
 		-
-			message: '#^Parameter \#1 \$afterBlock of method Concrete\\Core\\Block\\Block\:\:moveBlockToDisplayOrderPosition\(\) expects Concrete\\Core\\Block\\Block\|null, false given\.$#'
-			identifier: argument.type
-			count: 1
-			path: ../concrete/controllers/dialog/page/add_block.php
-
-		-
 			message: '#^Property Concrete\\Controller\\Dialog\\Page\\AddBlock\:\:\$areaToModify \(Concrete\\Core\\Area\\Area\) in isset\(\) is not nullable\.$#'
 			identifier: isset.property
 			count: 1
@@ -8877,12 +8871,6 @@ parameters:
 		-
 			message: '#^PHPDoc tag @var above a method has no effect\.$#'
 			identifier: varTag.misplaced
-			count: 1
-			path: ../concrete/src/Page/Type/Type.php
-
-		-
-			message: '#^Parameter \#1 \$pl of method Concrete\\Core\\Page\\Page\:\:setTheme\(\) expects Concrete\\Core\\Page\\Theme\\Theme\|null, false given\.$#'
-			identifier: argument.type
 			count: 1
 			path: ../concrete/src/Page/Type/Type.php
 

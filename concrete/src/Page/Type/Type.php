@@ -341,7 +341,7 @@ class Type extends ConcreteObject implements \Concrete\Core\Permission\ObjectInt
             if ($this->getPageTypeDefaultThemeID() > 0 && $theme = $this->getPageTypeDefaultThemeObject()) {
                 $template->setTheme($theme);
             } else {
-                $template->setTheme(false);
+                $template->setTheme(null);
             }
         }
 

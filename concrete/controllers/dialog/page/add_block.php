@@ -163,7 +163,7 @@ class AddBlock extends BackendInterfacePageController
                     }
                 }
                 if (!is_object($db)) {
-                    $nb->moveBlockToDisplayOrderPosition(false);
+                    $nb->moveBlockToDisplayOrderPosition(null);
                 }
 
                 $pc->setAdditionalDataAttribute('btID', $nb->getBlockTypeID());
