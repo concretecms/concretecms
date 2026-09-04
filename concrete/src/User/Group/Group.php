@@ -404,7 +404,7 @@ class Group extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
     }
 
     /**
-     * @return \Concrete\Core\Entity\File\File|bool
+     * @return \Concrete\Core\Entity\File\File|false|null
      */
     public function getThumbnailImage()
     {
@@ -413,7 +413,7 @@ class Group extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
         if ($this->gThumbnailFID) {
             $bf = \Concrete\Core\File\File::getByID($this->gThumbnailFID);
             if (!is_object($bf) || $bf->isError()) {
-                unset($bf);
+                $bf = null;
             }
         }
 
@@ -754,7 +754,7 @@ class Group extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
     }
 
     /**
-     * @return bool
+     * @return \Concrete\Core\Entity\File\File|false|null
      * @deprecated
      */
     public function getGroupBadgeImageObject()
@@ -763,7 +763,7 @@ class Group extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
         if ($this->gBadgeFID) {
             $bf = File::getByID($this->gBadgeFID);
             if (!is_object($bf) || $bf->isError()) {
-                unset($bf);
+                $bf = null;
             }
         }
 

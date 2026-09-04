@@ -14671,12 +14671,6 @@ parameters:
 			path: ../concrete/src/User/Group/Group.php
 
 		-
-			message: '#^Variable \$bf might not be defined\.$#'
-			identifier: variable.undefined
-			count: 2
-			path: ../concrete/src/User/Group/Group.php
-
-		-
 			message: '#^Variable \$row in isset\(\) always exists and is not nullable\.$#'
 			identifier: isset.variable
 			count: 1
