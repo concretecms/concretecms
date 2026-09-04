@@ -271,9 +271,10 @@ trait DashboardExpressEntryListTrait
         }
         if ($searchMethod === 'preset' && !empty($savedSearchPresetId)) {
             $preset = $this->entityManager->find(SavedExpressSearch::class, $savedSearchPresetId);
-            if ($preset && $preset->getEntity() && $preset->getEntity()->getId() === $entity->getId()) {
-                $query = $this->getQueryFactory()->createFromSavedSearch($preset);
+            if (!$preset || !$preset->getEntity() || $preset->getEntity()->getId() !== $entity->getId()) {
+                throw new UserMessageException(t('Invalid search preset.'));
             }
+            $query = $this->getQueryFactory()->createFromSavedSearch($preset);
         } else if ($searchMethod == 'advanced_search') {
             $query = $this->getQueryFactory()->createFromAdvancedSearchRequest(
                 $this->getSearchProvider($entity),

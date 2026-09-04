@@ -1741,12 +1741,6 @@ parameters:
 			path: ../concrete/controllers/single_page/dashboard/express/entries.php
 
 		-
-			message: '#^Variable \$query might not be defined\.$#'
-			identifier: variable.undefined
-			count: 1
-			path: ../concrete/controllers/single_page/dashboard/express/entries.php
-
-		-
 			message: '#^Instanceof between Concrete\\Core\\Entity\\Package and Concrete\\Core\\Entity\\Package will always evaluate to true\.$#'
 			identifier: instanceof.alwaysTrue
 			count: 1
@@ -1900,12 +1894,6 @@ parameters:
 			message: '#^Variable \$entity might not be defined\.$#'
 			identifier: variable.undefined
 			count: 3
-			path: ../concrete/controllers/single_page/dashboard/reports/forms.php
-
-		-
-			message: '#^Variable \$query might not be defined\.$#'
-			identifier: variable.undefined
-			count: 1
 			path: ../concrete/controllers/single_page/dashboard/reports/forms.php
 
 		-
@@ -11223,12 +11211,6 @@ parameters:
 		-
 			message: '#^Property Concrete\\Core\\Page\\Controller\\DashboardExpressEntityPageController\:\:\$headerSearch \(Concrete\\Core\\Filesystem\\Element\) in isset\(\) is not nullable\.$#'
 			identifier: isset.property
-			count: 1
-			path: ../concrete/src/Page/Controller/DashboardExpressEntityPageController.php
-
-		-
-			message: '#^Variable \$query might not be defined\.$#'
-			identifier: variable.undefined
 			count: 1
 			path: ../concrete/src/Page/Controller/DashboardExpressEntityPageController.php
 
