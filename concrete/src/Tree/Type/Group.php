@@ -3,6 +3,7 @@ namespace Concrete\Core\Tree\Type;
 
 use Concrete\Core\Tree\Node\Type\Group as GroupTreeNode;
 use Concrete\Core\Tree\Tree;
+use Concrete\Core\User\Group\Group as UserGroup;
 use Database;
 
 class Group extends Tree
@@ -74,7 +75,7 @@ class Group extends Tree
         $rootNode = $tree->getRootTreeNodeObject();
         $rows = $db->fetchFirstColumn('select Groups.gID from ' . $db->getDatabasePlatform()->quoteSingleIdentifier('Groups') . ' left join TreeGroupNodes on Groups.gID = TreeGroupNodes.gID where TreeGroupNodes.gID is null');
         foreach ($rows as $gID) {
-            $g = static::getByID($gID);
+            $g = UserGroup::getByID($gID);
             GroupTreeNode::add($g, $rootNode);
         }
     }
