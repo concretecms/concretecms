@@ -57,7 +57,7 @@ class CalendarAssignment extends Assignment
             return $pae;
         }
 
-        return false;
+        return null;
     }
 
     /**

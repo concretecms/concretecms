@@ -49,7 +49,7 @@ class TopicTreeNodeAssignment extends TreeNodeAssignment
             );
             $pa = Access::getByID($r, $this->pk);
         } else {
-            return false;
+            return null;
         }
 
         return $pa;

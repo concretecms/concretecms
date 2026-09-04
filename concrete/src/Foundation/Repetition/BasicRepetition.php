@@ -6,7 +6,7 @@ class BasicRepetition extends AbstractRepetition
 
     public function getID()
     {
-        return false;
+        return null;
     }
 
 }

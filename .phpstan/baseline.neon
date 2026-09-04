@@ -1717,12 +1717,6 @@ parameters:
 			path: ../concrete/controllers/single_page/dashboard/system/express/entities.php
 
 		-
-			message: '#^Method Concrete\\Controller\\SinglePage\\Dashboard\\System\\Express\\Entities\\Attributes\:\:getHeaderMenu\(\) should return Concrete\\Core\\Controller\\ElementController\|null but returns false\.$#'
-			identifier: return.type
-			count: 1
-			path: ../concrete/controllers/single_page/dashboard/system/express/entities/attributes.php
-
-		-
 			message: '#^Method Concrete\\Core\\Page\\Controller\\DashboardAttributesPageController\:\:renderList\(\) invoked with 2 parameters, 0 required\.$#'
 			identifier: arguments.count
 			count: 1
@@ -3245,12 +3239,6 @@ parameters:
 			identifier: varTag.nativeType
 			count: 1
 			path: ../concrete/src/Attribute/Category/SearchIndexer/StandardSearchIndexer.php
-
-		-
-			message: '#^Method Concrete\\Core\\Attribute\\Category\\SiteTypeCategory\:\:getSearchIndexer\(\) should return Concrete\\Core\\Attribute\\Category\\SearchIndexer\\SearchIndexerInterface\|null but returns false\.$#'
-			identifier: return.type
-			count: 1
-			path: ../concrete/src/Attribute/Category/SiteTypeCategory.php
 
 		-
 			message: '#^Call to an undefined method Concrete\\Core\\Entity\\Attribute\\Key\\Key\:\:setAttributeKeyDisplayedOnMemberList\(\)\.$#'
@@ -7081,12 +7069,6 @@ parameters:
 			path: ../concrete/src/Foundation/Repetition/AbstractRepetition.php
 
 		-
-			message: '#^Method Concrete\\Core\\Foundation\\Repetition\\BasicRepetition\:\:getID\(\) should return int\|string\|null but returns false\.$#'
-			identifier: return.type
-			count: 1
-			path: ../concrete/src/Foundation/Repetition/BasicRepetition.php
-
-		-
 			message: '#^Call to an undefined static method Concrete\\Core\\Http\\Request\:\:setTrustedHeaderName\(\)\.$#'
 			identifier: staticMethod.notFound
 			count: 1
@@ -9949,12 +9931,6 @@ parameters:
 			path: ../concrete/src/Permission/Assignment/BoardAssignment.php
 
 		-
-			message: '#^Method Concrete\\Core\\Permission\\Assignment\\BoardAssignment\:\:getPermissionAccessObject\(\) should return Concrete\\Core\\Permission\\Access\\Access\|null but returns false\.$#'
-			identifier: return.type
-			count: 1
-			path: ../concrete/src/Permission/Assignment/BoardAssignment.php
-
-		-
 			message: '#^Property Concrete\\Core\\Permission\\Assignment\\BoardAssignment\:\:\$permissionObject \(Concrete\\Core\\Entity\\Board\\Board\) does not accept Concrete\\Core\\Permission\\ObjectInterface\.$#'
 			identifier: assign.propertyType
 			count: 1
@@ -9975,12 +9951,6 @@ parameters:
 		-
 			message: '#^Call to an undefined method Concrete\\Core\\Permission\\ObjectInterface\:\:getId\(\)\.$#'
 			identifier: method.notFound
-			count: 1
-			path: ../concrete/src/Permission/Assignment/CalendarAssignment.php
-
-		-
-			message: '#^Method Concrete\\Core\\Permission\\Assignment\\CalendarAssignment\:\:getPermissionAccessObject\(\) should return Concrete\\Core\\Permission\\Access\\Access\|null but returns false\.$#'
-			identifier: return.type
 			count: 1
 			path: ../concrete/src/Permission/Assignment/CalendarAssignment.php
 
@@ -10031,12 +10001,6 @@ parameters:
 			identifier: assign.propertyType
 			count: 1
 			path: ../concrete/src/Permission/Assignment/StackAssignment.php
-
-		-
-			message: '#^Method Concrete\\Core\\Permission\\Assignment\\TopicTreeNodeAssignment\:\:getPermissionAccessObject\(\) should return Concrete\\Core\\Permission\\Access\\Access\|null but returns false\.$#'
-			identifier: return.type
-			count: 1
-			path: ../concrete/src/Permission/Assignment/TopicTreeNodeAssignment.php
 
 		-
 			message: '#^Call to an undefined method Concrete\\Core\\Permission\\ObjectInterface\:\:getTreeNodeID\(\)\.$#'

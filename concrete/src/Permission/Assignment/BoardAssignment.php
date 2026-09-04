@@ -53,7 +53,7 @@ class BoardAssignment extends Assignment
             return $pae;
         }
 
-        return false;
+        return null;
     }
 
     /**
