@@ -14,9 +14,6 @@ class UpdateOAuthClientCommandHandler extends CreateOAuthClientCommandHandler
      */
     protected $entityManager;
 
-    /**
-     * @param ClientFactory $clientFactory
-     */
     public function __construct(EntityManager $entityManager)
     {
         $this->entityManager = $entityManager;

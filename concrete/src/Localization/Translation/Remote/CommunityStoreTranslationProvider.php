@@ -42,7 +42,6 @@ class CommunityStoreTranslationProvider implements ProviderInterface
     /**
      * @param Repository $config The configuration repository containind the default values
      * @param Cache $cache The cache to be used (won't be used if the cache lifetime is 0)
-     * @param HttpClient $httpClient The HTTP client to be used to communicate with the Community Translation server
      */
     public function __construct(Repository $config, Cache $cache, Factory $httpClientFactory)
     {

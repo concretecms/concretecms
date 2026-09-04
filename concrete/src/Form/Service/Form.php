@@ -330,7 +330,6 @@ class Form
      * If the result is a string, it'll be escaped (with htmlspecialchars).
      *
      * @param string $key the name of the field to be checked
-     * @param string $type 'post' to check in POST data, other values to check in GET data
      *
      * @return false|array|string returns an array if $key denotes an array and we received that data, a string if $key is the name of a received data, false if $key is not found in the received data
      */

@@ -197,7 +197,6 @@ class SitemapGenerator
     /**
      * Resolve an URL using the custom site canonical URL (if set).
      *
-     * @param array $args
      *
      * @return string
      */

@@ -16,7 +16,6 @@ abstract class TopicItem extends AbstractItem
 
     /**
      * CategoryItem constructor.
-     * @param Category $category
      */
     public function __construct(Topic $topic)
     {

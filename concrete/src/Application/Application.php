@@ -442,7 +442,6 @@ class Application extends Container
      * Instantiate a concrete instance of the given type.
      *
      * @param  string $concrete
-     * @param  array $parameters
      *
      * @throws \Illuminate\Contracts\Container\BindingResolutionException
      *

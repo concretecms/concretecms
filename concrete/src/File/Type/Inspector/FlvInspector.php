@@ -105,7 +105,6 @@ class FlvInspector extends Inspector
     }
 
     /**
-     * @param Version $version
      * @param Version $fv
      *
      * @return resource|null

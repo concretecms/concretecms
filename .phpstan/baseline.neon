@@ -2347,12 +2347,6 @@ parameters:
 			path: ../concrete/src/Announcement/Controller/ControllerInterface.php
 
 		-
-			message: '#^PHPDoc tag @param references unknown parameter\: \$announcements$#'
-			identifier: parameter.notFound
-			count: 1
-			path: ../concrete/src/Announcement/Controller/ControllerInterface.php
-
-		-
 			message: '#^PHPDoc tag @var above a method has no effect\.$#'
 			identifier: varTag.misplaced
 			count: 1
@@ -2375,12 +2369,6 @@ parameters:
 			identifier: new.static
 			count: 1
 			path: ../concrete/src/Antispam/Library.php
-
-		-
-			message: '#^PHPDoc tag @param references unknown parameter\: \$ui$#'
-			identifier: parameter.notFound
-			count: 1
-			path: ../concrete/src/Antispam/Service.php
 
 		-
 			message: '#^Strict comparison using \=\=\= between Concrete\\Core\\Utility\\IPAddress and false will always evaluate to false\.$#'
@@ -2482,12 +2470,6 @@ parameters:
 			message: '#^Call to an undefined method Concrete\\Core\\Block\\BlockController\:\:getOriginalBlockID\(\)\.$#'
 			identifier: method.notFound
 			count: 2
-			path: ../concrete/src/Api/Controller/Areas.php
-
-		-
-			message: '#^PHPDoc tag @param references unknown parameter\: \$block$#'
-			identifier: parameter.notFound
-			count: 1
 			path: ../concrete/src/Api/Controller/Areas.php
 
 		-
@@ -2599,20 +2581,8 @@ parameters:
 			path: ../concrete/src/Api/Fractal/Transformer/BaseBlockTransformer.php
 
 		-
-			message: '#^PHPDoc tag @param references unknown parameter\: \$calendar$#'
-			identifier: parameter.notFound
-			count: 1
-			path: ../concrete/src/Api/Fractal/Transformer/CalendarEventTransformer.php
-
-		-
 			message: '#^If condition is always true\.$#'
 			identifier: if.alwaysTrue
-			count: 1
-			path: ../concrete/src/Api/Fractal/Transformer/ExpressEntryTransformer.php
-
-		-
-			message: '#^PHPDoc tag @param references unknown parameter\: \$availableIncludes$#'
-			identifier: parameter.notFound
 			count: 1
 			path: ../concrete/src/Api/Fractal/Transformer/ExpressEntryTransformer.php
 
@@ -2639,12 +2609,6 @@ parameters:
 			identifier: argument.type
 			count: 1
 			path: ../concrete/src/Api/IntegrationList.php
-
-		-
-			message: '#^PHPDoc tag @param references unknown parameter\: \$clientFactory$#'
-			identifier: parameter.notFound
-			count: 1
-			path: ../concrete/src/Api/OAuth/Command/UpdateOAuthClientCommandHandler.php
 
 		-
 			message: '#^Call to an undefined method Concrete\\Core\\User\\Exception\\UserException\:\:getMessage\(\)\.$#'
@@ -2827,12 +2791,6 @@ parameters:
 			path: ../concrete/src/Api/OpenApi/SpecPath.php
 
 		-
-			message: '#^PHPDoc tag @param references unknown parameter\: \$ref$#'
-			identifier: parameter.notFound
-			count: 1
-			path: ../concrete/src/Api/OpenApi/SpecRequestBody.php
-
-		-
 			message: '#^Call to function is_array\(\) with array\<Concrete\\Core\\Job\\Set\> will always evaluate to true\.$#'
 			identifier: function.alreadyNarrowedType
 			count: 1
@@ -2841,12 +2799,6 @@ parameters:
 		-
 			message: '#^Call to method Concrete\\Core\\Routing\\RedirectResponse\:\:setRequest\(\) on a separate line has no effect\.$#'
 			identifier: method.resultUnused
-			count: 1
-			path: ../concrete/src/Application/Application.php
-
-		-
-			message: '#^PHPDoc tag @param references unknown parameter\: \$parameters$#'
-			identifier: parameter.notFound
 			count: 1
 			path: ../concrete/src/Application/Application.php
 
@@ -2881,8 +2833,8 @@ parameters:
 			path: ../concrete/src/Application/Service/Dashboard.php
 
 		-
-			message: '#^PHPDoc tag @param references unknown parameter\: \$cID$#'
-			identifier: parameter.notFound
+			message: '#^Instanceof between Concrete\\Core\\Entity\\Site\\Tree and Concrete\\Core\\Entity\\Site\\Tree will always evaluate to true\.$#'
+			identifier: instanceof.alwaysTrue
 			count: 1
 			path: ../concrete/src/Application/Service/Dashboard/Sitemap.php
 
@@ -3901,12 +3853,6 @@ parameters:
 			path: ../concrete/src/Backup/ContentImporter.php
 
 		-
-			message: '#^PHPDoc tag @param references unknown parameter\: \$folderName$#'
-			identifier: parameter.notFound
-			count: 1
-			path: ../concrete/src/Backup/ContentImporter.php
-
-		-
 			message: '#^Unsafe usage of new static\(\)\.$#'
 			identifier: new.static
 			count: 1
@@ -4279,12 +4225,6 @@ parameters:
 			path: ../concrete/src/Board/Command/SetBoardCustomWeightingCommandValidator.php
 
 		-
-			message: '#^PHPDoc tag @param references unknown parameter\: \$items$#'
-			identifier: parameter.notFound
-			count: 1
-			path: ../concrete/src/Board/Designer/Command/ScheduleCustomElementCommand.php
-
-		-
 			message: '#^Call to an undefined method Concrete\\Core\\Entity\\Board\\Designer\\CustomElement\:\:getItems\(\)\.$#'
 			identifier: method.notFound
 			count: 1
@@ -4311,12 +4251,6 @@ parameters:
 		-
 			message: '#^Call to an undefined method Concrete\\Core\\Entity\\Board\\DataSource\\Configuration\\Configuration\:\:getQuery\(\)\.$#'
 			identifier: method.notFound
-			count: 1
-			path: ../concrete/src/Board/Instance/Item/Populator/CalendarEventPopulator.php
-
-		-
-			message: '#^PHPDoc tag @param references unknown parameter\: \$configuration$#'
-			identifier: parameter.notFound
 			count: 1
 			path: ../concrete/src/Board/Instance/Item/Populator/CalendarEventPopulator.php
 
@@ -4385,12 +4319,6 @@ parameters:
 			identifier: parameter.phpDocType
 			count: 1
 			path: ../concrete/src/Board/Instance/Slot/Content/Populator/PopulatorInterface.php
-
-		-
-			message: '#^PHPDoc tag @param references unknown parameter\: \$page$#'
-			identifier: parameter.notFound
-			count: 1
-			path: ../concrete/src/Board/Instance/Slot/Content/TemplateLocator.php
 
 		-
 			message: '#^Parameter \#1 \$slot of class Concrete\\Core\\Board\\Instance\\Slot\\Menu\\Menu constructor expects Concrete\\Core\\Board\\Instance\\Slot\\RenderedSlot, Concrete\\Core\\Entity\\Board\\InstanceSlot given\.$#'
@@ -4531,34 +4459,10 @@ parameters:
 			path: ../concrete/src/Cache/Page/PageCache.php
 
 		-
-			message: '#^PHPDoc tag @param references unknown parameter\: \$rec$#'
-			identifier: parameter.notFound
-			count: 1
-			path: ../concrete/src/Cache/Page/PageCache.php
-
-		-
-			message: '#^PHPDoc tag @param references unknown parameter\: \$includeInactiveEvents$#'
-			identifier: parameter.notFound
-			count: 1
-			path: ../concrete/src/Calendar/Event/EventList.php
-
-		-
 			message: '#^Call to an undefined method Concrete\\Core\\Entity\\Calendar\\CalendarEventVersionRepetition\:\:getRepetitionObject\(\)\.$#'
 			identifier: method.notFound
 			count: 1
 			path: ../concrete/src/Calendar/Event/EventOccurrenceFactory.php
-
-		-
-			message: '#^PHPDoc tag @param references unknown parameter\: \$event$#'
-			identifier: parameter.notFound
-			count: 1
-			path: ../concrete/src/Calendar/Event/EventOccurrenceFactory.php
-
-		-
-			message: '#^PHPDoc tag @param references unknown parameter\: \$includeInactiveEvents$#'
-			identifier: parameter.notFound
-			count: 1
-			path: ../concrete/src/Calendar/Event/EventOccurrenceList.php
 
 		-
 			message: '#^Parameter \#1 \$repeat_period_week_days of method Concrete\\Core\\Foundation\\Repetition\\AbstractRepetition\:\:setRepeatPeriodWeekDays\(\) expects array\<int\>, bool\|float\|int\|string\|null given\.$#'
@@ -4655,12 +4559,6 @@ parameters:
 			identifier: trait.unused
 			count: 1
 			path: ../concrete/src/Command/Batch/BatchAwareTrait.php
-
-		-
-			message: '#^PHPDoc tag @param references unknown parameter\: \$processUpdater$#'
-			identifier: parameter.notFound
-			count: 1
-			path: ../concrete/src/Command/Batch/BatchUpdater.php
 
 		-
 			message: '#^If condition is always true\.$#'
@@ -5275,12 +5173,6 @@ parameters:
 			path: ../concrete/src/Csv/Import/AbstractImporter.php
 
 		-
-			message: '#^PHPDoc tag @param references unknown parameter\: \$controller$#'
-			identifier: parameter.notFound
-			count: 1
-			path: ../concrete/src/Csv/Import/AbstractImporter.php
-
-		-
 			message: '#^Array has 2 duplicate keys with value ''warnings'' \(''warnings'', ''warnings''\)\.$#'
 			identifier: array.duplicateKey
 			count: 1
@@ -5301,12 +5193,6 @@ parameters:
 		-
 			message: '#^PHPDoc tag @param for parameter \$messageCallback with type \(callable\)\|null is not subtype of native type callable\.$#'
 			identifier: parameter.phpDocType
-			count: 1
-			path: ../concrete/src/Database/CharacterSetCollation/Manager.php
-
-		-
-			message: '#^PHPDoc tag @param references unknown parameter\: \$connection$#'
-			identifier: parameter.notFound
 			count: 1
 			path: ../concrete/src/Database/CharacterSetCollation/Manager.php
 
@@ -5401,22 +5287,10 @@ parameters:
 			path: ../concrete/src/Database/EntityManagerConfigFactory.php
 
 		-
-			message: '#^PHPDoc tag @param references unknown parameter\: \$callback$#'
-			identifier: parameter.notFound
-			count: 1
-			path: ../concrete/src/Database/ForeignKeyFixer.php
-
-		-
 			message: '#^Property Concrete\\Core\\Database\\ForeignKeyFixer\:\:\$connection is never read, only written\.$#'
 			identifier: property.onlyWritten
 			count: 1
 			path: ../concrete/src/Database/ForeignKeyFixer.php
-
-		-
-			message: '#^PHPDoc tag @param references unknown parameter\: \$platform$#'
-			identifier: parameter.notFound
-			count: 1
-			path: ../concrete/src/Database/Query/LikeBuilder.php
 
 		-
 			message: '#^Method Concrete\\Core\\Database\\Schema\\MySqlSchemaManager\:\:createTable\(\) with return type void returns null but should not return anything\.$#'
@@ -7165,12 +7039,6 @@ parameters:
 			path: ../concrete/src/File/Tracker/UsageTracker.php
 
 		-
-			message: '#^PHPDoc tag @param references unknown parameter\: \$version$#'
-			identifier: parameter.notFound
-			count: 1
-			path: ../concrete/src/File/Type/Inspector/FlvInspector.php
-
-		-
 			message: '#^Parameter &\$data by\-ref type of method Concrete\\Core\\File\\Type\\Inspector\\FlvInspector\:\:extractScriptDataValue\(\) expects string, \(string\|false\) given\.$#'
 			identifier: parameterByRef.type
 			count: 1
@@ -7381,12 +7249,6 @@ parameters:
 			path: ../concrete/src/Form/Service/Form.php
 
 		-
-			message: '#^PHPDoc tag @param references unknown parameter\: \$type$#'
-			identifier: parameter.notFound
-			count: 1
-			path: ../concrete/src/Form/Service/Form.php
-
-		-
 			message: '#^PHPDoc tag @param references unknown parameter\: \$valueOrMiscFields$#'
 			identifier: parameter.notFound
 			count: 1
@@ -7429,22 +7291,10 @@ parameters:
 			path: ../concrete/src/Form/Service/Widget/SiteLocaleSelector.php
 
 		-
-			message: '#^PHPDoc tag @param references unknown parameter\: \$cID$#'
-			identifier: parameter.notFound
-			count: 1
-			path: ../concrete/src/Form/Service/Widget/SiteSelector.php
-
-		-
 			message: '#^Default value of the parameter \#2 \$users \(array\) of method Concrete\\Core\\Form\\Service\\Widget\\UserSelector\:\:selectMultipleUsers\(\) is incompatible with type iterable\<Concrete\\Core\\Entity\\User\\User\|Concrete\\Core\\User\\UserInfo\|int\>&Traversable\.$#'
 			identifier: parameter.defaultValue
 			count: 1
 			path: ../concrete/src/Form/Service/Widget/UserSelector.php
-
-		-
-			message: '#^PHPDoc tag @param references unknown parameter\: \$class$#'
-			identifier: parameter.notFound
-			count: 1
-			path: ../concrete/src/Foundation/ClassAutoloader.php
 
 		-
 			message: '#^Parameter \#1 \$autoload_function of function spl_autoload_register expects callable\(string\)\: void, array\{\$this\(Concrete\\Core\\Foundation\\ClassAutoloader\), ''loadClass''\} given\.$#'
@@ -7591,12 +7441,6 @@ parameters:
 			path: ../concrete/src/Geolocator/GeolocationResult.php
 
 		-
-			message: '#^PHPDoc tag @param references unknown parameter\: \$geolocator$#'
-			identifier: parameter.notFound
-			count: 1
-			path: ../concrete/src/Geolocator/GeolocatorController.php
-
-		-
 			message: '#^Method Doctrine\\Persistence\\ObjectManager\:\:flush\(\) invoked with 1 parameter, 0 required\.$#'
 			identifier: arguments.count
 			count: 2
@@ -7609,28 +7453,10 @@ parameters:
 			path: ../concrete/src/Health/Report/Finding/Control/Formatter/ButtonFormatter.php
 
 		-
-			message: '#^PHPDoc tag @param references unknown parameter\: \$controls$#'
-			identifier: parameter.notFound
-			count: 1
-			path: ../concrete/src/Health/Report/Finding/Control/Formatter/ButtonFormatter.php
-
-		-
 			message: '#^Call to an undefined method Concrete\\Core\\Health\\Report\\Finding\\Control\\ControlInterface\:\:getLocation\(\)\.$#'
 			identifier: method.notFound
 			count: 1
 			path: ../concrete/src/Health/Report/Finding/Control/Formatter/DropdownItemFormatter.php
-
-		-
-			message: '#^PHPDoc tag @param references unknown parameter\: \$controls$#'
-			identifier: parameter.notFound
-			count: 1
-			path: ../concrete/src/Health/Report/Finding/Control/Formatter/DropdownItemFormatter.php
-
-		-
-			message: '#^PHPDoc tag @param references unknown parameter\: \$controls$#'
-			identifier: parameter.notFound
-			count: 1
-			path: ../concrete/src/Health/Report/Finding/Control/Formatter/FindingDetailFormatter.php
 
 		-
 			message: '#^Call to an undefined method Concrete\\Core\\Health\\Report\\Finding\\Message\\MessageInterface\:\:getCategoryValue\(\)\.$#'
@@ -7641,12 +7467,6 @@ parameters:
 		-
 			message: '#^Call to an undefined method Concrete\\Core\\Health\\Report\\Finding\\Message\\MessageInterface\:\:getDetails\(\)\.$#'
 			identifier: method.notFound
-			count: 1
-			path: ../concrete/src/Health/Report/Finding/Message/Formatter/Search/AttributeFormatter.php
-
-		-
-			message: '#^PHPDoc tag @param references unknown parameter\: \$message$#'
-			identifier: parameter.notFound
 			count: 1
 			path: ../concrete/src/Health/Report/Finding/Message/Formatter/Search/AttributeFormatter.php
 
@@ -7671,12 +7491,6 @@ parameters:
 		-
 			message: '#^Call to an undefined method Concrete\\Core\\Page\\Collection\\Collection\:\:getCollectionPath\(\)\.$#'
 			identifier: method.notFound
-			count: 1
-			path: ../concrete/src/Health/Report/Finding/Message/Formatter/Search/BlockFormatter.php
-
-		-
-			message: '#^PHPDoc tag @param references unknown parameter\: \$message$#'
-			identifier: parameter.notFound
 			count: 1
 			path: ../concrete/src/Health/Report/Finding/Message/Formatter/Search/BlockFormatter.php
 
@@ -7709,12 +7523,6 @@ parameters:
 			identifier: argument.type
 			count: 1
 			path: ../concrete/src/Health/Report/Result/ResultList.php
-
-		-
-			message: '#^PHPDoc tag @param references unknown parameter\: \$object$#'
-			identifier: parameter.notFound
-			count: 1
-			path: ../concrete/src/Health/Report/Runner.php
 
 		-
 			message: '#^Call to function is_string\(\) with Concrete\\Core\\Health\\Report\\Test\\TestInterface will always evaluate to false\.$#'
@@ -8365,24 +8173,6 @@ parameters:
 			path: ../concrete/src/Legacy/UserList.php
 
 		-
-			message: '#^PHPDoc tag @param references unknown parameter\: \$msNumPlurals$#'
-			identifier: parameter.notFound
-			count: 1
-			path: ../concrete/src/Localization/Locale/LocaleInterface.php
-
-		-
-			message: '#^PHPDoc tag @param references unknown parameter\: \$msPluralCases$#'
-			identifier: parameter.notFound
-			count: 1
-			path: ../concrete/src/Localization/Locale/LocaleInterface.php
-
-		-
-			message: '#^PHPDoc tag @param references unknown parameter\: \$msPluralRule$#'
-			identifier: parameter.notFound
-			count: 1
-			path: ../concrete/src/Localization/Locale/LocaleInterface.php
-
-		-
 			message: '#^Call to an undefined method Concrete\\Core\\Site\\Tree\\TreeInterface\:\:getSiteHomePageObject\(\)\.$#'
 			identifier: method.notFound
 			count: 1
@@ -8539,28 +8329,10 @@ parameters:
 			path: ../concrete/src/Localization/Translation/Remote/CommunityStoreTranslationProvider.php
 
 		-
-			message: '#^PHPDoc tag @param references unknown parameter\: \$httpClient$#'
-			identifier: parameter.notFound
-			count: 1
-			path: ../concrete/src/Localization/Translation/Remote/CommunityStoreTranslationProvider.php
-
-		-
 			message: '#^Parameter \#1 \$response of method Concrete\\Core\\Localization\\Translation\\Remote\\CommunityStoreTranslationProvider\:\:getJsonFromResponse\(\) expects GuzzleHttp\\Psr7\\Response, Psr\\Http\\Message\\ResponseInterface given\.$#'
 			identifier: argument.type
 			count: 1
 			path: ../concrete/src/Localization/Translation/Remote/CommunityStoreTranslationProvider.php
-
-		-
-			message: '#^PHPDoc tag @param references unknown parameter\: \$app$#'
-			identifier: parameter.notFound
-			count: 1
-			path: ../concrete/src/Localization/Translator/Adapter/Core/TranslatorAdapterFactory.php
-
-		-
-			message: '#^PHPDoc tag @param references unknown parameter\: \$settings$#'
-			identifier: parameter.notFound
-			count: 1
-			path: ../concrete/src/Localization/Translator/Adapter/Core/TranslatorAdapterFactory.php
 
 		-
 			message: '#^Call to function is_string\(\) with string will always evaluate to true\.$#'
@@ -8857,12 +8629,6 @@ parameters:
 			path: ../concrete/src/Messenger/MessageBusAwareTrait.php
 
 		-
-			message: '#^PHPDoc tag @param references unknown parameter\: \$watchedProcessIds$#'
-			identifier: parameter.notFound
-			count: 1
-			path: ../concrete/src/Messenger/MessengerConsumeResponseFactory.php
-
-		-
 			message: '#^Call to function is_object\(\) with Concrete\\Core\\Entity\\Site\\Locale will always evaluate to true\.$#'
 			identifier: function.alreadyNarrowedType
 			count: 1
@@ -8927,18 +8693,6 @@ parameters:
 			identifier: argument.type
 			count: 1
 			path: ../concrete/src/Navigation/Breadcrumb/FileManagerBreadcrumbFactory.php
-
-		-
-			message: '#^PHPDoc tag @param references unknown parameter\: \$name$#'
-			identifier: parameter.notFound
-			count: 1
-			path: ../concrete/src/Navigation/Item/PageItem.php
-
-		-
-			message: '#^PHPDoc tag @param references unknown parameter\: \$url$#'
-			identifier: parameter.notFound
-			count: 1
-			path: ../concrete/src/Navigation/Item/PageItem.php
 
 		-
 			message: '#^Constructor of class Concrete\\Core\\Navigation\\Modifier\\AppendHTMLModifier has an unused parameter \$currentPage\.$#'
@@ -9469,18 +9223,6 @@ parameters:
 			path: ../concrete/src/Package/Packer/Filter/TranslationCompiler.php
 
 		-
-			message: '#^PHPDoc tag @param references unknown parameter\: \$bitmapExtension$#'
-			identifier: parameter.notFound
-			count: 1
-			path: ../concrete/src/Package/Packer/Filter/TranslationCompiler.php
-
-		-
-			message: '#^PHPDoc tag @param references unknown parameter\: \$bitmapSize$#'
-			identifier: parameter.notFound
-			count: 1
-			path: ../concrete/src/Package/Packer/Filter/TranslationCompiler.php
-
-		-
 			message: '#^Unsafe usage of new static\(\)\.$#'
 			identifier: new.static
 			count: 3
@@ -9859,18 +9601,6 @@ parameters:
 			path: ../concrete/src/Page/PageList.php
 
 		-
-			message: '#^PHPDoc tag @param references unknown parameter\: \$includeSystemPages$#'
-			identifier: parameter.notFound
-			count: 1
-			path: ../concrete/src/Page/PageList.php
-
-		-
-			message: '#^PHPDoc tag @param references unknown parameter\: \$ptHandle$#'
-			identifier: parameter.notFound
-			count: 1
-			path: ../concrete/src/Page/PageList.php
-
-		-
 			message: '#^Property Concrete\\Core\\Page\\PageList\:\:\$siteTree \(Concrete\\Core\\Entity\\Site\\Tree\) does not accept Concrete\\Core\\Site\\Tree\\TreeInterface\.$#'
 			identifier: assign.propertyType
 			count: 1
@@ -10099,12 +9829,6 @@ parameters:
 			path: ../concrete/src/Page/Sitemap/PageListGenerator.php
 
 		-
-			message: '#^PHPDoc tag @param references unknown parameter\: \$args$#'
-			identifier: parameter.notFound
-			count: 1
-			path: ../concrete/src/Page/Sitemap/SitemapGenerator.php
-
-		-
 			message: '#^Property Concrete\\Core\\Page\\Sitemap\\SitemapGenerator\:\:\$pageListGenerator \(Concrete\\Core\\Page\\Sitemap\\PageListGenerator\|null\) does not accept Concrete\\Core\\Url\\Resolver\\Manager\\ResolverManagerInterface\.$#'
 			identifier: assign.propertyType
 			count: 1
@@ -10205,18 +9929,6 @@ parameters:
 			identifier: booleanAnd.rightAlwaysTrue
 			count: 1
 			path: ../concrete/src/Page/Theme/Documentation/AtomikDocumentationProvider.php
-
-		-
-			message: '#^PHPDoc tag @param references unknown parameter\: \$name$#'
-			identifier: parameter.notFound
-			count: 1
-			path: ../concrete/src/Page/Theme/Documentation/DocumentationNavigationPageItem.php
-
-		-
-			message: '#^PHPDoc tag @param references unknown parameter\: \$url$#'
-			identifier: parameter.notFound
-			count: 1
-			path: ../concrete/src/Page/Theme/Documentation/DocumentationNavigationPageItem.php
 
 		-
 			message: '#^Cannot call method setTheme\(\) on null\.$#'
@@ -11215,12 +10927,6 @@ parameters:
 			path: ../concrete/src/Permission/Key/Key.php
 
 		-
-			message: '#^PHPDoc tag @param references unknown parameter\: \$object$#'
-			identifier: parameter.notFound
-			count: 1
-			path: ../concrete/src/Permission/Key/Key.php
-
-		-
 			message: '#^Parameter \#5 \$pkCanTriggerWorkflow of static method Concrete\\Core\\Permission\\Key\\Key\:\:add\(\) expects bool, int given\.$#'
 			identifier: argument.type
 			count: 1
@@ -11471,12 +11177,6 @@ parameters:
 			identifier: function.alreadyNarrowedType
 			count: 1
 			path: ../concrete/src/Permission/Response/Response.php
-
-		-
-			message: '#^PHPDoc tag @param references unknown parameter\: \$action$#'
-			identifier: parameter.notFound
-			count: 1
-			path: ../concrete/src/Routing/ControllerRouteAction.php
 
 		-
 			message: '#^Variable \$view in isset\(\) always exists and is not nullable\.$#'
@@ -11851,12 +11551,6 @@ parameters:
 			path: ../concrete/src/Site/InstallationService.php
 
 		-
-			message: '#^PHPDoc tag @param references unknown parameter\: \$selectChildren$#'
-			identifier: parameter.notFound
-			count: 1
-			path: ../concrete/src/Site/Locale/Listener.php
-
-		-
 			message: '#^Parameter \#1 \$cn of method Concrete\\Core\\Site\\Locale\\Listener\:\:fixMultilingualPageRelations\(\) expects Concrete\\Core\\Database\\Connection\\Connection, Doctrine\\DBAL\\Connection given\.$#'
 			identifier: argument.type
 			count: 1
@@ -11955,12 +11649,6 @@ parameters:
 		-
 			message: '#^If condition is always true\.$#'
 			identifier: if.alwaysTrue
-			count: 1
-			path: ../concrete/src/StyleCustomizer/Preset/PresetFactory.php
-
-		-
-			message: '#^PHPDoc tag @param references unknown parameter\: \$path$#'
-			identifier: parameter.notFound
 			count: 1
 			path: ../concrete/src/StyleCustomizer/Preset/PresetFactory.php
 
@@ -12103,12 +11791,6 @@ parameters:
 			path: ../concrete/src/Summary/Data/Extractor/Driver/BasicPageDriver.php
 
 		-
-			message: '#^PHPDoc tag @param references unknown parameter\: \$category$#'
-			identifier: parameter.notFound
-			count: 1
-			path: ../concrete/src/Summary/Data/Extractor/Driver/DriverManager.php
-
-		-
 			message: '#^PHPDoc tag @return with type mixed is not subtype of native type Concrete\\Core\\Summary\\Data\\Field\\DataFieldDataInterface\.$#'
 			identifier: return.phpDocType
 			count: 1
@@ -12143,12 +11825,6 @@ parameters:
 			identifier: argument.type
 			count: 1
 			path: ../concrete/src/Summary/Template/Renderer.php
-
-		-
-			message: '#^PHPDoc tag @param references unknown parameter\: \$page$#'
-			identifier: parameter.notFound
-			count: 1
-			path: ../concrete/src/Summary/Template/TemplateLocator.php
 
 		-
 			message: '#^Call to function is_object\(\) with string will always evaluate to false\.$#'
@@ -12223,32 +11899,8 @@ parameters:
 			path: ../concrete/src/System/Info.php
 
 		-
-			message: '#^PHPDoc tag @param references unknown parameter\: \$key$#'
-			identifier: parameter.notFound
-			count: 1
-			path: ../concrete/src/System/Mutex/FileLockMutex.php
-
-		-
-			message: '#^PHPDoc tag @param references unknown parameter\: \$value$#'
-			identifier: parameter.notFound
-			count: 1
-			path: ../concrete/src/System/Mutex/FileLockMutex.php
-
-		-
 			message: '#^Call to function is_int\(\) with int will always evaluate to true\.$#'
 			identifier: function.alreadyNarrowedType
-			count: 1
-			path: ../concrete/src/System/Mutex/SemaphoreMutex.php
-
-		-
-			message: '#^PHPDoc tag @param references unknown parameter\: \$key$#'
-			identifier: parameter.notFound
-			count: 1
-			path: ../concrete/src/System/Mutex/SemaphoreMutex.php
-
-		-
-			message: '#^PHPDoc tag @param references unknown parameter\: \$value$#'
-			identifier: parameter.notFound
 			count: 1
 			path: ../concrete/src/System/Mutex/SemaphoreMutex.php
 
@@ -12269,12 +11921,6 @@ parameters:
 			identifier: nullCoalesce.offset
 			count: 1
 			path: ../concrete/src/System/SystemUser.php
-
-		-
-			message: '#^PHPDoc tag @param references unknown parameter\: \$category$#'
-			identifier: parameter.notFound
-			count: 1
-			path: ../concrete/src/Tree/Menu/Item/Topic/TopicItem.php
 
 		-
 			message: '#^Call to an undefined method Concrete\\Core\\Permission\\Key\\Key\:\:copyFromParentNodeToCurrentNode\(\)\.$#'
@@ -12487,12 +12133,6 @@ parameters:
 			path: ../concrete/src/Updater/ApplicationUpdate/Diagnostic.php
 
 		-
-			message: '#^PHPDoc tag @param references unknown parameter\: \$schema$#'
-			identifier: parameter.notFound
-			count: 1
-			path: ../concrete/src/Updater/Migrations/AbstractMigration.php
-
-		-
 			message: '#^Call to an undefined static method Concrete\\Core\\Support\\Facade\\Database\:\:query\(\)\.$#'
 			identifier: staticMethod.notFound
 			count: 1
@@ -12681,12 +12321,6 @@ parameters:
 		-
 			message: '#^Loose comparison using \=\= between null and ''index\.php'' will always evaluate to false\.$#'
 			identifier: equal.alwaysFalse
-			count: 1
-			path: ../concrete/src/Url/Components/Path.php
-
-		-
-			message: '#^PHPDoc tag @param references unknown parameter\: \$old_path$#'
-			identifier: parameter.notFound
 			count: 1
 			path: ../concrete/src/Url/Components/Path.php
 

@@ -206,9 +206,9 @@ abstract class Key extends ConcreteObject
     }
 
     /**
-     * Set the actual object that should be checked for this permission (for example, a Page instance).
+     * Get the actual object that should be checked for this permission (for example, a Page instance).
      *
-     * @param \Concrete\Core\Permission\ObjectInterface|null $object
+     * @return \Concrete\Core\Permission\ObjectInterface|null
      */
     public function getPermissionObjectToCheck()
     {

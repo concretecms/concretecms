@@ -16,7 +16,6 @@ class BlockFormatter implements FormatterInterface, MessageHasDetailsInterface, 
 {
 
     /**
-     * @param BlockMessage $message
      * @return string
      */
     public function getFindingsListMessage(MessageInterface $findingMessage, Finding $finding): string

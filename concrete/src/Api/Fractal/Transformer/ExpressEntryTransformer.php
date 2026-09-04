@@ -24,7 +24,6 @@ class ExpressEntryTransformer extends TransformerAbstract
 
     /**
      * ExpressEntryTransformer constructor.
-     * @param string[] $availableIncludes
      */
     public function __construct(Entity $object)
     {

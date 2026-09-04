@@ -413,7 +413,6 @@ abstract class AbstractImporter
     /**
      * Convert the data read from CSV to be passed to the attribute controller.
      *
-     * @param AttributeController $controller
      * @param string|array $csvData
      * @param AttributeController $attributeController
      *

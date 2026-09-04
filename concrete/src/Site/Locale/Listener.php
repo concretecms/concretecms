@@ -33,7 +33,6 @@ EOT
 
     /**
      * @param Connection $cn
-     * @param string $selectChildren
      * @param string $updateMultilingualRelation
      * @param int[] $pageIDs
      */

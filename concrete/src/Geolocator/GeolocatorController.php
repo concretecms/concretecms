@@ -31,7 +31,6 @@ abstract class GeolocatorController extends Controller implements GeolocatorCont
     /**
      * Get the path to a geolocator file.
      *
-     * @param Geolocator $geolocator
      * @param string $file
      *
      * @return \Concrete\Core\Filesystem\FileLocator\Record

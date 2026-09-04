@@ -13,7 +13,6 @@ interface ControllerInterface
      * Allows for additional filtering of announcements
      *
      * @param User $user
-     * @param array $announcements
      * @return bool
      */
     public function shouldDisplayAnnouncementToUser(User $user): bool;

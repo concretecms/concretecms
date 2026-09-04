@@ -706,9 +706,6 @@ final class ClassAutoloader
         }
     }
 
-    /**
-     * @param string $class the FQN name of the class (must not start with '\')
-     */
     private function listCustomPackageInfo(string $packageHandle): array
     {
         if (isset($this->packageInfo[$packageHandle]['custom'])) {

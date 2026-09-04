@@ -181,7 +181,6 @@ class ContentImporter
      * Note: only use this in highly controlled environments, as in resetting sample content.
      *
      * @param array $fileNames
-     * @param string|FileFolder $folderName
      */
     public function deleteFilesByName(array $fileNames)
     {

@@ -34,7 +34,6 @@ class TemplateLocator
     }
 
     /**
-     * @param Page $page
      * @param SlotTemplate $template
      * @return string|null file
      */

@@ -328,7 +328,6 @@ abstract class PageCache implements FlushableInterface
     /**
      * Remove a cache entry given the page.
      *
-     * @param \Concrete\Core\Cache\Page\PageCacheRecord $rec
      * @param ConcretePage $c
      */
     abstract public function purge(ConcretePage $c);

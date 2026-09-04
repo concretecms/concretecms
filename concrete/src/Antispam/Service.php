@@ -38,7 +38,6 @@ class Service
      * Report some content with the poster's information to the AntiSpam service.
      *
      * @param string $content
-     * @param UserInfo $ui
      * @param string $ip
      * @param string $ua
      * @param array $additionalArgs

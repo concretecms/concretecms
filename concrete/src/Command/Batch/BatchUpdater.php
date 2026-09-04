@@ -26,7 +26,6 @@ class BatchUpdater
     /**
      * BatchUpdater constructor.
      * @param Application $app
-     * @param ProcessUpdater $processUpdater
      */
     public function __construct(Application $app)
     {

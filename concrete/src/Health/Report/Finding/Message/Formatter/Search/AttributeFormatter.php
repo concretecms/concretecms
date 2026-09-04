@@ -22,7 +22,6 @@ class AttributeFormatter implements FormatterInterface, MessageHasDetailsInterfa
 {
 
     /**
-     * @param AttributeMessage $message
      * @return string
      */
     public function getFindingsListMessage(MessageInterface $findingMessage, Finding $finding): string

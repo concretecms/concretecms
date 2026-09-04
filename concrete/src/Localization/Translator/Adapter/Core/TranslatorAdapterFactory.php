@@ -30,8 +30,6 @@ class TranslatorAdapterFactory implements TranslatorAdapterFactoryInterface
 
     /**
      * @param Config $config
-     * @param Application $app
-     * @param array $settings
      */
     public function __construct(Config $config, PlainTranslatorAdapterFactory $plainFactory, LaminasTranslatorAdapterFactory $laminasFactory)
     {

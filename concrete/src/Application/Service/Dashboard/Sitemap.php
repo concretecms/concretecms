@@ -99,7 +99,8 @@ class Sitemap
     }
 
     /**
-     * @param int $cID
+     * @param int|Tree|null $parent the ID of the parent page, or the site tree to list the root pages of
+     * @param Closure|null $onGetNode
      *
      * @return array
      */

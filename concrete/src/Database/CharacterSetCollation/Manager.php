@@ -31,7 +31,6 @@ class Manager
     protected $fileSystem;
 
     /**
-     * @param \Concrete\Core\Database\Connection\Connection $connection
      * @param \Concrete\Core\Database\CharacterSetCollation\Resolver $resolver
      * @param DatabaseManager $databaseManager
      * @param Filesystem $fileSystem

@@ -10,7 +10,6 @@ class ButtonFormatter implements FormatterInterface
 {
 
     /**
-     * @param ButtonControl $controls
      * @return Element
      */
     public function getFindingsListElement(ControlInterface $control, Finding $finding): Element

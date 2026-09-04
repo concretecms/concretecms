@@ -13,8 +13,7 @@ class SiteSelector
      * </code>.
      *
      * @param $fieldName
-     * @param bool|int $cID
-     * @param mixed $siteID
+     * @param int|'current'|'all'|false $siteID the ID of the selected site, 'current', 'all', or false if no site is selected
      * @param mixed $includeCurrent
      * @param mixed $includeAll
      *
