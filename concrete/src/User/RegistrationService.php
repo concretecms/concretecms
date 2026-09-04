@@ -77,9 +77,9 @@ class RegistrationService implements RegistrationServiceInterface
         $hasher = $this->application->make(PasswordHasher::class);
 
         if (isset($data['uIsValidated']) && $data['uIsValidated'] == 1) {
-            $uIsValidated = 1;
+            $uIsValidated = true;
         } elseif (isset($data['uIsValidated']) && $data['uIsValidated'] == 0) {
-            $uIsValidated = 0;
+            $uIsValidated = false;
         } else {
             $uIsValidated = -1;
         }
