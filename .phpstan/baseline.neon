@@ -5965,12 +5965,6 @@ parameters:
 			path: ../concrete/src/File/Image/Thumbnail/Type/Version.php
 
 		-
-			message: '#^Function fopen invoked with 1 parameter, 2\-4 required\.$#'
-			identifier: arguments.count
-			count: 1
-			path: ../concrete/src/File/Import/FileImporter.php
-
-		-
 			message: '#^Property Concrete\\Core\\File\\Import\\FileImporter\:\:\$incoming is never read, only written\.$#'
 			identifier: property.onlyWritten
 			count: 1

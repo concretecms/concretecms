@@ -371,7 +371,7 @@ class FileImporter implements LoggerAwareInterface
             if ($fromStream === false) {
                 throw ImportException::fromErrorCode(ImportException::E_FILE_INVALID);
             }
-            $toStream = @fopen($localPath);
+            $toStream = @fopen($localPath, 'wb');
             if ($toStream === false) {
                 throw ImportException::fromErrorCode(ImportException::E_FILE_INVALID);
             }
