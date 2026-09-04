@@ -8509,12 +8509,6 @@ parameters:
 			path: ../concrete/src/Page/Search/IndexedSearch.php
 
 		-
-			message: '#^Class Concrete\\Core\\Search\\Result\\ItemColumn constructor invoked with 2 parameters, 3 required\.$#'
-			identifier: arguments.count
-			count: 1
-			path: ../concrete/src/Page/Search/Result/Item.php
-
-		-
 			message: '#^Parameter \#1 \$stack of function array_unshift expects array, null given\.$#'
 			identifier: argument.type
 			count: 1
