@@ -1393,12 +1393,6 @@ parameters:
 			path: ../concrete/controllers/panel/page/versions.php
 
 		-
-			message: '#^Call to function is_object\(\) with Concrete\\Core\\Multilingual\\Page\\Section\\Section will always evaluate to true\.$#'
-			identifier: function.alreadyNarrowedType
-			count: 1
-			path: ../concrete/controllers/panel/page_relations.php
-
-		-
 			message: '#^Negated boolean expression is always false\.$#'
 			identifier: booleanNot.alwaysFalse
 			count: 1
@@ -5345,12 +5339,6 @@ parameters:
 			identifier: return.type
 			count: 1
 			path: ../concrete/src/Backup/ContentImporter/ValueInspector/Item/PageFeedItem.php
-
-		-
-			message: '#^Method Concrete\\Core\\Backup\\ContentImporter\\ValueInspector\\Item\\StackItem\:\:getContentObject\(\) should return Concrete\\Core\\Page\\Stack\\Stack\|null but returns Concrete\\Core\\Page\\Page\|true\|null\.$#'
-			identifier: return.type
-			count: 1
-			path: ../concrete/src/Backup/ContentImporter/ValueInspector/Item/StackItem.php
 
 		-
 			message: '#^PHPDoc tag @var above a method has no effect\.$#'

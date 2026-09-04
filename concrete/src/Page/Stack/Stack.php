@@ -100,7 +100,7 @@ class Stack extends Page
      * @param string $version
      * \Concrete\Core\Site\Tree\TreeInterface|null $siteTree
      *
-     * @return bool|\Concrete\Core\Page\Page
+     * @return static|false|null
      */
     public static function getByPath($path, $version = 'RECENT', ?TreeInterface $siteTree = null)
     {

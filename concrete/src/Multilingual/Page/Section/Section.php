@@ -104,7 +104,7 @@ class Section extends Page
     /**
      * @param Page $page
      *
-     * @return Section|null
+     * @return Section|false|null
      */
     public static function getBySectionOfSite($page)
     {
@@ -442,7 +442,7 @@ class Section extends Page
     /**
      * Gets the MultilingualSection object for the current section of the site.
      *
-     * @return Section
+     * @return Section|false|null
      */
     public static function getCurrentSection()
     {
