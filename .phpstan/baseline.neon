@@ -13531,12 +13531,6 @@ parameters:
 			path: ../concrete/src/StyleCustomizer/Customizations/SkinCustomizationsManager.php
 
 		-
-			message: '#^Variable \$type might not be defined\.$#'
-			identifier: variable.undefined
-			count: 1
-			path: ../concrete/src/StyleCustomizer/Customizer/CustomizerFactory.php
-
-		-
 			message: '#^Call to function is_array\(\) with bool\|float\|int\|string\|null will always evaluate to false\.$#'
 			identifier: function.impossibleType
 			count: 2
