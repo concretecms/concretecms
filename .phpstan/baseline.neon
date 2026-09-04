@@ -8935,12 +8935,6 @@ parameters:
 			path: ../concrete/src/Form/Service/Widget/DateTime.php
 
 		-
-			message: '#^Call to an undefined method Concrete\\Core\\Tree\\Node\\Node\:\:getTreeNodeGroupObject\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: ../concrete/src/Form/Service/Widget/GroupSelector.php
-
-		-
 			message: '#^Variable \$page might not be defined\.$#'
 			identifier: variable.undefined
 			count: 1

@@ -73,16 +73,24 @@ EOT;
         print $selector;
     }
 
+    /**
+     * @param int|string|null $value
+     *
+     * @return \Concrete\Core\User\Group\Group|null
+     */
     public function getGroupFromGroupTreeRequestValue($value)
     {
         // We have this helper method because you're not actually submitting a group ID – you're submitting a
         // group node ID. So we need to translate that into a group.
         if ($value) {
-            $node = \Concrete\Core\Tree\Node\Type\Group::getByID($value);
-            if ($node) {
+            $node = \Concrete\Core\Tree\Node\Node::getByID($value);
+            // The node may be a group folder, not a group
+            if ($node instanceof GroupTreeNode) {
                 return $node->getTreeNodeGroupObject();
             }
         }
+
+        return null;
     }
 
     public function selectGroupWithTree($field, $group = null)
