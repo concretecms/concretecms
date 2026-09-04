@@ -3835,12 +3835,6 @@ parameters:
 			path: ../concrete/src/Board/Instance/Slot/RenderedSlot.php
 
 		-
-			message: '#^Method Stash\\Interfaces\\ItemInterface\:\:set\(\) invoked with 2 parameters, 1 required\.$#'
-			identifier: arguments.count
-			count: 1
-			path: ../concrete/src/Cache/Adapter/DoctrineCacheDriver.php
-
-		-
 			message: '#^Call to function array_filter\(\) on a separate line has no effect\.$#'
 			identifier: function.resultUnused
 			count: 1
