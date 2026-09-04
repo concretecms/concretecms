@@ -960,7 +960,7 @@ class Area extends ConcreteObject implements \Concrete\Core\Permission\ObjectInt
 
         // finally, we rescan subareas so that, if they are inheriting up the tree, they inherit from this place
         $this->arInheritPermissionsFromAreaOnCID = $this->getCollectionID(); // we don't need to actually save this on the area, but we need it for the rescan function
-        $this->arOverrideCollectionPermissions = 1; // to match what we did above - useful for the rescan functions below
+        $this->arOverrideCollectionPermissions = true; // to match what we did above - useful for the rescan functions below
 
         $acobj = $this->getAreaCollectionObject();
         if ($acobj->isMasterCollection()) {

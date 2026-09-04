@@ -2539,12 +2539,6 @@ parameters:
 			path: ../concrete/src/Area/Area.php
 
 		-
-			message: '#^Property Concrete\\Core\\Area\\Area\:\:\$arOverrideCollectionPermissions \(bool\) does not accept int\.$#'
-			identifier: assign.propertyType
-			count: 1
-			path: ../concrete/src/Area/Area.php
-
-		-
 			message: '#^Property Concrete\\Core\\Area\\Area\:\:\$showControls \(bool\) does not accept default value of type int\.$#'
 			identifier: property.defaultValue
 			count: 1
@@ -3737,12 +3731,6 @@ parameters:
 			identifier: argument.type
 			count: 1
 			path: ../concrete/src/Calendar/Event/EventRepetitionService.php
-
-		-
-			message: '#^Property Concrete\\Core\\Captcha\\Library\:\:\$sclIsActive \(bool\) does not accept int\.$#'
-			identifier: assign.propertyType
-			count: 1
-			path: ../concrete/src/Captcha/Library.php
 
 		-
 			message: '#^Unsafe usage of new static\(\)\.$#'
@@ -6981,12 +6969,6 @@ parameters:
 		-
 			message: '#^Negated boolean expression is always false\.$#'
 			identifier: booleanNot.alwaysFalse
-			count: 1
-			path: ../concrete/src/Marketplace/Marketplace.php
-
-		-
-			message: '#^Property Concrete\\Core\\Marketplace\\Marketplace\:\:\$connectionError \(bool\|int\) does not accept string\|null\.$#'
-			identifier: assign.propertyType
 			count: 1
 			path: ../concrete/src/Marketplace/Marketplace.php
 

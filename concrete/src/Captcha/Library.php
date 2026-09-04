@@ -187,7 +187,7 @@ class Library extends ConcreteObject
         $db = $app->make('database')->connection();
         $db->executeQuery('update SystemCaptchaLibraries set sclIsActive = 0');
         $db->executeQuery('update SystemCaptchaLibraries set sclIsActive = 1 where sclHandle = ?', [$this->sclHandle]);
-        $this->sclIsActive = 1;
+        $this->sclIsActive = true;
     }
 
     /**
