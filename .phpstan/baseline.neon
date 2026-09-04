@@ -25,12 +25,6 @@ parameters:
 			path: ../concrete/controllers/backend/attribute/set/update_order.php
 
 		-
-			message: '#^Negated boolean expression is always false\.$#'
-			identifier: booleanNot.alwaysFalse
-			count: 1
-			path: ../concrete/controllers/backend/attribute/set/update_order.php
-
-		-
 			message: '#^Parameter \#1 \$array \(array\) to function array_filter contains falsy values only, the result will always be an empty array\.$#'
 			identifier: arrayFilter.alwaysEmpty
 			count: 1
@@ -61,12 +55,6 @@ parameters:
 			path: ../concrete/controllers/backend/attributes.php
 
 		-
-			message: '#^Negated boolean expression is always false\.$#'
-			identifier: booleanNot.alwaysFalse
-			count: 3
-			path: ../concrete/controllers/backend/block/action.php
-
-		-
 			message: '#^Parameter \#2 \$parameters of method Concrete\\Core\\Controller\\AbstractController\:\:runAction\(\) expects array, string given\.$#'
 			identifier: argument.type
 			count: 1
@@ -75,12 +63,6 @@ parameters:
 		-
 			message: '#^Call to an undefined method Concrete\\Core\\Block\\BlockController\:\:getOriginalBlockID\(\)\.$#'
 			identifier: method.notFound
-			count: 1
-			path: ../concrete/controllers/backend/block/process.php
-
-		-
-			message: '#^Negated boolean expression is always false\.$#'
-			identifier: booleanNot.alwaysFalse
 			count: 1
 			path: ../concrete/controllers/backend/block/process.php
 
@@ -109,22 +91,10 @@ parameters:
 			path: ../concrete/controllers/backend/dashboard/sitemap_update.php
 
 		-
-			message: '#^Left side of && is always true\.$#'
-			identifier: booleanAnd.leftAlwaysTrue
-			count: 1
-			path: ../concrete/controllers/backend/dashboard/sitemap_update.php
-
-		-
 			message: '#^Unreachable statement \- code above always terminates\.$#'
 			identifier: deadCode.unreachable
 			count: 1
 			path: ../concrete/controllers/backend/dashboard/sitemap_update.php
-
-		-
-			message: '#^Call to function is_object\(\) with Concrete\\Core\\Page\\Page will always evaluate to true\.$#'
-			identifier: function.alreadyNarrowedType
-			count: 1
-			path: ../concrete/controllers/backend/editor_data.php
 
 		-
 			message: '#^Call to function is_array\(\) with bool\|float\|int\|string\|null will always evaluate to false\.$#'
@@ -223,12 +193,6 @@ parameters:
 			path: ../concrete/controllers/backend/file/importer/thumbnail.php
 
 		-
-			message: '#^Negated boolean expression is always false\.$#'
-			identifier: booleanNot.alwaysFalse
-			count: 4
-			path: ../concrete/controllers/backend/page.php
-
-		-
 			message: '#^Call to an undefined method Concrete\\Core\\Block\\BlockController\:\:getOriginalBlockID\(\)\.$#'
 			identifier: method.notFound
 			count: 1
@@ -275,30 +239,6 @@ parameters:
 			identifier: function.alreadyNarrowedType
 			count: 1
 			path: ../concrete/controllers/backend/page/multilingual.php
-
-		-
-			message: '#^Negated boolean expression is always false\.$#'
-			identifier: booleanNot.alwaysFalse
-			count: 1
-			path: ../concrete/controllers/backend/page/multilingual.php
-
-		-
-			message: '#^Negated boolean expression is always false\.$#'
-			identifier: booleanNot.alwaysFalse
-			count: 1
-			path: ../concrete/controllers/backend/page/preview_version.php
-
-		-
-			message: '#^Call to function is_object\(\) with Concrete\\Core\\Page\\Page will always evaluate to true\.$#'
-			identifier: function.alreadyNarrowedType
-			count: 1
-			path: ../concrete/controllers/backend/page/sitemap_delete_forever.php
-
-		-
-			message: '#^Negated boolean expression is always false\.$#'
-			identifier: booleanNot.alwaysFalse
-			count: 1
-			path: ../concrete/controllers/backend/page/url_slug.php
 
 		-
 			message: '#^Variable \$contextFactory in PHPDoc tag @var does not exist\.$#'
@@ -421,12 +361,6 @@ parameters:
 			path: ../concrete/controllers/dialog/editor/settings/preview.php
 
 		-
-			message: '#^Left side of && is always true\.$#'
-			identifier: booleanAnd.leftAlwaysTrue
-			count: 1
-			path: ../concrete/controllers/dialog/editor/settings/preview.php
-
-		-
 			message: '#^Method Concrete\\Controller\\Dialog\\Event\\AdvancedSearch\:\:getSearchProvider\(\) should return Concrete\\Core\\Search\\ProviderInterface but returns false\.$#'
 			identifier: return.type
 			count: 1
@@ -452,12 +386,6 @@ parameters:
 
 		-
 			message: '#^Call to function is_array\(\) with array\<Concrete\\Core\\Entity\\Calendar\\CalendarEventRepetition\> will always evaluate to true\.$#'
-			identifier: function.alreadyNarrowedType
-			count: 1
-			path: ../concrete/controllers/dialog/event/edit.php
-
-		-
-			message: '#^Call to function is_object\(\) with Concrete\\Core\\Page\\Page will always evaluate to true\.$#'
 			identifier: function.alreadyNarrowedType
 			count: 1
 			path: ../concrete/controllers/dialog/event/edit.php
@@ -515,12 +443,6 @@ parameters:
 			identifier: booleanNot.alwaysFalse
 			count: 1
 			path: ../concrete/controllers/dialog/event_occurrence.php
-
-		-
-			message: '#^Left side of && is always true\.$#'
-			identifier: booleanAnd.leftAlwaysTrue
-			count: 1
-			path: ../concrete/controllers/dialog/express/advanced_search.php
 
 		-
 			message: '#^Property Concrete\\Controller\\Dialog\\Express\\AdvancedSearch\:\:\$entity \(Concrete\\Core\\Entity\\Express\\Entity\) in isset\(\) is not nullable\.$#'
@@ -691,12 +613,6 @@ parameters:
 			path: ../concrete/controllers/dialog/logs/delete.php
 
 		-
-			message: '#^Call to function is_object\(\) with Concrete\\Core\\Page\\Page will always evaluate to true\.$#'
-			identifier: function.alreadyNarrowedType
-			count: 1
-			path: ../concrete/controllers/dialog/page/add/compose.php
-
-		-
 			message: '#^Method Concrete\\Core\\Page\\Page\:\:getCollectionLink\(\) invoked with 1 parameter, 0 required\.$#'
 			identifier: arguments.count
 			count: 2
@@ -745,28 +661,10 @@ parameters:
 			path: ../concrete/controllers/dialog/page/add_block.php
 
 		-
-			message: '#^Left side of && is always true\.$#'
-			identifier: booleanAnd.leftAlwaysTrue
-			count: 1
-			path: ../concrete/controllers/dialog/page/bulk/cache.php
-
-		-
-			message: '#^Left side of && is always true\.$#'
-			identifier: booleanAnd.leftAlwaysTrue
-			count: 1
-			path: ../concrete/controllers/dialog/page/bulk/delete.php
-
-		-
 			message: '#^Parameter \#2 \$userID of class Concrete\\Core\\Page\\Command\\DeletePageCommand constructor expects int\|null, string given\.$#'
 			identifier: argument.type
 			count: 1
 			path: ../concrete/controllers/dialog/page/bulk/delete.php
-
-		-
-			message: '#^Left side of && is always true\.$#'
-			identifier: booleanAnd.leftAlwaysTrue
-			count: 1
-			path: ../concrete/controllers/dialog/page/bulk/design.php
 
 		-
 			message: '#^Call to Concrete\\Core\\Controller\\AbstractController\:\:on_start\(\) on a separate line has no effect\.$#'
@@ -777,12 +675,6 @@ parameters:
 		-
 			message: '#^Call to function is_array\(\) with bool\|float\|int\|string\|null will always evaluate to false\.$#'
 			identifier: function.impossibleType
-			count: 1
-			path: ../concrete/controllers/dialog/page/bulk/permissions.php
-
-		-
-			message: '#^Instanceof between Concrete\\Core\\Page\\Page and Concrete\\Core\\Page\\Page will always evaluate to true\.$#'
-			identifier: instanceof.alwaysTrue
 			count: 1
 			path: ../concrete/controllers/dialog/page/bulk/permissions.php
 
@@ -817,12 +709,6 @@ parameters:
 			path: ../concrete/controllers/dialog/page/bulk/properties.php
 
 		-
-			message: '#^Left side of && is always true\.$#'
-			identifier: booleanAnd.leftAlwaysTrue
-			count: 1
-			path: ../concrete/controllers/dialog/page/bulk/properties.php
-
-		-
 			message: '#^Parameter \#1 \$object of method Concrete\\Core\\Permission\\Key\\Key\:\:setPermissionObject\(\) expects Concrete\\Core\\Permission\\ObjectInterface\|null, Concrete\\Core\\Attribute\\ObjectInterface given\.$#'
 			identifier: argument.type
 			count: 1
@@ -839,12 +725,6 @@ parameters:
 			identifier: arguments.count
 			count: 1
 			path: ../concrete/controllers/dialog/page/delete.php
-
-		-
-			message: '#^Negated boolean expression is always false\.$#'
-			identifier: booleanNot.alwaysFalse
-			count: 1
-			path: ../concrete/controllers/dialog/page/drag_request.php
 
 		-
 			message: '#^If condition is always true\.$#'
@@ -875,12 +755,6 @@ parameters:
 			identifier: argument.type
 			count: 1
 			path: ../concrete/controllers/dialog/permissions/file_set.php
-
-		-
-			message: '#^Left side of && is always true\.$#'
-			identifier: booleanAnd.leftAlwaysTrue
-			count: 1
-			path: ../concrete/controllers/dialog/process/activity.php
 
 		-
 			message: '#^Call to an undefined method Concrete\\Controller\\Dialog\\Search\\AdvancedSearch\:\:getCurrentSearchBaseURL\(\)\.$#'
@@ -1075,12 +949,6 @@ parameters:
 			path: ../concrete/controllers/dialog/user/bulk/properties.php
 
 		-
-			message: '#^Negated boolean expression is always false\.$#'
-			identifier: booleanNot.alwaysFalse
-			count: 1
-			path: ../concrete/controllers/dialog/workflow/change_page_permissions.php
-
-		-
 			message: '#^PHPDoc tag @param for parameter \$category with type mixed is not subtype of native type Concrete\\Core\\Attribute\\Category\\CategoryInterface\.$#'
 			identifier: parameter.phpDocType
 			count: 1
@@ -1243,12 +1111,6 @@ parameters:
 			path: ../concrete/controllers/frontend/conversations/update_message.php
 
 		-
-			message: '#^Left side of && is always true\.$#'
-			identifier: booleanAnd.leftAlwaysTrue
-			count: 1
-			path: ../concrete/controllers/frontend/heartbeat.php
-
-		-
 			message: '#^Call to an undefined method Concrete\\Core\\Job\\JobQueue\:\:count\(\)\.$#'
 			identifier: method.notFound
 			count: 3
@@ -1271,18 +1133,6 @@ parameters:
 			identifier: method.notFound
 			count: 1
 			path: ../concrete/controllers/frontend/stylesheet.php
-
-		-
-			message: '#^Call to function is_object\(\) with Concrete\\Core\\Page\\Page will always evaluate to true\.$#'
-			identifier: function.alreadyNarrowedType
-			count: 2
-			path: ../concrete/controllers/frontend/stylesheet.php
-
-		-
-			message: '#^Left side of && is always true\.$#'
-			identifier: booleanAnd.leftAlwaysTrue
-			count: 1
-			path: ../concrete/controllers/frontend/switch_language.php
 
 		-
 			message: '#^Call to function is_array\(\) with bool\|float\|int\|string\|null will always evaluate to false\.$#'
@@ -1393,12 +1243,6 @@ parameters:
 			path: ../concrete/controllers/panel/detail/page/location.php
 
 		-
-			message: '#^Call to function is_object\(\) with Concrete\\Core\\Page\\Page will always evaluate to true\.$#'
-			identifier: function.alreadyNarrowedType
-			count: 1
-			path: ../concrete/controllers/panel/detail/page/location.php
-
-		-
 			message: '#^Call to function is_object\(\) with Concrete\\Core\\Permission\\Access\\ListItem\\EditPagePropertiesPageListItem will always evaluate to true\.$#'
 			identifier: function.alreadyNarrowedType
 			count: 1
@@ -1489,22 +1333,10 @@ parameters:
 			path: ../concrete/controllers/panel/help.php
 
 		-
-			message: '#^Left side of && is always true\.$#'
-			identifier: booleanAnd.leftAlwaysTrue
-			count: 1
-			path: ../concrete/controllers/panel/help.php
-
-		-
 			message: '#^Call to an undefined method Concrete\\Core\\Permission\\Key\\Key\:\:getMyAssignment\(\)\.$#'
 			identifier: method.notFound
 			count: 1
 			path: ../concrete/controllers/panel/page/attributes.php
-
-		-
-			message: '#^Call to function is_object\(\) with Concrete\\Core\\Page\\Page will always evaluate to true\.$#'
-			identifier: function.alreadyNarrowedType
-			count: 1
-			path: ../concrete/controllers/panel/page/check_in.php
 
 		-
 			message: '#^If condition is always true\.$#'
@@ -1529,12 +1361,6 @@ parameters:
 			identifier: method.notFound
 			count: 1
 			path: ../concrete/controllers/panel/page/devices.php
-
-		-
-			message: '#^Call to function is_object\(\) with Concrete\\Core\\Page\\Page will always evaluate to true\.$#'
-			identifier: function.alreadyNarrowedType
-			count: 1
-			path: ../concrete/controllers/panel/page/preview_as_user.php
 
 		-
 			message: '#^Call to function is_object\(\) with Concrete\\Core\\User\\UserInfo will always evaluate to true\.$#'
@@ -1573,12 +1399,6 @@ parameters:
 			path: ../concrete/controllers/panel/page_relations.php
 
 		-
-			message: '#^Left side of && is always true\.$#'
-			identifier: booleanAnd.leftAlwaysTrue
-			count: 1
-			path: ../concrete/controllers/panel/sitemap.php
-
-		-
 			message: '#^Negated boolean expression is always false\.$#'
 			identifier: booleanNot.alwaysFalse
 			count: 1
@@ -1615,12 +1435,6 @@ parameters:
 			path: ../concrete/controllers/permissions/access/entity/access_entity.php
 
 		-
-			message: '#^Left side of && is always true\.$#'
-			identifier: booleanAnd.leftAlwaysTrue
-			count: 1
-			path: ../concrete/controllers/permissions/categories/task_handlers/basic_workflow.php
-
-		-
 			message: '#^Call to an undefined method Concrete\\Core\\Permission\\Key\\Key\:\:assignPermissionAccess\(\)\.$#'
 			identifier: method.notFound
 			count: 1
@@ -1649,12 +1463,6 @@ parameters:
 			identifier: variable.undefined
 			count: 1
 			path: ../concrete/controllers/permissions/categories/task_handlers/page.php
-
-		-
-			message: '#^Left side of && is always true\.$#'
-			identifier: booleanAnd.leftAlwaysTrue
-			count: 1
-			path: ../concrete/controllers/permissions/categories/task_handlers/page_type.php
 
 		-
 			message: '#^Call to an undefined method Concrete\\Core\\Permission\\Key\\Key\:\:attachWorkflow\(\)\.$#'
@@ -1831,12 +1639,6 @@ parameters:
 			path: ../concrete/controllers/single_page/dashboard/boards/designer/choose_items.php
 
 		-
-			message: '#^Left side of && is always true\.$#'
-			identifier: booleanAnd.leftAlwaysTrue
-			count: 2
-			path: ../concrete/controllers/single_page/dashboard/boards/designer/choose_items.php
-
-		-
 			message: '#^Call to an undefined method Concrete\\Core\\Entity\\Board\\Designer\\CustomElement\:\:getItems\(\)\.$#'
 			identifier: method.notFound
 			count: 1
@@ -1895,12 +1697,6 @@ parameters:
 			identifier: isset.offset
 			count: 1
 			path: ../concrete/controllers/single_page/dashboard/boards/weighting.php
-
-		-
-			message: '#^Call to function is_object\(\) with Concrete\\Core\\Page\\Page will always evaluate to true\.$#'
-			identifier: function.alreadyNarrowedType
-			count: 1
-			path: ../concrete/controllers/single_page/dashboard/calendar/add.php
 
 		-
 			message: '#^Variable \$parent might not be defined\.$#'
@@ -2143,12 +1939,6 @@ parameters:
 			path: ../concrete/controllers/single_page/dashboard/reports/forms/legacy.php
 
 		-
-			message: '#^Left side of && is always true\.$#'
-			identifier: booleanAnd.leftAlwaysTrue
-			count: 1
-			path: ../concrete/controllers/single_page/dashboard/reports/health.php
-
-		-
 			message: '#^Comparison operation "\>" between int\<1, max\> and 0 is always true\.$#'
 			identifier: greater.alwaysTrue
 			count: 1
@@ -2177,12 +1967,6 @@ parameters:
 			identifier: isset.property
 			count: 1
 			path: ../concrete/controllers/single_page/dashboard/reports/logs.php
-
-		-
-			message: '#^Negated boolean expression is always false\.$#'
-			identifier: booleanNot.alwaysFalse
-			count: 1
-			path: ../concrete/controllers/single_page/dashboard/sitemap/explore.php
 
 		-
 			message: '#^Call to an undefined method Concrete\\Core\\Controller\\ElementController\:\:setQuery\(\)\.$#'
@@ -2225,12 +2009,6 @@ parameters:
 			identifier: argument.type
 			count: 1
 			path: ../concrete/controllers/single_page/dashboard/system/basics/attributes.php
-
-		-
-			message: '#^Left side of && is always true\.$#'
-			identifier: booleanAnd.leftAlwaysTrue
-			count: 1
-			path: ../concrete/controllers/single_page/dashboard/system/basics/multilingual.php
 
 		-
 			message: '#^Variable \$controller in PHPDoc tag @var does not exist\.$#'
@@ -2359,12 +2137,6 @@ parameters:
 			path: ../concrete/controllers/single_page/dashboard/system/files/external_file_provider.php
 
 		-
-			message: '#^Left side of && is always true\.$#'
-			identifier: booleanAnd.leftAlwaysTrue
-			count: 1
-			path: ../concrete/controllers/single_page/dashboard/system/files/image_uploading.php
-
-		-
 			message: '#^Call to function is_object\(\) with Concrete\\Core\\Error\\ErrorList\\Error\\Error will always evaluate to true\.$#'
 			identifier: function.alreadyNarrowedType
 			count: 1
@@ -2407,34 +2179,10 @@ parameters:
 			path: ../concrete/controllers/single_page/dashboard/system/files/thumbnails.php
 
 		-
-			message: '#^Left side of && is always true\.$#'
-			identifier: booleanAnd.leftAlwaysTrue
-			count: 1
-			path: ../concrete/controllers/single_page/dashboard/system/files/thumbnails/options.php
-
-		-
-			message: '#^Negated boolean expression is always false\.$#'
-			identifier: booleanNot.alwaysFalse
-			count: 1
-			path: ../concrete/controllers/single_page/dashboard/system/files/uploads.php
-
-		-
-			message: '#^Negated boolean expression is always false\.$#'
-			identifier: booleanNot.alwaysFalse
-			count: 1
-			path: ../concrete/controllers/single_page/dashboard/system/mail/method/test.php
-
-		-
 			message: '#^Variable \$sectionID in isset\(\) always exists and is not nullable\.$#'
 			identifier: isset.variable
 			count: 1
 			path: ../concrete/controllers/single_page/dashboard/system/multilingual/page_report.php
-
-		-
-			message: '#^Left side of && is always true\.$#'
-			identifier: booleanAnd.leftAlwaysTrue
-			count: 1
-			path: ../concrete/controllers/single_page/dashboard/system/multilingual/setup.php
 
 		-
 			message: '#^Method Doctrine\\Persistence\\ObjectManager\:\:flush\(\) invoked with 1 parameter, 0 required\.$#'
@@ -2707,24 +2455,6 @@ parameters:
 			path: ../concrete/controllers/single_page/dashboard/system/registration/postlogin.php
 
 		-
-			message: '#^Left side of && is always true\.$#'
-			identifier: booleanAnd.leftAlwaysTrue
-			count: 1
-			path: ../concrete/controllers/single_page/dashboard/system/registration/profiles.php
-
-		-
-			message: '#^Left side of && is always true\.$#'
-			identifier: booleanAnd.leftAlwaysTrue
-			count: 1
-			path: ../concrete/controllers/single_page/dashboard/system/seo/bulk.php
-
-		-
-			message: '#^Negated boolean expression is always false\.$#'
-			identifier: booleanNot.alwaysFalse
-			count: 1
-			path: ../concrete/controllers/single_page/dashboard/system/seo/bulk.php
-
-		-
 			message: '#^Call to function is_array\(\) with bool\|float\|int\|string\|null will always evaluate to false\.$#'
 			identifier: function.impossibleType
 			count: 1
@@ -2923,12 +2653,6 @@ parameters:
 			path: ../concrete/controllers/single_page/dashboard/users/search.php
 
 		-
-			message: '#^Negated boolean expression is always false\.$#'
-			identifier: booleanNot.alwaysFalse
-			count: 1
-			path: ../concrete/controllers/single_page/dashboard/users/search.php
-
-		-
 			message: '#^Parameter \#1 \$attributes of method Concrete\\Core\\User\\UserInfo\:\:saveUserAttributesForm\(\) expects array\<Concrete\\Core\\Entity\\Attribute\\Key\\UserKey\>, array\<int, Concrete\\Core\\Entity\\Attribute\\Key\\Key\> given\.$#'
 			identifier: argument.type
 			count: 1
@@ -2986,12 +2710,6 @@ parameters:
 			message: '#^Call to function is_string\(\) with int will always evaluate to false\.$#'
 			identifier: function.impossibleType
 			count: 3
-			path: ../concrete/controllers/single_page/download_file.php
-
-		-
-			message: '#^Instanceof between Concrete\\Core\\Page\\Page and Concrete\\Core\\Page\\Page will always evaluate to true\.$#'
-			identifier: instanceof.alwaysTrue
-			count: 1
 			path: ../concrete/controllers/single_page/download_file.php
 
 		-
@@ -3241,12 +2959,6 @@ parameters:
 			path: ../concrete/src/Api/Controller/Areas.php
 
 		-
-			message: '#^Left side of && is always true\.$#'
-			identifier: booleanAnd.leftAlwaysTrue
-			count: 3
-			path: ../concrete/src/Api/Controller/Areas.php
-
-		-
 			message: '#^PHPDoc tag @param references unknown parameter\: \$block$#'
 			identifier: parameter.notFound
 			count: 1
@@ -3313,18 +3025,6 @@ parameters:
 			path: ../concrete/src/Api/Controller/Pages.php
 
 		-
-			message: '#^Left side of && is always true\.$#'
-			identifier: booleanAnd.leftAlwaysTrue
-			count: 4
-			path: ../concrete/src/Api/Controller/Pages.php
-
-		-
-			message: '#^Negated boolean expression is always false\.$#'
-			identifier: booleanNot.alwaysFalse
-			count: 1
-			path: ../concrete/src/Api/Controller/Pages.php
-
-		-
 			message: '#^Parameter \#2 \$id of method Concrete\\Core\\Api\\ApiController\:\:deleted\(\) expects string, int given\.$#'
 			identifier: argument.type
 			count: 1
@@ -3341,12 +3041,6 @@ parameters:
 			identifier: method.notFound
 			count: 1
 			path: ../concrete/src/Api/Controller/Users.php
-
-		-
-			message: '#^Negated boolean expression is always false\.$#'
-			identifier: booleanNot.alwaysFalse
-			count: 5
-			path: ../concrete/src/Api/Controller/Versions.php
 
 		-
 			message: '#^Constructor of class Concrete\\Core\\Api\\Exception\\InvalidLimitQueryParameterValueException has an unused parameter \$code\.$#'
@@ -4447,18 +4141,6 @@ parameters:
 			path: ../concrete/src/Application/EditResponse.php
 
 		-
-			message: '#^Call to function is_object\(\) with Concrete\\Core\\Page\\Page will always evaluate to true\.$#'
-			identifier: function.alreadyNarrowedType
-			count: 2
-			path: ../concrete/src/Application/Service/Composer.php
-
-		-
-			message: '#^Left side of && is always true\.$#'
-			identifier: booleanAnd.leftAlwaysTrue
-			count: 1
-			path: ../concrete/src/Application/Service/Dashboard.php
-
-		-
 			message: '#^PHPDoc type array of property Concrete\\Core\\Application\\Service\\DefaultDashboardMenu\:\:\$items is not covariant with PHPDoc type array\<Concrete\\Core\\Page\\Page\> of overridden property Concrete\\Core\\Application\\Service\\DashboardMenu\:\:\$items\.$#'
 			identifier: property.phpDocType
 			count: 1
@@ -4531,12 +4213,6 @@ parameters:
 			path: ../concrete/src/Application/UserInterface/ContextMenu/AbstractManager.php
 
 		-
-			message: '#^Left side of && is always true\.$#'
-			identifier: booleanAnd.leftAlwaysTrue
-			count: 1
-			path: ../concrete/src/Application/UserInterface/Dashboard/Navigation/FavoritesNavigationFactory.php
-
-		-
 			message: '#^Call to an undefined method Concrete\\Core\\Navigation\\Item\\ItemInterface\:\:getPageID\(\)\.$#'
 			identifier: method.notFound
 			count: 2
@@ -4605,12 +4281,6 @@ parameters:
 		-
 			message: '#^Call to function is_array\(\) with non\-empty\-list\<string\> will always evaluate to true\.$#'
 			identifier: function.alreadyNarrowedType
-			count: 1
-			path: ../concrete/src/Application/UserInterface/Sitemap/StandardSitemapProvider.php
-
-		-
-			message: '#^Left side of && is always true\.$#'
-			identifier: booleanAnd.leftAlwaysTrue
 			count: 1
 			path: ../concrete/src/Application/UserInterface/Sitemap/StandardSitemapProvider.php
 
@@ -5509,12 +5179,6 @@ parameters:
 			path: ../concrete/src/Authentication/Type/OAuth/OAuth2/GenericOauth2TypeController.php
 
 		-
-			message: '#^Negated boolean expression is always false\.$#'
-			identifier: booleanNot.alwaysFalse
-			count: 1
-			path: ../concrete/src/Backup/ContentExporter.php
-
-		-
 			message: '#^Call to an undefined method Concrete\\Core\\Tree\\Node\\NodeType\:\:move\(\)\.$#'
 			identifier: method.notFound
 			count: 1
@@ -5623,24 +5287,6 @@ parameters:
 			path: ../concrete/src/Backup/ContentImporter/Importer/Routine/ImportPackagesRoutine.php
 
 		-
-			message: '#^Left side of && is always true\.$#'
-			identifier: booleanAnd.leftAlwaysTrue
-			count: 2
-			path: ../concrete/src/Backup/ContentImporter/Importer/Routine/ImportPageContentRoutine.php
-
-		-
-			message: '#^Negated boolean expression is always false\.$#'
-			identifier: booleanNot.alwaysFalse
-			count: 2
-			path: ../concrete/src/Backup/ContentImporter/Importer/Routine/ImportPageContentRoutine.php
-
-		-
-			message: '#^Left side of && is always true\.$#'
-			identifier: booleanAnd.leftAlwaysTrue
-			count: 2
-			path: ../concrete/src/Backup/ContentImporter/Importer/Routine/ImportPageStructureRoutine.php
-
-		-
 			message: '#^Method Concrete\\Core\\Backup\\ContentImporter\\Importer\\Routine\\ImportPageStructureRoutine\:\:getPageByPath\(\) invoked with 2 parameters, 1 required\.$#'
 			identifier: arguments.count
 			count: 1
@@ -5649,12 +5295,6 @@ parameters:
 		-
 			message: '#^Method Concrete\\Core\\Backup\\ContentImporter\\Importer\\Routine\\ImportPageStructureRoutine\:\:importAlias\(\) never returns string so it can be removed from the return type\.$#'
 			identifier: return.unusedType
-			count: 1
-			path: ../concrete/src/Backup/ContentImporter/Importer/Routine/ImportPageStructureRoutine.php
-
-		-
-			message: '#^Negated boolean expression is always false\.$#'
-			identifier: booleanNot.alwaysFalse
 			count: 1
 			path: ../concrete/src/Backup/ContentImporter/Importer/Routine/ImportPageStructureRoutine.php
 
@@ -5669,18 +5309,6 @@ parameters:
 			identifier: variable.undefined
 			count: 1
 			path: ../concrete/src/Backup/ContentImporter/Importer/Routine/ImportSiteTypeSkeletonsRoutine.php
-
-		-
-			message: '#^Negated boolean expression is always false\.$#'
-			identifier: booleanNot.alwaysFalse
-			count: 1
-			path: ../concrete/src/Backup/ContentImporter/Importer/Routine/ImportStacksContentRoutine.php
-
-		-
-			message: '#^Negated boolean expression is always false\.$#'
-			identifier: booleanNot.alwaysFalse
-			count: 1
-			path: ../concrete/src/Backup/ContentImporter/Importer/Routine/ImportStacksStructureRoutine.php
 
 		-
 			message: '#^Property Concrete\\Core\\Backup\\ContentImporter\\Importer\\Routine\\ImportStacksStructureRoutine\:\:\$site \(Concrete\\Core\\Entity\\Site\\Tree\|null\) does not accept Concrete\\Core\\Entity\\Site\\Site\.$#'
@@ -5717,12 +5345,6 @@ parameters:
 			identifier: return.type
 			count: 1
 			path: ../concrete/src/Backup/ContentImporter/ValueInspector/Item/PageFeedItem.php
-
-		-
-			message: '#^Left side of && is always true\.$#'
-			identifier: booleanAnd.leftAlwaysTrue
-			count: 1
-			path: ../concrete/src/Backup/ContentImporter/ValueInspector/Item/PageItem.php
 
 		-
 			message: '#^Method Concrete\\Core\\Backup\\ContentImporter\\ValueInspector\\Item\\StackItem\:\:getContentObject\(\) should return Concrete\\Core\\Page\\Stack\\Stack\|null but returns Concrete\\Core\\Page\\Page\|true\|null\.$#'
@@ -5768,12 +5390,6 @@ parameters:
 
 		-
 			message: '#^Call to function is_array\(\) with non\-empty\-array\<string, mixed\> will always evaluate to true\.$#'
-			identifier: function.alreadyNarrowedType
-			count: 1
-			path: ../concrete/src/Block/Block.php
-
-		-
-			message: '#^Call to function is_object\(\) with Concrete\\Core\\Page\\Page will always evaluate to true\.$#'
 			identifier: function.alreadyNarrowedType
 			count: 1
 			path: ../concrete/src/Block/Block.php
@@ -5917,12 +5533,6 @@ parameters:
 			path: ../concrete/src/Block/CacheSettings.php
 
 		-
-			message: '#^Left side of && is always true\.$#'
-			identifier: booleanAnd.leftAlwaysTrue
-			count: 2
-			path: ../concrete/src/Block/Command/AddAliasDefaultsBlockCommandHandler.php
-
-		-
 			message: '#^Instanceof between Concrete\\Core\\Page\\Page and Concrete\\Core\\Page\\Collection\\Collection will always evaluate to true\.$#'
 			identifier: instanceof.alwaysTrue
 			count: 1
@@ -5933,24 +5543,6 @@ parameters:
 			identifier: variable.undefined
 			count: 1
 			path: ../concrete/src/Block/Command/AddBlockToPageCommandHandler.php
-
-		-
-			message: '#^Left side of && is always true\.$#'
-			identifier: booleanAnd.leftAlwaysTrue
-			count: 1
-			path: ../concrete/src/Block/Command/DeleteBlockCommandHandler.php
-
-		-
-			message: '#^Left side of && is always true\.$#'
-			identifier: booleanAnd.leftAlwaysTrue
-			count: 2
-			path: ../concrete/src/Block/Command/ForceDefaultDisplayOrderBlockCommandHandler.php
-
-		-
-			message: '#^Left side of && is always true\.$#'
-			identifier: booleanAnd.leftAlwaysTrue
-			count: 2
-			path: ../concrete/src/Block/Command/UpdateForkedAliasDefaultsBlockCommandHandler.php
 
 		-
 			message: '#^Call to function is_object\(\) with Concrete\\Core\\Entity\\StyleCustomizer\\Inline\\StyleSet will always evaluate to true\.$#'
@@ -6137,12 +5729,6 @@ parameters:
 			identifier: deadCode.unreachable
 			count: 1
 			path: ../concrete/src/Board/Instance/Slot/Content/Populator/CalendarEventPopulator.php
-
-		-
-			message: '#^Left side of && is always true\.$#'
-			identifier: booleanAnd.leftAlwaysTrue
-			count: 1
-			path: ../concrete/src/Board/Instance/Slot/Content/Populator/PagePopulator.php
 
 		-
 			message: '#^PHPDoc tag @param for parameter \$logger with type Concrete\\Core\\Board\\Instance\\Logger\\Logger\|null is not subtype of native type Concrete\\Core\\Board\\Instance\\Logger\\LoggerInterface\.$#'
@@ -6340,12 +5926,6 @@ parameters:
 			message: '#^Call to an undefined method Concrete\\Core\\Entity\\Calendar\\CalendarEventVersion\:\:add\(\)\.$#'
 			identifier: method.notFound
 			count: 2
-			path: ../concrete/src/Calendar/Event/EventService.php
-
-		-
-			message: '#^Call to function is_object\(\) with Concrete\\Core\\Page\\Page will always evaluate to true\.$#'
-			identifier: function.alreadyNarrowedType
-			count: 1
 			path: ../concrete/src/Calendar/Event/EventService.php
 
 		-
@@ -6869,12 +6449,6 @@ parameters:
 			identifier: method.notFound
 			count: 1
 			path: ../concrete/src/Conversation/Command/HandleNewConversationMessageCommandHandler.php
-
-		-
-			message: '#^Call to function is_object\(\) with Concrete\\Core\\Page\\Page will always evaluate to true\.$#'
-			identifier: function.alreadyNarrowedType
-			count: 1
-			path: ../concrete/src/Conversation/Conversation.php
 
 		-
 			message: '#^Unsafe usage of new static\(\)\.$#'
@@ -7447,12 +7021,6 @@ parameters:
 			path: ../concrete/src/Entity/Block/BlockType/BlockType.php
 
 		-
-			message: '#^Call to function is_object\(\) with Concrete\\Core\\Page\\Page will always evaluate to true\.$#'
-			identifier: function.alreadyNarrowedType
-			count: 1
-			path: ../concrete/src/Entity/Block/BlockType/BlockType.php
-
-		-
 			message: '#^PHPDoc tag @var does not specify variable name\.$#'
 			identifier: varTag.noVariable
 			count: 1
@@ -7573,12 +7141,6 @@ parameters:
 			path: ../concrete/src/Entity/Calendar/CalendarEventOccurrence.php
 
 		-
-			message: '#^Call to function is_object\(\) with Concrete\\Core\\Page\\Page will always evaluate to true\.$#'
-			identifier: function.alreadyNarrowedType
-			count: 1
-			path: ../concrete/src/Entity/Calendar/CalendarEventVersion.php
-
-		-
 			message: '#^Method Concrete\\Core\\Entity\\Calendar\\CalendarEventVersion\:\:getAttributeValueObject\(\) should return Concrete\\Core\\Entity\\Attribute\\Value\\EventValue\|null but returns Concrete\\Core\\Attribute\\AttributeValueInterface\|null\.$#'
 			identifier: return.type
 			count: 1
@@ -7682,12 +7244,6 @@ parameters:
 
 		-
 			message: '#^Call to function is_numeric\(\) with int will always evaluate to true\.$#'
-			identifier: function.alreadyNarrowedType
-			count: 1
-			path: ../concrete/src/Entity/File/File.php
-
-		-
-			message: '#^Call to function is_object\(\) with Concrete\\Core\\Page\\Page will always evaluate to true\.$#'
 			identifier: function.alreadyNarrowedType
 			count: 1
 			path: ../concrete/src/Entity/File/File.php
@@ -8003,12 +7559,6 @@ parameters:
 			identifier: argument.type
 			count: 1
 			path: ../concrete/src/Entity/Site/Skeleton.php
-
-		-
-			message: '#^Call to function is_object\(\) with Concrete\\Core\\Page\\Page will always evaluate to true\.$#'
-			identifier: function.alreadyNarrowedType
-			count: 1
-			path: ../concrete/src/Entity/Site/Tree.php
 
 		-
 			message: '#^PHPDoc tag @param references unknown parameter\: \$borderStyle$#'
@@ -9325,12 +8875,6 @@ parameters:
 			path: ../concrete/src/Form/Service/DestinationPicker/DestinationPicker.php
 
 		-
-			message: '#^Negated boolean expression is always false\.$#'
-			identifier: booleanNot.alwaysFalse
-			count: 1
-			path: ../concrete/src/Form/Service/DestinationPicker/PagePicker.php
-
-		-
 			message: '#^Call to function is_array\(\) with array will always evaluate to true\.$#'
 			identifier: function.alreadyNarrowedType
 			count: 2
@@ -9407,12 +8951,6 @@ parameters:
 			identifier: method.notFound
 			count: 1
 			path: ../concrete/src/Form/Service/Widget/GroupSelector.php
-
-		-
-			message: '#^Left side of && is always true\.$#'
-			identifier: booleanAnd.leftAlwaysTrue
-			count: 2
-			path: ../concrete/src/Form/Service/Widget/PageSelector.php
 
 		-
 			message: '#^Variable \$page might not be defined\.$#'
@@ -10201,12 +9739,6 @@ parameters:
 			path: ../concrete/src/Http/ResponseFactory.php
 
 		-
-			message: '#^Call to function is_object\(\) with Concrete\\Core\\Page\\Page will always evaluate to true\.$#'
-			identifier: function.alreadyNarrowedType
-			count: 2
-			path: ../concrete/src/Http/ResponseFactory.php
-
-		-
 			message: '#^Call to function is_object\(\) with Concrete\\Core\\Permission\\Checker will always evaluate to true\.$#'
 			identifier: function.alreadyNarrowedType
 			count: 1
@@ -10687,12 +10219,6 @@ parameters:
 			path: ../concrete/src/Logging/Configuration/SimpleConfiguration.php
 
 		-
-			message: '#^Left side of && is always true\.$#'
-			identifier: booleanAnd.leftAlwaysTrue
-			count: 1
-			path: ../concrete/src/Logging/LogEntry.php
-
-		-
 			message: '#^Method Concrete\\Core\\Logging\\LogEntry\:\:getTimestamp\(\) should return string\|null but returns DateTime\|null\.$#'
 			identifier: return.type
 			count: 1
@@ -11019,12 +10545,6 @@ parameters:
 		-
 			message: '#^Call to function is_callable\(\) with array\{Concrete\\Core\\Page\\Controller\\PageController, ''useUserLocale''\} will always evaluate to true\.$#'
 			identifier: function.alreadyNarrowedType
-			count: 1
-			path: ../concrete/src/Multilingual/Service/Detector.php
-
-		-
-			message: '#^If condition is always true\.$#'
-			identifier: if.alwaysTrue
 			count: 1
 			path: ../concrete/src/Multilingual/Service/Detector.php
 
@@ -11767,12 +11287,6 @@ parameters:
 			path: ../concrete/src/Page/Collection/Version/EditResponse.php
 
 		-
-			message: '#^Left side of && is always true\.$#'
-			identifier: booleanAnd.leftAlwaysTrue
-			count: 1
-			path: ../concrete/src/Page/Collection/Version/Version.php
-
-		-
 			message: '#^Method Concrete\\Core\\Page\\Collection\\Version\\Version\:\:avoidApprovalOverlapping\(\) is unused\.$#'
 			identifier: method.unused
 			count: 1
@@ -11797,44 +11311,8 @@ parameters:
 			path: ../concrete/src/Page/Collection/Version/Version.php
 
 		-
-			message: '#^Left side of && is always true\.$#'
-			identifier: booleanAnd.leftAlwaysTrue
-			count: 1
-			path: ../concrete/src/Page/Command/CopyPageCommandHandler.php
-
-		-
-			message: '#^Left side of && is always true\.$#'
-			identifier: booleanAnd.leftAlwaysTrue
-			count: 1
-			path: ../concrete/src/Page/Command/DeletePageCommandHandler.php
-
-		-
-			message: '#^Left side of && is always true\.$#'
-			identifier: booleanAnd.leftAlwaysTrue
-			count: 1
-			path: ../concrete/src/Page/Command/DeletePageForeverCommandHandler.php
-
-		-
-			message: '#^Left side of && is always true\.$#'
-			identifier: booleanAnd.leftAlwaysTrue
-			count: 1
-			path: ../concrete/src/Page/Command/ReindexPageCommandHandler.php
-
-		-
-			message: '#^Left side of && is always true\.$#'
-			identifier: booleanAnd.leftAlwaysTrue
-			count: 1
-			path: ../concrete/src/Page/Command/RemoveOldPageVersionsTaskCommandHandler.php
-
-		-
 			message: '#^Access to an undefined property Concrete\\Core\\Block\\BlockController\:\:\$content\.$#'
 			identifier: property.notFound
-			count: 1
-			path: ../concrete/src/Page/Command/RescanMultilingualPageCommandHandler.php
-
-		-
-			message: '#^Negated boolean expression is always false\.$#'
-			identifier: booleanNot.alwaysFalse
 			count: 1
 			path: ../concrete/src/Page/Command/RescanMultilingualPageCommandHandler.php
 
@@ -11961,7 +11439,7 @@ parameters:
 		-
 			message: '#^Negated boolean expression is always false\.$#'
 			identifier: booleanNot.alwaysFalse
-			count: 2
+			count: 1
 			path: ../concrete/src/Page/Exporter.php
 
 		-
@@ -11991,12 +11469,6 @@ parameters:
 		-
 			message: '#^Call to function is_object\(\) with Concrete\\Core\\Page\\Page will always evaluate to true\.$#'
 			identifier: function.alreadyNarrowedType
-			count: 2
-			path: ../concrete/src/Page/Page.php
-
-		-
-			message: '#^Call to function is_object\(\) with static\(Concrete\\Core\\Page\\Page\) will always evaluate to true\.$#'
-			identifier: function.alreadyNarrowedType
 			count: 1
 			path: ../concrete/src/Page/Page.php
 
@@ -12022,18 +11494,6 @@ parameters:
 			message: '#^If condition is always true\.$#'
 			identifier: if.alwaysTrue
 			count: 6
-			path: ../concrete/src/Page/Page.php
-
-		-
-			message: '#^Instanceof between Concrete\\Core\\Page\\Page and Concrete\\Core\\Page\\Page will always evaluate to true\.$#'
-			identifier: instanceof.alwaysTrue
-			count: 1
-			path: ../concrete/src/Page/Page.php
-
-		-
-			message: '#^Left side of && is always true\.$#'
-			identifier: booleanAnd.leftAlwaysTrue
-			count: 1
 			path: ../concrete/src/Page/Page.php
 
 		-
@@ -12140,12 +11600,6 @@ parameters:
 
 		-
 			message: '#^Call to function is_object\(\) with Concrete\\Core\\Entity\\Site\\Tree will always evaluate to true\.$#'
-			identifier: function.alreadyNarrowedType
-			count: 1
-			path: ../concrete/src/Page/PageList.php
-
-		-
-			message: '#^Call to function is_object\(\) with Concrete\\Core\\Page\\Page will always evaluate to true\.$#'
 			identifier: function.alreadyNarrowedType
 			count: 1
 			path: ../concrete/src/Page/PageList.php
@@ -12295,12 +11749,6 @@ parameters:
 			path: ../concrete/src/Page/Search/Field/Field/PageTypeField.php
 
 		-
-			message: '#^Left side of && is always true\.$#'
-			identifier: booleanAnd.leftAlwaysTrue
-			count: 1
-			path: ../concrete/src/Page/Search/Field/Field/ParentPageField.php
-
-		-
 			message: '#^Call to an undefined method Concrete\\Core\\Search\\ItemList\\ItemList\:\:setSiteTreeObject\(\)\.$#'
 			identifier: method.notFound
 			count: 1
@@ -12397,18 +11845,6 @@ parameters:
 			path: ../concrete/src/Page/Sitemap/DragRequestData.php
 
 		-
-			message: '#^Negated boolean expression is always false\.$#'
-			identifier: booleanNot.alwaysFalse
-			count: 2
-			path: ../concrete/src/Page/Sitemap/DragRequestData.php
-
-		-
-			message: '#^Left side of && is always true\.$#'
-			identifier: booleanAnd.leftAlwaysTrue
-			count: 1
-			path: ../concrete/src/Page/Sitemap/PageListGenerator.php
-
-		-
 			message: '#^Method Concrete\\Core\\Page\\Sitemap\\PageListGenerator\:\:getViewPagePermissionKey\(\) should return Concrete\\Core\\Permission\\Key\\PageKey\|null but returns Concrete\\Core\\Permission\\Key\\Key\|null\.$#'
 			identifier: return.type
 			count: 1
@@ -12419,12 +11855,6 @@ parameters:
 			identifier: assign.propertyType
 			count: 1
 			path: ../concrete/src/Page/Sitemap/PageListGenerator.php
-
-		-
-			message: '#^Left side of && is always true\.$#'
-			identifier: booleanAnd.leftAlwaysTrue
-			count: 1
-			path: ../concrete/src/Page/Sitemap/SitemapGenerator.php
 
 		-
 			message: '#^PHPDoc tag @param references unknown parameter\: \$args$#'
@@ -12517,22 +11947,10 @@ parameters:
 			path: ../concrete/src/Page/Stack/Stack.php
 
 		-
-			message: '#^Parameter \#1 \$stack of static method Concrete\\Core\\Page\\Stack\\Stack\:\:isValidStack\(\) expects Concrete\\Core\\Page\\Stack\\Stack, Concrete\\Core\\Page\\Page given\.$#'
-			identifier: argument.type
-			count: 1
-			path: ../concrete/src/Page/Stack/Stack.php
-
-		-
 			message: '#^Unreachable statement \- code above always terminates\.$#'
 			identifier: deadCode.unreachable
 			count: 4
 			path: ../concrete/src/Page/Stack/Stack.php
-
-		-
-			message: '#^Call to function is_object\(\) with Concrete\\Core\\Page\\Page will always evaluate to true\.$#'
-			identifier: function.alreadyNarrowedType
-			count: 1
-			path: ../concrete/src/Page/Stack/StackCategory.php
 
 		-
 			message: '#^Method Doctrine\\DBAL\\Query\\Expression\\ExpressionBuilder\:\:or\(\) invoked with 0 parameters, at least 1 required\.$#'
@@ -12595,12 +12013,6 @@ parameters:
 			path: ../concrete/src/Page/Theme/Documentation/Installer.php
 
 		-
-			message: '#^Negated boolean expression is always false\.$#'
-			identifier: booleanNot.alwaysFalse
-			count: 1
-			path: ../concrete/src/Page/Theme/Documentation/Installer.php
-
-		-
 			message: '#^Result of method Concrete\\Core\\Page\\Theme\\Documentation\\CustomDocumentationPageInterface\:\:installDocumentationPage\(\) \(void\) is used\.$#'
 			identifier: method.void
 			count: 1
@@ -12622,12 +12034,6 @@ parameters:
 			message: '#^Call to function method_exists\(\) with Concrete\\Core\\Page\\Theme\\Theme and ''getThemeName'' will always evaluate to true\.$#'
 			identifier: function.alreadyNarrowedType
 			count: 1
-			path: ../concrete/src/Page/Theme/Theme.php
-
-		-
-			message: '#^Left side of && is always true\.$#'
-			identifier: booleanAnd.leftAlwaysTrue
-			count: 2
 			path: ../concrete/src/Page/Theme/Theme.php
 
 		-
@@ -12751,30 +12157,6 @@ parameters:
 			path: ../concrete/src/Page/Type/Composer/OutputControl.php
 
 		-
-			message: '#^Call to function is_object\(\) with Concrete\\Core\\Page\\Page will always evaluate to true\.$#'
-			identifier: function.alreadyNarrowedType
-			count: 1
-			path: ../concrete/src/Page/Type/PublishTarget/Configuration/AllConfiguration.php
-
-		-
-			message: '#^Call to function is_object\(\) with Concrete\\Core\\Page\\Page will always evaluate to true\.$#'
-			identifier: function.alreadyNarrowedType
-			count: 1
-			path: ../concrete/src/Page/Type/PublishTarget/Configuration/PageTypeConfiguration.php
-
-		-
-			message: '#^Call to function is_object\(\) with Concrete\\Core\\Page\\Page will always evaluate to true\.$#'
-			identifier: function.alreadyNarrowedType
-			count: 1
-			path: ../concrete/src/Page/Type/PublishTarget/Configuration/ParentPageConfiguration.php
-
-		-
-			message: '#^Call to function is_object\(\) with Concrete\\Core\\Page\\Page will always evaluate to true\.$#'
-			identifier: function.alreadyNarrowedType
-			count: 1
-			path: ../concrete/src/Page/Type/PublishTarget/Type/ParentPageType.php
-
-		-
 			message: '#^Call to an undefined static method Concrete\\Core\\Support\\Facade\\Database\:\:Connection\(\)\.$#'
 			identifier: staticMethod.notFound
 			count: 1
@@ -12783,12 +12165,6 @@ parameters:
 		-
 			message: '#^Call to an undefined method Concrete\\Core\\Permission\\Key\\Key\:\:copyFromDefaultsToPageType\(\)\.$#'
 			identifier: method.notFound
-			count: 1
-			path: ../concrete/src/Page/Type/Type.php
-
-		-
-			message: '#^Call to function is_object\(\) with Concrete\\Core\\Page\\Page will always evaluate to true\.$#'
-			identifier: function.alreadyNarrowedType
 			count: 1
 			path: ../concrete/src/Page/Type/Type.php
 
@@ -13687,12 +13063,6 @@ parameters:
 			path: ../concrete/src/Permission/Registry/Entry/Object/Object/NullObject.php
 
 		-
-			message: '#^Call to function is_object\(\) with Concrete\\Core\\Page\\Page will always evaluate to true\.$#'
-			identifier: function.alreadyNarrowedType
-			count: 1
-			path: ../concrete/src/Permission/Registry/Entry/Object/Object/Page.php
-
-		-
 			message: '#^Method Concrete\\Core\\Permission\\Registry\\Entry\\Object\\Object\\Page\:\:getPermissionObject\(\) should return Concrete\\Core\\Permission\\AssignableObjectInterface but return statement is missing\.$#'
 			identifier: return.missing
 			count: 1
@@ -14053,12 +13423,6 @@ parameters:
 			path: ../concrete/src/Search/ItemList/Pager/Manager/PageListPagerManager.php
 
 		-
-			message: '#^Left side of && is always true\.$#'
-			identifier: booleanAnd.leftAlwaysTrue
-			count: 1
-			path: ../concrete/src/Search/ItemList/Pager/Manager/PageListPagerManager.php
-
-		-
 			message: '#^Call to an undefined method Concrete\\Core\\Search\\ItemList\\Pager\\PagerProviderInterface\:\:getQueryObject\(\)\.$#'
 			identifier: method.notFound
 			count: 1
@@ -14313,12 +13677,6 @@ parameters:
 		-
 			message: '#^Call to an undefined method Doctrine\\DBAL\\Connection\:\:tableExists\(\)\.$#'
 			identifier: method.notFound
-			count: 1
-			path: ../concrete/src/Site/Service.php
-
-		-
-			message: '#^Call to function is_object\(\) with Concrete\\Core\\Page\\Page will always evaluate to true\.$#'
-			identifier: function.alreadyNarrowedType
 			count: 1
 			path: ../concrete/src/Site/Service.php
 
@@ -14959,12 +14317,6 @@ parameters:
 			path: ../concrete/src/Updater/Archive.php
 
 		-
-			message: '#^Call to function is_object\(\) with Concrete\\Core\\Page\\Page will always evaluate to true\.$#'
-			identifier: function.alreadyNarrowedType
-			count: 1
-			path: ../concrete/src/Updater/Migrations/AbstractMigration.php
-
-		-
 			message: '#^PHPDoc tag @param references unknown parameter\: \$schema$#'
 			identifier: parameter.notFound
 			count: 1
@@ -14983,25 +14335,7 @@ parameters:
 			path: ../concrete/src/Updater/Migrations/Migrations/Version20141017000000.php
 
 		-
-			message: '#^Call to function is_object\(\) with Concrete\\Core\\Page\\Page will always evaluate to true\.$#'
-			identifier: function.alreadyNarrowedType
-			count: 2
-			path: ../concrete/src/Updater/Migrations/Migrations/Version20141017000000.php
-
-		-
-			message: '#^Call to function is_object\(\) with Concrete\\Core\\Page\\Page will always evaluate to true\.$#'
-			identifier: function.alreadyNarrowedType
-			count: 1
-			path: ../concrete/src/Updater/Migrations/Migrations/Version20141113000000.php
-
-		-
 			message: '#^Call to function is_object\(\) with Concrete\\Core\\Authentication\\AuthenticationType will always evaluate to true\.$#'
-			identifier: function.alreadyNarrowedType
-			count: 1
-			path: ../concrete/src/Updater/Migrations/Migrations/Version20141219000000.php
-
-		-
-			message: '#^Call to function is_object\(\) with Concrete\\Core\\Page\\Page will always evaluate to true\.$#'
 			identifier: function.alreadyNarrowedType
 			count: 1
 			path: ../concrete/src/Updater/Migrations/Migrations/Version20141219000000.php
@@ -15061,18 +14395,6 @@ parameters:
 			path: ../concrete/src/Updater/Migrations/Migrations/Version20150504000000.php
 
 		-
-			message: '#^Call to function is_object\(\) with Concrete\\Core\\Page\\Page will always evaluate to true\.$#'
-			identifier: function.alreadyNarrowedType
-			count: 1
-			path: ../concrete/src/Updater/Migrations/Migrations/Version20150504000000.php
-
-		-
-			message: '#^Call to function is_object\(\) with Concrete\\Core\\Page\\Page will always evaluate to true\.$#'
-			identifier: function.alreadyNarrowedType
-			count: 1
-			path: ../concrete/src/Updater/Migrations/Migrations/Version20150515000000.php
-
-		-
 			message: '#^Call to an undefined method Concrete\\Core\\Attribute\\Category\\CategoryInterface\:\:add\(\)\.$#'
 			identifier: method.notFound
 			count: 2
@@ -15097,46 +14419,10 @@ parameters:
 			path: ../concrete/src/Updater/Migrations/Migrations/Version20160725000000.php
 
 		-
-			message: '#^Call to function is_object\(\) with Concrete\\Core\\Page\\Page will always evaluate to true\.$#'
-			identifier: function.alreadyNarrowedType
-			count: 5
-			path: ../concrete/src/Updater/Migrations/Migrations/Version20160725000000.php
-
-		-
-			message: '#^Left side of && is always true\.$#'
-			identifier: booleanAnd.leftAlwaysTrue
-			count: 2
-			path: ../concrete/src/Updater/Migrations/Migrations/Version20160725000000.php
-
-		-
-			message: '#^Left side of && is always true\.$#'
-			identifier: booleanAnd.leftAlwaysTrue
-			count: 1
-			path: ../concrete/src/Updater/Migrations/Migrations/Version20171110032423.php
-
-		-
-			message: '#^Call to function is_object\(\) with Concrete\\Core\\Page\\Page will always evaluate to true\.$#'
-			identifier: function.alreadyNarrowedType
-			count: 1
-			path: ../concrete/src/Updater/Migrations/Migrations/Version20180212000000.php
-
-		-
-			message: '#^Left side of && is always true\.$#'
-			identifier: booleanAnd.leftAlwaysTrue
-			count: 1
-			path: ../concrete/src/Updater/Migrations/Migrations/Version20180328215345.php
-
-		-
 			message: '#^Call to an undefined method Concrete\\Core\\Attribute\\Category\\CategoryInterface\:\:associateAttributeKeyType\(\)\.$#'
 			identifier: method.notFound
 			count: 2
 			path: ../concrete/src/Updater/Migrations/Migrations/Version20180609000000.php
-
-		-
-			message: '#^Left side of && is always true\.$#'
-			identifier: booleanAnd.leftAlwaysTrue
-			count: 1
-			path: ../concrete/src/Updater/Migrations/Migrations/Version20180831213421.php
 
 		-
 			message: '#^Call to an undefined method Concrete\\Core\\Attribute\\Category\\CategoryInterface\:\:associateAttributeKeyType\(\)\.$#'
@@ -15163,34 +14449,10 @@ parameters:
 			path: ../concrete/src/Updater/Migrations/Migrations/Version20181006212400.php
 
 		-
-			message: '#^Left side of && is always true\.$#'
-			identifier: booleanAnd.leftAlwaysTrue
-			count: 1
-			path: ../concrete/src/Updater/Migrations/Migrations/Version20181019010145.php
-
-		-
-			message: '#^Left side of && is always true\.$#'
-			identifier: booleanAnd.leftAlwaysTrue
-			count: 1
-			path: ../concrete/src/Updater/Migrations/Migrations/Version20181212000000.php
-
-		-
 			message: '#^Call to function is_object\(\) with Concrete\\Core\\Authentication\\AuthenticationType will always evaluate to true\.$#'
 			identifier: function.alreadyNarrowedType
 			count: 1
 			path: ../concrete/src/Updater/Migrations/Migrations/Version20181212221911.php
-
-		-
-			message: '#^Call to function is_object\(\) with Concrete\\Core\\Page\\Page will always evaluate to true\.$#'
-			identifier: function.alreadyNarrowedType
-			count: 1
-			path: ../concrete/src/Updater/Migrations/Migrations/Version20181222183445.php
-
-		-
-			message: '#^Left side of && is always true\.$#'
-			identifier: booleanAnd.leftAlwaysTrue
-			count: 1
-			path: ../concrete/src/Updater/Migrations/Migrations/Version20181222183445.php
 
 		-
 			message: '#^Call to an undefined method League\\OAuth2\\Server\\Entities\\AccessTokenEntityInterface\:\:getRefreshToken\(\)\.$#'
@@ -15205,22 +14467,10 @@ parameters:
 			path: ../concrete/src/Updater/Migrations/Migrations/Version20190111181236.php
 
 		-
-			message: '#^If condition is always true\.$#'
-			identifier: if.alwaysTrue
-			count: 1
-			path: ../concrete/src/Updater/Migrations/Migrations/Version20190417180607.php
-
-		-
 			message: '#^Call to an undefined method Concrete\\Core\\Attribute\\Category\\CategoryInterface\:\:associateAttributeKeyType\(\)\.$#'
 			identifier: method.notFound
 			count: 2
 			path: ../concrete/src/Updater/Migrations/Migrations/Version20190422235040.php
-
-		-
-			message: '#^Left side of && is always true\.$#'
-			identifier: booleanAnd.leftAlwaysTrue
-			count: 1
-			path: ../concrete/src/Updater/Migrations/Migrations/Version20190708000000.php
 
 		-
 			message: '#^Instanceof between Concrete\\Core\\Entity\\Attribute\\Type and Concrete\\Core\\Entity\\Attribute\\Type will always evaluate to true\.$#'
@@ -15238,31 +14488,13 @@ parameters:
 			message: '#^Call to function is_object\(\) with Concrete\\Core\\Page\\Page will always evaluate to true\.$#'
 			identifier: function.alreadyNarrowedType
 			count: 1
-			path: ../concrete/src/Updater/Migrations/Migrations/Version20200928000000.php
-
-		-
-			message: '#^Call to function is_object\(\) with Concrete\\Core\\Page\\Page will always evaluate to true\.$#'
-			identifier: function.alreadyNarrowedType
-			count: 1
 			path: ../concrete/src/Updater/Migrations/Migrations/Version20200928000001.php
-
-		-
-			message: '#^Call to function is_object\(\) with Concrete\\Core\\Page\\Page will always evaluate to true\.$#'
-			identifier: function.alreadyNarrowedType
-			count: 1
-			path: ../concrete/src/Updater/Migrations/Migrations/Version20200928000003.php
 
 		-
 			message: '#^Call to an undefined method Concrete\\Core\\Attribute\\Category\\CategoryInterface\:\:associateAttributeKeyType\(\)\.$#'
 			identifier: method.notFound
 			count: 1
 			path: ../concrete/src/Updater/Migrations/Migrations/Version20201231153200.php
-
-		-
-			message: '#^Left side of && is always true\.$#'
-			identifier: booleanAnd.leftAlwaysTrue
-			count: 1
-			path: ../concrete/src/Updater/Migrations/Migrations/Version20210725000000.php
 
 		-
 			message: '#^Left side of && is always true\.$#'
@@ -15299,54 +14531,6 @@ parameters:
 			identifier: method.notFound
 			count: 2
 			path: ../concrete/src/Updater/Migrations/Migrations/Version20220516191423.php
-
-		-
-			message: '#^Call to function is_object\(\) with Concrete\\Core\\Page\\Page will always evaluate to true\.$#'
-			identifier: function.alreadyNarrowedType
-			count: 1
-			path: ../concrete/src/Updater/Migrations/Migrations/Version20220812035034.php
-
-		-
-			message: '#^Left side of && is always true\.$#'
-			identifier: booleanAnd.leftAlwaysTrue
-			count: 1
-			path: ../concrete/src/Updater/Migrations/Migrations/Version20240508000000.php
-
-		-
-			message: '#^Left side of && is always true\.$#'
-			identifier: booleanAnd.leftAlwaysTrue
-			count: 1
-			path: ../concrete/src/Updater/Migrations/Migrations/Version20241126174022.php
-
-		-
-			message: '#^Left side of && is always true\.$#'
-			identifier: booleanAnd.leftAlwaysTrue
-			count: 1
-			path: ../concrete/src/Updater/Migrations/Migrations/Version20241204161559.php
-
-		-
-			message: '#^Call to function is_object\(\) with Concrete\\Core\\Page\\Page will always evaluate to true\.$#'
-			identifier: function.alreadyNarrowedType
-			count: 1
-			path: ../concrete/src/Updater/Migrations/Migrations/Version20241217194138.php
-
-		-
-			message: '#^Left side of && is always true\.$#'
-			identifier: booleanAnd.leftAlwaysTrue
-			count: 1
-			path: ../concrete/src/Updater/Migrations/Migrations/Version20250227155410.php
-
-		-
-			message: '#^Left side of && is always true\.$#'
-			identifier: booleanAnd.leftAlwaysTrue
-			count: 1
-			path: ../concrete/src/Updater/Migrations/Migrations/Version20250827152432.php
-
-		-
-			message: '#^Left side of && is always true\.$#'
-			identifier: booleanAnd.leftAlwaysTrue
-			count: 1
-			path: ../concrete/src/Updater/Migrations/Migrations/Version20260811120000.php
 
 		-
 			message: '#^Loose comparison using \=\= between null and ''index\.php'' will always evaluate to false\.$#'
@@ -15707,12 +14891,6 @@ parameters:
 			identifier: function.alreadyNarrowedType
 			count: 1
 			path: ../concrete/src/User/Password/PasswordUsageTracker.php
-
-		-
-			message: '#^Left side of && is always true\.$#'
-			identifier: booleanAnd.leftAlwaysTrue
-			count: 2
-			path: ../concrete/src/User/PostLoginLocation.php
 
 		-
 			message: '#^Parameter \#2 \$callback of function array_filter expects \(callable\(string\)\: bool\)\|null, ''strlen'' given\.$#'
@@ -16159,22 +15337,10 @@ parameters:
 			path: ../concrete/src/Workflow/Progress/Progress.php
 
 		-
-			message: '#^Call to function is_object\(\) with Concrete\\Core\\Page\\Page will always evaluate to true\.$#'
-			identifier: function.alreadyNarrowedType
-			count: 1
-			path: ../concrete/src/Workflow/Request/ApprovePageRequest.php
-
-		-
 			message: '#^Static method Concrete\\Core\\Calendar\\Event\\Event\:\:getVersionByID\(\) invoked with 2 parameters, 1 required\.$#'
 			identifier: arguments.count
 			count: 1
 			path: ../concrete/src/Workflow/Request/CalendarEventRequest.php
-
-		-
-			message: '#^Call to function is_object\(\) with Concrete\\Core\\Page\\Page will always evaluate to true\.$#'
-			identifier: function.alreadyNarrowedType
-			count: 2
-			path: ../concrete/src/Workflow/Request/MovePageRequest.php
 
 		-
 			message: '#^If condition is always true\.$#'

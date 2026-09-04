@@ -314,7 +314,7 @@ class Page extends Collection implements CategoryMemberInterface,
      * @param string $version the page version ('RECENT' for the most recent version, 'ACTIVE' for the currently published version, 'SCHEDULED' for the currently scheduled version, or an integer to retrieve a specific version ID)
      * @param \Concrete\Core\Entity\Site\Site|\Concrete\Core\Site\Tree\TreeInterface|null $tree
      *
-     * @return \Concrete\Core\Page\Page
+     * @return static|null if the page doesn't exist, currently a Page instance in an error state is returned (see isError()), but future versions may return NULL: callers must handle both cases
      */
     public static function getByPath($path, $version = 'RECENT', ?TreeInterface $tree = null)
     {
@@ -382,7 +382,7 @@ class Page extends Collection implements CategoryMemberInterface,
      * @param int $cID the ID of the page
      * @param int|string $version the page version ('RECENT' for the most recent version, 'ACTIVE' for the currently published version, 'SCHEDULED' for the currently scheduled version, or an integer to retrieve a specific version ID)
      *
-     * @return static
+     * @return static|null if the page doesn't exist, currently a Page instance in an error state is returned (see isError()), but future versions may return NULL: callers must handle both cases
      */
     public static function getByID($cID, $version = 'RECENT')
     {
