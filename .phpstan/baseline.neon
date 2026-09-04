@@ -2017,12 +2017,6 @@ parameters:
 			path: ../concrete/controllers/single_page/dashboard/system/boards/summary_templates.php
 
 		-
-			message: '#^Undefined variable\: \$row$#'
-			identifier: variable.undefined
-			count: 1
-			path: ../concrete/controllers/single_page/dashboard/system/calendar/import.php
-
-		-
 			message: '#^Call to function is_array\(\) with bool\|float\|int\|string\|null will always evaluate to false\.$#'
 			identifier: function.impossibleType
 			count: 1

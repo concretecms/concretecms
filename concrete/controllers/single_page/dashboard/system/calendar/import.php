@@ -37,7 +37,7 @@ class Import extends DashboardPageController
                         'evIsApproved' => 1,
                         'evDescription' => $row2['description'],
                         'evName' => $row2['name'],
-                        'evRelatedPageRelationType' => $row['evRelatedPageRelationType'],
+                        'evRelatedPageRelationType' => $row2['evRelatedPageRelationType'],
                         'cID' => $row2['cID'],
                         'eventID' => $row2['eventID'],
                         'uID' => 1
