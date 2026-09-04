@@ -85,9 +85,9 @@ class RegistrationService implements RegistrationServiceInterface
         }
 
         if (isset($data['uIsFullRecord']) && $data['uIsFullRecord'] == 0) {
-            $uIsFullRecord = 0;
+            $uIsFullRecord = false;
         } else {
-            $uIsFullRecord = 1;
+            $uIsFullRecord = true;
         }
 
         $password_to_insert = $data['uPassword'] ?? '';

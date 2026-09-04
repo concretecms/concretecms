@@ -61,7 +61,7 @@ class Duration extends AbstractRepetition
                     $pd->setStartDateAllDay(true);
                 }
             }
-            $pd->setEndDateAllDay(0);
+            $pd->setEndDateAllDay(false);
             if ($dateEndDT === null) {
                 $dateEnd = '';
             } else {
@@ -69,7 +69,7 @@ class Duration extends AbstractRepetition
                 if ($request->get('pdEndDateAllDayActivate')) {
                     // We need to work in the user timezone, otherwise we risk to change the day
                     $dateEnd = $service->toDateTime($dateEnd, 'user', 'system')->format('Y-m-d').' 23:59:59';
-                    $pd->setEndDateAllDay(1);
+                    $pd->setEndDateAllDay(true);
                 }
             }
             $pd->setStartDate($dateStart);

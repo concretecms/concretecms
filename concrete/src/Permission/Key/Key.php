@@ -433,8 +433,8 @@ EOT
             $pk['handle'],
             $pk['name'],
             $pk['description'],
-            $xml->getBool($pk['can-trigger-workflow']) ? 1 : 0,
-            $xml->getBool($pk['has-custom-class']) ? 1 : 0,
+            $xml->getBool($pk['can-trigger-workflow']),
+            $xml->getBool($pk['has-custom-class']),
             $pkg
         );
     }

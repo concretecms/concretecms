@@ -9937,12 +9937,6 @@ parameters:
 			path: ../concrete/src/Permission/Duration.php
 
 		-
-			message: '#^Parameter \#1 \$end_date_all_day of method Concrete\\Core\\Foundation\\Repetition\\AbstractRepetition\:\:setEndDateAllDay\(\) expects bool, int given\.$#'
-			identifier: argument.type
-			count: 2
-			path: ../concrete/src/Permission/Duration.php
-
-		-
 			message: '#^Parameter \#1 \$repeat_period_week_days of method Concrete\\Core\\Foundation\\Repetition\\AbstractRepetition\:\:setRepeatPeriodWeekDays\(\) expects array\<int\>, bool\|float\|int\|string\|null given\.$#'
 			identifier: argument.type
 			count: 1
@@ -10215,18 +10209,6 @@ parameters:
 		-
 			message: '#^Default value of the parameter \#7 \$pkg \(false\) of method Concrete\\Core\\Permission\\Key\\Key\:\:add\(\) is incompatible with type Concrete\\Core\\Entity\\Package\|Concrete\\Core\\Package\\Package\|null\.$#'
 			identifier: parameter.defaultValue
-			count: 1
-			path: ../concrete/src/Permission/Key/Key.php
-
-		-
-			message: '#^Parameter \#5 \$pkCanTriggerWorkflow of static method Concrete\\Core\\Permission\\Key\\Key\:\:add\(\) expects bool, int given\.$#'
-			identifier: argument.type
-			count: 1
-			path: ../concrete/src/Permission/Key/Key.php
-
-		-
-			message: '#^Parameter \#6 \$pkHasCustomClass of static method Concrete\\Core\\Permission\\Key\\Key\:\:add\(\) expects bool, int given\.$#'
-			identifier: argument.type
 			count: 1
 			path: ../concrete/src/Permission/Key/Key.php
 
@@ -11893,12 +11875,6 @@ parameters:
 			path: ../concrete/src/User/PrivateMessage/PrivateMessage.php
 
 		-
-			message: '#^Parameter \#1 \$uIsFullRecord of method Concrete\\Core\\Entity\\User\\User\:\:setUserIsFullRecord\(\) expects bool, int given\.$#'
-			identifier: argument.type
-			count: 1
-			path: ../concrete/src/User/RegistrationService.php
-
-		-
 			message: '#^Parameter \#1 \$uIsValidated of method Concrete\\Core\\Entity\\User\\User\:\:setUserIsValidated\(\) expects bool, int given\.$#'
 			identifier: argument.type
 			count: 1
@@ -11963,12 +11939,6 @@ parameters:
 			identifier: argument.type
 			count: 1
 			path: ../concrete/src/User/Search/Field/Field/GroupSetField.php
-
-		-
-			message: '#^Parameter \#1 \$isValidated of method Concrete\\Core\\User\\UserList\:\:filterByIsValidated\(\) expects bool, int given\.$#'
-			identifier: argument.type
-			count: 2
-			path: ../concrete/src/User/Search/Field/Field/IsValidatedField.php
 
 		-
 			message: '#^Parameter \#1 \$groups of method Concrete\\Core\\User\\UserList\:\:filterByInAnyGroup\(\) expects Generator&iterable\<Concrete\\Core\\User\\Group\\Group\>, list\<Concrete\\Core\\User\\Group\\Group\> given\.$#'

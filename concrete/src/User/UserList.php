@@ -307,7 +307,7 @@ class UserList extends DatabaseItemList implements PagerProviderInterface, Pagin
         if (!$isValidated) {
             $this->includeUnvalidatedUsers();
             $this->query->andWhere('u.uIsValidated = :uIsValidated');
-            $this->query->setParameter('uIsValidated', $isValidated);
+            $this->query->setParameter('uIsValidated', 0);
         }
     }
 
