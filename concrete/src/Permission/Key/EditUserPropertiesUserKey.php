@@ -59,7 +59,7 @@ class EditUserPropertiesUserKey extends UserKey
                 $asl->setAllowEditAvatar(1);
             }
             if ($l->allowEditTimezone() && (!in_array('uTimezone', $excluded))) {
-                $asl->allowEditTimezone(1);
+                $asl->setAllowEditTimezone(1);
             }
             if ($l->allowEditDefaultLanguage() && (!in_array('uDefaultLanguage', $excluded))) {
                 $asl->setAllowEditDefaultLanguage(1);

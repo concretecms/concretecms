@@ -9553,18 +9553,6 @@ parameters:
 			path: ../concrete/src/Permission/Key/EditUserPropertiesUserKey.php
 
 		-
-			message: '#^Call to method Concrete\\Core\\Permission\\Access\\ListItem\\EditUserPropertiesUserListItem\:\:allowEditTimezone\(\) on a separate line has no effect\.$#'
-			identifier: method.resultUnused
-			count: 1
-			path: ../concrete/src/Permission/Key/EditUserPropertiesUserKey.php
-
-		-
-			message: '#^Method Concrete\\Core\\Permission\\Access\\ListItem\\EditUserPropertiesUserListItem\:\:allowEditTimezone\(\) invoked with 1 parameter, 0 required\.$#'
-			identifier: arguments.count
-			count: 1
-			path: ../concrete/src/Permission/Key/EditUserPropertiesUserKey.php
-
-		-
 			message: '#^Parameter \#1 \$var of function count expects array\|Countable, bool given\.$#'
 			identifier: argument.type
 			count: 1
