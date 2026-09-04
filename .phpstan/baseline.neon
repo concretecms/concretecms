@@ -3037,12 +3037,6 @@ parameters:
 			path: ../concrete/src/Attribute/Command/RebuildIndexCommandHandler.php
 
 		-
-			message: '#^Method Concrete\\Core\\Attribute\\Key\\SearchIndexer\\SearchIndexerInterface\:\:updateSearchIndexKeyColumns\(\) invoked with 2 parameters, 3 required\.$#'
-			identifier: arguments.count
-			count: 1
-			path: ../concrete/src/Attribute/Command/RebuildIndexCommandHandler.php
-
-		-
 			message: '#^Variable \$key in PHPDoc tag @var does not exist\.$#'
 			identifier: varTag.variableNotFound
 			count: 1
@@ -3213,12 +3207,6 @@ parameters:
 		-
 			message: '#^Instanceof between Concrete\\Core\\Attribute\\Key\\SearchIndexer\\SearchIndexerInterface and Concrete\\Core\\Attribute\\Key\\SearchIndexer\\SearchIndexerInterface will always evaluate to true\.$#'
 			identifier: instanceof.alwaysTrue
-			count: 1
-			path: ../concrete/src/Attribute/Key/Listener.php
-
-		-
-			message: '#^Method Concrete\\Core\\Attribute\\Key\\SearchIndexer\\SearchIndexerInterface\:\:updateSearchIndexKeyColumns\(\) invoked with 2 parameters, 3 required\.$#'
-			identifier: arguments.count
 			count: 1
 			path: ../concrete/src/Attribute/Key/Listener.php
 
@@ -5723,12 +5711,6 @@ parameters:
 			identifier: varTag.misplaced
 			count: 1
 			path: ../concrete/src/Express/Search/Field/AssociationField.php
-
-		-
-			message: '#^Method Concrete\\Core\\Attribute\\Key\\SearchIndexer\\SearchIndexerInterface\:\:updateSearchIndexKeyColumns\(\) invoked with 2 parameters, 3 required\.$#'
-			identifier: arguments.count
-			count: 1
-			path: ../concrete/src/Express/Search/Index/EntityIndex.php
 
 		-
 			message: '#^Negated boolean expression is always false\.$#'
