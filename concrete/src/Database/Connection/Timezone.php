@@ -72,7 +72,7 @@ class Timezone
         $maxDeltaMinutes = 0;
         foreach ($timestamps as $index => $timestamp) {
             $databaseValue = new DateTime($databaseDatetimes[$index], $phpTimezone);
-            $phpValue = DateTime::createFromFormat('U', $timestamp, $phpTimezone);
+            $phpValue = DateTime::createFromFormat('U', (string) $timestamp, $phpTimezone);
             $deltaMinutes = (int) floor(($phpValue->getTimestamp() - $databaseValue->getTimestamp()) / 60);
             if ($deltaMinutes === 0) {
                 $sometimesSame = true;
