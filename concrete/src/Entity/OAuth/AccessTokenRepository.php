@@ -9,6 +9,9 @@ use League\OAuth2\Server\Entities\ClientEntityInterface;
 use League\OAuth2\Server\Entities\ScopeEntityInterface;
 use League\OAuth2\Server\Repositories\AccessTokenRepositoryInterface;
 
+/**
+ * @extends \Doctrine\ORM\EntityRepository<\Concrete\Core\Entity\OAuth\AccessToken>
+ */
 class AccessTokenRepository extends EntityRepository implements AccessTokenRepositoryInterface
 {
 

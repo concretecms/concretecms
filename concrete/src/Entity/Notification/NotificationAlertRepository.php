@@ -5,6 +5,9 @@ namespace Concrete\Core\Entity\Notification;
 use Concrete\Core\User\User;
 use Doctrine\ORM\EntityRepository;
 
+/**
+ * @extends \Doctrine\ORM\EntityRepository<\Concrete\Core\Entity\Notification\NotificationAlert>
+ */
 class NotificationAlertRepository extends EntityRepository
 {
     /**

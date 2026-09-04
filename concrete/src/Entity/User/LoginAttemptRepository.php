@@ -8,6 +8,9 @@ use DateTime;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\UnexpectedResultException;
 
+/**
+ * @extends \Doctrine\ORM\EntityRepository<\Concrete\Core\Entity\User\LoginAttempt>
+ */
 class LoginAttemptRepository extends EntityRepository
 {
 

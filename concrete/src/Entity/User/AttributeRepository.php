@@ -3,6 +3,9 @@ namespace Concrete\Core\Entity\User;
 
 use Doctrine\ORM\EntityRepository;
 
+/**
+ * @extends \Doctrine\ORM\EntityRepository<\Concrete\Core\Entity\Attribute\Key\UserKey>
+ */
 class AttributeRepository extends EntityRepository
 {
     public function getRegistrationList()

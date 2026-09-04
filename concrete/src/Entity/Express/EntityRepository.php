@@ -3,6 +3,9 @@ namespace Concrete\Core\Entity\Express;
 
 use Concrete\Core\Tree\Node\Type\ExpressEntryResults;
 
+/**
+ * @extends \Doctrine\ORM\EntityRepository<\Concrete\Core\Entity\Express\Entity>
+ */
 class EntityRepository extends \Doctrine\ORM\EntityRepository
 {
     public function findPublicEntities()
