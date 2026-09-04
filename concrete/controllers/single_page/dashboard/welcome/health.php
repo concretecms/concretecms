@@ -40,6 +40,8 @@ class Health extends DashboardPageController
         if ($productionStatus === Modes::MODE_DEVELOPMENT) {
             $productionStatus = self::SITE_MODE_DEVELOPMENT;
             $productionStatusClass = 'text-bg-info';
+        } else {
+            $productionStatusClass = '';
         }
         if ($productionStatus === Modes::MODE_STAGING) {
             $productionStatus = self::SITE_MODE_STAGING;

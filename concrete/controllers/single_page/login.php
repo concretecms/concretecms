@@ -469,6 +469,7 @@ class Login extends PageController implements LoggerAwareInterface
     {
         $nh = $this->app->make('helper/validation/numbers');
         $rcURL = '';
+        $pll = null;
         if ($this->request->query->has('rcURL')) {
             $requestRcURL = $this->request->query->get('rcURL');
             if (is_string($requestRcURL)) {

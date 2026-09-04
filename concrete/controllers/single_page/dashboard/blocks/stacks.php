@@ -420,6 +420,9 @@ class Stacks extends DashboardPageController
                 $isFolder = true;
                 $page = $folder->getPage();
                 $viewCID = $page->getCollectionParentID();
+            } else {
+                $isFolder = null;
+                $viewCID = null;
             }
         }
 

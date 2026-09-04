@@ -101,9 +101,7 @@ class Install extends DashboardPageController implements LoggerAwareInterface
         $this->view();
         $pkgID = $this->post('pkgID');
 
-        if ($pkgID > 0) {
-            $pkg = Package::getByID($pkgID);
-        }
+        $pkg = $pkgID > 0 ? Package::getByID($pkgID) : null;
 
         if (!$this->token->validate('uninstall')) {
             $this->error->add($this->token->getErrorMessage());

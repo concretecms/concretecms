@@ -29,6 +29,8 @@ class PageContentTransformer extends TransformerAbstract
         if (isset($element[0])) {
             $pageContent = $element[0]->innertext();
             $pageContentSanitized = $this->stripAllTags($pageContent);
+        } else {
+            $pageContentSanitized = null;
         }
 
         // Sanitize inside ccm-page

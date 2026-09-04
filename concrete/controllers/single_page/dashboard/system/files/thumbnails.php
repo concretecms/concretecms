@@ -214,6 +214,8 @@ class Thumbnails extends DashboardPageController
     {
         if (!$this->token->validate('thumbnailtype-delete-' . $ftTypeID)) {
             $this->error->add($this->token->getErrorMessage());
+            $type = null;
+            $em = null;
         } else {
             $em = $this->app->make(EntityManagerInterface::class);
             $type = $ftTypeID ? $em->find(TypeEntity::class, $ftTypeID) : null;

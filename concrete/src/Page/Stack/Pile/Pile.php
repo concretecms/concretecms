@@ -188,10 +188,10 @@ class Pile extends ConcreteObject
         // checks to see if we're registered, or if we're a visitor. Either way, we get a pile entry
         $u = $app->make(User::class);
         if ($u->isRegistered()) {
-            $v = array($u->getUserID(), 1);
-            $q = "select pID from Piles where uID = ? and isDefault = ?";
+            $pID = $db->getOne('select pID from Piles where uID = ? and isDefault = ?', [$u->getUserID(), 1]);
+        } else {
+            $pID = null;
         }
-        $pID = $db->getOne($q, $v);
         if ($pID > 0) {
             $p = self::get($pID);
 
@@ -214,10 +214,10 @@ class Pile extends ConcreteObject
         // for the sake of data integrity, we're going to ensure that a general pile does not exist
         $u = $app->make(User::class);
         if ($u->isRegistered()) {
-            $v = array($u->getUserID(), 1);
-            $q = "select pID from Piles where uID = ? and isDefault = ?";
+            $pID = $db->getOne('select pID from Piles where uID = ? and isDefault = ?', [$u->getUserID(), 1]);
+        } else {
+            $pID = null;
         }
-        $pID = $db->getOne($q, $v);
         if ($pID > 0) {
             $p = new self($pID);
 
@@ -245,12 +245,12 @@ class Pile extends ConcreteObject
 
         $u = $app->make(User::class);
         if ($u->isRegistered()) {
-            $v = array($u->getUserID());
-            $q = "select pID from Piles where uID = ? order by name asc";
+            $r = $db->query('select pID from Piles where uID = ? order by name asc', [$u->getUserID()]);
+        } else {
+            $r = null;
         }
 
         $piles = array();
-        $r = $db->query($q, $v);
         if ($r) {
             while ($row = $r->fetch()) {
                 $piles[] = self::get($row['pID']);
@@ -412,6 +412,8 @@ class Pile extends ConcreteObject
             case "pilecontent":
                 $v = array($this->pID, $obj->getItemID(), $obj->getItemType());
                 break;
+            default:
+                return;
         }
 
         $q = "select quantity from PileContents where pID = ? and itemID = ? and itemType = ?";

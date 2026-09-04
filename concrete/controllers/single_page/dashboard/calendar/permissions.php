@@ -47,8 +47,10 @@ class Permissions extends DashboardPageController
             $calendar = Calendar::getByID(intval($caID));
             $cp = new \Permissions($calendar);
             if (!$cp->canEditCalendarPermissions()) {
-                unset($calendar);
+                $calendar = null;
             }
+        } else {
+            $calendar = null;
         }
 
         if (!$calendar) {

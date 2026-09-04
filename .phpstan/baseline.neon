@@ -73,12 +73,6 @@ parameters:
 			path: ../concrete/controllers/backend/block/process.php
 
 		-
-			message: '#^Variable \$instance might not be defined\.$#'
-			identifier: variable.undefined
-			count: 2
-			path: ../concrete/controllers/backend/board/instance.php
-
-		-
 			message: '#^Parameter \#1 \$callback of function set_error_handler expects \(callable\(int, string, string, int, array\)\: bool\)\|null, Closure\(\)\: void given\.$#'
 			identifier: argument.type
 			count: 1
@@ -148,24 +142,6 @@ parameters:
 			message: '#^Ternary operator condition is always true\.$#'
 			identifier: ternary.alwaysTrue
 			count: 1
-			path: ../concrete/controllers/backend/file.php
-
-		-
-			message: '#^Variable \$filename might not be defined\.$#'
-			identifier: variable.undefined
-			count: 3
-			path: ../concrete/controllers/backend/file.php
-
-		-
-			message: '#^Variable \$newFiles might not be defined\.$#'
-			identifier: variable.undefined
-			count: 1
-			path: ../concrete/controllers/backend/file.php
-
-		-
-			message: '#^Variable \$replacingFile might not be defined\.$#'
-			identifier: variable.undefined
-			count: 2
 			path: ../concrete/controllers/backend/file.php
 
 		-
@@ -319,12 +295,6 @@ parameters:
 			path: ../concrete/controllers/dialog/area/edit.php
 
 		-
-			message: '#^Variable \$bt might not be defined\.$#'
-			identifier: variable.undefined
-			count: 1
-			path: ../concrete/controllers/dialog/block/design.php
-
-		-
 			message: '#^Argument of an invalid type float\|int\<min, \-1\>\|int\<1, max\>\|string\|true supplied for foreach, only iterables are supported\.$#'
 			identifier: foreach.nonIterable
 			count: 1
@@ -345,12 +315,6 @@ parameters:
 		-
 			message: '#^Offset ''template'' does not exist on bool\|float\|int\|string\.$#'
 			identifier: offsetAccess.notFound
-			count: 1
-			path: ../concrete/controllers/dialog/board/custom_slot.php
-
-		-
-			message: '#^Variable \$instance might not be defined\.$#'
-			identifier: variable.undefined
 			count: 1
 			path: ../concrete/controllers/dialog/board/custom_slot.php
 
@@ -379,12 +343,6 @@ parameters:
 			path: ../concrete/controllers/dialog/event/delete_occurrence.php
 
 		-
-			message: '#^Variable \$month might not be defined\.$#'
-			identifier: variable.undefined
-			count: 1
-			path: ../concrete/controllers/dialog/event/duplicate.php
-
-		-
 			message: '#^Call to function is_array\(\) with array\<Concrete\\Core\\Entity\\Calendar\\CalendarEventRepetition\> will always evaluate to true\.$#'
 			identifier: function.alreadyNarrowedType
 			count: 1
@@ -403,12 +361,6 @@ parameters:
 			path: ../concrete/controllers/dialog/event/summary_templates.php
 
 		-
-			message: '#^If condition is always true\.$#'
-			identifier: if.alwaysTrue
-			count: 1
-			path: ../concrete/controllers/dialog/event/summary_templates.php
-
-		-
 			message: '#^Negated boolean expression is always false\.$#'
 			identifier: booleanNot.alwaysFalse
 			count: 1
@@ -417,12 +369,6 @@ parameters:
 		-
 			message: '#^Parameter \#1 \$templateIDs of method Concrete\\Core\\Calendar\\Event\\Summary\\Template\\Command\\EnableCustomCalendarEventSummaryTemplatesCommand\:\:setTemplateIDs\(\) expects array\<int\>, list\<\(string\|false\)\> given\.$#'
 			identifier: argument.type
-			count: 1
-			path: ../concrete/controllers/dialog/event/summary_templates.php
-
-		-
-			message: '#^Variable \$templateIDs might not be defined\.$#'
-			identifier: variable.undefined
 			count: 1
 			path: ../concrete/controllers/dialog/event/summary_templates.php
 
@@ -513,12 +459,6 @@ parameters:
 		-
 			message: '#^Call to Concrete\\Core\\Controller\\AbstractController\:\:on_start\(\) on a separate line has no effect\.$#'
 			identifier: staticMethod.resultUnused
-			count: 1
-			path: ../concrete/controllers/dialog/file/bulk/storage.php
-
-		-
-			message: '#^Variable \$fsl might not be defined\.$#'
-			identifier: variable.undefined
 			count: 1
 			path: ../concrete/controllers/dialog/file/bulk/storage.php
 
@@ -625,12 +565,6 @@ parameters:
 			path: ../concrete/controllers/dialog/page/add_block.php
 
 		-
-			message: '#^Instanceof between Concrete\\Core\\Page\\Page and Concrete\\Core\\Page\\Collection\\Collection will always evaluate to true\.$#'
-			identifier: instanceof.alwaysTrue
-			count: 1
-			path: ../concrete/controllers/dialog/page/add_block.php
-
-		-
 			message: '#^Parameter \#1 \$afterBlock of method Concrete\\Core\\Block\\Block\:\:moveBlockToDisplayOrderPosition\(\) expects Concrete\\Core\\Block\\Block\|null, false given\.$#'
 			identifier: argument.type
 			count: 1
@@ -639,12 +573,6 @@ parameters:
 		-
 			message: '#^Property Concrete\\Controller\\Dialog\\Page\\AddBlock\:\:\$areaToModify \(Concrete\\Core\\Area\\Area\) in isset\(\) is not nullable\.$#'
 			identifier: isset.property
-			count: 1
-			path: ../concrete/controllers/dialog/page/add_block.php
-
-		-
-			message: '#^Variable \$nvc might not be defined\.$#'
-			identifier: variable.undefined
 			count: 1
 			path: ../concrete/controllers/dialog/page/add_block.php
 
@@ -715,20 +643,8 @@ parameters:
 			path: ../concrete/controllers/dialog/page/delete.php
 
 		-
-			message: '#^If condition is always true\.$#'
-			identifier: if.alwaysTrue
-			count: 1
-			path: ../concrete/controllers/dialog/page/summary_templates.php
-
-		-
 			message: '#^Parameter \#1 \$templateIDs of method Concrete\\Core\\Page\\Summary\\Template\\Command\\EnableCustomPageSummaryTemplatesCommand\:\:setTemplateIDs\(\) expects array\<int\>, list\<\(string\|false\)\> given\.$#'
 			identifier: argument.type
-			count: 1
-			path: ../concrete/controllers/dialog/page/summary_templates.php
-
-		-
-			message: '#^Variable \$templateIDs might not be defined\.$#'
-			identifier: variable.undefined
 			count: 1
 			path: ../concrete/controllers/dialog/page/summary_templates.php
 
@@ -823,32 +739,8 @@ parameters:
 			path: ../concrete/controllers/dialog/tree/node/group_folder/add.php
 
 		-
-			message: '#^Variable \$contains might not be defined\.$#'
-			identifier: variable.undefined
-			count: 1
-			path: ../concrete/controllers/dialog/tree/node/group_folder/add.php
-
-		-
-			message: '#^Variable \$title might not be defined\.$#'
-			identifier: variable.undefined
-			count: 1
-			path: ../concrete/controllers/dialog/tree/node/group_folder/add.php
-
-		-
 			message: '#^Call to function is_array\(\) with bool\|float\|int\|string\|null will always evaluate to false\.$#'
 			identifier: function.impossibleType
-			count: 1
-			path: ../concrete/controllers/dialog/tree/node/group_folder/edit.php
-
-		-
-			message: '#^Variable \$contains might not be defined\.$#'
-			identifier: variable.undefined
-			count: 1
-			path: ../concrete/controllers/dialog/tree/node/group_folder/edit.php
-
-		-
-			message: '#^Variable \$title might not be defined\.$#'
-			identifier: variable.undefined
 			count: 1
 			path: ../concrete/controllers/dialog/tree/node/group_folder/edit.php
 
@@ -1053,12 +945,6 @@ parameters:
 		-
 			message: '#^Array has 2 duplicate keys with value ''editInComposer'' \(''editInComposer'', ''editInComposer''\)\.$#'
 			identifier: array.duplicateKey
-			count: 1
-			path: ../concrete/controllers/frontend/assets_localization.php
-
-		-
-			message: '#^Variable \$content might not be defined\.$#'
-			identifier: variable.undefined
 			count: 1
 			path: ../concrete/controllers/frontend/assets_localization.php
 
@@ -1297,12 +1183,6 @@ parameters:
 			path: ../concrete/controllers/panel/detail/theme/preview_page_legacy.php
 
 		-
-			message: '#^Variable \$response might not be defined\.$#'
-			identifier: variable.undefined
-			count: 1
-			path: ../concrete/controllers/panel/detail/theme/preview_page_legacy.php
-
-		-
 			message: '#^Call to an undefined method Concrete\\Core\\StyleCustomizer\\Skin\\SkinInterface\:\:getPresetStartingPoint\(\)\.$#'
 			identifier: method.notFound
 			count: 1
@@ -1387,12 +1267,6 @@ parameters:
 			path: ../concrete/controllers/panel/theme/customize.php
 
 		-
-			message: '#^Variable \$variableCollection might not be defined\.$#'
-			identifier: variable.undefined
-			count: 1
-			path: ../concrete/controllers/panel/theme/customize_legacy.php
-
-		-
 			message: '#^Parameter \#1 \$customSkin of method Concrete\\Core\\Page\\Theme\\Command\\DeleteCustomSkinCommand\:\:setCustomSkin\(\) expects Concrete\\Core\\Entity\\Page\\Theme\\CustomSkin, Concrete\\Core\\StyleCustomizer\\Skin\\SkinInterface given\.$#'
 			identifier: argument.type
 			count: 1
@@ -1401,12 +1275,6 @@ parameters:
 		-
 			message: '#^Parameter \#1 \$customSkin of method Concrete\\Core\\Page\\Theme\\Command\\UpdateCustomSkinCommand\:\:setCustomSkin\(\) expects Concrete\\Core\\Entity\\Page\\Theme\\CustomSkin, Concrete\\Core\\StyleCustomizer\\Skin\\SkinInterface given\.$#'
 			identifier: argument.type
-			count: 1
-			path: ../concrete/controllers/panel/theme/customize_preset.php
-
-		-
-			message: '#^Variable \$variableCollection might not be defined\.$#'
-			identifier: variable.undefined
 			count: 1
 			path: ../concrete/controllers/panel/theme/customize_preset.php
 
@@ -1439,12 +1307,6 @@ parameters:
 			identifier: method.notFound
 			count: 1
 			path: ../concrete/controllers/permissions/categories/task_handlers/file.php
-
-		-
-			message: '#^Variable \$c might not be defined\.$#'
-			identifier: variable.undefined
-			count: 1
-			path: ../concrete/controllers/permissions/categories/task_handlers/page.php
 
 		-
 			message: '#^Call to an undefined method Concrete\\Core\\Permission\\Key\\Key\:\:attachWorkflow\(\)\.$#'
@@ -1525,12 +1387,6 @@ parameters:
 			path: ../concrete/controllers/single_page/account/avatar.php
 
 		-
-			message: '#^Variable \$msgID might not be defined\.$#'
-			identifier: variable.undefined
-			count: 1
-			path: ../concrete/controllers/single_page/account/messages.php
-
-		-
 			message: '#^Call to an undefined method Concrete\\Core\\Page\\Page\:\:copyLocalizedStacksFrom\(\)\.$#'
 			identifier: method.notFound
 			count: 1
@@ -1558,18 +1414,6 @@ parameters:
 			message: '#^Unreachable statement \- code above always terminates\.$#'
 			identifier: deadCode.unreachable
 			count: 1
-			path: ../concrete/controllers/single_page/dashboard/blocks/stacks.php
-
-		-
-			message: '#^Variable \$isFolder might not be defined\.$#'
-			identifier: variable.undefined
-			count: 3
-			path: ../concrete/controllers/single_page/dashboard/blocks/stacks.php
-
-		-
-			message: '#^Variable \$viewCID might not be defined\.$#'
-			identifier: variable.undefined
-			count: 4
 			path: ../concrete/controllers/single_page/dashboard/blocks/stacks.php
 
 		-
@@ -1645,12 +1489,6 @@ parameters:
 			path: ../concrete/controllers/single_page/dashboard/boards/designer/customize_slot.php
 
 		-
-			message: '#^Variable \$board might not be defined\.$#'
-			identifier: variable.undefined
-			count: 1
-			path: ../concrete/controllers/single_page/dashboard/boards/details.php
-
-		-
 			message: '#^If condition is always true\.$#'
 			identifier: if.alwaysTrue
 			count: 1
@@ -1681,28 +1519,10 @@ parameters:
 			path: ../concrete/controllers/single_page/dashboard/boards/weighting.php
 
 		-
-			message: '#^Variable \$parent might not be defined\.$#'
-			identifier: variable.undefined
-			count: 1
-			path: ../concrete/controllers/single_page/dashboard/calendar/add.php
-
-		-
 			message: '#^Loose comparison using \=\= between 0\|0\.0\|''0'' and ''0'' will always evaluate to true\.$#'
 			identifier: equal.alwaysTrue
 			count: 1
 			path: ../concrete/controllers/single_page/dashboard/calendar/events.php
-
-		-
-			message: '#^Variable \$calendar might not be defined\.$#'
-			identifier: variable.undefined
-			count: 1
-			path: ../concrete/controllers/single_page/dashboard/calendar/events.php
-
-		-
-			message: '#^Variable \$calendar might not be defined\.$#'
-			identifier: variable.undefined
-			count: 1
-			path: ../concrete/controllers/single_page/dashboard/calendar/permissions.php
 
 		-
 			message: '#^Call to an undefined method Concrete\\Core\\Controller\\ElementController\:\:setHeaderSearchAction\(\)\.$#'
@@ -1735,12 +1555,6 @@ parameters:
 			path: ../concrete/controllers/single_page/dashboard/express/entries.php
 
 		-
-			message: '#^Variable \$entity might not be defined\.$#'
-			identifier: variable.undefined
-			count: 3
-			path: ../concrete/controllers/single_page/dashboard/express/entries.php
-
-		-
 			message: '#^Instanceof between Concrete\\Core\\Entity\\Package and Concrete\\Core\\Entity\\Package will always evaluate to true\.$#'
 			identifier: instanceof.alwaysTrue
 			count: 1
@@ -1755,12 +1569,6 @@ parameters:
 		-
 			message: '#^Property Concrete\\Controller\\SinglePage\\Dashboard\\Extend\\Install\:\:\$repository \(Concrete\\Core\\Marketplace\\PackageRepositoryInterface\) in isset\(\) is not nullable\.$#'
 			identifier: isset.property
-			count: 1
-			path: ../concrete/controllers/single_page/dashboard/extend/install.php
-
-		-
-			message: '#^Variable \$pkg might not be defined\.$#'
-			identifier: variable.undefined
 			count: 1
 			path: ../concrete/controllers/single_page/dashboard/extend/install.php
 
@@ -1807,20 +1615,8 @@ parameters:
 			path: ../concrete/controllers/single_page/dashboard/files/search.php
 
 		-
-			message: '#^Variable \$feed might not be defined\.$#'
-			identifier: variable.undefined
-			count: 2
-			path: ../concrete/controllers/single_page/dashboard/pages/feeds.php
-
-		-
 			message: '#^Call to function is_object\(\) with Concrete\\Core\\Page\\Theme\\Theme will always evaluate to true\.$#'
 			identifier: function.alreadyNarrowedType
-			count: 1
-			path: ../concrete/controllers/single_page/dashboard/pages/themes.php
-
-		-
-			message: '#^Variable \$siteThemeID might not be defined\.$#'
-			identifier: variable.undefined
 			count: 1
 			path: ../concrete/controllers/single_page/dashboard/pages/themes.php
 
@@ -1891,12 +1687,6 @@ parameters:
 			path: ../concrete/controllers/single_page/dashboard/reports/forms.php
 
 		-
-			message: '#^Variable \$entity might not be defined\.$#'
-			identifier: variable.undefined
-			count: 3
-			path: ../concrete/controllers/single_page/dashboard/reports/forms.php
-
-		-
 			message: '#^Comparison operation "\>" between int\<1, max\> and 0 is always true\.$#'
 			identifier: greater.alwaysTrue
 			count: 1
@@ -1945,22 +1735,10 @@ parameters:
 			path: ../concrete/controllers/single_page/dashboard/sitemap/search.php
 
 		-
-			message: '#^Variable \$client might not be defined\.$#'
-			identifier: variable.undefined
-			count: 1
-			path: ../concrete/controllers/single_page/dashboard/system/api/integrations.php
-
-		-
 			message: '#^Call to an undefined method Concrete\\Core\\Attribute\\SetManagerInterface\:\:addSet\(\)\.$#'
 			identifier: method.notFound
 			count: 1
 			path: ../concrete/controllers/single_page/dashboard/system/attributes/sets.php
-
-		-
-			message: '#^Variable \$treeTypeHandle might not be defined\.$#'
-			identifier: variable.undefined
-			count: 1
-			path: ../concrete/controllers/single_page/dashboard/system/attributes/topics.php
 
 		-
 			message: '#^Parameter \#1 \$category of class Concrete\\Controller\\Element\\Attribute\\SiteStandardListHeader constructor expects Concrete\\Core\\Entity\\Attribute\\Category, Concrete\\Core\\Attribute\\CategoryObjectInterface given\.$#'
@@ -2011,12 +1789,6 @@ parameters:
 			path: ../concrete/controllers/single_page/dashboard/system/conversations/settings.php
 
 		-
-			message: '#^Variable \$warnings might not be defined\.$#'
-			identifier: variable.undefined
-			count: 2
-			path: ../concrete/controllers/single_page/dashboard/system/environment/database_charset.php
-
-		-
 			message: '#^Default value of the parameter \#1 \$strStatus \(false\) of method Concrete\\Controller\\SinglePage\\Dashboard\\System\\Environment\\Logging\:\:view\(\) is incompatible with type string\.$#'
 			identifier: parameter.defaultValue
 			count: 1
@@ -2033,12 +1805,6 @@ parameters:
 			identifier: arguments.count
 			count: 1
 			path: ../concrete/controllers/single_page/dashboard/system/express/entities.php
-
-		-
-			message: '#^Variable \$entity might not be defined\.$#'
-			identifier: variable.undefined
-			count: 1
-			path: ../concrete/controllers/single_page/dashboard/system/express/entities/associations.php
 
 		-
 			message: '#^Method Concrete\\Controller\\SinglePage\\Dashboard\\System\\Express\\Entities\\Attributes\:\:getHeaderMenu\(\) should return Concrete\\Core\\Controller\\ElementController\|null but returns false\.$#'
@@ -2113,21 +1879,9 @@ parameters:
 			path: ../concrete/controllers/single_page/dashboard/system/files/thumbnails.php
 
 		-
-			message: '#^Variable \$em might not be defined\.$#'
-			identifier: variable.undefined
-			count: 2
-			path: ../concrete/controllers/single_page/dashboard/system/files/thumbnails.php
-
-		-
 			message: '#^Variable \$receivedFileSetIDs in empty\(\) always exists and is always falsy\.$#'
 			identifier: empty.variable
 			count: 1
-			path: ../concrete/controllers/single_page/dashboard/system/files/thumbnails.php
-
-		-
-			message: '#^Variable \$type might not be defined\.$#'
-			identifier: variable.undefined
-			count: 2
 			path: ../concrete/controllers/single_page/dashboard/system/files/thumbnails.php
 
 		-
@@ -2143,24 +1897,6 @@ parameters:
 			path: ../concrete/controllers/single_page/dashboard/system/multilingual/setup.php
 
 		-
-			message: '#^Variable \$mlLink might not be defined\.$#'
-			identifier: variable.undefined
-			count: 1
-			path: ../concrete/controllers/single_page/dashboard/system/multilingual/setup.php
-
-		-
-			message: '#^Variable \$msCountry might not be defined\.$#'
-			identifier: variable.undefined
-			count: 2
-			path: ../concrete/controllers/single_page/dashboard/system/multilingual/setup.php
-
-		-
-			message: '#^Variable \$msLanguage might not be defined\.$#'
-			identifier: variable.undefined
-			count: 2
-			path: ../concrete/controllers/single_page/dashboard/system/multilingual/setup.php
-
-		-
 			message: '#^Parameter \#2 \$httpResponseCode of method Concrete\\Core\\Controller\\AbstractController\:\:buildRedirect\(\) expects int, string given\.$#'
 			identifier: argument.type
 			count: 1
@@ -2169,18 +1905,6 @@ parameters:
 		-
 			message: '#^Strict comparison using \=\=\= between int and null will always evaluate to false\.$#'
 			identifier: identical.alwaysFalse
-			count: 1
-			path: ../concrete/controllers/single_page/dashboard/system/multisite/sites.php
-
-		-
-			message: '#^Variable \$canonicalURL might not be defined\.$#'
-			identifier: variable.undefined
-			count: 1
-			path: ../concrete/controllers/single_page/dashboard/system/multisite/sites.php
-
-		-
-			message: '#^Variable \$theme might not be defined\.$#'
-			identifier: variable.undefined
 			count: 1
 			path: ../concrete/controllers/single_page/dashboard/system/multisite/sites.php
 
@@ -2215,20 +1939,8 @@ parameters:
 			path: ../concrete/controllers/single_page/dashboard/system/notification/alerts.php
 
 		-
-			message: '#^Variable \$publisherPrivateKey might not be defined\.$#'
-			identifier: variable.undefined
-			count: 1
-			path: ../concrete/controllers/single_page/dashboard/system/notification/events.php
-
-		-
 			message: '#^Variable \$subscriber in PHPDoc tag @var does not match assigned variable \$event\.$#'
 			identifier: varTag.differentVariable
-			count: 1
-			path: ../concrete/controllers/single_page/dashboard/system/notification/events.php
-
-		-
-			message: '#^Variable \$subscriberPrivateKey might not be defined\.$#'
-			identifier: variable.undefined
 			count: 1
 			path: ../concrete/controllers/single_page/dashboard/system/notification/events.php
 
@@ -2263,38 +1975,8 @@ parameters:
 			path: ../concrete/controllers/single_page/dashboard/system/permissions/denylist/configure.php
 
 		-
-			message: '#^If condition is always true\.$#'
-			identifier: if.alwaysTrue
-			count: 1
-			path: ../concrete/controllers/single_page/dashboard/system/permissions/denylist/range.php
-
-		-
 			message: '#^Method Doctrine\\Persistence\\ObjectManager\:\:flush\(\) invoked with 1 parameter, 0 required\.$#'
 			identifier: arguments.count
-			count: 1
-			path: ../concrete/controllers/single_page/dashboard/system/permissions/denylist/range.php
-
-		-
-			message: '#^Variable \$deleteAutomaticDenylist might not be defined\.$#'
-			identifier: variable.undefined
-			count: 1
-			path: ../concrete/controllers/single_page/dashboard/system/permissions/denylist/range.php
-
-		-
-			message: '#^Variable \$deleteAutomaticDenylistOnlyExpired might not be defined\.$#'
-			identifier: variable.undefined
-			count: 1
-			path: ../concrete/controllers/single_page/dashboard/system/permissions/denylist/range.php
-
-		-
-			message: '#^Variable \$messages in empty\(\) always exists and is not falsy\.$#'
-			identifier: empty.variable
-			count: 1
-			path: ../concrete/controllers/single_page/dashboard/system/permissions/denylist/range.php
-
-		-
-			message: '#^Variable \$myIP might not be defined\.$#'
-			identifier: variable.undefined
 			count: 1
 			path: ../concrete/controllers/single_page/dashboard/system/permissions/denylist/range.php
 
@@ -2308,12 +1990,6 @@ parameters:
 			message: '#^Call to an undefined method Concrete\\Core\\Permission\\Access\\Entity\\Entity\:\:getGroupObject\(\)\.$#'
 			identifier: method.notFound
 			count: 4
-			path: ../concrete/controllers/single_page/dashboard/system/permissions/site.php
-
-		-
-			message: '#^Variable \$viewObj might not be defined\.$#'
-			identifier: variable.undefined
-			count: 1
 			path: ../concrete/controllers/single_page/dashboard/system/permissions/site.php
 
 		-
@@ -2345,18 +2021,6 @@ parameters:
 			identifier: assign.propertyType
 			count: 1
 			path: ../concrete/controllers/single_page/dashboard/system/registration/logout.php
-
-		-
-			message: '#^Variable \$registerNotification might not be defined\.$#'
-			identifier: variable.undefined
-			count: 2
-			path: ../concrete/controllers/single_page/dashboard/system/registration/open.php
-
-		-
-			message: '#^Variable \$registerNotificationEmails might not be defined\.$#'
-			identifier: variable.undefined
-			count: 1
-			path: ../concrete/controllers/single_page/dashboard/system/registration/open.php
 
 		-
 			message: '#^Argument of an invalid type bool\|float\|int\|string supplied for foreach, only iterables are supported\.$#'
@@ -2401,12 +2065,6 @@ parameters:
 			path: ../concrete/controllers/single_page/dashboard/system/registration/password_requirements.php
 
 		-
-			message: '#^Variable \$loginRedirectCID might not be defined\.$#'
-			identifier: variable.undefined
-			count: 1
-			path: ../concrete/controllers/single_page/dashboard/system/registration/postlogin.php
-
-		-
 			message: '#^Call to function is_array\(\) with bool\|float\|int\|string\|null will always evaluate to false\.$#'
 			identifier: function.impossibleType
 			count: 1
@@ -2417,24 +2075,6 @@ parameters:
 			identifier: closure.unusedUse
 			count: 1
 			path: ../concrete/controllers/single_page/dashboard/system/seo/urls.php
-
-		-
-			message: '#^Variable \$message might not be defined\.$#'
-			identifier: variable.undefined
-			count: 1
-			path: ../concrete/controllers/single_page/dashboard/system/seo/urls.php
-
-		-
-			message: '#^Variable \$link might not be defined\.$#'
-			identifier: variable.undefined
-			count: 2
-			path: ../concrete/controllers/single_page/dashboard/system/social/social_links.php
-
-		-
-			message: '#^Variable \$service might not be defined\.$#'
-			identifier: variable.undefined
-			count: 1
-			path: ../concrete/controllers/single_page/dashboard/system/social/social_links.php
 
 		-
 			message: '#^Parameter \#1 \$callback of function set_error_handler expects \(callable\(int, string, string, int, array\)\: bool\)\|null, Closure\(\)\: void given\.$#'
@@ -2452,18 +2092,6 @@ parameters:
 			message: '#^Parameter \#2 \$newvalue of function ini_set expects string, int given\.$#'
 			identifier: argument.type
 			count: 1
-			path: ../concrete/controllers/single_page/dashboard/system/update/update.php
-
-		-
-			message: '#^Variable \$remote might not be defined\.$#'
-			identifier: variable.undefined
-			count: 1
-			path: ../concrete/controllers/single_page/dashboard/system/update/update.php
-
-		-
-			message: '#^Variable \$upd might not be defined\.$#'
-			identifier: variable.undefined
-			count: 2
 			path: ../concrete/controllers/single_page/dashboard/system/update/update.php
 
 		-
@@ -2641,18 +2269,6 @@ parameters:
 			path: ../concrete/controllers/single_page/dashboard/users/search.php
 
 		-
-			message: '#^Variable \$val might not be defined\.$#'
-			identifier: variable.undefined
-			count: 1
-			path: ../concrete/controllers/single_page/dashboard/users/search.php
-
-		-
-			message: '#^Variable \$productionStatusClass might not be defined\.$#'
-			identifier: variable.undefined
-			count: 1
-			path: ../concrete/controllers/single_page/dashboard/welcome/health.php
-
-		-
 			message: '#^Call to Concrete\\Core\\Controller\\AbstractController\:\:on_start\(\) on a separate line has no effect\.$#'
 			identifier: staticMethod.resultUnused
 			count: 1
@@ -2687,42 +2303,6 @@ parameters:
 			identifier: argument.type
 			count: 1
 			path: ../concrete/controllers/single_page/login.php
-
-		-
-			message: '#^Variable \$pll might not be defined\.$#'
-			identifier: variable.undefined
-			count: 1
-			path: ../concrete/controllers/single_page/login.php
-
-		-
-			message: '#^Variable \$aks might not be defined\.$#'
-			identifier: variable.undefined
-			count: 1
-			path: ../concrete/controllers/single_page/register.php
-
-		-
-			message: '#^Variable \$password might not be defined\.$#'
-			identifier: variable.undefined
-			count: 1
-			path: ../concrete/controllers/single_page/register.php
-
-		-
-			message: '#^Variable \$passwordConfirm might not be defined\.$#'
-			identifier: variable.undefined
-			count: 1
-			path: ../concrete/controllers/single_page/register.php
-
-		-
-			message: '#^Variable \$pll might not be defined\.$#'
-			identifier: variable.undefined
-			count: 1
-			path: ../concrete/controllers/single_page/register.php
-
-		-
-			message: '#^Variable \$username might not be defined\.$#'
-			identifier: variable.undefined
-			count: 1
-			path: ../concrete/controllers/single_page/register.php
 
 		-
 			message: '#^Call to Concrete\\Core\\Controller\\AbstractController\:\:on_start\(\) on a separate line has no effect\.$#'
@@ -3025,12 +2605,6 @@ parameters:
 			path: ../concrete/src/Api/Fractal/Transformer/BaseBlockTransformer.php
 
 		-
-			message: '#^Variable \$blockValue might not be defined\.$#'
-			identifier: variable.undefined
-			count: 1
-			path: ../concrete/src/Api/Fractal/Transformer/BaseBlockTransformer.php
-
-		-
 			message: '#^PHPDoc tag @param references unknown parameter\: \$calendar$#'
 			identifier: parameter.notFound
 			count: 1
@@ -3061,22 +2635,10 @@ parameters:
 			path: ../concrete/src/Api/Fractal/Transformer/ExpressEntryTransformer.php
 
 		-
-			message: '#^Variable \$pageContentSanitized might not be defined\.$#'
-			identifier: variable.undefined
-			count: 1
-			path: ../concrete/src/Api/Fractal/Transformer/PageContentTransformer.php
-
-		-
 			message: '#^If condition is always true\.$#'
 			identifier: if.alwaysTrue
 			count: 1
 			path: ../concrete/src/Api/Fractal/Transformer/PageTransformer.php
-
-		-
-			message: '#^Variable \$defaultLocaleString might not be defined\.$#'
-			identifier: variable.undefined
-			count: 1
-			path: ../concrete/src/Api/Fractal/Transformer/SiteTransformer.php
 
 		-
 			message: '#^Parameter \#2 \$fetchJoinCollection of class Pagerfanta\\Adapter\\DoctrineORMAdapter constructor expects bool, Closure given\.$#'
@@ -4099,12 +3661,6 @@ parameters:
 			path: ../concrete/src/Application/Service/Dashboard/Sitemap.php
 
 		-
-			message: '#^Variable \$cID might not be defined\.$#'
-			identifier: variable.undefined
-			count: 4
-			path: ../concrete/src/Application/Service/Dashboard/Sitemap.php
-
-		-
 			message: '#^Variable \$pagination in isset\(\) always exists and is not nullable\.$#'
 			identifier: isset.variable
 			count: 1
@@ -4521,12 +4077,6 @@ parameters:
 		-
 			message: '#^Right side of && is always true\.$#'
 			identifier: booleanAnd.rightAlwaysTrue
-			count: 1
-			path: ../concrete/src/Area/SubArea.php
-
-		-
-			message: '#^Variable \$row might not be defined\.$#'
-			identifier: variable.undefined
 			count: 1
 			path: ../concrete/src/Area/SubArea.php
 
@@ -4981,12 +4531,6 @@ parameters:
 			path: ../concrete/src/Attribute/Value/Value.php
 
 		-
-			message: '#^Variable \$context might not be defined\.$#'
-			identifier: variable.undefined
-			count: 1
-			path: ../concrete/src/Attribute/View.php
-
-		-
 			message: '#^Call to function is_array\(\) with array will always evaluate to true\.$#'
 			identifier: function.alreadyNarrowedType
 			count: 2
@@ -5173,12 +4717,6 @@ parameters:
 			path: ../concrete/src/Backup/ContentImporter/Importer/Routine/ImportBoardSlotTemplatesRoutine.php
 
 		-
-			message: '#^Variable \$repository might not be defined\.$#'
-			identifier: variable.undefined
-			count: 2
-			path: ../concrete/src/Backup/ContentImporter/Importer/Routine/ImportConfigValuesRoutine.php
-
-		-
 			message: '#^Parameter \#3 \$pkg of static method Concrete\\Core\\Conversation\\Editor\\Editor\:\:add\(\) expects bool\|Concrete\\Core\\Package\\Package, Concrete\\Core\\Entity\\Package\|null given\.$#'
 			identifier: argument.type
 			count: 1
@@ -5247,12 +4785,6 @@ parameters:
 		-
 			message: '#^Call to function is_object\(\) with Concrete\\Core\\Entity\\Site\\Skeleton will always evaluate to true\.$#'
 			identifier: function.alreadyNarrowedType
-			count: 1
-			path: ../concrete/src/Backup/ContentImporter/Importer/Routine/ImportSiteTypeSkeletonsRoutine.php
-
-		-
-			message: '#^Variable \$skeleton might not be defined\.$#'
-			identifier: variable.undefined
 			count: 1
 			path: ../concrete/src/Backup/ContentImporter/Importer/Routine/ImportSiteTypeSkeletonsRoutine.php
 
@@ -5350,18 +4882,6 @@ parameters:
 			message: '#^Ternary operator condition is always true\.$#'
 			identifier: ternary.alwaysTrue
 			count: 2
-			path: ../concrete/src/Block/Block.php
-
-		-
-			message: '#^Variable \$ocID might not be defined\.$#'
-			identifier: variable.undefined
-			count: 1
-			path: ../concrete/src/Block/Block.php
-
-		-
-			message: '#^Variable \$ovID might not be defined\.$#'
-			identifier: variable.undefined
-			count: 1
 			path: ../concrete/src/Block/Block.php
 
 		-
@@ -5473,18 +4993,6 @@ parameters:
 			path: ../concrete/src/Block/CacheSettings.php
 
 		-
-			message: '#^Instanceof between Concrete\\Core\\Page\\Page and Concrete\\Core\\Page\\Collection\\Collection will always evaluate to true\.$#'
-			identifier: instanceof.alwaysTrue
-			count: 1
-			path: ../concrete/src/Block/Command/AddBlockToPageCommandHandler.php
-
-		-
-			message: '#^Variable \$nvc might not be defined\.$#'
-			identifier: variable.undefined
-			count: 1
-			path: ../concrete/src/Block/Command/AddBlockToPageCommandHandler.php
-
-		-
 			message: '#^Call to function is_object\(\) with Concrete\\Core\\Entity\\StyleCustomizer\\Inline\\StyleSet will always evaluate to true\.$#'
 			identifier: function.alreadyNarrowedType
 			count: 3
@@ -5549,12 +5057,6 @@ parameters:
 			identifier: constructor.unusedParameter
 			count: 1
 			path: ../concrete/src/Board/Command/SetBoardCustomWeightingCommandValidator.php
-
-		-
-			message: '#^Variable \$author might not be defined\.$#'
-			identifier: variable.undefined
-			count: 1
-			path: ../concrete/src/Board/Designer/Command/CreateItemSelectorCustomElementCommandHandler.php
 
 		-
 			message: '#^PHPDoc tag @param references unknown parameter\: \$items$#'
@@ -6199,12 +5701,6 @@ parameters:
 			path: ../concrete/src/Console/Command/CompareSchemaCommand.php
 
 		-
-			message: '#^Variable \$count might not be defined\.$#'
-			identifier: variable.undefined
-			count: 1
-			path: ../concrete/src/Console/Command/DenylistClear.php
-
-		-
 			message: '#^Negated boolean expression is always false\.$#'
 			identifier: booleanNot.alwaysFalse
 			count: 1
@@ -6365,12 +5861,6 @@ parameters:
 			identifier: if.alwaysTrue
 			count: 1
 			path: ../concrete/src/Console/Parser.php
-
-		-
-			message: '#^Variable \$templateFromView might not be defined\.$#'
-			identifier: variable.undefined
-			count: 1
-			path: ../concrete/src/Controller/Controller.php
 
 		-
 			message: '#^Call to an undefined method Concrete\\Core\\Notification\\Notifier\\NotifierInterface\:\:notify\(\)\.$#'
@@ -7687,12 +7177,6 @@ parameters:
 			path: ../concrete/src/Express/Entry/Search/Result/Item.php
 
 		-
-			message: '#^Variable \$expressions might not be defined\.$#'
-			identifier: variable.undefined
-			count: 1
-			path: ../concrete/src/Express/EntryList.php
-
-		-
 			message: '#^If condition is always true\.$#'
 			identifier: if.alwaysTrue
 			count: 1
@@ -8065,12 +7549,6 @@ parameters:
 			path: ../concrete/src/File/Document/Xml/Sanitizer.php
 
 		-
-			message: '#^Variable \$loaded might not be defined\.$#'
-			identifier: variable.undefined
-			count: 1
-			path: ../concrete/src/File/Document/Xml/Sanitizer.php
-
-		-
 			message: '#^Unsafe usage of new static\(\)\.$#'
 			identifier: new.static
 			count: 1
@@ -8164,12 +7642,6 @@ parameters:
 			message: '#^Call to function is_string\(\) with string will always evaluate to true\.$#'
 			identifier: function.alreadyNarrowedType
 			count: 2
-			path: ../concrete/src/File/Image/Svg/Sanitizer.php
-
-		-
-			message: '#^Variable \$loaded might not be defined\.$#'
-			identifier: variable.undefined
-			count: 1
 			path: ../concrete/src/File/Image/Svg/Sanitizer.php
 
 		-
@@ -8393,18 +7865,6 @@ parameters:
 			identifier: method.notFound
 			count: 1
 			path: ../concrete/src/File/Search/Field/Field/AddedToPageField.php
-
-		-
-			message: '#^Variable \$icon might not be defined\.$#'
-			identifier: variable.undefined
-			count: 1
-			path: ../concrete/src/File/Search/Result/Item.php
-
-		-
-			message: '#^Variable \$obj might not be defined\.$#'
-			identifier: variable.undefined
-			count: 1
-			path: ../concrete/src/File/Search/Result/Item.php
 
 		-
 			message: '#^Call to an undefined static method Concrete\\Core\\File\\Search\\ColumnSet\\ColumnSet\:\:getCurrent\(\)\.$#'
@@ -8845,12 +8305,6 @@ parameters:
 			path: ../concrete/src/Form/Service/Widget/DateTime.php
 
 		-
-			message: '#^Variable \$page might not be defined\.$#'
-			identifier: variable.undefined
-			count: 1
-			path: ../concrete/src/Form/Service/Widget/PageSelector.php
-
-		-
 			message: '#^Binary operation "\+" between '' \<span class\="text…'' and string results in an error\.$#'
 			identifier: binaryOp.invalid
 			count: 1
@@ -8961,12 +8415,6 @@ parameters:
 		-
 			message: '#^Negated boolean expression is always false\.$#'
 			identifier: booleanNot.alwaysFalse
-			count: 1
-			path: ../concrete/src/Foundation/Repetition/AbstractRepetition.php
-
-		-
-			message: '#^Variable \$item might not be defined\.$#'
-			identifier: variable.undefined
 			count: 1
 			path: ../concrete/src/Foundation/Repetition/AbstractRepetition.php
 
@@ -9759,12 +9207,6 @@ parameters:
 		-
 			message: '#^PHPDoc tag @param references unknown parameter\: \$extension$#'
 			identifier: parameter.notFound
-			count: 1
-			path: ../concrete/src/Legacy/FileList.php
-
-		-
-			message: '#^Variable \$fsID might not be defined\.$#'
-			identifier: variable.undefined
 			count: 1
 			path: ../concrete/src/Legacy/FileList.php
 
@@ -10945,12 +10387,6 @@ parameters:
 			path: ../concrete/src/Package/PackageService.php
 
 		-
-			message: '#^Variable \$errorDetails might not be defined\.$#'
-			identifier: variable.undefined
-			count: 1
-			path: ../concrete/src/Package/PackageService.php
-
-		-
 			message: '#^Variable \$pkg in empty\(\) always exists and is not falsy\.$#'
 			identifier: empty.variable
 			count: 1
@@ -10996,18 +10432,6 @@ parameters:
 			message: '#^Property Concrete\\Core\\Page\\Cloner\:\:\$connection \(Concrete\\Core\\Database\\Connection\\Connection\) does not accept Doctrine\\DBAL\\Connection\.$#'
 			identifier: assign.propertyType
 			count: 1
-			path: ../concrete/src/Page/Cloner.php
-
-		-
-			message: '#^Variable \$newCollectionHandle might not be defined\.$#'
-			identifier: variable.undefined
-			count: 2
-			path: ../concrete/src/Page/Cloner.php
-
-		-
-			message: '#^Variable \$newCollectionName might not be defined\.$#'
-			identifier: variable.undefined
-			count: 2
 			path: ../concrete/src/Page/Cloner.php
 
 		-
@@ -11171,18 +10595,6 @@ parameters:
 			identifier: assign.propertyType
 			count: 1
 			path: ../concrete/src/Page/Controller/DashboardAttributesPageController.php
-
-		-
-			message: '#^Variable \$set might not be defined\.$#'
-			identifier: variable.undefined
-			count: 2
-			path: ../concrete/src/Page/Controller/DashboardAttributesPageController.php
-
-		-
-			message: '#^Variable \$calendar might not be defined\.$#'
-			identifier: variable.undefined
-			count: 1
-			path: ../concrete/src/Page/Controller/DashboardCalendarPageController.php
 
 		-
 			message: '#^Call to an undefined method Concrete\\Core\\Controller\\ElementController\:\:setHeaderSearchAction\(\)\.$#'
@@ -11403,12 +10815,6 @@ parameters:
 		-
 			message: '#^Unreachable statement \- code above always terminates\.$#'
 			identifier: deadCode.unreachable
-			count: 2
-			path: ../concrete/src/Page/Page.php
-
-		-
-			message: '#^Variable \$pc might not be defined\.$#'
-			identifier: variable.undefined
 			count: 2
 			path: ../concrete/src/Page/Page.php
 
@@ -11647,12 +11053,6 @@ parameters:
 			path: ../concrete/src/Page/Single.php
 
 		-
-			message: '#^Variable \$parent might not be defined\.$#'
-			identifier: variable.undefined
-			count: 1
-			path: ../concrete/src/Page/Single.php
-
-		-
 			message: '#^Call to function is_array\(\) with bool\|float\|null will always evaluate to false\.$#'
 			identifier: function.impossibleType
 			count: 1
@@ -11709,19 +11109,7 @@ parameters:
 		-
 			message: '#^If condition is always true\.$#'
 			identifier: if.alwaysTrue
-			count: 5
-			path: ../concrete/src/Page/Stack/Pile/Pile.php
-
-		-
-			message: '#^Variable \$q might not be defined\.$#'
-			identifier: variable.undefined
-			count: 3
-			path: ../concrete/src/Page/Stack/Pile/Pile.php
-
-		-
-			message: '#^Variable \$v might not be defined\.$#'
-			identifier: variable.undefined
-			count: 6
+			count: 4
 			path: ../concrete/src/Page/Stack/Pile/Pile.php
 
 		-
@@ -11739,12 +11127,6 @@ parameters:
 		-
 			message: '#^If condition is always true\.$#'
 			identifier: if.alwaysTrue
-			count: 1
-			path: ../concrete/src/Page/Stack/Pile/PileContent.php
-
-		-
-			message: '#^Variable \$obj might not be defined\.$#'
-			identifier: variable.undefined
 			count: 1
 			path: ../concrete/src/Page/Stack/Pile/PileContent.php
 
@@ -13123,12 +12505,6 @@ parameters:
 			path: ../concrete/src/Routing/Router.php
 
 		-
-			message: '#^Variable \$pkg might not be defined\.$#'
-			identifier: variable.undefined
-			count: 1
-			path: ../concrete/src/Routing/Router.php
-
-		-
 			message: '#^Call to an undefined method Concrete\\Core\\Search\\ItemList\\Pager\\PagerProviderInterface\:\:getQueryObject\(\)\.$#'
 			identifier: method.notFound
 			count: 1
@@ -13241,12 +12617,6 @@ parameters:
 			identifier: method.notFound
 			count: 1
 			path: ../concrete/src/Search/ItemList/Pager/Manager/UserListPagerManager.php
-
-		-
-			message: '#^Variable \$result might not be defined\.$#'
-			identifier: variable.undefined
-			count: 1
-			path: ../concrete/src/Search/Pagination/Adapter/PagerAdapter.php
 
 		-
 			message: '#^Call to an undefined method Concrete\\Core\\Search\\ItemList\\ItemList\:\:getPagerManager\(\)\.$#'
@@ -13651,12 +13021,6 @@ parameters:
 			path: ../concrete/src/StyleCustomizer/Style/Parser/TypeParser.php
 
 		-
-			message: '#^Variable \$value might not be defined\.$#'
-			identifier: variable.undefined
-			count: 1
-			path: ../concrete/src/StyleCustomizer/Style/TypeStyle.php
-
-		-
 			message: '#^Parameter \#1 \$style of method Concrete\\Core\\StyleCustomizer\\Set\:\:addStyle\(\) expects Concrete\\Core\\StyleCustomizer\\Style\\Style, Concrete\\Core\\StyleCustomizer\\Style\\StyleInterface given\.$#'
 			identifier: argument.type
 			count: 1
@@ -13745,12 +13109,6 @@ parameters:
 			identifier: return.phpDocType
 			count: 1
 			path: ../concrete/src/Summary/SummaryObject.php
-
-		-
-			message: '#^Variable \$resolvedFields might not be defined\.$#'
-			identifier: variable.undefined
-			count: 1
-			path: ../concrete/src/Summary/SummaryObjectExtractor.php
 
 		-
 			message: '#^If condition is always true\.$#'
@@ -14245,18 +13603,6 @@ parameters:
 			path: ../concrete/src/Updater/Migrations/Migrations/Version20180926070300.php
 
 		-
-			message: '#^Variable \$characterSet might not be defined\.$#'
-			identifier: variable.undefined
-			count: 2
-			path: ../concrete/src/Updater/Migrations/Migrations/Version20181006212400.php
-
-		-
-			message: '#^Variable \$collation might not be defined\.$#'
-			identifier: variable.undefined
-			count: 2
-			path: ../concrete/src/Updater/Migrations/Migrations/Version20181006212400.php
-
-		-
 			message: '#^Call to function is_object\(\) with Concrete\\Core\\Authentication\\AuthenticationType will always evaluate to true\.$#'
 			identifier: function.alreadyNarrowedType
 			count: 1
@@ -14309,18 +13655,6 @@ parameters:
 			identifier: booleanAnd.leftAlwaysTrue
 			count: 2
 			path: ../concrete/src/Updater/Migrations/Migrations/Version20211020151701.php
-
-		-
-			message: '#^Variable \$style might not be defined\.$#'
-			identifier: variable.undefined
-			count: 2
-			path: ../concrete/src/Updater/Migrations/Migrations/Version20211023155414.php
-
-		-
-			message: '#^Variable \$upgradedValue might not be defined\.$#'
-			identifier: variable.undefined
-			count: 1
-			path: ../concrete/src/Updater/Migrations/Migrations/Version20211023155414.php
 
 		-
 			message: '#^Left side of && is always true\.$#'
@@ -14397,12 +13731,6 @@ parameters:
 		-
 			message: '#^Parameter \#1 \$url of method Concrete\\Core\\Url\\Resolver\\PathUrlResolver\:\:handlePath\(\) expects Concrete\\Core\\Url\\UrlInterface, League\\Url\\UrlInterface\|null given\.$#'
 			identifier: argument.type
-			count: 1
-			path: ../concrete/src/Url/Resolver/PathUrlResolver.php
-
-		-
-			message: '#^Variable \$key might not be defined\.$#'
-			identifier: variable.undefined
 			count: 1
 			path: ../concrete/src/Url/Resolver/PathUrlResolver.php
 
@@ -14651,12 +13979,6 @@ parameters:
 			identifier: method.notFound
 			count: 1
 			path: ../concrete/src/User/Group/Search/ColumnSet/Column/NameColumn.php
-
-		-
-			message: '#^Variable \$obj might not be defined\.$#'
-			identifier: variable.undefined
-			count: 1
-			path: ../concrete/src/User/Group/Search/Result/Item.php
 
 		-
 			message: '#^Method Concrete\\Core\\User\\Group\\Search\\SearchProvider\:\:getDefaultColumnSet\(\) should return Concrete\\Core\\Page\\Search\\ColumnSet\\ColumnSet but returns Concrete\\Core\\User\\Group\\Search\\ColumnSet\\DefaultSet\.$#'
@@ -14935,12 +14257,6 @@ parameters:
 			path: ../concrete/src/User/UserList.php
 
 		-
-			message: '#^Variable \$setTable might not be defined\.$#'
-			identifier: variable.undefined
-			count: 1
-			path: ../concrete/src/User/UserList.php
-
-		-
 			message: '#^Call to an undefined method Concrete\\Core\\Events\\EventDispatcher\:\:addListener\(\)\.$#'
 			identifier: method.notFound
 			count: 2
@@ -15109,12 +14425,6 @@ parameters:
 			path: ../concrete/src/Workflow/EmptyWorkflow.php
 
 		-
-			message: '#^Variable \$d might not be defined\.$#'
-			identifier: variable.undefined
-			count: 1
-			path: ../concrete/src/Workflow/HistoryEntry/BasicHistoryEntry.php
-
-		-
 			message: '#^Method Concrete\\Core\\Workflow\\Progress\\CalendarEventProgress\:\:getSite\(\) should return Concrete\\Core\\Entity\\Site\\Site but return statement is missing\.$#'
 			identifier: return.missing
 			count: 2
@@ -15129,12 +14439,6 @@ parameters:
 		-
 			message: '#^Call to function is_object\(\) with Concrete\\Core\\Workflow\\Workflow will always evaluate to true\.$#'
 			identifier: function.alreadyNarrowedType
-			count: 1
-			path: ../concrete/src/Workflow/Progress/Progress.php
-
-		-
-			message: '#^Variable \$wpr might not be defined\.$#'
-			identifier: variable.undefined
 			count: 1
 			path: ../concrete/src/Workflow/Progress/Progress.php
 

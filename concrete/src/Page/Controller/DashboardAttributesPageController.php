@@ -109,6 +109,7 @@ abstract class DashboardAttributesPageController extends DashboardPageController
                 }
             }
 
+            $set = null;
             foreach ($category->getSetManager()->getAttributeSets() as $set) {
                 if ($set->getAttributeSetID() == $this->request->request->get('asID') && count($keys)) {
                     // Clear the keys
@@ -126,12 +127,11 @@ abstract class DashboardAttributesPageController extends DashboardPageController
                         $set->getAttributeKeyCollection()->add($setKey);
                         $i++;
                     }
+                    $this->entityManager->persist($set);
+                    $this->entityManager->flush();
                     break;
                 }
             }
-
-            $this->entityManager->persist($set);
-            $this->entityManager->flush();
 
             return new JsonResponse($set);
         }

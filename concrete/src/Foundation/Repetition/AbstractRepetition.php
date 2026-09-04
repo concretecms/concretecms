@@ -582,8 +582,13 @@ abstract class AbstractRepetition implements RepetitionInterface
                     case self::REPEAT_MONTHLY:
                         $item = t('months');
                         break;
+                    default:
+                        $item = null;
+                        break;
                 }
-                $text .= t('Repeats every %s %s. ', $this->getRepeatEveryNum(), $item);
+                if ($item !== null) {
+                    $text .= t('Repeats every %s %s. ', $this->getRepeatEveryNum(), $item);
+                }
             }
         }
 

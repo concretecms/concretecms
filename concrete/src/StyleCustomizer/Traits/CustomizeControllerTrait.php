@@ -69,9 +69,7 @@ trait CustomizeControllerTrait
         } else if ($mixed instanceof CustomStyle) {
             // legacy page customizer support.
             $valueList = $mixed->getValueList();
-            if ($valueList) {
-                $variableCollection = $variableCollectionFactory->createFromStyleValueList($valueList);
-            }
+            $variableCollection = $valueList ? $variableCollectionFactory->createFromStyleValueList($valueList) : null;
             $customCssRecord = $mixed->getCustomCssRecord();
             if ($customCssRecord) {
                 $customCss = $customCssRecord->getValue();

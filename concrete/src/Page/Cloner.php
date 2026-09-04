@@ -100,6 +100,8 @@ class Cloner
                 $newParentPage = Page::getByID(Page::getHomePageID());
             }
             $newCID = $pointer->addCollectionAlias($newParentPage);
+            $newCollectionName = null;
+            $newCollectionHandle = null;
         } else {
             if ($page->getPageTypeHandle() === STACKS_PAGE_TYPE) {
                 if (!$page instanceof Stack) {

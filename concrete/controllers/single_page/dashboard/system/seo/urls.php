@@ -197,6 +197,9 @@ class Urls extends DashboardSitePageController
                             $message = t('The following rule has been removed from the server configuration');
                         }
                         break;
+                    default:
+                        $message = '';
+                        break;
                 }
 
                 return h($message) . '<br>' . $this->getServerCodeHtml($rule->getCode());

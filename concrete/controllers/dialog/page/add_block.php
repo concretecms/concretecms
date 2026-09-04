@@ -141,6 +141,7 @@ class AddBlock extends BackendInterfacePageController
                 } else {
                     // if we apply to all, then we don't worry about a new version of the page
                     $nb = $this->pageToModify->addBlock($bt, $this->areaToModify, $data);
+                    $nvc = null;
                 }
 
                 $event = new BlockAdd($nb, $this->pageToModify);

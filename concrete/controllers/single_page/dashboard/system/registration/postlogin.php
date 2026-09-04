@@ -36,6 +36,8 @@ class Postlogin extends DashboardPageController
             if ($loginRedirectPage === null || $loginRedirectPage->isError()) {
                 $this->error->add(t('Please specify the custom login destination.'));
             }
+        } else {
+            $loginRedirectCID = null;
         }
         if ($this->error->has()) {
             return $this->view();

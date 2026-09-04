@@ -316,6 +316,7 @@ class PackageService
             // loads and instantiates the object
             $class = '\\Concrete\\Package\\' . camelcase($pkgHandle) . '\\Controller';
             $packageController = null;
+            $errorDetails = null;
             try {
                 $packageController = $this->application->make($class);
                 if (!$packageController instanceof Package) {

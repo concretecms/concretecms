@@ -175,6 +175,9 @@ final class Version20211023155414 extends AbstractMigration implements Repeatabl
                         $style = new ColorStyle();
                         $upgradedValue = $this->upgradeColorValue($legacyValueValueData);
                         $this->output(t('Color style value %s found. Upgrading...', $legacyValue['scvID']));
+                    } else {
+                        $style = null;
+                        $upgradedValue = null;
                     }
                     if ($legacyValueValue instanceof SizeValue) {
                         $style = new SizeStyle();

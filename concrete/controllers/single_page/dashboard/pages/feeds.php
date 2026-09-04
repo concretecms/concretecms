@@ -48,10 +48,10 @@ class Feeds extends DashboardPageController
     public function delete_feed()
     {
         $pfID = $this->request->request->get('pfID');
-        if ($this->app->make('helper/validation/numbers')->integer($pfID)) {
-            if ($pfID > 0) {
-                $feed = Feed::getByID($pfID);
-            }
+        if ($this->app->make('helper/validation/numbers')->integer($pfID) && $pfID > 0) {
+            $feed = Feed::getByID($pfID);
+        } else {
+            $feed = null;
         }
 
         if (!is_object($feed)) {
@@ -115,10 +115,10 @@ class Feeds extends DashboardPageController
 
     public function edit($pfID = null)
     {
-        if ($this->app->make('helper/validation/numbers')->integer($pfID)) {
-            if ($pfID > 0) {
-                $feed = Feed::getByID($pfID);
-            }
+        if ($this->app->make('helper/validation/numbers')->integer($pfID) && $pfID > 0) {
+            $feed = Feed::getByID($pfID);
+        } else {
+            $feed = null;
         }
 
         if (!is_object($feed)) {

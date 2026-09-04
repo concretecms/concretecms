@@ -91,6 +91,7 @@ class ImportSiteTypeSkeletonsRoutine extends AbstractRoutine
                     }
 
                     // Create the skeleton.
+                    $skeleton = null;
                     foreach($type->skeleton->locale as $localeNode ) {
 
                         $locale = new SkeletonLocale();

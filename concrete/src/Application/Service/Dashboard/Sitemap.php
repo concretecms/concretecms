@@ -122,6 +122,8 @@ class Sitemap
         } elseif ($parent instanceof Tree) {
             $pl->setSiteTreeObject($parent);
             $cID = 0;
+        } else {
+            $cID = null;
         }
         $pl->filterByParentID($cID); // Either 0 or cParentID
         $pl->setPageVersionToRetrieve(\Concrete\Core\Page\PageList::PAGE_VERSION_RECENT);

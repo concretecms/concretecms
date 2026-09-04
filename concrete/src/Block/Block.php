@@ -1828,6 +1828,9 @@ EOT
                     ]);
                 }
             }
+        } else {
+            $ocID = null;
+            $ovID = null;
         }
 
         // we duplicate block-specific sub-content

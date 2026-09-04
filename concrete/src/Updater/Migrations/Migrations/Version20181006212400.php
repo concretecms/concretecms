@@ -23,6 +23,8 @@ class Version20181006212400 extends AbstractMigration implements RepeatableMigra
         $config = $this->app->make('config');
         $resolver = $this->app->make(Resolver::class);
         $error = null;
+        $collation = null;
+        $characterSet = null;
         try {
             list($characterSet, $collation) = $resolver
                 ->setCharacterSet((string) $config->get('database.preferred_character_set'))

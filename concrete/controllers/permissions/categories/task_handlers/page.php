@@ -209,6 +209,7 @@ class Page extends Controller implements TaskHandlerInterface
         $permissions = Key::getList('page');
         $deferred = false;
         $u = $this->app->make(ConcreteUser::class);
+        $c = null;
         foreach ($pages as $c) {
             $pkr = new ChangePagePermissionsPageWorkflowRequest();
             $pkr->setRequestedPage($c);

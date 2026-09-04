@@ -57,15 +57,17 @@ class PathUrlResolver implements UrlResolverInterface, ApplicationAwareInterface
         }
 
         $page = null;
+        $pageKey = null;
         foreach ($arguments as $key => $argument) {
             if ($argument instanceof Page) {
                 $page = $argument;
+                $pageKey = $key;
                 break;
             }
         }
 
-        if ($page) {
-            unset($arguments[$key]);
+        if ($pageKey !== null) {
+            unset($arguments[$pageKey]);
         }
 
         $args = $arguments;

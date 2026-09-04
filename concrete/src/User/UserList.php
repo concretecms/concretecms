@@ -524,6 +524,7 @@ class UserList extends DatabaseItemList implements PagerProviderInterface, Pagin
         $isGroupSet = false;
         $isUserGroupSet = false;
         // Loop twice as params returns an array of arrays
+        $setTable = null;
         foreach ($params as $param) {
             foreach ($param as $setTable)
                 if (in_array('ug', $setTable)) {

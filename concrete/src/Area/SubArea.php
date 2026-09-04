@@ -54,13 +54,13 @@ class SubArea extends Area
             return false;
         }
 
-        while ($arParentID > 0) {
+        do {
             $row = $db->GetRow('select arID, arHandle, arParentID, arOverrideCollectionPermissions from Areas where arID = ?', array($arParentID));
             $arParentID = $row['arParentID'];
             if ($row['arOverrideCollectionPermissions']) {
                 break;
             }
-        }
+        } while ($arParentID > 0);
         $a = Area::get($this->c, $row['arHandle']);
         $cache->save($item->set($a));
 

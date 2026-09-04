@@ -269,6 +269,8 @@ abstract class Progress extends ConcreteObject implements SubjectInterface
         if (in_array($task, $wf->getAllowedTasks())) {
             $wpr = call_user_func_array(array($wf, $task), array($this, $args));
             $this->updateOnAction($wf);
+        } else {
+            $wpr = null;
         }
         if (!($wpr instanceof Response)) {
             $wpr = new Response();

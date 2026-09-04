@@ -3843,6 +3843,8 @@ EOT
             Events::dispatch('on_page_add', $pe);
 
             $pc->rescanCollectionPath();
+        } else {
+            $pc = null;
         }
 
         $entities = $u->getUserAccessEntityObjects();
@@ -3856,7 +3858,7 @@ EOT
             $u->refreshUserGroups();
         }
 
-        if ($theme) {
+        if ($pc && $theme) {
             $pc->setTheme($theme);
         }
 

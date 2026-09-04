@@ -56,6 +56,8 @@ class SummaryObjectExtractor
                     $resolvedFields[$identifier] = $resolvedField;
                 }
             }
+        } else {
+            $resolvedFields = null;
         }
         return $resolvedFields;
     }

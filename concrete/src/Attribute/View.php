@@ -81,6 +81,9 @@ class View extends AbstractView
             case 'label':
                 $context = 'label';
                 break;
+            default:
+                $context = null;
+                break;
         }
         return $context;
     }

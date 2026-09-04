@@ -513,9 +513,12 @@ class Search extends DashboardPageController
 
                 $this->user->saveUserAttributesForm([$ak]);
                 $val = $this->user->getAttributeValueObject($ak);
+            } else {
+                $val = null;
             }
         } else {
             $this->error->add($this->app->make('helper/validation/token')->getErrorMessage());
+            $val = null;
         }
         $sr->setUser($this->user);
         if ($this->error->has()) {

@@ -125,6 +125,9 @@ class PileContent extends ConcreteObject implements \JsonSerializable
             case "BLOCK":
                 $obj = Block::getByID($this->getItemID());
                 break;
+            default:
+                $obj = null;
+                break;
         }
 
         return $obj;

@@ -23,6 +23,8 @@ class BaseBlockTransformer extends TransformerAbstract
                 $blockValue = $blockValueResource->getTransformer()->transform(
                     $blockValueResource->getData()
                 );
+            } else {
+                $blockValue = null;
             }
         } else {
             // Hacky but a reasonable way to get a default API export

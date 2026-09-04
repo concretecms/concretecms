@@ -111,6 +111,7 @@ class EntryList extends DatabaseItemList implements PagerProviderInterface, Pagi
         $likeBuilder = Application::getFacadeApplication()->make(LikeBuilder::class);
         $keys = $this->category->getSearchableIndexedList();
         if (count($keys)) {
+            $expressions = [];
             foreach ($keys as $ak) {
                 $cnt = $ak->getController();
                 $expressions[] = $cnt->searchKeywords($keywords, $this->query);

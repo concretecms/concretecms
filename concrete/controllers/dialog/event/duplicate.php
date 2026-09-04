@@ -92,9 +92,7 @@ class Duplicate extends BackendInterfaceController
             if ($this->request->query->has('year')) {
                 $year = $this->request->query->get('year');
             }
-            if ($this->request->query->has('month')) {
-                $month = $this->request->query->get('month');
-            }
+            $month = $this->request->query->has('month') ? $this->request->query->get('month') : null;
             $this->set('year', $year);
             $this->set('month', $month);
         } else {

@@ -52,9 +52,7 @@ class Topics extends DashboardPageController
         if ($this->token->validate('remove_tree')) {
             $tree = Tree::getByID(Loader::helper('security')->sanitizeInt($_REQUEST['treeID']));
             $treeType = $tree->getTreeTypeObject();
-            if (is_object($treeType)) {
-                $treeTypeHandle = $treeType->getTreeTypeHandle();
-            }
+            $treeTypeHandle = is_object($treeType) ? $treeType->getTreeTypeHandle() : null;
             if (is_object($tree) && 'topic' == $treeTypeHandle) {
                 if (\PermissionKey::getByHandle('remove_topic_tree')->validate()) {
                     $tree->delete();

@@ -239,6 +239,7 @@ class Single
 
         // instantiate the home collection so we have someplace to add these to
         $sites = \Core::make('site')->getList();
+        $parent = null;
         /**
          * @var Site $site
          */

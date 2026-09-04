@@ -46,11 +46,10 @@ class PreviewPageLegacy extends BackendInterfaceController
 
                     // Nothing here yet. Maybe never?
 
+                    $response = null;
                 } else {
                     $customStyle = $manager->getCustomStyleObjectForPage($page, $theme);
-                    if ($customStyle) {
-                        $response = $previewHandler->getCustomStylePreviewResponse($customizer, $page, $customStyle);
-                    }
+                    $response = $customStyle ? $previewHandler->getCustomStylePreviewResponse($customizer, $page, $customStyle) : null;
                 }
                 return $response;
             }

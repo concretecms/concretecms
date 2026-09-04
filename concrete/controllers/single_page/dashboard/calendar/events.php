@@ -105,14 +105,14 @@ class Events extends DashboardCalendarPageController
     public function delete_calendar()
     {
         $caID = $this->request->request->get('caID');
-        if (\Core::make("helper/validation/numbers")->integer($caID)) {
-            if ($caID > 0) {
-                $calendar = Calendar::getByID($caID);
-                $cp = new \Permissions($calendar);
-                if (!$cp->canDeleteCalendar()) {
-                    unset($calendar);
-                }
+        if (\Core::make("helper/validation/numbers")->integer($caID) && $caID > 0) {
+            $calendar = Calendar::getByID($caID);
+            $cp = new \Permissions($calendar);
+            if (!$cp->canDeleteCalendar()) {
+                $calendar = null;
             }
+        } else {
+            $calendar = null;
         }
 
         if (!is_object($calendar)) {

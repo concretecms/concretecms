@@ -50,7 +50,12 @@ class Open extends DashboardPageController
                         $emailValidator->isValid($registerNotificationEmail, $this->error);
                     }
                 }
+            } else {
+                $registerNotificationEmails = null;
             }
+        } else {
+            $registerNotification = null;
+            $registerNotificationEmails = null;
         }
 
         if ($this->error->has()) {
