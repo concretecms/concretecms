@@ -203,7 +203,7 @@ class Cloner
                 $relation = $this->entityManager->getRepository('Concrete\Core\Entity\Page\Relation\SiblingRelation')
                     ->findOneBy(['cID' => $page->getCollectionID()]);
                 if (!is_object($relation)) {
-                    $mpRelationID = $this->entityManager->getConnection()->GetOne('select max(mpRelationID) as mpRelationID from SiblingPageRelations');
+                    $mpRelationID = $this->entityManager->getConnection()->fetchOne('select max(mpRelationID) as mpRelationID from SiblingPageRelations');
                     if (!$mpRelationID) {
                         $mpRelationID = 1;
                     } else {
