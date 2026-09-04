@@ -15,7 +15,7 @@ class ImportStacksStructureRoutine extends AbstractPageStructureRoutine implemen
     protected $home;
 
     /**
-     * @var \Concrete\Core\Entity\Site\Tree|null
+     * @var \Concrete\Core\Entity\Site\Site|null
      */
     private $site;
 

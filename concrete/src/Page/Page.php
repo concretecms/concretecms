@@ -1018,7 +1018,7 @@ class Page extends Collection implements CategoryMemberInterface,
     }
 
     /**
-     * @return CustomPageTemplateCollection
+     * @return CustomPageTemplateCollection|null
      */
     protected function getCustomPageSummaryTemplateCollection()
     {
@@ -1615,6 +1615,8 @@ class Page extends Collection implements CategoryMemberInterface,
         if ($tree instanceof SiteTree) {
             return $tree->getSite();
         }
+
+        return null;
     }
 
     /**

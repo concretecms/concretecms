@@ -97,8 +97,8 @@ parameters:
 			path: ../concrete/controllers/backend/express/entry.php
 
 		-
-			message: '#^If condition is always true\.$#'
-			identifier: if.alwaysTrue
+			message: '#^Instanceof between Concrete\\Core\\Entity\\Express\\Entity and Concrete\\Core\\Entity\\Express\\Entity will always evaluate to true\.$#'
+			identifier: instanceof.alwaysTrue
 			count: 1
 			path: ../concrete/controllers/backend/express/entry/autocomplete.php
 
@@ -325,40 +325,10 @@ parameters:
 			path: ../concrete/controllers/dialog/event/advanced_search.php
 
 		-
-			message: '#^Call to function is_object\(\) with Concrete\\Core\\Entity\\Calendar\\CalendarEventVersionOccurrence will always evaluate to true\.$#'
-			identifier: function.alreadyNarrowedType
-			count: 1
-			path: ../concrete/controllers/dialog/event/delete_occurrence.php
-
-		-
-			message: '#^Negated boolean expression is always false\.$#'
-			identifier: booleanNot.alwaysFalse
-			count: 2
-			path: ../concrete/controllers/dialog/event/delete_occurrence.php
-
-		-
 			message: '#^Call to function is_array\(\) with array\<Concrete\\Core\\Entity\\Calendar\\CalendarEventRepetition\> will always evaluate to true\.$#'
 			identifier: function.alreadyNarrowedType
 			count: 1
 			path: ../concrete/controllers/dialog/event/edit.php
-
-		-
-			message: '#^Negated boolean expression is always false\.$#'
-			identifier: booleanNot.alwaysFalse
-			count: 2
-			path: ../concrete/controllers/dialog/event/edit.php
-
-		-
-			message: '#^Call to function is_object\(\) with Concrete\\Core\\Entity\\Calendar\\CalendarEventVersionOccurrence will always evaluate to true\.$#'
-			identifier: function.alreadyNarrowedType
-			count: 1
-			path: ../concrete/controllers/dialog/event/summary_templates.php
-
-		-
-			message: '#^Negated boolean expression is always false\.$#'
-			identifier: booleanNot.alwaysFalse
-			count: 1
-			path: ../concrete/controllers/dialog/event/summary_templates.php
 
 		-
 			message: '#^Parameter \#1 \$templateIDs of method Concrete\\Core\\Calendar\\Event\\Summary\\Template\\Command\\EnableCustomCalendarEventSummaryTemplatesCommand\:\:setTemplateIDs\(\) expects array\<int\>, list\<\(string\|false\)\> given\.$#'
@@ -707,12 +677,6 @@ parameters:
 			identifier: notIdentical.alwaysTrue
 			count: 1
 			path: ../concrete/controllers/dialog/site_type/attributes.php
-
-		-
-			message: '#^If condition is always true\.$#'
-			identifier: if.alwaysTrue
-			count: 1
-			path: ../concrete/controllers/dialog/tree/node/file_folder/add.php
 
 		-
 			message: '#^Parameter \#1 \$folder of method Concrete\\Core\\File\\Filesystem\:\:addFolder\(\) expects Concrete\\Core\\Tree\\Node\\Type\\FileFolder, Concrete\\Core\\Tree\\Node\\Node\|null given\.$#'
@@ -1177,12 +1141,6 @@ parameters:
 			path: ../concrete/controllers/panel/detail/theme/preview_skin.php
 
 		-
-			message: '#^If condition is always true\.$#'
-			identifier: if.alwaysTrue
-			count: 1
-			path: ../concrete/controllers/panel/detail/theme/preview_skin.php
-
-		-
 			message: '#^Call to function is_array\(\) with float\|int\<min, \-1\>\|int\<1, max\>\|non\-falsy\-string\|true will always evaluate to false\.$#'
 			identifier: function.impossibleType
 			count: 1
@@ -1247,12 +1205,6 @@ parameters:
 			identifier: instanceof.alwaysTrue
 			count: 1
 			path: ../concrete/controllers/panel/page/versions.php
-
-		-
-			message: '#^Negated boolean expression is always false\.$#'
-			identifier: booleanNot.alwaysFalse
-			count: 1
-			path: ../concrete/controllers/panel/theme/customize.php
 
 		-
 			message: '#^Parameter \#1 \$customSkin of method Concrete\\Core\\Page\\Theme\\Command\\DeleteCustomSkinCommand\:\:setCustomSkin\(\) expects Concrete\\Core\\Entity\\Page\\Theme\\CustomSkin, Concrete\\Core\\StyleCustomizer\\Skin\\SkinInterface given\.$#'
@@ -2575,12 +2527,6 @@ parameters:
 			path: ../concrete/src/Api/Fractal/Transformer/BaseBlockTransformer.php
 
 		-
-			message: '#^If condition is always true\.$#'
-			identifier: if.alwaysTrue
-			count: 1
-			path: ../concrete/src/Api/Fractal/Transformer/ExpressEntryTransformer.php
-
-		-
 			message: '#^Ternary operator condition is always true\.$#'
 			identifier: ternary.alwaysTrue
 			count: 1
@@ -2591,12 +2537,6 @@ parameters:
 			identifier: varTag.differentVariable
 			count: 1
 			path: ../concrete/src/Api/Fractal/Transformer/ExpressEntryTransformer.php
-
-		-
-			message: '#^If condition is always true\.$#'
-			identifier: if.alwaysTrue
-			count: 1
-			path: ../concrete/src/Api/Fractal/Transformer/PageTransformer.php
 
 		-
 			message: '#^Parameter \#2 \$fetchJoinCollection of class Pagerfanta\\Adapter\\DoctrineORMAdapter constructor expects bool, Closure given\.$#'
@@ -3943,18 +3883,6 @@ parameters:
 			path: ../concrete/src/Backup/ContentImporter/Importer/Routine/ImportSiteTypeSkeletonsRoutine.php
 
 		-
-			message: '#^Property Concrete\\Core\\Backup\\ContentImporter\\Importer\\Routine\\ImportStacksStructureRoutine\:\:\$site \(Concrete\\Core\\Entity\\Site\\Tree\|null\) does not accept Concrete\\Core\\Entity\\Site\\Site\.$#'
-			identifier: assign.propertyType
-			count: 1
-			path: ../concrete/src/Backup/ContentImporter/Importer/Routine/ImportStacksStructureRoutine.php
-
-		-
-			message: '#^Property Concrete\\Core\\Backup\\ContentImporter\\Importer\\Routine\\ImportStacksStructureRoutine\:\:\$site \(Concrete\\Core\\Entity\\Site\\Tree\|null\) is never assigned Concrete\\Core\\Entity\\Site\\Tree so it can be removed from the property type\.$#'
-			identifier: property.unusedType
-			count: 1
-			path: ../concrete/src/Backup/ContentImporter/Importer/Routine/ImportStacksStructureRoutine.php
-
-		-
 			message: '#^Strict comparison using \!\=\= between string and null will always evaluate to true\.$#'
 			identifier: notIdentical.alwaysTrue
 			count: 2
@@ -4213,12 +4141,6 @@ parameters:
 			path: ../concrete/src/Board/Designer/Command/SetItemSelectorCustomElementItemsCommandHandler.php
 
 		-
-			message: '#^If condition is always true\.$#'
-			identifier: if.alwaysTrue
-			count: 1
-			path: ../concrete/src/Board/Instance/Item/Filterer/CalendarEventFilterer.php
-
-		-
 			message: '#^PHPDoc tag @return with type bool is incompatible with native type array\.$#'
 			identifier: return.phpDocType
 			count: 1
@@ -4273,20 +4195,8 @@ parameters:
 			path: ../concrete/src/Board/Instance/Slot/Content/Populator/CalendarEventPopulator.php
 
 		-
-			message: '#^If condition is always true\.$#'
-			identifier: if.alwaysTrue
-			count: 1
-			path: ../concrete/src/Board/Instance/Slot/Content/Populator/CalendarEventPopulator.php
-
-		-
 			message: '#^PHPDoc tag @param for parameter \$logger with type Concrete\\Core\\Board\\Instance\\Logger\\Logger\|null is not subtype of native type Concrete\\Core\\Board\\Instance\\Logger\\LoggerInterface\.$#'
 			identifier: parameter.phpDocType
-			count: 1
-			path: ../concrete/src/Board/Instance/Slot/Content/Populator/CalendarEventPopulator.php
-
-		-
-			message: '#^Unreachable statement \- code above always terminates\.$#'
-			identifier: deadCode.unreachable
 			count: 1
 			path: ../concrete/src/Board/Instance/Slot/Content/Populator/CalendarEventPopulator.php
 
@@ -4433,12 +4343,6 @@ parameters:
 			identifier: booleanAnd.leftAlwaysTrue
 			count: 1
 			path: ../concrete/src/Cache/Page/FilePageCache.php
-
-		-
-			message: '#^Call to function is_object\(\) with Concrete\\Core\\Entity\\Site\\Site will always evaluate to true\.$#'
-			identifier: function.alreadyNarrowedType
-			count: 1
-			path: ../concrete/src/Cache/Page/PageCache.php
 
 		-
 			message: '#^Call to an undefined method Concrete\\Core\\Entity\\Calendar\\CalendarEventVersionRepetition\:\:getRepetitionObject\(\)\.$#'
@@ -5779,12 +5683,6 @@ parameters:
 			path: ../concrete/src/Entity/Notification/NewConversationMessageNotification.php
 
 		-
-			message: '#^If condition is always true\.$#'
-			identifier: if.alwaysTrue
-			count: 1
-			path: ../concrete/src/Entity/Notification/WorkflowProgressNotification.php
-
-		-
 			message: '#^Method Concrete\\Core\\Entity\\OAuth\\AccessToken\:\:getExpiryDateTime\(\) should return DateTimeImmutable but returns DateTime\.$#'
 			identifier: return.type
 			count: 1
@@ -6073,12 +5971,6 @@ parameters:
 			path: ../concrete/src/Express/Command/ExpressEntryCommandFactory.php
 
 		-
-			message: '#^Negated boolean expression is always false\.$#'
-			identifier: booleanNot.alwaysFalse
-			count: 1
-			path: ../concrete/src/Express/Command/ExpressEntryCommandFactory.php
-
-		-
 			message: '#^Call to function is_array\(\) with array\<Concrete\\Core\\Entity\\Express\\Entry\> will always evaluate to true\.$#'
 			identifier: function.alreadyNarrowedType
 			count: 1
@@ -6089,12 +5981,6 @@ parameters:
 			identifier: function.alreadyNarrowedType
 			count: 1
 			path: ../concrete/src/Express/Command/ExpressEntryCommandHandlerTrait.php
-
-		-
-			message: '#^If condition is always true\.$#'
-			identifier: if.alwaysTrue
-			count: 1
-			path: ../concrete/src/Express/Command/ReindexEntryTaskCommandHandler.php
 
 		-
 			message: '#^Method Concrete\\Core\\Express\\Controller\\StandardController\:\:getContextRegistry\(\) should return Concrete\\Core\\Form\\Context\\Registry\\ContextRegistryInterface but returns null\.$#'
@@ -6137,12 +6023,6 @@ parameters:
 			identifier: property.notFound
 			count: 1
 			path: ../concrete/src/Express/Entry/Search/Result/Item.php
-
-		-
-			message: '#^If condition is always true\.$#'
-			identifier: if.alwaysTrue
-			count: 1
-			path: ../concrete/src/Express/Export/EntryList/CsvWriter.php
 
 		-
 			message: '#^Parameter \#1 \$iterator of function iterator_to_array expects Traversable, array given\.$#'
@@ -6333,14 +6213,8 @@ parameters:
 		-
 			message: '#^If condition is always true\.$#'
 			identifier: if.alwaysTrue
-			count: 2
-			path: ../concrete/src/Express/ObjectManager.php
-
-		-
-			message: '#^If condition is always true\.$#'
-			identifier: if.alwaysTrue
 			count: 1
-			path: ../concrete/src/Express/Search/ColumnSet/Available.php
+			path: ../concrete/src/Express/ObjectManager.php
 
 		-
 			message: '#^Call to an undefined method Concrete\\Core\\Search\\ItemList\\Pager\\PagerProviderInterface\:\:getQueryObject\(\)\.$#'
@@ -6421,15 +6295,9 @@ parameters:
 			path: ../concrete/src/Express/Search/Index/EntityIndex.php
 
 		-
-			message: '#^Call to function is_object\(\) with object will always evaluate to true\.$#'
-			identifier: function.alreadyNarrowedType
-			count: 1
-			path: ../concrete/src/Express/Search/Index/EntryIndexer.php
-
-		-
 			message: '#^Method Concrete\\Core\\Express\\Search\\Index\\EntryIndexer\:\:index\(\) should return bool but return statement is missing\.$#'
 			identifier: return.missing
-			count: 1
+			count: 2
 			path: ../concrete/src/Express/Search/Index/EntryIndexer.php
 
 		-
@@ -6651,7 +6519,7 @@ parameters:
 		-
 			message: '#^Strict comparison using \=\=\= between Concrete\\Core\\Entity\\File\\StorageLocation\\StorageLocation and null will always evaluate to false\.$#'
 			identifier: identical.alwaysFalse
-			count: 3
+			count: 2
 			path: ../concrete/src/File/Import/ImportOptions.php
 
 		-
@@ -8893,12 +8761,6 @@ parameters:
 			path: ../concrete/src/Notification/View/UserSignupListView.php
 
 		-
-			message: '#^If condition is always true\.$#'
-			identifier: if.alwaysTrue
-			count: 1
-			path: ../concrete/src/Notification/View/WorkflowProgressListView.php
-
-		-
 			message: '#^PHPDoc tag @var above a method has no effect\.$#'
 			identifier: varTag.misplaced
 			count: 1
@@ -9409,12 +9271,6 @@ parameters:
 			path: ../concrete/src/Page/Exporter.php
 
 		-
-			message: '#^Negated boolean expression is always false\.$#'
-			identifier: booleanNot.alwaysFalse
-			count: 1
-			path: ../concrete/src/Page/Exporter.php
-
-		-
 			message: '#^Method Concrete\\Core\\Page\\Feed\:\:getByHandle\(\) should return Concrete\\Core\\Page\\Feed\|null but returns Concrete\\Core\\Entity\\Page\\Feed\|null\.$#'
 			identifier: return.type
 			count: 1
@@ -9459,24 +9315,12 @@ parameters:
 		-
 			message: '#^If condition is always true\.$#'
 			identifier: if.alwaysTrue
-			count: 6
+			count: 4
 			path: ../concrete/src/Page/Page.php
 
 		-
 			message: '#^Method Concrete\\Core\\Page\\Page\:\:delete\(\) should return false\|null but empty return statement found\.$#'
 			identifier: return.empty
-			count: 1
-			path: ../concrete/src/Page/Page.php
-
-		-
-			message: '#^Method Concrete\\Core\\Page\\Page\:\:getSite\(\) should return Concrete\\Core\\Entity\\Site\\Site but return statement is missing\.$#'
-			identifier: return.missing
-			count: 1
-			path: ../concrete/src/Page/Page.php
-
-		-
-			message: '#^Negated boolean expression is always false\.$#'
-			identifier: booleanNot.alwaysFalse
 			count: 1
 			path: ../concrete/src/Page/Page.php
 
@@ -9501,12 +9345,6 @@ parameters:
 		-
 			message: '#^Ternary operator condition is always true\.$#'
 			identifier: ternary.alwaysTrue
-			count: 1
-			path: ../concrete/src/Page/Page.php
-
-		-
-			message: '#^Unreachable statement \- code above always terminates\.$#'
-			identifier: deadCode.unreachable
 			count: 1
 			path: ../concrete/src/Page/Page.php
 
@@ -12959,12 +12797,6 @@ parameters:
 			identifier: method.notFound
 			count: 1
 			path: ../concrete/src/Workflow/EmptyWorkflow.php
-
-		-
-			message: '#^Method Concrete\\Core\\Workflow\\Progress\\CalendarEventProgress\:\:getSite\(\) should return Concrete\\Core\\Entity\\Site\\Site but return statement is missing\.$#'
-			identifier: return.missing
-			count: 2
-			path: ../concrete/src/Workflow/Progress/CalendarEventProgress.php
 
 		-
 			message: '#^Unsafe usage of new static\(\)\.$#'

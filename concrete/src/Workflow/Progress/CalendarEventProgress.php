@@ -21,6 +21,8 @@ class CalendarEventProgress extends Progress implements SiteProgressInterface
                 return $calendar->getSite();
             }
         }
+
+        return null;
     }
 
     public static function add(Workflow $wf, CalendarEventRequest $wr)

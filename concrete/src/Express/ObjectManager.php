@@ -79,7 +79,7 @@ class ObjectManager
     /**
      * Entry ID may be the integer ID or the public identifier
      * @param int|string $entryID
-     * @return object
+     * @return \Concrete\Core\Entity\Express\Entry|null
      */
     public function getEntry($entryID)
     {
