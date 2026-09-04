@@ -1765,12 +1765,6 @@ parameters:
 			path: ../concrete/controllers/single_page/dashboard/system/multilingual/setup.php
 
 		-
-			message: '#^Parameter \#2 \$httpResponseCode of method Concrete\\Core\\Controller\\AbstractController\:\:buildRedirect\(\) expects int, string given\.$#'
-			identifier: argument.type
-			count: 1
-			path: ../concrete/controllers/single_page/dashboard/system/multisite/sites.php
-
-		-
 			message: '#^Strict comparison using \=\=\= between int and null will always evaluate to false\.$#'
 			identifier: identical.alwaysFalse
 			count: 1
@@ -1779,12 +1773,6 @@ parameters:
 		-
 			message: '#^Method Doctrine\\Persistence\\ObjectManager\:\:flush\(\) invoked with 1 parameter, 0 required\.$#'
 			identifier: arguments.count
-			count: 1
-			path: ../concrete/controllers/single_page/dashboard/system/multisite/types.php
-
-		-
-			message: '#^Parameter \#2 \$httpResponseCode of method Concrete\\Core\\Controller\\AbstractController\:\:buildRedirect\(\) expects int, string given\.$#'
-			identifier: argument.type
 			count: 1
 			path: ../concrete/controllers/single_page/dashboard/system/multisite/types.php
 
