@@ -337,20 +337,8 @@ parameters:
 			path: ../concrete/controllers/dialog/event/summary_templates.php
 
 		-
-			message: '#^Call to function is_object\(\) with Concrete\\Core\\Entity\\Calendar\\CalendarEventVersionOccurrence will always evaluate to true\.$#'
-			identifier: function.alreadyNarrowedType
-			count: 1
-			path: ../concrete/controllers/dialog/event_occurrence.php
-
-		-
 			message: '#^Method Concrete\\Controller\\Dialog\\EventOccurrence\:\:canAccess\(\) invoked with 1 parameter, 0 required\.$#'
 			identifier: arguments.count
-			count: 1
-			path: ../concrete/controllers/dialog/event_occurrence.php
-
-		-
-			message: '#^Negated boolean expression is always false\.$#'
-			identifier: booleanNot.alwaysFalse
 			count: 1
 			path: ../concrete/controllers/dialog/event_occurrence.php
 
@@ -491,12 +479,6 @@ parameters:
 			identifier: arguments.count
 			count: 1
 			path: ../concrete/controllers/dialog/file/upload_complete.php
-
-		-
-			message: '#^Negated boolean expression is always false\.$#'
-			identifier: booleanNot.alwaysFalse
-			count: 1
-			path: ../concrete/controllers/dialog/frontend/event.php
 
 		-
 			message: '#^Parameter \#2 \$default of method Symfony\\Component\\HttpFoundation\\InputBag\:\:get\(\) expects bool\|float\|int\|string\|null, array given\.$#'
@@ -4745,12 +4727,6 @@ parameters:
 			identifier: argument.type
 			count: 1
 			path: ../concrete/src/Console/Command/InstallThemeCommand.php
-
-		-
-			message: '#^Parameter \#2 \$pieces of function implode expects array, string given\.$#'
-			identifier: argument.type
-			count: 1
-			path: ../concrete/src/Console/Command/PhpCodingStyleCommand.php
 
 		-
 			message: '#^Unreachable statement \- code above always terminates\.$#'

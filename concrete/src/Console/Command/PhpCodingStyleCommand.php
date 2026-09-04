@@ -164,7 +164,7 @@ final class PhpCodingStyleCommand extends Command
         }
         $output = implode("\n", $output);
         if (!preg_match('/^PHP CS Fixer \d/m', $output)) {
-            throw new UserMessageException("Unexpected output from PHP CS Fixer:\n" . trim(implode("\n", $output)));
+            throw new UserMessageException("Unexpected output from PHP CS Fixer:\n" . trim($output));
         }
 
         return $quotedPath;
