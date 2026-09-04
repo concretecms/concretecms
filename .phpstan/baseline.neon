@@ -1909,12 +1909,6 @@ parameters:
 			path: ../concrete/controllers/single_page/dashboard/reports/forms.php
 
 		-
-			message: '#^Variable \$answer might not be defined\.$#'
-			identifier: variable.undefined
-			count: 3
-			path: ../concrete/controllers/single_page/dashboard/reports/forms/legacy.php
-
-		-
 			message: '#^Comparison operation "\>" between int\<1, max\> and 0 is always true\.$#'
 			identifier: greater.alwaysTrue
 			count: 1
