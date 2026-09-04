@@ -613,12 +613,6 @@ parameters:
 			path: ../concrete/controllers/dialog/page/add/compose.php
 
 		-
-			message: '#^Variable \$cParentID might not be defined\.$#'
-			identifier: variable.undefined
-			count: 3
-			path: ../concrete/controllers/dialog/page/add/compose.php
-
-		-
 			message: '#^Call to function is_a\(\) with Concrete\\Core\\Block\\BlockController and ''\\\\Concrete\\\\Core…'' will always evaluate to true\.$#'
 			identifier: function.alreadyNarrowedType
 			count: 1

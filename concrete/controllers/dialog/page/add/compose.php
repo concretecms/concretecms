@@ -59,12 +59,18 @@ class Compose extends Controller
     {
         $e = $this->app->make('error');
         $pagetype = Type::getByID($this->request->request->get('ptID'));
-        if (is_object($pagetype)) {
-            $configuredTarget = $pagetype->getPageTypePublishTargetObject();
-            $cParentID = $configuredTarget->getPageTypePublishTargetConfiguredTargetParentPageID();
-            if (!$cParentID) {
-                $cParentID = $this->request->request->get('cParentID');
-            }
+        if (!is_object($pagetype)) {
+            $e->add(t('Invalid page type.'));
+            $pr = new EditResponse();
+            $pr->setError($e);
+            $pr->outputJSON();
+
+            return;
+        }
+        $configuredTarget = $pagetype->getPageTypePublishTargetObject();
+        $cParentID = $configuredTarget->getPageTypePublishTargetConfiguredTargetParentPageID();
+        if (!$cParentID) {
+            $cParentID = $this->request->request->get('cParentID');
         }
         $parent = Page::getByID($cParentID);
 
@@ -76,13 +82,11 @@ class Compose extends Controller
             $template = $pagetype->getPageTypeDefaultPageTemplateObject();
         }
 
-        if (is_object($pagetype)) {
-            $validator = $pagetype->getPageTypeValidatorObject();
-            $e->add($validator->validateCreateDraftRequest($template));
-            $e->add($validator->validatePublishLocationRequest($parent));
-            if ($this->request->request('addPageComposeAction') == 'publish') {
-                $e->add($validator->validatePublishDraftRequest());
-            }
+        $validator = $pagetype->getPageTypeValidatorObject();
+        $e->add($validator->validateCreateDraftRequest($template));
+        $e->add($validator->validatePublishLocationRequest($parent));
+        if ($this->request->request('addPageComposeAction') == 'publish') {
+            $e->add($validator->validatePublishDraftRequest());
         }
         $pr = new EditResponse();
         $pr->setError($e);
