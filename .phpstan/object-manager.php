@@ -1,9 +1,7 @@
 <?php
 
 /*
- * Object manager loader for phpstan-doctrine.
- * It returns the Doctrine EntityManager of Concrete, so that PHPStan knows the entity metadata.
- * The database is never accessed: if it's not configured (for example in the CI), we configure a fake one.
+ * Object manager loader for phpstan-doctrine: it returns the Doctrine EntityManager of Concrete (see README.md).
  */
 
 use Concrete\Core\Support\Facade\Application;
@@ -23,7 +21,7 @@ if (!$config->get('database.default-connection')) {
         'database' => 'phpstan',
         'username' => 'phpstan',
         'password' => '',
-        // Lets Doctrine know the database platform without connecting to the server
+        // Let Doctrine know the database platform without connecting to the server
         'serverVersion' => '8.0',
         'character_set' => 'utf8mb4',
         'collation' => 'utf8mb4_unicode_ci',
