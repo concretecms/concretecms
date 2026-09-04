@@ -1573,12 +1573,6 @@ parameters:
 			path: ../concrete/controllers/single_page/dashboard/system/express/entities/customize_search.php
 
 		-
-			message: '#^Method Doctrine\\Persistence\\ObjectManager\:\:flush\(\) invoked with 1 parameter, 0 required\.$#'
-			identifier: arguments.count
-			count: 1
-			path: ../concrete/controllers/single_page/dashboard/system/express/entities/forms.php
-
-		-
 			message: '#^Parameter \#1 \$em of method Doctrine\\ORM\\Id\\AbstractIdGenerator\:\:generate\(\) expects Doctrine\\ORM\\EntityManager, Doctrine\\ORM\\EntityManagerInterface\|null given\.$#'
 			identifier: argument.type
 			count: 1
@@ -1627,22 +1621,10 @@ parameters:
 			path: ../concrete/controllers/single_page/dashboard/system/multilingual/page_report.php
 
 		-
-			message: '#^Method Doctrine\\Persistence\\ObjectManager\:\:flush\(\) invoked with 1 parameter, 0 required\.$#'
-			identifier: arguments.count
-			count: 1
-			path: ../concrete/controllers/single_page/dashboard/system/multilingual/setup.php
-
-		-
 			message: '#^Strict comparison using \=\=\= between int and null will always evaluate to false\.$#'
 			identifier: identical.alwaysFalse
 			count: 1
 			path: ../concrete/controllers/single_page/dashboard/system/multisite/sites.php
-
-		-
-			message: '#^Method Doctrine\\Persistence\\ObjectManager\:\:flush\(\) invoked with 1 parameter, 0 required\.$#'
-			identifier: arguments.count
-			count: 1
-			path: ../concrete/controllers/single_page/dashboard/system/multisite/types.php
 
 		-
 			message: '#^Result of method Concrete\\Controller\\SinglePage\\Dashboard\\System\\Multisite\\Types\:\:prepareAddOrEdit\(\) \(void\) is used\.$#'
@@ -1679,18 +1661,6 @@ parameters:
 			identifier: method.notFound
 			count: 1
 			path: ../concrete/controllers/single_page/dashboard/system/permissions/captcha.php
-
-		-
-			message: '#^Method Doctrine\\Persistence\\ObjectManager\:\:flush\(\) invoked with 1 parameter, 0 required\.$#'
-			identifier: arguments.count
-			count: 1
-			path: ../concrete/controllers/single_page/dashboard/system/permissions/denylist/configure.php
-
-		-
-			message: '#^Method Doctrine\\Persistence\\ObjectManager\:\:flush\(\) invoked with 1 parameter, 0 required\.$#'
-			identifier: arguments.count
-			count: 1
-			path: ../concrete/controllers/single_page/dashboard/system/permissions/denylist/range.php
 
 		-
 			message: '#^Unreachable statement \- code above always terminates\.$#'
@@ -6469,12 +6439,6 @@ parameters:
 			path: ../concrete/src/Geolocator/GeolocationResult.php
 
 		-
-			message: '#^Method Doctrine\\Persistence\\ObjectManager\:\:flush\(\) invoked with 1 parameter, 0 required\.$#'
-			identifier: arguments.count
-			count: 2
-			path: ../concrete/src/Geolocator/GeolocatorService.php
-
-		-
 			message: '#^Call to an undefined method Concrete\\Core\\Health\\Report\\Finding\\Control\\ControlInterface\:\:getLocation\(\)\.$#'
 			identifier: method.notFound
 			count: 1
@@ -9167,12 +9131,6 @@ parameters:
 			identifier: return.missing
 			count: 1
 			path: ../concrete/src/Permission/Inheritance/Registry/AbstractRegistry.php
-
-		-
-			message: '#^Method Doctrine\\Persistence\\ObjectManager\:\:flush\(\) invoked with 1 parameter, 0 required\.$#'
-			identifier: arguments.count
-			count: 2
-			path: ../concrete/src/Permission/IpAccessControlService.php
 
 		-
 			message: '#^Call to an undefined method Concrete\\Core\\Permission\\Access\\ListItem\\ListItem\:\:getBlockTypesAllowedArray\(\)\.$#'

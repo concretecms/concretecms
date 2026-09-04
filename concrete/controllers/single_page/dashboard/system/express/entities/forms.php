@@ -42,7 +42,7 @@ class Forms extends DashboardPageController
                 $form->setName($this->request->request->get('name'));
                 $form->setEntity($entity);
                 $this->entityManager->persist($form);
-                $this->entityManager->flush($form);
+                $this->entityManager->flush();
 
                 if ($this->request->request->has('form_id')) {
                     $this->flash('success', t('Form updated successfully.'));

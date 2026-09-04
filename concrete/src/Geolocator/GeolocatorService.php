@@ -86,13 +86,13 @@ class GeolocatorService
             if ($currentGeolocator !== null) {
                 $currentGeolocator->setIsActive(false);
                 if ($currentGeolocator->getGeolocatorID() !== null) {
-                    $this->em->flush($currentGeolocator);
+                    $this->em->flush();
                 }
             }
             if ($geolocator !== null) {
                 $geolocator->setIsActive(true);
                 if ($geolocator->getGeolocatorID() !== null) {
-                    $this->em->flush($geolocator);
+                    $this->em->flush();
                 }
             }
         }

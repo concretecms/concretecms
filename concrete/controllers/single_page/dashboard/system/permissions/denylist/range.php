@@ -152,7 +152,7 @@ class Range extends Denylist
             ->setType(IpAccessControlService::IPRANGETYPE_BLACKLIST_MANUAL)
             ->setExpiration(null)
         ;
-        $this->entityManager->flush($range);
+        $this->entityManager->flush();
 
         return $this->app->make(ResponseFactoryInterface::class)->json(true);
     }

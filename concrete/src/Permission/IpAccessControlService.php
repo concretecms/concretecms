@@ -408,7 +408,7 @@ class IpAccessControlService implements LoggerAwareInterface
             ->setSite($this->site)
         ;
         $this->em->persist($result);
-        $this->em->flush($result);
+        $this->em->flush();
 
         return $result;
     }
@@ -473,7 +473,7 @@ class IpAccessControlService implements LoggerAwareInterface
             return;
         }
         $this->em->remove($entity);
-        $this->em->flush($entity);
+        $this->em->flush();
     }
 
     /**

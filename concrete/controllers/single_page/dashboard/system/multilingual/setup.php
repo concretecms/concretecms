@@ -240,7 +240,7 @@ class Setup extends DashboardSitePageController
                     $editingLocale->setLanguage($msLanguage);
                     $editingLocale->setCountry($msCountry);
                     $service->updatePluralSettings($editingLocale);
-                    $this->entityManager->flush($editingLocale);
+                    $this->entityManager->flush();
                     
                     $event = new \Symfony\Component\EventDispatcher\GenericEvent();
                     $event->setArgument('locale', $editingLocale);

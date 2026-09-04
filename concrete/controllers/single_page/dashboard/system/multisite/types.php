@@ -262,7 +262,7 @@ class Types extends DashboardPageController
         }
         if (!$this->error->has()) {
             $group->setSiteGroupName($name);
-            $this->entityManager->flush($group);
+            $this->entityManager->flush();
             $this->flash('success', t('Group updated successfully.'));
 
             return $this->buildRedirect($this->action('view_groups', $group->getSiteType()->getSiteTypeID()));
