@@ -443,7 +443,7 @@ class Add extends BackendInterfacePageController
     }
 
     /**
-     * @return \Concrete\Core\Entity\Block\BlockType\BlockType[] array keys are the set names, array values are the block types associated to those sets
+     * @return array<string, \Concrete\Core\Entity\Block\BlockType\BlockType[]> array keys are the set names, array values are the block types associated to those sets
      */
     protected function buildSetsAndBlockTypes()
     {

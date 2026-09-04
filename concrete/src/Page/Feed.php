@@ -64,7 +64,7 @@ class Feed
     /**
      * Get a PageFeed by its handle
      * @param $pfHandle
-     * @return self|null
+     * @return \Concrete\Core\Entity\Page\Feed|null
      */
     public static function getByHandle($pfHandle)
     {

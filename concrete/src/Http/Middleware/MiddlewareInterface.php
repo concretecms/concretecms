@@ -12,7 +12,7 @@ interface MiddlewareInterface
      * Process the request and return a response
      * @param \Symfony\Component\HttpFoundation\Request $request
      * @param DelegateInterface $frame
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return \Symfony\Component\HttpFoundation\Response|\Psr\Http\Message\ResponseInterface
      */
     public function process(Request $request, DelegateInterface $frame);
 

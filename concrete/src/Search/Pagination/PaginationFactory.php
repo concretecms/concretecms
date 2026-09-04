@@ -42,7 +42,7 @@ class PaginationFactory
 
     /**
      * @param ItemList $itemList
-     * @return Pagerfanta
+     * @return \Concrete\Core\Search\Pagination\Pagination
      */
     public function createPaginationObject($itemList, $permissionedStylePagination = self::PERMISSIONED_PAGINATION_STYLE_FULL)
     {
@@ -71,9 +71,12 @@ class PaginationFactory
     }
 
     /**
+     * @template T of Pagerfanta
+     *
      * @param ItemList $itemList
-     * @param Pagerfanta $pagination
-     * @return Pagerfanta
+     * @param T $pagination
+     *
+     * @return T
      */
     public function deliverPaginationObject(ItemList $itemList, Pagerfanta $pagination)
     {

@@ -123,7 +123,7 @@ abstract class Editor extends ConcreteObject
     /**
      * Looks up and returns a Package object for the current Editor's Package ID.
      *
-     * @return Package|null
+     * @return \Concrete\Core\Entity\Package|null
      */
     public function getPackageObject()
     {

@@ -17,7 +17,7 @@ interface ProviderInterface
     function getBaseColumnSet();
 
     /**
-     * @return \Concrete\Core\Page\Search\ColumnSet\ColumnSet
+     * @return Set
      */
     function getDefaultColumnSet();
     function getCurrentColumnSet();

@@ -23,7 +23,7 @@ class DeleteGroupCommand extends Command
     private $onlyIfEmpty = false;
 
     /**
-     * @var bool
+     * @var int
      */
     private $onChildGroups = self::ONCHILDGROUPS_MOVETOROOT;
 

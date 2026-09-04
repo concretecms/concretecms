@@ -14,7 +14,7 @@ interface ItemInterface
     public function getController();
 
     /**
-     * @return bool
+     * @return string|null
      */
     public function getPosition();
 }

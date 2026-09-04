@@ -871,12 +871,6 @@ parameters:
 			path: ../concrete/controllers/event/export.php
 
 		-
-			message: '#^Call to an undefined method Concrete\\Core\\Page\\Feed\:\:getOutput\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: ../concrete/controllers/feed.php
-
-		-
 			message: '#^Array has 2 duplicate keys with value ''editInComposer'' \(''editInComposer'', ''editInComposer''\)\.$#'
 			identifier: array.duplicateKey
 			count: 1
@@ -981,12 +975,6 @@ parameters:
 		-
 			message: '#^Instanceof between Concrete\\Core\\Page\\Page and Concrete\\Core\\Page\\Page will always evaluate to true\.$#'
 			identifier: instanceof.alwaysTrue
-			count: 1
-			path: ../concrete/controllers/panel/add.php
-
-		-
-			message: '#^Method Concrete\\Controller\\Panel\\Add\:\:buildSetsAndBlockTypes\(\) should return array\<Concrete\\Core\\Entity\\Block\\BlockType\\BlockType\> but returns array\<string, list\>\.$#'
-			identifier: return.type
 			count: 1
 			path: ../concrete/controllers/panel/add.php
 
@@ -1777,12 +1765,6 @@ parameters:
 			path: ../concrete/controllers/single_page/dashboard/system/files/external_file_provider.php
 
 		-
-			message: '#^Call to function is_object\(\) with Concrete\\Core\\Error\\ErrorList\\Error\\Error will always evaluate to true\.$#'
-			identifier: function.alreadyNarrowedType
-			count: 1
-			path: ../concrete/controllers/single_page/dashboard/system/files/storage.php
-
-		-
 			message: '#^Call to function is_array\(\) with bool\|float\|int\|string\|null will always evaluate to false\.$#'
 			identifier: function.impossibleType
 			count: 1
@@ -2209,12 +2191,6 @@ parameters:
 			path: ../concrete/controllers/single_page/download_file.php
 
 		-
-			message: '#^Method Concrete\\Controller\\SinglePage\\Login\:\:logoutAndRedirect\(\) should return Concrete\\Core\\Routing\\RedirectResponse but returns Symfony\\Component\\HttpFoundation\\RedirectResponse\.$#'
-			identifier: return.type
-			count: 2
-			path: ../concrete/controllers/single_page/login.php
-
-		-
 			message: '#^Negated boolean expression is always false\.$#'
 			identifier: booleanNot.alwaysFalse
 			count: 2
@@ -2279,12 +2255,6 @@ parameters:
 			identifier: varTag.misplaced
 			count: 1
 			path: ../concrete/src/Announcement/Item/Factory/WelcomeItemFactory.php
-
-		-
-			message: '#^Method Concrete\\Core\\Antispam\\Library\:\:getPackageObject\(\) should return Concrete\\Core\\Package\\Package\|null but returns Concrete\\Core\\Entity\\Package\|null\.$#'
-			identifier: return.type
-			count: 1
-			path: ../concrete/src/Antispam/Library.php
 
 		-
 			message: '#^Parameter \#2 \$value of method SimpleXMLElement\:\:addAttribute\(\) expects string, bool given\.$#'
@@ -2855,12 +2825,6 @@ parameters:
 			identifier: method.notFound
 			count: 1
 			path: ../concrete/src/Application/UserInterface/Menu/Item/Controller.php
-
-		-
-			message: '#^Method Concrete\\Core\\Application\\UserInterface\\Menu\\Item\\Item\:\:getPosition\(\) should return bool but returns string\|null\.$#'
-			identifier: return.type
-			count: 1
-			path: ../concrete/src/Application/UserInterface/Menu/Item/Item.php
 
 		-
 			message: '#^Call to an undefined method Concrete\\Core\\Application\\UserInterface\\OptionsForm\\OptionsFormControllerInterface\:\:render\(\)\.$#'
@@ -3883,12 +3847,6 @@ parameters:
 			path: ../concrete/src/Backup/ContentImporter/ValueInspector/Item/FileItem.php
 
 		-
-			message: '#^Method Concrete\\Core\\Backup\\ContentImporter\\ValueInspector\\Item\\PageFeedItem\:\:getContentObject\(\) should return Concrete\\Core\\Entity\\Page\\Feed\|null but returns Concrete\\Core\\Page\\Feed\|null\.$#'
-			identifier: return.type
-			count: 1
-			path: ../concrete/src/Backup/ContentImporter/ValueInspector/Item/PageFeedItem.php
-
-		-
 			message: '#^PHPDoc tag @var above a method has no effect\.$#'
 			identifier: varTag.misplaced
 			count: 1
@@ -4849,12 +4807,6 @@ parameters:
 			path: ../concrete/src/Conversation/Editor/Editor.php
 
 		-
-			message: '#^Method Concrete\\Core\\Conversation\\Editor\\Editor\:\:getPackageObject\(\) should return Concrete\\Core\\Package\\Package\|null but returns Concrete\\Core\\Entity\\Package\|null\.$#'
-			identifier: return.type
-			count: 1
-			path: ../concrete/src/Conversation/Editor/Editor.php
-
-		-
 			message: '#^Strict comparison using \!\=\= between null and null will always evaluate to false\.$#'
 			identifier: notIdentical.alwaysFalse
 			count: 1
@@ -5087,12 +5039,6 @@ parameters:
 			identifier: booleanNot.alwaysFalse
 			count: 1
 			path: ../concrete/src/Database/DatabaseStructureManager.php
-
-		-
-			message: '#^Method Concrete\\Core\\Database\\EntityManager\\Provider\\PackageProviderFactory\:\:getEntityManagerProvider\(\) should return Concrete\\Core\\Database\\EntityManager\\Provider\\DefaultPackageProvider\|Concrete\\Core\\Package\\Package but returns Concrete\\Core\\Database\\EntityManager\\Provider\\ProviderInterface\.$#'
-			identifier: return.type
-			count: 1
-			path: ../concrete/src/Database/EntityManager/Provider/PackageProviderFactory.php
 
 		-
 			message: '#^Call to an undefined method Concrete\\Core\\Database\\EntityManager\\Provider\\ProviderInterface\:\:getNamespace\(\)\.$#'
@@ -5959,18 +5905,6 @@ parameters:
 			path: ../concrete/src/Express/Command/ExpressEntryCommandHandlerTrait.php
 
 		-
-			message: '#^Method Concrete\\Core\\Express\\Controller\\StandardController\:\:getContextRegistry\(\) should return Concrete\\Core\\Form\\Context\\Registry\\ContextRegistryInterface but returns null\.$#'
-			identifier: return.type
-			count: 1
-			path: ../concrete/src/Express/Controller/StandardController.php
-
-		-
-			message: '#^Method Concrete\\Core\\Express\\Entity\\Cloner\:\:cloneEntityAssociations\(\) should return array\<string, Concrete\\Core\\Entity\\Express\\Entry\\Association\> but returns array\<Concrete\\Core\\Entity\\Express\\Association\>\.$#'
-			identifier: return.type
-			count: 1
-			path: ../concrete/src/Express/Entity/Cloner.php
-
-		-
 			message: '#^Parameter &\$controlsMapping by\-ref type of method Concrete\\Core\\Express\\Entity\\Cloner\:\:cloneEntityForms\(\) expects array\<string, string\>, array\<mixed\> given\.$#'
 			identifier: parameterByRef.type
 			count: 1
@@ -6667,12 +6601,6 @@ parameters:
 			path: ../concrete/src/File/Search/SearchProvider.php
 
 		-
-			message: '#^Return type \(Concrete\\Core\\File\\Search\\ColumnSet\\DefaultSet\) of method Concrete\\Core\\File\\Search\\SearchProvider\:\:getDefaultColumnSet\(\) should be compatible with return type \(Concrete\\Core\\Page\\Search\\ColumnSet\\ColumnSet\) of method Concrete\\Core\\Search\\ProviderInterface\:\:getDefaultColumnSet\(\)$#'
-			identifier: method.childReturnType
-			count: 2
-			path: ../concrete/src/File/Search/SearchProvider.php
-
-		-
 			message: '#^Constant REL_DIR_FILES_THUMBNAILS_LEVEL2 not found\.$#'
 			identifier: constant.notFound
 			count: 1
@@ -6785,18 +6713,6 @@ parameters:
 			identifier: return.type
 			count: 1
 			path: ../concrete/src/File/StorageLocation/Configuration/DefaultConfiguration.php
-
-		-
-			message: '#^Return type \(Concrete\\Core\\Error\\ErrorList\\ErrorList\) of method Concrete\\Core\\File\\StorageLocation\\Configuration\\DefaultConfiguration\:\:validateRequest\(\) should be compatible with return type \(Concrete\\Core\\Error\\ErrorList\\Error\\Error\) of method Concrete\\Core\\File\\StorageLocation\\Configuration\\ConfigurationInterface\:\:validateRequest\(\)$#'
-			identifier: method.childReturnType
-			count: 1
-			path: ../concrete/src/File/StorageLocation/Configuration/DefaultConfiguration.php
-
-		-
-			message: '#^Return type \(Concrete\\Core\\Error\\ErrorList\\ErrorList\) of method Concrete\\Core\\File\\StorageLocation\\Configuration\\LocalConfiguration\:\:validateRequest\(\) should be compatible with return type \(Concrete\\Core\\Error\\ErrorList\\Error\\Error\) of method Concrete\\Core\\File\\StorageLocation\\Configuration\\ConfigurationInterface\:\:validateRequest\(\)$#'
-			identifier: method.childReturnType
-			count: 1
-			path: ../concrete/src/File/StorageLocation/Configuration/LocalConfiguration.php
 
 		-
 			message: '#^Method Concrete\\Core\\File\\StorageLocation\\StorageLocationFactory\:\:create\(\) invoked with 3 parameters, 2 required\.$#'
@@ -7681,12 +7597,6 @@ parameters:
 			path: ../concrete/src/Http/Middleware/OAuthAuthenticationMiddleware.php
 
 		-
-			message: '#^Method Concrete\\Core\\Http\\Middleware\\OAuthErrorMiddleware\:\:process\(\) should return Psr\\Http\\Message\\ResponseInterface but returns Symfony\\Component\\HttpFoundation\\Response\.$#'
-			identifier: return.type
-			count: 1
-			path: ../concrete/src/Http/Middleware/OAuthErrorMiddleware.php
-
-		-
 			message: '#^Method Concrete\\Core\\Http\\RequestBase\:\:getInstance\(\) should return static\(Concrete\\Core\\Http\\RequestBase\) but returns Symfony\\Component\\HttpFoundation\\Request\.$#'
 			identifier: return.type
 			count: 1
@@ -8065,12 +7975,6 @@ parameters:
 			path: ../concrete/src/Localization/Service/Date.php
 
 		-
-			message: '#^Method Concrete\\Core\\Localization\\Service\\TranslationsChecker\:\:getPackageTranslations\(\) should return Concrete\\Core\\Localization\\Translation\\PackageLocaleStatus but returns Concrete\\Core\\Localization\\Translation\\LocaleStatus\.$#'
-			identifier: return.type
-			count: 1
-			path: ../concrete/src/Localization/Service/TranslationsChecker.php
-
-		-
 			message: '#^Call to an undefined static method Gettext\\Translations\:\:fromMoFile\(\)\.$#'
 			identifier: staticMethod.notFound
 			count: 1
@@ -8113,12 +8017,6 @@ parameters:
 			path: ../concrete/src/Localization/Translator/Adapter/Laminas/TranslatorAdapter.php
 
 		-
-			message: '#^Method Concrete\\Core\\Localization\\Translator\\Adapter\\Laminas\\TranslatorAdapter\:\:translatePlural\(\) should return int but returns string\.$#'
-			identifier: return.type
-			count: 1
-			path: ../concrete/src/Localization/Translator/Adapter/Laminas/TranslatorAdapter.php
-
-		-
 			message: '#^Property Concrete\\Core\\Localization\\Translator\\Adapter\\Laminas\\TranslatorAdapterFactory\:\:\$translationLoaderRepository \(Concrete\\Core\\Localization\\Translator\\Translation\\TranslationLoaderRepositoryInterface\) in isset\(\) is not nullable\.$#'
 			identifier: isset.property
 			count: 1
@@ -8131,22 +8029,10 @@ parameters:
 			path: ../concrete/src/Localization/Translator/Adapter/Plain/TranslatorAdapter.php
 
 		-
-			message: '#^Return type \(string\) of method Concrete\\Core\\Localization\\Translator\\Adapter\\Plain\\TranslatorAdapter\:\:translatePlural\(\) should be compatible with return type \(int\) of method Concrete\\Core\\Localization\\Translator\\TranslatorAdapterInterface\:\:translatePlural\(\)$#'
-			identifier: method.childReturnType
-			count: 1
-			path: ../concrete/src/Localization/Translator/Adapter/Plain/TranslatorAdapter.php
-
-		-
 			message: '#^Property Concrete\\Core\\Localization\\Translator\\Loader\\Gettext\:\:\$webrootDirectory is never read, only written\.$#'
 			identifier: property.onlyWritten
 			count: 1
 			path: ../concrete/src/Localization/Translator/Loader/Gettext.php
-
-		-
-			message: '#^Method Concrete\\Core\\Localization\\Translator\\Translation\\TranslationLoaderRepository\:\:getTranslationLoader\(\) should return Concrete\\Core\\Localization\\Translator\\Translation\\TranslationLoaderInterface but returns null\.$#'
-			identifier: return.type
-			count: 1
-			path: ../concrete/src/Localization/Translator/Translation/TranslationLoaderRepository.php
 
 		-
 			message: '#^Method Concrete\\Core\\Localization\\Translator\\Translation\\TranslationLoaderRepository\:\:registerTranslationLoader\(\) should return Concrete\\Core\\Localization\\Translator\\Translation\\TranslationLoaderInterface but return statement is missing\.$#'
@@ -8159,12 +8045,6 @@ parameters:
 			identifier: booleanNot.alwaysFalse
 			count: 1
 			path: ../concrete/src/Logging/Configuration/SimpleConfiguration.php
-
-		-
-			message: '#^Method Concrete\\Core\\Logging\\LogEntry\:\:getTimestamp\(\) should return string\|null but returns DateTime\|null\.$#'
-			identifier: return.type
-			count: 1
-			path: ../concrete/src/Logging/LogEntry.php
 
 		-
 			message: '#^Parameter \#1 \$level of static method Concrete\\Core\\Logging\\Levels\:\:getLevelDisplayName\(\) expects int, string\|null given\.$#'
@@ -8195,12 +8075,6 @@ parameters:
 			identifier: argument.type
 			count: 1
 			path: ../concrete/src/Logging/Search/ColumnSet/DefaultSet.php
-
-		-
-			message: '#^Method Concrete\\Core\\Logging\\Search\\SearchProvider\:\:getDefaultColumnSet\(\) should return Concrete\\Core\\Page\\Search\\ColumnSet\\ColumnSet but returns Concrete\\Core\\Logging\\Search\\ColumnSet\\DefaultSet\.$#'
-			identifier: return.type
-			count: 1
-			path: ../concrete/src/Logging/Search/SearchProvider.php
 
 		-
 			message: '#^Call to an undefined method Concrete\\Core\\Mail\\Importer\\MailImporter\:\:process\(\)\.$#'
@@ -8587,16 +8461,10 @@ parameters:
 			path: ../concrete/src/Notification/Notifier/WorkflowProgressNotifier.php
 
 		-
-			message: '#^Method Concrete\\Core\\Notification\\Type\\CoreUpdateType\:\:createNotification\(\) should return Concrete\\Core\\Express\\Entry\\Notifier\\NotificationInterface but return statement is missing\.$#'
+			message: '#^Method Concrete\\Core\\Notification\\Type\\CoreUpdateType\:\:createNotification\(\) should return Concrete\\Core\\Entity\\Notification\\Notification but return statement is missing\.$#'
 			identifier: return.missing
 			count: 1
 			path: ../concrete/src/Notification/Type/CoreUpdateType.php
-
-		-
-			message: '#^Method Concrete\\Core\\Notification\\Type\\GroupCreateType\:\:createNotification\(\) should return Concrete\\Core\\Express\\Entry\\Notifier\\NotificationInterface but returns Concrete\\Core\\Entity\\Notification\\GroupCreateNotification\.$#'
-			identifier: return.type
-			count: 1
-			path: ../concrete/src/Notification/Type/GroupCreateType.php
 
 		-
 			message: '#^Parameter \#1 \$create of class Concrete\\Core\\Entity\\Notification\\GroupCreateNotification constructor expects Concrete\\Core\\Entity\\User\\GroupCreate, Concrete\\Core\\Notification\\Subject\\SubjectInterface given\.$#'
@@ -8605,22 +8473,10 @@ parameters:
 			path: ../concrete/src/Notification/Type/GroupCreateType.php
 
 		-
-			message: '#^Method Concrete\\Core\\Notification\\Type\\GroupRoleChangeType\:\:createNotification\(\) should return Concrete\\Core\\Express\\Entry\\Notifier\\NotificationInterface but returns Concrete\\Core\\Entity\\Notification\\GroupRoleChangeNotification\.$#'
-			identifier: return.type
-			count: 1
-			path: ../concrete/src/Notification/Type/GroupRoleChangeType.php
-
-		-
 			message: '#^Parameter \#1 \$groupRoleChange of class Concrete\\Core\\Entity\\Notification\\GroupRoleChangeNotification constructor expects Concrete\\Core\\Entity\\User\\GroupRoleChange, Concrete\\Core\\Notification\\Subject\\SubjectInterface given\.$#'
 			identifier: argument.type
 			count: 1
 			path: ../concrete/src/Notification/Type/GroupRoleChangeType.php
-
-		-
-			message: '#^Method Concrete\\Core\\Notification\\Type\\GroupSignupType\:\:createNotification\(\) should return Concrete\\Core\\Express\\Entry\\Notifier\\NotificationInterface but returns Concrete\\Core\\Entity\\Notification\\GroupSignupNotification\.$#'
-			identifier: return.type
-			count: 1
-			path: ../concrete/src/Notification/Type/GroupSignupType.php
 
 		-
 			message: '#^Parameter \#1 \$signup of class Concrete\\Core\\Entity\\Notification\\GroupSignupNotification constructor expects Concrete\\Core\\Entity\\User\\GroupSignup, Concrete\\Core\\Notification\\Subject\\SubjectInterface given\.$#'
@@ -8629,34 +8485,16 @@ parameters:
 			path: ../concrete/src/Notification/Type/GroupSignupType.php
 
 		-
-			message: '#^Method Concrete\\Core\\Notification\\Type\\NewConversationMessageType\:\:createNotification\(\) should return Concrete\\Core\\Express\\Entry\\Notifier\\NotificationInterface but returns Concrete\\Core\\Entity\\Notification\\NewConversationMessageNotification\.$#'
-			identifier: return.type
-			count: 1
-			path: ../concrete/src/Notification/Type/NewConversationMessageType.php
-
-		-
 			message: '#^Parameter \#1 \$message of class Concrete\\Core\\Entity\\Notification\\NewConversationMessageNotification constructor expects Concrete\\Core\\Conversation\\Message\\NewMessage, Concrete\\Core\\Notification\\Subject\\SubjectInterface given\.$#'
 			identifier: argument.type
 			count: 1
 			path: ../concrete/src/Notification/Type/NewConversationMessageType.php
 
 		-
-			message: '#^Method Concrete\\Core\\Notification\\Type\\NewFormSubmissionType\:\:createNotification\(\) should return Concrete\\Core\\Express\\Entry\\Notifier\\NotificationInterface but returns Concrete\\Core\\Entity\\Notification\\NewFormSubmissionNotification\.$#'
-			identifier: return.type
-			count: 1
-			path: ../concrete/src/Notification/Type/NewFormSubmissionType.php
-
-		-
 			message: '#^Parameter \#1 \$subject of class Concrete\\Core\\Entity\\Notification\\NewFormSubmissionNotification constructor expects Concrete\\Core\\Express\\Entry\\Notifier\\Notification\\EntrySubject, Concrete\\Core\\Notification\\Subject\\SubjectInterface given\.$#'
 			identifier: argument.type
 			count: 1
 			path: ../concrete/src/Notification/Type/NewFormSubmissionType.php
-
-		-
-			message: '#^Method Concrete\\Core\\Notification\\Type\\NewPrivateMessageType\:\:createNotification\(\) should return Concrete\\Core\\Express\\Entry\\Notifier\\NotificationInterface but returns Concrete\\Core\\Entity\\Notification\\NewPrivateMessageNotification\.$#'
-			identifier: return.type
-			count: 1
-			path: ../concrete/src/Notification/Type/NewPrivateMessageType.php
 
 		-
 			message: '#^Parameter \#1 \$message of class Concrete\\Core\\Entity\\Notification\\NewPrivateMessageNotification constructor expects Concrete\\Core\\User\\PrivateMessage\\PrivateMessage, Concrete\\Core\\Notification\\Subject\\SubjectInterface given\.$#'
@@ -8671,22 +8509,10 @@ parameters:
 			path: ../concrete/src/Notification/Type/UserDeactivatedType.php
 
 		-
-			message: '#^Method Concrete\\Core\\Notification\\Type\\UserSignupType\:\:createNotification\(\) should return Concrete\\Core\\Express\\Entry\\Notifier\\NotificationInterface but returns Concrete\\Core\\Entity\\Notification\\UserSignupNotification\.$#'
-			identifier: return.type
-			count: 1
-			path: ../concrete/src/Notification/Type/UserSignupType.php
-
-		-
 			message: '#^Parameter \#1 \$signup of class Concrete\\Core\\Entity\\Notification\\UserSignupNotification constructor expects Concrete\\Core\\Entity\\User\\UserSignup, Concrete\\Core\\Notification\\Subject\\SubjectInterface given\.$#'
 			identifier: argument.type
 			count: 1
 			path: ../concrete/src/Notification/Type/UserSignupType.php
-
-		-
-			message: '#^Method Concrete\\Core\\Notification\\Type\\WorkflowProgressType\:\:createNotification\(\) should return Concrete\\Core\\Express\\Entry\\Notifier\\NotificationInterface but returns Concrete\\Core\\Entity\\Notification\\WorkflowProgressNotification\.$#'
-			identifier: return.type
-			count: 1
-			path: ../concrete/src/Notification/Type/WorkflowProgressType.php
 
 		-
 			message: '#^Parameter \#1 \$progress of class Concrete\\Core\\Entity\\Notification\\WorkflowProgressNotification constructor expects Concrete\\Core\\Workflow\\Progress\\Progress, Concrete\\Core\\Notification\\Subject\\SubjectInterface given\.$#'
@@ -8801,144 +8627,6 @@ parameters:
 			identifier: new.static
 			count: 1
 			path: ../concrete/src/Package/Offline/PackageInfo.php
-
-		-
-			message: '#^Method Concrete\\Core\\Package\\Offline\\Parser\:\:findControllerClass\(\) should return array\<array\> but returns array\<int, mixed\>\.$#'
-			identifier: return.type
-			count: 1
-			path: ../concrete/src/Package/Offline/Parser.php
-
-		-
-			message: '#^Parameter \#2 \$className of method Concrete\\Core\\Package\\Offline\\Parser\:\:getPackageDescription\(\) expects string, array given\.$#'
-			identifier: argument.type
-			count: 1
-			path: ../concrete/src/Package/Offline/Parser.php
-
-		-
-			message: '#^Parameter \#2 \$className of method Concrete\\Core\\Package\\Offline\\Parser\:\:getPackageHandle\(\) expects string, array given\.$#'
-			identifier: argument.type
-			count: 1
-			path: ../concrete/src/Package/Offline/Parser.php
-
-		-
-			message: '#^Parameter \#2 \$className of method Concrete\\Core\\Package\\Offline\\Parser\:\:getPackageMinimumCodeVersion\(\) expects string, array given\.$#'
-			identifier: argument.type
-			count: 1
-			path: ../concrete/src/Package/Offline/Parser.php
-
-		-
-			message: '#^Parameter \#2 \$className of method Concrete\\Core\\Package\\Offline\\Parser\:\:getPackageMinimumPHPVersion\(\) expects string, array given\.$#'
-			identifier: argument.type
-			count: 1
-			path: ../concrete/src/Package/Offline/Parser.php
-
-		-
-			message: '#^Parameter \#2 \$className of method Concrete\\Core\\Package\\Offline\\Parser\:\:getPackageName\(\) expects string, array given\.$#'
-			identifier: argument.type
-			count: 1
-			path: ../concrete/src/Package/Offline/Parser.php
-
-		-
-			message: '#^Parameter \#2 \$className of method Concrete\\Core\\Package\\Offline\\Parser\:\:getPackageVersion\(\) expects string, array given\.$#'
-			identifier: argument.type
-			count: 1
-			path: ../concrete/src/Package/Offline/Parser.php
-
-		-
-			message: '#^Parameter \#3 \$classStart of method Concrete\\Core\\Package\\Offline\\Parser\:\:getPackageDescription\(\) expects int, array given\.$#'
-			identifier: argument.type
-			count: 1
-			path: ../concrete/src/Package/Offline/Parser.php
-
-		-
-			message: '#^Parameter \#3 \$classStart of method Concrete\\Core\\Package\\Offline\\Parser\:\:getPackageHandle\(\) expects int, array given\.$#'
-			identifier: argument.type
-			count: 1
-			path: ../concrete/src/Package/Offline/Parser.php
-
-		-
-			message: '#^Parameter \#3 \$classStart of method Concrete\\Core\\Package\\Offline\\Parser\:\:getPackageMinimumCodeVersion\(\) expects int, array given\.$#'
-			identifier: argument.type
-			count: 1
-			path: ../concrete/src/Package/Offline/Parser.php
-
-		-
-			message: '#^Parameter \#3 \$classStart of method Concrete\\Core\\Package\\Offline\\Parser\:\:getPackageMinimumPHPVersion\(\) expects int, array given\.$#'
-			identifier: argument.type
-			count: 1
-			path: ../concrete/src/Package/Offline/Parser.php
-
-		-
-			message: '#^Parameter \#3 \$classStart of method Concrete\\Core\\Package\\Offline\\Parser\:\:getPackageName\(\) expects int, array given\.$#'
-			identifier: argument.type
-			count: 1
-			path: ../concrete/src/Package/Offline/Parser.php
-
-		-
-			message: '#^Parameter \#3 \$classStart of method Concrete\\Core\\Package\\Offline\\Parser\:\:getPackageVersion\(\) expects int, array given\.$#'
-			identifier: argument.type
-			count: 1
-			path: ../concrete/src/Package/Offline/Parser.php
-
-		-
-			message: '#^Parameter \#4 \$classEnd of method Concrete\\Core\\Package\\Offline\\Parser\:\:getPackageDescription\(\) expects int, array given\.$#'
-			identifier: argument.type
-			count: 1
-			path: ../concrete/src/Package/Offline/Parser.php
-
-		-
-			message: '#^Parameter \#4 \$classEnd of method Concrete\\Core\\Package\\Offline\\Parser\:\:getPackageHandle\(\) expects int, array given\.$#'
-			identifier: argument.type
-			count: 1
-			path: ../concrete/src/Package/Offline/Parser.php
-
-		-
-			message: '#^Parameter \#4 \$classEnd of method Concrete\\Core\\Package\\Offline\\Parser\:\:getPackageMinimumCodeVersion\(\) expects int, array given\.$#'
-			identifier: argument.type
-			count: 1
-			path: ../concrete/src/Package/Offline/Parser.php
-
-		-
-			message: '#^Parameter \#4 \$classEnd of method Concrete\\Core\\Package\\Offline\\Parser\:\:getPackageMinimumPHPVersion\(\) expects int, array given\.$#'
-			identifier: argument.type
-			count: 1
-			path: ../concrete/src/Package/Offline/Parser.php
-
-		-
-			message: '#^Parameter \#4 \$classEnd of method Concrete\\Core\\Package\\Offline\\Parser\:\:getPackageName\(\) expects int, array given\.$#'
-			identifier: argument.type
-			count: 1
-			path: ../concrete/src/Package/Offline/Parser.php
-
-		-
-			message: '#^Parameter \#4 \$classEnd of method Concrete\\Core\\Package\\Offline\\Parser\:\:getPackageVersion\(\) expects int, array given\.$#'
-			identifier: argument.type
-			count: 1
-			path: ../concrete/src/Package/Offline/Parser.php
-
-		-
-			message: '#^Strict comparison using \!\=\= between Concrete\\Core\\Package\\Offline\\PackageInfo and string will always evaluate to true\.$#'
-			identifier: notIdentical.alwaysTrue
-			count: 1
-			path: ../concrete/src/Package/Offline/Parser.php
-
-		-
-			message: '#^Unreachable statement \- code above always terminates\.$#'
-			identifier: deadCode.unreachable
-			count: 1
-			path: ../concrete/src/Package/Offline/Parser.php
-
-		-
-			message: '#^Method Concrete\\Core\\Package\\Offline\\Parser\\FiveSeven\:\:getPackageHandleFromClassName\(\) should return Concrete\\Core\\Package\\Offline\\PackageInfo but returns string\.$#'
-			identifier: return.type
-			count: 1
-			path: ../concrete/src/Package/Offline/Parser/FiveSeven.php
-
-		-
-			message: '#^Method Concrete\\Core\\Package\\Offline\\Parser\\Legacy\:\:getPackageHandleFromClassName\(\) should return Concrete\\Core\\Package\\Offline\\PackageInfo but returns string\.$#'
-			identifier: return.type
-			count: 1
-			path: ../concrete/src/Package/Offline/Parser/Legacy.php
 
 		-
 			message: '#^Method Concrete\\Core\\Package\\Package\:\:getPackageEntityManager\(\) should return Doctrine\\ORM\\EntityManager\|null but empty return statement found\.$#'
@@ -9245,12 +8933,6 @@ parameters:
 			identifier: nullCoalesce.expr
 			count: 3
 			path: ../concrete/src/Page/Exporter.php
-
-		-
-			message: '#^Method Concrete\\Core\\Page\\Feed\:\:getByHandle\(\) should return Concrete\\Core\\Page\\Feed\|null but returns Concrete\\Core\\Entity\\Page\\Feed\|null\.$#'
-			identifier: return.type
-			count: 1
-			path: ../concrete/src/Page/Feed.php
 
 		-
 			message: '#^Parameter \#2 \$value of method SimpleXMLElement\:\:addChild\(\) expects string\|null, int given\.$#'
@@ -11113,12 +10795,6 @@ parameters:
 			path: ../concrete/src/Search/Result/Item.php
 
 		-
-			message: '#^Property Concrete\\Core\\Search\\Result\\Result\:\:\$pagination \(Concrete\\Core\\Search\\Pagination\\Pagination\) does not accept Pagerfanta\\Pagerfanta\.$#'
-			identifier: assign.propertyType
-			count: 1
-			path: ../concrete/src/Search/Result/Result.php
-
-		-
 			message: '#^Strict comparison using \=\=\= between string and false will always evaluate to false\.$#'
 			identifier: identical.alwaysFalse
 			count: 1
@@ -12217,26 +11893,8 @@ parameters:
 			path: ../concrete/src/User/CsvWriter.php
 
 		-
-			message: '#^Method Concrete\\Core\\User\\Group\\Command\\DeleteGroupCommand\:\:getOnChildGroups\(\) should return int but returns bool\.$#'
-			identifier: return.type
-			count: 1
-			path: ../concrete/src/User/Group/Command/DeleteGroupCommand.php
-
-		-
 			message: '#^PHPDoc tag @return with type mixed is not subtype of native type int\.$#'
 			identifier: return.phpDocType
-			count: 1
-			path: ../concrete/src/User/Group/Command/DeleteGroupCommand.php
-
-		-
-			message: '#^Property Concrete\\Core\\User\\Group\\Command\\DeleteGroupCommand\:\:\$onChildGroups \(bool\) does not accept default value of type int\.$#'
-			identifier: property.defaultValue
-			count: 1
-			path: ../concrete/src/User/Group/Command/DeleteGroupCommand.php
-
-		-
-			message: '#^Property Concrete\\Core\\User\\Group\\Command\\DeleteGroupCommand\:\:\$onChildGroups \(bool\) does not accept int\.$#'
-			identifier: assign.propertyType
 			count: 1
 			path: ../concrete/src/User/Group/Command/DeleteGroupCommand.php
 
@@ -12329,12 +11987,6 @@ parameters:
 			identifier: method.notFound
 			count: 1
 			path: ../concrete/src/User/Group/Search/ColumnSet/Column/NameColumn.php
-
-		-
-			message: '#^Method Concrete\\Core\\User\\Group\\Search\\SearchProvider\:\:getDefaultColumnSet\(\) should return Concrete\\Core\\Page\\Search\\ColumnSet\\ColumnSet but returns Concrete\\Core\\User\\Group\\Search\\ColumnSet\\DefaultSet\.$#'
-			identifier: return.type
-			count: 1
-			path: ../concrete/src/User/Group/Search/SearchProvider.php
 
 		-
 			message: '#^Call to an undefined method Doctrine\\ORM\\EntityManagerInterface\:\:merge\(\)\.$#'
@@ -12479,12 +12131,6 @@ parameters:
 			identifier: property.notFound
 			count: 1
 			path: ../concrete/src/User/Search/Result/Item.php
-
-		-
-			message: '#^Method Concrete\\Core\\User\\Search\\SearchProvider\:\:getDefaultColumnSet\(\) should return Concrete\\Core\\Page\\Search\\ColumnSet\\ColumnSet but returns Concrete\\Core\\User\\Search\\ColumnSet\\DefaultSet\.$#'
-			identifier: return.type
-			count: 1
-			path: ../concrete/src/User/Search/SearchProvider.php
 
 		-
 			message: '#^Call to function is_object\(\) with Concrete\\Core\\User\\Group\\Group will always evaluate to true\.$#'

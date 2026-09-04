@@ -13,6 +13,7 @@ use Concrete\Core\Routing\RedirectResponse;
 use Concrete\Core\User\PostLoginLocation;
 use Concrete\Core\User\PostLoginLocationUrl;
 use Concrete\Core\User\User;
+use Symfony\Component\HttpFoundation\RedirectResponse as SymfonyRedirectResponse;
 use Exception;
 use PageController;
 use UserAttributeKey;
@@ -408,7 +409,7 @@ class Login extends PageController implements LoggerAwareInterface
         }
     }
 
-    private function logoutAndRedirect(): RedirectResponse
+    private function logoutAndRedirect(): SymfonyRedirectResponse
     {
         $u = $this->app->make(User::class);
         $response = null;

@@ -48,7 +48,7 @@ interface TranslatorAdapterInterface
      * @param string $plural
      * @param int $number
      *
-     * @return int
+     * @return string
      */
     public function translatePlural($singular, $plural, $number);
 
