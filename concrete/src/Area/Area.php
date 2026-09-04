@@ -442,7 +442,7 @@ class Area extends ConcreteObject implements \Concrete\Core\Permission\ObjectInt
      * @param Page $c
      * @param string $arHandle
      *
-     * @return Area|false
+     * @return Area|false|null returns false if $c is not an object, null if the area doesn't exist
      */
     final public static function get($c, $arHandle)
     {
