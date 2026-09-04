@@ -120,7 +120,7 @@ class SitemapGenerator
      */
     public function setResolverManager(ResolverManagerInterface $resolverManager)
     {
-        $this->pageListGenerator = $resolverManager;
+        $this->resolverManager = $resolverManager;
 
         return $this;
     }

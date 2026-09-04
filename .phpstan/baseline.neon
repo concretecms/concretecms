@@ -7855,12 +7855,6 @@ parameters:
 			path: ../concrete/src/Page/Sitemap/PageListGenerator.php
 
 		-
-			message: '#^Property Concrete\\Core\\Page\\Sitemap\\SitemapGenerator\:\:\$pageListGenerator \(Concrete\\Core\\Page\\Sitemap\\PageListGenerator\|null\) does not accept Concrete\\Core\\Url\\Resolver\\Manager\\ResolverManagerInterface\.$#'
-			identifier: assign.propertyType
-			count: 1
-			path: ../concrete/src/Page/Sitemap/SitemapGenerator.php
-
-		-
 			message: '#^Call to an undefined method Concrete\\Core\\Events\\EventDispatcher\:\:hasListeners\(\)\.$#'
 			identifier: method.notFound
 			count: 3
