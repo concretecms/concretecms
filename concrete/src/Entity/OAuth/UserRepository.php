@@ -2,7 +2,7 @@
 
 namespace Concrete\Core\Entity\OAuth;
 
-use Concrete\Core\Entity\Express\EntityRepository;
+use Doctrine\ORM\EntityRepository;
 use Concrete\Core\Entity\User\User;
 use League\OAuth2\Server\Entities\ClientEntityInterface;
 use League\OAuth2\Server\Entities\UserEntityInterface;
