@@ -67,12 +67,6 @@ parameters:
 			path: ../concrete/controllers/backend/block/process.php
 
 		-
-			message: '#^PHPDoc tag @param references unknown parameter\: \$bID$#'
-			identifier: parameter.notFound
-			count: 1
-			path: ../concrete/controllers/backend/block/process.php
-
-		-
 			message: '#^Parameter \#1 \$callback of function set_error_handler expects \(callable\(int, string, string, int, array\)\: bool\)\|null, Closure\(\)\: void given\.$#'
 			identifier: argument.type
 			count: 1
@@ -3909,7 +3903,7 @@ parameters:
 		-
 			message: '#^PHPDoc tag @param references unknown parameter\: \$folderName$#'
 			identifier: parameter.notFound
-			count: 2
+			count: 1
 			path: ../concrete/src/Backup/ContentImporter.php
 
 		-
@@ -4165,12 +4159,6 @@ parameters:
 			path: ../concrete/src/Block/BlockController.php
 
 		-
-			message: '#^PHPDoc tag @param references unknown parameter\: \$newBlockID$#'
-			identifier: parameter.notFound
-			count: 1
-			path: ../concrete/src/Block/BlockController.php
-
-		-
 			message: '#^Access to an undefined property Concrete\\Core\\Entity\\Block\\BlockType\\BlockType\:\:\$hasCustomAddTemplate\.$#'
 			identifier: property.notFound
 			count: 1
@@ -4349,12 +4337,6 @@ parameters:
 			identifier: if.alwaysTrue
 			count: 2
 			path: ../concrete/src/Board/Instance/Notifier/PageNotifier.php
-
-		-
-			message: '#^PHPDoc tag @param references unknown parameter\: \$slotTemplate$#'
-			identifier: parameter.notFound
-			count: 1
-			path: ../concrete/src/Board/Instance/Slot/Content/AvailableObjectCollectionFactory.php
 
 		-
 			message: '#^Property Concrete\\Core\\Board\\Instance\\Slot\\Content\\ContentRenderer\:\:\$currentPage \(Concrete\\Core\\Page\\Page\) in isset\(\) is not nullable\.$#'
@@ -5527,42 +5509,6 @@ parameters:
 			path: ../concrete/src/Entity/Attribute/Key/Key.php
 
 		-
-			message: '#^PHPDoc tag @param references unknown parameter\: \$handle$#'
-			identifier: parameter.notFound
-			count: 1
-			path: ../concrete/src/Entity/Attribute/Key/Key.php
-
-		-
-			message: '#^PHPDoc tag @param references unknown parameter\: \$is_indexed$#'
-			identifier: parameter.notFound
-			count: 1
-			path: ../concrete/src/Entity/Attribute/Key/Key.php
-
-		-
-			message: '#^PHPDoc tag @param references unknown parameter\: \$is_internal$#'
-			identifier: parameter.notFound
-			count: 1
-			path: ../concrete/src/Entity/Attribute/Key/Key.php
-
-		-
-			message: '#^PHPDoc tag @param references unknown parameter\: \$is_searchable$#'
-			identifier: parameter.notFound
-			count: 1
-			path: ../concrete/src/Entity/Attribute/Key/Key.php
-
-		-
-			message: '#^PHPDoc tag @param references unknown parameter\: \$name$#'
-			identifier: parameter.notFound
-			count: 1
-			path: ../concrete/src/Entity/Attribute/Key/Key.php
-
-		-
-			message: '#^PHPDoc tag @param references unknown parameter\: \$type$#'
-			identifier: parameter.notFound
-			count: 1
-			path: ../concrete/src/Entity/Attribute/Key/Key.php
-
-		-
 			message: '#^Call to an undefined method Doctrine\\ORM\\EntityManagerInterface\:\:merge\(\)\.$#'
 			identifier: method.notFound
 			count: 1
@@ -5621,24 +5567,6 @@ parameters:
 			identifier: arguments.count
 			count: 1
 			path: ../concrete/src/Entity/Attribute/Value/FileValue.php
-
-		-
-			message: '#^PHPDoc tag @param references unknown parameter\: \$version$#'
-			identifier: parameter.notFound
-			count: 1
-			path: ../concrete/src/Entity/Attribute/Value/UserValue.php
-
-		-
-			message: '#^PHPDoc tag @param references unknown parameter\: \$attribute_value$#'
-			identifier: parameter.notFound
-			count: 1
-			path: ../concrete/src/Entity/Attribute/Value/Value/AbstractValue.php
-
-		-
-			message: '#^PHPDoc tag @param references unknown parameter\: \$value$#'
-			identifier: parameter.notFound
-			count: 1
-			path: ../concrete/src/Entity/Attribute/Value/Value/ImageFileValue.php
 
 		-
 			message: '#^Call to an undefined method Concrete\\Core\\Entity\\Automation\\TaskSet\:\:getAttributeSetID\(\)\.$#'
@@ -5779,12 +5707,6 @@ parameters:
 			path: ../concrete/src/Entity/Calendar/CalendarEventVersion.php
 
 		-
-			message: '#^PHPDoc tag @param references unknown parameter\: \$name$#'
-			identifier: parameter.notFound
-			count: 1
-			path: ../concrete/src/Entity/Calendar/CalendarEventVersion.php
-
-		-
 			message: '#^PHPDoc tag @param for parameter \$template with type mixed is not subtype of native type Concrete\\Core\\Entity\\Summary\\Template\.$#'
 			identifier: parameter.phpDocType
 			count: 1
@@ -5807,12 +5729,6 @@ parameters:
 			identifier: return.phpDocType
 			count: 1
 			path: ../concrete/src/Entity/Design/DesignTag.php
-
-		-
-			message: '#^PHPDoc tag @param references unknown parameter\: \$name$#'
-			identifier: parameter.notFound
-			count: 1
-			path: ../concrete/src/Entity/Express/Association.php
 
 		-
 			message: '#^If condition is always true\.$#'
@@ -6191,12 +6107,6 @@ parameters:
 			identifier: argument.type
 			count: 1
 			path: ../concrete/src/Entity/Site/Skeleton.php
-
-		-
-			message: '#^PHPDoc tag @param references unknown parameter\: \$borderStyle$#'
-			identifier: parameter.notFound
-			count: 1
-			path: ../concrete/src/Entity/StyleCustomizer/Inline/StyleSet.php
 
 		-
 			message: '#^Ternary operator condition is always true\.$#'
@@ -6715,12 +6625,6 @@ parameters:
 			path: ../concrete/src/Feed/FeedPost.php
 
 		-
-			message: '#^PHPDoc tag @param references unknown parameter\: \$feedurl$#'
-			identifier: parameter.notFound
-			count: 1
-			path: ../concrete/src/Feed/FeedService.php
-
-		-
 			message: '#^Strict comparison using \!\=\= between int and false will always evaluate to true\.$#'
 			identifier: notIdentical.alwaysTrue
 			count: 1
@@ -6785,12 +6689,6 @@ parameters:
 			identifier: new.static
 			count: 1
 			path: ../concrete/src/File/Document/Xml/SanitizerException.php
-
-		-
-			message: '#^PHPDoc tag @param references unknown parameter\: \$file$#'
-			identifier: parameter.notFound
-			count: 1
-			path: ../concrete/src/File/ExternalFileTransformer.php
 
 		-
 			message: '#^PHPDoc tag @var above a method has no effect\.$#'
@@ -7135,12 +7033,6 @@ parameters:
 			path: ../concrete/src/File/Service/File.php
 
 		-
-			message: '#^PHPDoc tag @param references unknown parameter\: \$filename$#'
-			identifier: parameter.notFound
-			count: 1
-			path: ../concrete/src/File/Service/File.php
-
-		-
 			message: '#^Call to function is_string\(\) with string will always evaluate to true\.$#'
 			identifier: function.alreadyNarrowedType
 			count: 1
@@ -7393,12 +7285,6 @@ parameters:
 			path: ../concrete/src/Filesystem/FileLocator/CoreLocation.php
 
 		-
-			message: '#^PHPDoc tag @param references unknown parameter\: \$templateHandle$#'
-			identifier: parameter.notFound
-			count: 1
-			path: ../concrete/src/Filesystem/TemplateLocation.php
-
-		-
 			message: '#^Anonymous function never returns null so it can be removed from the return type\.$#'
 			identifier: return.unusedType
 			count: 1
@@ -7553,12 +7439,6 @@ parameters:
 			identifier: parameter.defaultValue
 			count: 1
 			path: ../concrete/src/Form/Service/Widget/UserSelector.php
-
-		-
-			message: '#^PHPDoc tag @param references unknown parameter\: \$aliass$#'
-			identifier: parameter.notFound
-			count: 1
-			path: ../concrete/src/Foundation/ClassAutoloader.php
 
 		-
 			message: '#^PHPDoc tag @param references unknown parameter\: \$class$#'
@@ -8431,12 +8311,6 @@ parameters:
 			path: ../concrete/src/Legacy/FileList.php
 
 		-
-			message: '#^PHPDoc tag @param references unknown parameter\: \$extension$#'
-			identifier: parameter.notFound
-			count: 1
-			path: ../concrete/src/Legacy/FileList.php
-
-		-
 			message: '#^Argument of an invalid type \$this\(Concrete\\Core\\Legacy\\Model\) supplied for foreach, only iterables are supported\.$#'
 			identifier: foreach.nonIterable
 			count: 2
@@ -8665,18 +8539,6 @@ parameters:
 			path: ../concrete/src/Localization/Translation/Remote/CommunityStoreTranslationProvider.php
 
 		-
-			message: '#^PHPDoc tag @param references unknown parameter\: \$cacheLifetime$#'
-			identifier: parameter.notFound
-			count: 1
-			path: ../concrete/src/Localization/Translation/Remote/CommunityStoreTranslationProvider.php
-
-		-
-			message: '#^PHPDoc tag @param references unknown parameter\: \$defaultPogressLimit$#'
-			identifier: parameter.notFound
-			count: 1
-			path: ../concrete/src/Localization/Translation/Remote/CommunityStoreTranslationProvider.php
-
-		-
 			message: '#^PHPDoc tag @param references unknown parameter\: \$httpClient$#'
 			identifier: parameter.notFound
 			count: 1
@@ -8747,18 +8609,6 @@ parameters:
 			identifier: return.missing
 			count: 1
 			path: ../concrete/src/Localization/Translator/Translation/TranslationLoaderRepository.php
-
-		-
-			message: '#^PHPDoc tag @param references unknown parameter\: \$translatorFactory$#'
-			identifier: parameter.notFound
-			count: 1
-			path: ../concrete/src/Localization/Translator/TranslatorAdapterRepository.php
-
-		-
-			message: '#^PHPDoc tag @param references unknown parameter\: \$translator$#'
-			identifier: parameter.notFound
-			count: 1
-			path: ../concrete/src/Localization/Translator/TranslatorAdapterRepositoryInterface.php
 
 		-
 			message: '#^Negated boolean expression is always false\.$#'
@@ -9021,12 +8871,6 @@ parameters:
 		-
 			message: '#^If condition is always true\.$#'
 			identifier: if.alwaysTrue
-			count: 1
-			path: ../concrete/src/Multilingual/Page/Section/Section.php
-
-		-
-			message: '#^PHPDoc tag @param references unknown parameter\: \$language$#'
-			identifier: parameter.notFound
 			count: 1
 			path: ../concrete/src/Multilingual/Page/Section/Section.php
 
@@ -9970,54 +9814,6 @@ parameters:
 			message: '#^Negated boolean expression is always false\.$#'
 			identifier: booleanNot.alwaysFalse
 			count: 1
-			path: ../concrete/src/Page/Page.php
-
-		-
-			message: '#^PHPDoc tag @param references unknown parameter\: \$mcID$#'
-			identifier: parameter.notFound
-			count: 2
-			path: ../concrete/src/Page/Page.php
-
-		-
-			message: '#^PHPDoc tag @param references unknown parameter\: \$newInheritPermissionsFromCID$#'
-			identifier: parameter.notFound
-			count: 1
-			path: ../concrete/src/Page/Page.php
-
-		-
-			message: '#^PHPDoc tag @param references unknown parameter\: \$newParentPage$#'
-			identifier: parameter.notFound
-			count: 2
-			path: ../concrete/src/Page/Page.php
-
-		-
-			message: '#^PHPDoc tag @param references unknown parameter\: \$originalParentPage$#'
-			identifier: parameter.notFound
-			count: 1
-			path: ../concrete/src/Page/Page.php
-
-		-
-			message: '#^PHPDoc tag @param references unknown parameter\: \$pageTemplate$#'
-			identifier: parameter.notFound
-			count: 2
-			path: ../concrete/src/Page/Page.php
-
-		-
-			message: '#^PHPDoc tag @param references unknown parameter\: \$pageType$#'
-			identifier: parameter.notFound
-			count: 1
-			path: ../concrete/src/Page/Page.php
-
-		-
-			message: '#^PHPDoc tag @param references unknown parameter\: \$referencePage$#'
-			identifier: parameter.notFound
-			count: 1
-			path: ../concrete/src/Page/Page.php
-
-		-
-			message: '#^PHPDoc tag @param references unknown parameter\: \$toParentPage$#'
-			identifier: parameter.notFound
-			count: 2
 			path: ../concrete/src/Page/Page.php
 
 		-
@@ -11895,13 +11691,7 @@ parameters:
 		-
 			message: '#^Call to function is_string\(\) with string will always evaluate to true\.$#'
 			identifier: function.alreadyNarrowedType
-			count: 3
-			path: ../concrete/src/Service/Detector/HTTP/ApacheDetector.php
-
-		-
-			message: '#^PHPDoc tag @param references unknown parameter\: \$value$#'
-			identifier: parameter.notFound
-			count: 1
+			count: 4
 			path: ../concrete/src/Service/Detector/HTTP/ApacheDetector.php
 
 		-
@@ -12697,18 +12487,6 @@ parameters:
 			path: ../concrete/src/Updater/ApplicationUpdate/Diagnostic.php
 
 		-
-			message: '#^PHPDoc tag @param references unknown parameter\: \$releaseNotesUrl$#'
-			identifier: parameter.notFound
-			count: 1
-			path: ../concrete/src/Updater/ApplicationUpdate/Version.php
-
-		-
-			message: '#^PHPDoc tag @param references unknown parameter\: \$zipfile$#'
-			identifier: parameter.notFound
-			count: 1
-			path: ../concrete/src/Updater/Archive.php
-
-		-
 			message: '#^PHPDoc tag @param references unknown parameter\: \$schema$#'
 			identifier: parameter.notFound
 			count: 1
@@ -12911,12 +12689,6 @@ parameters:
 			identifier: parameter.notFound
 			count: 1
 			path: ../concrete/src/Url/Components/Path.php
-
-		-
-			message: '#^PHPDoc tag @param references unknown parameter\: \$domain$#'
-			identifier: parameter.notFound
-			count: 1
-			path: ../concrete/src/Url/DomainMapper/Map/Normalizer.php
 
 		-
 			message: '#^Call to function is_callable\(\) with callable\(\)\: mixed will always evaluate to true\.$#'

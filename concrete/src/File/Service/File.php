@@ -36,7 +36,6 @@ class File
     /**
      * Returns the contents of a directory.
      *
-     *
      */
     public function getDirectoryContents($dir, $ignoreFiles = [], $recursive = false)
     {
@@ -319,7 +318,7 @@ class File
      * Just a consistency wrapper for file_get_contents
      * Should use curl if it exists and fopen isn't allowed (thanks Remo).
      *
-     * @param string $filename
+     * @param string $file
      * @param string $timeout
      *
      * @throws RequestException Request timed out

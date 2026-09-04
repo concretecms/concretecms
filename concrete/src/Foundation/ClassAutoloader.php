@@ -450,7 +450,7 @@ final class ClassAutoloader
     /**
      * Add multiple class aliases.
      *
-     * @param array $aliass array keys are the aliases, array values are the actual classes
+     * @param array $aliases array keys are the aliases, array values are the actual classes
      *
      * @return $this
      */

@@ -21,7 +21,7 @@ class Version
     }
 
     /**
-     * @param mixed $releaseNotesUrl
+     * @param mixed $releaseNotesURL
      */
     public function setReleaseNotesURL($releaseNotesURL)
     {

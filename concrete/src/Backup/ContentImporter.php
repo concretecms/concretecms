@@ -150,7 +150,7 @@ class ContentImporter
      * Moves files with a particular filename to a particular folder.
      *
      * @param array $fileNames
-     * @param string|FileFolder $folderName
+     * @param string|FileFolder $folder
      */
     public function moveFilesByName(array $fileNames, $folder)
     {

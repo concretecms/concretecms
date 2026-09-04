@@ -371,7 +371,7 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
     /**
      * Automatically run when a block is duplicated. This most likely happens when a block is edited: a block is first duplicated, and then presented to the user to make changes.
      *
-     * @param int $newBlockID
+     * @param int $newBID
      *
      * @return BlockRecord|null
      */

@@ -2750,7 +2750,6 @@ EOT
      * Set the child pages of a list of parent pages to inherit permissions from the specified page (provided that they previouly had the same inheritance page as this page).
      *
      * @param int|string $cParentIDString A comma-separeted list of parent page IDs
-     * @param int $newInheritPermissionsFromCID the ID of the new page the child pages should inherit permissions from
      * @param mixed $npID
      */
     public function updatePermissionsCollectionID($cParentIDString, $npID)
@@ -2930,7 +2929,6 @@ EOT
     /**
      * Move this page under a new parent page.
      *
-     * @param \Concrete\Core\Page\Page $newParentPage
      * @param mixed $nc
      */
     public function move($nc)
@@ -3017,7 +3015,6 @@ EOT
     /**
      * Duplicate this page and all its child pages and return the new Page created.
      *
-     * @param \Concrete\Core\Page\Page|null $toParentPage The page under which this page should be copied to
      * @param bool $preserveUserID Set to true to preserve the original page author IDs
      * @param \Concrete\Core\Entity\Site\Site|null $site the destination site (used if $toParentPage is NULL)
      * @param null|mixed $nc
@@ -3035,7 +3032,6 @@ EOT
     /**
      * Duplicate this page and return the new Page created.
      *
-     * @param \Concrete\Core\Page\Page|null $toParentPage The page under which this page should be copied to
      * @param bool $preserveUserID Set to true to preserve the original page author IDs
      * @param \Concrete\Core\Site\Tree\TreeInterface|null $site the destination site (used if $toParentPage is NULL)
      * @param null|mixed $nc
@@ -3465,7 +3461,6 @@ EOT
     /**
      * Move this page before of after another page.
      *
-     * @param \Concrete\Core\Page\Page $referencePage The reference page
      * @param string $position 'before' or 'after'
      * @param Page $c
      */
@@ -3674,7 +3669,7 @@ EOT
     /**
      * Add a new page, child of this page.
      *
-     * @param \Concrete\Core\Page\Type\Type|null $pageType
+     * @param \Concrete\Core\Page\Type\Type|null $pt
      * @param array $data Supported keys: {
      *
      *     @var int|null $uID The ID of the page author (if unspecified or NULL: current user)
@@ -3692,9 +3687,7 @@ EOT
      *     @var bool $cAcquireComposerOutputControls
      * }
      *
-     * @param \Concrete\Core\Entity\Page\Template|null $pageTemplate
-     * @param mixed $pt
-     * @param mixed $template
+     * @param \Concrete\Core\Entity\Page\Template|false|null $template
      *
      * @return \Concrete\Core\Page\Page
      **/
@@ -4224,8 +4217,6 @@ EOT
     /**
      * Duplicate all the child pages of a specific page which has already have been duplicated.
      *
-     * @param \Concrete\Core\Page\Page $originalParentPage The original parent page
-     * @param \Concrete\Core\Page\Page $newParentPage The duplicated parent page
      * @param bool $preserveUserID Set to true to preserve the original page author IDs
      * @param \Concrete\Core\Entity\Site\Site|null $site the destination site
      * @param mixed $cParent
@@ -4311,7 +4302,6 @@ EOT
      * Duplicate the master collection blocks/permissions to a newly created page.
      *
      * @param int $newCID the ID of the newly created page
-     * @param int $mcID the ID of the master collection
      * @param bool $cAcquireComposerOutputControls
      * @param mixed $masterCID
      */
@@ -4353,7 +4343,6 @@ EOT
      * Duplicate the master collection attributes to a newly created page.
      *
      * @param int $newCID the ID of the newly created page
-     * @param int $mcID the ID of the master collection
      * @param mixed $masterCID
      */
     protected function _associateMasterCollectionAttributes($newCID, $masterCID)
@@ -4373,7 +4362,6 @@ EOT
     /**
      * Copy the area styles from a page template.
      *
-     * @param \Concrete\Core\Entity\Page\Template $pageTemplate
      * @param \Concrete\Core\Entity\Page\Template $template
      */
     protected function acquireAreaStylesFromDefaults(\Concrete\Core\Entity\Page\Template $template)

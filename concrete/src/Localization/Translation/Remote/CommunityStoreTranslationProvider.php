@@ -131,7 +131,7 @@ class CommunityStoreTranslationProvider implements ProviderInterface
     /**
      * Set the default progress limit.
      *
-     * @param int $defaultPogressLimit An integer between 0 (no translations at all) and 100 (all strings are translated)
+     * @param int $value An integer between 0 (no translations at all) and 100 (all strings are translated)
      *
      * @return $this
      */
@@ -166,7 +166,7 @@ class CommunityStoreTranslationProvider implements ProviderInterface
     /**
      * Set the cache life time (in seconds).
      *
-     * @param int $cacheLifetime if 0 (or less), the cache is disabled
+     * @param int $value if 0 (or less), the cache is disabled
      *
      * @return $this
      */

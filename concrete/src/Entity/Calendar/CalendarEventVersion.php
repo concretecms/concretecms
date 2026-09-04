@@ -211,7 +211,7 @@ class CalendarEventVersion implements ObjectInterface, \JsonSerializable
     }
 
     /**
-     * @param string $name
+     * @param int $cID
      */
     public function setPageID($cID)
     {

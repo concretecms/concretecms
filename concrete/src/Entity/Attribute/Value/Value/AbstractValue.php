@@ -30,7 +30,7 @@ abstract class AbstractValue
     }
 
     /**
-     * @param mixed $attribute_value
+     * @param mixed $generic_value
      */
     public function setGenericValue($generic_value)
     {

@@ -408,7 +408,7 @@ class Section extends Page
     }
 
     /**
-     * @param string $language
+     * @param string|\Concrete\Core\Entity\Site\Locale $locale
      *
      * @return Section|false|null
      */

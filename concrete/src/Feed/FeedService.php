@@ -45,7 +45,7 @@ class FeedService
     /**
      * Loads a newsfeed object.
      *
-     * @param string $feedurl
+     * @param string $url
      * @param int    $cache - number of seconds to cache the RSS feed data for
      * @return \Laminas\Feed\Reader\Feed\FeedInterface
      */

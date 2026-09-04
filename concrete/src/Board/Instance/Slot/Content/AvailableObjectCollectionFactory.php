@@ -53,7 +53,7 @@ class AvailableObjectCollectionFactory
      * Given a particular slot template and an array of ItemObjectGroup objects, return all possible
      * ObjectCollections for admin editors to choose from.
      *
-     * @param SlotTemplate $slotTemplate
+     * @param SlotTemplate $template
      * @param ItemObjectGroup[] $itemObjectGroups
      * @return ObjectCollection[]
      */

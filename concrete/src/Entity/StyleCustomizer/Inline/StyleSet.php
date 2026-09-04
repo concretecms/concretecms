@@ -462,7 +462,7 @@ class StyleSet
     }
 
     /**
-     * @param string|null $borderStyle
+     * @param string|null $borderRadius
      */
     public function setBorderRadius($borderRadius)
     {

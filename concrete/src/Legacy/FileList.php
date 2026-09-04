@@ -45,7 +45,7 @@ class FileList extends DatabaseItemList
     /** 
      * Filters by file extension.
      *
-     * @param mixed $extension
+     * @param mixed $ext
      */
     public function filterByExtension($ext)
     {

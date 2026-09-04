@@ -94,7 +94,7 @@ class Archive
      *
      * @todo This is theme-specific - it really ought to be moved to the page_theme_archive class, at least most it.
      *
-     * @param string $zipfile
+     * @param string $file
      * @param bool $inplace Set to false if $file should be moved to the temporary directory before working on it, set to true if it's already in the temp directory.
      *
      * @return string Returns the base directory into which the zipfile was unzipped

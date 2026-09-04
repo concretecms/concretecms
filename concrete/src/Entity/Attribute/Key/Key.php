@@ -107,7 +107,7 @@ class Key implements AttributeKeyInterface, ExportableInterface, ControlInterfac
     }
 
     /**
-     * @param mixed $handle
+     * @param mixed $akHandle
      */
     public function setAttributeKeyHandle($akHandle)
     {
@@ -123,7 +123,7 @@ class Key implements AttributeKeyInterface, ExportableInterface, ControlInterfac
     }
 
     /**
-     * @param mixed $is_internal
+     * @param mixed $akIsInternal
      */
     public function setIsAttributeKeyInternal($akIsInternal)
     {
@@ -139,7 +139,7 @@ class Key implements AttributeKeyInterface, ExportableInterface, ControlInterfac
     }
 
     /**
-     * @param mixed $name
+     * @param mixed $akName
      */
     public function setAttributeKeyName($akName)
     {
@@ -155,7 +155,7 @@ class Key implements AttributeKeyInterface, ExportableInterface, ControlInterfac
     }
 
     /**
-     * @param mixed $is_searchable
+     * @param mixed $akIsSearchable
      */
     public function setIsAttributeKeySearchable($akIsSearchable)
     {
@@ -171,7 +171,7 @@ class Key implements AttributeKeyInterface, ExportableInterface, ControlInterfac
     }
 
     /**
-     * @param mixed $is_indexed
+     * @param mixed $akIsSearchableIndexed
      */
     public function setIsAttributeKeyContentIndexed($akIsSearchableIndexed)
     {
@@ -191,7 +191,7 @@ class Key implements AttributeKeyInterface, ExportableInterface, ControlInterfac
     }
 
     /**
-     * @param mixed $type
+     * @param mixed $settings
      */
     public function setAttributeKeySettings($settings)
     {

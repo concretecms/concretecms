@@ -27,7 +27,7 @@ class UserValue extends AbstractValue
     }
 
     /**
-     * @param mixed $version
+     * @param mixed $user
      */
     public function setUser($user)
     {
