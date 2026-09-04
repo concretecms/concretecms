@@ -42,6 +42,13 @@ parameters:
         # Lets phpstan-doctrine know the entity metadata (magic findBy*/findOneBy* repository methods, entity fields, ...)
         objectManagerLoader: object-manager.php
     ignoreErrors:
+        # The private properties of the API models only carry the OpenAPI annotations (swagger-php) describing the API schemas:
+        # they are never used by the code
+        -
+            identifier: property.unused
+            paths:
+                - ../concrete/src/Api/Model/*
+                - ../concrete/src/Api/Response/*
         # application/config/database.php only exists in installed instances
         -
             message: '#^Path in include\(\) ".*/application/config/database\.php" is not a file or it does not exist\.$#'
