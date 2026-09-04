@@ -11917,12 +11917,6 @@ parameters:
 			path: ../concrete/src/Page/Stack/Stack.php
 
 		-
-			message: '#^Method Concrete\\Core\\Page\\Stack\\Stack\:\:addStackToCategory\(\) never returns false so it can be removed from the return type\.$#'
-			identifier: return.unusedType
-			count: 1
-			path: ../concrete/src/Page/Stack/Stack.php
-
-		-
 			message: '#^Parameter \#1 \$object of class Concrete\\Core\\Permission\\Checker constructor expects Concrete\\Core\\Permission\\ObjectInterface\|false\|null, Concrete\\Core\\Page\\Collection\\Collection given\.$#'
 			identifier: argument.type
 			count: 1

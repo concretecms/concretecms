@@ -86,7 +86,7 @@ class Section extends Page
      * @param int $cID
      * @param int|string $cvID
      *
-     * @return self|false
+     * @return self|false|null
      */
     public static function getByID($cID, $cvID = 'RECENT')
     {
@@ -382,7 +382,7 @@ class Section extends Page
     /**
      * @param string $language
      *
-     * @return Section|false
+     * @return Section|false|null
      */
     public static function getByLanguage($language, ?Site $site = null)
     {
@@ -410,7 +410,7 @@ class Section extends Page
     /**
      * @param string $language
      *
-     * @return Section|false
+     * @return Section|false|null
      */
     public static function getByLocale($locale, ?Site $site = null)
     {

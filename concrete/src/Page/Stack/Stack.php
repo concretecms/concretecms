@@ -219,7 +219,7 @@ class Stack extends Page
      * @param $name
      * @param int $type
      *
-     * @return self|false
+     * @return static|null
      */
     private static function addStackToCategory(\Concrete\Core\Page\Page $parent, $name, $type = 0)
     {
@@ -271,7 +271,7 @@ class Stack extends Page
     /**
      * @param $area
      *
-     * @return self|false
+     * @return static|null
      */
     public static function addGlobalArea($area)
     {
@@ -284,7 +284,7 @@ class Stack extends Page
      * @param $stack
      * @param \Concrete\Core\Page\Stack\Folder\Folder|null $folder
      *
-     * @return self|false
+     * @return static|null
      */
     public static function addStack($stack, ?Folder $folder = null)
     {
