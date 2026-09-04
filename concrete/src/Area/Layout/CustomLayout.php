@@ -59,8 +59,8 @@ class CustomLayout extends Layout
     public function exportDetails($node)
     {
         $node->addAttribute('type', 'custom');
-        $node->addAttribute('spacing', $this->arLayoutSpacing);
-        $node->addAttribute('custom-widths', $this->arLayoutIsCustom);
+        $node->addAttribute('spacing', (string) $this->arLayoutSpacing);
+        $node->addAttribute('custom-widths', $this->arLayoutIsCustom ? '1' : '0');
     }
 
     /**

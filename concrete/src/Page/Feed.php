@@ -31,13 +31,13 @@ class Feed
             $feedNode->addChild('description', $feed->getDescription());
             $feedNode->addChild('handle', $feed->getHandle());
             if ($feed->getIncludeAllDescendents()) {
-                $feedNode->addChild('descendents', 1);
+                $feedNode->addChild('descendents', '1');
             }
             if ($feed->getDisplayAliases()) {
-                $feedNode->addChild('aliases', 1);
+                $feedNode->addChild('aliases', '1');
             }
             if ($feed->getDisplayFeaturedOnly()) {
-                $feedNode->addChild('featured', 1);
+                $feedNode->addChild('featured', '1');
             }
             if ($feed->getPageTypeID()) {
                 $feedNode->addChild('pagetype', ContentExporter::replacePageTypeWithPlaceHolder($feed->getPageTypeID()));

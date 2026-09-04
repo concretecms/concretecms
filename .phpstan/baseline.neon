@@ -2253,7 +2253,7 @@ parameters:
 		-
 			message: '#^Parameter \#2 \$value of method SimpleXMLElement\:\:addAttribute\(\) expects string, bool given\.$#'
 			identifier: argument.type
-			count: 2
+			count: 1
 			path: ../concrete/src/Antispam/Library.php
 
 		-
@@ -2983,12 +2983,6 @@ parameters:
 			path: ../concrete/src/Area/Layout/CustomColumn.php
 
 		-
-			message: '#^Parameter \#2 \$value of method SimpleXMLElement\:\:addAttribute\(\) expects string, int given\.$#'
-			identifier: argument.type
-			count: 1
-			path: ../concrete/src/Area/Layout/CustomColumn.php
-
-		-
 			message: '#^Return type \(Concrete\\Core\\Area\\Layout\\CustomColumn\) of method Concrete\\Core\\Area\\Layout\\CustomColumn\:\:duplicate\(\) should be compatible with return type \(int\) of method Concrete\\Core\\Area\\Layout\\Column\:\:duplicate\(\)$#'
 			identifier: method.childReturnType
 			count: 1
@@ -2999,18 +2993,6 @@ parameters:
 			identifier: new.static
 			count: 1
 			path: ../concrete/src/Area/Layout/CustomColumn.php
-
-		-
-			message: '#^Parameter \#2 \$value of method SimpleXMLElement\:\:addAttribute\(\) expects string, bool given\.$#'
-			identifier: argument.type
-			count: 1
-			path: ../concrete/src/Area/Layout/CustomLayout.php
-
-		-
-			message: '#^Parameter \#2 \$value of method SimpleXMLElement\:\:addAttribute\(\) expects string, int given\.$#'
-			identifier: argument.type
-			count: 1
-			path: ../concrete/src/Area/Layout/CustomLayout.php
 
 		-
 			message: '#^Return type \(Concrete\\Core\\Area\\Layout\\CustomColumn\) of method Concrete\\Core\\Area\\Layout\\CustomLayout\:\:addLayoutColumn\(\) should be compatible with return type \(int\) of method Concrete\\Core\\Area\\Layout\\Layout\:\:addLayoutColumn\(\)$#'
@@ -3091,12 +3073,6 @@ parameters:
 			path: ../concrete/src/Area/Layout/ThemeGridColumn.php
 
 		-
-			message: '#^Parameter \#2 \$value of method SimpleXMLElement\:\:addAttribute\(\) expects string, int given\.$#'
-			identifier: argument.type
-			count: 2
-			path: ../concrete/src/Area/Layout/ThemeGridColumn.php
-
-		-
 			message: '#^Return type \(Concrete\\Core\\Area\\Layout\\ThemeGridColumn\) of method Concrete\\Core\\Area\\Layout\\ThemeGridColumn\:\:duplicate\(\) should be compatible with return type \(int\) of method Concrete\\Core\\Area\\Layout\\Column\:\:duplicate\(\)$#'
 			identifier: method.childReturnType
 			count: 1
@@ -3107,12 +3083,6 @@ parameters:
 			identifier: new.static
 			count: 1
 			path: ../concrete/src/Area/Layout/ThemeGridColumn.php
-
-		-
-			message: '#^Parameter \#2 \$value of method SimpleXMLElement\:\:addAttribute\(\) expects string, int given\.$#'
-			identifier: argument.type
-			count: 1
-			path: ../concrete/src/Area/Layout/ThemeGridLayout.php
 
 		-
 			message: '#^Return type \(Concrete\\Core\\Area\\Layout\\ThemeGridColumn\) of method Concrete\\Core\\Area\\Layout\\ThemeGridLayout\:\:addLayoutColumn\(\) should be compatible with return type \(int\) of method Concrete\\Core\\Area\\Layout\\Layout\:\:addLayoutColumn\(\)$#'
@@ -5233,12 +5203,6 @@ parameters:
 			path: ../concrete/src/Entity/Board/Board.php
 
 		-
-			message: '#^Parameter \#2 \$value of method SimpleXMLElement\:\:addAttribute\(\) expects string, int given\.$#'
-			identifier: argument.type
-			count: 1
-			path: ../concrete/src/Entity/Board/DataSource/Configuration/CalendarEventConfiguration.php
-
-		-
 			message: '#^PHPDoc tag @return with type mixed is not subtype of native type Concrete\\Core\\Entity\\Board\\DataSource\\Configuration\\Configuration\|null\.$#'
 			identifier: return.phpDocType
 			count: 1
@@ -5459,18 +5423,6 @@ parameters:
 			identifier: arguments.count
 			count: 1
 			path: ../concrete/src/Entity/File/File.php
-
-		-
-			message: '#^Parameter \#2 \$value of method SimpleXMLElement\:\:addAttribute\(\) expects string, int\<min, \-1\>\|int\<1, max\> given\.$#'
-			identifier: argument.type
-			count: 2
-			path: ../concrete/src/Entity/File/Image/Thumbnail/Type/Type.php
-
-		-
-			message: '#^Parameter \#2 \$value of method SimpleXMLElement\:\:addAttribute\(\) expects string, true given\.$#'
-			identifier: argument.type
-			count: 1
-			path: ../concrete/src/Entity/File/Image/Thumbnail/Type/Type.php
 
 		-
 			message: '#^Call to an undefined method Concrete\\Core\\File\\StorageLocation\\Configuration\\ConfigurationInterface\:\:getTypeObject\(\)\.$#'
@@ -5827,12 +5779,6 @@ parameters:
 			path: ../concrete/src/Error/Provider/ErrorHandlingServiceProvider.php
 
 		-
-			message: '#^Parameter \#2 \$value of method SimpleXMLElement\:\:addAttribute\(\) expects string, int given\.$#'
-			identifier: argument.type
-			count: 2
-			path: ../concrete/src/Export/Item/Board.php
-
-		-
 			message: '#^Variable \$set in PHPDoc tag @var does not exist\.$#'
 			identifier: varTag.variableNotFound
 			count: 1
@@ -5849,12 +5795,6 @@ parameters:
 			identifier: return.missing
 			count: 1
 			path: ../concrete/src/Export/Item/StackFolder.php
-
-		-
-			message: '#^Parameter \#2 \$value of method SimpleXMLElement\:\:addAttribute\(\) expects string, int given\.$#'
-			identifier: argument.type
-			count: 2
-			path: ../concrete/src/Export/Item/User.php
 
 		-
 			message: '#^Call to an undefined method Concrete\\Core\\Entity\\Express\\Entry\\Association\:\:setSelectedEntry\(\)\.$#'
@@ -8899,12 +8839,6 @@ parameters:
 			path: ../concrete/src/Page/Exporter.php
 
 		-
-			message: '#^Parameter \#2 \$value of method SimpleXMLElement\:\:addChild\(\) expects string\|null, int given\.$#'
-			identifier: argument.type
-			count: 3
-			path: ../concrete/src/Page/Feed.php
-
-		-
 			message: '#^Call to an undefined method Concrete\\Core\\Block\\BlockController\:\:getComposerOutputControlObject\(\)\.$#'
 			identifier: method.notFound
 			count: 1
@@ -9356,12 +9290,6 @@ parameters:
 
 		-
 			message: '#^Parameter \#2 \$callback of function usort expects callable\(Concrete\\Core\\StyleCustomizer\\Skin\\SkinInterface, Concrete\\Core\\StyleCustomizer\\Skin\\SkinInterface\)\: int, Closure\(Concrete\\Core\\StyleCustomizer\\Skin\\SkinInterface, Concrete\\Core\\StyleCustomizer\\Skin\\SkinInterface\)\: void given\.$#'
-			identifier: argument.type
-			count: 1
-			path: ../concrete/src/Page/Theme/Theme.php
-
-		-
-			message: '#^Parameter \#2 \$value of method SimpleXMLElement\:\:addAttribute\(\) expects string, int given\.$#'
 			identifier: argument.type
 			count: 1
 			path: ../concrete/src/Page/Theme/Theme.php
@@ -11467,12 +11395,6 @@ parameters:
 			path: ../concrete/src/Tree/Type/Topic.php
 
 		-
-			message: '#^Parameter \#2 \$value of method SimpleXMLElement\:\:addAttribute\(\) expects string, int given\.$#'
-			identifier: argument.type
-			count: 1
-			path: ../concrete/src/Tree/Type/Topic.php
-
-		-
 			message: '#^PHPDoc tag @param for parameter \$requestedVersion with type mixed is not subtype of native type Concrete\\Core\\Updater\\ApplicationUpdate\\Version\.$#'
 			identifier: parameter.phpDocType
 			count: 1
@@ -11801,12 +11723,6 @@ parameters:
 			identifier: method.notFound
 			count: 1
 			path: ../concrete/src/User/Command/UpdateUserAvatarCommandHandler.php
-
-		-
-			message: '#^Parameter \#2 \$value of method HtmlObject\\Traits\\Tag\:\:setAttribute\(\) expects string\|null, int given\.$#'
-			identifier: argument.type
-			count: 2
-			path: ../concrete/src/User/Component/AvatarCropperInstance.php
 
 		-
 			message: '#^Expression on left side of \?\? is not nullable\.$#'

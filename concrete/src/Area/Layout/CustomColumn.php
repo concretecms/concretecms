@@ -69,7 +69,7 @@ class CustomColumn extends Column
      */
     public function exportDetails($node)
     {
-        $node->addAttribute('width', $this->arLayoutColumnWidth);
+        $node->addAttribute('width', (string) $this->arLayoutColumnWidth);
     }
 
     public function getAreaLayoutColumnClass()

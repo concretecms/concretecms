@@ -85,7 +85,7 @@ class Topic extends Tree
         $default = self::getDefault();
         $sx->addAttribute('name', $this->getTreeName());
         if (is_object($default) && $default->getTreeID() == $this->getTreeID()) {
-            $sx->addAttribute('default', 1);
+            $sx->addAttribute('default', '1');
         }
     }
 

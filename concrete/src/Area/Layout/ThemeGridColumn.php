@@ -83,8 +83,8 @@ class ThemeGridColumn extends Column
      */
     public function exportDetails($node)
     {
-        $node->addAttribute('span', $this->arLayoutColumnSpan);
-        $node->addAttribute('offset', $this->arLayoutColumnOffset);
+        $node->addAttribute('span', (string) $this->arLayoutColumnSpan);
+        $node->addAttribute('offset', (string) $this->arLayoutColumnOffset);
     }
 
     /**

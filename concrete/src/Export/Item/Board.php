@@ -34,8 +34,8 @@ class Board implements ItemInterface
             $dataSourceNode->addAttribute('source', $dataSource->getDataSource()->getHandle());
             $dataSourceNode->addAttribute('weight', $dataSource->getCustomWeight());
             $dataSourceNode->addAttribute('name', $dataSource->getName());
-            $dataSourceNode->addAttribute('day-interval-future', $dataSource->getPopulationDayIntervalFuture());
-            $dataSourceNode->addAttribute('day-interval-past', $dataSource->getPopulationDayIntervalPast());
+            $dataSourceNode->addAttribute('day-interval-future', (string) $dataSource->getPopulationDayIntervalFuture());
+            $dataSourceNode->addAttribute('day-interval-past', (string) $dataSource->getPopulationDayIntervalPast());
 
             $configuration = $dataSource->getConfiguration();
             $configurationNode = $dataSourceNode->addChild('configuration');

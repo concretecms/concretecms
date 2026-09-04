@@ -105,8 +105,8 @@ class AvatarCropperInstance
         $tag->setAttribute(':lang', json_encode($lang));
         $tag->setAttribute('upload-url', $this->getUploadUrl());
         $tag->setAttribute('access-token', $this->getAccessToken());
-        $tag->setAttribute(':width', $this->getWidth());
-        $tag->setAttribute(':height', $this->getHeight());
+        $tag->setAttribute(':width', (string) $this->getWidth());
+        $tag->setAttribute(':height', (string) $this->getHeight());
         return $tag;
     }
 

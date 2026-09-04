@@ -801,9 +801,9 @@ class Theme extends ConcreteObject implements \JsonSerializable
     public function export($node)
     {
         $pst = static::getSiteTheme();
-        $activated = 0;
+        $activated = '0';
         if ($pst->getThemeID() == $this->getThemeID()) {
-            $activated = 1;
+            $activated = '1';
         }
         $type = $node->addChild('theme');
         $type->addAttribute('handle', $this->getThemeHandle());

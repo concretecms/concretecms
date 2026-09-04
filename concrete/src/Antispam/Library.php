@@ -202,7 +202,7 @@ class Library extends ConcreteObject
             $type->addAttribute('handle', $sc->getSystemAntispamLibraryHandle());
             $type->addAttribute('name', $sc->getSystemAntispamLibraryName());
             $type->addAttribute('package', $sc->getPackageHandle());
-            $type->addAttribute('activated', $sc->isSystemAntispamLibraryActive());
+            $type->addAttribute('activated', $sc->isSystemAntispamLibraryActive() ? '1' : '0');
         }
     }
 
