@@ -37,16 +37,16 @@ class DeleteOAuthClientCommandHandler
         foreach ($accessTokenRepository->findBy($criteria) as $token) {
             // If there is an associated refresh token, revoke it
             if ($refreshToken = $refreshTokenRepository->findOneBy(['accessToken' => $token])) {
-                $refreshTokenRepository->revokeRefreshToken($refreshToken);
+                $refreshTokenRepository->revokeRefreshToken($refreshToken->getIdentifier());
             }
 
             // Revoke the access token
-            $accessTokenRepository->revokeAccessToken($token);
+            $accessTokenRepository->revokeAccessToken($token->getIdentifier());
         }
 
         // Finally revoke all auth codes
         foreach ($authCodeRepository->findBy($criteria) as $authCode) {
-            $authCodeRepository->revokeAuthCode($authCode);
+            $authCodeRepository->revokeAuthCode($authCode->getIdentifier());
         }
     }
 

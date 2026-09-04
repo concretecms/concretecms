@@ -4339,18 +4339,6 @@ parameters:
 			path: ../concrete/src/Api/Model/UserSocialLink.php
 
 		-
-			message: '#^Parameter \#1 \$codeId of method Concrete\\Core\\Entity\\OAuth\\AuthCodeRepository\:\:revokeAuthCode\(\) expects string, Concrete\\Core\\Entity\\OAuth\\AuthCode given\.$#'
-			identifier: argument.type
-			count: 1
-			path: ../concrete/src/Api/OAuth/Command/DeleteOAuthClientCommandHandler.php
-
-		-
-			message: '#^Parameter \#1 \$tokenId of method Concrete\\Core\\Entity\\OAuth\\RefreshTokenRepository\:\:revokeRefreshToken\(\) expects string, Concrete\\Core\\Entity\\OAuth\\RefreshToken given\.$#'
-			identifier: argument.type
-			count: 1
-			path: ../concrete/src/Api/OAuth/Command/DeleteOAuthClientCommandHandler.php
-
-		-
 			message: '#^PHPDoc tag @param references unknown parameter\: \$clientFactory$#'
 			identifier: parameter.notFound
 			count: 1
