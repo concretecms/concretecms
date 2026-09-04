@@ -8749,12 +8749,6 @@ parameters:
 			path: ../concrete/src/Page/Type/Command/UpdatePageTypeDefaultsCommandHandler.php
 
 		-
-			message: '#^Parameter \#2 \$controllerMethodToTryAndRun of method Concrete\\Core\\Block\\Block\:\:duplicate\(\) expects string, true given\.$#'
-			identifier: argument.type
-			count: 1
-			path: ../concrete/src/Page/Type/Command/UpdatePageTypeDefaultsCommandHandler.php
-
-		-
 			message: '#^Method Concrete\\Core\\Page\\Type\\Composer\\Control\\Control\:\:addToPageTypeComposerFormLayoutSet\(\) invoked with 2 parameters, 1 required\.$#'
 			identifier: arguments.count
 			count: 1

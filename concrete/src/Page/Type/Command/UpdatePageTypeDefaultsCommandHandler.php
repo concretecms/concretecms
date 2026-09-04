@@ -58,7 +58,7 @@ class UpdatePageTypeDefaultsCommandHandler
                 $pageBlock->deleteBlock();
 
                 if ($bt->isCopiedWhenPropagated()) {
-                    $pageBlock = $pageTypeBlock->duplicate($page, true);
+                    $pageBlock = $pageTypeBlock->duplicate($page, 'duplicate_master');
                 } else {
                     $pageTypeBlock->alias($page);
                 }

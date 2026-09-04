@@ -98,7 +98,7 @@ class Aliasing extends BackendInterfaceBlockController
                             if (!$b->isAlias($nc)) {
                                 $bt = $b->getBlockTypeObject();
                                 if ($bt->isCopiedWhenPropagated()) {
-                                    $b->duplicate($nc, true);
+                                    $b->duplicate($nc, 'duplicate_master');
                                 } else {
                                     $b->alias($nc);
                                 }
