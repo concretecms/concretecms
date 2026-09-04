@@ -496,7 +496,7 @@ class Page extends Collection implements CategoryMemberInterface,
     /**
      * Get the page controller.
      *
-     * @return \Concrete\Core\Page\Controller\PageController
+     * @return \Concrete\Core\Page\Controller\PageController|null returns NULL if the page type doesn't exist anymore
      */
     public function getPageController()
     {
@@ -504,7 +504,6 @@ class Page extends Collection implements CategoryMemberInterface,
             $env = Environment::get();
             if ($this->getPageTypeID() > 0) {
                 $pt = $this->getPageTypeObject();
-                // return null if page type doesn't exist anymore
                 if (!$pt) {
                     return;
                 }
@@ -1842,7 +1841,7 @@ class Page extends Collection implements CategoryMemberInterface,
     /**
      * Get the collection's theme object.
      *
-     * @return \Concrete\Core\Page\Theme\Theme
+     * @return \Concrete\Core\Page\Theme\Theme|null
      */
     public function getCollectionThemeObject()
     {

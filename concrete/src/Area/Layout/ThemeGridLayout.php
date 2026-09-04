@@ -27,7 +27,7 @@ class ThemeGridLayout extends Layout
     protected $arLayoutIsCustom;
 
     /**
-     * @var \Concrete\Core\Page\Theme\GridFramework\GridFramework
+     * @var \Concrete\Core\Page\Theme\GridFramework\GridFramework|null
      */
     protected $gf;
 
@@ -65,7 +65,7 @@ class ThemeGridLayout extends Layout
     }
 
     /**
-     * @return \Concrete\Core\Page\Theme\GridFramework\GridFramework
+     * @return \Concrete\Core\Page\Theme\GridFramework\GridFramework|null
      */
     public function getThemeGridFrameworkObject()
     {

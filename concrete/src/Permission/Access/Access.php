@@ -54,7 +54,7 @@ class Access extends ConcreteObject
     /**
      * Get the object associated to the permission (for example, a Page instance).
      *
-     * @return object
+     * @return \Concrete\Core\Permission\ObjectInterface|null
      */
     public function getPermissionObject()
     {

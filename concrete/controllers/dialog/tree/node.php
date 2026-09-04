@@ -8,7 +8,7 @@ abstract class Node extends UserInterface
     protected $node;
 
     /**
-     * @return \Concrete\Core\Tree\Node\Node
+     * @return \Concrete\Core\Tree\Node\Node|null
      */
     protected function getNode()
     {

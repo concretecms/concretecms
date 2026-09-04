@@ -127,12 +127,6 @@ parameters:
 			path: ../concrete/controllers/backend/editor_data.php
 
 		-
-			message: '#^Call to function is_object\(\) with Concrete\\Core\\Page\\Theme\\Theme will always evaluate to true\.$#'
-			identifier: function.alreadyNarrowedType
-			count: 1
-			path: ../concrete/controllers/backend/editor_data.php
-
-		-
 			message: '#^Call to function is_array\(\) with bool\|float\|int\|string\|null will always evaluate to false\.$#'
 			identifier: function.impossibleType
 			count: 1
@@ -329,12 +323,6 @@ parameters:
 			identifier: booleanAnd.alwaysFalse
 			count: 1
 			path: ../concrete/controllers/backend/tree/node/drag_request.php
-
-		-
-			message: '#^Call to function is_object\(\) with Concrete\\Core\\User\\Group\\Group will always evaluate to true\.$#'
-			identifier: function.alreadyNarrowedType
-			count: 1
-			path: ../concrete/controllers/backend/user.php
 
 		-
 			message: '#^Call to an undefined method Concrete\\Core\\Block\\BlockController\:\:getOriginalBlockID\(\)\.$#'
@@ -949,25 +937,13 @@ parameters:
 			path: ../concrete/controllers/dialog/site_type/attributes.php
 
 		-
-			message: '#^Call to function is_object\(\) with Concrete\\Core\\Tree\\Node\\Node will always evaluate to true\.$#'
-			identifier: function.alreadyNarrowedType
-			count: 1
-			path: ../concrete/controllers/dialog/tree/node/category/add.php
-
-		-
-			message: '#^Call to function is_object\(\) with Concrete\\Core\\Tree\\Node\\Node will always evaluate to true\.$#'
-			identifier: function.alreadyNarrowedType
-			count: 1
-			path: ../concrete/controllers/dialog/tree/node/delete.php
-
-		-
 			message: '#^If condition is always true\.$#'
 			identifier: if.alwaysTrue
 			count: 1
 			path: ../concrete/controllers/dialog/tree/node/file_folder/add.php
 
 		-
-			message: '#^Parameter \#1 \$folder of method Concrete\\Core\\File\\Filesystem\:\:addFolder\(\) expects Concrete\\Core\\Tree\\Node\\Type\\FileFolder, Concrete\\Core\\Tree\\Node\\Node given\.$#'
+			message: '#^Parameter \#1 \$folder of method Concrete\\Core\\File\\Filesystem\:\:addFolder\(\) expects Concrete\\Core\\Tree\\Node\\Type\\FileFolder, Concrete\\Core\\Tree\\Node\\Node\|null given\.$#'
 			identifier: argument.type
 			count: 1
 			path: ../concrete/controllers/dialog/tree/node/file_folder/add.php
@@ -979,12 +955,6 @@ parameters:
 			path: ../concrete/controllers/dialog/tree/node/file_folder/edit.php
 
 		-
-			message: '#^Call to function is_object\(\) with Concrete\\Core\\Tree\\Node\\Node will always evaluate to true\.$#'
-			identifier: function.alreadyNarrowedType
-			count: 1
-			path: ../concrete/controllers/dialog/tree/node/file_folder/move.php
-
-		-
 			message: '#^Call to function is_array\(\) with bool\|float\|int\|string\|null will always evaluate to false\.$#'
 			identifier: function.impossibleType
 			count: 1
@@ -1019,12 +989,6 @@ parameters:
 			identifier: variable.undefined
 			count: 1
 			path: ../concrete/controllers/dialog/tree/node/group_folder/edit.php
-
-		-
-			message: '#^Call to function is_object\(\) with Concrete\\Core\\Tree\\Node\\Node will always evaluate to true\.$#'
-			identifier: function.alreadyNarrowedType
-			count: 1
-			path: ../concrete/controllers/dialog/tree/node/topic/add.php
 
 		-
 			message: '#^Call to an undefined method Concrete\\Core\\Attribute\\Category\\CategoryInterface\:\:getByID\(\)\.$#'
@@ -1357,12 +1321,6 @@ parameters:
 			path: ../concrete/controllers/oauth2.php
 
 		-
-			message: '#^If condition is always true\.$#'
-			identifier: if.alwaysTrue
-			count: 1
-			path: ../concrete/controllers/panel/add.php
-
-		-
 			message: '#^Instanceof between Concrete\\Core\\Page\\Page and Concrete\\Core\\Page\\Page will always evaluate to true\.$#'
 			identifier: instanceof.alwaysTrue
 			count: 1
@@ -1657,16 +1615,10 @@ parameters:
 			path: ../concrete/controllers/permissions/access/entity/access_entity.php
 
 		-
-			message: '#^If condition is always true\.$#'
-			identifier: if.alwaysTrue
+			message: '#^Method Concrete\\Controller\\Permissions\\Access\\Entity\\Group\:\:deliverEntity\(\) should return Concrete\\Core\\Permission\\Access\\Entity\\Entity\|null but return statement is missing\.$#'
+			identifier: return.missing
 			count: 1
 			path: ../concrete/controllers/permissions/access/entity/group.php
-
-		-
-			message: '#^If condition is always true\.$#'
-			identifier: if.alwaysTrue
-			count: 1
-			path: ../concrete/controllers/permissions/access/entity/group_combination.php
 
 		-
 			message: '#^Left side of && is always true\.$#'
@@ -2887,12 +2839,6 @@ parameters:
 			path: ../concrete/controllers/single_page/dashboard/users/add_group.php
 
 		-
-			message: '#^Call to function is_object\(\) with Concrete\\Core\\User\\Group\\Group will always evaluate to true\.$#'
-			identifier: function.alreadyNarrowedType
-			count: 2
-			path: ../concrete/controllers/single_page/dashboard/users/group_sets.php
-
-		-
 			message: '#^Argument of an invalid type bool\|float\|int\|string supplied for foreach, only iterables are supported\.$#'
 			identifier: foreach.nonIterable
 			count: 1
@@ -2947,18 +2893,6 @@ parameters:
 			path: ../concrete/controllers/single_page/dashboard/users/groups.php
 
 		-
-			message: '#^Call to function is_object\(\) with Concrete\\Core\\User\\Group\\Group will always evaluate to true\.$#'
-			identifier: function.alreadyNarrowedType
-			count: 1
-			path: ../concrete/controllers/single_page/dashboard/users/groups.php
-
-		-
-			message: '#^Instanceof between Concrete\\Core\\User\\Group\\Group and Concrete\\Core\\User\\Group\\Group will always evaluate to true\.$#'
-			identifier: instanceof.alwaysTrue
-			count: 1
-			path: ../concrete/controllers/single_page/dashboard/users/groups.php
-
-		-
 			message: '#^Property Concrete\\Controller\\SinglePage\\Dashboard\\Users\\Groups\:\:\$headerMenu \(Concrete\\Core\\Filesystem\\Element\) in isset\(\) is not nullable\.$#'
 			identifier: isset.property
 			count: 1
@@ -2975,18 +2909,6 @@ parameters:
 			identifier: instanceof.alwaysTrue
 			count: 1
 			path: ../concrete/controllers/single_page/dashboard/users/groups/bulk_user_assignment.php
-
-		-
-			message: '#^Strict comparison using \!\=\= between Concrete\\Core\\User\\Group\\Group and null will always evaluate to true\.$#'
-			identifier: notIdentical.alwaysTrue
-			count: 1
-			path: ../concrete/controllers/single_page/dashboard/users/groups/bulkupdate.php
-
-		-
-			message: '#^Negated boolean expression is always false\.$#'
-			identifier: booleanNot.alwaysFalse
-			count: 1
-			path: ../concrete/controllers/single_page/dashboard/users/groups/message.php
 
 		-
 			message: '#^Call to an undefined method Concrete\\Core\\Controller\\ElementController\:\:setQuery\(\)\.$#'
@@ -3387,12 +3309,6 @@ parameters:
 		-
 			message: '#^Call to an undefined method League\\Fractal\\Resource\\ResourceAbstract\:\:setCursor\(\)\.$#'
 			identifier: method.notFound
-			count: 1
-			path: ../concrete/src/Api/Controller/Groups.php
-
-		-
-			message: '#^Negated boolean expression is always false\.$#'
-			identifier: booleanNot.alwaysFalse
 			count: 1
 			path: ../concrete/src/Api/Controller/Groups.php
 
@@ -4741,12 +4657,6 @@ parameters:
 			path: ../concrete/src/Area/Area.php
 
 		-
-			message: '#^Call to function is_object\(\) with Concrete\\Core\\Page\\Theme\\Theme will always evaluate to true\.$#'
-			identifier: function.alreadyNarrowedType
-			count: 1
-			path: ../concrete/src/Area/Area.php
-
-		-
 			message: '#^Default value of the parameter \#1 \$c \(false\) of method Concrete\\Core\\Area\\Area\:\:getTotalBlocksInArea\(\) is incompatible with type Concrete\\Core\\Page\\Page\.$#'
 			identifier: parameter.defaultValue
 			count: 1
@@ -4985,18 +4895,6 @@ parameters:
 			identifier: new.static
 			count: 1
 			path: ../concrete/src/Area/Layout/ThemeGridColumn.php
-
-		-
-			message: '#^Call to function is_object\(\) with Concrete\\Core\\Page\\Theme\\GridFramework\\GridFramework will always evaluate to true\.$#'
-			identifier: function.alreadyNarrowedType
-			count: 1
-			path: ../concrete/src/Area/Layout/ThemeGridLayout.php
-
-		-
-			message: '#^Call to function is_object\(\) with Concrete\\Core\\Page\\Theme\\Theme will always evaluate to true\.$#'
-			identifier: function.alreadyNarrowedType
-			count: 1
-			path: ../concrete/src/Area/Layout/ThemeGridLayout.php
 
 		-
 			message: '#^Parameter \#2 \$value of method SimpleXMLElement\:\:addAttribute\(\) expects string, int given\.$#'
@@ -5559,7 +5457,7 @@ parameters:
 		-
 			message: '#^Left side of && is always true\.$#'
 			identifier: booleanAnd.leftAlwaysTrue
-			count: 3
+			count: 2
 			path: ../concrete/src/Authentication/Type/OAuth/GenericOauthTypeController.php
 
 		-
@@ -5767,12 +5665,6 @@ parameters:
 			path: ../concrete/src/Backup/ContentImporter/Importer/Routine/ImportPageStructureRoutine.php
 
 		-
-			message: '#^Call to function is_object\(\) with Concrete\\Core\\User\\Group\\Group will always evaluate to true\.$#'
-			identifier: function.alreadyNarrowedType
-			count: 1
-			path: ../concrete/src/Backup/ContentImporter/Importer/Routine/ImportPermissionsRoutine.php
-
-		-
 			message: '#^Call to function is_object\(\) with Concrete\\Core\\Entity\\Site\\Skeleton will always evaluate to true\.$#'
 			identifier: function.alreadyNarrowedType
 			count: 1
@@ -5926,12 +5818,6 @@ parameters:
 			message: '#^Access to an undefined property Concrete\\Core\\Block\\BlockController\:\:\$task\.$#'
 			identifier: property.notFound
 			count: 1
-			path: ../concrete/src/Block/BlockController.php
-
-		-
-			message: '#^Call to function is_object\(\) with Concrete\\Core\\Block\\Block will always evaluate to true\.$#'
-			identifier: function.alreadyNarrowedType
-			count: 3
 			path: ../concrete/src/Block/BlockController.php
 
 		-
@@ -6277,12 +6163,6 @@ parameters:
 			path: ../concrete/src/Board/Instance/Slot/Content/Populator/PopulatorInterface.php
 
 		-
-			message: '#^If condition is always true\.$#'
-			identifier: if.alwaysTrue
-			count: 1
-			path: ../concrete/src/Board/Instance/Slot/Content/TemplateLocator.php
-
-		-
 			message: '#^PHPDoc tag @param references unknown parameter\: \$page$#'
 			identifier: parameter.notFound
 			count: 1
@@ -6422,12 +6302,6 @@ parameters:
 
 		-
 			message: '#^Call to function is_object\(\) with Concrete\\Core\\Entity\\Site\\Site will always evaluate to true\.$#'
-			identifier: function.alreadyNarrowedType
-			count: 1
-			path: ../concrete/src/Cache/Page/PageCache.php
-
-		-
-			message: '#^Call to function is_object\(\) with Concrete\\Core\\Page\\Controller\\PageController will always evaluate to true\.$#'
 			identifier: function.alreadyNarrowedType
 			count: 1
 			path: ../concrete/src/Cache/Page/PageCache.php
@@ -7389,12 +7263,6 @@ parameters:
 		-
 			message: '#^Call to function is_array\(\) with bool\|float\|int\|string\|null will always evaluate to false\.$#'
 			identifier: function.impossibleType
-			count: 1
-			path: ../concrete/src/Editor/CkeditorEditor.php
-
-		-
-			message: '#^Call to function is_object\(\) with Concrete\\Core\\Page\\Theme\\Theme will always evaluate to true\.$#'
-			identifier: function.alreadyNarrowedType
 			count: 1
 			path: ../concrete/src/Editor/CkeditorEditor.php
 
@@ -9337,12 +9205,6 @@ parameters:
 			path: ../concrete/src/File/ValidationService.php
 
 		-
-			message: '#^If condition is always true\.$#'
-			identifier: if.alwaysTrue
-			count: 1
-			path: ../concrete/src/Filesystem/Element.php
-
-		-
 			message: '#^Left side of && is always true\.$#'
 			identifier: booleanAnd.leftAlwaysTrue
 			count: 1
@@ -11167,12 +11029,6 @@ parameters:
 			path: ../concrete/src/Multilingual/Service/Detector.php
 
 		-
-			message: '#^Call to function is_object\(\) with Concrete\\Core\\Page\\Controller\\PageController will always evaluate to true\.$#'
-			identifier: function.alreadyNarrowedType
-			count: 1
-			path: ../concrete/src/Multilingual/Service/Detector.php
-
-		-
 			message: '#^If condition is always true\.$#'
 			identifier: if.alwaysTrue
 			count: 1
@@ -11995,12 +11851,6 @@ parameters:
 			path: ../concrete/src/Page/Container/ContainerExporter.php
 
 		-
-			message: '#^If condition is always true\.$#'
-			identifier: if.alwaysTrue
-			count: 1
-			path: ../concrete/src/Page/Container/TemplateLocator.php
-
-		-
 			message: '#^Parameter \#1 \$key of method Concrete\\Core\\Attribute\\Category\\CategoryInterface\:\:updateFromRequest\(\) expects Concrete\\Core\\Entity\\Attribute\\Key\\Key, Concrete\\Core\\Attribute\\AttributeKeyInterface given\.$#'
 			identifier: argument.type
 			count: 1
@@ -12079,19 +11929,7 @@ parameters:
 			path: ../concrete/src/Page/Controller/PageController.php
 
 		-
-			message: '#^Call to function is_callable\(\) with array\{Concrete\\Core\\Page\\Controller\\PageController, ''setCustomRequestPath''\} will always evaluate to true\.$#'
-			identifier: function.alreadyNarrowedType
-			count: 1
-			path: ../concrete/src/Page/Controller/PageController.php
-
-		-
 			message: '#^Call to function is_object\(\) with Concrete\\Core\\Page\\Page will always evaluate to true\.$#'
-			identifier: function.alreadyNarrowedType
-			count: 1
-			path: ../concrete/src/Page/Controller/PageController.php
-
-		-
-			message: '#^Call to function is_object\(\) with Concrete\\Core\\Page\\Theme\\Theme will always evaluate to true\.$#'
 			identifier: function.alreadyNarrowedType
 			count: 1
 			path: ../concrete/src/Page/Controller/PageController.php
@@ -12163,12 +12001,6 @@ parameters:
 			path: ../concrete/src/Page/Page.php
 
 		-
-			message: '#^Call to function is_object\(\) with Concrete\\Core\\Page\\Theme\\Theme will always evaluate to true\.$#'
-			identifier: function.alreadyNarrowedType
-			count: 1
-			path: ../concrete/src/Page/Page.php
-
-		-
 			message: '#^Call to function is_object\(\) with static\(Concrete\\Core\\Page\\Page\) will always evaluate to true\.$#'
 			identifier: function.alreadyNarrowedType
 			count: 1
@@ -12217,7 +12049,13 @@ parameters:
 			path: ../concrete/src/Page/Page.php
 
 		-
-			message: '#^Method Concrete\\Core\\Page\\Page\:\:getPageController\(\) should return Concrete\\Core\\Page\\Controller\\PageController but empty return statement found\.$#'
+			message: '#^Method Concrete\\Core\\Page\\Page\:\:getCollectionThemeID\(\) should return int\|null but return statement is missing\.$#'
+			identifier: return.missing
+			count: 1
+			path: ../concrete/src/Page/Page.php
+
+		-
+			message: '#^Method Concrete\\Core\\Page\\Page\:\:getPageController\(\) should return Concrete\\Core\\Page\\Controller\\PageController\|null but empty return statement found\.$#'
 			identifier: return.empty
 			count: 1
 			path: ../concrete/src/Page/Page.php
@@ -12286,12 +12124,6 @@ parameters:
 			message: '#^PHPDoc tag @var above a method has no effect\.$#'
 			identifier: varTag.misplaced
 			count: 3
-			path: ../concrete/src/Page/Page.php
-
-		-
-			message: '#^Right side of && is always true\.$#'
-			identifier: booleanAnd.rightAlwaysTrue
-			count: 1
 			path: ../concrete/src/Page/Page.php
 
 		-
@@ -12607,12 +12439,6 @@ parameters:
 			path: ../concrete/src/Page/Sitemap/PageListGenerator.php
 
 		-
-			message: '#^Property Concrete\\Core\\Page\\Sitemap\\PageListGenerator\:\:\$visitorsUserGroup \(Concrete\\Core\\User\\Group\\Group\|false\|null\) is never assigned null so it can be removed from the property type\.$#'
-			identifier: property.unusedType
-			count: 1
-			path: ../concrete/src/Page/Sitemap/PageListGenerator.php
-
-		-
 			message: '#^Left side of && is always true\.$#'
 			identifier: booleanAnd.leftAlwaysTrue
 			count: 1
@@ -12898,18 +12724,6 @@ parameters:
 			message: '#^Call to an undefined method Concrete\\Core\\Attribute\\Key\\CollectionKey\:\:getController\(\)\.$#'
 			identifier: method.notFound
 			count: 5
-			path: ../concrete/src/Page/Type/Composer/Control/CollectionAttributeControl.php
-
-		-
-			message: '#^Call to function is_object\(\) with Concrete\\Core\\Attribute\\Key\\CollectionKey will always evaluate to true\.$#'
-			identifier: function.alreadyNarrowedType
-			count: 9
-			path: ../concrete/src/Page/Type/Composer/Control/CollectionAttributeControl.php
-
-		-
-			message: '#^Strict comparison using \!\=\= between Concrete\\Core\\Attribute\\Key\\CollectionKey and null will always evaluate to true\.$#'
-			identifier: notIdentical.alwaysTrue
-			count: 1
 			path: ../concrete/src/Page/Type/Composer/Control/CollectionAttributeControl.php
 
 		-
@@ -13273,15 +13087,9 @@ parameters:
 			path: ../concrete/src/Permission/Access/Entity/ConversationMessageAuthorEntity.php
 
 		-
-			message: '#^Call to function is_object\(\) with object will always evaluate to true\.$#'
-			identifier: function.alreadyNarrowedType
+			message: '#^Call to an undefined method Concrete\\Core\\Permission\\ObjectInterface\:\:getUserID\(\)\.$#'
+			identifier: method.notFound
 			count: 1
-			path: ../concrete/src/Permission/Access/Entity/ConversationMessageAuthorEntity.php
-
-		-
-			message: '#^Call to function is_object\(\) with object will always evaluate to true\.$#'
-			identifier: function.alreadyNarrowedType
-			count: 2
 			path: ../concrete/src/Permission/Access/Entity/FileUploaderEntity.php
 
 		-
@@ -13291,16 +13099,16 @@ parameters:
 			path: ../concrete/src/Permission/Access/Entity/GroupCombinationEntity.php
 
 		-
-			message: '#^Call to function is_object\(\) with Concrete\\Core\\User\\Group\\Group will always evaluate to true\.$#'
-			identifier: function.alreadyNarrowedType
+			message: '#^Call to an undefined method Concrete\\Core\\Permission\\ObjectInterface\:\:getAreaCollectionObject\(\)\.$#'
+			identifier: method.notFound
 			count: 1
-			path: ../concrete/src/Permission/Access/Entity/GroupCombinationEntity.php
+			path: ../concrete/src/Permission/Access/Entity/PageOwnerEntity.php
 
 		-
-			message: '#^Call to function is_object\(\) with Concrete\\Core\\User\\Group\\Group will always evaluate to true\.$#'
-			identifier: function.alreadyNarrowedType
+			message: '#^Call to an undefined method Concrete\\Core\\Permission\\ObjectInterface\:\:getBlockAreaObject\(\)\.$#'
+			identifier: method.notFound
 			count: 1
-			path: ../concrete/src/Permission/Access/Entity/GroupEntity.php
+			path: ../concrete/src/Permission/Access/Entity/PageOwnerEntity.php
 
 		-
 			message: '#^Call to function is_object\(\) with Concrete\\Core\\Entity\\Site\\Group\\Group will always evaluate to true\.$#'
@@ -13337,6 +13145,12 @@ parameters:
 			identifier: method.notFound
 			count: 2
 			path: ../concrete/src/Permission/Access/NotifyInNotificationCenterNotificationAccess.php
+
+		-
+			message: '#^Call to an undefined method Concrete\\Core\\Permission\\ObjectInterface\:\:getCollectionID\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: ../concrete/src/Permission/Access/PageAccess.php
 
 		-
 			message: '#^Call to Concrete\\Core\\Permission\\Access\\Access\:\:save\(\) on a separate line has no effect\.$#'
@@ -13873,14 +13687,8 @@ parameters:
 			path: ../concrete/src/Permission/Key/WorkflowKey.php
 
 		-
-			message: '#^Call to function is_object\(\) with Concrete\\Core\\User\\Group\\Group will always evaluate to true\.$#'
-			identifier: function.alreadyNarrowedType
-			count: 1
-			path: ../concrete/src/Permission/Registry/Entry/Access/Entity/GroupEntity.php
-
-		-
-			message: '#^Call to function is_object\(\) with object will always evaluate to true\.$#'
-			identifier: function.alreadyNarrowedType
+			message: '#^Method Concrete\\Core\\Permission\\Registry\\Entry\\Access\\Entity\\GroupEntity\:\:getAccessEntity\(\) should return Concrete\\Core\\Permission\\Access\\Entity\\Entity but return statement is missing\.$#'
+			identifier: return.missing
 			count: 1
 			path: ../concrete/src/Permission/Registry/Entry/Access/Entity/GroupEntity.php
 
@@ -14093,12 +13901,6 @@ parameters:
 			identifier: function.alreadyNarrowedType
 			count: 1
 			path: ../concrete/src/Permission/Response/Response.php
-
-		-
-			message: '#^Call to function is_object\(\) with Concrete\\Core\\User\\Group\\Group will always evaluate to true\.$#'
-			identifier: function.alreadyNarrowedType
-			count: 1
-			path: ../concrete/src/Permission/Response/UserInfoResponse.php
 
 		-
 			message: '#^PHPDoc tag @param references unknown parameter\: \$action$#'
@@ -14821,12 +14623,6 @@ parameters:
 			path: ../concrete/src/Summary/Template/Renderer.php
 
 		-
-			message: '#^If condition is always true\.$#'
-			identifier: if.alwaysTrue
-			count: 1
-			path: ../concrete/src/Summary/Template/TemplateLocator.php
-
-		-
 			message: '#^PHPDoc tag @param references unknown parameter\: \$page$#'
 			identifier: parameter.notFound
 			count: 1
@@ -15127,12 +14923,6 @@ parameters:
 			path: ../concrete/src/Tree/TreeType.php
 
 		-
-			message: '#^Call to function is_object\(\) with Concrete\\Core\\User\\Group\\Group will always evaluate to true\.$#'
-			identifier: function.alreadyNarrowedType
-			count: 1
-			path: ../concrete/src/Tree/Type/ExpressEntryResults.php
-
-		-
 			message: '#^Method Concrete\\Core\\Tree\\Type\\FileManager\:\:add\(\) should return Concrete\\Core\\Tree\\Type\\FileManager\|null but returns Concrete\\Core\\Tree\\Tree\|null\.$#'
 			identifier: return.type
 			count: 1
@@ -15295,12 +15085,6 @@ parameters:
 			path: ../concrete/src/Updater/Migrations/Migrations/Version20150504000000.php
 
 		-
-			message: '#^If condition is always true\.$#'
-			identifier: if.alwaysTrue
-			count: 1
-			path: ../concrete/src/Updater/Migrations/Migrations/Version20150504000000.php
-
-		-
 			message: '#^Call to function is_object\(\) with Concrete\\Core\\Page\\Page will always evaluate to true\.$#'
 			identifier: function.alreadyNarrowedType
 			count: 1
@@ -15359,12 +15143,6 @@ parameters:
 			identifier: booleanAnd.leftAlwaysTrue
 			count: 1
 			path: ../concrete/src/Updater/Migrations/Migrations/Version20180328215345.php
-
-		-
-			message: '#^If condition is always true\.$#'
-			identifier: if.alwaysTrue
-			count: 1
-			path: ../concrete/src/Updater/Migrations/Migrations/Version20180403143200.php
 
 		-
 			message: '#^Call to an undefined method Concrete\\Core\\Attribute\\Category\\CategoryInterface\:\:associateAttributeKeyType\(\)\.$#'
@@ -15877,12 +15655,6 @@ parameters:
 			path: ../concrete/src/User/Group/GroupRole.php
 
 		-
-			message: '#^Call to function is_object\(\) with Concrete\\Core\\User\\Group\\Group will always evaluate to true\.$#'
-			identifier: function.alreadyNarrowedType
-			count: 1
-			path: ../concrete/src/User/Group/GroupSet.php
-
-		-
 			message: '#^Unsafe usage of new static\(\)\.$#'
 			identifier: new.static
 			count: 2
@@ -16051,12 +15823,6 @@ parameters:
 			path: ../concrete/src/User/Search/Field/Field/IsValidatedField.php
 
 		-
-			message: '#^Call to function is_object\(\) with Concrete\\Core\\User\\Group\\Group will always evaluate to true\.$#'
-			identifier: function.alreadyNarrowedType
-			count: 1
-			path: ../concrete/src/User/Search/Field/Field/UserGroupField.php
-
-		-
 			message: '#^Parameter \#1 \$groups of method Concrete\\Core\\User\\UserList\:\:filterByInAnyGroup\(\) expects Generator&iterable\<Concrete\\Core\\User\\Group\\Group\>, list\<Concrete\\Core\\User\\Group\\Group\> given\.$#'
 			identifier: argument.type
 			count: 1
@@ -16165,12 +15931,6 @@ parameters:
 			path: ../concrete/src/User/UserInfo.php
 
 		-
-			message: '#^If condition is always true\.$#'
-			identifier: if.alwaysTrue
-			count: 1
-			path: ../concrete/src/User/UserInfo.php
-
-		-
 			message: '#^Method Concrete\\Core\\User\\UserInfo\:\:getUserPublicProfileUrl\(\) should return League\\Url\\UrlInterface\|null but empty return statement found\.$#'
 			identifier: return.empty
 			count: 1
@@ -16179,12 +15939,6 @@ parameters:
 		-
 			message: '#^Property Concrete\\Core\\User\\UserInfo\:\:\$connection \(Concrete\\Core\\Database\\Connection\\Connection\) does not accept Doctrine\\DBAL\\Connection\.$#'
 			identifier: assign.propertyType
-			count: 1
-			path: ../concrete/src/User/UserInfo.php
-
-		-
-			message: '#^Variable \$groupObjects in empty\(\) always exists and is not falsy\.$#'
-			identifier: empty.variable
 			count: 1
 			path: ../concrete/src/User/UserInfo.php
 
@@ -16215,12 +15969,6 @@ parameters:
 		-
 			message: '#^Instanceof between Concrete\\Core\\User\\Group\\Group and Concrete\\Core\\User\\Group\\Group will always evaluate to true\.$#'
 			identifier: instanceof.alwaysTrue
-			count: 1
-			path: ../concrete/src/User/UserList.php
-
-		-
-			message: '#^Negated boolean expression is always false\.$#'
-			identifier: booleanNot.alwaysFalse
 			count: 1
 			path: ../concrete/src/User/UserList.php
 

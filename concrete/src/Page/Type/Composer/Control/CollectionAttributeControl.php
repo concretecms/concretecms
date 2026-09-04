@@ -52,7 +52,7 @@ class CollectionAttributeControl extends Control
     }
 
     /**
-     * @return CollectionAttributeKey
+     * @return CollectionAttributeKey|null
      */
     public function getAttributeKeyObject()
     {

@@ -1062,7 +1062,7 @@ class Group extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
      * Takes the numeric id of a group and returns a group object.
      * @param int|string $gID
      *
-     * @return Group
+     * @return Group|null
      * @deprecated
      * This is deprecated, user the grouprepository instead.
      */
@@ -1077,7 +1077,7 @@ class Group extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
      * Takes the name of a group and returns a group object.
      * @param string $gName
      *
-     * @return Group
+     * @return Group|null
      * @deprecated
      * This is deprecated, user the grouprepository instead.
      */
