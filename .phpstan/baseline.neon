@@ -259,12 +259,6 @@ parameters:
 			path: ../concrete/controllers/calendar_feed.php
 
 		-
-			message: '#^Method Concrete\\Core\\Page\\Page\:\:getCollectionLink\(\) invoked with 1 parameter, 0 required\.$#'
-			identifier: arguments.count
-			count: 1
-			path: ../concrete/controllers/calendar_feed.php
-
-		-
 			message: '#^PHPDoc tag @var above foreach loop does not specify variable name\.$#'
 			identifier: varTag.noVariable
 			count: 1
@@ -317,12 +311,6 @@ parameters:
 			identifier: function.alreadyNarrowedType
 			count: 1
 			path: ../concrete/controllers/dialog/event/edit.php
-
-		-
-			message: '#^Method Concrete\\Controller\\Dialog\\EventOccurrence\:\:canAccess\(\) invoked with 1 parameter, 0 required\.$#'
-			identifier: arguments.count
-			count: 1
-			path: ../concrete/controllers/dialog/event_occurrence.php
 
 		-
 			message: '#^Property Concrete\\Controller\\Dialog\\Express\\AdvancedSearch\:\:\$entity \(Concrete\\Core\\Entity\\Express\\Entity\) in isset\(\) is not nullable\.$#'
@@ -451,12 +439,6 @@ parameters:
 			path: ../concrete/controllers/dialog/logs/delete.php
 
 		-
-			message: '#^Method Concrete\\Core\\Page\\Page\:\:getCollectionLink\(\) invoked with 1 parameter, 0 required\.$#'
-			identifier: arguments.count
-			count: 2
-			path: ../concrete/controllers/dialog/page/add/compose.php
-
-		-
 			message: '#^Call to function is_a\(\) with Concrete\\Core\\Block\\BlockController and ''\\\\Concrete\\\\Core…'' will always evaluate to true\.$#'
 			identifier: function.alreadyNarrowedType
 			count: 1
@@ -527,12 +509,6 @@ parameters:
 			identifier: argument.type
 			count: 1
 			path: ../concrete/controllers/dialog/page/bulk/properties.php
-
-		-
-			message: '#^Method Concrete\\Core\\Page\\Page\:\:getCollectionLink\(\) invoked with 1 parameter, 0 required\.$#'
-			identifier: arguments.count
-			count: 1
-			path: ../concrete/controllers/dialog/page/delete.php
 
 		-
 			message: '#^Call to an undefined method Concrete\\Core\\Permission\\Checker\:\:canEditFileSetPermissions\(\)\.$#'
@@ -929,12 +905,6 @@ parameters:
 			identifier: greater.invalid
 			count: 1
 			path: ../concrete/controllers/panel/detail/page/attributes.php
-
-		-
-			message: '#^Method Concrete\\Core\\Page\\Page\:\:getCollectionLink\(\) invoked with 1 parameter, 0 required\.$#'
-			identifier: arguments.count
-			count: 1
-			path: ../concrete/controllers/panel/detail/page/composer.php
 
 		-
 			message: '#^Call to an undefined method Concrete\\Core\\Permission\\Key\\Key\:\:getMyAssignment\(\)\.$#'
@@ -1595,12 +1565,6 @@ parameters:
 			identifier: function.alreadyNarrowedType
 			count: 2
 			path: ../concrete/controllers/single_page/dashboard/system/express/entities.php
-
-		-
-			message: '#^Method Concrete\\Core\\Page\\Controller\\DashboardAttributesPageController\:\:renderList\(\) invoked with 2 parameters, 0 required\.$#'
-			identifier: arguments.count
-			count: 1
-			path: ../concrete/controllers/single_page/dashboard/system/express/entities/attributes.php
 
 		-
 			message: '#^Call to function is_object\(\) with Concrete\\Core\\Entity\\Express\\Entity will always evaluate to true\.$#'
@@ -3475,12 +3439,6 @@ parameters:
 			path: ../concrete/src/Backup/ContentImporter/Importer/Routine/ImportPackagesRoutine.php
 
 		-
-			message: '#^Method Concrete\\Core\\Backup\\ContentImporter\\Importer\\Routine\\ImportPageStructureRoutine\:\:getPageByPath\(\) invoked with 2 parameters, 1 required\.$#'
-			identifier: arguments.count
-			count: 1
-			path: ../concrete/src/Backup/ContentImporter/Importer/Routine/ImportPageStructureRoutine.php
-
-		-
 			message: '#^Method Concrete\\Core\\Backup\\ContentImporter\\Importer\\Routine\\ImportPageStructureRoutine\:\:importAlias\(\) never returns string so it can be removed from the return type\.$#'
 			identifier: return.unusedType
 			count: 1
@@ -4579,12 +4537,6 @@ parameters:
 			path: ../concrete/src/Database/CharacterSetCollation/Exception/NoCharacterSetCollationDefinedException.php
 
 		-
-			message: '#^Method Concrete\\Core\\Database\\CharacterSetCollation\\Manager\:\:persistConfiguration\(\) invoked with 5 parameters, 4 required\.$#'
-			identifier: arguments.count
-			count: 1
-			path: ../concrete/src/Database/CharacterSetCollation/Manager.php
-
-		-
 			message: '#^PHPDoc tag @param for parameter \$messageCallback with type \(callable\)\|null is not subtype of native type callable\.$#'
 			identifier: parameter.phpDocType
 			count: 1
@@ -4815,12 +4767,6 @@ parameters:
 		-
 			message: '#^PHPDoc tag @param for parameter \$version with type mixed is not subtype of native type Concrete\\Core\\Entity\\File\\Version\.$#'
 			identifier: parameter.phpDocType
-			count: 1
-			path: ../concrete/src/Entity/Attribute/Value/FileValue.php
-
-		-
-			message: '#^Static method Concrete\\Core\\File\\File\:\:getByID\(\) invoked with 2 parameters, 1 required\.$#'
-			identifier: arguments.count
 			count: 1
 			path: ../concrete/src/Entity/Attribute/Value/FileValue.php
 
@@ -5059,12 +5005,6 @@ parameters:
 			path: ../concrete/src/Entity/File/File.php
 
 		-
-			message: '#^Static method Concrete\\Core\\Support\\Facade\\DatabaseORM\:\:entityManager\(\) invoked with 1 parameter, 0 required\.$#'
-			identifier: arguments.count
-			count: 1
-			path: ../concrete/src/Entity/File/File.php
-
-		-
 			message: '#^Call to an undefined method Concrete\\Core\\File\\StorageLocation\\Configuration\\ConfigurationInterface\:\:getTypeObject\(\)\.$#'
 			identifier: method.notFound
 			count: 1
@@ -5227,12 +5167,6 @@ parameters:
 			path: ../concrete/src/Entity/OAuth/UserRepository.php
 
 		-
-			message: '#^Method Concrete\\Core\\Permission\\Key\\Key\:\:getPermissionAccessObject\(\) invoked with 1 parameter, 0 required\.$#'
-			identifier: arguments.count
-			count: 1
-			path: ../concrete/src/Entity/Page/Feed.php
-
-		-
 			message: '#^PHPDoc tag @param for parameter \$template with type mixed is not subtype of native type Concrete\\Core\\Entity\\Summary\\Template\.$#'
 			identifier: parameter.phpDocType
 			count: 1
@@ -5243,12 +5177,6 @@ parameters:
 			identifier: return.phpDocType
 			count: 1
 			path: ../concrete/src/Entity/Page/Summary/PageTemplate.php
-
-		-
-			message: '#^Static method Concrete\\Core\\Support\\Facade\\DatabaseORM\:\:entityManager\(\) invoked with 1 parameter, 0 required\.$#'
-			identifier: arguments.count
-			count: 1
-			path: ../concrete/src/Entity/Page/Template.php
 
 		-
 			message: '#^PHPDoc tag @param for parameter \$value with type IPLib\\Address\\AddressInterface is not subtype of native type IPLib\\Range\\RangeInterface\.$#'
@@ -5271,12 +5199,6 @@ parameters:
 		-
 			message: '#^If condition is always true\.$#'
 			identifier: if.alwaysTrue
-			count: 1
-			path: ../concrete/src/Entity/Site/Site.php
-
-		-
-			message: '#^Method Concrete\\Core\\Entity\\Site\\Site\:\:updateSiteConfigRepository\(\) invoked with 2 parameters, 1 required\.$#'
-			identifier: arguments.count
 			count: 1
 			path: ../concrete/src/Entity/Site/Site.php
 
@@ -5623,12 +5545,6 @@ parameters:
 			path: ../concrete/src/Express/Form/Validator/AbstractValidator.php
 
 		-
-			message: '#^Method Concrete\\Core\\Express\\Form\\Control\\Type\\TypeInterface\:\:getValidator\(\) invoked with 1 parameter, 0 required\.$#'
-			identifier: arguments.count
-			count: 1
-			path: ../concrete/src/Express/Form/Validator/Routine/ValidateAttributesRoutine.php
-
-		-
 			message: '#^Cannot cast Concrete\\Core\\Attribute\\AttributeValueInterface to string\.$#'
 			identifier: cast.string
 			count: 1
@@ -5905,12 +5821,6 @@ parameters:
 			path: ../concrete/src/File/Image/Svg/SanitizerOptions.php
 
 		-
-			message: '#^Method Concrete\\Core\\File\\Image\\Thumbnail\\Type\\Version\:\:getFilePath\(\) invoked with 2 parameters, 1 required\.$#'
-			identifier: arguments.count
-			count: 1
-			path: ../concrete/src/File/Image/Thumbnail/Path/Resolver.php
-
-		-
 			message: '#^Parameter \#2 \$value of class HtmlObject\\Element constructor expects string\|null, array\<int, HtmlObject\\Element\> given\.$#'
 			identifier: argument.type
 			count: 1
@@ -6161,18 +6071,6 @@ parameters:
 			identifier: return.type
 			count: 1
 			path: ../concrete/src/File/StorageLocation/Configuration/DefaultConfiguration.php
-
-		-
-			message: '#^Method Concrete\\Core\\File\\StorageLocation\\StorageLocationFactory\:\:create\(\) invoked with 3 parameters, 2 required\.$#'
-			identifier: arguments.count
-			count: 1
-			path: ../concrete/src/File/StorageLocation/StorageLocation.php
-
-		-
-			message: '#^Method Doctrine\\ORM\\EntityManagerInterface\:\:getRepository\(\) invoked with 2 parameters, 1 required\.$#'
-			identifier: arguments.count
-			count: 1
-			path: ../concrete/src/File/StorageLocation/StorageLocationFactory.php
 
 		-
 			message: '#^Default value of the parameter \#3 \$pkg \(false\) of method Concrete\\Core\\File\\StorageLocation\\Type\\Type\:\:add\(\) is incompatible with type Concrete\\Core\\Package\\Package\|int\.$#'
@@ -6937,12 +6835,6 @@ parameters:
 			path: ../concrete/src/Http/DefaultServer.php
 
 		-
-			message: '#^Method Symfony\\Component\\HttpFoundation\\Request\:\:isMethodSafe\(\) invoked with 1 parameter, 0 required\.$#'
-			identifier: arguments.count
-			count: 1
-			path: ../concrete/src/Http/FlysystemFileResponse.php
-
-		-
 			message: '#^Property Concrete\\Core\\Http\\FlysystemFileResponse\:\:\$file \(League\\Flysystem\\File\) does not accept League\\Flysystem\\Handler\.$#'
 			identifier: assign.propertyType
 			count: 1
@@ -7315,12 +7207,6 @@ parameters:
 			path: ../concrete/src/Localization/Service/AddressFormat.php
 
 		-
-			message: '#^Method Concrete\\Core\\Localization\\Service\\CountryList\:\:getCountries\(\) invoked with 1 parameter, 0 required\.$#'
-			identifier: arguments.count
-			count: 1
-			path: ../concrete/src/Localization/Service/CountryList.php
-
-		-
 			message: '#^Parameter \#3 \$onlyCodes of static method Punic\\Territory\:\:getLanguages\(\) expects string, true given\.$#'
 			identifier: argument.type
 			count: 1
@@ -7570,12 +7456,6 @@ parameters:
 			message: '#^Call to function is_object\(\) with Concrete\\Core\\Error\\ErrorList\\ErrorList\|Concrete\\Core\\Package\\Package will always evaluate to true\.$#'
 			identifier: function.alreadyNarrowedType
 			count: 1
-			path: ../concrete/src/Marketplace/RemoteItem.php
-
-		-
-			message: '#^Class Concrete\\Core\\Package\\PackageArchive constructor invoked with 1 parameter, 0 required\.$#'
-			identifier: arguments.count
-			count: 2
 			path: ../concrete/src/Marketplace/RemoteItem.php
 
 		-
@@ -8269,12 +8149,6 @@ parameters:
 			path: ../concrete/src/Page/Page.php
 
 		-
-			message: '#^Static method Concrete\\Core\\Area\\Area\:\:getOrCreate\(\) invoked with 3 parameters, 2 required\.$#'
-			identifier: arguments.count
-			count: 1
-			path: ../concrete/src/Page/Page.php
-
-		-
 			message: '#^Call to function is_array\(\) with Concrete\\Core\\Entity\\Site\\Tree will always evaluate to false\.$#'
 			identifier: function.impossibleType
 			count: 1
@@ -8669,12 +8543,6 @@ parameters:
 			identifier: foreach.emptyArray
 			count: 1
 			path: ../concrete/src/Page/Type/Command/UpdatePageTypeDefaultsCommandHandler.php
-
-		-
-			message: '#^Method Concrete\\Core\\Page\\Type\\Composer\\Control\\Control\:\:addToPageTypeComposerFormLayoutSet\(\) invoked with 2 parameters, 1 required\.$#'
-			identifier: arguments.count
-			count: 1
-			path: ../concrete/src/Page/Type/Composer/Control/BlockControl.php
 
 		-
 			message: '#^Call to an undefined method Concrete\\Core\\Attribute\\Key\\CollectionKey\:\:getAttributeKeyDisplayName\(\)\.$#'
@@ -10975,12 +10843,6 @@ parameters:
 			path: ../concrete/src/User/Command/CheckAutomatedGroupsCommandHandler.php
 
 		-
-			message: '#^Static method Concrete\\Core\\User\\Group\\Group\:\:getAutomatedOnJobRunGroupControllers\(\) invoked with 1 parameter, 0 required\.$#'
-			identifier: arguments.count
-			count: 1
-			path: ../concrete/src/User/Command/CheckAutomatedGroupsCommandHandler.php
-
-		-
 			message: '#^PHPDoc tag @param for parameter \$command with type Concrete\\Core\\User\\Command\\ReindexUserTaskCommand is incompatible with native type Concrete\\Core\\User\\Command\\RemoveOldFileAttachmentsCommand\.$#'
 			identifier: parameter.phpDocType
 			count: 1
@@ -11127,12 +10989,6 @@ parameters:
 		-
 			message: '#^If condition is always true\.$#'
 			identifier: if.alwaysTrue
-			count: 1
-			path: ../concrete/src/User/Login/LoginService.php
-
-		-
-			message: '#^Method Concrete\\Core\\User\\Login\\LoginAttemptService\:\:remainingAttempts\(\) invoked with 2 parameters, 1 required\.$#'
-			identifier: arguments.count
 			count: 1
 			path: ../concrete/src/User/Login/LoginService.php
 
@@ -11383,12 +11239,6 @@ parameters:
 			path: ../concrete/src/Utility/Service/Text.php
 
 		-
-			message: '#^Method Concrete\\Core\\Utility\\Service\\Text\:\:sanitizeFileSystem\(\) invoked with 2 parameters, 1 required\.$#'
-			identifier: arguments.count
-			count: 1
-			path: ../concrete/src/Utility/Service/Text.php
-
-		-
 			message: '#^Parameter \#2 \$callback of function array_filter expects \(callable\(string\)\: bool\)\|null, ''strlen'' given\.$#'
 			identifier: argument.type
 			count: 1
@@ -11495,12 +11345,6 @@ parameters:
 			identifier: function.alreadyNarrowedType
 			count: 1
 			path: ../concrete/src/Workflow/Progress/Progress.php
-
-		-
-			message: '#^Static method Concrete\\Core\\Calendar\\Event\\Event\:\:getVersionByID\(\) invoked with 2 parameters, 1 required\.$#'
-			identifier: arguments.count
-			count: 1
-			path: ../concrete/src/Workflow/Request/CalendarEventRequest.php
 
 		-
 			message: '#^If condition is always true\.$#'

@@ -120,12 +120,12 @@ class Compose extends Controller
                 $pagetype->publish($d, $publishDateTime, $publishEndDateTime, $keepOtherScheduling);
 
                 if ((int) $this->request->request->get('redirectAfterPublish')) {
-                    $pr->setRedirectURL($d->getCollectionLink(true));
+                    $pr->setRedirectURL($d->getCollectionLink());
                 }
                 $pr->setAdditionalDataAttribute('cParentID', $cParentID);
                 $pr->setMessage(t('Page Added Successfully.'));
             } else {
-                $pr->setRedirectURL($d->getCollectionLink(true));
+                $pr->setRedirectURL($d->getCollectionLink());
             }
         }
 

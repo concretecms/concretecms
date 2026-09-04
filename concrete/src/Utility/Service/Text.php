@@ -360,7 +360,7 @@ class Text
      */
     public function handle($handle, $leaveSlashes = false)
     {
-        $handle = $this->sanitizeFileSystem($handle, $leaveSlashes);
+        $handle = $this->sanitizeFileSystem($handle);
         return str_replace('-', '_', $handle);
     }
 

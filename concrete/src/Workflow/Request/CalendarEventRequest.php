@@ -4,7 +4,6 @@ namespace Concrete\Core\Workflow\Request;
 use Concrete\Core\Workflow\Progress\Action\Action;
 use Concrete\Core\Workflow\Progress\Progress;
 use Concrete\Core\Calendar\Event\Event;
-use Concrete\Core\Calendar\Event\EventService;
 
 abstract class CalendarEventRequest extends Request
 {
@@ -22,7 +21,7 @@ abstract class CalendarEventRequest extends Request
 
     public function getRequestedEventVersionObject()
     {
-        return Event::getVersionByID($this->eventVersionID, EventService::EVENT_VERSION_RECENT);
+        return Event::getVersionByID($this->eventVersionID);
     }
 
     public function getWorkflowRequestAdditionalActions(Progress $wp)

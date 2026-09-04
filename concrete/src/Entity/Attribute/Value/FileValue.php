@@ -30,7 +30,7 @@ class FileValue extends AbstractValue
      */
     public function getVersion()
     {
-        return File::getByID($this->fID, $this->fvID);
+        return File::getByID($this->fID);
     }
 
     /**

@@ -2730,7 +2730,7 @@ EOT
         $db = Database::connection();
         $r = $db->executeQuery('select arHandle, arIsGlobal from Areas where cID = ?', [$this->getCollectionID()]);
         while ($row = $r->fetch()) {
-            $a = Area::getOrCreate($this, $row['arHandle'], $row['arIsGlobal']);
+            $a = Area::getOrCreate($this, $row['arHandle']);
             $a->rescanAreaPermissionsChain();
         }
     }

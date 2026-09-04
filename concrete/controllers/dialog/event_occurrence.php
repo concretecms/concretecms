@@ -26,7 +26,7 @@ class EventOccurrence extends BackendInterfaceController
 
     public function view()
     {
-        if ($this->canAccess(false)) {
+        if ($this->canAccess()) {
             $occurrence = EventOccurrenceObject::getByID($this->request->query->get('occurrenceID'));
             if (!$occurrence) {
                 throw new \Exception(t('Invalid occurrence.'));

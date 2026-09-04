@@ -52,7 +52,7 @@ class Delete extends BackendInterfacePageController
                             // we only get this response if we have skipped workflows and jumped straight in to an approve() step.
                             $pr->setMessage(t('Page deleted successfully.'));
                             if (!$this->request->request->get('sitemap')) {
-                                $pr->setRedirectURL($parent->getCollectionLink(true));
+                                $pr->setRedirectURL($parent->getCollectionLink());
                             }
                         } else {
                             $pr->setMessage(t('Page deletion request saved. This action will have to be approved before the page is deleted.'));

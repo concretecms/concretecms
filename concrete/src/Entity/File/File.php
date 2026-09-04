@@ -562,7 +562,7 @@ class File implements \Concrete\Core\Permission\ObjectInterface, AttributeObject
      */
     public function setFileFolder(FileFolder $folder)
     {
-        $em = \ORM::entityManager('core');
+        $em = \ORM::entityManager();
 
         $this->folderTreeNodeID = $folder->getTreeNodeID();
 

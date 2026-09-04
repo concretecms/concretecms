@@ -20,7 +20,7 @@ class CalendarFeed extends Controller
             if ($cp->canAccessCalendarRssFeed()) {
                 if ($calendar->getEventPageParentID()) {
                     $calendarPage = Page::getByID($calendar->getEventPageParentID());
-                    $calendarLink = $calendarPage->getCollectionLink(true);
+                    $calendarLink = $calendarPage->getCollectionLink();
                 } else {
                     $calendarLink = BASE_URL . DIR_REL;
                 }

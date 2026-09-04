@@ -33,7 +33,7 @@ class CheckAutomatedGroupsCommandHandler implements OutputAwareInterface
         $user = $this->userInfoRepository->getByID($command->getUserID());
         if ($user) {
             $this->output->write(t('Checking user: %s (ID: %s)', $user->getUserName(), $user->getUserID()));
-            $groupControllers = Group::getAutomatedOnJobRunGroupControllers($user);
+            $groupControllers = Group::getAutomatedOnJobRunGroupControllers();
             foreach ($groupControllers as $ga) {
                 if ($ga->check($user)) {
                     $user->enterGroup($ga->getGroupObject());

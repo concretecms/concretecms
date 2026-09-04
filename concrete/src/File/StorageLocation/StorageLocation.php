@@ -30,7 +30,7 @@ class StorageLocation
         /** @var StorageLocationFactory $factory */
         $factory = $app[StorageLocationFactory::class];
 
-        $location = $factory->create($configuration, $fslName, $fslIsDefault);
+        $location = $factory->create($configuration, $fslName);
         $location->setIsDefault($fslIsDefault);
 
         return $factory->persist($location);

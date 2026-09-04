@@ -71,7 +71,7 @@ class Manager
         $messageCallback(t('Setting character set "%1$s" and collation "%2$s" for connection "%3$s"', $characterSet, $collation, $connectionName));
         $this->convertTables($connection, $characterSet, $collation, $messageCallback, $warnings);
         $messageCallback(t('Saving connection configuration.'));
-        $this->persistConfiguration($connectionName, $environment, $characterSet, $collation, $warnings);
+        $this->persistConfiguration($connectionName, $environment, $characterSet, $collation);
         $connection->refreshCharactersetCollation($characterSet, $collation);
     }
 

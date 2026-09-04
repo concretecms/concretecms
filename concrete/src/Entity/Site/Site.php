@@ -218,7 +218,7 @@ class Site implements TreeInterface, ObjectInterface, PermissionObjectInterface,
     {
         if (!$this->siteConfig) {
             $app = Application::getFacadeApplication();
-            $this->updateSiteConfigRepository($app->make('config'), $this);
+            $this->updateSiteConfigRepository($app->make('config'));
         }
 
         return $this->siteConfig;
