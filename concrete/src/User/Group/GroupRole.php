@@ -15,11 +15,11 @@ use JsonSerializable;
  */
 class GroupRole extends ConcreteObject implements JsonSerializable
 {
-    /** @var int */
+    /** @var int|numeric-string */
     protected $grID;
     /** @var string */
     protected $grName;
-    /** @var bool */
+    /** @var bool|0|1|'0'|'1' */
     protected $grIsManager;
 
     /**

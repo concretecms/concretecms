@@ -15,23 +15,23 @@ abstract class Column extends ConcreteObject implements ColumnInterface
      */
     public $arLayout;
     /**
-     * @var int
+     * @var int|numeric-string
      */
     public $arLayoutColumnIndex;
     /**
-     * @var int
+     * @var int|numeric-string
      */
     public $arLayoutID;
     /**
-     * @var int
+     * @var int|numeric-string
      */
     public $arLayoutColumnID;
     /**
-     * @var int
+     * @var int|numeric-string|null
      */
     public $arLayoutColumnDisplayID;
     /**
-     * @var int
+     * @var int|numeric-string
      */
     public $arID;
 

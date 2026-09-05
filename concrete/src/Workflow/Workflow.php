@@ -17,7 +17,7 @@ abstract class Workflow extends ConcreteObject implements ObjectInterface
     /**
      * The workflow ID.
      *
-     * @var int
+     * @var int|numeric-string
      */
     protected $wfID = 0;
 

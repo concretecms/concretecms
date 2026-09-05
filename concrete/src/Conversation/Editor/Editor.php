@@ -16,7 +16,7 @@ abstract class Editor extends ConcreteObject
     protected $cnvEditorHandle;
     /** @var string */
     protected $cnvEditorID;
-    /** @var int */
+    /** @var bool|0|1|'0'|'1' */
     protected $cnvEditorIsActive;
     /** @var string */
     protected $cnvEditorInputName = 'cnvMessageBody';
@@ -26,7 +26,7 @@ abstract class Editor extends ConcreteObject
     protected $cnvMessage;
     /** @var Conversation */
     protected $cnvObject;
-    /** @var int */
+    /** @var int|numeric-string */
     protected $pkgID;
 
     /** @return \Concrete\Core\Asset\AssetPointer[] */

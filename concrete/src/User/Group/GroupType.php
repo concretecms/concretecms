@@ -15,11 +15,11 @@ use JsonSerializable;
  */
 class GroupType extends ConcreteObject implements JsonSerializable
 {
-    /** @var int */
+    /** @var int|numeric-string */
     protected $gtID;
     /** @var string */
     protected $gtName;
-    /** @var bool */
+    /** @var bool|0|1|'0'|'1' */
     protected $gtPetitionForPublicEntry;
 
     /**

@@ -22,11 +22,11 @@ class Library extends ConcreteObject
      */
     public $saslName;
     /**
-     * @var bool
+     * @var bool|0|1|'0'|'1'
      */
     public $saslIsActive;
     /**
-     * @var int
+     * @var int|numeric-string
      */
     public $pkgID;
 

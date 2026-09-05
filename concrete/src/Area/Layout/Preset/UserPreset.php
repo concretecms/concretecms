@@ -12,7 +12,7 @@ use Concrete\Core\Foundation\ConcreteObject;
 class UserPreset extends ConcreteObject
 {
     /**
-     * @var int
+     * @var int|numeric-string
      */
     public $arLayoutPresetID;
 
@@ -22,7 +22,7 @@ class UserPreset extends ConcreteObject
     public $arLayoutPresetName;
 
     /**
-     * @var int
+     * @var int|numeric-string
      */
     public $arLayoutID;
 

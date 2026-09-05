@@ -21,7 +21,7 @@ use PDO;
 class Access extends ConcreteObject
 {
     /**
-     * @var int
+     * @var int|numeric-string
      */
     protected $paID;
 

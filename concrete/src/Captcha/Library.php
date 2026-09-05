@@ -29,7 +29,7 @@ class Library extends ConcreteObject
     /**
      * Is this the active library?
      *
-     * @var bool
+     * @var bool|0|1|'0'|'1'
      */
     public $sclIsActive;
 
@@ -38,7 +38,7 @@ class Library extends ConcreteObject
     /**
      * The package ID (or 0 if it's a core library).
      *
-     * @var int
+     * @var int|numeric-string
      */
     protected $pkgID;
 
