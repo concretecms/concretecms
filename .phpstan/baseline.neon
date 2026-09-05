@@ -10129,12 +10129,6 @@ parameters:
 			path: ../concrete/src/Workflow/Request/UnapprovePageRequest.php
 
 		-
-			message: '#^Call to Concrete\\Core\\Legacy\\Loader\:\:model\(\) on a separate line has no effect\.$#'
-			identifier: staticMethod.resultUnused
-			count: 1
-			path: ../concrete/src/Workflow/Request/UserRequest.php
-
-		-
 			message: '#^Unsafe usage of new static\(\)\.$#'
 			identifier: new.static
 			count: 1
