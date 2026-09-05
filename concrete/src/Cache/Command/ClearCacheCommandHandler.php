@@ -39,7 +39,11 @@ class ClearCacheCommandHandler
     /** @var LoggerInterface */
     private $logger;
 
-    /** @var \Concrete\Core\Cache\Level\ObjectCache */
+    /**
+     * The caches to be cleared: the container handle (to be resolved with getCaches()) or the cache instance, keyed by handle.
+     *
+     * @var array<string, string|\Concrete\Core\Cache\FlushableInterface>
+     */
     private $caches = [
         'cache' => 'cache',
         'expensive' => 'cache/expensive',

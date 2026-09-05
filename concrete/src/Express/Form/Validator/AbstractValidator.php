@@ -10,7 +10,7 @@ abstract class AbstractValidator implements ValidatorInterface
 {
 
     /**
-     * @var RoutineInterface
+     * @var RoutineInterface[]
      */
     protected $routines = [];
     protected $error;

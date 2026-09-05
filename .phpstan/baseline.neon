@@ -229,12 +229,6 @@ parameters:
 			path: ../concrete/controllers/backend/user_interface/marketplace_item.php
 
 		-
-			message: '#^Argument of an invalid type Concrete\\Core\\Calendar\\Event\\EventOccurrence supplied for foreach, only iterables are supported\.$#'
-			identifier: foreach.nonIterable
-			count: 1
-			path: ../concrete/controllers/calendar_feed.php
-
-		-
 			message: '#^Call to an undefined method Concrete\\Core\\Calendar\\Event\\EventOccurrence\:\:getEvent\(\)\.$#'
 			identifier: method.notFound
 			count: 2
@@ -249,12 +243,6 @@ parameters:
 		-
 			message: '#^Constant BASE_URL not found\.$#'
 			identifier: constant.notFound
-			count: 1
-			path: ../concrete/controllers/calendar_feed.php
-
-		-
-			message: '#^PHPDoc tag @var above foreach loop does not specify variable name\.$#'
-			identifier: varTag.noVariable
 			count: 1
 			path: ../concrete/controllers/calendar_feed.php
 
@@ -3103,18 +3091,6 @@ parameters:
 			path: ../concrete/src/Cache/Cache.php
 
 		-
-			message: '#^Argument of an invalid type Concrete\\Core\\Cache\\Level\\ObjectCache supplied for foreach, only iterables are supported\.$#'
-			identifier: foreach.nonIterable
-			count: 1
-			path: ../concrete/src/Cache/Command/ClearCacheCommandHandler.php
-
-		-
-			message: '#^Property Concrete\\Core\\Cache\\Command\\ClearCacheCommandHandler\:\:\$caches \(Concrete\\Core\\Cache\\Level\\ObjectCache\) does not accept default value of type array\<string, string\>\.$#'
-			identifier: property.defaultValue
-			count: 1
-			path: ../concrete/src/Cache/Command/ClearCacheCommandHandler.php
-
-		-
 			message: '#^Property Concrete\\Core\\Cache\\Command\\ClearCacheCommandHandler\:\:\$clearGlobalAreas is never read, only written\.$#'
 			identifier: property.onlyWritten
 			count: 1
@@ -4427,18 +4403,6 @@ parameters:
 			identifier: method.notFound
 			count: 1
 			path: ../concrete/src/Express/Form/Control/View/AttributeKeyFormView.php
-
-		-
-			message: '#^Argument of an invalid type Concrete\\Core\\Express\\Form\\Validator\\Routine\\RoutineInterface supplied for foreach, only iterables are supported\.$#'
-			identifier: foreach.nonIterable
-			count: 1
-			path: ../concrete/src/Express/Form/Validator/AbstractValidator.php
-
-		-
-			message: '#^Property Concrete\\Core\\Express\\Form\\Validator\\AbstractValidator\:\:\$routines \(Concrete\\Core\\Express\\Form\\Validator\\Routine\\RoutineInterface\) does not accept default value of type array\.$#'
-			identifier: property.defaultValue
-			count: 1
-			path: ../concrete/src/Express/Form/Validator/AbstractValidator.php
 
 		-
 			message: '#^Cannot cast Concrete\\Core\\Attribute\\AttributeValueInterface to string\.$#'

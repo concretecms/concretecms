@@ -39,9 +39,7 @@ class CalendarFeed extends Controller
 
                 $results = $list->getResults();
 
-                /**
-                 * @var EventOccurrence
-                 */
+                /** @var EventOccurrence $occurrence */
                 foreach ($results as $occurrence) {
                     $entry = $writer->createEntry();
                     $entry->setTitle($occurrence->getEvent()->getName());
