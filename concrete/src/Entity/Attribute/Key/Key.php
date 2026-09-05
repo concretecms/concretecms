@@ -2,6 +2,7 @@
 namespace Concrete\Core\Entity\Attribute\Key;
 
 use Concrete\Core\Attribute\AttributeKeyInterface;
+use Concrete\Core\Attribute\SetFactory;
 use Concrete\Core\Attribute\View;
 use Concrete\Core\Form\Context\ContextInterface;
 use Concrete\Core\Attribute\Key\SearchIndexer\StandardSearchIndexer;
@@ -320,7 +321,7 @@ class Key implements AttributeKeyInterface, ExportableInterface, ControlInterfac
     public function setAttributeSet($set)
     {
         if (!is_object($set)) {
-            $set = Set::getByHandle($set);
+            $set = app(SetFactory::class)->getByHandle($set);
         }
         $set->addKey($this);
     }

@@ -4225,12 +4225,6 @@ parameters:
 			path: ../concrete/src/Entity/Attribute/Category.php
 
 		-
-			message: '#^Call to an undefined static method Concrete\\Core\\Entity\\Attribute\\Set\:\:getByHandle\(\)\.$#'
-			identifier: staticMethod.notFound
-			count: 1
-			path: ../concrete/src/Entity/Attribute/Key/Key.php
-
-		-
 			message: '#^Call to an undefined method Doctrine\\ORM\\EntityManagerInterface\:\:merge\(\)\.$#'
 			identifier: method.notFound
 			count: 1
