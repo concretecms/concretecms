@@ -1,0 +1,32 @@
+<?php
+
+/*
+ * HtmlObject\Traits\Tag::__call() sets the attribute named after the called method: this stub declares the
+ * attributes used by Concrete, so that PHPStan knows those magic methods.
+ */
+
+namespace HtmlObject\Traits;
+
+/**
+ * @method $this alt(mixed $value = true)
+ * @method $this class(mixed $value = true)
+ * @method $this content(mixed $value = true)
+ * @method $this dataSrc(mixed $value = true)
+ * @method $this dataSrcset(mixed $value = true)
+ * @method $this height(mixed $value = true)
+ * @method $this href(mixed $value = true)
+ * @method $this id(mixed $value = true)
+ * @method $this loading(mixed $value = true)
+ * @method $this media(mixed $value = true)
+ * @method $this property(mixed $value = true)
+ * @method $this rel(mixed $value = true)
+ * @method $this selected(mixed $value = true)
+ * @method $this src(mixed $value = true)
+ * @method $this srcset(mixed $value = true)
+ * @method $this title(mixed $value = true)
+ * @method $this type(mixed $value = true)
+ * @method $this width(mixed $value = true)
+ */
+abstract class Tag
+{
+}

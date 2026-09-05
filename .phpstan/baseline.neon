@@ -2179,12 +2179,6 @@ parameters:
 			path: ../concrete/src/Application/Service/UserInterface.php
 
 		-
-			message: '#^Call to an undefined method HtmlObject\\Link\:\:href\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: ../concrete/src/Application/Service/UserInterface/Help/Message.php
-
-		-
 			message: '#^Call to an undefined method Concrete\\Core\\Navigation\\Item\\ItemInterface\:\:getPageID\(\)\.$#'
 			identifier: method.notFound
 			count: 2
@@ -2222,12 +2216,6 @@ parameters:
 
 		-
 			message: '#^Call to an undefined method Concrete\\Core\\Application\\UserInterface\\Menu\\Item\\ItemInterface\:\:getPackageHandle\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: ../concrete/src/Application/UserInterface/Menu/Item/Controller.php
-
-		-
-			message: '#^Call to an undefined method HtmlObject\\Link\:\:href\(\)\.$#'
 			identifier: method.notFound
 			count: 1
 			path: ../concrete/src/Application/UserInterface/Menu/Item/Controller.php
@@ -2317,12 +2305,6 @@ parameters:
 			path: ../concrete/src/Area/Layout/Column.php
 
 		-
-			message: '#^Call to an undefined method HtmlObject\\Element\:\:id\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: ../concrete/src/Area/Layout/CustomColumn.php
-
-		-
 			message: '#^Return type \(Concrete\\Core\\Area\\Layout\\CustomColumn\) of method Concrete\\Core\\Area\\Layout\\CustomColumn\:\:duplicate\(\) should be compatible with return type \(int\) of method Concrete\\Core\\Area\\Layout\\Column\:\:duplicate\(\)$#'
 			identifier: method.childReturnType
 			count: 1
@@ -2333,24 +2315,6 @@ parameters:
 			identifier: method.childReturnType
 			count: 1
 			path: ../concrete/src/Area/Layout/CustomLayout.php
-
-		-
-			message: '#^Call to an undefined method HtmlObject\\Element\:\:id\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: ../concrete/src/Area/Layout/Formatter/CustomFormatter.php
-
-		-
-			message: '#^Call to an undefined method HtmlObject\\Element\:\:class\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: ../concrete/src/Area/Layout/Formatter/ThemeGridFormatter.php
-
-		-
-			message: '#^Call to an undefined method HtmlObject\\Element\:\:id\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: ../concrete/src/Area/Layout/Formatter/ThemeGridFormatter.php
 
 		-
 			message: '#^Call to function is_object\(\) with simplehtmldom_1_5\\simple_html_dom will always evaluate to true\.$#'
@@ -2411,24 +2375,6 @@ parameters:
 			identifier: varTag.misplaced
 			count: 1
 			path: ../concrete/src/Asset/AssetInterface.php
-
-		-
-			message: '#^Call to an undefined method HtmlObject\\Element\:\:type\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: ../concrete/src/Asset/JavascriptAsset.php
-
-		-
-			message: '#^Call to an undefined method HtmlObject\\Element\:\:type\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: ../concrete/src/Asset/JavascriptConditionalAsset.php
-
-		-
-			message: '#^Call to an undefined method HtmlObject\\Element\:\:type\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: ../concrete/src/Asset/JavascriptModuleAsset.php
 
 		-
 			message: '#^Call to an undefined method Concrete\\Core\\Attribute\\AttributeValueInterface\:\:getGenericValue\(\)\.$#'
@@ -2657,12 +2603,6 @@ parameters:
 			identifier: return.type
 			count: 1
 			path: ../concrete/src/Attribute/DefaultController.php
-
-		-
-			message: '#^Call to an undefined method HtmlObject\\Element\:\:src\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: ../concrete/src/Attribute/FileIconFormatter.php
 
 		-
 			message: '#^Call to an undefined method Concrete\\Core\\Form\\Control\\ViewInterface\:\:setObject\(\)\.$#'
@@ -4013,12 +3953,6 @@ parameters:
 			identifier: function.impossibleType
 			count: 1
 			path: ../concrete/src/Editor/CkeditorEditor.php
-
-		-
-			message: '#^Call to an undefined method HtmlObject\\Image\:\:alt\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: ../concrete/src/Editor/LinkAbstractor.php
 
 		-
 			message: '#^Call to function is_object\(\) with simplehtmldom_1_5\\simple_html_dom will always evaluate to true\.$#'
@@ -5557,136 +5491,16 @@ parameters:
 			path: ../concrete/src/Health/Search/Traits/SearchContentTrait.php
 
 		-
-			message: '#^Call to an undefined method HtmlObject\\Image\:\:height\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: ../concrete/src/Html/Image.php
-
-		-
-			message: '#^Call to an undefined method HtmlObject\\Image\:\:loading\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: ../concrete/src/Html/Image.php
-
-		-
-			message: '#^Call to an undefined method HtmlObject\\Image\:\:width\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: ../concrete/src/Html/Image.php
-
-		-
 			message: '#^Method Concrete\\Core\\Html\\Image\:\:__construct\(\) with return type void returns false but should not return anything\.$#'
 			identifier: return.void
 			count: 1
 			path: ../concrete/src/Html/Image.php
 
 		-
-			message: '#^Call to an undefined method HtmlObject\\Image\:\:alt\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: ../concrete/src/Html/Object/JavaScriptLazyImage.php
-
-		-
-			message: '#^Call to an undefined method HtmlObject\\Image\:\:dataSrc\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: ../concrete/src/Html/Object/JavaScriptLazyImage.php
-
-		-
-			message: '#^Call to an undefined method HtmlObject\\Image\:\:loading\(\)\.$#'
-			identifier: method.notFound
-			count: 2
-			path: ../concrete/src/Html/Object/JavaScriptLazyImage.php
-
-		-
-			message: '#^Call to an undefined method HtmlObject\\Image\:\:src\(\)\.$#'
-			identifier: method.notFound
-			count: 2
-			path: ../concrete/src/Html/Object/JavaScriptLazyImage.php
-
-		-
-			message: '#^Call to an undefined method HtmlObject\\Image\:\:title\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: ../concrete/src/Html/Object/JavaScriptLazyImage.php
-
-		-
 			message: '#^Constructor of class Concrete\\Core\\Html\\Object\\JavaScriptLazyImage has an unused parameter \$attributes\.$#'
 			identifier: constructor.unusedParameter
 			count: 1
 			path: ../concrete/src/Html/Object/JavaScriptLazyImage.php
-
-		-
-			message: '#^Call to an undefined method Concrete\\Core\\Html\\Object\\Source\:\:dataSrcset\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: ../concrete/src/Html/Object/Picture.php
-
-		-
-			message: '#^Call to an undefined method Concrete\\Core\\Html\\Object\\Source\:\:height\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: ../concrete/src/Html/Object/Picture.php
-
-		-
-			message: '#^Call to an undefined method Concrete\\Core\\Html\\Object\\Source\:\:media\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: ../concrete/src/Html/Object/Picture.php
-
-		-
-			message: '#^Call to an undefined method Concrete\\Core\\Html\\Object\\Source\:\:srcset\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: ../concrete/src/Html/Object/Picture.php
-
-		-
-			message: '#^Call to an undefined method Concrete\\Core\\Html\\Object\\Source\:\:width\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: ../concrete/src/Html/Object/Picture.php
-
-		-
-			message: '#^Call to an undefined method HtmlObject\\Image\:\:alt\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: ../concrete/src/Html/Object/Picture.php
-
-		-
-			message: '#^Call to an undefined method HtmlObject\\Image\:\:dataSrc\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: ../concrete/src/Html/Object/Picture.php
-
-		-
-			message: '#^Call to an undefined method HtmlObject\\Image\:\:height\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: ../concrete/src/Html/Object/Picture.php
-
-		-
-			message: '#^Call to an undefined method HtmlObject\\Image\:\:loading\(\)\.$#'
-			identifier: method.notFound
-			count: 2
-			path: ../concrete/src/Html/Object/Picture.php
-
-		-
-			message: '#^Call to an undefined method HtmlObject\\Image\:\:src\(\)\.$#'
-			identifier: method.notFound
-			count: 3
-			path: ../concrete/src/Html/Object/Picture.php
-
-		-
-			message: '#^Call to an undefined method HtmlObject\\Image\:\:title\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: ../concrete/src/Html/Object/Picture.php
-
-		-
-			message: '#^Call to an undefined method HtmlObject\\Image\:\:width\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: ../concrete/src/Html/Object/Picture.php
 
 		-
 			message: '#^Constructor of class Concrete\\Core\\Html\\Object\\Picture has an unused parameter \$attributes\.$#'
@@ -7123,12 +6937,6 @@ parameters:
 			path: ../concrete/src/Page/Theme/Documentation/Installer.php
 
 		-
-			message: '#^Call to an undefined method HtmlObject\\Image\:\:src\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: ../concrete/src/Page/Theme/Theme.php
-
-		-
 			message: '#^Call to function method_exists\(\) with Concrete\\Core\\Page\\Theme\\Theme and ''getThemeDescription'' will always evaluate to true\.$#'
 			identifier: function.alreadyNarrowedType
 			count: 1
@@ -7157,12 +6965,6 @@ parameters:
 			identifier: function.alreadyNarrowedType
 			count: 1
 			path: ../concrete/src/Page/Type/Composer/Control/CollectionAttributeControl.php
-
-		-
-			message: '#^Call to an undefined method HtmlObject\\Element\:\:src\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: ../concrete/src/Page/Type/Composer/Control/Control.php
 
 		-
 			message: '#^Strict comparison using \!\=\= between Concrete\\Core\\Page\\Type\\Type and null will always evaluate to true\.$#'
@@ -7217,12 +7019,6 @@ parameters:
 			identifier: varTag.misplaced
 			count: 1
 			path: ../concrete/src/Page/Type/Type.php
-
-		-
-			message: '#^Call to an undefined method HtmlObject\\Element\:\:type\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: ../concrete/src/Page/View/PageView.php
 
 		-
 			message: '#^If condition is always true\.$#'
@@ -7957,18 +7753,6 @@ parameters:
 			path: ../concrete/src/Session/Storage/Handler/RedisSessionHandler.php
 
 		-
-			message: '#^Call to an undefined method HtmlObject\\Element\:\:content\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: ../concrete/src/Sharing/OpenGraph/OpenGraph.php
-
-		-
-			message: '#^Call to an undefined method HtmlObject\\Element\:\:property\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: ../concrete/src/Sharing/OpenGraph/OpenGraph.php
-
-		-
 			message: '#^If condition is always true\.$#'
 			identifier: if.alwaysTrue
 			count: 1
@@ -8017,12 +7801,6 @@ parameters:
 			path: ../concrete/src/Site/Type/OptionsFormController.php
 
 		-
-			message: '#^Call to an undefined method HtmlObject\\Element\:\:selected\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: ../concrete/src/SiteInformation/Question/AbstractSelectQuestion.php
-
-		-
 			message: '#^Call to function is_array\(\) with bool\|float\|int\|string\|null will always evaluate to false\.$#'
 			identifier: function.impossibleType
 			count: 2
@@ -8057,30 +7835,6 @@ parameters:
 			identifier: argument.type
 			count: 1
 			path: ../concrete/src/StyleCustomizer/Preview/LegacyStylesheetPreviewHandler.php
-
-		-
-			message: '#^Call to an undefined method HtmlObject\\Element\:\:rel\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: ../concrete/src/StyleCustomizer/Skin/Stylesheet/CustomSkinStylesheet.php
-
-		-
-			message: '#^Call to an undefined method HtmlObject\\Element\:\:rel\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: ../concrete/src/StyleCustomizer/Skin/Stylesheet/PresetSkinStylesheet.php
-
-		-
-			message: '#^Call to an undefined method HtmlObject\\Element\:\:media\(\)\.$#'
-			identifier: method.notFound
-			count: 2
-			path: ../concrete/src/StyleCustomizer/Skin/Stylesheet/SiteStylesheet.php
-
-		-
-			message: '#^Call to an undefined method HtmlObject\\Element\:\:rel\(\)\.$#'
-			identifier: method.notFound
-			count: 2
-			path: ../concrete/src/StyleCustomizer/Skin/Stylesheet/SiteStylesheet.php
 
 		-
 			message: '#^If condition is always true\.$#'
@@ -8677,19 +8431,7 @@ parameters:
 			path: ../concrete/src/Url/Validation/ValidatedRemoteUrl.php
 
 		-
-			message: '#^Call to an undefined method HtmlObject\\Image\:\:src\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: ../concrete/src/User/Avatar/AnonymousAvatar.php
-
-		-
 			message: '#^Call to an undefined method Concrete\\Core\\File\\StorageLocation\\StorageLocation\:\:getConfigurationObject\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: ../concrete/src/User/Avatar/StandardAvatar.php
-
-		-
-			message: '#^Call to an undefined method HtmlObject\\Image\:\:src\(\)\.$#'
 			identifier: method.notFound
 			count: 1
 			path: ../concrete/src/User/Avatar/StandardAvatar.php
