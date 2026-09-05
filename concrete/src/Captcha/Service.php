@@ -8,7 +8,7 @@ namespace Concrete\Core\Captcha;
 class Service
 {
     /**
-     * @var \Concrete\Core\Captcha\Controller
+     * @var \Concrete\Core\Captcha\Controller|null
      */
     protected $controller;
 

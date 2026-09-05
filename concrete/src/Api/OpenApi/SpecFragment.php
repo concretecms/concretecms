@@ -6,7 +6,7 @@ class SpecFragment
 {
 
     /**
-     * @var SpecPathCollection
+     * @var SpecPathCollection|null
      */
     protected $pathCollection;
 

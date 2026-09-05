@@ -36,12 +36,12 @@ class Groups extends DashboardPageController
     use CanDeleteGroupsTrait;
 
     /**
-     * @var Element
+     * @var Element|null
      */
     protected $headerMenu;
 
     /**
-     * @var Element
+     * @var Element|null
      */
     protected $headerSearch;
 

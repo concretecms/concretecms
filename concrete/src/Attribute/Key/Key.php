@@ -33,7 +33,7 @@ class Key extends Facade implements AttributeKeyInterface
     // IN 5.7 THAT EXTEND THIS FILE.
 
     /**
-     * @var LegacyKey
+     * @var LegacyKey|null
      */
     protected $legacyAttributeKey;
 

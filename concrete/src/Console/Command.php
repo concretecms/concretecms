@@ -102,7 +102,7 @@ abstract class Command extends SymfonyCommand
      * Short option: `{--Q|quiet}`
      * Option with description: `{--ignore=default : The item to ignore}`
      *
-     * @var string
+     * @var string|null
      */
     protected $signature;
 

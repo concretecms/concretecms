@@ -53,7 +53,7 @@ class Localization
     /**
      * The translator adapter repository to be used.
      *
-     * @var TranslatorAdapterRepositoryInterface
+     * @var TranslatorAdapterRepositoryInterface|null
      */
     protected $translatorAdapterRepository;
 

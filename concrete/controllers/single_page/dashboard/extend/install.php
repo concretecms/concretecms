@@ -34,7 +34,7 @@ class Install extends DashboardPageController implements LoggerAwareInterface
 
     use LoggerAwareTrait;
 
-    /** @var PackageRepositoryInterface */
+    /** @var PackageRepositoryInterface|null */
     protected $repository;
     /** @var ConnectionInterface|null */
     protected $connection;

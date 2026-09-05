@@ -17,7 +17,7 @@ use \Concrete\Core\Permission\Duration;
 class Permissions extends BackendInterfaceController
 {
     protected $viewPath = '/dialogs/page/bulk/permissions';
-    /** @var Page[] */
+    /** @var Page[]|null */
     protected $pages = null;
     protected $canEdit = false;
     protected $permissionsInherit = '';

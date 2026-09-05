@@ -15,7 +15,7 @@ use Laminas\I18n\Translator\LoaderPluginManager;
  */
 class TranslatorAdapterFactory implements TranslatorAdapterFactoryInterface
 {
-    /** @var TranslationLoaderRepositoryInterface */
+    /** @var TranslationLoaderRepositoryInterface|null */
     protected $translationLoaderRepository;
 
     /**

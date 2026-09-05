@@ -28,7 +28,7 @@ class FileLogger implements LoggerInterface, NormalizableInterface, Denormalizab
     protected $filesystem;
 
     /**
-     * @var string
+     * @var string|null
      */
     protected $filePath;
 

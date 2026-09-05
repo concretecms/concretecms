@@ -25,7 +25,7 @@ class CsvWriter
     protected $status;
 
     /**
-     * @var \Concrete\Core\Entity\Attribute\Key\UserKey[]
+     * @var \Concrete\Core\Entity\Attribute\Key\UserKey[]|null
      */
     protected $attributeKeys;
 

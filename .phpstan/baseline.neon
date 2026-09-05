@@ -313,12 +313,6 @@ parameters:
 			path: ../concrete/controllers/dialog/event/edit.php
 
 		-
-			message: '#^Property Concrete\\Controller\\Dialog\\Express\\AdvancedSearch\:\:\$entity \(Concrete\\Core\\Entity\\Express\\Entity\) in isset\(\) is not nullable\.$#'
-			identifier: isset.property
-			count: 1
-			path: ../concrete/controllers/dialog/express/advanced_search.php
-
-		-
 			message: '#^Call to an undefined method Concrete\\Core\\Entity\\Search\\SavedSearch\:\:getEntity\(\)\.$#'
 			identifier: method.notFound
 			count: 1
@@ -451,12 +445,6 @@ parameters:
 			path: ../concrete/controllers/dialog/page/add_block.php
 
 		-
-			message: '#^Property Concrete\\Controller\\Dialog\\Page\\AddBlock\:\:\$areaToModify \(Concrete\\Core\\Area\\Area\) in isset\(\) is not nullable\.$#'
-			identifier: isset.property
-			count: 1
-			path: ../concrete/controllers/dialog/page/add_block.php
-
-		-
 			message: '#^Parameter \#2 \$userID of class Concrete\\Core\\Page\\Command\\DeletePageCommand constructor expects int\|null, string given\.$#'
 			identifier: argument.type
 			count: 1
@@ -477,12 +465,6 @@ parameters:
 		-
 			message: '#^Instanceof between Concrete\\Core\\Permission\\Duration and Concrete\\Core\\Permission\\Duration will always evaluate to true\.$#'
 			identifier: instanceof.alwaysTrue
-			count: 1
-			path: ../concrete/controllers/dialog/page/bulk/permissions.php
-
-		-
-			message: '#^Property Concrete\\Controller\\Dialog\\Page\\Bulk\\Permissions\:\:\$pages \(array\<Concrete\\Core\\Page\\Page\>\) in isset\(\) is not nullable\.$#'
-			identifier: isset.property
 			count: 1
 			path: ../concrete/controllers/dialog/page/bulk/permissions.php
 
@@ -679,70 +661,10 @@ parameters:
 			path: ../concrete/controllers/element/dashboard/express/control/options.php
 
 		-
-			message: '#^Property Concrete\\Controller\\Element\\Dashboard\\Reports\\Logs\\Search\\Search\:\:\$headerSearchAction \(string\) in isset\(\) is not nullable\.$#'
-			identifier: isset.property
-			count: 1
-			path: ../concrete/controllers/element/dashboard/reports/logs/search/search.php
-
-		-
-			message: '#^Property Concrete\\Controller\\Element\\Express\\Search\\Menu\:\:\$query \(Concrete\\Core\\Entity\\Search\\Query\) in isset\(\) is not nullable\.$#'
-			identifier: isset.property
-			count: 1
-			path: ../concrete/controllers/element/express/search/menu.php
-
-		-
-			message: '#^Property Concrete\\Controller\\Element\\Express\\Search\\Search\:\:\$headerSearchAction \(string\) in isset\(\) is not nullable\.$#'
-			identifier: isset.property
-			count: 1
-			path: ../concrete/controllers/element/express/search/search.php
-
-		-
-			message: '#^Property Concrete\\Controller\\Element\\Express\\Search\\Search\:\:\$query \(Concrete\\Core\\Entity\\Search\\Query\) in isset\(\) is not nullable\.$#'
-			identifier: isset.property
-			count: 1
-			path: ../concrete/controllers/element/express/search/search.php
-
-		-
-			message: '#^Property Concrete\\Controller\\Element\\Files\\Search\\Menu\:\:\$query \(Concrete\\Core\\Entity\\Search\\Query\) in isset\(\) is not nullable\.$#'
-			identifier: isset.property
-			count: 1
-			path: ../concrete/controllers/element/files/search/menu.php
-
-		-
-			message: '#^Property Concrete\\Controller\\Element\\Files\\Search\\Search\:\:\$headerSearchAction \(string\) in isset\(\) is not nullable\.$#'
-			identifier: isset.property
-			count: 1
-			path: ../concrete/controllers/element/files/search/search.php
-
-		-
-			message: '#^Property Concrete\\Controller\\Element\\Files\\Search\\Search\:\:\$query \(Concrete\\Core\\Entity\\Search\\Query\) in isset\(\) is not nullable\.$#'
-			identifier: isset.property
-			count: 1
-			path: ../concrete/controllers/element/files/search/search.php
-
-		-
-			message: '#^Property Concrete\\Controller\\Element\\Groups\\Search\\Search\:\:\$headerSearchAction \(string\) in isset\(\) is not nullable\.$#'
-			identifier: isset.property
-			count: 1
-			path: ../concrete/controllers/element/groups/search/search.php
-
-		-
 			message: '#^Call to an undefined method Concrete\\Core\\Page\\PageList\:\:filterByExcludeNav\(\)\.$#'
 			identifier: method.notFound
 			count: 1
 			path: ../concrete/controllers/element/navigation/menu.php
-
-		-
-			message: '#^Property Concrete\\Controller\\Element\\Pages\\Search\\Search\:\:\$headerSearchAction \(string\) in isset\(\) is not nullable\.$#'
-			identifier: isset.property
-			count: 1
-			path: ../concrete/controllers/element/pages/search/search.php
-
-		-
-			message: '#^Property Concrete\\Controller\\Element\\Users\\Search\\Search\:\:\$headerSearchAction \(string\) in isset\(\) is not nullable\.$#'
-			identifier: isset.property
-			count: 1
-			path: ../concrete/controllers/element/users/search/search.php
 
 		-
 			message: '#^Instanceof between Concrete\\Core\\Entity\\Calendar\\Calendar and Concrete\\Core\\Entity\\Calendar\\Calendar will always evaluate to true\.$#'
@@ -1303,26 +1225,8 @@ parameters:
 			path: ../concrete/controllers/single_page/dashboard/express/entries.php
 
 		-
-			message: '#^Property Concrete\\Controller\\SinglePage\\Dashboard\\Express\\Entries\:\:\$headerMenu \(Concrete\\Core\\Filesystem\\Element\) in isset\(\) is not nullable\.$#'
-			identifier: isset.property
-			count: 1
-			path: ../concrete/controllers/single_page/dashboard/express/entries.php
-
-		-
-			message: '#^Property Concrete\\Controller\\SinglePage\\Dashboard\\Express\\Entries\:\:\$headerSearch \(Concrete\\Core\\Filesystem\\Element\) in isset\(\) is not nullable\.$#'
-			identifier: isset.property
-			count: 1
-			path: ../concrete/controllers/single_page/dashboard/express/entries.php
-
-		-
 			message: '#^Instanceof between Concrete\\Core\\Entity\\Package and Concrete\\Core\\Entity\\Package will always evaluate to true\.$#'
 			identifier: instanceof.alwaysTrue
-			count: 1
-			path: ../concrete/controllers/single_page/dashboard/extend/install.php
-
-		-
-			message: '#^Property Concrete\\Controller\\SinglePage\\Dashboard\\Extend\\Install\:\:\$repository \(Concrete\\Core\\Marketplace\\PackageRepositoryInterface\) in isset\(\) is not nullable\.$#'
-			identifier: isset.property
 			count: 1
 			path: ../concrete/controllers/single_page/dashboard/extend/install.php
 
@@ -1347,18 +1251,6 @@ parameters:
 		-
 			message: '#^Call to an undefined method Concrete\\Core\\Controller\\ElementController\:\:setQuery\(\)\.$#'
 			identifier: method.notFound
-			count: 1
-			path: ../concrete/controllers/single_page/dashboard/files/search.php
-
-		-
-			message: '#^Property Concrete\\Controller\\SinglePage\\Dashboard\\Files\\Search\:\:\$headerMenu \(Concrete\\Core\\Filesystem\\Element\) in isset\(\) is not nullable\.$#'
-			identifier: isset.property
-			count: 1
-			path: ../concrete/controllers/single_page/dashboard/files/search.php
-
-		-
-			message: '#^Property Concrete\\Controller\\SinglePage\\Dashboard\\Files\\Search\:\:\$headerSearch \(Concrete\\Core\\Filesystem\\Element\) in isset\(\) is not nullable\.$#'
-			identifier: isset.property
 			count: 1
 			path: ../concrete/controllers/single_page/dashboard/files/search.php
 
@@ -1429,18 +1321,6 @@ parameters:
 			path: ../concrete/controllers/single_page/dashboard/reports/forms.php
 
 		-
-			message: '#^Property Concrete\\Controller\\SinglePage\\Dashboard\\Reports\\Forms\:\:\$headerMenu \(Concrete\\Core\\Filesystem\\Element\) in isset\(\) is not nullable\.$#'
-			identifier: isset.property
-			count: 2
-			path: ../concrete/controllers/single_page/dashboard/reports/forms.php
-
-		-
-			message: '#^Property Concrete\\Controller\\SinglePage\\Dashboard\\Reports\\Forms\:\:\$headerSearch \(Concrete\\Core\\Filesystem\\Element\) in isset\(\) is not nullable\.$#'
-			identifier: isset.property
-			count: 1
-			path: ../concrete/controllers/single_page/dashboard/reports/forms.php
-
-		-
 			message: '#^Comparison operation "\>" between int\<1, max\> and 0 is always true\.$#'
 			identifier: greater.alwaysTrue
 			count: 1
@@ -1453,32 +1333,8 @@ parameters:
 			path: ../concrete/controllers/single_page/dashboard/reports/logs.php
 
 		-
-			message: '#^Property Concrete\\Controller\\SinglePage\\Dashboard\\Reports\\Logs\:\:\$headerMenu \(Concrete\\Core\\Filesystem\\Element\) in isset\(\) is not nullable\.$#'
-			identifier: isset.property
-			count: 1
-			path: ../concrete/controllers/single_page/dashboard/reports/logs.php
-
-		-
-			message: '#^Property Concrete\\Controller\\SinglePage\\Dashboard\\Reports\\Logs\:\:\$headerSearch \(Concrete\\Core\\Filesystem\\Element\) in isset\(\) is not nullable\.$#'
-			identifier: isset.property
-			count: 1
-			path: ../concrete/controllers/single_page/dashboard/reports/logs.php
-
-		-
 			message: '#^Call to an undefined method Concrete\\Core\\Controller\\ElementController\:\:setQuery\(\)\.$#'
 			identifier: method.notFound
-			count: 1
-			path: ../concrete/controllers/single_page/dashboard/sitemap/search.php
-
-		-
-			message: '#^Property Concrete\\Controller\\SinglePage\\Dashboard\\Sitemap\\Search\:\:\$headerMenu \(Concrete\\Core\\Filesystem\\Element\) in isset\(\) is not nullable\.$#'
-			identifier: isset.property
-			count: 1
-			path: ../concrete/controllers/single_page/dashboard/sitemap/search.php
-
-		-
-			message: '#^Property Concrete\\Controller\\SinglePage\\Dashboard\\Sitemap\\Search\:\:\$headerSearch \(Concrete\\Core\\Filesystem\\Element\) in isset\(\) is not nullable\.$#'
-			identifier: isset.property
 			count: 1
 			path: ../concrete/controllers/single_page/dashboard/sitemap/search.php
 
@@ -1813,18 +1669,6 @@ parameters:
 			path: ../concrete/controllers/single_page/dashboard/users/groups.php
 
 		-
-			message: '#^Property Concrete\\Controller\\SinglePage\\Dashboard\\Users\\Groups\:\:\$headerMenu \(Concrete\\Core\\Filesystem\\Element\) in isset\(\) is not nullable\.$#'
-			identifier: isset.property
-			count: 1
-			path: ../concrete/controllers/single_page/dashboard/users/groups.php
-
-		-
-			message: '#^Property Concrete\\Controller\\SinglePage\\Dashboard\\Users\\Groups\:\:\$headerSearch \(Concrete\\Core\\Filesystem\\Element\) in isset\(\) is not nullable\.$#'
-			identifier: isset.property
-			count: 1
-			path: ../concrete/controllers/single_page/dashboard/users/groups.php
-
-		-
 			message: '#^Instanceof between Symfony\\Component\\HttpFoundation\\File\\UploadedFile and Symfony\\Component\\HttpFoundation\\File\\UploadedFile will always evaluate to true\.$#'
 			identifier: instanceof.alwaysTrue
 			count: 1
@@ -1857,18 +1701,6 @@ parameters:
 		-
 			message: '#^Parameter \#1 \$requester of method Concrete\\Core\\User\\UserInfo\:\:triggerDelete\(\) expects Concrete\\Core\\User\\User, Concrete\\Core\\User\\UserInfo\|false given\.$#'
 			identifier: argument.type
-			count: 1
-			path: ../concrete/controllers/single_page/dashboard/users/search.php
-
-		-
-			message: '#^Property Concrete\\Controller\\SinglePage\\Dashboard\\Users\\Search\:\:\$headerMenu \(Concrete\\Core\\Filesystem\\Element\) in isset\(\) is not nullable\.$#'
-			identifier: isset.property
-			count: 1
-			path: ../concrete/controllers/single_page/dashboard/users/search.php
-
-		-
-			message: '#^Property Concrete\\Controller\\SinglePage\\Dashboard\\Users\\Search\:\:\$headerSearch \(Concrete\\Core\\Filesystem\\Element\) in isset\(\) is not nullable\.$#'
-			identifier: isset.property
 			count: 1
 			path: ../concrete/controllers/single_page/dashboard/users/search.php
 
@@ -2029,14 +1861,8 @@ parameters:
 			path: ../concrete/src/Api/Api.php
 
 		-
-			message: '#^Property Concrete\\Core\\Api\\Api\:\:\$client \(GuzzleHttp\\ClientInterface\) does not accept Frankkessler\\Guzzle\\Oauth2\\Oauth2Client\.$#'
+			message: '#^Property Concrete\\Core\\Api\\Api\:\:\$client \(GuzzleHttp\\ClientInterface\|null\) does not accept Frankkessler\\Guzzle\\Oauth2\\Oauth2Client\.$#'
 			identifier: assign.propertyType
-			count: 1
-			path: ../concrete/src/Api/Api.php
-
-		-
-			message: '#^Property Concrete\\Core\\Api\\Api\:\:\$client \(GuzzleHttp\\ClientInterface\) in isset\(\) is not nullable\.$#'
-			identifier: isset.property
 			count: 1
 			path: ../concrete/src/Api/Api.php
 
@@ -2275,12 +2101,6 @@ parameters:
 			path: ../concrete/src/Api/OAuth/Validator/DefaultValidator.php
 
 		-
-			message: '#^Property Concrete\\Core\\Api\\OpenApi\\SpecFragment\:\:\$pathCollection \(Concrete\\Core\\Api\\OpenApi\\SpecPathCollection\) in isset\(\) is not nullable\.$#'
-			identifier: isset.property
-			count: 1
-			path: ../concrete/src/Api/OpenApi/SpecFragment.php
-
-		-
 			message: '#^Access to an undefined property OpenApi\\Annotations\\AbstractAnnotation\:\:\$requestBodies\.$#'
 			identifier: property.notFound
 			count: 1
@@ -2321,18 +2141,6 @@ parameters:
 			identifier: method.notFound
 			count: 1
 			path: ../concrete/src/Api/OpenApi/SpecParameter.php
-
-		-
-			message: '#^Property Concrete\\Core\\Api\\OpenApi\\SpecPath\:\:\$requestBody \(Concrete\\Core\\Api\\OpenApi\\SpecRequestBody\) in isset\(\) is not nullable\.$#'
-			identifier: isset.property
-			count: 1
-			path: ../concrete/src/Api/OpenApi/SpecPath.php
-
-		-
-			message: '#^Property Concrete\\Core\\Api\\OpenApi\\SpecPath\:\:\$responses \(Concrete\\Core\\Api\\OpenApi\\SpecResponseList\) in isset\(\) is not nullable\.$#'
-			identifier: isset.property
-			count: 1
-			path: ../concrete/src/Api/OpenApi/SpecPath.php
 
 		-
 			message: '#^Call to function is_array\(\) with array\<Concrete\\Core\\Job\\Set\> will always evaluate to true\.$#'
@@ -2523,12 +2331,6 @@ parameters:
 		-
 			message: '#^Negated boolean expression is always false\.$#'
 			identifier: booleanNot.alwaysFalse
-			count: 1
-			path: ../concrete/src/Area/Area.php
-
-		-
-			message: '#^Property Concrete\\Core\\Area\\Area\:\:\$arDisplayName \(string\) in isset\(\) is not nullable\.$#'
-			identifier: isset.property
 			count: 1
 			path: ../concrete/src/Area/Area.php
 
@@ -2989,12 +2791,6 @@ parameters:
 			path: ../concrete/src/Attribute/FilterableByValueInterface.php
 
 		-
-			message: '#^Property Concrete\\Core\\Attribute\\Form\\Control\\View\\View\:\:\$object \(Concrete\\Core\\Attribute\\ObjectInterface\) in isset\(\) is not nullable\.$#'
-			identifier: isset.property
-			count: 1
-			path: ../concrete/src/Attribute/Form/Control/View/View.php
-
-		-
 			message: '#^Call to an undefined method Concrete\\Core\\Form\\Control\\ViewInterface\:\:setObject\(\)\.$#'
 			identifier: method.notFound
 			count: 1
@@ -3031,9 +2827,45 @@ parameters:
 			path: ../concrete/src/Attribute/Key/Key.php
 
 		-
-			message: '#^Property Concrete\\Core\\Attribute\\Key\\Key\:\:\$legacyAttributeKey \(Concrete\\Core\\Entity\\Attribute\\Key\\LegacyKey\) in isset\(\) is not nullable\.$#'
-			identifier: isset.property
-			count: 8
+			message: '#^Method Concrete\\Core\\Attribute\\Key\\Key\:\:__toString\(\) should return string but return statement is missing\.$#'
+			identifier: return.missing
+			count: 1
+			path: ../concrete/src/Attribute/Key/Key.php
+
+		-
+			message: '#^Method Concrete\\Core\\Attribute\\Key\\Key\:\:getAttributeKeyHandle\(\) should return string but return statement is missing\.$#'
+			identifier: return.missing
+			count: 1
+			path: ../concrete/src/Attribute/Key/Key.php
+
+		-
+			message: '#^Method Concrete\\Core\\Attribute\\Key\\Key\:\:getAttributeKeyID\(\) should return int but return statement is missing\.$#'
+			identifier: return.missing
+			count: 1
+			path: ../concrete/src/Attribute/Key/Key.php
+
+		-
+			message: '#^Method Concrete\\Core\\Attribute\\Key\\Key\:\:getAttributeType\(\) should return Concrete\\Core\\Entity\\Attribute\\Type but return statement is missing\.$#'
+			identifier: return.missing
+			count: 1
+			path: ../concrete/src/Attribute/Key/Key.php
+
+		-
+			message: '#^Method Concrete\\Core\\Attribute\\Key\\Key\:\:getController\(\) should return Concrete\\Core\\Attribute\\Controller but return statement is missing\.$#'
+			identifier: return.missing
+			count: 1
+			path: ../concrete/src/Attribute/Key/Key.php
+
+		-
+			message: '#^Method Concrete\\Core\\Attribute\\Key\\Key\:\:getSearchIndexer\(\) should return Concrete\\Core\\Attribute\\Key\\SearchIndexer\\SearchIndexerInterface but return statement is missing\.$#'
+			identifier: return.missing
+			count: 1
+			path: ../concrete/src/Attribute/Key/Key.php
+
+		-
+			message: '#^Method Concrete\\Core\\Attribute\\Key\\Key\:\:isAttributeKeySearchable\(\) should return bool but return statement is missing\.$#'
+			identifier: return.missing
+			count: 1
 			path: ../concrete/src/Attribute/Key/Key.php
 
 		-
@@ -3595,12 +3427,6 @@ parameters:
 			path: ../concrete/src/Board/Instance/Notifier/PageNotifier.php
 
 		-
-			message: '#^Property Concrete\\Core\\Board\\Instance\\Slot\\Content\\ContentRenderer\:\:\$currentPage \(Concrete\\Core\\Page\\Page\) in isset\(\) is not nullable\.$#'
-			identifier: isset.property
-			count: 1
-			path: ../concrete/src/Board/Instance/Slot/Content/ContentRenderer.php
-
-		-
 			message: '#^Call to an undefined method Concrete\\Core\\Board\\Instance\\Item\\Data\\DataInterface\:\:getOccurrenceID\(\)\.$#'
 			identifier: method.notFound
 			count: 1
@@ -3757,12 +3583,6 @@ parameters:
 			path: ../concrete/src/Captcha/SecurimageController.php
 
 		-
-			message: '#^Property Concrete\\Core\\Captcha\\Service\:\:\$controller \(Concrete\\Core\\Captcha\\Controller\) in isset\(\) is not nullable\.$#'
-			identifier: isset.property
-			count: 1
-			path: ../concrete/src/Captcha/Service.php
-
-		-
 			message: '#^Trait Concrete\\Core\\Command\\Batch\\BatchAwareTrait is used zero times and is not analysed\.$#'
 			identifier: trait.unused
 			count: 1
@@ -3797,12 +3617,6 @@ parameters:
 			identifier: method.notFound
 			count: 1
 			path: ../concrete/src/Command/Process/Command/RetryFailedMessageCommandHandler.php
-
-		-
-			message: '#^Property Concrete\\Core\\Command\\Process\\Logger\\FileLogger\:\:\$filePath \(string\) in isset\(\) is not nullable\.$#'
-			identifier: isset.property
-			count: 1
-			path: ../concrete/src/Command/Process/Logger/FileLogger.php
 
 		-
 			message: '#^If condition is always true\.$#'
@@ -3981,12 +3795,6 @@ parameters:
 		-
 			message: '#^Call to an undefined method Symfony\\Component\\Console\\Application\:\:getConcrete\(\)\.$#'
 			identifier: method.notFound
-			count: 1
-			path: ../concrete/src/Console/Command.php
-
-		-
-			message: '#^Property Concrete\\Core\\Console\\Command\:\:\$signature \(string\) in isset\(\) is not nullable\.$#'
-			identifier: isset.property
 			count: 1
 			path: ../concrete/src/Console/Command.php
 
@@ -4513,26 +4321,8 @@ parameters:
 			path: ../concrete/src/Entity/Attribute/Value/AbstractValue.php
 
 		-
-			message: '#^Method Concrete\\Core\\Entity\\Attribute\\Value\\AbstractValue\:\:getValueObject\(\) never returns null so it can be removed from the return type\.$#'
-			identifier: return.unusedType
-			count: 1
-			path: ../concrete/src/Entity/Attribute/Value/AbstractValue.php
-
-		-
-			message: '#^Property Concrete\\Core\\Entity\\Attribute\\Value\\AbstractValue\:\:\$attribute_value \(Concrete\\Core\\Entity\\Attribute\\Value\\Value\\AbstractValue\) in isset\(\) is not nullable\.$#'
-			identifier: isset.property
-			count: 2
-			path: ../concrete/src/Entity/Attribute/Value/AbstractValue.php
-
-		-
-			message: '#^Result of && is always false\.$#'
-			identifier: booleanAnd.alwaysFalse
-			count: 1
-			path: ../concrete/src/Entity/Attribute/Value/AbstractValue.php
-
-		-
-			message: '#^Unreachable statement \- code above always terminates\.$#'
-			identifier: deadCode.unreachable
+			message: '#^Method Concrete\\Core\\Entity\\Attribute\\Value\\AbstractValue\:\:getValueObject\(\) should return Concrete\\Core\\Attribute\\AttributeValueInterface\|Concrete\\Core\\Entity\\Attribute\\Value\\Value\\AbstractValue\|null but return statement is missing\.$#'
+			identifier: return.missing
 			count: 1
 			path: ../concrete/src/Entity/Attribute/Value/AbstractValue.php
 
@@ -4575,18 +4365,6 @@ parameters:
 		-
 			message: '#^Method Concrete\\Core\\Entity\\Calendar\\CalendarEvent\:\:getAttributeValueObject\(\) should return Concrete\\Core\\Entity\\Attribute\\Value\\EventValue\|null but returns Concrete\\Core\\Attribute\\AttributeValueInterface\|null\.$#'
 			identifier: return.type
-			count: 1
-			path: ../concrete/src/Entity/Calendar/CalendarEvent.php
-
-		-
-			message: '#^Negated boolean expression is always false\.$#'
-			identifier: booleanNot.alwaysFalse
-			count: 1
-			path: ../concrete/src/Entity/Calendar/CalendarEvent.php
-
-		-
-			message: '#^Property Concrete\\Core\\Entity\\Calendar\\CalendarEvent\:\:\$selectedVersion \(Concrete\\Core\\Entity\\Calendar\\CalendarEventVersion\) in isset\(\) is not nullable\.$#'
-			identifier: isset.property
 			count: 1
 			path: ../concrete/src/Entity/Calendar/CalendarEvent.php
 
@@ -6709,12 +6487,6 @@ parameters:
 			path: ../concrete/src/Localization/Localization.php
 
 		-
-			message: '#^Property Concrete\\Core\\Localization\\Localization\:\:\$translatorAdapterRepository \(Concrete\\Core\\Localization\\Translator\\TranslatorAdapterRepositoryInterface\) in isset\(\) is not nullable\.$#'
-			identifier: isset.property
-			count: 1
-			path: ../concrete/src/Localization/Localization.php
-
-		-
 			message: '#^Ternary operator condition is always true\.$#'
 			identifier: ternary.alwaysTrue
 			count: 1
@@ -6803,12 +6575,6 @@ parameters:
 			identifier: function.alreadyNarrowedType
 			count: 5
 			path: ../concrete/src/Localization/Translator/Adapter/Laminas/TranslatorAdapter.php
-
-		-
-			message: '#^Property Concrete\\Core\\Localization\\Translator\\Adapter\\Laminas\\TranslatorAdapterFactory\:\:\$translationLoaderRepository \(Concrete\\Core\\Localization\\Translator\\Translation\\TranslationLoaderRepositoryInterface\) in isset\(\) is not nullable\.$#'
-			identifier: isset.property
-			count: 1
-			path: ../concrete/src/Localization/Translator/Adapter/Laminas/TranslatorAdapterFactory.php
 
 		-
 			message: '#^Call to function is_string\(\) with string will always evaluate to true\.$#'
@@ -7097,18 +6863,6 @@ parameters:
 			identifier: varTag.differentVariable
 			count: 1
 			path: ../concrete/src/Notification/Alert/Filter/FilterListFactory.php
-
-		-
-			message: '#^Property Concrete\\Core\\Notification\\Events\\MercureService\:\:\$hub \(Symfony\\Component\\Mercure\\Hub\) in isset\(\) is not nullable\.$#'
-			identifier: isset.property
-			count: 1
-			path: ../concrete/src/Notification/Events/MercureService.php
-
-		-
-			message: '#^Property Concrete\\Core\\Notification\\Events\\MercureService\:\:\$subscriber \(Concrete\\Core\\Notification\\Events\\Subscriber\) in isset\(\) is not nullable\.$#'
-			identifier: isset.property
-			count: 1
-			path: ../concrete/src/Notification/Events/MercureService.php
 
 		-
 			message: '#^Call to method withClaim\(\) on an unknown class Lcobucci\\JWT\\Token\\Builder\.$#'
@@ -7551,18 +7305,6 @@ parameters:
 		-
 			message: '#^Call to an undefined method Doctrine\\ORM\\EntityRepository\<Concrete\\Core\\Entity\\Express\\Form\>\:\:findOneById\(\)\.$#'
 			identifier: method.notFound
-			count: 1
-			path: ../concrete/src/Page/Controller/DashboardExpressEntityPageController.php
-
-		-
-			message: '#^Property Concrete\\Core\\Page\\Controller\\DashboardExpressEntityPageController\:\:\$headerMenu \(Concrete\\Core\\Filesystem\\Element\) in isset\(\) is not nullable\.$#'
-			identifier: isset.property
-			count: 1
-			path: ../concrete/src/Page/Controller/DashboardExpressEntityPageController.php
-
-		-
-			message: '#^Property Concrete\\Core\\Page\\Controller\\DashboardExpressEntityPageController\:\:\$headerSearch \(Concrete\\Core\\Filesystem\\Element\) in isset\(\) is not nullable\.$#'
-			identifier: isset.property
 			count: 1
 			path: ../concrete/src/Page/Controller/DashboardExpressEntityPageController.php
 
@@ -9091,12 +8833,6 @@ parameters:
 			path: ../concrete/src/Routing/Redirect.php
 
 		-
-			message: '#^Property Concrete\\Core\\Routing\\Route\:\:\$customName \(string\) in isset\(\) is not nullable\.$#'
-			identifier: isset.property
-			count: 2
-			path: ../concrete/src/Routing/Route.php
-
-		-
 			message: '#^If condition is always false\.$#'
 			identifier: if.alwaysFalse
 			count: 1
@@ -9549,18 +9285,6 @@ parameters:
 		-
 			message: '#^Instanceof between Concrete\\Core\\StyleCustomizer\\Normalizer\\NormalizedVariableCollection and Concrete\\Core\\StyleCustomizer\\Normalizer\\NormalizedVariableCollection will always evaluate to true\.$#'
 			identifier: instanceof.alwaysTrue
-			count: 1
-			path: ../concrete/src/StyleCustomizer/Stylesheet.php
-
-		-
-			message: '#^Property Concrete\\Core\\StyleCustomizer\\Stylesheet\:\:\$variableCollection \(Concrete\\Core\\StyleCustomizer\\Normalizer\\NormalizedVariableCollection\) in isset\(\) is not nullable\.$#'
-			identifier: isset.property
-			count: 1
-			path: ../concrete/src/StyleCustomizer/Stylesheet.php
-
-		-
-			message: '#^Result of && is always true\.$#'
-			identifier: booleanAnd.alwaysTrue
 			count: 1
 			path: ../concrete/src/StyleCustomizer/Stylesheet.php
 
@@ -10201,14 +9925,8 @@ parameters:
 			path: ../concrete/src/User/Component/UserSelectInstanceFactory.php
 
 		-
-			message: '#^Property Concrete\\Core\\User\\CsvWriter\:\:\$attributeKeys \(array\<Concrete\\Core\\Entity\\Attribute\\Key\\UserKey\>\) does not accept array\<Concrete\\Core\\Entity\\Attribute\\Key\\Key\>\.$#'
+			message: '#^Property Concrete\\Core\\User\\CsvWriter\:\:\$attributeKeys \(array\<Concrete\\Core\\Entity\\Attribute\\Key\\UserKey\>\|null\) does not accept array\<Concrete\\Core\\Entity\\Attribute\\Key\\Key\>\.$#'
 			identifier: assign.propertyType
-			count: 1
-			path: ../concrete/src/User/CsvWriter.php
-
-		-
-			message: '#^Property Concrete\\Core\\User\\CsvWriter\:\:\$attributeKeys \(array\<Concrete\\Core\\Entity\\Attribute\\Key\\UserKey\>\) in isset\(\) is not nullable\.$#'
-			identifier: isset.property
 			count: 1
 			path: ../concrete/src/User/CsvWriter.php
 

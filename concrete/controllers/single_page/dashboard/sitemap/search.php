@@ -25,12 +25,12 @@ class Search extends DashboardPageController
 {
 
     /**
-     * @var Element
+     * @var Element|null
      */
     protected $headerMenu;
 
     /**
-     * @var Element
+     * @var Element|null
      */
     protected $headerSearch;
 

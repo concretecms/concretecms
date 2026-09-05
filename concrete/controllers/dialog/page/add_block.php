@@ -44,7 +44,7 @@ class AddBlock extends BackendInterfacePageController
     /**
      * @deprecated What's deprecated is the "public" part.
      *
-     * @var \Concrete\Core\Area\Area
+     * @var \Concrete\Core\Area\Area|null
      */
     public $areaToModify;
 

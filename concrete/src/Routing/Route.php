@@ -9,7 +9,7 @@ class Route extends SymfonyRoute
     /**
      * If this route has a custom name, it appears here. Otherwise it is automatically generated
      * from the path.
-     * @var string
+     * @var string|null
      */
     protected $customName;
 

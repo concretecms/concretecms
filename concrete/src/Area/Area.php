@@ -80,7 +80,7 @@ class Area extends ConcreteObject implements \Concrete\Core\Permission\ObjectInt
     protected $arUseGridContainer = false;
 
     /**
-     * @var string
+     * @var string|null
      */
     protected $arDisplayName;
 

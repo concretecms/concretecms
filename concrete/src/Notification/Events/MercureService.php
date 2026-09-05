@@ -31,12 +31,12 @@ class MercureService implements LoggerAwareInterface
     protected $app;
 
     /**
-     * @var Hub
+     * @var Hub|null
      */
     protected $hub;
 
     /**
-     * @var Subscriber
+     * @var Subscriber|null
      */
     protected $subscriber;
 

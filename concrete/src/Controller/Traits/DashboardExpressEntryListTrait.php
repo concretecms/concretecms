@@ -48,12 +48,12 @@ trait DashboardExpressEntryListTrait
     }
 
     /**
-     * @var Element
+     * @var Element|null
      */
     protected $headerSearch;
 
     /**
-     * @var Element
+     * @var Element|null
      */
     protected $headerMenu;
 
