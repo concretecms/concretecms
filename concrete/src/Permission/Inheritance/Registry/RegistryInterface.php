@@ -7,7 +7,10 @@ interface RegistryInterface
 {
 
     /**
-     * @return EntryInterface
+     * @param string $pkCategoryHandle
+     * @param string $pkHandle
+     *
+     * @return EntryInterface|null
      */
     function getEntry($pkCategoryHandle, $pkHandle);
 

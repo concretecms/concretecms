@@ -161,5 +161,7 @@ class CheckIn extends BackendInterfacePageController
                 return true;
             }
         }
+
+        return false;
     }
 }

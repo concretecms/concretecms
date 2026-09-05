@@ -23,6 +23,8 @@ abstract class AbstractRegistry implements RegistryInterface
                 return $entry;
             }
         }
+
+        return null;
     }
 
 }

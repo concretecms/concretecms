@@ -901,12 +901,6 @@ parameters:
 			path: ../concrete/controllers/panel/page/check_in.php
 
 		-
-			message: '#^Method Concrete\\Controller\\Panel\\Page\\CheckIn\:\:validateAction\(\) should return bool but return statement is missing\.$#'
-			identifier: return.missing
-			count: 2
-			path: ../concrete/controllers/panel/page/check_in.php
-
-		-
 			message: '#^Call to an undefined method Concrete\\Core\\Permission\\Checker\:\:canEditPageVersions\(\)\.$#'
 			identifier: method.notFound
 			count: 1
@@ -3931,12 +3925,6 @@ parameters:
 			path: ../concrete/src/Entity/Attribute/Value/AbstractValue.php
 
 		-
-			message: '#^Method Concrete\\Core\\Entity\\Attribute\\Value\\AbstractValue\:\:getValueObject\(\) should return Concrete\\Core\\Attribute\\AttributeValueInterface\|Concrete\\Core\\Entity\\Attribute\\Value\\Value\\AbstractValue\|null but return statement is missing\.$#'
-			identifier: return.missing
-			count: 1
-			path: ../concrete/src/Entity/Attribute/Value/AbstractValue.php
-
-		-
 			message: '#^Instanceof between Concrete\\Core\\Entity\\Express\\Entry and Concrete\\Core\\Entity\\Express\\Entry will always evaluate to true\.$#'
 			identifier: instanceof.alwaysTrue
 			count: 1
@@ -6139,12 +6127,6 @@ parameters:
 			path: ../concrete/src/Notification/Type/WorkflowProgressType.php
 
 		-
-			message: '#^Method Concrete\\Core\\Notification\\View\\NewConversationMessageListView\:\:getInitiatorUserObject\(\) should return Concrete\\Core\\User\\UserInfo\|null but return statement is missing\.$#'
-			identifier: return.missing
-			count: 2
-			path: ../concrete/src/Notification/View/NewConversationMessageListView.php
-
-		-
 			message: '#^If condition is always true\.$#'
 			identifier: if.alwaysTrue
 			count: 2
@@ -6157,22 +6139,10 @@ parameters:
 			path: ../concrete/src/Notification/View/NewPrivateMessageListView.php
 
 		-
-			message: '#^Method Concrete\\Core\\Notification\\View\\NewPrivateMessageListView\:\:getInitiatorUserObject\(\) should return Concrete\\Core\\User\\UserInfo\|null but return statement is missing\.$#'
-			identifier: return.missing
-			count: 1
-			path: ../concrete/src/Notification/View/NewPrivateMessageListView.php
-
-		-
 			message: '#^Parameter \#1 \$child of method HtmlObject\\Traits\\TreeObject\:\:appendChild\(\) expects HtmlObject\\Element, HtmlObject\\Link given\.$#'
 			identifier: argument.type
 			count: 1
 			path: ../concrete/src/Notification/View/StandardListView.php
-
-		-
-			message: '#^Method Concrete\\Core\\Notification\\View\\UserSignupListView\:\:getInitiatorUserObject\(\) should return Concrete\\Core\\User\\UserInfo\|null but return statement is missing\.$#'
-			identifier: return.missing
-			count: 1
-			path: ../concrete/src/Notification/View/UserSignupListView.php
 
 		-
 			message: '#^Call to an undefined method Concrete\\Core\\Package\\ItemCategory\\AbstractCategory\:\:getPackageItems\(\)\.$#'
@@ -6913,12 +6883,6 @@ parameters:
 			path: ../concrete/src/Permission/Assignment/AreaAssignment.php
 
 		-
-			message: '#^Right side of && is always true\.$#'
-			identifier: booleanAnd.rightAlwaysTrue
-			count: 1
-			path: ../concrete/src/Permission/Assignment/BlockAssignment.php
-
-		-
 			message: '#^Call to an undefined method Concrete\\Core\\Permission\\ObjectInterface\:\:arePermissionsSetToOverride\(\)\.$#'
 			identifier: method.notFound
 			count: 1
@@ -6971,12 +6935,6 @@ parameters:
 			identifier: argument.type
 			count: 1
 			path: ../concrete/src/Permission/Duration.php
-
-		-
-			message: '#^Method Concrete\\Core\\Permission\\Inheritance\\Registry\\AbstractRegistry\:\:getEntry\(\) should return Concrete\\Core\\Permission\\Inheritance\\Registry\\Entry\\EntryInterface but return statement is missing\.$#'
-			identifier: return.missing
-			count: 1
-			path: ../concrete/src/Permission/Inheritance/Registry/AbstractRegistry.php
 
 		-
 			message: '#^Call to an undefined method Concrete\\Core\\Permission\\Access\\ListItem\\ListItem\:\:getBlockTypesAllowedArray\(\)\.$#'

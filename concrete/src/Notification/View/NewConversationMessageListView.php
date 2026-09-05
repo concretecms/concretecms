@@ -44,6 +44,8 @@ class NewConversationMessageListView extends StandardListView
                 return $author->getUser();
             }
         }
+
+        return null;
     }
 
     public function getActionDescription()
