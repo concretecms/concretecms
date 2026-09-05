@@ -17,11 +17,9 @@ class Maintenance extends DashboardPageController
                 if ($mode == 1) {
                     Config::save('concrete.maintenance_mode', true);
                     $this->redirect('/dashboard/system/permissions/maintenance', 'saved', 'enabled');
-                    exit;
                 }
                 Config::save('concrete.maintenance_mode', false);
                 $this->redirect('/dashboard/system/permissions/maintenance', 'saved', 'disabled');
-                exit;
             }
             $this->error->add($this->token->getErrorMessage());
         }

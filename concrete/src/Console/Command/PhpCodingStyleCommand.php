@@ -191,7 +191,6 @@ final class PhpCodingStyleCommand extends Command
                 return false;
             case 'check':
                 return true;
-                break;
             default:
                 throw new UserMessageException("Unknown '{$action}' action: accepted values are 'fix' and 'check'.");
         }

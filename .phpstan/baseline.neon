@@ -609,7 +609,7 @@ parameters:
 		-
 			message: '#^Unreachable statement \- code above always terminates\.$#'
 			identifier: deadCode.unreachable
-			count: 3
+			count: 1
 			path: ../concrete/controllers/dialog/type/update_from_type.php
 
 		-
@@ -1375,20 +1375,8 @@ parameters:
 			path: ../concrete/controllers/single_page/dashboard/system/conversations/editor.php
 
 		-
-			message: '#^Unreachable statement \- code above always terminates\.$#'
-			identifier: deadCode.unreachable
-			count: 1
-			path: ../concrete/controllers/single_page/dashboard/system/conversations/editor.php
-
-		-
 			message: '#^Parameter \#1 \$stack of function array_pop is passed by reference, so it expects variables only\.$#'
 			identifier: argument.byRef
-			count: 1
-			path: ../concrete/controllers/single_page/dashboard/system/conversations/settings.php
-
-		-
-			message: '#^Unreachable statement \- code above always terminates\.$#'
-			identifier: deadCode.unreachable
 			count: 1
 			path: ../concrete/controllers/single_page/dashboard/system/conversations/settings.php
 
@@ -1493,12 +1481,6 @@ parameters:
 			identifier: method.notFound
 			count: 1
 			path: ../concrete/controllers/single_page/dashboard/system/permissions/captcha.php
-
-		-
-			message: '#^Unreachable statement \- code above always terminates\.$#'
-			identifier: deadCode.unreachable
-			count: 2
-			path: ../concrete/controllers/single_page/dashboard/system/permissions/maintenance.php
 
 		-
 			message: '#^Call to an undefined method Concrete\\Core\\Permission\\Access\\Entity\\Entity\:\:getGroupObject\(\)\.$#'
@@ -2977,12 +2959,6 @@ parameters:
 			path: ../concrete/src/Authentication/Type/OAuth/GenericOauthTypeController.php
 
 		-
-			message: '#^Unreachable statement \- code above always terminates\.$#'
-			identifier: deadCode.unreachable
-			count: 1
-			path: ../concrete/src/Authentication/Type/OAuth/GenericOauthTypeController.php
-
-		-
 			message: '#^Call to an undefined method OAuth\\Common\\Service\\AbstractService\:\:requestAccessToken\(\)\.$#'
 			identifier: method.notFound
 			count: 2
@@ -3784,12 +3760,6 @@ parameters:
 			message: '#^Unreachable statement \- code above always terminates\.$#'
 			identifier: deadCode.unreachable
 			count: 1
-			path: ../concrete/src/Console/Command/PhpCodingStyleCommand.php
-
-		-
-			message: '#^Unreachable statement \- code above always terminates\.$#'
-			identifier: deadCode.unreachable
-			count: 1
 			path: ../concrete/src/Console/Command/RunSchedulerInForegroundCommand.php
 
 		-
@@ -3939,12 +3909,6 @@ parameters:
 		-
 			message: '#^Strict comparison using \=\=\= between Concrete\\Core\\Utility\\IPAddress and false will always evaluate to false\.$#'
 			identifier: identical.alwaysFalse
-			count: 1
-			path: ../concrete/src/Conversation/Message/Message.php
-
-		-
-			message: '#^Unreachable statement \- code above always terminates\.$#'
-			identifier: deadCode.unreachable
 			count: 1
 			path: ../concrete/src/Conversation/Message/Message.php
 
@@ -5329,12 +5293,6 @@ parameters:
 			path: ../concrete/src/File/Type/Inspector/FlvInspector.php
 
 		-
-			message: '#^Unreachable statement \- code above always terminates\.$#'
-			identifier: deadCode.unreachable
-			count: 7
-			path: ../concrete/src/File/Type/Type.php
-
-		-
 			message: '#^Call to function is_numeric\(\) with numeric\-string will always evaluate to true\.$#'
 			identifier: function.alreadyNarrowedType
 			count: 2
@@ -6112,12 +6070,6 @@ parameters:
 			message: '#^Parameter \#1 \$object of class Concrete\\Core\\Permission\\Checker constructor expects Concrete\\Core\\Permission\\ObjectInterface\|false\|null, Concrete\\Core\\Page\\Collection\\Collection given\.$#'
 			identifier: argument.type
 			count: 1
-			path: ../concrete/src/Http/ResponseFactory.php
-
-		-
-			message: '#^Unreachable statement \- code above always terminates\.$#'
-			identifier: deadCode.unreachable
-			count: 2
 			path: ../concrete/src/Http/ResponseFactory.php
 
 		-
@@ -7390,12 +7342,6 @@ parameters:
 			message: '#^Parameter \#1 \$object of class Concrete\\Core\\Permission\\Checker constructor expects Concrete\\Core\\Permission\\ObjectInterface\|false\|null, Concrete\\Core\\Page\\Collection\\Collection given\.$#'
 			identifier: argument.type
 			count: 1
-			path: ../concrete/src/Page/Stack/Stack.php
-
-		-
-			message: '#^Unreachable statement \- code above always terminates\.$#'
-			identifier: deadCode.unreachable
-			count: 4
 			path: ../concrete/src/Page/Stack/Stack.php
 
 		-

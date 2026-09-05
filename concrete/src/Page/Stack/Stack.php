@@ -42,10 +42,8 @@ class Stack extends Page
         switch ($type) {
             case 'global_area':
                 return static::ST_TYPE_GLOBAL_AREA;
-                break;
             default:
                 return static::ST_TYPE_USER_ADDED;
-                break;
         }
     }
 
@@ -393,10 +391,8 @@ class Stack extends Page
         switch ($this->getStackType()) {
             case static::ST_TYPE_GLOBAL_AREA:
                 return 'global_area';
-                break;
             default:
                 return false;
-                break;
         }
     }
 

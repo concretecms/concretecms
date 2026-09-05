@@ -371,7 +371,6 @@ class Message extends ConcreteObject implements ObjectInterface, SubjectInterfac
                     $dh->formatDateTime($this->cnvMessageDateCreated, true, true));
             default:
                 return tc('Message posted date', 'Posted on %s', $dh->formatDate($this->cnvMessageDateCreated, true));
-                break;
         }
     }
 

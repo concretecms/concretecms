@@ -296,10 +296,8 @@ class ResponseFactory implements ResponseFactoryInterface, ApplicationAwareInter
             switch ($vp->getError()) {
                 case COLLECTION_NOT_FOUND:
                     return $this->notFound('', Response::HTTP_NOT_FOUND, $headers);
-                    break;
                 case COLLECTION_FORBIDDEN:
                     return $this->forbidden($request->getUri(), Response::HTTP_FORBIDDEN, $headers);
-                    break;
             }
         }
 

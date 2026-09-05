@@ -68,8 +68,6 @@ class Settings extends DashboardPageController
         $db = Core::make('Concrete\Core\Database\Connection\Connection');
         if (!isset($this->editors[$active])) {
             $this->redirect('/dashboard/system/conversations/editor/error');
-
-            return;
         }
         $db->executeQuery('UPDATE ConversationEditors SET cnvEditorIsActive=0');
         $db->executeQuery('UPDATE ConversationEditors SET cnvEditorIsActive=1 WHERE cnvEditorHandle=?', array($active));
