@@ -1951,26 +1951,8 @@ parameters:
 			path: ../concrete/src/Api/OAuth/Server/ClaimsSetFactory.php
 
 		-
-			message: '#^Call to method permittedFor\(\) on an unknown class Lcobucci\\JWT\\Token\\Builder\.$#'
-			identifier: class.notFound
-			count: 1
-			path: ../concrete/src/Api/OAuth/Server/IdTokenResponse.php
-
-		-
-			message: '#^Call to static method default\(\) on an unknown class Lcobucci\\JWT\\Encoding\\ChainedFormatter\.$#'
-			identifier: class.notFound
-			count: 1
-			path: ../concrete/src/Api/OAuth/Server/IdTokenResponse.php
-
-		-
 			message: '#^Instanceof between Lcobucci\\JWT\\Token and Lcobucci\\JWT\\Token will always evaluate to true\.$#'
 			identifier: instanceof.alwaysTrue
-			count: 1
-			path: ../concrete/src/Api/OAuth/Server/IdTokenResponse.php
-
-		-
-			message: '#^Instantiated class Lcobucci\\JWT\\Encoding\\JoseEncoder not found\.$#'
-			identifier: class.notFound
 			count: 1
 			path: ../concrete/src/Api/OAuth/Server/IdTokenResponse.php
 
@@ -2745,12 +2727,6 @@ parameters:
 		-
 			message: '#^Call to an undefined method OAuth\\Common\\Service\\ServiceInterface\:\:service\(\)\.$#'
 			identifier: method.notFound
-			count: 1
-			path: ../concrete/src/Authentication/Type/ExternalConcrete/Extractor.php
-
-		-
-			message: '#^Instantiated class Lcobucci\\JWT\\Encoding\\JoseEncoder not found\.$#'
-			identifier: class.notFound
 			count: 1
 			path: ../concrete/src/Authentication/Type/ExternalConcrete/Extractor.php
 
@@ -5983,50 +5959,14 @@ parameters:
 			path: ../concrete/src/Notification/Alert/Filter/FilterListFactory.php
 
 		-
-			message: '#^Call to method withClaim\(\) on an unknown class Lcobucci\\JWT\\Token\\Builder\.$#'
-			identifier: class.notFound
-			count: 1
-			path: ../concrete/src/Notification/Events/MercureServiceProvider.php
-
-		-
-			message: '#^Call to static method default\(\) on an unknown class Lcobucci\\JWT\\Encoding\\ChainedFormatter\.$#'
-			identifier: class.notFound
-			count: 1
-			path: ../concrete/src/Notification/Events/MercureServiceProvider.php
-
-		-
 			message: '#^Instanceof between Lcobucci\\JWT\\Token and Lcobucci\\JWT\\Token will always evaluate to true\.$#'
 			identifier: instanceof.alwaysTrue
 			count: 1
 			path: ../concrete/src/Notification/Events/MercureServiceProvider.php
 
 		-
-			message: '#^Instantiated class Lcobucci\\JWT\\Encoding\\JoseEncoder not found\.$#'
-			identifier: class.notFound
-			count: 1
-			path: ../concrete/src/Notification/Events/MercureServiceProvider.php
-
-		-
-			message: '#^Call to method withClaim\(\) on an unknown class Lcobucci\\JWT\\Token\\Builder\.$#'
-			identifier: class.notFound
-			count: 1
-			path: ../concrete/src/Notification/Events/Subscriber.php
-
-		-
-			message: '#^Call to static method default\(\) on an unknown class Lcobucci\\JWT\\Encoding\\ChainedFormatter\.$#'
-			identifier: class.notFound
-			count: 1
-			path: ../concrete/src/Notification/Events/Subscriber.php
-
-		-
 			message: '#^Instanceof between Lcobucci\\JWT\\Token and Lcobucci\\JWT\\Token will always evaluate to true\.$#'
 			identifier: instanceof.alwaysTrue
-			count: 1
-			path: ../concrete/src/Notification/Events/Subscriber.php
-
-		-
-			message: '#^Instantiated class Lcobucci\\JWT\\Encoding\\JoseEncoder not found\.$#'
-			identifier: class.notFound
 			count: 1
 			path: ../concrete/src/Notification/Events/Subscriber.php
 
