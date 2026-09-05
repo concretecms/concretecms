@@ -16,7 +16,7 @@ class SetBoardCustomWeightingCommandValidator implements ValidatorInterface
     
     public function __construct(ErrorList $errorList)
     {
-        $this->errorList = new ErrorList();
+        $this->errorList = $errorList;
     }
 
     /**

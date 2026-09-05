@@ -1951,19 +1951,7 @@ parameters:
 			path: ../concrete/src/Api/Controller/Users.php
 
 		-
-			message: '#^Constructor of class Concrete\\Core\\Api\\Exception\\InvalidLimitQueryParameterValueException has an unused parameter \$code\.$#'
-			identifier: constructor.unusedParameter
-			count: 1
-			path: ../concrete/src/Api/Exception/InvalidLimitQueryParameterValueException.php
-
-		-
 			message: '#^Constructor of class Concrete\\Core\\Api\\Exception\\InvalidLimitQueryParameterValueException has an unused parameter \$message\.$#'
-			identifier: constructor.unusedParameter
-			count: 1
-			path: ../concrete/src/Api/Exception/InvalidLimitQueryParameterValueException.php
-
-		-
-			message: '#^Constructor of class Concrete\\Core\\Api\\Exception\\InvalidLimitQueryParameterValueException has an unused parameter \$previous\.$#'
 			identifier: constructor.unusedParameter
 			count: 1
 			path: ../concrete/src/Api/Exception/InvalidLimitQueryParameterValueException.php
@@ -3311,12 +3299,6 @@ parameters:
 			identifier: property.defaultValue
 			count: 1
 			path: ../concrete/src/Board/Command/ScheduleBoardInstanceRuleCommand.php
-
-		-
-			message: '#^Constructor of class Concrete\\Core\\Board\\Command\\SetBoardCustomWeightingCommandValidator has an unused parameter \$errorList\.$#'
-			identifier: constructor.unusedParameter
-			count: 1
-			path: ../concrete/src/Board/Command/SetBoardCustomWeightingCommandValidator.php
 
 		-
 			message: '#^Call to an undefined method Concrete\\Core\\Entity\\Board\\Designer\\CustomElement\:\:getItems\(\)\.$#'
