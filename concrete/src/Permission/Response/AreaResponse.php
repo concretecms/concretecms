@@ -8,6 +8,9 @@ use Concrete\Core\Permission\Key\Key;
 use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\User\User;
 
+/**
+ * @property \Concrete\Core\Area\Area $object
+ */
 class AreaResponse extends Response
 {
     // legacy support

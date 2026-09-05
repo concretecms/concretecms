@@ -6,10 +6,17 @@ use Concrete\Core\Permission\Access\Access;
 use Concrete\Core\Conversation\Conversation;
 use Database;
 
+/**
+ * @property \Concrete\Core\Conversation\Conversation|null $permissionObject
+ * @method \Concrete\Core\Conversation\Conversation|null getPermissionObject()
+ */
 class ConversationAssignment extends Assignment
 {
     protected $permissionObjectToCheck = null;
 
+    /**
+     * @param \Concrete\Core\Conversation\Conversation|\Concrete\Core\Conversation\Message\Message $object
+     */
     public function setPermissionObject($object)
     {
         $this->permissionObject = $object;

@@ -12,6 +12,10 @@ use PermissionKey;
 use Page;
 use Database;
 
+/**
+ * @property \Concrete\Core\Block\Block|null $permissionObject
+ * @method \Concrete\Core\Block\Block|null getPermissionObject()
+ */
 class BlockAssignment extends Assignment
 {
     protected $permissionObjectToCheck;

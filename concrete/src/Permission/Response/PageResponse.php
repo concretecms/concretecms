@@ -18,6 +18,9 @@ use Concrete\Core\Permission\Key\PageKey as PagePermissionKey;
 use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\User\User;
 
+/**
+ * @property \Concrete\Core\Page\Page $object
+ */
 class PageResponse extends Response
 {
     // legacy support

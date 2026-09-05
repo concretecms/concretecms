@@ -4,6 +4,10 @@ namespace Concrete\Core\Permission\Assignment;
 use Concrete\Core\Permission\Access\Access;
 use Loader;
 
+/**
+ * @property \Concrete\Core\Workflow\BasicWorkflow|null $permissionObject
+ * @method \Concrete\Core\Workflow\BasicWorkflow|null getPermissionObject()
+ */
 class BasicWorkflowAssignment extends Assignment
 {
     public function getPermissionAccessObject()

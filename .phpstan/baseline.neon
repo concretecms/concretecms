@@ -7399,34 +7399,10 @@ parameters:
 			path: ../concrete/src/Permission/Access/NotifyInNotificationCenterNotificationAccess.php
 
 		-
-			message: '#^Call to an undefined method Concrete\\Core\\Permission\\ObjectInterface\:\:getCollectionID\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: ../concrete/src/Permission/Access/PageAccess.php
-
-		-
 			message: '#^Call to Concrete\\Core\\Permission\\Access\\Access\:\:save\(\) on a separate line has no effect\.$#'
 			identifier: staticMethod.resultUnused
 			count: 1
 			path: ../concrete/src/Permission/Access/ViewUserAttributesUserAccess.php
-
-		-
-			message: '#^Call to an undefined method Concrete\\Core\\Permission\\ObjectInterface\:\:getAreaCollectionObject\(\)\.$#'
-			identifier: method.notFound
-			count: 2
-			path: ../concrete/src/Permission/Assignment/AreaAssignment.php
-
-		-
-			message: '#^Call to an undefined method Concrete\\Core\\Permission\\ObjectInterface\:\:getAreaHandle\(\)\.$#'
-			identifier: method.notFound
-			count: 3
-			path: ../concrete/src/Permission/Assignment/AreaAssignment.php
-
-		-
-			message: '#^Call to an undefined method Concrete\\Core\\Permission\\ObjectInterface\:\:getCollectionID\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: ../concrete/src/Permission/Assignment/AreaAssignment.php
 
 		-
 			message: '#^Instanceof between Concrete\\Core\\Area\\Area and Concrete\\Core\\Area\\Area will always evaluate to true\.$#'
@@ -7441,30 +7417,6 @@ parameters:
 			path: ../concrete/src/Permission/Assignment/AreaAssignment.php
 
 		-
-			message: '#^Call to an undefined method Concrete\\Core\\Permission\\ObjectInterface\:\:getWorkflowID\(\)\.$#'
-			identifier: method.notFound
-			count: 4
-			path: ../concrete/src/Permission/Assignment/BasicWorkflowAssignment.php
-
-		-
-			message: '#^Call to an undefined method Concrete\\Core\\Permission\\ObjectInterface\:\:getAreaHandle\(\)\.$#'
-			identifier: method.notFound
-			count: 2
-			path: ../concrete/src/Permission/Assignment/BlockAssignment.php
-
-		-
-			message: '#^Call to an undefined method Concrete\\Core\\Permission\\ObjectInterface\:\:getBlockCollectionObject\(\)\.$#'
-			identifier: method.notFound
-			count: 3
-			path: ../concrete/src/Permission/Assignment/BlockAssignment.php
-
-		-
-			message: '#^Call to an undefined method Concrete\\Core\\Permission\\ObjectInterface\:\:getBlockID\(\)\.$#'
-			identifier: method.notFound
-			count: 4
-			path: ../concrete/src/Permission/Assignment/BlockAssignment.php
-
-		-
 			message: '#^Right side of && is always true\.$#'
 			identifier: booleanAnd.rightAlwaysTrue
 			count: 1
@@ -7474,12 +7426,6 @@ parameters:
 			message: '#^Call to an undefined method Concrete\\Core\\Permission\\ObjectInterface\:\:arePermissionsSetToOverride\(\)\.$#'
 			identifier: method.notFound
 			count: 1
-			path: ../concrete/src/Permission/Assignment/BoardAssignment.php
-
-		-
-			message: '#^Call to an undefined method Concrete\\Core\\Permission\\ObjectInterface\:\:getBoardID\(\)\.$#'
-			identifier: method.notFound
-			count: 3
 			path: ../concrete/src/Permission/Assignment/BoardAssignment.php
 
 		-
@@ -7495,28 +7441,10 @@ parameters:
 			path: ../concrete/src/Permission/Assignment/CalendarAssignment.php
 
 		-
-			message: '#^Call to an undefined method Concrete\\Core\\Permission\\ObjectInterface\:\:getID\(\)\.$#'
-			identifier: method.notFound
-			count: 2
-			path: ../concrete/src/Permission/Assignment/CalendarAssignment.php
-
-		-
-			message: '#^Call to an undefined method Concrete\\Core\\Permission\\ObjectInterface\:\:getId\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: ../concrete/src/Permission/Assignment/CalendarAssignment.php
-
-		-
 			message: '#^Property Concrete\\Core\\Permission\\Assignment\\CalendarAssignment\:\:\$permissionObject \(Concrete\\Core\\Entity\\Calendar\\Calendar\) does not accept Concrete\\Core\\Permission\\ObjectInterface\.$#'
 			identifier: assign.propertyType
 			count: 1
 			path: ../concrete/src/Permission/Assignment/CalendarAssignment.php
-
-		-
-			message: '#^Call to an undefined method Concrete\\Core\\Permission\\ObjectInterface\:\:getConversationID\(\)\.$#'
-			identifier: method.notFound
-			count: 3
-			path: ../concrete/src/Permission/Assignment/ConversationAssignment.php
 
 		-
 			message: '#^Call to function is_object\(\) with Concrete\\Core\\Entity\\Express\\Entity will always evaluate to true\.$#'
@@ -7525,46 +7453,16 @@ parameters:
 			path: ../concrete/src/Permission/Assignment/ExpressEntryAssignment.php
 
 		-
-			message: '#^Call to an undefined method Concrete\\Core\\Permission\\ObjectInterface\:\:getFileID\(\)\.$#'
-			identifier: method.notFound
-			count: 4
-			path: ../concrete/src/Permission/Assignment/FileAssignment.php
-
-		-
-			message: '#^Call to an undefined method Concrete\\Core\\Permission\\ObjectInterface\:\:getTreeNodePermissionsNodeID\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: ../concrete/src/Permission/Assignment/GroupTreeNodeAssignment.php
-
-		-
 			message: '#^Method Concrete\\Core\\Permission\\Assignment\\PageAssignment\:\:getPermissionAccessObject\(\) should return Concrete\\Core\\Permission\\Access\\PageAccess\|null but returns Concrete\\Core\\Permission\\Access\\Access\|null\.$#'
 			identifier: return.type
 			count: 1
 			path: ../concrete/src/Permission/Assignment/PageAssignment.php
 
 		-
-			message: '#^Call to an undefined method Concrete\\Core\\Permission\\ObjectInterface\:\:getPageTypeID\(\)\.$#'
-			identifier: method.notFound
-			count: 4
-			path: ../concrete/src/Permission/Assignment/PageTypeAssignment.php
-
-		-
 			message: '#^Property Concrete\\Core\\Permission\\Assignment\\PageAssignment\:\:\$pk \(Concrete\\Core\\Permission\\Key\\PageKey\) does not accept Concrete\\Core\\Permission\\Key\\Key\.$#'
 			identifier: assign.propertyType
 			count: 1
 			path: ../concrete/src/Permission/Assignment/StackAssignment.php
-
-		-
-			message: '#^Call to an undefined method Concrete\\Core\\Permission\\ObjectInterface\:\:getTreeNodeID\(\)\.$#'
-			identifier: method.notFound
-			count: 3
-			path: ../concrete/src/Permission/Assignment/TreeNodeAssignment.php
-
-		-
-			message: '#^Call to an undefined method Concrete\\Core\\Permission\\ObjectInterface\:\:getTreeNodePermissionsNodeID\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: ../concrete/src/Permission/Assignment/TreeNodeAssignment.php
 
 		-
 			message: '#^Call to function is_object\(\) with Concrete\\Core\\Permission\\Duration will always evaluate to true\.$#'
@@ -7595,48 +7493,6 @@ parameters:
 			identifier: method.notFound
 			count: 1
 			path: ../concrete/src/Permission/Key/AddBlockToAreaAreaKey.php
-
-		-
-			message: '#^Call to an undefined method Concrete\\Core\\Permission\\ObjectInterface\:\:getAreaHandle\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: ../concrete/src/Permission/Key/AddBlockToAreaAreaKey.php
-
-		-
-			message: '#^Call to an undefined method Concrete\\Core\\Permission\\ObjectInterface\:\:getCollectionID\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: ../concrete/src/Permission/Key/AddBlockToAreaAreaKey.php
-
-		-
-			message: '#^Call to an undefined method Concrete\\Core\\Permission\\ObjectInterface\:\:getAreaHandle\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: ../concrete/src/Permission/Key/AreaKey.php
-
-		-
-			message: '#^Call to an undefined method Concrete\\Core\\Permission\\ObjectInterface\:\:getCollectionID\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: ../concrete/src/Permission/Key/AreaKey.php
-
-		-
-			message: '#^Call to an undefined method Concrete\\Core\\Permission\\ObjectInterface\:\:getAreaHandle\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: ../concrete/src/Permission/Key/BlockKey.php
-
-		-
-			message: '#^Call to an undefined method Concrete\\Core\\Permission\\ObjectInterface\:\:getBlockCollectionObject\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: ../concrete/src/Permission/Key/BlockKey.php
-
-		-
-			message: '#^Call to an undefined method Concrete\\Core\\Permission\\ObjectInterface\:\:getBlockID\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: ../concrete/src/Permission/Key/BlockKey.php
 
 		-
 			message: '#^Call to an undefined method Concrete\\Core\\Permission\\Access\\ListItem\\ListItem\:\:allowEditDateTime\(\)\.$#'
@@ -7687,12 +7543,6 @@ parameters:
 			path: ../concrete/src/Permission/Key/EditUserPropertiesUserKey.php
 
 		-
-			message: '#^Call to an undefined method Concrete\\Core\\Permission\\ObjectInterface\:\:getFileID\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: ../concrete/src/Permission/Key/FileKey.php
-
-		-
 			message: '#^Method Concrete\\Core\\Permission\\Key\\Key\:\:validate\(\) invoked with 1 parameter, 0 required\.$#'
 			identifier: arguments.count
 			count: 1
@@ -7703,18 +7553,6 @@ parameters:
 			identifier: booleanAnd.rightAlwaysTrue
 			count: 1
 			path: ../concrete/src/Permission/Key/Key.php
-
-		-
-			message: '#^Call to an undefined method Concrete\\Core\\Permission\\ObjectInterface\:\:getPageTypeID\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: ../concrete/src/Permission/Key/PageTypeKey.php
-
-		-
-			message: '#^Call to an undefined method Concrete\\Core\\Permission\\ObjectInterface\:\:getTreeNodeID\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: ../concrete/src/Permission/Key/TreeNodeKey.php
 
 		-
 			message: '#^Call to an undefined method Concrete\\Core\\Permission\\Access\\Access\:\:setWorkflowProgressObject\(\)\.$#'
@@ -7759,12 +7597,6 @@ parameters:
 			path: ../concrete/src/Permission/Registry/Multisite/Entry/Access/Entity/SiteGroupInstanceEntity.php
 
 		-
-			message: '#^Call to an undefined method Concrete\\Core\\Permission\\ObjectInterface\:\:getAreaCollectionObject\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: ../concrete/src/Permission/Response/AreaResponse.php
-
-		-
 			message: '#^Call to an undefined method Concrete\\Core\\Permission\\Response\\AreaResponse\:\:canEditAreaContents\(\)\.$#'
 			identifier: method.notFound
 			count: 1
@@ -7783,7 +7615,7 @@ parameters:
 			path: ../concrete/src/Permission/Response/AreaResponse.php
 
 		-
-			message: '#^Call to an undefined method Concrete\\Core\\Permission\\ObjectInterface\:\:getBlockCollectionObject\(\)\.$#'
+			message: '#^Call to an undefined method Concrete\\Core\\Page\\Collection\\Collection\:\:isMasterCollection\(\)\.$#'
 			identifier: method.notFound
 			count: 1
 			path: ../concrete/src/Permission/Response/BlockResponse.php
@@ -7837,30 +7669,6 @@ parameters:
 			path: ../concrete/src/Permission/Response/ExpressEntityResponse.php
 
 		-
-			message: '#^Call to an undefined method Concrete\\Core\\Permission\\ObjectInterface\:\:getCollectionID\(\)\.$#'
-			identifier: method.notFound
-			count: 6
-			path: ../concrete/src/Permission/Response/PageResponse.php
-
-		-
-			message: '#^Call to an undefined method Concrete\\Core\\Permission\\ObjectInterface\:\:getCollectionPointerExternalLink\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: ../concrete/src/Permission/Response/PageResponse.php
-
-		-
-			message: '#^Call to an undefined method Concrete\\Core\\Permission\\ObjectInterface\:\:getVersionID\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: ../concrete/src/Permission/Response/PageResponse.php
-
-		-
-			message: '#^Call to an undefined method Concrete\\Core\\Permission\\ObjectInterface\:\:isMasterCollection\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: ../concrete/src/Permission/Response/PageResponse.php
-
-		-
 			message: '#^Call to an undefined method Concrete\\Core\\Permission\\Response\\PageResponse\:\:canAddSubpage\(\)\.$#'
 			identifier: method.notFound
 			count: 1
@@ -7911,18 +7719,6 @@ parameters:
 		-
 			message: '#^Method Concrete\\Core\\Permission\\Key\\Key\:\:validate\(\) invoked with 1 parameter, 0 required\.$#'
 			identifier: arguments.count
-			count: 1
-			path: ../concrete/src/Permission/Response/PageResponse.php
-
-		-
-			message: '#^Parameter \#1 \$c of static method Concrete\\Core\\Area\\Area\:\:getListOnPage\(\) expects Concrete\\Core\\Page\\Page, Concrete\\Core\\Permission\\ObjectInterface given\.$#'
-			identifier: argument.type
-			count: 1
-			path: ../concrete/src/Permission/Response/PageResponse.php
-
-		-
-			message: '#^Parameter \#2 \$c of static method Concrete\\Core\\Block\\Block\:\:getByID\(\) expects Concrete\\Core\\Page\\Collection\\Collection\|null, Concrete\\Core\\Permission\\ObjectInterface given\.$#'
-			identifier: argument.type
 			count: 1
 			path: ../concrete/src/Permission/Response/PageResponse.php
 

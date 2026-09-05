@@ -13,6 +13,10 @@ use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\User\User;
 use PDO;
 
+/**
+ * @property \Concrete\Core\Area\Area|null $permissionObject
+ * @method \Concrete\Core\Area\Area|null getPermissionObject()
+ */
 class AddBlockToAreaAreaKey extends AreaKey
 {
     /**
