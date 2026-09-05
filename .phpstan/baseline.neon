@@ -10303,19 +10303,19 @@ parameters:
 			path: ../concrete/src/Url/Resolver/CallableUrlResolver.php
 
 		-
-			message: '#^Parameter \#1 \$data of method League\\Url\\UrlImmutable\:\:setHost\(\) expects array\|string\|Traversable, null given\.$#'
+			message: '#^Parameter \#1 \$data of method League\\Url\\UrlImmutable\:\:setHost\(\) expects array\<int\|string, mixed\>\|string\|Traversable\<int\|string, mixed\>, null given\.$#'
 			identifier: argument.type
 			count: 1
 			path: ../concrete/src/Url/Resolver/CanonicalUrlResolver.php
 
 		-
-			message: '#^Parameter \#1 \$data of method League\\Url\\UrlInterface\:\:setScheme\(\) expects string, null given\.$#'
+			message: '#^Parameter \#1 \$data of method League\\Url\\UrlImmutable\:\:setScheme\(\) expects string, null given\.$#'
 			identifier: argument.type
 			count: 1
 			path: ../concrete/src/Url/Resolver/CanonicalUrlResolver.php
 
 		-
-			message: '#^Property Concrete\\Core\\Url\\Resolver\\CanonicalUrlResolver\:\:\$cached \(Concrete\\Core\\Url\\Url\) does not accept League\\Url\\UrlInterface\.$#'
+			message: '#^Property Concrete\\Core\\Url\\Resolver\\CanonicalUrlResolver\:\:\$cached \(Concrete\\Core\\Url\\Url\) does not accept Concrete\\Core\\Url\\UrlImmutable\.$#'
 			identifier: assign.propertyType
 			count: 1
 			path: ../concrete/src/Url/Resolver/CanonicalUrlResolver.php
@@ -10345,22 +10345,10 @@ parameters:
 			path: ../concrete/src/Url/Resolver/RouterUrlResolver.php
 
 		-
-			message: '#^Method Concrete\\Core\\Url\\Url\:\:setPortIfNecessary\(\) should return Concrete\\Core\\Url\\UrlInterface but returns League\\Url\\UrlInterface\.$#'
-			identifier: return.type
-			count: 1
-			path: ../concrete/src/Url/Url.php
-
-		-
 			message: '#^Unsafe usage of new static\(\)\.$#'
 			identifier: new.static
 			count: 1
 			path: ../concrete/src/Url/Url.php
-
-		-
-			message: '#^Method Concrete\\Core\\Url\\UrlImmutable\:\:setPortIfNecessary\(\) should return Concrete\\Core\\Url\\UrlInterface but returns League\\Url\\UrlInterface\.$#'
-			identifier: return.type
-			count: 1
-			path: ../concrete/src/Url/UrlImmutable.php
 
 		-
 			message: '#^Unsafe usage of new static\(\)\.$#'

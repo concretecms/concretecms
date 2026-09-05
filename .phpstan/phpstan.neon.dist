@@ -38,6 +38,8 @@ parameters:
         # PHPStan validates the stub files in isolation, so the generated file must declare every class it references,
         # except the ones already declared by the stubs of phpstan-doctrine (hence the --phpstan-other-stubs option)
         - ../concrete/src/Support/__PHPSTAN_STUBS__.php
+        # Hand-written stubs fixing the PHPDoc of third-party libraries
+        - stubs/league-url.stub
     doctrine:
         # Lets phpstan-doctrine know the entity metadata (magic findBy*/findOneBy* repository methods, entity fields, ...)
         objectManagerLoader: object-manager.php

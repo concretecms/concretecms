@@ -45,6 +45,8 @@ PHPStan validates the stub files in isolation (it only knows the classes declare
 
 When Concrete is installed, the permission keys come from the database, otherwise they are read from the CIF files in `concrete/config/install`.
 
+The `stubs` directory contains hand-written stubs that fix the PHPDoc of third-party libraries (for example the League URL setters, documented as returning `UrlInterface` while they actually return `$this` or a clone of the same class).
+
 ## Notes
 
 - When Concrete is installed, booting it connects to the database: the database server must be running to run PHPStan.
