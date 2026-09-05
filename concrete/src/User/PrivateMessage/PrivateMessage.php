@@ -21,8 +21,17 @@ class PrivateMessage extends ConcreteObject implements SubjectInterface
     public $msgIsUnread;
     public $msgIsNew;
     public $msgIsReplied;
+    /**
+     * @var int|numeric-string
+     */
     public $msgID;
+    /**
+     * @var int|numeric-string
+     */
     public $uAuthorID;
+    /**
+     * @var int|numeric-string
+     */
     public $uToID;
     public $msgDateCreated;
     public $msgSubject;

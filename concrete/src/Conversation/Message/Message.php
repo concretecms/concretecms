@@ -25,9 +25,15 @@ use Events;
  */
 class Message extends ConcreteObject implements ObjectInterface, SubjectInterface
 {
+    /**
+     * @var int|numeric-string
+     */
     public $cnvMessageID;
     protected $cnvMessageDateCreated;
     public $cnvMessageFlagTypes;
+    /**
+     * @var int|numeric-string
+     */
     public $cnvMessageReview;
 
     public function getConversationMessageID()

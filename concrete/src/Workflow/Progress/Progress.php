@@ -25,9 +25,18 @@ abstract class Progress extends ConcreteObject implements SubjectInterface
 {
     use SafeClassUnserializerTrait;
 
+    /**
+     * @var int|numeric-string|null
+     */
     protected $wrID = null;
+    /**
+     * @var int|numeric-string
+     */
     protected $wpID;
     protected $wpDateAdded;
+    /**
+     * @var int|numeric-string
+     */
     protected $wfID;
     protected $response;
     protected $wpDateLastAction;

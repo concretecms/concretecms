@@ -43,7 +43,13 @@ use Concrete\Core\Utility\Service\Xml;
  */
 class Type extends ConcreteObject implements \Concrete\Core\Permission\ObjectInterface, AssignableObjectInterface
 {
+    /**
+     * @var int|numeric-string|null
+     */
     protected $ptDefaultPageTemplateID = 0;
+    /**
+     * @var int|numeric-string|null
+     */
     protected $ptDefaultThemeID = 0;
 
     use AssignableObjectTrait;

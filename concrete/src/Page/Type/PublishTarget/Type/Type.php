@@ -13,9 +13,15 @@ use Symfony\Component\HttpFoundation\Request;
 
 abstract class Type extends ConcreteObject
 {
+    /**
+     * @var int|numeric-string
+     */
     protected $ptPublishTargetTypeID;
     protected $ptPublishTargetTypeHandle;
     protected $ptPublishTargetTypeName;
+    /**
+     * @var int|numeric-string
+     */
     protected $pkgID;
 
     abstract public function configurePageTypePublishTarget(PageType $pt, $post);
