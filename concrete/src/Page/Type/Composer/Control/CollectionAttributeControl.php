@@ -52,7 +52,7 @@ class CollectionAttributeControl extends Control
     }
 
     /**
-     * @return CollectionAttributeKey|null
+     * @return \Concrete\Core\Entity\Attribute\Key\PageKey|null
      */
     public function getAttributeKeyObject()
     {

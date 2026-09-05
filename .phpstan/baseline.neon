@@ -7153,33 +7153,9 @@ parameters:
 			path: ../concrete/src/Page/Type/Command/UpdatePageTypeDefaultsCommandHandler.php
 
 		-
-			message: '#^Call to an undefined method Concrete\\Core\\Attribute\\Key\\CollectionKey\:\:getAttributeKeyDisplayName\(\)\.$#'
-			identifier: method.notFound
+			message: '#^Call to function is_object\(\) with Concrete\\Core\\Attribute\\Controller will always evaluate to true\.$#'
+			identifier: function.alreadyNarrowedType
 			count: 1
-			path: ../concrete/src/Page/Type/Composer/Control/CollectionAttributeControl.php
-
-		-
-			message: '#^Call to an undefined method Concrete\\Core\\Attribute\\Key\\CollectionKey\:\:getAttributeKeyHandle\(\)\.$#'
-			identifier: method.notFound
-			count: 3
-			path: ../concrete/src/Page/Type/Composer/Control/CollectionAttributeControl.php
-
-		-
-			message: '#^Call to an undefined method Concrete\\Core\\Attribute\\Key\\CollectionKey\:\:getAttributeTypeHandle\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: ../concrete/src/Page/Type/Composer/Control/CollectionAttributeControl.php
-
-		-
-			message: '#^Call to an undefined method Concrete\\Core\\Attribute\\Key\\CollectionKey\:\:getControlView\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: ../concrete/src/Page/Type/Composer/Control/CollectionAttributeControl.php
-
-		-
-			message: '#^Call to an undefined method Concrete\\Core\\Attribute\\Key\\CollectionKey\:\:getController\(\)\.$#'
-			identifier: method.notFound
-			count: 5
 			path: ../concrete/src/Page/Type/Composer/Control/CollectionAttributeControl.php
 
 		-
