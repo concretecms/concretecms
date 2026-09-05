@@ -1393,12 +1393,6 @@ parameters:
 			path: ../concrete/controllers/single_page/dashboard/system/conversations/settings.php
 
 		-
-			message: '#^Default value of the parameter \#1 \$strStatus \(false\) of method Concrete\\Controller\\SinglePage\\Dashboard\\System\\Environment\\Logging\:\:view\(\) is incompatible with type string\.$#'
-			identifier: parameter.defaultValue
-			count: 1
-			path: ../concrete/controllers/single_page/dashboard/system/environment/logging.php
-
-		-
 			message: '#^Call to function is_object\(\) with Concrete\\Core\\Entity\\Express\\Entity will always evaluate to true\.$#'
 			identifier: function.alreadyNarrowedType
 			count: 2
@@ -1615,7 +1609,7 @@ parameters:
 			path: ../concrete/controllers/single_page/dashboard/users/add_group.php
 
 		-
-			message: '#^Parameter \#3 \$parentFolder of static method Concrete\\Core\\User\\Group\\Group\:\:addBeneathFolder\(\) expects Concrete\\Core\\Tree\\Node\\Type\\GroupFolder, Concrete\\Core\\Tree\\Node\\Node\|null given\.$#'
+			message: '#^Parameter \#3 \$parentFolder of static method Concrete\\Core\\User\\Group\\Group\:\:addBeneathFolder\(\) expects Concrete\\Core\\Tree\\Node\\Type\\GroupFolder\|false\|null, Concrete\\Core\\Tree\\Node\\Node\|null given\.$#'
 			identifier: argument.type
 			count: 1
 			path: ../concrete/controllers/single_page/dashboard/users/add_group.php
@@ -2317,18 +2311,6 @@ parameters:
 			path: ../concrete/src/Area/Area.php
 
 		-
-			message: '#^Default value of the parameter \#1 \$c \(false\) of method Concrete\\Core\\Area\\Area\:\:getTotalBlocksInArea\(\) is incompatible with type Concrete\\Core\\Page\\Page\.$#'
-			identifier: parameter.defaultValue
-			count: 1
-			path: ../concrete/src/Area/Area.php
-
-		-
-			message: '#^Negated boolean expression is always false\.$#'
-			identifier: booleanNot.alwaysFalse
-			count: 1
-			path: ../concrete/src/Area/Area.php
-
-		-
 			message: '#^Property Concrete\\Core\\Area\\Area\:\:\$showControls \(bool\) does not accept default value of type int\.$#'
 			identifier: property.defaultValue
 			count: 1
@@ -2357,24 +2339,6 @@ parameters:
 			identifier: method.notFound
 			count: 1
 			path: ../concrete/src/Area/CustomStyleRepository.php
-
-		-
-			message: '#^Default value of the parameter \#1 \$c \(false\) of method Concrete\\Core\\Area\\GlobalArea\:\:getGlobalAreaStackObject\(\) is incompatible with type Concrete\\Core\\Page\\Page\.$#'
-			identifier: parameter.defaultValue
-			count: 1
-			path: ../concrete/src/Area/GlobalArea.php
-
-		-
-			message: '#^Default value of the parameter \#1 \$c \(false\) of method Concrete\\Core\\Area\\GlobalArea\:\:getTotalBlocksInArea\(\) is incompatible with type Concrete\\Core\\Page\\Page\.$#'
-			identifier: parameter.defaultValue
-			count: 1
-			path: ../concrete/src/Area/GlobalArea.php
-
-		-
-			message: '#^Negated boolean expression is always false\.$#'
-			identifier: booleanNot.alwaysFalse
-			count: 1
-			path: ../concrete/src/Area/GlobalArea.php
 
 		-
 			message: '#^Call to function is_object\(\) with Concrete\\Core\\Area\\Area will always evaluate to true\.$#'
@@ -5191,44 +5155,8 @@ parameters:
 			path: ../concrete/src/File/Import/ImportOptions.php
 
 		-
-			message: '#^Default value of the parameter \#3 \$mode \(int\) of method Concrete\\Core\\File\\ImportProcessor\\ConstrainImageProcessor\:\:resizeInPlace\(\) is incompatible with type string\.$#'
-			identifier: parameter.defaultValue
-			count: 1
-			path: ../concrete/src/File/ImportProcessor/ConstrainImageProcessor.php
-
-		-
-			message: '#^Property Concrete\\Core\\File\\ImportProcessor\\ConstrainImageProcessor\:\:\$constraintMode \(string\) does not accept default value of type int\.$#'
-			identifier: property.defaultValue
-			count: 1
-			path: ../concrete/src/File/ImportProcessor/ConstrainImageProcessor.php
-
-		-
-			message: '#^Result of && is always true\.$#'
-			identifier: booleanAnd.alwaysTrue
-			count: 1
-			path: ../concrete/src/File/ImportProcessor/ConstrainImageProcessor.php
-
-		-
-			message: '#^Strict comparison using \!\=\= between string and 1 will always evaluate to true\.$#'
-			identifier: notIdentical.alwaysTrue
-			count: 1
-			path: ../concrete/src/File/ImportProcessor/ConstrainImageProcessor.php
-
-		-
-			message: '#^Strict comparison using \!\=\= between string and 2 will always evaluate to true\.$#'
-			identifier: notIdentical.alwaysTrue
-			count: 1
-			path: ../concrete/src/File/ImportProcessor/ConstrainImageProcessor.php
-
-		-
 			message: '#^Strict comparison using \=\=\= between false and false will always evaluate to true\.$#'
 			identifier: identical.alwaysTrue
-			count: 1
-			path: ../concrete/src/File/ImportProcessor/ConstrainImageProcessor.php
-
-		-
-			message: '#^Unreachable statement \- code above always terminates\.$#'
-			identifier: deadCode.unreachable
 			count: 1
 			path: ../concrete/src/File/ImportProcessor/ConstrainImageProcessor.php
 
@@ -5399,18 +5327,6 @@ parameters:
 			identifier: return.type
 			count: 1
 			path: ../concrete/src/File/StorageLocation/Configuration/DefaultConfiguration.php
-
-		-
-			message: '#^Default value of the parameter \#3 \$pkg \(false\) of method Concrete\\Core\\File\\StorageLocation\\Type\\Type\:\:add\(\) is incompatible with type Concrete\\Core\\Package\\Package\|int\.$#'
-			identifier: parameter.defaultValue
-			count: 1
-			path: ../concrete/src/File/StorageLocation/Type/Type.php
-
-		-
-			message: '#^Instanceof between int and Concrete\\Core\\Entity\\Package will always evaluate to false\.$#'
-			identifier: instanceof.alwaysFalse
-			count: 1
-			path: ../concrete/src/File/StorageLocation/Type/Type.php
 
 		-
 			message: '#^Property Concrete\\Core\\File\\Tracker\\UsageTracker\:\:\$manager \(Doctrine\\ORM\\EntityManager\) does not accept Doctrine\\ORM\\EntityManagerInterface\.$#'
@@ -5593,12 +5509,6 @@ parameters:
 			path: ../concrete/src/Form/Service/Form.php
 
 		-
-			message: '#^Default value of the parameter \#3 \$defaultValues \(false\) of method Concrete\\Core\\Form\\Service\\Form\:\:selectMultiple\(\) is incompatible with type array\|string\.$#'
-			identifier: parameter.defaultValue
-			count: 1
-			path: ../concrete/src/Form/Service/Form.php
-
-		-
 			message: '#^PHPDoc tag @param references unknown parameter\: \$key$#'
 			identifier: parameter.notFound
 			count: 1
@@ -5623,34 +5533,10 @@ parameters:
 			path: ../concrete/src/Form/Service/Form.php
 
 		-
-			message: '#^Result of && is always true\.$#'
-			identifier: booleanAnd.alwaysTrue
-			count: 1
-			path: ../concrete/src/Form/Service/Form.php
-
-		-
-			message: '#^Strict comparison using \!\=\= between string and false will always evaluate to true\.$#'
-			identifier: notIdentical.alwaysTrue
-			count: 1
-			path: ../concrete/src/Form/Service/Form.php
-
-		-
-			message: '#^Strict comparison using \!\=\= between string and null will always evaluate to true\.$#'
-			identifier: notIdentical.alwaysTrue
-			count: 1
-			path: ../concrete/src/Form/Service/Form.php
-
-		-
 			message: '#^Binary operation "\+" between '' \<span class\="text…'' and string results in an error\.$#'
 			identifier: binaryOp.invalid
 			count: 1
 			path: ../concrete/src/Form/Service/Widget/SiteLocaleSelector.php
-
-		-
-			message: '#^Default value of the parameter \#2 \$users \(array\) of method Concrete\\Core\\Form\\Service\\Widget\\UserSelector\:\:selectMultipleUsers\(\) is incompatible with type iterable\<Concrete\\Core\\Entity\\User\\User\|Concrete\\Core\\User\\UserInfo\|int\>&Traversable\.$#'
-			identifier: parameter.defaultValue
-			count: 1
-			path: ../concrete/src/Form/Service/Widget/UserSelector.php
 
 		-
 			message: '#^Parameter \#1 \$autoload_function of function spl_autoload_register expects callable\(string\)\: void, array\{\$this\(Concrete\\Core\\Foundation\\ClassAutoloader\), ''loadClass''\} given\.$#'
@@ -8317,12 +8203,6 @@ parameters:
 			path: ../concrete/src/Permission/Key/AddBlockToAreaAreaKey.php
 
 		-
-			message: '#^Default value of the parameter \#1 \$blockTypeOrBlock \(false\) of method Concrete\\Core\\Permission\\Key\\AddBlockToAreaAreaKey\:\:validate\(\) is incompatible with type Concrete\\Core\\Block\\Block\|Concrete\\Core\\Entity\\Block\\BlockType\\BlockType\.$#'
-			identifier: parameter.defaultValue
-			count: 1
-			path: ../concrete/src/Permission/Key/AddBlockToAreaAreaKey.php
-
-		-
 			message: '#^Call to an undefined method Concrete\\Core\\Permission\\Access\\ListItem\\ListItem\:\:getNewConversationMessageApprovalStatus\(\)\.$#'
 			identifier: method.notFound
 			count: 2
@@ -8513,12 +8393,6 @@ parameters:
 			identifier: arguments.count
 			count: 1
 			path: ../concrete/src/Permission/Key/GroupTreeNodeKey.php
-
-		-
-			message: '#^Default value of the parameter \#7 \$pkg \(false\) of method Concrete\\Core\\Permission\\Key\\Key\:\:add\(\) is incompatible with type Concrete\\Core\\Entity\\Package\|Concrete\\Core\\Package\\Package\|null\.$#'
-			identifier: parameter.defaultValue
-			count: 1
-			path: ../concrete/src/Permission/Key/Key.php
 
 		-
 			message: '#^Right side of && is always true\.$#'
@@ -9529,18 +9403,6 @@ parameters:
 			path: ../concrete/src/Tree/Node/Type/SearchPreset.php
 
 		-
-			message: '#^Default value of the parameter \#1 \$treeNodeTopicName \(''''\) of method Concrete\\Core\\Tree\\Node\\Type\\Topic\:\:add\(\) is incompatible with type Concrete\\Core\\Tree\\Node\\Node\|false\|null\.$#'
-			identifier: parameter.defaultValue
-			count: 1
-			path: ../concrete/src/Tree/Node/Type/Topic.php
-
-		-
-			message: '#^Parameter \#1 \$treeNodeTopicName of static method Concrete\\Core\\Tree\\Node\\Type\\Topic\:\:add\(\) expects Concrete\\Core\\Tree\\Node\\Node\|false\|null, string given\.$#'
-			identifier: argument.type
-			count: 1
-			path: ../concrete/src/Tree/Node/Type/Topic.php
-
-		-
 			message: '#^Call to function is_string\(\) with string will always evaluate to true\.$#'
 			identifier: function.alreadyNarrowedType
 			count: 1
@@ -9891,18 +9753,6 @@ parameters:
 		-
 			message: '#^Call to function is_numeric\(\) with int will always evaluate to true\.$#'
 			identifier: function.alreadyNarrowedType
-			count: 1
-			path: ../concrete/src/User/Group/Group.php
-
-		-
-			message: '#^Default value of the parameter \#3 \$parentFolder \(false\) of method Concrete\\Core\\User\\Group\\Group\:\:addBeneathFolder\(\) is incompatible with type Concrete\\Core\\Tree\\Node\\Type\\GroupFolder\.$#'
-			identifier: parameter.defaultValue
-			count: 1
-			path: ../concrete/src/User/Group/Group.php
-
-		-
-			message: '#^If condition is always true\.$#'
-			identifier: if.alwaysTrue
 			count: 1
 			path: ../concrete/src/User/Group/Group.php
 

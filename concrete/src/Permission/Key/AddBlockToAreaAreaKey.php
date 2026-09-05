@@ -83,7 +83,7 @@ class AddBlockToAreaAreaKey extends AreaKey
     }
 
     /**
-     * @param \Concrete\Core\Entity\Block\BlockType\BlockType|\Concrete\Core\Block\Block $blockTypeOrBlock specify a block type when adding a new block, a block instance when adding an existing block.
+     * @param \Concrete\Core\Entity\Block\BlockType\BlockType|\Concrete\Core\Block\Block|false|null $blockTypeOrBlock specify a block type when adding a new block, a block instance when adding an existing block.
      *
      * {@inheritdoc}
      *

@@ -12,7 +12,7 @@ class Logging extends DashboardPageController
     /**
      * Dasboard page view.
      *
-     * @param string $strStatus - Result of attempting to update logging settings
+     * @param string|false $strStatus - Result of attempting to update logging settings
      */
     public function view($strStatus = false)
     {

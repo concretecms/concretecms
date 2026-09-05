@@ -498,7 +498,7 @@ EOT
      * @param string|null $pkDescription
      * @param bool $pkCanTriggerWorkflow
      * @param bool $pkHasCustomClass
-     * @param \Concrete\Core\Entity\Package|\Concrete\Core\Package\Package|null $pkg
+     * @param \Concrete\Core\Entity\Package|\Concrete\Core\Package\Package|false|null $pkg
      */
     public static function add($pkCategoryHandle, $pkHandle, $pkName, $pkDescription, $pkCanTriggerWorkflow, $pkHasCustomClass, $pkg = false)
     {

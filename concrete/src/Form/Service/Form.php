@@ -625,7 +625,7 @@ class Form
      *
      * @param string $key The ID of the element. The name attribute will be $key followed by '[].
      * @param array $optionValues Hash array with name/value as the select's option value/text
-     * @param array|string $defaultValues Default value(s) which match with the option values; overridden by $_REQUEST
+     * @param array|string|false|null $defaultValues Default value(s) which match with the option values; overridden by $_REQUEST
      * @param array $miscFields additional fields appended to the element (a hash array of attributes name => value), possibly including 'class', 'id', and 'name'
      *
      * @return string

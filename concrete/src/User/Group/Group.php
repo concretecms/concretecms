@@ -887,7 +887,7 @@ class Group extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
      * This is deprecated; use the AddGroupCommand and the command bus.
      * @param string $gName
      * @param string $gDescription
-     * @param GroupFolder $parentFolder
+     * @param GroupFolder|false|null $parentFolder
      *
      * @return Group
      */
