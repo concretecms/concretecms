@@ -52,7 +52,7 @@ class CollectionAttributeControl extends Control
     }
 
     /**
-     * @return CollectionAttributeKey
+     * @return \Concrete\Core\Entity\Attribute\Key\PageKey|null
      */
     public function getAttributeKeyObject()
     {
@@ -205,7 +205,7 @@ class CollectionAttributeControl extends Control
                     $this->isPageTypeComposerFormControlRequiredOnThisRequest()
                 );
                 /**
-                 * @var $response ResponseInterface
+                 * @var ResponseInterface $response
                  */
             } else {
                 $value = $this->getPageTypeComposerControlDraftValue();

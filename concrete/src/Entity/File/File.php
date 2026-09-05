@@ -44,6 +44,8 @@ use Concrete\Core\Events\EventDispatcher;
  *     @ORM\Index(name="fOverrideSetPermissions", columns={"fOverrideSetPermissions"}),
  *     }
  * )
+ *
+ * @mixin \Concrete\Core\Entity\File\Version
  */
 class File implements \Concrete\Core\Permission\ObjectInterface, AttributeObjectInterface
 {
@@ -173,7 +175,7 @@ class File implements \Concrete\Core\Permission\ObjectInterface, AttributeObject
     }
 
     /**
-     * @return \Concrete\Core\Entity\File\StorageLocation\StorageLocation
+     * @return \Concrete\Core\Entity\File\StorageLocation\StorageLocation|null
      */
     public function getFileStorageLocationObject()
     {
@@ -218,9 +220,9 @@ class File implements \Concrete\Core\Permission\ObjectInterface, AttributeObject
      *
      * @param StorageLocation\StorageLocation $newLocation
      *
-     * @return bool false if the storage location is the same
      * @throws \Exception
      *
+     * @return bool false if the storage location is the same
      */
     public function setFileStorageLocation(\Concrete\Core\Entity\File\StorageLocation\StorageLocation $newLocation)
     {
@@ -255,6 +257,8 @@ class File implements \Concrete\Core\Permission\ObjectInterface, AttributeObject
 
         $this->setStorageLocation($newLocation);
         $this->save();
+
+        return true;
     }
 
     /**
@@ -558,7 +562,7 @@ class File implements \Concrete\Core\Permission\ObjectInterface, AttributeObject
      */
     public function setFileFolder(FileFolder $folder)
     {
-        $em = \ORM::entityManager('core');
+        $em = \ORM::entityManager();
 
         $this->folderTreeNodeID = $folder->getTreeNodeID();
 
@@ -575,7 +579,7 @@ class File implements \Concrete\Core\Permission\ObjectInterface, AttributeObject
     }
 
     /**
-     * @return NodeType
+     * @return NodeType|null
      */
     public function getFileNodeObject()
     {
@@ -819,7 +823,7 @@ class File implements \Concrete\Core\Permission\ObjectInterface, AttributeObject
      *
      * @param int $fvID
      *
-     * @return Version
+     * @return Version|null
      */
     public function getVersion($fvID = null)
     {
@@ -944,6 +948,8 @@ class File implements \Concrete\Core\Permission\ObjectInterface, AttributeObject
         if ($fv !== null) {
             return $fv->getAttributeValueObject($ak, $createIfNotExists);
         }
+
+        return null;
     }
 
     /**
@@ -957,6 +963,8 @@ class File implements \Concrete\Core\Permission\ObjectInterface, AttributeObject
         if ($fv !== null) {
             return $fv->getAttributeValue($ak);
         }
+
+        return null;
     }
 
     /**

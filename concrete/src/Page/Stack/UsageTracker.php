@@ -51,6 +51,8 @@ class UsageTracker implements TrackerInterface
         if ($trackable instanceof Controller) {
             $this->trackBlocks($trackable->getCollectionObject(), [$trackable]);
         }
+
+        return $this;
     }
 
     /**
@@ -77,6 +79,8 @@ class UsageTracker implements TrackerInterface
                 ->setParameter('block_id', $trackable->getBlockObject()->getBlockID())
                 ->getQuery()->execute();
         }
+
+        return $this;
     }
 
     /**

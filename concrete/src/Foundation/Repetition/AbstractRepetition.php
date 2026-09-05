@@ -12,7 +12,7 @@ use Concrete\Core\Localization\Service\Date;
 abstract class AbstractRepetition implements RepetitionInterface
 {
     /**
-     * @var string Date string of the start date/time
+     * @var string|null Date string of the start date/time
      */
     protected $startDate;
 
@@ -62,7 +62,7 @@ abstract class AbstractRepetition implements RepetitionInterface
     protected $repeatPeriodEnd;
 
     /**
-     * @var \DateTimeZone
+     * @var \DateTimeZone|null
      */
     protected $timezone;
 
@@ -412,7 +412,7 @@ abstract class AbstractRepetition implements RepetitionInterface
     }
 
     /**
-     * @return string
+     * @return string|null
      */
     public function getStartDate()
     {
@@ -457,7 +457,7 @@ abstract class AbstractRepetition implements RepetitionInterface
     }
 
     /**
-     * @return string Time string of the last possible time for an occurrence
+     * @return string|null Time string of the last possible time for an occurrence
      */
     public function getRepeatPeriodEnd()
     {
@@ -466,6 +466,8 @@ abstract class AbstractRepetition implements RepetitionInterface
             $datetime = new \DateTime($this->repeatPeriodEnd);
             return $datetime->format('Y-m-d');
         }
+
+        return null;
     }
 
     /**
@@ -580,8 +582,13 @@ abstract class AbstractRepetition implements RepetitionInterface
                     case self::REPEAT_MONTHLY:
                         $item = t('months');
                         break;
+                    default:
+                        $item = null;
+                        break;
                 }
-                $text .= t('Repeats every %s %s. ', $this->getRepeatEveryNum(), $item);
+                if ($item !== null) {
+                    $text .= t('Repeats every %s %s. ', $this->getRepeatEveryNum(), $item);
+                }
             }
         }
 

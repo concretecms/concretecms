@@ -64,9 +64,17 @@ class EditPageThemePageAccess extends PageAccess
         }
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Permission\Access\Access::getAccessListItems()
+     *
+     * @return \Concrete\Core\Permission\Access\ListItem\EditPageThemePageListItem[]
+     */
     public function getAccessListItems($accessType = PagePermissionKey::ACCESS_TYPE_INCLUDE, $filterEntities = [], $checkCache = true)
     {
         $db = Database::connection();
+        /** @var \Concrete\Core\Permission\Access\ListItem\EditPageThemePageListItem[] $list */
         $list = parent::getAccessListItems($accessType, $filterEntities);
         $list = PermissionDuration::filterByActive($list);
         foreach ($list as $l) {

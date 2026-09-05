@@ -23,6 +23,11 @@ class Skeleton implements ObjectInterface
         return \Core::make(SiteTypeCategory::class);
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Attribute\ObjectInterface::getAttributeValueObject()
+     */
     public function getAttributeValueObject($ak, $createIfNotExists = false)
     {
         if (!is_object($ak)) {
@@ -41,6 +46,8 @@ class Skeleton implements ObjectInterface
             $attributeValue->setAttributeKey($ak);
             return $attributeValue;
         }
+
+        return null;
     }
 
     /**

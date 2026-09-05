@@ -33,7 +33,6 @@ class Session
      */
     public static function start()
     {
-        /** @var FactoryInterface $factory */
         return self::$app->make('session');
     }
 

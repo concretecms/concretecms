@@ -7,11 +7,20 @@ use Concrete\Core\Tree\Node\Type\Topic as TopicTreeNode;
 use Concrete\Core\Tree\Node\Type\Category as CategoryTreeNode;
 use Database;
 
+/**
+ * @property \Concrete\Core\Tree\Node\Type\Topic|\Concrete\Core\Tree\Node\Type\Category|null $permissionObject
+ * @method \Concrete\Core\Tree\Node\Type\Topic|\Concrete\Core\Tree\Node\Type\Category|null getPermissionObject()
+ */
 class TopicTreeNodeAssignment extends TreeNodeAssignment
 {
     protected $inheritedPermissions = array(
         'view_topic_tree_node' => 'view_category_tree_node',
     );
+
+    /**
+     * @var \Concrete\Core\Tree\Node\Node
+     */
+    protected $permissionObjectToCheck;
 
     /**
      * @param TopicTreeNode $node
@@ -44,7 +53,7 @@ class TopicTreeNodeAssignment extends TreeNodeAssignment
             );
             $pa = Access::getByID($r, $this->pk);
         } else {
-            return false;
+            return null;
         }
 
         return $pa;

@@ -121,7 +121,7 @@ abstract class Association implements ExportableInterface
     }
 
     /**
-     * @param mixed $name
+     * @param mixed $target_property_name
      */
     public function setTargetPropertyName($target_property_name)
     {

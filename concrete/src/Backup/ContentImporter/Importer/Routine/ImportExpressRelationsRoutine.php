@@ -19,7 +19,7 @@ class ImportExpressRelationsRoutine extends AbstractRoutine
         if (isset($sx->expressentities)) {
             foreach ($sx->expressentities->entity as $entityNode) {
                 /**
-                 * @var $entity \Concrete\Core\Entity\Express\Entity
+                 * @var \Concrete\Core\Entity\Express\Entity $entity
                  */
                 $entity = $em->find('Concrete\Core\Entity\Express\Entity', (string) $entityNode['id']);
                 if (is_object($entity)) {
@@ -36,7 +36,7 @@ class ImportExpressRelationsRoutine extends AbstractRoutine
                 if (isset($entityNode->associations)) {
                     foreach($entityNode->associations->association as $associationNode) {
                         /**
-                         * @var $association \Concrete\Core\Entity\Express\Association
+                         * @var \Concrete\Core\Entity\Express\Association $association
                          */
                         $association = $em->find('Concrete\Core\Entity\Express\Association', (string) $associationNode['id']);
                         if (is_object($association)) {

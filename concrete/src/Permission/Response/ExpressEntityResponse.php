@@ -10,7 +10,7 @@ class ExpressEntityResponse extends Response
     protected function getExpressNodePermissions()
     {
         /**
-         * @var $entry Entry
+         * @var Entry $entry
          */
         $entity = $this->getPermissionObject();
         if (is_object($entity)) {

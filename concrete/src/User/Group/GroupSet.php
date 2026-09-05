@@ -5,6 +5,9 @@ use Concrete\Core\Foundation\ConcreteObject;
 use Gettext\Translations;
 use Loader;
 
+/**
+ * @phpstan-consistent-constructor
+ */
 class GroupSet extends ConcreteObject
 {
     public static function getList()

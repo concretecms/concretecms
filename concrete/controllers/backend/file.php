@@ -362,6 +362,7 @@ class File extends Controller
     {
         $errors = $this->app->make('error');
         $importedFileVersions = [];
+        $replacingFile = null;
         try {
             $token = $this->app->make('token');
             if (!$token->validate()) {
@@ -419,6 +420,7 @@ class File extends Controller
     {
         $errors = $this->app->make('error');
         $importedFileVersions = [];
+        $replacingFile = null;
         try {
             $token = $this->app->make('token');
             if (!$token->validate()) {
@@ -494,6 +496,7 @@ class File extends Controller
             $errorList = new ErrorList();
             $errorList->add($token->getErrorMessage());
             $r->setError($errorList);
+            $newFiles = null;
         }
         $r->setFiles($newFiles);
         $r->outputJSON();
@@ -881,6 +884,7 @@ class File extends Controller
             // got a filename (with extension)... use it
             $filename = $matches[1];
         } else {
+            $filename = null;
             foreach ($response->getHeader('Content-Type') as $contentType) {
                 if (!empty($contentType)) {
                     [$mimeType] = explode(';', $contentType, 2);

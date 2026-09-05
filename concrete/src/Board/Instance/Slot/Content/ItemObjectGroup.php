@@ -22,9 +22,6 @@ class ItemObjectGroup
         $this->contentObjects = $contentObjects;
     }
 
-    /**
-     * @return Item
-     */
     public function getItem(): ItemProviderInterface
     {
         return $this->item;

@@ -6,6 +6,9 @@ use Concrete\Core\Entity\Board\DataSource\ConfiguredDataSource;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\EntityRepository;
 
+/**
+ * @extends \Doctrine\ORM\EntityRepository<\Concrete\Core\Entity\Board\InstanceItem>
+ */
 class InstanceItemRepository extends EntityRepository
 {
 

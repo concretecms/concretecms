@@ -23,6 +23,11 @@ class Location extends BackendInterfacePageController
     protected $controllerActionPath = '/ccm/system/panels/details/page/location';
     protected $validationToken = '/panels/details/page/location';
 
+    /**
+     * @var \Concrete\Core\Permission\Access\ListItem\EditPagePropertiesPageListItem
+     */
+    protected $asl;
+
     protected function canAccess()
     {
         return is_object($this->asl) && $this->asl->allowEditPaths();

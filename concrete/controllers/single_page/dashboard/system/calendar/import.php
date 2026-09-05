@@ -3,7 +3,7 @@ namespace Concrete\Controller\SinglePage\Dashboard\System\Calendar;
 
 use Concrete\Core\Attribute\Key\Category;
 use Concrete\Core\Page\Controller\DashboardPageController;
-use Doctrine\DBAL\Connection;
+use Concrete\Core\Database\Connection\Connection;
 
 class Import extends DashboardPageController
 {
@@ -13,7 +13,7 @@ class Import extends DashboardPageController
         $site = $this->app->make('site')->getSite();
         if ($this->token->validate('submit')) {
             /**
-             * @var $db Connection
+             * @var Connection $db
              */
             $db = $this->app->make(Connection::class);
             $db->executeQuery('set foreign_key_checks = 0');
@@ -37,7 +37,7 @@ class Import extends DashboardPageController
                         'evIsApproved' => 1,
                         'evDescription' => $row2['description'],
                         'evName' => $row2['name'],
-                        'evRelatedPageRelationType' => $row['evRelatedPageRelationType'],
+                        'evRelatedPageRelationType' => $row2['evRelatedPageRelationType'],
                         'cID' => $row2['cID'],
                         'eventID' => $row2['eventID'],
                         'uID' => 1
@@ -106,7 +106,7 @@ class Import extends DashboardPageController
     public function view()
     {
         /**
-         * @var $db Connection
+         * @var Connection $db
          */
         $db = $this->app->make(Connection::class);
         if ($db->tableExists('_CalendarEvents')) {

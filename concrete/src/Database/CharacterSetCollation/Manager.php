@@ -31,7 +31,6 @@ class Manager
     protected $fileSystem;
 
     /**
-     * @param \Concrete\Core\Database\Connection\Connection $connection
      * @param \Concrete\Core\Database\CharacterSetCollation\Resolver $resolver
      * @param DatabaseManager $databaseManager
      * @param Filesystem $fileSystem
@@ -72,7 +71,7 @@ class Manager
         $messageCallback(t('Setting character set "%1$s" and collation "%2$s" for connection "%3$s"', $characterSet, $collation, $connectionName));
         $this->convertTables($connection, $characterSet, $collation, $messageCallback, $warnings);
         $messageCallback(t('Saving connection configuration.'));
-        $this->persistConfiguration($connectionName, $environment, $characterSet, $collation, $warnings);
+        $this->persistConfiguration($connectionName, $environment, $characterSet, $collation);
         $connection->refreshCharactersetCollation($characterSet, $collation);
     }
 
@@ -103,7 +102,7 @@ class Manager
      * Convert all the database tables a specific character set/collation combination.
      *
      * @param \Concrete\Core\Database\Connection\Connection $connection
-     * @param callable|null $messageCallback a callback function that will receive progress messages
+     * @param callable $messageCallback a callback function that will receive progress messages
      * @param string $characterSet
      * @param string $collation
      * @param \Concrete\Core\Error\ErrorList\ErrorList $warnings

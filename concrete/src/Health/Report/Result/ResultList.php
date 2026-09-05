@@ -43,9 +43,7 @@ class ResultList extends EntityItemList
 
     protected function createPaginationObject()
     {
-        $adapter = new DoctrineORMAdapter($this->query, function ($query) {
-            $query->select('count(result)')->setMaxResults(1);
-        });
+        $adapter = new DoctrineORMAdapter($this->query);
         $pagination = new Pagination($this, $adapter);
         return $pagination;
     }
@@ -74,7 +72,7 @@ class ResultList extends EntityItemList
         $list->setItemsPerPage(1);
         $pagination = app(PaginationFactory::class)->createPaginationObject($list);
         /**
-         * @var $pagination Pagination
+         * @var Pagination $pagination
          */
         if ($pagination->getTotalResults() > 0) {
             return $pagination->getCurrentPageResults()[0];

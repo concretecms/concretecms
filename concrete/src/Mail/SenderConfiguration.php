@@ -30,7 +30,7 @@ final class SenderConfiguration
     private $entries = [];
 
     /**
-     * @var string
+     * @var string[]
      */
     private $allConfigurationKeys = [];
 

@@ -36,7 +36,6 @@ class File
     /**
      * Returns the contents of a directory.
      *
-     *
      */
     public function getDirectoryContents($dir, $ignoreFiles = [], $recursive = false)
     {
@@ -135,7 +134,7 @@ class File
      *
      * @param string $path (optional)
      *
-     * @return \stdClass
+     * @return \stdClass|false
      */
     public function getCreateFilePermissions($path = null)
     {
@@ -263,7 +262,7 @@ class File
     /**
      * Returns the full path to the temporary directory.
      *
-     * @return string
+     * @return string|null
      */
     public function getTemporaryDirectory()
     {
@@ -298,6 +297,8 @@ class File
 
             return str_replace(DIRECTORY_SEPARATOR, '/', dirname($temp));
         }
+
+        return null;
     }
 
     /**
@@ -317,7 +318,7 @@ class File
      * Just a consistency wrapper for file_get_contents
      * Should use curl if it exists and fopen isn't allowed (thanks Remo).
      *
-     * @param string $filename
+     * @param string $file
      * @param string $timeout
      *
      * @throws RequestException Request timed out

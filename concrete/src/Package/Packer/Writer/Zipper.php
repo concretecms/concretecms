@@ -79,6 +79,8 @@ class Zipper implements WriterInterface
                 $this->filesToAdd[$relativePath] = $file->getAbsolutePath();
             }
         }
+
+        return $this;
     }
 
     /**

@@ -15,7 +15,7 @@ class FunctionInspector
     /**
      * Set the system-level disabled functions.
      *
-     * @param string[]|Traversable $functionNames
+     * @param iterable<string> $functionNames
      *
      * @return $this
      */

@@ -13,7 +13,6 @@ interface ControllerInterface
      * Allows for additional filtering of announcements
      *
      * @param User $user
-     * @param array $announcements
      * @return bool
      */
     public function shouldDisplayAnnouncementToUser(User $user): bool;
@@ -22,8 +21,7 @@ interface ControllerInterface
 
     /**
      * @param Announcement $announcement
-     * @param SlideInterface $slides
-     * @return mixed
+     * @param SlideInterface[] $slides
      */
     public function createAnnouncementComponent(Announcement $announcement, array $slides);
 

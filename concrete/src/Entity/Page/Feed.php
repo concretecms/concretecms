@@ -407,7 +407,7 @@ class Feed
             // authentication won't work with RSS feeds
             $pl->setPermissionsChecker(function ($page) use ($vp, $access) {
                 $vp->setPermissionObject($page);
-                $pa = $vp->getPermissionAccessObject($page);
+                $pa = $vp->getPermissionAccessObject();
                 if (!is_object($pa)) {
                     return false;
                 }
@@ -539,6 +539,8 @@ class Feed
 
             return $writer->export('rss');
         }
+
+        return null;
     }
 
     public function getHeadLinkElement()

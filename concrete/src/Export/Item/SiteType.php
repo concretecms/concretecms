@@ -63,7 +63,7 @@ class SiteType implements ItemInterface
         }
 
         /**
-         * @var $skeleton Skeleton
+         * @var Skeleton $skeleton
          */
         $skeleton = $this->skeletonService->getSkeleton($type);
 
@@ -93,7 +93,7 @@ class SiteType implements ItemInterface
             $skeletonNode = $sitetype->addChild('skeleton');
             foreach($skeleton->getLocales() as $locale) {
                 /**
-                 * @var $locale SkeletonLocale
+                 * @var SkeletonLocale $locale
                  */
                 $exporter = new Exporter();
                 

@@ -3,7 +3,6 @@
 namespace Concrete\Core\Board\Instance\Slot;
 
 use Concrete\Core\Entity\Board\Instance;
-use Concrete\Core\Entity\Board\InstanceSlot;
 
 class RenderedSlot implements \JsonSerializable
 {
@@ -47,7 +46,7 @@ class RenderedSlot implements \JsonSerializable
 
     /**
      * State constructor.
-     * @param InstanceSlot $slot
+     * @param int $slot
      */
     public function __construct(Instance $instance, int $slot)
     {

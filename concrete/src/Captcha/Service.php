@@ -7,6 +7,11 @@ namespace Concrete\Core\Captcha;
  */
 class Service
 {
+    /**
+     * @var \Concrete\Core\Captcha\Controller|null
+     */
+    protected $controller;
+
     public function __call($nm, $args)
     {
         if (!isset($this->controller)) {

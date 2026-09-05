@@ -276,7 +276,7 @@ class Update
         $app = Application::getFacadeApplication();
         $config = $app->make('config');
         /**
-         * @var $inspector Inspector
+         * @var Inspector $inspector
          */
         $inspector = $app->make(Inspector::class);
         try {

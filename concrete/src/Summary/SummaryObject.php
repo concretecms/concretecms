@@ -20,7 +20,7 @@ class SummaryObject implements SummaryObjectInterface
     protected $identifier;
 
     /**
-     * @var array
+     * @var Collection
      */
     protected $data;
 
@@ -37,9 +37,6 @@ class SummaryObject implements SummaryObjectInterface
         $this->identifier = $identifier;
     }
 
-    /**
-     * @return mixed
-     */
     public function getDataSourceCategoryHandle() : string
     {
         return $this->dataSourceCategoryHandle;

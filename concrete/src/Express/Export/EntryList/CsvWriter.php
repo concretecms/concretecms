@@ -109,7 +109,7 @@ class CsvWriter
     /**
      * Turn an Entry into an array
      * @param \Concrete\Core\Entity\Express\Entry $entry
-     * @return array
+     * @return \Generator
      */
     private function projectEntry(Entry $entry)
     {

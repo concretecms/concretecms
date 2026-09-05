@@ -24,7 +24,7 @@ class Documentation extends BackendInterfaceController
     public function view($clientId)
     {
         /**
-         * @var $clientRepository ClientRepository
+         * @var ClientRepository $clientRepository
          */
         $clientRepository = $this->app->make(ClientRepositoryInterface::class);
         $client = $clientRepository->findOneByIdentifier($clientId);

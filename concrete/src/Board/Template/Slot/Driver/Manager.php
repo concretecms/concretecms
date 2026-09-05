@@ -24,11 +24,6 @@ class Manager extends CoreManager
         return $this->app->make(BlogImageRightDriver::class);
     }
 
-    public function createBlogCardDriver()
-    {
-        return $this->app->make(BlogCardDriver::class);
-    }
-
     public function createBlogTwoUpDriver()
     {
         return $this->app->make(BlogTwoUpDriver::class);

@@ -6,6 +6,8 @@ namespace Concrete\Core\Device;
  * A representation of a device.
  *
  * \@package Concrete\Core\Device
+ *
+ * @phpstan-consistent-constructor
  */
 class Device implements DeviceInterface
 {
@@ -216,6 +218,8 @@ class Device implements DeviceInterface
         if ($this->isDesktop()) {
             return 'ccm-device-icon-desktop fas fa-desktop';
         }
+
+        return 'ccm-device-icon-unknown fas fa-question';
     }
 
     /**

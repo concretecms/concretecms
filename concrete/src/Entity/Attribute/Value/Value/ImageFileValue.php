@@ -47,7 +47,7 @@ class ImageFileValue extends AbstractValue implements FileProviderInterface
     }
 
     /**
-     * @param mixed $value
+     * @param mixed $file
      */
     public function setFileObject($file)
     {

@@ -6,7 +6,7 @@ use Loader;
 class TemplateFile
 {
     /** Stores the parent object of this template file
-     * @var \BlockType
+     * @var \Concrete\Core\Entity\Block\BlockType\BlockType
      */
     protected $parentObject;
     /** Stores the file name
@@ -18,7 +18,7 @@ class TemplateFile
      */
     protected $name;
     /** Initializes this TemplateFile instance
-     * @param \BlockType $parentObject The parent object of this template file
+     * @param \Concrete\Core\Entity\Block\BlockType\BlockType $parentObject The parent object of this template file
      * @param string $filename The file name
      */
     public function __construct($parentObject, $filename)
@@ -34,7 +34,7 @@ class TemplateFile
         $this->name = Loader::helper('text')->unhandle($baseName);
     }
     /** Returns the parent object of this template file
-     * @return \BlockType
+     * @return \Concrete\Core\Entity\Block\BlockType\BlockType
      */
     public function getTemplateFileParentObject()
     {

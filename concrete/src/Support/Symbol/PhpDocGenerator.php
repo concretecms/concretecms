@@ -25,7 +25,7 @@ class PhpDocGenerator
     /**
      * Insert the variable definitions in the same PHPDoc block?
      *
-     * @var string
+     * @var bool
      */
     protected $singleDocBlock = false;
 

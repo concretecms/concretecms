@@ -45,7 +45,7 @@ class PermissionsEntry implements EntryInterface
                 $listItems = $pa->getAccessListItems($this->accessType);
                 foreach($listItems as $item) {
                     /**
-                     * @var $item ListItem
+                     * @var ListItem $item
                      */
                     $entity = $item->getAccessEntityObject();
                     if ($entity == $mixed->getAccessEntity()) {

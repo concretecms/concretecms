@@ -143,6 +143,15 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
     protected $btDefaultSet;
     protected $identifier;
     protected $btID;
+
+    /**
+     * The action being run (set by setupAndRun()).
+     *
+     * @deprecated it's never read by the core: it's only set for backward compatibility
+     *
+     * @var string|null
+     */
+    public $task;
     /** @var array */
     protected $requestArray;
     /**
@@ -371,9 +380,9 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
     /**
      * Automatically run when a block is duplicated. This most likely happens when a block is edited: a block is first duplicated, and then presented to the user to make changes.
      *
-     * @param int $newBlockID
+     * @param int $newBID
      *
-     * @return BlockRecord | null $newInstance
+     * @return BlockRecord|null
      */
     public function duplicate($newBID)
     {
@@ -387,6 +396,8 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
 
             return $newInstance;
         }
+
+        return null;
     }
 
     public function __wakeup()
@@ -785,6 +796,7 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
         } catch (\Exception $e) {
         }
 
+        return null;
     }
 
     public function isValidControllerTask($method, $parameters = [])
@@ -873,7 +885,7 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
     /**
      * Gets the generic Block object attached to this controller's instance.
      *
-     * @return Block $b
+     * @return \Concrete\Core\Block\Block|false|null
      */
     public function getBlockObject()
     {
@@ -884,7 +896,7 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
         return Block::getByID($this->bID);
     }
 
-    public function post($field = false, $defaultValue = null)
+    public function post($field = null, $defaultValue = null)
     {
         // the only post that matters is the one for this attribute's name space
         $req = ($this->requestArray == false) ? $_POST : $this->requestArray;

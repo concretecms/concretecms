@@ -7,6 +7,11 @@ use Concrete\Core\Routing\Redirect;
 
 class Editor extends DashboardPageController
 {
+    /**
+     * @var array
+     */
+    protected $editors;
+
     public function view()
     {
         $db = Loader::db();
@@ -47,8 +52,6 @@ class Editor extends DashboardPageController
         $db = Loader::db();
         if (!isset($this->editors[$active])) {
             $this->redirect('/dashboard/system/conversations/editor/error');
-
-            return;
         }
         $db->executeQuery('UPDATE ConversationEditors SET cnvEditorIsActive=0');
         $db->executeQuery('UPDATE ConversationEditors SET cnvEditorIsActive=1 WHERE cnvEditorHandle=?', array($active));

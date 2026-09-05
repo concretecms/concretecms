@@ -66,7 +66,7 @@ class Service
     public function getHomePage(Type $type)
     {
         /**
-         * @var $skeleton Skeleton
+         * @var Skeleton $skeleton
          */
         $skeleton = $this->getSkeleton($type);
         $tree = $skeleton->getLocales()[0]->getSiteTree();

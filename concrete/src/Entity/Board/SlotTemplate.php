@@ -129,6 +129,8 @@ class SlotTemplate implements \JsonSerializable, ProvidesTagsInterface
             }
             return $image;
         }
+
+        return null;
     }
 
     public function getDesignTags(): array

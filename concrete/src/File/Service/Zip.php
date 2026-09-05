@@ -286,7 +286,7 @@ class Zip
                 }
                 $item = [
                     'type' => $isDir ? 'D' : 'F',
-                    'date' => (isset($stat['mtime']) && $stat['mtime']) ? DateTime::createFromFormat('U', $stat['mtime']) : null,
+                    'date' => (isset($stat['mtime']) && $stat['mtime']) ? DateTime::createFromFormat('U', (string) $stat['mtime']) : null,
                 ];
                 if (!$isDir) {
                     $item += [

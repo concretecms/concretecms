@@ -11,9 +11,11 @@ class ElementManager
 
     /**
      * @param string $element the element name
-     * @param \Concrete\Core\Page\Page $page
-     * @param array $elementArguments the arguments to be used when calling the constructor of the element controller
-     * @param string $pkgHandle the handle of the package defining this element
+     *
+     * The additional optional arguments (read with func_get_args(), see Element::populateFromArguments()) can be, in any order:
+     * - \Concrete\Core\Page\Page: the page where the element will be rendered
+     * - array: the arguments to be used when calling the constructor of the element controller
+     * - string: the handle of the package defining this element
      *
      * @return \Concrete\Core\Filesystem\Element
      */

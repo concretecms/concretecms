@@ -12,6 +12,11 @@ abstract class File extends \Concrete\Controller\Backend\UserInterface
 {
     protected $file;
 
+    /**
+     * @var \Concrete\Core\Permission\Checker
+     */
+    protected $permissions;
+
     public function on_start()
     {
         if (!isset($this->file)) {

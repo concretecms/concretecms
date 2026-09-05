@@ -94,6 +94,34 @@ class BlockType
      */
     protected $pkgID = 0;
 
+    /**
+     * Does the block type have a custom view template? Only set by BlockTypeList::getAvailableList() for the block types that aren't installed.
+     *
+     * @var bool
+     */
+    public $hasCustomViewTemplate;
+
+    /**
+     * Does the block type have a custom edit template? Only set by BlockTypeList::getAvailableList() for the block types that aren't installed.
+     *
+     * @var bool
+     */
+    public $hasCustomEditTemplate;
+
+    /**
+     * Does the block type have a custom add template? Only set by BlockTypeList::getAvailableList() for the block types that aren't installed.
+     *
+     * @var bool
+     */
+    public $hasCustomAddTemplate;
+
+    /**
+     * Is the block type installed? Only set by BlockTypeList::getAvailableList().
+     *
+     * @var bool
+     */
+    public $installed;
+
     public function getBlockTypeInSetName()
     {
         if ($this->controller) {
@@ -362,7 +390,7 @@ class BlockType
      * Returns the number of unique instances of this block throughout the entire site
      * note - this count could include blocks in areas that are no longer rendered by the theme.
      *
-     * @param bool specify true if you only want to see the number of blocks in active pages
+     * @param bool $ignoreUnapprovedVersions specify true if you only want to see the number of blocks in active pages
      *
      * @return int
      */
@@ -417,7 +445,7 @@ EOT
     /**
      * Renders a particular view of a block type, using the public $controller variable as the block type's controller.
      *
-     * @param string template 'view' for the default
+     * @param string $view template 'view' for the default
      */
     public function render($view = 'view')
     {
@@ -632,7 +660,7 @@ EOT
      * @param bool|\Collection $c
      * @param bool|\Area       $a
      * @param string $saveMode
-     * @return bool|\Concrete\Core\Block\Block
+     * @return bool|\Concrete\Core\Block\Block|null
      */
     public function add($data, $c = false, $a = false, ?string $saveMode = SaveMode::SAVE_MODE_REQUEST)
     {
@@ -678,6 +706,8 @@ EOT
 
             return Block::getByID($bIDnew);
         }
+
+        return null;
     }
 
     /**

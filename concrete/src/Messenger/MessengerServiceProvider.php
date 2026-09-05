@@ -70,7 +70,7 @@ class MessengerServiceProvider extends ServiceProvider
                 $manager = new TransportManager();
                 foreach ((array)$config->get('concrete.messenger.transports') as $transportClass) {
                     /**
-                     * @var $transport TransportInterface
+                     * @var TransportInterface $transport
                      */
                     $transport = $app->make($transportClass);
                     $manager->addTransport($transport);
@@ -152,7 +152,7 @@ class MessengerServiceProvider extends ServiceProvider
             $manager = new FailedTransportManager();
             foreach ((array) $config->get('concrete.messenger.failure.transports') as $transportClass) {
                 /**
-                 * @var $transport TransportInterface
+                 * @var TransportInterface $transport
                  */
                 $transport = $app->make($transportClass);
                 $manager->addTransport($transport);
@@ -206,7 +206,7 @@ class MessengerServiceProvider extends ServiceProvider
 
         if ($this->app->isInstalled()) {
             /**
-             * @var $dispatcher \Symfony\Component\EventDispatcher\EventDispatcher
+             * @var \Symfony\Component\EventDispatcher\EventDispatcher $dispatcher
              */
             $dispatcher = $this->app->make(EventDispatcher::class)->getEventDispatcher();
             $dispatcher->addSubscriber($this->app->make(MessengerEventSubscriber::class));

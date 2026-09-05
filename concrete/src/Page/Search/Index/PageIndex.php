@@ -25,7 +25,7 @@ class PageIndex extends AbstractIndex implements ApplicationAwareInterface
     }
 
     /**
-     * @return DefaultPageDriver|IndexingDriverInterface
+     * @return IndexingDriverInterface
      */
     protected function getIndexer()
     {

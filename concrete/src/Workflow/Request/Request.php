@@ -107,7 +107,7 @@ abstract class Request extends ConcreteObject
      *
      * @param \PermissionKey $pk
      *
-     * @return optional WorkflowProgress
+     * @return \Concrete\Core\Workflow\Progress\Response|null
      */
     protected function triggerRequest(\PermissionKey $pk)
     {
@@ -150,6 +150,8 @@ abstract class Request extends ConcreteObject
 
             return $wp->getWorkflowProgressResponseObject();
         }
+
+        return null;
     }
 
     abstract public function addWorkflowProgress(\Concrete\Core\Workflow\Workflow $wf);

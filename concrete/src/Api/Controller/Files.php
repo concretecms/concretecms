@@ -219,8 +219,8 @@ class Files extends ApiController
         }
 
         /**
-         * @var $importer FileImporter
-         * @var $importOptions ImportOptions
+         * @var FileImporter $importer
+         * @var ImportOptions $importOptions
          */
         $importer = $this->app->make(FileImporter::class);
         $importOptions = $this->app->make(ImportOptions::class);

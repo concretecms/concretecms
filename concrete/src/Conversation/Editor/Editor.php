@@ -16,7 +16,7 @@ abstract class Editor extends ConcreteObject
     protected $cnvEditorHandle;
     /** @var string */
     protected $cnvEditorID;
-    /** @var int */
+    /** @var bool|0|1|'0'|'1' */
     protected $cnvEditorIsActive;
     /** @var string */
     protected $cnvEditorInputName = 'cnvMessageBody';
@@ -26,7 +26,7 @@ abstract class Editor extends ConcreteObject
     protected $cnvMessage;
     /** @var Conversation */
     protected $cnvObject;
-    /** @var int */
+    /** @var int|numeric-string */
     protected $pkgID;
 
     /** @return \Concrete\Core\Asset\AssetPointer[] */
@@ -123,7 +123,7 @@ abstract class Editor extends ConcreteObject
     /**
      * Looks up and returns a Package object for the current Editor's Package ID.
      *
-     * @return Package
+     * @return \Concrete\Core\Entity\Package|null
      */
     public function getPackageObject()
     {
@@ -284,7 +284,7 @@ abstract class Editor extends ConcreteObject
      *
      * @param string $cnvEditorHandle
      * @param string $cnvEditorName
-     * @param bool|Package $pkg
+     * @param \Concrete\Core\Entity\Package|\Concrete\Core\Package\Package|false|null $pkg
      *
      * @return Editor|null
      */

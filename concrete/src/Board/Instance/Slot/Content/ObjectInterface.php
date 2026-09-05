@@ -11,8 +11,6 @@ interface ObjectInterface extends \JsonSerializable, DenormalizableInterface, Pr
     /**
      * Refreshes the content object without changing any slot attributes. Useful for when
      * summary objects need to update their fields, etc...
-     * 
-     * @return mixed
      */
     public function refresh(Application $app) : void;
 

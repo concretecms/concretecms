@@ -57,6 +57,8 @@ class StartingPoint implements OptionsPreconditionInterface
     public function setInstallerOptions(InstallerOptions $installerOptions)
     {
         $this->installerOptions = $installerOptions;
+
+        return $this;
     }
 
     /**

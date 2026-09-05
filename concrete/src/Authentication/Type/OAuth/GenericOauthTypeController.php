@@ -133,6 +133,8 @@ abstract class GenericOauthTypeController extends AuthenticationTypeController
      */
     public function authenticate()
     {
+
+        return null;
     }
 
     /**
@@ -266,7 +268,6 @@ abstract class GenericOauthTypeController extends AuthenticationTypeController
         if (!$token_helper->validate($this->getHandle().'_register', $token) && !$token_helper->validate($this->getHandle().'_register') ||
             !$this->token) {
             $this->redirect('/login/');
-            exit;
         }
         if (\Request::request('uEmail', false)) {
             $this->email = \Request::request('uEmail');

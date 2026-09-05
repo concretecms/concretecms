@@ -34,9 +34,8 @@ class TemplateLocator
     }
 
     /**
-     * @param Page $page
      * @param SlotTemplate $template
-     * @return string file
+     * @return string|null file
      */
     public function getFileToRender(SlotTemplate $template)
     {

@@ -76,6 +76,8 @@ class Storage extends BackendInterfaceController
             if (!is_object($fsl)) {
                 $err->add(t('Please select valid file storage location.'));
             }
+        } else {
+            $fsl = null;
         }
         $files = $this->files;
         if (!$err->has()) {

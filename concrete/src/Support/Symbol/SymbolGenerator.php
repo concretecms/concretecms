@@ -7,7 +7,9 @@
 
 namespace Concrete\Core\Support\Symbol;
 
+use Concrete\Core\File\Service\File as FileService;
 use Concrete\Core\Foundation\ClassAliasList;
+use Concrete\Core\Support\Facade\Facade;
 use Concrete\Core\Support\Symbol\ClassSymbol\ClassSymbol;
 use Throwable;
 
@@ -26,6 +28,19 @@ class SymbolGenerator
      * @var array
      */
     protected $aliasNamespaces = [''];
+
+    /**
+     * The ClassSymbol objects of all the facades (array keys are the fully-qualified names of the facade classes).
+     * NULL if not yet listed.
+     *
+     * @var ClassSymbol[]|null
+     */
+    protected $facades;
+
+    /**
+     * @var \Concrete\Core\Support\Symbol\ClassLister
+     */
+    protected $classLister;
 
     /**
      * @var \Concrete\Core\Support\Symbol\CheckerGenerator
@@ -48,7 +63,46 @@ class SymbolGenerator
             }
             $this->registerClass($alias, $class);
         }
-        $this->checkerGenerator = app(CheckerGenerator::class, ['isInstalled' => $this->isInstalled]);
+        $this->classLister = new ClassLister(app(FileService::class), 'Concrete\Core', DIR_BASE_CORE . '/' . DIRNAME_CLASSES);
+        $this->checkerGenerator = app(CheckerGenerator::class, ['isInstalled' => $this->isInstalled, 'classLister' => $this->classLister]);
+    }
+
+    public function getCheckerGenerator(): CheckerGenerator
+    {
+        return $this->checkerGenerator;
+    }
+
+    /**
+     * Get the ClassSymbol objects of all the facades: the ones with a registered class alias, plus the ones found in the core classes.
+     *
+     * @return ClassSymbol[] array keys are the fully-qualified names of the facade classes
+     */
+    public function getFacades(): array
+    {
+        if ($this->facades === null) {
+            $facades = [];
+            foreach ($this->classes as $classSymbol) {
+                if ($classSymbol->isFacade()) {
+                    $facades[$classSymbol->getFacadeReflectionClass()->getName()] = $classSymbol;
+                }
+            }
+            foreach ($this->classLister->getClassNames() as $className) {
+                if (isset($facades[$className]) || !is_subclass_of($className, Facade::class)) {
+                    continue;
+                }
+                try {
+                    $classSymbol = new ClassSymbol($className, $className);
+                } catch (Throwable $_) {
+                    // The facade root can't be resolved (for example because Concrete is not installed)
+                    continue;
+                }
+                $facades[$className] = $classSymbol;
+            }
+            ksort($facades, SORT_STRING);
+            $this->facades = $facades;
+        }
+
+        return $this->facades;
     }
 
     /**

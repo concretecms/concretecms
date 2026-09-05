@@ -27,7 +27,7 @@ class AssociationView extends View
         $this->entry = $context->getEntry();
         $this->association = $this->control->getAssociation();
         /**
-         * @var $entity Entity
+         * @var Entity $entity
          */
         $entity = $this->association->getTargetEntity();
         if (AssociationControl::TYPE_ENTRY_SELECTOR != $control->getEntrySelectorMode()) {

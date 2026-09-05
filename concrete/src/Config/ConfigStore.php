@@ -6,7 +6,7 @@ use Loader;
 class ConfigStore
 {
     /**
-     * @var \Database
+     * @var \Concrete\Core\Database\Connection\Connection
      */
     protected $db;
 
@@ -43,7 +43,7 @@ class ConfigStore
      * @param string $cfKey
      * @param int $pkgID optional
      *
-     * @return ConfigValue|void
+     * @return mixed
      */
     public function get($cfKey, $pkgID = null)
     {

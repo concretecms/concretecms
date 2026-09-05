@@ -32,9 +32,6 @@ class Parameter extends SpecParameter
     }
 
 
-    /**
-     * @return mixed
-     */
     public function getName(): ?string
     {
         return $this->name;
@@ -48,9 +45,6 @@ class Parameter extends SpecParameter
         $this->name = $name;
     }
 
-    /**
-     * @return mixed
-     */
     public function getIn(): ?string
     {
         return $this->in;
@@ -64,9 +58,6 @@ class Parameter extends SpecParameter
         $this->in = $in;
     }
 
-    /**
-     * @return mixed
-     */
     public function getDescription(): ?string
     {
         return $this->description;

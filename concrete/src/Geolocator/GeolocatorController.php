@@ -31,7 +31,6 @@ abstract class GeolocatorController extends Controller implements GeolocatorCont
     /**
      * Get the path to a geolocator file.
      *
-     * @param Geolocator $geolocator
      * @param string $file
      *
      * @return \Concrete\Core\Filesystem\FileLocator\Record
@@ -88,6 +87,7 @@ abstract class GeolocatorController extends Controller implements GeolocatorCont
         if ($record->exists()) {
             call_user_func(
                 function ($_vars) {
+                    /** @var array{_file: string, app: \Concrete\Core\Application\Application, geolocator: \Concrete\Core\Entity\Geolocator, controller: static, form: \Concrete\Core\Form\Service\Form} $_vars */
                     extract($_vars);
                     unset($_vars);
                     require_once $_file;

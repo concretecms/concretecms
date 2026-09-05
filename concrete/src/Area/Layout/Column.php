@@ -15,23 +15,23 @@ abstract class Column extends ConcreteObject implements ColumnInterface
      */
     public $arLayout;
     /**
-     * @var int
+     * @var int|numeric-string
      */
     public $arLayoutColumnIndex;
     /**
-     * @var int
+     * @var int|numeric-string
      */
     public $arLayoutID;
     /**
-     * @var int
+     * @var int|numeric-string
      */
     public $arLayoutColumnID;
     /**
-     * @var int
+     * @var int|numeric-string|null
      */
     public $arLayoutColumnDisplayID;
     /**
-     * @var int
+     * @var int|numeric-string
      */
     public $arID;
 
@@ -114,7 +114,7 @@ abstract class Column extends ConcreteObject implements ColumnInterface
     }
 
     /**
-     * @param Column $newAreaLayout
+     * @param \Concrete\Core\Area\Layout\Layout $newAreaLayout
      *
      * @return int
      */
@@ -141,6 +141,8 @@ abstract class Column extends ConcreteObject implements ColumnInterface
 
             return $area;
         }
+
+        return null;
     }
 
     /**
@@ -184,7 +186,7 @@ abstract class Column extends ConcreteObject implements ColumnInterface
         $layout = $this->getAreaLayoutObject();
         if ($layout) {
             $a = $layout->getAreaObject();
-            $as = new SubArea($this->getAreaLayoutColumnDisplayID(), $a->getAreaHandle(), $a->getAreaID());
+            $as = new SubArea((string) $this->getAreaLayoutColumnDisplayID(), $a->getAreaHandle(), $a->getAreaID());
             $as->setAreaGridMaximumColumns($this->getSubAreaMaximumColumns());
             $as->setAreaDisplayName(t('Column %s', $this->getAreaLayoutColumnIndex() + 1));
             return $as;

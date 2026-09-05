@@ -16,7 +16,7 @@ class Stylesheet
     protected $stylesheet; // e.g "css/main.less";
 
     /**
-     * @var NormalizedVariableCollection
+     * @var NormalizedVariableCollection|null
      */
     protected $variableCollection;
 

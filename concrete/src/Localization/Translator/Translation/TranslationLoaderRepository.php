@@ -19,6 +19,8 @@ class TranslationLoaderRepository implements TranslationLoaderRepositoryInterfac
     public function registerTranslationLoader($handle, TranslationLoaderInterface $loader)
     {
         $this->loaders[$handle] = $loader;
+
+        return $loader;
     }
 
     /**

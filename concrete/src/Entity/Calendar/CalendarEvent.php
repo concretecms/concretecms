@@ -19,6 +19,8 @@ use RuntimeException;
 /**
  * @ORM\Entity(repositoryClass="CalendarEventRepository")
  * @ORM\Table(name="CalendarEvents")
+ *
+ * @mixin \Concrete\Core\Entity\Calendar\CalendarEventVersion
  */
 class CalendarEvent implements ObjectInterface, CategoryMemberInterface
 {
@@ -27,7 +29,7 @@ class CalendarEvent implements ObjectInterface, CategoryMemberInterface
 
     /**
      * This points to the currently selected version in the object.
-     * @var CalendarEventVersion
+     * @var CalendarEventVersion|null
      */
     protected $selectedVersion;
 
@@ -135,7 +137,7 @@ class CalendarEvent implements ObjectInterface, CategoryMemberInterface
     }
 
     /**
-     * @return CalendarEventVersion
+     * @return \Doctrine\Common\Collections\Collection|CalendarEventVersion[]
      */
     public function getVersions()
     {
@@ -145,7 +147,7 @@ class CalendarEvent implements ObjectInterface, CategoryMemberInterface
     }
 
     /**
-     * @return CalendarEventVersion
+     * @return CalendarEventVersion|null
      */
     public function getSelectedVersion()
     {
@@ -161,7 +163,7 @@ class CalendarEvent implements ObjectInterface, CategoryMemberInterface
     }
 
     /**
-     * @return CalendarEventVersion
+     * @return CalendarEventVersion|false|null
      */
     public function getApprovedVersion()
     {
@@ -172,7 +174,7 @@ class CalendarEvent implements ObjectInterface, CategoryMemberInterface
     }
 
     /**
-     * @return CalendarEventVersion
+     * @return CalendarEventVersion|false|null
      */
     public function getRecentVersion()
     {

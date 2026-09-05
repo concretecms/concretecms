@@ -29,6 +29,8 @@ class NewPrivateMessageListView extends StandardListView
         if (is_object($message)) {
             return $message->getMessageAuthorObject();
         }
+
+        return null;
     }
 
     public function getActionDescription()

@@ -21,7 +21,7 @@ final class MiddlewareStack implements StackInterface, ApplicationAwareInterface
     protected $middleware = [];
 
     /**
-     * @var \Concrete\Core\Http\Middleware\DispatcherFrame|Mock_BlockController_7fcd43c1|Mock_TrackableBlockController_a75af608
+     * @var \Concrete\Core\Http\Middleware\DelegateInterface|null
      */
     protected $dispatcher;
 

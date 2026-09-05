@@ -51,6 +51,7 @@ class Edit extends Node
         if (!$request->request->has('treeNodeGroupFolderName') ||
             strlen($request->request->get('treeNodeGroupFolderName')) === 0) {
             $error->add(t('Invalid title for folder'));
+            $title = null;
         } else {
             $title = $request->request->get('treeNodeGroupFolderName');
         }
@@ -63,6 +64,7 @@ class Edit extends Node
             ])) {
 
             $error->add(t('Invalid value for field contains.'));
+            $contains = null;
         } else {
             $contains = $request->request->get('contains');
         }

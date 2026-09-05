@@ -37,7 +37,6 @@ class ForeignKeyFixer
     /**
      * Set a callback to be called to log/display progress.
      *
-     * @param \Closure|null $callback
      * @param null|Closure $value
      *
      * @return $this

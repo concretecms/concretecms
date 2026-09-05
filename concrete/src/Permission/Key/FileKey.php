@@ -8,6 +8,11 @@ use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\Permission\Duration as PermissionDuration;
 use PermissionKey;
 
+/**
+ * @property \Concrete\Core\Entity\File\File|null $permissionObject
+ * @method \Concrete\Core\Permission\Access\ListItem\FileListItem[] getAccessListItems($accessType = self::ACCESS_TYPE_INCLUDE, $filterEntities = [], $checkCache = true)
+ * @method \Concrete\Core\Entity\File\File|null getPermissionObject()
+ */
 class FileKey extends Key
 {
     public function validate()

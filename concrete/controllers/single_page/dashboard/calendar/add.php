@@ -86,7 +86,7 @@ class Add extends DashboardCalendarPageController
             if ($this->request->request->has('eventPageParentID')) {
                 $parent = Page::getByID($this->request->request->get('eventPageParentID'));
                 if (!is_object($parent) || $parent->isError()) {
-                    unset($parent);
+                    $parent = null;
                 }
             }
 

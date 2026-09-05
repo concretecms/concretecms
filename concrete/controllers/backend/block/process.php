@@ -24,7 +24,7 @@ class Process extends AbstractController
     /**
      * @param int $cID
      * @param string $arHandle
-     * @param int $bID
+     * @param int $stackBlockID
      * @param int $pcID
      * @param int|null $dragAreaBlockID
      * @param int|null $orphanedBlockID

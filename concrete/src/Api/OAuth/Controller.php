@@ -56,7 +56,7 @@ final class Controller implements LoggerAwareInterface
     /** @var \Concrete\Core\Config\Repository\Repository */
     private $config;
 
-    /** @var \Concrete\Core\User\User The logged in user */
+    /** @var \Concrete\Core\User\User|null The logged in user */
     private $user;
 
     use LoggerAwareTrait;

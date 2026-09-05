@@ -129,7 +129,7 @@ class UserInterface
      *    $bh->buttons($myButton1, $myButton2, $myButton3);
      * </code>.
      *
-     * @param string $buttons
+     * @param string|string[]|null $buttons
      *
      * @return string
      */
@@ -343,7 +343,7 @@ class UserInterface
      * @param string $error
      * @param bool|\Exception $exception
      *
-     * @return Response;
+     * @return Response
      */
     public function buildErrorResponse($title, $error, $exception = false)
     {

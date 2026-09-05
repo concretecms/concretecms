@@ -7,7 +7,7 @@ use JsonSerializable;
 class ExternalFileList implements JsonSerializable
 {
     protected $files;
-    /** @var @var int */
+    /** @var int */
     protected $totalFiles;
 
     /**

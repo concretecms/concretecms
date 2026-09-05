@@ -63,6 +63,8 @@ class FileFolder extends TreeNode
         } elseif ($this->getTreeNodeParentID() == 0) {
             return t('Folders');
         }
+
+        return '';
     }
 
     /**
@@ -76,7 +78,7 @@ class FileFolder extends TreeNode
     }
 
     /**
-     * @return \Concrete\Core\Entity\File\StorageLocation\StorageLocation
+     * @return \Concrete\Core\Entity\File\StorageLocation\StorageLocation|null
      */
     public function getTreeNodeStorageLocationObject()
     {

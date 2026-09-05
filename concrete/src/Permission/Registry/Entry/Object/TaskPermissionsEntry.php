@@ -40,7 +40,7 @@ class TaskPermissionsEntry implements EntryInterface
             $listItems = $pa->getAccessListItems($this->accessType);
             foreach($listItems as $item) {
                 /**
-                 * @var $item ListItem
+                 * @var \Concrete\Core\Permission\Access\ListItem\ListItem $item
                  */
                 $entity = $item->getAccessEntityObject();
                 if ($entity == $mixed->getAccessEntity()) {

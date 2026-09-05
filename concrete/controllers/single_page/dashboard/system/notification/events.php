@@ -130,7 +130,7 @@ class Events extends DashboardPageController
         $ping = $this->request->request->get('ping');
         $service = $this->app->make(MercureService::class);
         /**
-         * @var $subscriber Subscriber
+         * @var Subscriber $subscriber
          */
         $event = new TestConnectionEvent($ping);
         $service->publish($event);
@@ -173,6 +173,9 @@ class Events extends DashboardPageController
             if (!$publisherPrivateKey || !$filesystem->exists($publisherPrivateKey)) {
                 $this->error->add(t('You must specify a valid file path for the publisher private key.'));
             }
+        } else {
+            $publisherPrivateKey = null;
+            $subscriberPrivateKey = null;
         }
 
         if (!$this->error->has()) {

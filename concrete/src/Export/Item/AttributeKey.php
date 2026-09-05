@@ -15,7 +15,7 @@ class AttributeKey implements ItemInterface
     public function export($key, \SimpleXMLElement $xml)
     {
         /**
-         * @var $key Key
+         * @var Key $key
          */
         $type = $key->getAttributeType()->getAttributeTypeHandle();
         $categoryHandle = $key->getAttributeKeyCategoryHandle();

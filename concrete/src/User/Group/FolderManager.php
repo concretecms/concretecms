@@ -45,7 +45,7 @@ class FolderManager
      *
      * @param mixed $folderID
      *
-     * @return \Concrete\Core\Tree\Node\Type\FileFolder|null
+     * @return \Concrete\Core\Tree\Node\Type\GroupFolder|null
      */
     public function getFolder($folderID)
     {
@@ -53,6 +53,8 @@ class FolderManager
         if ($node instanceof GroupFolder) {
             return $node;
         }
+
+        return null;
     }
 
     /**
@@ -66,6 +68,8 @@ class FolderManager
         if ($tree !== null) {
             return $tree->getRootTreeNodeObject();
         }
+
+        return null;
     }
 
     /**

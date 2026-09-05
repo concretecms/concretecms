@@ -27,6 +27,9 @@ use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Permission\Checker;
 use Concrete\Core\Error\UserMessageException;
 
+/**
+ * @phpstan-consistent-constructor
+ */
 class Version extends ConcreteObject implements PermissionObjectInterface, AttributeObjectInterface
 {
     use ObjectTrait;
@@ -36,21 +39,21 @@ class Version extends ConcreteObject implements PermissionObjectInterface, Attri
     /**
      * @deprecated what's deprecated is the public part of this property: use the getVersionID() method instead
      *
-     * @var int|string
+     * @var int|numeric-string
      */
     public $cvID;
 
     /**
      * @deprecated what's deprecated is the public part of this property: use the isApproved() or the isApprovedNow() methods instead
      *
-     * @var bool|int|string
+     * @var bool|0|1|'0'|'1'
      */
     public $cvIsApproved;
 
     /**
      * @deprecated what's deprecated is the public part of this property: use the isNew() / removeNewStatus() method instead
      *
-     * @var bool|int|string
+     * @var bool|0|1|'0'|'1'
      */
     public $cvIsNew;
 
@@ -94,21 +97,21 @@ class Version extends ConcreteObject implements PermissionObjectInterface, Attri
     /**
      * The ID of the page template.
      *
-     * @var int|string
+     * @var int|numeric-string
      */
     public $pTemplateID;
 
     /**
      * @deprecated what's deprecated is the public part of this property: use the getVersionAuthorUserID() method instead
      *
-     * @var int|string|null
+     * @var int|numeric-string|null
      */
     public $cvAuthorUID;
 
     /**
      * @deprecated what's deprecated is the public part of this property: use the getVersionApproverUserID() method instead
      *
-     * @var int|string|null
+     * @var int|numeric-string|null
      */
     public $cvApproverUID;
 
@@ -122,7 +125,7 @@ class Version extends ConcreteObject implements PermissionObjectInterface, Attri
     /**
      * The ID of the page theme.
      *
-     * @var int|string
+     * @var int|numeric-string
      */
     public $pThemeID;
 
@@ -159,7 +162,7 @@ class Version extends ConcreteObject implements PermissionObjectInterface, Attri
     /**
      * @deprecated what's deprecated is the public part of this property: use the getCollectionID() method instead
      *
-     * @var int
+     * @var int|numeric-string
      */
     public $cID;
 
@@ -355,6 +358,8 @@ class Version extends ConcreteObject implements PermissionObjectInterface, Attri
 
             return $attributeValue;
         }
+
+        return null;
     }
 
     /**
@@ -372,7 +377,8 @@ class Version extends ConcreteObject implements PermissionObjectInterface, Attri
     /**
      * Is this version approved and in the publish interval?
      *
-     * @var string|int|\DateTime|null $when a date/time representation (empty: now)
+     * @param string|int|\DateTime|null $when a date/time representation (empty: now)
+     *
      * @return bool
      */
     public function isApprovedNow($when = null)
@@ -528,6 +534,8 @@ class Version extends ConcreteObject implements PermissionObjectInterface, Attri
                 $this->cvAuthorUID,
             ));
         }
+
+        return null;
     }
 
     /**
@@ -545,6 +553,8 @@ class Version extends ConcreteObject implements PermissionObjectInterface, Attri
                 $this->cvApproverUID,
             ));
         }
+
+        return null;
     }
 
     /**

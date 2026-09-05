@@ -3,7 +3,6 @@ namespace Concrete\Core\Board\Instance\Slot\Content\Populator;
 
 use Concrete\Core\Board\Instance\Item\Data\DataInterface;
 use Concrete\Core\Board\Instance\Item\Data\PageData;
-use Concrete\Core\Board\Instance\Logger\Logger;
 use Concrete\Core\Board\Instance\Logger\LoggerInterface;
 use Concrete\Core\Board\Instance\Slot\Content\SummaryObjectCreatorTrait;
 use Concrete\Core\Page\Page;
@@ -22,7 +21,7 @@ class PagePopulator extends AbstractPopulator
 
     /**
      * @param PageData $data
-     * @param Logger|null $logger
+     * @param LoggerInterface $logger
      * @return array
      */
     public function createContentObjects(DataInterface $data, LoggerInterface $logger): array

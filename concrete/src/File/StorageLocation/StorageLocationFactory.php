@@ -87,7 +87,7 @@ class StorageLocationFactory
      */
     public function fetchByName($name)
     {
-        return $this->entityManager->getRepository(StorageLocationEntity::class, 'l')->findOneBy(['fslName' => $name]);
+        return $this->entityManager->getRepository(StorageLocationEntity::class)->findOneBy(['fslName' => $name]);
     }
 
     /**
@@ -105,7 +105,7 @@ class StorageLocationFactory
     /**
      * Fetch the default storage location.
      *
-     * @return StorageLocationEntity
+     * @return StorageLocationEntity|null
      */
     public function fetchDefault()
     {

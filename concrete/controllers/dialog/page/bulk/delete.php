@@ -15,7 +15,7 @@ class Delete extends BackendInterfaceController
 
     protected function getObjectFromRequestId(string $id)
     {
-        $page = Page::getByID($id, 'RECENT');
+        $page = Page::getByID((int) $id, 'RECENT');
         if ($page && !$page->isError()) {
             return $page;
         }

@@ -8,7 +8,7 @@ interface IndexManagerInterface
     /**
      * Get the indexes for a type
      * @param string $type
-     * @return Iterator
+     * @return iterable<string, \Concrete\Core\Search\Index\IndexInterface>
      */
     public function getIndexes($type);
 

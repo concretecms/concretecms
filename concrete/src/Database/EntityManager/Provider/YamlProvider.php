@@ -28,7 +28,6 @@ class YamlProvider implements ProviderInterface
     /**
      * Constructor
      * 
-     * @param Package $pkg
      * @param boolean $useDefaultSettings  if it's set to false, no default 
      *                                      mapping information will be added to 
      *                                      the drivers array

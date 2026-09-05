@@ -24,6 +24,11 @@ class CsvWriter
     /** @var string[] The memoized result of translating the status strings */
     protected $status;
 
+    /**
+     * @var \Concrete\Core\Entity\Attribute\Key\UserKey[]|null
+     */
+    protected $attributeKeys;
+
     public function __construct(Writer $writer, UserCategory $category, Date $date)
     {
         $this->writer = $writer;
@@ -66,7 +71,7 @@ class CsvWriter
     /**
      * Turn a user into an array
      * @param \Concrete\Core\User\UserInfo $user
-     * @return array
+     * @return \Generator
      */
     private function projectUser(UserInfo $user)
     {

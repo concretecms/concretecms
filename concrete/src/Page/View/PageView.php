@@ -287,9 +287,6 @@ class PageView extends View
     }
 
 
-    /**
-     * @param mixed $customPreviewRequest
-     */
     public function setCustomPreviewRequest(PreviewRequestInterface $customPreviewRequest): void
     {
         $this->customPreviewRequest = $customPreviewRequest;

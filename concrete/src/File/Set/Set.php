@@ -25,6 +25,8 @@ use Concrete\Core\User\User;
  * Represents a file set.
  *
  * @method static Set add(string $setName, int $fsOverrideGlobalPermissions = 0, bool|\User $u = false, int $type = self::TYPE_PUBLIC) Deprecated method. Use Set::create instead.
+ *
+ * @phpstan-consistent-constructor
  */
 class Set
 {
@@ -97,7 +99,7 @@ class Set
             return [];
         }
 
-        /** @var $database \Concrete\Core\Database\Connection\Connection */
+        /** @var \Concrete\Core\Database\Connection\Connection $database */
         $database = $app->make('database')->connection();
         $fileSets = array();
 
@@ -196,7 +198,7 @@ class Set
      *
      * @param int $fsID
      *
-     * @return Set
+     * @return Set|null
      */
     public static function getByID($fsID)
     {
@@ -215,6 +217,8 @@ class Set
 
             return $fs;
         }
+
+        return null;
     }
 
     public static function __callStatic($name, $arguments)
@@ -306,7 +310,7 @@ class Set
      * @param  string   $fsName
      * @param  int|bool $uID
      *
-     * @return Set
+     * @return Set|null
      */
     public static function getByName($fsName, $uID = false)
     {
@@ -322,12 +326,14 @@ class Set
 
             return $fs;
         }
+
+        return null;
     }
 
     /**
      * Returns an array of File objects from the current set.
      *
-     * @return ConcreteFile[]
+     * @return \Concrete\Core\Entity\File\File[]
      */
     public function getFiles()
     {
@@ -419,7 +425,7 @@ class Set
     }
 
     /**
-     * @return int
+     * @return int|false
      */
     public function overrideGlobalPermissions()
     {

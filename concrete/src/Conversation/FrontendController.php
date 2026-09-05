@@ -91,7 +91,7 @@ abstract class FrontendController extends Controller
     /**
      * The Conversation instance for in tbe block specified by the request.
      *
-     * @var Conversation
+     * @var Conversation|null
      */
     private $blockConversation;
 

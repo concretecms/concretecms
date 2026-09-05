@@ -450,7 +450,7 @@ final class ClassAutoloader
     /**
      * Add multiple class aliases.
      *
-     * @param array $aliass array keys are the aliases, array values are the actual classes
+     * @param array $aliases array keys are the aliases, array values are the actual classes
      *
      * @return $this
      */
@@ -706,9 +706,6 @@ final class ClassAutoloader
         }
     }
 
-    /**
-     * @param string $class the FQN name of the class (must not start with '\')
-     */
     private function listCustomPackageInfo(string $packageHandle): array
     {
         if (isset($this->packageInfo[$packageHandle]['custom'])) {

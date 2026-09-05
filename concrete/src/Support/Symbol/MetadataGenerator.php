@@ -3,6 +3,8 @@
 namespace Concrete\Core\Support\Symbol;
 
 use Concrete\Core\Application\Application;
+use Concrete\Core\Database\Connection\ConnectionFactory;
+use Concrete\Core\Database\EntityManagerFactoryInterface;
 use Concrete\Core\Package\Event\PackageEntities as PackageEntitiesEvent;
 use Concrete\Core\Support\Facade\Application as ApplicationFacade;
 use Doctrine\ORM\EntityManagerInterface;
@@ -53,7 +55,7 @@ class MetadataGenerator
         $app = ApplicationFacade::getFacadeApplication();
         $pev = new PackageEntitiesEvent();
         $app->make('director')->dispatch('on_list_package_entities', $pev);
-        $entityManagers = array_merge([$app->make(EntityManagerInterface::class)], $pev->getEntityManagers());
+        $entityManagers = array_merge([$this->getCoreEntityManager($app)], $pev->getEntityManagers());
         foreach ($entityManagers as $entityManager) {
             /* @var EntityManagerInterface $entityManager */
             $metadataFactory = $entityManager->getMetadataFactory();
@@ -124,6 +126,27 @@ class MetadataGenerator
         $output = array_merge($output, $this->getOverride('\Doctrine\ORM\EntityManagerInterface::find(0)', ['' => "'@'"], '$em->find(EntityClass::class, $id)'));
 
         return implode("\n", $output);
+    }
+
+    /**
+     * Get the entity manager of the core.
+     * If Concrete is not installed, we create it with a database connection that will never be used:
+     * the entity metadata are read from the entity classes, not from the database.
+     */
+    private function getCoreEntityManager(Application $app): EntityManagerInterface
+    {
+        if ($app->isInstalled()) {
+            return $app->make(EntityManagerInterface::class);
+        }
+        $connection = $app->make(ConnectionFactory::class)->createConnection([
+            'driver' => 'c5_pdo_mysql',
+            'host' => 'localhost',
+            'dbname' => 'concrete',
+            // With serverVersion Doctrine doesn't need to connect to the database to detect the platform
+            'serverVersion' => '5.7',
+        ]);
+
+        return $app->make(EntityManagerFactoryInterface::class)->create($connection);
     }
 
     /**

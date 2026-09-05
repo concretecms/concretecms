@@ -13,6 +13,7 @@ use Concrete\Core\Routing\RedirectResponse;
 use Concrete\Core\User\PostLoginLocation;
 use Concrete\Core\User\PostLoginLocationUrl;
 use Concrete\Core\User\User;
+use Symfony\Component\HttpFoundation\RedirectResponse as SymfonyRedirectResponse;
 use Exception;
 use PageController;
 use UserAttributeKey;
@@ -408,7 +409,7 @@ class Login extends PageController implements LoggerAwareInterface
         }
     }
 
-    private function logoutAndRedirect(): RedirectResponse
+    private function logoutAndRedirect(): SymfonyRedirectResponse
     {
         $u = $this->app->make(User::class);
         $response = null;
@@ -469,6 +470,7 @@ class Login extends PageController implements LoggerAwareInterface
     {
         $nh = $this->app->make('helper/validation/numbers');
         $rcURL = '';
+        $pll = null;
         if ($this->request->query->has('rcURL')) {
             $requestRcURL = $this->request->query->get('rcURL');
             if (is_string($requestRcURL)) {

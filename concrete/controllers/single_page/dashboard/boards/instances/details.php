@@ -21,7 +21,7 @@ class Details extends DashboardPageController
 
     /**
      * @param $id
-     * @return Instance
+     * @return Instance|null
      */
     protected function getInstance($id)
     {
@@ -36,6 +36,8 @@ class Details extends DashboardPageController
                 }
             }
         }
+
+        return null;
     }
 
     public function refresh_pool($id = null)
@@ -107,7 +109,7 @@ class Details extends DashboardPageController
         $instance = $this->getInstance($id);
         if ($instance) {
             /**
-             * @var $instance Instance
+             * @var Instance $instance
              */
             $site = $instance->getsite();
             $home = $site->getSiteHomePageObject();

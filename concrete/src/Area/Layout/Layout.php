@@ -23,17 +23,17 @@ abstract class Layout extends ConcreteObject
     public $block;
 
     /**
-     * @var int
+     * @var int|numeric-string
      */
     public $arLayoutID;
 
     /**
-     * @var bool
+     * @var bool|0|1|'0'|'1'
      */
     public $arLayoutUsesThemeGridFramework;
 
     /**
-     * @var int
+     * @var int|numeric-string
      */
     public $arLayoutNumColumns;
 

@@ -26,16 +26,15 @@ class FileValue extends AbstractValue
     protected $fvID;
 
     /**
-     * @return
+     * @return \Concrete\Core\Entity\File\Version|null
      */
     public function getVersion()
     {
-        return File::getByID($this->fID, $this->fvID);
+        $file = File::getByID($this->fID);
+
+        return $file === null ? null : $file->getVersion($this->fvID);
     }
 
-    /**
-     * @param mixed $version
-     */
     public function setVersion(Version $version)
     {
         $this->fID = $version->getFileID();

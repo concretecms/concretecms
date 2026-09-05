@@ -37,7 +37,7 @@ class Archive
         if (!file_exists($file)) {
             throw new Exception(t('Could not transfer to temp directory - file not found.'));
         } else {
-            $dir = time();
+            $dir = (string) time();
             copy($file, $this->f->getTemporaryDirectory() . '/'. $dir . '.zip');
 
             return $dir;
@@ -52,7 +52,7 @@ class Archive
      *
      * @param string $directory The base name of the file (without extension, assumed to be in the the temporary directory).
      *
-     * @return string Return the full path of the extracted directory.
+     * @return string|null Return the full path of the extracted directory.
      */
     protected function unzip($directory)
     {
@@ -64,6 +64,8 @@ class Archive
 
             return $this->f->getTemporaryDirectory() . '/' . $directory;
         }
+
+        return null;
     }
 
     /**
@@ -92,7 +94,7 @@ class Archive
      *
      * @todo This is theme-specific - it really ought to be moved to the page_theme_archive class, at least most it.
      *
-     * @param string $zipfile
+     * @param string $file
      * @param bool $inplace Set to false if $file should be moved to the temporary directory before working on it, set to true if it's already in the temp directory.
      *
      * @return string Returns the base directory into which the zipfile was unzipped

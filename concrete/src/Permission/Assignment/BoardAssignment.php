@@ -5,6 +5,10 @@ use Concrete\Core\Entity\Board\Board;
 use Concrete\Core\Permission\Access\Access;
 use Concrete\Core\Permission\Key\Key;
 
+/**
+ * @property \Concrete\Core\Entity\Board\Board|null $permissionObject
+ * @method \Concrete\Core\Entity\Board\Board|null getPermissionObject()
+ */
 class BoardAssignment extends Assignment
 {
     protected $board;
@@ -53,7 +57,7 @@ class BoardAssignment extends Assignment
             return $pae;
         }
 
-        return false;
+        return null;
     }
 
     /**

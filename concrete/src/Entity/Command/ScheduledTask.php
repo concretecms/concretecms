@@ -167,7 +167,7 @@ class ScheduledTask implements \JsonSerializable
     {
         $serializer = app(JsonSerializer::class);
         /**
-         * @var $serializer Serializer
+         * @var JsonSerializer $serializer
          */
         return $serializer->denormalize($this->getInput(), Input::class);
     }

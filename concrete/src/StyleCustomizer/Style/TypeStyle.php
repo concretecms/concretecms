@@ -43,6 +43,8 @@ class TypeStyle extends Style
                 $value = $style->createValueFromVariableCollection($subject);
             } else if ($parseType === self::PARSE_SUBJECT_REQUEST) {
                 $value = $style->createValueFromRequestDataCollection($subject);
+            } else {
+                $value = null;
             }
             if ($value) {
                 $styleValue = new StyleValue($style, $value);

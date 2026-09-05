@@ -10,6 +10,9 @@ use Concrete\Core\User\UserInfoRepository;
 use DateTime;
 use Monolog\Logger as Monolog;
 
+/**
+ * @phpstan-consistent-constructor
+ */
 class LogEntry
 {
     /** @var int|null */
@@ -20,7 +23,7 @@ class LogEntry
     public $time;
     /** @var string|null */
     public $message;
-    /** @var string|null */
+    /** @var int|null */
     public $level;
     /** @var UserInfo|null */
     public $user;
@@ -144,7 +147,7 @@ class LogEntry
     }
 
     /**
-     * @return string|null
+     * @return int|null
      */
     public function getLevel()
     {
@@ -152,7 +155,7 @@ class LogEntry
     }
 
     /**
-     * @param string|null $level
+     * @param int|null $level
      * @return LogEntry
      */
     public function setLevel($level)
@@ -217,7 +220,7 @@ class LogEntry
     /**
      * Gets the HTML code for the icon of the logging level.
      *
-     * @return string
+     * @return string|null
      */
     public function getLevelIcon()
     {
@@ -239,6 +242,8 @@ class LogEntry
             case Monolog::DEBUG:
                 return '<i class="text-info fas fa-cog launch-tooltip" title="' . $this->getLevelDisplayName() . '"></i>';
         }
+
+        return null;
     }
 
     /**
@@ -280,7 +285,7 @@ class LogEntry
     /**
      * Gets the timestamp of the log.
      *
-     * @return string
+     * @return DateTime|null
      */
     public function getTimestamp()
     {
@@ -302,6 +307,8 @@ class LogEntry
         if ($row) {
             return new static($row);
         }
+
+        return null;
     }
 
     /**

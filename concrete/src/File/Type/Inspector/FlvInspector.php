@@ -87,7 +87,7 @@ class FlvInspector extends Inspector
                                 }
                                 break;
                         }
-                        $tagOffset += $dataSize + 15;
+                        $tagOffset += $tagData['dataSize'] + 15;
                         break; // Let's just parse the first tag
                     }
                 }
@@ -105,7 +105,6 @@ class FlvInspector extends Inspector
     }
 
     /**
-     * @param Version $version
      * @param Version $fv
      *
      * @return resource|null

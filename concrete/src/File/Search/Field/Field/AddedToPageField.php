@@ -1,7 +1,7 @@
 <?php
 namespace Concrete\Core\File\Search\Field\Field;
 
-use Concrete\Core\File\FileList;
+use Concrete\Core\File\FolderItemList;
 use Concrete\Core\Search\Field\AbstractField;
 use Concrete\Core\Search\Field\FieldInterface;
 use Concrete\Core\Search\ItemList\ItemList;
@@ -28,8 +28,11 @@ class AddedToPageField extends AbstractField
     }
 
     /**
-     * @param FileList $list
-     * @param $request
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Search\Field\FieldInterface::filterList()
+     *
+     * @param FolderItemList $list
      */
     public function filterList(ItemList $list)
     {

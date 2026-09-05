@@ -42,10 +42,8 @@ class Stack extends Page
         switch ($type) {
             case 'global_area':
                 return static::ST_TYPE_GLOBAL_AREA;
-                break;
             default:
                 return static::ST_TYPE_USER_ADDED;
-                break;
         }
     }
 
@@ -100,7 +98,7 @@ class Stack extends Page
      * @param string $version
      * \Concrete\Core\Site\Tree\TreeInterface|null $siteTree
      *
-     * @return bool|\Concrete\Core\Page\Page
+     * @return static|false|null
      */
     public static function getByPath($path, $version = 'RECENT', ?TreeInterface $siteTree = null)
     {
@@ -129,11 +127,11 @@ class Stack extends Page
 
     /**
      * @param string $stackName
-     * @param string $cvID
+     * @param int|string $cvID
      * \Concrete\Core\Site\Tree\TreeInterface|null $site
      * @param int $multilingualContentSource
      *
-     * @return self|false|null
+     * @return static|null
      */
     public static function getByName($stackName, $cvID = 'RECENT', ?TreeInterface $site = null, $multilingualContentSource = self::MULTILINGUAL_CONTENT_SOURCE_CURRENT)
     {
@@ -189,9 +187,9 @@ class Stack extends Page
 
     /**
      * @param int    $cID
-     * @param string $cvID
+     * @param int|string $cvID
      *
-     * @return \Concrete\Core\Page\Page|self|false
+     * @return static|null
      */
     public static function getByID($cID, $cvID = 'RECENT')
     {
@@ -219,7 +217,7 @@ class Stack extends Page
      * @param $name
      * @param int $type
      *
-     * @return self|false
+     * @return static|null
      */
     private static function addStackToCategory(\Concrete\Core\Page\Page $parent, $name, $type = 0)
     {
@@ -271,7 +269,7 @@ class Stack extends Page
     /**
      * @param $area
      *
-     * @return self|false
+     * @return static|null
      */
     public static function addGlobalArea($area)
     {
@@ -284,7 +282,7 @@ class Stack extends Page
      * @param $stack
      * @param \Concrete\Core\Page\Stack\Folder\Folder|null $folder
      *
-     * @return self|false
+     * @return static|null
      */
     public static function addStack($stack, ?Folder $folder = null)
     {
@@ -393,10 +391,8 @@ class Stack extends Page
         switch ($this->getStackType()) {
             case static::ST_TYPE_GLOBAL_AREA:
                 return 'global_area';
-                break;
             default:
                 return false;
-                break;
         }
     }
 
@@ -526,7 +522,7 @@ class Stack extends Page
 
     /**
      * @param \Concrete\Core\Multilingual\Page\Section\Section $section
-     * @param array{copyContents: bool = true} $options 
+     * @param array{copyContents?: bool} $options 
      *
      * @return self
      */

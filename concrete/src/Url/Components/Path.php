@@ -9,7 +9,6 @@ class Path extends \League\Url\Components\Path
     protected $trail = false;
 
     /**
-     * @param \League\Url\Components\Path $old_path
      * @param bool                        $trailing_slash
      */
     public function __construct($data, $trailing_slash = false)

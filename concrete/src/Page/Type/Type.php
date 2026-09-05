@@ -38,9 +38,18 @@ use Concrete\Core\Page\Collection\Version\VersionList;
 use Concrete\Core\Page\Type\Composer\Control\CorePageProperty\CorePageProperty as CorePagePropertyPageTypeComposerControl;
 use Concrete\Core\Utility\Service\Xml;
 
+/**
+ * @phpstan-consistent-constructor
+ */
 class Type extends ConcreteObject implements \Concrete\Core\Permission\ObjectInterface, AssignableObjectInterface
 {
+    /**
+     * @var int|numeric-string|null
+     */
     protected $ptDefaultPageTemplateID = 0;
+    /**
+     * @var int|numeric-string|null
+     */
     protected $ptDefaultThemeID = 0;
 
     use AssignableObjectTrait;
@@ -341,7 +350,7 @@ class Type extends ConcreteObject implements \Concrete\Core\Permission\ObjectInt
             if ($this->getPageTypeDefaultThemeID() > 0 && $theme = $this->getPageTypeDefaultThemeObject()) {
                 $template->setTheme($theme);
             } else {
-                $template->setTheme(false);
+                $template->setTheme(null);
             }
         }
 
@@ -1193,6 +1202,8 @@ class Type extends ConcreteObject implements \Concrete\Core\Permission\ObjectInt
 
             return $validator;
         }
+
+        return null;
     }
 
     /**
@@ -1205,6 +1216,8 @@ class Type extends ConcreteObject implements \Concrete\Core\Permission\ObjectInt
             $saver->setPageTypeObject($this);
             return $saver;
         }
+
+        return null;
     }
 
 

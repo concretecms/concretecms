@@ -61,9 +61,7 @@ class Controller extends AbstractController
      */
     public function getThemeViewTemplate()
     {
-        if (isset($this->view)) {
-            $templateFromView = $this->view->getViewTemplateFile();
-        }
+        $templateFromView = isset($this->view) ? $this->view->getViewTemplateFile() : null;
 
         if (isset($this->themeViewTemplate) && $templateFromView == FILENAME_THEMES_VIEW) {
             return $this->themeViewTemplate;

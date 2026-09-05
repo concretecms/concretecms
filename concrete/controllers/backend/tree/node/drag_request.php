@@ -17,6 +17,11 @@ class DragRequest extends UserInterface
      */
     protected $validationToken = '';
 
+    /**
+     * @var array|false|null
+     */
+    protected $nodes;
+
     protected function getNodes()
     {
         $sourceNodes = array();

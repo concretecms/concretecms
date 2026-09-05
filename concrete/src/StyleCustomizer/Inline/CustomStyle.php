@@ -3,6 +3,11 @@ namespace Concrete\Core\StyleCustomizer\Inline;
 
 abstract class CustomStyle
 {
+    /**
+     * @var \Concrete\Core\Entity\StyleCustomizer\Inline\StyleSet
+     */
+    protected $set;
+
     public function getStyleSet()
     {
         return $this->set;

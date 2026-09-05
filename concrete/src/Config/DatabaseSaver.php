@@ -7,7 +7,7 @@ use Concrete\Core\Support\Facade\Database;
 class DatabaseSaver implements SaverInterface
 {
     /**
-     * @var \Concrete\Core\Database\Connection\Connection
+     * @var \Concrete\Core\Database\Connection\Connection|null
      */
     protected $connection;
 
@@ -58,6 +58,8 @@ class DatabaseSaver implements SaverInterface
         $amount_deleted = $query->execute();
 
         $this->doSave($item, $value, $environment, $group, $namespace);
+
+        return true;
     }
 
     private function doSave($item, $value, $environment, $group, $namespace = null)

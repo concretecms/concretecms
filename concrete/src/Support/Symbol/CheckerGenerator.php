@@ -5,21 +5,31 @@ declare(strict_types=1);
 namespace Concrete\Core\Support\Symbol;
 
 use Concrete\Core\File\Service\File as FileService;
-use Concrete\Core\Permission\Category;
 use Concrete\Core\Permission\Checker;
-use Concrete\Core\Permission\Key\Key;
 use Concrete\Core\Permission\ObjectInterface;
+use Concrete\Core\Support\Symbol\CheckerGenerator\CIFPermissionKeysProvider;
+use Concrete\Core\Support\Symbol\CheckerGenerator\DatabasePermissionKeysProvider;
 use Concrete\Core\Support\Symbol\CheckerGenerator\Method;
-use ReflectionClass;
-use ReflectionMethod;
-use Throwable;
+use Concrete\Core\Support\Symbol\CheckerGenerator\PermissionKeysProviderInterface;
+
+defined('C5_EXECUTE') or die('Access Denied.');
 
 class CheckerGenerator
 {
     /**
-     * @var \Concrete\Core\File\Service\File
+     * @var \Concrete\Core\Support\Symbol\ClassLister
      */
-    private $fileService;
+    private $classLister;
+
+    /**
+     * @var \Concrete\Core\Support\Symbol\CheckerGenerator\PermissionKeysProviderInterface
+     */
+    private $permissionKeysProvider;
+
+    /**
+     * @var \Concrete\Core\Support\Symbol\PhpDocTypeResolver
+     */
+    private $typeResolver;
 
     /**
      * @var \Concrete\Core\Support\Symbol\CheckerGenerator\Method[]|null
@@ -32,14 +42,18 @@ class CheckerGenerator
     private $namespace;
 
     /**
-     * @var bool
+     * @param bool $isInstalled is Concrete installed? If so, the permission keys are read from the database, otherwise from the CIF files of the core
+     * @param \Concrete\Core\Support\Symbol\CheckerGenerator\PermissionKeysProviderInterface|null $permissionKeysProvider a custom provider of the permission keys (if NULL, we'll use the default one depending on $isInstalled)
+     * @param \Concrete\Core\Support\Symbol\ClassLister|null $classLister the lister of the core classes (if NULL, we'll create a new one)
      */
-    private $isInstalled;
-
-    public function __construct(FileService $fileService, bool $isInstalled)
+    public function __construct(FileService $fileService, bool $isInstalled, ?PermissionKeysProviderInterface $permissionKeysProvider = null, ?ClassLister $classLister = null)
     {
-        $this->fileService = $fileService;
-        $this->isInstalled = $isInstalled;
+        if ($permissionKeysProvider === null) {
+            $permissionKeysProvider = $isInstalled ? new DatabasePermissionKeysProvider() : new CIFPermissionKeysProvider($fileService, DIR_BASE_CORE . '/config/install');
+        }
+        $this->permissionKeysProvider = $permissionKeysProvider;
+        $this->classLister = $classLister ?? new ClassLister($fileService, 'Concrete\Core', DIR_BASE_CORE . '/' . DIRNAME_CLASSES);
+        $this->typeResolver = new PhpDocTypeResolver();
     }
 
     public function getNamespace(): string
@@ -122,7 +136,7 @@ class CheckerGenerator
     /**
      * @return \Concrete\Core\Support\Symbol\CheckerGenerator\Method[]
      */
-    private function getMethods(): array
+    public function getMethods(): array
     {
         if ($this->methods === null) {
             $this->methods = $this->listMethods();
@@ -136,11 +150,14 @@ class CheckerGenerator
      */
     private function listMethods(): array
     {
-        $all = $this->listMethodsIn('Concrete\Core', DIR_BASE_CORE . '/' . DIRNAME_CLASSES);
-        if ($this->isInstalled) {
-            foreach (Category::getList() as $category) {
-                $all = array_merge($all, $this->generateMethodsFromCategory($category->getPermissionKeyCategoryHandle()));
+        $all = [];
+        foreach ($this->classLister->getClassNames() as $className) {
+            if (in_array(ObjectInterface::class, class_implements($className), true)) {
+                $all = array_merge($all, $this->analyzeObjectInterfaceClass($className));
             }
+        }
+        foreach ($this->permissionKeysProvider->getCategoryHandles() as $categoryHandle) {
+            $all = array_merge($all, $this->generateMethodsFromCategory($categoryHandle));
         }
         $merged = [];
         foreach ($all as $item) {
@@ -167,48 +184,10 @@ class CheckerGenerator
     /**
      * @return \Concrete\Core\Support\Symbol\CheckerGenerator\Method[]
      */
-    private function listMethodsIn(string $namespacePrefix, string $parentDirectory): array
-    {
-        $result = [];
-        $matches = null;
-        foreach ($this->fileService->getDirectoryContents($parentDirectory) as $name) {
-            if ($name === '__IDE_SYMBOLS__.php') {
-                continue;
-            }
-            if (preg_match('/^(\w.*)\.php/i', $name, $matches)) {
-                $className = $namespacePrefix . '\\' . $matches[1];
-                $classExists = null;
-                if (strpos($className, 'Concrete\\Core\\Support\\CodingStyle\\') === 0) {
-                    $classExists = false;
-                }
-                if ($classExists === null) {
-                    $classExists = class_exists($className);
-                }
-                if ($classExists) {
-                    $interfaces = class_implements($className);
-                    if (in_array(ObjectInterface::class, $interfaces)) {
-                        $result = array_merge($result, $this->analyzeObjectInterfaceClass($className));
-                    }
-                }
-            } else {
-                $fullPath = $parentDirectory . '/' . $name;
-                if (is_dir($fullPath)) {
-                    $namespace = ($namespacePrefix === '' ? '' : "{$namespacePrefix}\\") . $name;
-                    $result = array_merge($result, $this->listMethodsIn($namespace, $fullPath));
-                }
-            }
-        }
-
-        return $result;
-    }
-
-    /**
-     * @return \Concrete\Core\Support\Symbol\CheckerGenerator\Method[]
-     */
     private function analyzeObjectInterfaceClass(string $objectInterfaceClassName): array
     {
         $result = [];
-        $objectInterfaceClass = new ReflectionClass($objectInterfaceClassName);
+        $objectInterfaceClass = new \ReflectionClass($objectInterfaceClassName);
         if ($objectInterfaceClass->isAbstract()) {
             return $result;
         }
@@ -218,11 +197,8 @@ class CheckerGenerator
         if (!is_string($categoryHandle = $objectInterfaceInstance->getPermissionObjectKeyCategoryHandle())) {
             $categoryHandle = '';
         }
-        if ($categoryHandle !== '' && $this->isInstalled) {
-            $category = Category::getByHandle($categoryHandle);
-            if ($category) {
-                $result = array_merge($result, $this->generateMethodsFromCategory($categoryHandle, $objectInterfaceClassName));
-            }
+        if ($categoryHandle !== '') {
+            $result = array_merge($result, $this->generateMethodsFromCategory($categoryHandle, $objectInterfaceClassName));
         }
         $responseClassName = $objectInterfaceInstance->getPermissionResponseClassName();
         $canonicalResponseClassName = null;
@@ -235,7 +211,7 @@ class CheckerGenerator
             }
         }
         if ($canonicalResponseClassName === null) {
-            $responseClass = new ReflectionClass($responseClassName);
+            $responseClass = new \ReflectionClass($responseClassName);
             $canonicalResponseClassName = $responseClass->getName();
         }
         if ($canonicalResponseClassName !== '') {
@@ -251,17 +227,16 @@ class CheckerGenerator
     private function generateMethodsFromCategory(string $categoryHandle, string $objectInterfaceClassName = ''): array
     {
         $result = [];
-        if ($this->isInstalled) {
-            foreach (Key::getList($categoryHandle) as $key) {
-                $name = 'can' . camelcase($key->getPermissionKeyHandle());
-                $method = new Method($name);
-                $method
-                    ->addDescription($key->getPermissionKeyDescription() ?: $key->getPermissionKeyName() ?: '')
-                    ->addForObjectOfClass($objectInterfaceClassName)
-                    ->addCategoryKeyHandle($categoryHandle)
-                ;
-                $result[] = $method;
-            }
+        foreach ($this->permissionKeysProvider->getKeys($categoryHandle) as $key) {
+            $name = 'can' . camelcase($key->getHandle());
+            $method = new Method($name);
+            $method
+                ->setReturnType('bool')
+                ->addDescription($key->getDescription() ?: $key->getName())
+                ->addForObjectOfClass($objectInterfaceClassName)
+                ->addCategoryKeyHandle($categoryHandle)
+            ;
+            $result[] = $method;
         }
 
         return $result;
@@ -269,9 +244,9 @@ class CheckerGenerator
 
     private function generateMethodsFromResponseClass(string $responseClassName, string $objectInterfaceClassName = '', string $categoryHandle = ''): array
     {
-        $responseClass = new ReflectionClass($responseClassName);
+        $responseClass = new \ReflectionClass($responseClassName);
         $result = [];
-        foreach ($responseClass->getMethods(ReflectionMethod::IS_PUBLIC) as $methodInfo) {
+        foreach ($responseClass->getMethods(\ReflectionMethod::IS_PUBLIC) as $methodInfo) {
             if (!preg_match('/^can[A-Z]/', $methodInfo->getName())) {
                 continue;
             }
@@ -285,11 +260,11 @@ class CheckerGenerator
                         if (is_object($parameter->getClass())) {
                             $param .= $parameter->getClass()->getName() . ' ';
                         }
-                    } catch (Throwable $_) {
+                    } catch (\Throwable $_) {
                     }
                 }
                 if ($parameter->isPassedByReference()) {
-                    $param .= "&";
+                    $param .= '&';
                 }
                 $param .= '$' . $parameter->getName();
 
@@ -337,6 +312,7 @@ class CheckerGenerator
             $phpDoc = (string) $methodInfo->getDocComment();
             $method = new Method($methodInfo->getName(), implode(', ', $params));
             $method
+                ->setReturnType($this->typeResolver->resolveReturnType($methodInfo))
                 ->setDeprecated(str_contains($phpDoc, '@deprecated'))
                 ->addForObjectOfClass($objectInterfaceClassName)
                 ->addCategoryKeyHandle($categoryHandle)

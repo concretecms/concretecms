@@ -4,6 +4,9 @@ namespace Concrete\Core\Block;
 
 use Database;
 
+/**
+ * @phpstan-consistent-constructor
+ */
 class CacheSettings
 {
     protected $btCacheBlockOutputOnPost = false;

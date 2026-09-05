@@ -37,7 +37,7 @@ abstract class AbstractValue implements AttributeValueInterface
      * generic value to retrieve this value against. So we make it possible
      * to set this via runtime. Do NOT set this if you are trying to actually
      * persist the attribute value object.
-     * @var \Concrete\Core\Entity\Attribute\Value\Value\AbstractValue
+     * @var \Concrete\Core\Entity\Attribute\Value\Value\AbstractValue|null
      */
     protected $attribute_value;
 
@@ -106,6 +106,8 @@ abstract class AbstractValue implements AttributeValueInterface
         if ($this->generic_value) {
             return $this->getController()->getAttributeValueObject();
         }
+
+        return null;
     }
 
     public function getValue($mode = false)

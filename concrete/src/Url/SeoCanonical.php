@@ -30,7 +30,7 @@ class SeoCanonical
     /**
      * The list of query string parameters to be included from generated canonical URLs.
      *
-     * @var string[]|\Traversable
+     * @var string[]
      */
     protected $includedQuerystringParameters;
 
@@ -46,13 +46,16 @@ class SeoCanonical
      *
      * @param ResolverManagerInterface $resolver the instance of the class that builds page URLs
      * @param Numbers $valn the instance of the numbers validator
-     * @param string[]|\Traversable $includedQuerystringParameters the list of query string parameters to be included from generated canonical URLs
+     * @param iterable<string>|null $includedQuerystringParameters the list of query string parameters to be included from generated canonical URLs
      */
     public function __construct(ResolverManagerInterface $resolver, Numbers $valn, $includedQuerystringParameters)
     {
         $this->resolver = $resolver;
         $this->valn = $valn;
-        $this->includedQuerystringParameters = $includedQuerystringParameters ?: [];
+        $this->includedQuerystringParameters = [];
+        foreach ($includedQuerystringParameters ?: [] as $parameter) {
+            $this->includedQuerystringParameters[] = $parameter;
+        }
     }
 
     /**
@@ -61,7 +64,7 @@ class SeoCanonical
      * @param Page|int $page The Page instance (or its collection ID)
      * @param Request|ParameterBag|Query|array|string|null $querystring Optional query string parameters
      *
-     * @return \League\URL\URLInterface|null
+     * @return \League\Url\UrlInterface|null
      */
     public function getPageCanonicalURL($page, $querystring = null)
     {

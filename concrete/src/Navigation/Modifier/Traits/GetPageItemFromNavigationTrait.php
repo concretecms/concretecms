@@ -17,7 +17,7 @@ trait GetPageItemFromNavigationTrait
         $matchedItem = null;
         foreach($items as $item) {
             /**
-             * @var $item PageItem
+             * @var PageItem $item
              */
             if ($item->getPageID() == $page->getCollectionID()) {
                 return $item;

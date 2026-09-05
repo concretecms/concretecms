@@ -5,6 +5,10 @@ use Concrete\Core\Permission\Access\Access;
 use Concrete\Core\Permission\Key\Key;
 use Concrete\Core\Entity\Calendar\Calendar;
 
+/**
+ * @property \Concrete\Core\Entity\Calendar\Calendar|null $permissionObject
+ * @method \Concrete\Core\Entity\Calendar\Calendar|null getPermissionObject()
+ */
 class CalendarAssignment extends Assignment
 {
     protected $calendar;
@@ -57,7 +61,7 @@ class CalendarAssignment extends Assignment
             return $pae;
         }
 
-        return false;
+        return null;
     }
 
     /**

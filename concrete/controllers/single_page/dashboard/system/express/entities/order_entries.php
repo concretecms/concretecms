@@ -33,7 +33,7 @@ class OrderEntries extends DashboardPageController
             $entity = $this->get('entity');
 
             $displayOrder = 0;
-            foreach($this->request->request->get('entry') as $entryID) {
+            foreach($this->request->request->all('entry') as $entryID) {
                 $entry = $this->entityManager->find('Concrete\Core\Entity\Express\Entry', $entryID);
                 if ($entry) {
                     $entry->setEntryDisplayOrder($displayOrder);

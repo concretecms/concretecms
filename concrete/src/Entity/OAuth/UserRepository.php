@@ -2,12 +2,15 @@
 
 namespace Concrete\Core\Entity\OAuth;
 
-use Concrete\Core\Entity\Express\EntityRepository;
+use Doctrine\ORM\EntityRepository;
 use Concrete\Core\Entity\User\User;
 use League\OAuth2\Server\Entities\ClientEntityInterface;
 use League\OAuth2\Server\Entities\UserEntityInterface;
 use League\OAuth2\Server\Repositories\UserRepositoryInterface;
 
+/**
+ * @extends \Doctrine\ORM\EntityRepository<\Concrete\Core\Entity\User\User>
+ */
 class UserRepository extends EntityRepository implements UserRepositoryInterface
 {
 
@@ -19,7 +22,7 @@ class UserRepository extends EntityRepository implements UserRepositoryInterface
      * @param string $grantType The grant type used
      * @param ClientEntityInterface $clientEntity
      *
-     * @return UserEntityInterface
+     * @return UserEntityInterface|null
      */
     public function getUserEntityByUserCredentials(
         $username,
@@ -31,5 +34,7 @@ class UserRepository extends EntityRepository implements UserRepositoryInterface
         if ($user && !$user->isError() && $user->isActive()) {
             return $this->getEntityManager()->getRepository(User::class)->find($user->getUserID());
         }
+
+        return null;
     }
 }

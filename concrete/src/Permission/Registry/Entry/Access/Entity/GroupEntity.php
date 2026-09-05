@@ -27,6 +27,8 @@ class GroupEntity implements EntityInterface
             $entity = GroupAccessEntity::getOrCreate($group);
             return $entity;
         }
+
+        return null;
     }
 
 }

@@ -13,7 +13,7 @@ class ColumnSet extends Set
     public static function getCurrent()
     {
         $app = Facade::getFacadeApplication();
-        /** @var $provider SearchProvider */
+        /** @var SearchProvider $provider */
         $provider = $app->make(SearchProvider::class);
         $query = $provider->getSessionCurrentQuery();
 

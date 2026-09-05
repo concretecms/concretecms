@@ -10,6 +10,11 @@ use Loader;
 
 class Antispam extends DashboardPageController
 {
+    /**
+     * @var array
+     */
+    protected $groups;
+
     public function view()
     {
         $list = SystemAntispamLibrary::getList();

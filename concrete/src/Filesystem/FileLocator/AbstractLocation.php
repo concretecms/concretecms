@@ -44,6 +44,11 @@ abstract class AbstractLocation implements LocationInterface
         return $record;
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Filesystem\FileLocator\LocationInterface::contains()
+     */
     public function contains($file)
     {
         if ($this->filesystem->exists(
@@ -53,6 +58,8 @@ abstract class AbstractLocation implements LocationInterface
             $record->setExists(true);
             return $record;
         }
+
+        return false;
     }
 
 }

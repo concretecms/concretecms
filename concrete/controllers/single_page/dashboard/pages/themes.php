@@ -251,9 +251,7 @@ class Themes extends DashboardSitePageController
             }
 
             $obj = Theme::getSiteTheme();
-            if (is_object($obj)) {
-                $siteThemeID = $obj->getThemeID();
-            }
+            $siteThemeID = is_object($obj) ? $obj->getThemeID() : null;
             if ($siteThemeID === $pl->getThemeID()) {
                 throw new Exception(t('You can not uninstall an active theme'));
             }

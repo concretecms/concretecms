@@ -1,6 +1,8 @@
 <?php
 namespace Concrete\Core\Legacy;
 
+use Concrete\Core\Entity\Attribute\Key\Key as AttributeKey;
+
 class DatabaseItemList extends ItemList
 {
     protected $query = '';
@@ -13,6 +15,11 @@ class DatabaseItemList extends ItemList
     protected $autoSortColumns = array();
     protected $userPostQuery = '';
     protected $attributeClass = '';
+
+    /**
+     * @var array
+     */
+    protected $attributeFilters;
 
     public function getTotal()
     {

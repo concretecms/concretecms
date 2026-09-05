@@ -69,7 +69,7 @@ class ImportSiteTypeSkeletonsRoutine extends AbstractRoutine
                 $site_type = $this->typeService->getByHandle($handle);
                 if (is_object($site_type)) {
                     /**
-                     * @var $site_type Type
+                     * @var Type $site_type
                      */
                     $theme = Theme::getByHandle((string) $type['theme']);
                     if (is_object($theme)) {
@@ -91,6 +91,7 @@ class ImportSiteTypeSkeletonsRoutine extends AbstractRoutine
                     }
 
                     // Create the skeleton.
+                    $skeleton = null;
                     foreach($type->skeleton->locale as $localeNode ) {
 
                         $locale = new SkeletonLocale();
@@ -98,7 +99,7 @@ class ImportSiteTypeSkeletonsRoutine extends AbstractRoutine
                         $locale->setLanguage((string)$localeNode['language']);
 
                         /**
-                         * @var $skeleton Skeleton
+                         * @var Skeleton $skeleton
                          */
                         $skeleton = $this->skeletonService->getSkeleton($site_type);
 

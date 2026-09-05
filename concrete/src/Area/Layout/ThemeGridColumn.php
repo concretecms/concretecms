@@ -7,6 +7,9 @@ use Concrete\Core\Support\Facade\Application;
 use HtmlObject\Element;
 use Loader;
 
+/**
+ * @phpstan-consistent-constructor
+ */
 class ThemeGridColumn extends Column
 {
     /**
@@ -55,7 +58,7 @@ class ThemeGridColumn extends Column
     }
 
     /**
-     * @param Column $newAreaLayout
+     * @param \Concrete\Core\Area\Layout\Layout $newAreaLayout
      *
      * @return ThemeGridColumn
      */
@@ -83,8 +86,8 @@ class ThemeGridColumn extends Column
      */
     public function exportDetails($node)
     {
-        $node->addAttribute('span', $this->arLayoutColumnSpan);
-        $node->addAttribute('offset', $this->arLayoutColumnOffset);
+        $node->addAttribute('span', (string) $this->arLayoutColumnSpan);
+        $node->addAttribute('offset', (string) $this->arLayoutColumnOffset);
     }
 
     /**
@@ -104,7 +107,7 @@ class ThemeGridColumn extends Column
     }
 
     /**
-     * @return string
+     * @return string|null
      */
     public function getAreaLayoutColumnClass()
     {
@@ -123,12 +126,14 @@ class ThemeGridColumn extends Column
 
             return $class;
         }
+
+        return null;
     }
 
     /**
      * this returns offsets in the form of spans.
      *
-     * @return string
+     * @return string|null
      */
     public function getAreaLayoutColumnOffsetEditClass()
     {
@@ -146,6 +151,8 @@ class ThemeGridColumn extends Column
 
             return $class;
         }
+
+        return null;
     }
 
     public function getColumnHtmlObject()
@@ -186,7 +193,7 @@ class ThemeGridColumn extends Column
     }
 
     /**
-     * @return string
+     * @return string|null
      */
     public function getAreaLayoutColumnOffsetClass()
     {
@@ -205,6 +212,8 @@ class ThemeGridColumn extends Column
 
             return $class;
         }
+
+        return null;
     }
 
     public function delete()

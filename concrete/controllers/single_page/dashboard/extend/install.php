@@ -8,7 +8,6 @@ use Concrete\Core\Localization\Service\TranslationsInstaller;
 use Concrete\Core\Logging\Channels;
 use Concrete\Core\Logging\LoggerAwareInterface;
 use Concrete\Core\Logging\LoggerAwareTrait;
-use Concrete\Core\Marketplace\Connection;
 use Concrete\Core\Marketplace\ConnectionInterface;
 use Concrete\Core\Marketplace\Exception\InvalidConnectResponseException;
 use Concrete\Core\Marketplace\Exception\InvalidDownloadResponseException;
@@ -35,9 +34,9 @@ class Install extends DashboardPageController implements LoggerAwareInterface
 
     use LoggerAwareTrait;
 
-    /** @var PackageRepositoryInterface */
+    /** @var PackageRepositoryInterface|null */
     protected $repository;
-    /** @var Connection|null */
+    /** @var ConnectionInterface|null */
     protected $connection;
 
     public function on_start()
@@ -101,9 +100,7 @@ class Install extends DashboardPageController implements LoggerAwareInterface
         $this->view();
         $pkgID = $this->post('pkgID');
 
-        if ($pkgID > 0) {
-            $pkg = Package::getByID($pkgID);
-        }
+        $pkg = $pkgID > 0 ? Package::getByID($pkgID) : null;
 
         if (!$this->token->validate('uninstall')) {
             $this->error->add($this->token->getErrorMessage());

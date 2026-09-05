@@ -141,6 +141,7 @@ class Messages extends AccountPageController
             $this->reply($box, $msgID);
         } else {
             $this->write($uID);
+            $msgID = null;
         }
 
         $vf = Loader::helper('validation/form');

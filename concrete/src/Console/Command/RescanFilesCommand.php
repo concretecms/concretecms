@@ -39,7 +39,7 @@ class RescanFilesCommand extends Command
         $app = Facade::getFacadeApplication();
         $db = $app->make(Connection::class);
         /**
-         * @var $db Connection
+         * @var Connection $db
          */
         $query = $db->createQueryBuilder();
         $query->select('fID')->from('Files', 'f');

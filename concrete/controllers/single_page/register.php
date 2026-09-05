@@ -74,6 +74,8 @@ class Register extends PageController
             if (is_string($requestRcURL)) {
                 $rcURL = $urlHelper->getAllowedRedirectUrl($requestRcURL);
             }
+        } else {
+            $pll = null;
         }
         if ($rcURL !== '') {
             $pll->setSessionPostLoginUrl($rcURL);
@@ -142,6 +144,10 @@ class Register extends PageController
             }
         } else {
             $e->add(t('Invalid token.'));
+            $username = null;
+            $passwordConfirm = null;
+            $password = null;
+            $aks = null;
         }
 
         if (!$e->has()) {

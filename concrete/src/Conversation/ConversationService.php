@@ -16,7 +16,7 @@ use Concrete\Core\Database\DatabaseManager;
 class ConversationService
 {
 
-    /** @var Connection */
+    /** @var Connection|null */
     protected $connection;
 
     /** @var PageCategory  */

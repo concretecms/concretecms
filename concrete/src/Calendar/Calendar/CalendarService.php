@@ -17,7 +17,7 @@ class CalendarService
     public function getList($site = null)
     {
         /**
-         * @var $r CalendarRepository
+         * @var CalendarRepository $r
          */
         $r = $this->entityManager->getRepository(Calendar::class);
         if (is_object($site)) {
@@ -57,7 +57,7 @@ class CalendarService
     public function getByName($name)
     {
         /**
-         * @var $r CalendarRepository
+         * @var CalendarRepository $r
          */
         $r = $this->entityManager->getRepository(Calendar::class);
         return $r->findOneByName($name);

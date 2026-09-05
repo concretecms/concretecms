@@ -120,7 +120,7 @@ class ApacheDetector implements DetectorInterface
     /**
      * Detect using PHP_SAPI/php_sapi_name.
      *
-     * @param string $value
+     * @param string $sapiName
      *
      * @return null|string
      */

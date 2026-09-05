@@ -135,6 +135,8 @@ class EntityManagerConfigFactory implements ApplicationAwareInterface, EntityMan
         // The annotations added to the global ignored namespace are still valid for the simple annotation reader
         \Doctrine\Common\Annotations\AnnotationReader::addGlobalIgnoredName('subpackages');
         \Doctrine\Common\Annotations\AnnotationReader::addGlobalIgnoredName('package');
+        // PHPDoc annotation used by static analyzers (not ignored by default by Doctrine)
+        \Doctrine\Common\Annotations\AnnotationReader::addGlobalIgnoredName('mixin');
 
         // Default Doctrine annotations
         \Doctrine\Common\Annotations\AnnotationReader::addGlobalIgnoredName('Column');

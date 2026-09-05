@@ -81,6 +81,6 @@ class SiteLocaleField extends AbstractField
         }
         $site = $app->make('site')->getActiveSiteForEditing();
         $selector = new SiteLocaleSelector();
-        print $selector->selectLocale('localeID', $site, $selectedLocale);
+        return $selector->selectLocale('localeID', $site, $selectedLocale);
     }
 }

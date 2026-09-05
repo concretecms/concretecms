@@ -28,7 +28,7 @@ use Concrete\Core\Events\EventDispatcher;
 class Cloner
 {
     /**
-     * @var \Concrete\Core\Database\Connection\Connection
+     * @var \Doctrine\DBAL\Connection
      */
     protected $connection;
 
@@ -100,6 +100,8 @@ class Cloner
                 $newParentPage = Page::getByID(Page::getHomePageID());
             }
             $newCID = $pointer->addCollectionAlias($newParentPage);
+            $newCollectionName = null;
+            $newCollectionHandle = null;
         } else {
             if ($page->getPageTypeHandle() === STACKS_PAGE_TYPE) {
                 if (!$page instanceof Stack) {
@@ -203,7 +205,7 @@ class Cloner
                 $relation = $this->entityManager->getRepository('Concrete\Core\Entity\Page\Relation\SiblingRelation')
                     ->findOneBy(['cID' => $page->getCollectionID()]);
                 if (!is_object($relation)) {
-                    $mpRelationID = $this->entityManager->getConnection()->GetOne('select max(mpRelationID) as mpRelationID from SiblingPageRelations');
+                    $mpRelationID = $this->entityManager->getConnection()->fetchOne('select max(mpRelationID) as mpRelationID from SiblingPageRelations');
                     if (!$mpRelationID) {
                         $mpRelationID = 1;
                     } else {

@@ -8,6 +8,8 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * @ORM\Entity
  * @ORM\Table(name="CalendarEventVersionOccurrences")
+ *
+ * @mixin \Concrete\Core\Entity\Calendar\CalendarEventOccurrence
  */
 class CalendarEventVersionOccurrence implements ObjectInterface, CategoryMemberInterface
 {

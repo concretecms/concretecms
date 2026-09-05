@@ -866,18 +866,17 @@ jQuery.fn.concreteConversationAttachments.localize(' . json_encode([
         }
         $alternatives[] = $localeParts[0];
         $locator = $this->app->make(FileLocator::class);
-        $found = false;
+        $content = null;
         foreach ($alternatives as $alternative) {
             foreach ($alternatives as $alternative) {
                 $r = $locator->getRecord(DIRNAME_JAVASCRIPT . "/i18n/moment/{$alternative}.js");
                 if ($r->exists()) {
-                    $found = true;
                     $content = file_get_contents($r->getFile()) . ";\n;moment.locale(" . json_encode($alternative) . ");\n";
                     break;
                 }
             }
         }
-        if ($found === false) {
+        if ($content === null) {
             $content = '/* moment: no translations for ' . implode(', ', $alternatives) . ' */';
         }
 

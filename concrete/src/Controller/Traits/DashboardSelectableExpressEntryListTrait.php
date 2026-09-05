@@ -49,9 +49,7 @@ trait DashboardSelectableExpressEntryListTrait
     public function results($entityID = null)
     {
         $r = $this->entityManager->getRepository(Entity::class);
-        if ($entityID) {
-            $entity = $r->findOneById($entityID);
-        }
+        $entity = $entityID ? $r->findOneById($entityID) : null;
         if ($entity) {
             $ep = new Checker($entity);
             if ($ep->canViewExpressEntries()) {
@@ -67,9 +65,7 @@ trait DashboardSelectableExpressEntryListTrait
     public function csv_export($entityID = null, $searchMethod = null, $savedSearchPresetId = null)
     {
         $r = $this->entityManager->getRepository(Entity::class);
-        if ($entityID) {
-            $entity = $r->findOneById($entityID);
-        }
+        $entity = $entityID ? $r->findOneById($entityID) : null;
         if ($entity) {
             return $this->exportCsv($entity, $searchMethod, $savedSearchPresetId);
         } else {
@@ -81,9 +77,7 @@ trait DashboardSelectableExpressEntryListTrait
     public function advanced_search($entityID = null)
     {
         $r = $this->entityManager->getRepository('\Concrete\Core\Entity\Express\Entity');
-        if ($entityID) {
-            $entity = $r->findOneById($entityID);
-        }
+        $entity = $entityID ? $r->findOneById($entityID) : null;
         if ($entity) {
             $this->renderExpressEntryAdvancedSearchResults($entity);
         }

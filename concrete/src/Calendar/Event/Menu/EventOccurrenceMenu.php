@@ -19,7 +19,7 @@ class EventOccurrenceMenu extends PopoverMenu
         $this->setAttribute('data-event-occurrence', $occurrence->getID());
         $calendar = $occurrence->getEvent()->getCalendar();
         /**
-         * @var $linkFormatter LinkFormatterInterface
+         * @var LinkFormatterInterface $linkFormatter
          */
         $linkFormatter = \Core::make('calendar/event/formatter/link');
         $url = $linkFormatter->getEventOccurrenceFrontendViewLink($occurrence);

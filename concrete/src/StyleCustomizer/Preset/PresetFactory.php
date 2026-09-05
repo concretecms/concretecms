@@ -29,8 +29,6 @@ class PresetFactory
 
     /**
      * Returns an array of SkinInterface objects found in the path.
-     *
-     * @param string $path
      */
     public function createFromTheme(Theme $theme, TypeInterface $type): array
     {

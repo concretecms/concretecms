@@ -267,6 +267,8 @@ abstract class AbstractImporter
         if ($dataCollected !== null) {
             $importResult->setDataCollected($dataCollected);
         }
+
+        return null;
     }
 
     /**
@@ -304,7 +306,6 @@ abstract class AbstractImporter
     {
         $this->category = $category;
         $this->attributeKeysAndControllers = null;
-        $this->csvHeader = null;
 
         return $this;
     }
@@ -412,7 +413,6 @@ abstract class AbstractImporter
     /**
      * Convert the data read from CSV to be passed to the attribute controller.
      *
-     * @param AttributeController $controller
      * @param string|array $csvData
      * @param AttributeController $attributeController
      *

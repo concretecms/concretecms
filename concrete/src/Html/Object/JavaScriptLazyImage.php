@@ -4,6 +4,9 @@ namespace Concrete\Core\Html\Object;
 use HtmlObject\Element;
 use HtmlObject\Image;
 
+/**
+ * @phpstan-consistent-constructor
+ */
 class JavaScriptLazyImage extends Element
 {
     /**
@@ -32,7 +35,7 @@ class JavaScriptLazyImage extends Element
      *
      * @return \Concrete\Core\Html\Object\JavaScriptLazyImage
      */
-    public static function create($src = false, $attributes = array(), $lazyLoadNative = false)
+    public static function create($src = null, $attributes = array(), $lazyLoadNative = false)
     {
         return new static($src, $attributes, $lazyLoadNative);
     }
@@ -136,5 +139,7 @@ class JavaScriptLazyImage extends Element
                 $child->addClass($classes);
             }
         }
+
+        return $this;
     }
 }

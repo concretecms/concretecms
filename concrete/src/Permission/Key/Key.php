@@ -206,9 +206,9 @@ abstract class Key extends ConcreteObject
     }
 
     /**
-     * Set the actual object that should be checked for this permission (for example, a Page instance).
+     * Get the actual object that should be checked for this permission (for example, a Page instance).
      *
-     * @param \Concrete\Core\Permission\ObjectInterface|null $object
+     * @return \Concrete\Core\Permission\ObjectInterface|null
      */
     public function getPermissionObjectToCheck()
     {
@@ -433,8 +433,8 @@ EOT
             $pk['handle'],
             $pk['name'],
             $pk['description'],
-            $xml->getBool($pk['can-trigger-workflow']) ? 1 : 0,
-            $xml->getBool($pk['has-custom-class']) ? 1 : 0,
+            $xml->getBool($pk['can-trigger-workflow']),
+            $xml->getBool($pk['has-custom-class']),
             $pkg
         );
     }
@@ -495,10 +495,10 @@ EOT
      * @param string $pkCategoryHandle
      * @param string $pkHandle
      * @param string $pkName
-     * @param string $pkDescription
+     * @param string|null $pkDescription
      * @param bool $pkCanTriggerWorkflow
      * @param bool $pkHasCustomClass
-     * @param \Concrete\Core\Entity\Package|\Concrete\Core\Package\Package|null $pkg
+     * @param \Concrete\Core\Entity\Package|\Concrete\Core\Package\Package|false|null $pkg
      */
     public static function add($pkCategoryHandle, $pkHandle, $pkName, $pkDescription, $pkCanTriggerWorkflow, $pkHasCustomClass, $pkg = false)
     {

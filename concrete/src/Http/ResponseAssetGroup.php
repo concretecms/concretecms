@@ -121,10 +121,7 @@ class ResponseAssetGroup
      * 2. Returns the assets with the non-post-process-able assets FIRST, in the order in which they were added, with post-processable assets
      * grouped after. We also make sure to maintain the proper position.
      *
-     * @return array[
-     *  'H' => \Concrete\Core\Asset\Asset[]
-     *  'F' => \Concrete\Core\Asset\Asset[]
-     * ]
+     * @return array{H: \Concrete\Core\Asset\Asset[], F: \Concrete\Core\Asset\Asset[]}
      */
     public function getAssetsToOutput()
     {

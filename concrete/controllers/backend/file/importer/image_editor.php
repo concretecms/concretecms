@@ -69,6 +69,8 @@ class ImageEditor extends AbstractController
         if (!$fp->canWrite()) {
             throw new UserMessageException(t('Access Denied'), 401);
         }
+
+        return $file;
     }
 
     protected function getFileID(): ?int

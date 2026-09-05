@@ -69,6 +69,23 @@ final class MinPHPVersionTest extends TestCase
         );
     }
 
+    public function testPHPStanPHPVersion(): void
+    {
+        $expectedVersion = self::getMinPHPVersionFromInstallPreconditions();
+        if ($expectedVersion === null) {
+            self::markTestSkipped('Unable to retrieve the minimum PHP version from the install preconditions');
+        }
+        $versionChunks = array_map('intval', explode('.', $expectedVersion));
+        $expectedVersionID = $versionChunks[0] * 10000 + ($versionChunks[1] ?? 0) * 100 + ($versionChunks[2] ?? 0);
+        $configFile = DIR_BASE . '/.phpstan/phpstan.neon.dist';
+        $neon = file_get_contents($configFile);
+        self::assertNotFalse($neon, "Failed to read the file {$configFile}");
+        $matches = null;
+        self::assertSame(1, preg_match('/^\s*phpVersion\s*:\s*(\d+)\s*$/m', $neon, $matches), "The PHPStan configuration file ({$configFile}) should contain the phpVersion parameter");
+        $actualVersionID = (int) $matches[1];
+        self::assertSame($expectedVersionID, $actualVersionID, "The value of phpVersion in the PHPStan configuration file ({$actualVersionID}) should correspond to the minimum PHP version defined in the install preconditions ({$expectedVersion}, that is {$expectedVersionID})");
+    }
+
     private static function getMinPHPVersionFromInstallPreconditions(): ?string
     {
         if (!class_exists(PhpVersion::class)) {

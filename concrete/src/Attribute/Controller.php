@@ -54,6 +54,15 @@ class Controller extends AbstractController implements AttributeInterface
     protected $requestArray = false;
 
     /**
+     * The action being run (set by setupAndRun()).
+     *
+     * @deprecated it's never read by the core: it's only set for backward compatibility
+     *
+     * @var string|null
+     */
+    public $task;
+
+    /**
      * @param EntityManager $entityManager
      */
     public function __construct(EntityManager $entityManager)
@@ -124,6 +133,8 @@ class Controller extends AbstractController implements AttributeInterface
         if ($r->exists()) {
             return $r->url;
         }
+
+        return null;
     }
 
     /**
@@ -516,7 +527,7 @@ class Controller extends AbstractController implements AttributeInterface
      *
      * @see \Concrete\Core\Controller\AbstractController::post()
      */
-    public function post($field = false, $defaultValue = null)
+    public function post($field = null, $defaultValue = null)
     {
         // the only post that matters is the one for this attribute's name space
         $req = ($this->requestArray == false) ? $this->request->request->all() : $this->requestArray;
@@ -538,7 +549,7 @@ class Controller extends AbstractController implements AttributeInterface
      *
      * @see \Concrete\Core\Controller\AbstractController::request()
      */
-    public function request($field = false)
+    public function request($field = null)
     {
         $request = array_merge($this->request->request->all(), $this->request->query->all());
         $req = ($this->requestArray == false) ? $request : $this->requestArray;

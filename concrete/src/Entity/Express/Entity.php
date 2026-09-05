@@ -529,7 +529,7 @@ class Entity implements CategoryObjectInterface, ObjectInterface, ExportableInte
         $node = Node::getByID($this->getEntityResultsNodeId());
         if ($node) {
             /**
-             * @var $node ExpressEntryResults
+             * @var ExpressEntryResults $node
              */
             if ($site && $this->usesSeparateSiteResultsBuckets()) {
                 $siteNode = $node->getSiteResultsNode($site);
@@ -549,6 +549,9 @@ class Entity implements CategoryObjectInterface, ObjectInterface, ExportableInte
         $this->entity_results_node_id = $entity_results_node_id;
     }
 
+    /**
+     * @return \Concrete\Core\Attribute\Category\ExpressCategory
+     */
     public function getAttributeKeyCategory()
     {
         return \Core::make('\Concrete\Core\Attribute\Category\ExpressCategory', array('entity' => $this));

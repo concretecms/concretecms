@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\Permission\Access\Entity;
 
+use Concrete\Core\Entity\File\File;
 use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\Permission\Access\FileFolderAccess;
 use Loader;

@@ -187,7 +187,7 @@ EOL;
      * Build the HTML to be placed in a page to choose multiple users using a popup dialog.
      *
      * @param string $fieldName the name of the field
-     * @param \Concrete\Core\Entity\User\User[]|\Concrete\Core\User\UserInfo[]|int[]\Traversable $users The users to be initially selected
+     * @param iterable<\Concrete\Core\Entity\User\User|\Concrete\Core\User\UserInfo|int> $users The users to be initially selected
      *
      * @return string
      */

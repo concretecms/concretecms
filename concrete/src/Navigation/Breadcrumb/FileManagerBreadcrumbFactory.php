@@ -17,9 +17,7 @@ class FileManagerBreadcrumbFactory
             if ($mixed->getTreeNodeParentID() > 0) {
                 $nodes = array_reverse($mixed->getTreeNodeParentArray());
 
-                /**
-                 * @var FileFolder[]
-                 */
+                /** @var FileFolder $node */
                 foreach ($nodes as $node) {
                     $item = new FileFolderItem($node);
 

@@ -18,9 +18,8 @@ class Attributes extends DashboardAttributesPageController
     public function view($id = null)
     {
         $entity = $this->getEntity($id);
-        $typeFactory = $this->app->make(TypeFactory::class);
         $this->set('entity', $entity);
-        $this->renderList($entity->getAttributes(), $typeFactory->getList());
+        $this->renderList();
     }
 
     public function edit($id = null, $akID = null)
@@ -110,6 +109,6 @@ class Attributes extends DashboardAttributesPageController
      */
     protected function getHeaderMenu(CategoryObjectInterface $category)
     {
-        return false;
+        return null;
     }
 }

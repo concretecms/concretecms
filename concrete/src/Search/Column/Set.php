@@ -6,6 +6,11 @@ class Set implements \JsonSerializable
     protected $columns = array();
     protected $defaultSortColumn;
 
+    /**
+     * @var string
+     */
+    protected $attributeClass;
+
     public function addColumn($col)
     {
         $this->columns[] = $col;
@@ -60,7 +65,6 @@ class Set implements \JsonSerializable
     {
         return array('columns', 'defaultSortColumn');
     }
-
 
     public function __wakeup()
     {

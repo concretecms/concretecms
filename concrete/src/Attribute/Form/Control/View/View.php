@@ -18,7 +18,7 @@ class View extends BaseFormView
     protected $key;
 
     /**
-     * @var ObjectInterface
+     * @var ObjectInterface|null
      */
     protected $object;
 

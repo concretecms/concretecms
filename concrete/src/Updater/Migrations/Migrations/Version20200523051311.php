@@ -80,13 +80,13 @@ final class Version20200523051311 extends AbstractMigration implements Repeatabl
         }
 
         /**
-         * @var $objectManager ObjectManager
+         * @var ObjectManager $objectManager
          */
         $objectManager = $this->app->make(ObjectManager::class);
         $list = $objectManager->getEntities(true);
         $db = $this->app->make(Connection::class);
         /**
-         * @var $db Connection
+         * @var Connection $db
          */
         foreach($list->findAll() as $entity) {
             $db->executeQuery(

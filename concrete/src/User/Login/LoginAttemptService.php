@@ -32,7 +32,7 @@ class LoginAttemptService
     /**
      * The config repository that has configuration for this service
      *
-     * @var \Concrete\Core\User\Login\Repository
+     * @var \Concrete\Core\Config\Repository\Repository
      */
     protected $config;
 

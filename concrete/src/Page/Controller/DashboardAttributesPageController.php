@@ -94,7 +94,7 @@ abstract class DashboardAttributesPageController extends DashboardPageController
     /**
      * Sort the attributes belinging to a set, reading the data from the request.
      *
-     * @return \Symfony\Component\HttpFoundation\JsonResponse
+     * @return \Symfony\Component\HttpFoundation\JsonResponse|null
      */
     public function sort_attribute_set()
     {
@@ -109,6 +109,7 @@ abstract class DashboardAttributesPageController extends DashboardPageController
                 }
             }
 
+            $set = null;
             foreach ($category->getSetManager()->getAttributeSets() as $set) {
                 if ($set->getAttributeSetID() == $this->request->request->get('asID') && count($keys)) {
                     // Clear the keys
@@ -126,15 +127,16 @@ abstract class DashboardAttributesPageController extends DashboardPageController
                         $set->getAttributeKeyCollection()->add($setKey);
                         $i++;
                     }
+                    $this->entityManager->persist($set);
+                    $this->entityManager->flush();
                     break;
                 }
             }
 
-            $this->entityManager->persist($set);
-            $this->entityManager->flush();
-
             return new JsonResponse($set);
         }
+
+        return null;
     }
 
     /**
@@ -292,7 +294,7 @@ abstract class DashboardAttributesPageController extends DashboardPageController
             $this->buildRedirect($successURL)->send();
             $this->app->shutdown();
         } catch (UserMessageException $e) {
-            $this->error = $e;
+            $this->error->add($e);
         }
     }
 }

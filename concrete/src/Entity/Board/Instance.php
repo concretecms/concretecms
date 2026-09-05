@@ -163,17 +163,11 @@ class Instance implements \JsonSerializable, ObjectInterface
         $this->boardInstanceName = $boardInstanceName;
     }
 
-    /**
-     * @return mixed
-     */
     public function getSite(): ?Site
     {
         return $this->site;
     }
 
-    /**
-     * @param mixed $site
-     */
     public function setSite(?Site $site = null): void
     {
         $this->site = $site;
@@ -197,9 +191,6 @@ class Instance implements \JsonSerializable, ObjectInterface
     }
 
 
-    /**
-     * @return mixed
-     */
     public function getBoard() : Board
     {
         return $this->board;
@@ -229,17 +220,11 @@ class Instance implements \JsonSerializable, ObjectInterface
         $this->dateCreated = $dateCreated;
     }
 
-    /**
-     * @return mixed
-     */
     public function getLog(): ?InstanceLog
     {
         return $this->log;
     }
 
-    /**
-     * @param mixed $log
-     */
     public function setLog(?InstanceLog $log = null): void
     {
         $this->log = $log;

@@ -75,6 +75,9 @@ class Site extends DashboardPageController
                     case 'PRIVATE':
                         $viewObj = GroupPermissionAccessEntity::getOrCreate(Group::getByID(ADMIN_GROUP_ID));
                         break;
+                    default:
+                        $viewObj = null;
+                        break;
                 }
 
                 $pk = PermissionKey::getByHandle('view_page');

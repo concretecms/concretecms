@@ -29,7 +29,7 @@ class Page extends DataSourceElementController
             $configuration = $this->configuredDataSource->getConfiguration();
             if ($configuration) {
                 /**
-                 * @var $configuration PageConfiguration
+                 * @var PageConfiguration $configuration
                  */
                 $query = $configuration->getQuery();
                 if ($query) {

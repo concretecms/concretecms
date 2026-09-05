@@ -38,12 +38,19 @@ class BasicWorkflow extends \Concrete\Core\Workflow\Workflow implements Assignab
         return false;
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Workflow\Workflow::getWorkflowProgressCurrentComment()
+     */
     public function getWorkflowProgressCurrentComment(WorkflowProgress $wp)
     {
         $req = $wp->getWorkflowRequestObject();
         if ($req) {
             return $req->getRequesterComment();
         }
+
+        return null;
     }
 
     public function getPermissionAssignmentClassName()
@@ -130,6 +137,11 @@ class BasicWorkflow extends \Concrete\Core\Workflow\Workflow implements Assignab
         parent::delete();
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Workflow\Workflow::start()
+     */
     public function start(WorkflowProgress $wp)
     {
         // lets save the basic data associated with this workflow.
@@ -155,6 +167,8 @@ class BasicWorkflow extends \Concrete\Core\Workflow\Workflow implements Assignab
                 $this->notify($wp, $message, 'notify_on_basic_workflow_entry');
             }
         }
+
+        return null;
     }
 
     protected function notify(

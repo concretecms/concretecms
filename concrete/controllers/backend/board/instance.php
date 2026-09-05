@@ -75,9 +75,7 @@ class Instance extends AbstractController
     {
         $entityManager = $this->app->make(EntityManager::class);
         $boardInstanceID = $this->request->request->get('boardInstanceID');
-        if ($boardInstanceID) {
-            $instance = $entityManager->find(InstanceEntity::class, $boardInstanceID);
-        }
+        $instance = $boardInstanceID ? $entityManager->find(InstanceEntity::class, $boardInstanceID) : null;
 
         if ($instance) {
             $checker = new Checker($instance);
@@ -102,9 +100,7 @@ class Instance extends AbstractController
     {
         $entityManager = $this->app->make(EntityManager::class);
         $boardInstanceID = $this->request->request->get('boardInstanceID');
-        if ($boardInstanceID) {
-            $instance = $entityManager->find(InstanceEntity::class, $boardInstanceID);
-        }
+        $instance = $boardInstanceID ? $entityManager->find(InstanceEntity::class, $boardInstanceID) : null;
 
         $rule = $entityManager->find(InstanceSlotRule::class, $this->request->request->get('boardInstanceSlotRuleID'));
         if ($instance && $rule) {

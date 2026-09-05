@@ -312,7 +312,7 @@ class Application extends Container
      * @param SymfonyRequest $request
      * @param Site $site
      *
-     * @return \Concrete\Core\Routing\RedirectResponse
+     * @return \Concrete\Core\Routing\RedirectResponse|null
      */
     public function handleURLSlashes(SymfonyRequest $request, Site $site)
     {
@@ -333,6 +333,8 @@ class Application extends Container
                 return $response;
             }
         }
+
+        return null;
     }
 
     /**
@@ -383,16 +385,16 @@ class Application extends Container
                 }
             }
 
-            $response = new RedirectResponse($mainCanonical, '301');
+            $response = new RedirectResponse($mainCanonical, 301);
 
             return $response;
         }
+
+        return null;
     }
 
     /**
      * Get or check the current application environment.
-     *
-     * @param  mixed
      *
      * @return string|bool
      */
@@ -440,7 +442,6 @@ class Application extends Container
      * Instantiate a concrete instance of the given type.
      *
      * @param  string $concrete
-     * @param  array $parameters
      *
      * @throws \Illuminate\Contracts\Container\BindingResolutionException
      *

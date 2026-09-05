@@ -6,6 +6,9 @@ use Concrete\Core\Entity\Board\DataSource\ConfiguredDataSource;
 use Concrete\Core\Entity\Board\Instance;
 use Doctrine\ORM\EntityRepository;
 
+/**
+ * @extends \Doctrine\ORM\EntityRepository<\Concrete\Core\Entity\Command\Process>
+ */
 class ProcessRepository extends EntityRepository
 {
 

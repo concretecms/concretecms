@@ -15,7 +15,7 @@ class DataSources extends DashboardSitePageController
 
     /**
      * @param $id
-     * @return Board
+     * @return Board|null
      */
     protected function getBoard($id)
     {
@@ -27,6 +27,8 @@ class DataSources extends DashboardSitePageController
                 return $board;
             }
         }
+
+        return null;
     }
 
     /**
@@ -46,6 +48,8 @@ class DataSources extends DashboardSitePageController
                 }
             }
         }
+
+        return null;
     }
     
     public function add($boardID = null, $dataSourceID = null)
@@ -94,7 +98,7 @@ class DataSources extends DashboardSitePageController
             }
             if (!$this->error->has()) {
                 /**
-                 * @var $dataSource DataSource
+                 * @var DataSource $dataSource
                  */
                 $driver = $dataSource->getDriver();
                 $saver = $driver->getSaver();
@@ -105,7 +109,7 @@ class DataSources extends DashboardSitePageController
                 $this->executeCommand($resetCommand);
                 return $this->redirect('/dashboard/boards/data_sources', 'view', $board->getBoardID());
             }
-            $this->update($board->getBoardID(), $dataSource->getId());
+            $this->update($configuredDataSourceID);
         } else {
             return $this->redirect('/dashboard/boards/boards');
         }
@@ -154,7 +158,7 @@ class DataSources extends DashboardSitePageController
 
             if (!$this->error->has()) {
                 /**
-                 * @var $dataSource DataSource
+                 * @var DataSource $dataSource
                  */
                 $driver = $dataSource->getDriver();
                 $saver = $driver->getSaver();

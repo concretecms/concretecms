@@ -9,7 +9,7 @@ class DashboardSitePageController extends DashboardPageController
 {
 
     /**
-     * @var $site Site
+     * @var Site $site
      */
     protected $site;
 

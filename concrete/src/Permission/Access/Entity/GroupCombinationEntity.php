@@ -57,7 +57,7 @@ class GroupCombinationEntity extends Entity
         if ($user->isRegistered()) {
             $ingids = [];
             $app = Facade::getFacadeApplication();
-            /** @var $database \Concrete\Core\Database\Connection\Connection */
+            /** @var \Concrete\Core\Database\Connection\Connection $database */
             $database = $app->make('database')->connection();
 
             // First look for any combos that this group would specifically be in.
@@ -107,7 +107,7 @@ class GroupCombinationEntity extends Entity
     public static function getOrCreate($groups)
     {
         $app = Facade::getFacadeApplication();
-        /** @var $database \Concrete\Core\Database\Connection\Connection */
+        /** @var \Concrete\Core\Database\Connection\Connection $database */
         $database = $app->make('database')->connection();
         $petID = $database->fetchColumn(
             'select petID from PermissionAccessEntityTypes
@@ -192,7 +192,7 @@ class GroupCombinationEntity extends Entity
     public function load()
     {
         $app = Facade::getFacadeApplication();
-        /** @var $database \Concrete\Core\Database\Connection\Connection */
+        /** @var \Concrete\Core\Database\Connection\Connection $database */
         $database = $app->make('database')->connection();
         $gIDs = $database->fetchAll(
             'select gID from PermissionAccessEntityGroups

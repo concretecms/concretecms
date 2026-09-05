@@ -104,7 +104,7 @@ class PasswordRequirements extends DashboardPageController
     protected function validate(Request $request)
     {
         $result = true;
-        $regex = $request->request->get('regex', []);
+        $regex = (array) $request->request->get('regex');
         foreach ($regex as $key => $value) {
             if (!$this->validateRegex($value)) {
                 $this->error->add('Invalid custom regex', "regex[{$key}]");
@@ -140,7 +140,7 @@ class PasswordRequirements extends DashboardPageController
         set_error_handler(function () {}, -1);
         try {
             // If this test returns false it means we have invalid regex
-            return @preg_match($regex, null) !== false;
+            return @preg_match($regex, '') !== false;
         } finally {
             restore_error_handler();
         }

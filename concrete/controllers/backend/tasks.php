@@ -74,7 +74,7 @@ class Tasks extends AbstractController
         $task = null;
         if ($this->request->request->has('id')) {
             /**
-             * @var $task Task
+             * @var Task $task
              */
             $task = $this->entityManager->find(Task::class, $this->request->request->get('id'));
         }
@@ -87,8 +87,8 @@ class Tasks extends AbstractController
             return new JsonResponse($this->errorList);
         } else {
             /**
-             * @var $inputFactory InputFactory
-             * @var $contextFactory ContextFactory
+             * @var InputFactory $inputFactory
+             * @var ContextFactory $contextFactory
              */
             $inputFactory = $this->app->make(InputFactory::class);
             $contextFactory = $this->app->make(ContextFactory::class);

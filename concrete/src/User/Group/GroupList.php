@@ -270,7 +270,7 @@ class GroupList extends DatabaseItemList implements PagerProviderInterface, Pagi
     /**
      * @param GroupRepository $value
      *
-     * @return $this;
+     * @return $this
      */
     public function setGroupRepository(GroupRepository $value)
     {

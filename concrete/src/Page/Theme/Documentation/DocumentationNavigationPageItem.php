@@ -20,8 +20,6 @@ class DocumentationNavigationPageItem extends PageItem
 
     /**
      * Item constructor.
-     * @param string $url
-     * @param string $name
      * @param bool $isActive
      */
     public function __construct(Theme $theme, Page $page, bool $isActive = false)

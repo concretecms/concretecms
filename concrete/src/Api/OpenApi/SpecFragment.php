@@ -6,7 +6,7 @@ class SpecFragment
 {
 
     /**
-     * @var SpecPathCollection
+     * @var SpecPathCollection|null
      */
     protected $pathCollection;
 
@@ -38,9 +38,6 @@ class SpecFragment
         return $this->pathCollection;
     }
 
-    /**
-     * @return SpecModel[]
-     */
     public function getComponents(): ?SpecComponents
     {
         return $this->components;

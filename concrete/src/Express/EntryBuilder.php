@@ -69,7 +69,6 @@ class EntryBuilder
         $this->site = $site;
     }
 
-
     public function save()
     {
         $entry = $this->entryManager->addEntry($this->getEntity(), $this->site);
@@ -95,7 +94,7 @@ class EntryBuilder
      */
     public function getEntityManager()
     {
-        return $this->entityManager;
+        return $this->entryManager->getEntityManager();
     }
 
     /**
@@ -105,6 +104,5 @@ class EntryBuilder
     {
         return $this->entity;
     }
-
 
 }

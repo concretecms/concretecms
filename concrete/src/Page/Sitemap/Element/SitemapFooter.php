@@ -23,5 +23,7 @@ class SitemapFooter extends SitemapElement
      */
     public function toXmlElement(?SimpleXMLElement $parentElement = null)
     {
+
+        return null;
     }
 }

@@ -19,6 +19,11 @@ class SummaryTemplates extends BackendInterfaceController
      */
     protected $eventService;
 
+    /**
+     * @var \Concrete\Core\Calendar\Event\EventOccurrenceService
+     */
+    protected $eventOccurrenceService;
+
     public function __construct()
     {
         parent::__construct();
@@ -57,7 +62,6 @@ class SummaryTemplates extends BackendInterfaceController
         return $url;
     }
 
-
     public function view()
     {
         $occurrence = $this->getOccurrenceFromRequest();
@@ -93,9 +97,10 @@ class SummaryTemplates extends BackendInterfaceController
             if ($this->request->request->get('hasCustomSummaryTemplates')) {
                 $command = new EnableCustomCalendarEventSummaryTemplatesCommand($event->getID());
                 $keys = array_keys($this->request->request->all());
+                $templateIDs = [];
                 foreach($keys as $key) {
                     if (substr($key, 0, 8) === 'template') {
-                        $templateIDs[] = substr($key, 9);
+                        $templateIDs[] = (int) substr($key, 9);
                     }
                 }
                 if ($templateIDs) {

@@ -126,7 +126,8 @@ class ResponseFactory implements ResponseFactoryInterface, ApplicationAwareInter
         }
 
         $cnt = $this->app->make(PageForbidden::class);
-        $this->controller($cnt, $code, $headers);
+
+        return $this->controller($cnt, $code, $headers);
     }
 
     /**
@@ -209,7 +210,7 @@ class ResponseFactory implements ResponseFactoryInterface, ApplicationAwareInter
             if ($this->config->get('concrete.misc.mobile_theme_id') > 0) {
                 $md = $this->app->make(MobileDetect::class);
                 if ($md->isMobile()) {
-                    $mobileTheme = Theme::getByID($this->app->config->get('concrete.misc.mobile_theme_id'));
+                    $mobileTheme = Theme::getByID($this->app->make('config')->get('concrete.misc.mobile_theme_id'));
                     if ($mobileTheme instanceof Theme) {
                         $view->setViewTheme($mobileTheme);
                         $controller->setTheme($mobileTheme);
@@ -244,7 +245,7 @@ class ResponseFactory implements ResponseFactoryInterface, ApplicationAwareInter
         if ($collection->getCollectionPath() != '/page_not_found') {
             if (!isset($collection->cPathFetchIsCanonical) || !$collection->cPathFetchIsCanonical) {
                 // Handle redirect URL (additional page paths)
-                /** @var Url $url */
+                /** @var \Concrete\Core\Url\Url $url */
                 $url = $this->app->make('url/manager')->resolve([$collection]);
                 $query = $url->getQuery();
                 $query->modify($request->getQueryString());
@@ -295,10 +296,8 @@ class ResponseFactory implements ResponseFactoryInterface, ApplicationAwareInter
             switch ($vp->getError()) {
                 case COLLECTION_NOT_FOUND:
                     return $this->notFound('', Response::HTTP_NOT_FOUND, $headers);
-                    break;
                 case COLLECTION_FORBIDDEN:
                     return $this->forbidden($request->getUri(), Response::HTTP_FORBIDDEN, $headers);
-                    break;
             }
         }
 

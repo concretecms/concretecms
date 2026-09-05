@@ -9,7 +9,7 @@ class ConcreteThumbnailEditor extends ElementController
 {
 
     /**
-     * @var $thumbnail Version
+     * @var Version $thumbnail
      */
     protected $thumbnail;
 

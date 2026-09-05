@@ -127,7 +127,7 @@ class Update extends DashboardPageController
                 $client = $this->app->make(Client::class);
 
                 $location = $fileHelper->getTemporaryDirectory();
-                $file = uniqid(time(), true);
+                $file = uniqid((string) time(), true);
 
                 try {
                     $client->get($remote->getDirectDownloadURL(), [
@@ -153,6 +153,8 @@ class Update extends DashboardPageController
             } else {
                 $this->error->add(t('Unable to retrieve software from update server.'));
             }
+        } else {
+            $remote = null;
         }
         if ($this->error->has()) {
             return $this->view();
@@ -168,6 +170,7 @@ class Update extends DashboardPageController
         if (!$this->userHasUpgradePermission()) {
             return $this->buildRedirect($this->action());
         }
+        $upd = null;
         if (!$this->request->isMethod('POST')) {
             $this->error->add(t('Invalid request method.'));
         } elseif (!$this->token->validate('do_update')) {
@@ -221,6 +224,7 @@ class Update extends DashboardPageController
             return $this->buildRedirect($this->action());
         }
         $updateVersion = (string) $this->request->request->get('updateVersion', '');
+        $upd = null;
         if ($updateVersion === '') {
             $this->error->add(t('Invalid version'));
         } else {
@@ -280,7 +284,7 @@ class Update extends DashboardPageController
             if (!@set_time_limit(0)) {
                 $result = false;
             }
-            if (@ini_set('max_execution_time', 0) === false) {
+            if (@ini_set('max_execution_time', '0') === false) {
                 $result = false;
             }
         } finally {

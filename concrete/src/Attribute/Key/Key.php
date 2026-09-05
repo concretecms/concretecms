@@ -33,7 +33,7 @@ class Key extends Facade implements AttributeKeyInterface
     // IN 5.7 THAT EXTEND THIS FILE.
 
     /**
-     * @var LegacyKey
+     * @var LegacyKey|null
      */
     protected $legacyAttributeKey;
 
@@ -191,7 +191,7 @@ class Key extends Facade implements AttributeKeyInterface
         }
 
         /**
-         * @var $value AbstractValue
+         * @var AbstractValue $value
          */
         if (!($value instanceof EmptyRequestAttributeValue)) {
             // This is a new v8 attribute type
@@ -257,7 +257,7 @@ class Key extends Facade implements AttributeKeyInterface
      */
     public function reindex($table, $columnHeaders, $attribs, $rs = null)
     {
-        /** @var \Concrete\Core\Database\Connection $db */
+        /** @var \Concrete\Core\Database\Connection\Connection $db */
         $db = \Database::connection();
         $sm = $db->getSchemaManager();
 

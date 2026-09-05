@@ -11,7 +11,7 @@ trait GetTreeIdsForQueryTrait
      * A helper method for getting tree IDs for use in a query. Includes "0" in the query out of simplicity
      *
      * @param Site $site
-     * @return array
+     * @return string
      */
     public function getTreeIdsForQuery(Site $site): string
     {

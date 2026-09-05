@@ -131,7 +131,8 @@ class View extends AbstractView
      * A shortcut to posting back to the current page with a task and optional parameters. Only works in the context of.
      *
      * @param string $action
-     * @param string $task
+     *
+     * The additional optional arguments (read with func_get_args()) are the task and its parameters, forwarded to url().
      *
      * @return string $url
      */

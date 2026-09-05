@@ -6,6 +6,8 @@ use Exception as BaseException;
 
 /**
  * Exception thrown while inspecting an offline package.
+ *
+ * @phpstan-consistent-constructor
  */
 class Exception extends BaseException
 {

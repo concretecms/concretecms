@@ -20,11 +20,20 @@ use Concrete\Core\User\UserInfo;
 use Concrete\Core\Utility\IPAddress;
 use Events;
 
+/**
+ * @phpstan-consistent-constructor
+ */
 class Message extends ConcreteObject implements ObjectInterface, SubjectInterface
 {
+    /**
+     * @var int|numeric-string
+     */
     public $cnvMessageID;
     protected $cnvMessageDateCreated;
     public $cnvMessageFlagTypes;
+    /**
+     * @var int|numeric-string
+     */
     public $cnvMessageReview;
 
     public function getConversationMessageID()
@@ -336,7 +345,7 @@ class Message extends ConcreteObject implements ObjectInterface, SubjectInterfac
                         return t2('%d second ago', '%d seconds ago', 0);
                     }
                     if ($elp >= 1) {
-                        $rounded = round($elp);
+                        $rounded = (int) round($elp);
                         switch ($unit) {
                             case 'Y':
                                 return t2('%d year ago', '%d years ago', $rounded);
@@ -371,7 +380,6 @@ class Message extends ConcreteObject implements ObjectInterface, SubjectInterfac
                     $dh->formatDateTime($this->cnvMessageDateCreated, true, true));
             default:
                 return tc('Message posted date', 'Posted on %s', $dh->formatDate($this->cnvMessageDateCreated, true));
-                break;
         }
     }
 

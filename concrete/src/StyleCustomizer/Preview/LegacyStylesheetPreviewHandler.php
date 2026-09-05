@@ -68,7 +68,7 @@ class LegacyStylesheetPreviewHandler implements PreviewHandlerInterface
         }
 
         $request = Request::getInstance();
-        $request->setCustomRequestUser(-1);
+        $request->setCustomRequestUser(null);
         $request->setCurrentPage($page);
 
         $controller = $page->getPageController();

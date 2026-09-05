@@ -124,6 +124,8 @@ class GroupFolder extends TreeNode
         } elseif ($this->getTreeNodeParentID() == 0) {
             return t('Folders');
         }
+
+        return '';
     }
 
     public function loadDetails()

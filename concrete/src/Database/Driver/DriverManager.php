@@ -23,7 +23,7 @@ class DriverManager extends Manager
     }
 
     /**
-     * @return \Doctrine\DBAL\Driver
+     * @return \Doctrine\DBAL\Driver[]
      */
     public function getDrivers()
     {

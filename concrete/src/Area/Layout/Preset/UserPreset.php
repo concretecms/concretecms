@@ -6,10 +6,13 @@ use Concrete\Core\Area\Layout\Preset\Formatter\UserFormatter;
 use Loader;
 use Concrete\Core\Foundation\ConcreteObject;
 
+/**
+ * @phpstan-consistent-constructor
+ */
 class UserPreset extends ConcreteObject
 {
     /**
-     * @var int
+     * @var int|numeric-string
      */
     public $arLayoutPresetID;
 
@@ -19,7 +22,7 @@ class UserPreset extends ConcreteObject
     public $arLayoutPresetName;
 
     /**
-     * @var int
+     * @var int|numeric-string
      */
     public $arLayoutID;
 
@@ -44,7 +47,7 @@ class UserPreset extends ConcreteObject
     }
 
     /**
-     * @return Preset[]
+     * @return static[]
      */
     public static function getList()
     {
@@ -64,7 +67,7 @@ class UserPreset extends ConcreteObject
     /**
      * @param int $arLayoutPresetID
      *
-     * @return static
+     * @return static|null
      */
     public static function getByID($arLayoutPresetID)
     {
@@ -81,6 +84,8 @@ class UserPreset extends ConcreteObject
 
             return $preset;
         }
+
+        return null;
     }
 
     public function delete()
@@ -119,7 +124,7 @@ class UserPreset extends ConcreteObject
     }
 
     /**
-     * @return CustomLayout|ThemeGridLayout|null
+     * @return \Concrete\Core\Area\Layout\CustomLayout|\Concrete\Core\Area\Layout\ThemeGridLayout|null
      */
     public function getAreaLayoutObject()
     {

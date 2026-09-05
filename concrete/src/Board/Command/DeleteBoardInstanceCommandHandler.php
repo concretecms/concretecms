@@ -15,7 +15,7 @@ class DeleteBoardInstanceCommandHandler
     protected $entityManager;
 
     /**
-     * @var DateTime
+     * @var \DateTime
      */
     protected $now;
 

@@ -1,0 +1,20 @@
+{
+    "description": "Dependencies for running PHPStan on the Concrete CMS code base (see phpstan.neon.dist)",
+    "require": {
+        "phpstan/phpstan": "^2.1",
+        "phpstan/phpstan-doctrine": "^2.0"
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "scripts": {
+        "generate-stubs": "@php ../concrete/bin/concrete c5:ide-symbols phpstan --phpstan-other-stubs=vendor/phpstan/phpstan-doctrine/stubs",
+        "phpstan": "phpstan analyse --memory-limit=-1",
+        "generate-baseline": "phpstan analyse --memory-limit=-1 --generate-baseline=baseline.neon"
+    },
+    "scripts-descriptions": {
+        "generate-stubs": "Generate the stubs describing the methods handled by __call/__callStatic (facades, Permission\\Checker)",
+        "phpstan": "Run PHPStan (additional options can be passed after --)",
+        "generate-baseline": "Regenerate baseline.neon with the errors detected in the current code base"
+    }
+}

@@ -46,5 +46,7 @@ class JsonFormatter extends AbstractFormatter
 
             return $o;
         }
+
+        return null;
     }
 }

@@ -120,6 +120,8 @@ class Range extends Denylist
                 if ($range->contains($myIP)) {
                     $myIpWasAllowlisted = true;
                 }
+            } else {
+                $myIP = null;
             }
             $service->deleteRange($record);
             if ($myIpWasAllowlisted && $service->isDenylisted($myIP)) {
@@ -150,7 +152,7 @@ class Range extends Denylist
             ->setType(IpAccessControlService::IPRANGETYPE_BLACKLIST_MANUAL)
             ->setExpiration(null)
         ;
-        $this->entityManager->flush($range);
+        $this->entityManager->flush();
 
         return $this->app->make(ResponseFactoryInterface::class)->json(true);
     }
@@ -232,6 +234,10 @@ class Range extends Denylist
                 break;
             case 'yes-all':
                 $deleteAutomaticDenylist = true;
+                $deleteAutomaticDenylistOnlyExpired = false;
+                break;
+            default:
+                $deleteAutomaticDenylist = false;
                 $deleteAutomaticDenylistOnlyExpired = false;
                 break;
         }

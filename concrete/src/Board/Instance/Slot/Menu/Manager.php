@@ -2,13 +2,13 @@
 namespace Concrete\Core\Board\Instance\Slot\Menu;
 
 use Concrete\Core\Application\UserInterface\ContextMenu\AbstractManager;
-use Concrete\Core\Entity\Board\InstanceSlot;
+use Concrete\Core\Board\Instance\Slot\RenderedSlot;
 
 class Manager extends AbstractManager
 {
 
     /**
-     * @param InstanceSlot $mixed
+     * @param RenderedSlot $mixed
      * @return Menu
      */
     public function getMenu($mixed)

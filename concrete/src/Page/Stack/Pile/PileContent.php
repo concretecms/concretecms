@@ -3,6 +3,7 @@ namespace Concrete\Core\Page\Stack\Pile;
 
 use Concrete\Core\Application\Service\Urls;
 use Concrete\Core\Block\View\BlockView;
+use Concrete\Core\Page\Page;
 use Concrete\Core\Support\Facade\Application;
 use Loader;
 use Concrete\Core\Foundation\ConcreteObject;
@@ -123,6 +124,9 @@ class PileContent extends ConcreteObject implements \JsonSerializable
                 break;
             case "BLOCK":
                 $obj = Block::getByID($this->getItemID());
+                break;
+            default:
+                $obj = null;
                 break;
         }
 

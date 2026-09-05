@@ -132,7 +132,7 @@ class AuthenticationType extends ConcreteObject
     /**
      * Return an array of AuthenticationTypes that are associated with a specific package.
      *
-     * @param Package $pkg
+     * @param \Concrete\Core\Entity\Package|\Concrete\Core\Package\Package $pkg
      *
      * @return AuthenticationType[]
      */

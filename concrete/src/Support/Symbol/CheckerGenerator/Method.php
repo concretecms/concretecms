@@ -7,12 +7,12 @@ namespace Concrete\Core\Support\Symbol\CheckerGenerator;
 class Method
 {
     /**
-     * @var $string
+     * @var string
      */
     private $name;
 
     /**
-     * @var $string
+     * @var string
      */
     private $arguments;
 
@@ -22,24 +22,31 @@ class Method
     private $deprecated = false;
 
     /**
-     * @var $string[]
+     * @var string[]
      */
     private $descriptions = [];
 
     /**
-     * @var $string[]
+     * @var string[]
      */
     private $forObjectOfClasses = [];
 
     /**
-     * @var $string[]
+     * @var string[]
      */
     private $categoryKeyHandles = [];
 
     /**
-     * @var $string[]
+     * @var string[]
      */
     private $sees = [];
+
+    /**
+     * The return type (empty string if unknown).
+     *
+     * @var string
+     */
+    private $returnType = '';
 
     public function __construct(string $name, string $arguments = '')
     {
@@ -55,6 +62,26 @@ class Method
     public function getArguments(): string
     {
         return $this->arguments;
+    }
+
+    /**
+     * @param string $value the return type (empty string if unknown)
+     *
+     * @return $this
+     */
+    public function setReturnType(string $value): self
+    {
+        $this->returnType = $value;
+
+        return $this;
+    }
+
+    /**
+     * Get the return type (empty string if unknown).
+     */
+    public function getReturnType(): string
+    {
+        return $this->returnType;
     }
 
     /**
@@ -190,6 +217,9 @@ class Method
         }
         foreach ($other->getSees() as $value) {
             $this->addSee($value);
+        }
+        if ($this->getReturnType() === '') {
+            $this->setReturnType($other->getReturnType());
         }
 
         return $this;

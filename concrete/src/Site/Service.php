@@ -209,7 +209,7 @@ class Service
         if ($groups) {
             foreach ($groups as $group) {
                 /**
-                 * @var $group \Concrete\Core\Entity\Site\Group\Group
+                 * @var \Concrete\Core\Entity\Site\Group\Group $group
                  */
                 $siteGroup = $groupService->createInstanceGroup($group, $parent);
                 $relation = new Relation();
@@ -251,7 +251,7 @@ class Service
         */
 
         /**
-         * @var $manager Manager;
+         * @var Manager $manager
          */
         $request = Request::createFromGlobals();
         $controller = $this->getController($site);
@@ -289,6 +289,8 @@ class Service
         if (is_object($site)) {
             return $factory->createEntity($site);
         }
+
+        return null;
     }
 
     /**

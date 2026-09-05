@@ -408,7 +408,7 @@ abstract class Node extends ConcreteObject implements \Concrete\Core\Permission\
     protected function updateTreeNodePermissionsID(array $treeNodeParentIDs, int $newPermissionsTreeNodeID)
     {
         /**
-         * @var $db Connection
+         * @var Connection $db
          */
         $db = app(Connection::class);
         $treeNodePermissionsID = $this->getTreeNodePermissionsNodeID();

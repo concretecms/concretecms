@@ -90,7 +90,7 @@ class Identifier
      */
     public function getString($length = 12)
     {
-        $size = ceil($length / 2);
+        $size = (int) ceil($length / 2);
 
         try {
             $bytes = random_bytes($size);

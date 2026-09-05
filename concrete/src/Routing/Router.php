@@ -275,6 +275,7 @@ class Router implements RouterInterface
             $pkg = $data[1];
         } else {
             $path = $data;
+            $pkg = null;
         }
 
         $path = trim($path, '/');

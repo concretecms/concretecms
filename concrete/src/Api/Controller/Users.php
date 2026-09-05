@@ -241,7 +241,7 @@ class Users extends ApiController
     public function delete($uID)
     {
         /**
-         * @var $repository UserInfoRepository
+         * @var UserInfoRepository $repository
          */
         $repository = $this->app->make(UserInfoRepository::class);
         $user = $repository->getByID($uID);
@@ -297,7 +297,7 @@ class Users extends ApiController
     public function update($uID)
     {
         /**
-         * @var $repository UserInfoRepository
+         * @var UserInfoRepository $repository
          */
         $repository = $this->app->make(UserInfoRepository::class);
         $user = $repository->getByID($uID);
@@ -404,7 +404,7 @@ class Users extends ApiController
     public function changePassword($uID)
     {
         /**
-         * @var $repository UserInfoRepository
+         * @var UserInfoRepository $repository
          */
         $repository = $this->app->make(UserInfoRepository::class);
         $user = $repository->getByID($uID);

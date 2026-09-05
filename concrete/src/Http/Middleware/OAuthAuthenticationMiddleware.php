@@ -30,9 +30,9 @@ class OAuthAuthenticationMiddleware implements MiddlewareInterface
     private $foundationFactory;
 
     /**
-     * @var \Concrete\Core\Http\Middleware\Application
+     * @var \Concrete\Core\User\UserInfoRepository
      */
-    private $app;
+    protected $userRepository;
 
     public function __construct(
         ResourceServer $oauth,

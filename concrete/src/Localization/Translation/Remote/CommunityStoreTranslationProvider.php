@@ -11,7 +11,7 @@ use Gettext\Translations;
 use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Psr7\MultipartStream;
 use GuzzleHttp\Psr7\Request;
-use GuzzleHttp\Psr7\Response;
+use Psr\Http\Message\ResponseInterface;
 
 class CommunityStoreTranslationProvider implements ProviderInterface
 {
@@ -42,7 +42,6 @@ class CommunityStoreTranslationProvider implements ProviderInterface
     /**
      * @param Repository $config The configuration repository containind the default values
      * @param Cache $cache The cache to be used (won't be used if the cache lifetime is 0)
-     * @param HttpClient $httpClient The HTTP client to be used to communicate with the Community Translation server
      */
     public function __construct(Repository $config, Cache $cache, Factory $httpClientFactory)
     {
@@ -131,7 +130,7 @@ class CommunityStoreTranslationProvider implements ProviderInterface
     /**
      * Set the default progress limit.
      *
-     * @param int $defaultPogressLimit An integer between 0 (no translations at all) and 100 (all strings are translated)
+     * @param int $value An integer between 0 (no translations at all) and 100 (all strings are translated)
      *
      * @return $this
      */
@@ -166,7 +165,7 @@ class CommunityStoreTranslationProvider implements ProviderInterface
     /**
      * Set the cache life time (in seconds).
      *
-     * @param int $cacheLifetime if 0 (or less), the cache is disabled
+     * @param int $value if 0 (or less), the cache is disabled
      *
      * @return $this
      */
@@ -367,13 +366,13 @@ class CommunityStoreTranslationProvider implements ProviderInterface
     }
 
     /**
-     * @param Response $response
+     * @param \Psr\Http\Message\ResponseInterface $response
      *
      * @throws Exception
      *
      * @return array
      */
-    protected function getJsonFromResponse(Response $response)
+    protected function getJsonFromResponse(ResponseInterface $response)
     {
         $responseBody = $response->getBody()->getContents();
         if ($response->getStatusCode() >= 400) {

@@ -33,7 +33,7 @@ class AvailableObjectCollectionFactory
             $itemIDs = [];
             foreach ($values as $availableObject) {
                 /**
-                 * @var $availableObject AvailableObject
+                 * @var AvailableObject $availableObject
                  */
                 $itemIDs[] = $availableObject->getItem()->getItem()->getUniqueItemId();
             }
@@ -53,7 +53,7 @@ class AvailableObjectCollectionFactory
      * Given a particular slot template and an array of ItemObjectGroup objects, return all possible
      * ObjectCollections for admin editors to choose from.
      *
-     * @param SlotTemplate $slotTemplate
+     * @param SlotTemplate $template
      * @param ItemObjectGroup[] $itemObjectGroups
      * @return ObjectCollection[]
      */
@@ -68,7 +68,7 @@ class AvailableObjectCollectionFactory
             $availableObjects = [];
             foreach ($itemObjectGroups as $itemObjectGroup) {
                 /**
-                 * @var $itemObjectGroup ItemObjectGroup
+                 * @var ItemObjectGroup $itemObjectGroup
                  */
                 $item = $itemObjectGroup->getItem();
                 $objects = $itemObjectGroup->getContentObjects();

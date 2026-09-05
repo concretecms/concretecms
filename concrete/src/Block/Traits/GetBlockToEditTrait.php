@@ -54,7 +54,6 @@ trait GetBlockToEditTrait
     /**
      * Given a block we do things like ensure the proper version of the page for that block is loaded
      * (and sometimes create a new version); we relate edits to pages if the block is in a stack, etc...
-     * @param Block $block
      * @return Block
      */
     public function getBlockToEdit(Page $page, Area $area, string $areaHandle, $blockID): ?Block

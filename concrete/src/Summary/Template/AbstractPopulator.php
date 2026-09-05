@@ -44,7 +44,7 @@ abstract class AbstractPopulator
         $this->clearAvailableTemplates($mixed);
         
         /**
-         * @var $driverCollection DriverCollection
+         * @var DriverCollection $driverCollection
          */
         $driverCollection = $this->driverManager->getDriverCollection($mixed);
 

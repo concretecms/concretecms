@@ -13,7 +13,7 @@ use Concrete\Core\Support\Facade\Url;
 class Attributes extends DashboardPageController
 {
     /**
-     * @var PageType
+     * @var PageType|null
      */
     protected $pageType;
 

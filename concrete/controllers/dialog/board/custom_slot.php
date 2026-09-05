@@ -37,7 +37,7 @@ protected function validateCustomSlotToken()
         $canEdit = false;
         if ($this->request->query->has('boardInstanceID')) {
             /**
-             * @var $instance Instance
+             * @var Instance $instance
              */
             $instance = $entityManager->find(Instance::class, $this->request->query->get('boardInstanceID'));
             if ($instance) {
@@ -46,6 +46,8 @@ protected function validateCustomSlotToken()
                     $canEdit = true;
                 }
             }
+        } else {
+            $instance = null;
         }
         if (!$canEdit) {
             throw new UserMessageException(t('Access Denied'));
@@ -64,7 +66,7 @@ protected function validateCustomSlotToken()
         $instance = $this->getInstanceFromRequest();
         $items = [];
         if (!empty($this->request->request->get('selectedItemIds'))) {
-            foreach ($this->request->request->get('selectedItemIds') as $itemId) {
+            foreach ($this->request->request->all('selectedItemIds') as $itemId) {
                 $items[] = $entityManager->find(InstanceItem::class, $itemId);
             }
         }

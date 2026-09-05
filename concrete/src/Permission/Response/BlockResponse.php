@@ -5,6 +5,9 @@ use Concrete\Core\Permission\Access\Entity\GroupEntity as GroupPermissionAccessE
 use Concrete\Core\Permission\Key\Key;
 use Group;
 
+/**
+ * @property \Concrete\Core\Block\Block $object
+ */
 class BlockResponse extends Response
 {
     // legacy support

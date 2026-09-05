@@ -9,7 +9,7 @@ namespace Concrete\Core\Application;
 trait ApplicationAwareTrait
 {
 
-    /** @var \Concrete\Core\Application\Application */
+    /** @var \Concrete\Core\Application\Application|null */
     protected $app;
 
     /**

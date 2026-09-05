@@ -147,6 +147,8 @@ class Version
                 return $version;
             }
         }
+
+        return null;
     }
 
     /**

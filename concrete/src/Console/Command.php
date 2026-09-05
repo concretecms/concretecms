@@ -11,6 +11,7 @@ use Symfony\Component\Console\Command\Command as SymfonyCommand;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console\Output\NullOutput;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
 use Throwable;
@@ -101,7 +102,7 @@ abstract class Command extends SymfonyCommand
      * Short option: `{--Q|quiet}`
      * Option with description: `{--ignore=default : The item to ignore}`
      *
-     * @var string
+     * @var string|null
      */
     protected $signature;
 
@@ -295,11 +296,11 @@ abstract class Command extends SymfonyCommand
      * @param array $choices
      * @param string $default
      * @param null $attempts
-     * @param null $strict
+     * @param bool $strict
      *
      * @return string
      */
-    public function askWithCompletion($question, array $choices, $default = null, $attempts = null, $strict = null)
+    public function askWithCompletion($question, array $choices, $default = null, $attempts = null, $strict = false)
     {
         return $this->output->askWithCompletion($question, $choices, $default, $attempts, $strict);
     }
@@ -328,7 +329,7 @@ abstract class Command extends SymfonyCommand
      *
      * @return string
      */
-    public function choice($question, array $choices, $default = null, $attempts = null, $multiple = null)
+    public function choice($question, array $choices, $default = null, $attempts = null, $multiple = false)
     {
         return $this->output->choice($question, $choices, $default, $attempts, $multiple);
     }
@@ -337,7 +338,7 @@ abstract class Command extends SymfonyCommand
      * Format input to textual table.
      *
      * @param array $headers
-     * @param \Illuminate\Contracts\Support\Arrayable|array $rows
+     * @param array $rows
      * @param string $tableStyle
      * @param array $columnStyles
      *

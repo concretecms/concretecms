@@ -45,7 +45,7 @@ class Collection extends ConcreteObject implements TrackableInterface
      *
      * @deprecated Use getCollectionID (what's deprecated is the public part)
      *
-     * @var int|null
+     * @var int|numeric-string|null
      */
     public $cID;
 
@@ -458,7 +458,7 @@ class Collection extends ConcreteObject implements TrackableInterface
      * @param string|\Concrete\Core\Attribute\Key\CollectionKey $ak the attribute key (or its handle)
      * @param \Concrete\Core\Entity\Attribute\Value\Value\AbstractValue|mixed $value an attribute value object, or the data needed by the attribute controller to create the attribute value object
      * @param bool $doReindexImmediately
-     * @return \Concrete\Core\Entity\Attribute\Value\PageValue
+     * @return \Concrete\Core\Attribute\AttributeValueInterface
      */
     public function setAttribute($ak, $value, $doReindexImmediately = true)
     {
@@ -505,6 +505,8 @@ class Collection extends ConcreteObject implements TrackableInterface
         if (is_object($this->vObj)) {
             return $this->vObj->getAttributeValueObject($akHandle, $createIfNotExists);
         }
+
+        return null;
     }
 
     /**
@@ -644,7 +646,7 @@ class Collection extends ConcreteObject implements TrackableInterface
         $areaHandle = $area->getAreaHandle();
         if ($area->isGlobalArea()) {
             /**
-             * @var $area GlobalArea
+             * @var GlobalArea $area
              */
             $stack = Stack::getGlobalAreaStackFromName($this, $area->getAreaHandle());
             if ($stack) {
@@ -785,6 +787,8 @@ class Collection extends ConcreteObject implements TrackableInterface
                 $v->addHeaderItem($styleHeader);
             }
         }
+
+        return null;
     }
 
     /**
@@ -824,6 +828,8 @@ class Collection extends ConcreteObject implements TrackableInterface
                 ->setValue('cvRelationID', $oc->getVersionID())
                 ->execute();
         }
+
+        return null;
     }
 
     /**

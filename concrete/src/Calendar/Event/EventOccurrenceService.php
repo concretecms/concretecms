@@ -18,7 +18,7 @@ class EventOccurrenceService
 
     /**
      * @param $id
-     * @return CalendarEventVersionOccurrence
+     * @return CalendarEventVersionOccurrence|null
      */
     public function getByID($versionOccurrenceID)
     {

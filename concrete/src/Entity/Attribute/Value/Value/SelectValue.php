@@ -53,7 +53,7 @@ class SelectValue extends AbstractValue implements \IteratorAggregate
         $str = '';
         $i = 0;
         /**
-         * @var $option SelectValueOption
+         * @var SelectValueOption $option
          */
         foreach ($this->selectedOptions as $option) {
             $str .= $option->getSelectAttributeOptionValue();

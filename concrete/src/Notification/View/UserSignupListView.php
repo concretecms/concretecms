@@ -30,6 +30,8 @@ class UserSignupListView extends StandardListView
         if (is_object($createdBy)) {
             return $createdBy->getUserInfoObject();
         }
+
+        return null;
     }
 
     public function getActionDescription()

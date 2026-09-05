@@ -163,7 +163,7 @@ class Thumbnails extends DashboardPageController
                 } else {
                     $publicFileSets = $this->getPublicFileSets(true);
                     $receivedFileSetIDs = [];
-                    $ids = $post->get('fileSets', []);
+                    $ids = $post->get('fileSets');
                     if (is_array($ids)) {
                         foreach ($ids as $id) {
                             if ($valNumbers->integer($id, 1)) {
@@ -214,6 +214,8 @@ class Thumbnails extends DashboardPageController
     {
         if (!$this->token->validate('thumbnailtype-delete-' . $ftTypeID)) {
             $this->error->add($this->token->getErrorMessage());
+            $type = null;
+            $em = null;
         } else {
             $em = $this->app->make(EntityManagerInterface::class);
             $type = $ftTypeID ? $em->find(TypeEntity::class, $ftTypeID) : null;

@@ -28,6 +28,9 @@ use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 
+/**
+ * @phpstan-consistent-constructor
+ */
 class User extends ConcreteObject
 {
     public $uID = '';
@@ -851,7 +854,7 @@ class User extends ConcreteObject
         $app = Application::getFacadeApplication();
         /** @var \Concrete\Core\Database\Connection\Connection $db */
         $db = $app['database']->connection();
-        /** @var $likeBuilder LikeBuilder */
+        /** @var LikeBuilder $likeBuilder */
         $likeBuilder = $app->make(LikeBuilder::class);
         $query = $db->createQueryBuilder();
         $query->select('ug.gID')->from('UserGroups', 'ug')
@@ -1096,7 +1099,7 @@ class User extends ConcreteObject
 
         $cookie->set(
             sprintf('%s_LOGIN', $app['config']->get('concrete.session.name')),
-            1,
+            '1',
             // $expire
             time() + (int)$config->get('concrete.session.remember_me.lifetime'),
             // $path

@@ -5,6 +5,9 @@ namespace Concrete\Core\Package\Packer;
 use InvalidArgumentException;
 use SplFileInfo;
 
+/**
+ * @phpstan-consistent-constructor
+ */
 class PackerFile
 {
     /**

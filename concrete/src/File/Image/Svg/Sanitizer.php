@@ -309,8 +309,11 @@ class Sanitizer
         $xml = new DOMDocument();
 
         $error = null;
+        $loaded = false;
         try {
-            $loaded = $xml->loadXML($data, $this->getLoadFlags());
+            if ($xml->loadXML($data, $this->getLoadFlags())) {
+                $loaded = true;
+            }
         } catch (Exception $x) {
             $error = $x;
         } catch (Throwable $x) {

@@ -27,7 +27,7 @@ class Express extends ApiController implements ApplicationAwareInterface
     public function listItems(string $objectHandle)
     {
         /**
-         * @var $express ObjectManager
+         * @var ObjectManager $express
          */
         $express = $this->app->make('express');
         $object = $express->getObjectByHandle($objectHandle);
@@ -67,7 +67,7 @@ class Express extends ApiController implements ApplicationAwareInterface
     protected function getEntry(string $objectHandle, $entryIdentifier)
     {
         /**
-         * @var $express ObjectManager
+         * @var ObjectManager $express
          */
         $express = $this->app->make('express');
         $object = $express->getObjectByHandle($objectHandle);

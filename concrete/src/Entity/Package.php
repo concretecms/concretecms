@@ -11,6 +11,8 @@ use Concrete\Core\Support\Facade\Application;
 /**
  * @ORM\Entity
  * @ORM\Table(name="Packages")
+ *
+ * @mixin \Concrete\Core\Package\Package
  */
 class Package implements LocalizablePackageInterface
 {

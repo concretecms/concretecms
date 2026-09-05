@@ -19,7 +19,7 @@ class Sitemap
     protected $app;
 
     /**
-     * @var bool
+     * @var array
      */
     protected $expandedNodes = [];
 
@@ -59,7 +59,7 @@ class Sitemap
     }
 
     /**
-     * @param bool $autoOpen
+     * @param array $nodes
      */
     public function setExpandedNodes($nodes)
     {
@@ -99,7 +99,8 @@ class Sitemap
     }
 
     /**
-     * @param int $cID
+     * @param int|Tree|null $parent the ID of the parent page, or the site tree to list the root pages of
+     * @param Closure|null $onGetNode
      *
      * @return array
      */
@@ -122,6 +123,8 @@ class Sitemap
         } elseif ($parent instanceof Tree) {
             $pl->setSiteTreeObject($parent);
             $cID = 0;
+        } else {
+            $cID = null;
         }
         $pl->filterByParentID($cID); // Either 0 or cParentID
         $pl->setPageVersionToRetrieve(\Concrete\Core\Page\PageList::PAGE_VERSION_RECENT);
@@ -183,7 +186,7 @@ class Sitemap
      * @param \Concrete\Core\Page\Page|int $cItem
      * @param bool $includeChildren
      *
-     * @return stdClass
+     * @return stdClass|false
      */
     public function getNode($cItem, $includeChildren = true, $onGetNode = null)
     {

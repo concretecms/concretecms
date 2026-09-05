@@ -40,9 +40,7 @@ class Date
      *    <li>'app' for the app's timezone</li>
      *    <li>Other values: one of the PHP supported time zones (see http://us1.php.net/manual/en/timezones.php )</li>
      * </ul>
-     * @param string Returns the date/time representation (an empty string if $value is empty)
-     *
-     * @return string
+     * @return string Returns the date/time representation (an empty string if $value is empty)
      *
      * @throws \Punic\Exception\BadArgumentType
      */
@@ -367,12 +365,12 @@ class Date
         $secondsPerMinute = 60;
         $secondsPerHour = 60 * $secondsPerMinute;
         $secondsPerDay = 24 * $secondsPerHour;
-        $days = floor($diff / $secondsPerDay);
+        $days = (int) floor($diff / $secondsPerDay);
         $diff = $diff - $days * $secondsPerDay;
-        $hours = floor($diff / $secondsPerHour);
+        $hours = (int) floor($diff / $secondsPerHour);
         $diff = $diff - $hours * $secondsPerHour;
-        $minutes = floor($diff / $secondsPerMinute);
-        $seconds = $diff - $minutes * $secondsPerMinute;
+        $minutes = (int) floor($diff / $secondsPerMinute);
+        $seconds = (int) ($diff - $minutes * $secondsPerMinute);
         $chunks = [];
         if ($days > 0) {
             $chunks[] = t2('%d day', '%d days', $days, $days);
@@ -426,19 +424,21 @@ class Date
             case 'user':
                 $tz = null;
                 if ($config->get('concrete.misc.user_timezones')) {
-                    $u = null;
                     $request = null;
                     if (!$app->isRunThroughCommandLineInterface()) {
                         $request = Request::getInstance();
                     }
                     if ($request && $request->hasCustomRequestUser()) {
-                        $u = $request->getCustomRequestUser();
+                        $ui = $request->getCustomRequestUser();
+                        if ($ui !== null) {
+                            $tz = $ui->getUserTimezone();
+                        }
                     } else {
                         $app = Application::getFacadeApplication();
                         $u = $app->make(User::class);
-                    }
-                    if (is_object($u) && $u->isRegistered()) {
-                        $tz = $u->getUserTimezone();
+                        if ($u->isRegistered()) {
+                            $tz = $u->getUserTimezone();
+                        }
                     }
                 }
                 if ($tz) {
@@ -548,7 +548,7 @@ class Date
      * Render the date part of a date/time as a localized string.
      *
      * @param mixed $value $The date/time representation (one of the values accepted by toDateTime)
-     * @param string $format The format name; it can be 'full' (eg 'EEEE, MMMM d, y' - 'Wednesday, August 20, 2014'), 'long' (eg 'MMMM d, y' - 'August 20, 2014'), 'medium' (eg 'MMM d, y' - 'August 20, 2014') or 'short' (eg 'M/d/yy' - '8/20/14'),
+     * @param string|bool $format The format name; it can be 'full' (eg 'EEEE, MMMM d, y' - 'Wednesday, August 20, 2014'), 'long' (eg 'MMMM d, y' - 'August 20, 2014'), 'medium' (eg 'MMM d, y' - 'August 20, 2014') or 'short' (eg 'M/d/yy' - '8/20/14'),
      *                      or a skeleton pattern prefixed by '~', e.g. '~yMd'.
      *                      You can also append a caret ('^') or an asterisk ('*') to $width. If so, special day names may be used (like 'Today', 'Yesterday', 'Tomorrow' with '^' and 'today', 'yesterday', 'tomorrow' width '*') instead of the date.
      * @param string $toTimezone The timezone to set. Special values are:<ul>

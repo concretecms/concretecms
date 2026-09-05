@@ -33,6 +33,16 @@ class PageList extends DatabaseItemList
     protected $indexedSearch = false;
     protected $viewPagePermissionKeyHandle = 'view_page';
 
+    /**
+     * @var bool
+     */
+    protected $indexModeSimple;
+
+    /**
+     * @var string
+     */
+    protected $indexedKeywords;
+
     /* magic method for filtering by page attributes. */
 
     public function __call($nm, $a)

@@ -45,7 +45,7 @@ class TemplateLocation
     }
 
     /**
-     * @param mixed $templateHandle
+     * @param mixed $location
      */
     public function setLocation($location)
     {

@@ -11,6 +11,10 @@ use Concrete\Core\Permission\Access\Access;
 use Concrete\Core\Permission\Key\Key as PermissionKey;
 use Concrete\Core\Support\Facade\Application;
 
+/**
+ * @property \Concrete\Core\Area\Area|null $permissionObject
+ * @method \Concrete\Core\Area\Area|null getPermissionObject()
+ */
 class AreaAssignment extends Assignment
 {
     /**

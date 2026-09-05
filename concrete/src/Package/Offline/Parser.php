@@ -81,7 +81,7 @@ abstract class Parser
      *
      * @throws \Concrete\Core\Package\Offline\Exception in case of problems
      *
-     * @return \Concrete\Core\Package\Offline\PackageInfo
+     * @return string
      */
     abstract protected function getPackageHandleFromClassName(array $tokens, $className, $classStart);
 
@@ -92,7 +92,7 @@ abstract class Parser
      *
      * @throws \Concrete\Core\Package\Offline\Exception in case of problems
      *
-     * @return array[] [$className, $classStart, $classEnd] returns the class name, the index of the first PHP token of the class body (its first '{'}, and the index of the last PHP token of the class body (its last '}'}
+     * @return array{0: string, 1: int, 2: int} [$className, $classStart, $classEnd] returns the class name, the index of the first PHP token of the class body (its first '{'}, and the index of the last PHP token of the class body (its last '}'}
      */
     protected function findControllerClass(array $tokens)
     {

@@ -6,6 +6,10 @@ use Concrete\Core\Support\Facade\Database;
 use Concrete\Core\Tree\Node\Node;
 use Concrete\Core\Tree\Node\Type\Group;
 
+/**
+ * @property \Concrete\Core\Tree\Node\Type\Group|null $permissionObject
+ * @method \Concrete\Core\Tree\Node\Type\Group|null getPermissionObject()
+ */
 class GroupTreeNodeAssignment extends TreeNodeAssignment
 {
 

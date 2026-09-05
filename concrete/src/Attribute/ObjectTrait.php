@@ -42,6 +42,8 @@ trait ObjectTrait
         if (is_object($value)) {
             return $value;
         }
+
+        return null;
     }
 
     /**
@@ -108,7 +110,7 @@ trait ObjectTrait
                 $value = false;
             } else {
                 /**
-                 * @var $value AttributeValue\AbstractValue
+                 * @var AttributeValue\AbstractValue $value
                  */
                 $value = $controller->createAttributeValue($value);
             }

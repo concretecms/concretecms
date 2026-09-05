@@ -44,7 +44,6 @@ class Aliasing extends BackendInterfaceBlockController
             if (is_object($a)) {
                 $b = Block::getByID($this->request->get('bID'), $c, $a);
                 $p = new Checker($b);
-                /** @phpstan-ignore-next */
                 if ($p->canAdminBlock() && $c->isMasterCollection()) {
                     $blocks = $this->block->queueForDefaultsAliasing($this->request->request->get('addBlock'), $this->request->request->get('updateForkedBlocks'), (bool) $this->request->request->get('forceDisplayOrder' , false));
                     $batch = Batch::create(t('Update Defaults'), function() use ($blocks) {
@@ -99,7 +98,7 @@ class Aliasing extends BackendInterfaceBlockController
                             if (!$b->isAlias($nc)) {
                                 $bt = $b->getBlockTypeObject();
                                 if ($bt->isCopiedWhenPropagated()) {
-                                    $b->duplicate($nc, true);
+                                    $b->duplicate($nc, 'duplicate_master');
                                 } else {
                                     $b->alias($nc);
                                 }

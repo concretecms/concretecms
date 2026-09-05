@@ -20,7 +20,7 @@ class CalendarFeed extends Controller
             if ($cp->canAccessCalendarRssFeed()) {
                 if ($calendar->getEventPageParentID()) {
                     $calendarPage = Page::getByID($calendar->getEventPageParentID());
-                    $calendarLink = $calendarPage->getCollectionLink(true);
+                    $calendarLink = $calendarPage->getCollectionLink();
                 } else {
                     $calendarLink = BASE_URL . DIR_REL;
                 }
@@ -39,9 +39,7 @@ class CalendarFeed extends Controller
 
                 $results = $list->getResults();
 
-                /**
-                 * @var EventOccurrence
-                 */
+                /** @var EventOccurrence $occurrence */
                 foreach ($results as $occurrence) {
                     $entry = $writer->createEntry();
                     $entry->setTitle($occurrence->getEvent()->getName());

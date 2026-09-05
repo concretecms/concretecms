@@ -172,7 +172,7 @@ class PackageService
     /**
      * Get the controllers of the packages that have an upgraded version available in the marketplace.
      *
-     * @return \Concrete\Core\Package\Package[]
+     * @return \Concrete\Core\Entity\Package[]
      */
     public function getRemotelyUpgradeablePackages()
     {
@@ -316,6 +316,7 @@ class PackageService
             // loads and instantiates the object
             $class = '\\Concrete\\Package\\' . camelcase($pkgHandle) . '\\Controller';
             $packageController = null;
+            $errorDetails = null;
             try {
                 $packageController = $this->application->make($class);
                 if (!$packageController instanceof Package) {

@@ -2,9 +2,12 @@
 namespace Concrete\Core\Legacy;
 
 use Concrete\Core\Database\Query\LikeBuilder;
+use Concrete\Core\File\Set\Set as FileSet;
 use Concrete\Core\Support\Facade\Application;
+use Exception;
 use File as ConcreteFile;
 use FileAttributeKey;
+use ZipArchive;
 
 /**
  * An object that allows a filtered list of files to be returned.
@@ -19,6 +22,11 @@ class FileList extends DatabaseItemList
     protected $attributeClass = 'FileAttributeKey';
     protected $permissionLevel = 'search_file_set';
     protected $filteredFileSetIDs = array();
+
+    /**
+     * @var int|null
+     */
+    protected $queryCreated;
 
     /* magic method for filtering by attributes. */
     public function __call($nm, $a)
@@ -37,7 +45,7 @@ class FileList extends DatabaseItemList
     /** 
      * Filters by file extension.
      *
-     * @param mixed $extension
+     * @param mixed $ext
      */
     public function filterByExtension($ext)
     {
@@ -146,6 +154,8 @@ class FileList extends DatabaseItemList
                     $_fsIDs[] = $fsID;
                 }
             }
+        } else {
+            $fsID = null;
         }
 
         if (count($_fsIDs) > 1) {
@@ -246,7 +256,6 @@ class FileList extends DatabaseItemList
         if ($this->permissionLevel == false || $u->isSuperUser()) {
             return false;
         }
-
 
         $accessEntities = $u->getUserAccessEntityObjects();
         foreach ($accessEntities as $pae) {

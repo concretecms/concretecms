@@ -14,6 +14,8 @@ use Symfony\Component\HttpFoundation\File\Exception\FileException;
  * @author Igor Wiedler <igor@wiedler.ch>
  * @author Jordan Alliot <jordan.alliot@gmail.com>
  * @author Sergey Linnik <linniksa@gmail.com>
+ *
+ * @phpstan-consistent-constructor
  */
 class FlysystemFileResponse extends Response
 {
@@ -29,7 +31,7 @@ class FlysystemFileResponse extends Response
     protected $maxlen;
 
     /**
-     * @param File                $file               The file to stream
+     * @param File|string         $file               The file to stream
      * @param FilesystemInterface $filesystem         The filesystem instance to get info with
      * @param int                 $status             The response status code
      * @param array               $headers            An array of response headers
@@ -50,7 +52,8 @@ class FlysystemFileResponse extends Response
     }
 
     /**
-     * @param \SplFileInfo|string $file               The file to stream
+     * @param File|string         $file               The file to stream
+     * @param FilesystemInterface $filesystem         The filesystem instance to get info with
      * @param int                 $status             The response status code
      * @param array               $headers            An array of response headers
      * @param bool                $public             Files are public by default
@@ -59,15 +62,15 @@ class FlysystemFileResponse extends Response
      *
      * @return static
      */
-    public static function create($file = null, $status = 200, $headers = array(), $public = true, $contentDisposition = null, $autoEtag = false)
+    public static function create($file = null, $filesystem = null, $status = 200, $headers = array(), $public = true, $contentDisposition = null, $autoEtag = false)
     {
-        return new static($file, $status, $headers, $public, $contentDisposition, $autoEtag);
+        return new static($file, $filesystem, $status, $headers, $public, $contentDisposition, $autoEtag);
     }
 
     /**
      * Sets the file to stream.
      *
-     * @param \SplFileInfo|string $file               The file to stream
+     * @param File|string         $file               The file to stream
      * @param string              $contentDisposition
      * @param bool                $autoEtag
      *
@@ -178,11 +181,11 @@ class FlysystemFileResponse extends Response
         if (false === $fileSize = $this->file->getSize()) {
             return $this;
         }
-        $this->headers->set('Content-Length', $fileSize);
+        $this->headers->set('Content-Length', (string) $fileSize);
 
         if (!$this->headers->has('Accept-Ranges')) {
             // Only accept ranges on safe HTTP methods
-            $this->headers->set('Accept-Ranges', $request->isMethodSafe(false) ? 'bytes' : 'none');
+            $this->headers->set('Accept-Ranges', $request->isMethodSafe() ? 'bytes' : 'none');
         }
 
         if ($request->headers->has('Range')) {
@@ -211,7 +214,7 @@ class FlysystemFileResponse extends Response
 
                         $this->setStatusCode(206);
                         $this->headers->set('Content-Range', sprintf('bytes %s-%s/%s', $start, $end, $fileSize));
-                        $this->headers->set('Content-Length', $end - $start + 1);
+                        $this->headers->set('Content-Length', (string) ($end - $start + 1));
                     }
                 }
             }
@@ -268,6 +271,8 @@ class FlysystemFileResponse extends Response
         if (null !== $content) {
             throw new \LogicException('The content cannot be set on a FlysystemFileResponse instance.');
         }
+
+        return $this;
     }
 
     /**

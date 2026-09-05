@@ -1,0 +1,158 @@
+<?php
+
+/*
+ * The setters of the League URL classes are documented as returning UrlInterface, but Url returns $this and UrlImmutable
+ * returns a clone: this stub declares the actual types, so that the subclasses of Concrete keep their type in method chains.
+ */
+
+namespace League\Url;
+
+class Url
+{
+    /**
+     * @param string $data
+     *
+     * @return $this
+     */
+    public function setScheme($data)
+    {
+    }
+
+    /**
+     * @param string $data
+     *
+     * @return $this
+     */
+    public function setUser($data)
+    {
+    }
+
+    /**
+     * @param string $data
+     *
+     * @return $this
+     */
+    public function setPass($data)
+    {
+    }
+
+    /**
+     * @param string|array<string|int, mixed>|\Traversable<string|int, mixed> $data
+     *
+     * @return $this
+     */
+    public function setHost($data)
+    {
+    }
+
+    /**
+     * @param string|int $data
+     *
+     * @return $this
+     */
+    public function setPort($data)
+    {
+    }
+
+    /**
+     * @param string|array<string|int, mixed>|\Traversable<string|int, mixed> $data
+     *
+     * @return $this
+     */
+    public function setPath($data)
+    {
+    }
+
+    /**
+     * @param string|array<string|int, mixed>|\Traversable<string|int, mixed> $data
+     *
+     * @return $this
+     */
+    public function setQuery($data)
+    {
+    }
+
+    /**
+     * @param string $data
+     *
+     * @return $this
+     */
+    public function setFragment($data)
+    {
+    }
+}
+
+class UrlImmutable
+{
+    /**
+     * @param string $data
+     *
+     * @return static
+     */
+    public function setScheme($data)
+    {
+    }
+
+    /**
+     * @param string $data
+     *
+     * @return static
+     */
+    public function setUser($data)
+    {
+    }
+
+    /**
+     * @param string $data
+     *
+     * @return static
+     */
+    public function setPass($data)
+    {
+    }
+
+    /**
+     * @param string|array<string|int, mixed>|\Traversable<string|int, mixed> $data
+     *
+     * @return static
+     */
+    public function setHost($data)
+    {
+    }
+
+    /**
+     * @param string|int $data
+     *
+     * @return static
+     */
+    public function setPort($data)
+    {
+    }
+
+    /**
+     * @param string|array<string|int, mixed>|\Traversable<string|int, mixed> $data
+     *
+     * @return static
+     */
+    public function setPath($data)
+    {
+    }
+
+    /**
+     * @param string|array<string|int, mixed>|\Traversable<string|int, mixed> $data
+     *
+     * @return static
+     */
+    public function setQuery($data)
+    {
+    }
+
+    /**
+     * @param string $data
+     *
+     * @return static
+     */
+    public function setFragment($data)
+    {
+    }
+}

@@ -10,7 +10,7 @@ class TextControlSaveHandler extends ControlSaveHandler
     public function saveFromRequest(Control $control, Request $request)
     {
         /**
-         * @var $control TextControl
+         * @var TextControl $control
          */
         $control = parent::saveFromRequest($control, $request);
         $control->setHeadline($request->request('headline'));

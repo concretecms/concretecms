@@ -490,13 +490,13 @@ class Type
         $linkNode->addAttribute('upscalingEnabled', $this->isUpscalingEnabled() ? '1' : '0');
         $linkNode->addAttribute('keepAnimations', $this->isKeepAnimations() ? '1' : '0');
         if ($this->getWidth()) {
-            $linkNode->addAttribute('width', $this->getWidth());
+            $linkNode->addAttribute('width', (string) $this->getWidth());
         }
         if ($this->getHeight()) {
-            $linkNode->addAttribute('height', $this->getHeight());
+            $linkNode->addAttribute('height', (string) $this->getHeight());
         }
         if ($this->isRequired()) {
-            $linkNode->addAttribute('required', $this->isRequired());
+            $linkNode->addAttribute('required', '1');
         }
         $linkNode->addAttribute('limitedToFileSets', $this->isLimitedToFileSets() ? '1' : '0');
         $filesetsNode = null;

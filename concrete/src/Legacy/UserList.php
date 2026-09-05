@@ -32,6 +32,11 @@ class UserList extends DatabaseItemList
     public $showInvalidatedUsers = 0;
     public $searchAgainstEmail = 0;
 
+    /**
+     * @var int|null
+     */
+    protected $queryCreated;
+
     //Filter by uName
     public function filterByUserName($username)
     {
@@ -102,7 +107,7 @@ class UserList extends DatabaseItemList
     /**
      * Returns an array of userInfo objects based on current filter settings.
      *
-     * @return UserInfo[]
+     * @return \Concrete\Core\User\UserInfo[]
      */
     public function get($itemsToGet = 100, $offset = 0)
     {

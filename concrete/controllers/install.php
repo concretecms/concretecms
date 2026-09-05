@@ -255,9 +255,6 @@ class Install extends Controller
         return $rf->json($result);
     }
 
-    /**
-     * @return \Concrete\Core\Error\Error
-     */
     public function configure()
     {
         $post = $this->request->request;
@@ -289,7 +286,7 @@ class Install extends Controller
                 $error->add($val->getError());
             } elseif (!$error->has()) {
                 /**
-                 * @var $options InstallerOptions
+                 * @var InstallerOptions $options
                  */
                 $options = $this->app->make(InstallerOptions::class);
                 $config = $this->app->make('config');

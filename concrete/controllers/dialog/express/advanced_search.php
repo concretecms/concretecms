@@ -17,7 +17,7 @@ class AdvancedSearch extends AdvancedSearchController
 {
 
     /**
-     * @var Entity
+     * @var Entity|null
      */
     protected $entity;
 

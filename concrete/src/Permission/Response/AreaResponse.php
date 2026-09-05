@@ -8,6 +8,9 @@ use Concrete\Core\Permission\Key\Key;
 use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\User\User;
 
+/**
+ * @property \Concrete\Core\Area\Area $object
+ */
 class AreaResponse extends Response
 {
     // legacy support
@@ -49,7 +52,7 @@ class AreaResponse extends Response
     public function validate($permissionHandle, $args = array())
     {
         /**
-         * @var $area Area
+         * @var Area $area
          */
         $page = $this->object->getAreaCollectionObject();
         if ($page->isMasterCollection()) {

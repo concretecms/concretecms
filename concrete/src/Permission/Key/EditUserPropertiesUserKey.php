@@ -1,11 +1,15 @@
 <?php
 namespace Concrete\Core\Permission\Key;
 
+use Concrete\Core\Entity\Attribute\Key\UserKey as UserAttributeKey;
 use Loader;
 use Concrete\Core\User\User;
 use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\Permission\Duration as PermissionDuration;
 
+/**
+ * @method \Concrete\Core\Permission\Access\ListItem\EditUserPropertiesUserListItem[] getAccessListItems($accessType = self::ACCESS_TYPE_INCLUDE, $filterEntities = [], $checkCache = true)
+ */
 class EditUserPropertiesUserKey extends UserKey
 {
     public function getMyAssignment()
@@ -58,7 +62,7 @@ class EditUserPropertiesUserKey extends UserKey
                 $asl->setAllowEditAvatar(1);
             }
             if ($l->allowEditTimezone() && (!in_array('uTimezone', $excluded))) {
-                $asl->allowEditTimezone(1);
+                $asl->setAllowEditTimezone(1);
             }
             if ($l->allowEditDefaultLanguage() && (!in_array('uDefaultLanguage', $excluded))) {
                 $asl->setAllowEditDefaultLanguage(1);

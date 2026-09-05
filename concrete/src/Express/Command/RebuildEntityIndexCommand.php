@@ -36,9 +36,11 @@ class RebuildEntityIndexCommand extends AbstractRebuildIndexCommand
     public function getAttributeKeyCategory(): CategoryInterface
     {
         $entity = app(ObjectManager::class)->getObjectByID($this->getEntityId());
-        if ($entity) {
-            return $entity->getAttributeKeyCategory();
+        if (!$entity) {
+            throw new \RuntimeException(t('Unable to find the Express entity with ID %s', $this->getEntityId()));
         }
+
+        return $entity->getAttributeKeyCategory();
     }
 
     public static function getHandler(): string

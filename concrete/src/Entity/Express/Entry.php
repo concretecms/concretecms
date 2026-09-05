@@ -25,7 +25,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * @ORM\Entity(repositoryClass="\Concrete\Core\Entity\Express\EntryRepository")
  * @ORM\Table(name="ExpressEntityEntries",
- *  *     indexes={
+ *     indexes={
  *         @ORM\Index(name="resultsNodeID", columns={"resultsNodeID"}),
  *         @ORM\Index(name="createdSort", columns={"exEntryDateCreated"}),
  *         @ORM\Index(name="modifiedSort", columns={"exEntryDateModified"})
@@ -46,7 +46,7 @@ class Entry implements \JsonSerializable, PermissionObjectInterface, AttributeOb
      * @param $nm
      * @param $a
      *
-     * @return $mixed
+     * @return mixed
      */
     public function __call($nm, $a)
     {
@@ -117,7 +117,7 @@ class Entry implements \JsonSerializable, PermissionObjectInterface, AttributeOb
     }
 
     /**
-     * @return bool
+     * @return string
      */
     public function getPermissionAssignmentClassName()
     {
@@ -125,7 +125,7 @@ class Entry implements \JsonSerializable, PermissionObjectInterface, AttributeOb
     }
 
     /**
-     * @return bool
+     * @return string
      */
     public function getPermissionObjectKeyCategoryHandle()
     {
@@ -168,6 +168,8 @@ class Entry implements \JsonSerializable, PermissionObjectInterface, AttributeOb
 
             return $attributeValue;
         }
+
+        return null;
     }
 
     /**
@@ -340,6 +342,8 @@ class Entry implements \JsonSerializable, PermissionObjectInterface, AttributeOb
                 return $entryAssociation;
             }
         }
+
+        return null;
     }
 
     /**
@@ -399,8 +403,6 @@ class Entry implements \JsonSerializable, PermissionObjectInterface, AttributeOb
 
     /**
      * Formats the label of this entry to the mask (e.g. %product-name%) or the standard format.
-     *
-     * @return mixed
      */
     public function getLabel(): string
     {
@@ -493,7 +495,7 @@ class Entry implements \JsonSerializable, PermissionObjectInterface, AttributeOb
     }
 
     /**
-     * @return \Concrete\Core\Entity\User\User
+     * @return \Concrete\Core\Entity\User\User|null
      */
     public function getAuthor()
     {

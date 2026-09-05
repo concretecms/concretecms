@@ -462,7 +462,7 @@ class StyleSet
     }
 
     /**
-     * @param string|null $borderStyle
+     * @param string|null $borderRadius
      */
     public function setBorderRadius($borderRadius)
     {
@@ -978,5 +978,7 @@ class StyleSet
             case GridFramework::DEVICE_CLASSES_HIDE_ON_LARGE:
                 return $this->getHideOnLargeDevice();
         }
+
+        return null;
     }
 }

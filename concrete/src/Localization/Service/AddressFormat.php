@@ -265,7 +265,7 @@ class AddressFormat
      *
      * @param  string $code the country code
      *
-     * @return \CommerceGuys\Addressing\AddressFormat\AddressFormat the address
+     * @return \CommerceGuys\Addressing\AddressFormat\AddressFormat|null the address
      *         format for the country
      */
     protected function getCountryAddressFormat($code)

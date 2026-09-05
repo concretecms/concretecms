@@ -70,7 +70,7 @@ class Service implements LoggerAwareInterface
     /**
      * Should we throw an exception if the delivery fails?
      *
-     * @var false
+     * @var bool
      */
     protected $throwOnFailure;
 
@@ -99,7 +99,7 @@ class Service implements LoggerAwareInterface
     public function __destruct()
     {
         try {
-            $this->mailer = null;
+            unset($this->mailer);
         } catch (Throwable $x) {
             // Ignore error
         }
@@ -393,7 +393,7 @@ class Service implements LoggerAwareInterface
             $importer->setupValidation($address->getAddress(), $data);
         }
         $this->from($importer->getMailImporterEmail());
-        $this->body = $importer->setupBody(($this->getBody() === false) ? '' : $this->getBody());
+        $this->setBody($importer->setupBody(($this->getBody() === false) ? '' : $this->getBody()));
     }
 
     /**

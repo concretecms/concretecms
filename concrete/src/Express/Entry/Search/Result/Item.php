@@ -10,6 +10,13 @@ class Item extends SearchResultItem
 {
     protected $entry;
 
+    /**
+     * @deprecated use getEntry()->getID()
+     *
+     * @var int
+     */
+    public $id;
+
     public function __construct(SearchResult $result, Set $columns, $item)
     {
         parent::__construct($result, $columns, $item);

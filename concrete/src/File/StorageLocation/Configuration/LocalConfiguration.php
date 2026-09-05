@@ -70,7 +70,7 @@ class LocalConfiguration extends Configuration implements ConfigurationInterface
     /**
      * @param \Concrete\Core\Http\Request $req
      *
-     * @return Error
+     * @return \Concrete\Core\Error\ErrorList\ErrorList
      */
     public function validateRequest(\Concrete\Core\Http\Request $req)
     {

@@ -44,7 +44,7 @@ class Attributes extends BackendInterfaceController
     protected $allowedEditAttributes;
 
     /**
-     * @var Page
+     * @var Page|null
      */
     private $defaultPage;
 

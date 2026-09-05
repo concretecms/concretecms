@@ -17,8 +17,7 @@ trait MutexTrait
     /**
      * Set the temporary directory.
      *
-     * @param string $value
-     * @param mixed $temporaryDirectory
+     * @param string $temporaryDirectory
      */
     protected function setTemporaryDirectory($temporaryDirectory)
     {
@@ -28,8 +27,7 @@ trait MutexTrait
     /**
      * Get the full path of a temporary file that's unique for the concrete5 application and for the specified mutex key.
      *
-     * @param string $key The mutex key
-     * @param mixed $mutexKey
+     * @param mixed $mutexKey The mutex key (a string or an integer)
      *
      * @throws InvalidMutexKeyException
      *

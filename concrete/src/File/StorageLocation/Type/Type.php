@@ -12,7 +12,7 @@ class Type
     /**
      * @param string $fslTypeHandle
      * @param string $fslTypeName
-     * @param int|\Package $pkg
+     * @param \Concrete\Core\Entity\Package|\Concrete\Core\Package\Package|false|null $pkg
      *
      * @return \Concrete\Core\Entity\File\StorageLocation\Type\Type
      */
@@ -75,7 +75,7 @@ class Type
     /**
      * Return an array of AuthenticationTypes that are associated with a specific package.
      *
-     * @param \Package $pkg
+     * @param \Concrete\Core\Entity\Package|\Concrete\Core\Package\Package $pkg
      *
      * @return \Concrete\Core\Entity\File\StorageLocation\Type\Type[]
      */

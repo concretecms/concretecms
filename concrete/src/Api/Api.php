@@ -25,7 +25,7 @@ class Api
     protected $config;
 
     /**
-     * @var ClientInterface
+     * @var ClientInterface|null
      */
     protected $client;
 

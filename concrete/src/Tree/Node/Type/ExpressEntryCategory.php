@@ -49,6 +49,8 @@ class ExpressEntryCategory extends Category
         } elseif ($this->treeNodeParentID == 0) {
             return t('Entries');
         }
+
+        return '';
     }
 
     public function getListFormatter()

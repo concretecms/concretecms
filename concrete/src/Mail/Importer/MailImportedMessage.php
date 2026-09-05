@@ -4,6 +4,7 @@ namespace Concrete\Core\Mail\Importer;
 use Concrete\Core\Foundation\ConcreteObject;
 use Core;
 use Database;
+use Exception;
 use RecursiveIteratorIterator;
 use Concrete\Core\Package\PackageList;
 use Laminas\Mail\Storage\Pop3                             as MailStoragePop3;
@@ -22,6 +23,11 @@ class MailImportedMessage
     protected $oMailMessage;
     protected $oMailCnt;
     protected $oMailID;
+
+    /**
+     * @var mixed
+     */
+    protected $dataObject;
 
     public function __construct($mail, MailMessage $msg, $count, $id)
     {
@@ -137,7 +143,6 @@ class MailImportedMessage
                     if (isset($params[1])) {
                         $fileName = trim($params[1]);
                     }
-
 
                     if ($part->getHeaders()->has('Content-Type')) {
                         $params   = explode(';', $part->getHeaders()->get('Content-Type')->getFieldValue());

@@ -72,7 +72,7 @@ class Timezone
         $maxDeltaMinutes = 0;
         foreach ($timestamps as $index => $timestamp) {
             $databaseValue = new DateTime($databaseDatetimes[$index], $phpTimezone);
-            $phpValue = DateTime::createFromFormat('U', $timestamp, $phpTimezone);
+            $phpValue = DateTime::createFromFormat('U', (string) $timestamp, $phpTimezone);
             $deltaMinutes = (int) floor(($phpValue->getTimestamp() - $databaseValue->getTimestamp()) / 60);
             if ($deltaMinutes === 0) {
                 $sometimesSame = true;
@@ -124,11 +124,8 @@ class Timezone
     /**
      * Get a list of date/times checked against the database.
      *
-     * @return array {
-     *
-     *     @var int[] $timestamps the UNIX timestamps of the date/times checked
-     *     @var string[] $databaseDatetimes The corresponding date/time representations of the timestamps as formatted by the database.
-     * }
+     * @return array{timestamps: int[], databaseDatetimes: string[]} timestamps are the UNIX timestamps of the date/times checked,
+     *                                                                databaseDatetimes are the corresponding date/time representations of the timestamps as formatted by the database
      */
     protected function getDatabaseTimestamps()
     {
@@ -136,8 +133,8 @@ class Timezone
             // Let's check the timestamp at solstices,
             // to be sure we also check potential daylight saving time changes.
             $timestamps = [
-                mktime(12, 0, 0, 6, 21, date('Y')),
-                mktime(12, 0, 0, 12, 21, date('Y')),
+                mktime(12, 0, 0, 6, 21, (int) date('Y')),
+                mktime(12, 0, 0, 12, 21, (int) date('Y')),
             ];
             $sql = 'SELECT ';
             foreach ($timestamps as $index => $timestamp) {

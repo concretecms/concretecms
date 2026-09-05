@@ -26,7 +26,7 @@ class Site implements TreeInterface, ObjectInterface, PermissionObjectInterface,
     /**
      * The site configuration repository.
      *
-     * @var \Concrete\Core\Site\Config\Liaison
+     * @var \Concrete\Core\Site\Config\Liaison|null
      */
     protected $siteConfig;
 
@@ -218,7 +218,7 @@ class Site implements TreeInterface, ObjectInterface, PermissionObjectInterface,
     {
         if (!$this->siteConfig) {
             $app = Application::getFacadeApplication();
-            $this->updateSiteConfigRepository($app->make('config'), $this);
+            $this->updateSiteConfigRepository($app->make('config'));
         }
 
         return $this->siteConfig;
@@ -317,6 +317,8 @@ class Site implements TreeInterface, ObjectInterface, PermissionObjectInterface,
                 return $locale;
             }
         }
+
+        return null;
     }
 
     /**
@@ -325,6 +327,8 @@ class Site implements TreeInterface, ObjectInterface, PermissionObjectInterface,
      * {@inheritdoc}
      *
      * @see \Concrete\Core\Site\Tree\TreeInterface::getSiteTreeObject()
+     *
+     * @return SiteTree|null
      */
     public function getSiteTreeObject()
     {

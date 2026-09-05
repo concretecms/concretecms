@@ -90,7 +90,9 @@ class RescanMultilingualPageCommandHandler
     {
         foreach ($c->getBlocks() as $b) {
             if ($b->getBlockTypeHandle() == 'content') {
-                $content = $b->getController()->content;
+                /** @var \Concrete\Block\Content\Controller $controller */
+                $controller = $b->getController();
+                $content = $controller->content;
                 $content = preg_replace_callback(
                     '/{CCM:CID_([0-9]+)}/i',
                     static function ($matches) use ($section) {

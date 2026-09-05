@@ -17,7 +17,7 @@ use Concrete\Core\Site\Tree\TreeInterface;
 class StandardSitemapProvider implements ProviderInterface
 {
     /**
-     * @var string
+     * @var bool
      */
     protected $permissionsIgnored = false;
 
@@ -180,6 +180,8 @@ class StandardSitemapProvider implements ProviderInterface
                 return $this->siteService->getSiteTreeByID($siteTreeID);
             }
         }
+
+        return null;
     }
 
     /**

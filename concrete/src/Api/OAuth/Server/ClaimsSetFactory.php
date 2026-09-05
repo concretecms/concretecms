@@ -27,7 +27,7 @@ class ClaimsSetFactory
             $value =  $user->getAttribute($attribute);
 
             if ($value) {
-                $set->{$method} = $value;
+                $set->{$method}($value);
             }
         }
 

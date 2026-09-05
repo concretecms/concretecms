@@ -10,7 +10,6 @@ use Permissions;
 
 class Edit extends PresetEdit
 {
-
     public function getEditSearchPresetAction()
     {
         $action = parent::getEditSearchPresetAction();
@@ -30,10 +29,6 @@ class Edit extends PresetEdit
             if ($requestedEntityID !== 0 && $requestedEntityID !== $entityID) {
                 return null;
             }
-            if ($entityID !== 0) {
-                $this->exEntityID = $entityID;
-            }
-
             return $entity;
         }
 

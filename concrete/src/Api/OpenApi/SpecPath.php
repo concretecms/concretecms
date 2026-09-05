@@ -28,7 +28,7 @@ class SpecPath implements \JsonSerializable
     protected $summary;
 
     /**
-     * @var SpecParameter[]
+     * @var ParameterInterface[]
      */
     protected $parameters = [];
 
@@ -38,12 +38,12 @@ class SpecPath implements \JsonSerializable
     protected $security;
 
     /**
-     * @var SpecRequestBody
+     * @var SpecRequestBody|null
      */
     protected $requestBody;
 
     /**
-     * @var SpecResponseList
+     * @var SpecResponseList|null
      */
     protected $responses;
 

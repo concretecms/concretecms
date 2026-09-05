@@ -19,7 +19,6 @@ class CalendarEventPopulator extends AbstractPopulator
 
     /**
      * @param Instance $instance
-     * @param CalendarEventConfiguration $configuration
      * @return array
      * @throws \Exception
      */

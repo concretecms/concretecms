@@ -22,6 +22,11 @@ class Attributes extends BackendInterfacePageController
     // and that page needs to know how to submit it.
     protected $controllerActionPath = '/ccm/system/panels/details/page/attributes';
 
+    /**
+     * @var \Concrete\Core\Permission\Access\ListItem\EditPagePropertiesPageListItem
+     */
+    protected $assignment;
+
     protected function canAccess()
     {
         return $this->permissions->canEditPageProperties();

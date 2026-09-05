@@ -102,7 +102,7 @@ class IdTokenResponse extends BearerTokenResponse
      * @param \League\OAuth2\Server\Entities\AccessTokenEntityInterface $accessToken
      * @param \League\OpenIdConnectClaims\ClaimsSet $claims
      *
-     * @return \Lcobucci\JWT\Token
+     * @return string
      */
     protected function createIdToken(AccessTokenEntityInterface $accessToken, ClaimsSet $claims)
     {

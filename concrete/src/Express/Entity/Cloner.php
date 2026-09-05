@@ -10,7 +10,7 @@ use Concrete\Core\Entity\Attribute\Key\ExpressKey;
 use Concrete\Core\Entity\Express\Control\AssociationControl;
 use Concrete\Core\Entity\Express\Control\AttributeKeyControl;
 use Concrete\Core\Entity\Express\Entity;
-use Concrete\Core\Entity\Express\Entry\Association;
+use Concrete\Core\Entity\Express\Association;
 use Concrete\Core\Express\Attribute\AttributeKeyHandleGenerator;
 use Concrete\Core\Express\Generator\EntityHandleGenerator;
 use Concrete\Core\Tree\Node\Node;
@@ -128,7 +128,7 @@ class Cloner implements ApplicationAwareInterface
      * @param Entity $sourceEntity
      * @param Entity $destinationEntity
      *
-     * @return array<string, Association> Return association mapping [sourceAssociationId => newAssociation]
+     * @return array<int, Association> Return association mapping [sourceAssociationId => newAssociation]
      */
     protected function cloneEntityAssociations(Entity $sourceEntity, Entity $destinationEntity): array
     {
@@ -153,7 +153,7 @@ class Cloner implements ApplicationAwareInterface
      * @param Entity $sourceEntity
      * @param Entity $destinationEntity
      * @param array<string, ExpressKey> $akMapping attribute key mapping [sourceKeyHandle => newKey]
-     * @param array<string, Association> $associationMapping attribute key mapping [sourceAssociationId => newAssociation]
+     * @param array<int, Association> $associationMapping association mapping [sourceAssociationId => newAssociation]
      * @param array<string, string> &$controlsMapping (Optional) Map old form controls ID's to new ones [oldFormControlID => newFormControlID]
      */
     protected function cloneEntityForms(Entity $sourceEntity, Entity $destinationEntity, array $akMapping, array $associationMapping, array &$controlsMapping = []): void

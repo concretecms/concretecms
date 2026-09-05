@@ -63,8 +63,6 @@ class LikeBuilder
 
     /**
      * Initialize the instance.
-     *
-     * @param AbstractPlatform $platform the database platform
      */
     public function __construct($anyCharacterWildcard = self::DEFAULT_ANYCHARACTER_WILDCARD, $oneCharacterWildcard = self::DEFAULT_ONECHARACTER_WILDCARD, $escapeCharacter = self::DEFAULT_ESCAPE_CHARACTER, array $otherWildcards = [])
     {

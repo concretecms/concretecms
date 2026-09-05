@@ -21,6 +21,8 @@ class SearchResultFormatter implements FormatterInterface
         } elseif ($result->getSearchType() === $result::TYPE_KEYWORDS) {
             return t('"<b>%s</b>" string found in the following locations:', $result->getSearchString());
         }
+
+        return '';
     }
 
     public function getExporter(): ExporterInterface

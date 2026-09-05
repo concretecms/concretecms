@@ -73,7 +73,7 @@ class Configure extends Denylist
             }
 
             if (!$this->error->has()) {
-                $this->entityManager->flush($category);
+                $this->entityManager->flush();
                 $this->flash('success', t('IP Denylist settings saved.'));
 
                 return $this->app->make(ResponseFactoryInterface::class)->redirect(

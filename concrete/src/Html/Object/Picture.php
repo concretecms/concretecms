@@ -5,6 +5,9 @@ namespace Concrete\Core\Html\Object;
 use HtmlObject\Element;
 use HtmlObject\Image;
 
+/**
+ * @phpstan-consistent-constructor
+ */
 class Picture extends Element
 {
     /**
@@ -54,7 +57,7 @@ class Picture extends Element
      *
      * @return \Concrete\Core\Html\Object\Picture
      */
-    public static function create($sources = [], $fallbackSrc = false, $attributes = [], $lazyLoadNative = false, $lazyLoadJavaScript = false)
+    public static function create($sources = [], $fallbackSrc = '', $attributes = [], $lazyLoadNative = false, $lazyLoadJavaScript = false)
     {
         return new static($sources, $fallbackSrc, $attributes, $lazyLoadNative, $lazyLoadJavaScript);
     }
@@ -235,6 +238,8 @@ class Picture extends Element
                 $child->addClass($classes);
             }
         }
+
+        return $this;
     }
 
     /**
@@ -250,5 +255,7 @@ class Picture extends Element
                 $child->setAttribute($attribute, $value);
             }
         }
+
+        return $this;
     }
 }

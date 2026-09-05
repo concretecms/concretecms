@@ -55,7 +55,7 @@ class Factory
 
         if (is_object($category)) {
             /**
-             * @var $category CategoryInterface
+             * @var CategoryInterface $category
              */
             return $category->getList();
         }

@@ -29,9 +29,9 @@ class Listener
         $em = $event->getEntityManager();
         $db = $em->getConnection();
 
-        $db->Execute('delete from atExpressSettings where exEntityID = ?', array($entity->getID()));
+        $db->executeStatement('delete from atExpressSettings where exEntityID = ?', [$entity->getID()]);
         $table = $entity->getAttributeKeyCategory()->getIndexedSearchTable();
-        $db->Execute('DROP TABLE IF EXISTS ' . $table);
+        $db->executeStatement('DROP TABLE IF EXISTS ' . $table);
 
         $entity->setDefaultEditForm(null);
         $entity->setDefaultViewForm(null);

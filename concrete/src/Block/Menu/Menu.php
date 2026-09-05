@@ -111,8 +111,10 @@ class Menu extends PopoverMenu
 
         if ($btOriginal->getBlockTypeHandle() == BLOCK_HANDLE_STACK_PROXY) {
             if (is_object($_bo)) {
+                /** @var \Concrete\Block\CoreStackDisplay\Controller $bi */
                 $bi = $_bo->getInstance();
             } else {
+                /** @var \Concrete\Block\CoreStackDisplay\Controller $bi */
                 $bi = $b->getInstance();
             }
 

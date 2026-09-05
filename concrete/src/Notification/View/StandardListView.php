@@ -51,7 +51,7 @@ abstract class StandardListView implements StandardListViewInterface
     }
 
     /**
-     * @return UserInfo
+     * @return UserInfo|null
      */
     public function getInitiatorUserObject()
     {

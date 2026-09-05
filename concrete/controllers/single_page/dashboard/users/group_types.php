@@ -45,7 +45,7 @@ class GroupTypes extends DashboardPageController
     public function remove($groupTypeId = null)
     {
         if (!$this->request->isMethod('POST')) {
-            return $this->responseFactory->notFound();
+            return $this->responseFactory->notFound('');
         }
 
         if (!$this->token->validate('save_group_type')) {
@@ -104,7 +104,7 @@ class GroupTypes extends DashboardPageController
         $hasManagerRole = false;
 
         if (is_array($this->request->request->get("roles"))) {
-            foreach ($this->request->request->get("roles") as $roleId => $role) {
+            foreach ($this->request->request->all("roles") as $roleId => $role) {
                 if (strlen($role["name"]) === 0) {
                     $this->error->add(t("You need to enter a role name."));
                 }
@@ -118,7 +118,7 @@ class GroupTypes extends DashboardPageController
                 //$this->error->add(t("You need to have at least one manager role."));
             }
 
-            if (!in_array($this->request->request->get("defaultRole"), array_keys($this->request->request->get("roles")))) {
+            if (!in_array($this->request->request->get("defaultRole"), array_keys($this->request->request->all('roles')))) {
                 $this->error->add(t("You need to set a default role."));
             }
         } else {
@@ -137,7 +137,7 @@ class GroupTypes extends DashboardPageController
         $updateRoleIds = [];
         $defaultRole = null;
 
-        foreach ($this->request->request->get("roles") as $roleId => $role) {
+        foreach ($this->request->request->all("roles") as $roleId => $role) {
             if (substr($roleId, 0, 1) === "_") {
                 $newRoles[$roleId] = $role;
             } else {

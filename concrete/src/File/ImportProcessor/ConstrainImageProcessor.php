@@ -39,7 +39,7 @@ class ConstrainImageProcessor implements ProcessorInterface
     /**
      * Resize mode (one of the ImageInterface::THUMBNAIL_... constants).
      *
-     * @var string
+     * @var int
      */
     protected $constraintMode = ImageInterface::THUMBNAIL_INSET;
 
@@ -51,11 +51,16 @@ class ConstrainImageProcessor implements ProcessorInterface
     protected $rescanThumbnails = true;
 
     /**
+     * @var bool
+     */
+    protected $resizeInPlace;
+
+    /**
      * Initialize the instance.
      *
      * @param int|null $maxWidth the maximum image width (if set)
      * @param int|null $maxHeight the maximum image height (if set)
-     * @param string|null $constraintMode The resize mode (one of the ImageInterface::THUMBNAIL_... constants)
+     * @param int|null $constraintMode The resize mode (one of the ImageInterface::THUMBNAIL_... constants)
      */
     public function __construct($maxWidth = null, $maxHeight = null, $constraintMode = null)
     {
@@ -112,7 +117,7 @@ class ConstrainImageProcessor implements ProcessorInterface
     /**
      * Get the resize mode.
      *
-     * @return string One of the ImageInterface::THUMBNAIL_... constants
+     * @return int One of the ImageInterface::THUMBNAIL_... constants
      */
     public function getConstraintMode()
     {
@@ -122,7 +127,7 @@ class ConstrainImageProcessor implements ProcessorInterface
     /**
      * Set the resize mode.
      *
-     * @param string $constraintMode One of the ImageInterface::THUMBNAIL_... constants
+     * @param int $constraintMode One of the ImageInterface::THUMBNAIL_... constants
      */
     public function setConstraintMode($constraintMode)
     {
@@ -186,7 +191,7 @@ class ConstrainImageProcessor implements ProcessorInterface
      *
      * @param ImageInterface $image The image to be resized
      * @param Box $size The size of the image
-     * @param string $mode
+     * @param int $mode One of the ImageInterface::THUMBNAIL_... constants
      * @param string $filter
      *
      * @throws InvalidArgumentException

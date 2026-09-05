@@ -8,7 +8,6 @@ use Concrete\Core\Attribute\Category\UserCategory;
 use Concrete\Core\Attribute\Key\UserKey;
 use Concrete\Core\Attribute\ObjectInterface as AttributeObjectInterface;
 use Concrete\Core\Attribute\ObjectTrait;
-use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Encryption\PasswordHasher;
 use Concrete\Core\Entity\Attribute\Value\UserValue;
 use Concrete\Core\Entity\Express\Entry;
@@ -51,7 +50,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Group;
 use Imagine\Image\ImageInterface;
 use League\Flysystem\AdapterInterface;
-use League\URL\URLInterface;
+use League\Url\UrlInterface;
 use stdClass;
 use Concrete\Core\Events\EventDispatcher;
 
@@ -82,7 +81,7 @@ class UserInfo extends ConcreteObject implements AttributeObjectInterface, Permi
     protected $entityManager;
 
     /**
-     * @var Connection
+     * @var \Doctrine\DBAL\Connection
      */
     protected $connection;
 
@@ -472,6 +471,8 @@ class UserInfo extends ConcreteObject implements AttributeObjectInterface, Permi
         $notified = $notifier->getUsersToNotify($subscription, $msg);
         $notification = $type->createNotification($msg);
         $notifier->notify($notified, $notification);
+
+        return null;
     }
 
     /**
@@ -818,6 +819,8 @@ class UserInfo extends ConcreteObject implements AttributeObjectInterface, Permi
             $this->changePassword($newPassword);
             return $newPassword;
         }
+
+        return null;
     }
 
     /**
@@ -829,7 +832,7 @@ class UserInfo extends ConcreteObject implements AttributeObjectInterface, Permi
     }
 
     /**
-     * @return URLInterface|null
+     * @return UrlInterface|null
      */
     public function getUserPublicProfileUrl()
     {
@@ -1011,7 +1014,7 @@ class UserInfo extends ConcreteObject implements AttributeObjectInterface, Permi
     }
 
     /**
-     * @param UserAttributeKey[] $attributes
+     * @param \Concrete\Core\Entity\Attribute\Key\UserKey[] $attributes
      */
     public function saveUserAttributesForm($attributes)
     {

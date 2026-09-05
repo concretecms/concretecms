@@ -7,6 +7,9 @@ use Concrete\Core\Package\PackageList;
 use Concrete\Core\Support\Facade\Facade;
 use Concrete\Core\Support\Facade\Package as PackageService;
 
+/**
+ * @phpstan-consistent-constructor
+ */
 class Library extends ConcreteObject
 {
     /**
@@ -26,7 +29,7 @@ class Library extends ConcreteObject
     /**
      * Is this the active library?
      *
-     * @var bool
+     * @var bool|0|1|'0'|'1'
      */
     public $sclIsActive;
 
@@ -35,7 +38,7 @@ class Library extends ConcreteObject
     /**
      * The package ID (or 0 if it's a core library).
      *
-     * @var int
+     * @var int|numeric-string
      */
     protected $pkgID;
 
@@ -135,6 +138,8 @@ class Library extends ConcreteObject
 
             return $sc;
         }
+
+        return null;
     }
 
     /**
@@ -185,7 +190,7 @@ class Library extends ConcreteObject
         $db = $app->make('database')->connection();
         $db->executeQuery('update SystemCaptchaLibraries set sclIsActive = 0');
         $db->executeQuery('update SystemCaptchaLibraries set sclIsActive = 1 where sclHandle = ?', [$this->sclHandle]);
-        $this->sclIsActive = 1;
+        $this->sclIsActive = true;
     }
 
     /**
@@ -282,6 +287,8 @@ class Library extends ConcreteObject
         } else {
             return file_exists(DIR_FILES_ELEMENTS_CORE . '/' . $path);
         }
+
+        return false;
     }
 
     /**

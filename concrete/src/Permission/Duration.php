@@ -11,9 +11,11 @@ class Duration extends AbstractRepetition
     protected $pdID;
 
     /**
-     * @param \Concrete\Core\Permission\Access\ListItem\ListItem[] $list
+     * @template T of \Concrete\Core\Permission\Access\ListItem\ListItem
      *
-     * @return \Concrete\Core\Permission\Access\ListItem\ListItem[]
+     * @param T[] $list
+     *
+     * @return T[]
      */
     public static function filterByActive($list)
     {
@@ -50,7 +52,7 @@ class Duration extends AbstractRepetition
             // create a Duration object
             $pd = new self();
 
-            $pd->setStartDateAllDay(0);
+            $pd->setStartDateAllDay(false);
             if ($dateStartDT === null) {
                 $dateStart = '';
             } else {
@@ -58,10 +60,10 @@ class Duration extends AbstractRepetition
                 if ($request->get('pdStartDateAllDayActivate')) {
                     // We need to work in the user timezone, otherwise we risk to change the day
                     $dateStart = $service->toDateTime($dateStart, 'user', 'system')->format('Y-m-d').' 00:00:00';
-                    $pd->setStartDateAllDay(1);
+                    $pd->setStartDateAllDay(true);
                 }
             }
-            $pd->setEndDateAllDay(0);
+            $pd->setEndDateAllDay(false);
             if ($dateEndDT === null) {
                 $dateEnd = '';
             } else {
@@ -69,7 +71,7 @@ class Duration extends AbstractRepetition
                 if ($request->get('pdEndDateAllDayActivate')) {
                     // We need to work in the user timezone, otherwise we risk to change the day
                     $dateEnd = $service->toDateTime($dateEnd, 'user', 'system')->format('Y-m-d').' 23:59:59';
-                    $pd->setEndDateAllDay(1);
+                    $pd->setEndDateAllDay(true);
                 }
             }
             $pd->setStartDate($dateStart);
@@ -119,7 +121,7 @@ class Duration extends AbstractRepetition
     /**
      * @param $pdID
      *
-     * @return \Concrete\Core\Permission\Duration
+     * @return \Concrete\Core\Permission\Duration|null
      */
     public static function getByID($pdID)
     {

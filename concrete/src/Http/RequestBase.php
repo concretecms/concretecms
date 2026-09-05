@@ -51,7 +51,7 @@ class RequestBase extends SymfonyRequest
     protected static $instance;
 
     /**
-     * @var \Concrete\Core\Page\Page
+     * @var \Concrete\Core\Page\Page|null
      */
     protected $c;
 
@@ -76,7 +76,7 @@ class RequestBase extends SymfonyRequest
     }
 
     /**
-     * @return \Concrete\Core\Page\Page
+     * @return \Concrete\Core\Page\Page|null
      */
     public function getCurrentPage()
     {
@@ -97,7 +97,7 @@ class RequestBase extends SymfonyRequest
     }
 
     /**
-     * @return \Concrete\Core\User\UserInfo
+     * @return \Concrete\Core\User\UserInfo|null
      */
     public function getCustomRequestUser()
     {
@@ -105,7 +105,7 @@ class RequestBase extends SymfonyRequest
     }
 
     /**
-     * @param \Concrete\Core\User\UserInfo $ui
+     * @param \Concrete\Core\User\UserInfo|null $ui
      */
     public function setCustomRequestUser($ui)
     {

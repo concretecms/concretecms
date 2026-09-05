@@ -10,13 +10,12 @@ abstract class TopicItem extends AbstractItem
 {
 
     /**
-     * @var $topic Topic
+     * @var Topic $topic
      */
     protected $topic;
 
     /**
      * CategoryItem constructor.
-     * @param Category $category
      */
     public function __construct(Topic $topic)
     {

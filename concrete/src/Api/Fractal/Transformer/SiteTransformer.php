@@ -22,9 +22,7 @@ class SiteTransformer extends TransformerAbstract
         $data['home_page_id'] = $site->getSiteHomePageID();
 
         $defaultLocale = $site->getDefaultLocale();
-        if ($defaultLocale) {
-            $defaultLocaleString = $defaultLocale->getLocale();
-        }
+        $defaultLocaleString = $defaultLocale ? $defaultLocale->getLocale() : null;
         
         $data['default_locale'] = $defaultLocaleString;
         return $data;

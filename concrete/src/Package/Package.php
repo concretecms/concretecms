@@ -262,6 +262,13 @@ abstract class Package implements LocalizablePackageInterface
     protected $packageDependencies = [];
 
     /**
+     * The currently installed version of the package. Only set by PackageService::getLocalUpgradeablePackages().
+     *
+     * @var string|null
+     */
+    public $pkgCurrentVersion;
+
+    /**
      * Initialize the instance.
      *
      * @param Application $app the application instance

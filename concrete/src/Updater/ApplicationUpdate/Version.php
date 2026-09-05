@@ -8,6 +8,11 @@ class Version
     protected $releaseNotesUrl;
 
     /**
+     * @var string
+     */
+    protected $releaseNotesURL;
+
+    /**
      * @return mixed
      */
     public function getReleaseNotesURL()
@@ -16,7 +21,7 @@ class Version
     }
 
     /**
-     * @param mixed $releaseNotesUrl
+     * @param mixed $releaseNotesURL
      */
     public function setReleaseNotesURL($releaseNotesURL)
     {

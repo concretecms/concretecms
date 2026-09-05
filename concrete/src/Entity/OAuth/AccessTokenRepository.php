@@ -9,6 +9,9 @@ use League\OAuth2\Server\Entities\ClientEntityInterface;
 use League\OAuth2\Server\Entities\ScopeEntityInterface;
 use League\OAuth2\Server\Repositories\AccessTokenRepositoryInterface;
 
+/**
+ * @extends \Doctrine\ORM\EntityRepository<\Concrete\Core\Entity\OAuth\AccessToken>
+ */
 class AccessTokenRepository extends EntityRepository implements AccessTokenRepositoryInterface
 {
 
@@ -72,7 +75,7 @@ class AccessTokenRepository extends EntityRepository implements AccessTokenRepos
      */
     public function isAccessTokenRevoked($tokenId)
     {
-        /** @var \Concrete\Core\Entity\OAuth\AccessToken $token */
+        /** @var \Concrete\Core\Entity\OAuth\AccessToken|null $token */
         $token = $this->find($tokenId);
         if (!$token) {
             // The token was manually removed.
@@ -81,7 +84,7 @@ class AccessTokenRepository extends EntityRepository implements AccessTokenRepos
 
         $now = new \DateTime('now');
         // If we have a token and it has expired...
-        if ($token && $token->getExpiryDateTime() < $now) {
+        if ($token->getExpiryDateTime() < $now) {
             return true;
         }
 

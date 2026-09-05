@@ -367,7 +367,7 @@ class Group extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
     }
 
     /**
-     * @return GroupRole
+     * @return GroupRole|null
      */
     public function getDefaultRole()
     {
@@ -404,7 +404,7 @@ class Group extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
     }
 
     /**
-     * @return \Concrete\Core\Entity\File\File|bool
+     * @return \Concrete\Core\Entity\File\File|false|null
      */
     public function getThumbnailImage()
     {
@@ -413,7 +413,7 @@ class Group extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
         if ($this->gThumbnailFID) {
             $bf = \Concrete\Core\File\File::getByID($this->gThumbnailFID);
             if (!is_object($bf) || $bf->isError()) {
-                unset($bf);
+                $bf = null;
             }
         }
 
@@ -754,7 +754,7 @@ class Group extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
     }
 
     /**
-     * @return bool
+     * @return \Concrete\Core\Entity\File\File|false|null
      * @deprecated
      */
     public function getGroupBadgeImageObject()
@@ -763,7 +763,7 @@ class Group extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
         if ($this->gBadgeFID) {
             $bf = File::getByID($this->gBadgeFID);
             if (!is_object($bf) || $bf->isError()) {
-                unset($bf);
+                $bf = null;
             }
         }
 
@@ -887,7 +887,7 @@ class Group extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
      * This is deprecated; use the AddGroupCommand and the command bus.
      * @param string $gName
      * @param string $gDescription
-     * @param GroupFolder $parentFolder
+     * @param GroupFolder|false|null $parentFolder
      *
      * @return Group
      */
@@ -1060,9 +1060,9 @@ class Group extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
 
     /**
      * Takes the numeric id of a group and returns a group object.
-     * @param string $gID
+     * @param int|string $gID
      *
-     * @return Group
+     * @return Group|null
      * @deprecated
      * This is deprecated, user the grouprepository instead.
      */
@@ -1077,7 +1077,7 @@ class Group extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
      * Takes the name of a group and returns a group object.
      * @param string $gName
      *
-     * @return Group
+     * @return Group|null
      * @deprecated
      * This is deprecated, user the grouprepository instead.
      */

@@ -79,6 +79,11 @@ class UserList extends DatabaseItemList implements PagerProviderInterface, Pagin
      */
     private $userInfoRepository;
 
+    /**
+     * @var int
+     */
+    protected $sortUserStatus;
+
     public function __construct(?StickyRequest $req = null)
     {
         $u = Application::getFacadeApplication()->make(User::class);
@@ -189,7 +194,7 @@ class UserList extends DatabaseItemList implements PagerProviderInterface, Pagin
     /**
      * @param UserInfoRepository $value
      *
-     * @return $this;
+     * @return $this
      */
     public function setUserInfoRepository(UserInfoRepository $value)
     {
@@ -302,7 +307,7 @@ class UserList extends DatabaseItemList implements PagerProviderInterface, Pagin
         if (!$isValidated) {
             $this->includeUnvalidatedUsers();
             $this->query->andWhere('u.uIsValidated = :uIsValidated');
-            $this->query->setParameter('uIsValidated', $isValidated);
+            $this->query->setParameter('uIsValidated', 0);
         }
     }
 
@@ -405,7 +410,7 @@ class UserList extends DatabaseItemList implements PagerProviderInterface, Pagin
     /**
      * Filters the user list for only users within at least one of the provided groups.
      *
-     * @param \Concrete\Core\User\Group\Group[]|\Generator $groups
+     * @param iterable<\Concrete\Core\User\Group\Group> $groups
      * @param bool $inGroups Set to true to search users that are in at least in one of the specified groups, false to search users that aren't in any of the specified groups
      */
     public function filterByInAnyGroup($groups, $inGroups = true)
@@ -519,6 +524,7 @@ class UserList extends DatabaseItemList implements PagerProviderInterface, Pagin
         $isGroupSet = false;
         $isUserGroupSet = false;
         // Loop twice as params returns an array of arrays
+        $setTable = null;
         foreach ($params as $param) {
             foreach ($param as $setTable)
                 if (in_array('ug', $setTable)) {

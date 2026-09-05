@@ -144,7 +144,7 @@ class GroupCreate implements SubjectInterface
     }
 
     /**
-     * @return \Concrete\Core\Entity\Notification\GroupCreateNotification[]
+     * @return Collection|\Concrete\Core\Entity\Notification\GroupCreateNotification[]
      */
     public function getNotifications(): Collection
     {

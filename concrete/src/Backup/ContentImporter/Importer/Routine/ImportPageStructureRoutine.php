@@ -120,7 +120,7 @@ class ImportPageStructureRoutine extends AbstractPageStructureRoutine implements
             $page = $this->home;
         } else {
             $pagePath = '/' . implode('/', $pathSlugs);
-            $page = $this->getPageByPath($pagePath, 'RECENT');
+            $page = $this->getPageByPath($pagePath);
         }
 
         if ($page !== null) {

@@ -156,7 +156,7 @@ class LoginService implements LoggerAwareInterface, ApplicationAwareInterface
         }
 
         // If the remaining attempts are less than 0
-        if ($this->loginAttemptService->remainingAttempts($username, $password) <= 0) {
+        if ($this->loginAttemptService->remainingAttempts($username) <= 0) {
             $this->loginAttemptService->deactivate($username);
             $userFailed = true;
         }

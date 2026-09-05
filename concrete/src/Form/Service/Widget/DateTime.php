@@ -423,7 +423,7 @@ EOT;
      * Choose an array value nearest to a specified value.
      * Useful when we work with time resolutions.
      *
-     * @param int $values
+     * @param int[] $values
      * @param int $wantedValue
      *
      * @return int

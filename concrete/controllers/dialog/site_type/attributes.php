@@ -40,7 +40,7 @@ class Attributes extends BackendInterfaceController
     protected $requestSiteType;
 
     /**
-     * @var Skeleton
+     * @var Skeleton|null
      */
     private $skeleton;
 

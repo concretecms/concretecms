@@ -21,6 +21,11 @@ use Concrete\Core\Routing\Redirect;
 
 class Entities extends DashboardPageController
 {
+    /**
+     * @var \Concrete\Core\Entity\Express\Entity|null
+     */
+    protected $entity;
+
     public function add()
     {
         $this->set('pageTitle', t('Add Data Object'));
@@ -111,7 +116,7 @@ class Entities extends DashboardPageController
         }
 
         $r = $this->entityManager->getRepository('\Concrete\Core\Entity\Express\Entity');
-        $entities = $r->findAll(array(), array('name' => 'asc'));
+        $entities = $r->findBy([], ['name' => 'asc']);
         $select = ['' => t('** Choose Entity')];
         foreach ($entities as $entity) {
             $select[$entity->getID()] = $entity->getEntityDisplayName();
@@ -207,7 +212,6 @@ class Entities extends DashboardPageController
         $this->view_entity($this->request->request->get('entity_id'));
     }
 
-
     public function view_entity($id = null)
     {
         $r = $this->entityManager->getRepository('\Concrete\Core\Entity\Express\Entity');
@@ -227,7 +231,7 @@ class Entities extends DashboardPageController
     }
 
     /**
-     * @return \Concrete\Core\Routing\RedirectResponse
+     * @return \Concrete\Core\Routing\RedirectResponse|null
      */
     public function delete_entries()
     {
@@ -264,10 +268,12 @@ class Entities extends DashboardPageController
         // Without this the action falls through to the default view, which renders without the
         // variables view() sets and fatals - so the error above would never reach the user.
         $this->view_entity($this->request->request->get('entity_id'));
+
+        return null;
     }
 
     /**
-     * @return \Concrete\Core\Routing\RedirectResponse
+     * @return \Concrete\Core\Routing\RedirectResponse|null
      */
     public function publish()
     {
@@ -292,6 +298,8 @@ class Entities extends DashboardPageController
         // Without this the action falls through to the default view, which renders without the
         // variables view() sets and fatals - so the error above would never reach the user.
         $this->view_entity($this->request->request->get('entity_id'));
+
+        return null;
     }
 
     public function clear_entries($id = null)
@@ -351,7 +359,6 @@ class Entities extends DashboardPageController
             $this->view();
         }
     }
-
 
     public function update($id = null)
     {
@@ -447,7 +454,7 @@ class Entities extends DashboardPageController
             $this->entityManager->flush();
 
             /**
-             * @var $indexer ExpressSearchIndexer
+             * @var ExpressSearchIndexer $indexer
              */
             $indexer = $entity->getAttributeKeyCategory()->getSearchIndexer();
             $indexer->updateRepository($previousEntity, $entity);

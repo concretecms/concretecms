@@ -55,12 +55,12 @@ class Search extends DashboardPageController
      */
     protected $user = false;
     /**
-     * @var Element
+     * @var Element|null
      */
     protected $headerMenu;
 
     /**
-     * @var Element
+     * @var Element|null
      */
     protected $headerSearch;
 
@@ -68,6 +68,76 @@ class Search extends DashboardPageController
      * @var bool
      */
     protected $canResetPassword;
+
+    /**
+     * @var array
+     */
+    protected $allowedEditAttributes;
+
+    /**
+     * @var \Concrete\Core\Permission\Access\ListItem\EditUserPropertiesUserListItem
+     */
+    protected $assignment;
+
+    /**
+     * @var bool
+     */
+    protected $canActivateUser;
+
+    /**
+     * @var bool
+     */
+    protected $canAddGroup;
+
+    /**
+     * @var bool
+     */
+    protected $canDeleteUser;
+
+    /**
+     * @var bool
+     */
+    protected $canEdit;
+
+    /**
+     * @var bool
+     */
+    protected $canEditAvatar;
+
+    /**
+     * @var bool
+     */
+    protected $canEditEmail;
+
+    /**
+     * @var bool
+     */
+    protected $canEditHomeFileManagerFolderID;
+
+    /**
+     * @var bool
+     */
+    protected $canEditLanguage;
+
+    /**
+     * @var bool
+     */
+    protected $canEditPassword;
+
+    /**
+     * @var bool
+     */
+    protected $canEditTimezone;
+
+    /**
+     * @var bool
+     */
+    protected $canEditUserName;
+
+    /**
+     * @var bool
+     */
+    protected $canSignInAsUser;
 
     /**
      * @return SearchProvider
@@ -443,9 +513,12 @@ class Search extends DashboardPageController
 
                 $this->user->saveUserAttributesForm([$ak]);
                 $val = $this->user->getAttributeValueObject($ak);
+            } else {
+                $val = null;
             }
         } else {
             $this->error->add($this->app->make('helper/validation/token')->getErrorMessage());
+            $val = null;
         }
         $sr->setUser($this->user);
         if ($this->error->has()) {
@@ -578,7 +651,6 @@ class Search extends DashboardPageController
         } else {
             return $this->buildRedirect('/dashboard/users/search');
         }
-
 
     }
 

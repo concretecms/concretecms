@@ -50,7 +50,7 @@ class DashboardExpressBreadcrumbFactory implements ApplicationAwareInterface
             array_shift($nodes);
 
             /**
-             * @var $nodes FileFolder[]
+             * @var FileFolder[] $nodes
              */
             foreach($nodes as $node) {
                 $itemUrl = $url->to(

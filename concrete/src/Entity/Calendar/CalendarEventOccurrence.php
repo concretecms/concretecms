@@ -42,6 +42,12 @@ class CalendarEventOccurrence
      */
     protected $cancelled = false;
 
+    /**
+     * The event version this occurrence has been loaded for (not persisted).
+     *
+     * @var CalendarEventVersion|null
+     */
+    protected $version;
 
     public function __construct(CalendarEventRepetition $repetition, $start, $end, $cancelled = false)
     {
@@ -130,7 +136,7 @@ class CalendarEventOccurrence
     }
 
     /**
-     * @return mixed
+     * @return CalendarEventVersion|null
      */
     public function getVersion()
     {
@@ -138,7 +144,7 @@ class CalendarEventOccurrence
     }
 
     /**
-     * @param mixed $version
+     * @param CalendarEventVersion|null $version
      */
     public function setVersion($version)
     {

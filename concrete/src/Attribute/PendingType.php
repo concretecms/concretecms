@@ -5,6 +5,9 @@ use Concrete\Core\Entity\Attribute\Type as TypeEntity;
 use Core;
 use Database;
 
+/**
+ * @phpstan-consistent-constructor
+ */
 class PendingType extends TypeEntity
 {
     public static function getList()

@@ -97,7 +97,7 @@ class Template implements \JsonSerializable
 
     public function delete()
     {
-        $em = \ORM::entityManager('core');
+        $em = \ORM::entityManager();
         $em->remove($this);
         $em->flush();
     }

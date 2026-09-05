@@ -85,7 +85,7 @@ class Category implements CategoryObjectInterface
     }
 
     /**
-     * @return mixed
+     * @return int one of the \Concrete\Core\Attribute\StandardSetManager::ASET_ALLOW_... constants
      */
     public function allowAttributeSets()
     {
@@ -93,7 +93,7 @@ class Category implements CategoryObjectInterface
     }
 
     /**
-     * @param mixed $akCategoryAllowSets
+     * @param int $akCategoryAllowSets one of the \Concrete\Core\Attribute\StandardSetManager::ASET_ALLOW_... constants
      */
     public function setAllowAttributeSets($akCategoryAllowSets)
     {

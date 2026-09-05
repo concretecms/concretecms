@@ -94,7 +94,7 @@ class Extractor extends LazyExtractor
      *
      * @param \Lcobucci\JWT\Claim|string $claim
      *
-     * @return string
+     * @return string|null
      */
     protected function claim($claim = null)
     {

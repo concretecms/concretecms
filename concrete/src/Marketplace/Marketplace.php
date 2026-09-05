@@ -57,7 +57,7 @@ class Marketplace implements ApplicationAwareInterface
     protected $databaseConfig;
 
     /**
-     * @var File
+     * @var File|null
      */
     protected $fileHelper;
 
@@ -119,7 +119,7 @@ class Marketplace implements ApplicationAwareInterface
             } else {
                 if ($vn->integer($r)) {
                     $this->isConnected = false;
-                    $this->connectionError = $r;
+                    $this->connectionError = (int) $r;
 
                     if ($this->connectionError == self::E_DELETED_SITE_TOKEN) {
                         $this->databaseConfig->clear('concrete.marketplace.token');

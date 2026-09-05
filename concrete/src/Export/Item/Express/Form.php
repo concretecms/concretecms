@@ -21,7 +21,7 @@ class Form implements ItemInterface
         $node->addAttribute('id', $form->getID());
         $node->addAttribute('name', $form->getName());
         /**
-         * @var $set FieldSet
+         * @var FieldSet $set
          */
         if (count($form->getFieldSets()) > 0) {
             $sets = $node->addChild('fieldsets');

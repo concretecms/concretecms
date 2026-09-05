@@ -58,6 +58,8 @@ class SourceUpdater implements WriterInterface
         if (!$file->isDirectory() && $file->isModified()) {
             $this->filesToReplace[$file->getRelativePath()] = $file->getAbsolutePath();
         }
+
+        return $this;
     }
 
     /**
