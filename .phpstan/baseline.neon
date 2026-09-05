@@ -4069,12 +4069,6 @@ parameters:
 			path: ../concrete/src/Entity/Calendar/CalendarEvent.php
 
 		-
-			message: '#^Access to an undefined property Concrete\\Core\\Entity\\Calendar\\CalendarEventOccurrence\:\:\$version\.$#'
-			identifier: property.notFound
-			count: 2
-			path: ../concrete/src/Entity/Calendar/CalendarEventOccurrence.php
-
-		-
 			message: '#^Method Concrete\\Core\\Entity\\Calendar\\CalendarEventVersion\:\:getAttributeValueObject\(\) should return Concrete\\Core\\Entity\\Attribute\\Value\\EventValue\|null but returns Concrete\\Core\\Attribute\\AttributeValueInterface\|null\.$#'
 			identifier: return.type
 			count: 1
@@ -4457,12 +4451,6 @@ parameters:
 			identifier: method.notFound
 			count: 1
 			path: ../concrete/src/Express/Entry/Formatter/LabelFormatter.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Express\\Entry\\Search\\Result\\Item\:\:\$id\.$#'
-			identifier: property.notFound
-			count: 1
-			path: ../concrete/src/Express/Entry/Search/Result/Item.php
 
 		-
 			message: '#^Ternary operator condition is always true\.$#'
@@ -8603,24 +8591,6 @@ parameters:
 			identifier: arguments.count
 			count: 1
 			path: ../concrete/src/User/Search/ColumnSet/ColumnSet.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\User\\Search\\Result\\Item\:\:\$uEmail\.$#'
-			identifier: property.notFound
-			count: 1
-			path: ../concrete/src/User/Search/Result/Item.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\User\\Search\\Result\\Item\:\:\$uID\.$#'
-			identifier: property.notFound
-			count: 1
-			path: ../concrete/src/User/Search/Result/Item.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\User\\Search\\Result\\Item\:\:\$uName\.$#'
-			identifier: property.notFound
-			count: 1
-			path: ../concrete/src/User/Search/Result/Item.php
 
 		-
 			message: '#^Call to function is_object\(\) with Concrete\\Core\\User\\Group\\Group will always evaluate to true\.$#'
