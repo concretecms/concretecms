@@ -46,6 +46,7 @@ class RefreshBoardInstanceCommandHandler
         foreach ($blockIDs as $bID) {
             $block = Block::getByID($bID);
             if ($block && $block->getBlockTypeHandle() == BLOCK_HANDLE_BOARD_SLOT_PROXY) {
+                /** @var \Concrete\Block\CoreBoardSlot\Controller $blockController */
                 $blockController = $block->getController();
                 $contentObjectCollection = $this->serializer->deserialize(
                     $blockController->contentObjectCollection,

@@ -1,6 +1,7 @@
 <?php
 
 namespace Concrete\Core\Api\OpenApi;
+use OpenApi\Annotations\Components;
 use OpenApi\Annotations\OpenApi;
 use OpenApi\Annotations\Schema;
 use OpenApi\Serializer;
@@ -33,7 +34,8 @@ class SpecMerger
         // Express models included with everything else.
         $components = $object->getComponents();
         if ($components) {
-            $componentsObject = $this->serializer->deserialize(json_encode($components), 'OpenApi\Annotations\Components');
+            /** @var Components $componentsObject */
+            $componentsObject = $this->serializer->deserialize(json_encode($components), Components::class);
             foreach ($componentsObject->schemas as $schema) {
                 $openApi->components->schemas[] = $schema;
             }

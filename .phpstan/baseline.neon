@@ -1915,18 +1915,6 @@ parameters:
 			path: ../concrete/src/Api/OAuth/Validator/DefaultValidator.php
 
 		-
-			message: '#^Access to an undefined property OpenApi\\Annotations\\AbstractAnnotation\:\:\$requestBodies\.$#'
-			identifier: property.notFound
-			count: 1
-			path: ../concrete/src/Api/OpenApi/SpecMerger.php
-
-		-
-			message: '#^Access to an undefined property OpenApi\\Annotations\\AbstractAnnotation\:\:\$schemas\.$#'
-			identifier: property.notFound
-			count: 1
-			path: ../concrete/src/Api/OpenApi/SpecMerger.php
-
-		-
 			message: '#^Property OpenApi\\Annotations\\Schema\:\:\$properties \(array\<OpenApi\\Annotations\\Property\>\) does not accept array\<OpenApi\\Annotations\\AbstractAnnotation\>\.$#'
 			identifier: assign.propertyType
 			count: 1
@@ -2905,12 +2893,6 @@ parameters:
 			path: ../concrete/src/Block/CustomStyleRepository.php
 
 		-
-			message: '#^Access to an undefined property Concrete\\Core\\Block\\BlockController\:\:\$stID\.$#'
-			identifier: property.notFound
-			count: 1
-			path: ../concrete/src/Block/Menu/Menu.php
-
-		-
 			message: '#^Call to an undefined method Concrete\\Core\\Block\\BlockController\:\:getOriginalBlockID\(\)\.$#'
 			identifier: method.notFound
 			count: 1
@@ -2933,18 +2915,6 @@ parameters:
 			identifier: if.alwaysTrue
 			count: 1
 			path: ../concrete/src/Board/Command/BoardSlotCommandHandler.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Block\\BlockController\:\:\$contentObjectCollection\.$#'
-			identifier: property.notFound
-			count: 1
-			path: ../concrete/src/Board/Command/RefreshBoardInstanceCommandHandler.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Block\\BlockController\:\:\$slotTemplateID\.$#'
-			identifier: property.notFound
-			count: 1
-			path: ../concrete/src/Board/Command/RefreshBoardInstanceCommandHandler.php
 
 		-
 			message: '#^Property Concrete\\Core\\Board\\Command\\ScheduleBoardInstanceRuleCommand\:\:\$timezone \(string\) does not accept default value of type int\.$#'
@@ -6035,12 +6005,6 @@ parameters:
 			identifier: ternary.alwaysTrue
 			count: 2
 			path: ../concrete/src/Page/Collection/Version/Version.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Block\\BlockController\:\:\$content\.$#'
-			identifier: property.notFound
-			count: 1
-			path: ../concrete/src/Page/Command/RescanMultilingualPageCommandHandler.php
 
 		-
 			message: '#^If condition is always true\.$#'
