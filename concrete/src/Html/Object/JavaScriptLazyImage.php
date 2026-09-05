@@ -32,7 +32,7 @@ class JavaScriptLazyImage extends Element
      *
      * @return \Concrete\Core\Html\Object\JavaScriptLazyImage
      */
-    public static function create($src = false, $attributes = array(), $lazyLoadNative = false)
+    public static function create($src = null, $attributes = array(), $lazyLoadNative = false)
     {
         return new static($src, $attributes, $lazyLoadNative);
     }

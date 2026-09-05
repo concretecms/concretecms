@@ -1182,7 +1182,7 @@ class Page extends Collection implements CategoryMemberInterface,
      * @param string $cLink
      * @param bool $newWindow
      */
-    public function updateCollectionAliasExternal($cName, $cLink, $newWindow = 0)
+    public function updateCollectionAliasExternal($cName, $cLink, $newWindow = false)
     {
         if ($this->isExternalLink()) {
             $db = Database::connection();
@@ -2342,7 +2342,7 @@ EOT
      *
      * @return int[]
      */
-    public function getCollectionChildrenArray($oneLevelOnly = 0)
+    public function getCollectionChildrenArray($oneLevelOnly = false)
     {
         $this->childrenCIDArray = [];
         $this->_getNumChildren($this->cID, $oneLevelOnly);
@@ -4206,7 +4206,7 @@ EOT
      * @param bool $oneLevelOnly
      * @param string $sortColumn
      */
-    protected function _getNumChildren($cID, $oneLevelOnly = 0, $sortColumn = 'cDisplayOrder asc')
+    protected function _getNumChildren($cID, $oneLevelOnly = false, $sortColumn = 'cDisplayOrder asc')
     {
         $db = Database::connection();
         $q = "select cID from Pages where cParentID = {$cID} and cIsTemplate = 0 order by {$sortColumn}";

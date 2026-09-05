@@ -54,7 +54,7 @@ class Picture extends Element
      *
      * @return \Concrete\Core\Html\Object\Picture
      */
-    public static function create($sources = [], $fallbackSrc = false, $attributes = [], $lazyLoadNative = false, $lazyLoadJavaScript = false)
+    public static function create($sources = [], $fallbackSrc = '', $attributes = [], $lazyLoadNative = false, $lazyLoadJavaScript = false)
     {
         return new static($sources, $fallbackSrc, $attributes, $lazyLoadNative, $lazyLoadJavaScript);
     }

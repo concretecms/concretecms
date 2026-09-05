@@ -2677,18 +2677,6 @@ parameters:
 			path: ../concrete/src/Attribute/Controller.php
 
 		-
-			message: '#^Default value of the parameter \#1 \$field \(false\) of method Concrete\\Core\\Attribute\\Controller\:\:post\(\) is incompatible with type string\|null\.$#'
-			identifier: parameter.defaultValue
-			count: 1
-			path: ../concrete/src/Attribute/Controller.php
-
-		-
-			message: '#^Default value of the parameter \#1 \$field \(false\) of method Concrete\\Core\\Attribute\\Controller\:\:request\(\) is incompatible with type string\|null\.$#'
-			identifier: parameter.defaultValue
-			count: 1
-			path: ../concrete/src/Attribute/Controller.php
-
-		-
 			message: '#^Method Concrete\\Core\\Attribute\\Controller\:\:createAttributeValueFromRequest\(\) should return Concrete\\Core\\Attribute\\AttributeValueInterface but returns Concrete\\Core\\Attribute\\Value\\EmptyRequestAttributeValue\.$#'
 			identifier: return.type
 			count: 1
@@ -3183,12 +3171,6 @@ parameters:
 		-
 			message: '#^Call to function method_exists\(\) with \$this\(Concrete\\Core\\Block\\BlockController\) and ''on_start'' will always evaluate to true\.$#'
 			identifier: function.alreadyNarrowedType
-			count: 1
-			path: ../concrete/src/Block/BlockController.php
-
-		-
-			message: '#^Default value of the parameter \#1 \$field \(false\) of method Concrete\\Core\\Block\\BlockController\:\:post\(\) is incompatible with type string\|null\.$#'
-			identifier: parameter.defaultValue
 			count: 1
 			path: ../concrete/src/Block/BlockController.php
 
@@ -5869,12 +5851,6 @@ parameters:
 			path: ../concrete/src/Html/Object/JavaScriptLazyImage.php
 
 		-
-			message: '#^Default value of the parameter \#1 \$src \(false\) of method Concrete\\Core\\Html\\Object\\JavaScriptLazyImage\:\:create\(\) is incompatible with type string\|null\.$#'
-			identifier: parameter.defaultValue
-			count: 1
-			path: ../concrete/src/Html/Object/JavaScriptLazyImage.php
-
-		-
 			message: '#^Unsafe usage of new static\(\)\.$#'
 			identifier: new.static
 			count: 1
@@ -5955,12 +5931,6 @@ parameters:
 		-
 			message: '#^Constructor of class Concrete\\Core\\Html\\Object\\Picture has an unused parameter \$attributes\.$#'
 			identifier: constructor.unusedParameter
-			count: 1
-			path: ../concrete/src/Html/Object/Picture.php
-
-		-
-			message: '#^Default value of the parameter \#2 \$fallbackSrc \(false\) of method Concrete\\Core\\Html\\Object\\Picture\:\:create\(\) is incompatible with type string\|null\.$#'
-			identifier: parameter.defaultValue
 			count: 1
 			path: ../concrete/src/Html/Object/Picture.php
 
@@ -7191,24 +7161,6 @@ parameters:
 		-
 			message: '#^Call to function is_array\(\) with array will always evaluate to true\.$#'
 			identifier: function.alreadyNarrowedType
-			count: 1
-			path: ../concrete/src/Page/Page.php
-
-		-
-			message: '#^Default value of the parameter \#1 \$oneLevelOnly \(int\) of method Concrete\\Core\\Page\\Page\:\:getCollectionChildrenArray\(\) is incompatible with type bool\.$#'
-			identifier: parameter.defaultValue
-			count: 1
-			path: ../concrete/src/Page/Page.php
-
-		-
-			message: '#^Default value of the parameter \#2 \$oneLevelOnly \(int\) of method Concrete\\Core\\Page\\Page\:\:_getNumChildren\(\) is incompatible with type bool\.$#'
-			identifier: parameter.defaultValue
-			count: 1
-			path: ../concrete/src/Page/Page.php
-
-		-
-			message: '#^Default value of the parameter \#3 \$newWindow \(int\) of method Concrete\\Core\\Page\\Page\:\:updateCollectionAliasExternal\(\) is incompatible with type bool\.$#'
-			identifier: parameter.defaultValue
 			count: 1
 			path: ../concrete/src/Page/Page.php
 
