@@ -1885,18 +1885,6 @@ parameters:
 			path: ../concrete/src/Api/OAuth/Controller.php
 
 		-
-			message: '#^Access to an undefined property League\\OpenIdConnectClaims\\ClaimsSet\:\:\$setFirstName\.$#'
-			identifier: property.notFound
-			count: 1
-			path: ../concrete/src/Api/OAuth/Server/ClaimsSetFactory.php
-
-		-
-			message: '#^Access to an undefined property League\\OpenIdConnectClaims\\ClaimsSet\:\:\$setLastName\.$#'
-			identifier: property.notFound
-			count: 1
-			path: ../concrete/src/Api/OAuth/Server/ClaimsSetFactory.php
-
-		-
 			message: '#^Instanceof between Lcobucci\\JWT\\Token and Lcobucci\\JWT\\Token will always evaluate to true\.$#'
 			identifier: instanceof.alwaysTrue
 			count: 1
