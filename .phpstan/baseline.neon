@@ -8803,12 +8803,6 @@ parameters:
 			path: ../concrete/src/Validation/BannedWord/BannedWord.php
 
 		-
-			message: '#^Class Egulias\\EmailValidator\\Warning\\NoMXRecord not found\.$#'
-			identifier: class.notFound
-			count: 1
-			path: ../concrete/src/Validator/String/EmailValidator.php
-
-		-
 			message: '#^Call to an undefined method ArrayAccess\:\:add\(\)\.$#'
 			identifier: method.notFound
 			count: 1
