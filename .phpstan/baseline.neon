@@ -3859,12 +3859,6 @@ parameters:
 			path: ../concrete/src/Database/Schema/MySqlSchemaManager.php
 
 		-
-			message: '#^Method Concrete\\Core\\Device\\Device\:\:getIconClass\(\) should return string but return statement is missing\.$#'
-			identifier: return.missing
-			count: 1
-			path: ../concrete/src/Device/Device.php
-
-		-
 			message: '#^Call to function is_array\(\) with bool\|float\|int\|string\|null will always evaluate to false\.$#'
 			identifier: function.impossibleType
 			count: 1

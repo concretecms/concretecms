@@ -218,6 +218,8 @@ class Device implements DeviceInterface
         if ($this->isDesktop()) {
             return 'ccm-device-icon-desktop fas fa-desktop';
         }
+
+        return 'ccm-device-icon-unknown fas fa-question';
     }
 
     /**
