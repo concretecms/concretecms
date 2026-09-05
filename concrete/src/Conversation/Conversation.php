@@ -7,6 +7,9 @@ use Page;
 use Config;
 use Concrete\Core\Conversation\Message\MessageList as ConversationMessageList;
 
+/**
+ * @phpstan-consistent-constructor
+ */
 class Conversation extends ConcreteObject implements \Concrete\Core\Permission\ObjectInterface
 {
     const POSTING_ENABLED = 10;

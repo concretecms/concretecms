@@ -10,6 +10,9 @@ use Concrete\Core\Page\Type\Composer\FormLayoutSet as PageTypeComposerFormLayout
 use Concrete\Core\Page\Type\Composer\Control\Type\Type as PageTypeComposerControlType;
 use Concrete\Core\Support\Facade\Application;
 
+/**
+ * @phpstan-consistent-constructor
+ */
 class FormLayoutSetControl extends ConcreteObject
 {
     protected $ptTargetParentPageID = 0;

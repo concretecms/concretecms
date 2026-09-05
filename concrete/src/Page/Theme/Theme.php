@@ -41,6 +41,8 @@ use Punic\Comparer;
 /**
  * A page's theme is a pointer to a directory containing templates, CSS files and optionally PHP includes, images and JavaScript files.
  * Themes inherit down the tree when a page is added, but can also be set at the site-wide level (thereby overriding any previous choices.).
+ *
+ * @phpstan-consistent-constructor
  */
 class Theme extends ConcreteObject implements \JsonSerializable
 {

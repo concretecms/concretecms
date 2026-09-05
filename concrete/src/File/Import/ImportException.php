@@ -4,6 +4,9 @@ namespace Concrete\Core\File\Import;
 
 use Concrete\Core\Error\UserMessageException;
 
+/**
+ * @phpstan-consistent-constructor
+ */
 class ImportException extends UserMessageException
 {
     /**

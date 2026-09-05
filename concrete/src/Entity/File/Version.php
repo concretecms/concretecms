@@ -70,6 +70,8 @@ use Concrete\Core\User\User;
  *         @ORM\Index(name="fvType", columns={"fvType"})
  *     }
  * )
+ *
+ * @phpstan-consistent-constructor
  */
 class Version implements ObjectInterface
 {

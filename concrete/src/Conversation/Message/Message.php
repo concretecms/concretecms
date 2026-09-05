@@ -20,6 +20,9 @@ use Concrete\Core\User\UserInfo;
 use Concrete\Core\Utility\IPAddress;
 use Events;
 
+/**
+ * @phpstan-consistent-constructor
+ */
 class Message extends ConcreteObject implements ObjectInterface, SubjectInterface
 {
     public $cnvMessageID;

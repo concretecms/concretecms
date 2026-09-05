@@ -28,6 +28,9 @@ use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 
+/**
+ * @phpstan-consistent-constructor
+ */
 class User extends ConcreteObject
 {
     public $uID = '';

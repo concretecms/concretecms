@@ -14,6 +14,8 @@ use Symfony\Component\HttpFoundation\File\Exception\FileException;
  * @author Igor Wiedler <igor@wiedler.ch>
  * @author Jordan Alliot <jordan.alliot@gmail.com>
  * @author Sergey Linnik <linniksa@gmail.com>
+ *
+ * @phpstan-consistent-constructor
  */
 class FlysystemFileResponse extends Response
 {

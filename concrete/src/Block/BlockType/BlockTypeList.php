@@ -6,6 +6,9 @@ use Concrete\Core\Entity\Block\BlockType\BlockType as BlockTypeEntity;
 use Concrete\Core\Legacy\DatabaseItemList;
 use Concrete\Core\Support\Facade\Application;
 
+/**
+ * @phpstan-consistent-constructor
+ */
 class BlockTypeList extends DatabaseItemList
 {
     protected $autoSortColumns = ['btHandle', 'btID', 'btDisplayOrder'];

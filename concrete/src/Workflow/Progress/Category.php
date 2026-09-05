@@ -5,6 +5,9 @@ use Concrete\Core\Foundation\ConcreteObject;
 use Loader;
 use Concrete\Core\Package\PackageList;
 
+/**
+ * @phpstan-consistent-constructor
+ */
 class Category extends ConcreteObject
 {
     public static function getByID($wpCategoryID)

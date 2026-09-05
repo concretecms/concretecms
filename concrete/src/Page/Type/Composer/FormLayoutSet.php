@@ -6,6 +6,9 @@ use Concrete\Core\Page\Type\Type;
 use PageType;
 use Loader;
 
+/**
+ * @phpstan-consistent-constructor
+ */
 class FormLayoutSet extends ConcreteObject
 {
     public function getPageTypeComposerFormLayoutSetID()

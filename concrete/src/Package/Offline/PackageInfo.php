@@ -4,6 +4,8 @@ namespace Concrete\Core\Package\Offline;
 
 /**
  * Represents the package details extracted from a package controller.php file.
+ *
+ * @phpstan-consistent-constructor
  */
 class PackageInfo
 {

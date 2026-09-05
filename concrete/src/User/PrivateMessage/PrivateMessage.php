@@ -9,6 +9,9 @@ use Loader;
 use UserInfo;
 use Events;
 
+/**
+ * @phpstan-consistent-constructor
+ */
 class PrivateMessage extends ConcreteObject implements SubjectInterface
 {
     protected $authorName = false;

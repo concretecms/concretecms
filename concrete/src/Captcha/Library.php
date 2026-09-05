@@ -7,6 +7,9 @@ use Concrete\Core\Package\PackageList;
 use Concrete\Core\Support\Facade\Facade;
 use Concrete\Core\Support\Facade\Package as PackageService;
 
+/**
+ * @phpstan-consistent-constructor
+ */
 class Library extends ConcreteObject
 {
     /**

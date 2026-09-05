@@ -7,6 +7,9 @@ use Concrete\Core\Entity\Package as PackageEntity;
 use Concrete\Core\Foundation\ConcreteObject;
 use Doctrine\ORM\EntityManagerInterface;
 
+/**
+ * @phpstan-consistent-constructor
+ */
 class PackageList extends ConcreteObject
 {
     /**

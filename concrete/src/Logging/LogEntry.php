@@ -10,6 +10,9 @@ use Concrete\Core\User\UserInfoRepository;
 use DateTime;
 use Monolog\Logger as Monolog;
 
+/**
+ * @phpstan-consistent-constructor
+ */
 class LogEntry
 {
     /** @var int|null */

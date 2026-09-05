@@ -6,6 +6,9 @@ use Concrete\Core\Area\Layout\Preset\Formatter\UserFormatter;
 use Loader;
 use Concrete\Core\Foundation\ConcreteObject;
 
+/**
+ * @phpstan-consistent-constructor
+ */
 class UserPreset extends ConcreteObject
 {
     /**

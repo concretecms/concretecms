@@ -2,6 +2,9 @@
 
 namespace Concrete\Core\Support\Less;
 
+/**
+ * @phpstan-consistent-constructor
+ */
 class TreeCallColor extends \Less_Tree_Call
 {
 

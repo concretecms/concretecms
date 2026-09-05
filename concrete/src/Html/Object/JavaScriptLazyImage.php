@@ -4,6 +4,9 @@ namespace Concrete\Core\Html\Object;
 use HtmlObject\Element;
 use HtmlObject\Image;
 
+/**
+ * @phpstan-consistent-constructor
+ */
 class JavaScriptLazyImage extends Element
 {
     /**

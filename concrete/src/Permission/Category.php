@@ -8,6 +8,9 @@ use Concrete\Core\Package\PackageList;
 use Concrete\Core\Url\Resolver\Manager\ResolverManagerInterface;
 use Concrete\Core\Validation\CSRF\Token;
 
+/**
+ * @phpstan-consistent-constructor
+ */
 class Category extends ConcreteObject
 {
     protected static $categories;

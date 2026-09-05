@@ -8,6 +8,9 @@ use Concrete\Core\Foundation\ConcreteObject;
 use Concrete\Core\Package\PackageList;
 use Concrete\Core\Support\Facade\Application;
 
+/**
+ * @phpstan-consistent-constructor
+ */
 class Set extends ConcreteObject
 {
     /**

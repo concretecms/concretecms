@@ -25,6 +25,8 @@ use Concrete\Core\User\User;
  * Represents a file set.
  *
  * @method static Set add(string $setName, int $fsOverrideGlobalPermissions = 0, bool|\User $u = false, int $type = self::TYPE_PUBLIC) Deprecated method. Use Set::create instead.
+ *
+ * @phpstan-consistent-constructor
  */
 class Set
 {

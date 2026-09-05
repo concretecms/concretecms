@@ -7,6 +7,9 @@ use Concrete\Core\Support\Facade\Application;
 use HtmlObject\Element;
 use Loader;
 
+/**
+ * @phpstan-consistent-constructor
+ */
 class ThemeGridColumn extends Column
 {
     /**

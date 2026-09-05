@@ -38,6 +38,9 @@ use Concrete\Core\Page\Collection\Version\VersionList;
 use Concrete\Core\Page\Type\Composer\Control\CorePageProperty\CorePageProperty as CorePagePropertyPageTypeComposerControl;
 use Concrete\Core\Utility\Service\Xml;
 
+/**
+ * @phpstan-consistent-constructor
+ */
 class Type extends ConcreteObject implements \Concrete\Core\Permission\ObjectInterface, AssignableObjectInterface
 {
     protected $ptDefaultPageTemplateID = 0;

@@ -6,6 +6,8 @@ use Concrete\Core\Error\UserMessageException;
 
 /**
  * Exception thrown when importing the page structure if the parent page does not exist (yet).
+ *
+ * @phpstan-consistent-constructor
  */
 class MissingPageAtPathException extends UserMessageException
 {

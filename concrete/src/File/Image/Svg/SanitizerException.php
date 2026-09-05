@@ -4,6 +4,9 @@ namespace Concrete\Core\File\Image\Svg;
 
 use Concrete\Core\Error\UserMessageException;
 
+/**
+ * @phpstan-consistent-constructor
+ */
 class SanitizerException extends UserMessageException
 {
     /**

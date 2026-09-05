@@ -27,6 +27,9 @@ use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Permission\Checker;
 use Concrete\Core\Error\UserMessageException;
 
+/**
+ * @phpstan-consistent-constructor
+ */
 class Version extends ConcreteObject implements PermissionObjectInterface, AttributeObjectInterface
 {
     use ObjectTrait;

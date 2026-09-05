@@ -8,6 +8,9 @@ use Package;
 use Concrete\Core\Package\PackageList;
 use Core;
 
+/**
+ * @phpstan-consistent-constructor
+ */
 class Library extends ConcreteObject
 {
     /**

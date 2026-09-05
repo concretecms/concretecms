@@ -3,6 +3,9 @@ namespace Concrete\Core\Url;
 
 use RuntimeException;
 
+/**
+ * @phpstan-consistent-constructor
+ */
 class UrlImmutable extends \League\Url\UrlImmutable implements UrlInterface
 {
 

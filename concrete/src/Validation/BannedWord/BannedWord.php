@@ -7,6 +7,8 @@ use Doctrine\ORM\EntityManagerInterface;
 
 /**
  * @deprecated Use \Concrete\Core\Entity\Validation\BannedWord instead
+ *
+ * @phpstan-consistent-constructor
  */
 class BannedWord extends ConcreteObject
 {

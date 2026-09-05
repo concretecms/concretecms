@@ -10,6 +10,9 @@ use Concrete\Core\Support\Facade\Application;
 use Doctrine\DBAL\Exception;
 use JsonSerializable;
 
+/**
+ * @phpstan-consistent-constructor
+ */
 class GroupRole extends ConcreteObject implements JsonSerializable
 {
     /** @var int */

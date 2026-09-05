@@ -1765,12 +1765,6 @@ parameters:
 			path: ../concrete/src/Announcement/AnnouncementService.php
 
 		-
-			message: '#^Unsafe usage of new static\(\)\.$#'
-			identifier: new.static
-			count: 1
-			path: ../concrete/src/Antispam/Library.php
-
-		-
 			message: '#^Strict comparison using \=\=\= between Concrete\\Core\\Utility\\IPAddress and false will always evaluate to false\.$#'
 			identifier: identical.alwaysFalse
 			count: 1
@@ -2335,12 +2329,6 @@ parameters:
 			path: ../concrete/src/Area/Layout/CustomColumn.php
 
 		-
-			message: '#^Unsafe usage of new static\(\)\.$#'
-			identifier: new.static
-			count: 1
-			path: ../concrete/src/Area/Layout/CustomColumn.php
-
-		-
 			message: '#^Return type \(Concrete\\Core\\Area\\Layout\\CustomColumn\) of method Concrete\\Core\\Area\\Layout\\CustomLayout\:\:addLayoutColumn\(\) should be compatible with return type \(int\) of method Concrete\\Core\\Area\\Layout\\Layout\:\:addLayoutColumn\(\)$#'
 			identifier: method.childReturnType
 			count: 1
@@ -2371,12 +2359,6 @@ parameters:
 			path: ../concrete/src/Area/Layout/Formatter/ThemeGridFormatter.php
 
 		-
-			message: '#^Unsafe usage of new static\(\)\.$#'
-			identifier: new.static
-			count: 1
-			path: ../concrete/src/Area/Layout/Preset/Column.php
-
-		-
 			message: '#^Call to function is_object\(\) with simplehtmldom_1_5\\simple_html_dom will always evaluate to true\.$#'
 			identifier: function.alreadyNarrowedType
 			count: 1
@@ -2395,20 +2377,8 @@ parameters:
 			path: ../concrete/src/Area/Layout/Preset/UserPreset.php
 
 		-
-			message: '#^Unsafe usage of new static\(\)\.$#'
-			identifier: new.static
-			count: 1
-			path: ../concrete/src/Area/Layout/Preset/UserPreset.php
-
-		-
 			message: '#^Call to an undefined method Concrete\\Core\\Area\\Layout\\Layout\:\:getPresetObject\(\)\.$#'
 			identifier: method.notFound
-			count: 1
-			path: ../concrete/src/Area/Layout/PresetColumn.php
-
-		-
-			message: '#^Unsafe usage of new static\(\)\.$#'
-			identifier: new.static
 			count: 1
 			path: ../concrete/src/Area/Layout/PresetColumn.php
 
@@ -2421,12 +2391,6 @@ parameters:
 		-
 			message: '#^Return type \(Concrete\\Core\\Area\\Layout\\ThemeGridColumn\) of method Concrete\\Core\\Area\\Layout\\ThemeGridColumn\:\:duplicate\(\) should be compatible with return type \(int\) of method Concrete\\Core\\Area\\Layout\\Column\:\:duplicate\(\)$#'
 			identifier: method.childReturnType
-			count: 1
-			path: ../concrete/src/Area/Layout/ThemeGridColumn.php
-
-		-
-			message: '#^Unsafe usage of new static\(\)\.$#'
-			identifier: new.static
 			count: 1
 			path: ../concrete/src/Area/Layout/ThemeGridColumn.php
 
@@ -2821,12 +2785,6 @@ parameters:
 			path: ../concrete/src/Attribute/Key/SearchIndexer/StandardSearchIndexer.php
 
 		-
-			message: '#^Unsafe usage of new static\(\)\.$#'
-			identifier: new.static
-			count: 1
-			path: ../concrete/src/Attribute/PendingType.php
-
-		-
 			message: '#^Instanceof between Concrete\\Core\\Error\\ErrorList\\ErrorList and Concrete\\Core\\Error\\ErrorList\\ErrorList will always evaluate to true\.$#'
 			identifier: instanceof.alwaysTrue
 			count: 1
@@ -2849,12 +2807,6 @@ parameters:
 			identifier: method.notFound
 			count: 1
 			path: ../concrete/src/Attribute/TypeFactory.php
-
-		-
-			message: '#^Unsafe usage of new static\(\)\.$#'
-			identifier: new.static
-			count: 1
-			path: ../concrete/src/Attribute/Value/Value.php
 
 		-
 			message: '#^Call to function is_array\(\) with array will always evaluate to true\.$#'
@@ -2993,12 +2945,6 @@ parameters:
 			identifier: method.notFound
 			count: 1
 			path: ../concrete/src/Backup/ContentImporter.php
-
-		-
-			message: '#^Unsafe usage of new static\(\)\.$#'
-			identifier: new.static
-			count: 1
-			path: ../concrete/src/Backup/ContentImporter/Exception/MissingPageAtPathException.php
 
 		-
 			message: '#^Call to an undefined method Concrete\\Core\\Block\\BlockController\:\:getAreaLayoutObject\(\)\.$#'
@@ -3193,27 +3139,9 @@ parameters:
 			path: ../concrete/src/Block/BlockType/BlockTypeList.php
 
 		-
-			message: '#^Unsafe usage of new static\(\)\.$#'
-			identifier: new.static
-			count: 2
-			path: ../concrete/src/Block/BlockType/BlockTypeList.php
-
-		-
-			message: '#^Unsafe usage of new static\(\)\.$#'
-			identifier: new.static
-			count: 2
-			path: ../concrete/src/Block/BlockType/Set.php
-
-		-
 			message: '#^If condition is always true\.$#'
 			identifier: if.alwaysTrue
 			count: 1
-			path: ../concrete/src/Block/CacheSettings.php
-
-		-
-			message: '#^Unsafe usage of new static\(\)\.$#'
-			identifier: new.static
-			count: 3
 			path: ../concrete/src/Block/CacheSettings.php
 
 		-
@@ -3437,12 +3365,6 @@ parameters:
 			identifier: argument.type
 			count: 1
 			path: ../concrete/src/Calendar/Event/EventRepetitionService.php
-
-		-
-			message: '#^Unsafe usage of new static\(\)\.$#'
-			identifier: new.static
-			count: 1
-			path: ../concrete/src/Captcha/Library.php
 
 		-
 			message: '#^Access to an undefined property Securimage\:\:\$multi_text_color\.$#'
@@ -3829,12 +3751,6 @@ parameters:
 			path: ../concrete/src/Conversation/Command/HandleNewConversationMessageCommandHandler.php
 
 		-
-			message: '#^Unsafe usage of new static\(\)\.$#'
-			identifier: new.static
-			count: 1
-			path: ../concrete/src/Conversation/Conversation.php
-
-		-
 			message: '#^Negated boolean expression is always false\.$#'
 			identifier: booleanNot.alwaysFalse
 			count: 1
@@ -3863,12 +3779,6 @@ parameters:
 			identifier: notIdentical.alwaysFalse
 			count: 1
 			path: ../concrete/src/Conversation/Editor/Editor.php
-
-		-
-			message: '#^Unsafe usage of new static\(\)\.$#'
-			identifier: new.static
-			count: 3
-			path: ../concrete/src/Conversation/FlagType/FlagType.php
 
 		-
 			message: '#^Instanceof between Concrete\\Core\\Conversation\\Conversation and Concrete\\Core\\Conversation\\Conversation will always evaluate to true\.$#'
@@ -3909,12 +3819,6 @@ parameters:
 		-
 			message: '#^Strict comparison using \=\=\= between Concrete\\Core\\Utility\\IPAddress and false will always evaluate to false\.$#'
 			identifier: identical.alwaysFalse
-			count: 1
-			path: ../concrete/src/Conversation/Message/Message.php
-
-		-
-			message: '#^Unsafe usage of new static\(\)\.$#'
-			identifier: new.static
 			count: 1
 			path: ../concrete/src/Conversation/Message/Message.php
 
@@ -4105,12 +4009,6 @@ parameters:
 			path: ../concrete/src/Device/Device.php
 
 		-
-			message: '#^Unsafe usage of new static\(\)\.$#'
-			identifier: new.static
-			count: 1
-			path: ../concrete/src/Device/Device.php
-
-		-
 			message: '#^Call to function is_array\(\) with bool\|float\|int\|string\|null will always evaluate to false\.$#'
 			identifier: function.impossibleType
 			count: 1
@@ -4285,12 +4183,6 @@ parameters:
 			path: ../concrete/src/Entity/Express/Form.php
 
 		-
-			message: '#^Unsafe usage of new static\(\)\.$#'
-			identifier: new.static
-			count: 1
-			path: ../concrete/src/Entity/File/DownloadStatistics.php
-
-		-
 			message: '#^Call to an undefined method Concrete\\Core\\Permission\\Key\\Key\:\:copyFromFileSetToFile\(\)\.$#'
 			identifier: method.notFound
 			count: 1
@@ -4397,12 +4289,6 @@ parameters:
 			identifier: new.static
 			count: 1
 			path: ../concrete/src/Entity/File/Version.php
-
-		-
-			message: '#^Unsafe usage of new static\(\)\.$#'
-			identifier: new.static
-			count: 1
-			path: ../concrete/src/Entity/Geolocator.php
 
 		-
 			message: '#^Cannot call method toArray\(\) on array\<Concrete\\Core\\Entity\\Health\\Report\\Finding\>\.$#'
@@ -4939,12 +4825,6 @@ parameters:
 			path: ../concrete/src/File/Document/Xml/Sanitizer.php
 
 		-
-			message: '#^Unsafe usage of new static\(\)\.$#'
-			identifier: new.static
-			count: 1
-			path: ../concrete/src/File/Document/Xml/SanitizerException.php
-
-		-
 			message: '#^PHPDoc tag @var above a method has no effect\.$#'
 			identifier: varTag.misplaced
 			count: 1
@@ -5029,12 +4909,6 @@ parameters:
 			path: ../concrete/src/File/Image/Svg/Sanitizer.php
 
 		-
-			message: '#^Unsafe usage of new static\(\)\.$#'
-			identifier: new.static
-			count: 1
-			path: ../concrete/src/File/Image/Svg/SanitizerException.php
-
-		-
 			message: '#^Call to function is_array\(\) with array will always evaluate to true\.$#'
 			identifier: function.alreadyNarrowedType
 			count: 1
@@ -5063,12 +4937,6 @@ parameters:
 			identifier: property.onlyWritten
 			count: 1
 			path: ../concrete/src/File/Import/FileImporter.php
-
-		-
-			message: '#^Unsafe usage of new static\(\)\.$#'
-			identifier: new.static
-			count: 1
-			path: ../concrete/src/File/Import/ImportException.php
 
 		-
 			message: '#^Strict comparison using \=\=\= between Concrete\\Core\\Entity\\File\\StorageLocation\\StorageLocation and null will always evaluate to false\.$#'
@@ -5209,12 +5077,6 @@ parameters:
 			path: ../concrete/src/File/Service/Zip.php
 
 		-
-			message: '#^Unsafe usage of new static\(\)\.$#'
-			identifier: new.static
-			count: 1
-			path: ../concrete/src/File/Set/File.php
-
-		-
 			message: '#^Call to function is_array\(\) with array will always evaluate to true\.$#'
 			identifier: function.alreadyNarrowedType
 			count: 1
@@ -5224,12 +5086,6 @@ parameters:
 			message: '#^Parameter \#2 \$y of method Doctrine\\DBAL\\Query\\Expression\\ExpressionBuilder\:\:in\(\) expects array\<string\>\|string, array\<int, int\> given\.$#'
 			identifier: argument.type
 			count: 2
-			path: ../concrete/src/File/Set/Set.php
-
-		-
-			message: '#^Unsafe usage of new static\(\)\.$#'
-			identifier: new.static
-			count: 6
 			path: ../concrete/src/File/Set/Set.php
 
 		-
@@ -5737,12 +5593,6 @@ parameters:
 			path: ../concrete/src/Html/Image.php
 
 		-
-			message: '#^Unsafe usage of new static\(\)\.$#'
-			identifier: new.static
-			count: 1
-			path: ../concrete/src/Html/Object/HeadLink.php
-
-		-
 			message: '#^Call to an undefined method HtmlObject\\Image\:\:alt\(\)\.$#'
 			identifier: method.notFound
 			count: 1
@@ -5775,12 +5625,6 @@ parameters:
 		-
 			message: '#^Constructor of class Concrete\\Core\\Html\\Object\\JavaScriptLazyImage has an unused parameter \$attributes\.$#'
 			identifier: constructor.unusedParameter
-			count: 1
-			path: ../concrete/src/Html/Object/JavaScriptLazyImage.php
-
-		-
-			message: '#^Unsafe usage of new static\(\)\.$#'
-			identifier: new.static
 			count: 1
 			path: ../concrete/src/Html/Object/JavaScriptLazyImage.php
 
@@ -5863,12 +5707,6 @@ parameters:
 			path: ../concrete/src/Html/Object/Picture.php
 
 		-
-			message: '#^Unsafe usage of new static\(\)\.$#'
-			identifier: new.static
-			count: 1
-			path: ../concrete/src/Html/Object/Picture.php
-
-		-
 			message: '#^Instanceof between Concrete\\Core\\View\\View and Concrete\\Core\\View\\View will always evaluate to true\.$#'
 			identifier: instanceof.alwaysTrue
 			count: 1
@@ -5917,14 +5755,38 @@ parameters:
 			path: ../concrete/src/Http/DefaultServer.php
 
 		-
-			message: '#^Property Concrete\\Core\\Http\\FlysystemFileResponse\:\:\$file \(League\\Flysystem\\File\) does not accept League\\Flysystem\\Handler\.$#'
-			identifier: assign.propertyType
+			message: '#^Parameter \#2 \$filesystem of class Concrete\\Core\\Http\\FlysystemFileResponse constructor expects League\\Flysystem\\FilesystemInterface, int given\.$#'
+			identifier: argument.type
 			count: 1
 			path: ../concrete/src/Http/FlysystemFileResponse.php
 
 		-
-			message: '#^Unsafe usage of new static\(\)\.$#'
-			identifier: new.static
+			message: '#^Parameter \#3 \$status of class Concrete\\Core\\Http\\FlysystemFileResponse constructor expects int, array given\.$#'
+			identifier: argument.type
+			count: 1
+			path: ../concrete/src/Http/FlysystemFileResponse.php
+
+		-
+			message: '#^Parameter \#4 \$headers of class Concrete\\Core\\Http\\FlysystemFileResponse constructor expects array, bool given\.$#'
+			identifier: argument.type
+			count: 1
+			path: ../concrete/src/Http/FlysystemFileResponse.php
+
+		-
+			message: '#^Parameter \#5 \$public of class Concrete\\Core\\Http\\FlysystemFileResponse constructor expects bool, string\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: ../concrete/src/Http/FlysystemFileResponse.php
+
+		-
+			message: '#^Parameter \#6 \$contentDisposition of class Concrete\\Core\\Http\\FlysystemFileResponse constructor expects string\|null, bool given\.$#'
+			identifier: argument.type
+			count: 1
+			path: ../concrete/src/Http/FlysystemFileResponse.php
+
+		-
+			message: '#^Property Concrete\\Core\\Http\\FlysystemFileResponse\:\:\$file \(League\\Flysystem\\File\) does not accept League\\Flysystem\\Handler\.$#'
+			identifier: assign.propertyType
 			count: 1
 			path: ../concrete/src/Http/FlysystemFileResponse.php
 
@@ -6341,12 +6203,6 @@ parameters:
 			identifier: booleanNot.alwaysFalse
 			count: 1
 			path: ../concrete/src/Logging/Configuration/SimpleConfiguration.php
-
-		-
-			message: '#^Unsafe usage of new static\(\)\.$#'
-			identifier: new.static
-			count: 1
-			path: ../concrete/src/Logging/LogEntry.php
 
 		-
 			message: '#^Parameter \#1 \$logger of class Concrete\\Core\\Logging\\Event constructor expects Monolog\\Logger, Psr\\Log\\LoggerInterface given\.$#'
@@ -6781,12 +6637,6 @@ parameters:
 			path: ../concrete/src/Package/ItemCategory/Manager.php
 
 		-
-			message: '#^Unsafe usage of new static\(\)\.$#'
-			identifier: new.static
-			count: 1
-			path: ../concrete/src/Package/Offline/Exception.php
-
-		-
 			message: '#^Access to undefined constant Concrete\\Core\\Package\\Offline\\Exception\:\:ERRORCODE_NOPARSERSFOUND\.$#'
 			identifier: classConstant.notFound
 			count: 1
@@ -6805,22 +6655,10 @@ parameters:
 			path: ../concrete/src/Package/Offline/Inspector.php
 
 		-
-			message: '#^Unsafe usage of new static\(\)\.$#'
-			identifier: new.static
-			count: 1
-			path: ../concrete/src/Package/Offline/PackageInfo.php
-
-		-
 			message: '#^Method Concrete\\Core\\Package\\Package\:\:getPackageEntityManager\(\) should return Doctrine\\ORM\\EntityManager\|null but empty return statement found\.$#'
 			identifier: return.empty
 			count: 1
 			path: ../concrete/src/Package/Package.php
-
-		-
-			message: '#^Unsafe usage of new static\(\)\.$#'
-			identifier: new.static
-			count: 1
-			path: ../concrete/src/Package/PackageList.php
 
 		-
 			message: '#^Access to an undefined property Concrete\\Core\\Package\\Package\:\:\$pkgCurrentVersion\.$#'
@@ -6851,12 +6689,6 @@ parameters:
 			identifier: staticMethod.notFound
 			count: 1
 			path: ../concrete/src/Package/Packer/Filter/TranslationCompiler.php
-
-		-
-			message: '#^Unsafe usage of new static\(\)\.$#'
-			identifier: new.static
-			count: 3
-			path: ../concrete/src/Package/Packer/PackerFile.php
 
 		-
 			message: '#^Call to function is_string\(\) with string will always evaluate to true\.$#'
@@ -7405,12 +7237,6 @@ parameters:
 			path: ../concrete/src/Page/Theme/Theme.php
 
 		-
-			message: '#^Unsafe usage of new static\(\)\.$#'
-			identifier: new.static
-			count: 1
-			path: ../concrete/src/Page/Theme/Theme.php
-
-		-
 			message: '#^Empty array passed to foreach\.$#'
 			identifier: foreach.emptyArray
 			count: 1
@@ -7471,24 +7297,6 @@ parameters:
 			path: ../concrete/src/Page/Type/Composer/Control/Type/CollectionAttributeType.php
 
 		-
-			message: '#^Unsafe usage of new static\(\)\.$#'
-			identifier: new.static
-			count: 1
-			path: ../concrete/src/Page/Type/Composer/FormLayoutSet.php
-
-		-
-			message: '#^Unsafe usage of new static\(\)\.$#'
-			identifier: new.static
-			count: 1
-			path: ../concrete/src/Page/Type/Composer/FormLayoutSetControl.php
-
-		-
-			message: '#^Unsafe usage of new static\(\)\.$#'
-			identifier: new.static
-			count: 1
-			path: ../concrete/src/Page/Type/Composer/OutputControl.php
-
-		-
 			message: '#^Call to an undefined static method Concrete\\Core\\Support\\Facade\\Database\:\:Connection\(\)\.$#'
 			identifier: staticMethod.notFound
 			count: 1
@@ -7521,12 +7329,6 @@ parameters:
 		-
 			message: '#^PHPDoc tag @var above a method has no effect\.$#'
 			identifier: varTag.misplaced
-			count: 1
-			path: ../concrete/src/Page/Type/Type.php
-
-		-
-			message: '#^Unsafe usage of new static\(\)\.$#'
-			identifier: new.static
 			count: 1
 			path: ../concrete/src/Page/Type/Type.php
 
@@ -7795,12 +7597,6 @@ parameters:
 			path: ../concrete/src/Permission/Access/Entity/SiteGroupEntity.php
 
 		-
-			message: '#^Unsafe usage of new static\(\)\.$#'
-			identifier: new.static
-			count: 1
-			path: ../concrete/src/Permission/Access/Entity/Type.php
-
-		-
 			message: '#^Call to Concrete\\Core\\Permission\\Access\\Access\:\:save\(\) on a separate line has no effect\.$#'
 			identifier: staticMethod.resultUnused
 			count: 1
@@ -8005,12 +7801,6 @@ parameters:
 			path: ../concrete/src/Permission/Assignment/TreeNodeAssignment.php
 
 		-
-			message: '#^Unsafe usage of new static\(\)\.$#'
-			identifier: new.static
-			count: 1
-			path: ../concrete/src/Permission/Category.php
-
-		-
 			message: '#^Call to function is_object\(\) with Concrete\\Core\\Permission\\Duration will always evaluate to true\.$#'
 			identifier: function.alreadyNarrowedType
 			count: 1
@@ -8021,12 +7811,6 @@ parameters:
 			identifier: argument.type
 			count: 1
 			path: ../concrete/src/Permission/Duration.php
-
-		-
-			message: '#^Unsafe usage of new static\(\)\.$#'
-			identifier: new.static
-			count: 2
-			path: ../concrete/src/Permission/IPRange.php
 
 		-
 			message: '#^Method Concrete\\Core\\Permission\\Inheritance\\Registry\\AbstractRegistry\:\:getEntry\(\) should return Concrete\\Core\\Permission\\Inheritance\\Registry\\Entry\\EntryInterface but return statement is missing\.$#'
@@ -9037,12 +8821,6 @@ parameters:
 			path: ../concrete/src/Support/Facade/Facade.php
 
 		-
-			message: '#^Unsafe usage of new static\(\)\.$#'
-			identifier: new.static
-			count: 1
-			path: ../concrete/src/Support/Less/TreeCallColor.php
-
-		-
 			message: '#^Call to function is_string\(\) with string will always evaluate to true\.$#'
 			identifier: function.alreadyNarrowedType
 			count: 1
@@ -9275,12 +9053,6 @@ parameters:
 			identifier: function.alreadyNarrowedType
 			count: 1
 			path: ../concrete/src/Tree/Tree.php
-
-		-
-			message: '#^Unsafe usage of new static\(\)\.$#'
-			identifier: new.static
-			count: 2
-			path: ../concrete/src/Tree/TreeType.php
 
 		-
 			message: '#^Method Concrete\\Core\\Tree\\Type\\FileManager\:\:add\(\) should return Concrete\\Core\\Tree\\Type\\FileManager\|null but returns Concrete\\Core\\Tree\\Tree\|null\.$#'
@@ -9523,18 +9295,6 @@ parameters:
 			path: ../concrete/src/Url/Resolver/RouterUrlResolver.php
 
 		-
-			message: '#^Unsafe usage of new static\(\)\.$#'
-			identifier: new.static
-			count: 1
-			path: ../concrete/src/Url/Url.php
-
-		-
-			message: '#^Unsafe usage of new static\(\)\.$#'
-			identifier: new.static
-			count: 1
-			path: ../concrete/src/Url/UrlImmutable.php
-
-		-
 			message: '#^Ternary operator condition is always true\.$#'
 			identifier: ternary.alwaysTrue
 			count: 1
@@ -9643,24 +9403,6 @@ parameters:
 			path: ../concrete/src/User/Group/GroupJoinRequest.php
 
 		-
-			message: '#^Unsafe usage of new static\(\)\.$#'
-			identifier: new.static
-			count: 1
-			path: ../concrete/src/User/Group/GroupRole.php
-
-		-
-			message: '#^Unsafe usage of new static\(\)\.$#'
-			identifier: new.static
-			count: 2
-			path: ../concrete/src/User/Group/GroupSet.php
-
-		-
-			message: '#^Unsafe usage of new static\(\)\.$#'
-			identifier: new.static
-			count: 1
-			path: ../concrete/src/User/Group/GroupType.php
-
-		-
 			message: '#^Call to an undefined method Concrete\\Core\\Tree\\Node\\Node\:\:getTreeNodeGroupObject\(\)\.$#'
 			identifier: method.notFound
 			count: 4
@@ -9707,12 +9449,6 @@ parameters:
 			identifier: argument.type
 			count: 1
 			path: ../concrete/src/User/PostLoginLocationUrl.php
-
-		-
-			message: '#^Unsafe usage of new static\(\)\.$#'
-			identifier: new.static
-			count: 1
-			path: ../concrete/src/User/PrivateMessage/PrivateMessage.php
 
 		-
 			message: '#^Call to an undefined method Concrete\\Core\\Search\\ItemList\\Pager\\PagerProviderInterface\:\:getQueryObject\(\)\.$#'
@@ -9961,12 +9697,6 @@ parameters:
 			path: ../concrete/src/Validation/BannedWord/BannedWord.php
 
 		-
-			message: '#^Unsafe usage of new static\(\)\.$#'
-			identifier: new.static
-			count: 3
-			path: ../concrete/src/Validation/BannedWord/BannedWord.php
-
-		-
 			message: '#^Class Egulias\\EmailValidator\\Warning\\NoMXRecord not found\.$#'
 			identifier: class.notFound
 			count: 1
@@ -10027,12 +9757,6 @@ parameters:
 			path: ../concrete/src/Workflow/EmptyWorkflow.php
 
 		-
-			message: '#^Unsafe usage of new static\(\)\.$#'
-			identifier: new.static
-			count: 2
-			path: ../concrete/src/Workflow/Progress/Category.php
-
-		-
 			message: '#^Call to function is_object\(\) with Concrete\\Core\\Workflow\\Workflow will always evaluate to true\.$#'
 			identifier: function.alreadyNarrowedType
 			count: 1
@@ -10043,9 +9767,3 @@ parameters:
 			identifier: if.alwaysTrue
 			count: 1
 			path: ../concrete/src/Workflow/Request/UnapprovePageRequest.php
-
-		-
-			message: '#^Unsafe usage of new static\(\)\.$#'
-			identifier: new.static
-			count: 1
-			path: ../concrete/src/Workflow/Type.php

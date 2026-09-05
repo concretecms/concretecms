@@ -9,6 +9,9 @@ use Loader;
 use Core;
 use Concrete\Core\Package\PackageList;
 
+/**
+ * @phpstan-consistent-constructor
+ */
 class Type extends ConcreteObject
 {
     public function getAccessEntityTypeID()
