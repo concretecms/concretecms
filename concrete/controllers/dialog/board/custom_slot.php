@@ -66,7 +66,7 @@ protected function validateCustomSlotToken()
         $instance = $this->getInstanceFromRequest();
         $items = [];
         if (!empty($this->request->request->get('selectedItemIds'))) {
-            foreach ($this->request->request->get('selectedItemIds') as $itemId) {
+            foreach ($this->request->request->all('selectedItemIds') as $itemId) {
                 $items[] = $entityManager->find(InstanceItem::class, $itemId);
             }
         }

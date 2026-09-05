@@ -253,12 +253,6 @@ parameters:
 			path: ../concrete/controllers/dialog/area/edit.php
 
 		-
-			message: '#^Argument of an invalid type float\|int\<min, \-1\>\|int\<1, max\>\|string\|true supplied for foreach, only iterables are supported\.$#'
-			identifier: foreach.nonIterable
-			count: 1
-			path: ../concrete/controllers/dialog/board/custom_slot.php
-
-		-
 			message: '#^If condition is always true\.$#'
 			identifier: if.alwaysTrue
 			count: 1
@@ -1309,12 +1303,6 @@ parameters:
 			path: ../concrete/controllers/single_page/dashboard/system/basics/name.php
 
 		-
-			message: '#^Argument of an invalid type bool\|float\|int\|string supplied for foreach, only iterables are supported\.$#'
-			identifier: foreach.nonIterable
-			count: 1
-			path: ../concrete/controllers/single_page/dashboard/system/boards/summary_templates.php
-
-		-
 			message: '#^Call to function is_array\(\) with bool\|float\|int\|string\|null will always evaluate to false\.$#'
 			identifier: function.impossibleType
 			count: 1
@@ -1349,12 +1337,6 @@ parameters:
 			identifier: argument.type
 			count: 1
 			path: ../concrete/controllers/single_page/dashboard/system/express/entities/forms.php
-
-		-
-			message: '#^Argument of an invalid type bool\|float\|int\|string supplied for foreach, only iterables are supported\.$#'
-			identifier: foreach.nonIterable
-			count: 1
-			path: ../concrete/controllers/single_page/dashboard/system/express/entities/order_entries.php
 
 		-
 			message: '#^Call to function is_object\(\) with Concrete\\Core\\Entity\\Express\\Entity will always evaluate to true\.$#'
@@ -1513,20 +1495,8 @@ parameters:
 			path: ../concrete/controllers/single_page/dashboard/users/add.php
 
 		-
-			message: '#^Argument of an invalid type bool\|float\|int\|string supplied for foreach, only iterables are supported\.$#'
-			identifier: foreach.nonIterable
-			count: 1
-			path: ../concrete/controllers/single_page/dashboard/users/add_group.php
-
-		-
 			message: '#^Call to function is_array\(\) with bool\|float\|int\|string\|null will always evaluate to false\.$#'
 			identifier: function.impossibleType
-			count: 1
-			path: ../concrete/controllers/single_page/dashboard/users/add_group.php
-
-		-
-			message: '#^Offset ''manager'' on \*NEVER\* in isset\(\) always exists and is not nullable\.$#'
-			identifier: isset.offset
 			count: 1
 			path: ../concrete/controllers/single_page/dashboard/users/add_group.php
 
@@ -1549,20 +1519,8 @@ parameters:
 			path: ../concrete/controllers/single_page/dashboard/users/add_group.php
 
 		-
-			message: '#^Argument of an invalid type bool\|float\|int\|string supplied for foreach, only iterables are supported\.$#'
-			identifier: foreach.nonIterable
-			count: 1
-			path: ../concrete/controllers/single_page/dashboard/users/group_types.php
-
-		-
 			message: '#^Call to function is_array\(\) with bool\|float\|int\|string\|null will always evaluate to false\.$#'
 			identifier: function.impossibleType
-			count: 1
-			path: ../concrete/controllers/single_page/dashboard/users/group_types.php
-
-		-
-			message: '#^Offset ''manager'' on \*NEVER\* in isset\(\) always exists and is not nullable\.$#'
-			identifier: isset.offset
 			count: 1
 			path: ../concrete/controllers/single_page/dashboard/users/group_types.php
 

@@ -104,7 +104,7 @@ class GroupTypes extends DashboardPageController
         $hasManagerRole = false;
 
         if (is_array($this->request->request->get("roles"))) {
-            foreach ($this->request->request->get("roles") as $roleId => $role) {
+            foreach ($this->request->request->all("roles") as $roleId => $role) {
                 if (strlen($role["name"]) === 0) {
                     $this->error->add(t("You need to enter a role name."));
                 }
@@ -137,7 +137,7 @@ class GroupTypes extends DashboardPageController
         $updateRoleIds = [];
         $defaultRole = null;
 
-        foreach ($this->request->request->get("roles") as $roleId => $role) {
+        foreach ($this->request->request->all("roles") as $roleId => $role) {
             if (substr($roleId, 0, 1) === "_") {
                 $newRoles[$roleId] = $role;
             } else {
