@@ -58,6 +58,8 @@ class DatabaseSaver implements SaverInterface
         $amount_deleted = $query->execute();
 
         $this->doSave($item, $value, $environment, $group, $namespace);
+
+        return true;
     }
 
     private function doSave($item, $value, $environment, $group, $namespace = null)
