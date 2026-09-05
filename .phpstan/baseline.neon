@@ -6073,12 +6073,6 @@ parameters:
 			path: ../concrete/src/Mail/Importer/MailImporter.php
 
 		-
-			message: '#^Access to an undefined property Concrete\\Core\\Mail\\Service\<T of Symfony\\Component\\Mime\\Email\>\:\:\$body\.$#'
-			identifier: property.notFound
-			count: 1
-			path: ../concrete/src/Mail/Service.php
-
-		-
 			message: '#^Dead catch \- Throwable is never thrown in the try block\.$#'
 			identifier: catch.neverThrown
 			count: 1

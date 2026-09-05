@@ -393,7 +393,7 @@ class Service implements LoggerAwareInterface
             $importer->setupValidation($address->getAddress(), $data);
         }
         $this->from($importer->getMailImporterEmail());
-        $this->body = $importer->setupBody(($this->getBody() === false) ? '' : $this->getBody());
+        $this->setBody($importer->setupBody(($this->getBody() === false) ? '' : $this->getBody()));
     }
 
     /**
