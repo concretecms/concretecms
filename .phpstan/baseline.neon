@@ -4801,44 +4801,8 @@ parameters:
 			path: ../concrete/src/File/ValidationService.php
 
 		-
-			message: '#^PHPDoc tag @param references unknown parameter\: \$elementArguments$#'
-			identifier: parameter.notFound
-			count: 1
-			path: ../concrete/src/Filesystem/Element.php
-
-		-
-			message: '#^PHPDoc tag @param references unknown parameter\: \$page$#'
-			identifier: parameter.notFound
-			count: 1
-			path: ../concrete/src/Filesystem/Element.php
-
-		-
-			message: '#^PHPDoc tag @param references unknown parameter\: \$pkgHandle$#'
-			identifier: parameter.notFound
-			count: 1
-			path: ../concrete/src/Filesystem/Element.php
-
-		-
 			message: '#^Instanceof between Concrete\\Core\\Filesystem\\Element and Closure will always evaluate to false\.$#'
 			identifier: instanceof.alwaysFalse
-			count: 1
-			path: ../concrete/src/Filesystem/ElementManager.php
-
-		-
-			message: '#^PHPDoc tag @param references unknown parameter\: \$elementArguments$#'
-			identifier: parameter.notFound
-			count: 1
-			path: ../concrete/src/Filesystem/ElementManager.php
-
-		-
-			message: '#^PHPDoc tag @param references unknown parameter\: \$page$#'
-			identifier: parameter.notFound
-			count: 1
-			path: ../concrete/src/Filesystem/ElementManager.php
-
-		-
-			message: '#^PHPDoc tag @param references unknown parameter\: \$pkgHandle$#'
-			identifier: parameter.notFound
 			count: 1
 			path: ../concrete/src/Filesystem/ElementManager.php
 
@@ -4911,24 +4875,6 @@ parameters:
 		-
 			message: '#^Call to function is_string\(\) with string will always evaluate to true\.$#'
 			identifier: function.alreadyNarrowedType
-			count: 1
-			path: ../concrete/src/Form/Service/Form.php
-
-		-
-			message: '#^PHPDoc tag @param references unknown parameter\: \$key$#'
-			identifier: parameter.notFound
-			count: 1
-			path: ../concrete/src/Form/Service/Form.php
-
-		-
-			message: '#^PHPDoc tag @param references unknown parameter\: \$miscFields$#'
-			identifier: parameter.notFound
-			count: 1
-			path: ../concrete/src/Form/Service/Form.php
-
-		-
-			message: '#^PHPDoc tag @param references unknown parameter\: \$valueOrMiscFields$#'
-			identifier: parameter.notFound
 			count: 1
 			path: ../concrete/src/Form/Service/Form.php
 
@@ -8289,12 +8235,6 @@ parameters:
 		-
 			message: '#^Call to function is_object\(\) with Concrete\\Core\\Page\\Theme\\Theme will always evaluate to true\.$#'
 			identifier: function.alreadyNarrowedType
-			count: 1
-			path: ../concrete/src/View/View.php
-
-		-
-			message: '#^PHPDoc tag @param references unknown parameter\: \$task$#'
-			identifier: parameter.notFound
 			count: 1
 			path: ../concrete/src/View/View.php
 
