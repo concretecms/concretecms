@@ -6505,12 +6505,6 @@ parameters:
 			path: ../concrete/src/Page/Sitemap/PageListGenerator.php
 
 		-
-			message: '#^Call to an undefined method Concrete\\Core\\Events\\EventDispatcher\:\:hasListeners\(\)\.$#'
-			identifier: method.notFound
-			count: 3
-			path: ../concrete/src/Page/Sitemap/SitemapWriter.php
-
-		-
 			message: '#^Call to an undefined method Concrete\\Core\\Page\\Page\:\:getBlockID\(\)\.$#'
 			identifier: method.notFound
 			count: 1
@@ -8273,18 +8267,6 @@ parameters:
 			identifier: instanceof.alwaysTrue
 			count: 1
 			path: ../concrete/src/User/UserList.php
-
-		-
-			message: '#^Call to an undefined method Concrete\\Core\\Events\\EventDispatcher\:\:addListener\(\)\.$#'
-			identifier: method.notFound
-			count: 2
-			path: ../concrete/src/User/UserServiceProvider.php
-
-		-
-			message: '#^Call to an undefined method Concrete\\Core\\Events\\EventDispatcher\:\:addSubscriber\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: ../concrete/src/User/UserServiceProvider.php
 
 		-
 			message: '#^If condition is always true\.$#'
