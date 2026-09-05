@@ -1273,7 +1273,7 @@ class Version20160725000000 extends AbstractMigration implements LongRunningMigr
                 $neutralKey = $row['stName'] . '@' . $row['stType'];
                 $child = \Stack::getByID($row['cID']);
                 if ($child) {
-                    if (isset($neutrals[$neutralKey]) && is_numeric(isset($neutrals[$neutralKey]))) {
+                    if (isset($neutrals[$neutralKey]) && is_numeric($neutrals[$neutralKey])) {
                         if ($row['stType'] == \Stack::ST_TYPE_GLOBAL_AREA) {
                             $neutrals[$neutralKey] = \Page::getByID($neutrals[$neutralKey]);
                             if ($neutrals[$neutralKey] && $neutrals[$neutralKey]->isError()) {
