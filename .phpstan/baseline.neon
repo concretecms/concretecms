@@ -5635,12 +5635,6 @@ parameters:
 			path: ../concrete/src/Http/ResponseAssetGroup.php
 
 		-
-			message: '#^Access to an undefined property Concrete\\Core\\Application\\Application\:\:\$config\.$#'
-			identifier: property.notFound
-			count: 1
-			path: ../concrete/src/Http/ResponseFactory.php
-
-		-
 			message: '#^Call to an undefined method Concrete\\Core\\Page\\Collection\\Collection\:\:getCollectionPath\(\)\.$#'
 			identifier: method.notFound
 			count: 4

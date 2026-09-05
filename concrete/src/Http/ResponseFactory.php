@@ -210,7 +210,7 @@ class ResponseFactory implements ResponseFactoryInterface, ApplicationAwareInter
             if ($this->config->get('concrete.misc.mobile_theme_id') > 0) {
                 $md = $this->app->make(MobileDetect::class);
                 if ($md->isMobile()) {
-                    $mobileTheme = Theme::getByID($this->app->config->get('concrete.misc.mobile_theme_id'));
+                    $mobileTheme = Theme::getByID($this->app->make('config')->get('concrete.misc.mobile_theme_id'));
                     if ($mobileTheme instanceof Theme) {
                         $view->setViewTheme($mobileTheme);
                         $controller->setTheme($mobileTheme);
