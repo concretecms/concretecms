@@ -2383,12 +2383,6 @@ parameters:
 			path: ../concrete/src/Attribute/Command/SaveAttributesCommandHandler.php
 
 		-
-			message: '#^Access to an undefined property Concrete\\Core\\Attribute\\Controller\:\:\$task\.$#'
-			identifier: property.notFound
-			count: 1
-			path: ../concrete/src/Attribute/Controller.php
-
-		-
 			message: '#^Call to an undefined method Concrete\\Core\\Attribute\\AttributeValueInterface\:\:getAttributeValueID\(\)\.$#'
 			identifier: method.notFound
 			count: 2
@@ -2851,12 +2845,6 @@ parameters:
 			path: ../concrete/src/Block/Block.php
 
 		-
-			message: '#^Access to an undefined property Concrete\\Core\\Block\\BlockController\:\:\$task\.$#'
-			identifier: property.notFound
-			count: 1
-			path: ../concrete/src/Block/BlockController.php
-
-		-
 			message: '#^Call to function method_exists\(\) with \$this\(Concrete\\Core\\Block\\BlockController\) and ''on_before_render'' will always evaluate to true\.$#'
 			identifier: function.alreadyNarrowedType
 			count: 1
@@ -2891,30 +2879,6 @@ parameters:
 			identifier: isset.offset
 			count: 2
 			path: ../concrete/src/Block/BlockController.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Entity\\Block\\BlockType\\BlockType\:\:\$hasCustomAddTemplate\.$#'
-			identifier: property.notFound
-			count: 1
-			path: ../concrete/src/Block/BlockType/BlockTypeList.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Entity\\Block\\BlockType\\BlockType\:\:\$hasCustomEditTemplate\.$#'
-			identifier: property.notFound
-			count: 1
-			path: ../concrete/src/Block/BlockType/BlockTypeList.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Entity\\Block\\BlockType\\BlockType\:\:\$hasCustomViewTemplate\.$#'
-			identifier: property.notFound
-			count: 1
-			path: ../concrete/src/Block/BlockType/BlockTypeList.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Entity\\Block\\BlockType\\BlockType\:\:\$installed\.$#'
-			identifier: property.notFound
-			count: 2
-			path: ../concrete/src/Block/BlockType/BlockTypeList.php
 
 		-
 			message: '#^Cannot call method addChild\(\) on string\.$#'
@@ -4073,12 +4037,6 @@ parameters:
 			identifier: function.alreadyNarrowedType
 			count: 1
 			path: ../concrete/src/Entity/Search/Query.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Entity\\Search\\SavedSearch\:\:\$id\.$#'
-			identifier: property.notFound
-			count: 1
-			path: ../concrete/src/Entity/Search/SavedSearch.php
 
 		-
 			message: '#^If condition is always true\.$#'
@@ -5933,12 +5891,6 @@ parameters:
 			identifier: return.empty
 			count: 1
 			path: ../concrete/src/Package/Package.php
-
-		-
-			message: '#^Access to an undefined property Concrete\\Core\\Package\\Package\:\:\$pkgCurrentVersion\.$#'
-			identifier: property.notFound
-			count: 1
-			path: ../concrete/src/Package/PackageService.php
 
 		-
 			message: '#^Call to an undefined method Doctrine\\Common\\Cache\\Cache\:\:flushAll\(\)\.$#'

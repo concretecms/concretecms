@@ -94,6 +94,34 @@ class BlockType
      */
     protected $pkgID = 0;
 
+    /**
+     * Does the block type have a custom view template? Only set by BlockTypeList::getAvailableList() for the block types that aren't installed.
+     *
+     * @var bool
+     */
+    public $hasCustomViewTemplate;
+
+    /**
+     * Does the block type have a custom edit template? Only set by BlockTypeList::getAvailableList() for the block types that aren't installed.
+     *
+     * @var bool
+     */
+    public $hasCustomEditTemplate;
+
+    /**
+     * Does the block type have a custom add template? Only set by BlockTypeList::getAvailableList() for the block types that aren't installed.
+     *
+     * @var bool
+     */
+    public $hasCustomAddTemplate;
+
+    /**
+     * Is the block type installed? Only set by BlockTypeList::getAvailableList().
+     *
+     * @var bool
+     */
+    public $installed;
+
     public function getBlockTypeInSetName()
     {
         if ($this->controller) {

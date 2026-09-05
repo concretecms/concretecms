@@ -143,6 +143,15 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
     protected $btDefaultSet;
     protected $identifier;
     protected $btID;
+
+    /**
+     * The action being run (set by setupAndRun()).
+     *
+     * @deprecated it's never read by the core: it's only set for backward compatibility
+     *
+     * @var string|null
+     */
+    public $task;
     /** @var array */
     protected $requestArray;
     /**

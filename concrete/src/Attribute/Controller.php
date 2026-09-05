@@ -54,6 +54,15 @@ class Controller extends AbstractController implements AttributeInterface
     protected $requestArray = false;
 
     /**
+     * The action being run (set by setupAndRun()).
+     *
+     * @deprecated it's never read by the core: it's only set for backward compatibility
+     *
+     * @var string|null
+     */
+    public $task;
+
+    /**
      * @param EntityManager $entityManager
      */
     public function __construct(EntityManager $entityManager)
