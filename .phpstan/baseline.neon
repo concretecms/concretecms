@@ -1789,12 +1789,6 @@ parameters:
 			path: ../concrete/src/Announcement/AnnouncementService.php
 
 		-
-			message: '#^PHPDoc tag @var above a method has no effect\.$#'
-			identifier: varTag.misplaced
-			count: 1
-			path: ../concrete/src/Announcement/Item/Factory/WelcomeItemFactory.php
-
-		-
 			message: '#^Unsafe usage of new static\(\)\.$#'
 			identifier: new.static
 			count: 1
@@ -2785,12 +2779,6 @@ parameters:
 			path: ../concrete/src/Attribute/FileIconFormatter.php
 
 		-
-			message: '#^PHPDoc tag @var above a method has no effect\.$#'
-			identifier: varTag.misplaced
-			count: 1
-			path: ../concrete/src/Attribute/FilterableByValueInterface.php
-
-		-
 			message: '#^Call to an undefined method Concrete\\Core\\Form\\Control\\ViewInterface\:\:setObject\(\)\.$#'
 			identifier: method.notFound
 			count: 1
@@ -3161,12 +3149,6 @@ parameters:
 			identifier: ternary.alwaysTrue
 			count: 1
 			path: ../concrete/src/Backup/ContentImporter/ValueInspector/Item/FileItem.php
-
-		-
-			message: '#^PHPDoc tag @var above a method has no effect\.$#'
-			identifier: varTag.misplaced
-			count: 1
-			path: ../concrete/src/Backup/ContentImporter/ValueInspector/Result.php
 
 		-
 			message: '#^Call to an undefined method Concrete\\Core\\Page\\Collection\\Collection\:\:getCollectionThemeObject\(\)\.$#'
@@ -4969,12 +4951,6 @@ parameters:
 			path: ../concrete/src/Express/Search/ColumnSet/DefaultSet.php
 
 		-
-			message: '#^Call to an undefined method Concrete\\Core\\Search\\ItemList\\ItemList\:\:filterByAssociatedEntry\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: ../concrete/src/Express/Search/Field/AssociationField.php
-
-		-
 			message: '#^Method Concrete\\Core\\Express\\Search\\Field\\AssociationField\:\:getDisplayName\(\) should return string but return statement is missing\.$#'
 			identifier: return.missing
 			count: 1
@@ -4989,12 +4965,6 @@ parameters:
 		-
 			message: '#^Method Concrete\\Core\\Express\\Search\\Field\\AssociationField\:\:renderSearchField\(\) should return string but return statement is missing\.$#'
 			identifier: return.missing
-			count: 1
-			path: ../concrete/src/Express/Search/Field/AssociationField.php
-
-		-
-			message: '#^PHPDoc tag @var above a method has no effect\.$#'
-			identifier: varTag.misplaced
 			count: 1
 			path: ../concrete/src/Express/Search/Field/AssociationField.php
 
@@ -6229,12 +6199,6 @@ parameters:
 			path: ../concrete/src/Http/RequestBase.php
 
 		-
-			message: '#^PHPDoc tag @var above a method has no effect\.$#'
-			identifier: varTag.misplaced
-			count: 1
-			path: ../concrete/src/Http/RequestMediaTypeParser.php
-
-		-
 			message: '#^Call to an undefined method Concrete\\Core\\Asset\\Asset\:\:getHandle\(\)\.$#'
 			identifier: method.notFound
 			count: 2
@@ -7027,12 +6991,6 @@ parameters:
 			path: ../concrete/src/Notification/View/UserSignupListView.php
 
 		-
-			message: '#^PHPDoc tag @var above a method has no effect\.$#'
-			identifier: varTag.misplaced
-			count: 1
-			path: ../concrete/src/Package/Dependency/MissingRequiredPackageException.php
-
-		-
 			message: '#^Call to an undefined method Concrete\\Core\\Package\\ItemCategory\\AbstractCategory\:\:getPackageItems\(\)\.$#'
 			identifier: method.notFound
 			count: 1
@@ -7135,12 +7093,6 @@ parameters:
 			path: ../concrete/src/Package/Packer/Writer/Zipper.php
 
 		-
-			message: '#^PHPDoc tag @var above a method has no effect\.$#'
-			identifier: varTag.misplaced
-			count: 1
-			path: ../concrete/src/Page/ClonerOptions.php
-
-		-
 			message: '#^Call to an undefined method Concrete\\Core\\Page\\Collection\\Collection\:\:getCollectionThemeObject\(\)\.$#'
 			identifier: method.notFound
 			count: 3
@@ -7239,12 +7191,6 @@ parameters:
 		-
 			message: '#^Method Concrete\\Core\\Page\\Collection\\Version\\Version\:\:avoidApprovalOverlapping\(\) is unused\.$#'
 			identifier: method.unused
-			count: 1
-			path: ../concrete/src/Page/Collection/Version/Version.php
-
-		-
-			message: '#^PHPDoc tag @var above a method has no effect\.$#'
-			identifier: varTag.misplaced
 			count: 1
 			path: ../concrete/src/Page/Collection/Version/Version.php
 
@@ -7695,12 +7641,6 @@ parameters:
 		-
 			message: '#^Call to function method_exists\(\) with Concrete\\Core\\Page\\Theme\\Theme and ''getThemeName'' will always evaluate to true\.$#'
 			identifier: function.alreadyNarrowedType
-			count: 1
-			path: ../concrete/src/Page/Theme/Theme.php
-
-		-
-			message: '#^PHPDoc tag @var above a method has no effect\.$#'
-			identifier: varTag.misplaced
 			count: 1
 			path: ../concrete/src/Page/Theme/Theme.php
 
@@ -10397,9 +10337,3 @@ parameters:
 			identifier: new.static
 			count: 1
 			path: ../concrete/src/Workflow/Type.php
-
-		-
-			message: '#^PHPDoc tag @var above a method has no effect\.$#'
-			identifier: varTag.misplaced
-			count: 1
-			path: ../concrete/src/Workflow/Workflow.php

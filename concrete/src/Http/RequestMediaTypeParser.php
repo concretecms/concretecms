@@ -154,7 +154,7 @@ class RequestMediaTypeParser
     /**
      * Get the 'Accept' header of the request.
      *
-     * @var string empty if not available
+     * @return string empty if not available
      */
     protected function getRequestAccept()
     {

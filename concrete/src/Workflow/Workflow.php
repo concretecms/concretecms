@@ -99,7 +99,7 @@ abstract class Workflow extends ConcreteObject implements ObjectInterface
     /**
      * Get the list of permission key handles that this workflow can be attached to.
      *
-     * @var string[]
+     * @return string[]
      */
     public function getRestrictedToPermissionKeyHandles()
     {

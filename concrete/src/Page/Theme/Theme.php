@@ -88,9 +88,9 @@ class Theme extends ConcreteObject implements \JsonSerializable
     /**
      * Get the installed themes provided by a package.
      *
-     * @return \Concrete\Core\Page\Theme\Theme[]
-     * @var \Concrete\Core\Entity\Package|\Concrete\Core\Package\Package $pkg
+     * @param \Concrete\Core\Entity\Package|\Concrete\Core\Package\Package $pkg
      *
+     * @return \Concrete\Core\Page\Theme\Theme[]
      */
     public static function getListByPackage($pkg)
     {

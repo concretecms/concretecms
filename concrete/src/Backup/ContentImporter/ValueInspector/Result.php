@@ -54,7 +54,7 @@ class Result implements ResultInterface
     /**
      * Get the original content being inspected.
      *
-     * @var string|mixed
+     * @return mixed
      */
     public function getOriginalContent()
     {

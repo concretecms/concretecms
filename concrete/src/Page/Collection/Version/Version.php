@@ -374,7 +374,8 @@ class Version extends ConcreteObject implements PermissionObjectInterface, Attri
     /**
      * Is this version approved and in the publish interval?
      *
-     * @var string|int|\DateTime|null $when a date/time representation (empty: now)
+     * @param string|int|\DateTime|null $when a date/time representation (empty: now)
+     *
      * @return bool
      */
     public function isApprovedNow($when = null)

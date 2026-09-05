@@ -31,8 +31,8 @@ class WelcomeItemFactory implements ApplicationAwareInterface
     }
 
     /**
-     * @return ?ItemInterface[]
-     * @var bool $returnNullIfSurveyUnfilled
+     * @return ItemInterface[]|null
+     * @param bool $returnNullIfSurveyUnfilled
      *
      * Gets items to display in the welcome screen. On the first load of the site, must return null
      * because we need to wait for the survey to be filled out, and the items will be filled by the c
