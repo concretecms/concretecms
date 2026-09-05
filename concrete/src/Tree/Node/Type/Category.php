@@ -54,6 +54,8 @@ class Category extends TreeNode
         } elseif ($this->treeNodeParentID == 0) {
             return t('Categories');
         }
+
+        return '';
     }
 
     public function loadDetails()

@@ -4519,24 +4519,6 @@ parameters:
 			path: ../concrete/src/Express/Search/ColumnSet/DefaultSet.php
 
 		-
-			message: '#^Method Concrete\\Core\\Express\\Search\\Field\\AssociationField\:\:getDisplayName\(\) should return string but return statement is missing\.$#'
-			identifier: return.missing
-			count: 1
-			path: ../concrete/src/Express/Search/Field/AssociationField.php
-
-		-
-			message: '#^Method Concrete\\Core\\Express\\Search\\Field\\AssociationField\:\:getKey\(\) should return string but return statement is missing\.$#'
-			identifier: return.missing
-			count: 1
-			path: ../concrete/src/Express/Search/Field/AssociationField.php
-
-		-
-			message: '#^Method Concrete\\Core\\Express\\Search\\Field\\AssociationField\:\:renderSearchField\(\) should return string but return statement is missing\.$#'
-			identifier: return.missing
-			count: 1
-			path: ../concrete/src/Express/Search/Field/AssociationField.php
-
-		-
 			message: '#^Negated boolean expression is always false\.$#'
 			identifier: booleanNot.alwaysFalse
 			count: 1
@@ -7237,24 +7219,6 @@ parameters:
 			path: ../concrete/src/Search/Field/AbstractField.php
 
 		-
-			message: '#^Method Concrete\\Core\\Search\\Field\\AttributeKeyField\:\:getDisplayName\(\) should return string but return statement is missing\.$#'
-			identifier: return.missing
-			count: 1
-			path: ../concrete/src/Search/Field/AttributeKeyField.php
-
-		-
-			message: '#^Method Concrete\\Core\\Search\\Field\\AttributeKeyField\:\:getKey\(\) should return string but return statement is missing\.$#'
-			identifier: return.missing
-			count: 1
-			path: ../concrete/src/Search/Field/AttributeKeyField.php
-
-		-
-			message: '#^Method Concrete\\Core\\Search\\Field\\AttributeKeyField\:\:renderSearchField\(\) should return string but return statement is missing\.$#'
-			identifier: return.missing
-			count: 1
-			path: ../concrete/src/Search/Field/AttributeKeyField.php
-
-		-
 			message: '#^Call to an undefined method Concrete\\Core\\Search\\ItemList\\ItemList\:\:filterByKeywords\(\)\.$#'
 			identifier: method.notFound
 			count: 1
@@ -7765,18 +7729,6 @@ parameters:
 			path: ../concrete/src/Tree/Node/Node.php
 
 		-
-			message: '#^Method Concrete\\Core\\Tree\\Node\\Type\\Category\:\:getTreeNodeDisplayName\(\) should return string but return statement is missing\.$#'
-			identifier: return.missing
-			count: 1
-			path: ../concrete/src/Tree/Node/Type/Category.php
-
-		-
-			message: '#^Method Concrete\\Core\\Tree\\Node\\Type\\ExpressEntryCategory\:\:getTreeNodeDisplayName\(\) should return string but return statement is missing\.$#'
-			identifier: return.missing
-			count: 1
-			path: ../concrete/src/Tree/Node/Type/ExpressEntryCategory.php
-
-		-
 			message: '#^Call to an undefined method Concrete\\Core\\Tree\\Node\\Node\:\:setTreeNodeSite\(\)\.$#'
 			identifier: method.notFound
 			count: 1
@@ -7809,12 +7761,6 @@ parameters:
 		-
 			message: '#^Instanceof between Concrete\\Core\\Entity\\File\\StorageLocation\\StorageLocation and Concrete\\Core\\Entity\\File\\StorageLocation\\StorageLocation will always evaluate to true\.$#'
 			identifier: instanceof.alwaysTrue
-			count: 1
-			path: ../concrete/src/Tree/Node/Type/FileFolder.php
-
-		-
-			message: '#^Method Concrete\\Core\\Tree\\Node\\Type\\FileFolder\:\:getTreeNodeDisplayName\(\) should return string but return statement is missing\.$#'
-			identifier: return.missing
 			count: 1
 			path: ../concrete/src/Tree/Node/Type/FileFolder.php
 
@@ -7857,12 +7803,6 @@ parameters:
 		-
 			message: '#^Call to an undefined method Concrete\\Core\\Tree\\Node\\Node\:\:setSelectedGroupTypes\(\)\.$#'
 			identifier: method.notFound
-			count: 1
-			path: ../concrete/src/Tree/Node/Type/GroupFolder.php
-
-		-
-			message: '#^Method Concrete\\Core\\Tree\\Node\\Type\\GroupFolder\:\:getTreeNodeDisplayName\(\) should return string but return statement is missing\.$#'
-			identifier: return.missing
 			count: 1
 			path: ../concrete/src/Tree/Node/Type/GroupFolder.php
 

@@ -63,6 +63,8 @@ class FileFolder extends TreeNode
         } elseif ($this->getTreeNodeParentID() == 0) {
             return t('Folders');
         }
+
+        return '';
     }
 
     /**

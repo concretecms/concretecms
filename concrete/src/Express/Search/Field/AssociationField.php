@@ -33,6 +33,8 @@ class AssociationField extends AbstractField
         if ($this->association !== null) {
             return 'express_association_' . $this->association->getId();
         }
+
+        return '';
     }
 
     /**
@@ -45,6 +47,8 @@ class AssociationField extends AbstractField
         if ($this->association !== null) {
             return $this->association->getTargetEntity()->getName();
         }
+
+        return '';
     }
 
     /**
@@ -91,6 +95,8 @@ class AssociationField extends AbstractField
             }
             return $form->select($name, $entries, $this->getData('express_association_' . $this->associationID));
         }
+
+        return '';
     }
 
     /**
