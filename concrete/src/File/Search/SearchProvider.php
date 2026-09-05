@@ -70,11 +70,16 @@ class SearchProvider extends AbstractSearchProvider
     }
 
     /**
-     * @return string
+     * @return \Concrete\Core\Search\Column\Set
      */
     public function getCurrentColumnSet()
     {
-        return ColumnSet::getCurrent();
+        $query = $this->getSessionCurrentQuery();
+        if ($query) {
+            return $query->getColumns();
+        }
+
+        return $this->getDefaultColumnSet();
     }
 
     /**

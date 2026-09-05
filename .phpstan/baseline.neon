@@ -5203,12 +5203,6 @@ parameters:
 			path: ../concrete/src/File/Search/Field/Field/AddedToPageField.php
 
 		-
-			message: '#^Call to an undefined static method Concrete\\Core\\File\\Search\\ColumnSet\\ColumnSet\:\:getCurrent\(\)\.$#'
-			identifier: staticMethod.notFound
-			count: 1
-			path: ../concrete/src/File/Search/SearchProvider.php
-
-		-
 			message: '#^Constant REL_DIR_FILES_THUMBNAILS_LEVEL2 not found\.$#'
 			identifier: constant.notFound
 			count: 1
