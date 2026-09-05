@@ -37,7 +37,7 @@ class FormLayoutSet extends ConcreteObject
     }
 
     /**
-     * @return \Concrete\Core\Page\Type\Type
+     * @return \Concrete\Core\Page\Type\Type|null
      */
     public function getPageTypeObject()
     {

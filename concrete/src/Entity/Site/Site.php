@@ -26,7 +26,7 @@ class Site implements TreeInterface, ObjectInterface, PermissionObjectInterface,
     /**
      * The site configuration repository.
      *
-     * @var \Concrete\Core\Site\Config\Liaison
+     * @var \Concrete\Core\Site\Config\Liaison|null
      */
     protected $siteConfig;
 

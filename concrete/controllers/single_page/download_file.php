@@ -28,7 +28,7 @@ class DownloadFile extends PageController
     }
 
     /**
-     * @param int $fID File ID
+     * @param int|string $fID File ID or UUID
      * @param null|int $rcID
      * @noinspection PhpDocMissingReturnTagInspection
      * @noinspection PhpInconsistentReturnPointsInspection
@@ -120,7 +120,7 @@ class DownloadFile extends PageController
     }
 
     /**
-     * @param int $fID File ID
+     * @param int|string $fID File ID or UUID
      * @param null|int $rcID
      * @noinspection PhpDocMissingReturnTagInspection
      */
@@ -132,7 +132,7 @@ class DownloadFile extends PageController
     }
 
     /**
-     * @param int $fID File ID
+     * @param int|string $fID File ID or UUID
      * @return bool|null
      * @noinspection PhpInconsistentReturnPointsInspection
      */
@@ -196,7 +196,7 @@ class DownloadFile extends PageController
     }
 
     /**
-     * @param int $fID File ID
+     * @param int|string $fID File ID or UUID
      * @return RedirectResponse|false|\Symfony\Component\HttpFoundation\Response|void
      */
     public function submit_password($fID = 0)

@@ -11,7 +11,7 @@ class UserInfoRepository
     protected $application;
 
     /**
-     * @var \Doctrine\Persistence\ObjectRepository
+     * @var \Doctrine\Persistence\ObjectRepository|null
      */
     protected $repository;
 

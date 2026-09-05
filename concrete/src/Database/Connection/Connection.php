@@ -14,7 +14,7 @@ use Throwable;
 
 class Connection extends \Doctrine\DBAL\Connection
 {
-    /** @var EntityManager */
+    /** @var EntityManager|null */
     protected $entityManager;
 
     /**

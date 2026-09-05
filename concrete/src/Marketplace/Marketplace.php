@@ -57,7 +57,7 @@ class Marketplace implements ApplicationAwareInterface
     protected $databaseConfig;
 
     /**
-     * @var File
+     * @var File|null
      */
     protected $fileHelper;
 

@@ -105,7 +105,7 @@ class StorageLocationFactory
     /**
      * Fetch the default storage location.
      *
-     * @return StorageLocationEntity
+     * @return StorageLocationEntity|null
      */
     public function fetchDefault()
     {

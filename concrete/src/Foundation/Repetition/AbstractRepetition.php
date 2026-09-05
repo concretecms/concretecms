@@ -62,7 +62,7 @@ abstract class AbstractRepetition implements RepetitionInterface
     protected $repeatPeriodEnd;
 
     /**
-     * @var \DateTimeZone
+     * @var \DateTimeZone|null
      */
     protected $timezone;
 

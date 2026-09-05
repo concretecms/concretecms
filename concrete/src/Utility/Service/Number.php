@@ -6,7 +6,7 @@ class Number
     /**
      * Rounds the value only out to its most significant digit.
      *
-     * @param string $value
+     * @param float|int|numeric-string|null $value
      *
      * @return float|null
      */

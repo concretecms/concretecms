@@ -603,7 +603,7 @@ EOT
     /**
      * Set the collection instance containing the block.
      *
-     * @param \Concrete\Core\Page\Collection\Collection $c
+     * @param \Concrete\Core\Page\Collection\Collection|null $c
      *
      * @return void
      */
@@ -640,7 +640,7 @@ EOT
     /**
      * Set the area containing the block.
      *
-     * @param \Concrete\Core\Area\Area $a
+     * @param \Concrete\Core\Area\Area|null $a
      *
      * @return void
      */

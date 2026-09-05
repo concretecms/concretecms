@@ -415,7 +415,7 @@ class GeolocationResult implements JsonSerializable
     /**
      * Set the latitude.
      *
-     * @param float|null $value
+     * @param float|int|numeric-string|null $value
      *
      * @return $this
      */
@@ -443,7 +443,7 @@ class GeolocationResult implements JsonSerializable
     /**
      * Set the longitude.
      *
-     * @param float|null $value
+     * @param float|int|numeric-string|null $value
      *
      * @return $this
      */

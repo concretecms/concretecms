@@ -175,7 +175,7 @@ class File implements \Concrete\Core\Permission\ObjectInterface, AttributeObject
     }
 
     /**
-     * @return \Concrete\Core\Entity\File\StorageLocation\StorageLocation
+     * @return \Concrete\Core\Entity\File\StorageLocation\StorageLocation|null
      */
     public function getFileStorageLocationObject()
     {
@@ -823,7 +823,7 @@ class File implements \Concrete\Core\Permission\ObjectInterface, AttributeObject
      *
      * @param int $fvID
      *
-     * @return Version
+     * @return Version|null
      */
     public function getVersion($fvID = null)
     {

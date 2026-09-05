@@ -18,7 +18,7 @@ abstract class AbstractRequestModifier implements ModifierInterface
     protected $request;
 
     /**
-     * @var int
+     * @var string
      */
     protected $method;
 

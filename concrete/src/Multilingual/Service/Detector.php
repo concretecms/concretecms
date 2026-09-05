@@ -52,7 +52,7 @@ class Detector implements ApplicationAwareInterface, SiteAggregateInterface
     }
 
     /**
-     * @return Site
+     * @return Site|null
      */
     public function getSite()
     {

@@ -7,7 +7,7 @@ use Concrete\Core\Support\Facade\Database;
 class DatabaseSaver implements SaverInterface
 {
     /**
-     * @var \Concrete\Core\Database\Connection\Connection
+     * @var \Concrete\Core\Database\Connection\Connection|null
      */
     protected $connection;
 

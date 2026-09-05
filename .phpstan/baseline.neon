@@ -145,12 +145,6 @@ parameters:
 			path: ../concrete/controllers/backend/file/importer/image_editor.php
 
 		-
-			message: '#^Strict comparison using \=\=\= between Concrete\\Core\\Entity\\File\\Version and null will always evaluate to false\.$#'
-			identifier: identical.alwaysFalse
-			count: 1
-			path: ../concrete/controllers/backend/file/importer/thumbnail.php
-
-		-
 			message: '#^Strict comparison using \=\=\= between string and false will always evaluate to false\.$#'
 			identifier: identical.alwaysFalse
 			count: 1
@@ -541,12 +535,6 @@ parameters:
 			path: ../concrete/controllers/dialog/site_type/attributes.php
 
 		-
-			message: '#^Negated boolean expression is always false\.$#'
-			identifier: booleanNot.alwaysFalse
-			count: 1
-			path: ../concrete/controllers/dialog/site_type/attributes.php
-
-		-
 			message: '#^Strict comparison using \!\=\= between Concrete\\Core\\Entity\\Site\\Skeleton and null will always evaluate to true\.$#'
 			identifier: notIdentical.alwaysTrue
 			count: 1
@@ -585,12 +573,6 @@ parameters:
 		-
 			message: '#^Call to an undefined method Concrete\\Core\\Permission\\Key\\Key\:\:getMyAssignment\(\)\.$#'
 			identifier: method.notFound
-			count: 1
-			path: ../concrete/controllers/dialog/type/attributes.php
-
-		-
-			message: '#^Negated boolean expression is always false\.$#'
-			identifier: booleanNot.alwaysFalse
 			count: 1
 			path: ../concrete/controllers/dialog/type/attributes.php
 
@@ -1255,12 +1237,6 @@ parameters:
 			path: ../concrete/controllers/single_page/dashboard/files/search.php
 
 		-
-			message: '#^Strict comparison using \!\=\= between int and null will always evaluate to true\.$#'
-			identifier: notIdentical.alwaysTrue
-			count: 1
-			path: ../concrete/controllers/single_page/dashboard/files/search.php
-
-		-
 			message: '#^Call to function is_object\(\) with Concrete\\Core\\Page\\Theme\\Theme will always evaluate to true\.$#'
 			identifier: function.alreadyNarrowedType
 			count: 1
@@ -1289,12 +1265,6 @@ parameters:
 			identifier: equal.alwaysTrue
 			count: 1
 			path: ../concrete/controllers/single_page/dashboard/pages/types/add.php
-
-		-
-			message: '#^Negated boolean expression is always false\.$#'
-			identifier: booleanNot.alwaysFalse
-			count: 1
-			path: ../concrete/controllers/single_page/dashboard/pages/types/attributes.php
 
 		-
 			message: '#^Call to an undefined method Concrete\\Core\\Controller\\ElementController\:\:setHeaderSearchAction\(\)\.$#'
@@ -1699,18 +1669,6 @@ parameters:
 			path: ../concrete/controllers/single_page/download_file.php
 
 		-
-			message: '#^Call to function is_string\(\) with int will always evaluate to false\.$#'
-			identifier: function.impossibleType
-			count: 3
-			path: ../concrete/controllers/single_page/download_file.php
-
-		-
-			message: '#^Strict comparison using \!\=\= between null and null will always evaluate to false\.$#'
-			identifier: notIdentical.alwaysFalse
-			count: 1
-			path: ../concrete/controllers/single_page/download_file.php
-
-		-
 			message: '#^Negated boolean expression is always false\.$#'
 			identifier: booleanNot.alwaysFalse
 			count: 2
@@ -1981,12 +1939,6 @@ parameters:
 			path: ../concrete/src/Api/OAuth/Controller.php
 
 		-
-			message: '#^Negated boolean expression is always false\.$#'
-			identifier: booleanNot.alwaysFalse
-			count: 1
-			path: ../concrete/src/Api/OAuth/Controller.php
-
-		-
 			message: '#^Parameter \#1 \$client of method Concrete\\Core\\Api\\OAuth\\Controller\:\:validateScopesAgainstClient\(\) expects Concrete\\Core\\Entity\\OAuth\\Client, League\\OAuth2\\Server\\Entities\\ClientEntityInterface given\.$#'
 			identifier: argument.type
 			count: 1
@@ -2168,12 +2120,6 @@ parameters:
 
 		-
 			message: '#^Call to function is_array\(\) with Concrete\\Core\\Page\\Page will always evaluate to false\.$#'
-			identifier: function.impossibleType
-			count: 1
-			path: ../concrete/src/Application/Service/UserInterface.php
-
-		-
-			message: '#^Call to function is_array\(\) with string\|null will always evaluate to false\.$#'
 			identifier: function.impossibleType
 			count: 1
 			path: ../concrete/src/Application/Service/UserInterface.php
@@ -3001,12 +2947,6 @@ parameters:
 			path: ../concrete/src/Block/Block.php
 
 		-
-			message: '#^Ternary operator condition is always true\.$#'
-			identifier: ternary.alwaysTrue
-			count: 2
-			path: ../concrete/src/Block/Block.php
-
-		-
 			message: '#^Access to an undefined property Concrete\\Core\\Block\\BlockController\:\:\$task\.$#'
 			identifier: property.notFound
 			count: 1
@@ -3469,12 +3409,6 @@ parameters:
 			path: ../concrete/src/Config/DatabaseSaver.php
 
 		-
-			message: '#^Negated boolean expression is always false\.$#'
-			identifier: booleanNot.alwaysFalse
-			count: 1
-			path: ../concrete/src/Config/DatabaseSaver.php
-
-		-
 			message: '#^If condition is always true\.$#'
 			identifier: if.alwaysTrue
 			count: 1
@@ -3691,12 +3625,6 @@ parameters:
 			path: ../concrete/src/Conversation/Command/HandleNewConversationMessageCommandHandler.php
 
 		-
-			message: '#^Negated boolean expression is always false\.$#'
-			identifier: booleanNot.alwaysFalse
-			count: 1
-			path: ../concrete/src/Conversation/ConversationService.php
-
-		-
 			message: '#^Call to function is_array\(\) with array will always evaluate to true\.$#'
 			identifier: function.alreadyNarrowedType
 			count: 1
@@ -3845,12 +3773,6 @@ parameters:
 			identifier: constructor.unusedParameter
 			count: 1
 			path: ../concrete/src/Database/CharacterSetCollation/Exception/NoCharacterSetCollationDefinedException.php
-
-		-
-			message: '#^Negated boolean expression is always false\.$#'
-			identifier: booleanNot.alwaysFalse
-			count: 1
-			path: ../concrete/src/Database/Connection/Connection.php
 
 		-
 			message: '#^Unreachable statement \- code above always terminates\.$#'
@@ -4207,12 +4129,6 @@ parameters:
 			path: ../concrete/src/Entity/File/Version.php
 
 		-
-			message: '#^Strict comparison using \!\=\= between Concrete\\Core\\Entity\\File\\StorageLocation\\StorageLocation and null will always evaluate to true\.$#'
-			identifier: notIdentical.alwaysTrue
-			count: 6
-			path: ../concrete/src/Entity/File/Version.php
-
-		-
 			message: '#^Cannot call method toArray\(\) on array\<Concrete\\Core\\Entity\\Health\\Report\\Finding\>\.$#'
 			identifier: method.nonObject
 			count: 1
@@ -4305,12 +4221,6 @@ parameters:
 		-
 			message: '#^If condition is always true\.$#'
 			identifier: if.alwaysTrue
-			count: 1
-			path: ../concrete/src/Entity/Site/Site.php
-
-		-
-			message: '#^Negated boolean expression is always false\.$#'
-			identifier: booleanNot.alwaysFalse
 			count: 1
 			path: ../concrete/src/Entity/Site/Site.php
 
@@ -4693,12 +4603,6 @@ parameters:
 			path: ../concrete/src/Feed/FeedService.php
 
 		-
-			message: '#^Instanceof between Concrete\\Core\\Entity\\File\\Version and Concrete\\Core\\Entity\\File\\Version will always evaluate to true\.$#'
-			identifier: instanceof.alwaysTrue
-			count: 1
-			path: ../concrete/src/File/Command/GenerateThumbnailCommandHandler.php
-
-		-
 			message: '#^Instanceof between Concrete\\Core\\File\\Image\\Thumbnail\\Type\\Version and Concrete\\Core\\File\\Image\\Thumbnail\\Type\\Version will always evaluate to true\.$#'
 			identifier: instanceof.alwaysTrue
 			count: 1
@@ -4715,18 +4619,6 @@ parameters:
 			identifier: argument.type
 			count: 1
 			path: ../concrete/src/File/Command/ReindexFileTaskCommandHandler.php
-
-		-
-			message: '#^Strict comparison using \!\=\= between int and null will always evaluate to true\.$#'
-			identifier: notIdentical.alwaysTrue
-			count: 1
-			path: ../concrete/src/File/Component/Chooser/ExternalFileProviderOptionTrait.php
-
-		-
-			message: '#^Strict comparison using \=\=\= between int and null will always evaluate to false\.$#'
-			identifier: identical.alwaysFalse
-			count: 1
-			path: ../concrete/src/File/Component/Chooser/Option/FileManagerOption.php
 
 		-
 			message: '#^Property Concrete\\Core\\File\\Component\\Chooser\\Option\\FolderBookmarkOption\:\:\$treeNode \(Concrete\\Core\\Tree\\Node\\Type\\FileFolder\) does not accept Concrete\\Core\\Tree\\Node\\Node\|null\.$#'
@@ -4853,12 +4745,6 @@ parameters:
 			identifier: property.onlyWritten
 			count: 1
 			path: ../concrete/src/File/Import/FileImporter.php
-
-		-
-			message: '#^Strict comparison using \=\=\= between Concrete\\Core\\Entity\\File\\StorageLocation\\StorageLocation and null will always evaluate to false\.$#'
-			identifier: identical.alwaysFalse
-			count: 2
-			path: ../concrete/src/File/Import/ImportOptions.php
 
 		-
 			message: '#^Strict comparison using \=\=\= between false and false will always evaluate to true\.$#'
@@ -5287,12 +5173,6 @@ parameters:
 			path: ../concrete/src/Foundation/Repetition/AbstractRepetition.php
 
 		-
-			message: '#^Negated boolean expression is always false\.$#'
-			identifier: booleanNot.alwaysFalse
-			count: 1
-			path: ../concrete/src/Foundation/Repetition/AbstractRepetition.php
-
-		-
 			message: '#^Call to an undefined static method Concrete\\Core\\Http\\Request\:\:setTrustedHeaderName\(\)\.$#'
 			identifier: staticMethod.notFound
 			count: 1
@@ -5311,12 +5191,6 @@ parameters:
 			path: ../concrete/src/Foundation/Runtime/Run/CLIRunner.php
 
 		-
-			message: '#^Negated boolean expression is always false\.$#'
-			identifier: booleanNot.alwaysFalse
-			count: 5
-			path: ../concrete/src/Foundation/Runtime/Run/DefaultRunner.php
-
-		-
 			message: '#^Right side of && is always true\.$#'
 			identifier: booleanAnd.rightAlwaysTrue
 			count: 1
@@ -5329,20 +5203,8 @@ parameters:
 			path: ../concrete/src/Foundation/Serializer/SafeClassUnserializerTrait.php
 
 		-
-			message: '#^Call to function is_int\(\) with null will always evaluate to false\.$#'
-			identifier: function.impossibleType
-			count: 2
-			path: ../concrete/src/Geolocator/GeolocationResult.php
-
-		-
-			message: '#^Call to function is_numeric\(\) with \*NEVER\* will always evaluate to true\.$#'
+			message: '#^Call to function is_numeric\(\) with numeric\-string will always evaluate to true\.$#'
 			identifier: function.alreadyNarrowedType
-			count: 2
-			path: ../concrete/src/Geolocator/GeolocationResult.php
-
-		-
-			message: '#^Call to function is_string\(\) with null will always evaluate to false\.$#'
-			identifier: function.impossibleType
 			count: 2
 			path: ../concrete/src/Geolocator/GeolocationResult.php
 
@@ -5665,12 +5527,6 @@ parameters:
 			path: ../concrete/src/Http/ResponseFactory.php
 
 		-
-			message: '#^Negated boolean expression is always false\.$#'
-			identifier: booleanNot.alwaysFalse
-			count: 1
-			path: ../concrete/src/Http/ResponseFactory.php
-
-		-
 			message: '#^Parameter \#1 \$c of class Concrete\\Core\\Page\\Event constructor expects Concrete\\Core\\Page\\Page, Concrete\\Core\\Page\\Collection\\Collection given\.$#'
 			identifier: argument.type
 			count: 1
@@ -5953,12 +5809,6 @@ parameters:
 			path: ../concrete/src/Localization/Translator/Translation/TranslationLoaderRepository.php
 
 		-
-			message: '#^Negated boolean expression is always false\.$#'
-			identifier: booleanNot.alwaysFalse
-			count: 1
-			path: ../concrete/src/Logging/Configuration/SimpleConfiguration.php
-
-		-
 			message: '#^Parameter \#1 \$logger of class Concrete\\Core\\Logging\\Event constructor expects Monolog\\Logger, Psr\\Log\\LoggerInterface given\.$#'
 			identifier: argument.type
 			count: 1
@@ -6076,12 +5926,6 @@ parameters:
 			message: '#^Negated boolean expression is always false\.$#'
 			identifier: booleanNot.alwaysFalse
 			count: 1
-			path: ../concrete/src/Marketplace/Marketplace.php
-
-		-
-			message: '#^Negated boolean expression is always false\.$#'
-			identifier: booleanNot.alwaysFalse
-			count: 1
 			path: ../concrete/src/Marketplace/PackageRepository.php
 
 		-
@@ -6139,20 +5983,8 @@ parameters:
 			path: ../concrete/src/Multilingual/Service/Detector.php
 
 		-
-			message: '#^Strict comparison using \!\=\= between Concrete\\Core\\Entity\\Site\\Site and null will always evaluate to true\.$#'
-			identifier: notIdentical.alwaysTrue
-			count: 1
-			path: ../concrete/src/Multilingual/Service/Detector.php
-
-		-
 			message: '#^Strict comparison using \=\=\= between null and null will always evaluate to true\.$#'
 			identifier: identical.alwaysTrue
-			count: 1
-			path: ../concrete/src/Multilingual/Service/Detector.php
-
-		-
-			message: '#^Unreachable statement \- code above always terminates\.$#'
-			identifier: deadCode.unreachable
 			count: 1
 			path: ../concrete/src/Multilingual/Service/Detector.php
 
@@ -6313,12 +6145,6 @@ parameters:
 			path: ../concrete/src/Notification/Type/NewPrivateMessageType.php
 
 		-
-			message: '#^Negated boolean expression is always false\.$#'
-			identifier: booleanNot.alwaysFalse
-			count: 2
-			path: ../concrete/src/Notification/Type/UserDeactivatedType.php
-
-		-
 			message: '#^Parameter \#1 \$signup of class Concrete\\Core\\Entity\\Notification\\UserSignupNotification constructor expects Concrete\\Core\\Entity\\User\\UserSignup, Concrete\\Core\\Notification\\Subject\\SubjectInterface given\.$#'
 			identifier: argument.type
 			count: 1
@@ -6359,12 +6185,6 @@ parameters:
 			identifier: argument.type
 			count: 1
 			path: ../concrete/src/Notification/View/StandardListView.php
-
-		-
-			message: '#^Negated boolean expression is always false\.$#'
-			identifier: booleanNot.alwaysFalse
-			count: 2
-			path: ../concrete/src/Notification/View/UserDeactivatedListView.php
 
 		-
 			message: '#^Method Concrete\\Core\\Notification\\View\\UserSignupListView\:\:getInitiatorUserObject\(\) should return Concrete\\Core\\User\\UserInfo\|null but return statement is missing\.$#'
@@ -6941,12 +6761,6 @@ parameters:
 			identifier: function.alreadyNarrowedType
 			count: 1
 			path: ../concrete/src/Page/Type/Composer/Control/CollectionAttributeControl.php
-
-		-
-			message: '#^Strict comparison using \!\=\= between Concrete\\Core\\Page\\Type\\Type and null will always evaluate to true\.$#'
-			identifier: notIdentical.alwaysTrue
-			count: 1
-			path: ../concrete/src/Page/Type/Composer/Control/Control.php
 
 		-
 			message: '#^Offset ''description'' on non\-empty\-array\<mixed, mixed\> on left side of \?\? always exists and is not nullable\.$#'
@@ -7595,12 +7409,6 @@ parameters:
 			identifier: method.notFound
 			count: 1
 			path: ../concrete/src/Search/Pagination/PermissionablePagination.php
-
-		-
-			message: '#^Strict comparison using \=\=\= between int and ''POST'' will always evaluate to false\.$#'
-			identifier: identical.alwaysFalse
-			count: 1
-			path: ../concrete/src/Search/Query/Modifier/AbstractRequestModifier.php
 
 		-
 			message: '#^Constructor of class Concrete\\Core\\Search\\Result\\Item has an unused parameter \$result\.$#'
@@ -8521,12 +8329,6 @@ parameters:
 			path: ../concrete/src/User/Login/LoginAttemptService.php
 
 		-
-			message: '#^If condition is always true\.$#'
-			identifier: if.alwaysTrue
-			count: 1
-			path: ../concrete/src/User/Login/LoginService.php
-
-		-
 			message: '#^Call to function is_string\(\) with string will always evaluate to true\.$#'
 			identifier: function.alreadyNarrowedType
 			count: 1
@@ -8659,12 +8461,6 @@ parameters:
 			path: ../concrete/src/User/UserInfo.php
 
 		-
-			message: '#^Negated boolean expression is always false\.$#'
-			identifier: booleanNot.alwaysFalse
-			count: 1
-			path: ../concrete/src/User/UserInfoRepository.php
-
-		-
 			message: '#^Call to an undefined method Concrete\\Core\\User\\UserList\:\:setQuery\(\)\.$#'
 			identifier: method.notFound
 			count: 1
@@ -8719,7 +8515,7 @@ parameters:
 			path: ../concrete/src/Utility/Service/Number.php
 
 		-
-			message: '#^Strict comparison using \=\=\= between string and null will always evaluate to false\.$#'
+			message: '#^Strict comparison using \=\=\= between float\|int\|numeric\-string and '''' will always evaluate to false\.$#'
 			identifier: identical.alwaysFalse
 			count: 1
 			path: ../concrete/src/Utility/Service/Number.php

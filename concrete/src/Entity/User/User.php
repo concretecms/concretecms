@@ -484,7 +484,7 @@ class User implements UserEntityInterface, \JsonSerializable
     }
 
     /**
-     * @return int
+     * @return int|null
      */
     public function getHomeFileManagerFolderID()
     {
