@@ -4285,12 +4285,6 @@ parameters:
 			path: ../concrete/src/Entity/File/Version.php
 
 		-
-			message: '#^Unsafe usage of new static\(\)\.$#'
-			identifier: new.static
-			count: 1
-			path: ../concrete/src/Entity/File/Version.php
-
-		-
 			message: '#^Cannot call method toArray\(\) on array\<Concrete\\Core\\Entity\\Health\\Report\\Finding\>\.$#'
 			identifier: method.nonObject
 			count: 1
@@ -6808,12 +6802,6 @@ parameters:
 			message: '#^Ternary operator condition is always true\.$#'
 			identifier: ternary.alwaysTrue
 			count: 2
-			path: ../concrete/src/Page/Collection/Version/Version.php
-
-		-
-			message: '#^Unsafe usage of new static\(\)\.$#'
-			identifier: new.static
-			count: 1
 			path: ../concrete/src/Page/Collection/Version/Version.php
 
 		-
@@ -9561,12 +9549,6 @@ parameters:
 		-
 			message: '#^Strict comparison using \=\=\= between null and \-1 will always evaluate to false\.$#'
 			identifier: identical.alwaysFalse
-			count: 1
-			path: ../concrete/src/User/User.php
-
-		-
-			message: '#^Unsafe usage of new static\(\)\.$#'
-			identifier: new.static
 			count: 1
 			path: ../concrete/src/User/User.php
 

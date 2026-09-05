@@ -250,6 +250,10 @@ final class PHPStanStubGenerator
         $result = [];
         $matches = null;
         foreach (preg_split('/\r\n|\n|\r/', $docComment) as $line) {
+            if (preg_match('/^\s*\*?\s*(@phpstan-consistent-constructor)\s*$/', $line, $matches)) {
+                $result[] = $matches[1];
+                continue;
+            }
             if (!preg_match('/^\s*\*?\s*(@(?:mixin|method|property|property-read|property-write)\s+)(.+?)\s*$/', $line, $matches)) {
                 continue;
             }
