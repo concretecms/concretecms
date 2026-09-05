@@ -6,6 +6,9 @@ use Concrete\Core\User\User;
 use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\Permission\Duration as PermissionDuration;
 
+/**
+ * @method \Concrete\Core\Permission\Access\ListItem\AddSubpagePageListItem[] getAccessListItems($accessType = self::ACCESS_TYPE_INCLUDE, $filterEntities = [], $checkCache = true)
+ */
 class AddSubpagePageKey extends PageKey
 {
     public function canAddExternalLink()

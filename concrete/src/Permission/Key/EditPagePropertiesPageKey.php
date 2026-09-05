@@ -7,6 +7,9 @@ use Concrete\Core\Permission\Duration as PermissionDuration;
 use Concrete\Core\User\User;
 use Concrete\Core\Support\Facade\Application;
 
+/**
+ * @method \Concrete\Core\Permission\Access\ListItem\EditPagePropertiesPageListItem[] getAccessListItems($accessType = self::ACCESS_TYPE_INCLUDE, $filterEntities = [], $checkCache = true)
+ */
 class EditPagePropertiesPageKey extends PageKey
 {
     protected function getAllAttributeKeyIDs()

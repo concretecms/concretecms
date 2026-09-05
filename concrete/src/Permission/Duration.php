@@ -11,9 +11,11 @@ class Duration extends AbstractRepetition
     protected $pdID;
 
     /**
-     * @param \Concrete\Core\Permission\Access\ListItem\ListItem[] $list
+     * @template T of \Concrete\Core\Permission\Access\ListItem\ListItem
      *
-     * @return \Concrete\Core\Permission\Access\ListItem\ListItem[]
+     * @param T[] $list
+     *
+     * @return T[]
      */
     public static function filterByActive($list)
     {

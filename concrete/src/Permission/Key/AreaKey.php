@@ -4,6 +4,9 @@ namespace Concrete\Core\Permission\Key;
 use Concrete\Core\Permission\Assignment\AreaAssignment;
 use Loader;
 
+/**
+ * @method \Concrete\Core\Permission\Access\ListItem\AreaListItem[] getAccessListItems($accessType = self::ACCESS_TYPE_INCLUDE, $filterEntities = [], $checkCache = true)
+ */
 class AreaKey extends Key
 {
     public function copyFromPageToArea()

@@ -7,6 +7,9 @@ use Concrete\Core\Support\Facade\Application;
 use PermissionKey;
 use Concrete\Core\Permission\Duration as PermissionDuration;
 
+/**
+ * @method \Concrete\Core\Permission\Access\ListItem\AddBlockBlockTypeListItem[] getAccessListItems($accessType = self::ACCESS_TYPE_INCLUDE, $filterEntities = [], $checkCache = true)
+ */
 class AddBlockBlockTypeKey extends BlockTypeKey
 {
     protected function getAllowedBlockTypeIDs()

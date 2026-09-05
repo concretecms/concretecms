@@ -7309,32 +7309,8 @@ parameters:
 			path: ../concrete/src/Permission/Access/AddBlockBlockTypeAccess.php
 
 		-
-			message: '#^Call to an undefined method Concrete\\Core\\Permission\\Access\\ListItem\\ListItem\:\:setBlockTypesAllowedArray\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: ../concrete/src/Permission/Access/AddBlockBlockTypeAccess.php
-
-		-
-			message: '#^Call to an undefined method Concrete\\Core\\Permission\\Access\\ListItem\\ListItem\:\:setBlockTypesAllowedPermission\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: ../concrete/src/Permission/Access/AddBlockBlockTypeAccess.php
-
-		-
 			message: '#^Call to Concrete\\Core\\Permission\\Access\\Access\:\:save\(\) on a separate line has no effect\.$#'
 			identifier: staticMethod.resultUnused
-			count: 1
-			path: ../concrete/src/Permission/Access/AddBlockToAreaAreaAccess.php
-
-		-
-			message: '#^Call to an undefined method Concrete\\Core\\Permission\\Access\\ListItem\\ListItem\:\:setBlockTypesAllowedArray\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: ../concrete/src/Permission/Access/AddBlockToAreaAreaAccess.php
-
-		-
-			message: '#^Call to an undefined method Concrete\\Core\\Permission\\Access\\ListItem\\ListItem\:\:setBlockTypesAllowedPermission\(\)\.$#'
-			identifier: method.notFound
 			count: 1
 			path: ../concrete/src/Permission/Access/AddBlockToAreaAreaAccess.php
 
@@ -7345,26 +7321,8 @@ parameters:
 			path: ../concrete/src/Permission/Access/AddConversationMessageConversationAccess.php
 
 		-
-			message: '#^Call to an undefined method Concrete\\Core\\Permission\\Access\\ListItem\\ListItem\:\:setNewConversationMessageApprovalStatus\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: ../concrete/src/Permission/Access/AddConversationMessageConversationAccess.php
-
-		-
 			message: '#^Call to Concrete\\Core\\Permission\\Access\\Access\:\:save\(\) on a separate line has no effect\.$#'
 			identifier: staticMethod.resultUnused
-			count: 1
-			path: ../concrete/src/Permission/Access/AddFileFileFolderAccess.php
-
-		-
-			message: '#^Call to an undefined method Concrete\\Core\\Permission\\Access\\ListItem\\ListItem\:\:setFileTypesAllowedArray\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: ../concrete/src/Permission/Access/AddFileFileFolderAccess.php
-
-		-
-			message: '#^Call to an undefined method Concrete\\Core\\Permission\\Access\\ListItem\\ListItem\:\:setFileTypesAllowedPermission\(\)\.$#'
-			identifier: method.notFound
 			count: 1
 			path: ../concrete/src/Permission/Access/AddFileFileFolderAccess.php
 
@@ -7375,69 +7333,9 @@ parameters:
 			path: ../concrete/src/Permission/Access/AddSubpagePageAccess.php
 
 		-
-			message: '#^Call to an undefined method Concrete\\Core\\Permission\\Access\\ListItem\\ListItem\:\:setAllowExternalLinks\(\)\.$#'
-			identifier: method.notFound
-			count: 3
-			path: ../concrete/src/Permission/Access/AddSubpagePageAccess.php
-
-		-
-			message: '#^Call to an undefined method Concrete\\Core\\Permission\\Access\\ListItem\\ListItem\:\:setPageTypesAllowedArray\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: ../concrete/src/Permission/Access/AddSubpagePageAccess.php
-
-		-
-			message: '#^Call to an undefined method Concrete\\Core\\Permission\\Access\\ListItem\\ListItem\:\:setPageTypesAllowedPermission\(\)\.$#'
-			identifier: method.notFound
-			count: 3
-			path: ../concrete/src/Permission/Access/AddSubpagePageAccess.php
-
-		-
 			message: '#^Call to Concrete\\Core\\Permission\\Access\\Access\:\:save\(\) on a separate line has no effect\.$#'
 			identifier: staticMethod.resultUnused
 			count: 1
-			path: ../concrete/src/Permission/Access/EditPagePropertiesPageAccess.php
-
-		-
-			message: '#^Call to an undefined method Concrete\\Core\\Permission\\Access\\ListItem\\ListItem\:\:setAllowEditDateTime\(\)\.$#'
-			identifier: method.notFound
-			count: 3
-			path: ../concrete/src/Permission/Access/EditPagePropertiesPageAccess.php
-
-		-
-			message: '#^Call to an undefined method Concrete\\Core\\Permission\\Access\\ListItem\\ListItem\:\:setAllowEditDescription\(\)\.$#'
-			identifier: method.notFound
-			count: 3
-			path: ../concrete/src/Permission/Access/EditPagePropertiesPageAccess.php
-
-		-
-			message: '#^Call to an undefined method Concrete\\Core\\Permission\\Access\\ListItem\\ListItem\:\:setAllowEditName\(\)\.$#'
-			identifier: method.notFound
-			count: 3
-			path: ../concrete/src/Permission/Access/EditPagePropertiesPageAccess.php
-
-		-
-			message: '#^Call to an undefined method Concrete\\Core\\Permission\\Access\\ListItem\\ListItem\:\:setAllowEditPaths\(\)\.$#'
-			identifier: method.notFound
-			count: 3
-			path: ../concrete/src/Permission/Access/EditPagePropertiesPageAccess.php
-
-		-
-			message: '#^Call to an undefined method Concrete\\Core\\Permission\\Access\\ListItem\\ListItem\:\:setAllowEditUserID\(\)\.$#'
-			identifier: method.notFound
-			count: 3
-			path: ../concrete/src/Permission/Access/EditPagePropertiesPageAccess.php
-
-		-
-			message: '#^Call to an undefined method Concrete\\Core\\Permission\\Access\\ListItem\\ListItem\:\:setAttributesAllowedArray\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: ../concrete/src/Permission/Access/EditPagePropertiesPageAccess.php
-
-		-
-			message: '#^Call to an undefined method Concrete\\Core\\Permission\\Access\\ListItem\\ListItem\:\:setAttributesAllowedPermission\(\)\.$#'
-			identifier: method.notFound
-			count: 3
 			path: ../concrete/src/Permission/Access/EditPagePropertiesPageAccess.php
 
 		-
@@ -7447,75 +7345,9 @@ parameters:
 			path: ../concrete/src/Permission/Access/EditPageThemePageAccess.php
 
 		-
-			message: '#^Call to an undefined method Concrete\\Core\\Permission\\Access\\ListItem\\ListItem\:\:setThemesAllowedArray\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: ../concrete/src/Permission/Access/EditPageThemePageAccess.php
-
-		-
-			message: '#^Call to an undefined method Concrete\\Core\\Permission\\Access\\ListItem\\ListItem\:\:setThemesAllowedPermission\(\)\.$#'
-			identifier: method.notFound
-			count: 3
-			path: ../concrete/src/Permission/Access/EditPageThemePageAccess.php
-
-		-
 			message: '#^Call to Concrete\\Core\\Permission\\Access\\Access\:\:save\(\) on a separate line has no effect\.$#'
 			identifier: staticMethod.resultUnused
 			count: 1
-			path: ../concrete/src/Permission/Access/EditUserPropertiesUserAccess.php
-
-		-
-			message: '#^Call to an undefined method Concrete\\Core\\Permission\\Access\\ListItem\\ListItem\:\:setAllowEditAvatar\(\)\.$#'
-			identifier: method.notFound
-			count: 3
-			path: ../concrete/src/Permission/Access/EditUserPropertiesUserAccess.php
-
-		-
-			message: '#^Call to an undefined method Concrete\\Core\\Permission\\Access\\ListItem\\ListItem\:\:setAllowEditDefaultLanguage\(\)\.$#'
-			identifier: method.notFound
-			count: 3
-			path: ../concrete/src/Permission/Access/EditUserPropertiesUserAccess.php
-
-		-
-			message: '#^Call to an undefined method Concrete\\Core\\Permission\\Access\\ListItem\\ListItem\:\:setAllowEditEmail\(\)\.$#'
-			identifier: method.notFound
-			count: 3
-			path: ../concrete/src/Permission/Access/EditUserPropertiesUserAccess.php
-
-		-
-			message: '#^Call to an undefined method Concrete\\Core\\Permission\\Access\\ListItem\\ListItem\:\:setAllowEditHomeFileManagerFolderID\(\)\.$#'
-			identifier: method.notFound
-			count: 3
-			path: ../concrete/src/Permission/Access/EditUserPropertiesUserAccess.php
-
-		-
-			message: '#^Call to an undefined method Concrete\\Core\\Permission\\Access\\ListItem\\ListItem\:\:setAllowEditPassword\(\)\.$#'
-			identifier: method.notFound
-			count: 3
-			path: ../concrete/src/Permission/Access/EditUserPropertiesUserAccess.php
-
-		-
-			message: '#^Call to an undefined method Concrete\\Core\\Permission\\Access\\ListItem\\ListItem\:\:setAllowEditTimezone\(\)\.$#'
-			identifier: method.notFound
-			count: 3
-			path: ../concrete/src/Permission/Access/EditUserPropertiesUserAccess.php
-
-		-
-			message: '#^Call to an undefined method Concrete\\Core\\Permission\\Access\\ListItem\\ListItem\:\:setAllowEditUserName\(\)\.$#'
-			identifier: method.notFound
-			count: 3
-			path: ../concrete/src/Permission/Access/EditUserPropertiesUserAccess.php
-
-		-
-			message: '#^Call to an undefined method Concrete\\Core\\Permission\\Access\\ListItem\\ListItem\:\:setAttributesAllowedArray\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: ../concrete/src/Permission/Access/EditUserPropertiesUserAccess.php
-
-		-
-			message: '#^Call to an undefined method Concrete\\Core\\Permission\\Access\\ListItem\\ListItem\:\:setAttributesAllowedPermission\(\)\.$#'
-			identifier: method.notFound
-			count: 3
 			path: ../concrete/src/Permission/Access/EditUserPropertiesUserAccess.php
 
 		-
@@ -7561,18 +7393,6 @@ parameters:
 			path: ../concrete/src/Permission/Access/NotifyInNotificationCenterNotificationAccess.php
 
 		-
-			message: '#^Call to an undefined method Concrete\\Core\\Permission\\Access\\ListItem\\ListItem\:\:setSubscriptionsAllowedArray\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: ../concrete/src/Permission/Access/NotifyInNotificationCenterNotificationAccess.php
-
-		-
-			message: '#^Call to an undefined method Concrete\\Core\\Permission\\Access\\ListItem\\ListItem\:\:setSubscriptionsAllowedPermission\(\)\.$#'
-			identifier: method.notFound
-			count: 3
-			path: ../concrete/src/Permission/Access/NotifyInNotificationCenterNotificationAccess.php
-
-		-
 			message: '#^Call to an undefined method Concrete\\Core\\Permission\\Access\\ListItem\\NotifyInNotificationCenterNotificationListItem\:\:getAccessEntityID\(\)\.$#'
 			identifier: method.notFound
 			count: 2
@@ -7587,18 +7407,6 @@ parameters:
 		-
 			message: '#^Call to Concrete\\Core\\Permission\\Access\\Access\:\:save\(\) on a separate line has no effect\.$#'
 			identifier: staticMethod.resultUnused
-			count: 1
-			path: ../concrete/src/Permission/Access/ViewUserAttributesUserAccess.php
-
-		-
-			message: '#^Call to an undefined method Concrete\\Core\\Permission\\Access\\ListItem\\ListItem\:\:setAttributesAllowedArray\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: ../concrete/src/Permission/Access/ViewUserAttributesUserAccess.php
-
-		-
-			message: '#^Call to an undefined method Concrete\\Core\\Permission\\Access\\ListItem\\ListItem\:\:setAttributesAllowedPermission\(\)\.$#'
-			identifier: method.notFound
 			count: 1
 			path: ../concrete/src/Permission/Access/ViewUserAttributesUserAccess.php
 
@@ -7780,18 +7588,6 @@ parameters:
 			message: '#^Call to an undefined method Concrete\\Core\\Permission\\Access\\ListItem\\ListItem\:\:getBlockTypesAllowedArray\(\)\.$#'
 			identifier: method.notFound
 			count: 2
-			path: ../concrete/src/Permission/Key/AddBlockBlockTypeKey.php
-
-		-
-			message: '#^Call to an undefined method Concrete\\Core\\Permission\\Access\\ListItem\\ListItem\:\:getBlockTypesAllowedPermission\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: ../concrete/src/Permission/Key/AddBlockBlockTypeKey.php
-
-		-
-			message: '#^Call to an undefined method Concrete\\Core\\Permission\\Access\\ListItem\\ListItem\:\:getBlockTypesAllowedArray\(\)\.$#'
-			identifier: method.notFound
-			count: 2
 			path: ../concrete/src/Permission/Key/AddBlockToAreaAreaKey.php
 
 		-
@@ -7811,42 +7607,6 @@ parameters:
 			identifier: method.notFound
 			count: 1
 			path: ../concrete/src/Permission/Key/AddBlockToAreaAreaKey.php
-
-		-
-			message: '#^Call to an undefined method Concrete\\Core\\Permission\\Access\\ListItem\\ListItem\:\:getNewConversationMessageApprovalStatus\(\)\.$#'
-			identifier: method.notFound
-			count: 2
-			path: ../concrete/src/Permission/Key/AddConversationMessageConversationKey.php
-
-		-
-			message: '#^Call to an undefined method Concrete\\Core\\Permission\\Access\\ListItem\\ListItem\:\:getFileTypesAllowedArray\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: ../concrete/src/Permission/Key/AddFileFileFolderKey.php
-
-		-
-			message: '#^Call to an undefined method Concrete\\Core\\Permission\\Access\\ListItem\\ListItem\:\:getFileTypesAllowedPermission\(\)\.$#'
-			identifier: method.notFound
-			count: 3
-			path: ../concrete/src/Permission/Key/AddFileFileFolderKey.php
-
-		-
-			message: '#^Call to an undefined method Concrete\\Core\\Permission\\Access\\ListItem\\ListItem\:\:allowExternalLinks\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: ../concrete/src/Permission/Key/AddSubpagePageKey.php
-
-		-
-			message: '#^Call to an undefined method Concrete\\Core\\Permission\\Access\\ListItem\\ListItem\:\:getPageTypesAllowedArray\(\)\.$#'
-			identifier: method.notFound
-			count: 2
-			path: ../concrete/src/Permission/Key/AddSubpagePageKey.php
-
-		-
-			message: '#^Call to an undefined method Concrete\\Core\\Permission\\Access\\ListItem\\ListItem\:\:getPageTypesAllowedPermission\(\)\.$#'
-			identifier: method.notFound
-			count: 3
-			path: ../concrete/src/Permission/Key/AddSubpagePageKey.php
 
 		-
 			message: '#^Call to an undefined method Concrete\\Core\\Permission\\ObjectInterface\:\:getAreaHandle\(\)\.$#'
@@ -7921,72 +7681,6 @@ parameters:
 			path: ../concrete/src/Permission/Key/EditPagePropertiesPageKey.php
 
 		-
-			message: '#^Call to an undefined method Concrete\\Core\\Permission\\Access\\ListItem\\ListItem\:\:getThemesAllowedArray\(\)\.$#'
-			identifier: method.notFound
-			count: 2
-			path: ../concrete/src/Permission/Key/EditPageThemePageKey.php
-
-		-
-			message: '#^Call to an undefined method Concrete\\Core\\Permission\\Access\\ListItem\\ListItem\:\:getThemesAllowedPermission\(\)\.$#'
-			identifier: method.notFound
-			count: 3
-			path: ../concrete/src/Permission/Key/EditPageThemePageKey.php
-
-		-
-			message: '#^Call to an undefined method Concrete\\Core\\Permission\\Access\\ListItem\\ListItem\:\:allowEditAvatar\(\)\.$#'
-			identifier: method.notFound
-			count: 2
-			path: ../concrete/src/Permission/Key/EditUserPropertiesUserKey.php
-
-		-
-			message: '#^Call to an undefined method Concrete\\Core\\Permission\\Access\\ListItem\\ListItem\:\:allowEditDefaultLanguage\(\)\.$#'
-			identifier: method.notFound
-			count: 2
-			path: ../concrete/src/Permission/Key/EditUserPropertiesUserKey.php
-
-		-
-			message: '#^Call to an undefined method Concrete\\Core\\Permission\\Access\\ListItem\\ListItem\:\:allowEditEmail\(\)\.$#'
-			identifier: method.notFound
-			count: 2
-			path: ../concrete/src/Permission/Key/EditUserPropertiesUserKey.php
-
-		-
-			message: '#^Call to an undefined method Concrete\\Core\\Permission\\Access\\ListItem\\ListItem\:\:allowEditHomeFileManagerFolderID\(\)\.$#'
-			identifier: method.notFound
-			count: 2
-			path: ../concrete/src/Permission/Key/EditUserPropertiesUserKey.php
-
-		-
-			message: '#^Call to an undefined method Concrete\\Core\\Permission\\Access\\ListItem\\ListItem\:\:allowEditPassword\(\)\.$#'
-			identifier: method.notFound
-			count: 2
-			path: ../concrete/src/Permission/Key/EditUserPropertiesUserKey.php
-
-		-
-			message: '#^Call to an undefined method Concrete\\Core\\Permission\\Access\\ListItem\\ListItem\:\:allowEditTimezone\(\)\.$#'
-			identifier: method.notFound
-			count: 2
-			path: ../concrete/src/Permission/Key/EditUserPropertiesUserKey.php
-
-		-
-			message: '#^Call to an undefined method Concrete\\Core\\Permission\\Access\\ListItem\\ListItem\:\:allowEditUserName\(\)\.$#'
-			identifier: method.notFound
-			count: 2
-			path: ../concrete/src/Permission/Key/EditUserPropertiesUserKey.php
-
-		-
-			message: '#^Call to an undefined method Concrete\\Core\\Permission\\Access\\ListItem\\ListItem\:\:getAttributesAllowedArray\(\)\.$#'
-			identifier: method.notFound
-			count: 2
-			path: ../concrete/src/Permission/Key/EditUserPropertiesUserKey.php
-
-		-
-			message: '#^Call to an undefined method Concrete\\Core\\Permission\\Access\\ListItem\\ListItem\:\:getAttributesAllowedPermission\(\)\.$#'
-			identifier: method.notFound
-			count: 3
-			path: ../concrete/src/Permission/Key/EditUserPropertiesUserKey.php
-
-		-
 			message: '#^Parameter \#1 \$var of function count expects array\|Countable, bool given\.$#'
 			identifier: argument.type
 			count: 1
@@ -8021,12 +7715,6 @@ parameters:
 			identifier: method.notFound
 			count: 1
 			path: ../concrete/src/Permission/Key/TreeNodeKey.php
-
-		-
-			message: '#^Call to an undefined method Concrete\\Core\\Permission\\Access\\ListItem\\ListItem\:\:getAttributesAllowedPermission\(\)\.$#'
-			identifier: method.notFound
-			count: 3
-			path: ../concrete/src/Permission/Key/ViewUserAttributesUserKey.php
 
 		-
 			message: '#^Call to an undefined method Concrete\\Core\\Permission\\Access\\Access\:\:setWorkflowProgressObject\(\)\.$#'
