@@ -35,7 +35,7 @@ class Block extends ConcreteObject implements ObjectInterface
     public $bName;
 
     /**
-     * @var int|null
+     * @var int|numeric-string|null
      */
     public $btID;
 
@@ -47,7 +47,7 @@ class Block extends ConcreteObject implements ObjectInterface
     /**
      * The ID of the collection containing the block.
      *
-     * @var int|null
+     * @var int|numeric-string|null
      */
     protected $cID;
 
@@ -82,7 +82,7 @@ class Block extends ConcreteObject implements ObjectInterface
     /**
      * The ID of the associated block.
      *
-     * @var int|null
+     * @var int|numeric-string|null
      */
     protected $cbRelationID;
 
@@ -103,7 +103,7 @@ class Block extends ConcreteObject implements ObjectInterface
     /**
      * Override cache settings?
      *
-     * @var int|null 1 for true; 0/null for false
+     * @var bool|0|1|'0'|'1'|null 1 for true; 0/null for false
      */
     protected $cbOverrideBlockTypeCacheSettings;
 
@@ -115,7 +115,7 @@ class Block extends ConcreteObject implements ObjectInterface
     protected $bFilename;
 
     /**
-     * @var bool|int|null
+     * @var bool|0|1|'0'|'1'|null
      */
     protected $isOriginal;
 
@@ -130,7 +130,7 @@ class Block extends ConcreteObject implements ObjectInterface
     protected $btName;
 
     /**
-     * @var int|null
+     * @var int|numeric-string|null
      */
     protected $uID;
 
@@ -145,24 +145,24 @@ class Block extends ConcreteObject implements ObjectInterface
     protected $bDateModified;
 
     /**
-     * @var int|null
+     * @var bool|0|1|'0'|'1'|null
      */
     protected $bIsActive;
 
     /**
-     * @var int|null
+     * @var bool|0|1|'0'|'1'|null
      */
     protected $cbIncludeAll;
 
     protected $cbOverrideBlockTypeContainerSettings;
 
     /**
-     * @var bool|int|null
+     * @var bool|0|1|'0'|'1'|null
      */
     protected $cbEnableBlockContainer;
 
     /**
-     * @var int|null
+     * @var bool|0|1|'0'|'1'|null
      */
     protected $cbOverrideAreaPermissions;
 

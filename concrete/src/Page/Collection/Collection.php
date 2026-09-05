@@ -45,7 +45,7 @@ class Collection extends ConcreteObject implements TrackableInterface
      *
      * @deprecated Use getCollectionID (what's deprecated is the public part)
      *
-     * @var int|null
+     * @var int|numeric-string|null
      */
     public $cID;
 

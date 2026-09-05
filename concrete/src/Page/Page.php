@@ -101,21 +101,21 @@ class Page extends Collection implements CategoryMemberInterface,
     /**
      * The user id of the user that has checked out the page.
      *
-     * @var int|null
+     * @var int|numeric-string|null
      */
     public $cCheckedOutUID = null;
 
     /**
      * The original cID of a page (if it's a page alias).
      *
-     * @var int|null
+     * @var int|numeric-string|null
      */
     protected $cPointerOriginalID = null;
 
     /**
      * The original siteTreeID of a page (if it's a page alias).
      *
-     * @var int|null
+     * @var int|numeric-string|null
      */
     protected $cPointerOriginalSiteTreeID = null;
 
@@ -129,7 +129,7 @@ class Page extends Collection implements CategoryMemberInterface,
     /**
      * Should the alias link to be opened in a new window?
      *
-     * @var bool|int|null
+     * @var bool|0|1|'0'|'1'|null
      */
     protected $cPointerExternalLinkNewWindow = null;
 
@@ -143,28 +143,28 @@ class Page extends Collection implements CategoryMemberInterface,
     /**
      * The ID of the page from which this page inherits permissions from.
      *
-     * @var int|null
+     * @var int|numeric-string|null
      */
     protected $cInheritPermissionsFromCID = null;
 
     /**
      * Is this a system page?
      *
-     * @var bool
+     * @var bool|0|1|'0'|'1'
      */
     protected $cIsSystemPage = false;
 
     /**
      * The site tree ID.
      *
-     * @var int|null
+     * @var int|numeric-string|null
      */
     protected $siteTreeID;
 
     /**
      * @deprecated What's deprecated is the "public" part.
      *
-     * @var int|null
+     * @var int|numeric-string|null
      */
     public $pkgID;
 
@@ -178,21 +178,21 @@ class Page extends Collection implements CategoryMemberInterface,
     /**
      * @deprecated What's deprecated is the "public" part.
      *
-     * @var int|null
+     * @var int|numeric-string|null
      */
     public $cPointerID;
 
     /**
      * @deprecated What's deprecated is the "public" part.
      *
-     * @var int|bool|null
+     * @var bool|0|1|'0'|'1'|null
      */
     public $cIsDraft;
 
     /**
      * @deprecated What's deprecated is the "public" part.
      *
-     * @var int|bool|null
+     * @var bool|0|1|'0'|'1'|null
      */
     public $cIsActive;
 
@@ -206,14 +206,14 @@ class Page extends Collection implements CategoryMemberInterface,
     /**
      * @deprecated What's deprecated is the "public" part.
      *
-     * @var int|null
+     * @var int|numeric-string|null
      */
     public $ptID;
 
     /**
      * @deprecated What's deprecated is the "public" part.
      *
-     * @var int|null
+     * @var int|numeric-string|null
      */
     public $cDisplayOrder;
 
@@ -227,21 +227,21 @@ class Page extends Collection implements CategoryMemberInterface,
     /**
      * @deprecated What's deprecated is the "public" part.
      *
-     * @var bool|int|null
+     * @var bool|0|1|'0'|'1'|null
      */
     public $cOverrideTemplatePermissions;
 
     /**
      * @deprecated What's deprecated is the "public" part.
      *
-     * @var int|bool|null
+     * @var bool|0|1|'0'|'1'|null
      */
     public $cIsTemplate;
 
     /**
      * @deprecated What's deprecated is the "public" part.
      *
-     * @var int|null
+     * @var int|numeric-string|null
      */
     public $uID;
 
@@ -255,21 +255,21 @@ class Page extends Collection implements CategoryMemberInterface,
     /**
      * @deprecated What's deprecated is the "public" part.
      *
-     * @var int|null
+     * @var int|numeric-string|null
      */
     public $cParentID;
 
     /**
      * @deprecated What's deprecated is the "public" part.
      *
-     * @var int|null
+     * @var int|numeric-string|null
      */
     public $cChildren;
 
     /**
      * @deprecated What's deprecated is the "public" part.
      *
-     * @var int|null
+     * @var int|numeric-string|null
      */
     public $cCacheFullPageContent;
 

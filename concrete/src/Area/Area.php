@@ -17,12 +17,12 @@ use Concrete\Core\Localization\Localization;
 class Area extends ConcreteObject implements \Concrete\Core\Permission\ObjectInterface
 {
     /**
-     * @var int
+     * @var int|numeric-string
      */
     public $cID;
 
     /**
-     * @var int
+     * @var int|numeric-string
      */
     public $arID;
 
@@ -90,12 +90,12 @@ class Area extends ConcreteObject implements \Concrete\Core\Permission\ObjectInt
     protected $arGridMaximumColumns;
 
     /**
-     * @var bool
+     * @var bool|0|1|'0'|'1'
      */
     protected $arOverrideCollectionPermissions;
 
     /**
-     * @var int
+     * @var int|numeric-string
      */
     protected $arInheritPermissionsFromAreaOnCID;
 
