@@ -5749,36 +5749,6 @@ parameters:
 			path: ../concrete/src/Http/DefaultServer.php
 
 		-
-			message: '#^Parameter \#2 \$filesystem of class Concrete\\Core\\Http\\FlysystemFileResponse constructor expects League\\Flysystem\\FilesystemInterface, int given\.$#'
-			identifier: argument.type
-			count: 1
-			path: ../concrete/src/Http/FlysystemFileResponse.php
-
-		-
-			message: '#^Parameter \#3 \$status of class Concrete\\Core\\Http\\FlysystemFileResponse constructor expects int, array given\.$#'
-			identifier: argument.type
-			count: 1
-			path: ../concrete/src/Http/FlysystemFileResponse.php
-
-		-
-			message: '#^Parameter \#4 \$headers of class Concrete\\Core\\Http\\FlysystemFileResponse constructor expects array, bool given\.$#'
-			identifier: argument.type
-			count: 1
-			path: ../concrete/src/Http/FlysystemFileResponse.php
-
-		-
-			message: '#^Parameter \#5 \$public of class Concrete\\Core\\Http\\FlysystemFileResponse constructor expects bool, string\|null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: ../concrete/src/Http/FlysystemFileResponse.php
-
-		-
-			message: '#^Parameter \#6 \$contentDisposition of class Concrete\\Core\\Http\\FlysystemFileResponse constructor expects string\|null, bool given\.$#'
-			identifier: argument.type
-			count: 1
-			path: ../concrete/src/Http/FlysystemFileResponse.php
-
-		-
 			message: '#^Property Concrete\\Core\\Http\\FlysystemFileResponse\:\:\$file \(League\\Flysystem\\File\) does not accept League\\Flysystem\\Handler\.$#'
 			identifier: assign.propertyType
 			count: 1
