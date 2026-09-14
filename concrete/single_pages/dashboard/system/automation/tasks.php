@@ -42,11 +42,16 @@ defined('C5_EXECUTE') or die("Access Denied."); ?>
                     </div>
                     <div class="modal-body">
                         <div class="form-group" v-for="field in selectedTask.inputDefinition.fields">
-                            <label class="control-label">{{field.label}}</label>
+                            <label v-if="field.type !== 'boolean' || !field.displayAsCheckbox" class="control-label">{{field.label}}</label>
                             <select v-if="field.type === 'select'" :name="field.key" class="form-control">
                                 <option value="" v-if="!field.isRequired"><?=t('** None')?></option>
                                 <option v-for="(option, optionValue) in field.options" :value="optionValue">{{option}}</option>
                             </select>
+                            <div v-else-if="field.type === 'boolean' && field.displayAsCheckbox" class="form-check">
+                                <input type="hidden" :name="field.key" value="">
+                                <input class="form-check-input" type="checkbox" :name="field.key" :id="'task-option-' + field.key" value="1">
+                                <label class="form-check-label" :for="'task-option-' + field.key">{{field.label}}</label>
+                            </div>
                             <div v-else-if="field.type === 'boolean'">
                                 <div class="form-check">
                                     <input class="form-check-input" type="radio" :name="field.key" :id="field.key + '1'" value="" checked>
