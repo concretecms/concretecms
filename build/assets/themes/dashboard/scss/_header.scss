@@ -138,7 +138,7 @@ div#ccm-dashboard-content {
     header {
       div.ccm-dashboard-header-title {
         .header-icon {
-          .icon-bookmark {
+          .icon-bookmark:not(.bookmarked) {
             --icon-color: #{$gray-200};
           }
         }
