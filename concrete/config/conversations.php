@@ -13,6 +13,8 @@ return [
     'attachments_enabled' => true,
     'attachments_pending_file_set' => 'Conversation Messages (Pending)',
     'attachments_file_set' => 'Conversation Messages',
+    // Files uploaded but not attached to a message after this number of seconds are deleted by the delete_orphaned_conversation_attachments task
+    'attachments_orphaned_min_age' => 28800,
     'subscription_enabled' => false,
     'files' => [
         'allowed_types' => '*.jpg;*.gif;*.jpeg;*.png;*.doc;*.docx;*.zip',
