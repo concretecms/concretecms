@@ -8,22 +8,22 @@
       <unsigned/>
       <key/>
     </field>
-    <field name="title" type="string" size="255"/>
-    <field name="url" type="string" size="255"/>
-    <field name="dateFormat" type="string" size="100"/>
-    <field name="itemsToDisplay" type="integer">
+    <field name="title" type="string" size="255" comment="The text displayed above the items of the feed"/>
+    <field name="url" type="string" size="255" comment="The address of the RSS or Atom feed the items are read from"/>
+    <field name="dateFormat" type="string" size="100" comment="A format accepted by the date() PHP function, used for the date of the items"/>
+    <field name="itemsToDisplay" type="integer" comment="How many items of the feed are displayed">
       <unsigned/>
       <default value="5"/>
     </field>
-    <field name="showSummary" type="boolean">
+    <field name="showSummary" type="boolean" comment="true: the summary of every item is displayed below its title; false: only the titles are displayed">
       <default value="1"/>
       <notnull/>
     </field>
-    <field name="launchInNewWindow" type="boolean">
+    <field name="launchInNewWindow" type="boolean" comment="true: the items open in another window; false: they open in the same one">
       <default value="1"/>
       <notnull/>
     </field>
-    <field name="titleFormat" type="string" size="20">
+    <field name="titleFormat" type="string" size="20" comment="The HTML element wrapping the text displayed above the items: h1, h2, h3, h4, h5, h6 or p">
         <default value="h5" />
 		<notnull/>
     </field>

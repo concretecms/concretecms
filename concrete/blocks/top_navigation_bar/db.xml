@@ -7,35 +7,35 @@
             <unsigned/>
             <key/>
         </field>
-        <field name="brandingText" type="string" />
-        <field name="brandingLogo" type="integer" />
-        <field name="brandingTransparentLogo" type="integer" />
-        <field name="includeBrandText" type="boolean">
+        <field name="brandingText" type="string" comment="The text displayed as the brand (empty: the name of the site)" />
+        <field name="brandingLogo" type="integer" comment="The ID of the image displayed as the brand (0 or NULL: none)" />
+        <field name="brandingTransparentLogo" type="integer" comment="The ID of the image displayed as the brand while the bar is transparent (0 or NULL: brandingLogo is kept)" />
+        <field name="includeBrandText" type="boolean" comment="true: brandingText is displayed as the brand; false or NULL: it isn't">
             <default value="0"/>
         </field>
-        <field name="includeBrandLogo" type="boolean">
+        <field name="includeBrandLogo" type="boolean" comment="true: brandingLogo is displayed as the brand; false or NULL: it isn't">
             <default value="0"/>
         </field>
-        <field name="includeTransparency" type="boolean">
+        <field name="includeTransparency" type="boolean" comment="true: the bar is transparent until the visitor scrolls, if the theme supports it; false or NULL: it always has a background">
             <default value="0"/>
         </field>
-        <field name="includeStickyNav" type="boolean">
+        <field name="includeStickyNav" type="boolean" comment="true: the bar stays at the top while the visitor scrolls, if the theme supports it; false or NULL: it scrolls away">
             <default value="0"/>
         </field>
-        <field name="includeNavigation" type="boolean">
+        <field name="includeNavigation" type="boolean" comment="true: the pages of the site are displayed in the bar; false or NULL: they are left out">
             <default value="0"/>
         </field>
-        <field name="includeNavigationDropdowns" type="boolean">
+        <field name="includeNavigationDropdowns" type="boolean" comment="true: the child pages are displayed in dropdown menus; false or NULL: only the top level pages are displayed">
             <default value="0"/>
         </field>
-        <field name="includeSearchInput" type="boolean">
+        <field name="includeSearchInput" type="boolean" comment="true: a search box is displayed in the bar; false or NULL: it isn't">
             <default value="0"/>
         </field>
-        <field name="searchInputFormActionPageID" type="integer" />
-        <field name="includeSwitchLanguage" type="boolean">
+        <field name="searchInputFormActionPageID" type="integer" comment="The ID of the page that displays the results of the search (0 or NULL: the page holding the block)" />
+        <field name="includeSwitchLanguage" type="boolean" comment="true: the visitors are offered the languages of the site; false or NULL: they are not">
             <default value="0"/>
         </field>
-        <field name="ignorePermissions" type="boolean">
+        <field name="ignorePermissions" type="boolean" comment="true: the pages that the visitor is not allowed to view are displayed too; false: they are left out">
             <default value="0"/>
             <notnull/>
         </field>

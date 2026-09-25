@@ -9,39 +9,39 @@
             <unsigned/>
             <key/>
         </field>
-        <field name="mode" type="string" size="1" comment="S = Specify, P = Page, R = Request">
+        <field name="mode" type="string" size="1" comment="S: the event in eventID is displayed; P: the one held by the page attribute named by calendarEventAttributeKeyHandle; R: the occurrence passed through the URL">
             <default value="S"/>
             <notnull/>
         </field>
-        <field name="calendarEventAttributeKeyHandle" type="string" size="255">
+        <field name="calendarEventAttributeKeyHandle" type="string" size="255" comment="The handle of the page attribute holding the event to be displayed (used if mode is P)">
             <default value=""/>
             <notnull/>
         </field>
-        <field name="calendarID" type="integer" size="10">
+        <field name="calendarID" type="integer" size="10" comment="The ID of the calendar the event belongs to">
             <unsigned/>
             <default value="0"/>
             <notnull/>
         </field>
-        <field name="eventID" type="integer" size="10">
+        <field name="eventID" type="integer" size="10" comment="The ID of the event to be displayed (used if mode is S)">
             <unsigned/>
             <default value="0"/>
             <notnull/>
         </field>
-        <field name="displayEventAttributes" type="text">
+        <field name="displayEventAttributes" type="text" comment="A JSON array of the IDs of the event attributes to be displayed">
         </field>
-        <field name="allowExport" type="boolean">
+        <field name="allowExport" type="boolean" comment="true: the visitors are offered a link to add the event to their own calendar; false or NULL: they are not">
             <default value="0"/>
         </field>
-        <field name="enableLinkToPage" type="boolean">
+        <field name="enableLinkToPage" type="boolean" comment="true: the name of the event links to the page that the event is bound to, opening it at the occurrence being displayed; false or NULL: the name is not a link">
             <default value="0"/>
         </field>
-        <field name="displayEventName" type="boolean">
+        <field name="displayEventName" type="boolean" comment="true: the name of the event is displayed; false or NULL: it's left out">
             <default value="0"/>
         </field>
-        <field name="displayEventDate" type="boolean">
+        <field name="displayEventDate" type="boolean" comment="true: the date of the event is displayed; false or NULL: it's left out">
             <default value="0"/>
         </field>
-        <field name="displayEventDescription" type="boolean">
+        <field name="displayEventDescription" type="boolean" comment="true: the description of the event is displayed; false or NULL: it's left out">
             <default value="0"/>
         </field>
 

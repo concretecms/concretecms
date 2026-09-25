@@ -8,29 +8,29 @@
       <unsigned/>
       <key/>
     </field>
-    <field name="navigationType" type="integer">
+    <field name="navigationType" type="integer" comment="0 or NULL: the slides are navigated with arrows; 1: with bullets; 2: with both of them; 3: with neither">
       <unsigned/>
       <default value="0"/>
     </field>
-    <field name="timeout" type="integer">
+    <field name="timeout" type="integer" comment="How many milliseconds a slide is displayed, which must be at least 100 more than speed">
       <unsigned/>
     </field>
-    <field name="speed" type="integer">
+    <field name="speed" type="integer" comment="How many milliseconds the transition between two slides lasts">
       <unsigned/>
     </field>
-    <field name="noAnimate" type="boolean">
+    <field name="noAnimate" type="boolean" comment="true: the slides are switched without animating them; false or NULL: they slide">
       <default value="0"/>
     </field>
-    <field name="pause" type="boolean">
+    <field name="pause" type="boolean" comment="true: the slideshow stops while the pointer is over it; false or NULL: it keeps going">
       <default value="0"/>
     </field>
-    <field name="maxWidth" type="integer">
+    <field name="maxWidth" type="integer" comment="The maximum width of the slideshow, in pixels (0 or NULL: no limit)">
       <unsigned/>
     </field>
   </table>
 
   <table name="btImageSliderEntries">
-    <field name="id" type="integer">
+    <field name="id" type="integer" comment="The ID of the slide">
       <unsigned/>
       <autoincrement/>
       <key/>
@@ -38,22 +38,22 @@
     <field name="bID" type="integer">
       <unsigned/>
     </field>
-    <field name="cID" type="integer">
+    <field name="cID" type="integer" comment="Deprecated, not used">
       <unsigned/>
       <default value="0"/>
     </field>
-    <field name="fID" type="integer">
+    <field name="fID" type="integer" comment="The ID of the image of the slide">
       <unsigned/>
       <default value="0"/>
     </field>
-    <field name="linkURL" type="string" size="255"/>
-    <field name="internalLinkCID" type="integer">
+    <field name="linkURL" type="string" size="255" comment="The URL the slide links to (used if internalLinkCID is 0)"/>
+    <field name="internalLinkCID" type="integer" comment="The ID of the page the slide links to (0 or NULL: it links to linkURL)">
       <unsigned/>
       <default value="0"/>
     </field>
-    <field name="title" type="text"/>
-    <field name="description" type="text"/>
-    <field name="sortOrder" type="integer"/>
+    <field name="title" type="text" comment="The title displayed over the image, as rich text"/>
+    <field name="description" type="text" comment="The text displayed below the title, as rich text"/>
+    <field name="sortOrder" type="integer" comment="The position of the slide in the slideshow, starting from zero"/>
   </table>
 
 </schema>

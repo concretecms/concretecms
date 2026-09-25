@@ -8,32 +8,32 @@
       <unsigned/>
       <key/>
     </field>
-    <field name="exFormID" type="guid">
+    <field name="exFormID" type="guid" comment="The ID of the Express form that the block renders (its controls belong to the form itself)">
     </field>
-    <field name="submitLabel" type="string" size="255">
+    <field name="submitLabel" type="string" size="255" comment="The text of the button that submits the form">
       <default value="Submit"/>
     </field>
-    <field name="thankyouMsg" type="text" size="65535"/>
-    <field name="notifyMeOnSubmission" type="boolean">
+    <field name="thankyouMsg" type="text" size="65535" comment="The text displayed once the form has been submitted (used if redirectCID is 0)"/>
+    <field name="notifyMeOnSubmission" type="boolean" comment="true: an email is sent to the recipientEmail addresses when the form is submitted; false: no email is sent">
       <default value="0"/>
       <notnull/>
     </field>
-    <field name="recipientEmail" type="string" size="255"/>
-    <field name="displayCaptcha" type="boolean">
+    <field name="recipientEmail" type="string" size="255" comment="The email addresses notified when the form is submitted, separated by commas (used if notifyMeOnSubmission is true)"/>
+    <field name="displayCaptcha" type="boolean" comment="true: the visitors must solve a captcha before submitting the form; false or NULL: they don't">
       <default value="1"/>
     </field>
-    <field name="storeFormSubmission" type="boolean">
+    <field name="storeFormSubmission" type="boolean" comment="true: the submitted forms are saved as entries of the Express entity; false or NULL: they are not kept">
      <default value="1"/>
     </field>
-    <field name="redirectCID" type="integer">
+    <field name="redirectCID" type="integer" comment="The ID of the page the visitors are sent to once the form has been submitted (0 or NULL: thankyouMsg is displayed instead)">
       <default value="0"/>
     </field>
-    <field name="replyToEmailControlID" type="string">
+    <field name="replyToEmailControlID" type="string" comment="The ID of the control of the form holding the address that the notification replies to">
     </field>
-    <field name="addFilesToSet" type="integer">
+    <field name="addFilesToSet" type="integer" comment="The ID of the file set that the files uploaded with the form are added to (0 or NULL: none)">
       <default value="0"/>
     </field>
-    <field name="addFilesToFolder" type="integer">
+    <field name="addFilesToFolder" type="integer" comment="The ID of the file folder that the files uploaded with the form are stored in (0 or NULL: the root folder)">
       <default value="0"/>
     </field>
   </table>

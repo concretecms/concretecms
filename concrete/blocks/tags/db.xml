@@ -8,15 +8,15 @@
       <unsigned/>
       <key/>
     </field>
-    <field name="title" type="string" size="255"/>
-    <field name="targetCID" type="integer"/>
-    <field name="displayMode" type="string" size="20">
+    <field name="title" type="string" size="255" comment="The text displayed above the tags"/>
+    <field name="targetCID" type="integer" comment="The ID of the page that the links of the block point to, where a page list block filters its pages by the chosen tag (0 or NULL: they point to the page holding the block)"/>
+    <field name="displayMode" type="string" size="20" comment="page: the tags of the page holding the block are listed; cloud: the ones of the whole site are listed">
       <default value="page"/>
     </field>
-    <field name="cloudCount" type="integer">
+    <field name="cloudCount" type="integer" comment="How many tags are listed at most (0 or NULL: all of them): it's used only when displayMode is cloud">
       <default value="10"/>
     </field>
-    <field name="titleFormat" type="string" size="20">
+    <field name="titleFormat" type="string" size="20" comment="The HTML element wrapping the text displayed above the tags: h1, h2, h3, h4, h5, h6 or p">
       <default value="h5" />
 	  <notnull/>
     </field>

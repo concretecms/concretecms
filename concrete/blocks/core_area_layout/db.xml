@@ -10,7 +10,7 @@
       <default value="0"/>
       <notnull/>
     </field>
-    <field name="arLayoutID" type="integer">
+    <field name="arLayoutID" type="integer" comment="The ID of the layout that the block adds to the page, which owns the columns and the area of every column">
       <unsigned/>
       <default value="0"/>
       <notnull/>

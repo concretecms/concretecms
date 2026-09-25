@@ -4,7 +4,7 @@
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.concrete5.org/doctrine-xml/0.5 https://concretecms.github.io/doctrine-xml/doctrine-xml-0.5.xsd">
 
   <table name="btShareThisPage">
-    <field name="btShareThisPageID" type="integer">
+    <field name="btShareThisPageID" type="integer" comment="The ID of the row pairing the block with one of the services">
       <unsigned/>
       <autoincrement/>
       <key/>
@@ -13,8 +13,8 @@
       <unsigned/>
       <default value="0"/>
     </field>
-    <field name="service" type="string" size="255"/>
-    <field name="displayOrder" type="integer">
+    <field name="service" type="string" size="255" comment="The handle of the service the page can be shared with, for instance facebook"/>
+    <field name="displayOrder" type="integer" comment="The position of the service in the block, starting from zero">
       <unsigned/>
       <default value="0"/>
     </field>

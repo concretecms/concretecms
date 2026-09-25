@@ -8,19 +8,19 @@
       <unsigned/>
       <key/>
     </field>
-    <field name="title" type="string" size="255"/>
-    <field name="buttonText" type="string" size="128"/>
-    <field name="baseSearchPath" type="string" size="255"/>
-    <field name="search_all" type="boolean">
+    <field name="title" type="string" size="255" comment="The text displayed above the search box"/>
+    <field name="buttonText" type="string" size="128" comment="The text of the button that starts the search"/>
+    <field name="baseSearchPath" type="string" size="255" comment="The path of the page whose descendants are searched (empty: the whole site)"/>
+    <field name="search_all" type="boolean" comment="true: every site of the installation is searched, and baseSearchPath is ignored; false or NULL: only the current site is searched">
       <default value="0"/>
     </field>
-    <field name="allow_user_options" type="boolean">
+    <field name="allow_user_options" type="boolean" comment="true: the visitors can choose whether to search every site of the installation; false or NULL: they can't">
       <default value="0"/>
     </field>
-    <field name="postTo_cID" type="integer">
+    <field name="postTo_cID" type="integer" comment="The ID of the page that displays the results (NULL: they are displayed in the page holding the block, or at resultsURL)">
       <unsigned/>
     </field>
-    <field name="resultsURL" type="string" size="255"/>
+    <field name="resultsURL" type="string" size="255" comment="The address the search is sent to (used if postTo_cID is NULL)"/>
   </table>
 
 </schema>

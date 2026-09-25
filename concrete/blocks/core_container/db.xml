@@ -9,7 +9,7 @@
       <key/>
       <notnull/>
     </field>
-    <field name="containerInstanceID" type="integer">
+    <field name="containerInstanceID" type="integer" comment="The ID of the container instance displayed by the block, which owns the areas that the container adds to the page">
       <unsigned/>
       <notnull/>
     </field>

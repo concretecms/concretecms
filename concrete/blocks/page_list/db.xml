@@ -8,124 +8,124 @@
       <unsigned/>
       <key/>
     </field>
-    <field name="num" type="smallint">
+    <field name="num" type="smallint" comment="How many pages are listed (0: all of them)">
       <unsigned/>
       <notnull/>
     </field>
-    <field name="orderBy" type="string" size="32" comment="Was enum, display_asc','display_desc','chrono_asc','chrono_desc','alpha_asc','alpha_desc','score_asc','score_desc'"/>
-    <field name="cParentID" type="integer">
+    <field name="orderBy" type="string" size="32" comment="display_asc: the order of the sitemap; display_desc: the reverse order; chrono_asc: by date, oldest first; chrono_desc: by date, most recent first; alpha_asc: by name; alpha_desc: by name, reversed; modified_desc: most recently changed first; random"/>
+    <field name="cParentID" type="integer" comment="The ID of the page whose children are listed (0: the whole site): it's used only when cThis and cThisParent are both false">
       <unsigned/>
       <default value="1"/>
       <notnull/>
     </field>
-    <field name="cThis" type="boolean">
+    <field name="cThis" type="boolean" comment="true: the children of the page holding the block are listed; false: cThisParent decides">
       <default value="0"/>
       <notnull/>
     </field>
-    <field name="cThisParent" type="boolean">
+    <field name="cThisParent" type="boolean" comment="true: the children of the parent of the page holding the block are listed; false: cParentID decides">
       <default value="0"/>
       <notnull/>
     </field>
-    <field name="useButtonForLink" type="boolean">
+    <field name="useButtonForLink" type="boolean" comment="true: every listed page is linked with a button; false: its name is the link">
       <default value="0"/>
       <notnull/>
     </field>
-    <field name="buttonLinkText" type="string" size="255"/>
-    <field name="pageListTitle" type="string" size="255"/>
-    <field name="filterByRelated" type="boolean">
+    <field name="buttonLinkText" type="string" size="255" comment="The text of the button (used if useButtonForLink is true)"/>
+    <field name="pageListTitle" type="string" size="255" comment="The text displayed above the list"/>
+    <field name="filterByRelated" type="boolean" comment="true: only the pages sharing a topic with the page holding the block are listed; false: they are not filtered this way">
       <default value="0"/>
       <notnull/>
     </field>
-    <field name="filterByCustomTopic" type="boolean">
+    <field name="filterByCustomTopic" type="boolean" comment="true: only the pages assigned to the customTopicTreeNodeID topic are listed; false: they are not filtered this way">
       <default value="0"/>
       <notnull/>
     </field>
-    <field name="filterDateOption" type="string" size="25" comment="('all','today','past','future','between')">
+    <field name="filterDateOption" type="string" size="25" comment="all: every page is listed; now: only the ones published today; past: the ones published in the last filterDateDays days; future: the ones to be published in the next filterDateDays days; between: the ones published from filterDateStart to filterDateEnd">
       <default value="all"/>
     </field>
-    <field name="filterDateDays" type="integer">
+    <field name="filterDateDays" type="integer" comment="How many days back or ahead the pages can be published in, 0 for no limit (used if filterDateOption is past or future)">
       <unsigned/>
       <default value="0"/>
       <notnull/>
     </field>
 
-    <field name="filterDateStart" type="string" size="20">
+    <field name="filterDateStart" type="string" size="20" comment="The first day the pages can be published in, as YYYY-MM-DD (used if filterDateOption is between)">
     </field>
-    <field name="filterDateEnd" type="string" size="20">
+    <field name="filterDateEnd" type="string" size="20" comment="The last day the pages can be published in, as YYYY-MM-DD (used if filterDateOption is between)">
     </field>
 
 
-    <field name="relatedTopicAttributeKeyHandle" type="string" size="255"/>
-    <field name="customTopicAttributeKeyHandle" type="string" size="255"/>
-    <field name="customTopicTreeNodeID" type="integer">
+    <field name="relatedTopicAttributeKeyHandle" type="string" size="255" comment="The handle of the topics attribute holding the topics to be shared (used if filterByRelated is true)"/>
+    <field name="customTopicAttributeKeyHandle" type="string" size="255" comment="The handle of the topics attribute of the pages holding the topic (used if filterByCustomTopic is true)"/>
+    <field name="customTopicTreeNodeID" type="integer" comment="The ID of the topic the listed pages must be assigned to (0: none): when it doesn't belong to the customTopicAttributeKeyHandle attribute the filter is turned off">
       <unsigned/>
       <default value="0"/>
       <notnull/>
     </field>
-    <field name="includeName" type="boolean">
+    <field name="includeName" type="boolean" comment="true: the name of every listed page is displayed; false: it's left out">
       <default value="1"/>
       <notnull/>
     </field>
-    <field name="includeDescription" type="boolean">
+    <field name="includeDescription" type="boolean" comment="true: the description of every listed page is displayed; false: it's left out">
       <default value="1"/>
       <notnull/>
     </field>
-    <field name="includeDate" type="boolean">
+    <field name="includeDate" type="boolean" comment="true: the date every listed page was published in is displayed; false: it's left out">
       <default value="0"/>
       <notnull/>
     </field>
-    <field name="includeAllDescendents" type="boolean">
+    <field name="includeAllDescendents" type="boolean" comment="true: the pages at any depth below the chosen page are listed; false: only its children are listed">
       <default value="0"/>
       <notnull/>
     </field>
-    <field name="paginate" type="boolean">
+    <field name="paginate" type="boolean" comment="true: the pages are split in pages of num items; false: only the first num pages are listed">
       <default value="0"/>
       <notnull/>
     </field>
-    <field name="excludeCanonicalPaging" type="boolean">
+    <field name="excludeCanonicalPaging" type="boolean" comment="true: the canonical URL of the page leaves the paging out; false: it keeps it">
       <default value="0"/>
       <notnull/>
     </field>
-    <field name="displayAliases" type="boolean">
+    <field name="displayAliases" type="boolean" comment="true: the aliases of the pages are listed too; false: they are left out">
       <default value="1"/>
       <notnull/>
     </field>
-    <field name="displaySystemPages" type="boolean">
+    <field name="displaySystemPages" type="boolean" comment="true: the pages of the system are listed too; false: they are left out">
       <default value="0"/>
       <notnull/>
     </field>
-    <field name="ignorePermissions" type="boolean">
+    <field name="ignorePermissions" type="boolean" comment="true: the pages that the visitor is not allowed to view are listed too; false: they are left out">
       <default value="0"/>
       <notnull/>
     </field>
-    <field name="enableExternalFiltering" type="boolean">
+    <field name="enableExternalFiltering" type="boolean" comment="true: the query string of the page filters the listed pages too; false: it's ignored">
       <default value="0"/>
       <notnull/>
     </field>
-    <field name="excludeCurrentPage" type="boolean">
+    <field name="excludeCurrentPage" type="boolean" comment="true: the page holding the block is left out of the list; false: it's listed like the other ones">
       <default value="0"/>
       <notnull/>
     </field>
-    <field name="ptID" type="smallint">
+    <field name="ptID" type="smallint" comment="The ID of the page type that the listed pages must have (0 or NULL: any page type)">
       <unsigned/>
     </field>
-    <field name="pfID" type="integer">
+    <field name="pfID" type="integer" comment="The ID of the RSS feed publishing the listed pages (0 or NULL: none)">
       <default value="0"/>
     </field>
-    <field name="truncateSummaries" type="boolean">
+    <field name="truncateSummaries" type="boolean" comment="true: the descriptions are cut to truncateChars characters; false or NULL: they are displayed whole">
       <default value="0"/>
     </field>
-    <field name="displayFeaturedOnly" type="boolean">
+    <field name="displayFeaturedOnly" type="boolean" comment="true: only the pages whose is_featured attribute is set are listed; false or NULL: all of them are listed">
       <default value="0"/>
     </field>
-    <field name="noResultsMessage" type="string" size="255"/>
-    <field name="displayThumbnail" type="boolean">
+    <field name="noResultsMessage" type="string" size="255" comment="The text displayed when no page is listed"/>
+    <field name="displayThumbnail" type="boolean" comment="true: the thumbnail of every listed page is displayed; false or NULL: it's left out">
       <default value="0"/>
     </field>
-    <field name="truncateChars" type="integer">
+    <field name="truncateChars" type="integer" comment="How many characters the descriptions are cut to (used if truncateSummaries is true)">
       <default value="128"/>
     </field>
-    <field name="titleFormat" type="string" size="20">
+    <field name="titleFormat" type="string" size="20" comment="The HTML element wrapping the text displayed above the list: h1, h2, h3, h4, h5, h6 or p">
       <default value="h5" />
 	  <notnull/>
     </field>

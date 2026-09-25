@@ -5,44 +5,44 @@
             <unsigned/>
             <key/>
         </field>
-        <field name="fID" type="integer">
+        <field name="fID" type="integer" comment="The ID of the image to be displayed">
             <unsigned/>
             <default value="0" />
         </field>
-        <field name="fOnstateID" type="integer">
+        <field name="fOnstateID" type="integer" comment="The ID of the image displayed while the pointer is over the block (0 or NULL: the image never changes)">
             <unsigned/>
             <default value="0" />
         </field>
-        <field name="cropImage" type="boolean">
+        <field name="cropImage" type="boolean" comment="true: the image is cropped to the maxWidth and maxHeight box; false or NULL: it is fitted in it (SVG images are never cropped)">
             <default value="0"/>
         </field>
-        <field name="maxWidth" type="integer">
+        <field name="maxWidth" type="integer" comment="The maximum width of the image, in pixels (used if sizingOption is constrain_size)">
             <unsigned/>
             <default value="0" />
         </field>
-        <field name="maxHeight" type="integer">
+        <field name="maxHeight" type="integer" comment="The maximum height of the image, in pixels (used if sizingOption is constrain_size)">
             <unsigned/>
             <default value="0" />
         </field>
-        <field name="externalLink" type="string" size="255" />
-        <field name="internalLinkCID" type="integer">
+        <field name="externalLink" type="string" size="255" comment="The URL the image links to: it's used only when internalLinkCID and fileLinkID are 0" />
+        <field name="internalLinkCID" type="integer" comment="The ID of the page the image links to (0 or NULL: it links to fileLinkID or to externalLink)">
             <unsigned/>
             <default value="0" />
         </field>
-        <field name="fileLinkID" type="integer">
+        <field name="fileLinkID" type="integer" comment="The ID of the file the image links to (0 or NULL: none): it's used only when internalLinkCID is 0">
             <unsigned/>
             <default value="0" />
         </field>
-        <field name="openLinkInNewWindow" type="boolean">
+        <field name="openLinkInNewWindow" type="boolean" comment="true: the link of the image opens in another window; false: it opens in the same one">
             <default value="0"/>
             <notnull/>
         </field>
-        <field name="altText" type="string" size="255" />
-        <field name="title" type="string" size="255" />
-        <field name="lazyLoad" type="boolean">
+        <field name="altText" type="string" size="255" comment="The text describing the image, for the visitors that can't see it" />
+        <field name="title" type="string" size="255" comment="The text displayed when the pointer stays over the image" />
+        <field name="lazyLoad" type="boolean" comment="true: the browser loads the image only when it's about to be displayed; false or NULL: it loads it right away">
             <default value="0"/>
         </field>
-        <field name="sizingOption" type="string" size="255" >
+        <field name="sizingOption" type="string" size="255" comment="thumbnails_default: the image is sized by the thumbnails of the theme; thumbnails_configurable: by the ones in btContentImageBreakpoints; full_size: it's displayed whole; constrain_size: it fits the maxWidth and maxHeight box" >
             <default value="thumbnails_default"/>
         </field>
         <index name="fID">
@@ -51,7 +51,7 @@
     </table>
 
     <table name="btContentImageBreakpoints">
-        <field name="id" type="integer">
+        <field name="id" type="integer" comment="The ID of the row pairing a breakpoint of the theme with a thumbnail type">
             <unsigned/>
             <autoincrement/>
             <key/>
@@ -59,8 +59,8 @@
         <field name="bID" type="integer">
             <unsigned/>
         </field>
-        <field name="breakpointHandle" type="string" size="255" />
-        <field name="ftTypeID" type="integer">
+        <field name="breakpointHandle" type="string" size="255" comment="The handle of the breakpoint of the theme (used if sizingOption is thumbnails_configurable)" />
+        <field name="ftTypeID" type="integer" comment="The ID of the thumbnail type displayed at the breakpoint">
             <unsigned/>
             <default value="0" />
         </field>

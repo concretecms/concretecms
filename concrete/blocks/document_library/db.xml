@@ -10,82 +10,82 @@
       <unsigned/>
       <key/>
     </field>
-    <field name="setIds" type="string" size="255">
+    <field name="setIds" type="string" size="255" comment="A JSON array of the IDs of the file sets the files must belong to">
       <notnull/>
     </field>
-    <field name="folderID" type="integer">
+    <field name="folderID" type="integer" comment="The ID of the file folder holding the files to be listed (0: the root folder)">
       <default value="0"/>
       <notnull/>
     </field>
-    <field name="setMode" type="string" size="32"/>
-    <field name="onlyCurrentUser" type="boolean">
+    <field name="setMode" type="string" size="32" comment="any: the files must belong to any of the file sets listed in setIds; all: they must belong to all of them"/>
+    <field name="onlyCurrentUser" type="boolean" comment="true: only the files added by the visitor are listed; false or NULL: all of them are listed">
       <default value="0"/>
     </field>
-    <field name="tags" type="string" size="128"/>
-    <field name="viewProperties" type="text"/>
-    <field name="expandableProperties" type="string" size="255"/>
-    <field name="searchProperties" type="string" size="255"/>
-    <field name="orderBy" type="string" size="64">
+    <field name="tags" type="string" size="128" comment="The tags the files must have, separated by commas"/>
+    <field name="viewProperties" type="text" comment="A JSON object pairing every column with how it's displayed: the key is a property of the files (thumbnail, filename, tags, date, extension, size, description, ak_&lt;file attribute key ID&gt;), the value is -1 (hidden), 1 (displayed) or 5 (sortable)"/>
+    <field name="expandableProperties" type="string" size="255" comment="A JSON array of the properties displayed when a file is expanded: image, description, tags, filename, date, extension, size, or ak_&lt;file attribute key ID&gt;"/>
+    <field name="searchProperties" type="string" size="255" comment="A JSON array of the properties the visitors can search the files by: keywords, type, extension, or ak_&lt;file attribute key ID&gt; (used if enableSearch is true)"/>
+    <field name="orderBy" type="string" size="64" comment="The property the files are sorted by: title, set, date, filename, or ak_&lt;file attribute key ID&gt;">
       <default value="title"/>
     </field>
-    <field name="displayLimit" type="integer">
+    <field name="displayLimit" type="integer" comment="How many files a page displays (0 or NULL: all of them)">
       <default value="20"/>
     </field>
-    <field name="displayOrderDesc" type="boolean">
+    <field name="displayOrderDesc" type="boolean" comment="true: the files are sorted in descending order; false: in ascending order">
       <default value="0"/>
       <notnull/>
     </field>
-    <field name="addFilesToSetID" type="integer">
+    <field name="addFilesToSetID" type="integer" comment="The ID of the file set the uploaded files are added to (0: none)">
       <unsigned/>
       <default value="0"/>
       <notnull/>
     </field>
-    <field name="maxThumbWidth" type="integer">
+    <field name="maxThumbWidth" type="integer" comment="The maximum width, in pixels, of the thumbnails of the files">
       <default value="100"/>
     </field>
-    <field name="maxThumbHeight" type="integer">
+    <field name="maxThumbHeight" type="integer" comment="The maximum height, in pixels, of the thumbnails of the files">
       <default value="150"/>
     </field>
-    <field name="enableSearch" type="boolean">
+    <field name="enableSearch" type="boolean" comment="true: the visitors are offered a form to search the files; false or NULL: they are not">
       <default value="0"/>
     </field>
-    <field name="heightMode" type="string" size="32">
+    <field name="heightMode" type="string" size="32" comment="auto: the table is as tall as its contents; fixed: it's fixedHeightSize pixels tall">
       <default value="auto"/>
     </field>
-    <field name="downloadFileMethod" type="string" size="32">
+    <field name="downloadFileMethod" type="string" size="32" comment="force: the links to the files make the browser download them; browser: the browser decides whether to display them instead">
       <default value="force"/>
     </field>
-    <field name="fixedHeightSize" type="integer">
+    <field name="fixedHeightSize" type="integer" comment="The height of the table, in pixels (used if heightMode is fixed)">
       <default value="0"/>
     </field>
-    <field name="headerBackgroundColor" type="string" size="32">
+    <field name="headerBackgroundColor" type="string" size="32" comment="The background color of the header of the table, as a CSS color such as rgb(255, 0, 0)">
       <default value=""/>
     </field>
-    <field name="headerBackgroundColorActiveSort" type="string" size="32">
+    <field name="headerBackgroundColorActiveSort" type="string" size="32" comment="The background color of the column of the header the files are sorted by, as a CSS color such as rgb(255, 0, 0)">
       <default value=""/>
     </field>
-    <field name="headerTextColor" type="string" size="32">
+    <field name="headerTextColor" type="string" size="32" comment="The color of the text of the header of the table, as a CSS color such as rgb(255, 0, 0)">
       <default value=""/>
     </field>
-    <field name="allowFileUploading" type="boolean">
+    <field name="allowFileUploading" type="boolean" comment="true: the visitors that are allowed to add files can upload them from the block; false or NULL: they can't">
       <default value="0"/>
     </field>
-    <field name="allowInPageFileManagement" type="boolean">
+    <field name="allowInPageFileManagement" type="boolean" comment="true: the visitors that are allowed to edit the files can manage them from the block; false or NULL: they can't">
       <default value="0"/>
     </field>
-    <field name="tableName" type="string" size="255">
+    <field name="tableName" type="string" size="255" comment="The title displayed above the table">
       <default value=""/>
     </field>
-    <field name="tableDescription" type="string" size="255">
+    <field name="tableDescription" type="string" size="255" comment="The text displayed below the title of the table">
       <default value=""/>
     </field>
-    <field name="tableStriped" type="boolean">
+    <field name="tableStriped" type="boolean" comment="true: the rows of the table alternate two colors, the second one being rowBackgroundColorAlternate; false or NULL: they all look the same">
       <default value="0"/>
     </field>
-    <field name="rowBackgroundColorAlternate" type="string" size="32">
+    <field name="rowBackgroundColorAlternate" type="string" size="32" comment="The color of the even rows of the table, as a CSS color such as rgb(255, 0, 0) (used if tableStriped is true)">
       <default value=""/>
     </field>
-    <field name="hideFolders" type="boolean">
+    <field name="hideFolders" type="boolean" comment="true: only the files are listed; false or NULL: the folders contained in the folder are listed too">
       <default value="0"/>
     </field>
   </table>
