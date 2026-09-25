@@ -183,7 +183,7 @@ class Message extends ConcreteObject implements ObjectInterface, SubjectInterfac
 
         $this->cnvMessageReview = $review;
         $db = Loader::db();
-        $db->Execute('update ConversationMessages set cnvMessageReview = ? where cnvMessageID = ?', array(
+        $db->executeStatement('update ConversationMessages set cnvMessageReview = ? where cnvMessageID = ?', array(
             $review,
             $this->getConversationMessageID()
         ));
@@ -193,7 +193,7 @@ class Message extends ConcreteObject implements ObjectInterface, SubjectInterfac
     {
         $this->cnvMessageDateCreated = $cnvMessageDateCreated;
         $db = Loader::db();
-        $db->Execute('update ConversationMessages set cnvMessageDateCreated = ? where cnvMessageID = ?', array(
+        $db->executeStatement('update ConversationMessages set cnvMessageDateCreated = ? where cnvMessageID = ?', array(
             $cnvMessageDateCreated,
             $this->getConversationMessageID()
         ));
@@ -203,7 +203,7 @@ class Message extends ConcreteObject implements ObjectInterface, SubjectInterfac
     {
         $this->cnvMessageBody = $cnvMessageBody;
         $db = Loader::db();
-        $db->Execute('update ConversationMessages set cnvMessageBody = ? where cnvMessageID = ?', array(
+        $db->executeStatement('update ConversationMessages set cnvMessageBody = ? where cnvMessageID = ?', array(
             $cnvMessageBody,
             $this->getConversationMessageID(),
         ));
@@ -221,7 +221,7 @@ class Message extends ConcreteObject implements ObjectInterface, SubjectInterfac
     public function approve()
     {
         $db = Loader::db();
-        $db->execute('UPDATE ConversationMessages SET cnvIsMessageApproved=1 WHERE cnvMessageID=?',
+        $db->executeStatement('UPDATE ConversationMessages SET cnvIsMessageApproved=1 WHERE cnvMessageID=?',
             array($this->cnvMessageID));
         $this->cnvIsMessageApproved = true;
 
@@ -236,7 +236,7 @@ class Message extends ConcreteObject implements ObjectInterface, SubjectInterfac
     public function unapprove()
     {
         $db = Loader::db();
-        $db->execute('UPDATE ConversationMessages SET cnvIsMessageApproved=0 WHERE cnvMessageID=?',
+        $db->executeStatement('UPDATE ConversationMessages SET cnvIsMessageApproved=0 WHERE cnvMessageID=?',
             array($this->cnvMessageID));
         $this->cnvIsMessageApproved = false;
 
@@ -381,7 +381,7 @@ class Message extends ConcreteObject implements ObjectInterface, SubjectInterfac
         if (!$this->hasRatedMessage($ratingType, $commentRatingUserID)) {
             $cnvRatingTypeID = $db->GetOne('SELECT * FROM ConversationRatingTypes WHERE cnvRatingTypeHandle = ?',
                 array($ratingType->cnvRatingTypeHandle));
-            $db->Execute('INSERT INTO ConversationMessageRatings (cnvMessageID, cnvRatingTypeID, cnvMessageRatingIP, timestamp, uID) VALUES (?, ?, ?, ?, ?)',
+            $db->executeStatement('INSERT INTO ConversationMessageRatings (cnvMessageID, cnvRatingTypeID, cnvMessageRatingIP, timestamp, uID) VALUES (?, ?, ?, ?, ?)',
                 array(
                     $this->getConversationMessageID(),
                     $cnvRatingTypeID,
@@ -430,7 +430,7 @@ class Message extends ConcreteObject implements ObjectInterface, SubjectInterfac
                     return;
                 }
             }
-            $db->execute('INSERT INTO ConversationFlaggedMessages (cnvMessageFlagTypeID, cnvMessageID) VALUES (?,?)',
+            $db->executeStatement('INSERT INTO ConversationFlaggedMessages (cnvMessageFlagTypeID, cnvMessageID) VALUES (?,?)',
                 array($flagtype->getConversationFlagTypeID(), $this->getConversationMessageID()));
             $this->cnvMessageFlagTypes[] = $flagtype;
             $this->unapprove();
@@ -444,7 +444,7 @@ class Message extends ConcreteObject implements ObjectInterface, SubjectInterfac
     {
         if ($flagtype instanceof FlagType) {
             $db = Loader::db();
-            $db->execute('DELETE FROM ConversationFlaggedMessages WHERE cnvMessageFlagTypeID = ? AND cnvMessageID = ?',
+            $db->executeStatement('DELETE FROM ConversationFlaggedMessages WHERE cnvMessageFlagTypeID = ? AND cnvMessageID = ?',
                 array($flagtype->getConversationFlagTypeID(), $this->getConversationMessageID()));
             $this->cnvMessageFlagTypes[] = $flagtype;
 
@@ -483,7 +483,7 @@ class Message extends ConcreteObject implements ObjectInterface, SubjectInterfac
         if (!is_object($f)) {
             return false;
         } else {
-            $db->Execute('INSERT INTO ConversationMessageAttachments (cnvMessageID, fID) VALUES (?, ?)', array(
+            $db->executeStatement('INSERT INTO ConversationMessageAttachments (cnvMessageID, fID) VALUES (?, ?)', array(
                 $this->getConversationMessageID(),
                 $f->getFileID(),
             ));
@@ -500,7 +500,7 @@ class Message extends ConcreteObject implements ObjectInterface, SubjectInterfac
     public function removeFile($cnvMessageAttachmentID)
     {
         $db = Loader::db();
-        $db->Execute('DELETE FROM ConversationMessageAttachments WHERE cnvMessageAttachmentID = ?', array(
+        $db->executeStatement('DELETE FROM ConversationMessageAttachments WHERE cnvMessageAttachmentID = ?', array(
             $cnvMessageAttachmentID,
         ));
         // remove from file manager.
@@ -569,7 +569,7 @@ class Message extends ConcreteObject implements ObjectInterface, SubjectInterfac
         /** @var \Concrete\Core\Permission\IPService $iph */
         $iph = Core::make('helper/validation/ip');
         $ip = $iph->getRequestIP();
-        $r = $db->Execute('insert into ConversationMessages (cnvMessageSubject, cnvMessageBody, cnvMessageDateCreated, cnvMessageParentID, cnvEditorID, cnvMessageLevel, cnvID, uID, cnvMessageAuthorName, cnvMessageAuthorEmail, cnvMessageAuthorWebsite, cnvMessageSubmitIP, cnvMessageSubmitUserAgent) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+        $db->executeStatement('insert into ConversationMessages (cnvMessageSubject, cnvMessageBody, cnvMessageDateCreated, cnvMessageParentID, cnvEditorID, cnvMessageLevel, cnvID, uID, cnvMessageAuthorName, cnvMessageAuthorEmail, cnvMessageAuthorWebsite, cnvMessageSubmitIP, cnvMessageSubmitUserAgent) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
             array(
                 $cnvMessageSubject,
                 $cnvMessageBody,
@@ -599,7 +599,7 @@ class Message extends ConcreteObject implements ObjectInterface, SubjectInterfac
     public function delete()
     {
         $db = Loader::db();
-        $db->Execute('update ConversationMessages set cnvIsMessageDeleted = 1, cnvIsMessageApproved = 0 where cnvMessageID = ?',
+        $db->executeStatement('update ConversationMessages set cnvIsMessageDeleted = 1, cnvIsMessageApproved = 0 where cnvMessageID = ?',
             array(
                 $this->cnvMessageID,
             ));
@@ -615,7 +615,7 @@ class Message extends ConcreteObject implements ObjectInterface, SubjectInterfac
     public function restore()
     {
         $db = Loader::db();
-        $db->Execute('update ConversationMessages set cnvIsMessageDeleted = 0 where cnvMessageID = ?', array(
+        $db->executeStatement('update ConversationMessages set cnvIsMessageDeleted = 0 where cnvMessageID = ?', array(
             $this->cnvMessageID,
         ));
 

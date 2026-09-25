@@ -288,7 +288,7 @@ class Themes extends DashboardSitePageController
 
             // clean up a page types that are pointing to this deleted theme as the default
             $db = $this->app->make('database')->connection();
-            $db->query('update PageTypes set ptDefaultThemeID = null where ptDefaultThemeID = ?', [$pThemeID]);
+            $db->executeStatement('update PageTypes set ptDefaultThemeID = null where ptDefaultThemeID = ?', [$pThemeID]);
 
             $this->set('message', t('Theme uninstalled.'));
         } catch (Exception $e) {

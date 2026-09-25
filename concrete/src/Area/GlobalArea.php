@@ -137,8 +137,8 @@ class GlobalArea extends Area
     public static function deleteByName($arHandle)
     {
         $db = Loader::db();
-        $db->Execute('select cID from Areas where arHandle = ? and arIsGlobal = 1', [$arHandle]);
-        $db->Execute('delete from Areas where arHandle = ? and arIsGlobal = 1', [$arHandle]);
+        $db->executeQuery('select cID from Areas where arHandle = ? and arIsGlobal = 1', [$arHandle]);
+        $db->executeStatement('delete from Areas where arHandle = ? and arIsGlobal = 1', [$arHandle]);
     }
 
     /**

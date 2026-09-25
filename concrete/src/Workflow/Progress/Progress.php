@@ -157,7 +157,7 @@ abstract class Progress extends ConcreteObject implements SubjectInterface
         $db = Database::connection();
         $wpDateAdded = Core::make('helper/date')->getOverridableNow();
         $wpCategoryID = $db->fetchColumn('select wpCategoryID from WorkflowProgressCategories where wpCategoryHandle = ?', array($wpCategoryHandle));
-        $db->executeQuery('insert into WorkflowProgress (wfID, wrID, wpDateAdded, wpCategoryID) values (?, ?, ?, ?)', array(
+        $db->executeStatement('insert into WorkflowProgress (wfID, wrID, wpDateAdded, wpCategoryID) values (?, ?, ?, ?)', array(
             $wf->getWorkflowID(), $wr->getWorkflowRequestID(), $wpDateAdded, $wpCategoryID,
         ));
         $wp = self::getByID($db->lastInsertId());
@@ -181,7 +181,7 @@ abstract class Progress extends ConcreteObject implements SubjectInterface
     {
         $db = Database::connection();
         $wr = $this->getWorkflowRequestObject();
-        $db->executeQuery('delete from WorkflowProgress where wpID = ?', array($this->wpID));
+        $db->executeStatement('delete from WorkflowProgress where wpID = ?', array($this->wpID));
         // now we clean up any WorkflowRequests that aren't in use any longer
         $cnt = $db->fetchColumn('select count(wpID) from WorkflowProgress where wrID = ?', array($this->wrID));
         if ($cnt == 0) {
@@ -252,7 +252,7 @@ abstract class Progress extends ConcreteObject implements SubjectInterface
         $db = Database::connection();
         $num = $wf->getWorkflowProgressCurrentStatusNum($this);
         $time = Core::make('helper/date')->getOverridableNow();
-        $db->executeQuery('update WorkflowProgress set wpDateLastAction = ?, wpCurrentStatus = ? where wpID = ?', array($time, $num, $this->wpID));
+        $db->executeStatement('update WorkflowProgress set wpDateLastAction = ?, wpCurrentStatus = ? where wpID = ?', array($time, $num, $this->wpID));
     }
 
     /**
@@ -314,7 +314,7 @@ abstract class Progress extends ConcreteObject implements SubjectInterface
     public function addWorkflowProgressHistoryObject($obj)
     {
         $db = Database::connection();
-        $db->executeQuery('insert into WorkflowProgressHistory (wpID, object) values (?, ?)', array($this->wpID, serialize($obj)));
+        $db->executeStatement('insert into WorkflowProgressHistory (wpID, object) values (?, ?)', array($this->wpID, serialize($obj)));
     }
 
     public function markCompleted()
@@ -322,7 +322,7 @@ abstract class Progress extends ConcreteObject implements SubjectInterface
         $wf = $this->getWorkflowObject();
 
         $db = Database::connection();
-        $db->executeQuery('update WorkflowProgress set wpIsCompleted = 1 where wpID = ?', array($this->wpID));
+        $db->executeStatement('update WorkflowProgress set wpIsCompleted = 1 where wpID = ?', array($this->wpID));
 
         if (!($wf instanceof EmptyWorkflow)) {
             $application = \Core::getFacadeApplication();

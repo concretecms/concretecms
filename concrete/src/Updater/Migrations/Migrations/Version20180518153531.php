@@ -11,6 +11,6 @@ class Version20180518153531 extends AbstractMigration implements RepeatableMigra
 
     public function upgradeDatabase()
     {
-        $this->connection->executeQuery('alter table Sessions modify column sessionValue longtext null');
+        $this->connection->executeStatement('alter table Sessions modify column sessionValue longtext null');
     }
 }

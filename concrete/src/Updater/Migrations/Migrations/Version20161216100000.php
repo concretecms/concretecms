@@ -49,7 +49,7 @@ class Version20161216100000 extends AbstractMigration implements RepeatableMigra
         while ($row = $r->fetch()) {
             $control = FormLayoutSetControl::getByID($row['ptComposerFormLayoutSetControlID']);
             $object = $control->getPageTypeComposerControlObject();
-            $this->connection->executeQuery('update PageTypeComposerFormLayoutSetControls set ptComposerControlObject = ? where ptComposerFormLayoutSetControlID = ?', [serialize($object), $row['ptComposerFormLayoutSetControlID']]);
+            $this->connection->executeStatement('update PageTypeComposerFormLayoutSetControls set ptComposerControlObject = ? where ptComposerFormLayoutSetControlID = ?', [serialize($object), $row['ptComposerFormLayoutSetControlID']]);
         }
     }
 }

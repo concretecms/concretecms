@@ -50,7 +50,7 @@ class ConversationAssignment extends Assignment
         }
 
         $db = Database::connection();
-        $db->Execute(
+        $db->executeStatement(
             'update ConversationPermissionAssignments set paID = 0 where pkID = ? and cnvID = ?',
             array($this->pk->getPermissionKeyID(), $cnvID)
         );

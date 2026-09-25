@@ -65,7 +65,7 @@ class AddBlockToAreaAreaKey extends AreaKey
                     true
                 );
             }
-            $db->executeQuery('delete from AreaPermissionBlockTypeAccessListCustom where paID = ?', [$row['paID']]);
+            $db->executeStatement('delete from AreaPermissionBlockTypeAccessListCustom where paID = ?', [$row['paID']]);
             $rx = $db->executeQuery('select btID from BlockTypePermissionBlockTypeAccessListCustom where paID = ? and peID = ?', [$row['paID'], $row['peID']]);
             while (($rowx = $rx->fetch(PDO::FETCH_ASSOC)) !== false) {
                 $db->replace(

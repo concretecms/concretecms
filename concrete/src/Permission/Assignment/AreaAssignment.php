@@ -212,7 +212,7 @@ class AreaAssignment extends Assignment
         $db = $app->make(Connection::class);
         $area = $this->getPermissionObject();
         $c = $area->getAreaCollectionObject();
-        $db->executeQuery('update AreaPermissionAssignments set paID = 0 where pkID = ? and cID = ? and arHandle = ?', [$this->pk->getPermissionKeyID(), $c->getCollectionID(), $area->getAreaHandle()]);
+        $db->executeStatement('update AreaPermissionAssignments set paID = 0 where pkID = ? and cID = ? and arHandle = ?', [$this->pk->getPermissionKeyID(), $c->getCollectionID(), $area->getAreaHandle()]);
     }
 
     /**

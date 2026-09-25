@@ -37,7 +37,7 @@ class ValidationHash
                 break;
         }
         $db = Database::connection();
-        $db->executeQuery('DELETE FROM UserValidationHashes WHERE type = ? AND uDateGenerated <= ?', array($type, time() - $lifetime));
+        $db->executeStatement('DELETE FROM UserValidationHashes WHERE type = ? AND uDateGenerated <= ?', array($type, time() - $lifetime));
     }
 
     /**
@@ -56,9 +56,9 @@ class ValidationHash
         $hash = self::generate($hashLength);
         $db = Database::connection();
         if ($singeHashAllowed) {
-            $db->executeQuery("DELETE FROM UserValidationHashes WHERE uID = ? AND type = ?", array($uID, $type));
+            $db->executeStatement("DELETE FROM UserValidationHashes WHERE uID = ? AND type = ?", array($uID, $type));
         }
-        $db->executeQuery("insert into UserValidationHashes (uID, uHash, uDateGenerated, type) values (?, ?, ?, ?)", array($uID, $hash, time(), intval($type)));
+        $db->executeStatement("insert into UserValidationHashes (uID, uHash, uDateGenerated, type) values (?, ?, ?, ?)", array($uID, $hash, time(), intval($type)));
 
         return $hash;
     }

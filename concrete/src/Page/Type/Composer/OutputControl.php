@@ -28,7 +28,7 @@ class OutputControl extends ConcreteObject
         $pagetype = $set->getPageTypeObject();
 
         $db = Loader::db();
-        $db->Execute('insert into PageTypeComposerOutputControls (ptID, pTemplateID, ptComposerFormLayoutSetControlID) values (?, ?, ?)', array(
+        $db->executeStatement('insert into PageTypeComposerOutputControls (ptID, pTemplateID, ptComposerFormLayoutSetControlID) values (?, ?, ?)', array(
             $pagetype->getPageTypeID(), $pt->getPageTemplateID(), $control->getPageTypeComposerFormLayoutSetControlID(),
         ));
         $ptComposerOutputControlID = $db->Insert_ID();
@@ -78,7 +78,7 @@ class OutputControl extends ConcreteObject
     public function delete()
     {
         $db = Loader::db();
-        $db->Execute('delete from PageTypeComposerOutputControls where ptComposerOutputControlID = ?', array($this->ptComposerOutputControlID));
+        $db->executeStatement('delete from PageTypeComposerOutputControls where ptComposerOutputControlID = ?', array($this->ptComposerOutputControlID));
     }
 
     public function getPageTypeComposerControlOutputLabel()

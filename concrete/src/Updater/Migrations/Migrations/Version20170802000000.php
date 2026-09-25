@@ -45,7 +45,7 @@ class Version20170802000000 extends AbstractMigration implements RepeatableMigra
         }
 
         foreach ($delete as $deleteRow) {
-            $this->connection->executeQuery('delete from btExpressEntryDetail where bID = ? and exEntityID = ? and exSpecificEntryID = ? and exFormID = ?', $deleteRow);
+            $this->connection->executeStatement('delete from btExpressEntryDetail where bID = ? and exEntityID = ? and exSpecificEntryID = ? and exFormID = ?', $deleteRow);
         }
 
         // Now that we have removed problematic duplicate rows, rescan the table and remove the primary keys.

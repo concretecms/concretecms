@@ -19,7 +19,7 @@ class DatabaseItemList extends ItemList
         if ($this->total == -1) {
             $db = Loader::db();
             $arr = $this->executeBase(); // returns an associated array of query/placeholder values
-            $r = $db->Execute($arr);
+            $r = $db->executeQuery($arr);
             $this->total = $r->rowCount();
         }
 

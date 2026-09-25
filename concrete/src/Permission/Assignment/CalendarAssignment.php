@@ -76,7 +76,7 @@ class CalendarAssignment extends Assignment
     {
         $db = \Database::connection();
         $calendar = $this->getPermissionObject();
-        $db->Execute('update CalendarPermissionAssignments set paID = 0 where pkID = ? and caID = ?', array($this->pk->getPermissionKeyID(), $calendar->getID()));
+        $db->executeStatement('update CalendarPermissionAssignments set paID = 0 where pkID = ? and caID = ?', array($this->pk->getPermissionKeyID(), $calendar->getID()));
     }
 
     public function assignPermissionAccess(Access $pa)

@@ -85,7 +85,7 @@ class Translation extends \Gettext\Translation
     public static function getByString($msgid)
     {
         $db = \Database::get();
-        $r = $db->query('select mtID from MultilingualTranslations mt where msgid = ?', array($msgid));
+        $r = $db->executeQuery('select mtID from MultilingualTranslations mt where msgid = ?', array($msgid));
         $row = $r->fetch();
         if ($row && $row['mtID']) {
             return static::getByRecordID($row['mtID']);
@@ -96,7 +96,7 @@ class Translation extends \Gettext\Translation
     {
         $result = null;
         $db = \Database::get();
-        $r = $db->query('select  * from MultilingualTranslations where mtID = ?', array($mtID));
+        $r = $db->executeQuery('select  * from MultilingualTranslations where mtID = ?', array($mtID));
         $row = $r->fetch();
 
         return self::getByRow($row);

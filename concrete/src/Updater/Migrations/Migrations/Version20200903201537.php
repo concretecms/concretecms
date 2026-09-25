@@ -13,6 +13,6 @@ final class Version20200903201537 extends AbstractMigration implements Repeatabl
     public function upgradeDatabase()
     {
         $this->refreshEntities([SavedExpressSearch::class]);
-        $this->connection->executeQuery('delete from SavedExpressSearchQueries where exEntityID is null');
+        $this->connection->executeStatement('delete from SavedExpressSearchQueries where exEntityID is null');
     }
 }

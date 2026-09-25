@@ -40,7 +40,7 @@ class PageProgress extends Progress implements SiteProgressInterface
     {
         parent::delete();
         $db = Database::connection();
-        $db->Execute('delete from PageWorkflowProgress where wpID = ?', array($this->wpID));
+        $db->executeStatement('delete from PageWorkflowProgress where wpID = ?', array($this->wpID));
     }
 
     public static function getList(Page $c, $filters = array('wpIsCompleted' => 0), $sortBy = 'wpDateAdded asc')
@@ -51,7 +51,7 @@ class PageProgress extends Progress implements SiteProgressInterface
             $filter .= ' and ' . $key . ' = ' . $value . ' ';
         }
         $filter .= ' order by ' . $sortBy;
-        $r = $db->Execute('select wp.wpID from PageWorkflowProgress pwp inner join WorkflowProgress wp on pwp.wpID = wp.wpID where cID = ? ' . $filter, array($c->getCollectionID()));
+        $r = $db->executeQuery('select wp.wpID from PageWorkflowProgress pwp inner join WorkflowProgress wp on pwp.wpID = wp.wpID where cID = ? ' . $filter, array($c->getCollectionID()));
         $list = array();
         while ($row = $r->fetch()) {
             $wp = static::getByID($row['wpID']);

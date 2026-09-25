@@ -78,7 +78,7 @@ class PageOwnerEntity extends Entity
         $petID = $db->fetchColumn('select petID from PermissionAccessEntityTypes where petHandle = \'page_owner\'');
         $peID = $db->fetchColumn('select peID from PermissionAccessEntities where petID = ?', array($petID));
         if (!$peID) {
-            $db->executeQuery("insert into PermissionAccessEntities (petID) values(?)", array($petID));
+            $db->executeStatement("insert into PermissionAccessEntities (petID) values(?)", array($petID));
             $peID = $db->lastInsertId();
             Config::save('concrete.misc.access_entity_updated', time());
         }

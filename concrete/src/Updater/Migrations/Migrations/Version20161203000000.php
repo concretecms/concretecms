@@ -43,7 +43,7 @@ class Version20161203000000 extends AbstractMigration implements RepeatableMigra
                 'select treeNodeID from TreeFileNodes where fID = ?', [$row['fID']]
             );
             if ($properFolderID) {
-                $this->connection->executeQuery(
+                $this->connection->executeStatement(
                     'update Files set folderTreeNodeID = ? where fID = ?', [$properFolderID, $row['fID']]
                 );
             }
@@ -53,7 +53,7 @@ class Version20161203000000 extends AbstractMigration implements RepeatableMigra
     protected function fixWorkflows()
     {
         $this->output(t('Updating permission keys to trigger workflows'));
-        $this->connection->executeQuery(
+        $this->connection->executeStatement(
             "update PermissionKeys set pkCanTriggerWorkflow = 1 where pkHandle in ('delete_user', 'activate_user')"
         );
     }

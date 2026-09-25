@@ -20,8 +20,8 @@ class ResetEditMode extends DashboardSitePageController
 
                 /** @var Connection $db */
                 $db = $this->app->make(Connection::class);
-                $db->executeQuery("TRUNCATE Piles");
-                $db->executeQuery("TRUNCATE PileContents");
+                $db->executeStatement("TRUNCATE Piles");
+                $db->executeStatement("TRUNCATE PileContents");
 
             } catch (DBALException $exception) {
                 $this->error->add(t("Error while clearing the clipboard."));

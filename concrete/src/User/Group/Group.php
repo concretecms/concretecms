@@ -133,7 +133,7 @@ class Group extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
         $path .= '/' . $this->gName;
         $this->gPath = $path;
 
-        $db->executeQuery('update ' . $db->getDatabasePlatform()->quoteSingleIdentifier('Groups') . ' set gPath = ? where gID = ?', [$path, $this->getGroupID()]);
+        $db->executeStatement('update ' . $db->getDatabasePlatform()->quoteSingleIdentifier('Groups') . ' set gPath = ? where gID = ?', [$path, $this->getGroupID()]);
     }
 
     public function rescanGroupPathRecursive()
@@ -216,7 +216,7 @@ class Group extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
                 $app = Application::getFacadeApplication();
                 /** @var Connection $db */
                 $db = $app->make(Connection::class);
-                $db->executeQuery("UPDATE UserGroups SET grID = ? WHERE gID = ? AND uID = ?", [$userRole->getId(), $this->getGroupID(), $user->getUserID()]);
+                $db->executeStatement("UPDATE UserGroups SET grID = ? WHERE gID = ? AND uID = ?", [$userRole->getId(), $this->getGroupID(), $user->getUserID()]);
 
                 /** @noinspection PhpUnhandledExceptionInspection */
                 $subject = new GroupRoleChange($this, $user, $userRole);
@@ -251,7 +251,7 @@ class Group extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
             $db = $app->make(Connection::class);
             $dt = $app->make('helper/date');
 
-            $db->executeQuery("DELETE FROM GroupJoinRequests WHERE gID = ? AND uID = ?", [$this->getGroupID(), $user->getUserID()]);
+            $db->executeStatement("DELETE FROM GroupJoinRequests WHERE gID = ? AND uID = ?", [$this->getGroupID(), $user->getUserID()]);
             $db->insert("GroupJoinRequests", [
                 "gID" => $this->getGroupID(),
                 "uID" => $user->getUserID(),
@@ -310,7 +310,7 @@ class Group extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
         $this->gOverrideGroupTypeSettings = $gOverrideGroupTypeSettings;
 
         try {
-            $db->executeQuery("update `Groups` set gOverrideGroupTypeSettings = ? where gID = ?", [(int)$gOverrideGroupTypeSettings, $this->getGroupID()]);
+            $db->executeStatement("update `Groups` set gOverrideGroupTypeSettings = ? where gID = ?", [(int)$gOverrideGroupTypeSettings, $this->getGroupID()]);
 
             return true;
         } catch (Exception $e) {
@@ -350,7 +350,7 @@ class Group extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
         $this->gtID = $groupType->getId();
 
         try {
-            $db->executeQuery("update `Groups` set gtID = ? where gID = ?", [$this->gtID, $this->getGroupID()]);
+            $db->executeStatement("update `Groups` set gtID = ? where gID = ?", [$this->gtID, $this->getGroupID()]);
 
             return true;
         } catch (Exception $e) {
@@ -395,7 +395,7 @@ class Group extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
         $this->gDefaultRoleID = $role->getId();
 
         try {
-            $db->executeQuery("update `Groups` set gDefaultRoleID = ? where gID = ?", [(int)$this->gDefaultRoleID, (int)$this->getGroupID()]);
+            $db->executeStatement("update `Groups` set gDefaultRoleID = ? where gID = ?", [(int)$this->gDefaultRoleID, (int)$this->getGroupID()]);
 
             return true;
         } catch (Exception $e) {
@@ -427,7 +427,7 @@ class Group extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
         $db = $app->make(Connection::class);
 
         try {
-            $db->executeQuery("update `Groups` set gThumbnailFID = ? where gID = ?", [0, $this->getGroupID()]);
+            $db->executeStatement("update `Groups` set gThumbnailFID = ? where gID = ?", [0, $this->getGroupID()]);
 
             return true;
         } catch (Exception $e) {
@@ -448,7 +448,7 @@ class Group extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
         $this->gThumbnailFID = $file->getFileID();
 
         try {
-            $db->executeQuery("update `Groups` set gThumbnailFID = ? where gID = ?", [$this->gThumbnailFID, $this->getGroupID()]);
+            $db->executeStatement("update `Groups` set gThumbnailFID = ? where gID = ?", [$this->gThumbnailFID, $this->getGroupID()]);
 
             return true;
         } catch (Exception $e) {
@@ -474,7 +474,7 @@ class Group extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
         $this->gPetitionForPublicEntry = $gPetitionForPublicEntry;
 
         try {
-            $db->executeQuery("update `Groups` set gPetitionForPublicEntry = ? where gID = ?", [(int)$gPetitionForPublicEntry, $this->getGroupID()]);
+            $db->executeStatement("update `Groups` set gPetitionForPublicEntry = ? where gID = ?", [(int)$gPetitionForPublicEntry, $this->getGroupID()]);
 
             return true;
         } catch (Exception $e) {
@@ -543,7 +543,7 @@ class Group extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
         $db = $app->make(Connection::class);
 
         try {
-            $db->executeQuery('insert into GroupSelectedRoles (grID, gID) values (?,?)', [(int)$role->getId(), (int)$this->getGroupID()]);
+            $db->executeStatement('insert into GroupSelectedRoles (grID, gID) values (?,?)', [(int)$role->getId(), (int)$this->getGroupID()]);
         } catch (Exception $e) {
             return false;
         }
@@ -847,8 +847,10 @@ class Group extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
         if ($gID) {
             CacheLocal::delete('group', $gID);
             $v = [$gName, $gDescription, $gID];
-            $r = $db->prepare('update ' . $db->getDatabasePlatform()->quoteSingleIdentifier('Groups') . ' set gName = ?, gDescription = ? where gID = ?');
-            $db->Execute($r, $v);
+            $db->executeStatement(
+                'update ' . $db->getDatabasePlatform()->quoteSingleIdentifier('Groups') . ' set gName = ?, gDescription = ? where gID = ?',
+                $v
+            );
             $group = static::getByID($gID);
             $group->rescanGroupPathRecursive();
 
@@ -966,7 +968,7 @@ class Group extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
     public function clearBadgeOptions()
     {
         $db = Database::connection();
-        $db->executeQuery(
+        $db->executeStatement(
             'update ' . $db->getDatabasePlatform()->quoteSingleIdentifier('Groups') . ' set gIsBadge = 0, gBadgeFID = 0, gBadgeDescription = null, gBadgeCommunityPointValue = 0 where gID = ?',
             [$this->getGroupID()]
         );
@@ -975,7 +977,7 @@ class Group extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
     public function clearAutomationOptions()
     {
         $db = Database::connection();
-        $db->executeQuery(
+        $db->executeStatement(
             'update ' . $db->getDatabasePlatform()->quoteSingleIdentifier('Groups') . ' set gIsAutomated = 0, gCheckAutomationOnRegister = 0, gCheckAutomationOnLogin = 0, gCheckAutomationOnJobRun = 0 where gID = ?',
             [$this->getGroupID()]
         );
@@ -984,7 +986,7 @@ class Group extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
     public function removeGroupExpiration()
     {
         $db = Database::connection();
-        $db->executeQuery(
+        $db->executeStatement(
             'update ' . $db->getDatabasePlatform()->quoteSingleIdentifier('Groups') . ' set gUserExpirationIsEnabled = 0, gUserExpirationMethod = null, gUserExpirationSetDateTime = null, gUserExpirationInterval = 0, gUserExpirationAction = null where gID = ?',
             [$this->getGroupID()]
         );
@@ -999,7 +1001,7 @@ class Group extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
     public function setBadgeOptions($gBadgeFID, $gBadgeDescription, $gBadgeCommunityPointValue)
     {
         $db = Database::connection();
-        $db->executeQuery(
+        $db->executeStatement(
             'update ' . $db->getDatabasePlatform()->quoteSingleIdentifier('Groups') . ' set gIsBadge = 1, gBadgeFID = ?, gBadgeDescription = ?, gBadgeCommunityPointValue = ? where gID = ?',
             [intval($gBadgeFID), $gBadgeDescription, $gBadgeCommunityPointValue, $this->getGroupID()]
         );
@@ -1012,7 +1014,7 @@ class Group extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
     )
     {
         $db = Database::connection();
-        $db->executeQuery(
+        $db->executeStatement(
             'update ' . $db->getDatabasePlatform()->quoteSingleIdentifier('Groups') . ' set gIsAutomated = 1, gCheckAutomationOnRegister = ?, gCheckAutomationOnLogin = ?, gCheckAutomationOnJobRun = ? where gID = ?',
             [
                 intval($gCheckAutomationOnRegister),
@@ -1026,7 +1028,7 @@ class Group extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
     public function setGroupExpirationByDateTime($datetime, $action)
     {
         $db = Database::connection();
-        $db->executeQuery(
+        $db->executeStatement(
             'update ' . $db->getDatabasePlatform()->quoteSingleIdentifier('Groups') . ' set gUserExpirationIsEnabled = 1, gUserExpirationMethod = \'SET_TIME\', gUserExpirationInterval = 0, gUserExpirationSetDateTime = ?, gUserExpirationAction = ? where gID = ?',
             [$datetime, $action, $this->getGroupID()]
         );
@@ -1036,7 +1038,7 @@ class Group extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
     {
         $db = Database::connection();
         $interval = $minutes + ($hours * 60) + ($days * 1440);
-        $db->executeQuery(
+        $db->executeStatement(
             'update ' . $db->getDatabasePlatform()->quoteSingleIdentifier('Groups') . ' set gUserExpirationIsEnabled = 1, gUserExpirationMethod = \'INTERVAL\', gUserExpirationSetDateTime = null, gUserExpirationInterval = ?, gUserExpirationAction = ? where gID = ?',
             [$interval, $action, $this->getGroupID()]
         );

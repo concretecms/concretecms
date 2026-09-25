@@ -171,7 +171,7 @@ class BlockType
             $platform = $db->getDatabasePlatform();
             foreach ($sm->listTableColumns('Blocks') as $tableColumn) {
                 if (strcasecmp($tableColumn->getName(), 'btCachedBlockRecord') === 0) {
-                    $db->query('update Blocks set btCachedBlockRecord = null');
+                    $db->executeStatement('update Blocks set btCachedBlockRecord = null');
                     break;
                 }
             }

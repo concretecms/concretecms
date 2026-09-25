@@ -46,7 +46,7 @@ class Category extends ConcreteObject
     {
         $db = Loader::db();
         $list = array();
-        $r = $db->Execute('select wpCategoryID from WorkflowProgressCategories where pkgID = ? order by wpCategoryID asc', array($pkg->getPackageID()));
+        $r = $db->executeQuery('select wpCategoryID from WorkflowProgressCategories where pkgID = ? order by wpCategoryID asc', array($pkg->getPackageID()));
         while ($row = $r->fetch()) {
             $list[] = static::getByID($row['wpCategoryID']);
         }
@@ -97,14 +97,14 @@ class Category extends ConcreteObject
     public function delete()
     {
         $db = Loader::db();
-        $db->Execute('delete from WorkflowProgressCategories where wpCategoryID = ?', array($this->wpCategoryID));
+        $db->executeStatement('delete from WorkflowProgressCategories where wpCategoryID = ?', array($this->wpCategoryID));
     }
 
     public static function getList()
     {
         $db = Loader::db();
         $cats = array();
-        $r = $db->Execute('select wpCategoryID from WorkflowProgressCategories order by wpCategoryID asc');
+        $r = $db->executeQuery('select wpCategoryID from WorkflowProgressCategories order by wpCategoryID asc');
         while ($row = $r->fetch()) {
             $cats[] = static::getByID($row['wpCategoryID']);
         }
@@ -120,7 +120,7 @@ class Category extends ConcreteObject
         } else {
             $pkgID = $pkg ?: null;
         }
-        $db->Execute('insert into WorkflowProgressCategories (wpCategoryHandle, pkgID) values (?, ?)', array($wpCategoryHandle, $pkgID));
+        $db->executeStatement('insert into WorkflowProgressCategories (wpCategoryHandle, pkgID) values (?, ?)', array($wpCategoryHandle, $pkgID));
         $id = $db->Insert_ID();
 
         return static::getByID($id);

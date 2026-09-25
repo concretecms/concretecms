@@ -32,7 +32,7 @@ class UserPreset extends ConcreteObject
     public static function add(Layout $arLayout, $name)
     {
         $db = Loader::db();
-        $db->Execute(
+        $db->executeStatement(
             'insert into AreaLayoutPresets (arLayoutID, arLayoutPresetName) values (?, ?)',
             array(
                 $arLayout->getAreaLayoutID(),
@@ -49,7 +49,7 @@ class UserPreset extends ConcreteObject
     public static function getList()
     {
         $db = Loader::db();
-        $r = $db->Execute('select arLayoutPresetID from AreaLayoutPresets order by arLayoutPresetName asc');
+        $r = $db->executeQuery('select arLayoutPresetID from AreaLayoutPresets order by arLayoutPresetName asc');
         $presets = array();
         while ($row = $r->fetch()) {
             $preset = static::getByID($row['arLayoutPresetID']);
@@ -86,7 +86,7 @@ class UserPreset extends ConcreteObject
     public function delete()
     {
         $db = Loader::db();
-        $db->Execute(
+        $db->executeStatement(
             'delete from AreaLayoutPresets where arLayoutPresetID = ?',
             array(
                 $this->arLayoutPresetID,
@@ -132,7 +132,7 @@ class UserPreset extends ConcreteObject
     public function updateAreaLayoutObject(Layout $arLayout)
     {
         $db = Loader::db();
-        $db->Execute(
+        $db->executeStatement(
             'update AreaLayoutPresets set arLayoutID = ? where arLayoutPresetID = ?',
             array(
                 $arLayout->getAreaLayoutID(),
@@ -148,7 +148,7 @@ class UserPreset extends ConcreteObject
     public function updateName($arLayoutPresetName)
     {
         $db = Loader::db();
-        $db->Execute(
+        $db->executeStatement(
             'update AreaLayoutPresets set arLayoutPresetName = ? where arLayoutPresetID = ?',
             array(
                 $arLayoutPresetName,

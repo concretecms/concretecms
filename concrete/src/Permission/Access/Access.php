@@ -206,7 +206,7 @@ class Access extends ConcreteObject
     {
         $app = Application::getFacadeApplication();
         $db = $app->make(Connection::class);
-        $db->executeQuery('delete from PermissionAccessWorkflows where paID = ?', [$this->getPermissionAccessID()]);
+        $db->executeStatement('delete from PermissionAccessWorkflows where paID = ?', [$this->getPermissionAccessID()]);
     }
 
     /**
@@ -231,7 +231,7 @@ class Access extends ConcreteObject
     {
         $app = Application::getFacadeApplication();
         $db = $app->make(Connection::class);
-        $db->executeQuery(
+        $db->executeStatement(
             'delete from PermissionAccessWorkflows where paID = ? and wfID = ?',
             [$this->getPermissionAccessID(), $wf->getWorkflowID()]
         );
@@ -286,7 +286,7 @@ class Access extends ConcreteObject
     {
         $app = Application::getFacadeApplication();
         $db = $app->make(Connection::class);
-        $db->executeQuery('update PermissionAccess set paIsInUse = 1 where paID = ?', [$this->paID]);
+        $db->executeStatement('update PermissionAccess set paIsInUse = 1 where paID = ?', [$this->paID]);
         $this->paIsInUse = true;
 
         $logger = $app->make(Logger::class);
@@ -333,7 +333,7 @@ class Access extends ConcreteObject
     {
         $app = Application::getFacadeApplication();
         $db = $app->make(Connection::class);
-        $db->executeQuery(
+        $db->executeStatement(
             'delete from PermissionAccessList where peID = ? and paID = ?',
             [$pe->getAccessEntityID(), $this->getPermissionAccessID()]
         );
@@ -355,7 +355,7 @@ class Access extends ConcreteObject
     {
         $app = Application::getFacadeApplication();
         $db = $app->make(Connection::class);
-        $db->executeQuery('insert into PermissionAccess (paIsInUse) values (0)');
+        $db->executeStatement('insert into PermissionAccess (paIsInUse) values (0)');
 
         return static::getByID($db->lastInsertId(), $pk);
     }

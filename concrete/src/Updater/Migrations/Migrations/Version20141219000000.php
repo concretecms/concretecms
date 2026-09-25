@@ -113,7 +113,7 @@ class Version20141219000000 extends AbstractMigration implements RepeatableMigra
             $ptk = PermissionKey::add('page', 'edit_page_page_type', 'Edit Page Type', 'Change the type of an existing page.', false, false);
         }
         $db = \Database::get();
-        $r = $db->Execute('select cID from Pages where cInheritPermissionsFrom = "OVERRIDE" order by cID asc');
+        $r = $db->executeQuery('select cID from Pages where cInheritPermissionsFrom = "OVERRIDE" order by cID asc');
         while ($row = $r->fetch()) {
             $c = Page::getByID($row['cID']);
             if (is_object($c) && !$c->isError()) {

@@ -163,6 +163,6 @@ class SubArea extends Area
                 $b->deleteBlock();
             }
         }
-        $db->Execute('delete from Areas where arID = ?', array($this->arID));
+        $db->executeStatement('delete from Areas where arID = ?', array($this->arID));
     }
 }

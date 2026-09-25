@@ -40,8 +40,8 @@ EOT
     private function fixMultilingualPageRelations(Connection $cn, $updateMultilingualRelation, array $pageIDs)
     {
         $pageIDsJoined = implode(',', $pageIDs);
-        $cn->query(str_replace(':cIDs:', $pageIDsJoined, $updateMultilingualRelation));
-        $childPageIDs = $cn->query('SELECT cID FROM Pages WHERE cParentID IN (' . $pageIDsJoined . ')')->fetchAll();
+        $cn->executeStatement(str_replace(':cIDs:', $pageIDsJoined, $updateMultilingualRelation));
+        $childPageIDs = $cn->executeQuery('SELECT cID FROM Pages WHERE cParentID IN (' . $pageIDsJoined . ')')->fetchAll();
         if (!empty($childPageIDs)) {
             $tempChildPageIDs = array();
             foreach ($childPageIDs as $oneChildPage) {

@@ -30,7 +30,7 @@ class TreeNodeAssignment extends Assignment
     public function clearPermissionAssignment()
     {
         $db = Loader::db();
-        $db->Execute('update TreeNodePermissionAssignments set paID = 0 where pkID = ? and treeNodeID = ?', array($this->pk->getPermissionKeyID(), $this->permissionObject->getTreeNodeID()));
+        $db->executeStatement('update TreeNodePermissionAssignments set paID = 0 where pkID = ? and treeNodeID = ?', array($this->pk->getPermissionKeyID(), $this->permissionObject->getTreeNodeID()));
     }
 
     public function assignPermissionAccess(Access $pa)

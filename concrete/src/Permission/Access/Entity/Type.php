@@ -80,10 +80,10 @@ class Type extends ConcreteObject
         $db = Loader::db();
         $list = array();
         if ($category instanceof Category) {
-            $r = $db->Execute('select pet.petID from PermissionAccessEntityTypes pet inner join PermissionAccessEntityTypeCategories petc on pet.petID = petc.petID where petc.pkCategoryID = ? order by pet.petID asc',
+            $r = $db->executeQuery('select pet.petID from PermissionAccessEntityTypes pet inner join PermissionAccessEntityTypeCategories petc on pet.petID = petc.petID where petc.pkCategoryID = ? order by pet.petID asc',
                 array($category->getPermissionKeyCategoryID()));
         } else {
-            $r = $db->Execute('select petID from PermissionAccessEntityTypes order by petID asc');
+            $r = $db->executeQuery('select petID from PermissionAccessEntityTypes order by petID asc');
         }
 
         while ($row = $r->fetch()) {
@@ -129,14 +129,14 @@ class Type extends ConcreteObject
     public function delete()
     {
         $db = Loader::db();
-        $db->Execute("delete from PermissionAccessEntityTypes where petID = ?", array($this->petID));
+        $db->executeStatement("delete from PermissionAccessEntityTypes where petID = ?", array($this->petID));
     }
 
     public static function getListByPackage($pkg)
     {
         $db = Loader::db();
         $list = array();
-        $r = $db->Execute('select petID from PermissionAccessEntityTypes where pkgID = ? order by petID asc',
+        $r = $db->executeQuery('select petID from PermissionAccessEntityTypes where pkgID = ? order by petID asc',
             array($pkg->getPackageID()));
         while ($row = $r->fetch()) {
             $list[] = static::getByID($row['petID']);
@@ -162,7 +162,7 @@ class Type extends ConcreteObject
             $pkgID = $pkg->getPackageID();
         }
         $db = Loader::db();
-        $db->Execute('insert into PermissionAccessEntityTypes (petHandle, petName, pkgID) values (?, ?, ?)',
+        $db->executeStatement('insert into PermissionAccessEntityTypes (petHandle, petName, pkgID) values (?, ?, ?)',
             array($petHandle, $petName, $pkgID));
         $id = $db->Insert_ID();
         $est = static::getByID($id);

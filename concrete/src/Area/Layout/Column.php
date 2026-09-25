@@ -122,7 +122,7 @@ abstract class Column extends ConcreteObject implements ColumnInterface
     {
         $db = Database::connection();
         $v = array($newAreaLayout->getAreaLayoutID(), $this->arLayoutColumnIndex, $this->arLayoutColumnDisplayID);
-        $db->executeQuery('insert into AreaLayoutColumns (arLayoutID, arLayoutColumnIndex, arLayoutColumnDisplayID) values (?, ?, ?)', $v);
+        $db->executeStatement('insert into AreaLayoutColumns (arLayoutID, arLayoutColumnIndex, arLayoutColumnDisplayID) values (?, ?, ?)', $v);
         $newAreaLayoutColumnID = $db->Insert_ID();
 
         return $newAreaLayoutColumnID;
@@ -220,13 +220,13 @@ abstract class Column extends ConcreteObject implements ColumnInterface
     {
         $db = Database::connection();
         $this->arID = $arID;
-        $db->executeQuery('update AreaLayoutColumns set arID = ? where arLayoutColumnID = ?', array($arID, $this->arLayoutColumnID));
+        $db->executeStatement('update AreaLayoutColumns set arID = ? where arLayoutColumnID = ?', array($arID, $this->arLayoutColumnID));
     }
 
     public function delete()
     {
         $db = Database::connection();
-        $db->executeQuery("delete from AreaLayoutColumns where arLayoutColumnID = ?", array($this->arLayoutColumnID));
+        $db->executeStatement("delete from AreaLayoutColumns where arLayoutColumnID = ?", array($this->arLayoutColumnID));
 
         // now we check to see if this area id is in use anywhere else. If it isn't we delete the sub area.
         $r = $db->fetchColumn('select count(arLayoutColumnID) from AreaLayoutColumns where arID = ?', array($this->arID));

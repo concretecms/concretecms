@@ -52,6 +52,6 @@ class Version20161208000000 extends AbstractMigration implements RepeatableMigra
     protected function updateEmptyFileAttributes()
     {
         $this->output(t('Updating old empty file attributes.'));
-        $this->connection->executeQuery('update atFile set fID = null where fID = 0');
+        $this->connection->executeStatement('update atFile set fID = null where fID = 0');
     }
 }

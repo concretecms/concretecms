@@ -212,7 +212,7 @@ class Controller extends BlockController implements UsesFeatureInterface
         $conv = Conversation::add();
         $conv->setConversationPageObject($newPage);
         $this->conversation = $conv;
-        $db->executeQuery('update btCoreConversation set cnvID = ? where bID = ?', [$conv->getConversationID(), $newBID]);
+        $db->executeStatement('update btCoreConversation set cnvID = ? where bID = ?', [$conv->getConversationID(), $newBID]);
     }
 
     /**

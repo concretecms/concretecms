@@ -106,7 +106,7 @@ abstract class Node extends ConcreteObject implements \Concrete\Core\Permission\
     public function setTreeNodeName($treeNodeName)
     {
         $db = app(Connection::class);
-        $db->executeQuery('update TreeNodes set treeNodeName = ? where treeNodeID = ?', [$treeNodeName, $this->treeNodeID]);
+        $db->executeStatement('update TreeNodes set treeNodeName = ? where treeNodeID = ?', [$treeNodeName, $this->treeNodeID]);
         $this->treeNodeName = $treeNodeName;
     }
 
@@ -361,8 +361,8 @@ abstract class Node extends ConcreteObject implements \Concrete\Core\Permission\
             $db = app(Connection::class);
             $parentNode = $this->getTreeNodeParentObject();
             if (is_object($parentNode)) {
-                $db->executeQuery('delete from TreeNodePermissionAssignments where treeNodeID = ?', [$this->treeNodeID]);
-                $db->executeQuery('update TreeNodes set treeNodeOverridePermissions = 0, inheritPermissionsFromTreeNodeID = ? where treeNodeID = ?', [$parentNode->getTreeNodePermissionsNodeID(), $this->treeNodeID]);
+                $db->executeStatement('delete from TreeNodePermissionAssignments where treeNodeID = ?', [$this->treeNodeID]);
+                $db->executeStatement('update TreeNodes set treeNodeOverridePermissions = 0, inheritPermissionsFromTreeNodeID = ? where treeNodeID = ?', [$parentNode->getTreeNodePermissionsNodeID(), $this->treeNodeID]);
                 $this->updateTreeNodePermissionsID([$this->getTreeNodeID()], $parentNode->getTreeNodePermissionsNodeID());
 
                 $this->treeNodeOverridePermissions = false;
@@ -381,7 +381,7 @@ abstract class Node extends ConcreteObject implements \Concrete\Core\Permission\
             $this->populateChildren();
             $childNodeIDs = $this->getAllChildNodeIDs();
 
-            $db->executeQuery('delete from TreeNodePermissionAssignments where treeNodeID = ?', [$this->treeNodeID]);
+            $db->executeStatement('delete from TreeNodePermissionAssignments where treeNodeID = ?', [$this->treeNodeID]);
             // copy permissions
             $permissions = Key::getList($this->getPermissionObjectKeyCategoryHandle());
             foreach ($permissions as $pk) {
@@ -389,7 +389,7 @@ abstract class Node extends ConcreteObject implements \Concrete\Core\Permission\
                 $pk->copyFromParentNodeToCurrentNode();
             }
 
-            $db->executeQuery('update TreeNodes set treeNodeOverridePermissions = 1, inheritPermissionsFromTreeNodeID = ? where treeNodeID = ?', [$this->treeNodeID, $this->treeNodeID]);
+            $db->executeStatement('update TreeNodes set treeNodeOverridePermissions = 1, inheritPermissionsFromTreeNodeID = ? where treeNodeID = ?', [$this->treeNodeID, $this->treeNodeID]);
 
             $this->updateTreeNodePermissionsID([$this->getTreeNodeID()], $this->treeNodeID);
 
@@ -455,7 +455,7 @@ abstract class Node extends ConcreteObject implements \Concrete\Core\Permission\
     public function setTreeNodeTreeID($treeID)
     {
         $db = app(Connection::class);
-        $db->executeQuery('update TreeNodes set treeID = ? where treeNodeID = ?', [$treeID, $this->treeNodeID]);
+        $db->executeStatement('update TreeNodes set treeID = ? where treeNodeID = ?', [$treeID, $this->treeNodeID]);
         $this->treeID = $treeID;
     }
 
@@ -502,12 +502,12 @@ abstract class Node extends ConcreteObject implements \Concrete\Core\Permission\
             $db = app(Connection::class);
             $existingDisplayOrder = $this->treeNodeDisplayOrder;
             $treeNodeDisplayOrder = (int) $db->fetchColumn('select count(treeNodeDisplayOrder) from TreeNodes where treeNodeParentID = ?', [$newParent->getTreeNodeID()]);
-            $db->executeQuery('update TreeNodes set treeNodeParentID = ?, treeNodeDisplayOrder = ? where treeNodeID = ?', [$newParent->getTreeNodeID(), $treeNodeDisplayOrder, $this->treeNodeID]);
+            $db->executeStatement('update TreeNodes set treeNodeParentID = ?, treeNodeDisplayOrder = ? where treeNodeID = ?', [$newParent->getTreeNodeID(), $treeNodeDisplayOrder, $this->treeNodeID]);
             if (!$this->overrideParentTreeNodePermissions()) {
                 $newParentPermissionsNodeID = $newParent->getTreeNodePermissionsNodeID();
                 if ($newParentPermissionsNodeID != $this->getTreeNodePermissionsNodeID()) {
                     // first we do this one
-                    $db->executeQuery('update TreeNodes set inheritPermissionsFromTreeNodeID = ? where treeNodeID = ?', [$newParentPermissionsNodeID, $this->treeNodeID]);
+                    $db->executeStatement('update TreeNodes set inheritPermissionsFromTreeNodeID = ? where treeNodeID = ?', [$newParentPermissionsNodeID, $this->treeNodeID]);
                     // Now let's do it recursively down the tree
                     $this->updateTreeNodePermissionsID([$this->treeNodeID], $newParentPermissionsNodeID);
                 }
@@ -517,7 +517,7 @@ abstract class Node extends ConcreteObject implements \Concrete\Core\Permission\
                 // Instead of just rescanning all the nodes (which could take a long time),
                 // let's just update all the nodes with display order above this one to be their current
                 // order - 1
-                $db->executeQuery(
+                $db->executeStatement(
                     'update TreeNodes set treeNodeDisplayOrder = (treeNodeDisplayOrder - 1) 
 where treeNodeDisplayOrder > ? and treeNodeParentID = ?',
                     [$existingDisplayOrder, $oldParent->getTreeNodeID()]
@@ -548,7 +548,7 @@ where treeNodeDisplayOrder > ? and treeNodeParentID = ?',
         if (is_array($orderedIDs)) {
             $displayOrder = 0;
             foreach ($orderedIDs as $treeNodeID) {
-                $db->executeQuery('update TreeNodes set treeNodeDisplayOrder = ? where treeNodeID = ?', [$displayOrder, $treeNodeID]);
+                $db->executeStatement('update TreeNodes set treeNodeDisplayOrder = ? where treeNodeID = ?', [$displayOrder, $treeNodeID]);
                 ++$displayOrder;
             }
         }
@@ -584,7 +584,7 @@ where treeNodeDisplayOrder > ? and treeNodeParentID = ?',
         $dateCreated = app('date')->toDB();
 
         $type = TreeNodeType::getByHandle($treeNodeTypeHandle);
-        $db->executeQuery(
+        $db->executeStatement(
             'insert into TreeNodes (treeNodeTypeID, treeNodeParentID, treeNodeDisplayOrder, inheritPermissionsFromTreeNodeID, dateModified, dateCreated, treeID) values (?, ?, ?, ?, ?, ?, ?)',
             [
                 $type->getTreeNodeTypeID(),
@@ -698,7 +698,7 @@ where treeNodeDisplayOrder > ? and treeNodeParentID = ?',
         while ($row = $r->fetch()) {
             $node = self::getByID($row['treeNodeID']);
             $parentNode = $node->getTreeNodeParentObject();
-            $db->executeQuery('update TreeNodes set inheritPermissionsFromTreeNodeID = ? where treeNodeID = ?', [$parentNode->getTreeNodePermissionsNodeID(), $node->getTreeNodeID()]);
+            $db->executeStatement('update TreeNodes set inheritPermissionsFromTreeNodeID = ? where treeNodeID = ?', [$parentNode->getTreeNodePermissionsNodeID(), $node->getTreeNodeID()]);
         }
         $r->closeCursor();
 
@@ -717,8 +717,8 @@ where treeNodeDisplayOrder > ? and treeNodeParentID = ?',
         }
 
         $this->deleteDetails();
-        $db->executeQuery('delete from TreeNodes where treeNodeID = ?', [$this->treeNodeID]);
-        $db->executeQuery('delete from TreeNodePermissionAssignments where treeNodeID = ?', [$this->treeNodeID]);
+        $db->executeStatement('delete from TreeNodes where treeNodeID = ?', [$this->treeNodeID]);
+        $db->executeStatement('delete from TreeNodePermissionAssignments where treeNodeID = ?', [$this->treeNodeID]);
     }
 
     /**
@@ -844,7 +844,7 @@ where treeNodeDisplayOrder > ? and treeNodeParentID = ?',
         $r = $db->executeQuery('select treeNodeID from TreeNodes WHERE treeNodeParentID = ? order by treeNodeDisplayOrder asc', [$this->getTreeNodeID()]);
         $displayOrder = 0;
         while ($row = $r->fetch()) {
-            $db->executeQuery('update TreeNodes set treeNodeDisplayOrder = ? where treeNodeID = ?', [$displayOrder, $row['treeNodeID']]);
+            $db->executeStatement('update TreeNodes set treeNodeDisplayOrder = ? where treeNodeID = ?', [$displayOrder, $row['treeNodeID']]);
             ++$displayOrder;
         }
         $r->closeCursor();

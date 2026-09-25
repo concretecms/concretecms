@@ -298,12 +298,18 @@ class DefaultBooter implements BootInterface, ApplicationAwareInterface
 
         // Make sure we have all the stuff we expect
         $connection = array_get($db_config, "connections.{$defaultConnection}");
+        if (is_array($connection)) {
+            $primary = array_get($connection, 'primary', []);
+            if (is_array($primary)) {
+                $connection = array_replace($connection, $primary);
+            }
+        }
 
         // Make sure we have all the keys we are expecting
         return $defaultConnection && $connection &&
-            array_get($connection, 'database') &&
-            array_get($connection, 'username') &&
-            array_get($connection, 'server');
+            (array_get($connection, 'database') || array_get($connection, 'dbname')) &&
+            (array_get($connection, 'username') || array_get($connection, 'user')) &&
+            (array_get($connection, 'server') || array_get($connection, 'host'));
     }
 
     private function initializeClassAliases(Repository $config): void

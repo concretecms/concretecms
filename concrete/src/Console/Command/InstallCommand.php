@@ -153,12 +153,12 @@ EOT
             $attach_mode = $options['force_attach'];
             if (!$attach_mode && $options['auto_attach']) {
                 $db = $app->make('database')->connection();
-                if ($db->query('show tables')->rowCount()) {
+                if ($db->executeQuery('show tables')->rowCount()) {
                     $attach_mode = true;
                 }
             }
             $db = app('database');
-            $db->executeQuery('set foreign_key_checks = 0');
+            $db->executeStatement('set foreign_key_checks = 0');
 
             $routines = $spl->getInstallRoutines();
             foreach ($routines as $r) {

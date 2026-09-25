@@ -15,14 +15,14 @@ class Version20170926000000 extends AbstractMigration implements RepeatableMigra
      */
     public function upgradeDatabase()
     {
-        $this->connection->executeQuery("UPDATE btSearch SET postTo_cID = NULL WHERE postTo_cID IS NOT NULL AND postTo_cID = ''");
+        $this->connection->executeStatement("UPDATE btSearch SET postTo_cID = NULL WHERE postTo_cID IS NOT NULL AND postTo_cID = ''");
         foreach ([
             "postTo_cID NOT REGEXP '^[1-9][0-9]*$'",
             'IFNULL(postTo_cID + 0, 0) < 1',
             'IFNULL(CAST(postTo_cID AS SIGNED), 0) < 1',
         ] as $try) {
             try {
-                $this->connection->executeQuery('UPDATE btSearch SET postTo_cID = NULL WHERE postTo_cID IS NOT NULL AND ' . $try);
+                $this->connection->executeStatement('UPDATE btSearch SET postTo_cID = NULL WHERE postTo_cID IS NOT NULL AND ' . $try);
                 break;
             } catch (Exception $foo) {
             }

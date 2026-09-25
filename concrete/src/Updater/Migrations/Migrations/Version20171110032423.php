@@ -47,7 +47,7 @@ class Version20171110032423 extends AbstractMigration implements RepeatableMigra
         // first, let's see whether the concrete5 calendar is installed.
         $pkg = Package::getByHandle('calendar');
         if ($pkg) {
-            $this->connection->Execute('set foreign_key_checks = 0');
+            $this->connection->executeStatement('set foreign_key_checks = 0');
 
             // let's uninstall the package.
             $this->uninstallLegacyCalendar($pkg);
@@ -63,7 +63,7 @@ class Version20171110032423 extends AbstractMigration implements RepeatableMigra
 
             // leaving data in backup tables so that we can use the dashboard import to migrate it.
 
-            $this->connection->Execute('set foreign_key_checks = 1');
+            $this->connection->executeStatement('set foreign_key_checks = 1');
         } else {
             $this->addCalendarFunctionality();
         }
@@ -133,11 +133,11 @@ class Version20171110032423 extends AbstractMigration implements RepeatableMigra
             }
         }
         $this->output('Updating attribute categories...');
-        $this->connection->executeQuery('delete from AttributeKeyCategories where pkgID = ?', [$pkg->getPackageID()]);
+        $this->connection->executeStatement('delete from AttributeKeyCategories where pkgID = ?', [$pkg->getPackageID()]);
         $this->output('Updating block types...');
-        $this->connection->executeQuery('delete from BlockTypes where pkgID = ?', [$pkg->getPackageID()]);
+        $this->connection->executeStatement('delete from BlockTypes where pkgID = ?', [$pkg->getPackageID()]);
         $this->output(t('Uninstalling calendar package (ID %s)', $pkg->getPackageID()));
-        $this->connection->executeQuery('delete from Packages where pkgID = ?', [$pkg->getPackageID()]);
+        $this->connection->executeStatement('delete from Packages where pkgID = ?', [$pkg->getPackageID()]);
     }
 
     protected function updateAttributeKeys($pkg)
@@ -148,8 +148,8 @@ class Version20171110032423 extends AbstractMigration implements RepeatableMigra
         while ($row = $r->fetch()) {
             $cnt = $this->connection->fetchColumn('select count(akID) from CalendarEventAttributeKeys where akID = ?', [$row['akID']]);
             if (!$cnt) {
-                $this->connection->executeQuery('delete from LegacyAttributeKeys where akID = ?', [$row['akID']]);
-                $this->connection->executeQuery('update AttributeKeys set pkgID = null, akCategoryID = ?, akCategory = ? where akID = ?',
+                $this->connection->executeStatement('delete from LegacyAttributeKeys where akID = ?', [$row['akID']]);
+                $this->connection->executeStatement('update AttributeKeys set pkgID = null, akCategoryID = ?, akCategory = ? where akID = ?',
                     [$category->getAttributeKeyCategoryID(), 'eventkey', $row['akID']]
                 );
                 $this->connection->insert('CalendarEventAttributeKeys', ['akID' => $row['akID']]);
@@ -158,7 +158,7 @@ class Version20171110032423 extends AbstractMigration implements RepeatableMigra
 
         $r = $this->connection->executeQuery('select asID from AttributeSets ats left join AttributeKeyCategories akc on ats.akCategoryID = akc.akCategoryID where akc.akCategoryID is null');
         while ($row = $r->fetch()) {
-            $this->connection->executeQuery('update AttributeSets set pkgID = null, akCategoryID = ? where asID = ?',
+            $this->connection->executeStatement('update AttributeSets set pkgID = null, akCategoryID = ? where asID = ?',
                 [$category->getAttributeKeyCategoryID(), $row['asID']]
             );
         }

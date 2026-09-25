@@ -104,7 +104,7 @@ class PrivateMessage extends ConcreteObject implements SubjectInterface
         $db = Loader::db();
         $ue = new Event($this);
         Events::dispatch('on_private_message_marked_as_read', $ue);
-        $db->Execute('update UserPrivateMessagesTo set msgIsUnread = 0 where msgID = ? and msgMailboxID = ? and uID = ?', array($this->msgID, $this->msgMailboxID, $this->uID));
+        $db->executeStatement('update UserPrivateMessagesTo set msgIsUnread = 0 where msgID = ? and msgMailboxID = ? and uID = ?', array($this->msgID, $this->msgMailboxID, $this->uID));
     }
 
     public function getMessageAuthorID()
@@ -192,7 +192,7 @@ class PrivateMessage extends ConcreteObject implements SubjectInterface
             return;
         }
 
-        $db->Execute('delete from UserPrivateMessagesTo where uID = ? and msgID = ?', array($this->uID, $this->msgID));
+        $db->executeStatement('delete from UserPrivateMessagesTo where uID = ? and msgID = ?', array($this->uID, $this->msgID));
     }
 
     public function getMessageRelevantUserObject()

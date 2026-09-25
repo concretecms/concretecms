@@ -58,7 +58,7 @@ class Surveys extends DashboardPageController
                   LEFT JOIN Users ON Users.uID = btSurveyResults.uID
 			 WHERE
 				btSurveyResults.bID = ? AND btSurveyResults.cId = ?';
-        $r = $db->query($q, $v);
+        $r = $db->executeQuery($q, $v);
 
         // Set default information in case query returns nothing
         $current_survey = 'Unknown Survey';
@@ -79,7 +79,7 @@ class Surveys extends DashboardPageController
             // If there is no user-submitted information pertaining to this survey, just get the name
             $q = 'SELECT question FROM btSurvey WHERE bID = ?';
             $v = [$bID];
-            $r = $db->query($q, $v);
+            $r = $db->executeQuery($q, $v);
             if ($row = $r->fetch()) {
                 $current_survey = $row['question'];
             }

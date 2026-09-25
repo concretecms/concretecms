@@ -50,8 +50,8 @@ class Editor extends DashboardPageController
 
             return;
         }
-        $db->executeQuery('UPDATE ConversationEditors SET cnvEditorIsActive=0');
-        $db->executeQuery('UPDATE ConversationEditors SET cnvEditorIsActive=1 WHERE cnvEditorHandle=?', array($active));
+        $db->executeStatement('UPDATE ConversationEditors SET cnvEditorIsActive=0');
+        $db->executeStatement('UPDATE ConversationEditors SET cnvEditorIsActive=1 WHERE cnvEditorHandle=?', array($active));
         $this->redirect('/dashboard/system/conversations/editor', 'success');
     }
 }

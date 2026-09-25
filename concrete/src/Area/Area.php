@@ -599,8 +599,8 @@ class Area extends ConcreteObject implements \Concrete\Core\Permission\ObjectInt
 
         $db = Database::connection();
         $v = array($this->getAreaHandle(), $this->getCollectionID());
-        $db->executeQuery('delete from AreaPermissionAssignments where arHandle = ? and cID = ?', $v);
-        $db->executeQuery('update Areas set arOverrideCollectionPermissions = 0 where arID = ?', array($this->getAreaID()));
+        $db->executeStatement('delete from AreaPermissionAssignments where arHandle = ? and cID = ?', $v);
+        $db->executeStatement('update Areas set arOverrideCollectionPermissions = 0 where arID = ?', array($this->getAreaID()));
 
         // now we set rescan this area to determine where it -should- be inheriting from
         $this->arOverrideCollectionPermissions = false;
@@ -645,7 +645,7 @@ class Area extends ConcreteObject implements \Concrete\Core\Permission\ObjectInt
                     array($cIDToCheck, $this->getAreaHandle())
                 );
                 if ($arInheritPermissionsFromAreaOnCID > 0) {
-                    $db->executeQuery(
+                    $db->executeStatement(
                         'update Areas set arInheritPermissionsFromAreaOnCID = ? where arID = ?',
                         array($arInheritPermissionsFromAreaOnCID, $this->getAreaID())
                     );
@@ -665,7 +665,7 @@ class Area extends ConcreteObject implements \Concrete\Core\Permission\ObjectInt
                         if ($row['cID'] > 0) {
                             // then that means we have successfully found a parent area record that we can inherit from. So we set
                             // out current area to inherit from that COLLECTION ID (not area ID - from the collection ID)
-                            $db->executeQuery(
+                            $db->executeStatement(
                                 'update Areas set arInheritPermissionsFromAreaOnCID = ? where arID = ?',
                                 array($row['cID'], $this->getAreaID())
                             );
@@ -683,7 +683,7 @@ class Area extends ConcreteObject implements \Concrete\Core\Permission\ObjectInt
                         array($areac->getPermissionsCollectionID(), $this->getAreaHandle())
                     );
                     if ($doOverride && $areac->getPermissionsCollectionID() > 0) {
-                        $db->executeQuery(
+                        $db->executeStatement(
                             'update Areas set arInheritPermissionsFromAreaOnCID = ? where arID = ?',
                             array($areac->getPermissionsCollectionID(), $this->getAreaID())
                         );
@@ -719,7 +719,7 @@ class Area extends ConcreteObject implements \Concrete\Core\Permission\ObjectInt
         while ($row = $r->fetch()) {
             // these are all the areas we need to update.
             if ($this->getAreaCollectionInheritID() > 0) {
-                $db->executeQuery(
+                $db->executeStatement(
                     'update Areas set arInheritPermissionsFromAreaOnCID = ? where arID = ?',
                     array($this->getAreaCollectionInheritID(), $row['arID'])
                 );
@@ -750,7 +750,7 @@ class Area extends ConcreteObject implements \Concrete\Core\Permission\ObjectInt
 
         $db = Database::connection();
         $v = array($this->getAreaHandle(), 'TEMPLATE', $masterCollection->getCollectionID());
-        $db->executeQuery(
+        $db->executeStatement(
             'update Areas, Pages set Areas.arInheritPermissionsFromAreaOnCID = '.$toSetCID.' where Areas.cID = Pages.cID and Areas.arHandle = ? and cInheritPermissionsFrom = ? and arOverrideCollectionPermissions = 0 and cInheritPermissionsFromCID = ?',
             $v
         );
@@ -936,7 +936,7 @@ class Area extends ConcreteObject implements \Concrete\Core\Permission\ObjectInt
         $cID = $this->getCollectionID();
         $v = array($cID, $this->getAreaHandle());
         // update the Area record itself. Hopefully it's been created.
-        $db->executeQuery(
+        $db->executeStatement(
             'update Areas set arOverrideCollectionPermissions = 1, arInheritPermissionsFromAreaOnCID = 0 where arID = ?',
             array($this->getAreaID())
         );

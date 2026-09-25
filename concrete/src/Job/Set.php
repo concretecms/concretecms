@@ -26,7 +26,7 @@ class Set extends ConcreteObject
         } else {
             $q = "select jsID, pkgID, jsName, jDateLastRun, isScheduled, scheduledInterval, scheduledValue from JobSets order by jsName asc";
         }
-        $r = $db->Execute($q);
+        $r = $db->executeQuery($q);
         $list = array();
         while ($row = $r->fetch()) {
             $js = new JobSet();
@@ -65,7 +65,7 @@ class Set extends ConcreteObject
     {
         $db = Loader::db();
         $list = array();
-        $r = $db->Execute('select jsID from JobSets where pkgID = ? order by jsID asc', array($pkg->getPackageID()));
+        $r = $db->executeQuery('select jsID from JobSets where pkgID = ? order by jsID asc', array($pkg->getPackageID()));
         while ($row = $r->fetch()) {
             $list[] = JobSet::getByID($row['jsID']);
         }
@@ -118,7 +118,7 @@ class Set extends ConcreteObject
     {
         $this->jsName = Loader::helper('security')->sanitizeString($jsName);
         $db = Loader::db();
-        $db->Execute("update JobSets set jsName = ? where jsID = ?", array($this->jsName, $this->jsID));
+        $db->executeStatement("update JobSets set jsName = ? where jsID = ?", array($this->jsName, $this->jsID));
     }
 
     public function addJob(Job $j)
@@ -126,7 +126,7 @@ class Set extends ConcreteObject
         $db = Loader::db();
         $no = $db->GetOne("select count(jID) from JobSetJobs where jID = ? and jsID = ?", array($j->getJobID(), $this->getJobSetID()));
         if ($no < 1) {
-            $db->Execute('insert into JobSetJobs (jsID, jID) values (?, ?)', array($this->getJobSetID(), $j->getJobID()));
+            $db->executeStatement('insert into JobSetJobs (jsID, jID) values (?, ?)', array($this->getJobSetID(), $j->getJobID()));
         }
     }
 
@@ -138,7 +138,7 @@ class Set extends ConcreteObject
         if (is_object($pkg)) {
             $pkgID = $pkg->getPackageID();
         }
-        $db->Execute('insert into JobSets (jsName, pkgID) values (?,?)', array($jsName, $pkgID));
+        $db->executeStatement('insert into JobSets (jsName, pkgID) values (?,?)', array($jsName, $pkgID));
         $id = $db->Insert_ID();
         $js = JobSet::getByID($id);
 
@@ -148,7 +148,7 @@ class Set extends ConcreteObject
     public function clearJobs()
     {
         $db = Loader::db();
-        $db->Execute('delete from JobSetJobs where jsID = ?', array($this->jsID));
+        $db->executeStatement('delete from JobSetJobs where jsID = ?', array($this->jsID));
     }
 
     /**
@@ -157,7 +157,7 @@ class Set extends ConcreteObject
     public function getJobs()
     {
         $db = Loader::db();
-        $r = $db->Execute('select jID from JobSetJobs where jsID = ? order by jID asc', $this->getJobSetId());
+        $r = $db->executeQuery('select jID from JobSetJobs where jsID = ? order by jID asc', $this->getJobSetId());
         $jobs = array();
         while ($row = $r->fetch()) {
             $j = Job::getByID($row['jID']);
@@ -174,7 +174,7 @@ class Set extends ConcreteObject
         $db = Loader::db();
         $timestamp = date('Y-m-d H:i:s');
         $this->jDateLastRun = $timestamp;
-        $db->query("UPDATE JobSets SET jDateLastRun=? WHERE jsID=?", array($timestamp, $this->getJobSetID()));
+        $db->executeStatement("UPDATE JobSets SET jDateLastRun=? WHERE jsID=?", array($timestamp, $this->getJobSetID()));
     }
 
     public function contains(Job $j)
@@ -188,8 +188,8 @@ class Set extends ConcreteObject
     public function delete()
     {
         $db = Loader::db();
-        $db->Execute('delete from JobSets where jsID = ?', array($this->getJobSetID()));
-        $db->Execute('delete from JobSetJobs where jsID = ?', array($this->getJobSetID()));
+        $db->executeStatement('delete from JobSets where jsID = ?', array($this->getJobSetID()));
+        $db->executeStatement('delete from JobSetJobs where jsID = ?', array($this->getJobSetID()));
     }
 
     public function canDelete()
@@ -200,7 +200,7 @@ class Set extends ConcreteObject
     public function removeJob(Job $j)
     {
         $db = Loader::db();
-        $db->Execute('delete from JobSetJobs where jsID = ? and jID = ?', array($this->getJobSetID(), $j->getJobID()));
+        $db->executeStatement('delete from JobSetJobs where jsID = ? and jID = ?', array($this->getJobSetID(), $j->getJobID()));
     }
 
     public function isScheduledForNow()
@@ -244,7 +244,7 @@ class Set extends ConcreteObject
         $this->scheduledValue = $value;
         if ($this->getJobSetID()) {
             $db = Loader::db();
-            $db->query("UPDATE JobSets SET isScheduled = ?, scheduledInterval = ?, scheduledValue = ? WHERE jsID = ?",
+            $db->executeStatement("UPDATE JobSets SET isScheduled = ?, scheduledInterval = ?, scheduledValue = ? WHERE jsID = ?",
             array($this->isScheduled ? 1 : 0, $this->scheduledInterval, $this->scheduledValue, $this->getJobSetID()));
 
             return true;

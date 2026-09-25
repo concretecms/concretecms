@@ -126,7 +126,7 @@ class BasicWorkflow extends \Concrete\Core\Workflow\Workflow implements Assignab
     public function delete()
     {
         $db = Core::make('database')->connection();
-        $db->executeQuery('DELETE FROM BasicWorkflowPermissionAssignments WHERE wfID = ?', [$this->wfID]);
+        $db->executeStatement('DELETE FROM BasicWorkflowPermissionAssignments WHERE wfID = ?', [$this->wfID]);
         parent::delete();
     }
 
@@ -141,7 +141,7 @@ class BasicWorkflow extends \Concrete\Core\Workflow\Workflow implements Assignab
                 return new SkippedResponse();
             } else {
                 $db = Core::make('database')->connection();
-                $db->executeQuery(
+                $db->executeStatement(
                     'INSERT INTO BasicWorkflowProgressData (wpID, uIDStarted) VALUES (?, ?)',
                     [$wp->getWorkflowProgressID(), $req->getRequesterUserID()]);
 

@@ -79,7 +79,7 @@ final class Version20190422235040 extends AbstractMigration implements Repeatabl
 
         // for sites with the private multisite addon installed:
         if ($this->connection->tableExists('SiteAttributeValueValues')) {
-            $this->connection->query('alter table SiteAttributeValueValues rename atSite');
+            $this->connection->executeStatement('alter table SiteAttributeValueValues rename atSite');
         }
 
     }

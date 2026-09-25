@@ -89,11 +89,11 @@ class PresetLayout extends Layout
     {
         $db = Loader::db();
         $v = array($this->arLayoutIsPreset);
-        $db->Execute('insert into AreaLayouts (arLayoutIsPreset) values (?)', $v);
+        $db->executeStatement('insert into AreaLayouts (arLayoutIsPreset) values (?)', $v);
         $newAreaLayoutID = $db->Insert_ID();
         if ($newAreaLayoutID) {
             $v = array($newAreaLayoutID, $this->getAreaLayoutPresetHandle());
-            $db->Execute('insert into AreaLayoutsUsingPresets (arLayoutID, preset) values (?, ?)', $v);
+            $db->executeStatement('insert into AreaLayoutsUsingPresets (arLayoutID, preset) values (?, ?)', $v);
             $newAreaLayout = Layout::getByID($newAreaLayoutID);
 
             $columns = $this->getAreaLayoutColumns();
@@ -113,10 +113,10 @@ class PresetLayout extends Layout
     public static function add(PresetInterface $preset)
     {
         $db = Loader::db();
-        $db->Execute('insert into AreaLayouts (arLayoutIsPreset) values (?)', array(1));
+        $db->executeStatement('insert into AreaLayouts (arLayoutIsPreset) values (?)', array(1));
         $arLayoutID = $db->Insert_ID();
         if ($arLayoutID) {
-            $db->Execute('insert into AreaLayoutsUsingPresets (arLayoutID, preset) values (?, ?)', array($arLayoutID, $preset->getIdentifier()));
+            $db->executeStatement('insert into AreaLayoutsUsingPresets (arLayoutID, preset) values (?, ?)', array($arLayoutID, $preset->getIdentifier()));
             $ar = static::getByID($arLayoutID);
 
             return $ar;

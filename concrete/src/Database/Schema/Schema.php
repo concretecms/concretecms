@@ -73,7 +73,7 @@ class Schema
         $schemaDiff = $comparator->compare($fromSchema, $toSchema);
         $saveQueries = $schemaDiff->toSaveSql($db->getDatabasePlatform());
         foreach ($saveQueries as $query) {
-            $db->query($query);
+            $db->executeStatement($query);
         }
 
     }

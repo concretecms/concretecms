@@ -48,7 +48,7 @@ class GroupRole extends ConcreteObject implements JsonSerializable
         $this->grName = $grName;
 
         try {
-            $db->executeQuery("update GroupRoles set grName = ? where grID = ?", [$grName, $this->grID]);
+            $db->executeStatement("update GroupRoles set grName = ? where grID = ?", [$grName, $this->grID]);
 
             return true;
         } catch (Exception $e) {
@@ -77,7 +77,7 @@ class GroupRole extends ConcreteObject implements JsonSerializable
         $this->grIsManager = $grIsManager;
 
         try {
-            $db->executeQuery("update GroupRoles set grIsManager = ? where grID = ?", [(int)$grIsManager, $this->grID]);
+            $db->executeStatement("update GroupRoles set grIsManager = ? where grID = ?", [(int)$grIsManager, $this->grID]);
 
             return true;
         } catch (Exception $e) {
@@ -194,7 +194,7 @@ class GroupRole extends ConcreteObject implements JsonSerializable
         $db = $app->make(Connection::class);
 
         try {
-            $db->executeQuery('insert into GroupRoles (grName, grIsManager) values (?,?)', [$grName, (int)$grIsManager]);
+            $db->executeStatement('insert into GroupRoles (grName, grIsManager) values (?,?)', [$grName, (int)$grIsManager]);
         } catch (Exception $e) {
             return false;
         }
@@ -219,9 +219,9 @@ class GroupRole extends ConcreteObject implements JsonSerializable
         $db = $app->make(Connection::class);
 
         try {
-            $db->executeQuery('delete from GroupRoles where grID = ?', [$this->getId()]);
-            $db->executeQuery('delete from GroupSelectedRoles where grID = ?', [$this->getId()]);
-            $db->executeQuery('delete from GroupTypeSelectedRoles where grID = ?', [$this->getId()]);
+            $db->executeStatement('delete from GroupRoles where grID = ?', [$this->getId()]);
+            $db->executeStatement('delete from GroupSelectedRoles where grID = ?', [$this->getId()]);
+            $db->executeStatement('delete from GroupTypeSelectedRoles where grID = ?', [$this->getId()]);
 
             // update Group Type or Group => set new default role
         } catch (Exception $e) {

@@ -40,7 +40,7 @@ class Navigation
         if ($currentcParentID > 0) {
             while (is_numeric($currentcParentID) && $currentcParentID > 0 && $currentcParentID) {
                 $q = "select cID, cParentID from Pages where cID = '{$currentcParentID}'";
-                $r = $db->query($q);
+                $r = $db->executeQuery($q);
                 $row = $r->fetch();
                 if ($row['cID']) {
                     $cArray[] = Page::getByID($row['cID'], 'ACTIVE');

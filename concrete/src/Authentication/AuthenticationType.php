@@ -58,7 +58,7 @@ class AuthenticationType extends ConcreteObject
     {
         $list = [];
         $db = Loader::db();
-        $q = $db->query('SELECT * FROM AuthenticationTypes'
+        $q = $db->executeQuery('SELECT * FROM AuthenticationTypes'
             . ($activeOnly ? ' WHERE authTypeIsEnabled=1 ' : '')
             . ' ORDER BY ' . ($sorted ? 'authTypeDisplayOrder' : 'authTypeID'));
         while ($row = $q->fetch()) {
@@ -141,7 +141,7 @@ class AuthenticationType extends ConcreteObject
         $db = Loader::db();
         $list = [];
 
-        $q = $db->query('SELECT * FROM AuthenticationTypes WHERE pkgID=?', [$pkg->getPackageID()]);
+        $q = $db->executeQuery('SELECT * FROM AuthenticationTypes WHERE pkgID=?', [$pkg->getPackageID()]);
         while ($row = $q->fetch()) {
             $list[] = self::load($row);
         }
@@ -176,7 +176,7 @@ class AuthenticationType extends ConcreteObject
             $pkgID = $pkg->getPackageID();
         }
         $db = Loader::db();
-        $db->Execute(
+        $db->executeStatement(
             'INSERT INTO AuthenticationTypes (authTypeHandle, authTypeName, authTypeIsEnabled, authTypeDisplayOrder, pkgID) values (?, ?, ?, ?, ?)',
             [$atHandle, $atName, 1, intval($order), $pkgID]);
         $est = self::getByHandle($atHandle);
@@ -283,7 +283,7 @@ class AuthenticationType extends ConcreteObject
     public function setAuthenticationTypeName($authTypeName)
     {
         $db = Loader::db();
-        $db->Execute(
+        $db->executeStatement(
             'UPDATE AuthenticationTypes SET authTypeName=? WHERE authTypeID=?',
             [$authTypeName, $this->getAuthenticationTypeID()]);
     }
@@ -297,7 +297,7 @@ class AuthenticationType extends ConcreteObject
     public function setAuthenticationTypeDisplayOrder($order)
     {
         $db = Loader::db();
-        $db->Execute(
+        $db->executeStatement(
             'UPDATE AuthenticationTypes SET authTypeDisplayOrder=? WHERE authTypeID=?',
             [$order, $this->getAuthenticationTypeID()]);
     }
@@ -336,7 +336,7 @@ class AuthenticationType extends ConcreteObject
             throw new Exception(t('The core authentication cannot be disabled.'));
         }
         $db = Loader::db();
-        $db->Execute(
+        $db->executeStatement(
             'UPDATE AuthenticationTypes SET authTypeIsEnabled=0 WHERE AuthTypeID=?',
             [$this->getAuthenticationTypeID()]);
     }
@@ -348,7 +348,7 @@ class AuthenticationType extends ConcreteObject
     public function enable()
     {
         $db = Loader::db();
-        $db->Execute(
+        $db->executeStatement(
             'UPDATE AuthenticationTypes SET authTypeIsEnabled=1 WHERE AuthTypeID=?',
             [$this->getAuthenticationTypeID()]);
     }
@@ -364,7 +364,7 @@ class AuthenticationType extends ConcreteObject
             $this->controller->deleteType();
         }
 
-        $db->Execute('DELETE FROM AuthenticationTypes WHERE authTypeID=?', [$this->authTypeID]);
+        $db->executeStatement('DELETE FROM AuthenticationTypes WHERE authTypeID=?', [$this->authTypeID]);
     }
 
     /**

@@ -56,7 +56,7 @@ class PageIndexer implements IndexingDriverInterface, ApplicationAwareInterface
 
             /** @var Connection $database */
             $database = $this->app['database']->connection();
-            $database->executeQuery('DELETE FROM PageSearchIndex WHERE cID=?', [$page->getCollectionID()]);
+            $database->executeStatement('DELETE FROM PageSearchIndex WHERE cID=?', [$page->getCollectionID()]);
         }
 
         return false;

@@ -91,7 +91,7 @@ class Controller extends BlockController implements UsesFeatureInterface
             $db = Database::connection();
             $v = [$this->bID];
             $q = 'SELECT optionID, optionName, displayOrder FROM btSurveyOptions WHERE bID = ? ORDER BY displayOrder ASC';
-            $r = $db->query($q, $v);
+            $r = $db->executeQuery($q, $v);
             $this->options = [];
             if ($r) {
                 while ($row = $r->fetch()) {
@@ -122,10 +122,10 @@ class Controller extends BlockController implements UsesFeatureInterface
         $v = [$this->bID];
 
         $q = 'DELETE FROM btSurveyOptions WHERE bID = ?';
-        $db->query($q, $v);
+        $db->executeStatement($q, $v);
 
         $q = 'DELETE FROM btSurveyResults WHERE bID = ?';
-        $db->query($q, $v);
+        $db->executeStatement($q, $v);
 
         parent::delete();
     }
@@ -182,7 +182,7 @@ class Controller extends BlockController implements UsesFeatureInterface
                     $this->cID,
                 ];
                 $q = 'INSERT INTO btSurveyResults (optionID, bID, uID, ipAddress, cID) VALUES (?, ?, ?, ?, ?)';
-                $db->query($q, $v);
+                $db->executeStatement($q, $v);
                 $cookieJar = $this->app->make(ResponseCookieJar::class);
                 $cookieKey = 'ccmPoll' . $this->bID . '-' . $this->cID;
                 $config = $this->app->make('config');

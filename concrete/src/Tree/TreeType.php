@@ -36,7 +36,7 @@ class TreeType extends ConcreteObject
             $pkgID = $pkg->getPackageID();
         }
 
-        $r = $db->query("insert into TreeTypes (treeTypeHandle, pkgID) values (?, ?)", array(
+        $db->executeStatement("insert into TreeTypes (treeTypeHandle, pkgID) values (?, ?)", array(
             $treeTypeHandle, $pkgID,
         ));
 
@@ -48,7 +48,7 @@ class TreeType extends ConcreteObject
     public function delete()
     {
         $db = Database::connection();
-        $db->Execute('delete from TreeTypes where treeTypeID = ?', array($this->treeTypeID));
+        $db->executeStatement('delete from TreeTypes where treeTypeID = ?', array($this->treeTypeID));
     }
 
     public static function getByID($treeTypeID)
@@ -87,7 +87,7 @@ class TreeType extends ConcreteObject
     {
         $db = Database::connection();
         $list = array();
-        $r = $db->Execute('select treeTypeID from TreeTypes where pkgID = ? order by treeTypeID asc', array($pkg->getPackageID()));
+        $r = $db->executeQuery('select treeTypeID from TreeTypes where pkgID = ? order by treeTypeID asc', array($pkg->getPackageID()));
         while ($row = $r->fetch()) {
             $list[] = self::getByID($row['treeTypeID']);
         }
@@ -101,7 +101,7 @@ class TreeType extends ConcreteObject
     {
         $db = Database::connection();
         $list = array();
-        $r = $db->Execute('select treeTypeID from TreeTypes order by treeTypeID asc');
+        $r = $db->executeQuery('select treeTypeID from TreeTypes order by treeTypeID asc');
         while ($row = $r->fetch()) {
             $list[] = self::getByID($row['treeTypeID']);
         }

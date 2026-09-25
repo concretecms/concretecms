@@ -109,7 +109,7 @@ class FormLayoutSet extends ConcreteObject
     public function updateFormLayoutSetName($ptComposerFormLayoutSetName)
     {
         $db = Loader::db();
-        $db->Execute('update PageTypeComposerFormLayoutSets set ptComposerFormLayoutSetName = ? where ptComposerFormLayoutSetID = ?', array(
+        $db->executeStatement('update PageTypeComposerFormLayoutSets set ptComposerFormLayoutSetName = ? where ptComposerFormLayoutSetID = ?', array(
             $ptComposerFormLayoutSetName, $this->ptComposerFormLayoutSetID,
         ));
         $this->ptComposerFormLayoutSetName = $ptComposerFormLayoutSetName;
@@ -118,7 +118,7 @@ class FormLayoutSet extends ConcreteObject
     public function updateFormLayoutSetDescription($ptComposerFormLayoutSetDescription)
     {
         $db = Loader::db();
-        $db->Execute('update PageTypeComposerFormLayoutSets set ptComposerFormLayoutSetDescription = ? where ptComposerFormLayoutSetID = ?', array(
+        $db->executeStatement('update PageTypeComposerFormLayoutSets set ptComposerFormLayoutSetDescription = ? where ptComposerFormLayoutSetID = ?', array(
             $ptComposerFormLayoutSetDescription, $this->ptComposerFormLayoutSetID,
         ));
         $this->ptComposerFormLayoutSetDescription = $ptComposerFormLayoutSetDescription;
@@ -127,7 +127,7 @@ class FormLayoutSet extends ConcreteObject
     public function updateFormLayoutSetCollapseType($ptComposerFormLayoutSetCollapseType)
     {
         $db = Loader::db();
-        $db->Execute('update PageTypeComposerFormLayoutSets set ptComposerFormLayoutSetCollapseType = ? where ptComposerFormLayoutSetID = ?', array(
+        $db->executeStatement('update PageTypeComposerFormLayoutSets set ptComposerFormLayoutSetCollapseType = ? where ptComposerFormLayoutSetID = ?', array(
             $ptComposerFormLayoutSetCollapseType, $this->ptComposerFormLayoutSetID,
         ));
         $this->ptComposerFormLayoutSetCollapseType = $ptComposerFormLayoutSetCollapseType;
@@ -136,7 +136,7 @@ class FormLayoutSet extends ConcreteObject
     public function updateFormLayoutSetDisplayOrder($displayOrder)
     {
         $db = Loader::db();
-        $db->Execute('update PageTypeComposerFormLayoutSets set ptComposerFormLayoutSetDisplayOrder = ? where ptComposerFormLayoutSetID = ?', array(
+        $db->executeStatement('update PageTypeComposerFormLayoutSets set ptComposerFormLayoutSetDisplayOrder = ? where ptComposerFormLayoutSetID = ?', array(
             $displayOrder, $this->ptComposerFormLayoutSetID,
         ));
         $this->ptComposerFormLayoutSetDisplayOrder = $displayOrder;
@@ -149,7 +149,7 @@ class FormLayoutSet extends ConcreteObject
             $control->delete();
         }
         $db = Loader::db();
-        $db->Execute('delete from PageTypeComposerFormLayoutSets where ptComposerFormLayoutSetID = ?', array($this->ptComposerFormLayoutSetID));
+        $db->executeStatement('delete from PageTypeComposerFormLayoutSets where ptComposerFormLayoutSetID = ?', array($this->ptComposerFormLayoutSetID));
         $pagetype = $this->getPageTypeObject();
         $pagetype->rescanFormLayoutSetDisplayOrder();
     }

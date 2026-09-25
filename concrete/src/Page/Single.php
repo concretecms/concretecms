@@ -27,7 +27,7 @@ class Single
     public static function getListByPackage($pkg)
     {
         $db = Loader::db();
-        $r = $db->Execute("select cID from Pages where cFilename is not null and pkgID = ?", array($pkg->getPackageID()));
+        $r = $db->executeQuery("select cID from Pages where cFilename is not null and pkgID = ?", array($pkg->getPackageID()));
         $singlePages = array();
         while ($row = $r->fetch()) {
             $singlePages[] = CorePage::getByID($row['cID']);
@@ -258,7 +258,7 @@ class Single
     public static function getList()
     {
         $db = Loader::db();
-        $r = $db->query("select Pages.cID from Pages inner join Collections on Pages.cID = Collections.cID where cFilename is not null order by cDateModified desc");
+        $r = $db->executeQuery("select Pages.cID from Pages inner join Collections on Pages.cID = Collections.cID where cFilename is not null order by cDateModified desc");
         $pages = array();
         while ($row = $r->fetch()) {
             $c = Page::getByID($row['cID']);

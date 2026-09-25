@@ -101,7 +101,7 @@ class Extractor
     {
         $app = Application::getFacadeApplication();
         $db = $app->make('database')->connection();
-        $db->executeQuery('truncate table MultilingualTranslations');
+        $db->executeStatement('truncate table MultilingualTranslations');
     }
 
     public function deleteSectionTranslationFile(Section $section)

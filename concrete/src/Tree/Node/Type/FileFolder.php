@@ -134,10 +134,10 @@ class FileFolder extends TreeNode
     {
         $app = Application::getFacadeApplication();
         $db = $app->make(Connection::class);
-        $db->executeQuery('DELETE FROM TreeFileFolderNodes WHERE treeNodeID = ?', [
+        $db->executeStatement('DELETE FROM TreeFileFolderNodes WHERE treeNodeID = ?', [
             $this->treeNodeID,
         ]);
-        $db->executeQuery('DELETE FROM UserFavoriteFolders WHERE treeNodeFolderId = ?', [
+        $db->executeStatement('DELETE FROM UserFavoriteFolders WHERE treeNodeFolderId = ?', [
             $this->treeNodeID,
         ]);
     }

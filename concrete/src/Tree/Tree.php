@@ -182,7 +182,7 @@ abstract class Tree extends ConcreteObject
             $node->delete();
         }
         $this->deleteDetails();
-        $db->executeQuery('delete from Trees where treeID = ?', [$this->treeID]);
+        $db->executeStatement('delete from Trees where treeID = ?', [$this->treeID]);
     }
 
     public function duplicate()
@@ -195,7 +195,7 @@ abstract class Tree extends ConcreteObject
         $db = $app->make('database')->connection();
         $nodes = $newRoot->getAllChildNodeIDs();
         foreach ($nodes as $nodeID) {
-            $db->executeQuery('update TreeNodes set treeID = ? where treeNodeID = ?', [$tree->getTreeID(), $nodeID]);
+            $db->executeStatement('update TreeNodes set treeID = ? where treeNodeID = ?', [$tree->getTreeID(), $nodeID]);
         }
 
         return $tree;
@@ -225,7 +225,7 @@ abstract class Tree extends ConcreteObject
         $date = $app->make('date')->getOverridableNow();
         $treeTypeHandle = uncamelcase(strrchr(get_called_class(), '\\'));
         $type = TreeType::getByHandle($treeTypeHandle);
-        $db->executeQuery(
+        $db->executeStatement(
             'insert into Trees (treeDateAdded, rootTreeNodeID, treeTypeID) values (?, ?, ?)',
             [$date, $rootNode->getTreeNodeID(), $type->getTreeTypeID()]
         );

@@ -363,7 +363,7 @@ class Type
     {
         $app = Application::getFacadeApplication();
         $db = $app->make('database')->connection();
-        $stm = $db->query('select distinct fvType from FileVersions where fvIsApproved = 1 and fvType is not null and fvType <> 0');
+        $stm = $db->executeQuery('select distinct fvType from FileVersions where fvIsApproved = 1 and fvType is not null and fvType <> 0');
         $types = [];
         while ($row = $stm->fetch()) {
             $types[] = (int) $row['fvType'];

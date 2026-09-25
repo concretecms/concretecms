@@ -14,12 +14,12 @@ class NotifyInNotificationCenterNotificationAccess extends NotificationAccess
         $r = $db->executeQuery('select * from NotificationPermissionSubscriptionList where paID = ?', [$this->getPermissionAccessID()]);
         while ($row = $r->fetch()) {
             $v = [$row['peID'], $newPA->getPermissionAccessID(), $row['permission']];
-            $db->executeQuery('insert into NotificationPermissionSubscriptionList (peID, paID, permission) values (?, ?, ?)', $v);
+            $db->executeStatement('insert into NotificationPermissionSubscriptionList (peID, paID, permission) values (?, ?, ?)', $v);
         }
         $r = $db->executeQuery('select * from NotificationPermissionSubscriptionListCustom where paID = ?', [$this->getPermissionAccessID()]);
         while ($row = $r->fetch()) {
             $v = [$row['peID'], $newPA->getPermissionAccessID(), $row['nSubscriptionIdentifier']];
-            $db->executeQuery('insert into NotificationPermissionSubscriptionListCustom  (peID, paID, nSubscriptionIdentifier) values (?, ?, ?)', $v);
+            $db->executeStatement('insert into NotificationPermissionSubscriptionListCustom  (peID, paID, nSubscriptionIdentifier) values (?, ?, ?)', $v);
         }
 
         return $newPA;
@@ -29,19 +29,19 @@ class NotifyInNotificationCenterNotificationAccess extends NotificationAccess
     {
         parent::save();
         $db = Database::connection();
-        $db->executeQuery('delete from NotificationPermissionSubscriptionList where paID = ?', [$this->getPermissionAccessID()]);
-        $db->executeQuery('delete from NotificationPermissionSubscriptionListCustom where paID = ?', [$this->getPermissionAccessID()]);
+        $db->executeStatement('delete from NotificationPermissionSubscriptionList where paID = ?', [$this->getPermissionAccessID()]);
+        $db->executeStatement('delete from NotificationPermissionSubscriptionListCustom where paID = ?', [$this->getPermissionAccessID()]);
         if (isset($args['subscriptionsIncluded']) && is_array($args['subscriptionsIncluded'])) {
             foreach ($args['subscriptionsIncluded'] as $peID => $permission) {
                 $v = [$this->getPermissionAccessID(), $peID, $permission];
-                $db->executeQuery('insert into NotificationPermissionSubscriptionList (paID, peID, permission) values (?, ?, ?)', $v);
+                $db->executeStatement('insert into NotificationPermissionSubscriptionList (paID, peID, permission) values (?, ?, ?)', $v);
             }
         }
 
         if (isset($args['subscriptionsExcluded']) && is_array($args['subscriptionsExcluded'])) {
             foreach ($args['subscriptionsExcluded'] as $peID => $permission) {
                 $v = [$this->getPermissionAccessID(), $peID, $permission];
-                $db->executeQuery('insert into NotificationPermissionSubscriptionList (paID, peID, permission) values (?, ?, ?)', $v);
+                $db->executeStatement('insert into NotificationPermissionSubscriptionList (paID, peID, permission) values (?, ?, ?)', $v);
             }
         }
 
@@ -49,7 +49,7 @@ class NotifyInNotificationCenterNotificationAccess extends NotificationAccess
             foreach ($args['subscriptionIdentifierInclude'] as $peID => $pThemeIDs) {
                 foreach ($pThemeIDs as $pThemeID) {
                     $v = [$this->getPermissionAccessID(), $peID, $pThemeID];
-                    $db->executeQuery('insert into NotificationPermissionSubscriptionListCustom (paID, peID, nSubscriptionIdentifier) values (?, ?, ?)', $v);
+                    $db->executeStatement('insert into NotificationPermissionSubscriptionListCustom (paID, peID, nSubscriptionIdentifier) values (?, ?, ?)', $v);
                 }
             }
         }
@@ -58,7 +58,7 @@ class NotifyInNotificationCenterNotificationAccess extends NotificationAccess
             foreach ($args['subscriptionIdentifierExclude'] as $peID => $pThemeIDs) {
                 foreach ($pThemeIDs as $pThemeID) {
                     $v = [$this->getPermissionAccessID(), $peID, $pThemeID];
-                    $db->executeQuery('insert into NotificationPermissionSubscriptionListCustom (paID, peID, nSubscriptionIdentifier) values (?, ?, ?)', $v);
+                    $db->executeStatement('insert into NotificationPermissionSubscriptionListCustom (paID, peID, nSubscriptionIdentifier) values (?, ?, ?)', $v);
                 }
             }
         }

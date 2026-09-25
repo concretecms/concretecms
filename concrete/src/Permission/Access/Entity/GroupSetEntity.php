@@ -62,7 +62,7 @@ class GroupSetEntity extends Entity
             $ingids[] = $group->getGroupID();
         }
         $instr = implode(',', $ingids);
-        $r = $db->Execute('select uID from UserGroups where gID in (' . $instr . ')');
+        $r = $db->executeQuery('select uID from UserGroups where gID in (' . $instr . ')');
         $users = array();
         while ($row = $r->fetch()) {
             $ui = UserInfo::getByID($row['uID']);
@@ -81,10 +81,10 @@ class GroupSetEntity extends Entity
         $peID = $db->GetOne('select pae.peID from PermissionAccessEntities pae inner join PermissionAccessEntityGroupSets paeg on pae.peID = paeg.peID where petID = ? and paeg.gsID = ?',
             array($petID, $gs->getGroupSetID()));
         if (!$peID) {
-            $db->Execute("insert into PermissionAccessEntities (petID) values(?)", array($petID));
+            $db->executeStatement("insert into PermissionAccessEntities (petID) values(?)", array($petID));
             Config::save('concrete.misc.access_entity_updated', time());
             $peID = $db->Insert_ID();
-            $db->Execute('insert into PermissionAccessEntityGroupSets (peID, gsID) values (?, ?)', array($peID, $gs->getGroupSetID()));
+            $db->executeStatement('insert into PermissionAccessEntityGroupSets (peID, gsID) values (?, ?)', array($peID, $gs->getGroupSetID()));
         }
 
         return \Concrete\Core\Permission\Access\Entity\Entity::getByID($peID);

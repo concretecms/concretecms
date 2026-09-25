@@ -24,7 +24,7 @@ class UserProgress extends Progress
     {
         parent::delete();
         $db = Loader::db();
-        $db->Execute('delete from UserWorkflowProgress where wpID = ?', array($this->wpID));
+        $db->executeStatement('delete from UserWorkflowProgress where wpID = ?', array($this->wpID));
     }
 
     public static function add(Workflow $wf, UserRequest $wr)
@@ -72,8 +72,8 @@ class UserProgress extends Progress
         $filter .= ' order by ' . $sortBy;
 
 
-        $r = $db->Execute('SELECT wp.wpID FROM UserWorkflowProgress uwp INNER JOIN WorkflowProgress wp ON wp.wpID = uwp.wpID WHERE uwp.uID = ? ' . $filter,
-            $requestedUID);
+        $r = $db->executeQuery('SELECT wp.wpID FROM UserWorkflowProgress uwp INNER JOIN WorkflowProgress wp ON wp.wpID = uwp.wpID WHERE uwp.uID = ? ' . $filter,
+            [$requestedUID]);
         $list = array();
         while ($row = $r->fetch()) {
             $wp = UserProgress::getByID($row['wpID']);

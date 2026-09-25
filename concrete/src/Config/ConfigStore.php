@@ -27,7 +27,7 @@ class ConfigStore
         if (!$this->db) {
             return;
         }
-        $r = $this->db->Execute('select * from ConfigStore where uID = 0 order by cfKey asc');
+        $r = $this->db->executeQuery('select * from ConfigStore where uID = 0 order by cfKey asc');
         while ($row = $r->fetch()) {
             if (!$row['pkgID']) {
                 $row['pkgID'] = 0;
@@ -90,7 +90,7 @@ class ConfigStore
             return;
         }
 
-        $db->query(
+        $db->executeStatement(
             "replace into ConfigStore (cfKey, timestamp, cfValue, pkgID) values (?, ?, ?, ?)",
             array($cfKey, $timestamp, $cfValue, $pkgID)
         );
@@ -101,7 +101,7 @@ class ConfigStore
         $db = Loader::db();
         if ($pkgID > 0) {
             unset($this->rows["{$cfKey}.{$pkgID}"]);
-            $db->query(
+            $db->executeStatement(
                 "delete from ConfigStore where cfKey = ? and pkgID = ?",
                 array($cfKey, $pkgID)
             );
@@ -111,7 +111,7 @@ class ConfigStore
                     unset($this->rows[$key]);
                 }
             }
-            $db->query(
+            $db->executeStatement(
                 "delete from ConfigStore where cfKey = ?",
                 array($cfKey)
             );

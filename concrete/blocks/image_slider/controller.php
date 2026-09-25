@@ -211,7 +211,7 @@ class Controller extends BlockController implements FileTrackableInterface, Uses
         $args['maxWidth'] = isset($args['maxWidth']) ? (int) $args['maxWidth'] : 0;
 
         $db = Database::get();
-        $db->execute('DELETE from btImageSliderEntries WHERE bID = ?', [$this->bID]);
+        $db->executeStatement('DELETE from btImageSliderEntries WHERE bID = ?', [$this->bID]);
         parent::save($args);
         if (isset($args['sortOrder'])) {
             $count = count($args['sortOrder']);
@@ -237,7 +237,7 @@ class Controller extends BlockController implements FileTrackableInterface, Uses
                     $args['description'][$i] = LinkAbstractor::translateTo($args['description'][$i]);
                 }
 
-                $db->execute('INSERT INTO btImageSliderEntries (bID, fID, title, description, sortOrder, linkURL, internalLinkCID) values(?, ?, ?, ?,?,?,?)',
+                $db->executeStatement('INSERT INTO btImageSliderEntries (bID, fID, title, description, sortOrder, linkURL, internalLinkCID) values(?, ?, ?, ?,?,?,?)',
                     [
                         $this->bID,
                         (int) $args['fID'][$i],

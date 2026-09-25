@@ -35,13 +35,11 @@ class PileContent extends ConcreteObject implements \JsonSerializable
 
     public function delete()
     {
-
         // it's assumed that we've already checked whether this user has access to this pile content object
-
         $db = Loader::db();
         $v = array($this->pcID);
         $q = "delete from PileContents where pcID = ?";
-        $r = $db->query($q, $v);
+        $r = $db->executeStatement($q, $v);
         if ($r) {
             $this->p->rescanDisplayOrder();
 
@@ -64,10 +62,10 @@ class PileContent extends ConcreteObject implements \JsonSerializable
 
             $pcID = $db->getOne($q);
             $q = "update PileContents set displayOrder = {$targetDO} where pcID = {$this->pcID}";
-            $db->query($q);
+            $db->executeStatement($q);
 
             $q = "update PileContents set displayOrder = {$displayOrder} where pcID = {$pcID}";
-            $db->query($q);
+            $db->executeStatement($q);
         }
     }
 
@@ -88,10 +86,10 @@ class PileContent extends ConcreteObject implements \JsonSerializable
             $q = "select pcID from PileContents where displayOrder = {$targetDO}";
             $pcID = $db->getOne($q);
             $q = "update PileContents set displayOrder = {$targetDO} where pcID = {$this->pcID}";
-            $db->query($q);
+            $db->executeStatement($q);
 
             $q = "update PileContents set displayOrder = {$displayOrder} where pcID = {$pcID}";
-            $db->query($q);
+            $db->executeStatement($q);
         }
     }
 
@@ -100,7 +98,7 @@ class PileContent extends ConcreteObject implements \JsonSerializable
         $db = Loader::db();
         $v = array($pcID);
         $q = "select pID, pcID, itemID, itemType, displayOrder, quantity, timestamp from PileContents where pcID = ?";
-        $r = $db->query($q, $v);
+        $r = $db->executeQuery($q, $v);
         $row = $r->fetch();
 
         $pc = new self();

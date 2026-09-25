@@ -76,7 +76,7 @@ class Assignment
     {
         $app = Application::getFacadeApplication();
         $db = $app->make(Connection::class);
-        $db->executeQuery('update PermissionAssignments set paID = 0 where pkID = ?', [$this->pk->getPermissionKeyID()]);
+        $db->executeStatement('update PermissionAssignments set paID = 0 where pkID = ?', [$this->pk->getPermissionKeyID()]);
     }
 
     /**

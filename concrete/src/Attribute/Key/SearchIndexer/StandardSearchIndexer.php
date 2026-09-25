@@ -173,7 +173,7 @@ class StandardSearchIndexer implements SearchIndexerInterface
         $primaryValue = $category->getIndexedSearchPrimaryKeyValue($subject);
         $columnValues = [];
 
-        $exists = $this->connection->query(
+        $exists = $this->connection->executeQuery(
             "select count({$primary}) from {$category->getIndexedSearchTable()} where {$primary} = {$primaryValue}"
         )->fetchColumn();
 

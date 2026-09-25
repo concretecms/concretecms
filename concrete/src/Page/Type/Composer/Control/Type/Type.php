@@ -86,7 +86,7 @@ abstract class Type extends ConcreteObject
             $pkgID = $pkg->getPackageID();
         }
         $db = Loader::db();
-        $db->Execute('insert into PageTypeComposerControlTypes (ptComposerControlTypeHandle, ptComposerControlTypeName, pkgID) values (?, ?, ?)', array($ptComposerControlTypeHandle, $ptComposerControlTypeName, $pkgID));
+        $db->executeStatement('insert into PageTypeComposerControlTypes (ptComposerControlTypeHandle, ptComposerControlTypeName, pkgID) values (?, ?, ?)', array($ptComposerControlTypeHandle, $ptComposerControlTypeName, $pkgID));
 
         return static::getByHandle($ptComposerControlTypeHandle);
     }
@@ -94,7 +94,7 @@ abstract class Type extends ConcreteObject
     public function delete()
     {
         $db = Loader::db();
-        $db->Execute('delete from PageTypeComposerControlTypes where ptComposerControlTypeID = ?', array($this->ptComposerControlTypeID));
+        $db->executeStatement('delete from PageTypeComposerControlTypes where ptComposerControlTypeID = ?', array($this->ptComposerControlTypeID));
     }
 
     public static function getList()

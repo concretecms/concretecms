@@ -646,7 +646,7 @@ EOT
             $q .= 'and cParentID = ?';
         }
         $q .= ' group by avSelectOptionID order by total desc limit ' . $limit;
-        $r = $db->Execute($q, $v);
+        $r = $db->executeQuery($q, $v);
         $options = new ArrayCollection();
         while ($row = $r->fetch()) {
             $opt = new SelectValueUsedOption();

@@ -143,7 +143,7 @@ abstract class Job extends ConcreteObject
         } else {
             $q = "SELECT jID FROM Jobs ORDER BY jDateLastRun, jID";
         }
-        $r = $db->Execute($q);
+        $r = $db->executeQuery($q);
         $jobs = array();
         while ($row = $r->fetch()) {
             $j = static::getByID($row['jID']);
@@ -158,7 +158,7 @@ abstract class Job extends ConcreteObject
     public function reset()
     {
         $db = Loader::db();
-        $db->Execute('update Jobs set jLastStatusCode = 0, jStatus = \'ENABLED\' where jID = ?', array($this->jID));
+        $db->executeStatement('update Jobs set jLastStatusCode = 0, jStatus = \'ENABLED\' where jID = ?', array($this->jID));
     }
 
     public function markStarted()
@@ -170,7 +170,7 @@ abstract class Job extends ConcreteObject
         $timestampH = date('Y-m-d g:i:s A');
         $timestamp = date('Y-m-d H:i:s');
         $this->jDateLastRun = $timestampH;
-        $rs = $db->query("UPDATE Jobs SET jStatus='RUNNING', jDateLastRun=? WHERE jHandle=?", array($timestamp, $this->jHandle));
+        $rs = $db->executeStatement("UPDATE Jobs SET jStatus='RUNNING', jDateLastRun=? WHERE jHandle=?", array($timestamp, $this->jHandle));
     }
 
     public function markCompleted($resultCode = 0, $resultMsg = false)
@@ -187,8 +187,8 @@ abstract class Job extends ConcreteObject
             $jStatus = 'ERROR';
         }
         $timestamp = date('Y-m-d H:i:s');
-        $rs = $db->query("UPDATE Jobs SET jStatus=?, jLastStatusCode = ?, jLastStatusText=? WHERE jHandle=?", array($jStatus, $resultCode, $resultMsg, $this->jHandle));
-        $rs = $db->query("INSERT INTO JobsLog (jID, jlMessage, jlTimestamp, jlError) VALUES(?,?,?,?)", array($this->jID, $resultMsg, $timestamp, $resultCode));
+        $rs = $db->executeStatement("UPDATE Jobs SET jStatus=?, jLastStatusCode = ?, jLastStatusText=? WHERE jHandle=?", array($jStatus, $resultCode, $resultMsg, $this->jHandle));
+        $rs = $db->executeStatement("INSERT INTO JobsLog (jID, jlMessage, jlTimestamp, jlError) VALUES(?,?,?,?)", array($this->jID, $resultMsg, $timestamp, $resultCode));
 
         $je = new Event($this);
         Events::dispatch('on_job_execute', $je);
@@ -361,7 +361,7 @@ abstract class Job extends ConcreteObject
         if (!in_array($jStatus, $this->availableJStatus)) {
             $jStatus = 'ENABLED';
         }
-        $rs = $db->query("UPDATE Jobs SET jStatus=? WHERE jHandle=?", array($jStatus, $this->jHandle));
+        $rs = $db->executeStatement("UPDATE Jobs SET jStatus=? WHERE jHandle=?", array($jStatus, $this->jHandle));
     }
 
     public static function installByHandle($jHandle = '')
@@ -379,7 +379,7 @@ abstract class Job extends ConcreteObject
     {
         $db = Loader::db();
         $list = array();
-        $r = $db->Execute('select jHandle from Jobs where pkgID = ? order by jHandle asc', array($pkg->getPackageID()));
+        $r = $db->executeQuery('select jHandle from Jobs where pkgID = ? order by jHandle asc', array($pkg->getPackageID()));
         while ($row = $r->fetch()) {
             $list[] = static::getJobObjByHandle($row['jHandle']);
         }
@@ -394,7 +394,7 @@ abstract class Job extends ConcreteObject
         if (class_exists($className)) {
             $j = Core::make($className);
             $db = Loader::db();
-            $db->Execute('insert into Jobs (jName, jDescription, jDateInstalled, jNotUninstallable, jHandle, pkgID) values (?, ?, ?, ?, ?, ?)',
+            $db->executeStatement('insert into Jobs (jName, jDescription, jDateInstalled, jNotUninstallable, jHandle, pkgID) values (?, ?, ?, ?, ?, ?)',
                 array($j->getJobName(), $j->getJobDescription(), Loader::helper('date')->getOverridableNow(), 0, $jHandle, $pkg->getPackageID()));
 
             $je = new Event($j);
@@ -411,9 +411,9 @@ abstract class Job extends ConcreteObject
         $jobExists = $db->getOne('SELECT count(*) FROM Jobs WHERE jHandle=?', array($this->jHandle));
         $vals = array($this->getJobName(), $this->getJobDescription(),  date('Y-m-d H:i:s'), $this->jNotUninstallable, $this->jHandle);
         if ($jobExists) {
-            $db->query('UPDATE Jobs SET jName=?, jDescription=?, jDateInstalled=?, jNotUninstallable=? WHERE jHandle=?', $vals);
+            $db->executeStatement('UPDATE Jobs SET jName=?, jDescription=?, jDateInstalled=?, jNotUninstallable=? WHERE jHandle=?', $vals);
         } else {
-            $db->query('INSERT INTO Jobs (jName, jDescription, jDateInstalled, jNotUninstallable, jHandle) VALUES(?,?,?,?,?)', $vals);
+            $db->executeStatement('INSERT INTO Jobs (jName, jDescription, jDateInstalled, jNotUninstallable, jHandle) VALUES(?,?,?,?,?)', $vals);
         }
 
         $je = new Event($this);
@@ -429,7 +429,7 @@ abstract class Job extends ConcreteObject
         }
 
         $db = Loader::db();
-        $db->query('DELETE FROM Jobs WHERE jHandle=?', array($this->jHandle));
+        $db->executeStatement('DELETE FROM Jobs WHERE jHandle=?', array($this->jHandle));
     }
 
     /**
@@ -438,7 +438,7 @@ abstract class Job extends ConcreteObject
     public static function clearLog()
     {
         $db = Loader::db();
-        $db->Execute("delete from JobsLog");
+        $db->executeStatement("delete from JobsLog");
     }
 
     public function isScheduledForNow()
@@ -484,7 +484,7 @@ abstract class Job extends ConcreteObject
         $this->scheduledValue = $value;
         if ($this->getJobID()) {
             $db = Loader::db();
-            $db->query("UPDATE Jobs SET isScheduled = ?, scheduledInterval = ?, scheduledValue = ? WHERE jID = ?",
+            $db->executeStatement("UPDATE Jobs SET isScheduled = ?, scheduledInterval = ?, scheduledValue = ? WHERE jID = ?",
             array($this->isScheduled, $this->scheduledInterval, $this->scheduledValue, $this->getJobID()));
 
             return true;

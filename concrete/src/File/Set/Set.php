@@ -405,11 +405,11 @@ class Set
     public function updateFileSetDisplayOrder($files)
     {
         $db = Database::connection();
-        $db->executeQuery('UPDATE FileSetFiles SET fsDisplayOrder = 0 WHERE fsID = ?', array($this->getFileSetID()));
+        $db->executeStatement('UPDATE FileSetFiles SET fsDisplayOrder = 0 WHERE fsID = ?', array($this->getFileSetID()));
         $i = 0;
         if (is_array($files)) {
             foreach ($files as $fID) {
-                $db->executeQuery(
+                $db->executeStatement(
                     'UPDATE FileSetFiles SET fsDisplayOrder = ? WHERE fsID = ? AND fID = ?',
                     array($i, $this->getFileSetID(), $fID)
                 );
@@ -551,7 +551,7 @@ class Set
         } else {
             $file_set_file = File::createAndGetFile($f_id, $this->fsID);
             $db = $app->make(Connection::class);
-            $db->executeQuery(
+            $db->executeStatement(
                 'DELETE FROM FileSetFiles WHERE fID = ? AND fsID = ?',
                 [$f_id, $this->getFileSetID()]
             );
@@ -586,9 +586,9 @@ class Set
 
         $db = Database::connection();
         $db->delete('FileSets', array('fsID' => $this->fsID));
-        $db->executeQuery('DELETE FROM FileSetSavedSearches WHERE fsID = ?', array($this->fsID));
-        $db->executeQuery('DELETE FROM FileSetFiles WHERE fsID = ?', array($this->fsID));
-        $db->executeQuery('DELETE FROM FileImageThumbnailTypeFileSets WHERE ftfsFileSetID = ?', [$this->fsID]);
+        $db->executeStatement('DELETE FROM FileSetSavedSearches WHERE fsID = ?', array($this->fsID));
+        $db->executeStatement('DELETE FROM FileSetFiles WHERE fsID = ?', array($this->fsID));
+        $db->executeStatement('DELETE FROM FileImageThumbnailTypeFileSets WHERE ftfsFileSetID = ?', [$this->fsID]);
     }
 
     /*
@@ -599,18 +599,18 @@ class Set
         $db = Database::connection();
 
         $q = "SELECT fsID, paID, pkID FROM FileSetPermissionAssignments WHERE fsID = 0";
-        $r = $db->query($q);
+        $r = $db->executeQuery($q);
         while ($row = $r->fetch()) {
             $v = array($this->fsID, $row['paID'], $row['pkID']);
             $q = "INSERT INTO FileSetPermissionAssignments (fsID, paID, pkID) VALUES (?, ?, ?)";
-            $db->executeQuery($q, $v);
+            $db->executeStatement($q, $v);
         }
     }
 
     public function resetPermissions()
     {
         $db = Database::connection();
-        $db->executeQuery('DELETE FROM FileSetPermissionAssignments WHERE fsID = ?', array($this->fsID));
+        $db->executeStatement('DELETE FROM FileSetPermissionAssignments WHERE fsID = ?', array($this->fsID));
     }
 
     public function assignPermissions(
@@ -620,7 +620,7 @@ class Set
     ) {
         $db = Database::connection();
         if ($this->fsID > 0) {
-            $db->executeQuery("UPDATE FileSets SET fsOverrideGlobalPermissions = 1 WHERE fsID = ?", array($this->fsID));
+            $db->executeStatement("UPDATE FileSets SET fsOverrideGlobalPermissions = 1 WHERE fsID = ?", array($this->fsID));
             $this->fsOverrideGlobalPermissions = true;
         }
 

@@ -89,7 +89,7 @@ final class Version20200523051311 extends AbstractMigration implements Repeatabl
          * @var $db Connection
          */
         foreach($list->findAll() as $entity) {
-            $db->executeQuery(
+            $db->executeStatement(
                 'update ExpressEntityEntries set resultsNodeID = ? 
                 where exEntryEntityID = ? and (resultsNodeID = 0 or resultsNodeID is null)',
             [$entity->getEntityResultsNodeId(), $entity->getId()]

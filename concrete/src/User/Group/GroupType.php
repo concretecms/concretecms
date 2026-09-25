@@ -53,7 +53,7 @@ class GroupType extends ConcreteObject implements JsonSerializable
         $this->gtName = $gtName;
 
         try {
-            $db->executeQuery("update GroupTypes set gtName = ? where gtID = ?", [$gtName, $this->gtID]);
+            $db->executeStatement("update GroupTypes set gtName = ? where gtID = ?", [$gtName, $this->gtID]);
 
             return true;
         } catch (Exception $e) {
@@ -82,7 +82,7 @@ class GroupType extends ConcreteObject implements JsonSerializable
         $this->gtPetitionForPublicEntry = $gtPetitionForPublicEntry;
 
         try {
-            $db->executeQuery("update GroupTypes set gtPetitionForPublicEntry = ? where gtID = ?", [(int)$gtPetitionForPublicEntry, $this->gtID]);
+            $db->executeStatement("update GroupTypes set gtPetitionForPublicEntry = ? where gtID = ?", [(int)$gtPetitionForPublicEntry, $this->gtID]);
 
             return true;
         } catch (Exception $e) {
@@ -173,7 +173,7 @@ class GroupType extends ConcreteObject implements JsonSerializable
         $db = $app->make(Connection::class);
 
         try {
-            $db->executeQuery('insert into GroupTypes (gtName, gtPetitionForPublicEntry) values (?,?)', [$gtName, (int)$gtPetitionForPublicEntry]);
+            $db->executeStatement('insert into GroupTypes (gtName, gtPetitionForPublicEntry) values (?,?)', [$gtName, (int)$gtPetitionForPublicEntry]);
         } catch (Exception $e) {
             return false;
         }
@@ -196,7 +196,7 @@ class GroupType extends ConcreteObject implements JsonSerializable
         $this->gtDefaultRoleID = $role->getId();
 
         try {
-            $db->executeQuery("update GroupTypes set gtDefaultRoleID = ? where gtID = ?", [(int)$this->gtDefaultRoleID, $this->gtID]);
+            $db->executeStatement("update GroupTypes set gtDefaultRoleID = ? where gtID = ?", [(int)$this->gtDefaultRoleID, $this->gtID]);
 
             return true;
         } catch (Exception $e) {
@@ -223,9 +223,9 @@ class GroupType extends ConcreteObject implements JsonSerializable
         $db = $app->make(Connection::class);
 
         try {
-            $db->executeQuery('delete from GroupTypes where gtID = ?', [$this->getId()]);
-            $db->executeQuery("update `Groups` set gtID = ? where gtID = ?", [DEFAULT_GROUP_TYPE_ID, $this->getId()]);
-            $db->executeQuery("update UserGroups set gtID = ? where gtID = ?", [DEFAULT_GROUP_TYPE_ID, $this->getId()]);
+            $db->executeStatement('delete from GroupTypes where gtID = ?', [$this->getId()]);
+            $db->executeStatement("update `Groups` set gtID = ? where gtID = ?", [DEFAULT_GROUP_TYPE_ID, $this->getId()]);
+            $db->executeStatement("update UserGroups set gtID = ? where gtID = ?", [DEFAULT_GROUP_TYPE_ID, $this->getId()]);
         } catch (Exception $e) {
             return false;
         }
@@ -253,7 +253,7 @@ class GroupType extends ConcreteObject implements JsonSerializable
         $db = $app->make(Connection::class);
 
         try {
-            $db->executeQuery('insert into GroupTypeSelectedRoles (grID, gtID) values (?,?)', [(int)$role->getId(), (int)$this->getId()]);
+            $db->executeStatement('insert into GroupTypeSelectedRoles (grID, gtID) values (?,?)', [(int)$role->getId(), (int)$this->getId()]);
         } catch (Exception $e) {
             return false;
         }

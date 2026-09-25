@@ -134,7 +134,7 @@ class SiteGroupEntity extends Entity
         $siteGroupEntity = $r->findOneByGroup($siteGroup);
 
         if (!$siteGroupEntity) {
-            $db->Execute('insert into PermissionAccessEntities (petID) values(?)', [$petID]);
+            $db->executeStatement('insert into PermissionAccessEntities (petID) values(?)', [$petID]);
             $peID = $db->Insert_ID();
             \Config::save('concrete.misc.access_entity_updated', time());
 

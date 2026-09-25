@@ -107,7 +107,7 @@ class StandardSetManager implements SetManagerInterface
     {
         $db = \Database::connection();
         for ($i = 0; $i < count($asIDs); ++$i) {
-            $db->executeQuery(
+            $db->executeStatement(
                 "UPDATE AttributeSets SET asDisplayOrder = {$i} WHERE akCategoryID = ? AND asID = ?",
                 array($this->categoryEntity->getAttributeKeyCategoryID(), $asIDs[$i])
             );

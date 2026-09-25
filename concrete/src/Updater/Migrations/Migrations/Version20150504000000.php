@@ -119,7 +119,7 @@ class Version20150504000000 extends AbstractMigration implements RepeatableMigra
         }
 
         $db = \Database::get();
-        $db->Execute('DROP TABLE IF EXISTS PageStatistics');
+        $db->executeStatement('DROP TABLE IF EXISTS PageStatistics');
 
         $this->refreshBlockType('page_list');
 
@@ -142,7 +142,7 @@ class Version20150504000000 extends AbstractMigration implements RepeatableMigra
         $pkx->associateAccessEntityType(Type::getByHandle('user'));
         $pkx->associateAccessEntityType(Type::getByHandle('group_combination'));
 
-        $db->Execute('alter table QueueMessages modify column body longtext not null');
+        $db->executeStatement('alter table QueueMessages modify column body longtext not null');
 
         $this->updatePermissionDurationObjects();
 
@@ -155,7 +155,7 @@ class Version20150504000000 extends AbstractMigration implements RepeatableMigra
 
         $db = \Database::get();
         if ($this->updateSectionPlurals) {
-            $rs = $db->Execute('select cID, msLanguage, msCountry from MultilingualSections');
+            $rs = $db->executeQuery('select cID, msLanguage, msCountry from MultilingualSections');
             while ($row = $rs->fetch()) {
                 $locale = $row['msLanguage'];
                 if ($row['msCountry']) {
@@ -180,14 +180,14 @@ class Version20150504000000 extends AbstractMigration implements RepeatableMigra
             }
         }
         if ($this->updateMultilingualTranslations) {
-            $db->Execute("UPDATE MultilingualTranslations SET comments = REPLACE(comments, ':', '\\n') WHERE comments IS NOT NULL");
+            $db->executeStatement("UPDATE MultilingualTranslations SET comments = REPLACE(comments, ':', '\\n') WHERE comments IS NOT NULL");
         }
     }
 
     protected function updatePermissionDurationObjects()
     {
         $db = \Database::get();
-        $r = $db->Execute('select pdID from PermissionDurationObjects order by pdID asc');
+        $r = $db->executeQuery('select pdID from PermissionDurationObjects order by pdID asc');
         while ($row = $r->fetch()) {
             $pd = Duration::getByID($row['pdID']);
             if (isset($pd->error)) {

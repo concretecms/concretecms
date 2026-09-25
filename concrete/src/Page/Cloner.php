@@ -625,6 +625,6 @@ EOT
         if (count($wheres) > 0) {
             $query .= ' where ' . implode(' and ', $wheres);
         }
-        $this->connection->executeQuery($query, array_merge($insertParams, $whereParams));
+        $this->connection->executeStatement($query, array_merge($insertParams, $whereParams));
     }
 }

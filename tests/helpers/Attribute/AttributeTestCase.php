@@ -162,7 +162,7 @@ abstract class AttributeTestCase extends ConcreteDatabaseTestCase
         $object->reindex();
 
         $db = Database::get();
-        $r = $db->query($this->indexQuery);
+        $r = $db->executeQuery($this->indexQuery);
         $row = $r->fetch();
         foreach ($columns as $column => $value) {
             $this->assertTrue(isset($row[$column]));

@@ -309,7 +309,7 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
             if ($this->cacheBlockRecord() && Config::get('concrete.cache.blocks')) {
                 $record = base64_encode(serialize($this->record));
                 $db = Database::connection();
-                $db->Execute('update Blocks set btCachedBlockRecord = ? where bID = ?', [$record, $this->bID]);
+                $db->executeStatement('update Blocks set btCachedBlockRecord = ? where bID = ?', [$record, $this->bID]);
             }
         }
 
@@ -445,7 +445,7 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
                     // this is the first time we're loading
                     $record = base64_encode(serialize($this->record));
                     $db = Database::connection();
-                    $db->Execute('update Blocks set btCachedBlockRecord = ? where bID = ?', [$record, $this->bID]);
+                    $db->executeStatement('update Blocks set btCachedBlockRecord = ? where bID = ?', [$record, $this->bID]);
                 }
             }
         }

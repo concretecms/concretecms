@@ -68,11 +68,11 @@ class UpdatePageTypeDefaultsCommandHandler
                 $pageCollectionID = $page->getCollectionID();
                 $pageVersionID = $page->getVersionID();
 
-                $db->executeQuery(
+                $db->executeStatement(
                     'UPDATE CollectionVersionBlockStyles SET arHandle = ?  WHERE cID = ? and cvID = ? and bID = ?',
                     [$actualArHandle, $pageCollectionID, $pageVersionID, $pageBlock->getBlockID()]
                 );
-                $db->executeQuery(
+                $db->executeStatement(
                     'UPDATE CollectionVersionBlocks SET arHandle = ?  WHERE cID = ? and cvID = ? and bID = ?',
                     [$actualArHandle, $pageCollectionID, $pageVersionID, $pageBlock->getBlockID()]
                 );

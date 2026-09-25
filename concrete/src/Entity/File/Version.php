@@ -878,7 +878,7 @@ class Version implements ObjectInterface
     {
         $app = Application::getFacadeApplication();
         $db = $app->make(Connection::class);
-        $db->executeQuery(
+        $db->executeStatement(
             'INSERT INTO FileVersionLog (fID, fvID, fvUpdateTypeID, fvUpdateTypeAttributeID) VALUES (?, ?, ?, ?)',
             [
                 $this->getFileID(),
@@ -1247,7 +1247,7 @@ class Version implements ObjectInterface
         }
 
         /** @noinspection PhpUnhandledExceptionInspection */
-        $db->executeQuery('DELETE FROM FileVersionLog WHERE fID = ? AND fvID = ?', [$this->getFileID(), $this->fvID]);
+        $db->executeStatement('DELETE FROM FileVersionLog WHERE fID = ? AND fvID = ?', [$this->getFileID(), $this->fvID]);
 
         if ($deleteFilesAndThumbnails) {
             if ($this->getTypeObject()->getGenericType() === FileType::T_IMAGE) {
