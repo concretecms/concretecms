@@ -18,8 +18,6 @@ class PageNotFound extends PageController
         $view = $this->getViewObject();
         $contents = $view->render();
 
-        Events::dispatch('on_page_not_found');
-
         return new Response($contents, 404);
     }
 
