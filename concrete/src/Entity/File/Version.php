@@ -560,8 +560,9 @@ class Version implements ObjectInterface
     {
         $app = Application::getFacadeApplication();
         foreach ($this->file->getFileVersions() as $fv) {
-            $fv->fvIsApproved = false;
-            $fv->save(false);
+            if ($fv->isApproved()) {
+                $fv->deny();
+            }
         }
 
         $this->fvIsApproved = true;
@@ -1180,8 +1181,6 @@ class Version implements ObjectInterface
 
         $em->persist($fv);
 
-        $this->deny();
-
         foreach ($this->getAttributes() as $value) {
             $value = clone $value;
             $value->setVersion($fv);
@@ -1272,6 +1271,9 @@ class Version implements ObjectInterface
 
         $em->remove($this);
         $em->flush();
+
+        $fve = new FileVersionEvent($this);
+        $app->make(EventDispatcher::class)->dispatch('on_file_version_delete', $fve);
 
         try {
             $logger->notice(t('Version %1$s of file %2$s successfully deleted.', $this->getFileVersionID(), $this->getFileName()));

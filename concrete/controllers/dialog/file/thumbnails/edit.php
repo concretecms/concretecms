@@ -52,6 +52,7 @@ class Edit extends BackendInterfaceFileController
         if ($this->validateAction()) {
             $fp = new Checker($this->file);
             if ($fp->canEditFileProperties()) {
+                $shouldApprove = ($this->file->getRecentVersion()->getFileVersionID() == $this->file->getApprovedVersion()->getFileVersionID());
                 $fileVersion = $this->file->getVersionToModify();
                 $uploadedFile = $this->request->files->get('file');
                 $typeVersion = $this->getThumbnailTypeVersionFromRequest();
@@ -61,6 +62,9 @@ class Edit extends BackendInterfaceFileController
                  * @var $uploadedFile UploadedFile
                  */
                 $filesystem->update($typeVersion->getFilePath($fileVersion), $uploadedFile->getContent());
+                if (!$fileVersion->isApproved() && $shouldApprove) {
+                    $fileVersion->approve();
+                }
 
                 $sr = new FileEditResponse();
                 $sr->setFile($this->file);
