@@ -10,15 +10,31 @@
         <field name="brandingText" type="string" />
         <field name="brandingLogo" type="integer" />
         <field name="brandingTransparentLogo" type="integer" />
-        <field name="includeBrandText" type="boolean" />
-        <field name="includeBrandLogo" type="boolean" />
-        <field name="includeTransparency" type="boolean" />
-        <field name="includeStickyNav" type="boolean" />
-        <field name="includeNavigation" type="boolean" />
-        <field name="includeNavigationDropdowns" type="boolean" />
-        <field name="includeSearchInput" type="boolean" />
+        <field name="includeBrandText" type="boolean">
+            <default value="0"/>
+        </field>
+        <field name="includeBrandLogo" type="boolean">
+            <default value="0"/>
+        </field>
+        <field name="includeTransparency" type="boolean">
+            <default value="0"/>
+        </field>
+        <field name="includeStickyNav" type="boolean">
+            <default value="0"/>
+        </field>
+        <field name="includeNavigation" type="boolean">
+            <default value="0"/>
+        </field>
+        <field name="includeNavigationDropdowns" type="boolean">
+            <default value="0"/>
+        </field>
+        <field name="includeSearchInput" type="boolean">
+            <default value="0"/>
+        </field>
         <field name="searchInputFormActionPageID" type="integer" />
-        <field name="includeSwitchLanguage" type="boolean" />
+        <field name="includeSwitchLanguage" type="boolean">
+            <default value="0"/>
+        </field>
         <field name="ignorePermissions" type="boolean">
             <default value="0"/>
             <notnull/>

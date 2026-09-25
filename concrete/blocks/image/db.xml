@@ -13,9 +13,8 @@
             <unsigned/>
             <default value="0" />
         </field>
-        <field name="cropImage" type="integer">
-            <unsigned/>
-            <default value="0" />
+        <field name="cropImage" type="boolean">
+            <default value="0"/>
         </field>
         <field name="maxWidth" type="integer">
             <unsigned/>
@@ -40,9 +39,8 @@
         </field>
         <field name="altText" type="string" size="255" />
         <field name="title" type="string" size="255" />
-        <field name="lazyLoad" type="integer">
-            <unsigned/>
-            <default value="0" />
+        <field name="lazyLoad" type="boolean">
+            <default value="0"/>
         </field>
         <field name="sizingOption" type="string" size="255" >
             <default value="thumbnails_default"/>

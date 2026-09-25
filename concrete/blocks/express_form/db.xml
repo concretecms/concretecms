@@ -19,7 +19,7 @@
       <notnull/>
     </field>
     <field name="recipientEmail" type="string" size="255"/>
-    <field name="displayCaptcha" type="integer">
+    <field name="displayCaptcha" type="boolean">
       <default value="1"/>
     </field>
     <field name="storeFormSubmission" type="boolean">
