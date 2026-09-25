@@ -1,8 +1,13 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Concrete\Core\Page\Collection\Version;
 
 use Concrete\Core\Search\ItemList\Database\ItemList as DatabaseItemList;
 use Concrete\Core\Search\StickyRequest;
+
+defined('C5_EXECUTE') or die('Access Denied.');
 
 /**
  * An object that holds a list of collection versions.
@@ -12,9 +17,6 @@ use Concrete\Core\Search\StickyRequest;
  */
 class GlobalVersionList extends DatabaseItemList
 {
-    /**
-     * @param \Concrete\Core\Search\StickyRequest|null $req
-     */
     public function __construct(?StickyRequest $req = null)
     {
         parent::__construct($req);
@@ -36,7 +38,8 @@ class GlobalVersionList extends DatabaseItemList
     public function createQuery()
     {
         $this->query->select('cv.*')
-            ->from('CollectionVersions', 'cv');
+            ->from('CollectionVersions', 'cv')
+        ;
     }
 
     /**
@@ -51,31 +54,37 @@ class GlobalVersionList extends DatabaseItemList
             ->select('count(1)')
             ->setMaxResults(1)
             ->execute()
-            ->fetchColumn();
+            ->fetchColumn()
+        ;
     }
 
     /**
      * Filter versions that are approved after a certain date.
-     *
-     * @param \DateTime $date
      */
     public function filterByApprovedAfter(\DateTime $date)
     {
         $this->query->andWhere(
-             'cv.cvDateApproved >= ' . $this->query->createNamedParameter($date->format('Y-m-d H:i-s'))
+            'cv.cvDateApproved >= ' . $this->query->createNamedParameter($date->format('Y-m-d H:i-s'))
         );
     }
 
     /**
      * Filter versions that are approved before a certain date.
-     *
-     * @param \DateTime $date
      */
     public function filterByApprovedBefore(\DateTime $date)
     {
         $this->query->andWhere(
-             'cv.cvDateApproved <= ' . $this->query->createNamedParameter($date->format('Y-m-d H:i-s'))
+            'cv.cvDateApproved <= ' . $this->query->createNamedParameter($date->format('Y-m-d H:i-s'))
         );
+    }
+
+    /**
+     * Filter versions by the user who authored them.
+     */
+    public function filterByVersionAuthorUserID(int $uID)
+    {
+        $this->query->andWhere('cv.cvAuthorUID = :cvAuthorUID');
+        $this->query->setParameter('cvAuthorUID', $uID);
     }
 
     /**
