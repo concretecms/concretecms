@@ -270,7 +270,7 @@ class Files extends ApiController
 
         $checker = new Checker($file);
         if (!$checker->canDeleteFile()) {
-            return $this->error(t('You do not have access to delete this file.', 401));
+            return $this->error(t('You do not have access to delete this file.'), 401);
         }
 
         $file->delete();
@@ -318,7 +318,7 @@ class Files extends ApiController
 
         $checker = new Checker($file);
         if (!$checker->canEditFileProperties()) {
-            return $this->error(t('You do not have access to edit this file.', 401));
+            return $this->error(t('You do not have access to edit this file.'), 401);
         }
 
         $body = json_decode($this->request->getContent(), true);

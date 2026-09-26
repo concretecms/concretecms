@@ -260,7 +260,7 @@ class Users extends ApiController
 
         $checker = new Checker($user);
         if (!$checker->canDeleteUser()) {
-            return $this->error(t('You do not have access to delete this user.', 401));
+            return $this->error(t('You do not have access to delete this user.'), 401);
         }
 
         $user->delete();
@@ -423,7 +423,7 @@ class Users extends ApiController
 
         $checker = new Checker($user);
         if (!$checker->canEditUser()) {
-            return $this->error(t('You do not have access to change the password for this user.', 401));
+            return $this->error(t('You do not have access to change the password for this user.'), 401);
         }
 
         $assignment = $this->getEditUserPropertiesAssignment();
