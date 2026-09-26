@@ -74,7 +74,7 @@ class Users extends ApiController
         } else {
             $permissions = new Checker($user);
             if (!$permissions->canViewUser()) {
-                return $this->error(t('You do not have access to read properties about this user.'), 401);
+                return $this->error(t('You do not have access to read properties about this user.'), 403);
             }
         }
 
@@ -180,7 +180,7 @@ class Users extends ApiController
      *         @OA\JsonContent(ref="#/components/schemas/User"),
      *     ),
      *     @OA\Response(
-     *         response=401,
+     *         response=403,
      *         description="You do not have the proper permissions to add this resource."
      *     ),
      * )
@@ -189,7 +189,7 @@ class Users extends ApiController
     {
         $permissions = new Checker();
         if (!$permissions->canAddUsers()) {
-            return $this->error(t('You do not have access to add users.'), 401);
+            return $this->error(t('You do not have access to add users.'), 403);
         }
 
         $content = json_decode($this->request->getContent(), true);
@@ -200,7 +200,7 @@ class Users extends ApiController
         $this->app->make('validator/password')->isValid($content['password'], $e);
 
         if ($e->has()) {
-            return $this->error($e, 401);
+            return $this->error($e, 400);
         }
 
         $data = ['uName' => $content['username'], 'uEmail' => $content['email'], 'uPassword' => $content['password']];
@@ -238,7 +238,7 @@ class Users extends ApiController
      *         @OA\JsonContent(ref="#/components/schemas/DeletedResponse"),
      *     ),
      *     @OA\Response(
-     *         response=401,
+     *         response=403,
      *         description="You do not have the proper permissions to delete this resource."
      *     ),
      *     @OA\Response(
@@ -260,7 +260,7 @@ class Users extends ApiController
 
         $checker = new Checker($user);
         if (!$checker->canDeleteUser()) {
-            return $this->error(t('You do not have access to delete this user.'), 401);
+            return $this->error(t('You do not have access to delete this user.'), 403);
         }
 
         $user->delete();
@@ -294,7 +294,7 @@ class Users extends ApiController
      *         @OA\JsonContent(ref="#/components/schemas/User"),
      *     ),
      *     @OA\Response(
-     *         response=401,
+     *         response=403,
      *         description="You do not have the proper permissions to update this resource."
      *     ),
      *     @OA\Response(
@@ -316,7 +316,7 @@ class Users extends ApiController
 
         $checker = new Checker($user);
         if (!$checker->canEditUser()) {
-            return $this->error(t('You do not have access to update this user.'), 401);
+            return $this->error(t('You do not have access to update this user.'), 403);
         }
 
         $assignment = $this->getEditUserPropertiesAssignment();
@@ -325,14 +325,14 @@ class Users extends ApiController
         $e = $this->app->make('error');
         if (isset($content['username'])) {
             if (!$assignment->allowEditUserName()) {
-                return $this->error(t('You do not have access to edit the username for this user.'), 401);
+                return $this->error(t('You do not have access to edit the username for this user.'), 403);
             }
             $this->app->make('validator/user/name')->isValid($content['username'], $e);
             $data['uName'] = $content['username'];
         }
         if (isset($content['email'])) {
             if (!$assignment->allowEditEmail()) {
-                return $this->error(t('You do not have access to edit the email address for this user.'), 401);
+                return $this->error(t('You do not have access to edit the email address for this user.'), 403);
             }
             $this->app->make('validator/user/email')->isValid($content['email'], $e);
             $data['uEmail'] = $content['email'];
@@ -340,7 +340,7 @@ class Users extends ApiController
 
         if (isset($content['language']) && $content['language'] !== '') {
             if (!$assignment->allowEditDefaultLanguage()) {
-                return $this->error(t('You do not have access to edit the default language for this user.'), 401);
+                return $this->error(t('You do not have access to edit the default language for this user.'), 403);
             }
             $data['uDefaultLanguage'] = $content['language'];
         }
@@ -353,13 +353,13 @@ class Users extends ApiController
             foreach ($attributeMap->getEntries() as $entry) {
                 $attributeKey = $entry->getAttributeKey();
                 if (!in_array($attributeKey->getAttributeKeyID(), $assignment->getAttributesAllowedArray())) {
-                    return $this->error(t('You do not have access to edit the attribute %s for this user.', $attributeKey->getAttributeKeyDisplayName()), 401);
+                    return $this->error(t('You do not have access to edit the attribute %s for this user.', $attributeKey->getAttributeKeyDisplayName()), 403);
                 }
             }
         }
 
         if ($e->has()) {
-            return $this->error($e, 401);
+            return $this->error($e, 400);
         }
 
         if (count($data) > 0) {
@@ -401,7 +401,7 @@ class Users extends ApiController
      *         @OA\JsonContent(ref="#/components/schemas/User"),
      *     ),
      *     @OA\Response(
-     *         response=401,
+     *         response=403,
      *         description="You do not have the proper permissions to update this resource."
      *     ),
      *     @OA\Response(
@@ -423,12 +423,12 @@ class Users extends ApiController
 
         $checker = new Checker($user);
         if (!$checker->canEditUser()) {
-            return $this->error(t('You do not have access to change the password for this user.'), 401);
+            return $this->error(t('You do not have access to change the password for this user.'), 403);
         }
 
         $assignment = $this->getEditUserPropertiesAssignment();
         if (!$assignment->allowEditPassword()) {
-            return $this->error(t('You do not have access to change the password for this user.'), 401);
+            return $this->error(t('You do not have access to change the password for this user.'), 403);
         }
 
         $e = $this->app->make('error');
@@ -436,7 +436,7 @@ class Users extends ApiController
         $this->app->make('validator/password')->isValid($password, $e);
 
         if ($e->has()) {
-            return $this->error($e, 401);
+            return $this->error($e, 400);
         }
 
         $user->changePassword($password);

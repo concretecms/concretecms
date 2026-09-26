@@ -78,7 +78,7 @@ class Areas extends ApiController implements ApplicationAwareInterface
         $area = Area::getOrCreate($page, $areaHandle);
         $blockType = BlockType::getByHandle($content['type']);
         if (!$blockType) {
-            return $this->error(t('Invalid block type handle.'), 401);
+            return $this->error(t('Invalid block type handle.'), 400);
         }
         $checker = new Checker($area);
         if (!$checker->canAddBlock($blockType)) {

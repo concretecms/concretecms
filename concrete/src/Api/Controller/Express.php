@@ -36,7 +36,7 @@ class Express extends ApiController implements ApplicationAwareInterface
         }
         $permissions = new Checker($object);
         if (!$permissions->canViewExpressEntries()) {
-            return $this->error(t('You do not have access to view %s entries.', $object->getName()), 401);
+            return $this->error(t('You do not have access to view %s entries.', $object->getName()), 403);
         }
         $list = $express->getList($objectHandle, true);
         $dateModifiedColumn = new DateLastModifiedColumn();
@@ -92,7 +92,7 @@ class Express extends ApiController implements ApplicationAwareInterface
         }
         $permissions = new Checker($entry);
         if (!$permissions->canViewExpressEntry()) {
-            return $this->error(t('You do not have access to view this entry.'), 401);
+            return $this->error(t('You do not have access to view this entry.'), 403);
         }
 
         return $this->transform($entry, new ExpressEntryTransformer($object), $object->getPluralHandle());
@@ -108,7 +108,7 @@ class Express extends ApiController implements ApplicationAwareInterface
         }
         $permissions = new Checker($entry);
         if (!$permissions->canEditExpressEntry()) {
-            return $this->error(t('You do not have access to update this entry.'), 401);
+            return $this->error(t('You do not have access to update this entry.'), 403);
         }
 
         $factory = $this->app->make(ExpressEntryCommandFactory::class);
@@ -128,7 +128,7 @@ class Express extends ApiController implements ApplicationAwareInterface
         }
         $permissions = new Checker($object);
         if (!$permissions->canAddExpressEntries()) {
-            return $this->error(t('You do not have access to add %s entries.', $object->getName()), 401);
+            return $this->error(t('You do not have access to add %s entries.', $object->getName()), 403);
         }
 
         $factory = $this->app->make(ExpressEntryCommandFactory::class);
@@ -148,7 +148,7 @@ class Express extends ApiController implements ApplicationAwareInterface
         }
         $permissions = new Checker($entry);
         if (!$permissions->canDeleteExpressEntry()) {
-            return $this->error(t('You do not have access to delete this entry.'), 401);
+            return $this->error(t('You do not have access to delete this entry.'), 403);
         }
 
         $express = $this->app->make('express');
