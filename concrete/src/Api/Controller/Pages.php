@@ -389,7 +389,7 @@ class Pages extends ApiController
 
         $checker = new Checker($page);
         if (!$checker->canEditPageContents()) {
-            return $this->error(t('You do not have access to edit this page.', 401));
+            return $this->error(t('You do not have access to edit this page.'), 401);
         }
 
         $body = json_decode($this->request->getContent(), true);

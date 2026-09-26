@@ -32,7 +32,7 @@ class Express extends ApiController implements ApplicationAwareInterface
         $express = $this->app->make('express');
         $object = $express->getObjectByHandle($objectHandle);
         if (!$object) {
-            return $this->error(t('Object not found.', 404));
+            return $this->error(t('Object not found.'), 404);
         }
         $permissions = new Checker($object);
         if (!$permissions->canViewExpressEntries()) {
@@ -72,11 +72,11 @@ class Express extends ApiController implements ApplicationAwareInterface
         $express = $this->app->make('express');
         $object = $express->getObjectByHandle($objectHandle);
         if (!$object) {
-            return $this->error(t('Object not found.', 404));
+            return $this->error(t('Object not found.'), 404);
         }
         $entry = $express->getEntryByPublicIdentifier($entryIdentifier);
         if (!$entry || !$entry->is($objectHandle)) {
-            return $this->error(t('Invalid entry public identifier.', 404));
+            return $this->error(t('Invalid entry public identifier.'), 404);
         }
 
         return [$object, $entry];
@@ -124,7 +124,7 @@ class Express extends ApiController implements ApplicationAwareInterface
         $express = $this->app->make('express');
         $object = $express->getObjectByHandle($objectHandle);
         if (!$object) {
-            return $this->error(t('Object not found.', 404));
+            return $this->error(t('Object not found.'), 404);
         }
         $permissions = new Checker($object);
         if (!$permissions->canAddExpressEntries()) {
