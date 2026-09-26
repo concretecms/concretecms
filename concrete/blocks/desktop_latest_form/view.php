@@ -13,7 +13,7 @@
 
         <?php if (isset($formName) && $formName) { ?>
 
-            <span class="ccm-block-desktop-latest-form-name"><?=$formName?></span>
+            <span class="ccm-block-desktop-latest-form-name"><?=h($formName)?></span>
             <span class="ccm-block-desktop-latest-form-date"><?=$date ?? ''?></span>
 
         <?php } else { ?>
