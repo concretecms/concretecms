@@ -535,9 +535,6 @@ class User extends ConcreteObject
         if ($cookie->has('ConcreteSitemapTreeID')) {
             $cookie->clear('ConcreteSitemapTreeID');
         }
-        if ($cookie->has('dashboardPanelStatus')) {
-            $cookie->clear('dashboardPanelStatus');
-        }
 
         $app->make(PersistentAuthentication\CookieService::class)->deleteCookie();
 

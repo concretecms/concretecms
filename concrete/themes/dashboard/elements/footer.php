@@ -51,13 +51,13 @@ if (!empty($showPrivacyPolicyNotice)) { ?>
     var savePanelStatus = false;
     ConcreteEvent.subscribe('PanelOpen', function(e, data) {
         if (savePanelStatus && data.panel === panel) {
-            $.cookie('dashboardPanelStatus', 'open', {path: '<?=DIR_REL?>/'});
+            $.removeCookie('dashboardPanelStatus', {path: '<?=DIR_REL?>/'});
             savePanelStatus = false;
         }
     });
     ConcreteEvent.subscribe('PanelClose', function(e, data) {
         if (savePanelStatus && data.panel === panel) {
-            $.cookie('dashboardPanelStatus', null, {path: '<?=DIR_REL?>/'});
+            $.cookie('dashboardPanelStatus', 'closed', {path: '<?=DIR_REL?>/', expires: 365});
             savePanelStatus = false;
         }
     });

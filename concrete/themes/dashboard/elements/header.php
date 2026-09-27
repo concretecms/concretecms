@@ -17,7 +17,7 @@ $config = $app->make('config');
 
 $sitemapHelper = $app->make('helper/concrete/dashboard/sitemap');
 if (!isset($hideDashboardPanel)) {
-    $hideDashboardPanel = true;
+    $hideDashboardPanel = false;
 }
 
 $view->addFooterItem('<script type="text/javascript">$(function() { ConcreteToolbar.start(); });</script>');
