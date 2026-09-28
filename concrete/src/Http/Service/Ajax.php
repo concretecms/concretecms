@@ -13,7 +13,7 @@ class Ajax
      *
      * @return bool
      *
-     * @deprecated use the isXmlHttpRequest() and/or the getPreferredFormat() methods of the request object
+     * @deprecated use the \Concrete\Core\Http\Traits\AcceptsJsonTrait trait
      */
     public function isAjaxRequest(Request $request)
     {
