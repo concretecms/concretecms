@@ -96,7 +96,13 @@ class Tasks extends AbstractController
 
             if ($this->request->request->get('scheduleTask')) {
                 $scheduler = $this->app->make(Scheduler::class);
-                $scheduledTask = $scheduler->createScheduledTask($task, $input, $this->request->request->get('cronExpression'));
+                $notes = $this->request->request->get('notes');
+                $scheduledTask = $scheduler->createScheduledTask(
+                    $task,
+                    $input,
+                    $this->request->request->get('cronExpression'),
+                    is_string($notes) ? $notes : null
+                );
                 return $this->scheduleHttpResponseFactory->createResponse($scheduledTask);
             } else {
                 $runner = $task->getController()->getTaskRunner($task, $input);

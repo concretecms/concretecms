@@ -48,6 +48,12 @@ class ScheduledTask implements \JsonSerializable
      */
     protected $cronExpression;
 
+    /**
+     * Optional free-form notes to help identify this scheduled task.
+     *
+     * @ORM\Column(type="text", nullable=true)
+     */
+    protected $notes;
 
     /**
      * @return mixed
@@ -137,6 +143,22 @@ class ScheduledTask implements \JsonSerializable
         $this->dateScheduled = $dateScheduled;
     }
 
+    public function getNotes(): ?string
+    {
+        return $this->notes;
+    }
+
+    public function setNotes(?string $notes): void
+    {
+        if ($notes !== null) {
+            $notes = trim($notes);
+            if ($notes === '') {
+                $notes = null;
+            }
+        }
+        $this->notes = $notes;
+    }
+
     public function getCronExpressionObject(): CronExpression
     {
         return new CronExpression($this->getCronExpression());
@@ -159,6 +181,7 @@ class ScheduledTask implements \JsonSerializable
             'cronExpression' => $this->getCronExpression(),
             'nextRunDate' => $date->formatPrettyDateTime($cronExpression->getNextRunDate()),
             'user' => $this->getUser(),
+            'notes' => $this->getNotes(),
         ];
         return $data;
     }

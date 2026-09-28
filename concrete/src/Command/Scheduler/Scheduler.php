@@ -42,14 +42,13 @@ class Scheduler
         return $this->config->get('concrete.processes.scheduler.enable');
     }
 
-    public function createScheduledTask(TaskInterface $task, InputInterface $input, string $cronExpression)
+    /**
+     * @param string|null $notes optional free-form notes to help identify the scheduled task later on
+     */
+    public function createScheduledTask(TaskInterface $task, InputInterface $input, string $cronExpression, ?string $notes = null)
     {
-        // Validate cron expression
-        try {
-            $expressionObject = new CronExpression($cronExpression);
-        } catch (\Exception $e) {
-            throw new UserMessageException(t('Unable to parse supplied cron expression. Please ensure your cron expression is accurate in a standard format. You may validate your expression at https://crontab.guru'));
-        }
+        $cronExpression = trim($cronExpression);
+        $this->parseCronExpression($cronExpression);
 
         $scheduledTask = new ScheduledTask();
         $scheduledTask->setDateScheduled($this->dateService->toDateTime()->getTimestamp());
@@ -63,10 +62,40 @@ class Scheduler
         $scheduledTask->setTask($task);
         $scheduledTask->setInput($input);
         $scheduledTask->setCronExpression($cronExpression);
+        $scheduledTask->setNotes($notes);
         $this->entityManager->persist($scheduledTask);
         $this->entityManager->flush();
 
         return $scheduledTask;
+    }
+
+    /**
+     * Update the cron expression and notes of an existing scheduled task.
+     *
+     * @throws UserMessageException when the cron expression cannot be parsed
+     */
+    public function updateScheduledTask(ScheduledTask $scheduledTask, string $cronExpression, ?string $notes = null): ScheduledTask
+    {
+        $cronExpression = trim($cronExpression);
+        $this->parseCronExpression($cronExpression);
+        $scheduledTask->setCronExpression($cronExpression);
+        $scheduledTask->setNotes($notes);
+        $this->entityManager->persist($scheduledTask);
+        $this->entityManager->flush();
+
+        return $scheduledTask;
+    }
+
+    /**
+     * @throws UserMessageException when the cron expression cannot be parsed
+     */
+    protected function parseCronExpression(string $cronExpression): CronExpression
+    {
+        try {
+            return new CronExpression($cronExpression);
+        } catch (\Exception $e) {
+            throw new UserMessageException(t('Unable to parse supplied cron expression. Please ensure your cron expression is accurate in a standard format. You may validate your expression at https://crontab.guru'));
+        }
     }
 
 

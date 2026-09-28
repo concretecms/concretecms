@@ -103,6 +103,11 @@ defined('C5_EXECUTE') or die("Access Denied."); ?>
                     <div class="help-block"><?= t(
                             'Cron is a time-based scheduler in Unix-like operating systems. You can describe when this task will run using a short string. <a href="https://crontab.cronhub.io/" target="_blank">Generate a cron-tab online</a>.'
                         ) ?></div>
+                    <div class="form-group mt-3">
+                        <label class="control-label" for="scheduledTaskNotes"><?= t('Notes') ?></label>
+                        <textarea id="scheduledTaskNotes" class="form-control" rows="2" v-model="notes"></textarea>
+                        <div class="help-block"><?= t('Optional. Notes help you identify this scheduled task later on.') ?></div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -141,7 +146,8 @@ defined('C5_EXECUTE') or die("Access Denied."); ?>
                     scheduleTask: false,
                     executedProcess: null,
                     executedProcesses: [],
-                    cronExpression: null
+                    cronExpression: null,
+                    notes: ''
                 },
                 watch: {
                     'executedProcess': function (value) {
@@ -166,6 +172,7 @@ defined('C5_EXECUTE') or die("Access Denied."); ?>
                             data.push({'name': 'ccm_token', 'value': '<?=$token->generate('execute')?>'})
                             data.push({'name': 'scheduleTask', 'value': my.scheduleTask ? 1 : 0})
                             data.push({'name': 'cronExpression', 'value': my.cronExpression})
+                            data.push({'name': 'notes', 'value': my.notes})
 
                             new ConcreteAjaxRequest({
                                 url: '<?=URL::to('/ccm/system/tasks/execute')?>',
