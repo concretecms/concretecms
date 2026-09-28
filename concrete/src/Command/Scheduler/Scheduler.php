@@ -42,7 +42,10 @@ class Scheduler
         return $this->config->get('concrete.processes.scheduler.enable');
     }
 
-    public function createScheduledTask(TaskInterface $task, InputInterface $input, string $cronExpression)
+    /**
+     * @param string|null $notes optional free-form notes to help identify the scheduled task later on
+     */
+    public function createScheduledTask(TaskInterface $task, InputInterface $input, string $cronExpression, ?string $notes = null)
     {
         // Validate cron expression
         try {
@@ -63,6 +66,7 @@ class Scheduler
         $scheduledTask->setTask($task);
         $scheduledTask->setInput($input);
         $scheduledTask->setCronExpression($cronExpression);
+        $scheduledTask->setNotes($notes);
         $this->entityManager->persist($scheduledTask);
         $this->entityManager->flush();
 

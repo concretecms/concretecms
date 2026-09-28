@@ -38,4 +38,28 @@ class Schedule extends DashboardPageController
         return new JsonResponse($this->error);
     }
 
+    public function update_notes($token = null)
+    {
+        $scheduledTask = $this->entityManager->find(
+            ScheduledTask::class,
+            $this->request->request->get('scheduledTaskId')
+        );
+        if (!$this->token->validate('update_notes', $token)) {
+            $this->error->add($this->token->getErrorMessage());
+        }
+        if (!$scheduledTask) {
+            $this->error->add(t('Invalid scheduled task ID'));
+        }
+        if (!$this->error->has()) {
+            $notes = $this->request->request->get('notes');
+            $scheduledTask->setNotes(is_string($notes) ? $notes : null);
+            $this->entityManager->persist($scheduledTask);
+            $this->entityManager->flush();
+
+            return new JsonResponse($scheduledTask);
+        }
+
+        return new JsonResponse($this->error);
+    }
+
 }
