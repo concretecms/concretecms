@@ -44,7 +44,7 @@ defined('C5_EXECUTE') or die("Access Denied."); ?>
                         </div>
                         <div class="col-md-1 d-flex">
                             <div class="ml-auto">
-                                <a href="#" class="ccm-hover-icon me-2" title="<?=h(t('Edit Notes'))?>" @click.stop.prevent="editScheduledTaskNotes(scheduledTask)">
+                                <a href="#" class="ccm-hover-icon me-2" title="<?=h(t('Edit'))?>" @click.stop.prevent="editScheduledTask(scheduledTask)">
                                     <icon icon="pencil-alt"></icon>
                                 </a>
                                 <a href="#" class="ccm-hover-icon" @click.stop="deleteScheduledTask(scheduledTask)">
@@ -55,15 +55,20 @@ defined('C5_EXECUTE') or die("Access Denied."); ?>
                     </div>
                 </div>
             </transition-group>
-            <div class="modal fade" tabindex="-1" role="dialog" id="edit-scheduled-task-notes">
+            <div class="modal fade" tabindex="-1" role="dialog" id="edit-scheduled-task">
                 <div class="modal-dialog modal-dialog-centered">
                     <div class="modal-content">
-                        <form method="post" @submit.prevent="editScheduledTaskNotesSubmit">
+                        <form method="post" @submit.prevent="editScheduledTaskSubmit">
                             <div class="modal-header">
-                                <h5 class="modal-title"><?=t('Edit Notes')?></h5>
+                                <h5 class="modal-title"><?=t('Edit Scheduled Task')?></h5>
                                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                             </div>
                             <div class="modal-body">
+                                <div class="form-group">
+                                    <label class="control-label" for="edit-scheduled-task-cron"><?=t('Cron Expression')?></label>
+                                    <input type="text" id="edit-scheduled-task-cron" class="form-control" v-model="editingCronExpression" placeholder="0 8 * * *">
+                                    <div class="help-block"><?=t('Cron is a time-based scheduler. You can describe when this task will run using a short string. <a href="https://crontab.cronhub.io/" target="_blank">Generate a cron-tab online</a>.')?></div>
+                                </div>
                                 <div class="form-group">
                                     <label class="control-label" for="edit-scheduled-task-notes-input"><?=t('Notes')?></label>
                                     <textarea id="edit-scheduled-task-notes-input" class="form-control" rows="3" v-model="editingNotes"></textarea>
@@ -113,27 +118,32 @@ defined('C5_EXECUTE') or die("Access Denied."); ?>
                 data: {
                     'scheduledTasks': <?=json_encode($scheduledTasks)?>,
                     'editingScheduledTaskId': null,
+                    'editingCronExpression': '',
                     'editingNotes': ''
                 },
                 methods: {
-                    editScheduledTaskNotes(scheduledTask) {
+                    editScheduledTask(scheduledTask) {
                         this.editingScheduledTaskId = scheduledTask.id
+                        this.editingCronExpression = scheduledTask.cronExpression
                         this.editingNotes = scheduledTask.notes || ''
-                        $('#edit-scheduled-task-notes').modal('show')
+                        $('#edit-scheduled-task').modal('show')
                     },
-                    editScheduledTaskNotesSubmit() {
+                    editScheduledTaskSubmit() {
                         var my = this
                         var scheduledTaskId = my.editingScheduledTaskId
                         new ConcreteAjaxRequest({
-                            url: <?=json_encode($view->action('update_notes', $token->generate('update_notes')))?>,
+                            url: <?=json_encode($view->action('update', $token->generate('update')))?>,
                             data: {
                                 scheduledTaskId: scheduledTaskId,
+                                cronExpression: my.editingCronExpression,
                                 notes: my.editingNotes
                             },
                             success: function (r) {
-                                $('#edit-scheduled-task-notes').modal('hide')
+                                $('#edit-scheduled-task').modal('hide')
                                 my.scheduledTasks.forEach(function(scheduledTask) {
                                     if (scheduledTask.id == scheduledTaskId) {
+                                        scheduledTask.cronExpression = r.cronExpression
+                                        scheduledTask.nextRunDate = r.nextRunDate
                                         scheduledTask.notes = r.notes
                                     }
                                 })
