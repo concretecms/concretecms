@@ -1,0 +1,69 @@
+// Thumbnail Gallery Dialog Styles
+// Used in /concrete/views/dialogs/file/thumbnails.php
+
+// Column spacing for thumbnail grid
+.ccm-image-thumbnail-column {
+  margin-bottom: $spacer * 1.25; 
+}
+
+.ccm-image-thumbnail-card {
+  display: flex;
+  flex-direction: column;
+  padding: $spacer;
+  border: $border-width solid $border-color;
+  border-radius: $border-radius;
+}
+
+.ccm-image-thumbnail-info {
+  margin-bottom: $spacer;
+}
+
+.ccm-image-thumbnail-display-name {
+  min-height: 40px;
+
+  h4 {
+    margin-top: 0;
+  }
+}
+
+.ccm-image-thumbnail-dimensions {
+  display: block;
+  margin-bottom: $spacer * 0.625;
+  color: $text-muted;
+  font-size: $font-size-sm;
+}
+
+// Legacy divider support (if needed)
+.ccm-image-thumbnail-divider {
+  margin: ($spacer * 0.9375) (-$spacer);
+}
+
+.ccm-file-manager-image-thumbnail {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: $spacer;
+  margin-bottom: 0;
+  background-color: $gray-100;
+  font-size: $font-size-lg;
+  font-weight: $font-weight-light;
+  color: $text-muted;
+}
+
+.ccm-file-manager-image-thumbnail-image {
+  max-width: 100%;
+}
+
+// Responsive adjustments
+@media (max-width: map-get($grid-breakpoints, "md") - 1px) {
+  .ccm-image-thumbnail-column {
+    margin-bottom: $spacer;
+  }
+}
+
+// Dark mode support
+@include color-mode(dark) {
+  .ccm-file-manager-image-thumbnail {
+    background-color: $gray-800;
+  }
+}
