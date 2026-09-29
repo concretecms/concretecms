@@ -20,10 +20,10 @@ class UserInfo extends Facade
     /**
      * @deprecated
      */
-    public static function addSuperUser($uPasswordEncrypted, $uEmail)
+    public static function addSuperUser($uPasswordEncrypted, $uEmail, $uName = USER_SUPER)
     {
         $cms = static::getFacadeApplication();
-        return $cms->make('user/registration')->createSuperUser($uPasswordEncrypted, $uEmail);
+        return $cms->make('user/registration')->createSuperUser($uPasswordEncrypted, $uEmail, $uName);
     }
 
     /**

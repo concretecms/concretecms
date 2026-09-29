@@ -536,7 +536,8 @@ class StartingPointPackage extends Package
 
         $superuser = UserInfo::addSuperUser(
             $this->installerOptions->getUserPasswordHash(),
-            $this->installerOptions->getUserEmail()
+            $this->installerOptions->getUserEmail(),
+            $this->installerOptions->getUserName()
         );
         $u = User::getByUserID(USER_SUPER_ID, true, false);
 
@@ -618,14 +619,15 @@ class StartingPointPackage extends Package
             @chmod(DIR_CONFIG_SITE . '/database.php', $config->get('concrete.filesystem.permissions.file'));
         }
 
-        // In attach mode we want to be able to update the email and the password hash. It's already been set
+        // In attach mode we want to be able to update the email, username and password hash. It's already been set
         // in the create_users routine but let's support attach as well.
         $em = app(EntityManager::class);
         $adminUser = $em->getRepository(\Concrete\Core\Entity\User\User::class)
-            ->findOneByUName(USER_SUPER);
+            ->find(USER_SUPER_ID);
         if ($adminUser) {
             $adminUser->setUserPassword($this->installerOptions->getUserPasswordHash());
             $adminUser->setUserEmail($this->installerOptions->getUserEmail());
+            $adminUser->setUserName($this->installerOptions->getUserName());
             $em->persist($adminUser);
             $em->flush();
         }
