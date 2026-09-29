@@ -29,6 +29,30 @@ abstract class AdvancedSearch extends BackendInterfaceController
 
     abstract public function getSavedSearchBaseURL(SavedSearch $search);
 
+    /**
+     * Get the URL of the basic search (used by the Concrete\Controller\Search\Standard controllers).
+     *
+     * @throws \RuntimeException if the dialog does not support the basic search
+     *
+     * @return string
+     */
+    public function getBasicSearchBaseURL()
+    {
+        throw new \RuntimeException(t('%s does not support the basic search.', static::class));
+    }
+
+    /**
+     * Get the URL of the current search (used by the Concrete\Controller\Search\Standard controllers and by the submit() action).
+     *
+     * @throws \RuntimeException if the dialog does not support the current search
+     *
+     * @return string
+     */
+    public function getCurrentSearchBaseURL()
+    {
+        throw new \RuntimeException(t('%s does not support the current search.', static::class));
+    }
+
     public function getAddFieldAction()
     {
         return $this->action('add_field');

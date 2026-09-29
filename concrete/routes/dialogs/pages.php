@@ -64,7 +64,6 @@ $router->all('/drag_request/submit', 'DragRequest::submit');
 $router->all('/drag_request/copy_all', 'DragRequest::doCopyAll');
 $router->all('/advanced_search', 'AdvancedSearch::view');
 $router->all('/advanced_search/add_field', 'AdvancedSearch::addField');
-$router->all('/advanced_search/submit', 'AdvancedSearch::submit');
 $router->all('/advanced_search/save_preset', 'AdvancedSearch::savePreset');
 
 $router->all('/advanced_search/preset/edit', 'Preset\Edit::view');

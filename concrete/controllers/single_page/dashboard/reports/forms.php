@@ -43,7 +43,7 @@ class Forms extends DashboardSitePageController
             $this->setBreadcrumb($factory->getBreadcrumb($this->getPageObject(), $parent));
         } else {
             if (!isset($this->headerMenu)) {
-                $this->headerMenu = $this->app->make(ElementManager::class)->get('dashboard/reports/forms/header', ['nodeId' => null, 'entity' => null]);
+                $this->headerMenu = $this->app->make(ElementManager::class)->get('dashboard/reports/forms/header');
             }
             $this->set('headerMenu', $this->headerMenu);
         }

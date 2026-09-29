@@ -14,7 +14,6 @@ defined('C5_EXECUTE') or die('Access Denied.');
 
 $router->all('/advanced_search', 'AdvancedSearch::view');
 $router->all('/advanced_search/add_field', 'AdvancedSearch::addField');
-$router->all('/advanced_search/submit', 'AdvancedSearch::submit');
 $router->all('/advanced_search/save_preset', 'AdvancedSearch::savePreset');
 $router->all('/bulk/delete', 'Bulk\Delete::view');
 $router->all('/bulk/delete/submit', 'Bulk\Delete::submit');
