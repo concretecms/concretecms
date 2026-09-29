@@ -58,6 +58,13 @@ class Page
     private $date_last_updated;
 
     /**
+     * @OA\Property(type="date", title="Date page made public")
+     *
+     * @var string
+     */
+    private $date_public;
+
+    /**
      * @OA\Property(type="date", title="Locale of the page", description="Locale of the page - defaults to site if unset.")
      *
      * @var string
