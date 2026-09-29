@@ -97,10 +97,8 @@ if ($showMenu) {
                         $containerBlockContainerInstance = $containerBlockController->getContainerInstanceObject();
                         if ($containerBlockContainerInstance) {
                             $containerBlockContainer = $containerBlockContainerInstance->getContainer();
-                            if ($containerBlockContainer) {
-                                print $containerBlockContainer->getContainerIconImage();
-                                print '<span>' . $containerBlockContainer->getContainerDisplayName() . '</span>';
-                            }
+                            print $containerBlockContainer->getContainerIconImage();
+                            print '<span>' . $containerBlockContainer->getContainerDisplayName() . '</span>';
                         }
                     } ?>
                 </li>
