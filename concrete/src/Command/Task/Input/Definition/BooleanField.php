@@ -11,9 +11,15 @@ defined('C5_EXECUTE') or die("Access Denied.");
 class BooleanField extends Field
 {
 
-    public function __construct(string $key, string $label, string $description)
+    /**
+     * @var bool
+     */
+    protected $displayAsCheckbox;
+
+    public function __construct(string $key, string $label, string $description, bool $displayAsCheckbox = false)
     {
         parent::__construct($key, $label, $description, false);
+        $this->displayAsCheckbox = $displayAsCheckbox;
     }
 
     public function addToCommand(TaskCommand $command)
@@ -26,6 +32,9 @@ class BooleanField extends Field
     {
         $data = parent::jsonSerialize();
         $data['type'] = FieldInterface::FIELD_TYPE_BOOLEAN;
+        if ($this->displayAsCheckbox) {
+            $data['displayAsCheckbox'] = true;
+        }
         return $data;
     }
 
