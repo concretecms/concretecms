@@ -51,7 +51,9 @@
 /.* export-ignore
 /build/ export-ignore
 /tests/ export-ignore
+/AGENTS.md export-ignore
 /CHANGELOG.md export-ignore
+/CLAUDE.md export-ignore
 /CONTRIBUTING.md export-ignore
 /INSTALL.md export-ignore
 /phpunit.xml export-ignore
