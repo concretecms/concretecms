@@ -174,7 +174,7 @@ class ImportException extends UserMessageException
                 return t('Missing a temporary folder.');
             case static::E_PHP_CANT_WRITE:
                 return t('Failed to write file to disk.');
-            case static::E_PHP_CANT_WRITE:
+            case static::E_PHP_EXTENSION:
                 return t('A PHP extension stopped the file upload.');
             case static::E_FILE_MISSING_ROOT_FOLDER:
                 return t('The root folder does not exist.');
