@@ -231,6 +231,15 @@ class EventService implements ApplicationAwareInterface, LoggerAwareInterface
         $version->setAuthor($u->getUserInfoObject()->getEntityObject());
         $version->setIsApproved(false);
         $version->setName($version->getName() . ' ' . t('Copy'));
+        // The page of the original event must not be shared with the copy: the copy would link to it, and deleting the
+        // copy would delete it. If the calendar creates event pages, the copy gets its own page when it's approved.
+        $version->setPageID(0);
+        $version->setRelatedPageRelationType(null);
+        if ($calendar->enableMoreDetails() == 'A') {
+            // Associate the copy with the page set at the calendar level, as the event edit dialog does
+            $version->setPageID($calendar->getEventPageAssociatedID());
+            $version->setRelatedPageRelationType('A');
+        }
         $new->getVersions()->add($version);
         $version->setEvent($new);
 
