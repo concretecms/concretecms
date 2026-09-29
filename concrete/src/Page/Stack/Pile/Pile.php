@@ -152,22 +152,7 @@ class Pile extends ConcreteObject
      */
     public function inPile($obj)
     {
-        $db = Loader::db();
-        $v = array();
-        $class = strtoupper(get_class($obj));
-        switch ($class) {
-            case "COLLECTION":
-                $v = array("COLLECTION", $obj->getCollectionID());
-                break;
-            case "BLOCK":
-                $v = array("BLOCK", $obj->getBlockID());
-                break;
-        }
-        $v[] = $this->getPileID();
-        $q = "select pcID from PileContents where itemType = ? and itemID = ? and pID = ?";
-        $pcID = $db->getOne($q, $v);
-
-        return $pcID > 0;
+        return $this->getPileContentID($obj) !== null;
     }
 
     /**
@@ -374,23 +359,21 @@ class Pile extends ConcreteObject
     }
 
     /**
-     * @param Page $obj
+     * @param Collection|Block|PileContent $obj
      *
-     * @return mixed
+     * @return int|null
      */
     public function getPileContentID(&$obj)
     {
-        $db = Loader::db();
-        switch (strtolower(get_class($obj))) {
-            case "page":
-                $v = array($this->pID, $obj->getCollectionID(), "COLLECTION");
-                $q = "select pcID from PileContents where pID = ? and itemID = ? and itemType = ?";
-                $pcID = $db->getOne($q, $v);
-                if ($pcID > 0) {
-                    return $pcID;
-                }
-                break;
+        $item = $this->getItemID($obj);
+        if ($item === null) {
+            return null;
         }
+        $db = Loader::db();
+        $q = "select pcID from PileContents where pID = ? and itemType = ? and itemID = ?";
+        $pcID = $db->getOne($q, array($this->pID, $item[0], $item[1]));
+
+        return $pcID > 0 ? (int) $pcID : null;
     }
 
     /**
@@ -399,28 +382,43 @@ class Pile extends ConcreteObject
      */
     public function remove(&$obj, $quantity = 1)
     {
-        $db = Loader::db();
-        switch (strtolower(get_class($obj))) {
-            case "page":
-                $v = array($this->pID, $obj->getCollectionID(), "COLLECTION");
-                break;
-            case "block":
-                $v = array($this->pID, $obj->getBlockID(), "BLOCK");
-                break;
-            case "pilecontent":
-                $v = array($this->pID, $obj->getItemID(), $obj->getItemType());
-                break;
+        $item = $this->getItemID($obj);
+        if ($item === null) {
+            return;
         }
-
-        $q = "select quantity from PileContents where pID = ? and itemID = ? and itemType = ?";
+        $db = Loader::db();
+        $v = array($this->pID, $item[0], $item[1]);
+        $q = "select quantity from PileContents where pID = ? and itemType = ? and itemID = ?";
         $exQuantity = $db->getOne($q, $v);
         if ($exQuantity > $quantity) {
             $db->query(
-               "update PileContent set quantity = quantity - {$quantity} where pID = ? and itemID = ? and itemType = ?",
+               "update PileContents set quantity = quantity - {$quantity} where pID = ? and itemType = ? and itemID = ?",
                $v);
         } else {
-            $db->query("delete from PileContents where pID = ? and itemID = ? and itemType = ?", $v);
+            $db->query("delete from PileContents where pID = ? and itemType = ? and itemID = ?", $v);
         }
+    }
+
+    /**
+     * Get the type and the ID of an item of the pile.
+     *
+     * @param Collection|Block|PileContent $obj
+     *
+     * @return array{0: string, 1: int}|null NULL if $obj is not a supported item
+     */
+    private function getItemID($obj): ?array
+    {
+        if ($obj instanceof Collection) {
+            return ['COLLECTION', (int) $obj->getCollectionID()];
+        }
+        if ($obj instanceof Block) {
+            return ['BLOCK', (int) $obj->getBlockID()];
+        }
+        if ($obj instanceof PileContent) {
+            return [(string) $obj->getItemType(), (int) $obj->getItemID()];
+        }
+
+        return null;
     }
 
     /**
