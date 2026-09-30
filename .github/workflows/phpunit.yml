@@ -106,6 +106,8 @@ jobs:
           echo "CCM_TEST_SKIP_CHECKCOMPOSERPLATFORM=1" >>"$GITHUB_ENV"
           composer config --unset platform.php
           composer update --no-interaction --no-progress
+          # Run twice for mediawiki merge (its failures don't stop the first run)
+          composer update --no-interaction --no-progress
 
       - name: "Install locked dependencies"
         if: ${{ matrix.dependencies == 'locked' }}
