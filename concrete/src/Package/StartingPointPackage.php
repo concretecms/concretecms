@@ -453,8 +453,7 @@ class StartingPointPackage extends Package
             // is going to return a empty array. To overcome this issue a new EntityManager is create with the
             // only purpose to be used during the installation.
             $config = Setup::createConfiguration(true, \Config::get('database.proxy_classes'));
-            \Doctrine\Common\Annotations\AnnotationReader::addGlobalIgnoredName('subpackages');
-            \Doctrine\Common\Annotations\AnnotationReader::addGlobalIgnoredName('package');
+            \Concrete\Core\Database\EntityManagerConfigFactory::registerGlobalIgnoredPHPDocAnnotations();
             // Use default AnnotationReader
             $driverImpl = $config->newDefaultAnnotationDriver(
                 DIR_BASE_CORE . '/' . DIRNAME_CLASSES . '/' . DIRNAME_ENTITIES,

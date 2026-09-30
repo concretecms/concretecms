@@ -120,60 +120,77 @@ class EntityManagerConfigFactory implements ApplicationAwareInterface, EntityMan
     }
 
     /**
-     * Register globally ignored annotations
+     * Register globally ignored annotations.
      */
     protected function registerGlobalIgnoredAnnotations()
     {
-        // There is a bug in the Doctrine annotation DocParser class. 
-        // If there's a class named the same as an annotation, an exeption will be raised. 
-        // In the case of Concrete5 this is the \@package annotaton. Even though 
-        // the addGlobalIgnoredName is set the exception is still thrown.
-        // http://stackoverflow.com/questions/21609571/swagger-php-and-doctrine-annotation-issue
-        // Solution 1: Add this fix to \Doctrine\Common\Annotations\DocParser and customize other Classes
-        // https://github.com/bfanger/annotations/commit/1dfb5073061d3fe856c3b138286aa4c75120fcd3 
-        // Solution 2: Comment all [at]package annotation found in concrete/src with a backslash. Example \@package
-        // The annotations added to the global ignored namespace are still valid for the simple annotation reader
-        \Doctrine\Common\Annotations\AnnotationReader::addGlobalIgnoredName('subpackages');
-        \Doctrine\Common\Annotations\AnnotationReader::addGlobalIgnoredName('package');
+        static::registerGlobalIgnoredPHPDocAnnotations();
 
-        // Default Doctrine annotations
-        \Doctrine\Common\Annotations\AnnotationReader::addGlobalIgnoredName('Column');
-        \Doctrine\Common\Annotations\AnnotationReader::addGlobalIgnoredName('ColumnResult');
-        \Doctrine\Common\Annotations\AnnotationReader::addGlobalIgnoredName('Cache');
-        \Doctrine\Common\Annotations\AnnotationReader::addGlobalIgnoredName('ChangeTrackingPolicy');
-        \Doctrine\Common\Annotations\AnnotationReader::addGlobalIgnoredName('DiscriminatorColumn');
-        \Doctrine\Common\Annotations\AnnotationReader::addGlobalIgnoredName('DiscriminatorMap');
-        \Doctrine\Common\Annotations\AnnotationReader::addGlobalIgnoredName('Entity');
-        \Doctrine\Common\Annotations\AnnotationReader::addGlobalIgnoredName('EntityResult');
-        \Doctrine\Common\Annotations\AnnotationReader::addGlobalIgnoredName('FieldResult');
-        \Doctrine\Common\Annotations\AnnotationReader::addGlobalIgnoredName('GeneratedValue');
-        \Doctrine\Common\Annotations\AnnotationReader::addGlobalIgnoredName('HasLifecycleCallbacks');
-        \Doctrine\Common\Annotations\AnnotationReader::addGlobalIgnoredName('Id');
-        \Doctrine\Common\Annotations\AnnotationReader::addGlobalIgnoredName('InheritanceType');
-        \Doctrine\Common\Annotations\AnnotationReader::addGlobalIgnoredName('JoinColumn');
-        \Doctrine\Common\Annotations\AnnotationReader::addGlobalIgnoredName('JoinColumns');
-        \Doctrine\Common\Annotations\AnnotationReader::addGlobalIgnoredName('JoinTable');
-        \Doctrine\Common\Annotations\AnnotationReader::addGlobalIgnoredName('ManyToOne');
-        \Doctrine\Common\Annotations\AnnotationReader::addGlobalIgnoredName('ManyToMany');
-        \Doctrine\Common\Annotations\AnnotationReader::addGlobalIgnoredName('MappedSuperclass');
-        \Doctrine\Common\Annotations\AnnotationReader::addGlobalIgnoredName('NamedNativeQuery');
-        \Doctrine\Common\Annotations\AnnotationReader::addGlobalIgnoredName('OneToOne');
-        \Doctrine\Common\Annotations\AnnotationReader::addGlobalIgnoredName('OneToMany');
-        \Doctrine\Common\Annotations\AnnotationReader::addGlobalIgnoredName('OrderBy');
-        \Doctrine\Common\Annotations\AnnotationReader::addGlobalIgnoredName('PostLoad');
-        \Doctrine\Common\Annotations\AnnotationReader::addGlobalIgnoredName('PostPersist');
-        \Doctrine\Common\Annotations\AnnotationReader::addGlobalIgnoredName('PostRemove');
-        \Doctrine\Common\Annotations\AnnotationReader::addGlobalIgnoredName('PostUpdate');
-        \Doctrine\Common\Annotations\AnnotationReader::addGlobalIgnoredName('PrePersist');
-        \Doctrine\Common\Annotations\AnnotationReader::addGlobalIgnoredName('PreRemove');
-        \Doctrine\Common\Annotations\AnnotationReader::addGlobalIgnoredName('PreUpdate');
-        \Doctrine\Common\Annotations\AnnotationReader::addGlobalIgnoredName('SequenceGenerator');
-        \Doctrine\Common\Annotations\AnnotationReader::addGlobalIgnoredName('SqlResultSetMapping');
-        \Doctrine\Common\Annotations\AnnotationReader::addGlobalIgnoredName('Table');
-        \Doctrine\Common\Annotations\AnnotationReader::addGlobalIgnoredName('UniqueConstraint');
-        \Doctrine\Common\Annotations\AnnotationReader::addGlobalIgnoredName('Version');
+        // Names of the Doctrine ORM annotations written without a namespace (for example "Column" instead of
+        // "ORM\Column"), which is the style of the legacy entities read by the SimpleAnnotationReader.
+        // When the standard AnnotationReader meets a class written in that style, those names are not imported by any
+        // "use" statement: without ignoring them, the reader would throw a "never imported" AnnotationException
+        // instead of simply considering that class as not mapped.
+        // This doesn't affect the SimpleAnnotationReader: it resolves the names by using its own list of namespaces,
+        // without checking the ignored names.
+        foreach ([
+            'Cache',
+            'ChangeTrackingPolicy',
+            'Column',
+            'ColumnResult',
+            'DiscriminatorColumn',
+            'DiscriminatorMap',
+            'Embeddable',
+            'Embedded',
+            'Entity',
+            'EntityResult',
+            'FieldResult',
+            'GeneratedValue',
+            'HasLifecycleCallbacks',
+            'Id',
+            'InheritanceType',
+            'JoinColumn',
+            'JoinColumns',
+            'JoinTable',
+            'ManyToMany',
+            'ManyToOne',
+            'MappedSuperclass',
+            'NamedNativeQuery',
+            'OneToMany',
+            'OneToOne',
+            'OrderBy',
+            'PostLoad',
+            'PostPersist',
+            'PostRemove',
+            'PostUpdate',
+            'PrePersist',
+            'PreRemove',
+            'PreUpdate',
+            'SequenceGenerator',
+            'SqlResultSetMapping',
+            'Table',
+            'UniqueConstraint',
+            'Version',
+        ] as $name) {
+            \Doctrine\Common\Annotations\AnnotationReader::addGlobalIgnoredName($name);
+        }
+    }
 
-        \Doctrine\Common\Annotations\AnnotationReader::addGlobalIgnoredName('Embeddable');
-        \Doctrine\Common\Annotations\AnnotationReader::addGlobalIgnoredName('Embedded');
+    /**
+     * Make the Doctrine annotation reader ignore the PHPDoc annotations it does not know.
+     */
+    public static function registerGlobalIgnoredPHPDocAnnotations()
+    {
+        // Doctrine already ignores the most common PHPDoc annotations (included "package"): here we add the other
+        // ones that may be found in the classes read by the annotation readers.
+        // Please remark that old versions of the DocParser class (before doctrine/annotations 1.2) didn't check the
+        // ignored names when a class with the same name of the annotation exists (that's the case of "package"):
+        // that's why some PHPDoc annotations in the core are still escaped with a backslash.
+        foreach ([
+            'package',
+            'subpackages',
+        ] as $name) {
+            \Doctrine\Common\Annotations\AnnotationReader::addGlobalIgnoredName($name);
+        }
     }
 }
