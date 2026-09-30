@@ -136,7 +136,9 @@ class Task implements \JsonSerializable, TaskInterface
     {
         $app = Facade::getFacadeApplication();
         $manager = $app->make(Manager::class);
-        return $manager->driver($this->getHandle());
+        $pkgHandle = (string) $this->getPackageHandle();
+
+        return $manager->driver($pkgHandle === '' ? $this->getHandle() : "{$pkgHandle}:{$this->getHandle()}");
     }
 
     public function formatDateLastStarted($format)
