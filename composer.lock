@@ -274,16 +274,16 @@
         },
         {
             "name": "concretecms/dependency-patches",
-            "version": "1.8.1",
+            "version": "1.9.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/concretecms/dependency-patches.git",
-                "reference": "dc000eab49f6b15b950ecb96fca2b9328a3f0f27"
+                "reference": "d55ad28395e63fd6bc17a18b48fa1539edd5afce"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/concretecms/dependency-patches/zipball/dc000eab49f6b15b950ecb96fca2b9328a3f0f27",
-                "reference": "dc000eab49f6b15b950ecb96fca2b9328a3f0f27",
+                "url": "https://api.github.com/repos/concretecms/dependency-patches/zipball/d55ad28395e63fd6bc17a18b48fa1539edd5afce",
+                "reference": "d55ad28395e63fd6bc17a18b48fa1539edd5afce",
                 "shasum": ""
             },
             "require": {
@@ -293,7 +293,8 @@
             "extra": {
                 "patches": {
                     "league/url:3.3.5": {
-                        "Add PHP 8.1 compatibility": "league/url/php8.1-compatibility.patch"
+                        "Add PHP 8.1 compatibility": "league/url/php8.1-compatibility.patch",
+                        "Fix the PHPDoc of the setters of Url and UrlImmutable": "league/url/setters-phpdoc.patch"
                     },
                     "twig/twig:3.11.3": {
                         "Escape profiler HTML output names (CVE-2026-47730)": "twig/twig/cve-2026-47730-profiler-html-escaping.patch",
@@ -329,6 +330,9 @@
                     },
                     "phpunit/phpunit:4.8.36": {
                         "Avoid each() in Getopt": "phpunit/phpunit/Getopt-each.patch"
+                    },
+                    "league/flysystem:1.1.10": {
+                        "Report malformed UTF-8 as a corrupted path (CVE-2026-102601)": "league/flysystem/cve-2026-102601-malformed-utf8-path.patch"
                     },
                     "wikimedia/less.php:1.8.2": {
                         "Add PHP 8.2 compatibility": "wikimedia/less.php/fix-php-8.2-compatibility.patch"
@@ -366,7 +370,8 @@
                     },
                     "sunra/php-simple-html-dom-parser:1.5.2": {
                         "Add PHP 8.1 compatibility": "sunra/php-simple-html-dom-parser/php8.1-compatibility.patch",
-                        "Fix minus in regular expressions": "sunra/php-simple-html-dom-parser/minus-in-regular-expressions.patch"
+                        "Fix minus in regular expressions": "sunra/php-simple-html-dom-parser/minus-in-regular-expressions.patch",
+                        "Fix the return types of HtmlDomParser::file_get_html() and str_get_html()": "sunra/php-simple-html-dom-parser/return-types.patch"
                     }
                 }
             },
@@ -386,9 +391,9 @@
             "homepage": "https://github.com/concretecms/dependency-patches",
             "support": {
                 "issues": "https://github.com/concretecms/dependency-patches/issues",
-                "source": "https://github.com/concretecms/dependency-patches/tree/1.8.1"
+                "source": "https://github.com/concretecms/dependency-patches/tree/1.9.0"
             },
-            "time": "2026-08-21T07:53:10+00:00"
+            "time": "2026-09-30T08:30:21+00:00"
         },
         {
             "name": "concretecms/doctrine-xml",
