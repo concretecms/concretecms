@@ -41,6 +41,7 @@ $app->instance('app', $app);
 // Bind fully application qualified class names
 $app->instance('Concrete\Core\Application\Application', $app);
 $app->instance('Illuminate\Container\Container', $app);
+$app->instance('Illuminate\Contracts\Container\Container', $app);
 $app->instance(ClassAutoloader::class, ClassAutoloader::getInstance());
 
 // Boot the runtime
