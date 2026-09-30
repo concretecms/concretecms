@@ -25,10 +25,6 @@ jobs:
           REF_TYPE: ${{ github.event_name == 'delete' && github.event.ref_type || github.ref_type }}
           REF_NAME: ${{ github.event_name == 'delete' && github.event.ref || github.ref_name }}
         run: |
-          if [ -z "$GH_TOKEN" ]; then
-            echo '::error::The SPLITTER_TOKEN secret is not set'
-            exit 1
-          fi
           # Check if the splitter processes the branch or the tag.
           # The branches and the tags to be processed are defined in the workflow of the splitter:
           # if we can't read them, we start the split anyway.
@@ -81,8 +77,12 @@ jobs:
             fi
             return 0
           }
-          if isSplitRequired; then
-            gh workflow run split.yml --repo "$SPLITTER_REPOSITORY"
-          else
+          if ! isSplitRequired; then
             echo "The splitter doesn't process the $REF_TYPE $REF_NAME: the split is not required"
+          elif [ -z "$GH_TOKEN" ]; then
+            # The secrets aren't available in the runs started by Dependabot
+            echo '::error::The SPLITTER_TOKEN secret is not set'
+            exit 1
+          else
+            gh workflow run split.yml --repo "$SPLITTER_REPOSITORY"
           fi
