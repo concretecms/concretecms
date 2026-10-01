@@ -115,7 +115,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
 
     <fieldset>
         <legend><?=t('CSS and JavaScript Post-Processing')?></legend>
-        <div class="help-block"><?=t('Minifies and combines assets while loading pages to reduce web server requests and asset size. May slow initial page request time. Most sites can safely leave this disabled.')?></div>
+        <div class="help-block"><?=t('Combines assets while loading pages to reduce web server requests. May slow initial page request time. Most sites can safely leave this disabled.')?></div>
         <div class="form-group">
             <div class="form-check">
                 <?= $form->radio('ENABLE_ASSET_CACHE', '0', $enableAssetCache ? '1' : '0', ['id' => 'ENABLE_ASSET_CACHE-0']) ?>
