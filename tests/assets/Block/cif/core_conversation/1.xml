@@ -4,7 +4,6 @@
       <addMessageLabel>Add Message!</addMessageLabel>
       <attachmentOverridesEnabled>1</attachmentOverridesEnabled>
       <attachmentsEnabled>1</attachmentsEnabled>
-      <cnvID>1</cnvID>
       <customDateFormat>Y</customDateFormat>
       <dateFormat>custom</dateFormat>
       <displayMode>threaded</displayMode>
