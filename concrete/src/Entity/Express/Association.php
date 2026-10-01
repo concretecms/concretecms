@@ -3,7 +3,9 @@ namespace Concrete\Core\Entity\Express;
 
 use Concrete\Core\Export\ExportableInterface;
 use Concrete\Core\Express\Form\Context\ContextInterface;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Mapping as ORM;
+use Gettext\Translations;
 use Concrete\Core\Export\Item\Express\Association as AssociationExporter;
 
 /**
@@ -197,7 +199,7 @@ abstract class Association implements ExportableInterface
     }
 
     /**
-     * Get the name of this association if set, the name of the target entity otherwise.
+     * Get the localized name of this association if set, the name of the target entity otherwise.
      *
      * @param string $format 'html' or 'text'
      */
@@ -205,6 +207,8 @@ abstract class Association implements ExportableInterface
     {
         $value = $this->getName();
         if ($value !== '') {
+            $value = tc('AssociationName', $value);
+
             return $format === 'html' ? h($value) : $value;
         }
 
@@ -227,6 +231,21 @@ abstract class Association implements ExportableInterface
         } else {
             return uncamelcase($this->getSourceEntity()->getName());
         }
+    }
+
+    /**
+     * Export the names of all the associations, so that they can be translated.
+     */
+    public static function exportTranslations(): Translations
+    {
+        $translations = new Translations();
+        $em = app(EntityManagerInterface::class);
+        $query = $em->createQuery('SELECT a.name FROM ' . self::class . " a WHERE a.name <> ''");
+        foreach (array_unique($query->getSingleColumnResult()) as $name) {
+            $translations->insert('AssociationName', $name);
+        }
+
+        return $translations;
     }
 
     abstract public function getFormatter();
