@@ -23,6 +23,13 @@ abstract class Association implements ExportableInterface
     protected $id;
 
     /**
+     * @ORM\Column(type="string", length=255, options={"default": ""})
+     *
+     * @var string
+     */
+    protected $name = '';
+
+    /**
      * @ORM\ManyToOne(targetEntity="Entity", inversedBy="associations")
      **/
     protected $source_entity;
@@ -65,7 +72,7 @@ abstract class Association implements ExportableInterface
     protected $inversed_by_property_name;
 
     /**
-     * @return mixed
+     * @return string|null NULL if not yet persisted
      */
     public function getId()
     {
@@ -73,7 +80,7 @@ abstract class Association implements ExportableInterface
     }
 
     /**
-     * @param mixed $id
+     * @param string $id
      */
     public function setId($id)
     {
@@ -81,7 +88,20 @@ abstract class Association implements ExportableInterface
     }
 
     /**
-     * @return mixed
+     * Get the custom name of this association (empty string if not set).
+     */
+    public function getName(): string
+    {
+        return $this->name;
+    }
+
+    public function setName(string $name): void
+    {
+        $this->name = $name;
+    }
+
+    /**
+     * @return bool
      */
     public function isOwningAssociation()
     {
@@ -89,7 +109,7 @@ abstract class Association implements ExportableInterface
     }
 
     /**
-     * @param mixed $is_owning_association
+     * @param bool $is_owning_association
      */
     public function setIsOwningAssociation($is_owning_association)
     {
@@ -97,7 +117,7 @@ abstract class Association implements ExportableInterface
     }
 
     /**
-     * @return mixed
+     * @return bool
      */
     public function isOwnedByAssociation()
     {
@@ -105,7 +125,7 @@ abstract class Association implements ExportableInterface
     }
 
     /**
-     * @param mixed $is_owned_by_association
+     * @param bool $is_owned_by_association
      */
     public function setIsOwnedByAssociation($is_owned_by_association)
     {
@@ -113,7 +133,7 @@ abstract class Association implements ExportableInterface
     }
 
     /**
-     * @return mixed
+     * @return string|null
      */
     public function getTargetPropertyName()
     {
@@ -121,7 +141,7 @@ abstract class Association implements ExportableInterface
     }
 
     /**
-     * @param mixed $name
+     * @param string|null $target_property_name
      */
     public function setTargetPropertyName($target_property_name)
     {
@@ -129,7 +149,7 @@ abstract class Association implements ExportableInterface
     }
 
     /**
-     * @return mixed
+     * @return string|null
      */
     public function getInversedByPropertyName()
     {
@@ -137,7 +157,7 @@ abstract class Association implements ExportableInterface
     }
 
     /**
-     * @param mixed $inversed_by_property_name
+     * @param string|null $inversed_by_property_name
      */
     public function setInversedByPropertyName($inversed_by_property_name)
     {
@@ -145,7 +165,7 @@ abstract class Association implements ExportableInterface
     }
 
     /**
-     * @return mixed
+     * @return \Concrete\Core\Entity\Express\Entity|null NULL if not set yet
      */
     public function getSourceEntity()
     {
@@ -153,7 +173,7 @@ abstract class Association implements ExportableInterface
     }
 
     /**
-     * @param mixed $source_entity
+     * @param \Concrete\Core\Entity\Express\Entity $source_entity
      */
     public function setSourceEntity($source_entity)
     {
@@ -161,7 +181,7 @@ abstract class Association implements ExportableInterface
     }
 
     /**
-     * @return mixed
+     * @return \Concrete\Core\Entity\Express\Entity|null NULL if not set yet
      */
     public function getTargetEntity()
     {
@@ -169,11 +189,26 @@ abstract class Association implements ExportableInterface
     }
 
     /**
-     * @param mixed $target_entity
+     * @param \Concrete\Core\Entity\Express\Entity $target_entity
      */
     public function setTargetEntity($target_entity)
     {
         $this->target_entity = $target_entity;
+    }
+
+    /**
+     * Get the name of this association if set, the name of the target entity otherwise.
+     *
+     * @param string $format 'html' or 'text'
+     */
+    public function getDisplayName(string $format = 'html'): string
+    {
+        $value = $this->getName();
+        if ($value !== '') {
+            return $format === 'html' ? h($value) : $value;
+        }
+
+        return $this->getTargetEntity()->getEntityDisplayName($format);
     }
 
     public function getComputedTargetPropertyName()

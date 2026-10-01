@@ -25,7 +25,7 @@ class AssociationColumn extends Column
     public function getColumnName()
     {
         if (is_object($this->association)) {
-            return $this->association->getTargetEntity()->getName();
+            return $this->association->getDisplayName('text');
         }
     }
 

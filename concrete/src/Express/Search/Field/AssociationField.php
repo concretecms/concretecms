@@ -43,7 +43,7 @@ class AssociationField extends AbstractField
     public function getDisplayName()
     {
         if ($this->association !== null) {
-            return $this->association->getTargetEntity()->getName();
+            return $this->association->getDisplayName('text');
         }
     }
 

@@ -40,7 +40,7 @@ if (isset($entity)) { ?>
                         <?=$ak->render(new \Concrete\Core\Attribute\Context\BasicSearchContext(), null, true)?>
                     <?php } ?>
                     <?php foreach ($tableSearchAssociations as $association) { ?>
-                        <h5><?= $association->getTargetEntity()->getEntityDisplayName() ?></h5>
+                        <h5><?= $association->getDisplayName() ?></h5>
                         <?php
                         $field = new \Concrete\Core\Express\Search\Field\AssociationField($association);
                         $field->loadDataFromRequest($controller->getRequest()->query->all());

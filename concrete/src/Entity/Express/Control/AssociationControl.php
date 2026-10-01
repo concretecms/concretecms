@@ -113,7 +113,7 @@ class AssociationControl extends Control
 
     public function getControlLabel()
     {
-        return $this->getAssociation()->getTargetEntity()->getName();
+        return $this->getAssociation()->getDisplayName('text');
     }
 
     public function getType()
