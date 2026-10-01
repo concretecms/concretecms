@@ -1,30 +1,6 @@
 parameters:
 	ignoreErrors:
 		-
-			message: '#^Call to an undefined static method Concrete\\Core\\Attribute\\Key\\UserKey\:\:updateAttributesDisplayOrder\(\)\.$#'
-			identifier: staticMethod.notFound
-			count: 1
-			path: ../concrete/controllers/backend/attributes.php
-
-		-
-			message: '#^Call to an undefined method Concrete\\Controller\\Dialog\\File\\Bulk\\Properties\:\:setFiles\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: ../concrete/controllers/dialog/file/upload_complete.php
-
-		-
-			message: '#^Class Concrete\\Controller\\Dialog\\File\\Bulk\\Properties constructor invoked with 0 parameters, 2 required\.$#'
-			identifier: arguments.count
-			count: 1
-			path: ../concrete/controllers/dialog/file/upload_complete.php
-
-		-
-			message: '#^Class Concrete\\Controller\\Dialog\\File\\Properties constructor invoked with 0 parameters, 1 required\.$#'
-			identifier: arguments.count
-			count: 1
-			path: ../concrete/controllers/dialog/file/upload_complete.php
-
-		-
 			message: '#^Call to an undefined method Concrete\\Core\\Permission\\Checker\:\:canEditFileSetPermissions\(\)\.$#'
 			identifier: method.notFound
 			count: 1
@@ -37,82 +13,16 @@ parameters:
 			path: ../concrete/controllers/dialog/permissions/file_set.php
 
 		-
-			message: '#^Call to an undefined method Concrete\\Controller\\Dialog\\Search\\AdvancedSearch\:\:getCurrentSearchBaseURL\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: ../concrete/controllers/dialog/search/advanced_search.php
-
-		-
-			message: '#^Call to an undefined method Concrete\\Core\\Job\\JobQueue\:\:count\(\)\.$#'
-			identifier: method.notFound
-			count: 3
-			path: ../concrete/controllers/frontend/jobs.php
-
-		-
-			message: '#^Call to an undefined method Concrete\\Core\\Job\\JobQueue\:\:receive\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: ../concrete/controllers/frontend/jobs.php
-
-		-
-			message: '#^Call to an undefined method Concrete\\Core\\Job\\QueueableJob\:\:executeBatch\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: ../concrete/controllers/frontend/jobs.php
-
-		-
-			message: '#^Call to an undefined method Concrete\\Controller\\Dialog\\Search\\AdvancedSearch\:\:setEntityID\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: ../concrete/controllers/search/express.php
-
-		-
-			message: '#^Call to an undefined method Concrete\\Controller\\Dialog\\Search\\AdvancedSearch\:\:getBasicSearchBaseURL\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: ../concrete/controllers/search/standard.php
-
-		-
-			message: '#^Call to an undefined method Concrete\\Controller\\Dialog\\Search\\AdvancedSearch\:\:getCurrentSearchBaseURL\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: ../concrete/controllers/search/standard.php
-
-		-
-			message: '#^Constant ONLINE_NOW_SRC_OFF not found\.$#'
-			identifier: constant.notFound
-			count: 1
-			path: ../concrete/src/Application/Service/User.php
-
-		-
-			message: '#^Constant ONLINE_NOW_SRC_ON not found\.$#'
-			identifier: constant.notFound
-			count: 1
-			path: ../concrete/src/Application/Service/User.php
-
-		-
 			message: '#^Parameter \#1 \$func of method Doctrine\\DBAL\\Connection\:\:transactional\(\) expects Closure\(Doctrine\\DBAL\\Connection\)\: void, Closure\(Concrete\\Core\\Database\\Connection\\Connection\)\: void given\.$#'
 			identifier: argument.type
 			count: 1
 			path: ../concrete/src/Authentication/Type/OAuth/BindingService.php
 
 		-
-			message: '#^Call to an undefined method Concrete\\Core\\Config\\ConfigStore\:\:rowToConfigValue\(\)\.$#'
-			identifier: method.notFound
-			count: 2
-			path: ../concrete/src/Config/ConfigStore.php
-
-		-
 			message: '#^Parameter \#2 \$value of class HtmlObject\\Element constructor expects string\|null, array\<int, HtmlObject\\Element\> given\.$#'
 			identifier: argument.type
 			count: 1
 			path: ../concrete/src/File/Image/Thumbnail/ThumbnailPlaceholderService.php
-
-		-
-			message: '#^Call to an undefined method Concrete\\Core\\Routing\\Router\:\:getAction\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: ../concrete/src/Http/RouteActionDispatcher.php
 
 		-
 			message: '#^Call to an undefined method Concrete\\Core\\Mail\\Importer\\MailImporter\:\:process\(\)\.$#'
@@ -211,31 +121,25 @@ parameters:
 			path: ../concrete/src/Notification/View/StandardListView.php
 
 		-
-			message: '#^If condition is always true\.$#'
-			identifier: if.alwaysTrue
-			count: 1
-			path: ../concrete/src/Page/Container/ContainerExporter.php
-
-		-
-			message: '#^Call to an undefined method Concrete\\Core\\Page\\Page\:\:getBlockID\(\)\.$#'
-			identifier: method.notFound
+			message: '#^Instanceof between Concrete\\Core\\Page\\Stack\\Pile\\PileContent and Concrete\\Core\\Page\\Stack\\Pile\\PileContent will always evaluate to true\.$#'
+			identifier: instanceof.alwaysTrue
 			count: 1
 			path: ../concrete/src/Page/Stack/Pile/Pile.php
 
 		-
-			message: '#^Constant PILE_MODULES_INSTALLED not found\.$#'
-			identifier: constant.notFound
+			message: '#^Method Concrete\\Core\\Page\\Stack\\Pile\\Pile\:\:getItemID\(\) never returns null so it can be removed from the return type\.$#'
+			identifier: return.unusedType
 			count: 1
-			path: ../concrete/src/Page/Stack/Pile/PileContent.php
+			path: ../concrete/src/Page/Stack/Pile/Pile.php
 
 		-
-			message: '#^Call to an undefined static method Concrete\\Core\\Tree\\Node\\Node\:\:getClassByType\(\)\.$#'
-			identifier: staticMethod.notFound
+			message: '#^Parameter &\$obj by\-ref type of method Concrete\\Core\\Page\\Stack\\Pile\\Pile\:\:add\(\) expects Concrete\\Core\\Block\\Block\|Concrete\\Core\\Page\\Page\|Concrete\\Core\\Page\\Stack\\Pile\\PileContent, Concrete\\Core\\Block\\Block\|Concrete\\Core\\Page\\Collection\\Collection\|Concrete\\Core\\Page\\Stack\\Pile\\PileContent given\.$#'
+			identifier: parameterByRef.type
 			count: 1
-			path: ../concrete/src/Tree/Node/Node.php
+			path: ../concrete/src/Page/Stack/Pile/Pile.php
 
 		-
-			message: '#^Call to an undefined method Concrete\\Core\\Routing\\Router\:\:getGenerator\(\)\.$#'
-			identifier: method.notFound
+			message: '#^Unreachable statement \- code above always terminates\.$#'
+			identifier: deadCode.unreachable
 			count: 1
-			path: ../concrete/src/Url/Resolver/RouterUrlResolver.php
+			path: ../concrete/src/Page/Stack/Pile/Pile.php

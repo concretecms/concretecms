@@ -46,7 +46,8 @@
         "PKSA-3mcc-k66d-pydb": "Testing vulnerable Twig behavior on PHP 7.3 line",
         "PKSA-gw7n-z4yx-7xjt": "Testing vulnerable Twig behavior on PHP 7.3 line",
         "PKSA-dpx1-78wg-1kqs": "Testing vulnerable Twig behavior on PHP 7.3 line",
-        "PKSA-21g2-dzjv-sky5": "Testing vulnerable Twig behavior on PHP 7.3 line"
+        "PKSA-21g2-dzjv-sky5": "Testing vulnerable Twig behavior on PHP 7.3 line",
+        "PKSA-w9tt-7782-78jx": "Flysystem 1.x is no longer maintained: patched by concretecms/dependency-patches"
       }
     }
   },

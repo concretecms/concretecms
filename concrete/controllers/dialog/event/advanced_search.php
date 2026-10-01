@@ -41,16 +41,6 @@ class AdvancedSearch extends AdvancedSearchController
         return false; // not implemented yet
     }
 
-    public function getCurrentSearchBaseURL()
-    {
-        return false; // not implemented yet
-    }
-
-    public function getBasicSearchBaseURL()
-    {
-        return false; // not implemented yet
-    }
-
     public function getSavedSearchDeleteURL(SavedSearch $search)
     {
         return false; // not implemented yet

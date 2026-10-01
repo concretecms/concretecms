@@ -35,6 +35,7 @@ class PageTransformer extends TransformerAbstract
         $data['name'] = $page->getCollectionName();
         $data['date_added'] = Carbon::make($page->getCollectionDateAdded())->toAtomString();
         $data['date_last_updated']  = Carbon::make($page->getCollectionDateLastModified())->toAtomString();
+        $data['date_public'] = Carbon::make($page->getCollectionDatePublic())->toAtomString();
         $data['type'] = $page->getPageTypeHandle();
         $data['template'] = $page->getPageTemplateHandle();
 

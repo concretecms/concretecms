@@ -274,16 +274,16 @@
         },
         {
             "name": "concretecms/dependency-patches",
-            "version": "1.8.4",
+            "version": "1.9.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/concretecms/dependency-patches.git",
-                "reference": "421bf35141ee220479ca726ef3f7f3b79555990e"
+                "reference": "d55ad28395e63fd6bc17a18b48fa1539edd5afce"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/concretecms/dependency-patches/zipball/421bf35141ee220479ca726ef3f7f3b79555990e",
-                "reference": "421bf35141ee220479ca726ef3f7f3b79555990e",
+                "url": "https://api.github.com/repos/concretecms/dependency-patches/zipball/d55ad28395e63fd6bc17a18b48fa1539edd5afce",
+                "reference": "d55ad28395e63fd6bc17a18b48fa1539edd5afce",
                 "shasum": ""
             },
             "require": {
@@ -330,6 +330,9 @@
                     },
                     "phpunit/phpunit:4.8.36": {
                         "Avoid each() in Getopt": "phpunit/phpunit/Getopt-each.patch"
+                    },
+                    "league/flysystem:1.1.10": {
+                        "Report malformed UTF-8 as a corrupted path (CVE-2026-102601)": "league/flysystem/cve-2026-102601-malformed-utf8-path.patch"
                     },
                     "wikimedia/less.php:1.8.2": {
                         "Add PHP 8.2 compatibility": "wikimedia/less.php/fix-php-8.2-compatibility.patch"
@@ -388,9 +391,9 @@
             "homepage": "https://github.com/concretecms/dependency-patches",
             "support": {
                 "issues": "https://github.com/concretecms/dependency-patches/issues",
-                "source": "https://github.com/concretecms/dependency-patches/tree/1.8.4"
+                "source": "https://github.com/concretecms/dependency-patches/tree/1.9.0"
             },
-            "time": "2026-09-08T10:20:34+00:00"
+            "time": "2026-09-30T08:30:21+00:00"
         },
         {
             "name": "concretecms/doctrine-xml",

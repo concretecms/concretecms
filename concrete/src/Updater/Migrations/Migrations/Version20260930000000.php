@@ -12,7 +12,7 @@ use Concrete\Core\Updater\Migrations\RepeatableMigrationInterface;
 
 defined('C5_EXECUTE') or die('Access Denied.');
 
-final class Version20260909000000 extends AbstractMigration implements RepeatableMigrationInterface
+final class Version20260930000000 extends AbstractMigration implements RepeatableMigrationInterface
 {
     /**
      * {@inheritdoc}

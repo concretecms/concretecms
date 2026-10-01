@@ -6,7 +6,6 @@ use Concrete\Core\Error\UserMessageException;
 use Concrete\Core\File\File as ConcreteFile;
 use Loader;
 use Permissions;
-use Exception;
 
 abstract class File extends \Concrete\Controller\Backend\UserInterface
 {
@@ -22,13 +21,11 @@ abstract class File extends \Concrete\Controller\Backend\UserInterface
         if (!isset($this->file)) {
             $request = $this->request;
             $fID = Loader::helper('security')->sanitizeInt($request->query->get('fID'));
-            if ($fID) {
-                $file = ConcreteFile::getByID($fID);
-                if (is_object($file) && !$file->isError()) {
-                    $this->setFileObject($file);
-                } else {
-                    throw new UserMessageException(t('Invalid file.'));
-                }
+            $file = $fID ? ConcreteFile::getByID($fID) : null;
+            if (is_object($file) && !$file->isError()) {
+                $this->setFileObject($file);
+            } else {
+                throw new UserMessageException(t('Invalid file.'));
             }
         }
     }
@@ -46,7 +43,7 @@ abstract class File extends \Concrete\Controller\Backend\UserInterface
         if ($this->permissions->canViewFileInFileManager()) {
             return parent::getViewObject();
         }
-        throw new Exception(t('Access Denied'));
+        throw new UserMessageException(t('Access Denied'));
     }
 
     public function action()

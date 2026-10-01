@@ -525,7 +525,11 @@ class Controller extends BlockController implements FileTrackableInterface, Uses
             $e->add(t('SVG images cannot be cropped.'));
         }
 
-        $this->app->make(DestinationPicker::class)->decode('imageLink', $this->getImageLinkPickers(), $e, t('Image Link'), $args);
+        if (isset($args['imageLink__which'])) {
+            // that's the destination picker of the form of the block: a CIF file and the API carry the
+            // columns it fills (see the save() method below)
+            $this->app->make(DestinationPicker::class)->decode('imageLink', $this->getImageLinkPickers(), $e, t('Image Link'), $args);
+        }
 
         return $e;
     }

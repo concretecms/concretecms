@@ -131,13 +131,6 @@ class PileContent extends ConcreteObject implements \JsonSerializable
         return $obj;
     }
 
-    public function getModuleList()
-    {
-        $modules = explode(',', PILE_MODULES_INSTALLED);
-
-        return $modules;
-    }
-
     #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {

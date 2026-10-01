@@ -1,0 +1,88 @@
+name: Notify splitter
+
+on:
+  # Branches and tags pushed
+  push:
+  # Branches and tags deleted (this event is only handled by the workflow in the default branch)
+  delete:
+
+# This workflow doesn't use the default token of GitHub Actions: let's remove all its permissions
+permissions: {}
+
+env:
+  # The repository that extracts the concrete directory
+  SPLITTER_REPOSITORY: concretecms/concretecms-core
+
+jobs:
+  notify:
+    name: Notify splitter
+    if: github.repository == 'concretecms/concretecms'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Start the split
+        env:
+          GH_TOKEN: ${{ secrets.SPLITTER_TOKEN }}
+          REF_TYPE: ${{ github.event_name == 'delete' && github.event.ref_type || github.ref_type }}
+          REF_NAME: ${{ github.event_name == 'delete' && github.event.ref || github.ref_name }}
+        run: |
+          # Check if the splitter processes the branch or the tag.
+          # The branches and the tags to be processed are defined in the workflow of the splitter:
+          # if we can't read them, we start the split anyway.
+          isSplitRequired() {
+            if ! curl --silent --show-error --fail --location --retry 3 --output split.yml "https://raw.githubusercontent.com/$SPLITTER_REPOSITORY/HEAD/.github/workflows/split.yml"; then
+              echo '::warning::Failed to download the workflow of the splitter'
+              return 0
+            fi
+            case "$REF_TYPE" in
+              branch) lists=BRANCH ;;
+              tag) lists=TAG ;;
+              *) return 0 ;;
+            esac
+            for list in BLACKLIST WHITELIST; do
+              if ! items="$(yq ".env.${lists}_${list} // \"\"" split.yml)"; then
+                echo "::warning::Failed to read the ${lists}_${list} of the splitter"
+                return 0
+              fi
+              # The lists contain names and regular expressions prefixed by rx:
+              # Let's save them in a file as regular expressions, one per line
+              printf '%s\n' "$items" | tr -s '[:space:]' '\n' >items.txt
+              # 1. the regular expressions: we remove the rx: prefix
+              sed -n -e 's/^rx://p' items.txt >"$list.txt"
+              # 2. the names: we escape the special characters
+              sed -e '/^rx:/d' -e '/^$/d' -e 's/[][(){}.*+?^$|\\]/\\&/g' items.txt >>"$list.txt"
+            done
+            if [ -s BLACKLIST.txt ]; then
+              rc=0
+              printf '%s\n' "$REF_NAME" | grep -Eqx -f BLACKLIST.txt || rc=$?
+              case $rc in
+                0) return 1 ;;
+                1) ;;
+                *)
+                  echo "::warning::Failed to check the ${lists}_BLACKLIST of the splitter"
+                  return 0
+                  ;;
+              esac
+            fi
+            if [ -s WHITELIST.txt ]; then
+              rc=0
+              printf '%s\n' "$REF_NAME" | grep -Eqx -f WHITELIST.txt || rc=$?
+              case $rc in
+                0) ;;
+                1) return 1 ;;
+                *)
+                  echo "::warning::Failed to check the ${lists}_WHITELIST of the splitter"
+                  return 0
+                  ;;
+              esac
+            fi
+            return 0
+          }
+          if ! isSplitRequired; then
+            echo "The splitter doesn't process the $REF_TYPE $REF_NAME: the split is not required"
+          elif [ -z "$GH_TOKEN" ]; then
+            # The secrets aren't available in the runs started by Dependabot
+            echo '::error::The SPLITTER_TOKEN secret is not set'
+            exit 1
+          else
+            gh workflow run split.yml --repo "$SPLITTER_REPOSITORY"
+          fi

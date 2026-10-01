@@ -4,6 +4,7 @@ namespace Concrete\Controller\SinglePage\Dashboard\System\Express;
 
 use Concrete\Core\Api\Command\SynchronizeScopesCommand;
 use Concrete\Core\Attribute\Category\SearchIndexer\ExpressSearchIndexer;
+use Concrete\Core\Controller\Traits\DashboardExpressEntityBreadcrumbTrait;
 use Concrete\Core\Entity\Express\Entity;
 use Concrete\Core\Entity\Express\Form;
 use Concrete\Core\Express\Command\PublishEntityCommand;
@@ -21,6 +22,10 @@ use Concrete\Core\Routing\Redirect;
 
 class Entities extends DashboardPageController
 {
+    use DashboardExpressEntityBreadcrumbTrait {
+        getEntityBreadcrumbActionName as getDefaultEntityBreadcrumbActionName;
+    }
+
     /**
      * @var \Concrete\Core\Entity\Express\Entity|null
      */
@@ -212,6 +217,20 @@ class Entities extends DashboardPageController
         $this->view_entity($this->request->request->get('entity_id'));
     }
 
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Controller\Traits\DashboardExpressEntityBreadcrumbTrait::getEntityBreadcrumbActionName()
+     */
+    protected function getEntityBreadcrumbActionName(): string
+    {
+        $actionName = $this->getDefaultEntityBreadcrumbActionName();
+
+        // The object details are already represented by the entity item
+        return $actionName === t('Object Details') ? '' : $actionName;
+    }
+
     public function view_entity($id = null)
     {
         $r = $this->entityManager->getRepository('Concrete\Core\Entity\Express\Entity');
@@ -310,6 +329,7 @@ class Entities extends DashboardPageController
 
         $this->set('entity', $entity);
         $this->set('token', new Token());
+        $this->set('pageTitle', t('Clear Entries'));
         $this->render('/dashboard/system/express/entities/clear_entries');
     }
 

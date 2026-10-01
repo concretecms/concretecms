@@ -275,7 +275,6 @@ class Areas extends ApiController implements ApplicationAwareInterface
 
         $block = $this->app->executeCommand($command);
 
-        $blockToEdit->update($body);
         $transformer = new BaseBlockTransformer();
         $transformer->setDefaultIncludes(['page']);
 

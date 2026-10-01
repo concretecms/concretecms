@@ -4,28 +4,12 @@ namespace Concrete\Controller\Backend;
 use Controller;
 use Permissions;
 use Loader;
-use Concrete\Core\Attribute\Key\UserKey;
 use Concrete\Core\Attribute\Set;
 use stdClass;
 use Exception;
 
 class Attributes extends Controller
 {
-
-    public function sortUser()
-    {
-        $this->canAccess();
-        $uats = $_REQUEST['akID'];
-
-
-        if (is_array($uats)) {
-            $uats = array_filter($uats, 'is_numeric');
-        }
-
-        if (count($uats)) {
-            UserKey::updateAttributesDisplayOrder($uats);
-        }
-    }
 
     public function sortInSet()
     {

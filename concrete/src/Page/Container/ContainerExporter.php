@@ -27,21 +27,19 @@ class ContainerExporter implements ItemInterface
     public function export($instance, \SimpleXMLElement $element)
     {
         $container = $instance->getContainer();
-        if ($container) {
-            $containerNode = $element->addChild('container');
-            $containerNode->addAttribute('handle', $container->getContainerHandle());
-            
-            // Retrieve all the areas within this container.
-            $instanceAreas = $instance->getInstanceAreas();
-            foreach($instanceAreas as $instanceArea) {
-                $arHandle = Area::getAreaHandleFromID($instanceArea->getAreaID());
-                if ($arHandle) {
-                    $containerAreaNode = $containerNode->addChild('containerarea');
-                    $containerAreaNode->addAttribute('name', $instanceArea->getContainerAreaName());
-                    $area = Area::get($this->page, $arHandle);
-                    if ($area) {
-                        $area->export($containerAreaNode, $this->page);
-                    }
+        $containerNode = $element->addChild('container');
+        $containerNode->addAttribute('handle', $container->getContainerHandle());
+        
+        // Retrieve all the areas within this container.
+        $instanceAreas = $instance->getInstanceAreas();
+        foreach($instanceAreas as $instanceArea) {
+            $arHandle = Area::getAreaHandleFromID($instanceArea->getAreaID());
+            if ($arHandle) {
+                $containerAreaNode = $containerNode->addChild('containerarea');
+                $containerAreaNode->addAttribute('name', $instanceArea->getContainerAreaName());
+                $area = Area::get($this->page, $arHandle);
+                if ($area) {
+                    $area->export($containerAreaNode, $this->page);
                 }
             }
         }

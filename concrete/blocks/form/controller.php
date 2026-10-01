@@ -336,7 +336,6 @@ class Controller extends BlockController
         }
 
         $ip = $this->app->make('failed_login');
-        $this->view();
 
         if ($ip->isDenylisted()) {
             $this->set('invalidIP', $ip->getErrorMessage());

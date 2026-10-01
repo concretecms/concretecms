@@ -3,7 +3,9 @@
 namespace Concrete\Core\Url\Resolver;
 
 use Concrete\Core\Routing\Router;
+use Symfony\Component\Routing\Generator\UrlGenerator;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Routing\RequestContext;
 use Symfony\Component\Routing\RouteCollection;
 
 class RouterUrlResolver implements UrlResolverInterface
@@ -25,13 +27,14 @@ class RouterUrlResolver implements UrlResolverInterface
     }
 
     /**
-     * Get the url generator from the router.
+     * Get the url generator for the routes of the router.
      *
      * @return \Symfony\Component\Routing\Generator\UrlGeneratorInterface
      */
     public function getGenerator()
     {
-        return $this->router->getGenerator();
+        // The generator only builds the paths of the routes: the path resolver turns them into URLs (with the base path of the site)
+        return new UrlGenerator($this->router->getRoutes(), new RequestContext());
     }
 
     /**
@@ -81,7 +84,10 @@ class RouterUrlResolver implements UrlResolverInterface
             if (is_string($route_handle) &&
                 strtolower(substr($route_handle, 0, 6)) == 'route/' &&
                 is_array($route_parameters)) {
-                $resolved = $this->resolveRoute(substr($route_handle, 6), $route_parameters);
+                $url = $this->resolveRoute(substr($route_handle, 6), $route_parameters);
+                if ($url !== null) {
+                    $resolved = $url;
+                }
             }
         }
 

@@ -125,7 +125,7 @@
     "tubalmartin/cssmin": "^4.1",
     "ssddanbrown/htmldiff": "^1.0",
     "zircote/swagger-php": "4.9.2",
-    "concretecms/dependency-patches": "^1.8.0",
+    "concretecms/dependency-patches": "^1.9.0",
     "twig/twig": "3.11.3|^3.26"
   },
   "provide": {

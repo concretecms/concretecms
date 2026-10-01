@@ -181,20 +181,6 @@ abstract class Node extends ConcreteObject implements \Concrete\Core\Permission\
     }
 
     /**
-     * Transforms a node to another node.
-     *
-     * @param mixed $treeNodeType
-     */
-    public function transformNode($treeNodeType)
-    {
-        $class = self::getClassByType($treeNodeType);
-        $node = new $class();
-        $node->setPropertiesFromArray($this);
-
-        return $node;
-    }
-
-    /**
      * Returns an array of all parents of this tree node.
      */
     public function getTreeNodeParentArray()

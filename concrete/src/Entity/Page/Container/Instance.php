@@ -22,7 +22,7 @@ class Instance
 
     /**
      * @ORM\ManyToOne(targetEntity="Concrete\Core\Entity\Page\Container")
-     * @ORM\JoinColumn(name="containerID", referencedColumnName="containerID", onDelete="CASCADE")
+     * @ORM\JoinColumn(name="containerID", referencedColumnName="containerID", nullable=false, onDelete="CASCADE")
      **/
     protected $container;
 
