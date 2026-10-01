@@ -119,27 +119,3 @@ parameters:
 			identifier: argument.type
 			count: 1
 			path: ../concrete/src/Notification/View/StandardListView.php
-
-		-
-			message: '#^Instanceof between Concrete\\Core\\Page\\Stack\\Pile\\PileContent and Concrete\\Core\\Page\\Stack\\Pile\\PileContent will always evaluate to true\.$#'
-			identifier: instanceof.alwaysTrue
-			count: 1
-			path: ../concrete/src/Page/Stack/Pile/Pile.php
-
-		-
-			message: '#^Method Concrete\\Core\\Page\\Stack\\Pile\\Pile\:\:getItemID\(\) never returns null so it can be removed from the return type\.$#'
-			identifier: return.unusedType
-			count: 1
-			path: ../concrete/src/Page/Stack/Pile/Pile.php
-
-		-
-			message: '#^Parameter &\$obj by\-ref type of method Concrete\\Core\\Page\\Stack\\Pile\\Pile\:\:add\(\) expects Concrete\\Core\\Block\\Block\|Concrete\\Core\\Page\\Page\|Concrete\\Core\\Page\\Stack\\Pile\\PileContent, Concrete\\Core\\Block\\Block\|Concrete\\Core\\Page\\Collection\\Collection\|Concrete\\Core\\Page\\Stack\\Pile\\PileContent given\.$#'
-			identifier: parameterByRef.type
-			count: 1
-			path: ../concrete/src/Page/Stack/Pile/Pile.php
-
-		-
-			message: '#^Unreachable statement \- code above always terminates\.$#'
-			identifier: deadCode.unreachable
-			count: 1
-			path: ../concrete/src/Page/Stack/Pile/Pile.php
