@@ -614,7 +614,7 @@ if ($style instanceof CustomStyle) {
                         return this.deviceClasses[device] ? this.deviceClasses[device].hidden : false;
                     },
                     handleResponse(resp, callback = null) {
-                        var editor = new Concrete.getEditMode()
+                        var editor = Concrete.getEditMode()
                         var area = editor.getAreaByID(resp.aID)
                         var block = area.getBlockByID(parseInt(resp.originalBlockID))
                         var arEnableGridContainer = area.getEnableGridContainer() ? 1 : 0
@@ -652,7 +652,7 @@ if ($style instanceof CustomStyle) {
                         })
                     },
                     handleAreaResponse(resp) {
-                        let editor = new Concrete.getEditMode()
+                        let editor = Concrete.getEditMode()
                         let area = editor.getAreaByID(resp.aID)
 
                         this.refreshStyles(resp)
