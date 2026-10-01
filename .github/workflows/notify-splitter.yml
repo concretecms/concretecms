@@ -28,6 +28,7 @@ jobs:
           # Check if the splitter processes the branch or the tag.
           # The branches and the tags to be processed are defined in the workflow of the splitter:
           # if we can't read them, we start the split anyway.
+          # The build-assets.yml workflow contains a copy of this code: keep them aligned.
           isSplitRequired() {
             if ! curl --silent --show-error --fail --location --retry 3 --output split.yml "https://raw.githubusercontent.com/$SPLITTER_REPOSITORY/HEAD/.github/workflows/split.yml"; then
               echo '::warning::Failed to download the workflow of the splitter'
