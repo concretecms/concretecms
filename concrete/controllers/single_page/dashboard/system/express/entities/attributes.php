@@ -4,10 +4,13 @@ namespace Concrete\Controller\SinglePage\Dashboard\System\Express\Entities;
 
 use Concrete\Core\Attribute\CategoryObjectInterface;
 use Concrete\Core\Attribute\TypeFactory;
+use Concrete\Core\Controller\Traits\DashboardExpressEntityBreadcrumbTrait;
 use Concrete\Core\Page\Controller\DashboardAttributesPageController;
 
 class Attributes extends DashboardAttributesPageController
 {
+    use DashboardExpressEntityBreadcrumbTrait;
+
     /**
      * The current express entity.
      *
