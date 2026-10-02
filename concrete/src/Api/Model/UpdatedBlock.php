@@ -5,7 +5,8 @@ namespace Concrete\Core\Api\Model;
 /**
  * @OA\Schema(
  *     title="UpdatedBlock model",
- *     description="A Concrete Block"
+ *     description="A Concrete Block",
+ *     required={"value"}
 *     )
  */
 class UpdatedBlock
