@@ -28,6 +28,9 @@ class Association implements ItemInterface
         $node->addAttribute('target-entity', $association->getTargetEntity()->getID());
         $node->addAttribute('target-property-name', $association->getTargetPropertyName());
         $node->addAttribute('inversed-by-property-name', $association->getInversedByPropertyName());
+        if ($association->getName() !== '') {
+            $node->addAttribute('name', $association->getName());
+        }
         $node->addAttribute('is-owned', $association->isOwnedByAssociation() ? '1' : '');
         $node->addAttribute('is-owner', $association->isOwningAssociation() ? '1' : '');
 

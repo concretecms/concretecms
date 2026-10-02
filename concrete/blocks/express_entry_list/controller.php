@@ -336,7 +336,7 @@ class Controller extends BlockController implements UsesFeatureInterface
             if ($association instanceof ManyToManyAssociation || $association instanceof ManyToOneAssociation) {
                 $o = new \stdClass();
                 $o->associationID = $association->getId();
-                $o->associationName = $association->getTargetEntity()->getEntityDisplayName();
+                $o->associationName = $association->getDisplayName();
                 $select[] = $o;
             }
         }

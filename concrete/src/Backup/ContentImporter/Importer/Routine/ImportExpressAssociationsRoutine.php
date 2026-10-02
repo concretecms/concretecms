@@ -36,6 +36,7 @@ class ImportExpressAssociationsRoutine extends AbstractRoutine
                          */
                         $association->setTargetPropertyName((string) $associationNode['target-property-name']);
                         $association->setInversedByPropertyName((string) $associationNode['inversed-by-property-name']);
+                        $association->setName(trim((string) $associationNode['name']));
                         $association->setIsOwnedByAssociation($xml->getBool($associationNode['is-owned']));
                         $association->setIsOwningAssociation($xml->getBool($associationNode['is-owner']));
                         $em->persist($association);

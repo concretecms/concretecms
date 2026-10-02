@@ -3,7 +3,9 @@ namespace Concrete\Core\Entity\Express;
 
 use Concrete\Core\Export\ExportableInterface;
 use Concrete\Core\Express\Form\Context\ContextInterface;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Mapping as ORM;
+use Gettext\Translations;
 use Concrete\Core\Export\Item\Express\Association as AssociationExporter;
 
 /**
@@ -21,6 +23,13 @@ abstract class Association implements ExportableInterface
      * @ORM\GeneratedValue(strategy="UUID")
      */
     protected $id;
+
+    /**
+     * @ORM\Column(type="string", length=255, options={"default": ""})
+     *
+     * @var string
+     */
+    protected $name = '';
 
     /**
      * @ORM\ManyToOne(targetEntity="Entity", inversedBy="associations")
@@ -65,7 +74,7 @@ abstract class Association implements ExportableInterface
     protected $inversed_by_property_name;
 
     /**
-     * @return mixed
+     * @return string|null NULL if not yet persisted
      */
     public function getId()
     {
@@ -73,7 +82,7 @@ abstract class Association implements ExportableInterface
     }
 
     /**
-     * @param mixed $id
+     * @param string $id
      */
     public function setId($id)
     {
@@ -81,7 +90,20 @@ abstract class Association implements ExportableInterface
     }
 
     /**
-     * @return mixed
+     * Get the custom name of this association (empty string if not set).
+     */
+    public function getName(): string
+    {
+        return $this->name;
+    }
+
+    public function setName(string $name): void
+    {
+        $this->name = $name;
+    }
+
+    /**
+     * @return bool
      */
     public function isOwningAssociation()
     {
@@ -89,7 +111,7 @@ abstract class Association implements ExportableInterface
     }
 
     /**
-     * @param mixed $is_owning_association
+     * @param bool $is_owning_association
      */
     public function setIsOwningAssociation($is_owning_association)
     {
@@ -97,7 +119,7 @@ abstract class Association implements ExportableInterface
     }
 
     /**
-     * @return mixed
+     * @return bool
      */
     public function isOwnedByAssociation()
     {
@@ -105,7 +127,7 @@ abstract class Association implements ExportableInterface
     }
 
     /**
-     * @param mixed $is_owned_by_association
+     * @param bool $is_owned_by_association
      */
     public function setIsOwnedByAssociation($is_owned_by_association)
     {
@@ -113,7 +135,7 @@ abstract class Association implements ExportableInterface
     }
 
     /**
-     * @return mixed
+     * @return string|null
      */
     public function getTargetPropertyName()
     {
@@ -121,7 +143,7 @@ abstract class Association implements ExportableInterface
     }
 
     /**
-     * @param mixed $name
+     * @param string|null $target_property_name
      */
     public function setTargetPropertyName($target_property_name)
     {
@@ -129,7 +151,7 @@ abstract class Association implements ExportableInterface
     }
 
     /**
-     * @return mixed
+     * @return string|null
      */
     public function getInversedByPropertyName()
     {
@@ -137,7 +159,7 @@ abstract class Association implements ExportableInterface
     }
 
     /**
-     * @param mixed $inversed_by_property_name
+     * @param string|null $inversed_by_property_name
      */
     public function setInversedByPropertyName($inversed_by_property_name)
     {
@@ -145,7 +167,7 @@ abstract class Association implements ExportableInterface
     }
 
     /**
-     * @return mixed
+     * @return \Concrete\Core\Entity\Express\Entity|null NULL if not set yet
      */
     public function getSourceEntity()
     {
@@ -153,7 +175,7 @@ abstract class Association implements ExportableInterface
     }
 
     /**
-     * @param mixed $source_entity
+     * @param \Concrete\Core\Entity\Express\Entity $source_entity
      */
     public function setSourceEntity($source_entity)
     {
@@ -161,7 +183,7 @@ abstract class Association implements ExportableInterface
     }
 
     /**
-     * @return mixed
+     * @return \Concrete\Core\Entity\Express\Entity|null NULL if not set yet
      */
     public function getTargetEntity()
     {
@@ -169,11 +191,28 @@ abstract class Association implements ExportableInterface
     }
 
     /**
-     * @param mixed $target_entity
+     * @param \Concrete\Core\Entity\Express\Entity $target_entity
      */
     public function setTargetEntity($target_entity)
     {
         $this->target_entity = $target_entity;
+    }
+
+    /**
+     * Get the localized name of this association if set, the name of the target entity otherwise.
+     *
+     * @param string $format 'html' or 'text'
+     */
+    public function getDisplayName(string $format = 'html'): string
+    {
+        $value = $this->getName();
+        if ($value !== '') {
+            $value = tc('AssociationName', $value);
+
+            return $format === 'html' ? h($value) : $value;
+        }
+
+        return $this->getTargetEntity()->getEntityDisplayName($format);
     }
 
     public function getComputedTargetPropertyName()
@@ -192,6 +231,21 @@ abstract class Association implements ExportableInterface
         } else {
             return uncamelcase($this->getSourceEntity()->getName());
         }
+    }
+
+    /**
+     * Export the names of all the associations, so that they can be translated.
+     */
+    public static function exportTranslations(): Translations
+    {
+        $translations = new Translations();
+        $em = app(EntityManagerInterface::class);
+        $query = $em->createQuery('SELECT a.name FROM ' . self::class . " a WHERE a.name <> ''");
+        foreach (array_unique($query->getSingleColumnResult()) as $name) {
+            $translations->insert('AssociationName', $name);
+        }
+
+        return $translations;
     }
 
     abstract public function getFormatter();
