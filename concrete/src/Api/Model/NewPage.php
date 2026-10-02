@@ -14,7 +14,7 @@ class NewPage
 
 
     /**
-     * @OA\Property(type="integer", title="ID")
+     * @OA\Property(type="integer", title="Parent Page ID")
      *
      * @var string
      */
