@@ -34,6 +34,13 @@ if ($fs->isDirectory(DIR_CONFIG_SITE . '/doctrine')) {
     $fs->deleteDirectory(DIR_CONFIG_SITE . '/doctrine');
 }
 
+// Start with an empty log
+if ($fs->isDirectory(DIR_TESTS . '/logs')) {
+    $fs->deleteDirectory(DIR_TESTS . '/logs', true);
+} else {
+    $fs->makeDirectory(DIR_TESTS . '/logs', 0777, true);
+}
+
 // Define a fake request
 Request::setInstance(new Request(
     [],

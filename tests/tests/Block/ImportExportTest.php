@@ -200,7 +200,7 @@ class ImportExportTest extends PageTestCase
                     } else {
                         continue;
                     }
-                    $key = "{$basename}@{$blockTypeHandle}";
+                    $key = "{$blockTypeHandle}_{$basename}";
                     if (isset($cases[$key])) {
                         continue;
                     }
@@ -213,7 +213,6 @@ class ImportExportTest extends PageTestCase
                     $cases[$key] = [$blockTypeHandle, $basename, $options];
                 }
             }
-            $cases = array_values($cases);
         }
 
         return $cases;
@@ -229,7 +228,7 @@ class ImportExportTest extends PageTestCase
             if (($options['richTexts'] ?? []) === []) {
                 continue;
             }
-            $result[] = [$blockTypeHandle];
+            $result[$blockTypeHandle] = [$blockTypeHandle];
         }
 
         return $result;
