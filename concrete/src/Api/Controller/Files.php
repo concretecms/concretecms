@@ -60,7 +60,7 @@ class Files extends ApiController
      *         @OA\JsonContent(ref="#/components/schemas/File"),
      *     ),
      *     @OA\Response(
-     *         response=401,
+     *         response=403,
      *         description="You do not have the proper permissions to access this resource."
      *     ),
      *     @OA\Response(
@@ -77,7 +77,7 @@ class Files extends ApiController
         } else {
             $permissions = new Checker($file);
             if (!$permissions->canViewFileInFileManager()) {
-                return $this->error(t('You do not have access to read properties about this file.'), 401);
+                return $this->error(t('You do not have access to read properties about this file.'), 403);
             }
         }
 
@@ -252,7 +252,7 @@ class Files extends ApiController
      *         @OA\JsonContent(ref="#/components/schemas/DeletedResponse"),
      *     ),
      *     @OA\Response(
-     *         response=401,
+     *         response=403,
      *         description="You do not have the proper permissions to delete this resource."
      *     ),
      *     @OA\Response(
@@ -270,7 +270,7 @@ class Files extends ApiController
 
         $checker = new Checker($file);
         if (!$checker->canDeleteFile()) {
-            return $this->error(t('You do not have access to delete this file.', 401));
+            return $this->error(t('You do not have access to delete this file.'), 403);
         }
 
         $file->delete();
@@ -300,7 +300,7 @@ class Files extends ApiController
      *         @OA\JsonContent(ref="#/components/schemas/File"),
      *     ),
      *     @OA\Response(
-     *         response=401,
+     *         response=403,
      *         description="You do not have the proper permissions to update this resource."
      *     ),
      *     @OA\Response(
@@ -318,7 +318,7 @@ class Files extends ApiController
 
         $checker = new Checker($file);
         if (!$checker->canEditFileProperties()) {
-            return $this->error(t('You do not have access to edit this file.', 401));
+            return $this->error(t('You do not have access to edit this file.'), 403);
         }
 
         $body = json_decode($this->request->getContent(), true);
@@ -367,7 +367,7 @@ class Files extends ApiController
      *         @OA\JsonContent(ref="#/components/schemas/File"),
      *     ),
      *     @OA\Response(
-     *         response=401,
+     *         response=403,
      *         description="You do not have the proper permissions to update this resource."
      *     ),
      *     @OA\Response(
@@ -387,7 +387,7 @@ class Files extends ApiController
         if ($fileNode) {
             $checker = new Checker($fileNode);
             if (!$checker->canEditTreeNode()) {
-                return $this->error(t('You are not allowed to move this file.'), 401);
+                return $this->error(t('You are not allowed to move this file.'), 403);
             }
         } else {
             return $this->error(t('Invalid source file object.'), 404);
