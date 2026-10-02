@@ -37,6 +37,7 @@ use Concrete\Core\Permission\Access\Entity\PageOwnerEntity;
 use Concrete\Core\Permission\Access\Entity\UserEntity as UserPermissionAccessEntity;
 use Concrete\Core\Permission\AssignableObjectInterface;
 use Concrete\Core\Permission\AssignableObjectTrait;
+use Concrete\Core\Permission\Event\PermissionInheritanceEvent;
 use Concrete\Core\Permission\Key\PageKey as PagePermissionKey;
 use Concrete\Core\Production\Modes;
 use Concrete\Core\Search\Index\IndexManagerInterface;
@@ -2671,6 +2672,15 @@ EOT
         $this->cInheritPermissionsFromCID = $cpID;
         $this->clearPagePermissions();
         $this->rescanAreaPermissions();
+
+        $app = Application::getFacadeApplication();
+        $u = null;
+        if (!$app->isRunThroughCommandLineInterface() && $app->isInstalled()) {
+            $u = $app->make(User::class);
+        }
+        $event = new PermissionInheritanceEvent($this, 'PARENT', $u);
+        Events::dispatch('on_permission_inheritance_change', $event);
+        Events::dispatch('on_page_permission_inheritance_change', $event);
     }
 
     /**
@@ -2692,6 +2702,15 @@ EOT
                 $this->cInheritPermissionsFromCID = $cpID;
                 $this->clearPagePermissions();
                 $this->rescanAreaPermissions();
+
+                $app = Application::getFacadeApplication();
+                $u = null;
+                if (!$app->isRunThroughCommandLineInterface() && $app->isInstalled()) {
+                    $u = $app->make(User::class);
+                }
+                $event = new PermissionInheritanceEvent($this, 'TEMPLATE', $u);
+                Events::dispatch('on_permission_inheritance_change', $event);
+                Events::dispatch('on_page_permission_inheritance_change', $event);
             }
         }
     }
@@ -2714,6 +2733,15 @@ EOT
             $this->cInheritPermissionsFrom = 'OVERRIDE';
             $this->cInheritPermissionsFromCID = $cpID;
             $this->rescanAreaPermissions();
+
+            $app = Application::getFacadeApplication();
+            $u = null;
+            if (!$app->isRunThroughCommandLineInterface() && $app->isInstalled()) {
+                $u = $app->make(User::class);
+            }
+            $event = new PermissionInheritanceEvent($this, 'OVERRIDE', $u);
+            Events::dispatch('on_permission_inheritance_change', $event);
+            Events::dispatch('on_page_permission_inheritance_change', $event);
         }
     }
 
