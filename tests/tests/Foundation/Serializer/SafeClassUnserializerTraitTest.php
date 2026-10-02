@@ -62,6 +62,109 @@ class SafeClassUnserializerTraitTest extends TestCase
         $this->assertSame('inner', $result->nested->value);
     }
 
+    public function testListOfAllowedObjectsIsUnserialized()
+    {
+        $data = serialize([
+            'first' => new SafeUnserializerFixtureAllowedThing('one'),
+            'second' => new SafeUnserializerFixtureAllowedSubThing('two'),
+        ]);
+
+        $result = SafeUnserializerFixtureConsumer::unserializeList($data, SafeUnserializerFixtureAllowedBase::class);
+
+        $this->assertSame(['first', 'second'], array_keys($result));
+        $this->assertSame('one', $result['first']->value);
+        $this->assertInstanceOf(SafeUnserializerFixtureAllowedSubThing::class, $result['second']);
+    }
+
+    public function testObjectsOfTheListAreFoundHoweverDeepTheyAre()
+    {
+        $data = serialize(['test' => [new SafeUnserializerFixtureAllowedThing('deep')]]);
+
+        $result = SafeUnserializerFixtureConsumer::unserializeList($data, SafeUnserializerFixtureAllowedBase::class);
+
+        $this->assertInstanceOf(SafeUnserializerFixtureAllowedThing::class, $result['test'][0]);
+        $this->assertSame('deep', $result['test'][0]->value);
+    }
+
+    public function testWhatTheListHoldsBesidesObjectsIsKept()
+    {
+        $data = serialize(['just a string', 42, null, new SafeUnserializerFixtureAllowedThing('kept')]);
+
+        $result = SafeUnserializerFixtureConsumer::unserializeList($data, SafeUnserializerFixtureAllowedBase::class);
+
+        $this->assertSame([0, 1, 2, 3], array_keys($result));
+        $this->assertSame(42, $result[1]);
+    }
+
+    public function testObjectNotExtendingAllowedBaseRefusesTheWholeListWithoutUnserializing()
+    {
+        SafeUnserializerFixtureGadget::$triggered = false;
+        $data = serialize([new SafeUnserializerFixtureAllowedThing('kept'), new SafeUnserializerFixtureGadget()]);
+
+        $result = SafeUnserializerFixtureConsumer::unserializeList($data, SafeUnserializerFixtureAllowedBase::class);
+
+        $this->assertNull($result);
+        $this->assertFalse(SafeUnserializerFixtureGadget::$triggered, 'The disallowed class should never be instantiated/unserialized');
+    }
+
+    public function testObjectNotExtendingAllowedBaseIsFoundHoweverDeepItIs()
+    {
+        SafeUnserializerFixtureGadget::$triggered = false;
+        $thing = new SafeUnserializerFixtureAllowedThing('outer');
+        $thing->nested = ['deeper' => new SafeUnserializerFixtureGadget()];
+        $data = serialize(['test' => [$thing]]);
+
+        $result = SafeUnserializerFixtureConsumer::unserializeList($data, SafeUnserializerFixtureAllowedBase::class);
+
+        $this->assertNull($result);
+        $this->assertFalse(SafeUnserializerFixtureGadget::$triggered, 'The disallowed class should never be instantiated/unserialized');
+    }
+
+    public function testObjectNotExtendingAllowedBaseIsFoundInsideAPrivateProperty()
+    {
+        SafeUnserializerFixtureGadget::$triggered = false;
+        $data = serialize([new SafeUnserializerFixtureSecretiveThing(new SafeUnserializerFixtureGadget())]);
+
+        $result = SafeUnserializerFixtureConsumer::unserializeList($data, SafeUnserializerFixtureAllowedBase::class);
+
+        $this->assertNull($result);
+        $this->assertFalse(SafeUnserializerFixtureGadget::$triggered, 'The disallowed class should never be instantiated/unserialized');
+    }
+
+    public function testAnObjectHoldingItselfIsWalkedThroughJustOnce()
+    {
+        $thing = new SafeUnserializerFixtureAllowedThing('itself');
+        $thing->nested = $thing;
+        $data = serialize([$thing]);
+
+        $result = SafeUnserializerFixtureConsumer::unserializeList($data, SafeUnserializerFixtureAllowedBase::class);
+
+        $this->assertInstanceOf(SafeUnserializerFixtureAllowedThing::class, $result[0]);
+        $this->assertSame($result[0], $result[0]->nested);
+    }
+
+    /**
+     * @dataProvider provideNonListInput
+     */
+    public function testInputThatIsNoListReturnsNull($data)
+    {
+        $result = SafeUnserializerFixtureConsumer::unserializeList($data, SafeUnserializerFixtureAllowedBase::class);
+
+        $this->assertNull($result);
+    }
+
+    public static function provideNonListInput()
+    {
+        return [
+            'null' => [null],
+            'empty string' => [''],
+            'garbage string' => ['not a serialized value'],
+            'serialized scalar' => [serialize('just a string')],
+            'serialized object' => [serialize(new SafeUnserializerFixtureAllowedThing('alone'))],
+            'truncated array header' => ['a:1:'],
+        ];
+    }
+
     /**
      * @dataProvider provideNonMatchingInput
      */
@@ -95,6 +198,11 @@ trait SafeUnserializerFixtureTestingTrait
     {
         return static::safeUnserializeObject($data, $allowedBaseClasses);
     }
+
+    public static function unserializeList($data, $allowedBaseClasses)
+    {
+        return static::safeUnserializeObjectArray($data, $allowedBaseClasses);
+    }
 }
 
 class SafeUnserializerFixtureConsumer
@@ -123,6 +231,16 @@ class SafeUnserializerFixtureAllowedThing extends SafeUnserializerFixtureAllowed
 
 class SafeUnserializerFixtureAllowedSubThing extends SafeUnserializerFixtureAllowedThing
 {
+}
+
+class SafeUnserializerFixtureSecretiveThing extends SafeUnserializerFixtureAllowedBase
+{
+    private $secret;
+
+    public function __construct($secret = null)
+    {
+        $this->secret = $secret;
+    }
 }
 
 class SafeUnserializerFixtureNestedHelper
