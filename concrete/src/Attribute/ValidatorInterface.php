@@ -14,7 +14,7 @@ interface ValidatorInterface
 
     /**
      * @param CategoryInterface $category
-     * @param Type $type
+     * @param TypeEntity $type
      * @param Request $request
      * @return ResponseInterface
      */

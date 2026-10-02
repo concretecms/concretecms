@@ -27,7 +27,7 @@ class ThemeGridLayout extends Layout
     protected $arLayoutIsCustom;
 
     /**
-     * @var \Concrete\Core\Page\Theme\GridFramework\GridFramework
+     * @var \Concrete\Core\Page\Theme\GridFramework\GridFramework|null
      */
     protected $gf;
 
@@ -53,7 +53,7 @@ class ThemeGridLayout extends Layout
     public function exportDetails($node)
     {
         $node->addAttribute('type', 'theme-grid');
-        $node->addAttribute('columns', $this->arLayoutMaxColumns);
+        $node->addAttribute('columns', (string) $this->arLayoutMaxColumns);
     }
 
     /**
@@ -65,7 +65,7 @@ class ThemeGridLayout extends Layout
     }
 
     /**
-     * @return \Concrete\Core\Page\Theme\GridFramework\GridFramework
+     * @return \Concrete\Core\Page\Theme\GridFramework\GridFramework|null
      */
     public function getThemeGridFrameworkObject()
     {
@@ -124,6 +124,8 @@ class ThemeGridLayout extends Layout
 
             return $newAreaLayout;
         }
+
+        return null;
     }
 
     /**
@@ -148,7 +150,7 @@ class ThemeGridLayout extends Layout
     }
 
     /**
-     * @return static
+     * @return \Concrete\Core\Area\Layout\ThemeGridColumn
      */
     public function addLayoutColumn()
     {
@@ -172,5 +174,7 @@ class ThemeGridLayout extends Layout
 
             return $ar;
         }
+
+        return null;
     }
 }

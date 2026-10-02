@@ -104,6 +104,8 @@ class Container
             }
             return $image;
         }
+
+        return null;
     }
 
     public function export(\SimpleXMLElement $node): void

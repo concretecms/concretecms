@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\Permission\Access;
 
+use Concrete\Core\Page\Page;
 use Database;
 use Concrete\Core\Permission\Key\Key as PermissionKey;
 
@@ -63,9 +64,17 @@ class ViewUserAttributesUserAccess extends UserAccess
         return $newPA;
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Permission\Access\Access::getAccessListItems()
+     *
+     * @return \Concrete\Core\Permission\Access\ListItem\ViewUserAttributesUserListItem[]
+     */
     public function getAccessListItems($accessType = PermissionKey::ACCESS_TYPE_INCLUDE, $filterEntities = array(), $checkCache = true)
     {
         $db = Database::connection();
+        /** @var \Concrete\Core\Permission\Access\ListItem\ViewUserAttributesUserListItem[] $list */
         $list = parent::getAccessListItems($accessType, $filterEntities);
         foreach ($list as $l) {
             $pe = $l->getAccessEntityObject();

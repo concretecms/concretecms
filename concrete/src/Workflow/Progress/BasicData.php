@@ -5,6 +5,26 @@ use Loader;
 
 class BasicData
 {
+    /**
+     * @var int
+     */
+    protected $uIDCompleted;
+
+    /**
+     * @var int
+     */
+    protected $uIDStarted;
+
+    /**
+     * @var string
+     */
+    protected $wpDateCompleted;
+
+    /**
+     * @var int
+     */
+    protected $wpID;
+
     public function __construct($wp)
     {
         $db = Loader::db();

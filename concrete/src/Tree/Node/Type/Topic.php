@@ -39,7 +39,7 @@ class Topic extends TreeNode
 
     public function getTreeNodeDisplayName($format = 'html')
     {
-        $name = $this->getTreeNodeName();
+        $name = $this->getTreeNodeName() ?? '';
         $name = tc($this->getTreeNodeTranslationContext(), $name);
         switch ($format) {
             case 'html':
@@ -84,6 +84,12 @@ class Topic extends TreeNode
         return static::add((string) $sx['name'], $parent);
     }
 
+    /**
+     * @param string $treeNodeTopicName
+     * @param \Concrete\Core\Tree\Node\Node|false|null $parent the parent node
+     *
+     * @return \Concrete\Core\Tree\Node\Node
+     */
     public static function add($treeNodeTopicName = '', $parent = false)
     {
         $db = Loader::db();

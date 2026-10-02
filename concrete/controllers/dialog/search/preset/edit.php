@@ -14,6 +14,20 @@ abstract class Edit extends UserInterface
     protected $validationToken = 'edit_search_preset';
     public $objectID = null;
 
+    /**
+     * Get the repository of the saved search presets.
+     *
+     * @return \Doctrine\ORM\EntityRepository|null
+     */
+    abstract public function getSavedSearchEntity();
+
+    /**
+     * Get the URL to be used to search with a saved search preset.
+     *
+     * @return string
+     */
+    abstract public function getSavedSearchBaseURL(\Concrete\Core\Entity\Search\SavedSearch $search);
+
     public function getEditSearchPresetAction()
     {
         return $this->action('edit_search_preset');
@@ -27,7 +41,7 @@ abstract class Edit extends UserInterface
         $presetID = $securityHelper->sanitizeInt($this->request->query->get('presetID'));
         $searchEntity = $this->getSavedSearchEntity();
         if (!empty($presetID) && is_object($searchEntity)) {
-            $searchPreset = $searchEntity->findOneById($presetID);
+            $searchPreset = $searchEntity->find($presetID);
         }
         $this->set('searchPreset', $searchPreset);
         $this->set('form', $app->make('helper/form'));
@@ -44,7 +58,7 @@ abstract class Edit extends UserInterface
             if (!empty($presetID) && !empty($newPresetName)) {
                 $searchEntity = $this->getSavedSearchEntity();
                 if (is_object($searchEntity)) {
-                    $searchPreset = $searchEntity->findOneById($presetID);
+                    $searchPreset = $searchEntity->find($presetID);
                     if (!is_object($searchPreset)) {
                         $this->error->add(t('Invalid search preset.'));
                     }

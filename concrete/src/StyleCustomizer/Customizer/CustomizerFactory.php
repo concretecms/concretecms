@@ -7,6 +7,7 @@ use Concrete\Core\Page\Theme\CustomizableInterface;
 use Concrete\Core\Page\Theme\Theme;
 use Concrete\Core\StyleCustomizer\Customizer\Type\LegacyCustomizerType;
 use Concrete\Core\StyleCustomizer\Customizer\Type\SkinCustomizerType;
+use RuntimeException;
 
 class CustomizerFactory
 {
@@ -53,15 +54,16 @@ class CustomizerFactory
             } else {
                 // Load the xml and see what happens
                 $x = simplexml_load_file($r->file);
-                if ($x) {
-                    $version = (string)$x['version'];
-                    if (version_compare($version, '2.0', '>=')) {
-                        $language = (string) $x['lang'];
-                        $type = $this->app->make(SkinCustomizerType::class);
-                        $type->setLanguage($language);
-                    } else {
-                        $type = $this->app->make(LegacyCustomizerType::class);
-                    }
+                if (!$x) {
+                    throw new RuntimeException(t('Unable to load the customizer configuration file %s', $r->file));
+                }
+                $version = (string)$x['version'];
+                if (version_compare($version, '2.0', '>=')) {
+                    $language = (string) $x['lang'];
+                    $type = $this->app->make(SkinCustomizerType::class);
+                    $type->setLanguage($language);
+                } else {
+                    $type = $this->app->make(LegacyCustomizerType::class);
                 }
             }
 

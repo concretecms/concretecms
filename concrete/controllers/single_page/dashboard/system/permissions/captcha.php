@@ -34,6 +34,8 @@ class Captcha extends DashboardPageController
                 $scl->activate();
                 if ($scl->hasOptionsForm() && $this->post('ccm-submit-submit')) {
                     $controller = $scl->getController();
+                    // The controllers of the captcha libraries with an options form must implement saveOptions()
+                    // @phpstan-ignore method.notFound (required by the captcha libraries with an options form)
                     $controller->saveOptions($this->post());
                 }
                 $this->redirect('/dashboard/system/permissions/captcha', 'captcha_saved');

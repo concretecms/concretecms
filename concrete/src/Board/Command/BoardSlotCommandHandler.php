@@ -52,12 +52,10 @@ abstract class BoardSlotCommandHandler
         $rule->setTimezone($timezone);
         $rule->setBatchIdentifier($this->uuidGenerator->generate($this->entityManager, $rule));
 
-        $user = new User();
-        if ($user) {
-            $userInfo = $user->getUserInfoObject();
-            if ($userInfo) {
-                $rule->setUser($userInfo->getEntityObject());
-            }
+        $user = app(User::class);
+        $userInfo = $user->getUserInfoObject();
+        if ($userInfo) {
+            $rule->setUser($userInfo->getEntityObject());
         }
 
         $rule->setStartDate($command->getStartDate());

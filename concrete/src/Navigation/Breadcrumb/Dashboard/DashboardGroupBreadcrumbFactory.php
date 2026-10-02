@@ -52,7 +52,7 @@ class DashboardGroupBreadcrumbFactory implements ApplicationAwareInterface
                 array_shift($nodes);
 
                 /**
-                 * @var $nodes GroupFolder[]
+                 * @var GroupFolder[] $nodes
                  */
                 foreach($nodes as $node) {
                     $item = new Item(

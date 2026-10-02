@@ -108,7 +108,7 @@ class Instance implements \JsonSerializable, ObjectInterface
     }
 
     /**
-     * @return mixed
+     * @return \Doctrine\Common\Collections\Collection|\Concrete\Core\Entity\Board\InstanceItem[]
      */
     public function getItems()
     {
@@ -124,7 +124,7 @@ class Instance implements \JsonSerializable, ObjectInterface
     }
 
     /**
-     * @return mixed
+     * @return \Doctrine\Common\Collections\Collection|\Concrete\Core\Entity\Board\InstanceItemBatch[]
      */
     public function getBatches()
     {
@@ -163,17 +163,11 @@ class Instance implements \JsonSerializable, ObjectInterface
         $this->boardInstanceName = $boardInstanceName;
     }
 
-    /**
-     * @return mixed
-     */
     public function getSite(): ?Site
     {
         return $this->site;
     }
 
-    /**
-     * @param mixed $site
-     */
     public function setSite(?Site $site = null): void
     {
         $this->site = $site;
@@ -181,7 +175,7 @@ class Instance implements \JsonSerializable, ObjectInterface
 
 
     /**
-     * @return mixed
+     * @return \Doctrine\Common\Collections\Collection|\Concrete\Core\Entity\Board\InstanceSlot[]
      */
     public function getSlots()
     {
@@ -197,16 +191,13 @@ class Instance implements \JsonSerializable, ObjectInterface
     }
 
 
-    /**
-     * @return mixed
-     */
     public function getBoard() : Board
     {
         return $this->board;
     }
 
     /**
-     * @param mixed $board
+     * @param Board $board
      */
     public function setBoard($board): void
     {
@@ -229,17 +220,11 @@ class Instance implements \JsonSerializable, ObjectInterface
         $this->dateCreated = $dateCreated;
     }
 
-    /**
-     * @return mixed
-     */
     public function getLog(): ?InstanceLog
     {
         return $this->log;
     }
 
-    /**
-     * @param mixed $log
-     */
     public function setLog(?InstanceLog $log = null): void
     {
         $this->log = $log;
@@ -324,7 +309,7 @@ class Instance implements \JsonSerializable, ObjectInterface
     }
 
     /**
-     * @return mixed
+     * @return \Doctrine\Common\Collections\Collection|\Concrete\Core\Entity\Board\InstanceSlotRule[]
      */
     public function getRules()
     {

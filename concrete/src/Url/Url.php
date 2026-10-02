@@ -3,6 +3,9 @@ namespace Concrete\Core\Url;
 
 use RuntimeException;
 
+/**
+ * @phpstan-consistent-constructor
+ */
 class Url extends \League\Url\Url implements UrlInterface
 {
 

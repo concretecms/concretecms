@@ -1,7 +1,6 @@
 <?php
 namespace Concrete\Core\Authentication;
 
-use Concrete\Authentication\Concrete\Controller;
 use Concrete\Core\Backup\ContentImporter;
 use Concrete\Core\Database\Schema\Schema;
 use Concrete\Core\Filesystem\FileLocator;
@@ -18,7 +17,7 @@ use Package;
 
 class AuthenticationType extends ConcreteObject
 {
-    /** @var Controller */
+    /** @var \Concrete\Core\Authentication\AuthenticationTypeController */
     public $controller;
     protected $authTypeID;
     protected $authTypeName;
@@ -132,7 +131,7 @@ class AuthenticationType extends ConcreteObject
     /**
      * Return an array of AuthenticationTypes that are associated with a specific package.
      *
-     * @param Package $pkg
+     * @param \Concrete\Core\Entity\Package|\Concrete\Core\Package\Package $pkg
      *
      * @return AuthenticationType[]
      */
@@ -393,7 +392,7 @@ class AuthenticationType extends ConcreteObject
      *
      * @param string $_file the filename you want
      *
-     * @return string this will return false if the file is not found
+     * @return \Concrete\Core\Filesystem\FileLocator\Record
      */
     protected function mapAuthenticationTypeFilePath($_file)
     {
@@ -452,7 +451,7 @@ class AuthenticationType extends ConcreteObject
         // invoke the auth controller method even when no matching template existed, then
         // render form.php as a fallback.
         if (!$this->hasTemplate($element) && method_exists($this->controller, $element)) {
-            $params = array_values($params) === $params ? array_values($params) : [];
+            $params = array_values($params) === $params ? $params : [];
             call_user_func_array([$this->controller, $element], $params);
 
             $atHandle = $this->getAuthenticationTypeHandle();
@@ -460,9 +459,7 @@ class AuthenticationType extends ConcreteObject
             $r = $this->getTemplateVariantLocator()->getRecord($path);
             if ($r && $r->exists()) {
                 $sets = $this->controller->getSets();
-                if (is_array($sets)) {
-                    $params = array_merge($params, $sets);
-                }
+                $params = array_merge($params, $sets);
 
                 echo $this->templateService->renderTemplate($r->getFile(), $params, $this);
                 return;
@@ -543,7 +540,7 @@ class AuthenticationType extends ConcreteObject
      * Render the matching template for a given handle. The template can be either PHP or Twig
      *
      * @param string $handle
-     * @param array<string, mixed> $data
+     * @param array<string, mixed>|list<mixed> $data the template variables (a list is used as the positional arguments of the controller method)
      * @param bool $viewFallback
      * @return string|null
      */
@@ -561,16 +558,14 @@ class AuthenticationType extends ConcreteObject
         }
 
         if (method_exists($this->controller, $handle)) {
-            $params = array_values($data) === $data ? array_values($data) : [];
+            $params = array_values($data) === $data ? $data : [];
             call_user_func_array([$this->controller, $handle], $params);
-        } elseif ($viewFallback && method_exists($this->controller, 'view')) {
+        } elseif ($viewFallback) {
             $this->controller->view();
         }
 
         $sets = $this->controller->getSets();
-        if (is_array($sets)) {
-            $data = array_merge($data, $this->controller->getSets());
-        }
+        $data = array_merge($data, $this->controller->getSets());
 
         return $this->templateService->renderTemplate($r->getFile(), $data, $this);
     }

@@ -55,7 +55,7 @@ class DescriptionCorePageProperty extends CorePageProperty
     {
         $data = parent::getRequestValue($args);
         if (is_array($data) && isset($data['description'])) {
-            $data['description'] = Core::make('helper/security')->sanitizeString($data['description'] ?? '');
+            $data['description'] = Core::make('helper/security')->sanitizeString($data['description']);
         }
         return $data;
     }

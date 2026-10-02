@@ -372,7 +372,7 @@ class Controller extends AttributeTypeController implements
     public function getOptionByID($id)
     {
         $orm = $this->entityManager;
-        $repository = $orm->getRepository('\Concrete\Core\Entity\Attribute\Value\Value\SelectValueOption');
+        $repository = $orm->getRepository('Concrete\Core\Entity\Attribute\Value\Value\SelectValueOption');
 
         return $repository->findOneBy([
             'avSelectOptionID' => $id,
@@ -382,7 +382,7 @@ class Controller extends AttributeTypeController implements
     public function getOptionByValue($value, $attributeKey = false)
     {
         $orm = \Database::connection()->getEntityManager();
-        $repository = $orm->getRepository('\Concrete\Core\Entity\Attribute\Value\Value\SelectValueOption');
+        $repository = $orm->getRepository('Concrete\Core\Entity\Attribute\Value\Value\SelectValueOption');
         if ($attributeKey) {
             $existingList = $attributeKey->getAttributeKeySettings()->getOptionList();
         }
@@ -574,7 +574,7 @@ class Controller extends AttributeTypeController implements
         }
 
         $em = \Database::connection()->getEntityManager();
-        $r = $em->getRepository('\Concrete\Core\Entity\Attribute\Value\Value\SelectValueOption');
+        $r = $em->getRepository('Concrete\Core\Entity\Attribute\Value\Value\SelectValueOption');
         $type = $this->attributeKey->getAttributeKeySettings();
         $results = [];
         foreach ((array)$this->request->request->get('optionId') as $value) {
@@ -665,7 +665,7 @@ EOT
         if ($value instanceof SelectValueOption) {
             $option = $value;
         } else {
-            $option = $em->getRepository('\Concrete\Core\Entity\Attribute\Value\Value\SelectValueOption')
+            $option = $em->getRepository('Concrete\Core\Entity\Attribute\Value\Value\SelectValueOption')
                 ->findOneByValue($value)
             ;
         }
@@ -704,7 +704,7 @@ EOT
         $type = $this->attributeKey->getAttributeKeySettings();
 
         $em = \Database::get()->getEntityManager();
-        $r = $em->getRepository('\Concrete\Core\Entity\Attribute\Value\Value\SelectValueOption');
+        $r = $em->getRepository('Concrete\Core\Entity\Attribute\Value\Value\SelectValueOption');
         $builder = $r->createQueryBuilder('v');
         $builder->where('v.list = :list');
         $builder->andWhere('v.isDeleted = false');
@@ -981,7 +981,7 @@ EOT
     protected function loadSelectedTagValueFromPost($value)
     {
         $em = \Database::get()->getEntityManager();
-        $r = $em->getRepository('\Concrete\Core\Entity\Attribute\Value\Value\SelectValueOption');
+        $r = $em->getRepository('Concrete\Core\Entity\Attribute\Value\Value\SelectValueOption');
         $type = $this->attributeKey->getAttributeKeySettings();
 
         if (!is_array($value)) {

@@ -6,6 +6,7 @@ use Concrete\Core\Database\Query\AndWhereNotExistsTrait;
 use Concrete\Core\Search\Column\Column;
 use Concrete\Core\Search\Column\PagerColumnInterface;
 use Concrete\Core\Search\ItemList\Pager\PagerProviderInterface;
+use Concrete\Core\Search\ItemList\Pager\QueryObjectResolver;
 
 /**
  * Note: This Column is required to work PageList class with PagerPagination,
@@ -23,7 +24,7 @@ class RandomColumn extends Column implements PagerColumnInterface
 
     function filterListAtOffset(PagerProviderInterface $itemList, $mixed)
     {
-        $query = $itemList->getQueryObject();
+        $query = QueryObjectResolver::getQueryObject($itemList);
         $sort = $this->getColumnSortDirection() == 'desc' ? '<' : '>';
         $where = sprintf('p.cID %s :sortID', $sort);
         $query->setParameter('sortID', $mixed->getCollectionID());

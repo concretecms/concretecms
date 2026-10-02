@@ -29,7 +29,7 @@ class ApacheDetector implements DetectorInterface
     public function detect()
     {
         $result = null;
-        if (($result === null || $result === '') && $this->request->server->has('SERVER_SOFTWARE')) {
+        if ($this->request->server->has('SERVER_SOFTWARE')) {
             $version = $this->detectFromServer($this->request->server->get('SERVER_SOFTWARE'));
             if ($version !== null) {
                 $result = $version;
@@ -61,7 +61,7 @@ class ApacheDetector implements DetectorInterface
     /**
      * Detect from the SERVER_SOFTWARE key of the superglobal server array.
      *
-     * @param string $value
+     * @param string|mixed $value NULL is returned if it's not a string
      *
      * @return null|string
      */
@@ -82,7 +82,7 @@ class ApacheDetector implements DetectorInterface
     /**
      * Detect using the result of the SPL apache_get_version().
      *
-     * @param string $value
+     * @param string|mixed $value NULL is returned if it's not a string
      *
      * @return null|string
      */
@@ -103,7 +103,7 @@ class ApacheDetector implements DetectorInterface
     /**
      * Detect using PHPInfo.
      *
-     * @param string $value
+     * @param string|mixed $value NULL is returned if it's not a string
      *
      * @return null|string
      */
@@ -120,7 +120,7 @@ class ApacheDetector implements DetectorInterface
     /**
      * Detect using PHP_SAPI/php_sapi_name.
      *
-     * @param string $value
+     * @param string|mixed $sapiName NULL is returned if it's not a string
      *
      * @return null|string
      */

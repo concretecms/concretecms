@@ -3,6 +3,7 @@ namespace Concrete\Core\Conversation\Rating;
 
 use Concrete\Core\Conversation\Message\Message;
 use Concrete\Core\Foundation\ConcreteObject;
+use Concrete\Core\Package\Package;
 use Concrete\Core\Package\PackageList;
 use Core;
 use Database;
@@ -22,7 +23,7 @@ abstract class Type extends ConcreteObject
     }
 
     /** Returns the list of all conversation rating types
-     * @return array[Type]
+     * @return \Concrete\Core\Conversation\Rating\Type[]
      */
     public static function getList()
     {

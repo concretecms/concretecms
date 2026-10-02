@@ -78,17 +78,18 @@ EOT
         }
         $packageOptions = [];
         foreach ($input->getArgument('package-options') as $keyValuePair) {
-            [$key, $value] = explode('=', $keyValuePair, 2);
-            $key = trim($key);
+            $chunks = explode('=', $keyValuePair, 2);
+            $key = trim($chunks[0]);
             if (substr($key, -2) === '[]') {
                 $isArray = true;
                 $key = rtrim(substr($key, 0, -2));
             } else {
                 $isArray = false;
             }
-            if ($key === '' || !isset($value)) {
+            if ($key === '' || !isset($chunks[1])) {
                 throw new Exception(sprintf("Unable to parse the package option '%s': it must be in the form of key=value", $keyValuePair));
             }
+            $value = $chunks[1];
             if (isset($packageOptions[$key])) {
                 if (!($isArray && is_array($packageOptions[$key]))) {
                     throw new Exception(sprintf("Duplicated package option '%s'", $key));
@@ -133,7 +134,7 @@ EOT
         $output->write('Installing... ');
         $r = $packageService->install($pkg, $packageOptions);
         if ($r instanceof ErrorList) {
-            throw new Exception(implode("\n", $r->getList()));
+            throw new Exception($r->toText());
         }
         $output->writeln('<info>installed.</info>');
 

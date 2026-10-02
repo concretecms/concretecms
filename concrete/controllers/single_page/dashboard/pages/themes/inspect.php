@@ -68,7 +68,7 @@ class Inspect extends DashboardPageController
             }
 
             $pt = PageTheme::getByID($pThemeID);
-            if (!is_array($this->request->request->get('pageTemplates'))) {
+            if (!is_array($this->request->request->all()['pageTemplates'] ?? null)) {
                 throw new Exception(t('You must specify at least one template to create.'));
             }
 

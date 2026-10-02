@@ -25,10 +25,10 @@ class User implements ItemInterface
         $node->addAttribute('username', $user->getUserName());
         $node->addAttribute('email', $user->getUserEmail());
         if (!$user->isActive()) {
-            $node->addAttribute('inactive', 1);
+            $node->addAttribute('inactive', '1');
         }
         if (!$user->isValidated()) {
-            $node->addAttribute('unvalidated', 1);
+            $node->addAttribute('unvalidated', '1');
         }
         if ($timezone = $user->getUserObject()->getUserTimezone()) {
             $node->addAttribute('timezone', $timezone);

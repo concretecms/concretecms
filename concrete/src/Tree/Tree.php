@@ -293,6 +293,8 @@ abstract class Tree extends ConcreteObject
                 }
                 if (isset($tree)) {
                     /* @var $tree Tree */
+                    // The implementations may return properties that have not been set
+                    /** @var string|null $treeName */
                     $treeName = $tree->getTreeName();
                     if (is_string($treeName) && ($treeName !== '')) {
                         $translations->insert('TreeName', $treeName);

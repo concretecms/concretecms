@@ -18,7 +18,6 @@ use Symfony\Component\Routing\Exception\MethodNotAllowedException;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Routing\Matcher\UrlMatcher;
 use Symfony\Component\Routing\RequestContext;
-use Symfony\Component\Routing\RouteCollection;
 
 class DefaultDispatcher implements DispatcherInterface
 {
@@ -132,39 +131,5 @@ class DefaultDispatcher implements DispatcherInterface
         $response = $this->app->make(ResponseFactoryInterface::class)->collection($c);
 
         return $response;
-    }
-
-    /**
-     * @param \Symfony\Component\Routing\RouteCollection $routes
-     * @param string $path
-     *
-     * @return \Symfony\Component\Routing\RouteCollection
-     */
-    private function filterRouteCollectionForPath(RouteCollection $routes, $path)
-    {
-        $result = new RouteCollection();
-        foreach ($routes->getResources() as $resource) {
-            $result->addResource($resource);
-        }
-        foreach ($routes->all() as $name => $route) {
-            $routePath = $route->getPath();
-            $p = strpos($routePath, '{');
-            $skip = false;
-            if ($p === false) {
-                if ($routePath !== $path) {
-                    $skip = true;
-                }
-            } elseif ($p > 0) {
-                $routeFixedPath = substr($routePath, 0, $p);
-                if (strpos($path, $routeFixedPath) !== 0) {
-                    $skip = true;
-                }
-            }
-            if ($skip === false) {
-                $result->add($name, $route);
-            }
-        }
-
-        return $result;
     }
 }

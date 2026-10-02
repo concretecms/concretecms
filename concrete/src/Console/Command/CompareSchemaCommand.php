@@ -35,6 +35,7 @@ EOT
     {
         $db = \Database::connection();
         $em = $db->getEntityManager();
+        /** @var \Doctrine\Common\Cache\CacheProvider|null $cacheDriver */
         $cacheDriver = $em->getConfiguration()->getMetadataCacheImpl();
         $cacheDriver->flushAll();
 

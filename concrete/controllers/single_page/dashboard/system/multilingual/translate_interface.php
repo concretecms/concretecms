@@ -203,7 +203,7 @@ class TranslateInterface extends DashboardSitePageController
             $jsonTranslations = array();
             $numPlurals = $section->getNumberOfPluralForms();
             foreach ($translations as $translation) {
-                /* @var $translation \Concrete\Core\Multilingual\Page\Section\Translation */
+                /** @var \Concrete\Core\Multilingual\Page\Section\Translation $translation */
                 $jsonTranslation = array();
                 $jsonTranslation['id'] = $translation->getRecordID();
                 if ($translation->hasContext()) {

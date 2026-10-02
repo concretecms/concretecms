@@ -37,6 +37,13 @@ class SiteListController extends Controller
     }
 
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Application\UserInterface\Menu\Item\Controller::getMenuItemLinkElement()
+     *
+     * @return \HtmlObject\Element
+     */
     public function getMenuItemLinkElement()
     {
         $ag = ResponseAssetGroup::get();

@@ -33,6 +33,13 @@ class AttributeSet extends AbstractCategory
         return $set->getAttributeSetDisplayName();
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Package\ItemCategory\AbstractCategory::getPackageItems()
+     *
+     * @return \Concrete\Core\Entity\Attribute\Set[]
+     */
     public function getPackageItems(Package $package)
     {
         return Set::getListByPackage($package);

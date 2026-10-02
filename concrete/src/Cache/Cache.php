@@ -78,7 +78,7 @@ abstract class Cache implements FlushableInterface
         }
 
         // Remove any empty arrays for an accurate count
-        array_filter($drivers);
+        $drivers = array_filter($drivers);
         $count = count($drivers);
         if ($count > 1) {
             $driver = new Composite(['drivers' => $drivers]);

@@ -496,7 +496,7 @@ class Pages extends ApiController
             if ($permissions->canDeletePage()) {
                 $command = new DeletePageCommand($page->getCollectionID(), $this->app->make(User::class)->getUserID());
                 $this->app->executeCommand($command);
-                return $this->deleted(Resources::RESOURCE_PAGES, $pageID);
+                return $this->deleted(Resources::RESOURCE_PAGES, (string) $pageID);
             } else {
                 return $this->error(t('You do not have access to delete this page.'), 401);
             }

@@ -98,12 +98,13 @@ class Conversation extends Controller implements TaskHandlerInterface
         $permissions = Key::getList('conversations');
         foreach ($permissions as $pk) {
             $pk->setPermissionObject($conversation);
-            $pk->clearPermissionAssignment();
+            $pt = $pk->getPermissionAssignmentObject();
+            $pt->clearPermissionAssignment();
             $paID = (int) ($options['pkID'][$pk->getPermissionKeyID()] ?? 0);
             if ($paID > 0) {
                 $pa = Access::getByID($paID, $pk);
                 if ($pa !== null) {
-                    $pk->assignPermissionAccess($pa);
+                    $pt->assignPermissionAccess($pa);
                 }
             }
         }

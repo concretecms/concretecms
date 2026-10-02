@@ -26,7 +26,7 @@ class ExpressValue extends AbstractValue
     }
 
     /**
-     * @return mixed
+     * @return \Doctrine\Common\Collections\Collection|\Concrete\Core\Entity\Express\Entry[]
      */
     public function getSelectedEntries()
     {
@@ -46,7 +46,7 @@ class ExpressValue extends AbstractValue
         $str = '';
         $i = 0;
         /**
-         * @var $option Entry
+         * @var Entry $option
          */
         foreach($this->selectedEntries as $option) {
             $str .= $option->getLabel();

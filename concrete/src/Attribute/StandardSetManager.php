@@ -21,7 +21,9 @@ class StandardSetManager implements SetManagerInterface
     protected $categoryEntity;
 
     /**
-     * @return boolean
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Attribute\SetManagerInterface::allowAttributeSets()
      */
     public function allowAttributeSets()
     {

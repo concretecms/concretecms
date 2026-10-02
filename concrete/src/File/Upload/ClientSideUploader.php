@@ -50,12 +50,15 @@ abstract class ClientSideUploader
      */
     public function getTimeout(): int
     {
+        // ini_get() returns the configured value as is, which may not be numeric
+        /** @var string $raw */
         $raw = ini_get('max_execution_time');
         $maxExecutionTime = is_numeric($raw) ? (int) $raw : 30;
         if ($maxExecutionTime <= 0) {
             // Forever: let's assume 1 full day
             $maxExecutionTime = 24 * 60 * 60;
         }
+        /** @var string $raw */
         $raw = ini_get('max_input_time');
         $maxInputTime = is_numeric($raw) ? (int) $raw : -1;
         if ($maxInputTime === 0) {

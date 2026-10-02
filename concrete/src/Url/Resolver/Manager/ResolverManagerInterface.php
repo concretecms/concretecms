@@ -30,7 +30,7 @@ interface ResolverManagerInterface
      *
      * @param array $args this can be an array of any information
      *
-     * @return \League\URL\URLInterface
+     * @return \League\Url\UrlInterface|null NULL if no resolver was able to resolve the arguments
      */
     public function resolve(array $args);
 }

@@ -1,8 +1,6 @@
 <?php
 namespace Concrete\Core\File\StorageLocation\Configuration;
 
-use Concrete\Core\Error\ErrorList\Error\Error;
-
 interface ConfigurationInterface
 {
     /**
@@ -27,7 +25,7 @@ interface ConfigurationInterface
     /**
      * Validate a request, this is used during saving
      * @param \Concrete\Core\Http\Request $req
-     * @return Error
+     * @return \Concrete\Core\Error\ErrorList\ErrorList|false|null
      */
     public function validateRequest(\Concrete\Core\Http\Request $req);
 

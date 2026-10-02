@@ -42,12 +42,12 @@ interface ObjectInterface
     public function clearAttribute($ak);
 
     /**
-     * Sets the attribute of of the ObjectInterface instance to the specified value, and persists it.
+     * Sets the attribute of the ObjectInterface instance to the specified value, and persists it.
      *
      * @param \Concrete\Core\Attribute\AttributeKeyInterface|string $ak An attribute key instance (or its handle)
      * @param \Concrete\Core\Entity\Attribute\Value\Value\AbstractValue|\Concrete\Core\Attribute\Value\EmptyRequestAttributeValue|array $value
      *
-     * @return \Concrete\Core\Attribute\AttributeValueInterface
+     * @return \Concrete\Core\Attribute\AttributeValueInterface|null the attribute value (NULL if the object can't store the value, for example a file without an approved version)
      */
     public function setAttribute($ak, $value);
 }

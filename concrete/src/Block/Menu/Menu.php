@@ -75,6 +75,7 @@ class Menu extends PopoverMenu
             $editInline = true;
         }
         if ($btw->getBlockTypeHandle() == BLOCK_HANDLE_SCRAPBOOK_PROXY) {
+            /** @var \Concrete\Block\CoreScrapbookDisplay\Controller $_bi */
             $_bi = $b->getInstance();
             $_bo = Block::getByID($_bi->getOriginalBlockID());
             $btOriginal = BlockType::getByHandle($_bo->getBlockTypeHandle());
@@ -111,8 +112,10 @@ class Menu extends PopoverMenu
 
         if ($btOriginal->getBlockTypeHandle() == BLOCK_HANDLE_STACK_PROXY) {
             if (is_object($_bo)) {
+                /** @var \Concrete\Block\CoreStackDisplay\Controller $bi */
                 $bi = $_bo->getInstance();
             } else {
+                /** @var \Concrete\Block\CoreStackDisplay\Controller $bi */
                 $bi = $b->getInstance();
             }
 

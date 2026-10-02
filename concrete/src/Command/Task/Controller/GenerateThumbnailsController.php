@@ -150,13 +150,8 @@ class GenerateThumbnailsController extends AbstractController
                                 // Delete both base and doubled versions
                                 $baseVersion = $thumbnailType->getBaseVersion();
                                 $doubledVersion = $thumbnailType->getDoubledVersion();
-                                
-                                if ($baseVersion) {
-                                    $fileVersion->deleteThumbnail($baseVersion);
-                                }
-                                if ($doubledVersion) {
-                                    $fileVersion->deleteThumbnail($doubledVersion);
-                                }
+                                $fileVersion->deleteThumbnail($baseVersion);
+                                $fileVersion->deleteThumbnail($doubledVersion);
                             }
                             
                             $batch->add(new GeneratedThumbnailCommand(

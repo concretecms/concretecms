@@ -71,7 +71,7 @@ final class Composer
             return false;
         }
         $root = InstalledVersions::getRootPackage();
-        if (($root['name'] ?? null) !== 'concrete5/concrete5') {
+        if ($root['name'] !== 'concrete5/concrete5') {
             // In ConcreteCMS zip distributions, the "name" in the root composer.json is 'concrete5/concrete5'
             return true;
         }

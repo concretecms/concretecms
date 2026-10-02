@@ -19,6 +19,13 @@ class PageType extends AbstractCategory
         return $type->getPageTypeDisplayName();
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Package\ItemCategory\AbstractCategory::getPackageItems()
+     *
+     * @return \Concrete\Core\Page\Type\Type[]
+     */
     public function getPackageItems(Package $package)
     {
         return Type::getListByPackage($package);

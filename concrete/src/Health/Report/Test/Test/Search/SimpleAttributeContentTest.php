@@ -41,8 +41,8 @@ class SimpleAttributeContentTest implements TestInterface
             $message = new AttributeMessage($genericValue);
             $formatter = $message->getFormatter();
             $location = $formatter->getLocation($message);
+            $detailsControl = new FindingDetailControl();
             if ($location) {
-                $detailsControl = new FindingDetailControl();
                 $report->warning($message, new DropdownControl([$detailsControl, new DropdownItemControl($location)]));
             } else {
                 $report->warning($message, new DropdownControl([$detailsControl]));

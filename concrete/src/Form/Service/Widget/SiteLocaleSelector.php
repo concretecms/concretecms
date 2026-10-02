@@ -79,7 +79,7 @@ EOL;
         foreach ($siteLocales as $siteLocale) {
             $optionContent = '<div>' . (string) Flag::getLocaleFlagIcon($siteLocale) . ' ' . htmlspecialchars($siteLocale->getLanguageText());
             if ($displayLocaleCode) {
-                $optionContent .= ' <span class="text-muted small">' + htmlspecialchars($siteLocale->getLocale()) + '</span>';
+                $optionContent .= ' <span class="text-muted small">' . htmlspecialchars($siteLocale->getLocale()) . '</span>';
             }
             $optionContent .= '</div>';
 

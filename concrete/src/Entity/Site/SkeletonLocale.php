@@ -56,7 +56,11 @@ class SkeletonLocale implements LocaleInterface, LocaleEntityInterface, Exportab
     }
 
     /**
-     * @return mixed
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Entity\Site\LocaleEntityInterface::getSiteTree()
+     *
+     * @return \Concrete\Core\Entity\Site\SkeletonTree|null
      */
     public function getSiteTree()
     {

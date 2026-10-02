@@ -8,7 +8,6 @@ use Concrete\Core\Attribute\Category\UserCategory;
 use Concrete\Core\Attribute\Key\UserKey;
 use Concrete\Core\Attribute\ObjectInterface as AttributeObjectInterface;
 use Concrete\Core\Attribute\ObjectTrait;
-use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Encryption\PasswordHasher;
 use Concrete\Core\Entity\Attribute\Value\UserValue;
 use Concrete\Core\Entity\Express\Entry;
@@ -51,7 +50,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Group;
 use Imagine\Image\ImageInterface;
 use League\Flysystem\AdapterInterface;
-use League\URL\URLInterface;
+use League\Url\UrlInterface;
 use stdClass;
 use Concrete\Core\Events\EventDispatcher;
 
@@ -82,7 +81,7 @@ class UserInfo extends ConcreteObject implements AttributeObjectInterface, Permi
     protected $entityManager;
 
     /**
-     * @var Connection
+     * @var \Doctrine\DBAL\Connection
      */
     protected $connection;
 
@@ -472,6 +471,8 @@ class UserInfo extends ConcreteObject implements AttributeObjectInterface, Permi
         $notified = $notifier->getUsersToNotify($subscription, $msg);
         $notification = $type->createNotification($msg);
         $notifier->notify($notified, $notification);
+
+        return null;
     }
 
     /**
@@ -488,7 +489,7 @@ class UserInfo extends ConcreteObject implements AttributeObjectInterface, Permi
     }
 
     /**
-     * @param array $data
+     * @param array|mixed $data ignored if it's not an array
      *
      * @return bool|null returns false if the record has not been saved, null if the password confirmation failed, true otherwise
      */
@@ -620,7 +621,7 @@ class UserInfo extends ConcreteObject implements AttributeObjectInterface, Permi
     }
 
     /**
-     * @param int[] $groupArray
+     * @param int[]|mixed $groupArray nothing happens if it's not an array
      */
     public function updateGroups($groupArray)
     {
@@ -818,6 +819,8 @@ class UserInfo extends ConcreteObject implements AttributeObjectInterface, Permi
             $this->changePassword($newPassword);
             return $newPassword;
         }
+
+        return null;
     }
 
     /**
@@ -829,7 +832,7 @@ class UserInfo extends ConcreteObject implements AttributeObjectInterface, Permi
     }
 
     /**
-     * @return URLInterface|null
+     * @return UrlInterface|null
      */
     public function getUserPublicProfileUrl()
     {
@@ -837,7 +840,7 @@ class UserInfo extends ConcreteObject implements AttributeObjectInterface, Permi
         $config = $site->getConfigRepository();
 
         if (!$config->get('user.profiles_enabled')) {
-            return;
+            return null;
         }
         $url = $this->application->make('url/manager');
 
@@ -1011,7 +1014,7 @@ class UserInfo extends ConcreteObject implements AttributeObjectInterface, Permi
     }
 
     /**
-     * @param UserAttributeKey[] $attributes
+     * @param \Concrete\Core\Entity\Attribute\Key\UserKey[] $attributes
      */
     public function saveUserAttributesForm($attributes)
     {
@@ -1032,11 +1035,9 @@ class UserInfo extends ConcreteObject implements AttributeObjectInterface, Permi
     {
         foreach ($attributes as $uak) {
             $controller = $uak->getController();
-            if (method_exists($controller, 'createDefaultAttributeValue')) {
-                $value = $controller->createDefaultAttributeValue();
-                if ($value !== null) {
-                    $this->setAttributeValue($uak, $value);
-                }
+            $value = $controller->createDefaultAttributeValue();
+            if ($value !== null) {
+                $this->setAttributeValue($uak, $value);
             }
         }
         $this->dispatchUserAttributesSavedEvent($attributes);
@@ -1160,6 +1161,10 @@ class UserInfo extends ConcreteObject implements AttributeObjectInterface, Permi
 
     /**
      * @deprecated use app(\Concrete\Core\User\UserInfoRepository::class)->getByID()
+     *
+     * @param int $uID
+     *
+     * @return \Concrete\Core\User\UserInfo|null
      */
     public static function getByID($uID)
     {
@@ -1168,6 +1173,10 @@ class UserInfo extends ConcreteObject implements AttributeObjectInterface, Permi
 
     /**
      * @deprecated use app(\Concrete\Core\User\UserInfoRepository::class)->getByName()
+     *
+     * @param string $uName
+     *
+     * @return \Concrete\Core\User\UserInfo|null
      */
     public static function getByUserName($uName)
     {
@@ -1176,6 +1185,10 @@ class UserInfo extends ConcreteObject implements AttributeObjectInterface, Permi
 
     /**
      * @deprecated use app(\Concrete\Core\User\UserInfoRepository::class)->getByEmail()
+     *
+     * @param string $uEmail
+     *
+     * @return \Concrete\Core\User\UserInfo|null
      */
     public static function getByEmail($uEmail)
     {
@@ -1184,6 +1197,11 @@ class UserInfo extends ConcreteObject implements AttributeObjectInterface, Permi
 
     /**
      * @deprecated use app(\Concrete\Core\User\UserInfoRepository::class)->getByValidationHash()
+     *
+     * @param string $uHash
+     * @param bool $unredeemedHashesOnly
+     *
+     * @return \Concrete\Core\User\UserInfo|null
      */
     public static function getByValidationHash($uHash, $unredeemedHashesOnly = true)
     {

@@ -104,7 +104,6 @@ class Runner
     }
 
     /**
-     * @param Finding $object
      * @param $message
      */
     public function finding(

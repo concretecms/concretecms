@@ -27,7 +27,7 @@ class Searchindex extends DashboardPageController
         if (!is_string($areaIndexMethod) || !array_key_exists($areaIndexMethod, $this->getAvailableAreaIndexMethods())) {
             $this->error->add(t('Please specify the indexing method.'));
         }
-        $areas = $post->get('arHandle');
+        $areas = $post->all()['arHandle'] ?? null;
         if (!is_array($areas)) {
             $areas = [];
         }

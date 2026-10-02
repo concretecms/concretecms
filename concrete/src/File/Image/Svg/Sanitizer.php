@@ -258,7 +258,7 @@ class Sanitizer
     /**
      * Reads a file.
      *
-     * @param string $filename
+     * @param string|mixed $filename a SanitizerException is thrown if it's not a string
      *
      * @throws \Concrete\Core\File\Image\Svg\SanitizerException in case of errors
      *
@@ -291,7 +291,7 @@ class Sanitizer
     /**
      * Create a DOMDocument instance from a string.
      *
-     * @param string $data
+     * @param string|mixed $data a SanitizerException is thrown if it's not a string
      *
      * @throws \Concrete\Core\File\Image\Svg\SanitizerException in case of errors
      *
@@ -309,8 +309,11 @@ class Sanitizer
         $xml = new DOMDocument();
 
         $error = null;
+        $loaded = false;
         try {
-            $loaded = $xml->loadXML($data, $this->getLoadFlags());
+            if ($xml->loadXML($data, $this->getLoadFlags())) {
+                $loaded = true;
+            }
         } catch (Exception $x) {
             $error = $x;
         } catch (Throwable $x) {

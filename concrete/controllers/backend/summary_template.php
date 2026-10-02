@@ -27,7 +27,7 @@ class SummaryTemplate extends Controller
         $manager = $this->app->make(Manager::class);
         $category = $manager->driver($categoryHandle);
         /**
-         * @var $category DriverInterface
+         * @var DriverInterface $category
          */
         $template = $category->getMemberSummaryTemplate($templateID);
         $object = $category->getCategoryMemberFromIdentifier($memberIdentifier);

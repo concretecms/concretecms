@@ -17,7 +17,7 @@ class Details extends DashboardSitePageController
         if ($board) {
             $permissions = new Checker($board);
             if (!$permissions->canViewBoard()) {
-                unset($board);
+                $board = null;
             }
         }
         if ($board) {

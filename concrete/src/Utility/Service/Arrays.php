@@ -7,18 +7,20 @@ class Arrays
      * Fetches a value from an (multidimensional) array.
      *
      * @param array $array
-     * @param string|int|array $keys Either one key or multiple keys
-     * @param mixedvar $default the value that is returned if key is not found
+     * @param string|int|array|mixed $keys a key, a list of keys, or a string in the form 'key1[key2][key3]' (see parseKeys())
+     * @param mixed $default the value that is returned if key is not found
+     *
+     * @return mixed
      */
     public function get(array $array, $keys, $default = null)
     {
         $keys = $this->parseKeys($keys);
 
-        if (is_array($array) && $keys) {
+        if ($keys !== []) {
             $key = array_shift($keys);
             if (array_key_exists($key, $array)) {
                 $value = $array[$key];
-                if (!$keys) {
+                if ($keys === []) {
                     return $value;
                 }
 
@@ -35,23 +37,25 @@ class Arrays
      * Sets a value in an (multidimensional) array, creating the arrays recursivly.
      *
      * @param array $array
-     * @param unknown_type $keys
-     * @param unknown_type $value
+     * @param string|int|array|mixed $keys a key, a list of keys, or a string in the form 'key1[key2][key3]' (see parseKeys())
+     * @param mixed $value
+     *
+     * @return array
      */
     public function set(array $array, $keys, $value)
     {
         $keys = $this->parseKeys($keys);
 
-        if ($keys) {
+        if ($keys !== []) {
             $key = array_shift($keys);
 
             // This is the last key we've shifted
-            if (!$keys) {
+            if ($keys === []) {
                 $array[$key] = $value;
             } else {
                 // There are more keys so this should be an array
                 if (!isset($array[$key]) || !is_array($array[$key])) {
-                    $array[$key] = array();
+                    $array[$key] = [];
                 }
                 $array[$key] = $this->set(
                     $array[$key], $keys, $value
@@ -63,24 +67,26 @@ class Arrays
     }
 
     /**
-     * Turns the string keys into an array of keys.
+     * Turns the keys into a list of keys.
      *
-     * @param string|array $keys
-     *
-     * @return array
+     * @param string|int|array|mixed $keys a key, a list of keys, or a string in the form 'key1[key2][key3]' (other values are treated as no keys)
      */
-    private function parseKeys($keys)
+    private function parseKeys($keys): array
     {
-        if (is_string($keys)) {
-            if (strpos($keys, '[') !== false) {
-                $keys = str_replace(']', '', $keys);
-                $keys = explode('[', trim($keys, '['));
-            } else {
-                $keys = (array) $keys;
-            }
+        if (is_array($keys)) {
+            return $keys;
+        }
+        if (is_int($keys)) {
+            return [$keys];
+        }
+        if (!is_string($keys) || $keys === '') {
+            return [];
+        }
+        if (strpos($keys, '[') === false) {
+            return [$keys];
         }
 
-        return $keys;
+        return explode('[', trim(str_replace(']', '', $keys), '['));
     }
 
     /**
@@ -95,7 +101,7 @@ class Arrays
         $tmp = array();
         foreach ($array as $a) {
             if (is_array($a)) {
-                $tmp = array_merge($tmp, array_flat($a));
+                $tmp = array_merge($tmp, $this->flatten($a));
             } else {
                 $tmp[] = $a;
             }

@@ -8,7 +8,7 @@ class RouteMiddleware
 
 
     /**
-     * @var MiddlewareInterface
+     * @var MiddlewareInterface|string
      */
     protected $middleware;
 
@@ -19,7 +19,7 @@ class RouteMiddleware
     protected $priority = 10;
 
     /**
-     * @return MiddlewareInterface
+     * @return MiddlewareInterface|string
      */
     public function getMiddleware()
     {

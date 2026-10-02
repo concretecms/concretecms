@@ -53,7 +53,7 @@ class Localization
     /**
      * The translator adapter repository to be used.
      *
-     * @var TranslatorAdapterRepositoryInterface
+     * @var TranslatorAdapterRepositoryInterface|null
      */
     protected $translatorAdapterRepository;
 
@@ -281,9 +281,7 @@ class Localization
      */
     public function getLocale()
     {
-        $adapter = $this->getActiveTranslatorAdapter();
-
-        return $adapter ? $adapter->getLocale() : static::BASE_LOCALE;
+        return $this->getActiveTranslatorAdapter()->getLocale();
     }
 
     /**
@@ -307,11 +305,8 @@ class Localization
     public function getActiveTranslateObject()
     {
         $adapter = $this->getTranslatorAdapter($this->getActiveContext());
-        if (is_object($adapter)) {
-            return $adapter->getTranslator();
-        }
 
-        return null;
+        return $adapter->getTranslator();
     }
 
     /**

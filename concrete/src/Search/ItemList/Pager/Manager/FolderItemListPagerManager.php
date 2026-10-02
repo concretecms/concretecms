@@ -3,6 +3,7 @@ namespace Concrete\Core\Search\ItemList\Pager\Manager;
 
 use Concrete\Core\File\Search\ColumnSet\Available;
 use Concrete\Core\Search\ItemList\Pager\PagerProviderInterface;
+use Concrete\Core\Search\ItemList\Pager\QueryObjectResolver;
 use Concrete\Core\Tree\Node\Node;
 
 class FolderItemListPagerManager extends AbstractPagerManager
@@ -25,7 +26,7 @@ class FolderItemListPagerManager extends AbstractPagerManager
 
     public function sortListByCursor(PagerProviderInterface $itemList, $direction)
     {
-        $itemList->getQueryObject()->addOrderBy('treeNodeID', $direction);
+        QueryObjectResolver::getQueryObject($itemList)->addOrderBy('treeNodeID', $direction);
     }
 
 

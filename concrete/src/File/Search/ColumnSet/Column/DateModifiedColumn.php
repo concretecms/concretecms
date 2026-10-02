@@ -6,6 +6,7 @@ use Concrete\Core\Search\Column\Column;
 use Concrete\Core\Search\Column\ColumnInterface;
 use Concrete\Core\Search\Column\PagerColumnInterface;
 use Concrete\Core\Search\ItemList\Pager\PagerProviderInterface;
+use Concrete\Core\Search\ItemList\Pager\QueryObjectResolver;
 
 class DateModifiedColumn extends Column implements PagerColumnInterface
 {
@@ -29,7 +30,7 @@ class DateModifiedColumn extends Column implements PagerColumnInterface
 
     public function filterListAtOffset(PagerProviderInterface $itemList, $mixed)
     {
-        $query = $itemList->getQueryObject();
+        $query = QueryObjectResolver::getQueryObject($itemList);
         $sort = $this->getColumnSortDirection() == 'desc' ? '<' : '>';
         $where = sprintf('(if(nt.treeNodeTypeHandle=\'file\', fv.fvDateAdded, n.dateModified), n.treeNodeID) %s (:sortDate, :sortID)', $sort);
         $date = $mixed->getDateLastModified();

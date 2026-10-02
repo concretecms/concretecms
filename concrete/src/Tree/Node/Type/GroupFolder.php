@@ -124,6 +124,8 @@ class GroupFolder extends TreeNode
         } elseif ($this->getTreeNodeParentID() == 0) {
             return t('Folders');
         }
+
+        return '';
     }
 
     public function loadDetails()
@@ -200,7 +202,7 @@ class GroupFolder extends TreeNode
      *
      * @param int $contains
      * @param GroupType[] $selectedGroupTypes
-     * @return TreeNode|GroupFolder
+     * @return static
      */
     public static function add($treeNodeName = '', $parent = false, $contains = self::CONTAINS_GROUP_FOLDERS, $selectedGroupTypes = [])
     {
@@ -227,24 +229,22 @@ class GroupFolder extends TreeNode
         $sort = false;
         $list = new FolderItemList();
         $list->filterByParentFolder($this);
-        if ($u !== null) {
-            if (($column = $request->get($list->getQuerySortColumnParameter())) && ($direction = $request->get($list->getQuerySortDirectionParameter()))) {
-                if (is_object($available->getColumnByKey($column)) && ($direction == 'asc' || $direction == 'desc')) {
-                    $sort = [$column, $direction];
-                    $u->saveConfig(sprintf('folder_manager.sort.%s', $this->getTreeNodeID()), json_encode($sort));
-                }
-            } else {
-                $sort = $u->config(sprintf('folder_manager.sort.%s', $this->getTreeNodeID()));
-                if ($sort) {
-                    /** @noinspection PhpComposerExtensionStubsInspection */
-                    $sort = json_decode($sort);
-                }
+        if (($column = $request->get($list->getQuerySortColumnParameter())) && ($direction = $request->get($list->getQuerySortDirectionParameter()))) {
+            if (is_object($available->getColumnByKey($column)) && ($direction == 'asc' || $direction == 'desc')) {
+                $sort = [$column, $direction];
+                $u->saveConfig(sprintf('folder_manager.sort.%s', $this->getTreeNodeID()), json_encode($sort));
             }
-            if (is_array($sort)) {
-                if ($sortColumn = $available->getColumnByKey($sort[0])) {
-                    $sortColumn->setColumnSortDirection($sort[1]);
-                    $list->sortBySearchColumn($sortColumn);
-                }
+        } else {
+            $sort = $u->config(sprintf('folder_manager.sort.%s', $this->getTreeNodeID()));
+            if ($sort) {
+                /** @noinspection PhpComposerExtensionStubsInspection */
+                $sort = json_decode($sort);
+            }
+        }
+        if (is_array($sort)) {
+            if ($sortColumn = $available->getColumnByKey($sort[0])) {
+                $sortColumn->setColumnSortDirection($sort[1]);
+                $list->sortBySearchColumn($sortColumn);
             }
         }
 

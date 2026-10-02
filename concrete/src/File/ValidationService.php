@@ -34,20 +34,13 @@ class ValidationService
      */
     public function image($pathToImage)
     {
-
-        /* compatibility if exif functions not available (--enable-exif) */
-        if (!function_exists('exif_imagetype')) {
-            function exif_imagetype($filename)
-            {
-                if ((list($width, $height, $type, $attr) = getimagesize($filename)) !== false) {
-                    return $type;
-                }
-
-                return false;
-            }
+        if (function_exists('exif_imagetype')) {
+            $val = @exif_imagetype($pathToImage);
+        } else {
+            /* compatibility if exif functions not available (--enable-exif) */
+            $info = @getimagesize($pathToImage);
+            $val = $info === false ? false : $info[2];
         }
-
-        $val = @exif_imagetype($pathToImage);
 
         return in_array($val, array(IMAGETYPE_GIF, IMAGETYPE_JPEG, IMAGETYPE_PNG));
     }

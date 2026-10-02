@@ -32,7 +32,7 @@ class UpdatePageTypeDefaultsCommandHandler
 
         foreach ($blocksToUpdate as $blockToUpdate) {
             $pageBlock = Block::getByID($blockToUpdate->bID, $page, $blockToUpdate->arHandle);
-            array_merge(
+            $handlesToOrder = array_merge(
                 $handlesToOrder,
                 $this->processBlockUpdateActions($blockToUpdate->actions, $pageTypeDefaultPage, $page, $pageBlock)
             );
@@ -58,7 +58,7 @@ class UpdatePageTypeDefaultsCommandHandler
                 $pageBlock->deleteBlock();
 
                 if ($bt->isCopiedWhenPropagated()) {
-                    $pageBlock = $pageTypeBlock->duplicate($page, true);
+                    $pageBlock = $pageTypeBlock->duplicate($page, 'duplicate_master');
                 } else {
                     $pageTypeBlock->alias($page);
                 }

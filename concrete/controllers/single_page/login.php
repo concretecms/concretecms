@@ -13,6 +13,7 @@ use Concrete\Core\Routing\RedirectResponse;
 use Concrete\Core\User\PostLoginLocation;
 use Concrete\Core\User\PostLoginLocationUrl;
 use Concrete\Core\User\User;
+use Symfony\Component\HttpFoundation\RedirectResponse as SymfonyRedirectResponse;
 use Exception;
 use PageController;
 use UserAttributeKey;
@@ -61,16 +62,16 @@ class Login extends PageController implements LoggerAwareInterface
     /**
      * @param string $type
      * @param string $method
-     * @param null $a
-     * @param null $b
-     * @param null $c
-     * @param null $d
-     * @param null $e
-     * @param null $f
-     * @param null $g
-     * @param null $h
-     * @param null $i
-     * @param null $j
+     * @param string|null $a
+     * @param string|null $b
+     * @param string|null $c
+     * @param string|null $d
+     * @param string|null $e
+     * @param string|null $f
+     * @param string|null $g
+     * @param string|null $h
+     * @param string|null $i
+     * @param string|null $j
      *
      * @throws \Concrete\Core\Authentication\AuthenticationTypeFailureException
      * @throws \Exception
@@ -81,7 +82,7 @@ class Login extends PageController implements LoggerAwareInterface
             return $this->view();
         }
         $at = AuthenticationType::getByHandle($type);
-        if (!$at || !$at->isEnabled()) {
+        if (!$at->isEnabled()) {
             throw new AuthenticationTypeFailureException(t('Invalid authentication type.'));
         }
 
@@ -179,7 +180,7 @@ class Login extends PageController implements LoggerAwareInterface
             }
         }
 
-        $ui = UserInfo::getByID($u->getUserID());
+        $ui = UserInfo::getByID((int) $u->getUserID());
         $aks = UserAttributeKey::getRegistrationList();
 
         $unfilled = array_values(
@@ -370,11 +371,11 @@ class Login extends PageController implements LoggerAwareInterface
             $u = $this->app->make(User::class);
             $at = AuthenticationType::getByHandle($session->get('uRequiredAttributeUserAuthenticationType'));
             $session->remove('uRequiredAttributeUserAuthenticationType');
-            if (!$at || !$at->isEnabled()) {
+            if (!$at->isEnabled()) {
                 throw new Exception(t('Invalid Authentication Type'));
             }
 
-            $ui = UserInfo::getByID($u->getUserID());
+            $ui = UserInfo::getByID((int) $u->getUserID());
             $aks = UserAttributeKey::getRegistrationList();
 
             $unfilled = array_values(
@@ -408,7 +409,7 @@ class Login extends PageController implements LoggerAwareInterface
         }
     }
 
-    private function logoutAndRedirect(): RedirectResponse
+    private function logoutAndRedirect(): SymfonyRedirectResponse
     {
         $u = $this->app->make(User::class);
         $response = null;
@@ -469,6 +470,7 @@ class Login extends PageController implements LoggerAwareInterface
     {
         $nh = $this->app->make('helper/validation/numbers');
         $rcURL = '';
+        $pll = null;
         if ($this->request->query->has('rcURL')) {
             $requestRcURL = $this->request->query->get('rcURL');
             if (is_string($requestRcURL)) {

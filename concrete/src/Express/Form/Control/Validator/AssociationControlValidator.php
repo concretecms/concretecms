@@ -21,12 +21,11 @@ class AssociationControlValidator implements ValidatorInterface
 
     public function validateRequest(Control $control, Request $request)
     {
-        if ($control->isRequired()) {
+        if (!$control instanceof AssociationControl) {
+            $this->errorList->add(t('The control must be an instance of %s.', AssociationControl::class));
+        } elseif ($control->isRequired()) {
             $associationValue = $request->request->get('express_association_' . $control->getId());
             if (!$associationValue) {
-                /**
-                 * @var AssociationControl
-                 */
                 $this->errorList->add(t('You must select a valid %s', $control->getAssociation()->getTargetEntity()->getName()));
             }
         }

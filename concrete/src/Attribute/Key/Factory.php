@@ -20,11 +20,21 @@ class Factory
     }
 
 
+    /**
+     * @param int $akID
+     *
+     * @return \Concrete\Core\Entity\Attribute\Key\Key|null
+     */
     public function getInstanceByID($akID)
     {
         return $this->getByID($akID);
     }
 
+    /**
+     * @param int $akID
+     *
+     * @return \Concrete\Core\Entity\Attribute\Key\Key|null
+     */
     public function getByID($akID)
     {
         $cache = Facade::getFacadeApplication()->make("cache/request");
@@ -55,7 +65,7 @@ class Factory
 
         if (is_object($category)) {
             /**
-             * @var $category CategoryInterface
+             * @var CategoryInterface $category
              */
             return $category->getList();
         }
@@ -67,7 +77,7 @@ class Factory
     public function exportTranslations()
     {
         $translations = new Translations();
-        $keys = $this->entityManager->getRepository('\Concrete\Core\Entity\Attribute\Key\Key')
+        $keys = $this->entityManager->getRepository('Concrete\Core\Entity\Attribute\Key\Key')
             ->findAll();
         foreach($keys as $key) {
             $translations->insert('AttributeKeyName', $key->getAttributeKeyName());

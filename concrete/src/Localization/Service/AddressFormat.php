@@ -33,6 +33,13 @@ class AddressFormat
         // "California".
         // When set to `false`, it will be displayed as "CA".
         'subdivision_names' => true,
+        // The HTML tag wrapping the address when the 'html' format is used.
+        // Default: 'div'.
+        // 'html_tag' => 'div',
+        // The attributes of the HTML tag wrapping the address when the 'html'
+        // format is used.
+        // Default: ['class' => 'ccm-address-text'].
+        // 'html_attributes' => ['class' => 'ccm-address-text'],
     ];
 
     /**
@@ -72,13 +79,16 @@ class AddressFormat
      * Formats a local concrete5 address lines array with the underlying address
      * formatting library.
      *
-     * The options that can be passed to the formatter in the array of the
-     * fourth argument:
+     * The options that can be set with setOptions():
      * - subdivision_names - Defines whether the subdivision names are printed
      *   to the output instead of their codes. Default: true.
      * - subdivision_translations - Defines whether the subdivision names are
      *   translated to the given locale if translations are available. Otherwise
      *   the will be printed out in their default locale. Default: true.
+     * - html_tag - The HTML tag wrapping the address when $format is 'html'.
+     *   Default: 'div'.
+     * - html_attributes - The attributes of the HTML tag wrapping the address
+     *   when $format is 'html'. Default: ['class' => 'ccm-address-text'].
      *
      * @param  array       $addressData an array containing the keys and values
      *                                  for all address lines
@@ -124,10 +134,7 @@ class AddressFormat
             $line2 .= trim($addressData['address3']);
         }
 
-        $address = new Address();
-        if (!empty($addressData['country'])) {
-            $address = $address->withCountryCode($addressData['country']);
-        }
+        $address = (new Address())->withCountryCode($addressData['country']);
         if (!empty($addressData['address1'])) {
             $address = $address->withAddressLine1($addressData['address1']);
         }
@@ -161,10 +168,14 @@ class AddressFormat
         }
         if ($format === 'html') {
             $options['html'] = true;
-            if (!isset($options['html_tag'])) {
+            if (isset($this->options['html_tag'])) {
+                $options['html_tag'] = $this->options['html_tag'];
+            } else {
                 $options['html_tag'] = 'div';
             }
-            if (!isset($options['html_attributes'])) {
+            if (isset($this->options['html_attributes'])) {
+                $options['html_attributes'] = $this->options['html_attributes'];
+            } else {
                 $options['html_attributes'] = [
                     'class' => 'ccm-address-text',
                 ];
@@ -263,9 +274,9 @@ class AddressFormat
     /**
      * Fetches the country's address format from the address format repository.
      *
-     * @param  string $code the country code
+     * @param  string|mixed $code the country code (NULL is returned if it's not a string)
      *
-     * @return \CommerceGuys\Addressing\AddressFormat\AddressFormat the address
+     * @return \CommerceGuys\Addressing\AddressFormat\AddressFormat|null the address
      *         format for the country
      */
     protected function getCountryAddressFormat($code)

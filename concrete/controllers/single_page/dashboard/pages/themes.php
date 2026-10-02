@@ -240,7 +240,6 @@ class Themes extends DashboardSitePageController
                 throw new Exception($this->token->getErrorMessage());
             }
 
-            /** @var \Concrete\Core\Page\Theme\Theme $pl */
             $pl = Theme::getByID($pThemeID);
             if (!is_object($pl)) {
                 throw new Exception(t('Invalid theme.'));
@@ -251,9 +250,7 @@ class Themes extends DashboardSitePageController
             }
 
             $obj = Theme::getSiteTheme();
-            if (is_object($obj)) {
-                $siteThemeID = $obj->getThemeID();
-            }
+            $siteThemeID = is_object($obj) ? $obj->getThemeID() : null;
             if ($siteThemeID === $pl->getThemeID()) {
                 throw new Exception(t('You can not uninstall an active theme'));
             }

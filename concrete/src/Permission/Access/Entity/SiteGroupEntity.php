@@ -123,12 +123,18 @@ class SiteGroupEntity extends Entity
         return $entities;
     }
 
+    /**
+     * @return static|null NULL if the site_group access entity type isn't installed
+     */
     public static function getOrCreate(Group $siteGroup)
     {
         $db = \Database::connection();
         $em = $db->getEntityManager();
 
         $petID = $db->GetOne('select petID from PermissionAccessEntityTypes where petHandle = \'site_group\'');
+        if (!$petID) {
+            return null;
+        }
 
         $r = $em->getRepository(SiteGroup::class);
         $siteGroupEntity = $r->findOneByGroup($siteGroup);
@@ -145,7 +151,9 @@ class SiteGroupEntity extends Entity
             $em->flush();
         }
 
-        return \Concrete\Core\Permission\Access\Entity\Entity::getByID($siteGroupEntity->getPermissionAccessEntityID());
+        $entity = \Concrete\Core\Permission\Access\Entity\Entity::getByID($siteGroupEntity->getPermissionAccessEntityID());
+
+        return $entity instanceof static ? $entity : null;
     }
 
     public function load()

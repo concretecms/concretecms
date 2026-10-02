@@ -13,6 +13,13 @@ abstract class Delete extends UserInterface
     protected $validationToken = 'remove_search_preset';
     public $objectID = null;
 
+    /**
+     * Get the repository of the saved search presets.
+     *
+     * @return \Doctrine\ORM\EntityRepository|null
+     */
+    abstract public function getSavedSearchEntity();
+
     public function getDeleteSearchPresetAction()
     {
         return $this->action('remove_search_preset');
@@ -26,7 +33,7 @@ abstract class Delete extends UserInterface
         $presetID = $securityHelper->sanitizeInt($this->request->query->get('presetID'));
         $searchEntity = $this->getSavedSearchEntity();
         if (!empty($presetID) && is_object($searchEntity)) {
-            $searchPreset = $searchEntity->findOneById($presetID);
+            $searchPreset = $searchEntity->find($presetID);
         }
         $this->set('searchPreset', $searchPreset);
         $this->set('form', $app->make('helper/form'));
@@ -42,7 +49,7 @@ abstract class Delete extends UserInterface
             if (!empty($presetID)) {
                 $searchEntity = $this->getSavedSearchEntity();
                 if (is_object($searchEntity)) {
-                    $searchPreset = $searchEntity->findOneById($presetID);
+                    $searchPreset = $searchEntity->find($presetID);
                     if (!is_object($searchPreset)) {
                         $this->error->add(t('Invalid search preset.'));
                     }

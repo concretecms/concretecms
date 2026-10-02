@@ -10,8 +10,8 @@ trait SlotTemplateJsonHelperTrait
 {
 
     /**
-     * @param SlotTemplate[]
-     * @param ItemObjectGroup[]
+     * @param SlotTemplate[] $templates
+     * @param ItemObjectGroup[] $itemObjectGroups
      * @return array
      */
     public function createSlotTemplateJsonArray(array $templates, array $itemObjectGroups) : array

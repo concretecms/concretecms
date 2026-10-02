@@ -1,0 +1,6 @@
+# Composer dependencies of PHPStan
+/vendor/
+# PHPStan result cache
+/tmp/
+# Local PHPStan configuration
+/phpstan.neon

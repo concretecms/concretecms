@@ -38,8 +38,8 @@ class BlockViewTemplate
         $this->obj = $obj;
         if ($obj instanceof Block) {
             $this->bFilename = $obj->getBlockFilename();
-            $c = $obj->getBlockCollectionObject();
-            if (is_object($c)) {
+            $c = $obj->getBlockPageObject();
+            if ($c !== null) {
                 $this->theme = $c->getCollectionThemeObject();
             }
         } else {
@@ -65,7 +65,7 @@ class BlockViewTemplate
     }
 
     /**
-     * @param static $packageList
+     * @param \Concrete\Core\Package\PackageList $packageList
      */
     public function setPackageList($packageList)
     {
@@ -79,7 +79,7 @@ class BlockViewTemplate
         $obj = $this->obj;
 
         /**
-         * @var $locator FileLocator
+         * @var FileLocator $locator
          */
         $locator = \Core::make(FileLocator::class);
         if (is_object($this->theme)) {

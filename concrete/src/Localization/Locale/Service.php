@@ -121,7 +121,7 @@ class Service
                 foreach ($localeInfo->categories as $category) {
                     $pluralCases[] = $category->id . '@' . $category->examples;
                 }
-                $pluralCases = is_array($pluralCases) ? implode("\n", $pluralCases) : $pluralCases;
+                $pluralCases = implode("\n", $pluralCases);
                 $l->setNumPlurals($numPlurals);
                 $l->setPluralCases($pluralCases);
                 $l->setPluralRule($pluralRule);
@@ -162,6 +162,11 @@ class Service
         return $home;
     }
 
+    /**
+     * Delete a locale (and its site tree, if any).
+     *
+     * @param \Concrete\Core\Entity\Site\Locale|\Concrete\Core\Entity\Site\SkeletonLocale $locale
+     */
     public function delete(LocaleEntityInterface $locale)
     {
         $tree = $locale->getSiteTree();

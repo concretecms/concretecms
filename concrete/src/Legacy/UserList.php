@@ -32,6 +32,11 @@ class UserList extends DatabaseItemList
     public $showInvalidatedUsers = 0;
     public $searchAgainstEmail = 0;
 
+    /**
+     * @var int|null
+     */
+    protected $queryCreated;
+
     //Filter by uName
     public function filterByUserName($username)
     {
@@ -47,9 +52,14 @@ class UserList extends DatabaseItemList
         $keys = UserAttributeKey::getSearchableIndexedList();
         $emailSearchStr = ' OR u.uEmail like '.$qkeywords.' ';
         $attribsStr = '';
+        $queryBuilder = $db->createQueryBuilder();
         foreach ($keys as $ak) {
             $cnt = $ak->getController();
-            $attribsStr .= ' OR ' . $cnt->searchKeywords($escapedKeywords);
+            $attributeExpression = (string) $cnt->searchKeywords($keywords, $queryBuilder);
+            if ($attributeExpression !== '') {
+                // the attribute controllers build their expressions around the :keywords placeholder
+                $attribsStr .= ' OR ' . str_replace(':keywords', $qkeywords, $attributeExpression);
+            }
         }
         $this->filter(false, '( u.uName like ' . $qkeywords . $emailSearchStr . $attribsStr . ')');
     }
@@ -102,7 +112,7 @@ class UserList extends DatabaseItemList
     /**
      * Returns an array of userInfo objects based on current filter settings.
      *
-     * @return UserInfo[]
+     * @return \Concrete\Core\User\UserInfo[]
      */
     public function get($itemsToGet = 100, $offset = 0)
     {

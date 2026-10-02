@@ -3,6 +3,7 @@
 namespace Concrete\Core\Command\Process\Command;
 
 use Concrete\Core\Command\Process\ProcessUpdater;
+use Concrete\Core\Command\Task\Output\NullOutput;
 use Concrete\Core\Command\Task\Output\OutputAwareInterface;
 use Concrete\Core\Command\Task\Output\OutputAwareTrait;
 use Concrete\Core\Command\Task\Stamp\OutputStamp;
@@ -33,8 +34,8 @@ class HandleProcessMessageCommandHandler implements OutputAwareInterface
     {
         $message = $command->getMessage();
         $stamps = [];
-        if ($this->output) {
-            $stamps = [new OutputStamp($this->output)];
+        if (!$this->output instanceof NullOutput) {
+            $stamps[] = new OutputStamp($this->output);
         }
         try {
             $this->messageBus->dispatch($message, $stamps);

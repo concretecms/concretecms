@@ -2,9 +2,9 @@
 namespace Concrete\Controller\Permissions\Access\Entity;
 
 use Concrete\Core\Controller\Controller;
+use Concrete\Core\Http\Request;
 use Concrete\Core\Permission\Access\Entity\Entity;
 use Concrete\Core\Validation\CSRF\Token;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 abstract class AccessEntity extends Controller
@@ -22,7 +22,7 @@ abstract class AccessEntity extends Controller
 
     public function __construct(Token $token)
     {
-        $this->request = Request::createFromGlobals();
+        $this->request = Request::getInstance();
         $this->token = $token;
     }
 

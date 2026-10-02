@@ -101,6 +101,7 @@ abstract class Block extends Page
             */
 
             $originalDisplayOrder = $b->getBlockDisplayOrder();
+            /** @var \Concrete\Block\CoreScrapbookDisplay\Controller $cnt */
             $cnt = $b->getController();
             $ob = \Block::getByID($cnt->getOriginalBlockID());
             $ob->loadNewCollection($nvc);

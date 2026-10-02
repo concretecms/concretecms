@@ -12,6 +12,9 @@ use Loader;
 /*
  * @deprecated
  */
+/**
+ * @phpstan-consistent-constructor
+ */
 class Value extends ConcreteObject implements AttributeValueInterface
 {
     protected $attributeType;

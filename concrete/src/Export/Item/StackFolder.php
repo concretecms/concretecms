@@ -11,9 +11,13 @@ defined('C5_EXECUTE') or die("Access Denied.");
 class StackFolder implements ItemInterface
 {
     /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Export\Item\ItemInterface::export()
+     *
      * @param \Concrete\Core\Page\Stack\Folder\Folder $folder
      *
-     * @return \SimpleXMLElement
+     * @return void
      */
     public function export($folder, SimpleXMLElement $xml)
     {

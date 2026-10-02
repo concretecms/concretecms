@@ -30,7 +30,7 @@ class StorageLocation
         /** @var StorageLocationFactory $factory */
         $factory = $app[StorageLocationFactory::class];
 
-        $location = $factory->create($configuration, $fslName, $fslIsDefault);
+        $location = $factory->create($configuration, $fslName);
         $location->setIsDefault($fslIsDefault);
 
         return $factory->persist($location);
@@ -39,7 +39,7 @@ class StorageLocation
     /**
      * @deprecated use FileStorageFactory::fetchByID()
      * @param int $id
-     * @return null|StorageLocation
+     * @return \Concrete\Core\Entity\File\StorageLocation\StorageLocation|null
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
      * @throws \Doctrine\ORM\TransactionRequiredException
@@ -52,7 +52,7 @@ class StorageLocation
 
     /**
      * @deprecated use FileStorageFactory::fetchList()
-     * @return StorageLocation[]
+     * @return \Concrete\Core\Entity\File\StorageLocation\StorageLocation[]
      */
     public static function getList()
     {
@@ -62,7 +62,7 @@ class StorageLocation
 
     /**
      * @deprecated use StorageLocationFactory::fetchDefault()
-     * @return StorageLocation
+     * @return \Concrete\Core\Entity\File\StorageLocation\StorageLocation|null NULL if there's no default storage location
      */
     public static function getDefault()
     {

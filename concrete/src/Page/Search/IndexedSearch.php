@@ -9,7 +9,6 @@ use Concrete\Core\Utility\SearchIndexContentSanitizer;
 use Loader;
 use Config;
 use PageList;
-use Concrete\Core\Page\Collection\Collection;
 use Concrete\Core\Area\Area;
 use Concrete\Core\Area\SubArea;
 use Block;
@@ -20,7 +19,6 @@ class IndexedSearch
     public $searchBatchSize;
     public $searchReindexTimeout;
 
-    private $cPathSections = [];
     private $searchableAreaNames;
     private $contentSanitizer;
 
@@ -90,7 +88,7 @@ class IndexedSearch
     public function reindexPage($page)
     {
         $db = Loader::db();
-        if (is_object($page) && ($page instanceof Collection) && (1 != $page->getAttribute('exclude_search_index'))) {
+        if (($page instanceof Page) && (1 != $page->getAttribute('exclude_search_index'))) {
             $datetime = Loader::helper('date')->getOverridableNow();
             $db->Replace(
                 'PageSearchIndex',

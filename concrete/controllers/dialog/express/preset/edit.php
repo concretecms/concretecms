@@ -10,7 +10,6 @@ use Permissions;
 
 class Edit extends PresetEdit
 {
-
     public function getEditSearchPresetAction()
     {
         $action = parent::getEditSearchPresetAction();
@@ -30,10 +29,6 @@ class Edit extends PresetEdit
             if ($requestedEntityID !== 0 && $requestedEntityID !== $entityID) {
                 return null;
             }
-            if ($entityID !== 0) {
-                $this->exEntityID = $entityID;
-            }
-
             return $entity;
         }
 
@@ -55,15 +50,16 @@ class Edit extends PresetEdit
     public function getSavedSearchEntity()
     {
         $em = $this->app->make(EntityManager::class);
-        if (is_object($em)) {
-            return $em->getRepository('Concrete\Core\Entity\Search\SavedExpressSearch');
-        }
 
-        return null;
+        return $em->getRepository('Concrete\Core\Entity\Search\SavedExpressSearch');
     }
 
     public function getSavedSearchBaseURL(SavedSearch $search)
     {
+        if (!$search instanceof SavedExpressSearch) {
+            throw new \InvalidArgumentException(t('The saved search must be an instance of %s.', SavedExpressSearch::class));
+        }
+
         return (string) URL::to('/ccm/system/search/express/preset', $search->getEntity()->getID(), $search->getID());
     }
 

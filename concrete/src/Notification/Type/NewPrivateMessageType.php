@@ -10,6 +10,13 @@ use Concrete\Core\Notification\Subscription\StandardSubscription;
 class NewPrivateMessageType extends Type
 {
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Notification\Type\TypeInterface::createNotification()
+     *
+     * @param \Concrete\Core\User\PrivateMessage\PrivateMessage $subject
+     */
     public function createNotification(SubjectInterface $subject)
     {
         return new NewPrivateMessageNotification($subject);

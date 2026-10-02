@@ -35,7 +35,7 @@ class Relation
     protected $gID = 0;
 
     /**
-     * @return mixed
+     * @return \Concrete\Core\Entity\Site\Group\Group|null NULL only for relations that have not been assigned to a site group yet (see \Concrete\Core\Site\Service::add())
      */
     public function getSiteGroup()
     {
@@ -43,7 +43,7 @@ class Relation
     }
 
     /**
-     * @param mixed $group
+     * @param \Concrete\Core\Entity\Site\Group\Group $group
      */
     public function setSiteGroup($group)
     {

@@ -11,27 +11,30 @@ use RuntimeException;
 abstract class Column extends ConcreteObject implements ColumnInterface
 {
     /**
-     * @var Layout
+     * The layout containing this column.
+     * It's set only by Layout::getAreaLayoutColumns(): it's NULL for the columns loaded directly with getByID() (for example, the ones returned by Layout::addLayoutColumn()).
+     *
+     * @var Layout|null
      */
     public $arLayout;
     /**
-     * @var int
+     * @var int|numeric-string
      */
     public $arLayoutColumnIndex;
     /**
-     * @var int
+     * @var int|numeric-string
      */
     public $arLayoutID;
     /**
-     * @var int
+     * @var int|numeric-string
      */
     public $arLayoutColumnID;
     /**
-     * @var int
+     * @var int|numeric-string|null
      */
     public $arLayoutColumnDisplayID;
     /**
-     * @var int
+     * @var int|numeric-string
      */
     public $arID;
 
@@ -69,7 +72,9 @@ abstract class Column extends ConcreteObject implements ColumnInterface
     }
 
     /**
-     * @return Layout
+     * Get the layout containing this column.
+     *
+     * @return Layout|null NULL if the column has been loaded directly with getByID() instead of being retrieved from the layout (see Layout::getAreaLayoutColumns())
      */
     public function getAreaLayoutObject()
     {
@@ -114,9 +119,9 @@ abstract class Column extends ConcreteObject implements ColumnInterface
     }
 
     /**
-     * @param Column $newAreaLayout
+     * @param \Concrete\Core\Area\Layout\Layout $newAreaLayout
      *
-     * @return int
+     * @return int|\Concrete\Core\Area\Layout\Column the ID of the new column (the subclasses may return the new column itself)
      */
     public function duplicate($newAreaLayout)
     {
@@ -141,6 +146,8 @@ abstract class Column extends ConcreteObject implements ColumnInterface
 
             return $area;
         }
+
+        return null;
     }
 
     /**
@@ -184,7 +191,7 @@ abstract class Column extends ConcreteObject implements ColumnInterface
         $layout = $this->getAreaLayoutObject();
         if ($layout) {
             $a = $layout->getAreaObject();
-            $as = new SubArea($this->getAreaLayoutColumnDisplayID(), $a->getAreaHandle(), $a->getAreaID());
+            $as = new SubArea((string) $this->getAreaLayoutColumnDisplayID(), $a->getAreaHandle(), $a->getAreaID());
             $as->setAreaGridMaximumColumns($this->getSubAreaMaximumColumns());
             $as->setAreaDisplayName(t('Column %s', $this->getAreaLayoutColumnIndex() + 1));
             return $as;

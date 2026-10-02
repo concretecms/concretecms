@@ -22,7 +22,7 @@ trait SafeClassUnserializerTrait
      * Unserializes $data, only allowing instantiation of the encoded object's class if it
      * extends/implements one of $allowedBaseClasses.
      *
-     * @param string $data
+     * @param string|mixed $data false is returned if it's not a string
      * @param string|string[] $allowedBaseClasses one or more base classes/interfaces that the
      *                                             encoded object's class must extend/implement
      *

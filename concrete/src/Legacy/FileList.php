@@ -2,9 +2,12 @@
 namespace Concrete\Core\Legacy;
 
 use Concrete\Core\Database\Query\LikeBuilder;
+use Concrete\Core\File\Set\Set as FileSet;
 use Concrete\Core\Support\Facade\Application;
+use Exception;
 use File as ConcreteFile;
 use FileAttributeKey;
+use ZipArchive;
 
 /**
  * An object that allows a filtered list of files to be returned.
@@ -19,6 +22,11 @@ class FileList extends DatabaseItemList
     protected $attributeClass = 'FileAttributeKey';
     protected $permissionLevel = 'search_file_set';
     protected $filteredFileSetIDs = array();
+
+    /**
+     * @var int|null
+     */
+    protected $queryCreated;
 
     /* magic method for filtering by attributes. */
     public function __call($nm, $a)
@@ -37,7 +45,7 @@ class FileList extends DatabaseItemList
     /** 
      * Filters by file extension.
      *
-     * @param mixed $extension
+     * @param mixed $ext
      */
     public function filterByExtension($ext)
     {
@@ -66,9 +74,14 @@ class FileList extends DatabaseItemList
         $qkeywords = $db->quote($escapedKeywords);
         $keys = FileAttributeKey::getSearchableIndexedList();
         $attribsStr = '';
+        $queryBuilder = $db->createQueryBuilder();
         foreach ($keys as $ak) {
             $cnt = $ak->getController();
-            $attribsStr .= ' OR ' . $cnt->searchKeywords($escapedKeywords);
+            $attributeExpression = (string) $cnt->searchKeywords($keywords, $queryBuilder);
+            if ($attributeExpression !== '') {
+                // the attribute controllers build their expressions around the :keywords placeholder
+                $attribsStr .= ' OR ' . str_replace(':keywords', $qkeywords, $attributeExpression);
+            }
         }
         $this->filter(false, '(fvFilename like ' . $qkeywords . ' or fvDescription like ' . $qkeywords . ' or fvTitle like ' . $qkeywords . ' or fvTags like ' . $qkeywords . ' or u.uName = ' . $keywordsExact . $attribsStr . ')');
     }
@@ -140,12 +153,14 @@ class FileList extends DatabaseItemList
         $db = Loader::db();
         $i = 0;
         $_fsIDs = array();
-        if (is_array($fsIDs) && count($fsIDs)) {
+        if (count($fsIDs)) {
             foreach ($fsIDs as $fsID) {
                 if ($fsID > 0) {
                     $_fsIDs[] = $fsID;
                 }
             }
+        } else {
+            $fsID = null;
         }
 
         if (count($_fsIDs) > 1) {
@@ -246,7 +261,6 @@ class FileList extends DatabaseItemList
         if ($this->permissionLevel == false || $u->isSuperUser()) {
             return false;
         }
-
 
         $accessEntities = $u->getUserAccessEntityObjects();
         foreach ($accessEntities as $pae) {

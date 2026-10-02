@@ -45,7 +45,7 @@ class Colors extends DashboardPageController
         $this->set('categories', (array) $config->get('concrete.calendar.colors.categories'));
 
         /**
-         * @var $preferences Preferences
+         * @var Preferences $preferences
          */
         $preferences = $this->app->make(Preferences::class);
         $ak = $preferences->getCalendarTopicsAttributeKey();

@@ -19,6 +19,13 @@ class PageTypePublishTargetType extends AbstractCategory
         return $type->getPageTypePublishTargetTypeDisplayName();
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Package\ItemCategory\AbstractCategory::getPackageItems()
+     *
+     * @return \Concrete\Core\Page\Type\PublishTarget\Type\Type[]
+     */
     public function getPackageItems(Package $package)
     {
         return Type::getListByPackage($package);

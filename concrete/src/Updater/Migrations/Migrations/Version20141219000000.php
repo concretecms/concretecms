@@ -92,9 +92,7 @@ class Version20141219000000 extends AbstractMigration implements RepeatableMigra
             $gat = AuthenticationType::getByHandle('google');
         } catch (Exception $e) {
             $gat = AuthenticationType::add('google', 'Google');
-            if (is_object($gat)) {
-                $gat->disable();
-            }
+            $gat->disable();
         }
 
         // fix register page permissions

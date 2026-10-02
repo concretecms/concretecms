@@ -60,6 +60,10 @@ class TranslatorAdapter implements TranslatorAdapterInterface
 
     /**
      * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Localization\Translator\TranslatorAdapterInterface::translate()
+     *
+     * @param string|mixed $text an empty string is returned if it's not a string
      */
     public function translate($text)
     {
@@ -80,6 +84,11 @@ class TranslatorAdapter implements TranslatorAdapterInterface
 
     /**
      * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Localization\Translator\TranslatorAdapterInterface::translatePlural()
+     *
+     * @param string|mixed $singular an empty string is returned if it's not a string
+     * @param string|mixed $plural an empty string is returned if it's not a string
      */
     public function translatePlural($singular, $plural, $number)
     {
@@ -93,6 +102,11 @@ class TranslatorAdapter implements TranslatorAdapterInterface
 
     /**
      * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Localization\Translator\TranslatorAdapterInterface::translateContext()
+     *
+     * @param string|mixed $context an empty string is returned if it's not a string
+     * @param string|mixed $text an empty string is returned if it's not a string
      */
     public function translateContext($context, $text)
     {

@@ -29,8 +29,6 @@ class PresetFactory
 
     /**
      * Returns an array of SkinInterface objects found in the path.
-     *
-     * @param string $path
      */
     public function createFromTheme(Theme $theme, TypeInterface $type): array
     {
@@ -54,9 +52,7 @@ class PresetFactory
 
         foreach ($entries as $path) {
             $preset = $type->createPresetFromPath($path, $theme);
-            if ($preset) {
-                $presets[] = $preset;
-            }
+            $presets[] = $preset;
         }
         usort($presets, function (PresetInterface $a, PresetInterface $b) {
             if ($a->getIdentifier() === 'default') {

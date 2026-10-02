@@ -71,17 +71,11 @@ class PageTemplate implements RenderableTemplateInterface
         $this->cID = $cID;
     }
 
-    /**
-     * @return mixed
-     */
     public function getTemplate() : Template
     {
         return $this->template;
     }
 
-    /**
-     * @param mixed $template
-     */
     public function setTemplate(Template $template): void
     {
         $this->template = $template;

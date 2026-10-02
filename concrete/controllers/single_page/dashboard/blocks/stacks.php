@@ -13,6 +13,7 @@ use Concrete\Core\Page\Page;
 use Concrete\Core\Page\Stack\Stack;
 use Concrete\Core\Page\Stack\StackList;
 use Concrete\Core\Permission\Checker;
+use Concrete\Core\Routing\Redirect;
 use Concrete\Core\Support\Facade\StackFolder;
 use Concrete\Core\User\User;
 use Concrete\Core\Workflow\Request\ApprovePageRequest;
@@ -82,10 +83,7 @@ class Stacks extends DashboardPageController
                 foreach ($blocks as $b1) {
                     $btc = $b1->getController();
                     // now we inject any custom template CSS and JavaScript into the header
-                    if ($btc instanceof \Concrete\Core\Block\BlockController) {
-                        $btc->outputAutoHeaderItems();
-                    }
-
+                    $btc->outputAutoHeaderItems();
                     $btc->runAction('on_page_view', [$view]);
                 }
 
@@ -419,6 +417,9 @@ class Stacks extends DashboardPageController
                 $isFolder = true;
                 $page = $folder->getPage();
                 $viewCID = $page->getCollectionParentID();
+            } else {
+                $isFolder = null;
+                $viewCID = null;
             }
         }
 
@@ -488,7 +489,7 @@ class Stacks extends DashboardPageController
             throw new Exception($this->token->getErrorMessage());
         }
 
-        $receivedSourceIDs = $this->request->request->get('sourceIDs');
+        $receivedSourceIDs = $this->request->request->all()['sourceIDs'] ?? null;
         if (!is_array($receivedSourceIDs)) {
             throw new Exception(t('Bad parameter: %s', 'sourceIDs'));
         }
@@ -715,7 +716,7 @@ class Stacks extends DashboardPageController
     /**
      * Check if stacks in a Page or StackFolder can be moved.
      *
-     * @param Page|StackFolder $parent
+     * @param \Concrete\Core\Page\Page|\Concrete\Core\Page\Stack\Folder\Folder $parent
      *
      * @return bool
      */

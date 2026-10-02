@@ -18,6 +18,11 @@ class SiteGroup extends AccessEntity
         parent::__construct($token);
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Controller\Permissions\Access\Entity\AccessEntity::deliverEntity()
+     */
     public function deliverEntity()
     {
         $group = $this->entityManager->find(GroupEntity::class,
@@ -26,6 +31,8 @@ class SiteGroup extends AccessEntity
         if ($group) {
             return SiteGroupEntity::getOrCreate($group);
         }
+
+        return null;
     }
 
 }

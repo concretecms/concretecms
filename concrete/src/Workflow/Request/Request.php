@@ -47,6 +47,13 @@ abstract class Request extends ConcreteObject
         return PermissionKey::getByID($this->pkID);
     }
 
+    /**
+     * Approve the request.
+     *
+     * @return \Concrete\Core\Workflow\Progress\Response|null
+     */
+    abstract public function approve(WorkflowProgress $wp);
+
     public function setCurrentWorkflowProgressObject(WorkflowProgress $wp)
     {
         $this->currentWP = $wp;
@@ -107,7 +114,7 @@ abstract class Request extends ConcreteObject
      *
      * @param \PermissionKey $pk
      *
-     * @return optional WorkflowProgress
+     * @return \Concrete\Core\Workflow\Progress\Response|null
      */
     protected function triggerRequest(\PermissionKey $pk)
     {
@@ -150,6 +157,8 @@ abstract class Request extends ConcreteObject
 
             return $wp->getWorkflowProgressResponseObject();
         }
+
+        return null;
     }
 
     abstract public function addWorkflowProgress(\Concrete\Core\Workflow\Workflow $wf);

@@ -155,7 +155,7 @@ class ImageEditorService
 
     /**
      * @param string $handle
-     * @return Editor
+     * @return Editor|null
      */
     public function getEditorByHandle($handle)
     {
@@ -164,6 +164,8 @@ class ImageEditorService
             return $this->imageEditorRepository->findOneBy(["handle" => $handle]);
         } catch (Exception $e) {
         }
+
+        return null;
     }
 
     public function getActiveEditor()
@@ -178,7 +180,7 @@ class ImageEditorService
     }
 
     /**
-     * @param Editor $editor
+     * @param Editor|null $editor the editor to be activated (if NULL, the default editor is activated)
      */
     public function setActiveEditor(
         $editor
@@ -194,7 +196,7 @@ class ImageEditorService
     }
 
     /**
-     * @return Editor
+     * @return Editor|null
      */
     public function getDefaultEditor()
     {
@@ -203,10 +205,12 @@ class ImageEditorService
             return $this->imageEditorRepository->findOneBy(["handle" => self::DEFAULT_EDITOR]);
         } catch (Exception $e) {
         }
+
+        return null;
     }
 
     /**
-     * @param Version $fileVersion
+     * @param Version|null $fileVersion the file version to be edited (if NULL, nothing is rendered)
      */
     public function renderActiveImageEditor(
         $fileVersion
@@ -223,7 +227,7 @@ class ImageEditorService
     }
 
     /**
-     * @param Version $fileVersion
+     * @param Version|null $fileVersion the file version to be edited (if NULL, nothing is rendered)
      */
     public function renderActiveThumbnailEditor(
         $fileVersion,
@@ -234,8 +238,12 @@ class ImageEditorService
             $activeEditor = $this->getActiveEditor();
             $element = $activeEditor->getThumbnailEditorHandle();
             if ($element instanceof Element) {
-                $element->getElementController()->setThumbnail($thumbnail);
-                $element->getElementController()->set("fileVersion", $fileVersion);
+                $controller = $element->getElementController();
+                if (method_exists($controller, 'setThumbnail')) {
+                    /** @var \Concrete\Controller\Element\Files\Edit\ThumbnailEditor\ConcreteThumbnailEditor $controller for the default image editor; custom image editors may use other controllers implementing setThumbnail() */
+                    $controller->setThumbnail($thumbnail);
+                }
+                $controller->set("fileVersion", $fileVersion);
                 $element->render();
             }
         }

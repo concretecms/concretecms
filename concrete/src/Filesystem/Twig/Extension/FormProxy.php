@@ -33,7 +33,7 @@ class FormProxy
      * %}
      * {{ form_html.select('userAttributeKeyID', userAttributesOptions, division.userKey) }}
      *
-     * @param iterable $items
+     * @param iterable|mixed $items an empty array is returned if it's not iterable
      * @param string   $keyMethod
      * @param string   $labelMethod
      *

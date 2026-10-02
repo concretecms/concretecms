@@ -13,7 +13,6 @@ use Lcobucci\JWT\Signer\Hmac\Sha256 as HS256;
 use Lcobucci\JWT\Token\Builder as TokenBuilder;
 use Lcobucci\JWT\Encoding\JoseEncoder;
 use Lcobucci\JWT\Encoding\ChainedFormatter;
-use Lcobucci\JWT\Token\Plain;
 
 class Subscriber
 {
@@ -109,11 +108,7 @@ class Subscriber
                 $key
             );
 
-        if ($token instanceof Plain) {
-            return $token->toString();
-        } else {
-            return (string)$token;
-        }
+        return $token->toString();
     }
 
     public function refreshAuthorizationCookie()

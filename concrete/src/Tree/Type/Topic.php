@@ -64,6 +64,7 @@ class Topic extends Tree
         // copy permissions from the other node.
         $rootNode = CategoryTreeNode::add();
         $treeID = parent::create($rootNode);
+        /** @var \Concrete\Core\Tree\Type\Topic $tree */
         $tree = self::getByID($treeID);
         $tree->setTopicTreeName($name);
 
@@ -85,7 +86,7 @@ class Topic extends Tree
         $default = self::getDefault();
         $sx->addAttribute('name', $this->getTreeName());
         if (is_object($default) && $default->getTreeID() == $this->getTreeID()) {
-            $sx->addAttribute('default', 1);
+            $sx->addAttribute('default', '1');
         }
     }
 

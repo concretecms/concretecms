@@ -42,7 +42,7 @@ class ImportBoardsRoutine extends AbstractRoutine
                                 $driver = $sourceEntity->getDriver();
                                 $saver = $driver->getSaver();
                                 /**
-                                 * @var $configuration Configuration
+                                 * @var Configuration $configuration
                                  */
                                 $configuration = $saver->createConfigurationFromImport($datasource->configuration);
 

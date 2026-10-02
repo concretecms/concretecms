@@ -25,6 +25,13 @@ class Theme extends AbstractCategory
         $controller->render();
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Package\ItemCategory\AbstractCategory::getPackageItems()
+     *
+     * @return \Concrete\Core\Page\Theme\Theme[]
+     */
     public function getPackageItems(Package $package)
     {
         return \Concrete\Core\Page\Theme\Theme::getListByPackage($package);

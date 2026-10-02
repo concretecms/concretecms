@@ -7,10 +7,10 @@ defined('C5_EXECUTE') or die('Access Denied.');
 /* @var string $msgBody */
 /* @var string $msgAuthor */
 /* @var string $msgDateCreated (in system time zone) */
-/* @var League\URL\URLInterface $profilePreferencesURL */
-/* @var League\URL\URLInterface $myPrivateMessagesURL */
-/* @var League\URL\URLInterface $profileURL (if users profiles are enabled) */
-/* @var League\URL\URLInterface $replyToMessageURL (if users profiles are enabled and message sender has private messages enabled) */
+/* @var League\Url\UrlInterface $profilePreferencesURL */
+/* @var League\Url\UrlInterface $myPrivateMessagesURL */
+/* @var League\Url\UrlInterface $profileURL (if users profiles are enabled) */
+/* @var League\Url\UrlInterface $replyToMessageURL (if users profiles are enabled and message sender has private messages enabled) */
 
 $subject = t('Private message from %s', $msgAuthor);
 

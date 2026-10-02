@@ -63,7 +63,7 @@ class ConversationMessageAuthorEntity extends Entity
     }
 
     /**
-     * @param User|\Concrete\Core\Entity\User\User $user
+     * @param User|\Concrete\Core\Entity\User\User|mixed $user no entities are returned if it's not an object
      *
      * @throws \Doctrine\DBAL\Exception
      *
@@ -88,13 +88,16 @@ class ConversationMessageAuthorEntity extends Entity
     /**
      * @throws \Doctrine\DBAL\Exception
      *
-     * @return Entity|false
+     * @return static|null NULL if the conversation_message_author access entity type isn't installed
      */
     public static function getOrCreate()
     {
         /** @var Connection $db */
         $db = app(Connection::class);
         $petID = $db->fetchOne('select petID from PermissionAccessEntityTypes where petHandle = \'conversation_message_author\'');
+        if (!$petID) {
+            return null;
+        }
         $peID = $db->fetchOne(
             'select peID from PermissionAccessEntities where petID = ?',
             [$petID]
@@ -105,7 +108,9 @@ class ConversationMessageAuthorEntity extends Entity
             app('config')->save('concrete.misc.access_entity_updated', time());
         }
 
-        return \Concrete\Core\Permission\Access\Entity\Entity::getByID($peID);
+        $entity = \Concrete\Core\Permission\Access\Entity\Entity::getByID($peID);
+
+        return $entity instanceof static ? $entity : null;
     }
 
     /**

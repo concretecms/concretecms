@@ -33,6 +33,16 @@ class PageList extends DatabaseItemList
     protected $indexedSearch = false;
     protected $viewPagePermissionKeyHandle = 'view_page';
 
+    /**
+     * @var bool
+     */
+    protected $indexModeSimple;
+
+    /**
+     * @var string
+     */
+    protected $indexedKeywords;
+
     /* magic method for filtering by page attributes. */
 
     public function __call($nm, $a)
@@ -104,9 +114,14 @@ class PageList extends DatabaseItemList
 
         $keys = CollectionAttributeKey::getSearchableIndexedList();
         $attribsStr = '';
+        $queryBuilder = $db->createQueryBuilder();
         foreach ($keys as $ak) {
             $cnt = $ak->getController();
-            $attribsStr .= ' OR ' . $cnt->searchKeywords($escapedKeywords);
+            $attributeExpression = (string) $cnt->searchKeywords($keywords, $queryBuilder);
+            if ($attributeExpression !== '') {
+                // the attribute controllers build their expressions around the :keywords placeholder
+                $attribsStr .= ' OR ' . str_replace(':keywords', $qk, $attributeExpression);
+            }
         }
 
         if ($simple || $this->indexModeSimple) {
@@ -466,11 +481,10 @@ class PageList extends DatabaseItemList
             $db = Loader::db();
             $criteria = [];
             foreach ($value as $v) {
-                $escapedValue = $db->escape($v);
                 if ($isMultiSelect) {
-                    $criteria[] = "(ak_{$akHandle} LIKE '%\n{$escapedValue}\n%')";
+                    $criteria[] = "(ak_{$akHandle} LIKE " . $db->quote("%\n{$v}\n%") . ')';
                 } else {
-                    $criteria[] = "(ak_{$akHandle} = '\n{$escapedValue}\n')";
+                    $criteria[] = "(ak_{$akHandle} = " . $db->quote("\n{$v}\n") . ')';
                 }
             }
             $where = '(' . implode(' OR ', $criteria) . ')';

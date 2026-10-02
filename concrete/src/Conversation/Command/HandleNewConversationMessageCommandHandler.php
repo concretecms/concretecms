@@ -58,10 +58,12 @@ class HandleNewConversationMessageCommandHandler
             // setting. Waiting for Me notifications go into the Dashboard and include both unapproved
             // and approved users.
             $notifier = $this->notificationType->getNotifier();
-            $subscription = $this->notificationType->getSubscription($message);
-            $notified = $notifier->getUsersToNotify($subscription, $message);
-            $notification = $this->notificationType->createNotification($message);
-            $notifier->notify($notified, $notification);
+            if (method_exists($notifier, 'notify')) {
+                $subscription = $this->notificationType->getSubscription($message);
+                $notified = $notifier->getUsersToNotify($subscription, $message);
+                $notification = $this->notificationType->createNotification($message);
+                $notifier->notify($notified, $notification);
+            }
 
             if ($message->isConversationMessageApproved()) {
                 // Send the emails.

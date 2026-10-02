@@ -30,6 +30,8 @@ class Item extends SearchResultItem
             $icon = $item->getListFormatter()->getIconElement();
         } else if ($item instanceof \Concrete\Core\Tree\Node\Type\File) {
             $icon = $item->getTreeNodeFileObject()->getListingThumbnailImage();
+        } else {
+            $icon = null;
         }
         return $icon;
     }
@@ -74,7 +76,7 @@ class Item extends SearchResultItem
 
     /**
      * Returns an integer for a file ID if the result is a file, otherwise returns null.
-     * @return int
+     * @return int|null
      */
     public function getResultFileUUID()
     {
@@ -86,7 +88,7 @@ class Item extends SearchResultItem
 
     /**
      * Returns an integer for a file ID if the result is a file, otherwise returns null.
-     * @return int
+     * @return int|null
      */
     public function getResultFileID()
     {
@@ -103,6 +105,8 @@ class Item extends SearchResultItem
         } else if ($item instanceof File) {
             $obj = $item->getJSONObject();
             $obj->treeNodeTypeHandle = 'file'; // We include this so our bulk menu works when searching.
+        } else {
+            return;
         }
         foreach ($obj as $key => $value) {
             $this->{$key} = $value;

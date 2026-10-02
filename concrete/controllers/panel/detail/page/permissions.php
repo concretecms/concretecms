@@ -39,7 +39,7 @@ class Permissions extends BackendInterfacePageController
             $assignments = $pk->getAccessListItems();
             foreach ($assignments as $asi) {
                 $ae = $asi->getAccessEntityObject();
-                if ($ae->getAccessEntityTypeHandle() == 'group') {
+                if ($ae instanceof GroupPermissionAccessEntity) {
                     $group = $ae->getGroupObject();
                     if (is_object($group)) {
                         $viewAccess[] = $group->getGroupID();
@@ -52,7 +52,7 @@ class Permissions extends BackendInterfacePageController
             $assignments = $pk->getAccessListItems();
             foreach ($assignments as $asi) {
                 $ae = $asi->getAccessEntityObject();
-                if ($ae->getAccessEntityTypeHandle() == 'group') {
+                if ($ae instanceof GroupPermissionAccessEntity) {
                     $group = $ae->getGroupObject();
                     if (is_object($group)) {
                         $editAccess[] = $group->getGroupID();
@@ -83,7 +83,7 @@ class Permissions extends BackendInterfacePageController
             $pt->clearPermissionAssignment();
             $pa = Access::create($pk);
 
-            $readGID = $this->request->request->get('readGID');
+            $readGID = $this->request->request->all()['readGID'] ?? null;
             if (is_array($readGID)) {
                 foreach ($readGID as $gID) {
                     $pa->addListItem(GroupPermissionAccessEntity::getOrCreate(Group::getByID($gID)));
@@ -92,7 +92,7 @@ class Permissions extends BackendInterfacePageController
             $pt->assignPermissionAccess($pa);
 
             $editAccessEntities = [];
-            $editGID = $this->request->request->get('editGID');
+            $editGID = $this->request->request->all()['editGID'] ?? null;
             if (is_array($editGID)) {
                 foreach ($editGID as $gID) {
                     $editAccessEntities[] = GroupPermissionAccessEntity::getOrCreate(Group::getByID($gID));

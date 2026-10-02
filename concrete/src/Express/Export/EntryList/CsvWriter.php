@@ -109,12 +109,11 @@ class CsvWriter
     /**
      * Turn an Entry into an array
      * @param \Concrete\Core\Entity\Express\Entry $entry
-     * @return array
+     * @return \Generator
      */
     private function projectEntry(Entry $entry)
     {
-        $date = $entry->getDateCreated();
-        yield 'ccm_date_created' => $date ? $this->dateFormatter->formatCustom($this->datetime_format, $date) : null;
+        yield 'ccm_date_created' => $this->dateFormatter->formatCustom($this->datetime_format, $entry->getDateCreated());
 
         $date = $entry->getDateModified();
         yield 'ccm_date_modified' => $date ? $this->dateFormatter->formatCustom($this->datetime_format, $date) : null;

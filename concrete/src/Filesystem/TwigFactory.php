@@ -26,7 +26,7 @@ class TwigFactory implements ApplicationAwareInterface
     /** @var array<string, mixed>  */
     protected $globals = [];
 
-    /** @var ExtensionInterface[] */
+    /** @var array<ExtensionInterface|class-string<ExtensionInterface>> the extensions (the class names are resolved with the container when the environment is created) */
     protected $extensions = [];
 
     /** @var array<string, array<string, string>> */

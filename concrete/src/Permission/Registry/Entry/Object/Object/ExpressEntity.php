@@ -26,7 +26,7 @@ class ExpressEntity implements ObjectInterface
             $entity = Express::getObjectByHandle($this->entity);
         }
         /**
-         * @var $entity Entity
+         * @var Entity $entity
          */
         $nodeId = $entity->getEntityResultsNodeId();
         if ($nodeId) {

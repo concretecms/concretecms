@@ -19,6 +19,13 @@ class Page extends AbstractCategory
         return $page->getCollectionPath();
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Package\ItemCategory\AbstractCategory::getPackageItems()
+     *
+     * @return \Concrete\Core\Page\Page[]
+     */
     public function getPackageItems(Package $package)
     {
         $list = new PageList();

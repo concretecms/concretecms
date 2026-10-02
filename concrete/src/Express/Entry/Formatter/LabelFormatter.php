@@ -3,6 +3,7 @@
 namespace Concrete\Core\Express\Entry\Formatter;
 
 use Concrete\Core\Entity\Express\Entry;
+use Concrete\Core\Entity\Express\Entry\OneAssociation;
 use Concrete\Core\Express\Formatter\FormatterInterface;
 
 class LabelFormatter implements EntryFormatterInterface
@@ -38,7 +39,7 @@ class LabelFormatter implements EntryFormatterInterface
             }
 
             $association = $entry->getAssociation($key);
-            if (is_object($association)) {
+            if ($association instanceof OneAssociation) {
                 return $association->getSelectedEntry()->getLabel();
             }
         });

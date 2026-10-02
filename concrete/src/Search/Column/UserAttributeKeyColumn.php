@@ -3,6 +3,7 @@ namespace Concrete\Core\Search\Column;
 
 use Concrete\Core\Database\Query\AndWhereNotExistsTrait;
 use Concrete\Core\Search\ItemList\Pager\PagerProviderInterface;
+use Concrete\Core\Search\ItemList\Pager\QueryObjectResolver;
 
 class UserAttributeKeyColumn extends AttributeKeyColumn implements PagerColumnInterface
 {
@@ -13,7 +14,7 @@ class UserAttributeKeyColumn extends AttributeKeyColumn implements PagerColumnIn
     {
         $db = \Database::connection();
         $value = $db->GetOne('select ' . $this->getColumnKey() . ' from UserSearchIndexAttributes where uID = ?', [$mixed->getUserID()]);
-        $query = $itemList->getQueryObject();
+        $query = QueryObjectResolver::getQueryObject($itemList);
         $sort = $this->getColumnSortDirection() == 'desc' ? '<' : '>';
         $where = sprintf('(' . $this->getColumnKey() . ', u.uID) %s (:sortColumn, :sortID)', $sort);
         $query->setParameter('sortColumn', $value);

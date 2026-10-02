@@ -7,6 +7,7 @@
 return;
 
 // To translate the value of the VERSION_INITIAL_COMMENT constant
+// @phpstan-ignore deadCode.unreachable (the code is never executed by design: see above)
 t('Initial Version');
 
 // To translate the names of the autentication types

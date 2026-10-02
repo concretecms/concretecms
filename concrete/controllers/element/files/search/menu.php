@@ -13,7 +13,7 @@ class Menu extends ElementController
 {
 
     /**
-     * @var Query
+     * @var Query|null
      */
     protected $query;
 

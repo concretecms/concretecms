@@ -5,6 +5,7 @@ namespace Concrete\Core\Command\Batch\Command;
 use Concrete\Core\Command\Batch\BatchUpdater;
 use Concrete\Core\Command\Batch\Stamp\BatchStamp;
 use Concrete\Core\Command\Process\Command\ProcessMessageInterface;
+use Concrete\Core\Command\Task\Output\NullOutput;
 use Concrete\Core\Command\Task\Output\OutputAwareInterface;
 use Concrete\Core\Command\Task\Output\OutputAwareTrait;
 use Concrete\Core\Command\Task\Stamp\OutputStamp;
@@ -35,10 +36,10 @@ class HandleBatchMessageCommandHandler implements OutputAwareInterface
     {
         $message = $command->getMessage();
         $stamps = [];
-        if ($this->output) {
+        if (!$this->output instanceof NullOutput) {
             $stamps = [
                 new BatchStamp($command->getBatch()),
-                new OutputStamp($this->output)
+                new OutputStamp($this->output),
             ];
         }
         try {

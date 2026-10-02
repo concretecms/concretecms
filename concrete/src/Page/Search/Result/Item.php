@@ -25,7 +25,7 @@ class Item extends SearchResultItem
     {
         $list = $result->getItemListObject();
         if ($list->isFulltextSearch()) {
-            $this->columns[] = new SearchResultItemColumn(t('Score'), $item->getPageIndexScore());
+            $this->columns[] = new SearchResultItemColumn(t('Score'), $item->getPageIndexScore(), null);
         }
         parent::__construct($result, $columns, $item);
         $this->populateDetails($item);

@@ -9,6 +9,8 @@ use IPLib\Range\RangeInterface;
 
 /**
  * @deprecated Use the methods of $app->make('failed_login')
+ *
+ * @phpstan-consistent-constructor
  */
 class IPRange
 {

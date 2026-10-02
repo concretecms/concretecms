@@ -71,7 +71,7 @@ class Reorder extends BackendInterfaceController
                 $i = 0;
                 $handler = $association->getSaveHandler();
                 /**
-                 * @var $handler ManySaveHandlerInterface
+                 * @var ManySaveHandlerInterface $handler
                  */
                 $supportsCustomDisplayOrder = false;
                 if ($association->getTargetEntity()->supportsCustomDisplayOrder()) {

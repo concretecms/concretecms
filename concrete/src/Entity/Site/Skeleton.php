@@ -5,6 +5,7 @@ use Concrete\Core\Attribute\Category\SiteTypeCategory;
 use Concrete\Core\Attribute\ObjectInterface;
 use Concrete\Core\Attribute\ObjectTrait;
 use Concrete\Core\Attribute\Key\SiteTypeKey;
+use Concrete\Core\Entity\Attribute\Key\Key;
 use Concrete\Core\Entity\Attribute\Value\SiteTypeValue;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -23,13 +24,18 @@ class Skeleton implements ObjectInterface
         return \Core::make(SiteTypeCategory::class);
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Attribute\ObjectInterface::getAttributeValueObject()
+     */
     public function getAttributeValueObject($ak, $createIfNotExists = false)
     {
         if (!is_object($ak)) {
             $ak = SiteTypeKey::getByHandle($ak);
         }
         $value = false;
-        if (is_object($ak)) {
+        if ($ak instanceof Key) {
             $value = $this->getObjectAttributeCategory()->getAttributeValue($ak, $this);
         }
 
@@ -41,6 +47,8 @@ class Skeleton implements ObjectInterface
             $attributeValue->setAttributeKey($ak);
             return $attributeValue;
         }
+
+        return null;
     }
 
     /**
@@ -86,7 +94,7 @@ class Skeleton implements ObjectInterface
     }
 
     /**
-     * @return mixed
+     * @return \Concrete\Core\Entity\Site\SkeletonLocale[]|\Doctrine\Common\Collections\Collection
      */
     public function getLocales()
     {

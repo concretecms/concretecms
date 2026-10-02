@@ -96,7 +96,7 @@ class Import extends UserInterface
     {
         if ($this->currentFolder === false) {
             $currentFolder = null;
-            $fID = $this->request->request->get('currentFolder', $this->request->query->get('currentFolder'));
+            $fID = $this->request->request->all()['currentFolder'] ?? $this->request->query->all()['currentFolder'] ?? null;
             if ($fID && is_scalar($fID)) {
                 $fID = (int) $fID;
                 if ($fID !== 0) {
@@ -169,7 +169,7 @@ class Import extends UserInterface
     {
         if ($this->originalPage === false) {
             $originalPage = null;
-            $ocID = $this->request->request->get('ocID', $this->request->query->get('ocID'));
+            $ocID = $this->request->request->all()['ocID'] ?? $this->request->query->all()['ocID'] ?? null;
             if ($ocID && is_scalar($ocID)) {
                 $ocID = (int) $ocID;
                 if ($ocID !== 0) {

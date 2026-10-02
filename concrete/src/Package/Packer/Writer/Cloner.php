@@ -79,6 +79,8 @@ class Cloner implements WriterInterface
                 $this->filesToAdd[$relativePath] = $file->getAbsolutePath();
             }
         }
+
+        return $this;
     }
 
     /**

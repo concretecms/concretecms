@@ -69,16 +69,14 @@ interface LocaleInterface
     /**
      * Set the number of plural rules used in this locale.
      *
-     * @param int $msNumPlurals
-     * @param mixed $numPlurals
+     * @param int $numPlurals
      */
     public function setNumPlurals($numPlurals);
 
     /**
      * Set the plural rule names with examples (using CLDR format).
      *
-     * @param string $msPluralCases
-     * @param mixed $numCases
+     * @param string $numCases
      *
      * @example <code>one@1\nother@0, 2~16, 100, 1000, 10000, 100000, 1000000, …</code>
      */
@@ -87,8 +85,7 @@ interface LocaleInterface
     /**
      * Set the plural rules definition of this locale (using gettext format).
      *
-     * @param string $msPluralRule
-     * @param mixed $pluralRule
+     * @param string $pluralRule
      *
      * @example <code>(n != 1)</code>
      */

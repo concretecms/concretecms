@@ -61,7 +61,7 @@ class CustomizeSlot extends DashboardSitePageController
 
     /**
      * @param $id
-     * @return CustomElement
+     * @return \Concrete\Core\Entity\Board\Designer\ItemSelectorCustomElement|null
      */
     protected function getCustomElement($id)
     {

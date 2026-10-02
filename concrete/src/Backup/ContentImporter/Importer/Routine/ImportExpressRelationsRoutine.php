@@ -18,9 +18,6 @@ class ImportExpressRelationsRoutine extends AbstractRoutine
         // Loop through all associations and set the related entities
         if (isset($sx->expressentities)) {
             foreach ($sx->expressentities->entity as $entityNode) {
-                /**
-                 * @var $entity \Concrete\Core\Entity\Express\Entity
-                 */
                 $entity = $em->find('Concrete\Core\Entity\Express\Entity', (string) $entityNode['id']);
                 if (is_object($entity)) {
                     $default_view_form = $em->find('Concrete\Core\Entity\Express\Form', (string) $entityNode['default_view_form']);
@@ -35,9 +32,6 @@ class ImportExpressRelationsRoutine extends AbstractRoutine
                 $em->persist($entity);
                 if (isset($entityNode->associations)) {
                     foreach($entityNode->associations->association as $associationNode) {
-                        /**
-                         * @var $association \Concrete\Core\Entity\Express\Association
-                         */
                         $association = $em->find('Concrete\Core\Entity\Express\Association', (string) $associationNode['id']);
                         if (is_object($association)) {
                             $source_entity = $em->find('Concrete\Core\Entity\Express\Entity', (string) $associationNode['source-entity']);

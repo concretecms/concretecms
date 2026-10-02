@@ -32,13 +32,9 @@ class SemaphoreMutex implements MutexInterface
      */
     public static function isSupported(Application $app)
     {
-        $result = false;
-        if (PHP_VERSION_ID >= 50601) { // we need the $nowait parameter of sem_acquire, available since PHP 5.6.1
-            $fi = $app->make(FunctionInspector::class);
-            $result = $fi->functionAvailable('sem_get') && $fi->functionAvailable('sem_acquire') && $fi->functionAvailable('sem_release') & $fi->functionAvailable('ftok');
-        }
+        $fi = $app->make(FunctionInspector::class);
 
-        return $result;
+        return $fi->functionAvailable('sem_get') && $fi->functionAvailable('sem_acquire') && $fi->functionAvailable('sem_release') && $fi->functionAvailable('ftok');
     }
 
     /**
@@ -61,13 +57,15 @@ class SemaphoreMutex implements MutexInterface
                     @chmod($filename, 0666);
                     $statBefore = @stat($filename);
                     $semKey = @ftok($filename, 'a');
-                    if (!is_int($semKey) || $semKey === -1) {
+                    if ($semKey === -1) {
                         $retry = true; // file may have been deleted in the meanwhile
                         throw new RuntimeException("ftok() failed for path {$filename}");
                     }
                     $errorDescription = '';
-                    set_error_handler(function ($errno, $errstr) use (&$errorDescription) {
-                        $errorDescription = (string) $errstr;
+                    set_error_handler(static function (int $errno, string $errstr) use (&$errorDescription): bool {
+                        $errorDescription = $errstr;
+
+                        return true;
                     });
                     $sem = sem_get($semKey, 1);
                     restore_error_handler();

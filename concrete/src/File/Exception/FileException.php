@@ -6,7 +6,7 @@ class FileException extends \Exception
     protected $fileObject;
 
     /**
-     * @param \File      $file
+     * @param \Concrete\Core\Entity\File\File $file
      * @param string     $message
      * @param int        $code
      * @param \Exception $previous

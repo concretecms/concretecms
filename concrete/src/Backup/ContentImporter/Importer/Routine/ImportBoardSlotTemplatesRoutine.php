@@ -33,7 +33,7 @@ class ImportBoardSlotTemplatesRoutine extends AbstractRoutine
                     if (isset($bt->tags)) {
                         foreach ($bt->tags->children() as $templateTag) {
                             $templateTagValue = (string) $templateTag['value'];
-                            if ($templateTagValue !== null) {
+                            if ($templateTagValue !== '') {
                                 $tag = $tagRepository->findOneByValue($templateTagValue);
                                 if ($tag) {
                                     $template->getTags()->add($tag);

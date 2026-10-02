@@ -21,9 +21,7 @@ class Version20181212221911 extends AbstractMigration implements RepeatableMigra
             // AuthenticationType::getByHandle throws an exception if the call fails, which is stupid, but here
             // we are.
             $external = AuthenticationType::add('external_concrete', 'External Concrete');
-            if (is_object($external)) {
-                $external->disable();
-            }
+            $external->disable();
         }
     }
 }

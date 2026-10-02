@@ -20,10 +20,8 @@ class Listener
         // Remove the index column(s), if any
         if ($key->isAttributeKeySearchable()) {
             $indexer = $key->getSearchIndexer();
-            if ($indexer instanceof SearchIndexerInterface) {
-                $key->setIsAttributeKeySearchable(false);
-                $indexer->updateSearchIndexKeyColumns($category, $key);
-            }
+            $key->setIsAttributeKeySearchable(false);
+            $indexer->updateSearchIndexKeyColumns($category, $key);
         }
         // Delete the category key record
         $category->deleteKey($key);
@@ -33,7 +31,7 @@ class Listener
         $controller->deleteKey();
 
         // Delete from any attribute sets
-        $r = $em->getRepository('\Concrete\Core\Entity\Attribute\SetKey');
+        $r = $em->getRepository('Concrete\Core\Entity\Attribute\SetKey');
         $setKeys = $r->findBy(['attribute_key' => $key]);
         foreach ($setKeys as $setKey) {
             $em->remove($setKey);

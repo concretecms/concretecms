@@ -49,7 +49,6 @@ class ExportCommand extends Command
 
         // Locate the entity
         $repository = $entityManager->getRepository(Entity::class);
-        /** @var Entity $entity */
         $entity = $repository->findOneBy([
             'handle' => $entityHandle
         ]);

@@ -139,12 +139,8 @@ class CommandRegistry implements ApplicationAwareInterface
         if ($this->app->isInstalled()) {
             // Set the doctrine helperset to the CLI
             $doctrineHelperSet = $this->app->call([ConsoleRunner::class, 'createHelperSet']);
-            if ($this->console->getHelperSet()) {
-                foreach ($doctrineHelperSet as $key => $helper) {
-                    $this->console->getHelperSet()->set($helper, $key);
-                }
-            } else {
-                $this->console->setHelperSet($doctrineHelperSet);
+            foreach ($doctrineHelperSet as $key => $helper) {
+                $this->console->getHelperSet()->set($helper, $key);
             }
 
             // Add Doctrine ConsoleRunner commands

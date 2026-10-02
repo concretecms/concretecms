@@ -31,7 +31,7 @@ class DefaultManager implements IndexManagerInterface, ApplicationAwareInterface
      * Get the indexes for a type
      * @param string $type
      * @param bool $includeGlobal
-     * @return \Concrete\Core\Search\Index\IndexInterface[]|\Concrete\Core\Search\Index\Iterator
+     * @return \Generator<string, \Concrete\Core\Search\Index\IndexInterface>
      */
     public function getIndexes($type, $includeGlobal=true)
     {

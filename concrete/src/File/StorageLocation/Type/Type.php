@@ -12,7 +12,7 @@ class Type
     /**
      * @param string $fslTypeHandle
      * @param string $fslTypeName
-     * @param int|\Package $pkg
+     * @param \Concrete\Core\Entity\Package|\Concrete\Core\Package\Package|false|null $pkg
      *
      * @return \Concrete\Core\Entity\File\StorageLocation\Type\Type
      */
@@ -52,7 +52,7 @@ class Type
     public static function getByHandle($fslTypeHandle)
     {
         $em = \ORM::entityManager();
-        $type = $em->getRepository('\Concrete\Core\Entity\File\StorageLocation\Type\Type')->findOneBy(
+        $type = $em->getRepository('Concrete\Core\Entity\File\StorageLocation\Type\Type')->findOneBy(
             array('fslTypeHandle' => $fslTypeHandle,
          ));
 
@@ -67,7 +67,7 @@ class Type
     public static function getList()
     {
         $em = \ORM::entityManager();
-        return $em->getRepository('\Concrete\Core\Entity\File\StorageLocation\Type\Type')->findBy(
+        return $em->getRepository('Concrete\Core\Entity\File\StorageLocation\Type\Type')->findBy(
             array(), array('fslTypeID' => 'asc')
         );
     }
@@ -75,14 +75,14 @@ class Type
     /**
      * Return an array of AuthenticationTypes that are associated with a specific package.
      *
-     * @param \Package $pkg
+     * @param \Concrete\Core\Entity\Package|\Concrete\Core\Package\Package $pkg
      *
      * @return \Concrete\Core\Entity\File\StorageLocation\Type\Type[]
      */
     public static function getListByPackage($pkg)
     {
         $em = \ORM::entityManager();
-        return $em->getRepository('\Concrete\Core\Entity\File\StorageLocation\Type\Type')->findBy(
+        return $em->getRepository('Concrete\Core\Entity\File\StorageLocation\Type\Type')->findBy(
             array('pkgID' => $pkg->getPackageID()), array('fslTypeID' => 'asc')
         );
     }

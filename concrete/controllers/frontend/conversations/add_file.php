@@ -114,7 +114,7 @@ class AddFile extends FrontendController
         }
         // check file count (this is just for presentation, final count check is done on message submit).
         if ($maxQuantity !== null && (int) $this->request->request->get('fileCount') > $maxQuantity) {
-            throw new UserMessageException(tt('Attachment limit reached'));
+            throw new UserMessageException(t('Attachment limit reached'));
         }
     }
 

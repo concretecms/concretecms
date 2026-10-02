@@ -85,7 +85,8 @@ interface ResponseFactoryInterface
 
     /**
      * Create a response from a collection object
-     * @param Collection $collection
+     *
+     * @param \Concrete\Core\Page\Page $collection the page to be rendered (the signature accepts any collection for backward compatibility, but it must be a page)
      * @param int $code
      * @param array $headers
      * @return SymfonyResponse

@@ -3,6 +3,10 @@ namespace Concrete\Core\Permission\Key;
 
 use Loader;
 
+/**
+ * @property \Concrete\Core\Block\Block|null $permissionObject
+ * @method \Concrete\Core\Block\Block|null getPermissionObject()
+ */
 class BlockKey extends Key
 {
     public function copyFromPageOrAreaToBlock()

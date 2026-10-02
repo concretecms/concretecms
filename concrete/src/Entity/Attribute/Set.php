@@ -72,7 +72,7 @@ class Set implements ExportableInterface, \JsonSerializable
     }
 
     /**
-     * @return mixed
+     * @return \Doctrine\Common\Collections\Collection|\Concrete\Core\Entity\Attribute\SetKey[]
      */
     public function getAttributeKeyCollection()
     {

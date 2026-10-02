@@ -19,6 +19,13 @@ class PageTypeComposerControlType extends AbstractCategory
         return $type->getPageTypeComposerControlTypeDisplayName();
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Package\ItemCategory\AbstractCategory::getPackageItems()
+     *
+     * @return \Concrete\Core\Page\Type\Composer\Control\Type\Type[]
+     */
     public function getPackageItems(Package $package)
     {
         return Type::getListByPackage($package);

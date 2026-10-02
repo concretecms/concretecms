@@ -17,7 +17,7 @@ class ApplicationMiddleware implements MiddlewareInterface, ApplicationAwareInte
 
     /**
      * Apply the request instance to the request singleton
-     * @param \Symfony\Component\HttpFoundation\Request $request
+     * @param \Concrete\Core\Http\Request $request
      * @param \Concrete\Core\Http\Middleware\DelegateInterface $frame
      * @return \Symfony\Component\HttpFoundation\Response
      */

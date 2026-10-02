@@ -27,6 +27,9 @@ class TopicsValue extends AbstractValue
         $this->topics = new ArrayCollection();
     }
 
+    /**
+     * @return \Doctrine\Common\Collections\Collection|\Concrete\Core\Entity\Attribute\Value\Value\SelectedTopic[]
+     */
     public function getSelectedTopics()
     {
         return $this->topics;

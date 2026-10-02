@@ -123,7 +123,7 @@ class ConcreteErrorRenderer implements ErrorRendererInterface
             $htmlErrorRenderer = new HtmlErrorRenderer(true);
             $originalHtml = $htmlErrorRenderer->render($exception)->getAsString();
             $document = new \DOMDocument();
-            set_error_handler(static function() {}, -1);
+            set_error_handler(static function (): bool { return true; }, -1);
             try {
                 $document->loadHTML($originalHtml);
                 $xpath = new \DOMXPath($document);

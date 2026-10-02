@@ -21,7 +21,7 @@ interface ConfigurationInterface
     /**
      * Validate a request, this is used during saving
      * @param Request $req
-     * @return Error
+     * @return Error|null NULL if there are no errors
      */
     public function validateRequest(Request $req);
 
@@ -52,9 +52,10 @@ interface ConfigurationInterface
     public function hasCustomImportHandler();
 
     /**
-     * @param $fileId
-     * @param $uploadDirectoryId
-     * @return Version
+     * @param string|int $fileId the identifier of the file in the external provider
+     * @param int $uploadDirectoryId the ID of the folder node where the file should be imported
+     *
+     * @return Version|null NULL (or any other non-Version value) if the import failed
      */
     public function importFile($fileId, $uploadDirectoryId);
 }

@@ -17,20 +17,38 @@ class FolderService
         $this->application = $application;
     }
 
+    /**
+     * Get a stack folder given its path (relative to the stacks page).
+     *
+     * @param string $path
+     *
+     * @return \Concrete\Core\Page\Stack\Folder\Folder|null
+     */
     public function getByPath($path)
     {
         $c = \Page::getByPath(STACKS_PAGE_PATH . '/' . trim($path, '/'));
         if ($c->getCollectionTypeHandle() == STACK_CATEGORY_PAGE_TYPE) {
             return $this->application->make('Concrete\Core\Page\Stack\Folder\Folder', array('page' => $c));
         }
+
+        return null;
     }
 
+    /**
+     * Get a stack folder given the ID of its page.
+     *
+     * @param int|string $cID
+     *
+     * @return \Concrete\Core\Page\Stack\Folder\Folder|null
+     */
     public function getByID($cID)
     {
         $c = \Page::getByID($cID);
         if ($c->getCollectionTypeHandle() == STACK_CATEGORY_PAGE_TYPE) {
             return $this->application->make('Concrete\Core\Page\Stack\Folder\Folder', array('page' => $c));
         }
+
+        return null;
     }
 
     public function add($name, ?Folder $folder = null)

@@ -35,7 +35,9 @@ class IpAccessControlCategory extends AbstractCategory
     }
 
     /**
-     * @param \Concrete\Core\Entity\Package $package
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Package\ItemCategory\AbstractCategory::getPackageItems()
      *
      * @return \Concrete\Core\Entity\Permission\IpAccessControlCategory[]
      */

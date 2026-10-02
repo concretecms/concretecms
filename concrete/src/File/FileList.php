@@ -7,7 +7,7 @@ namespace Concrete\Core\File;
 use Concrete\Core\Database\Query\LikeBuilder;
 use Concrete\Core\Search\ItemList\Database\AttributedItemList as DatabaseItemList;
 use Concrete\Core\Search\ItemList\Pager\Manager\FileListPagerManager;
-use Concrete\Core\Search\ItemList\Pager\PagerProviderInterface;
+use Concrete\Core\Search\ItemList\Pager\DatabasePagerProviderInterface;
 use Concrete\Core\Search\ItemList\Pager\QueryString\VariableFactory;
 use Concrete\Core\Search\Pagination\PaginationProviderInterface;
 use Concrete\Core\Search\StickyRequest;
@@ -17,7 +17,7 @@ use Pagerfanta\Adapter\DoctrineDbalAdapter;
 
 defined('C5_EXECUTE') or die('Access Denied.');
 
-class FileList extends DatabaseItemList implements PagerProviderInterface, PaginationProviderInterface
+class FileList extends DatabaseItemList implements DatabasePagerProviderInterface, PaginationProviderInterface
 {
     /**
      * @var \Closure|int|null
@@ -120,7 +120,7 @@ class FileList extends DatabaseItemList implements PagerProviderInterface, Pagin
     }
 
     /**
-     * @return \Concrete\Core\Entity\File\File
+     * @return \Concrete\Core\Entity\File\File|null
      */
     public function getResult($queryRow)
     {
@@ -128,6 +128,8 @@ class FileList extends DatabaseItemList implements PagerProviderInterface, Pagin
         if (is_object($f) && $this->checkPermissions($f)) {
             return $f;
         }
+
+        return null;
     }
 
     public function checkPermissions($mixed)
@@ -175,7 +177,7 @@ class FileList extends DatabaseItemList implements PagerProviderInterface, Pagin
     /**
      * Filter the files by their storage location using a storage location object.
      *
-     * @param \Concrete\Core\Entity\File\StorageLocation\StorageLocation|int $storageLocation storage location object
+     * @param \Concrete\Core\Entity\File\StorageLocation\StorageLocation|int|mixed $storageLocation storage location object or ID (an exception is thrown for other objects)
      */
     public function filterByStorageLocation($storageLocation)
     {

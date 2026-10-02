@@ -124,6 +124,8 @@ EOT
                 if ($output->getVerbosity() > OutputInterface::VERBOSITY_QUIET) {
                     $output->writeln("{$count} records deleted.");
                 }
+            } else {
+                $count = null;
             }
             if ($automaticBans !== null) {
                 if ($output->getVerbosity() > OutputInterface::VERBOSITY_QUIET) {

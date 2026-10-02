@@ -19,7 +19,7 @@ class UpdateOrder extends UserInterface
         if ($akCategory === null) {
             throw new UserMessageException(t('Failed to find the attribute category.'));
         }
-        $uats = $post->get('asID', null);
+        $uats = $post->all()['asID'] ?? null;
         $uats = is_array($uats) ? array_values(array_filter(array_map('intval', $uats))) : [];
         if ($uats === []) {
             throw new UserMessageException(t('Missing list of attributes.'));

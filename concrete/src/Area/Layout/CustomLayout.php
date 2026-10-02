@@ -3,6 +3,9 @@ namespace Concrete\Core\Area\Layout;
 
 use Loader;
 
+/**
+ * @method \Concrete\Core\Area\Layout\CustomColumn[] getAreaLayoutColumns()
+ */
 class CustomLayout extends Layout
 {
     /**
@@ -59,12 +62,12 @@ class CustomLayout extends Layout
     public function exportDetails($node)
     {
         $node->addAttribute('type', 'custom');
-        $node->addAttribute('spacing', $this->arLayoutSpacing);
-        $node->addAttribute('custom-widths', $this->arLayoutIsCustom);
+        $node->addAttribute('spacing', (string) $this->arLayoutSpacing);
+        $node->addAttribute('custom-widths', $this->arLayoutIsCustom ? '1' : '0');
     }
 
     /**
-     * @return CustomLayout|ThemeGridLayout
+     * @return CustomLayout|ThemeGridLayout|null
      */
     public function duplicate()
     {
@@ -81,6 +84,8 @@ class CustomLayout extends Layout
 
             return $newAreaLayout;
         }
+
+        return null;
     }
 
     /**
@@ -141,10 +146,12 @@ class CustomLayout extends Layout
 
             return $ar;
         }
+
+        return null;
     }
 
     /**
-     * @return static
+     * @return \Concrete\Core\Area\Layout\CustomColumn
      */
     public function addLayoutColumn()
     {

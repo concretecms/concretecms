@@ -531,7 +531,10 @@ class Controller extends BlockController implements UsesFeatureInterface
             $set = $this->app->make(ColumnSet::class);
             $available = $provider->getAvailableColumnSet();
             foreach ($this->request->request->get('column') as $key) {
-                $set->addColumn($available->getColumnByKey($key));
+                $column = $available->getColumnByKey($key);
+                if ($column !== null) {
+                    $set->addColumn($column);
+                }
             }
 
             $sort = $available->getColumnByKey($this->request->request->get('fSearchDefaultSort'));

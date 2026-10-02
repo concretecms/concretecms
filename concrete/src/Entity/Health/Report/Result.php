@@ -152,7 +152,7 @@ class Result implements ResultInterface
     }
 
     /**
-     * @return Finding[]
+     * @return \Doctrine\Common\Collections\Collection|\Concrete\Core\Entity\Health\Report\Finding[]
      */
     public function getFindings()
     {

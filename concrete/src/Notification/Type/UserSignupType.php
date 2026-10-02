@@ -2,7 +2,6 @@
 namespace Concrete\Core\Notification\Type;
 
 use Concrete\Core\Entity\Notification\UserSignupNotification;
-use Concrete\Core\Entity\User\UserSignup;
 use Concrete\Core\Notification\Alert\Filter\StandardFilter;
 use Concrete\Core\Notification\Subject\SubjectInterface;
 use Concrete\Core\Notification\Subscription\StandardSubscription;
@@ -11,7 +10,11 @@ class UserSignupType extends Type
 {
 
     /**
-     * @param $user UserSignup
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Notification\Type\TypeInterface::createNotification()
+     *
+     * @param \Concrete\Core\Entity\User\UserSignup $signup
      */
     public function createNotification(SubjectInterface $signup)
     {

@@ -1,0 +1,58 @@
+<?php
+
+/*
+ * MountManager::copy() and MountManager::move() don't document all the exceptions thrown by the Filesystem methods
+ * they call: copy() calls readStream(), which throws FileNotFoundException if the source file doesn't exist; move()
+ * calls rename() (or copy() and delete()), which throw FileNotFoundException too, and rename() also throws
+ * FileExistsException if the destination file already exists. This stub declares the actual exceptions.
+ * PHPStan validates the stub files in isolation, so the exception classes must be declared here too.
+ */
+
+namespace League\Flysystem;
+
+class FileExistsException extends \Exception
+{
+}
+
+class FileNotFoundException extends \Exception
+{
+}
+
+class FilesystemNotFoundException extends \LogicException
+{
+}
+
+class MountManager
+{
+    /**
+     * @param string $from
+     * @param string $to
+     * @param array<string, mixed> $config
+     *
+     * @throws \InvalidArgumentException
+     * @throws \League\Flysystem\FilesystemNotFoundException
+     * @throws \League\Flysystem\FileNotFoundException if the source file doesn't exist
+     * @throws \League\Flysystem\FileExistsException if the destination file already exists
+     *
+     * @return bool
+     */
+    public function copy($from, $to, array $config = [])
+    {
+    }
+
+    /**
+     * @param string $from
+     * @param string $to
+     * @param array<string, mixed> $config
+     *
+     * @throws \InvalidArgumentException
+     * @throws \League\Flysystem\FilesystemNotFoundException
+     * @throws \League\Flysystem\FileNotFoundException if the source file doesn't exist
+     * @throws \League\Flysystem\FileExistsException if the destination file already exists
+     *
+     * @return bool
+     */
+    public function move($from, $to, array $config = [])
+    {
+    }
+}

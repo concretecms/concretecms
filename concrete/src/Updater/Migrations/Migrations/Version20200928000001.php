@@ -14,7 +14,7 @@ final class Version20200928000001 extends AbstractMigration implements Repeatabl
 
         $c = $this->createSinglePage('/dashboard/system/mail/logging', 'Email Logging');
 
-        if (is_object($c) && !$c->isError()) {
+        if (!$c->isError()) {
             $c->update([
                 'cDescription' => t('Control how emails get logged.')
             ]);

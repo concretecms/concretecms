@@ -116,9 +116,11 @@ class Legacy extends DashboardPageController
                             isset($answerSet['answers'][$questionId]['answer']) &&
                             isset($answerSet['answers'][$questionId]['answerLong'])) {
                             $answer = $answerSet['answers'][$questionId]['answer'] . $answerSet['answers'][$questionId]['answerLong'];
+                        } else {
+                            $answer = null;
                         }
 
-                        if (in_array(substr($answer, 0, 1), $charactersToEscape)) {
+                        if ($answer !== null && in_array(substr($answer, 0, 1), $charactersToEscape)) {
                             $row[] = $escapeCharacter . $answer;
                         } else {
                             $row[] = $answer;

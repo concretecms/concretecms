@@ -18,12 +18,12 @@ class DatabaseCharset extends DashboardPageController
 
     public function set_connection_collation()
     {
+        $warnings = $this->app->make('error');
         if (!$this->token->validate(__FUNCTION__)) {
             $this->error->add($this->token->getErrorMessage());
         } else {
             $collation = $this->request->request->get('collation');
             $manager = $this->app->make(Manager::class);
-            $warnings = $this->app->make('error');
             try {
                 $manager->apply('', $collation, '', '', null, $warnings);
             } catch (Exception $x) {

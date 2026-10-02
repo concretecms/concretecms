@@ -5,6 +5,16 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
 class Translation extends \Gettext\Translation
 {
+    /**
+     * @var int
+     */
+    public $mtID;
+
+    /**
+     * @var int
+     */
+    public $mtSectionID;
+
     public function getRecordID()
     {
         return $this->mtID;

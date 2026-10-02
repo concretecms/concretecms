@@ -97,7 +97,7 @@ class PagePathTest extends PageTestCase
             ]);
 
         $page->setCanonicalPagePath('/a-completely-new-canonical-page-path');
-        $testPath = \ORM::entityManager('core')->getRepository('\Concrete\Core\Entity\Page\PagePath')->findOneBy(
+        $testPath = \ORM::entityManager('core')->getRepository('Concrete\Core\Entity\Page\PagePath')->findOneBy(
             ['cID' => $page->getCollectionID(), 'ppIsCanonical' => true,
         ]);
         $this->assertInstanceOf('\Concrete\Core\Entity\Page\PagePath', $testPath);

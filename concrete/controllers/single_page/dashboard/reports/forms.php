@@ -8,7 +8,6 @@ use Concrete\Core\Filesystem\ElementManager;
 use Concrete\Core\Page\Controller\DashboardSitePageController;
 use Concrete\Core\Tree\Node\Node;
 use Concrete\Core\Tree\Node\Type\ExpressEntryCategory;
-use Concrete\Core\Tree\Type\ExpressEntryResults;
 
 class Forms extends DashboardSitePageController
 {
@@ -20,7 +19,7 @@ class Forms extends DashboardSitePageController
     {
         if ($folder) {
             $node = Node::getByID($folder);
-            if (!($node instanceof ExpressEntryCategory) && !($node instanceof ExpressEntryResults)) {
+            if (!($node instanceof ExpressEntryCategory)) {
                 throw new \Exception(t('Invalid form entry node.'));
             }
         } else {

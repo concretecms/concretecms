@@ -24,9 +24,6 @@ class ViewContext implements ContextInterface
         return $this->entry;
     }
 
-    /**
-     * @param mixed $entry
-     */
     public function setEntry(Entry $entry)
     {
         $this->entry = $entry;
@@ -45,9 +42,6 @@ class ViewContext implements ContextInterface
         return $this->form;
     }
 
-    /**
-     * @param mixed $form
-     */
     public function setForm(FormInterface $form)
     {
         $this->form = $form;

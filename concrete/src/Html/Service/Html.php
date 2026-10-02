@@ -48,7 +48,7 @@ class Html
             } else {
                 $v = View::getInstance();
                 // checking the theme directory for it. It's just in the root.
-                if ($v instanceof View && $v->getThemeDirectory() != '' && file_exists(
+                if ($v->getThemeDirectory() != '' && file_exists(
                         $v->getThemeDirectory() . '/' . $file
                     )
                 ) {

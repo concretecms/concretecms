@@ -3,6 +3,7 @@ namespace Concrete\Core\StyleCustomizer;
 
 use Concrete\Core\StyleCustomizer\Preset\PresetInterface;
 use Concrete\Core\StyleCustomizer\Style\Parser\ParserManager;
+use Concrete\Core\StyleCustomizer\Style\Style;
 use Concrete\Core\StyleCustomizer\Style\Parser\Manager\ManagerInterface;
 
 class StyleListFactory
@@ -16,6 +17,9 @@ class StyleListFactory
             foreach ($setNode->style as $styleNode) {
                 $parser = $parserManager->getParserFromType((string) $styleNode['type']);
                 $style = $parser->parseNode($styleNode, $preset);
+                if (!$style instanceof Style) {
+                    throw new \UnexpectedValueException(t('The style parser must return an instance of %s.', Style::class));
+                }
                 $set->addStyle($style);
             }
         }

@@ -36,7 +36,7 @@ class Replace extends Import
     {
         if ($this->replacingFile === false) {
             $replacingFile = null;
-            $fID = $this->request->request->get('fID', $this->request->query->get('fID'));
+            $fID = $this->request->request->all()['fID'] ?? $this->request->query->all()['fID'] ?? null;
             if ($fID && is_scalar($fID)) {
                 $fID = (int) $fID;
                 if ($fID !== 0) {

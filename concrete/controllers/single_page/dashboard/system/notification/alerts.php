@@ -32,7 +32,7 @@ class Alerts extends DashboardPageController
         if (!$tp->canAccessTaskPermissions()) {
             $this->error->add(t('Access Denied.'));
         }
-        $permissionKeyIDs = $this->request->request->get('pkID', []);
+        $permissionKeyIDs = $this->request->request->get('pkID') ?? [];
         if (!is_array($permissionKeyIDs)) {
             $this->error->add(t('Invalid parameters.'));
         }

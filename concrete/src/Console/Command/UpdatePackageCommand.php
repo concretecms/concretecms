@@ -115,7 +115,7 @@ EOT
         } else {
             $test = $pkg->testForUpgrade();
             if ($test !== true) {
-                throw new Exception(implode("\n", $test->getList()));
+                throw new Exception($test->toText());
             }
             $output->writeln('<info>good.</info>');
 

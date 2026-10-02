@@ -17,10 +17,11 @@ class CallableUrlResolver implements UrlResolverInterface
     }
 
     /**
-     * @param callable $resolver A Callable that receives three arguments
+     * @param callable|mixed $resolver A Callable that receives three arguments
      *                               CallableUrlResolver $resolver,
      *                               array               $arguments,
      *                               string|null         $resolved
+     *                               (an InvalidArgumentException is thrown if it's not callable)
      */
     public function setResolver(/* callable */ $resolver)
     {

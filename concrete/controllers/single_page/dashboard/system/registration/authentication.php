@@ -142,9 +142,6 @@ EOT
         } else {
             $this->flash('success', t('The %s authentication type has been disabled.', $authenticationType->getAuthenticationTypeDisplayName('text')));
         }
-        if ($this->error->has()) {
-            return $this->edit($authenticationType->getAuthenticationTypeID());
-        }
 
         return $this->buildRedirect($this->action());
     }

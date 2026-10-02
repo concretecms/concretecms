@@ -19,6 +19,13 @@ class ConversationRatingType extends AbstractCategory
         return $type->getConversationRatingTypeDisplayName();
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Package\ItemCategory\AbstractCategory::getPackageItems()
+     *
+     * @return \Concrete\Core\Conversation\Rating\Type[]
+     */
     public function getPackageItems(Package $package)
     {
         return Type::getListByPackage($package);

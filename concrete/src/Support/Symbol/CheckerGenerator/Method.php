@@ -7,12 +7,12 @@ namespace Concrete\Core\Support\Symbol\CheckerGenerator;
 class Method
 {
     /**
-     * @var $string
+     * @var string
      */
     private $name;
 
     /**
-     * @var $string
+     * @var string
      */
     private $arguments;
 
@@ -22,24 +22,31 @@ class Method
     private $deprecated = false;
 
     /**
-     * @var $string[]
+     * @var string[]
      */
     private $descriptions = [];
 
     /**
-     * @var $string[]
+     * @var string[]
      */
     private $forObjectOfClasses = [];
 
     /**
-     * @var $string[]
+     * @var string[]
      */
     private $categoryKeyHandles = [];
 
     /**
-     * @var $string[]
+     * @var string[]
      */
     private $sees = [];
+
+    /**
+     * The return type (empty string if unknown).
+     *
+     * @var string
+     */
+    private $returnType = '';
 
     public function __construct(string $name, string $arguments = '')
     {
@@ -55,6 +62,26 @@ class Method
     public function getArguments(): string
     {
         return $this->arguments;
+    }
+
+    /**
+     * @param string $value the return type (empty string if unknown)
+     *
+     * @return $this
+     */
+    public function setReturnType(string $value): self
+    {
+        $this->returnType = $value;
+
+        return $this;
+    }
+
+    /**
+     * Get the return type (empty string if unknown).
+     */
+    public function getReturnType(): string
+    {
+        return $this->returnType;
     }
 
     /**
@@ -161,14 +188,7 @@ class Method
 
     public function isCompatibleWith(self $other): bool
     {
-        if (strcasecmp($this->getName(), $other->getName()) !== 0) {
-            return false;
-        }
-        if ($this->getArguments() !== $other->getArguments()) {
-            return false;
-        }
-
-        return true;
+        return strcasecmp($this->getName(), $other->getName()) === 0;
     }
 
     /**
@@ -176,6 +196,9 @@ class Method
      */
     public function merge(self $other): self
     {
+        if ($other->getArguments() !== $this->arguments) {
+            $this->arguments = self::mergeArguments($this->arguments, $other->getArguments());
+        }
         if (!$other->isDeprecated()) {
             $this->setDeprecated(false);
         }
@@ -191,7 +214,45 @@ class Method
         foreach ($other->getSees() as $value) {
             $this->addSee($value);
         }
+        if ($this->getReturnType() === '') {
+            $this->setReturnType($other->getReturnType());
+        }
 
         return $this;
+    }
+
+    /**
+     * Merge two different argument lists of the same method: a class can't declare a method twice, so we keep the longest list and we make every argument optional.
+     */
+    private static function mergeArguments(string $arguments1, string $arguments2): string
+    {
+        $list1 = self::splitArguments($arguments1);
+        $list2 = self::splitArguments($arguments2);
+        $longest = count($list2) > count($list1) ? $list2 : $list1;
+        $result = [];
+        foreach ($longest as $argument) {
+            if (strpos($argument, '=') === false && strpos($argument, '...') === false) {
+                if ($argument[0] !== '$' && $argument[0] !== '&' && $argument[0] !== '?') {
+                    // Typed argument: make it nullable
+                    $argument = '?' . $argument;
+                }
+                $argument .= ' = null';
+            }
+            $result[] = $argument;
+        }
+
+        return implode(', ', $result);
+    }
+
+    /**
+     * @return string[]
+     */
+    private static function splitArguments(string $arguments): array
+    {
+        if ($arguments === '') {
+            return [];
+        }
+
+        return preg_split('/,\s*(?=(?:[?A-Za-z_\\\\][A-Za-z0-9_\\\\]*\s+)?&?(?:\.\.\.)?\$)/', $arguments);
     }
 }

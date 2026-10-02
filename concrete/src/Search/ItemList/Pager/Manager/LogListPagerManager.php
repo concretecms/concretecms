@@ -6,6 +6,7 @@ use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Logging\LogEntry;
 use Concrete\Core\Logging\Search\ColumnSet\Available;
 use Concrete\Core\Search\ItemList\Pager\PagerProviderInterface;
+use Concrete\Core\Search\ItemList\Pager\QueryObjectResolver;
 use Concrete\Core\Support\Facade\Facade;
 
 class LogListPagerManager extends AbstractPagerManager
@@ -36,7 +37,7 @@ class LogListPagerManager extends AbstractPagerManager
 
     public function sortListByCursor(PagerProviderInterface $itemList, $direction)
     {
-        $itemList->getQueryObject()->addOrderBy('l.logID', $direction);
+        QueryObjectResolver::getQueryObject($itemList)->addOrderBy('l.logID', $direction);
     }
 
 }

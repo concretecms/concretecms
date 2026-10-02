@@ -5,6 +5,9 @@ namespace Concrete\Core\Events;
 use Symfony\Contracts\EventDispatcher\Event;
 use Symfony\Component\EventDispatcher\EventDispatcher as SymfonyEventDispatcher;
 
+/**
+ * @mixin SymfonyEventDispatcher
+ */
 class EventDispatcher
 {
 

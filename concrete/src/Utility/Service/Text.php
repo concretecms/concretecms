@@ -353,14 +353,19 @@ class Text
     /**
      * Takes a string and turns it into a handle.
      *
-     * @param      $handle
-     * @param bool $leaveSlashes
+     * @param string $handle
+     * @param bool $leaveSlashes set to true to keep the slashes (every segment is sanitized separately)
      *
      * @return string
      */
     public function handle($handle, $leaveSlashes = false)
     {
-        $handle = $this->sanitizeFileSystem($handle, $leaveSlashes);
+        if ($leaveSlashes) {
+            $handle = implode('/', array_map([$this, 'sanitizeFileSystem'], explode('/', $handle)));
+        } else {
+            $handle = $this->sanitizeFileSystem($handle);
+        }
+
         return str_replace('-', '_', $handle);
     }
 
@@ -409,7 +414,7 @@ class Text
                 if (strlen($excludeSeoWords)) {
                     $remove_list = explode(',', $excludeSeoWords);
                     $remove_list = array_map('trim', $remove_list);
-                    $remove_list = array_filter($remove_list, 'strlen');
+                    $remove_list = array_filter($remove_list, static function (string $word): bool { return $word !== ''; });
                 } else {
                     $remove_list = array();
                 }
@@ -526,8 +531,7 @@ class Text
         if (strlen($value) < 1 || strlen($searchString) < 1) {
             return $value;
         }
-        preg_match_all("/$searchString+/i", $value, $matches);
-        if (is_array($matches[0]) && count($matches[0]) > 0) {
+        if (preg_match_all("/$searchString+/i", $value, $matches)) {
             return str_replace($matches[0][0], '<em class="ccm-highlight-search">' . $matches[0][0] . '</em>', $value);
         }
 

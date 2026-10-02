@@ -2,6 +2,7 @@
 namespace Concrete\Core\Search\ItemList;
 
 use Concrete\Core\Search\Column\Column;
+use Concrete\Core\Search\Pagination\Pagination;
 use Concrete\Core\Search\Pagination\PaginationFactory;
 use Concrete\Core\Search\StickyRequest;
 use Pagerfanta\Exception\OutOfRangeCurrentPageException;
@@ -216,6 +217,9 @@ abstract class ItemList
         if (method_exists($this, 'createPaginationObject')) {
             $pagination = $this->createPaginationObject();
             $pagination = $factory->deliverPaginationObject($this, $pagination);
+            if (!$pagination instanceof Pagination) {
+                throw new \UnexpectedValueException(t('The pagination object is not an instance of %s.', Pagination::class));
+            }
         } else {
             $pagination = $factory->createPaginationObject($this);
         }

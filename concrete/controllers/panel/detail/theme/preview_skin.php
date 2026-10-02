@@ -2,6 +2,7 @@
 namespace Concrete\Controller\Panel\Detail\Theme;
 
 use Concrete\Controller\Backend\UserInterface as BackendInterfaceController;
+use Concrete\Core\Entity\Page\Theme\CustomSkin;
 use Concrete\Core\Http\Request;
 use Concrete\Core\Page\Page;
 use Concrete\Core\Page\Theme\Theme;
@@ -55,6 +56,9 @@ class PreviewSkin extends BackendInterfaceController
                 $theme = Theme::getByID($pThemeID);
                 $customizer = $theme->getThemeCustomizer();
                 $skin = $theme->getSkinByIdentifier($skinIdentifier);
+                if (!$skin instanceof CustomSkin) {
+                    throw new UserMessageException(t('Unable to find the specified skin.'));
+                }
 
                 $req = Request::getInstance();
                 $req->setCurrentPage($page);

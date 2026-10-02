@@ -133,6 +133,8 @@ abstract class GenericOauthTypeController extends AuthenticationTypeController
      */
     public function authenticate()
     {
+
+        return null;
     }
 
     /**
@@ -213,13 +215,13 @@ abstract class GenericOauthTypeController extends AuthenticationTypeController
         }
 
         if ($extractor->supportsEmail() && $user = \UserInfo::getByEmail($extractor->getEmail())) {
-            if ($user && !$user->isError()) {
+            if (!$user->isError()) {
                 throw new Exception('A user account already exists for this email, please log in and attach from your account page.');
             }
         }
 
         if ($this->supportsRegistration()) {
-            if ($extractor->getEmail() === null || empty($extractor->getEmail())) {
+            if (empty($extractor->getEmail())) {
 
                 /** @var FlashBagInterface $flashbag */
                 $flashbag = $this->app->make('session')->getFlashBag();
@@ -230,7 +232,7 @@ abstract class GenericOauthTypeController extends AuthenticationTypeController
                     $flashbag->set('lastName', $this->getLastName());
                 }
                 $flashbag->set('username', $this->getUsername());
-                $flashbag->set('token', $this->getToken());
+                $flashbag->set('token', $this->getToken()->getAccessToken());
 
 
                 $response = \Redirect::to('/login/callback/' . $this->getHandle() . '/handle_register/', id(new Token())->generate($this->getHandle() . '_register'));
@@ -253,20 +255,19 @@ abstract class GenericOauthTypeController extends AuthenticationTypeController
         /** @var FlashBagInterface $flashbag */
         $flashbag = $this->app->make('session')->getFlashBag();
         if ($this->supportsFullName()) {
-            $this->fullName = array_shift($flashbag->peek('fullName'));
+            $this->fullName = $flashbag->peek('fullName')[0] ?? null;
         } else {
-            $this->firstName = array_shift($flashbag->peek('firstName'));
-            $this->lastName = array_shift($flashbag->peek('lastName'));
+            $this->firstName = $flashbag->peek('firstName')[0] ?? null;
+            $this->lastName = $flashbag->peek('lastName')[0] ?? null;
         }
-        $this->username = array_shift($flashbag->peek('username'));
-        $this->token = array_shift($flashbag->peek('token'));
+        $this->username = $flashbag->peek('username')[0] ?? null;
+        $accessToken = $flashbag->peek('token')[0] ?? null;
 
         $token_helper = new Token();
 
         if (!$token_helper->validate($this->getHandle().'_register', $token) && !$token_helper->validate($this->getHandle().'_register') ||
-            !$this->token) {
+            !$accessToken) {
             $this->redirect('/login/');
-            exit;
         }
         if (\Request::request('uEmail', false)) {
             $this->email = \Request::request('uEmail');
@@ -400,7 +401,7 @@ abstract class GenericOauthTypeController extends AuthenticationTypeController
 
         if ($group_id = intval($this->registrationGroupID(), 10)) {
             $group = \Group::getByID($group_id);
-            if ($group && is_object($group) && !$group->isError()) {
+            if ($group && !$group->isError()) {
                 $user = User::getByUserID($user_info->getUserID());
                 $user->enterGroup($group);
             }

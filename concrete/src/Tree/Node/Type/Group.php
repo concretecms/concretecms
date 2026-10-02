@@ -128,7 +128,7 @@ class Group extends TreeNode
 
         $group = $this->getTreeNodeGroupObject();
         if ($group === null) {
-            return null;
+            return '';
         }
         $gName = $group->getGroupDisplayName(false, false);
         switch ($format) {
@@ -188,8 +188,9 @@ class Group extends TreeNode
     {
         $db = app(Connection::class);
         $treeNodeID = $db->fetchOne('select treeNodeID from TreeGroupNodes where gID = ?', [$gID]);
+        $node = TreeNode::getByID($treeNodeID);
 
-        return TreeNode::getByID($treeNodeID);
+        return $node instanceof static ? $node : null;
     }
 
     /**
@@ -245,7 +246,7 @@ class Group extends TreeNode
      * @param \Concrete\Core\User\Group\Group|false|null $group
      * @param \Concrete\Core\Tree\Node\Node|false|null $parent
      *
-     * @return \Concrete\Core\Tree\Node\Type\Group
+     * @return static
      */
     public static function add($group = false, $parent = false)
     {

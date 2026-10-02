@@ -64,7 +64,7 @@ class PackageService
      */
     public function getByHandle($pkgHandle)
     {
-        $r = $this->entityManager->getRepository('\Concrete\Core\Entity\Package');
+        $r = $this->entityManager->getRepository('Concrete\Core\Entity\Package');
 
         return $r->findOneBy(['pkgHandle' => $pkgHandle]);
     }
@@ -78,7 +78,7 @@ class PackageService
      */
     public function getByID($pkgID)
     {
-        $r = $this->entityManager->getRepository('\Concrete\Core\Entity\Package');
+        $r = $this->entityManager->getRepository('Concrete\Core\Entity\Package');
 
         return $r->findOneBy(['pkgID' => $pkgID]);
     }
@@ -90,7 +90,7 @@ class PackageService
      */
     public function getInstalledList()
     {
-        $r = $this->entityManager->getRepository('\Concrete\Core\Entity\Package');
+        $r = $this->entityManager->getRepository('Concrete\Core\Entity\Package');
 
         return $r->findBy(['pkgIsInstalled' => true], ['pkgDateInstalled' => 'asc']);
     }
@@ -116,10 +116,7 @@ class PackageService
             // get package objects from the file system
             foreach ($packages as $p) {
                 if (file_exists(DIR_PACKAGES . '/' . $p . '/' . FILENAME_CONTROLLER)) {
-                    $pkg = $this->getClass($p);
-                    if (!empty($pkg)) {
-                        $packagesTemp[] = $pkg;
-                    }
+                    $packagesTemp[] = $this->getClass($p);
                 }
             }
             $packages = $packagesTemp;
@@ -172,7 +169,7 @@ class PackageService
     /**
      * Get the controllers of the packages that have an upgraded version available in the marketplace.
      *
-     * @return \Concrete\Core\Package\Package[]
+     * @return \Concrete\Core\Entity\Package[]
      */
     public function getRemotelyUpgradeablePackages()
     {
@@ -232,6 +229,7 @@ class PackageService
         $provider = $providerFactory->getEntityManagerProvider();
         $configUpdater->addProvider($provider);
         if ($clearCache) {
+            /** @var \Doctrine\Common\Cache\CacheProvider|null $cache */
             $cache = $this->entityManager->getConfiguration()->getMetadataCacheImpl();
             if ($cache) {
                 $cache->flushAll();
@@ -248,6 +246,7 @@ class PackageService
     {
         $p->uninstall();
         $config = $this->entityManager->getConfiguration();
+        /** @var \Doctrine\Common\Cache\CacheProvider|null $cache */
         $cache = $config->getMetadataCacheImpl();
         if ($cache) {
             $cache->flushAll();
@@ -316,6 +315,7 @@ class PackageService
             // loads and instantiates the object
             $class = '\\Concrete\\Package\\' . camelcase($pkgHandle) . '\\Controller';
             $packageController = null;
+            $errorDetails = null;
             try {
                 $packageController = $this->application->make($class);
                 if (!$packageController instanceof Package) {

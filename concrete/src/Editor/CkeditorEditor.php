@@ -345,7 +345,7 @@ EOL;
         $selected = (array) $defaultConfig->get('editor.ckeditor4.plugins.selected_hidden', []);
 
         // Merge in plugins selected in the dashboard form
-        $post = $request->request->get('plugin');
+        $post = $request->request->all()['plugin'] ?? null;
         if (is_array($post)) {
             $selected = array_merge($selected, $post);
         }

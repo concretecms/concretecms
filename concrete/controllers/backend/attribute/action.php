@@ -12,25 +12,19 @@ class Action extends AbstractController
     {
         $arguments = explode('/', trim($action, '/'));
         if (count($arguments) > 2) { // there must at last be three arguments here
-            if (isset($arguments[0])) {
-                switch($arguments[0]) {
-                    case 'key':
-                        if (isset($arguments[1])) {
-                            $key = Key::getByID($arguments[1]);
-                            if (is_object($key)) {
-                                $controller = $key->getController();
-                            }
-                        }
-                        break;
-                    case 'type':
-                        if (isset($arguments[1])) {
-                            $type = Type::getByID($arguments[1]);
-                            if (is_object($type)) {
-                                $controller = $type->getController();
-                            }
-                        }
-                        break;
-                }
+            switch($arguments[0]) {
+                case 'key':
+                    $key = Key::getByID((int) $arguments[1]);
+                    if (is_object($key)) {
+                        $controller = $key->getController();
+                    }
+                    break;
+                case 'type':
+                    $type = Type::getByID((int) $arguments[1]);
+                    if (is_object($type)) {
+                        $controller = $type->getController();
+                    }
+                    break;
             }
             if (isset($controller)) {
                 $action = $arguments[2];

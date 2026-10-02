@@ -13,7 +13,7 @@ use Database;
 abstract class Layout extends ConcreteObject
 {
     /**
-     * @var Area
+     * @var Area|null NULL until setAreaObject() is called
      */
     public $area;
 
@@ -23,17 +23,17 @@ abstract class Layout extends ConcreteObject
     public $block;
 
     /**
-     * @var int
+     * @var int|numeric-string
      */
     public $arLayoutID;
 
     /**
-     * @var bool
+     * @var bool|0|1|'0'|'1'
      */
     public $arLayoutUsesThemeGridFramework;
 
     /**
-     * @var int
+     * @var int|numeric-string
      */
     public $arLayoutNumColumns;
 
@@ -104,7 +104,7 @@ abstract class Layout extends ConcreteObject
     }
 
     /**
-     * @return Area
+     * @return Area|null NULL until setAreaObject() is called
      */
     public function getAreaObject()
     {
@@ -156,7 +156,7 @@ abstract class Layout extends ConcreteObject
     }
 
     /**
-     * @return int
+     * @return int|\Concrete\Core\Area\Layout\Column the ID of the new column (the subclasses may return the new column itself)
      */
     public function addLayoutColumn()
     {

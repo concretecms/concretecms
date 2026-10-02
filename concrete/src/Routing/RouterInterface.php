@@ -15,7 +15,7 @@ interface RouterInterface
     public function resolveAction(Route $route);
 
     /**
-     * @return \Symfony\Component\Routing\RouteCollection[]
+     * @return \Symfony\Component\Routing\RouteCollection
      */
     public function getRoutes();
 
@@ -32,7 +32,7 @@ interface RouterInterface
      * @param array $routeAttributes [output] if specified, this argument will contain the route attributes
      *
      * @throws \Symfony\Component\Routing\Exception\NoConfigurationException If no routing configuration could be found
-     * @throws \Symfony\Component\Routing\Exception\ResourceNotFoundException If the resource could not be found
+     * @throws \Symfony\Component\Routing\Exception\ResourceNotFoundException If the resource could not be found (or if the matched route is not a Concrete route)
      * @throws \Symfony\Component\Routing\Exception\MethodNotAllowedException If the resource was found but the request method is not allowed
      *
      * @return \Concrete\Core\Routing\Route

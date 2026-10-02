@@ -18,7 +18,6 @@ class CalendarEventTransformer extends TransformerAbstract
     ];
 
     /**
-     * @param Calendar $calendar
      * @return array
      */
     public function transform(CalendarEvent $event)

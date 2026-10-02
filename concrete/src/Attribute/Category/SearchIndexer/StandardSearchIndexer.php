@@ -61,7 +61,7 @@ class StandardSearchIndexer implements SearchIndexerInterface
         $schema = new Schema([], [], $this->connection->getSchemaManager()->createSchemaConfig());
         if ($this->isValid($category)) {
             /**
-             * @var $category StandardSearchIndexerInterface
+             * @var CategoryInterface&StandardSearchIndexerInterface $category
              */
             if (!$this->connection->tableExists($category->getIndexedSearchTable())) {
                 $table = $schema->createTable($category->getIndexedSearchTable());
@@ -119,7 +119,7 @@ class StandardSearchIndexer implements SearchIndexerInterface
     {
         if ($this->isValid($category)) {
             $attributeIndexer = $key->getSearchIndexer();
-            $attributeIndexer->refreshSearchIndexKeyColumns($category, $key);
+            $attributeIndexer->updateSearchIndexKeyColumns($category, $key);
         }
     }
 
@@ -135,7 +135,7 @@ class StandardSearchIndexer implements SearchIndexerInterface
     protected function isValid(CategoryInterface $category)
     {
         if (!($category instanceof StandardSearchIndexerInterface)) {
-            throw new \Exception(t('Category %s must implement StandardSearchIndexerInterface.'), $category->getCategoryEntity()->getAttributeCategoryHandle());
+            throw new \Exception(t('Category %s must implement StandardSearchIndexerInterface.', get_class($category)));
         }
 
         return true;

@@ -2,7 +2,6 @@
 
 namespace Concrete\Core\Board\Instance\Slot\Content\Populator;
 
-use Concrete\Core\Board\Instance\Logger\Logger;
 use Concrete\Core\Board\Instance\Logger\LoggerInterface;
 use Concrete\Core\Board\Instance\Slot\Content\ObjectInterface;
 use Concrete\Core\Board\Instance\Item\Data\DataInterface;
@@ -19,7 +18,7 @@ interface PopulatorInterface
 
     /**
      * @param DataInterface $data
-     * @param Logger|null $logger
+     * @param LoggerInterface $logger
      * @param bool $enforceViewPermissions Whether the resulting content must be restricted to what the
      *                                     current user is permitted to view. Board generation runs from
      *                                     the console and from queue workers, where there is no session

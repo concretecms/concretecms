@@ -27,6 +27,9 @@ use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Permission\Checker;
 use Concrete\Core\Error\UserMessageException;
 
+/**
+ * @phpstan-consistent-constructor
+ */
 class Version extends ConcreteObject implements PermissionObjectInterface, AttributeObjectInterface
 {
     use ObjectTrait;
@@ -36,21 +39,21 @@ class Version extends ConcreteObject implements PermissionObjectInterface, Attri
     /**
      * @deprecated what's deprecated is the public part of this property: use the getVersionID() method instead
      *
-     * @var int|string
+     * @var int|numeric-string
      */
     public $cvID;
 
     /**
      * @deprecated what's deprecated is the public part of this property: use the isApproved() or the isApprovedNow() methods instead
      *
-     * @var bool|int|string
+     * @var bool|0|1|'0'|'1'
      */
     public $cvIsApproved;
 
     /**
      * @deprecated what's deprecated is the public part of this property: use the isNew() / removeNewStatus() method instead
      *
-     * @var bool|int|string
+     * @var bool|0|1|'0'|'1'
      */
     public $cvIsNew;
 
@@ -94,21 +97,21 @@ class Version extends ConcreteObject implements PermissionObjectInterface, Attri
     /**
      * The ID of the page template.
      *
-     * @var int|string
+     * @var int|numeric-string
      */
     public $pTemplateID;
 
     /**
      * @deprecated what's deprecated is the public part of this property: use the getVersionAuthorUserID() method instead
      *
-     * @var int|string|null
+     * @var int|numeric-string|null
      */
     public $cvAuthorUID;
 
     /**
      * @deprecated what's deprecated is the public part of this property: use the getVersionApproverUserID() method instead
      *
-     * @var int|string|null
+     * @var int|numeric-string|null
      */
     public $cvApproverUID;
 
@@ -122,7 +125,7 @@ class Version extends ConcreteObject implements PermissionObjectInterface, Attri
     /**
      * The ID of the page theme.
      *
-     * @var int|string
+     * @var int|numeric-string
      */
     public $pThemeID;
 
@@ -159,7 +162,7 @@ class Version extends ConcreteObject implements PermissionObjectInterface, Attri
     /**
      * @deprecated what's deprecated is the public part of this property: use the getCollectionID() method instead
      *
-     * @var int
+     * @var int|numeric-string
      */
     public $cID;
 
@@ -243,7 +246,7 @@ class Version extends ConcreteObject implements PermissionObjectInterface, Attri
      * @param \Concrete\Core\Page\Collection\Collection $c the collection for which you want the version
      * @param int|string $cvID the specific version ID (or 'ACTIVE', 'SCHEDULED', 'RECENT')
      *
-     * @return static
+     * @return static|null if the version doesn't exist, currently a Version instance in an error state is returned (see isError()), but future versions may return NULL: callers must handle both cases
      */
     public static function get($c, $cvID)
     {
@@ -355,6 +358,8 @@ class Version extends ConcreteObject implements PermissionObjectInterface, Attri
 
             return $attributeValue;
         }
+
+        return null;
     }
 
     /**
@@ -372,7 +377,8 @@ class Version extends ConcreteObject implements PermissionObjectInterface, Attri
     /**
      * Is this version approved and in the publish interval?
      *
-     * @var string|int|\DateTime|null $when a date/time representation (empty: now)
+     * @param string|int|\DateTime|null $when a date/time representation (empty: now)
+     *
      * @return bool
      */
     public function isApprovedNow($when = null)
@@ -528,6 +534,8 @@ class Version extends ConcreteObject implements PermissionObjectInterface, Attri
                 $this->cvAuthorUID,
             ));
         }
+
+        return null;
     }
 
     /**
@@ -545,6 +553,8 @@ class Version extends ConcreteObject implements PermissionObjectInterface, Attri
                 $this->cvApproverUID,
             ));
         }
+
+        return null;
     }
 
     /**
@@ -1013,112 +1023,5 @@ class Version extends ConcreteObject implements PermissionObjectInterface, Attri
         $ev->setUser($u);
         $ev->setCollectionVersionObject($this);
         $app->make('director')->dispatch('on_page_version_delete', $ev);
-    }
-
-    /**
-     * Make sure that other collection versions aren't approved and valid at the same time as this version.
-     */
-    private function avoidApprovalOverlapping()
-    {
-        if (!$this->isApproved()) {
-            return;
-        }
-        $app = Facade::getFacadeApplication();
-        $db = $app->make('database')->connection();
-        $dh = $app->make('helper/date');
-        $qbBase = $db->createQueryBuilder();
-        $x = $qbBase->expr();
-        $qbBase->update('CollectionVersions', 'cv')
-            ->andWhere($x->eq('cv.cvIsApproved', 1))
-            ->andWhere($x->eq('cv.cID', $qbBase->createNamedParameter($this->getCollectionID())))
-            ->andWhere($x->neq('cv.cvID', $qbBase->createNamedParameter($this->getVersionID())))
-        ;
-        $startDate = $this->getPublishDate() ?: null;
-        $endDate = $this->getPublishEndDate() ?: null;
-        $changes = [];
-
-        // Let's unapprove other approved collection versions whose approval time is all within this collection version
-        if ($startDate !== null && $endDate !== null) {
-            // This collection version is published from $startDate until $endDate:
-            // let's unapprove the other collection versions that start at or after $startDate and end at or before $endDate
-            $qb = clone $qbBase;
-            $changes[] = $qb
-                ->set('cv.cvIsApproved', 0)
-                ->andWhere($x->isNotNull('cv.cvPublishDate'))
-                ->andWhere($x->gte('cv.cvPublishDate', $qb->createNamedParameter($startDate)))
-                ->andWhere($x->isNotNull('cv.cvPublishEndDate'))
-                ->andWhere($x->lte('cv.cvPublishEndDate', $qb->createNamedParameter($endDate)))
-                ->execute()
-            ;
-        } elseif ($startDate !== null) {
-            // This collection version is published from $startDate until forever:
-            // let's unapprove the other collection versions that start at or after $startDate
-            $qb = clone $qbBase;
-            $changes[] = $qb
-                ->set('cv.cvIsApproved', 0)
-                ->andWhere($x->isNotNull('cv.cvPublishDate'))
-                ->andWhere($x->gte('cv.cvPublishDate', $qb->createNamedParameter($startDate)))
-                ->execute()
-            ;
-        } elseif ($endDate !== null) {
-            // This collection version is published from ever until $endDate:
-            // let's unapprove the other collection versions that end at or before $endDate
-            $qb = clone $qbBase;
-            $changes[] = $qb
-                ->set('cv.cvIsApproved', 0)
-                ->andWhere($x->isNotNull('cv.cvPublishEndDate'))
-                ->andWhere($x->lte('cv.cvPublishEndDate', $qb->createNamedParameter($endDate)))
-                ->execute()
-            ;
-        } else {
-            // This collection version is published from ever and until forever:
-            // let's unapprove all the other collection versions
-            $qb = clone $qbBase;
-            $changes[] = $qb
-                ->set('cv.cvIsApproved', 0)
-                ->execute()
-            ;
-        }
-
-        if ($endDate != null) {
-            // This collection version is published until $endDate:
-            // set the initial date/time of the other collection versions that start and end at or before $endDate
-            $minOthersStartDate = $endDate ? $dh->toDB(strtotime($endDate) + 1) : null;
-            $qb = clone $qbBase;
-            $changes[] = $qb
-                ->set('cv.cvPublishDate', $qb->createNamedParameter($minOthersStartDate))
-                ->andWhere($x->orX(
-                    $x->isNull('cv.cvPublishDate'),
-                    $x->lte('cv.cvPublishDate', $qb->createNamedParameter($endDate))
-                ))
-                ->andWhere($x->orX(
-                    $x->isNull('cv.cvPublishEndDate'),
-                    $x->gte('cv.cvPublishEndDate', $qb->createNamedParameter($minOthersStartDate))
-                ))
-                ->execute()
-            ;
-        }
-
-        if ($startDate !== null) {
-            // This collection version is published from $startDate
-            // set the final date/time of the other collection versions that end at or after $startDate
-            $maxOthersEndDate = $startDate ? $dh->toDB(strtotime($startDate) - 1) : null;
-            $qb = clone $qbBase;
-            $changes[] = $qb
-                ->set('cv.cvPublishEndDate', $qb->createNamedParameter($maxOthersEndDate))
-                ->andWhere($x->orX(
-                    $x->isNull('cv.cvPublishEndDate'),
-                    $x->gte('cv.cvPublishEndDate', $qb->createNamedParameter($startDate))
-                ))
-                ->andWhere($x->orX(
-                    $x->isNull('cv.cvPublishDate'),
-                    $x->lte('cv.cvPublishDate', $qb->createNamedParameter($maxOthersEndDate))
-                ))
-                ->execute()
-            ;
-        }
-        if (count(array_filter($changes)) > 0) {
-            $this->refreshCache();
-        }
     }
 }

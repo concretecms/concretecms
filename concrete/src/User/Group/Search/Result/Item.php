@@ -33,6 +33,8 @@ class Item extends SearchResultItem
         } else if ($item instanceof Group) {
             $obj = $item->jsonSerialize();
             $obj->treeNodeTypeHandle = 'group';
+        } else {
+            return;
         }
         foreach ($obj as $key => $value) {
             $this->{$key} = $value;

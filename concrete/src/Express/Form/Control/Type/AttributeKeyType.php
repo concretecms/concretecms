@@ -39,7 +39,7 @@ class AttributeKeyType implements TypeInterface
 
     public function getItems(Entity $entity)
     {
-        $r = $this->entityManager->getRepository('\Concrete\Core\Entity\Attribute\Key\ExpressKey');
+        $r = $this->entityManager->getRepository('Concrete\Core\Entity\Attribute\Key\ExpressKey');
         $keys = $r->findByEntity($entity, array('akID' => 'asc'));
         $items = array();
         foreach ($keys as $key) {
@@ -52,7 +52,7 @@ class AttributeKeyType implements TypeInterface
 
     public function createControlByIdentifier($id)
     {
-        $r = $this->entityManager->getRepository('\Concrete\Core\Entity\Attribute\Key\Key');
+        $r = $this->entityManager->getRepository('Concrete\Core\Entity\Attribute\Key\Key');
         $key = $r->findOneBy(array('akID' => $id));
         $control = new AttributeKeyControl();
         $control->setAttributeKey($key);

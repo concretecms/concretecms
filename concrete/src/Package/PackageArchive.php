@@ -13,7 +13,7 @@ class PackageArchive extends Archive
 {
     public function install($file, $inplace = false)
     {
-        parent::install($file, $inplace);
+        return parent::install($file, $inplace);
     }
 
     public function __construct()

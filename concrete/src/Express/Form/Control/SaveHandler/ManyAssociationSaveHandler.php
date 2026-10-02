@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\Express\Form\Control\SaveHandler;
 
+use Concrete\Core\Entity\Express\Control\AssociationControl;
 use Concrete\Core\Entity\Express\Control\Control;
 use Concrete\Core\Express\Association\Applier;
 use Concrete\Core\Support\Facade\Application;
@@ -20,8 +21,11 @@ abstract class ManyAssociationSaveHandler implements ManySaveHandlerInterface
 
     public function getAssociatedEntriesFromRequest(Control $control, Request $request)
     {
+        if (!$control instanceof AssociationControl) {
+            throw new \InvalidArgumentException(t('The control must be an instance of %s.', AssociationControl::class));
+        }
         $r = $this->entityManager->getRepository('Concrete\Core\Entity\Express\Entry');
-        $entryIDs = $request->request->get('express_association_' . $control->getId());
+        $entryIDs = $request->request->all()['express_association_' . $control->getId()] ?? null;
         $vals = Application::getFacadeApplication()->make('helper/validation/strings');
         if (!is_array($entryIDs) && $vals->notempty($entryIDs)) {
             $entryIDs = explode(',', $entryIDs);

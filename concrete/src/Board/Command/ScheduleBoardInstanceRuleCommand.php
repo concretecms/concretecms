@@ -52,7 +52,7 @@ class ScheduleBoardInstanceRuleCommand extends Command
     /**
      * @var string
      */
-    protected $timezone = 0;
+    protected $timezone = '';
 
     /**
      * @return int

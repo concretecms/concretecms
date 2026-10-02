@@ -7,6 +7,7 @@ use Concrete\Core\Search\Column\ColumnExportableInterface;
 use Concrete\Core\Search\Column\ColumnInterface;
 use Concrete\Core\Search\Column\PagerColumnInterface;
 use Concrete\Core\Search\ItemList\Pager\PagerProviderInterface;
+use Concrete\Core\Search\ItemList\Pager\QueryObjectResolver;
 
 class EmailColumn extends Column implements PagerColumnInterface, ColumnExportableInterface
 {
@@ -30,7 +31,7 @@ class EmailColumn extends Column implements PagerColumnInterface, ColumnExportab
 
     public function filterListAtOffset(PagerProviderInterface $itemList, $mixed)
     {
-        $query = $itemList->getQueryObject();
+        $query = QueryObjectResolver::getQueryObject($itemList);
         $sort = $this->getColumnSortDirection() == 'desc' ? '<' : '>';
         $where = sprintf('(u.uEmail, u.uID) %s (:sortName, :sortID)', $sort);
         $query->setParameter('sortName', $mixed->getUserEmail());

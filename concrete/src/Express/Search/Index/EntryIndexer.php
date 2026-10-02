@@ -39,7 +39,11 @@ class EntryIndexer implements IndexingDriverInterface, ApplicationAwareInterface
             foreach ($values as $value) {
                 $indexer->indexEntry($category, $value, $entry);
             }
+
+            return true;
         }
+
+        return false;
     }
 
     public function forget($entry)

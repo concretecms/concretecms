@@ -240,7 +240,7 @@ class Info
                 $phpinfo[$section] = [];
                 if (preg_match_all('#(?:<h2>(?:<a name=".*?">)?(.*?)(?:</a>)?</h2>)|(?:<tr(?: class=".*?")?><t[hd](?: class=".*?")?>(.*?)\s*</t[hd]>(?:<t[hd](?: class=".*?")?>(.*?)\s*</t[hd]>(?:<t[hd](?: class=".*?")?>(.*?)\s*</t[hd]>)?)?</tr>)#s', $buffer, $matches, PREG_SET_ORDER)) {
                     foreach ($matches as $match) {
-                        if ($match[1] !== null && $match[1] !== '') {
+                        if ($match[1] !== '') {
                             $section = $match[1];
                             $phpinfo[$section] = [];
                         } elseif (isset($match[3])) {

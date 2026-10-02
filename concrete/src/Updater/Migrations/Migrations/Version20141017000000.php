@@ -77,18 +77,14 @@ class Version20141017000000 extends AbstractMigration implements RepeatableMigra
             $community = AuthenticationType::getByHandle('community');
         } catch (Exception $e) {
             $community = AuthenticationType::add('community', 'community.concretecms.com');
-            if (is_object($community)) {
-                $community->disable();
-            }
+            $community->disable();
         }
 
         try {
             $twitter = AuthenticationType::getByHandle('twitter');
         } catch (Exception $e) {
             $twitter = AuthenticationType::add('twitter', 'Twitter');
-            if (is_object($twitter)) {
-                $twitter->disable();
-            }
+            $twitter->disable();
         }
 
         /* delete customize page themes dashboard single page */

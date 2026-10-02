@@ -77,6 +77,8 @@ class Attributes extends DashboardAttributesPageController
      * {@inheritdoc}
      *
      * @see \Concrete\Core\Page\Controller\DashboardAttributesPageController::getHeaderMenu()
+     *
+     * @param \Concrete\Core\Entity\Attribute\Category $category the category entity returned by getCategoryObject()
      */
     protected function getHeaderMenu(CategoryObjectInterface $category)
     {

@@ -18,6 +18,13 @@ class GroupSet extends AbstractCategory
         return $set->getGroupSetDisplayName();
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Package\ItemCategory\AbstractCategory::getPackageItems()
+     *
+     * @return \Concrete\Core\User\Group\GroupSet[]
+     */
     public function getPackageItems(Package $package)
     {
         return \Concrete\Core\User\Group\GroupSet::getListByPackage($package);

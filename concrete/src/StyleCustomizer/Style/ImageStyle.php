@@ -26,7 +26,7 @@ class ImageStyle extends Style
             $numbers = new Numbers();
             if ($numbers->integer($variable->getFileID())) {
                 // This is  file ID.
-                $value->setImageFileID($variable->getFileID());
+                $value->setImageFileID((int) $variable->getFileID());
             } else {
                 // is it a URL?
                 if ($variable->getUrl()) {

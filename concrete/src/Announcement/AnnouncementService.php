@@ -70,9 +70,7 @@ class AnnouncementService implements ApplicationAwareInterface
         $announcements = [];
         while ($row = $r->fetchAssociative()) {
             $announcement = $this->entityManager->find(Announcement::class, $row['id']);
-            if ($announcement
-                && ($announcementController = $announcement->getController())
-                && $announcementController->shouldDisplayAnnouncementToUser($user)) {
+            if ($announcement && $announcement->getController()->shouldDisplayAnnouncementToUser($user)) {
                 $announcements[] = $announcement;
             }
         }

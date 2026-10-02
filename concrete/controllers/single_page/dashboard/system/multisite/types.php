@@ -54,7 +54,7 @@ class Types extends DashboardPageController
 
     public function add()
     {
-        return $this->prepareAddOrEdit(new Type());
+        $this->prepareAddOrEdit(new Type());
     }
 
     public function create()
@@ -73,7 +73,7 @@ class Types extends DashboardPageController
             return $this->buildRedirect($this->action('view_type', $type->getSiteTypeID()));
         }
 
-        return $this->add();
+        $this->add();
     }
 
     public function edit($id)
@@ -86,7 +86,7 @@ class Types extends DashboardPageController
             return $this->buildRedirect($this->action());
         }
 
-        return $this->prepareAddOrEdit($type);
+        $this->prepareAddOrEdit($type);
     }
 
     public function update()
@@ -262,7 +262,7 @@ class Types extends DashboardPageController
         }
         if (!$this->error->has()) {
             $group->setSiteGroupName($name);
-            $this->entityManager->flush($group);
+            $this->entityManager->flush();
             $this->flash('success', t('Group updated successfully.'));
 
             return $this->buildRedirect($this->action('view_groups', $group->getSiteType()->getSiteTypeID()));

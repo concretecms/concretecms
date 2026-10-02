@@ -83,7 +83,7 @@ class Query implements \JsonSerializable, DenormalizableInterface
     }
 
     /**
-     * @param int
+     * @param int|mixed $itemsPerPage MAX_ITEMS_PER_PAGE is used if it's not numeric
      */
     public function setItemsPerPage($itemsPerPage)
     {
@@ -102,7 +102,7 @@ class Query implements \JsonSerializable, DenormalizableInterface
     {
         $searchProvider = $context['searchProvider'];
         /**
-         * @var $searchProvider ProviderInterface
+         * @var ProviderInterface $searchProvider
          */
         $fieldManager = $searchProvider->getFieldManager();
         foreach($data['fields'] as $fieldRecord) {
@@ -114,7 +114,9 @@ class Query implements \JsonSerializable, DenormalizableInterface
         $all = $searchProvider->getAllColumnSet();
         foreach($data['columnSet']['columns'] as $columnRecord) {
             $column = $all->getColumnByKey($columnRecord['columnKey']);
-            $columnSet->addColumn($column);
+            if ($column !== null) {
+                $columnSet->addColumn($column);
+            }
         }
         if (isset($data['columnSet']['sortColumn'])) {
             $sortColumn = $all->getColumnByKey($data['columnSet']['sortColumn']);

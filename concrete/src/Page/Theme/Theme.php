@@ -41,6 +41,8 @@ use Punic\Comparer;
 /**
  * A page's theme is a pointer to a directory containing templates, CSS files and optionally PHP includes, images and JavaScript files.
  * Themes inherit down the tree when a page is added, but can also be set at the site-wide level (thereby overriding any previous choices.).
+ *
+ * @phpstan-consistent-constructor
  */
 class Theme extends ConcreteObject implements \JsonSerializable
 {
@@ -49,6 +51,9 @@ class Theme extends ConcreteObject implements \JsonSerializable
     const FILENAME_TYPOGRAPHY_CSS = 'typography.css';
 
     protected $pThemeName;
+    /**
+     * @var int|numeric-string
+     */
     protected $pThemeID;
     protected $pThemeDescription;
     protected $pThemeDirectory;
@@ -56,6 +61,9 @@ class Theme extends ConcreteObject implements \JsonSerializable
     protected $pThemeHandle;
     protected $pThemeURL;
     protected $pThemeIsPreview = false;
+    /**
+     * @var int|numeric-string
+     */
     protected $pkgID;
     protected $stylesheetCachePath;
     protected $stylesheetCacheRelativePath = REL_DIR_FILES_CACHE;
@@ -88,9 +96,9 @@ class Theme extends ConcreteObject implements \JsonSerializable
     /**
      * Get the installed themes provided by a package.
      *
-     * @return \Concrete\Core\Page\Theme\Theme[]
-     * @var \Concrete\Core\Entity\Package|\Concrete\Core\Package\Package $pkg
+     * @param \Concrete\Core\Entity\Package|\Concrete\Core\Package\Package $pkg
      *
+     * @return \Concrete\Core\Page\Theme\Theme[]
      */
     public static function getListByPackage($pkg)
     {
@@ -211,7 +219,7 @@ class Theme extends ConcreteObject implements \JsonSerializable
     {
         $dirt = $dir . '/' . $handle;
         if (is_dir($dirt)) {
-            $res = static::getThemeNameAndDescription($dirt, $handle, $pkgHandle);
+            $res = self::getThemeNameAndDescription($dirt, $handle, $pkgHandle);
 
             $th = new static();
             $th->pThemeHandle = $handle;
@@ -229,6 +237,8 @@ class Theme extends ConcreteObject implements \JsonSerializable
 
             return $th;
         }
+
+        return null;
     }
 
     /**
@@ -298,7 +308,7 @@ class Theme extends ConcreteObject implements \JsonSerializable
         usort(
             $allSkins,
             function (SkinInterface $a, SkinInterface $b) use ($cmp) {
-                $cmp->compare($a->getName(), $b->getName());
+                return $cmp->compare($a->getName(), $b->getName());
             }
         );
         return $allSkins;
@@ -507,6 +517,8 @@ class Theme extends ConcreteObject implements \JsonSerializable
 
             return $o;
         }
+
+        return null;
     }
 
     /**
@@ -767,17 +779,13 @@ class Theme extends ConcreteObject implements \JsonSerializable
                             ltrim($extensionOf, '\\')
                         );
                     } else {
-                        if (method_exists($instance, 'getThemeName')) {
-                            $s = $instance->getThemeName();
-                            if (strlen($s) > 0) {
-                                $res->pThemeName = $s;
-                            }
+                        $s = $instance->getThemeName();
+                        if (strlen($s) > 0) {
+                            $res->pThemeName = $s;
                         }
-                        if (method_exists($instance, 'getThemeDescription')) {
-                            $s = $instance->getThemeDescription();
-                            if (strlen($s) > 0) {
-                                $res->pThemeDescription = $s;
-                            }
+                        $s = $instance->getThemeDescription();
+                        if (strlen($s) > 0) {
+                            $res->pThemeDescription = $s;
                         }
                     }
                 }
@@ -797,9 +805,9 @@ class Theme extends ConcreteObject implements \JsonSerializable
     public function export($node)
     {
         $pst = static::getSiteTheme();
-        $activated = 0;
+        $activated = '0';
         if ($pst->getThemeID() == $this->getThemeID()) {
-            $activated = 1;
+            $activated = '1';
         }
         $type = $node->addChild('theme');
         $type->addAttribute('handle', $this->getThemeHandle());
@@ -847,7 +855,7 @@ class Theme extends ConcreteObject implements \JsonSerializable
             $loc = Localization::getInstance();
             $loc->pushActiveContext(Localization::CONTEXT_SYSTEM);
             try {
-                $res = static::getThemeNameAndDescription(
+                $res = self::getThemeNameAndDescription(
                     $dir,
                     $pThemeHandle,
                     is_object($pkg) ? $pkg->getPackageHandle() : ''
@@ -1325,6 +1333,8 @@ class Theme extends ConcreteObject implements \JsonSerializable
             $framework = Core::make('manager/grid_framework')->driver($handle);
             return $framework;
         }
+
+        return null;
     }
 
     /**
@@ -1389,7 +1399,7 @@ class Theme extends ConcreteObject implements \JsonSerializable
     /**
      * Get the theme-specific templates for every block.
      *
-     * @return array array keys are the block type handles, array values are a list of the block templates.
+     * @return array|mixed array keys are the block type handles, array values are a list of the block templates (values that are not arrays are ignored)
      *
      * @see \Concrete\Theme\Elemental\PageTheme::getThemeDefaultBlockTemplates() for an example
      */

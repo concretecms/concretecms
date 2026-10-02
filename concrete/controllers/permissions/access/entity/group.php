@@ -12,5 +12,7 @@ class Group extends AccessEntity
         if ($group) {
             return GroupEntity::getOrCreate($group);
         }
+
+        return null;
     }
 }

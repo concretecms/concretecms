@@ -32,7 +32,7 @@ class PackageProviderFactory implements ProviderAggregateInterface
     /**
      * Get the EntityManager(Metadata)Provider
      * 
-     * @return \Concrete\Core\Database\EntityManager\Provider\DefaultPackageProvider|\Concrete\Core\Package\Package
+     * @return ProviderInterface
      */
     public function getEntityManagerProvider()
     {

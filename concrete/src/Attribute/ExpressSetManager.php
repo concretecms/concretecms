@@ -16,12 +16,12 @@ class ExpressSetManager implements SetManagerInterface
 
     public function allowAttributeSets()
     {
-        return false;
+        return StandardSetManager::ASET_ALLOW_NONE;
     }
 
     public function getUnassignedAttributeKeys()
     {
-        $r = $this->entityManager->getRepository('\Concrete\Core\Entity\Attribute\Key\ExpressKey');
+        $r = $this->entityManager->getRepository('Concrete\Core\Entity\Attribute\Key\ExpressKey');
         return $r->findBy(array('entity' => $this->entity));
     }
 

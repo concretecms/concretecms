@@ -17,6 +17,13 @@ class ExternalFileProviderType extends AbstractCategory
         return $location->getName();
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Package\ItemCategory\AbstractCategory::getPackageItems()
+     *
+     * @return \Concrete\Core\Entity\File\ExternalFileProvider\Type\Type[]
+     */
     public function getPackageItems(Package $package)
     {
         return Type::getListByPackage($package);

@@ -59,7 +59,7 @@ class Plugin
     /**
      * Add an asset to the assets required for this plugin.
      *
-     * @param \Concrete\Core\Asset\AssetInterface|string $assetType The asset to require, or the asset group handle, or the asset type (in this case, specify the $assetHandle parameter)
+     * @param \Concrete\Core\Asset\Asset|string $assetType The asset to require, or the asset group handle, or the asset type (in this case, specify the $assetHandle parameter)
      * @param string|null|false $assetHandle the handle of the asset to specify (if $assetType is the asset type handle)
      *
      * @throws \Exception throws an Exception if the asset is not valid

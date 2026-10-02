@@ -6,6 +6,7 @@ use Concrete\Core\Export\ExportableInterface;
 use Concrete\Core\Express\Form\FormInterface;
 use Concrete\Core\Express\Form\Control\View\FormView;
 use Concrete\Core\Form\Context\ContextInterface;
+use Concrete\Core\Express\Form\Context\ContextInterface as ExpressContextInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -109,12 +110,18 @@ class Form implements \JsonSerializable, ExportableInterface, FormInterface
     }
 
     /**
-     * @param ContextInterface $context
+     * {@inheritdoc}
      *
-     * @return FormView
+     * @see \Concrete\Core\Form\Control\ControlInterface::getControlView()
+     *
+     * @throws \InvalidArgumentException if $context is not a \Concrete\Core\Express\Form\Context\ContextInterface instance
      */
     public function getControlView(ContextInterface $context)
     {
+        if (!$context instanceof ExpressContextInterface) {
+            throw new \InvalidArgumentException(t('The form context must be an instance of %s.', ExpressContextInterface::class));
+        }
+
         return new FormView($context, $this);
     }
 

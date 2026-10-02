@@ -18,7 +18,7 @@ interface SearchIndexerInterface
      * @param \Concrete\Core\Attribute\AttributeKeyInterface $key
      * @param string|null $previousHandle
      */
-    public function updateSearchIndexKeyColumns(CategoryInterface $category, AttributeKeyInterface $key, $previousHandle);
+    public function updateSearchIndexKeyColumns(CategoryInterface $category, AttributeKeyInterface $key, $previousHandle = null);
 
     /**
      * Store in the index table the value of an attribute of an item.

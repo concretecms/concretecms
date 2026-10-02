@@ -5,6 +5,20 @@ namespace Concrete\Core\Attribute\Category;
 use Concrete\Core\Entity\Attribute\Key\Key;
 use Concrete\Core\Entity\Attribute\Key\PageKey;
 
+/**
+ * The attribute keys of this category are \Concrete\Core\Entity\Attribute\Key\PageKey instances.
+ *
+ * @method \Concrete\Core\Entity\Attribute\Key\PageKey|null getAttributeKeyByID(int $akID)
+ * @method \Concrete\Core\Entity\Attribute\Key\PageKey|null getAttributeKeyByHandle(string $akHandle)
+ * @method \Concrete\Core\Entity\Attribute\Key\PageKey|null getByID(int $akID)
+ * @method \Concrete\Core\Entity\Attribute\Key\PageKey|null getByHandle(string $akHandle)
+ * @method \Concrete\Core\Entity\Attribute\Key\PageKey[] getList()
+ * @method \Concrete\Core\Entity\Attribute\Key\PageKey[] getSearchableList()
+ * @method \Concrete\Core\Entity\Attribute\Key\PageKey[] getSearchableIndexedList()
+ * @method \Concrete\Core\Entity\Attribute\Key\PageKey addFromRequest(\Concrete\Core\Entity\Attribute\Type $type, \Symfony\Component\HttpFoundation\Request $request)
+ * @method \Concrete\Core\Entity\Attribute\Key\PageKey import(\Concrete\Core\Entity\Attribute\Type $type, \SimpleXMLElement $element, ?\Concrete\Core\Entity\Package $package = null)
+ * @method \Concrete\Core\Entity\Attribute\Key\PageKey updateFromRequest(\Concrete\Core\Entity\Attribute\Key\PageKey $key, \Symfony\Component\HttpFoundation\Request $request)
+ */
 class PageCategory extends AbstractStandardCategory
 {
     /**
@@ -79,7 +93,7 @@ class PageCategory extends AbstractStandardCategory
      */
     public function getAttributeKeyRepository()
     {
-        return $this->entityManager->getRepository('\Concrete\Core\Entity\Attribute\Key\PageKey');
+        return $this->entityManager->getRepository('Concrete\Core\Entity\Attribute\Key\PageKey');
     }
 
     /**
@@ -89,7 +103,7 @@ class PageCategory extends AbstractStandardCategory
      */
     public function getAttributeValueRepository()
     {
-        return $this->entityManager->getRepository('\Concrete\Core\Entity\Attribute\Value\PageValue');
+        return $this->entityManager->getRepository('Concrete\Core\Entity\Attribute\Value\PageValue');
     }
 
     /**

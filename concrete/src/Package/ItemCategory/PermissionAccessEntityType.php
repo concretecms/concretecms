@@ -19,6 +19,13 @@ class PermissionAccessEntityType extends AbstractCategory
         return $type->getAccessEntityTypeDisplayName();
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Package\ItemCategory\AbstractCategory::getPackageItems()
+     *
+     * @return \Concrete\Core\Permission\Access\Entity\Type[]
+     */
     public function getPackageItems(Package $package)
     {
         return Type::getListByPackage($package);

@@ -32,7 +32,7 @@ abstract class AbstractPagerManager implements PagerManagerInterface
     public function getNextCursorStart(PagerProviderInterface $itemList, PagerPagination $pagination)
     {
         /**
-         * @var $adapter PagerAdapter
+         * @var PagerAdapter $adapter
          */
         $adapter = $pagination->getAdapter();
         $result = $pagination->getLastResult();
@@ -49,6 +49,9 @@ abstract class AbstractPagerManager implements PagerManagerInterface
             $object = $cursor;
         }
         if ($object) {
+            if (!$itemList instanceof ItemList) {
+                throw new \InvalidArgumentException(t('The pager provider must be an instance of %s.', ItemList::class));
+            }
             // Figure out what we are sorting by
             $column = $itemList->getSearchByColumn();
             if ($column instanceof PagerColumnInterface) {

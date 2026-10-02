@@ -214,7 +214,7 @@ EOT
     /**
      * Takes an array, keeps only strings, makes them lowercase, and returns the unique values.
      *
-     * @param string|array $value
+     * @param string|array|mixed $value an empty list is returned if it's neither a string nor an array
      *
      * @return string[]
      */

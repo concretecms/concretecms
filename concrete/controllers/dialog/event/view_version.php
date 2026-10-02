@@ -17,6 +17,11 @@ class ViewVersion extends BackendInterfaceController
      */
     protected $eventService;
 
+    /**
+     * @var \Concrete\Core\Calendar\Event\Formatter\DateFormatter
+     */
+    protected $dateFormatter;
+
     public function __construct()
     {
         parent::__construct();
@@ -52,8 +57,5 @@ class ViewVersion extends BackendInterfaceController
 
         return false;
     }
-
-
-
 
 }

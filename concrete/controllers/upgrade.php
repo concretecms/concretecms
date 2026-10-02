@@ -13,6 +13,11 @@ use View;
 class Upgrade extends BackendUserInterfaceController
 {
     /**
+     * @var string|null
+     */
+    protected $siteVersion;
+
+    /**
      * {@inheritdoc}
      *
      * @see \Concrete\Controller\Backend\UserInterface::canAccess()

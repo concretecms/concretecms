@@ -21,6 +21,13 @@ class WorkflowProgressCategory extends AbstractCategory
         return $txt->unhandle($category->getWorkflowProgressCategoryHandle());
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Package\ItemCategory\AbstractCategory::getPackageItems()
+     *
+     * @return \Concrete\Core\Workflow\Progress\Category[]
+     */
     public function getPackageItems(Package $package)
     {
         return Category::getListByPackage($package);

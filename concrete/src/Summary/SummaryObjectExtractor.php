@@ -29,7 +29,7 @@ class SummaryObjectExtractor
         })) > 0;
     }
 
-    public function getData(SummaryObject $summaryObject): array
+    public function getData(SummaryObjectInterface $summaryObject): array
     {
         $fields = $summaryObject->getData()->getFields();
         if (!$this->usesLazyLoading($fields)) {
@@ -56,6 +56,8 @@ class SummaryObjectExtractor
                     $resolvedFields[$identifier] = $resolvedField;
                 }
             }
+        } else {
+            $resolvedFields = null;
         }
         return $resolvedFields;
     }

@@ -23,7 +23,7 @@ class CacheSettingField extends AbstractField
     }
 
     /**
-     * @param ItemList $list
+     * @param \Concrete\Core\Page\PageList $list
      */
     public function filterList(ItemList $list)
     {

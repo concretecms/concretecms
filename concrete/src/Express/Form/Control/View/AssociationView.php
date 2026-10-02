@@ -21,13 +21,24 @@ class AssociationView extends View
         return 'express_association_' . $this->control->getID();
     }
 
+    /**
+     * @var \Concrete\Core\Entity\Express\Control\AssociationControl
+     */
+    protected $control;
+
+    /**
+     * @throws \InvalidArgumentException if $control is not a \Concrete\Core\Entity\Express\Control\AssociationControl instance
+     */
     public function __construct(ContextInterface $context, Control $control)
     {
+        if (!$control instanceof AssociationControl) {
+            throw new \InvalidArgumentException(t('The control must be an instance of %s.', AssociationControl::class));
+        }
         parent::__construct($context, $control);
         $this->entry = $context->getEntry();
         $this->association = $this->control->getAssociation();
         /**
-         * @var $entity Entity
+         * @var Entity $entity
          */
         $entity = $this->association->getTargetEntity();
         if (AssociationControl::TYPE_ENTRY_SELECTOR != $control->getEntrySelectorMode()) {

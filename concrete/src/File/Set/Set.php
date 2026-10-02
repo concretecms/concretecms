@@ -25,6 +25,8 @@ use Concrete\Core\User\User;
  * Represents a file set.
  *
  * @method static Set add(string $setName, int $fsOverrideGlobalPermissions = 0, bool|\User $u = false, int $type = self::TYPE_PUBLIC) Deprecated method. Use Set::create instead.
+ *
+ * @phpstan-consistent-constructor
  */
 class Set
 {
@@ -97,7 +99,7 @@ class Set
             return [];
         }
 
-        /** @var $database \Concrete\Core\Database\Connection\Connection */
+        /** @var \Concrete\Core\Database\Connection\Connection $database */
         $database = $app->make('database')->connection();
         $fileSets = array();
 
@@ -106,10 +108,11 @@ class Set
             $queryBuilder->expr()->eq('fsType', self::TYPE_PUBLIC)
             )->orWhere(
                 $queryBuilder->expr()->andX(
-                    $queryBuilder->expr()->in('fsType',[self::TYPE_PRIVATE, self::TYPE_STARRED, self::TYPE_PUBLIC]),
+                    $queryBuilder->expr()->in('fsType', ':fsTypes'),
                     $queryBuilder->expr()->eq('uID', $user->getUserID())
                 )
-            )->orderBy('fsName', 'ASC')->execute();
+            )->setParameter('fsTypes', [self::TYPE_PRIVATE, self::TYPE_STARRED, self::TYPE_PUBLIC], Connection::PARAM_INT_ARRAY)
+            ->orderBy('fsName', 'ASC')->execute();
 
 
         while ($row = $results->fetch()) {
@@ -143,8 +146,10 @@ class Set
 
         $queryBuilder = $database->createQueryBuilder();
         $results = $queryBuilder->select('*')->from('FileSets')->where(
-            $queryBuilder->expr()->in('fsType',[self::TYPE_PRIVATE, self::TYPE_STARRED, self::TYPE_PUBLIC])
-        )->andWhere($queryBuilder->expr()->eq('uID', $user->getUserID()))->execute();
+            $queryBuilder->expr()->in('fsType', ':fsTypes')
+        )->andWhere($queryBuilder->expr()->eq('uID', $user->getUserID()))
+        ->setParameter('fsTypes', [self::TYPE_PRIVATE, self::TYPE_STARRED, self::TYPE_PUBLIC], Connection::PARAM_INT_ARRAY)
+        ->execute();
 
 
         while ($row = $results->fetch()) {
@@ -196,7 +201,7 @@ class Set
      *
      * @param int $fsID
      *
-     * @return Set
+     * @return Set|null
      */
     public static function getByID($fsID)
     {
@@ -215,6 +220,8 @@ class Set
 
             return $fs;
         }
+
+        return null;
     }
 
     public static function __callStatic($name, $arguments)
@@ -306,7 +313,7 @@ class Set
      * @param  string   $fsName
      * @param  int|bool $uID
      *
-     * @return Set
+     * @return Set|null
      */
     public static function getByName($fsName, $uID = false)
     {
@@ -322,12 +329,14 @@ class Set
 
             return $fs;
         }
+
+        return null;
     }
 
     /**
      * Returns an array of File objects from the current set.
      *
-     * @return ConcreteFile[]
+     * @return \Concrete\Core\Entity\File\File[]
      */
     public function getFiles()
     {
@@ -400,7 +409,7 @@ class Set
     }
 
     /**
-     * @param array $files Array of file IDs
+     * @param array|mixed $files Array of file IDs (nothing happens if it's not an array)
      */
     public function updateFileSetDisplayOrder($files)
     {
@@ -419,7 +428,7 @@ class Set
     }
 
     /**
-     * @return int
+     * @return int|false
      */
     public function overrideGlobalPermissions()
     {

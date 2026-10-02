@@ -5,12 +5,12 @@ class RouteBuilder
 {
 
     /**
-     * @var $router Router
+     * @var Router $router
      */
     protected $router;
 
     /**
-     * @var $route Route
+     * @var Route $route
      */
     protected $route;
 

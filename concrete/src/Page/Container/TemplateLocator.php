@@ -33,7 +33,7 @@ class TemplateLocator
     /**
      * @param Page $page
      * @param Container $container
-     * @return string file
+     * @return string|null file
      */
     public function getFileToRender(Page $page, Container $container, bool $template = false)
     {

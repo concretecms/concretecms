@@ -82,12 +82,22 @@ abstract class AbstractView
 
     abstract public function action($action);
 
+    /**
+     * Add an asset that should be loaded in the header.
+     *
+     * @param \Concrete\Core\Asset\Asset|string $asset the asset, or a raw HTML string
+     */
     public function addHeaderAsset($asset)
     {
         $r = ResponseAssetGroup::get();
         $r->addHeaderAsset($asset);
     }
 
+    /**
+     * Add an asset that should be loaded in the footer.
+     *
+     * @param \Concrete\Core\Asset\Asset|string $asset the asset, or a raw HTML string
+     */
     public function addFooterAsset($asset)
     {
         $r = ResponseAssetGroup::get();
@@ -207,6 +217,9 @@ abstract class AbstractView
     }
 
     /**
+     * Add an asset that should be loaded in the header.
+     *
+     * @param \Concrete\Core\Asset\Asset|string $item the asset, or a raw HTML string
      */
     public function addHeaderItem($item)
     {
@@ -214,6 +227,9 @@ abstract class AbstractView
     }
 
     /**
+     * Add an asset that should be loaded in the footer.
+     *
+     * @param \Concrete\Core\Asset\Asset|string $item the asset, or a raw HTML string
      */
     public function addFooterItem($item)
     {

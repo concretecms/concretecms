@@ -21,6 +21,13 @@ class PermissionKeyCategory extends AbstractCategory
         return $txt->unhandle($category->getPermissionKeyCategoryHandle());
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Package\ItemCategory\AbstractCategory::getPackageItems()
+     *
+     * @return \Concrete\Core\Permission\Category[]
+     */
     public function getPackageItems(Package $package)
     {
         return Category::getListByPackage($package);

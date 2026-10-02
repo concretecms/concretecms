@@ -188,7 +188,7 @@ class CalendarEventVersion implements ObjectInterface, \JsonSerializable
     }
 
     /**
-     * @return \Concrete\Core\Page\Page
+     * @return \Concrete\Core\Page\Page|false
      */
     public function getPageObject()
     {
@@ -211,7 +211,7 @@ class CalendarEventVersion implements ObjectInterface, \JsonSerializable
     }
 
     /**
-     * @param string $name
+     * @param int $cID
      */
     public function setPageID($cID)
     {
@@ -298,7 +298,7 @@ class CalendarEventVersion implements ObjectInterface, \JsonSerializable
     }
     
     /**
-     * @return mixed
+     * @return \Doctrine\Common\Collections\Collection|\Concrete\Core\Entity\Calendar\CalendarEventVersionOccurrence[]
      */
     public function getOccurrences()
     {
@@ -336,6 +336,9 @@ class CalendarEventVersion implements ObjectInterface, \JsonSerializable
         return $repetitions;
     }
 
+    /**
+     * @return \Doctrine\Common\Collections\Collection|\Concrete\Core\Entity\Calendar\CalendarEventVersionRepetition[]
+     */
     public function getRepetitionEntityCollection()
     {
         return $this->repetitions;
@@ -388,7 +391,7 @@ class CalendarEventVersion implements ObjectInterface, \JsonSerializable
             $this->occurrences = new ArrayCollection();
 
             /**
-             * @var $r CalendarEventVersionRepetition
+             * @var CalendarEventVersionRepetition $r
              */
             foreach ($repetitions as $r) {
                 $nr = clone $r;
@@ -397,7 +400,7 @@ class CalendarEventVersion implements ObjectInterface, \JsonSerializable
             }
 
             /**
-             * @var $o CalendarEventVersionOccurrence
+             * @var CalendarEventVersionOccurrence $o
              */
             foreach ($occurrences as $o) {
                 $no = clone $o;

@@ -47,7 +47,9 @@ class FileManager extends Tree
         $db = Database::connection();
         $treeID = $db->fetchColumn('select Trees.treeID from TreeTypes inner join Trees on TreeTypes.treeTypeID = Trees.treeTypeID where TreeTypes.treeTypeHandle = ?', ['file_manager']);
 
-        return $treeID ? Tree::getByID($treeID) : null;
+        $tree = $treeID ? Tree::getByID($treeID) : null;
+
+        return $tree instanceof self ? $tree : null;
     }
 
     public function exportDetails(\SimpleXMLElement $sx)
@@ -55,7 +57,7 @@ class FileManager extends Tree
     }
 
     /**
-     * @return FileManager
+     * @return FileManager|null
      */
     public static function add()
     {
@@ -64,7 +66,7 @@ class FileManager extends Tree
         $treeID = parent::create($rootNode);
         $tree = self::getByID($treeID);
 
-        return $tree;
+        return $tree instanceof self ? $tree : null;
     }
 
     protected function deleteDetails()

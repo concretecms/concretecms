@@ -9,6 +9,16 @@ class Subscribe extends Controller
 {
     protected $controllerActionPath = '/ccm/system/dialogs/conversation/subscribe';
 
+    /**
+     * @var \Concrete\Core\Conversation\Conversation
+     */
+    protected $conversation;
+
+    /**
+     * @var \Concrete\Core\User\User
+     */
+    protected $user;
+
     protected function loadConversation($cnvID)
     {
         $conversation = \Conversation::getByID($cnvID);

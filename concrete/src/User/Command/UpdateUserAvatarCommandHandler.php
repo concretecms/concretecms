@@ -7,7 +7,6 @@ use Concrete\Core\Logging\Channels;
 use Concrete\Core\Logging\LoggerAwareInterface;
 use Concrete\Core\Logging\LoggerAwareTrait;
 use Concrete\Core\User\Command\UpdateUserAvatarCommand;
-use Imagine\Image\ImageInterface;
 use Imagine\Image\ImagineInterface;
 use Imagine\Image\Palette\RGB;
 use Imagine\Image\Point;
@@ -34,7 +33,6 @@ class UpdateUserAvatarCommandHandler implements LoggerAwareInterface
 
     public function __invoke(UpdateUserAvatarCommand $command)
     {
-        /** @var ImageInterface $imagine */
         $imagine = $this->app->make(ImagineInterface::class);
         $image = $imagine->open($command->getAvatarFile()->getPathname());
 

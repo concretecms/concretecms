@@ -14,14 +14,12 @@ class AssociationMapEntry
     protected $association;
 
     /**
-     * @var Entry[]
+     * @var \Concrete\Core\Entity\Express\Entry[] an empty list removes the association
      */
     protected $entries;
 
     /**
-     * AssociationMapEntry constructor.
-     * @param Association $association
-     * @param Entry[] $entries
+     * @param \Concrete\Core\Entity\Express\Entry[] $entries the entries to be associated (an empty list removes the association)
      */
     public function __construct(Association $association, array $entries)
     {
@@ -29,16 +27,13 @@ class AssociationMapEntry
         $this->entries = $entries;
     }
 
-    /**
-     * @return Association
-     */
     public function getAssociation(): Association
     {
         return $this->association;
     }
 
     /**
-     * @return Entry[]
+     * @return \Concrete\Core\Entity\Express\Entry[] the entries to be associated (an empty list removes the association)
      */
     public function getEntries(): array
     {

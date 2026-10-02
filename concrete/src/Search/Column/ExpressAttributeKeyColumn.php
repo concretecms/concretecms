@@ -3,6 +3,7 @@ namespace Concrete\Core\Search\Column;
 
 use Concrete\Core\Database\Query\AndWhereNotExistsTrait;
 use Concrete\Core\Search\ItemList\Pager\PagerProviderInterface;
+use Concrete\Core\Search\ItemList\Pager\QueryObjectResolver;
 
 class ExpressAttributeKeyColumn extends AttributeKeyColumn implements PagerColumnInterface
 {
@@ -14,7 +15,7 @@ class ExpressAttributeKeyColumn extends AttributeKeyColumn implements PagerColum
         $db = \Database::connection();
         $category = $this->attributeKey->getAttributeCategory();
         $value = $db->GetOne('select ' . $this->getColumnKey() . ' from ' . $category->getIndexedSearchTable() . ' where exEntryID = ?', [$mixed->getID()]);
-        $query = $itemList->getQueryObject();
+        $query = QueryObjectResolver::getQueryObject($itemList);
         $sort = $this->getColumnSortDirection() == 'desc' ? '<' : '>';
         $where = sprintf('(' . $this->getColumnKey() . ', e.exEntryID) %s (:sortColumn, :sortID)', $sort);
         $query->setParameter('sortColumn', $value);

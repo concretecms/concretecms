@@ -11,6 +11,7 @@ use Concrete\Core\Url\Resolver\Manager\ResolverManagerInterface;
 use Concrete\Core\Utility\Service\Validation\Numbers;
 use Concrete\Core\Workflow\Progress\PageProgress;
 use Concrete\Core\Workflow\Progress\Progress;
+use Concrete\Core\Workflow\Request\ApprovePageRequest;
 use Symfony\Component\HttpFoundation\Response;
 
 defined('C5_EXECUTE') or die('Access Denied.');
@@ -61,6 +62,9 @@ class ApprovePagePreview extends Controller
     protected function getPage(PageProgress $wp): Page
     {
         $req = $wp->getWorkflowRequestObject();
+        if (!$req instanceof ApprovePageRequest) {
+            throw new \RuntimeException(t('The workflow request must be an instance of %s.', ApprovePageRequest::class));
+        }
         $requestedVersionPage = Page::getByID($req->getRequestedPageID(), $req->getRequestedVersionID());
         $rvcp = new Checker($requestedVersionPage);
         if (!$rvcp->canViewPageVersions()) {

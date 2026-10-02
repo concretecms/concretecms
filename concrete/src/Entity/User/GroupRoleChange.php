@@ -179,7 +179,7 @@ class GroupRoleChange implements SubjectInterface
     }
 
     /**
-     * @return \Concrete\Core\Entity\Notification\GroupRoleChangeNotification[]
+     * @return Collection|\Concrete\Core\Entity\Notification\GroupRoleChangeNotification[]
      */
     public function getNotifications(): Collection
     {

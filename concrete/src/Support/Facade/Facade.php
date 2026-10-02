@@ -28,7 +28,7 @@ abstract class Facade
     /**
      * Resolve the facade root instance from the container.
      *
-     * @param  string $name
+     * @param  string|object $name the name of the service (or the instance itself)
      *
      * @return mixed
      */

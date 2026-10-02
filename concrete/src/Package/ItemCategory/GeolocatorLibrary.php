@@ -21,6 +21,13 @@ class GeolocatorLibrary extends AbstractCategory
         return $geolocator->getGeolocatorDisplayName();
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Package\ItemCategory\AbstractCategory::getPackageItems()
+     *
+     * @return \Concrete\Core\Entity\Geolocator[]
+     */
     public function getPackageItems(Package $package)
     {
         $app = Application::getFacadeApplication();

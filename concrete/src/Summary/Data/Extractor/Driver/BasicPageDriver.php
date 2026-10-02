@@ -53,8 +53,11 @@ class BasicPageDriver implements DriverInterface
     }
 
     /**
-     * @param $mixed Page
-     * @return Collection
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Summary\Data\Extractor\Driver\DriverInterface::extractData()
+     *
+     * @param \Concrete\Core\Page\Page $mixed the page (this driver only handles pages: see isValidForObject())
      */
     public function extractData(CategoryMemberInterface $mixed): Collection
     {

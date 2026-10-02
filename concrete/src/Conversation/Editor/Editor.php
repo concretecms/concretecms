@@ -16,17 +16,17 @@ abstract class Editor extends ConcreteObject
     protected $cnvEditorHandle;
     /** @var string */
     protected $cnvEditorID;
-    /** @var int */
+    /** @var bool|0|1|'0'|'1' */
     protected $cnvEditorIsActive;
     /** @var string */
     protected $cnvEditorInputName = 'cnvMessageBody';
     /** @var string */
     protected $cnvEditorName;
-    /** @var Message */
+    /** @var Message|null NULL until setConversationMessageObject() is called */
     protected $cnvMessage;
-    /** @var Conversation */
+    /** @var Conversation|null NULL until setConversationObject() is called */
     protected $cnvObject;
-    /** @var int */
+    /** @var int|numeric-string */
     protected $pkgID;
 
     /** @return \Concrete\Core\Asset\AssetPointer[] */
@@ -123,7 +123,7 @@ abstract class Editor extends ConcreteObject
     /**
      * Looks up and returns a Package object for the current Editor's Package ID.
      *
-     * @return Package
+     * @return \Concrete\Core\Entity\Package|null
      */
     public function getPackageObject()
     {
@@ -187,7 +187,7 @@ abstract class Editor extends ConcreteObject
     /**
      * This function is used to instantiate a Conversation Editor object from an associative array.
      *
-     * @param array $record an associative array of field value pairs for the ConversationEditor record
+     * @param array|false|null $record an associative array of field value pairs for the ConversationEditor record (NULL is returned if it's not an array)
      *
      * @return Editor|null
      */
@@ -284,7 +284,7 @@ abstract class Editor extends ConcreteObject
      *
      * @param string $cnvEditorHandle
      * @param string $cnvEditorName
-     * @param bool|Package $pkg
+     * @param \Concrete\Core\Entity\Package|\Concrete\Core\Package\Package|false|null $pkg
      *
      * @return Editor|null
      */
@@ -338,7 +338,7 @@ abstract class Editor extends ConcreteObject
     /**
      * Returns an array of all Editor Objects.
      *
-     * @param null $pkgID An optional filter for Package ID
+     * @param int|null $pkgID An optional filter for Package ID
      *
      * @return Editor[]
      */

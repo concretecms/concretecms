@@ -21,7 +21,7 @@ class Details extends DashboardPageController
 
     /**
      * @param $id
-     * @return Instance
+     * @return Instance|null
      */
     protected function getInstance($id)
     {
@@ -29,13 +29,13 @@ class Details extends DashboardPageController
         $instance = $r->findOneByBoardInstanceID($id);
         if ($instance) {
             $board = $instance->getBoard();
-            if ($board) {
-                $checker = new Checker($board);
-                if ($checker->canEditBoardSettings()) {
-                    return $instance;
-                }
+            $checker = new Checker($board);
+            if ($checker->canEditBoardSettings()) {
+                return $instance;
             }
         }
+
+        return null;
     }
 
     public function refresh_pool($id = null)
@@ -107,7 +107,7 @@ class Details extends DashboardPageController
         $instance = $this->getInstance($id);
         if ($instance) {
             /**
-             * @var $instance Instance
+             * @var Instance $instance
              */
             $site = $instance->getsite();
             $home = $site->getSiteHomePageObject();

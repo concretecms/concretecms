@@ -2,6 +2,7 @@
 
 namespace Concrete\Core\Entity\Board\DataSource\Configuration;
 
+use Concrete\Core\Entity\Search\Query;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -11,8 +12,17 @@ use Doctrine\ORM\Mapping as ORM;
 class PageConfiguration extends Configuration
 {
 
-    /** @ORM\Embedded(class = "\Concrete\Core\Entity\Search\Query") */
+    /**
+     * @ORM\Embedded(class = "\Concrete\Core\Entity\Search\Query")
+     *
+     * @var \Concrete\Core\Entity\Search\Query
+     */
     protected $query;
+
+    public function __construct()
+    {
+        $this->query = new Query();
+    }
 
     /**
      * @return \Concrete\Core\Entity\Search\Query
@@ -23,7 +33,7 @@ class PageConfiguration extends Configuration
     }
 
     /**
-     * @param mixed $query
+     * @param \Concrete\Core\Entity\Search\Query $query
      */
     public function setQuery($query): void
     {
@@ -32,13 +42,11 @@ class PageConfiguration extends Configuration
     
     public function export(\SimpleXMLElement $element)
     {
-        if ($this->query) {
-            $fields = $this->query->getFields();
-            if (count($fields)) {
-                $fieldsNode = $element->addChild('fields');
-                foreach ($fields as $field) {
-                    $field->export($fieldsNode);
-                }
+        $fields = $this->query->getFields();
+        if (count($fields)) {
+            $fieldsNode = $element->addChild('fields');
+            foreach ($fields as $field) {
+                $field->export($fieldsNode);
             }
         }
     }

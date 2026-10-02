@@ -17,12 +17,12 @@ use Concrete\Core\Localization\Localization;
 class Area extends ConcreteObject implements \Concrete\Core\Permission\ObjectInterface
 {
     /**
-     * @var int
+     * @var int|numeric-string
      */
     public $cID;
 
     /**
-     * @var int
+     * @var int|numeric-string
      */
     public $arID;
 
@@ -32,7 +32,7 @@ class Area extends ConcreteObject implements \Concrete\Core\Permission\ObjectInt
     public $arHandle;
 
     /**
-     * @var Page
+     * @var Page|null NULL until the area is loaded (see load())
      */
     public $c;
 
@@ -46,7 +46,7 @@ class Area extends ConcreteObject implements \Concrete\Core\Permission\ObjectInt
     public $maximumBlocks = -1; //
 
     /**
-     * @var bool
+     * @var bool|-1 -1 if not set (in which case the controls are displayed when the page is in edit mode)
      */
     protected $showControls = -1;
 
@@ -80,22 +80,22 @@ class Area extends ConcreteObject implements \Concrete\Core\Permission\ObjectInt
     protected $arUseGridContainer = false;
 
     /**
-     * @var string
+     * @var string|null
      */
     protected $arDisplayName;
 
     /**
-     * @var int
+     * @var int|null
      */
     protected $arGridMaximumColumns;
 
     /**
-     * @var bool
+     * @var bool|0|1|'0'|'1'
      */
     protected $arOverrideCollectionPermissions;
 
     /**
-     * @var int
+     * @var int|numeric-string
      */
     protected $arInheritPermissionsFromAreaOnCID;
 
@@ -205,7 +205,7 @@ class Area extends ConcreteObject implements \Concrete\Core\Permission\ObjectInt
      * We actually use Collection::getArea() when we want to interact with a fully
      * qualified Area object when dealing with a Page/Collection object.
      *
-     * @param string
+     * @param string $arHandle
      */
     public function __construct($arHandle)
     {
@@ -251,19 +251,21 @@ class Area extends ConcreteObject implements \Concrete\Core\Permission\ObjectInt
     /**
      * returns the Collection's cID.
      *
-     * @return int
+     * @return int|null NULL until the area is loaded (see load())
      */
     public function getCollectionID()
     {
         if (is_object($this->c)) {
             return $this->c->getCollectionID();
         }
+
+        return null;
     }
 
     /**
      * returns the Collection object for the current Area.
      *
-     * @return Page
+     * @return Page|null NULL until the area is loaded (see load())
      */
     public function getAreaCollectionObject()
     {
@@ -315,7 +317,7 @@ class Area extends ConcreteObject implements \Concrete\Core\Permission\ObjectInt
     /**
      * Returns the total number of blocks in an area.
      *
-     * @param Page $c must be passed if the display() method has not been run on the area object yet.
+     * @param Page|false|null $c must be passed if the display() method has not been run on the area object yet.
      * @return int
      */
     public function getTotalBlocksInArea($c = false)
@@ -415,9 +417,11 @@ class Area extends ConcreteObject implements \Concrete\Core\Permission\ObjectInt
     }
 
     /**
-     * @param Page $c
+     * Clear the request cache of the areas of a page.
+     *
+     * @param \Concrete\Core\Page\Collection\Collection $c
      */
-    public function refreshCache($c)
+    public static function refreshCacheForPage($c)
     {
         $identifier = sprintf('/page/area/%s', $c->getCollectionID());
         $cache = \Core::make('cache/request');
@@ -425,12 +429,22 @@ class Area extends ConcreteObject implements \Concrete\Core\Permission\ObjectInt
     }
 
     /**
+     * @param \Concrete\Core\Page\Collection\Collection $c
+     *
+     * @deprecated use the static refreshCacheForPage() method
+     */
+    public function refreshCache($c)
+    {
+        static::refreshCacheForPage($c);
+    }
+
+    /**
      * Gets the Area object for the given page and area handle.
      *
-     * @param Page $c
+     * @param Page|mixed $c false is returned if it's not an object
      * @param string $arHandle
      *
-     * @return Area
+     * @return Area|false|null returns false if $c is not an object, null if the area doesn't exist
      */
     final public static function get($c, $arHandle)
     {
@@ -477,7 +491,7 @@ class Area extends ConcreteObject implements \Concrete\Core\Permission\ObjectInt
     /**
      * Creates an area in the database. I would like to make this static but PHP pre 5.3 sucks at this stuff.
      *
-     * @param Page $c
+     * @param \Concrete\Core\Page\Collection\Collection $c
      * @param string $arHandle
      *
      * @return Area
@@ -625,7 +639,7 @@ class Area extends ConcreteObject implements \Concrete\Core\Permission\ObjectInt
     /**
      * Rescans the current Area's permissions ensuring that it's inheriting permissions properly up the chain.
      *
-     * @return bool
+     * @return bool|null
      */
     public function rescanAreaPermissionsChain()
     {
@@ -692,6 +706,8 @@ class Area extends ConcreteObject implements \Concrete\Core\Permission\ObjectInt
                 }
             }
         }
+
+        return null;
     }
 
     /**
@@ -734,8 +750,6 @@ class Area extends ConcreteObject implements \Concrete\Core\Permission\ObjectInt
      * @see Area::rescanSubAreaPermissions()
      *
      * @param Page $masterCollection
-     *
-     * @return bool
      */
     public function rescanSubAreaPermissionsMasterCollection($masterCollection)
     {
@@ -757,7 +771,7 @@ class Area extends ConcreteObject implements \Concrete\Core\Permission\ObjectInt
     }
 
     /**
-     * @param Page $c
+     * @param \Concrete\Core\Page\Collection\Collection $c
      * @param string $arHandle
      *
      * @return Area
@@ -791,8 +805,7 @@ class Area extends ConcreteObject implements \Concrete\Core\Permission\ObjectInt
             $this->arInheritPermissionsFromAreaOnCID = $area->getAreaCollectionInheritID();
             $this->arID = $area->getAreaID();
 
-            $area = $this;
-            array_map(function($ab) use ($area) {
+            array_map(function($ab) {
                 $ab->setBlockAreaObject($this);
             }, $this->areaBlocksArray);
         }
@@ -824,8 +837,6 @@ class Area extends ConcreteObject implements \Concrete\Core\Permission\ObjectInt
      *
      * @param \Concrete\Core\Page\Page|bool $c
      * @param Block[] $alternateBlockArray optional array of blocks to render instead of default behavior
-     *
-     * @return bool
      */
     public function display($c = false, $alternateBlockArray = null)
     {
@@ -942,6 +953,7 @@ class Area extends ConcreteObject implements \Concrete\Core\Permission\ObjectInt
         );
 
         // copy permissions from the page to the area
+        /** @var \Concrete\Core\Permission\Key\AreaKey[] $permissions */
         $permissions = PermissionKey::getList('area');
         foreach ($permissions as $pk) {
             $pk->setPermissionObject($this);
@@ -950,7 +962,7 @@ class Area extends ConcreteObject implements \Concrete\Core\Permission\ObjectInt
 
         // finally, we rescan subareas so that, if they are inheriting up the tree, they inherit from this place
         $this->arInheritPermissionsFromAreaOnCID = $this->getCollectionID(); // we don't need to actually save this on the area, but we need it for the rescan function
-        $this->arOverrideCollectionPermissions = 1; // to match what we did above - useful for the rescan functions below
+        $this->arOverrideCollectionPermissions = true; // to match what we did above - useful for the rescan functions below
 
         $acobj = $this->getAreaCollectionObject();
         if ($acobj->isMasterCollection()) {

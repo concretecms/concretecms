@@ -32,7 +32,7 @@ class Versions extends BackendInterfacePageController
      */
     public function canAccess()
     {
-        return $this->permissions->canViewPageVersions() || $this->permissions->canEditPageVersions();
+        return $this->permissions->canViewPageVersions();
     }
 
     /**
@@ -170,11 +170,11 @@ class Versions extends BackendInterfacePageController
             $cp = new Permissions($this->page);
             if ($cp->canDeletePageVersions()) {
                 $r->setPage($c);
-                $cvIDs = $this->request->request->get('cvID');
+                $cvIDs = $this->request->request->all()['cvID'] ?? null;
                 if (is_array($cvIDs)) {
                     foreach ($cvIDs as $cvID) {
                         $v = CollectionVersion::get($c, $cvID);
-                        if (is_object($v)) {
+                        if (is_object($v) && !$v->isError()) {
                             if ($versions === 1) {
                                 $e = $this->app->make('helper/validation/error');
                                 $e->add(t('You cannot delete all page versions.'));
@@ -221,7 +221,7 @@ class Versions extends BackendInterfacePageController
         if ($this->validateAction() && $cp->canApprovePageVersions()) {
             $ov = CollectionVersion::get($c, 'ACTIVE');
             $ovID = null;
-            if (is_object($ov)) {
+            if (is_object($ov) && !$ov->isError()) {
                 $ovID = $ov->getVersionID();
             }
             $nvID = app('helper/security')->sanitizeInt($this->request->request->get('cvID'));

@@ -8,6 +8,7 @@ use Concrete\Core\Page\CustomStyle;
 use Concrete\Core\Page\Page;
 use Concrete\Core\Page\Theme\Theme;
 use Concrete\Core\StyleCustomizer\Customizer\Customizer;
+use Concrete\Core\StyleCustomizer\Customizer\Type\LegacyCustomizerType;
 use Concrete\Core\StyleCustomizer\Normalizer\NormalizedVariableCollection;
 use Concrete\Core\StyleCustomizer\Normalizer\NormalizedVariableCollectionFactory;
 use Concrete\Core\StyleCustomizer\Preset\PresetInterface;
@@ -49,9 +50,13 @@ class LegacyStylesheetPreviewHandler implements PreviewHandlerInterface
         array $requestData
     ): Response {
 
+        $type = $customizer->getType();
+        if (!$type instanceof LegacyCustomizerType) {
+            throw new \InvalidArgumentException(t('The customizer type must be an instance of %s.', LegacyCustomizerType::class));
+        }
         $styles = json_decode($requestData['styles'], true);
         $styleValueList = $this->styleValueListFactory->createFromRequestArray($customizer->getThemeCustomizableStyleList($preset), $styles);
-        $this->addPresetFontsFileStyleToStyleValueList($customizer->getType(), $preset, $styleValueList);
+        $this->addPresetFontsFileStyleToStyleValueList($type, $preset, $styleValueList);
         $collection = $this->variableCollectionFactory->createFromStyleValueList($styleValueList);
         return $this->deliverResponse($customizer, $page, $collection);
     }
@@ -68,7 +73,7 @@ class LegacyStylesheetPreviewHandler implements PreviewHandlerInterface
         }
 
         $request = Request::getInstance();
-        $request->setCustomRequestUser(-1);
+        $request->setCustomRequestUser(null);
         $request->setCurrentPage($page);
 
         $controller = $page->getPageController();

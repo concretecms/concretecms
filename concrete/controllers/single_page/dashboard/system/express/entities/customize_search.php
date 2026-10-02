@@ -18,14 +18,11 @@ class CustomizeSearch extends DashboardPageController
     public function on_start()
     {
         parent::on_start();
-        $this->repository = $this->entityManager->getRepository('\Concrete\Core\Entity\Express\Entity');
+        $this->repository = $this->entityManager->getRepository('Concrete\Core\Entity\Express\Entity');
     }
 
     public function save($id = null)
     {
-        /**
-         * @var $entity Entity
-         */
         $entity = $this->repository->findOneById($id);
         if (is_object($entity)) {
             if (!$this->token->validate('save')) {
@@ -33,7 +30,7 @@ class CustomizeSearch extends DashboardPageController
             }
             if (!$this->error->has()) {
                 /**
-                 * @var $provider \Concrete\Core\Express\Search\SearchProvider
+                 * @var \Concrete\Core\Express\Search\SearchProvider $provider
                  */
                 $provider = $this->app->make(SearchProvider::class, ['entity' => $entity, 'category' => $entity->getAttributeKeyCategory()]);
                 $factory = $this->app->make(QueryFactory::class);
@@ -60,7 +57,7 @@ class CustomizeSearch extends DashboardPageController
         if (is_object($entity)) {
             $this->set('entity', $entity);
             /**
-             * @var $provider SearchProvider
+             * @var SearchProvider $provider
              */
             $provider = $this->app->make(SearchProvider::class, ['entity' => $entity, 'category' => $entity->getAttributeKeyCategory()]);
             $element = new CustomizeResults($provider);

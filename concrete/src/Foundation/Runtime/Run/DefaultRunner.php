@@ -31,19 +31,19 @@ class DefaultRunner implements RunInterface, ApplicationAwareInterface
 {
     use ApplicationAwareTrait;
 
-    /** @var Repository */
+    /** @var Repository|null */
     protected $config;
 
-    /** @var UrlResolverInterface */
+    /** @var UrlResolverInterface|null */
     protected $urlResolver;
 
-    /** @var Router */
+    /** @var Router|null */
     protected $router;
 
-    /** @var SiteService */
+    /** @var SiteService|null */
     protected $siteService;
 
-    /** @var EventDispatcher */
+    /** @var EventDispatcher|null */
     protected $eventDispatcher;
 
     /** @var ServerInterface */

@@ -56,7 +56,7 @@ class Model
 
         $primaryKeys = $this->getPrimaryKeys();
 
-        foreach ($this as $key => $value) {
+        foreach (get_object_vars($this) as $key => $value) {
             if (!in_array($key, array('_table'))) {
                 $data[$key] = $value;
             }
@@ -115,7 +115,7 @@ class Model
         $db = Loader::db();
         $data = array();
 
-        foreach ($this as $key => $value) {
+        foreach (get_object_vars($this) as $key => $value) {
             if ('_table' !== $key) {
                 $data[$key] = $value;
             }

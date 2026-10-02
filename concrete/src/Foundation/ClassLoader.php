@@ -55,7 +55,7 @@ class ClassLoader
     }
 
 
-    public function __construct($enableLegacyNamespace = false, $applicationNamespace = 'Application')
+    public function __construct()
     {
     }
 

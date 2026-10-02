@@ -26,7 +26,7 @@ class FieldsetBuilder
         $position = 0;
         foreach($this->controls as $control) {
             $control = $control->build($builder);
-            $control->setId((new UuidGenerator())->generate($builder->getEntityManager(), $control));
+            $control->setId((new UuidGenerator())->generateId($builder->getEntityManager(), $control));
             $control->setFieldSet($fieldset);
             $control->setPosition($position);
             $fieldset->getControls()->add($control);

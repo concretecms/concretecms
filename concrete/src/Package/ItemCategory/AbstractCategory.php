@@ -11,6 +11,13 @@ abstract class AbstractCategory implements ItemInterface
 {
     protected $items;
 
+    /**
+     * Get the items of this category installed by a package.
+     *
+     * @return object[]
+     */
+    abstract public function getPackageItems(Package $package);
+
     public function hasItems(Package $package)
     {
         return count($this->getItems($package)) > 0;

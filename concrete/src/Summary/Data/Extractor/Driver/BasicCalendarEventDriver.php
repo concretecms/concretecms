@@ -73,7 +73,7 @@ class BasicCalendarEventDriver implements DriverInterface
 
 
     /**
-     * @param $mixed CalendarEvent|CalendarEventVersionOccurrence
+     * @param \Concrete\Core\Entity\Calendar\CalendarEvent|\Concrete\Core\Entity\Calendar\CalendarEventVersionOccurrence $mixed
      * @return Collection
      */
     public function extractData(CategoryMemberInterface $mixed): Collection

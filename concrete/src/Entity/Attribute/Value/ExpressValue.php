@@ -38,9 +38,7 @@ class ExpressValue extends AbstractValue
 
     /** @ORM\PreUpdate */
     public function updateEntryDateModified() {
-        if ($this->getEntry() instanceof \Concrete\Core\Entity\Express\Entry) {
-            $this->getEntry()->updateDateModified();
-        }
+        $this->getEntry()->updateDateModified();
     }
 
 

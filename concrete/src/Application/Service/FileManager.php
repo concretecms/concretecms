@@ -218,7 +218,7 @@ EOL;
      * @param string $inputName The name of the form field (the selected file ID will be posted with this name)
      * @param string $chooseText The text to be used to tell users "Choose a File"
      * @param \Concrete\Core\Entity\File\File|\Concrete\Core\Entity\File\Version|int|null $preselectedFile the pre-selected file (or its ID)
-     * @param array $args See the $args description of the <code>file</code> method
+     * @param array|mixed $args See the $args description of the <code>file</code> method (ignored if it's not an array)
      *
      * @return string
      *

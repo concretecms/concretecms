@@ -110,7 +110,7 @@ class Form
      * @param string $action
      * @param string $task
      *
-     * @return \League\URL\URLInterface
+     * @return \League\Url\UrlInterface
      */
     public function action($action, $task = null)
     {
@@ -330,7 +330,6 @@ class Form
      * If the result is a string, it'll be escaped (with htmlspecialchars).
      *
      * @param string $key the name of the field to be checked
-     * @param string $type 'post' to check in POST data, other values to check in GET data
      *
      * @return false|array|string returns an array if $key denotes an array and we received that data, a string if $key is the name of a received data, false if $key is not found in the received data
      */
@@ -428,14 +427,16 @@ class Form
         return $this->inputType($key, 'search', $valueOrMiscFields, $miscFields);
     }
 
-     /**
+    /**
      * Renders any previously unspecified input field type. Allows for adaptive update to any new HTML input types
      * that are not covered by explicit methods. Browsers will either handle the specific input type or fallback
      * to a text input.
      *
-     * @param string $key the name/id of the element
-     * @param string|array $valueOrMiscFields the value of the element or an array with additional fields appended to the element (a hash array of attributes name => value), possibly including 'class'
-     * @param array $miscFields (used if $valueOrMiscFields is not an array) Additional fields appended to the element (a hash array of attributes name => value), possibly including 'class'
+     * @param string $name the input type (underscores are converted to dashes)
+     * @param array $args the arguments of the call:
+     * - [0] string: the name/id of the element
+     * - [1] string|array: the value of the element or an array with additional fields appended to the element (a hash array of attributes name => value), possibly including 'class'
+     * - [2] array: (used if [1] is not an array) Additional fields appended to the element (a hash array of attributes name => value), possibly including 'class'
      *
      * @return string
      */
@@ -454,11 +455,11 @@ class Form
      * Renders a select field.
      *
      * @param string $key The name of the element. If $key denotes an array, the ID will start with $key but will have a progressive unique number added; if $key does not denotes an array, the ID attribute will be $key.
-     * @param array $optionValues an associative array of key => display
+     * @param array|mixed $optionValues an associative array of key => display (no options are rendered if it's not an array)
      * @param string|array|int $valueOrMiscFields the value of the field to be selected or an array with additional fields appended to the element (a hash array of attributes name => value), possibly including 'class', 'id', and 'name'
      * @param array $miscFields (used if $valueOrMiscFields is not an array) Additional fields appended to the element (a hash array of attributes name => value), possibly including 'class', 'id', and 'name'
      *
-     * @return $html
+     * @return string
      */
     public function select($key, $optionValues, $valueOrMiscFields = '', $miscFields = [])
     {
@@ -558,8 +559,6 @@ class Form
             $requestValue = $this->getRequestValue($name);
             if (is_array($requestValue)) {
                 $requestValue = (string) $requestValue[0];
-            } elseif ($requestValue !== false && !is_string($requestValue)) {
-                $requestValue = '';
             }
             if ($requestValue !== false && !isset($allCountries[$requestValue])) {
                 $requestValue = '';
@@ -625,11 +624,11 @@ class Form
      * Renders a multiple select box.
      *
      * @param string $key The ID of the element. The name attribute will be $key followed by '[].
-     * @param array $optionValues Hash array with name/value as the select's option value/text
-     * @param array|string $defaultValues Default value(s) which match with the option values; overridden by $_REQUEST
+     * @param array|mixed $optionValues Hash array with name/value as the select's option value/text (no options are rendered if it's not an array)
+     * @param array|string|false|null $defaultValues Default value(s) which match with the option values; overridden by $_REQUEST
      * @param array $miscFields additional fields appended to the element (a hash array of attributes name => value), possibly including 'class', 'id', and 'name'
      *
-     * @return $html
+     * @return string
      */
     public function selectMultiple($key, $optionValues, $defaultValues = false, $miscFields = [])
     {
@@ -755,11 +754,11 @@ EOT;
             $key = explode('[', trim($key, '['));
             $v2 = $this->ah->get($bag->all(), $key);
             if ($v2 !== null) {
-                if (is_string($v2)) {
-                    return $this->th->specialchars($v2);
-                } else {
+                if (is_array($v2)) {
                     return $v2;
                 }
+
+                return $this->th->specialchars((string) $v2);
             }
         } elseif ($bag->has($key) && is_string($s = $bag->get($key))) {
             return $this->th->specialchars($s);

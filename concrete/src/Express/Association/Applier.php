@@ -7,7 +7,6 @@ use Concrete\Core\Entity\Express\ManyToManyAssociation;
 use Concrete\Core\Entity\Express\ManyToOneAssociation;
 use Concrete\Core\Entity\Express\OneToManyAssociation;
 use Concrete\Core\Entity\Express\OneToOneAssociation;
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 
 class Applier
@@ -53,6 +52,7 @@ class Applier
     public function associateManyToOne(Association $association, Entry $entry, Entry $associatedEntry)
     {
         // First create the owning entry association
+        /** @var \Concrete\Core\Entity\Express\Entry\OneAssociation|null $oneAssociation */
         $oneAssociation = $entry->getEntryAssociation($association);
         if (!is_object($oneAssociation)) {
             $oneAssociation = new Entry\OneAssociation();
@@ -100,9 +100,6 @@ class Applier
 
         // Now lets loop through all the entries
         $collection = $manyAssociation->getSelectedEntriesCollection();
-        if (!$collection) {
-            $collection = new ArrayCollection();
-        }
         $displayOrder = count($collection);
 
         $associationEntry = new Entry\AssociationEntry();
@@ -323,6 +320,7 @@ class Applier
         // Locate the inverse association
         $inversedAssociation = $this->getInverseAssociation($association);
 
+        /** @var \Concrete\Core\Entity\Express\Entry\OneAssociation|null $oneAssociation */
         $oneAssociation = $entry->getEntryAssociation($association);
         if (!is_object($oneAssociation)) {
             $oneAssociation = new Entry\OneAssociation();
@@ -355,6 +353,7 @@ class Applier
         $this->entityManager->persist($oneAssociation);
         $this->entityManager->flush();
 
+        /** @var \Concrete\Core\Entity\Express\Entry\OneAssociation|null $oneAssociation */
         $oneAssociation = $associatedEntry->getEntryAssociation($inversedAssociation);
 
         if (!is_object($oneAssociation)) {

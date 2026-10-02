@@ -54,6 +54,8 @@ class Category extends TreeNode
         } elseif ($this->treeNodeParentID == 0) {
             return t('Categories');
         }
+
+        return '';
     }
 
     public function loadDetails()
@@ -99,6 +101,10 @@ class Category extends TreeNode
         return new CategoryListFormatter();
     }
 
+    /**
+     * @param string $treeNodeCategoryName
+     * @param \Concrete\Core\Tree\Node\Node|false|null $parent
+     */
     public static function add($treeNodeCategoryName = '', $parent = false)
     {
         $node = parent::add($parent);

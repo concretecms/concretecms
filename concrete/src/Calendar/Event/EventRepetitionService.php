@@ -65,7 +65,7 @@ class EventRepetitionService
                     $dateStart = date('Y-m-d 00:00:00', strtotime($dateStart));
                     $dateEnd = date('Y-m-d 23:59:59', strtotime($dateEnd));
                 } else {
-                    $pd->setStartDateAllDay(0);
+                    $pd->setStartDateAllDay(false);
                     // Grab the times.
                     $dateStart = date('Y-m-d H:i:s', strtotime($dateStart . ' ' . $r->get($namespace . '_pdStartDateSelectTime_' . $repetitionSetID)));
                     $dateEnd = date('Y-m-d H:i:s', strtotime($dateEnd . ' ' . $r->get($namespace . '_pdEndDateSelectTime_' . $repetitionSetID)));
@@ -81,7 +81,7 @@ class EventRepetitionService
                     } elseif ($r->get($namespace . '_pdRepeatPeriod_' . $repetitionSetID) == 'weekly') {
                         $pd->setRepeatPeriod($pd::REPEAT_WEEKLY);
                         $pd->setRepeatEveryNum($r->get($namespace . '_pdRepeatPeriodWeeksEvery_' . $repetitionSetID));
-                        $pd->setRepeatPeriodWeekDays($r->get($namespace . '_pdRepeatPeriodWeeksDays_' . $repetitionSetID));
+                        $pd->setRepeatPeriodWeekDays($r->all($namespace . '_pdRepeatPeriodWeeksDays_' . $repetitionSetID));
                     } elseif ($r->get($namespace . '_pdRepeatPeriod_' . $repetitionSetID) == 'monthly') {
                         $pd->setRepeatPeriod($pd::REPEAT_MONTHLY);
                         $repeat_by = $r->get($namespace . '_pdRepeatPeriodMonthsRepeatBy_' . $repetitionSetID);

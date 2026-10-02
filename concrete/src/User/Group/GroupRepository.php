@@ -50,6 +50,8 @@ class GroupRepository
             $g->setPropertiesFromArray($row);
             return $g;
         }
+
+        return null;
     }
 
     /**
@@ -68,6 +70,7 @@ class GroupRepository
             return $g;
         }
 
+        return null;
     }
 
     /**
@@ -91,6 +94,8 @@ class GroupRepository
             $this->cache->save($item->set($g));
             return $g;
         }
+
+        return null;
     }
 
 }

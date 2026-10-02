@@ -5,6 +5,20 @@ namespace Concrete\Core\Attribute\Category;
 use Concrete\Core\Entity\Attribute\Key\FileKey;
 use Concrete\Core\Entity\Attribute\Key\Key;
 
+/**
+ * The attribute keys of this category are \Concrete\Core\Entity\Attribute\Key\FileKey instances.
+ *
+ * @method \Concrete\Core\Entity\Attribute\Key\FileKey|null getAttributeKeyByID(int $akID)
+ * @method \Concrete\Core\Entity\Attribute\Key\FileKey|null getAttributeKeyByHandle(string $akHandle)
+ * @method \Concrete\Core\Entity\Attribute\Key\FileKey|null getByID(int $akID)
+ * @method \Concrete\Core\Entity\Attribute\Key\FileKey|null getByHandle(string $akHandle)
+ * @method \Concrete\Core\Entity\Attribute\Key\FileKey[] getList()
+ * @method \Concrete\Core\Entity\Attribute\Key\FileKey[] getSearchableList()
+ * @method \Concrete\Core\Entity\Attribute\Key\FileKey[] getSearchableIndexedList()
+ * @method \Concrete\Core\Entity\Attribute\Key\FileKey addFromRequest(\Concrete\Core\Entity\Attribute\Type $type, \Symfony\Component\HttpFoundation\Request $request)
+ * @method \Concrete\Core\Entity\Attribute\Key\FileKey import(\Concrete\Core\Entity\Attribute\Type $type, \SimpleXMLElement $element, ?\Concrete\Core\Entity\Package $package = null)
+ * @method \Concrete\Core\Entity\Attribute\Key\FileKey updateFromRequest(\Concrete\Core\Entity\Attribute\Key\FileKey $key, \Symfony\Component\HttpFoundation\Request $request)
+ */
 class FileCategory extends AbstractStandardCategory
 {
     /**
@@ -78,7 +92,7 @@ class FileCategory extends AbstractStandardCategory
      */
     public function getAttributeKeyRepository()
     {
-        return $this->entityManager->getRepository('\Concrete\Core\Entity\Attribute\Key\FileKey');
+        return $this->entityManager->getRepository('Concrete\Core\Entity\Attribute\Key\FileKey');
     }
 
     /**
@@ -88,7 +102,7 @@ class FileCategory extends AbstractStandardCategory
      */
     public function getAttributeValueRepository()
     {
-        return $this->entityManager->getRepository('\Concrete\Core\Entity\Attribute\Value\FileValue');
+        return $this->entityManager->getRepository('Concrete\Core\Entity\Attribute\Value\FileValue');
     }
 
     /**
@@ -96,7 +110,7 @@ class FileCategory extends AbstractStandardCategory
      *
      * @see \Concrete\Core\Attribute\Category\CategoryInterface::getAttributeValues()
      *
-     * @param \Concrete\Core\Entity\File\Version $version
+     * @param \Concrete\Core\Entity\File\Version|\Concrete\Core\Entity\File\File $version the file version (or a file: in this case its approved version is used)
      *
      * @return \Concrete\Core\Entity\Attribute\Value\FileValue[]
      */

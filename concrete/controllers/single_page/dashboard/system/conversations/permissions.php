@@ -16,7 +16,7 @@ class Permissions extends DashboardPageController
             if ($tp->canAccessTaskPermissions()) {
                 $permissions = PermissionKey::getList('conversation');
                 foreach ($permissions as $pk) {
-                    $pk->setPermissionObject(false);
+                    $pk->setPermissionObject(null);
                     $paID = $_POST['pkID'][$pk->getPermissionKeyID()];
                     $pt = $pk->getPermissionAssignmentObject();
                     $pt->clearPermissionAssignment();

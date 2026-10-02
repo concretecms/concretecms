@@ -31,9 +31,6 @@ final class DataField implements DataFieldInterface
         $this->data = $data;
     }
 
-    /**
-     * @return mixed
-     */
     public function getData() : DataFieldDataInterface
     {
         return $this->data;

@@ -24,7 +24,7 @@ interface SetManagerInterface
     /**
      * Get the attribute keys that are not in any set.
      *
-     * @return \Concrete\Core\Attribute\AttributeKeyInterface[]
+     * @return \Concrete\Core\Entity\Attribute\Key\Key[]
      */
     public function getUnassignedAttributeKeys();
 

@@ -110,13 +110,13 @@ class File
      *
      * @param string $filename The name of the file (without path, only the file name)
      * @param string $prefix The concrete5 file prefix that has been used to store the file
-     * @param array $data {
-     *     @var int|null $uID The ID of the user to be set as the author of the file (if not specified, we'll use the currently logged in user)
-     *     @var string $fvTitle The file title (if not specified, we'll assume an empty string)
-     *     @var string $fvDescription The file description (if not specified, we'll assume an empty string)
-     *     @var string $fvTags The tags to be associated to the file (separate multiple tags with commas or new lines) (if not specified, we'll assume no tags)
-     *     @var bool $fvIsApproved The file title (if not specified, we'll assume an empty string)
-     * }
+     * @param array{uID?: int|null, fvTitle?: string, fvDescription?: string, fvTags?: string, fvIsApproved?: bool, ...} $data
+     *
+     * - uID: The ID of the user to be set as the author of the file (if not specified, we'll use the currently logged in user)
+     * - fvTitle: The file title (if not specified, we'll assume an empty string)
+     * - fvDescription: The file description (if not specified, we'll assume an empty string)
+     * - fvTags: The tags to be associated to the file (separate multiple tags with commas or new lines) (if not specified, we'll assume no tags)
+     * - fvIsApproved: The file title (if not specified, we'll assume an empty string)
      *
      * @param \Concrete\Core\Entity\File\StorageLocation\StorageLocation|false $fsl The storage location to be used (we'll use the default one if it's falsy)
      * @param FileFolder|false $folder The folder where the file must be added (we'll use the root folder if it's falsy)

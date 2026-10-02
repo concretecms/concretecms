@@ -4,6 +4,9 @@ namespace Concrete\Core\Conversation\FlagType;
 use Loader;
 use Concrete\Core\Foundation\ConcreteObject;
 
+/**
+ * @phpstan-consistent-constructor
+ */
 class FlagType extends ConcreteObject
 {
     public $id;

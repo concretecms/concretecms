@@ -57,10 +57,8 @@ class ApiServiceProvider extends ServiceProvider
 
         // Provide our public key to the BearerTokenValidator
         $this->app->extend(BearerTokenValidator::class, function(BearerTokenValidator $validator) {
-            if (method_exists($validator, 'setPublicKey')) {
-                $key = (string) $this->getKey(self::KEY_PUBLIC);
-                $validator->setPublicKey(new CryptKey($key));
-            }
+            $key = (string) $this->getKey(self::KEY_PUBLIC);
+            $validator->setPublicKey(new CryptKey($key));
 
             return $validator;
         });

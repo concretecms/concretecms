@@ -25,7 +25,7 @@ interface ItemInterface
     public function getUrl(): string;
 
     /**
-     * @return Item[]
+     * @return \Concrete\Core\Navigation\Item\ItemInterface[]
      */
     public function getChildren(): array;
 

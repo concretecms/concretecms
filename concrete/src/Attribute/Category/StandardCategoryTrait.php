@@ -43,6 +43,9 @@ trait StandardCategoryTrait
     public function addSet($handle, $name, $pkg = null, $locked = null)
     {
         $manager = $this->getSetManager();
+        if (!$manager instanceof StandardSetManager) {
+            throw new \RuntimeException(t('The set manager of the attribute category must be an instance of %s.', StandardSetManager::class));
+        }
 
         return $manager->addSet($handle, $name, $pkg, $locked);
     }

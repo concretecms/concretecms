@@ -20,7 +20,7 @@ class Event extends BackendInterfaceController
         if (is_object($b) && $b->getBlockTypeHandle() == 'calendar') {
             $controller = $b->getController();
             /**
-             * @var $controller Controller
+             * @var Controller $controller
              */
             $calendar = $controller->getCalendar();
             if (!$calendar) {

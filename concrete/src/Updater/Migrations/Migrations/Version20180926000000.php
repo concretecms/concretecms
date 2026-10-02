@@ -35,22 +35,32 @@ class Version20180926000000 extends AbstractMigration implements RepeatableMigra
             $type = $factory->add('user_selector', t('User Selector'));
 
             // associate the 'user_selector' attribute to collection category
+            // The core attribute categories are standard categories
+            /** @var \Concrete\Core\Attribute\Category\AbstractStandardCategory $category */
             $category = Category::getByHandle('collection')->getController();
             $category->associateAttributeKeyType($type);
 
             // associate the 'user_selector' attribute to site category
+            // The core attribute categories are standard categories
+            /** @var \Concrete\Core\Attribute\Category\AbstractStandardCategory $category */
             $category = Category::getByHandle('site')->getController();
             $category->associateAttributeKeyType($type);
 
             // associate the 'user_selector' attribute to user category
+            // The core attribute categories are standard categories
+            /** @var \Concrete\Core\Attribute\Category\AbstractStandardCategory $category */
             $category = Category::getByHandle('user')->getController();
             $category->associateAttributeKeyType($type);
 
             // associate the 'user_selector' attribute to file category
+            // The core attribute categories are standard categories
+            /** @var \Concrete\Core\Attribute\Category\AbstractStandardCategory $category */
             $category = Category::getByHandle('file')->getController();
             $category->associateAttributeKeyType($type);
 
             // associate the 'user_selector' attribute to file category
+            // The core attribute categories are standard categories
+            /** @var \Concrete\Core\Attribute\Category\AbstractStandardCategory $category */
             $category = Category::getByHandle('event')->getController();
             $category->associateAttributeKeyType($type);
         }

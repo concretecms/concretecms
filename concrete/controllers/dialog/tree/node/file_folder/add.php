@@ -19,6 +19,13 @@ class Add extends Node
     protected $viewPath = '/dialogs/tree/node/file_folder/add';
     protected $helpers = ['form', 'validation/token'];
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Controller\Dialog\Tree\Node::getNode()
+     *
+     * @return \Concrete\Core\Tree\Node\Type\FileFolder the requested folder, or the root folder
+     */
     protected function getNode()
     {
         if (!isset($this->node)) {
@@ -57,11 +64,9 @@ class Add extends Node
         $storageLocations = $this->app->make(StorageLocationFactory::class)->fetchList();
         $locations = [];
         $selectedLocationID = null;
-        if ($node instanceof FileFolder) {
-            $selectedLocation = $node->getTreeNodeStorageLocationObject();
-            if ($selectedLocation) {
-                $selectedLocationID = $selectedLocation->getID();
-            }
+        $selectedLocation = $node->getTreeNodeStorageLocationObject();
+        if ($selectedLocation) {
+            $selectedLocationID = $selectedLocation->getID();
         }
         foreach ($storageLocations as $location) {
             if ($location->isDefault()) {

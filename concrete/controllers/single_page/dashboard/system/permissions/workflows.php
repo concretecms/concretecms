@@ -97,7 +97,7 @@ class Workflows extends DashboardPageController
         }
         if (!$this->error->has()) {
             $type = WorkflowType::getByID($this->post('wftID'));
-            if (!is_object($type) || !($type instanceof WorkflowType)) {
+            if (!is_object($type)) {
                 $this->error->add(t('Invalid Workflow Type.'));
                 $this->add();
 

@@ -23,6 +23,9 @@ class SocialLinksValue extends AbstractValue
         $this->links = new ArrayCollection();
     }
 
+    /**
+     * @return \Doctrine\Common\Collections\Collection|\Concrete\Core\Entity\Attribute\Value\Value\SelectedSocialLink[]
+     */
     public function getSelectedLinks()
     {
         return $this->links;

@@ -5,7 +5,6 @@ namespace Concrete\Core\Page\Theme\Command;
 use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Page\Page;
 use Concrete\Core\Page\Theme\Theme;
-use Concrete\Core\Site\Service;
 
 class ResetSiteThemeLegacyCustomizationsCommandHandler
 {
@@ -15,7 +14,7 @@ class ResetSiteThemeLegacyCustomizationsCommandHandler
      */
     protected $db;
 
-    public function __construct(Service $siteService, Connection $db)
+    public function __construct(Connection $db)
     {
         $this->db = $db;
     }

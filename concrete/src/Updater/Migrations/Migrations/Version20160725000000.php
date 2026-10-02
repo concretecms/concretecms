@@ -656,7 +656,10 @@ class Version20160725000000 extends AbstractMigration implements LongRunningMigr
                 $type = Type::add($handle, $name);
                 foreach ($categories as $category) {
                     $cat = Category::getByHandle($category);
-                    $cat->getController()->associateAttributeKeyType($type);
+                    // The core attribute categories are standard categories
+                    /** @var \Concrete\Core\Attribute\Category\AbstractStandardCategory $controller */
+                    $controller = $cat->getController();
+                    $controller->associateAttributeKeyType($type);
                 }
             }
         }
@@ -860,6 +863,8 @@ class Version20160725000000 extends AbstractMigration implements LongRunningMigr
             ]);
         }
 
+        // The core attribute categories are standard categories
+        /** @var \Concrete\Core\Attribute\Category\AbstractStandardCategory $category */
         $category = Category::getByHandle('collection')->getController();
         $attribute = CollectionKey::getByHandle('is_desktop');
         if (!is_object($attribute)) {
@@ -983,6 +988,8 @@ class Version20160725000000 extends AbstractMigration implements LongRunningMigr
         } else {
             $category = $category->getController();
         }
+        // The core attribute categories are standard categories
+        /** @var \Concrete\Core\Attribute\Category\AbstractStandardCategory $category */
 
         $types = Type::getList();
         foreach ($types as $type) {
@@ -1273,7 +1280,7 @@ class Version20160725000000 extends AbstractMigration implements LongRunningMigr
                 $neutralKey = $row['stName'] . '@' . $row['stType'];
                 $child = \Stack::getByID($row['cID']);
                 if ($child) {
-                    if (isset($neutrals[$neutralKey]) && is_numeric(isset($neutrals[$neutralKey]))) {
+                    if (isset($neutrals[$neutralKey]) && is_numeric($neutrals[$neutralKey])) {
                         if ($row['stType'] == \Stack::ST_TYPE_GLOBAL_AREA) {
                             $neutrals[$neutralKey] = \Page::getByID($neutrals[$neutralKey]);
                             if ($neutrals[$neutralKey] && $neutrals[$neutralKey]->isError()) {

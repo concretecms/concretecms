@@ -12,6 +12,9 @@ use Psr\Log\LoggerInterface;
 use Exception;
 use Throwable;
 
+/**
+ * @phpstan-ignore class.extendsFinalByPhpDoc (the parent class is marked as final only in its PHPDoc: extending it is a known and accepted risk)
+ */
 class Client extends GuzzleHttpClient implements LoggerAwareInterface
 {
 
@@ -78,7 +81,7 @@ class Client extends GuzzleHttpClient implements LoggerAwareInterface
                 'The response code was {statusCode} and the body was {shortBody}',
                 [
                     'statusCode' => $statusCode,
-                    'headers' => is_object($headers) ? $headers->toArray() : $headers,
+                    'headers' => $headers,
                     'shortBody' => $shortBody,
                     'body' => $body,
                 ]

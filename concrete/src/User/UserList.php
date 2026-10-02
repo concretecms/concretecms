@@ -5,7 +5,7 @@ namespace Concrete\Core\User;
 use Concrete\Core\Database\Query\LikeBuilder;
 use Concrete\Core\Search\ItemList\Database\AttributedItemList as DatabaseItemList;
 use Concrete\Core\Search\ItemList\Pager\Manager\UserListPagerManager;
-use Concrete\Core\Search\ItemList\Pager\PagerProviderInterface;
+use Concrete\Core\Search\ItemList\Pager\DatabasePagerProviderInterface;
 use Concrete\Core\Search\ItemList\Pager\QueryString\VariableFactory;
 use Concrete\Core\Search\Pagination\PaginationProviderInterface;
 use Concrete\Core\Search\StickyRequest;
@@ -13,7 +13,7 @@ use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\User\Group\Group;
 use Pagerfanta\Adapter\DoctrineDbalAdapter;
 
-class UserList extends DatabaseItemList implements PagerProviderInterface, PaginationProviderInterface
+class UserList extends DatabaseItemList implements DatabasePagerProviderInterface, PaginationProviderInterface
 {
     /**
      * Determines whether the list should automatically always sort by a column that's in the automatic sort.
@@ -189,7 +189,7 @@ class UserList extends DatabaseItemList implements PagerProviderInterface, Pagin
     /**
      * @param UserInfoRepository $value
      *
-     * @return $this;
+     * @return $this
      */
     public function setUserInfoRepository(UserInfoRepository $value)
     {
@@ -302,13 +302,12 @@ class UserList extends DatabaseItemList implements PagerProviderInterface, Pagin
         if (!$isValidated) {
             $this->includeUnvalidatedUsers();
             $this->query->andWhere('u.uIsValidated = :uIsValidated');
-            $this->query->setParameter('uIsValidated', $isValidated);
+            $this->query->setParameter('uIsValidated', 0);
         }
     }
 
     public function sortByStatus($dir = 'asc')
     {
-        $this->sortUserStatus = 1;
         parent::sortBy('uStatus', $dir);
     }
 
@@ -405,7 +404,7 @@ class UserList extends DatabaseItemList implements PagerProviderInterface, Pagin
     /**
      * Filters the user list for only users within at least one of the provided groups.
      *
-     * @param \Concrete\Core\User\Group\Group[]|\Generator $groups
+     * @param iterable<\Concrete\Core\User\Group\Group|mixed> $groups the groups (the items that aren't Group instances are ignored)
      * @param bool $inGroups Set to true to search users that are in at least in one of the specified groups, false to search users that aren't in any of the specified groups
      */
     public function filterByInAnyGroup($groups, $inGroups = true)
@@ -496,20 +495,6 @@ class UserList extends DatabaseItemList implements PagerProviderInterface, Pagin
         return '\\Concrete\\Core\\Attribute\\Key\\UserKey';
     }
 
-    protected function setBaseQuery()
-    {
-        $sql = '';
-        if ($this->sortUserStatus) {
-            // When uStatus column is selected, we also get the "status" column for
-            // multilingual sorting purposes.
-            $sql =
-                ", CASE WHEN u.uIsActive = 1 THEN '" . t('Active') . "' " .
-                "WHEN u.uIsValidated = 1 AND u.uIsActive = 0 THEN '" . t('Inactive') . "' " .
-                "ELSE '" . t('Unvalidated') . "' END AS uStatus";
-        }
-        $this->setQuery('SELECT DISTINCT u.uID, u.uName' . $sql . ' FROM Users u ');
-    }
-
     /**
      * Function used to check if a group join has already been set.
      */
@@ -519,6 +504,7 @@ class UserList extends DatabaseItemList implements PagerProviderInterface, Pagin
         $isGroupSet = false;
         $isUserGroupSet = false;
         // Loop twice as params returns an array of arrays
+        $setTable = null;
         foreach ($params as $param) {
             foreach ($param as $setTable)
                 if (in_array('ug', $setTable)) {

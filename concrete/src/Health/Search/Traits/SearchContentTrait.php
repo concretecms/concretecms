@@ -24,7 +24,7 @@ trait SearchContentTrait
      * This object gives us one place to implement new types of filters added to the Report class
      *
      * @param Runner $report
-     * @param OrmBuilder|DbalBuilder $query
+     * @param OrmBuilder|DbalBuilder|mixed $query the query builder (an InvalidArgumentException is thrown for other values)
      * @param bool $having
      * @param string $filterColumn
      *
@@ -33,7 +33,7 @@ trait SearchContentTrait
     protected function applyQueryFilters(Runner $report, $query, bool $having = true, string $filterColumn = 'content')
     {
         /**
-         * @var $result SearchResult
+         * @var SearchResult $result
          */
         $result = $report->getResult();
         if (!$query instanceof OrmBuilder && !$query instanceof DbalBuilder) {
@@ -46,10 +46,6 @@ trait SearchContentTrait
             $tags = [$result->getSearchString()];
         } else {
             $keywords = [$result->getSearchString()];
-        }
-
-        if (!count($keywords) && !count($tags)) {
-            return false;
         }
 
         $method = $having ? [$query, 'orHaving'] : [$query, 'orWhere'];

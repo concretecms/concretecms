@@ -102,6 +102,11 @@ abstract class Entity extends ConcreteObject
         return true;
     }
 
+    /**
+     * @param int $peID
+     *
+     * @return self|false|null the entity (an instance of the class corresponding to its type), or NULL/false if it doesn't exist
+     */
     final public static function getByID($peID)
     {
         $entity = CacheLocal::getEntry('permission_access_entity', $peID);

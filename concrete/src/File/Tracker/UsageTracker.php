@@ -11,7 +11,7 @@ use Concrete\Core\Page\Collection\Collection;
 use Concrete\Core\Page\Controller\PageController;
 use Concrete\Core\Statistics\UsageTracker\TrackableInterface;
 use Concrete\Core\Statistics\UsageTracker\TrackerInterface;
-use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\EntityManager;
 
 class UsageTracker implements TrackerInterface
 {
@@ -25,7 +25,7 @@ class UsageTracker implements TrackerInterface
      */
     private $repository;
 
-    public function __construct(EntityManagerInterface $manager)
+    public function __construct(EntityManager $manager)
     {
         $this->manager = $manager;
         $this->repository = $manager->getRepository(FileUsageRecord::class);
@@ -49,6 +49,8 @@ class UsageTracker implements TrackerInterface
                 $this->trackBlocks($collection, [$trackable]);
             }
         }
+
+        return $this;
     }
 
     /**
@@ -72,6 +74,8 @@ class UsageTracker implements TrackerInterface
                 ->setParameter('block_id', $trackable->getBlockObject()->getBlockID())
                 ->getQuery()->execute();
         }
+
+        return $this;
     }
 
     /**

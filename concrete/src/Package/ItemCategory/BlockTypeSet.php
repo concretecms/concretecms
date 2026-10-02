@@ -19,6 +19,13 @@ class BlockTypeSet extends AbstractCategory
         return $set->getBlockTypeSetDisplayName();
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Package\ItemCategory\AbstractCategory::getPackageItems()
+     *
+     * @return \Concrete\Core\Block\BlockType\Set[]
+     */
     public function getPackageItems(Package $package)
     {
         return Set::getListByPackage($package);

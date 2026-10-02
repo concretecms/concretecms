@@ -18,6 +18,13 @@ class MailImporter extends AbstractCategory
         return $importer->getMailImporterName();
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Package\ItemCategory\AbstractCategory::getPackageItems()
+     *
+     * @return \Concrete\Core\Mail\Importer\MailImporter[]
+     */
     public function getPackageItems(Package $package)
     {
         return \Concrete\Core\Mail\Importer\MailImporter::getListByPackage($package);

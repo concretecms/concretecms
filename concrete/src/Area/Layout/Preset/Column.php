@@ -5,6 +5,9 @@ use Concrete\Core\Area\Layout\ColumnInterface;
 use HtmlObject\Element;
 use Sunra\PhpSimple\HtmlDomParser;
 
+/**
+ * @phpstan-consistent-constructor
+ */
 class Column implements ColumnInterface
 {
     protected $column;

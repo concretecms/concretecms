@@ -20,10 +20,10 @@ class Forms extends DashboardPageController
     public function on_start()
     {
         parent::on_start();
-        $this->repository = $this->entityManager->getRepository('\Concrete\Core\Entity\Express\Entity');
-        $this->formRepository = $this->entityManager->getRepository('\Concrete\Core\Entity\Express\Form');
-        $this->fieldSetRepository = $this->entityManager->getRepository('\Concrete\Core\Entity\Express\FieldSet');
-        $this->controlRepository = $this->entityManager->getRepository('\Concrete\Core\Entity\Express\Control\Control');
+        $this->repository = $this->entityManager->getRepository('Concrete\Core\Entity\Express\Entity');
+        $this->formRepository = $this->entityManager->getRepository('Concrete\Core\Entity\Express\Form');
+        $this->fieldSetRepository = $this->entityManager->getRepository('Concrete\Core\Entity\Express\FieldSet');
+        $this->controlRepository = $this->entityManager->getRepository('Concrete\Core\Entity\Express\Control\Control');
     }
 
     public function save()
@@ -45,7 +45,7 @@ class Forms extends DashboardPageController
                 $form->setName($this->request->request->get('name'));
                 $form->setEntity($entity);
                 $this->entityManager->persist($form);
-                $this->entityManager->flush($form);
+                $this->entityManager->flush();
 
                 if ($this->request->request->has('form_id')) {
                     $this->flash('success', t('Form updated successfully.'));
@@ -195,7 +195,7 @@ class Forms extends DashboardPageController
 
                 $type = $manager->driver($this->request->request->get('type'));
                 $control = $type->createControlByIdentifier($this->request->request->get('id'));
-                $control->setId((new UuidGenerator())->generate($this->entityManager, $control));
+                $control->setId((new UuidGenerator())->generateId($this->entityManager, $control));
                 $control->setFieldSet($set);
                 $control->setPosition($position);
 
@@ -351,7 +351,7 @@ class Forms extends DashboardPageController
         $form = $this->formRepository->findOneById($id);
         if (is_object($form)) {
             /**
-             * @var $entity Entity
+             * @var Entity $entity
              */
             $entity = $form->getEntity();
             $this->set('entity', $entity);

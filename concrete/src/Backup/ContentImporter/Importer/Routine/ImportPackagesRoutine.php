@@ -74,7 +74,7 @@ class ImportPackagesRoutine extends AbstractRoutine
                 continue;
             }
             $pkgClass = $this->packageService->getClass((string) $xPackage['handle']);
-            if (!$pkgClass || $pkgClass instanceof BrokenPackage) {
+            if ($pkgClass instanceof BrokenPackage) {
                 continue;
             }
             $data = [];

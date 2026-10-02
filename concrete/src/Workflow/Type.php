@@ -9,6 +9,9 @@ use Concrete\Core\Support\Facade\Application;
 use PDO;
 use Punic\Comparer;
 
+/**
+ * @phpstan-consistent-constructor
+ */
 class Type extends ConcreteObject
 {
     /**

@@ -190,7 +190,7 @@ class BlockControl extends Control
 
     public function addToPageTypeComposerFormLayoutSet(PageTypeComposerFormLayoutSet $set, $import = false)
     {
-        $layoutSetControl = parent::addToPageTypeComposerFormLayoutSet($set, $import);
+        $layoutSetControl = parent::addToPageTypeComposerFormLayoutSet($set);
         $pagetype = $set->getPageTypeObject();
         $pagetype->rescanPageTypeComposerOutputControlObjects();
 

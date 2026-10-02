@@ -140,7 +140,7 @@ class Application extends Container
                 // job sets
                 if (!strlen($url)) {
                     $jSets = JobSet::getList(true);
-                    if (is_array($jSets) && count($jSets)) {
+                    if (count($jSets)) {
                         foreach ($jSets as $set) {
                             if ($set->isScheduledForNow()) {
                                 $url = View::url(
@@ -309,10 +309,10 @@ class Application extends Container
      * Using the configuration value, determines whether we need to redirect to a URL with
      * a trailing slash or not.
      *
-     * @param SymfonyRequest $request
+     * @param \Concrete\Core\Http\Request $request the current request (the signature accepts any Symfony request for backward compatibility, but the redirect response requires a Concrete request)
      * @param Site $site
      *
-     * @return \Concrete\Core\Routing\RedirectResponse
+     * @return \Concrete\Core\Routing\RedirectResponse|null
      */
     public function handleURLSlashes(SymfonyRequest $request, Site $site)
     {
@@ -327,12 +327,11 @@ class Application extends Container
                 $parsed_url = Url::createFromUrl($request->getUri(),
                 $trailing_slashes ? Url::TRAILING_SLASHES_ENABLED : Url::TRAILING_SLASHES_DISABLED);
 
-                $response = new RedirectResponse($parsed_url, 301);
-                $response->setRequest($request);
-
-                return $response;
+                return new RedirectResponse($parsed_url, 301);
             }
         }
+
+        return null;
     }
 
     /**
@@ -383,16 +382,16 @@ class Application extends Container
                 }
             }
 
-            $response = new RedirectResponse($mainCanonical, '301');
+            $response = new RedirectResponse($mainCanonical, 301);
 
             return $response;
         }
+
+        return null;
     }
 
     /**
      * Get or check the current application environment.
-     *
-     * @param  mixed
      *
      * @return string|bool
      */
@@ -440,7 +439,6 @@ class Application extends Container
      * Instantiate a concrete instance of the given type.
      *
      * @param  string $concrete
-     * @param  array $parameters
      *
      * @throws \Illuminate\Contracts\Container\BindingResolutionException
      *
@@ -516,7 +514,7 @@ class Application extends Container
      */
     public function bindShared($abstract, $concrete)
     {
-        return $this->singleton($abstract, $concrete);
+        $this->singleton($abstract, $concrete);
     }
     
 }

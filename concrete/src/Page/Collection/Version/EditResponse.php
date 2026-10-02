@@ -41,7 +41,7 @@ class EditResponse extends PageEditResponse
 
         $c = Page::getByID($this->cID);
         $cp = new Permissions($c);
-        $cpCanDeletePageVersions = $cp->cpCanDeletePageVersions();
+        $cpCanDeletePageVersions = $cp->canDeletePageVersions();
 
         $versions = [];
         foreach ($this->versions as $v) {

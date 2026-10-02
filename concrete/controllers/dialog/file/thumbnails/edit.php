@@ -6,6 +6,7 @@ use Concrete\Controller\Backend\UserInterface\File as BackendInterfaceFileContro
 use Concrete\Core\File\EditResponse as FileEditResponse;
 use Concrete\Core\File\Image\Thumbnail\Type\Version;
 use Concrete\Core\File\Type\Type;
+use Concrete\Core\Error\UserMessageException;
 use Concrete\Core\ImageEditor\ImageEditorService;
 use Concrete\Core\Permission\Checker;
 use Concrete\Core\File\Image\Thumbnail\Type\Type as ThumbnailType;
@@ -31,11 +32,11 @@ class Edit extends BackendInterfaceFileController
         foreach ($thumbnails as $thumb) {
             $tempVersion = $thumb->getThumbnailTypeVersionObject();
             if ($tempVersion->getHandle() === $handle) {
-                $typeVersion = $tempVersion;
-                break;
+                return $tempVersion;
             }
         }
-        return $typeVersion;
+
+        throw new UserMessageException(t('Unable to find the requested thumbnail type.'));
     }
 
     public function view()

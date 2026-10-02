@@ -39,7 +39,7 @@ class Image
     public function __construct(?File $f = null, $options = null)
     {
         if ($f === null) {
-            return false;
+            return;
         }
 
         if ($options === null) {

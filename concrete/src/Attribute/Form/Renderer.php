@@ -73,11 +73,14 @@ class Renderer
             $value = $this->object->getAttributeValueObject($ak);
         }
 
-        /**
-         * @var $view View
-         */
+        if (!method_exists($view, 'setValue')) {
+            throw new \InvalidArgumentException(t('The view must have the %s method.', 'setValue()'));
+        }
         $view->setValue($value);
         if ($this->object) {
+            if (!method_exists($view, 'setObject')) {
+                throw new \InvalidArgumentException(t('The view must have the %s method.', 'setObject()'));
+            }
             $view->setObject($this->object);
         }
         $renderer = $view->getControlRenderer();

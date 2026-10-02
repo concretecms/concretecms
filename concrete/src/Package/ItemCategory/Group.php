@@ -19,6 +19,13 @@ class Group extends AbstractCategory
         return $set->getGroupDisplayName();
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Package\ItemCategory\AbstractCategory::getPackageItems()
+     *
+     * @return \Concrete\Core\User\Group\Group[]
+     */
     public function getPackageItems(Package $package)
     {
         $gl = new GroupList();

@@ -147,6 +147,8 @@ class Version
                 return $version;
             }
         }
+
+        return null;
     }
 
     /**
@@ -236,7 +238,7 @@ class Version
     /**
      * Set the width of the thumbnails (or the maximum width in case of proportional sizing).
      *
-     * @param int|null $width
+     * @param int|null|mixed $width ignored if it's not a positive number
      */
     public function setWidth($width)
     {
@@ -262,7 +264,7 @@ class Version
     /**
      * Set the height of the thumbnails (or the maximum height in case of proportional sizing).
      *
-     * @param int|null $height
+     * @param int|null|mixed $height ignored if it's not a positive number
      */
     public function setHeight($height)
     {
@@ -521,7 +523,7 @@ class Version
                                 if ($thumbnailWidth < $imageWidth) {
                                     $result = true;
                                 }
-                            } elseif ($thumbnailHeight > 0) {
+                            } else {
                                 // Only the thumbnail height is set: the thumbnail must be shorter than the image.
                                 if ($thumbnailHeight < $imageHeight) {
                                     $result = true;

@@ -64,6 +64,13 @@ class AddBlockBlockTypeAccess extends BlockTypeAccess
         }
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Permission\Access\Access::getAccessListItems()
+     *
+     * @return \Concrete\Core\Permission\Access\ListItem\AddBlockBlockTypeListItem[]
+     */
     public function getAccessListItems($accessType = PermissionKey::ACCESS_TYPE_INCLUDE, $filterEntities = array(), $checkCache = true)
     {
 
@@ -77,6 +84,7 @@ class AddBlockBlockTypeAccess extends BlockTypeAccess
         }
 
         $db = Database::connection();
+        /** @var \Concrete\Core\Permission\Access\ListItem\AddBlockBlockTypeListItem[] $list */
         $list = parent::getAccessListItems($accessType, $filterEntities, false);
         foreach ($list as $l) {
             $pe = $l->getAccessEntityObject();

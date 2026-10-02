@@ -26,7 +26,7 @@ abstract class OneAssociationSaveHandler implements SaveHandlerInterface
     protected function getAssociatedEntryFromRequest(Control $control, Request $request)
     {
         /**
-         * @var $control AssociationControl
+         * @var AssociationControl $control
          */
         $r = $this->entityManager->getRepository('Concrete\Core\Entity\Express\Entry');
         $entryID = $request->request->get('express_association_' . $control->getId());

@@ -24,7 +24,7 @@ class DashboardCalendarPageController extends DashboardSitePageController
             $calendar = Calendar::getByID(intval($caID));
             $cp = new \Permissions($calendar);
             if (!$cp->canViewCalendarInEditInterface()) {
-                unset($calendar);
+                $calendar = null;
             }
         } else {
             $calendar = null;

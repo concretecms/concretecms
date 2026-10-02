@@ -48,7 +48,7 @@ abstract class Control implements \JsonSerializable, ExportableInterface, Contro
     protected $field_set;
 
     /**
-     * @return mixed
+     * @return string the GUID of the control
      */
     public function getId()
     {
@@ -56,7 +56,7 @@ abstract class Control implements \JsonSerializable, ExportableInterface, Contro
     }
 
     /**
-     * @param mixed $id
+     * @param string $id the GUID of the control
      */
     public function setId($id)
     {

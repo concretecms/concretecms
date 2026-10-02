@@ -27,7 +27,7 @@ class Delete extends BackendInterfaceController
     {
         /** @var Request $request */
         $request = $this->app->make(Request::class);
-        $logItems = (array)$request->query->get("item", []);
+        $logItems = (array) $request->query->get("item");
         $this->set('logItems', $logItems);
     }
 
@@ -40,7 +40,7 @@ class Delete extends BackendInterfaceController
             $db = $this->app->make(Connection::class);
             /** @var ResponseFactory $responseFactory */
             $responseFactory = $this->app->make(ResponseFactory::class);
-            $logItems = (array)$request->request->get("logItem", []);
+            $logItems = (array) $request->request->get("logItem");
 
             foreach ($logItems as $logItem) {
                 /** @noinspection PhpUnhandledExceptionInspection */

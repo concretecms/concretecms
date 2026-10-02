@@ -7,6 +7,9 @@ use Core;
 
 class CustomStyle extends AbstractCustomStyle
 {
+    /**
+     * @var StyleSet|null
+     */
     protected $set;
     protected $theme;
 
@@ -34,6 +37,9 @@ class CustomStyle extends AbstractCustomStyle
     public function getCSS()
     {
         $set = $this->set;
+        if ($set === null) {
+            return '';
+        }
         $groups = [];
         if ($set->getBackgroundColor()) {
             $groups[''][] = 'background-color:' . $set->getBackgroundColor();

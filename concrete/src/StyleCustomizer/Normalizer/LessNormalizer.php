@@ -29,6 +29,8 @@ class LessNormalizer implements NormalizerInterface
     public function createVariableCollectionFromFile(string $variablesFilePath): NormalizedVariableCollection
     {
         $collection = new NormalizedVariableCollection();
+        // parseFile() returns the root ruleset when its third argument is true
+        /** @var \Less_Tree_Ruleset $parser */
         $parser = $this->parser->parseFile($variablesFilePath, '', true);
         $rules = $parser->rules;
 

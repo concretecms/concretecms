@@ -24,7 +24,7 @@ class Process extends AbstractController
     /**
      * @param int $cID
      * @param string $arHandle
-     * @param int $bID
+     * @param int $stackBlockID
      * @param int $pcID
      * @param int|null $dragAreaBlockID
      * @param int|null $orphanedBlockID
@@ -174,6 +174,7 @@ class Process extends AbstractController
         }
         $b = Block::getByID($bID, $cx, $ax);
         if ($b && !$b->isError() && $b->getBlockTypeHandle() === BLOCK_HANDLE_SCRAPBOOK_PROXY) {
+            /** @var \Concrete\Block\CoreScrapbookDisplay\Controller $bi */
             $bi = $b->getInstance();
             $b = Block::getByID($bi->getOriginalBlockID());
         }

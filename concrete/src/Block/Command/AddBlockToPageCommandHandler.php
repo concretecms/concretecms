@@ -41,6 +41,7 @@ class AddBlockToPageCommandHandler
         } else {
             // if we apply to all, then we don't worry about a new version of the page
             $nb = $pageToModify->addBlock($blockType, $areaToModify, $data);
+            $nvc = null;
         }
 
         $event = new BlockAdd($nb, $pageToModify);

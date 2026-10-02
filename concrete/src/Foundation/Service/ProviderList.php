@@ -55,5 +55,7 @@ class ProviderList
     public function __sleep()
     {
         unset($this->app);
+
+        return array_keys(get_object_vars($this));
     }
 }

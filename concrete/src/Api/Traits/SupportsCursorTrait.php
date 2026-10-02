@@ -16,6 +16,14 @@ trait SupportsCursorTrait
         return $this->request->query->get('after', null);
     }
 
+    /**
+     * Add the pagination cursor to a resource collection.
+     *
+     * @param iterable $results the items of the current page
+     * @param string|callable $getNewCursor the name of the item method returning the cursor of an item, or a callable receiving the item and returning it
+     * @param \League\Fractal\Resource\Collection $resource
+     * @param string|int|null $previousCursor
+     */
     public function addCursorToResource(
         iterable $results,
         Request $request,
@@ -28,7 +36,7 @@ trait SupportsCursorTrait
                 $newCursor = $getNewCursor(collect($results)->last());
             } else {
                 /**
-                 * @var $getNewCursor string
+                 * @var string $getNewCursor
                  */
                 $newCursor = collect($results)->last()->$getNewCursor();
             }
@@ -43,6 +51,10 @@ trait SupportsCursorTrait
         return $resource;
     }
 
+    /**
+     * @param \Concrete\Core\Search\ItemList\ItemList&\Concrete\Core\Search\ItemList\Pager\PagerProviderInterface $list
+     * @param \Concrete\Core\Search\Column\Column&\Concrete\Core\Search\Column\PagerColumnInterface $column
+     */
     public function setupSortAndCursor(
         Request $request,
         ItemList $list,

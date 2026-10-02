@@ -7,6 +7,26 @@ use Concrete\Core\Search\Column\Set;
 
 class Item extends SearchResultItem
 {
+    /**
+     * @deprecated use getItem()->getUserID()
+     *
+     * @var int
+     */
+    public $uID;
+
+    /**
+     * @deprecated use getItem()->getUserName()
+     *
+     * @var string
+     */
+    public $uName;
+
+    /**
+     * @deprecated use getItem()->getUserEmail()
+     *
+     * @var string
+     */
+    public $uEmail;
 
     public function __construct(SearchResult $result, Set $columns, $item)
     {

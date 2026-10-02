@@ -29,7 +29,7 @@ class Avatar extends AccountProfileEditPageController
         ];
 
         /**
-         * @var $instanceFactory AvatarCropperInstanceFactory
+         * @var AvatarCropperInstanceFactory $instanceFactory
          */
         $instanceFactory = $this->app->make(AvatarCropperInstanceFactory::class);
         $instance = $instanceFactory->createInstanceFromRequest($this->request);
@@ -43,7 +43,7 @@ class Avatar extends AccountProfileEditPageController
         /** @var UserInfo */
         $profile = $this->get('profile');
 
-        /** @var \Symfony\Component\HttpFoundation\File\UploadedFile */
+        /** @var \Symfony\Component\HttpFoundation\File\UploadedFile|null $file */
         $file = $this->request->files->get('file');
 
         if ($file) {

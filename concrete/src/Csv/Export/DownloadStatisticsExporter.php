@@ -7,7 +7,7 @@ use Concrete\Core\Entity\File\File;
 use Concrete\Core\Entity\User\User;
 use Concrete\Core\Localization\Service\Date;
 use Concrete\Core\Page\Page;
-use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\EntityManager;
 use Generator;
 use League\Csv\Writer;
 
@@ -50,7 +50,7 @@ class DownloadStatisticsExporter
      * @param \League\Csv\Writer $writer
      * @param \Concrete\Core\Localization\Service\Date $dateService
      */
-    public function __construct(File $file, Writer $writer, Date $dateService, EntityManagerInterface $entityManager)
+    public function __construct(File $file, Writer $writer, Date $dateService, EntityManager $entityManager)
     {
         $this->file = $file;
         $this->writer = $writer;
@@ -85,7 +85,7 @@ class DownloadStatisticsExporter
     }
 
     /**
-     * @return string[]
+     * @return \Generator<int, string>
      */
     protected function generateHeaders(): Generator
     {
@@ -99,7 +99,7 @@ class DownloadStatisticsExporter
     }
 
     /**
-     * @return \Concrete\Core\Entity\File\DownloadStatistics[]
+     * @return \Generator<int, \Concrete\Core\Entity\File\DownloadStatistics>
      */
     protected function generateRecordList(): Generator
     {
@@ -129,7 +129,7 @@ class DownloadStatisticsExporter
     }
 
     /**
-     * @return \Concrete\Core\Entity\File\DownloadStatistics[]
+     * @return \Generator<int, int|string|null>
      */
     protected function generateRecord(DownloadStatistics $record): Generator
     {

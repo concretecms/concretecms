@@ -18,6 +18,13 @@ class Job extends AbstractCategory
         return $job->getJobName();
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Package\ItemCategory\AbstractCategory::getPackageItems()
+     *
+     * @return \Concrete\Core\Job\Job[]
+     */
     public function getPackageItems(Package $package)
     {
         return \Concrete\Core\Job\Job::getListByPackage($package);

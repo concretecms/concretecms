@@ -13,6 +13,7 @@ use Concrete\Core\Error\UserMessageException;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use League\Csv\Reader;
+use League\Csv\Statement;
 use Punic\Misc;
 use Throwable;
 
@@ -73,7 +74,7 @@ abstract class AbstractImporter
      * Initialize the instance.
      *
      * @param CategoryInterface $category the attribute category
-     * @param Reader $reader the CSV Reader instance
+     * @param \League\Csv\Reader $reader the CSV Reader instance (it must not have a header offset: the importer reads the header row by itself)
      * @param Application $app
      */
     protected function __construct(Reader $reader, CategoryInterface $category, Application $app)
@@ -170,11 +171,10 @@ abstract class AbstractImporter
         $result = false;
         $this->csvSchema = null;
         $csvSchema = null;
-        $this->reader->each(function ($headerCells, $rowIndex) use (&$csvSchema) {
+        foreach ($this->reader->getRecords() as $rowIndex => $headerCells) {
             $csvSchema = new CsvSchema($rowIndex, $headerCells, $this->getStaticHeaders(), $this->getAttributesMap());
-
-            return false;
-        });
+            break;
+        }
         if ($csvSchema === null) {
             $importResult->getErrors()->add(t("There's no row in the CSV."));
         } elseif (!$csvSchema->someHeaderRecognized()) {
@@ -236,8 +236,9 @@ abstract class AbstractImporter
             }
             if ($maxDataRows === null || $maxDataRows > 0) {
                 $dataRowsToSkip = (int) $dataRowsToSkip;
-                $this->reader->setOffset(1 + ($dataRowsToSkip > 0 ? $dataRowsToSkip : 0));
-                $this->reader->each(function ($cells, $rowIndex) use ($importResult, $maxDataRows, &$dataCollected, $collectData) {
+                // Skip the header row and the requested data rows (the record offsets are preserved)
+                $records = (new Statement())->offset(1 + ($dataRowsToSkip > 0 ? $dataRowsToSkip : 0))->process($this->reader);
+                foreach ($records as $rowIndex => $cells) {
                     $importResult->countRowProcessed($rowIndex);
                     $staticValues = $this->csvSchema->getStaticValues($cells);
                     try {
@@ -260,13 +261,17 @@ abstract class AbstractImporter
                         }
                     }
 
-                    return $maxDataRows === null || $importResult->getTotalDataRowsProcessed() < $maxDataRows;
-                });
+                    if ($maxDataRows !== null && $importResult->getTotalDataRowsProcessed() >= $maxDataRows) {
+                        break;
+                    }
+                }
             }
         }
         if ($dataCollected !== null) {
             $importResult->setDataCollected($dataCollected);
         }
+
+        return null;
     }
 
     /**
@@ -304,7 +309,6 @@ abstract class AbstractImporter
     {
         $this->category = $category;
         $this->attributeKeysAndControllers = null;
-        $this->csvHeader = null;
 
         return $this;
     }
@@ -412,7 +416,6 @@ abstract class AbstractImporter
     /**
      * Convert the data read from CSV to be passed to the attribute controller.
      *
-     * @param AttributeController $controller
      * @param string|array $csvData
      * @param AttributeController $attributeController
      *

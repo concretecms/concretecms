@@ -140,6 +140,7 @@ class NameAlreadyInUseTest extends TestCase
             case 'concrete/dispatcher.php':
             case 'concrete/src/Support/.phpstorm.meta.php':
             case 'concrete/src/Support/__IDE_SYMBOLS__.php':
+            case 'concrete/src/Support/__PHPSTAN_STUBS__.php':
                 return false;
             default:
                 return true;

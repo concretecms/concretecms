@@ -14,7 +14,7 @@ class Entries extends DashboardSitePageController
 
     public function view()
     {
-        $r = $this->entityManager->getRepository('\Concrete\Core\Entity\Express\Entity');
+        $r = $this->entityManager->getRepository('Concrete\Core\Entity\Express\Entity');
         $entities = [];
         foreach($r->findPublicEntities() as $entity) {
             $permissions = new Checker($entity);

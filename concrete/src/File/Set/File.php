@@ -5,6 +5,9 @@ use Concrete\Core\Entity\File\File as FileEntity;
 use FileSet;
 use Loader;
 
+/**
+ * @phpstan-consistent-constructor
+ */
 class File
 {
     /**

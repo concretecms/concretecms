@@ -37,7 +37,7 @@ class LocalizationEssentialServiceProvider extends ServiceProvider
                     [
                         'factories' => [
                             GettextLoader::class => function($creationContext, $resolvedName, $options) {
-                                return $this->app->make(GettextLoader::class, ['webrootDirectory' => DIR_BASE]);
+                                return $this->app->make(GettextLoader::class);
                             }
                         ],
                         'aliases' => [

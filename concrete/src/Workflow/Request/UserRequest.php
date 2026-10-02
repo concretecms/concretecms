@@ -63,7 +63,6 @@ abstract class UserRequest extends Request
 
     public function addWorkflowProgress(Workflow $wf)
     {
-        Loader::model('workflow/progress/categories/user');
         $uwp = UserWorkflowProgress::add($wf, $this);
         $r = $uwp->start();
         $uwp->setWorkflowProgressResponseObject($r);

@@ -21,6 +21,9 @@ abstract class AbstractParser implements ParserInterface
 
     protected function loadFromXml(StyleInterface $style, \SimpleXMLElement $element)
     {
+        if (!method_exists($style, 'setName') || !method_exists($style, 'setVariable')) {
+            throw new \InvalidArgumentException(t('The style must have the %s and %s methods.', 'setName()', 'setVariable()'));
+        }
         $style->setName((string) $element['name']);
         $style->setVariable((string) $element['variable']);
         return $style;

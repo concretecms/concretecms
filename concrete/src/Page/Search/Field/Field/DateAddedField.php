@@ -1,7 +1,7 @@
 <?php
 namespace Concrete\Core\Page\Search\Field\Field;
 
-use Concrete\Core\File\FileList;
+use Concrete\Core\Page\PageList;
 use Concrete\Core\Search\Field\AbstractField;
 use Concrete\Core\Search\Field\FieldInterface;
 use Concrete\Core\Search\ItemList\ItemList;
@@ -38,8 +38,11 @@ class DateAddedField extends AbstractField
     }
 
     /**
-     * @param FileList $list
-     * @param $request
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Search\Field\FieldInterface::filterList()
+     *
+     * @param PageList $list
      */
     public function filterList(ItemList $list)
     {

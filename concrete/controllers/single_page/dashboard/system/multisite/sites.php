@@ -149,6 +149,7 @@ class Sites extends DashboardPageController
         $type = $typeID === 0 ? null : $this->app->make('site/type')->getByID($typeID);
         if ($type === null) {
             $this->error->add(t('Type required.'));
+            $theme = null;
         } else {
             $templateID = $type->getSiteTypeHomePageTemplateID();
             $template = $templateID ? Template::getByID($templateID) : null;
@@ -180,6 +181,7 @@ class Sites extends DashboardPageController
             $this->error->add(t('Name required.'));
         }
 
+        $canonicalURL = null;
         try {
             $canonicalURL = (string) UrlImmutable::createFromUrl($this->post('canonical_url'));
         } catch (\RuntimeException $x) {
@@ -227,7 +229,7 @@ class Sites extends DashboardPageController
     protected function setCurrentSite(?Site $site): void
     {
         $this->set('site', $site);
-        if ($site === null || $site->getSiteID() === null) {
+        if ($site === null) {
             $menu = null;
         } else {
             $breadcrumb = $this->app->make(DashboardBreadcrumbFactory::class)->getBreadcrumb($this->getPageObject());

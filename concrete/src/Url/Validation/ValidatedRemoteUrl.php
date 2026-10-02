@@ -39,8 +39,7 @@ class ValidatedRemoteUrl
 
     public function getPort(): int
     {
-        $port = $this->url->getPort();
-        $port = $port ? $port->get() : null;
+        $port = $this->url->getPort()->get();
 
         return $port ? (int) $port : ($this->getScheme() === 'http' ? 80 : 443);
     }

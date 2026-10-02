@@ -26,6 +26,13 @@ class SinglePage extends AbstractCategory
         $controller->render();
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Package\ItemCategory\AbstractCategory::getPackageItems()
+     *
+     * @return \Concrete\Core\Page\Page[]
+     */
     public function getPackageItems(Package $package)
     {
         return Single::getListByPackage($package);

@@ -15,7 +15,7 @@ interface FilterableByValueInterface
     /**
      * Filters list by exact value
      *
-     * @var ItemList $list
+     * @param ItemList $list
      * @param mixed|AbstractValue $value
      * @return mixed
      */

@@ -33,10 +33,8 @@ class FormBuilder
         $form->setName($this->formName);
         $form->setEntity($entity);
 
-        /**
-         * @var $fieldset FieldsetBuilder
-         */
         $position = 0;
+        /** @var FieldsetBuilder $fieldset */
         foreach($this->fieldsets as $fieldset) {
             $builtSet = $fieldset->build($this->objectBuilder);
             $builtSet->setPosition($position);

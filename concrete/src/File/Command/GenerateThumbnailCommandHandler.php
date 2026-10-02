@@ -26,7 +26,6 @@ class GenerateThumbnailCommandHandler
 
     public function __invoke(GeneratedThumbnailCommand $command)
     {
-        /** @var FileEntity $f */
         $fileEntity = $this->entityManager->find(FileEntity::class, $command->getFileID());
 
         if ($fileEntity instanceof FileEntity) {
@@ -37,25 +36,23 @@ class GenerateThumbnailCommandHandler
 
                 if ($thumbnailType instanceof ThumbnailTypeEntity) {
                     foreach([$thumbnailType->getBaseVersion(), $thumbnailType->getDoubledVersion()] as $thumbnailTypeVersion) {
-                        if ($thumbnailTypeVersion instanceof ThumbnailVersion) {
-                            $image = $fileVersion->getImagineImage();
+                        $image = $fileVersion->getImagineImage();
 
-                            if ($image) {
-                                $imageSize = $image->getSize();
+                        if ($image) {
+                            $imageSize = $image->getSize();
 
-                                unset($image);
+                            unset($image);
 
-                                if ($thumbnailTypeVersion->shouldExistFor($imageSize->getWidth(), $imageSize->getHeight(), $fileEntity)) {
-                                    $location = $fileVersion->getFile()->getFileStorageLocationObject();
-                                    $filesystem = $location->getFileSystemObject();
+                            if ($thumbnailTypeVersion->shouldExistFor($imageSize->getWidth(), $imageSize->getHeight(), $fileEntity)) {
+                                $location = $fileVersion->getFile()->getFileStorageLocationObject();
+                                $filesystem = $location->getFileSystemObject();
 
-                                    if (!$filesystem->has($thumbnailTypeVersion->getFilePath($fileVersion))) {
-                                        $fileVersion->generateThumbnail($thumbnailTypeVersion);
-                                    }
+                                if (!$filesystem->has($thumbnailTypeVersion->getFilePath($fileVersion))) {
+                                    $fileVersion->generateThumbnail($thumbnailTypeVersion);
                                 }
-
-                                $fileVersion->releaseImagineImage();
                             }
+
+                            $fileVersion->releaseImagineImage();
                         }
                     }
                 }

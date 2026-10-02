@@ -41,7 +41,7 @@ class Autocomplete extends AbstractController
         $requestInstance = $this->checkAccess();
         $entity = $this->getAccessibleEntity($requestInstance);
         /**
-         * @var $objectManager ObjectManager
+         * @var ObjectManager $objectManager
          */
         $objectManager = $this->app->make(ObjectManager::class);
         $query = $this->request->request->get('query', $this->request->query->get('query'));
@@ -63,16 +63,13 @@ class Autocomplete extends AbstractController
         $entity = $this->getAccessibleEntity($requestInstance);
         $results = [];
         /**
-         * @var $objectManager ObjectManager
+         * @var ObjectManager $objectManager
          */
         $objectManager = $this->app->make(ObjectManager::class);
         foreach ((array) $this->request->request->get('entryId') as $id) {
             $entry = $objectManager->getEntry($id);
             if ($entry) {
                 $entryEntity = $entry->getEntity();
-                if (!$entryEntity instanceof Entity) {
-                    throw new \Exception(t('Unable to retrieve entity from Express entry: %s', $entry->getID()));
-                }
                 if ($entryEntity->getID() !== $entity->getID()) {
                     throw new \Exception(t('Access Denied.'));
                 }

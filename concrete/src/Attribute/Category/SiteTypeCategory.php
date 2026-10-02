@@ -8,8 +8,29 @@ use Concrete\Core\Entity\Attribute\Value\SiteTypeValue;
 use Concrete\Core\Entity\Attribute\Value\SiteValue;
 use Concrete\Core\Entity\Site\Site;
 
+/**
+ * The attribute keys of this category are \Concrete\Core\Entity\Attribute\Key\SiteKey instances.
+ *
+ * @method \Concrete\Core\Entity\Attribute\Key\SiteKey|null getAttributeKeyByID(int $akID)
+ * @method \Concrete\Core\Entity\Attribute\Key\SiteKey|null getAttributeKeyByHandle(string $akHandle)
+ * @method \Concrete\Core\Entity\Attribute\Key\SiteKey|null getByID(int $akID)
+ * @method \Concrete\Core\Entity\Attribute\Key\SiteKey|null getByHandle(string $akHandle)
+ * @method \Concrete\Core\Entity\Attribute\Key\SiteKey[] getList()
+ * @method \Concrete\Core\Entity\Attribute\Key\SiteKey[] getSearchableList()
+ * @method \Concrete\Core\Entity\Attribute\Key\SiteKey[] getSearchableIndexedList()
+ * @method \Concrete\Core\Entity\Attribute\Key\SiteKey addFromRequest(\Concrete\Core\Entity\Attribute\Type $type, \Symfony\Component\HttpFoundation\Request $request)
+ * @method \Concrete\Core\Entity\Attribute\Key\SiteKey import(\Concrete\Core\Entity\Attribute\Type $type, \SimpleXMLElement $element, ?\Concrete\Core\Entity\Package $package = null)
+ * @method \Concrete\Core\Entity\Attribute\Key\SiteKey updateFromRequest(\Concrete\Core\Entity\Attribute\Key\SiteKey $key, \Symfony\Component\HttpFoundation\Request $request)
+ */
 class SiteTypeCategory extends AbstractStandardCategory
 {
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Attribute\Category\AbstractCategory::createAttributeKey()
+     *
+     * @return \Concrete\Core\Entity\Attribute\Key\SiteKey
+     */
     public function createAttributeKey()
     {
         return new SiteKey();
@@ -17,7 +38,7 @@ class SiteTypeCategory extends AbstractStandardCategory
 
     public function getSearchIndexer()
     {
-        return false;
+        return null;
     }
 
     public function getIndexedSearchTable()

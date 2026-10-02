@@ -18,6 +18,8 @@
 *.html normalizetext diff=html
 *.js normalizetext
 *.md normalizetext
+*.neon text eol=lf
+*.neon.dist text eol=lf
 *.php normalizetext diff=php
 *.sql normalizetext
 *.tpl normalizetext

@@ -27,8 +27,8 @@ class AddGroup extends DashboardPageController
         if ((bool)$this->request->request->get('gOverrideGroupTypeSettings')) {
             $hasManagerRole = false;
 
-            if (is_array($this->request->request->get("roles"))) {
-                foreach ($this->request->request->get("roles") as $roleId => $role) {
+            if (is_array($this->request->request->all()["roles"] ?? null)) {
+                foreach ($this->request->request->all("roles") as $roleId => $role) {
                     if (strlen($role["name"]) === 0) {
                         $errorList->add(t("You need to enter a role name."));
                     }
@@ -42,7 +42,7 @@ class AddGroup extends DashboardPageController
                     //$errorList->add(t("You need to have at least one manager role."));
                 }
 
-                if (!in_array($this->request->request->get("defaultRole"), array_keys($this->request->request->get("roles")))) {
+                if (!in_array($this->request->request->get("defaultRole"), array_keys($this->request->request->all('roles')))) {
                     $errorList->add(t("You need to set a default role."));
                 }
             } else {
@@ -99,9 +99,9 @@ class AddGroup extends DashboardPageController
             $defaultRole = null;
 
             if ($typeWasInherited) {
-                $newRoles = $this->request->request->get("roles");
+                $newRoles = $this->request->request->all("roles");
             } else {
-                foreach ($this->request->request->get("roles") as $roleId => $role) {
+                foreach ($this->request->request->all("roles") as $roleId => $role) {
                     if (substr($roleId, 0, 1) === "_") {
                         $newRoles[$roleId] = $role;
                     } else {
@@ -113,7 +113,7 @@ class AddGroup extends DashboardPageController
             // update existing roles and remove removed items
             foreach ($g->getRoles() as $role) {
                 if (in_array($role->getId(), array_keys($updateRoleIds))) {
-                    $updateData = $this->request->request->get("roles")[$role->getId()];
+                    $updateData = $this->request->request->all("roles")[$role->getId()];
                     $role->setName($updateData["name"]);
                     $role->setIsManager(isset($updateData["manager"]));
 

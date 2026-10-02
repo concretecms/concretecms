@@ -12,7 +12,7 @@ class Normalizer implements NormalizerInterface
 {
 
     /**
-     * @param string $domain
+     * @param string $url
      * @return string
      */
     public function getDomain($url)

@@ -6,12 +6,11 @@ use Concrete\Core\Application\ApplicationAwareInterface;
 use Concrete\Core\Application\ApplicationAwareTrait;
 use Concrete\Core\Attribute\Category\PageCategory;
 use Concrete\Core\Attribute\Key\SearchIndexer\SearchIndexerInterface;
-use Concrete\Core\Entity\Attribute\Key\ExpressKey;
 use Concrete\Core\Entity\Attribute\Key\PageKey;
 use Concrete\Core\Entity\Express\Entity;
 use Concrete\Core\Search\Index\AbstractIndex;
 use Concrete\Core\Search\Index\Driver\IndexingDriverInterface;
-use Doctrine\DBAL\Connection;
+use Concrete\Core\Database\Connection\Connection;
 
 class EntityIndex extends AbstractIndex implements ApplicationAwareInterface
 {
@@ -55,7 +54,6 @@ class EntityIndex extends AbstractIndex implements ApplicationAwareInterface
         $category = $this->entity->getAttributeKeyCategory();
         $table = $category->getIndexedSearchTable();
 
-        /** @var ExpressKey $key */
         if (!$this->connection->tableExists($table)) {
             $indexer = $category->getSearchIndexer();
             $indexer->createRepository($category);
@@ -72,7 +70,7 @@ class EntityIndex extends AbstractIndex implements ApplicationAwareInterface
 
         // Truncate the existing search index
         if ($table) {
-            $this->connection->Execute(sprintf('truncate table %s', $table));
+            $this->connection->executeStatement(sprintf('truncate table %s', $table));
         }
     }
 

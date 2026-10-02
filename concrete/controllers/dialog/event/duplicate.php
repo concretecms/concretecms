@@ -75,7 +75,7 @@ class Duplicate extends BackendInterfaceController
             $event = $this->app->make(EventService::class)->getByID($_REQUEST['eventID'], EventService::EVENT_VERSION_RECENT);
             $calendars = [];
             /**
-             * @var $service CalendarService
+             * @var CalendarService $service
              */
             $service = $this->app->make(CalendarService::class);
             foreach($service->getList() as $calendar) {
@@ -92,9 +92,7 @@ class Duplicate extends BackendInterfaceController
             if ($this->request->query->has('year')) {
                 $year = $this->request->query->get('year');
             }
-            if ($this->request->query->has('month')) {
-                $month = $this->request->query->get('month');
-            }
+            $month = $this->request->query->has('month') ? $this->request->query->get('month') : null;
             $this->set('year', $year);
             $this->set('month', $month);
         } else {

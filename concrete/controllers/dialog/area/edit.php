@@ -40,7 +40,7 @@ abstract class Edit extends BackendPageController
             }
             $this->permissions = new Checker($cx);
             $ax = Area::get($cx, STACKS_AREA_NAME);
-            if (!$this->area) {
+            if (!$ax) {
                 throw new UserMessageException('Invalid Area for Permissions');
             }
             $this->areaPermissions = new Checker($ax);

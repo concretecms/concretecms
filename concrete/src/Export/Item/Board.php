@@ -28,14 +28,14 @@ class Board implements ItemInterface
         $dataSourcesNode = $node->addChild('datasources');
         foreach ($dataSources as $dataSource) {
             /**
-             * @var $dataSource ConfiguredDataSource
+             * @var ConfiguredDataSource $dataSource
              */
             $dataSourceNode = $dataSourcesNode->addChild('datasource');
             $dataSourceNode->addAttribute('source', $dataSource->getDataSource()->getHandle());
             $dataSourceNode->addAttribute('weight', $dataSource->getCustomWeight());
             $dataSourceNode->addAttribute('name', $dataSource->getName());
-            $dataSourceNode->addAttribute('day-interval-future', $dataSource->getPopulationDayIntervalFuture());
-            $dataSourceNode->addAttribute('day-interval-past', $dataSource->getPopulationDayIntervalPast());
+            $dataSourceNode->addAttribute('day-interval-future', (string) $dataSource->getPopulationDayIntervalFuture());
+            $dataSourceNode->addAttribute('day-interval-past', (string) $dataSource->getPopulationDayIntervalPast());
 
             $configuration = $dataSource->getConfiguration();
             $configurationNode = $dataSourceNode->addChild('configuration');

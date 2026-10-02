@@ -76,9 +76,6 @@ class KeyList extends ElementController
         return $this->category;
     }
 
-    /**
-     * @param mixed $category
-     */
     public function setCategory(CategoryInterface $category)
     {
         $this->category = $category;

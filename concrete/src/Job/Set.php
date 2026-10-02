@@ -11,8 +11,14 @@ class Set extends ConcreteObject
     const DEFAULT_JOB_SET_ID = 1;
 
     public $jDateLastRun;
+    /**
+     * @var bool|0|1|'0'|'1'
+     */
     public $isScheduled = 0;
     public $scheduledInterval = 'days'; // hours|days|weeks|months
+    /**
+     * @var int|numeric-string
+     */
     public $scheduledValue = 0;
 
     /**

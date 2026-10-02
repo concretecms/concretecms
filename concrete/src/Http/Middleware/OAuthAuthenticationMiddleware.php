@@ -30,9 +30,9 @@ class OAuthAuthenticationMiddleware implements MiddlewareInterface
     private $foundationFactory;
 
     /**
-     * @var \Concrete\Core\Http\Middleware\Application
+     * @var \Concrete\Core\User\UserInfoRepository
      */
-    private $app;
+    protected $userRepository;
 
     public function __construct(
         ResourceServer $oauth,
@@ -79,7 +79,7 @@ class OAuthAuthenticationMiddleware implements MiddlewareInterface
 
             if ($userId = $request->attributes->get('oauth_user_id')) {
                 /**
-                 * @var $request \Concrete\Core\Http\Request
+                 * @var \Concrete\Core\Http\Request $request
                  */
                 $request->setCustomRequestUser(
                     $this->userRepository->getByID($userId)

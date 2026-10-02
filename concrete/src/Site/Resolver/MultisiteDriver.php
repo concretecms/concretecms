@@ -22,11 +22,8 @@ class MultisiteDriver implements DriverInterface
     public function getActiveSiteForEditing(Service $service, Request $request)
     {
         $id = $this->selector->getSiteIDFromSession();
-        if ($id) {
-            $site = $service->getByID($id);
-        }
-
-        if (isset($site) && is_object($site)) {
+        $site = $id ? $service->getByID($id) : null;
+        if (is_object($site)) {
             return $site;
         } else {
             return $service->getSite();

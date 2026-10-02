@@ -12,6 +12,9 @@ class TopLevelOnlyModifier implements ModifierInterface
     public function modify(NavigationInterface $navigation)
     {
         foreach($navigation->getItems() as $topLevelItem) {
+            if (!method_exists($topLevelItem, 'setChildren')) {
+                throw new \RuntimeException(t('The navigation items must have a %s method.', 'setChildren()'));
+            }
             $topLevelItem->setChildren([]);
         }
     }

@@ -19,6 +19,13 @@ abstract class SavedSearch
     protected $presetName;
 
     /**
+     * The identifier of the saved search: declared (and mapped) by the subclasses.
+     *
+     * @var int|null
+     */
+    protected $id;
+
+    /**
      * @return mixed
      */
     public function getID()

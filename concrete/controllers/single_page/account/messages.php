@@ -141,6 +141,8 @@ class Messages extends AccountPageController
             $this->reply($box, $msgID);
         } else {
             $this->write($uID);
+            $msgID = null;
+            $box = null;
         }
 
         $vf = Loader::helper('validation/form');
@@ -154,7 +156,7 @@ class Messages extends AccountPageController
             if ($r instanceof \Concrete\Core\Error\ErrorList\ErrorList) {
                 $this->error = $r;
             } else {
-                if ($this->post('msgID') > 0) {
+                if ($msgID !== null) {
                     $this->redirect('/account/messages', 'reply_complete', $box, $msgID);
                 } else {
                     $this->redirect('/account/messages', 'send_complete', $uID);

@@ -79,7 +79,7 @@ class ObjectManager
     /**
      * Entry ID may be the integer ID or the public identifier
      * @param int|string $entryID
-     * @return object
+     * @return \Concrete\Core\Entity\Express\Entry|null
      */
     public function getEntry($entryID)
     {
@@ -93,8 +93,9 @@ class ObjectManager
     }
 
     /**
-     * @param $publicIdentifier
-     * @return object
+     * @param string $publicIdentifier
+     *
+     * @return \Concrete\Core\Entity\Express\Entry|null
      */
     public function getEntryByPublicIdentifier($publicIdentifier)
     {
@@ -111,9 +112,6 @@ class ObjectManager
             $entry = $this->getEntry($entry);
         }
         if ($entry) {
-            /**
-             * @var $entry Entry
-             */
             $entity = $entry->getEntity();
             if ($entity) {
                 $request = Request::createFromGlobals();

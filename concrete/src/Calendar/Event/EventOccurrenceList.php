@@ -31,9 +31,6 @@ class EventOccurrenceList extends AttributedItemList
         $this->timezone = $timezone;
     }
 
-    /**
-     * @param bool $includeInactiveEvents
-     */
     public function includeInactiveEvents()
     {
         $this->includeInactiveEvents = true;

@@ -29,13 +29,12 @@ class PageReport extends DashboardSitePageController
         $this->set('sections', $sections);
         $this->set('sectionList', $list);
 
-        if (!isset($_REQUEST['sectionID']) && (count($sections) > 0)) {
-            foreach ($sections as $key => $value) {
-                $sectionID = $key;
-                break;
-            }
-        } else {
+        if (isset($_REQUEST['sectionID'])) {
             $sectionID = (int) $_REQUEST['sectionID'];
+        } elseif ($sections === []) {
+            $sectionID = 0;
+        } else {
+            $sectionID = array_key_first($sections);
         }
 
         if (!isset($_REQUEST['targets']) && (count($sections) > 1)) {
@@ -68,7 +67,7 @@ class PageReport extends DashboardSitePageController
         $this->set('sectionID', $sectionID);
         $this->set('fh', \Core::make('multilingual/interface/flag'));
 
-        if (isset($sectionID) && $sectionID > 0) {
+        if ($sectionID > 0) {
             $pl = new MultilingualPageList();
             $pc = \Page::getByID($sectionID);
             $pl->setSiteTreeObject($pc->getSiteTreeObject());

@@ -10,6 +10,11 @@ use PageType;
 
 class Form extends DashboardPageController
 {
+    /**
+     * @var \Concrete\Core\Page\Type\Type|null
+     */
+    protected $pagetype;
+
     public function view($ptID = false, $message = false)
     {
         $this->pagetype = PageType::getByID($ptID);

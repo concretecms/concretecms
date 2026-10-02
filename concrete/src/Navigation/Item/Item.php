@@ -25,7 +25,7 @@ class Item implements ItemInterface, \JsonSerializable
     protected $isActiveParent = false;
 
     /**
-     * @var Item[]
+     * @var \Concrete\Core\Navigation\Item\ItemInterface[]
      */
     protected $children = [];
 
@@ -69,7 +69,7 @@ class Item implements ItemInterface, \JsonSerializable
     }
 
     /**
-     * @return Item[]
+     * @return \Concrete\Core\Navigation\Item\ItemInterface[]
      */
     public function getChildren(): array
     {
@@ -77,7 +77,7 @@ class Item implements ItemInterface, \JsonSerializable
     }
 
     /**
-     * @param Item[] $children
+     * @param \Concrete\Core\Navigation\Item\ItemInterface[] $children
      */
     public function setChildren(array $children): void
     {

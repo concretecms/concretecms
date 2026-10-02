@@ -6,6 +6,7 @@ use Concrete\Core\Entity\Page\PagePath;
 use Concrete\Core\Page\PagePathEvent;
 use Events;
 use PageEditResponse;
+use Concrete\Core\Permission\Key\EditPagePropertiesPageKey;
 use PermissionKey;
 use Exception;
 use Loader;
@@ -23,6 +24,11 @@ class Location extends BackendInterfacePageController
     protected $controllerActionPath = '/ccm/system/panels/details/page/location';
     protected $validationToken = '/panels/details/page/location';
 
+    /**
+     * @var \Concrete\Core\Permission\Access\ListItem\EditPagePropertiesPageListItem|null NULL until on_start() is called
+     */
+    protected $asl;
+
     protected function canAccess()
     {
         return is_object($this->asl) && $this->asl->allowEditPaths();
@@ -32,6 +38,9 @@ class Location extends BackendInterfacePageController
     {
         parent::on_start();
         $pk = PermissionKey::getByHandle('edit_page_properties');
+        if (!$pk instanceof EditPagePropertiesPageKey) {
+            throw new \RuntimeException(t('The %s permission key is not installed correctly.', 'edit_page_properties'));
+        }
         $pk->setPermissionObject($this->page);
         $this->asl = $pk->getMyAssignment();
     }
@@ -118,7 +127,7 @@ class Location extends BackendInterfacePageController
 
             $canonical = $req->request->get('canonical');
             $generated = $req->request->get('generated');
-            $pathArray = $req->request->get('path');
+            $pathArray = $req->request->all()['path'] ?? null;
 
             // check if path exists, in order to avoid deleting single page path
             if($pathArray){
@@ -165,7 +174,7 @@ class Location extends BackendInterfacePageController
         if ($this->validateAction()) {
             $req = Request::getInstance();
 
-            $pathArray = $req->request->get('path');
+            $pathArray = $req->request->all()['path'] ?? null;
             $paths = [];
 
             if (is_array($pathArray)) {
@@ -185,7 +194,7 @@ class Location extends BackendInterfacePageController
     protected function isCanonicalPathOnAnotherPageExist(int $cID, string $path)
     {
         $em = \ORM::entityManager();
-        return $em->getRepository('\Concrete\Core\Entity\Page\PagePath')
+        return $em->getRepository('Concrete\Core\Entity\Page\PagePath')
             ->createQueryBuilder('pp')
             ->where('pp.cID != :cID')
             ->andWhere('pp.cPath = :cPath')

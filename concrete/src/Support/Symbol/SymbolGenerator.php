@@ -7,7 +7,9 @@
 
 namespace Concrete\Core\Support\Symbol;
 
+use Concrete\Core\File\Service\File as FileService;
 use Concrete\Core\Foundation\ClassAliasList;
+use Concrete\Core\Support\Facade\Facade;
 use Concrete\Core\Support\Symbol\ClassSymbol\ClassSymbol;
 use Throwable;
 
@@ -28,9 +30,32 @@ class SymbolGenerator
     protected $aliasNamespaces = [''];
 
     /**
+     * The ClassSymbol objects of all the facades (array keys are the fully-qualified names of the facade classes).
+     * NULL if not yet listed.
+     *
+     * @var ClassSymbol[]|null
+     */
+    protected $facades;
+
+    /**
+     * @var \Concrete\Core\Support\Symbol\ClassLister
+     */
+    protected $classLister;
+
+    /**
      * @var \Concrete\Core\Support\Symbol\CheckerGenerator
      */
     protected $checkerGenerator;
+
+    /**
+     * @var \Concrete\Core\Support\Symbol\AttributedItemListGenerator
+     */
+    protected $attributedItemListGenerator;
+
+    /**
+     * @var \Concrete\Core\Support\Symbol\UserInfoGenerator
+     */
+    protected $userInfoGenerator;
 
     /**
      * @var bool
@@ -48,7 +73,58 @@ class SymbolGenerator
             }
             $this->registerClass($alias, $class);
         }
-        $this->checkerGenerator = app(CheckerGenerator::class, ['isInstalled' => $this->isInstalled]);
+        $this->classLister = new ClassLister(app(FileService::class), 'Concrete\Core', DIR_BASE_CORE . '/' . DIRNAME_CLASSES);
+        $this->checkerGenerator = app(CheckerGenerator::class, ['isInstalled' => $this->isInstalled, 'classLister' => $this->classLister]);
+        $this->attributedItemListGenerator = app(AttributedItemListGenerator::class, ['isInstalled' => $this->isInstalled, 'classLister' => $this->classLister]);
+        $this->userInfoGenerator = app(UserInfoGenerator::class, ['attributeKeysProvider' => $this->attributedItemListGenerator->getAttributeKeysProvider()]);
+    }
+
+    public function getCheckerGenerator(): CheckerGenerator
+    {
+        return $this->checkerGenerator;
+    }
+
+    public function getAttributedItemListGenerator(): AttributedItemListGenerator
+    {
+        return $this->attributedItemListGenerator;
+    }
+
+    public function getUserInfoGenerator(): UserInfoGenerator
+    {
+        return $this->userInfoGenerator;
+    }
+
+    /**
+     * Get the ClassSymbol objects of all the facades: the ones with a registered class alias, plus the ones found in the core classes.
+     *
+     * @return ClassSymbol[] array keys are the fully-qualified names of the facade classes
+     */
+    public function getFacades(): array
+    {
+        if ($this->facades === null) {
+            $facades = [];
+            foreach ($this->classes as $classSymbol) {
+                if ($classSymbol->isFacade()) {
+                    $facades[$classSymbol->getFacadeReflectionClass()->getName()] = $classSymbol;
+                }
+            }
+            foreach ($this->classLister->getClassNames() as $className) {
+                if (isset($facades[$className]) || !is_subclass_of($className, Facade::class)) {
+                    continue;
+                }
+                try {
+                    $classSymbol = new ClassSymbol($className, $className);
+                } catch (Throwable $_) {
+                    // The facade root can't be resolved (for example because Concrete is not installed)
+                    continue;
+                }
+                $facades[$className] = $classSymbol;
+            }
+            ksort($facades, SORT_STRING);
+            $this->facades = $facades;
+        }
+
+        return $this->facades;
     }
 
     /**
@@ -86,14 +162,26 @@ class SymbolGenerator
      */
     public function render($eol = "\n", $padding = '    ', $methodFilter = null)
     {
-        $checkerWritten = false;
         $lines = [];
         $lines[] = '<?php';
         $lines[] = '';
         $lines[] = '// Generated on ' . date('c');
+        // The classes describing the methods handled by __call() of the permission checker, of the permission response classes, of the attributed item lists and of UserInfo, grouped by namespace
+        $extraClasses = [
+            $this->checkerGenerator->getNamespace() => [$this->checkerGenerator->renderLines($padding)],
+        ];
+        if ($this->userInfoGenerator->getMethods() !== []) {
+            $extraClasses[$this->userInfoGenerator->getNamespace()][] = $this->userInfoGenerator->renderLines($padding);
+        }
+        foreach ($this->checkerGenerator->renderResponseClassesLines($padding) + $this->attributedItemListGenerator->renderClassesLines($padding) as $fqn => $classLines) {
+            $p = strrpos($fqn, '\\');
+            $extraClasses[$p === false ? '' : substr($fqn, 0, $p)][] = $classLines;
+        }
         $namespaces = $this->aliasNamespaces;
-        if (!in_array($this->checkerGenerator->getNamespace(), $namespaces, true)) {
-            $namespaces[] = $this->checkerGenerator->getNamespace();
+        foreach (array_keys($extraClasses) as $namespace) {
+            if (!in_array($namespace, $namespaces, true)) {
+                $namespaces[] = $namespace;
+            }
         }
         foreach ($namespaces as $namespace) {
             $lines[] = '';
@@ -117,11 +205,15 @@ class SymbolGenerator
                     }
                 }
             }
-            if ($checkerWritten === false && $this->checkerGenerator->getNamespace() === $namespace) {
-                foreach ($this->checkerGenerator->renderLines($padding) as $line) {
+            foreach ($extraClasses[$namespace] ?? [] as $classLines) {
+                if ($addNewline === true) {
+                    $lines[] = '';
+                } else {
+                    $addNewline = true;
+                }
+                foreach ($classLines as $line) {
                     $lines[] = "{$padding}{$line}";
                 }
-                $checkerWritten = true;
             }
             $lines[] = '}';
         }

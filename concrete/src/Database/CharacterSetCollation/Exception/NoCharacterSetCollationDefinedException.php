@@ -8,6 +8,6 @@ class NoCharacterSetCollationDefinedException extends Exception
 {
     public function __construct($message = null)
     {
-        parent::__construct(t('Neither the character set nor the collation are defined.'));
+        parent::__construct($message ?: t('Neither the character set nor the collation are defined.'));
     }
 }

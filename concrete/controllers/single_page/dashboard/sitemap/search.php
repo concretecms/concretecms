@@ -25,12 +25,12 @@ class Search extends DashboardPageController
 {
 
     /**
-     * @var Element
+     * @var Element|null
      */
     protected $headerMenu;
 
     /**
-     * @var Element
+     * @var Element|null
      */
     protected $headerSearch;
 
@@ -50,6 +50,9 @@ class Search extends DashboardPageController
         return $this->app->make(QueryFactory::class);
     }
 
+    /**
+     * @return \Concrete\Core\Filesystem\Element
+     */
     protected function getHeaderMenu()
     {
         if (!isset($this->headerMenu)) {
@@ -59,6 +62,9 @@ class Search extends DashboardPageController
         return $this->headerMenu;
     }
 
+    /**
+     * @return \Concrete\Core\Filesystem\Element
+     */
     protected function getHeaderSearch()
     {
         if (!isset($this->headerSearch)) {
@@ -75,8 +81,12 @@ class Search extends DashboardPageController
     {
         $headerMenu = $this->getHeaderMenu();
         $headerSearch = $this->getHeaderSearch();
-        $headerMenu->getElementController()->setQuery($result->getQuery());
-        $headerSearch->getElementController()->setQuery($result->getQuery());
+        /** @var \Concrete\Controller\Element\Pages\Search\Menu $headerMenuController */
+        $headerMenuController = $headerMenu->getElementController();
+        $headerMenuController->setQuery($result->getQuery());
+        /** @var \Concrete\Controller\Element\Pages\Search\Search $headerSearchController */
+        $headerSearchController = $headerSearch->getElementController();
+        $headerSearchController->setQuery($result->getQuery());
 
         $this->set('resultsBulkMenu', $this->app->make(MenuFactory::class)->createBulkMenu());
         $this->set('result', $result);
@@ -124,7 +134,9 @@ class Search extends DashboardPageController
 
         $this->renderSearchResult($result);
 
-        $this->headerSearch->getElementController()->setQuery(null);
+        /** @var \Concrete\Controller\Element\Pages\Search\Search $headerSearchController */
+        $headerSearchController = $this->headerSearch->getElementController();
+        $headerSearchController->setQuery(null);
     }
 
     public function advanced_search()

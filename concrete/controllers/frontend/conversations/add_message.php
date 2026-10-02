@@ -17,6 +17,7 @@ use Concrete\Core\Error\ErrorList\ErrorList;
 use Concrete\Core\Error\UserMessageException;
 use Concrete\Core\Http\ResponseFactoryInterface;
 use Concrete\Core\Permission\Checker;
+use Concrete\Core\Permission\Key\AddConversationMessageConversationKey;
 use Concrete\Core\Permission\Key\Key as PermissionKey;
 use Concrete\Core\User\User;
 use Concrete\Core\Utility\Service\Validation\Numbers;
@@ -205,7 +206,7 @@ class AddMessage extends FrontendController
      */
     protected function getAttachmentIDs(): array
     {
-        $attachmentIDs = $this->request->request->get('attachments');
+        $attachmentIDs = $this->request->request->all()['attachments'] ?? null;
         if (!is_array($attachmentIDs)) {
             return [];
         }
@@ -306,6 +307,9 @@ class AddMessage extends FrontendController
     protected function processValidMessage(ConversationMessage $message): void
     {
         $pk = PermissionKey::getByHandle('add_conversation_message');
+        if (!$pk instanceof AddConversationMessageConversationKey) {
+            throw new \RuntimeException(t('The %s permission key is not installed correctly.', 'add_conversation_message'));
+        }
         $assignment = $pk->getMyAssignment();
         if ($assignment->approveNewConversationMessages()) {
             $message->approve();

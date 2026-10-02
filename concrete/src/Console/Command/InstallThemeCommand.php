@@ -6,6 +6,7 @@ use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\Page\Theme\Theme;
 use Loader;
 use Exception;
+use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -18,7 +19,7 @@ class InstallThemeCommand extends Command
         ->addOption('activate', 'a', InputOption::VALUE_NONE, 'Activate this theme after install', null)
         ->setDescription('Install a Concrete Theme')
         ->setCanRunAsRoot(false)
-        ->addArgument('theme-handle', null, InputOption::VALUE_REQUIRED, 'The handle name of the theme');
+        ->addArgument('theme-handle', InputArgument::REQUIRED, 'The handle name of the theme');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)

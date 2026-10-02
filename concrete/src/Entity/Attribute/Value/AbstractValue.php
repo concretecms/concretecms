@@ -3,7 +3,6 @@ namespace Concrete\Core\Entity\Attribute\Value;
 
 use Concrete\Core\Attribute\AttributeValueInterface;
 use Concrete\Core\Attribute\View;
-use Concrete\Core\Entity\Attribute\Key\Key;
 use Concrete\Core\Form\Control\ValueInterface;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -37,12 +36,12 @@ abstract class AbstractValue implements AttributeValueInterface
      * generic value to retrieve this value against. So we make it possible
      * to set this via runtime. Do NOT set this if you are trying to actually
      * persist the attribute value object.
-     * @var \Concrete\Core\Entity\Attribute\Value\Value\AbstractValue
+     * @var \Concrete\Core\Entity\Attribute\Value\Value\AbstractValue|null
      */
     protected $attribute_value;
 
     /**
-     * @return Key
+     * @return \Concrete\Core\Entity\Attribute\Key\Key|null NULL if the attribute key has not been set (for example for values created at runtime, or if the attribute key has been deleted)
      */
     public function getAttributeKey()
     {
@@ -106,6 +105,8 @@ abstract class AbstractValue implements AttributeValueInterface
         if ($this->generic_value) {
             return $this->getController()->getAttributeValueObject();
         }
+
+        return null;
     }
 
     public function getValue($mode = false)
@@ -156,8 +157,9 @@ abstract class AbstractValue implements AttributeValueInterface
             return $controller->getDisplayValue();
         }
 
-        if ($this->getValueObject()) {
-            return (string) $this->getValueObject();
+        $valueObject = $this->getValueObject();
+        if ($valueObject && method_exists($valueObject, '__toString')) {
+            return (string) $valueObject;
         }
 
         // Legacy support.
@@ -176,8 +178,9 @@ abstract class AbstractValue implements AttributeValueInterface
             return $controller->getPlainTextValue();
         }
 
-        if ($this->getValueObject()) {
-            return (string) $this->getValueObject();
+        $valueObject = $this->getValueObject();
+        if ($valueObject && method_exists($valueObject, '__toString')) {
+            return (string) $valueObject;
         }
 
         // Legacy support.
@@ -191,7 +194,8 @@ abstract class AbstractValue implements AttributeValueInterface
     /**
      * Returns the attribute in the context of search indexing (for search index
      * database tables)
-     * @return $this
+     *
+     * @return mixed the value returned by the getSearchIndexValue() method of the attribute type controller (an array for multi-column indexes), or this instance if the controller doesn't implement it
      */
     public function getSearchIndexValue()
     {

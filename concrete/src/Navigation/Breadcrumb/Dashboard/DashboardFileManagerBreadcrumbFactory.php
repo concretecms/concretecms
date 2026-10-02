@@ -53,7 +53,7 @@ class DashboardFileManagerBreadcrumbFactory implements ApplicationAwareInterface
                 array_shift($nodes);
 
                 /**
-                 * @var $nodes FileFolder[]
+                 * @var FileFolder[] $nodes
                  */
                 foreach($nodes as $node) {
                     $item = new Item(

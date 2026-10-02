@@ -2,6 +2,7 @@
 namespace Concrete\Controller\Panel\Theme;
 
 use Concrete\Controller\Backend\UserInterface as BackendInterfaceController;
+use Concrete\Core\Entity\Page\Theme\CustomSkin;
 use Concrete\Core\Error\UserMessageException;
 use Concrete\Core\Http\ResponseFactory;
 use Concrete\Core\Page\EditResponse;
@@ -165,7 +166,7 @@ class CustomizePreset extends BackendInterfaceController
             $theme = Theme::getByID($pThemeID);
             if ($theme) {
                 $skin = $theme->getSkinByIdentifier($skinIdentifier);
-                if ($skin) {
+                if ($skin instanceof CustomSkin) {
 
                     $responseFactory = $this->app->make(ResponseFactory::class);
 
@@ -202,7 +203,7 @@ class CustomizePreset extends BackendInterfaceController
             $theme = Theme::getByID($pThemeID);
             if ($theme) {
                 $skin = $theme->getSkinByIdentifier($skinIdentifier);
-                if ($skin) {
+                if ($skin instanceof CustomSkin) {
 
                     $responseFactory = $this->app->make(ResponseFactory::class);
                     $command = new DeleteCustomSkinCommand();

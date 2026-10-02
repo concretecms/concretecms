@@ -11,7 +11,7 @@ class Response
 {
     /** @var \Concrete\Core\Permission\ObjectInterface */
     protected $object;
-    /** @var PermissionKeyCategory */
+    /** @var PermissionKeyCategory|null NULL until setPermissionCategoryObject() is called */
     protected $category;
     public static $cache = array();
 

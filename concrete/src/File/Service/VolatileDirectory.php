@@ -25,7 +25,7 @@ class VolatileDirectory
      * Initializes the instance.
      *
      * @param Filesystem $filesystem the Filesystem instance to use
-     * @param string $parentDirectory the parent directory that will contain this volatile directory
+     * @param string|mixed $parentDirectory the parent directory that will contain this volatile directory (an exception is thrown if it's not a string)
      *
      * @throws Exception
      */
@@ -76,12 +76,12 @@ class VolatileDirectory
      */
     public function __destruct()
     {
-        if ($this->path !== null) {
+        if ($this->path !== '') {
             try {
                 $this->filesystem->deleteDirectory($this->path);
             } catch (Exception $foo) {
             }
-            $this->path = null;
+            $this->path = '';
         }
     }
 }

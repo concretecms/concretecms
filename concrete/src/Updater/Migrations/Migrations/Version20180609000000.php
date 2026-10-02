@@ -34,10 +34,14 @@ class Version20180609000000 extends AbstractMigration implements RepeatableMigra
             $type = $factory->add('page_selector', t('Page Selector'));
 
             // associate the 'page_selector' attribute to collection category
+            // The core attribute categories are standard categories
+            /** @var \Concrete\Core\Attribute\Category\AbstractStandardCategory $category */
             $category = Category::getByHandle('collection')->getController();
             $category->associateAttributeKeyType($type);
 
             // associate the 'page_selector' attribute to site category
+            // The core attribute categories are standard categories
+            /** @var \Concrete\Core\Attribute\Category\AbstractStandardCategory $category */
             $category = Category::getByHandle('site')->getController();
             $category->associateAttributeKeyType($type);
         }

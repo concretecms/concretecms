@@ -36,11 +36,19 @@ class AddConversationMessageConversationAccess extends ConversationAccess
         return $newPA;
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Permission\Access\Access::getAccessListItems()
+     *
+     * @return \Concrete\Core\Permission\Access\ListItem\AddConversationMessageConversationListItem[]
+     */
     public function getAccessListItems(
         $accessType = Key::ACCESS_TYPE_INCLUDE,
         $filterEntities = array(), $checkCache = true
     ) {
         $db = Database::connection();
+        /** @var \Concrete\Core\Permission\Access\ListItem\AddConversationMessageConversationListItem[] $list */
         $list = parent::getAccessListItems($accessType, $filterEntities);
         foreach ($list as $l) {
             $pe = $l->getAccessEntityObject();

@@ -188,7 +188,7 @@ EOT
             throw new UserMessageException($this->token->getErrorMessage());
         }
         $valn = $this->app->make(Numbers::class);
-        $rawBtSetIDs = $this->request->request->get('btSetIDs');
+        $rawBtSetIDs = $this->request->request->all()['btSetIDs'] ?? null;
         if (!is_array($rawBtSetIDs)) {
             throw new UserMessageException(sprintf('Invalid parameters: %s', 'btSetIDs'));
         }
@@ -276,7 +276,7 @@ EOT
         if (!$config->get('concrete.misc.enable_move_blocktypes_across_sets') && $newBtSetID !== $oldBtSetID) {
             throw new UserMessageException(sprintf('Invalid parameters: %s', 'oldBtSetID, newBtSetID'));
         }
-        $rawBtIDs = $this->request->request->get('btIDs');
+        $rawBtIDs = $this->request->request->all()['btIDs'] ?? null;
         if (!is_array($rawBtIDs)) {
             throw new UserMessageException(sprintf('Invalid parameters: %s', 'btIDs'));
         }

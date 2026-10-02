@@ -69,6 +69,8 @@ class ImageEditor extends AbstractController
         if (!$fp->canWrite()) {
             throw new UserMessageException(t('Access Denied'), 401);
         }
+
+        return $file;
     }
 
     protected function getFileID(): ?int
@@ -100,7 +102,7 @@ class ImageEditor extends AbstractController
         if (!preg_match('%^data:image/(png|jpeg);base64,(.+)$%s', $rawImageData, $matches)) {
             throw new UserMessageException(t('Invalid image data'), 400);
         }
-        $binaryData = base64_decode($matches[1]);
+        $binaryData = base64_decode($matches[2], true);
         if ($binaryData === false) {
             throw new UserMessageException(t('Invalid image data'), 400);
         }

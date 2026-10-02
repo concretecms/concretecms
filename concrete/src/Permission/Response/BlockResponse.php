@@ -5,6 +5,9 @@ use Concrete\Core\Permission\Access\Entity\GroupEntity as GroupPermissionAccessE
 use Concrete\Core\Permission\Key\Key;
 use Group;
 
+/**
+ * @property \Concrete\Core\Block\Block $object
+ */
 class BlockResponse extends Response
 {
     // legacy support
@@ -31,8 +34,8 @@ class BlockResponse extends Response
 
     public function validate($permissionHandle, $args = array())
     {
-        $page = $this->object->getBlockCollectionObject();
-        if ($page->isMasterCollection()) {
+        $page = $this->object->getBlockPageObject();
+        if ($page !== null && $page->isMasterCollection()) {
             $key = Key::getByHandle('access_page_defaults');
             return $key->validate();
         } else {

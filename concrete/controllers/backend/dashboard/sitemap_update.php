@@ -46,7 +46,7 @@ class SitemapUpdate extends AbstractController
      */
     protected function getPageIDs(): array
     {
-        $pageIDs = $this->request->request->get('cID', $this->request->query->get('cID'));
+        $pageIDs = $this->request->request->all()['cID'] ?? $this->request->query->all()['cID'] ?? null;
         if (!is_array($pageIDs)) {
             return [];
         }

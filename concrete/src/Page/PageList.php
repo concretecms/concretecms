@@ -11,7 +11,7 @@ use Concrete\Core\Entity\Site\Site;
 use Concrete\Core\Entity\Site\Tree;
 use Concrete\Core\Search\ItemList\Database\AttributedItemList as DatabaseItemList;
 use Concrete\Core\Search\ItemList\Pager\Manager\PageListPagerManager;
-use Concrete\Core\Search\ItemList\Pager\PagerProviderInterface;
+use Concrete\Core\Search\ItemList\Pager\DatabasePagerProviderInterface;
 use Concrete\Core\Search\ItemList\Pager\QueryString\VariableFactory;
 use Concrete\Core\Search\Pagination\PaginationProviderInterface;
 use Concrete\Core\Search\StickyRequest;
@@ -23,7 +23,7 @@ use Pagerfanta\Adapter\DoctrineDbalAdapter;
 /**
  * An object that allows a filtered list of pages to be returned.
  */
-class PageList extends DatabaseItemList implements PagerProviderInterface, PaginationProviderInterface
+class PageList extends DatabaseItemList implements DatabasePagerProviderInterface, PaginationProviderInterface
 {
     const PAGE_VERSION_ACTIVE = 1;
     const PAGE_VERSION_RECENT = 2;
@@ -36,7 +36,7 @@ class PageList extends DatabaseItemList implements PagerProviderInterface, Pagin
     /** @var \Closure | integer | null */
     protected $permissionsChecker;
 
-    /** @var Tree */
+    /** @var TreeInterface|array<TreeInterface|Site>|self::SITE_TREE_CURRENT|self::SITE_TREE_ALL */
     protected $siteTree = self::SITE_TREE_CURRENT;
 
     /**
@@ -131,9 +131,6 @@ class PageList extends DatabaseItemList implements PagerProviderInterface, Pagin
         $this->siteTree = self::SITE_TREE_CURRENT;
     }
 
-    /**
-     * @param bool $includeSystemPages
-     */
     public function includeSystemPages()
     {
         $this->includeSystemPages = true;
@@ -327,7 +324,7 @@ class PageList extends DatabaseItemList implements PagerProviderInterface, Pagin
     /**
      * @param $queryRow
      *
-     * @return \Concrete\Core\Page\Page
+     * @return \Concrete\Core\Page\Page|null
      */
     public function getResult($queryRow)
     {
@@ -362,6 +359,8 @@ class PageList extends DatabaseItemList implements PagerProviderInterface, Pagin
                 return $c;
             }
         }
+
+        return null;
     }
 
     public function checkPermissions($mixed)
@@ -400,7 +399,6 @@ class PageList extends DatabaseItemList implements PagerProviderInterface, Pagin
     /**
      * Filters by page template.
      *
-     * @param mixed $ptHandle
      * @param TemplateEntity $template
      */
     public function filterByPageTemplate(TemplateEntity $template)

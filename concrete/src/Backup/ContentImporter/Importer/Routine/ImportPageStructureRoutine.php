@@ -120,7 +120,7 @@ class ImportPageStructureRoutine extends AbstractPageStructureRoutine implements
             $page = $this->home;
         } else {
             $pagePath = '/' . implode('/', $pathSlugs);
-            $page = $this->getPageByPath($pagePath, 'RECENT');
+            $page = $this->getPageByPath($pagePath);
         }
 
         if ($page !== null) {
@@ -287,7 +287,7 @@ class ImportPageStructureRoutine extends AbstractPageStructureRoutine implements
     /**
      * @throws \Concrete\Core\Backup\ContentImporter\Exception\MissingPageAtPathException
      *
-     * @return \Concrete\Core\Page\Page|string|null returns NULL if there's already a collection with the same handle, the newly created page otherwise
+     * @return \Concrete\Core\Page\Page|null returns NULL if there's already a collection with the same handle, the newly created alias otherwise
      */
     private function importAlias(SimpleXMLElement $aliasElement)
     {

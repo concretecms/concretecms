@@ -29,7 +29,7 @@ class NginxDetector implements DetectorInterface
     public function detect()
     {
         $result = null;
-        if ($result === null && $this->request->server->has('SERVER_SOFTWARE')) {
+        if ($this->request->server->has('SERVER_SOFTWARE')) {
             $result = $this->detectFromServer($this->request->server->get('SERVER_SOFTWARE'));
         }
         if ($result === null && function_exists('apache_get_version')) {
@@ -49,7 +49,7 @@ class NginxDetector implements DetectorInterface
     /**
      * Detect from the SERVER_SOFTWARE key of the superglobal server array.
      *
-     * @param string $value
+     * @param string|mixed $value NULL is returned if it's not a string
      *
      * @return null|string
      */
@@ -66,7 +66,7 @@ class NginxDetector implements DetectorInterface
     /**
      * Detect using the result of the SPL apache_get_version().
      *
-     * @param string $value
+     * @param string|mixed $value NULL is returned if it's not a string
      *
      * @return null|string
      */
@@ -83,7 +83,7 @@ class NginxDetector implements DetectorInterface
     /**
      * Detect using PHPInfo.
      *
-     * @param string $value
+     * @param string|mixed $value NULL is returned if it's not a string
      *
      * @return null|string
      */

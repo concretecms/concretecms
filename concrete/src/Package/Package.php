@@ -32,6 +32,9 @@ use Gettext\Translations;
 
 defined('C5_EXECUTE') or die('Access Denied.');
 
+/**
+ * @method \Concrete\Core\Entity\Package install(array $data = []) Install the package info row and the database (doctrine entities and db.xml): $data contains the options specified by the user (for example, the fields of the install form).
+ */
 abstract class Package implements LocalizablePackageInterface
 {
     /**
@@ -260,6 +263,13 @@ abstract class Package implements LocalizablePackageInterface
      * ]
      */
     protected $packageDependencies = [];
+
+    /**
+     * The currently installed version of the package. Only set by PackageService::getLocalUpgradeablePackages().
+     *
+     * @var string|null
+     */
+    public $pkgCurrentVersion;
 
     /**
      * Initialize the instance.
@@ -1161,7 +1171,7 @@ abstract class Package implements LocalizablePackageInterface
         $provider = $providerFactory->getEntityManagerProvider();
         $drivers = $provider->getDrivers();
         if (empty($drivers)) {
-            return;
+            return null;
         }
         $config = Setup::createConfiguration(true, $this->app->make('config')->get('database.proxy_classes'));
         $driverImpl = new MappingDriverChain();

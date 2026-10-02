@@ -86,7 +86,7 @@ class Section extends Page
      * @param int $cID
      * @param int|string $cvID
      *
-     * @return self|false
+     * @return self|false|null
      */
     public static function getByID($cID, $cvID = 'RECENT')
     {
@@ -104,7 +104,7 @@ class Section extends Page
     /**
      * @param Page $page
      *
-     * @return Section
+     * @return Section|false|null
      */
     public static function getBySectionOfSite($page)
     {
@@ -121,12 +121,10 @@ class Section extends Page
 
             if ($page->isPageDraft()) {
                 $tree = false;
-                if ($page->getPageDraftTargetParentPageID()) {
-                    $cParentID = $page->getPageDraftTargetParentPageID();
-                    if ($cParentID) {
-                        $parent = Page::getByID($cParentID);
-                        $tree = $parent->getSiteTreeObject();
-                    }
+                $cParentID = $page->getPageDraftTargetParentPageID();
+                if ($cParentID) {
+                    $parent = Page::getByID($cParentID);
+                    $tree = $parent->getSiteTreeObject();
                 }
             }
 
@@ -144,6 +142,8 @@ class Section extends Page
         if ($returnID) {
             return static::getByID($returnID);
         }
+
+        return null;
     }
 
 
@@ -380,7 +380,7 @@ class Section extends Page
     /**
      * @param string $language
      *
-     * @return Section|false
+     * @return Section|false|null
      */
     public static function getByLanguage($language, ?Site $site = null)
     {
@@ -389,9 +389,6 @@ class Section extends Page
         }
 
         $em = Database::get()->getEntityManager();
-        /**
-         * @var $section Locale
-         */
         $section = $em->getRepository('Concrete\Core\Entity\Site\Locale')
             ->findOneBy(['site' => $site, 'msLanguage' => $language]);
 
@@ -406,9 +403,9 @@ class Section extends Page
     }
 
     /**
-     * @param string $language
+     * @param string|\Concrete\Core\Entity\Site\Locale $locale
      *
-     * @return Section|false
+     * @return Section|false|null
      */
     public static function getByLocale($locale, ?Site $site = null)
     {
@@ -440,7 +437,7 @@ class Section extends Page
     /**
      * Gets the MultilingualSection object for the current section of the site.
      *
-     * @return Section
+     * @return Section|false|null
      */
     public static function getCurrentSection()
     {
@@ -649,6 +646,8 @@ class Section extends Page
 
             return $cID;
         }
+
+        return null;
     }
 
     /**

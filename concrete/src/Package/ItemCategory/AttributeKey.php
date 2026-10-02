@@ -32,6 +32,13 @@ class AttributeKey extends AbstractCategory
         return $key->getAttributeKeyDisplayName();
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Package\ItemCategory\AbstractCategory::getPackageItems()
+     *
+     * @return \Concrete\Core\Entity\Attribute\Key\Key[]
+     */
     public function getPackageItems(Package $package)
     {
         $r = $this->entityManager->getRepository('Concrete\Core\Entity\Attribute\Key\Key');

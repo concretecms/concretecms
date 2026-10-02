@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\Marketplace;
 
+use Concrete\Core\Error\Error;
 use Concrete\Core\Error\ErrorList\ErrorList;
 use Concrete\Core\Marketplace\Model\RemotePackage;
 use Concrete\Core\Package\Package;
@@ -233,20 +234,17 @@ class RemoteItem extends ConcreteObject
 
         $r = $pkg->backup();
         // Can the calling code handle a return of ErrorList?
-        if (is_object($r) && ($r instanceof Error || $r instanceof ErrorList)) {
+        if ($r instanceof Error || $r instanceof ErrorList) {
             return $r;
         }
 
         $pkg = $r;
 
         try {
-            $am = new PackageArchive($this->getHandle());
+            $am = new PackageArchive();
             $am->install($file, true);
         } catch (Exception $e) {
-            // This is a messy fix. Better would be to restructure this method to avoid variant object type for $pkg.
-            if(is_callable([$pkg, 'restore'])){
-                $pkg->restore();
-            }
+            $pkg->restore();
             $error = app('error');
             $error->add($e);
             return $error;
@@ -260,7 +258,7 @@ class RemoteItem extends ConcreteObject
             return $file;
         } else {
             try {
-                $am = new PackageArchive($this->getHandle());
+                $am = new PackageArchive();
                 $am->install($file, true);
             } catch (Exception $e) {
                 $error = \Core::make('error');
@@ -310,7 +308,7 @@ class RemoteItem extends ConcreteObject
     }
 
     /**
-     * @return \Concrete\Core\Marketplace\RemoteItem;
+     * @return \Concrete\Core\Marketplace\RemoteItem
      *
      * @param $mpID
      *
@@ -322,7 +320,7 @@ class RemoteItem extends ConcreteObject
     }
 
     /**
-     * @return \Concrete\Core\Marketplace\RemoteItem;
+     * @return \Concrete\Core\Marketplace\RemoteItem
      *
      * @param $mpID
      *

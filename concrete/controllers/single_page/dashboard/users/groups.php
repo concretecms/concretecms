@@ -36,12 +36,12 @@ class Groups extends DashboardPageController
     use CanDeleteGroupsTrait;
 
     /**
-     * @var Element
+     * @var Element|null
      */
     protected $headerMenu;
 
     /**
-     * @var Element
+     * @var Element|null
      */
     protected $headerSearch;
 
@@ -90,7 +90,9 @@ class Groups extends DashboardPageController
         $this->renderSearchResult($result);
         $this->setCurrentFolder($rootFolder);
 
-        $this->headerSearch->getElementController()->setQuery(null);
+        /** @var \Concrete\Controller\Element\Groups\Search\Search $headerSearchController */
+        $headerSearchController = $this->headerSearch->getElementController();
+        $headerSearchController->setQuery(null);
     }
 
     public function view_tree()
@@ -123,7 +125,9 @@ class Groups extends DashboardPageController
 
                     $factory = $this->createBreadcrumbFactory();
                     $this->setBreadcrumb($factory->getBreadcrumb($this->getPageObject(), $folder));
-                    $this->headerSearch->getElementController()->setHeaderSearchAction(
+                    /** @var \Concrete\Controller\Element\Groups\Search\Search $headerSearchController */
+                    $headerSearchController = $this->headerSearch->getElementController();
+                    $headerSearchController->setHeaderSearchAction(
                         $this->app->make('url')->to('/dashboard/users/groups', 'folder', $folder->getTreeNodeID())
                     );
                     $this->setCurrentFolder($folder);
@@ -144,7 +148,9 @@ class Groups extends DashboardPageController
 
                 $factory = $this->createBreadcrumbFactory();
                 $this->setBreadcrumb($factory->getBreadcrumb($this->getPageObject(), $folder));
-                $this->headerSearch->getElementController()->setHeaderSearchAction(
+                /** @var \Concrete\Controller\Element\Groups\Search\Search $headerSearchController */
+                $headerSearchController = $this->headerSearch->getElementController();
+                $headerSearchController->setHeaderSearchAction(
                     $this->app->make('url')->to('/dashboard/users/groups', 'folder', $folder->getTreeNodeID())
                 );
                 $this->setCurrentFolder($folder);
@@ -287,6 +293,9 @@ class Groups extends DashboardPageController
         return $this->app->make(QueryFactory::class);
     }
 
+    /**
+     * @return \Concrete\Core\Filesystem\Element
+     */
     protected function getHeaderMenu()
     {
         if (!isset($this->headerMenu)) {
@@ -296,6 +305,9 @@ class Groups extends DashboardPageController
         return $this->headerMenu;
     }
 
+    /**
+     * @return \Concrete\Core\Filesystem\Element
+     */
     protected function getHeaderSearch()
     {
         if (!isset($this->headerSearch)) {
@@ -312,8 +324,12 @@ class Groups extends DashboardPageController
     {
         $headerMenu = $this->getHeaderMenu();
         $headerSearch = $this->getHeaderSearch();
-        $headerMenu->getElementController()->setQuery($result->getQuery());
-        $headerSearch->getElementController()->setQuery($result->getQuery());
+        /** @var \Concrete\Controller\Element\Groups\Search\Menu $headerMenuController */
+        $headerMenuController = $headerMenu->getElementController();
+        $headerMenuController->setQuery($result->getQuery());
+        /** @var \Concrete\Controller\Element\Groups\Search\Search $headerSearchController */
+        $headerSearchController = $headerSearch->getElementController();
+        $headerSearchController->setQuery($result->getQuery());
 
         $this->set('resultsBulkMenu', $this->app->make(MenuFactory::class)->createBulkMenu());
         $this->set('result', $result);
@@ -377,7 +393,9 @@ class Groups extends DashboardPageController
     protected function setCurrentFolder(Node $folder)
     {
         $this->set('folderID', $folder->getTreeNodeID());
-        $this->headerMenu->getElementController()->setCurrentFolder($folder);
+        /** @var \Concrete\Controller\Element\Groups\Search\Menu $headerMenuController */
+        $headerMenuController = $this->headerMenu->getElementController();
+        $headerMenuController->setCurrentFolder($folder);
     }
 
     /**

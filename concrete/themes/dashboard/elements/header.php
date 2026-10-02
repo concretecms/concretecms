@@ -67,7 +67,7 @@ $colorScheme = $config->get('concrete.appearance.color_scheme');
                     </a>
                 </li>
                 <?php
-                $mobileMenu = Element::get('dashboard/navigation/mobile');
+                $mobileMenu = Element::get('dashboard/navigation/mobile', ['section' => $c, 'currentPage' => $c]);
                 $mobileMenu->render();
                 
                 $ihm = $app->make('helper/concrete/ui/menu');

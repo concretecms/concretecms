@@ -29,7 +29,7 @@ class PageOwnerEntity extends Entity
                 }
             }
         }
-        if (is_object($c) && ($c instanceof Page)) {
+        if ($c instanceof Page) {
             $ui = UserInfo::getByID($c->getCollectionUserID());
             if ($ui) {
                 return [$ui];
@@ -72,10 +72,16 @@ class PageOwnerEntity extends Entity
         return $entities;
     }
 
+    /**
+     * @return static|null NULL if the page_owner access entity type isn't installed
+     */
     public static function getOrCreate()
     {
         $db = Database::connection();
         $petID = $db->fetchColumn('select petID from PermissionAccessEntityTypes where petHandle = \'page_owner\'');
+        if (!$petID) {
+            return null;
+        }
         $peID = $db->fetchColumn('select peID from PermissionAccessEntities where petID = ?', array($petID));
         if (!$peID) {
             $db->executeQuery("insert into PermissionAccessEntities (petID) values(?)", array($petID));
@@ -83,7 +89,9 @@ class PageOwnerEntity extends Entity
             Config::save('concrete.misc.access_entity_updated', time());
         }
 
-        return \Concrete\Core\Permission\Access\Entity\Entity::getByID($peID);
+        $entity = \Concrete\Core\Permission\Access\Entity\Entity::getByID($peID);
+
+        return $entity instanceof static ? $entity : null;
     }
 
     public function load()

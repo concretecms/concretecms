@@ -18,6 +18,14 @@ class ProgressList extends UserList
         $this->filter('wpIsCompleted', 0);
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Legacy\DatabaseItemList::get()
+     *
+     * @return \Concrete\Core\User\Workflow\Progress\User[]
+     * @phpstan-ignore method.childReturnType (the class extends UserList only to reuse its query building: its items are workflow progress users)
+     */
     public function get($itemsToGet = 0, $offset = 0)
     {
         $_users = DatabaseItemList::get($itemsToGet, $offset);

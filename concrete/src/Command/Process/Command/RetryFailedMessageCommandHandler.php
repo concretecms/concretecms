@@ -9,6 +9,7 @@ use Concrete\Core\Messenger\Transport\FailedTransportManager;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Messenger\EventListener\StopWorkerOnMessageLimitListener;
 use Symfony\Component\Messenger\MessageBusInterface;
+use Symfony\Component\Messenger\Transport\Receiver\ListableReceiverInterface;
 use Symfony\Component\Messenger\Transport\Receiver\MessageCountAwareInterface;
 use Symfony\Component\Messenger\Transport\Receiver\SingleMessageReceiver;
 use Symfony\Component\Messenger\Worker;
@@ -44,6 +45,9 @@ class RetryFailedMessageCommandHandler extends AbstractFailedMessageCommandHandl
     public function __invoke(RetryFailedMessageCommand $command)
     {
         $receiver = $this->getReceiverFromCommand($command);
+        if (!$receiver instanceof ListableReceiverInterface) {
+            throw new \RuntimeException(t('The receiver %s does not support finding its messages.', $command->getReceiverName()));
+        }
         $envelope = $receiver->find($command->getMessageId());
         $singleReceiver = new SingleMessageReceiver($receiver, $envelope);
 

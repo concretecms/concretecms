@@ -33,7 +33,7 @@ class Renderer implements LoggerAwareInterface
     protected $templateLocator;
 
     /**
-     * @var Page
+     * @var Page|null
      */
     protected $currentPage;
 

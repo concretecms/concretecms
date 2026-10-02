@@ -17,7 +17,7 @@ use \Concrete\Core\Permission\Duration;
 class Permissions extends BackendInterfaceController
 {
     protected $viewPath = '/dialogs/page/bulk/permissions';
-    /** @var Page[] */
+    /** @var Page[]|null */
     protected $pages = null;
     protected $canEdit = false;
     protected $permissionsInherit = '';
@@ -38,9 +38,9 @@ class Permissions extends BackendInterfaceController
             $permissionsInherit = [];
 
             if ($this->request->getMethod() === "POST" && !$this->request->query->has('item')) {
-                $pageIds = $this->request->request->get('item');
+                $pageIds = $this->request->request->all()['item'] ?? null;
             } else {
-                $pageIds = $this->request->query->get('item');
+                $pageIds = $this->request->query->all()['item'] ?? null;
             }
 
             if (!is_array($pageIds)) {

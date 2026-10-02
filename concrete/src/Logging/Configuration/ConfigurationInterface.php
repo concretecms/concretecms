@@ -9,7 +9,7 @@ interface ConfigurationInterface
      *
      * @param string $channel The name of logging channel
      *
-     * @return \Psr\Log\LoggerInterface
+     * @return \Monolog\Logger
      */
     public function createLogger($channel);
 }

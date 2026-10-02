@@ -4,6 +4,7 @@ namespace Concrete\Tests\Site;
 
 use Concrete\Core\Application\Application;
 use Concrete\Core\Cache\Level\RequestCache;
+use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Entity\Site\Site;
 use Concrete\Core\Entity\Site\Type;
 use Concrete\Core\Site\Resolver\ResolverFactory;
@@ -149,6 +150,16 @@ class SiteTest extends TestCase
             ->method('persist');
         $entityManager->expects($this->any())
             ->method('flush');
+        $connection = $this
+            ->getMockBuilder(Connection::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $connection->expects($this->any())
+            ->method('tableExists')
+            ->will($this->returnValue(false));
+        $entityManager->expects($this->any())
+            ->method('getConnection')
+            ->will($this->returnValue($connection));
 
         $type = new Type();
 

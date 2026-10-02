@@ -27,7 +27,7 @@ class CoreFileLoader extends FileLoader
      *
      * @param string $environment
      * @param string $group
-     * @param null $namespace
+     * @param string|null $namespace
      * @return array
      */
     public function load($environment, $group, $namespace = null)

@@ -49,7 +49,7 @@ class UserExporter extends AbstractExporter
     ) {
         parent::__construct($writer, $columns === null ? $userCategory : null);
         $this->appTimezone = $dateService->getTimezone('app');
-        $this->columns = $columns === null ? null : array_values(array_filter($columns));
+        $this->columns = $columns === null ? null : array_values($columns);
         $this->dateService = $dateService;
         $this->format = $this->getFormat($config->get('concrete.export.csv.datetime_format', 'ATOM'));
     }
@@ -81,10 +81,11 @@ class UserExporter extends AbstractExporter
      * {@inheritdoc}
      *
      * @see \Concrete\Core\Csv\Export\AbstractExporter::getStaticFieldValues()
+     *
+     * @param \Concrete\Core\User\UserInfo $userInfo
      */
     protected function getStaticFieldValues(ObjectInterface $userInfo)
     {
-        // @var \Concrete\Core\User\UserInfo $userInfo
         if ($this->columns !== null) {
             foreach ($this->columns as $column) {
                 $value = $column instanceof ColumnExportableInterface

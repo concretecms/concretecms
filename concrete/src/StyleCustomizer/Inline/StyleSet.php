@@ -200,7 +200,7 @@ class StyleSet
             $return = true;
         }
 
-        $hod = $post->get('hideOnDevice');
+        $hod = $post->all()['hideOnDevice'] ?? null;
         if (is_array($hod)) {
             if (!empty($hod[GridFramework::DEVICE_CLASSES_HIDE_ON_EXTRA_SMALL])) {
                 $set->setHideOnExtraSmallDevice(true);
@@ -329,7 +329,7 @@ class StyleSet
             }
         }
 
-        $v = $post->get('customClass');
+        $v = $post->all()['customClass'] ?? null;
         if (is_array($v)) {
             $customClasses = self::sanitizeCssClasses($v);
             if ($customClasses !== null) {

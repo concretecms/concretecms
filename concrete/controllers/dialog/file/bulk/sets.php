@@ -65,7 +65,7 @@ class Sets extends BackendInterfaceController
                     $id = explode(':', $key);
                     $fsID = $id[1];
 
-                    $fs = Set::getByID($fsID);
+                    $fs = Set::getByID((int) $fsID);
                     foreach ($this->files as $file) {
                         if ($fsp->canAddFile($file)) {
                             switch ($value) {
@@ -91,14 +91,14 @@ class Sets extends BackendInterfaceController
                 }
             }
 
-            $fsNew = $this->request->request->get('fsNew');
-            $fsNewShare = $this->request->request->get('fsNewShare');
+            $fsNew = $this->request->request->all('fsNew');
+            $fsNewShare = $this->request->request->all('fsNewShare');
 
-            if (is_array($fsNew)) {
+            if ($fsNew !== []) {
                 foreach ($fsNew as $i => $name) {
                     if ($name) {
                         foreach ($this->files as $file) {
-                            $type = ($fsNewShare[$i] == 1) ? Set::TYPE_PUBLIC : Set::TYPE_PRIVATE;
+                            $type = (isset($fsNewShare[$i]) && $fsNewShare[$i] == 1) ? Set::TYPE_PUBLIC : Set::TYPE_PRIVATE;
                             $fs = Set::createAndGetSet($fsNew[$i], $type);
                             $fs->addFileToSet($file);
                             $fv = $file->getApprovedVersion();

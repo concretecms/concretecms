@@ -7,7 +7,6 @@ use Concrete\Core\Page\Stack\StackList;
 use Concrete\Core\Page\Template;
 use Concrete\Core\Page\Theme\Theme;
 use Concrete\Core\Attribute\Category\SiteTypeCategory;
-use Concrete\Core\Entity\Site\Skeleton;
 use Concrete\Core\Entity\Site\SkeletonLocale;
 use Concrete\Core\Site\Type\Skeleton\Service;
 use Concrete\Core\Site\User\Group\Service as GroupService;
@@ -62,9 +61,6 @@ class SiteType implements ItemInterface
             $sitetype->addAttribute('package', $type->getPackageHandle());
         }
 
-        /**
-         * @var $skeleton Skeleton
-         */
         $skeleton = $this->skeletonService->getSkeleton($type);
 
         // Export attributes
@@ -93,7 +89,7 @@ class SiteType implements ItemInterface
             $skeletonNode = $sitetype->addChild('skeleton');
             foreach($skeleton->getLocales() as $locale) {
                 /**
-                 * @var $locale SkeletonLocale
+                 * @var SkeletonLocale $locale
                  */
                 $exporter = new Exporter();
                 

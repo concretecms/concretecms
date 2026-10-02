@@ -3,6 +3,9 @@ namespace Concrete\Core\Html\Object;
 
 use HtmlObject\Element;
 
+/**
+ * @phpstan-consistent-constructor
+ */
 class HeadLink extends Element
 {
     /**

@@ -195,7 +195,7 @@ class Type
     /**
      * Set the name (empty string if generic type).
      *
-     * @param string
+     * @param string $value
      *
      * @return static Returns the class instance itself for method chaining
      */
@@ -431,6 +431,8 @@ class Type
         if ($typeName == 'PNG' || $typeName == 'JPEG'|| $typeName == 'GIF' || $typeName == 'WEBP') {
             return true;
         }
+
+        return null;
     }
 
     /**
@@ -444,6 +446,8 @@ class Type
         if ($typeName == 'SVG') {
             return true;
         }
+
+        return null;
     }
 
     /**
@@ -458,26 +462,21 @@ class Type
         switch ($type) {
             case static::T_IMAGE:
                 return t('Image');
-                break;
             case static::T_VIDEO:
                 return t('Video');
-                break;
             case static::T_TEXT:
                 return t('Text');
-                break;
             case static::T_AUDIO:
                 return t('Audio');
-                break;
             case static::T_DOCUMENT:
                 return t('Document');
-                break;
             case static::T_APPLICATION:
                 return t('Application');
-                break;
             case static::T_UNKNOWN:
                 return t('File');
-                break;
 
         }
+
+        return null;
     }
 }

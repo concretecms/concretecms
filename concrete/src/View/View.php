@@ -131,7 +131,8 @@ class View extends AbstractView
      * A shortcut to posting back to the current page with a task and optional parameters. Only works in the context of.
      *
      * @param string $action
-     * @param string $task
+     *
+     * The additional optional arguments (read with func_get_args()) are the task and its parameters, forwarded to url().
      *
      * @return string $url
      */
@@ -508,6 +509,7 @@ class View extends AbstractView
 
         $_c = Page::getCurrentPage();
         $_app = Facade::getFacadeApplication();
+        $_theme = null;
         if (is_object($_c)) {
             $_theme = $_c->getCollectionThemeObject();
         } else if ($_app->isInstalled()) {
@@ -516,7 +518,7 @@ class View extends AbstractView
 
         $_fs = $_app->make(Filesystem::class);
         $_locator = new FileLocator($_fs, $_app);
-        if (isset($_theme) && is_object($_theme)) {
+        if (is_object($_theme)) {
             $_locator->addLocation(new FileLocator\ThemeElementLocation($_theme));
         }
         if ($_pkgHandle) {

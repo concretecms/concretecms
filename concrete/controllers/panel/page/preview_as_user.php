@@ -41,12 +41,12 @@ class PreviewAsUser extends BackendUIPageController
 
             /** @var Request $request */
             $request = Request::getInstance();
-            $request->setCustomRequestUser(false);
+            $request->setCustomRequestUser(null);
             $request->setCurrentPage($page);
 
             if ($request->request('customUser')) {
                 $user_info = UserInfo::getByID($request->request('customUser'));
-                if ($user_info && is_object($user_info) && !$user_info->isError()) {
+                if ($user_info && !$user_info->isError()) {
                     $request->setCustomRequestUser($user_info);
                 }
             }

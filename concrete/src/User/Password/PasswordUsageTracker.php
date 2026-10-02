@@ -35,7 +35,7 @@ class PasswordUsageTracker
     /**
      * Track a string being used
      *
-     * @param string $string The password that was used
+     * @param string|mixed $string The password that was used (an InvalidArgumentException is thrown if it's not a string)
      * @param int|\Concrete\Core\User\User|\Concrete\Core\User\UserInfo|\Concrete\Core\Entity\User\User $subject The subject that used the password
      *
      * @return bool

@@ -166,7 +166,7 @@ class Pagination
     public function getNextURL()
     {
         if ($this->hasNextPage()) {
-            $linkURL = str_replace("%pageNum%", $this->getNextInt() + 1, $this->URL);
+            $linkURL = str_replace("%pageNum%", (string) ($this->getNextInt() + 1), $this->URL);
 
             return $linkURL;
         }
@@ -175,7 +175,7 @@ class Pagination
     public function getPreviousURL()
     {
         if ($this->hasPreviousPage()) {
-            $linkURL = str_replace("%pageNum%", $this->getPreviousInt() + 1, $this->URL);
+            $linkURL = str_replace("%pageNum%", (string) ($this->getPreviousInt() + 1), $this->URL);
 
             return $linkURL;
         }
@@ -193,7 +193,7 @@ class Pagination
         if (!$this->hasNextPage()) {
             return '<' . $wrapper . ' class="page-link"' . ($wrapper == 'a' ? ' href="#"' : '') . '>'.$linkText.'</' . $wrapper . '>';
         } else {
-            $linkURL = str_replace("%pageNum%", $this->getNextInt() + 1, $this->URL);
+            $linkURL = str_replace("%pageNum%", (string) ($this->getNextInt() + 1), $this->URL);
             $linkURL = htmlspecialchars($linkURL, ENT_QUOTES, 'UTF-8');
 
             return '<a class="page-link" href="'.$linkURL.'" '.$this->getJSFunctionCall($this->getNextInt() + 1).'>'.$linkText.'</a>';
@@ -221,7 +221,7 @@ class Pagination
         if ($this->current_page == "0") {
             return '<' . $wrapper . ' class="page-link"' . ($wrapper == 'a' ? ' href="#"' : '') . '>'.$linkText.'</' . $wrapper . '>';
         } else {
-            $linkURL = str_replace("%pageNum%", $this->getPreviousInt() + 1, $this->URL);
+            $linkURL = str_replace("%pageNum%", (string) ($this->getPreviousInt() + 1), $this->URL);
             $linkURL = htmlspecialchars($linkURL, ENT_QUOTES, 'UTF-8');
 
             return '<a class="page-link" href="'.$linkURL.'" '.$this->getJSFunctionCall($this->getPreviousInt() + 1).'>'.$linkText.'</a>';
@@ -302,7 +302,7 @@ class Pagination
                     $pages .= "<span class=\"{$this->classCurrent}\"><strong>".($i + 1)."</strong></span>";
                 }
             } else {
-                $linkURL = str_replace("%pageNum%", $i + 1, $this->URL);
+                $linkURL = str_replace("%pageNum%", (string) ($i + 1), $this->URL);
                 $linkURL = htmlspecialchars($linkURL, ENT_QUOTES, 'UTF-8');
 
                 if ($wrapper == 'li') {

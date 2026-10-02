@@ -9,6 +9,13 @@ use Concrete\Core\Notification\Subscription\StandardSubscription;
 class NewFormSubmissionType extends Type
 {
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Notification\Type\TypeInterface::createNotification()
+     *
+     * @param \Concrete\Core\Express\Entry\Notifier\Notification\EntrySubject $subject
+     */
     public function createNotification(SubjectInterface $subject)
     {
         return new NewFormSubmissionNotification($subject);

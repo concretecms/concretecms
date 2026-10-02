@@ -117,6 +117,8 @@ class Integrations extends DashboardPageController
                 $this->set('client', $client);
                 $this->render('/dashboard/system/api/integrations/view_client');
             }
+        } else {
+            $client = null;
         }
         if (!$client) {
             return $this->view();

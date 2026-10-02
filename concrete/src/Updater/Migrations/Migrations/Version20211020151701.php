@@ -24,7 +24,7 @@ final class Version20211020151701 extends AbstractMigration implements Repeatabl
 
         $configurePage = $this->createSinglePage('/dashboard/system/permissions/denylist/configure', 'Configure IP Blocking');
 
-        if ($configurePage && !$configurePage->isError()) {
+        if (!$configurePage->isError()) {
             if ($this->isAttributeHandleValid(PageCategory::class, 'exclude_nav')) {
                 $configurePage->setAttribute('exclude_nav', true);
             }
@@ -32,7 +32,7 @@ final class Version20211020151701 extends AbstractMigration implements Repeatabl
 
         $rangePage = $this->createSinglePage('/dashboard/system/permissions/denylist/range', 'IP Range');
 
-        if ($rangePage && !$rangePage->isError()) {
+        if (!$rangePage->isError()) {
             if ($this->isAttributeHandleValid(PageCategory::class, 'exclude_nav')) {
                 $rangePage->setAttribute('exclude_nav', true);
             }

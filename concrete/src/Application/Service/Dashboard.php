@@ -109,7 +109,7 @@ class Dashboard
 class DashboardMenu
 {
     /**
-     * @var \Concrete\Core\Page\Page[]
+     * @var string[] the paths of the pages
      */
     protected $items;
 
@@ -171,6 +171,8 @@ class DashboardMenu
                 return -1;
             }
         }
+
+        return 0;
     }
 
     /**
@@ -223,7 +225,7 @@ class DashboardMenu
 class DefaultDashboardMenu extends DashboardMenu
 {
     /**
-     * @var array
+     * @var string[]
      */
     public $items = [
         '/dashboard/welcome',

@@ -6,14 +6,20 @@ use Database;
 use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\Http\Request;
 
+// The durations are stored serialized: the ones saved by 5.7.3.1 and earlier (when Duration extended Object) still have
+// the legacy pd* properties, which unserialize() re-creates as dynamic properties (deprecated since PHP 8.2 without this
+// attribute) until they are converted by \Concrete\Core\Updater\Migrations\Migrations\Version20150504000000::updatePermissionDurationObjects().
+#[\AllowDynamicProperties]
 class Duration extends AbstractRepetition
 {
     protected $pdID;
 
     /**
-     * @param \Concrete\Core\Permission\Access\ListItem\ListItem[] $list
+     * @template T of \Concrete\Core\Permission\Access\ListItem\ListItem
      *
-     * @return \Concrete\Core\Permission\Access\ListItem\ListItem[]
+     * @param T[] $list
+     *
+     * @return T[]
      */
     public static function filterByActive($list)
     {
@@ -50,7 +56,7 @@ class Duration extends AbstractRepetition
             // create a Duration object
             $pd = new self();
 
-            $pd->setStartDateAllDay(0);
+            $pd->setStartDateAllDay(false);
             if ($dateStartDT === null) {
                 $dateStart = '';
             } else {
@@ -58,10 +64,10 @@ class Duration extends AbstractRepetition
                 if ($request->get('pdStartDateAllDayActivate')) {
                     // We need to work in the user timezone, otherwise we risk to change the day
                     $dateStart = $service->toDateTime($dateStart, 'user', 'system')->format('Y-m-d').' 00:00:00';
-                    $pd->setStartDateAllDay(1);
+                    $pd->setStartDateAllDay(true);
                 }
             }
-            $pd->setEndDateAllDay(0);
+            $pd->setEndDateAllDay(false);
             if ($dateEndDT === null) {
                 $dateEnd = '';
             } else {
@@ -69,7 +75,7 @@ class Duration extends AbstractRepetition
                 if ($request->get('pdEndDateAllDayActivate')) {
                     // We need to work in the user timezone, otherwise we risk to change the day
                     $dateEnd = $service->toDateTime($dateEnd, 'user', 'system')->format('Y-m-d').' 23:59:59';
-                    $pd->setEndDateAllDay(1);
+                    $pd->setEndDateAllDay(true);
                 }
             }
             $pd->setStartDate($dateStart);
@@ -83,7 +89,7 @@ class Duration extends AbstractRepetition
                     case 'weekly':
                         $pd->setRepeatPeriod(self::REPEAT_WEEKLY);
                         $pd->setRepeatEveryNum($request->request->get('pdRepeatPeriodWeeksEvery'));
-                        $pd->setRepeatPeriodWeekDays($request->request->get('pdRepeatPeriodWeeksDays'));
+                        $pd->setRepeatPeriodWeekDays($request->request->all('pdRepeatPeriodWeeksDays'));
                         break;
                     case 'monthly':
                         $pd->setRepeatPeriod(self::REPEAT_MONTHLY);
@@ -119,7 +125,7 @@ class Duration extends AbstractRepetition
     /**
      * @param $pdID
      *
-     * @return \Concrete\Core\Permission\Duration
+     * @return \Concrete\Core\Permission\Duration|null
      */
     public static function getByID($pdID)
     {

@@ -54,8 +54,8 @@ class FilesParseTest extends TestCase
             return false;
         }
 
-        // Ignore meta files for IDE's
-        if ($filename == '.phpstorm.meta.php' || $filename == '__IDE_SYMBOLS__.php') {
+        // Ignore meta files for IDE's and PHPStan
+        if ($filename == '.phpstorm.meta.php' || $filename == '__IDE_SYMBOLS__.php' || $filename == '__PHPSTAN_STUBS__.php') {
             return false;
         }
 

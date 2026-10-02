@@ -16,7 +16,7 @@ class OAuthErrorMiddleware implements MiddlewareInterface
      *
      * @param \Symfony\Component\HttpFoundation\Request $request
      * @param DelegateInterface $frame
-     * @return \Psr\Http\Message\ResponseInterface
+     * @return \Symfony\Component\HttpFoundation\Response|\Psr\Http\Message\ResponseInterface
      */
     public function process(Request $request, DelegateInterface $frame)
     {

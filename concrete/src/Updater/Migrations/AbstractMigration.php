@@ -41,8 +41,6 @@ abstract class AbstractMigration extends DoctrineAbstractMigration
 
     /**
      * Override this method when database schema is not upgraded, or when it's upgraded without using a Schema.
-     *
-     * @param Schema $schema
      */
     public function upgradeDatabase()
     {

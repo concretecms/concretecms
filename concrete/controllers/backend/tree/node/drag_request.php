@@ -17,6 +17,11 @@ class DragRequest extends UserInterface
      */
     protected $validationToken = '';
 
+    /**
+     * @var array|false|null
+     */
+    protected $nodes;
+
     protected function getNodes()
     {
         $sourceNodes = array();
@@ -35,7 +40,7 @@ class DragRequest extends UserInterface
                 }
             }
             $destNode = Node::getByID(Loader::helper('security')->sanitizeInt($_REQUEST['treeNodeParentID']));
-            if (is_array($sourceNodes) && count($sourceNodes) && is_object($destNode)) {
+            if (count($sourceNodes) && is_object($destNode)) {
                 $this->nodes = array($sourceNodes, $destNode);
             } else {
                 $this->nodes = false;
@@ -47,7 +52,7 @@ class DragRequest extends UserInterface
     protected function canAccess()
     {
         list($sourceNodes, $destNode) = $this->getNodes();
-        if (!$sourceNodes || (is_array($sourceNodes) && count($sourceNodes) == 0)) {
+        if (!$sourceNodes) {
             return false;
         }
 

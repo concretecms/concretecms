@@ -9,7 +9,7 @@ use Concrete\Core\Permission\Checker;
 use Concrete\Core\Search\ItemList\Database\ItemList as DatabaseItemList;
 use Concrete\Core\Search\ItemList\Pager\Manager\PagerManagerInterface;
 use Concrete\Core\Search\ItemList\Pager\Manager\UserGroupPagerManager;
-use Concrete\Core\Search\ItemList\Pager\PagerProviderInterface;
+use Concrete\Core\Search\ItemList\Pager\DatabasePagerProviderInterface;
 use Concrete\Core\Search\ItemList\Pager\QueryString\VariableFactory;
 use Concrete\Core\Search\Pagination\Pagination;
 use Concrete\Core\Search\Pagination\PaginationProviderInterface;
@@ -19,7 +19,7 @@ use Concrete\Core\User\User;
 use Pagerfanta\Adapter\DoctrineDbalAdapter;
 use Closure;
 
-class GroupList extends DatabaseItemList implements PagerProviderInterface, PaginationProviderInterface
+class GroupList extends DatabaseItemList implements DatabasePagerProviderInterface, PaginationProviderInterface
 {
     protected $enableAutomaticSorting = false;
 
@@ -270,7 +270,7 @@ class GroupList extends DatabaseItemList implements PagerProviderInterface, Pagi
     /**
      * @param GroupRepository $value
      *
-     * @return $this;
+     * @return $this
      */
     public function setGroupRepository(GroupRepository $value)
     {

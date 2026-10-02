@@ -46,7 +46,7 @@ class DefaultController extends AttributeTypeController implements SimpleTextExp
     }
 
     /**
-     * @param \Concrete\Core\Search\ItemList\ItemList $list
+     * @param \Concrete\Core\Search\ItemList\Database\AttributedItemList $list
      * @param TextValue $value
      * @return mixed|void
      */
@@ -65,7 +65,13 @@ class DefaultController extends AttributeTypeController implements SimpleTextExp
         echo $f->text($this->field('value'), $this->request('value'));
     }
 
-    // run when we call setAttribute(), instead of saving through the UI
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Attribute\AttributeInterface::createAttributeValue()
+     *
+     * @return \Concrete\Core\Entity\Attribute\Value\Value\TextValue
+     */
     public function createAttributeValue($value)
     {
         $av = new TextValue();
@@ -79,6 +85,13 @@ class DefaultController extends AttributeTypeController implements SimpleTextExp
         return TextSettings::class;
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Attribute\AttributeInterface::createAttributeValueFromRequest()
+     *
+     * @return \Concrete\Core\Entity\Attribute\Value\Value\TextValue
+     */
     public function createAttributeValueFromRequest()
     {
         $data = $this->post();
@@ -126,6 +139,9 @@ class DefaultController extends AttributeTypeController implements SimpleTextExp
                 $value = $this->createAttributeValue($textRepresentation);
             }
         } else {
+            if (!method_exists($value, 'setValue')) {
+                throw new \RuntimeException(t('The attribute value must have the %s method.', 'setValue()'));
+            }
             $value->setValue($textRepresentation);
         }
 

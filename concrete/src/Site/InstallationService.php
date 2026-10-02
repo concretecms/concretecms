@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\Site;
 
+use Concrete\Core\Config\Repository\Repository;
 use Concrete\Core\Error\ErrorList\ErrorList;
 use Concrete\Core\File\Filesystem;
 use Concrete\Core\Permission\Access\Entity\GroupEntity;
@@ -21,7 +22,7 @@ use Doctrine\ORM\EntityManager;
 class InstallationService
 {
     /**
-     * @var \Illuminate\Config\Repository
+     * @var \Concrete\Core\Config\Repository\Repository
      */
     protected $config;
 
@@ -56,7 +57,7 @@ class InstallationService
     protected $userGroupService;
 
     public function __construct(
-        \Illuminate\Config\Repository $config,
+        Repository $config,
         Service $siteService,
         SiteTypeService $siteTypeService,
         EntityManager $entityManager,

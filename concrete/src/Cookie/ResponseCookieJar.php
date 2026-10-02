@@ -171,5 +171,7 @@ class ResponseCookieJar
             }
             $this->cookies = array_values($this->cookies);
         }
+
+        return $this;
     }
 }

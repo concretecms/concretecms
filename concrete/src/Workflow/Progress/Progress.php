@@ -25,9 +25,18 @@ abstract class Progress extends ConcreteObject implements SubjectInterface
 {
     use SafeClassUnserializerTrait;
 
+    /**
+     * @var int|numeric-string|null
+     */
     protected $wrID = null;
+    /**
+     * @var int|numeric-string
+     */
     protected $wpID;
     protected $wpDateAdded;
+    /**
+     * @var int|numeric-string
+     */
     protected $wfID;
     protected $response;
     protected $wpDateLastAction;
@@ -45,7 +54,7 @@ abstract class Progress extends ConcreteObject implements SubjectInterface
     /**
      * Gets the Workflow object attached to this WorkflowProgress object.
      *
-     * @return Workflow
+     * @return Workflow|null NULL if the workflow doesn't exist anymore
      */
     public function getWorkflowObject()
     {
@@ -106,7 +115,7 @@ abstract class Progress extends ConcreteObject implements SubjectInterface
     /**
      * Gets the date the WorkflowProgress object was added.
      *
-     * @return datetime
+     * @return string
      */
     public function getWorkflowProgressDateAdded()
     {
@@ -116,7 +125,7 @@ abstract class Progress extends ConcreteObject implements SubjectInterface
     /**
      * Get the WorkflowRequest object for the current WorkflowProgress object.
      *
-     * @return WorkflowRequest
+     * @return WorkflowRequest|null
      */
     public function getWorkflowRequestObject()
     {
@@ -133,6 +142,8 @@ abstract class Progress extends ConcreteObject implements SubjectInterface
                 return $wr;
             }
         }
+
+        return null;
     }
 
     public static function __callStatic($name, $arguments)
@@ -239,10 +250,11 @@ abstract class Progress extends ConcreteObject implements SubjectInterface
     public function start()
     {
         $wf = $this->getWorkflowObject();
-        if (is_object($wf)) {
-            $r = $wf->start($this);
-            $this->updateOnAction($wf);
+        if (!is_object($wf)) {
+            return null;
         }
+        $r = $wf->start($this);
+        $this->updateOnAction($wf);
 
         return $r;
     }
@@ -259,7 +271,7 @@ abstract class Progress extends ConcreteObject implements SubjectInterface
      * Attempts to run a workflow task on the bound WorkflowRequest object first, then if that doesn't exist, attempts to run
      * it on the current WorkflowProgress object.
      *
-     * @return WorkflowProgressResponse
+     * @return Response
      */
     public function runTask($task, $args = array())
     {
@@ -267,6 +279,8 @@ abstract class Progress extends ConcreteObject implements SubjectInterface
         if (in_array($task, $wf->getAllowedTasks())) {
             $wpr = call_user_func_array(array($wf, $task), array($this, $args));
             $this->updateOnAction($wf);
+        } else {
+            $wpr = null;
         }
         if (!($wpr instanceof Response)) {
             $wpr = new Response();

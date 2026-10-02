@@ -36,7 +36,7 @@ class RequestBase extends SymfonyRequest
     protected $hasCustomRequestUser;
 
     /**
-     * @var \Concrete\Core\User\UserInfo
+     * @var \Concrete\Core\User\UserInfo|null NULL if the custom request user is the guest user (or if there's no custom request user)
      */
     protected $customRequestUser;
 
@@ -46,37 +46,34 @@ class RequestBase extends SymfonyRequest
     protected $customRequestDateTime;
 
     /**
-     * @var SymfonyRequest
+     * @var \Concrete\Core\Http\Request|null
      */
     protected static $instance;
 
     /**
-     * @var \Concrete\Core\Page\Page
+     * @var \Concrete\Core\Page\Page|null
      */
     protected $c;
 
     /**
-     * @return static
+     * @return \Concrete\Core\Http\Request
      */
     public static function getInstance()
     {
         if (self::$instance === null) {
-            self::$instance = static::createFromGlobals();
+            self::$instance = Request::createFromGlobals();
         }
 
         return self::$instance;
     }
 
-    /**
-     * @param SymfonyRequest $instance
-     */
-    public static function setInstance(SymfonyRequest $instance)
+    public static function setInstance(Request $instance)
     {
         self::$instance = $instance;
     }
 
     /**
-     * @return \Concrete\Core\Page\Page
+     * @return \Concrete\Core\Page\Page|null
      */
     public function getCurrentPage()
     {
@@ -97,7 +94,7 @@ class RequestBase extends SymfonyRequest
     }
 
     /**
-     * @return \Concrete\Core\User\UserInfo
+     * @return \Concrete\Core\User\UserInfo|null
      */
     public function getCustomRequestUser()
     {
@@ -105,10 +102,14 @@ class RequestBase extends SymfonyRequest
     }
 
     /**
-     * @param \Concrete\Core\User\UserInfo $ui
+     * @param \Concrete\Core\User\UserInfo|-1|false|null $ui the user (NULL: the guest user; -1 and false are legacy values with the same meaning)
      */
     public function setCustomRequestUser($ui)
     {
+        if ($ui === -1 || $ui === false) {
+            // Legacy values that used to identify the guest user
+            $ui = null;
+        }
         $this->hasCustomRequestUser = true;
         $this->customRequestUser = $ui;
         $app = Facade::getFacadeApplication();

@@ -11,7 +11,7 @@ class Link
     {
         $em = \ORM::entityManager();
         $site = is_object($site) ? $site : \Core::make('site')->getSite();
-        return $em->getRepository('\Concrete\Core\Entity\Sharing\SocialNetwork\Link')->findBy(array('site' => $site), array('ssHandle' => 'asc'));
+        return $em->getRepository('Concrete\Core\Entity\Sharing\SocialNetwork\Link')->findBy(array('site' => $site), array('ssHandle' => 'asc'));
     }
 
     public static function exportList($node)
@@ -37,7 +37,7 @@ class Link
     {
         $em = \ORM::entityManager();
         $site = is_object($site) ? $site : \Core::make('site')->getSite();
-        return $em->getRepository('\Concrete\Core\Entity\Sharing\SocialNetwork\Link')->findOneBy(
+        return $em->getRepository('Concrete\Core\Entity\Sharing\SocialNetwork\Link')->findOneBy(
             array('ssHandle' => $ssHandle, 'site' => $site)
         );
     }

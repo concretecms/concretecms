@@ -29,12 +29,10 @@ class Page extends DataSourceElementController
             $configuration = $this->configuredDataSource->getConfiguration();
             if ($configuration) {
                 /**
-                 * @var $configuration PageConfiguration
+                 * @var PageConfiguration $configuration
                  */
                 $query = $configuration->getQuery();
-                if ($query) {
-                    $fieldSelector->setQuery($query);
-                }
+                $fieldSelector->setQuery($query);
             }
         }
         $this->set('fieldSelector', $fieldSelector);

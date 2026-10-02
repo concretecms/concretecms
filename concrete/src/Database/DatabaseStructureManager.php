@@ -138,7 +138,7 @@ class DatabaseStructureManager
             $prefix = \Doctrine\Common\Proxy\Proxy::MARKER . $prefix;
             $filesMatched = 0;
             foreach ($fh->getDirectoryContents($proxyDir) as $file) {
-                if (strpos($file, $prefix) === 0 || !$prefix) {
+                if (strpos($file, $prefix) === 0) {
                     if (!@unlink($proxyDir . '/' . $file)) {
                         throw new \Exception(t(
                             "Could not delete a proxy file. Please check the " .
@@ -313,8 +313,6 @@ class DatabaseStructureManager
      * 
      * @param  string $prefix
      * @param  array $excludeTables
-     *
-     * @return int
      */
     public function dropObsoleteDatabaseTables($prefix, array $excludeTables = array())
     {
@@ -388,6 +386,7 @@ class DatabaseStructureManager
 
         // First, we flush the metadata cache.
         if (is_object($cache = $config->getMetadataCacheImpl())) {
+            /** @var \Doctrine\Common\Cache\CacheProvider $cache */
             $cache->flushAll();
         }
 

@@ -21,15 +21,14 @@ class Attributes extends DashboardAttributesPageController
     public function view($id = null)
     {
         $entity = $this->getEntity($id);
-        $typeFactory = $this->app->make(TypeFactory::class);
         $this->set('entity', $entity);
-        $this->renderList($entity->getAttributes(), $typeFactory->getList());
+        $this->renderList();
     }
 
     public function edit($id = null, $akID = null)
     {
         $this->set('entity', $this->getEntity($id));
-        $r = $this->entityManager->getRepository('\Concrete\Core\Entity\Attribute\Key\Key');
+        $r = $this->entityManager->getRepository('Concrete\Core\Entity\Attribute\Key\Key');
         $key = $r->findOneBy(['akID' => $akID]);
         $this->renderEdit($key,
             \URL::to('/dashboard/system/express/entities/attributes', 'view', $id)
@@ -41,7 +40,7 @@ class Attributes extends DashboardAttributesPageController
         $this->edit($id, $akID);
         $entity = $this->getEntity($id);
         $this->set('entity', $entity);
-        $r = $this->entityManager->getRepository('\Concrete\Core\Entity\Attribute\Key\Key');
+        $r = $this->entityManager->getRepository('Concrete\Core\Entity\Attribute\Key\Key');
         $key = $r->findOneBy(['akID' => $akID]);
         $this->executeUpdate($key,
             \URL::to('/dashboard/system/express/entities/attributes', 'view', $id)
@@ -88,7 +87,7 @@ class Attributes extends DashboardAttributesPageController
      */
     protected function getEntity($id)
     {
-        $r = $this->entityManager->getRepository('\Concrete\Core\Entity\Express\Entity');
+        $r = $this->entityManager->getRepository('Concrete\Core\Entity\Express\Entity');
         $this->category = $r->findOneById($id);
 
         return $this->category;
@@ -113,6 +112,6 @@ class Attributes extends DashboardAttributesPageController
      */
     protected function getHeaderMenu(CategoryObjectInterface $category)
     {
-        return false;
+        return null;
     }
 }

@@ -160,6 +160,9 @@ class MailImporter extends ConcreteObject
         return PackageList::getHandle($this->pkgID);
     }
 
+    /**
+     * @param array{miHandle: string, miPort?: int|string|null, miIsEnabled?: bool|int|string|null, miEncryption?: string|null, miConnectionMethod?: string|null, miServer?: string|null, miUsername?: string|null, miPassword?: string|null, miEmail?: string|null} $args
+     */
     public static function add($args, $pkg = null)
     {
         $db = Database::connection();
@@ -212,9 +215,22 @@ class MailImporter extends ConcreteObject
         return static::getByID($miID);
     }
 
+    /**
+     * @param array{miPort?: int|string|null, miIsEnabled?: bool|int|string|null, miEncryption?: string|null, miConnectionMethod?: string|null, miServer?: string|null, miUsername?: string|null, miPassword?: string|null, miEmail?: string|null} $args
+     */
     public function update($args)
     {
         $db = Database::connection();
+        $args = $args + array(
+          'miPort' => null,
+          'miIsEnabled' => null,
+          'miEncryption' => null,
+          'miConnectionMethod' => null,
+          'miServer' => null,
+          'miUsername' => null,
+          'miPassword' => null,
+          'miEmail' => null,
+        );
         extract($args);
 
         if ($miPort < 1) {

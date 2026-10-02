@@ -18,7 +18,7 @@ class Permissions extends DashboardPageController
             if ($tp->canAccessTaskPermissions()) {
                 $permissions = Key::getList('calendar_admin');
                 $valn = $this->app->make(Numbers::class);
-                $pkIDs = $this->request->request->get('pkID');
+                $pkIDs = $this->request->request->all()['pkID'] ?? null;
                 if (!is_array($pkIDs)) {
                     $pkIDs = [];
                 }

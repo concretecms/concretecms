@@ -31,7 +31,7 @@ interface TypeInterface
      *
      * @param \Concrete\Core\Notification\Subject\SubjectInterface $subject
      *
-     * @return \Concrete\Core\Express\Entry\Notifier\NotificationInterface
+     * @return \Concrete\Core\Entity\Notification\Notification
      */
     public function createNotification(SubjectInterface $subject);
 

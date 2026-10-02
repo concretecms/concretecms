@@ -45,7 +45,7 @@ class AssetPointer
     }
 
     /**
-     * @return Asset
+     * @return Asset|null NULL if the asset hasn't been registered
      */
     public function getAsset()
     {

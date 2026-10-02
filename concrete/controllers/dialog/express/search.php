@@ -44,6 +44,8 @@ class Search extends UserInterface
                 ->getRepository(Entity::class)
                 ->findOneById($this->request->query->get('exEntityID'));
         }
+
+        return null;
     }
 
     public function entries()

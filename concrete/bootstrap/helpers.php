@@ -97,7 +97,7 @@ function id($mixed)
  *  Returns a concrete5 namespaced class. $prefix is either true (for application), or a package handle or null.
  *
  * @param string $class
- * @param bool $prefix
+ * @param bool|string|null $prefix
  *
  * @return string
  */

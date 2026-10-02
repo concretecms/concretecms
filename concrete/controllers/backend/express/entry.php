@@ -51,7 +51,7 @@ class Entry extends AbstractController
 
         if ($this->request->query->has('exEntryID')) {
             $entryIDs = [];
-            $entryID = $this->request->query->get('exEntryID');
+            $entryID = $this->request->query->all()['exEntryID'] ?? null;
 
             if (is_array($entryID)) {
                 $entryIDs = $entryID;

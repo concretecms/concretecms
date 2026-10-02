@@ -6,6 +6,7 @@ use Concrete\Core\Html\Image;
 use Concrete\Core\Summary\Category\Driver\DriverInterface;
 use Concrete\Core\Summary\Category\Driver\Manager;
 use Concrete\Core\Support\Facade\Facade;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -39,6 +40,11 @@ class Category
      * @ORM\ManyToMany(targetEntity="Template", mappedBy="categories")
      */
     protected $templates;
+
+    public function __construct()
+    {
+        $this->templates = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -81,7 +87,7 @@ class Category
     }
 
     /**
-     * @return mixed
+     * @return \Doctrine\Common\Collections\Collection|\Concrete\Core\Entity\Summary\Template[]
      */
     public function getTemplates()
     {

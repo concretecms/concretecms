@@ -92,7 +92,7 @@ class SitemapGenerator
     /**
      * @param \Concrete\Core\Page\Sitemap\PageListGenerator $pageListGenerator
      *
-     * @return $this;
+     * @return $this
      */
     public function setPageListGenerator(PageListGenerator $pageListGenerator)
     {
@@ -116,11 +116,11 @@ class SitemapGenerator
     /**
      * @param \Concrete\Core\Url\Resolver\Manager\ResolverManagerInterface $resolverManager
      *
-     * @return $this;
+     * @return $this
      */
     public function setResolverManager(ResolverManagerInterface $resolverManager)
     {
-        $this->pageListGenerator = $resolverManager;
+        $this->resolverManager = $resolverManager;
 
         return $this;
     }
@@ -197,9 +197,8 @@ class SitemapGenerator
     /**
      * Resolve an URL using the custom site canonical URL (if set).
      *
-     * @param array $args
      *
-     * @return \League\URL\URLInterface
+     * @return string
      */
     public function resolveUrl(string $sitemapFile)
     {
@@ -269,7 +268,7 @@ class SitemapGenerator
     /**
      * @param \Concrete\Core\Page\Page $page
      *
-     * @return \League\URL\URLInterface
+     * @return \League\Url\UrlInterface
      */
     protected function getPageUrl(Page $page)
     {

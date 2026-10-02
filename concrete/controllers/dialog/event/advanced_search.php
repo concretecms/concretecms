@@ -23,12 +23,12 @@ class AdvancedSearch extends AdvancedSearchController
 
     public function getSearchProvider()
     {
-        return false; // not implemented yet
+        throw new \RuntimeException(t('Not implemented yet.'));
     }
 
     public function getSearchPresets()
     {
-        return false; // not implemented yet
+        throw new \RuntimeException(t('Not implemented yet.'));
     }
 
     public function getFieldManager()

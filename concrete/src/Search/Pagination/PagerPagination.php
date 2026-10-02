@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\Search\Pagination;
 
+use Concrete\Core\Search\ItemList\Database\ItemList;
 use Concrete\Core\Search\ItemList\Pager\PagerProviderInterface;
 use Concrete\Core\Search\Pagination\Adapter\PagerAdapter;
 use Concrete\Core\Search\Pagination\View\ViewRenderer;
@@ -9,6 +10,9 @@ use Pagerfanta\Pagerfanta;
 
 class PagerPagination extends Pagination
 {
+    /**
+     * @var \Concrete\Core\Search\ItemList\Database\ItemList&\Concrete\Core\Search\ItemList\Pager\PagerProviderInterface
+     */
     protected $list;
     protected $app;
     protected $request;
@@ -16,8 +20,14 @@ class PagerPagination extends Pagination
     protected $hasNextPage;
     protected $currentPageResults;
 
+    /**
+     * @throws \InvalidArgumentException if $itemList is not a \Concrete\Core\Search\ItemList\Database\ItemList instance
+     */
     public function __construct(PagerProviderInterface $itemList)
     {
+        if (!$itemList instanceof ItemList) {
+            throw new \InvalidArgumentException(t('The item list must be an instance of %s.', ItemList::class));
+        }
         $adapter = new PagerAdapter($itemList);
         $this->list = $itemList;
         $this->app = Facade::getFacadeApplication();

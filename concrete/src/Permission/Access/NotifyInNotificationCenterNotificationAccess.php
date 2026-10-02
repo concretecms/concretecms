@@ -64,15 +64,20 @@ class NotifyInNotificationCenterNotificationAccess extends NotificationAccess
         }
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Permission\Access\Access::getAccessListItems()
+     *
+     * @return \Concrete\Core\Permission\Access\ListItem\NotifyInNotificationCenterNotificationListItem[]
+     */
     public function getAccessListItems($accessType = PagePermissionKey::ACCESS_TYPE_INCLUDE, $filterEntities = [], $checkCache = true)
     {
         $db = Database::connection();
+        /** @var \Concrete\Core\Permission\Access\ListItem\NotifyInNotificationCenterNotificationListItem[] $list */
         $list = parent::getAccessListItems($accessType, $filterEntities);
         $list = PermissionDuration::filterByActive($list);
         foreach ($list as $l) {
-            /**
-             * @var \Concrete\Core\Permission\Access\ListItem\NotifyInNotificationCenterNotificationListItem
-             */
             $pe = $l->getAccessEntityObject();
             $prow = $db->fetchAssoc('select permission from NotificationPermissionSubscriptionList where peID = ? and paID = ?', [$pe->getAccessEntityID(), $l->getPermissionAccessID()]);
             if (is_array($prow) && $prow['permission']) {

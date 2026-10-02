@@ -58,9 +58,7 @@ class ServiceList
         $return = [];
         foreach ($services as $serviceArray) {
             $o = new Service($serviceArray[0], $serviceArray[1], $serviceArray[2], isset($serviceArray[3]) ? $serviceArray[3] : null);
-            if ($o) {
-                $return[] = $o;
-            }
+            $return[] = $o;
         }
 
         return $return;

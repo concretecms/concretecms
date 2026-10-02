@@ -26,11 +26,12 @@ class FolderBookmarkOption implements ChooserOptionInterface
     {
         $this->favoriteFolder = $favoriteFolder;
 
-        $this->treeNode = Node::getByID($this->favoriteFolder->getTreeNodeFolderId());
+        $treeNode = Node::getByID($this->favoriteFolder->getTreeNodeFolderId());
 
-        if (!$this->treeNode instanceof FileFolder) {
+        if (!$treeNode instanceof FileFolder) {
             throw new Exception(t("Invalid node type."));
         }
+        $this->treeNode = $treeNode;
     }
 
     public function getId()

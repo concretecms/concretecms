@@ -38,9 +38,18 @@ use Concrete\Core\Page\Collection\Version\VersionList;
 use Concrete\Core\Page\Type\Composer\Control\CorePageProperty\CorePageProperty as CorePagePropertyPageTypeComposerControl;
 use Concrete\Core\Utility\Service\Xml;
 
+/**
+ * @phpstan-consistent-constructor
+ */
 class Type extends ConcreteObject implements \Concrete\Core\Permission\ObjectInterface, AssignableObjectInterface
 {
+    /**
+     * @var int|numeric-string|null
+     */
     protected $ptDefaultPageTemplateID = 0;
+    /**
+     * @var int|numeric-string|null
+     */
     protected $ptDefaultThemeID = 0;
 
     use AssignableObjectTrait;
@@ -341,7 +350,7 @@ class Type extends ConcreteObject implements \Concrete\Core\Permission\ObjectInt
             if ($this->getPageTypeDefaultThemeID() > 0 && $theme = $this->getPageTypeDefaultThemeObject()) {
                 $template->setTheme($theme);
             } else {
-                $template->setTheme(false);
+                $template->setTheme(null);
             }
         }
 
@@ -418,10 +427,11 @@ class Type extends ConcreteObject implements \Concrete\Core\Permission\ObjectInt
         $defaultTheme = Theme::getByHandle((string) $node->pagetemplates['theme']);
 
         $ptID = $db->GetOne('select ptID from PageTypes where ptHandle = ?', array($ptHandle));
-        $data = array(
+        $data = [
             'handle' => $ptHandle,
             'name' => $ptName,
-        );
+            'allowedTemplates' => $ptAllowedPageTemplates,
+        ];
 
         $siteType = (string) $node['site-type'];
         if ($siteType) {
@@ -434,10 +444,6 @@ class Type extends ConcreteObject implements \Concrete\Core\Permission\ObjectInt
 
         if ($defaultTheme) {
             $data['defaultTheme'] = $defaultTheme;
-        }
-
-        if ($ptAllowedPageTemplates) {
-            $data['allowedTemplates'] = $ptAllowedPageTemplates;
         }
 
         $data['internal'] = $xml->getBool($node['internal']) ? 1 : 0;
@@ -691,10 +697,8 @@ class Type extends ConcreteObject implements \Concrete\Core\Permission\ObjectInt
             if (is_object($rpa)) {
                 $pk->setPermissionObject($new);
                 $pt = $pk->getPermissionAssignmentObject();
-                if (is_object($pt)) {
-                    $pt->clearPermissionAssignment();
-                    $pt->assignPermissionAccess($rpa);
-                }
+                $pt->clearPermissionAssignment();
+                $pt->assignPermissionAccess($rpa);
             }
         }
         // copy permissions from the default page to the page type
@@ -705,10 +709,8 @@ class Type extends ConcreteObject implements \Concrete\Core\Permission\ObjectInt
             if (is_object($rpa)) {
                 $pk->setPermissionObject($new->getPageTypePageTemplateDefaultPageObject());
                 $pt = $pk->getPermissionAssignmentObject();
-                if (is_object($pt)) {
-                    $pt->clearPermissionAssignment();
-                    $pt->assignPermissionAccess($rpa);
-                }
+                $pt->clearPermissionAssignment();
+                $pt->assignPermissionAccess($rpa);
             }
         }
 
@@ -720,17 +722,18 @@ class Type extends ConcreteObject implements \Concrete\Core\Permission\ObjectInt
     /**
      * Add a page type.
      *
-     * @param array $data {
+     * @param array{handle?: string, name?: string, siteType?: \Concrete\Core\Entity\Site\Type|null, defaultTemplate?: \Concrete\Core\Entity\Page\Template|string|null, defaultTheme?: \Concrete\Core\Page\Theme\Theme|null, allowedTemplates?: string|null, templates?: array<\Concrete\Core\Entity\Page\Template|string>|null, internal?: scalar|null, ptLaunchInComposer?: scalar|null, ptIsFrequentlyAdded?: scalar|null, ...} $data
      *
-     *     @var string          $handle              A string which can be used to identify the page type
-     *     @var string          $name                A user friendly display name
-     *     @var \PageTemplate   $defaultTemplate     The default template object or handle
-     *     @var string          $allowedTemplates    (A|C|X) A for all, C for selected only, X for non-selected only
-     *     @var \PageTemplate[] $templates           Array or Iterator of selected templates, see `$allowedTemplates`, or Page Template Handles
-     *     @var bool            $internal            Is this an internal only page type? Default: `false`
-     *     @var bool            $ptLaunchInComposer  Does this launch in composer? Default: `false`
-     *     @var bool            $ptIsFrequentlyAdded Should this always be displayed in the pages panel? Default: `false`
-     * }
+     * - handle: A string which can be used to identify the page type
+     * - name: A user friendly display name
+     * - siteType: The site type (default: the default site type)
+     * - defaultTemplate: The default template object or handle
+     * - defaultTheme: The default theme
+     * - allowedTemplates: (A|C|X) A for all, C for selected only, X for non-selected only
+     * - templates: Array of selected templates, see `$allowedTemplates`, or Page Template Handles
+     * - internal: Is this an internal only page type? Default: `false`
+     * - ptLaunchInComposer: Does this launch in composer? Default: `false`
+     * - ptIsFrequentlyAdded: Should this always be displayed in the pages panel? Default: `false`
      *
      * @param bool|Package $pkg This should be false if the type is not tied to a package, or a package object
      *
@@ -846,6 +849,7 @@ class Type extends ConcreteObject implements \Concrete\Core\Permission\ObjectInt
 
         // copy permissions from the defaults to the page type
         $cpk = PermissionKey::getByHandle('access_page_type_permissions');
+        /** @var \Concrete\Core\Permission\Key\PageTypeKey[] $permissions */
         $permissions = PermissionKey::getList('page_type');
         foreach ($permissions as $pk) {
             $pk->setPermissionObject($ptt);
@@ -857,9 +861,7 @@ class Type extends ConcreteObject implements \Concrete\Core\Permission\ObjectInt
         if (is_object($pk)) {
             $pk->setPermissionObject($ptt);
             $pt = $pk->getPermissionAssignmentObject();
-            if (is_object($pt)) {
-                $pt->clearPermissionAssignment();
-            }
+            $pt->clearPermissionAssignment();
             // now we assign the page draft owner access entity
             $pa = PermissionAccess::create($pk);
             $pe = PageOwnerPermissionAccessEntity::getOrCreate();
@@ -1123,16 +1125,14 @@ class Type extends ConcreteObject implements \Concrete\Core\Permission\ObjectInt
     public function setConfiguredPageTypePublishTargetObject(PageTypePublishTargetConfiguration $configuredTarget)
     {
         $db = Loader::db();
-        if (is_object($configuredTarget)) {
-            $db->Execute(
-                'update PageTypes set ptPublishTargetTypeID = ?, ptPublishTargetObject = ? where ptID = ?',
-                array(
-                    $configuredTarget->getPageTypePublishTargetTypeID(),
-                    @serialize($configuredTarget),
-                    $this->getPageTypeID(),
-                )
-            );
-        }
+        $db->Execute(
+            'update PageTypes set ptPublishTargetTypeID = ?, ptPublishTargetObject = ? where ptID = ?',
+            [
+                $configuredTarget->getPageTypePublishTargetTypeID(),
+                @serialize($configuredTarget),
+                $this->getPageTypeID(),
+            ]
+        );
     }
 
     public function rescanFormLayoutSetDisplayOrder()
@@ -1193,6 +1193,8 @@ class Type extends ConcreteObject implements \Concrete\Core\Permission\ObjectInt
 
             return $validator;
         }
+
+        return null;
     }
 
     /**
@@ -1205,6 +1207,8 @@ class Type extends ConcreteObject implements \Concrete\Core\Permission\ObjectInt
             $saver->setPageTypeObject($this);
             return $saver;
         }
+
+        return null;
     }
 
 

@@ -25,6 +25,11 @@ class ColumnSet extends Set
         parent::__wakeup();
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Search\Column\Set::getAttributeKeyColumn()
+     */
     public function getAttributeKeyColumn($akHandle)
     {
         $ak = $this->category->getAttributeKeyByHandle($akHandle);
@@ -32,6 +37,8 @@ class ColumnSet extends Set
             $col = new ExpressAttributeKeyColumn($ak);
             return $col;
         }
+
+        return null;
     }
 
 }

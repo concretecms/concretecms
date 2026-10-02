@@ -16,9 +16,6 @@ class Diagnostic
         return $this->requestedVersion;
     }
 
-    /**
-     * @param mixed $requestedVersion
-     */
     public function setRequestedVersion(Version $requestedVersion)
     {
         $this->requestedVersion = $requestedVersion;

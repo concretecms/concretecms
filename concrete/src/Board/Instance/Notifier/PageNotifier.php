@@ -43,20 +43,16 @@ class PageNotifier extends AbstractNotifier
         foreach ($instances as $instance) {
             $includeInstance = true;
             $board = $instance->getBoard();
-            if ($board) {
-                foreach ($board->getDataSources() as $configuredDataSource) {
-                    $configuration = $configuredDataSource->getConfiguration();
-                    if ($configuration instanceof PageConfiguration) {
-                        $query = $configuration->getQuery();
-                        if ($query) {
-                            foreach ($query->getFields() as $field) {
-                                if ($field instanceof PageTypeField) {
-                                    if ($pageType !== null && $field->getData('ptID') == $pageType->getPageTypeID()) {
-                                        $includeInstance = true;
-                                    } else {
-                                        $includeInstance = false;
-                                    }
-                                }
+            foreach ($board->getDataSources() as $configuredDataSource) {
+                $configuration = $configuredDataSource->getConfiguration();
+                if ($configuration instanceof PageConfiguration) {
+                    $query = $configuration->getQuery();
+                    foreach ($query->getFields() as $field) {
+                        if ($field instanceof PageTypeField) {
+                            if ($pageType !== null && $field->getData('ptID') == $pageType->getPageTypeID()) {
+                                $includeInstance = true;
+                            } else {
+                                $includeInstance = false;
                             }
                         }
                     }

@@ -33,6 +33,8 @@ class AttributeKeyField extends AbstractField
         if ($this->attributeKey !== null) {
             return 'attribute_key_' . $this->attributeKey->getAttributeKeyHandle();
         }
+
+        return '';
     }
 
     /**
@@ -45,6 +47,8 @@ class AttributeKeyField extends AbstractField
         if ($this->attributeKey !== null) {
             return $this->attributeKey->getAttributeKeyDisplayName();
         }
+
+        return '';
     }
 
     /**
@@ -82,6 +86,8 @@ class AttributeKeyField extends AbstractField
 
             return $view->render(new BasicSearchContext());
         }
+
+        return '';
     }
 
     /**

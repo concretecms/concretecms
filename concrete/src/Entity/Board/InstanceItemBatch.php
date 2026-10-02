@@ -35,6 +35,7 @@ class InstanceItemBatch
 
     public function __construct()
     {
+        $this->items = new ArrayCollection();
         $this->dateCreated = time();
     }
 
@@ -43,7 +44,7 @@ class InstanceItemBatch
      */
     public function getBoardItemBatchID()
     {
-        return $this->boardItemBatchID;
+        return $this->boardInstanceItemBatchID;
     }
 
     /**
@@ -51,11 +52,11 @@ class InstanceItemBatch
      */
     public function setBoardItemBatchID($boardItemBatchID): void
     {
-        $this->boardItemBatchID = $boardItemBatchID;
+        $this->boardInstanceItemBatchID = $boardItemBatchID;
     }
 
     /**
-     * @return mixed
+     * @return \Doctrine\Common\Collections\Collection|\Concrete\Core\Entity\Board\InstanceItem[]
      */
     public function getItems()
     {

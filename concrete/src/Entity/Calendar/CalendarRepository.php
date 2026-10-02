@@ -4,6 +4,9 @@ namespace Concrete\Core\Entity\Calendar;
 use Concrete\Core\Entity\Site\Site;
 use Doctrine\ORM\EntityRepository;
 
+/**
+ * @extends \Doctrine\ORM\EntityRepository<\Concrete\Core\Entity\Calendar\Calendar>
+ */
 class CalendarRepository extends EntityRepository
 {
     public function findBySite(Site $site)

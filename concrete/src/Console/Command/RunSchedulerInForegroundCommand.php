@@ -32,6 +32,5 @@ class RunSchedulerInForegroundCommand extends Command
             }
             sleep(1);
         }
-        return static::SUCCESS;
     }
 }

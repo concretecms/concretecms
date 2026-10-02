@@ -51,6 +51,7 @@ class Add extends Node
         if (!$request->request->has('treeNodeGroupFolderName') ||
             strlen($request->request->get('treeNodeGroupFolderName')) === 0) {
             $error->add(t('Invalid title for folder'));
+            $title = null;
         } else {
             $title = $request->request->get('treeNodeGroupFolderName');
         }
@@ -63,14 +64,16 @@ class Add extends Node
             ])) {
 
             $error->add(t('Invalid value for field contains.'));
+            $contains = null;
         } else {
             $contains = $request->request->get('contains');
         }
 
         $selectedGroupTypes = [];
 
-        if ($request->request->has('groupTypes') && is_array($request->request->get('groupTypes'))) {
-            foreach($request->request->get('groupTypes') as $selectedGroupTypeId) {
+        $groupTypes = $request->request->all()['groupTypes'] ?? null;
+        if (is_array($groupTypes)) {
+            foreach($groupTypes as $selectedGroupTypeId) {
                 $selectedGroupTypes[] = GroupType::getByID($selectedGroupTypeId);
             }
         }

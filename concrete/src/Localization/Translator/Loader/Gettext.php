@@ -10,23 +10,6 @@ use Laminas\I18n\Translator\TextDomain;
 class Gettext extends LaminasGettext
 {
     /**
-     * Tthe absolute path of the web root.
-     *
-     * @var string
-     */
-    private $webrootDirectory;
-
-    /**
-     * Initialize the instance.
-     *
-     * @param string $webrootDirectory the absolute path of the web root
-     */
-    public function __construct($webrootDirectory)
-    {
-        $this->webrootDirectory = $webrootDirectory;
-    }
-
-    /**
      * {@inheritdoc}
      *
      * @see \Laminas\I18n\Translator\Loader\Gettext::load()

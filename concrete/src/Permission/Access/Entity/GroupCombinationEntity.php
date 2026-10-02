@@ -57,7 +57,7 @@ class GroupCombinationEntity extends Entity
         if ($user->isRegistered()) {
             $ingids = [];
             $app = Facade::getFacadeApplication();
-            /** @var $database \Concrete\Core\Database\Connection\Connection */
+            /** @var \Concrete\Core\Database\Connection\Connection $database */
             $database = $app->make('database')->connection();
 
             // First look for any combos that this group would specifically be in.
@@ -102,17 +102,20 @@ class GroupCombinationEntity extends Entity
      *
      * @param Group[] $groups Groups for this combination.
      *
-     * @return self
+     * @return static|null NULL if the group_combination access entity type isn't installed
      */
     public static function getOrCreate($groups)
     {
         $app = Facade::getFacadeApplication();
-        /** @var $database \Concrete\Core\Database\Connection\Connection */
+        /** @var \Concrete\Core\Database\Connection\Connection $database */
         $database = $app->make('database')->connection();
         $petID = $database->fetchColumn(
             'select petID from PermissionAccessEntityTypes
                       where petHandle = \'group_combination\''
         );
+        if (!$petID) {
+            return null;
+        }
         $query = $database->createQueryBuilder();
         $query->select('pae.peID')->from('PermissionAccessEntities', 'pae');
         $i = 1;
@@ -162,7 +165,9 @@ class GroupCombinationEntity extends Entity
             }
         }
 
-        return self::getByID($peID);
+        $entity = self::getByID($peID);
+
+        return $entity instanceof static ? $entity : null;
     }
 
     /**
@@ -192,14 +197,14 @@ class GroupCombinationEntity extends Entity
     public function load()
     {
         $app = Facade::getFacadeApplication();
-        /** @var $database \Concrete\Core\Database\Connection\Connection */
+        /** @var \Concrete\Core\Database\Connection\Connection $database */
         $database = $app->make('database')->connection();
         $gIDs = $database->fetchAll(
             'select gID from PermissionAccessEntityGroups
             where peID = ? order by gID asc',
             [$this->peID]
         );
-        if ($gIDs && is_array($gIDs)) {
+        if ($gIDs) {
             for ($i = 0; $i < count($gIDs); ++$i) {
                 $g = Group::getByID($gIDs[$i]['gID']);
                 if (is_object($g)) {

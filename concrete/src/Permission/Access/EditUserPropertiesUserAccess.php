@@ -130,9 +130,17 @@ class EditUserPropertiesUserAccess extends UserAccess
         }
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Permission\Access\Access::getAccessListItems()
+     *
+     * @return \Concrete\Core\Permission\Access\ListItem\EditUserPropertiesUserListItem[]
+     */
     public function getAccessListItems($accessType = UserPermissionKey::ACCESS_TYPE_INCLUDE, $filterEntities = [], $checkCache = true)
     {
         $db = Database::connection();
+        /** @var \Concrete\Core\Permission\Access\ListItem\EditUserPropertiesUserListItem[] $list */
         $list = parent::getAccessListItems($accessType, $filterEntities);
         $list = PermissionDuration::filterByActive($list);
         foreach ($list as $l) {

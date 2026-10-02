@@ -26,7 +26,7 @@ class Configuration extends DoctrineMigrationConfiguration
     /**
      * Forced initial migration.
      *
-     * @var null|\Doctrine\DBAL\Migrations\Version
+     * @var null|\Doctrine\Migrations\Version\Version
      */
     protected $forcedInitialMigration = null;
 
@@ -57,7 +57,7 @@ class Configuration extends DoctrineMigrationConfiguration
     {
         $forcedInitialMigration = null;
         foreach (array_reverse($this->getMigrations()) as $migration) {
-            /* @var \Doctrine\Migrations\Version $migration */
+            /* @var \Doctrine\Migrations\Version\Version $migration */
             if ($migration->isMigrated() && !$migration->getMigration() instanceof RepeatableMigrationInterface) {
                 break;
             }
@@ -96,7 +96,7 @@ class Configuration extends DoctrineMigrationConfiguration
     /**
      * Get the forced initial migration (if set).
      *
-     * @return \Doctrine\DBAL\Migrations\Version|null
+     * @return \Doctrine\Migrations\Version\Version|null
      */
     public function getForcedInitialMigration()
     {
@@ -189,7 +189,7 @@ class Configuration extends DoctrineMigrationConfiguration
      *
      * @throws Exception throws an Exception if $criteria is not valid
      *
-     * @return \Doctrine\DBAL\Migrations\Version|null
+     * @return \Doctrine\Migrations\Version\Version|null
      */
     protected function findInitialMigration($reference, $criteria)
     {
@@ -206,7 +206,7 @@ class Configuration extends DoctrineMigrationConfiguration
      *
      * @throws Exception throws an Exception if $criteria is not valid
      *
-     * @return \Doctrine\DBAL\Migrations\Version|null
+     * @return \Doctrine\Migrations\Version\Version|null
      */
     protected function findInitialMigrationByIdentifier($identifier, $criteria)
     {
@@ -244,7 +244,7 @@ class Configuration extends DoctrineMigrationConfiguration
      *
      * @throws Exception throws an Exception if $criteria is not valid
      *
-     * @return \Doctrine\DBAL\Migrations\Version|null
+     * @return \Doctrine\Migrations\Version\Version|null
      *
      * @example If looking for version 1.4:
      *

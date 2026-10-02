@@ -160,7 +160,7 @@ class Group extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
     /**
      * Get the date/time when a user entered this group.
      *
-     * @param object|int $user the user ID or an object with a getUserID method
+     * @param object|int|mixed $user the user ID or an object with a getUserID method (NULL is returned if it's neither an object nor a number)
      *
      * @return string|null
      */
@@ -367,7 +367,7 @@ class Group extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
     }
 
     /**
-     * @return GroupRole
+     * @return GroupRole|null
      */
     public function getDefaultRole()
     {
@@ -404,7 +404,7 @@ class Group extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
     }
 
     /**
-     * @return \Concrete\Core\Entity\File\File|bool
+     * @return \Concrete\Core\Entity\File\File|false|null
      */
     public function getThumbnailImage()
     {
@@ -413,7 +413,7 @@ class Group extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
         if ($this->gThumbnailFID) {
             $bf = \Concrete\Core\File\File::getByID($this->gThumbnailFID);
             if (!is_object($bf) || $bf->isError()) {
-                unset($bf);
+                $bf = null;
             }
         }
 
@@ -512,7 +512,7 @@ class Group extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
             /** @var Connection $db */
             $db = $app->make(Connection::class);
             $row = $db->fetchAssoc("SELECT grID FROM UserGroups WHERE gID = ? AND uID = ?", [$this->getGroupID(), $user->getUserID()]);
-            if (isset($row)) {
+            if ($row !== false) {
                 return GroupRole::getByID($row["grID"]);
             }
         }
@@ -754,7 +754,7 @@ class Group extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
     }
 
     /**
-     * @return bool
+     * @return \Concrete\Core\Entity\File\File|false|null
      * @deprecated
      */
     public function getGroupBadgeImageObject()
@@ -763,7 +763,7 @@ class Group extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
         if ($this->gBadgeFID) {
             $bf = File::getByID($this->gBadgeFID);
             if (!is_object($bf) || $bf->isError()) {
-                unset($bf);
+                $bf = null;
             }
         }
 
@@ -887,7 +887,7 @@ class Group extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
      * This is deprecated; use the AddGroupCommand and the command bus.
      * @param string $gName
      * @param string $gDescription
-     * @param GroupFolder $parentFolder
+     * @param \Concrete\Core\Tree\Node\Type\GroupFolder|\Concrete\Core\Tree\Node\Type\Group|\Concrete\Core\Tree\Node\Node|false|null $parentFolder the parent node: a group folder, or the node of a group (for nested groups); if empty, the group is added to the root of the tree
      *
      * @return Group
      */
@@ -930,8 +930,8 @@ class Group extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
         $excludeGIDs = [];
         if (is_object($excludeUser)) {
             $groups = $excludeUser->getUserGroups();
-            $groupKeys = array_keys($groups);
-            if (is_array($groupKeys)) {
+            if (!empty($groups)) {
+                $groupKeys = array_keys($groups);
                 $gs->filter(false, 'gID not in (' . implode(',', $groupKeys) . ')');
             }
         }
@@ -1060,9 +1060,9 @@ class Group extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
 
     /**
      * Takes the numeric id of a group and returns a group object.
-     * @param string $gID
+     * @param int|string $gID
      *
-     * @return Group
+     * @return Group|null
      * @deprecated
      * This is deprecated, user the grouprepository instead.
      */
@@ -1077,7 +1077,7 @@ class Group extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
      * Takes the name of a group and returns a group object.
      * @param string $gName
      *
-     * @return Group
+     * @return Group|null
      * @deprecated
      * This is deprecated, user the grouprepository instead.
      */

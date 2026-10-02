@@ -23,7 +23,7 @@ class Result extends SearchResult
     public function getColumns()
     {
         if (!isset($this->columns)) {
-            parent::getColumns();
+            $this->columns = parent::getColumns();
             if ($this->getItemListObject()->isFulltextSearch()) {
                 $baseColumn = new BaseColumn('cIndexScore', t('Score'), false, true, 'desc');
                 $column = new Column($this, $baseColumn);

@@ -2,11 +2,11 @@
 
 namespace Concrete\Core\Attribute\Command;
 
+use Concrete\Core\Attribute\Category\SearchIndexer\StandardSearchIndexerInterface;
 use Concrete\Core\Attribute\Key\SearchIndexer\SearchIndexerInterface;
 use Concrete\Core\Command\Task\Output\OutputAwareInterface;
 use Concrete\Core\Command\Task\Output\OutputAwareTrait;
 use Concrete\Core\Database\Connection\Connection;
-use Concrete\Core\Entity\Attribute\Key\ExpressKey;
 
 class RebuildIndexCommandHandler implements OutputAwareInterface
 {
@@ -32,9 +32,11 @@ class RebuildIndexCommandHandler implements OutputAwareInterface
     {
         $this->output->write(t("Rebuilding index table for '%s'...", $command->getIndexName()));
         $category = $command->getAttributeKeyCategory();
+        if (!$category instanceof StandardSearchIndexerInterface) {
+            throw new \InvalidArgumentException(t('The attribute category must implement %s.', StandardSearchIndexerInterface::class));
+        }
         $table = $category->getIndexedSearchTable();
 
-        /** @var ExpressKey $key */
         if (!$this->connection->tableExists($table)) {
             $indexer = $category->getSearchIndexer();
             $indexer->createRepository($category);

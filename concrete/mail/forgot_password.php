@@ -5,7 +5,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 /**
  * @var string $uName
  * @var bool $isForgotPassword
- * @var League\URL\URLInterface|string $changePassURL
+ * @var League\Url\UrlInterface|string $changePassURL
  * @var string $siteName
  */
 

@@ -9,6 +9,11 @@ use Concrete\Core\Cache\Page\PageCacheRecord;
 
 class FilePageCache extends PageCache
 {
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Cache\Page\PageCache::getRecord()
+     */
     public function getRecord($mixed)
     {
         $file = $this->getCacheFile($mixed);
@@ -19,6 +24,8 @@ class FilePageCache extends PageCache
                 return $record;
             }
         }
+
+        return null;
     }
 
     protected function getCacheFile($mixed)
@@ -28,7 +35,7 @@ class FilePageCache extends PageCache
             $key = hash('sha256', $key);
             $filename = $key . '.cache';
             $dir = Config::get('concrete.cache.page.directory') . '/' . $key[0] . '/' . $key[1] . '/' . $key[2];
-            if ($dir && (!is_dir($dir))) {
+            if (!is_dir($dir)) {
                 @mkdir($dir, Config::get('concrete.filesystem.permissions.directory'), true);
             }
             $path = $dir . '/' . $filename;

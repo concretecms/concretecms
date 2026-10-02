@@ -125,9 +125,7 @@ class Design extends BackendInterfaceBlockController
                     $output = $bi->getComposerOutputControlObject();
                     $control = FormLayoutSetControl::getByID($output->getPageTypeComposerFormLayoutSetControlID());
                     $object = $control->getPageTypeComposerControlObject();
-                    if ($object instanceof BlockControl) {
-                        $bt = $object->getBlockTypeObject();
-                    }
+                    $bt = $object instanceof BlockControl ? $object->getBlockTypeObject() : null;
                     $bFilename = $this->block->getBlockFilename();
                     break;
                 default:

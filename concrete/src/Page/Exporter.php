@@ -33,7 +33,7 @@ class Exporter implements ItemInterface
         $p->addAttribute('name', $mixed->getCollectionName());
         switch ($type) {
             case self::TYPE_EXTERNALLINK:
-                $p->addAttribute('path', $mixed->generatePagePath() ?? '');
+                $p->addAttribute('path', $mixed->generatePagePath());
                 break;
             default:
                 $p->addAttribute('path', $mixed->getCollectionPath() ?? '');

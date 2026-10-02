@@ -27,14 +27,7 @@ class Factory
      *
      * @param Repository $config
      *
-     * @return array {
-     *     @var bool $sslverifypeer [always]
-     *     @var string $proxyhost [optional]
-     *     @var int $proxyport [optional]
-     *     @var string $proxyuser [optional]
-     *     @var string $proxypass [optional]
-     *     ... and all other options set in app.curl
-     * }
+     * @return array{sslverifypeer: bool, proxyhost?: string, proxyport?: int, proxyuser?: string, proxypass?: string, ...} the listed keys, plus all the other options set in app.curl
      */
     protected function getOptions(Repository $config)
     {

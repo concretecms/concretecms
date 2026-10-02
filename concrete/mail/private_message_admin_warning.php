@@ -4,8 +4,8 @@ defined('C5_EXECUTE') or die('Access Denied.');
 // Parameters
 /* @var string $siteName */
 /* @var string $offenderUname */
-/* @var League\URL\URLInterface $profileURL (if users profiles are enabled) */
-/* @var League\URL\URLInterface $profilePreferencesURL */
+/* @var League\Url\UrlInterface $profileURL (if users profiles are enabled) */
+/* @var League\Url\UrlInterface $profilePreferencesURL */
 
 $subject = t('Private message limit exceeded for user: %s on %s', $offenderUname, $siteName);
 

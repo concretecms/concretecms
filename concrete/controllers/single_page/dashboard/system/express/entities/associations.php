@@ -15,8 +15,8 @@ class Associations extends DashboardPageController
     public function on_start()
     {
         parent::on_start();
-        $this->repository = $this->entityManager->getRepository('\Concrete\Core\Entity\Express\Entity');
-        $this->associationRepository = $this->entityManager->getRepository('\Concrete\Core\Entity\Express\Association');
+        $this->repository = $this->entityManager->getRepository('Concrete\Core\Entity\Express\Entity');
+        $this->associationRepository = $this->entityManager->getRepository('Concrete\Core\Entity\Express\Association');
     }
 
     public function add($id = null)
@@ -184,6 +184,8 @@ class Associations extends DashboardPageController
             $this->set('formatter', $association->getFormatter());
             $this->set('pageTitle', t('Association Details'));
             $this->render('/dashboard/system/express/entities/associations/view_association');
+        } else {
+            $entity = null;
         }
         if (is_object($entity)) {
         } else {

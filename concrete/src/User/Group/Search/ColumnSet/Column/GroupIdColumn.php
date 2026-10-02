@@ -5,6 +5,7 @@ use Concrete\Core\Database\Query\AndWhereNotExistsTrait;
 use Concrete\Core\Search\Column\Column;
 use Concrete\Core\Search\Column\PagerColumnInterface;
 use Concrete\Core\Search\ItemList\Pager\PagerProviderInterface;
+use Concrete\Core\Search\ItemList\Pager\QueryObjectResolver;
 
 class GroupIdColumn extends Column implements PagerColumnInterface
 {
@@ -28,7 +29,7 @@ class GroupIdColumn extends Column implements PagerColumnInterface
 
     public function filterListAtOffset(PagerProviderInterface $itemList, $mixed)
     {
-        $query = $itemList->getQueryObject();
+        $query = QueryObjectResolver::getQueryObject($itemList);
         $sort = $this->getColumnSortDirection() == 'desc' ? '<' : '>';
         $where = sprintf('gID %s :sortID', $sort);
         $query->setParameter('sortID', $mixed->getGroupID());

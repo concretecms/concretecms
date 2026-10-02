@@ -50,18 +50,18 @@ class PageActivityExporter extends AbstractExporter
      * {@inheritdoc}
      *
      * @see \Concrete\Core\Csv\Export\AbstractExporter::getStaticFieldValues()
+     *
+     * @param \Concrete\Core\Page\Collection\Version\Version $version
      */
     protected function getStaticFieldValues(ObjectInterface $version)
     {
-        /** @var \Concrete\Core\Page\Collection\Version\Version $version */
-
         /** @var \Concrete\Core\Page\Page $page */
         $page = Page::getByID($version->getCollectionID());
 
-        yield (int) $page->getCollectionID();
+        yield (string) $page->getCollectionID();
         yield (string) $page->getCollectionPath();
         yield (string) $page->getCollectionName();
-        yield (int) $version->getVersionID();
+        yield (string) $version->getVersionID();
         yield (string) $this->getLocalizedDate($version->getVersionDateApproved());
         yield (string) $version->getVersionComments();
         yield (string) $version->getVersionAuthorUserName();

@@ -42,6 +42,8 @@ trait ObjectTrait
         if (is_object($value)) {
             return $value;
         }
+
+        return null;
     }
 
     /**
@@ -81,6 +83,9 @@ trait ObjectTrait
 
         // Create the attribute category value.
         $attributeValue = $this->getAttributeValueObject($ak, true);
+        if ($attributeValue === null || !method_exists($attributeValue, 'setGenericValue')) {
+            throw new \RuntimeException(t('The attribute value must have the %s method.', 'setGenericValue()'));
+        }
         $orm->persist($attributeValue);
         $orm->flush();
 
@@ -108,7 +113,7 @@ trait ObjectTrait
                 $value = false;
             } else {
                 /**
-                 * @var $value AttributeValue\AbstractValue
+                 * @var AttributeValue\AbstractValue $value
                  */
                 $value = $controller->createAttributeValue($value);
             }

@@ -32,11 +32,6 @@ class InstallLanguageCommand extends Command
     protected $translationsInstaller;
 
     /**
-     * @var OutputInterface|null
-     */
-    protected $output;
-
-    /**
      * @var bool|null
      */
     protected $shouldClearLocalizationCache;
@@ -94,7 +89,6 @@ EOT
         $this->app = Application::getFacadeApplication();
         $this->translationsChecker = $this->app->make(TranslationsChecker::class);
         $this->translationsInstaller = $this->app->make(TranslationsInstaller::class);
-        $this->output = $output;
         $this->shouldClearLocalizationCache = false;
 
         $processCore = $this->checkCoreFlag($input);
@@ -202,6 +196,8 @@ EOT
 
     /**
      * @param \Concrete\Core\Localization\Translation\LocaleStatus[] $data
+     *
+     * @return void
      */
     private function updateLanguages(array $data)
     {
@@ -265,6 +261,8 @@ EOT
     /**
      * @param \Concrete\Core\Localization\Translation\LocaleStatus[] $data
      * @param string[] $localeIDs
+     *
+     * @return void
      */
     private function addLanguages(array $data, array $localeIDs)
     {

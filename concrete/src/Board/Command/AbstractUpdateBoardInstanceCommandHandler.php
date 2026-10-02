@@ -65,5 +65,7 @@ abstract class AbstractUpdateBoardInstanceCommandHandler implements LoggerAwareI
             $notifier = $driver->getBoardInstanceNotifier();
             return $notifier->findBoardInstancesThatMayContainObject($command->getObject());
         }
+
+        return [];
     }
 }

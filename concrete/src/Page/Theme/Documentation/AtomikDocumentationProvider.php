@@ -171,7 +171,7 @@ class AtomikDocumentationProvider implements DocumentationProviderInterface
             $date->modify($eventData[1]);
             $repetition = new EventRepetition();
             $repetition->setStartDate($date->format('Y-m-d H:i:s'));
-            if (isset($eventData[2]) && $eventData[2]) {
+            if ($eventData[2] ?? false) {
                 $repetition->setRepeatPeriod(BasicRepetition::REPEAT_WEEKLY);
                 $repetition->setRepeatEveryNum(1);
             }

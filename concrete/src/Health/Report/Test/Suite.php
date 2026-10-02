@@ -5,7 +5,7 @@ abstract class Suite implements SuiteInterface
 {
 
     /**
-     * @param $className
+     * @param TestInterface|TestGroupInterface|class-string<TestInterface|TestGroupInterface> $mixed
      */
     public function add($mixed)
     {
@@ -13,7 +13,7 @@ abstract class Suite implements SuiteInterface
     }
 
     /**
-     * @var TestInterface[]
+     * @var array<TestInterface|TestGroupInterface|class-string<TestInterface|TestGroupInterface>>
      */
     protected $items = [];
 

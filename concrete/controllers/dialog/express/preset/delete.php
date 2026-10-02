@@ -53,11 +53,8 @@ class Delete extends PresetDelete
     public function getSavedSearchEntity()
     {
         $em = $this->app->make(EntityManager::class);
-        if (is_object($em)) {
-            return $em->getRepository('Concrete\Core\Entity\Search\SavedExpressSearch');
-        }
 
-        return null;
+        return $em->getRepository('Concrete\Core\Entity\Search\SavedExpressSearch');
     }
 
     public function remove_search_preset()
@@ -69,7 +66,7 @@ class Delete extends PresetDelete
             if (!empty($presetID)) {
                 $searchEntity = $this->getSavedSearchEntity();
                 if (is_object($searchEntity)) {
-                    $searchPreset = $searchEntity->findOneById($presetID);
+                    $searchPreset = $searchEntity->find($presetID);
                     if (!is_object($searchPreset)) {
                         $this->error->add(t('Invalid search preset.'));
                     }

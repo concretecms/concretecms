@@ -5,6 +5,7 @@ use Concrete\Controller\Backend\UserInterface\Page as BackendInterfacePageContro
 use Concrete\Core\Workflow\Request\ApprovePageRequest;
 use PageEditResponse;
 use Concrete\Core\Attribute\Set as AttributeSet;
+use Concrete\Core\Permission\Key\EditPagePropertiesPageKey;
 use PermissionKey;
 use Concrete\Core\Page\Collection\Version\Version;
 use Concrete\Core\User\User;
@@ -15,6 +16,11 @@ class Seo extends BackendInterfacePageController
     protected $controllerActionPath = '/ccm/system/panels/details/page/seo';
     protected $validationToken = '/panels/details/page/seo';
 
+    /**
+     * @var \Concrete\Core\Permission\Access\ListItem\EditPagePropertiesPageListItem
+     */
+    protected $asl;
+
     protected function canAccess()
     {
         return $this->permissions->canEditPageContents() || $this->asl->allowEditPaths();
@@ -24,6 +30,9 @@ class Seo extends BackendInterfacePageController
     {
         parent::on_start();
         $pk = PermissionKey::getByHandle('edit_page_properties');
+        if (!$pk instanceof EditPagePropertiesPageKey) {
+            throw new \RuntimeException(t('The %s permission key is not installed correctly.', 'edit_page_properties'));
+        }
         $pk->setPermissionObject($this->page);
         $this->asl = $pk->getMyAssignment();
     }

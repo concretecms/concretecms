@@ -18,6 +18,11 @@ class ItemList
     protected $stickySearchRequestNameSpace = '';
     protected $items = array();
 
+    /**
+     * @var string
+     */
+    protected $sortByString;
+
     public function enableStickySearchRequest($namespace = false)
     {
         if ($namespace) {

@@ -68,7 +68,7 @@ EOT
             /*
              * @var Error $test
              */
-            throw new Exception(implode("\n", $test->getList()));
+            throw new Exception($test->toText());
         }
         $output->writeln('<info>good.</info>');
 
@@ -80,7 +80,7 @@ EOT
             $output->write('Moving package to trash... ');
             $r = $pkg->backup();
             if ($r instanceof ErrorList) {
-                throw new Exception(implode("\n", $r->getList()));
+                throw new Exception($r->toText());
             }
             $output->writeln('<info>done.</info>');
         }

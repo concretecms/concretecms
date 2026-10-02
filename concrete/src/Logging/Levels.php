@@ -11,7 +11,7 @@ class Levels
      *
      * @param  int $level
      *
-     * @return string
+     * @return string|null
      */
     public static function getLevelDisplayName($level)
     {
@@ -37,6 +37,8 @@ class Levels
                     return tc(/*i18n: Urgent alert */ 'Log level', 'Emergency');
             }
         }
+
+        return null;
     }
 
 }

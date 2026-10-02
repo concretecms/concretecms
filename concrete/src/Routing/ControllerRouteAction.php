@@ -15,9 +15,7 @@ class ControllerRouteAction implements RouteActionInterface
     protected $controllerCallback;
 
     /**
-     * ControllerRouteCallback constructor. $action is something like
-     * \My\Controller::myAction
-     * @param string $action
+     * @param string|array{0: object|string, 1: string} $controllerCallback the controller and its method, as a string like \My\Controller::myAction or as an array [class or instance, method name]
      */
     public function __construct($controllerCallback)
     {
@@ -25,7 +23,7 @@ class ControllerRouteAction implements RouteActionInterface
     }
 
     /**
-     * @return string
+     * @return string|array{0: object|string, 1: string}
      */
     public function getControllerCallback()
     {
@@ -78,7 +76,7 @@ class ControllerRouteAction implements RouteActionInterface
             $view = $controller->getViewObject();
             if (is_object($view)) {
                 $view->setController($controller);
-                if (isset($view) && $view instanceof AbstractView) {
+                if ($view instanceof AbstractView) {
                     $content = $view->render();
                 }
             }

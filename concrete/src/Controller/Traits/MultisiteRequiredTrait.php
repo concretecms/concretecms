@@ -18,7 +18,7 @@ trait MultisiteRequiredTrait
         parent::on_start();
         $service = $this->app->make(InstallationService::class);
         if (!$service->isMultisiteEnabled()) {
-            return $this->buildRedirect('/dashboard/system/multisite/settings', 'multisite_required');
+            return $this->buildRedirect(['/dashboard/system/multisite/settings', 'multisite_required']);
         }
 
         return null;

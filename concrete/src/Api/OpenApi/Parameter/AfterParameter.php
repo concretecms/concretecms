@@ -8,7 +8,9 @@ use Concrete\Core\Api\OpenApi\SpecSchema;
 class AfterParameter extends SpecParameter
 {
     /**
-     * @return string
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Api\OpenApi\SpecParameter::getName()
      */
     public function getName(): string
     {
@@ -16,7 +18,9 @@ class AfterParameter extends SpecParameter
     }
 
     /**
-     * @return string
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Api\OpenApi\SpecParameter::getIn()
      */
     public function getIn(): string
     {
@@ -24,13 +28,20 @@ class AfterParameter extends SpecParameter
     }
 
     /**
-     * @return string
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Api\OpenApi\SpecParameter::getDescription()
      */
     public function getDescription(): string
     {
         return t('The ID of the current object to start at.');
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Api\OpenApi\SpecParameter::getSchema()
+     */
     public function getSchema(): ?SpecSchema
     {
         return new SpecSchema('integer', 'int64');

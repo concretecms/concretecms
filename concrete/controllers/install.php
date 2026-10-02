@@ -189,7 +189,7 @@ class Install extends Controller
         $canonicalUrlAlternative = '';
         $canonicalUrlAlternativeChecked = false;
         $uri = $this->request->getUri();
-        if (preg_match('/^(https?)(:.+?)(?:\/' . preg_quote(DISPATCHER_FILENAME, '%') . ')?\/install(?:$|\/|\?)/i', $uri, $m)) {
+        if (preg_match('/^(https?)(:.+?)(?:\/' . preg_quote(DISPATCHER_FILENAME, '/') . ')?\/install(?:$|\/|\?)/i', $uri, $m)) {
             switch (strtolower($m[1])) {
                 case 'http':
                     $canonicalUrl = (string) UrlImmutable::createFromUrl('http' . $m[2]);
@@ -255,9 +255,6 @@ class Install extends Controller
         return $rf->json($result);
     }
 
-    /**
-     * @return \Concrete\Core\Error\Error
-     */
     public function configure()
     {
         $post = $this->request->request;
@@ -289,11 +286,11 @@ class Install extends Controller
                 $error->add($val->getError());
             } elseif (!$error->has()) {
                 /**
-                 * @var $options InstallerOptions
+                 * @var InstallerOptions $options
                  */
                 $options = $this->app->make(InstallerOptions::class);
                 $config = $this->app->make('config');
-                $configuration = $post->get('SITE_CONFIG');
+                $configuration = $post->all()['SITE_CONFIG'] ?? null;
                 if (!is_array($configuration)) {
                     $configuration = [];
                 }

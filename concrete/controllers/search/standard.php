@@ -5,6 +5,7 @@ use Concrete\Controller\Dialog\Search\AdvancedSearch;
 use Concrete\Core\Controller\AbstractController;
 use Concrete\Core\Entity\Search\SavedSearch;
 use Concrete\Core\Search\Result\Result;
+use Concrete\Core\Search\SessionQueryProviderInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 abstract class Standard extends AbstractController
@@ -65,7 +66,9 @@ abstract class Standard extends AbstractController
         if ($this->canAccess()) {
             $advancedSearch = $this->getAdvancedSearchDialogController();
             $provider = $advancedSearch->getSearchProvider();
-            $provider->clearSessionCurrentQuery();
+            if ($provider instanceof SessionQueryProviderInterface) {
+                $provider->clearSessionCurrentQuery();
+            }
 
             $result = $this->getDefaultResetSearchResultObject();
             return new JsonResponse($result->getJSONObject());
@@ -78,7 +81,7 @@ abstract class Standard extends AbstractController
     {
         $advancedSearch = $this->getAdvancedSearchDialogController();
         $provider = $advancedSearch->getSearchProvider();
-        $query = $provider->getSessionCurrentQuery();
+        $query = $provider instanceof SessionQueryProviderInterface ? $provider->getSessionCurrentQuery() : null;
         if (is_object($query)) {
             $itemsPerPage = (int) $this->request->get('fSearchItemsPerPage');
             if ($itemsPerPage) {

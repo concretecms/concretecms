@@ -26,7 +26,7 @@ interface TranslationLoaderRepositoryInterface
      *
      * @param string $handle
      *
-     * @return TranslationLoaderInterface
+     * @return TranslationLoaderInterface|null
      */
     public function getTranslationLoader($handle);
 

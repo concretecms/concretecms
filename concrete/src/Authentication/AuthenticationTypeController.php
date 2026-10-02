@@ -11,11 +11,22 @@ use Concrete\Core\User\User;
 use Page;
 use Concrete\Core\Support\Facade\Application;
 
+/**
+ * @method void saveAuthenticationType(array $values) Save the settings of the authentication type submitted from the dashboard (every authentication type controller must implement it)
+ */
 abstract class AuthenticationTypeController extends Controller implements LoggerAwareInterface,
     AuthenticationTypeControllerInterface
 {
     protected $authenticationType;
     protected $app;
+
+    /**
+     * The methods of the controller that can be called with the /login/callback/<authentication type handle>/<method> and
+     * /account/edit_profile/callback/<authentication type handle>/<method> URLs (in addition to the callback() method).
+     *
+     * @var string[]|null
+     */
+    public $apiMethods;
 
     use LoggerAwareTrait;
 
@@ -66,7 +77,9 @@ abstract class AuthenticationTypeController extends Controller implements Logger
     public function completeAuthentication(User $u)
     {
         $c = Page::getByPath('/login');
+        /** @var \Concrete\Controller\SinglePage\Login $controller */
         $controller = $c->getPageController();
+
         return $controller->finishAuthentication($this->getAuthenticationType(), $u);
     }
 

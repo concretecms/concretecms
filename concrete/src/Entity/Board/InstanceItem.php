@@ -56,9 +56,6 @@ class InstanceItem implements \JsonSerializable, ItemProviderInterface
         return $this->boardInstanceItemID;
     }
 
-    /**
-     * @return mixed
-     */
     public function getDataSource() : ConfiguredDataSource
     {
         return $this->data_source;
@@ -120,9 +117,6 @@ class InstanceItem implements \JsonSerializable, ItemProviderInterface
         $this->dateAddedToBoard = $dateAddedToBoard;
     }
 
-    /**
-     * @return mixed
-     */
     public function getItem() :? Item
     {
         return $this->item;

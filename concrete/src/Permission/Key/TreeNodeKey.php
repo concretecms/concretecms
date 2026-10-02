@@ -3,6 +3,10 @@ namespace Concrete\Core\Permission\Key;
 
 use Loader;
 
+/**
+ * @property \Concrete\Core\Tree\Node\Node|null $permissionObject
+ * @method \Concrete\Core\Tree\Node\Node|null getPermissionObject()
+ */
 class TreeNodeKey extends Key
 {
     public function copyFromParentNodeToCurrentNode()

@@ -151,7 +151,7 @@ class InstallerOptions
      *
      * @param bool $value
      *
-     * @return $this;
+     * @return $this
      */
     public function setAutoAttachEnabled($value)
     {

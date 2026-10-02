@@ -56,7 +56,11 @@ class Setup extends DashboardSitePageController
                     t($mlPage->getCollectionName()),
                     $mlPage->getCollectionLink(),
                 ];
+            } else {
+                $mlLink = null;
             }
+        } else {
+            $mlLink = null;
         }
         $this->set('mlLink', $mlLink);
     }
@@ -210,6 +214,8 @@ class Setup extends DashboardSitePageController
         $editingLocale = $localeID ? $service->getById($localeID) : null;
         if ($editingLocale === null) {
             $this->error->add(t('Invalid locale object.'));
+            $msLanguage = null;
+            $msCountry = null;
         } else {
             /* @var \Concrete\Core\Entity\Site\Locale $editingLocale */
             $msLanguage = $post->get('msLanguageChange' . $localeID);
@@ -234,7 +240,7 @@ class Setup extends DashboardSitePageController
                     $editingLocale->setLanguage($msLanguage);
                     $editingLocale->setCountry($msCountry);
                     $service->updatePluralSettings($editingLocale);
-                    $this->entityManager->flush($editingLocale);
+                    $this->entityManager->flush();
                     
                     $event = new \Symfony\Component\EventDispatcher\GenericEvent();
                     $event->setArgument('locale', $editingLocale);

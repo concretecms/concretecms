@@ -40,7 +40,7 @@ class StandardSearchIndexer implements SearchIndexerInterface
     }
 
     /**
-     * @deprecated use the updateRepositoryColumns() method, with TRUE as the fourth argument
+     * @deprecated use the updateSearchIndexKeyColumns() method
      *
      * @param \Concrete\Core\Attribute\Category\CategoryInterface $category
      * @param \Concrete\Core\Attribute\AttributeKeyInterface $key
@@ -162,11 +162,19 @@ class StandardSearchIndexer implements SearchIndexerInterface
      * {@inheritdoc}
      *
      * @see \Concrete\Core\Attribute\Key\SearchIndexer\SearchIndexerInterface::indexEntry()
+     *
+     * @throws \InvalidArgumentException if $category doesn't implement \Concrete\Core\Attribute\Category\SearchIndexer\StandardSearchIndexerInterface
      */
     public function indexEntry(CategoryInterface $category, AttributeValueInterface $value, $subject)
     {
+        if (!$category instanceof StandardSearchIndexerInterface) {
+            throw new \InvalidArgumentException(t('The attribute category must implement %s.', StandardSearchIndexerInterface::class));
+        }
         $columns = $this->connection->getSchemaManager()->listTableColumns($category->getIndexedSearchTable());
 
+        if (!method_exists($value, 'getSearchIndexValue')) {
+            throw new \InvalidArgumentException(t('The attribute value must have the %s method.', 'getSearchIndexValue()'));
+        }
         $attributeValue = $value->getSearchIndexValue();
         $details = $category->getSearchIndexFieldDefinition();
         $primary = $details['primary'][0];
@@ -216,9 +224,14 @@ class StandardSearchIndexer implements SearchIndexerInterface
      * {@inheritdoc}
      *
      * @see \Concrete\Core\Attribute\Key\SearchIndexer\SearchIndexerInterface::clearIndexEntry()
+     *
+     * @throws \InvalidArgumentException if $category doesn't implement \Concrete\Core\Attribute\Category\SearchIndexer\StandardSearchIndexerInterface
      */
     public function clearIndexEntry(CategoryInterface $category, AttributeValueInterface $value, $subject)
     {
+        if (!$category instanceof StandardSearchIndexerInterface) {
+            throw new \InvalidArgumentException(t('The attribute category must implement %s.', StandardSearchIndexerInterface::class));
+        }
         $key = $value->getAttributeKey();
         if (!$key->isAttributeKeySearchable()) {
             return false; // if it's not searchable there won't be the right columns in the database
@@ -244,15 +257,13 @@ class StandardSearchIndexer implements SearchIndexerInterface
             }
         }
 
-        if (count($columnValues)) {
-            $primaries = [$primary => $primaryValue];
+        $primaries = [$primary => $primaryValue];
 
-            $this->connection->update(
-                $category->getIndexedSearchTable(),
-                $columnValues,
-                $primaries
-            );
-        }
+        $this->connection->update(
+            $category->getIndexedSearchTable(),
+            $columnValues,
+            $primaries
+        );
     }
 
     /**

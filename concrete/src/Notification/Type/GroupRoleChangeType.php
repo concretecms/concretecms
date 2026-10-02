@@ -10,6 +10,13 @@ use Concrete\Core\Notification\Subscription\StandardSubscription;
 class GroupRoleChangeType extends Type
 {
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Notification\Type\TypeInterface::createNotification()
+     *
+     * @param \Concrete\Core\Entity\User\GroupRoleChange $group
+     */
     public function createNotification(SubjectInterface $group)
     {
         return new GroupRoleChangeNotification($group);

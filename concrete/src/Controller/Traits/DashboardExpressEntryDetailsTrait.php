@@ -50,13 +50,13 @@ trait DashboardExpressEntryDetailsTrait
 
     public function create_entry($id = null, $owner_entry_id = null)
     {
-        $r = $this->entityManager->getRepository('\Concrete\Core\Entity\Express\Entity');
+        $r = $this->entityManager->getRepository('Concrete\Core\Entity\Express\Entity');
         $entity = $r->findOneById($id);
         if (!is_object($entity)) {
             return $this->buildRedirect('/dashboard/express/entries');
         }
 
-        $r = $this->entityManager->getRepository('\Concrete\Core\Entity\Express\Entry');
+        $r = $this->entityManager->getRepository('Concrete\Core\Entity\Express\Entry');
         $entry = $r->findOneById($owner_entry_id);
         $permissions = new Checker($entity);
         if (!$permissions->canAddExpressEntries()) {
@@ -207,10 +207,10 @@ trait DashboardExpressEntryDetailsTrait
 
     public function submit($id = null)
     {
-        $r = $this->entityManager->getRepository('\Concrete\Core\Entity\Express\Entity');
+        $r = $this->entityManager->getRepository('Concrete\Core\Entity\Express\Entity');
         $entity = $r->findOneById($id);
 
-        $r = $this->entityManager->getRepository('\Concrete\Core\Entity\Express\Form');
+        $r = $this->entityManager->getRepository('Concrete\Core\Entity\Express\Form');
         $form = $r->findOneById($this->request->request->get('express_form_id'));
 
         $entry = null;

@@ -69,7 +69,7 @@ class ReuseValidator extends AbstractTranslatableValidator implements ValidatorF
 
         // If the password has recently been used, it's invalid
         if ($error) {
-            $error->add($this->getErrorString(self::E_PASSWORD_RECENTLY_USED, $mixed));
+            $error[] = $this->getErrorString(self::E_PASSWORD_RECENTLY_USED, $mixed);
         }
 
         return false;

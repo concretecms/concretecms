@@ -11,7 +11,10 @@ namespace Concrete\Core\Legacy;
  *
  * Portable PHP password hashing framework.
  *
- * Version 0.3 / genuine.
+ * Version 0.3 / Concrete CMS.
+ *
+ * Changes to the original code:
+ * - removed the checks on the CRYPT_BLOWFISH and CRYPT_EXT_DES constants: they are always 1 since PHP 5.3
  *
  * Written by Solar Designer <solar at openwall.com> in 2004-2006 and placed in
  *
@@ -70,30 +73,7 @@ final class PasswordHash
      */
     public function get_random_bytes($count)
     {
-        $output = '';
-        
-        if (is_callable('random_bytes')) {
-            return random_bytes($count);
-        }
-        
-        if (@is_readable('/dev/urandom') &&
-            ($fh = @fopen('/dev/urandom', 'rb'))) {
-            $output = fread($fh, $count);
-            fclose($fh);
-        }
-
-        if (strlen($output) < $count) {
-            $output = '';
-            for ($i = 0; $i < $count; $i += 16) {
-                $this->random_state =
-                    md5(microtime() . $this->random_state);
-                $output .=
-                    pack('H*', md5($this->random_state));
-            }
-            $output = substr($output, 0, $count);
-        }
-
-        return $output;
+        return random_bytes($count);
     }
 
     /**
@@ -270,7 +250,7 @@ final class PasswordHash
     {
         $random = '';
 
-        if (CRYPT_BLOWFISH == 1 && !$this->portable_hashes) {
+        if (!$this->portable_hashes) {
             $random = $this->get_random_bytes(16);
             $hash =
                 crypt($password, $this->gensalt_blowfish($random));
@@ -279,7 +259,7 @@ final class PasswordHash
             }
         }
 
-        if (CRYPT_EXT_DES == 1 && !$this->portable_hashes) {
+        if (!$this->portable_hashes) {
             if (strlen($random) < 3) {
                 $random = $this->get_random_bytes(3);
             }

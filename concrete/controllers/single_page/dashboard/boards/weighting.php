@@ -14,7 +14,7 @@ class Weighting extends DashboardSitePageController
 
     /**
      * @param $id
-     * @return Board
+     * @return Board|null
      */
     protected function getBoard($id)
     {
@@ -26,6 +26,8 @@ class Weighting extends DashboardSitePageController
                 return $board;
             }
         }
+
+        return null;
     }
     
     public function view($id = null)
@@ -52,10 +54,10 @@ class Weighting extends DashboardSitePageController
             $command->setBoard($board);
             $configuredSources = $this->entityManager->getRepository(ConfiguredDataSource::class)
                 ->findByBoard($board);
-            $weighting = $this->request->request->get('weighting');
+            $weighting = $this->request->request->all('weighting');
             foreach($configuredSources as $configuredSource) {
                 $weight = 0;
-                if (is_array($weighting) && isset($weighting[$configuredSource->getConfiguredDataSourceID()])) {
+                if (isset($weighting[$configuredSource->getConfiguredDataSourceID()])) {
                     $weight = (int) $weighting[$configuredSource->getConfiguredDataSourceID()];
                 }
                 $command->addWeighting($configuredSource, $weight);

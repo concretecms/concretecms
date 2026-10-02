@@ -20,7 +20,7 @@ class UserDeactivatedListView extends StandardListView implements ApplicationAwa
     /**
      * The url resolver we use to build urls
      *
-     * @var ResolverManagerInterface
+     * @var ResolverManagerInterface|null
      */
     protected $resolver;
 

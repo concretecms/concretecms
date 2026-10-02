@@ -52,7 +52,7 @@ class CollectionAttributeControl extends Control
     }
 
     /**
-     * @return CollectionAttributeKey
+     * @return \Concrete\Core\Entity\Attribute\Key\PageKey|null
      */
     public function getAttributeKeyObject()
     {
@@ -186,9 +186,7 @@ class CollectionAttributeControl extends Control
     {
         $ak = $this->getAttributeKeyObject();
         $controller = $ak->getController();
-        if (is_object($controller)) {
-            return $controller->requestFieldExists();
-        }
+        return $controller->requestFieldExists();
     }
 
     public function validate()
@@ -205,7 +203,7 @@ class CollectionAttributeControl extends Control
                     $this->isPageTypeComposerFormControlRequiredOnThisRequest()
                 );
                 /**
-                 * @var $response ResponseInterface
+                 * @var ResponseInterface $response
                  */
             } else {
                 $value = $this->getPageTypeComposerControlDraftValue();

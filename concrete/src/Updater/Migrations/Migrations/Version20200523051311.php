@@ -54,7 +54,7 @@ final class Version20200523051311 extends AbstractMigration implements Repeatabl
         ];
 
         foreach ($attributeTypeFactory->getList() as $attributeType) {
-            if ($attributeType instanceof Type && in_array($attributeType->getAttributeTypeHandle(), $mappedAttributesTypeHandles)) {
+            if (in_array($attributeType->getAttributeTypeHandle(), $mappedAttributesTypeHandles)) {
                 $category->getAttributeTypes()->add($attributeType);
             }
         }
@@ -80,14 +80,12 @@ final class Version20200523051311 extends AbstractMigration implements Repeatabl
         }
 
         /**
-         * @var $objectManager ObjectManager
+         * @var ObjectManager $objectManager
          */
         $objectManager = $this->app->make(ObjectManager::class);
         $list = $objectManager->getEntities(true);
+        /** @var Connection $db */
         $db = $this->app->make(Connection::class);
-        /**
-         * @var $db Connection
-         */
         foreach($list->findAll() as $entity) {
             $db->executeQuery(
                 'update ExpressEntityEntries set resultsNodeID = ? 

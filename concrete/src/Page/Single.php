@@ -133,7 +133,7 @@ class Single
      * Adds a single page outside of any site trees. The global=true declaration in content importer XML must come at
      * on the first URL segment, so we don't have to be smart and check to see if the parents already eixst.
      * @param $cPath
-     * @param null $pkg
+     * @param \Concrete\Core\Entity\Package|\Concrete\Core\Package\Package|null $pkg
      * @return mixed
      */
     public static function addGlobal($cPath, $pkg = null)
@@ -239,8 +239,9 @@ class Single
 
         // instantiate the home collection so we have someplace to add these to
         $sites = \Core::make('site')->getList();
+        $parent = null;
         /**
-         * @var $site Site
+         * @var Site $site
          */
         foreach($sites as $site) {
 

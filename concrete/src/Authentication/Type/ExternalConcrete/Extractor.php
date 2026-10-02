@@ -14,6 +14,9 @@ class Extractor extends LazyExtractor
 {
     const USER_PATH = '/ccm/api/1.0/account';
 
+    /**
+     * @var \OAuth\Common\Service\AbstractService
+     */
     protected $service;
 
     public function __construct()
@@ -94,7 +97,7 @@ class Extractor extends LazyExtractor
      *
      * @param \Lcobucci\JWT\Claim|string $claim
      *
-     * @return string
+     * @return string|null
      */
     protected function claim($claim = null)
     {

@@ -9,7 +9,7 @@ use HtmlObject\Link;
 
 class Controller extends AbstractController implements ControllerInterface
 {
-    /** @var ItemInterface */
+    /** @var \Concrete\Core\Application\UserInterface\Menu\Item\Item */
     protected $menuItem;
 
     /**
@@ -31,7 +31,7 @@ class Controller extends AbstractController implements ControllerInterface
     }
 
     /**
-     * @return Link
+     * @return \HtmlObject\Traits\Tag
      */
     public function getMenuItemLinkElement()
     {
@@ -99,7 +99,11 @@ class Controller extends AbstractController implements ControllerInterface
     }
 
     /**
-     * @return ItemInterface
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Application\UserInterface\Menu\Item\ControllerInterface::getMenuItem()
+     *
+     * @return \Concrete\Core\Application\UserInterface\Menu\Item\Item
      */
     public function getMenuItem()
     {
@@ -108,6 +112,9 @@ class Controller extends AbstractController implements ControllerInterface
 
     public function setMenuItem(ItemInterface $obj)
     {
+        if (!$obj instanceof Item) {
+            throw new \InvalidArgumentException(t('The menu item must be an instance of %s.', Item::class));
+        }
         $this->menuItem = $obj;
     }
 }

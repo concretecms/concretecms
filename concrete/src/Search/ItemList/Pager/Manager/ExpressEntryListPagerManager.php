@@ -7,6 +7,7 @@ use Concrete\Core\Express\ObjectManager;
 use Concrete\Core\Page\Search\ColumnSet\Available;
 use Concrete\Core\Search\ItemList\ItemList;
 use Concrete\Core\Search\ItemList\Pager\PagerProviderInterface;
+use Concrete\Core\Search\ItemList\Pager\QueryObjectResolver;
 
 class ExpressEntryListPagerManager extends AbstractPagerManager
 {
@@ -46,7 +47,7 @@ class ExpressEntryListPagerManager extends AbstractPagerManager
 
     public function sortListByCursor(PagerProviderInterface $itemList, $direction)
     {
-        $itemList->getQueryObject()->addOrderBy('e.exEntryID', $direction);
+        QueryObjectResolver::getQueryObject($itemList)->addOrderBy('e.exEntryID', $direction);
     }
 
 

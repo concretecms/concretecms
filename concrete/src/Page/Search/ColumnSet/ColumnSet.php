@@ -23,7 +23,7 @@ class ColumnSet extends Set
 
         $app = Facade::getFacadeApplication();
         /**
-         * @var $provider SearchProvider
+         * @var SearchProvider $provider
          */
         $provider = $app->make(SearchProvider::class);
         $query = $provider->getSessionCurrentQuery();

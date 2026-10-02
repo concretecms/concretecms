@@ -182,7 +182,7 @@ class Controller extends BlockController implements UsesFeatureInterface
     /**
      * @throws \Illuminate\Contracts\Container\BindingResolutionException
      *
-     * @return Conversation
+     * @return Conversation|null NULL if the conversation of the block doesn't exist (any more)
      */
     public function getConversationObject()
     {

@@ -6,6 +6,11 @@ use Concrete\Core\Page\Page;
 
 class ImportSinglePageContentRoutine extends AbstractPageContentRoutine implements SpecifiableHomePageRoutineInterface
 {
+    /**
+     * @var \Concrete\Core\Page\Page|null
+     */
+    protected $home;
+
     public function getHandle()
     {
         return 'single_page_content';

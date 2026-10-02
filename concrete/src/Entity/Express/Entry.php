@@ -25,7 +25,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * @ORM\Entity(repositoryClass="\Concrete\Core\Entity\Express\EntryRepository")
  * @ORM\Table(name="ExpressEntityEntries",
- *  *     indexes={
+ *     indexes={
  *         @ORM\Index(name="resultsNodeID", columns={"resultsNodeID"}),
  *         @ORM\Index(name="createdSort", columns={"exEntryDateCreated"}),
  *         @ORM\Index(name="modifiedSort", columns={"exEntryDateModified"})
@@ -46,7 +46,7 @@ class Entry implements \JsonSerializable, PermissionObjectInterface, AttributeOb
      * @param $nm
      * @param $a
      *
-     * @return $mixed
+     * @return mixed
      */
     public function __call($nm, $a)
     {
@@ -117,7 +117,7 @@ class Entry implements \JsonSerializable, PermissionObjectInterface, AttributeOb
     }
 
     /**
-     * @return bool
+     * @return string
      */
     public function getPermissionAssignmentClassName()
     {
@@ -125,7 +125,7 @@ class Entry implements \JsonSerializable, PermissionObjectInterface, AttributeOb
     }
 
     /**
-     * @return bool
+     * @return string
      */
     public function getPermissionObjectKeyCategoryHandle()
     {
@@ -145,7 +145,7 @@ class Entry implements \JsonSerializable, PermissionObjectInterface, AttributeOb
      * @param \Concrete\Core\Attribute\AttributeKeyInterface|string $ak
      * @param bool $createIfNotExists
      *
-     * @return \Concrete\Core\Attribute\AttributeValueInterface|ExpressValue|null
+     * @return \Concrete\Core\Entity\Attribute\Value\ExpressValue|null
      */
     public function getAttributeValueObject($ak, $createIfNotExists = false)
     {
@@ -168,6 +168,8 @@ class Entry implements \JsonSerializable, PermissionObjectInterface, AttributeOb
 
             return $attributeValue;
         }
+
+        return null;
     }
 
     /**
@@ -214,7 +216,7 @@ class Entry implements \JsonSerializable, PermissionObjectInterface, AttributeOb
     protected $resultsNodeID;
 
     /**
-     * @return Entity
+     * @return Entity|null NULL only for entries that have not been assigned to an entity yet (see Manager::createEntry())
      */
     public function getEntity()
     {
@@ -222,7 +224,7 @@ class Entry implements \JsonSerializable, PermissionObjectInterface, AttributeOb
     }
 
     /**
-     * @param mixed $entity
+     * @param Entity $entity
      */
     public function setEntity($entity)
     {
@@ -246,7 +248,7 @@ class Entry implements \JsonSerializable, PermissionObjectInterface, AttributeOb
     }
 
     /**
-     * @return mixed
+     * @return \Doctrine\Common\Collections\Collection|\Concrete\Core\Entity\Attribute\Value\ExpressValue[]
      */
     public function getAttributes()
     {
@@ -289,7 +291,7 @@ class Entry implements \JsonSerializable, PermissionObjectInterface, AttributeOb
     protected $associations;
 
     /**
-     * @return \Concrete\Core\Entity\Express\Entry\Association[]
+     * @return \Doctrine\Common\Collections\Collection|\Concrete\Core\Entity\Express\Entry\Association[]
      */
     public function getAssociations()
     {
@@ -340,6 +342,8 @@ class Entry implements \JsonSerializable, PermissionObjectInterface, AttributeOb
                 return $entryAssociation;
             }
         }
+
+        return null;
     }
 
     /**
@@ -399,8 +403,6 @@ class Entry implements \JsonSerializable, PermissionObjectInterface, AttributeOb
 
     /**
      * Formats the label of this entry to the mask (e.g. %product-name%) or the standard format.
-     *
-     * @return mixed
      */
     public function getLabel(): string
     {
@@ -445,7 +447,7 @@ class Entry implements \JsonSerializable, PermissionObjectInterface, AttributeOb
     }
 
     /**
-     * @return \DateTime
+     * @return \DateTime|null
      */
     public function getDateModified()
     {
@@ -493,7 +495,7 @@ class Entry implements \JsonSerializable, PermissionObjectInterface, AttributeOb
     }
 
     /**
-     * @return \Concrete\Core\Entity\User\User
+     * @return \Concrete\Core\Entity\User\User|null
      */
     public function getAuthor()
     {

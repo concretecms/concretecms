@@ -73,8 +73,8 @@ class FlvInspector extends Inspector
                         switch ($tagData['tagType']) {
                             case 18: // Script data
                                 if ($tagData['filter'] === 0) { // Not encrypted
-                                    $data = @fread($fp, $tagData['dataSize']);
-                                    if ($data !== false && isset($data[$tagData['dataSize'] - 1])) {
+                                    $data = (string) @fread($fp, $tagData['dataSize']);
+                                    if (isset($data[$tagData['dataSize'] - 1])) {
                                         $scriptBody = $this->extractScriptTagBody($data);
                                         if ($scriptBody !== null) {
                                             list($bodyName, $bodyData) = $scriptBody;
@@ -87,7 +87,7 @@ class FlvInspector extends Inspector
                                 }
                                 break;
                         }
-                        $tagOffset += $dataSize + 15;
+                        $tagOffset += $tagData['dataSize'] + 15;
                         break; // Let's just parse the first tag
                     }
                 }
@@ -105,7 +105,6 @@ class FlvInspector extends Inspector
     }
 
     /**
-     * @param Version $version
      * @param Version $fv
      *
      * @return resource|null
@@ -131,8 +130,8 @@ class FlvInspector extends Inspector
     private function readFlvHeader($fp)
     {
         $result = null;
-        $flvHeaderChunk = @fread($fp, 9); // 3 bytes signature + 1 byte version + 1 byte flags + 4 bytes data offset
-        if ($flvHeaderChunk !== false && isset($flvHeaderChunk[8])) {
+        $flvHeaderChunk = (string) @fread($fp, 9); // 3 bytes signature + 1 byte version + 1 byte flags + 4 bytes data offset
+        if (isset($flvHeaderChunk[8])) {
             if (substr($flvHeaderChunk, 0, 3) === 'FLV') { // Signature ok
                 $version = $this->parseUI8($flvHeaderChunk[3]);
                 if ($version === 1) { // Version ok
@@ -163,8 +162,8 @@ class FlvInspector extends Inspector
         $result = null;
         $seeked = @fseek($fp, $tagOffset + 4); // +4 to skip PreviousTagSize
         if ($seeked === 0) {
-            $tagHeaderChunk = @fread($fp, 11); // (2 bits reserved + 1 bit filter + 5 bits TagType) + 3 bytes DataSize + 3 bytes Timestamp + 1 byte TimestampExtended + 3 bytes StreamID
-            if ($tagHeaderChunk !== false && isset($tagHeaderChunk[10])) {
+            $tagHeaderChunk = (string) @fread($fp, 11); // (2 bits reserved + 1 bit filter + 5 bits TagType) + 3 bytes DataSize + 3 bytes Timestamp + 1 byte TimestampExtended + 3 bytes StreamID
+            if (isset($tagHeaderChunk[10])) {
                 $byte = $this->parseUI8($tagHeaderChunk[0]);
                 $result = [
                     'filter' => ($byte >> 5) & 0x01,
@@ -296,7 +295,7 @@ class FlvInspector extends Inspector
         $result = null;
         if (isset($data[0])) {
             $type = $this->parseUI8($data[0]);
-            $data = substr($data, 1);
+            $data = (string) substr($data, 1);
             switch ($type) {
                 case 0: // Number
                     $result = $this->extractScriptDataValue_Double($data);
@@ -340,7 +339,7 @@ class FlvInspector extends Inspector
     private function extractScriptDataValue_UI16(&$data)
     {
         $result = $this->parseUI16(substr($data, 0, 2));
-        $data = substr($data, 2);
+        $data = (string) substr($data, 2);
 
         return $result;
     }
@@ -355,7 +354,7 @@ class FlvInspector extends Inspector
     private function extractScriptDataValue_Double(&$data)
     {
         $result = $this->parseDouble(substr($data, 0, 8));
-        $data = substr($data, 8);
+        $data = (string) substr($data, 8);
 
         return $result;
     }
@@ -370,7 +369,7 @@ class FlvInspector extends Inspector
     private function extractScriptDataValue_Boolean(&$data)
     {
         $result = $this->parseUI8($data[0]) !== 0;
-        $data = substr($data, 1);
+        $data = (string) substr($data, 1);
 
         return $result;
     }
@@ -386,7 +385,7 @@ class FlvInspector extends Inspector
     {
         $stringLength = $this->parseUI16(substr($data, 0, 2));
         $result = substr($data, 2, $stringLength);
-        $data = substr($data, 2 + $stringLength);
+        $data = (string) substr($data, 2 + $stringLength);
 
         return $result;
     }
@@ -403,7 +402,7 @@ class FlvInspector extends Inspector
         $result = [];
         if (isset($data[4])) {
             $approximateLength = $this->parseUI32(substr($data, 0, 4));
-            $data = substr($data, 4);
+            $data = (string) substr($data, 4);
             while ($data !== '') {
                 $propertyName = $this->extractScriptDataValue_String($data);
                 $propertyValue = $this->extractScriptDataValue($data);

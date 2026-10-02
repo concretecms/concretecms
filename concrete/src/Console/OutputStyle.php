@@ -3,8 +3,6 @@
 namespace Concrete\Core\Console;
 
 use Symfony\Component\Console\Helper\Table;
-use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ChoiceQuestion;
 use Symfony\Component\Console\Question\Question;
 use Symfony\Component\Console\Style\SymfonyStyle;
@@ -17,29 +15,13 @@ use Symfony\Component\Console\Terminal;
 class OutputStyle extends SymfonyStyle
 {
 
-    /** @var \Symfony\Component\Console\Output\OutputInterface */
-    private $output;
-
-    /**
-     * Create a new Console OutputStyle instance.
-     *
-     * @param  \Symfony\Component\Console\Input\InputInterface  $input
-     * @param  \Symfony\Component\Console\Output\OutputInterface  $output
-     * @return void
-     */
-    public function __construct(InputInterface $input, OutputInterface $output)
-    {
-        $this->output = $output;
-        parent::__construct($input, $output);
-    }
-
     /**
      * Ask a question with autocompletion
      *
      * @param $question
      * @param array $choices
-     * @param null $default
-     * @param null $attempts
+     * @param string|null $default
+     * @param int|null $attempts
      * @param bool $strict
      * @return string
      */
@@ -90,12 +72,12 @@ class OutputStyle extends SymfonyStyle
      *
      * @param string $question
      * @param array $choices
-     * @param null $default
-     * @param null $attempts
-     * @param null $multiple
+     * @param string|int|null $default
+     * @param int|null $attempts
+     * @param bool $multiple
      * @return mixed
      */
-    public function choice($question, array $choices, $default = null, $attempts = null, $multiple = null)
+    public function choice($question, array $choices, $default = null, $attempts = null, $multiple = false)
     {
         $question = new ChoiceQuestion($question, $choices, $default);
         $question->setMaxAttempts($attempts)->setMultiselect($multiple);

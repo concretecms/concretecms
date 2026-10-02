@@ -13,6 +13,8 @@ use Doctrine\ORM\Mapping as ORM;
  *         "comment": "List of all the installed Geolocator services"
  *     }
  * )
+ *
+ * @phpstan-consistent-constructor
  */
 class Geolocator
 {

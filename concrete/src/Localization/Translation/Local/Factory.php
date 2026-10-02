@@ -4,7 +4,6 @@ namespace Concrete\Core\Localization\Translation\Local;
 use Concrete\Core\Cache\Cache;
 use Concrete\Core\Package\Package;
 use DateTime;
-use Exception;
 use Gettext\Translations;
 use Illuminate\Filesystem\Filesystem;
 use Throwable;
@@ -124,10 +123,7 @@ class Factory implements FactoryInterface
      * @param Translations $translations
      * @param DateTime $defaultUpdatedOn
      *
-     * @return null|array {
-     *     @var string $version
-     *     @var DateTime $updatedOn
-     * }
+     * @return array{version: string, updatedOn: DateTime}|null
      */
     protected function getTranslationsStats(Translations $translations, DateTime $defaultUpdatedOn)
     {
@@ -150,7 +146,6 @@ class Factory implements FactoryInterface
             if ($h) {
                 try {
                     $result['updatedOn'] = new DateTime($h);
-                } catch (Exception $x) {
                 } catch (Throwable $x) {
                 }
             }

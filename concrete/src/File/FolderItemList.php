@@ -10,7 +10,7 @@ use Concrete\Core\Permission\Checker as Permissions;
 use Concrete\Core\Permission\Key\FileFolderKey;
 use Concrete\Core\Search\ItemList\Database\AttributedItemList;
 use Concrete\Core\Search\ItemList\Pager\Manager\FolderItemListPagerManager;
-use Concrete\Core\Search\ItemList\Pager\PagerProviderInterface;
+use Concrete\Core\Search\ItemList\Pager\DatabasePagerProviderInterface;
 use Concrete\Core\Search\ItemList\Pager\QueryString\VariableFactory;
 use Concrete\Core\Search\Pagination\PaginationProviderInterface;
 use Concrete\Core\Support\Facade\Application;
@@ -19,7 +19,7 @@ use Concrete\Core\Tree\Node\Type\FileFolder;
 use Concrete\Core\User\User;
 use Pagerfanta\Adapter\DoctrineDbalAdapter;
 
-class FolderItemList extends AttributedItemList implements PagerProviderInterface, PaginationProviderInterface
+class FolderItemList extends AttributedItemList implements DatabasePagerProviderInterface, PaginationProviderInterface
 {
     protected $parent;
 
@@ -219,7 +219,7 @@ class FolderItemList extends AttributedItemList implements PagerProviderInterfac
     /**
      * Filter the files by their storage location using a storage location object.
      *
-     * @param \Concrete\Core\Entity\File\StorageLocation\StorageLocation|int $storageLocation storage location object
+     * @param \Concrete\Core\Entity\File\StorageLocation\StorageLocation|int|mixed $storageLocation storage location object or ID (an exception is thrown for other objects)
      */
     public function filterByStorageLocation($storageLocation)
     {
@@ -358,11 +358,9 @@ class FolderItemList extends AttributedItemList implements PagerProviderInterfac
         $u = Application::getFacadeApplication()->make(User::class);
         // Super user can search any files
         if (!$u->isSuperUser()) {
-            /** @var FileFolderKey $pk */
             $pk = FileFolderKey::getByHandle('search_file_folder');
             if (is_object($pk)) {
                 $pk->setPermissionObject($this->parent);
-                /** @var \Concrete\Core\Permission\Access\Access $pa */
                 $pa = $pk->getPermissionAccessObject();
                 // Check whether or not current user can search files in the current folder
                 if (is_object($pa) && $pa->validate()) {

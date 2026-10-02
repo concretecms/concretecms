@@ -40,7 +40,6 @@ class MessengerConsumeResponseFactory
     }
 
     /**
-     * @param string[] $watchedProcessIds
      * @return JsonResponse
      */
     public function createResponse()

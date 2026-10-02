@@ -7,6 +7,9 @@ use Concrete\Core\Entity\Page\Template;
 use Concrete\Core\Page\Type\Composer\FormLayoutSetControl as PageTypeComposerFormLayoutSetControl;
 use PageType;
 
+/**
+ * @phpstan-consistent-constructor
+ */
 class OutputControl extends ConcreteObject
 {
     public function getPageTypeComposerOutputControlID()

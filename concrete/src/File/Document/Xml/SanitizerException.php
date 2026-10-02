@@ -4,6 +4,9 @@ namespace Concrete\Core\File\Document\Xml;
 
 use Concrete\Core\Error\UserMessageException;
 
+/**
+ * @phpstan-consistent-constructor
+ */
 class SanitizerException extends UserMessageException
 {
     /**

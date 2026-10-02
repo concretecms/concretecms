@@ -8,6 +8,9 @@ use Package;
 use Concrete\Core\Package\PackageList;
 use Core;
 
+/**
+ * @phpstan-consistent-constructor
+ */
 class Library extends ConcreteObject
 {
     /**
@@ -19,11 +22,11 @@ class Library extends ConcreteObject
      */
     public $saslName;
     /**
-     * @var bool
+     * @var bool|0|1|'0'|'1'
      */
     public $saslIsActive;
     /**
-     * @var int
+     * @var int|numeric-string
      */
     public $pkgID;
 
@@ -60,7 +63,7 @@ class Library extends ConcreteObject
     }
 
     /**
-     * @return bool
+     * @return string|false
      */
     public function getPackageHandle()
     {
@@ -68,7 +71,7 @@ class Library extends ConcreteObject
     }
 
     /**
-     * @return Package
+     * @return \Concrete\Core\Entity\Package|null
      */
     public function getPackageObject()
     {
@@ -76,7 +79,7 @@ class Library extends ConcreteObject
     }
 
     /**
-     * @return Library
+     * @return Library|null
      */
     public static function getActive()
     {
@@ -85,12 +88,14 @@ class Library extends ConcreteObject
         if ($saslHandle) {
             return static::getByHandle($saslHandle);
         }
+
+        return null;
     }
 
     /**
      * @param string $saslHandle
      *
-     * @return static
+     * @return static|null
      */
     public static function getByHandle($saslHandle)
     {
@@ -102,6 +107,8 @@ class Library extends ConcreteObject
 
             return $sc;
         }
+
+        return null;
     }
 
     /**
@@ -168,7 +175,7 @@ class Library extends ConcreteObject
     }
 
     /**
-     * @param \Package $pkg
+     * @param \Concrete\Core\Entity\Package|\Concrete\Core\Package\Package $pkg
      *
      * @return Library[]
      */
@@ -198,7 +205,7 @@ class Library extends ConcreteObject
             $type->addAttribute('handle', $sc->getSystemAntispamLibraryHandle());
             $type->addAttribute('name', $sc->getSystemAntispamLibraryName());
             $type->addAttribute('package', $sc->getPackageHandle());
-            $type->addAttribute('activated', $sc->isSystemAntispamLibraryActive());
+            $type->addAttribute('activated', $sc->isSystemAntispamLibraryActive() ? '1' : '0');
         }
     }
 

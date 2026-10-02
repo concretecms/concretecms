@@ -19,6 +19,13 @@ class WorkflowType extends AbstractCategory
         return $type->getWorkflowTypeName();
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Package\ItemCategory\AbstractCategory::getPackageItems()
+     *
+     * @return \Concrete\Core\Workflow\Type[]
+     */
     public function getPackageItems(Package $package)
     {
         return Type::getListByPackage($package);

@@ -23,11 +23,27 @@ class UpdateFromType extends BackendInterfaceController
 {
     protected $viewPath = '/dialogs/type/update_from_type';
 
+    /**
+     * @var \Concrete\Core\Page\Type\Type|null
+     */
+    protected $pagetype;
+
+    /**
+     * @var \Concrete\Core\Permission\Checker
+     */
+    protected $permissions;
+
+    /**
+     * @var \Concrete\Core\Entity\Page\Template|null
+     */
+    protected $template;
+
     public function on_start()
     {
 
         throw new UserMessageException(t('This feature is not implemented yet.'));
 
+        // @phpstan-ignore deadCode.unreachable (the code is kept in case the feature will be completed)
         parent::on_start();
 
         $request = $this->request;
@@ -181,8 +197,6 @@ class UpdateFromType extends BackendInterfaceController
 
         if (!$this->validateAction() || !$this->canAccess()) {
             $this->app->shutdown();
-
-            return;
         }
 
         $this->fetchTypeAndTemplate($ptID, $pTemplateID);
@@ -190,8 +204,6 @@ class UpdateFromType extends BackendInterfaceController
 
         if (!$pageTypeDefaultPage->isMasterCollection()) {
             $this->app->shutdown();
-
-            return;
         }
 
         return $this->queueForPageTypeUpdate($pageTypeDefaultPage);

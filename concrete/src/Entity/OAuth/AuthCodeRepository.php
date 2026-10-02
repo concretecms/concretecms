@@ -2,12 +2,14 @@
 
 namespace Concrete\Core\Entity\OAuth;
 
-use Concrete\Core\Entity\Express\EntityRepository;
+use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\EntityManagerInterface;
 use League\OAuth2\Server\Entities\AuthCodeEntityInterface;
 use League\OAuth2\Server\Repositories\AuthCodeRepositoryInterface;
 
+/**
+ * @extends \Doctrine\ORM\EntityRepository<\Concrete\Core\Entity\OAuth\AuthCode>
+ */
 class AuthCodeRepository extends EntityRepository implements AuthCodeRepositoryInterface
 {
 
@@ -29,7 +31,7 @@ class AuthCodeRepository extends EntityRepository implements AuthCodeRepositoryI
      */
     public function persistNewAuthCode(AuthCodeEntityInterface $authCodeEntity)
     {
-        $this->getEntityManager()->transactional(function(EntityManagerInterface $entityManager) use ($authCodeEntity) {
+        $this->getEntityManager()->transactional(function(EntityManager $entityManager) use ($authCodeEntity) {
             $entityManager->persist($authCodeEntity);
         });
     }
@@ -48,11 +50,8 @@ class AuthCodeRepository extends EntityRepository implements AuthCodeRepositoryI
             throw new \InvalidArgumentException('Invalid auth token code');
         }
 
-        $this->getEntityManager()->transactional(function(EntityManagerInterface $em) use ($code) {
-            $code = $em->merge($code);
-            if ($code) {
-                $em->remove($code);
-            }
+        $this->getEntityManager()->transactional(function(EntityManager $em) use ($code) {
+            $em->remove($em->merge($code));
         });
     }
 

@@ -25,6 +25,8 @@ class PageType implements ObjectInterface
         if (is_object($type)) {
             return $type;
         }
+
+        return null;
     }
 
 

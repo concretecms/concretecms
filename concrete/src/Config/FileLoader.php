@@ -60,9 +60,13 @@ class FileLoader implements LoaderInterface
      *   /application/config/namespace/group.php
      *   /application/config/namespace/environment.group.php
      *
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Config\LoaderInterface::load()
+     *
      * @param string $environment
      * @param string $group
-     * @param null   $namespace
+     * @param string|null $namespace
      *
      * @return array
      */
@@ -74,10 +78,6 @@ class FileLoader implements LoaderInterface
         // where all of the configuration files live for that namespace, as well
         // as any environment folders with their specific configuration items.
         $path = $this->getPath($namespace);
-
-        if ($path === null) {
-            return $items;
-        }
 
         $paths = [];
         if ($namespace === null || $namespace == '') {
@@ -125,13 +125,6 @@ class FileLoader implements LoaderInterface
         }
 
         $path = $this->getPath($namespace);
-
-        // To check if a group exists, we will simply get the path based on the
-        // namespace, and then check to see if this files exists within that
-        // namespace. False is returned if no path exists for a namespace.
-        if ($path === null) {
-            return $this->exists[$key] = false;
-        }
 
         $file = "{$path}/{$group}.php";
 
@@ -245,10 +238,6 @@ class FileLoader implements LoaderInterface
         // as any environment folders with their specific configuration items.
         $path = $this->getPath($namespace);
 
-        if ($path === null) {
-            return $items;
-        }
-
         // First we'll get the main configuration file for the groups. Once we have
         // that we can check for any environment specific files, which will get
         // merged on top of the main arrays to make the environments cascade.
@@ -302,7 +291,7 @@ class FileLoader implements LoaderInterface
     /**
      * Get the configuration path for a namespace.
      *
-     * @param  string  $namespace
+     * @param  string|null  $namespace
      *
      * @return string
      */

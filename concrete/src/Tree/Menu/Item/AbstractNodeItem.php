@@ -11,7 +11,7 @@ abstract class AbstractNodeItem extends AbstractItem
 {
 
     /**
-     * @var $category Node
+     * @var Node $category
      */
     protected $node;
 

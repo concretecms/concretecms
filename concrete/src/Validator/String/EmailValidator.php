@@ -162,7 +162,7 @@ class EmailValidator extends AbstractTranslatableValidator
         $isValid = $eev->isValid($mixed, new Validation\MultipleValidationWithAnd($validators));
         if ($isValid && $testMX) {
             foreach ($eev->getWarnings() as $warning) {
-                if ($warning instanceof Warning\NoMXRecord) {
+                if ($warning instanceof Warning\NoDNSMXRecord) {
                     return false;
                 }
             }

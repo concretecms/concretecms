@@ -43,12 +43,10 @@ abstract class AbstractNotifier implements NotifierInterface
         $return = [];
         foreach ($instances as $instance) {
             $board = $instance->getBoard();
-            if ($board) {
-                foreach ($board->getDataSources() as $configuredDataSource) {
-                    $configuration = $configuredDataSource->getConfiguration();
-                    if (is_a($configuration, $configurationClass)) {
-                        $return[] = $instance;
-                    }
+            foreach ($board->getDataSources() as $configuredDataSource) {
+                $configuration = $configuredDataSource->getConfiguration();
+                if (is_a($configuration, $configurationClass)) {
+                    $return[] = $instance;
                 }
             }
         }

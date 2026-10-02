@@ -49,6 +49,8 @@ class Manager implements ManagerInterface
                 return $group;
             }
         }
+
+        return null;
     }
 
     /**
@@ -75,6 +77,8 @@ class Manager implements ManagerInterface
                 }
             }
         }
+
+        return null;
     }
 
     /**

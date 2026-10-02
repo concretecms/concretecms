@@ -23,6 +23,13 @@ class FontFamilyParser extends AbstractParser
         $this->webFontCollectionFactory = $webFontCollectionFactory;
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\StyleCustomizer\Style\Parser\AbstractParser::createStyleObject()
+     *
+     * @return \Concrete\Core\StyleCustomizer\Style\FontFamilyStyle
+     */
     public function createStyleObject(): StyleInterface
     {
         return new FontFamilyStyle();
@@ -32,6 +39,7 @@ class FontFamilyParser extends AbstractParser
     public function parseNode(\SimpleXMLElement $element, PresetInterface $preset): StyleInterface
     {
         $collection = $this->webFontCollectionFactory->createFromPreset($preset);
+        /** @var \Concrete\Core\StyleCustomizer\Style\FontFamilyStyle $style */
         $style = parent::parseNode($element, $preset);
         $style->setWebFonts($collection);
         return $style;

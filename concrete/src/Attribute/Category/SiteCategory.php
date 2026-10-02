@@ -5,6 +5,20 @@ namespace Concrete\Core\Attribute\Category;
 use Concrete\Core\Entity\Attribute\Key\Key;
 use Concrete\Core\Entity\Attribute\Key\SiteKey;
 
+/**
+ * The attribute keys of this category are \Concrete\Core\Entity\Attribute\Key\SiteKey instances.
+ *
+ * @method \Concrete\Core\Entity\Attribute\Key\SiteKey|null getAttributeKeyByID(int $akID)
+ * @method \Concrete\Core\Entity\Attribute\Key\SiteKey|null getAttributeKeyByHandle(string $akHandle)
+ * @method \Concrete\Core\Entity\Attribute\Key\SiteKey|null getByID(int $akID)
+ * @method \Concrete\Core\Entity\Attribute\Key\SiteKey|null getByHandle(string $akHandle)
+ * @method \Concrete\Core\Entity\Attribute\Key\SiteKey[] getList()
+ * @method \Concrete\Core\Entity\Attribute\Key\SiteKey[] getSearchableList()
+ * @method \Concrete\Core\Entity\Attribute\Key\SiteKey[] getSearchableIndexedList()
+ * @method \Concrete\Core\Entity\Attribute\Key\SiteKey addFromRequest(\Concrete\Core\Entity\Attribute\Type $type, \Symfony\Component\HttpFoundation\Request $request)
+ * @method \Concrete\Core\Entity\Attribute\Key\SiteKey import(\Concrete\Core\Entity\Attribute\Type $type, \SimpleXMLElement $element, ?\Concrete\Core\Entity\Package $package = null)
+ * @method \Concrete\Core\Entity\Attribute\Key\SiteKey updateFromRequest(\Concrete\Core\Entity\Attribute\Key\SiteKey $key, \Symfony\Component\HttpFoundation\Request $request)
+ */
 class SiteCategory extends AbstractStandardCategory
 {
     /**
@@ -78,7 +92,7 @@ class SiteCategory extends AbstractStandardCategory
      */
     public function getAttributeKeyRepository()
     {
-        return $this->entityManager->getRepository('\Concrete\Core\Entity\Attribute\Key\SiteKey');
+        return $this->entityManager->getRepository('Concrete\Core\Entity\Attribute\Key\SiteKey');
     }
 
     /**
@@ -88,7 +102,7 @@ class SiteCategory extends AbstractStandardCategory
      */
     public function getAttributeValueRepository()
     {
-        return $this->entityManager->getRepository('\Concrete\Core\Entity\Attribute\Value\SiteValue');
+        return $this->entityManager->getRepository('Concrete\Core\Entity\Attribute\Value\SiteValue');
     }
 
     /**

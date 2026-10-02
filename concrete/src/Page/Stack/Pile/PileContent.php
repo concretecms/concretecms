@@ -3,6 +3,7 @@ namespace Concrete\Core\Page\Stack\Pile;
 
 use Concrete\Core\Application\Service\Urls;
 use Concrete\Core\Block\View\BlockView;
+use Concrete\Core\Page\Page;
 use Concrete\Core\Support\Facade\Application;
 use Loader;
 use Concrete\Core\Foundation\ConcreteObject;
@@ -41,12 +42,10 @@ class PileContent extends ConcreteObject implements \JsonSerializable
         $db = Loader::db();
         $v = array($this->pcID);
         $q = "delete from PileContents where pcID = ?";
-        $r = $db->query($q, $v);
-        if ($r) {
-            $this->p->rescanDisplayOrder();
+        $db->query($q, $v);
+        $this->p->rescanDisplayOrder();
 
-            return true;
-        }
+        return true;
     }
 
     public function moveUp()
@@ -124,6 +123,9 @@ class PileContent extends ConcreteObject implements \JsonSerializable
             case "BLOCK":
                 $obj = Block::getByID($this->getItemID());
                 break;
+            default:
+                $obj = null;
+                break;
         }
 
         return $obj;
@@ -134,7 +136,7 @@ class PileContent extends ConcreteObject implements \JsonSerializable
     {
         $block = Block::getByID($this->getItemID());
 
-        if (!$block || !is_object($block) || $block->isError()) {
+        if (!$block || $block->isError()) {
             return [
                 "name" => t('(Deleted Block)'),
                 "pileContentId" => $this->getPileContentID(),

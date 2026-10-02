@@ -5,6 +5,7 @@ use Concrete\Core\Logging\Channels;
 use Config;
 use Core;
 use Group;
+use IPLib\Address\AddressInterface;
 use Loader;
 use Log;
 use Page;
@@ -38,7 +39,6 @@ class Service
      * Report some content with the poster's information to the AntiSpam service.
      *
      * @param string $content
-     * @param UserInfo $ui
      * @param string $ip
      * @param string $ua
      * @param array $additionalArgs
@@ -89,10 +89,7 @@ class Service
                 return true;
             }
 
-            /** @var \Concrete\Core\Permission\IPService $iph */
-            $iph = Core::make('helper/validation/ip');
-            $ip = $iph->getRequestIP();
-            $args['ip_address'] = ($ip === false) ? ('') : ($ip->getIp($ip::FORMAT_IP_STRING));
+            $args['ip_address'] = Core::make(AddressInterface::class)->toString();
             $args['user_agent'] = $_SERVER['HTTP_USER_AGENT'];
             $args['content'] = $content;
             foreach ($additionalArgs as $key => $value) {

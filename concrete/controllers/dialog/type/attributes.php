@@ -14,6 +14,7 @@ use Concrete\Core\Filesystem\ElementManager;
 use Concrete\Core\Page\Page;
 use Concrete\Core\Page\Type\Type as PageType;
 use Concrete\Core\Permission\Checker;
+use Concrete\Core\Permission\Key\EditPagePropertiesPageKey;
 use Concrete\Core\Permission\Key\Key;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
@@ -44,7 +45,7 @@ class Attributes extends BackendInterfaceController
     protected $allowedEditAttributes;
 
     /**
-     * @var Page
+     * @var Page|null
      */
     private $defaultPage;
 
@@ -66,12 +67,13 @@ class Attributes extends BackendInterfaceController
         $permissions = new Checker($this->getPageTypeDefaultPage());
         if ($permissions->canEditPageProperties()) {
             $pk = Key::getByHandle('edit_page_properties');
-            $assignment = $pk->getMyAssignment();
-            if ($assignment) {
-                $this->allowedEditAttributes = $assignment->getAttributesAllowedArray();
-
-                return count($this->allowedEditAttributes) > 0;
+            if (!$pk instanceof EditPagePropertiesPageKey) {
+                throw new \RuntimeException(t('The %s permission key is not installed correctly.', 'edit_page_properties'));
             }
+            $assignment = $pk->getMyAssignment();
+            $this->allowedEditAttributes = $assignment->getAttributesAllowedArray();
+
+            return count($this->allowedEditAttributes) > 0;
         }
 
         return false;

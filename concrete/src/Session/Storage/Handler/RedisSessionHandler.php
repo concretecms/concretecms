@@ -36,8 +36,8 @@ class RedisSessionHandler extends SessionHandler
      * List of available options:
      *  * prefix: The prefix to use for the keys in order to avoid collision on the Redis server.
      *
-     * @param \Redis|\RedisArray|\RedisCluster|\Predis\Client $redis
-     * @param array                                                      $options An associative array of options
+     * @param \Redis|\RedisArray|\RedisCluster|\Predis\Client|mixed $redis the Redis client (an InvalidArgumentException is thrown for other values)
+     * @param array $options An associative array of options
      *
      * @throws \InvalidArgumentException When unsupported client or options are passed
      */

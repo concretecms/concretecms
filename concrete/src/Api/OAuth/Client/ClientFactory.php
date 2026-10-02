@@ -95,7 +95,7 @@ class ClientFactory
      */
     protected function generateString($length)
     {
-        $bytes = ceil($length / 2);
+        $bytes = (int) ceil($length / 2);
         $string = bin2hex(random_bytes($bytes));
 
         return substr($string, 0, $length);

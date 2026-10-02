@@ -6,9 +6,9 @@ class Number
     /**
      * Rounds the value only out to its most significant digit.
      *
-     * @param string $value
+     * @param float|int|numeric-string|''|null $value
      *
-     * @return float|null
+     * @return float|null NULL if $value is NULL or an empty string
      */
     public function flexround($value)
     {
@@ -179,15 +179,17 @@ class Number
             $last = strtolower($val[strlen($val) - 1]);
             if (!is_numeric($last)) {
                 $num = trim(substr($val, 0, -1));
-                switch ($last) {
-                    case 'g':
-                        $num *= 1024;
-                    case 'm':
-                        $num *= 1024;
-                    case 'k':
-                        $num *= 1024;
-                        $val = $num;
-                        break;
+                if (is_numeric($num)) {
+                    switch ($last) {
+                        case 'g':
+                            $num *= 1024;
+                        case 'm':
+                            $num *= 1024;
+                        case 'k':
+                            $num *= 1024;
+                            $val = $num;
+                            break;
+                    }
                 }
             }
         }

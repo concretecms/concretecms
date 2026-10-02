@@ -20,11 +20,20 @@ use Concrete\Core\User\UserInfo;
 use Concrete\Core\Utility\IPAddress;
 use Events;
 
+/**
+ * @phpstan-consistent-constructor
+ */
 class Message extends ConcreteObject implements ObjectInterface, SubjectInterface
 {
+    /**
+     * @var int|numeric-string
+     */
     public $cnvMessageID;
     protected $cnvMessageDateCreated;
     public $cnvMessageFlagTypes;
+    /**
+     * @var int|numeric-string
+     */
     public $cnvMessageReview;
 
     public function getConversationMessageID()
@@ -336,7 +345,7 @@ class Message extends ConcreteObject implements ObjectInterface, SubjectInterfac
                         return t2('%d second ago', '%d seconds ago', 0);
                     }
                     if ($elp >= 1) {
-                        $rounded = round($elp);
+                        $rounded = (int) round($elp);
                         switch ($unit) {
                             case 'Y':
                                 return t2('%d year ago', '%d years ago', $rounded);
@@ -371,7 +380,6 @@ class Message extends ConcreteObject implements ObjectInterface, SubjectInterfac
                     $dh->formatDateTime($this->cnvMessageDateCreated, true, true));
             default:
                 return tc('Message posted date', 'Posted on %s', $dh->formatDate($this->cnvMessageDateCreated, true));
-                break;
         }
     }
 
@@ -480,20 +488,16 @@ class Message extends ConcreteObject implements ObjectInterface, SubjectInterfac
     public function attachFile(\Concrete\Core\Entity\File\File $f)
     {
         $db = Loader::db();
-        if (!is_object($f)) {
-            return false;
-        } else {
-            $db->Execute('INSERT INTO ConversationMessageAttachments (cnvMessageID, fID) VALUES (?, ?)', array(
-                $this->getConversationMessageID(),
-                $f->getFileID(),
-            ));
-            $fs = FileSet::createAndGetSet(Config::get('conversations.attachments_file_set'), FileSet::TYPE_PUBLIC,
-                USER_SUPER_ID);
-            $fsToRemove = FileSet::createAndGetSet(Config::get('conversations.attachments_pending_file_set'),
-                FileSet::TYPE_PUBLIC, USER_SUPER_ID);
-            $fs->addFileToSet($f);
-            $fsToRemove->removeFileFromSet($f);
-        }
+        $db->Execute('INSERT INTO ConversationMessageAttachments (cnvMessageID, fID) VALUES (?, ?)', [
+            $this->getConversationMessageID(),
+            $f->getFileID(),
+        ]);
+        $fs = FileSet::createAndGetSet(Config::get('conversations.attachments_file_set'), FileSet::TYPE_PUBLIC,
+            USER_SUPER_ID);
+        $fsToRemove = FileSet::createAndGetSet(Config::get('conversations.attachments_pending_file_set'),
+            FileSet::TYPE_PUBLIC, USER_SUPER_ID);
+        $fs->addFileToSet($f);
+        $fsToRemove->removeFileFromSet($f);
         // associate with non-pending file set.
     }
 
@@ -558,10 +562,7 @@ class Message extends ConcreteObject implements ObjectInterface, SubjectInterfac
             $cnvMessageLevel = $parentMessage->getConversationMessageLevel() + 1;
         }
 
-        $cnvID = 0;
-        if ($cnv instanceof Conversation) {
-            $cnvID = $cnv->getConversationID();
-        }
+        $cnvID = $cnv->getConversationID();
 
         $editor = ConversationEditor::getActive();
         $cnvEditorID = $editor->getConversationEditorID();
@@ -582,7 +583,7 @@ class Message extends ConcreteObject implements ObjectInterface, SubjectInterfac
                 $cnvMessageAuthorName,
                 $cnvMessageAuthorEmail,
                 $cnvMessageAuthorWebsite,
-                ($ip === false) ? ('') : ($ip->getIp()),
+                $ip->getIp(),
                 $_SERVER['HTTP_USER_AGENT']
             ));
 

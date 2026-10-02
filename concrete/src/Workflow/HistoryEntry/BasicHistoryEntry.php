@@ -16,13 +16,11 @@ class BasicHistoryEntry extends HistoryEntry
         }
         switch ($this->getAction()) {
             case 'approve':
-                $d = t('Approved by %s', $userName);
-                break;
+                return t('Approved by %s', $userName);
             case 'cancel':
-                $d = t('Denied by %s', $userName);
-                break;
+                return t('Denied by %s', $userName);
+            default:
+                return null;
         }
-
-        return $d;
     }
 }

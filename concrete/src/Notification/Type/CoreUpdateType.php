@@ -10,7 +10,7 @@ class CoreUpdateType extends Type
 
     public function createNotification(SubjectInterface $subject)
     {
-        // TODO: Implement createNotification() method.
+        throw new \RuntimeException(t('The core update notifications are not implemented yet.'));
     }
 
     protected function createSubscription()

@@ -88,7 +88,7 @@ final class Version20260908000000 extends AbstractMigration implements Repeatabl
         $entities = [];
         foreach ($pa->getAccessListItems(Key::ACCESS_TYPE_ALL) as $listItem) {
             $accessEntity = $listItem->getAccessEntityObject();
-            if ($accessEntity === null) {
+            if (!$accessEntity) {
                 continue;
             }
             $entities[] = [$accessEntity, (int) $listItem->getAccessType()];

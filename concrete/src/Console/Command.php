@@ -11,6 +11,7 @@ use Symfony\Component\Console\Command\Command as SymfonyCommand;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console\Output\NullOutput;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
 use Throwable;
@@ -19,6 +20,8 @@ use Throwable;
  * base command class
  * Large swaths of this class have been copied from illuminate/config 5.2 and 5.5
  * so you may refer to their documentation for some things.
+ *
+ * @method \Concrete\Core\Console\Application|null getApplication()
  */
 abstract class Command extends SymfonyCommand
 {
@@ -101,7 +104,7 @@ abstract class Command extends SymfonyCommand
      * Short option: `{--Q|quiet}`
      * Option with description: `{--ignore=default : The item to ignore}`
      *
-     * @var string
+     * @var string|null
      */
     protected $signature;
 
@@ -201,9 +204,9 @@ abstract class Command extends SymfonyCommand
     /**
      * Get the value of a command argument.
      *
-     * @param string|null $key
+     * @param string|null $key the argument name (NULL: get all the arguments)
      *
-     * @return string|array
+     * @return string|string[]|null|array<string, string|string[]|null> the value of the argument (NULL if it's optional and it's not specified, an array for the array arguments), or all the arguments (keyed by name) if $key is NULL
      */
     public function argument($key = null)
     {
@@ -294,12 +297,12 @@ abstract class Command extends SymfonyCommand
      * @param string $question
      * @param array $choices
      * @param string $default
-     * @param null $attempts
-     * @param null $strict
+     * @param int|null $attempts
+     * @param bool $strict
      *
      * @return string
      */
-    public function askWithCompletion($question, array $choices, $default = null, $attempts = null, $strict = null)
+    public function askWithCompletion($question, array $choices, $default = null, $attempts = null, $strict = false)
     {
         return $this->output->askWithCompletion($question, $choices, $default, $attempts, $strict);
     }
@@ -328,7 +331,7 @@ abstract class Command extends SymfonyCommand
      *
      * @return string
      */
-    public function choice($question, array $choices, $default = null, $attempts = null, $multiple = null)
+    public function choice($question, array $choices, $default = null, $attempts = null, $multiple = false)
     {
         return $this->output->choice($question, $choices, $default, $attempts, $multiple);
     }
@@ -337,7 +340,7 @@ abstract class Command extends SymfonyCommand
      * Format input to textual table.
      *
      * @param array $headers
-     * @param \Illuminate\Contracts\Support\Arrayable|array $rows
+     * @param array $rows
      * @param string $tableStyle
      * @param array $columnStyles
      *
@@ -346,16 +349,6 @@ abstract class Command extends SymfonyCommand
     public function table(array $headers, array $rows, $tableStyle = 'default', array $columnStyles = [])
     {
         $this->output->table($headers, $rows, $tableStyle, $columnStyles);
-    }
-
-    /**
-     * {@inheritdoc}
-     *
-     * @return \Symfony\Component\Console\Application|\Concrete\Core\Console\Application
-     */
-    public function getApplication()
-    {
-        return parent::getApplication();
     }
 
     /**

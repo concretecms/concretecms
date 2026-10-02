@@ -198,7 +198,7 @@ class Files extends ApiController
             return $this->error(Importer::getErrorMessage($uploadedFile->getError()), 400);
         }
 
-        $treeNodeID = $this->request->request->get('folder');
+        $treeNodeID = $this->request->request->all()['folder'] ?? null;
         if ($treeNodeID) {
             $treeNodeID = is_scalar($treeNodeID) ? (int) $treeNodeID : 0;
             $folder = $treeNodeID === 0 ? null : Node::getByID($treeNodeID);
@@ -218,15 +218,11 @@ class Files extends ApiController
             return $this->error(Importer::getErrorMessage(Importer::E_FILE_INVALID_EXTENSION), 403);
         }
 
-        /**
-         * @var $importer FileImporter
-         * @var $importOptions ImportOptions
-         */
+        /** @var FileImporter $importer */
         $importer = $this->app->make(FileImporter::class);
+        /** @var ImportOptions $importOptions */
         $importOptions = $this->app->make(ImportOptions::class);
-        if ($folder) {
-            $importOptions->setImportToFolder($folder);
-        }
+        $importOptions->setImportToFolder($folder);
         $file = $importer->importLocalFile($uploadedFile->getPathname(), $uploadedFile->getClientOriginalName(), $importOptions);
         return $this->transform($file->getFile(), new FileTransformer(), Resources::RESOURCE_FILES);
     }

@@ -4,6 +4,7 @@ namespace Concrete\Core\Entity\Site;
 
 use Concrete\Core\Attribute\Category\SiteCategory;
 use Concrete\Core\Attribute\Key\SiteKey;
+use Concrete\Core\Entity\Attribute\Key\SiteKey as SiteKeyEntity;
 use Concrete\Core\Attribute\ObjectInterface;
 use Concrete\Core\Attribute\ObjectTrait;
 use Concrete\Core\Entity\Attribute\Value\SiteValue;
@@ -26,7 +27,7 @@ class Site implements TreeInterface, ObjectInterface, PermissionObjectInterface,
     /**
      * The site configuration repository.
      *
-     * @var \Concrete\Core\Site\Config\Liaison
+     * @var \Concrete\Core\Site\Config\Liaison|null
      */
     protected $siteConfig;
 
@@ -187,7 +188,7 @@ class Site implements TreeInterface, ObjectInterface, PermissionObjectInterface,
         if (!is_object($ak)) {
             $ak = SiteKey::getAttributeKeyByHandle($ak);
         }
-        if ($ak !== null) {
+        if ($ak instanceof SiteKeyEntity) {
             $result = $this->getObjectAttributeCategory()->getAttributeValue($ak, $this);
             if ($result === null && $createIfNotExists) {
                 $result = new SiteValue();
@@ -218,7 +219,7 @@ class Site implements TreeInterface, ObjectInterface, PermissionObjectInterface,
     {
         if (!$this->siteConfig) {
             $app = Application::getFacadeApplication();
-            $this->updateSiteConfigRepository($app->make('config'), $this);
+            $this->updateSiteConfigRepository($app->make('config'));
         }
 
         return $this->siteConfig;
@@ -317,6 +318,8 @@ class Site implements TreeInterface, ObjectInterface, PermissionObjectInterface,
                 return $locale;
             }
         }
+
+        return null;
     }
 
     /**
@@ -325,6 +328,8 @@ class Site implements TreeInterface, ObjectInterface, PermissionObjectInterface,
      * {@inheritdoc}
      *
      * @see \Concrete\Core\Site\Tree\TreeInterface::getSiteTreeObject()
+     *
+     * @return SiteTree|null
      */
     public function getSiteTreeObject()
     {
@@ -495,9 +500,7 @@ class Site implements TreeInterface, ObjectInterface, PermissionObjectInterface,
     {
         $timezone = null;
         $config = $this->getConfigRepository();
-        if ($config) {
-            $timezone = $config->get('timezone');
-        }
+        $timezone = $config->get('timezone');
         if (!$timezone) {
             $timezone = date_default_timezone_get();
         }

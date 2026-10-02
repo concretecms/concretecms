@@ -27,7 +27,10 @@ final class Version20201231153200 extends AbstractMigration implements Repeatabl
 
             foreach (['file', 'user', 'collection', 'site', 'event', 'site_type', 'express'] as $category) {
                 $cat = Category::getByHandle($category);
-                $cat->getController()->associateAttributeKeyType($type);
+                // The core attribute categories are standard categories
+                /** @var \Concrete\Core\Attribute\Category\AbstractStandardCategory $controller */
+                $controller = $cat->getController();
+                $controller->associateAttributeKeyType($type);
             }
         }
     }

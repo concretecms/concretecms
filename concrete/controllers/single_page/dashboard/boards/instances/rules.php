@@ -10,7 +10,7 @@ class Rules extends DashboardPageController
 
     /**
      * @param $id
-     * @return Instance
+     * @return Instance|null
      */
     protected function getInstance($id)
     {
@@ -18,13 +18,13 @@ class Rules extends DashboardPageController
         $instance = $r->findOneByBoardInstanceID($id);
         if ($instance) {
             $board = $instance->getBoard();
-            if ($board) {
-                $checker = new Checker($board);
-                if ($checker->canEditBoardSettings()) {
-                    return $instance;
-                }
+            $checker = new Checker($board);
+            if ($checker->canEditBoardSettings()) {
+                return $instance;
             }
         }
+
+        return null;
     }
 
     public function view($id = null)

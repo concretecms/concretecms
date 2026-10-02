@@ -100,10 +100,6 @@ class UserServiceProvider extends ServiceProvider
             return;
         }
 
-        $entity = $event->getUserEntity();
-
-        if ($entity) {
-            $service->deactivated($event);
-        }
+        $service->deactivated($event);
     }
 }

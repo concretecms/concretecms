@@ -3,7 +3,7 @@ namespace Concrete\Core\Entity\Attribute\Key\Settings;
 
 use Concrete\Core\Entity\Attribute\Value\Value\SelectValue;
 use Concrete\Core\Entity\Attribute\Value\Value\SelectValueOptionList;
-use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -145,7 +145,7 @@ class SelectSettings extends Settings
         $this->akDisplayMultipleValuesOnSelect = $displayMultipleValuesOnSelect;
     }
 
-    public function mergeAndPersist(EntityManagerInterface $entityManager)
+    public function mergeAndPersist(EntityManager $entityManager)
     {
         $tempOptions = array();
 

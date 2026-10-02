@@ -145,7 +145,7 @@ abstract class Node extends ConcreteObject implements \Concrete\Core\Permission\
     /**
      * Return the list of child nodes (call populateDirectChildrenOnly() before calling this method).
      *
-     * @return static[]
+     * @return \Concrete\Core\Tree\Node\Node[] the child nodes, instantiated according to their own node type (which may differ from the one of this node)
      */
     public function getChildNodes()
     {
@@ -369,6 +369,7 @@ abstract class Node extends ConcreteObject implements \Concrete\Core\Permission\
 
             $db->executeQuery('delete from TreeNodePermissionAssignments where treeNodeID = ?', [$this->treeNodeID]);
             // copy permissions
+            /** @var \Concrete\Core\Permission\Key\TreeNodeKey[] $permissions */
             $permissions = Key::getList($this->getPermissionObjectKeyCategoryHandle());
             foreach ($permissions as $pk) {
                 $pk->setPermissionObject($this);
@@ -394,7 +395,7 @@ abstract class Node extends ConcreteObject implements \Concrete\Core\Permission\
     protected function updateTreeNodePermissionsID(array $treeNodeParentIDs, int $newPermissionsTreeNodeID)
     {
         /**
-         * @var $db Connection
+         * @var Connection $db
          */
         $db = app(Connection::class);
         $treeNodePermissionsID = $this->getTreeNodePermissionsNodeID();
@@ -414,8 +415,9 @@ abstract class Node extends ConcreteObject implements \Concrete\Core\Permission\
         if (count($treeNodes)) {
             $db->createQueryBuilder()
                 ->update('TreeNodes', 't')
-                ->set('inheritPermissionsFromTreeNodeID', $newPermissionsTreeNodeID)
+                ->set('inheritPermissionsFromTreeNodeID', ':newPermissionsTreeNodeID')
                 ->where('t.treeNodeID in (:treeNodes)')
+                ->setParameter('newPermissionsTreeNodeID', $newPermissionsTreeNodeID)
                 ->setParameter('treeNodes', $treeNodes, Connection::PARAM_INT_ARRAY)
                 ->execute();
             $this->updateTreeNodePermissionsID($treeNodes, $newPermissionsTreeNodeID);
@@ -545,7 +547,7 @@ where treeNodeDisplayOrder > ? and treeNodeParentID = ?',
      *
      * @param Node|null|false $parent the parent node
      *
-     * @return Node
+     * @return static
      */
     public static function add($parent = false)
     {
@@ -584,6 +586,9 @@ where treeNodeDisplayOrder > ? and treeNodeParentID = ?',
         );
         $id = $db->lastInsertId();
         $node = self::getByID($id);
+        if (!$node instanceof static) {
+            throw new \RuntimeException(t('Failed to load the tree node that has just been created.'));
+        }
 
         if (!$inheritPermissionsFromTreeNodeID) {
             $node->setTreeNodePermissionsToOverride();
@@ -751,7 +756,7 @@ where treeNodeDisplayOrder > ? and treeNodeParentID = ?',
     public function exportTranslations(Translations $translations)
     {
         $name = $this->getTreeNodeDisplayName('text');
-        if (is_string($name) && ($name !== '')) {
+        if ($name !== '') {
             $context = method_exists($this, 'getTreeNodeTranslationContext') ? $this->getTreeNodeTranslationContext() : '';
             $translations->insert($context, $name);
         }

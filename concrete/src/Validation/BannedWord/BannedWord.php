@@ -7,12 +7,14 @@ use Doctrine\ORM\EntityManagerInterface;
 
 /**
  * @deprecated Use \Concrete\Core\Entity\Validation\BannedWord instead
+ *
+ * @phpstan-consistent-constructor
  */
 class BannedWord extends ConcreteObject
 {
     protected $id;
     protected $word;
-    /** @var \Concrete\Core\Entity\Validation\BannedWord */
+    /** @var \Concrete\Core\Entity\Validation\BannedWord|null */
     protected $entity;
 
     /**
@@ -103,7 +105,6 @@ class BannedWord extends ConcreteObject
         /** @var EntityManagerInterface $em */
         $em = $app->make(EntityManagerInterface::class);
         $repository = $em->getRepository(\Concrete\Core\Entity\Validation\BannedWord::class);
-        /** @var \Concrete\Core\Entity\Validation\BannedWord $word */
         $word = $repository->find($id);
         if (!is_object($word)) {
             return false;
@@ -124,7 +125,6 @@ class BannedWord extends ConcreteObject
         $em = $app->make(EntityManagerInterface::class);
         $repository = $em->getRepository(\Concrete\Core\Entity\Validation\BannedWord::class);
         $word = strtolower($word);
-        /** @var \Concrete\Core\Entity\Validation\BannedWord $bw */
         $bw = $repository->findOneBy(['bannedWord' => $word]);
         if (!is_object($bw)) {
             return false;

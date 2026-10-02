@@ -25,5 +25,7 @@ class User extends AccessEntity
         if ($user) {
             return UserEntity::getOrCreate($user);
         }
+
+        return null;
     }
 }

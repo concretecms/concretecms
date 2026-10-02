@@ -221,12 +221,10 @@ class Client implements ClientEntityInterface, \JsonSerializable
 
         if (count($urls) > 1) {
             return $urls;
-        } else if (isset($urls[0])) {
-            // we could technically return just the array every time but this will keep tests working just as before
-            return $urls[0];
-        } else {
-            return '';
         }
+
+        // we could technically return just the array every time but this will keep tests working just as before
+        return $urls[0];
     }
 
     /**

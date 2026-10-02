@@ -90,7 +90,6 @@ final class MembershipsColumnFormatter
     {
         $app = Application::getFacadeApplication();
 
-        /** @var MembershipsProvider $provider */
         return $app->make(MembershipsProvider::class);
     }
 }

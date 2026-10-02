@@ -4,6 +4,7 @@ namespace Concrete\Core\Workflow;
 use Concrete\Core\Permission\AssignableObjectInterface;
 use Concrete\Core\Permission\AssignableObjectTrait;
 use Concrete\Core\Permission\Key\Key;
+use Concrete\Core\Permission\Key\WorkflowKey;
 use Concrete\Core\Workflow\HistoryEntry\BasicHistoryEntry as BasicWorkflowHistoryEntry;
 use Concrete\Core\Workflow\Progress\Action\ApprovalAction as WorkflowProgressApprovalAction;
 use Concrete\Core\Workflow\Progress\Action\CancelAction as WorkflowProgressCancelAction;
@@ -38,12 +39,19 @@ class BasicWorkflow extends \Concrete\Core\Workflow\Workflow implements Assignab
         return false;
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Workflow\Workflow::getWorkflowProgressCurrentComment()
+     */
     public function getWorkflowProgressCurrentComment(WorkflowProgress $wp)
     {
         $req = $wp->getWorkflowRequestObject();
         if ($req) {
             return $req->getRequesterComment();
         }
+
+        return null;
     }
 
     public function getPermissionAssignmentClassName()
@@ -130,6 +138,11 @@ class BasicWorkflow extends \Concrete\Core\Workflow\Workflow implements Assignab
         parent::delete();
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Workflow\Workflow::start()
+     */
     public function start(WorkflowProgress $wp)
     {
         // lets save the basic data associated with this workflow.
@@ -155,6 +168,8 @@ class BasicWorkflow extends \Concrete\Core\Workflow\Workflow implements Assignab
                 $this->notify($wp, $message, 'notify_on_basic_workflow_entry');
             }
         }
+
+        return null;
     }
 
     protected function notify(
@@ -164,6 +179,9 @@ class BasicWorkflow extends \Concrete\Core\Workflow\Workflow implements Assignab
         $parameters = []
     ) {
         $nk = PermissionKey::getByHandle($permission);
+        if (!$nk instanceof WorkflowKey) {
+            throw new \InvalidArgumentException(t('The %s permission key must be a workflow permission key.', $permission));
+        }
         $nk->setPermissionObject($this);
         $users = $nk->getCurrentlyActiveUsers($wp);
         $loc = Localization::getInstance();

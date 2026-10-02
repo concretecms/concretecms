@@ -186,7 +186,7 @@ EOT
             if ($name === '') {
                 $this->error->add(t('Specify a name for your Job set.'));
             }
-            $jobIDs = $post->get('jID');
+            $jobIDs = $post->all()['jID'] ?? null;
             $jobIDs = is_array($jobIDs) ? array_unique(array_filter(array_map('intval', $jobIDs))) : [];
 
             $isScheduled = (bool) $post->get('isScheduled');

@@ -1,7 +1,7 @@
 <?php
 namespace Concrete\Core\Import;
 
-use Concrete\Core\Import\Item\ItemInterface;
+use Concrete\Core\Import\Item\Express\ItemInterface;
 
 defined('C5_EXECUTE') or die("Access Denied.");
 

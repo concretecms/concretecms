@@ -10,6 +10,9 @@ use Concrete\Core\Entity\Attribute\Value\Value\AbstractValue;
 use Concrete\Core\Entity\Attribute\Value\Value\Value;
 use Concrete\Core\Support\Facade\Facade;
 
+/**
+ * @mixin \Concrete\Core\Entity\Attribute\Key\LegacyKey
+ */
 class Key extends Facade implements AttributeKeyInterface
 {
     public static function getFacadeAccessor()
@@ -33,9 +36,16 @@ class Key extends Facade implements AttributeKeyInterface
     // IN 5.7 THAT EXTEND THIS FILE.
 
     /**
-     * @var LegacyKey
+     * @var LegacyKey|null
      */
     protected $legacyAttributeKey;
+
+    /**
+     * @var array|null
+     *
+     * @deprecated use \Concrete\Core\Attribute\Controller::getSearchIndexFieldDefinition() (and \Concrete\Core\Attribute\Category\SearchIndexer\StandardSearchIndexerInterface::getSearchIndexFieldDefinition() for the category) instead
+     */
+    protected $searchIndexFieldDefinition;
 
     /**
      * @deprecated
@@ -45,6 +55,9 @@ class Key extends Facade implements AttributeKeyInterface
         if (isset($this->legacyAttributeKey)) {
             return $this->legacyAttributeKey->getController();
         }
+
+        // @phpstan-ignore return.type (legacy: NULL if the key has not been loaded, so that old code can check the result of getAttributeKeyID())
+        return null;
     }
 
     public function __toString()
@@ -52,6 +65,8 @@ class Key extends Facade implements AttributeKeyInterface
         if (isset($this->legacyAttributeKey)) {
             return (string) $this->legacyAttributeKey->getAttributeKeyID();
         }
+
+        return '';
     }
 
     /**
@@ -62,6 +77,9 @@ class Key extends Facade implements AttributeKeyInterface
         if (isset($this->legacyAttributeKey)) {
             return $this->legacyAttributeKey->getAttributeKeyID();
         }
+
+        // @phpstan-ignore return.type (legacy: NULL if the key has not been loaded, so that old code can check the result of getAttributeKeyID())
+        return null;
     }
 
     /**
@@ -72,6 +90,8 @@ class Key extends Facade implements AttributeKeyInterface
         if (isset($this->legacyAttributeKey)) {
             return $this->legacyAttributeKey->getAttributeKeyHandle();
         }
+
+        return '';
     }
 
     /**
@@ -82,6 +102,9 @@ class Key extends Facade implements AttributeKeyInterface
         if (isset($this->legacyAttributeKey)) {
             return $this->legacyAttributeKey->getAttributeType();
         }
+
+        // @phpstan-ignore return.type (legacy: NULL if the key has not been loaded, so that old code can check the result of getAttributeKeyID())
+        return null;
     }
 
     /**
@@ -92,6 +115,8 @@ class Key extends Facade implements AttributeKeyInterface
         if (isset($this->legacyAttributeKey)) {
             return $this->legacyAttributeKey->isAttributeKeySearchable();
         }
+
+        return false;
     }
 
     public function getSearchIndexer()
@@ -99,6 +124,9 @@ class Key extends Facade implements AttributeKeyInterface
         if (isset($this->legacyAttributeKey)) {
             return $this->legacyAttributeKey->getSearchIndexer();
         }
+
+        // @phpstan-ignore return.type (legacy: NULL if the key has not been loaded, so that old code can check the result of getAttributeKeyID())
+        return null;
     }
 
     /**
@@ -139,7 +167,7 @@ class Key extends Facade implements AttributeKeyInterface
      */
     public function __call($name, $arguments)
     {
-        if (isset($this->legacyAttributeKey) && is_object($this->legacyAttributeKey)) {
+        if (is_object($this->legacyAttributeKey)) {
             return call_user_func_array([$this->legacyAttributeKey, $name], $arguments);
         } else {
             throw new \Exception(t('Unable to retrieve legacy attribute key for method: %s', $name));
@@ -191,7 +219,7 @@ class Key extends Facade implements AttributeKeyInterface
         }
 
         /**
-         * @var $value AbstractValue
+         * @var AbstractValue|EmptyRequestAttributeValue $value
          */
         if (!($value instanceof EmptyRequestAttributeValue)) {
             // This is a new v8 attribute type
@@ -229,7 +257,7 @@ class Key extends Facade implements AttributeKeyInterface
     }
 
     /**
-     * @deprecated
+     * @deprecated use \Concrete\Core\Attribute\Controller::getSearchIndexFieldDefinition() (and \Concrete\Core\Attribute\Category\SearchIndexer\StandardSearchIndexerInterface::getSearchIndexFieldDefinition() for the category) instead
      */
     public function getSearchIndexFieldDefinition()
     {
@@ -237,7 +265,7 @@ class Key extends Facade implements AttributeKeyInterface
     }
 
     /**
-     * @deprecated
+     * @deprecated use \Concrete\Core\Attribute\Category\SearchIndexer\StandardSearchIndexerInterface::getIndexedSearchTable() instead
      */
     public function getIndexedSearchTable()
     {
@@ -257,7 +285,7 @@ class Key extends Facade implements AttributeKeyInterface
      */
     public function reindex($table, $columnHeaders, $attribs, $rs = null)
     {
-        /** @var \Concrete\Core\Database\Connection $db */
+        /** @var \Concrete\Core\Database\Connection\Connection $db */
         $db = \Database::connection();
         $sm = $db->getSchemaManager();
 

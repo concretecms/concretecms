@@ -96,12 +96,10 @@ class FileSaver implements SaverInterface
         );
 
         $rendered = $renderer->render(PHP_EOL, '    ', implode(PHP_EOL, $header));
-        $result = $this->files->replace($file, $rendered) !== false;
-        if ($result) {
-            @chmod($file, Config::get('concrete.filesystem.permissions.file'));
-            OpCache::clear($file);
-        }
+        $this->files->replace($file, $rendered);
+        @chmod($file, Config::get('concrete.filesystem.permissions.file'));
+        OpCache::clear($file);
 
-        return $result;
+        return true;
     }
 }

@@ -42,9 +42,6 @@ class Statistics extends Controller
     public function view($fID): void
     {
         $file = $this->getFile($fID);
-        if ($file === null) {
-            throw new UserMessageException(t('Unable to find the requested file.'));
-        }
         $permissionChecker = new Checker($file);
         if (!$permissionChecker->canViewFileInFileManager()) {
             throw new UserMessageException(t('Access denied to the requested file.'));

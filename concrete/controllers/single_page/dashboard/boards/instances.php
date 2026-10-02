@@ -13,7 +13,7 @@ class Instances extends DashboardSitePageController
 
     /**
      * @param $id
-     * @return Board
+     * @return Board|null
      */
     protected function getBoard($id)
     {
@@ -25,6 +25,8 @@ class Instances extends DashboardSitePageController
                 return $board;
             }
         }
+
+        return null;
     }
 
     public function generate_instance($id = null)

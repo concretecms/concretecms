@@ -12,6 +12,11 @@ class ThreadedList extends ItemList
     protected $sortByDirection = 'asc';
     protected $cnvID;
 
+    /**
+     * @var array
+     */
+    protected $messages;
+
     public function __construct(Conversation $cnv)
     {
         $this->cnvID = $cnv->getConversationID();

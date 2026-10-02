@@ -4,7 +4,6 @@ namespace Concrete\Core\Routing;
 use Core;
 use League\Url\Url;
 use League\Url\UrlInterface;
-use Request;
 use Page;
 
 class Redirect
@@ -14,10 +13,7 @@ class Redirect
      */
     protected static function createRedirectResponse($url, $code, $headers)
     {
-        $r = new RedirectResponse($url, $code, $headers);
-        $r->setRequest(Request::getInstance());
-
-        return $r;
+        return new RedirectResponse($url, $code, $headers);
     }
 
     /**

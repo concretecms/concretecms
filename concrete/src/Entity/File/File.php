@@ -18,6 +18,7 @@ use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\Support\Facade\Database;
 use Concrete\Core\Tree\Node\Node;
 use Concrete\Core\Tree\Node\NodeType;
+use Concrete\Core\Tree\Node\Type\File as FileNode;
 use Concrete\Core\Tree\Node\Type\FileFolder;
 use Concrete\Core\Url\UrlInterface;
 use Concrete\Core\User\User;
@@ -44,6 +45,8 @@ use Concrete\Core\Events\EventDispatcher;
  *     @ORM\Index(name="fOverrideSetPermissions", columns={"fOverrideSetPermissions"}),
  *     }
  * )
+ *
+ * @mixin \Concrete\Core\Entity\File\Version
  */
 class File implements \Concrete\Core\Permission\ObjectInterface, AttributeObjectInterface
 {
@@ -173,7 +176,7 @@ class File implements \Concrete\Core\Permission\ObjectInterface, AttributeObject
     }
 
     /**
-     * @return \Concrete\Core\Entity\File\StorageLocation\StorageLocation
+     * @return \Concrete\Core\Entity\File\StorageLocation\StorageLocation|null
      */
     public function getFileStorageLocationObject()
     {
@@ -181,7 +184,7 @@ class File implements \Concrete\Core\Permission\ObjectInterface, AttributeObject
     }
 
     /**
-     * @return \Concrete\Core\Entity\File\Version[]
+     * @return \Doctrine\Common\Collections\Collection|\Concrete\Core\Entity\File\Version[]
      */
     public function getFileVersions()
     {
@@ -218,9 +221,9 @@ class File implements \Concrete\Core\Permission\ObjectInterface, AttributeObject
      *
      * @param StorageLocation\StorageLocation $newLocation
      *
-     * @return bool false if the storage location is the same
      * @throws \Exception
      *
+     * @return bool false if the storage location is the same
      */
     public function setFileStorageLocation(\Concrete\Core\Entity\File\StorageLocation\StorageLocation $newLocation)
     {
@@ -255,6 +258,8 @@ class File implements \Concrete\Core\Permission\ObjectInterface, AttributeObject
 
         $this->setStorageLocation($newLocation);
         $this->save();
+
+        return true;
     }
 
     /**
@@ -304,6 +309,7 @@ class File implements \Concrete\Core\Permission\ObjectInterface, AttributeObject
         $db = Loader::db();
         $db->Execute('delete from FilePermissionAssignments where fID = ?', [$this->fID]);
         if ($fOverrideSetPermissions) {
+            /** @var \Concrete\Core\Permission\Key\FileKey[] $permissions */
             $permissions = PermissionKey::getList('file');
             foreach ($permissions as $pk) {
                 $pk->setPermissionObject($this);
@@ -558,7 +564,7 @@ class File implements \Concrete\Core\Permission\ObjectInterface, AttributeObject
      */
     public function setFileFolder(FileFolder $folder)
     {
-        $em = \ORM::entityManager('core');
+        $em = \ORM::entityManager();
 
         $this->folderTreeNodeID = $folder->getTreeNodeID();
 
@@ -567,22 +573,31 @@ class File implements \Concrete\Core\Permission\ObjectInterface, AttributeObject
     }
 
     /**
+     * Get the folder containing this file.
+     *
      * @return \Concrete\Core\Tree\Node\Type\FileFolder|null
      */
     public function getFileFolderObject()
     {
-        return Node::getByID($this->folderTreeNodeID);
+        $node = Node::getByID($this->folderTreeNodeID);
+        // Fix for 5.7 files that had their parents set to their own file id
+        if ($node instanceof \Concrete\Core\Tree\Node\Type\File) {
+            $node = $node->getTreeNodeParentObject();
+        }
+
+        return $node instanceof FileFolder ? $node : null;
     }
 
     /**
-     * @return NodeType
+     * @return \Concrete\Core\Tree\Node\Type\File|null
      */
     public function getFileNodeObject()
     {
         $db = \Database::connection();
         $treeNodeID = $db->GetOne('select treeNodeID from TreeFileNodes where fID = ?', [$this->getFileID()]);
+        $node = Node::getByID($treeNodeID);
 
-        return Node::getByID($treeNodeID);
+        return $node instanceof FileNode ? $node : null;
     }
 
     /**
@@ -686,7 +701,7 @@ class File implements \Concrete\Core\Permission\ObjectInterface, AttributeObject
         }
 
         $em = \ORM::entityManager();
-        $r = $em->getRepository('\Concrete\Core\Entity\File\Version');
+        $r = $em->getRepository('Concrete\Core\Entity\File\Version');
         $fv = $r->findOneBy(['file' => $this, 'fvIsApproved' => true]);
 
         $cache->save($item->set($fv));
@@ -805,7 +820,7 @@ class File implements \Concrete\Core\Permission\ObjectInterface, AttributeObject
     public function getRecentVersion()
     {
         $em = \ORM::entityManager();
-        $r = $em->getRepository('\Concrete\Core\Entity\File\Version');
+        $r = $em->getRepository('Concrete\Core\Entity\File\Version');
 
         return $r->findOneBy(
             ['file' => $this],
@@ -819,7 +834,7 @@ class File implements \Concrete\Core\Permission\ObjectInterface, AttributeObject
      *
      * @param int $fvID
      *
-     * @return Version
+     * @return Version|null
      */
     public function getVersion($fvID = null)
     {
@@ -828,15 +843,15 @@ class File implements \Concrete\Core\Permission\ObjectInterface, AttributeObject
         }
 
         $em = \ORM::entityManager();
-        $r = $em->getRepository('\Concrete\Core\Entity\File\Version');
+        $r = $em->getRepository('Concrete\Core\Entity\File\Version');
 
         return $r->findOneBy(['file' => $this, 'fvID' => $fvID]);
     }
 
     /**
-     * Returns an array of all FileVersion objects owned by this file.
+     * Returns all the FileVersion objects owned by this file.
      *
-     * @return Version[]
+     * @return \Doctrine\Common\Collections\Collection|\Concrete\Core\Entity\File\Version[]
      */
     public function getVersionList()
     {
@@ -901,7 +916,7 @@ class File implements \Concrete\Core\Permission\ObjectInterface, AttributeObject
     /**
      * Tracks File Download, takes the cID of the page that the file was downloaded from.
      *
-     * @param int $rcID
+     * @param int|null|mixed $rcID 0 is used if it's not numeric
      */
     public function trackDownload($rcID = null)
     {
@@ -944,6 +959,8 @@ class File implements \Concrete\Core\Permission\ObjectInterface, AttributeObject
         if ($fv !== null) {
             return $fv->getAttributeValueObject($ak, $createIfNotExists);
         }
+
+        return null;
     }
 
     /**
@@ -957,6 +974,8 @@ class File implements \Concrete\Core\Permission\ObjectInterface, AttributeObject
         if ($fv !== null) {
             return $fv->getAttributeValue($ak);
         }
+
+        return null;
     }
 
     /**
@@ -1008,16 +1027,20 @@ class File implements \Concrete\Core\Permission\ObjectInterface, AttributeObject
         if ($fv !== null) {
             return $fv->setAttribute($ak, $value);
         }
+
+        return null;
     }
 
     /**
      * Returns a URL to the file in the file manager
-     *
-     * @return UrlInterface
      */
     public function getDetailsURL(): UrlInterface
     {
-        return \URL::to('/dashboard/files/details', $this->getFileID());
+        // The core URL resolvers always create Concrete URLs when resolving relative paths
+        /** @var \Concrete\Core\Url\UrlInterface $url */
+        $url = \URL::to('/dashboard/files/details', $this->getFileID());
+
+        return $url;
     }
 
     /**

@@ -28,12 +28,14 @@ class EntityManagerConfigFactory implements ApplicationAwareInterface, EntityMan
     /**
      * Concrete5 configuration files repository
      *
-     * @var \Illuminate\Config\Repository or \Concrete\Core\Config\Repository\Repository
+     * @var \Concrete\Core\Config\Repository\Repository
      */
     protected $configRepository;
 
     /**
      * Constructor
+     *
+     * @param \Concrete\Core\Config\Repository\Repository $configRepository the Concrete configuration repository (the signature accepts any Illuminate repository for backward compatibility, but the application entity driver requires the Concrete one)
      */
     public function __construct(
         \Concrete\Core\Application\Application $app,
@@ -48,7 +50,7 @@ class EntityManagerConfigFactory implements ApplicationAwareInterface, EntityMan
     /**
      * Set configRepository
      *
-     * @param \Illuminate\Config\Repository $configRepository
+     * @param \Concrete\Core\Config\Repository\Repository $configRepository the Concrete configuration repository (the signature accepts any Illuminate repository for backward compatibility, but the application entity driver requires the Concrete one)
      */
     public function setConfigRepository(\Illuminate\Config\Repository $configRepository)
     {
@@ -58,7 +60,7 @@ class EntityManagerConfigFactory implements ApplicationAwareInterface, EntityMan
     /**
      * Get configRepository
      *
-     * @return \Illuminate\Config\Repository
+     * @return \Concrete\Core\Config\Repository\Repository
      */
     public function getConfigRepository()
     {
@@ -187,6 +189,7 @@ class EntityManagerConfigFactory implements ApplicationAwareInterface, EntityMan
         // ignored names when a class with the same name of the annotation exists (that's the case of "package"):
         // that's why some PHPDoc annotations in the core are still escaped with a backslash.
         foreach ([
+            'mixin', // used by static analyzers
             'package',
             'subpackages',
         ] as $name) {

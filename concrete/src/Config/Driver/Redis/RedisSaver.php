@@ -41,9 +41,7 @@ class RedisSaver implements SaverInterface
             $deleteKeys[] = $key;
         }
 
-        if ($deleteKeys) {
-            $this->connection->del($deleteKeys);
-        }
+        $this->connection->del($deleteKeys);
 
         // Now we can convert the value into a flat array and save each key
         $valueList = $this->flattenValue($namespace, $group, $item, $value);

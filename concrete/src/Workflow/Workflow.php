@@ -17,7 +17,7 @@ abstract class Workflow extends ConcreteObject implements ObjectInterface
     /**
      * The workflow ID.
      *
-     * @var int
+     * @var int|numeric-string
      */
     protected $wfID = 0;
 
@@ -99,7 +99,7 @@ abstract class Workflow extends ConcreteObject implements ObjectInterface
     /**
      * Get the list of permission key handles that this workflow can be attached to.
      *
-     * @var string[]
+     * @return string[]
      */
     public function getRestrictedToPermissionKeyHandles()
     {
@@ -177,6 +177,8 @@ abstract class Workflow extends ConcreteObject implements ObjectInterface
         if (is_object($req)) {
             return $req->getWorkflowRequestStatusNum();
         }
+
+        return null;
     }
 
     /**

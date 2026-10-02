@@ -18,6 +18,20 @@ use Symfony\Component\HttpFoundation\Request;
 
 class LegacyCategory implements CategoryInterface, StandardSearchIndexerInterface
 {
+    /**
+     * @var \Concrete\Core\Application\Application
+     */
+    protected $application;
+
+    /**
+     * @var \Doctrine\ORM\EntityManagerInterface
+     */
+    protected $entityManager;
+
+    /**
+     * @var \Concrete\Core\Attribute\SetManagerInterface|null
+     */
+    protected $setManager;
 
     use StandardCategoryTrait;
 
@@ -41,6 +55,11 @@ class LegacyCategory implements CategoryInterface, StandardSearchIndexerInterfac
         return $class;
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Attribute\Category\CategoryInterface::getSearchIndexer()
+     */
     public function getSearchIndexer()
     {
         $table = $this->getIndexedSearchTable();
@@ -48,6 +67,8 @@ class LegacyCategory implements CategoryInterface, StandardSearchIndexerInterfac
             $indexer = $this->application->make('Concrete\Core\Attribute\Category\SearchIndexer\LegacySearchIndexer');
             return $indexer;
         }
+
+        return null;
     }
 
     public function getIndexedSearchTable()
@@ -100,7 +121,7 @@ class LegacyCategory implements CategoryInterface, StandardSearchIndexerInterfac
 
     public function addFromRequest(\Concrete\Core\Entity\Attribute\Type $type, Request $request)
     {
-        // TODO: Implement addFromRequest() method.
+        throw new \RuntimeException(t('The legacy attribute categories do not support adding attribute keys from a request.'));
     }
 
     public function updateFromRequest(Key $key, Request $request)
@@ -120,7 +141,6 @@ class LegacyCategory implements CategoryInterface, StandardSearchIndexerInterfac
         $this->entityManager->flush();
 
         $key->setAttributeKeySettings($settings);
-
 
         // Modify the category's search indexer.
         $indexer = $this->getSearchIndexer();
@@ -178,14 +198,21 @@ class LegacyCategory implements CategoryInterface, StandardSearchIndexerInterfac
 
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Attribute\Category\CategoryInterface::getAttributeKeyByID()
+     */
     public function getAttributeKeyByID($akID)
     {
         // TODO: Implement getAttributeKeyByID() method.
+
+        return null;
     }
 
     public function deleteKey(Key $key)
     {
-        $values = $this->entityManager->getRepository('\Concrete\Core\Entity\Attribute\Value\Value\Value')
+        $values = $this->entityManager->getRepository('Concrete\Core\Entity\Attribute\Value\Value\Value')
             ->findBy(['attribute_key' => $key]);
         $controller = $key->getController();
 
@@ -214,9 +241,16 @@ class LegacyCategory implements CategoryInterface, StandardSearchIndexerInterfac
         // TODO: Implement deleteValue() method.
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Attribute\Category\CategoryInterface::getAttributeValue()
+     */
     public function getAttributeValue(Key $key, $mixed)
     {
         // TODO: Implement getAttributeValue() method.
+
+        return null;
     }
 
     protected function clearAttributeSet(Key $key)
@@ -277,7 +311,5 @@ class LegacyCategory implements CategoryInterface, StandardSearchIndexerInterfac
 
         return $key;
     }
-
-
 
 }

@@ -117,12 +117,14 @@ class StorageLocation implements StorageLocationInterface
         $this->fslConfiguration = $configuration;
     }
 
+    /**
+     * @return \Concrete\Core\Entity\File\StorageLocation\Type\Type|null
+     */
     public function getTypeObject()
     {
         $configuration = $this->getConfigurationObject();
-        $type = $configuration->getTypeObject();
 
-        return $type;
+        return method_exists($configuration, 'getTypeObject') ? $configuration->getTypeObject() : null;
     }
 
     /**

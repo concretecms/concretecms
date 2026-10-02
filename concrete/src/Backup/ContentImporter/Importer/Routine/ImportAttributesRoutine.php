@@ -21,6 +21,9 @@ class ImportAttributesRoutine extends AbstractRoutine
                 $controller = $akc->getController();
                 $attribute = $controller->getAttributeKeyByHandle((string) $ak['handle']);
                 if (!$attribute) {
+                    if (!method_exists($controller, 'import')) {
+                        throw new \RuntimeException(t('The attribute category %s does not support importing the attribute keys.', (string) $ak['category']));
+                    }
                     $pkg = static::getPackageObject($ak['package']);
                     $type = Type::getByHandle((string) $ak['type']);
                     $key = $controller->import($type, $ak, $pkg);

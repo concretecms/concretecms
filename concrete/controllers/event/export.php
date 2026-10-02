@@ -38,57 +38,55 @@ class Export implements ApplicationAwareInterface
         if ($event instanceof CalendarEvent) {
 
             $calendar = $event->getCalendar();
-            if ($calendar instanceof Calendar) {
 
-                $permissions = new Checker($calendar);
+            $permissions = new Checker($calendar);
 
-                if ($permissions->canViewCalendar()) {
-                    $approvedEventVersion = $event->getApprovedVersion();
+            if ($permissions->canViewCalendar()) {
+                $approvedEventVersion = $event->getApprovedVersion();
 
-                    if ($approvedEventVersion instanceof CalendarEventVersion) {
-                        // create the iCalendar-Object
-                        $vCalendar = new VCalendar();
+                if ($approvedEventVersion instanceof CalendarEventVersion) {
+                    // create the iCalendar-Object
+                    $vCalendar = new VCalendar();
 
-                        $i = 0;
+                    $i = 0;
 
-                        foreach ($approvedEventVersion->getRepetitions() as $repetition) {
-                            // attributes and categories are ignored because they are not supported in the iCalendar format
-                            // @see https://tools.ietf.org/html/rfc2446
+                    foreach ($approvedEventVersion->getRepetitions() as $repetition) {
+                        // attributes and categories are ignored because they are not supported in the iCalendar format
+                        // @see https://tools.ietf.org/html/rfc2446
 
-                            /** @noinspection PhpUnhandledExceptionInspection */
-                            /** @noinspection HtmlRequiredLangAttribute */
-                            $arrEvent = [
-                                'SUMMARY' => $approvedEventVersion->getName(),
-                                'DESCRIPTION' => strip_tags($approvedEventVersion->getDescription()),
-                                // Add HTML description if supported (https://stackoverflow.com/questions/854036/html-in-ical-attachment)
-                                'X-ALT-DESC' => 'FMTTYPE=text/html:<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN"><HTML>' . $approvedEventVersion->getDescription(
-                                    ) . '</HTML>',
-                                'CREATED' => $approvedEventVersion->getDateAdded(),
-                                'URL' => Url::to($approvedEventVersion->getPageObject()),
-                                'DTSTART' => new DateTime(
-                                    $repetition->getStartDate(),
-                                    new DateTimeZone($event->getCalendar()->getTimezone())
-                                ),
-                                'DTEND' => new DateTime(
-                                    $repetition->getEndDate(),
-                                    new DateTimeZone($event->getCalendar()->getTimezone())
-                                ),
-                                'SEQUENCE' => $i++
-                            ];
+                        /** @noinspection PhpUnhandledExceptionInspection */
+                        /** @noinspection HtmlRequiredLangAttribute */
+                        $arrEvent = [
+                            'SUMMARY' => $approvedEventVersion->getName(),
+                            'DESCRIPTION' => strip_tags($approvedEventVersion->getDescription()),
+                            // Add HTML description if supported (https://stackoverflow.com/questions/854036/html-in-ical-attachment)
+                            'X-ALT-DESC' => 'FMTTYPE=text/html:<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN"><HTML>' . $approvedEventVersion->getDescription(
+                                ) . '</HTML>',
+                            'CREATED' => $approvedEventVersion->getDateAdded(),
+                            'URL' => Url::to($approvedEventVersion->getPageObject()),
+                            'DTSTART' => new DateTime(
+                                $repetition->getStartDate(),
+                                new DateTimeZone($event->getCalendar()->getTimezone())
+                            ),
+                            'DTEND' => new DateTime(
+                                $repetition->getEndDate(),
+                                new DateTimeZone($event->getCalendar()->getTimezone())
+                            ),
+                            'SEQUENCE' => $i++
+                        ];
 
-                            $vCalendar->add('VEVENT', $arrEvent);
-                        }
-
-                        return $responseFactory->create(
-                            $vCalendar->serialize(),
-                            Response::HTTP_OK,
-                            [
-                                "Content-Type" => "text/calendar; charset=utf-8",
-                                "Content-Disposition" => "inline; filename=\"" . $approvedEventVersion->getName(
-                                    ) . ".ics\""
-                            ]
-                        );
+                        $vCalendar->add('VEVENT', $arrEvent);
                     }
+
+                    return $responseFactory->create(
+                        $vCalendar->serialize(),
+                        Response::HTTP_OK,
+                        [
+                            "Content-Type" => "text/calendar; charset=utf-8",
+                            "Content-Disposition" => "inline; filename=\"" . $approvedEventVersion->getName(
+                                ) . ".ics\""
+                        ]
+                    );
                 }
             }
         }

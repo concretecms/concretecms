@@ -19,6 +19,11 @@ class DashboardBreadcrumbFactory
         $this->navigation = $navigation;
     }
 
+    /**
+     * Build the breadcrumb of a dashboard page (the trail from the dashboard to the page).
+     *
+     * @return \Concrete\Core\Navigation\Breadcrumb\Dashboard\DashboardBreadcrumb
+     */
     public function getBreadcrumb(Page $dashboardPage): BreadcrumbInterface
     {
         $pages = array_reverse($this->navigation->getTrailToCollection($dashboardPage));

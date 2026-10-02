@@ -38,13 +38,11 @@ class Flag
                 $icon = ASSETS_URL . '/' . DIRNAME_IMAGES . '/' . DIRNAME_IMAGES_LANGUAGES . '/' . $region . '.png';
             }
 
-            if (isset($icon)) {
-                if ($filePathOnly) {
-                    return $icon;
-                } else {
-                    $img = new Image($icon, $region, ['id' => 'ccm-region-flag-' . $region, 'class' => 'ccm-region-flag']);
-                    return $img;
-                }
+            if ($filePathOnly) {
+                return $icon;
+            } else {
+                $img = new Image($icon, $region, ['id' => 'ccm-region-flag-' . $region, 'class' => 'ccm-region-flag']);
+                return $img;
             }
         }
     }

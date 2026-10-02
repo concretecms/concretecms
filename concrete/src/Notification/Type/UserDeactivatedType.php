@@ -33,14 +33,14 @@ class UserDeactivatedType implements TypeInterface
     /**
      * The default subscription to output
      *
-     * @var \Concrete\Core\Notification\Subscription\SubscriptionInterface
+     * @var \Concrete\Core\Notification\Subscription\SubscriptionInterface|null
      */
     protected $defaultSubscription;
 
     /**
      * The filter we output by default
      *
-     * @var \Concrete\Core\Notification\Alert\Filter\FilterInterface
+     * @var \Concrete\Core\Notification\Alert\Filter\FilterInterface|null
      */
     protected $defaultFilter;
 

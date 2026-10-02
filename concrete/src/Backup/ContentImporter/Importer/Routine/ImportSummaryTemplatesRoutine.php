@@ -41,7 +41,7 @@ class ImportSummaryTemplatesRoutine extends AbstractRoutine
                     if (isset($pt->categories)) {
                         foreach ($pt->categories->children() as $summaryCategory) {
                             $categoryHandle = (string)$summaryCategory['handle'];
-                            if ($categoryHandle !== null) {
+                            if ($categoryHandle !== '') {
                                 $category = $categoryRepository->findOneByHandle($categoryHandle);
                                 if ($category) {
                                     $template->getCategories()->add($category);
@@ -54,7 +54,7 @@ class ImportSummaryTemplatesRoutine extends AbstractRoutine
                     if (isset($pt->tags)) {
                         foreach ($pt->tags->children() as $summaryTag) {
                             $summaryTagValue = (string) $summaryTag['value'];
-                            if ($summaryTagValue !== null) {
+                            if ($summaryTagValue !== '') {
                                 $tag = $tagRepository->findOneByValue($summaryTagValue);
                                 if ($tag) {
                                     $template->getTags()->add($tag);

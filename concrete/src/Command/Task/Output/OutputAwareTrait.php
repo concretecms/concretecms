@@ -9,6 +9,8 @@ trait OutputAwareTrait
 {
 
     /**
+     * The output to write to. It's null only until setOutput() is called (that is, only in the constructor of the classes using this trait).
+     *
      * @var OutputInterface
      */
     protected $output;

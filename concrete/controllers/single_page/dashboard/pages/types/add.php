@@ -60,8 +60,9 @@ class Add extends DashboardPageController
         }
 
         $templates = array();
-        if (is_array($post->get('ptPageTemplateID'))) {
-            foreach ($post->get('ptPageTemplateID') as $pageTemplateID) {
+        $pageTemplateIDs = $post->all()['ptPageTemplateID'] ?? null;
+        if (is_array($pageTemplateIDs)) {
+            foreach ($pageTemplateIDs as $pageTemplateID) {
                 $pt = PageTemplate::getByID($pageTemplateID);
                 if (is_object($pt)) {
                     $templates[] = $pt;

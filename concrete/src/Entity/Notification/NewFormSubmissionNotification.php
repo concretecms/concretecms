@@ -18,7 +18,7 @@ class NewFormSubmissionNotification extends Notification
      * @ORM\ManyToOne(targetEntity="\Concrete\Core\Entity\Express\Entry")
      * @ORM\JoinColumn(name="exEntryID", referencedColumnName="exEntryID", onDelete="CASCADE")
      *
-     * @var \Concrete\Core\Entity\Express\Entry
+     * @var \Concrete\Core\Entity\Express\Entry|null
      */
     protected $entry;
 
@@ -39,7 +39,7 @@ class NewFormSubmissionNotification extends Notification
     }
 
     /**
-     * @return \Concrete\Core\Entity\Express\Entry
+     * @return \Concrete\Core\Entity\Express\Entry|null
      */
     public function getEntry()
     {

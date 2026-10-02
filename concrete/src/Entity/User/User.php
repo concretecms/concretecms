@@ -372,7 +372,7 @@ class User implements UserEntityInterface, \JsonSerializable
     }
 
     /**
-     * @param bool $uIsValidated
+     * @param bool|-1 $uIsValidated true if validated, false if not validated, -1 if validation is not required
      */
     public function setUserIsValidated($uIsValidated)
     {
@@ -484,7 +484,7 @@ class User implements UserEntityInterface, \JsonSerializable
     }
 
     /**
-     * @return int
+     * @return int|null
      */
     public function getHomeFileManagerFolderID()
     {
@@ -559,7 +559,7 @@ class User implements UserEntityInterface, \JsonSerializable
     }
 
     /**
-     * @return \Concrete\Core\Entity\Notification\NotificationAlert[]
+     * @return Collection|\Concrete\Core\Entity\Notification\NotificationAlert[]
      */
     public function getAlerts(): Collection
     {

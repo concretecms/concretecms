@@ -19,16 +19,13 @@ class Application
 
     public function getThumbnailFilePath($prefix, $filename, $level)
     {
-        switch ($level) {
-            case 2:
-                $base = REL_DIR_FILES_THUMBNAILS_LEVEL2;
-                break;
-            case 3:
-                $base = REL_DIR_FILES_THUMBNAILS_LEVEL3;
-                break;
-            default: // level 1
-                $base = REL_DIR_FILES_THUMBNAILS;
-                break;
+        if ($level == 2 && defined('REL_DIR_FILES_THUMBNAILS_LEVEL2')) {
+            $base = REL_DIR_FILES_THUMBNAILS_LEVEL2;
+        } elseif ($level == 3 && defined('REL_DIR_FILES_THUMBNAILS_LEVEL3')) {
+            $base = REL_DIR_FILES_THUMBNAILS_LEVEL3;
+        } else {
+            // level 1
+            $base = REL_DIR_FILES_THUMBNAILS;
         }
         $app = ApplicationFacade::getFacadeApplication();
         $format = $app->make(ThumbnailFormatService::class)->getFormatForFile($filename);

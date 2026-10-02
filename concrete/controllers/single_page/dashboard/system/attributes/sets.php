@@ -5,7 +5,7 @@ namespace Concrete\Controller\SinglePage\Dashboard\System\Attributes;
 use AttributeSet;
 use Concrete\Core\Attribute\Category\CategoryService;
 use Concrete\Core\Attribute\Key\Category as AttributeKeyCategory;
-use Concrete\Core\Attribute\SetManagerInterface;
+use Concrete\Core\Attribute\StandardSetManager;
 use Concrete\Core\Entity\Attribute\Key\Key;
 use Concrete\Core\Page\Controller\DashboardPageController;
 use Concrete\Core\Url\Resolver\Manager\ResolverManagerInterface;
@@ -92,11 +92,8 @@ EOT
                 }
             }
             if (!$this->error->has()) {
-                /**
-                 * @var SetManagerInterface
-                 */
                 $manager = $this->category->getController()->getSetManager();
-                if ($manager->allowAttributeSets()) {
+                if ($manager instanceof StandardSetManager && $manager->allowAttributeSets()) {
                     $manager->addSet($this->post('asHandle'), $this->post('asName'), false, 0);
                     $this->redirect('dashboard/system/attributes/sets', 'category',
                         $this->category->getAttributeKeyCategoryID(), 'set_added');
@@ -160,6 +157,8 @@ EOT
                 $this->entityManager->flush();
                 $cat = AttributeKeyCategory::getByID($as->getAttributeSetKeyCategoryID());
                 $category = $cat->getAttributeKeyCategory();
+                // The legacy attribute key categories return legacy key objects instead of the key entities
+                /** @var \Concrete\Core\Entity\Attribute\Key\Key[]|\Concrete\Core\Attribute\Key\Key[] $unassigned */
                 $unassigned = $category->getSetManager()->getUnassignedAttributeKeys();
 
                 if (is_array($this->post('akID'))) {

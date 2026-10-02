@@ -22,7 +22,7 @@ class ImageDataFieldData implements DataFieldDataInterface
     }
 
     /**
-     * @param int
+     * @param int $fID
      */
     public function setData($fID): void
     {

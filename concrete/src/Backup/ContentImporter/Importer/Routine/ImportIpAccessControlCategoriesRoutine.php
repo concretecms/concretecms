@@ -41,9 +41,9 @@ class ImportIpAccessControlCategoriesRoutine extends AbstractRoutine
                         ->setHandle($handle)
                         ->setName($xIpAccessControlCategory['name'])
                         ->setEnabled($xml->getBool($xIpAccessControlCategory['enabled'], true))
-                        ->setMaxEvents($xIpAccessControlCategory['max-events'])
-                        ->setTimeWindow($xIpAccessControlCategory['time-window'])
-                        ->setBanDuration($xIpAccessControlCategory['ban-duration'])
+                        ->setMaxEvents((int) $xIpAccessControlCategory['max-events'])
+                        ->setTimeWindow((int) $xIpAccessControlCategory['time-window'])
+                        ->setBanDuration((int) $xIpAccessControlCategory['ban-duration'])
                         ->setSiteSpecific($xml->getBool($xIpAccessControlCategory['site-specific']))
                         ->setPackage(static::getPackageObject($xIpAccessControlCategory['package']))
                     ;

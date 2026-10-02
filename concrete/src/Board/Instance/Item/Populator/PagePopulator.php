@@ -4,6 +4,7 @@ namespace Concrete\Core\Board\Instance\Item\Populator;
 
 use Concrete\Core\Board\Instance\Item\Data\DataInterface;
 use Concrete\Core\Board\Instance\Item\Data\PageData;
+use Concrete\Core\Entity\Board\DataSource\Configuration\PageConfiguration;
 use Concrete\Core\Entity\Board\DataSource\ConfiguredDataSource;
 use Concrete\Core\Entity\Board\Instance;
 use Concrete\Core\Entity\File\File;
@@ -19,27 +20,28 @@ class PagePopulator extends AbstractPopulator
     public function getDataObjects(Instance $instance, ConfiguredDataSource $dataSource): array
     {
         $configuration = $dataSource->getConfiguration();
+        if (!$configuration instanceof PageConfiguration) {
+            throw new \InvalidArgumentException(t('The data source configuration must be an instance of %s.', PageConfiguration::class));
+        }
         $list = new PageList();
         $query = $configuration->getQuery();
         $list->ignorePermissions();
         $containsSitefield = false;
-        if ($query) {
-            foreach ($query->getFields() as $field) {
-                if ($field instanceof SiteField) {
-                    // If we have a site field we handle it manually here, because we have to use the instance's
-                    // site.
-                    $containsSitefield = true;
-                    if ($field->isSetToCurrent()) {
-                        // we filter by the instance's site
-                        $list->setSiteTreeObject($instance->getSite()->getSiteTreeObject());
-                    } else {
-                        if ($field->isSetToAll()) {
-                            $list->setSiteTreeToAll();
-                        }
-                    }
+        foreach ($query->getFields() as $field) {
+            if ($field instanceof SiteField) {
+                // If we have a site field we handle it manually here, because we have to use the instance's
+                // site.
+                $containsSitefield = true;
+                if ($field->isSetToCurrent()) {
+                    // we filter by the instance's site
+                    $list->setSiteTreeObject($instance->getSite()->getSiteTreeObject());
                 } else {
-                    $field->filterList($list);
+                    if ($field->isSetToAll()) {
+                        $list->setSiteTreeToAll();
+                    }
                 }
+            } else {
+                $field->filterList($list);
             }
         }
 

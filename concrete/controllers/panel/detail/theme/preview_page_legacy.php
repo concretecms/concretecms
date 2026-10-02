@@ -39,18 +39,19 @@ class PreviewPageLegacy extends BackendInterfaceController
             if ($checker->canViewPage()) {
                 $theme = Theme::getByID($pThemeID);
                 $customizer = $theme->getThemeCustomizer();
+                /** @var \Concrete\Core\StyleCustomizer\Preview\LegacyStylesheetPreviewHandler $previewHandler */
                 $previewHandler = $customizer->getType()->getPreviewHandler();
                 $type = $customizer->getType();
+                /** @var \Concrete\Core\StyleCustomizer\Customizations\LegacyCustomizationsManager $manager */
                 $manager = $type->getCustomizationsManager();
                 if ($this->request->request->has('styles')) {
 
                     // Nothing here yet. Maybe never?
 
+                    $response = null;
                 } else {
                     $customStyle = $manager->getCustomStyleObjectForPage($page, $theme);
-                    if ($customStyle) {
-                        $response = $previewHandler->getCustomStylePreviewResponse($customizer, $page, $customStyle);
-                    }
+                    $response = $customStyle ? $previewHandler->getCustomStylePreviewResponse($customizer, $page, $customStyle) : null;
                 }
                 return $response;
             }

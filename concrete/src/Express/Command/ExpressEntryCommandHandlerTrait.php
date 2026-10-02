@@ -27,18 +27,16 @@ trait ExpressEntryCommandHandlerTrait
         foreach ($map->getEntries() as $mapAssociation) {
             $association = $mapAssociation->getAssociation();
             $associationEntries = $mapAssociation->getEntries();
-            if (is_array($associationEntries)) {
-                if ($association instanceof ManyToManyAssociation) {
-                    $this->applier->associateManyToMany($association, $entry, $associationEntries);
-                } else if ($association instanceof OneToManyAssociation) {
-                    $this->applier->associateOneToMany($association, $entry, $associationEntries);
-                } else if ($association instanceof ManyToOneAssociation) {
-                    $this->applier->associateManyToOne($association, $entry, $associationEntries[0]);
-                } else if ($association instanceof OneToOneAssociation) {
-                    $this->applier->associateOneToOne($association, $entry, $associationEntries[0]);
-                }
-            } else if (is_null($associationEntries)) {
+            if ($associationEntries === []) {
                 $this->applier->removeAssociation($association, $entry);
+            } elseif ($association instanceof ManyToManyAssociation) {
+                $this->applier->associateManyToMany($association, $entry, $associationEntries);
+            } elseif ($association instanceof OneToManyAssociation) {
+                $this->applier->associateOneToMany($association, $entry, $associationEntries);
+            } elseif ($association instanceof ManyToOneAssociation) {
+                $this->applier->associateManyToOne($association, $entry, $associationEntries[0]);
+            } elseif ($association instanceof OneToOneAssociation) {
+                $this->applier->associateOneToOne($association, $entry, $associationEntries[0]);
             }
         }
     }

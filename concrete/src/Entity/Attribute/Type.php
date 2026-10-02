@@ -85,7 +85,7 @@ class Type implements ExportableInterface
     }
 
     /**
-     * @return mixed
+     * @return \Doctrine\Common\Collections\Collection|\Concrete\Core\Entity\Attribute\Category[]
      */
     public function getAttributeCategories()
     {

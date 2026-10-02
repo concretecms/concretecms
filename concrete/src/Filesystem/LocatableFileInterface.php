@@ -7,7 +7,7 @@ interface LocatableFileInterface
 {
     /**
      * @param $file
-     * @return Record
+     * @return Record|null
      */
     function getFileLocatorRecord();
 

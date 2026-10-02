@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\Search\Pagination;
 
+use Concrete\Core\Search\ItemList\Database\ItemList as DatabaseItemList;
 use Concrete\Core\Search\ItemList\ItemList;
 use Pagerfanta\Adapter\ArrayAdapter;
 use Pagerfanta\Pagerfanta;
@@ -17,6 +18,9 @@ class PermissionablePagination extends Pagination
 
     public function __construct(ItemList $itemList)
     {
+        if (!$itemList instanceof DatabaseItemList) {
+            throw new \InvalidArgumentException(t('The item list must be an instance of %s.', DatabaseItemList::class));
+        }
         $itemList->getQueryObject()->setMaxResults($this->maxResultsToProcessAtOnce);
         $results = $itemList->getResults();
         $adapter = new ArrayAdapter($results);

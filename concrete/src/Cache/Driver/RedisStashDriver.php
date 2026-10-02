@@ -74,7 +74,7 @@ class RedisStashDriver extends AbstractDriver
      *  Decides whether to return a Redis Instance or RedisArray Instance depending on the number of servers passed to it.
      *
      * @param array $servers The `concrete.session.servers` or `concrete.session.redis.servers` config item
-     * @param int | null $database The concrete.session.redis.database config item
+     * @param int $database The concrete.session.redis.database config item
      *
      * @return \Redis | \RedisArray | \Predis\Client
      */
@@ -140,8 +140,8 @@ class RedisStashDriver extends AbstractDriver
                     }
                     // We can only use one ttl for connection timeout so use the last set ttl
                     // isset allows for 0 - unlimited
-                    if (isset($server['ttl'])) {
-                        $ttl = $server['ttl'];
+                    if (isset($server['timeout'])) {
+                        $ttl = $server['timeout'];
                     }
                     if (isset($server['password'])) {
                         $password = $server['password'];
@@ -178,7 +178,7 @@ class RedisStashDriver extends AbstractDriver
      * @param array $servers The `concrete.cache.{level}.redis.options.servers` config item
      * @param int $database Which database to use for each connection (only used for predis)
      *
-     * @return \Generator| string[] [ $server, $port, $ttl ]
+     * @return \Generator<int, array{scheme: string, host?: string, path?: string, port?: int, timeout: int|null, password?: string|null, database: int}>
      */
     private function getRedisServers(array $servers, int $database)
     {
@@ -194,9 +194,8 @@ class RedisStashDriver extends AbstractDriver
                         'database' => array_get($server, 'database', $database)
                     ];
                 } else {
-                    $host = array_get($server, 'host', '');
                     // Check for both server/host - fallback due to cache using server
-                    $host = !empty($host) ?: array_get($server, 'server', '127.0.0.1');
+                    $host = array_get($server, 'host', '') ?: array_get($server, 'server', '127.0.0.1');
                     $server = [
                         'scheme' => 'tcp',
                         'host' => $host,
@@ -244,6 +243,10 @@ class RedisStashDriver extends AbstractDriver
 
     /**
      * {@inheritdoc}
+     *
+     * @see \Stash\Interfaces\DriverInterface::storeData()
+     *
+     * @param int|null $expiration the expiration timestamp (NULL: no expiration)
      */
     public function storeData($key, $data, $expiration)
     {
@@ -304,10 +307,12 @@ class RedisStashDriver extends AbstractDriver
             } else {
                 if ($this->redis instanceof Client && $this->redis->getConnection() instanceof AggregateConnectionInterface) {
                         foreach ($this->redis as $connection) {
-                            $connection->flushDB();
+                            $connection->flushdb();
                         }
-                } else {
+                } elseif ($this->redis instanceof Redis) {
                     $this->redis->flushDB();
+                } else {
+                    $this->redis->flushdb();
                 }
             }
 

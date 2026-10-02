@@ -11,7 +11,7 @@ use Concrete\Core\Search\Index\Driver\IndexingDriverInterface;
 abstract class AbstractIndex implements IndexInterface
 {
 
-    /** @var IndexingDriverInterface */
+    /** @var IndexingDriverInterface|null NULL when the subclass constructor doesn't call this one (the driver is then created lazily by getIndexer()) */
     protected $indexDriver;
 
     /**

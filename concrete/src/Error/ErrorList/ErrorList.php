@@ -45,7 +45,7 @@ class ErrorList implements ArrayAccess, JsonSerializable
     #[\ReturnTypeWillChange]
     public function offsetExists($offset)
     {
-        return $this->errors[$offset];
+        return isset($this->errors[$offset]);
     }
 
     /**
@@ -182,8 +182,6 @@ class ErrorList implements ArrayAccess, JsonSerializable
     /**
      * @deprecated Use the StandardFormatter class
      *
-     * @return string
-     *
      * @see \Concrete\Core\Error\ErrorList\Formatter\StandardFormatter
      */
     public function output()
@@ -194,8 +192,6 @@ class ErrorList implements ArrayAccess, JsonSerializable
 
     /**
      * @deprecated Use the JsonFormatter class
-     *
-     * @return string
      *
      * @see \Concrete\Core\Error\ErrorList\Formatter\JsonFormatter
      */
@@ -243,7 +239,7 @@ class ErrorList implements ArrayAccess, JsonSerializable
     {
         $identifier = $field instanceof FieldInterface ? $field->getFieldElementName() : $field;
         foreach ($this->getList() as $error) {
-            $field = $error->getField();
+            $field = method_exists($error, 'getField') ? $error->getField() : null;
             if (is_object($field) && $field->getFieldElementName() == $identifier) {
                 return true;
             }
@@ -263,7 +259,7 @@ class ErrorList implements ArrayAccess, JsonSerializable
     {
         $identifier = ($field instanceof FieldInterface) ? $field->getFieldElementName() : $field;
         foreach ($this->getList() as $error) {
-            $field = $error->getField();
+            $field = method_exists($error, 'getField') ? $error->getField() : null;
             if (is_object($field) && $field->getFieldElementName() == $identifier) {
                 return $error->getMessage();
             }

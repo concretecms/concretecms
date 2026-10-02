@@ -1,11 +1,15 @@
 <?php
 namespace Concrete\Core\Permission\Key;
 
+use Concrete\Core\Entity\Attribute\Key\PageKey as PageAttributeKey;
 use Loader;
 use Concrete\Core\Permission\Duration as PermissionDuration;
 use Concrete\Core\User\User;
 use Concrete\Core\Support\Facade\Application;
 
+/**
+ * @method \Concrete\Core\Permission\Access\ListItem\EditPagePropertiesPageListItem[] getAccessListItems($accessType = self::ACCESS_TYPE_INCLUDE, $filterEntities = [], $checkCache = true)
+ */
 class EditPagePropertiesPageKey extends PageKey
 {
     protected function getAllAttributeKeyIDs()
@@ -16,6 +20,9 @@ class EditPagePropertiesPageKey extends PageKey
         return $allAKIDs;
     }
 
+    /**
+     * @return \Concrete\Core\Permission\Access\ListItem\EditPagePropertiesPageListItem
+     */
     public function getMyAssignment()
     {
         $app = Application::getFacadeApplication();
@@ -41,6 +48,7 @@ class EditPagePropertiesPageKey extends PageKey
 
         $accessEntities = $u->getUserAccessEntityObjects();
         $accessEntities = $pae->validateAndFilterAccessEntities($accessEntities);
+        /** @var \Concrete\Core\Permission\Access\ListItem\EditPagePropertiesPageListItem[] $list */
         $list = $pae->getAccessListItems(PageKey::ACCESS_TYPE_ALL, $accessEntities);
         $list = PermissionDuration::filterByActive($list);
         $properties = array();
@@ -122,7 +130,7 @@ class EditPagePropertiesPageKey extends PageKey
         }
         $asl = $this->getMyAssignment();
         if (is_object($obj)) {
-            if ($obj instanceof CollectionAttributeKey) {
+            if ($obj instanceof PageAttributeKey) {
                 if ($asl->getAttributesAllowedPermission() == 'A') {
                     return true;
                 }

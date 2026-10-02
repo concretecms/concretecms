@@ -30,12 +30,10 @@ class CheckIn extends BackendInterfacePageController
     public function on_start()
     {
         parent::on_start();
-        if ($this->page) {
-            $v = CollectionVersion::get($this->page, "RECENT");
+        $v = CollectionVersion::get($this->page, "RECENT");
 
-            $this->set('publishDate', $v->getPublishDate());
-            $this->set('publishErrors', $this->checkForPublishing());
-        }
+        $this->set('publishDate', $v->getPublishDate());
+        $this->set('publishErrors', $this->checkForPublishing());
     }
 
     protected function checkForPublishing()
@@ -161,5 +159,7 @@ class CheckIn extends BackendInterfacePageController
                 return true;
             }
         }
+
+        return false;
     }
 }

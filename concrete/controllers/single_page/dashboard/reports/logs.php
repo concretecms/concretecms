@@ -32,12 +32,12 @@ class Logs extends DashboardPageController
 {
 
     /**
-     * @var Element
+     * @var Element|null
      */
     protected $headerMenu;
 
     /**
-     * @var Element
+     * @var Element|null
      */
     protected $headerSearch;
 
@@ -57,6 +57,9 @@ class Logs extends DashboardPageController
         return $this->app->make(QueryFactory::class);
     }
 
+    /**
+     * @return \Concrete\Core\Filesystem\Element
+     */
     protected function getHeaderMenu()
     {
         if (!isset($this->headerMenu)) {
@@ -66,6 +69,9 @@ class Logs extends DashboardPageController
         return $this->headerMenu;
     }
 
+    /**
+     * @return \Concrete\Core\Filesystem\Element
+     */
     protected function getHeaderSearch()
     {
         if (!isset($this->headerSearch)) {
@@ -82,10 +88,12 @@ class Logs extends DashboardPageController
     {
         $headerMenu = $this->getHeaderMenu();
         $headerSearch = $this->getHeaderSearch();
-        /** @noinspection PhpPossiblePolymorphicInvocationInspection */
-        $headerMenu->getElementController()->setQuery($result->getQuery());
-        /** @noinspection PhpPossiblePolymorphicInvocationInspection */
-        $headerSearch->getElementController()->setQuery($result->getQuery());
+        /** @var \Concrete\Controller\Element\Dashboard\Reports\Logs\Search\Menu $headerMenuController */
+        $headerMenuController = $headerMenu->getElementController();
+        $headerMenuController->setQuery($result->getQuery());
+        /** @var \Concrete\Controller\Element\Dashboard\Reports\Logs\Search\Search $headerSearchController */
+        $headerSearchController = $headerSearch->getElementController();
+        $headerSearchController->setQuery($result->getQuery());
 
         $this->set('resultsBulkMenu', $this->app->make(MenuFactory::class)->createBulkMenu());
         $this->set('result', $result);
@@ -130,8 +138,9 @@ class Logs extends DashboardPageController
         ]);
         $result = $this->createSearchResult($query);
         $this->renderSearchResult($result);
-        /** @noinspection PhpPossiblePolymorphicInvocationInspection */
-        $this->headerSearch->getElementController()->setQuery(null);
+        /** @var \Concrete\Controller\Element\Dashboard\Reports\Logs\Search\Search $headerSearchController */
+        $headerSearchController = $this->headerSearch->getElementController();
+        $headerSearchController->setQuery(null);
     }
 
     public function advanced_search()

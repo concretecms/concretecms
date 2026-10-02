@@ -17,6 +17,8 @@ final class Version20220516191423 extends AbstractMigration implements Repeatabl
     public function upgradeDatabase()
     {
         $akc = Category::getByHandle('collection');
+        // The core attribute categories are standard categories
+        /** @var \Concrete\Core\Attribute\Category\AbstractStandardCategory $categoryController */
         $categoryController = $akc->getController();
         $attribute = $categoryController->getAttributeKeyByHandle('exclude_subpages_from_nav');
         if (!$attribute) {

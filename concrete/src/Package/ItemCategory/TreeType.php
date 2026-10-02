@@ -23,6 +23,13 @@ class TreeType extends AbstractCategory
         return $type->getTreeTypeHandle();
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Package\ItemCategory\AbstractCategory::getPackageItems()
+     *
+     * @return \Concrete\Core\Tree\TreeType[]
+     */
     public function getPackageItems(Package $package)
     {
         return \Concrete\Core\Tree\TreeType::getListByPackage($package);

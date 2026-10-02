@@ -27,11 +27,9 @@ class Name extends DashboardSitePageController
 
     public function view()
     {
-        /**
-         * @var Category $category
-         * @var SiteCategory $controller
-         */
+        /** @var Category $category */
         $category = AttributeKeyCategory::getByHandle('site');
+        /** @var SiteCategory $controller */
         $controller = $category->getController();
         $sets = $controller->getSetManager()->getAttributeSets();
         $unassignedAttributes = $controller->getSetManager()->getUnassignedAttributeKeys();

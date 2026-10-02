@@ -53,7 +53,7 @@ class BulkUserAssignment extends DashboardPageController
                 }
 
                 if (!$this->error->has()) {
-                    /** @var UploadedFile $csvFile */
+                    /** @var UploadedFile|null $csvFile */
                     $csvFile = $this->request->files->get('csvFile');
 
                     if ($csvFile instanceof UploadedFile) {

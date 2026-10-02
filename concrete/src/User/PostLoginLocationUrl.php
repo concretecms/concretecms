@@ -78,7 +78,7 @@ class PostLoginLocationUrl
     {
         $configured = $this->config->get('concrete.security.post_login_redirect_url_allowlist', []);
         if (is_array($configured) && $configured !== []) {
-            return array_values(array_filter(array_map('trim', $configured), 'strlen'));
+            return array_values(array_filter(array_map('trim', $configured), static function (string $url): bool { return $url !== ''; }));
         }
 
         $canonicalUrl = (string) $this->canonicalUrlResolver->resolve([]);

@@ -40,7 +40,7 @@ class Attributes extends BackendInterfaceController
     protected $requestSiteType;
 
     /**
-     * @var Skeleton
+     * @var Skeleton|null
      */
     private $skeleton;
 
@@ -73,7 +73,9 @@ class Attributes extends BackendInterfaceController
      */
     public function getObjects(): array
     {
-        return [$this->getTypeSkeleton()];
+        $skeleton = $this->getTypeSkeleton();
+
+        return $skeleton === null ? [] : [$skeleton];
     }
 
     /**
@@ -117,7 +119,7 @@ class Attributes extends BackendInterfaceController
         }
     }
 
-    protected function getTypeSkeleton(): Skeleton
+    protected function getTypeSkeleton(): ?Skeleton
     {
         if (!$this->skeleton) {
             $skeletonService = $this->app->make(SkeletonService::class);

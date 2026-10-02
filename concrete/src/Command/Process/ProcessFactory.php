@@ -69,12 +69,10 @@ class ProcessFactory
     protected function fillProcess(Process $process): Process
     {
         $process->setDateStarted($this->dateService->toDateTime()->getTimestamp());
-        $user = new User();
-        if ($user) {
-            $userInfo = $user->getUserInfoObject();
-            if ($userInfo) {
-                $process->setUser($userInfo->getEntityObject());
-            }
+        $user = app(User::class);
+        $userInfo = $user->getUserInfoObject();
+        if ($userInfo) {
+            $process->setUser($userInfo->getEntityObject());
         }
         $this->entityManager->persist($process);
         $this->entityManager->flush();

@@ -59,7 +59,7 @@ abstract class AbstractPageStructureRoutine extends AbstractRoutine
             return $indexA - $indexB;
         });
 
-        return array_values($sortedElements);
+        return $sortedElements;
     }
 
     /**

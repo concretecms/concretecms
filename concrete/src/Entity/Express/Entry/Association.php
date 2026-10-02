@@ -90,6 +90,9 @@ abstract class Association
         $this->entry = $entry;
     }
 
+    /**
+     * @return \Doctrine\Common\Collections\Collection|\Concrete\Core\Entity\Express\Entry\AssociationEntry[]
+     */
     public function getSelectedEntriesCollection()
     {
         return $this->selectedEntries;

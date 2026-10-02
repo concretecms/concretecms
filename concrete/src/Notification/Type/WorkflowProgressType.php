@@ -14,6 +14,13 @@ use Doctrine\ORM\Mapping as ORM;
 class WorkflowProgressType extends Type
 {
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Notification\Type\TypeInterface::createNotification()
+     *
+     * @param \Concrete\Core\Workflow\Progress\Progress $subject
+     */
     public function createNotification(SubjectInterface $subject)
     {
         return new WorkflowProgressNotification($subject);

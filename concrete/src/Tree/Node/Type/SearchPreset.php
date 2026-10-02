@@ -37,7 +37,7 @@ class SearchPreset extends Node
 
     public function getTreeNodeDisplayName($format = 'html')
     {
-        return $this->getTreeNodeName();
+        return $this->getTreeNodeName() ?? '';
     }
 
     public function getTreeNodeMenu()
@@ -113,9 +113,7 @@ class SearchPreset extends Node
     public static function addSearchPreset(SavedFileSearch $search, $parent = false)
     {
         $node = parent::add($parent);
-        if (is_object($search)) {
-            $node->setTreeNodeSavedSearch($search);
-        }
+        $node->setTreeNodeSavedSearch($search);
 
         return $node;
     }

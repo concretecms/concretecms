@@ -2,11 +2,14 @@
 
 namespace Concrete\Core\Entity\OAuth;
 
-use Concrete\Core\Entity\Express\EntityRepository;
+use Doctrine\ORM\EntityRepository;
 use League\OAuth2\Server\Entities\ClientEntityInterface;
 use League\OAuth2\Server\Exception\OAuthServerException;
 use League\OAuth2\Server\Repositories\ClientRepositoryInterface;
 
+/**
+ * @extends \Doctrine\ORM\EntityRepository<\Concrete\Core\Entity\OAuth\Client>
+ */
 class ClientRepository extends EntityRepository implements ClientRepositoryInterface
 {
 
@@ -24,7 +27,6 @@ class ClientRepository extends EntityRepository implements ClientRepositoryInter
      */
     public function getClientEntity($clientIdentifier, $grantType = null, $clientSecret = null, $mustValidateSecret = true)
     {
-        /** @var ClientEntityInterface $client */
         $client = $this->findOneBy(['clientKey' => $clientIdentifier]);
 
         // Handle client not found
@@ -49,7 +51,6 @@ class ClientRepository extends EntityRepository implements ClientRepositoryInter
      */
     public function validateClient($clientIdentifier, $clientSecret, $grantType)
     {
-        /** @var ClientEntityInterface $client */
         $client = $this->findOneBy(['clientKey' => $clientIdentifier]);
 
         // Probably need to add grant type validation
@@ -63,7 +64,7 @@ class ClientRepository extends EntityRepository implements ClientRepositoryInter
 
     /**
      * @inheritdoc
-     * @return \Concrete\Core\Entity\OAuth\Client
+     * @return \Concrete\Core\Entity\OAuth\Client|null
      */
     public function find($id, $lockMode = null, $lockVersion = null)
     {

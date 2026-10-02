@@ -3,6 +3,7 @@
 namespace Concrete\Core\User\Group\Search\ColumnSet;
 
 use Concrete\Core\Tree\Node\Node;
+use Concrete\Core\Tree\Node\Type\Group as GroupTreeNode;
 use Concrete\Core\User\Group\Group;
 use Concrete\Core\User\Group\Search\ColumnSet\Column\GroupIdColumn;
 
@@ -25,8 +26,7 @@ class Available extends DefaultSet
             case 'group_folder':
                 return t('Folder');
             default:
-                if ($node->getTreeNodeTypeHandle() == 'group') {
-                    /** @var Group $group */
+                if ($node instanceof GroupTreeNode) {
                     $group = $node->getTreeNodeGroupObject();
                     $countOfChildGroups = count($group->getChildGroups());
 
@@ -52,8 +52,7 @@ class Available extends DefaultSet
     {
         if ($node->getTreeNodeTypeHandle() == 'group_folder') {
             return '';
-        } else if ($node->getTreeNodeTypeHandle() == 'group') {
-            /** @var Group $group */
+        } else if ($node instanceof GroupTreeNode) {
             $group = $node->getTreeNodeGroupObject();
             return (int)$group->getGroupMembersNum();
         }
@@ -67,7 +66,7 @@ class Available extends DefaultSet
     {
         if ($node->getTreeNodeTypeHandle() == 'group_folder') {
             return '';
-        } else if ($node->getTreeNodeTypeHandle() == 'group') {
+        } else if ($node instanceof GroupTreeNode) {
             $group = $node->getTreeNodeGroupObject();
             if (is_object($group)) {
                 return $group->getGroupID();
@@ -83,7 +82,7 @@ class Available extends DefaultSet
     {
         if ($node->getTreeNodeTypeHandle() == 'group_folder') {
             return h($node->getTreeNodeName());
-        } else if ($node->getTreeNodeTypeHandle() == 'group') {
+        } else if ($node instanceof GroupTreeNode) {
             $group = $node->getTreeNodeGroupObject();
             if (is_object($group)) {
                 return h($group->getGroupName());

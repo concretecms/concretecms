@@ -274,11 +274,6 @@ class StackList extends PageList
             // No need to filter
             return;
         }
-        if (!$folders && !$globalAreas && !$stacks) {
-            // We won't have any result
-            $query->andWhere('1 = 0');
-            return;
-        }
         $orList = [];
         if ($folders) {
             $orList[] = 'p.ptID = ' . $query->createNamedParameter(Type::getByHandle(STACK_CATEGORY_PAGE_TYPE)->getPageTypeID());
@@ -289,6 +284,11 @@ class StackList extends PageList
         if ($stacks) {
             $orList[] = 's.stType IS NOT NULL AND s.stType <> ' . $query->createNamedParameter(Stack::ST_TYPE_GLOBAL_AREA);
         }
-        $query->andWhere($query->expr()->or(...$orList));
+        if ($orList === []) {
+            // We won't have any result
+            $query->andWhere('1 = 0');
+        } else {
+            $query->andWhere($query->expr()->or(...$orList));
+        }
     }
 }

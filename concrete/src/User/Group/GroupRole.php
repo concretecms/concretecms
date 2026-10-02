@@ -10,17 +10,20 @@ use Concrete\Core\Support\Facade\Application;
 use Doctrine\DBAL\Exception;
 use JsonSerializable;
 
+/**
+ * @phpstan-consistent-constructor
+ */
 class GroupRole extends ConcreteObject implements JsonSerializable
 {
-    /** @var int */
+    /** @var int|numeric-string */
     protected $grID;
     /** @var string */
     protected $grName;
-    /** @var bool */
+    /** @var bool|0|1|'0'|'1' */
     protected $grIsManager;
 
     /**
-     * @return string
+     * @return int
      */
     public function getId()
     {

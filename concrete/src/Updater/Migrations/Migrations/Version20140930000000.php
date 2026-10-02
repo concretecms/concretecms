@@ -25,7 +25,7 @@ class Version20140930000000 extends AbstractMigration implements RepeatableMigra
      */
     public function preUp(Schema $schema): void
     {
-        \Database::query('UPDATE Config SET configNamespace="" WHERE configNamespace IS NULL');
+        $this->connection->executeQuery('UPDATE Config SET configNamespace="" WHERE configNamespace IS NULL');
     }
 
     /**

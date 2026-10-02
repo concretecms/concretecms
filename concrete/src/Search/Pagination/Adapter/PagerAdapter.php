@@ -56,7 +56,10 @@ class PagerAdapter implements AdapterInterface
             if (count($results) === 0) {
                 break;
             }
+            // The last examined result is the cursor of the next segment
+            $lastResult = null;
             foreach($results as $result) {
+                $lastResult = $result;
                 if ($this->checkPermissions($checker, $result)) {
 
                     if ($this->firstResult === null) {
@@ -69,7 +72,7 @@ class PagerAdapter implements AdapterInterface
                     }
                 }
             }
-            $manager->displaySegmentAtCursor($result, $this->itemList);
+            $manager->displaySegmentAtCursor($lastResult, $this->itemList);
             $this->itemList->ignorePermissions();
         }
 

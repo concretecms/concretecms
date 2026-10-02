@@ -6,7 +6,11 @@ use Concrete\Core\Permission\Access\Entity\GroupSetEntity;
 
 class GroupCombination extends AccessEntity
 {
-
+    /**
+     * {@inheritDoc}
+     *
+     * @see \Concrete\Controller\Permissions\Access\Entity\AccessEntity::deliverEntity()
+     */
     public function deliverEntity()
     {
         $groups = [];
@@ -20,5 +24,7 @@ class GroupCombination extends AccessEntity
         if ($groups) {
             return GroupCombinationEntity::getOrCreate($groups);
         }
+
+        return null;
     }
 }

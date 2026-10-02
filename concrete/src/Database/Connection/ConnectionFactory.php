@@ -22,7 +22,9 @@ class ConnectionFactory
     /**
      * @param \ArrayAccess|array $config
      *
-     * @return \Concrete\Core\Database\Connection\Connection|\Doctrine\DBAL\Connection
+     * @throws \Doctrine\DBAL\DBALException if the configured wrapper class is not a subclass of \Doctrine\DBAL\Connection
+     *
+     * @return \Concrete\Core\Database\Connection\Connection|\Doctrine\DBAL\Connection the Concrete connection class is used if the wrapperClass option is not specified
      */
     public function createConnection($config)
     {
@@ -59,12 +61,12 @@ class ConnectionFactory
     }
 
     /**
-     * @param $config
-     * @param $name
+     * @param \ArrayAccess|array $config
+     * @param string $name
      *
-     * @return \Doctrine\DBAL\Connection
+     * @throws \Doctrine\DBAL\DBALException if the configured wrapper class is not a subclass of \Doctrine\DBAL\Connection
      *
-     * @throws DBALException
+     * @return \Concrete\Core\Database\Connection\Connection|\Doctrine\DBAL\Connection the Concrete connection class is used if the wrapperClass option is not specified
      */
     public function make($config, $name)
     {

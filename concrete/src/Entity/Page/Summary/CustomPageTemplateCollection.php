@@ -50,7 +50,7 @@ class CustomPageTemplateCollection
     }
 
     /**
-     * @return mixed
+     * @return \Doctrine\Common\Collections\Collection|\Concrete\Core\Entity\Summary\Template[]
      */
     public function getTemplates()
     {

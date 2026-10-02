@@ -90,7 +90,7 @@ class MissingRequiredPackageException extends DependencyException
     /**
      * Get the version requirements of the not installed package.
      *
-     * @var string|string[]|bool
+     * @return string|string[]|bool
      */
     public function getRequirements()
     {

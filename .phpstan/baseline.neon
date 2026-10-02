@@ -1,0 +1,121 @@
+parameters:
+	ignoreErrors:
+		-
+			message: '#^Call to an undefined method Concrete\\Core\\Permission\\Checker\:\:canEditFileSetPermissions\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: ../concrete/controllers/dialog/permissions/file_set.php
+
+		-
+			message: '#^Parameter \#1 \$object of class Concrete\\Core\\Permission\\Checker constructor expects Concrete\\Core\\Permission\\ObjectInterface\|false\|null, Concrete\\Core\\File\\Set\\Set given\.$#'
+			identifier: argument.type
+			count: 1
+			path: ../concrete/controllers/dialog/permissions/file_set.php
+
+		-
+			message: '#^Parameter \#1 \$func of method Doctrine\\DBAL\\Connection\:\:transactional\(\) expects Closure\(Doctrine\\DBAL\\Connection\)\: void, Closure\(Concrete\\Core\\Database\\Connection\\Connection\)\: void given\.$#'
+			identifier: argument.type
+			count: 1
+			path: ../concrete/src/Authentication/Type/OAuth/BindingService.php
+
+		-
+			message: '#^Parameter \#2 \$value of class HtmlObject\\Element constructor expects string\|null, array\<int, HtmlObject\\Element\> given\.$#'
+			identifier: argument.type
+			count: 1
+			path: ../concrete/src/File/Image/Thumbnail/ThumbnailPlaceholderService.php
+
+		-
+			message: '#^Call to an undefined method Concrete\\Core\\Mail\\Importer\\MailImporter\:\:process\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: ../concrete/src/Mail/Command/ProcessEmailCommandHandler.php
+
+		-
+			message: '#^Access to property \$contentType on an unknown class Laminas\\Mail\\Storage\\Message\.$#'
+			identifier: class.notFound
+			count: 1
+			path: ../concrete/src/Mail/Importer/MailImportedMessage.php
+
+		-
+			message: '#^Access to property \$from on an unknown class Laminas\\Mail\\Storage\\Message\.$#'
+			identifier: class.notFound
+			count: 6
+			path: ../concrete/src/Mail/Importer/MailImportedMessage.php
+
+		-
+			message: '#^Access to property \$subject on an unknown class Laminas\\Mail\\Storage\\Message\.$#'
+			identifier: class.notFound
+			count: 1
+			path: ../concrete/src/Mail/Importer/MailImportedMessage.php
+
+		-
+			message: '#^Call to method getContent\(\) on an unknown class Laminas\\Mail\\Storage\\Message\.$#'
+			identifier: class.notFound
+			count: 1
+			path: ../concrete/src/Mail/Importer/MailImportedMessage.php
+
+		-
+			message: '#^Caught class Laminas\\Mail\\Exception not found\.$#'
+			identifier: class.notFound
+			count: 1
+			path: ../concrete/src/Mail/Importer/MailImportedMessage.php
+
+		-
+			message: '#^Parameter \#1 \$iterator of class RecursiveIteratorIterator constructor expects T of IteratorAggregate\|RecursiveIterator, Laminas\\Mail\\Storage\\Message given\.$#'
+			identifier: argument.type
+			count: 1
+			path: ../concrete/src/Mail/Importer/MailImportedMessage.php
+
+		-
+			message: '#^Parameter \$msg of method Concrete\\Core\\Mail\\Importer\\MailImportedMessage\:\:__construct\(\) has invalid type Laminas\\Mail\\Storage\\Message\.$#'
+			identifier: class.notFound
+			count: 1
+			path: ../concrete/src/Mail/Importer/MailImportedMessage.php
+
+		-
+			message: '#^Static call to instance method Concrete\\Core\\Mail\\Importer\\MailImporter\:\:getMessageBodyHashRegularExpression\(\)\.$#'
+			identifier: method.staticCall
+			count: 2
+			path: ../concrete/src/Mail/Importer/MailImportedMessage.php
+
+		-
+			message: '#^Call to method getUniqueId\(\) on an unknown class Laminas\\Mail\\Storage\\Imap\.$#'
+			identifier: class.notFound
+			count: 1
+			path: ../concrete/src/Mail/Importer/MailImporter.php
+
+		-
+			message: '#^Call to method getUniqueId\(\) on an unknown class Laminas\\Mail\\Storage\\Pop3\.$#'
+			identifier: class.notFound
+			count: 1
+			path: ../concrete/src/Mail/Importer/MailImporter.php
+
+		-
+			message: '#^Instantiated class Laminas\\Mail\\Storage\\Imap not found\.$#'
+			identifier: class.notFound
+			count: 1
+			path: ../concrete/src/Mail/Importer/MailImporter.php
+
+		-
+			message: '#^Instantiated class Laminas\\Mail\\Storage\\Pop3 not found\.$#'
+			identifier: class.notFound
+			count: 1
+			path: ../concrete/src/Mail/Importer/MailImporter.php
+
+		-
+			message: '#^Iterating over an object of an unknown class Laminas\\Mail\\Storage\\Imap\.$#'
+			identifier: class.notFound
+			count: 1
+			path: ../concrete/src/Mail/Importer/MailImporter.php
+
+		-
+			message: '#^Iterating over an object of an unknown class Laminas\\Mail\\Storage\\Pop3\.$#'
+			identifier: class.notFound
+			count: 1
+			path: ../concrete/src/Mail/Importer/MailImporter.php
+
+		-
+			message: '#^Parameter \#1 \$child of method HtmlObject\\Traits\\TreeObject\:\:appendChild\(\) expects HtmlObject\\Element, HtmlObject\\Link given\.$#'
+			identifier: argument.type
+			count: 1
+			path: ../concrete/src/Notification/View/StandardListView.php

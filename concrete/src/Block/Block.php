@@ -35,7 +35,7 @@ class Block extends ConcreteObject implements ObjectInterface
     public $bName;
 
     /**
-     * @var int|null
+     * @var int|numeric-string|null
      */
     public $btID;
 
@@ -47,7 +47,7 @@ class Block extends ConcreteObject implements ObjectInterface
     /**
      * The ID of the collection containing the block.
      *
-     * @var int|null
+     * @var int|numeric-string|null
      */
     protected $cID;
 
@@ -82,7 +82,7 @@ class Block extends ConcreteObject implements ObjectInterface
     /**
      * The ID of the associated block.
      *
-     * @var int|null
+     * @var int|numeric-string|null
      */
     protected $cbRelationID;
 
@@ -103,7 +103,7 @@ class Block extends ConcreteObject implements ObjectInterface
     /**
      * Override cache settings?
      *
-     * @var int|null 1 for true; 0/null for false
+     * @var bool|0|1|'0'|'1'|null 1 for true; 0/null for false
      */
     protected $cbOverrideBlockTypeCacheSettings;
 
@@ -115,7 +115,7 @@ class Block extends ConcreteObject implements ObjectInterface
     protected $bFilename;
 
     /**
-     * @var bool|int|null
+     * @var bool|0|1|'0'|'1'|null
      */
     protected $isOriginal;
 
@@ -130,7 +130,7 @@ class Block extends ConcreteObject implements ObjectInterface
     protected $btName;
 
     /**
-     * @var int|null
+     * @var int|numeric-string|null
      */
     protected $uID;
 
@@ -145,24 +145,24 @@ class Block extends ConcreteObject implements ObjectInterface
     protected $bDateModified;
 
     /**
-     * @var int|null
+     * @var bool|0|1|'0'|'1'|null
      */
     protected $bIsActive;
 
     /**
-     * @var int|null
+     * @var bool|0|1|'0'|'1'|null
      */
     protected $cbIncludeAll;
 
     protected $cbOverrideBlockTypeContainerSettings;
 
     /**
-     * @var bool|int|null
+     * @var bool|0|1|'0'|'1'|null
      */
     protected $cbEnableBlockContainer;
 
     /**
-     * @var int|null
+     * @var bool|0|1|'0'|'1'|null
      */
     protected $cbOverrideAreaPermissions;
 
@@ -553,6 +553,25 @@ EOT
     }
 
     /**
+     * Get the page instance containing the block.
+     *
+     * @return \Concrete\Core\Page\Page|null
+     */
+    public function getBlockPageObject(): ?Page
+    {
+        $collection = $this->getBlockCollectionObject();
+        if ($collection instanceof Page) {
+            return $collection;
+        }
+        if (!$collection) {
+            return null;
+        }
+        $page = Page::getByID($collection->getCollectionID(), $collection->getVersionID());
+
+        return $page && !$page->isError() ? $page : null;
+    }
+
+    /**
      * Get the page instance where this block is defined (or the page where the original block is defined if this block is an alias).
      *
      * @return \Concrete\Core\Page\Page|null
@@ -603,7 +622,7 @@ EOT
     /**
      * Set the collection instance containing the block.
      *
-     * @param \Concrete\Core\Page\Collection\Collection $c
+     * @param \Concrete\Core\Page\Collection\Collection|null $c
      *
      * @return void
      */
@@ -640,7 +659,7 @@ EOT
     /**
      * Set the area containing the block.
      *
-     * @param \Concrete\Core\Area\Area $a
+     * @param \Concrete\Core\Area\Area|null $a
      *
      * @return void
      */
@@ -900,9 +919,9 @@ EOT
      */
     public function isAliasOfMasterCollection()
     {
-        $blockCollection = $this->getBlockCollectionObject();
+        $page = $this->getBlockPageObject();
 
-        return $blockCollection ? $blockCollection->isBlockAliasedFromMasterCollection($this) : false;
+        return $page === null ? false : $page->isBlockAliasedFromMasterCollection($this);
     }
 
     /**
@@ -928,8 +947,8 @@ EOT
      */
     public function isBlockInStack()
     {
-        $co = $this->getBlockCollectionObject();
-        if (is_object($co)) {
+        $co = $this->getBlockPageObject();
+        if ($co !== null) {
             if ($co->getPageTypeHandle() == STACKS_PAGE_TYPE) {
                 return true;
             }
@@ -966,7 +985,8 @@ EOT
     {
         if ($this->getCustomStyleSetID() > 0 || $force) {
             $csr = StyleSet::getByID($this->getCustomStyleSetID());
-            $theme = $this->c->getCollectionThemeObject();
+            $page = $this->getBlockPageObject();
+            $theme = $page === null ? null : $page->getCollectionThemeObject();
             switch ($this->getBlockTypeHandle()) {
                 case BLOCK_HANDLE_LAYOUT_PROXY:
                     $bs = new CoreAreaLayoutCustomStyle($csr, $this, $theme);
@@ -1378,6 +1398,7 @@ EOT
         $db->executeStatement('delete from BlockPermissionAssignments where cID = ? and cvID = ? and bID = ?', $v);
 
         // copy permissions from the page to the area
+        /** @var \Concrete\Core\Permission\Key\BlockKey[] $permissions */
         $permissions = PermissionKey::getList('block');
         foreach ($permissions as $pk) {
             $pk->setPermissionObject($this);
@@ -1617,8 +1638,7 @@ EOT
         $v = [$bDateModified, $bID];
         $q = 'update Blocks set bDateModified = ? where bID = ?';
 
-        $r = $db->prepare($q);
-        $r->executeStatement($v);
+        $db->executeStatement($q, $v);
 
         $this->refreshBlockOutputCache();
 
@@ -1679,8 +1699,7 @@ EOT
 
         $v = [$bName, $bFilename, $dt, $this->getBlockID()];
         $q = 'update Blocks set bName = ?, bFilename = ?, bDateModified = ? where bID = ?';
-        $r = $db->prepare($q);
-        $r->executeStatement($v);
+        $db->executeStatement($q, $v);
 
         $this->refreshBlockOutputCache();
     }
@@ -1782,7 +1801,7 @@ EOT
                 ->setParameter('bID', $this->getBlockID())
                 ->setParameter('arHandle', $this->getAreaHandle())
                 ->execute()->fetchAssociative();
-            if ($row && is_array($row) && $row['cID']) {
+            if ($row !== false) {
                 $connection->insert('PageTypeComposerOutputBlocks', [
                     'cID' => $ncID,
                     'cvID' => $nvID,
@@ -1830,6 +1849,9 @@ EOT
                     ]);
                 }
             }
+        } else {
+            $ocID = null;
+            $ovID = null;
         }
 
         // we duplicate block-specific sub-content
@@ -2003,7 +2025,7 @@ EOT
 
             // so, first we delete the block's sub content
             $bt = BlockType::getByID($this->getBlockTypeID());
-            if ($bt && method_exists($bt, 'getBlockTypeClass')) {
+            if ($bt) {
                 $class = $bt->getBlockTypeClass();
                 $app = Facade::getFacadeApplication();
                 $bc = $app->make($class, ['obj' => $this]);
@@ -2094,7 +2116,10 @@ EOT
         $records = [];
         /** @var Connection $db */
         $db = $app->make(Connection::class);
-        $oc = $this->getBlockCollectionObject();
+        $oc = $this->getBlockPageObject();
+        if ($oc === null) {
+            throw new \RuntimeException(t('The block is not associated to a page.'));
+        }
         $site = $app->make('site')->getSite();
         $cbRelationID = $this->getBlockRelationID();
         $treeIDs = [0];

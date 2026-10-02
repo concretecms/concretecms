@@ -85,7 +85,7 @@ class Category implements CategoryObjectInterface
     }
 
     /**
-     * @return mixed
+     * @return int one of the \Concrete\Core\Attribute\StandardSetManager::ASET_ALLOW_... constants
      */
     public function allowAttributeSets()
     {
@@ -93,7 +93,7 @@ class Category implements CategoryObjectInterface
     }
 
     /**
-     * @param mixed $akCategoryAllowSets
+     * @param int $akCategoryAllowSets one of the \Concrete\Core\Attribute\StandardSetManager::ASET_ALLOW_... constants
      */
     public function setAllowAttributeSets($akCategoryAllowSets)
     {
@@ -126,7 +126,7 @@ class Category implements CategoryObjectInterface
     }
 
     /**
-     * @return mixed
+     * @return \Doctrine\Common\Collections\Collection|\Concrete\Core\Entity\Attribute\Set[]
      */
     public function getAttributeSets()
     {
@@ -134,7 +134,7 @@ class Category implements CategoryObjectInterface
     }
 
     /**
-     * @return mixed
+     * @return \Doctrine\Common\Collections\Collection|\Concrete\Core\Entity\Attribute\Type[]
      */
     public function getAttributeTypes()
     {
@@ -151,10 +151,17 @@ class Category implements CategoryObjectInterface
 
     /**
      * @deprecated
+     *
+     * @throws \RuntimeException if the category controller doesn't support the attribute sets
      */
     public function addSet($handle, $name, $pkg = null)
     {
-        return $this->getController()->addSet($handle, $name, $pkg, false);
+        $controller = $this->getController();
+        if (!method_exists($controller, 'addSet')) {
+            throw new \RuntimeException(t('The attribute category %s does not support the attribute sets.', $this->getAttributeKeyCategoryHandle()));
+        }
+
+        return $controller->addSet($handle, $name, $pkg, false);
     }
 
     public function __toString()
@@ -164,10 +171,16 @@ class Category implements CategoryObjectInterface
 
     /**
      * @deprecated
+     *
+     * @throws \RuntimeException if the category controller doesn't support associating the attribute types
      */
     public function associateAttributeKeyType(Type $type)
     {
-        $this->getController()->associateAttributeKeyType($type);
+        $controller = $this->getController();
+        if (!method_exists($controller, 'associateAttributeKeyType')) {
+            throw new \RuntimeException(t('The attribute category %s does not support associating the attribute types.', $this->getAttributeKeyCategoryHandle()));
+        }
+        $controller->associateAttributeKeyType($type);
     }
 
 

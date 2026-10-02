@@ -39,11 +39,17 @@ class SkeletonSitemapProvider extends StandardSitemapProvider
         $skeleton = $this->skeletonService->getSkeleton($this->siteType);
 
         /**
-         * @var $skeleton Skeleton
+         * @var Skeleton $skeleton
          */
+        // A skeleton can't actually have more than one locale: every SkeletonLocale needs its own SkeletonTree,
+        // and SkeletonTree::$type is a OneToOne association (the siteTypeID column of SiteSkeletonTrees is unique).
+        // So this branch is never executed, and the SkeletonLocale instances it would pass to checkPermissions()
+        // (which requires a TreeInterface) and to LocaleEntry (which requires a Locale) would be rejected.
         if (count($skeleton->getLocales()) > 1) {
             foreach($skeleton->getLocales() as $locale) {
+                // @phpstan-ignore argument.type (unreachable, see above)
                 if ($this->checkPermissions($locale)) {
+                    // @phpstan-ignore argument.type (unreachable, see above)
                     $entry = new LocaleEntry($locale);
                     if ($selectedTree && $entry->getSiteTreeID() == $selectedTree->getSiteTreeID()){
                         $entry->setIsSelected(true);

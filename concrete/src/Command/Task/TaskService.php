@@ -81,7 +81,7 @@ class TaskService
     protected function getCurrentUserEntity(): ?UserEntity
     {
         if ($this->user->isRegistered()) {
-            $userInfo = $this->userInfoRepository->getByID($this->user->getUserID());
+            $userInfo = $this->userInfoRepository->getByID((int) $this->user->getUserID());
             return $userInfo->getEntityObject();
         }
         return null;

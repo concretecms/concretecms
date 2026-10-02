@@ -4,6 +4,9 @@ namespace Concrete\Core\Block;
 
 use Database;
 
+/**
+ * @phpstan-consistent-constructor
+ */
 class CacheSettings
 {
     protected $btCacheBlockOutputOnPost = false;
@@ -44,21 +47,13 @@ class CacheSettings
             }
         }
         if (!isset($o)) {
-            if ($controller = $b->getController()) {
-                $o = new static();
-                $o->btCacheBlockOutput = $controller->cacheBlockOutput();
-                $o->btCacheBlockOutputOnPost = $controller->cacheBlockOutputOnPost();
-                $o->btCacheBlockOutputForRegisteredUsers = $controller->cacheBlockOutputForRegisteredUsers();
-                $o->btCacheBlockOutputOnEditMode = $controller->cacheBlockOutputOnEditMode();
-                $o->btCacheBlockOutputLifetime = $controller->getBlockTypeCacheOutputLifetime();
-            } else {
-                $o = new static();
-                $o->btCacheBlockOutput = false;
-                $o->btCacheBlockOutputOnPost = false;
-                $o->btCacheBlockOutputForRegisteredUsers = false;
-                $o->btCacheBlockOutputOnEditMode = false;
-                $o->btCacheBlockOutputLifetime = false;
-            }
+            $controller = $b->getController();
+            $o = new static();
+            $o->btCacheBlockOutput = $controller->cacheBlockOutput();
+            $o->btCacheBlockOutputOnPost = $controller->cacheBlockOutputOnPost();
+            $o->btCacheBlockOutputForRegisteredUsers = $controller->cacheBlockOutputForRegisteredUsers();
+            $o->btCacheBlockOutputOnEditMode = $controller->cacheBlockOutputOnEditMode();
+            $o->btCacheBlockOutputLifetime = $controller->getBlockTypeCacheOutputLifetime();
         }
 
         return $o;

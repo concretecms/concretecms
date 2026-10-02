@@ -12,6 +12,10 @@ use PermissionKey;
 use Page;
 use Database;
 
+/**
+ * @property \Concrete\Core\Block\Block|null $permissionObject
+ * @method \Concrete\Core\Block\Block|null getPermissionObject()
+ */
 class BlockAssignment extends Assignment
 {
     protected $permissionObjectToCheck;
@@ -63,7 +67,7 @@ class BlockAssignment extends Assignment
     public function getPermissionAccessObject()
     {
         /**
-         * @var $registry RegistryInterface
+         * @var RegistryInterface $registry
          */
         $registry = \Core::make('Concrete\Core\Permission\Inheritance\Registry\BlockRegistry');
         $db = Database::connection();

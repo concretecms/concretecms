@@ -67,6 +67,9 @@ class Navigation implements NavigationInterface, JsonSerializable
     {
         $data = [];
         foreach ($this->getItems() as $item) {
+            if (!$item instanceof JsonSerializable) {
+                throw new \RuntimeException(t('The navigation items must be instances of %s.', JsonSerializable::class));
+            }
             $data[] = $item->jsonSerialize();
         }
 

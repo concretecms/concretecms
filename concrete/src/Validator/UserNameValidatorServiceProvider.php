@@ -22,7 +22,10 @@ class UserNameValidatorServiceProvider extends Provider
             $config = $app->make('config');
             $manager = $app->make(ValidatorForSubjectInterface::class);
 
+            // The validators are created below (if configured): the closures capture them by reference
+            /** @var \Concrete\Core\Validator\String\MinimumLengthValidator|null $minimumLengthValidator */
             $minimumLengthValidator = null;
+            /** @var \Concrete\Core\Validator\String\MaximumLengthValidator|null $maximumLengthValidator */
             $maximumLengthValidator = null;
             $lengthError = function ($validator, $code, $username) use (&$minimumLengthValidator, &$maximumLengthValidator) {
                 if ($minimumLengthValidator && $maximumLengthValidator) {

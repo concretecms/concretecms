@@ -45,6 +45,8 @@ class AddBlockToAreaAreaAccess extends AreaAccess
      * {@inheritdoc}
      *
      * @see \Concrete\Core\Permission\Access\Access::getAccessListItems()
+     *
+     * @return \Concrete\Core\Permission\Access\ListItem\AddBlockToAreaAreaListItem[]
      */
     public function getAccessListItems($accessType = PermissionKey::ACCESS_TYPE_INCLUDE, $filterEntities = [], $checkCache = true)
     {
@@ -58,6 +60,7 @@ class AddBlockToAreaAreaAccess extends AreaAccess
             $item->lock();
         }
         $db = $app->make(Connection::class);
+        /** @var \Concrete\Core\Permission\Access\ListItem\AddBlockToAreaAreaListItem[] $list */
         $list = parent::getAccessListItems($accessType, $filterEntities, false);
         $pobj = $this->getPermissionObjectToCheck();
         foreach ($list as $l) {

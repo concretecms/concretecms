@@ -40,7 +40,7 @@ class Delete extends BackendInterfaceController
     public function submit()
     {
         if (!$this->validateAction()) {
-            throw new \RuntimeException(implode("\n", $this->error->getList()));
+            throw new \RuntimeException($this->error->toText());
         }
         /** @var Request $request */
         $request = $this->app->make(Request::class);

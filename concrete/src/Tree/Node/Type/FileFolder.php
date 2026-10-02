@@ -63,6 +63,8 @@ class FileFolder extends TreeNode
         } elseif ($this->getTreeNodeParentID() == 0) {
             return t('Folders');
         }
+
+        return '';
     }
 
     /**
@@ -76,7 +78,7 @@ class FileFolder extends TreeNode
     }
 
     /**
-     * @return \Concrete\Core\Entity\File\StorageLocation\StorageLocation
+     * @return \Concrete\Core\Entity\File\StorageLocation\StorageLocation|null
      */
     public function getTreeNodeStorageLocationObject()
     {
@@ -86,7 +88,7 @@ class FileFolder extends TreeNode
     }
 
     /**
-     * @param \Concrete\Core\Entity\File\StorageLocation\StorageLocation|int $storageLocation Storage location object or id
+     * @param \Concrete\Core\Entity\File\StorageLocation\StorageLocation|int|mixed $storageLocation Storage location object or id (an exception is thrown for other objects)
      */
     public function setTreeNodeStorageLocation($storageLocation)
     {
@@ -188,12 +190,12 @@ class FileFolder extends TreeNode
      * @param \Concrete\Core\Tree\Node\Node|bool $parent Node's parent folder
      * @param int|\Concrete\Core\Entity\File\StorageLocation\StorageLocation|null $storageLocationID Id or object of the storage location, if null the default one will be used
      *
-     * @return \Concrete\Core\Tree\Node\Node
+     * @return static
      */
     public static function add($treeNodeName = '', $parent = false, $storageLocationID = null)
     {
         // Get the storage location id if we have an object
-        if (is_object($storageLocationID) && $storageLocationID instanceof \Concrete\Core\Entity\File\StorageLocation\StorageLocation) {
+        if ($storageLocationID instanceof \Concrete\Core\Entity\File\StorageLocation\StorageLocation) {
             $storageLocationID = $storageLocationID->getID();
         }
 
@@ -235,24 +237,22 @@ class FileFolder extends TreeNode
         $sort = false;
         $list = new FolderItemList();
         $list->filterByParentFolder($this);
-        if ($u !== null) {
-            if (($column = $request->get($list->getQuerySortColumnParameter())) && ($direction = $request->get($list->getQuerySortDirectionParameter()))) {
-                if (is_object($available->getColumnByKey($column)) && ($direction == 'asc' || $direction == 'desc')) {
-                    $sort = [$column, $direction];
-                    $u->saveConfig(sprintf('file_manager.sort.%s', $this->getTreeNodeID()), json_encode($sort));
-                }
-            } else {
-                $sort = $u->config(sprintf('file_manager.sort.%s', $this->getTreeNodeID()));
-                if ($sort) {
-                    /** @noinspection PhpComposerExtensionStubsInspection */
-                    $sort = json_decode($sort);
-                }
+        if (($column = $request->get($list->getQuerySortColumnParameter())) && ($direction = $request->get($list->getQuerySortDirectionParameter()))) {
+            if (is_object($available->getColumnByKey($column)) && ($direction == 'asc' || $direction == 'desc')) {
+                $sort = [$column, $direction];
+                $u->saveConfig(sprintf('file_manager.sort.%s', $this->getTreeNodeID()), json_encode($sort));
             }
-            if (is_array($sort)) {
-                if ($sortColumn = $available->getColumnByKey($sort[0])) {
-                    $sortColumn->setColumnSortDirection($sort[1]);
-                    $list->sortBySearchColumn($sortColumn);
-                }
+        } else {
+            $sort = $u->config(sprintf('file_manager.sort.%s', $this->getTreeNodeID()));
+            if ($sort) {
+                /** @noinspection PhpComposerExtensionStubsInspection */
+                $sort = json_decode($sort);
+            }
+        }
+        if (is_array($sort)) {
+            if ($sortColumn = $available->getColumnByKey($sort[0])) {
+                $sortColumn->setColumnSortDirection($sort[1]);
+                $list->sortBySearchColumn($sortColumn);
             }
         }
 

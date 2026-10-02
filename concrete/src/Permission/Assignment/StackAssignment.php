@@ -12,6 +12,8 @@ class StackAssignment extends PageAssignment
      * {@inheritdoc}
      *
      * @see \Concrete\Core\Permission\Assignment\Assignment::setPermissionKeyObject()
+     *
+     * @param \Concrete\Core\Permission\Key\PageKey|\Concrete\Core\Permission\Key\AreaKey|null $pk the area keys are converted to the corresponding page keys
      */
     public function setPermissionKeyObject($pk)
     {
@@ -33,7 +35,7 @@ class StackAssignment extends PageAssignment
                 $pageKeyHandle = $map[$areaKeyHandle];
             }
             $pk2 = isset($pageKeyHandle) ? PageKey::getByHandle($pageKeyHandle) : null;
-            if ($pk2 === null) {
+            if (!$pk2 instanceof PageKey) {
                 throw new Exception(t('Unsupported area key: %s', $areaKeyHandle));
             }
             $pk2->setPermissionObject($this->getPermissionObject());

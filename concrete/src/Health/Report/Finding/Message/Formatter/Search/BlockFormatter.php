@@ -16,15 +16,17 @@ class BlockFormatter implements FormatterInterface, MessageHasDetailsInterface, 
 {
 
     /**
-     * @param BlockMessage $message
      * @return string
      */
     public function getFindingsListMessage(MessageInterface $findingMessage, Finding $finding): string
     {
+        if (!$findingMessage instanceof BlockMessage) {
+            throw new \InvalidArgumentException(t('The message must be an instance of %s.', BlockMessage::class));
+        }
         $block = Block::getByID($findingMessage->getBlockID());
         if ($block) {
-            $page = $block->getBlockCollectionObject();
-            if ($page) {
+            $page = $block->getBlockPageObject();
+            if ($page !== null) {
                 $message = t(
                     '%s block type (ID %s) on page %s (ID %s)',
                     $block->getBlockTypeName(),
@@ -58,20 +60,26 @@ class BlockFormatter implements FormatterInterface, MessageHasDetailsInterface, 
 
     public function getDetailsString(MessageInterface $message): string
     {
+        if (!$message instanceof BlockMessage) {
+            throw new \InvalidArgumentException(t('The message must be an instance of %s.', BlockMessage::class));
+        }
+
         return $message->getContent();
     }
 
 
     /**
-     * @param BlockMessage $message
      * @return LocationInterface|null
      */
     public function getLocation(MessageInterface $message): ?LocationInterface
     {
+        if (!$message instanceof BlockMessage) {
+            throw new \InvalidArgumentException(t('The message must be an instance of %s.', BlockMessage::class));
+        }
         $block = Block::getByID($message->getBlockID());
         if ($block) {
-            $page = $block->getBlockCollectionObject();
-            if ($page) {
+            $page = $block->getBlockPageObject();
+            if ($page !== null) {
                 return new Location($page->getCollectionLink(), t('View Page'));
             }
         }

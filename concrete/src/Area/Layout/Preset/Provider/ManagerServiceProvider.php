@@ -12,7 +12,7 @@ class ManagerServiceProvider extends ServiceProvider
         $this->app->singleton(
             Manager::class,
             static function(Application $app): Manager {
-                $manager = new Manager($app);
+                $manager = new Manager();
                 $manager->register($app->make(UserProvider::class));
                 $manager->register($app->make(ActiveThemeProvider::class));
                 return $manager;

@@ -5,14 +5,14 @@ namespace Concrete\Core\Database;
 use Concrete\Core\Database\EntityManager\Driver\DriverInterface;
 use Concrete\Core\Database\EntityManager\Provider\ProviderInterface;
 use Concrete\Core\Package\Package;
-use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 
 class EntityManagerConfigUpdater
 {
 
     protected $entityManager;
 
-    public function __construct(EntityManager $entityManager)
+    public function __construct(EntityManagerInterface $entityManager)
     {
         $this->entityManager = $entityManager;
     }

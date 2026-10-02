@@ -10,7 +10,6 @@ use Concrete\Core\Entity\Calendar\CalendarEventVersionRepetition;
 class EventOccurrenceFactory
 {
     /**
-     * @param CalendarEvent $event
      * @param       $start
      * @param       $end
      *

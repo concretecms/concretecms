@@ -21,7 +21,7 @@ final class MiddlewareStack implements StackInterface, ApplicationAwareInterface
     protected $middleware = [];
 
     /**
-     * @var \Concrete\Core\Http\Middleware\DispatcherFrame|Mock_BlockController_7fcd43c1|Mock_TrackableBlockController_a75af608
+     * @var \Concrete\Core\Http\Middleware\DelegateInterface|null
      */
     protected $dispatcher;
 
@@ -48,7 +48,13 @@ final class MiddlewareStack implements StackInterface, ApplicationAwareInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Http\Middleware\StackInterface::withMiddleware()
+     *
+     * @param int $priority lower priority runs first
+     *
+     * @return static
      */
     public function withMiddleware(MiddlewareInterface $middleware, $priority = 10)
     {
@@ -87,8 +93,9 @@ final class MiddlewareStack implements StackInterface, ApplicationAwareInterface
     }
 
     /**
-     * Reduce middleware into a stack of functions that each call the next
-     * @return callable
+     * Reduce middleware into a stack of delegates that each call the next
+     *
+     * @return \Concrete\Core\Http\Middleware\DelegateInterface|null NULL if there are no middlewares and no dispatcher
      */
     private function getStack()
     {

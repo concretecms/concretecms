@@ -24,6 +24,13 @@ class TreeNodeType extends AbstractCategory
         return $type->getTreeNodeTypeHandle();
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Package\ItemCategory\AbstractCategory::getPackageItems()
+     *
+     * @return \Concrete\Core\Tree\Node\NodeType[]
+     */
     public function getPackageItems(Package $package)
     {
         return NodeType::getListByPackage($package);

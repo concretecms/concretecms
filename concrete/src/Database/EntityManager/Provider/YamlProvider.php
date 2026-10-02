@@ -28,7 +28,6 @@ class YamlProvider implements ProviderInterface
     /**
      * Constructor
      * 
-     * @param Package $pkg
      * @param boolean $useDefaultSettings  if it's set to false, no default 
      *                                      mapping information will be added to 
      *                                      the drivers array
@@ -36,6 +35,9 @@ class YamlProvider implements ProviderInterface
     public function __construct(ProviderInterface $pkg, $useDefaultSettings = true)
     {
         if($useDefaultSettings){
+            if (!method_exists($pkg, 'getNamespace') || !method_exists($pkg, 'getPackagePath')) {
+                throw new \InvalidArgumentException(t('The provider must have the %s and %s methods.', 'getNamespace()', 'getPackagePath()'));
+            }
             $defaultNamespace = $pkg->getNamespace() . '\Entity';
             $mappingDataPath = $pkg->getPackagePath() . '/' 
                     . DIRNAME_CONFIG . '/' . DIRNAME_METADATA_YAML;

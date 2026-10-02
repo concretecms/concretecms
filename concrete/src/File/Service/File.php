@@ -36,7 +36,6 @@ class File
     /**
      * Returns the contents of a directory.
      *
-     *
      */
     public function getDirectoryContents($dir, $ignoreFiles = [], $recursive = false)
     {
@@ -135,7 +134,7 @@ class File
      *
      * @param string $path (optional)
      *
-     * @return \stdClass
+     * @return \stdClass|false
      */
     public function getCreateFilePermissions($path = null)
     {
@@ -220,7 +219,7 @@ class File
      *
      * @param string $file
      *
-     * @return never
+     * @return false|never false if the file can't be opened (otherwise the script terminates after sending the file)
      */
     public function forceDownload($file)
     {
@@ -263,7 +262,7 @@ class File
     /**
      * Returns the full path to the temporary directory.
      *
-     * @return string
+     * @return string|null
      */
     public function getTemporaryDirectory()
     {
@@ -298,6 +297,8 @@ class File
 
             return str_replace(DIRECTORY_SEPARATOR, '/', dirname($temp));
         }
+
+        return null;
     }
 
     /**
@@ -317,7 +318,7 @@ class File
      * Just a consistency wrapper for file_get_contents
      * Should use curl if it exists and fopen isn't allowed (thanks Remo).
      *
-     * @param string $filename
+     * @param string $file
      * @param string $timeout
      *
      * @throws RequestException Request timed out
@@ -399,7 +400,7 @@ class File
      * Splits a filename into directory, base file name, extension.
      * If the file name starts with a dot and it's the only dot (eg: '.htaccess'), we don't consider the file to have an extension.
      *
-     * @param string $filename
+     * @param string|mixed $filename empty strings are returned if it's not a string
      *
      * @return array
      */
@@ -441,7 +442,7 @@ class File
      * Takes a path and replaces the files extension in that path with the specified extension.
      *
      * @param string $filename
-     * @param string $extension
+     * @param string|mixed $extension no extension is added if it's not a non-empty string
      *
      * @return string
      */

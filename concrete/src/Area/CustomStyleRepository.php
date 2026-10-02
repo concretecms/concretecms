@@ -24,7 +24,7 @@ class CustomStyleRepository
     }
 
     /**
-     * @param \Concrete\Core\Page\Collection\Collection $collection
+     * @param \Concrete\Core\Page\Page $collection
      * @return array|AreaCustomStyle[]
      */
     public function getCollectionVersionAreaStyles(Collection $collection): array

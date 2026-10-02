@@ -5,6 +5,9 @@ namespace Concrete\Core\Http\Middleware;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
+/**
+ * @method static withMiddleware(\Concrete\Core\Http\Middleware\MiddlewareInterface $middleware, int $priority = 10) Return an instance with the specified middleware added to the stack (middleware with lower priority runs first).
+ */
 interface StackInterface
 {
 

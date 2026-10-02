@@ -5,6 +5,7 @@ use Concrete\Controller\Backend\UserInterface\Page as BackendInterfacePageContro
 use Permissions;
 use Page;
 use stdClass;
+use Concrete\Core\Permission\Key\EditPagePropertiesPageKey;
 use PermissionKey;
 use Concrete\Core\Attribute\Key\Category as AttributeKeyCategory;
 
@@ -20,6 +21,9 @@ class Attributes extends BackendInterfacePageController
     public function view()
     {
         $pk = PermissionKey::getByHandle('edit_page_properties');
+        if (!$pk instanceof EditPagePropertiesPageKey) {
+            throw new \RuntimeException(t('The %s permission key is not installed correctly.', 'edit_page_properties'));
+        }
         $pk->setPermissionObject($this->page);
         $assignment = $pk->getMyAssignment();
         $allowed = $assignment->getAttributesAllowedArray();

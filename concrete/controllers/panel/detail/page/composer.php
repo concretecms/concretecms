@@ -58,7 +58,7 @@ class Composer extends BackendInterfacePageController
             $r = $this->save();
             $ptr = $r[0];
             $c = Page::getCurrentPage();
-            $ptr->setRedirectURL($c->getCollectionLink(true));
+            $ptr->setRedirectURL($c->getCollectionLink());
             $ptr->outputJSON();
         } else {
             throw new Exception(t('Access Denied.'));

@@ -1,0 +1,58 @@
+name: PHPStan
+
+on:
+  pull_request:
+  push:
+    branches:
+      - "**"
+    tags-ignore:
+      - "**"
+
+jobs:
+  phpstan:
+    name: PHPStan
+    runs-on: ubuntu-latest
+    steps:
+      -
+        name: Checkout
+        uses: actions/checkout@v7
+      -
+        name: Install PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          # PHPStan 2 requires PHP 7.4+ to run, but it analyzes the code as PHP 7.3 (see phpVersion in .phpstan/phpstan.neon.dist)
+          php-version: "8.4"
+          extensions: mbstring, xml, ctype, iconv, intl, pdo_mysql, gd
+          coverage: none
+          ini-values: memory_limit=-1
+          tools: composer:v2
+      -
+        name: Get Composer cache directory
+        id: composer-cache-dir
+        run: echo "dir=$(composer config --global --no-interaction cache-files-dir)" >>"$GITHUB_OUTPUT"
+      -
+        name: Cache Composer downloads
+        uses: actions/cache@v6
+        with:
+          path: ${{ steps.composer-cache-dir.outputs.dir }}
+          key: composer-${{ runner.os }}-phpstan-${{ hashFiles('composer.json', 'composer.lock', '.phpstan/composer.json', '.phpstan/composer.lock') }}
+          restore-keys: composer-${{ runner.os }}-phpstan-
+      -
+        name: Install Composer dependencies
+        run: composer install --no-interaction --no-progress
+      -
+        name: Install PHPStan
+        run: composer install --no-interaction --no-progress --working-dir=.phpstan
+      -
+        name: Cache PHPStan result cache
+        uses: actions/cache@v6
+        with:
+          path: .phpstan/tmp
+          key: phpstan-${{ runner.os }}-${{ github.sha }}
+          restore-keys: phpstan-${{ runner.os }}-
+      -
+        name: Generate PHPStan stubs
+        run: composer run --working-dir=.phpstan generate-stubs
+      -
+        name: Run PHPStan
+        run: composer run --working-dir=.phpstan phpstan -- --no-progress --no-interaction --error-format=github

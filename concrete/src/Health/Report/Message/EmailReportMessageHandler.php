@@ -46,7 +46,7 @@ class EmailReportMessageHandler
 
 
         /**
-         * @var $result Result
+         * @var Result|null $result
          */
         $result = $this->entityManager->find(Result::class, $message->getResultId());
         if ($result && $message->getEmail()) {
@@ -58,10 +58,8 @@ class EmailReportMessageHandler
             $this->mailService->addParameter('reportName', $result->getTask()->getController()->getName());
             $this->mailService->load('report_result_ready');
 
-            if ($writer) {
-                $csvContent = $writer->toString();
-                $this->mailService->addRawAttachment($csvContent, $this->csvWriter->getFilenameForResult($result), 'text/csv');
-            }
+            $csvContent = $writer->toString();
+            $this->mailService->addRawAttachment($csvContent, $this->csvWriter->getFilenameForResult($result), 'text/csv');
 
             $this->mailService->sendMail();
         }

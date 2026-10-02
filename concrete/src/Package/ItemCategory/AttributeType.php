@@ -47,6 +47,13 @@ class AttributeType extends AbstractCategory
         $controller->render();
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Package\ItemCategory\AbstractCategory::getPackageItems()
+     *
+     * @return \Concrete\Core\Entity\Attribute\Type[]
+     */
     public function getPackageItems(Package $package)
     {
         return Type::getListByPackage($package);

@@ -12,7 +12,7 @@ class RemoteUrlRequestOptionsBuilder
         $host = trim((string) $url->getHost());
         $scheme = strtolower((string) $url->getScheme());
         $port = $url->getPort();
-        $port = $port ? $port->get() : null;
+        $port = $port->get();
         $port = $port ? (int) $port : ($scheme === 'http' ? 80 : 443);
 
         return [

@@ -18,6 +18,13 @@ class AuthenticationType extends AbstractCategory
         return $type->getAuthenticationTypeDisplayName();
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Package\ItemCategory\AbstractCategory::getPackageItems()
+     *
+     * @return \Concrete\Core\Authentication\AuthenticationType[]
+     */
     public function getPackageItems(Package $package)
     {
         return \Concrete\Core\Authentication\AuthenticationType::getListByPackage($package);

@@ -8,6 +8,7 @@ use Concrete\Core\Express\Form\Control\View\AuthorView;
 use Concrete\Core\Express\Form\Control\View\PublicIdentifierView;
 use Concrete\Core\Express\Form\Control\View\TextView;
 use Concrete\Core\Form\Context\ContextInterface;
+use Concrete\Core\Express\Form\Context\ContextInterface as ExpressContextInterface;
 use Concrete\Core\Express\Form\Control\Renderer\TextEntityPropertyControlRenderer;
 use Concrete\Core\Express\Form\Control\Template\Template;
 use Concrete\Core\Express\Form\Control\Type\SaveHandler\TextControlSaveHandler;
@@ -25,8 +26,19 @@ class PublicIdentifierControl extends Control
         return t('Public Identifier');
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Form\Control\ControlInterface::getControlView()
+     *
+     * @throws \InvalidArgumentException if $context is not a \Concrete\Core\Express\Form\Context\ContextInterface instance
+     */
     public function getControlView(ContextInterface $context)
     {
+        if (!$context instanceof ExpressContextInterface) {
+            throw new \InvalidArgumentException(t('The form context must be an instance of %s.', ExpressContextInterface::class));
+        }
+
         return new PublicIdentifierView($context, $this);
     }
 

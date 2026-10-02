@@ -8,6 +8,10 @@ use FileSet;
 use Concrete\Core\Entity\File\File;
 use Database;
 
+/**
+ * @property \Concrete\Core\Entity\File\File|null $permissionObject
+ * @method \Concrete\Core\Entity\File\File|null getPermissionObject()
+ */
 class FileAssignment extends TreeNodeAssignment
 {
     protected $permissionObjectToCheck;

@@ -18,6 +18,8 @@ class Options extends ElementController
         if (isset($this->control)) {
             return 'dashboard/express/control/options/' . $this->control->getType();
         }
+
+        return '';
     }
 
     public function view()

@@ -58,7 +58,7 @@ class InstanceLog implements \JsonSerializable
     }
 
     /**
-     * @return InstanceLogEntry[]
+     * @return \Doctrine\Common\Collections\Collection|\Concrete\Core\Entity\Board\InstanceLogEntry[]
      */
     public function getEntries()
     {
@@ -79,9 +79,7 @@ class InstanceLog implements \JsonSerializable
         if ($entries->count()) {
             $return = [];
             foreach ($entries as $entry) {
-                if ($entry instanceof InstanceLogEntry) {
-                    $return[] = $entry;
-                }
+                $return[] = $entry;
             }
         }
 

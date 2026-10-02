@@ -8,6 +8,7 @@ use Concrete\Core\Attribute\ObjectInterface;
 use Concrete\Core\Attribute\ObjectTrait;
 use Concrete\Core\Config\Repository\Repository;
 use Concrete\Core\Database\Connection\Connection;
+use Concrete\Core\Entity\Attribute\Key\FileKey;
 use Concrete\Core\Entity\Attribute\Value\FileValue;
 use Concrete\Core\Entity\File\StorageLocation\StorageLocation;
 use Concrete\Core\Events\EventDispatcher;
@@ -48,6 +49,7 @@ use Imagine\Image\ImagineInterface;
 use Imagine\Image\Metadata\ExifMetadataReader;
 use League\Flysystem\AdapterInterface;
 use League\Flysystem\Cached\CachedAdapter;
+use League\Flysystem\File as FlysystemFile;
 use League\Flysystem\FileNotFoundException;
 use League\Flysystem\MountManager;
 use League\Flysystem\Util;
@@ -70,6 +72,8 @@ use Concrete\Core\User\User;
  *         @ORM\Index(name="fvType", columns={"fvType"})
  *     }
  * )
+ *
+ * @phpstan-consistent-constructor
  */
 class Version implements ObjectInterface
 {
@@ -310,14 +314,13 @@ class Version implements ObjectInterface
      * @param \Concrete\Core\Entity\File\File $file the File instance associated to this version
      * @param string $filename The name of the file
      * @param string $prefix the path prefix used to store the file in the file system
-     * @param array $data Valid array keys are {
+     * @param array{uID?: int|null, fvTitle?: string, fvDescription?: string, fvTags?: string, fvIsApproved?: bool, ...} $data Valid array keys are
      *
-     *     @var int|null $uID the ID of the user that creates the file version (if not specified or empty: we'll assume the currently user logged in user)
-     *     @var string $fvTitle the title of the file version
-     *     @var string $fvDescription the description of the file version
-     *     @var string $fvTags the tags to be assigned to the file version (separated by newlines and/or commas)
-     *     @var bool $fvIsApproved Is this version the approved one for the associated file? (default: true)
-     * }
+     * - uID: the ID of the user that creates the file version (if not specified or empty: we'll assume the currently user logged in user)
+     * - fvTitle: the title of the file version
+     * - fvDescription: the description of the file version
+     * - fvTags: the tags to be assigned to the file version (separated by newlines and/or commas)
+     * - fvIsApproved: Is this version the approved one for the associated file? (default: true)
      *
      * @return static
      */
@@ -861,7 +864,7 @@ class Version implements ObjectInterface
                     $to->getGenericDisplayType()
                 );
             }
-        } else if ($to) {
+        } else {
             return $to->getGenericDisplayType();
         }
 
@@ -1283,7 +1286,7 @@ class Version implements ObjectInterface
     /**
      * Get an abstract object to work with the actual file resource (note: this is NOT a concrete5 File object).
      *
-     * @throws \League\Flysystem\FileNotFoundException
+     * @throws \League\Flysystem\FileNotFoundException if the file doesn't exist (or if it's a directory)
      *
      * @return \League\Flysystem\File
      */
@@ -1292,7 +1295,11 @@ class Version implements ObjectInterface
         $app = Application::getFacadeApplication();
         $cf = $app->make('helper/concrete/file');
         $fs = $this->getFile()->getFileStorageLocationObject()->getFileSystemObject();
-        $fo = $fs->get($cf->prefix($this->fvPrefix, $this->fvFilename));
+        $path = $cf->prefix($this->fvPrefix, $this->fvFilename);
+        $fo = $fs->get($path);
+        if (!$fo instanceof FlysystemFile) {
+            throw new FileNotFoundException($path);
+        }
 
         return $fo;
     }
@@ -1425,6 +1432,8 @@ class Version implements ObjectInterface
 
         $f = $this->getFile();
         $f->reindex();
+
+        return null;
     }
 
     /**
@@ -1449,7 +1458,7 @@ class Version implements ObjectInterface
         if (!($ak instanceof AttributeKeyInterface)) {
             $ak = $ak ? $this->getObjectAttributeCategory()->getAttributeKeyByHandle((string) $ak) : null;
         }
-        if ($ak === null) {
+        if (!$ak instanceof FileKey) {
             $result = null;
         } else {
             $result = $this->getObjectAttributeCategory()->getAttributeValue($ak, $this);

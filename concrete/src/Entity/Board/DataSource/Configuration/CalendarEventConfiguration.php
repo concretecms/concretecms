@@ -2,6 +2,7 @@
 
 namespace Concrete\Core\Entity\Board\DataSource\Configuration;
 
+use Concrete\Core\Entity\Search\Query;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -17,13 +18,22 @@ class CalendarEventConfiguration extends Configuration
      */
     protected $calendar;
 
-    /** @ORM\Embedded(class = "\Concrete\Core\Entity\Search\Query") */
+    /**
+     * @ORM\Embedded(class = "\Concrete\Core\Entity\Search\Query")
+     *
+     * @var \Concrete\Core\Entity\Search\Query
+     */
     protected $query;
 
     /**
      * @ORM\Column(type="integer", options={"unsigned": true})
      */
     protected $maxOccurrencesOfSameEvent = 0;
+
+    public function __construct()
+    {
+        $this->query = new Query();
+    }
 
     /**
      * @return \Concrete\Core\Entity\Search\Query
@@ -34,7 +44,7 @@ class CalendarEventConfiguration extends Configuration
     }
 
     /**
-     * @param mixed $query
+     * @param \Concrete\Core\Entity\Search\Query $query
      */
     public function setQuery($query): void
     {
@@ -75,16 +85,14 @@ class CalendarEventConfiguration extends Configuration
 
     public function export(\SimpleXMLElement $element)
     {
-        $element->addAttribute('max-occurrences-of-event', $this->getMaxOccurrencesOfSameEvent());
+        $element->addAttribute('max-occurrences-of-event', (string) $this->getMaxOccurrencesOfSameEvent());
         $element->addAttribute('calendar', $this->getCalendar()->getName());
 
-        if ($this->query) {
-            $fields = $this->query->getFields();
-            if (count($fields)) {
-                $fieldsNode = $element->addChild('fields');
-                foreach ($fields as $field) {
-                    $field->export($fieldsNode);
-                }
+        $fields = $this->query->getFields();
+        if (count($fields)) {
+            $fieldsNode = $element->addChild('fields');
+            foreach ($fields as $field) {
+                $field->export($fieldsNode);
             }
         }
 

@@ -51,7 +51,6 @@ class ScheduleCustomElementCommand extends Command
 
     /**
      * @param CustomElement $element
-     * @param Item[] $items
      */
     public function __construct(CustomElement $element)
     {

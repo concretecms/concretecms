@@ -25,6 +25,10 @@ use Events;
 use Package;
 use Page;
 
+/**
+ * @method void on_start(string|null $method = null) Override this method to perform controller initializations: $method is the action being run.
+ * @method void on_before_render(string|null $method = null) Override this method to do something right before the view is rendered: $method is the action being run.
+ */
 class BlockController extends \Concrete\Core\Controller\AbstractController
 {
     public $headerItems = []; // blockrecord
@@ -143,6 +147,15 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
     protected $btDefaultSet;
     protected $identifier;
     protected $btID;
+
+    /**
+     * The action being run (set by setupAndRun()).
+     *
+     * @deprecated it's never read by the core: it's only set for backward compatibility
+     *
+     * @var string|null
+     */
+    public $task;
     /** @var array */
     protected $requestArray;
     /**
@@ -260,7 +273,7 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
      * @param $args array|string|null
      * @version <= 8.4.3 Method returns ErrorList|boolean
      * @version 8.5.0a3 Method returns ErrorList
-     * @return ErrorList|boolean
+     * @return ErrorList|bool|mixed an ErrorList instance, or a boolean (the block controllers of third-party packages may return other values: the callers treat the objects that aren't ErrorList instances as validation failures)
      */
     public function validate($args)
     {
@@ -371,9 +384,9 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
     /**
      * Automatically run when a block is duplicated. This most likely happens when a block is edited: a block is first duplicated, and then presented to the user to make changes.
      *
-     * @param int $newBlockID
+     * @param int $newBID
      *
-     * @return BlockRecord | null $newInstance
+     * @return BlockRecord|null
      */
     public function duplicate($newBID)
     {
@@ -387,6 +400,8 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
 
             return $newInstance;
         }
+
+        return null;
     }
 
     public function __wakeup()
@@ -397,7 +412,7 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
     /**
      * Instantiates the block controller.
      *
-     * @param BlockType $obj |Block $obj
+     * @param BlockType|Block|null $obj
      */
     public function __construct($obj = null)
     {
@@ -617,7 +632,7 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
                     if (isset($data->record)) {
                         foreach ($data->record->children() as $key => $node) {
                             $nodeValue = (string) $node;
-                            if ($nodeValue === '' && isset($node['null']) && filter_var((string) $node['null'], FILTER_VALIDATE_BOOLEAN)) {
+                            if (isset($node['null']) && $nodeValue === '' && filter_var((string) $node['null'], FILTER_VALIDATE_BOOLEAN)) {
                                 $args[$node->getName()] = null;
                             } elseif (in_array($key, $btExportPageColumns)
                                 || in_array($key, $this->btExportFileColumns)
@@ -662,7 +677,7 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
                             foreach ($record->children() as $key => $node) {
                                 $nodeName = $node->getName();
                                 $nodeValue = (string) $node;
-                                if ($nodeValue === '' && isset($node['null']) && filter_var((string) $node['null'], FILTER_VALIDATE_BOOLEAN)) {
+                                if (isset($node['null']) && $nodeValue === '' && filter_var((string) $node['null'], FILTER_VALIDATE_BOOLEAN)) {
                                     $aar->{$nodeName} = null;
                                 } elseif (in_array($key, $btExportPageColumns)
                                     || in_array($key, $this->btExportFileColumns)
@@ -724,6 +739,11 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
         return $this->validateEditBlockPassThruAction($b);
     }
 
+    /**
+     * @param string[] $parameters the action followed by its parameters
+     *
+     * @return array the method name and the array of its parameters
+     */
     public function getPassThruActionAndParameters($parameters)
     {
         $method = 'action_' . $parameters[0];
@@ -785,6 +805,7 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
         } catch (\Exception $e) {
         }
 
+        return null;
     }
 
     public function isValidControllerTask($method, $parameters = [])
@@ -873,7 +894,7 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
     /**
      * Gets the generic Block object attached to this controller's instance.
      *
-     * @return Block $b
+     * @return \Concrete\Core\Block\Block|false|null
      */
     public function getBlockObject()
     {
@@ -884,7 +905,7 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
         return Block::getByID($this->bID);
     }
 
-    public function post($field = false, $defaultValue = null)
+    public function post($field = null, $defaultValue = null)
     {
         // the only post that matters is the one for this attribute's name space
         $req = ($this->requestArray == false) ? $_POST : $this->requestArray;
@@ -948,16 +969,12 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
             $this->task = $method;
         }
 
-        if (method_exists($this, 'on_start')) {
-            $this->on_start($method);
-        }
+        $this->on_start($method);
         if ($method) {
             $this->runTask($method, []);
         }
 
-        if (method_exists($this, 'on_before_render')) {
-            $this->on_before_render($method);
-        }
+        $this->on_before_render($method);
     }
 
     /**

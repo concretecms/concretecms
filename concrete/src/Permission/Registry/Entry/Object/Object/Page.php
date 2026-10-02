@@ -25,6 +25,8 @@ class Page implements ObjectInterface
         if (is_object($page) && !$page->isError()) {
             return $page;
         }
+
+        return null;
     }
 
 

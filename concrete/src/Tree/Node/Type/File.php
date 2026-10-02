@@ -69,7 +69,7 @@ class File extends TreeNode
             return h($this->getTreeNodeDisplayName('text'));
         }
 
-        return $this->getTreeNodeName();
+        return $this->getTreeNodeName() ?? '';
     }
 
     public function loadDetails()
@@ -133,7 +133,7 @@ class File extends TreeNode
     {
         parent::move($newParent);
         $f = $this->getTreeNodeFileObject();
-        if (is_object($f)) {
+        if (is_object($f) && $newParent instanceof FileFolder) {
             $storageLocation = $newParent->getTreeNodeStorageLocationObject();
             if ($storageLocation) {
                 $f->setFileStorageLocation($storageLocation);
@@ -142,6 +142,10 @@ class File extends TreeNode
         }
     }
 
+    /**
+     * @param \Concrete\Core\Entity\File\File|false $file
+     * @param \Concrete\Core\Tree\Node\Node|false|null $parent
+     */
     public static function add($file = false, $parent = false)
     {
         $node = parent::add($parent);

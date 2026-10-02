@@ -3,6 +3,7 @@ namespace Concrete\Core\Search\Column;
 
 use Concrete\Core\Database\Query\AndWhereNotExistsTrait;
 use Concrete\Core\Search\ItemList\Pager\PagerProviderInterface;
+use Concrete\Core\Search\ItemList\Pager\QueryObjectResolver;
 
 class FileAttributeKeyColumn extends AttributeKeyColumn implements PagerColumnInterface
 {
@@ -31,7 +32,7 @@ class FileAttributeKeyColumn extends AttributeKeyColumn implements PagerColumnIn
     {
         $db = \Database::connection();
         $value = $db->GetOne('select ' . $this->getColumnKey() . ' from FileSearchIndexAttributes where fID = ?', [$mixed->getFileID()]);
-        $query = $itemList->getQueryObject();
+        $query = QueryObjectResolver::getQueryObject($itemList);
         $sort = $this->getColumnSortDirection() == 'desc' ? '<' : '>';
         $where = sprintf('(' . $this->getColumnKey() . ', f.fID) %s (:sortColumn, :sortID)', $sort);
         $query->setParameter('sortColumn', $value);

@@ -5,6 +5,9 @@ use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use DateTime;
 use DateTimeZone;
 
+/**
+ * @mixin \DateTime
+ */
 class DatetimeDataFieldData implements DataFieldDataInterface
 {
 

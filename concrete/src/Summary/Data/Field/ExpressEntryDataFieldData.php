@@ -6,6 +6,9 @@ use Concrete\Core\Express\ObjectManager;
 use Concrete\Core\Support\Facade\Facade;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 
+/**
+ * @mixin \Concrete\Core\Entity\Express\Entry
+ */
 class ExpressEntryDataFieldData implements DataFieldDataInterface
 {
 

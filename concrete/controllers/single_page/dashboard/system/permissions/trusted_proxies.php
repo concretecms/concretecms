@@ -72,7 +72,7 @@ class TrustedProxies extends DashboardPageController
             $this->error->add(t2('This IP address is not valid: %2$s', 'These IP addresses are not valid: %2$s', $numInvalid, "\n- " . implode("\n- ", $invalidIPs)));
         }
         $trustedHeaderFlags = 0;
-        $trustedHeaderNames = $post->get('trustedHeaders');
+        $trustedHeaderNames = $post->all()['trustedHeaders'] ?? null;
         if (is_array($trustedHeaderNames)) {
             $map = $this->getSymfonyHeadersMap();
             foreach ($trustedHeaderNames as $trustedHeaderName) {

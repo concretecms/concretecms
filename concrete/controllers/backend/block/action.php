@@ -155,7 +155,7 @@ class Action extends AbstractController
      * @param \Concrete\Core\Block\BlockController $controller
      * @param string $action
      *
-     * @return string[]
+     * @return array the method name and the array of its parameters
      */
     public function getMethodAndParameters(BlockController $controller, $action)
     {

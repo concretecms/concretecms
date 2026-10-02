@@ -19,7 +19,7 @@ abstract class AbstractManager implements ManagerInterface
     }
 
     /**
-     * @param MenuInterface $menu
+     * @param ModifiableMenuInterface $menu
      * @return \HtmlObject\Element
      */
     final public function deliverMenu(ModifiableMenuInterface $menu)

@@ -3,7 +3,6 @@
 namespace Concrete\Core\Updater\Migrations\Migrations;
 
 use Concrete\Core\Entity\OAuth\AccessToken;
-use Concrete\Core\Entity\OAuth\RefreshToken;
 use Concrete\Core\Entity\OAuth\Scope;
 use Concrete\Core\Updater\Migrations\AbstractMigration;
 use Concrete\Core\Updater\Migrations\RepeatableMigrationInterface;
@@ -46,33 +45,6 @@ class Version20190111181236 extends AbstractMigration implements RepeatableMigra
 
         // Refresh the access token entity
         $this->refreshEntities([AccessToken::class]);
-
-        // Update all access tokens to be associated with their refresh tokens
-        $tokens = $entityManager->createQueryBuilder()
-            ->select('at,rt')
-            ->from(RefreshToken::class, 'rt')
-            ->join('rt.accessToken', 'at')
-            ->getQuery()->execute();
-
-        $count = 0;
-
-        /** @var RefreshToken $token */
-        foreach ($tokens as $token) {
-            $accessToken = $entityManager->merge($token->getAccessToken());
-
-            if (!$accessToken->getRefreshToken()) {
-                $accessToken->setRefreshToken($token);
-                $count++;
-            }
-
-            if ($count > 50) {
-                $entityManager->flush();
-                $count = 0;
-            }
-        }
-
-        if ($count) {
-            $entityManager->flush();
-        }
+        // The association between the access tokens and their refresh tokens (that this migration used to populate) was removed shortly after
     }
 }

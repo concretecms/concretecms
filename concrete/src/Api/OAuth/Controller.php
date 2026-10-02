@@ -56,7 +56,7 @@ final class Controller implements LoggerAwareInterface
     /** @var \Concrete\Core\Config\Repository\Repository */
     private $config;
 
-    /** @var \Concrete\Core\User\User The logged in user */
+    /** @var \Concrete\Core\User\User|null The logged in user */
     private $user;
 
     use LoggerAwareTrait;
@@ -144,6 +144,9 @@ final class Controller implements LoggerAwareInterface
             $step = $this->determineStep($request);
 
             $client = $request->getClient();
+            if (!$client instanceof Client) {
+                throw new \UnexpectedValueException(t('The client must be an instance of %s.', Client::class));
+            }
             $scopes = $request->getScopes();
             if (!$this->validateScopesAgainstClient($client, $scopes)) {
                 throw new \Exception(t('Invalid scope(s) requested. Please ensure only scopes allowed by the client are requested.'));
@@ -201,9 +204,11 @@ final class Controller implements LoggerAwareInterface
         $app = Application::getFacadeApplication();
         $loginService = $app->make(LoginService::class);
 
+        /** @var \Concrete\Core\Entity\OAuth\Client $client */
+        $client = $request->getClient();
         while ($this->request->getMethod() === 'POST') {
 
-            if (!$this->token->validate('oauth_login_' . $request->getClient()->getClientKey())) {
+            if (!$this->token->validate('oauth_login_' . $client->getClientKey())) {
                 $error->add($this->token->getErrorMessage());
                 break;
             }
@@ -301,6 +306,7 @@ final class Controller implements LoggerAwareInterface
     public function handleAuthorizeClient(AuthorizationRequest $request)
     {
         $error = new ErrorList();
+        /** @var \Concrete\Core\Entity\OAuth\Client $client */
         $client = $request->getClient();
 
         while ($this->request->getMethod() === 'POST') {

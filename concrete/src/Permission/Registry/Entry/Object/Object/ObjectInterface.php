@@ -8,7 +8,7 @@ interface ObjectInterface extends EntrySubjectInterface
 {
 
     /**
-     * @return AssignableObjectInterface
+     * @return \Concrete\Core\Permission\AssignableObjectInterface|null NULL if the object can't be resolved
      */
     function getPermissionObject();
 

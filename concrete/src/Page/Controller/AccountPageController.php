@@ -18,6 +18,16 @@ class AccountPageController extends CorePageController implements UsesFeatureInt
 {
     public $helpers = array('html', 'form', 'text');
 
+    /**
+     * @var \Concrete\Core\Error\ErrorList\ErrorList
+     */
+    protected $error;
+
+    /**
+     * @var \Concrete\Core\Validation\CSRF\Token
+     */
+    protected $token;
+
     public function getRequiredFeatures(): array
     {
         return [

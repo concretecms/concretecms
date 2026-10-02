@@ -3,7 +3,7 @@ namespace Concrete\Core\Attribute\Form\Control\View;
 
 use Concrete\Core\Attribute\ObjectInterface;
 use Concrete\Core\Entity\Attribute\Key\Key;
-use Concrete\Core\Entity\Attribute\Value\AbstractValue;
+use Concrete\Core\Attribute\AttributeValueInterface;
 use Concrete\Core\Form\Context\ContextInterface;
 use Concrete\Core\Filesystem\TemplateLocator;
 use Concrete\Core\Attribute\Context\ContextInterface as AttributeContextInterface;
@@ -18,7 +18,7 @@ class View extends BaseFormView
     protected $key;
 
     /**
-     * @var ObjectInterface
+     * @var ObjectInterface|null
      */
     protected $object;
 
@@ -42,7 +42,7 @@ class View extends BaseFormView
         $this->object = $object;
     }
 
-    public function __construct(ContextInterface $context, Key $key, ?AbstractValue $value = null)
+    public function __construct(ContextInterface $context, Key $key, ?AttributeValueInterface $value = null)
     {
         parent::__construct($context);
         $this->key = $key;

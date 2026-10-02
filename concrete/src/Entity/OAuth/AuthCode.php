@@ -30,8 +30,8 @@ class AuthCode implements AuthCodeEntityInterface
     protected $scopes = [];
 
     /**
-     * @var \DateTime
-     * @ORM\Column(type="datetime")
+     * @var \DateTimeImmutable
+     * @ORM\Column(type="datetime_immutable")
      */
     protected $expiryDateTime;
 
@@ -41,7 +41,7 @@ class AuthCode implements AuthCodeEntityInterface
     protected $userIdentifier;
 
     /**
-     * @var ScopeEntityInterface[]
+     * @var \League\OAuth2\Server\Entities\ClientEntityInterface
      * @ORM\ManyToOne(targetEntity="Client")
      * @ORM\JoinColumn(name="client", referencedColumnName="identifier")
      */

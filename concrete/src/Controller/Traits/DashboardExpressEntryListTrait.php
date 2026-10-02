@@ -48,15 +48,18 @@ trait DashboardExpressEntryListTrait
     }
 
     /**
-     * @var Element
+     * @var Element|null
      */
     protected $headerSearch;
 
     /**
-     * @var Element
+     * @var Element|null
      */
     protected $headerMenu;
 
+    /**
+     * @return \Concrete\Core\Filesystem\Element
+     */
     protected function getHeaderMenu()
     {
         if (!isset($this->headerMenu)) {
@@ -65,6 +68,9 @@ trait DashboardExpressEntryListTrait
         return $this->headerMenu;
     }
 
+    /**
+     * @return \Concrete\Core\Filesystem\Element
+     */
     protected function getHeaderSearch()
     {
         if (!isset($this->headerSearch)) {
@@ -115,7 +121,7 @@ trait DashboardExpressEntryListTrait
 
     /**
      * @param Query $query
-     * @return Result
+     * @return \Concrete\Core\Express\Entry\Search\Result\Result
      */
     protected function createSearchResult(Entity $entity, Query $query)
     {
@@ -127,7 +133,10 @@ trait DashboardExpressEntryListTrait
         $queryModifier->addModifier(new ItemsPerPageRequestModifier($provider, $this->request, Request::METHOD_GET));
         $query = $queryModifier->process($query);
 
-        return $resultFactory->createFromQuery($provider, $query);
+        /** @var \Concrete\Core\Express\Entry\Search\Result\Result $result */
+        $result = $resultFactory->createFromQuery($provider, $query);
+
+        return $result;
     }
 
     protected function getSearchKeywordsField()
@@ -140,7 +149,7 @@ trait DashboardExpressEntryListTrait
     }
 
     /**
-     * @param Result $result
+     * @param \Concrete\Core\Express\Entry\Search\Result\Result $result
      */
     protected function renderSearchResult(Result $result)
     {
@@ -148,15 +157,19 @@ trait DashboardExpressEntryListTrait
         $query = $result->getQuery();
         $headerMenu = $this->getHeaderMenu();
         $headerSearch = $this->getHeaderSearch();
-        $headerMenu->getElementController()->setQuery($query);
-        $headerMenu->getElementController()->setEntity($entity);
-        $headerSearch->getElementController()->setQuery($query);
-        $headerSearch->getElementController()->setEntity($entity);
+        /** @var \Concrete\Controller\Element\Express\Search\Menu $headerMenuController */
+        $headerMenuController = $headerMenu->getElementController();
+        $headerMenuController->setQuery($query);
+        $headerMenuController->setEntity($entity);
+        /** @var \Concrete\Controller\Element\Express\Search\Search $headerSearchController */
+        $headerSearchController = $headerSearch->getElementController();
+        $headerSearchController->setQuery($query);
+        $headerSearchController->setEntity($entity);
 
         $permissions = new Checker($entity);
 
         if ($permissions->canAddExpressEntries()) {
-            $headerMenu->getElementController()->setCreateURL(
+            $headerMenuController->setCreateURL(
                 $this->app->make('url/resolver/path')->resolve([
                                                                    $this->getPageObject()->getCollectionPath(), 'create_entry', $entity->getID()])
             );
@@ -171,12 +184,12 @@ trait DashboardExpressEntryListTrait
             $exportArgs[] = $this->getParameters()[0];
         }
 
-        $this->headerSearch->getElementController()->setHeaderSearchAction($this->getHeaderSearchAction($entity));
+        $headerSearchController->setHeaderSearchAction($this->getHeaderSearchAction($entity));
 
         $exportURL = $this->app->make('url/resolver/path')->resolve($exportArgs);
         $query = Url::createFromServer($_SERVER)->getQuery();
         $exportURL = $exportURL->setQuery($query);
-        $headerMenu->getElementController()->setExportURL($exportURL);
+        $headerMenuController->setExportURL($exportURL);
 
         $this->set('result', $result);
         $this->set('headerMenu', $headerMenu);
@@ -271,9 +284,10 @@ trait DashboardExpressEntryListTrait
         }
         if ($searchMethod === 'preset' && !empty($savedSearchPresetId)) {
             $preset = $this->entityManager->find(SavedExpressSearch::class, $savedSearchPresetId);
-            if ($preset && $preset->getEntity() && $preset->getEntity()->getId() === $entity->getId()) {
-                $query = $this->getQueryFactory()->createFromSavedSearch($preset);
+            if (!$preset || !$preset->getEntity() || $preset->getEntity()->getId() !== $entity->getId()) {
+                throw new UserMessageException(t('Invalid search preset.'));
             }
+            $query = $this->getQueryFactory()->createFromSavedSearch($preset);
         } else if ($searchMethod == 'advanced_search') {
             $query = $this->getQueryFactory()->createFromAdvancedSearchRequest(
                 $this->getSearchProvider($entity),

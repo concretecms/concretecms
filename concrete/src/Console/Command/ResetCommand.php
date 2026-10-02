@@ -58,7 +58,7 @@ EOT
             $output->writeln('<info>done.</info>');
             foreach ($tables as $table) {
                 $output->write("Dropping table {$table->getName()}... ");
-                $sm->dropTable($table);
+                $sm->dropTable($table->getName());
                 $output->writeln('<info>done.</info>');
             }
         }

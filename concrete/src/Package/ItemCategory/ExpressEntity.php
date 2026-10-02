@@ -36,6 +36,13 @@ class ExpressEntity extends AbstractCategory
         return $entity->getName();
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Package\ItemCategory\AbstractCategory::getPackageItems()
+     *
+     * @return \Concrete\Core\Entity\Express\Entity[]
+     */
     public function getPackageItems(Package $package)
     {
         $r = $this->entityManager->getRepository('Concrete\Core\Entity\Express\Entity');

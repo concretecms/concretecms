@@ -20,7 +20,7 @@ class ResponseAssetGroup
     protected $providedAssetGroupUnmatched = array();
 
     /**
-     * @var array
+     * @var array<string, array<\Concrete\Core\Asset\Asset|string>> array keys are the positions, array values are the assets (or raw HTML strings, see addHeaderAsset()/addFooterAsset())
      */
     protected $outputAssets = array();
 
@@ -68,7 +68,7 @@ class ResponseAssetGroup
     /**
      * Add an asset that should be loaded in the header.
      *
-     * @param \Concrete\Core\Asset\Asset $item
+     * @param \Concrete\Core\Asset\Asset|string $item the asset, or a raw HTML string
      */
     public function addHeaderAsset($item)
     {
@@ -78,7 +78,7 @@ class ResponseAssetGroup
     /**
      * Add an asset that should be loaded in the footer.
      *
-     * @param \Concrete\Core\Asset\Asset $item
+     * @param \Concrete\Core\Asset\Asset|string $item the asset, or a raw HTML string
      */
     public function addFooterAsset($item)
     {
@@ -98,7 +98,7 @@ class ResponseAssetGroup
     /**
      * Add an asset at a specific position.
      *
-     * @param \Concrete\Core\Asset\Asset $item
+     * @param \Concrete\Core\Asset\Asset|string $item the asset, or a raw HTML string
      * @param string $position Whether the asset should be loaded in the header or in the footer.
      *
      * @see \Concrete\Core\Asset\AssetInterface::ASSET_POSITION_HEADER
@@ -121,10 +121,7 @@ class ResponseAssetGroup
      * 2. Returns the assets with the non-post-process-able assets FIRST, in the order in which they were added, with post-processable assets
      * grouped after. We also make sure to maintain the proper position.
      *
-     * @return array[
-     *  'H' => \Concrete\Core\Asset\Asset[]
-     *  'F' => \Concrete\Core\Asset\Asset[]
-     * ]
+     * @return array{H?: array<\Concrete\Core\Asset\Asset|string>, F?: array<\Concrete\Core\Asset\Asset|string>} the assets (or raw HTML strings, see addHeaderAsset()/addFooterAsset()) for the header (H) and the footer (F): only the positions with at least one asset are present
      */
     public function getAssetsToOutput()
     {
@@ -243,7 +240,7 @@ class ResponseAssetGroup
     }
 
     /**
-     * @param \Concrete\Core\Asset\Asset $asset
+     * @param \Concrete\Core\Asset\AssetPointer $asset
      *
      * @return bool
      */

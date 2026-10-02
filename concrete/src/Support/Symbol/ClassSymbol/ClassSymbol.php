@@ -51,7 +51,7 @@ class ClassSymbol
     /**
      * The class's docblock.
      *
-     * @var string
+     * @var string|false false if the class doesn't have a docblock
      */
     protected $comment;
 
@@ -90,10 +90,8 @@ class ClassSymbol
                 )
             )
         ) {
-            $obj = $fqn::getFacadeRoot();
-
             $this->facade = $this->reflectionClass;
-            $this->reflectionClass = new ReflectionClass($obj);
+            $this->reflectionClass = $this->getFacadeRootReflectionClass($fqn);
             $this->fqn = $this->reflectionClass->getName();
         } else {
             $this->facade = null;
@@ -103,13 +101,53 @@ class ClassSymbol
     }
 
     /**
+     * Get the reflection class of the object a facade forwards the calls to.
+     *
+     * @throws \Throwable if the facade root can't be resolved
+     */
+    protected function getFacadeRootReflectionClass(string $facadeClassName): ReflectionClass
+    {
+        try {
+            return new ReflectionClass($facadeClassName::getFacadeRoot());
+        } catch (\Throwable $x) {
+            // The facade root can't be instantiated (for example because it requires a database connection, and Concrete is not installed):
+            // let's fallback to the facade accessor, if it's a class/interface name
+            $getFacadeAccessor = new \ReflectionMethod($facadeClassName, 'getFacadeAccessor');
+            if (PHP_VERSION_ID < 80100) {
+                // Not needed (and deprecated since PHP 8.5) in newer PHP versions
+                $getFacadeAccessor->setAccessible(true);
+            }
+            $accessor = $getFacadeAccessor->invoke(null);
+            if (is_string($accessor)) {
+                if (class_exists($accessor) || interface_exists($accessor)) {
+                    return new ReflectionClass($accessor);
+                }
+                // The accessor may be a container alias of a class name
+                $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
+                if ($app->isAlias($accessor)) {
+                    $aliased = $app->getAlias($accessor);
+                    if (class_exists($aliased) || interface_exists($aliased)) {
+                        return new ReflectionClass($aliased);
+                    }
+                }
+            }
+            throw $x;
+        }
+    }
+
+    /**
      * Get the methods.
      */
     protected function resolveMethods()
     {
         $methods = $this->reflectionClass->getMethods();
         if ($this->isFacade()) {
-            $methods = array_merge($methods, $this->getFacadeReflectionClass()->getMethods());
+            // The methods defined by the facade class itself take precedence over the ones of the root class (__callStatic is never invoked for them)
+            $facadeClass = $this->getFacadeReflectionClass();
+            $methods = array_filter($methods, static function (\ReflectionMethod $method) use ($facadeClass): bool {
+                return !$facadeClass->hasMethod($method->getName());
+            });
+            $methods = array_merge($methods, $facadeClass->getMethods());
         }
         foreach ($methods as $method) {
             $this->methods[] = new MethodSymbol($this, $method);
@@ -185,5 +223,21 @@ class ClassSymbol
     public function getAliasNamespace()
     {
         return $this->aliasNamespace;
+    }
+
+    /**
+     * Get the fully-qualified name of the actual class (for facades: the class the calls are forwarded to).
+     */
+    public function getFqn(): string
+    {
+        return $this->fqn;
+    }
+
+    /**
+     * Get the reflection of the actual class (for facades: the class the calls are forwarded to).
+     */
+    public function getReflectionClass(): ReflectionClass
+    {
+        return $this->reflectionClass;
     }
 }

@@ -46,7 +46,7 @@ interface AttributeInterface
      * A key is mapped with a row from the AttributeKeys table.
      * Use the object for example to retrieve the current attribute handle (e.g. 'meta_title').
      *
-     * @return AttributeKeyInterface|\Concrete\Core\Entity\Attribute\Key\Key
+     * @return AttributeKeyInterface|\Concrete\Core\Entity\Attribute\Key\Key|null
      */
     public function getAttributeKey();
 
@@ -87,7 +87,7 @@ interface AttributeInterface
      * Is run when an attribute is saved through the standard user interfaces
      * like the sitemap attributes dialog, the attributes panel, or the user attributes slideouts.
      *
-     * @return AttributeValueInterface
+     * @return \Concrete\Core\Entity\Attribute\Value\Value\AbstractValue|\Concrete\Core\Attribute\Value\EmptyRequestAttributeValue the value (or an EmptyRequestAttributeValue instance for the legacy attribute types that save the values by themselves)
      */
     public function createAttributeValueFromRequest();
 
@@ -95,9 +95,9 @@ interface AttributeInterface
      * Is run whenever $object->setAttribute('my_property_location_attribute', $value)
      * is run through code, with whatever you happen to pass through.
      *
-     * @param $mixed
+     * @param mixed $mixed
      *
-     * @return AttributeValueInterface
+     * @return \Concrete\Core\Entity\Attribute\Value\Value\AbstractValue|false the value (or false for the legacy attribute types that don't create the values)
      */
     public function createAttributeValue($mixed);
 

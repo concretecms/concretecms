@@ -3,6 +3,16 @@ namespace Concrete\Core\Workflow\HistoryEntry;
 
 abstract class HistoryEntry
 {
+    /**
+     * @var string
+     */
+    protected $action;
+
+    /**
+     * @var int
+     */
+    protected $uID;
+
     abstract public function getWorkflowProgressHistoryDescription();
 
     public function setAction($action)

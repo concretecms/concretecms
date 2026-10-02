@@ -6,11 +6,19 @@ use Database;
 
 class AddFileFileFolderAccess extends FileFolderAccess
 {
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Permission\Access\Access::getAccessListItems()
+     *
+     * @return \Concrete\Core\Permission\Access\ListItem\AddFileFileFolderListItem[]
+     */
     public function getAccessListItems(
         $accessType = FileFolderKey::ACCESS_TYPE_INCLUDE,
         $filterEntities = array(), $checkCache = true
     ) {
         $db = Database::connection();
+        /** @var \Concrete\Core\Permission\Access\ListItem\AddFileFileFolderListItem[] $list */
         $list = parent::getAccessListItems($accessType, $filterEntities);
         foreach ($list as $l) {
             $pe = $l->getAccessEntityObject();

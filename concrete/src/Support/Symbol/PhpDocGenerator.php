@@ -25,7 +25,7 @@ class PhpDocGenerator
     /**
      * Insert the variable definitions in the same PHPDoc block?
      *
-     * @var string
+     * @var bool
      */
     protected $singleDocBlock = false;
 
@@ -202,9 +202,7 @@ class PhpDocGenerator
                                 if (empty($commonObjectDescriptors)) {
                                     break;
                                 }
-                                if (!empty($commonObjectDescriptors)) {
-                                    $commonObjectDescriptors = array_intersect($commonObjectDescriptors, $this->getObjectDescriptors($item));
-                                }
+                                $commonObjectDescriptors = array_intersect($commonObjectDescriptors, $this->getObjectDescriptors($item));
                             }
                         }
                     }

@@ -70,6 +70,8 @@ class ApplicationUpdate
                 return $up;
             }
         }
+
+        return null;
     }
 
     /**
@@ -117,6 +119,8 @@ class ApplicationUpdate
 
             return $obj;
         }
+
+        return null;
     }
 
     public function getVersion()

@@ -77,7 +77,11 @@ class DoctrineCacheDriver extends CacheProvider
             $lifeTime = null;
         }
 
-        return $cache->save($cache->getItem('doctrine/' . $id)->set($data, $lifeTime));
+        $item = $cache->getItem('doctrine/' . $id);
+        $item->set($data);
+        $item->setTTL($lifeTime);
+
+        return $cache->save($item);
     }
 
     /**

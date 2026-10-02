@@ -7,7 +7,7 @@ use Concrete\Core\Board\Instance\Item\Populator\PagePopulator;
 use Concrete\Core\Calendar\Calendar;
 use Concrete\Core\Calendar\Event\EventOccurrenceService;
 use Concrete\Core\Entity\Board\DataSource\DataSource;
-use Concrete\Core\Entity\Board\Designer\CustomElement;
+use Concrete\Core\Entity\Board\Designer\ItemSelectorCustomElement;
 use Concrete\Core\Page\Controller\DashboardSitePageController;
 use Concrete\Core\Page\Page;
 use Concrete\Core\Permission\Checker;
@@ -67,11 +67,11 @@ class ChooseItems extends DashboardSitePageController
 
     /**
      * @param $id
-     * @return CustomElement
+     * @return \Concrete\Core\Entity\Board\Designer\ItemSelectorCustomElement|null
      */
     protected function getCustomElement($id)
     {
-        $r = $this->entityManager->getRepository(CustomElement::class);
+        $r = $this->entityManager->getRepository(ItemSelectorCustomElement::class);
         $element = $r->findOneById($id);
         return $element;
     }

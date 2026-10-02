@@ -19,6 +19,13 @@ class AntispamLibrary extends AbstractCategory
         return $library->getSystemAntispamLibraryName();
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Package\ItemCategory\AbstractCategory::getPackageItems()
+     *
+     * @return \Concrete\Core\Antispam\Library[]
+     */
     public function getPackageItems(Package $package)
     {
         return Library::getListByPackage($package);

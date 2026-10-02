@@ -89,5 +89,7 @@ class MovePageRequest extends PageRequest
                 return $wpr;
             }
         }
+
+        return null;
     }
 }

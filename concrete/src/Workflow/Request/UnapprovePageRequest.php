@@ -100,6 +100,8 @@ class UnapprovePageRequest extends PageRequest
 
             return $wpr;
         }
+
+        return null;
     }
 
 

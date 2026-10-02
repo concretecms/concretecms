@@ -4,6 +4,7 @@ namespace Concrete\Core\Api\Controller;
 
 use Concrete\Core\Attribute\Category\UserCategory;
 use Concrete\Core\Permission\Checker;
+use Concrete\Core\Permission\Key\EditUserPropertiesUserKey;
 use Concrete\Core\Permission\Key\Key;
 use Concrete\Core\Search\Pagination\PagerPagination;
 use Concrete\Core\User\RegistrationService;
@@ -26,7 +27,12 @@ class Users extends ApiController
 
     protected function getEditUserPropertiesAssignment()
     {
-        return Key::getByHandle('edit_user_properties')->getMyAssignment();
+        $pk = Key::getByHandle('edit_user_properties');
+        if (!$pk instanceof EditUserPropertiesUserKey) {
+            throw new \RuntimeException(t('The %s permission key is not installed correctly.', 'edit_user_properties'));
+        }
+
+        return $pk->getMyAssignment();
     }
 
     /**
@@ -250,7 +256,7 @@ class Users extends ApiController
     public function delete($uID)
     {
         /**
-         * @var $repository UserInfoRepository
+         * @var UserInfoRepository $repository
          */
         $repository = $this->app->make(UserInfoRepository::class);
         $user = $repository->getByID($uID);
@@ -306,7 +312,7 @@ class Users extends ApiController
     public function update($uID)
     {
         /**
-         * @var $repository UserInfoRepository
+         * @var UserInfoRepository $repository
          */
         $repository = $this->app->make(UserInfoRepository::class);
         $user = $repository->getByID($uID);
@@ -413,7 +419,7 @@ class Users extends ApiController
     public function changePassword($uID)
     {
         /**
-         * @var $repository UserInfoRepository
+         * @var UserInfoRepository $repository
          */
         $repository = $this->app->make(UserInfoRepository::class);
         $user = $repository->getByID($uID);

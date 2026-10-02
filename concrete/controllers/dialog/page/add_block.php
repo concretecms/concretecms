@@ -44,7 +44,7 @@ class AddBlock extends BackendInterfacePageController
     /**
      * @deprecated What's deprecated is the "public" part.
      *
-     * @var \Concrete\Core\Area\Area
+     * @var \Concrete\Core\Area\Area|null
      */
     public $areaToModify;
 
@@ -141,6 +141,7 @@ class AddBlock extends BackendInterfacePageController
                 } else {
                     // if we apply to all, then we don't worry about a new version of the page
                     $nb = $this->pageToModify->addBlock($bt, $this->areaToModify, $data);
+                    $nvc = null;
                 }
 
                 $event = new BlockAdd($nb, $this->pageToModify);
@@ -162,7 +163,7 @@ class AddBlock extends BackendInterfacePageController
                     }
                 }
                 if (!is_object($db)) {
-                    $nb->moveBlockToDisplayOrderPosition(false);
+                    $nb->moveBlockToDisplayOrderPosition(null);
                 }
 
                 $pc->setAdditionalDataAttribute('btID', $nb->getBlockTypeID());

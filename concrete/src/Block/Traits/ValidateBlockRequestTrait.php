@@ -18,7 +18,9 @@ trait ValidateBlockRequestTrait
     {
         $bi = $b->getController();
         if ($b->getBlockTypeHandle() == BLOCK_HANDLE_SCRAPBOOK_PROXY) {
-            $_b = Block::getByID($bi->getOriginalBlockID());
+            /** @var \Concrete\Block\CoreScrapbookDisplay\Controller $scrapbookController */
+            $scrapbookController = $bi;
+            $_b = Block::getByID($scrapbookController->getOriginalBlockID());
             $bi = $_b->getController(); // for validation
         }
 

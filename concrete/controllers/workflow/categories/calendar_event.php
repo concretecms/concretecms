@@ -26,7 +26,7 @@ class CalendarEvent extends AbstractController
         $workflowResponse = $wp->runTask($task, $this->request->request->all());
         $responseData = [
             'wpID' => $wp->getWorkflowProgressID(),
-            'redirect' => $workflowResponse instanceof WorkflowProgressResponse ? (string) $workflowResponse->getWorkflowProgressResponseURL() : '',
+            'redirect' => (string) $workflowResponse->getWorkflowProgressResponseURL(),
         ];
 
         return $this->app->make(ResponseFactoryInterface::class)->json($responseData);

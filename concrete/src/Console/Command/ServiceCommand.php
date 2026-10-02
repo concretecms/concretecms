@@ -204,17 +204,18 @@ EOT
     {
         $ruleOptions = [];
         foreach ($input->getArgument('rule-options') as $keyValuePair) {
-            list($key, $value) = explode('=', $keyValuePair, 2);
-            $key = trim($key);
+            $chunks = explode('=', $keyValuePair, 2);
+            $key = trim($chunks[0]);
             if (substr($key, -2) === '[]') {
                 $isArray = true;
                 $key = rtrim(substr($key, 0, -2));
             } else {
                 $isArray = false;
             }
-            if ($key === '' || !isset($value)) {
+            if ($key === '' || !isset($chunks[1])) {
                 throw new Exception(sprintf("Unable to parse the rule option '%s': it must be in the form of key=value", $keyValuePair));
             }
+            $value = $chunks[1];
             if (isset($ruleOptions[$key])) {
                 if (!($isArray && is_array($ruleOptions[$key]))) {
                     throw new Exception(sprintf("Duplicated rule option '%s'", $key));

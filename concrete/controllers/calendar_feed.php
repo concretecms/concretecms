@@ -5,7 +5,6 @@ use Concrete\Core\Controller\Controller;
 use Concrete\Core\Http\Response;
 use Concrete\Core\Page\Page;
 use Concrete\Core\Calendar\Calendar;
-use Concrete\Core\Calendar\Event\EventOccurrence;
 use Concrete\Core\Calendar\Event\EventOccurrenceList;
 use Concrete\Core\Calendar\CalendarServiceProvider;
 use Laminas\Feed\Writer\Feed as LaminasFeed;
@@ -20,7 +19,7 @@ class CalendarFeed extends Controller
             if ($cp->canAccessCalendarRssFeed()) {
                 if ($calendar->getEventPageParentID()) {
                     $calendarPage = Page::getByID($calendar->getEventPageParentID());
-                    $calendarLink = $calendarPage->getCollectionLink(true);
+                    $calendarLink = $calendarPage->getCollectionLink();
                 } else {
                     $calendarLink = BASE_URL . DIR_REL;
                 }
@@ -39,9 +38,7 @@ class CalendarFeed extends Controller
 
                 $results = $list->getResults();
 
-                /**
-                 * @var EventOccurrence
-                 */
+                /** @var \Concrete\Core\Entity\Calendar\CalendarEventVersionOccurrence $occurrence */
                 foreach ($results as $occurrence) {
                     $entry = $writer->createEntry();
                     $entry->setTitle($occurrence->getEvent()->getName());

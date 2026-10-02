@@ -8,43 +8,31 @@ class PageDesignPreviewRequest extends SkinPreviewRequest
 {
 
     /**
-     * @var Template
+     * @var Template|null
      */
     protected $template;
 
     /**
-     * @var Theme
+     * @var Theme|null
      */
     protected $theme;
 
 
-    /**
-     * @return Template
-     */
     public function getPageTemplate(): ?Template
     {
         return $this->template;
     }
 
-    /**
-     * @param Template $template
-     */
     public function setPageTemplate(Template $template): void
     {
         $this->template = $template;
     }
 
-    /**
-     * @return Theme
-     */
-    public function getTheme(): Theme
+    public function getTheme(): ?Theme
     {
         return $this->theme;
     }
 
-    /**
-     * @param Theme $theme
-     */
     public function setTheme(Theme $theme): void
     {
         $this->theme = $theme;

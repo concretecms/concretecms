@@ -30,6 +30,13 @@ class StandardValidator implements ValidatorInterface
         return $this->validate($category, $key->getAttributeType()->getController(), $request, $key);
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Attribute\ValidatorInterface::validateSaveValueRequest()
+     *
+     * @param \Concrete\Core\Http\Request $request the request whose data is validated by the attribute controller
+     */
     public function validateSaveValueRequest(Controller $controller, Request $request, $includeFieldNotPresentErrors = true)
     {
         $key = $controller->getAttributeKey();

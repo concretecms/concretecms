@@ -156,7 +156,7 @@ class Importer
     private $fileImporter;
 
     /**
-     * @var \Concrete\Core\File\Import\ProcessorManager
+     * @var array<string, \Concrete\Core\File\Import\Processor\LegacyPostProcessor>
      */
     private $deprecatedProcessorUsed = [];
 

@@ -153,8 +153,7 @@ class Installer
     {
         $result = null;
         $configuration = $this->getOptions()->getConfiguration();
-        if (true
-            && isset($configuration['database'])
+        if (isset($configuration['database'])
             && is_array($configuration['database'])
             && isset($configuration['database']['default-connection'])
             && is_string($defaultConnection = $configuration['database']['default-connection'])
@@ -171,8 +170,7 @@ class Installer
                 'username' => '',
                 'password' => '',
             ];
-            if (false
-                || !is_string($result['driver'])
+            if (!is_string($result['driver'])
                 || '' === $result['driver']
                 || !is_string($result['server'])
                 || '' === $result['server']

@@ -362,12 +362,13 @@ class File extends Controller
     {
         $errors = $this->app->make('error');
         $importedFileVersions = [];
+        $replacingFile = null;
         try {
             $token = $this->app->make('token');
             if (!$token->validate()) {
                 throw new UserMessageException($token->getErrorMessage());
             }
-            $filenames = $this->request->request->get('send_file');
+            $filenames = $this->request->request->all()['send_file'] ?? null;
             if (is_string($filenames)) {
                 $filenames = [$filenames];
             } elseif (!is_array($filenames)) {
@@ -419,19 +420,20 @@ class File extends Controller
     {
         $errors = $this->app->make('error');
         $importedFileVersions = [];
+        $replacingFile = null;
         try {
             $token = $this->app->make('token');
             if (!$token->validate()) {
                 throw new UserMessageException($token->getErrorMessage());
             }
-            $urls = $this->request->request->get('url_upload');
+            $urls = $this->request->request->all()['url_upload'] ?? null;
             if (is_string($urls)) {
                 $urls = explode("\n", $urls);
             } elseif (!is_array($urls)) {
                 $urls = [];
             }
 
-            $urls = array_values(array_filter(array_map('trim', $urls), 'strlen'));
+            $urls = array_values(array_filter(array_map('trim', $urls), static function (string $url): bool { return $url !== ''; }));
             $replacingFile = $this->getFileToBeReplaced();
             switch (count($urls)) {
                 case 0:
@@ -494,6 +496,7 @@ class File extends Controller
             $errorList = new ErrorList();
             $errorList->add($token->getErrorMessage());
             $r->setError($errorList);
+            $newFiles = null;
         }
         $r->setFiles($newFiles);
         $r->outputJSON();
@@ -563,7 +566,7 @@ class File extends Controller
     protected function getRequestFiles($permissionKey = 'view_file_in_file_manager', $checkUUID = false)
     {
         $files = [];
-        $fID = $this->request->request->get('fID', $this->request->query->get('fID'));
+        $fID = $this->request->request->all()['fID'] ?? $this->request->query->all()['fID'] ?? null;
         if (is_array($fID)) {
             $fileIDs = $fID;
         } else {
@@ -678,7 +681,7 @@ class File extends Controller
     protected function getFileToBeReplaced()
     {
         if ($this->fileToBeReplaced === false) {
-            $fID = $this->request->request->get('fID');
+            $fID = $this->request->request->all()['fID'] ?? null;
             if (!$fID) {
                 $this->fileToBeReplaced = null;
             } else {
@@ -713,12 +716,8 @@ class File extends Controller
             $replacingFile = $this->getFileToBeReplaced();
             if ($replacingFile !== null) {
                 $folder = $replacingFile->getFileFolderObject();
-                // Fix for 5.7 files that had their parents set to their own file id
-                if ($folder instanceof \Concrete\Core\Tree\Node\Type\File) {
-                    $folder = $folder->getTreeNodeParentObject();
-                }
             } else {
-                $treeNodeID = $this->request->request->get('currentFolder');
+                $treeNodeID = $this->request->request->all()['currentFolder'] ?? null;
                 if ($treeNodeID) {
                     $treeNodeID = is_scalar($treeNodeID) ? (int)$treeNodeID : 0;
                     $folder = $treeNodeID === 0 ? null : Node::getByID($treeNodeID);
@@ -754,7 +753,7 @@ class File extends Controller
     protected function getImportOriginalPage()
     {
         if ($this->importOriginalPage === false) {
-            $ocID = $this->request->request->get('ocID');
+            $ocID = $this->request->request->all()['ocID'] ?? null;
             if (!$ocID) {
                 $this->importOriginalPage = null;
             } else {
@@ -844,8 +843,7 @@ class File extends Controller
         $parsedUrl = \Concrete\Core\Url\Url::createFromUrl($url);
         $scheme = strtolower((string) $parsedUrl->getScheme());
         $host = strtolower(trim((string) $parsedUrl->getHost()));
-        $port = $parsedUrl->getPort();
-        $port = $port ? $port->get() : null;
+        $port = $parsedUrl->getPort()->get();
         $port = $port ? (int) $port : ($scheme === 'http' ? 80 : 443);
 
         return sprintf('%s://%s:%d', $scheme, $host, $port);
@@ -881,6 +879,7 @@ class File extends Controller
             // got a filename (with extension)... use it
             $filename = $matches[1];
         } else {
+            $filename = null;
             foreach ($response->getHeader('Content-Type') as $contentType) {
                 if (!empty($contentType)) {
                     [$mimeType] = explode(';', $contentType, 2);

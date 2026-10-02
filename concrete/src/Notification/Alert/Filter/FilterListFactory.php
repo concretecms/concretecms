@@ -23,10 +23,8 @@ class FilterListFactory
     public function createList()
     {
         $list = new FilterList();
+        /** @var TypeInterface $driver */
         foreach($this->typeManager->getDrivers() as $driver) {
-            /**
-             * @var $driver TypeInterface
-             */
             foreach($driver->getAvailableFilters() as $filter) {
                 $list->addFilter($filter);
             }

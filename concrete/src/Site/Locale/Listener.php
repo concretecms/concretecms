@@ -2,7 +2,7 @@
 
 namespace Concrete\Core\Site\Locale;
 
-use Concrete\Core\Database\Connection\Connection;
+use Doctrine\DBAL\Connection;
 use Concrete\Core\Entity\Site\Locale as LocaleEntity;
 use Doctrine\ORM\Event\PreUpdateEventArgs;
 
@@ -33,7 +33,6 @@ EOT
 
     /**
      * @param Connection $cn
-     * @param string $selectChildren
      * @param string $updateMultilingualRelation
      * @param int[] $pageIDs
      */

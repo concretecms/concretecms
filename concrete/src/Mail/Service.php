@@ -70,7 +70,7 @@ class Service implements LoggerAwareInterface
     /**
      * Should we throw an exception if the delivery fails?
      *
-     * @var false
+     * @var bool
      */
     protected $throwOnFailure;
 
@@ -99,7 +99,8 @@ class Service implements LoggerAwareInterface
     public function __destruct()
     {
         try {
-            $this->mailer = null;
+            unset($this->mailer);
+            // @phpstan-ignore catch.neverThrown (the destructor of the mailer may throw when unset() releases the last reference to it)
         } catch (Throwable $x) {
             // Ignore error
         }
@@ -393,7 +394,7 @@ class Service implements LoggerAwareInterface
             $importer->setupValidation($address->getAddress(), $data);
         }
         $this->from($importer->getMailImporterEmail());
-        $this->body = $importer->setupBody(($this->getBody() === false) ? '' : $this->getBody());
+        $this->setBody($importer->setupBody(($this->getBody() === false) ? '' : $this->getBody()));
     }
 
     /**
@@ -536,7 +537,7 @@ class Service implements LoggerAwareInterface
         foreach ($headers as $header) {
             if (is_string($header)) {
                 $split = array_map('trim', explode(':', $header, 2));
-                $emailHeaders->addTextHeader($split[0] ?? '', $split[1] ?? '');
+                $emailHeaders->addTextHeader($split[0], $split[1] ?? '');
             } else {
                 $emailHeaders->add($header);
             }

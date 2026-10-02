@@ -29,9 +29,9 @@ class Site extends DashboardPageController
         $registeredCanRead = false;
         foreach ($assignments as $asi) {
             $ae = $asi->getAccessEntityObject();
-            if ($ae->getAccessEntityTypeHandle() == 'group' && $ae->getGroupObject()->getGroupID() == GUEST_GROUP_ID) {
+            if ($ae instanceof GroupPermissionAccessEntity && $ae->getGroupObject()->getGroupID() == GUEST_GROUP_ID) {
                 $guestCanRead = true;
-            } elseif ($ae->getAccessEntityTypeHandle() == 'group' && $ae->getGroupObject()->getGroupID() == REGISTERED_GROUP_ID) {
+            } elseif ($ae instanceof GroupPermissionAccessEntity && $ae->getGroupObject()->getGroupID() == REGISTERED_GROUP_ID) {
                 $registeredCanRead = true;
             }
         }
@@ -51,10 +51,10 @@ class Site extends DashboardPageController
         $assignments = $pk->getAccessListItems();
         foreach ($assignments as $asi) {
             $ae = $asi->getAccessEntityObject();
-            if ($ae->getAccessEntityTypeHandle() == 'group') {
+            if ($ae instanceof GroupPermissionAccessEntity) {
                 $groupObject = $ae->getGroupObject();
                 if ($groupObject) {
-                    $editAccess[] = $ae->getGroupObject()->getGroupID();
+                    $editAccess[] = $groupObject->getGroupID();
                 }
             }
         }
@@ -74,6 +74,9 @@ class Site extends DashboardPageController
                         break;
                     case 'PRIVATE':
                         $viewObj = GroupPermissionAccessEntity::getOrCreate(Group::getByID(ADMIN_GROUP_ID));
+                        break;
+                    default:
+                        $viewObj = null;
                         break;
                 }
 

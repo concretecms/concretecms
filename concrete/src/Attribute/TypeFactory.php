@@ -59,7 +59,7 @@ class TypeFactory
         if ($atHandle === '') {
             return null;
         }
-        $r = $this->entityManager->getRepository('\Concrete\Core\Entity\Attribute\Type');
+        $r = $this->entityManager->getRepository('Concrete\Core\Entity\Attribute\Type');
 
         return $r->findOneBy(['atHandle' => $atHandle]);
     }
@@ -73,7 +73,7 @@ class TypeFactory
      */
     public function getListByPackage(Package $package)
     {
-        $r = $this->entityManager->getRepository('\Concrete\Core\Entity\Attribute\Type');
+        $r = $this->entityManager->getRepository('Concrete\Core\Entity\Attribute\Type');
 
         return $r->findByPackage($package);
     }
@@ -91,7 +91,7 @@ class TypeFactory
         if ($atID === 0) {
             return null;
         }
-        $r = $this->entityManager->getRepository('\Concrete\Core\Entity\Attribute\Type');
+        $r = $this->entityManager->getRepository('Concrete\Core\Entity\Attribute\Type');
 
         return $r->findOneBy(['atID' => $atID]);
     }
@@ -131,14 +131,14 @@ class TypeFactory
      */
     public function getList($akCategoryHandle = false)
     {
-        $r = $this->entityManager->getRepository('\Concrete\Core\Entity\Attribute\Type');
+        $r = $this->entityManager->getRepository('Concrete\Core\Entity\Attribute\Type');
         $akCategoryHandle = (string) $akCategoryHandle;
         if ($akCategoryHandle === '') {
             return $r->findAll();
         }
         $category = $this->categoryService->getByHandle($akCategoryHandle);
 
-        return $category->getAttributeTypes();
+        return $category->getAttributeTypes()->toArray();
     }
 
     /**

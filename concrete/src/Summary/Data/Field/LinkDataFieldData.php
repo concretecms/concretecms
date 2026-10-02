@@ -11,7 +11,7 @@ class LinkDataFieldData implements DataFieldDataInterface
 {
 
     /**
-     * @var int
+     * @var Url|string|null
      */
     protected $link;
     
@@ -21,7 +21,7 @@ class LinkDataFieldData implements DataFieldDataInterface
     }
 
     /**
-     * @param string|Url
+     * @param string|Url $link
      */
     public function setData($link): void
     {

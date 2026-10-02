@@ -23,7 +23,7 @@ class RedisLoader implements LoaderInterface
      */
     public function clearNamespace($namespace)
     {
-        $keys = $this->paginatedScan($this->connection, "{$namespace}::*");
+        $keys = iterator_to_array($this->paginatedScan($this->connection, "{$namespace}::*"), false);
         if ($keys) {
             $this->connection->del($keys);
         }

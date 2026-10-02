@@ -67,8 +67,8 @@ class TranslatorAdapter implements TranslatorAdapterInterface
      *
      * If the $number is not equal to 1, the plural format will be returned.
      *
-     * @param string $singular
-     * @param string $plural
+     * @param string|mixed $singular an empty string is returned if it's not a string
+     * @param string|mixed $plural an empty string is returned if it's not a string
      * @param int $number
      *
      * @return string

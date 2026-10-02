@@ -13,7 +13,7 @@ use Core;
 class Avatar
 {
     /**
-     * @param \UserInfo $uo
+     * @param \Concrete\Core\User\UserInfo $uo
      * @param bool $suppressNone
      * @param float $aspectRatio
      *
@@ -35,7 +35,7 @@ class Avatar
     /**
      * gets the image path for a users avatar.
      *
-     * @param \UserInfo $uo
+     * @param \Concrete\Core\User\UserInfo $uo
      * @param bool $withNoCacheStr
      *
      * @return bool|string $src

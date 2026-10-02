@@ -5,14 +5,14 @@ namespace Concrete\Core\Logging;
 use Closure;
 use Concrete\Core\Search\ItemList\Database\ItemList;
 use Concrete\Core\Search\ItemList\Pager\Manager\LogListPagerManager;
-use Concrete\Core\Search\ItemList\Pager\PagerProviderInterface;
+use Concrete\Core\Search\ItemList\Pager\DatabasePagerProviderInterface;
 use Concrete\Core\Search\ItemList\Pager\QueryString\VariableFactory;
 use Concrete\Core\Search\Pagination\PaginationProviderInterface;
 use DateTime;
 use Doctrine\DBAL\Query\QueryBuilder;
 use Pagerfanta\Adapter\DoctrineDbalAdapter;
 
-class LogList extends ItemList implements PagerProviderInterface, PaginationProviderInterface
+class LogList extends ItemList implements DatabasePagerProviderInterface, PaginationProviderInterface
 {
 
     /**

@@ -1,7 +1,6 @@
 <?php
 namespace Concrete\Core\Notification\Type;
 
-use Concrete\Core\Conversation\Message\NewMessage;
 use Concrete\Core\Entity\Notification\NewConversationMessageNotification;
 use Concrete\Core\Notification\Alert\Filter\StandardFilter;
 use Concrete\Core\Notification\Subject\SubjectInterface;
@@ -12,7 +11,11 @@ class NewConversationMessageType extends Type
 {
 
     /**
-     * @param $user NewMessage
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Notification\Type\TypeInterface::createNotification()
+     *
+     * @param \Concrete\Core\Conversation\Message\Message $message
      */
     public function createNotification(SubjectInterface $message)
     {

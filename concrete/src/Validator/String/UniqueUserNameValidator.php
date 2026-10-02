@@ -83,7 +83,7 @@ class UniqueUserNameValidator extends AbstractTranslatableValidator implements V
      *
      * @see \Concrete\Core\Validator\ValidatorForSubjectInterface::isValidFor()
      *
-     * @param int|\Concrete\Core\User\User|\Concrete\Core\Entity\User\User|\Concrete\Core\User\UserInfo|null $subject
+     * @param int|\Concrete\Core\User\User|\Concrete\Core\Entity\User\User|\Concrete\Core\User\UserInfo|null|mixed $subject an InvalidArgumentException is thrown if it's an object without a getUserID() method
      */
     public function isValidFor($mixed, $subject = null, ?ArrayAccess $error = null)
     {

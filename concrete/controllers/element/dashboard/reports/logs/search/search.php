@@ -13,7 +13,7 @@ class Search extends ElementController
      * This is where the header search bar in the page should point. This search bar allows keyword searching in
      * different contexts. Valid options are `view` and `folder`.
      *
-     * @var string
+     * @var string|null
      */
     protected $headerSearchAction;
     protected $query;

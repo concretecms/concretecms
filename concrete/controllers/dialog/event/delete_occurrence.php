@@ -28,6 +28,16 @@ class DeleteOccurrence extends BackendInterfaceController
      */
     protected $eventService;
 
+    /**
+     * @var \Concrete\Core\Calendar\Event\Formatter\DateFormatter
+     */
+    protected $dateFormatter;
+
+    /**
+     * @var \Concrete\Core\Calendar\Event\EventOccurrenceService
+     */
+    protected $eventOccurrenceService;
+
     public function __construct()
     {
         parent::__construct();
@@ -91,7 +101,6 @@ class DeleteOccurrence extends BackendInterfaceController
         }
     }
 
-
     public function view()
     {
         if ($this->canAccess()) {
@@ -119,8 +128,5 @@ class DeleteOccurrence extends BackendInterfaceController
 
         return false;
     }
-
-
-
 
 }

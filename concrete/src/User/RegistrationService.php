@@ -77,17 +77,17 @@ class RegistrationService implements RegistrationServiceInterface
         $hasher = $this->application->make(PasswordHasher::class);
 
         if (isset($data['uIsValidated']) && $data['uIsValidated'] == 1) {
-            $uIsValidated = 1;
+            $uIsValidated = true;
         } elseif (isset($data['uIsValidated']) && $data['uIsValidated'] == 0) {
-            $uIsValidated = 0;
+            $uIsValidated = false;
         } else {
             $uIsValidated = -1;
         }
 
         if (isset($data['uIsFullRecord']) && $data['uIsFullRecord'] == 0) {
-            $uIsFullRecord = 0;
+            $uIsFullRecord = false;
         } else {
-            $uIsFullRecord = 1;
+            $uIsFullRecord = true;
         }
 
         $password_to_insert = $data['uPassword'] ?? '';

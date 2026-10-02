@@ -60,7 +60,7 @@ class GlobalArea extends Area
     }
 
     /**
-     * @param Page $c
+     * @param Page|false|null $c
      *
      * @return int
      */
@@ -202,7 +202,7 @@ class GlobalArea extends Area
     }
 
     /**
-     * @param Page $c
+     * @param Page|false|null $c
      *
      * @return Page
      */

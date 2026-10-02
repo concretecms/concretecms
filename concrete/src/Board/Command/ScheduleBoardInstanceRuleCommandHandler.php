@@ -29,20 +29,20 @@ class ScheduleBoardInstanceRuleCommandHandler
     public function __invoke(ScheduleBoardInstanceRuleCommand $command)
     {
         $rule = $this->entityManager->find(InstanceSlotRule::class, $command->getBoardInstanceSlotRuleID());
-        if ($rule) {
-            $startDateTime = new \DateTime($command->getStartDate() . ' ' . $command->getStartTime() . ':00', new \DateTimeZone($command->getTimezone()));
-            $endDateTime = new \DateTime($command->getEndDate() . ' ' . $command->getEndTime() . ':00', new \DateTimeZone($command->getTimezone()));
-            $rule->setTimezone($command->getTimezone());
-            $rule->setStartDate($startDateTime->getTimestamp());
-            $rule->setEndDate($endDateTime->getTimestamp());
-            $rule->setSlot($command->getSlot());
-            if ($command->getName()) {
-                $rule->setNotes($command->getName());
-            }
-            $this->entityManager->persist($rule);
-            $this->entityManager->flush();
+        if (!$rule) {
+            return null;
         }
-
+        $startDateTime = new \DateTime($command->getStartDate() . ' ' . $command->getStartTime() . ':00', new \DateTimeZone($command->getTimezone()));
+        $endDateTime = new \DateTime($command->getEndDate() . ' ' . $command->getEndTime() . ':00', new \DateTimeZone($command->getTimezone()));
+        $rule->setTimezone($command->getTimezone());
+        $rule->setStartDate($startDateTime->getTimestamp());
+        $rule->setEndDate($endDateTime->getTimestamp());
+        $rule->setSlot($command->getSlot());
+        if ($command->getName()) {
+            $rule->setNotes($command->getName());
+        }
+        $this->entityManager->persist($rule);
+        $this->entityManager->flush();
         $logger = $this->loggerFactory->createLogger(Channels::CHANNEL_BOARD);
         $logger->info(t('Instance rule {ruleID} successfully scheduled for start date {startDate} and end date {endDate} in slot {slot}.'), [
             'slot' => $command->getSlot(),

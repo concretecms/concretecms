@@ -45,7 +45,7 @@ class ApplicationDriver implements DriverInterface
     /**
      * Return the correct MappingDriver base on the application config
      * 
-     * @return XmlDriver|YamlDriver|AnnotationDriver
+     * @return XmlDriver|YamlDriver|AnnotationDriver|null
      */
     public function getDriver()
     {
@@ -84,6 +84,8 @@ class ApplicationDriver implements DriverInterface
                 }
             }
         }
+
+        return null;
     }
     
     /**

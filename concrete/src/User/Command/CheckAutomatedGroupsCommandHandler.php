@@ -33,10 +33,10 @@ class CheckAutomatedGroupsCommandHandler implements OutputAwareInterface
         $user = $this->userInfoRepository->getByID($command->getUserID());
         if ($user) {
             $this->output->write(t('Checking user: %s (ID: %s)', $user->getUserName(), $user->getUserID()));
-            $groupControllers = Group::getAutomatedOnJobRunGroupControllers($user);
+            $groupControllers = Group::getAutomatedOnJobRunGroupControllers();
             foreach ($groupControllers as $ga) {
                 if ($ga->check($user)) {
-                    $user->enterGroup($ga->getGroupObject());
+                    $user->getUserObject()->enterGroup($ga->getGroupObject());
                 }
             }
 
@@ -45,7 +45,7 @@ class CheckAutomatedGroupsCommandHandler implements OutputAwareInterface
             $groups = $gl->getResults();
             foreach ($groups as $group) {
                 if ($group->isUserExpired($user)) {
-                    $user->exitGroup($group);
+                    $user->getUserObject()->exitGroup($group);
                 }
             }
         }

@@ -23,6 +23,13 @@ class ImageEditor extends AbstractCategory
         return $editor->getName();
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Package\ItemCategory\AbstractCategory::getPackageItems()
+     *
+     * @return \Concrete\Core\Entity\File\Image\Editor[]
+     */
     public function getPackageItems(Package $package)
     {
         $app = Application::getFacadeApplication();

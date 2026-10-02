@@ -10,6 +10,13 @@ use Concrete\Core\StyleCustomizer\WebFont\WebFontCollectionFactory;
 class TypeParser extends AbstractParser
 {
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\StyleCustomizer\Style\Parser\AbstractParser::createStyleObject()
+     *
+     * @return \Concrete\Core\StyleCustomizer\Style\TypeStyle
+     */
     public function createStyleObject(): StyleInterface
     {
         return new TypeStyle();
@@ -31,6 +38,7 @@ class TypeParser extends AbstractParser
     public function parseNode(\SimpleXMLElement $element, PresetInterface $preset): StyleInterface
     {
         $collection = $this->webFontCollectionFactory->createFromPreset($preset);
+        /** @var \Concrete\Core\StyleCustomizer\Style\TypeStyle $style */
         $style = parent::parseNode($element, $preset);
         $style->setWebFonts($collection);
         return $style;

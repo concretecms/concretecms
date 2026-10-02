@@ -1,0 +1,30 @@
+<?php
+
+/*
+ * gettext/gettext 3.x: Gettext\Translations converts the translations from and to the supported formats with
+ * __callStatic() and __call() (for example fromPoFile() calls Extractors\Po::fromFile(), toMoFile() calls
+ * Generators\Mo::toFile()): this stub declares the magic methods used by Concrete, so that PHPStan knows them.
+ * PHPStan requires the generic types of the ArrayObject parent class to be specified in stubs: the translations are
+ * indexed by their ID (numeric IDs become integer keys).
+ * PHPStan validates the stub files in isolation, so Gettext\Translation must be declared too.
+ */
+
+namespace Gettext;
+
+class Translation
+{
+}
+
+/**
+ * @extends \ArrayObject<array-key, \Gettext\Translation>
+ *
+ * @method static \Gettext\Translations fromMoFile(string|string[] $file, \Gettext\Translations|null $translations = null)
+ * @method static \Gettext\Translations fromPoFile(string|string[] $file, \Gettext\Translations|null $translations = null)
+ * @method static \Gettext\Translations fromPoString(string $string, \Gettext\Translations|null $translations = null, string $file = '')
+ * @method bool toMoFile(string $file)
+ * @method bool toPoFile(string $file)
+ * @method string toPoString()
+ */
+class Translations extends \ArrayObject
+{
+}

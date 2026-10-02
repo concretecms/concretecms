@@ -8,7 +8,7 @@ class Announcement implements AnnouncementInterface
 {
 
     /**
-     * @var SlideInterface
+     * @var SlideInterface[]
      */
     protected $slides = [];
 

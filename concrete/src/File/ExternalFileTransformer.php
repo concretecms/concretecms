@@ -9,12 +9,12 @@ class ExternalFileTransformer extends TransformerAbstract
     /**
      * Basic transforming of an external file into an array
      *
-     * @param ExternalFileEntry $file
+     * @param ExternalFileEntry $fileEntry
      * @return array
      */
     public function transform(ExternalFileEntry $fileEntry)
     {
-        return (array) $file->jsonSerialize();
+        return (array) $fileEntry->jsonSerialize();
     }
 
 }

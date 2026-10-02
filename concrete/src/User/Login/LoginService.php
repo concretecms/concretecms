@@ -138,7 +138,8 @@ class LoginService implements LoggerAwareInterface, ApplicationAwareInterface
      * @param string $username The user provided username
      * @param string $password The user provided password
      *
-     * @throws \Concrete\Core\User\Exception\FailedLoginThresholdExceededException
+     * @throws \Concrete\Core\User\Exception\FailedLoginThresholdExceededException if the IP address reached the failed login threshold
+     * @throws \Concrete\Core\User\Exception\UserDeactivatedException if the user has been deactivated because of too many failed logins
      */
     public function failLogin($username, $password)
     {
@@ -156,7 +157,7 @@ class LoginService implements LoggerAwareInterface, ApplicationAwareInterface
         }
 
         // If the remaining attempts are less than 0
-        if ($this->loginAttemptService->remainingAttempts($username, $password) <= 0) {
+        if ($this->loginAttemptService->remainingAttempts($username) <= 0) {
             $this->loginAttemptService->deactivate($username);
             $userFailed = true;
         }

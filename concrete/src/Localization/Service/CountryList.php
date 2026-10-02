@@ -51,7 +51,7 @@ class CountryList
      */
     public function getCountryName($code)
     {
-        $countries = $this->getCountries(true);
+        $countries = $this->getCountries();
 
         return isset($countries[$code]) ? $countries[$code] : null;
     }

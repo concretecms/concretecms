@@ -57,25 +57,21 @@ abstract class GenericOauth2TypeController extends GenericOauthTypeController
             exit;
         }
 
-        if ($token) {
-            try {
-                $user = $this->attemptAuthentication();
-                if ($user) {
-                    return $this->completeAuthentication($user);
-                } else {
-                    $this->showError(
-                        t('No local user account associated with this user, please log in with a local account and connect your account from your user profile.'));
-                }
-            } catch (LoginException $e) {
-                $this->showError($e->getMessage());
-            } catch (Exception $e) {
-                $this->showError($e->getMessage());
-            } catch (\Exception $e) {
-                $this->logger->error($e->getMessage(), ['exception' => $e]);
-                $this->showError(t('An unexpected error occurred.'));
+        try {
+            $user = $this->attemptAuthentication();
+            if ($user) {
+                return $this->completeAuthentication($user);
+            } else {
+                $this->showError(
+                    t('No local user account associated with this user, please log in with a local account and connect your account from your user profile.'));
             }
-        } else {
-            $this->showError(t('Failed to complete authentication.'));
+        } catch (LoginException $e) {
+            $this->showError($e->getMessage());
+        } catch (Exception $e) {
+            $this->showError($e->getMessage());
+        } catch (\Exception $e) {
+            $this->logger->error($e->getMessage(), ['exception' => $e]);
+            $this->showError(t('An unexpected error occurred.'));
         }
         exit;
     }
@@ -126,23 +122,22 @@ abstract class GenericOauth2TypeController extends GenericOauthTypeController
             exit;
         }
 
-        if ($token) {
-            if ($this->bindUser($user, $this->getExtractor(true)->getUniqueId())) {
-                $this->showSuccess(t('Successfully attached.'));
-                exit;
-            }
+        if ($this->bindUser($user, $this->getExtractor(true)->getUniqueId())) {
+            $this->showSuccess(t('Successfully attached.'));
+            exit;
         }
         $this->showError(t('Unable to attach user.'));
         exit;
     }
 
     /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Authentication\Type\OAuth\GenericOauthTypeController::getService()
+     *
      * @return \OAuth\OAuth2\Service\AbstractService
      */
-    public function getService()
-    {
-        return parent::getService();
-    }
+    abstract public function getService();
 
     public function view()
     {

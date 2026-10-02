@@ -25,8 +25,8 @@ class AccessToken implements AccessTokenEntityInterface
     protected $identifier;
 
     /**
-     * @var \DateTime
-     * @ORM\Column(type="datetime")
+     * @var \DateTimeImmutable
+     * @ORM\Column(type="datetime_immutable")
      */
     protected $expiryDateTime;
 
@@ -41,7 +41,7 @@ class AccessToken implements AccessTokenEntityInterface
     protected $scopes = [];
 
     /**
-     * @var \League\OAuth2\Server\Entities\ScopeEntityInterface[]
+     * @var \League\OAuth2\Server\Entities\ClientEntityInterface
      * @ORM\ManyToOne(targetEntity="Client")
      * @ORM\JoinColumn(name="client", referencedColumnName="identifier", onDelete="CASCADE")
      */

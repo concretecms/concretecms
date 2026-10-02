@@ -43,6 +43,8 @@ final class Version20190422235040 extends AbstractMigration implements Repeatabl
         } else {
             $category = $category->getController();
         }
+        // The core attribute categories are standard categories
+        /** @var \Concrete\Core\Attribute\Category\AbstractStandardCategory $category */
 
         $factory = $this->app->make(TypeFactory::class);
         $types = $factory->getList();
@@ -57,7 +59,10 @@ final class Version20190422235040 extends AbstractMigration implements Repeatabl
         foreach(['collection', 'user', 'file'] as $categoryHandle) {
             $category = Category::getByHandle($categoryHandle);
             if ($category) {
-                $category->getController()->associateAttributeKeyType($siteAttribute);
+                // The core attribute categories are standard categories
+                /** @var \Concrete\Core\Attribute\Category\AbstractStandardCategory $controller */
+                $controller = $category->getController();
+                $controller->associateAttributeKeyType($siteAttribute);
             }
         }
 

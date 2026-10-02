@@ -5,6 +5,10 @@ use Concrete\Core\Permission\Access\Access;
 use PermissionKeyCategory;
 use Loader;
 
+/**
+ * @property \Concrete\Core\Tree\Node\Node|null $permissionObject
+ * @method \Concrete\Core\Tree\Node\Node|null getPermissionObject()
+ */
 class TreeNodeAssignment extends Assignment
 {
     /**

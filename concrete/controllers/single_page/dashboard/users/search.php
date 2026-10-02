@@ -25,6 +25,7 @@ use Concrete\Core\User\User;
 use Concrete\Core\Workflow\Progress\UserProgress as UserWorkflowProgress;
 use Exception;
 use Imagine\Image\Box;
+use Concrete\Core\Permission\Key\EditUserPropertiesUserKey;
 use PermissionKey;
 use Permissions;
 use stdClass;
@@ -55,12 +56,12 @@ class Search extends DashboardPageController
      */
     protected $user = false;
     /**
-     * @var Element
+     * @var Element|null
      */
     protected $headerMenu;
 
     /**
-     * @var Element
+     * @var Element|null
      */
     protected $headerSearch;
 
@@ -68,6 +69,76 @@ class Search extends DashboardPageController
      * @var bool
      */
     protected $canResetPassword;
+
+    /**
+     * @var array
+     */
+    protected $allowedEditAttributes;
+
+    /**
+     * @var \Concrete\Core\Permission\Access\ListItem\EditUserPropertiesUserListItem
+     */
+    protected $assignment;
+
+    /**
+     * @var bool
+     */
+    protected $canActivateUser;
+
+    /**
+     * @var bool
+     */
+    protected $canAddGroup;
+
+    /**
+     * @var bool
+     */
+    protected $canDeleteUser;
+
+    /**
+     * @var bool
+     */
+    protected $canEdit;
+
+    /**
+     * @var bool
+     */
+    protected $canEditAvatar;
+
+    /**
+     * @var bool
+     */
+    protected $canEditEmail;
+
+    /**
+     * @var bool
+     */
+    protected $canEditHomeFileManagerFolderID;
+
+    /**
+     * @var bool
+     */
+    protected $canEditLanguage;
+
+    /**
+     * @var bool
+     */
+    protected $canEditPassword;
+
+    /**
+     * @var bool
+     */
+    protected $canEditTimezone;
+
+    /**
+     * @var bool
+     */
+    protected $canEditUserName;
+
+    /**
+     * @var bool
+     */
+    protected $canSignInAsUser;
 
     /**
      * @return SearchProvider
@@ -85,6 +156,9 @@ class Search extends DashboardPageController
         return $this->app->make(QueryFactory::class);
     }
 
+    /**
+     * @return \Concrete\Core\Filesystem\Element
+     */
     protected function getHeaderMenu()
     {
         if (!isset($this->headerMenu)) {
@@ -94,6 +168,9 @@ class Search extends DashboardPageController
         return $this->headerMenu;
     }
 
+    /**
+     * @return \Concrete\Core\Filesystem\Element
+     */
     protected function getHeaderSearch()
     {
         if (!isset($this->headerSearch)) {
@@ -125,8 +202,12 @@ class Search extends DashboardPageController
     {
         $headerMenu = $this->getHeaderMenu();
         $headerSearch = $this->getHeaderSearch();
-        $headerMenu->getElementController()->setQuery($result->getQuery());
-        $headerSearch->getElementController()->setQuery($result->getQuery());
+        /** @var \Concrete\Controller\Element\Users\Search\Menu $headerMenuController */
+        $headerMenuController = $headerMenu->getElementController();
+        $headerMenuController->setQuery($result->getQuery());
+        /** @var \Concrete\Controller\Element\Users\Search\Search $headerSearchController */
+        $headerSearchController = $headerSearch->getElementController();
+        $headerSearchController->setQuery($result->getQuery());
         $query = $this->getExportQueryParameters();
 
         $exportArgs = [$this->getPageObject()->getCollectionPath(), 'csv_export'];
@@ -138,7 +219,7 @@ class Search extends DashboardPageController
         }
         $exportURL = $this->app->make('url/resolver/path')->resolve($exportArgs);
         $exportURL = $exportURL->setQuery($query);
-        $headerMenu->getElementController()->setExportURL($exportURL);
+        $headerMenuController->setExportURL($exportURL);
 
         $this->set('resultsBulkMenu', $this->app->make(MenuFactory::class)->createBulkMenu());
         $this->set('result', $result);
@@ -241,7 +322,10 @@ class Search extends DashboardPageController
         }
 
         if ($this->canEditAvatar) {
-            $result = [];
+            $result = [
+                'success' => false,
+                'avatar' => null,
+            ];
             $file = $this->request->files->get('file');
             if ($file !== null) {
 
@@ -317,7 +401,8 @@ class Search extends DashboardPageController
             case 'delete':
                 $this->setupUser($uID);
                 if ($this->canDeleteUser && $this->app->make('helper/validation/token')->validate()) {
-                    $wasDeleted = $this->user->triggerDelete($this->user);
+                    $me = $this->app->make(User::class);
+                    $wasDeleted = $this->user->triggerDelete($me);
                     if ($wasDeleted) {
                         $this->flash('success', t("User deleted successfully"));
                         return $this->buildRedirect('/dashboard/users/search');
@@ -416,7 +501,7 @@ class Search extends DashboardPageController
             if (!$error->has()) {
                 $this->user->update($data);
                 $message[] = t('User updated successfully.');
-                if (!empty($password)) {
+                if (isset($data['uPassword'])) {
                     $message[] = t('Password changed successfully.');
                 }
                 $this->flash('success', implode(' ', $message));
@@ -433,6 +518,9 @@ class Search extends DashboardPageController
     public function update_attribute($uID = false)
     {
         $this->setupUser($uID);
+        if (!$this->user) {
+            throw new UserMessageException(t('Invalid user.'));
+        }
         $sr = new UserEditResponse();
         if ($this->app->make('helper/validation/token')->validate()) {
             $ak = UserAttributeKey::getByID($this->app->make('helper/security')->sanitizeInt($this->request->request('name')));
@@ -443,9 +531,12 @@ class Search extends DashboardPageController
 
                 $this->user->saveUserAttributesForm([$ak]);
                 $val = $this->user->getAttributeValueObject($ak);
+            } else {
+                $val = null;
             }
         } else {
             $this->error->add($this->app->make('helper/validation/token')->getErrorMessage());
+            $val = null;
         }
         $sr->setUser($this->user);
         if ($this->error->has()) {
@@ -454,13 +545,15 @@ class Search extends DashboardPageController
             $sr->setMessage(t('Attribute saved successfully.'));
             $sr->setAdditionalDataAttribute('value', $val->getDisplayValue());
         }
-        $this->user->reindex();
         $sr->outputJSON();
     }
 
     public function clear_attribute($uID = false)
     {
         $this->setupUser($uID);
+        if (!$this->user) {
+            throw new UserMessageException(t('Invalid user.'));
+        }
         $sr = new UserEditResponse();
         if ($this->app->make('helper/validation/token')->validate()) {
             $ak = UserAttributeKey::getByID($this->app->make('helper/security')->sanitizeInt($this->request->request('akID')));
@@ -579,7 +672,6 @@ class Search extends DashboardPageController
             return $this->buildRedirect('/dashboard/users/search');
         }
 
-
     }
 
     public function view($uID = null, $status = false)
@@ -596,7 +688,9 @@ class Search extends DashboardPageController
 
         $this->renderSearchResult($result);
 
-        $this->headerSearch->getElementController()->setQuery(null);
+        /** @var \Concrete\Controller\Element\Users\Search\Search $headerSearchController */
+        $headerSearchController = $this->headerSearch->getElementController();
+        $headerSearchController->setQuery(null);
     }
 
     /**
@@ -690,6 +784,9 @@ class Search extends DashboardPageController
             }
             $tp = new Permissions();
             $pke = PermissionKey::getByHandle('edit_user_properties');
+            if (!$pke instanceof EditUserPropertiesUserKey) {
+                throw new \RuntimeException(t('The %s permission key is not installed correctly.', 'edit_user_properties'));
+            }
             $this->user = $ui;
             $this->assignment = $pke->getMyAssignment();
             $this->canEdit = $up->canEditUser();

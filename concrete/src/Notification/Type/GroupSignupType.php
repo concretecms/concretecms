@@ -10,6 +10,13 @@ use Concrete\Core\Notification\Subscription\StandardSubscription;
 class GroupSignupType extends Type
 {
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Notification\Type\TypeInterface::createNotification()
+     *
+     * @param \Concrete\Core\Entity\User\GroupSignup $group
+     */
     public function createNotification(SubjectInterface $group)
     {
         return new GroupSignupNotification($group);

@@ -11,7 +11,7 @@ class Events extends Facade
     /**
      * @deprecated
      * @param $eventName
-     * @param null $event
+     * @param object|null $event
      */
     public static function fire($eventName, $event = null)
     {

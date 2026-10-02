@@ -23,5 +23,7 @@ class StandardExporter implements ExporterInterface
         if ($column->getKey() === 'message') {
             return $finding->getMessage()->getMessage();
         }
+
+        return '';
     }
 }

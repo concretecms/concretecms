@@ -192,33 +192,34 @@ class Version20150504000000 extends AbstractMigration implements RepeatableMigra
             $pd = Duration::getByID($row['pdID']);
             if (isset($pd->error)) {
                 // this is a legacy object. It was serialized from 5.7.3.1 and earlier and used to extend Object.
-                // so we take the old pd* parameters and use them as the basis for the standard parameters.
-                $pd->setStartDate($pd->pdStartDate);
-                $pd->setEndDate($pd->pdEndDate);
-                $pd->setStartDateAllDay((bool) $pd->pdStartDateAllDay);
-                $pd->setEndDateAllDay((bool) $pd->pdEndDateAllDay);
-                if ($pd->pdRepeatPeriod == 'daily') {
+                // so we take the old pd* parameters (dynamic properties created by unserialize()) and use them as the basis for the standard parameters.
+                $legacy = get_object_vars($pd);
+                $pd->setStartDate($legacy['pdStartDate']);
+                $pd->setEndDate($legacy['pdEndDate']);
+                $pd->setStartDateAllDay((bool) $legacy['pdStartDateAllDay']);
+                $pd->setEndDateAllDay((bool) $legacy['pdEndDateAllDay']);
+                if ($legacy['pdRepeatPeriod'] == 'daily') {
                     $pd->setRepeatPeriod(Duration::REPEAT_DAILY);
-                } elseif ($pd->pdRepeatPeriod == 'weekly') {
+                } elseif ($legacy['pdRepeatPeriod'] == 'weekly') {
                     $pd->setRepeatPeriod(Duration::REPEAT_WEEKLY);
-                } elseif ($pd->pdRepeatPeriod == 'monthly') {
+                } elseif ($legacy['pdRepeatPeriod'] == 'monthly') {
                     $pd->setRepeatPeriod(Duration::REPEAT_MONTHLY);
                 } else {
                     $pd->setRepeatPeriod(Duration::REPEAT_NONE);
                 }
-                if ($pd->pdRepeatEveryNum) {
-                    $pd->setRepeatEveryNum($pd->pdRepeatEveryNum);
+                if ($legacy['pdRepeatEveryNum']) {
+                    $pd->setRepeatEveryNum($legacy['pdRepeatEveryNum']);
                 }
-                if ($pd->pdRepeatPeriodWeeksDays) {
-                    $pd->setRepeatPeriodWeekDays($pd->pdRepeatPeriodWeeksDays);
+                if ($legacy['pdRepeatPeriodWeeksDays']) {
+                    $pd->setRepeatPeriodWeekDays($legacy['pdRepeatPeriodWeeksDays']);
                 }
-                if ($pd->pdRepeatPeriodMonthsRepeatBy == 'week') {
+                if ($legacy['pdRepeatPeriodMonthsRepeatBy'] == 'week') {
                     $pd->setRepeatMonthBy(Duration::MONTHLY_REPEAT_WEEKLY);
-                } elseif ($pd->pdRepeatPeriodMonthsRepeatBy == 'month') {
+                } elseif ($legacy['pdRepeatPeriodMonthsRepeatBy'] == 'month') {
                     $pd->setRepeatMonthBy(Duration::MONTHLY_REPEAT_MONTHLY);
                 }
-                if ($pd->pdRepeatPeriodEnd) {
-                    $pd->setRepeatPeriodEnd($pd->pdRepeatPeriodEnd);
+                if ($legacy['pdRepeatPeriodEnd']) {
+                    $pd->setRepeatPeriodEnd($legacy['pdRepeatPeriodEnd']);
                 }
 
                 unset($pd->pdStartDate);

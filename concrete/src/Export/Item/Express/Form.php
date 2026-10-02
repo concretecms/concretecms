@@ -2,7 +2,6 @@
 namespace Concrete\Core\Export\Item\Express;
 
 use Concrete\Core\Database\Connection\Connection;
-use Concrete\Core\Entity\Express\FieldSet;
 use Concrete\Core\Export\Item\ItemInterface;
 use Concrete\Core\Export\ExportableInterface;
 
@@ -20,9 +19,6 @@ class Form implements ItemInterface
         $node = $xml->addChild('form');
         $node->addAttribute('id', $form->getID());
         $node->addAttribute('name', $form->getName());
-        /**
-         * @var $set FieldSet
-         */
         if (count($form->getFieldSets()) > 0) {
             $sets = $node->addChild('fieldsets');
             foreach($form->getFieldSets() as $set) {

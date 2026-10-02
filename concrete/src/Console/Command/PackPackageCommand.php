@@ -229,8 +229,7 @@ EOT
      * Generate the filters analyzing the command-line options.
      *
      * @param \Concrete\Core\Application\Application $app
-     * @param \Concrete\Core\Package\Offline\PackageInfo the package info for which the options should be related to
-     * @param PackageInfo $packageInfo
+     * @param PackageInfo $packageInfo the package info for which the options should be related to
      *
      * @throws \Exception in case of invalid command line options
      *
@@ -308,8 +307,7 @@ EOT
      * Generate the writers analyzing the command-line options.
      *
      * @param \Concrete\Core\Application\Application $app
-     * @param \Concrete\Core\Package\Offline\PackageInfo the package info for which the options should be related to
-     * @param PackageInfo $packageInfo
+     * @param PackageInfo $packageInfo the package info for which the options should be related to
      *
      * @throws \Exception in case of invalid command line options
      *

@@ -23,7 +23,7 @@ class AttributeKeyControl extends Control
     protected $attribute_key;
 
     /**
-     * @return Key
+     * @return \Concrete\Core\Entity\Attribute\Key\Key|null
      */
     public function getAttributeKey()
     {

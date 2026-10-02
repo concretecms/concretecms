@@ -42,7 +42,7 @@ class SystemUser
         if ($userID) {
             $userInfo = posix_getpwuid($userID);
             if ($userInfo !== false) {
-                if (is_string($userInfo['name'] ?? null) && $userInfo['name'] !== '') {
+                if ($userInfo['name'] !== '') {
                     return $userInfo['name'];
                 }
             }

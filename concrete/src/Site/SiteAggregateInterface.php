@@ -7,7 +7,7 @@ interface SiteAggregateInterface
 {
 
     /**
-     * @return Site
+     * @return Site|null
      */
     function getSite();
 

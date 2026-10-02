@@ -17,7 +17,10 @@ class BasicWorkflow implements ObjectInterface
 
     public function getPermissionObject()
     {
-        return \Concrete\Core\Workflow\BasicWorkflow::getByName($this->wfName);
+        // getByName() returns an instance of the class corresponding to the type of the workflow with that name
+        $workflow = \Concrete\Core\Workflow\BasicWorkflow::getByName($this->wfName);
+
+        return $workflow instanceof \Concrete\Core\Permission\AssignableObjectInterface ? $workflow : null;
     }
 
 

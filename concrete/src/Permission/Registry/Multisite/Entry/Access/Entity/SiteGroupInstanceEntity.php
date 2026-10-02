@@ -2,7 +2,6 @@
 namespace Concrete\Core\Permission\Registry\Multisite\Entry\Access\Entity;
 
 use Concrete\Core\Entity\Site\Site;
-use Concrete\Core\Permission\Access\Entity\SiteGroupEntity as SiteGroupAccessEntity;
 
 class SiteGroupInstanceEntity extends SiteGroupEntity
 {
@@ -15,16 +14,21 @@ class SiteGroupInstanceEntity extends SiteGroupEntity
         $this->site = $site;
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Permission\Registry\Entry\Access\Entity\EntityInterface::getAccessEntity()
+     *
+     * @return \Concrete\Core\User\Group\Group|null the group of the site corresponding to the site group (NULL if the site group access entity type isn't installed, or if the group doesn't exist)
+     */
     public function getAccessEntity()
     {
-        /**
-         * @var $entity SiteGroupAccessEntity
-         */
         $entity = parent::getAccessEntity();
         if (is_object($entity)) {
             return $entity->getInstanceGroup($this->site);
         }
 
+        return null;
     }
 
 

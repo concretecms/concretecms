@@ -52,7 +52,7 @@ class Help extends UserInterface
     
     protected function getPage(): ?Page
     {
-        $cID = $this->request->query->get('cID');
+        $cID = $this->request->query->all()['cID'] ?? null;
         if (empty($cID) || is_array($cID)) {
             return null;
         }

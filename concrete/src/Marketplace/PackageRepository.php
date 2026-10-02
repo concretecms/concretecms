@@ -258,7 +258,7 @@ final class PackageRepository implements PackageRepositoryInterface
     protected function rimraf(string $handle)
     {
         // Make sure we're working with a valid dir
-        if (!DIR_PACKAGES || !$handle || substr($handle, -4) !== '.old') {
+        if (!$handle || substr($handle, -4) !== '.old') {
             trigger_error('Invalid handle provided to delete.');
         }
 

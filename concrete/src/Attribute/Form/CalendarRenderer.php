@@ -3,7 +3,7 @@ namespace Concrete\Core\Attribute\Form;
 
 use Concrete\Core\Form\Context\ContextInterface;
 use Concrete\Core\Attribute\ObjectInterface;
-use Concrete\Core\Entity\Calendar;
+use Concrete\Core\Entity\Calendar\Calendar;
 
 class CalendarRenderer extends Renderer
 {

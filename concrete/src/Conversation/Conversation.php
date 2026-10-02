@@ -7,6 +7,9 @@ use Page;
 use Config;
 use Concrete\Core\Conversation\Message\MessageList as ConversationMessageList;
 
+/**
+ * @phpstan-consistent-constructor
+ */
 class Conversation extends ConcreteObject implements \Concrete\Core\Permission\ObjectInterface
 {
     const POSTING_ENABLED = 10;
@@ -134,6 +137,11 @@ class Conversation extends ConcreteObject implements \Concrete\Core\Permission\O
         return $this->getConversationID();
     }
 
+    /**
+     * @param int $cnvID
+     *
+     * @return static|null
+     */
     public static function getByID($cnvID)
     {
         $db = Loader::db();
@@ -147,6 +155,8 @@ class Conversation extends ConcreteObject implements \Concrete\Core\Permission\O
 
             return $cnv;
         }
+
+        return null;
     }
 
     public function getConversationPageObject()

@@ -8,6 +8,9 @@ use Concrete\Core\Entity\File\File;
 use Concrete\Core\Page\Collection\Collection;
 use Concrete\Core\Page\Collection\Version\Version;
 
+/**
+ * @extends \Doctrine\ORM\EntityRepository<\Concrete\Core\Entity\Statistics\UsageTracker\FileUsageRecord>
+ */
 class FileUsageRepository extends \Doctrine\ORM\EntityRepository
 {
 
@@ -75,8 +78,8 @@ class FileUsageRepository extends \Doctrine\ORM\EntityRepository
     /**
      * @param array $criteria
      * @param array|null $orderBy
-     * @param null $limit
-     * @param null $offset
+     * @param int|null $limit
+     * @param int|null $offset
      * @return FileUsageRecord[]
      */
     public function findBy(array $criteria, ?array $orderBy = null, $limit = null, $offset = null)

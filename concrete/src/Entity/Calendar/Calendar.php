@@ -194,13 +194,13 @@ class Calendar implements ObjectInterface, AssignableObjectInterface
         $app = Facade::getFacadeApplication();
         $preferences = $app->make(Preferences::class);
         /**
-         * @var $preferences Preferences
+         * @var Preferences $preferences
          */
         return $preferences->getCalendarTopicsAttributeKey();
     }
 
     /**
-     * @return boolean
+     * @return string|null
      */
     public function enableMoreDetails()
     {
@@ -208,7 +208,7 @@ class Calendar implements ObjectInterface, AssignableObjectInterface
     }
 
     /**
-     * @param boolean $enableMoreDetails
+     * @param string|null $enableMoreDetails
      */
     public function setEnableMoreDetails($enableMoreDetails)
     {
@@ -259,7 +259,7 @@ class Calendar implements ObjectInterface, AssignableObjectInterface
     public function setPermissionsToOverride()
     {
         /**
-         * @var $manager PermissionsManager
+         * @var PermissionsManager $manager
          */
         $manager = \Core::make(PermissionsManager::class);
         return $manager->setPermissionsToOverride($this);

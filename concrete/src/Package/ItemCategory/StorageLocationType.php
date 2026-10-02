@@ -19,6 +19,13 @@ class StorageLocationType extends AbstractCategory
         return $location->getName();
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Package\ItemCategory\AbstractCategory::getPackageItems()
+     *
+     * @return \Concrete\Core\Entity\File\StorageLocation\Type\Type[]
+     */
     public function getPackageItems(Package $package)
     {
         return Type::getListByPackage($package);

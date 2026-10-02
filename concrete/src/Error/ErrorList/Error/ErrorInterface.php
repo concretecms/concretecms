@@ -12,4 +12,11 @@ interface ErrorInterface extends JsonSerializable
      * @return string
      */
     public function getMessage();
+
+    /**
+     * Get the error message.
+     *
+     * @return string
+     */
+    public function __toString();
 }

@@ -2,6 +2,7 @@
 
 namespace Concrete\Core\Board\Designer\Command;
 
+use Concrete\Core\Entity\Board\Designer\ItemSelectorCustomElement;
 use Concrete\Core\Entity\Board\Designer\ItemSelectorCustomElementItem;
 use Doctrine\ORM\EntityManager;
 
@@ -22,6 +23,9 @@ class SetItemSelectorCustomElementItemsCommandHandler
     {
 
         $element = $command->getElement();
+        if (!$element instanceof ItemSelectorCustomElement) {
+            throw new \InvalidArgumentException(t('The custom element must be an instance of %s.', ItemSelectorCustomElement::class));
+        }
         $items = $element->getItems();
         foreach($items as $item) {
             $this->entityManager->remove($item);

@@ -75,11 +75,14 @@ class File extends ObjectTaskHandler
     {
         $pk = Key::getByID($options['pkID']);
         $pk->setPermissionObject($file);
-        $pk->clearWorkflows();
-        foreach (($options['wfID'] ?? []) as $wfID) {
-            $wf = Workflow::getByID($wfID);
-            if ($wf !== null) {
-                $pk->attachWorkflow($wf);
+        $pa = Access::getByID($options['paID'], $pk);
+        if ($pa !== null) {
+            $pa->clearWorkflows();
+            foreach (($options['wfID'] ?? []) as $wfID) {
+                $wf = Workflow::getByID($wfID);
+                if ($wf !== null) {
+                    $pa->attachWorkflow($wf);
+                }
             }
         }
 

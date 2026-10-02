@@ -24,6 +24,13 @@ class Container extends AbstractCategory
         return $container->getContainerName();
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Package\ItemCategory\AbstractCategory::getPackageItems()
+     *
+     * @return \Concrete\Core\Entity\Page\Container[]
+     */
     public function getPackageItems(Package $package)
     {
         $app = Application::getFacadeApplication();

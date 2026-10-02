@@ -29,11 +29,7 @@ class Edit extends PresetEdit
     {
         $em = $this->app->make(EntityManager::class);
 
-        if (is_object($em)) {
-            return $em->getRepository('Concrete\Core\Entity\Search\SavedLogSearch');
-        }
-
-        return null;
+        return $em->getRepository('Concrete\Core\Entity\Search\SavedLogSearch');
     }
 
     public function getSavedSearchBaseURL(SavedSearch $search)

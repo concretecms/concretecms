@@ -56,11 +56,11 @@ class TaskSet implements \JsonSerializable
 
     public function __toString()
     {
-        return (string) $this->getAttributeSetID();
+        return (string) $this->getID();
     }
 
     /**
-     * @return mixed
+     * @return \Doctrine\Common\Collections\Collection|\Concrete\Core\Entity\Automation\TaskSetTask[]
      */
     public function getTaskCollection()
     {

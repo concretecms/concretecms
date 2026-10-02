@@ -77,9 +77,9 @@ class RouteUrlResolver implements UrlResolverInterface
      * @param array $arguments [ string $handle, array $parameters = array() ]
      *                         The first parameter MUST be prepended with
      *                         "route/" for it to be tested
-     * @param \League\URL\URLInterface|null $resolved
+     * @param \League\Url\UrlInterface|null $resolved
      *
-     * @return \League\URL\URLInterface|null
+     * @return \League\Url\UrlInterface|null
      */
     public function resolve(array $arguments, $resolved = null)
     {

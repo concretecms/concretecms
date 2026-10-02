@@ -15,7 +15,7 @@ class Attributes extends DashboardAttributesPageController
 
     public function edit($akID = null)
     {
-        $key = $this->getCategoryObject()->getController()->getByID($akID);
+        $key = $this->getCategoryObject()->getController()->getAttributeKeyByID($akID);
         $this->renderEdit($key,
             \URL::to('/dashboard/files/attributes', 'view')
         );
@@ -24,7 +24,7 @@ class Attributes extends DashboardAttributesPageController
     public function update($akID = null)
     {
         $this->edit($akID);
-        $key = $this->getCategoryObject()->getController()->getByID($akID);
+        $key = $this->getCategoryObject()->getController()->getAttributeKeyByID($akID);
         $this->executeUpdate($key,
             \URL::to('/dashboard/files/attributes', 'view')
         );
@@ -49,7 +49,7 @@ class Attributes extends DashboardAttributesPageController
 
     public function delete($akID = null)
     {
-        $key = $this->getCategoryObject()->getController()->getByID($akID);
+        $key = $this->getCategoryObject()->getController()->getAttributeKeyByID($akID);
         $this->executeDelete($key,
             \URL::to('/dashboard/files/attributes', 'view')
         );

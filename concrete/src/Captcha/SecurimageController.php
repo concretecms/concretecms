@@ -5,11 +5,13 @@ namespace Concrete\Core\Captcha;
 use Concrete\Core\Controller\AbstractController;
 use Concrete\Core\Form\Service\Form as FormService;
 use Concrete\Core\Http\Request;
+use Concrete\Core\Http\ResponseFactoryInterface;
 use Concrete\Core\Url\Resolver\Manager\ResolverManagerInterface;
 use HtmlObject\Image;
 use HtmlObject\Input;
 use Securimage;
 use Securimage_Color;
+use Symfony\Component\HttpFoundation\Response;
 
 class SecurimageController extends AbstractController implements CaptchaWithPictureInterface, ConfigurableCaptchaInterface
 {
@@ -69,20 +71,18 @@ class SecurimageController extends AbstractController implements CaptchaWithPict
         $this->request = $request;
         $this->urlResolver = $urlResolver;
         $this->formService = $formService;
-        $this->securimage = new Securimage(['no_session' => PHP_SAPI === 'cli' || PHP_SAPI === 'phpdbg']);
+        $this->securimage = new Securimage([
+            'no_session' => PHP_SAPI === 'cli' || PHP_SAPI === 'phpdbg',
+            // The picture is returned as a Response (see displayCaptchaPicture()): Securimage must not send the headers nor exit
+            'send_headers' => false,
+            'no_exit' => true,
+        ]);
         $this->securimage->image_width = 190;
         $this->securimage->image_height = 60;
-        $this->securimage->image_bg_color = new Securimage_Color(227, 218, 237);
-        $this->securimage->line_color = new Securimage_Color(51, 51, 51);
+        $this->securimage->image_bg_color = new Securimage_Color('#e3daed');
+        $this->securimage->line_color = new Securimage_Color('#333333');
         $this->securimage->num_lines = 5;
-
-        $this->securimage->use_multi_text = true;
-        $this->securimage->multi_text_color = [
-            new Securimage_Color(184, 4, 50),
-            new Securimage_Color(12, 67, 157),
-            new Securimage_Color(244, 49, 11),
-        ];
-        $this->securimage->text_color = new Securimage_Color(184, 4, 50);
+        $this->securimage->text_color = new Securimage_Color('#b80432');
     }
 
     /**
@@ -273,6 +273,30 @@ class SecurimageController extends AbstractController implements CaptchaWithPict
      */
     public function displayCaptchaPicture()
     {
-        $this->securimage->show();
+        switch ($this->securimage->image_type) {
+            case Securimage::SI_IMAGE_JPEG:
+                $contentType = 'image/jpeg';
+                break;
+            case Securimage::SI_IMAGE_GIF:
+                $contentType = 'image/gif';
+                break;
+            default:
+                $contentType = 'image/png';
+                break;
+        }
+        ob_start();
+        try {
+            $this->securimage->show();
+            $picture = ob_get_contents();
+        } finally {
+            ob_end_clean();
+        }
+
+        return $this->app->make(ResponseFactoryInterface::class)->create($picture, Response::HTTP_OK, [
+            'Content-Type' => $contentType,
+            'Cache-Control' => 'no-store, no-cache, must-revalidate',
+            'Pragma' => 'no-cache',
+            'Expires' => 'Mon, 26 Jul 1997 05:00:00 GMT',
+        ]);
     }
 }

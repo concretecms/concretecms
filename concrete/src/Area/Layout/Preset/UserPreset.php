@@ -6,10 +6,13 @@ use Concrete\Core\Area\Layout\Preset\Formatter\UserFormatter;
 use Loader;
 use Concrete\Core\Foundation\ConcreteObject;
 
+/**
+ * @phpstan-consistent-constructor
+ */
 class UserPreset extends ConcreteObject
 {
     /**
-     * @var int
+     * @var int|numeric-string
      */
     public $arLayoutPresetID;
 
@@ -19,15 +22,14 @@ class UserPreset extends ConcreteObject
     public $arLayoutPresetName;
 
     /**
-     * @var int
+     * @var int|numeric-string
      */
     public $arLayoutID;
 
     /**
-     * @param Layout $arLayout
      * @param string $name
      *
-     * @return Preset
+     * @return static
      */
     public static function add(Layout $arLayout, $name)
     {
@@ -40,11 +42,16 @@ class UserPreset extends ConcreteObject
             )
         );
 
-        return static::getByID($db->Insert_ID());
+        $preset = static::getByID($db->Insert_ID());
+        if ($preset === null) {
+            throw new \RuntimeException(t('Failed to load the layout preset that has just been created.'));
+        }
+
+        return $preset;
     }
 
     /**
-     * @return Preset[]
+     * @return static[]
      */
     public static function getList()
     {
@@ -64,7 +71,7 @@ class UserPreset extends ConcreteObject
     /**
      * @param int $arLayoutPresetID
      *
-     * @return static
+     * @return static|null
      */
     public static function getByID($arLayoutPresetID)
     {
@@ -81,6 +88,8 @@ class UserPreset extends ConcreteObject
 
             return $preset;
         }
+
+        return null;
     }
 
     public function delete()
@@ -119,7 +128,7 @@ class UserPreset extends ConcreteObject
     }
 
     /**
-     * @return CustomLayout|ThemeGridLayout|null
+     * @return \Concrete\Core\Area\Layout\CustomLayout|\Concrete\Core\Area\Layout\ThemeGridLayout|null
      */
     public function getAreaLayoutObject()
     {

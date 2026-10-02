@@ -132,26 +132,24 @@ class Multilingual extends Page
                     $targetParent = $newParent;
                 }
                 $newPage = $this->page->duplicate($targetParent);
-                if (is_object($newPage)) {
-                    if ($this->page->isPageDraft()) {
-                        $newPage->setPageDraftTargetParentPageID($newParent->getCollectionID());
-                        Section::relatePage($this->page, $newPage, $ms->getLocale());
-                        $pr->setMessage(t('New draft created.'));
-                    } else {
-                        // grab the approved version and unapprove it
-                        $v = Version::get($newPage, 'ACTIVE');
-                        if (is_object($v)) {
-                            $v->deny();
-                        }
-                        $pr->setMessage(t('Unapproved page created. You must publish this page before it is live.'));
+                if ($this->page->isPageDraft()) {
+                    $newPage->setPageDraftTargetParentPageID($newParent->getCollectionID());
+                    Section::relatePage($this->page, $newPage, $ms->getLocale());
+                    $pr->setMessage(t('New draft created.'));
+                } else {
+                    // grab the approved version and unapprove it
+                    $v = Version::get($newPage, 'ACTIVE');
+                    if (is_object($v) && !$v->isError()) {
+                        $v->deny();
                     }
-                    $ih = Core::make('multilingual/interface/flag');
-                    $icon = (string) $ih->getSectionFlagIcon($ms);
-                    $pr->setPage($newPage);
-                    $pr->setAdditionalDataAttribute('name', $newPage->getCollectionName());
-                    $pr->setAdditionalDataAttribute('link', $newPage->getCollectionLink());
-                    $pr->setAdditionalDataAttribute('icon', $icon);
+                    $pr->setMessage(t('Unapproved page created. You must publish this page before it is live.'));
                 }
+                $ih = Core::make('multilingual/interface/flag');
+                $icon = (string) $ih->getSectionFlagIcon($ms);
+                $pr->setPage($newPage);
+                $pr->setAdditionalDataAttribute('name', $newPage->getCollectionName());
+                $pr->setAdditionalDataAttribute('link', $newPage->getCollectionLink());
+                $pr->setAdditionalDataAttribute('icon', $icon);
             } else {
                 throw new UserMessageException(t('You do not have permission to add this page to this section of the tree.'));
             }

@@ -26,7 +26,7 @@ class ContentRenderer implements LoggerAwareInterface
     protected $app;
 
     /**
-     * @var Page
+     * @var Page|null
      */
     protected $currentPage;
 

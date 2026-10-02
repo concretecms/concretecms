@@ -236,7 +236,7 @@ class SessionFactory implements SessionFactoryInterface
      * @param \Memcached $memcached
      * @param array $servers The servers as described in config
      *
-     * @return \Generator|string[] [ $host, $port, $weight ]
+     * @return \Generator<int, array{host: string, port: int, weight: int}>
      */
     private function newMemcachedServers(Memcached $memcached, array $servers)
     {
@@ -291,7 +291,7 @@ class SessionFactory implements SessionFactoryInterface
      *  Decides whether to return a Redis Instance or RedisArray Instance depending on the number of servers passed to it.
      *
      * @param array $servers The `concrete.session.servers` or `concrete.session.redis.servers` config item
-     * @param int | null $database The concrete.session.redis.database config item
+     * @param int $database The concrete.session.redis.database config item
      *
      * @return \Redis | \RedisArray | \Predis\Client
      */
@@ -359,8 +359,8 @@ class SessionFactory implements SessionFactoryInterface
                 }
                 // We can only use one ttl for connection timeout so use the last set ttl
                 // isset allows for 0 - unlimited
-                if (isset($server['ttl'])) {
-                    $ttl = $server['ttl'];
+                if (isset($server['timeout'])) {
+                    $ttl = $server['timeout'];
                 }
                 if (isset($server['password'])) {
                     $password = $server['password'];
@@ -396,7 +396,7 @@ class SessionFactory implements SessionFactoryInterface
      * @param array $servers The `concrete.session.servers` or `concrete.session.redis.servers` config item
      * @param int $database Which database to use for each connection (only used for predis)
      *
-     * @return \Generator| string[] [ $server, $port, $ttl ]
+     * @return \Generator<int, array{scheme: string, host?: string, path?: string, port?: int, timeout: int|null, password?: string|null, database: int}>
      */
     private function getRedisServers(array $servers, int $database)
     {
@@ -411,9 +411,8 @@ class SessionFactory implements SessionFactoryInterface
                         'database' => array_get($server, 'database', $database)
                     ];
                 } else {
-                    $host = array_get($server, 'host', '');
                     // Check for both server/host - fallback due to cache using server
-                    $host = !empty($host) ?: array_get($server, 'server', '127.0.0.1');
+                    $host = array_get($server, 'host', '') ?: array_get($server, 'server', '127.0.0.1');
                     $server = [
                         'scheme' => 'tcp',
                         'host' => $host,

@@ -28,6 +28,9 @@ use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 
+/**
+ * @phpstan-consistent-constructor
+ */
 class User extends ConcreteObject
 {
     public $uID = '';
@@ -79,7 +82,7 @@ class User extends ConcreteObject
     /**
      * @param int $uID
      *
-     * @return User
+     * @return User|null
      */
     public static function loginByUserID($uID)
     {
@@ -287,7 +290,7 @@ class User extends ConcreteObject
             $this->uTimezone = null;
             if ($req->hasCustomRequestUser()) {
                 $ux = $req->getCustomRequestUser();
-                if ($ux && is_object($ux)) {
+                if ($ux instanceof UserInfo) {
                     $this->uID = $ux->getUserID();
                     $this->uName = $ux->getUserName();
                     $this->superUser = $ux->getUserID() == USER_SUPER_ID;
@@ -295,12 +298,9 @@ class User extends ConcreteObject
                         $this->uDefaultLanguage = $ux->getUserDefaultLanguage();
                     }
                     $this->uTimezone = $ux->getUserTimezone();
-                } elseif ($ux === -1) {
-                    $this->uID = 0;
-                    $this->uName = t('Guest');
                 }
                 $this->uGroups = $this->_getUserGroups(true);
-            } elseif ($validator->hasActiveSession() || $this->uID) {
+            } elseif ($validator->hasActiveSession()) {
                 if ($session->has('uID')) {
                     $this->uID = $session->get('uID');
                     $this->uName = $session->get('uName');
@@ -339,14 +339,14 @@ class User extends ConcreteObject
         /** @var \Concrete\Core\Permission\IPService $iph */
         $iph = $app->make('helper/validation/ip');
         $ip = $iph->getRequestIP();
-        $db->query('update Users set uLastIP = ?, uLastLogin = ?, uPreviousLogin = ?, uNumLogins = uNumLogins + 1 where uID = ?', [($ip === false) ? ('') : ($ip->getIp()), time(), $uLastLogin, $this->uID]);
+        $db->query('update Users set uLastIP = ?, uLastLogin = ?, uPreviousLogin = ?, uNumLogins = uNumLogins + 1 where uID = ?', [$ip->getIp(), time(), $uLastLogin, $this->uID]);
     }
 
     /**
      * $salt is retained for compatibilty with older versions of concerete5, but not used.
      *
      * @param string $uPassword
-     * @param null $salt
+     * @param string|null $salt
      *
      * @return string
      */
@@ -411,7 +411,7 @@ class User extends ConcreteObject
     }
 
     /**
-     * @return string
+     * @return int|numeric-string|''|null the ID of the user (as an integer or as a numeric string, depending on where it comes from); an empty string or null if no user is logged in
      */
     public function getUserID()
     {
@@ -743,7 +743,7 @@ class User extends ConcreteObject
     }
 
     /**
-     * @param Group $g
+     * @param Group|mixed $g nothing happens if it's not an object
      * @param GroupRole $r
      */
     public function changeGroupRole($g, $r)
@@ -768,7 +768,7 @@ class User extends ConcreteObject
     }
 
     /**
-     * @param Group $g
+     * @param Group|mixed $g nothing happens if it's not an object
      */
     public function enterGroup($g)
     {
@@ -819,7 +819,7 @@ class User extends ConcreteObject
     }
 
     /**
-     * @param Group $g
+     * @param Group|mixed $g nothing happens if it's not an object
      */
     public function exitGroup($g)
     {
@@ -851,7 +851,7 @@ class User extends ConcreteObject
         $app = Application::getFacadeApplication();
         /** @var \Concrete\Core\Database\Connection\Connection $db */
         $db = $app['database']->connection();
-        /** @var $likeBuilder LikeBuilder */
+        /** @var LikeBuilder $likeBuilder */
         $likeBuilder = $app->make(LikeBuilder::class);
         $query = $db->createQueryBuilder();
         $query->select('ug.gID')->from('UserGroups', 'ug')
@@ -1096,7 +1096,7 @@ class User extends ConcreteObject
 
         $cookie->set(
             sprintf('%s_LOGIN', $app['config']->get('concrete.session.name')),
-            1,
+            '1',
             // $expire
             time() + (int)$config->get('concrete.session.remember_me.lifetime'),
             // $path

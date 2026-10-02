@@ -58,7 +58,7 @@ class SiteGroup
     }
 
     /**
-     * @return Group
+     * @return Group|null NULL only for instances that have not been assigned to a site group yet (see \Concrete\Core\Permission\Access\Entity\SiteGroupEntity::getOrCreate())
      */
     public function getSiteGroup()
     {
@@ -66,7 +66,7 @@ class SiteGroup
     }
 
     /**
-     * @param mixed $group
+     * @param Group $group
      */
     public function setSiteGroup($group)
     {

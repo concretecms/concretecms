@@ -43,7 +43,7 @@ class Preview extends BackendUserInterface
         $manager->deselect($manager->getSelectedPluginObjects());
         $config = $this->app->make('site')->getDefault()->getConfigRepository();
         $manager->select($config->get('editor.ckeditor4.plugins.selected_hidden'));
-        $plugins = $post->get('plugin');
+        $plugins = $post->all()['plugin'] ?? null;
         if (is_array($plugins)) {
             $manager->select($plugins);
         }

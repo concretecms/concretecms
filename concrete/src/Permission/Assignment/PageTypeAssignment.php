@@ -4,6 +4,10 @@ namespace Concrete\Core\Permission\Assignment;
 use Concrete\Core\Permission\Access\Access;
 use Loader;
 
+/**
+ * @property \Concrete\Core\Page\Type\Type|null $permissionObject
+ * @method \Concrete\Core\Page\Type\Type|null getPermissionObject()
+ */
 class PageTypeAssignment extends Assignment
 {
     public function getPermissionAccessObject()

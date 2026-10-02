@@ -17,6 +17,6 @@ class UpdateArchive extends Archive
      */
     public function install($file, $inplace = true)
     {
-        parent::install($file, $inplace);
+        return parent::install($file, $inplace);
     }
 }

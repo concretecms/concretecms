@@ -26,6 +26,13 @@ class SiteType extends AbstractCategory
         return $type->getSiteTypeName();
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Package\ItemCategory\AbstractCategory::getPackageItems()
+     *
+     * @return \Concrete\Core\Entity\Site\Type[]
+     */
     public function getPackageItems(Package $package)
     {
         return $this->service->getByPackage($package);

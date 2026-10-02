@@ -96,7 +96,7 @@ EOL;
             $page = $app->make(Page::class)->getByID((int) $selectedCID);
             $cp = new Permissions($page);
             if (!$cp->canViewPage()) {
-                unset($page);
+                $page = null;
             }
         } else {
             $page = null;

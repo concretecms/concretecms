@@ -26,6 +26,13 @@ class BlockType extends AbstractCategory
         $controller->render();
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Package\ItemCategory\AbstractCategory::getPackageItems()
+     *
+     * @return \Concrete\Core\Entity\Block\BlockType\BlockType[]
+     */
     public function getPackageItems(Package $package)
     {
         $list = new BlockTypeList();

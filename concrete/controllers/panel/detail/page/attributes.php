@@ -6,6 +6,7 @@ use Concrete\Core\Attribute\Context\AttributePanelContext;
 use Concrete\Core\Http\ResponseAssetGroup;
 use Concrete\Core\Workflow\Request\ApprovePageRequest;
 use PageEditResponse;
+use Concrete\Core\Permission\Key\EditPagePropertiesPageKey;
 use PermissionKey;
 use stdClass;
 use Loader;
@@ -22,6 +23,11 @@ class Attributes extends BackendInterfacePageController
     // and that page needs to know how to submit it.
     protected $controllerActionPath = '/ccm/system/panels/details/page/attributes';
 
+    /**
+     * @var \Concrete\Core\Permission\Access\ListItem\EditPagePropertiesPageListItem
+     */
+    protected $assignment;
+
     protected function canAccess()
     {
         return $this->permissions->canEditPageProperties();
@@ -31,6 +37,9 @@ class Attributes extends BackendInterfacePageController
     {
         parent::on_start();
         $pk = PermissionKey::getByHandle('edit_page_properties');
+        if (!$pk instanceof EditPagePropertiesPageKey) {
+            throw new \RuntimeException(t('The %s permission key is not installed correctly.', 'edit_page_properties'));
+        }
         $pk->setPermissionObject($this->page);
         $this->assignment = $pk->getMyAssignment();
     }
@@ -65,7 +74,7 @@ class Attributes extends BackendInterfacePageController
         $selectedAttributes = array();
         $allowed = $this->assignment->getAttributesAllowedArray();
         foreach ($this->page->getSetCollectionAttributes() as $ak) {
-            if (is_object($ak) && in_array($ak->getAttributeKeyID(), $allowed)) {
+            if (in_array($ak->getAttributeKeyID(), $allowed)) {
                 $obj = $this->getAttributeJSONRepresentation($ak);
                 $selectedAttributes[] = $obj;
             }
@@ -103,11 +112,11 @@ class Attributes extends BackendInterfacePageController
             // First, we check out the attributes we need to clear.
             $setAttribs = $nvc->getSetCollectionAttributes();
             $processedAttributes = array();
-            $selectedAKIDs = $post->get('selectedAKIDs');
+            $selectedAKIDs = $post->all()['selectedAKIDs'] ?? null;
             if (!is_array($selectedAKIDs)) {
                 $selectedAKIDs = array();
             }
-            $selected = is_array($post->get('selectedAKIDs')) ? $post->get('selectedAKIDs') : array();
+            $selected = $selectedAKIDs;
 
             foreach ($setAttribs as $ak) {
                 // do I have the ability to edit this attribute?

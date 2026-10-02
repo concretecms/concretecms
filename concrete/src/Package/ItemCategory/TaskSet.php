@@ -21,6 +21,13 @@ class TaskSet extends AbstractCategory
         return $set->getDisplayName();
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Package\ItemCategory\AbstractCategory::getPackageItems()
+     *
+     * @return \Concrete\Core\Entity\Automation\TaskSet[]
+     */
     public function getPackageItems(Package $package)
     {
         $app = Application::getFacadeApplication();

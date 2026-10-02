@@ -54,6 +54,8 @@ class SiteLocaleField extends AbstractField
      * {@inheritdoc}
      *
      * @see \Concrete\Core\Search\Field\FieldInterface::filterList()
+     *
+     * @param \Concrete\Core\Page\PageList $list
      */
     public function filterList(ItemList $list)
     {
@@ -81,6 +83,6 @@ class SiteLocaleField extends AbstractField
         }
         $site = $app->make('site')->getActiveSiteForEditing();
         $selector = new SiteLocaleSelector();
-        print $selector->selectLocale('localeID', $site, $selectedLocale);
+        return $selector->selectLocale('localeID', $site, $selectedLocale);
     }
 }

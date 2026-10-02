@@ -40,6 +40,8 @@ class Health extends DashboardPageController
         if ($productionStatus === Modes::MODE_DEVELOPMENT) {
             $productionStatus = self::SITE_MODE_DEVELOPMENT;
             $productionStatusClass = 'text-bg-info';
+        } else {
+            $productionStatusClass = '';
         }
         if ($productionStatus === Modes::MODE_STAGING) {
             $productionStatus = self::SITE_MODE_STAGING;
@@ -53,7 +55,7 @@ class Health extends DashboardPageController
                 $latestTestResult = ResultList::getLatestResult($task);
                 if ($latestTestResult) {
                     /**
-                     * @var $grade PassFailGrade
+                     * @var PassFailGrade $grade
                      */
                     $grade = $latestTestResult->getGrade();
                     if ($grade->hasPassed()) {

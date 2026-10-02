@@ -40,9 +40,7 @@ class Date
      *    <li>'app' for the app's timezone</li>
      *    <li>Other values: one of the PHP supported time zones (see http://us1.php.net/manual/en/timezones.php )</li>
      * </ul>
-     * @param string Returns the date/time representation (an empty string if $value is empty)
-     *
-     * @return string
+     * @return string Returns the date/time representation (an empty string if $value is empty)
      *
      * @throws \Punic\Exception\BadArgumentType
      */
@@ -117,7 +115,7 @@ class Date
     /**
      * Retrieve the display name (localized) of a time zone given its PHP identifier.
      *
-     * @param string $timezoneID
+     * @param string|mixed $timezoneID an empty string is returned if it's not a string
      *
      * @return string
      */
@@ -170,54 +168,52 @@ class Date
                         if (array_key_exists($chunks[0], $continentNames)) {
                             $chunks[0] = $continentNames[$chunks[0]];
                         }
-                        if (count($chunks) > 0) {
-                            $city = Calendar::getTimezoneExemplarCity($timezoneID, false);
-                            if (!strlen($city)) {
-                                switch ($timezoneID) {
-                                    case 'America/Fort_Nelson':
-                                        $city = tc(/*i18n: Canadian territory */'Territory', 'Fort Nelson');
-                                        break;
-                                    case 'America/Montreal':
-                                        $city = tc(/*i18n: Canadian city */'Territory', 'Montreal');
-                                        break;
-                                    case 'America/Shiprock':
-                                        $city = tc(/*i18n: Territory in New Mexico (USA) */'Territory', 'Shiprock');
-                                        break;
-                                    case 'Antarctica/South_Pole':
-                                        $city = tc(/*i18n: The South Pole */'Territory', 'South Pole');
-                                        break;
-                                    case 'Asia/Atyrau':
-                                        $city = tc(/*i18n: Kazakh territory */'Territory', 'Atyrau');
-                                        break;
-                                    case 'Asia/Barnaul':
-                                        $city = tc(/*i18n: Russian city */'Territory', 'Barnaul');
-                                        break;
-                                    case 'Asia/Famagusta':
-                                        $city = tc(/*i18n: City in Cyprus Island */'Territory', 'Famagusta');
-                                        break;
-                                    case 'Asia/Tomsk':
-                                        $city = tc(/*i18n: Russian city */'Territory', 'Tomsk');
-                                        break;
-                                    case 'Asia/Yangon':
-                                        $city = tc(/*i18n: Burmese city */'Territory', 'Yangon');
-                                        break;
-                                    case 'Europe/Astrakhan':
-                                        $city = tc(/*i18n: Russian city */'Territory', 'Astrakhan');
-                                        break;
-                                    case 'Europe/Kirov':
-                                        $city = tc(/*i18n: Russian city */'Territory', 'Kirov');
-                                        break;
-                                    case 'Europe/Saratov':
-                                        $city = tc(/*i18n: Russian city */'Territory', 'Saratov');
-                                        break;
-                                    case 'Europe/Ulyanovsk':
-                                        $city = tc(/*i18n: Russian city */'Territory', 'Ulyanovsk');
-                                        break;
-                                }
+                        $city = Calendar::getTimezoneExemplarCity($timezoneID, false);
+                        if (!strlen($city)) {
+                            switch ($timezoneID) {
+                                case 'America/Fort_Nelson':
+                                    $city = tc(/*i18n: Canadian territory */'Territory', 'Fort Nelson');
+                                    break;
+                                case 'America/Montreal':
+                                    $city = tc(/*i18n: Canadian city */'Territory', 'Montreal');
+                                    break;
+                                case 'America/Shiprock':
+                                    $city = tc(/*i18n: Territory in New Mexico (USA) */'Territory', 'Shiprock');
+                                    break;
+                                case 'Antarctica/South_Pole':
+                                    $city = tc(/*i18n: The South Pole */'Territory', 'South Pole');
+                                    break;
+                                case 'Asia/Atyrau':
+                                    $city = tc(/*i18n: Kazakh territory */'Territory', 'Atyrau');
+                                    break;
+                                case 'Asia/Barnaul':
+                                    $city = tc(/*i18n: Russian city */'Territory', 'Barnaul');
+                                    break;
+                                case 'Asia/Famagusta':
+                                    $city = tc(/*i18n: City in Cyprus Island */'Territory', 'Famagusta');
+                                    break;
+                                case 'Asia/Tomsk':
+                                    $city = tc(/*i18n: Russian city */'Territory', 'Tomsk');
+                                    break;
+                                case 'Asia/Yangon':
+                                    $city = tc(/*i18n: Burmese city */'Territory', 'Yangon');
+                                    break;
+                                case 'Europe/Astrakhan':
+                                    $city = tc(/*i18n: Russian city */'Territory', 'Astrakhan');
+                                    break;
+                                case 'Europe/Kirov':
+                                    $city = tc(/*i18n: Russian city */'Territory', 'Kirov');
+                                    break;
+                                case 'Europe/Saratov':
+                                    $city = tc(/*i18n: Russian city */'Territory', 'Saratov');
+                                    break;
+                                case 'Europe/Ulyanovsk':
+                                    $city = tc(/*i18n: Russian city */'Territory', 'Ulyanovsk');
+                                    break;
                             }
-                            if (strlen($city)) {
-                                $chunks = [$chunks[0], $city];
-                            }
+                        }
+                        if (strlen($city)) {
+                            $chunks = [$chunks[0], $city];
                         }
                         $timezoneName = implode('/', $chunks);
                         break;
@@ -367,12 +363,12 @@ class Date
         $secondsPerMinute = 60;
         $secondsPerHour = 60 * $secondsPerMinute;
         $secondsPerDay = 24 * $secondsPerHour;
-        $days = floor($diff / $secondsPerDay);
+        $days = (int) floor($diff / $secondsPerDay);
         $diff = $diff - $days * $secondsPerDay;
-        $hours = floor($diff / $secondsPerHour);
+        $hours = (int) floor($diff / $secondsPerHour);
         $diff = $diff - $hours * $secondsPerHour;
-        $minutes = floor($diff / $secondsPerMinute);
-        $seconds = $diff - $minutes * $secondsPerMinute;
+        $minutes = (int) floor($diff / $secondsPerMinute);
+        $seconds = (int) ($diff - $minutes * $secondsPerMinute);
         $chunks = [];
         if ($days > 0) {
             $chunks[] = t2('%d day', '%d days', $days, $days);
@@ -399,17 +395,25 @@ class Date
     /**
      * Returns the normalized timezone identifier.
      *
-     * @param string $timezone The timezone to retrieve. Special values are:<ul>
+     * @param string|\DateTimeZone|mixed $timezone The timezone to retrieve. Special values are:<ul>
      *    <li>'system' (default) for the current system timezone</li>
      *    <li>'user' for the user's timezone</li>
      *    <li>'app' for the app's timezone</li>
+     *    <li>a \DateTimeZone instance: its identifier is returned</li>
      *    <li>Other values: one of the PHP supported time zones (see http://us1.php.net/manual/en/timezones.php )</li>
      * </ul>
+     * An empty string is returned if $timezone is neither a string nor a \DateTimeZone instance.
      *
      * @return string
      */
     public function getTimezoneID($timezone)
     {
+        if ($timezone instanceof \DateTimeZone) {
+            return $timezone->getName();
+        }
+        if (!is_string($timezone)) {
+            return '';
+        }
         $app = Facade::getFacadeApplication();
         /** @var Repository $config */
         $config = $app->make('config');
@@ -426,19 +430,21 @@ class Date
             case 'user':
                 $tz = null;
                 if ($config->get('concrete.misc.user_timezones')) {
-                    $u = null;
                     $request = null;
                     if (!$app->isRunThroughCommandLineInterface()) {
                         $request = Request::getInstance();
                     }
                     if ($request && $request->hasCustomRequestUser()) {
-                        $u = $request->getCustomRequestUser();
+                        $ui = $request->getCustomRequestUser();
+                        if ($ui !== null) {
+                            $tz = $ui->getUserTimezone();
+                        }
                     } else {
                         $app = Application::getFacadeApplication();
                         $u = $app->make(User::class);
-                    }
-                    if (is_object($u) && $u->isRegistered()) {
-                        $tz = $u->getUserTimezone();
+                        if ($u->isRegistered()) {
+                            $tz = $u->getUserTimezone();
+                        }
                     }
                 }
                 if ($tz) {
@@ -463,12 +469,7 @@ class Date
     /**
      * Returns a \DateTimeZone instance for a specified timezone identifier.
      *
-     * @param string $timezone The timezone to retrieve. Special values are:<ul>
-     *    <li>'system' (default) for the current system timezone</li>
-     *    <li>'user' for the user's timezone</li>
-     *    <li>'app' for the app's timezone</li>
-     *    <li>Other values: one of the PHP supported time zones (see http://us1.php.net/manual/en/timezones.php )</li>
-     * </ul>
+     * @param string|\DateTimeZone|mixed $timezone The timezone to retrieve (see getTimezoneID() for the accepted values)
      *
      * @return \DateTimeZone|null Returns null if $timezone is invalid or the \DateTimeZone corresponding to $timezone
      */
@@ -476,7 +477,7 @@ class Date
     {
         $tz = null;
         $phpTimezone = $this->getTimezoneID($timezone);
-        if (is_string($phpTimezone) && strlen($phpTimezone)) {
+        if ($phpTimezone !== '') {
             try {
                 $tz = new \DateTimeZone($phpTimezone);
             } catch (\Exception $x) {
@@ -548,7 +549,7 @@ class Date
      * Render the date part of a date/time as a localized string.
      *
      * @param mixed $value $The date/time representation (one of the values accepted by toDateTime)
-     * @param string $format The format name; it can be 'full' (eg 'EEEE, MMMM d, y' - 'Wednesday, August 20, 2014'), 'long' (eg 'MMMM d, y' - 'August 20, 2014'), 'medium' (eg 'MMM d, y' - 'August 20, 2014') or 'short' (eg 'M/d/yy' - '8/20/14'),
+     * @param string|bool $format The format name; it can be 'full' (eg 'EEEE, MMMM d, y' - 'Wednesday, August 20, 2014'), 'long' (eg 'MMMM d, y' - 'August 20, 2014'), 'medium' (eg 'MMM d, y' - 'August 20, 2014') or 'short' (eg 'M/d/yy' - '8/20/14'),
      *                      or a skeleton pattern prefixed by '~', e.g. '~yMd'.
      *                      You can also append a caret ('^') or an asterisk ('*') to $width. If so, special day names may be used (like 'Today', 'Yesterday', 'Tomorrow' with '^' and 'today', 'yesterday', 'tomorrow' width '*') instead of the date.
      * @param string $toTimezone The timezone to set. Special values are:<ul>
@@ -751,8 +752,8 @@ class Date
     }
 
     /** Returns the format string for the jQueryUI DatePicker widget
-     * @param string $relatedPHPFormat = '' Related PHP date format that will be used to parse the format handled by the DatePicker.
-     *     If not specified we'll use the same format used by formatDate(..., false)
+     * @param string|mixed $relatedPHPFormat = '' Related PHP date format that will be used to parse the format handled by the DatePicker.
+     *     If not specified (or if it's not a string) we'll use the same format used by formatDate(..., false)
      *
      * @return string
      *

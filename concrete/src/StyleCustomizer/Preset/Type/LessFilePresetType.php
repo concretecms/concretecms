@@ -29,6 +29,8 @@ class LessFilePresetType implements TypeInterface
 
     protected function getSkinNameFromFile(string $path): string
     {
+        // parseFile() returns the root ruleset when its third argument is true
+        /** @var \Less_Tree_Ruleset $parser */
         $parser = $this->lessParser->parseFile($path, '', true);
         $rules = $parser->rules;
         foreach ($rules as $rule) {

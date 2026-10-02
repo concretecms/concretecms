@@ -22,7 +22,7 @@ class ValidateAttributesRoutine implements RoutineInterface
         $valid = true;
         foreach ($form->getControls() as $control) {
             $type = $control->getControlType();
-            $validator = $type->getValidator($control);
+            $validator = $type->getValidator();
             if (is_object($validator)) {
                 $e = $validator->validateRequest($control, $this->request);
                 if (is_object($e) && $e->has()) {

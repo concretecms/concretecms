@@ -90,9 +90,6 @@ abstract class Finding
     }
 
 
-    /**
-     * @param mixed $message
-     */
     public function setMessage(MessageInterface $message): void
     {
         $this->message = $message;

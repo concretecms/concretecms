@@ -69,7 +69,7 @@ class Timezone extends DashboardSitePageController
                 $newValue = $this->request->request->get('timezone');
                 if (is_string($newValue) && strcasecmp($newValue, $oldValue) !== 0) {
                     $siteConfig->save('timezone', $newValue);
-                    $messages[] .= t('Default application timezone has been updated.');
+                    $messages[] = t('Default application timezone has been updated.');
                 }
                 if (!empty($messages)) {
                     $this->flash('message', implode("\n", $messages));

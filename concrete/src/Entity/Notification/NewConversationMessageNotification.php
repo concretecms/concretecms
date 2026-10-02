@@ -3,7 +3,6 @@
 namespace Concrete\Core\Entity\Notification;
 
 use Concrete\Core\Conversation\Message\Message;
-use Concrete\Core\Notification\Subject\SubjectInterface;
 use Concrete\Core\Notification\View\NewConversationMessageListView;
 use Concrete\Core\Notification\View\StandardListView;
 use Doctrine\ORM\Mapping as ORM;
@@ -23,10 +22,7 @@ class NewConversationMessageNotification extends Notification
      */
     protected $cnvMessageID;
 
-    /**
-     * @param \Concrete\Core\Conversation\Message\NewMessage $message
-     */
-    public function __construct(SubjectInterface $message)
+    public function __construct(Message $message)
     {
         $this->cnvMessageID = $message->getConversationMessageID();
         parent::__construct($message);

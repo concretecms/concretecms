@@ -155,12 +155,10 @@ class LinkAbstractor extends ConcreteObject
                         $picture->height = $matches[1];
                     }
                     $usePictureTag = null;
-                    if ($usePictureTag === null) {
-                        $widthFromHtml = (string) $picture->width;
-                        if ($widthFromHtml === (string) (int) $widthFromHtml && is_numeric($widthFromAttributes = (string) $fo->getAttribute('width'))) {
-                            if ($widthFromHtml !== $widthFromAttributes) {
-                                $usePictureTag = false;
-                            }
+                    $widthFromHtml = (string) $picture->width;
+                    if ($widthFromHtml === (string) (int) $widthFromHtml && is_numeric($widthFromAttributes = (string) $fo->getAttribute('width'))) {
+                        if ($widthFromHtml !== $widthFromAttributes) {
+                            $usePictureTag = false;
                         }
                     }
                     if ($usePictureTag === null) {

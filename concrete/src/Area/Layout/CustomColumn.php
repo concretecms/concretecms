@@ -6,10 +6,13 @@ use Concrete\Core\Support\Facade\Application;
 use HtmlObject\Element;
 use Loader;
 
+/**
+ * @phpstan-consistent-constructor
+ */
 class CustomColumn extends Column
 {
     /**
-     * @var int;
+     * @var int
      */
     public $arLayoutColumnWidth;
 
@@ -49,7 +52,7 @@ class CustomColumn extends Column
     }
 
     /**
-     * @param Column $newAreaLayout
+     * @param \Concrete\Core\Area\Layout\Layout $newAreaLayout
      *
      * @return CustomColumn
      */
@@ -69,7 +72,7 @@ class CustomColumn extends Column
      */
     public function exportDetails($node)
     {
-        $node->addAttribute('width', $this->arLayoutColumnWidth);
+        $node->addAttribute('width', (string) $this->arLayoutColumnWidth);
     }
 
     public function getAreaLayoutColumnClass()

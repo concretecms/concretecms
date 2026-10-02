@@ -54,7 +54,6 @@ class DriverManager
     }
     
     /**
-     * @param string $category
      * @param $object
      * @return DriverCollection
      */

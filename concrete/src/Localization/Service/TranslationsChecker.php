@@ -86,7 +86,7 @@ class TranslationsChecker
      * @param LocalStats[] $localStats
      * @param RemoteStats[] $remoteStats
      *
-     * @return PackageLocaleStatus|LocaleStatus
+     * @return ($package is null ? LocaleStatus : PackageLocaleStatus)
      */
     private function computeUpdates(array $localStats, array $remoteStats, ?Package $package = null)
     {

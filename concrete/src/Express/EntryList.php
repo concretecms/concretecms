@@ -9,7 +9,7 @@ use Concrete\Core\Entity\Express\Entry;
 use Concrete\Core\Entity\Site\Site;
 use Concrete\Core\Search\ItemList\Database\AttributedItemList as DatabaseItemList;
 use Concrete\Core\Search\ItemList\Pager\Manager\ExpressEntryListPagerManager;
-use Concrete\Core\Search\ItemList\Pager\PagerProviderInterface;
+use Concrete\Core\Search\ItemList\Pager\DatabasePagerProviderInterface;
 use Concrete\Core\Search\ItemList\Pager\QueryString\VariableFactory;
 use Concrete\Core\Search\Pagination\PaginationProviderInterface;
 use Concrete\Core\Search\PermissionableListItemInterface;
@@ -18,7 +18,7 @@ use Concrete\Core\User\User;
 use Pagerfanta\Adapter\DoctrineDbalAdapter;
 use Concrete\Core\Search\Pagination\Pagination;
 
-class EntryList extends DatabaseItemList implements PagerProviderInterface, PaginationProviderInterface
+class EntryList extends DatabaseItemList implements DatabasePagerProviderInterface, PaginationProviderInterface
 {
 
     protected $category;
@@ -111,6 +111,7 @@ class EntryList extends DatabaseItemList implements PagerProviderInterface, Pagi
         $likeBuilder = Application::getFacadeApplication()->make(LikeBuilder::class);
         $keys = $this->category->getSearchableIndexedList();
         if (count($keys)) {
+            $expressions = [];
             foreach ($keys as $ak) {
                 $cnt = $ak->getController();
                 $expressions[] = $cnt->searchKeywords($keywords, $this->query);

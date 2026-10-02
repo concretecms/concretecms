@@ -8,6 +8,7 @@ abstract class WorkflowKey extends Key
 {
     public function getCurrentlyActiveUsers(WorkflowProgress $wp)
     {
+        /** @var \Concrete\Core\Permission\Access\WorkflowAccess|null $paa */
         $paa = $this->getPermissionAccessObject();
         if (!$paa) {
             return array();

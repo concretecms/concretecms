@@ -284,7 +284,7 @@ abstract class AbstractExporter
      *
      * @param ItemList $list
      *
-     * @return string[][]\Generator
+     * @return \Generator<int, string[]>
      */
     protected function projectList(ItemList $list)
     {

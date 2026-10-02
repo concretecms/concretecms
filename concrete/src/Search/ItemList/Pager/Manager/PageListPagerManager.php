@@ -7,6 +7,7 @@ use Concrete\Core\Page\Search\ColumnSet\Available;
 use Concrete\Core\Search\Column\AttributeKeyColumn;
 use Concrete\Core\Search\Column\Column;
 use Concrete\Core\Search\ItemList\Pager\PagerProviderInterface;
+use Concrete\Core\Search\ItemList\Pager\QueryObjectResolver;
 
 class PageListPagerManager extends AbstractPagerManager
 {
@@ -31,7 +32,7 @@ class PageListPagerManager extends AbstractPagerManager
 
     public function sortListByCursor(PagerProviderInterface $itemList, $direction)
     {
-        $itemList->getQueryObject()->addOrderBy('p.cID', $direction);
+        QueryObjectResolver::getQueryObject($itemList)->addOrderBy('p.cID', $direction);
     }
 
 

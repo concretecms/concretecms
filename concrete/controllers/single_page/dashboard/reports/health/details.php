@@ -74,9 +74,7 @@ class Details extends DashboardPageController
 
             $this->set('grade', $grade);
 
-            if (count($findings) > 0) {
-                $this->setThemeViewTemplate('full.php');
-            }
+            $this->setThemeViewTemplate('full.php');
         }
     }
 

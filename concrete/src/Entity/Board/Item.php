@@ -166,7 +166,7 @@ class Item
     }
 
     /**
-     * @return mixed
+     * @return \Doctrine\Common\Collections\Collection|\Concrete\Core\Entity\Board\ItemCategory[]
      */
     public function getCategories()
     {
@@ -174,7 +174,7 @@ class Item
     }
 
     /**
-     * @return mixed
+     * @return \Doctrine\Common\Collections\Collection|\Concrete\Core\Entity\Board\ItemTag[]
      */
     public function getTags()
     {

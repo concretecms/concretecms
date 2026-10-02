@@ -229,14 +229,13 @@ interface AssetInterface
      * Register the asset properties.
      *
      * @param string $filename the location of the asset
-     * @param array $args {
+     * @param array{local?: bool, minify?: bool, combine?: bool, version?: string, position?: string, ...} $args
      *
-     *     @var bool $local is this asset a locally available file (accessible with the getAssetPath method)?
-     *     @var bool $minify does this asset support minification?
-     *     @var bool $combine can this asset be combined with other assets?
-     *     @var string $version the version of this asset
-     *     @var string $position the position of this asset (\Concrete\Core\Asset\AssetInterface::ASSET_POSITION_HEADER or \Concrete\Core\Asset\AssetInterface::ASSET_POSITION_FOOTER).
-     * }
+     * - local: is this asset a locally available file (accessible with the getAssetPath method)?
+     * - minify: does this asset support minification?
+     * - combine: can this asset be combined with other assets?
+     * - version: the version of this asset
+     * - position: the position of this asset (\Concrete\Core\Asset\AssetInterface::ASSET_POSITION_HEADER or \Concrete\Core\Asset\AssetInterface::ASSET_POSITION_FOOTER).
      *
      * @param \Concrete\Core\Package\Package|\Concrete\Core\Entity\Package|string|null|false $pkg the package that defines this asset (or its handle)
      */

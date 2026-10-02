@@ -19,6 +19,13 @@ class CaptchaLibrary extends AbstractCategory
         return $library->getSystemCaptchaLibraryName();
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Package\ItemCategory\AbstractCategory::getPackageItems()
+     *
+     * @return \Concrete\Core\Captcha\Library[]
+     */
     public function getPackageItems(Package $package)
     {
         return Library::getListByPackage($package);

@@ -64,7 +64,7 @@ class PageIndexer implements IndexingDriverInterface, ApplicationAwareInterface
 
     /**
      * Get a page based on criteria
-     * @param string|int|Page|Collection $page
+     * @param string|int|Page|Collection|mixed $page the page ID, the page path, a Page or a Collection instance (NULL is returned for other values)
      * @return \Concrete\Core\Page\Page|null
      */
     protected function getPage($page)

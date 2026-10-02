@@ -77,7 +77,9 @@ class ImportConfigValuesRoutine extends AbstractRoutine
                 $repository = $package ? $package->getController()->getDatabaseConfig() : app('config/database');
                 break;
             case 'file':
+            default:
                 $repository = $package ? $package->getController()->getFileConfig() : app('config');
+                break;
         }
         $this->repositoryInstances[$key] = $repository;
 

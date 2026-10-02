@@ -26,6 +26,13 @@ class AttributeKeyCategory extends AbstractCategory
         return $txt->unhandle($category->getAttributeKeyCategoryHandle());
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Package\ItemCategory\AbstractCategory::getPackageItems()
+     *
+     * @return \Concrete\Core\Entity\Attribute\Category[]
+     */
     public function getPackageItems(Package $package)
     {
         return Category::getListByPackage($package);

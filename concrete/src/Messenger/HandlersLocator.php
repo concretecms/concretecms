@@ -5,6 +5,7 @@ use Closure;
 use Concrete\Core\Application\Application;
 use Concrete\Core\Command\Batch\Stamp\BatchStamp;
 use Concrete\Core\Command\Batch\BatchAwareInterface;
+use Concrete\Core\Command\Task\Output\NullOutput;
 use Concrete\Core\Command\Task\Output\OutputAwareInterface;
 use Concrete\Core\Command\Task\Stamp\OutputStamp;
 use Concrete\Core\Config\Repository\Repository;
@@ -55,19 +56,19 @@ class HandlersLocator implements HandlersLocatorInterface
         if (isset($handlerClass)) {
             $builtClass = $this->app->build($handlerClass);
             if ($builtClass instanceof OutputAwareInterface) {
+                /** @var \Concrete\Core\Command\Task\Stamp\OutputStamp|null $outputStamp */
                 $outputStamp = $envelope->last(OutputStamp::class);
                 if ($outputStamp) {
-                    /**
-                     * @var $outputStamp OutputStamp
-                     */
                     $builtClass->setOutput($outputStamp->getOutput());
+                } else {
+                    $builtClass->setOutput(new NullOutput());
                 }
             }
             if ($builtClass instanceof BatchAwareInterface) {
                 $batchStamp = $envelope->last(BatchStamp::class);
                 if ($batchStamp) {
                     /**
-                     * @var $batchStamp BatchStamp
+                     * @var BatchStamp $batchStamp
                      */
                     $batch = $this->entityManager->find(Batch::class, $batchStamp->getBatchId());
                     if ($batch) {
@@ -98,7 +99,9 @@ class HandlersLocator implements HandlersLocatorInterface
      */
     private function shouldHandle(Envelope $envelope, HandlerDescriptor $handlerDescriptor): bool
     {
-        if (null === $received = $envelope->last(ReceivedStamp::class)) {
+        /** @var \Symfony\Component\Messenger\Stamp\ReceivedStamp|null $received */
+        $received = $envelope->last(ReceivedStamp::class);
+        if ($received === null) {
             return true;
         }
 

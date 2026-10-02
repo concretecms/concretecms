@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\Mail\Command;
 
+use Concrete\Core\Legacy\Loader;
 use Concrete\Core\Mail\Importer\MailImporter;
 
 class ProcessEmailCommandHandler

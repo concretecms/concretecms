@@ -14,7 +14,7 @@ class AttributeMessage implements MessageInterface
 {
 
     /**
-     * @var Value
+     * @var Value|null
      */
     protected $value;
 

@@ -55,9 +55,6 @@ class InstanceSlot
         return $this->boardInstanceSlotID;
     }
 
-    /**
-     * @return mixed
-     */
     public function getTemplate() : SlotTemplate
     {
         return $this->template;

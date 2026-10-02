@@ -9,6 +9,13 @@ class Item
 
     protected $item;
 
+    /**
+     * The search result containing this item.
+     *
+     * @var \Concrete\Core\Search\Result\Result
+     */
+    protected $result;
+
     public function getColumns()
     {
         return $this->columns;
@@ -21,6 +28,7 @@ class Item
 
     public function __construct(Result $result, Set $columns, $item)
     {
+        $this->result = $result;
         $this->item = $item;
         foreach ($columns->getColumns() as $col) {
             if ($col) {

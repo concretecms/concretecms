@@ -23,6 +23,6 @@ class MySqlSchemaManager extends DoctrineMySqlSchemaManager
             }
         }
 
-        return parent::createTable($table);
+        parent::createTable($table);
     }
 }

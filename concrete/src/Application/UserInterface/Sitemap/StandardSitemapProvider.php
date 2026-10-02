@@ -17,7 +17,7 @@ use Concrete\Core\Site\Tree\TreeInterface;
 class StandardSitemapProvider implements ProviderInterface
 {
     /**
-     * @var string
+     * @var bool
      */
     protected $permissionsIgnored = false;
 
@@ -180,6 +180,8 @@ class StandardSitemapProvider implements ProviderInterface
                 return $this->siteService->getSiteTreeByID($siteTreeID);
             }
         }
+
+        return null;
     }
 
     /**
@@ -192,9 +194,7 @@ class StandardSitemapProvider implements ProviderInterface
         $dh = $this->getSitemapDataProvider();
         if ($this->cookieJar->has('ConcreteSitemap-expand')) {
             $openNodeArray = explode(',', str_replace('_', '', $this->cookieJar->get('ConcreteSitemap-expand')));
-            if (is_array($openNodeArray)) {
-                $dh->setExpandedNodes($openNodeArray);
-            }
+            $dh->setExpandedNodes($openNodeArray);
         }
         if (!$this->includeMenuInResponse()) {
             if ($this->request->query->get('reloadSelfNode')) {

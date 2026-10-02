@@ -100,7 +100,7 @@ class FileItem implements ItemInterface
             return null;
         }
 
-        return $fID ? $em->find(File::class, $fID) : null;
+        return $em->find(File::class, $fID);
     }
 
     /**

@@ -19,6 +19,13 @@ class ContentEditorSnippet extends AbstractCategory
         return $snippet->getSystemContentEditorSnippetName();
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Package\ItemCategory\AbstractCategory::getPackageItems()
+     *
+     * @return \Concrete\Core\Editor\Snippet[]
+     */
     public function getPackageItems(Package $package)
     {
         return Snippet::getListByPackage($package);

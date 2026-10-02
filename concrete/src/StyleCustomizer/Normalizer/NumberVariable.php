@@ -46,9 +46,6 @@ class NumberVariable implements VariableInterface
         return $this->unit;
     }
 
-    /**
-     * @param string|null $unit
-     */
     public function setUnit(string $unit): void
     {
         $this->unit = $unit;

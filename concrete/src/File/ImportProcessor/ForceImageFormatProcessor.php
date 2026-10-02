@@ -49,23 +49,15 @@ class ForceImageFormatProcessor implements ProcessorInterface
 
     public function process(Version $version)
     {
-        switch ($this->getFormat()) {
-            case self::FORMAT_JPEG:
-                $format = BitmapFormat::FORMAT_JPEG;
-            default:
-                $format = BitmapFormat::FORMAT_JPEG;
-                break;
-        }
-
-        if ($format !== null) {
-            $bitmapFormat = \Core::make(BitmapFormat::class);
-            $extension = $bitmapFormat->getFormatFileExtension($format);
-            $image = $version->getImagineImage();
-            $filename = $version->getFileName();
-            $service = \Core::make('helper/file');
-            $newFilename = $service->replaceExtension($filename, $extension);
-            $version->updateContents($image->get($format, $bitmapFormat->getFormatImagineSaveOptions($format)));
-            $version->rename($newFilename);
-        }
+        // JPEG is the only supported format (see shouldProcess())
+        $format = BitmapFormat::FORMAT_JPEG;
+        $bitmapFormat = \Core::make(BitmapFormat::class);
+        $extension = $bitmapFormat->getFormatFileExtension($format);
+        $image = $version->getImagineImage();
+        $filename = $version->getFileName();
+        $service = \Core::make('helper/file');
+        $newFilename = $service->replaceExtension($filename, $extension);
+        $version->updateContents($image->get($format, $bitmapFormat->getFormatImagineSaveOptions($format)));
+        $version->rename($newFilename);
     }
 }

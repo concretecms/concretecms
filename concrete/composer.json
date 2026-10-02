@@ -27,7 +27,8 @@
     },
     "exclude-from-classmap": [
         "src/Support/.phpstorm.meta.php",
-        "src/Support/__IDE_SYMBOLS__.php"
+        "src/Support/__IDE_SYMBOLS__.php",
+        "src/Support/__PHPSTAN_STUBS__.php"
     ]
   },
   "bin": [
@@ -67,7 +68,7 @@
     "doctrine/persistence": "^2.5.1|^3.4.3",
     "doctrine/migrations": "^2",
     "symfony/cache": "^v5.3.7",
-    "league/flysystem": "1.*",
+    "league/flysystem": "^1.0.2",
     "laravel/helpers": "^1.3",
     "illuminate/container": "^8",
     "illuminate/config": "^8",

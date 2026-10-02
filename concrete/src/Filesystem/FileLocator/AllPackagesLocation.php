@@ -25,6 +25,11 @@ class AllPackagesLocation implements LocationInterface
         $this->filesystem = $filesystem;
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Filesystem\FileLocator\LocationInterface::contains()
+     */
     public function contains($file)
     {
         foreach($this->packageList->getPackages() as $pkg) {
@@ -35,6 +40,8 @@ class AllPackagesLocation implements LocationInterface
                 return $record;
             }
         }
+
+        return false;
     }
 
 }

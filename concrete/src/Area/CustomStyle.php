@@ -10,7 +10,7 @@ class CustomStyle extends AbstractCustomStyle
     public $area;
 
     /**
-     * @var StyleSet
+     * @var StyleSet|null
      */
     protected $set;
 
@@ -36,6 +36,9 @@ class CustomStyle extends AbstractCustomStyle
     public function getCSS()
     {
         $set = $this->set;
+        if ($set === null) {
+            return '';
+        }
         $groups = [];
         if ($set->getBackgroundColor()) {
             $groups[''][] = 'background-color:' . $set->getBackgroundColor();

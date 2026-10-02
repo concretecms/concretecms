@@ -20,7 +20,7 @@ class Inspector
     /**
      * The list of registered parsers.
      *
-     * @var \Concrete\Core\Package\Offline\Parser[]|null
+     * @var \Concrete\Core\Package\Offline\Parser[]
      */
     private $parsers = [];
 
@@ -53,7 +53,7 @@ class Inspector
     /**
      * Get the parsers list.
      *
-     * \Concrete\Core\Package\Offline\Parser[]
+     * @return \Concrete\Core\Package\Offline\Parser[]
      */
     public function getParsers()
     {

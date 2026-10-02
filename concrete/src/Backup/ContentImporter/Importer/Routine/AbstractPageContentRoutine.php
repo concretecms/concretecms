@@ -38,6 +38,7 @@ abstract class AbstractPageContentRoutine extends AbstractRoutine
 
                                 if ($block->getBlockTypeHandle() == BLOCK_HANDLE_LAYOUT_PROXY) {
                                     // we have to go get the blocks on that page in this layout.
+                                    /** @var \Concrete\Block\CoreAreaLayout\Controller $btc */
                                     $btc = $block->getController();
                                     $arLayout = $btc->getAreaLayoutObject();
                                     $columns = $arLayout->getAreaLayoutColumns();
@@ -52,9 +53,10 @@ abstract class AbstractPageContentRoutine extends AbstractRoutine
 
                                 if ($block->getBlockTypeHandle() == BLOCK_HANDLE_CONTAINER_PROXY) {
                                     // we have to go get the blocks on that page in this layout.
+                                    /** @var \Concrete\Block\CoreAreaLayout\Controller $btc */
                                     $btc = $block->getController();
                                     /**
-                                     * @var $btc ContainerBlockController
+                                     * @var ContainerBlockController $btc
                                      */
                                     $instance = $btc->getContainerInstanceObject();
                                     $em = app(EntityManager::class);

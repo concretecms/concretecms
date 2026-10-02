@@ -46,7 +46,7 @@ class UserSelectInstanceFactory implements ApplicationAwareInterface
     public function createInstanceFromRequest(Request $request)
     {
         $labelFormat = $request->request->get('labelFormat') ?? '';
-        $includeAvatar = $request->request->getBoolean('includeAvatar') ?? false;
+        $includeAvatar = $request->request->getBoolean('includeAvatar');
         return $this->createInstance($labelFormat, $includeAvatar);
     }
 

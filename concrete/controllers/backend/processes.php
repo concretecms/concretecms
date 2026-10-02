@@ -24,7 +24,7 @@ class Processes extends AbstractController
     protected $entityManager;
 
     /**
-     * @var
+     * @var ProcessResponseFactory
      */
     protected $responseFactory;
 

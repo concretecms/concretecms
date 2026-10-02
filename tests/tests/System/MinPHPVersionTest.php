@@ -69,6 +69,67 @@ final class MinPHPVersionTest extends TestCase
         );
     }
 
+    public function testPHPStanPHPVersion(): void
+    {
+        $expectedVersion = self::getMinPHPVersionFromInstallPreconditions();
+        if ($expectedVersion === null) {
+            self::markTestSkipped('Unable to retrieve the minimum PHP version from the install preconditions');
+        }
+        $versionChunks = array_map('intval', explode('.', $expectedVersion));
+        $expectedVersionID = $versionChunks[0] * 10000 + ($versionChunks[1] ?? 0) * 100 + ($versionChunks[2] ?? 0);
+        $configFile = DIR_BASE . '/.phpstan/phpstan.neon.dist';
+        $neon = file_get_contents($configFile);
+        self::assertNotFalse($neon, "Failed to read the file {$configFile}");
+        $actualVersionID = self::getPHPStanPHPVersionID($neon);
+        self::assertNotNull($actualVersionID, "The PHPStan configuration file ({$configFile}) should contain the phpVersion parameter (either a version ID or a map with the min version ID)");
+        self::assertSame($expectedVersionID, $actualVersionID, "The value of phpVersion in the PHPStan configuration file ({$actualVersionID}) should correspond to the minimum PHP version defined in the install preconditions ({$expectedVersion}, that is {$expectedVersionID})");
+    }
+
+    /**
+     * Get the minimum PHP version ID from the phpVersion parameter of a PHPStan configuration file.
+     * The parameter is either a version ID ("phpVersion: 70300") or a map with the "min" (and "max") version IDs.
+     */
+    private static function getPHPStanPHPVersionID(string $neon): ?int
+    {
+        $lines = preg_split('/\r\n|\n|\r/', $neon);
+        $numLines = count($lines);
+        for ($index = 0; $index < $numLines; $index++) {
+            $matches = null;
+            if (!preg_match('/^([ \t]*)phpVersion[ \t]*:(.*)$/', $lines[$index], $matches)) {
+                continue;
+            }
+            $indentation = strlen($matches[1]);
+            $value = self::stripNeonComment($matches[2]);
+            if ($value !== '') {
+                return preg_match('/^\d+$/', $value) ? (int) $value : null;
+            }
+            // The version IDs are in the following lines, which must be indented more than the phpVersion line
+            for ($index++; $index < $numLines; $index++) {
+                $line = $lines[$index];
+                if (self::stripNeonComment($line) === '') {
+                    continue;
+                }
+                if (!preg_match('/^([ \t]*)(\w+)[ \t]*:(.*)$/', $line, $matches) || strlen($matches[1]) <= $indentation) {
+                    break;
+                }
+                if ($matches[2] === 'min') {
+                    $value = self::stripNeonComment($matches[3]);
+
+                    return preg_match('/^\d+$/', $value) ? (int) $value : null;
+                }
+            }
+
+            return null;
+        }
+
+        return null;
+    }
+
+    private static function stripNeonComment(string $line): string
+    {
+        return trim(preg_replace('/#.*$/', '', $line));
+    }
+
     private static function getMinPHPVersionFromInstallPreconditions(): ?string
     {
         if (!class_exists(PhpVersion::class)) {

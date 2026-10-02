@@ -4,6 +4,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
 use Concrete\Controller\Backend\UserInterface as BackendInterfaceController;
 use Concrete\Core\Application\EditResponse as UserEditResponse;
+use Concrete\Core\Workflow\Progress\UserProgress as UserWorkflowProgress;
 use PermissionKey;
 use Permissions;
 use UserInfo;

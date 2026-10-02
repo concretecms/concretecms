@@ -19,8 +19,16 @@ class SearchProvider extends AbstractSearchProvider
     protected $entity;
     protected $columnSet;
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Search\ProviderInterface::getFieldManager()
+     *
+     * @return \Concrete\Core\Express\Search\Field\Manager
+     */
     public function getFieldManager()
     {
+        /** @var \Concrete\Core\Express\Search\Field\Manager $manager */
         $manager = ManagerFactory::get('express');
         $manager->setExpressCategory($this->category);
         return $manager;
@@ -87,6 +95,13 @@ class SearchProvider extends AbstractSearchProvider
         return $this->columnSet;
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Search\ProviderInterface::createSearchResultObject()
+     *
+     * @return \Concrete\Core\Express\Entry\Search\Result\Result
+     */
     public function createSearchResultObject($columns, $list)
     {
         $result = new Result($columns, $list);

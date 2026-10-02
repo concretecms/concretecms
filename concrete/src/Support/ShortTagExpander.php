@@ -9,7 +9,7 @@ class ShortTagExpander
     /**
      * Replace the short PHP open tags to long tags (`<?` to `<?php`) and optionally the short echo tags (`<?=` to `<?php echo `).
      *
-     * @param string $code the code to be expanded
+     * @param string|mixed $code the code to be expanded (an InvalidArgumentException is thrown if it's not a string)
      * @param bool $expandShortEcho expand
      *
      * @throws \InvalidArgumentException if $code is not a string

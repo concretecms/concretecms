@@ -122,7 +122,7 @@ class Token
         if (is_string($token)) {
             $parts = explode(':', $token);
             if ($parts[0] && isset($parts[1])) {
-                $time = $parts[0];
+                $time = (int) $parts[0];
                 $hash = $parts[1];
                 $compHash = $this->generate($action, $time);
                 $now = time();

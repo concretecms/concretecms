@@ -9,6 +9,9 @@ use Concrete\Core\Workflow\Request\PageRequest as PageWorkflowRequest;
 use Concrete\Core\Url\Resolver\Manager\ResolverManagerInterface;
 use Concrete\Core\Validation\CSRF\Token;
 
+/**
+ * @method \Concrete\Core\Workflow\Request\PageRequest|null getWorkflowRequestObject()
+ */
 class PageProgress extends Progress implements SiteProgressInterface
 {
     protected $cID;

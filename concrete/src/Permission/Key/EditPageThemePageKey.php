@@ -6,6 +6,9 @@ use Concrete\Core\User\User;
 use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\Permission\Duration as PermissionDuration;
 
+/**
+ * @method \Concrete\Core\Permission\Access\ListItem\EditPageThemePageListItem[] getAccessListItems($accessType = self::ACCESS_TYPE_INCLUDE, $filterEntities = [], $checkCache = true)
+ */
 class EditPageThemePageKey extends PageKey
 {
     protected function getAllowedThemeIDs()

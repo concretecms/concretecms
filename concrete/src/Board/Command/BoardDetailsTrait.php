@@ -45,9 +45,6 @@ trait BoardDetailsTrait
         $this->name = $name;
     }
 
-    /**
-     * @return Template\null
-     */
     public function getTemplate(): ?Template
     {
         return $this->template;

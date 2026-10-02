@@ -83,7 +83,7 @@ class PresetLayout extends Layout
     }
 
     /**
-     * @return PresetLayout
+     * @return PresetLayout|null
      */
     public function duplicate()
     {
@@ -103,12 +103,14 @@ class PresetLayout extends Layout
 
             return $newAreaLayout;
         }
+
+        return null;
     }
 
     /**
      * @param PresetInterface $preset
      *
-     * @return PresetLayout
+     * @return PresetLayout|null
      */
     public static function add(PresetInterface $preset)
     {
@@ -121,5 +123,7 @@ class PresetLayout extends Layout
 
             return $ar;
         }
+
+        return null;
     }
 }

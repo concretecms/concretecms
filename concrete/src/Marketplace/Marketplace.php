@@ -57,7 +57,7 @@ class Marketplace implements ApplicationAwareInterface
     protected $databaseConfig;
 
     /**
-     * @var File
+     * @var File|null
      */
     protected $fileHelper;
 
@@ -119,7 +119,7 @@ class Marketplace implements ApplicationAwareInterface
             } else {
                 if ($vn->integer($r)) {
                     $this->isConnected = false;
-                    $this->connectionError = $r;
+                    $this->connectionError = (int) $r;
 
                     if ($this->connectionError == self::E_DELETED_SITE_TOKEN) {
                         $this->databaseConfig->clear('concrete.marketplace.token');
@@ -271,15 +271,13 @@ class Marketplace implements ApplicationAwareInterface
 
             if ($filterInstalled) {
                 $handles = $packageService->getInstalledHandles();
-                if (is_array($handles)) {
-                    $adlist = [];
-                    foreach ($addons as $key => $ad) {
-                        if (!in_array($ad->getHandle(), $handles)) {
-                            $adlist[$key] = $ad;
-                        }
+                $adlist = [];
+                foreach ($addons as $key => $ad) {
+                    if (!in_array($ad->getHandle(), $handles)) {
+                        $adlist[$key] = $ad;
                     }
-                    $addons = $adlist;
                 }
+                $addons = $adlist;
             }
         }
 

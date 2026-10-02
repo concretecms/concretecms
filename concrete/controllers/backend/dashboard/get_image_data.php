@@ -79,7 +79,7 @@ class GetImageData extends AbstractController
         if ($imageData === '') {
             return null;
         }
-        set_error_handler(static function () {}, -1);
+        set_error_handler(static function (): bool { return true; }, -1);
         $decoded = json_decode($imageData, true);
         restore_error_handler();
 

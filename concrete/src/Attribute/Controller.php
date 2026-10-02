@@ -13,6 +13,10 @@ use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityNotFoundException;
 use SimpleXMLElement;
 
+/**
+ * @method void on_start(string|null $method = null) Override this method to perform controller initializations: $method is the action being run.
+ * @method void on_before_render(string|string[]|null $method = null) Override this method to do something right before the view is rendered: $method is the action being run.
+ */
 class Controller extends AbstractController implements AttributeInterface
 {
     /**
@@ -52,6 +56,15 @@ class Controller extends AbstractController implements AttributeInterface
      * @var false|array
      */
     protected $requestArray = false;
+
+    /**
+     * The action being run (set by setupAndRun()).
+     *
+     * @deprecated it's never read by the core: it's only set for backward compatibility
+     *
+     * @var string|null
+     */
+    public $task;
 
     /**
      * @param EntityManager $entityManager
@@ -124,12 +137,14 @@ class Controller extends AbstractController implements AttributeInterface
         if ($r->exists()) {
             return $r->url;
         }
+
+        return null;
     }
 
     /**
      * @param array|false $data
      *
-     * @return \Concrete\Core\Error\ErrorList\ErrorList
+     * @return \Concrete\Core\Error\ErrorList\ErrorList|mixed an ErrorList instance (attribute controllers of third-party packages may return other values, like booleans or null, which are ignored by the validators)
      */
     public function validateKey($data = false)
     {
@@ -160,6 +175,8 @@ class Controller extends AbstractController implements AttributeInterface
      * {@inheritdoc}
      *
      * @see \Concrete\Core\Attribute\AttributeInterface::getAttributeKey()
+     *
+     * @return \Concrete\Core\Entity\Attribute\Key\Key|null
      */
     public function getAttributeKey()
     {
@@ -259,7 +276,7 @@ class Controller extends AbstractController implements AttributeInterface
     {
         try {
             $class = $this->getAttributeValueClass();
-            if ($class && $this->attributeValue && !empty($this->attributeValue->getAttributeValueID())) {
+            if ($class && $this->attributeValue && method_exists($this->attributeValue, 'getAttributeValueID') && method_exists($this->attributeValue, 'getGenericValue') && !empty($this->attributeValue->getAttributeValueID())) {
                 $result = $this->entityManager->find($class, $this->attributeValue->getGenericValue());
             } else {
                 if ($class && $this->attributeValue) {
@@ -428,7 +445,12 @@ class Controller extends AbstractController implements AttributeInterface
      */
     public function getControlView(ContextInterface $context)
     {
-        return new ControlView($context, $this->getAttributeKey(), $this->getAttributeValue());
+        $key = $this->getAttributeKey();
+        if ($key === null) {
+            throw new \RuntimeException(t('The attribute key is not set.'));
+        }
+
+        return new ControlView($context, $key, $this->getAttributeValue());
     }
 
     /**
@@ -516,7 +538,7 @@ class Controller extends AbstractController implements AttributeInterface
      *
      * @see \Concrete\Core\Controller\AbstractController::post()
      */
-    public function post($field = false, $defaultValue = null)
+    public function post($field = null, $defaultValue = null)
     {
         // the only post that matters is the one for this attribute's name space
         $req = ($this->requestArray == false) ? $this->request->request->all() : $this->requestArray;
@@ -538,7 +560,7 @@ class Controller extends AbstractController implements AttributeInterface
      *
      * @see \Concrete\Core\Controller\AbstractController::request()
      */
-    public function request($field = false)
+    public function request($field = null)
     {
         $request = array_merge($this->request->request->all(), $this->request->query->all());
         $req = ($this->requestArray == false) ? $request : $this->requestArray;
@@ -575,9 +597,7 @@ class Controller extends AbstractController implements AttributeInterface
         if ($method) {
             $this->task = $method;
         }
-        if (method_exists($this, 'on_start')) {
-            $this->on_start($method);
-        }
+        $this->on_start($method);
         if ($method == 'composer') {
             $method = ['composer', 'form'];
         }
@@ -586,9 +606,7 @@ class Controller extends AbstractController implements AttributeInterface
             $this->runTask($method, $args);
         }
 
-        if (method_exists($this, 'on_before_render')) {
-            $this->on_before_render($method);
-        }
+        $this->on_before_render($method);
     }
 
     /**
@@ -615,7 +633,7 @@ class Controller extends AbstractController implements AttributeInterface
      */
     public function getAttributeValueID()
     {
-        if (is_object($this->attributeValue)) {
+        if (is_object($this->attributeValue) && method_exists($this->attributeValue, 'getAttributeValueID')) {
             return $this->attributeValue->getAttributeValueID();
         }
     }

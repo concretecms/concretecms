@@ -6,6 +6,8 @@ use Concrete\Core\Database\CharacterSetCollation\Manager;
 use Concrete\Core\Updater\Migrations\AbstractMigration;
 use Concrete\Core\Updater\Migrations\LongRunningMigrationInterface;
 use Concrete\Core\Updater\Migrations\RepeatableMigrationInterface;
+use Exception;
+use Throwable;
 
 class Version20190509000000 extends AbstractMigration implements RepeatableMigrationInterface, LongRunningMigrationInterface
 {

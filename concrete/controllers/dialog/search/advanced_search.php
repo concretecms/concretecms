@@ -13,6 +13,7 @@ use Concrete\Core\Entity\Search\Query;
 use Concrete\Core\Entity\Search\SavedSearch;
 use Concrete\Core\Search\Field\Field\KeywordsField;
 use Concrete\Core\Search\ProviderInterface;
+use Concrete\Core\Search\SessionQueryProviderInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Doctrine\ORM\EntityManager;
 use Exception;
@@ -209,7 +210,9 @@ abstract class AdvancedSearch extends BackendInterfaceController
             $query = $this->getQueryFromRequest();
 
             $provider = $this->getSearchProvider();
-            $provider->setSessionCurrentQuery($query);
+            if ($provider instanceof SessionQueryProviderInterface) {
+                $provider->setSessionCurrentQuery($query);
+            }
 
             $result = $provider->getSearchResultFromQuery($query);
             $result->setBaseURL($this->getCurrentSearchBaseURL());

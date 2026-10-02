@@ -13,9 +13,9 @@ class DriverManager extends Manager
     protected $drivers = array();
 
     /**
-     * @param null $driver
+     * @param string|null $driver the handle of the driver (if NULL, the default driver is used)
      *
-     * @return \Doctrine\DBAL\Driver
+     * @return \Doctrine\DBAL\Driver|mixed the driver created by the registered driver creator (it should be a \Doctrine\DBAL\Driver instance)
      */
     public function driver($driver = null)
     {
@@ -23,7 +23,7 @@ class DriverManager extends Manager
     }
 
     /**
-     * @return \Doctrine\DBAL\Driver
+     * @return \Doctrine\DBAL\Driver[]
      */
     public function getDrivers()
     {

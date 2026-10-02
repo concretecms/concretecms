@@ -17,6 +17,7 @@ use Concrete\Core\Error\ErrorList\ErrorList;
 use Concrete\Core\Error\UserMessageException;
 use Concrete\Core\Filesystem\ElementManager;
 use Concrete\Core\Foundation\Serializer\JsonSerializer;
+use Concrete\Core\Permission\Key\EditUserPropertiesUserKey;
 use Concrete\Core\Permission\Key\Key;
 use Concrete\Core\User\UserInfo;
 use Concrete\Core\User\UserInfoRepository;
@@ -73,6 +74,9 @@ class Attributes extends BackendInterfaceController
         $permissions = new \Permissions($user);
         if ($permissions->canEditUser()) {
             $pk = Key::getByHandle('edit_user_properties');
+            if (!$pk instanceof EditUserPropertiesUserKey) {
+                throw new \RuntimeException(t('The %s permission key is not installed correctly.', 'edit_user_properties'));
+            }
             $assignment = $pk->getMyAssignment();
             if ($assignment) {
                 $this->allowedEditAttributes = $assignment->getAttributesAllowedArray();

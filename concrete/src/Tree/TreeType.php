@@ -6,6 +6,9 @@ use Concrete\Core\Package\PackageList;
 use Core;
 use Database;
 
+/**
+ * @phpstan-consistent-constructor
+ */
 class TreeType extends ConcreteObject
 {
     public function getTreeTypeID()

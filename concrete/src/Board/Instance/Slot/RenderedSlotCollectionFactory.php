@@ -55,7 +55,7 @@ class RenderedSlotCollectionFactory
         $rules = $this->getCurrentRules($instance, $ruleTypes);
         $renderedSlots = [];
         /**
-         * @var $rule InstanceSlotRule
+         * @var InstanceSlotRule $rule
          */
         foreach($rules as $rule) {
             $slot = $rule->getSlot();

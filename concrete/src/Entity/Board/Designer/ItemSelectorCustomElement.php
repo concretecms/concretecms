@@ -4,6 +4,7 @@ namespace Concrete\Core\Entity\Board\Designer;
 use Concrete\Core\Block\Block;
 use Concrete\Core\Block\BlockType\BlockType;
 use Concrete\Core\Localization\Service\Date;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -27,8 +28,13 @@ class ItemSelectorCustomElement extends CustomElement
      */
     protected $slotTemplate;
 
+    public function __construct()
+    {
+        $this->items = new ArrayCollection();
+    }
+
     /**
-     * @return mixed
+     * @return \Doctrine\Common\Collections\Collection|\Concrete\Core\Entity\Board\Designer\ItemSelectorCustomElementItem[]
      */
     public function getItems()
     {

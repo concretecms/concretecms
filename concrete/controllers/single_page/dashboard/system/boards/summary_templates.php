@@ -48,7 +48,7 @@ class SummaryTemplates extends DashboardPageController
 
             $this->entityManager->flush();
 
-            foreach ($this->request->request->get('category_template') as $categoryId => $templates) {
+            foreach ($this->request->request->all('category_template') as $categoryId => $templates) {
                 $category = $this->entityManager->find(Category::class, $categoryId);
                 if ($category) {
                     $templateObjects = [];

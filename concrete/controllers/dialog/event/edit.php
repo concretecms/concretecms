@@ -195,7 +195,7 @@ class Edit extends BackendInterfaceController
 
             // Load the local repetition if available. This is what tells us which repetition was being edited
             $localRepetition = $this->eventRepetitionService->translateFromRequest('local', $event->getCalendar(), $this->request);
-            if (is_array($localRepetition) && count($localRepetition) > 0) {
+            if (count($localRepetition) > 0) {
                 $repetition = $localRepetition[0];
             } else {
                 $repetition = $repetitions[0];

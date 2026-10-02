@@ -53,12 +53,10 @@ class Scheduler
 
         $scheduledTask = new ScheduledTask();
         $scheduledTask->setDateScheduled($this->dateService->toDateTime()->getTimestamp());
-        $user = new User();
-        if ($user) {
-            $userInfo = $user->getUserInfoObject();
-            if ($userInfo) {
-                $scheduledTask->setUser($userInfo->getEntityObject());
-            }
+        $user = app(User::class);
+        $userInfo = $user->getUserInfoObject();
+        if ($userInfo) {
+            $scheduledTask->setUser($userInfo->getEntityObject());
         }
         $scheduledTask->setTask($task);
         $scheduledTask->setInput($input);

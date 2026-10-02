@@ -12,6 +12,7 @@ use Concrete\Core\Filesystem\ElementManager;
 use Concrete\Core\User\EditResponse as UserEditResponse;
 use Concrete\Core\User\UserInfoRepository;
 use Concrete\Core\Permission\Checker;
+use Concrete\Core\Permission\Key\EditUserPropertiesUserKey;
 use Concrete\Core\Permission\Key\Key;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
@@ -181,6 +182,9 @@ class Properties extends BackendInterfaceController
     protected function setupAllowedEditAttributes(): void
     {
         $pk = Key::getByHandle('edit_user_properties');
+        if (!$pk instanceof EditUserPropertiesUserKey) {
+            throw new \RuntimeException(t('The %s permission key is not installed correctly.', 'edit_user_properties'));
+        }
         $assignment = $pk->getMyAssignment();
         if ($assignment) {
             $this->allowedEditAttributes = $assignment->getAttributesAllowedArray();

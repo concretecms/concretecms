@@ -18,6 +18,7 @@ class Listener
         foreach($receivers as $receiver) {
             if ($receiver instanceof ListableReceiverInterface) {
                 foreach($receiver->all() as $envelope) {
+                    /** @var \Concrete\Core\Command\Batch\Stamp\BatchStamp|null $batchStamp */
                     $batchStamp = $envelope->last(BatchStamp::class);
                     if ($batchStamp && $batchStamp->getBatchId() == $batch->getId()) {
                         // This was a message on that batch, so we're going to reject and remove the message.

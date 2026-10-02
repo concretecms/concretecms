@@ -175,7 +175,7 @@ class ExpressEntitySpecFactory
                 ->addParameter(new IncludesParameter($includes))
                 ->addResponse(
                     new SpecResponse(
-                        200,
+                        '200',
                         t('An array of %s objects.', $object->getName()),
                         new JsonSchemaRefArrayContent('/components/schemas/' . camelcase($object->getHandle()))
                     )
@@ -203,7 +203,7 @@ class ExpressEntitySpecFactory
                 ->setSecurity(new SpecSecurity('authorization', [$handle . ':read']))
                 ->addResponse(
                     new SpecResponse(
-                        200,
+                        '200',
                         t('The %s object.', $object->getName()),
                         new JsonSchemaRefContent('/components/schemas/' . camelcase($object->getHandle()))
                     )
@@ -228,7 +228,7 @@ class ExpressEntitySpecFactory
             ->setSecurity(new SpecSecurity('authorization', [$handle . ':add']))
             ->addResponse(
                 new SpecResponse(
-                    200,
+                    '200',
                     t('The %s object.', $object->getName()),
                     new JsonSchemaRefContent('/components/schemas/' . camelcase($object->getHandle()))
                 )
@@ -259,7 +259,7 @@ class ExpressEntitySpecFactory
             ->addParameter(new Parameter('id', 'path', t('The ID of the object.'), new SpecSchema('string', 'string')))
             ->addResponse(
                 new SpecResponse(
-                    200,
+                    '200',
                     t('The %s object.', $object->getName()),
                     new JsonSchemaRefContent('/components/schemas/' . camelcase($object->getHandle()))
                 )
@@ -290,7 +290,7 @@ class ExpressEntitySpecFactory
                 ->setSecurity(new SpecSecurity('authorization', [$handle . ':delete']))
                 ->addResponse(
                     new SpecResponse(
-                        200,
+                        '200',
                         t('The %s object.', $object->getName()),
                         new JsonSchemaRefContent('/components/schemas/DeletedResponse')
                     )

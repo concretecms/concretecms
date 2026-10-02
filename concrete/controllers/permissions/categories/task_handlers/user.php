@@ -6,6 +6,7 @@ use Concrete\Core\Error\UserMessageException;
 use Concrete\Core\Http\ResponseFactoryInterface;
 use Concrete\Core\Permission\Category\GenericTaskHandler;
 use Concrete\Core\Permission\Checker;
+use Concrete\Core\Permission\Access\Access;
 use Concrete\Core\Permission\Key\Key;
 use Concrete\Core\Workflow\Workflow;
 use Symfony\Component\HttpFoundation\Response;
@@ -37,12 +38,15 @@ class User extends GenericTaskHandler
     protected function saveWorkflows(array $options): ?Response
     {
         $pk = Key::getByID($options['pkID']);
-        $pk->clearWorkflows();
-        if (is_array($options['wfID'] ?? null)) {
-            foreach ($options['wfID'] as $wfID) {
-                $wf = Workflow::getByID($wfID);
-                if ($wf !== null) {
-                    $pk->attachWorkflow($wf);
+        $pa = Access::getByID($options['paID'], $pk);
+        if ($pa !== null) {
+            $pa->clearWorkflows();
+            if (is_array($options['wfID'] ?? null)) {
+                foreach ($options['wfID'] as $wfID) {
+                    $wf = Workflow::getByID($wfID);
+                    if ($wf !== null) {
+                        $pa->attachWorkflow($wf);
+                    }
                 }
             }
         }

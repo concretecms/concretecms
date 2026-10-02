@@ -210,13 +210,15 @@ class Manager extends CoreManager
         return $this->app->make(Container::class);
     }
 
+    /**
+     * Get the items of all the categories installed by a package.
+     *
+     * @return object[]
+     */
     public function getPackageItems(Package $package)
     {
         $items = [];
         foreach ($this->getPackageItemCategories() as $category) {
-            /**
-             * @var ItemInterface
-             */
             $items = array_merge($items, $category->getItems($package));
         }
 

@@ -19,6 +19,13 @@ class PageTemplate extends AbstractCategory
         return $template->getPageTemplateDisplayName();
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Package\ItemCategory\AbstractCategory::getPackageItems()
+     *
+     * @return \Concrete\Core\Entity\Page\Template[]
+     */
     public function getPackageItems(Package $package)
     {
         return Template::getListByPackage($package);

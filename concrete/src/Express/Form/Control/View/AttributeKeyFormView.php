@@ -25,11 +25,18 @@ class AttributeKeyFormView extends BaseFormView
 
         $this->context = $context->getAttributeContext();
         $this->key = $key;
-        $this->view = $this->key->getController()->getControlView($this->context);
-        $this->view->setIsRequired($control->isRequired());
-        $this->view->setLabel($control->getDisplayLabel());
+        $view = $this->key->getController()->getControlView($this->context);
+        if (!method_exists($view, 'setIsRequired')) {
+            throw new \RuntimeException(t('The control view must have the %s method.', 'setIsRequired()'));
+        }
+        $this->view = $view;
+        $view->setIsRequired($control->isRequired());
+        $view->setLabel($control->getDisplayLabel());
         if (is_object($entry)) {
-            $this->view->setValue($entry->getAttributeValueObject($key));
+            if (!method_exists($view, 'setValue')) {
+                throw new \RuntimeException(t('The control view must have the %s method.', 'setValue()'));
+            }
+            $view->setValue($entry->getAttributeValueObject($key));
         }
     }
 

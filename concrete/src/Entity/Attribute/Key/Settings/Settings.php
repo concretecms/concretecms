@@ -2,7 +2,7 @@
 namespace Concrete\Core\Entity\Attribute\Key\Settings;
 
 use Concrete\Core\Entity\Attribute\Type;
-use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -42,7 +42,7 @@ abstract class Settings
         return $this->key->getAttributeType();
     }
 
-    public function mergeAndPersist(EntityManagerInterface $entityManager)
+    public function mergeAndPersist(EntityManager $entityManager)
     {
         $settings = $entityManager->merge($this);
         $entityManager->persist($settings);

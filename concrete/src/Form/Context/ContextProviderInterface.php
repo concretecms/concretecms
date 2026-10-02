@@ -7,7 +7,7 @@ interface ContextProviderInterface
 {
 
     /**
-     * @return ContextRegistryInterface
+     * @return ContextRegistryInterface|null
      */
     function getContextRegistry();
 

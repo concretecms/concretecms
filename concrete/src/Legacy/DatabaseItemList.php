@@ -1,6 +1,8 @@
 <?php
 namespace Concrete\Core\Legacy;
 
+use Concrete\Core\Entity\Attribute\Key\Key as AttributeKey;
+
 class DatabaseItemList extends ItemList
 {
     protected $query = '';
@@ -13,6 +15,11 @@ class DatabaseItemList extends ItemList
     protected $autoSortColumns = array();
     protected $userPostQuery = '';
     protected $attributeClass = '';
+
+    /**
+     * @var array
+     */
+    protected $attributeFilters;
 
     public function getTotal()
     {
@@ -183,6 +190,13 @@ class DatabaseItemList extends ItemList
         }
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Legacy\ItemList::getSearchResultsClass()
+     *
+     * @param string|AttributeKey $field
+     */
     public function getSearchResultsClass($field)
     {
         if ($field instanceof AttributeKey) {
@@ -192,6 +206,14 @@ class DatabaseItemList extends ItemList
         return parent::getSearchResultsClass($field);
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Legacy\ItemList::sortBy()
+     *
+     * @param string|AttributeKey $key
+     * @param string $dir
+     */
     public function sortBy($key, $dir = 'asc')
     {
         if ($key instanceof AttributeKey) {

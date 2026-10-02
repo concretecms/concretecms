@@ -74,7 +74,7 @@ class Clipboard extends AbstractController
 
     protected function getPermissionKeysAndEntityIDs(): array
     {
-        $pkIDs = $this->request->request->get('pkID');
+        $pkIDs = $this->request->request->all()['pkID'] ?? null;
         if (!is_array($pkIDs) || $pkIDs === []) {
             return [];
         }

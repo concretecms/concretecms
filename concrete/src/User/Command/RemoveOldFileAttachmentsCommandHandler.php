@@ -33,9 +33,6 @@ class RemoveOldFileAttachmentsCommandHandler implements OutputAwareInterface
         $this->config = $config;
     }
 
-    /**
-     * @param ReindexUserTaskCommand $command
-     */
     public function __invoke(RemoveOldFileAttachmentsCommand $command)
     {
         $removedItemsCounter = 0;

@@ -56,6 +56,9 @@ class KeywordsField extends AbstractField
     public function filterList(ItemList $list)
     {
         if (isset($this->data['keywords'])) {
+            if (!method_exists($list, 'filterByKeywords')) {
+                throw new \RuntimeException(t('The item list must have the %s method.', 'filterByKeywords()'));
+            }
             $list->filterByKeywords($this->data['keywords']);
         }
 

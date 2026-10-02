@@ -8,6 +8,22 @@ class UserBannedIp
 {
     protected $unique_keys;
 
+    /**
+     * @var int
+     */
+    protected $banCode;
+
+    /**
+     * @var int
+     */
+    protected $ipFrom;
+
+    /**
+     * @var int
+     */
+    protected $ipTo;
+
+    // @phpstan-ignore constructor.unusedParameter ($db_name is kept for backward compatibility only)
     public function __construct($db_name = false, $keys = false)
     {
         if (!$keys) {

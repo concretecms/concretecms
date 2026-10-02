@@ -15,7 +15,6 @@ use Concrete\Core\Routing\Router;
 use Concrete\Core\Support\Facade\Route;
 use Concrete\Core\Support\Facade\Facade;
 use Illuminate\Config\Repository;
-use Symfony\Component\HttpFoundation\Request as SymphonyRequest;
 use Symfony\Component\HttpFoundation\Response;
 use Concrete\Core\Page\Theme\ThemeRouteCollection;
 
@@ -133,6 +132,8 @@ class DefaultBooter implements BootInterface, ApplicationAwareInterface
         if (!$this->app->isRunThroughCommandLineInterface()) {
             return $this->bootHttpSapi($config, $app);
         }
+
+        return null;
     }
 
     /**
@@ -178,6 +179,8 @@ class DefaultBooter implements BootInterface, ApplicationAwareInterface
              */
             $this->initializePackages($app);
         }
+
+        return null;
     }
 
     /**
@@ -360,7 +363,7 @@ class DefaultBooter implements BootInterface, ApplicationAwareInterface
     private function initializeRoutes(Repository $config)
     {
         /**
-         * @var $router Router
+         * @var Router $router
          */
         $router = Route::getFacadeRoot();
         // Legacy route registration.
@@ -411,38 +414,27 @@ class DefaultBooter implements BootInterface, ApplicationAwareInterface
         $trustedProxiesIps = $config->get('concrete.security.trusted_proxies.ips');
         if ($trustedProxiesIps) {
             $proxyHeaders = $config->get('concrete.security.trusted_proxies.headers');
-            if (defined(SymphonyRequest::class . '::HEADER_X_FORWARDED_ALL')) {
-                // Symphony 3.3+
-                if (is_array($proxyHeaders)) {
-                    $proxyHeadersBitfield = 0;
-                    $legacyValues = [
-                        'forwarded' => Request::HEADER_FORWARDED,
-                        'client_ip' => Request::HEADER_X_FORWARDED_FOR,
-                        'client_host' => Request::HEADER_X_FORWARDED_HOST,
-                        'client_proto' => Request::HEADER_X_FORWARDED_PROTO,
-                        'client_port' => Request::HEADER_X_FORWARDED_PORT,
-                    ];
-                    foreach ($proxyHeaders as $proxyHeader) {
-                        if (isset($legacyValues[$proxyHeader])) {
-                            $proxyHeadersBitfield |= $legacyValues[$proxyHeader];
-                        }
+            if (is_array($proxyHeaders)) {
+                $proxyHeadersBitfield = 0;
+                $legacyValues = [
+                    'forwarded' => Request::HEADER_FORWARDED,
+                    'client_ip' => Request::HEADER_X_FORWARDED_FOR,
+                    'client_host' => Request::HEADER_X_FORWARDED_HOST,
+                    'client_proto' => Request::HEADER_X_FORWARDED_PROTO,
+                    'client_port' => Request::HEADER_X_FORWARDED_PORT,
+                ];
+                foreach ($proxyHeaders as $proxyHeader) {
+                    if (isset($legacyValues[$proxyHeader])) {
+                        $proxyHeadersBitfield |= $legacyValues[$proxyHeader];
                     }
-                } else {
-                    $proxyHeadersBitfield = (int) $proxyHeaders;
                 }
-                if ($proxyHeadersBitfield === 0) {
-                    $proxyHeadersBitfield = -1;
-                }
-                Request::setTrustedProxies($trustedProxiesIps, $proxyHeadersBitfield);
             } else {
-                // Symphony 3.2-
-                if (is_array($proxyHeaders)) {
-                    foreach ($proxyHeaders as $key => $value) {
-                        Request::setTrustedHeaderName($key, $value);
-                    }
-                }
-                Request::setTrustedProxies($trustedProxiesIps);
+                $proxyHeadersBitfield = (int) $proxyHeaders;
             }
+            if ($proxyHeadersBitfield === 0) {
+                $proxyHeadersBitfield = -1;
+            }
+            Request::setTrustedProxies($trustedProxiesIps, $proxyHeadersBitfield);
         }
 
         /*
@@ -477,6 +469,8 @@ class DefaultBooter implements BootInterface, ApplicationAwareInterface
                 return $response;
             }
         }
+
+        return null;
     }
 
     /**
@@ -491,6 +485,8 @@ class DefaultBooter implements BootInterface, ApplicationAwareInterface
         if ($response) {
             return $response;
         }
+
+        return null;
     }
 
     /**

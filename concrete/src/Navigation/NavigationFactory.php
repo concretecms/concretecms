@@ -19,6 +19,9 @@ class NavigationFactory
         $this->home = $home;
     }
 
+    /**
+     * @return \Concrete\Core\Navigation\Item\PageItem
+     */
     public function createItemFromPage(Page $page): ItemInterface
     {
         return new PageItem($page);

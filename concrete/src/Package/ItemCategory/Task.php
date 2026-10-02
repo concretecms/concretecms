@@ -22,6 +22,13 @@ class Task extends AbstractCategory
         return $task->getController()->getName();
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Package\ItemCategory\AbstractCategory::getPackageItems()
+     *
+     * @return \Concrete\Core\Entity\Automation\Task[]
+     */
     public function getPackageItems(Package $package)
     {
         $app = Application::getFacadeApplication();

@@ -165,8 +165,9 @@ class Resolver
      * @throws \Concrete\Core\Database\CharacterSetCollation\Exception\UnsupportedCollationException
      * @throws \Concrete\Core\Database\CharacterSetCollation\Exception\InvalidCharacterSetCollationCombination
      * @throws \Concrete\Core\Database\CharacterSetCollation\Exception\LongKeysUnsupportedByCollation
+     * @throws \Exception in case of database errors
      *
-     * return string[] first value is the character set; the second value is the collation
+     * @return array{string, string} first value is the character set; the second value is the collation
      */
     public function resolveCharacterSetAndCollation(Connection $connection)
     {

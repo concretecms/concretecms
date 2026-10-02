@@ -19,8 +19,6 @@ class PageItem extends Item
 
     /**
      * Item constructor.
-     * @param string $url
-     * @param string $name
      * @param bool $isActive
      */
     public function __construct(?Page $page = null, bool $isActive = false)

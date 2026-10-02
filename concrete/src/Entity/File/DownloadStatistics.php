@@ -20,6 +20,8 @@ use Doctrine\ORM\Mapping as ORM;
  *         "comment": "List of downloaded files"
  *     }
  * )
+ *
+ * @phpstan-consistent-constructor
  */
 class DownloadStatistics
 {

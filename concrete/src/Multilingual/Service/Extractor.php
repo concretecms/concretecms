@@ -52,7 +52,7 @@ class Extractor
         foreach ($processApplication as $dirname => $parsers) {
             if (is_dir(DIR_APPLICATION.'/'.$dirname)) {
                 foreach ($parsers as $parser) {
-                    /** @var $parser \C5TL\Parser */
+                    /** @var \C5TL\Parser $parser */
                     $fullDirname = DIR_APPLICATION.'/'.$dirname;
                     if (is_dir($fullDirname)) {
                         $parser->parseDirectory(

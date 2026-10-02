@@ -2,6 +2,7 @@
 
 namespace Concrete\Core\Command\Task\Stamp;
 
+use Concrete\Core\Command\Task\Output\NullOutput;
 use Concrete\Core\Command\Task\Output\OutputInterface;
 use Symfony\Component\Messenger\Stamp\StampInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizableInterface;
@@ -19,15 +20,16 @@ class OutputStamp implements StampInterface, NormalizableInterface, Denormalizab
 
     /**
      * OutputStamp constructor.
-     * @param $output
+     *
+     * @param OutputInterface|null $output the output (if NULL, a NullOutput is used)
      */
     public function __construct(?OutputInterface $output = null)
     {
-        $this->output = $output;
+        $this->output = $output ?? new NullOutput();
     }
 
     /**
-     * @return mixed
+     * @return OutputInterface
      */
     public function getOutput()
     {

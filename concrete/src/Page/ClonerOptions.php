@@ -230,7 +230,7 @@ class ClonerOptions
     /**
      * Get the version comments (if empty string, automatically build it).
      *
-     * @var string
+     * @return string
      */
     public function getVersionComments()
     {

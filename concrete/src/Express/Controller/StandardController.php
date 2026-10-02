@@ -36,7 +36,7 @@ class StandardController implements ControllerInterface
     public function getNotifier(?NotificationProviderInterface $provider = null)
     {
         /**
-         * @var $notifier StandardNotifier
+         * @var StandardNotifier $notifier
          */
         $notifier = $this->app->make(StandardNotifier::class);
         if ($provider) {

@@ -19,7 +19,7 @@ class Navigation extends BaseNavigation implements DenormalizableInterface
     public function has(PageItem $pageItem): bool
     {
         foreach ($this->getItems() as $item) {
-            if ($pageItem->getPageID() == $item->getPageID()) {
+            if (method_exists($item, 'getPageID') && $pageItem->getPageID() == $item->getPageID()) {
                 return true;
             }
         }
@@ -38,7 +38,7 @@ class Navigation extends BaseNavigation implements DenormalizableInterface
     {
         $items = [];
         foreach ($this->getItems() as $item) {
-            if ($pageItem->getPageID() != $item->getPageID()) {
+            if (!method_exists($item, 'getPageID') || $pageItem->getPageID() != $item->getPageID()) {
                 $items[] = $item;
             }
         }

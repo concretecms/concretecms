@@ -1,7 +1,6 @@
 <?php
 namespace Concrete\Core\Http;
 
-use Concrete\Core\Routing\Router;
 use Concrete\Core\Routing\RouterInterface;
 use Symfony\Component\HttpFoundation\Request as SymfonyRequest;
 use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
@@ -13,7 +12,7 @@ class RouteDispatcher implements DispatcherInterface
     /** @var Route */
     protected $route;
 
-    /** @var Router */
+    /** @var RouterInterface */
     protected $router;
 
     /** @var array */
@@ -28,7 +27,7 @@ class RouteDispatcher implements DispatcherInterface
     }
 
     /**
-     * @param \Symfony\Component\HttpFoundation\Request $request
+     * @param \Concrete\Core\Http\Request $request
      * @return SymfonyResponse
      */
     public function dispatch(SymfonyRequest $request)

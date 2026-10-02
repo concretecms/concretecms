@@ -21,9 +21,6 @@ class EventList extends \Concrete\Core\Search\ItemList\Database\AttributedItemLi
         return $this->includeInactiveEvents;
     }
 
-    /**
-     * @param bool $includeInactiveEvents
-     */
     public function includeInactiveEvents()
     {
         $this->includeInactiveEvents = true;

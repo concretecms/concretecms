@@ -94,11 +94,9 @@ class LaminasCacheDriver extends AbstractAdapter implements StorageInterface, Fl
             $item->setTTL($this->cacheLifetime);
         }
 
-        if ($result = $item->set($value)) {
-            $item->save();
-        }
+        $item->set($value);
 
-        return $result;
+        return $item->save();
     }
 
     /**

@@ -101,8 +101,6 @@ class TranslationCompiler implements FilterInterface
 
     /**
      * @param \Concrete\Core\Package\Packer\PackerFile $sourceFile
-     * @param string $bitmapExtension
-     * @param int[] $bitmapSize
      *
      * @throws \RuntimeException
      *

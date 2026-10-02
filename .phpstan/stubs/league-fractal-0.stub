@@ -1,0 +1,16 @@
+<?php
+
+/*
+ * league/fractal 0.x: TransformerAbstract doesn't declare the transform() method, which must be defined by the subclasses
+ * with the type of the data they transform (see League\Fractal\Scope::fireTransformer()): this stub declares it, so that
+ * PHPStan knows that every transformer has it.
+ */
+
+namespace League\Fractal;
+
+/**
+ * @method array<string, mixed> transform(mixed $data)
+ */
+abstract class TransformerAbstract
+{
+}

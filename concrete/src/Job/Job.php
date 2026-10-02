@@ -57,15 +57,27 @@ abstract class Job extends ConcreteObject
     protected $jobClassLocations = array();
 
     //Other Job Variables
+    /**
+     * @var int|numeric-string
+     */
     public $jID = 0;
     public $jStatus = 'ENABLED';
     public $availableJStatus = array('ENABLED', 'RUNNING', 'ERROR', 'DISABLED_ERROR', 'DISABLED');
     public $jDateLastRun;
     public $jHandle = '';
+    /**
+     * @var bool|0|1|'0'|'1'
+     */
     public $jNotUninstallable = 0;
 
+    /**
+     * @var bool|0|1|'0'|'1'
+     */
     public $isScheduled = 0;
     public $scheduledInterval = 'days'; // hours|days|weeks|months
+    /**
+     * @var int|numeric-string
+     */
     public $scheduledValue = 0;
 
     /*

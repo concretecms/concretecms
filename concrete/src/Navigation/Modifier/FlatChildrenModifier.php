@@ -25,6 +25,9 @@ class FlatChildrenModifier implements ModifierInterface
     public function modify(NavigationInterface $navigation)
     {
         foreach ($navigation->getItems() as $item) {
+            if (!method_exists($item, 'setChildren')) {
+                throw new \RuntimeException(t('The navigation items must have a %s method.', 'setChildren()'));
+            }
             $item->setChildren($this->flatChildren($item->getChildren()));
         }
     }
