@@ -1,6 +1,7 @@
 <?php
 
 use Concrete\Core\Http\Request;
+use Concrete\TestHelpers\Http\FakeHttpsServer;
 use Illuminate\Filesystem\Filesystem;
 use PHPUnit\Framework\Error\Notice;
 
@@ -57,6 +58,13 @@ if (!$cn->isConnected()) {
 $cn->query('DROP DATABASE IF EXISTS ccm_tests');
 $cn->query('CREATE DATABASE ccm_tests');
 $cn->close();
+
+// Start the fake HTTPS server used by the tests that perform real HTTPS requests, and stop it when we quit.
+// If it can't be started, the tests requiring it will be skipped (see FakeHttpsServer::getStartupError()).
+FakeHttpsServer::tryStart();
+register_shutdown_function(static function () {
+    FakeHttpsServer::shutdown();
+});
 
 // Unset variables, so that PHPUnit won't consider them as global variables.
 unset(
