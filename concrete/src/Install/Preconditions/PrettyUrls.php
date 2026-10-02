@@ -2,11 +2,12 @@
 
 namespace Concrete\Core\Install\Preconditions;
 
+use Concrete\Core\Config\Repository\Repository;
 use Concrete\Core\Error\UserMessageException;
 use Concrete\Core\Install\WebPreconditionInterface;
 use Concrete\Core\Url\Resolver\Manager\ResolverManager;
 
-class RequestUrls implements WebPreconditionInterface
+class PrettyUrls implements WebPreconditionInterface
 {
     /**
      * The URL resolver.
@@ -16,13 +17,19 @@ class RequestUrls implements WebPreconditionInterface
     protected $resolver;
 
     /**
+     * @var \Concrete\Core\Config\Repository\Repository
+     */
+    protected $config;
+
+    /**
      * Initialize the instance.
      *
      * @param ResolverManager $resolver The URL resolver
      */
-    public function __construct(ResolverManager $resolver)
+    public function __construct(ResolverManager $resolver, Repository $config)
     {
         $this->resolver = $resolver;
+        $this->config = $config;
     }
 
     /**
@@ -32,7 +39,7 @@ class RequestUrls implements WebPreconditionInterface
      */
     public function getName()
     {
-        return t('Supports Concrete request URLs');
+        return t(/* i18n: %s is "index.php" */'Support for URLs without %s ("pretty URLs")', \DISPATCHER_FILENAME);
     }
 
     /**
@@ -42,7 +49,7 @@ class RequestUrls implements WebPreconditionInterface
      */
     public function getUniqueIdentifier()
     {
-        return 'request_urls';
+        return 'pretty_urls';
     }
 
     /**
@@ -52,7 +59,7 @@ class RequestUrls implements WebPreconditionInterface
      */
     public function isOptional()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -82,9 +89,13 @@ class RequestUrls implements WebPreconditionInterface
      */
     public function getHtml()
     {
-        $url = json_encode((string) $this->resolver->resolve(['/install', 'web_precondition', 'request_urls', '20']));
-        $errorMessage = json_encode(t('Concrete cannot parse the PATH_INFO or ORIG_PATH_INFO information provided by your server.'));
-        $ajaxFailErrorMessage = json_encode(t('Request failed: unable to verify support for request URLs'));
+        $url = $this->config->withKey('concrete.seo.url_rewriting', true, function (): string {
+            return $this->config->withKey('concrete.seo.url_rewriting_all', true, function (): string {
+                return (string) $this->resolver->resolve(['/install', 'web_precondition', $this->getUniqueIdentifier(), 'ping']);
+            });
+        });
+        $url = json_encode($url);
+        $errorMessage = json_encode(t('It seems seems your web server does not support pretty URLs.'));
         $myIdentifier = json_encode($this->getUniqueIdentifier());
         $isOptional = json_encode($this->isOptional());
 
@@ -98,14 +109,15 @@ $(document).ready(function() {
         url: {$url}
     })
     .done(function(data) {
-        if (data.response === 400) {
+        if (data && data.response === 'pong') {
+            $('form#continue-to-installation').append('<input type="hidden" name="prettyURLsSupported" value="1" />');
             setWebPreconditionResult({$myIdentifier}, true);
         } else {
             setWebPreconditionResult({$myIdentifier}, false, {$errorMessage}, {$isOptional});
         }
     })
     .fail(function(xhr, textStatus, errorThrown) {
-        setWebPreconditionResult({$myIdentifier}, false, {$ajaxFailErrorMessage}, {$isOptional});
+        setWebPreconditionResult({$myIdentifier}, false, {$errorMessage}, {$isOptional});
     });
 });
 </script>
@@ -130,10 +142,8 @@ EOT
      */
     public function getAjaxAnswer($argument)
     {
-        $i = is_int($argument) || is_string($argument) && is_numeric($argument) ? (int) $argument : null;
-
         return [
-            'response' => $i === null ? null : $i * $i,
+            'response' => $argument === 'ping' ? 'pong' : '',
         ];
     }
 }

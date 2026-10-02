@@ -229,6 +229,7 @@ class Install extends Controller
         $this->set('canonicalUrlAlternativeChecked', $canonicalUrlAlternativeChecked);
         $this->set('SERVER_TIMEZONE', @date_default_timezone_get() ?: 'UTC');
         $this->set('availableTimezones', $this->app->make('date')->getGroupedTimezones());
+        $this->set('prettyURLsSupported', filter_var($this->request->request->get('prettyURLsSupported'), FILTER_VALIDATE_BOOLEAN)); 
         $this->setInstallStep();
     }
 
@@ -311,6 +312,7 @@ class Install extends Controller
                         ],
                     ],
                 ];
+                $configuration['pretty-urls'] = $post->get('enablePrettyURLs') === '1';
                 $configuration['canonical-url'] = $post->get('canonicalUrlChecked') === '1' ? $post->get('canonicalUrl') : '';
                 $configuration['canonical-url-alternative'] = $post->get('canonicalUrlAlternativeChecked') === '1' ? $post->get('canonicalUrlAlternative') : '';
                 $configuration['session-handler'] = $post->get('sessionHandler');

@@ -66,6 +66,7 @@ class Cookies implements WebPreconditionInterface
     {
         $errorMessage = json_encode(t('Cookies must be enabled in your browser to install Concrete CMS.'));
         $myIdentifier = json_encode($this->getUniqueIdentifier());
+        $isOptional = json_encode($this->isOptional());
 
         return <<<EOT
 <script>
@@ -85,7 +86,7 @@ $(document).ready(function() {
     if (check()) {
         setWebPreconditionResult({$myIdentifier}, true);
     } else {
-        setWebPreconditionResult({$myIdentifier}, false, {$errorMessage});
+        setWebPreconditionResult({$myIdentifier}, false, {$errorMessage}, {$isOptional});
     }
 });
 </script>
