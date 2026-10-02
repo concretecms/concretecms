@@ -13,7 +13,7 @@ if ($listView->getMenu() instanceof \Concrete\Core\Application\UserInterface\Con
         <i class="fas fa-chevron-down"></i>
     </button>
 
-    <?php print $listView->getMenu()->getMenuElement() ?>
+    <?php print $listView->getMenu()->getMenuElement()->addClass('dropdown-menu-end'); ?>
 
 
 <?php } else { ?>
