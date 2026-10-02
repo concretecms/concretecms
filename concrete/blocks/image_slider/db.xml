@@ -18,11 +18,11 @@
     <field name="speed" type="integer">
       <unsigned/>
     </field>
-    <field name="noAnimate" type="integer">
-      <unsigned/>
+    <field name="noAnimate" type="boolean">
+      <default value="0"/>
     </field>
-    <field name="pause" type="integer">
-      <unsigned/>
+    <field name="pause" type="boolean">
+      <default value="0"/>
     </field>
     <field name="maxWidth" type="integer">
       <unsigned/>
