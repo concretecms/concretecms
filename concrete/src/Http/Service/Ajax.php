@@ -3,9 +3,12 @@ namespace Concrete\Core\Http\Service;
 
 use Exception;
 use Concrete\Core\Http\Request;
+use Concrete\Core\Http\Traits\AcceptsJsonTrait;
 
 class Ajax
 {
+    use AcceptsJsonTrait;
+
     /**
      * Check if a request is an Ajax call.
      *
@@ -13,11 +16,11 @@ class Ajax
      *
      * @return bool
      *
-     * @deprecated use the isXmlHttpRequest() and/or the getPreferredFormat() methods of the request object
+     * @deprecated use the \Concrete\Core\Http\Traits\AcceptsJsonTrait trait
      */
     public function isAjaxRequest(Request $request)
     {
-        return $request->isXmlHttpRequest() || in_array($request->getPreferredFormat(), ['json', 'jsonld'], true);
+        return static::requestAcceptsJson($request);
     }
 
     /**
