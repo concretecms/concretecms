@@ -13,6 +13,7 @@ interface FieldInterface extends \JsonSerializable
     const FIELD_TYPE_INPUT = 'input';
     const FIELD_TYPE_SELECT = 'select';
     const FIELD_TYPE_BOOLEAN = 'boolean';
+    const FIELD_TYPE_INTEGER = 'integer';
 
     public function getKey() : string;
 

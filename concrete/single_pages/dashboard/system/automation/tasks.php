@@ -1,5 +1,7 @@
 <?php
 
+use Concrete\Core\Command\Task\Input\Definition\FieldInterface;
+
 defined('C5_EXECUTE') or die("Access Denied."); ?>
 
 <div data-view="automated-tasks" v-cloak>
@@ -42,31 +44,40 @@ defined('C5_EXECUTE') or die("Access Denied."); ?>
                     </div>
                     <div class="modal-body">
                         <div class="form-group" v-for="field in selectedTask.inputDefinition.fields">
-                            <label v-if="field.type !== 'boolean' || !field.displayAsCheckbox" class="control-label">{{field.label}}</label>
-                            <select v-if="field.type === 'select'" :name="field.key" class="form-control">
-                                <option value="" v-if="!field.isRequired"><?=t('** None')?></option>
-                                <option v-for="(option, optionValue) in field.options" :value="optionValue">{{option}}</option>
-                            </select>
-                            <div v-else-if="field.type === 'boolean' && field.displayAsCheckbox" class="form-check">
-                                <input type="hidden" :name="field.key" value="">
-                                <input class="form-check-input" type="checkbox" :name="field.key" :id="'task-option-' + field.key" value="1">
-                                <label class="form-check-label" :for="'task-option-' + field.key">{{field.label}}</label>
-                            </div>
-                            <div v-else-if="field.type === 'boolean'">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" :name="field.key" :id="field.key + '1'" value="" checked>
-                                    <label class="form-check-label" :for="field.key + '1'">
-                                        <?=t('No')?>
-                                    </label>
+                            <label v-if="field.type !== <?= h(json_encode(FieldInterface::FIELD_TYPE_BOOLEAN)) ?> || !field.displayAsCheckbox" class="control-label">{{field.label}}</label>
+                            <template v-if="field.type === <?= h(json_encode(FieldInterface::FIELD_TYPE_SELECT)) ?>">
+                                <select :name="field.key" class="form-control">
+                                    <option value="" v-if="!field.isRequired"><?=t('** None')?></option>
+                                    <option v-for="(option, optionValue) in field.options" :value="optionValue">{{option}}</option>
+                                </select>
+                            </template>
+                            <template v-else-if="field.type === <?= h(json_encode(FieldInterface::FIELD_TYPE_BOOLEAN)) ?>">
+                                <div v-if="field.displayAsCheckbox" class="form-check">
+                                    <input type="hidden" :name="field.key" value="">
+                                    <input class="form-check-input" type="checkbox" :name="field.key" :id="'task-option-' + field.key" value="1">
+                                    <label class="form-check-label" :for="'task-option-' + field.key">{{field.label}}</label>
                                 </div>
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" :name="field.key" :id="field.key + '2'" value="1">
-                                    <label class="form-check-label" :for="field.key + '2'">
-                                        <?=t('Yes')?>
-                                    </label>
+                                <div v-else>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" :name="field.key" :id="field.key + '1'" value="" checked>
+                                        <label class="form-check-label" :for="field.key + '1'">
+                                            <?=t('No')?>
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" :name="field.key" :id="field.key + '2'" value="1">
+                                        <label class="form-check-label" :for="field.key + '2'">
+                                            <?=t('Yes')?>
+                                        </label>
+                                    </div>
                                 </div>
-                            </div>
-                            <input v-else :name="field.key" class="form-control"/>
+                            </template>
+                            <template v-else-if="field.type === <?= h(json_encode(FieldInterface::FIELD_TYPE_INTEGER)) ?>">
+                                <input type="number" step="1" :min="field.min" :max="field.max" :required="field.isRequired" :name="field.key" class="form-control"/>
+                            </template>
+                            <template v-else>
+                                <input type="text" :name="field.key" class="form-control"/>
+                            </template>
                             <div class="help-block" v-if="field.description">{{field.description}}</div>
                         </div>
                     </div>
