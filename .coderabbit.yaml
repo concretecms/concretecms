@@ -1,6 +1,15 @@
 # yaml-language-server: $schema=https://coderabbit.ai/integrations/schema.v2.json
 
+tone_instructions: "Be brief: say what is wrong and what to do instead. No praise, no restating the diff."
+
 reviews:
+  high_level_summary_in_walkthrough: true
+  review_status: false
+  changed_files_summary: false
+  estimate_code_review_effort: false
+  pre_merge_checks:
+    docstrings:
+      mode: "off"
   finishing_touches:
     unit_tests:
       enabled: true
