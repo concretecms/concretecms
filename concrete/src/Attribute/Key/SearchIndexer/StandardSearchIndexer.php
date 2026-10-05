@@ -219,7 +219,20 @@ class StandardSearchIndexer implements SearchIndexerInterface
      */
     public function clearIndexEntry(CategoryInterface $category, AttributeValueInterface $value, $subject)
     {
-        $key = $value->getAttributeKey();
+        $this->clearIndexEntryForAttributeKey($category, $value->getAttributeKey(), $subject);
+    }
+
+    /**
+     * Remove from the index table the value of a specific attribute key for an item.
+     *
+     * @param \Concrete\Core\Attribute\Category\CategoryInterface $category
+     * @param \Concrete\Core\Attribute\AttributeKeyInterface $key
+     * @param object $subject The item owning the attribute value
+     *
+     * @return bool
+     */
+    public function clearIndexEntryForAttributeKey(CategoryInterface $category, AttributeKeyInterface $key, $subject)
+    {
         if (!$key->isAttributeKeySearchable()) {
             return false; // if it's not searchable there won't be the right columns in the database
         }
