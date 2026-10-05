@@ -50,7 +50,9 @@ class RedisPaginatedTraitTest extends TestCase
 
         // Call the scan method
         $method = new \ReflectionMethod(RedisPaginatedTraitFixture::class, 'paginatedScan');
-        $method->setAccessible(true);
+        if (PHP_VERSION_ID < 80100) {
+            $method->setAccessible(true);
+        }
         $fixture = new RedisPaginatedTraitFixture();
         $result = iterator_to_array($method->invoke($fixture, $redis, 'some-filter'));
 
@@ -78,7 +80,9 @@ class RedisPaginatedTraitTest extends TestCase
 
         $fixture = new RedisPaginatedTraitValuesFixture($scanMock);
         $method = new \ReflectionMethod(RedisPaginatedTraitValuesFixture::class, 'paginatedScanValues');
-        $method->setAccessible(true);
+        if (PHP_VERSION_ID < 80100) {
+            $method->setAccessible(true);
+        }
         $result = iterator_to_array($method->invoke($fixture, $redis, 'some-filter'));
 
         // Make sure we have all 60 items even though they were requested in chunks of 50

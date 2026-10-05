@@ -124,7 +124,9 @@ class IdTokenResponseTest extends TestCase
     protected function getExtraParams(AccessTokenEntityInterface $accessToken)
     {
         $method = new ReflectionMethod($this->response, 'getExtraParams');
-        $method->setAccessible(true);
+        if (PHP_VERSION_ID < 80100) {
+            $method->setAccessible(true);
+        }
 
         return $method->invoke($this->response, $accessToken);
     }
