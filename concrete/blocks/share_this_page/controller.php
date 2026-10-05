@@ -120,10 +120,12 @@ class Controller extends BlockController implements UsesFeatureInterface
 
     public function getImportData($blockNode, $page)
     {
-        $args = array();
+        $args = ['service' => []];
         foreach ($blockNode->data->service as $service) {
             $link = Service::getByHandle((string) $service);
-            $args['service'][] = $link->getHandle();
+            if (is_object($link)) {
+                $args['service'][] = $link->getHandle();
+            }
         }
 
         return $args;
@@ -133,7 +135,7 @@ class Controller extends BlockController implements UsesFeatureInterface
     {
         $db = Database::get();
         $db->delete('btShareThisPage', array('bID' => $this->bID));
-        $services = $args['service'];
+        $services = is_array($args['service'] ?? null) ? $args['service'] : [];
 
         $statement = $db->prepare('insert into btShareThisPage (bID, service, displayOrder) values (?, ?, ?)');
         $displayOrder = 0;
