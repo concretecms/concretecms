@@ -4,6 +4,9 @@ tone_instructions: "Be brief: say what is wrong and what to do instead. No prais
 
 reviews:
   high_level_summary_in_walkthrough: true
+  review_progress: false
+  commit_status: false
+  in_progress_fortune: false
   review_status: false
   changed_files_summary: false
   estimate_code_review_effort: false
