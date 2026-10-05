@@ -62,7 +62,9 @@ class CoreStackDisplayControllerSaveTest extends TestCase
         // Skip performSave()'s DB persistence branch; it's not what this test is about, and this
         // lightweight test doesn't set up btCoreStackDisplay's schema.
         $btTable = new ReflectionProperty(Controller::class, 'btTable');
-        $btTable->setAccessible(true);
+        if (PHP_VERSION_ID < 80100) {
+            $btTable->setAccessible(true);
+        }
         $btTable->setValue($controller, null);
 
         $controller->save(['stID' => 42]);

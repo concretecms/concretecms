@@ -172,9 +172,13 @@ class TranslatorAdapterRepositoryTest extends TestCase
 
         $reflection = new ReflectionObject($this->repository);
         $method = $reflection->getMethod('getKey');
-        $method->setAccessible(true);
+        if (PHP_VERSION_ID < 80100) {
+            $method->setAccessible(true);
+        }
         $key = $method->invoke($this->repository, $context, $locale);
-        $method->setAccessible(false);
+        if (PHP_VERSION_ID < 80100) {
+            $method->setAccessible(false);
+        }
 
         return array_key_exists($key, $adapters) ? $adapters[$key] : null;
     }
@@ -190,9 +194,13 @@ class TranslatorAdapterRepositoryTest extends TestCase
     {
         $reflection = new ReflectionObject($this->repository);
         $property = $reflection->getProperty('adapters');
-        $property->setAccessible(true);
+        if (PHP_VERSION_ID < 80100) {
+            $property->setAccessible(true);
+        }
         $adapters = $property->getValue($this->repository);
-        $property->setAccessible(false);
+        if (PHP_VERSION_ID < 80100) {
+            $property->setAccessible(false);
+        }
 
         return $adapters;
     }

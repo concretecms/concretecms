@@ -236,7 +236,9 @@ class Localization2Test extends LocalizationTestsBase
 
         $reflection = new ReflectionClass($rep);
         $property = $reflection->getProperty('adapters');
-        $property->setAccessible(true);
+        if (PHP_VERSION_ID < 80100) {
+            $property->setAccessible(true);
+        }
         $adapters = $property->getValue($rep);
 
         $this->assertEquals(0, count($adapters));

@@ -46,7 +46,9 @@ class ReuseValidatorTest extends TestCase
     public function testUserNegotiation()
     {
         $method = new ReflectionMethod(ReuseValidator::class, 'resolveUserID');
-        $method->setAccessible(true);
+        if (PHP_VERSION_ID < 80100) {
+            $method->setAccessible(true);
+        }
 
         $entityManager = M::mock(EntityManagerInterface::class);
         $tracker = new ReuseValidator($entityManager, 1);
