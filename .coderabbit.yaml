@@ -1,0 +1,5 @@
+reviews:
+  auto_review:
+    base_branches:
+      - "9\\..*"       # Matches 9.5.x, 9.6.x, etc.
+      - ".*\\.x"       # Alternatively, matches any branch ending in .x
