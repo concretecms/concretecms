@@ -22,7 +22,7 @@ use Psr\Log\NullLogger;
 
 class EventServiceTest extends TestCase
 {
-    public function relatedPageProvider(): array
+    public static function relatedPageProvider(): array
     {
         return [
             // original calendar mode, original page relation, original page ID, target calendar mode, target calendar page ID, expected page relation, expected page ID
