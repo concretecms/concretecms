@@ -4,8 +4,8 @@ namespace Concrete\Controller\Dialog\Express\Preset;
 use Concrete\Controller\Dialog\Search\Preset\Edit as PresetEdit;
 use Concrete\Core\Entity\Search\SavedExpressSearch;
 use Concrete\Core\Entity\Search\SavedSearch;
+use Concrete\Core\Page\Page;
 use Doctrine\ORM\EntityManager;
-use URL;
 use Permissions;
 
 class Edit extends PresetEdit
@@ -16,7 +16,12 @@ class Edit extends PresetEdit
         $action = parent::getEditSearchPresetAction();
         $url = \League\Url\Url::createFromUrl($action);
         $entity = $this->getEntity();
-        $url->getQuery()->modify(['exEntityID' => $entity ? $entity->getID() : null]);
+        $query = ['exEntityID' => $entity ? $entity->getID() : null];
+        $cID = $this->request->query->getInt('cID');
+        if ($cID > 0) {
+            $query['cID'] = $cID;
+        }
+        $url->getQuery()->modify($query);
         return (string) $url;
     }
 
@@ -64,7 +69,17 @@ class Edit extends PresetEdit
 
     public function getSavedSearchBaseURL(SavedSearch $search)
     {
-        return (string) URL::to('/ccm/system/search/express/preset', $search->getEntity()->getID(), $search->getID());
+        // Same URL as the one built by the advanced search dialog: the presets are handled by the dashboard pages
+        $pagePath = '/dashboard/express/entries';
+        $cID = $this->request->query->getInt('cID');
+        if ($cID > 0) {
+            $page = Page::getByID($cID);
+            if ($page && !$page->isError()) {
+                $pagePath = $page->getCollectionPath();
+            }
+        }
+
+        return (string) $this->app->make('url')->to($pagePath, 'preset', $search->getID());
     }
 
     protected function getSearchPreset()
