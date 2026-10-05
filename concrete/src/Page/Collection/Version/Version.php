@@ -129,7 +129,7 @@ class Version extends ConcreteObject implements PermissionObjectInterface, Attri
     /**
      * The identifier of any custom skin attached to this page version.
      *
-     * @var string
+     * @var string|null
      */
     public $pThemeSkinIdentifier;
 
