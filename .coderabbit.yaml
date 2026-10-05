@@ -1,5 +1,29 @@
+# yaml-language-server: $schema=https://coderabbit.ai/integrations/schema.v2.json
+
 reviews:
+  finishing_touches:
+    unit_tests:
+      enabled: true
   auto_review:
     base_branches:
       - "9\\..*"       # Matches 9.5.x, 9.6.x, etc.
       - ".*\\.x"       # Alternatively, matches any branch ending in .x
+
+code_generation:
+  unit_tests:
+    path_instructions:
+      - path: "**/*.php"
+        instructions: |
+          Generate PHPUnit tests that match the existing concreteCMS test suite. Place normal test classes in tests/tests with the matching Concrete Tests namespace, helper classes in tests/helpers with the Concrete TestHelpers namespace, and file fixtures in tests/assets.
+
+          Use phpunit.xml as the source of truth. It bootstraps tests/bootstrap.php, discovers tests under tests/tests, excludes the online group, and expects composer test or php ./concrete/vendor/phpunit/phpunit/phpunit from the repository root.
+
+          Prefer Concrete Tests TestCase for unit-level tests. Use ConcreteDatabaseTestCase only when the code truly needs database tables, fixtures, ORM state, or services that require the test database. When using ConcreteDatabaseTestCase, declare only the required tables, fixtures, or entity class names and keep database state narrow.
+
+          Keep generated tests compatible with PHP 7.3 and the PHPUnit versions allowed by composer.json. Do not introduce new testing frameworks. Mockery is available, but prefer small fakes or existing helpers when they make behavior clearer.
+
+          Follow local style: test classes end in Test, methods begin with test, data providers are static where practical, and assertions should check observable behavior rather than implementation details. Use data providers for validation matrices and regression cases with many inputs.
+
+          Avoid network-dependent tests and avoid broad end-to-end coverage unless the changed code already depends on framework bootstrapping. Clean up container bindings, facade state, globals, generated files, and caches in tearDown when a test mutates shared application state.
+
+          For bug fixes, generate regression tests that fail against the old behavior and pass with the PR. Cover edge cases around null, empty strings, scalar coercion, permissions, localization, request context, database cleanup, and cache or singleton behavior when relevant to the changed code.
