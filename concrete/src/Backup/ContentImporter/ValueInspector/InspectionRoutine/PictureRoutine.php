@@ -23,7 +23,27 @@ class PictureRoutine extends AbstractRegularExpressionRoutine
      */
     public function getRegularExpression()
     {
-        return '/\<concrete-picture\s[^>]*?file\s*=\s*[\'"]([^\'"]*?)[\'"][^>]*?>/i';
+        // anything but the end of the element, where a quoted attribute may hold a ">"
+        $untilTheEnd = '(?:[^>"\']|"[^"]*"|\'[^\']*\')*';
+
+        return implode('', [
+            '~',
+            // group 1: the whole element, since its other attributes are kept
+            '(',
+            '<concrete-picture',
+            // the element name ends here
+            '(?=\s)',
+            $untilTheEnd,
+            // the attribute naming the file
+            '\s(?:file)\s*=\s*',
+            '(?<quote>["\'])',
+            '(?:(?!\k<quote>).)+',
+            '\k<quote>',
+            $untilTheEnd,
+            '>',
+            ')',
+            '~is',
+        ]);
     }
 
     /**
@@ -33,13 +53,24 @@ class PictureRoutine extends AbstractRegularExpressionRoutine
      */
     public function getItem($identifier)
     {
-        if (str_contains($identifier, ':')) {
-            [$prefix, $filename] = explode(':', $identifier);
-        } else {
-            $filename = $identifier;
-            $prefix = null;
-        }
+        $filename = '';
+        $prefix = null;
+        // the element without its name and its final ">" (or "/>")
+        $attributes = preg_replace(['~^<concrete-picture~i', '~/?>$~'], '', $identifier);
+        // the attribute naming the file is taken out: the other ones are kept as they are
+        $attributes = preg_replace_callback(
+            '~\s+file\s*=\s*(?<quote>["\'])(?<value>(?:(?!\k<quote>).)*)\k<quote>~si',
+            static function (array $matches) use (&$filename, &$prefix): string {
+                $filename = $matches['value'];
+                if (strpos($filename, ':') !== false) {
+                    [$prefix, $filename] = explode(':', $filename, 2);
+                }
 
-        return new PictureItem($filename, $prefix);
+                return '';
+            },
+            $attributes
+        );
+
+        return new PictureItem($filename, $prefix, trim($attributes));
     }
 }
