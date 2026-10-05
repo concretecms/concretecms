@@ -81,3 +81,6 @@ __IDE_SYMBOLS__.php
 
 # Ignore stuff copied in from node dependencies
 concrete/js/ckeditor/package.json
+
+# ignore the log written while running the tests
+/tests/logs

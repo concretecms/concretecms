@@ -49,11 +49,14 @@ class IdTokenResponseTest extends TestCase
     {
         parent::setUpBeforeClass();
 
-        $resource = openssl_pkey_new([
+        $options = [
             'private_key_bits' => 2048,
             'private_key_type' => OPENSSL_KEYTYPE_RSA,
-        ]);
-        openssl_pkey_export($resource, self::$privateKeyPem);
+            // OpenSSL reads a configuration file, and a PHP for Windows usually comes without one
+            'config' => DIR_TESTS . '/assets/openssl.cnf',
+        ];
+        $resource = openssl_pkey_new($options);
+        openssl_pkey_export($resource, self::$privateKeyPem, null, $options);
     }
 
     public function setUp(): void
