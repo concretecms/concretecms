@@ -517,11 +517,11 @@ class Controller extends BlockController implements FileTrackableInterface, Uses
             $e->add(t('Please select an image.'));
         }
 
-        if (isset($args['cropImage']) && ((int) $args['maxWidth'] <= 0 || ((int) $args['maxHeight'] <= 0)) && !$svg) {
+        if (!empty($args['cropImage']) && ((int) $args['maxWidth'] <= 0 || ((int) $args['maxHeight'] <= 0)) && !$svg) {
             $e->add(t('Cropping an image requires setting a max width and max height.'));
         }
 
-        if ($svg && isset($args['cropImage'])) {
+        if ($svg && !empty($args['cropImage'])) {
             $e->add(t('SVG images cannot be cropped.'));
         }
 
@@ -568,7 +568,7 @@ class Controller extends BlockController implements FileTrackableInterface, Uses
 
         $args['fID'] = $args['fID'] != '' ? $args['fID'] : 0;
         $args['fOnstateID'] = $args['fOnstateID'] != '' ? $args['fOnstateID'] : 0;
-        $args['cropImage'] = isset($args['cropImage']) ? 1 : 0;
+        $args['cropImage'] = empty($args['cropImage']) ? 0 : 1;
         $args['maxWidth'] = (int) $args['maxWidth'] > 0 ? (int) $args['maxWidth'] : 0;
         $args['maxHeight'] = (int) $args['maxHeight'] > 0 ? (int) $args['maxHeight'] : 0;
 
