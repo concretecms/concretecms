@@ -17,7 +17,6 @@ use Concrete\Core\Permission\Access\Entity\Type as AccessEntityType;
 use Concrete\Core\Permission\Category as PermissionCategory;
 use Concrete\Core\Permission\Key\Key as PermissionKey;
 use Concrete\Core\User\Group\Group;
-use Concrete\Core\User\User;
 use Concrete\Core\User\UserInfo;
 use Concrete\Core\Validation\CSRF\Token as CSRFToken;
 use Concrete\TestHelpers\Page\PageTestCase;
@@ -147,11 +146,7 @@ class LoginTest extends PageTestCase
 
     public function tearDown(): void
     {
-        $app = app();
-        if ($app->resolved('session')) {
-            $app->make('session')->clear();
-        }
-        $app->forgetInstance(User::class);
+        static::resetApplicationState();
         Request::setInstance($this->originalRequest);
         parent::tearDown();
     }
