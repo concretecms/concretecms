@@ -29,6 +29,10 @@ class Help extends UserInterface
 
     public function canAccess()
     {
+        if (!$this->app->make('config')->get('concrete.accessibility.display_help_system')) {
+            return false;
+        }
+
         $token = $this->app->make('token');
         return $token->validate('view_help', $this->request->request->get('ccm_token'));
     }
