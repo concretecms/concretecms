@@ -12,6 +12,7 @@
         <task handle="update_statistics" package=""/>
         <task handle="generate_thumbnails" package=""/>
         <task handle="remove_old_file_attachments" package=""/>
+        <task handle="delete_orphaned_conversation_attachments" package=""/>
         <task handle="remove_unvalidated_users" package=""/>
         <task handle="production_status" package=""/>
         <task handle="page_cache_report" package=""/>
@@ -23,6 +24,7 @@
             <task handle="rescan_files"/>
             <task handle="remove_old_page_versions"/>
             <task handle="remove_old_file_attachments"/>
+            <task handle="delete_orphaned_conversation_attachments"/>
             <task handle="generate_thumbnails"/>
         </taskset>
         <taskset handle="seo" name="SEO and Search" package="">
