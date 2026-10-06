@@ -956,6 +956,14 @@ return [
          * @var bool
          */
         'toolbar_tooltips' => true,
+
+        /*
+         * Display the Help menu item/panel (dashboard toolbar, frontend edit toolbar, and the help panel/dialog
+         * routes themselves).
+         *
+         * @var bool
+         */
+        'display_help_system' => true,
     ],
 
     /*

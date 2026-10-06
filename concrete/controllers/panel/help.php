@@ -33,7 +33,7 @@ class Help extends UserInterface
      */
     protected function canAccess()
     {
-        return true;
+        return (bool) $this->app->make('config')->get('concrete.accessibility.display_help_system');
     }
 
     protected function getHelpMessage(): ?Message
