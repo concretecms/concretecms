@@ -71,7 +71,9 @@ class UserNameValidatorServiceProvider extends Provider
             });
             $manager->setValidator('valid_pattern', $rxValidator);
 
-            $manager->setValidator('unique_username', $app->make(UniqueUserNameValidator::class));
+            if ($app->isInstalled()) {
+                $manager->setValidator('unique_username', $app->make(UniqueUserNameValidator::class));
+            }
 
             return $manager;
         });
