@@ -41,6 +41,12 @@
         "PKSA-gw7n-z4yx-7xjt": "Testing vulnerable Twig behavior on PHP 7.3 line",
         "PKSA-dpx1-78wg-1kqs": "Testing vulnerable Twig behavior on PHP 7.3 line",
         "PKSA-21g2-dzjv-sky5": "Testing vulnerable Twig behavior on PHP 7.3 line",
+        "PKSA-yd6k-t2gh-1m43": "Twig sandbox (CVE-2026-46636): Concrete doesn't use the Twig sandbox",
+        "PKSA-8zx5-v2nz-58pb": "Twig sandbox (CVE-2026-49981, duplicate of CVE-2026-46636): Concrete doesn't use the Twig sandbox",
+        "PKSA-g9zw-qxh8-pq8w": "Twig sandbox (CVE-2026-48805): Concrete doesn't use the Twig sandbox",
+        "PKSA-1tmc-rt7x-12w6": "Twig sandbox (CVE-2026-48806): Concrete doesn't use the Twig sandbox",
+        "PKSA-xx6c-6d96-db2w": "Twig sandbox (CVE-2026-48807): Concrete doesn't use the Twig sandbox",
+        "PKSA-fbvq-z33h-r2np": "Twig sandbox (CVE-2026-48808): Concrete doesn't use the Twig sandbox",
         "PKSA-w9tt-7782-78jx": "Flysystem 1.x is no longer maintained: patched by concretecms/dependency-patches"
       }
     }
