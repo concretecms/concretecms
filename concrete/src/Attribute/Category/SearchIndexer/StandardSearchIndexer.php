@@ -61,7 +61,11 @@ class StandardSearchIndexer implements SearchIndexerInterface
     public function clearIndexEntryForAttributeKey(CategoryInterface $category, AttributeKeyInterface $key, $subject)
     {
         if ($this->isValid($category)) {
-            $key->getSearchIndexer()->clearIndexEntryForAttributeKey($category, $key, $subject);
+            $indexer = $key->getSearchIndexer();
+            // The method is not part of the SearchIndexerInterface
+            if (method_exists($indexer, 'clearIndexEntryForAttributeKey')) {
+                $indexer->clearIndexEntryForAttributeKey($category, $key, $subject);
+            }
         }
     }
 

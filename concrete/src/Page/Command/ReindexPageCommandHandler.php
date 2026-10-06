@@ -44,9 +44,12 @@ class ReindexPageCommandHandler
                 $presentKeyIds[$value->getAttributeKey()->getAttributeKeyID()] = true;
                 $indexer->indexEntry($this->pageCategory, $value, $c);
             }
-            foreach ($this->pageCategory->getSearchableList() as $key) {
-                if (!isset($presentKeyIds[$key->getAttributeKeyID()])) {
-                    $indexer->clearIndexEntryForAttributeKey($this->pageCategory, $key, $c);
+            // The method is not part of the SearchIndexerInterface
+            if (method_exists($indexer, 'clearIndexEntryForAttributeKey')) {
+                foreach ($this->pageCategory->getSearchableList() as $key) {
+                    if (!isset($presentKeyIds[$key->getAttributeKeyID()])) {
+                        $indexer->clearIndexEntryForAttributeKey($this->pageCategory, $key, $c);
+                    }
                 }
             }
 
