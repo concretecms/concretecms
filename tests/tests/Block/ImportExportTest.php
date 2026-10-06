@@ -22,6 +22,7 @@ use Concrete\Core\File\Set\Set as FileSet;
 use Concrete\Core\File\StorageLocation\StorageLocationFactory;
 use Concrete\Core\File\StorageLocation\Type\Type as StorageLocationType;
 use Concrete\Core\File\Tracker\FileTrackableInterface;
+use Concrete\Core\Page\Page;
 use Concrete\Core\Page\Single as SinglePage;
 use Concrete\Core\Page\Stack\Folder\FolderService as StackFolderService;
 use Concrete\Core\Page\Stack\Stack;
@@ -269,6 +270,42 @@ class ImportExportTest extends PageTestCase
         $this->assertTrue(method_exists($this, $importerExporterMethod), "The method '{$importerExporterMethod}' specified in the options does not exist");
         $outputCif = $this->{$importerExporterMethod}($blockType, $inputCif, $options);
         $this->assertSameXML($inputCif->asXML(), $outputCif, $options['keepXmlElementsOrder'] ?? false);
+    }
+
+    /**
+     * Regression test for https://github.com/concretecms/concretecms/issues/13232
+     *
+     * On the home page, getCollectionParentID() is 0, which collides with the
+     * "Everywhere" sentinel previously used for cParentID: saving a page list
+     * block set to "Everywhere" on the home page was indistinguishable from
+     * "At the current level", and got silently stored as the latter.
+     */
+    public function testPageListEverywhereOnHomePage(): void
+    {
+        $blockType = BlockType::getByHandle('page_list') ?: BlockType::installBlockType('page_list');
+        $this->assertInstanceOf(BlockTypeEntity::class, $blockType);
+
+        $home = Page::getByID(Page::getHomePageID());
+
+        $everywhereBlock = $home->addBlock($blockType, 'Main', [
+            'num' => 10,
+            'customTopicTreeNodeID' => 0,
+            'cParentID' => 'EVERYWHERE',
+        ]);
+        $controller = $everywhereBlock->getController();
+        $this->assertSame(0, (int) $controller->cParentID, 'Selecting "Everywhere" on the home page should store cParentID as 0');
+        $this->assertSame(0, (int) $controller->cThis, 'Selecting "Everywhere" on the home page should not be stored as "Beneath this page"');
+        $this->assertSame(0, (int) $controller->cThisParent, 'Selecting "Everywhere" on the home page should not be stored as "At the current level"');
+
+        $currentLevelBlock = $home->addBlock($blockType, 'Main', [
+            'num' => 10,
+            'customTopicTreeNodeID' => 0,
+            'cParentID' => $home->getCollectionParentID(),
+        ]);
+        $controller = $currentLevelBlock->getController();
+        $this->assertSame(0, (int) $controller->cParentID);
+        $this->assertSame(0, (int) $controller->cThis);
+        $this->assertSame(1, (int) $controller->cThisParent, 'Selecting "At the current level" on the home page should still be stored as such');
     }
 
     /**
