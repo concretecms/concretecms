@@ -262,12 +262,12 @@ class StandardSearchIndexer implements SearchIndexerInterface
         $columnValues = [];
 
         if (isset($definition['type'])) {
-            $col = $this->getIndexEntryColumn($key);
+            $col = $this->getIndexEntryColumnName($key->getAttributeKeyHandle());
             $columnValues[$col] = null;
         } else {
             $subkeys = array_keys($definition);
             foreach ($subkeys as $subkey) {
-                $col = $this->getIndexEntryColumn($key, $subkey);
+                $col = $this->getIndexEntryColumnName($key->getAttributeKeyHandle(), $subkey);
                 $columnValues[$col] = null;
             }
         }
