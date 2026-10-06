@@ -3,6 +3,7 @@
 namespace Concrete\Tests\Utility;
 
 use Concrete\Tests\TestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class IPAddressTest extends TestCase
 {
@@ -33,7 +34,7 @@ class IPAddressTest extends TestCase
         parent::tearDown();
     }
 
-    public function loopbackDataProvider()
+    public static function loopbackDataProvider()
     {
         return [
             ['127.0.0.0', true],
@@ -47,17 +48,16 @@ class IPAddressTest extends TestCase
     }
 
     /**
-     * @dataProvider loopbackDataProvider
-     *
      * @param mixed $ip
      * @param mixed $expected
      */
+    #[DataProvider('loopbackDataProvider')]
     public function testLoopback($ip, $expected)
     {
         $this->assertEquals($expected, $this->object->setIp($ip)->isLoopback());
     }
 
-    public function privateDataProvider()
+    public static function privateDataProvider()
     {
         return [
             ['192.168.0.1', true],
@@ -81,17 +81,16 @@ class IPAddressTest extends TestCase
     }
 
     /**
-     * @dataProvider privateDataProvider
-     *
      * @param mixed $ip
      * @param mixed $expected
      */
+    #[DataProvider('privateDataProvider')]
     public function testPrivate($ip, $expected)
     {
         $this->assertEquals($expected, $this->object->setIp($ip)->isPrivate());
     }
 
-    public function linkedLocalDataProvider()
+    public static function linkedLocalDataProvider()
     {
         return [
             ['169.254.255.255', true],
@@ -111,17 +110,16 @@ class IPAddressTest extends TestCase
     }
 
     /**
-     * @dataProvider linkedLocalDataProvider
-     *
      * @param mixed $ip
      * @param mixed $expected
      */
+    #[DataProvider('linkedLocalDataProvider')]
     public function testLinkedLocal($ip, $expected)
     {
         $this->assertEquals($expected, $this->object->setIp($ip)->isLinkLocal());
     }
 
-    public function ipTypeDataProvider()
+    public static function ipTypeDataProvider()
     {
         return [
             ['169.254.255.255', 4],
@@ -142,11 +140,10 @@ class IPAddressTest extends TestCase
     }
 
     /**
-     * @dataProvider ipTypeDataProvider
-     *
      * @param mixed $ip
      * @param mixed $expected
      */
+    #[DataProvider('ipTypeDataProvider')]
     public function testIpType($ip, $expected)
     {
         $this->object->setIp($ip);

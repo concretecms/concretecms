@@ -51,7 +51,7 @@ class ValidateEnvironmentCommandResponse implements \JsonSerializable
         $this->preconditions = $preconditions;
     }
 
-    public function jsonSerialize()
+    public function jsonSerialize(): mixed
     {
         return [
             'error' => $this->error,

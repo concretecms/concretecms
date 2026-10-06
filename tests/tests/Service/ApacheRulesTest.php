@@ -3,6 +3,7 @@
 namespace Concrete\Tests\Service;
 
 use Concrete\Tests\TestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class ApacheRulesTest extends TestCase
 {
@@ -17,7 +18,7 @@ class ApacheRulesTest extends TestCase
      */
     private static $prettyUrlRule;
 
-    public function detectPrettyUrlProvider()
+    public static function detectPrettyUrlProvider()
     {
         self::prepareClass();
         $DIR_REL = DIR_REL;
@@ -101,17 +102,16 @@ EOT
     }
 
     /**
-     *  @dataProvider detectPrettyUrlProvider
-     *
      * @param mixed $found
      * @param mixed $htaccess
      */
+    #[DataProvider('detectPrettyUrlProvider')]
     public function testDetectPrettyUrl($found, $htaccess)
     {
         $this->assertSame($found, self::$configurator->hasRule($htaccess, self::$prettyUrlRule));
     }
 
-    public function addPrettyUrlProvider()
+    public static function addPrettyUrlProvider()
     {
         self::prepareClass();
         $DIR_REL = DIR_REL;
@@ -136,18 +136,17 @@ EOT
     }
 
     /**
-     *  @dataProvider addPrettyUrlProvider
-     *
      * @param mixed $before
      * @param mixed $after
      */
+    #[DataProvider('addPrettyUrlProvider')]
     public function testAddPrettyUrl($before, $after)
     {
         $resulting = self::$configurator->addRule($before, self::$prettyUrlRule);
         $this->assertSame($after, $resulting);
     }
 
-    public function removePrettyUrlProvider()
+    public static function removePrettyUrlProvider()
     {
         self::prepareClass();
         $DIR_REL = DIR_REL;
@@ -172,11 +171,10 @@ EOT
     }
 
     /**
-     *  @dataProvider removePrettyUrlProvider
-     *
      * @param mixed $before
      * @param mixed $after
      */
+    #[DataProvider('removePrettyUrlProvider')]
     public function testRemovePrettyUrl($before, $after)
     {
         $resulting = self::$configurator->removeRule($before, self::$prettyUrlRule);

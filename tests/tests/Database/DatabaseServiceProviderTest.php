@@ -3,13 +3,15 @@
 namespace Concrete\Tests\Database;
 
 use Concrete\Tests\TestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * DatabaseServiceProviderTest.
  *
  * @author Markus Liechti <markus@liechti.io>
- * @group orm_setup
  */
+#[Group('orm_setup')]
 class DatabaseServiceProviderTest extends TestCase
 {
     protected $app;
@@ -23,19 +25,18 @@ class DatabaseServiceProviderTest extends TestCase
     /**
      * Test if the the classes are mapped correctly be the IoC during the bootstrap.
      *
-     * @dataProvider dataProviderForTestDoctrineORMSetup
-     *
      * @param string $ioCAlias
      * @param string $expected
      * @param string $message
      */
+    #[DataProvider('dataProviderForTestDoctrineORMSetup')]
     public function testDoctrineORMSetup($ioCAlias, $expected, $message)
     {
         $doctrineConfig = $this->app->make($ioCAlias);
         $this->assertInstanceOf($expected, $doctrineConfig, $message);
     }
 
-    public function dataProviderForTestDoctrineORMSetup()
+    public static function dataProviderForTestDoctrineORMSetup()
     {
         return [
             ['Doctrine\ORM\Configuration', 'Doctrine\ORM\Configuration', 'This is not an instance of Doctrine\ORM\Configuration.'],
@@ -53,12 +54,11 @@ class DatabaseServiceProviderTest extends TestCase
      *
      * @todo Doesn't work yet properly. the line whiche overrides the config instance makes crache the succeeding tests.
      *
-     * @dataProvider dataProviderForTestORMCache
-     *
      * @param string $ioCAlias
      * @param string $compare
      * @param string $isDevMode
      */
+//    #[DataProvider('dataProviderForTestORMCache')]
 //    public function testORMCacheSettings($ioCAlias, $compare, $isDevMode){
 //
 //        // Store something in the config file and fetching it doesn't work.
@@ -79,7 +79,7 @@ class DatabaseServiceProviderTest extends TestCase
 //        $this->assertInstanceOf($compare, $doctrineConfig);
 //    }
 
-    public function dataProviderForTestORMCache()
+    public static function dataProviderForTestORMCache()
     {
         return [
             'ORM development cache settings' => ['orm/cache', 'Doctrine\Common\Cache\ArrayCache', true],
@@ -90,12 +90,11 @@ class DatabaseServiceProviderTest extends TestCase
     /**
      * Test if the interface and the concrete EntityManagerConfigFactory are mapped correctly.
      *
-     * @dataProvider dataProviderForTestEntityManagerConfigFactory     *
-     *
      * @param string $ioCAlias
      * @param string $expected1
      * @param string $expected2
      */
+    #[DataProvider('dataProviderForTestEntityManagerConfigFactory')]
     public function testEntityManagerConfigFactory($ioCAlias, $expected1, $expected2)
     {
         $entityManagerConfigFactory = $this->app->make($ioCAlias);
@@ -103,7 +102,7 @@ class DatabaseServiceProviderTest extends TestCase
         $this->assertInstanceOf($expected2, $entityManagerConfigFactory);
     }
 
-    public function dataProviderForTestEntityManagerConfigFactory()
+    public static function dataProviderForTestEntityManagerConfigFactory()
     {
         return [
             'Map EntityManagerConfigFactoryInterface' => ['Concrete\Core\Database\EntityManagerConfigFactoryInterface', 'Concrete\Core\Database\EntityManagerConfigFactoryInterface', 'Concrete\Core\Database\EntityManagerConfigFactory'],
@@ -114,12 +113,11 @@ class DatabaseServiceProviderTest extends TestCase
     /**
      * Test if the interface and the concrete EntityManagerFactory are mapped correctly.
      *
-     * @dataProvider dataProviderForTestEntityManagerFactory
-     *
      * @param string $ioCAlias
      * @param string $expected1
      * @param string $expected2
      */
+    #[DataProvider('dataProviderForTestEntityManagerFactory')]
     public function testEntityManagerFactory($ioCAlias, $expected1, $expected2)
     {
         $entityManagerFactory = $this->app->make($ioCAlias);
@@ -127,7 +125,7 @@ class DatabaseServiceProviderTest extends TestCase
         $this->assertInstanceOf($expected2, $entityManagerFactory);
     }
 
-    public function dataProviderForTestEntityManagerFactory()
+    public static function dataProviderForTestEntityManagerFactory()
     {
         return [
             'Map EntityManagerFactoryInterface' => ['Concrete\Core\Database\EntityManagerFactoryInterface', 'Concrete\Core\Database\EntityManagerFactoryInterface', 'Concrete\Core\Database\EntityManagerFactory'],
@@ -139,18 +137,17 @@ class DatabaseServiceProviderTest extends TestCase
      * Test if the Doctrine DBAL connect, database connection and the
      * database managers are mapped correctly.
      *
-     * @dataProvider dataProviderForTestDatabaseAndDBALSetup
-     *
      * @param string $ioCAlias
      * @param string $expected1
      */
+    #[DataProvider('dataProviderForTestDatabaseAndDBALSetup')]
     public function testDatabaseAndDBALSetup($ioCAlias, $expected1)
     {
         $instance = $this->app->make($ioCAlias);
         $this->assertInstanceOf($expected1, $instance);
     }
 
-    public function dataProviderForTestDatabaseAndDBALSetup()
+    public static function dataProviderForTestDatabaseAndDBALSetup()
     {
         return [
             ['Concrete\Core\Database\DatabaseManager', 'Concrete\Core\Database\DatabaseManager'],

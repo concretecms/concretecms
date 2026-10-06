@@ -3,7 +3,9 @@
 namespace Concrete\Tests\Foundation;
 
 use Concrete\Core\Foundation\ClassLoader;
+use Concrete\Core\Package\Package;
 use Concrete\TestHelpers\Foundation\ClassLoaderTestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class ClassloaderTest extends ClassLoaderTestCase
 {
@@ -28,7 +30,7 @@ class ClassloaderTest extends ClassLoaderTestCase
         $coreAutoloader->enable();
     }
 
-    public function aliasesClassesDataProvider()
+    public static function aliasesClassesDataProvider()
     {
         return [
             ['\Controller', '\Concrete\Core\Controller\Controller'],
@@ -38,11 +40,10 @@ class ClassloaderTest extends ClassLoaderTestCase
     }
 
     /**
-     * @dataProvider aliasesClassesDataProvider
-     *
      * @param mixed $a
      * @param mixed $b
      */
+    #[DataProvider('aliasesClassesDataProvider')]
     public function testClassAliases($a, $b)
     {
         // We still need to enable class loaders here otherwise the aliases won't work
@@ -55,7 +56,7 @@ class ClassloaderTest extends ClassLoaderTestCase
         $this->assertEquals($class1, $class2);
     }
 
-    public function applicationClassesDataProvider()
+    public static function applicationClassesDataProvider()
     {
         return [
             // Overrides, Modified autoloader
@@ -77,7 +78,7 @@ class ClassloaderTest extends ClassLoaderTestCase
         ];
     }
 
-    public function packageClassesDataProvider()
+    public static function packageClassesDataProvider()
     {
         return [
             // Overrides, Modified autoloader
@@ -95,7 +96,7 @@ class ClassloaderTest extends ClassLoaderTestCase
         ];
     }
 
-    public function applicationClassesLegacyDataProvider()
+    public static function applicationClassesLegacyDataProvider()
     {
         return [
             ['TestClass.php', 'src/Testing/', 'Application\Src\Testing\TestClass'],
@@ -103,33 +104,32 @@ class ClassloaderTest extends ClassLoaderTestCase
         ];
     }
 
-    public function packageClassesLegacyDataProvider()
+    public static function packageClassesLegacyDataProvider()
     {
         return [
-['legacy_foo', 'packages/legacy_foo/src/My/Custom.php', '/legacy_foo/src/My/', 'Concrete\Package\LegacyFoo\Src\My\Custom'],
+            [
+                'legacy_foo',
+                'packages/legacy_foo/src/My/Custom.php',
+                '/legacy_foo/src/My/',
+                'Concrete\Package\LegacyFoo\Src\My\Custom'
+            ],
         ];
     }
 
-    public function applicationClassesLegacyCustomNamespaceDataProvider()
+    public static function applicationClassesLegacyCustomNamespaceDataProvider()
     {
         return [
             ['Foobar', 'TestCustomNamespaceClass.php', 'src/Testing/', 'Foobar\Src\Testing\TestCustomNamespaceClass'],
         ];
     }
 
-    public function packageCustomAutoloadersDataProvider()
+    public static function packageCustomAutoloadersDataProvider()
     {
-        $package1 = $this->getMockBuilder('Concrete\Core\Package\Package')
-            ->disableOriginalConstructor()
-            ->getMock();
-        $package1->expects($this->any())
-            ->method('getPackageAutoloaderRegistries')
-            ->will($this->returnValue([
-                'src/PortlandLabs/Foo' => 'PortlandLabs\Foo',
-            ]));
-        $package1->expects($this->any())
-            ->method('getPackageHandle')
-            ->will($this->returnValue('advanced_test'));
+        $package1 = \Mockery::mock(Package::class);
+        $package1->shouldReceive('getPackageAutoloaderRegistries')->andReturn([
+            'src/PortlandLabs/Foo' => 'PortlandLabs\Foo',
+        ]);
+        $package1->shouldReceive('getPackageHandle')->andReturn('advanced_test');
 
         return [
             // Overrides, Modified autoloader
@@ -141,7 +141,7 @@ class ClassloaderTest extends ClassLoaderTestCase
         ];
     }
 
-    public function coreClassesDataProvider()
+    public static function coreClassesDataProvider()
     {
         return [
             // Strict autoloader
@@ -176,23 +176,21 @@ class ClassloaderTest extends ClassLoaderTestCase
     }
 
     /**
-     * @dataProvider coreClassesDataProvider
-     *
      * @param mixed $class
      */
+    #[DataProvider('coreClassesDataProvider')]
     public function testCoreClassExists($class)
     {
         $this->assertTrue($this->classExists($class), sprintf('Class %s failed to load', $class));
     }
 
     /**
-     * @dataProvider applicationClassesDataProvider
-     *
      * @param mixed $file
      * @param mixed $destination
      * @param mixed $class
      * @param mixed $exists
      */
+    #[DataProvider('applicationClassesDataProvider')]
     public function testApplicationCoreOverrideAutoloader($file, $destination, $class, $exists = true)
     {
         $destination = trim($destination, '/');
@@ -208,13 +206,12 @@ class ClassloaderTest extends ClassLoaderTestCase
     }
 
     /**
-     * @dataProvider applicationClassesLegacyDataProvider
-     *
      * @param mixed $file
      * @param mixed $destination
      * @param mixed $class
      * @param mixed $exists
      */
+    #[DataProvider('applicationClassesLegacyDataProvider')]
     public function testApplicationLegacyAutoloader($file, $destination, $class, $exists = true)
     {
         $destination = trim($destination, '/');
@@ -233,13 +230,12 @@ class ClassloaderTest extends ClassLoaderTestCase
     }
 
     /**
-     * @dataProvider applicationClassesLegacyCustomNamespaceDataProvider
-     *
      * @param mixed $namespace
      * @param mixed $file
      * @param mixed $destination
      * @param mixed $class
      */
+    #[DataProvider('applicationClassesLegacyCustomNamespaceDataProvider')]
     public function testApplicationLegacyCustomNamespaceAutoloader($namespace, $file, $destination, $class)
     {
         $destination = trim($destination, '/');
@@ -255,14 +251,13 @@ class ClassloaderTest extends ClassLoaderTestCase
     }
 
     /**
-     * @dataProvider packageClassesDataProvider
-     *
      * @param mixed $pkgHandle
      * @param mixed $file
      * @param mixed $destination
      * @param mixed $class
      * @param mixed $exists
      */
+    #[DataProvider('packageClassesDataProvider')]
     public function testPackageAutoloader($pkgHandle, $file, $destination, $class, $exists = true)
     {
         $destination = trim($destination, '/');
@@ -293,14 +288,13 @@ class ClassloaderTest extends ClassLoaderTestCase
     }
 
     /**
-     * @dataProvider packageClassesLegacyDataProvider
-     *
      * @param mixed $pkgHandle
      * @param mixed $file
      * @param mixed $destination
      * @param mixed $class
      * @param mixed $exists
      */
+    #[DataProvider('packageClassesLegacyDataProvider')]
     public function testPackageLegacyAutoloader($pkgHandle, $file, $destination, $class, $exists = true)
     {
         $destination = trim($destination, '/');
@@ -331,14 +325,13 @@ class ClassloaderTest extends ClassLoaderTestCase
     }
 
     /**
-     * @dataProvider packageCustomAutoloadersDataProvider
-     *
      * @param mixed $package
      * @param mixed $file
      * @param mixed $destination
      * @param mixed $classes
      * @param mixed $exists
      */
+    #[DataProvider('packageCustomAutoloadersDataProvider')]
     public function testPackageCustomAutoloaders($package, $file, $destination, $classes, $exists = true)
     {
         $destination = trim($destination, '/');

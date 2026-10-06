@@ -7,6 +7,17 @@ use ReflectionProperty;
 
 class TestCase extends PHPUnitTestCase
 {
+
+    protected static function assertFileNotExists(string $path): void
+    {
+        self::assertFalse(file_exists($path));
+    }
+
+    protected static function assertRegExp(string $expr, string $test): void
+    {
+        self::assertNotFalse(preg_match($expr, $test));
+    }
+
     protected static function setNonPublicPropertyValues(object $object, array $properties): void
     {
         foreach ($properties as $propertyName => $propertyValue) {

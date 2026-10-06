@@ -6,6 +6,7 @@ use Concrete\Core\Http\Request;
 use Concrete\Core\Http\RequestMediaTypeParser;
 use Mockery;
 use Concrete\Tests\TestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\HttpFoundation\HeaderBag;
 
 class RequestMediaTypeParserTest extends TestCase
@@ -13,7 +14,7 @@ class RequestMediaTypeParserTest extends TestCase
     /**
      * @return array
      */
-    public function provideMediaTypeMap()
+    public static function provideMediaTypeMap()
     {
         return [
             [
@@ -53,11 +54,10 @@ class RequestMediaTypeParserTest extends TestCase
     }
 
     /**
-     * @dataProvider provideMediaTypeMap
-     *
      * @param string|mixed $acceptValue
      * @param array $expectedMap
      */
+    #[DataProvider('provideMediaTypeMap')]
     public function testMediaTypeMap($acceptValue, array $expectedMap)
     {
         $mediaTypeParser = $this->getMediaTypeParser($acceptValue);
@@ -69,7 +69,7 @@ class RequestMediaTypeParserTest extends TestCase
     /**
      * @return array
      */
-    public function provideAcceptMediaType()
+    public static function provideAcceptMediaType()
     {
         return [
             [null, 'text/html', null, false],
@@ -101,13 +101,12 @@ class RequestMediaTypeParserTest extends TestCase
     }
 
     /**
-     * @dataProvider provideAcceptMediaType
-     *
      * @param string|mixed $acceptValue
      * @param string|string[] $mediaType
      * @param float|null $minWeight
      * @param bool $expectedResult
      */
+    #[DataProvider('provideAcceptMediaType')]
     public function testAcceptMediaType($acceptValue, $mediaType, $minWeight, $expectedResult)
     {
         $mediaTypeParser = $this->getMediaTypeParser($acceptValue);

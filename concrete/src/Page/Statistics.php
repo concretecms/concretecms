@@ -65,7 +65,11 @@ class Statistics
         $db = Loader::db();
         $cParentID = $db->GetOne("select cParentID from Pages where cID = ?", array($cID));
         $cChildren = $db->GetOne("select cChildren from Pages where cID = ?", array($cParentID));
-        --$cChildren;
+
+        if (is_int($cChildren)) {
+            $cChildren--;
+        }
+
         if ($cChildren < 0) {
             $cChildren = 0;
         }

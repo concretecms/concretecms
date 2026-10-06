@@ -4,10 +4,11 @@ namespace Concrete\Tests\Utility\Service;
 
 use Concrete\Core\Utility\Service\Number;
 use Concrete\Tests\TestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class NumberTest extends TestCase
 {
-    public function flexRoundDataProvider()
+    public static function flexRoundDataProvider()
     {
         return [
             ['00010.0000', 10],
@@ -20,18 +21,17 @@ class NumberTest extends TestCase
     }
 
     /**
-     * @dataProvider flexRoundDataProvider
-     *
      * @param mixed $test
      * @param mixed $value
      */
+    #[DataProvider('flexRoundDataProvider')]
     public function testFlexRound($test, $value)
     {
         $numberService = new Number();
         $this->assertEquals($value, $numberService->flexround($test));
     }
 
-    public function trimDataProvider()
+    public static function trimDataProvider()
     {
         return [
             ['00010.0000', '10'],
@@ -58,11 +58,10 @@ class NumberTest extends TestCase
     }
 
     /**
-     * @dataProvider trimDataProvider
-     *
      * @param mixed $test
      * @param mixed $expected
      */
+    #[DataProvider('trimDataProvider')]
     public function testTrim($test, $expected)
     {
         $numberService = new Number();

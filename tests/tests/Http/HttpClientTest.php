@@ -9,6 +9,8 @@ use Exception;
 use GuzzleHttp\Handler\CurlHandler;
 use GuzzleHttp\Handler\StreamHandler;
 use Concrete\Tests\TestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 
 class HttpClientTest extends TestCase
 {
@@ -30,7 +32,7 @@ class HttpClientTest extends TestCase
         self::$testRemoteURI = getenv('CONCRETE5TESTS_TEST_REMOTE_URI') ?: 'https://www.concrete5.org/';
     }
 
-    public function adapterListProvider()
+    public static function adapterListProvider()
     {
         return [
             [CurlHandler::class],
@@ -38,10 +40,10 @@ class HttpClientTest extends TestCase
         ];
     }
 
-    public function sslOptionsProvider()
+    public static function sslOptionsProvider()
     {
         $result = [];
-        foreach ($this->adapterListProvider() as $al) {
+        foreach (self::adapterListProvider() as $al) {
             $adapterClass = $al[0];
             $result[] = [
                 $adapterClass,
@@ -86,15 +88,13 @@ class HttpClientTest extends TestCase
     }
 
     /**
-     * @dataProvider sslOptionsProvider
-     *
      * @param mixed $adapterClass
      * @param mixed $caFile
      * @param mixed $caPath
      * @param mixed $shouldBeOK
-     *
-     * @group online
      */
+    #[Group('online')]
+    #[DataProvider('sslOptionsProvider')]
     public function testSSLOptions($adapterClass, $caFile, $caPath, $shouldBeOK)
     {
         $this->markTestSkipped('HTTP Client Tests broken – needs rewriting for Guzzle.');
@@ -141,10 +141,9 @@ class HttpClientTest extends TestCase
     }
 
     /**
-     * @dataProvider adapterListProvider
-     *
      * @param mixed $adapterClass
      */
+    #[DataProvider('adapterListProvider')]
     public function testNormalizingOptions($adapterClass)
     {
         $this->markTestSkipped('HTTP Client Tests broken – needs rewriting for Guzzle.');

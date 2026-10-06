@@ -3,6 +3,7 @@
 namespace Concrete\Tests\Utility\Service\Validation;
 
 use Concrete\Tests\TestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class NumbersTest extends TestCase
 {
@@ -29,7 +30,7 @@ class NumbersTest extends TestCase
         parent::tearDown();
     }
 
-    public function integerDataProvider()
+    public static function integerDataProvider()
     {
         return [
             [true, '0'],
@@ -59,19 +60,18 @@ class NumbersTest extends TestCase
     }
 
     /**
-     * @dataProvider integerDataProvider
-     *
      * @param mixed $expected
      * @param mixed $input1
      * @param null|mixed $min
      * @param null|mixed $max
      */
+    #[DataProvider('integerDataProvider')]
     public function testInteger($expected, $input1, $min = null, $max = null)
     {
         $this->assertEquals($expected, $this->object->integer($input1, $min, $max));
     }
 
-    public function numberDataProvider()
+    public static function numberDataProvider()
     {
         return [
             [true, '0'],
@@ -109,13 +109,12 @@ class NumbersTest extends TestCase
     }
 
     /**
-     * @dataProvider numberDataProvider
-     *
      * @param mixed $expected
      * @param mixed $input1
      * @param null|mixed $min
      * @param null|mixed $max
      */
+    #[DataProvider('numberDataProvider')]
     public function testNumber($expected, $input1, $min = null, $max = null)
     {
         $this->assertEquals($expected, $this->object->number($input1, $min, $max));

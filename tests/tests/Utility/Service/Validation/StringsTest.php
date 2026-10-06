@@ -3,6 +3,7 @@
 namespace Concrete\Tests\Utility\Service\Validation;
 
 use Concrete\Tests\TestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 use stdClass;
 
 class StringsTest extends TestCase
@@ -31,7 +32,7 @@ class StringsTest extends TestCase
         parent::tearDown();
     }
 
-    public function emailDataProvider()
+    public static function emailDataProvider()
     {
         return [
             //no mx record validation
@@ -57,7 +58,7 @@ class StringsTest extends TestCase
         ];
     }
 
-    public function alphanumDataProvider()
+    public static function alphanumDataProvider()
     {
         return [
             [false, null, false, false],
@@ -82,7 +83,7 @@ class StringsTest extends TestCase
         ];
     }
 
-    public function handleDataProvider()
+    public static function handleDataProvider()
     {
         return [
             [false, null],
@@ -104,7 +105,7 @@ class StringsTest extends TestCase
         ];
     }
 
-    public function notEmptyDataProvider()
+    public static function notEmptyDataProvider()
     {
         return [
             [false, null],
@@ -125,7 +126,7 @@ class StringsTest extends TestCase
         ];
     }
 
-    public function minDataProvider()
+    public static function minDataProvider()
     {
         return [
             [false, null, 1],
@@ -144,7 +145,7 @@ class StringsTest extends TestCase
         ];
     }
 
-    public function maxDataProvider()
+    public static function maxDataProvider()
     {
         return [
             [false, null, 1],
@@ -164,7 +165,7 @@ class StringsTest extends TestCase
         ];
     }
 
-    public function containsNumberDataProvider()
+    public static function containsNumberDataProvider()
     {
         return [
             [0, null],
@@ -182,7 +183,7 @@ class StringsTest extends TestCase
         ];
     }
 
-    public function containsUpperCaseDataProvider()
+    public static function containsUpperCaseDataProvider()
     {
         return [
             [0, null],
@@ -200,7 +201,7 @@ class StringsTest extends TestCase
         ];
     }
 
-    public function containsLowerCaseDataProvider()
+    public static function containsLowerCaseDataProvider()
     {
         return [
             [0, null],
@@ -218,7 +219,7 @@ class StringsTest extends TestCase
         ];
     }
 
-    public function containsSymbolDataProvider()
+    public static function containsSymbolDataProvider()
     {
         return [
             [0, null],
@@ -236,13 +237,13 @@ class StringsTest extends TestCase
         ];
     }
 
-    public function isValidRegexProvider()
+    public static function isValidRegexProvider()
     {
         return [
             [false, null, false],
             [false, null, true],
-            [false, $this, false],
-            [false, $this, true],
+            [false, 'self', false],
+            [false, 'self', true],
             [false, [], false],
             [false, [], true],
             [false, 1, false],
@@ -265,129 +266,121 @@ class StringsTest extends TestCase
     }
 
     /**
-     * @dataProvider emailDataProvider
-     *
      * @param mixed $expected
      * @param mixed $email
      * @param mixed $mxValidation
      */
+    #[DataProvider('emailDataProvider')]
     public function testEmail($expected, $email, $mxValidation)
     {
         $this->assertEquals($expected, $this->object->email($email, $mxValidation));
     }
 
     /**
-     * @dataProvider alphanumDataProvider
-     *
      * @param mixed $expected
      * @param mixed $value
      * @param mixed $allowSpaces
      * @param mixed $allowDashes
      */
+    #[DataProvider('alphanumDataProvider')]
     public function testAlphaNum($expected, $value, $allowSpaces = false, $allowDashes = false)
     {
         $this->assertEquals($expected, $this->object->alphanum($value, $allowSpaces, $allowDashes));
     }
 
     /**
-     * @dataProvider handleDataProvider
-     *
      * @param mixed $expected
      * @param mixed $value
      */
+    #[DataProvider('handleDataProvider')]
     public function testHandle($expected, $value)
     {
         $this->assertEquals($expected, $this->object->handle($value));
     }
 
     /**
-     * @dataProvider notEmptyDataProvider
-     *
      * @param mixed $expected
      * @param mixed $value
      */
+    #[DataProvider('notEmptyDataProvider')]
     public function testNotEmpty($expected, $value)
     {
         $this->assertEquals($expected, $this->object->notempty($value));
     }
 
     /**
-     * @dataProvider minDataProvider
-     *
      * @param mixed $expected
      * @param mixed $string
      * @param mixed $minLength
      */
+    #[DataProvider('minDataProvider')]
     public function testMin($expected, $string, $minLength)
     {
         $this->assertEquals($expected, $this->object->min($string, $minLength));
     }
 
     /**
-     * @dataProvider maxDataProvider
-     *
      * @param mixed $expected
      * @param mixed $string
      * @param mixed $maxLength
      */
+    #[DataProvider('maxDataProvider')]
     public function testMax($expected, $string, $maxLength)
     {
         $this->assertEquals($expected, $this->object->max($string, $maxLength));
     }
 
     /**
-     * @dataProvider containsNumberDataProvider
-     *
      * @param mixed $expected
      * @param mixed $string
      */
+    #[DataProvider('containsNumberDataProvider')]
     public function testContainsNumber($expected, $string)
     {
         $this->assertEquals($expected, $this->object->containsNumber($string));
     }
 
     /**
-     * @dataProvider containsUpperCaseDataProvider
-     *
      * @param mixed $expected
      * @param mixed $string
      */
+    #[DataProvider('containsUpperCaseDataProvider')]
     public function testContainsUpperCase($expected, $string)
     {
         $this->assertEquals($expected, $this->object->containsUpperCase($string));
     }
 
     /**
-     * @dataProvider containsLowerCaseDataProvider
-     *
      * @param mixed $expected
      * @param mixed $string
      */
+    #[DataProvider('containsLowerCaseDataProvider')]
     public function testContainsLowerCase($expected, $string)
     {
         $this->assertEquals($expected, $this->object->containsLowerCase($string));
     }
 
     /**
-     * @dataProvider containsSymbolDataProvider
-     *
      * @param mixed $expected
      * @param mixed $string
      */
+    #[DataProvider('containsSymbolDataProvider')]
     public function testContainsSymbol($expected, $string)
     {
         $this->assertEquals($expected, $this->object->containsSymbol($string));
     }
 
     /**
-     * @dataProvider isValidRegexProvider
-     *
      * @param bool $expected
      * @param string|mixed $pattern
      * @param bool $includesDelimiters
      */
+    #[DataProvider('isValidRegexProvider')]
     public function testIsValidRegex($expected, $pattern, $includesDelimiters)
     {
+        if ($pattern === 'self') {
+            $pattern = $this;
+        }
         $this->assertSame($expected, $this->object->isValidRegex($pattern, $includesDelimiters));
     }
 }

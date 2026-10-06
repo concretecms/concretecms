@@ -7,6 +7,7 @@ use Concrete\Core\Package\Offline\Inspector;
 use Concrete\Core\Package\Offline\PackageInfo;
 use Concrete\Core\Support\Facade\Application;
 use Concrete\Tests\TestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class OfflineInspectorTest extends TestCase
 {
@@ -26,7 +27,7 @@ class OfflineInspectorTest extends TestCase
         self::$inspector = self::$app->build(Inspector::class);
     }
 
-    public function validPackagesProvider()
+    public static function validPackagesProvider()
     {
         return [
             ['good01.php', ['handle' => 'nice_legacy', 'version' => '0.9.1', 'name' => 'Legacy package!', 'description' => 'This is a nice legacy package.', 'minimumCoreVersion' => '5.5']],
@@ -36,11 +37,10 @@ class OfflineInspectorTest extends TestCase
     }
 
     /**
-     * @dataProvider validPackagesProvider
-     *
      * @param string $filename
      * @param array $expectedInfo
      */
+    #[DataProvider('validPackagesProvider')]
     public function testExtractHandle($filename, array $expectedInfo)
     {
         $info = self::$inspector->inspectControllerFile(DIR_TESTS . '/assets/Package/offline/' . $filename);
@@ -49,11 +49,10 @@ class OfflineInspectorTest extends TestCase
     }
 
     /**
-     * @dataProvider validPackagesProvider
-     *
      * @param string $filename
      * @param array $expectedInfo
      */
+    #[DataProvider('validPackagesProvider')]
     public function testExtractVersion($filename, array $expectedInfo)
     {
         $info = self::$inspector->inspectControllerFile(DIR_TESTS . '/assets/Package/offline/' . $filename);
@@ -62,11 +61,10 @@ class OfflineInspectorTest extends TestCase
     }
 
     /**
-     * @dataProvider validPackagesProvider
-     *
      * @param string $filename
      * @param array $expectedInfo
      */
+    #[DataProvider('validPackagesProvider')]
     public function testExtractName($filename, array $expectedInfo)
     {
         $info = self::$inspector->inspectControllerFile(DIR_TESTS . '/assets/Package/offline/' . $filename);
@@ -75,11 +73,10 @@ class OfflineInspectorTest extends TestCase
     }
 
     /**
-     * @dataProvider validPackagesProvider
-     *
      * @param string $filename
      * @param array $expectedInfo
      */
+    #[DataProvider('validPackagesProvider')]
     public function testExtractDescription($filename, array $expectedInfo)
     {
         $info = self::$inspector->inspectControllerFile(DIR_TESTS . '/assets/Package/offline/' . $filename);
@@ -88,11 +85,10 @@ class OfflineInspectorTest extends TestCase
     }
 
     /**
-     * @dataProvider validPackagesProvider
-     *
      * @param string $filename
      * @param array $expectedInfo
      */
+    #[DataProvider('validPackagesProvider')]
     public function testExtractMinimumCoreVersion($filename, array $expectedInfo)
     {
         $info = self::$inspector->inspectControllerFile(DIR_TESTS . '/assets/Package/offline/' . $filename);
@@ -100,7 +96,7 @@ class OfflineInspectorTest extends TestCase
         $this->assertSame($expectedInfo['minimumCoreVersion'], $info->getMinimumCoreVersion());
     }
 
-    public function invalidPackagesByFileProvider()
+    public static function invalidPackagesByFileProvider()
     {
         return [
             ['not-existing.php', Exception::ERRORCODE_FILENOTFOUND],
@@ -121,11 +117,10 @@ class OfflineInspectorTest extends TestCase
     }
 
     /**
-     * @dataProvider invalidPackagesByFileProvider
-     *
      * @param string $filename
      * @param int $expectedExceptionCode
      */
+    #[DataProvider('invalidPackagesByFileProvider')]
     public function testInvalidPackagesByFile($filename, $expectedExceptionCode)
     {
         try {
@@ -138,7 +133,7 @@ class OfflineInspectorTest extends TestCase
         $this->assertSame($expectedExceptionCode, $exception->getCode());
     }
 
-    public function invalidPackagesByContentProvider()
+    public static function invalidPackagesByContentProvider()
     {
         return [
             [null, Exception::ERRORCODE_BADPARAM],
@@ -147,11 +142,10 @@ class OfflineInspectorTest extends TestCase
     }
 
     /**
-     * @dataProvider invalidPackagesByContentProvider
-     *
      * @param string $content
      * @param int $expectedExceptionCode
      */
+    #[DataProvider('invalidPackagesByContentProvider')]
     public function testInvalidPackagesByContent($content, $expectedExceptionCode)
     {
         try {

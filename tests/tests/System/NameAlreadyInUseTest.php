@@ -3,6 +3,7 @@
 namespace Concrete\Tests\System;
 
 use Concrete\Tests\TestCase;
+use PHPUnit\Framework\Attributes\DoesNotPerformAssertions;
 use RuntimeException;
 
 class NameAlreadyInUseTest extends TestCase
@@ -22,9 +23,8 @@ class NameAlreadyInUseTest extends TestCase
     /**
      * Let's load all the php-code only files, to be sure that we don't have errors like this:
      * Cannot use FillyQualifiedClassName as ClassAliasName because the name is already in use.
-     *
-     * @doesNotPerformAssertions
      */
+    #[DoesNotPerformAssertions]
     public function testNoNameInUseErrorException()
     {
         $this->markTestSkipped('This test is not currently working in my local environment for some reason.');

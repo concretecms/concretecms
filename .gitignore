@@ -51,6 +51,7 @@ error_log
 
 # phpunit
 /.phpunit.result.cache
+/.phpunit.cache
 
 # nova
 /.nova

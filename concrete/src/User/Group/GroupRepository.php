@@ -10,7 +10,6 @@ use Concrete\Core\Tree\Node\Type\Group as GroupNode;
 /**
  * This class simply exists as an intermediary between the local group repository and the Group::getByPath() method.
  * This will enable us to test the local group repository class.
- * @codeCoverageIgnore
  */
 class GroupRepository
 {

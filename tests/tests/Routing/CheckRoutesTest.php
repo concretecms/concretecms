@@ -8,12 +8,13 @@ use Concrete\Core\Routing\MatchedRoute;
 use Concrete\Core\Routing\Router;
 use Concrete\Core\Support\Facade\Application as ApplicationFacade;
 use Concrete\Tests\TestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Throwable;
 
 class CheckRoutesTest extends TestCase
 {
-    public function routeDestinationProvider()
+    public static function routeDestinationProvider()
     {
         $app = ApplicationFacade::getFacadeApplication();
         /** @var \Concrete\Core\Routing\Router $router */
@@ -34,12 +35,12 @@ class CheckRoutesTest extends TestCase
         return $result;
     }
 
-    /** @dataProvider routeDestinationProvider
-     *
+    /**
      * @param $app Application
      * @param $path string
      * @param $callable mixed
      */
+    #[DataProvider('routeDestinationProvider')]
     public function testRouteDestination(Application $app, $path, $callable)
     {
         $checked = false;
@@ -63,13 +64,16 @@ class CheckRoutesTest extends TestCase
             } else {
                 // PHP 8 is_callable only works on static methods
                 // get_class_methods only returns public methods so its similar to the old behaviour
-                $this->assertTrue(class_exists($class) && in_array($method, get_class_methods($class)), "Not callable! Invalid route for path {$path} : {$callable}");
+                $this->assertTrue(
+                    class_exists($class) && in_array($method, get_class_methods($class)),
+                    "Not callable! Invalid route for path {$path} : {$callable}"
+                );
             }
 
         }
     }
 
-    public function provideRouteWithDefaultParameters(): array
+    public static function provideRouteWithDefaultParameters(): array
     {
         $app = ApplicationFacade::getFacadeApplication();
         $result = [];
@@ -86,9 +90,7 @@ class CheckRoutesTest extends TestCase
         return $result;
     }
 
-    /**
-     * @dataProvider provideRouteWithDefaultParameters
-     */
+    #[DataProvider('provideRouteWithDefaultParameters')]
     public function testRouteWithArguments(Application $app, bool $requestArgumentValue, bool $requestWithTrailingSlash, bool $routeWithTrailingShash, bool $routeWithDefaultArgumentValue): void
     {
         $router = $app->build(Router::class);

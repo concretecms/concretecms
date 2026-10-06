@@ -11,6 +11,7 @@ use Concrete\Core\Entity\Attribute\Value\PageValue as PageAttributeValueEntity;
 use Concrete\TestHelpers\Database\ConcreteDatabaseTestCase;
 use Core;
 use Page;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 abstract class AttributeValueTestCase extends ConcreteDatabaseTestCase
 {
@@ -95,11 +96,10 @@ abstract class AttributeValueTestCase extends ConcreteDatabaseTestCase
     abstract public function getAttributeValueClassName();
 
     /**
-     *  @dataProvider baseAttributeValues
-     *
      * @param mixed $input
      * @param mixed $expectedBaseValue
      */
+    #[DataProvider('baseAttributeValues')]
     public function testBaseAttributeValueGet($input, $expectedBaseValue)
     {
         // because of stupid !@#!@ phpunit.
@@ -122,11 +122,10 @@ abstract class AttributeValueTestCase extends ConcreteDatabaseTestCase
     }
 
     /**
-     *  @dataProvider displayAttributeValues
-     *
      * @param mixed $input
      * @param mixed $expectedDisplayValue
      */
+    #[DataProvider('displayAttributeValues')]
     public function testDisplayAttributeValues($input, $expectedDisplayValue)
     {
         // because of stupid !@#!@ phpunit.
@@ -156,11 +155,10 @@ abstract class AttributeValueTestCase extends ConcreteDatabaseTestCase
     }
 
     /**
-     *  @dataProvider plaintextAttributeValues
-     *
      * @param mixed $input
      * @param mixed $expectedPlainTextOutput
      */
+    #[DataProvider('plaintextAttributeValues')]
     public function testPlainTextAttributeValues($input, $expectedPlainTextOutput)
     {
         // because of stupid !@#!@ phpunit.
@@ -179,11 +177,10 @@ abstract class AttributeValueTestCase extends ConcreteDatabaseTestCase
     }
 
     /**
-     *  @dataProvider searchIndexAttributeValues
-     *
      * @param mixed $input
      * @param mixed $expectedSearchIndexValue
      */
+    #[DataProvider('searchIndexAttributeValues')]
     public function testSearchIndexAttributeValues($input, $expectedSearchIndexValue)
     {
         // because of stupid !@#!@ phpunit.

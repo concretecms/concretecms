@@ -8,6 +8,7 @@ use Concrete\Core\Config\Repository\Repository;
 use Concrete\Core\Encryption\PasswordHasher;
 use Concrete\Core\Legacy\PasswordHash;
 use Concrete\Tests\TestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class PasswordHasherTest extends TestCase
 {
@@ -31,25 +32,19 @@ class PasswordHasherTest extends TestCase
         return new PasswordHasher($config);
     }
 
-    /**
-     * @dataProvider portableHashes
-     */
+    #[DataProvider('portableHashes')]
     public function testPortableHashesSucceed(string $password, string $hash)
     {
         $this->assertTrue($this->hasher()->checkPassword($password, $hash));
     }
 
-    /**
-     * @dataProvider bcryptHashes
-     */
+    #[DataProvider('bcryptHashes')]
     public function testBcryptHashesSucceed(string $password, string $hash)
     {
         $this->assertTrue($this->hasher()->checkPassword($password, $hash));
     }
 
-    /**
-     * @dataProvider argon2IHashes
-     */
+    #[DataProvider('argon2IHashes')]
     public function testArgon2IHashesSucceed(string $password, string $hash)
     {
         if (!defined('PASSWORD_ARGON2I')) {
@@ -59,9 +54,7 @@ class PasswordHasherTest extends TestCase
         $this->assertTrue($this->hasher()->checkPassword($password, $hash));
     }
 
-    /**
-     * @dataProvider argon2IDHashes
-     */
+    #[DataProvider('argon2IDHashes')]
     public function testArgon2IDHashesSucceed(string $password, string $hash)
     {
         if (!defined('PASSWORD_ARGON2ID')) {
@@ -71,17 +64,13 @@ class PasswordHasherTest extends TestCase
         $this->assertTrue($this->hasher()->checkPassword($password, $hash));
     }
 
-    /**
-     * @dataProvider portableHashes
-     */
+    #[DataProvider('portableHashes')]
     public function testPortableRehash(string $password, string $hash)
     {
         $this->assertTrue($this->hasher()->needsRehash($hash));
     }
 
-    /**
-     * @dataProvider bcryptHashes
-     */
+    #[DataProvider('bcryptHashes')]
     public function testBcryptRehash(string $password, string $hash)
     {
         [, $cost,] = explode('$', $hash);
@@ -97,16 +86,14 @@ class PasswordHasherTest extends TestCase
         $this->assertTrue($this->hasher(PASSWORD_ARGON2I)->needsRehash($hash));
     }
 
-    /**
-     * @dataProvider argon2IHashes
-     */
+    #[DataProvider('argon2IHashes')]
     public function testArgonPasswordRehash(string $password, string $hash)
     {
         $this->assertFalse($this->hasher(PASSWORD_ARGON2I)->needsRehash($hash));
         $this->assertTrue($this->hasher(PASSWORD_BCRYPT)->needsRehash($hash));
     }
 
-    private function testPasswords(): array
+    private static function testPasswords(): array
     {
         return [
             'test' => [
@@ -137,40 +124,40 @@ class PasswordHasherTest extends TestCase
     }
 
 
-    public function portableHashes(): iterable
+    public static function portableHashes(): iterable
     {
-        foreach ($this->testPasswords() as $password => $hashes) {
+        foreach (static::testPasswords() as $password => $hashes) {
             yield [$password, $hashes[0]];
         }
 
         $hasher = new PasswordHash(5, true);
-        foreach (array_keys($this->testPasswords()) as $password) {
+        foreach (array_keys(static::testPasswords()) as $password) {
             yield [$password, $hasher->HashPassword($password)];
         }
     }
 
-    public function bcryptHashes(): iterable
+    public static function bcryptHashes(): iterable
     {
-        foreach ($this->testPasswords() as $password => $hashes) {
+        foreach (self::testPasswords() as $password => $hashes) {
             yield [$password, $hashes[1]];
         }
 
         $hasher = new PasswordHash(5, false);
-        foreach (array_keys($this->testPasswords()) as $password) {
+        foreach (array_keys(static::testPasswords()) as $password) {
             yield [$password, $hasher->HashPassword($password)];
         }
     }
 
-    public function argon2IHashes(): iterable
+    public static function argon2IHashes(): iterable
     {
-        foreach ($this->testPasswords() as $password => $hashes) {
+        foreach (self::testPasswords() as $password => $hashes) {
             yield [$password, $hashes[2]];
         }
     }
 
-    public function argon2IDHashes(): iterable
+    public static function argon2IDHashes(): iterable
     {
-        foreach ($this->testPasswords() as $password => $hashes) {
+        foreach (self::testPasswords() as $password => $hashes) {
             yield [$password, $hashes[3]];
         }
     }

@@ -73,9 +73,10 @@ abstract class ConcreteDatabaseTestCase extends TestCase
     {
         Cache::disableAll();
         // Make sure tables are imported
-        $testCase = new static();
+        $testCase = new static('Tables Imported');
         $testCase->importTables();
         $testCase->importMetadatas();
+
         // Call parent setup
         parent::setUpBeforeClass();
     }
@@ -89,12 +90,11 @@ abstract class ConcreteDatabaseTestCase extends TestCase
     /**
      * Tear down after class has completed.
      */
-    public static function TearDownAfterClass():void
+    public static function tearDownAfterClass():void
     {
         Cache::enableAll();
         // Make sure tables are removed
-        $testCase = new static();
-        $testCase->removeTables();
+        self::removeTables();
 
         // Call parent teardown
         parent::tearDownAfterClass();
@@ -112,7 +112,7 @@ abstract class ConcreteDatabaseTestCase extends TestCase
      *
      * @return \Concrete\Core\Database\Connection\Connection
      */
-    protected function connection()
+    protected static function connection()
     {
         if (!static::$connection) {
             static::$connection = Core::make('database')->connection('ccm_test');
@@ -182,9 +182,12 @@ abstract class ConcreteDatabaseTestCase extends TestCase
     /**
      * Remove all existing tables.
      */
-    protected function removeTables()
+    protected static function removeTables()
     {
-        $connection = $this->connection();
+        $connection = self::connection();
+        if (!$connection) {
+            return;
+        }
 
         // Get all existing tables
         $tables = $connection->query('show tables')->fetchAllAssociative();

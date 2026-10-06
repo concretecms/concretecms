@@ -3,6 +3,7 @@
 namespace Concrete\Tests\Block;
 
 use Concrete\TestHelpers\Page\PageTestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class ContentPageTranslateTest extends PageTestCase
 {
@@ -26,11 +27,10 @@ class ContentPageTranslateTest extends PageTestCase
     /**
      * This is taking data OUT of the database and sending it into the page.
      *
-     *  @dataProvider contentsFrom
-     *
      * @param mixed $from
      * @param mixed $to
      */
+    #[DataProvider('contentsFrom')]
     public function testFrom($from, $to)
     {
         self::createPage('Awesome');
@@ -39,7 +39,7 @@ class ContentPageTranslateTest extends PageTestCase
         $this->assertEquals($to, $translated);
     }
 
-    public function contentsFrom()
+    public static function contentsFrom()
     {
         \Core::forgetInstance('url/canonical');
 

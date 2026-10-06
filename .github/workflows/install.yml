@@ -12,8 +12,8 @@ jobs:
     strategy:
       matrix:
         php-version:
-          - "7.4"
           - "8.2"
+          - "8.3"
         starting-point:
           - atomik_full
     steps:
