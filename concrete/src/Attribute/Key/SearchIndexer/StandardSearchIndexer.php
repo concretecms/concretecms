@@ -279,6 +279,8 @@ class StandardSearchIndexer implements SearchIndexerInterface
             $columnValues,
             $primaries
         );
+
+        return true;
     }
 
     /**
