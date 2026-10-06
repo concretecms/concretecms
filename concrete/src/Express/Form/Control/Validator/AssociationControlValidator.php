@@ -27,7 +27,7 @@ class AssociationControlValidator implements ValidatorInterface
                 /**
                  * @var AssociationControl
                  */
-                $this->errorList->add(t('You must select a valid %s', $control->getAssociation()->getTargetEntity()->getName()));
+                $this->errorList->add(t('You must select a valid %s', $control->getAssociation()->getDisplayName('text')));
             }
         }
 

@@ -27,6 +27,14 @@ $token = $app->make(Token::class);
     <?php echo $token->output() ?>
 
     <div class="form-group">
+        <?= $form->label('name', t('Name')) ?>
+        <?= $form->text('name', $association->getName(), ['maxlength' => 255]) ?>
+        <div class="form-text">
+            <?= t('If empty, the name of the target object is used.') ?>
+        </div>
+    </div>
+
+    <div class="form-group">
         <?php echo $form->label('target_property_name', t('Target Property Name')) ?>
         <?php echo $form->text('target_property_name', $association->getTargetPropertyName()) ?>
     </div>

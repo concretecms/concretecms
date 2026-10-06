@@ -26,7 +26,7 @@ foreach ($attributes as $value) {
     }
 }
 foreach ($associations as $association) {
-    $submittedData .= $association->getAssociation()->getTargetEntity()->getEntityDisplayName() .  ":\r\n";
+    $submittedData .= $association->getAssociation()->getDisplayName('text') .  ":\r\n";
     $selectedEntries = $association->getSelectedEntries();
     foreach ($selectedEntries as $selectedEntry) {
         $submittedData .= $selectedEntry->getLabel() . "\r\n";

@@ -83,6 +83,19 @@ $token = $app->make(Token::class);
     <?php echo $formatter->getDisplayName() ?>
 </h3>
 
+<?php
+if ($association->getName() !== '') {
+    ?>
+    <h4>
+        <?= t('Name') ?>
+    </h4>
+    <p>
+        <?= h($association->getName()) ?>
+    </p>
+    <?php
+}
+?>
+
 <h4>
     <?php echo t('Type') ?>
 </h4>

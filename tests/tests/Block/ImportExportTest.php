@@ -927,6 +927,7 @@ class ImportExportTest extends PageTestCase
         $samples['entity2']->setEntityResultsNodeId(0); // ?
         $em->persist($samples['entity2']);
         $associator->addOneToMany($samples['entity1'], $samples['entity2']);
+        $samples['entity1']->getAssociations()->first()->setName('Example Association #1');
         $em->flush();
         $samples['association1id'] = $samples['entity1']->getAssociations()->first()->getId();
         self::$expressSamples = $samples;
