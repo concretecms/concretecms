@@ -357,7 +357,7 @@ echo $userInterface->tabs([
                 <?php echo $form->label('', t('Location')); ?>
 
                 <div class="form-check">
-                    <?php echo $form->radio("cParentID", 0, $cParentID, ["id" => "cEverywhereField"]); ?>
+                    <?php echo $form->radio("cParentID", 'EVERYWHERE', (!$cThis && !$cThisParent && !$isOtherPage) ? 'EVERYWHERE' : false, ["id" => "cEverywhereField"]); ?>
                     <?php echo $form->label("cEverywhereField", t('Everywhere'), ["class" => "form-check-label"]); ?>
                 </div>
 

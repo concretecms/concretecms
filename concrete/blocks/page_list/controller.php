@@ -822,7 +822,11 @@ class Controller extends BlockController implements UsesFeatureInterface
         if (!$fromCIF) {
             $args['cThis'] = ($args['cParentID'] === $this->cID) ? '1' : '0';
             $args['cThisParent'] = ($args['cParentID'] === $this->cPID) ? '1' : '0';
-            $args['cParentID'] = ($args['cParentID'] === 'OTHER') ? (empty($args['cParentIDValue']) ? null : $args['cParentIDValue']) : $args['cParentID'];
+            if ($args['cParentID'] === 'EVERYWHERE') {
+                $args['cParentID'] = 0;
+            } elseif ($args['cParentID'] === 'OTHER') {
+                $args['cParentID'] = empty($args['cParentIDValue']) ? null : $args['cParentIDValue'];
+            }
             if (!$args['cParentID']) {
                 $args['cParentID'] = 0;
             }
