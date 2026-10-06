@@ -6,9 +6,11 @@ use Concrete\Core\Application\Application;
 use Concrete\Core\Application\ApplicationAwareInterface;
 use Concrete\Core\Application\ApplicationAwareTrait;
 use Concrete\Core\Asset\AssetList;
+use Concrete\Core\Error\ErrorList\ErrorList;
 use Concrete\Core\File\Type\TypeList;
 use Concrete\Core\Foundation\ClassAutoloader;
 use Concrete\Core\Http\Request;
+use Concrete\Core\Http\Traits\AcceptsJsonTrait;
 use Concrete\Core\Routing\RedirectResponse;
 use Concrete\Core\Routing\SystemRouteList;
 use Concrete\Core\Routing\Router;
@@ -21,6 +23,7 @@ use Concrete\Core\Page\Theme\ThemeRouteCollection;
 class DefaultBooter implements BootInterface, ApplicationAwareInterface
 {
     use ApplicationAwareTrait;
+    use AcceptsJsonTrait;
 
     /**
      * Boot up
@@ -463,6 +466,12 @@ class DefaultBooter implements BootInterface, ApplicationAwareInterface
                 && $request->getPath() != '/install'
                 && !$request->matches('/ccm/assets/localization/*')
             ) {
+                if (self::requestAcceptsJson($request)) {
+                    $errors = new ErrorList();
+                    $errors->add(t('This site has not been installed yet.'));
+
+                    return $errors->createResponse(Response::HTTP_SERVICE_UNAVAILABLE);
+                }
                 $manager = $app->make('Concrete\Core\Url\Resolver\Manager\ResolverManager');
                 $response = new RedirectResponse($manager->resolve(['install']));
 

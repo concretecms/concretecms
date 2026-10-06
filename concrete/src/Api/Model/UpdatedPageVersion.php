@@ -19,7 +19,7 @@ class UpdatedPageVersion
     private $is_approved;
 
     /**
-     * @OA\Property(type="date", title="Publish end date")
+     * @OA\Property(type="date", title="Version publish end date")
      *
      * @var string
      */

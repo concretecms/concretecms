@@ -1,27 +1,39 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Concrete\Tests\Controller\SinglePage;
 
-use Concrete\Core\Authentication\AuthenticationType;
 use Concrete\Core\Attribute\Key\Category;
+use Concrete\Core\Authentication\AuthenticationType;
 use Concrete\Core\Encryption\PasswordHasher;
 use Concrete\Core\Entity\Permission\IpAccessControlCategory;
 use Concrete\Core\Http\Request;
 use Concrete\Core\Http\ServerInterface;
 use Concrete\Core\Page\Single as SinglePage;
 use Concrete\Core\Permission\Access\Access;
-use Concrete\Core\Permission\Access\Entity\Type as AccessEntityType;
 use Concrete\Core\Permission\Access\Entity\GroupEntity as GroupPermissionAccessEntity;
+use Concrete\Core\Permission\Access\Entity\Type as AccessEntityType;
 use Concrete\Core\Permission\Category as PermissionCategory;
 use Concrete\Core\Permission\Key\Key as PermissionKey;
-use Concrete\Core\Validation\CSRF\Token as CSRFToken;
+use Concrete\Core\User\Group\Group;
+use Concrete\Core\User\User;
 use Concrete\Core\User\UserInfo;
+use Concrete\Core\Validation\CSRF\Token as CSRFToken;
 use Concrete\TestHelpers\Page\PageTestCase;
-use Core;
 use Doctrine\ORM\EntityManagerInterface;
-use Group;
+
+defined('C5_EXECUTE') or die('Access Denied.');
 
 class LoginTest extends PageTestCase
 {
+    /**
+     * The request instance before the test is run.
+     *
+     * @var \Concrete\Core\Http\Request
+     */
+    private $originalRequest;
+
     /**
      * {@inheritdoc}
      *
@@ -84,7 +96,7 @@ class LoginTest extends PageTestCase
         ]);
     }
 
-    public static function setUpBeforeClass():void
+    public static function setUpBeforeClass(): void
     {
         parent::setUpBeforeClass();
         Category::add('user');
@@ -112,7 +124,7 @@ class LoginTest extends PageTestCase
         $pa->addListItem(GroupPermissionAccessEntity::getOrCreate($guest));
         $pt->assignPermissionAccess($pa);
 
-        $em = Core::make(EntityManagerInterface::class);
+        $em = app(EntityManagerInterface::class);
         $category = new IpAccessControlCategory();
         $category
             ->setHandle('failed_login')
@@ -127,19 +139,39 @@ class LoginTest extends PageTestCase
         $em->persist($category);
     }
 
-    public function testConcreteLogin()
+    public function setUp(): void
     {
+        parent::setUp();
+        $this->originalRequest = Request::getInstance();
+    }
 
-        $this->markTestSkipped('LoginTest skipped because it breaks subsequent tests that are expecting users table to be empty.');
+    public function tearDown(): void
+    {
+        $app = app();
+        if ($app->resolved('session')) {
+            $app->make('session')->clear();
+        }
+        $app->forgetInstance(User::class);
+        Request::setInstance($this->originalRequest);
+        parent::tearDown();
+    }
 
+    /**
+     * Logging a user in makes Request::overrideGlobals() replace the PHP superglobals:
+     * let PHPUnit restore them, so that they don't leak into the other test cases.
+     *
+     * @backupGlobals enabled
+     */
+    public function testConcreteLogin(): void
+    {
         $password = 'Sup3r$S3cur3#P4ss';
-        $hasher = Core::make(PasswordHasher::class);
-        $admin = UserInfo::addSuperUser(
+        $hasher = app(PasswordHasher::class);
+        UserInfo::addSuperUser(
             $hasher->hashPassword($password),
             'admin@example.org'
         );
 
-        $token = Core::make('helper/validation/token')->generate('login_concrete');
+        $token = app('helper/validation/token')->generate('login_concrete');
         $request = Request::create(
             'http://www.dummyco.com/login/authenticate/concrete',
             'POST',
@@ -157,13 +189,13 @@ class LoginTest extends PageTestCase
         // framework...
         $_SERVER['REQUEST_METHOD'] = 'POST';
 
-        $server = Core::make(ServerInterface::class);
+        $server = app(ServerInterface::class);
         $response = $server->handleRequest($request);
 
-        $this->assertEquals($response->getStatusCode(), 302);
-        $this->assertEquals(
-            $response->headers->get('Location'),
-            'http://www.dummyco.com/path/to/server/index.php/login/login_complete'
+        static::assertEquals(302, $response->getStatusCode());
+        static::assertEquals(
+            'http://www.dummyco.com/path/to/server/index.php/login/login_complete',
+            $response->headers->get('Location')
         );
 
         // Create the after redirect request
@@ -183,16 +215,14 @@ class LoginTest extends PageTestCase
 
         $response = $server->handleRequest($request);
 
-        $this->assertEquals($response->getStatusCode(), 302);
-        $this->assertEquals(
-            $response->headers->get('Location'),
-            'http://www.dummyco.com/path/to/server/index.php'
+        static::assertEquals(302, $response->getStatusCode());
+        static::assertEquals(
+            'http://www.dummyco.com/path/to/server/index.php',
+            $response->headers->get('Location')
         );
 
-        // Ensure that the "Clear-Site-Data" header is sent
-        $this->assertEquals(
-            $response->headers->get('Clear-Site-Data'),
-            '"cache"'
-        );
+        // The "Clear-Site-Data" header is intentionally not sent: see the comments
+        // in Concrete\Controller\SinglePage\Login::login_complete()
+        static::assertNull($response->headers->get('Clear-Site-Data'));
     }
 }

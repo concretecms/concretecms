@@ -385,7 +385,7 @@ class Controller extends BlockController implements UsesFeatureInterface
             'postTo_cID' => null,
             'resultsURL' => '',
             'search_all' => 0,
-            'allow_users_options' => 0,
+            'allow_user_options' => 0,
         ];
         switch ($data['baseSearchPath']) {
             case 'THIS':
@@ -458,7 +458,7 @@ class Controller extends BlockController implements UsesFeatureInterface
         } elseif ((string) ($args['resultsURL'] ?? '') !== '') {
             $args['resultsPageKind'] = 'URL';
         }
-        $args['allowUserOptions'] = empty($args['allowUserOptions']) ? 0 : 'ALLOW';
+        $args['allowUserOptions'] = empty($args['allow_user_options']) ? 0 : 'ALLOW';
 
         return $args;
     }

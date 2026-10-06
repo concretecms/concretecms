@@ -27,6 +27,7 @@ jobs:
           - 3306:3306/tcp
         options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
     strategy:
+      fail-fast: false
       matrix:
         php-version:
           - "7.3"
@@ -58,6 +59,10 @@ jobs:
             dependencies: "highest"
 
     steps:
+      - name: "Install system packages"
+        if: startsWith(matrix.operating-system, 'ubuntu')
+        run: sudo apt-get install -qqy --no-install-recommends gettext || true
+
       - name: Enable code coverage
         if: matrix.code-coverage && github.repository_owner == 'concretecms'
         run: printf 'CODE_COVERAGE=pcov\n' >> "$GITHUB_ENV"

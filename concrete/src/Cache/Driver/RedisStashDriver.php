@@ -286,6 +286,7 @@ class RedisStashDriver extends AbstractDriver
                     } else {
                         $keys = $this->redis->keys('*');
                     }
+                    $keys = array_values(array_filter($keys, 'is_string'));
 
                     // Predis doesnt give us an easy way to remove the prefix as keys returns all keys with prefixes
                     foreach ($keys as $key) {
@@ -297,6 +298,7 @@ class RedisStashDriver extends AbstractDriver
 
                 } else {
                     $keys = $this->redis->keys('*');
+                    $keys = array_values(array_filter($keys, 'is_string'));
                     // Remove the prefix
                     $this->redis->setOption(\Redis::OPT_PREFIX, null);
                     // Delete all keys

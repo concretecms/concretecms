@@ -77,7 +77,9 @@ class ServiceTest extends TestCase
         $properties = $reflection->getProperties();
         foreach ($properties as $property) {
             if ($property->isProtected() || $property->isPrivate()) {
-                $property->setAccessible(true);
+                if (PHP_VERSION_ID < 80100) {
+                    $property->setAccessible(true);
+                }
                 $allProperties[$property->getName()] = $property->getValue($this->service);
             }
         }

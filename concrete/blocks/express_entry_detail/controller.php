@@ -83,7 +83,7 @@ class Controller extends BlockController implements UsesFeatureInterface
     public function add()
     {
         $this->loadData();
-        $this->set('entryMode', 'L');
+        $this->set('entryMode', '');
         $this->set('exEntityID', null);
         $this->set('entity', null);
         $this->set('exEntryAttributeKeyHandle', null);

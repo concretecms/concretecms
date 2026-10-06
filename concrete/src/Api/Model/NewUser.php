@@ -3,7 +3,11 @@
 namespace Concrete\Core\Api\Model;
 
 /**
- * @OA\Schema(title="NewUser model", description="A Concrete User")
+ * @OA\Schema(
+ *     title="NewUser model",
+ *     description="A Concrete User",
+ *     required={"username", "email", "password"}
+ * )
  */
 class NewUser
 {

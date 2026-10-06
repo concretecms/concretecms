@@ -121,7 +121,9 @@ class PackageRepositoryTest extends TestCase
 
         $repository = $this->repository($baseUri, $paths);
         $method = new \ReflectionMethod($repository, 'requestFor');
-        $method->setAccessible(true);
+        if (PHP_VERSION_ID < 80100) {
+            $method->setAccessible(true);
+        }
 
         $request = $method->invoke($repository, 'FOO', 'fake_key', 'foo', 'baz');
         assert($request instanceof Request);
@@ -144,7 +146,9 @@ class PackageRepositoryTest extends TestCase
     {
         $repository = $this->repository();
         $method = new \ReflectionMethod($repository, 'authenticate');
-        $method->setAccessible(true);
+        if (PHP_VERSION_ID < 80100) {
+            $method->setAccessible(true);
+        }
 
         $connection = new Connection('public', 'private');
 

@@ -307,18 +307,20 @@ class PageView extends View
         $stylesheet = null;
         if (isset($this->customPreviewRequest)) {
             if ($this->customPreviewRequest instanceof SkinPreviewRequest) {
-                $skinIdentifier = $this->customPreviewRequest->getSkin()->getIdentifier();
-                $skin = $this->themeObject->getSkinByIdentifier($skinIdentifier);
-                $stylesheet = $skin->getStylesheet();
+                $requestedSkin = $this->customPreviewRequest->getSkin();
+                if ($requestedSkin !== null) {
+                    $skin = $this->themeObject->getSkinByIdentifier($requestedSkin->getIdentifier());
+                    $stylesheet = ($skin ?? $requestedSkin)->getStylesheet();
+                }
             }
             if ($this->customPreviewRequest instanceof ThemeCustomizerRequest) {
                 $customStyles = $this->customPreviewRequest->getCustomCss();
             }
         } else {
             $skinIdentifier = $this->c->getPageSkinIdentifier(false);
-            if ($skinIdentifier) {
-                // The page has a custom skin identifier
-                $skin = $this->themeObject->getSkinByIdentifier($skinIdentifier);
+            // the skin attached to the page may not be one of the skins of its current theme
+            $skin = $skinIdentifier ? $this->themeObject->getSkinByIdentifier($skinIdentifier) : null;
+            if ($skin !== null) {
                 $stylesheet = $skin->getStylesheet();
             } else {
                 $site = $this->c->getSite();

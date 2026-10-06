@@ -13,6 +13,24 @@ parameters:
 			path: ../concrete/controllers/dialog/permissions/file_set.php
 
 		-
+			message: '#^Call to an undefined method Concrete\\Core\\Attribute\\Key\\SearchIndexer\\SearchIndexerInterface\:\:clearIndexEntryForAttributeKey\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: ../concrete/src/Attribute/Category/SearchIndexer/StandardSearchIndexer.php
+
+		-
+			message: '#^Method Concrete\\Core\\Attribute\\Key\\SearchIndexer\\StandardSearchIndexer\:\:clearIndexEntryForAttributeKey\(\) should return bool but return statement is missing\.$#'
+			identifier: return.missing
+			count: 1
+			path: ../concrete/src/Attribute/Key/SearchIndexer/StandardSearchIndexer.php
+
+		-
+			message: '#^Parameter \#1 \$key of method Concrete\\Core\\Attribute\\Key\\SearchIndexer\\StandardSearchIndexer\:\:getIndexEntryColumn\(\) expects Concrete\\Core\\Entity\\Attribute\\Key\\Key, Concrete\\Core\\Attribute\\AttributeKeyInterface given\.$#'
+			identifier: argument.type
+			count: 2
+			path: ../concrete/src/Attribute/Key/SearchIndexer/StandardSearchIndexer.php
+
+		-
 			message: '#^Parameter \#1 \$func of method Doctrine\\DBAL\\Connection\:\:transactional\(\) expects Closure\(Doctrine\\DBAL\\Connection\)\: void, Closure\(Concrete\\Core\\Database\\Connection\\Connection\)\: void given\.$#'
 			identifier: argument.type
 			count: 1
@@ -119,3 +137,9 @@ parameters:
 			identifier: argument.type
 			count: 1
 			path: ../concrete/src/Notification/View/StandardListView.php
+
+		-
+			message: '#^Call to an undefined method Concrete\\Core\\Attribute\\Category\\SearchIndexer\\SearchIndexerInterface\:\:clearIndexEntryForAttributeKey\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: ../concrete/src/Page/Command/ReindexPageCommandHandler.php

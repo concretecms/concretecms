@@ -2139,12 +2139,17 @@ class Page extends Collection implements CategoryMemberInterface,
     /**
      * Set the theme skin of this page.
      *
-     * @param SkinInterface $skin
+     * @param \Concrete\Core\StyleCustomizer\Skin\SkinInterface|null $skin NULL to let the page use the skin of the site
      */
-    public function setThemeSkin(SkinInterface $skin)
+    public function setThemeSkin(?SkinInterface $skin)
     {
+        $skinIdentifier = $skin === null ? null : $skin->getIdentifier();
         $db = Database::connection();
-        $db->executeQuery('update CollectionVersions set pThemeSkinIdentifier = ? where cID = ? and cvID = ?', [$skin->getIdentifier(), $this->cID, $this->vObj->getVersionID()]);
+        $db->executeQuery(
+            'update CollectionVersions set pThemeSkinIdentifier = ? where cID = ? and cvID = ?',
+            [$skinIdentifier, $this->cID, $this->vObj->getVersionID()]
+        );
+        $this->vObj->pThemeSkinIdentifier = $skinIdentifier;
     }
 
     /**

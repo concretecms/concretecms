@@ -10,8 +10,8 @@ on:
 permissions: {}
 
 env:
-  # The repository that extracts the concrete directory
-  SPLITTER_REPOSITORY: concretecms/concretecms-core
+  # The repository that extracts the concrete directory (it has the same owner as this repository)
+  SPLITTER_REPOSITORY_NAME: concretecms-core
 
 jobs:
   notify:
@@ -19,15 +19,17 @@ jobs:
     if: github.repository == 'concretecms/concretecms'
     runs-on: ubuntu-latest
     steps:
-      - name: Start the split
+      - name: Check if the split is required
+        id: check
         env:
-          GH_TOKEN: ${{ secrets.SPLITTER_TOKEN }}
+          SPLITTER_REPOSITORY: ${{ github.repository_owner }}/${{ env.SPLITTER_REPOSITORY_NAME }}
           REF_TYPE: ${{ github.event_name == 'delete' && github.event.ref_type || github.ref_type }}
           REF_NAME: ${{ github.event_name == 'delete' && github.event.ref || github.ref_name }}
         run: |
           # Check if the splitter processes the branch or the tag.
           # The branches and the tags to be processed are defined in the workflow of the splitter:
           # if we can't read them, we start the split anyway.
+          # The build-assets.yml workflow contains a copy of this code: keep them aligned.
           isSplitRequired() {
             if ! curl --silent --show-error --fail --location --retry 3 --output split.yml "https://raw.githubusercontent.com/$SPLITTER_REPOSITORY/HEAD/.github/workflows/split.yml"; then
               echo '::warning::Failed to download the workflow of the splitter'
@@ -77,12 +79,24 @@ jobs:
             fi
             return 0
           }
-          if ! isSplitRequired; then
-            echo "The splitter doesn't process the $REF_TYPE $REF_NAME: the split is not required"
-          elif [ -z "$GH_TOKEN" ]; then
-            # The secrets aren't available in the runs started by Dependabot
-            echo '::error::The SPLITTER_TOKEN secret is not set'
-            exit 1
+          if isSplitRequired; then
+            echo 'required=yes' >>"$GITHUB_OUTPUT"
           else
-            gh workflow run split.yml --repo "$SPLITTER_REPOSITORY"
+            echo "The splitter doesn't process the $REF_TYPE $REF_NAME: the split is not required"
           fi
+      - name: Create token
+        id: token
+        if: steps.check.outputs.required == 'yes'
+        uses: actions/create-github-app-token@v3
+        with:
+          client-id: ${{ secrets.SPLITTER_APP_CLIENT_ID }}
+          private-key: ${{ secrets.SPLITTER_APP_PRIVATE_KEY }}
+          owner: ${{ github.repository_owner }}
+          repositories: ${{ env.SPLITTER_REPOSITORY_NAME }}
+          permission-actions: write
+      - name: Start the split
+        if: steps.check.outputs.required == 'yes'
+        env:
+          GH_TOKEN: ${{ steps.token.outputs.token }}
+          SPLITTER_REPOSITORY: ${{ github.repository_owner }}/${{ env.SPLITTER_REPOSITORY_NAME }}
+        run: gh workflow run split.yml --repo "$SPLITTER_REPOSITORY"

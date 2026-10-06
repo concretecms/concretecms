@@ -54,7 +54,21 @@ class ColumnTest extends TestCase
     public function testArrayCallbackInstantiatesForInstanceMethod()
     {
         $column = new Column('someKey', 'Some Name', [ColumnTestCallbackFixture::class, 'renderInstance']);
-        $this->assertSame('instance:x', $column->getColumnValue('x'));
+        if (PHP_VERSION_ID < 80000) {
+            // Let's ignore the expected deprecation warning:
+            // call_user_func() expects parameter 1 to be a valid callback, non-static method
+            // Concrete\Tests\Search\Column\ColumnTestCallbackFixture::renderInstance()
+            // should not be called statically
+            set_error_handler(static function() {}, E_DEPRECATED);
+            try {
+                $columnValue = $column->getColumnValue('x');
+            } finally {
+                restore_error_handler();
+            }
+        } else {
+            $columnValue = $column->getColumnValue('x');
+        }
+        $this->assertSame('instance:x', $columnValue);
     }
 }
 

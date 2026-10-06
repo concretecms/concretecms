@@ -20,6 +20,27 @@
 
     <script type="text/javascript">
         $(function() {
+            var submitting = false;
+            $('form[data-dialog-form=add-file-folder-node]').on('form-pre-serialize', function(e, form, options, veto) {
+                if (submitting) {
+                    veto.veto = true;
+                    return;
+                }
+
+                submitting = true;
+                var success = options.success;
+                var error = options.error;
+                options.success = function(response) {
+                    if (response.error) {
+                        submitting = false;
+                    }
+                    return success.apply(this, arguments);
+                };
+                options.error = function() {
+                    submitting = false;
+                    return error.apply(this, arguments);
+                };
+            });
             _.defer(function() {
                 $('input[name=fileFolderName]').focus();
             });

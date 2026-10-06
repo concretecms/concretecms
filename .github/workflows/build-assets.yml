@@ -4,9 +4,14 @@ on:
   pull_request:
   push:
     branches:
-      - "**"      
+      - "**"
+      - "!auto-assets/**"
     tags-ignore:
       - "**"
+
+concurrency:
+  group: build-assets-${{ github.event_name }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   build-assets:
@@ -54,33 +59,84 @@ jobs:
         run: |
           cd "${{ github.workspace }}/build"
           npm run-script prod
-      - name: Check if we need to create a pull request
+      - name: Check if we need to create or close a pull request
         if: matrix.update-repo == 'yes'
         id: pr-test
+        env:
+          SPLITTER_REPOSITORY: concretecms/concretecms-core
+          REF_NAME: ${{ github.ref_name }}
         run: |
+          # Same check as in notify-splitter.yml (keep them aligned), but here an unreadable list means no.
+          isSplitBranch() (
+            cd "$RUNNER_TEMP"
+            if ! curl --silent --show-error --fail --location --retry 3 --output split.yml "https://raw.githubusercontent.com/$SPLITTER_REPOSITORY/HEAD/.github/workflows/split.yml"; then
+              echo '::warning::Failed to download the workflow of the splitter'
+              return 1
+            fi
+            for list in BLACKLIST WHITELIST; do
+              if ! items="$(yq ".env.BRANCH_${list} // \"\"" split.yml)"; then
+                echo "::warning::Failed to read the BRANCH_${list} of the splitter"
+                return 1
+              fi
+              printf '%s\n' "$items" | tr -s '[:space:]' '\n' >items.txt
+              sed -n -e 's/^rx://p' items.txt >"$list.txt"
+              # Items without the rx: prefix are literal names
+              sed -e '/^rx:/d' -e '/^$/d' -e 's/[][(){}.*+?^$|\\]/\\&/g' items.txt >>"$list.txt"
+            done
+            if [ -s BLACKLIST.txt ]; then
+              rc=0
+              printf '%s\n' "$REF_NAME" | grep -Eqx -f BLACKLIST.txt || rc=$?
+              case $rc in
+                0) return 1 ;;
+                1) ;;
+                *)
+                  echo '::warning::Failed to check the BRANCH_BLACKLIST of the splitter'
+                  return 1
+                  ;;
+              esac
+            fi
+            if [ -s WHITELIST.txt ]; then
+              rc=0
+              printf '%s\n' "$REF_NAME" | grep -Eqx -f WHITELIST.txt || rc=$?
+              case $rc in
+                0) ;;
+                1) return 1 ;;
+                *)
+                  echo '::warning::Failed to check the BRANCH_WHITELIST of the splitter'
+                  return 1
+                  ;;
+              esac
+            fi
+            return 0
+          )
           cd '${{ github.workspace }}'
-          if git diff --exit-code --name-status; then
-            echo "We won't create a pull request because no change has been detected"
-          elif [ '${{ github.event_name }}' != 'push' ]; then
+          if [ '${{ github.event_name }}' != 'push' ]; then
             echo "We won't create a pull request because it's a '${{ github.event_name }}' operation and not a 'push' one"
           elif [ '${{ github.repository }}' != 'concretecms/concretecms' ]; then
             echo "We won't create a pull request because the current repository is '${{ github.repository }}' and not 'concretecms/concretecms'"
+          elif ! isSplitBranch; then
+            echo "We won't create a pull request because the splitter doesn't process the branch $REF_NAME"
           else
-            echo 'Changes detected and pull request needed!'
+            if git diff --exit-code --name-status; then
+              # Without changes the action closes the pull request that's already open (if any)
+              echo 'No change has been detected'
+            else
+              echo 'Changes detected and pull request needed!'
+            fi
             echo "result=yes" >>"$GITHUB_OUTPUT"
-            echo "branch-name=auto-assets/$(date --utc +%Y%m%d-%H%M%S)" >>"$GITHUB_OUTPUT"
+            # Fixed name: an already open pull request gets updated
+            echo "branch-name=auto-assets/$REF_NAME" >>"$GITHUB_OUTPUT"
           fi
-      - name: Create pull request
+      - name: Create or close pull request
         id: pr-create
         if: steps.pr-test.outputs.result == 'yes'
         uses: peter-evans/create-pull-request@v8
         with:
           commit-message: Automatic assets rebuilding
-          committer: GitHub Action <noreply@concretecms.org>
-          author: GitHub Action <noreply@concretecms.org>
           branch: '${{ steps.pr-test.outputs.branch-name }}'
+          delete-branch: true
           title: "Automatic assets rebuilding for ${{ github.ref_name }}"
           body: "Created by ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
       - name: Pull request info
         if: steps.pr-test.outputs.result == 'yes'
-        run: printf 'Pull request created:\n%s' "${{ steps.pr-create.outputs.pull-request-url }}"
+        run: printf 'Pull request %s:\n%s' "${{ steps.pr-create.outputs.pull-request-operation }}" "${{ steps.pr-create.outputs.pull-request-url }}"
