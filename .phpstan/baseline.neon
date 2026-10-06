@@ -19,12 +19,6 @@ parameters:
 			path: ../concrete/src/Attribute/Category/SearchIndexer/StandardSearchIndexer.php
 
 		-
-			message: '#^Method Concrete\\Core\\Attribute\\Key\\SearchIndexer\\StandardSearchIndexer\:\:clearIndexEntryForAttributeKey\(\) should return bool but return statement is missing\.$#'
-			identifier: return.missing
-			count: 1
-			path: ../concrete/src/Attribute/Key/SearchIndexer/StandardSearchIndexer.php
-
-		-
 			message: '#^Parameter \#1 \$key of method Concrete\\Core\\Attribute\\Key\\SearchIndexer\\StandardSearchIndexer\:\:getIndexEntryColumn\(\) expects Concrete\\Core\\Entity\\Attribute\\Key\\Key, Concrete\\Core\\Attribute\\AttributeKeyInterface given\.$#'
 			identifier: argument.type
 			count: 2
