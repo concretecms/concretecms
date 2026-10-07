@@ -30,6 +30,29 @@ window.onload = function() {
             SwaggerUIStandalonePreset
         ],
         persistAuthorization: true,
+        requestInterceptor: (request) => {
+            // Avoid having the browser asking for credentials when users submit an invalid Client ID/Client Secret
+            try {
+                const authorization = request.headers?.Authorization;
+                if (typeof authorization === 'string' && authorization.indexOf('Basic ') === 0) {
+                    const body = request.body;
+                    if (typeof body === 'string' && body.indexOf('grant_type=') >= 0) {
+                        const credentials = atob(authorization.substring(6));
+                        const separator = credentials.indexOf(':');
+                        if (separator >= 1) {
+                            delete request.headers.Authorization;
+                            request.body = body
+                                + '&client_id=' + encodeURIComponent(credentials.substring(0, separator))
+                                + '&client_secret=' + encodeURIComponent(credentials.substring(separator + 1))
+                            ;
+                        }
+                    }
+                }
+            } catch (e) {
+                console.error(e);
+            }
+            return request;                
+        },
         oauth2RedirectUrl: <?= json_encode($oauth2RedirectUrl) ?>,
         layout: 'StandaloneLayout',
     });
