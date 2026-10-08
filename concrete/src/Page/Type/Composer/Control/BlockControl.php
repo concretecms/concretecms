@@ -33,6 +33,16 @@ class BlockControl extends Control
         return $this->btID;
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Page\Type\Composer\Control\Control::canPageTypeComposerControlBeAddedMoreThanOnce()
+     */
+    public function canPageTypeComposerControlBeAddedMoreThanOnce(): bool
+    {
+        return true;
+    }
+
     public function export($node)
     {
         $bt = $this->getBlockTypeObject();
