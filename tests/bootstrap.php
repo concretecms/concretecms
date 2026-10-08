@@ -53,11 +53,11 @@ if (CCM_TESTS_MAIN_PROCESS) {
     if ($fs->copyDirectory(DIR_TESTS . '/assets/application', DIR_APPLICATION) !== true) {
         throw new Exception('Failed to copy the test application directory to ' . DIR_APPLICATION);
     }
-    foreach ([
-        'attributes', 'authentication', 'blocks', 'bootstrap', 'controllers', 'elements', 'files/cache', 'files/incoming',
-        'files/tmp', 'images', 'jobs', 'languages', 'mail', 'page_templates', 'single_pages', 'src', 'themes', 'tools',
-    ] as $directory) {
-        $fs->makeDirectory(DIR_APPLICATION . '/' . $directory, 0777, true);
+    foreach ($fs->directories(DIR_BASE . '/' . DIRNAME_APPLICATION) as $directory) {
+        $fs->makeDirectory(DIR_APPLICATION . '/' . basename($directory), 0777, true, true);
+    }
+    foreach (['cache', 'incoming', 'tmp'] as $directory) {
+        $fs->makeDirectory(DIR_FILES_UPLOADED_STANDARD . '/' . $directory, 0777, true, true);
     }
     foreach ($fs->files(DIR_BASE . '/' . DIRNAME_APPLICATION . '/bootstrap') as $file) {
         if (!$fs->copy($file, DIR_APPLICATION . '/bootstrap/' . basename($file))) {
