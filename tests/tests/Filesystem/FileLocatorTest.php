@@ -100,7 +100,7 @@ class FileLocatorTest extends TestCase
         $record = $this->locator->getRecord(DIRNAME_BLOCKS . '/autonav/view.php');
         $this->assertTrue($record->exists());
         $this->assertTrue($record->isOverride());
-        $this->assertEquals(DIR_BASE . '/application/blocks/autonav/view.php', $record->getFile());
+        $this->assertEquals(DIR_APPLICATION . '/blocks/autonav/view.php', $record->getFile());
         $this->assertEquals('/path/to/server/application/blocks/autonav/view.php', $record->getUrl());
     }
 
@@ -135,7 +135,7 @@ class FileLocatorTest extends TestCase
         $this->locator->addLocation(new FileLocator\AllPackagesLocation($packageList, $filesystem));
 
         $record = $this->locator->getRecord(DIRNAME_BLOCKS . '/page_list/templates/fancy_thumbnails/view.php');
-        $this->assertEquals(DIR_BASE . '/packages/thumbnails_pro/blocks/page_list/templates/fancy_thumbnails/view.php', $record->getFile());
+        $this->assertEquals(DIR_PACKAGES . '/thumbnails_pro/blocks/page_list/templates/fancy_thumbnails/view.php', $record->getFile());
         $this->assertEquals('/path/to/server/packages/thumbnails_pro/blocks/page_list/templates/fancy_thumbnails/view.php', $record->getUrl());
     }
 
@@ -184,7 +184,7 @@ class FileLocatorTest extends TestCase
         $this->locator->addLocation(new FileLocator\ThemeLocation($theme));
         $this->locator->setFilesystem($filesystem);
         $record = $this->locator->getRecord(DIRNAME_BLOCKS . '/page_list/templates/fancy_list.php');
-        $this->assertEquals(DIR_BASE . '/packages/brilliant_theme/themes/brilliant/blocks/page_list/templates/fancy_list.php', $record->getFile());
+        $this->assertEquals(DIR_PACKAGES . '/brilliant_theme/themes/brilliant/blocks/page_list/templates/fancy_list.php', $record->getFile());
         $this->assertEquals('/path/to/server/packages/brilliant_theme/themes/brilliant/blocks/page_list/templates/fancy_list.php', $record->getUrl());
         $this->assertTrue($record->exists());
     }
@@ -215,7 +215,7 @@ class FileLocatorTest extends TestCase
         $this->locator->addLocation(new FileLocator\ThemeElementLocation($theme));
         $this->locator->setFilesystem($filesystem);
         $record = $this->locator->getRecord(DIRNAME_ELEMENTS . '/conversation/display.php');
-        $this->assertEquals(DIR_BASE . '/packages/brilliant_theme/themes/brilliant/elements/conversation/display.php', $record->getFile());
+        $this->assertEquals(DIR_PACKAGES . '/brilliant_theme/themes/brilliant/elements/conversation/display.php', $record->getFile());
         $this->assertEquals('/path/to/server/packages/brilliant_theme/themes/brilliant/elements/conversation/display.php', $record->getUrl());
         $this->assertTrue($record->exists());
     }

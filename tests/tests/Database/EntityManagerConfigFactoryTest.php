@@ -64,8 +64,7 @@ class EntityManagerConfigFactoryTest extends TestCase
      */
     public function testGetConfigurationDefaultSettingsForTheApplication()
     {
-        $root = dirname(DIR_BASE_CORE . '../');
-        mkdir($root . '/application/src/Entity', 0777, true);
+        mkdir(DIR_APPLICATION . '/src/Entity', 0777, true);
 
         $entityManagerConfigFactory = $this->app->make('Concrete\Core\Database\EntityManagerConfigFactory');
         $driverChain = $entityManagerConfigFactory->getMetadataDriverImpl();
@@ -88,7 +87,7 @@ class EntityManagerConfigFactoryTest extends TestCase
         $this->assertEquals(DIR_APPLICATION . '/' . DIRNAME_CLASSES . '/' . DIRNAME_ENTITIES,
             $driverPaths[0]);
 
-        rmdir($root . '/application/src/Entity');
+        rmdir(DIR_APPLICATION . '/src/Entity');
     }
 
     public function testGetConfigurationDefaultSettingsForTheApplicationWithLegacyOption()

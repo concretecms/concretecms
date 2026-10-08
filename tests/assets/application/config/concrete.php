@@ -23,7 +23,7 @@ return [
                 // a test case that creates no table has no Logs one to write to
                 'handler' => 'file',
                 'file' => [
-                    'file' => DIR_TESTS . '/logs/tests.log',
+                    'file' => CCM_TESTS_TEMPDIR . '/logs/tests.log',
                 ],
             ],
         ],

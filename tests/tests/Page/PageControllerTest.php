@@ -51,7 +51,7 @@ class PageControllerTest extends PageTestCase
     {
         $page = $this->addPage2();
 
-        $root = realpath(DIR_BASE . '/application');
+        $root = DIR_APPLICATION;
         @mkdir($root . '/' . DIRNAME_CONTROLLERS . '/' . DIRNAME_PAGE_TYPES, 0777, true);
         copy(DIR_TESTS . '/assets/Page/application/alternate.php',
             $root . '/' . DIRNAME_CONTROLLERS . '/' . DIRNAME_PAGE_TYPES . '/alternate.php');
@@ -75,7 +75,7 @@ class PageControllerTest extends PageTestCase
 
     public function testSinglePageControllerOverride()
     {
-        $root = realpath(DIR_BASE_CORE . '/../application');
+        $root = DIR_APPLICATION;
         if (!is_dir($root . '/' . DIRNAME_CONTROLLERS . '/' . DIRNAME_PAGE_CONTROLLERS . '/dashboard/reports')) {
             mkdir($root . '/' . DIRNAME_CONTROLLERS . '/' . DIRNAME_PAGE_CONTROLLERS . '/dashboard/reports', 0777, true);
         }
@@ -109,7 +109,7 @@ class PageControllerTest extends PageTestCase
         $loader = \Concrete\Core\Foundation\ClassLoader::getInstance();
         $loader->registerPackage($pkg);
 
-        $root = realpath(DIR_BASE_CORE . '/../packages');
+        $root = DIR_PACKAGES;
         @mkdir($root . '/awesome_package/' . DIRNAME_CONTROLLERS . '/' . DIRNAME_PAGE_CONTROLLERS . '/testerson', 0777, true);
         copy(DIR_TESTS . '/assets/Page/package/foo.php',
             $root . '/awesome_package/' . DIRNAME_CONTROLLERS . '/' . DIRNAME_PAGE_CONTROLLERS . '/testerson/foo.php');
@@ -138,7 +138,7 @@ class PageControllerTest extends PageTestCase
         $loader = \Concrete\Core\Foundation\ClassLoader::getInstance();
         $loader->registerPackage($pkg);
 
-        $root = realpath(DIR_BASE_CORE . '/../packages');
+        $root = DIR_PACKAGES;
         @mkdir($root . '/awesome_package/' . DIRNAME_CONTROLLERS . '/' . DIRNAME_PAGE_CONTROLLERS . '/testerson', 0777, true);
         copy(DIR_TESTS . '/assets/Page/package/foo.php',
             $root . '/awesome_package/' . DIRNAME_CONTROLLERS . '/' . DIRNAME_PAGE_CONTROLLERS . '/testerson/foo.php');
@@ -161,7 +161,7 @@ class PageControllerTest extends PageTestCase
 
     public function testApplicableSinglePageViewPhp()
     {
-        $root = realpath(DIR_BASE_CORE . '/../application');
+        $root = DIR_APPLICATION;
         @mkdir($root . '/' . DIRNAME_CONTROLLERS . '/' . DIRNAME_PAGE_CONTROLLERS . '/testerson', 0777, true);
         copy(DIR_TESTS . '/assets/Page/application/foo.php',
             $root . '/' . DIRNAME_CONTROLLERS . '/' . DIRNAME_PAGE_CONTROLLERS . '/testerson/foo.php');
@@ -192,7 +192,7 @@ class PageControllerTest extends PageTestCase
 
     public function testApplicableSinglePageViewNoPhp()
     {
-        $root = realpath(DIR_BASE_CORE . '/../application');
+        $root = DIR_APPLICATION;
         @mkdir($root . '/' . DIRNAME_CONTROLLERS . '/' . DIRNAME_PAGE_CONTROLLERS . '/testerson', 0777, true);
         copy(DIR_TESTS . '/assets/Page/application/foo.php',
             $root . '/' . DIRNAME_CONTROLLERS . '/' . DIRNAME_PAGE_CONTROLLERS . '/testerson/foo.php');

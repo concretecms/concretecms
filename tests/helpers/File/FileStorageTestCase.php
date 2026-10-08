@@ -68,7 +68,7 @@ abstract class FileStorageTestCase extends ConcreteDatabaseTestCase
 
     protected static function getStorageDirectory()
     {
-        return str_replace(DIRECTORY_SEPARATOR, '/', __DIR__) . '/files';
+        return CCM_TESTS_TEMPDIR . '/storage';
     }
 
     protected function cleanup()

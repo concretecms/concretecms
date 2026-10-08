@@ -237,7 +237,7 @@ const FILENAME_CONTENT_XML = 'content.xml';
  * ----------------------------------------------------------------------------
  */
 define('DIR_BASE_CORE', str_replace(DIRECTORY_SEPARATOR, '/', realpath(dirname(__FILE__) . '/..')));
-define('DIR_PACKAGES', DIR_BASE . '/packages');
+defined('DIR_PACKAGES') or define('DIR_PACKAGES', DIR_BASE . '/packages');
 define('DIR_FILES_BLOCK_TYPES', DIR_APPLICATION . '/' . DIRNAME_BLOCKS);
 define('DIR_FILES_BLOCK_TYPES_CORE', DIR_BASE_CORE . '/' . DIRNAME_BLOCKS);
 define('DIR_PACKAGES_CORE', DIR_BASE_CORE . '/packages');
