@@ -35,6 +35,6 @@ class ConfigurationTest extends ConcreteDatabaseTestCase
 
     protected function getStorageDirectory()
     {
-        return str_replace(DIRECTORY_SEPARATOR, '/', __DIR__) . '/files';
+        return CCM_TESTS_TEMPDIR . '/storage';
     }
 }

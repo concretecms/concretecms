@@ -90,10 +90,10 @@ class EntityManagerConfigFactory implements ApplicationAwareInterface, EntityMan
         $legacyNamespace = $this->getConfigRepository()->get('app.enable_legacy_src_namespace');
         if ($legacyNamespace) {
             \Doctrine\Common\Annotations\AnnotationRegistry::registerAutoloadNamespace('Application\Src',
-                DIR_BASE . '/application/src');
+                DIR_APPLICATION . '/src');
         } else {
             \Doctrine\Common\Annotations\AnnotationRegistry::registerAutoloadNamespace('Application\Entity',
-                DIR_BASE . '/application/src/Entity');
+                DIR_APPLICATION . '/src/Entity');
         }
         // Remove all unkown annotations from the AnnotationReader used by the SimpleAnnotationReader
         // to prevent fatal errors

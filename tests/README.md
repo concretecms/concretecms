@@ -10,7 +10,7 @@ As described [here](../README.md#installation)
 
 ## Step 3: Setup the database
 
-The tests expect a MySQL server on the same computer, reachable with the credentials set in `tests/assets/config/database.php` (by default `root` with password `root` on `127.0.0.1`).
+The tests expect a MySQL server on the same computer, reachable with the credentials set in `tests/assets/application/config/database.php` (by default `root` with password `root` on `127.0.0.1`).
 Every run starts by dropping and creating the test database, so that account needs full privileges on it.
 If you prefer a dedicated account, create it like this and set it in `database.php`:
 
@@ -39,7 +39,7 @@ To run a single tests, you can run for example
 composer test -- --filter testCoreBlockView
 ```
 
-Every run recreates the test database and empties a temporary directory, which receives the log (`logs/tests.log`), a copy of the `tests/assets/config` configuration and the files written by the tests.
+Every run recreates the test database and empties a temporary directory, which receives the log (`logs/tests.log`), an `application` directory built from `tests/assets/application` (plus the bootstrap files of the real `application` directory), an empty `packages` directory and the files written by the tests.
 
 
 ## Running more test processes at the same time
@@ -52,8 +52,6 @@ For example:
 ```sh
 CCM_TESTS_RUNID=2 composer test -- tests/tests/Page
 ```
-
-Some tests write to fixed paths of the repository (for example `application`, `packages` and `tests/helpers/File/files`), so the processes must also run in different checkouts of the repository (for example git worktrees).
 
 
 # Write Tests!

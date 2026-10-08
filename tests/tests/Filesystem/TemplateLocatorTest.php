@@ -61,7 +61,7 @@ class TemplateLocatorTest extends TestCase
         $location = $locator->getLocation();
 
         $this->assertInstanceOf('Concrete\Core\Filesystem\FileLocator\Record', $location);
-        $this->assertEquals(DIR_BASE . '/packages/foo_package/attributes/' . static::ATTRIBUTE_HANDLE . '/custom_form.php', $location->getFile());
+        $this->assertEquals(DIR_PACKAGES . '/foo_package/attributes/' . static::ATTRIBUTE_HANDLE . '/custom_form.php', $location->getFile());
         $this->assertEquals(false, $location->exists());
     }
 
