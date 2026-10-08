@@ -9,7 +9,8 @@ use Concrete\Tests\TestCase;
 
 class TemplateLocatorTest extends TestCase
 {
-    const ATTRIBUTE_HANDLE = 'test_attribute';
+    // Every test run must create its own attribute directory, since they share the core one
+    const ATTRIBUTE_HANDLE = 'test_attribute_run' . CCM_TESTS_RUNID;
 
     public function setUp():void
     {
