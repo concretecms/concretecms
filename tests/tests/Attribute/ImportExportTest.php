@@ -476,7 +476,7 @@ class ImportExportTest extends PageTestCase
 
     private static function createFiles(): void
     {
-        self::$storageVolatileDirectory = app(VolatileDirectory::class, ['parentDirectory' => sys_get_temp_dir()]);
+        self::$storageVolatileDirectory = app(VolatileDirectory::class, ['parentDirectory' => CCM_TESTS_TEMPDIR]);
         $storageLocationType = StorageLocationType::add('local', 'Local Storage');
         $storageLocationConfiguration = $storageLocationType->getConfigurationObject();
         $storageLocationConfiguration->setRootPath(self::$storageVolatileDirectory->getPath());
