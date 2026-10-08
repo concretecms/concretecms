@@ -74,7 +74,14 @@ if (CCM_TESTS_MAIN_PROCESS) {
     $dbConfig = require DIR_CONFIG_SITE . '/database.php';
     $dbConfig = $dbConfig['connections'][$dbConfig['default-connection']];
     try {
-        $cn = new PDO("mysql:host={$dbConfig['server']};charset={$dbConfig['charset']}", $dbConfig['username'], $dbConfig['password']);
+        $cn = new PDO(
+            "mysql:host={$dbConfig['server']};charset={$dbConfig['charset']}",
+            $dbConfig['username'],
+            $dbConfig['password'],
+            [
+                PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+            ]
+        );
     } catch (PDOException $x) {
         throw new Exception('Unable to connect to the test database server with the credentials set in ' . DIR_TESTS . '/assets/application/config/database.php', 0, $x);
     }

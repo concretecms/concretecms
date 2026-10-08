@@ -9,13 +9,12 @@ use Concrete\Tests\TestCase;
 
 class TemplateLocatorTest extends TestCase
 {
-    // Every test run must create its own attribute directory, since they share the core one
-    const ATTRIBUTE_HANDLE = 'test_attribute_run' . CCM_TESTS_RUNID;
+    const ATTRIBUTE_HANDLE = 'test_attribute';
 
     public function setUp():void
     {
         $fs = new Filesystem();
-        $dir = DIR_BASE_CORE . '/' . DIRNAME_ATTRIBUTES . '/' . static::ATTRIBUTE_HANDLE;
+        $dir = DIR_APPLICATION . '/' . DIRNAME_ATTRIBUTES . '/' . static::ATTRIBUTE_HANDLE;
         if (!$fs->isDirectory($dir)) {
             $fs->makeDirectory($dir);
         }
@@ -27,7 +26,7 @@ class TemplateLocatorTest extends TestCase
     protected function TearDown():void
     {
         $fs = new Filesystem();
-        $dir = DIR_BASE_CORE . '/' . DIRNAME_ATTRIBUTES . '/' . static::ATTRIBUTE_HANDLE;
+        $dir = DIR_APPLICATION . '/' . DIRNAME_ATTRIBUTES . '/' . static::ATTRIBUTE_HANDLE;
         if ($fs->isDirectory($dir)) {
             $fs->deleteDirectory($dir);
         }
@@ -41,7 +40,7 @@ class TemplateLocatorTest extends TestCase
         $location = $locator->getLocation();
 
         $this->assertInstanceOf('Concrete\Core\Filesystem\FileLocator\Record', $location);
-        $this->assertEquals(DIR_BASE_CORE . '/' . DIRNAME_ATTRIBUTES . '/' . static::ATTRIBUTE_HANDLE . '/composer.php', $location->getFile());
+        $this->assertEquals(DIR_APPLICATION . '/' . DIRNAME_ATTRIBUTES . '/' . static::ATTRIBUTE_HANDLE . '/composer.php', $location->getFile());
     }
 
     public function testFallback()
@@ -52,7 +51,7 @@ class TemplateLocatorTest extends TestCase
         $location = $locator->getLocation();
 
         $this->assertInstanceOf('Concrete\Core\Filesystem\FileLocator\Record', $location);
-        $this->assertEquals(DIR_BASE_CORE . '/' . DIRNAME_ATTRIBUTES . '/' . static::ATTRIBUTE_HANDLE . '/form.php', $location->getFile());
+        $this->assertEquals(DIR_APPLICATION . '/' . DIRNAME_ATTRIBUTES . '/' . static::ATTRIBUTE_HANDLE . '/form.php', $location->getFile());
     }
 
     public function testPackagedAttribute()
@@ -72,17 +71,17 @@ class TemplateLocatorTest extends TestCase
         $locator->addLocation(DIRNAME_ATTRIBUTES . '/' . static::ATTRIBUTE_HANDLE . '/form.php');
         $location = $locator->getLocation();
 
-        $this->assertEquals(DIR_BASE_CORE . '/' . DIRNAME_ATTRIBUTES . '/' . static::ATTRIBUTE_HANDLE . '/form.php', $location->getFile());
+        $this->assertEquals(DIR_APPLICATION . '/' . DIRNAME_ATTRIBUTES . '/' . static::ATTRIBUTE_HANDLE . '/form.php', $location->getFile());
 
         $locator->prependLocation(DIRNAME_ATTRIBUTES . '/' . static::ATTRIBUTE_HANDLE . '/composer.php');
         $location = $locator->getLocation();
 
-        $this->assertEquals(DIR_BASE_CORE . '/' . DIRNAME_ATTRIBUTES . '/' . static::ATTRIBUTE_HANDLE . '/composer.php', $location->getFile());
+        $this->assertEquals(DIR_APPLICATION . '/' . DIRNAME_ATTRIBUTES . '/' . static::ATTRIBUTE_HANDLE . '/composer.php', $location->getFile());
 
         $locator->prependLocation(DIRNAME_ATTRIBUTES . '/' . static::ATTRIBUTE_HANDLE . '/custom_composer.php', 'stupid_package');
         $location = $locator->getLocation();
 
         // Should still be the same file because the finally added one doesn't exist
-        $this->assertEquals(DIR_BASE_CORE . '/' . DIRNAME_ATTRIBUTES . '/' . static::ATTRIBUTE_HANDLE . '/composer.php', $location->getFile());
+        $this->assertEquals(DIR_APPLICATION . '/' . DIRNAME_ATTRIBUTES . '/' . static::ATTRIBUTE_HANDLE . '/composer.php', $location->getFile());
     }
 }
