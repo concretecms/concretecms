@@ -1,6 +1,6 @@
 # Instructions for AI tools
 
-These rules apply to any text you write for this repository: pull request descriptions, review comments, issue reports, commit messages.
+These rules apply to any text you write for this repository: pull request descriptions, review comments, issue reports, commit messages, code comments.
 Maintainers read everything by hand: reading your text must take less time than reading the diff.
 
 [CONTRIBUTING.md](CONTRIBUTING.md) applies to you too: read it for the AI policy and the coding style rules.
@@ -24,8 +24,14 @@ Maintainers read everything by hand: reading your text must take less time than 
 
 - A subject line of at most ~70 characters; add a body only when the reason is not obvious.
 
+## Code comments
+
+- Humans read far more slowly than AI tools: add a comment only when it is needed, and keep it short.
+- A comment says why, not what: don't describe what a PHP function does or restate the line that follows.
+
 ## Working on the code
 
+- A human must read the code written by an AI tool before it is committed: never commit on your own, wait for the review.
 - Every version is developed in its own `<major>.<minor>.x` branch (there is no `main`): branch off the one you are targeting, one topic per pull request.
 - The code must run on all the PHP versions allowed by `concrete/composer.json` (`require.php`), starting from the minimum one, which is also set in the root `composer.json` (`config.platform.php`): don't use syntax or functions introduced later.
 - Before proposing a fix or a removal, check the open issues and pull requests: it may already be there.
