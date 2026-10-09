@@ -49,7 +49,7 @@ class Groups extends ApiController
      *         @OA\JsonContent(ref="#/components/schemas/Group"),
      *     ),
      *     @OA\Response(
-     *         response=401,
+     *         response=403,
      *         description="You do not have the proper permissions to access this resource."
      *     ),
      *     @OA\Response(
@@ -68,7 +68,7 @@ class Groups extends ApiController
         } else {
             $permissions = new Checker($group);
             if (!$permissions->canViewTreeNode()) {
-                return $this->error(t('You do not have access to get information about this group.'), 401);
+                return $this->error(t('You do not have access to get information about this group.'), 403);
             }
         }
 
@@ -159,7 +159,7 @@ class Groups extends ApiController
 
         $pp = new \Permissions($parentNode);
         if (!$pp->canAddTreeSubNode()) {
-            return $this->error(t('You do not have permission to add a group beneath %s', $parentNode->getTreeNodeDisplayName()), 401);
+            return $this->error(t('You do not have permission to add a group beneath %s', $parentNode->getTreeNodeDisplayName()), 403);
         }
 
         $data = json_decode($this->request->getContent(), true);

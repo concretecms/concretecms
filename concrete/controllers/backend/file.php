@@ -156,7 +156,7 @@ class File extends Controller
         $fvID = $this->app->make('helper/security')->sanitizeInt($fvID);
         $fv = $files[0]->getVersion($fvID);
         if ($fv === null || $fv->isApproved()) {
-            throw new UserMessageException(t('Invalid file version.', 400));
+            throw new UserMessageException(t('Invalid file version.'), 400);
         }
         if (!$token->validate('version/delete/' . $fv->getFileID() . '/' . $fv->getFileVersionId())) {
             throw new UserMessageException($token->getErrorMessage(), 401);
